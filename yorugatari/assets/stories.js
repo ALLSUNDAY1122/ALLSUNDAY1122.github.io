@@ -73,9 +73,9 @@ window.STORIES = [
     "slug": "read-receipt",
     "title": "既読がつかない",
     "category": "意味怖",
-    "length": "長編",
+    "length": "中編",
     "fear": 3,
-    "minutes": 8,
+    "minutes": 5,
     "summary": "行方不明の親友へ三年間送り続けたメッセージには、一度も既読がつかなかった。午前4時の返信と自宅を示す位置情報から、沙耶は通知音を聞ける距離に誰かが潜んでいたことを知る。",
     "tags": [
       "メッセージ",

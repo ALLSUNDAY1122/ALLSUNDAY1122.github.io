@@ -6,7 +6,7 @@ const readingMinutes = {
   'kind-manager': 5,
   'family-photo': 5,
   'three-knocks': 5,
-  'read-receipt': 8,
+  'read-receipt': 5,
   'night-bus': 8,
   'delivery-box': 8,
   'voice-memo': 8,
