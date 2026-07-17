@@ -3,18 +3,25 @@ const search = document.querySelector('#searchInput');
 const chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
 const empty = document.querySelector('#emptyState');
 const count = document.querySelector('#count');
-const stories = Array.isArray(window.STORIES) ? window.STORIES : [];
+const coreStories = Array.isArray(window.STORIES) ? window.STORIES : [];
+const notionStories = Array.isArray(window.NOTION_STORIES) ? window.NOTION_STORIES : [];
+const stories = coreStories.concat(notionStories);
 let activeCategory = 'すべて';
 
 if (count) count.setAttribute('aria-live', 'polite');
 if (empty) empty.setAttribute('role', 'status');
 
+function storyHref(story) {
+  return story.href || `stories/${story.slug}.html`;
+}
+
 function card(story) {
   const fear = '●'.repeat(story.fear) + '○'.repeat(5 - story.fear);
-  return `<a class="card" href="stories/${story.slug}.html" data-title="${story.title}" data-category="${story.category}" data-tags="${story.tags.join(' ')}">
+  const tags = Array.isArray(story.tags) ? story.tags : [];
+  return `<a class="card" href="${storyHref(story)}" data-title="${story.title}" data-category="${story.category}" data-tags="${tags.join(' ')}">
     <div class="meta"><span class="badge">${story.category}</span><span>${story.length}</span><span>約${story.minutes}分</span></div>
     <h3>${story.title}</h3><p>${story.summary}</p>
-    <div class="card-foot"><span class="fear" aria-label="怖さ ${story.fear}/5">${fear}</span><span>オリジナル作品</span></div>
+    <div class="card-foot"><span class="fear" aria-label="怖さ ${story.fear}/5">${fear}</span><span>${story.series || 'オリジナル作品'}</span></div>
   </a>`;
 }
 
@@ -23,8 +30,9 @@ function render() {
 
   const query = (search ? search.value : '').trim().toLowerCase();
   const filtered = stories.filter(function (story) {
-    const categoryMatches = activeCategory === 'すべて' || story.category === activeCategory;
-    const text = `${story.title} ${story.summary} ${story.tags.join(' ')}`.toLowerCase();
+    const categoryMatches = activeCategory === 'すべて' || story.category === activeCategory || story.series === activeCategory;
+    const tags = Array.isArray(story.tags) ? story.tags : [];
+    const text = `${story.title} ${story.summary} ${story.category} ${story.series || ''} ${tags.join(' ')}`.toLowerCase();
     return categoryMatches && (!query || text.includes(query));
   });
 
@@ -54,7 +62,7 @@ if (randomButton) {
   randomButton.addEventListener('click', function () {
     if (!stories.length) return;
     const story = stories[Math.floor(Math.random() * stories.length)];
-    location.href = `stories/${story.slug}.html`;
+    location.href = storyHref(story);
   });
 }
 
