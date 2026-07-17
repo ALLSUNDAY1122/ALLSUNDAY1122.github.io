@@ -5,7 +5,7 @@ const readingMinutes = {
   'neighbor-wifi': 5,
   'kind-manager': 5,
   'family-photo': 5,
-  'three-knocks': 8,
+  'three-knocks': 5,
   'read-receipt': 8,
   'night-bus': 8,
   'delivery-box': 8,
