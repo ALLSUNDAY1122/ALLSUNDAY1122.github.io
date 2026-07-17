@@ -1,7 +1,7 @@
 document.documentElement.classList.add('js');
 
 const readingMinutes = {
-  'last-elevator': 8,
+  'last-elevator': 5,
   'neighbor-wifi': 8,
   'kind-manager': 8,
   'family-photo': 8,

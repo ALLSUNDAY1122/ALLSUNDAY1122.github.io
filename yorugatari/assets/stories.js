@@ -3,9 +3,9 @@ window.STORIES = [
     "slug": "last-elevator",
     "title": "最後のエレベーター",
     "category": "意味怖",
-    "length": "長編",
+    "length": "中編",
     "fear": 4,
-    "minutes": 8,
+    "minutes": 5,
     "summary": "三年前の設備事故と同じ夜、無人のエレベーターが存在しない18階を示す。削除された記録を追ううち、主人公は自分が事故の中心にいた事実を思い出す。",
     "tags": [
       "エレベーター",
