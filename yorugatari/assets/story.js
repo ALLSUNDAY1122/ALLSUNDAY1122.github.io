@@ -9,7 +9,7 @@ const readingMinutes = {
   'read-receipt': 5,
   'night-bus': 5,
   'delivery-box': 5,
-  'voice-memo': 8,
+  'voice-memo': 5,
   'missing-floor': 8,
   'good-night': 8,
   'window-reflection': 8
