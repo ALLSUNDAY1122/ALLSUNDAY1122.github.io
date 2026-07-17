@@ -1,6 +1,6 @@
 name: Sync Yorugatari to user site
 
-# Sync marker: good-night medium version finalized.
+# Sync marker: window-reflection and all medium versions finalized.
 on:
   push:
     branches:
@@ -62,7 +62,11 @@ jobs:
           manifest = root / 'site.webmanifest'
           if manifest.exists():
               text = manifest.read_text(encoding='utf-8')
-              text = text.replace('3分で読めるオリジナル短編ホラーサイト', '約8分で読めるオリジナル長編ホラーサイト')
+              for old_description in (
+                  '3分で読めるオリジナル短編ホラーサイト',
+                  '約8分で読めるオリジナル長編ホラーサイト',
+              ):
+                  text = text.replace(old_description, '約5分で読めるオリジナル中編ホラーサイト')
               manifest.write_text(text, encoding='utf-8')
           PY
 
