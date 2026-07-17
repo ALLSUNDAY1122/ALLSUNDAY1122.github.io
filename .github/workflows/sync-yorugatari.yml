@@ -1,6 +1,6 @@
 name: Sync Yorugatari to user site
 
-# Sync marker: night-bus medium version finalized.
+# Sync marker: delivery-box medium version finalized.
 on:
   push:
     branches:
@@ -111,7 +111,7 @@ jobs:
       - name: Commit deployed site
         run: |
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.email '4189824+github-actions[bot]@users.noreply.github.com'
           git add yorugatari
           if git diff --cached --quiet; then
             echo 'No deployment changes.'
