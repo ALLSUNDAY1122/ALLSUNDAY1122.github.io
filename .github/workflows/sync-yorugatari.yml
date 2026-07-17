@@ -1,6 +1,6 @@
 name: Sync Yorugatari to user site
 
-# Sync marker: window-reflection and all medium versions finalized.
+# Sync marker: final 12-story consistency audit.
 on:
   push:
     branches:
@@ -83,6 +83,8 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import json
+          import re
 
           root = Path('yorugatari')
           required = [
@@ -92,8 +94,9 @@ jobs:
               root / 'assets' / 'app.js',
               root / 'assets' / 'story.js',
               root / 'assets' / 'notion-stories.js',
+              root / 'site.webmanifest',
           ]
-          core_stories = list((root / 'stories').glob('*.html'))
+          core_stories = sorted((root / 'stories').glob('*.html'))
           if len(core_stories) != 12:
               raise SystemExit(f'Expected 12 core story pages, found {len(core_stories)}')
           required += core_stories
@@ -107,6 +110,55 @@ jobs:
                   text = path.read_text(encoding='utf-8')
                   if 'Kohei-Morita000.github.io/yorugatari' in text:
                       raise SystemExit(f'Old URL remains in {path}')
+
+          stories_text = (root / 'assets' / 'stories.js').read_text(encoding='utf-8')
+          prefix = 'window.STORIES = '
+          data = json.loads(stories_text[len(prefix):].rstrip()[:-1])
+          if len(data) != 12:
+              raise SystemExit(f'Expected 12 story records, found {len(data)}')
+          minutes_by_slug = {story['slug']: int(story['minutes']) for story in data}
+          if any(story.get('length') != '中編' or int(story.get('minutes', 0)) != 5 for story in data):
+              raise SystemExit('Core story list contains a non-medium or non-five-minute record')
+
+          related_pattern = re.compile(
+              r'<a class="rank-item" href="([^"]+)\.html"[^>]*>.*?<small>[^<]*・約(\d+)分</small>',
+              re.S,
+          )
+          for path in core_stories:
+              text = path.read_text(encoding='utf-8')
+              slug_match = re.search(r'<body data-slug="([^"]+)">', text)
+              if not slug_match:
+                  raise SystemExit(f'Missing slug in {path}')
+              slug = slug_match.group(1)
+              canonical = f'https://allsunday1122.github.io/yorugatari/stories/{slug}.html'
+              required_markers = [
+                  f'<link rel="canonical" href="{canonical}">',
+                  f'"timeRequired": "PT{minutes_by_slug[slug]}M"',
+                  '<span>中編</span><span>約5分</span>',
+              ]
+              for marker in required_markers:
+                  if marker not in text:
+                      raise SystemExit(f'Core metadata mismatch in {path}: {marker}')
+
+              related = related_pattern.findall(text)
+              if len(related) != 2:
+                  raise SystemExit(f'Expected two related links in {path}, found {len(related)}')
+              for related_slug, actual_minutes in related:
+                  related_slug = Path(related_slug).name
+                  expected_minutes = minutes_by_slug.get(related_slug)
+                  if expected_minutes is None or int(actual_minutes) != expected_minutes:
+                      raise SystemExit(
+                          f'Related reading-time mismatch in {path}: '
+                          f'{related_slug} expected {expected_minutes}, got {actual_minutes}'
+                      )
+
+          manifest_text = (root / 'site.webmanifest').read_text(encoding='utf-8')
+          if '約5分で読めるオリジナル中編ホラーサイト' not in manifest_text:
+              raise SystemExit('Web manifest reading-time description is stale')
+          index_text = (root / 'index.html').read_text(encoding='utf-8')
+          if '約8分' in index_text:
+              raise SystemExit('Old eight-minute label remains on the public index')
+          print('Public URL, metadata and reading-time checks passed for all 12 core stories.')
           PY
           node --check yorugatari/assets/stories.js
           node --check yorugatari/assets/notion-stories.js
