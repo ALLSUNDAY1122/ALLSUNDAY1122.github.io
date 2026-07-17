@@ -1,6 +1,6 @@
 name: Sync Yorugatari to user site
 
-# Sync marker: final 12-story consistency audit.
+# Sync marker: source main integration finalized.
 on:
   push:
     branches:
@@ -23,7 +23,7 @@ jobs:
 
       - name: Fetch current Yorugatari branch
         run: |
-          git clone --depth 1 --branch agent/yorugatari-longform \
+          git clone --depth 1 --branch main \
             https://github.com/ALLSUNDAY1122/Kohei-Morita000.github.io.git /tmp/yorugatari-source
 
       - name: Preserve public-only approved stories
