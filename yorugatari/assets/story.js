@@ -12,7 +12,7 @@ const readingMinutes = {
   'voice-memo': 5,
   'missing-floor': 5,
   'good-night': 5,
-  'window-reflection': 8
+  'window-reflection': 5
 };
 
 const mainContent = document.querySelector('main');
