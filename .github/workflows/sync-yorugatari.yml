@@ -25,6 +25,15 @@ jobs:
           git clone --depth 1 --branch agent/yorugatari-longform \
             https://github.com/ALLSUNDAY1122/Kohei-Morita000.github.io.git /tmp/yorugatari-source
 
+      - name: Preserve public-only approved stories
+        shell: bash
+        run: |
+          mkdir -p /tmp/yorugatari-overrides/assets
+          if [ -f yorugatari/index.html ]; then cp yorugatari/index.html /tmp/yorugatari-overrides/index.html; fi
+          if [ -f yorugatari/assets/app.js ]; then cp yorugatari/assets/app.js /tmp/yorugatari-overrides/assets/app.js; fi
+          if [ -f yorugatari/assets/notion-stories.js ]; then cp yorugatari/assets/notion-stories.js /tmp/yorugatari-overrides/assets/notion-stories.js; fi
+          if [ -d yorugatari/series ]; then cp -a yorugatari/series /tmp/yorugatari-overrides/series; fi
+
       - name: Copy public files and rewrite URLs
         shell: bash
         run: |
@@ -49,50 +58,54 @@ jobs:
               text = text.replace(old_absolute, new_absolute).replace(old_path, new_path)
               path.write_text(text, encoding='utf-8')
 
-          index = root / 'index.html'
-          text = index.read_text(encoding='utf-8')
-          replacements = {
-              '夜語り｜3分で読めるオリジナル怖い話': '夜語り｜約8分で読めるオリジナル怖い話',
-              '心霊、人怖、意味が分かると怖い話、ネット怪談、都市伝説風のオリジナル短編を収録。全作品フィクション。眠る前の3分に、ひとつだけ。': '心霊、人怖、意味が分かると怖い話、ネット怪談、都市伝説風のオリジナル長編を収録。全作品フィクション。眠る前に、ひとつだけ。',
-              '3分で読めるオリジナル短編ホラーサイト。': '約8分で読めるオリジナル長編ホラーサイト。',
-              '3分で読めて、少しだけ後を引くオリジナル短編。': '約8分で読めて、少しだけ後を引くオリジナル長編。',
-              '3分で読めて、少しだけ後を引くオリジナル短編を集めました。': '約8分で読めて、少しだけ後を引くオリジナル長編を集めました。',
-              '通勤時間や眠る前に読み切れる掌編・短編を中心に収録します。': '通勤時間や眠る前に読み切れる長編怪談を中心に収録します。',
-              'Original short horror stories': 'Original horror stories',
-              '約4分': '約8分',
-              '約3分': '約8分',
-              '約2分': '約8分',
-          }
-          for old, new in replacements.items():
-              text = text.replace(old, new)
-          index.write_text(text, encoding='utf-8')
-
           manifest = root / 'site.webmanifest'
           if manifest.exists():
               text = manifest.read_text(encoding='utf-8')
               text = text.replace('3分で読めるオリジナル短編ホラーサイト', '約8分で読めるオリジナル長編ホラーサイト')
               manifest.write_text(text, encoding='utf-8')
+          PY
 
+      - name: Restore public-only approved stories
+        shell: bash
+        run: |
+          if [ -f /tmp/yorugatari-overrides/index.html ]; then cp /tmp/yorugatari-overrides/index.html yorugatari/index.html; fi
+          if [ -f /tmp/yorugatari-overrides/assets/app.js ]; then cp /tmp/yorugatari-overrides/assets/app.js yorugatari/assets/app.js; fi
+          if [ -f /tmp/yorugatari-overrides/assets/notion-stories.js ]; then cp /tmp/yorugatari-overrides/assets/notion-stories.js yorugatari/assets/notion-stories.js; fi
+          if [ -d /tmp/yorugatari-overrides/series ]; then rm -rf yorugatari/series; cp -a /tmp/yorugatari-overrides/series yorugatari/series; fi
+
+      - name: Validate deployed files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path('yorugatari')
           required = [
               root / 'index.html',
               root / 'assets' / 'styles.css',
               root / 'assets' / 'stories.js',
               root / 'assets' / 'app.js',
               root / 'assets' / 'story.js',
+              root / 'assets' / 'notion-stories.js',
           ]
-          required += list((root / 'stories').glob('*.html'))
-          if len(list((root / 'stories').glob('*.html'))) != 12:
-              raise SystemExit('Expected 12 story pages')
+          core_stories = list((root / 'stories').glob('*.html'))
+          if len(core_stories) != 12:
+              raise SystemExit(f'Expected 12 core story pages, found {len(core_stories)}')
+          required += core_stories
           for path in required:
               if not path.exists():
                   raise SystemExit(f'Missing required file: {path}')
 
+          text_suffixes = {'.html', '.js', '.css', '.json', '.webmanifest', '.xml', '.txt'}
           for path in root.rglob('*'):
               if path.is_file() and path.suffix.lower() in text_suffixes:
                   text = path.read_text(encoding='utf-8')
                   if 'Kohei-Morita000.github.io/yorugatari' in text:
                       raise SystemExit(f'Old URL remains in {path}')
           PY
+          node --check yorugatari/assets/stories.js
+          node --check yorugatari/assets/notion-stories.js
+          node --check yorugatari/assets/app.js
 
       - name: Commit deployed site
         run: |
