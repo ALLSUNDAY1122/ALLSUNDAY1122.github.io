@@ -437,6 +437,14 @@ const overlay = document.getElementById('overlay');
 const rand = n => Math.floor(Math.random() * n);
 const pick = a => a[rand(a.length)];
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1);[a[i], a[j]] = [a[j], a[i]]; } return a; };
+// 既出を避けて1つ引く「山札」方式。poolを使い切ったらシャッフルし直して継続(セッション中は状態を保持)
+function deckDraw(store, key, pool){
+  if(!store._decks) store._decks = {};
+  if(!store._decks[key] || !store._decks[key].length){
+    store._decks[key] = shuffle(pool.map((_,i)=>i));
+  }
+  return pool[store._decks[key].pop()];
+}
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let timers = [];
 function later(fn, ms){ const id = setTimeout(fn, ms); timers.push(id); return id; }
@@ -505,6 +513,8 @@ const IC = {
   horse:(s=22)=>_w(s,'<path d="M4.5 20.5c.2-6.5 3.8-11 8.5-12.3L15 3.5l2.8 2.9c2.6.4 4.7 2.6 4.7 5.4l-2.3 1.7-2.7-1.2c-.6 3.3-1.6 5.5-1.6 8.2z" fill="#a9764f"/><path d="M15 3.5l-1.2 3.8 3-.9z" fill="#7c5233"/><circle cx="18.3" cy="9.3" r="1" fill="#2a2233"/><path d="M13.2 8.3c-2.1 1-3.8 2.9-4.6 5.2" stroke="#7c5233" stroke-width="1.4" fill="none" stroke-linecap="round"/>')
 ,
   kin:(s=22)=>_w(s,'<path d="M6.5 8h11l-1.6 9.2A2.4 2.4 0 0 1 13.5 19h-3a2.4 2.4 0 0 1-2.4-1.8z" fill="#f2b33d" stroke="#c98f1d" stroke-width="1.2" stroke-linejoin="round"/><ellipse cx="12" cy="8" rx="5.5" ry="1.8" fill="#ffd97a" stroke="#c98f1d" stroke-width="1"/><path d="M9.5 12l1.2 1.2 2.6-2.8" stroke="#8a5f00" stroke-width="1.5" fill="none" stroke-linecap="round"/>')
+,
+  n30:(s=22)=>_w(s,'<rect x="2.5" y="4.5" width="19" height="15" rx="4" fill="#2e2848" stroke="#f2b33d" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" font-size="9" font-weight="bold" fill="#f2b33d" font-family="sans-serif">30</text>')
 
 };
 /* --- 動物アバター(狐・熊・猫・蛙) --- */
@@ -521,7 +531,8 @@ const AVN = (name, sz=22) => AV(players().indexOf(name), sz);
 /* =============== サウンド(Web Audio 合成) =============== */
 const SFX = {
   ctx:null, on:true, out:null,
-  ensure(){
+  getCtx(){
+    // 効果音のON/OFFに関係なく、まずAudioContext自体を用意する(BGMはこちらを使う)
     try{
       if(!this.ctx){
         const AC = window.AudioContext || window.webkitAudioContext;
@@ -537,7 +548,12 @@ const SFX = {
       }
       if(this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
     }catch(e){}
-    return this.on ? this.ctx : null;
+    return this.ctx;
+  },
+  ensure(){
+    // 効果音を鳴らしていいかの判定込み(🔊がOFFならnullを返して効果音を止める)
+    const c = this.getCtx();
+    return this.on ? c : null;
   },
   t(freq, {dur=.15, type='sine', vol=.18, delay=0, slide=0, detune=0} = {}){
     const c = this.ensure(); if(!c) return;
@@ -616,7 +632,7 @@ const SFX = {
   simonFail(){ this.t(185,{dur:.5,type:'sawtooth',vol:.18,detune:20}); this.t(233,{dur:.5,type:'sawtooth',vol:.14,detune:-20}); this.t(120,{dur:.6,vol:.2,delay:.18,slide:-40}); },
   levelup(){ [784,988,1175].forEach((f,i)=>this.t(f,{dur:.1,type:'square',vol:.09,delay:i*.055})); }
 };
-document.addEventListener('pointerdown', () => { SFX.ensure(); BGM.kick(); }, {passive:true});
+document.addEventListener('pointerdown', () => { SFX.getCtx(); BGM.kick(); }, {passive:true});
 
 
 /* =============== BGM(Web Audio 自動生成・3トラック) =============== */
@@ -628,7 +644,7 @@ const BGM = {
     return c;
   },
   tone(f, when, {dur=.3, type='triangle', vol=.04, slide=0, detune=0, atk=.01} = {}){
-    if(!this.on || !SFX.on) return;
+    if(!this.on) return;
     const c = this.ready(); if(!c) return;
     try{
       const o = c.createOscillator(), g = c.createGain();
@@ -643,7 +659,7 @@ const BGM = {
     }catch(e){}
   },
   hit(when, {dur=.05, vol=.03, filter=5000, ftype='bandpass'} = {}){
-    if(!this.on || !SFX.on) return;
+    if(!this.on) return;
     const c = this.ready(); if(!c) return;
     try{
       const len = Math.max(1, Math.floor(c.sampleRate * dur));
@@ -721,7 +737,7 @@ const BGM = {
     }}
   },
   start(name){
-    const c = SFX.ensure(); this.cur = name;
+    const c = SFX.getCtx(); this.cur = name;
     if(!c || !this.on) return;
     this.ready();
     this.step = 0; this.next = c.currentTime + .08;
@@ -849,6 +865,28 @@ const AVATARS = [AV(0,22), AV(1,22), AV(2,22), AV(3,22)];
 const AVCOLORS = ['#f2b33d','#e8503a','#4ecb71','#5a8ff2'];
 let playerCount = 3;
 let playerNames = ['', '', '', ''];
+let lastOmakase = null;
+/* ---- 保存(localStorage): 戦績・プレイヤー名・音量設定を端末に記憶 ---- */
+const STORE_KEY = 'nomikai-arcade-v1';
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      playerCount, playerNames, tally, sfxOn: SFX.on, bgmOn: BGM.on
+    }));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(Number.isInteger(d.playerCount) && d.playerCount >= 2 && d.playerCount <= 4) playerCount = d.playerCount;
+    if(Array.isArray(d.playerNames)) playerNames = ['', '', '', ''].map((_,i) => typeof d.playerNames[i] === 'string' ? d.playerNames[i] : '');
+    if(d.tally && typeof d.tally === 'object') Object.keys(d.tally).forEach(k => { if(typeof d.tally[k] === 'number') tally[k] = d.tally[k]; });
+    if(typeof d.sfxOn === 'boolean') SFX.on = d.sfxOn;
+    if(typeof d.bgmOn === 'boolean') BGM.on = d.bgmOn;
+  }catch(e){}
+}
 const tally = {};   // 名前 → 飲んだ回数(今夜の戦績)
 function players(){ return Array.from({length: playerCount}, (_, i) => playerNames[i].trim() || `プレイヤー${i+1}`); }
 function avatarOf(name){ const i = players().indexOf(name); return i >= 0 ? AV(i, 20) : IC.tokkuri(20); }
@@ -859,8 +897,26 @@ function onLeave(fn){ leaveHooks.push(fn); }
 function runLeave(){ leaveHooks.forEach(f => { try{ f(); }catch(e){} }); leaveHooks = []; }
 function openGame(id){ runLeave(); currentGame = id; clearTimers(); hideResult(); BGM.play(LOVE_SET.has(id) ? 'love' : 'friend'); GAMES[id].start(); window.scrollTo(0,0); }
 function goHome(){ runLeave(); clearTimers(); hideResult(); currentGame = null; BGM.play('home'); renderHome(); window.scrollTo(0,0); }
-function toggleSound(){ SFX.on = !SFX.on; const b = $('#sndbtn'); if(b) b.innerHTML = SFX.on ? IC.spkOn(20) : IC.spkOff(20); if(SFX.on) SFX.ok(); }
-function toggleBgm(){ SFX.tap(); BGM.toggle(); const b = $('#bgmbtn'); if(b) b.innerHTML = BGM.on ? IC.noteOn(20) : IC.noteOff(20); }
+function toggleSound(){ SFX.on = !SFX.on; const b = $('#sndbtn'); if(b) b.innerHTML = SFX.on ? IC.spkOn(20) : IC.spkOff(20); if(SFX.on) SFX.ok(); saveState(); }
+function toggleBgm(){ SFX.tap(); BGM.toggle(); const b = $('#bgmbtn'); if(b) b.innerHTML = BGM.on ? IC.noteOn(20) : IC.noteOff(20); saveState(); }
+function omakasePick(){
+  SFX.tap();
+  const all = ['reflex','bomb','assoc','cups','simon','quiz','shake','timing','warikan','wolf','race','count30','roulette','king','match','chicken','twister','telepathy','palm','gaze','vote','couple','truth'];
+  const pool = all.filter(id => id !== lastOmakase);
+  const id = pick(pool.length ? pool : all);
+  lastOmakase = id;
+  const btn = $('#omakase');
+  if(!btn){ openGame(id); return; }
+  let i = 0, d = 60;
+  const spin = () => {
+    SFX.tick();
+    btn.innerHTML = IC.dice(18) + ' ' + GAMES[all[i % all.length]].name;
+    i++; d *= 1.16;
+    if(d < 420){ later(() => { SFX.fanfare(); buzz(30); openGame(id); }, 200); return; }
+    later(spin, d);
+  };
+  spin();
+}
 
 function frame(title, inner){
   app.innerHTML = `
@@ -877,7 +933,7 @@ function turnBadge(name, suffix){
 /* =============== 結果演出 =============== */
 const LOSE_WORDS = ['今日の主役はキミだ。','神様は見ていた。','いい飲みっぷり、期待してます。','これも宴の華。','次は勝てる。たぶん。','酒は罰ではなく祝福(ということにしよう)。'];
 function announceResult({title='結果発表', body='', sub='', stamp='飲', color='var(--red)', losers=[], celebrate=false, outMode=false}){
-  losers.forEach(n => { tally[n] = (tally[n]||0) + 1; });
+  losers.forEach(n => { tally[n] = (tally[n]||0) + 1; }); saveState();
   overlay.innerHTML = `<div class="drumwrap"><div class="drum disp">結 果 発 表</div><div class="drum-dots">● ● ●</div></div>`;
   overlay.classList.add('show');
   SFX.drum(1.4);
@@ -902,7 +958,7 @@ function hideResult(){ overlay.classList.remove('show'); overlay.innerHTML = '';
 
 /* =============== ホーム =============== */
 function renderHome(){
-  const friendGames = ['reflex','bomb','assoc','cups','simon','quiz','shake','timing','warikan','wolf','race'];
+  const friendGames = ['reflex','bomb','assoc','cups','simon','quiz','shake','timing','warikan','wolf','race','count30'];
   const loveGames = ['roulette','king','match','chicken','twister','telepathy','palm','gaze','vote','couple','truth'];
   const fuda = (id, love) => {
     const g = GAMES[id];
@@ -934,6 +990,7 @@ function renderHome(){
     </div>
     <h1 class="site-title">呑み処アーケード</h1>
     <div class="site-sub">— スマホ1台で遊ぶ 飲み会ゲーム十番勝負 —</div>
+    <button class="big-btn gold" id="omakase" style="margin-bottom:18px" onclick="omakasePick()">${IC.dice(18)} おまかせで1本(ランダム)</button>
     <div class="panel">
       <h3>${IC.users(15)} 本日のお客さま(人数と名前)</h3>
       <div class="count-row">
@@ -942,7 +999,7 @@ function renderHome(){
       ${Array.from({length: playerCount}, (_, i) => `
         <div class="name-row">
           <div class="pava" style="--av:${AVCOLORS[i]}">${AVATARS[i]}</div>
-          <input class="name-input" placeholder="プレイヤー${i+1} の名前(任意)" value="${esc(playerNames[i])}" oninput="playerNames[${i}]=this.value">
+          <input class="name-input" placeholder="プレイヤー${i+1} の名前(任意)" value="${esc(playerNames[i])}" oninput="playerNames[${i}]=this.value;saveState()">
         </div>`).join('')}
     </div>
     ${hasTally ? `
@@ -958,8 +1015,8 @@ function renderHome(){
     ${loveGames.map(g=>fuda(g,true)).join('')}
     <div class="site-sub" style="margin-top:26px;line-height:2">お酒は二十歳になってから。むちゃな一気飲みは禁止。<br>ソフトドリンクでも全力で楽しめます</div>`;
 }
-function setCount(n){ playerCount = n; renderHome(); }
-function resetTally(){ for(const k in tally) delete tally[k]; renderHome(); }
+function setCount(n){ playerCount = n; saveState(); renderHome(); }
+function resetTally(){ for(const k in tally) delete tally[k]; saveState(); renderHome(); }
 
 /* =============== データ =============== */
 const TOPICS = ['赤いもの','丸いもの','コンビニで買えるもの','冷たいもの','居酒屋のメニュー','動物の名前','都道府県','山手線の駅名','スポーツの名前','甘いもの','飲み物','白いもの','夏っぽいもの','カタカナの職業','4文字の食べ物','学校にあるもの','海の生き物','鍋の具材'];
@@ -992,10 +1049,32 @@ const MATCH_Q = [
   {q:'旅行の計画は?', c:['綿密に立てる','ノープランで行く']},
   {q:'朝型?夜型?', c:['朝型','夜型']},
   {q:'ケンカしたら?', c:['すぐ謝る','時間を置く','とことん話し合う']},
-  {q:'記念日は?', c:['ちゃんと祝いたい','あまりこだわらない']}
+  {q:'記念日は?', c:['ちゃんと祝いたい','あまりこだわらない']},
+  {q:'好きなデートの時間帯は?', c:['朝から昼','午後から夜','夜デート']},
+  {q:'記念日のプレゼントは?', c:['形に残るもの','思い出重視','特にこだわらない']},
+  {q:'相手の趣味には?', c:['一緒に楽しみたい','応援する派','干渉しない']},
+  {q:'雨の日デートは?', c:['室内で楽しむ','決行して外出','日程変更したい']},
+  {q:'恋人の友達付き合いは?', c:['自由にしてほしい','ある程度知りたい','全部共有したい']},
+  {q:'甘いものは?', c:['大好き','たまに食べる','あまり食べない']},
+  {q:'寝る前の連絡は?', c:['毎日したい','気が向いたら','特にしなくていい']},
+  {q:'恋人とお揃いのものは?', c:['欲しい','1つくらいならOK','いらない']},
+  {q:'デート代は?', c:['多めに出す方がいい','割り勘','状況次第']},
+  {q:'相手の異性の友達は?', c:['気にしない','少し気になる','かなり気になる']},
+  {q:'好きな飲み会の頻度は?', c:['週1以上','月数回','月1以下']},
+  {q:'長期休みの過ごし方は?', c:['旅行に行きたい','家でゆっくり','友達と遊ぶ']},
+  {q:'恋人の誕生日は?', c:['大きく祝いたい','ふたりで静かに','サプライズ重視']},
+  {q:'相手との将来設計は?', c:['早めに話したい','自然に任せる','あまり考えない']},
+  {q:'マメさは?', c:['自分がマメな方','相手にマメでいてほしい','どちらでもいい']},
+  {q:'恋人とのケンカ頻度は?', c:['ほぼしない','たまにする','わりとする']},
+  {q:'好きな連絡手段は?', c:['LINE中心','電話派','会って話したい']},
+  {q:'デート後の連絡は?', c:['すぐ「楽しかった」と送る','翌日でいい','特に送らない']},
+  {q:'恋人の秘密は?', c:['全部知りたい','ある程度でいい','詮索しない']},
+  {q:'お互いの家族との関わりは?', c:['早く紹介したい','慎重に進めたい','あまり気にしない']},
+  {q:'恋人とのお店選びは?', c:['新しいお店を開拓','行きつけを大事に','こだわらない']},
+  {q:'記念日を忘れたら?', c:['素直に謝る','フォローで挽回','正直に厳しく指摘する']}
 ];
 
-const TRUTH_Q = ['初キスはいつ?どんなシチュエーション?','元恋人と今も連絡取ってる?','同時に2人を好きになったこと、ある?','一夜限りの恋、経験ある?(はい・いいえだけでもOK)','この中の誰かを異性として意識したことある?','恋人の携帯、見たこと(見たくなったこと)ある?','過去にした一番大胆なアプローチは?','今この瞬間、隣に座ってほしい人は?','今までで一番ドキドキしたシチュエーションは?','付き合う前のキスはあり?なし?','デート中に「脈あり」を確信する瞬間は?','浮気の境界線はどこから?正直に','この中の誰かと二人きりで旅行できるなら、誰とどこへ?','恋愛で嘘をついたこと、ある?どんな嘘?','年上・年下に胸キュンしたエピソードは?','「運命の人」に出会った瞬間、分かる自信ある?'];
+const TRUTH_Q = ['初キスはいつ?どんなシチュエーション?','元恋人と今も連絡取ってる?','同時に2人を好きになったこと、ある?','一夜限りの恋、経験ある?(はい・いいえだけでもOK)','この中の誰かを異性として意識したことある?','恋人の携帯、見たこと(見たくなったこと)ある?','過去にした一番大胆なアプローチは?','今この瞬間、隣に座ってほしい人は?','今までで一番ドキドキしたシチュエーションは?','付き合う前のキスはあり?なし?','デート中に「脈あり」を確信する瞬間は?','浮気の境界線はどこから?正直に','この中の誰かと二人きりで旅行できるなら、誰とどこへ?','恋愛で嘘をついたこと、ある?どんな嘘?','年上・年下に胸キュンしたエピソードは?','「運命の人」に出会った瞬間、分かる自信ある?','好きな人ができたら、まず何をする?','告白は自分からする派?される派?','今までで一番後悔してる別れ方は?','「運命かも」と思った相手との出会い方は?','好きな人の前で素が出せないタイプ?','恋人に言われて一番嬉しかった言葉は?','デート中にキュンとした相手の仕草は?','好きな人には積極的にアピールする?','過去に「押せば付き合えた」のに逃したことある?','友達の恋人を良いなと思ったこと、正直ある?','好きな人の連絡が来ないとき、どれくらいで不安になる?','恋人に内緒にしていることがあるとしたら?','今、誰かに片思い中?','過去の恋人と比較されたら傷つく?','「もう一度付き合いたい」と思う元恋人、いる?','好きな人ができると分かりやすいタイプ?','デートの誘い方、自分からする派?','恋愛において一番許せないことは?','好きな人の何を一番最初にチェックする?','「押しに弱い」自覚ある?','恋人が欲しいと思う瞬間は?','出会って何回目のデートで告白されたい?','好きな人がこの中にいたら態度に出る?','恋愛経験人数、聞かれたら答えるタイプ?'];
 
 
 const QUIZ = [
@@ -1100,7 +1179,7 @@ const QUIZ = [
   {q:'海での事故の緊急通報番号は?', a:'118番'},
   {q:'「体育の日」は今なんという祝日?', a:'スポーツの日'}
 ];
-const TELE_TOPICS = ['おにぎりの具といえば?','デートで行きたい場所は?','赤い食べ物といえば?','コンビニで必ず買うものは?','カラオケの定番アーティストは?','好きな寿司ネタは?','朝ごはんの定番は?','夏といえば?','旅行に行くなら?(地名)','居酒屋で最初に頼むものは?','じゃんけんで最初に出す手は?','1〜5で好きな数字は?','犬と猫、どっち?','ラーメンの味といえば?','お祭りの屋台といえば?','「甘いもの」と聞いて浮かぶものは?'];
+const TELE_TOPICS = ['おにぎりの具といえば?','デートで行きたい場所は?','赤い食べ物といえば?','コンビニで必ず買うものは?','カラオケの定番アーティストは?','好きな寿司ネタは?','朝ごはんの定番は?','夏といえば?','旅行に行くなら?(地名)','居酒屋で最初に頼むものは?','じゃんけんで最初に出す手は?','1〜5で好きな数字は?','犬と猫、どっち?','ラーメンの味といえば?','お祭りの屋台といえば?','「甘いもの」と聞いて浮かぶものは?','焼肉で頼む肉といえば?','冬といえば?','デザートといえば?','好きな麺類は?','温泉で食べたいものは?','花火大会の思い出の食べ物は?','二日酔いに効く食べ物は?','好きなお酒は?','学生時代の部活・習い事といえば?','好きな色は?','好きな季節は?','朝と夜、どっち派?','カフェで頼む定番ドリンクは?','お祭りで一番好きな屋台の食べ物は?','好きなアイスの味は?','一番好きなおやつは?','週末にやりたいことは?','好きな天気は?','旅行の必需品といえば?','好きな動物は?','カラオケで盛り上がる曲のジャンルは?','コンビニスイーツの定番といえば?','好きな香りは?','家で過ごす休日の必需品は?'];
 const VOTE_Q = ['一番あざといのは?','一番モテるのは?','最初に結婚しそうなのは?','一番お金持ちになりそうなのは?','酔うと一番めんどくさいのは?','一番秘密が多そうなのは?','恋人に一番尽くしそうなのは?','一番嫉妬深そうなのは?','デートプランが一番上手そうなのは?','浮気したら一番バレなさそうなのは?','告白されたら一番断れなさそうなのは?','一番「沼らせる」タイプなのは?','親に紹介しやすそうなのは?','実は一番大胆なのは?','一番甘え上手なのは?','いま一番恋してそうなのは?'];
 const PALM_COMMENT = {
   S:['運命の出会いが向こうから歩いてくる相。今夜がその夜かも。','恋愛運が振り切れてる。視線を感じたら、それは気のせいじゃない。'],
@@ -1124,7 +1203,19 @@ const COUPLE_Q = [
   {q:'甘えるのは?', c:['得意','苦手']},
   {q:'嫉妬は?', c:['する','しない']},
   {q:'記念日は?', c:['しっかり祝う','ゆるくでいい']},
-  {q:'初デートは?', c:['ご飯','アクティビティ']}
+  {q:'初デートは?', c:['ご飯','アクティビティ']},
+  {q:'朝ごはんは?', c:['しっかり食べる派','軽く済ませる派']},
+  {q:'旅行の荷物は?', c:['最小限','多めに持つ']},
+  {q:'映画は?', c:['映画館で観たい','家で観たい']},
+  {q:'ペットは?', c:['犬派','猫派']},
+  {q:'お酒の席では?', c:['盛り上げ役','聞き役']},
+  {q:'プレゼントは?', c:['サプライズ派','欲しいものを聞く派']},
+  {q:'ケンカ後の仲直りは?', c:['すぐ謝りたい','時間を置きたい']},
+  {q:'連絡の返信は?', c:['即レス派','マイペース派']},
+  {q:'休みの日の朝は?', c:['早起き','ゆっくり寝る']},
+  {q:'お店選びは?', c:['自分で決めたい','任せたい']},
+  {q:'恋人との将来の話は?', c:['早めにしたい','自然に任せたい']},
+  {q:'手料理は?', c:['作る方が好き','食べる方が好き']}
 ];
 const COUPLE_CMD = ['見つめ合って乾杯する','肩を寄せて写真を1枚撮られる','お互いの良いところを1つずつ言い合う','恋人つなぎで10秒キープ','次のドリンクをお互いに選び合う','ハイタッチからの指切りをする','今夜限定のあだ名で呼び合う','2人同時に「よろしくね」と言う'];
 
@@ -1232,16 +1323,16 @@ GAMES.reflex = {
 
 /* ---- 2. 数字クライシス ---- */
 GAMES.bomb = {
-  name:'数字クライシス', desc:'1から順に押せ。爆弾の数は自分たちで選べ', icon:IC.bomb(26), time:'約2分', np:'2〜4人', heat:3,
+  name:'数字クライシス', desc:'好きなマスを選んで開けろ。爆弾の数は自分たちで選べ', icon:IC.bomb(26), time:'約2分', np:'2〜4人', heat:3,
   bombs: 3,
   start(){
     const P = players();
     const self = this;
     frame(this.name, `
       <div class="rules">
-        <div class="rl"><span class="ri">${IC.grid(16)}</span><span><b>1→2→3…</b>と順番に、1人1マスずつ交代でタップ。</span></div>
+        <div class="rl"><span class="ri">${IC.grid(16)}</span><span>25マスから<b>好きなマスを選んで</b>交代で開けていく。順番は自由、勘がすべて。</span></div>
         <div class="rl"><span class="ri">${IC.bomb(16)}</span><span>どこかに<b>爆弾</b>が眠っている。踏んだ人は<b>一口</b>!</span></div>
-        <div class="rl"><span class="ri">${IC.gauge(16)}</span><span>進むほど<b>危険度メーター</b>が上がっていく…</span></div>
+        <div class="rl"><span class="ri">${IC.gauge(16)}</span><span>開けるほど<b>危険度</b>が上がる…爆弾を全部残して生き延びたら<b>全員生還</b>!</span></div>
       </div>
       <div class="level-row">
         <button class="level-btn ${self.bombs===3?'on k1':''}" data-b="3">ほろ酔い<br><b>爆弾3</b></button>
@@ -1252,44 +1343,63 @@ GAMES.bomb = {
     $$('.level-btn').forEach(b => b.onclick = () => { SFX.tap(); self.bombs = +b.dataset.b; self.start(); });
     $('#go').onclick = () => { SFX.tap(); play(); };
     const play = () => {
-      const bombs = new Set(shuffle(Array.from({length:24},(_,i)=>i+2)).slice(0, self.bombs));
-      let target = 1, turn = 0, ended = false;
+      const bombs = new Set(shuffle(Array.from({length:25},(_,i)=>i+1)).slice(0, self.bombs));
+      let opened = 0, turn = 0, ended = false;
       frame(this.name, `
-        <div class="turn-badge"><span><span class="em" id="tav">${avatarOf(P[0])}</span><b id="tn">${esc(P[0])}</b>&nbsp;さんの番 → 「<b id="tg">1</b>」</span></div>
+        <div class="turn-badge"><span><span class="em" id="tav">${avatarOf(P[0])}</span><b id="tn">${esc(P[0])}</b>&nbsp;さん、好きなマスを開けて</span></div>
         <div class="danger-wrap">
-          <div class="danger-label"><span>危険度</span><b id="dp">0%</b></div>
-          <div class="danger-bar"><i id="db"></i></div>
+          <div class="danger-label"><span>危険度</span><b id="dp">${Math.round(self.bombs/25*100)}%</b></div>
+          <div class="danger-bar"><i id="db" style="width:${Math.round(self.bombs/25*100)}%"></i></div>
         </div>
         <div class="grid25" id="grid">
-          ${Array.from({length:25},(_,i)=>`<div class="cell ${i===0?'next':''}" data-n="${i+1}">${i+1}</div>`).join('')}
+          ${Array.from({length:25},(_,i)=>`<div class="cell" data-n="${i+1}">${i+1}</div>`).join('')}
         </div>`);
       const updateDanger = () => {
-        const p = target === 1 ? 0 : Math.min(99, Math.round(self.bombs / (26 - target) * 100));
+        const remain = 25 - opened;
+        const p = Math.min(99, Math.round(self.bombs / remain * 100));
         $('#dp').textContent = p + '%';
         $('#db').style.width = p + '%';
         if(p >= 30) SFX.heart();
       };
-      updateDanger();
       $('#grid').onclick = e => {
         if(ended) return;
-        const c = e.target.closest('.cell'); if(!c) return;
+        const c = e.target.closest('.cell'); if(!c || c.classList.contains('done') || c.classList.contains('boom')) return;
         const n = +c.dataset.n;
-        if(n !== target || c.classList.contains('done')) return;
         if(bombs.has(n)){
           ended = true;
           c.classList.add('boom'); c.innerHTML = IC.bomb(26);
           SFX.boom(); shake(); flash('rgba(232,80,58,.6)');
           const r = c.getBoundingClientRect();
           FX.burst(r.left + r.width/2, r.top + r.height/2);
-          later(() => announceResult({body:`${esc(P[turn])} が爆弾を踏んだ!\n(地雷は「${n}」でした)`, losers:[P[turn]], stamp:'爆'}), 700);
+          // 残りの爆弾も公開
+          later(() => {
+            bombs.forEach(bn => {
+              if(bn === n) return;
+              const bc = $(`.cell[data-n="${bn}"]`);
+              if(bc && !bc.classList.contains('done')){ bc.classList.add('boom'); bc.innerHTML = IC.bomb(22); }
+            });
+          }, 500);
+          later(() => announceResult({body:`${esc(P[turn])} が爆弾を踏んだ!\n(地雷は「${n}」でした)`, losers:[P[turn]], stamp:'爆'}), 900);
           return;
         }
         SFX.tap(); buzz(10);
-        c.classList.remove('next'); c.classList.add('done');
-        target++; turn = (turn+1) % P.length;
-        const nx = $(`.cell[data-n="${target}"]`);
-        if(nx) nx.classList.add('next');
-        $('#tn').textContent = P[turn]; $('#tav').innerHTML = avatarOf(P[turn]); $('#tg').textContent = target;
+        c.classList.add('done'); c.innerHTML = IC.check(18);
+        opened++;
+        // 安全マスを全部開けきったら全員生還
+        if(25 - opened === self.bombs){
+          ended = true;
+          SFX.fanfare(); FX.confetti();
+          later(() => {
+            bombs.forEach(bn => {
+              const bc = $(`.cell[data-n="${bn}"]`);
+              if(bc){ bc.classList.add('boom'); bc.innerHTML = IC.bomb(22); }
+            });
+          }, 300);
+          later(() => announceResult({title:'全員生還', body:`安全マスをすべて開けきった!\n爆弾${self.bombs}個を残しての完全勝利`, stamp:'凌', color:'#4ecb71', celebrate:true, sub:'全員で乾杯しよう!'}), 900);
+          return;
+        }
+        turn = (turn+1) % P.length;
+        $('#tn').textContent = P[turn]; $('#tav').innerHTML = avatarOf(P[turn]);
         updateDanger();
       };
     };
@@ -1408,7 +1518,7 @@ GAMES.cups = {
               nt.innerHTML = `<b style="color:var(--gold)">金杯!</b> ${esc(name)} さん、誰に一口飲ませる?<br><div style="margin-top:8px">${P.map((pp,pi)=>pi===turn?'':`<span class="pick-chip" data-p="${pi}" style="font-size:13px;padding:8px 14px">${AVATARS[pi]} ${esc(pp)}</span>`).join('')}</div>`;
               $$('#note .pick-chip').forEach(ch => ch.onclick = () => {
                 const target = P[+ch.dataset.p];
-                tally[target] = (tally[target]||0) + 1;
+                tally[target] = (tally[target]||0) + 1; saveState();
                 SFX.gulp(); buzz(30); flash('rgba(242,179,61,.3)');
                 toast(name + ' の指名!' + target + ' が一口');
                 nt.textContent = '運命の一杯はどれだ';
@@ -1681,7 +1791,7 @@ GAMES.match = {
     };
     const play = () => {
       const [a, b] = sel.map(i=>P[i]);
-      const qs = shuffle(MATCH_Q).slice(0,5);
+      const qs = Array.from({length:5}, () => deckDraw(this, 'match', MATCH_Q));
       const ans = [[],[]];
       const prog = qi => `<div class="qprog">${qs.map((_,i)=>`<i class="${i<=qi?'on':''}"></i>`).join('')}</div>`;
       const askIntro = (who, wi) => {
@@ -2161,7 +2271,7 @@ GAMES.quiz = {
       $('#okb').onclick = () => { SFX.ok(); pts[bi]++; skipIdx = -1; qi++; ask(); };
       $('#ngb').onclick = () => {
         const n = P[bi];
-        tally[n] = (tally[n]||0) + 1;
+        tally[n] = (tally[n]||0) + 1; saveState();
         SFX.gulp(); buzz(30); flash('rgba(242,179,61,.3)');
         toast(n + ':一口!次の1問はお休み');
         skipIdx = bi;
@@ -2411,7 +2521,7 @@ GAMES.telepathy = {
   name:'以心伝心ワード', desc:'同じお題に全員がこっそり回答。答えが揃えば奇跡', icon:IC.wave(26), time:'約2分', np:'2〜4人', heat:2,
   start(){
     const P = players();
-    const topic = pick(TELE_TOPICS);
+    const topic = deckDraw(GAMES.telepathy, 'topic', TELE_TOPICS);
     const ans = [];
     frame(this.name, `
       <div class="rules">
@@ -2788,7 +2898,7 @@ GAMES.couple = {
   name:'カップル成立シミュレーター', desc:'全員の相性を計算して今夜のベストカップルを発表', icon:IC.rings(26), time:'約3分', np:'2〜4人', heat:3,
   start(){
     const P = players();
-    const qs = shuffle(COUPLE_Q).slice(0, 4);
+    const qs = [0,1,2,3].map(() => deckDraw(this, 'couple', COUPLE_Q));
     const ans = P.map(()=>[]);
     frame(this.name, `
       <div class="rules">
@@ -2876,7 +2986,7 @@ GAMES.wolf = {
     };
     const deal = () => {
       const bank = self.mode === 'n' ? WOLF_N : WOLF_S;
-      const pair = pick(bank);
+      const pair = deckDraw(self, 'wolf_' + self.mode, bank);
       const f = rand(2);
       const maj = pair[f], min = pair[1 - f];
       const wolfIdx = rand(P.length);
@@ -3220,18 +3330,96 @@ GAMES.race = {
   }
 };
 
+/* ---- 23. カウント30 ---- */
+GAMES.count30 = {
+  name:'カウント30', desc:'交代で数え上げ「30」を言ったら負け。1回で言えるのは3つまで', icon:IC.n30(26), time:'約1分', np:'2〜4人', heat:2,
+  start(){
+    const P = players();
+    frame(this.name, `
+      <div class="rules">
+        <div class="rl"><span class="ri">${IC.n30(16)}</span><span>1から順に、交代で数字を<b>声に出して</b>数え上げる。</span></div>
+        <div class="rl"><span class="ri">${IC.chat(16)}</span><span>1回の番で言えるのは<b>連続する数字を3つまで</b>。いくつ言うかは自由。</span></div>
+        <div class="rl"><span class="ri">${IC.bomb(16)}</span><span><b>「30」を言った人が負け</b>で一口。29で回されたら…終わりだ。</span></div>
+      </div>
+      <button class="big-btn" id="go">先攻をルーレットで決める</button>`);
+    $('#go').onclick = () => { SFX.tap(); spin(); };
+    /* --- 先攻ルーレット --- */
+    const spin = () => {
+      frame(this.name, `
+        <div class="q-card" style="border-color:var(--gold)"><div class="who" style="color:var(--gold)">先攻は…</div><div class="q" id="q">${IC.dice(34)}</div></div>`);
+      const order = shuffle(P);
+      let i = 0, d = 70;
+      const step = () => {
+        SFX.tick();
+        $('#q').innerHTML = avatarOf(order[i % order.length]) + ' ' + esc(order[i % order.length]);
+        i++; d *= 1.18;
+        if(d < 400){ later(step, d); return; }
+        const first = order[(i-1) % order.length];
+        SFX.go(); buzz(30);
+        later(() => play(P.indexOf(first)), 900);
+      };
+      step();
+    };
+    /* --- 本体 --- */
+    const play = startIdx => {
+      let cur = 0, turn = startIdx, lock = false;
+      const render = () => {
+        const danger = cur >= 26;
+        const opts = [1,2,3].map(k => {
+          const nums = Array.from({length:k}, (_,j) => cur + 1 + j).filter(n => n <= 30);
+          if(nums.length < k) return '';
+          const has30 = nums.includes(30);
+          return `<button class="big-btn ${has30 ? '' : 'ghost'}" style="${has30 ? 'background:linear-gradient(160deg,#c0392b,#8e2418);border-color:#e8503a' : ''}" data-k="${k}">${nums.join('・')}${has30 ? ' ' : ''}</button>`;
+        }).join('');
+        frame(this.name, `
+          ${turnBadge(P[turn], 'さんの番 — 声に出して数えて')}
+          <div class="big-timer" id="num" style="${danger ? 'color:var(--red);text-shadow:0 0 26px rgba(232,80,58,.5)' : ''}">${cur === 0 ? '—' : cur}</div>
+          <div class="center-txt" style="color:var(--dim);font-weight:900;margin-bottom:14px">30 まで あと <b style="color:${danger ? 'var(--red)' : 'var(--gold)'}">${30 - cur}</b></div>
+          <div id="opts">${opts}</div>`);
+        $$('#opts .big-btn').forEach(b => b.onclick = () => {
+          if(lock) return; lock = true;
+          const k = +b.dataset.k;
+          sayNums(k);
+        });
+      };
+      const sayNums = k => {
+        const numEl = () => document.getElementById('num');
+        for(let j = 1; j <= k; j++){
+          later(() => {
+            cur++;
+            const el = numEl(); if(!el) return;
+            el.textContent = cur;
+            el.style.transform = 'scale(1.25)';
+            later(() => { const e2 = numEl(); if(e2) e2.style.transform = 'scale(1)'; }, 140);
+            if(cur >= 30){
+              SFX.boom(); shake(); flash('rgba(232,80,58,.6)');
+              later(() => announceResult({body:`${esc(P[turn])} が「30」を言った!\nカウントの果てに散る…`, losers:[P[turn]], stamp:'卅'}), 800);
+              return;
+            }
+            if(cur >= 24){ SFX.heart(); buzz(12); } else SFX.tick();
+          }, 420 * j);
+        }
+        later(() => {
+          if(cur >= 30) return;
+          turn = (turn + 1) % P.length;
+          lock = false;
+          render();
+        }, 420 * k + 380);
+      };
+      render();
+    };
+  }
+};
+
 /* ---- 10. 告白 or 飲む ---- */
 GAMES.truth = {
   name:'告白 or 飲む', desc:'質問に正直に答えるか、逃げて飲むか', icon:IC.beer(26), time:'約3分', np:'2〜4人', heat:3,
   start(){
     const P = players();
     const drinks = P.map(()=>0);
-    let turn = 0, used = [];
-    const nextQ = () => {
-      if(used.length === TRUTH_Q.length) used = [];
-      let q; do { q = pick(TRUTH_Q); } while(used.includes(q));
-      used.push(q); return q;
-    };
+    let turn = 0;
+    const self = this;
+    const nextQ = () => deckDraw(self, 'truth', TRUTH_Q);
     const intro = () => {
       frame(this.name, `
         <div class="rules">
@@ -3256,7 +3444,7 @@ GAMES.truth = {
       $('#drink').onclick = () => {
         SFX.gulp(); buzz(30);
         drinks[turn]++;
-        tally[P[turn]] = (tally[P[turn]]||0) + 1;
+        tally[P[turn]] = (tally[P[turn]]||0) + 1; saveState();
         flash('rgba(242,179,61,.3)');
         turn = (turn+1)%P.length; ask();
       };
@@ -3282,6 +3470,7 @@ GAMES.truth = {
 };
 
 /* =============== 起動 =============== */
+loadState();
 FX.init();
 renderHome();
 </script>
