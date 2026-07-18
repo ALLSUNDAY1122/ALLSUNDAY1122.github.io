@@ -5,11 +5,31 @@
   "prefecture": "北海道",
   "name": "札幌市",
   "officialUrl": "https://www.city.sapporo.jp/",
-  "status": "todo",
-  "summary": "北日本調査班の初期登録対象。9制度を順次調査する。",
+  "status": "researching",
+  "summary": "子ども医療費助成を確認済み。残る8制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
-    "childMedical": {"status": "todo", "summary": "子ども医療費助成を未調査"},
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校生世代まで（18歳到達後最初の3月31日まで）の入院・通院を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "residency": "札幌市に住民登録があること",
+        "insurance": "公的医療保険に加入していること",
+        "incomeLimit": "あり。主たる生計維持者の前年所得（1月から7月は前々年所得）が限度額未満であること",
+        "copay": "入院・通院とも、医科初診580円、歯科初診510円。再診・調剤薬局・柔道整復・はり・きゅう・保険適用マッサージは0円。訪問看護は1割負担（1か所月3,000円上限）",
+        "application": "医療費受給者証の申請が必要",
+        "excludedCosts": "差額ベッド代、食事療養費、文書料など保険給付対象外の費用は助成対象外",
+        "effectiveFrom": "2025-04-01診療分から高校生世代まで拡大"
+      },
+      "source": {
+        "url": "https://www.city.sapporo.jp/hoken-iryo/iryojosei/nyuyoji.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
     "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
