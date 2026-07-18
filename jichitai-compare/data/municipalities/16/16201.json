@@ -6,7 +6,7 @@
   "name": "富山市",
   "officialUrl": "https://www.city.toyama.lg.jp/",
   "status": "researching",
-  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育を確認済み。",
+  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -49,8 +49,23 @@
       }
     },
     "childcareFee": {
-      "status": "todo",
-      "summary": "未調査"
+      "status": "verified",
+      "summary": "4月1日時点で3歳以上は保育料無料。0歳から2歳は市町村民税所得割額に応じて決定し、第3子以降は無料",
+      "eligibility": {
+        "residency": "認可保育施設に在籍する富山市在住の児童",
+        "ageCondition": "4月1日時点で3歳以上の児童は保育料無料。年度途中で3歳になっても当該年度内は3歳未満児の保育料が必要"
+      },
+      "details": {
+        "feeCalculation": "0歳から2歳の保育料は、原則として父母の市町村民税所得割額の合計額により決定。父母が住民税非課税の場合は、同居の祖父母のうち税額が高い方を用いる場合がある",
+        "taxPeriods": "令和8年4月から8月分は令和7年度税額、令和8年9月から令和9年3月分は令和8年度税額を使用",
+        "siblingReduction": "令和6年4月から第3子以降は所得制限なく無料。同一世帯で保育所等へ同時入所している就学前児童がいる場合は多子軽減の対象となり、原則として第2子は半額、その他の児童は無料。低所得世帯等には追加軽減あり",
+        "additionalCosts": "3歳以上は別途、副食費等が必要。給食費は施設により異なる",
+        "reduction": "児童の傷病による長期欠席や災害による家屋被害など、一定の要件で減免制度あり"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/Index/3181",
+        "checkedAt": "2026-07-19"
+      }
     },
     "schoolMeals": {
       "status": "todo",
