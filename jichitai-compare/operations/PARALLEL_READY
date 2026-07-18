@@ -1,0 +1,14 @@
+ready: true
+preparedAt: 2026-07-19
+architectureVersion: 1.0.0
+workerTeams: 4
+coordinator: 編集長・全国統括
+sourceDataPath: jichitai-compare/data/municipalities/{prefectureCode}/{municipalityCode}.json
+generatedDataPath: jichitai-compare/data/generated/municipalities.json
+validationCommand: npm run check
+notes:
+  - Phase 0基盤はPR #11でmainへ統合済み
+  - 公開スモークテストはGitHub Actions run 29653142505で成功
+  - 公開URL: https://allsunday1122.github.io/jichitai-compare/
+  - 地方調査班は自治体単位の専用ブランチとPRで作業する
+  - generatedファイルと共通ファイルは編集長・全国統括が管理する
