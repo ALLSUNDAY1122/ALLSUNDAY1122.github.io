@@ -12,7 +12,7 @@
       "name": "江戸川区",
       "officialUrl": "https://www.city.edogawa.tokyo.jp/",
       "status": "verified",
-      "summary": "東京都東部。子ども医療費、病児・病後児保育、認可保育施設の基本保育料、学校給食費、産後ケアを確認済み。",
+      "summary": "東京都東部。子ども医療費、病児・病後児保育、認可保育施設の基本保育料、学校給食費、産後ケア、こども誰でも通園制度を確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -81,7 +81,19 @@
             "checkedAt": "2026-07-18"
           }
         },
-        "temporaryChildcare": { "status": "researching", "summary": "一時保育・誰でも通園を調査中" },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない0歳6か月～2歳児が月24時間まで利用可能",
+          "eligibility": { "minAgeMonths": 6, "maxAgeYears": 2 },
+          "details": {
+            "types": "こども誰でも通園制度（乳児等通園支援事業）。保護者の就労の有無を問わず、保育所等に通っていない子どもが対象",
+            "fee": "江戸川区民が区内施設を利用する場合は無料。子ども1人につき月24時間まで。用具などの実費がかかる場合あり"
+          },
+          "source": {
+            "url": "https://www.city.edogawa.tokyo.jp/e047/kosodate/kosodate/hoiku/ichiji/kodomodaredemotsuen.html",
+            "checkedAt": "2026-07-18"
+          }
+        },
         "housingSupport": { "status": "researching", "summary": "子育て世帯向け住宅支援を調査中" },
         "bulkyWaste": { "status": "researching", "summary": "粗大ごみ料金を調査中" },
         "disasterPrevention": { "status": "researching", "summary": "防災・ハザード情報を調査中" }
