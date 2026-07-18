@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-18T23:17:00+09:00",
+  "updatedAt": "2026-07-19T02:30:00+09:00",
   "totalMunicipalities": 1741,
   "totalMunicipalitiesSource": {
     "value": 1741,
@@ -11,9 +11,9 @@
     "calculation": "市町村計1724（北方4島の6村を含み、特別区を含まない）- 6村 + 23特別区 = 1741",
     "scope": "現に自治体行政が行われている市町村および東京都23特別区"
   },
-  "registeredMunicipalities": 3,
-  "remainingMunicipalities": 1738,
-  "todoMunicipalities": 0,
+  "registeredMunicipalities": 6,
+  "remainingMunicipalities": 1735,
+  "todoMunicipalities": 3,
   "researchingMunicipalities": 3,
   "verifiedMunicipalities": 0,
   "unavailableMunicipalities": 0,
@@ -23,10 +23,10 @@
   "prOpenMunicipalities": 0,
   "mergedMunicipalities": 0,
   "blockedMunicipalities": 0,
-  "totalServices": 27,
+  "totalServices": 54,
   "completedServices": 10,
-  "completionRatePercent": 37.04,
-  "todoServices": 0,
+  "completionRatePercent": 18.52,
+  "todoServices": 27,
   "researchingServices": 17,
   "verifiedServices": 10,
   "unavailableServices": 0,
@@ -38,13 +38,15 @@
   "blockedServices": 0,
   "teams": {
     "北日本調査班": {
-      "registeredMunicipalities": 0,
+      "registeredMunicipalities": 1,
       "verifiedServices": 0,
       "researchingServices": 0,
       "unavailableServices": 0,
       "needsReviewServices": 0,
       "blockedServices": 0,
-      "municipalityCodes": []
+      "municipalityCodes": [
+        "01100"
+      ]
     },
     "東日本調査班": {
       "registeredMunicipalities": 3,
@@ -60,26 +62,44 @@
       ]
     },
     "中日本調査班": {
-      "registeredMunicipalities": 0,
+      "registeredMunicipalities": 1,
       "verifiedServices": 0,
       "researchingServices": 0,
       "unavailableServices": 0,
       "needsReviewServices": 0,
       "blockedServices": 0,
-      "municipalityCodes": []
+      "municipalityCodes": [
+        "23100"
+      ]
     },
     "西日本調査班": {
-      "registeredMunicipalities": 0,
+      "registeredMunicipalities": 1,
       "verifiedServices": 0,
       "researchingServices": 0,
       "unavailableServices": 0,
       "needsReviewServices": 0,
       "blockedServices": 0,
-      "municipalityCodes": []
+      "municipalityCodes": [
+        "40130"
+      ]
     }
   },
   "stalledMunicipalities": [],
   "municipalities": [
+    {
+      "code": "01100",
+      "name": "札幌市",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "assignedTeam": "北日本調査班",
+      "status": "todo",
+      "completedServiceCount": 0,
+      "verifiedCount": 0,
+      "unavailableCount": 0,
+      "researchingCount": 0,
+      "currentService": "childMedical",
+      "lastUpdatedAt": "2026-07-19T02:30:00+09:00"
+    },
     {
       "code": "12203",
       "name": "市川市",
@@ -121,6 +141,34 @@
       "researchingCount": 3,
       "currentService": "housingSupport",
       "lastUpdatedAt": "2026-07-18T23:17:00+09:00"
+    },
+    {
+      "code": "23100",
+      "name": "名古屋市",
+      "prefectureCode": "23",
+      "prefecture": "愛知県",
+      "assignedTeam": "中日本調査班",
+      "status": "todo",
+      "completedServiceCount": 0,
+      "verifiedCount": 0,
+      "unavailableCount": 0,
+      "researchingCount": 0,
+      "currentService": "childMedical",
+      "lastUpdatedAt": "2026-07-19T02:30:00+09:00"
+    },
+    {
+      "code": "40130",
+      "name": "福岡市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "assignedTeam": "西日本調査班",
+      "status": "todo",
+      "completedServiceCount": 0,
+      "verifiedCount": 0,
+      "unavailableCount": 0,
+      "researchingCount": 0,
+      "currentService": "childMedical",
+      "lastUpdatedAt": "2026-07-19T02:30:00+09:00"
     }
   ]
 }
