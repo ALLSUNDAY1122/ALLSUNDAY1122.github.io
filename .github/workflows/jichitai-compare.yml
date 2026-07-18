@@ -23,7 +23,7 @@ jobs:
   validate:
     name: Validate municipality data
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -73,3 +73,7 @@ jobs:
             git status --short -- data/generated/municipalities.json operations/progress.json
             exit 1
           fi
+
+      - name: Verify published GitHub Pages site
+        working-directory: jichitai-compare
+        run: npm run smoke:public

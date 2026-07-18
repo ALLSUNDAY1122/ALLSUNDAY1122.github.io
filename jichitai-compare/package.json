@@ -9,6 +9,7 @@
     "progress": "node ./scripts/update-progress.mjs",
     "validate": "node ./scripts/validate-data.mjs",
     "validate:generated": "node ./scripts/validate-data.mjs --require-generated",
+    "smoke:public": "node ./scripts/smoke-public-site.mjs",
     "check": "npm run validate && npm run generate && npm run progress && npm run validate:generated"
   }
 }
