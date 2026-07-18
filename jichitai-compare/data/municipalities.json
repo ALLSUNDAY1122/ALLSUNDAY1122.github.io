@@ -12,7 +12,7 @@
       "name": "江戸川区",
       "officialUrl": "https://www.city.edogawa.tokyo.jp/",
       "status": "verified",
-      "summary": "東京都東部。子ども医療費と病児・病後児保育を確認済み。",
+      "summary": "東京都東部。子ども医療費、病児・病後児保育、認可保育施設の基本保育料を確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -41,7 +41,20 @@
             "checkedAt": "2026-07-18"
           }
         },
-        "childcareFee": { "status": "researching", "summary": "保育料・第2子以降の軽減を調査中" },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認可保育施設の基本保育料は第1子から無償",
+          "eligibility": { "minAgeMonths": 0, "maxAgeYears": 5 },
+          "details": {
+            "fee": "認可保育所・認定こども園・地域型保育事業の基本保育料は無償。延長保育料や施設が直接徴収する実費は対象外",
+            "siblingReduction": "第1子から無償のため、第2子以降も基本保育料は無償",
+            "incomeCondition": "所得制限なし。公費算定のため世帯の住民税申告が必要"
+          },
+          "source": {
+            "url": "https://www.city.edogawa.tokyo.jp/e048/kosodate/kosodate/hoiku/nitijou/hoikuen/riyoushahutan.html",
+            "checkedAt": "2026-07-18"
+          }
+        },
         "schoolMeals": { "status": "researching", "summary": "学校給食費支援を調査中" },
         "postpartumCare": { "status": "researching", "summary": "産後ケアを調査中" },
         "temporaryChildcare": { "status": "researching", "summary": "一時保育・誰でも通園を調査中" },
