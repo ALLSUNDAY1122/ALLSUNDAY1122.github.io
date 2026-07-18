@@ -8,10 +8,12 @@ const PREFECTURES = [
   ['36','徳島県'],['37','香川県'],['38','愛媛県'],['39','高知県'],['40','福岡県'],['41','佐賀県'],['42','長崎県'],
   ['43','熊本県'],['44','大分県'],['45','宮崎県'],['46','鹿児島県'],['47','沖縄県']
 ];
+const DEFAULT_SELECTION = ['13123', '12203', '12227'];
+const MAX_SELECTIONS = 3;
 
 const state = {
   municipalities: [],
-  selectedCodes: ['13123', '12203', '12227'],
+  selectedCodes: [...DEFAULT_SELECTION],
   activePrefectureCode: '13',
   childAge: 2
 };
@@ -26,7 +28,9 @@ const elements = {
   searchInput: document.querySelector('#municipality-search'),
   searchButton: document.querySelector('#search-button'),
   searchResults: document.querySelector('#search-results'),
-  childAge: document.querySelector('#child-age')
+  childAge: document.querySelector('#child-age'),
+  shareButton: document.querySelector('#share-comparison'),
+  shareStatus: document.querySelector('#share-status')
 };
 
 async function boot() {
@@ -34,15 +38,49 @@ async function boot() {
     const response = await fetch('./data/municipalities.json', { cache: 'no-store' });
     if (!response.ok) throw new Error(`自治体データの読み込みに失敗しました: ${response.status}`);
     const data = await response.json();
+    if (!Array.isArray(data.municipalities)) throw new Error('自治体データの形式が正しくありません。');
+
     state.municipalities = data.municipalities;
+    hydrateStateFromUrl();
+    elements.childAge.value = String(state.childAge);
+
     await renderMap();
-    renderMunicipalities('13');
+    renderMunicipalities(state.activePrefectureCode);
     renderSelection();
     renderComparison();
     bindControls();
+    updateUrl();
   } catch (error) {
     console.error(error);
-    elements.map.innerHTML = '<p class="loading">データを読み込めませんでした。ページを再読み込みしてください。</p>';
+    elements.map.innerHTML = '<div class="load-error"><strong>サイトデータを読み込めませんでした。</strong><p>通信状態を確認してページを再読み込みしてください。</p></div>';
+    elements.comparison.className = 'comparison-empty';
+    elements.comparison.textContent = '比較データを読み込めませんでした。';
+  }
+}
+
+function hydrateStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const requestedCodes = (params.get('compare') ?? '')
+    .split(',')
+    .map((code) => code.trim())
+    .filter(Boolean);
+  const validCodes = [...new Set(requestedCodes)]
+    .filter((code) => state.municipalities.some((item) => item.code === code))
+    .slice(0, MAX_SELECTIONS);
+
+  if (validCodes.length) state.selectedCodes = validCodes;
+
+  const requestedAge = Number(params.get('age'));
+  if (Number.isInteger(requestedAge) && requestedAge >= 0 && requestedAge <= 18) {
+    state.childAge = requestedAge;
+  }
+
+  const requestedPrefecture = params.get('pref');
+  if (PREFECTURES.some(([code]) => code === requestedPrefecture)) {
+    state.activePrefectureCode = requestedPrefecture;
+  } else {
+    const firstSelected = state.municipalities.find((item) => item.code === state.selectedCodes[0]);
+    if (firstSelected) state.activePrefectureCode = firstSelected.prefectureCode;
   }
 }
 
@@ -80,6 +118,7 @@ function renderPrefectureFallback() {
     const button = document.createElement('button');
     button.type = 'button';
     button.textContent = name;
+    button.classList.toggle('is-active', code === state.activePrefectureCode);
     button.addEventListener('click', () => selectPrefecture(code));
     grid.append(button);
   });
@@ -90,12 +129,16 @@ function selectPrefecture(code) {
   state.activePrefectureCode = code;
   highlightPrefecture();
   renderMunicipalities(code);
+  updateUrl();
 }
 
 function highlightPrefecture() {
   elements.map.querySelectorAll('.prefecture').forEach((node) => {
     const code = String(node.dataset.code).padStart(2, '0');
     node.classList.toggle('is-active', code === state.activePrefectureCode);
+  });
+  elements.map.querySelectorAll('.prefecture-grid button').forEach((button, index) => {
+    button.classList.toggle('is-active', PREFECTURES[index]?.[0] === state.activePrefectureCode);
   });
 }
 
@@ -151,15 +194,16 @@ function toggleMunicipality(code) {
   const index = state.selectedCodes.indexOf(code);
   if (index >= 0) {
     state.selectedCodes.splice(index, 1);
-  } else if (state.selectedCodes.length < 3) {
+  } else if (state.selectedCodes.length < MAX_SELECTIONS) {
     state.selectedCodes.push(code);
   } else {
-    window.alert('比較できる自治体は最大3件です。');
+    window.alert(`比較できる自治体は最大${MAX_SELECTIONS}件です。`);
     return;
   }
   renderMunicipalities(state.activePrefectureCode);
   renderSelection();
   renderComparison();
+  updateUrl();
 }
 
 function renderSelection() {
@@ -250,6 +294,7 @@ function bindControls() {
   elements.childAge.addEventListener('change', (event) => {
     state.childAge = Number(event.target.value);
     renderComparison();
+    updateUrl();
   });
   elements.searchButton.addEventListener('click', runSearch);
   elements.searchInput.addEventListener('keydown', (event) => {
@@ -258,6 +303,7 @@ function bindControls() {
   elements.searchInput.addEventListener('input', () => {
     if (!elements.searchInput.value.trim()) elements.searchResults.replaceChildren();
   });
+  elements.shareButton.addEventListener('click', shareComparison);
 }
 
 function runSearch() {
@@ -286,6 +332,51 @@ function runSearch() {
     row.append(button);
     elements.searchResults.append(row);
   });
+}
+
+async function shareComparison() {
+  updateUrl();
+  const url = window.location.href;
+  const selectedNames = selectedMunicipalities().map((item) => item.name).join('・');
+  const shareData = {
+    title: '自治体くらべ',
+    text: selectedNames ? `${selectedNames}の自治体比較` : '自治体比較',
+    url
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      setShareStatus('共有画面を開きました。');
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    setShareStatus('比較URLをコピーしました。');
+  } catch (error) {
+    if (error?.name === 'AbortError') return;
+    console.warn('share unavailable:', error);
+    window.prompt('このURLをコピーしてください。', url);
+    setShareStatus('比較URLを表示しました。');
+  }
+}
+
+function setShareStatus(message) {
+  elements.shareStatus.textContent = message;
+  window.setTimeout(() => {
+    if (elements.shareStatus.textContent === message) elements.shareStatus.textContent = '';
+  }, 4000);
+}
+
+function updateUrl() {
+  const url = new URL(window.location.href);
+  if (state.selectedCodes.length) {
+    url.searchParams.set('compare', state.selectedCodes.join(','));
+  } else {
+    url.searchParams.delete('compare');
+  }
+  url.searchParams.set('age', String(state.childAge));
+  url.searchParams.set('pref', state.activePrefectureCode);
+  window.history.replaceState(null, '', url);
 }
 
 function selectedMunicipalities() {
