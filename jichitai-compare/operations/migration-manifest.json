@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "architectureVersion": "1.0.0",
+  "migrationId": "phase0-split-existing-municipalities",
+  "status": "source_split_created",
+  "preparedAt": "2026-07-18",
+  "preparedBy": "編集長・全国統括",
+  "source": {
+    "path": "jichitai-compare/data/municipalities.json",
+    "blobSha": "7473610da9b377e916e8d0f16fd25029de9fbd08",
+    "metaVersion": "0.2.0",
+    "updatedAt": "2026-07-18",
+    "municipalityCount": 3,
+    "municipalityCodes": [
+      "13123",
+      "12203",
+      "12227"
+    ],
+    "serviceCountPerMunicipality": 9
+  },
+  "targets": [
+    {
+      "code": "12203",
+      "name": "市川市",
+      "path": "jichitai-compare/data/municipalities/12/12203.json"
+    },
+    {
+      "code": "12227",
+      "name": "浦安市",
+      "path": "jichitai-compare/data/municipalities/12/12227.json"
+    },
+    {
+      "code": "13123",
+      "name": "江戸川区",
+      "path": "jichitai-compare/data/municipalities/13/13123.json"
+    }
+  ],
+  "preservationRules": {
+    "originalFileRetained": true,
+    "existingFieldsPreserved": true,
+    "addedFields": [
+      "schemaVersion",
+      "updatedAt"
+    ],
+    "officialUrlsPreserved": true,
+    "checkedAtPreserved": true,
+    "servicesPreserved": true
+  },
+  "verification": {
+    "jsonParsed": true,
+    "targetMunicipalityCount": 3,
+    "targetServiceCountTotal": 27,
+    "semanticComparison": "pending_generation_stage",
+    "legacyFileRemoval": "not_allowed_before_public_validation"
+  },
+  "notes": [
+    "この工程では現行一括JSONを削除・変更しない。",
+    "生成スクリプト実装後に、追加したschemaVersionとupdatedAtを除外して自治体オブジェクトを深い比較する。"
+  ]
+}
