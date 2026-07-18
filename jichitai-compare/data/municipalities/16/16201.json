@@ -6,7 +6,7 @@
   "name": "富山市",
   "officialUrl": "https://www.city.toyama.lg.jp/",
   "status": "researching",
-  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料、学校給食費を確認済み。",
+  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料、学校給食費、産後ケアを確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -94,8 +94,42 @@
       ]
     },
     "postpartumCare": {
-      "status": "todo",
-      "summary": "未調査"
+      "status": "verified",
+      "summary": "産後1年未満の母親と乳児を対象に、ショートステイ・デイケア・訪問型の産後ケアを実施",
+      "eligibility": {
+        "residency": "原則として富山市に住所がある産婦。産後ケア応援室は連携市町村在住者や富山市への里帰り出産にも対応",
+        "ageCondition": "市の産後ケア事業は産後1年未満の母親と乳児が対象。実施機関により産後4か月までの場合がある"
+      },
+      "details": {
+        "serviceTypes": "ショートステイ、デイケア4時間・6時間、居宅訪問型。産後ケア応援室ではデイケアと宿泊を実施",
+        "facilityCount": 15,
+        "facilities": "令和8年5月時点で指定産科医療機関5か所、指定助産所10か所",
+        "fiscalYearExpansion": "令和8年度は助産所での通所型を追加し、居宅訪問型は外出困難者等に限定せず利用できるよう要件を緩和",
+        "application": "市のオンライン申請フォームから申請。利用決定通知等は申請後おおよそ1週間で届き、その後、各実施機関へ予約する",
+        "fee": "利用形態・施設により異なる。産後ケア応援室の富山市民料金は、令和8年4月1日以降、デイケア9時30分から19時が5,600円、9時30分から13時が2,100円、9時30分から15時30分が3,400円、13時から19時が3,500円、宿泊24時間が8,200円",
+        "facilitySpecificCondition": "産後ケア応援室はおおむね産後4か月まで。母子に感染症状がある場合や入院・治療が必要な場合は利用不可"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/4824?DestinationId=11",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/file?file=23225_%E5%AE%9F%E6%96%BD%E6%A9%9F%E9%96%A2%E4%B8%80%E8%A6%A7%EF%BC%88HP%E6%8E%B2%E8%BC%89%E7%94%A8%E3%80%80R8.5%E6%9C%88%EF%BC%89.pdf",
+          "checkedAt": "2026-07-19",
+          "description": "令和8年5月時点の実施機関、対象期間、利用区分、予約方法"
+        },
+        {
+          "url": "https://machinaka-care.city.toyama.lg.jp/guide/svGuideDtl.aspx?cd=0101&servno=14",
+          "checkedAt": "2026-07-19",
+          "description": "産後ケア応援室の令和8年4月改定料金"
+        },
+        {
+          "url": "https://www.city.toyama.lg.jp/shisei/mayor/1010725/1016816/1018580.html",
+          "checkedAt": "2026-07-19",
+          "description": "令和8年度の通所型拡充と訪問型要件緩和"
+        }
+      ]
     },
     "temporaryChildcare": {
       "status": "todo",
