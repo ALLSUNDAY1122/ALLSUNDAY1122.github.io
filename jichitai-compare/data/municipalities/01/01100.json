@@ -6,7 +6,7 @@
   "name": "札幌市",
   "officialUrl": "https://www.city.sapporo.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケア、一時預かり、住宅支援を確認済み。残る2制度を順次調査する。",
+  "summary": "子ども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケア、一時預かり、住宅支援を確認済み。大型ごみは減免要件の詳細を要確認。残る防災情報を調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -180,8 +180,29 @@
       }
     },
     "bulkyWaste": {
-      "status": "todo",
-      "summary": "粗大ごみ料金を未調査"
+      "status": "needs_medium_review",
+      "summary": "指定袋に入らない家庭の大型ごみを戸別有料収集。料金は品目・大きさにより200円から1,800円の例があり、減免要件の詳細は要確認",
+      "details": {
+        "definition": "耐久消費財その他の固形廃棄物で、札幌市の指定ごみ袋に入らないもの",
+        "feeRangeExamples": "公式手数料一覧の主な例は200円、500円、900円、1,300円、1,800円。品目と大きさで異なる",
+        "feeExamples": "ベビーベッド200円、自転車500円、応接用2人掛け以上のいす900円、高さ1m以上のたんす1,300円、スプリング付きベッドマットレス1,800円",
+        "application": "インターネットまたは大型ごみ収集センターへの電話で事前申込。収集希望日の2週間前から受付",
+        "internetLimits": "インターネットは24時間365日受付で、1回10個まで。品目検索にない物、減免申請、さわやか収集は電話申込",
+        "payment": "大型ごみ処理手数料シール、またはインターネット申込時のクレジットカード・PayPay・楽天ペイ",
+        "putOut": "受付番号を表示し、収集日当日の8時30分までに指定された建物外の場所へ出す。原則立会い不要",
+        "excludedItems": "単品100kg超、長さ2m超、体積2立方メートル超、家電4品目、パソコン、事業所で使用した物などは対象外",
+        "reduction": "札幌市条例第47条により、手数料を納付する資力がない者その他特別の事情があると認められる場合は減額・免除が可能。インターネット受付不可で電話申込が必要",
+        "reviewReason": "札幌市の公開ページでは、大型ごみ処理手数料減免の具体的対象区分・必要書類・減免額を確認できなかったためMedium確認が必要",
+        "support": "要介護者等で自力搬出が困難かつ周囲の支援を受けられない場合は、さわやか収集の対象となる場合がある。大型ごみには通常の手数料シールが必要",
+        "officialPage": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi.html",
+        "officialFeePage": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi_02.html",
+        "officialOrdinancePage": "https://www.city.sapporo.jp/ncms/reiki/d1w_reiki/H404901010067/H404901010067_j.html",
+        "officialSupportPage": "https://www.city.sapporo.jp/seiso/gomi/sawayaka/"
+      },
+      "source": {
+        "url": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi.html",
+        "checkedAt": "2026-07-19"
+      }
     },
     "disasterPrevention": {
       "status": "todo",
