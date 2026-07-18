@@ -6,7 +6,7 @@
   "name": "福岡市",
   "officialUrl": "https://www.city.fukuoka.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の初期登録対象。子ども医療費助成、病児・病後児保育、保育料・第2子以降の無償化、学校給食費、産後ケアを確認済み。残り4制度を順次調査する。",
+  "summary": "西日本調査班の初期登録対象。子ども医療費助成、病児・病後児保育、保育料・第2子以降の無償化、学校給食費、産後ケア、一時預かり・こども誰でも通園制度を確認済み。残り3制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -108,7 +108,32 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "一時預かりは生後6か月～就学前で月14回まで。こども誰でも通園は未就園の生後6か月～2歳児を原則週1回利用可能",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "types": "一時預かり事業と令和8年度『福岡市型』こども誰でも通園制度",
+        "oneTimeTarget": "福岡市内に居住する生後6か月から小学校就学前の乳幼児。病児・病気回復期は対象外",
+        "oneTimePurpose": "冠婚葬祭、通院、保護者のリフレッシュなどの際に一時的に預かる",
+        "oneTimeUsageLimit": "月14回まで。複数施設を利用する場合は合算",
+        "oneTimeFee": "施設・年齢・利用時間により異なる。生活保護世帯・市町村民税非課税世帯には利用料の減免制度あり。給食費や雑費等は別途の場合がある",
+        "anyoneTarget": "保育所、幼稚園、認定こども園、地域型保育事業所、企業主導型保育施設に通っていない生後6か月から2歳児。年度中に3歳になった場合は年度末まで利用可能",
+        "anyoneFrequency": "原則、週1回の固定曜日に定期利用。施設により受入年齢・利用時間・空き状況が異なる",
+        "anyoneFee": "原則1時間300円。施設により無料または1時間250円の場合があり、給食費・雑費等は別途",
+        "anyoneReduction": "生活保護世帯は無料。住民税非課税世帯および市町村民税所得割合算額7万7,101円未満の世帯は1時間100円",
+        "application": "こども誰でも通園制度総合支援システムで認定申請し、認定証発行後に希望施設へ直接申込み。初回面談後、週1回の利用日を登録",
+        "priority": "障がいのある子ども・きょうだい、保護者の疾病・障がい、ひとり親、多胎児、生活保護世帯、関係機関からの紹介などは優先利用対象"
+      },
+      "source": {
+        "url": "https://kodomo.city.fukuoka.lg.jp/info/25384/",
+        "additionalUrl": "https://kodomo.city.fukuoka.lg.jp/info/3161/",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
     "bulkyWaste": {"status": "todo", "summary": "粗大ごみ料金を未調査"},
     "disasterPrevention": {"status": "todo", "summary": "防災・ハザード情報を未調査"}
