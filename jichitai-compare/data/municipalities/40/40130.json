@@ -6,7 +6,7 @@
   "name": "福岡市",
   "officialUrl": "https://www.city.fukuoka.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の初期登録対象。子ども医療費助成と病児・病後児保育を確認済み。残り7制度を順次調査する。",
+  "summary": "西日本調査班の初期登録対象。子ども医療費助成、病児・病後児保育、保育料・第2子以降の無償化を確認済み。残り6制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -48,7 +48,25 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児は保育料無償。0～2歳児は市民税額で決定し、第2子以降は福岡市独自で無償",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "0～2歳児クラスの第1子は父母の市町村民税所得割額の合算額に応じて決定。住民税非課税世帯は無償。3～5歳児クラスの保育料は無償",
+        "siblingReduction": "福岡市在住の0～2歳児は、第2子以降の保育料を福岡市独自制度で無償化。きょうだいの年齢制限や施設の同時利用要件はなく、生計を同一にする子どもの最年長者を第1子として数える",
+        "mealFee": "0～2歳児の主食費・副食費は保育料に含む。3～5歳児は副食費を別途負担",
+        "calculationPeriod": "2025年9月から2026年8月までの保育料は、2025年度市町村民税所得割額を基に決定",
+        "facilityNote": "認可外保育施設や企業主導型保育施設の第2子以降無償化は、施設種別により認定申請や利用料の請求手続きが必要"
+      },
+      "source": {
+        "url": "https://kodomo.city.fukuoka.lg.jp/info/2122/",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
