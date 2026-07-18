@@ -43,10 +43,6 @@ jobs:
           SCOPE_HEAD_SHA: ${{ github.sha }}
         run: npm run check:scope
 
-      - name: Validate source data
-        working-directory: jichitai-compare
-        run: npm run validate
-
       - name: Generate public municipality data
         working-directory: jichitai-compare
         run: npm run generate
@@ -55,7 +51,7 @@ jobs:
         working-directory: jichitai-compare
         run: npm run progress
 
-      - name: Validate generated data
+      - name: Validate source and generated data
         working-directory: jichitai-compare
         run: npm run validate:generated
 
