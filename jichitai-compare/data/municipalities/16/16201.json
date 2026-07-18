@@ -6,7 +6,7 @@
   "name": "富山市",
   "officialUrl": "https://www.city.toyama.lg.jp/",
   "status": "researching",
-  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料、学校給食費、産後ケアを確認済み。",
+  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料、学校給食費、産後ケア、こども誰でも通園制度を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -132,8 +132,33 @@
       ]
     },
     "temporaryChildcare": {
-      "status": "todo",
-      "summary": "未調査"
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満で保育所等に通っていない富山市在住児童は、こども誰でも通園制度を月10時間まで利用可能",
+      "eligibility": {
+        "residency": "富山市に住民票があること",
+        "ageCondition": "利用日時点で生後6か月から満3歳未満。満3歳の誕生日の前々日まで利用可能",
+        "attendanceCondition": "保育所、幼稚園、認定こども園、地域型保育事業、企業主導型保育施設に通っていないこと。認可外保育施設に通っている場合は利用可能"
+      },
+      "details": {
+        "serviceTypes": "こども誰でも通園制度。幼稚園・認定こども園の一時預かり事業や預かり保育は施設ごとに実施内容を設定",
+        "monthlyLimit": "子ども1人につき月10時間まで。未利用時間の翌月繰越は不可。1時間未満の予約は不可",
+        "application": "利用前に認定申請が必要。こども家庭庁の総合支援システムによるオンライン申請、または富山市こども保育課・行政サービスセンターで窓口申請",
+        "process": "認定証発行は申請から約2週間。初めて利用する施設では子ども同伴の事前面談が必要。その後、総合支援システムで施設予約を行う",
+        "fee": "1時間当たりの利用料金は施設ごとに異なる。給食・おやつ代やキャンセル料が別途発生する場合がある",
+        "feeReduction": "令和8年度は、生活保護世帯は1時間当たり上限300円、市町村民税所得割合算額77,101円未満の世帯と要支援家庭は上限200円の負担軽減。対象外施設もある",
+        "cancellation": "利用日当日のキャンセルは利用したものとみなされ、利用時間を消費する"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/5192?DestinationId=16",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.toyama.lg.jp/kosodate/hoiku/1010433/1007397.html",
+          "checkedAt": "2026-07-19",
+          "description": "幼稚園・認定こども園の一時預かり事業・預かり保育"
+        }
+      ]
     },
     "housingSupport": {
       "status": "todo",
