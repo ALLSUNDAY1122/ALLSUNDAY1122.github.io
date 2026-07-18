@@ -59,6 +59,16 @@ jobs:
         working-directory: jichitai-compare
         run: node --check app.js
 
+      - name: Upload generated files
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: jichitai-generated
+          path: |
+            jichitai-compare/data/generated/municipalities.json
+            jichitai-compare/operations/progress.json
+          retention-days: 1
+
       - name: Confirm generated files are committed
         working-directory: jichitai-compare
         shell: bash
@@ -67,14 +77,6 @@ jobs:
           if [ -n "$changed" ]; then
             echo '生成済みファイルが最新ではありません。'
             git status --short -- data/generated/municipalities.json operations/progress.json
-            echo 'GENERATED_BASE64_BEGIN'
-            base64 -w0 data/generated/municipalities.json
-            echo
-            echo 'GENERATED_BASE64_END'
-            echo 'PROGRESS_BASE64_BEGIN'
-            base64 -w0 operations/progress.json
-            echo
-            echo 'PROGRESS_BASE64_END'
             exit 1
           fi
 
