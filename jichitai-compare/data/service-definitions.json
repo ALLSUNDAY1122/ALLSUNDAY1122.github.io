@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "version": "0.2.0",
+    "updatedAt": "2026-07-18"
+  },
+  "services": [
+    {
+      "id": "childMedical",
+      "label": "子ども医療費",
+      "category": "子育て",
+      "eligibilityRule": "ageRange",
+      "detailFields": [
+        { "label": "自己負担", "path": "details.copay" },
+        { "label": "所得制限", "path": "details.incomeLimit" },
+        { "label": "手続き", "path": "details.application" }
+      ]
+    },
+    {
+      "id": "sickChildCare",
+      "label": "病児・病後児保育",
+      "category": "子育て",
+      "eligibilityRule": "ageRange",
+      "detailFields": [
+        { "label": "施設数", "path": "details.facilityCount", "suffix": "施設" },
+        { "label": "利用料", "path": "details.fee" }
+      ]
+    },
+    {
+      "id": "childcareFee",
+      "label": "保育料・第2子軽減",
+      "category": "子育て",
+      "eligibilityRule": "ageRange",
+      "detailFields": [
+        { "label": "保育料", "path": "details.fee" },
+        { "label": "多子軽減", "path": "details.siblingReduction" },
+        { "label": "所得条件", "path": "details.incomeCondition" }
+      ]
+    },
+    {
+      "id": "schoolMeals",
+      "label": "学校給食費支援",
+      "category": "教育",
+      "eligibilityRule": "ageRange",
+      "detailFields": [
+        { "label": "支援内容", "path": "details.support" },
+        { "label": "対象校", "path": "details.schools" }
+      ]
+    },
+    {
+      "id": "postpartumCare",
+      "label": "産後ケア",
+      "category": "出産",
+      "eligibilityRule": "ageRange",
+      "detailFields": [
+        { "label": "利用形態", "path": "details.types" },
+        { "label": "利用料", "path": "details.fee" }
+      ]
+    },
+    {
+      "id": "temporaryChildcare",
+      "label": "一時保育・誰でも通園",
+      "category": "子育て",
+      "eligibilityRule": "ageRange",
+      "detailFields": [
+        { "label": "利用形態", "path": "details.types" },
+        { "label": "利用料", "path": "details.fee" }
+      ]
+    },
+    {
+      "id": "housingSupport",
+      "label": "子育て世帯向け住宅支援",
+      "category": "住宅",
+      "eligibilityRule": "informational",
+      "detailFields": [
+        { "label": "支援内容", "path": "details.support" },
+        { "label": "主な条件", "path": "details.conditions" }
+      ]
+    },
+    {
+      "id": "bulkyWaste",
+      "label": "粗大ごみ料金",
+      "category": "生活",
+      "eligibilityRule": "informational",
+      "detailFields": [
+        { "label": "料金体系", "path": "details.feeSystem" },
+        { "label": "申込方法", "path": "details.application" }
+      ]
+    },
+    {
+      "id": "disasterPrevention",
+      "label": "防災・ハザード情報",
+      "category": "防災",
+      "eligibilityRule": "informational",
+      "detailFields": [
+        { "label": "掲載情報", "path": "details.coverage" },
+        { "label": "確認方法", "path": "details.access" }
+      ]
+    }
+  ]
+}

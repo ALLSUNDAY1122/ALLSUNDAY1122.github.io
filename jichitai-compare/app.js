@@ -13,6 +13,7 @@ const MAX_SELECTIONS = 3;
 
 const state = {
   municipalities: [],
+  serviceDefinitions: [],
   selectedCodes: [...DEFAULT_SELECTION],
   activePrefectureCode: '13',
   childAge: 2
@@ -35,12 +36,24 @@ const elements = {
 
 async function boot() {
   try {
-    const response = await fetch('./data/municipalities.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`自治体データの読み込みに失敗しました: ${response.status}`);
-    const data = await response.json();
-    if (!Array.isArray(data.municipalities)) throw new Error('自治体データの形式が正しくありません。');
+    const [municipalitiesResponse, definitionsResponse] = await Promise.all([
+      fetch('./data/municipalities.json', { cache: 'no-store' }),
+      fetch('./data/service-definitions.json', { cache: 'no-store' })
+    ]);
 
-    state.municipalities = data.municipalities;
+    if (!municipalitiesResponse.ok) throw new Error(`自治体データの読み込みに失敗しました: ${municipalitiesResponse.status}`);
+    if (!definitionsResponse.ok) throw new Error(`制度定義の読み込みに失敗しました: ${definitionsResponse.status}`);
+
+    const [municipalitiesData, definitionsData] = await Promise.all([
+      municipalitiesResponse.json(),
+      definitionsResponse.json()
+    ]);
+
+    if (!Array.isArray(municipalitiesData.municipalities)) throw new Error('自治体データの形式が正しくありません。');
+    if (!Array.isArray(definitionsData.services)) throw new Error('制度定義の形式が正しくありません。');
+
+    state.municipalities = municipalitiesData.municipalities;
+    state.serviceDefinitions = definitionsData.services;
     hydrateStateFromUrl();
     elements.childAge.value = String(state.childAge);
 
@@ -60,10 +73,7 @@ async function boot() {
 
 function hydrateStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  const requestedCodes = (params.get('compare') ?? '')
-    .split(',')
-    .map((code) => code.trim())
-    .filter(Boolean);
+  const requestedCodes = (params.get('compare') ?? '').split(',').map((code) => code.trim()).filter(Boolean);
   const validCodes = [...new Set(requestedCodes)]
     .filter((code) => state.municipalities.some((item) => item.code === code))
     .slice(0, MAX_SELECTIONS);
@@ -72,9 +82,7 @@ function hydrateStateFromUrl() {
 
   const ageParam = params.get('age');
   const requestedAge = ageParam === null ? NaN : Number(ageParam);
-  if (Number.isInteger(requestedAge) && requestedAge >= 0 && requestedAge <= 18) {
-    state.childAge = requestedAge;
-  }
+  if (Number.isInteger(requestedAge) && requestedAge >= 0 && requestedAge <= 18) state.childAge = requestedAge;
 
   const requestedPrefecture = params.get('pref');
   if (PREFECTURES.some(([code]) => code === requestedPrefecture)) {
@@ -89,8 +97,7 @@ async function renderMap() {
   try {
     const response = await fetch(MAP_URL);
     if (!response.ok) throw new Error('map unavailable');
-    const svgText = await response.text();
-    elements.map.innerHTML = svgText;
+    elements.map.innerHTML = await response.text();
     elements.map.querySelectorAll('.prefecture').forEach((node) => {
       const code = String(node.dataset.code).padStart(2, '0');
       node.setAttribute('tabindex', '0');
@@ -238,57 +245,86 @@ function renderComparison() {
   const rows = [
     {
       label: '公式サイト',
-      render: (m) => `<a href="${escapeHtml(m.officialUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(m.name)}公式サイト</a>`
+      render: (municipality) => `<a href="${escapeHtml(municipality.officialUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(municipality.name)}公式サイト</a>`
     },
-    {
-      label: '子ども医療費',
-      render: (m) => eligibilityCell(
-        state.childAge <= m.childMedical.maxAge,
-        m.childMedical.target,
-        `${m.childMedical.copay}／所得制限：${m.childMedical.incomeLimit}`,
-        m.childMedical.sourceUrl,
-        m.childMedical.checkedAt
-      )
-    },
-    {
-      label: '病児・病後児保育',
-      render: (m) => eligibilityCell(
-        isSickChildEligible(m.sickChildCare, state.childAge),
-        m.sickChildCare.target,
-        `${m.sickChildCare.facilityCount}施設掲載／${m.sickChildCare.fee}`,
-        m.sickChildCare.sourceUrl,
-        m.sickChildCare.checkedAt
-      )
-    },
-    {
-      label: '住宅支援',
-      render: (m) => researchingCell(m.housing.summary)
-    },
-    {
-      label: '公共サービス',
-      render: (m) => researchingCell(m.publicServices.summary)
-    }
+    ...state.serviceDefinitions.map((definition) => ({
+      label: definition.label,
+      render: (municipality) => renderServiceCell(municipality, definition)
+    }))
   ];
 
-  const head = selected.map((m) => `<th scope="col">${escapeHtml(m.name)}</th>`).join('');
-  const body = rows.map((row) => `<tr><th scope="row">${escapeHtml(row.label)}</th>${selected.map((m) => `<td>${row.render(m)}</td>`).join('')}</tr>`).join('');
+  const head = selected.map((municipality) => `<th scope="col">${escapeHtml(municipality.name)}</th>`).join('');
+  const body = rows
+    .map((row) => `<tr><th scope="row">${escapeHtml(row.label)}</th>${selected.map((municipality) => `<td>${row.render(municipality)}</td>`).join('')}</tr>`)
+    .join('');
 
   elements.comparison.className = 'comparison-wrap';
   elements.comparison.innerHTML = `<table class="comparison-table"><thead><tr><th scope="col">比較項目</th>${head}</tr></thead><tbody>${body}</tbody></table>`;
 }
 
-function eligibilityCell(isEligible, main, detail, sourceUrl, checkedAt) {
-  const status = isEligible ? '<span class="status ok">年齢条件の対象候補</span>' : '<span class="status no">年齢条件外の可能性</span>';
-  return `${status}<span class="cell-main">${escapeHtml(main)}</span><span class="cell-detail">${escapeHtml(detail)}</span><a class="source-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">公式情報（確認日 ${escapeHtml(checkedAt)}）</a>`;
+function renderServiceCell(municipality, definition) {
+  const service = municipality.services?.[definition.id];
+  if (!service) return researchingCell('データ未登録');
+  if (service.status === 'researching') return researchingCell(service.summary);
+  if (service.status === 'unavailable') return unavailableCell(service.summary, service.source);
+
+  const eligibility = evaluateEligibility(definition.eligibilityRule, service.eligibility);
+  const details = formatServiceDetails(service, definition.detailFields);
+  const source = service.source ?? {};
+  const sourceLink = source.url
+    ? `<a class="source-link" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">公式情報（確認日 ${escapeHtml(source.checkedAt ?? '未記録')}）</a>`
+    : '';
+
+  return `${eligibilityBadge(eligibility)}<span class="cell-main">${escapeHtml(service.summary)}</span>${details ? `<span class="cell-detail">${escapeHtml(details)}</span>` : ''}${sourceLink}`;
+}
+
+function evaluateEligibility(rule, eligibility = {}) {
+  if (rule !== 'ageRange') return { kind: 'verified', label: '確認済み' };
+
+  const ageYears = state.childAge;
+  const ageStartMonths = ageYears * 12;
+  const ageEndMonths = ageStartMonths + 11;
+  const minAgeMonths = Number.isInteger(eligibility.minAgeMonths) ? eligibility.minAgeMonths : 0;
+  const maxAgeYears = Number.isInteger(eligibility.maxAgeYears) ? eligibility.maxAgeYears : 120;
+
+  if (ageYears > maxAgeYears || ageEndMonths < minAgeMonths) return { kind: 'ineligible', label: '年齢条件外の可能性' };
+  if (ageStartMonths < minAgeMonths && ageEndMonths >= minAgeMonths) return { kind: 'review', label: '月齢の確認が必要' };
+  return { kind: 'eligible', label: '年齢条件の対象候補' };
+}
+
+function eligibilityBadge(result) {
+  const className = result.kind === 'eligible'
+    ? 'status ok'
+    : result.kind === 'ineligible'
+      ? 'status no'
+      : 'status';
+  return `<span class="${className}">${escapeHtml(result.label)}</span>`;
+}
+
+function formatServiceDetails(service, fields = []) {
+  return fields
+    .map((field) => {
+      const value = valueAtPath(service, field.path);
+      if (value === undefined || value === null || value === '') return null;
+      return `${field.label}：${value}${field.suffix ?? ''}`;
+    })
+    .filter(Boolean)
+    .join('／');
+}
+
+function valueAtPath(object, path) {
+  return String(path).split('.').reduce((value, key) => value?.[key], object);
 }
 
 function researchingCell(summary) {
-  return `<span class="status">調査中</span><span class="cell-main">${escapeHtml(summary)}</span><span class="cell-detail">今後、公式情報を確認して追加します。</span>`;
+  return `<span class="status">調査中</span><span class="cell-main">${escapeHtml(summary)}</span><span class="cell-detail">公式情報を確認して追加します。</span>`;
 }
 
-function isSickChildEligible(data, ageYears) {
-  const ageMonths = ageYears * 12;
-  return ageMonths >= data.minAgeMonths && ageYears <= data.maxAge;
+function unavailableCell(summary, source = {}) {
+  const sourceLink = source.url
+    ? `<a class="source-link" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">公式情報（確認日 ${escapeHtml(source.checkedAt ?? '未記録')}）</a>`
+    : '';
+  return `<span class="status no">制度なし・対象外</span><span class="cell-main">${escapeHtml(summary)}</span>${sourceLink}`;
 }
 
 function bindControls() {
@@ -311,23 +347,23 @@ function runSearch() {
   const query = elements.searchInput.value.trim().toLowerCase();
   elements.searchResults.replaceChildren();
   if (!query) return;
-  const results = state.municipalities.filter((m) => `${m.prefecture}${m.name}`.toLowerCase().includes(query));
+  const results = state.municipalities.filter((municipality) => `${municipality.prefecture}${municipality.name}`.toLowerCase().includes(query));
   if (!results.length) {
     elements.searchResults.textContent = '詳細データ登録済みの自治体には見つかりませんでした。';
     return;
   }
-  results.forEach((m) => {
+  results.forEach((municipality) => {
     const row = document.createElement('div');
     row.className = 'search-result';
-    row.append(document.createTextNode(`${m.prefecture} ${m.name}`));
+    row.append(document.createTextNode(`${municipality.prefecture} ${municipality.name}`));
     const button = document.createElement('button');
     button.type = 'button';
-    button.textContent = state.selectedCodes.includes(m.code) ? '選択済み' : '比較に追加';
-    button.disabled = state.selectedCodes.includes(m.code);
+    button.textContent = state.selectedCodes.includes(municipality.code) ? '選択済み' : '比較に追加';
+    button.disabled = state.selectedCodes.includes(municipality.code);
     button.addEventListener('click', () => {
-      state.activePrefectureCode = m.prefectureCode;
-      toggleMunicipality(m.code);
-      renderMunicipalities(m.prefectureCode);
+      state.activePrefectureCode = municipality.prefectureCode;
+      toggleMunicipality(municipality.code);
+      renderMunicipalities(municipality.prefectureCode);
       document.querySelector('#compare-section').scrollIntoView({ behavior: 'smooth' });
     });
     row.append(button);
@@ -370,22 +406,19 @@ function setShareStatus(message) {
 
 function updateUrl() {
   const url = new URL(window.location.href);
-  if (state.selectedCodes.length) {
-    url.searchParams.set('compare', state.selectedCodes.join(','));
-  } else {
-    url.searchParams.delete('compare');
-  }
+  if (state.selectedCodes.length) url.searchParams.set('compare', state.selectedCodes.join(','));
+  else url.searchParams.delete('compare');
   url.searchParams.set('age', String(state.childAge));
   url.searchParams.set('pref', state.activePrefectureCode);
   window.history.replaceState(null, '', url);
 }
 
 function selectedMunicipalities() {
-  return state.selectedCodes.map((code) => state.municipalities.find((m) => m.code === code)).filter(Boolean);
+  return state.selectedCodes.map((code) => state.municipalities.find((municipality) => municipality.code === code)).filter(Boolean);
 }
 
 function prefectureName(code) {
-  return PREFECTURES.find(([prefCode]) => prefCode === code)?.[1] ?? '都道府県';
+  return PREFECTURES.find(([prefectureCode]) => prefectureCode === code)?.[1] ?? '都道府県';
 }
 
 function escapeHtml(value) {
