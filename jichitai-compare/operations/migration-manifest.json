@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0.0",
+  "architectureVersion": "1.0.0",
+  "migrationId": "phase0-split-existing-municipalities",
+  "status": "verification_complete",
+  "preparedAt": "2026-07-18",
+  "verifiedAt": "2026-07-19",
+  "preparedBy": "編集長・全国統括",
+  "source": {
+    "path": "jichitai-compare/data/municipalities.json",
+    "blobSha": "7473610da9b377e916e8d0f16fd25029de9fbd08",
+    "metaVersion": "0.2.0",
+    "updatedAt": "2026-07-18",
+    "municipalityCount": 3,
+    "municipalityCodes": [
+      "13123",
+      "12203",
+      "12227"
+    ],
+    "serviceCountPerMunicipality": 9
+  },
+  "targets": [
+    {
+      "code": "12203",
+      "name": "市川市",
+      "path": "jichitai-compare/data/municipalities/12/12203.json"
+    },
+    {
+      "code": "12227",
+      "name": "浦安市",
+      "path": "jichitai-compare/data/municipalities/12/12227.json"
+    },
+    {
+      "code": "13123",
+      "name": "江戸川区",
+      "path": "jichitai-compare/data/municipalities/13/13123.json"
+    }
+  ],
+  "generated": {
+    "path": "jichitai-compare/data/generated/municipalities.json",
+    "blobSha": "b5cf3f6cd3810c65b5811bf55af4524e229ac386",
+    "sha256": "035747f1f8398a4ff5906453acd21766208c5c3a7a26a9441581cb9dcf954d7f",
+    "byteLength": 10292,
+    "metaVersion": "1.0.0",
+    "municipalityCount": 3,
+    "municipalityCodeOrder": [
+      "12203",
+      "12227",
+      "13123"
+    ]
+  },
+  "preservationRules": {
+    "originalFileRetained": true,
+    "existingFieldsPreserved": true,
+    "addedSourceFields": [
+      "schemaVersion",
+      "updatedAt"
+    ],
+    "internalFieldsExcludedFromGenerated": [
+      "schemaVersion",
+      "updatedAt"
+    ],
+    "officialUrlsPreserved": true,
+    "checkedAtPreserved": true,
+    "servicesPreserved": true
+  },
+  "verification": {
+    "jsonParsed": true,
+    "sourceBlobShaMatched": true,
+    "generatedBlobShaMatchedLocalOutput": true,
+    "targetMunicipalityCount": 3,
+    "targetServiceCountTotal": 27,
+    "verifiedServiceCount": 10,
+    "researchingServiceCount": 17,
+    "allMunicipalitiesHaveNineServices": true,
+    "municipalityCodesUnique": true,
+    "semanticComparison": "passed",
+    "semanticComparisonRule": "自治体コード順に整列し、自治体別元データからschemaVersionとupdatedAtを除外して旧一括JSONの自治体配列と深い比較",
+    "progressSummaryMatched": true,
+    "appReadsGeneratedPath": true,
+    "javascriptSyntax": "passed",
+    "legacyFileRemoval": "not_allowed_before_public_validation"
+  },
+  "notes": [
+    "旧一括JSONは公開確認が完了するまで削除・変更しない。",
+    "GitHub Actionsの実行結果はPhase 0 PR作成後に確認する。",
+    "PARALLEL_READYはPR統合と公開確認が完了するまで作成しない。"
+  ]
+}

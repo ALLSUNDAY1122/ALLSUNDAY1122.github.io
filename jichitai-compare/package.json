@@ -4,6 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "validate": "node ./scripts/validate-data.mjs"
+    "check:scope": "node ./scripts/check-change-scope.mjs",
+    "generate": "node ./scripts/generate-municipalities.mjs",
+    "progress": "node ./scripts/update-progress.mjs",
+    "validate": "node ./scripts/validate-data.mjs",
+    "validate:generated": "node ./scripts/validate-data.mjs --require-generated",
+    "check": "npm run validate && npm run generate && npm run progress && npm run validate:generated"
   }
 }

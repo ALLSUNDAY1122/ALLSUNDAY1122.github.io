@@ -1,4 +1,6 @@
 const MAP_URL = 'https://raw.githubusercontent.com/geolonia/japanese-prefectures/master/map-full.svg';
+const MUNICIPALITIES_URL = './data/generated/municipalities.json';
+const DEFINITIONS_URL = './data/service-definitions.json';
 const PREFECTURES = [
   ['01','北海道'],['02','青森県'],['03','岩手県'],['04','宮城県'],['05','秋田県'],['06','山形県'],['07','福島県'],
   ['08','茨城県'],['09','栃木県'],['10','群馬県'],['11','埼玉県'],['12','千葉県'],['13','東京都'],['14','神奈川県'],
@@ -10,7 +12,16 @@ const PREFECTURES = [
 ];
 const DEFAULT_SELECTION = ['13123', '12203', '12227'];
 const MAX_SELECTIONS = 3;
-
+const WORK_STATUS_PRESENTATION = {
+  todo: { label: '未着手', detail: '公式情報の調査を開始していません。' },
+  researching: { label: '調査中', detail: '公式情報を確認して追加します。' },
+  needs_medium_review: { label: '要詳細確認', detail: '条件が複雑なため、詳細確認を行っています。' },
+  needs_revision: { label: '修正中', detail: '内容を再確認し、修正しています。' },
+  needs_coordinator: { label: '統括確認中', detail: '全国統括による確認待ちです。' },
+  blocked: { label: '確認停止中', detail: '確認上の問題が解消するまで更新を停止しています。' },
+  pr_open: { label: '審査中', detail: '更新内容を審査しています。' },
+  merged: { label: '統合済み', detail: 'データ更新は統合済みですが、確認済み制度としては表示しません。' }
+};
 const state = {
   municipalities: [],
   serviceDefinitions: [],
@@ -18,7 +29,6 @@ const state = {
   activePrefectureCode: '13',
   childAge: 2
 };
-
 const elements = {
   map: document.querySelector('#japan-map'),
   municipalityList: document.querySelector('#municipality-list'),
@@ -33,30 +43,33 @@ const elements = {
   shareButton: document.querySelector('#share-comparison'),
   shareStatus: document.querySelector('#share-status')
 };
-
 async function boot() {
   try {
     const [municipalitiesResponse, definitionsResponse] = await Promise.all([
-      fetch('./data/municipalities.json', { cache: 'no-store' }),
-      fetch('./data/service-definitions.json', { cache: 'no-store' })
+      fetch(MUNICIPALITIES_URL, { cache: 'no-store' }),
+      fetch(DEFINITIONS_URL, { cache: 'no-store' })
     ]);
-
-    if (!municipalitiesResponse.ok) throw new Error(`自治体データの読み込みに失敗しました: ${municipalitiesResponse.status}`);
-    if (!definitionsResponse.ok) throw new Error(`制度定義の読み込みに失敗しました: ${definitionsResponse.status}`);
-
+    if (!municipalitiesResponse.ok) {
+      throw new Error(`自治体データの読み込みに失敗しました: ${municipalitiesResponse.status}`);
+    }
+    if (!definitionsResponse.ok) {
+      throw new Error(`制度定義の読み込みに失敗しました: ${definitionsResponse.status}`);
+    }
     const [municipalitiesData, definitionsData] = await Promise.all([
       municipalitiesResponse.json(),
       definitionsResponse.json()
     ]);
-
-    if (!Array.isArray(municipalitiesData.municipalities)) throw new Error('自治体データの形式が正しくありません。');
-    if (!Array.isArray(definitionsData.services)) throw new Error('制度定義の形式が正しくありません。');
-
+    if (!Array.isArray(municipalitiesData.municipalities)) {
+      throw new Error('自治体データの形式が正しくありません。');
+    }
+    if (!Array.isArray(definitionsData.services)) {
+      throw new Error('制度定義の形式が正しくありません。');
+    }
     state.municipalities = municipalitiesData.municipalities;
     state.serviceDefinitions = definitionsData.services;
+    state.selectedCodes = state.selectedCodes.filter((code) => state.municipalities.some((item) => item.code === code));
     hydrateStateFromUrl();
     elements.childAge.value = String(state.childAge);
-
     await renderMap();
     renderMunicipalities(state.activePrefectureCode);
     renderSelection();
@@ -70,20 +83,21 @@ async function boot() {
     elements.comparison.textContent = '比較データを読み込めませんでした。';
   }
 }
-
 function hydrateStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  const requestedCodes = (params.get('compare') ?? '').split(',').map((code) => code.trim()).filter(Boolean);
+  const requestedCodes = (params.get('compare') ?? '')
+    .split(',')
+    .map((code) => code.trim())
+    .filter(Boolean);
   const validCodes = [...new Set(requestedCodes)]
     .filter((code) => state.municipalities.some((item) => item.code === code))
     .slice(0, MAX_SELECTIONS);
-
   if (validCodes.length) state.selectedCodes = validCodes;
-
   const ageParam = params.get('age');
   const requestedAge = ageParam === null ? NaN : Number(ageParam);
-  if (Number.isInteger(requestedAge) && requestedAge >= 0 && requestedAge <= 18) state.childAge = requestedAge;
-
+  if (Number.isInteger(requestedAge) && requestedAge >= 0 && requestedAge <= 18) {
+    state.childAge = requestedAge;
+  }
   const requestedPrefecture = params.get('pref');
   if (PREFECTURES.some(([code]) => code === requestedPrefecture)) {
     state.activePrefectureCode = requestedPrefecture;
@@ -92,7 +106,6 @@ function hydrateStateFromUrl() {
     if (firstSelected) state.activePrefectureCode = firstSelected.prefectureCode;
   }
 }
-
 async function renderMap() {
   try {
     const response = await fetch(MAP_URL);
@@ -118,7 +131,6 @@ async function renderMap() {
     renderPrefectureFallback();
   }
 }
-
 function renderPrefectureFallback() {
   const grid = document.createElement('div');
   grid.className = 'prefecture-grid';
@@ -132,14 +144,12 @@ function renderPrefectureFallback() {
   });
   elements.map.replaceChildren(grid);
 }
-
 function selectPrefecture(code) {
   state.activePrefectureCode = code;
   highlightPrefecture();
   renderMunicipalities(code);
   updateUrl();
 }
-
 function highlightPrefecture() {
   elements.map.querySelectorAll('.prefecture').forEach((node) => {
     const code = String(node.dataset.code).padStart(2, '0');
@@ -149,7 +159,6 @@ function highlightPrefecture() {
     button.classList.toggle('is-active', PREFECTURES[index]?.[0] === state.activePrefectureCode);
   });
 }
-
 function renderMunicipalities(prefectureCode) {
   const list = state.municipalities.filter((item) => item.prefectureCode === prefectureCode);
   elements.prefectureHeading.textContent = prefectureName(prefectureCode);
@@ -157,47 +166,39 @@ function renderMunicipalities(prefectureCode) {
     ? `${list.length}自治体の詳細データを掲載しています。`
     : '公式リンク・比較データは順次追加します。';
   elements.municipalityList.replaceChildren();
-
   if (!list.length) {
     const empty = document.createElement('p');
     empty.textContent = '現在、この都道府県の詳細データは未登録です。';
     elements.municipalityList.append(empty);
     return;
   }
-
   list.forEach((municipality) => elements.municipalityList.append(createMunicipalityCard(municipality)));
 }
-
 function createMunicipalityCard(municipality) {
   const card = document.createElement('article');
   card.className = 'municipality-card';
   card.classList.toggle('is-selected', state.selectedCodes.includes(municipality.code));
-
   const title = document.createElement('h4');
   title.textContent = municipality.name;
   const summary = document.createElement('p');
   summary.textContent = municipality.summary;
   const actions = document.createElement('div');
   actions.className = 'card-actions';
-
   const selectButton = document.createElement('button');
   selectButton.type = 'button';
   const selected = state.selectedCodes.includes(municipality.code);
   selectButton.textContent = selected ? '比較から外す' : '比較に追加';
   selectButton.classList.toggle('remove', selected);
   selectButton.addEventListener('click', () => toggleMunicipality(municipality.code));
-
   const official = document.createElement('a');
   official.href = municipality.officialUrl;
   official.target = '_blank';
   official.rel = 'noopener noreferrer';
   official.textContent = '公式サイト';
-
   actions.append(selectButton, official);
   card.append(title, summary, actions);
   return card;
 }
-
 function toggleMunicipality(code) {
   const index = state.selectedCodes.indexOf(code);
   if (index >= 0) {
@@ -213,7 +214,6 @@ function toggleMunicipality(code) {
   renderComparison();
   updateUrl();
 }
-
 function renderSelection() {
   elements.selectionBar.replaceChildren();
   if (!state.selectedCodes.length) {
@@ -233,7 +233,6 @@ function renderSelection() {
     elements.selectionBar.append(chip);
   });
 }
-
 function renderComparison() {
   const selected = selectedMunicipalities();
   if (!selected.length) {
@@ -241,7 +240,6 @@ function renderComparison() {
     elements.comparison.textContent = '地図または検索結果から自治体を選択してください。';
     return;
   }
-
   const rows = [
     {
       label: '公式サイト',
@@ -252,46 +250,54 @@ function renderComparison() {
       render: (municipality) => renderServiceCell(municipality, definition)
     }))
   ];
-
   const head = selected.map((municipality) => `<th scope="col">${escapeHtml(municipality.name)}</th>`).join('');
   const body = rows
     .map((row) => `<tr><th scope="row">${escapeHtml(row.label)}</th>${selected.map((municipality) => `<td>${row.render(municipality)}</td>`).join('')}</tr>`)
     .join('');
-
   elements.comparison.className = 'comparison-wrap';
   elements.comparison.innerHTML = `<table class="comparison-table"><thead><tr><th scope="col">比較項目</th>${head}</tr></thead><tbody>${body}</tbody></table>`;
 }
-
 function renderServiceCell(municipality, definition) {
   const service = municipality.services?.[definition.id];
-  if (!service) return researchingCell('データ未登録');
-  if (service.status === 'researching') return researchingCell(service.summary);
+  if (!service) return workStatusCell('todo', 'データ未登録');
+  if (service.status === 'verified') return verifiedServiceCell(service, definition);
   if (service.status === 'unavailable') return unavailableCell(service.summary, service.source);
-
+  return workStatusCell(service.status, service.summary, service.source);
+}
+function verifiedServiceCell(service, definition) {
   const eligibility = evaluateEligibility(definition.eligibilityRule, service.eligibility);
   const details = formatServiceDetails(service, definition.detailFields);
-  const source = service.source ?? {};
-  const sourceLink = source.url
-    ? `<a class="source-link" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">公式情報（確認日 ${escapeHtml(source.checkedAt ?? '未記録')}）</a>`
-    : '';
-
-  return `${eligibilityBadge(eligibility)}<span class="cell-main">${escapeHtml(service.summary)}</span>${details ? `<span class="cell-detail">${escapeHtml(details)}</span>` : ''}${sourceLink}`;
+  return `${eligibilityBadge(eligibility)}<span class="cell-main">${escapeHtml(service.summary)}</span>${details ? `<span class="cell-detail">${escapeHtml(details)}</span>` : ''}${sourceLink(service.source)}`;
 }
-
+function workStatusCell(status, summary, source = {}) {
+  const presentation = WORK_STATUS_PRESENTATION[status] ?? {
+    label: '状態不明',
+    detail: '表示状態を確認しています。'
+  };
+  return `<span class="status">${escapeHtml(presentation.label)}</span><span class="cell-main">${escapeHtml(summary || '内容未登録')}</span><span class="cell-detail">${escapeHtml(presentation.detail)}</span>${sourceLink(source)}`;
+}
+function unavailableCell(summary, source = {}) {
+  return `<span class="status no">制度なし・対象外</span><span class="cell-main">${escapeHtml(summary)}</span>${sourceLink(source)}`;
+}
+function sourceLink(source = {}) {
+  if (!source.url) return '';
+  return `<a class="source-link" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">公式情報（確認日 ${escapeHtml(source.checkedAt ?? '未記録')}）</a>`;
+}
 function evaluateEligibility(rule, eligibility = {}) {
   if (rule !== 'ageRange') return { kind: 'verified', label: '確認済み' };
-
   const ageYears = state.childAge;
   const ageStartMonths = ageYears * 12;
   const ageEndMonths = ageStartMonths + 11;
   const minAgeMonths = Number.isInteger(eligibility.minAgeMonths) ? eligibility.minAgeMonths : 0;
   const maxAgeYears = Number.isInteger(eligibility.maxAgeYears) ? eligibility.maxAgeYears : 120;
-
-  if (ageYears > maxAgeYears || ageEndMonths < minAgeMonths) return { kind: 'ineligible', label: '年齢条件外の可能性' };
-  if (ageStartMonths < minAgeMonths && ageEndMonths >= minAgeMonths) return { kind: 'review', label: '月齢の確認が必要' };
+  if (ageYears > maxAgeYears || ageEndMonths < minAgeMonths) {
+    return { kind: 'ineligible', label: '年齢条件外の可能性' };
+  }
+  if (ageStartMonths < minAgeMonths && ageEndMonths >= minAgeMonths) {
+    return { kind: 'review', label: '月齢の確認が必要' };
+  }
   return { kind: 'eligible', label: '年齢条件の対象候補' };
 }
-
 function eligibilityBadge(result) {
   const className = result.kind === 'eligible'
     ? 'status ok'
@@ -300,7 +306,6 @@ function eligibilityBadge(result) {
       : 'status';
   return `<span class="${className}">${escapeHtml(result.label)}</span>`;
 }
-
 function formatServiceDetails(service, fields = []) {
   return fields
     .map((field) => {
@@ -311,22 +316,9 @@ function formatServiceDetails(service, fields = []) {
     .filter(Boolean)
     .join('／');
 }
-
 function valueAtPath(object, path) {
   return String(path).split('.').reduce((value, key) => value?.[key], object);
 }
-
-function researchingCell(summary) {
-  return `<span class="status">調査中</span><span class="cell-main">${escapeHtml(summary)}</span><span class="cell-detail">公式情報を確認して追加します。</span>`;
-}
-
-function unavailableCell(summary, source = {}) {
-  const sourceLink = source.url
-    ? `<a class="source-link" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">公式情報（確認日 ${escapeHtml(source.checkedAt ?? '未記録')}）</a>`
-    : '';
-  return `<span class="status no">制度なし・対象外</span><span class="cell-main">${escapeHtml(summary)}</span>${sourceLink}`;
-}
-
 function bindControls() {
   elements.childAge.addEventListener('change', (event) => {
     state.childAge = Number(event.target.value);
@@ -342,7 +334,6 @@ function bindControls() {
   });
   elements.shareButton.addEventListener('click', shareComparison);
 }
-
 function runSearch() {
   const query = elements.searchInput.value.trim().toLowerCase();
   elements.searchResults.replaceChildren();
@@ -370,7 +361,6 @@ function runSearch() {
     elements.searchResults.append(row);
   });
 }
-
 async function shareComparison() {
   updateUrl();
   const url = window.location.href;
@@ -380,7 +370,6 @@ async function shareComparison() {
     text: selectedNames ? `${selectedNames}の自治体比較` : '自治体比較',
     url
   };
-
   try {
     if (navigator.share) {
       await navigator.share(shareData);
@@ -396,14 +385,12 @@ async function shareComparison() {
     setShareStatus('比較URLを表示しました。');
   }
 }
-
 function setShareStatus(message) {
   elements.shareStatus.textContent = message;
   window.setTimeout(() => {
     if (elements.shareStatus.textContent === message) elements.shareStatus.textContent = '';
   }, 4000);
 }
-
 function updateUrl() {
   const url = new URL(window.location.href);
   if (state.selectedCodes.length) url.searchParams.set('compare', state.selectedCodes.join(','));
@@ -412,15 +399,14 @@ function updateUrl() {
   url.searchParams.set('pref', state.activePrefectureCode);
   window.history.replaceState(null, '', url);
 }
-
 function selectedMunicipalities() {
-  return state.selectedCodes.map((code) => state.municipalities.find((municipality) => municipality.code === code)).filter(Boolean);
+  return state.selectedCodes
+    .map((code) => state.municipalities.find((municipality) => municipality.code === code))
+    .filter(Boolean);
 }
-
 function prefectureName(code) {
   return PREFECTURES.find(([prefectureCode]) => prefectureCode === code)?.[1] ?? '都道府県';
 }
-
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -429,5 +415,4 @@ function escapeHtml(value) {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
 }
-
 boot();
