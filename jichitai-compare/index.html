@@ -85,7 +85,7 @@
           <p class="loading">日本地図を読み込んでいます…</p>
         </div>
         <aside class="municipality-panel" aria-labelledby="selected-prefecture-heading">
-          <h3 id="selected-prefecture-heading">東京都・千葉県</h3>
+          <h3 id="selected-prefecture-heading">東京都</h3>
           <p id="prefecture-message">比較データ登録済みの自治体です。</p>
           <div id="municipality-list" class="municipality-list"></div>
         </aside>
@@ -99,9 +99,15 @@
           <p class="eyebrow">STEP 2</p>
           <h2 id="compare-heading">自治体を比較する</h2>
         </div>
-        <p>最大3自治体まで選択できます。</p>
+        <p>最大3自治体まで選択できます。選択内容と年齢条件はURLに保存されます。</p>
       </div>
-      <div id="selection-bar" class="selection-bar" aria-live="polite"></div>
+      <div class="compare-toolbar">
+        <div id="selection-bar" class="selection-bar" aria-live="polite"></div>
+        <div class="share-controls">
+          <button id="share-comparison" type="button">比較URLを共有</button>
+          <span id="share-status" role="status" aria-live="polite"></span>
+        </div>
+      </div>
       <div id="comparison" class="comparison-empty">
         地図または検索結果から自治体を選択してください。
       </div>
