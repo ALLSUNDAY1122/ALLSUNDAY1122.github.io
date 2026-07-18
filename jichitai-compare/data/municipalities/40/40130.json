@@ -6,7 +6,7 @@
   "name": "福岡市",
   "officialUrl": "https://www.city.fukuoka.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の初期登録対象。子ども医療費助成、病児・病後児保育、保育料・第2子以降の無償化、学校給食費無償化を確認済み。残り5制度を順次調査する。",
+  "summary": "西日本調査班の初期登録対象。子ども医療費助成、病児・病後児保育、保育料・第2子以降の無償化、学校給食費、産後ケアを確認済み。残り4制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -86,7 +86,28 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後1年未満の母子等を対象に宿泊型・日帰り型・訪問型を合計7日まで利用可能",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "target": "福岡市内に住民票があり、生後1年未満の赤ちゃんと母親、または流産・死産を経験して1年未満の女性（妊婦を除く）。母子ともに医療行為を必要としないこと",
+        "types": "宿泊型（ショートステイ）、日帰り型（デイケア）、訪問型（アウトリーチ）",
+        "support": "授乳・沐浴の助言、育児相談、母親の体調管理など",
+        "usageLimit": "宿泊型・日帰り型・訪問型を合わせて7日間まで",
+        "fee": "宿泊型は1日3,000円（1泊2日6,000円）、日帰り型は1日2,000円、訪問型は2～3時間で1日500円",
+        "exemption": "生活保護世帯・市民税非課税世帯は自己負担額を免除。証明書類の提出が必要",
+        "application": "利用希望事業者へ直接予約・日程調整し、利用申込書を提出。発行された福岡市産後ケア事業利用証明書を利用当日に提示",
+        "notes": "事業者により受入可能月齢が異なり、空き状況等により希望日に利用できない場合がある。期限後のキャンセルはキャンセル料が発生する場合がある"
+      },
+      "source": {
+        "url": "https://kodomo.city.fukuoka.lg.jp/info/1961/",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
     "bulkyWaste": {"status": "todo", "summary": "粗大ごみ料金を未調査"},
