@@ -1,6 +1,8 @@
-# 自治体くらべ MVP
+# 自治体くらべ
 
 日本地図から自治体を選び、子育て・住宅・公共サービスを比較する静的サイトです。
+
+公開URL: https://allsunday1122.github.io/jichitai-compare/
 
 ## 現在の機能
 
@@ -11,48 +13,73 @@
 - 比較条件を保存した共有URL
 - 自治体公式サイトと制度出典へのリンク
 - 江戸川区・市川市・浦安市の確認済みデータ
-- 9制度に拡張できる共通データ形式
-- JSONデータ検証スクリプト
+- 9制度の共通データ形式
+- 自治体別データ・進捗・生成物の検証
+- GitHub Actionsによる公開サイトのスモークテスト
 
 ## 技術構成
 
 - HTML / CSS / Vanilla JavaScript
 - 静的JSON
-- GitHub Pagesで動作
+- GitHub Pages
+- Node.js 20による生成・検証
 - サーバー、データベース、APIキー不要
 
-ChatGPTまたはCodexがJSONと画面ファイルを更新するだけで、自治体・制度を追加できる構成を優先しています。
-
-## データファイル
+## データ構成
 
 - `data/service-definitions.json`: 制度名、表示順、判定方法、表示する詳細項目
-- `data/municipalities.json`: 自治体基本情報と自治体ごとの制度内容
+- `data/municipalities/{prefectureCode}/{municipalityCode}.json`: 自治体ごとの元データ
+- `operations/tasks/{municipalityCode}.json`: 担当班、現在の制度、件数、ブランチ、PR、停滞理由
+- `data/generated/municipalities.json`: 公開画面が読む生成済みJSON
+- `operations/progress.json`: 全国・地方班・自治体別の生成済み進捗
+- `operations/PARALLEL_READY`: 4地方調査班の作業開始条件
 
-制度の状態は次の3種類です。
+旧一括ファイル `data/municipalities.json` は、Phase 0の移行・公開確認完了後に廃止しました。移行元の内容とblob SHAは `operations/migration-manifest.json` とGit履歴に残しています。
 
-- `verified`: 自治体公式ページで確認済み
+## status
+
+自治体・進捗では次のstatusを使用できます。
+
+- `todo`: 未着手
 - `researching`: 調査中
-- `unavailable`: 制度なし、または対象外であることを確認済み
+- `verified`: 公式情報で確認済み
+- `unavailable`: 制度なし・対象外を確認済み
+- `needs_medium_review`: 詳細判断が必要
+- `needs_revision`: 修正が必要
+- `needs_coordinator`: 全国統括の対応が必要
+- `pr_open`: PR審査中
+- `merged`: main統合済み
+- `blocked`: 作業停止中
 
-確認済み制度には、必ず `source.url` と `source.checkedAt` を登録します。年齢判定を行う制度には、`eligibility.minAgeMonths` と `eligibility.maxAgeYears` を登録します。
+制度単位では通常、`todo`、`researching`、`verified`、`unavailable`、`needs_medium_review`、`needs_revision`、`needs_coordinator`、`blocked`を使用します。
 
-## 自治体の追加
+`verified`または`unavailable`の制度には、公式HTTPS URLの`source.url`と、`YYYY-MM-DD`形式の`source.checkedAt`が必要です。
 
-1. `data/municipalities.json` の `municipalities` 配列へ自治体を追加
-2. `service-definitions.json` にある全制度IDを `services` に作成
-3. 未調査制度は推測せず `researching` とする
-4. 次を実行
+## 自治体の追加・更新
+
+1. 自治体コードに対応する `data/municipalities/{prefectureCode}/{municipalityCode}.json` を作成または更新
+2. `service-definitions.json`にある9制度をすべて`services`へ登録
+3. 対応する `operations/tasks/{municipalityCode}.json` を作成または更新
+4. 不明項目は推測せず、`todo`または`researching`とする
+5. 次を実行
 
 ```bash
-npm run validate
+npm run check
+node --check app.js
 ```
 
-## 制度の追加
+`npm run check`は、元データ検証、公開JSON生成、全国進捗生成、生成データ再検証を実行します。
 
-1. `data/service-definitions.json` に制度定義を追加
-2. 全自治体の `services` に同じ制度IDを追加
-3. JavaScriptを修正せず、共通表示・判定処理で表示できることを確認
-4. `npm run validate` を実行
+## 並列運用
+
+担当区域は次のとおりです。
+
+- 北日本調査班: 都道府県コード01〜07
+- 東日本調査班: 08〜15、19、20
+- 中日本調査班: 16〜18、21〜30
+- 西日本調査班: 31〜47
+
+地方調査班は自治体単位の専用ブランチとPRで、割り当てられた自治体元データと進捗ファイルだけを編集します。`data/generated/municipalities.json`、`operations/progress.json`、共通スクリプト、共通画面ファイルは編集長・全国統括が管理します。
 
 ## データ方針
 
@@ -61,15 +88,17 @@ npm run validate
 - 不明な項目は推測しない
 - 判定結果は参考情報であり、正式な対象可否は自治体へ確認する
 - 自治体単位でレビュー可能な更新に分ける
+- 生成済みJSONを手編集せず、元データから再生成する
 
 ## 次の開発順序
 
 1. 江戸川区・市川市・浦安市の未調査制度を追加
 2. 東京23区・千葉県北西部へ自治体を拡張
-3. 市区町村境界地図を都道府県単位で追加
-4. 世帯年収、子どもの人数、住宅形態の判定ルールを追加
-5. 独自ドメイン・広告表示方針を決定
+3. 北日本・中日本・西日本の初期自治体を登録
+4. 市区町村境界地図を都道府県単位で追加
+5. 世帯年収、子どもの人数、住宅形態の判定ルールを追加
+6. 独自ドメイン・広告表示方針を決定
 
 ## 地図ライセンス
 
-日本地図は Geolonia `japanese-prefectures` を使用します（GFDL）。
+日本地図はGeolonia `japanese-prefectures`を使用します（GFDL）。
