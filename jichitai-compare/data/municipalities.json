@@ -12,7 +12,7 @@
       "name": "江戸川区",
       "officialUrl": "https://www.city.edogawa.tokyo.jp/",
       "status": "verified",
-      "summary": "東京都東部。子ども医療費、病児・病後児保育、認可保育施設の基本保育料を確認済み。",
+      "summary": "東京都東部。子ども医療費、病児・病後児保育、認可保育施設の基本保育料、学校給食費を確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -55,7 +55,19 @@
             "checkedAt": "2026-07-18"
           }
         },
-        "schoolMeals": { "status": "researching", "summary": "学校給食費支援を調査中" },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "区立小・中学校の学校給食費を無償化",
+          "eligibility": { "minAgeMonths": 72, "maxAgeYears": 15 },
+          "details": {
+            "support": "2023年9月1日から、江戸川区立小学校・中学校の学校給食費を無償化",
+            "schools": "江戸川区立小学校・中学校"
+          },
+          "source": {
+            "url": "https://www.city.edogawa.tokyo.jp/kosodate/kyoiku/kyouiku/oshirase/mushouka.html",
+            "checkedAt": "2026-07-18"
+          }
+        },
         "postpartumCare": { "status": "researching", "summary": "産後ケアを調査中" },
         "temporaryChildcare": { "status": "researching", "summary": "一時保育・誰でも通園を調査中" },
         "housingSupport": { "status": "researching", "summary": "子育て世帯向け住宅支援を調査中" },
