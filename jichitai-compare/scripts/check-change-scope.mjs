@@ -9,17 +9,27 @@ if (!baseSha || /^0+$/u.test(baseSha)) {
   process.exit(0);
 }
 
-let output;
-try {
-  output = execFileSync('git', ['diff', '--name-only', baseSha, headSha], {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe']
-  });
-} catch (error) {
-  const detail = error.stderr?.toString().trim() || error.message;
-  console.error(`変更ファイルを取得できません: ${detail}`);
-  process.exit(1);
+function runGit(args, failureMessage) {
+  try {
+    return execFileSync('git', args, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe']
+    }).trim();
+  } catch (error) {
+    const detail = error.stderr?.toString().trim() || error.message;
+    console.error(`${failureMessage}: ${detail}`);
+    process.exit(1);
+  }
 }
+
+const mergeBase = runGit(
+  ['merge-base', baseSha, headSha],
+  '比較元と作業ブランチの共通祖先を取得できません'
+);
+const output = runGit(
+  ['diff', '--name-only', mergeBase, headSha],
+  '変更ファイルを取得できません'
+);
 
 const changedFiles = output
   .split(/\r?\n/u)
@@ -36,4 +46,4 @@ if (forbiddenFiles.length > 0) {
   process.exit(1);
 }
 
-console.log(`変更範囲検査に成功しました: ${changedFiles.length}ファイル`);
+console.log(`変更範囲検査に成功しました: ${changedFiles.length}ファイル（共通祖先 ${mergeBase}）`);
