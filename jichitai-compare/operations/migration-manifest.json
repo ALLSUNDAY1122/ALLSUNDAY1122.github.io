@@ -2,8 +2,9 @@
   "schemaVersion": "1.0.0",
   "architectureVersion": "1.0.0",
   "migrationId": "phase0-split-existing-municipalities",
-  "status": "source_split_created",
+  "status": "verification_complete",
   "preparedAt": "2026-07-18",
+  "verifiedAt": "2026-07-19",
   "preparedBy": "編集長・全国統括",
   "source": {
     "path": "jichitai-compare/data/municipalities.json",
@@ -35,10 +36,27 @@
       "path": "jichitai-compare/data/municipalities/13/13123.json"
     }
   ],
+  "generated": {
+    "path": "jichitai-compare/data/generated/municipalities.json",
+    "blobSha": "b5cf3f6cd3810c65b5811bf55af4524e229ac386",
+    "sha256": "035747f1f8398a4ff5906453acd21766208c5c3a7a26a9441581cb9dcf954d7f",
+    "byteLength": 10292,
+    "metaVersion": "1.0.0",
+    "municipalityCount": 3,
+    "municipalityCodeOrder": [
+      "12203",
+      "12227",
+      "13123"
+    ]
+  },
   "preservationRules": {
     "originalFileRetained": true,
     "existingFieldsPreserved": true,
-    "addedFields": [
+    "addedSourceFields": [
+      "schemaVersion",
+      "updatedAt"
+    ],
+    "internalFieldsExcludedFromGenerated": [
       "schemaVersion",
       "updatedAt"
     ],
@@ -48,13 +66,24 @@
   },
   "verification": {
     "jsonParsed": true,
+    "sourceBlobShaMatched": true,
+    "generatedBlobShaMatchedLocalOutput": true,
     "targetMunicipalityCount": 3,
     "targetServiceCountTotal": 27,
-    "semanticComparison": "pending_generation_stage",
+    "verifiedServiceCount": 10,
+    "researchingServiceCount": 17,
+    "allMunicipalitiesHaveNineServices": true,
+    "municipalityCodesUnique": true,
+    "semanticComparison": "passed",
+    "semanticComparisonRule": "自治体コード順に整列し、自治体別元データからschemaVersionとupdatedAtを除外して旧一括JSONの自治体配列と深い比較",
+    "progressSummaryMatched": true,
+    "appReadsGeneratedPath": true,
+    "javascriptSyntax": "passed",
     "legacyFileRemoval": "not_allowed_before_public_validation"
   },
   "notes": [
-    "この工程では現行一括JSONを削除・変更しない。",
-    "生成スクリプト実装後に、追加したschemaVersionとupdatedAtを除外して自治体オブジェクトを深い比較する。"
+    "旧一括JSONは公開確認が完了するまで削除・変更しない。",
+    "GitHub Actionsの実行結果はPhase 0 PR作成後に確認する。",
+    "PARALLEL_READYはPR統合と公開確認が完了するまで作成しない。"
   ]
 }
