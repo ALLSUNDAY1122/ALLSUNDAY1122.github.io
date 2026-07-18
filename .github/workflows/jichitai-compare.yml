@@ -71,6 +71,6 @@ jobs:
           fi
 
       - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
+        if: always()
         working-directory: jichitai-compare
         run: npm run smoke:public
