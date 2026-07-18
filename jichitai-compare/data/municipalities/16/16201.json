@@ -6,7 +6,7 @@
   "name": "富山市",
   "officialUrl": "https://www.city.toyama.lg.jp/",
   "status": "researching",
-  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料を確認済み。",
+  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料、学校給食費を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -68,8 +68,30 @@
       }
     },
     "schoolMeals": {
-      "status": "todo",
-      "summary": "未調査"
+      "status": "verified",
+      "summary": "令和8年度は小学校・義務教育学校前期課程の給食費を完全無償化。中学校・後期課程は月額6,800円",
+      "eligibility": {
+        "schools": "富山市立小学校・中学校・義務教育学校",
+        "fiscalYear": "令和8年度"
+      },
+      "details": {
+        "elementarySchool": "小学校・義務教育学校前期課程は学校給食費を無償化。国の基準額を超える分も含めて市が負担し、保護者からは徴収しない",
+        "juniorHighSchool": "中学校・義務教育学校後期課程は月額6,800円。改定後月額8,300円のうち1,500円を市が負担",
+        "supportProgram": "国の交付金を活用した学校給食費負担軽減事業を令和8年度も継続",
+        "financialAssistance": "経済的理由で就学が困難な世帯に対する就学援助では、学校給食費の実費が援助対象",
+        "futureReview": "令和9年度以降は物価変動に応じて給食費改定を検討"
+      },
+      "source": {
+        "url": "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010443/1007434.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010448/1007376.html",
+          "checkedAt": "2026-07-19",
+          "description": "就学援助の対象費用"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "todo",
