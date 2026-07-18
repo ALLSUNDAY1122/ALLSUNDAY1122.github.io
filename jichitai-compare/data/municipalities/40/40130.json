@@ -5,11 +5,29 @@
   "prefecture": "福岡県",
   "name": "福岡市",
   "officialUrl": "https://www.city.fukuoka.lg.jp/",
-  "status": "todo",
-  "summary": "西日本調査班の初期登録対象。9制度を順次調査する。",
+  "status": "researching",
+  "summary": "西日本調査班の初期登録対象。子ども医療費助成を確認済み。残り8制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
-    "childMedical": {"status": "todo", "summary": "子ども医療費助成を未調査"},
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校生世代まで（18歳到達後最初の3月31日まで）",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "residenceCondition": "福岡市内に居住し、健康保険に加入している子ども",
+        "incomeLimit": "なし",
+        "copay": "通院は3歳未満が自己負担なし、3歳以上高校生世代までは1医療機関あたり月500円まで。入院と薬局は高校生世代まで自己負担なし",
+        "application": "子ども医療費助成の認定申請が必要。オンラインまたは住所地の区役所・出張所で申請",
+        "exceptions": "生活保護受給者は対象外。ひとり親家庭等医療費助成や3歳以上の重度障がい者医療費助成を受けられる場合はそちらを優先。入院時食事代、個室代など保険適用外費用は対象外"
+      },
+      "source": {
+        "url": "https://www.city.fukuoka.lg.jp/hofuku/hokennenkin/hp/01.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
     "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
