@@ -6,7 +6,7 @@
   "name": "札幌市",
   "officialUrl": "https://www.city.sapporo.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケアを確認済み。残る4制度を順次調査する。",
+  "summary": "子ども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケア、一時預かりを確認済み。残る3制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -126,8 +126,33 @@
       }
     },
     "temporaryChildcare": {
-      "status": "todo",
-      "summary": "一時保育・誰でも通園を未調査"
+      "status": "verified",
+      "summary": "非在園の就学前児童向け一時預かりと、生後6か月から満2歳向けのこども誰でも通園制度",
+      "eligibility": {
+        "generalTemporaryCare": "保育所、認定こども園、特定地域型保育事業および幼稚園に在籍していない就学前児童。施設により対象年齢が異なる",
+        "anyChildcareMinAgeMonths": 6,
+        "anyChildcareMaxAgeYears": 2,
+        "anyChildcareCondition": "満3歳に達する日の前日までで、保育所・認定こども園・幼稚園・地域型保育事業所・企業主導型保育施設に在籍していないこと"
+      },
+      "details": {
+        "generalTemporaryCareReasons": "保護者の就労・就学、通院・入院・体調不良、介護・看護、社会的活動、冠婚葬祭、育児負担の解消やリフレッシュ等",
+        "generalTemporaryCareDays": "原則月曜日から土曜日。日曜・祝日および12月29日から1月3日は閉園",
+        "generalTemporaryCareFee": "1日上限。就労・通院等は3歳未満2,000円、3歳以上1,200円。リフレッシュ等は3歳未満2,700円、3歳以上1,600円",
+        "generalTemporaryCareExtraCosts": "給食を希望する場合の昼食代や、施設が定める実費は別途負担",
+        "generalTemporaryCareApplication": "利用希望施設へ直接問い合わせる。保育を必要とする理由の証明書提出や事前登録など、詳細は施設ごとに異なる",
+        "anyChildcareEmploymentRequirement": "保護者の就労要件は問わない",
+        "anyChildcareDays": "月曜日から金曜日。一部施設は土曜日も利用可能",
+        "anyChildcareFee": "1人1時間300円。生活保護世帯は0円、市・道民税非課税世帯および市・道民税所得割合算額77,101円未満の世帯は100円",
+        "anyChildcareMonthlyLimit": "子ども1人につき月10時間まで",
+        "anyChildcareApplication": "事前に給付認定申請が必要。審査は概ね1か月で、認定後に予約システムのアカウントが発行される。利用施設との事前面談後に予約する",
+        "anyChildcareReservation": "毎月1日に翌月分の予約枠が公開され、利用希望日の7日前まで予約申請可能。原則として定期利用",
+        "officialGeneralTemporaryCarePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/ichiji/927.html",
+        "officialAnyChildcarePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/13027.html"
+      },
+      "source": {
+        "url": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/13027.html",
+        "checkedAt": "2026-07-19"
+      }
     },
     "housingSupport": {
       "status": "todo",
