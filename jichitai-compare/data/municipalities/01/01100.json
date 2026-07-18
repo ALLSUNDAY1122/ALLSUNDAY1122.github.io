@@ -6,7 +6,7 @@
   "name": "札幌市",
   "officialUrl": "https://www.city.sapporo.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成と病児・病後児保育を確認済み。残る7制度を順次調査する。",
+  "summary": "子ども医療費助成、病児・病後児保育、保育料を確認済み。残る6制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -54,7 +54,29 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳児クラス以上は無料。0～2歳児は所得等で決定し、第2子以降は無料",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "coveredFacilities": "認可保育所、認定こども園（保育所部分）、地域型保育事業所",
+        "ageThreeAndOver": "3歳児クラス以上は世帯所得にかかわらず保育料無料。食材料費、バス代、教材費等は別途負担となる場合がある",
+        "ageZeroToTwo": "住民税非課税世帯は無料。その他の世帯は市民税所得割額、保育必要量（標準時間11時間・短時間8時間）、多子軽減により決定",
+        "calculation": "4月から8月は前年度の市民税所得割額、9月から翌年3月は当年度の市民税所得割額で算定",
+        "siblingReduction": "2024年4月分以降、保護者の収入や上の子の年齢等に関係なく、第2子以降の保育料は無料",
+        "excludedFacilities": "企業主導型保育施設および認可外保育施設は札幌市の第2子以降無償化の対象外",
+        "reduction": "失業（自己都合を除く）、疾病、災害等により収入が減少した場合は減免対象となる場合がある",
+        "officialFeePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/941.html",
+        "officialPolicyPage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/846.html"
+      },
+      "source": {
+        "url": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/941.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
