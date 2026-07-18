@@ -41,6 +41,13 @@ const SERVICE_STATUS_FIELDS = {
   blocked: 'blockedServices'
 };
 
+const ASSIGNMENT_STATES = [
+  'unassigned',
+  'assigned',
+  'pr_open',
+  'blocked'
+];
+
 const TOTAL_MUNICIPALITIES_SOURCE = {
   value: 1741,
   asOf: '2026-01-01',
@@ -87,9 +94,16 @@ function emptyStatusCounts(mapping) {
   return Object.fromEntries(Object.values(mapping).map((field) => [field, 0]));
 }
 
+function emptyAssignmentSummary() {
+  return Object.fromEntries(ASSIGNMENT_STATES.map((state) => [state, 0]));
+}
+
 function emptyTeamProgress() {
   return {
     registeredMunicipalities: 0,
+    assignedMunicipalities: 0,
+    prOpenMunicipalities: 0,
+    blockedMunicipalities: 0,
     verifiedServices: 0,
     researchingServices: 0,
     unavailableServices: 0,
@@ -107,8 +121,7 @@ function incrementMappedCount(target, mapping, status, label) {
 
 function serviceCounts(municipality) {
   const counts = emptyStatusCounts(SERVICE_STATUS_FIELDS);
-  const entries = Object.entries(municipality.services ?? {});
-  for (const [serviceId, service] of entries) {
+  for (const [serviceId, service] of Object.entries(municipality.services ?? {})) {
     incrementMappedCount(counts, SERVICE_STATUS_FIELDS, service?.status, `${municipality.code}/${serviceId}`);
   }
   return counts;
@@ -116,6 +129,14 @@ function serviceCounts(municipality) {
 
 function completedServiceCount(counts) {
   return counts.verifiedServices + counts.unavailableServices;
+}
+
+function assignmentState(task) {
+  const blockers = Array.isArray(task.blockers) ? task.blockers : [];
+  if (task.status === 'blocked' || task.status === 'needs_coordinator' || blockers.length > 0) return 'blocked';
+  if (Number.isInteger(task.pullRequestNumber) && task.pullRequestNumber > 0) return 'pr_open';
+  if (typeof task.currentBranch === 'string' && task.currentBranch.trim()) return 'assigned';
+  return 'unassigned';
 }
 
 async function main() {
@@ -152,6 +173,7 @@ async function main() {
 
   const municipalityCounts = emptyStatusCounts(MUNICIPALITY_STATUS_FIELDS);
   const aggregateServiceCounts = emptyStatusCounts(SERVICE_STATUS_FIELDS);
+  const assignmentSummary = emptyAssignmentSummary();
   const teams = Object.fromEntries(TEAM_NAMES.map((name) => [name, emptyTeamProgress()]));
   const stalledMunicipalities = [];
   const municipalityProgress = [];
@@ -161,14 +183,20 @@ async function main() {
     const municipality = municipalities.get(code);
     const task = tasks.get(code);
     const counts = serviceCounts(municipality);
+    const assignment = assignmentState(task);
+    const blockers = Array.isArray(task.blockers) ? task.blockers : [];
 
     incrementMappedCount(municipalityCounts, MUNICIPALITY_STATUS_FIELDS, task.status, code);
+    assignmentSummary[assignment] += 1;
     for (const field of Object.values(SERVICE_STATUS_FIELDS)) {
       aggregateServiceCounts[field] += counts[field];
     }
 
     const team = teams[task.assignedTeam];
     team.registeredMunicipalities += 1;
+    if (assignment !== 'unassigned') team.assignedMunicipalities += 1;
+    if (assignment === 'pr_open') team.prOpenMunicipalities += 1;
+    if (assignment === 'blocked') team.blockedMunicipalities += 1;
     team.verifiedServices += counts.verifiedServices;
     team.researchingServices += counts.researchingServices;
     team.unavailableServices += counts.unavailableServices;
@@ -178,16 +206,15 @@ async function main() {
 
     if (typeof task.lastUpdatedAt === 'string') updatedAtCandidates.push(task.lastUpdatedAt);
 
-    const stalled = task.status === 'blocked'
-      || task.status === 'needs_coordinator'
-      || (Array.isArray(task.blockers) && task.blockers.length > 0);
-    if (stalled) {
+    if (assignment === 'blocked') {
       stalledMunicipalities.push({
         code,
         name: municipality.name,
         assignedTeam: task.assignedTeam,
         status: task.status,
-        blockers: Array.isArray(task.blockers) ? task.blockers : []
+        currentBranch: task.currentBranch ?? null,
+        pullRequestNumber: task.pullRequestNumber ?? null,
+        blockers
       });
     }
 
@@ -198,12 +225,18 @@ async function main() {
       prefecture: municipality.prefecture,
       assignedTeam: task.assignedTeam,
       status: task.status,
+      assignmentState: assignment,
+      currentBranch: task.currentBranch ?? null,
+      pullRequestNumber: task.pullRequestNumber ?? null,
       completedServiceCount: completedServiceCount(counts),
       verifiedCount: counts.verifiedServices,
       unavailableCount: counts.unavailableServices,
       researchingCount: counts.researchingServices,
       currentService: task.currentService,
-      lastUpdatedAt: task.lastUpdatedAt
+      lastCheckedAt: task.lastCheckedAt,
+      lastUpdatedAt: task.lastUpdatedAt,
+      lastUpdatedBy: task.lastUpdatedBy,
+      blockers
     });
   }
 
@@ -221,6 +254,7 @@ async function main() {
     registeredMunicipalities: municipalities.size,
     remainingMunicipalities: TOTAL_MUNICIPALITIES_SOURCE.value - municipalities.size,
     ...municipalityCounts,
+    assignmentSummary,
     totalServices,
     completedServices,
     completionRatePercent: Number(((completedServices / totalServices) * 100).toFixed(2)),
