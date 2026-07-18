@@ -12,7 +12,7 @@
       "name": "江戸川区",
       "officialUrl": "https://www.city.edogawa.tokyo.jp/",
       "status": "verified",
-      "summary": "東京都東部。子ども医療費、病児・病後児保育、認可保育施設の基本保育料、学校給食費を確認済み。",
+      "summary": "東京都東部。子ども医療費、病児・病後児保育、認可保育施設の基本保育料、学校給食費、産後ケアを確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -68,7 +68,19 @@
             "checkedAt": "2026-07-18"
           }
         },
-        "postpartumCare": { "status": "researching", "summary": "産後ケアを調査中" },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊型・デイサービス型・訪問型を実施",
+          "eligibility": { "minAgeMonths": 0, "maxAgeYears": 0 },
+          "details": {
+            "types": "宿泊型・デイサービス型・訪問型。宿泊型とデイサービス型は産後4か月未満、訪問型は産後1年未満",
+            "fee": "宿泊型1泊2日7,000円（1日追加ごと3,500円）、デイサービス型1回3,000円、訪問型1回2,000円。住民税非課税・生活保護世帯は免除"
+          },
+          "source": {
+            "url": "https://www.city.edogawa.tokyo.jp/kosodate/ninshin/sangokea/index.html",
+            "checkedAt": "2026-07-18"
+          }
+        },
         "temporaryChildcare": { "status": "researching", "summary": "一時保育・誰でも通園を調査中" },
         "housingSupport": { "status": "researching", "summary": "子育て世帯向け住宅支援を調査中" },
         "bulkyWaste": { "status": "researching", "summary": "粗大ごみ料金を調査中" },
