@@ -62,8 +62,11 @@ input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px 
 .map-panel .prefecture:hover, .map-panel .prefecture:focus { fill: #8cc8c1; }
 .map-panel .prefecture.is-active { fill: var(--primary); }
 .loading { color: var(--muted); }
+.load-error { max-width: 420px; text-align: center; }
+.load-error p { margin-bottom: 0; color: var(--muted); }
 .prefecture-grid { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-content: center; }
 .prefecture-grid button { min-height: 42px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); color: var(--text); }
+.prefecture-grid button.is-active { border-color: var(--primary); background: var(--primary); color: #fff; }
 .municipality-panel h3 { margin-bottom: 4px; }
 .municipality-panel > p { margin: 0 0 20px; color: var(--muted); }
 .municipality-list { display: grid; gap: 12px; }
@@ -78,9 +81,13 @@ input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px 
 .card-actions a { border: 1px solid var(--line); background: #fff; }
 .map-note { color: var(--muted); font-size: .78rem; }
 
-.selection-bar { min-height: 56px; margin-bottom: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
+.compare-toolbar { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.selection-bar { min-height: 56px; display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
 .selection-chip { border: 1px solid var(--line); border-radius: 999px; background: var(--surface); padding: 8px 12px; display: inline-flex; align-items: center; gap: 7px; font-weight: 700; }
 .selection-chip button { border: 0; background: transparent; color: var(--danger); font-weight: 900; }
+.share-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.share-controls button { min-height: 42px; border: 1px solid var(--primary); border-radius: 11px; background: var(--surface); color: var(--primary-dark); padding: 0 15px; font-weight: 800; }
+.share-controls span { color: var(--muted); font-size: .82rem; }
 .comparison-empty { border: 1px dashed var(--line); border-radius: 20px; padding: 48px 20px; text-align: center; color: var(--muted); background: rgba(255,255,255,.5); }
 .comparison-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
 .comparison-table { width: 100%; min-width: 760px; border-collapse: collapse; }
@@ -111,6 +118,7 @@ footer p { margin: 0; }
   .prefecture-grid { grid-template-columns: repeat(3, 1fr); }
   .age-row { align-items: start; flex-direction: column; }
   .age-row p { min-width: 0; }
+  .compare-toolbar { align-items: flex-start; flex-direction: column; }
   footer .shell { flex-direction: column; gap: 4px; }
 }
 
@@ -119,5 +127,6 @@ footer p { margin: 0; }
   .controls, .map-panel, .municipality-panel { padding: 16px; border-radius: 16px; }
   .prefecture-grid { grid-template-columns: repeat(2, 1fr); }
   .search-row { align-items: stretch; flex-direction: column; }
-  .search-row button { width: 100%; }
+  .search-row button, .share-controls button { width: 100%; }
+  .share-controls { width: 100%; align-items: stretch; flex-direction: column; }
 }
