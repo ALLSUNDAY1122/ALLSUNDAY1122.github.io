@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="日本地図から自治体を選び、子育て支援や公共サービスを比較する試作サイトです。">
+  <meta name="theme-color" content="#0f766e">
+  <title>自治体くらべ（試作版）</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./" aria-label="自治体くらべ トップ">自治体くらべ <span>MVP</span></a>
+      <nav aria-label="ページ内ナビゲーション">
+        <a href="#map-section">地図</a>
+        <a href="#compare-section">比較</a>
+        <a href="#about-section">使い方</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div>
+        <p class="eyebrow">住む場所を、制度から選ぶ。</p>
+        <h1>家族に合う自治体を<br>地図から比較</h1>
+        <p class="lead">自治体公式サイトへの入口と、子育て支援・住居・公共サービスの比較を一つにまとめる試作版です。</p>
+      </div>
+      <div class="hero-panel" aria-label="現在の収録状況">
+        <strong>現在の比較対象</strong>
+        <span>江戸川区・市川市・浦安市</span>
+        <small>全国地図から選択可能。詳細データは順次追加します。</small>
+      </div>
+    </section>
+
+    <section class="shell controls" aria-labelledby="search-heading">
+      <div>
+        <label id="search-heading" for="municipality-search">自治体名で検索</label>
+        <div class="search-row">
+          <input id="municipality-search" type="search" placeholder="例：江戸川区、市川市" autocomplete="off">
+          <button id="search-button" type="button">検索</button>
+        </div>
+        <div id="search-results" class="search-results" aria-live="polite"></div>
+      </div>
+      <div>
+        <label for="child-age">お子さまの年齢（簡易判定）</label>
+        <div class="age-row">
+          <select id="child-age">
+            <option value="0">0歳</option>
+            <option value="1">1歳</option>
+            <option value="2" selected>2歳</option>
+            <option value="3">3歳</option>
+            <option value="4">4歳</option>
+            <option value="5">5歳</option>
+            <option value="6">6歳</option>
+            <option value="7">小学1年相当</option>
+            <option value="8">小学2年相当</option>
+            <option value="9">小学3年相当</option>
+            <option value="10">小学4年相当</option>
+            <option value="11">小学5年相当</option>
+            <option value="12">小学6年相当</option>
+            <option value="13">中学1年相当</option>
+            <option value="14">中学2年相当</option>
+            <option value="15">中学3年相当</option>
+            <option value="16">高校1年相当</option>
+            <option value="17">高校2年相当</option>
+            <option value="18">高校3年相当</option>
+          </select>
+          <p>比較表の対象判定に反映します。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="map-section" class="shell section-block" aria-labelledby="map-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 1</p>
+          <h2 id="map-heading">日本地図から選ぶ</h2>
+        </div>
+        <p>都道府県を押すと、登録済みの自治体が表示されます。</p>
+      </div>
+      <div class="map-layout">
+        <div id="japan-map" class="map-panel" aria-live="polite">
+          <p class="loading">日本地図を読み込んでいます…</p>
+        </div>
+        <aside class="municipality-panel" aria-labelledby="selected-prefecture-heading">
+          <h3 id="selected-prefecture-heading">東京都・千葉県</h3>
+          <p id="prefecture-message">比較データ登録済みの自治体です。</p>
+          <div id="municipality-list" class="municipality-list"></div>
+        </aside>
+      </div>
+      <p class="map-note">地図：Geolonia「japanese-prefectures」（GFDL）。読み込みに失敗した場合は都道府県一覧へ自動で切り替わります。</p>
+    </section>
+
+    <section id="compare-section" class="shell section-block" aria-labelledby="compare-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 2</p>
+          <h2 id="compare-heading">自治体を比較する</h2>
+        </div>
+        <p>最大3自治体まで選択できます。</p>
+      </div>
+      <div id="selection-bar" class="selection-bar" aria-live="polite"></div>
+      <div id="comparison" class="comparison-empty">
+        地図または検索結果から自治体を選択してください。
+      </div>
+    </section>
+
+    <section id="about-section" class="shell section-block about-grid" aria-labelledby="about-heading">
+      <div>
+        <p class="eyebrow">この試作版について</p>
+        <h2 id="about-heading">表示内容は参考判定です</h2>
+        <p>制度の対象可否は、世帯状況や申請時期によって変わります。各項目には自治体の公式情報へのリンクと確認日を表示します。最終判断は必ず自治体へ確認してください。</p>
+      </div>
+      <ul>
+        <li>確認済み情報：子ども医療費、病児・病後児保育</li>
+        <li>次に追加：保育料、給食費、産後ケア、住宅支援</li>
+        <li>将来追加：全国自治体、家賃・通勤・防災比較</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">
+      <p>自治体くらべ 試作版</p>
+      <p>当サイトは自治体の公式サイトではありません。</p>
+    </div>
+  </footer>
+
+  <noscript>このサイトの比較機能にはJavaScriptが必要です。</noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
