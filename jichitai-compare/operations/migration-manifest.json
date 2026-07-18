@@ -2,9 +2,10 @@
   "schemaVersion": "1.0.0",
   "architectureVersion": "1.0.0",
   "migrationId": "phase0-split-existing-municipalities",
-  "status": "verification_complete",
+  "status": "legacy_retired",
   "preparedAt": "2026-07-18",
   "verifiedAt": "2026-07-19",
+  "retiredAt": "2026-07-19",
   "preparedBy": "編集長・全国統括",
   "source": {
     "path": "jichitai-compare/data/municipalities.json",
@@ -17,7 +18,8 @@
       "12203",
       "12227"
     ],
-    "serviceCountPerMunicipality": 9
+    "serviceCountPerMunicipality": 9,
+    "retention": "Git履歴と本マニフェストに保存"
   },
   "targets": [
     {
@@ -50,7 +52,8 @@
     ]
   },
   "preservationRules": {
-    "originalFileRetained": true,
+    "originalFileRetained": false,
+    "originalFilePreservedInGitHistory": true,
     "existingFieldsPreserved": true,
     "addedSourceFields": [
       "schemaVersion",
@@ -79,11 +82,14 @@
     "progressSummaryMatched": true,
     "appReadsGeneratedPath": true,
     "javascriptSyntax": "passed",
-    "legacyFileRemoval": "not_allowed_before_public_validation"
+    "publicSmokeTest": "passed",
+    "publicSmokeWorkflowRun": 29653142505,
+    "parallelReadyCreated": true,
+    "legacyFileRemoval": "completed_after_public_validation"
   },
   "notes": [
-    "旧一括JSONは公開確認が完了するまで削除・変更しない。",
-    "GitHub Actionsの実行結果はPhase 0 PR作成後に確認する。",
-    "PARALLEL_READYはPR統合と公開確認が完了するまで作成しない。"
+    "旧一括JSONはPhase 0の移行検証と公開スモークテスト完了後に廃止した。",
+    "公開画面はdata/generated/municipalities.jsonのみを参照する。",
+    "新規自治体は自治体別元データと進捗ファイルを追加し、生成処理で公開JSONへ反映する。"
   ]
 }
