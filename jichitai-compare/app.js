@@ -70,7 +70,8 @@ function hydrateStateFromUrl() {
 
   if (validCodes.length) state.selectedCodes = validCodes;
 
-  const requestedAge = Number(params.get('age'));
+  const ageParam = params.get('age');
+  const requestedAge = ageParam === null ? NaN : Number(ageParam);
   if (Number.isInteger(requestedAge) && requestedAge >= 0 && requestedAge <= 18) {
     state.childAge = requestedAge;
   }
