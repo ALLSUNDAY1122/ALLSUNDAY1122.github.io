@@ -6,7 +6,7 @@
   "name": "富山市",
   "officialUrl": "https://www.city.toyama.lg.jp/",
   "status": "researching",
-  "summary": "富山市の9制度を調査中。こども医療費助成を確認済み。",
+  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -29,8 +29,24 @@
       }
     },
     "sickChildCare": {
-      "status": "todo",
-      "summary": "未調査"
+      "status": "verified",
+      "summary": "病気または回復期で集団保育が困難な児童を、保護者が家庭で保育できない場合に預かる。基本利用料は1日2,000円",
+      "eligibility": {
+        "residency": "富山市または富山医療圏の市町村（滑川市、舟橋村、上市町、立山町）に住所がある子ども",
+        "ageCondition": "対象年齢は施設により異なる。富山市まちなか総合ケアセンターは満6か月以上の未就学児"
+      },
+      "details": {
+        "condition": "病気または病気回復期で集団保育が困難であり、入院の必要はないが安静が必要な状態。受け入れ可否は施設が判断",
+        "facilityCount": 11,
+        "fee": "1日2,000円。お迎え型病児保育は別途タクシー代が必要",
+        "support": "ひとり親世帯や市民税非課税世帯等には利用料助成制度あり",
+        "application": "利用施設への事前予約が必要。お迎え型は事前登録が必要で、予約・登録方法は施設ごとに異なる",
+        "serviceTypes": "病児・病後児保育、お迎え型病児保育。一部施設は病後児のみ対応"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/3917?DestinationId=17",
+        "checkedAt": "2026-07-19"
+      }
     },
     "childcareFee": {
       "status": "todo",
