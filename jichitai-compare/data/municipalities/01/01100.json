@@ -6,7 +6,7 @@
   "name": "札幌市",
   "officialUrl": "https://www.city.sapporo.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成、病児・病後児保育、保育料、学校給食費を確認済み。残る5制度を順次調査する。",
+  "summary": "子ども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケアを確認済み。残る4制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -96,10 +96,50 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
-    "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
-    "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
-    "bulkyWaste": {"status": "todo", "summary": "粗大ごみ料金を未調査"},
-    "disasterPrevention": {"status": "todo", "summary": "防災・ハザード情報を未調査"}
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "宿泊型・日帰り型は生後6か月未満、訪問型は生後1年未満の母子を対象に助産師等が支援",
+      "eligibility": {
+        "lodgingAndDayCareMaxAgeMonths": 5,
+        "homeVisitMaxAgeMonths": 11
+      },
+      "details": {
+        "residency": "母親と赤ちゃんの双方が札幌市に住民登録していること",
+        "exclusion": "母親に心身の不調や疾患があり医療的介入が必要な場合は対象外",
+        "careTypes": "宿泊型、日帰り型、訪問型",
+        "careContent": "母体の体調管理、授乳・乳房ケア、沐浴・抱っこ・寝かしつけ等の育児相談、休息と食事の提供。訪問型は食事提供なし",
+        "lodgingHours": "基本11時から翌日15時",
+        "dayCareHours": "基本11時から15時",
+        "homeVisitHours": "9時から17時の間の2時間",
+        "lodgingFee": "1泊7,500円。市民税非課税世帯・生活保護世帯は2,500円",
+        "dayCareFee": "1日2,500円。市民税非課税世帯・生活保護世帯は1,000円",
+        "homeVisitFee": "1回2,500円。市民税非課税世帯・生活保護世帯は1,000円",
+        "usageLimit": "宿泊型と日帰り型を合わせて7日以内。1泊2日は2日として数える。訪問型は6回以内",
+        "application": "産後ケア予約サービス『テオテ産後ケア』でアカウント作成後、札幌市へオンライン申請し、承認後に施設登録・予約する。妊娠28週から申請可",
+        "bookingStart": "予約は原則利用希望日の30日前から。妊娠中の予約は不可",
+        "cancellation": "前営業日（平日）の午前10時までにキャンセル。以後の中止は利用料金が発生",
+        "effectiveApplicationChange": "2026年3月から予約サービスによる申込へ変更"
+      },
+      "source": {
+        "url": "https://kosodate.city.sapporo.jp/nenrei/ninshin_shussan/kenko/1036.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "todo",
+      "summary": "一時保育・誰でも通園を未調査"
+    },
+    "housingSupport": {
+      "status": "todo",
+      "summary": "子育て世帯向け住宅支援を未調査"
+    },
+    "bulkyWaste": {
+      "status": "todo",
+      "summary": "粗大ごみ料金を未調査"
+    },
+    "disasterPrevention": {
+      "status": "todo",
+      "summary": "防災・ハザード情報を未調査"
+    }
   }
 }
