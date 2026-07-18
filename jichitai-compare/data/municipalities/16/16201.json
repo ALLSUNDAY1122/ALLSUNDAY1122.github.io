@@ -6,7 +6,7 @@
   "name": "富山市",
   "officialUrl": "https://www.city.toyama.lg.jp/",
   "status": "researching",
-  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料、学校給食費、産後ケア、こども誰でも通園制度を確認済み。",
+  "summary": "富山市の9制度を調査中。こども医療費助成、病児・病後児保育、認可保育施設の保育料、学校給食費、産後ケア、こども誰でも通園制度、子育て世帯向け住宅支援を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -161,8 +161,27 @@
       ]
     },
     "housingSupport": {
-      "status": "todo",
-      "summary": "未調査"
+      "status": "verified",
+      "summary": "「まちなか」外から「まちなか」の民間賃貸住宅へ転入・転居する子育て世帯に、月額上限1万円を最長3年間助成",
+      "eligibility": {
+        "householdCondition": "交付申請年度の4月1日時点で満18歳未満の子を養育する世帯",
+        "moveCondition": "転居前の住所が「まちなか」外で、対象となる「まちなか」の民間賃貸住宅へ転入・転居すること",
+        "residencyCondition": "対象住宅へ転入・転居後、6か月以上継続して居住すること",
+        "incomeCondition": "同居する世帯全員の合計所得月額が44万5千円以下"
+      },
+      "details": {
+        "programName": "まちなか住宅家賃助成事業",
+        "amount": "家賃月額から勤務先の住宅手当を控除した額と1万円のうち少ない額。月額上限1万円",
+        "duration": "賃貸借契約期間の初日と住民票異動日のうち遅い日を基準に、最長3年間",
+        "contractCondition": "賃貸借契約は原則として申請者本人名義",
+        "excludedHousing": "公営住宅、社宅等の給与住宅などは対象外",
+        "application": "交付対象期間ごとに申請し、交付対象期間最終月の翌月から6か月以内に提出",
+        "effectiveCondition": "住民票異動日または賃貸借契約始期のいずれかが令和8年4月1日以降の場合に新制度を適用"
+      },
+      "source": {
+        "url": "https://www.city.toyama.lg.jp/kurashi/sumai/1010267/1018274/1018275/1018282.html",
+        "checkedAt": "2026-07-19"
+      }
     },
     "bulkyWaste": {
       "status": "todo",
