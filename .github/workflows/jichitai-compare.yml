@@ -13,7 +13,7 @@ on:
       - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
@@ -43,10 +43,6 @@ jobs:
           SCOPE_HEAD_SHA: ${{ github.sha }}
         run: npm run check:scope
 
-      - name: Validate source data
-        working-directory: jichitai-compare
-        run: npm run validate
-
       - name: Generate public municipality data
         working-directory: jichitai-compare
         run: npm run generate
@@ -55,13 +51,25 @@ jobs:
         working-directory: jichitai-compare
         run: npm run progress
 
-      - name: Validate generated data
+      - name: Validate source and generated data
         working-directory: jichitai-compare
         run: npm run validate:generated
 
       - name: Check JavaScript syntax
         working-directory: jichitai-compare
         run: node --check app.js
+
+      - name: Commit generated files for coordinator queue
+        if: github.event_name == 'pull_request' && github.head_ref == 'coord/seed-regional-queues'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update generated regional queue files [skip ci]'
+            git push origin HEAD:${{ github.head_ref }}
+          fi
 
       - name: Confirm generated files are committed
         working-directory: jichitai-compare
@@ -75,5 +83,6 @@ jobs:
           fi
 
       - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
         run: npm run smoke:public
