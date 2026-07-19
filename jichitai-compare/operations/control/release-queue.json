@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-19T21:45:00+09:00",
+  "status": "initialized",
+  "entries": [
+    {
+      "region": "east",
+      "branch": "region/east",
+      "municipalities": [
+        {
+          "code": "13123",
+          "name": "江戸川区"
+        }
+      ],
+      "count": 1,
+      "releaseStatus": "pending_threshold",
+      "reason": "地方統合済みだが、10自治体・24時間・重要訂正・統括release指定のいずれも現時点で未確認",
+      "mainIntegrationPr": null
+    },
+    {
+      "region": "west",
+      "branch": "region/west",
+      "municipalities": [],
+      "count": 0,
+      "releaseStatus": "waiting_regional_merge",
+      "reason": "福岡市PR #109はregion/westへの自治体統合待ち",
+      "mainIntegrationPr": null
+    }
+  ],
+  "nextAction": "地方統合ブランチの完成件数または24時間条件を再確認し、release可能になった地方からmain統合PRを作成する。",
+  "humanDecisionRequired": false
+}
