@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T08:00:00+09:00",
+  "updatedAt": "2026-07-20T08:30:00+09:00",
   "status": "active",
   "entries": [
     {
@@ -21,14 +21,14 @@
       "branch": "region/east",
       "municipalities": [
         {"code": "08201", "name": "水戸市"},
+        {"code": "08202", "name": "日立市"},
         {"code": "12203", "name": "市川市"},
         {"code": "12227", "name": "浦安市"},
         {"code": "13123", "name": "江戸川区"}
       ],
-      "count": 4,
-      "releaseStatus": "pending_regional_merge",
-      "reason": "4自治体を地方統合済み。日立市PR #123はopen・競合なしで地方統合待ち",
-      "sourcePullRequest": 123,
+      "count": 5,
+      "releaseStatus": "pending_threshold",
+      "reason": "5自治体を地方統合済み。日立市はCI run #255成功後に統合。10自治体または正式な24時間条件を待つ",
       "mainIntegrationPr": null
     },
     {
@@ -46,7 +46,7 @@
       ],
       "count": 8,
       "releaseStatus": "pending_threshold",
-      "reason": "8自治体を地方統合済み。完全性監査は合格済み。10自治体または正式な24時間条件を待つ",
+      "reason": "8自治体を地方統合済み。完全性監査と各PRのCIは合格済み。10自治体または正式な24時間条件を待つ",
       "auditStatus": "passed",
       "mainIntegrationPr": null
     },
@@ -65,11 +65,11 @@
     }
   ],
   "summary": {
-    "regionalMergedMunicipalities": 18,
-    "waitingRegionalMergeMunicipalities": 1,
+    "regionalMergedMunicipalities": 19,
+    "waitingRegionalMergeMunicipalities": 0,
     "releaseReadyRegions": [],
     "auditBlockedRegions": []
   },
-  "nextAction": "東日本は日立市PR #123を地方統合する。全国統合・公開担当は中日本の9件目以降、各地方の10自治体到達、正式な24時間条件を再評価する。",
+  "nextAction": "各地方調査班は次自治体へ進む。全国統合・公開担当は中日本の9件目・10件目、各地方の10自治体到達、正式な24時間条件を再評価する。",
   "humanDecisionRequired": false
 }
