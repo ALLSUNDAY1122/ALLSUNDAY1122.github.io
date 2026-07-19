@@ -5,18 +5,236 @@
   "prefecture": "北海道",
   "name": "札幌市",
   "officialUrl": "https://www.city.sapporo.jp/",
-  "status": "todo",
-  "summary": "北日本調査班の初期登録対象。9制度を順次調査する。",
+  "status": "needs_medium_review",
+  "summary": "9制度の調査を一巡。8制度は公式情報で確認済み。大型ごみの減免要件詳細のみMedium確認が必要。",
   "updatedAt": "2026-07-19",
   "services": {
-    "childMedical": {"status": "todo", "summary": "子ども医療費助成を未調査"},
-    "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
-    "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
-    "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
-    "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
-    "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
-    "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
-    "bulkyWaste": {"status": "todo", "summary": "粗大ごみ料金を未調査"},
-    "disasterPrevention": {"status": "todo", "summary": "防災・ハザード情報を未調査"}
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校生世代まで（18歳到達後最初の3月31日まで）の入院・通院を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "residency": "札幌市に住民登録があること",
+        "insurance": "公的医療保険に加入していること",
+        "incomeLimit": "あり。主たる生計維持者の前年所得（1月から7月は前々年所得）が限度額未満であること",
+        "copay": "入院・通院とも、医科初診580円、歯科初診510円。再診・調剤薬局・柔道整復・はり・きゅう・保険適用マッサージは0円。訪問看護は1割負担（1か所月3,000円上限）",
+        "application": "医療費受給者証の申請が必要",
+        "excludedCosts": "差額ベッド代、食事療養費、文書料など保険給付対象外の費用は助成対象外",
+        "effectiveFrom": "2025-04-01診療分から高校生世代まで拡大"
+      },
+      "source": {
+        "url": "https://www.city.sapporo.jp/hoken-iryo/iryojosei/nyuyoji.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後5か月から小学6年生までを医療機関併設等の施設で預かる病児・病後児保育",
+      "eligibility": {
+        "minAgeMonths": 5,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "residency": "札幌市内に住民登録があること。令和8年度は周辺8市町村の住民も試行利用可",
+        "conditions": "病気により保育園・幼稚園・学校等を利用できず、保護者が仕事等で家庭保育できず、かかりつけ医が利用可能と認めた子ども",
+        "hours": "月曜日から土曜日の8時から18時。祝日および12月29日から1月3日を除く",
+        "facilityCount": 6,
+        "facilityTypes": "病児対応型5施設、病後児対応型1施設",
+        "capacity": "各施設4名から6名",
+        "fee": "利用料3,000円と給食費等300円",
+        "reduction": "生活保護受給世帯および市町村民税非課税世帯は利用料0円。給食費等300円は必要",
+        "application": "予約システム『テオテ』でアカウント作成と利用施設への子どもの登録が必要。施設ごと、子どもごとに登録する",
+        "medicalDocument": "利用には、かかりつけ医が作成する札幌市病児・病後児保育事業利用連絡書が必要"
+      },
+      "source": {
+        "url": "https://kosodate.city.sapporo.jp/nenrei/mosugu/azukeru/1140.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳児クラス以上は無料。0～2歳児は所得等で決定し、第2子以降は無料",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "coveredFacilities": "認可保育所、認定こども園（保育所部分）、地域型保育事業所",
+        "ageThreeAndOver": "3歳児クラス以上は世帯所得にかかわらず保育料無料。食材料費、バス代、教材費等は別途負担となる場合がある",
+        "ageZeroToTwo": "住民税非課税世帯は無料。その他の世帯は市民税所得割額、保育必要量（標準時間11時間・短時間8時間）、多子軽減により決定",
+        "calculation": "4月から8月は前年度の市民税所得割額、9月から翌年3月は当年度の市民税所得割額で算定",
+        "siblingReduction": "2024年4月分以降、保護者の収入や上の子の年齢等に関係なく、第2子以降の保育料は無料",
+        "excludedFacilities": "企業主導型保育施設および認可外保育施設は札幌市の第2子以降無償化の対象外",
+        "reduction": "失業（自己都合を除く）、疾病、災害等により収入が減少した場合は減免対象となる場合がある",
+        "officialFeePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/941.html",
+        "officialPolicyPage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/846.html"
+      },
+      "source": {
+        "url": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/941.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校段階が実質無償。中学校段階は1食328円で据え置き",
+      "details": {
+        "fiscalYear": "令和8年度（2026年度）",
+        "elementaryScope": "小学校、義務教育学校前期課程、特別支援学校小学部",
+        "elementaryFee": "保護者負担は実質無償。生活保護の教育扶助受給者等は各制度から札幌市へ給食費が納付され、それ以外の保護者は納付不要",
+        "middleSchoolScope": "中学校、義務教育学校後期課程、中等教育学校前期課程、特別支援学校中学部・高等部",
+        "middleSchoolFee": "保護者負担は1食328円で令和7年度から据え置き",
+        "middleSchoolAnnualEstimate": "中学1年61,992円、中学2年61,336円、中学3年58,712円。実際の給食実施回数により変動する",
+        "payment": "中学校段階以上は6月から3月までの10期。口座振替または納付書で納付。生活保護・就学援助受給者は支給費から納付され、別途の支払いは不要",
+        "assistance": "就学援助の認定を受けた札幌市立小・中学校の児童生徒は、認定期間中の給食費が無料。特別支援教育就学奨励費の対象世帯も給食費の助成対象となる場合がある",
+        "temporaryMeasure": "小学校段階の実質無償化および物価高騰分の市負担は、現時点では令和8年度限りの取組"
+      },
+      "source": {
+        "url": "https://www.city.sapporo.jp/kyoiku/top/kyushoku/kyushokuhi.html",
+        "checkedAt": "2026-07-19"
+      },
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 18
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "宿泊型・日帰り型は生後6か月未満、訪問型は生後1年未満の母子を対象に助産師等が支援",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0,
+        "lodgingAndDayCareMaxAgeMonths": 5,
+        "homeVisitMaxAgeMonths": 11
+      },
+      "details": {
+        "residency": "母親と赤ちゃんの双方が札幌市に住民登録していること",
+        "exclusion": "母親に心身の不調や疾患があり医療的介入が必要な場合は対象外",
+        "careTypes": "宿泊型、日帰り型、訪問型",
+        "careContent": "母体の体調管理、授乳・乳房ケア、沐浴・抱っこ・寝かしつけ等の育児相談、休息と食事の提供。訪問型は食事提供なし",
+        "lodgingHours": "基本11時から翌日15時",
+        "dayCareHours": "基本11時から15時",
+        "homeVisitHours": "9時から17時の間の2時間",
+        "lodgingFee": "1泊7,500円。市民税非課税世帯・生活保護世帯は2,500円",
+        "dayCareFee": "1日2,500円。市民税非課税世帯・生活保護世帯は1,000円",
+        "homeVisitFee": "1回2,500円。市民税非課税世帯・生活保護世帯は1,000円",
+        "usageLimit": "宿泊型と日帰り型を合わせて7日以内。1泊2日は2日として数える。訪問型は6回以内",
+        "application": "産後ケア予約サービス『テオテ産後ケア』でアカウント作成後、札幌市へオンライン申請し、承認後に施設登録・予約する。妊娠28週から申請可",
+        "bookingStart": "予約は原則利用希望日の30日前から。妊娠中の予約は不可",
+        "cancellation": "前営業日（平日）の午前10時までにキャンセル。以後の中止は利用料金が発生",
+        "effectiveApplicationChange": "2026年3月から予約サービスによる申込へ変更"
+      },
+      "source": {
+        "url": "https://kosodate.city.sapporo.jp/nenrei/ninshin_shussan/kenko/1036.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "非在園の就学前児童向け一時預かりと、生後6か月から満2歳向けのこども誰でも通園制度",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5,
+        "generalTemporaryCare": "保育所、認定こども園、特定地域型保育事業および幼稚園に在籍していない就学前児童。施設により対象年齢が異なる",
+        "anyChildcareMinAgeMonths": 6,
+        "anyChildcareMaxAgeYears": 2,
+        "anyChildcareCondition": "満3歳に達する日の前日までで、保育所・認定こども園・幼稚園・地域型保育事業所・企業主導型保育施設に在籍していないこと"
+      },
+      "details": {
+        "generalTemporaryCareReasons": "保護者の就労・就学、通院・入院・体調不良、介護・看護、社会的活動、冠婚葬祭、育児負担の解消やリフレッシュ等",
+        "generalTemporaryCareDays": "原則月曜日から土曜日。日曜・祝日および12月29日から1月3日は閉園",
+        "generalTemporaryCareFee": "1日上限。就労・通院等は3歳未満2,000円、3歳以上1,200円。リフレッシュ等は3歳未満2,700円、3歳以上1,600円",
+        "generalTemporaryCareExtraCosts": "給食を希望する場合の昼食代や、施設が定める実費は別途負担",
+        "generalTemporaryCareApplication": "利用希望施設へ直接問い合わせる。保育を必要とする理由の証明書提出や事前登録など、詳細は施設ごとに異なる",
+        "anyChildcareEmploymentRequirement": "保護者の就労要件は問わない",
+        "anyChildcareDays": "月曜日から金曜日。一部施設は土曜日も利用可能",
+        "anyChildcareFee": "1人1時間300円。生活保護世帯は0円、市・道民税非課税世帯および市・道民税所得割合算額77,101円未満の世帯は100円",
+        "anyChildcareMonthlyLimit": "子ども1人につき月10時間まで",
+        "anyChildcareApplication": "事前に給付認定申請が必要。審査は概ね1か月で、認定後に予約システムのアカウントが発行される。利用施設との事前面談後に予約する",
+        "anyChildcareReservation": "毎月1日に翌月分の予約枠が公開され、利用希望日の7日前まで予約申請可能。原則として定期利用",
+        "officialGeneralTemporaryCarePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/ichiji/927.html",
+        "officialAnyChildcarePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/13027.html"
+      },
+      "source": {
+        "url": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/13027.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "未就学児世帯向け期限付き市営住宅、抽選優遇、低所得の子育て世帯向け入居費用補助",
+      "details": {
+        "childRaisingMunicipalHousing": "市営住宅東雁来団地に子育て世帯向け住宅を整備。地上5階建て3棟、計120戸、全戸2LDK",
+        "municipalHousingEligibility": "小学校就学前の子どもがいる世帯",
+        "municipalHousingTerm": "一番下の子どもが中学校を卒業するまでの期限付き入居",
+        "municipalHousingFeatures": "子育て向けの広さ・設備、安全性に配慮した床材・建具、敷地内広場、集会所での子育てサロンを備える",
+        "lotteryPreference": "市営住宅申込時、ひとり親世帯（申込者と20歳未満の子のみ）および多子世帯（18歳未満の児童が3人以上）は抽選時の優遇対象",
+        "municipalHousingRecruitment": "令和8年度は定期募集年3回のほか、短期募集と通年募集を実施。対象住戸と募集時期は募集案内で確認する",
+        "safetyNetHousing": "子育て世帯等の入居を拒まない民間のセーフティネット住宅があり、低額所得で住宅困窮度が高い世帯は初回の家賃債務保証料等の補助対象となる場合がある",
+        "safetyNetIncomeLimit": "月額所得15万8千円以下。子育て世帯・新婚世帯は21万4千円以下、多子世帯（18歳未満の子ども3人以上）は25万9千円以下",
+        "safetyNetSubsidy": "家賃債務保証料、孤独死・残置物保険料、緊急連絡先引受費用、死後事務委任契約費用を、コースにより最大6万円または最大3万円補助",
+        "safetyNetExclusion": "生活保護の住宅扶助または生活困窮者住居確保給付金の受給者は対象外",
+        "application": "市営住宅は札幌市住宅管理公社の募集案内から申し込む。セーフティネット住宅の補助は契約・入居後に必要書類を添えて申請する",
+        "officialMunicipalHousingPage": "https://www.city.sapporo.jp/toshi/jutaku/01osumai/siju/kosodate.html",
+        "officialRecruitmentPage": "https://www.city.sapporo.jp/toshi/jutaku/01osumai/siju/siju.html",
+        "officialPreferencePage": "https://www.city.sapporo.jp/shogaifukushi/guide/zaitaku_04.html",
+        "officialSafetyNetPage": "https://www.city.sapporo.jp/toshi/jutaku/11sn_seido/sapporo_yachinsaimuhoshouseido.html"
+      },
+      "source": {
+        "url": "https://www.city.sapporo.jp/toshi/jutaku/01osumai/siju/kosodate.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "bulkyWaste": {
+      "status": "needs_medium_review",
+      "summary": "指定袋に入らない家庭の大型ごみを戸別有料収集。料金は品目・大きさにより200円から1,800円の例があり、減免要件の詳細は要確認",
+      "details": {
+        "definition": "耐久消費財その他の固形廃棄物で、札幌市の指定ごみ袋に入らないもの",
+        "feeRangeExamples": "公式手数料一覧の主な例は200円、500円、900円、1,300円、1,800円。品目と大きさで異なる",
+        "feeExamples": "ベビーベッド200円、自転車500円、応接用2人掛け以上のいす900円、高さ1m以上のたんす1,300円、スプリング付きベッドマットレス1,800円",
+        "application": "インターネットまたは大型ごみ収集センターへの電話で事前申込。収集希望日の2週間前から受付",
+        "internetLimits": "インターネットは24時間365日受付で、1回10個まで。品目検索にない物、減免申請、さわやか収集は電話申込",
+        "payment": "大型ごみ処理手数料シール、またはインターネット申込時のクレジットカード・PayPay・楽天ペイ",
+        "putOut": "受付番号を表示し、収集日当日の8時30分までに指定された建物外の場所へ出す。原則立会い不要",
+        "excludedItems": "単品100kg超、長さ2m超、体積2立方メートル超、家電4品目、パソコン、事業所で使用した物などは対象外",
+        "reduction": "札幌市条例第47条により、手数料を納付する資力がない者その他特別の事情があると認められる場合は減額・免除が可能。インターネット受付不可で電話申込が必要",
+        "reviewReason": "札幌市の公開ページでは、大型ごみ処理手数料減免の具体的対象区分・必要書類・減免額を確認できなかったためMedium確認が必要",
+        "support": "要介護者等で自力搬出が困難かつ周囲の支援を受けられない場合は、さわやか収集の対象となる場合がある。大型ごみには通常の手数料シールが必要",
+        "officialPage": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi.html",
+        "officialFeePage": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi_02.html",
+        "officialOrdinancePage": "https://www.city.sapporo.jp/ncms/reiki/d1w_reiki/H404901010067/H404901010067_j.html",
+        "officialSupportPage": "https://www.city.sapporo.jp/seiso/gomi/sawayaka/"
+      },
+      "source": {
+        "url": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・内水・土砂災害・地震等のハザード情報、災害別避難場所、防災アプリを提供",
+      "details": {
+        "hazardMap": "札幌市地図情報サービスで災害リスクを確認でき、区別の浸水ハザードマップ、地震防災マップ、土砂災害警戒区域等も公開",
+        "inundationMap": "想定し得る最大規模の降雨による洪水と内水氾濫の浸水想定区域を、浸水深別に表示。令和8年7月版を区別に公開",
+        "earthquakeMap": "第4次地震被害想定に基づく震度分布、液状化危険度、家屋全壊率を区別に表示",
+        "shelters": "各区の一覧で、指定緊急避難場所・基幹避難所について洪水、土砂災害、地震、大規模火災など災害種別ごとの利用可否を確認できる",
+        "app": "札幌市防災アプリ『そなえ』で避難指示、避難場所開設、Jアラート、気象・地震情報、GPS周辺避難場所、ハザードマップを確認できる。多言語・オフライン表示にも対応",
+        "audioHazardMap": "2026年4月1日から『耳で聴くハザードマップ』を開始。現在地等の気象、標高、洪水・土砂災害・高潮・津波リスク、最寄り避難場所への案内を音声で利用可能",
+        "informationChannels": "さっぽろ防災ポータル、緊急速報メール、札幌市避難情報電話サービス等で災害・避難情報を提供",
+        "evacuationGuidance": "自宅が安全な場合は在宅避難も選択肢。安全確認ができない場合は指定緊急避難場所または安全な親戚・知人宅等へ立ち退き避難する",
+        "officialHazardMapPage": "https://www.city.sapporo.jp/kikikanri/higoro/hazardmap/hazardmap_index.html",
+        "officialInundationMapPage": "https://www.city.sapporo.jp/kikikanri/higoro/fuusui/ssh_map.html",
+        "officialEarthquakeMapPage": "https://www.city.sapporo.jp/kikikanri/higoro/jisin/jbmap.html",
+        "officialShelterPage": "https://www.city.sapporo.jp/kikikanri/higoro/hinan/hinanbasyo.html",
+        "officialAppPage": "https://www.city.sapporo.jp/kikikanri/apri.html",
+        "officialInformationPage": "https://www.city.sapporo.jp/kikikanri/torikumi/saigaijyoho.html"
+      },
+      "source": {
+        "url": "https://www.city.sapporo.jp/kikikanri/higoro/hazardmap/hazardmap_index.html",
+        "checkedAt": "2026-07-19"
+      }
+    }
   }
 }
