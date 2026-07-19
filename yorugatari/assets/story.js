@@ -37,6 +37,22 @@ addEventListener('scroll', function () {
 }, { passive: true });
 
 const slug = document.body.dataset.slug;
+const completedStorageKey = 'yorugatari-completed-stories';
+let completedStories = [];
+try {
+  const storedCompleted = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
+  completedStories = Array.isArray(storedCompleted) ? storedCompleted : [];
+} catch (error) {
+  completedStories = [];
+}
+
+function saveCompletedStories() {
+  try { localStorage.setItem(completedStorageKey, JSON.stringify(completedStories)); } catch (error) {}
+}
+
+function isCompleted() {
+  return Boolean(slug && completedStories.includes(slug));
+}
 const currentMinutes = readingMinutes[slug];
 const headerMeta = document.querySelectorAll('.story-hero .meta span');
 if (currentMinutes && headerMeta.length) {
@@ -111,6 +127,81 @@ if (favoriteButton) {
   });
 }
 drawFavorite();
+
+const storyInfoBox = document.querySelector('.story-side .side-box');
+let completedButton = null;
+let completedStatus = null;
+let viewCount = null;
+
+if (storyInfoBox && slug) {
+  const readingStatus = document.createElement('div');
+  readingStatus.className = 'reading-status';
+  readingStatus.innerHTML = '<p class="view-count" aria-live="polite">閲覧数 <strong>—</strong></p><button class="btn completed-toggle" type="button"></button><p class="completed-note" aria-live="polite"></p>';
+  const actions = storyInfoBox.querySelector('.hero-actions');
+  storyInfoBox.insertBefore(readingStatus, actions || null);
+  completedButton = readingStatus.querySelector('.completed-toggle');
+  completedStatus = readingStatus.querySelector('.completed-note');
+  viewCount = readingStatus.querySelector('.view-count strong');
+}
+
+function drawCompleted(automatic) {
+  if (!completedButton || !completedStatus) return;
+  const completed = isCompleted();
+  completedButton.classList.toggle('active', completed);
+  completedButton.setAttribute('aria-pressed', String(completed));
+  completedButton.textContent = completed ? '✓ 読了済み' : '○ 読了にする';
+  completedStatus.textContent = completed
+    ? (automatic ? '本文の最後まで読んだため、読了にしました。' : 'この端末の読了リストに保存されています。')
+    : '読了状況はこの端末だけに保存されます。';
+}
+
+function setCompleted(completed, automatic) {
+  if (!slug) return;
+  completedStories = completed
+    ? Array.from(new Set(completedStories.concat(slug)))
+    : completedStories.filter(function (item) { return item !== slug; });
+  saveCompletedStories();
+  drawCompleted(automatic);
+}
+
+if (completedButton) {
+  completedButton.addEventListener('click', function () {
+    setCompleted(!isCompleted(), false);
+  });
+}
+drawCompleted(false);
+
+const storyBody = document.querySelector('.story-body');
+const openedAt = Date.now();
+function markCompletedAtEnd() {
+  if (!storyBody || isCompleted() || Date.now() - openedAt < 15000) return;
+  const rect = storyBody.getBoundingClientRect();
+  if (rect.bottom <= window.innerHeight + 80) setCompleted(true, true);
+}
+addEventListener('scroll', markCompletedAtEnd, { passive: true });
+setTimeout(markCompletedAtEnd, 15000);
+
+async function updateViewCount() {
+  if (!viewCount || !slug) return;
+  const productionHost = 'allsunday1122.github.io';
+  const productionPath = '/yorugatari/stories/' + slug + '.html';
+  const base = 'https://page-views-api.ratneshc.com/api/v1/';
+  const query = '?site=' + encodeURIComponent(productionHost) + '&path=' + encodeURIComponent(productionPath);
+  try {
+    if (location.hostname === productionHost) {
+      const tracked = await fetch(base + 'track' + query, { keepalive: true });
+      if (!tracked.ok) throw new Error('view tracking request failed');
+    }
+    const response = await fetch(base + 'views' + query);
+    if (!response.ok) throw new Error('view count request failed');
+    const data = await response.json();
+    const views = Number(data.views);
+    viewCount.textContent = Number.isFinite(views) ? views.toLocaleString('ja-JP') + '回' : '—';
+  } catch (error) {
+    viewCount.textContent = '取得できませんでした';
+  }
+}
+updateViewCount();
 
 const shareButton = document.querySelector('#shareBtn');
 if (shareButton) shareButton.setAttribute('type', 'button');

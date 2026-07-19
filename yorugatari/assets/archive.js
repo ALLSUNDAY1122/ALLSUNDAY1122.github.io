@@ -4,20 +4,30 @@ const archiveSections = document.querySelector('#archiveSections');
 const archiveJump = document.querySelector('#archiveJump');
 const archiveTotal = document.querySelector('#archiveTotal');
 const archiveBreakdown = document.querySelector('#archiveBreakdown');
+const completedStorageKey = 'yorugatari-completed-stories';
+let completedStories = [];
+try {
+  const storedCompleted = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
+  completedStories = Array.isArray(storedCompleted) ? storedCompleted : [];
+} catch (error) {
+  completedStories = [];
+}
 
 function archiveHref(story) {
   return story.href || `stories/${story.slug}.html`;
 }
 
 function archiveItem(story, index) {
-  return `<a class="archive-item" href="${archiveHref(story)}">
+  const completed = completedStories.includes(story.slug);
+  return `<a class="archive-item${completed ? ' completed' : ''}" href="${archiveHref(story)}">
     <span class="archive-no">${String(index + 1).padStart(3, '0')}</span>
-    <span class="archive-copy"><strong>${story.title}</strong><small>${story.summary}</small></span>
+    <span class="archive-copy"><strong>${story.title}${completed ? '<span class="read-badge">✓ 読了</span>' : ''}</strong><small>${story.summary}</small></span>
   </a>`;
 }
 
 if (archiveSections && archiveJump) {
-  archiveTotal.textContent = `${archiveStories.length}話`;
+  const completedCount = archiveStories.filter(function (story) { return completedStories.includes(story.slug); }).length;
+  archiveTotal.textContent = `${archiveStories.length}話中 ${completedCount}話読了`;
   archiveBreakdown.textContent = archiveCategories.map(function (category) {
     return `${category}${archiveStories.filter(function (story) { return story.category === category; }).length}話`;
   }).join('・');
