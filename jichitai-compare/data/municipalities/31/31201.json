@@ -6,16 +6,13 @@
   "name": "鳥取市",
   "officialUrl": "https://www.city.tottori.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。childMedical、sickChildCare、childcareFeeを公式情報で確認済み。残り6制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。childMedical、sickChildCare、childcareFee、schoolMealsを公式情報で確認済み。残り5制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "18歳到達後最初の3月31日まで、保険診療の入院・通院自己負担額は0円",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
       "details": {
         "target": "18歳に達する日以後の最初の3月31日までの方",
         "copay": "保険診療分の入院・通院はいずれも自己負担0円",
@@ -24,18 +21,12 @@
         "outsidePrefecture": "鳥取県外ではいったん保険診療の患者負担額を支払い、後日申請による償還払いを受ける",
         "exceptions": "食事代、病衣代、容器代、個室代、文書代、選定療養費など保険適用外費用は助成対象外"
       },
-      "source": {
-        "url": "https://www.city.tottori.lg.jp/site/kosodate/4697.html",
-        "checkedAt": "2026-07-19"
-      }
+      "source": {"url": "https://www.city.tottori.lg.jp/site/kosodate/4697.html", "checkedAt": "2026-07-19"}
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "病児は生後4か月から小学校修了相当まで、病後児は施設により小学校修了相当または就学前まで。利用料は1日500円または1,500円",
-      "eligibility": {
-        "minAgeMonths": 4,
-        "maxAgeYears": 12
-      },
+      "eligibility": {"minAgeMonths": 4, "maxAgeYears": 12},
       "details": {
         "target": "病気または病気回復期で集団保育が困難かつ、保護者が仕事・病気・冠婚葬祭などのため家庭で保育できない児童",
         "residenceCondition": "病児施設の主な対象は鳥取市、岩美町、八頭町、若桜町、智頭町、兵庫県新温泉町・香美町に住民票がある児童、または保護者の出産で鳥取市に里帰り居住している児童。病後児支援センターかもめは鳥取市在住または里帰り居住が対象",
@@ -47,18 +38,12 @@
         "application": "利用前に実施施設へ連絡する。施設により、かかりつけ医等が記載した医師連絡票が必要。送迎対応の利用には事前登録が必要",
         "transport": "未就学児が保育所等で体調不良となり、保護者が迎えに行けない場合、対象4施設が送迎・診察後の預かりに対応。送迎費は無料で診察費は実費"
       },
-      "source": {
-        "url": "https://www.city.tottori.lg.jp/site/kosodate/4836.html",
-        "checkedAt": "2026-07-19"
-      }
+      "source": {"url": "https://www.city.tottori.lg.jp/site/kosodate/4836.html", "checkedAt": "2026-07-19"}
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯は無償。第3子以降は無料で、第2子にも所得・在園状況に応じた軽減あり",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 5
-      },
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
       "details": {
         "fee": "3～5歳児の保育所、認定こども園、幼稚園等の保育料は無償。0～2歳児は保護者の市町村民税額等に応じて決定",
         "ageRule": "保育料は4月1日現在の年齢で年度内の区分を決定し、年度途中に3歳になっても年度中は変更しない。月途中の入退所は日割り計算",
@@ -69,12 +54,28 @@
         "siblingCount": "就学前のきょうだいが幼稚園や障がい児通園施設等を利用している場合も入所児童とみなして多子軽減を判定。所得割課税額57,700円未満で児童が2人以上いる世帯は、第1子が保育所等に未入所でも第2子は半額",
         "mealFee": "3～5歳児の副食費は無償化の対象外"
       },
+      "source": {"url": "https://www.city.tottori.lg.jp/site/kosodate/4830.html", "checkedAt": "2026-07-19"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校等1食91円、中学校等1食309円。国交付金と市独自支援で改定額との差額を公費負担",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "鳥取市立の小学校・中学校および義務教育学校で学校給食を利用する児童・生徒の保護者",
+        "revisedPrice": "令和8年度から給食費を改定し、小学校・義務教育学校前期課程は1食385円、中学校・義務教育学校後期課程は1食441円",
+        "parentShare": "小学校・義務教育学校前期課程は国の学校給食費負担軽減の交付金等を活用し、保護者負担は1食91円。中学校・義務教育学校後期課程は市独自支援により、保護者負担を従来水準の1食309円に据え置く",
+        "fullFreeStatus": "全面無償化ではなく、令和8年度も保護者負担がある",
+        "monthlyCalculation": "月額の目安は1食単価に年間195食を乗じ11か月で除して算出するが、実額は喫食回数等で変動する",
+        "paymentStart": "令和8年度の学校給食費の口座振替は6月開始",
+        "exceptions": "食物アレルギー等で牛乳を飲まない場合など、通常の給食費と異なる場合がある",
+        "lowIncomeSupport": "就学援助制度では認定世帯に学校給食費等の援助がある"
+      },
       "source": {
-        "url": "https://www.city.tottori.lg.jp/site/kosodate/4830.html",
+        "url": "https://www.city.tottori.lg.jp/page/38096.html",
+        "additionalUrl": "https://www.city.tottori.lg.jp/site/kosodate/30322.html",
         "checkedAt": "2026-07-19"
       }
     },
-    "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
