@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-19T22:00:00+09:00",
+  "updatedAt": "2026-07-20T00:15:00+09:00",
   "status": "active",
   "entries": [
     {
@@ -23,11 +23,11 @@
       "municipalities": [],
       "count": 0,
       "releaseStatus": "blocked_regional_ci",
-      "reason": "福岡市PR #109はCI run 29687152706がfailure。Validate source and generated dataで失敗し、mergeable=false。PRコメントで全国進行統括へ引き渡し済み",
+      "reason": "福岡市PR #109は競合なし（mergeable=true）まで回復したが、CI run 29687152706がfailure。Validate source and generated dataの修正待ち",
       "sourcePullRequest": 109,
       "mainIntegrationPr": null
     }
   ],
-  "nextAction": "東日本のrelease条件到達を再確認する。西日本はPR #109のCI成功・競合解消・region/west統合後にrelease対象へ追加する。",
+  "nextAction": "東日本のrelease条件到達を再確認する。西日本はPR #109のCI成功後にregion/westへ統合されたことを確認し、release対象へ追加する。",
   "humanDecisionRequired": false
 }
