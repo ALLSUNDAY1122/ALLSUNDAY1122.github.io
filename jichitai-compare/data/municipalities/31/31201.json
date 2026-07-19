@@ -6,7 +6,7 @@
   "name": "鳥取市",
   "officialUrl": "https://www.city.tottori.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。childMedicalを公式情報で確認済み。残り8制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。childMedicalとsickChildCareを公式情報で確認済み。残り7制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -29,7 +29,29 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病児は生後4か月から小学校修了相当まで、病後児は施設により小学校修了相当または就学前まで。利用料は1日500円または1,500円",
+      "eligibility": {
+        "minAgeMonths": 4,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "病気または病気回復期で集団保育が困難かつ、保護者が仕事・病気・冠婚葬祭などのため家庭で保育できない児童",
+        "residenceCondition": "病児施設の主な対象は鳥取市、岩美町、八頭町、若桜町、智頭町、兵庫県新温泉町・香美町に住民票がある児童、または保護者の出産で鳥取市に里帰り居住している児童。病後児支援センターかもめは鳥取市在住または里帰り居住が対象",
+        "age": "病児施設およびにじっこルームは生後4か月から12歳到達後最初の3月31日まで。病後児支援センターかもめは生後4か月から6歳到達後最初の3月31日まで",
+        "facilities": "病児4施設、病後児2施設。定員は各3～9人",
+        "hours": "多くの施設は平日8時00分～18時00分。にじっこルームは18時30分まで、かもめは8時30分～17時30分。キッズルームこぐまのみ土曜8時00分～16時30分も開所",
+        "fee": "キッズルームこぐま、とくよしさかえまち、とくよしこやま、コモド第三保育園瓦町、にじっこルームは1日1,500円。病後児支援センターかもめは1日500円",
+        "exemption": "鳥取市に住民票があり生活保護を受給している世帯は無料",
+        "application": "利用前に実施施設へ連絡する。施設により、かかりつけ医等が記載した医師連絡票が必要。送迎対応の利用には事前登録が必要",
+        "transport": "未就学児が保育所等で体調不良となり、保護者が迎えに行けない場合、対象4施設が送迎・診察後の預かりに対応。送迎費は無料で診察費は実費"
+      },
+      "source": {
+        "url": "https://www.city.tottori.lg.jp/site/kosodate/4836.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
