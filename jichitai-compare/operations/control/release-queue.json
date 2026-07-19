@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T01:50:00+09:00",
+  "updatedAt": "2026-07-20T03:05:00+09:00",
   "status": "active",
   "entries": [
     {
@@ -17,14 +17,14 @@
       "region": "east",
       "branch": "region/east",
       "municipalities": [
+        {"code": "08201", "name": "水戸市"},
         {"code": "12203", "name": "市川市"},
         {"code": "12227", "name": "浦安市"},
         {"code": "13123", "name": "江戸川区"}
       ],
-      "count": 3,
-      "releaseStatus": "pending_regional_merge",
-      "reason": "地方統合済み3自治体の旧task.statusを正規化済み。水戸市PR #115はCI成功・競合なしで地方統合待ち",
-      "sourcePullRequest": 115,
+      "count": 4,
+      "releaseStatus": "pending_threshold",
+      "reason": "水戸市PR #115を含む4自治体がregion/eastへ地方統合済み。10自治体・24時間・重要訂正・release指定の条件は未到達",
       "mainIntegrationPr": null
     },
     {
@@ -46,14 +46,16 @@
     {
       "region": "west",
       "branch": "region/west",
-      "municipalities": [],
-      "count": 0,
-      "releaseStatus": "waiting_regional_merge",
-      "reason": "福岡市PR #109と鳥取市PR #114はCI成功・競合なし。#109を先に地方統合し、#114を最新baseで再確認して統合する",
-      "sourcePullRequests": [109, 114],
+      "municipalities": [
+        {"code": "31201", "name": "鳥取市"},
+        {"code": "40130", "name": "福岡市"}
+      ],
+      "count": 2,
+      "releaseStatus": "pending_threshold",
+      "reason": "福岡市PR #109と鳥取市PR #114がregion/westへ地方統合済み。10自治体・24時間・重要訂正・release指定の条件は未到達",
       "mainIntegrationPr": null
     }
   ],
-  "nextAction": "北日本・東日本・西日本の地方班は準備済みPRを順次regionブランチへ統合する。全国統合・公開担当は地方統合後に件数と24時間条件を再評価する。中日本は完全性監査を継続する。",
+  "nextAction": "北日本PR #89の地方統合、中日本の完全性監査、東日本・西日本の追加自治体または24時間条件を確認する。条件到達した地方からmain統合PRを作成する。",
   "humanDecisionRequired": false
 }
