@@ -26,7 +26,7 @@
   "currentBranch": "data/16201-toyama",
   "pullRequestNumber": 30,
   "lastCheckedAt": "2026-07-19",
-  "lastUpdatedAt": "2026-07-19T09:16:00+09:00",
+  "lastUpdatedAt": "2026-07-19T23:20:00+09:00",
   "lastUpdatedBy": "中日本調査班",
   "officialSources": [
     "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/1811",
@@ -65,9 +65,10 @@
     "PR提出前に同期用PR #29で最新mainを取り込み、mainからの遅延0と変更対象2ファイルを確認。",
     "自治体データPR #30を作成し、GitHub上でmergeable=trueを確認。",
     "GitHub Actions run #52でofficialSources再計算値の不一致を検出。補足出典を除外し、各制度の主出典9件へ修正。",
-    "ローカル取得環境がないためnpm run checkは未実行。GitHub Actionsの結果を全国統括へ引き渡す。"
+    "CI run #58では自治体データ検証・構文検証は成功し、共通生成物未コミットの確認だけが失敗。",
+    "生成対象はdata/generated/municipalities.jsonとoperations/progress.json。地方班の編集禁止対象のため直接変更せず、全国統括へ引き渡す。"
   ],
   "blockers": [
-    "全国統括によるPR #30の確認と、generated自治体データ・全国進捗ファイルの生成またはCI条件調整が必要。"
+    "全国統括によるPR #30の確認と、data/generated/municipalities.json・operations/progress.jsonの生成反映またはCI条件調整が必要。"
   ]
 }
