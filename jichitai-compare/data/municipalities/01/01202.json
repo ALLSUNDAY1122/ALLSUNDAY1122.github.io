@@ -6,7 +6,7 @@
   "name": "函館市",
   "officialUrl": "https://www.city.hakodate.hokkaido.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成、病児保育、保育料を公式情報で確認済み。残り6制度を順次調査する。",
+  "summary": "子ども医療費助成、病児保育、保育料、学校給食費を公式情報で確認済み。残り5制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -97,7 +97,35 @@
         "https://www.city.hakodate.hokkaido.jp/docs/2016061500128/file_contents/R7hoikuryo.pdf"
       ]
     },
-    "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は市立小学校の保護者負担を1食50円まで軽減し、中学校も食材費補助を継続",
+      "details": {
+        "fiscalYear": "令和8年度（2026年度）",
+        "scope": "函館市立小学校・中学校および義務教育学校。市内小中学校全校で完全給食を実施",
+        "elementaryGradesTwoToFive": "給食185回、年間給食費66,600円、保護者負担年額9,250円（4,625円を年2回）、市補助57,350円",
+        "elementaryGradesOneAndSix": "給食182回、年間給食費65,520円、保護者負担年額9,100円（4,550円を年2回）、市補助56,420円",
+        "elementaryPerMeal": "1食360円のうち保護者負担50円、市補助310円",
+        "middleGradesOneAndTwo": "給食186回、年間給食費80,432円、保護者負担年額57,740円（5,774円を年10回）、市補助22,692円",
+        "middleGradeThree": "給食178回、年間給食費76,966円、保護者負担年額55,250円（5,525円を年10回）、市補助21,716円",
+        "middlePerMeal": "1食433円のうち保護者負担311円、市補助122円",
+        "kindergartenPerMeal": "1食338円のうち保護者負担242円、市補助96円",
+        "payment": "郵便貯金口座からの自動払込み。引落日は毎月27日で、小学校は4月・5月の年2回、中学校は4月から1月までの年10回",
+        "subsidyBackground": "食材価格高騰への対応として2022年度2学期から食材購入費を補助。令和7・8年度は国の重点支援地方交付金を活用",
+        "elementaryReliefProgram": "国の学校給食費負担軽減制度を受け、令和8年度から市立小学校の保護者負担軽減補助金を実施",
+        "notFullyFree": "小学校は大幅軽減されているが、令和8年度の保護者負担は1食50円で完全無償ではない",
+        "nonMunicipalSchools": "国立・私立の小中学校は函館市の市立学校向け負担軽減事業の対象外",
+        "schoolAttendanceAssistance": "経済的理由により国公立小学校・中学校・義務教育学校への就学が困難と認められる世帯は、就学援助で給食費の支給対象"
+      },
+      "source": {
+        "url": "https://www.city.hakodate.hokkaido.jp/docs/2014031600069/",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        "https://www.city.hakodate.hokkaido.jp/docs/2020112600033/",
+        "https://www.city.hakodate.hokkaido.jp/citizensvoice/docs/2026052100046/"
+      ]
+    },
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
