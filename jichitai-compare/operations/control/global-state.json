@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T00:15:44+09:00",
+  "updatedAt": "2026-07-20T00:20:04+09:00",
   "phase": "migration-audit",
   "mainBranch": "main",
   "regionalBranches": {
@@ -25,12 +25,16 @@
       "PR #109 requires task officialSources correction before region/west merge",
       "legacy main-target PR #44 closed as superseded by PR #109",
       "legacy main-target PR #89 retargeted to region/north and is CI-success and mergeable",
-      "regions/north.json initialized"
+      "regions/north.json initialized",
+      "PR #38 is merged into region/east",
+      "PR #30 is CI-success and mergeable into region/central",
+      "legacy main-target PR #46 retargeted to region/central and is mergeable",
+      "regions/central.json initialized"
     ]
   },
   "priority": {
-    "type": "legacy-pr-classification",
-    "nextAction": "Classify the remaining legacy main-target municipality PRs, beginning with east PR #38, while regional teams merge ready PRs #89 and #110 and west repairs PR #109."
+    "type": "regional-queue-processing",
+    "nextAction": "Regional teams merge ready PRs #89, #30, and #110; central reruns CI for PR #46; nationwide supervisor next classifies the remaining open legacy municipality PRs, beginning with PR #58 and PR #68."
   },
   "humanDecisionRequired": false
 }
