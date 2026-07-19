@@ -38,6 +38,7 @@ addEventListener('scroll', function () {
 
 const slug = document.body.dataset.slug;
 const completedStorageKey = 'yorugatari-completed-stories';
+const lastReadingStorageKey = 'yorugatari-last-reading';
 let completedStories = [];
 try {
   const storedCompleted = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
@@ -52,6 +53,17 @@ function saveCompletedStories() {
 
 function isCompleted() {
   return Boolean(slug && completedStories.includes(slug));
+}
+
+const storyTitle = (document.querySelector('.story-hero h1') || {}).textContent || '';
+const storyCategory = (document.querySelector('.story-hero .badge') || {}).textContent || '怖い話';
+const storyHeroContent = document.querySelector('.story-hero .wrap');
+if (storyHeroContent && !storyHeroContent.querySelector('.breadcrumb')) {
+  const breadcrumb = document.createElement('nav');
+  breadcrumb.className = 'breadcrumb';
+  breadcrumb.setAttribute('aria-label', 'パンくずリスト');
+  breadcrumb.innerHTML = '<a href="../index.html">夜語り</a><span aria-hidden="true">›</span><a href="../archive.html">全100話</a><span aria-hidden="true">›</span><a href="../archive.html#' + encodeURIComponent(storyCategory) + '">' + storyCategory + '</a>';
+  storyHeroContent.insertAdjacentElement('afterbegin', breadcrumb);
 }
 const currentMinutes = readingMinutes[slug];
 const headerMeta = document.querySelectorAll('.story-hero .meta span');
@@ -100,7 +112,14 @@ if (explanationButton && explanation) {
   });
 }
 
-const favoriteButton = document.querySelector('#favoriteBtn');
+const storyInfoBox = document.querySelector('.story-side .side-box, .story-side .story-info, .story-side');
+let favoriteButton = document.querySelector('#favoriteBtn');
+if (!favoriteButton && storyInfoBox && slug) {
+  favoriteButton = document.createElement('button');
+  favoriteButton.id = 'favoriteBtn';
+  favoriteButton.className = 'btn favorite';
+  storyInfoBox.insertAdjacentElement('afterbegin', favoriteButton);
+}
 if (favoriteButton) favoriteButton.setAttribute('type', 'button');
 const storageKey = 'yorugatari-favorites';
 let favorites = [];
@@ -128,7 +147,6 @@ if (favoriteButton) {
 }
 drawFavorite();
 
-const storyInfoBox = document.querySelector('.story-side .side-box');
 let completedButton = null;
 let completedStatus = null;
 let viewCount = null;
@@ -161,6 +179,12 @@ function setCompleted(completed, automatic) {
     ? Array.from(new Set(completedStories.concat(slug)))
     : completedStories.filter(function (item) { return item !== slug; });
   saveCompletedStories();
+  if (completed) {
+    try {
+      const last = JSON.parse(localStorage.getItem(lastReadingStorageKey) || 'null');
+      if (last && last.slug === slug) localStorage.removeItem(lastReadingStorageKey);
+    } catch (error) {}
+  }
   drawCompleted(automatic);
 }
 
@@ -173,13 +197,128 @@ drawCompleted(false);
 
 const storyBody = document.querySelector('.story-body');
 const openedAt = Date.now();
+let lastPositionSavedAt = 0;
+
+function saveReadingPosition(force) {
+  if (!slug || !storyBody || isCompleted()) return;
+  if (!force && Date.now() - lastPositionSavedAt < 1000) return;
+  const documentElement = document.documentElement;
+  const max = documentElement.scrollHeight - documentElement.clientHeight;
+  const readingProgress = Math.max(0, Math.min(99, Math.round((max ? documentElement.scrollTop / max : 0) * 100)));
+  try {
+    localStorage.setItem(lastReadingStorageKey, JSON.stringify({ slug: slug, progress: readingProgress, updatedAt: Date.now() }));
+    lastPositionSavedAt = Date.now();
+  } catch (error) {}
+}
+
+if (location.hash === '#resume') {
+  try {
+    const savedReading = JSON.parse(localStorage.getItem(lastReadingStorageKey) || 'null');
+    if (savedReading && savedReading.slug === slug && Number(savedReading.progress) > 0) {
+      requestAnimationFrame(function () {
+        const max = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        scrollTo({ top: max * Number(savedReading.progress) / 100, behavior: 'smooth' });
+      });
+    }
+  } catch (error) {}
+}
+
 function markCompletedAtEnd() {
   if (!storyBody || isCompleted() || Date.now() - openedAt < 15000) return;
   const rect = storyBody.getBoundingClientRect();
   if (rect.bottom <= window.innerHeight + 80) setCompleted(true, true);
 }
 addEventListener('scroll', markCompletedAtEnd, { passive: true });
+addEventListener('scroll', function () { saveReadingPosition(false); }, { passive: true });
+addEventListener('pagehide', function () { saveReadingPosition(true); });
+saveReadingPosition(true);
 setTimeout(markCompletedAtEnd, 15000);
+
+const catalogSources = [
+  'stories.js',
+  'stories-016-025.js',
+  'stories-026-035.js',
+  'stories-036-045.js',
+  'stories-046-055.js',
+  'stories-056-065.js',
+  'stories-066-075.js',
+  'stories-076-085.js',
+  'stories-086-095.js',
+  'stories-096-100.js'
+];
+
+function loadCatalogScript(source) {
+  return new Promise(function (resolve, reject) {
+    const script = document.createElement('script');
+    script.src = '../assets/' + source + '?v=20260719-100';
+    script.async = false;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+function recommendationLink(story, className) {
+  const link = document.createElement('a');
+  link.className = className;
+  link.href = story.slug + '.html';
+  const title = document.createElement('strong');
+  title.textContent = story.title;
+  const detail = document.createElement('span');
+  detail.textContent = story.category + '・約' + story.minutes + '分' + (completedStories.includes(story.slug) ? '・読了済み' : '');
+  link.appendChild(title);
+  link.appendChild(detail);
+  return link;
+}
+
+async function buildNextStoryGuide() {
+  if (!storyBody || !slug || storyBody.querySelector('.story-next')) return;
+  try {
+    window.STORIES = [];
+    await Promise.all(catalogSources.map(loadCatalogScript));
+    const catalog = Array.from(
+      new Map((Array.isArray(window.STORIES) ? window.STORIES : []).map((story) => [story.slug, story])).values()
+    );
+    const currentIndex = catalog.findIndex(function (story) { return story.slug === slug; });
+    if (currentIndex < 0) return;
+
+    const orderedAfterCurrent = catalog.slice(currentIndex + 1).concat(catalog.slice(0, currentIndex));
+    const nextUnread = orderedAfterCurrent.find(function (story) { return !completedStories.includes(story.slug); }) || orderedAfterCurrent[0];
+    const sameFear = orderedAfterCurrent.filter(function (story) {
+      return story.category === storyCategory && story.slug !== (nextUnread && nextUnread.slug);
+    }).sort(function (a, b) {
+      return Number(completedStories.includes(a.slug)) - Number(completedStories.includes(b.slug));
+    }).slice(0, 2);
+    if (!nextUnread) return;
+
+    const guide = document.createElement('section');
+    guide.className = 'story-next';
+    guide.setAttribute('data-nosnippet', '');
+    const eyebrow = document.createElement('span');
+    eyebrow.className = 'eyebrow';
+    eyebrow.textContent = 'One more story';
+    const heading = document.createElement('h2');
+    heading.textContent = 'まだ眠れませんか？';
+    const copy = document.createElement('p');
+    copy.textContent = '読了していない作品から、次の一話を選びました。';
+    guide.appendChild(eyebrow);
+    guide.appendChild(heading);
+    guide.appendChild(copy);
+    guide.appendChild(recommendationLink(nextUnread, 'next-primary'));
+    if (sameFear.length) {
+      const subheading = document.createElement('h3');
+      subheading.textContent = '同じ「' + storyCategory + '」を読む';
+      const related = document.createElement('div');
+      related.className = 'next-related';
+      sameFear.forEach(function (story) { related.appendChild(recommendationLink(story, 'next-related__item')); });
+      guide.appendChild(subheading);
+      guide.appendChild(related);
+    }
+    storyBody.appendChild(guide);
+  } catch (error) {}
+}
+
+buildNextStoryGuide();
 
 async function updateViewCount() {
   if (!viewCount || !slug) return;
@@ -207,12 +346,12 @@ const shareButton = document.querySelector('#shareBtn');
 if (shareButton) shareButton.setAttribute('type', 'button');
 if (shareButton) {
   shareButton.addEventListener('click', async function () {
-    const description = document.querySelector('meta[name="description"]');
-    const data = { title: document.title, text: description ? description.content : '', url: location.href };
+    const shareText = '「' + storyTitle + '」を読みました。\n#夜語り #怖い話';
+    const data = { title: document.title, text: shareText, url: location.href };
     try {
       if (navigator.share) { await navigator.share(data); return; }
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(location.href);
+        await navigator.clipboard.writeText(shareText + '\n' + location.href);
         const original = shareButton.textContent;
         shareButton.textContent = 'URLをコピーしました';
         setTimeout(function () { shareButton.textContent = original; }, 1800);
