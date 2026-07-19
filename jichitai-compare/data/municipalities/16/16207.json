@@ -6,7 +6,7 @@
   "name": "黒部市",
   "officialUrl": "https://www.city.kurobe.toyama.jp/",
   "status": "researching",
-  "summary": "黒部市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費支援、産後ケアを確認済み。",
+  "summary": "黒部市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費支援、産後ケア、一時預かり・こども誰でも通園制度を確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {"status":"verified","summary":"黒部市在住で医療保険に加入する18歳到達後最初の3月31日までの子どもを対象に、保険診療の自己負担分を助成。所得制限なし。","eligibility":{"minAgeMonths":0,"maxAgeYears":18,"residency":"黒部市に住民登録があること","insurance":"医療保険に加入していること"},"details":{"incomeLimit":"所得制限なし","exclusions":"生活保護受給者は対象外","paymentMethod":"受給資格登録後、マイナ保険証または資格確認書と医療費受給資格証を提示して現物給付。対象外地域等では償還払い申請。"},"source":{"url":"https://www.city.kurobe.toyama.jp/category/page.aspx?servno=11498","checkedAt":"2026-07-19"},"additionalSources":[{"url":"https://www.city.kurobe.toyama.jp/category/menu.aspx?ctgcd=22","checkedAt":"2026-07-19","description":"受給資格登録、受診時の提示書類、助成方法"}]},
@@ -14,8 +14,39 @@
     "childcareFee": {"status":"verified","summary":"0歳から2歳児の保育料は、同一世帯で生計を一にする父母等の市町村民税所得割額の合計により決定。3歳から5歳児は幼児教育・保育の無償化対象。","eligibility":{"minAgeMonths":0,"maxAgeYears":5,"residency":"黒部市の保育所・認定こども園等を利用する児童"},"details":{"feeCalculation":"入所児童と同一世帯に属し生計を一にしている父母、および家計の主宰者であるその他の扶養義務者の市町村民税所得割額の合計により決定","taxTreatment":"配当控除、住宅取得控除、外国税額控除、配当割額・株式等譲渡所得割額控除の適用前の税額を使用","freeEducation":"3歳から5歳児の保育料は無償化。住民税非課税世帯の0歳から2歳児も無償化対象","additionalCosts":"給食費、行事費などの実費は無償化対象外","siblingReduction":"副食費は、年収360万円未満相当世帯、第2子の一定範囲、ひとり親世帯等の第2子以降、第3子以降などで免除対象","payment":"公立施設の保育料は原則口座振替で毎月月末に引き落とし。私立認定こども園は施設ごとに納付方法が異なる","feeTable":"黒部市利用者負担額基準表により階層別に決定"},"source":{"url":"https://www.city.kurobe.toyama.jp/category/page.aspx?servno=2740","checkedAt":"2026-07-19"},"additionalSources":[{"url":"https://www.city.kurobe.toyama.jp/child/news/detail.aspx?servno=17350","checkedAt":"2026-07-19","description":"幼児教育・保育無償化と副食費免除条件"}]},
     "schoolMeals": {"status":"verified","summary":"市内の幼稚園・小学校・中学校へ給食センターから給食を提供し、第3子以降の就学児童、経済的に困難な世帯、特別支援学級の保護者に給食費助成を実施。","eligibility":{"minAgeMonths":72,"maxAgeYears":15,"schools":"黒部市内の小学校9校・中学校2校。市立幼稚園1園にも給食を提供"},"details":{"provider":"黒部市学校給食センターが市内の幼稚園、小学校、中学校へ調理・配送","thirdChildSupport":"第3子以降の就学児童を扶養する保護者へ給食費助成金を交付","financialAssistance":"経済的理由で教育費に困る世帯は、就学援助により給食費を含む費用の援助対象","specialNeedsSupport":"特別支援学級へ就学する児童生徒の保護者にも給食費助成を実施","publishedFee":"市公式の学校給食案内ページでは、通常の月額・1食単価は掲載されていないため学校教育課への確認が必要"},"source":{"url":"https://www.city.kurobe.toyama.jp/category/page.aspx?servno=671","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.kurobe.toyama.jp/category/page.aspx?servno=1000","checkedAt":"2026-07-20","description":"就学援助で学用品代、給食費、医療費、修学旅行代等を援助"},{"url":"https://www.city.kurobe.toyama.jp/info/secdtl.aspx?seccd=2011040000","checkedAt":"2026-07-20","description":"学校給食センターによる市内全小中学校への給食提供"}]},
     "postpartumCare": {"status":"verified","summary":"黒部市在住の出産後1年以内の母親と赤ちゃんを対象に、宿泊・日帰り・訪問型の産後ケアを実施。利用者には2,500円分のクーポン券を5枚交付。","eligibility":{"minAgeMonths":0,"maxAgeYears":1,"residency":"黒部市に住所があること","ageCondition":"出産後1年以内の母親と赤ちゃんで、産後ケアを必要とする方"},"details":{"types":"宿泊タイプ、日帰りタイプ、訪問タイプ","fees":"宿泊1泊6,000円、日帰り1回3,000円、訪問1回1,500円","coupon":"2,500円/回（泊）の産後ケアクーポン券を5枚交付。宿泊3,500円、日帰り500円、訪問0円となる例が示されている","feeExemption":"生活保護世帯は利用料免除","additionalFees":"令和8年4月以降、宿泊・日帰りは施設ごとに食事代等の別途負担あり","application":"こども家庭センターへ利用申請書を提出、またはオンライン申請。電話聞き取り後に利用承認通知書とクーポン券が郵送され、市が施設と利用調整する","facilities":"黒部市民病院、あわの産婦人科医院、富山県立中央病院、厚生連滑川病院、温泉施設、市が契約する助産院","capacity":"原則として各施設1日1組"},"source":{"url":"https://www.city.kurobe.toyama.jp/category/page.aspx?servno=25973","checkedAt":"2026-07-20"}},
-    "temporaryChildcare": {"status":"researching","summary":"調査中"},
-    "housingSupport": {"status":"todo","summary":"未調査"},
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保護者の通院・技能習得・リフレッシュ等で家庭保育ができない未就園児を複数施設で一時預かり。加えて、未就園の生後6か月から3歳未満児は月10時間までこども誰でも通園制度を利用可能。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5,
+        "residency": "黒部市内の保育所等に入所していない児童。こども誰でも通園制度は利用日に生後6か月から満3歳未満で、保育所・幼稚園・認定こども園等に通っていない児童"
+      },
+      "details": {
+        "temporaryCarePurpose": "保護者の通院、技能習得、リフレッシュ等のため家庭で保育できない場合に一時的に預かる",
+        "temporaryFacilities": "生地こども園、前沢保育所、三日市保育所、田家保育所、おおふせ認定こども園、うらやま保育園、石田こども園等。黒部愛児保育園は休止中と案内",
+        "temporaryHours": "施設により月曜から土曜8時30分から17時、または月曜から金曜8時30分から16時30分等",
+        "temporaryFees": "施設により1日2,000円・半日1,000円、1時間250円または350円等。昼食・おやつ代は別途。無償化対象となる場合あり",
+        "temporaryApplication": "希望施設へ直接申込み。手続き、定員、利用条件は施設ごとに異なるため事前確認が必要",
+        "anyChildAge": "利用日に生後6か月から満3歳未満の未就園児",
+        "anyChildHours": "児童1人当たり月10時間まで",
+        "anyChildFee": "1時間300円程度。給食・おやつは別途料金",
+        "anyChildFacilities": "村椿保育所、若栗保育所、石田こども園（予定）",
+        "anyChildApplication": "こども誰でも通園制度総合支援システムで申請し、市の利用認定後、初回は事前面談を予約して利用"
+      },
+      "source": {
+        "url": "https://www.city.kurobe.toyama.jp/child/category/page.aspx?servno=16235",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=45806",
+          "checkedAt": "2026-07-20",
+          "description": "こども誰でも通園制度の対象、利用時間、料金、実施予定施設、申請手順"
+        }
+      ]
+    },
+    "housingSupport": {"status":"researching","summary":"調査中"},
     "bulkyWaste": {"status":"todo","summary":"未調査"},
     "disasterPrevention": {"status":"todo","summary":"未調査"}
   }
