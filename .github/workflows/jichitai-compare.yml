@@ -60,6 +60,7 @@ jobs:
         run: node --check app.js
 
       - name: Confirm generated files are committed
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
         shell: bash
         run: |
