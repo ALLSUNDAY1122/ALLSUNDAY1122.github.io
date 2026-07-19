@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-19T21:35:00+09:00",
+  "updatedAt": "2026-07-19T22:19:50+09:00",
   "phase": "migration-audit",
   "mainBranch": "main",
   "regionalBranches": {
@@ -14,16 +14,21 @@
     "firstAuditStartedAt": "2026-07-19T21:35:00+09:00",
     "confirmed": [
       "municipality-assignment-policy.json exists",
-      "region/north exists or was created",
+      "region/north exists",
       "region/east exists",
       "region/central exists",
       "region/west exists",
-      "open municipality PRs exist under both legacy main-target and regional-target patterns"
+      "release-queue.json initialized",
+      "exceptions.json initialized",
+      "audit-log.jsonl initialized",
+      "PR #110 is CI-success and mergeable into region/central",
+      "PR #109 requires task officialSources correction before region/west merge",
+      "legacy main-target PR #44 closed as superseded by PR #109"
     ]
   },
   "priority": {
     "type": "legacy-pr-classification",
-    "nextAction": "Classify open legacy PRs targeting main and move reusable municipality work to the correct regional branch without rebuilding valid data."
+    "nextAction": "Classify the remaining legacy main-target municipality PRs, beginning with north PR #89, while regional teams process PR #110 and PR #109 instructions."
   },
   "humanDecisionRequired": false
 }
