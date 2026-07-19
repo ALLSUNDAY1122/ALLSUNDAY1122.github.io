@@ -1,15 +1,17 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T04:40:00+09:00",
+  "updatedAt": "2026-07-20T04:55:00+09:00",
   "status": "active",
   "entries": [
     {
       "region": "north",
       "branch": "region/north",
-      "municipalities": [],
-      "count": 0,
-      "releaseStatus": "waiting_regional_merge",
-      "reason": "函館市PR #89はCI成功・競合なしで地方統合待ち",
+      "municipalities": [
+        {"code": "01203", "name": "小樽市"}
+      ],
+      "count": 1,
+      "releaseStatus": "pending_regional_merge",
+      "reason": "小樽市を地方統合済み。函館市PR #89はCI成功・競合なしで地方統合待ち",
       "sourcePullRequest": 89,
       "mainIntegrationPr": null
     },
@@ -24,7 +26,7 @@
       ],
       "count": 4,
       "releaseStatus": "pending_threshold",
-      "reason": "4自治体を地方統合済み。10自治体または前回統合から24時間のrelease条件を待つ",
+      "reason": "4自治体を地方統合済み。10自治体または前回全国統合から24時間のrelease条件を待つ",
       "mainIntegrationPr": null
     },
     {
@@ -36,13 +38,13 @@
         {"code": "16204", "name": "魚津市"},
         {"code": "16205", "name": "氷見市"},
         {"code": "16206", "name": "滑川市"},
+        {"code": "16207", "name": "黒部市"},
         {"code": "23100", "name": "名古屋市"}
       ],
-      "count": 6,
-      "releaseStatus": "pending_regional_merge",
-      "reason": "6自治体の完全性監査に合格。黒部市PR #118はCI run #232成功・競合なしで地方統合待ち",
+      "count": 7,
+      "releaseStatus": "pending_threshold",
+      "reason": "7自治体を地方統合済み。完全性監査は合格済み。10自治体または24時間条件を待つ",
       "auditStatus": "passed",
-      "sourcePullRequest": 118,
       "mainIntegrationPr": null
     },
     {
@@ -59,11 +61,11 @@
     }
   ],
   "summary": {
-    "regionalMergedMunicipalities": 12,
-    "waitingRegionalMergeMunicipalities": 2,
+    "regionalMergedMunicipalities": 14,
+    "waitingRegionalMergeMunicipalities": 1,
     "releaseReadyRegions": [],
     "auditBlockedRegions": []
   },
-  "nextAction": "北日本はPR #89、中日本はPR #118を地方統合する。全国統合・公開担当は地方統合後に件数と24時間条件を再評価する。",
+  "nextAction": "北日本は函館市PR #89を地方統合する。全国統合・公開担当は各地方の件数と24時間条件を再評価し、条件到達後にmain統合PRを作成する。",
   "humanDecisionRequired": false
 }
