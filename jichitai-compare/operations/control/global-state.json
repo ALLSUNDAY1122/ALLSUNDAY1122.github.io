@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-19T21:35:00+09:00",
+  "phase": "migration-audit",
+  "mainBranch": "main",
+  "regionalBranches": {
+    "north": "region/north",
+    "east": "region/east",
+    "central": "region/central",
+    "west": "region/west"
+  },
+  "migration": {
+    "status": "in_progress",
+    "firstAuditStartedAt": "2026-07-19T21:35:00+09:00",
+    "confirmed": [
+      "municipality-assignment-policy.json exists",
+      "region/north exists or was created",
+      "region/east exists",
+      "region/central exists",
+      "region/west exists",
+      "open municipality PRs exist under both legacy main-target and regional-target patterns"
+    ]
+  },
+  "priority": {
+    "type": "legacy-pr-classification",
+    "nextAction": "Classify open legacy PRs targeting main and move reusable municipality work to the correct regional branch without rebuilding valid data."
+  },
+  "humanDecisionRequired": false
+}
