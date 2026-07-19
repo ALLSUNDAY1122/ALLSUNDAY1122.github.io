@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T04:30:00+09:00",
+  "updatedAt": "2026-07-20T04:40:00+09:00",
   "status": "active",
   "entries": [
     {
@@ -39,9 +39,10 @@
         {"code": "23100", "name": "名古屋市"}
       ],
       "count": 6,
-      "releaseStatus": "pending_threshold",
-      "reason": "6自治体の完全性監査に合格。1行相当差分はJSON圧縮形式であり欠落なし。10自治体または24時間条件を待つ",
+      "releaseStatus": "pending_regional_merge",
+      "reason": "6自治体の完全性監査に合格。黒部市PR #118はCI run #232成功・競合なしで地方統合待ち",
       "auditStatus": "passed",
+      "sourcePullRequest": 118,
       "mainIntegrationPr": null
     },
     {
@@ -59,10 +60,10 @@
   ],
   "summary": {
     "regionalMergedMunicipalities": 12,
-    "waitingRegionalMergeMunicipalities": 1,
+    "waitingRegionalMergeMunicipalities": 2,
     "releaseReadyRegions": [],
     "auditBlockedRegions": []
   },
-  "nextAction": "全国統合・公開担当は各地域の10自治体・24時間・重要修正・明示release条件を再評価する。北日本はPR #89の地方統合を優先する。",
+  "nextAction": "北日本はPR #89、中日本はPR #118を地方統合する。全国統合・公開担当は地方統合後に件数と24時間条件を再評価する。",
   "humanDecisionRequired": false
 }
