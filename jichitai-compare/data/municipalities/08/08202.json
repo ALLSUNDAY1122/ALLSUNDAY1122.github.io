@@ -6,7 +6,7 @@
   "name": "日立市",
   "officialUrl": "https://www.city.hitachi.lg.jp/",
   "status": "researching",
-  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料、学校給食費無償化、産後ケアを確認済みで、その他4制度を調査中。",
+  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料、学校給食費無償化、産後ケア、一時預かり・こども誰でも通園制度を確認済みで、その他3制度を調査中。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -89,7 +89,29 @@
       },
       "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007202/1002005/1001652.html", "checkedAt": "2026-07-20"}
     },
-    "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "満1歳から就学前の一時預かりと、未就園の0歳6か月から3歳未満を対象とする月10時間のこども誰でも通園制度を実施",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "temporaryCareTarget": "日立市在住の満1歳から小学校就学前で、認定こども園、保育所、一時預かり実施幼稚園に在籍していない子ども",
+        "temporaryCareReasons": "保護者の仕事、病気、出産、看護、冠婚葬祭、育児疲れ等により緊急または一時的に保育できない場合",
+        "temporaryCareFacilities": "おおもり保育園、ゆなご保育園、おおくぼ保育園、みずき保育園",
+        "temporaryCareHours": "月曜日から金曜日の9時30分～16時30分。祝日・年末年始を除き、1時間単位、原則週3日以内",
+        "temporaryCareFee": "2026年4月から1時間300円。給食のおかず320円、おやつ100円。主食は持参",
+        "anyChildCareTarget": "日立市に住民登録があり、利用日時点で0歳6か月から満3歳未満、保育園・認定こども園・幼稚園・地域型保育・企業主導型保育に在籍していない子ども",
+        "anyChildCareLimit": "2026年4月1日開始。保護者の就労要件なしで月10時間まで、翌月繰越不可",
+        "anyChildCareFee": "1人1時間300円。生活保護世帯は0円、市町村民税所得割合算額77,101円未満の世帯は100円。教材費・保険料・給食費等の実費は別",
+        "anyChildCareApplication": "利用開始前に市への認定申請が必要。認定後、利用施設との初回面談と予約を行う",
+        "feeSupport": "保育の必要性の認定を事前に受けた一時預かり等は、3～5歳児月額37,000円、住民税非課税世帯の0～2歳児月額42,000円を上限に償還払いの対象となる場合がある"
+      },
+      "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007350/1004312/1002000.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [
+        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1018878.html", "checkedAt": "2026-07-20"},
+        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001998.html", "checkedAt": "2026-07-20"},
+        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001997.html", "checkedAt": "2026-07-20"}
+      ]
+    },
     "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
     "bulkyWaste": {"status": "researching", "summary": "粗大ごみ制度を調査中"},
     "disasterPrevention": {"status": "researching", "summary": "防災・ハザード情報を調査中"}
