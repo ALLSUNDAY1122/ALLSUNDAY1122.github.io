@@ -3,40 +3,33 @@
   "region": "central",
   "assignedTeam": "中日本調査班",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-20T00:20:04+09:00",
+  "updatedAt": "2026-07-20T04:30:00+09:00",
   "status": "active",
-  "regionalQueue": [
-    {
-      "code": "16201",
-      "name": "富山市",
-      "pullRequestNumber": 30,
-      "stage": "regional_merge_ready",
-      "ci": "success",
-      "mergeable": true,
-      "blocked": false
-    },
-    {
-      "code": "16206",
-      "name": "滑川市",
-      "pullRequestNumber": 110,
-      "stage": "regional_merge_ready",
-      "ci": "success",
-      "mergeable": true,
-      "blocked": false
-    },
-    {
-      "code": "23100",
-      "name": "名古屋市",
-      "pullRequestNumber": 46,
-      "stage": "ci_rerun_required",
-      "ci": "legacy_failure",
-      "mergeable": true,
-      "blocked": true,
-      "blocker": "新baseでCIを再実行し、成功確認が必要"
-    }
+  "completedSinceLastRelease": 6,
+  "completedMunicipalities": [
+    {"code": "16201", "name": "富山市", "regionalPullRequest": 30},
+    {"code": "16202", "name": "高岡市", "regionalPullRequest": 68},
+    {"code": "16204", "name": "魚津市", "regionalPullRequest": 80},
+    {"code": "16205", "name": "氷見市", "regionalPullRequest": 92},
+    {"code": "16206", "name": "滑川市", "regionalPullRequest": 110},
+    {"code": "23100", "name": "名古屋市", "regionalPullRequest": 46}
   ],
-  "completedSinceLastRelease": 0,
-  "lastAction": "富山市PR #30を地方統合可能と確認し、名古屋市PR #46をregion/centralへ移管",
-  "nextAction": "PR #30とPR #110を地方統合し、PR #46はtaskメタデータを最小更新してCIを再実行",
+  "regionalQueue": [],
+  "blocked": [],
+  "completenessAudit": {
+    "status": "passed",
+    "checkedCodes": ["16201", "16202", "16204", "16205", "16206", "23100"],
+    "checks": [
+      "自治体JSONの基本属性を確認",
+      "9制度IDの存在を確認",
+      "各制度のverified状態と公式主出典を確認",
+      "taskのcompletedServices 9件・verifiedCount 9を確認",
+      "1行相当差分はJSON圧縮形式によるもので欠落ではないと判定",
+      "地方統合済みPRとmerge commitを確認",
+      "task.statusをmergedへ正規化し旧blockerを除去"
+    ]
+  },
+  "lastAction": "中日本6自治体の完全性監査を完了し、地方統合後メタデータを正規化",
+  "nextAction": "中日本調査班は担当表の自治体コード順で次の未着手自治体へ進む。",
   "humanDecisionRequired": false
 }
