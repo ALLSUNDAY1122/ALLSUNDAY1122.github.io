@@ -7,7 +7,7 @@
     "code": "40130",
     "name": "福岡市"
   },
-  "stage": "ci_waiting",
+  "stage": "ci_failed",
   "completedServiceCount": 9,
   "requiredServiceCount": 9,
   "workingBranch": "data/40130-fukuoka-city",
@@ -19,12 +19,16 @@
   "ci": {
     "workflow": "Jichitai Compare CI",
     "runId": 29687152706,
-    "status": "in_progress",
-    "conclusion": null
+    "status": "completed",
+    "conclusion": "failure",
+    "failedJob": "Validate municipality data",
+    "failedStep": "Validate source and generated data"
   },
   "conflict": false,
-  "exceptions": [],
-  "lastAction": "福岡市9制度データを検証し、region/westを作成してPR #109を提出",
-  "nextAction": "PR #109のCI結果を確認し、成功かつ競合なしならregion/westへマージ",
-  "updatedAt": "2026-07-19T21:32:00+09:00"
+  "exceptions": [
+    "WEST-40130-CI-001"
+  ],
+  "lastAction": "PR #109のCIを確認し、Validate source and generated data工程の失敗を特定して記録",
+  "nextAction": "CIログの検証エラー本文を特定し、福岡市固有データまたはtaskの軽微修正で解消可能か確認する。解消不能なら別自治体へ移行する",
+  "updatedAt": "2026-07-19T21:36:00+09:00"
 }
