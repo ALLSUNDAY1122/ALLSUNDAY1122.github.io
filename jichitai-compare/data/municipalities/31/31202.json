@@ -6,7 +6,7 @@
   "name": "米子市",
   "officialUrl": "https://www.city.yonago.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。5制度を確認済みで、残り4制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。6制度を確認済みで、残り3制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -86,7 +86,26 @@
       "source": {"url": "https://www.city.yonago.lg.jp/20403.htm", "checkedAt": "2026-07-20"},
       "additionalSources": [{"url": "https://www.city.yonago.lg.jp/46534.htm", "checkedAt": "2026-07-20"}]
     },
-    "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園児向けの一時預かりと、6か月～満3歳未満向けのこども誰でも通園制度を実施",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "oneTimeTarget": "米子市在住で、保育施設等に在籍していない0歳から就学前までの子ども",
+        "oneTimeFee": "1日当たり3歳以上1,000円、3歳未満2,000円",
+        "oneTimeApplication": "実施施設へ空き状況を確認し、事前申請・登録が必要。公立施設は電子申請で予約",
+        "anyoneTarget": "保育所、認定こども園、企業主導型保育施設等に在籍していない生後6か月から満3歳未満までの子ども",
+        "anyoneLimit": "子ども1人当たり月10時間まで",
+        "anyoneRequirement": "保護者の就労要件を問わず利用可能",
+        "anyoneApplication": "利用申請後、総合支援システムで事前面談と利用予約を行う",
+        "anyoneFee": "利用料と支払方法は実施施設ごとに異なる"
+      },
+      "source": {"url": "https://www.city.yonago.lg.jp/48158.htm", "checkedAt": "2026-07-20"},
+      "additionalSources": [
+        {"url": "https://www.city.yonago.lg.jp/48160.htm", "checkedAt": "2026-07-20"},
+        {"url": "https://www.city.yonago.lg.jp/45555.htm", "checkedAt": "2026-07-20"}
+      ]
+    },
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
     "bulkyWaste": {"status": "todo", "summary": "粗大ごみ料金を未調査"},
     "disasterPrevention": {"status": "todo", "summary": "防災・ハザード情報を未調査"}
