@@ -3,21 +3,18 @@
   "region": "north",
   "assignedTeam": "北日本調査班",
   "integrationBranch": "region/north",
-  "updatedAt": "2026-07-20T04:30:00+09:00",
+  "updatedAt": "2026-07-20T06:20:00+09:00",
   "status": "active",
-  "currentMunicipality": {
-    "code": "01202",
-    "name": "函館市",
-    "stage": "regional_merge_ready",
-    "branch": "data/01202-hakodate",
-    "pullRequestNumber": 89,
-    "ci": "success",
-    "mergeable": true,
-    "blocked": false
-  },
-  "completedSinceLastRelease": 0,
-  "openPullRequestCount": 1,
-  "lastAction": "全open PRを確認し、PR #89が唯一の未統合案件であることを確認",
-  "nextAction": "北日本調査班がPR #89をregion/northへ統合し、次自治体へ進む。",
+  "currentMunicipality": null,
+  "completedSinceLastRelease": 2,
+  "completedMunicipalities": [
+    {"code": "01203", "name": "小樽市", "regionalPullRequest": 116},
+    {"code": "01202", "name": "函館市", "regionalPullRequest": 89}
+  ],
+  "regionalQueue": [],
+  "blocked": [],
+  "openPullRequestCount": 0,
+  "lastAction": "PR #89函館市のregion/north統合を確認し、task statusをmergedへ正規化",
+  "nextAction": "担当表から次の未着手自治体を選定して制度調査を開始する。",
   "humanDecisionRequired": false
 }
