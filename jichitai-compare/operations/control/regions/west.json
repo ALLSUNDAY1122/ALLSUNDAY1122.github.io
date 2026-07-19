@@ -3,22 +3,20 @@
   "region": "west",
   "team": "西日本調査班",
   "integrationBranch": "region/west",
-  "currentMunicipality": null,
-  "stage": "ready_for_next",
+  "currentMunicipality": {
+    "code": "31202",
+    "name": "米子市"
+  },
+  "stage": "researching",
   "completedServiceCount": 0,
   "requiredServiceCount": 9,
-  "workingBranch": null,
+  "workingBranch": "data/31202-yonago-city",
   "pullRequest": null,
-  "ci": {
-    "status": "success",
-    "lastSuccessfulWorkflowRunId": 29696649850,
-    "lastMergedPullRequest": 114,
-    "lastMergeCommit": "1141155b909fc298f66708bc9e2314fe65acf5f1"
-  },
+  "ci": null,
   "conflict": false,
   "exceptions": [],
   "deferredMunicipalities": [],
-  "lastAction": "福岡市PR #109と鳥取市PR #114をregion/westへ統合し、WEST-40130-CI-001とWEST-31201-CI-001を解消済みに更新",
-  "nextAction": "割当表から西日本調査班の次の未着手自治体を選定し、自治体ブランチとtaskを作成する",
-  "updatedAt": "2026-07-20T01:45:00+09:00"
+  "lastAction": "割当表の標準順序に従い、次の未着手自治体として米子市（31202）を選定し、自治体ブランチ・自治体JSON・taskを作成",
+  "nextAction": "米子市childMedicalを公式情報で調査し、自治体JSONとtaskへ保存・検証する",
+  "updatedAt": "2026-07-20T02:00:00+09:00"
 }
