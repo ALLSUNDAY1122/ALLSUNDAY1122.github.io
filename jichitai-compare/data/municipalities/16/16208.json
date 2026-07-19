@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "16208",
+  "prefectureCode": "16",
+  "prefecture": "富山県",
+  "name": "砺波市",
+  "officialUrl": "https://www.city.tonami.lg.jp/",
+  "status": "researching",
+  "summary": "砺波市の9制度を調査中。こども医療費助成を確認済み。",
+  "updatedAt": "2026-07-20",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "砺波市内に住む0歳から18歳になる年の年度末までの子どもを対象に、保険診療の自己負担分を助成。高校在学の有無は問わない。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18,
+        "residency": "砺波市内に住所があること",
+        "insurance": "健康保険に加入していること"
+      },
+      "details": {
+        "ageLimit": "満18歳に達する日以後の最初の3月31日まで",
+        "application": "出生・転入等で新たに利用する場合は申請が必要。申請後にこども医療費受給資格証を交付",
+        "requiredDocuments": "子どもの健康保険情報を確認できる書類等",
+        "exclusions": "ひとり親家庭等医療費助成、重度心身障害者等医療費助成を利用している場合は対象外"
+      },
+      "source": {
+        "url": "https://www.city.tonami.lg.jp/service/56378p/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.tonami.lg.jp/service/56371p/",
+          "checkedAt": "2026-07-20",
+          "description": "対象年齢を18歳年度末まで拡大した制度改正と高校在学要件なしの確認"
+        }
+      ]
+    },
+    "sickChildCare": {"status": "researching", "summary": "調査中"},
+    "childcareFee": {"status": "todo", "summary": "未調査"},
+    "schoolMeals": {"status": "todo", "summary": "未調査"},
+    "postpartumCare": {"status": "todo", "summary": "未調査"},
+    "temporaryChildcare": {"status": "todo", "summary": "未調査"},
+    "housingSupport": {"status": "todo", "summary": "未調査"},
+    "bulkyWaste": {"status": "todo", "summary": "未調査"},
+    "disasterPrevention": {"status": "todo", "summary": "未調査"}
+  }
+}
