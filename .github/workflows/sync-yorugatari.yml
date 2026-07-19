@@ -32,6 +32,10 @@ jobs:
           mkdir -p /tmp/yorugatari-overrides/assets
           if [ -f yorugatari/index.html ]; then cp yorugatari/index.html /tmp/yorugatari-overrides/index.html; fi
           if [ -f yorugatari/assets/app.js ]; then cp yorugatari/assets/app.js /tmp/yorugatari-overrides/assets/app.js; fi
+          if [ -f yorugatari/assets/archive.js ]; then cp yorugatari/assets/archive.js /tmp/yorugatari-overrides/assets/archive.js; fi
+          if [ -f yorugatari/assets/story.js ]; then cp yorugatari/assets/story.js /tmp/yorugatari-overrides/assets/story.js; fi
+          if [ -f yorugatari/assets/styles.css ]; then cp yorugatari/assets/styles.css /tmp/yorugatari-overrides/assets/styles.css; fi
+          if [ -f yorugatari/privacy.html ]; then cp yorugatari/privacy.html /tmp/yorugatari-overrides/privacy.html; fi
           if [ -f yorugatari/assets/notion-stories.js ]; then cp yorugatari/assets/notion-stories.js /tmp/yorugatari-overrides/assets/notion-stories.js; fi
           if [ -d yorugatari/series ]; then cp -a yorugatari/series /tmp/yorugatari-overrides/series; fi
 
@@ -75,6 +79,10 @@ jobs:
         run: |
           if [ -f /tmp/yorugatari-overrides/index.html ]; then cp /tmp/yorugatari-overrides/index.html yorugatari/index.html; fi
           if [ -f /tmp/yorugatari-overrides/assets/app.js ]; then cp /tmp/yorugatari-overrides/assets/app.js yorugatari/assets/app.js; fi
+          if [ -f /tmp/yorugatari-overrides/assets/archive.js ]; then cp /tmp/yorugatari-overrides/assets/archive.js yorugatari/assets/archive.js; fi
+          if [ -f /tmp/yorugatari-overrides/assets/story.js ]; then cp /tmp/yorugatari-overrides/assets/story.js yorugatari/assets/story.js; fi
+          if [ -f /tmp/yorugatari-overrides/assets/styles.css ]; then cp /tmp/yorugatari-overrides/assets/styles.css yorugatari/assets/styles.css; fi
+          if [ -f /tmp/yorugatari-overrides/privacy.html ]; then cp /tmp/yorugatari-overrides/privacy.html yorugatari/privacy.html; fi
           if [ -f /tmp/yorugatari-overrides/assets/notion-stories.js ]; then cp /tmp/yorugatari-overrides/assets/notion-stories.js yorugatari/assets/notion-stories.js; fi
           if [ -d /tmp/yorugatari-overrides/series ]; then rm -rf yorugatari/series; cp -a /tmp/yorugatari-overrides/series yorugatari/series; fi
 

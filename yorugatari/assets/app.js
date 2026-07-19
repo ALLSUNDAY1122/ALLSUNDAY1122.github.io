@@ -6,6 +6,14 @@ const count = document.querySelector('#count');
 const coreStories = Array.isArray(window.STORIES) ? window.STORIES : [];
 const notionStories = Array.isArray(window.NOTION_STORIES) ? window.NOTION_STORIES : [];
 const stories = coreStories.concat(notionStories);
+const completedStorageKey = 'yorugatari-completed-stories';
+let completedStories = [];
+try {
+  const storedCompleted = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
+  completedStories = Array.isArray(storedCompleted) ? storedCompleted : [];
+} catch (error) {
+  completedStories = [];
+}
 let activeCategory = 'すべて';
 
 if (count) count.setAttribute('aria-live', 'polite');
@@ -18,8 +26,9 @@ function storyHref(story) {
 function card(story) {
   const fear = '●'.repeat(story.fear) + '○'.repeat(5 - story.fear);
   const tags = Array.isArray(story.tags) ? story.tags : [];
-  return `<a class="card" href="${storyHref(story)}" data-title="${story.title}" data-category="${story.category}" data-tags="${tags.join(' ')}">
-    <div class="meta"><span class="badge">${story.category}</span><span>${story.length}</span><span>約${story.minutes}分</span></div>
+  const completed = completedStories.includes(story.slug);
+  return `<a class="card${completed ? ' completed' : ''}" href="${storyHref(story)}" data-title="${story.title}" data-category="${story.category}" data-tags="${tags.join(' ')}">
+    <div class="meta"><span class="badge">${story.category}</span><span>${story.length}</span><span>約${story.minutes}分</span>${completed ? '<span class="read-badge">✓ 読了</span>' : ''}</div>
     <h3>${story.title}</h3><p>${story.summary}</p>
     <div class="card-foot"><span class="fear" aria-label="怖さ ${story.fear}/5">${fear}</span><span>${story.series || 'オリジナル作品'}</span></div>
   </a>`;
@@ -38,7 +47,8 @@ function render() {
 
   grid.innerHTML = filtered.map(card).join('');
   empty.style.display = filtered.length ? 'none' : 'block';
-  count.textContent = `${filtered.length}話`;
+  const completedCount = stories.filter(function (story) { return completedStories.includes(story.slug); }).length;
+  count.textContent = `表示${filtered.length}話・この端末で${completedCount}話読了`;
 }
 
 chips.forEach(function (chip) {
