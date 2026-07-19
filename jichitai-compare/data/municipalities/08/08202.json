@@ -6,7 +6,7 @@
   "name": "日立市",
   "officialUrl": "https://www.city.hitachi.lg.jp/",
   "status": "researching",
-  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料、学校給食費無償化を確認済みで、その他5制度を調査中。",
+  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料、学校給食費無償化、産後ケアを確認済みで、その他4制度を調査中。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -73,7 +73,22 @@
       },
       "source": {"url": "https://www.city.hitachi.lg.jp/kyouiku/kyushoku/1017095.html", "checkedAt": "2026-07-20"}
     },
-    "postpartumCare": {"status": "researching", "summary": "産後ケアを調査中"},
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後1年未満の乳児と母親を対象に、宿泊・日帰り・訪問型の産後ケアを合計原則7日まで無料で提供",
+      "eligibility": {"minAgeMonths": 0, "maxAgeMonths": 11},
+      "details": {
+        "target": "原則として日立市に住所があり、体調不良または育児不安があり、家族等から産後の協力を得にくく、母子とも入院治療を必要としない母親と生後1年未満の乳児",
+        "ageLimitNote": "病院で利用できる月齢は生後4か月までで、施設により対象月齢が異なる",
+        "types": "医療機関・助産院での宿泊型、日帰り型、助産師による訪問型から選択",
+        "duration": "1回の出産につき、宿泊・日帰り・訪問を合わせて原則7日以内",
+        "hours": "宿泊型は午前9時から翌日午後5時、日帰り型は午前9時から午後5時、訪問型は午前9時から午後4時のうち3時間",
+        "fee": "自己負担無料",
+        "care": "母親の心身・乳房ケア、乳児の発育発達・体重・排便確認、授乳・沐浴・スキンケア指導、育児相談",
+        "application": "原則利用日の7日前までに申請書を提出し、育児状況や相談内容の審査後に利用決定。出産後は来所面接申込みフォームも利用可能"
+      },
+      "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007202/1002005/1001652.html", "checkedAt": "2026-07-20"}
+    },
     "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
     "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
     "bulkyWaste": {"status": "researching", "summary": "粗大ごみ制度を調査中"},
