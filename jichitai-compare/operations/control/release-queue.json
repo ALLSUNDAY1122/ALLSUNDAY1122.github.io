@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T05:25:00+09:00",
+  "updatedAt": "2026-07-20T08:00:00+09:00",
   "status": "active",
   "entries": [
     {
@@ -8,11 +8,12 @@
       "branch": "region/north",
       "municipalities": [
         {"code": "01202", "name": "函館市"},
-        {"code": "01203", "name": "小樽市"}
+        {"code": "01203", "name": "小樽市"},
+        {"code": "01204", "name": "旭川市"}
       ],
-      "count": 2,
+      "count": 3,
       "releaseStatus": "pending_threshold",
-      "reason": "函館市PR #89と小樽市PR #116を地方統合済み。10自治体または前回全国統合から24時間のrelease条件を待つ",
+      "reason": "函館市・小樽市・旭川市を地方統合済み。10自治体または正式な前回全国統合時刻から24時間のrelease条件を待つ",
       "mainIntegrationPr": null
     },
     {
@@ -25,8 +26,9 @@
         {"code": "13123", "name": "江戸川区"}
       ],
       "count": 4,
-      "releaseStatus": "pending_threshold",
-      "reason": "4自治体を地方統合済み。10自治体または前回全国統合から24時間のrelease条件を待つ",
+      "releaseStatus": "pending_regional_merge",
+      "reason": "4自治体を地方統合済み。日立市PR #123はopen・競合なしで地方統合待ち",
+      "sourcePullRequest": 123,
       "mainIntegrationPr": null
     },
     {
@@ -39,11 +41,12 @@
         {"code": "16205", "name": "氷見市"},
         {"code": "16206", "name": "滑川市"},
         {"code": "16207", "name": "黒部市"},
+        {"code": "16208", "name": "砺波市"},
         {"code": "23100", "name": "名古屋市"}
       ],
-      "count": 7,
+      "count": 8,
       "releaseStatus": "pending_threshold",
-      "reason": "7自治体を地方統合済み。完全性監査は合格済み。10自治体または24時間条件を待つ",
+      "reason": "8自治体を地方統合済み。完全性監査は合格済み。10自治体または正式な24時間条件を待つ",
       "auditStatus": "passed",
       "mainIntegrationPr": null
     },
@@ -52,20 +55,21 @@
       "branch": "region/west",
       "municipalities": [
         {"code": "31201", "name": "鳥取市"},
+        {"code": "31202", "name": "米子市"},
         {"code": "40130", "name": "福岡市"}
       ],
-      "count": 2,
+      "count": 3,
       "releaseStatus": "pending_threshold",
-      "reason": "2自治体を地方統合済み。CI例外とtaskメタデータ不整合は解消済み。10自治体または24時間条件を待つ",
+      "reason": "鳥取市・米子市・福岡市を地方統合済み。10自治体または正式な24時間条件を待つ",
       "mainIntegrationPr": null
     }
   ],
   "summary": {
-    "regionalMergedMunicipalities": 15,
-    "waitingRegionalMergeMunicipalities": 0,
+    "regionalMergedMunicipalities": 18,
+    "waitingRegionalMergeMunicipalities": 1,
     "releaseReadyRegions": [],
     "auditBlockedRegions": []
   },
-  "nextAction": "各地方の追加統合件数と24時間条件を再評価し、条件到達後にmain統合PRを作成する。",
+  "nextAction": "東日本は日立市PR #123を地方統合する。全国統合・公開担当は中日本の9件目以降、各地方の10自治体到達、正式な24時間条件を再評価する。",
   "humanDecisionRequired": false
 }
