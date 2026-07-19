@@ -6,10 +6,37 @@
   "name": "旭川市",
   "officialUrl": "https://www.city.asahikawa.hokkaido.jp/",
   "status": "researching",
-  "summary": "北日本調査班が9制度を順次調査する。",
+  "summary": "北日本調査班が1制度を公式情報で確認済み。残り8制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
-    "childMedical": {"status": "todo", "summary": "子ども医療費を未調査"},
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生年代までの公的医療保険適用後の自己負担額を全額助成。自己負担なし。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "residency": "旭川市に住民登録があること",
+        "insurance": "公的医療保険に加入していること",
+        "ageLimit": "18歳に達する日以後の最初の3月31日まで",
+        "copay": "公的医療保険適用後の自己負担額を全額助成し、自己負担なし",
+        "incomeLimit": "令和8年8月から北海道の乳幼児等医療給付事業で所得制限撤廃。旭川市の対象要件にも所得制限の記載なし",
+        "exclusions": "生活保護受給者、ひとり親家庭等医療・重度心身障害者医療の受給者は対象外。保険外診療、入院時食事療養費、紹介状なし大病院受診時の保険外併用療養費、学校管理下のけが、第三者行為等は助成対象外",
+        "application": "受給者証の交付申請が必要。オンライン申請または窓口申請に対応",
+        "effectiveFrom": "高校生年代は2025年8月診療分から対象"
+      },
+      "source": {
+        "url": "https://www.city.asahikawa.hokkaido.jp/kurashi/218/228/230/p004567.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.asahikawa.hokkaido.jp/1000/1001/1026/1030/p003310.html",
+          "checkedAt": "2026-07-20"
+        }
+      ]
+    },
     "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
     "childcareFee": {"status": "todo", "summary": "保育料・第2子軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
