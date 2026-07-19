@@ -6,7 +6,7 @@
   "name": "米子市",
   "officialUrl": "https://www.city.yonago.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。4制度を確認済みで、残り5制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。5制度を確認済みで、残り4制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -70,7 +70,22 @@
         {"url": "https://www.city.yonago.lg.jp/48186.htm", "checkedAt": "2026-07-20"}
       ]
     },
-    "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後12か月までの母子を対象に、宿泊・日帰り・訪問型の産後ケアを無料で実施",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "米子市に住民票があり、医療機関退院後の産婦と生後12か月までの赤ちゃん。訪問型は医療的ケア児、多胎児、外出困難等の条件がある",
+        "types": "ショートステイ（宿泊）、デイケア（日帰り）、訪問型",
+        "fee": "無料",
+        "facilityLimit": "デイケアとショートステイを合わせて7回まで、多胎の場合は10回まで",
+        "visitLimit": "訪問型は3回まで、1回4時間以内",
+        "support": "育児相談、授乳相談、母体ケア、乳児の健康・体重・栄養状態の確認、沐浴支援等",
+        "exclusions": "医療行為が必要な場合や感染症罹患時は利用不可。施設との日程調整により希望日に利用できない場合がある"
+      },
+      "source": {"url": "https://www.city.yonago.lg.jp/20403.htm", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.yonago.lg.jp/46534.htm", "checkedAt": "2026-07-20"}]
+    },
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
     "bulkyWaste": {"status": "todo", "summary": "粗大ごみ料金を未調査"},
