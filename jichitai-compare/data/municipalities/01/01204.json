@@ -6,7 +6,7 @@
   "name": "旭川市",
   "officialUrl": "https://www.city.asahikawa.hokkaido.jp/",
   "status": "researching",
-  "summary": "北日本調査班が2制度を公式情報で確認済み。残り7制度を順次調査する。",
+  "summary": "北日本調査班が3制度を公式情報で確認済み。残り6制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -47,7 +47,21 @@
       },
       "source": {"url": "https://www.city.asahikawa.hokkaido.jp/kurashi/218/232/233/p009064.html", "checkedAt": "2026-07-20"}
     },
-    "childcareFee": {"status": "todo", "summary": "保育料・第2子軽減を未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳から5歳は全員、0歳から2歳は住民税非課税世帯の保育料が無償。課税世帯の3号認定は市町村民税額等で算定し、多子軽減がある。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "fee": "1号認定および年度当初時点の2号認定は0円。3号認定は生活保護・住民税非課税世帯0円、課税世帯は市町村民税所得割額と保育必要量で月額決定",
+        "calculation": "4月から8月は前年度、9月から翌年3月は当年度の市町村民税額を基礎に算定",
+        "siblingReduction": "C1～C9-1階層は生計を一にする子の第2子が表の軽減額、第3子以降0円。C9-2～C13階層は対象施設等を利用する就学前児童の第2子が軽減、第3子以降0円",
+        "singleParentReduction": "ひとり親・障害者等を含む一定世帯でC1～C4-1階層は2,700円、生計を一にする第2子以降0円",
+        "excludedCosts": "通園送迎費、食材料費、行事費等は無償化対象外。2号認定の副食費は原則実費",
+        "supplementaryMealExemption": "年収約360万円未満世帯の全児童と、生計を一にする子の第3子以降は副食費免除"
+      },
+      "source": {"url": "https://www.city.asahikawa.hokkaido.jp/800/808/811/p004303.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.asahikawa.hokkaido.jp/800/808/811/d067068.html", "checkedAt": "2026-07-20"}]
+    },
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
