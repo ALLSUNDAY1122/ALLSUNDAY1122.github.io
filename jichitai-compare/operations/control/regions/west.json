@@ -7,16 +7,18 @@
     "code": "31201",
     "name": "鳥取市"
   },
-  "stage": "ci_exception",
+  "stage": "ci_retry_in_progress",
   "completedServiceCount": 9,
   "requiredServiceCount": 9,
   "workingBranch": "data/31201-tottori-city",
   "pullRequest": 114,
   "ci": {
-    "status": "failure",
-    "workflowRunId": 29695183184,
-    "failedJob": "Validate municipality data",
-    "failedStep": "Generate national progress"
+    "status": "in_progress",
+    "workflowRunId": 29696503134,
+    "previousWorkflowRunId": 29695183184,
+    "previousFailedJob": "Validate municipality data",
+    "previousFailedStep": "Generate national progress",
+    "rootCause": "operations/tasks/31201.json の status=completed が全国進捗生成スクリプトの許可値外だったため。status=pr_open、pullRequestNumber=114へ補正済み"
   },
   "conflict": false,
   "exceptions": [
@@ -36,10 +38,10 @@
       "name": "鳥取市",
       "branch": "data/31201-tottori-city",
       "pullRequestNumber": 114,
-      "reason": "CI national progress generation failure"
+      "reason": "CI retry in progress after task status correction"
     }
   ],
-  "lastAction": "PR #114のCIを確認し、Generate national progress工程の失敗をWEST-31201-CI-001として登録",
-  "nextAction": "鳥取市PR #114の全国進捗生成エラーを特定し、軽微修正可能なら作業ブランチへ反映する",
-  "updatedAt": "2026-07-20T00:40:00+09:00"
+  "lastAction": "PR #114の全国進捗生成失敗原因をtask statusの許可値不一致と特定。全国進行統括によるpr_open補正を確認し、CI Run #214の再実行状態を保存",
+  "nextAction": "CI Run #214の結果を確認し、成功ならWEST-31201-CI-001を解消してPR #114をregion/westへ統合する",
+  "updatedAt": "2026-07-20T01:25:00+09:00"
 }
