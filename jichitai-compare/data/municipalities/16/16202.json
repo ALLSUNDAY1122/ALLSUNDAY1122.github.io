@@ -6,7 +6,7 @@
   "name": "高岡市",
   "officialUrl": "https://www.city.takaoka.toyama.jp/",
   "status": "researching",
-  "summary": "高岡市の9制度を調査中。こども医療費助成、病児・病後児保育を確認済み。",
+  "summary": "高岡市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -79,8 +79,46 @@
       ]
     },
     "childcareFee": {
-      "status": "todo",
-      "summary": "保育料を未調査"
+      "status": "verified",
+      "summary": "3歳以上児と市民税非課税世帯の0～2歳児は保育料無料。課税世帯の0～2歳児は市民税額・保育時間・出生順位に応じて月額を決定",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5,
+        "ageCondition": "0～2歳児は4月1日時点の年齢区分で保育料を算定。3歳以上児は幼児教育・保育の無償化対象",
+        "facilities": "保育園、認定こども園、事業所内保育施設等"
+      },
+      "details": {
+        "feeCalculation": "0～2歳児は、父母の市町村民税均等割・所得割の合計、保育標準時間・短時間、世帯内の出生順位により決定。父母の所得が少なく祖父母等と同居する場合は、家計の主宰者を算定対象とすることがある",
+        "fiscalYearCalculation": "令和8年4～8月分は令和7年度市町村民税、令和8年9月～令和9年8月分は令和8年度市町村民税で算定。年齢は4月1日時点で固定",
+        "feeRange": "令和8年度の0～2歳児第1子は、生活保護・市民税非課税世帯0円から、所得割397,000円以上で標準時間46,500円・短時間45,800円まで。第2子は所得区分により0円または半額相当で、最高は標準時間23,250円・短時間22,900円",
+        "freeChildcare": "3歳以上児は所得にかかわらず保育料無料。0～2歳児は市民税非課税世帯が無料。保育料以外の送迎費・行事費等は施設ごとの実費負担",
+        "siblingReduction": "第2子は市町村民税所得割額57,700円未満の世帯では無料、57,700円以上では半額。第3子以降は所得にかかわらず無料。出生順位は生計を一にする子どもで判定し、兄姉の年齢を問わない",
+        "specialHouseholdReduction": "生活保護世帯と市民税非課税世帯は無料。所得割77,101円未満のひとり親家庭等医療費受給世帯、または在宅障がい児・障がい者がいる世帯は、認定内容変更後に保育料無料",
+        "sideDishFee": "3歳以上児の副食費は別途。公立園は1号認定月額3,700円、2号認定月額4,900円。私立園は施設ごとに設定。0～2歳児の主食費・副食費は保育料に含む",
+        "sideDishReduction": "1号認定は所得割77,101円未満、2号認定は57,700円未満の世帯等が免除。第2子以降は月額5,100円上限の減免、対象施設を同時利用する第3子以降は所得にかかわらず免除。保育園・認定こども園は原則申請不要、幼稚園は施設案内に従い申請",
+        "otherReduction": "自然災害による全焼・全壊は全額、半焼・半壊は半額、長期欠席は日数により半額または全額、失業・倒産等による大幅な収入減は30％から全額の減免制度あり"
+      },
+      "source": {
+        "url": "https://www.city.takaoka.toyama.jp/soshiki/kodomo_kosodateka/2/11/3/2140.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.takaoka.toyama.jp/soshiki/kodomo_kosodateka/1/3/2139.html",
+          "checkedAt": "2026-07-19",
+          "description": "第2子・第3子以降の保育料軽減と副食費軽減"
+        },
+        {
+          "url": "https://www.city.takaoka.toyama.jp/gyosei/kosodate_kyoiku/yochien_hoikuen_ninteikodomoen/99/6319.html",
+          "checkedAt": "2026-07-19",
+          "description": "公立園の副食費額、所得・出生順位による免除と減免"
+        },
+        {
+          "url": "https://www.city.takaoka.toyama.jp/material/files/group/36/r8hoikuryokijungakuhyou.pdf",
+          "checkedAt": "2026-07-19",
+          "description": "令和8年度保育料徴収基準額表"
+        }
+      ]
     },
     "schoolMeals": {
       "status": "todo",
