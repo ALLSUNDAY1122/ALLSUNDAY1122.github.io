@@ -6,16 +6,13 @@
   "name": "水戸市",
   "officialUrl": "https://www.city.mito.lg.jp/",
   "status": "researching",
-  "summary": "茨城県の県庁所在地。子ども医療福祉費助成を確認済みで、その他8制度を調査中。",
+  "summary": "茨城県の県庁所在地。子ども医療福祉費助成と病児・病後児保育を確認済みで、その他7制度を調査中。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "出生から18歳到達後最初の3月31日まで、健康保険診療の自己負担を助成",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
       "details": {
         "target": "水戸市に住民登録があり健康保険に加入している子ども",
         "period": "出生から18歳に到達した後、最初の3月31日まで",
@@ -25,48 +22,30 @@
         "application": "受給者証の交付申請が必要。新規申請、保険情報変更、再交付は電子申請にも対応",
         "renewal": "毎年、子どもの誕生月に更新"
       },
-      "source": {
-        "url": "https://www.city.mito.lg.jp/site/shinsei/3148.html",
-        "checkedAt": "2026-07-19"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.mito.lg.jp/page/102442.html",
-          "checkedAt": "2026-07-19"
-        }
-      ]
+      "source": {"url": "https://www.city.mito.lg.jp/site/shinsei/3148.html", "checkedAt": "2026-07-19"},
+      "additionalSources": [{"url": "https://www.city.mito.lg.jp/page/102442.html", "checkedAt": "2026-07-19"}]
     },
     "sickChildCare": {
-      "status": "researching",
-      "summary": "病児・病後児保育を調査中"
+      "status": "verified",
+      "summary": "生後2か月から小学校6年生までを中心に、施設型と訪問型の病児・病後児保育を実施",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 12},
+      "details": {
+        "target": "水戸市在住で、病気または病気回復期にあり、保護者の就労等により家庭保育が困難な児童",
+        "facilityTypes": "病児保育2施設、病後児保育3施設、訪問型病児保育1事業者",
+        "ageRange": "施設型は生後2か月から小学校6年生までが基本。水戸済生会総合病院病児保育室は小学校3年生まで。訪問型は生後6か月から小学校6年生まで",
+        "hours": "施設型は月曜から金曜の8時から18時。訪問型は月曜から金曜の8時から20時。祝日および12月29日から1月3日は除く",
+        "fee": "施設型は1日2,400円、半日1,200円。生活保護世帯は無料。訪問型は15分100円で、初回登録料500円、所定のキャンセル料あり",
+        "application": "施設型は事前利用登録後、各施設へ申込み。訪問型は毎月開催の事前登録会で登録と面談が必要",
+        "capacity": "病児保育は各3名または4名、病後児保育は各4名"
+      },
+      "source": {"url": "https://www.city.mito.lg.jp/site/kosodate/5284.html", "checkedAt": "2026-07-19"}
     },
-    "childcareFee": {
-      "status": "researching",
-      "summary": "認可保育施設の保育料を調査中"
-    },
-    "schoolMeals": {
-      "status": "researching",
-      "summary": "学校給食費支援を調査中"
-    },
-    "postpartumCare": {
-      "status": "researching",
-      "summary": "産後ケアを調査中"
-    },
-    "temporaryChildcare": {
-      "status": "researching",
-      "summary": "一時保育・こども誰でも通園制度を調査中"
-    },
-    "housingSupport": {
-      "status": "researching",
-      "summary": "子育て世帯向け住宅支援を調査中"
-    },
-    "bulkyWaste": {
-      "status": "researching",
-      "summary": "粗大ごみ制度を調査中"
-    },
-    "disasterPrevention": {
-      "status": "researching",
-      "summary": "防災・ハザード情報を調査中"
-    }
+    "childcareFee": {"status": "researching", "summary": "認可保育施設の保育料を調査中"},
+    "schoolMeals": {"status": "researching", "summary": "学校給食費支援を調査中"},
+    "postpartumCare": {"status": "researching", "summary": "産後ケアを調査中"},
+    "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
+    "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
+    "bulkyWaste": {"status": "researching", "summary": "粗大ごみ制度を調査中"},
+    "disasterPrevention": {"status": "researching", "summary": "防災・ハザード情報を調査中"}
   }
 }
