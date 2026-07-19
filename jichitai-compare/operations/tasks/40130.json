@@ -5,7 +5,7 @@
   "prefectureCode": "40",
   "prefectureName": "福岡県",
   "assignedTeam": "西日本調査班",
-  "status": "researching",
+  "status": "pr_open",
   "currentService": null,
   "nextServiceIndex": 9,
   "completedServices": [
@@ -24,27 +24,20 @@
   "unavailableCount": 0,
   "needsMediumReviewCount": 0,
   "currentBranch": "data/40130-fukuoka-city",
-  "pullRequestNumber": null,
-  "lastCheckedAt": "2026-07-19",
-  "lastUpdatedAt": "2026-07-19T09:21:32+09:00",
-  "lastUpdatedBy": "西日本調査班",
+  "pullRequestNumber": 109,
+  "lastCheckedAt": "2026-07-20",
+  "lastUpdatedAt": "2026-07-20T00:30:00+09:00",
+  "lastUpdatedBy": "全国進行統括（移行補正）",
   "officialSources": [
     "https://www.city.fukuoka.lg.jp/hofuku/hokennenkin/hp/01.html",
     "https://kodomo.city.fukuoka.lg.jp/info/3147/",
     "https://kodomo.city.fukuoka.lg.jp/info/2122/",
-    "https://kodomo.city.fukuoka.lg.jp/info/2137/",
     "https://www.city.fukuoka.lg.jp/kyoiku-iinkai/kenko_k/child/index_2_3_2.html",
-    "https://www.city.fukuoka.lg.jp/kyoiku-iinkai/kenko_k/child/kyuushokuhimushoukaniawasetakyuushokuhisoutougakunokyuuhu.html",
     "https://kodomo.city.fukuoka.lg.jp/info/1961/",
     "https://kodomo.city.fukuoka.lg.jp/info/25384/",
-    "https://kodomo.city.fukuoka.lg.jp/info/3161/",
     "https://www.city.fukuoka.lg.jp/jutaku-toshi/jigyochosei/life/kosodatehikkoshi.html",
     "https://www.city.fukuoka.lg.jp/kankyo/kateigomi/life/katei-bunbetsu/sodaigomi.html",
-    "https://sodaigomi-kankyo.city.fukuoka.lg.jp/mobile/m_caution.html",
-    "https://webmap.city.fukuoka.lg.jp/bousai/index.html",
-    "https://www.city.fukuoka.lg.jp/shimin/b_suishin/bousai/bousaimail.html",
-    "https://www.city.fukuoka.lg.jp/shimin/b_suishin/bousai/line_evacuation.html",
-    "https://www.city.fukuoka.lg.jp/shimin/t_bousai/bousai/EvacuationInformation.html"
+    "https://webmap.city.fukuoka.lg.jp/bousai/index.html"
   ],
   "notes": [
     "通常統括の初期キューとして作成。",
@@ -57,7 +50,8 @@
     "temporaryChildcareを公式情報で確認済み。",
     "housingSupportを公式情報で確認済み。",
     "bulkyWasteを公式情報で確認済み。",
-    "disasterPreventionを公式情報で確認済み。9制度の調査が完了。次はPR提出前の最終検証。"
+    "disasterPreventionを公式情報で確認済み。9制度の調査が完了。",
+    "全国進行統括が移行時のCI不一致を補正。officialSourcesを各制度のsource.url 9件へ正規化し、PR #109の状態へ更新。"
   ],
   "blockers": []
 }
