@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "16207",
+  "prefectureCode": "16",
+  "prefecture": "富山県",
+  "name": "黒部市",
+  "officialUrl": "https://www.city.kurobe.toyama.jp/",
+  "status": "researching",
+  "summary": "黒部市の9制度を調査中。こども医療費助成を確認済み。",
+  "updatedAt": "2026-07-19",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "黒部市在住で医療保険に加入する18歳到達後最初の3月31日までの子どもを対象に、保険診療の自己負担分を助成。所得制限なし。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18,
+        "residency": "黒部市に住民登録があること",
+        "insurance": "医療保険に加入していること"
+      },
+      "details": {
+        "incomeLimit": "所得制限なし",
+        "exclusions": "生活保護受給者は対象外",
+        "paymentMethod": "受給資格登録後、マイナ保険証または資格確認書と医療費受給資格証を提示して現物給付。対象外地域等では償還払い申請。"
+      },
+      "source": {
+        "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=11498",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kurobe.toyama.jp/category/menu.aspx?ctgcd=22",
+          "checkedAt": "2026-07-19",
+          "description": "受給資格登録、受診時の提示書類、助成方法"
+        }
+      ]
+    },
+    "sickChildCare": {"status": "researching", "summary": "調査中"},
+    "childcareFee": {"status": "todo", "summary": "未調査"},
+    "schoolMeals": {"status": "todo", "summary": "未調査"},
+    "postpartumCare": {"status": "todo", "summary": "未調査"},
+    "temporaryChildcare": {"status": "todo", "summary": "未調査"},
+    "housingSupport": {"status": "todo", "summary": "未調査"},
+    "bulkyWaste": {"status": "todo", "summary": "未調査"},
+    "disasterPrevention": {"status": "todo", "summary": "未調査"}
+  }
+}
