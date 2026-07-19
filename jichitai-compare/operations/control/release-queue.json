@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T03:05:00+09:00",
+  "updatedAt": "2026-07-20T04:30:00+09:00",
   "status": "active",
   "entries": [
     {
@@ -9,7 +9,7 @@
       "municipalities": [],
       "count": 0,
       "releaseStatus": "waiting_regional_merge",
-      "reason": "region/northはmainより先行差分なし。函館市PR #89はCI成功・競合なしで地方統合待ち",
+      "reason": "函館市PR #89はCI成功・競合なしで地方統合待ち",
       "sourcePullRequest": 89,
       "mainIntegrationPr": null
     },
@@ -24,7 +24,7 @@
       ],
       "count": 4,
       "releaseStatus": "pending_threshold",
-      "reason": "水戸市PR #115を含む4自治体がregion/eastへ地方統合済み。10自治体・24時間・重要訂正・release指定の条件は未到達",
+      "reason": "4自治体を地方統合済み。10自治体または前回統合から24時間のrelease条件を待つ",
       "mainIntegrationPr": null
     },
     {
@@ -39,8 +39,9 @@
         {"code": "23100", "name": "名古屋市"}
       ],
       "count": 6,
-      "releaseStatus": "blocked_audit_confirmation",
-      "reason": "region/centralのmain先行差分は6自治体。16202・16204・16205・16206・23100の完全性確認が必要。10自治体・24時間条件も未到達",
+      "releaseStatus": "pending_threshold",
+      "reason": "6自治体の完全性監査に合格。1行相当差分はJSON圧縮形式であり欠落なし。10自治体または24時間条件を待つ",
+      "auditStatus": "passed",
       "mainIntegrationPr": null
     },
     {
@@ -52,10 +53,16 @@
       ],
       "count": 2,
       "releaseStatus": "pending_threshold",
-      "reason": "福岡市PR #109と鳥取市PR #114がregion/westへ地方統合済み。10自治体・24時間・重要訂正・release指定の条件は未到達",
+      "reason": "2自治体を地方統合済み。CI例外とtaskメタデータ不整合は解消済み。10自治体または24時間条件を待つ",
       "mainIntegrationPr": null
     }
   ],
-  "nextAction": "北日本PR #89の地方統合、中日本の完全性監査、東日本・西日本の追加自治体または24時間条件を確認する。条件到達した地方からmain統合PRを作成する。",
+  "summary": {
+    "regionalMergedMunicipalities": 12,
+    "waitingRegionalMergeMunicipalities": 1,
+    "releaseReadyRegions": [],
+    "auditBlockedRegions": []
+  },
+  "nextAction": "全国統合・公開担当は各地域の10自治体・24時間・重要修正・明示release条件を再評価する。北日本はPR #89の地方統合を優先する。",
   "humanDecisionRequired": false
 }
