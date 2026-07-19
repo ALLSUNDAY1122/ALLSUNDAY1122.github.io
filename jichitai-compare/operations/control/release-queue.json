@@ -1,20 +1,44 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T00:15:00+09:00",
+  "updatedAt": "2026-07-20T00:35:00+09:00",
   "status": "active",
   "entries": [
+    {
+      "region": "north",
+      "branch": "region/north",
+      "municipalities": [],
+      "count": 0,
+      "releaseStatus": "waiting_regional_merge",
+      "reason": "region/northはmainより先行差分なし。函館市PR #89の地方統合待ち",
+      "sourcePullRequest": 89,
+      "mainIntegrationPr": null
+    },
     {
       "region": "east",
       "branch": "region/east",
       "municipalities": [
-        {
-          "code": "13123",
-          "name": "江戸川区"
-        }
+        {"code": "12203", "name": "市川市"},
+        {"code": "12227", "name": "浦安市"},
+        {"code": "13123", "name": "江戸川区"}
       ],
-      "count": 1,
+      "count": 3,
       "releaseStatus": "pending_threshold",
-      "reason": "地方統合済みだが、10自治体・24時間・重要訂正・統括release指定のいずれも現時点で未確認",
+      "reason": "地方統合済み3自治体。10自治体・24時間・重要訂正・release指定の条件は未到達",
+      "mainIntegrationPr": null
+    },
+    {
+      "region": "central",
+      "branch": "region/central",
+      "municipalities": [
+        {"code": "16202", "name": "高岡市"},
+        {"code": "16204", "name": "魚津市"},
+        {"code": "16205", "name": "氷見市"},
+        {"code": "16206", "name": "滑川市"},
+        {"code": "23100", "name": "名古屋市"}
+      ],
+      "count": 5,
+      "releaseStatus": "pending_threshold_and_audit_confirmation",
+      "reason": "region/centralのmain先行差分として5自治体を確認。10自治体・24時間条件は未到達で、名古屋市のCI確認記録も未完了",
       "mainIntegrationPr": null
     },
     {
@@ -23,11 +47,11 @@
       "municipalities": [],
       "count": 0,
       "releaseStatus": "blocked_regional_ci",
-      "reason": "福岡市PR #109は競合なし（mergeable=true）まで回復したが、CI run 29687152706がfailure。Validate source and generated dataの修正待ち",
+      "reason": "福岡市PR #109は地方統合前。CI run 29687152706のValidate source and generated data失敗が継続",
       "sourcePullRequest": 109,
       "mainIntegrationPr": null
     }
   ],
-  "nextAction": "東日本のrelease条件到達を再確認する。西日本はPR #109のCI成功後にregion/westへ統合されたことを確認し、release対象へ追加する。",
+  "nextAction": "各地方の完成数と24時間条件を再確認する。release条件を満たした地方からmain統合PRを作成する。北日本と西日本は自治体PRの地方統合完了を待つ。",
   "humanDecisionRequired": false
 }
