@@ -6,11 +6,27 @@
   "name": "土浦市",
   "officialUrl": "https://www.city.tsuchiura.lg.jp/",
   "status": "researching",
-  "summary": "茨城県南部の市。9制度を公式情報から順次調査中。",
+  "summary": "茨城県南部の市。子ども医療費助成を確認し、残る8制度を調査中。",
   "updatedAt": "2026-07-20",
   "services": {
-    "childMedical": {"status":"researching","summary":"子ども医療費助成を公式情報から調査中"},
-    "sickChildCare": {"status":"todo","summary":"病児・病後児保育を未調査"},
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、所得制限なしで保険診療の自己負担分の一部を助成",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "土浦市に住所があり、健康保険に加入している0歳から満18歳の年度末までの子ども。生活保護受給者は対象外で、養育者の所得申告が必要",
+        "incomeLimit": "所得制限なし。県基準の所得制限を超える場合も土浦市独自制度により対象",
+        "copay": "外来は医療機関ごとに1日最大600円、月2回までで月上限1,200円。入院は医療機関ごとに1日最大300円、月上限3,000円。調剤は自己負担なし",
+        "coverage": "健康保険適用の医療機関・薬局等の費用と治療用装具の購入費用",
+        "excludedCosts": "健康保険適用外費用、入院時食事代、差額ベッド代、交通費、選定療養費等。学校管理下の負傷は日本スポーツ振興センター災害共済給付制度を原則優先",
+        "application": "事前申請が必要。市役所本庁舎国保年金課、各支所、郵送で受付。健康保険資格情報、口座情報、印鑑、本人確認書類等を提出",
+        "useOutsidePrefecture": "茨城県外では受給者証を使用できないため、保険診療分を支払った後に償還払いを申請",
+        "renewal": "原則自動更新。通常は有効期限前に新しい受給者証を郵送。所得確認ができない場合は手続きが必要",
+        "digitalUse": "2026年3月23日からマイナ保険証をマル福受給者証として利用可能"
+      },
+      "source": {"url": "https://www.city.tsuchiura.lg.jp/kurashi-tetsuzuki/kokuho-nenkin/marufuku/kakushu-marufuku/page016824.html", "checkedAt": "2026-07-20"}
+    },
+    "sickChildCare": {"status":"researching","summary":"病児・病後児保育を公式情報から調査中"},
     "childcareFee": {"status":"todo","summary":"保育料・第2子軽減を未調査"},
     "schoolMeals": {"status":"todo","summary":"学校給食費支援を未調査"},
     "postpartumCare": {"status":"todo","summary":"産後ケアを未調査"},
