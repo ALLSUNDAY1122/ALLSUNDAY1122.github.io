@@ -1,0 +1,281 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "16201",
+  "prefectureCode": "16",
+  "prefecture": "富山県",
+  "name": "富山市",
+  "officialUrl": "https://www.city.toyama.lg.jp/",
+  "status": "verified",
+  "summary": "富山市の9制度を調査し、こども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケア、一時保育・こども誰でも通園制度、住宅支援、粗大ごみ、防災情報を確認済み。",
+  "updatedAt": "2026-07-19",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、入院・通院の保険診療自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "residency": "富山市に住所がある子ども",
+        "copay": "保険診療の自己負担分を助成。食事療養費など保険診療外は対象外",
+        "paymentMethod": "県内等は現物給付。県外診療などは一旦支払った後の償還払い",
+        "application": "出生または転入後に受給資格登録申請が必要。受診時はマイナ保険証等とこども医療費受給資格証を提示",
+        "exclusions": "学校管理下の負傷等で日本スポーツ振興センターの災害共済給付が支給される場合、ひとり親家庭等医療費・重度心身障害者医療費の助成対象となる場合など"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/1811",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気または回復期で集団保育が困難な児童を、保護者が家庭で保育できない場合に預かる。基本利用料は1日2,000円",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5,
+        "residency": "富山市または富山医療圏の市町村（滑川市、舟橋村、上市町、立山町）に住所がある子ども",
+        "ageCondition": "対象年齢は施設により異なる。富山市まちなか総合ケアセンターは満6か月以上の未就学児"
+      },
+      "details": {
+        "condition": "病気または病気回復期で集団保育が困難であり、入院の必要はないが安静が必要な状態。受け入れ可否は施設が判断",
+        "facilityCount": 11,
+        "fee": "1日2,000円。お迎え型病児保育は別途タクシー代が必要",
+        "support": "ひとり親世帯や市民税非課税世帯等には利用料助成制度あり",
+        "application": "利用施設への事前予約が必要。お迎え型は事前登録が必要で、予約・登録方法は施設ごとに異なる",
+        "serviceTypes": "病児・病後児保育、お迎え型病児保育。一部施設は病後児のみ対応"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/3917?DestinationId=17",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "4月1日時点で3歳以上は保育料無料。0歳から2歳は市町村民税所得割額に応じて決定し、第3子以降は無料",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5,
+        "residency": "認可保育施設に在籍する富山市在住の児童",
+        "ageCondition": "4月1日時点で3歳以上の児童は保育料無料。年度途中で3歳になっても当該年度内は3歳未満児の保育料が必要"
+      },
+      "details": {
+        "fee": "4月1日時点で3歳以上は無料。0歳から2歳は市町村民税所得割額に応じて決定",
+        "feeCalculation": "0歳から2歳の保育料は、原則として父母の市町村民税所得割額の合計額により決定。父母が住民税非課税の場合は、同居の祖父母のうち税額が高い方を用いる場合がある",
+        "incomeCondition": "原則として父母の市町村民税所得割額の合計額を用いる。父母が住民税非課税の場合は同居祖父母の税額を用いる場合がある",
+        "taxPeriods": "令和8年4月から8月分は令和7年度税額、令和8年9月から令和9年3月分は令和8年度税額を使用",
+        "siblingReduction": "令和6年4月から第3子以降は所得制限なく無料。同一世帯で保育所等へ同時入所している就学前児童がいる場合は多子軽減の対象となり、原則として第2子は半額、その他の児童は無料。低所得世帯等には追加軽減あり",
+        "additionalCosts": "3歳以上は別途、副食費等が必要。給食費は施設により異なる",
+        "reduction": "児童の傷病による長期欠席や災害による家屋被害など、一定の要件で減免制度あり"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/Index/3181",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校・義務教育学校前期課程の給食費を完全無償化。中学校・後期課程は月額6,800円",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15,
+        "schools": "富山市立小学校・中学校・義務教育学校",
+        "fiscalYear": "令和8年度"
+      },
+      "details": {
+        "support": "小学校・義務教育学校前期課程は完全無償。中学校・義務教育学校後期課程は月額6,800円",
+        "schools": "富山市立小学校・中学校・義務教育学校",
+        "elementarySchool": "小学校・義務教育学校前期課程は学校給食費を無償化。国の基準額を超える分も含めて市が負担し、保護者からは徴収しない",
+        "juniorHighSchool": "中学校・義務教育学校後期課程は月額6,800円。改定後月額8,300円のうち1,500円を市が負担",
+        "supportProgram": "国の交付金を活用した学校給食費負担軽減事業を令和8年度も継続",
+        "financialAssistance": "経済的理由で就学が困難な世帯に対する就学援助では、学校給食費の実費が援助対象",
+        "futureReview": "令和9年度以降は物価変動に応じて給食費改定を検討"
+      },
+      "source": {
+        "url": "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010443/1007434.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010448/1007376.html",
+          "checkedAt": "2026-07-19",
+          "description": "就学援助の対象費用"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母親と乳児を対象に、ショートステイ・デイケア・訪問型の産後ケアを実施",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0,
+        "residency": "原則として富山市に住所がある産婦。産後ケア応援室は連携市町村在住者や富山市への里帰り出産にも対応",
+        "ageCondition": "市の産後ケア事業は産後1年未満の母親と乳児が対象。実施機関により産後4か月までの場合がある"
+      },
+      "details": {
+        "types": "ショートステイ、デイケア4時間・6時間、居宅訪問型",
+        "serviceTypes": "ショートステイ、デイケア4時間・6時間、居宅訪問型。産後ケア応援室ではデイケアと宿泊を実施",
+        "facilityCount": 15,
+        "facilities": "令和8年5月時点で指定産科医療機関5か所、指定助産所10か所",
+        "fiscalYearExpansion": "令和8年度は助産所での通所型を追加し、居宅訪問型は外出困難者等に限定せず利用できるよう要件を緩和",
+        "application": "市のオンライン申請フォームから申請。利用決定通知等は申請後おおよそ1週間で届き、その後、各実施機関へ予約する",
+        "fee": "利用形態・施設により異なる。産後ケア応援室の富山市民料金は、令和8年4月1日以降、デイケア9時30分から19時が5,600円、9時30分から13時が2,100円、9時30分から15時30分が3,400円、13時から19時が3,500円、宿泊24時間が8,200円",
+        "facilitySpecificCondition": "産後ケア応援室はおおむね産後4か月まで。母子に感染症状がある場合や入院・治療が必要な場合は利用不可"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/4824?DestinationId=11",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/file?file=23225_%E5%AE%9F%E6%96%BD%E6%A9%9F%E9%96%A2%E4%B8%80%E8%A6%A7%EF%BC%88HP%E6%8E%B2%E8%BC%89%E7%94%A8%E3%80%80R8.5%E6%9C%88%EF%BC%89.pdf",
+          "checkedAt": "2026-07-19",
+          "description": "令和8年5月時点の実施機関、対象期間、利用区分、予約方法"
+        },
+        {
+          "url": "https://machinaka-care.city.toyama.lg.jp/guide/svGuideDtl.aspx?cd=0101&servno=14",
+          "checkedAt": "2026-07-19",
+          "description": "産後ケア応援室の令和8年4月改定料金"
+        },
+        {
+          "url": "https://www.city.toyama.lg.jp/shisei/mayor/1010725/1016816/1018580.html",
+          "checkedAt": "2026-07-19",
+          "description": "令和8年度の通所型拡充と訪問型要件緩和"
+        }
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満で保育所等に通っていない富山市在住児童は、こども誰でも通園制度を月10時間まで利用可能",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5,
+        "residency": "富山市に住民票があること",
+        "ageCondition": "こども誰でも通園制度は利用日時点で生後6か月から満3歳未満。満3歳の誕生日の前々日まで利用可能",
+        "attendanceCondition": "保育所、幼稚園、認定こども園、地域型保育事業、企業主導型保育施設に通っていないこと。認可外保育施設に通っている場合は利用可能"
+      },
+      "details": {
+        "types": "こども誰でも通園制度、幼稚園・認定こども園の一時預かり事業・預かり保育",
+        "serviceTypes": "こども誰でも通園制度。幼稚園・認定こども園の一時預かり事業や預かり保育は施設ごとに実施内容を設定",
+        "monthlyLimit": "子ども1人につき月10時間まで。未利用時間の翌月繰越は不可。1時間未満の予約は不可",
+        "application": "利用前に認定申請が必要。こども家庭庁の総合支援システムによるオンライン申請、または富山市こども保育課・行政サービスセンターで窓口申請",
+        "process": "認定証発行は申請から約2週間。初めて利用する施設では子ども同伴の事前面談が必要。その後、総合支援システムで施設予約を行う",
+        "fee": "1時間当たりの利用料金は施設ごとに異なる。給食・おやつ代やキャンセル料が別途発生する場合がある",
+        "feeReduction": "令和8年度は、生活保護世帯は1時間当たり上限300円、市町村民税所得割合算額77,101円未満の世帯と要支援家庭は上限200円の負担軽減。対象外施設もある",
+        "cancellation": "利用日当日のキャンセルは利用したものとみなされ、利用時間を消費する"
+      },
+      "source": {
+        "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/5192?DestinationId=16",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.toyama.lg.jp/kosodate/hoiku/1010433/1007397.html",
+          "checkedAt": "2026-07-19",
+          "description": "幼稚園・認定こども園の一時預かり事業・預かり保育"
+        }
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "「まちなか」外から「まちなか」の民間賃貸住宅へ転入・転居する子育て世帯に、月額上限1万円を最長3年間助成",
+      "eligibility": {
+        "householdCondition": "交付申請年度の4月1日時点で満18歳未満の子を養育する世帯",
+        "moveCondition": "転居前の住所が「まちなか」外で、対象となる「まちなか」の民間賃貸住宅へ転入・転居すること",
+        "residencyCondition": "対象住宅へ転入・転居後、6か月以上継続して居住すること",
+        "incomeCondition": "同居する世帯全員の合計所得月額が44万5千円以下"
+      },
+      "details": {
+        "programName": "まちなか住宅家賃助成事業",
+        "support": "家賃を月額上限1万円、最長3年間助成",
+        "conditions": "「まちなか」外から対象区域内の民間賃貸住宅へ転入・転居し、6か月以上居住する子育て世帯。世帯の合計所得月額44万5千円以下等の要件あり",
+        "amount": "家賃月額から勤務先の住宅手当を控除した額と1万円のうち少ない額。月額上限1万円",
+        "duration": "賃貸借契約期間の初日と住民票異動日のうち遅い日を基準に、最長3年間",
+        "contractCondition": "賃貸借契約は原則として申請者本人名義",
+        "excludedHousing": "公営住宅、社宅等の給与住宅などは対象外",
+        "application": "交付対象期間ごとに申請し、交付対象期間最終月の翌月から6か月以内に提出",
+        "effectiveCondition": "住民票異動日または賃貸借契約始期のいずれかが令和8年4月1日以降の場合に新制度を適用"
+      },
+      "source": {
+        "url": "https://www.city.toyama.lg.jp/kurashi/sumai/1010267/1018274/1018275/1018282.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型品は材質に応じて燃やせるごみ・燃やせないごみとして排出。分解困難品や多量ごみは予約制の戸別有料収集を利用可能",
+      "details": {
+        "feeSystem": "戸別有料収集は30kgまで2,090円、超過分は10kgごと319円",
+        "application": "富山市環境センター業務課へ事前予約し、燃やせるごみ・燃やせないごみに分別して屋外へ搬出。収集当日は立会いと精算が必要",
+        "regularCollection": "大型木製品は原則として一辺約1メートル以内に分解して燃やせるごみへ出す。大型スチール製品、スプリング入り家具、自転車等は燃やせないごみとして集積場へ出せる",
+        "doorToDoorCollection": "分解困難品や引越し時の多量ごみは、予約制の戸別有料収集を利用できる。土日・祝日は収集しない",
+        "directCarryIn": "自分で運搬する場合、燃やせるごみはクリーンセンター、燃やせないごみはリサイクルセンターへ有料で直接持ち込める。事前に問い合わせが必要",
+        "excludedItems": "市で収集・処理できない品目、家電リサイクル法対象品などは別の処理方法が必要",
+        "futureChange": "家庭ごみの有料化は令和9年10月開始予定"
+      },
+      "source": {
+        "url": "https://www.city.toyama.lg.jp/faq/1008441/1009895/1008841.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1005357.html",
+          "checkedAt": "2026-07-19",
+          "description": "戸別有料収集の料金、予約、搬出、立会い"
+        },
+        {
+          "url": "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1005384.html",
+          "checkedAt": "2026-07-19",
+          "description": "ごみの直接持込先と手続き"
+        },
+        {
+          "url": "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1017484.html",
+          "checkedAt": "2026-07-19",
+          "description": "令和9年10月開始予定の家庭ごみ有料化"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・津波・洪水・土砂災害・内水・ため池のハザードマップ、避難場所、複数の防災情報配信手段を提供",
+      "details": {
+        "coverage": "地震、津波、洪水、土砂災害、内水、ため池の6種類のハザードマップ、災害種別ごとの緊急避難場所、避難所、防災情報配信手段を掲載",
+        "access": "富山市公式サイト、インフォマップとやま、富山市公式LINE、富山市防災情報X、緊急速報メール等で確認",
+        "hazardMaps": "地震、津波、洪水、土砂災害、内水、ため池の6種類を公開",
+        "onlineMap": "インフォマップとやまで住所や郵便番号から洪水浸水想定区域、土砂災害警戒区域等を検索可能",
+        "evacuationSites": "緊急避難場所は洪水、地震・大規模火災、津波など災害種別ごとに指定",
+        "shelterPriority": "避難所は開設優先順位があり、第1次は主に小学校体育館、第2次は中学校体育館、第3次は高等学校体育館等",
+        "informationChannels": "富山市防災情報X、富山市公式LINE、緊急速報メール、防災行政無線、市ホームページ、県河川情報メール、土砂災害警戒情報メール、Yahoo!防災速報等",
+        "emergencyAlert": "公式LINEで関心テーマに防災を設定すると、避難情報や気象警報を受信可能",
+        "accessibility": "Uni-Voice Blindアプリで災害リスクや周辺避難場所の音声案内、避難指示・避難所開設情報の受信に対応",
+        "dataFreshness": "避難所一覧と洪水の緊急避難場所一覧は令和8年4月1日更新"
+      },
+      "source": {
+        "url": "https://www.city.toyama.lg.jp/bosai/bosai/1011986/index.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1010656/1007904.html",
+          "checkedAt": "2026-07-19",
+          "description": "指定緊急避難場所・避難所一覧と開設優先順位"
+        },
+        {
+          "url": "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1011306/1009832.html",
+          "checkedAt": "2026-07-19",
+          "description": "防災情報の入手方法"
+        },
+        {
+          "url": "https://www.city.toyama.lg.jp/shisei/koho/1010858/1013250/index.html",
+          "checkedAt": "2026-07-19",
+          "description": "富山市公式LINEの防災情報設定"
+        },
+        {
+          "url": "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1006962.html",
+          "checkedAt": "2026-07-19",
+          "description": "緊急時の災害情報伝達手段"
+        }
+      ]
+    }
+  }
+}
