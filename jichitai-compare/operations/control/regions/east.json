@@ -2,18 +2,19 @@
   "schemaVersion": "1.0.0",
   "region": "east",
   "branch": "region/east",
-  "updatedAt": "2026-07-20T04:30:00+09:00",
+  "updatedAt": "2026-07-20T08:30:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 4,
+  "completedSinceLastRelease": 5,
   "completedMunicipalities": [
     {"code": "08201", "name": "水戸市", "regionalPullRequest": 115},
+    {"code": "08202", "name": "日立市", "regionalPullRequest": 123},
     {"code": "12203", "name": "市川市", "regionalPullRequest": 38},
     {"code": "12227", "name": "浦安市", "regionalPullRequest": 58},
     {"code": "13123", "name": "江戸川区", "regionalPullRequest": 27}
   ],
   "pendingRegionalPullRequests": [],
   "blocked": [],
-  "lastAction": "PR #115をregion/eastへ統合し、task.status=mergedを確認",
+  "lastAction": "日立市の粗大ごみ主出典を自治体JSONとtaskで統一し、CI run #255成功後にPR #123をregion/eastへ統合。task statusをmergedへ正規化",
   "nextAction": "東日本調査班は担当表の自治体コード順で次の未着手自治体へ進む。",
   "humanDecisionRequired": false
 }
