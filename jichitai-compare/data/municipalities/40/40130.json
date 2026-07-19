@@ -5,8 +5,8 @@
   "prefecture": "福岡県",
   "name": "福岡市",
   "officialUrl": "https://www.city.fukuoka.lg.jp/",
-  "status": "researching",
-  "summary": "西日本調査班の初期登録対象。子ども医療費助成、病児・病後児保育、保育料・第2子以降の無償化、学校給食費、産後ケア、一時預かり・こども誰でも通園制度、子育て世帯向け住宅支援、粗大ごみを確認済み。残り1制度を調査する。",
+  "status": "verified",
+  "summary": "西日本調査班の初期登録対象。9制度すべてを公式情報で確認済み。PR提出前の最終検証を実施する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -172,8 +172,26 @@
       }
     },
     "disasterPrevention": {
-      "status": "todo",
-      "summary": "防災・ハザード情報を未調査"
+      "status": "verified",
+      "summary": "総合ハザードマップで洪水・内水、土砂災害、高潮、地震、津波のリスクと避難先を確認可能",
+      "details": {
+        "hazardMap": "福岡市総合ハザードマップで洪水・内水、土砂災害、高潮、地震、津波の災害リスクを確認できる",
+        "floodMap": "洪水・内水ハザードマップでは浸水想定区域、浸水深、避難所の位置、避難行動に関する情報を確認できる",
+        "shelter": "総合ハザードマップや福岡市LINE公式アカウントで近隣の避難所を検索可能。災害時には開設済み避難所も案内される",
+        "information": "福岡市防災メールで緊急情報、気象警報・注意報、土砂災害警戒情報、地震、津波、雨量情報を受信できる。LINE公式アカウントでも防災・気象情報を選択受信できる",
+        "app": "防災アプリ『ツナガル＋』では近隣避難所の確認・ルート案内や、避難所掲示板による支援情報共有が可能",
+        "accessibility": "避難情報の入手が困難な人を対象に、固定電話への音声またはFAXで避難情報・Jアラート情報を配信する制度がある",
+        "preparedness": "自宅・職場周辺の災害リスク、避難場所、避難経路を平常時に確認し、防災メールやLINEの受信設定を行う"
+      },
+      "source": {
+        "url": "https://webmap.city.fukuoka.lg.jp/bousai/index.html",
+        "additionalUrls": [
+          "https://www.city.fukuoka.lg.jp/shimin/b_suishin/bousai/bousaimail.html",
+          "https://www.city.fukuoka.lg.jp/shimin/b_suishin/bousai/line_evacuation.html",
+          "https://www.city.fukuoka.lg.jp/shimin/t_bousai/bousai/EvacuationInformation.html"
+        ],
+        "checkedAt": "2026-07-19"
+      }
     }
   }
 }
