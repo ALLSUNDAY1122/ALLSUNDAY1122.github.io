@@ -6,16 +6,13 @@
   "name": "米子市",
   "officialUrl": "https://www.city.yonago.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。childMedicalを確認済みで、残り8制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。childMedicalとsickChildCareを確認済みで、残り7制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "18歳到達後最初の3月31日まで、保険診療の通院・入院自己負担は無料",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
       "details": {
         "target": "18歳に達する日以後の最初の3月31日までの子ども",
         "copay": "令和6年4月1日診療分から、保険診療の通院・入院自己負担は無料",
@@ -23,18 +20,24 @@
         "excludedCases": "労災、学校・保育園等の管理下でのけが、交通事故等は受給資格証を使用できない場合がある",
         "application": "特別医療費受給資格証の交付を受け、医療機関で健康保険証等と併せて提示する"
       },
-      "source": {
-        "url": "https://www.city.yonago.lg.jp/42202.htm",
-        "checkedAt": "2026-07-20"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.yonago.lg.jp/3850.htm",
-          "checkedAt": "2026-07-20"
-        }
-      ]
+      "source": {"url": "https://www.city.yonago.lg.jp/42202.htm", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.yonago.lg.jp/3850.htm", "checkedAt": "2026-07-20"}]
     },
-    "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病児・病後児保育を市内5施設で実施し、利用料は原則1日2,500円",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "target": "病気または病気回復中で、保護者の就労等により家庭で保育できない0歳から小学6年生までの子ども。施設により受入月齢等が異なる",
+        "facilities": "病児看護センターベアーズデイサービス、病児保育室ペンギンハウス、病児保育かるがも、病後児保育室こあら、アイグラン保育園米原病児・病後児保育室",
+        "fee": "原則1日2,500円。アイグラン保育園米原の水曜日は1,500円",
+        "reduction": "市民税非課税世帯等は事前申請と決定により1日500円、開所時間4時間30分以下の日は300円",
+        "application": "あらかじめ利用施設へ直接登録し、利用時は施設へ予約・申込みを行う。施設指定医療機関の受診が必要な場合がある",
+        "note": "病後児保育室こあらは病後児専用で、病中の子どもは利用できない"
+      },
+      "source": {"url": "https://www.city.yonago.lg.jp/48157.htm", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.yonago.lg.jp/13199.htm", "checkedAt": "2026-07-20"}]
+    },
     "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
