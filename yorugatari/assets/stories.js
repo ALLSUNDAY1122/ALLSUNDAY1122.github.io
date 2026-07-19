@@ -16,5 +16,7 @@ window.STORIES = [
   {"slug":"scheduled-for-deletion","title":"削除予定は午前六時","category":"ネット怪談","length":"中編","fear":4,"minutes":5,"summary":"共有クラウドで消された社員の記録を復元すると、その仕事と責任の所有者が復元者へ移り、午前六時の削除対象も引き継がれる。","tags":["共有クラウド","削除予約","アカウント","編集履歴"]},
   {"slug":"borrowed-tears","title":"代わりに泣く席","category":"後味悪い","length":"中編","fear":3,"minutes":5,"summary":"代理参列で泣くたび他人の記憶を受け取る香奈は、特別案件の遺影から、父に忘れさせられていた母の記憶を死後に返却される。","tags":["葬儀","代理参列","涙","記憶移転"]},
   {"slug":"one-person-short","title":"点呼は一人足りない","category":"意味怖","length":"中編","fear":4,"minutes":5,"summary":"全員避難という数字を作る点呼端末は、未避難者か捜索員の一人を社員記録から消し、次回の犠牲者まで事前登録する。","tags":["物流倉庫","避難訓練","点呼端末","社員証"]},
-  {"slug":"tomorrows-lost-item","title":"明日の忘れ物","category":"都市伝説風","length":"中編","fear":4,"minutes":5,"summary":"午前三時の乾燥機から取り出した物は翌日に失われ、名前のない物では機械が持ち主本人を消してしまう。","tags":["コインランドリー","乾燥機","忘れ物","婚約指輪"]}
+  {"slug":"tomorrows-lost-item","title":"明日の忘れ物","category":"都市伝説風","length":"中編","fear":4,"minutes":5,"summary":"午前三時の乾燥機から取り出した物は翌日に失われ、名前のない物では機械が持ち主本人を消してしまう。","tags":["コインランドリー","乾燥機","忘れ物","婚約指輪"]},
+  {"slug":"pickup-signature","title":"お迎えの署名","category":"心霊","length":"中編","fear":4,"minutes":5,"summary":"死亡退院が未処理の患者の〈お迎え人〉へ署名すると、登録住所が帰る場所のない死者全員の退院先になる。","tags":["病院","夜間受付","退院確認票","青いスリッパ"]},
+  {"slug":"relic-sample-shelf","title":"遺品の見本棚","category":"人怖","length":"中編","fear":4,"minutes":5,"summary":"死者の部屋へ偽の遺書や借用書を置く遺品整理会社で、主人公は姉の死と自分の自死偽装計画を見つける。","tags":["遺品整理","見本棚","偽の遺書","死因偽装"]}
 ];
