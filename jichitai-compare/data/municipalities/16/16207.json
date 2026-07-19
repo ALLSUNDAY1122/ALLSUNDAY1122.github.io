@@ -6,7 +6,7 @@
   "name": "黒部市",
   "officialUrl": "https://www.city.kurobe.toyama.jp/",
   "status": "researching",
-  "summary": "黒部市の9制度を調査中。こども医療費助成を確認済み。",
+  "summary": "黒部市の9制度を調査中。こども医療費助成、病児・病後児保育を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -35,8 +35,30 @@
         }
       ]
     },
-    "sickChildCare": {"status": "researching", "summary": "調査中"},
-    "childcareFee": {"status": "todo", "summary": "未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気中または回復期で家庭保育が困難な満1歳から小学3年生までの子どもを、病児・病後児保育室「くるみ」で一時保育。",
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 9,
+        "ageCondition": "満1歳から小学校3年生まで"
+      },
+      "details": {
+        "facility": "病児・病後児保育室「くるみ」",
+        "capacity": "1日4名まで。先着順・要予約",
+        "hours": "月曜日から金曜日の午前8時から午後6時。祝日、お盆、年末年始を除く",
+        "fee": "1日（5時間以上）2,500円、半日（5時間未満）1,300円。昼食・おやつ代を含む",
+        "payment": "納付書による支払いのほか、お迎え時のPayPay支払い、子育て応援券の利用が可能",
+        "application": "原則事前登録後、電話で空き状況を確認して予約。かかりつけ医を受診し、診療情報提供書を作成してもらい、利用当日に利用申請書等とともに提出",
+        "sameDay": "キャンセル等で空きがある場合は当日申込みも可能",
+        "conditions": "かぜ、消化不良、インフルエンザ、おたふく風邪、ぜんそく、骨折等に対応。はしかは受入不可。病状や隔離状況により受入不可の場合あり"
+      },
+      "source": {
+        "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=6198",
+        "checkedAt": "2026-07-19"
+      }
+    },
+    "childcareFee": {"status": "researching", "summary": "調査中"},
     "schoolMeals": {"status": "todo", "summary": "未調査"},
     "postpartumCare": {"status": "todo", "summary": "未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "未調査"},
