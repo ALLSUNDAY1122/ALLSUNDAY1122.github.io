@@ -6,50 +6,17 @@
   "name": "砺波市",
   "officialUrl": "https://www.city.tonami.lg.jp/",
   "status": "researching",
-  "summary": "砺波市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料を確認済み。",
+  "summary": "砺波市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費支援を確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
-    "childMedical": {
-      "status": "verified",
-      "summary": "砺波市内に住む0歳から18歳になる年の年度末までの子どもを対象に、保険診療の自己負担分を助成。高校在学の有無は問わない。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18, "residency": "砺波市内に住所があること", "insurance": "健康保険に加入していること"},
-      "details": {"ageLimit": "満18歳に達する日以後の最初の3月31日まで", "application": "出生・転入等で新たに利用する場合は申請が必要。申請後にこども医療費受給資格証を交付", "requiredDocuments": "子どもの健康保険情報を確認できる書類等", "exclusions": "ひとり親家庭等医療費助成、重度心身障害者等医療費助成を利用している場合は対象外"},
-      "source": {"url": "https://www.city.tonami.lg.jp/service/56378p/", "checkedAt": "2026-07-20"},
-      "additionalSources": [{"url": "https://www.city.tonami.lg.jp/service/56371p/", "checkedAt": "2026-07-20", "description": "対象年齢を18歳年度末まで拡大した制度改正と高校在学要件なしの確認"}]
-    },
-    "sickChildCare": {
-      "status": "verified",
-      "summary": "病気の回復期前の児童を病児保育棟「ものがたりのおうち」で、回復期の生後6か月以上の就学前児童をちゅうりっぷ認定こども園で預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 6, "ageCondition": "病後児保育は生後6か月以上の就学前児童。病児保育は急変のおそれがなく家庭での看護が困難な児童"},
-      "details": {"sickChildFacility": "病児保育棟ものがたりのおうち（砺波市太田1382）", "sickChildHours": "月曜日から金曜日の8時30分から16時30分。土日、祝日、年末年始を除く", "sickChildFee": "1日2,000円、半日1,000円。1日利用時は昼食持参", "sickChildApplication": "利用日前日の16時までに施設へ電話予約し、利用登録書、利用申込書、かかりつけ医作成の診療情報提供書等を提出", "sickChildExclusions": "麻しん、結核、水痘、新型コロナウイルス感染症、腸管出血性大腸菌感染症等は受入不可。定員等により利用できない場合あり", "postIllnessFacility": "ちゅうりっぷ認定こども園 病後児保育室ちゅうりっぷルーム", "postIllnessHours": "月曜日から金曜日の8時30分から16時30分。祝日を除く。1回につき7日間まで", "postIllnessFee": "1日2,000円（昼食含む）、半日1,000円（昼食除く）。とみいくデジタルポイント利用可", "postIllnessApplication": "前日までに施設へ予約し、医師から病後児保育利用連絡票を発行してもらった後、再度施設へ連絡"},
-      "source": {"url": "https://www.city.tonami.lg.jp/info/78606p/", "checkedAt": "2026-07-20"},
-      "additionalSources": [{"url": "https://www.city.tonami.lg.jp/info/4057p/", "checkedAt": "2026-07-20", "description": "病後児保育の対象、施設、利用時間、料金、申込方法"}]
-    },
-    "childcareFee": {
-      "status": "verified",
-      "summary": "保育料は児童の年齢と保護者の市民税所得割課税額により決定。3歳以上、第3子以降、住民税非課税世帯の0歳から2歳児は無償化対象。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5, "residency": "砺波市の保育所・認定こども園等を利用する児童"},
-      "details": {
-        "feeCalculation": "児童の年齢および保護者の市民税所得割課税額により決定",
-        "siblingReduction": "同時に2人が入所している場合、2人目は基準額の半額。第3子以降は無料",
-        "freeEducation": "3歳児から5歳児は無償。0歳から2歳児は住民税非課税世帯および第3子以降が無償",
-        "additionalCosts": "延長保育料、給食費、通園送迎費、行事費等の実費は無償化対象外",
-        "schoolLunch": "3歳以上は給食費を実費負担。0歳から2歳児の副食費は保育料に含まれる",
-        "sideDishExemption": "保育認定の3歳から5歳児は市町村民税所得割額57,700円未満の世帯および第3子以降が副食費免除。教育認定は77,101円未満相当世帯および第3子以降が免除",
-        "payment": "市立施設の保育料口座振替日は毎月25日。休日の場合は翌営業日。私立施設は各園へ確認",
-        "procedures": "市内の保育所・認定こども園の通常無償化は原則手続不要。対象施設や預かり保育等は事前の施設等利用給付認定が必要な場合あり"
-      },
-      "source": {"url": "https://www.city.tonami.lg.jp/info/6219p/", "checkedAt": "2026-07-20"},
-      "additionalSources": [
-        {"url": "https://www.city.tonami.lg.jp/service/46798p/", "checkedAt": "2026-07-20", "description": "保育所の保育料決定、多子軽減、無償化"},
-        {"url": "https://www.city.tonami.lg.jp/service/46797p/", "checkedAt": "2026-07-20", "description": "認定こども園の保育料、口座振替日、給食費・副食費免除"}
-      ]
-    },
-    "schoolMeals": {"status": "researching", "summary": "調査中"},
-    "postpartumCare": {"status": "todo", "summary": "未調査"},
-    "temporaryChildcare": {"status": "todo", "summary": "未調査"},
-    "housingSupport": {"status": "todo", "summary": "未調査"},
-    "bulkyWaste": {"status": "todo", "summary": "未調査"},
-    "disasterPrevention": {"status": "todo", "summary": "未調査"}
+    "childMedical": {"status":"verified","summary":"砺波市内に住む0歳から18歳になる年の年度末までの子どもを対象に、保険診療の自己負担分を助成。高校在学の有無は問わない。","eligibility":{"minAgeMonths":0,"maxAgeYears":18,"residency":"砺波市内に住所があること","insurance":"健康保険に加入していること"},"details":{"ageLimit":"満18歳に達する日以後の最初の3月31日まで","application":"出生・転入等で新たに利用する場合は申請が必要。申請後にこども医療費受給資格証を交付","requiredDocuments":"子どもの健康保険情報を確認できる書類等","exclusions":"ひとり親家庭等医療費助成、重度心身障害者等医療費助成を利用している場合は対象外"},"source":{"url":"https://www.city.tonami.lg.jp/service/56378p/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.tonami.lg.jp/service/56371p/","checkedAt":"2026-07-20","description":"対象年齢を18歳年度末まで拡大した制度改正と高校在学要件なしの確認"}]},
+    "sickChildCare": {"status":"verified","summary":"病気の回復期前の児童を病児保育棟「ものがたりのおうち」で、回復期の生後6か月以上の就学前児童をちゅうりっぷ認定こども園で預かる。","eligibility":{"minAgeMonths":6,"maxAgeYears":6,"ageCondition":"病後児保育は生後6か月以上の就学前児童。病児保育は急変のおそれがなく家庭での看護が困難な児童"},"details":{"sickChildFacility":"病児保育棟ものがたりのおうち（砺波市太田1382）","sickChildHours":"月曜日から金曜日の8時30分から16時30分。土日、祝日、年末年始を除く","sickChildFee":"1日2,000円、半日1,000円。1日利用時は昼食持参","sickChildApplication":"利用日前日の16時までに施設へ電話予約し、利用登録書、利用申込書、かかりつけ医作成の診療情報提供書等を提出","sickChildExclusions":"麻しん、結核、水痘、新型コロナウイルス感染症、腸管出血性大腸菌感染症等は受入不可。定員等により利用できない場合あり","postIllnessFacility":"ちゅうりっぷ認定こども園 病後児保育室ちゅうりっぷルーム","postIllnessHours":"月曜日から金曜日の8時30分から16時30分。祝日を除く。1回につき7日間まで","postIllnessFee":"1日2,000円（昼食含む）、半日1,000円（昼食除く）。とみいくデジタルポイント利用可","postIllnessApplication":"前日までに施設へ予約し、医師から病後児保育利用連絡票を発行してもらった後、再度施設へ連絡"},"source":{"url":"https://www.city.tonami.lg.jp/info/78606p/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.tonami.lg.jp/info/4057p/","checkedAt":"2026-07-20","description":"病後児保育の対象、施設、利用時間、料金、申込方法"}]},
+    "childcareFee": {"status":"verified","summary":"保育料は児童の年齢と保護者の市民税所得割課税額により決定。3歳以上、第3子以降、住民税非課税世帯の0歳から2歳児は無償化対象。","eligibility":{"minAgeMonths":0,"maxAgeYears":5,"residency":"砺波市の保育所・認定こども園等を利用する児童"},"details":{"feeCalculation":"児童の年齢および保護者の市民税所得割課税額により決定","siblingReduction":"同時に2人が入所している場合、2人目は基準額の半額。第3子以降は無料","freeEducation":"3歳児から5歳児は無償。0歳から2歳児は住民税非課税世帯および第3子以降が無償","additionalCosts":"延長保育料、給食費、通園送迎費、行事費等の実費は無償化対象外","schoolLunch":"3歳以上は給食費を実費負担。0歳から2歳児の副食費は保育料に含まれる","sideDishExemption":"保育認定の3歳から5歳児は市町村民税所得割額57,700円未満の世帯および第3子以降が副食費免除。教育認定は77,101円未満相当世帯および第3子以降が免除","payment":"市立施設の保育料口座振替日は毎月25日。休日の場合は翌営業日。私立施設は各園へ確認","procedures":"市内の保育所・認定こども園の通常無償化は原則手続不要。対象施設や預かり保育等は事前の施設等利用給付認定が必要な場合あり"},"source":{"url":"https://www.city.tonami.lg.jp/info/6219p/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.tonami.lg.jp/service/46798p/","checkedAt":"2026-07-20","description":"保育所の保育料決定、多子軽減、無償化"},{"url":"https://www.city.tonami.lg.jp/service/46797p/","checkedAt":"2026-07-20","description":"認定こども園の保育料、口座振替日、給食費・副食費免除"}]},
+    "schoolMeals": {"status":"verified","summary":"砺波市立小中学校では学校給食を実施し、経済的理由で就学が困難な世帯には就学援助で学校給食費を含む費用の一部を援助。","eligibility":{"minAgeMonths":72,"maxAgeYears":15,"residency":"砺波市に住所があり、砺波市立小中学校に在学する児童生徒の保護者"},"details":{"provider":"砺波市学校給食センターが小学校・中学校の給食を提供","financialAssistance":"生活保護、生活保護の停止・廃止、市県民税非課税・減免、児童扶養手当受給、所得基準該当等の世帯は就学援助の対象となり得る","coveredCosts":"就学援助では学校給食費、学用品費、新入学学用品費、校外活動費、修学旅行費等を援助","application":"申請書、収入額・需要額調書、必要に応じ所得課税証明書を在学する学校へ提出","publishedFee":"市公式の学校給食・就学援助案内では通常の月額または1食単価を確認できないため、学校または学校給食センターへの確認が必要"},"source":{"url":"https://www.city.tonami.lg.jp/service/34914p/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.tonami.lg.jp/info/89971p/","checkedAt":"2026-07-20","description":"令和8年7月の小中学校給食だより・献立表と学校給食センター情報"},{"url":"https://www.city.tonami.lg.jp/info/4601p/","checkedAt":"2026-07-20","description":"児童生徒就学援助で給食費・学用品費等を補助する案内"}]},
+    "postpartumCare": {"status":"researching","summary":"調査中"},
+    "temporaryChildcare": {"status":"todo","summary":"未調査"},
+    "housingSupport": {"status":"todo","summary":"未調査"},
+    "bulkyWaste": {"status":"todo","summary":"未調査"},
+    "disasterPrevention": {"status":"todo","summary":"未調査"}
   }
 }
