@@ -3,33 +3,33 @@
   "region": "central",
   "assignedTeam": "中日本調査班",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-20T04:40:00+09:00",
+  "updatedAt": "2026-07-20T06:20:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 6,
+  "completedSinceLastRelease": 7,
   "completedMunicipalities": [
     {"code": "16201", "name": "富山市", "regionalPullRequest": 30},
     {"code": "16202", "name": "高岡市", "regionalPullRequest": 68},
     {"code": "16204", "name": "魚津市", "regionalPullRequest": 80},
     {"code": "16205", "name": "氷見市", "regionalPullRequest": 92},
     {"code": "16206", "name": "滑川市", "regionalPullRequest": 110},
+    {"code": "16207", "name": "黒部市", "regionalPullRequest": 118},
     {"code": "23100", "name": "名古屋市", "regionalPullRequest": 46}
   ],
-  "regionalQueue": [
-    {"code": "16207", "name": "黒部市", "pullRequestNumber": 118, "stage": "regional_merge_ready", "ci": "success", "ciRun": 232, "mergeable": true, "blocked": false}
-  ],
+  "regionalQueue": [],
   "blocked": [],
   "completenessAudit": {
     "status": "passed",
-    "checkedCodes": ["16201", "16202", "16204", "16205", "16206", "23100"],
+    "checkedCodes": ["16201", "16202", "16204", "16205", "16206", "16207", "23100"],
     "checks": [
       "自治体JSONの基本属性と9制度IDを確認",
       "各制度のverified状態と公式主出典を確認",
       "taskのcompletedServices 9件・verifiedCount 9を確認",
       "1行相当差分はJSON圧縮形式によるもので欠落ではないと判定",
-      "task.statusをmergedへ正規化し旧blockerを除去"
+      "task.statusをmergedへ正規化し旧blockerを除去",
+      "黒部市の年齢範囲必須項目と主出典9件を補正後にCI成功を確認"
     ]
   },
-  "lastAction": "黒部市PR #118の年齢範囲・task status・主出典を補正し、CI run #232成功を確認",
-  "nextAction": "中日本調査班はPR #118をregion/centralへ統合し、taskをmergedへ更新して次自治体へ進む。",
+  "lastAction": "PR #118黒部市のregion/central統合を確認し、task statusをmergedへ正規化",
+  "nextAction": "担当表から次の未着手自治体を選定して制度調査を開始する。",
   "humanDecisionRequired": false
 }
