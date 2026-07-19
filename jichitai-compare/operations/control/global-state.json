@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T04:40:00+09:00",
+  "updatedAt": "2026-07-20T06:20:00+09:00",
   "phase": "migration-audit",
   "mainBranch": "main",
   "regionalBranches": {
@@ -15,27 +15,24 @@
     "confirmed": [
       "assignment policy and four regional branches exist",
       "all four regional control files exist",
-      "east 4, central 6, west 2 municipalities are regionally merged",
-      "central six municipality completeness audit passed",
-      "post-merge task statuses normalized for central six and west two municipalities",
-      "PR #118 Kurobe schema corrections completed; CI run #232 success and mergeable",
-      "PR #89 Hakodate remains CI-success and mergeable"
+      "north 2, east 4, central 7, west 2 municipalities are regionally merged",
+      "central seven municipality completeness audit passed",
+      "post-merge task statuses normalized for north two, central seven and west two municipalities",
+      "PR #89 Hakodate and PR #118 Kurobe are merged into their regional branches",
+      "no open municipality pull requests remain"
     ]
   },
   "regionalCompletedSinceLastRelease": {
-    "north": 0,
+    "north": 2,
     "east": 4,
-    "central": 6,
+    "central": 7,
     "west": 2,
-    "total": 12
+    "total": 15
   },
   "priority": {
-    "type": "regional-merge-followup",
-    "nextAction": "北日本調査班はPR #89をregion/northへ、中日本調査班はPR #118をregion/centralへ統合する。他地域は次の未着手自治体へ進む。"
+    "type": "release-gate-recheck",
+    "nextAction": "各地方調査班は次の未着手自治体へ進む。全国統合・公開担当は地方統合15自治体について10自治体または24時間のrelease条件を再評価する。"
   },
-  "openPullRequests": [
-    {"number": 89, "region": "north", "municipalityCode": "01202", "municipalityName": "函館市", "status": "regional_merge_ready", "ciRun": 179},
-    {"number": 118, "region": "central", "municipalityCode": "16207", "municipalityName": "黒部市", "status": "regional_merge_ready", "ciRun": 232}
-  ],
+  "openPullRequests": [],
   "humanDecisionRequired": false
 }
