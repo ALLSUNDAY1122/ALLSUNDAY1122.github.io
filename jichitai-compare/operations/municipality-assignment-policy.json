@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "1.0.0",
+  "asOf": "2026-01-01",
+  "updatedAt": "2026-07-19",
+  "totalAssignedMunicipalities": 1741,
+  "unassignedMunicipalities": 0,
+  "duplicateAssignments": 0,
+  "assignmentKey": "municipalityCode",
+  "resolver": {
+    "description": "5桁自治体コードの先頭2桁を都道府県コードとして、prefectures配列のassignedTeamを適用する。",
+    "prefectureCodeExpression": "municipalityCode.slice(0, 2)",
+    "includeEntityTypes": [
+      "city",
+      "town",
+      "village",
+      "tokyo_special_ward"
+    ],
+    "excludeEntityTypes": [
+      "designated_city_ward",
+      "subprefecture",
+      "district"
+    ],
+    "excludedMunicipalityCodes": [
+      "01695",
+      "01696",
+      "01697",
+      "01698",
+      "01699",
+      "01700"
+    ],
+    "specialRules": [
+      {
+        "rule": "東京都23特別区を独立自治体として含める",
+        "codes": "13101-13123",
+        "assignedTeam": "東日本調査班"
+      },
+      {
+        "rule": "北方四島6村は現に自治体行政が行われていないため調査対象から除外する",
+        "codes": [
+          "01695",
+          "01696",
+          "01697",
+          "01698",
+          "01699",
+          "01700"
+        ]
+      },
+      {
+        "rule": "政令指定都市の行政区は独立自治体として扱わず、政令指定都市本体だけを対象とする"
+      }
+    ]
+  },
+  "source": {
+    "authority": "政府統計の総合窓口 e-Stat",
+    "municipalityCodeUrl": "https://www.e-stat.go.jp/municipalities/cities/areacode",
+    "municipalityCountUrl": "https://www.e-stat.go.jp/municipalities/number-of-municipalities",
+    "countCalculation": "市町村計1724（北方四島6村を含む・特別区を含まない）-6+東京都23特別区=1741"
+  },
+  "teams": [
+    {
+      "team": "北日本調査班",
+      "prefectureCodes": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07"
+      ],
+      "assignedMunicipalityCount": 406,
+      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+    },
+    {
+      "team": "東日本調査班",
+      "prefectureCodes": [
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "19",
+        "20"
+      ],
+      "assignedMunicipalityCount": 450,
+      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+    },
+    {
+      "team": "中日本調査班",
+      "prefectureCodes": [
+        "16",
+        "17",
+        "18",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30"
+      ],
+      "assignedMunicipalityCount": 409,
+      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+    },
+    {
+      "team": "西日本調査班",
+      "prefectureCodes": [
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44",
+        "45",
+        "46",
+        "47"
+      ],
+      "assignedMunicipalityCount": 476,
+      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+    }
+  ],
+  "prefectures": [
+    {"prefectureCode":"01","prefectureName":"北海道","assignedTeam":"北日本調査班","assignedMunicipalityCount":179},
+    {"prefectureCode":"02","prefectureName":"青森県","assignedTeam":"北日本調査班","assignedMunicipalityCount":40},
+    {"prefectureCode":"03","prefectureName":"岩手県","assignedTeam":"北日本調査班","assignedMunicipalityCount":33},
+    {"prefectureCode":"04","prefectureName":"宮城県","assignedTeam":"北日本調査班","assignedMunicipalityCount":35},
+    {"prefectureCode":"05","prefectureName":"秋田県","assignedTeam":"北日本調査班","assignedMunicipalityCount":25},
+    {"prefectureCode":"06","prefectureName":"山形県","assignedTeam":"北日本調査班","assignedMunicipalityCount":35},
+    {"prefectureCode":"07","prefectureName":"福島県","assignedTeam":"北日本調査班","assignedMunicipalityCount":59},
+    {"prefectureCode":"08","prefectureName":"茨城県","assignedTeam":"東日本調査班","assignedMunicipalityCount":44},
+    {"prefectureCode":"09","prefectureName":"栃木県","assignedTeam":"東日本調査班","assignedMunicipalityCount":25},
+    {"prefectureCode":"10","prefectureName":"群馬県","assignedTeam":"東日本調査班","assignedMunicipalityCount":35},
+    {"prefectureCode":"11","prefectureName":"埼玉県","assignedTeam":"東日本調査班","assignedMunicipalityCount":63},
+    {"prefectureCode":"12","prefectureName":"千葉県","assignedTeam":"東日本調査班","assignedMunicipalityCount":54},
+    {"prefectureCode":"13","prefectureName":"東京都","assignedTeam":"東日本調査班","assignedMunicipalityCount":62},
+    {"prefectureCode":"14","prefectureName":"神奈川県","assignedTeam":"東日本調査班","assignedMunicipalityCount":33},
+    {"prefectureCode":"15","prefectureName":"新潟県","assignedTeam":"東日本調査班","assignedMunicipalityCount":30},
+    {"prefectureCode":"16","prefectureName":"富山県","assignedTeam":"中日本調査班","assignedMunicipalityCount":15},
+    {"prefectureCode":"17","prefectureName":"石川県","assignedTeam":"中日本調査班","assignedMunicipalityCount":19},
+    {"prefectureCode":"18","prefectureName":"福井県","assignedTeam":"中日本調査班","assignedMunicipalityCount":17},
+    {"prefectureCode":"19","prefectureName":"山梨県","assignedTeam":"東日本調査班","assignedMunicipalityCount":27},
+    {"prefectureCode":"20","prefectureName":"長野県","assignedTeam":"東日本調査班","assignedMunicipalityCount":77},
+    {"prefectureCode":"21","prefectureName":"岐阜県","assignedTeam":"中日本調査班","assignedMunicipalityCount":42},
+    {"prefectureCode":"22","prefectureName":"静岡県","assignedTeam":"中日本調査班","assignedMunicipalityCount":35},
+    {"prefectureCode":"23","prefectureName":"愛知県","assignedTeam":"中日本調査班","assignedMunicipalityCount":54},
+    {"prefectureCode":"24","prefectureName":"三重県","assignedTeam":"中日本調査班","assignedMunicipalityCount":29},
+    {"prefectureCode":"25","prefectureName":"滋賀県","assignedTeam":"中日本調査班","assignedMunicipalityCount":19},
+    {"prefectureCode":"26","prefectureName":"京都府","assignedTeam":"中日本調査班","assignedMunicipalityCount":26},
+    {"prefectureCode":"27","prefectureName":"大阪府","assignedTeam":"中日本調査班","assignedMunicipalityCount":43},
+    {"prefectureCode":"28","prefectureName":"兵庫県","assignedTeam":"中日本調査班","assignedMunicipalityCount":41},
+    {"prefectureCode":"29","prefectureName":"奈良県","assignedTeam":"中日本調査班","assignedMunicipalityCount":39},
+    {"prefectureCode":"30","prefectureName":"和歌山県","assignedTeam":"中日本調査班","assignedMunicipalityCount":30},
+    {"prefectureCode":"31","prefectureName":"鳥取県","assignedTeam":"西日本調査班","assignedMunicipalityCount":19},
+    {"prefectureCode":"32","prefectureName":"島根県","assignedTeam":"西日本調査班","assignedMunicipalityCount":19},
+    {"prefectureCode":"33","prefectureName":"岡山県","assignedTeam":"西日本調査班","assignedMunicipalityCount":27},
+    {"prefectureCode":"34","prefectureName":"広島県","assignedTeam":"西日本調査班","assignedMunicipalityCount":23},
+    {"prefectureCode":"35","prefectureName":"山口県","assignedTeam":"西日本調査班","assignedMunicipalityCount":19},
+    {"prefectureCode":"36","prefectureName":"徳島県","assignedTeam":"西日本調査班","assignedMunicipalityCount":24},
+    {"prefectureCode":"37","prefectureName":"香川県","assignedTeam":"西日本調査班","assignedMunicipalityCount":17},
+    {"prefectureCode":"38","prefectureName":"愛媛県","assignedTeam":"西日本調査班","assignedMunicipalityCount":20},
+    {"prefectureCode":"39","prefectureName":"高知県","assignedTeam":"西日本調査班","assignedMunicipalityCount":34},
+    {"prefectureCode":"40","prefectureName":"福岡県","assignedTeam":"西日本調査班","assignedMunicipalityCount":60},
+    {"prefectureCode":"41","prefectureName":"佐賀県","assignedTeam":"西日本調査班","assignedMunicipalityCount":20},
+    {"prefectureCode":"42","prefectureName":"長崎県","assignedTeam":"西日本調査班","assignedMunicipalityCount":21},
+    {"prefectureCode":"43","prefectureName":"熊本県","assignedTeam":"西日本調査班","assignedMunicipalityCount":45},
+    {"prefectureCode":"44","prefectureName":"大分県","assignedTeam":"西日本調査班","assignedMunicipalityCount":18},
+    {"prefectureCode":"45","prefectureName":"宮崎県","assignedTeam":"西日本調査班","assignedMunicipalityCount":26},
+    {"prefectureCode":"46","prefectureName":"鹿児島県","assignedTeam":"西日本調査班","assignedMunicipalityCount":43},
+    {"prefectureCode":"47","prefectureName":"沖縄県","assignedTeam":"西日本調査班","assignedMunicipalityCount":41}
+  ]
+}
