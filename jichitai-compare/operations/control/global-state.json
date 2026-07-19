@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T06:30:00+09:00",
+  "updatedAt": "2026-07-20T08:30:00+09:00",
   "phase": "release-monitoring",
   "mainBranch": "main",
   "regionalBranches": {
@@ -15,23 +15,23 @@
     "confirmed": [
       "assignment policy and four regional branches exist",
       "all four regional control files exist",
-      "north 2, east 4, central 7, west 2 municipalities are regionally merged",
-      "central seven municipality completeness audit passed",
-      "post-merge task statuses normalized for north two, central seven and west two municipalities",
-      "PR #89 Hakodate and PR #118 Kurobe are merged into their regional branches",
+      "north 3, east 5, central 8, west 3 municipalities are regionally merged",
+      "PR #122 Yonago, PR #123 Hitachi, PR #124 Asahikawa and PR #125 Tonami are merged into their regional branches",
+      "Hitachi CI run #255 succeeded after primary-source alignment",
+      "post-merge task statuses for Hitachi and Tonami were normalized to merged",
       "no open municipality pull requests remain"
     ]
   },
   "regionalCompletedSinceLastRelease": {
-    "north": 2,
-    "east": 4,
-    "central": 7,
-    "west": 2,
-    "total": 15
+    "north": 3,
+    "east": 5,
+    "central": 8,
+    "west": 3,
+    "total": 19
   },
   "priority": {
     "type": "release-monitoring",
-    "nextAction": "各地方調査班は次の未着手自治体へ進む。全国統合・公開担当は地方統合15自治体について10自治体条件を監視し、前回全国統合時刻の正式記録が確定した場合のみ24時間条件を適用する。"
+    "nextAction": "各地方調査班は次の未着手自治体へ進む。全国統合・公開担当は地方ごとの10自治体条件を監視し、前回全国統合時刻の正式記録が確定した場合のみ24時間条件を適用する。"
   },
   "openPullRequests": [],
   "humanDecisionRequired": false
