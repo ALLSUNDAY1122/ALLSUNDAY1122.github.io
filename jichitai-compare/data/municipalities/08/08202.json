@@ -6,7 +6,7 @@
   "name": "日立市",
   "officialUrl": "https://www.city.hitachi.lg.jp/",
   "status": "researching",
-  "summary": "茨城県北部の市。7制度を確認済みで、粗大ごみ・防災情報を調査中。",
+  "summary": "茨城県北部の市。8制度を確認済みで、防災情報を調査中。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {"status":"verified","summary":"出生から18歳年度末まで、保険診療の自己負担金と入院時食事代を市独自助成により実質無料化","source":{"url":"https://www.city.hitachi.lg.jp/fukushi_kenko/hojokin_joseikin/1009459.html","checkedAt":"2026-07-20"}},
@@ -28,7 +28,22 @@
       "source": {"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/sumai/1002171/1007303/1002715.html","checkedAt":"2026-07-20"},
       "additionalSources": [{"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/sumai/1002171/1007303/1013151.html","checkedAt":"2026-07-20"}]
     },
-    "bulkyWaste": {"status":"researching","summary":"粗大ごみ制度を調査中"},
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "45リットル袋に入る粗大ごみ（小）は月1回集積所収集、粗大ごみ（中・大）は処理券を貼って戸別回収を申込む",
+      "details": {
+        "smallBulky": "可燃・不燃素材が混在し、45リットルの粗大ごみ（小）専用袋に入るものは、地域別の月1回収集日に指定集積所へ当日朝8時30分までに出す",
+        "mediumLarge": "粗大ごみ（中・大）は販売店で粗大ごみ処理券を購入し、粗大ごみ受付センターへ事前申込みのうえ、処理券を貼って指定日に玄関前等へ出す",
+        "directDropOff": "大量ごみや粗大ごみは清掃センターへ自己搬入可能。受付は8時30分～11時30分、13時～16時",
+        "directDropOffFee": "持込料金は50kgまで300円、100kgまで500円、150kgまで1,000円。150kg超は50kgごとに500円加算",
+        "notes": "家電リサイクル法対象品、処理困難物などは市収集・清掃センター持込の対象外となる場合があるため、品目別案内を確認する"
+      },
+      "source": {"url":"https://www-source.city.hitachi.lg.jp/kurashi_tetsuzuki/gomi_recycle/1002216/1002234/1002238.html","checkedAt":"2026-07-20"},
+      "additionalSources": [
+        {"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/gomi_recycle/1008727/1002277.html","checkedAt":"2026-07-20"},
+        {"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/gomi_recycle/1002242/1009431.html","checkedAt":"2026-07-20"}
+      ]
+    },
     "disasterPrevention": {"status":"researching","summary":"防災・ハザード情報を調査中"}
   }
 }
