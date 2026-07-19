@@ -6,7 +6,7 @@
   "name": "水戸市",
   "officialUrl": "https://www.city.mito.lg.jp/",
   "status": "researching",
-  "summary": "茨城県の県庁所在地。子ども医療福祉費助成、病児・病後児保育、認可保育施設の保育料を確認済みで、その他6制度を調査中。",
+  "summary": "茨城県の県庁所在地。子ども医療福祉費助成、病児・病後児保育、認可保育施設の保育料、学校給食費を確認済みで、その他5制度を調査中。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -59,7 +59,23 @@
         {"url": "https://www.city.mito.lg.jp/site/kosodate/5720.html", "checkedAt": "2026-07-19"}
       ]
     },
-    "schoolMeals": {"status": "researching", "summary": "学校給食費支援を調査中"},
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2025年度から市立小・中・義務教育学校の学校給食費を完全無償化",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "水戸市立小学校、中学校、義務教育学校で学校給食の提供を受ける児童生徒",
+        "support": "市立中学校は2023年度から、市立小学校は2024年度に保護者負担を半額、2025年度から無償化。市立小・中・義務教育学校の全校で保護者負担額0円",
+        "continuation": "水戸市は2026年度も独自の無償化を継続する方針を示している",
+        "application": "通常の給食費無償化について保護者の申請・支払手続きは不要",
+        "suspension": "学校行事以外の事情で4日以上連続して給食を受けない見込みの場合は、学校へ給食停止等届出書を提出"
+      },
+      "source": {"url": "https://www.city.mito.lg.jp/site/education/28915.html", "checkedAt": "2026-07-19"},
+      "additionalSources": [
+        {"url": "https://www.city.mito.lg.jp/site/education/47168.html", "checkedAt": "2026-07-19"},
+        {"url": "https://www.city.mito.lg.jp/site/mayor/120230.html", "checkedAt": "2026-07-19"}
+      ]
+    },
     "postpartumCare": {"status": "researching", "summary": "産後ケアを調査中"},
     "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
     "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
