@@ -29,5 +29,35 @@ window.STORIES.push(
     "minutes": 9,
     "summary": "面会後に早く泣き止むほど、子どもは実親との関係を終えても安定できると評価されていく。",
     "tags": ["親子面会", "児童福祉", "安定時間", "養育家庭"]
+  },
+  {
+    "slug": "the-donation-was-the-persons-wish",
+    "title": "献体は本人の希望でした",
+    "category": "意味怖",
+    "length": "中編",
+    "fear": 4,
+    "minutes": 9,
+    "summary": "献体への同意は一人の身体ではなく再利用可能な名義として、身元不明遺体へ付け替えられていた。",
+    "tags": ["献体", "医科大学", "身元不明遺体", "同意書"]
+  },
+  {
+    "slug": "do-not-focus-night-telescope-four-times",
+    "title": "夜景の望遠鏡は四回合わせないで",
+    "category": "都市伝説風",
+    "length": "中編",
+    "fear": 4,
+    "minutes": 9,
+    "summary": "閉鎖展望台の望遠鏡で四回焦点を合わせると、視点だけが扉のない部屋へ移される。",
+    "tags": ["展望台", "コイン式望遠鏡", "四回目", "焦点"]
+  },
+  {
+    "slug": "voice-of-the-last-person-who-cut-the-mic",
+    "title": "最後にマイクを切った人の声です",
+    "category": "心霊",
+    "length": "中編",
+    "fear": 4,
+    "minutes": 9,
+    "summary": "災害テープの最後の七秒を切ると、亡くなったアナウンサーが最後にマイクを閉じた人の声帯へ移る。",
+    "tags": ["地域FM", "災害放送", "送信終了音", "声帯"]
   }
 );
