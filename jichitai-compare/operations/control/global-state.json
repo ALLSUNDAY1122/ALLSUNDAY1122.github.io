@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T01:50:00+09:00",
+  "updatedAt": "2026-07-20T04:30:00+09:00",
   "phase": "migration-audit",
   "mainBranch": "main",
   "regionalBranches": {
@@ -13,30 +13,32 @@
     "status": "in_progress",
     "firstAuditStartedAt": "2026-07-19T21:35:00+09:00",
     "confirmed": [
-      "municipality-assignment-policy.json exists",
-      "region/north exists",
-      "region/east exists",
-      "region/central exists",
-      "region/west exists",
-      "release-queue.json initialized",
-      "exceptions.json initialized",
-      "audit-log.jsonl initialized",
-      "regions/north.json initialized",
-      "regions/central.json initialized",
-      "regions/east.json initialized",
-      "regions/west.json initialized",
-      "legacy main-target PR #44 closed as superseded by PR #109",
-      "legacy main-target PR #89 retargeted to region/north and is CI-success and mergeable",
-      "PR #38 and PR #58 are merged into region/east",
-      "region/east task statuses for 12203, 12227, and 13123 normalized to merged",
-      "PR #109 Fukuoka CI issue resolved; CI run #212 success",
-      "PR #114 Tottori schema corrections completed; CI run #219 success",
-      "PR #115 Mito east-base and task corrections completed; CI run #220 success"
+      "assignment policy and four regional branches exist",
+      "all four regional control files exist",
+      "PR #115 Mito merged into region/east",
+      "PR #109 Fukuoka and PR #114 Tottori merged into region/west",
+      "PRs #30, #68, #80, #92, #110, and #46 merged into region/central",
+      "east completed municipality count is 4",
+      "central completed municipality count is 6",
+      "west completed municipality count is 2",
+      "central six municipality files contain all nine required services and matching task source sets",
+      "post-merge task statuses normalized to merged for central six and west two municipalities",
+      "only open pull request is north PR #89 for Hakodate City"
     ]
   },
-  "priority": {
-    "type": "regional-queue-processing",
-    "nextAction": "Regional teams merge ready PRs: north #89, west #109 then #114, east #115. Nationwide supervisor next verifies regional merge completion and remaining open PRs; nationwide release session reevaluates release-queue after regional merges."
+  "regionalCompletedSinceLastRelease": {
+    "north": 0,
+    "east": 4,
+    "central": 6,
+    "west": 2,
+    "total": 12
   },
+  "priority": {
+    "type": "north-regional-merge-followup",
+    "nextAction": "北日本調査班はPR #89をregion/northへ統合する。他3地域は次の未着手自治体へ進む。全国統合・公開担当はeast 4件、central 6件、west 2件について10件または24時間のrelease条件を再評価する。"
+  },
+  "openPullRequests": [
+    {"number": 89, "region": "north", "municipalityCode": "01202", "municipalityName": "函館市", "status": "regional_merge_ready"}
+  ],
   "humanDecisionRequired": false
 }
