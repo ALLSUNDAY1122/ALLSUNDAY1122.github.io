@@ -6,114 +6,29 @@
   "name": "日立市",
   "officialUrl": "https://www.city.hitachi.lg.jp/",
   "status": "researching",
-  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料、学校給食費無償化、産後ケア、一時預かり・こども誰でも通園制度を確認済みで、その他3制度を調査中。",
+  "summary": "茨城県北部の市。7制度を確認済みで、粗大ごみ・防災情報を調査中。",
   "updatedAt": "2026-07-20",
   "services": {
-    "childMedical": {
+    "childMedical": {"status":"verified","summary":"出生から18歳年度末まで、保険診療の自己負担金と入院時食事代を市独自助成により実質無料化","source":{"url":"https://www.city.hitachi.lg.jp/fukushi_kenko/hojokin_joseikin/1009459.html","checkedAt":"2026-07-20"}},
+    "sickChildCare": {"status":"verified","summary":"病気の回復期にある子どもを市内4施設で事前登録制により預かる病後児保育","source":{"url":"https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007350/1004312/1004313.html","checkedAt":"2026-07-20"}},
+    "childcareFee": {"status":"verified","summary":"3～5歳児と非課税世帯0～2歳児に加え、市独自で認可保育施設の0～2歳児第2子以降も無償","source":{"url":"https://www.city.hitachi.lg.jp/kosodateoen/nenrei_sagasu/1007358/1010778/1010409.html","checkedAt":"2026-07-20"}},
+    "schoolMeals": {"status":"verified","summary":"市が提供する市立小・中・義務教育学校等の学校給食費を完全無償化","source":{"url":"https://www.city.hitachi.lg.jp/kyouiku/kyushoku/1017095.html","checkedAt":"2026-07-20"}},
+    "postpartumCare": {"status":"verified","summary":"生後1年未満の乳児と母親を対象に宿泊・日帰り・訪問型を合計原則7日まで無料提供","source":{"url":"https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007202/1002005/1001652.html","checkedAt":"2026-07-20"}},
+    "temporaryChildcare": {"status":"verified","summary":"満1歳から就学前の一時預かりと、未就園の0歳6か月から3歳未満のこども誰でも通園制度を実施","source":{"url":"https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007350/1004312/1002000.html","checkedAt":"2026-07-20"}},
+    "housingSupport": {
       "status": "verified",
-      "summary": "出生から18歳年度末まで、保険診療の自己負担金と入院時食事代を市独自助成により実質無料化",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "summary": "子育て世帯・若年夫婦の中古住宅等取得に20万円、省エネ新築住宅取得に5万円を助成",
       "details": {
-        "target": "出生から18歳到達後最初の3月31日までの日立市の児童",
-        "incomeLimit": "日立市独自助成により所得制限を撤廃",
-        "coverage": "健康保険が適用される医療費の自己負担分。外来・入院の自己負担金に加え、入院時食事代も助成対象",
-        "paymentFlow": "受給者証を使用して窓口で600円を支払った場合は登録口座へ年4回自動振込。600円未満、入院食事代、受給者証を使用しなかった場合等は支給申請が必要",
-        "application": "出生・転入後に受給者証交付手続きと自己負担金支給用の口座登録を行う。変更・再交付・払い戻し等は一部オンライン申請に対応",
-        "claimDeadline": "支給申請は診療月から5年以内"
+        "challengeSupport": "住み替えチャレンジ支援事業では、市内の中古戸建住宅またはマンションを取得する子育て世帯・若年夫婦等に20万円を助成",
+        "challengeEligibility": "申請日または契約日時点で18歳未満の子等を有する子育て世帯、または夫婦のどちらかが45歳未満の若年夫婦等。対象住宅は居住部分50平方メートル以上で、2027年3月31日までに登記完了が必要",
+        "ecoSupport": "ひたちエコみらい住宅助成では、市内に新築の省エネ注文住宅または分譲住宅を取得する子育て世帯・若者夫婦に5万円を助成",
+        "ecoEligibility": "契約日または申請日に18歳未満の子等を有する子育て世帯、または夫婦のどちらかが39歳以下。過去に同助成を受けていないこと等が条件",
+        "application": "予算に限りがあり年度途中で受付終了する場合がある。2026年度の申請期限は2027年3月31日"
       },
-      "source": {"url": "https://www.city.hitachi.lg.jp/fukushi_kenko/hojokin_joseikin/1009459.html", "checkedAt": "2026-07-20"}
+      "source": {"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/sumai/1002171/1007303/1002715.html","checkedAt":"2026-07-20"},
+      "additionalSources": [{"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/sumai/1002171/1007303/1013151.html","checkedAt":"2026-07-20"}]
     },
-    "sickChildCare": {
-      "status": "verified",
-      "summary": "病気の回復期にあり集団生活が難しい子どもを、市内4施設で事前登録制により預かる病後児保育",
-      "details": {
-        "target": "日立市内に住む子ども、または市内の認定こども園、保育園、幼稚園、認可外保育施設等に通園している子ども",
-        "condition": "前日までに医師の診断を受け、病気の回復期と認められたこと。現在病気にかかっている病児は対象外",
-        "facilities": "いしまち認定こども園、豊浦さくら認定こども園、田尻徳風保育園、多賀さくら認定こども園",
-        "application": "利用前の事前登録が必要。利用日時、受入年齢、料金、必要書類などの詳細は各実施施設へ直接確認する",
-        "feeSupport": "保育の必要性の認定を事前に受けた場合、病児保育等の利用料は幼児教育・保育無償化の対象となり得る。3～5歳児は月額37,000円、住民税非課税世帯の0～2歳児は月額42,000円が上限",
-        "alternativeSupport": "日立市ファミリー・サポート・センターでも病後児預かりを実施し、通常預かりとは別料金を設定"
-      },
-      "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007350/1004312/1004313.html", "checkedAt": "2026-07-20"},
-      "additionalSources": [
-        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001998.html", "checkedAt": "2026-07-20"},
-        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007202/1002005/1004357.html", "checkedAt": "2026-07-20"}
-      ]
-    },
-    "childcareFee": {
-      "status": "verified",
-      "summary": "3～5歳児と非課税世帯の0～2歳児は無償。日立市独自に認可保育施設の0～2歳児第2子以降も無償",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
-      "details": {
-        "basicRule": "認可保育園、認定こども園の保育部分、地域型保育を利用する3～5歳児は保育料無料。0～2歳児は住民税非課税世帯のみ国制度で無料",
-        "municipalExpansion": "日立市独自に、認可保育園、認定こども園の保育部分等を利用する0～2歳児クラスの第2子以降の保育料を無料化",
-        "siblingCounting": "原則として年齢にかかわらず最年長の子から第1子、第2子と数える。年収640万円以上相当世帯などは、認可保育施設に在園する就学前児童のみで数える場合がある",
-        "feeCalculation": "0～2歳児第1子の保育料は世帯の市民税額等と保育標準時間・短時間区分により決定。公立・私立は同額",
-        "application": "認可保育施設の通常保育料無償化は原則申請不要。預かり保育、認可外保育、一時預かり等は保育の必要性の認定と償還払い請求が必要",
-        "excludedCosts": "給食費、通園送迎費、行事費、制服・日用品等の実費は無償化対象外",
-        "sideDishFee": "副食費は年収360万円未満相当世帯や第3子以降等で免除となる場合がある。主食費は原則保護者負担"
-      },
-      "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/nenrei_sagasu/1007358/1010778/1010409.html", "checkedAt": "2026-07-20"},
-      "additionalSources": [
-        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001998.html", "checkedAt": "2026-07-20"},
-        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001997.html", "checkedAt": "2026-07-20"}
-      ]
-    },
-    "schoolMeals": {
-      "status": "verified",
-      "summary": "市が提供する市立小・中・義務教育学校等の学校給食費を完全無償化",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "target": "日立市が学校給食を提供する市立小学校、中学校、義務教育学校等の児童生徒",
-        "support": "2026年度も学校給食費の完全無償化を継続し、保護者負担は0円",
-        "standardAmount": "2026年4月改定後の給食費は小学生月額5,310円、中学生月額6,050円。いずれも8月を除く年11か月分を市が負担",
-        "annualEquivalent": "無償化相当額は小学生年58,410円、中学生年66,550円",
-        "allergySupport": "食物アレルギー等により学校給食を一切受けられず弁当を持参する市立小・中・義務教育学校、特別支援学校の児童生徒について、学校給食費相当額を補助",
-        "application": "通常の給食費無償化は保護者の支払不要。アレルギー等による弁当持参者向け補助は学校を通じて申請書を配布"
-      },
-      "source": {"url": "https://www.city.hitachi.lg.jp/kyouiku/kyushoku/1017095.html", "checkedAt": "2026-07-20"}
-    },
-    "postpartumCare": {
-      "status": "verified",
-      "summary": "生後1年未満の乳児と母親を対象に、宿泊・日帰り・訪問型の産後ケアを合計原則7日まで無料で提供",
-      "eligibility": {"minAgeMonths": 0, "maxAgeMonths": 11},
-      "details": {
-        "target": "原則として日立市に住所があり、体調不良または育児不安があり、家族等から産後の協力を得にくく、母子とも入院治療を必要としない母親と生後1年未満の乳児",
-        "ageLimitNote": "病院で利用できる月齢は生後4か月までで、施設により対象月齢が異なる",
-        "types": "医療機関・助産院での宿泊型、日帰り型、助産師による訪問型から選択",
-        "duration": "1回の出産につき、宿泊・日帰り・訪問を合わせて原則7日以内",
-        "hours": "宿泊型は午前9時から翌日午後5時、日帰り型は午前9時から午後5時、訪問型は午前9時から午後4時のうち3時間",
-        "fee": "自己負担無料",
-        "care": "母親の心身・乳房ケア、乳児の発育発達・体重・排便確認、授乳・沐浴・スキンケア指導、育児相談",
-        "application": "原則利用日の7日前までに申請書を提出し、育児状況や相談内容の審査後に利用決定。出産後は来所面接申込みフォームも利用可能"
-      },
-      "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007202/1002005/1001652.html", "checkedAt": "2026-07-20"}
-    },
-    "temporaryChildcare": {
-      "status": "verified",
-      "summary": "満1歳から就学前の一時預かりと、未就園の0歳6か月から3歳未満を対象とする月10時間のこども誰でも通園制度を実施",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
-      "details": {
-        "temporaryCareTarget": "日立市在住の満1歳から小学校就学前で、認定こども園、保育所、一時預かり実施幼稚園に在籍していない子ども",
-        "temporaryCareReasons": "保護者の仕事、病気、出産、看護、冠婚葬祭、育児疲れ等により緊急または一時的に保育できない場合",
-        "temporaryCareFacilities": "おおもり保育園、ゆなご保育園、おおくぼ保育園、みずき保育園",
-        "temporaryCareHours": "月曜日から金曜日の9時30分～16時30分。祝日・年末年始を除き、1時間単位、原則週3日以内",
-        "temporaryCareFee": "2026年4月から1時間300円。給食のおかず320円、おやつ100円。主食は持参",
-        "anyChildCareTarget": "日立市に住民登録があり、利用日時点で0歳6か月から満3歳未満、保育園・認定こども園・幼稚園・地域型保育・企業主導型保育に在籍していない子ども",
-        "anyChildCareLimit": "2026年4月1日開始。保護者の就労要件なしで月10時間まで、翌月繰越不可",
-        "anyChildCareFee": "1人1時間300円。生活保護世帯は0円、市町村民税所得割合算額77,101円未満の世帯は100円。教材費・保険料・給食費等の実費は別",
-        "anyChildCareApplication": "利用開始前に市への認定申請が必要。認定後、利用施設との初回面談と予約を行う",
-        "feeSupport": "保育の必要性の認定を事前に受けた一時預かり等は、3～5歳児月額37,000円、住民税非課税世帯の0～2歳児月額42,000円を上限に償還払いの対象となる場合がある"
-      },
-      "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007350/1004312/1002000.html", "checkedAt": "2026-07-20"},
-      "additionalSources": [
-        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1018878.html", "checkedAt": "2026-07-20"},
-        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001998.html", "checkedAt": "2026-07-20"},
-        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001997.html", "checkedAt": "2026-07-20"}
-      ]
-    },
-    "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
-    "bulkyWaste": {"status": "researching", "summary": "粗大ごみ制度を調査中"},
-    "disasterPrevention": {"status": "researching", "summary": "防災・ハザード情報を調査中"}
+    "bulkyWaste": {"status":"researching","summary":"粗大ごみ制度を調査中"},
+    "disasterPrevention": {"status":"researching","summary":"防災・ハザード情報を調査中"}
   }
 }
