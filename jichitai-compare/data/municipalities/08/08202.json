@@ -6,7 +6,7 @@
   "name": "日立市",
   "officialUrl": "https://www.city.hitachi.lg.jp/",
   "status": "researching",
-  "summary": "茨城県北部の市。子どもの医療福祉費助成と病後児保育を確認済みで、その他7制度を調査中。",
+  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料を確認済みで、その他6制度を調査中。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -40,7 +40,25 @@
         {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007202/1002005/1004357.html", "checkedAt": "2026-07-20"}
       ]
     },
-    "childcareFee": {"status": "researching", "summary": "保育料を調査中"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児は無償。日立市独自に認可保育施設の0～2歳児第2子以降も無償",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "basicRule": "認可保育園、認定こども園の保育部分、地域型保育を利用する3～5歳児は保育料無料。0～2歳児は住民税非課税世帯のみ国制度で無料",
+        "municipalExpansion": "日立市独自に、認可保育園、認定こども園の保育部分等を利用する0～2歳児クラスの第2子以降の保育料を無料化",
+        "siblingCounting": "原則として年齢にかかわらず最年長の子から第1子、第2子と数える。年収640万円以上相当世帯などは、認可保育施設に在園する就学前児童のみで数える場合がある",
+        "feeCalculation": "0～2歳児第1子の保育料は世帯の市民税額等と保育標準時間・短時間区分により決定。公立・私立は同額",
+        "application": "認可保育施設の通常保育料無償化は原則申請不要。預かり保育、認可外保育、一時預かり等は保育の必要性の認定と償還払い請求が必要",
+        "excludedCosts": "給食費、通園送迎費、行事費、制服・日用品等の実費は無償化対象外",
+        "sideDishFee": "副食費は年収360万円未満相当世帯や第3子以降等で免除となる場合がある。主食費は原則保護者負担"
+      },
+      "source": {"url": "https://www.city.hitachi.lg.jp/kosodateoen/nenrei_sagasu/1007358/1010778/1010409.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [
+        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001998.html", "checkedAt": "2026-07-20"},
+        {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001997.html", "checkedAt": "2026-07-20"}
+      ]
+    },
     "schoolMeals": {"status": "researching", "summary": "学校給食費支援を調査中"},
     "postpartumCare": {"status": "researching", "summary": "産後ケアを調査中"},
     "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
