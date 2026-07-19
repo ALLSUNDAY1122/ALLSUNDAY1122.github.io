@@ -5,7 +5,7 @@
   "prefectureCode": "08",
   "prefectureName": "茨城県",
   "assignedTeam": "東日本調査班",
-  "status": "research_complete",
+  "status": "pr_open",
   "currentService": null,
   "nextServiceIndex": 9,
   "completedServices": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
@@ -14,9 +14,9 @@
   "unavailableCount": 0,
   "needsMediumReviewCount": 0,
   "currentBranch": "data/08202-hitachi",
-  "pullRequestNumber": null,
+  "pullRequestNumber": 123,
   "lastCheckedAt": "2026-07-20",
-  "lastUpdatedAt": "2026-07-20T05:15:00+09:00",
+  "lastUpdatedAt": "2026-07-20T06:40:00+09:00",
   "lastUpdatedBy": "東日本調査班",
   "officialSources": [
     "https://www.city.hitachi.lg.jp/fukushi_kenko/hojokin_joseikin/1009459.html",
@@ -33,8 +33,8 @@
     "東日本担当自治体コード昇順により日立市を新規選定。",
     "region/eastから自治体専用ブランチを作成。",
     "9制度すべて公式情報で確認済み。",
-    "disasterPreventionは地区別・WEB版ハザードマップ、洪水・内水・土砂災害・津波・地震情報、災害種別ごとの避難所開設基準を確認。",
-    "次はJSON整合性・差分確認後にregion/east向けPRを作成する。"
+    "自治体JSONとtaskの制度数・status・公式ソース9件の整合性を確認。",
+    "PR #123をregion/east向けに作成。差分は日立市の自治体JSONとtaskの2ファイルのみ。"
   ],
   "blockers": []
 }
