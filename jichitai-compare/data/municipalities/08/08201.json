@@ -6,7 +6,7 @@
   "name": "水戸市",
   "officialUrl": "https://www.city.mito.lg.jp/",
   "status": "researching",
-  "summary": "茨城県の県庁所在地。子ども医療福祉費助成、病児・病後児保育、認可保育施設の保育料、学校給食費、産後ケアを確認済みで、その他4制度を調査中。",
+  "summary": "茨城県の県庁所在地。子ども医療福祉費助成、病児・病後児保育、認可保育施設の保育料、学校給食費、産後ケア、一時預かり・こども誰でも通園制度を確認済みで、その他3制度を調査中。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -95,7 +95,25 @@
         {"url": "https://www.city.mito.lg.jp/site/kosodate/3132.html", "checkedAt": "2026-07-19"}
       ]
     },
-    "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "就学前児童向け一時預かりと、生後6か月から3歳未満向けこども誰でも通園制度を実施",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "oneTimeCareTarget": "水戸市内在住で、保護者の傷病・入院・災害・事故・育児負担等により一時的に家庭保育が困難な就学前児童。公立施設は生後6か月から就学前、民間施設は各施設が定める月齢から就学前まで",
+        "oneTimeCareHours": "公立は原則8時30分から17時まで、土曜日は正午まで。民間は各施設が定める時間",
+        "oneTimeCareApplication": "利用希望施設へ事前に空き状況を確認し、登録・申込みを行う。子育て支援・多世代交流センター等は利用希望日の2週間前から予約受付",
+        "universalCareTarget": "保育所、幼稚園、認定こども園、家庭的保育、小規模保育、事業所内保育、企業主導型保育に在籍していない生後6か月から満3歳未満の児童",
+        "universalCareUse": "保護者の就労要件を問わず、月一定時間の利用可能枠内で時間単位に保育園等を利用し、保護者向け子育て相談支援も受けられる",
+        "universalCareFee": "実施施設の多くは1時間300円。施設ごとに実施日時、受入年齢、定員、キャンセル料が異なる",
+        "universalCareApplication": "国のこども誰でも通園制度総合支援システム等を通じて利用認定・施設予約を行い、施設の受入条件を確認する"
+      },
+      "source": {"url": "https://www.city.mito.lg.jp/site/kosodate/2164.html", "checkedAt": "2026-07-19"},
+      "additionalSources": [
+        {"url": "https://www.city.mito.lg.jp/site/kosodate/95901.html", "checkedAt": "2026-07-19"},
+        {"url": "https://www.city.mito.lg.jp/site/kosodate/71597.html", "checkedAt": "2026-07-19"}
+      ]
+    },
     "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
     "bulkyWaste": {"status": "researching", "summary": "粗大ごみ制度を調査中"},
     "disasterPrevention": {"status": "researching", "summary": "防災・ハザード情報を調査中"}
