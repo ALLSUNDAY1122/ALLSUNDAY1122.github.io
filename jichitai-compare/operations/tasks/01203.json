@@ -5,7 +5,7 @@
   "prefectureCode": "01",
   "prefectureName": "北海道",
   "assignedTeam": "北日本調査班",
-  "status": "completed",
+  "status": "pr_open",
   "currentService": null,
   "nextServiceIndex": 9,
   "completedServices": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
@@ -16,9 +16,23 @@
   "currentBranch": "data/01203-otaru",
   "pullRequestNumber": 116,
   "lastCheckedAt": "2026-07-20",
-  "lastUpdatedAt": "2026-07-20T02:20:00+09:00",
+  "lastUpdatedAt": "2026-07-20T02:45:00+09:00",
   "lastUpdatedBy": "北日本調査班",
-  "officialSources": ["https://www.city.otaru.lg.jp/docs/2024062400026/","https://www.city.otaru.lg.jp/docs/2020111000438/","https://www.city.otaru.lg.jp/docs/2026041300013/","https://www.city.otaru.lg.jp/docs/2021032200068/","https://www.city.otaru.lg.jp/docs/2020111000452/","https://www.city.otaru.lg.jp/docs/2024013000022/","https://www.city.otaru.lg.jp/docs/2020110900692/","https://www.city.otaru.lg.jp/docs/2022040600055/","https://www.city.otaru.lg.jp/docs/2020111000872/","https://www.city.otaru.lg.jp/docs/2021032200082/","https://www.city.otaru.lg.jp/docs/2026010500024/","https://www.city.otaru.lg.jp/docs/2026033000013/","https://www.city.otaru.lg.jp/docs/2021030400033/","https://www.city.otaru.lg.jp/docs/2020102100420/","https://www.city.otaru.lg.jp/docs/2020102100499/","https://www.city.otaru.lg.jp/docs/2020102100406/","https://www.city.otaru.lg.jp/docs/2020101000813/","https://www.city.otaru.lg.jp/docs/2026062500010/","https://www.city.otaru.lg.jp/docs/2025100200011/","https://www.city.otaru.lg.jp/docs/2020101000806/"],
-  "notes": ["北日本調査班の次期自治体として正式登録。","9制度を小樽市公式情報で確認しverifiedへ更新。","disasterPreventionでは令和7年2月改訂防災マップ、避難所一覧、2026年7月試行導入の災救マップを記録。","9制度の調査を完了。","PR #116をregion/north向けに作成。"],
+  "officialSources": [
+    "https://www.city.otaru.lg.jp/docs/2024062400026/",
+    "https://www.city.otaru.lg.jp/docs/2020111000438/",
+    "https://www.city.otaru.lg.jp/docs/2021032200068/",
+    "https://www.city.otaru.lg.jp/docs/2024013000022/",
+    "https://www.city.otaru.lg.jp/docs/2022040600055/",
+    "https://www.city.otaru.lg.jp/docs/2021032200082/",
+    "https://www.city.otaru.lg.jp/docs/2021030400033/",
+    "https://www.city.otaru.lg.jp/docs/2020102100420/",
+    "https://www.city.otaru.lg.jp/docs/2020101000813/"
+  ],
+  "notes": [
+    "9制度を小樽市公式情報で確認済み。",
+    "PR #116をregion/north向けに作成。",
+    "CI run 218の失敗原因だった未許可statusと旧source形式を現行スキーマへ修正。"
+  ],
   "blockers": []
 }
