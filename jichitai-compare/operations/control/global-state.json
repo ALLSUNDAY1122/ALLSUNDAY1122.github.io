@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T00:20:04+09:00",
+  "updatedAt": "2026-07-20T01:50:00+09:00",
   "phase": "migration-audit",
   "mainBranch": "main",
   "regionalBranches": {
@@ -21,20 +21,22 @@
       "release-queue.json initialized",
       "exceptions.json initialized",
       "audit-log.jsonl initialized",
-      "PR #110 is CI-success and mergeable into region/central",
-      "PR #109 requires task officialSources correction before region/west merge",
+      "regions/north.json initialized",
+      "regions/central.json initialized",
+      "regions/east.json initialized",
+      "regions/west.json initialized",
       "legacy main-target PR #44 closed as superseded by PR #109",
       "legacy main-target PR #89 retargeted to region/north and is CI-success and mergeable",
-      "regions/north.json initialized",
-      "PR #38 is merged into region/east",
-      "PR #30 is CI-success and mergeable into region/central",
-      "legacy main-target PR #46 retargeted to region/central and is mergeable",
-      "regions/central.json initialized"
+      "PR #38 and PR #58 are merged into region/east",
+      "region/east task statuses for 12203, 12227, and 13123 normalized to merged",
+      "PR #109 Fukuoka CI issue resolved; CI run #212 success",
+      "PR #114 Tottori schema corrections completed; CI run #219 success",
+      "PR #115 Mito east-base and task corrections completed; CI run #220 success"
     ]
   },
   "priority": {
     "type": "regional-queue-processing",
-    "nextAction": "Regional teams merge ready PRs #89, #30, and #110; central reruns CI for PR #46; nationwide supervisor next classifies the remaining open legacy municipality PRs, beginning with PR #58 and PR #68."
+    "nextAction": "Regional teams merge ready PRs: north #89, west #109 then #114, east #115. Nationwide supervisor next verifies regional merge completion and remaining open PRs; nationwide release session reevaluates release-queue after regional merges."
   },
   "humanDecisionRequired": false
 }

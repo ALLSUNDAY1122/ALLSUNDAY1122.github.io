@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "region": "west",
+  "branch": "region/west",
+  "updatedAt": "2026-07-20T01:50:00+09:00",
+  "status": "active",
+  "completedSinceLastRelease": 0,
+  "completedMunicipalities": [],
+  "pendingRegionalPullRequests": [
+    {"number": 109, "code": "40130", "name": "福岡市", "ci": "success", "mergeable": true, "mergeOrder": 1},
+    {"number": 114, "code": "31201", "name": "鳥取市", "ci": "success", "mergeable": true, "mergeOrder": 2}
+  ],
+  "blocked": [],
+  "migrationCorrections": [
+    "40130のofficialSources・PRメタデータを現行スキーマへ正規化",
+    "31201のstatus・officialSourcesを現行スキーマへ正規化",
+    "31201 postpartumCareへ公式対象期間に基づくeligibilityを追加",
+    "CI run #212および#219 successを確認"
+  ],
+  "nextAction": "西日本調査班はPR #109を先にregion/westへ統合し、PR #114を最新baseで再確認して統合した後、次の未着手自治体へ進む。",
+  "humanDecisionRequired": false
+}
