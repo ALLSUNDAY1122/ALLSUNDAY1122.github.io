@@ -7,15 +7,21 @@
     "code": "31201",
     "name": "鳥取市"
   },
-  "stage": "municipality_complete",
+  "stage": "ci_exception",
   "completedServiceCount": 9,
   "requiredServiceCount": 9,
   "workingBranch": "data/31201-tottori-city",
-  "pullRequest": null,
-  "ci": null,
+  "pullRequest": 114,
+  "ci": {
+    "status": "failure",
+    "workflowRunId": 29695183184,
+    "failedJob": "Validate municipality data",
+    "failedStep": "Generate national progress"
+  },
   "conflict": false,
   "exceptions": [
-    "WEST-40130-CI-001"
+    "WEST-40130-CI-001",
+    "WEST-31201-CI-001"
   ],
   "deferredMunicipalities": [
     {
@@ -24,9 +30,16 @@
       "branch": "data/40130-fukuoka-city",
       "pullRequestNumber": 109,
       "reason": "CI validation failure"
+    },
+    {
+      "code": "31201",
+      "name": "鳥取市",
+      "branch": "data/31201-tottori-city",
+      "pullRequestNumber": 114,
+      "reason": "CI national progress generation failure"
     }
   ],
-  "lastAction": "鳥取市disasterPreventionを公式情報で確認し、9制度すべての調査を完了",
-  "nextAction": "鳥取市作業ブランチの差分を検証し、region/west向けPRを作成する",
-  "updatedAt": "2026-07-20T00:25:00+09:00"
+  "lastAction": "PR #114のCIを確認し、Generate national progress工程の失敗をWEST-31201-CI-001として登録",
+  "nextAction": "鳥取市PR #114の全国進捗生成エラーを特定し、軽微修正可能なら作業ブランチへ反映する",
+  "updatedAt": "2026-07-20T00:40:00+09:00"
 }
