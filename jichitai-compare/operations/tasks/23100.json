@@ -6,29 +6,34 @@
   "prefectureName": "愛知県",
   "assignedTeam": "中日本調査班",
   "status": "researching",
-  "currentService": "sickChildCare",
-  "nextServiceIndex": 1,
+  "currentService": "childcareFee",
+  "nextServiceIndex": 2,
   "completedServices": [
-    "childMedical"
+    "childMedical",
+    "sickChildCare"
   ],
-  "verifiedCount": 1,
+  "verifiedCount": 2,
   "researchingCount": 0,
   "unavailableCount": 0,
   "needsMediumReviewCount": 0,
   "currentBranch": "data/23100-nagoya",
   "pullRequestNumber": null,
   "lastCheckedAt": "2026-07-19",
-  "lastUpdatedAt": "2026-07-19T09:38:00+09:00",
+  "lastUpdatedAt": "2026-07-19T09:44:00+09:00",
   "lastUpdatedBy": "中日本調査班",
   "officialSources": [
-    "https://www.city.nagoya.jp/kodomo/kosodate/1008992/1009002/1009009.html"
+    "https://www.city.nagoya.jp/kodomo/kosodate/1008992/1009002/1009009.html",
+    "https://www.city.nagoya.jp/kodomo/kosodate/1009115/1009125/1009255/1034085/1009265.html"
   ],
   "notes": [
     "通常統括の初期キューとして作成。",
     "開始時に名古屋市ブランチがmainより20コミット遅れており、固有差分がないことを確認して最新mainへfast-forward同期。",
     "子ども医療費助成は18歳到達後最初の3月31日まで、所得制限なく保険診療の自己負担額を助成。",
     "愛知県内はマイナ保険証等と子ども医療証の提示による現物給付。県外受診等は払い戻し申請の対象。",
-    "次の対象はsickChildCare。"
+    "病児・病後児デイケアは原則生後6か月から小学生までを対象に22施設で実施。",
+    "一般世帯の利用料は6時間まで1,000円、8時間まで1,500円、10時間まで2,000円。生活保護世帯・市民税非課税世帯は無料。",
+    "利用前に受診して利用連絡書を作成し、原則前日までに施設へ予約する。",
+    "次の対象はchildcareFee。"
   ],
   "blockers": []
 }
