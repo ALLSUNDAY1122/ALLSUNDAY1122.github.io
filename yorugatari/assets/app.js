@@ -66,4 +66,21 @@ if (randomButton) {
   });
 }
 
+const mainNav = document.querySelector('.site-header .nav');
+if (mainNav && !mainNav.querySelector('a[href="archive.html"]')) {
+  const archiveLink = document.createElement('a');
+  archiveLink.href = 'archive.html';
+  archiveLink.textContent = '全100話';
+  const aboutLink = mainNav.querySelector('a[href="about.html"]');
+  mainNav.insertBefore(archiveLink, aboutLink || null);
+}
+
+const footerNav = document.querySelector('.site-footer .footer-links');
+if (footerNav && !footerNav.querySelector('a[href="archive.html"]')) {
+  const archiveLink = document.createElement('a');
+  archiveLink.href = 'archive.html';
+  archiveLink.textContent = '全100話一覧';
+  footerNav.insertBefore(archiveLink, footerNav.firstChild);
+}
+
 render();
