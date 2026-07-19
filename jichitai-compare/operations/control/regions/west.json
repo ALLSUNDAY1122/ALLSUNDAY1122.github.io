@@ -2,21 +2,21 @@
   "schemaVersion": "1.0.0",
   "region": "west",
   "branch": "region/west",
-  "updatedAt": "2026-07-20T01:50:00+09:00",
+  "updatedAt": "2026-07-20T04:30:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 0,
-  "completedMunicipalities": [],
-  "pendingRegionalPullRequests": [
-    {"number": 109, "code": "40130", "name": "福岡市", "ci": "success", "mergeable": true, "mergeOrder": 1},
-    {"number": 114, "code": "31201", "name": "鳥取市", "ci": "success", "mergeable": true, "mergeOrder": 2}
+  "completedSinceLastRelease": 2,
+  "completedMunicipalities": [
+    {"code": "31201", "name": "鳥取市", "regionalPullRequest": 114},
+    {"code": "40130", "name": "福岡市", "regionalPullRequest": 109}
   ],
+  "pendingRegionalPullRequests": [],
   "blocked": [],
   "migrationCorrections": [
-    "40130のofficialSources・PRメタデータを現行スキーマへ正規化",
-    "31201のstatus・officialSourcesを現行スキーマへ正規化",
-    "31201 postpartumCareへ公式対象期間に基づくeligibilityを追加",
-    "CI run #212および#219 successを確認"
+    "40130と31201の地方統合完了を確認",
+    "両taskのstatusをmergedへ正規化",
+    "旧CI例外EX-20260719-001は解消済み"
   ],
-  "nextAction": "西日本調査班はPR #109を先にregion/westへ統合し、PR #114を最新baseで再確認して統合した後、次の未着手自治体へ進む。",
+  "lastAction": "PR #109とPR #114をregion/westへ統合し、taskメタデータを実態へ補正",
+  "nextAction": "西日本調査班は担当表の自治体コード順で次の未着手自治体へ進む。",
   "humanDecisionRequired": false
 }
