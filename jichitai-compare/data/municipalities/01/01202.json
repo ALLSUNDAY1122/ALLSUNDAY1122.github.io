@@ -6,7 +6,7 @@
   "name": "函館市",
   "officialUrl": "https://www.city.hakodate.hokkaido.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成と病児保育を公式情報で確認済み。残り7制度を順次調査する。",
+  "summary": "子ども医療費助成、病児保育、保育料を公式情報で確認済み。残り6制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -65,7 +65,38 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳児クラス以上、0～2歳児の住民税非課税世帯、第2子以降の保育料を無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "coveredFacilities": "保育所、認定こども園、幼稚園など。施設類型と認定区分により取扱いが異なる",
+        "ageThreeToFive": "3歳児クラスから5歳児クラスの保育料は無料。幼稚園・認定こども園の幼稚園機能は満3歳から無料",
+        "ageZeroToTwoNonTax": "0歳児から2歳児クラスの住民税非課税世帯は保育料無料",
+        "ageZeroToTwoFirstChild": "住民税課税世帯の第1子は、保護者の市町村民税所得割額、保育必要量、世帯状況等により決定",
+        "taxCalculationPeriod": "4月分から8月分は前年度、9月分から翌年3月分は当該年度の市町村民税額で算定",
+        "secondChildFree": "2024年4月から、所得制限およびきょうだいの年齢制限を撤廃し、すべての世帯の第2子以降を無料化",
+        "siblingCounting": "生計を一にする子どもを年齢の高い順に第1子、第2子と数える。別居の場合は仕送り等を記載した申立書等が必要となる場合がある",
+        "foodAndOtherCosts": "3歳以上児は食材料費、主食費、教材費、行事費、送迎費等が実費となる場合がある。延長保育料も無償化対象外",
+        "foodCostExemption": "年収360万円未満相当の世帯および全世帯の第3子以降は、副食費が免除される場合がある",
+        "reduction": "失業、倒産、病気、災害、離婚・死別等で収入や世帯構成が大きく変わり納付が困難な場合、減免対象となることがある",
+        "payment": "市立保育所等は函館市へ、私立認定こども園は利用園へ納付。函館市への納付は口座振替、納付書、対応するスマートフォン決済を利用可能",
+        "currentFeeTableNote": "市公式ページで公開されている0～2歳児の基準額表は令和7年度版。令和8年度の個別決定額は市公式LINEの試算または子どもサービス課で確認する",
+        "fiscalYear2026Policy": "令和8年度市政執行方針で、認可保育施設の第2子以降保育料無償化を引き続き実施すると明記"
+      },
+      "source": {
+        "url": "https://www.city.hakodate.hokkaido.jp/docs/2016061500128/",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        "https://www.city.hakodate.hokkaido.jp/docs/2019022100061/",
+        "https://www.city.hakodate.hokkaido.jp/docs/2026021700031/",
+        "https://www.city.hakodate.hokkaido.jp/docs/2016061500128/file_contents/R7hoikuryo.pdf"
+      ]
+    },
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
