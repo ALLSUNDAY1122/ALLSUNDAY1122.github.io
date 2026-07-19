@@ -6,7 +6,7 @@
   "name": "黒部市",
   "officialUrl": "https://www.city.kurobe.toyama.jp/",
   "status": "researching",
-  "summary": "黒部市の9制度を調査中。こども医療費助成、病児・病後児保育を確認済み。",
+  "summary": "黒部市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -58,8 +58,36 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "childcareFee": {"status": "researching", "summary": "調査中"},
-    "schoolMeals": {"status": "todo", "summary": "未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "0歳から2歳児の保育料は、同一世帯で生計を一にする父母等の市町村民税所得割額の合計により決定。3歳から5歳児は幼児教育・保育の無償化対象。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5,
+        "residency": "黒部市の保育所・認定こども園等を利用する児童"
+      },
+      "details": {
+        "feeCalculation": "入所児童と同一世帯に属し生計を一にしている父母、および家計の主宰者であるその他の扶養義務者の市町村民税所得割額の合計により決定",
+        "taxTreatment": "配当控除、住宅取得控除、外国税額控除、配当割額・株式等譲渡所得割額控除の適用前の税額を使用",
+        "freeEducation": "3歳から5歳児の保育料は無償化。住民税非課税世帯の0歳から2歳児も無償化対象",
+        "additionalCosts": "給食費、行事費などの実費は無償化対象外",
+        "siblingReduction": "副食費は、年収360万円未満相当世帯、第2子の一定範囲、ひとり親世帯等の第2子以降、第3子以降などで免除対象",
+        "payment": "公立施設の保育料は原則口座振替で毎月月末に引き落とし。私立認定こども園は施設ごとに納付方法が異なる",
+        "feeTable": "黒部市利用者負担額基準表により階層別に決定"
+      },
+      "source": {
+        "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=2740",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kurobe.toyama.jp/child/news/detail.aspx?servno=17350",
+          "checkedAt": "2026-07-19",
+          "description": "幼児教育・保育無償化と副食費免除条件"
+        }
+      ]
+    },
+    "schoolMeals": {"status": "researching", "summary": "調査中"},
     "postpartumCare": {"status": "todo", "summary": "未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "未調査"},
     "housingSupport": {"status": "todo", "summary": "未調査"},
