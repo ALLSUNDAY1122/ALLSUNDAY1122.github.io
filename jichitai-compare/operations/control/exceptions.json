@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T01:50:00+09:00",
+  "updatedAt": "2026-07-20T04:30:00+09:00",
   "entries": [
     {
       "id": "EX-20260719-001",
@@ -13,12 +13,13 @@
       "status": "resolved",
       "owner": "全国進行統括",
       "summary": "taskのofficialSourcesが自治体JSONから再計算される9件の主出典URLと一致せず、CI run #192が失敗していた。",
-      "resolution": "officialSourcesを9件へ正規化し、status・PR番号・更新情報を補正。CI run #212 successを確認。",
-      "nextAction": "西日本調査班がPR #109をregion/westへ統合する。",
+      "resolution": "officialSourcesを9件へ正規化し、CI run #212成功後にPR #109をregion/westへ統合。地方統合後のtask.statusもmergedへ正規化した。",
+      "nextAction": "なし。通常運用へ復帰済み。",
       "createdAt": "2026-07-19T22:19:50+09:00",
-      "updatedAt": "2026-07-20T01:50:00+09:00",
-      "resolvedAt": "2026-07-20T01:50:00+09:00"
+      "updatedAt": "2026-07-20T04:30:00+09:00",
+      "resolvedAt": "2026-07-20T04:30:00+09:00"
     }
   ],
+  "openExceptionCount": 0,
   "humanDecisionRequired": false
 }
