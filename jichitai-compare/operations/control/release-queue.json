@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T00:50:00+09:00",
+  "updatedAt": "2026-07-20T01:50:00+09:00",
   "status": "active",
   "entries": [
     {
@@ -9,7 +9,7 @@
       "municipalities": [],
       "count": 0,
       "releaseStatus": "waiting_regional_merge",
-      "reason": "region/northはmainより先行差分なし。函館市PR #89の地方統合待ち",
+      "reason": "region/northはmainより先行差分なし。函館市PR #89はCI成功・競合なしで地方統合待ち",
       "sourcePullRequest": 89,
       "mainIntegrationPr": null
     },
@@ -22,8 +22,9 @@
         {"code": "13123", "name": "江戸川区"}
       ],
       "count": 3,
-      "releaseStatus": "pending_threshold",
-      "reason": "地方統合済み3自治体。10自治体・24時間・重要訂正・release指定の条件は未到達",
+      "releaseStatus": "pending_regional_merge",
+      "reason": "地方統合済み3自治体の旧task.statusを正規化済み。水戸市PR #115はCI成功・競合なしで地方統合待ち",
+      "sourcePullRequest": 115,
       "mainIntegrationPr": null
     },
     {
@@ -39,7 +40,7 @@
       ],
       "count": 6,
       "releaseStatus": "blocked_audit_confirmation",
-      "reason": "region/centralのmain先行差分は6自治体。16202・16204・16205・16206・23100の差分が各1行相当または大幅縮小として検出され、正式JSONとしての完全性確認が必要。10自治体・24時間条件も未到達",
+      "reason": "region/centralのmain先行差分は6自治体。16202・16204・16205・16206・23100の完全性確認が必要。10自治体・24時間条件も未到達",
       "mainIntegrationPr": null
     },
     {
@@ -47,12 +48,12 @@
       "branch": "region/west",
       "municipalities": [],
       "count": 0,
-      "releaseStatus": "blocked_regional_ci",
-      "reason": "福岡市PR #109は地方統合前。CI run 29687152706のValidate source and generated data失敗が継続",
-      "sourcePullRequest": 109,
+      "releaseStatus": "waiting_regional_merge",
+      "reason": "福岡市PR #109と鳥取市PR #114はCI成功・競合なし。#109を先に地方統合し、#114を最新baseで再確認して統合する",
+      "sourcePullRequests": [109, 114],
       "mainIntegrationPr": null
     }
   ],
-  "nextAction": "中日本の1行相当差分を全国進行統括へ確認し、完全な自治体JSON・taskであることが確認できるまでreleaseを保留する。東日本は追加自治体または24時間条件を待つ。",
+  "nextAction": "北日本・東日本・西日本の地方班は準備済みPRを順次regionブランチへ統合する。全国統合・公開担当は地方統合後に件数と24時間条件を再評価する。中日本は完全性監査を継続する。",
   "humanDecisionRequired": false
 }
