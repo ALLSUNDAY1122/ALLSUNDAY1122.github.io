@@ -5,8 +5,8 @@
   "prefecture": "茨城県",
   "name": "日立市",
   "officialUrl": "https://www.city.hitachi.lg.jp/",
-  "status": "researching",
-  "summary": "茨城県北部の市。8制度を確認済みで、防災情報を調査中。",
+  "status": "verified",
+  "summary": "茨城県北部の市。9制度すべて公式情報で確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {"status":"verified","summary":"出生から18歳年度末まで、保険診療の自己負担金と入院時食事代を市独自助成により実質無料化","source":{"url":"https://www.city.hitachi.lg.jp/fukushi_kenko/hojokin_joseikin/1009459.html","checkedAt":"2026-07-20"}},
@@ -15,35 +15,22 @@
     "schoolMeals": {"status":"verified","summary":"市が提供する市立小・中・義務教育学校等の学校給食費を完全無償化","source":{"url":"https://www.city.hitachi.lg.jp/kyouiku/kyushoku/1017095.html","checkedAt":"2026-07-20"}},
     "postpartumCare": {"status":"verified","summary":"生後1年未満の乳児と母親を対象に宿泊・日帰り・訪問型を合計原則7日まで無料提供","source":{"url":"https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007202/1002005/1001652.html","checkedAt":"2026-07-20"}},
     "temporaryChildcare": {"status":"verified","summary":"満1歳から就学前の一時預かりと、未就園の0歳6か月から3歳未満のこども誰でも通園制度を実施","source":{"url":"https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007350/1004312/1002000.html","checkedAt":"2026-07-20"}},
-    "housingSupport": {
-      "status": "verified",
-      "summary": "子育て世帯・若年夫婦の中古住宅等取得に20万円、省エネ新築住宅取得に5万円を助成",
+    "housingSupport": {"status":"verified","summary":"子育て世帯・若年夫婦の中古住宅等取得に20万円、省エネ新築住宅取得に5万円を助成","source":{"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/sumai/1002171/1007303/1002715.html","checkedAt":"2026-07-20"}},
+    "bulkyWaste": {"status":"verified","summary":"小型は月1回の集積所収集、中・大型は処理券による戸別回収、清掃センターへの自己搬入にも対応","source":{"url":"https://www-source.city.hitachi.lg.jp/kurashi_tetsuzuki/gomi_recycle/1002216/1002234/1002238.html","checkedAt":"2026-07-20"}},
+    "disasterPrevention": {
+      "status":"verified",
+      "summary":"洪水・内水・土砂災害・津波・地震等を確認できる地区別・WEB版ハザードマップと災害種別ごとの避難所開設基準を公開",
       "details": {
-        "challengeSupport": "住み替えチャレンジ支援事業では、市内の中古戸建住宅またはマンションを取得する子育て世帯・若年夫婦等に20万円を助成",
-        "challengeEligibility": "申請日または契約日時点で18歳未満の子等を有する子育て世帯、または夫婦のどちらかが45歳未満の若年夫婦等。対象住宅は居住部分50平方メートル以上で、2027年3月31日までに登記完了が必要",
-        "ecoSupport": "ひたちエコみらい住宅助成では、市内に新築の省エネ注文住宅または分譲住宅を取得する子育て世帯・若者夫婦に5万円を助成",
-        "ecoEligibility": "契約日または申請日に18歳未満の子等を有する子育て世帯、または夫婦のどちらかが39歳以下。過去に同助成を受けていないこと等が条件",
-        "application": "予算に限りがあり年度途中で受付終了する場合がある。2026年度の申請期限は2027年3月31日"
+        "maps":"市内を8地区に分けた地区別防災マップとWEB版ハザードマップを公開。洪水、大雨浸水・内水、土砂災害、津波、地震、防災施設を確認可能",
+        "webMap":"パソコン・スマートフォンから災害リスクと避難場所を確認でき、印刷にも対応。県管理河川の洪水浸水想定区域を反映して情報を更新",
+        "evacuationCriteria":"震度5強以上では小中学校等35か所、津波注意報・警報等では沿岸部小中学校12か所、豪雨では小中学校・交流センター23か所を基本に開設。洪水・土砂災害は河川水位や土砂キキクル等に応じて開設",
+        "preparedness":"危険区域外では在宅避難を原則とし、知人宅等も含む避難先の事前検討とマイ・タイムライン作成を案内"
       },
-      "source": {"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/sumai/1002171/1007303/1002715.html","checkedAt":"2026-07-20"},
-      "additionalSources": [{"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/sumai/1002171/1007303/1013151.html","checkedAt":"2026-07-20"}]
-    },
-    "bulkyWaste": {
-      "status": "verified",
-      "summary": "45リットル袋に入る粗大ごみ（小）は月1回集積所収集、粗大ごみ（中・大）は処理券を貼って戸別回収を申込む",
-      "details": {
-        "smallBulky": "可燃・不燃素材が混在し、45リットルの粗大ごみ（小）専用袋に入るものは、地域別の月1回収集日に指定集積所へ当日朝8時30分までに出す",
-        "mediumLarge": "粗大ごみ（中・大）は販売店で粗大ごみ処理券を購入し、粗大ごみ受付センターへ事前申込みのうえ、処理券を貼って指定日に玄関前等へ出す",
-        "directDropOff": "大量ごみや粗大ごみは清掃センターへ自己搬入可能。受付は8時30分～11時30分、13時～16時",
-        "directDropOffFee": "持込料金は50kgまで300円、100kgまで500円、150kgまで1,000円。150kg超は50kgごとに500円加算",
-        "notes": "家電リサイクル法対象品、処理困難物などは市収集・清掃センター持込の対象外となる場合があるため、品目別案内を確認する"
-      },
-      "source": {"url":"https://www-source.city.hitachi.lg.jp/kurashi_tetsuzuki/gomi_recycle/1002216/1002234/1002238.html","checkedAt":"2026-07-20"},
-      "additionalSources": [
-        {"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/gomi_recycle/1008727/1002277.html","checkedAt":"2026-07-20"},
-        {"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/gomi_recycle/1002242/1009431.html","checkedAt":"2026-07-20"}
+      "source":{"url":"https://www.city.hitachi.lg.jp/kurashi_tetsuzuki/anzen_anshin/1004772/1004793/1004794.html","checkedAt":"2026-07-20"},
+      "additionalSources":[
+        {"url":"https://www.city.hitachi.lg.jp/area/hazardmap/index.html","checkedAt":"2026-07-20"},
+        {"url":"https://www-source.city.hitachi.lg.jp/kurashi_tetsuzuki/anzen_anshin/1004772/1004806/1004807.html","checkedAt":"2026-07-20"}
       ]
-    },
-    "disasterPrevention": {"status":"researching","summary":"防災・ハザード情報を調査中"}
+    }
   }
 }
