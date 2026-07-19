@@ -7,16 +7,22 @@
     "code": "31202",
     "name": "米子市"
   },
-  "stage": "ready_for_pr",
+  "stage": "pr_open",
   "completedServiceCount": 9,
   "requiredServiceCount": 9,
   "workingBranch": "data/31202-yonago-city",
-  "pullRequest": null,
-  "ci": null,
+  "pullRequest": 122,
+  "ci": {
+    "status": "retry_pending",
+    "failedWorkflowRunId": 29704654201,
+    "failedRunNumber": 239,
+    "failureStep": "Generate national progress",
+    "fixCommit": "695ea8ecdcd6ad3e0dc5182a8bab422780eb5356"
+  },
   "conflict": false,
   "exceptions": [],
   "deferredMunicipalities": [],
-  "lastAction": "米子市disasterPreventionを公式情報で確認し、9制度すべての調査を完了",
-  "nextAction": "米子市の自治体JSONとtaskの構造・差分を検証し、region/west向けPRを作成する",
-  "updatedAt": "2026-07-20T04:15:00+09:00"
+  "lastAction": "米子市9制度のPR #122をregion/west向けに作成し、初回CIの進捗生成失敗に対してtask statusをcompletedへ修正",
+  "nextAction": "修正コミット695ea8eのCI結果を確認し、成功後にPR #122の統合可否を判定する",
+  "updatedAt": "2026-07-20T06:42:00+09:00"
 }
