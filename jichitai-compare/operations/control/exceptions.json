@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T00:40:00+09:00",
+  "updatedAt": "2026-07-20T01:45:00+09:00",
   "exceptions": [
     {
       "id": "WEST-40130-CI-001",
@@ -9,15 +9,17 @@
       "municipalityCode": "40130",
       "municipalityName": "福岡市",
       "type": "ci_failure",
-      "status": "open",
+      "status": "resolved",
       "branch": "data/40130-fukuoka-city",
       "pullRequestNumber": 109,
       "workflowRunId": 29687152706,
       "failedJob": "Validate municipality data",
       "failedStep": "Validate source and generated data",
-      "summary": "福岡市の9制度データPRで自治体データ検証工程が失敗。差分限定チェックと生成処理は成功している。検証エラー本文の特定と軽微修正可否の確認が必要。",
+      "summary": "taskメタデータを現行スキーマへ補正後、CI run #212が成功し、PR #109をregion/westへ統合済み。",
       "createdAt": "2026-07-19T21:38:00+09:00",
-      "updatedAt": "2026-07-19T21:38:00+09:00"
+      "updatedAt": "2026-07-20T01:45:00+09:00",
+      "resolvedAt": "2026-07-20T01:45:00+09:00",
+      "resolution": "CI成功確認後、PR #109をsquash merge。"
     },
     {
       "id": "WEST-31201-CI-001",
@@ -26,15 +28,17 @@
       "municipalityCode": "31201",
       "municipalityName": "鳥取市",
       "type": "ci_failure",
-      "status": "open",
+      "status": "resolved",
       "branch": "data/31201-tottori-city",
       "pullRequestNumber": 114,
       "workflowRunId": 29695183184,
       "failedJob": "Validate municipality data",
       "failedStep": "Generate national progress",
-      "summary": "鳥取市の9制度データPRで全国進捗生成工程が失敗。無関係差分チェックと公開自治体データ生成は成功し、後続のデータ検証は未実行。進捗生成スクリプトのエラー本文特定と修正が必要。",
+      "summary": "task statusをpr_openへ修正し、産後ケアのeligibilityを補完。CI run #219が成功し、PR #114をregion/westへ統合済み。",
       "createdAt": "2026-07-20T00:40:00+09:00",
-      "updatedAt": "2026-07-20T00:40:00+09:00"
+      "updatedAt": "2026-07-20T01:45:00+09:00",
+      "resolvedAt": "2026-07-20T01:45:00+09:00",
+      "resolution": "CI成功確認後、PR #114をsquash merge。"
     }
   ]
 }
