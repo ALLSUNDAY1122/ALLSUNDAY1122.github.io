@@ -6,8 +6,8 @@
   "name": "黒部市",
   "officialUrl": "https://www.city.kurobe.toyama.jp/",
   "status": "researching",
-  "summary": "黒部市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料を確認済み。",
-  "updatedAt": "2026-07-19",
+  "summary": "黒部市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費支援を確認済み。",
+  "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -87,8 +87,39 @@
         }
       ]
     },
-    "schoolMeals": {"status": "researching", "summary": "調査中"},
-    "postpartumCare": {"status": "todo", "summary": "未調査"},
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市内の幼稚園・小学校・中学校へ給食センターから給食を提供し、第3子以降の就学児童、経済的に困難な世帯、特別支援学級の保護者に給食費助成を実施。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15,
+        "schools": "黒部市内の小学校9校・中学校2校。市立幼稚園1園にも給食を提供"
+      },
+      "details": {
+        "provider": "黒部市学校給食センターが市内の幼稚園、小学校、中学校へ調理・配送",
+        "thirdChildSupport": "第3子以降の就学児童を扶養する保護者へ給食費助成金を交付",
+        "financialAssistance": "経済的理由で教育費に困る世帯は、就学援助により給食費を含む費用の援助対象",
+        "specialNeedsSupport": "特別支援学級へ就学する児童生徒の保護者にも給食費助成を実施",
+        "publishedFee": "市公式の学校給食案内ページでは、通常の月額・1食単価は掲載されていないため学校教育課への確認が必要"
+      },
+      "source": {
+        "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=671",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=1000",
+          "checkedAt": "2026-07-20",
+          "description": "就学援助で学用品代、給食費、医療費、修学旅行代等を援助"
+        },
+        {
+          "url": "https://www.city.kurobe.toyama.jp/info/secdtl.aspx?seccd=2011040000",
+          "checkedAt": "2026-07-20",
+          "description": "学校給食センターによる市内全小中学校への給食提供"
+        }
+      ]
+    },
+    "postpartumCare": {"status": "researching", "summary": "調査中"},
     "temporaryChildcare": {"status": "todo", "summary": "未調査"},
     "housingSupport": {"status": "todo", "summary": "未調査"},
     "bulkyWaste": {"status": "todo", "summary": "未調査"},
