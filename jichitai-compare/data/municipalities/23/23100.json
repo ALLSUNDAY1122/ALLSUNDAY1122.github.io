@@ -6,7 +6,7 @@
   "name": "名古屋市",
   "officialUrl": "https://www.city.nagoya.jp/",
   "status": "researching",
-  "summary": "名古屋市の9制度を調査中。子ども医療費助成、病児・病後児保育、保育料を確認済み。",
+  "summary": "名古屋市の9制度を調査中。子ども医療費助成、病児・病後児保育、保育料、学校給食費を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -114,8 +114,45 @@
       ]
     },
     "schoolMeals": {
-      "status": "todo",
-      "summary": "学校給食費支援を未調査"
+      "status": "verified",
+      "summary": "公表中の給食費は小学校月額4,400円、中学校スクールランチ1食320円。令和8年度は小学校の抜本的負担軽減と中学校の物価高騰対応支援を予算化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15,
+        "schools": "名古屋市立小学校・中学校・特別支援学校",
+        "fiscalYear": "令和8年度"
+      },
+      "details": {
+        "support": "給食費案内ページの公表額は、小学校月額4,400円、中学校スクールランチ1食320円",
+        "schools": "市立小学校では学校給食、中学校では原則スクールランチを実施。鳴海中学校は学校給食を実施",
+        "elementarySchool": "名古屋市立小学校の給食費は月額4,400円。令和8年度予算に『小学校給食費の抜本的な負担軽減』を計上しているが、給食費案内ページでは軽減後の徴収額をまだ公表していない",
+        "juniorHighSchool": "中学校スクールランチ代は1食320円。令和8年度予算に中学校給食費の物価高騰対応支援を計上",
+        "costSharing": "人件費、光熱水費、施設設備費等は市が公費負担し、食材費を給食費として保護者が負担",
+        "financialAssistance": "就学援助の認定を受けた中学生は学校給食費を実費援助。鳴海中学校は学校長から給食実施機関へ支払い、スクールランチ実施校は実際に飲食した金額を翌月支給",
+        "specialNeedsSupport": "特別支援教育就学奨励費では、所得要件を満たす中学校段階の学校給食費について実費額の2分の1を支給",
+        "currentRateNote": "令和8年度の負担軽減施策は予算資料で確認できるが、公式の給食費案内ページに軽減後の具体額が掲載されるまでは公表中の4,400円・320円を現行額として記録"
+      },
+      "source": {
+        "url": "https://www.city.nagoya.jp/kodomo/schools/1034352/1016933/1016934/1016937.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nagoya.jp/kodomo/schools/1027693/1027946/1027947.html",
+          "checkedAt": "2026-07-19",
+          "description": "令和8年度の小学校給食費負担軽減と中学校給食費の物価高騰対応支援"
+        },
+        {
+          "url": "https://www.city.nagoya.jp/kodomo/schools/1016760/1016781.html",
+          "checkedAt": "2026-07-19",
+          "description": "就学援助による中学校給食費の実費援助"
+        },
+        {
+          "url": "https://www.city.nagoya.jp/kodomo/schools/1017010/1017016.html",
+          "checkedAt": "2026-07-19",
+          "description": "特別支援教育就学奨励費による中学校段階の給食費2分の1支給"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "todo",
