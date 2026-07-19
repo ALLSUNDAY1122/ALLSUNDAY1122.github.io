@@ -6,45 +6,27 @@
   "name": "小矢部市",
   "officialUrl": "https://www.city.oyabe.toyama.jp/",
   "status": "researching",
-  "summary": "小矢部市の9制度を調査中。こども医療費助成を確認済み。",
+  "summary": "小矢部市の9制度を調査中。こども医療費助成、病児・病後児保育を確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "小矢部市内に住民票があり健康保険に加入している、満18歳に達する年度末までの子どもを対象に、保険診療の自己負担分を助成する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18,
-        "residency": "小矢部市内に住民票があること",
-        "insurance": "健康保険に加入していること"
-      },
-      "details": {
-        "ageLimit": "満18歳に達する日以後の最初の3月31日まで",
-        "coverage": "病気やけがで受診した場合の保険診療の自己負担分",
-        "inKindBenefit": "富山県内の保険医療機関・保険薬局で受給資格証と健康保険資格を確認できるものを提示すると現物給付",
-        "reimbursement": "県外受診や受給資格証を提示できなかった場合は、いったん支払い、領収書等を添えて償還払いを申請",
-        "application": "出生・転入等の場合は出生日または転入日の翌日から15日以内に登録申請が必要",
-        "requiredDocuments": "子どもの健康保険資格を確認できるもの、保護者の通帳、個人番号関係書類、母子健康手帳等",
-        "excludedCosts": "食事療養費、選定療養費、健康保険適用外費用、日本スポーツ振興センター災害共済給付対象の医療費等"
-      },
-      "contact": {
-        "department": "こども家庭課",
-        "phone": "0766-67-8603"
-      },
-      "source": {
-        "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004460/1002633/1002652/1002654.html",
-        "checkedAt": "2026-07-20"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004460/1002633/1002652/1002657.html",
-          "checkedAt": "2026-07-20",
-          "description": "出生・転入時の申請期限と必要書類"
-        }
-      ]
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18, "residency": "小矢部市内に住民票があること", "insurance": "健康保険に加入していること"},
+      "details": {"ageLimit": "満18歳に達する日以後の最初の3月31日まで", "coverage": "病気やけがで受診した場合の保険診療の自己負担分", "inKindBenefit": "富山県内の保険医療機関・保険薬局で受給資格証と健康保険資格を確認できるものを提示すると現物給付", "reimbursement": "県外受診や受給資格証を提示できなかった場合は、いったん支払い、領収書等を添えて償還払いを申請", "application": "出生・転入等の場合は出生日または転入日の翌日から15日以内に登録申請が必要", "requiredDocuments": "子どもの健康保険資格を確認できるもの、保護者の通帳、個人番号関係書類、母子健康手帳等", "excludedCosts": "食事療養費、選定療養費、健康保険適用外費用、日本スポーツ振興センター災害共済給付対象の医療費等"},
+      "contact": {"department": "こども家庭課", "phone": "0766-67-8603"},
+      "source": {"url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004460/1002633/1002652/1002654.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004460/1002633/1002652/1002657.html", "checkedAt": "2026-07-20", "description": "出生・転入時の申請期限と必要書類"}]
     },
-    "sickChildCare": {"status": "researching", "summary": "調査中"},
-    "childcareFee": {"status": "todo", "summary": "未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気中または回復期で家庭保育が難しい、生後6か月から小学6年生までの児童を北陸中央病院内のおやべにこにこ園で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12, "condition": "保育所等または小学校に通い、病気中または病気の回復期にあって保護者が家庭で保育できない児童"},
+      "details": {"facility": "おやべにこにこ園（北陸中央病院内）", "hours": "月曜日から金曜日の8時30分から16時30分まで。祝日を除く", "capacity": "2名", "fee": "1日1,000円。食事代400円", "application": "かかりつけ医に診療情報提供書を記入してもらい、利用登録・申請書とともに提出", "phone": "070-5061-1594", "relatedCare": "市内の複数の認定こども園では、在園中に体調不良となった児童を対象とする体調不良児対応型の病児保育も実施"},
+      "source": {"url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004459/1002661.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004459/1002682/1007297/index.html", "checkedAt": "2026-07-20", "description": "認定こども園の体調不良児対応状況"}]
+    },
+    "childcareFee": {"status": "researching", "summary": "調査中"},
     "schoolMeals": {"status": "todo", "summary": "未調査"},
     "postpartumCare": {"status": "todo", "summary": "未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "未調査"},
