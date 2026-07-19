@@ -3,23 +3,20 @@
   "region": "west",
   "team": "西日本調査班",
   "integrationBranch": "region/west",
-  "currentMunicipality": null,
-  "stage": "ready_for_next",
+  "currentMunicipality": {
+    "code": "31203",
+    "name": "倉吉市"
+  },
+  "stage": "researching",
   "completedServiceCount": 0,
   "requiredServiceCount": 9,
-  "workingBranch": null,
+  "workingBranch": "data/31203-kurayoshi-city",
   "pullRequest": null,
-  "ci": {
-    "status": "success",
-    "lastSuccessfulWorkflowRunId": 29705898387,
-    "lastSuccessfulRunNumber": 250,
-    "lastMergedPullRequest": 122,
-    "lastMergeCommit": "29aa2c4c39ef951789e9593b8fbb2d1c1c288488"
-  },
+  "ci": null,
   "conflict": false,
   "exceptions": [],
   "deferredMunicipalities": [],
-  "lastAction": "米子市PR #122のCI Run #250成功を確認し、region/westへ統合",
-  "nextAction": "割当表から西日本調査班の次の未着手自治体を選定し、自治体ブランチとtaskを作成する",
-  "updatedAt": "2026-07-20T07:06:00+09:00"
+  "lastAction": "米子市（31202）の次の未着手自治体として倉吉市（31203）を選定し、自治体ブランチとtaskを作成",
+  "nextAction": "倉吉市childMedicalを公式情報で調査し、自治体JSONとtaskへ保存・検証する",
+  "updatedAt": "2026-07-20T07:15:00+09:00"
 }
