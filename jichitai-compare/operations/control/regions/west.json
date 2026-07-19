@@ -3,26 +3,23 @@
   "region": "west",
   "team": "西日本調査班",
   "integrationBranch": "region/west",
-  "currentMunicipality": {
-    "code": "31202",
-    "name": "米子市"
-  },
-  "stage": "pr_open",
-  "completedServiceCount": 9,
+  "currentMunicipality": null,
+  "stage": "ready_for_next",
+  "completedServiceCount": 0,
   "requiredServiceCount": 9,
-  "workingBranch": "data/31202-yonago-city",
-  "pullRequest": 122,
+  "workingBranch": null,
+  "pullRequest": null,
   "ci": {
-    "status": "retry_pending",
-    "failedWorkflowRunId": 29704654201,
-    "failedRunNumber": 239,
-    "failureStep": "Generate national progress",
-    "fixCommit": "695ea8ecdcd6ad3e0dc5182a8bab422780eb5356"
+    "status": "success",
+    "lastSuccessfulWorkflowRunId": 29705898387,
+    "lastSuccessfulRunNumber": 250,
+    "lastMergedPullRequest": 122,
+    "lastMergeCommit": "29aa2c4c39ef951789e9593b8fbb2d1c1c288488"
   },
   "conflict": false,
   "exceptions": [],
   "deferredMunicipalities": [],
-  "lastAction": "米子市9制度のPR #122をregion/west向けに作成し、初回CIの進捗生成失敗に対してtask statusをcompletedへ修正",
-  "nextAction": "修正コミット695ea8eのCI結果を確認し、成功後にPR #122の統合可否を判定する",
-  "updatedAt": "2026-07-20T06:42:00+09:00"
+  "lastAction": "米子市PR #122のCI Run #250成功を確認し、region/westへ統合",
+  "nextAction": "割当表から西日本調査班の次の未着手自治体を選定し、自治体ブランチとtaskを作成する",
+  "updatedAt": "2026-07-20T07:06:00+09:00"
 }
