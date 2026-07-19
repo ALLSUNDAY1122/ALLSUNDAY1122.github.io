@@ -4,17 +4,24 @@
   "assignedTeam": "東日本調査班",
   "currentMunicipalityCode": "08201",
   "currentMunicipalityName": "水戸市",
-  "currentStage": "pr_open_ci_pending",
+  "currentStage": "pr_open_ci_failure_diagnosis",
   "completedServiceCount": 9,
   "incompleteServices": [],
   "workingBranch": "data/08201-mito",
   "pullRequestNumber": 115,
   "pullRequestBase": "region/east",
-  "ciStatus": "pending",
-  "mergeConflictStatus": "not_checked",
-  "blockedCases": [],
-  "lastAction": "水戸市の防災・ハザード情報を反映して9制度を完了し、差分2ファイルのPR #115をregion/east向けに作成。",
-  "nextAction": "PR #115のCI、変更ファイル、mergeable状態を確認し、問題なければregion/eastへsquash mergeする。",
-  "lastUpdatedAt": "2026-07-20T01:01:00+09:00",
+  "ciStatus": "failure",
+  "mergeConflictStatus": "mergeable",
+  "blockedCases": [
+    {
+      "type": "ci_failure",
+      "workflowRun": 29696509862,
+      "failedStep": "Generate national progress",
+      "note": "Reject unrelated changesと自治体公開データ生成は成功。全国進捗生成で失敗しているため地方統合を停止。"
+    }
+  ],
+  "lastAction": "PR #115の差分2ファイルとmergeable=trueを確認。最新head 0c4e5013c6699a0e74a46751ed9387d8eda3e14cのCI run #215はGenerate national progressで失敗したため、マージを保留して障害状態を記録。",
+  "nextAction": "CI run #215の全国進捗生成エラー原因を特定し、必要なtaskまたは生成前提を修正後にCIを再実行する。",
+  "lastUpdatedAt": "2026-07-20T02:20:00+09:00",
   "completedMunicipalitiesSinceLastNationalMerge": 3
 }
