@@ -2,23 +2,18 @@
   "schemaVersion": "1.0.0",
   "region": "east",
   "branch": "region/east",
-  "updatedAt": "2026-07-20T01:50:00+09:00",
+  "updatedAt": "2026-07-20T04:30:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 3,
+  "completedSinceLastRelease": 4,
   "completedMunicipalities": [
+    {"code": "08201", "name": "水戸市", "regionalPullRequest": 115},
     {"code": "12203", "name": "市川市", "regionalPullRequest": 38},
     {"code": "12227", "name": "浦安市", "regionalPullRequest": 58},
     {"code": "13123", "name": "江戸川区", "regionalPullRequest": 27}
   ],
-  "pendingRegionalPullRequests": [
-    {"number": 115, "code": "08201", "name": "水戸市", "ci": "success", "mergeable": true}
-  ],
+  "pendingRegionalPullRequests": [],
   "blocked": [],
-  "migrationCorrections": [
-    "12203・12227・13123のtask.statusをmerged_to_regionからmergedへ正規化",
-    "08201のofficialSourcesを各制度のsource.url 9件へ正規化",
-    "CI run #220 successを確認"
-  ],
-  "nextAction": "東日本調査班はPR #115をregion/eastへ統合し、次の未着手自治体へ進む。",
+  "lastAction": "PR #115をregion/eastへ統合し、task.status=mergedを確認",
+  "nextAction": "東日本調査班は担当表の自治体コード順で次の未着手自治体へ進む。",
   "humanDecisionRequired": false
 }
