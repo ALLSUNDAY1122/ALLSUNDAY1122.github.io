@@ -6,16 +6,13 @@
   "name": "旭川市",
   "officialUrl": "https://www.city.asahikawa.hokkaido.jp/",
   "status": "researching",
-  "summary": "北日本調査班が1制度を公式情報で確認済み。残り8制度を順次調査する。",
+  "summary": "北日本調査班が2制度を公式情報で確認済み。残り7制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から高校生年代までの公的医療保険適用後の自己負担額を全額助成。自己負担なし。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
       "details": {
         "residency": "旭川市に住民登録があること",
         "insurance": "公的医療保険に加入していること",
@@ -26,18 +23,30 @@
         "application": "受給者証の交付申請が必要。オンライン申請または窓口申請に対応",
         "effectiveFrom": "高校生年代は2025年8月診療分から対象"
       },
-      "source": {
-        "url": "https://www.city.asahikawa.hokkaido.jp/kurashi/218/228/230/p004567.html",
-        "checkedAt": "2026-07-20"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.asahikawa.hokkaido.jp/1000/1001/1026/1030/p003310.html",
-          "checkedAt": "2026-07-20"
-        }
-      ]
+      "source": {"url": "https://www.city.asahikawa.hokkaido.jp/kurashi/218/228/230/p004567.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.asahikawa.hokkaido.jp/1000/1001/1026/1030/p003310.html", "checkedAt": "2026-07-20"}]
     },
-    "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "市内在住で保育所等に通う生後5か月から小学3年生までを対象に、病児対応型と病後児対応型を実施。",
+      "eligibility": {"minAgeMonths": 5, "maxAgeYears": 9},
+      "details": {
+        "residency": "旭川市内に居住していること",
+        "attendance": "保育所等に通っていること",
+        "types": "急性期を預かる病児対応型と、回復期を預かる病後児対応型",
+        "capacity": "各施設1日3名",
+        "hours": "月曜日から土曜日の8時から18時。祝日および12月30日から1月4日を除く",
+        "usagePeriod": "同一疾病で連続利用する場合は原則7日以内",
+        "sickChildFee": "5時間超2,000円、5時間以内1,000円。同一疾病で連続利用する2日目以降は5時間超1,000円",
+        "convalescentFee": "5時間超1,700円、5時間以内850円。同一疾病で連続利用する2日目以降は5時間超850円",
+        "mealFee": "1日300円",
+        "pickupService": "病児保育のみ、保育園等からの迎え・受診・一時保育サービスを1日500円で利用可能",
+        "feeExemption": "生活保護世帯、中国残留邦人等支援世帯、前年度市町村民税非課税世帯は利用料免除。給食費等は別途",
+        "application": "予約システム『テオテ』でアカウント作成、施設登録、予約を行う。施設ごとに登録が必要",
+        "exclusions": "麻疹は利用不可。症状によって受入不可の場合があり、新型コロナ陽性者は当面利用不可"
+      },
+      "source": {"url": "https://www.city.asahikawa.hokkaido.jp/kurashi/218/232/233/p009064.html", "checkedAt": "2026-07-20"}
+    },
     "childcareFee": {"status": "todo", "summary": "保育料・第2子軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
