@@ -6,7 +6,7 @@
   "name": "鳥取市",
   "officialUrl": "https://www.city.tottori.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。childMedicalとsickChildCareを公式情報で確認済み。残り7制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。childMedical、sickChildCare、childcareFeeを公式情報で確認済み。残り6制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -52,7 +52,28 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯は無償。第3子以降は無料で、第2子にも所得・在園状況に応じた軽減あり",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "3～5歳児の保育所、認定こども園、幼稚園等の保育料は無償。0～2歳児は保護者の市町村民税額等に応じて決定",
+        "ageRule": "保育料は4月1日現在の年齢で年度内の区分を決定し、年度途中に3歳になっても年度中は変更しない。月途中の入退所は日割り計算",
+        "taxExemption": "市町村民税非課税世帯の保育料は無料",
+        "singleParentSupport": "ひとり親、障害者手帳等の交付を受けた人との同居世帯などで、市町村民税所得割課税額が77,101円未満の場合、第1子は半額以下、第2子以降は無料",
+        "thirdChild": "第3子以降の保育料は無料",
+        "secondChild": "同一世帯から2人以上が入所する場合、最年長児が3歳以上なら2人目は2分の1負担、最年長児が3歳未満なら2人目は5分の1負担。市町村民税所得割課税額57,700円未満の世帯では2人目は無料",
+        "siblingCount": "就学前のきょうだいが幼稚園や障がい児通園施設等を利用している場合も入所児童とみなして多子軽減を判定。所得割課税額57,700円未満で児童が2人以上いる世帯は、第1子が保育所等に未入所でも第2子は半額",
+        "mealFee": "3～5歳児の副食費は無償化の対象外"
+      },
+      "source": {
+        "url": "https://www.city.tottori.lg.jp/site/kosodate/4830.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
