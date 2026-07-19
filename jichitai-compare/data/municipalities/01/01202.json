@@ -6,7 +6,7 @@
   "name": "函館市",
   "officialUrl": "https://www.city.hakodate.hokkaido.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成、病児保育、保育料、学校給食費を公式情報で確認済み。残り5制度を順次調査する。",
+  "summary": "子ども医療費助成、病児保育、保育料、学校給食費、産後ケアを公式情報で確認済み。残り4制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -126,7 +126,33 @@
         "https://www.city.hakodate.hokkaido.jp/citizensvoice/docs/2026052100046/"
       ]
     },
-    "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子を対象に、宿泊型・通所型・訪問型で助産師等が心身のケアと育児支援を実施",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeMonths": 11
+      },
+      "details": {
+        "residency": "函館市に住所を有する産後1年以内の母親とその赤ちゃん",
+        "conditions": "産後の体調不良または育児への不安があり、家族などから支援を受けられないこと",
+        "medicalExclusion": "入院治療が必要な場合は利用不可",
+        "careContent": "母親の乳房ケア・健康状態確認・休息支援、赤ちゃんの体重・栄養等の健康確認、授乳・沐浴等の育児相談",
+        "providers": "函館市が委託した医療機関・助産所",
+        "lodgingFee": "宿泊型は1泊2日7,200円、その後1日ごと3,600円",
+        "lodgingLimit": "1泊2日から6泊7日まで",
+        "dayCareFee": "通所型は3時間1,200円、6時間2,400円",
+        "homeVisitFee": "訪問型は約2時間1,600円",
+        "dayAndVisitLimit": "通所型と訪問型を合わせて7日まで",
+        "feeExemption": "生活保護世帯および市民税非課税世帯は利用料金免除。証明書類の提出が必要",
+        "application": "事前申請が必要。マザーズ・サポート・ステーションへ相談し、利用申請書または函館市公式LINEから申請",
+        "contactHours": "マザーズ・サポート・ステーションの受付は8時45分から17時30分。土日祝日・年末年始を除く"
+      },
+      "source": {
+        "url": "https://www.city.hakodate.hokkaido.jp/docs/2017051600057/",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
     "bulkyWaste": {"status": "todo", "summary": "粗大ごみ料金を未調査"},
