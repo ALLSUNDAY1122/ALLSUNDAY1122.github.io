@@ -6,7 +6,7 @@
   "name": "米子市",
   "officialUrl": "https://www.city.yonago.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。childMedical、sickChildCare、childcareFeeを確認済みで、残り6制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。4制度を確認済みで、残り5制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -53,7 +53,23 @@
       "source": {"url": "https://www.city.yonago.lg.jp/40491.htm", "checkedAt": "2026-07-20"},
       "additionalSources": [{"url": "https://www.city.yonago.lg.jp/25343.htm", "checkedAt": "2026-07-20"}]
     },
-    "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度の給食費は1食当たり小学校352円・中学校410円。就学援助で給食費支援あり",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "fee": "令和8年度は小学校1食352円、中学校1食410円",
+        "change": "令和7年11月以降の小学校336円・中学校393円から、それぞれ16円・17円値上げ",
+        "fullFreeStatus": "全面無償化ではない",
+        "support": "経済的理由で就学が困難な世帯を対象に、就学援助制度で給食費等の一部を助成",
+        "background": "食材価格上昇下でも栄養バランスと献立水準を維持するため改定"
+      },
+      "source": {"url": "https://www.city.yonago.lg.jp/item/61135.htm", "checkedAt": "2026-07-20"},
+      "additionalSources": [
+        {"url": "https://www.city.yonago.lg.jp/item/11244.htm", "checkedAt": "2026-07-20"},
+        {"url": "https://www.city.yonago.lg.jp/48186.htm", "checkedAt": "2026-07-20"}
+      ]
+    },
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
     "housingSupport": {"status": "todo", "summary": "子育て世帯向け住宅支援を未調査"},
