@@ -4,15 +4,17 @@
   "team": "北日本調査班",
   "currentMunicipalityCode": "01203",
   "currentMunicipalityName": "小樽市",
-  "currentStage": "pr_open",
+  "currentStage": "ci_failed",
   "completedServiceCount": 9,
   "pendingServices": [],
   "workingBranch": "data/01203-otaru",
   "pullRequestNumber": 116,
-  "ciStatus": "pending",
-  "blockers": [],
-  "lastAction": "小樽市の9制度を完了し、data/01203-otaruからregion/northへのPR #116を作成した。",
-  "nextAction": "PR #116の差分、CI、マージ可能状態を確認し、問題がなければregion/northへ統合する。",
-  "updatedAt": "2026-07-20T02:20:00+09:00",
+  "ciStatus": "failure",
+  "blockers": [
+    "Jichitai Compare CI run 218 failed at Generate national progress."
+  ],
+  "lastAction": "PR #116のCIを確認し、Generate national progress工程の失敗を特定した。マージは保留した。",
+  "nextAction": "national progress生成処理が要求する地域状態スキーマまたは生成対象ファイルを確認し、PR #116を修正する。",
+  "updatedAt": "2026-07-20T02:30:00+09:00",
   "completedMunicipalitiesSinceLastNationalMerge": 0
 }
