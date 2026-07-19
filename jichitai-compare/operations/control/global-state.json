@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T06:20:00+09:00",
-  "phase": "migration-audit",
+  "updatedAt": "2026-07-20T06:30:00+09:00",
+  "phase": "release-monitoring",
   "mainBranch": "main",
   "regionalBranches": {
     "north": "region/north",
@@ -10,7 +10,7 @@
     "west": "region/west"
   },
   "migration": {
-    "status": "in_progress",
+    "status": "completed",
     "firstAuditStartedAt": "2026-07-19T21:35:00+09:00",
     "confirmed": [
       "assignment policy and four regional branches exist",
@@ -30,8 +30,8 @@
     "total": 15
   },
   "priority": {
-    "type": "release-gate-recheck",
-    "nextAction": "各地方調査班は次の未着手自治体へ進む。全国統合・公開担当は地方統合15自治体について10自治体または24時間のrelease条件を再評価する。"
+    "type": "release-monitoring",
+    "nextAction": "各地方調査班は次の未着手自治体へ進む。全国統合・公開担当は地方統合15自治体について10自治体条件を監視し、前回全国統合時刻の正式記録が確定した場合のみ24時間条件を適用する。"
   },
   "openPullRequests": [],
   "humanDecisionRequired": false
