@@ -6,7 +6,7 @@
   "name": "日立市",
   "officialUrl": "https://www.city.hitachi.lg.jp/",
   "status": "researching",
-  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料を確認済みで、その他6制度を調査中。",
+  "summary": "茨城県北部の市。子どもの医療福祉費助成、病後児保育、保育料、学校給食費無償化を確認済みで、その他5制度を調査中。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -59,7 +59,20 @@
         {"url": "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007349/1001986/1001997.html", "checkedAt": "2026-07-20"}
       ]
     },
-    "schoolMeals": {"status": "researching", "summary": "学校給食費支援を調査中"},
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市が提供する市立小・中・義務教育学校等の学校給食費を完全無償化",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "日立市が学校給食を提供する市立小学校、中学校、義務教育学校等の児童生徒",
+        "support": "2026年度も学校給食費の完全無償化を継続し、保護者負担は0円",
+        "standardAmount": "2026年4月改定後の給食費は小学生月額5,310円、中学生月額6,050円。いずれも8月を除く年11か月分を市が負担",
+        "annualEquivalent": "無償化相当額は小学生年58,410円、中学生年66,550円",
+        "allergySupport": "食物アレルギー等により学校給食を一切受けられず弁当を持参する市立小・中・義務教育学校、特別支援学校の児童生徒について、学校給食費相当額を補助",
+        "application": "通常の給食費無償化は保護者の支払不要。アレルギー等による弁当持参者向け補助は学校を通じて申請書を配布"
+      },
+      "source": {"url": "https://www.city.hitachi.lg.jp/kyouiku/kyushoku/1017095.html", "checkedAt": "2026-07-20"}
+    },
     "postpartumCare": {"status": "researching", "summary": "産後ケアを調査中"},
     "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
     "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
