@@ -5,16 +5,34 @@ const empty = document.querySelector('#emptyState');
 const count = document.querySelector('#count');
 const coreStories = Array.isArray(window.STORIES) ? window.STORIES : [];
 const notionStories = Array.isArray(window.NOTION_STORIES) ? window.NOTION_STORIES : [];
-const stories = coreStories.concat(notionStories);
+const stories = Array.from(
+  new Map(coreStories.concat(notionStories).map((story) => [story.slug, story])).values()
+);
 const completedStorageKey = 'yorugatari-completed-stories';
+const favoritesStorageKey = 'yorugatari-favorites';
+const lastReadingStorageKey = 'yorugatari-last-reading';
 let completedStories = [];
+let favoriteStories = [];
+let lastReading = null;
 try {
   const storedCompleted = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
   completedStories = Array.isArray(storedCompleted) ? storedCompleted : [];
 } catch (error) {
   completedStories = [];
 }
+try {
+  const storedFavorites = JSON.parse(localStorage.getItem(favoritesStorageKey) || '[]');
+  favoriteStories = Array.isArray(storedFavorites) ? storedFavorites : [];
+} catch (error) {
+  favoriteStories = [];
+}
+try {
+  lastReading = JSON.parse(localStorage.getItem(lastReadingStorageKey) || 'null');
+} catch (error) {
+  lastReading = null;
+}
 let activeCategory = 'すべて';
+let activeReadingStatus = 'all';
 
 if (count) count.setAttribute('aria-live', 'polite');
 if (empty) empty.setAttribute('role', 'status');
@@ -27,7 +45,7 @@ function card(story) {
   const fear = '●'.repeat(story.fear) + '○'.repeat(5 - story.fear);
   const tags = Array.isArray(story.tags) ? story.tags : [];
   const completed = completedStories.includes(story.slug);
-  return `<a class="card${completed ? ' completed' : ''}" href="${storyHref(story)}" data-title="${story.title}" data-category="${story.category}" data-tags="${tags.join(' ')}">
+  return `<a class="card${completed ? ' completed' : ''}" href="${storyHref(story)}" data-title="${story.title}" data-category="${story.category}" data-tags="${tags.join(' ')}"${completed ? ' aria-label="' + story.title + '（読了済み）"' : ''}>
     <div class="meta"><span class="badge">${story.category}</span><span>${story.length}</span><span>約${story.minutes}分</span>${completed ? '<span class="read-badge">✓ 読了</span>' : ''}</div>
     <h3>${story.title}</h3><p>${story.summary}</p>
     <div class="card-foot"><span class="fear" aria-label="怖さ ${story.fear}/5">${fear}</span><span>${story.series || 'オリジナル作品'}</span></div>
@@ -40,9 +58,13 @@ function render() {
   const query = (search ? search.value : '').trim().toLowerCase();
   const filtered = stories.filter(function (story) {
     const categoryMatches = activeCategory === 'すべて' || story.category === activeCategory || story.series === activeCategory;
+    const statusMatches = activeReadingStatus === 'all'
+      || (activeReadingStatus === 'unread' && !completedStories.includes(story.slug))
+      || (activeReadingStatus === 'completed' && completedStories.includes(story.slug))
+      || (activeReadingStatus === 'favorite' && favoriteStories.includes(story.slug));
     const tags = Array.isArray(story.tags) ? story.tags : [];
     const text = `${story.title} ${story.summary} ${story.category} ${story.series || ''} ${tags.join(' ')}`.toLowerCase();
-    return categoryMatches && (!query || text.includes(query));
+    return categoryMatches && statusMatches && (!query || text.includes(query));
   });
 
   grid.innerHTML = filtered.map(card).join('');
@@ -67,6 +89,28 @@ chips.forEach(function (chip) {
 
 if (search) search.addEventListener('input', render);
 
+const categoryChips = document.querySelector('.chips');
+if (categoryChips) {
+  const readingFilters = document.createElement('div');
+  readingFilters.className = 'reading-filters';
+  readingFilters.setAttribute('aria-label', '読書状況で絞り込む');
+  readingFilters.innerHTML = '<span>読書状況</span><button class="chip active" data-reading-status="all" type="button">すべて</button><button class="chip" data-reading-status="unread" type="button">未読のみ</button><button class="chip" data-reading-status="completed" type="button">読了済み</button><button class="chip" data-reading-status="favorite" type="button">お気に入り</button>';
+  categoryChips.insertAdjacentElement('afterend', readingFilters);
+  readingFilters.querySelectorAll('[data-reading-status]').forEach(function (button) {
+    button.setAttribute('aria-pressed', String(button.classList.contains('active')));
+    button.addEventListener('click', function () {
+      readingFilters.querySelectorAll('[data-reading-status]').forEach(function (item) {
+        item.classList.remove('active');
+        item.setAttribute('aria-pressed', 'false');
+      });
+      button.classList.add('active');
+      button.setAttribute('aria-pressed', 'true');
+      activeReadingStatus = button.dataset.readingStatus;
+      render();
+    });
+  });
+}
+
 const randomButton = document.querySelector('#randomBtn');
 if (randomButton) {
   randomButton.addEventListener('click', function () {
@@ -75,6 +119,50 @@ if (randomButton) {
     location.href = storyHref(story);
   });
 }
+
+function buildReaderPanel() {
+  const hero = document.querySelector('.hero .wrap');
+  if (!hero || !stories.length) return;
+
+  const completedCount = stories.filter(function (story) { return completedStories.includes(story.slug); }).length;
+  const percent = Math.round(completedCount / stories.length * 100);
+  const unread = stories.filter(function (story) { return !completedStories.includes(story.slug); });
+  const lastStory = lastReading && stories.find(function (story) { return story.slug === lastReading.slug; });
+  const dayNumber = Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 86400000);
+  const tonightStory = stories[dayNumber % stories.length];
+  const nextUnread = unread[0];
+
+  const panel = document.createElement('aside');
+  panel.className = 'reader-panel';
+  panel.setAttribute('aria-label', 'あなたの読書状況');
+  panel.innerHTML = '<div class="reader-panel__head"><div><span class="eyebrow">Your night log</span><strong>' + completedCount + ' / ' + stories.length + '話 読了</strong></div><span>' + percent + '%</span></div><div class="reader-meter" aria-label="読了率 ' + percent + '%"><span style="width:' + percent + '%"></span></div><p>' + (completedCount === stories.length ? '全話読了。今夜はお気に入りをもう一度。' : completedCount ? '読了の印はこの端末に残ります。今夜も一話だけ。' : '読み終えると作品カードの色が変わります。') + '</p>';
+
+  const actions = document.createElement('div');
+  actions.className = 'reader-panel__actions';
+  if (lastStory && !completedStories.includes(lastStory.slug)) {
+    const resume = document.createElement('a');
+    resume.className = 'btn btn-primary';
+    resume.href = storyHref(lastStory) + (Number(lastReading.progress) > 8 ? '#resume' : '');
+    resume.textContent = '「' + lastStory.title + '」の続き';
+    actions.appendChild(resume);
+  } else if (nextUnread) {
+    const next = document.createElement('a');
+    next.className = 'btn btn-primary';
+    next.href = storyHref(nextUnread);
+    next.textContent = '次の未読を読む';
+    actions.appendChild(next);
+  }
+  const tonight = document.createElement('a');
+  tonight.className = 'btn';
+  tonight.href = storyHref(tonightStory);
+  tonight.textContent = '今夜の一話';
+  tonight.setAttribute('aria-label', '今夜の一話「' + tonightStory.title + '」を読む');
+  actions.appendChild(tonight);
+  panel.appendChild(actions);
+  hero.appendChild(panel);
+}
+
+buildReaderPanel();
 
 const mainNav = document.querySelector('.site-header .nav');
 if (mainNav && !mainNav.querySelector('a[href="archive.html"]')) {
