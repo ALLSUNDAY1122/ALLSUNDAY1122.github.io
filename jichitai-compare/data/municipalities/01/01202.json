@@ -6,7 +6,7 @@
   "name": "函館市",
   "officialUrl": "https://www.city.hakodate.hokkaido.jp/",
   "status": "researching",
-  "summary": "子ども医療費助成を公式情報で確認済み。残り8制度を順次調査する。",
+  "summary": "子ども医療費助成と病児保育を公式情報で確認済み。残り7制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -37,7 +37,34 @@
         "checkedAt": "2026-07-19"
       }
     },
-    "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生までを市立函館病院内の専用保育室で一時的に預かる病児保育",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "condition": "病気やけがの治療中で、当面症状の急変が認められず、保護者が仕事や用事等で保育できない子ども",
+        "residencyOrEmployment": "函館市内に居住する子ども、または市外居住でも保護者が函館市内の事業所等に勤務する子ども",
+        "usagePeriod": "原則、連続する5日以内の開設日",
+        "residentFee": "函館市内居住者は1日1人1,000円",
+        "nonResidentFee": "市外居住で保護者が市内勤務の場合は1日1人3,000円",
+        "extensionFee": "10分200円",
+        "additionalCosts": "物品等の提供を受けた場合は実費がかかることがある",
+        "facility": "市立函館病院内保育施設『愛児園』病児保育室（函館市港町1丁目5番10号）",
+        "preregistration": "病児保育登録票を実施施設へ提出して事前登録。登録後1週間後から利用可能。市公式LINEでも登録可能",
+        "reservation": "実施施設で当日分または翌日分を仮予約し、かかりつけ医を受診して専用の医師連絡票を取得後、本予約する",
+        "documentsAtUse": "利用申込書、医師連絡票、着替え等を準備して利用",
+        "feeExemption": "市内居住者で、生活保護世帯、住民税非課税世帯、児童扶養手当受給世帯、函館市ひとり親家庭等医療費助成受給世帯のいずれかは利用料金免除。延長料金と実費は対象外",
+        "exemptionApplication": "病児保育利用料免除申請書に確認書類を添えて利用時に実施施設へ提出",
+        "freeChildcareProgram": "認可外保育施設利用者は保育の必要性の認定を受けると限度額内で無償化対象。認可保育所・認定こども園等の利用者は病児保育利用料の無償化対象外"
+      },
+      "source": {
+        "url": "https://www.city.hakodate.hokkaido.jp/docs/2023032700050/",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
