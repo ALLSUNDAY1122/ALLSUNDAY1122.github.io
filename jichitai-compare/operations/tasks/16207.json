@@ -5,7 +5,7 @@
   "prefectureCode": "16",
   "prefectureName": "富山県",
   "assignedTeam": "中日本調査班",
-  "status": "pr_open",
+  "status": "merged",
   "currentService": null,
   "nextServiceIndex": 9,
   "completedServices": ["childMedical", "sickChildCare", "childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport", "bulkyWaste", "disasterPrevention"],
@@ -16,8 +16,8 @@
   "currentBranch": "data/16207-kurobe",
   "pullRequestNumber": 118,
   "lastCheckedAt": "2026-07-20",
-  "lastUpdatedAt": "2026-07-20T04:35:00+09:00",
-  "lastUpdatedBy": "全国進行統括（スキーマ補正）",
+  "lastUpdatedAt": "2026-07-20T06:15:00+09:00",
+  "lastUpdatedBy": "全国進行統括（地方統合確認）",
   "officialSources": [
     "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=11498",
     "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=6198",
@@ -32,8 +32,9 @@
   "notes": [
     "担当表の昇順ルールに従い黒部市を選定し、region/centralから作業ブランチを作成。",
     "9制度すべてを黒部市公式情報または黒部市災害情報ポータルで確認。",
-    "PR #118をregion/central向けに作成。",
-    "全国進行統括が年齢範囲必須6制度のeligibility、task status、PR番号、主出典9件を現行スキーマへ補正。"
+    "PR #118をregion/centralへ統合済み。",
+    "全国進行統括が年齢範囲必須6制度のeligibility、task status、PR番号、主出典9件を現行スキーマへ補正。",
+    "全国進行統括が地方統合完了を確認し、task statusをmergedへ正規化。"
   ],
   "blockers": []
 }
