@@ -6,7 +6,7 @@
   "name": "倉吉市",
   "officialUrl": "https://www.city.kurayoshi.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。1制度を確認済みで、残り8制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。2制度を確認済みで、残り7制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -27,7 +27,21 @@
         {"url": "https://www.city.kurayoshi.lg.jp/7414.htm", "checkedAt": "2026-07-20"}
       ]
     },
-    "sickChildCare": {"status": "researching", "summary": "病児・病後児保育を未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病児2施設・病後児1施設を利用でき、利用料は病児1日1,500円、病後児1日500円",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "target": "倉吉市・三朝町・湯梨浜町・北栄町・琴浦町に住所があり、保育所、幼稚園、認定こども園、届出保育施設に在籍する児童または小学1～3年生。病児保育は利用日に満6か月以上",
+        "facilities": "病児保育室きらきら園、キッズケアポノ、病後児保育室すくすく園",
+        "fee": "病児保育は1日1,500円、病後児保育は1日500円",
+        "exemption": "生活保護世帯・市町村民税非課税世帯は無料",
+        "hours": "きらきら園は平日8時～18時、キッズケアポノは月・火・水・金8時30分～18時および土曜8時30分～17時、すくすく園は月～土8時～17時30分",
+        "application": "事前予約が必要。病児保育はインターネット予約サービスを利用し、初日に指定医療機関を受診する。病後児保育は電話予約",
+        "notes": "利用希望者多数や施設の受入状況により利用できない場合がある。キッズケアポノは食事代・布団代等の実費がかかる場合がある"
+      },
+      "source": {"url": "https://www.city.kurayoshi.lg.jp/2661.htm", "checkedAt": "2026-07-20"}
+    },
     "childcareFee": {"status": "researching", "summary": "保育料を未調査"},
     "schoolMeals": {"status": "researching", "summary": "学校給食費を未調査"},
     "postpartumCare": {"status": "researching", "summary": "産後ケアを未調査"},
