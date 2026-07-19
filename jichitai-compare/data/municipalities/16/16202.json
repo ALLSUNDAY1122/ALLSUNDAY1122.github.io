@@ -6,12 +6,40 @@
   "name": "高岡市",
   "officialUrl": "https://www.city.takaoka.toyama.jp/",
   "status": "researching",
-  "summary": "高岡市の9制度を調査中。",
+  "summary": "高岡市の9制度を調査中。こども医療費助成を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
-      "status": "todo",
-      "summary": "子ども医療費助成を未調査"
+      "status": "verified",
+      "summary": "高岡市に住所がある0歳から18歳到達後最初の3月31日までの子どもを対象に、保険診療の自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18,
+        "residency": "高岡市に住所があること",
+        "insurance": "各種健康保険に加入していること",
+        "ageCondition": "18歳となった後、最初の3月31日まで"
+      },
+      "details": {
+        "copay": "入院・通院にかかる保険診療の自己負担分を助成。加入する健康保険から高額療養費や附加給付が支給される場合は、その額を控除して助成",
+        "incomeLimit": "公式の対象要件に所得条件の記載なし",
+        "application": "出生・転入等で高岡市に住所を有することになった日から15日以内に、子ども・子育て課、福岡・伏木・戸出・中田の各支所、または富山県電子申請サービスで資格登録を申請",
+        "requiredDocuments": "保護者の本人確認書類、子どもの健康保険情報を確認できる書類等。電子申請では申請書の提出は不要",
+        "paymentMethod": "マイナ保険証または資格確認書等と、こども医療費受給資格証を医療機関等の窓口で提示して現物給付",
+        "reimbursement": "受給資格証を提示しなかった場合等は、受診月の翌月以降に償還払いを申請可能。領収日から2年以内に申請し、審査後おおむね2～3か月以内に保護者名義口座へ振込",
+        "excludedCosts": "健康診断、予防接種、病衣代、文書料、薬の容器代、入院時食事療養費等の保険適用外費用、紹介状なしで200床以上の病院を受診した場合の保険外併用療養費、学校・認定こども園・保育園等での災害共済給付対象のけがや疾病は対象外",
+        "excludedPersons": "生活保護受給者、児童福祉施設入所者、里親委託児童、ひとり親家庭等医療費助成や重度心身障害者等医療費助成など他の福祉医療費助成を受けている場合は対象外"
+      },
+      "source": {
+        "url": "https://www.city.takaoka.toyama.jp/soshiki/kodomo_kosodateka/2/4/1/11767.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.takaoka.toyama.jp/soshiki/kodomo_kosodateka/1/1_1/3274.html",
+          "checkedAt": "2026-07-19",
+          "description": "受給資格証を使用しなかった場合の償還払いと2年間の申請期限"
+        }
+      ]
     },
     "sickChildCare": {
       "status": "todo",
