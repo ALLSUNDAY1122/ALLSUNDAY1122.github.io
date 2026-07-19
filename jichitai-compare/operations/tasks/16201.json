@@ -26,32 +26,18 @@
   "currentBranch": "data/16201-toyama",
   "pullRequestNumber": 30,
   "lastCheckedAt": "2026-07-19",
-  "lastUpdatedAt": "2026-07-19T09:12:00+09:00",
+  "lastUpdatedAt": "2026-07-19T09:16:00+09:00",
   "lastUpdatedBy": "中日本調査班",
   "officialSources": [
     "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/1811",
     "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/3917?DestinationId=17",
-    "https://machinaka-care.city.toyama.lg.jp/guide/svGuideDtl.aspx?cd=0102&servno=22",
     "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/Index/3181",
-    "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/file?file=22701_%E5%A4%9A%E5%AD%90%E8%BB%BD%E6%B8%9B%E3%81%AE%E4%BE%8B.pdf",
     "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010443/1007434.html",
-    "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010448/1007376.html",
     "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/4824?DestinationId=11",
-    "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/file?file=23225_%E5%AE%9F%E6%96%BD%E6%A9%9F%E9%96%A2%E4%B8%80%E8%A6%A7%EF%BC%88HP%E6%8E%B2%E8%BC%89%E7%94%A8%E3%80%80R8.5%E6%9C%88%EF%BC%89.pdf",
-    "https://machinaka-care.city.toyama.lg.jp/guide/svGuideDtl.aspx?cd=0101&servno=14",
-    "https://www.city.toyama.lg.jp/shisei/mayor/1010725/1016816/1018580.html",
     "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/5192?DestinationId=16",
-    "https://www.city.toyama.lg.jp/kosodate/hoiku/1010433/1007397.html",
     "https://www.city.toyama.lg.jp/kurashi/sumai/1010267/1018274/1018275/1018282.html",
     "https://www.city.toyama.lg.jp/faq/1008441/1009895/1008841.html",
-    "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1005357.html",
-    "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1005384.html",
-    "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1017484.html",
-    "https://www.city.toyama.lg.jp/bosai/bosai/1011986/index.html",
-    "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1010656/1007904.html",
-    "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1011306/1009832.html",
-    "https://www.city.toyama.lg.jp/shisei/koho/1010858/1013250/index.html",
-    "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1006962.html"
+    "https://www.city.toyama.lg.jp/bosai/bosai/1011986/index.html"
   ],
   "notes": [
     "2026-07-19、最新mainを基点に自治体専用ブランチを作成。",
@@ -78,6 +64,7 @@
     "9制度の調査を完了。",
     "PR提出前に同期用PR #29で最新mainを取り込み、mainからの遅延0と変更対象2ファイルを確認。",
     "自治体データPR #30を作成し、GitHub上でmergeable=trueを確認。",
+    "GitHub Actions run #52でofficialSources再計算値の不一致を検出。補足出典を除外し、各制度の主出典9件へ修正。",
     "ローカル取得環境がないためnpm run checkは未実行。GitHub Actionsの結果を全国統括へ引き渡す。"
   ],
   "blockers": [
