@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "08202",
+  "prefectureCode": "08",
+  "prefecture": "茨城県",
+  "name": "日立市",
+  "officialUrl": "https://www.city.hitachi.lg.jp/",
+  "status": "researching",
+  "summary": "茨城県北部の市。子どもの医療福祉費助成を確認済みで、その他8制度を調査中。",
+  "updatedAt": "2026-07-20",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、保険診療の自己負担金と入院時食事代を市独自助成により実質無料化",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "出生から18歳到達後最初の3月31日までの日立市の児童",
+        "incomeLimit": "日立市独自助成により所得制限を撤廃",
+        "coverage": "健康保険が適用される医療費の自己負担分。外来・入院の自己負担金に加え、入院時食事代も助成対象",
+        "paymentFlow": "受給者証を使用して窓口で600円を支払った場合は登録口座へ年4回自動振込。600円未満、入院食事代、受給者証を使用しなかった場合等は支給申請が必要",
+        "application": "出生・転入後に受給者証交付手続きと自己負担金支給用の口座登録を行う。変更・再交付・払い戻し等は一部オンライン申請に対応",
+        "claimDeadline": "支給申請は診療月から5年以内"
+      },
+      "source": {"url": "https://www.city.hitachi.lg.jp/fukushi_kenko/hojokin_joseikin/1009459.html", "checkedAt": "2026-07-20"}
+    },
+    "sickChildCare": {"status": "researching", "summary": "病児・病後児保育を調査中"},
+    "childcareFee": {"status": "researching", "summary": "保育料を調査中"},
+    "schoolMeals": {"status": "researching", "summary": "学校給食費支援を調査中"},
+    "postpartumCare": {"status": "researching", "summary": "産後ケアを調査中"},
+    "temporaryChildcare": {"status": "researching", "summary": "一時保育・こども誰でも通園制度を調査中"},
+    "housingSupport": {"status": "researching", "summary": "子育て世帯向け住宅支援を調査中"},
+    "bulkyWaste": {"status": "researching", "summary": "粗大ごみ制度を調査中"},
+    "disasterPrevention": {"status": "researching", "summary": "防災・ハザード情報を調査中"}
+  }
+}
