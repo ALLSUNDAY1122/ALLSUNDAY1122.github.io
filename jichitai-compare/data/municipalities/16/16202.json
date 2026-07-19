@@ -6,7 +6,7 @@
   "name": "高岡市",
   "officialUrl": "https://www.city.takaoka.toyama.jp/",
   "status": "researching",
-  "summary": "高岡市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料を確認済み。",
+  "summary": "高岡市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費を確認済み。",
   "updatedAt": "2026-07-19",
   "services": {
     "childMedical": {
@@ -121,8 +121,42 @@
       ]
     },
     "schoolMeals": {
-      "status": "todo",
-      "summary": "学校給食費を未調査"
+      "status": "verified",
+      "summary": "令和8年度は小学校給食費を完全無償化。市内すべての小・中学校等で完全給食を実施し、就学援助等では学校給食費が援助対象",
+      "eligibility": {
+        "schools": "高岡市立小学校、中学校、義務教育学校、特別支援学校",
+        "fiscalYear": "令和8年度"
+      },
+      "details": {
+        "implementation": "高岡市内のすべての小学校・中学校・義務教育学校・特別支援学校で完全給食を実施",
+        "elementarySchoolFree": "令和8年度は、国と富山県の支援に高岡市が差額を上乗せし、小学校給食費を完全無償化",
+        "juniorHighSchoolFee": "中学校給食は継続実施。令和8年度の具体的な徴収額は、確認できた市公式ページでは公表されていないため記録しない",
+        "priceIncreaseSupport": "令和7年度は物価高騰による保護者負担増を防ぐため、小学校・中学校の学校給食費の一部を支援",
+        "financialAssistance": "就学援助では、生活保護世帯、市・県民税非課税・減免世帯、児童扶養手当またはひとり親家庭等医療費助成の受給者、収入状況により援助が必要な世帯等を対象に学校給食費を援助",
+        "specialNeedsSupport": "高岡市内の小・中学校の特別支援学級に在籍する児童生徒の保護者に対し、同一生計世帯の収入に応じて学校給食費等の一部を補助",
+        "currentAmountNote": "小学校は令和8年度完全無償。中学校の現行徴収額は市公式ページ上で確認できないため、第三者情報から推定しない"
+      },
+      "source": {
+        "url": "https://www.city.takaoka.toyama.jp/soshiki/hishoka/1/shiseihoushin/13628.html",
+        "checkedAt": "2026-07-19"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.takaoka.toyama.jp/soshiki/kyoikuiinkai_gakkokyoikuka/2/3/3/3308.html",
+          "checkedAt": "2026-07-19",
+          "description": "市内全小中学校・義務教育学校・特別支援学校での完全給食実施状況"
+        },
+        {
+          "url": "https://www.city.takaoka.toyama.jp/gyosei/kosodate_kyoiku/kosodateshienjoho/3/7997.html",
+          "checkedAt": "2026-07-19",
+          "description": "就学援助制度の対象世帯と学校給食費援助"
+        },
+        {
+          "url": "https://www.city.takaoka.toyama.jp/gyosei/kosodate_kyoiku/kosodateshienjoho/3/8000.html",
+          "checkedAt": "2026-07-19",
+          "description": "特別支援教育就学奨励制度による学校給食費等の一部補助"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "todo",
