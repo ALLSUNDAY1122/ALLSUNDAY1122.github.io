@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-19T21:38:00+09:00",
+  "updatedAt": "2026-07-20T00:40:00+09:00",
   "exceptions": [
     {
       "id": "WEST-40130-CI-001",
@@ -18,6 +18,23 @@
       "summary": "福岡市の9制度データPRで自治体データ検証工程が失敗。差分限定チェックと生成処理は成功している。検証エラー本文の特定と軽微修正可否の確認が必要。",
       "createdAt": "2026-07-19T21:38:00+09:00",
       "updatedAt": "2026-07-19T21:38:00+09:00"
+    },
+    {
+      "id": "WEST-31201-CI-001",
+      "region": "west",
+      "team": "西日本調査班",
+      "municipalityCode": "31201",
+      "municipalityName": "鳥取市",
+      "type": "ci_failure",
+      "status": "open",
+      "branch": "data/31201-tottori-city",
+      "pullRequestNumber": 114,
+      "workflowRunId": 29695183184,
+      "failedJob": "Validate municipality data",
+      "failedStep": "Generate national progress",
+      "summary": "鳥取市の9制度データPRで全国進捗生成工程が失敗。無関係差分チェックと公開自治体データ生成は成功し、後続のデータ検証は未実行。進捗生成スクリプトのエラー本文特定と修正が必要。",
+      "createdAt": "2026-07-20T00:40:00+09:00",
+      "updatedAt": "2026-07-20T00:40:00+09:00"
     }
   ]
 }
