@@ -6,7 +6,7 @@
   "name": "米子市",
   "officialUrl": "https://www.city.yonago.lg.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。childMedicalとsickChildCareを確認済みで、残り7制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。childMedical、sickChildCare、childcareFeeを確認済みで、残り6制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -38,7 +38,21 @@
       "source": {"url": "https://www.city.yonago.lg.jp/48157.htm", "checkedAt": "2026-07-20"},
       "additionalSources": [{"url": "https://www.city.yonago.lg.jp/13199.htm", "checkedAt": "2026-07-20"}]
     },
-    "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上児は無償。0～2歳児は市民税額に応じて決まり、第2子半額・第3子以降無料などの軽減あり",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "fee": "0～2歳児の保育料は父母等の市民税所得割額に応じて決定し、3歳以上児は無償",
+        "taxExemption": "市民税非課税世帯の0～2歳児は無償",
+        "simultaneousEnrollment": "同一世帯の就学前児童が保育所等を同時利用する場合、2人目は半額、3人目以降は無料",
+        "lowIncomeSecondChild": "市民税所得割額57,700円未満の世帯では、一定条件下で2人目が無料",
+        "thirdChild": "保護者と生計同一の3人目以降の児童が保育所等に入所する場合は無料",
+        "otherCosts": "延長保育料、主食費、副食費、用品代などの実費は別途負担となる場合がある"
+      },
+      "source": {"url": "https://www.city.yonago.lg.jp/40491.htm", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.yonago.lg.jp/25343.htm", "checkedAt": "2026-07-20"}]
+    },
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
     "postpartumCare": {"status": "todo", "summary": "産後ケアを未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "一時保育・誰でも通園を未調査"},
