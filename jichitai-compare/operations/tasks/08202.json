@@ -5,7 +5,7 @@
   "prefectureCode": "08",
   "prefectureName": "茨城県",
   "assignedTeam": "東日本調査班",
-  "status": "pr_open",
+  "status": "merged",
   "currentService": null,
   "nextServiceIndex": 9,
   "completedServices": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
@@ -16,8 +16,8 @@
   "currentBranch": "data/08202-hitachi",
   "pullRequestNumber": 123,
   "lastCheckedAt": "2026-07-20",
-  "lastUpdatedAt": "2026-07-20T08:20:00+09:00",
-  "lastUpdatedBy": "全国進行統括（主出典整合補正）",
+  "lastUpdatedAt": "2026-07-20T08:24:00+09:00",
+  "lastUpdatedBy": "全国進行統括（地方統合確認）",
   "officialSources": [
     "https://www.city.hitachi.lg.jp/fukushi_kenko/hojokin_joseikin/1009459.html",
     "https://www.city.hitachi.lg.jp/kosodateoen/mokuteki_sagasu/1007350/1004312/1004313.html",
@@ -34,9 +34,10 @@
     "region/eastから自治体専用ブランチを作成。",
     "9制度すべて公式情報で確認済み。",
     "自治体JSONとtaskの制度数・status・公式ソース9件の整合性を確認。",
-    "PR #123をregion/east向けに作成。差分は日立市の自治体JSONとtaskの2ファイルのみ。",
+    "PR #123をregion/eastへ統合済み。差分は日立市の自治体JSONとtaskの2ファイルのみ。",
     "CI run #241のValidate source and generated data失敗を受け、www-sourceサブドメインを正規のwww.city.hitachi.lg.jp公式URLへ統一。",
-    "CI run #254の失敗原因として、粗大ごみ主出典が自治体JSONとtaskで不一致だったため、自治体JSONの主出典へ統一。"
+    "CI run #254の失敗原因として、粗大ごみ主出典が自治体JSONとtaskで不一致だったため、自治体JSONの主出典へ統一。",
+    "CI run #255成功後、全国進行統括が地方統合完了を確認し、task statusをmergedへ正規化。"
   ],
   "blockers": []
 }
