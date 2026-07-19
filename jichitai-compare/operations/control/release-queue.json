@@ -1,18 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-20T04:55:00+09:00",
+  "updatedAt": "2026-07-20T05:25:00+09:00",
   "status": "active",
   "entries": [
     {
       "region": "north",
       "branch": "region/north",
       "municipalities": [
+        {"code": "01202", "name": "函館市"},
         {"code": "01203", "name": "小樽市"}
       ],
-      "count": 1,
-      "releaseStatus": "pending_regional_merge",
-      "reason": "小樽市を地方統合済み。函館市PR #89はCI成功・競合なしで地方統合待ち",
-      "sourcePullRequest": 89,
+      "count": 2,
+      "releaseStatus": "pending_threshold",
+      "reason": "函館市PR #89と小樽市PR #116を地方統合済み。10自治体または前回全国統合から24時間のrelease条件を待つ",
       "mainIntegrationPr": null
     },
     {
@@ -61,11 +61,11 @@
     }
   ],
   "summary": {
-    "regionalMergedMunicipalities": 14,
-    "waitingRegionalMergeMunicipalities": 1,
+    "regionalMergedMunicipalities": 15,
+    "waitingRegionalMergeMunicipalities": 0,
     "releaseReadyRegions": [],
     "auditBlockedRegions": []
   },
-  "nextAction": "北日本は函館市PR #89を地方統合する。全国統合・公開担当は各地方の件数と24時間条件を再評価し、条件到達後にmain統合PRを作成する。",
+  "nextAction": "各地方の追加統合件数と24時間条件を再評価し、条件到達後にmain統合PRを作成する。",
   "humanDecisionRequired": false
 }
