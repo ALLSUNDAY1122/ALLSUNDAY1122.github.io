@@ -5,11 +5,30 @@
   "prefecture": "鳥取県",
   "name": "鳥取市",
   "officialUrl": "https://www.city.tottori.lg.jp/",
-  "status": "todo",
-  "summary": "西日本調査班の調査対象。9制度を順次、公式情報で確認する。",
+  "status": "researching",
+  "summary": "西日本調査班の調査対象。childMedicalを公式情報で確認済み。残り8制度を順次調査する。",
   "updatedAt": "2026-07-19",
   "services": {
-    "childMedical": {"status": "todo", "summary": "子ども医療費助成を未調査"},
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳到達後最初の3月31日まで、保険診療の入院・通院自己負担額は0円",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "18歳に達する日以後の最初の3月31日までの方",
+        "copay": "保険診療分の入院・通院はいずれも自己負担0円",
+        "application": "対象者の健康保険情報が確認できるものと、窓口申請者の本人確認書類を持参し、市役所福祉総合窓口13番または各総合支所市民福祉課で特別医療費受給資格証の交付手続きを行う",
+        "usage": "鳥取県内の医療機関で、マイナ保険証または資格確認書と受給資格証を提示する。院外処方の場合は薬局でも提示する",
+        "outsidePrefecture": "鳥取県外ではいったん保険診療の患者負担額を支払い、後日申請による償還払いを受ける",
+        "exceptions": "食事代、病衣代、容器代、個室代、文書代、選定療養費など保険適用外費用は助成対象外"
+      },
+      "source": {
+        "url": "https://www.city.tottori.lg.jp/site/kosodate/4697.html",
+        "checkedAt": "2026-07-19"
+      }
+    },
     "sickChildCare": {"status": "todo", "summary": "病児・病後児保育を未調査"},
     "childcareFee": {"status": "todo", "summary": "保育料・第2子以降の軽減を未調査"},
     "schoolMeals": {"status": "todo", "summary": "学校給食費支援を未調査"},
