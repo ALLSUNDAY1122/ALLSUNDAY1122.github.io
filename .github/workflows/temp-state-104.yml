@@ -1,0 +1,120 @@
+name: Temp State 104
+on:
+  push:
+    branches:
+      - coord/state-104-20260721
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/state-104-20260721
+      - name: Update control state
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('jichitai-compare/operations/control')
+          rq_path = root / 'release-queue.json'
+          gs_path = root / 'global-state.json'
+          audit_path = root / 'audit-log.jsonl'
+          ts = '2026-07-21T02:18:00+09:00'
+
+          rq = json.loads(rq_path.read_text(encoding='utf-8'))
+          entries = {e['region']: e for e in rq['entries']}
+
+          additions = {
+              'north': [('01226', '砂川市'), ('01227', '歌志内市'), ('01228', '深川市')],
+              'central': [('17324', '川北町'), ('17361', '津幡町'), ('17365', '内灘町')],
+          }
+          for region, items in additions.items():
+              existing = {m['code'] for m in entries[region]['municipalities']}
+              for code, name in items:
+                  if code not in existing:
+                      entries[region]['municipalities'].append({'code': code, 'name': name})
+
+          entries['north']['count'] = 27
+          entries['north']['pendingSinceLastRelease'] = 7
+          entries['north']['releaseStatus'] = 'pending_threshold'
+          entries['north']['reason'] = '北日本の初回10自治体をPR #186、追加10自治体をPR #244でmainへ全国統合。生成・公開をPR #249で73自治体へ更新後、三笠市から深川市まで7自治体を地方統合'
+
+          entries['east']['count'] = 18
+          entries['east']['pendingSinceLastRelease'] = 8
+          entries['east']['releaseStatus'] = 'pending_threshold'
+
+          entries['central']['count'] = 30
+          entries['central']['pendingSinceLastRelease'] = 9
+          entries['central']['releaseStatus'] = 'pending_threshold'
+          entries['central']['reason'] = '中日本の初回11自治体をPR #150、追加10自治体をPR #217でmainへ全国統合。生成データをPR #221で53自治体へ更新後、加賀市から内灘町まで9自治体を地方統合'
+
+          entries['west']['count'] = 29
+          entries['west']['pendingSinceLastRelease'] = 8
+          entries['west']['releaseStatus'] = 'pending_threshold'
+
+          rq['updatedAt'] = ts
+          rq['summary']['regionalMergedMunicipalities'] = 104
+          rq['summary']['waitingRegionalMergeMunicipalities'] = 0
+          rq['summary']['releaseReadyRegions'] = []
+          rq['summary']['auditBlockedRegions'] = []
+          rq['summary']['lastNationalIntegrationAt'] = '2026-07-21T01:18:06+09:00'
+          rq['summary']['lastNationalIntegrationPr'] = 244
+          rq['summary']['latestGeneratedMunicipalityCount'] = 73
+          rq['summary']['latestGeneratedPullRequest'] = 249
+          rq['summary']['latestPublicCountPullRequest'] = 249
+          rq['nextAction'] = '中日本が前回全国統合後9自治体で最短候補。あと1自治体の地方統合を監視し、到達時に固定releaseブランチ経由でmainへ全国統合する。'
+          rq['humanDecisionRequired'] = False
+          rq_path.write_text(json.dumps(rq, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+
+          gs = json.loads(gs_path.read_text(encoding='utf-8'))
+          gs['updatedAt'] = ts
+          gs['phase'] = 'release-monitoring'
+          gs['regionalCompletedSinceLastRelease'] = {'north': 7, 'east': 8, 'central': 9, 'west': 8, 'total': 32}
+          gs['priority'] = {'type': 'release-monitoring', 'nextAction': 'central_remaining_1'}
+          gs['lastNationalIntegrationAt'] = '2026-07-21T01:18:06+09:00'
+          gs['lastNationalIntegrationPr'] = 244
+          gs['latestGeneratedMunicipalityCount'] = 73
+          gs['latestGeneratedPullRequest'] = 249
+          gs['latestPublicCountPullRequest'] = 249
+          gs['regionalMergedMunicipalities'] = 104
+          gs['openPullRequests'] = []
+          gs['humanDecisionRequired'] = False
+          gs_path.write_text(json.dumps(gs, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+
+          audit = {
+              'timestamp': ts,
+              'actor': '全国進行統括',
+              'action': 'regional-progress-104',
+              'details': {
+                  'confirmedMergedPullRequests': [257, 258, 259, 260, 261, 262],
+                  'mergedMunicipalities': [
+                      {'region': 'north', 'code': '01226', 'name': '砂川市', 'pullRequest': 257},
+                      {'region': 'central', 'code': '17324', 'name': '川北町', 'pullRequest': 258},
+                      {'region': 'north', 'code': '01227', 'name': '歌志内市', 'pullRequest': 259},
+                      {'region': 'central', 'code': '17361', 'name': '津幡町', 'pullRequest': 260},
+                      {'region': 'north', 'code': '01228', 'name': '深川市', 'pullRequest': 261},
+                      {'region': 'central', 'code': '17365', 'name': '内灘町', 'pullRequest': 262},
+                  ],
+                  'regionalCounts': {'north': 27, 'east': 18, 'central': 30, 'west': 29, 'total': 104},
+                  'pendingSinceRegionalRelease': {'north': 7, 'east': 8, 'central': 9, 'west': 8, 'total': 32},
+                  'nextNationalReleaseCandidate': {'region': 'central', 'remainingMunicipalities': 1},
+                  'latestGeneratedMunicipalityCount': 73,
+                  'openMunicipalityPullRequests': 0,
+                  'openExceptions': 0,
+              },
+              'humanDecisionRequired': False,
+          }
+          with audit_path.open('a', encoding='utf-8') as f:
+              if audit_path.stat().st_size and not audit_path.read_bytes().endswith(b'\n'):
+                  f.write('\n')
+              f.write(json.dumps(audit, ensure_ascii=False, separators=(',', ':')) + '\n')
+          PY
+          rm .github/workflows/temp-state-104.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control .github/workflows/temp-state-104.yml
+          git commit -m "統括管理: 104自治体へ更新"
+          git push
