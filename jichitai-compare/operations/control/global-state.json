@@ -1,1 +1,29 @@
-{"schemaVersion":"1.0.0","updatedAt":"2026-07-20T11:15:00+09:00","phase":"release-monitoring","mainBranch":"main","regionalBranches":{"north":"region/north","east":"region/east","central":"region/central","west":"region/west"},"migration":{"status":"completed","firstAuditStartedAt":"2026-07-19T21:35:00+09:00","confirmed":["assignment policy and four regional branches exist","all four regional control files exist","north 5, east 5, central 8, west 3 municipalities are regionally merged","PR #127 Muroran and PR #129 Kushiro are merged into region/north","Kushiro recovery PR #131 passed CI run #268 and was merged","no open municipality pull requests remain"]},"regionalCompletedSinceLastRelease":{"north":5,"east":5,"central":8,"west":3,"total":21},"priority":{"type":"release-monitoring","nextAction":"各地方調査班は次の未着手自治体へ進む。全国統合・公開担当は地方ごとの10自治体条件を監視する。"},"openPullRequests":[],"humanDecisionRequired":false}
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-20T12:15:00+09:00",
+  "phase": "release-monitoring",
+  "mainBranch": "main",
+  "regionalBranches": {
+    "north": "region/north",
+    "east": "region/east",
+    "central": "region/central",
+    "west": "region/west"
+  },
+  "migration": {
+    "status": "completed",
+    "firstAuditStartedAt": "2026-07-19T21:35:00+09:00"
+  },
+  "regionalCompletedSinceLastRelease": {
+    "north": 5,
+    "east": 5,
+    "central": 9,
+    "west": 4,
+    "total": 23
+  },
+  "priority": {
+    "type": "release-monitoring",
+    "nextAction": "central_remaining_1"
+  },
+  "openPullRequests": [],
+  "humanDecisionRequired": false
+}
