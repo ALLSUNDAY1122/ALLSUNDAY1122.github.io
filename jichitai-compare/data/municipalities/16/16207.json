@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "16207",
+  "prefectureCode": "16",
+  "prefecture": "富山県",
+  "name": "黒部市",
+  "officialUrl": "https://www.city.kurobe.toyama.jp/",
+  "status": "verified",
+  "summary": "黒部市の9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-20",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳到達後最初の3月31日までの子どもの保険診療自己負担分を助成。所得制限なし。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {"eligibility": "黒部市に住民登録があり医療保険に加入していること", "paymentMethod": "資格証等を提示する現物給付が基本。対象外地域等は償還払い"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=11498", "checkedAt": "2026-07-19"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "満1歳から小学3年生までを病児・病後児保育室くるみで一時保育。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 9},
+      "details": {"capacity": "1日4名、先着順・要予約", "hours": "平日8時から18時", "fee": "5時間以上2,500円、5時間未満1,300円", "application": "事前登録、電話予約、診療情報提供書等が必要"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=6198", "checkedAt": "2026-07-19"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "0歳から2歳児は市町村民税所得割額により決定。3歳から5歳児と住民税非課税世帯の0歳から2歳児は無償化対象。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {"additionalCosts": "給食費や行事費等は別途", "payment": "公立施設は原則口座振替"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=2740", "checkedAt": "2026-07-19"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市内小中学校等へ給食を提供し、第3子以降、就学援助対象世帯、特別支援学級の保護者に給食費支援を実施。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {"publishedFee": "通常の月額・1食単価は市公式案内に掲載なし"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=671", "checkedAt": "2026-07-20"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の母子を対象に宿泊・日帰り・訪問型を実施。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {"fees": "宿泊6,000円、日帰り3,000円、訪問1,500円", "coupon": "2,500円分を5枚交付", "exemption": "生活保護世帯は利用料免除"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=25973", "checkedAt": "2026-07-20"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園児の一時預かりと、生後6か月から3歳未満の未就園児向けこども誰でも通園制度を実施。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {"temporaryFee": "施設により1日2,000円・半日1,000円、1時間250円または350円等", "anyChildHours": "月10時間まで", "anyChildFee": "1時間300円程度", "application": "一時預かりは施設へ直接申込み。誰でも通園は総合支援システム申請後に事前面談"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/child/category/page.aspx?servno=16235", "checkedAt": "2026-07-20"},
+      "additionalSources": [{"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=45806", "checkedAt": "2026-07-20"}]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "住宅取得支援補助金により転入・転居世帯を支援し、若年・子育て・県外転入等の加算を実施。",
+      "details": {"baseSupport": "居住誘導区域内は転入者50万円、一定の転居者30万円", "maximumExample": "加算の組合せにより最大130万円の公式例あり", "requirements": "3年以上居住、所有権2分の1以上、市税滞納なし等"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/news/detail.aspx?servno=15270", "checkedAt": "2026-07-20"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "金属・ガラス・粗大ごみ収集日に指定袋または指定券で排出。大型品は処理施設へ直接持込。",
+      "details": {"collection": "収集日当日の朝8時までに地区のごみステーションへ排出", "excludedSize": "130cm×50cm×50cm以上は収集対象外", "dropOff": "宮沢清掃センターへ持込可能", "fee": "家庭系もやせないごみは100kgにつき500円", "hours": "平日8時30分から16時30分、土曜8時30分から12時"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=11323", "checkedAt": "2026-07-20"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・津波・ため池・揺れやすさ等のハザードマップ、避難所データ、災害情報ポータル、緊急情報メールを提供。",
+      "details": {"hazardMaps": "洪水、土砂災害、津波、ため池、ゆれやすさの各マップを公開", "shelters": "指定避難所一覧と地区別の避難判断情報を公開", "alerts": "災害情報ポータルと緊急情報メールで防災・火災情報を配信", "weatherInfo": "2026年5月29日から警戒レベル数字付きの新たな防災気象情報を運用", "contact": "防災危機管理班 0765-54-2112"},
+      "source": {"url": "https://www.city.kurobe.toyama.jp/category/menu.aspx?ctgcd=28", "checkedAt": "2026-07-20"},
+      "additionalSources": [
+        {"url": "https://sgportal.city.kurobe.toyama.jp/guide/svGuideDtl.aspx?pg=1&servno=43565", "checkedAt": "2026-07-20", "description": "土砂災害ハザードマップ"},
+        {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=83", "checkedAt": "2026-07-20", "description": "洪水ハザードマップと指定避難所"},
+        {"url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=3170", "checkedAt": "2026-07-20", "description": "緊急情報メール"},
+        {"url": "https://www.city.kurobe.toyama.jp/news/detail.aspx?servno=46421", "checkedAt": "2026-07-20", "description": "新たな防災気象情報"}
+      ]
+    }
+  }
+}
