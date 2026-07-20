@@ -1,0 +1,88 @@
+name: Temporary North Release 11 v2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-north-release-11-v2.yml
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build-release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Build and validate fixed snapshot
+        env:
+          BRANCH: coord/north-release-11-20260721-0625
+        run: |
+          set -euxo pipefail
+          git fetch origin main '+refs/heads/region/north:refs/remotes/origin/region/north'
+          git switch -C "$BRANCH" origin/main
+          codes=(01233 01234 01235 01236 01303 01304 01331 01332 01333 01334 01337)
+          for code in "${codes[@]}"; do
+            pref="${code:0:2}"
+            data_path="jichitai-compare/data/municipalities/${pref}/${code}.json"
+            task_path="jichitai-compare/operations/tasks/${code}.json"
+            git cat-file -e "origin/region/north:${data_path}"
+            git cat-file -e "origin/region/north:${task_path}"
+            mkdir -p "$(dirname "$data_path")" "$(dirname "$task_path")"
+            git show "origin/region/north:${data_path}" > "$data_path"
+            git show "origin/region/north:${task_path}" > "$task_path"
+          done
+          git add jichitai-compare/data/municipalities/01 jichitai-compare/operations/tasks
+          test "$(git diff --cached --name-only | wc -l)" -eq 22
+          git commit -m "全国統合: 北日本の追加11自治体を固定スナップショット化"
+          cd jichitai-compare
+          npm run validate
+          cd ..
+          git push --force origin "HEAD:refs/heads/${BRANCH}"
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: coord/north-release-11-20260721-0625
+        run: |
+          set -euxo pipefail
+          cat > /tmp/pr-body.md <<'EOF'
+          ## 目的
+          北日本調査班で前回全国統合後に地方統合された11自治体がリリース条件へ到達したため、最新main基準の固定スナップショットとして自治体JSON・taskだけを移植します。
+
+          ## 対象自治体
+          伊達市、北広島市、石狩市、北斗市、当別町、新篠津村、松前町、福島町、知内町、木古内町、七飯町。
+
+          ## 変更範囲
+          各自治体の自治体JSONとtask、合計22ファイルのみです。地域状態、全国管理、生成データ、公開表示は含めません。
+
+          ## 検証
+          - region/northで各地方PRのCI成功後に統合済み
+          - 最新mainを親とする固定スナップショット
+          - npm run validate 成功
+
+          ## リリース後
+          本PR成功後、生成データ・全国進捗・公開件数・全国管理を別PRで同期します。
+          EOF
+          gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" --title "全国統合: 北日本の追加11自治体をmainへ反映" --body-file /tmp/pr-body.md
+
+      - name: Remove temporary workflow
+        if: always()
+        run: |
+          set -euxo pipefail
+          git switch main
+          git pull --ff-only origin main
+          git rm .github/workflows/temp-north-release-11-v2.yml
+          git commit -m "ci: 北日本11自治体全国統合用ワークフローv2を削除"
+          git push origin main
