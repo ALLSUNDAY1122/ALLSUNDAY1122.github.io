@@ -6,48 +6,17 @@
   "name": "南砺市",
   "officialUrl": "https://www.city.nanto.toyama.jp/",
   "status": "researching",
-  "summary": "南砺市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費支援を確認済み。",
+  "summary": "南砺市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費支援、産後ケアを確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
-    "childMedical": {
-      "status": "verified",
-      "summary": "南砺市内に住み健康保険に加入する高校3年生までの子どもを対象に、保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18, "residency": "南砺市内に住所があること", "insurance": "健康保険に加入していること"},
-      "details": {"ageLimit": "満18歳の誕生日後の最初の3月31日まで", "coverage": "保険適用となる医療費の自己負担分。高額療養費や附加給付がある場合はその額を控除", "inKindBenefit": "富山県内の医療機関等では健康保険証と受給資格証を提示して現物給付", "reimbursement": "県外受診等は窓口で支払った後、市民センターまたはこども課へ申請する償還払い", "reimbursementTiming": "受診月の翌月以降に月ごとにまとめて申請し、原則として申請翌月25日に振込", "application": "出生・転入等で資格が生じた場合は受給資格登録申請が必要", "requiredDocuments": "子どもと保護者の個人番号確認書類、本人確認書類、子どもの健康保険資格を確認できるもの等", "excludedCosts": "日本スポーツ振興センター災害共済給付に該当する保育園・幼稚園・学校での災害等は対象外"},
-      "contact": {"department": "こども課", "phone": "0763-23-2010"},
-      "source": {"url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/12/2/1880.html", "checkedAt": "2026-07-20"},
-      "additionalSources": [{"url": "https://sukoyaka.city.nanto.toyama.jp/support", "checkedAt": "2026-07-20", "description": "対象年齢と資格申請・助成方法の子育て支援案内"}]
-    },
-    "sickChildCare": {
-      "status": "verified",
-      "summary": "病気中または回復期で家庭保育が難しい生後6か月以上の就学前児を、南砺市民病院内の病児保育室または市内保育園の病後児保育で預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 6, "condition": "疾病中または病気回復期で、保護者や家族が就業等により家庭で保育できない就学前児童", "residency": "南砺市民のほか、高岡市・魚津市・氷見市・黒部市・砺波市・小矢部市・射水市・入善町・朝日町の児童も利用可能"},
-      "details": {"sickChildFacility": "南砺市民病院内 病児保育室ぽけっと", "postSickFacilities": "城端さくら保育園、認定こども園井波にじいろ保育園、福野ひまわり保育園、福光どんぐり保育園、福光東部かがやき保育園。喜志麻保育園は園へ直接問い合わせ", "hours": "月曜日から金曜日の8時30分から17時まで。土日、祝日、年末年始を除く", "capacity": "1日2名まで", "usageLimit": "1回につきおおむね7日間", "fee": "1日2,000円、半日1,000円。給食を食べる場合は半日でも2,000円", "paymentSupport": "とみいくデジタルポイント、子育て応援券を利用可能", "application": "事前登録が必要。利用時は利用申込書と医師作成の診療情報提供書等を提出"},
-      "contact": {"department": "こども課", "phone": "0763-23-2010"},
-      "source": {"url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/5075.html", "checkedAt": "2026-07-20"},
-      "additionalSources": [{"url": "https://sukoyaka.city.nanto.toyama.jp/nursey", "checkedAt": "2026-07-20", "description": "病児・病後児保育の事前登録と実施園一覧"}]
-    },
-    "childcareFee": {
-      "status": "verified",
-      "summary": "保育料は支給認定や世帯状況に基づいて算定され、3歳から5歳児クラス等は無償化対象。南砺市独自の多子軽減で第2子は半額、第3子以降は無料となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5, "residency": "南砺市の保育園・認定こども園等を利用する児童"},
-      "details": {"calculation": "在園児は毎年現況届を提出し、保育を必要とする事由や世帯状況を確認して利用者負担額を算定する。令和8年9月以降の保育料算定にも現況届を使用", "freeEducation": "国の幼児教育・保育無償化により、3歳から5歳児クラスと住民税非課税世帯の0歳から2歳児クラスが無償化対象", "siblingReduction": "養育されている22歳までの範囲で最年長の子から数え、第2子の保育料を半額、第3子以降を無料", "sideDishReduction": "副食費は第1子・第2子が半額、第3子以降が無料", "nonLicensedCare": "南砺市に居住し認可外保育施設を利用する児童も、保育園等と同様に保育料等が軽減される場合がある", "payment": "保育料は南砺市の口座振替対象。口座振替依頼書を取扱金融機関へ提出して申し込む"},
-      "contact": {"department": "こども課", "phone": "0763-23-2010"},
-      "source": {"url": "https://sukoyaka.city.nanto.toyama.jp/nursey", "checkedAt": "2026-07-20"},
-      "additionalSources": [{"url": "https://www.city.nanto.toyama.jp/kosodate-kyoiku/ikuji-mishugakuji/3/4108.html", "checkedAt": "2026-07-20", "description": "現況届と利用者負担額算定"}, {"url": "https://www.city.nanto.toyama.jp/soshiki/kaikei/1/1/607.html", "checkedAt": "2026-07-20", "description": "保育料の口座振替"}]
-    },
-    "schoolMeals": {
-      "status": "verified",
-      "summary": "南砺市立小学校・義務教育学校前期課程の学校給食費は無償。経済的に就学が困難な世帯には、中学生の学校給食費を含む就学援助を行う。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15, "residency": "南砺市に住所があり、児童生徒が南砺市立小・中・義務教育学校に在学していること", "financialCondition": "生活保護、市民税非課税・減免、国民年金・国民健康保険料の免除等、児童扶養手当受給、保護者の死亡・療養、その他経済的困窮のいずれか"},
-      "details": {"elementaryFee": "小学生は学校給食費無償", "juniorHighAssistance": "就学援助認定者は中学生の学校給食費が援助対象", "otherAssistance": "学用品費、通学用品費、校外活動費、新入学用品費、修学旅行費、クラブ活動費、生徒会費、PTA会費、卒業アルバム代、オンライン学習通信費等も対象", "application": "申請書、収入額・需要額調書、必要に応じ所得課税証明書を在学する学校へ提出", "deadline": "令和8年度の当初申請期限は2026年5月22日。期限後も随時受付するが、援助開始は原則として提出月の翌月分から", "contact": "教育総務課 0763-23-2012"},
-      "source": {"url": "https://www.city.nanto.toyama.jp/soshiki/kyoikusomu/1/1/1590.html", "checkedAt": "2026-07-20"},
-      "additionalSources": [{"url": "https://sukoyaka.city.nanto.toyama.jp/school", "checkedAt": "2026-07-20", "description": "就学援助制度の子育て支援案内"}]
-    },
-    "postpartumCare": {"status": "researching", "summary": "調査中"},
-    "temporaryChildcare": {"status": "todo", "summary": "未調査"},
-    "housingSupport": {"status": "todo", "summary": "未調査"},
-    "bulkyWaste": {"status": "todo", "summary": "未調査"},
-    "disasterPrevention": {"status": "todo", "summary": "未調査"}
+    "childMedical": {"status":"verified","summary":"南砺市内に住み健康保険に加入する高校3年生までの子どもを対象に、保険診療の自己負担分を助成する。","eligibility":{"minAgeMonths":0,"maxAgeYears":18,"residency":"南砺市内に住所があること","insurance":"健康保険に加入していること"},"details":{"ageLimit":"満18歳の誕生日後の最初の3月31日まで","coverage":"保険適用となる医療費の自己負担分。高額療養費や附加給付がある場合はその額を控除","inKindBenefit":"富山県内の医療機関等では健康保険証と受給資格証を提示して現物給付","reimbursement":"県外受診等は窓口で支払った後、市民センターまたはこども課へ申請する償還払い","reimbursementTiming":"受診月の翌月以降に月ごとにまとめて申請し、原則として申請翌月25日に振込","application":"出生・転入等で資格が生じた場合は受給資格登録申請が必要","requiredDocuments":"子どもと保護者の個人番号確認書類、本人確認書類、子どもの健康保険資格を確認できるもの等","excludedCosts":"日本スポーツ振興センター災害共済給付に該当する保育園・幼稚園・学校での災害等は対象外"},"contact":{"department":"こども課","phone":"0763-23-2010"},"source":{"url":"https://www.city.nanto.toyama.jp/soshiki/kodomo/12/2/1880.html","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://sukoyaka.city.nanto.toyama.jp/support","checkedAt":"2026-07-20","description":"対象年齢と資格申請・助成方法の子育て支援案内"}]},
+    "sickChildCare": {"status":"verified","summary":"病気中または回復期で家庭保育が難しい生後6か月以上の就学前児を、南砺市民病院内の病児保育室または市内保育園の病後児保育で預かる。","eligibility":{"minAgeMonths":6,"maxAgeYears":6,"condition":"疾病中または病気回復期で、保護者や家族が就業等により家庭で保育できない就学前児童","residency":"南砺市民のほか、高岡市・魚津市・氷見市・黒部市・砺波市・小矢部市・射水市・入善町・朝日町の児童も利用可能"},"details":{"sickChildFacility":"南砺市民病院内 病児保育室ぽけっと","postSickFacilities":"城端さくら保育園、認定こども園井波にじいろ保育園、福野ひまわり保育園、福光どんぐり保育園、福光東部かがやき保育園。喜志麻保育園は園へ直接問い合わせ","hours":"月曜日から金曜日の8時30分から17時まで。土日、祝日、年末年始を除く","capacity":"1日2名まで","usageLimit":"1回につきおおむね7日間","fee":"1日2,000円、半日1,000円。給食を食べる場合は半日でも2,000円","paymentSupport":"とみいくデジタルポイント、子育て応援券を利用可能","application":"事前登録が必要。利用時は利用申込書と医師作成の診療情報提供書等を提出"},"contact":{"department":"こども課","phone":"0763-23-2010"},"source":{"url":"https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/5075.html","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://sukoyaka.city.nanto.toyama.jp/nursey","checkedAt":"2026-07-20","description":"病児・病後児保育の事前登録と実施園一覧"}]},
+    "childcareFee": {"status":"verified","summary":"保育料は支給認定や世帯状況に基づいて算定され、3歳から5歳児クラス等は無償化対象。南砺市独自の多子軽減で第2子は半額、第3子以降は無料となる。","eligibility":{"minAgeMonths":0,"maxAgeYears":5,"residency":"南砺市の保育園・認定こども園等を利用する児童"},"details":{"calculation":"在園児は毎年現況届を提出し、保育を必要とする事由や世帯状況を確認して利用者負担額を算定する。令和8年9月以降の保育料算定にも現況届を使用","freeEducation":"国の幼児教育・保育無償化により、3歳から5歳児クラスと住民税非課税世帯の0歳から2歳児クラスが無償化対象","siblingReduction":"養育されている22歳までの範囲で最年長の子から数え、第2子の保育料を半額、第3子以降を無料","sideDishReduction":"副食費は第1子・第2子が半額、第3子以降が無料","nonLicensedCare":"南砺市に居住し認可外保育施設を利用する児童も、保育園等と同様に保育料等が軽減される場合がある","payment":"保育料は南砺市の口座振替対象。口座振替依頼書を取扱金融機関へ提出して申し込む"},"contact":{"department":"こども課","phone":"0763-23-2010"},"source":{"url":"https://sukoyaka.city.nanto.toyama.jp/nursey","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.nanto.toyama.jp/kosodate-kyoiku/ikuji-mishugakuji/3/4108.html","checkedAt":"2026-07-20","description":"現況届と利用者負担額算定"},{"url":"https://www.city.nanto.toyama.jp/soshiki/kaikei/1/1/607.html","checkedAt":"2026-07-20","description":"保育料の口座振替"}]},
+    "schoolMeals": {"status":"verified","summary":"南砺市立小学校・義務教育学校前期課程の学校給食費は無償。経済的に就学が困難な世帯には、中学生の学校給食費を含む就学援助を行う。","eligibility":{"minAgeMonths":72,"maxAgeYears":15,"residency":"南砺市に住所があり、児童生徒が南砺市立小・中・義務教育学校に在学していること","financialCondition":"生活保護、市民税非課税・減免、国民年金・国民健康保険料の免除等、児童扶養手当受給、保護者の死亡・療養、その他経済的困窮のいずれか"},"details":{"elementaryFee":"小学生は学校給食費無償","juniorHighAssistance":"就学援助認定者は中学生の学校給食費が援助対象","otherAssistance":"学用品費、通学用品費、校外活動費、新入学用品費、修学旅行費、クラブ活動費、生徒会費、PTA会費、卒業アルバム代、オンライン学習通信費等も対象","application":"申請書、収入額・需要額調書、必要に応じ所得課税証明書を在学する学校へ提出","deadline":"令和8年度の当初申請期限は2026年5月22日。期限後も随時受付するが、援助開始は原則として提出月の翌月分から","contact":"教育総務課 0763-23-2012"},"source":{"url":"https://www.city.nanto.toyama.jp/soshiki/kyoikusomu/1/1/1590.html","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://sukoyaka.city.nanto.toyama.jp/school","checkedAt":"2026-07-20","description":"就学援助制度の子育て支援案内"}]},
+    "postpartumCare": {"status":"verified","summary":"南砺市に住民票がある生後1年未満の母子を対象に、訪問型、デイケア、ショートステイの産後ケアを提供する。","eligibility":{"minAgeMonths":0,"maxAgeYears":1,"residency":"南砺市に住民票があること","ageCondition":"生後1年未満の子どもと母親。ショートステイは生後4か月未満。早産児は修正月齢で判断","exclusions":"医療行為または入院治療が必要な方は対象外"},"details":{"services":"母親の健康状態確認・乳房ケア、赤ちゃんの体重・健康状態確認、授乳・沐浴・抱き方等の育児相談、母親の休息・心身ケア","types":"助産師訪問、助産院等でのデイケア、医療機関等でのショートステイ","fees":"訪問型4時間1,200円・2時間600円、デイケア1回1,500円、ショートステイ1回3,300円","feeReduction":"市民税非課税世帯・生活保護世帯は利用料減免の対象","usageLimits":"3形態を通算して6回まで。ショートステイは原則3回まで","application":"福光保健センターへ連絡し、保健師の家庭訪問等で相談後、利用申請書を提出。利用承認通知書を受け取ってから実施施設へ予約","contact":"福光保健センター 0763-52-1767"},"source":{"url":"https://www.city.nanto.toyama.jp/soshiki/kenko/5/1/692.html","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://sukoyaka.city.nanto.toyama.jp/baby","checkedAt":"2026-07-20","description":"対象者と利用申込の子育て支援案内"}]},
+    "temporaryChildcare": {"status":"researching","summary":"調査中"},
+    "housingSupport": {"status":"todo","summary":"未調査"},
+    "bulkyWaste": {"status":"todo","summary":"未調査"},
+    "disasterPrevention": {"status":"todo","summary":"未調査"}
   }
 }
