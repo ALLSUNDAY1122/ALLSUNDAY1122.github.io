@@ -1,0 +1,44 @@
+name: Jichitai Generate Central 103 Temporary
+
+on:
+  push:
+    branches:
+      - coord/generated-central-103-20260721-0408
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate and validate municipality data
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
+          if git diff --cached --quiet; then
+            echo "Generated files already current."
+            exit 0
+          fi
+          git commit -m "生成更新: 中日本全国統合後の公開データを103自治体へ同期"
+          git push
