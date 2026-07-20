@@ -1,0 +1,27 @@
+name: Temporary Append State 85 Audit
+
+on:
+  push:
+    branches:
+      - coord/state-85-jul21
+
+permissions:
+  contents: write
+
+jobs:
+  append:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Append audit record and remove workflow
+        run: |
+          cat >> jichitai-compare/operations/control/audit-log.jsonl <<'EOF'
+          {"timestamp":"2026-07-21T01:07:00+09:00","actor":"全国進行統括","action":"west-regional-progress-85","details":{"confirmedMergedPullRequests":[237,238],"successfulCiRuns":{"237":518,"238":521},"mergedMunicipalities":[{"code":"32204","name":"益田市","region":"west"},{"code":"32205","name":"大田市","region":"west"}],"regionalCounts":{"north":19,"east":17,"central":24,"west":25,"total":85},"pendingSinceLatestNationalIntegration":{"north":9,"east":7,"central":3,"west":4,"total":23},"nextNationalReleaseCandidate":{"region":"north","remainingMunicipalities":1},"latestGeneratedMunicipalityCount":63,"openMunicipalityPullRequests":0,"openExceptions":0},"humanDecisionRequired":false}
+          EOF
+          rm .github/workflows/temp-append-state85-audit.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/audit-log.jsonl .github/workflows/temp-append-state85-audit.yml
+          git commit -m "統括監査: 西日本2自治体を追記 [skip ci]"
+          git push
