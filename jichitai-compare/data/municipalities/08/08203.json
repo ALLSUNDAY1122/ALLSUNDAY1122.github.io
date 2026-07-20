@@ -6,7 +6,7 @@
   "name": "土浦市",
   "officialUrl": "https://www.city.tsuchiura.lg.jp/",
   "status": "researching",
-  "summary": "茨城県南部の市。子ども医療費、病児・病後児保育、保育料・多子軽減を確認済み。",
+  "summary": "茨城県南部の市。子ども医療費、病児・病後児保育、保育料・多子軽減、学校給食費支援を確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -60,8 +60,22 @@
         {"url": "https://www.city.tsuchiura.lg.jp/kosodate-kyoiku/hoiku-gakko/yochien-kodomoen-hoikuen/hoikujo/page006565.html", "checkedAt": "2026-07-20"}
       ]
     },
-    "schoolMeals": {"status":"researching","summary":"学校給食費支援を公式情報から調査中"},
-    "postpartumCare": {"status":"todo","summary":"産後ケアを未調査"},
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市立小中学校・義務教育学校23校の学校給食費を2027年3月分まで無償化",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "support": "土浦市立小学校、中学校、義務教育学校の全23校に在籍し、学校給食を喫食する児童生徒の保護者負担を無償化",
+        "period": "2023年10月分から2027年3月分まで無償",
+        "schools": "土浦市立小学校、中学校、義務教育学校の全23校",
+        "standardAmount": "2025年度以降の通常額は小学校・義務教育学校前期課程が月額5,280円、中学校・後期課程が月額5,910円。無償化期間中は保護者負担0円",
+        "dailyAmount": "通常の日額は小学校・前期課程291円、中学校・後期課程326円",
+        "conditions": "無償化以前の2023年9月分以前に未納がある場合は引き続き納付が必要。食物アレルギー等により給食内容を変更している場合は通常額が変わる場合がある",
+        "application": "通常の無償化について保護者の支払手続きは不要。給食申込内容に変更がある場合は変更日の3日前までに学校へ変更届を提出"
+      },
+      "source": {"url": "https://www.city.tsuchiura.lg.jp/kosodate-kyoiku/hoiku-gakko/gakko-kyoiku/gakko-kyushoku/page017408.html", "checkedAt": "2026-07-20"}
+    },
+    "postpartumCare": {"status":"researching","summary":"産後ケアを公式情報から調査中"},
     "temporaryChildcare": {"status":"todo","summary":"一時保育・こども誰でも通園制度を未調査"},
     "housingSupport": {"status":"todo","summary":"子育て世帯向け住宅支援を未調査"},
     "bulkyWaste": {"status":"todo","summary":"粗大ごみ料金・申込方法を未調査"},
