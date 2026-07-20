@@ -1,0 +1,90 @@
+name: Temporary Sync Release Queue 129
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-sync-release-queue-129.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync release queue and remove workflow
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const path = 'jichitai-compare/operations/control/release-queue.json';
+          const queue = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const addUnique = (entry, additions) => {
+            const seen = new Set(entry.municipalities.map(x => x.code));
+            for (const item of additions) {
+              if (!seen.has(item.code)) entry.municipalities.push(item);
+            }
+            entry.count = entry.municipalities.length;
+          };
+          const north = queue.entries.find(x => x.region === 'north');
+          addUnique(north, [
+            {code:'01304',name:'新篠津村'},
+            {code:'01331',name:'松前町'},
+            {code:'01332',name:'福島町'},
+            {code:'01333',name:'知内町'},
+            {code:'01334',name:'木古内町'},
+            {code:'01337',name:'七飯町'}
+          ]);
+          north.pendingSinceLastRelease = 0;
+          north.releaseStatus = 'released';
+          north.reason = '北日本の初回10自治体をPR #186、追加10自治体をPR #244、三笠市から恵庭市までの追加10自治体をPR #283、伊達市から七飯町までの追加11自治体をPR #299でmainへ全国統合。生成・公開をPR #300で114自治体へ更新';
+          north.mainIntegrationPr = 299;
+          north.generatedPullRequest = 300;
+
+          const central = queue.entries.find(x => x.region === 'central');
+          addUnique(central, [
+            {code:'18202',name:'敦賀市'},
+            {code:'18204',name:'小浜市'},
+            {code:'18205',name:'大野市'},
+            {code:'18206',name:'勝山市'},
+            {code:'18207',name:'鯖江市'}
+          ]);
+          central.pendingSinceLastRelease = 0;
+          central.releaseStatus = 'released';
+          central.reason = '中日本の初回11自治体をPR #150、追加10自治体をPR #217、加賀市から志賀町までの追加10自治体をPR #267、宝達志水町から鯖江市までの追加10自治体をPR #297でmainへ全国統合。生成・公開をPR #298で103自治体へ更新';
+          central.mainIntegrationPr = 297;
+          central.generatedPullRequest = 298;
+          central.auditStatus = 'passed';
+
+          for (const entry of queue.entries) {
+            entry.count = entry.municipalities.length;
+          }
+          queue.updatedAt = '2026-07-21T06:25:00+09:00';
+          queue.summary = {
+            regionalMergedMunicipalities: queue.entries.reduce((sum, x) => sum + x.count, 0),
+            waitingRegionalMergeMunicipalities: 0,
+            releaseReadyRegions: [],
+            auditBlockedRegions: [],
+            lastNationalIntegrationAt: '2026-07-21T06:20:37+09:00',
+            lastNationalIntegrationPr: 299,
+            latestGeneratedMunicipalityCount: 114,
+            latestGeneratedPullRequest: 300,
+            latestPublicCountPullRequest: 300
+          };
+          queue.nextAction = '東日本と西日本が前回全国統合後8自治体で並ぶ。各あと2自治体の地方統合を監視し、先に到達した地域を固定releaseブランチ経由でmainへ全国統合する。';
+          queue.humanDecisionRequired = false;
+          fs.writeFileSync(path, JSON.stringify(queue));
+          NODE
+          git rm .github/workflows/temp-sync-release-queue-129.yml
+          git add jichitai-compare/operations/control/release-queue.json
+          git commit -m "統括管理: 地方統合129自治体へリリースキューを同期"
+          git push origin main
