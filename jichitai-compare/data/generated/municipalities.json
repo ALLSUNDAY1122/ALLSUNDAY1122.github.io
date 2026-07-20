@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": "1.0.0",
-    "updatedAt": "2026-07-19",
-    "municipalityCount": 6,
+    "updatedAt": "2026-07-20",
+    "municipalityCount": 16,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -12,44 +12,235 @@
       "prefecture": "北海道",
       "name": "札幌市",
       "officialUrl": "https://www.city.sapporo.jp/",
-      "status": "todo",
-      "summary": "北日本調査班の初期登録対象。9制度を順次調査する。",
+      "status": "needs_medium_review",
+      "summary": "9制度の調査を一巡。8制度は公式情報で確認済み。大型ごみの減免要件詳細のみMedium確認が必要。",
       "services": {
         "childMedical": {
-          "status": "todo",
-          "summary": "子ども医療費助成を未調査"
+          "status": "verified",
+          "summary": "高校生世代まで（18歳到達後最初の3月31日まで）の入院・通院を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "residency": "札幌市に住民登録があること",
+            "insurance": "公的医療保険に加入していること",
+            "incomeLimit": "あり。主たる生計維持者の前年所得（1月から7月は前々年所得）が限度額未満であること",
+            "copay": "入院・通院とも、医科初診580円、歯科初診510円。再診・調剤薬局・柔道整復・はり・きゅう・保険適用マッサージは0円。訪問看護は1割負担（1か所月3,000円上限）",
+            "application": "医療費受給者証の申請が必要",
+            "excludedCosts": "差額ベッド代、食事療養費、文書料など保険給付対象外の費用は助成対象外",
+            "effectiveFrom": "2025-04-01診療分から高校生世代まで拡大"
+          },
+          "source": {
+            "url": "https://www.city.sapporo.jp/hoken-iryo/iryojosei/nyuyoji.html",
+            "checkedAt": "2026-07-19"
+          }
         },
         "sickChildCare": {
-          "status": "todo",
-          "summary": "病児・病後児保育を未調査"
+          "status": "verified",
+          "summary": "生後5か月から小学6年生までを医療機関併設等の施設で預かる病児・病後児保育",
+          "eligibility": {
+            "minAgeMonths": 5,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "residency": "札幌市内に住民登録があること。令和8年度は周辺8市町村の住民も試行利用可",
+            "conditions": "病気により保育園・幼稚園・学校等を利用できず、保護者が仕事等で家庭保育できず、かかりつけ医が利用可能と認めた子ども",
+            "hours": "月曜日から土曜日の8時から18時。祝日および12月29日から1月3日を除く",
+            "facilityCount": 6,
+            "facilityTypes": "病児対応型5施設、病後児対応型1施設",
+            "capacity": "各施設4名から6名",
+            "fee": "利用料3,000円と給食費等300円",
+            "reduction": "生活保護受給世帯および市町村民税非課税世帯は利用料0円。給食費等300円は必要",
+            "application": "予約システム『テオテ』でアカウント作成と利用施設への子どもの登録が必要。施設ごと、子どもごとに登録する",
+            "medicalDocument": "利用には、かかりつけ医が作成する札幌市病児・病後児保育事業利用連絡書が必要"
+          },
+          "source": {
+            "url": "https://kosodate.city.sapporo.jp/nenrei/mosugu/azukeru/1140.html",
+            "checkedAt": "2026-07-19"
+          }
         },
         "childcareFee": {
-          "status": "todo",
-          "summary": "保育料・第2子以降の軽減を未調査"
+          "status": "verified",
+          "summary": "3歳児クラス以上は無料。0～2歳児は所得等で決定し、第2子以降は無料",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "coveredFacilities": "認可保育所、認定こども園（保育所部分）、地域型保育事業所",
+            "ageThreeAndOver": "3歳児クラス以上は世帯所得にかかわらず保育料無料。食材料費、バス代、教材費等は別途負担となる場合がある",
+            "ageZeroToTwo": "住民税非課税世帯は無料。その他の世帯は市民税所得割額、保育必要量（標準時間11時間・短時間8時間）、多子軽減により決定",
+            "calculation": "4月から8月は前年度の市民税所得割額、9月から翌年3月は当年度の市民税所得割額で算定",
+            "siblingReduction": "2024年4月分以降、保護者の収入や上の子の年齢等に関係なく、第2子以降の保育料は無料",
+            "excludedFacilities": "企業主導型保育施設および認可外保育施設は札幌市の第2子以降無償化の対象外",
+            "reduction": "失業（自己都合を除く）、疾病、災害等により収入が減少した場合は減免対象となる場合がある",
+            "officialFeePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/941.html",
+            "officialPolicyPage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/846.html"
+          },
+          "source": {
+            "url": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/hoiku/ninka/941/941.html",
+            "checkedAt": "2026-07-19"
+          }
         },
         "schoolMeals": {
-          "status": "todo",
-          "summary": "学校給食費支援を未調査"
+          "status": "verified",
+          "summary": "令和8年度は小学校段階が実質無償。中学校段階は1食328円で据え置き",
+          "details": {
+            "fiscalYear": "令和8年度（2026年度）",
+            "elementaryScope": "小学校、義務教育学校前期課程、特別支援学校小学部",
+            "elementaryFee": "保護者負担は実質無償。生活保護の教育扶助受給者等は各制度から札幌市へ給食費が納付され、それ以外の保護者は納付不要",
+            "middleSchoolScope": "中学校、義務教育学校後期課程、中等教育学校前期課程、特別支援学校中学部・高等部",
+            "middleSchoolFee": "保護者負担は1食328円で令和7年度から据え置き",
+            "middleSchoolAnnualEstimate": "中学1年61,992円、中学2年61,336円、中学3年58,712円。実際の給食実施回数により変動する",
+            "payment": "中学校段階以上は6月から3月までの10期。口座振替または納付書で納付。生活保護・就学援助受給者は支給費から納付され、別途の支払いは不要",
+            "assistance": "就学援助の認定を受けた札幌市立小・中学校の児童生徒は、認定期間中の給食費が無料。特別支援教育就学奨励費の対象世帯も給食費の助成対象となる場合がある",
+            "temporaryMeasure": "小学校段階の実質無償化および物価高騰分の市負担は、現時点では令和8年度限りの取組"
+          },
+          "source": {
+            "url": "https://www.city.sapporo.jp/kyoiku/top/kyushoku/kyushokuhi.html",
+            "checkedAt": "2026-07-19"
+          },
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 18
+          }
         },
         "postpartumCare": {
-          "status": "todo",
-          "summary": "産後ケアを未調査"
+          "status": "verified",
+          "summary": "宿泊型・日帰り型は生後6か月未満、訪問型は生後1年未満の母子を対象に助産師等が支援",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0,
+            "lodgingAndDayCareMaxAgeMonths": 5,
+            "homeVisitMaxAgeMonths": 11
+          },
+          "details": {
+            "residency": "母親と赤ちゃんの双方が札幌市に住民登録していること",
+            "exclusion": "母親に心身の不調や疾患があり医療的介入が必要な場合は対象外",
+            "careTypes": "宿泊型、日帰り型、訪問型",
+            "careContent": "母体の体調管理、授乳・乳房ケア、沐浴・抱っこ・寝かしつけ等の育児相談、休息と食事の提供。訪問型は食事提供なし",
+            "lodgingHours": "基本11時から翌日15時",
+            "dayCareHours": "基本11時から15時",
+            "homeVisitHours": "9時から17時の間の2時間",
+            "lodgingFee": "1泊7,500円。市民税非課税世帯・生活保護世帯は2,500円",
+            "dayCareFee": "1日2,500円。市民税非課税世帯・生活保護世帯は1,000円",
+            "homeVisitFee": "1回2,500円。市民税非課税世帯・生活保護世帯は1,000円",
+            "usageLimit": "宿泊型と日帰り型を合わせて7日以内。1泊2日は2日として数える。訪問型は6回以内",
+            "application": "産後ケア予約サービス『テオテ産後ケア』でアカウント作成後、札幌市へオンライン申請し、承認後に施設登録・予約する。妊娠28週から申請可",
+            "bookingStart": "予約は原則利用希望日の30日前から。妊娠中の予約は不可",
+            "cancellation": "前営業日（平日）の午前10時までにキャンセル。以後の中止は利用料金が発生",
+            "effectiveApplicationChange": "2026年3月から予約サービスによる申込へ変更"
+          },
+          "source": {
+            "url": "https://kosodate.city.sapporo.jp/nenrei/ninshin_shussan/kenko/1036.html",
+            "checkedAt": "2026-07-19"
+          }
         },
         "temporaryChildcare": {
-          "status": "todo",
-          "summary": "一時保育・誰でも通園を未調査"
+          "status": "verified",
+          "summary": "非在園の就学前児童向け一時預かりと、生後6か月から満2歳向けのこども誰でも通園制度",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5,
+            "generalTemporaryCare": "保育所、認定こども園、特定地域型保育事業および幼稚園に在籍していない就学前児童。施設により対象年齢が異なる",
+            "anyChildcareMinAgeMonths": 6,
+            "anyChildcareMaxAgeYears": 2,
+            "anyChildcareCondition": "満3歳に達する日の前日までで、保育所・認定こども園・幼稚園・地域型保育事業所・企業主導型保育施設に在籍していないこと"
+          },
+          "details": {
+            "generalTemporaryCareReasons": "保護者の就労・就学、通院・入院・体調不良、介護・看護、社会的活動、冠婚葬祭、育児負担の解消やリフレッシュ等",
+            "generalTemporaryCareDays": "原則月曜日から土曜日。日曜・祝日および12月29日から1月3日は閉園",
+            "generalTemporaryCareFee": "1日上限。就労・通院等は3歳未満2,000円、3歳以上1,200円。リフレッシュ等は3歳未満2,700円、3歳以上1,600円",
+            "generalTemporaryCareExtraCosts": "給食を希望する場合の昼食代や、施設が定める実費は別途負担",
+            "generalTemporaryCareApplication": "利用希望施設へ直接問い合わせる。保育を必要とする理由の証明書提出や事前登録など、詳細は施設ごとに異なる",
+            "anyChildcareEmploymentRequirement": "保護者の就労要件は問わない",
+            "anyChildcareDays": "月曜日から金曜日。一部施設は土曜日も利用可能",
+            "anyChildcareFee": "1人1時間300円。生活保護世帯は0円、市・道民税非課税世帯および市・道民税所得割合算額77,101円未満の世帯は100円",
+            "anyChildcareMonthlyLimit": "子ども1人につき月10時間まで",
+            "anyChildcareApplication": "事前に給付認定申請が必要。審査は概ね1か月で、認定後に予約システムのアカウントが発行される。利用施設との事前面談後に予約する",
+            "anyChildcareReservation": "毎月1日に翌月分の予約枠が公開され、利用希望日の7日前まで予約申請可能。原則として定期利用",
+            "officialGeneralTemporaryCarePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/ichiji/927.html",
+            "officialAnyChildcarePage": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/13027.html"
+          },
+          "source": {
+            "url": "https://kosodate.city.sapporo.jp/mokuteki/azukeru/13027.html",
+            "checkedAt": "2026-07-19"
+          }
         },
         "housingSupport": {
-          "status": "todo",
-          "summary": "子育て世帯向け住宅支援を未調査"
+          "status": "verified",
+          "summary": "未就学児世帯向け期限付き市営住宅、抽選優遇、低所得の子育て世帯向け入居費用補助",
+          "details": {
+            "childRaisingMunicipalHousing": "市営住宅東雁来団地に子育て世帯向け住宅を整備。地上5階建て3棟、計120戸、全戸2LDK",
+            "municipalHousingEligibility": "小学校就学前の子どもがいる世帯",
+            "municipalHousingTerm": "一番下の子どもが中学校を卒業するまでの期限付き入居",
+            "municipalHousingFeatures": "子育て向けの広さ・設備、安全性に配慮した床材・建具、敷地内広場、集会所での子育てサロンを備える",
+            "lotteryPreference": "市営住宅申込時、ひとり親世帯（申込者と20歳未満の子のみ）および多子世帯（18歳未満の児童が3人以上）は抽選時の優遇対象",
+            "municipalHousingRecruitment": "令和8年度は定期募集年3回のほか、短期募集と通年募集を実施。対象住戸と募集時期は募集案内で確認する",
+            "safetyNetHousing": "子育て世帯等の入居を拒まない民間のセーフティネット住宅があり、低額所得で住宅困窮度が高い世帯は初回の家賃債務保証料等の補助対象となる場合がある",
+            "safetyNetIncomeLimit": "月額所得15万8千円以下。子育て世帯・新婚世帯は21万4千円以下、多子世帯（18歳未満の子ども3人以上）は25万9千円以下",
+            "safetyNetSubsidy": "家賃債務保証料、孤独死・残置物保険料、緊急連絡先引受費用、死後事務委任契約費用を、コースにより最大6万円または最大3万円補助",
+            "safetyNetExclusion": "生活保護の住宅扶助または生活困窮者住居確保給付金の受給者は対象外",
+            "application": "市営住宅は札幌市住宅管理公社の募集案内から申し込む。セーフティネット住宅の補助は契約・入居後に必要書類を添えて申請する",
+            "officialMunicipalHousingPage": "https://www.city.sapporo.jp/toshi/jutaku/01osumai/siju/kosodate.html",
+            "officialRecruitmentPage": "https://www.city.sapporo.jp/toshi/jutaku/01osumai/siju/siju.html",
+            "officialPreferencePage": "https://www.city.sapporo.jp/shogaifukushi/guide/zaitaku_04.html",
+            "officialSafetyNetPage": "https://www.city.sapporo.jp/toshi/jutaku/11sn_seido/sapporo_yachinsaimuhoshouseido.html"
+          },
+          "source": {
+            "url": "https://www.city.sapporo.jp/toshi/jutaku/01osumai/siju/kosodate.html",
+            "checkedAt": "2026-07-19"
+          }
         },
         "bulkyWaste": {
-          "status": "todo",
-          "summary": "粗大ごみ料金を未調査"
+          "status": "needs_medium_review",
+          "summary": "指定袋に入らない家庭の大型ごみを戸別有料収集。料金は品目・大きさにより200円から1,800円の例があり、減免要件の詳細は要確認",
+          "details": {
+            "definition": "耐久消費財その他の固形廃棄物で、札幌市の指定ごみ袋に入らないもの",
+            "feeRangeExamples": "公式手数料一覧の主な例は200円、500円、900円、1,300円、1,800円。品目と大きさで異なる",
+            "feeExamples": "ベビーベッド200円、自転車500円、応接用2人掛け以上のいす900円、高さ1m以上のたんす1,300円、スプリング付きベッドマットレス1,800円",
+            "application": "インターネットまたは大型ごみ収集センターへの電話で事前申込。収集希望日の2週間前から受付",
+            "internetLimits": "インターネットは24時間365日受付で、1回10個まで。品目検索にない物、減免申請、さわやか収集は電話申込",
+            "payment": "大型ごみ処理手数料シール、またはインターネット申込時のクレジットカード・PayPay・楽天ペイ",
+            "putOut": "受付番号を表示し、収集日当日の8時30分までに指定された建物外の場所へ出す。原則立会い不要",
+            "excludedItems": "単品100kg超、長さ2m超、体積2立方メートル超、家電4品目、パソコン、事業所で使用した物などは対象外",
+            "reduction": "札幌市条例第47条により、手数料を納付する資力がない者その他特別の事情があると認められる場合は減額・免除が可能。インターネット受付不可で電話申込が必要",
+            "reviewReason": "札幌市の公開ページでは、大型ごみ処理手数料減免の具体的対象区分・必要書類・減免額を確認できなかったためMedium確認が必要",
+            "support": "要介護者等で自力搬出が困難かつ周囲の支援を受けられない場合は、さわやか収集の対象となる場合がある。大型ごみには通常の手数料シールが必要",
+            "officialPage": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi.html",
+            "officialFeePage": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi_02.html",
+            "officialOrdinancePage": "https://www.city.sapporo.jp/ncms/reiki/d1w_reiki/H404901010067/H404901010067_j.html",
+            "officialSupportPage": "https://www.city.sapporo.jp/seiso/gomi/sawayaka/"
+          },
+          "source": {
+            "url": "https://www.city.sapporo.jp/seiso/gomi/oogatagomi.html",
+            "checkedAt": "2026-07-19"
+          }
         },
         "disasterPrevention": {
-          "status": "todo",
-          "summary": "防災・ハザード情報を未調査"
+          "status": "verified",
+          "summary": "洪水・内水・土砂災害・地震等のハザード情報、災害別避難場所、防災アプリを提供",
+          "details": {
+            "hazardMap": "札幌市地図情報サービスで災害リスクを確認でき、区別の浸水ハザードマップ、地震防災マップ、土砂災害警戒区域等も公開",
+            "inundationMap": "想定し得る最大規模の降雨による洪水と内水氾濫の浸水想定区域を、浸水深別に表示。令和8年7月版を区別に公開",
+            "earthquakeMap": "第4次地震被害想定に基づく震度分布、液状化危険度、家屋全壊率を区別に表示",
+            "shelters": "各区の一覧で、指定緊急避難場所・基幹避難所について洪水、土砂災害、地震、大規模火災など災害種別ごとの利用可否を確認できる",
+            "app": "札幌市防災アプリ『そなえ』で避難指示、避難場所開設、Jアラート、気象・地震情報、GPS周辺避難場所、ハザードマップを確認できる。多言語・オフライン表示にも対応",
+            "audioHazardMap": "2026年4月1日から『耳で聴くハザードマップ』を開始。現在地等の気象、標高、洪水・土砂災害・高潮・津波リスク、最寄り避難場所への案内を音声で利用可能",
+            "informationChannels": "さっぽろ防災ポータル、緊急速報メール、札幌市避難情報電話サービス等で災害・避難情報を提供",
+            "evacuationGuidance": "自宅が安全な場合は在宅避難も選択肢。安全確認ができない場合は指定緊急避難場所または安全な親戚・知人宅等へ立ち退き避難する",
+            "officialHazardMapPage": "https://www.city.sapporo.jp/kikikanri/higoro/hazardmap/hazardmap_index.html",
+            "officialInundationMapPage": "https://www.city.sapporo.jp/kikikanri/higoro/fuusui/ssh_map.html",
+            "officialEarthquakeMapPage": "https://www.city.sapporo.jp/kikikanri/higoro/jisin/jbmap.html",
+            "officialShelterPage": "https://www.city.sapporo.jp/kikikanri/higoro/hinan/hinanbasyo.html",
+            "officialAppPage": "https://www.city.sapporo.jp/kikikanri/apri.html",
+            "officialInformationPage": "https://www.city.sapporo.jp/kikikanri/torikumi/saigaijyoho.html"
+          },
+          "source": {
+            "url": "https://www.city.sapporo.jp/kikikanri/higoro/hazardmap/hazardmap_index.html",
+            "checkedAt": "2026-07-19"
+          }
         }
       }
     },
@@ -319,49 +510,2411 @@
       }
     },
     {
+      "code": "16201",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "富山市",
+      "officialUrl": "https://www.city.toyama.lg.jp/",
+      "status": "verified",
+      "summary": "富山市の9制度を調査し、こども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケア、一時保育・こども誰でも通園制度、住宅支援、粗大ごみ、防災情報を確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達後最初の3月31日まで、入院・通院の保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "residency": "富山市に住所がある子ども",
+            "copay": "保険診療の自己負担分を助成。食事療養費など保険診療外は対象外",
+            "paymentMethod": "県内等は現物給付。県外診療などは一旦支払った後の償還払い",
+            "application": "出生または転入後に受給資格登録申請が必要。受診時はマイナ保険証等とこども医療費受給資格証を提示",
+            "exclusions": "学校管理下の負傷等で日本スポーツ振興センターの災害共済給付が支給される場合、ひとり親家庭等医療費・重度心身障害者医療費の助成対象となる場合など"
+          },
+          "source": {
+            "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/1811",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気または回復期で集団保育が困難な児童を、保護者が家庭で保育できない場合に預かる。基本利用料は1日2,000円",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5,
+            "residency": "富山市または富山医療圏の市町村（滑川市、舟橋村、上市町、立山町）に住所がある子ども",
+            "ageCondition": "対象年齢は施設により異なる。富山市まちなか総合ケアセンターは満6か月以上の未就学児"
+          },
+          "details": {
+            "condition": "病気または病気回復期で集団保育が困難であり、入院の必要はないが安静が必要な状態。受け入れ可否は施設が判断",
+            "facilityCount": 11,
+            "fee": "1日2,000円。お迎え型病児保育は別途タクシー代が必要",
+            "support": "ひとり親世帯や市民税非課税世帯等には利用料助成制度あり",
+            "application": "利用施設への事前予約が必要。お迎え型は事前登録が必要で、予約・登録方法は施設ごとに異なる",
+            "serviceTypes": "病児・病後児保育、お迎え型病児保育。一部施設は病後児のみ対応"
+          },
+          "source": {
+            "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/3917?DestinationId=17",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "4月1日時点で3歳以上は保育料無料。0歳から2歳は市町村民税所得割額に応じて決定し、第3子以降は無料",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5,
+            "residency": "認可保育施設に在籍する富山市在住の児童",
+            "ageCondition": "4月1日時点で3歳以上の児童は保育料無料。年度途中で3歳になっても当該年度内は3歳未満児の保育料が必要"
+          },
+          "details": {
+            "fee": "4月1日時点で3歳以上は無料。0歳から2歳は市町村民税所得割額に応じて決定",
+            "feeCalculation": "0歳から2歳の保育料は、原則として父母の市町村民税所得割額の合計額により決定。父母が住民税非課税の場合は、同居の祖父母のうち税額が高い方を用いる場合がある",
+            "incomeCondition": "原則として父母の市町村民税所得割額の合計額を用いる。父母が住民税非課税の場合は同居祖父母の税額を用いる場合がある",
+            "taxPeriods": "令和8年4月から8月分は令和7年度税額、令和8年9月から令和9年3月分は令和8年度税額を使用",
+            "siblingReduction": "令和6年4月から第3子以降は所得制限なく無料。同一世帯で保育所等へ同時入所している就学前児童がいる場合は多子軽減の対象となり、原則として第2子は半額、その他の児童は無料。低所得世帯等には追加軽減あり",
+            "additionalCosts": "3歳以上は別途、副食費等が必要。給食費は施設により異なる",
+            "reduction": "児童の傷病による長期欠席や災害による家屋被害など、一定の要件で減免制度あり"
+          },
+          "source": {
+            "url": "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/Index/3181",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校・義務教育学校前期課程の給食費を完全無償化。中学校・後期課程は月額6,800円",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15,
+            "schools": "富山市立小学校・中学校・義務教育学校",
+            "fiscalYear": "令和8年度"
+          },
+          "details": {
+            "support": "小学校・義務教育学校前期課程は完全無償。中学校・義務教育学校後期課程は月額6,800円",
+            "schools": "富山市立小学校・中学校・義務教育学校",
+            "elementarySchool": "小学校・義務教育学校前期課程は学校給食費を無償化。国の基準額を超える分も含めて市が負担し、保護者からは徴収しない",
+            "juniorHighSchool": "中学校・義務教育学校後期課程は月額6,800円。改定後月額8,300円のうち1,500円を市が負担",
+            "supportProgram": "国の交付金を活用した学校給食費負担軽減事業を令和8年度も継続",
+            "financialAssistance": "経済的理由で就学が困難な世帯に対する就学援助では、学校給食費の実費が援助対象",
+            "futureReview": "令和9年度以降は物価変動に応じて給食費改定を検討"
+          },
+          "source": {
+            "url": "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010443/1007434.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.toyama.lg.jp/kosodate/shochugakko/1010448/1007376.html",
+              "checkedAt": "2026-07-19",
+              "description": "就学援助の対象費用"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母親と乳児を対象に、ショートステイ・デイケア・訪問型の産後ケアを実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0,
+            "residency": "原則として富山市に住所がある産婦。産後ケア応援室は連携市町村在住者や富山市への里帰り出産にも対応",
+            "ageCondition": "市の産後ケア事業は産後1年未満の母親と乳児が対象。実施機関により産後4か月までの場合がある"
+          },
+          "details": {
+            "types": "ショートステイ、デイケア4時間・6時間、居宅訪問型",
+            "serviceTypes": "ショートステイ、デイケア4時間・6時間、居宅訪問型。産後ケア応援室ではデイケアと宿泊を実施",
+            "facilityCount": 15,
+            "facilities": "令和8年5月時点で指定産科医療機関5か所、指定助産所10か所",
+            "fiscalYearExpansion": "令和8年度は助産所での通所型を追加し、居宅訪問型は外出困難者等に限定せず利用できるよう要件を緩和",
+            "application": "市のオンライン申請フォームから申請。利用決定通知等は申請後おおよそ1週間で届き、その後、各実施機関へ予約する",
+            "fee": "利用形態・施設により異なる。産後ケア応援室の富山市民料金は、令和8年4月1日以降、デイケア9時30分から19時が5,600円、9時30分から13時が2,100円、9時30分から15時30分が3,400円、13時から19時が3,500円、宿泊24時間が8,200円",
+            "facilitySpecificCondition": "産後ケア応援室はおおむね産後4か月まで。母子に感染症状がある場合や入院・治療が必要な場合は利用不可"
+          },
+          "source": {
+            "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/4824?DestinationId=11",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://ikusapotoyama.city.toyama.lg.jp/lgarticle/file?file=23225_%E5%AE%9F%E6%96%BD%E6%A9%9F%E9%96%A2%E4%B8%80%E8%A6%A7%EF%BC%88HP%E6%8E%B2%E8%BC%89%E7%94%A8%E3%80%80R8.5%E6%9C%88%EF%BC%89.pdf",
+              "checkedAt": "2026-07-19",
+              "description": "令和8年5月時点の実施機関、対象期間、利用区分、予約方法"
+            },
+            {
+              "url": "https://machinaka-care.city.toyama.lg.jp/guide/svGuideDtl.aspx?cd=0101&servno=14",
+              "checkedAt": "2026-07-19",
+              "description": "産後ケア応援室の令和8年4月改定料金"
+            },
+            {
+              "url": "https://www.city.toyama.lg.jp/shisei/mayor/1010725/1016816/1018580.html",
+              "checkedAt": "2026-07-19",
+              "description": "令和8年度の通所型拡充と訪問型要件緩和"
+            }
+          ]
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満で保育所等に通っていない富山市在住児童は、こども誰でも通園制度を月10時間まで利用可能",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5,
+            "residency": "富山市に住民票があること",
+            "ageCondition": "こども誰でも通園制度は利用日時点で生後6か月から満3歳未満。満3歳の誕生日の前々日まで利用可能",
+            "attendanceCondition": "保育所、幼稚園、認定こども園、地域型保育事業、企業主導型保育施設に通っていないこと。認可外保育施設に通っている場合は利用可能"
+          },
+          "details": {
+            "types": "こども誰でも通園制度、幼稚園・認定こども園の一時預かり事業・預かり保育",
+            "serviceTypes": "こども誰でも通園制度。幼稚園・認定こども園の一時預かり事業や預かり保育は施設ごとに実施内容を設定",
+            "monthlyLimit": "子ども1人につき月10時間まで。未利用時間の翌月繰越は不可。1時間未満の予約は不可",
+            "application": "利用前に認定申請が必要。こども家庭庁の総合支援システムによるオンライン申請、または富山市こども保育課・行政サービスセンターで窓口申請",
+            "process": "認定証発行は申請から約2週間。初めて利用する施設では子ども同伴の事前面談が必要。その後、総合支援システムで施設予約を行う",
+            "fee": "1時間当たりの利用料金は施設ごとに異なる。給食・おやつ代やキャンセル料が別途発生する場合がある",
+            "feeReduction": "令和8年度は、生活保護世帯は1時間当たり上限300円、市町村民税所得割合算額77,101円未満の世帯と要支援家庭は上限200円の負担軽減。対象外施設もある",
+            "cancellation": "利用日当日のキャンセルは利用したものとみなされ、利用時間を消費する"
+          },
+          "source": {
+            "url": "https://ikusapotoyama.city.toyama.lg.jp/LGArticle/Index/5192?DestinationId=16",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.toyama.lg.jp/kosodate/hoiku/1010433/1007397.html",
+              "checkedAt": "2026-07-19",
+              "description": "幼稚園・認定こども園の一時預かり事業・預かり保育"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "「まちなか」外から「まちなか」の民間賃貸住宅へ転入・転居する子育て世帯に、月額上限1万円を最長3年間助成",
+          "eligibility": {
+            "householdCondition": "交付申請年度の4月1日時点で満18歳未満の子を養育する世帯",
+            "moveCondition": "転居前の住所が「まちなか」外で、対象となる「まちなか」の民間賃貸住宅へ転入・転居すること",
+            "residencyCondition": "対象住宅へ転入・転居後、6か月以上継続して居住すること",
+            "incomeCondition": "同居する世帯全員の合計所得月額が44万5千円以下"
+          },
+          "details": {
+            "programName": "まちなか住宅家賃助成事業",
+            "support": "家賃を月額上限1万円、最長3年間助成",
+            "conditions": "「まちなか」外から対象区域内の民間賃貸住宅へ転入・転居し、6か月以上居住する子育て世帯。世帯の合計所得月額44万5千円以下等の要件あり",
+            "amount": "家賃月額から勤務先の住宅手当を控除した額と1万円のうち少ない額。月額上限1万円",
+            "duration": "賃貸借契約期間の初日と住民票異動日のうち遅い日を基準に、最長3年間",
+            "contractCondition": "賃貸借契約は原則として申請者本人名義",
+            "excludedHousing": "公営住宅、社宅等の給与住宅などは対象外",
+            "application": "交付対象期間ごとに申請し、交付対象期間最終月の翌月から6か月以内に提出",
+            "effectiveCondition": "住民票異動日または賃貸借契約始期のいずれかが令和8年4月1日以降の場合に新制度を適用"
+          },
+          "source": {
+            "url": "https://www.city.toyama.lg.jp/kurashi/sumai/1010267/1018274/1018275/1018282.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "大型品は材質に応じて燃やせるごみ・燃やせないごみとして排出。分解困難品や多量ごみは予約制の戸別有料収集を利用可能",
+          "details": {
+            "feeSystem": "戸別有料収集は30kgまで2,090円、超過分は10kgごと319円",
+            "application": "富山市環境センター業務課へ事前予約し、燃やせるごみ・燃やせないごみに分別して屋外へ搬出。収集当日は立会いと精算が必要",
+            "regularCollection": "大型木製品は原則として一辺約1メートル以内に分解して燃やせるごみへ出す。大型スチール製品、スプリング入り家具、自転車等は燃やせないごみとして集積場へ出せる",
+            "doorToDoorCollection": "分解困難品や引越し時の多量ごみは、予約制の戸別有料収集を利用できる。土日・祝日は収集しない",
+            "directCarryIn": "自分で運搬する場合、燃やせるごみはクリーンセンター、燃やせないごみはリサイクルセンターへ有料で直接持ち込める。事前に問い合わせが必要",
+            "excludedItems": "市で収集・処理できない品目、家電リサイクル法対象品などは別の処理方法が必要",
+            "futureChange": "家庭ごみの有料化は令和9年10月開始予定"
+          },
+          "source": {
+            "url": "https://www.city.toyama.lg.jp/faq/1008441/1009895/1008841.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1005357.html",
+              "checkedAt": "2026-07-19",
+              "description": "戸別有料収集の料金、予約、搬出、立会い"
+            },
+            {
+              "url": "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1005384.html",
+              "checkedAt": "2026-07-19",
+              "description": "ごみの直接持込先と手続き"
+            },
+            {
+              "url": "https://www.city.toyama.lg.jp/kurashi/gomi/1010228/1017484.html",
+              "checkedAt": "2026-07-19",
+              "description": "令和9年10月開始予定の家庭ごみ有料化"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・津波・洪水・土砂災害・内水・ため池のハザードマップ、避難場所、複数の防災情報配信手段を提供",
+          "details": {
+            "coverage": "地震、津波、洪水、土砂災害、内水、ため池の6種類のハザードマップ、災害種別ごとの緊急避難場所、避難所、防災情報配信手段を掲載",
+            "access": "富山市公式サイト、インフォマップとやま、富山市公式LINE、富山市防災情報X、緊急速報メール等で確認",
+            "hazardMaps": "地震、津波、洪水、土砂災害、内水、ため池の6種類を公開",
+            "onlineMap": "インフォマップとやまで住所や郵便番号から洪水浸水想定区域、土砂災害警戒区域等を検索可能",
+            "evacuationSites": "緊急避難場所は洪水、地震・大規模火災、津波など災害種別ごとに指定",
+            "shelterPriority": "避難所は開設優先順位があり、第1次は主に小学校体育館、第2次は中学校体育館、第3次は高等学校体育館等",
+            "informationChannels": "富山市防災情報X、富山市公式LINE、緊急速報メール、防災行政無線、市ホームページ、県河川情報メール、土砂災害警戒情報メール、Yahoo!防災速報等",
+            "emergencyAlert": "公式LINEで関心テーマに防災を設定すると、避難情報や気象警報を受信可能",
+            "accessibility": "Uni-Voice Blindアプリで災害リスクや周辺避難場所の音声案内、避難指示・避難所開設情報の受信に対応",
+            "dataFreshness": "避難所一覧と洪水の緊急避難場所一覧は令和8年4月1日更新"
+          },
+          "source": {
+            "url": "https://www.city.toyama.lg.jp/bosai/bosai/1011986/index.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1010656/1007904.html",
+              "checkedAt": "2026-07-19",
+              "description": "指定緊急避難場所・避難所一覧と開設優先順位"
+            },
+            {
+              "url": "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1011306/1009832.html",
+              "checkedAt": "2026-07-19",
+              "description": "防災情報の入手方法"
+            },
+            {
+              "url": "https://www.city.toyama.lg.jp/shisei/koho/1010858/1013250/index.html",
+              "checkedAt": "2026-07-19",
+              "description": "富山市公式LINEの防災情報設定"
+            },
+            {
+              "url": "https://www.city.toyama.lg.jp/bosai/bosai/1010655/1006962.html",
+              "checkedAt": "2026-07-19",
+              "description": "緊急時の災害情報伝達手段"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16202",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "高岡市",
+      "officialUrl": "https://www.city.takaoka.toyama.jp/",
+      "status": "needs_coordinator",
+      "summary": "高岡市の9制度を確認済み。全国統括による確認待ち。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高岡市在住・健康保険加入の18歳年度末までを対象に、保険診療の自己負担分を助成",
+          "details": {
+            "copay": "入院・通院の保険診療自己負担分を助成",
+            "incomeLimit": "公式対象要件に所得条件の記載なし",
+            "application": "出生・転入等の日から15日以内に窓口または電子申請",
+            "paymentMethod": "保険資格確認書類等と受給資格証を提示して現物給付",
+            "reimbursement": "未提示時等は領収日から2年以内に償還払い申請"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/soshiki/kodomo_kosodateka/2/4/1/11767.html",
+            "checkedAt": "2026-07-19"
+          },
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病児保育3施設・病後児保育3施設。医師確認後に施設へ直接予約",
+          "details": {
+            "facilities": "病児：JCHO高岡ふしき病院、済生会高岡なでしこ保育園、あさひキッズ。病後児：高岡保育園、ふたばこども園、といでこども園",
+            "ageCondition": "施設別。JCHOは生後9週からおおむね小学6年生まで",
+            "feeExample": "JCHOは1日2,200円、半日1,100円、給食300円",
+            "reduction": "JCHOは高岡市在住の生活保護・市民税非課税世帯無料"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/gyosei/kosodate_kyoiku/kosodate_site/2/9752.html",
+            "checkedAt": "2026-07-19"
+          },
+          "eligibility": {
+            "minAgeMonths": 2,
+            "maxAgeYears": 12
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳以上児と非課税世帯の0～2歳児は無料。課税世帯の0～2歳児は市民税額等で算定",
+          "details": {
+            "feeRange": "令和8年度第1子月額0～46,500円、第2子0～23,250円",
+            "siblingReduction": "第2子は所得区分により無料または半額、第3子以降無料",
+            "sideDishFee": "公立園は1号月3,700円、2号月4,900円。所得・出生順位で免除・減免",
+            "otherReduction": "災害、長期欠席、失業・倒産等による減免あり"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/soshiki/kodomo_kosodateka/2/11/3/2140.html",
+            "checkedAt": "2026-07-19"
+          },
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を完全無償化。就学援助等で給食費を援助",
+          "details": {
+            "implementation": "市立小・中・義務教育・特別支援学校で完全給食",
+            "juniorHighSchoolFee": "令和8年度の具体的徴収額は公式ページで確認できず未記録",
+            "assistance": "就学援助と特別支援教育就学奨励制度で給食費を援助・補助"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/soshiki/hishoka/1/shiseihoushin/13628.html",
+            "checkedAt": "2026-07-19"
+          },
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊型・通所型・訪問型を各原則7日まで実施",
+          "details": {
+            "ageCondition": "宿泊・通所は産後4か月未満、訪問は産後1年以内",
+            "fee": "課税世帯は宿泊1泊6,600円、通所1日3,200円、訪問1日1,000円",
+            "coupon": "1人5枚、1枚最大2,500円減額",
+            "exemption": "市民税非課税・生活保護世帯無料",
+            "application": "健康増進課へ連絡または電子申請し、承認後に施設予約"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/soshiki/kenkozoshinka/3/9/1/2208.html",
+            "checkedAt": "2026-07-19"
+          },
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "一時預かりとこども誰でも通園制度を実施",
+          "details": {
+            "temporaryCare": "生後4か月以上の未就園児。料金例1日2,400円・半日1,400円。施設へ直接申込み",
+            "anyChildAccess": "6か月から満3歳未満の未就園児、月10時間、1時間300円",
+            "anyChildFacilities": "令和8年度は高岡市はおか保育園、戸出西部保育園",
+            "anyChildApplication": "市の認定後、総合支援システムで事前面談・予約",
+            "reduction": "生活保護、一定所得未満、要支援家庭に軽減制度"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/soshiki/kodomo_kosodateka/2/11/12353.html",
+            "checkedAt": "2026-07-19"
+          },
+          "eligibility": {
+            "minAgeMonths": 4,
+            "maxAgeYears": 5
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "対象区域の住宅取得、戸建てリフォーム、空き家バンク物件取得等を補助",
+          "details": {
+            "homePurchase": "住宅ローン費の5％。まちなか区域上限50万円、居住誘導区域上限20万円",
+            "renovation": "対象工事費の3分の1、最大20万円。三世代同居リフォームも対象",
+            "vacantHouse": "空き家バンク登録物件取得費の5％、最大20万円",
+            "addition": "若年子育て世帯・三世代同居等の加算あり。HTML本文で加算額未確認",
+            "applicationTiming": "事業により着工前、所有権移転前、移転後3か月以内等"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/soshiki/kenchikuseisakuka/2/3/4/2521.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "大型・多量ごみは、市施設への直接持込みまたは事前申込みによる有料戸別収集で処理",
+          "details": {
+            "pickupApplication": "事前に環境政策課へ相談し収集日程を調整。平日8時30分～17時受付",
+            "pickupPreparation": "分別し、1階の玄関先・車庫等へ出す。家の中からの持ち出しはしない",
+            "pickupFee": "1立方メートルまでごとに3,500円。特別処理品は1個300円加算",
+            "directDropOff": "燃やせる・燃やせないごみはストックヤードへ火～土8時30分～16時30分。埋立ごみは埋立処分場へ平日9時～16時",
+            "directDropOffFee": "燃やせる・燃やせないごみは10kgまでごとに100円。特殊処理品1個300円、木質家具・建具・畳1個100円加算。埋立ごみは100kgまでごとに350円",
+            "notAccepted": "有毒・危険・有害・引火性の物、処理困難物、家電リサイクル法対象品等",
+            "privateCollection": "市の許可業者へ依頼する方法もある"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/soshiki/kankyoseisakuka/2/1/4/1/4643.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.takaoka.toyama.jp/gyosei/kurashi_tetsuzuki/gomi_recycle/3/5827.html",
+              "checkedAt": "2026-07-19",
+              "description": "持込み品目、受付日時、料金、受入不可品"
+            },
+            {
+              "url": "https://www.city.takaoka.toyama.jp/soshiki/kankyoseisakuka/2/1/3/3649.html",
+              "checkedAt": "2026-07-19",
+              "description": "粗大ごみ取扱い許可業者"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・洪水・水害・土砂災害・津波・ため池等のハザードマップと避難施設一覧を公開し、複数手段で防災情報を配信",
+          "details": {
+            "hazardMaps": "地震、土砂災害、洪水、水害、津波、ため池、海抜等の防災マップを公開。地域別・災害種別に危険区域と避難先を確認できる",
+            "evacuationFacilities": "指定緊急避難場所は災害の危険から命を守る緊急避難先で、災害種別ごとに指定。指定一般避難所は被災者が一定期間生活する施設。福祉避難所と届出避難所の制度もある",
+            "emailService": "登録制防災情報メールで国民保護、特別警報、震度4以上、津波、避難情報、熱中症特別警戒アラート等を配信。警報・注意報や線状降水帯等は選択配信",
+            "otherInformationChannels": "防災行政無線、J-ALERT、Yahoo!防災速報、固定電話・ファックス、多言語メール、ウェブ等で情報を発信",
+            "fixedPhoneFax": "固定電話音声またはファックスの登録制サービスは無料。避難情報、避難所開設、特別警報、津波警報等を配信",
+            "preparedness": "非常持出品は簡易的な1日分、備蓄品は3日間自力で生活できる量を目安とし、飲料水は1人1日3リットル程度を例示",
+            "guide": "令和8年5月改定の『防災たかおか』でハザードマップの見方、避難行動、平時の備えを案内"
+          },
+          "source": {
+            "url": "https://www.city.takaoka.toyama.jp/gyosei/kurashi_tetsuzuki/anzen_anshin/8/1/5555.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.takaoka.toyama.jp/gyosei/kurashi_tetsuzuki/anzen_anshin/8/2/6781.html",
+              "checkedAt": "2026-07-19",
+              "description": "指定緊急避難場所、指定一般避難所、福祉避難所の区分と最新一覧"
+            },
+            {
+              "url": "https://www.city.takaoka.toyama.jp/gyosei/kurashi_tetsuzuki/anzen_anshin/8/3/8687.html",
+              "checkedAt": "2026-07-19",
+              "description": "防災情報メールの配信内容と登録方法"
+            },
+            {
+              "url": "https://www.city.takaoka.toyama.jp/gyosei/kurashi_tetsuzuki/anzen_anshin/8/3/5659.html",
+              "checkedAt": "2026-07-19",
+              "description": "固定電話・ファックス配信サービス"
+            },
+            {
+              "url": "https://www.city.takaoka.toyama.jp/gyosei/kurashi_tetsuzuki/anzen_anshin/8/2/12793.html",
+              "checkedAt": "2026-07-19",
+              "description": "令和8年5月改定の防災ガイド"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16204",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "魚津市",
+      "officialUrl": "https://www.city.uozu.toyama.jp/",
+      "status": "needs_coordinator",
+      "summary": "魚津市の9制度を確認済み。全国統括による確認待ち。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "魚津市在住の0歳から18歳到達後最初の3月31日までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "copay": "保険診療の自己負担分を助成。入院時食事療養費など保険適用外費用は対象外",
+            "application": "出生・転入等の翌日から15日以内にこども課で申請",
+            "payment": "富山県内は現物給付、県外受診等は償還払い。償還払いは受診月から5年間申請可能"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=6170",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "キッズベアーで生後3か月から10歳までの病児・病後児を一時保育",
+          "eligibility": {
+            "minAgeMonths": 3,
+            "maxAgeYears": 10
+          },
+          "details": {
+            "facility": "病児・病後児保育施設キッズベアー",
+            "hours": "月～土曜7時45分～17時30分。20時まで延長可",
+            "fee": "1日2,000円、4時間まで1,300円、延長1時間500円",
+            "reservation": "原則前日までに電話予約。緊急時は当日相談可",
+            "capacity": "10人",
+            "pickupService": "保育中の体調不良時に受診送迎を行うお迎え型保育あり"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=11136",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "1歳児以上は保育料・副食費を無償化し、第2子以降の0歳児も保育料無料",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "fee": "1歳児以上は無料。0歳児は第2子以降無料で、第1子のみ市町村民税所得割額に基づき算定",
+            "sideDishFee": "魚津市在住の1歳児以上は副食費を全員免除",
+            "reduction": "1か月以上の疾病欠席、高額療養費、災害による著しい損害は申請により減免可能"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?cd=01&cdkb=scn&servno=3626",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を完全無償化し、中学校は1食420円のうち360円を保護者負担",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "1食360円、保護者負担なし",
+            "juniorHigh": "1食420円、保護者負担360円",
+            "allergyAdjustment": "牛乳・パン等を提供しない場合は相当額を減額",
+            "schoolAssistance": "就学援助では中学生の学校給食費を援助"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/event-topics/svTopiDtl.aspx?servno=13628",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "おおむね生後1年未満の母子を対象に宿泊型・通所型・居宅訪問型を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "types": "宿泊型、通所型、居宅訪問型",
+            "stayGuide": "宿泊型は寝返り前の生後4か月頃までを想定",
+            "stayFee": "1泊2日7,500円、市が8割程度を補助",
+            "application": "利用前に魚津市健康センター母子保健係へ相談・申込み"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=67",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "市内全保育園・認定こども園で一時保育を実施し、未就園の生後6か月から3歳未満には月10時間のこども誰でも通園制度を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "temporaryCare": "市内すべての保育園・認定こども園で半日・1日の一時保育。利用前に各施設へ確認",
+            "anyChildTarget": "未就園の生後6か月から満3歳未満",
+            "anyChildLimit": "月10時間、翌月繰越不可",
+            "anyChildFee": "1時間300円。生活保護・住民税非課税・一定所得未満・要支援等は軽減あり",
+            "anyChildFacility": "令和8年度は経田保育園で定期利用のみ。平日9時～11時30分、15時～16時、定員5人",
+            "application": "市こども課へ認定申請後、施設面談・予約"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=26754",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "中学3年生以下の子を養育する世帯の市内住宅取得に定額30万円を補助し、居住誘導区域・空き家改修の補助も利用可能",
+          "details": {
+            "childFamilyGrant": "認定申請日に中学3年生以下の子を養育する子育て世帯が、市内で税抜100万円以上の居住用住宅を取得する場合、定額30万円",
+            "applicationTiming": "新築は着工前、建売・中古購入は所有権登記前に認定申請。事後申請不可",
+            "completionReport": "住民票異動日・登記日・引渡日のうち最も遅い日から1か月以内、または3月31日の早い日までに実績報告",
+            "urbanInducement": "居住誘導区域の住宅取得は税抜取得額の4％。転入者上限50万円、区域外からの市内転居者上限30万円",
+            "combination": "子育て新婚世帯住宅取得支援補助金と居住誘導区域住宅取得支援補助金は併用可能。みらいエコ住宅2026事業との併用条件あり",
+            "vacantHouseRenovation": "購入した空き家の改修費を上限50万円補助し、居住誘導区域内は20万円加算。工事前申請と認定が必要",
+            "budget": "いずれも予算上限に達した場合は年度途中で受付終了",
+            "loan": "対象制度利用者はフラット35地域連携型で当初5年間年0.25％金利引下げの対象となる場合あり"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?cd=01&cdkb=scn&servno=18040",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.uozu.toyama.jp/child/guide/svGuideDtl.aspx?cd=26&cdkb=ctg&servno=18039",
+              "checkedAt": "2026-07-19",
+              "description": "居住誘導区域住宅取得支援"
+            },
+            {
+              "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?cd=2002&cdkb=ctg&servno=21761",
+              "checkedAt": "2026-07-19",
+              "description": "空家リフォーム支援"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋または収集指定券でごみステーションに出すか、宮沢清掃センターへ家庭系ごみ100kgにつき500円で直接持込み",
+          "details": {
+            "stationCollection": "もやせないごみ指定袋に入れる。指定袋に入らない家具・自転車等は収集指定券を貼り、町内会名を記入して金物・陶器・ガラス・粗大ごみの指定日に出す",
+            "collectionSchedule": "金物類・陶器類・ガラス類・粗大ごみは毎月第2週の地区指定曜日に収集",
+            "stationSizeLimit": "箱物は縦1.2m×横1.4m×長さ2m以内、角材・丸柱は縦横20cm×長さ1m以内",
+            "directDropOff": "宮沢清掃センターへ直接持込み可能。家庭系ごみは営業日の受付時間内であれば随時受入れ、持込み許可書は不要",
+            "dropOffHours": "月～金曜8時30分～16時30分、土曜8時30分～正午。日曜・祝日・振替休日・第4土曜は休業",
+            "dropOffFee": "家庭系ごみ100kgにつき500円。100kg未満は100kgとして計算",
+            "largeVolume": "一度に多量に処分する場合は地区ステーションではなく処理場への直接持込みを案内",
+            "excludedItems": "エアコン、テレビ、冷蔵庫・冷凍庫、洗濯機等の家電リサイクル対象品とパソコン類は通常のもやせないごみ対象外"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=1403",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂・津波・洪水・内水・地震・ため池のハザードマップ、避難所一覧、多経路の緊急情報配信を提供",
+          "details": {
+            "hazardMaps": "土砂災害、津波、洪水、内水、揺れやすさ、ため池の各ハザードマップを公開",
+            "shelters": "指定緊急避難場所、1次・2次指定避難所、福祉避難所を案内。災害状況で開設先が変わるため、避難前に現在開設中の避難所確認を求めている",
+            "emailService": "登録制メールで気象注意報・警報・特別警報、短時間大雨、土砂災害、地震、津波、避難・避難所、国民保護、火災、熱中症・クマ等を配信し、受信項目を選択可能",
+            "informationChannels": "Yahoo!防災速報、防災行政無線、緊急速報メール、テレビデータ放送、広報車、市ホームページ、Yahoo!避難情報・避難所マップ、市公式LINE等で発信",
+            "radioReplay": "防災行政無線の放送内容は専用電話で再確認可能",
+            "preparedness": "非常持出品、避難先・避難経路、家族の連絡方法、家具固定、乳幼児・高齢者等の避難方法、災害情報の入手方法を平時に確認するよう案内"
+          },
+          "source": {
+            "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=7511&topkb=H",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=292&topkb=H",
+              "checkedAt": "2026-07-19",
+              "description": "指定緊急避難場所・指定避難所・福祉避難所"
+            },
+            {
+              "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=20487",
+              "checkedAt": "2026-07-19",
+              "description": "災害時の情報伝達手段"
+            },
+            {
+              "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=20486&topkb=H",
+              "checkedAt": "2026-07-19",
+              "description": "緊急情報配信サービス"
+            },
+            {
+              "url": "https://www.city.uozu.toyama.jp/guide/svGuideDtl.aspx?servno=287",
+              "checkedAt": "2026-07-19",
+              "description": "家庭での災害への備え"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16205",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "氷見市",
+      "officialUrl": "https://www.city.himi.toyama.jp/",
+      "status": "needs_coordinator",
+      "summary": "氷見市の9制度を確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/kosodate/nenrei_taishobetsu/shogakusei/1/5128.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月以上の就学前児を対象に平日実施。1日2,000円、半日1,000円",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/kosodate/1/2/9842.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "1歳以上は第1子から無料、第3子以降は0歳児から無料。給食費も無料",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/kosodate/1/2/687.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校に加え中学校給食費も全額支援",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/material/files/group/11/r8tosyoyosan-gaiyo.pdf",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1年未満を対象に宿泊・日帰り・訪問型を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/kenkoka/3/2/1982.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "一時預かりは生後4か月頃から1日2,000円。誰でも通園は未就園の生後6か月から3歳未満で月10時間",
+          "eligibility": {
+            "minAgeMonths": 4,
+            "maxAgeYears": 5
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/kosodate/1/2/14745.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅取得を転入者100万円・市内居住者50万円支援し、改修・家賃も補助",
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/miraisenryaku/3/1/1653.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "燃やせる粗大ごみは事前確認後に自己搬入。家庭系は50kgまで250円、超過10kgごとに50円加算",
+          "details": {
+            "burnable": "火曜・木曜の13時から15時30分に受付後、高岡広域エコ・クリーンセンターへ搬入",
+            "nonBurnable": "不燃物処理センターは平日9時から15時。家庭系料金は同額",
+            "notice": "持込み前に内容を電話確認。家電リサイクル対象品は市処理対象外"
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/gyosei/benri_service/gomi_kensaku/4775.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/kankyo/1/1/1934.html",
+              "checkedAt": "2026-07-19",
+              "description": "燃やせない持込みごみ"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害、津波、ため池、揺れやすさの各ハザードマップと災害種別ごとの避難所情報を公開",
+          "details": {
+            "hazards": "洪水浸水想定区域、土砂災害警戒区域、津波浸水想定、ため池、地震の揺れやすさを確認可能",
+            "shelters": "指定避難所、指定緊急避難場所、福祉避難所を区分して公開",
+            "alerts": "防災行政無線、テレホンサービス、緊急速報メール、登録制防災メール、市公式LINEで情報を配信",
+            "preparedness": "自宅周辺の危険区域と災害種別に対応する避難先を事前確認するよう案内"
+          },
+          "source": {
+            "url": "https://www.city.himi.toyama.jp/gyosei/bosai_syobo/9/2377.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.himi.toyama.jp/gyosei/bosai_syobo/9/2/2270.html",
+              "checkedAt": "2026-07-19",
+              "description": "洪水・土砂災害ハザードマップ"
+            },
+            {
+              "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/bosai/1_2/1376.html",
+              "checkedAt": "2026-07-19",
+              "description": "津波ハザードマップ"
+            },
+            {
+              "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/bosai/1_2/1315.html",
+              "checkedAt": "2026-07-19",
+              "description": "避難所・避難場所"
+            },
+            {
+              "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/bosai/1_2/1355.html",
+              "checkedAt": "2026-07-19",
+              "description": "防災メール"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16206",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "滑川市",
+      "officialUrl": "https://www.city.namerikawa.toyama.jp/",
+      "status": "needs_coordinator",
+      "summary": "滑川市の9制度を確認済み。こども医療費助成、病児・病後児保育、保育料、学校給食費支援、産後ケア、一時保育・こども誰でも通園制度、住宅支援、粗大ごみ、防災情報を収録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "application": "出生・転入等から15日以内に申請",
+            "paymentMethod": "富山県内は現物給付、県外等は償還払い",
+            "claimDeadline": "支払日から5年以内"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/soshiki/24/2/2/2/619.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "彩りの杜で1歳から小学3年生まで実施し、富山市の連携施設も利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "facility": "彩りの杜",
+            "hours": "平日8時30分から17時30分",
+            "fee": "4時間以上2,000円、4時間未満1,000円",
+            "requirements": "医師の診察と診療情報提供書が必要",
+            "reservation": "テオテで登録・予約"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/soshiki/24/2/1/6/10039.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.le-famille.jp/17328624969102",
+              "checkedAt": "2026-07-19",
+              "description": "彩りの杜の利用条件"
+            }
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳未満児は第1子半額、第2子以降は保育料等を完全無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "calculation": "父母の市民税所得割額の合計で決定",
+            "municipalReduction": "国制度対象外の3歳未満児は第1子半額、第2子以降完全無償",
+            "nationalProgram": "3歳から5歳児と非課税世帯の0歳から2歳児は国制度で無償",
+            "mealFee": "第2子以降の1号・2号認定児は副食費を月4,900円まで無償"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/soshiki/24/2/3/613.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/24/2/3/4671.html",
+              "checkedAt": "2026-07-19",
+              "description": "無償化と副食費"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市内小学校の給食費を手続き不要で実質無償化。中学校は就学援助対象世帯に実徴収額を支給",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "令和8年度、市内小学校の給食費は保護者負担0円",
+            "funding": "国基準額月5,200円に市が月1,080円を上乗せ補助",
+            "juniorHigh": "中学校の一律無償化は公式情報で確認できず、就学援助認定世帯には実徴収額を支給",
+            "allergySupport": "給食を全く食べない児童への一定額補助を予定"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/soshiki/21/1/3/10598.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/material/files/group/21/08kyuusyoku.pdf",
+              "checkedAt": "2026-07-19",
+              "description": "令和8年度小学校給食費無償化"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/21/1/1/1170.html",
+              "checkedAt": "2026-07-19",
+              "description": "就学援助"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後12か月未満の母子を対象に産後ケアを実施し、2,500円の利用券を5枚交付",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "滑川市に居住する生後12か月未満の母子で、援助不足や体調不良・育児不安がある方",
+            "facilities": "厚生連滑川病院、委託助産院、富山県立中央病院、富山市産後ケア応援室等",
+            "subsidy": "2,500円券を5枚、合計12,500円分交付",
+            "application": "利用前に市民健康センターへ申請"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/soshiki/27/3/1/3218.html",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "市立保育所で非在園児の一時保育を実施し、未就園の生後6か月から3歳未満は月10時間までこども誰でも通園制度を利用可能",
+          "eligibility": {
+            "minAgeMonths": 3,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "temporaryFacilities": "あずま保育所、坪川保育所で非在園児の一時保育を実施",
+            "temporaryTarget": "施設の受入条件を満たす未就学の非在園児。市立保育所は生後3か月からの乳児保育を実施",
+            "temporaryApplication": "希望日時を利用施設へ事前連絡。利用料と受入可否は施設へ確認",
+            "temporaryFee": "公式市ページでは具体額を掲載せず、施設へ確認が必要",
+            "anyChildTarget": "保育所、認定こども園、地域型保育事業等に通っていない生後6か月から満3歳未満。認可外保育施設利用児は対象、企業主導型保育施設利用児は対象外",
+            "anyChildLimit": "子ども1人あたり月10時間まで。1時間未満も1時間として算定",
+            "anyChildFacilities": "あずま保育所、坪川保育所、和光保育園、中加積保育園、西加積認定こども園",
+            "anyChildFee": "利用料金に加えて給食・おやつ代等が発生。金額は各施設へ確認",
+            "anyChildApplication": "こども誰でも通園制度総合支援システムを使用し、利用認定後に施設との事前面談を経て予約",
+            "digitalPoints": "あずま保育所では一時保育と誰でも通園制度にとみいくデジタルポイントを利用可能"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/kosodate/58/9717.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/31/1463.html",
+              "checkedAt": "2026-07-19",
+              "description": "あずま保育所の一時保育と誰でも通園制度"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/32/1477.html",
+              "checkedAt": "2026-07-19",
+              "description": "坪川保育所の一時保育"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/24/2/3/4671.html",
+              "checkedAt": "2026-07-19",
+              "description": "一時預かりの無償化要件"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "居住誘導区域内の住宅取得費を最大50万円補助し、対象となる東京圏からの子育て移住世帯には18歳未満1人につき100万円を加算",
+          "details": {
+            "homePurchaseProgram": "居住誘導区域住宅取得支援事業補助金",
+            "homePurchaseTarget": "滑川市立地適正化計画の居住誘導区域内で新築、建売または中古住宅を取得する方",
+            "homePurchaseRate": "住宅取得額の5分の1",
+            "homePurchaseLimit": "事前申込時に居住誘導区域外に住む方は上限50万円、区域内居住者は上限20万円",
+            "homePurchaseTiming": "新築は着工前、建売・中古住宅は所有権移転登記前に事前申込が必要",
+            "nationalCombination": "みらいエコ住宅事業など国補助金との併用可",
+            "migrationSupport": "東京23区内に5年以上在住または通勤していた方が、就業・テレワーク・起業等の要件を満たして移住する場合、単身60万円、世帯100万円",
+            "childAddOn": "移住支援金は18歳未満の世帯員を帯同する場合、18歳未満1人につき100万円を加算",
+            "migrationDeadline": "転入後1年以内に申請し、申請日から5年以上の継続居住意思が必要",
+            "newlywedProgram": "令和8年1月1日から令和9年3月31日までに婚姻した39歳以下・夫婦所得合計500万円未満等の世帯は、住宅賃借、取得、リフォーム、引越費用の補助対象",
+            "newlywedDeadline": "結婚新生活支援補助金は令和9年3月12日まで。予算上限に達した場合は受付終了",
+            "renovation": "市内既存住宅を全体的に高気密・高断熱化するエコハウスリノベーションは省エネ改修費の5分の1を補助",
+            "publicHousing": "定住促進住宅は随時募集で、入居後に市内住所を置けること、一定収入、市税滞納なし等が要件"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/soshiki/17/machinakasaisei/10605.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/4/9/4554.html",
+              "checkedAt": "2026-07-19",
+              "description": "移住支援金と18歳未満世帯員加算"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/4/kekkonshien/8084.html",
+              "checkedAt": "2026-07-19",
+              "description": "結婚新生活支援補助金の住宅・引越費用"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/17/4/2/10537.html",
+              "checkedAt": "2026-07-19",
+              "description": "エコハウスリノベーション補助"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/17/4/3/7725.html",
+              "checkedAt": "2026-07-19",
+              "description": "定住促進住宅"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "持ち運べない粗大ごみや引越し時の多量ごみを、市委託業者が有料で戸別収集",
+          "details": {
+            "target": "引越し等で多量に出る家庭ごみや、タンス・食器棚など分解が難しく集積所へ運べない粗大ごみ",
+            "collectionMethod": "市の委託業者へ電話予約し、可燃・不燃・資源ごみに分別して戸別収集を受ける",
+            "contractor": "株式会社公生社",
+            "reservationHours": "平日8時30分から17時、土曜日8時30分から12時",
+            "reservationInformation": "収集希望日、住所、氏名、電話番号、搬出物の内容を伝える",
+            "fee": "30kgまで3,327円。30kgを超える場合は10kgごとに312円を加算",
+            "estimate": "戸別収集の訪問見積りは実施せず、市の料金体系表を基に利用者が概算",
+            "unavailable": "品目によっては収集できないため、予約時に委託業者へ確認",
+            "carryIn": "一般の粗大ごみの自己搬入先は確認できた公式HTMLに明記なし",
+            "smallAppliances": "使用済小型家電は市内拠点へ直接持ち込むと無料回収。滑川市ストックヤードは火曜から日曜の9時から17時",
+            "recyclingAppliances": "エアコン、テレビ、冷蔵庫・冷凍庫、洗濯機、衣類乾燥機は家電リサイクル対象で、リサイクル料金と収集運搬料金が必要",
+            "prohibitedCollectors": "家庭ごみの回収は市の委託業者のみが可能で、無許可の不用品回収業者は利用しない"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/soshiki/10/2/1/789.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/10/2/1/797.html",
+              "checkedAt": "2026-07-19",
+              "description": "令和8～9年度の家庭ごみ分別案内"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/10/2/1/823.html",
+              "checkedAt": "2026-07-19",
+              "description": "ストックヤードの回収品目と受付時間"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/10/2/1/1/777.html",
+              "checkedAt": "2026-07-19",
+              "description": "家電リサイクル対象品の処分方法"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/10/2/1/9306.html",
+              "checkedAt": "2026-07-19",
+              "description": "無許可回収業者への注意"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・津波・土砂災害・洪水のハザードマップ、避難所、メール・LINEによる防災情報を公開",
+          "details": {
+            "hazardMaps": "地震、津波、土砂災害、洪水の4種類のハザードマップを公開",
+            "earthquake": "市内・周辺断層や市直下地震を想定した最大震度を色分けし、指定避難場所も掲載",
+            "tsunami": "令和6年能登半島地震の課題を踏まえ、2025年5月に津波ハザードマップを見直し",
+            "landslide": "急傾斜地の崩壊、土石流、地すべりについて警戒区域・特別警戒区域を掲載",
+            "flood": "洪水ハザードマップを災害ハザードマップ一覧とデジタルマップで公開",
+            "evacuationSites": "指定緊急避難場所は洪水、土砂災害、高潮、地震、津波など災害種別ごとに指定",
+            "shelters": "指定避難所は災害規模や被害状況に応じて開設。福祉避難所は要配慮者向けの二次的避難所",
+            "shelterMap": "指定避難所43か所の位置と海抜を表示した地図を公開",
+            "email": "気象警報・注意報、震度別地震情報、津波情報、火災、防災・災害情報等をメール配信",
+            "line": "市LINE公式アカウントでも気象警報、地震、津波、火災、防災情報等を受信可能",
+            "warningLevels": "警戒レベル3高齢者等避難、警戒レベル4避難指示が発令された場合は速やかな避難行動を推奨"
+          },
+          "source": {
+            "url": "https://www.city.namerikawa.toyama.jp/kurashi/6/2/index.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/bousaikikikanri/2/729.html",
+              "checkedAt": "2026-07-19",
+              "description": "2025年5月改訂の津波ハザードマップ"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/16/4/1/755.html",
+              "checkedAt": "2026-07-19",
+              "description": "土砂災害ハザードマップ"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/bousaikikikanri/2_1/2/665.html",
+              "checkedAt": "2026-07-19",
+              "description": "地震ハザードマップ"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/bousaikikikanri/2_1/3/hinan/720.html",
+              "checkedAt": "2026-07-19",
+              "description": "指定緊急避難場所・指定避難所の区分"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/bousaikikikanri/2_1/3/hinan/667.html",
+              "checkedAt": "2026-07-19",
+              "description": "指定避難所43か所の位置・海抜図"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/dx/10/778.html",
+              "checkedAt": "2026-07-19",
+              "description": "防災メール配信内容"
+            },
+            {
+              "url": "https://www.city.namerikawa.toyama.jp/soshiki/dx/3/8636.html",
+              "checkedAt": "2026-07-19",
+              "description": "LINEによる防災情報配信"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16207",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "黒部市",
+      "officialUrl": "https://www.city.kurobe.toyama.jp/",
+      "status": "verified",
+      "summary": "黒部市の9制度を公式情報で確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳到達後最初の3月31日までの子どもの保険診療自己負担分を助成。所得制限なし。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "eligibility": "黒部市に住民登録があり医療保険に加入していること",
+            "paymentMethod": "資格証等を提示する現物給付が基本。対象外地域等は償還払い"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=11498",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "満1歳から小学3年生までを病児・病後児保育室くるみで一時保育。",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "capacity": "1日4名、先着順・要予約",
+            "hours": "平日8時から18時",
+            "fee": "5時間以上2,500円、5時間未満1,300円",
+            "application": "事前登録、電話予約、診療情報提供書等が必要"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=6198",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "0歳から2歳児は市町村民税所得割額により決定。3歳から5歳児と住民税非課税世帯の0歳から2歳児は無償化対象。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "additionalCosts": "給食費や行事費等は別途",
+            "payment": "公立施設は原則口座振替"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=2740",
+            "checkedAt": "2026-07-19"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市内小中学校等へ給食を提供し、第3子以降、就学援助対象世帯、特別支援学級の保護者に給食費支援を実施。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "publishedFee": "通常の月額・1食単価は市公式案内に掲載なし"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=671",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子を対象に宿泊・日帰り・訪問型を実施。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "fees": "宿泊6,000円、日帰り3,000円、訪問1,500円",
+            "coupon": "2,500円分を5枚交付",
+            "exemption": "生活保護世帯は利用料免除"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=25973",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園児の一時預かりと、生後6か月から3歳未満の未就園児向けこども誰でも通園制度を実施。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "temporaryFee": "施設により1日2,000円・半日1,000円、1時間250円または350円等",
+            "anyChildHours": "月10時間まで",
+            "anyChildFee": "1時間300円程度",
+            "application": "一時預かりは施設へ直接申込み。誰でも通園は総合支援システム申請後に事前面談"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/child/category/page.aspx?servno=16235",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=45806",
+              "checkedAt": "2026-07-20"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅取得支援補助金により転入・転居世帯を支援し、若年・子育て・県外転入等の加算を実施。",
+          "details": {
+            "baseSupport": "居住誘導区域内は転入者50万円、一定の転居者30万円",
+            "maximumExample": "加算の組合せにより最大130万円の公式例あり",
+            "requirements": "3年以上居住、所有権2分の1以上、市税滞納なし等"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/news/detail.aspx?servno=15270",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "金属・ガラス・粗大ごみ収集日に指定袋または指定券で排出。大型品は処理施設へ直接持込。",
+          "details": {
+            "collection": "収集日当日の朝8時までに地区のごみステーションへ排出",
+            "excludedSize": "130cm×50cm×50cm以上は収集対象外",
+            "dropOff": "宮沢清掃センターへ持込可能",
+            "fee": "家庭系もやせないごみは100kgにつき500円",
+            "hours": "平日8時30分から16時30分、土曜8時30分から12時"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=11323",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・ため池・揺れやすさ等のハザードマップ、避難所データ、災害情報ポータル、緊急情報メールを提供。",
+          "details": {
+            "hazardMaps": "洪水、土砂災害、津波、ため池、ゆれやすさの各マップを公開",
+            "shelters": "指定避難所一覧と地区別の避難判断情報を公開",
+            "alerts": "災害情報ポータルと緊急情報メールで防災・火災情報を配信",
+            "weatherInfo": "2026年5月29日から警戒レベル数字付きの新たな防災気象情報を運用",
+            "contact": "防災危機管理班 0765-54-2112"
+          },
+          "source": {
+            "url": "https://www.city.kurobe.toyama.jp/category/menu.aspx?ctgcd=28",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://sgportal.city.kurobe.toyama.jp/guide/svGuideDtl.aspx?pg=1&servno=43565",
+              "checkedAt": "2026-07-20",
+              "description": "土砂災害ハザードマップ"
+            },
+            {
+              "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=83",
+              "checkedAt": "2026-07-20",
+              "description": "洪水ハザードマップと指定避難所"
+            },
+            {
+              "url": "https://www.city.kurobe.toyama.jp/category/page.aspx?servno=3170",
+              "checkedAt": "2026-07-20",
+              "description": "緊急情報メール"
+            },
+            {
+              "url": "https://www.city.kurobe.toyama.jp/news/detail.aspx?servno=46421",
+              "checkedAt": "2026-07-20",
+              "description": "新たな防災気象情報"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16208",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "砺波市",
+      "officialUrl": "https://www.city.tonami.lg.jp/",
+      "status": "verified",
+      "summary": "砺波市の9制度を公式情報で確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "砺波市内に住む0歳から18歳になる年の年度末までの子どもを対象に、保険診療の自己負担分を助成。高校在学の有無は問わない。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "ageLimit": "満18歳に達する日以後の最初の3月31日まで",
+            "application": "出生・転入等で新たに利用する場合は申請が必要"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/service/56378p/",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気の回復期前の児童を病児保育棟ものがたりのおうちで、回復期の生後6か月以上の就学前児童をちゅうりっぷ認定こども園で預かる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 6
+          },
+          "details": {
+            "sickChildFee": "1日2,000円、半日1,000円",
+            "postIllnessFee": "1日2,000円、半日1,000円"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/info/78606p/",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "保育料は児童の年齢と保護者の市民税所得割課税額により決定。3歳以上、第3子以降、住民税非課税世帯の0歳から2歳児は無償化対象。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "feeCalculation": "児童の年齢および保護者の市民税所得割課税額により決定",
+            "siblingReduction": "第2子半額、第3子以降無料",
+            "additionalCosts": "給食費、延長保育料等は別途"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/info/6219p/",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "砺波市立小中学校で学校給食を実施し、経済的理由で就学が困難な世帯には就学援助で学校給食費を含む費用を援助。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "financialAssistance": "生活保護、市県民税非課税・減免、児童扶養手当受給、所得基準該当等",
+            "publishedFee": "通常の月額・1食単価は市公式案内で確認できない"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/service/34914p/",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "砺波市に住民票がある産後1年未満の母子を対象に、訪問・通所・宿泊型の産後ケアを合計7回まで実施。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "fees": "訪問500円または1,000円、通所1,500円または1,600円、宿泊1泊2日3,300円",
+            "feeExemption": "生活保護・市民税非課税世帯は無料",
+            "usageLimit": "合計7回、宿泊型は3回まで"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/info/4718p/",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "家庭で一時的に保育できない未就園児を認定こども園で預かるほか、生後6か月から3歳未満の未就園児はこども誰でも通園制度を利用可能。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "temporaryApplication": "希望施設へ直接相談・申込み",
+            "anyChildFacility": "南部認定こども園",
+            "anyChildHours": "平日9時から16時、月10時間まで",
+            "anyChildFee": "1時間300円"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/info/3652p/",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.tonami.lg.jp/info/85268p/",
+              "checkedAt": "2026-07-20"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "転入若者世帯・転入子育て世帯の住宅取得や民間賃貸住宅の家賃を支援し、空き家バンク登録物件の改修・賃借にも補助を実施。",
+          "eligibility": {
+            "residency": "住宅取得支援は転入から3年以内、家賃支援は転入から1年以内の転入若者世帯または転入子育て世帯",
+            "youngHousehold": "夫婦のいずれかが39歳以下",
+            "childHousehold": "中学生までの子どもがいる世帯"
+          },
+          "details": {
+            "purchaseSupport": "令和8年1月1日以降の契約等が対象。上限137.3万円",
+            "purchaseRequirements": "取得住宅に10年以上居住する意思、世帯全員の市税等滞納なし、申請者が所有権2分の1以上等",
+            "rentSupport": "家賃から住宅手当等を差し引いた額を月1万円まで、最長12か月補助",
+            "vacantHouseSupport": "空き家バンク登録物件の購入・改修は改修費の2分の1、上限137.3万円。賃借は月1万円を最大3年間補助"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/service/2717p/",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "地区の集積場所へ出せない粗大ごみ、がれき、引越し等の大量ごみは、分別してクリーンセンターとなみへ直接持ち込める。",
+          "details": {
+            "facility": "クリーンセンターとなみ（砺波市太田1873-1）",
+            "weekdayHours": "平日9時から12時、13時から16時。祝日、12月29日から1月3日を除く",
+            "sundayHours": "毎週日曜日9時から11時30分。1月・2月は第3日曜日のみ。予約制で粗大ごみ・がれき類、剪定枝、古紙類のみ",
+            "restrictions": "砺波市および対象地域外で発生したごみは受入不可。排出禁止ごみは購入店または専門業者へ依頼",
+            "selfTransport": "自ら運搬できない場合は市の一般廃棄物収集運搬許可業者へ有料で依頼",
+            "fee": "市公式案内では具体的な持込手数料を掲載していないため、クリーンセンターとなみに確認が必要"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/info/3628p/",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.tonami.lg.jp/faq/9346p/",
+              "checkedAt": "2026-07-20",
+              "description": "日曜日の予約制持込"
+            },
+            {
+              "url": "https://www.city.tonami.lg.jp/info/4189p/",
+              "checkedAt": "2026-07-20",
+              "description": "家庭地域美化の日の対象品目と受付時間"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "水害・土砂災害・地震・ため池のハザードマップ、緊急避難場所・避難所一覧、防災マニュアル、緊急メール等を提供。",
+          "details": {
+            "hazardMaps": "洪水・内水を含む水害、土砂災害、地震の揺れやすさ、ため池の各ハザードマップを公開",
+            "shelters": "令和8年4月1日現在の指定緊急避難場所、指定避難所、その他避難所一覧を公開。災害種別によって使用できない施設があるため事前確認を推奨",
+            "alerts": "砺波市緊急メールで国民保護情報、避難情報、気象情報、震度4以上の震度速報等を配信。市公式サイト、公式X、防災アプリ等も案内",
+            "manual": "防災となみ改訂版に地震・風水害・火災時の行動、応急手当、避難所、非常持出品、避難ルート等を掲載",
+            "latestUpdate": "2026年5月に水害ハザードマップを見直し、地域防災計画を新たな防災気象情報や地震被害想定等に対応して改正",
+            "contact": "総務課防災・危機管理室 0763-33-1247"
+          },
+          "source": {
+            "url": "https://www.city.tonami.lg.jp/emergency/",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.tonami.lg.jp/info/6079p/",
+              "checkedAt": "2026-07-20",
+              "description": "2026年版水害ハザードマップ"
+            },
+            {
+              "url": "https://www.city.tonami.lg.jp/info/35043p/",
+              "checkedAt": "2026-07-20",
+              "description": "緊急避難場所・避難所一覧"
+            },
+            {
+              "url": "https://www.city.tonami.lg.jp/meruma/",
+              "checkedAt": "2026-07-20",
+              "description": "緊急メール配信"
+            },
+            {
+              "url": "https://www.city.tonami.lg.jp/info/5689p/",
+              "checkedAt": "2026-07-20",
+              "description": "防災となみ改訂版"
+            },
+            {
+              "url": "https://www.city.tonami.lg.jp/info/35424p/",
+              "checkedAt": "2026-07-20",
+              "description": "令和8年5月地域防災計画改正"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16209",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "小矢部市",
+      "officialUrl": "https://www.city.oyabe.toyama.jp/",
+      "status": "verified",
+      "summary": "小矢部市の9制度を公式情報で確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "小矢部市内に住民票があり健康保険に加入している、満18歳に達する年度末までの子どもを対象に、保険診療の自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "ageLimit": "満18歳に達する日以後の最初の3月31日まで",
+            "application": "出生・転入等の場合は翌日から15日以内に登録申請が必要"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004460/1002633/1002652/1002654.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気中または回復期で家庭保育が難しい、生後6か月から小学6年生までの児童を北陸中央病院内のおやべにこにこ園で一時的に預かる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "おやべにこにこ園（北陸中央病院内）",
+            "hours": "月曜日から金曜日の8時30分から16時30分まで。祝日を除く",
+            "capacity": "2名",
+            "fee": "1日1,000円、食事代400円"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004459/1002661.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "保育料は父母等の市民税所得割課税額と児童の年齢により決定。3歳から5歳児、住民税非課税世帯の0歳から2歳児、第3子以降は無償化・無料の対象となる。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "feeCalculation": "父母等の市民税所得割課税額等の合計で決定",
+            "freeEducation": "3歳から5歳児クラス、住民税非課税世帯の0歳から2歳児クラスは無償化対象",
+            "siblingReduction": "第3子以降は無料",
+            "additionalCosts": "延長保育料、給食費、送迎費、行事費等は対象外"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004459/1002682/1003317.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "小矢部市立小中学校で学校給食を実施し、経済的理由で就学が困難な世帯には就学援助で学校給食費を含む費用を支給する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "schoolLunchSupport": "小学生は実費、中学生は実費で年額上限69,000円",
+            "application": "学校または教育総務課への書面提出、オンライン申請にも対応"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004458/1002737/1002739.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "小矢部市民の産後1年未満の母子を対象に、訪問・デイサービス・ショートステイ型の産後ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "fees": "訪問型1回1,000円、デイサービス型1回1,500円、ショートステイ型1泊6,000円",
+            "usageLimits": "訪問・通所は各7回まで、宿泊は3泊まで",
+            "coupon": "宿泊型は2,500円割引クーポン2枚"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004460/1002598/1002605.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "家庭で保育できない場合の一時預かりを市内の認定こども園等で実施し、未就園の生後6か月から3歳未満児は月10時間までこども誰でも通園制度を利用できる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "temporaryFacilities": "大谷こども園、津沢こども園、石動青葉保育園、石動西部こども園、NPO法人わくわく小矢部",
+            "temporaryFees": "多くの園は1日2,000円",
+            "anyChildFacility": "蟹谷こども園",
+            "anyChildHours": "平日9時から15時、月10時間まで",
+            "anyChildFee": "1時間300円、昼食400円"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004459/1002688.html",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004459/1007486.html",
+              "checkedAt": "2026-07-20"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "新婚世帯・転入者の住宅取得を支援し、空き家バンク登録物件の購入、賃貸、改修、家財処分にも助成する。",
+          "details": {
+            "purchaseSupport": "住宅取得額とリフォーム工事額の合計の10％。新婚者上限100万円、転入者上限50万円",
+            "childAddition": "15歳未満の対象児童1人につき10万円加算",
+            "applicationDeadline": "住宅取得日またはリフォーム完了日から1年以内",
+            "vacantHouseSupport": "購入上限10万円、リフォーム費10％で上限20万円、家財処分費2分の1で上限10万円。賃貸借にも助成あり"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/ijyu/1001583/1004452.html",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.oyabe.toyama.jp/kurashi/1001729/1001737/1001733.html",
+              "checkedAt": "2026-07-20"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "ごみステーションに出せない粗大ごみや多量ごみは、小矢部市環境センターへ直接持ち込める。",
+          "details": {
+            "facility": "小矢部市環境センター（小矢部市矢水町678-2）",
+            "hours": "月曜日から土曜日の9時から12時、13時から16時",
+            "closed": "日曜日、祝日、振替休日、年末年始",
+            "fee": "個人搬入は10キログラム当たり100円。10キログラム未満は10キログラムとして計算",
+            "eligibility": "小矢部市内に住所を有する本人または家族",
+            "restrictions": "市外で発生したごみは搬入不可。大型・多量ごみは許可業者へ相談"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kurashi/1002145/1002146/1002153/1002160.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害ハザードマップ、指定緊急避難場所・指定避難所、防災メール、LINE防災メニュー、シームレス防災マップ等を提供する。",
+          "details": {
+            "hazardMaps": "令和6年3月改訂の洪水・土砂災害ハザードマップを公開。洪水マップは小矢部川、庄川、渋江川、旅川、子撫川、横江宮川、岸渡川の7河川が対象",
+            "shelters": "災害種類別の指定緊急避難場所と、被災者が一定期間滞在する指定避難所を公開。開設避難所は防災行政無線やケーブルテレビ等で周知",
+            "alerts": "登録制の防災・緊急メールで避難・国民保護、地震、気象、指定河川、クマ目撃等を配信。公式LINEでも防災情報を受信可能",
+            "digitalMap": "シームレス防災マップで県内の気象センサー、雨量、水位、カメラ等を一つのデジタル地図で確認可能",
+            "latestUpdate": "2026年5月から新しい防災気象情報の運用に対応し、2026年6月には西中野に水位監視カメラを追加",
+            "contact": "総務課 0766-67-1760"
+          },
+          "source": {
+            "url": "https://www.city.oyabe.toyama.jp/kurashi/1002236/1002243/index.html",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.oyabe.toyama.jp/kurashi/1002236/1002243/1002259/index.html",
+              "checkedAt": "2026-07-20",
+              "description": "避難所・防災マップ"
+            },
+            {
+              "url": "https://www.city.oyabe.toyama.jp/kurashi/1002236/1002243/1002266.html",
+              "checkedAt": "2026-07-20",
+              "description": "洪水ハザードマップ"
+            },
+            {
+              "url": "https://www.city.oyabe.toyama.jp/kurashi/1002236/1002243/1002264.html",
+              "checkedAt": "2026-07-20",
+              "description": "土砂災害ハザードマップ"
+            },
+            {
+              "url": "https://www.city.oyabe.toyama.jp/kurashi/1002236/1002243/1002260.html",
+              "checkedAt": "2026-07-20",
+              "description": "指定緊急避難場所・指定避難所"
+            },
+            {
+              "url": "https://www.city.oyabe.toyama.jp/kurashi/1002236/1002243/1002255.html",
+              "checkedAt": "2026-07-20",
+              "description": "防災・緊急メール"
+            },
+            {
+              "url": "https://www.city.oyabe.toyama.jp/shiseijyouhou/1001969/1006836.html",
+              "checkedAt": "2026-07-20",
+              "description": "シームレス防災マップ"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "16210",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "南砺市",
+      "officialUrl": "https://www.city.nanto.toyama.jp/",
+      "status": "verified",
+      "summary": "南砺市の9制度を公式情報で確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高校3年生までの子どもの保険診療自己負担分を助成。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/12/2/1880.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月以上の就学前児を対象に病児・病後児保育を実施。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 6
+          },
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/5075.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3〜5歳児等の無償化と、第2子半額・第3子以降無料の多子軽減。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "source": {
+            "url": "https://sukoyaka.city.nanto.toyama.jp/nursey",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "小学校給食費は無償。中学生は就学援助認定者の給食費を援助。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/soshiki/kyoikusomu/1/1/1590.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1年未満の母子に訪問型・デイケア・ショートステイを提供。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/soshiki/kenko/5/1/692.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "満1歳以上の未就学児を対象に一時預かりを実施。",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 6
+          },
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/5066.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "若者世帯の家賃、新築・同居改修、中古住宅・空き家活用を支援。",
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/soshiki/seisakusuishin/3_1/5215.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは地域の収集ルールに従うほか、対象地域ではクリーンセンターとなみへ直接搬入できる。",
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/soshiki/seikatsukankyo/1/5/418.html",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・地震のハザードマップ、防災アプリ、緊急メール、防災行政無線を公開。",
+          "source": {
+            "url": "https://www.city.nanto.toyama.jp/nantobosai/index.html",
+            "checkedAt": "2026-07-20"
+          }
+        }
+      }
+    },
+    {
+      "code": "16211",
+      "prefectureCode": "16",
+      "prefecture": "富山県",
+      "name": "射水市",
+      "officialUrl": "https://www.city.imizu.toyama.jp/",
+      "status": "verified",
+      "summary": "射水市の9制度を公式情報で確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳の高校生世代までの保険診療自己負担分を助成。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svguidedtl.aspx?servno=3387",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月以上から小学3年生までを対象に病児保育を実施。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svGuideDtl.aspx?servno=14362",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3〜5歳児クラス等を無償化し、0〜2歳児は住民税非課税世帯が無料。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svGuideDtl.aspx?servno=54244",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度1学期から小学校1食350円、中学校1食400円。就学援助で給食費等を援助。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/hp/svfachp.aspx?faccd=4001120",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後4か月未満の母子に宿泊型・日帰り型、産後1年未満の母子に訪問型の産後ケアを提供。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svguidedtl.aspx?servno=21961",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで千成保育園で受け入れる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svGuideDtl.aspx?servno=55383",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の親を含む子育て世帯などを対象に、市内民間賃貸住宅の家賃負担額の2分の1を最長24か月補助する。",
+          "eligibility": {
+            "childAgeLimit": "中学校3年生まで",
+            "parentAgeLimit": "子の親のいずれかが39歳以下",
+            "incomeLimit": "原則として世帯全員の合計所得500万円未満",
+            "residency": "住民登録から3年以上射水市に定住する意思があること"
+          },
+          "details": {
+            "program": "射水市若者世帯定住促進家賃補助事業",
+            "eligibleHouseholds": "子育て世帯、39歳以下のひとり親世帯、夫婦のいずれかが39歳以下の転入世帯",
+            "subsidy": "契約家賃から住居手当等を差し引いた家賃負担額の2分の1",
+            "monthlyCap": "世帯全員が初年度申請日に29歳以下の場合は月2万円、その他は月1万円",
+            "period": "同居開始月または翌月から24か月",
+            "excludedHousing": "公営住宅、社宅・官舎・寮、1親等親族所有住宅、契約期間1年未満の住宅等",
+            "requirements": "新規賃貸借契約、家賃・市税等の滞納なし、生活保護を受給していないこと、過去に同補助を受給していないこと",
+            "application": "申請書、賃貸借契約書、住民票、住居手当が分かる書類、所得証明書、振込口座資料等を観光まちづくり課へ提出"
+          },
+          "contact": {
+            "department": "産業経済部 観光まちづくり課",
+            "phone": "0766-51-6676"
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svGuideDtl.aspx?servno=18555",
+            "checkedAt": "2026-07-20"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "家庭の燃えないごみ・粗大ごみはクリーンピア射水へ直接持ち込め、10kgにつき160円で受け入れる。",
+          "eligibility": {
+            "residency": "射水市内から出る家庭系一般廃棄物",
+            "carrier": "射水市に住所がある本人または同居家族"
+          },
+          "details": {
+            "facility": "クリーンピア射水",
+            "method": "家庭の燃えないごみ・粗大ごみを施設へ直接持込み",
+            "fee": "10kgにつき160円",
+            "hours": "土日・年末年始を除く8時30分から16時45分。月曜から金曜の祝日・振替休日は15時30分まで",
+            "businessWaste": "事業系の燃えないごみ・粗大ごみは受入不可",
+            "difficultItems": "乗用車以下のタイヤ、廃バッテリー、廃消火器は品目別料金で受入れ",
+            "excludedAppliances": "エアコン、テレビ、冷蔵庫・冷凍庫、洗濯機・衣類乾燥機は家電リサイクル法に従い、指定引取場所または小売業者を利用",
+            "warning": "無許可の不用品回収業者は利用しない"
+          },
+          "contact": {
+            "department": "市民生活部 環境課",
+            "phone": "0766-51-6624"
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svGuideDtl.aspx?servno=5398",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.imizu.toyama.jp/guide/svGuideDtl.aspx?servno=34913",
+              "checkedAt": "2026-07-20",
+              "description": "無許可回収業者と家電4品目の注意"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・洪水・土砂災害・ため池・内水等のハザードマップ、指定避難所、防災メール、LINE、災害情報ポータルを提供する。",
+          "details": {
+            "hazardMaps": "津波、洪水、土砂災害、ため池、内水、地震の各防災マップを公開。内水ハザードマップは2026年6月配布",
+            "shelters": "市指定避難所は112施設。第1次避難所と第2次避難所に区分し、市指定緊急避難場所一覧も公開",
+            "email": "メール配信サービスで防災・緊急情報、火災情報、射水市内の気象警報・注意報を配信",
+            "line": "射水市LINE公式アカウントで災害・防災等の緊急情報をリアルタイム配信。IDは@imizu_city",
+            "portal": "災害・防災・緊急ページおよび射水市災害情報ポータルで緊急情報や関連資料を確認可能",
+            "weatherUpdate": "2026年の新たな防災気象情報への移行に伴い、メール・LINE等から気象庁ページを案内。Xでの防災気象情報配信は終了",
+            "welfareShelter": "福祉避難所は必要に応じて開設され、まず指定避難所へ避難した後、受入態勢が整い次第移動する"
+          },
+          "contact": {
+            "department": "防災・資産管理課 防災危機管理班",
+            "phone": "0766-51-6632"
+          },
+          "source": {
+            "url": "https://www.city.imizu.toyama.jp/guide/svguidedtl.aspx?servno=5470",
+            "checkedAt": "2026-07-20"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.imizu.toyama.jp/event-topics/svTopiDtl.aspx?servno=9663",
+              "checkedAt": "2026-07-20",
+              "description": "市指定緊急避難場所・指定避難所"
+            },
+            {
+              "url": "https://www.city.imizu.toyama.jp/mmag/mmagmenu.aspx",
+              "checkedAt": "2026-07-20",
+              "description": "メール配信サービス"
+            },
+            {
+              "url": "https://www.city.imizu.toyama.jp/event-topics/svtopidtl.aspx?servno=21229",
+              "checkedAt": "2026-07-20",
+              "description": "射水市LINE公式アカウント"
+            },
+            {
+              "url": "https://www.city.imizu.toyama.jp/event-topics/svTopiDtl.aspx?servno=32774",
+              "checkedAt": "2026-07-20",
+              "description": "2026年以降の防災気象情報配信"
+            }
+          ]
+        }
+      }
+    },
+    {
       "code": "23100",
       "prefectureCode": "23",
       "prefecture": "愛知県",
       "name": "名古屋市",
       "officialUrl": "https://www.city.nagoya.jp/",
-      "status": "todo",
-      "summary": "中日本調査班の初期登録対象。9制度を順次調査する。",
+      "status": "needs_coordinator",
+      "summary": "名古屋市の9制度を調査済み。子ども医療費助成、病児・病後児保育、保育料、学校給食費、産後ケア、一時保育・こども誰でも通園制度、住宅支援、粗大ごみ、防災情報を確認済み。",
       "services": {
         "childMedical": {
-          "status": "todo",
-          "summary": "子ども医療費助成を未調査"
+          "status": "verified",
+          "summary": "0歳から18歳到達後最初の3月31日まで、所得制限なく保険診療の自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18,
+            "residency": "名古屋市内に住所があること",
+            "insurance": "健康保険に加入していること"
+          },
+          "details": {
+            "copay": "保険診療分の自己負担額を助成し、原則として窓口負担は無料。所得制限なし",
+            "incomeLimit": "なし",
+            "application": "住所地の区役所保険年金課福祉医療担当または支所区民福祉課福祉医療担当の窓口、もしくは電子申請で子ども医療証を申請。健康保険の加入を確認できるものが必要",
+            "paymentMethod": "愛知県内の医療機関等では、マイナ保険証等と子ども医療証を提示して現物給付。医療証交付前、県外受診、治療用装具購入などは申請による払い戻し",
+            "excludedCosts": "差額ベッド代、先発医薬品の特別料金、健康診断、予防接種、文書料、入院時食事療養の標準負担額など保険診療外の費用は対象外",
+            "otherPrograms": "障害者医療費助成制度またはひとり親家庭等医療費助成制度の適用対象者、生活保護受給者、児童福祉施設等入所者は対象外。他の国の公費負担制度が利用できる場合はその制度を優先"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kodomo/kosodate/1008992/1009002/1009009.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagoya.jp/kenkofukushi/iryou/1034391/1011182/1033725.html",
+              "checkedAt": "2026-07-19",
+              "description": "助成内容、医療証の使い方、対象外費用、払い戻し"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kenkofukushi/iryou/1034391/1011182/1042060.html",
+              "checkedAt": "2026-07-19",
+              "description": "子ども医療証の電子申請"
+            }
+          ]
         },
         "sickChildCare": {
-          "status": "todo",
-          "summary": "病児・病後児保育を未調査"
+          "status": "verified",
+          "summary": "原則生後6か月から小学生までの病児・病後児を22施設で預かる。一般世帯は利用時間に応じ1,000円から2,000円",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12,
+            "residency": "名古屋市内または相互利用協定を締結した自治体に居住すること",
+            "condition": "病気または回復期にあり、保護者の勤務等で家庭保育ができず、医師が利用適当と認めること。保育所等の利用有無は問わない"
+          },
+          "details": {
+            "facilityCount": 22,
+            "capacity": "各施設4人以上。施設規模や職員体制により異なる",
+            "hours": "原則、月曜日から土曜日の8時から18時。祝日・年末年始を除き、土曜日の実施時間は施設ごとに異なる",
+            "usagePeriod": "原則として1回につき連続7日以内。病状等により必要最小限の延長が可能",
+            "fee": "一般世帯は6時間まで1,000円、8時間まで1,500円、10時間まで2,000円。生活保護世帯・市民税非課税世帯は0円。給食・おやつ代等は別途",
+            "application": "希望施設の空き状況を確認し、運営医療機関またはかかりつけ医を受診して利用連絡書を作成してもらう。原則前日までに施設へ電話等で予約し、申込書と利用連絡書を提出",
+            "registration": "施設によって事前登録が必要。預かり前の診察や聞き取りを行う場合があるため、手続き・持ち物を施設へ事前確認する",
+            "payment": "利用当日、お迎え時に利用料等を施設へ直接支払う",
+            "mutualUse": "大府市、春日井市、北名古屋市、小牧市、みよし市、豊明市、東海市、知多市、尾張旭市、蟹江町、半田市と相互利用協定あり。市外施設は所在地自治体の料金・利用方法に従う",
+            "freeChildcareSupport": "保育の必要性があり事前認定を受けた場合、対象施設では幼児教育・保育の無償化の上限内で利用料が給付対象となる場合がある"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kodomo/kosodate/1009115/1009125/1009255/1034085/1009265.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://kodomokosodate.city.nagoya.jp/firstuse/service/7-6.html",
+              "checkedAt": "2026-07-19",
+              "description": "空き確認、受診、利用連絡書、予約、申込、支払いの利用手順"
+            }
+          ]
         },
         "childcareFee": {
-          "status": "todo",
-          "summary": "保育料・第2子以降の軽減を未調査"
+          "status": "verified",
+          "summary": "3歳児クラスから5歳児クラスは無料。0歳児クラスから2歳児クラスは市民税額と保育必要時間に応じて決まり、多子世帯には半額・無料制度がある",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5,
+            "residency": "名古屋市で教育・保育給付認定を受け、保育所、認定こども園、地域型保育事業等を利用する子ども",
+            "ageCondition": "0歳児クラスから2歳児クラスは市民税非課税世帯を除き保育料が必要。3歳児クラスから5歳児クラスは無料"
+          },
+          "details": {
+            "fee": "3歳児クラスから5歳児クラスは無料。0歳児クラスから2歳児クラスは世帯の市民税額と保育標準時間・保育短時間の区分に応じて決定",
+            "feeCalculation": "0歳児クラスから2歳児クラスは市民税額に応じた階層制。保育標準時間は原則1日11時間まで、保育短時間は原則1日8時間まで。所得状況に応じ毎年9月に金額を見直す",
+            "incomeCondition": "住民税非課税世帯の0歳児クラスから2歳児クラスは幼児教育・保育の無償化対象",
+            "siblingReduction": "市民税所得割額57,700円未満の多子世帯は、子どもの年齢を問わず第2子半額、第3子以降無料。57,700円以上の世帯等は対象施設を同時利用する就学前児童を数え、第2子半額、第3子以降無料",
+            "thirdChildFree": "18歳到達後最初の3月31日までの子どもが3人以上いる世帯では、保育所等を利用する第3子以降の3歳未満児の保育料が無料",
+            "singleParentReduction": "一定の市民税階層に該当するひとり親世帯・在宅障害児者のいる世帯は、第1子の減額や第2子以降無料の軽減がある",
+            "additionalCosts": "3歳児クラスから5歳児クラスも、教材費、行事費、主食費、副食費などの実費は無償化対象外",
+            "sideDishExemption": "副食費は、1号認定では生活保護世帯、市民税所得割額77,101円未満世帯、里親、小学校3年生から数えて第3子以降が免除。2号認定では生活保護世帯、市民税所得割額57,700円未満世帯、里親、小学校就学前から数えて第3子以降が免除",
+            "payment": "保育所利用者は市へ支払い、認定こども園・小規模保育事業等の利用者は施設・事業所へ直接支払う"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kodomo/kosodate/1009115/1009125/1009255/1009267.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagoya.jp/kodomo/kosodate/1009115/1009125/1009255/1009268.html",
+              "checkedAt": "2026-07-19",
+              "description": "3歳児クラスから5歳児クラスの無償化と副食費免除"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kodomo/kosodate/1009115/1009353/1034093/1009355.html",
+              "checkedAt": "2026-07-19",
+              "description": "幼児教育・保育無償化の対象施設と対象者"
+            }
+          ]
         },
         "schoolMeals": {
-          "status": "todo",
-          "summary": "学校給食費支援を未調査"
+          "status": "verified",
+          "summary": "公表中の給食費は小学校月額4,400円、中学校スクールランチ1食320円。令和8年度は小学校の抜本的負担軽減と中学校の物価高騰対応支援を予算化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15,
+            "schools": "名古屋市立小学校・中学校・特別支援学校",
+            "fiscalYear": "令和8年度"
+          },
+          "details": {
+            "support": "給食費案内ページの公表額は、小学校月額4,400円、中学校スクールランチ1食320円",
+            "schools": "市立小学校では学校給食、中学校では原則スクールランチを実施。鳴海中学校は学校給食を実施",
+            "elementarySchool": "名古屋市立小学校の給食費は月額4,400円。令和8年度予算に『小学校給食費の抜本的な負担軽減』を計上しているが、給食費案内ページでは軽減後の徴収額をまだ公表していない",
+            "juniorHighSchool": "中学校スクールランチ代は1食320円。令和8年度予算に中学校給食費の物価高騰対応支援を計上",
+            "costSharing": "人件費、光熱水費、施設設備費等は市が公費負担し、食材費を給食費として保護者が負担",
+            "financialAssistance": "就学援助の認定を受けた中学生は学校給食費を実費援助。鳴海中学校は学校長から給食実施機関へ支払い、スクールランチ実施校は実際に飲食した金額を翌月支給",
+            "specialNeedsSupport": "特別支援教育就学奨励費では、所得要件を満たす中学校段階の学校給食費について実費額の2分の1を支給",
+            "currentRateNote": "令和8年度の負担軽減施策は予算資料で確認できるが、公式の給食費案内ページに軽減後の具体額が掲載されるまでは公表中の4,400円・320円を現行額として記録"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kodomo/schools/1034352/1016933/1016934/1016937.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagoya.jp/kodomo/schools/1027693/1027946/1027947.html",
+              "checkedAt": "2026-07-19",
+              "description": "令和8年度の小学校給食費負担軽減と中学校給食費の物価高騰対応支援"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kodomo/schools/1016760/1016781.html",
+              "checkedAt": "2026-07-19",
+              "description": "就学援助による中学校給食費の実費援助"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kodomo/schools/1017010/1017016.html",
+              "checkedAt": "2026-07-19",
+              "description": "特別支援教育就学奨励費による中学校段階の給食費2分の1支給"
+            }
+          ]
         },
         "postpartumCare": {
-          "status": "todo",
-          "summary": "産後ケアを未調査"
+          "status": "verified",
+          "summary": "出産後1年以内の産婦と乳児を対象に、宿泊型・通所型・訪問型を合算7日まで利用できる",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1,
+            "residency": "名古屋市に住所があり、産後ケアを必要とする方",
+            "ageCondition": "出産後1年以内。利用期限は児が1歳の誕生日当日まで",
+            "exclusions": "母子いずれかが感染症にかかっている場合、母親に入院治療が必要な場合、母親に治療が必要な心身の不調・疾患がある場合は原則利用不可。医師が利用可能と判断した場合を除く"
+          },
+          "details": {
+            "types": "宿泊型、通所型、訪問型。基本的に母子で利用し、受け入れ可能月齢や託児時間等は事業所・サービスごとに異なる",
+            "usageLimit": "1回の出産につき、宿泊型・通所型・訪問型を合算して7日間まで。宿泊型2泊3日は3日分として数える",
+            "fee": "1日当たり、一般区分は宿泊型3,520円、通所型2,360円、訪問型1,560円",
+            "feeExemption": "生活保護受給世帯、または母親とパートナーの双方が市民税非課税の場合は宿泊型・通所型・訪問型とも0円",
+            "application": "妊娠32週から名古屋市電子申請システムで利用申込。利用決定まで2～3週間程度。承認決定通知書と利用券が住民票住所へ簡易書留で届いた後、希望事業所へ直接予約する",
+            "useProcedure": "利用当日は母子健康手帳と利用券を持参し、利用後に階層区分に応じた利用料を事業所へ支払う",
+            "cancellation": "予約日前日の正午までに変更・キャンセル等の連絡がない場合、階層区分にかかわらず宿泊型3,520円、通所型2,360円、訪問型1,560円のキャンセル料が発生",
+            "optionalFees": "市が定めるサービス以外のオプションを希望する場合は別料金。内容と料金は事業所ごとに異なる",
+            "stillbirthSupport": "流産または死産を経験して1年以内の方も訪問型の対象"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kodomo/ninshin/1008971/1008978.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.promotion.city.nagoya.jp/news/2317/",
+              "checkedAt": "2026-07-19",
+              "description": "利用対象、利用できない場合、流産・死産後の訪問型対象"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/jigyou/boshu/1014251/1014296/1014304.html",
+              "checkedAt": "2026-07-19",
+              "description": "利用期限と宿泊型・通所型・訪問型合算7日"
+            }
+          ]
         },
         "temporaryChildcare": {
-          "status": "todo",
-          "summary": "一時保育・誰でも通園を未調査"
+          "status": "verified",
+          "summary": "一時保育は就学前児童を71施設で預かり、こども誰でも通園制度は生後6か月から満3歳未満の未就園児が月10時間まで利用できる",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5,
+            "residency": "一時保育は保護者と子どもが名古屋市内在住で、原則として保育所・幼稚園等に在籍していない就学前児童が対象",
+            "ageCondition": "こども誰でも通園制度は利用日時点で生後6か月から満3歳未満で、保育所・認定こども園・地域型保育・企業主導型保育等を利用していない子どもが対象",
+            "employmentCondition": "こども誰でも通園制度は保護者の就労要件を問わない"
+          },
+          "details": {
+            "types": "一時保育は非定型保育、緊急保育、リフレッシュ保育。別制度として、就労要件を問わないこども誰でも通園制度を実施",
+            "temporaryCareReasons": "非定型保育は就労・職業訓練・就学等、緊急保育は保護者の傷病・出産・災害・事故・親族の看護介護・冠婚葬祭等、リフレッシュ保育は育児負担の軽減を目的に利用可能",
+            "temporaryCareLimits": "非定型保育は週3日まで・最長6か月、緊急保育は原則連続14日以内、リフレッシュ保育は公立保育所の同種事業と合わせて月3日以内",
+            "temporaryCareHours": "午前8時から午後6時までのうち必要な時間。定員は1日概ね6人、小規模保育事業所は3人",
+            "temporaryCareFacilities": 71,
+            "temporaryCareFee": "市民税所得割額40,800円以上は6時間まで1,200円・8時間まで1,600円・10時間まで2,000円。均等割のみまたは所得割額40,800円未満は600円・800円・1,000円。生活保護・市民税非課税世帯は無料。飲食物費300円が別途必要",
+            "temporaryCareApplication": "原則利用開始日の1週間前までに、住所地の区役所民生子ども課へ申請。緊急保育・リフレッシュ保育は実施施設でも受付可能で、施設ごとに受付方法を事前確認する",
+            "freeChildcareSupport": "保育の必要性の認定を事前に受けた場合、一時保育の利用料は年齢・世帯区分に応じた月額上限の範囲内で幼児教育・保育の無償化対象となる場合がある",
+            "anyChildCareLimit": "こども誰でも通園制度は子ども1人につき月10時間まで。1回1時間以上、30分単位で利用でき、未利用時間は翌月へ繰り越せない",
+            "anyChildCareFee": "令和8年度は各事業者が利用料を設定する。生活保護世帯・市民税非課税世帯等には減免制度があり、給食費・おやつ代等は別途。利用施設へ直接支払う",
+            "anyChildCareFacilities": 23,
+            "anyChildCareApplication": "最初に名古屋市オンライン申請システムで利用申請し、利用可能通知後、つうえんポータルで事前面談と利用予約を行う。申請からポータル利用可能まで1～2週間、認定通知書郵送まで2～3週間程度"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kodomo/kosodate/1009115/1009125/1009255/1034084/1009261.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagoya.jp/kodomo/kosodate/1009115/1009125/1033528/1036127.html",
+              "checkedAt": "2026-07-19",
+              "description": "令和8年度こども誰でも通園制度の対象、月10時間、事業者設定料金、申請・面談・予約手順、23施設"
+            },
+            {
+              "url": "https://kodomokosodate.city.nagoya.jp/firstuse/service/7-3.html",
+              "checkedAt": "2026-07-19",
+              "description": "令和8年4月時点の一時保育71施設と利用料・申請手順"
+            }
+          ]
         },
         "housingSupport": {
-          "status": "todo",
-          "summary": "子育て世帯向け住宅支援を未調査"
+          "status": "verified",
+          "summary": "子育て世帯向けに定住促進住宅・公社賃貸住宅の家賃20％減額、補助付きセーフティネット住宅、市営住宅の専用募集などを実施",
+          "eligibility": {
+            "residency": "制度・物件ごとの入居要件を満たすこと",
+            "householdCondition": "主な対象は18歳到達後最初の3月31日までの子ども、または妊娠している方がいる世帯",
+            "incomeCondition": "補助付きセーフティネット住宅は所得月額214,000円以下。子どもが3人以上いる場合は259,000円以下"
+          },
+          "details": {
+            "conditions": "定住促進住宅は令和6年4月1日以降の入居世帯で18歳年度末までの子どもまたは妊娠している方がいる世帯が主対象。公社賃貸住宅は床面積40平方メートル以上の対象住宅へ新規入居する子育て世帯が対象。制度ごとに追加要件あり",
+            "rentReduction": "定住促進住宅は家賃を20％減額し、減額後家賃は6万円を下回らない。令和6年4月1日以降入居世帯は最大通算120か月。公社賃貸住宅も家賃20％減額を最大10年間",
+            "safetyNetHousing": "子育て世帯または新婚世帯専用のセーフティネット住宅に、名古屋市と国による家賃減額補助あり。子育て世帯は6年以内かつ管理期間内。生活保護の住宅扶助や住居確保給付金受給中は併用不可",
+            "municipalHousing": "市営住宅の一般募集には、18歳年度末までの子または妊娠している方がいる世帯向けの『子育て・若年世帯』区分がある。多家族・多子世帯向け区分や、申込者本人45歳未満を対象とする期限付きの定期入居募集も実施",
+            "application": "定住促進住宅・公社賃貸住宅・補助付きセーフティネット住宅は対象物件の管理会社または名古屋市住宅供給公社等へ確認・申請。市営住宅は募集ごとに郵送または電子申請等で申し込む",
+            "otherSupport": "子育て世帯等が市内の良質な中古住宅を取得する際の融資利子補給や、補助錠・チャイルドゲート・転落防止手すり等の購入・設置費の2分の1、最大20万円を補助する制度もある"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014635/index.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014585/1014622/1034009.html",
+              "checkedAt": "2026-07-19",
+              "description": "定住促進住宅の子育て世帯家賃20％減額"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014635/1014638.html",
+              "checkedAt": "2026-07-19",
+              "description": "住宅供給公社賃貸住宅の家賃20％減額を最大10年間"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014635/1040294.html",
+              "checkedAt": "2026-07-19",
+              "description": "家賃補助付き子育て世帯専用セーフティネット住宅の所得要件と補助期間"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014585/1014586/1014587/1014589/1034006.html",
+              "checkedAt": "2026-07-19",
+              "description": "市営住宅の子育て・若年世帯、多家族・多子世帯向け募集区分"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014710/1014581.html",
+              "checkedAt": "2026-07-19",
+              "description": "子どもあんしん住まいる補助金"
+            }
+          ]
         },
         "bulkyWaste": {
-          "status": "todo",
-          "summary": "粗大ごみ料金を未調査"
+          "status": "verified",
+          "summary": "原則30センチ角を超える家庭ごみが対象。月1回の事前申込制で、手数料は250円・500円・1,000円・1,500円",
+          "eligibility": {
+            "wasteType": "名古屋市内の家庭から出る粗大ごみ",
+            "sizeCondition": "原則として30センチ角を超える大型ごみ"
+          },
+          "details": {
+            "definition": "原則30センチ角を超える家庭ごみ。ただし傘、食器、調理器具、清掃用具など一部品目は大きさにかかわらず通常の可燃・不燃ごみ等として扱う",
+            "fees": "品目と大きさにより250円、500円、1,000円、1,500円",
+            "collection": "地域ごとに月1回の指定日に収集。収集日の朝8時までに指定場所へ出す",
+            "application": "収集日の7日前までにインターネットまたは粗大ごみ受付センターへ電話で申し込む。インターネット受付は24時間365日利用可能で、対象品目はキャッシュレス決済にも対応",
+            "payment": "電話申込等は案内された金額の粗大ごみ処理手数料納付券を購入して貼付。キャッシュレス決済時は受付番号等を表示して排出する",
+            "excludedItems": "家電リサイクル法対象機器、家庭用パソコン、ガスボンベ、耐火金庫、消火器、自動車用タイヤ等の処理困難物、事業系ごみ、自動車・二輪車関連部品などは市では収集しない",
+            "selfDelivery": "ごみが発生した区の環境事業所で受付後、平日に処理施設へ自己搬入できる。2026年9月30日までは10キログラムごと200円、2026年10月1日以降は10キログラムごと270円で現金払い",
+            "plannedChange": "2027年1月頃から、ウェブで搬入時間を事前予約して処理施設へ直接持ち込む方式へ変更予定"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/kurashi/gomi/1012183/1035058/1012184/1033988.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagoya.jp/kurashi/gomi/1012183/1033991.html",
+              "checkedAt": "2026-07-19",
+              "description": "家庭ごみの自己搬入方法、処理手数料改定、予約方式への変更予定"
+            }
+          ]
         },
         "disasterPrevention": {
-          "status": "todo",
-          "summary": "防災・ハザード情報を未調査"
+          "status": "verified",
+          "summary": "洪水・内水氾濫・高潮・地震・津波・ため池氾濫等をまとめたハザードマップ、防災アプリ、災害種別ごとの避難場所・避難所情報を提供",
+          "details": {
+            "hazardMaps": "なごやハザードマップで、想定最大規模の洪水、内水氾濫、高潮に加え、地震、津波、ため池氾濫などを確認できる。16区別の地図、音声版、防災ガイドブック、マイ・タイムライン、地区防災カルテも公開",
+            "evacuationPlaces": "指定緊急避難場所は命を守るため災害の危険からまず逃げる場所で、対象となる災害の種類ごとに異なる。指定避難所は、自宅が被災して帰宅できない場合に一定期間避難生活を送る施設",
+            "shelterData": "指定緊急避難場所・指定避難所の区別一覧を、2026年6月1日時点のExcel・PDFオープンデータとして公開",
+            "tsunami": "津波避難ビル等を津波に対する指定緊急避難場所として指定。対象区域は中村区、瑞穂区、熱田区、中川区、港区、南区、緑区の7区で、最新一覧は2026年6月1日時点",
+            "app": "名古屋市防災アプリで地震・大雨・避難情報等をプッシュ通知。自宅や職場の災害リスク、避難場所、帰宅困難者向け施設、国民保護避難施設を地図で確認でき、マイ・タイムラインも作成可能",
+            "informationChannels": "防災アプリ、名古屋市LINE公式アカウント、Yahoo!防災、きずなネット、緊急速報メール、公式ウェブサイト、SNS、テレビ・ラジオ、防災スピーカーを組み合わせて情報を発信",
+            "emergencyMail": "対応する携帯電話へ避難情報等を緊急速報メールで配信。配信地域外から名古屋市の情報を受け取る場合などは、区を選択して登録できる無料のきずなネット防災情報を利用可能",
+            "speaker": "区役所、消防署、小学校等に設置した防災スピーカーで、緊急地震速報、高齢者等避難、避難指示、津波情報、国民保護情報等をサイレンと音声で放送。放送内容は多言語対応のテレホンサービスでも確認可能",
+            "welfareShelters": "福祉避難所は2025年3月31日時点で248か所。指定福祉避難所は原則として利用施設のサービス利用者と家族、協定福祉避難所は指定避難所で市職員等が必要性を判断した要配慮者と家族が対象で、一般避難者が直接避難する施設ではない",
+            "waterInformation": "名古屋市水防システムで市内の雨量や河川水位を確認できる"
+          },
+          "source": {
+            "url": "https://www.city.nagoya.jp/bousaiportal/hazardmap/1036428.html",
+            "checkedAt": "2026-07-19"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagoya.jp/bousaiportal/jouhou/1036430/1013493.html",
+              "checkedAt": "2026-07-19",
+              "description": "名古屋市防災アプリの通知、ハザードマップ、避難場所、マイ・タイムライン"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/bousaiportal/hinan/1013390/1013492.html",
+              "checkedAt": "2026-07-19",
+              "description": "2026年6月1日時点の指定緊急避難場所・指定避難所一覧"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/bousaiportal/hinan/1013390/1013420.html",
+              "checkedAt": "2026-07-19",
+              "description": "津波避難ビル等の対象区域と一覧"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/bousaiportal/jouhou/",
+              "checkedAt": "2026-07-19",
+              "description": "災害情報を入手する複数の手段"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/bousaiportal/jouhou/1036432/1013386.html",
+              "checkedAt": "2026-07-19",
+              "description": "きずなネット防災情報の配信内容と登録方法"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/bousaiportal/jouhou/1036435/1013378.html",
+              "checkedAt": "2026-07-19",
+              "description": "防災スピーカーの放送内容とテレホンサービス"
+            },
+            {
+              "url": "https://www.city.nagoya.jp/bousaiportal/hinan/1013390/1013491.html",
+              "checkedAt": "2026-07-19",
+              "description": "福祉避難所の対象者、避難手順、施設数"
+            }
+          ]
         }
       }
     },
