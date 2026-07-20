@@ -1,0 +1,22 @@
+name: Temp Append State 92 Audit
+on:
+  push:
+    branches: [coord/state-92-jul21]
+permissions:
+  contents: write
+jobs:
+  append:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cat >> jichitai-compare/operations/control/audit-log.jsonl <<'EOF'
+          {"timestamp":"2026-07-21T01:26:00+09:00","actor":"全国進行統括","action":"north-national-integration-and-regional-progress-92","details":{"nationalIntegration":{"region":"north","mainPullRequest":244,"ciRun":530,"mergedAt":"2026-07-21T01:18:06+09:00","generatedPullRequest":249,"generatedCiRun":539,"publicMunicipalityCount":73},"releaseBoundary":{"includedCodes":["01212","01213","01214","01215","01216","01217","01218","01219","01220","01221"],"deferredCodes":["01222","01223"]},"regionalMergesSinceState83":[{"region":"north","code":"01221","name":"名寄市","pullRequest":241},{"region":"north","code":"01222","name":"三笠市","pullRequest":243},{"region":"north","code":"01223","name":"根室市","pullRequest":246},{"region":"east","code":"08219","name":"牛久市","pullRequest":247},{"region":"central","code":"17210","name":"白山市","pullRequest":245},{"region":"west","code":"32204","name":"益田市","pullRequest":237},{"region":"west","code":"32205","name":"大田市","pullRequest":238},{"region":"west","code":"32207","name":"江津市","pullRequest":240},{"region":"west","code":"32209","name":"雲南市","pullRequest":248}],"regionalCounts":{"north":22,"east":18,"central":25,"west":27,"total":92},"pendingSinceRegionalRelease":{"north":2,"east":8,"central":4,"west":6,"total":20},"nextNationalReleaseCandidate":{"region":"east","remainingMunicipalities":2},"latestGeneratedMunicipalityCount":73,"openMunicipalityPullRequests":0,"openExceptions":0},"humanDecisionRequired":false}
+          EOF
+          rm .github/workflows/temp-append-state92-audit.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/audit-log.jsonl .github/workflows/temp-append-state92-audit.yml
+          git commit -m "統括監査: 北日本全国統合と92自治体を記録 [skip ci]"
+          git push
