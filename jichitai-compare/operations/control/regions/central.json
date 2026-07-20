@@ -3,15 +3,16 @@
   "region": "central",
   "assignedTeam": "中日本調査班",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-20T22:59:00+09:00",
+  "updatedAt": "2026-07-20T23:17:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 2,
+  "completedSinceLastRelease": 3,
   "completedMunicipalities": [
     "16321",
-    "16322"
+    "16322",
+    "16323"
   ],
   "regionalQueue": [
-    "16323"
+    "16342"
   ],
   "blocked": [],
   "completenessAudit": {
@@ -29,7 +30,8 @@
       "16211",
       "23100",
       "16321",
-      "16322"
+      "16322",
+      "16323"
     ],
     "checks": [
       "中日本11自治体の自治体JSON・9制度・task整合を確認",
@@ -38,10 +40,12 @@
       "舟橋村（16321）の自治体JSON・9制度・task整合とCI run #358成功を確認",
       "PR #157でregion/centralへの地方統合を完了",
       "上市町（16322）の自治体JSON・9制度・task整合とCI run #378成功を確認",
-      "PR #170でregion/centralへの地方統合を完了"
+      "PR #170でregion/centralへの地方統合を完了",
+      "立山町（16323）の自治体JSON・9制度・task整合とCI run #388成功を確認",
+      "PR #175でregion/centralへの地方統合を完了"
     ]
   },
-  "lastAction": "上市町（16322）の9制度をPR #170でregion/centralへ統合し、task.statusをmergedへ更新。立山町（16323）の作業ブランチと調査用JSON・taskを作成",
-  "nextAction": "data/16323-tateyama上で立山町の必須9制度を公式情報から一括調査し、自治体JSONとtaskを完成させる",
+  "lastAction": "上市町（16322）と立山町（16323）の9制度をそれぞれPR #170、#175でregion/centralへ統合し、両task.statusをmergedへ更新",
+  "nextAction": "担当表上の次の未登録・未着手自治体として入善町（16342）を確認し、taskと作業ブランチを作成する",
   "humanDecisionRequired": false
 }
