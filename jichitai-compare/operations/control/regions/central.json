@@ -3,14 +3,15 @@
   "region": "central",
   "assignedTeam": "中日本調査班",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-21T00:31:00+09:00",
+  "updatedAt": "2026-07-21T00:50:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 1,
+  "completedSinceLastRelease": 2,
   "completedMunicipalities": [
-    "17206"
+    "17206",
+    "17207"
   ],
   "regionalQueue": [
-    "17207"
+    "17209"
   ],
   "blocked": [],
   "completenessAudit": {
@@ -37,17 +38,20 @@
       "17203",
       "17204",
       "17205",
-      "17206"
+      "17206",
+      "17207"
     ],
     "checks": [
       "中日本11自治体の初回全国統合をPR #150でmainへ完了",
       "舟橋村から珠洲市までの追加10自治体をPR #217・CI run #476でmainへ全国統合",
       "生成データをPR #219・CI run #479で53自治体へ更新",
-      "加賀市（17206）は全国統合条件到達後の次回分として1件を繰り越し"
+      "加賀市（17206）は全国統合条件到達後の次回分として1件を繰り越し",
+      "羽咋市（17207）の自治体JSON・9制度・task整合をCI run #499成功で確認",
+      "PR #229でregion/centralへの地方統合を完了"
     ]
   },
-  "lastAction": "舟橋村（16321）から珠洲市（17205）までの追加10自治体をPR #217でmainへ全国統合し、生成データをPR #219で53自治体へ更新。加賀市（17206）を次回全国統合分として残してカウンターを1へリセットした。",
-  "nextAction": "羽咋市（17207）の必須9制度を公式情報から調査し、地方統合まで進める。",
+  "lastAction": "羽咋市（17207）の9制度をPR #229でregion/centralへ統合し、task.statusをmergedへ更新",
+  "nextAction": "かほく市（17209）の必須9制度を公式情報から調査し、地方統合まで進める",
   "lastNationalIntegrationPr": 217,
   "lastNationalIntegrationAt": "2026-07-21T00:25:25+09:00",
   "lastGeneratedPullRequest": 219,
