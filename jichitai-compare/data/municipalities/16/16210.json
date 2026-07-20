@@ -6,7 +6,7 @@
   "name": "南砺市",
   "officialUrl": "https://www.city.nanto.toyama.jp/",
   "status": "researching",
-  "summary": "南砺市の9制度を調査中。こども医療費助成を確認済み。",
+  "summary": "南砺市の9制度を調査中。こども医療費助成、病児・病後児保育を確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -44,8 +44,42 @@
         }
       ]
     },
-    "sickChildCare": {"status": "researching", "summary": "調査中"},
-    "childcareFee": {"status": "todo", "summary": "未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気中または回復期で家庭保育が難しい生後6か月以上の就学前児を、南砺市民病院内の病児保育室または市内保育園の病後児保育で預かる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 6,
+        "condition": "疾病中または病気回復期で、保護者や家族が就業等により家庭で保育できない就学前児童",
+        "residency": "南砺市民のほか、高岡市・魚津市・氷見市・黒部市・砺波市・小矢部市・射水市・入善町・朝日町の児童も利用可能"
+      },
+      "details": {
+        "sickChildFacility": "南砺市民病院内 病児保育室ぽけっと",
+        "postSickFacilities": "城端さくら保育園、認定こども園井波にじいろ保育園、福野ひまわり保育園、福光どんぐり保育園、福光東部かがやき保育園。喜志麻保育園は園へ直接問い合わせ",
+        "hours": "月曜日から金曜日の8時30分から17時まで。土日、祝日、年末年始を除く",
+        "capacity": "1日2名まで",
+        "usageLimit": "1回につきおおむね7日間",
+        "fee": "1日2,000円、半日1,000円。給食を食べる場合は半日でも2,000円",
+        "paymentSupport": "とみいくデジタルポイント、子育て応援券を利用可能",
+        "application": "事前登録が必要。利用時は利用申込書と医師作成の診療情報提供書等を提出"
+      },
+      "contact": {
+        "department": "こども課",
+        "phone": "0763-23-2010"
+      },
+      "source": {
+        "url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/5075.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://sukoyaka.city.nanto.toyama.jp/nursey",
+          "checkedAt": "2026-07-20",
+          "description": "病児・病後児保育の事前登録と実施園一覧"
+        }
+      ]
+    },
+    "childcareFee": {"status": "researching", "summary": "調査中"},
     "schoolMeals": {"status": "todo", "summary": "未調査"},
     "postpartumCare": {"status": "todo", "summary": "未調査"},
     "temporaryChildcare": {"status": "todo", "summary": "未調査"},
