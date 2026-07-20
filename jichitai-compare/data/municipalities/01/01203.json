@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "01203",
+  "prefectureCode": "01",
+  "prefecture": "北海道",
+  "name": "小樽市",
+  "officialUrl": "https://www.city.otaru.lg.jp/",
+  "status": "merged",
+  "summary": "9制度を小樽市公式情報で確認し、PR #116でregion/northへ統合済み。",
+  "updatedAt": "2026-07-20",
+  "services": {
+    "childMedical": {"status":"verified","summary":"0歳から高校3年生年代までの入院・通院を助成。所得制限あり。","eligibility":{"minAgeMonths":0,"maxAgeYears":18},"details":{"copay":"保険診療の自己負担分を助成。対象外費用あり","incomeLimit":"主たる生計維持者の所得制限あり","application":"受給者証の申請が必要"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2024062400026/","checkedAt":"2026-07-19"}},
+    "sickChildCare": {"status":"verified","summary":"1歳から小学6年生までの病児保育。市内施設は一時休止中で札幌市施設を試行利用可能。","eligibility":{"minAgeMonths":12,"maxAgeYears":12},"details":{"facilityCount":1,"fee":"市内施設は利用料無料。食事・おやつ代300円","statusNote":"市内施設は2026年6月25日から当面休止中"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2020111000438/","checkedAt":"2026-07-19"},"additionalSources":[{"url":"https://www.city.otaru.lg.jp/docs/2026041300013/","checkedAt":"2026-07-19"}]},
+    "childcareFee": {"status":"verified","summary":"3歳以上は無償。3歳未満は所得等で算定し、第2子以降は所得制限なく無料。","eligibility":{"minAgeMonths":0,"maxAgeYears":5},"details":{"fee":"3歳以上は0円。0～2歳は住民税額等で算定","siblingReduction":"2023年9月分から世帯内第2子以降は無料","incomeCondition":"0～2歳の住民税非課税世帯は無償"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2021032200068/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.otaru.lg.jp/docs/2020111000452/","checkedAt":"2026-07-20"}]},
+    "schoolMeals": {"status":"verified","summary":"令和6年度は物価高騰分を補助し、4月・5月を無償化。就学援助対象世帯は実費支援。","eligibility":{"minAgeMonths":72,"maxAgeYears":15},"details":{"support":"令和6年4月・5月の2か月分無償化。就学援助で実費支援","schools":"小樽市立小中学校等"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2024013000022/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.otaru.lg.jp/docs/2020110900692/","checkedAt":"2026-07-20"}]},
+    "postpartumCare": {"status":"verified","summary":"産後1年未満を対象にデイケア型・アウトリーチ型を無料で合計5回まで利用可能。","eligibility":{"minAgeMonths":0,"maxAgeYears":0},"details":{"types":"デイケア型ロング、デイケア型ショート、アウトリーチ型","fee":"無料。3種類を組み合わせて5回まで"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2022040600055/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.otaru.lg.jp/docs/2020111000872/","checkedAt":"2026-07-20"}]},
+    "temporaryChildcare": {"status":"verified","summary":"1歳から就学前の一時預かりと、生後6か月から満3歳未満のこども誰でも通園制度。","eligibility":{"minAgeMonths":6,"maxAgeYears":5},"details":{"types":"一時預かり、こども誰でも通園制度","fee":"一時預かりは年齢別料金。誰でも通園は1時間300円"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2021032200082/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.otaru.lg.jp/docs/2026010500024/","checkedAt":"2026-07-20"},{"url":"https://www.city.otaru.lg.jp/docs/2026033000013/","checkedAt":"2026-07-20"}]},
+    "housingSupport": {"status":"verified","summary":"三世代同居・近居を始める転入世帯向けに住宅取得・改修費を補助。子ども加算あり。","details":{"support":"新築・中古住宅購入、増改築等を補助。併用時最大100万円","conditions":"市外から転入し三世代同居または市内近居を開始。開始日から1年以内に申請"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2021030400033/","checkedAt":"2026-07-20"}},
+    "bulkyWaste": {"status":"verified","summary":"市は粗大ごみを収集せず、許可業者へ直接依頼。料金は品目や搬出条件等で異なる。","details":{"feeSystem":"定額制ではなく、品目・大きさ・搬出条件等で個別見積り","application":"小樽市の収集運搬業許可業者へ直接申し込む"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2020102100420/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.otaru.lg.jp/docs/2020102100499/","checkedAt":"2026-07-20"},{"url":"https://www.city.otaru.lg.jp/docs/2020102100406/","checkedAt":"2026-07-20"}]},
+    "disasterPrevention": {"status":"verified","summary":"防災マップで土砂・洪水・津波等を確認でき、災救マップで避難所状況等を確認可能。","details":{"coverage":"土砂災害、洪水、津波、避難場所・避難所、避難路、標高、避難所混雑状況","access":"小樽市防災マップおよび登録不要の災救マップ"},"source":{"url":"https://www.city.otaru.lg.jp/docs/2020101000813/","checkedAt":"2026-07-20"},"additionalSources":[{"url":"https://www.city.otaru.lg.jp/docs/2026062500010/","checkedAt":"2026-07-20"},{"url":"https://www.city.otaru.lg.jp/docs/2025100200011/","checkedAt":"2026-07-20"},{"url":"https://www.city.otaru.lg.jp/docs/2020101000806/","checkedAt":"2026-07-20"}]}
+  }
+}
