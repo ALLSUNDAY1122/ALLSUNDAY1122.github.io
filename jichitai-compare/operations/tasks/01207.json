@@ -5,7 +5,7 @@
   "prefectureCode": "01",
   "prefectureName": "北海道",
   "assignedTeam": "北日本調査班",
-  "status": "pr_open",
+  "status": "merged",
   "currentService": null,
   "nextServiceIndex": 9,
   "completedServices": ["childMedical", "sickChildCare", "childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport", "bulkyWaste", "disasterPrevention"],
@@ -16,7 +16,7 @@
   "currentBranch": "data/01207-obihiro",
   "pullRequestNumber": 140,
   "lastCheckedAt": "2026-07-20",
-  "lastUpdatedAt": "2026-07-20T14:45:00+09:00",
+  "lastUpdatedAt": "2026-07-20T14:50:00+09:00",
   "lastUpdatedBy": "全国進行統括",
   "officialSources": [
     "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/teate/1004588.html",
@@ -31,8 +31,8 @@
   ],
   "notes": [
     "対象9制度をすべて帯広市公式情報で確認済み。",
-    "地方統合PR #140をregion/north向けに作成。差分は帯広市自治体JSON、task、北日本地域進行の3ファイルのみ。",
-    "CI検証仕様に合わせ、task.statusをpr_open、officialSourcesを各制度の主出典9件へ正規化。"
+    "地方統合PR #140はCI run #306成功後、region/northへ統合済み。",
+    "task.statusをmergedへ正規化。"
   ],
   "blockers": []
 }
