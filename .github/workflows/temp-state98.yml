@@ -1,0 +1,43 @@
+name: Temp State 98
+on:
+  push:
+    branches: [coord/state-92-jul21]
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          base = Path('jichitai-compare/operations/control')
+          qpath = base / 'release-queue.json'
+          q = json.loads(qpath.read_text(encoding='utf-8'))
+          q['updatedAt'] = '2026-07-21T01:36:00+09:00'
+          central = next(e for e in q['entries'] if e['region'] == 'central')
+          if not any(x['code'] == '17212' for x in central['municipalities']):
+              central['municipalities'].append({'code':'17212','name':'野々市市'})
+          central['count'] = 27
+          central['pendingSinceLastRelease'] = 6
+          central['reason'] = '中日本の初回11自治体をPR #150、追加10自治体をPR #217でmainへ全国統合。生成データをPR #221で53自治体へ更新後、加賀市・羽咋市・かほく市・白山市・能美市・野々市市を地方統合'
+          q['summary']['regionalMergedMunicipalities'] = 98
+          qpath.write_text(json.dumps(q, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+          gpath = base / 'global-state.json'
+          g = json.loads(gpath.read_text(encoding='utf-8'))
+          g['updatedAt'] = '2026-07-21T01:36:00+09:00'
+          g['regionalCompletedSinceLastRelease'] = {'north':4,'east':8,'central':6,'west':8,'total':26}
+          g['regionalMergedMunicipalities'] = 98
+          gpath.write_text(json.dumps(g, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+          with (base / 'audit-log.jsonl').open('a', encoding='utf-8') as f:
+              f.write('\n' + json.dumps({'timestamp':'2026-07-21T01:36:00+09:00','actor':'全国進行統括','action':'regional-progress-98','details':{'mergedMunicipalities':[{'region':'central','code':'17212','name':'野々市市','pullRequest':256}],'regionalCounts':{'north':24,'east':18,'central':27,'west':29,'total':98},'pendingSinceRegionalRelease':{'north':4,'east':8,'central':6,'west':8,'total':26},'nextNationalReleaseCandidates':[{'region':'east','remainingMunicipalities':2},{'region':'west','remainingMunicipalities':2}],'latestGeneratedMunicipalityCount':73,'openMunicipalityPullRequests':0,'openExceptions':0},'humanDecisionRequired':False}, ensure_ascii=False, separators=(',', ':')))
+          PY
+          rm .github/workflows/temp-state98.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/release-queue.json jichitai-compare/operations/control/global-state.json jichitai-compare/operations/control/audit-log.jsonl .github/workflows/temp-state98.yml
+          git commit -m "統括管理: 98自治体へ更新 [skip ci]"
+          git push
