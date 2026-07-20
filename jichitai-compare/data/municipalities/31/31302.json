@@ -6,7 +6,7 @@
   "name": "岩美町",
   "officialUrl": "https://www.iwami.gr.jp/",
   "status": "researching",
-  "summary": "西日本調査班の調査対象。1制度を確認済みで、残り8制度を順次調査する。",
+  "summary": "西日本調査班の調査対象。2制度を確認済みで、残り7制度を順次調査する。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -22,7 +22,23 @@
       "source": {"url": "https://www.iwami.gr.jp/1107.htm", "checkedAt": "2026-07-20"},
       "additionalSources": [{"url": "https://www.iwami.gr.jp/2228.htm", "checkedAt": "2026-07-20"}]
     },
-    "sickChildCare": {"status": "researching", "summary": "病児・病後児保育を未調査"},
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "岩美病院で0歳から概ね小学6年生までを定員2名で預かり、町民は1日1,000円",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "target": "病気または病気の回復期にあり、集団保育や保護者の就労等により家庭での保育が困難な0歳から概ね小学6年生までの児童",
+        "facility": "岩美病院 病児・病後児保育室",
+        "hours": "岩美病院小児科の受診後から17時30分まで",
+        "capacity": "2名",
+        "feeResidents": "岩美町民は生活保護世帯無料、その他の世帯は1日1,000円",
+        "feeWorkers": "町外居住で岩美町内勤務の方は生活保護世帯無料、その他の世帯は1日2,500円",
+        "application": "事前に役場子ども未来課または岩美病院で利用登録し、利用時に岩美病院小児科を受診する",
+        "documents": "登録時は利用登録申請書と予防接種・病歴票、利用時は利用申込書と病状連絡票が必要",
+        "wideAreaUse": "鳥取市内の5施設も広域利用できる。令和8年4月の料金改定に伴い広域利用料助成は廃止された"
+      },
+      "source": {"url": "https://www.iwami.gr.jp/1104.htm", "checkedAt": "2026-07-20"}
+    },
     "childcareFee": {"status": "researching", "summary": "保育料を未調査"},
     "schoolMeals": {"status": "researching", "summary": "学校給食費を未調査"},
     "postpartumCare": {"status": "researching", "summary": "産後ケアを未調査"},
