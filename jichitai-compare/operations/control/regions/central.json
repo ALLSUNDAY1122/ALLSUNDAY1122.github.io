@@ -3,16 +3,17 @@
   "region": "central",
   "assignedTeam": "中日本調査班",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-20T23:04:00+09:00",
+  "updatedAt": "2026-07-20T23:19:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 3,
+  "completedSinceLastRelease": 4,
   "completedMunicipalities": [
     "16321",
     "16322",
-    "16323"
+    "16323",
+    "16342"
   ],
   "regionalQueue": [
-    "16342"
+    "16343"
   ],
   "blocked": [],
   "completenessAudit": {
@@ -31,7 +32,8 @@
       "23100",
       "16321",
       "16322",
-      "16323"
+      "16323",
+      "16342"
     ],
     "checks": [
       "中日本11自治体の自治体JSON・9制度・task整合を確認",
@@ -42,10 +44,12 @@
       "上市町（16322）の自治体JSON・9制度・task整合とCI run #378成功を確認",
       "PR #170でregion/centralへの地方統合を完了",
       "立山町（16323）の自治体JSON・9制度・task整合とCI run #388成功を確認",
-      "PR #175でregion/centralへの地方統合を完了"
+      "PR #175でregion/centralへの地方統合を完了",
+      "入善町（16342）の自治体JSON・9制度・task整合とCI run #396成功を確認",
+      "PR #179でregion/centralへの地方統合を完了"
     ]
   },
-  "lastAction": "上市町（16322）と立山町（16323）をregion/centralへ統合し、両taskをmergedへ更新。入善町（16342）の作業ブランチと調査用JSON・taskを作成",
-  "nextAction": "data/16342-nyuzen上で入善町の必須9制度を公式情報から一括調査し、自治体JSONとtaskを完成させる",
+  "lastAction": "入善町（16342）の9制度をPR #179でregion/centralへ統合し、task.statusをmergedへ更新",
+  "nextAction": "担当表上の次の未登録・未着手自治体として朝日町（16343）を確認し、taskと作業ブランチを作成する",
   "humanDecisionRequired": false
 }
