@@ -5,18 +5,190 @@
   "prefecture": "富山県",
   "name": "朝日町",
   "officialUrl": "https://www.town.asahi.toyama.jp/",
-  "status": "researching",
-  "summary": "朝日町の子育て、教育、住宅、生活、防災に関する9制度を調査中。",
+  "status": "verified",
+  "summary": "朝日町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
-    "childMedical": {"status": "researching", "summary": "朝日町の子ども医療費助成について公式情報を調査中。"},
-    "sickChildCare": {"status": "researching", "summary": "朝日町の病児・病後児保育について公式情報を調査中。"},
-    "childcareFee": {"status": "researching", "summary": "朝日町の保育料・多子軽減について公式情報を調査中。"},
-    "schoolMeals": {"status": "researching", "summary": "朝日町の学校給食費支援について公式情報を調査中。"},
-    "postpartumCare": {"status": "researching", "summary": "朝日町の産後ケアについて公式情報を調査中。"},
-    "temporaryChildcare": {"status": "researching", "summary": "朝日町の一時保育・こども誰でも通園制度について公式情報を調査中。"},
-    "housingSupport": {"status": "researching", "summary": "朝日町の子育て世帯向け住宅支援について公式情報を調査中。"},
-    "bulkyWaste": {"status": "researching", "summary": "朝日町の粗大ごみ処理方法・料金について公式情報を調査中。"},
-    "disasterPrevention": {"status": "researching", "summary": "朝日町の防災・ハザード情報について公式情報を調査中。"}
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生世代までの保険診療自己負担分を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "coverage": "入院・通院に係る保険診療自己負担分",
+        "copay": "受給資格証等の提示による現物給付を基本とし、県外受診等は償還払い",
+        "ageCondition": "満18歳到達後最初の3月31日まで",
+        "application": "出生・転入時に住民・子ども課で受給資格登録を行う"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/soshiki/jumin_kodomo/jidou/1452749075327.html",
+        "checkedAt": "2026-07-20"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "おおむね生後6か月から小学3年生までを、朝日町病児保育室スマイルで受け入れる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 9
+      },
+      "details": {
+        "facilityCount": 1,
+        "facility": "朝日町病児保育室スマイル",
+        "fee": "通常時間は1時間250円、延長時間は1時間300円、給食費は1日300円",
+        "hours": "月曜日から金曜日の8時30分から17時30分。延長は7時30分から8時30分および17時30分から18時30分",
+        "capacity": "病状等に応じて4名から6名程度",
+        "condition": "病気または回復期で集団保育が困難であり、保護者の就労等により家庭で保育できないこと",
+        "application": "事前登録、施設予約、医師連絡票等の提出が必要。小学4年生以上は施設へ相談"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/kosodate/mokuteki/5/2164.html",
+        "checkedAt": "2026-07-20"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "保育料は市町村民税所得割額に基づき算定し、同一世帯の第2子は半額、第3子以降は無料とする。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "父母等の市町村民税所得割額を基準に算定",
+        "siblingReduction": "同一世帯の第2子は半額、第3子以降は無料。保育施設への同時入所を要件としない",
+        "incomeCondition": "3歳から5歳児クラス等は幼児教育・保育の無償化対象。0歳から2歳児は住民税非課税世帯等が無償化対象",
+        "application": "保育所入所申込みと教育・保育給付認定手続きを行う"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/kosodate/mokuteki/5/2160.html",
+        "checkedAt": "2026-07-20"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校の学校給食費を無償化している。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "中学校は平成29年度、小学校は令和2年度から学校給食費を無償化",
+        "schools": "朝日町立小学校・中学校",
+        "fee": "保護者負担0円",
+        "relatedSupport": "保育所の副食費は令和元年10月から無償化し、令和7年4月から主食の米飯提供も実施"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/soshiki/jumin_kodomo/jidou/2215.html",
+        "checkedAt": "2026-07-20"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後おおむね4か月未満の母子に宿泊・通所型、産後1年未満の母子に訪問型の産後ケアを提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "types": "宿泊型、デイサービス型、訪問型",
+        "ageCondition": "宿泊・通所型は産後おおむね4か月未満、訪問型は産後1年未満",
+        "usageLimit": "訪問型は5回まで、デイサービス型は3回まで",
+        "fee": "宿泊型は1泊2日2,500円、2泊3日5,000円。町民税非課税世帯等は軽減対象",
+        "support": "母の心身のケア、乳房ケア、授乳・育児相談、乳児の健康確認等",
+        "additionalEligibility": "流産・死産を経験した方も相談・支援対象"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/soshiki/hoken/boshi/syussann/1601269014648.html",
+        "checkedAt": "2026-07-20"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "types": "こども誰でも通園制度（乳児等通園支援事業）",
+        "usageLimit": "子ども1人につき月10時間まで",
+        "fee": "おおむね1時間300円。実施施設により異なり、給食・おやつ代等は別途",
+        "facilities": "朝日町内の町立保育所",
+        "condition": "生後6か月から満3歳未満で、保育所・認定こども園・幼稚園等に在籍していないこと",
+        "application": "認定申請後に利用施設との事前面談・予約を行う",
+        "feeReduction": "生活保護世帯等は利用料軽減の対象となる場合がある"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/soshiki/jumin_kodomo/hoikusho/kodomodaredemo.html",
+        "checkedAt": "2026-07-20"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内で住宅を取得する世帯や、転入・新婚等で賃貸住宅へ入居する世帯を対象とする定住支援制度を設けている。",
+      "details": {
+        "programs": "朝日町住宅取得促進補助金、朝日町賃貸住宅家賃補助金",
+        "support": "町内住宅の新築・購入および一定の転入・新婚等の賃貸世帯に対して補助",
+        "conditions": "住所、年齢、住宅取得・賃貸契約、居住継続、町税滞納がないこと等、制度ごとの要件を満たすこと",
+        "application": "建設課へ事前相談し、各制度の申請書・契約書・住民票等を提出",
+        "notice": "補助額・加算条件は申請年度の要綱・募集案内で確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/soshiki/kensetsu/1449206958224.html",
+        "checkedAt": "2026-07-20"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない粗大ごみは収集指定券を付けて出すか、宮沢清掃センターへ直接搬入する。",
+      "details": {
+        "feeSystem": "家庭系ごみの宮沢清掃センター直接搬入は100kgまでごとに500円",
+        "application": "町収集では指定袋に入らないものをひも等で束ねて収集指定券を付け、1人で積載できる大きさで出す。大量ごみ等は施設へ直接搬入",
+        "facility": "新川広域圏事務組合 宮沢清掃センター",
+        "hours": "平日8時30分から16時30分、土曜日8時30分から正午。ごみ種別により搬入可能日が異なる",
+        "sizeLimit": "不燃性粗大ごみは原則120cm×140cm×200cm以下。木製品等は品目別の寸法制限あり",
+        "excluded": "家電4品目、タイヤ、消火器、ガスボンベ、バッテリー、農薬・農機具、危険物、スプリング入りマットレス等は通常収集対象外"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/soshiki/jumin_kodomo/kankyo/gomikankei/3201.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.niikawa.or.jp/work/work05_miyazawa.html",
+          "checkedAt": "2026-07-20",
+          "description": "宮沢清掃センターの受付時間・家庭系ごみ手数料"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・津波・土砂災害・地震等の防災情報、避難所、災害情報配信手段を公開している。",
+      "details": {
+        "coverage": "洪水、津波、土砂災害、地震、避難情報、地域防災計画等を掲載",
+        "access": "朝日町公式サイトの防災ページから各種ハザードマップと防災資料を確認可能",
+        "floodMap": "令和8年5月改訂の洪水ハザードマップで想定最大規模降雨や地区別浸水想定を掲載",
+        "tsunamiMap": "津波浸水想定、指定避難所および自主緊急避難場所を掲載",
+        "information": "Jアラート、防災行政無線、緊急情報メール、災害情報アプリ等で情報を提供"
+      },
+      "source": {
+        "url": "https://www.town.asahi.toyama.jp/soshiki/somu/bousai/index.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.asahi.toyama.jp/soshiki/kensetsu/doro/1449206911372.html",
+          "checkedAt": "2026-07-20",
+          "description": "令和8年5月改訂の洪水ハザードマップ"
+        },
+        {
+          "url": "https://www.town.asahi.toyama.jp/soshiki/somu/bousai/1449208596625.html",
+          "checkedAt": "2026-07-20",
+          "description": "津波ハザードマップと避難場所"
+        }
+      ]
+    }
   }
 }
