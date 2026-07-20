@@ -16,33 +16,23 @@
   "currentBranch": "data/01207-obihiro",
   "pullRequestNumber": 140,
   "lastCheckedAt": "2026-07-20",
-  "lastUpdatedAt": "2026-07-20T14:35:00+09:00",
+  "lastUpdatedAt": "2026-07-20T14:45:00+09:00",
   "lastUpdatedBy": "全国進行統括",
   "officialSources": [
-    "https://www.city.obihiro.hokkaido.jp/",
     "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/teate/1004588.html",
     "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/1010272/1004599.html",
     "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/hoiku/1004598.html",
     "https://www.city.obihiro.hokkaido.jp/kyoiku/kyoiku/kyushoku/1004738.html",
-    "https://www.city.obihiro.hokkaido.jp/kyoiku/kyoiku/enjo/1004714.html",
     "https://www.city.obihiro.hokkaido.jp/kyoiku/ninshin/service/1006504.html",
     "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/family/1015420.html",
-    "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/1010272/1023135.html",
-    "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/family/1023723.html",
     "https://www.city.obihiro.hokkaido.jp/kurashi/sumai/minkan/1003040.html",
-    "https://www.city.obihiro.hokkaido.jp/kurashi/sumai/kouei/1003029.html",
-    "https://www.city.obihiro.hokkaido.jp/sangyo/roudou/boshu/1005813.html",
     "https://www.city.obihiro.hokkaido.jp/kurashi/gomi/shushu1/1002770.html",
-    "https://www.city.obihiro.hokkaido.jp/kurashi/gomi/1002762.html",
-    "https://www.city.obihiro.hokkaido.jp/kurashi/bousai/1007329/index.html",
-    "https://www.city.obihiro.hokkaido.jp/kurashi/bousai/1007324/1002242.html",
-    "https://www.city.obihiro.hokkaido.jp/kurashi/bousai/1007329/1014402.html",
-    "https://www.city.obihiro.hokkaido.jp/kurashi/bousai/1007327/1002252.html"
+    "https://www.city.obihiro.hokkaido.jp/kurashi/bousai/1007329/index.html"
   ],
   "notes": [
-    "対象9制度をすべて帯広市公式情報で確認し、自治体データをcompletedへ更新。",
+    "対象9制度をすべて帯広市公式情報で確認済み。",
     "地方統合PR #140をregion/north向けに作成。差分は帯広市自治体JSON、task、北日本地域進行の3ファイルのみ。",
-    "初回CIはtask.status=completedが全国進捗生成の許可値外だったため失敗。PR公開中の正規値pr_openへ補正。"
+    "CI検証仕様に合わせ、task.statusをpr_open、officialSourcesを各制度の主出典9件へ正規化。"
   ],
   "blockers": []
 }
