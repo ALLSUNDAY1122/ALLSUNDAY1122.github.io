@@ -1,0 +1,48 @@
+name: Temporary Jichitai Generate Central
+
+on:
+  push:
+    branches:
+      - coord/generated-central-10-20260721
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generate and validate
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+      - name: Update public count
+        run: |
+          COUNT=$(node -p "JSON.parse(require('fs').readFileSync('jichitai-compare/data/generated/municipalities.json','utf8')).meta.municipalityCount")
+          python3 - "$COUNT" <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+          count = sys.argv[1]
+          path = Path('jichitai-compare/index.html')
+          text = path.read_text(encoding='utf-8')
+          text = re.sub(r'\d+自治体・9制度', f'{count}自治体・9制度', text)
+          text = re.sub(r'登録状況：\d+自治体の生成データを公開中', f'登録状況：{count}自治体の生成データを公開中', text)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "生成更新: 中日本10自治体統合後の公開データを反映 [skip ci]"
+            git push
+          fi
