@@ -1,1 +1,41 @@
-{"schemaVersion":"1.0.0","region":"central","assignedTeam":"中日本調査班","integrationBranch":"region/central","updatedAt":"2026-07-20T20:40:00+09:00","status":"active","completedSinceLastRelease":0,"completedMunicipalities":[],"regionalQueue":[],"blocked":[],"completenessAudit":{"status":"passed","checkedCodes":["16201","16202","16204","16205","16206","16207","16208","16209","16210","16211","23100"],"checks":["中日本11自治体の自治体JSON・9制度・task整合を確認","PR #150でmainへの全国統合を完了","全国統合後のリリースカウンターを0へリセット"]},"lastAction":"中日本11自治体をPR #150でmainへ全国統合し、生成データを16自治体へ同期","nextAction":"担当表に従い次の未登録・未着手自治体として舟橋村（16321）を確認し、taskと作業ブランチを作成する","humanDecisionRequired":false}
+{
+  "schemaVersion": "1.0.0",
+  "region": "central",
+  "assignedTeam": "中日本調査班",
+  "integrationBranch": "region/central",
+  "updatedAt": "2026-07-20T22:29:00+09:00",
+  "status": "active",
+  "completedSinceLastRelease": 1,
+  "completedMunicipalities": [
+    "16321"
+  ],
+  "regionalQueue": [],
+  "blocked": [],
+  "completenessAudit": {
+    "status": "passed",
+    "checkedCodes": [
+      "16201",
+      "16202",
+      "16204",
+      "16205",
+      "16206",
+      "16207",
+      "16208",
+      "16209",
+      "16210",
+      "16211",
+      "23100",
+      "16321"
+    ],
+    "checks": [
+      "中日本11自治体の自治体JSON・9制度・task整合を確認",
+      "PR #150でmainへの全国統合を完了",
+      "全国統合後のリリースカウンターを0へリセット",
+      "舟橋村（16321）の自治体JSON・9制度・task整合とCI run #358成功を確認",
+      "PR #157でregion/centralへの地方統合を完了"
+    ]
+  },
+  "lastAction": "舟橋村（16321）の9制度をPR #157でregion/centralへ統合し、task.statusをmergedへ更新",
+  "nextAction": "次の未登録・未着手自治体として上市町（16322）のtaskと作業ブランチを作成し、9制度を一括調査する",
+  "humanDecisionRequired": false
+}
