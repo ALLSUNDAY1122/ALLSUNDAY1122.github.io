@@ -6,7 +6,7 @@
   "name": "土浦市",
   "officialUrl": "https://www.city.tsuchiura.lg.jp/",
   "status": "researching",
-  "summary": "茨城県南部の市。子ども医療費と病児・病後児保育を確認済み。",
+  "summary": "茨城県南部の市。子ども医療費、病児・病後児保育、保育料・多子軽減を確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -43,8 +43,24 @@
         {"url": "https://www.city.tsuchiura.lg.jp/kosodate-kyoiku/syussan-kosodate/jidofukushi-boshifushifukushi/jigyo-service/page010079.html", "checkedAt": "2026-07-20"}
       ]
     },
-    "childcareFee": {"status":"researching","summary":"保育料・第2子軽減を公式情報から調査中"},
-    "schoolMeals": {"status":"todo","summary":"学校給食費支援を未調査"},
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は保育料無料。その他の0～2歳児保育料も市独自に約5％軽減",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "fee": "保育所・認定こども園の保育利用・地域型保育は、3～5歳児クラスの保育料が全額無料。0～2歳児クラスは住民税非課税世帯のみ全額無料",
+        "siblingReduction": "副食費は年収360万円未満相当世帯と第3子以降で免除。保育利用では小学校就学前の子どもから数えて第3子以降、教育利用では小学3年生までの子どもから数えて第3子以降が対象",
+        "incomeCondition": "0～2歳児の無償化は住民税非課税世帯が対象。無償化対象外の0～2歳児保育料については、市が2020年4月から従来額を約5％引き下げている",
+        "excludedCosts": "給食費、行事費、延長保育料などは無償化対象外。副食費は条件該当世帯のみ免除",
+        "otherFacilities": "認可外保育施設等は、保育の必要性が認定された3～5歳児が月額37,000円まで、住民税非課税世帯の0～2歳児が月額42,000円まで無償化",
+        "application": "保育所・認定こども園の通常保育料無償化は原則手続き不要。預かり保育や認可外保育施設等は事前の施設等利用給付認定が必要"
+      },
+      "source": {"url": "https://www.city.tsuchiura.lg.jp/kosodate-kyoiku/hoiku-gakko/yochien-kodomoen-hoikuen/hoikujo/page012483.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [
+        {"url": "https://www.city.tsuchiura.lg.jp/kosodate-kyoiku/hoiku-gakko/yochien-kodomoen-hoikuen/hoikujo/page006565.html", "checkedAt": "2026-07-20"}
+      ]
+    },
+    "schoolMeals": {"status":"researching","summary":"学校給食費支援を公式情報から調査中"},
     "postpartumCare": {"status":"todo","summary":"産後ケアを未調査"},
     "temporaryChildcare": {"status":"todo","summary":"一時保育・こども誰でも通園制度を未調査"},
     "housingSupport": {"status":"todo","summary":"子育て世帯向け住宅支援を未調査"},
