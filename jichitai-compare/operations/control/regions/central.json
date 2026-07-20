@@ -3,9 +3,9 @@
   "region": "central",
   "assignedTeam": "中日本調査班",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-20T08:30:00+09:00",
+  "updatedAt": "2026-07-20T11:50:00+09:00",
   "status": "active",
-  "completedSinceLastRelease": 8,
+  "completedSinceLastRelease": 9,
   "completedMunicipalities": [
     {"code": "16201", "name": "富山市", "regionalPullRequest": 30},
     {"code": "16202", "name": "高岡市", "regionalPullRequest": 68},
@@ -14,13 +14,14 @@
     {"code": "16206", "name": "滑川市", "regionalPullRequest": 110},
     {"code": "16207", "name": "黒部市", "regionalPullRequest": 118},
     {"code": "16208", "name": "砺波市", "regionalPullRequest": 125},
+    {"code": "16209", "name": "小矢部市", "regionalPullRequest": 134},
     {"code": "23100", "name": "名古屋市", "regionalPullRequest": 46}
   ],
   "regionalQueue": [],
   "blocked": [],
   "completenessAudit": {
     "status": "passed",
-    "checkedCodes": ["16201", "16202", "16204", "16205", "16206", "16207", "16208", "23100"],
+    "checkedCodes": ["16201", "16202", "16204", "16205", "16206", "16207", "16208", "16209", "23100"],
     "checks": [
       "自治体JSONの基本属性と9制度IDを確認",
       "各制度のverified状態と公式主出典を確認",
@@ -28,10 +29,11 @@
       "1行相当差分はJSON圧縮形式によるもので欠落ではないと判定",
       "task.statusをmergedへ正規化し旧blockerを除去",
       "黒部市の年齢範囲必須項目と主出典9件を補正後にCI成功を確認",
-      "砺波市PR #125のCI成功と地方統合を確認し、task statusをmergedへ正規化"
+      "砺波市PR #125のCI成功と地方統合を確認し、task statusをmergedへ正規化",
+      "小矢部市PR #132のCI失敗を確認し、主出典9件へ正規化したPR #134をCI run #281成功後に統合"
     ]
   },
-  "lastAction": "PR #125砺波市のregion/central統合を確認し、task statusをmergedへ正規化",
-  "nextAction": "担当表から次の未着手自治体を選定して制度調査を開始する。中日本は10自治体条件まで残り2件。",
+  "lastAction": "小矢部市PR #134をregion/centralへ統合し、task statusをmergedへ正規化",
+  "nextAction": "担当表から次の未着手自治体を選定する。中日本は10自治体条件まで残り1件。",
   "humanDecisionRequired": false
 }
