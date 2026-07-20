@@ -5,45 +5,249 @@
   "prefecture": "富山県",
   "name": "上市町",
   "officialUrl": "https://www.town.kamiichi.toyama.jp/",
-  "status": "researching",
-  "summary": "上市町の子育て、教育、住宅、生活、防災に関する9制度を調査中。",
+  "status": "verified",
+  "summary": "上市町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
-      "status": "researching",
-      "summary": "上市町の子ども医療費助成について公式情報を調査中。"
+      "status": "verified",
+      "summary": "出生から高校生年代までの通院・入院に係る保険診療自己負担分を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "copay": "富山県内では健康保険証と子ども医療費受給資格証の提示により現物給付。県外受診等は償還払い",
+        "coverage": "満18歳到達後最初の3月31日までの通院・入院に係る保険診療自己負担分",
+        "exclusions": "食事療養費、保険給付外、日本スポーツ振興センター災害共済給付、他の医療費助成制度対象等は除外",
+        "application": "出生・転入時に福祉課児童班で資格登録が必要"
+      },
+      "source": {
+        "url": "https://kira-kami.jp/contents/%E5%AD%90%E3%81%A9%E3%82%82%E5%8C%BB%E7%99%82%E8%B2%BB%E5%8A%A9%E6%88%90%E5%88%B6%E5%BA%A6/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/1998.html",
+          "checkedAt": "2026-07-20",
+          "description": "上市町公式サイトから出産・育児支援サイトへの公式案内"
+        }
+      ]
     },
     "sickChildCare": {
-      "status": "researching",
-      "summary": "上市町の病児・病後児保育について公式情報を調査中。"
+      "status": "verified",
+      "summary": "病気回復期で集団保育が困難な満1歳から小学3年生までを、上市保育園の病後児保育室で受け入れる。",
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 9
+      },
+      "details": {
+        "facilityCount": "町内1施設。県内全域の病児・病後児保育施設も利用可能",
+        "facility": "社会福祉法人上市保育園 病後児保育室ぽかぽかルーム",
+        "fee": "1日2,000円",
+        "hours": "月曜日から金曜日の9時から17時まで",
+        "condition": "病気の回復期で集団生活が困難かつ保護者が就労等により家庭で保育できないこと",
+        "application": "施設へ予約し、利用日の前日または当日に医師の診療情報提供書を取得"
+      },
+      "source": {
+        "url": "https://www.shafuku-kamiho.com/about-3",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://kira-kami.jp/contents/%E7%97%85%E5%85%90%E3%83%BB%E7%97%85%E5%BE%8C%E5%85%90%E4%BF%9D%E8%82%B2%E3%81%AE%E5%88%A9%E7%94%A8%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/",
+          "checkedAt": "2026-07-20",
+          "description": "上市町在住児が利用できる町内・県内施設一覧"
+        }
+      ]
     },
     "childcareFee": {
-      "status": "researching",
-      "summary": "上市町の保育料・多子軽減について公式情報を調査中。"
+      "status": "verified",
+      "summary": "保育料は市町村民税課税額に基づき算定し、令和7年4月から第2子以降を無償化している。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "保護者の市町村民税課税額の合計額で決定",
+        "siblingReduction": "令和7年4月から第2子以降の保育料を無償化",
+        "incomeCondition": "原則として父母の市町村民税課税額を算定対象とし、両親非課税等では他の扶養義務者を算定対象とする場合がある",
+        "otherReduction": "ひとり親家庭や障害者同居世帯は階層により軽減される場合があり、別途申請が必要",
+        "application": "新年度入所は例年前年度11月、途中入所は希望月の前々月末日までに申請"
+      },
+      "source": {
+        "url": "https://kira-kami.jp/contents/%E4%BF%9D%E8%82%B2%E6%89%80%EF%BC%88%E5%9C%92%EF%BC%89%E3%83%BB%E8%AA%8D%E5%AE%9A%E3%81%93%E3%81%A9%E3%82%82%E5%9C%92%E3%80%80%E5%85%A5%E6%89%80%E7%94%B3%E8%BE%BC%E7%AD%89%E3%81%AB%E3%81%A4%E3%81%84/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/1930.html",
+          "checkedAt": "2026-07-20",
+          "description": "上市町公式サイトから出産・育児支援サイトへの公式案内"
+        }
+      ]
     },
     "schoolMeals": {
-      "status": "researching",
-      "summary": "上市町の学校給食費支援について公式情報を調査中。"
+      "status": "verified",
+      "summary": "町内小中学校の給食費を無償化し、令和8年度の基準額は小学生月額6,200円、中学生月額7,200円。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "町内小中学校に通う児童生徒の学校給食費を無償化",
+        "schools": "上市町内の小学校・中学校",
+        "referenceFee": "令和8年4月から小学生月額6,200円、中学生月額7,200円",
+        "assistance": "経済的理由で就学困難と認められる世帯は就学援助で学校給食費等の対象"
+      },
+      "source": {
+        "url": "https://www.town.kamiichi.toyama.jp/page/18501.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/1789.html",
+          "checkedAt": "2026-07-20",
+          "description": "学校給食費を含む就学援助費"
+        },
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/15495.html",
+          "checkedAt": "2026-07-20",
+          "description": "町内小中学校の給食費負担がないことの公式回答"
+        }
+      ]
     },
     "postpartumCare": {
-      "status": "researching",
-      "summary": "上市町の産後ケアについて公式情報を調査中。"
+      "status": "verified",
+      "summary": "上市町に住所がある産後1年未満の母子を対象に、宿泊・通所等の産後ケアを原則7回まで提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "types": "かみいち総合病院、助産院、富山市産後ケア応援室、富山県立中央病院等で宿泊・通所等を実施",
+        "support": "母の心身のケア、乳房ケア、乳児のケア、育児相談、授乳・沐浴指導",
+        "usageLimit": "原則7回まで。1日1種類の利用",
+        "condition": "上市町内に住所がある産後1年未満の母と乳児で、育児不安や体調不良、家族支援不足等があること",
+        "application": "原則として初回利用希望日の7日前までに上市町保健センターへ利用承認申請"
+      },
+      "source": {
+        "url": "https://kira-kami.jp/contents/%E4%B8%8A%E5%B8%82%E7%94%BA%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD-3/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/1444.html",
+          "checkedAt": "2026-07-20",
+          "description": "上市町産後ケア事業の公式案内"
+        },
+        {
+          "url": "https://kira-kami.jp/contents/%E5%AF%8C%E5%B1%B1%E5%B8%82%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E5%BF%9C%E6%8F%B4%E5%AE%A4%E3%81%AE%E5%88%A9%E7%94%A8%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/",
+          "checkedAt": "2026-07-20",
+          "description": "富山市産後ケア応援室の利用条件・料金"
+        }
+      ]
     },
     "temporaryChildcare": {
-      "status": "researching",
-      "summary": "上市町の一時保育・こども誰でも通園制度について公式情報を調査中。"
+      "status": "verified",
+      "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "types": "こども誰でも通園制度（乳児等通園支援事業）",
+        "usageLimit": "子ども1人につき月10時間まで。未利用時間の翌月繰越不可",
+        "fee": "1時間当たりの利用料は施設ごとに異なり、給食・おやつ等は別途。生活保護世帯等は負担軽減対象となる場合がある",
+        "facilities": "ニチイ弓庄保育所、音杉保育園、認定こども園相ノ木保育園",
+        "condition": "利用日時点で生後6か月から満3歳未満かつ保育所・認定こども園等に在籍していないこと",
+        "application": "福祉課児童班へ認定申請後、総合支援システムで情報登録、事前面談、予約を行う"
+      },
+      "source": {
+        "url": "https://kira-kami.jp/contents/%E3%81%93%E3%81%A9%E3%82%82%E8%AA%B0%E3%81%A7%E3%82%82%E9%80%9A%E5%9C%92%E5%88%B6%E5%BA%A6%EF%BC%88%E4%B9%B3%E5%85%90%E7%AD%89%E9%80%9A%E5%9C%92%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%EF%BC%89/",
+        "checkedAt": "2026-07-20"
+      }
     },
     "housingSupport": {
-      "status": "researching",
-      "summary": "上市町の子育て世帯向け住宅支援について公式情報を調査中。"
+      "status": "verified",
+      "summary": "若年・子育て世帯が町内で住宅を取得する場合、住宅条件等に応じて補助し、中学生以下の子ども1人につき20万円を加算する。",
+      "details": {
+        "support": "新築・取得・増改築は転入世帯最大140万円、町内在住世帯最大70万円。住宅団地外は転入120万円、町内在住60万円。中古住宅は住宅取得補助額の半額",
+        "childAddition": "申請時に中学生以下の子どもがいる場合、1人当たり20万円を加算",
+        "conditions": "夫婦合計年齢80歳未満、世帯主40歳未満の単身世帯、または中学生以下の子どもがいる世帯。登記面積75平方メートル以上等",
+        "residency": "補助受給後10年以内の売却・町外転出等では返還対象となる場合がある",
+        "application": "事業完了年度の12月28日までに申請し、建設課管理建築班へ提出"
+      },
+      "source": {
+        "url": "https://www.town.kamiichi.toyama.jp/page/1710.html",
+        "checkedAt": "2026-07-20"
+      }
     },
     "bulkyWaste": {
-      "status": "researching",
-      "summary": "上市町の粗大ごみ処理方法・料金について公式情報を調査中。"
+      "status": "verified",
+      "summary": "ごみステーションに出せない大型・多量の不燃ごみは広域リサイクルセンターへ直接搬入でき、10kgまでごとに110円。",
+      "details": {
+        "feeSystem": "不燃ごみ・大型金属類は1回の搬入量10kgまでごとに110円",
+        "application": "ごみの種類・大きさ等を事前連絡し、富山地区広域圏リサイクルセンターへ直接搬入",
+        "facility": "富山地区広域圏リサイクルセンター（富山市辰尾170番地1）",
+        "hours": "月曜日から金曜日の8時30分から16時まで。土日祝日・年末年始は休み",
+        "eligibleArea": "富山市、滑川市、立山町、上市町、舟橋村の一般家庭から発生した不燃ごみ",
+        "stationRule": "一辺100cm以下にできるものは町の燃やせないごみ収集対象。大型・多量の場合は直接搬入または許可業者の戸別有料収集",
+        "excludedAppliances": "テレビ、エアコン、冷蔵庫・冷凍庫、洗濯機・衣類乾燥機は家電リサイクル法に基づき処理"
+      },
+      "source": {
+        "url": "https://www.toyama-kouiki.jp/ukeire/recycle/01.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/7056.html",
+          "checkedAt": "2026-07-20",
+          "description": "令和8年度ごみの出し方と直接搬入施設の案内"
+        },
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/1784.html",
+          "checkedAt": "2026-07-20",
+          "description": "家電リサイクル法対象製品の排出方法"
+        }
+      ]
     },
     "disasterPrevention": {
-      "status": "researching",
-      "summary": "上市町の防災・ハザード情報について公式情報を調査中。"
+      "status": "verified",
+      "summary": "洪水・土砂災害・内水の各ハザードマップ、避難施設一覧、地域防災計画等を公開している。",
+      "details": {
+        "coverage": "想定最大規模・計画規模の洪水、土砂災害、内水氾濫の各ハザードマップを公開",
+        "access": "上市町公式サイトの災害対策、防災マップ・避難所ページから確認可能",
+        "shelters": "地区別の避難施設一覧に所在地、電話番号、洪水時利用可否を掲載",
+        "plan": "災害対策基本法に基づく上市町地域防災計画を公開",
+        "information": "防災行政無線、Jアラート、町公式サイト等で情報を伝達"
+      },
+      "source": {
+        "url": "https://www.town.kamiichi.toyama.jp/page/1852.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/1953.html",
+          "checkedAt": "2026-07-20",
+          "description": "土砂災害ハザードマップ"
+        },
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/2005.html",
+          "checkedAt": "2026-07-20",
+          "description": "内水ハザードマップ"
+        },
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/2015.html",
+          "checkedAt": "2026-07-20",
+          "description": "避難施設一覧"
+        },
+        {
+          "url": "https://www.town.kamiichi.toyama.jp/page/1879.html",
+          "checkedAt": "2026-07-20",
+          "description": "上市町地域防災計画"
+        }
+      ]
     }
   }
 }
