@@ -5,7 +5,7 @@
   "prefectureCode": "01",
   "prefectureName": "北海道",
   "assignedTeam": "北日本調査班",
-  "status": "completed",
+  "status": "pr_open",
   "currentService": null,
   "nextServiceIndex": 9,
   "completedServices": ["childMedical", "sickChildCare", "childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport", "bulkyWaste", "disasterPrevention"],
@@ -16,8 +16,8 @@
   "currentBranch": "data/01207-obihiro",
   "pullRequestNumber": 140,
   "lastCheckedAt": "2026-07-20",
-  "lastUpdatedAt": "2026-07-20T14:20:00+09:00",
-  "lastUpdatedBy": "北日本調査班",
+  "lastUpdatedAt": "2026-07-20T14:35:00+09:00",
+  "lastUpdatedBy": "全国進行統括",
   "officialSources": [
     "https://www.city.obihiro.hokkaido.jp/",
     "https://www.city.obihiro.hokkaido.jp/kyoiku/kosodate/teate/1004588.html",
@@ -42,7 +42,7 @@
   "notes": [
     "対象9制度をすべて帯広市公式情報で確認し、自治体データをcompletedへ更新。",
     "地方統合PR #140をregion/north向けに作成。差分は帯広市自治体JSON、task、北日本地域進行の3ファイルのみ。",
-    "CIのReject unrelated changesと公開用自治体データ生成は成功したが、Generate national progressで失敗。詳細原因の追加確認が必要。"
+    "初回CIはtask.status=completedが全国進捗生成の許可値外だったため失敗。PR公開中の正規値pr_openへ補正。"
   ],
-  "blockers": ["PR #140のGenerate national progress失敗原因を特定し、必要な補正後にCIを再確認する"]
+  "blockers": []
 }
