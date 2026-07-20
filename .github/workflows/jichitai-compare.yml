@@ -55,6 +55,16 @@ jobs:
         working-directory: jichitai-compare
         run: npm run validate:generated
 
+      - name: Upload generated files
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: jichitai-generated
+          path: |
+            jichitai-compare/data/generated/municipalities.json
+            jichitai-compare/operations/progress.json
+          retention-days: 1
+
       - name: Check JavaScript syntax
         working-directory: jichitai-compare
         run: node --check app.js
