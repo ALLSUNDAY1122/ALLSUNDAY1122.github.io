@@ -6,7 +6,7 @@
   "name": "小矢部市",
   "officialUrl": "https://www.city.oyabe.toyama.jp/",
   "status": "researching",
-  "summary": "小矢部市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料を確認済み。",
+  "summary": "小矢部市の9制度を調査中。こども医療費助成、病児・病後児保育、保育料、学校給食費支援を確認済み。",
   "updatedAt": "2026-07-20",
   "services": {
     "childMedical": {
@@ -48,8 +48,25 @@
         {"url": "https://www.city.oyabe.toyama.jp/kurashi/1002060/1002062.html", "checkedAt": "2026-07-20", "description": "保育料の口座振替"}
       ]
     },
-    "schoolMeals": {"status": "researching", "summary": "調査中"},
-    "postpartumCare": {"status": "todo", "summary": "未調査"},
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "小矢部市立小中学校で学校給食を実施し、経済的理由で就学が困難な世帯には就学援助で学校給食費を含む費用を支給する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15, "residency": "小矢部市に居住する方、または子どもを小矢部市内の小中学校へ区域外就学させている方", "financialCondition": "生活保護、市県民税非課税・減免、児童扶養手当受給、所得基準該当、災害・病気・失業等の特別事情のいずれか"},
+      "details": {
+        "provider": "小矢部市学校給食課・学校給食センターが市立小中学校の給食を提供",
+        "financialAssistance": "就学援助の対象者には学校給食費、学用品費、新入学用品費、校外活動費、修学旅行費等を支給",
+        "schoolLunchSupport": "小学生の学校給食費は実費支給、中学生は実費支給で年額上限69,000円",
+        "nonresidentRule": "小矢部市外に居住し、市内小中学校へ区域外就学させている場合は学校給食費のみ対象",
+        "application": "書面申請は申請書を学校または教育総務課へ提出。オンライン申請にも対応",
+        "publishedRegularFee": "通常の学校給食費の月額・1食単価は市公式案内で確認できないため、学校または学校給食課への確認が必要"
+      },
+      "source": {"url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004458/1002737/1002739.html", "checkedAt": "2026-07-20"},
+      "additionalSources": [
+        {"url": "https://www.city.oyabe.toyama.jp/kosodatekyoiku/1004458/1002731/1004837.html", "checkedAt": "2026-07-20", "description": "学校給食献立一覧と学校給食課の確認"},
+        {"url": "https://www.city.oyabe.toyama.jp/shiseijyouhou/soshiki/1003338.html", "checkedAt": "2026-07-20", "description": "令和8年度に学校給食課を新設し学校給食センターを所管"}
+      ]
+    },
+    "postpartumCare": {"status": "researching", "summary": "調査中"},
     "temporaryChildcare": {"status": "todo", "summary": "未調査"},
     "housingSupport": {"status": "todo", "summary": "未調査"},
     "bulkyWaste": {"status": "todo", "summary": "未調査"},
