@@ -1,0 +1,56 @@
+name: Temporary Generate North 114
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-generated-north-114.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate 114 municipality snapshot
+        env:
+          BRANCH: coord/generated-north-114-20260721
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git switch -C "$BRANCH" origin/main
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const path = 'index.html';
+          const current = fs.readFileSync(path, 'utf8');
+          const updated = current.replaceAll('103自治体', '114自治体');
+          if (updated === current) throw new Error('103自治体の表示が見つかりません');
+          fs.writeFileSync(path, updated);
+          NODE
+          npm run validate:generated
+          cd ..
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git commit -m "生成更新: 北日本全国統合後の114自治体を同期"
+          git push --force origin "HEAD:refs/heads/${BRANCH}"
+
+      - name: Remove temporary workflow
+        if: always()
+        run: |
+          set -euxo pipefail
+          git switch main
+          git pull --ff-only origin main
+          git rm .github/workflows/temp-generated-north-114.yml
+          git commit -m "ci: 北日本114自治体生成用の一時ワークフローを削除"
+          git push origin main
