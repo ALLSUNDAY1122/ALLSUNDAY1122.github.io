@@ -1,4 +1,4 @@
-name: Temporary Generate Public 254 Retry 2
+name: Temporary Generate Public 254 Retry 3
 
 on:
   push:
@@ -18,6 +18,15 @@ jobs:
           ref: coord/generated-254-retry
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Mark generation start
+        run: |
+          set -euxo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          printf 'started 2026-07-22T05:50:00+09:00\n' > .generation-started-254
+          git add .generation-started-254
+          git commit -m '公開更新: 254自治体生成を開始'
+          git push origin coord/generated-254-retry
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -39,8 +48,7 @@ jobs:
               raise SystemExit('public count target not found')
           path.write_text(new,encoding='utf-8')
           PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          rm .generation-started-254
+          git add -A .generation-started-254 jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
           git commit -m '公開更新: 生成データと表示件数を254自治体へ同期'
           git push origin coord/generated-254-retry
