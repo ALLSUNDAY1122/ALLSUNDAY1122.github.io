@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "18442",
+  "prefectureCode": "18",
+  "prefecture": "福井県",
+  "name": "美浜町",
+  "officialUrl": "https://www.town.fukui-mihama.lg.jp/",
+  "status": "verified",
+  "summary": "美浜町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-21",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、保険診療の自己負担分、入院時食事療養費、治療用装具費等を全額助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "coverage": "保険診療自己負担分、入院時食事療養費、医師の診断に基づく治療用装具費",
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "copay": "県内対応医療機関では受給者証提示により窓口無料",
+        "reimbursement": "県外受診等は償還払いを申請",
+        "exclusions": "高額療養費・付加給付分、保険外診療等は除外"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/site/shinsei-navi/671.html", "checkedAt": "2026-07-21"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気中または回復期の生後6か月から小学6年生までを、敦賀市等の病児・病後児保育施設で受け入れる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "facility": "敦賀市病児・病後児保育施設はぴけあ等",
+        "fee": "1日2,000円、半日1,000円",
+        "feeReduction": "第2子以降の未就学児、多胎児第1子、生活保護・非課税・ひとり親世帯等は無料",
+        "application": "かかりつけ医を受診し、診療情報提供書を取得して施設へ予約",
+        "notice": "施設により対象年齢・時間・受入疾病が異なる"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/soshiki/18/724.html", "checkedAt": "2026-07-21"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上児と非課税世帯の0～2歳児を無償化し、第2子以降の保育料も無料としている。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "universalFreeAge": "3歳以上児は幼児教育・保育無償化の対象",
+        "zeroToTwo": "生活保護・住民税非課税世帯の0～2歳児は無料",
+        "siblingReduction": "生計を一にする子どもが2人以上いる世帯の第2子以降は無料",
+        "firstChild": "課税世帯の0～2歳第1子は町民税所得割額等により算定",
+        "mealCost": "3～5歳児の副食費は月額4,500円。低所得世帯等は免除"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/site/shinsei-navi/729.html", "checkedAt": "2026-07-21"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町内小学校3校・中学校1校へ学校給食を提供し、経済的理由がある世帯には学校給食費を含む就学援助を行う。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "provision": "美浜町給食センターが町内小学校3校・中学校1校へ給食を提供",
+        "universalFreeStatus": "令和8年度の一律完全無償化は公式情報で確認できない",
+        "assistance": "要保護・準要保護世帯は学校給食費等の就学援助対象",
+        "application": "在籍校または教育委員会へ相談・申請"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/soshiki/36/", "checkedAt": "2026-07-21"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年までの母子を対象に、宿泊型・通所型・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "宿泊型、通所型、訪問型",
+        "condition": "美浜町に住所がある産後1年までの母と乳児。母のみの利用も可能",
+        "support": "母の心身・乳房ケア、乳児の健康確認、授乳・沐浴等の育児相談、休養支援",
+        "application": "こども未来課へ事前相談・申請",
+        "notice": "感染性疾患や医療的介入が必要な場合は利用不可"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/soshiki/46/13964.html", "checkedAt": "2026-07-21"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設に在籍していない生後6か月から満3歳未満の子どもを、月10時間まで1時間300円で受け入れる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "types": "こども誰でも通園制度（乳児等通園支援事業）",
+        "usageLimit": "子ども1人につき月10時間まで",
+        "fee": "30分150円、1時間300円",
+        "condition": "保育所・認定こども園・幼稚園等に在籍していないこと",
+        "feeReduction": "生活保護・非課税世帯等は申請により負担軽減",
+        "employmentRequirement": "保護者の就労要件なし"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/soshiki/46/15884.html", "checkedAt": "2026-07-21"},
+      "additionalSources": [{"url": "https://www.town.fukui-mihama.lg.jp/soshiki/46/12124.html", "checkedAt": "2026-07-21", "description": "満1歳から就学前までの一時預かり"}]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・子育て・移住・多世帯同居近居世帯の住宅取得・改修・家賃を支援し、取得・改修は最大100万円。",
+      "details": {
+        "programs": "若者世帯住宅取得、多世帯同居・近居住宅取得・リフォーム、空家住まいる支援、家賃支援等",
+        "purchaseSupport": "住宅取得は制度により上限100万円",
+        "renovationSupport": "多世帯同居近居・空家改修は上限100万円",
+        "rentSupport": "空家・若者子育て世帯の家賃補助は月最大2万円、最長24か月、上限48万円",
+        "conditions": "定住、世帯構成、税滞納なし等の要件があり、契約・着工前の申請が必要"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/site/iju/10268.html", "checkedAt": "2026-07-21"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは敦賀市清掃センターへ直接搬入し、家庭ごみは50kgにつき100円を基本とする。",
+      "details": {
+        "facility": "敦賀市清掃センター",
+        "hours": "平日8時30分～16時30分、土日祝8時30分～12時。第3日曜等は休業",
+        "fee": "埋立ごみ以外は350kg未満で50kgにつき100円、350kg以上で50kgにつき200円",
+        "landfillFee": "埋立ごみは350kg未満で50kgにつき50円、350kg以上で50kgにつき100円",
+        "application": "分別して直接搬入。大量搬入は町へ事前相談"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/site/gomi/8552.html", "checkedAt": "2026-07-21"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・津波・原子力災害等の防災情報と避難所を公開している。",
+      "details": {
+        "coverage": "洪水、土砂災害、津波、原子力災害等",
+        "maps": "洪水・土砂災害ハザードマップ、津波ハザードマップ、防災ハンドブックを公開",
+        "shelters": "指定避難所・津波避難場所を公開",
+        "preparedness": "自宅周辺の危険区域、標高、避難先・経路を平時に確認するよう案内"
+      },
+      "source": {"url": "https://www.town.fukui-mihama.lg.jp/life/1/4/22/", "checkedAt": "2026-07-21"}
+    }
+  }
+}
