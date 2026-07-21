@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 235
+name: Temporary Sync Release Queue 236
 
 on:
   push:
@@ -26,16 +26,25 @@ jobs:
           from pathlib import Path
           path=Path('jichitai-compare/operations/control/release-queue.json')
           data=json.loads(path.read_text(encoding='utf-8'))
+          additions={'north':[('01432','新十津川町')],'central':[('21504','七宗町')]}
           for entry in data['entries']:
-              if entry['region']=='central':
-                  if not any(m['code']=='21504' for m in entry['municipalities']):
-                      entry['municipalities'].append({'code':'21504','name':'七宗町'})
-                  entry['municipalities'].sort(key=lambda x:x['code'])
-                  entry['pendingSinceLastRelease']=8
-                  entry['reason']='下呂市から安八町までの追加10自治体をPR #404でmainへ全国統合し、生成・公開をPR #408で204自治体へ更新。その後、揖斐川町・大野町・池田町・北方町・坂祝町・富加町・川辺町・七宗町を地方統合'
+              region=entry['region']
+              existing={m['code'] for m in entry['municipalities']}
+              for code,name in additions.get(region,[]):
+                  if code not in existing:
+                      entry['municipalities'].append({'code':code,'name':name})
+              entry['municipalities'].sort(key=lambda x:x['code'])
               entry['count']=len(entry['municipalities'])
               entry['releaseStatus']='pending_threshold'
-          data['updatedAt']='2026-07-22T03:36:00+09:00'
+              if region=='north':
+                  entry['pendingSinceLastRelease']=9
+                  entry['reason']='倶知安町から赤井川村までの追加10自治体をPR #411でmainへ全国統合し、生成・公開をPR #415で214自治体へ更新。その後、南幌町・奈井江町・上砂川町・由仁町・長沼町・栗山町・月形町・浦臼町・新十津川町を地方統合'
+              elif region=='central':
+                  entry['pendingSinceLastRelease']=8
+                  entry['reason']='下呂市から安八町までの追加10自治体をPR #404でmainへ全国統合し、生成・公開をPR #408で204自治体へ更新。その後、揖斐川町・大野町・池田町・北方町・坂祝町・富加町・川辺町・七宗町を地方統合'
+              elif region=='east': entry['pendingSinceLastRelease']=3
+              elif region=='west': entry['pendingSinceLastRelease']=3
+          data['updatedAt']='2026-07-22T03:40:00+09:00'
           data['summary']['regionalMergedMunicipalities']=sum(e['count'] for e in data['entries'])
           data['summary']['waitingRegionalMergeMunicipalities']=0
           data['summary']['releaseReadyRegions']=[]
@@ -43,9 +52,9 @@ jobs:
           data['summary']['latestGeneratedMunicipalityCount']=214
           data['summary']['latestGeneratedPullRequest']=415
           data['summary']['latestPublicCountPullRequest']=415
-          if data['summary']['regionalMergedMunicipalities'] != 235:
-              raise SystemExit(f"expected regional total 235, got {data['summary']['regionalMergedMunicipalities']}")
-          data['nextAction']='北日本・中日本が前回全国統合後8自治体で先行。東日本3、西日本3。各地域をコード昇順で継続し、10自治体到達時に直ちに全国統合する。'
+          if data['summary']['regionalMergedMunicipalities'] != 236:
+              raise SystemExit(f"expected regional total 236, got {data['summary']['regionalMergedMunicipalities']}")
+          data['nextAction']='北日本9自治体、中日本8自治体で先行。東日本3、西日本3。北日本は次自治体統合で全国統合条件に到達する。'
           data['humanDecisionRequired']=False
           path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
           PY
@@ -53,5 +62,5 @@ jobs:
           git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-235.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 地方統合235自治体・公開214自治体へ同期'
+          git commit -m '統括管理: 地方統合236自治体・公開214自治体へ同期'
           git push origin main
