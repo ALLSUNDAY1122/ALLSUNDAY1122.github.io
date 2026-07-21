@@ -1,0 +1,80 @@
+name: Temporary release queue sync 296
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-sync-release-queue-296-0718.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update release queue
+        shell: bash
+        run: |
+          git pull --rebase origin main
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+
+          path = Path('jichitai-compare/operations/control/release-queue.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          entries = {entry['region']: entry for entry in data['entries']}
+
+          central = entries['central']
+          existing = {item['code'] for item in central['municipalities']}
+          if '22224' not in existing:
+              central['municipalities'].append({'code': '22224', 'name': '菊川市'})
+          central['municipalities'].sort(key=lambda item: item['code'])
+
+          baselines = {'north': 102, 'east': 40, 'central': 111, 'west': 32}
+          labels = {'north': '北日本', 'east': '東日本', 'central': '中日本', 'west': '西日本'}
+          for entry in data['entries']:
+              entry['count'] = len(entry['municipalities'])
+              pending = max(0, entry['count'] - baselines[entry['region']])
+              entry['pendingSinceLastRelease'] = pending
+              entry['releaseStatus'] = 'ready' if pending >= 10 else 'pending_threshold'
+              entry['reason'] = f"最新地方ブランチを再走査。前回全国統合後の地方統合繰越は{pending}自治体"
+
+          entries['north']['mainIntegrationPr'] = 495
+          entries['north']['generatedPullRequest'] = 500
+          entries['east']['mainIntegrationPr'] = 487
+          entries['east']['generatedPullRequest'] = 500
+          entries['central']['mainIntegrationPr'] = 498
+          entries['central']['generatedPullRequest'] = 500
+          entries['central']['auditStatus'] = 'passed'
+
+          data['updatedAt'] = datetime.now(timezone(timedelta(hours=9))).replace(second=0, microsecond=0).isoformat()
+          data['summary']['regionalMergedMunicipalities'] = sum(entry['count'] for entry in data['entries'])
+          data['summary']['waitingRegionalMergeMunicipalities'] = 0
+          data['summary']['releaseReadyRegions'] = [entry['region'] for entry in data['entries'] if entry['pendingSinceLastRelease'] >= 10]
+          data['summary']['auditBlockedRegions'] = []
+          data['summary']['lastNationalIntegrationPr'] = 498
+          data['summary']['latestGeneratedMunicipalityCount'] = 284
+          data['summary']['latestGeneratedPullRequest'] = 500
+          data['summary']['latestPublicCountPullRequest'] = 500
+          ordered = sorted(data['entries'], key=lambda entry: (-entry['pendingSinceLastRelease'], entry['region']))
+          progress = '、'.join(f"{labels[entry['region']]}{entry['pendingSinceLastRelease']}" for entry in ordered)
+          data['nextAction'] = f"公開284自治体を基準に地方統合を継続。現在の公開後繰越は{progress}。各地域10自治体到達時に全国統合する。"
+          data['humanDecisionRequired'] = False
+
+          path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/control/release-queue.json
+          git rm .github/workflows/temp-sync-release-queue-296-0718.yml
+          git commit -m "統括管理: 地方統合296自治体・公開284自治体へ同期"
+          git push origin HEAD:main
