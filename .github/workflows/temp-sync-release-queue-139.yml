@@ -1,0 +1,90 @@
+name: Temporary Sync Release Queue 139
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-sync-release-queue-139.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync release queue and remove workflow
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const path = 'jichitai-compare/operations/control/release-queue.json';
+          const queue = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const addUnique = (entry, additions) => {
+            const seen = new Set(entry.municipalities.map(x => x.code));
+            for (const item of additions) {
+              if (!seen.has(item.code)) {
+                entry.municipalities.push(item);
+                seen.add(item.code);
+              }
+            }
+            entry.count = entry.municipalities.length;
+          };
+
+          const central = queue.entries.find(x => x.region === 'central');
+          if (!central) throw new Error('central entry not found');
+          addUnique(central, [
+            {code:'18208',name:'あわら市'},
+            {code:'18209',name:'越前市'},
+            {code:'18210',name:'坂井市'},
+            {code:'18322',name:'永平寺町'},
+            {code:'18382',name:'池田町'},
+            {code:'18404',name:'南越前町'},
+            {code:'18423',name:'越前町'},
+            {code:'18442',name:'美浜町'},
+            {code:'18481',name:'高浜町'},
+            {code:'18483',name:'おおい町'}
+          ]);
+          central.pendingSinceLastRelease = 0;
+          central.releaseStatus = 'released';
+          central.reason = '中日本の初回11自治体をPR #150、追加10自治体をPR #217、加賀市から志賀町までの追加10自治体をPR #267、宝達志水町から鯖江市までの追加10自治体をPR #297、あわら市からおおい町までの追加10自治体をPR #315でmainへ全国統合。生成・公開をPR #316で124自治体へ更新';
+          central.mainIntegrationPr = 315;
+          central.generatedPullRequest = 316;
+          central.auditStatus = 'passed';
+
+          for (const entry of queue.entries) {
+            entry.count = entry.municipalities.length;
+          }
+          queue.updatedAt = '2026-07-21T22:07:00+09:00';
+          queue.summary = {
+            regionalMergedMunicipalities: queue.entries.reduce((sum, x) => sum + x.count, 0),
+            waitingRegionalMergeMunicipalities: 0,
+            releaseReadyRegions: [],
+            auditBlockedRegions: [],
+            lastNationalIntegrationAt: '2026-07-21T09:49:12+09:00',
+            lastNationalIntegrationPr: 315,
+            latestGeneratedMunicipalityCount: 124,
+            latestGeneratedPullRequest: 316,
+            latestPublicCountPullRequest: 316
+          };
+          queue.nextAction = '東日本と西日本が前回全国統合後8自治体で並ぶ。各あと2自治体の地方統合を監視し、先に到達した地域を固定releaseブランチ経由でmainへ全国統合する。';
+          queue.humanDecisionRequired = false;
+
+          if (central.count !== 51) throw new Error(`central count mismatch: ${central.count}`);
+          if (queue.summary.regionalMergedMunicipalities !== 139) {
+            throw new Error(`regional total mismatch: ${queue.summary.regionalMergedMunicipalities}`);
+          }
+          fs.writeFileSync(path, JSON.stringify(queue));
+          NODE
+          git rm .github/workflows/temp-sync-release-queue-139.yml
+          git add jichitai-compare/operations/control/release-queue.json
+          git commit -m "統括管理: 地方統合139自治体・公開124自治体へ同期"
+          git push origin main
