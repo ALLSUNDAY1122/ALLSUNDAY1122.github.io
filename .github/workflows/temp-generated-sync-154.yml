@@ -1,0 +1,47 @@
+name: Temporary Generated Sync 154
+
+on:
+  push:
+    branches:
+      - coord/generated-sync-154-20260721
+    paths:
+      - .github/workflows/temp-generated-sync-154.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout generated sync branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/generated-sync-154-20260721
+          fetch-depth: 0
+
+      - name: Regenerate public data and remove workflow
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const generated = JSON.parse(fs.readFileSync('data/generated/municipalities.json', 'utf8'));
+          const count = Array.isArray(generated) ? generated.length : generated.municipalities.length;
+          if (count !== 154) throw new Error(`generated count mismatch: ${count}`);
+          const path = 'index.html';
+          const html = fs.readFileSync(path, 'utf8');
+          const updated = html.replace(/\d+自治体・9制度/u, `${count}自治体・9制度`);
+          if (updated === html) throw new Error('public count text was not updated');
+          fs.writeFileSync(path, updated);
+          NODE
+          npm run validate:generated
+          cd ..
+          git rm .github/workflows/temp-generated-sync-154.yml
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git commit -m "生成更新: 中日本全国統合後の154自治体を公開データへ反映"
+          git push origin HEAD:coord/generated-sync-154-20260721
