@@ -1,0 +1,17 @@
+
+> jichitai-compare-mvp@0.1.0 generate
+> node ./scripts/generate-municipalities.mjs
+
+100自治体の公開用JSONを生成しました: data/generated/municipalities.json
+
+> jichitai-compare-mvp@0.1.0 progress
+> node ./scripts/update-progress.mjs
+
+100自治体・900制度の全国進捗を生成しました: operations/progress.json
+
+> jichitai-compare-mvp@0.1.0 validate
+> node ./scripts/validate-data.mjs
+
+検証成功: 100自治体・9制度・100進捗ファイル（警告0件）
+
+VALIDATE_EXIT=0
