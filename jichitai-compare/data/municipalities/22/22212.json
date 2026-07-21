@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "22212",
+  "prefectureCode": "22",
+  "prefecture": "静岡県",
+  "name": "焼津市",
+  "officialUrl": "https://www.city.yaizu.lg.jp/",
+  "status": "verified",
+  "summary": "焼津市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、保険診療による医療費の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "coverage": "保険診療による自己負担分",
+        "copayment": "通院・入院とも自己負担なし",
+        "condition": "子どもと保護者が市内に住所を有し、所定の健康保険加入要件を満たすこと",
+        "application": "子ども医療費受給者証の交付申請が必要"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/child-edu/kodomo/mokuteki/application/kodomo-iryo.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気または回復期で家庭保育が難しい小学3年生までの子どもを、実施施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 9},
+      "details": {
+        "ageCondition": "市内在住の小学3年生まで",
+        "condition": "入院治療を必要とせず、医師が利用可能と判断し、保護者の勤務・傷病等で家庭保育が困難なこと",
+        "fee": "1日1,000円。給食費は別途",
+        "hours": "月曜日から金曜日、午前8時30分から午後5時30分まで",
+        "facilities": "焼津南保育園、第三ゆりかご保育所、大井川保育園",
+        "application": "事前登録、施設への空き確認、医師の利用連絡票が必要"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/child-edu/kodomo/mokuteki/day-care/hoiku/byoji-byogoji.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等の無償化に加え、市独自に世帯年収や第1子の年齢を問わず第2子以降の保育料を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalProgram": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象",
+        "cityProgram": "2024年4月から第2子以降の0～2歳児保育料を無料化",
+        "incomeCondition": "世帯年収にかかわらない",
+        "siblingCondition": "第1子の年齢制限を設けず、小学生以上の子どもも第1子として数える",
+        "excludedCosts": "給食費、行事費等の実費は別途必要な場合がある"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/child-edu/kodomo/mokuteki/day-care/hoiku/aftersecondchild-muryo.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は市立小学校の給食費を無償化し、中学校は市負担後の保護者負担を1食302円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "1食単価323円のうち市が67円を負担し、国の交付金を活用して保護者負担を無料化",
+        "juniorHigh": "1食単価407円のうち市が105円を負担し、保護者負担は1食302円",
+        "period": "2026年度",
+        "support": "就学援助認定世帯は学校給食費等の援助対象"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/child-edu/education/kyushoku/more-info/statistics.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "焼津市に住民票があり、体調・育児に不安等がある産後1年未満の母子で、医療行為が不要なこと",
+        "types": "ショートステイ（宿泊）型、デイサービス（日帰り）型、アウトリーチ（訪問）型",
+        "care": "休養、授乳ケア、育児の助言",
+        "fee": "サービス種別と世帯所得に応じた自己負担額",
+        "application": "出産後に申請し、委託施設またはこども家庭センターで手続き"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/child-edu/kodomo/mokuteki/torikumi/support/sango-care.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "condition": "認可保育所、認定こども園、地域型保育、企業主導型保育施設を利用していないこと",
+        "limit": "児童1人につき月10時間以内",
+        "fee": "施設ごとに異なる。市立大井川保育園は1時間300円",
+        "reduction": "生活保護世帯や住民税所得割額77,101円未満の世帯は減免対象",
+        "application": "利用認定申請と初回施設の事前面談が必要"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/child-edu/kodomo/mokuteki/day-care/tsuenshienjigyo/use.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "市外から転入する子育て世帯・若者夫婦世帯が市内で新築住宅を取得する場合に補助する。",
+      "details": {
+        "program": "子育て世帯等定住促進住宅取得支援事業",
+        "childHousehold": "最大100万円",
+        "youngCouple": "最大50万円",
+        "calculation": "（土地価格と建物建設費の合計－1,500万円）の10％",
+        "housing": "市内で土地を購入して新築した、必要な居住設備を備える未入居住宅",
+        "period": "対象期間は2024年4月1日から2027年3月31日まで"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/life/iju-marriage/support-iju/kosodatesetaitou_teijyusokushin/kosodatesetaitou_teijyusokushin.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "引っ越しや大掃除で出た大型ごみは、分別して処理施設へ自己搬入するか、許可業者へ有料回収を依頼する。",
+      "details": {
+        "directCarry": "燃やすごみは高柳清掃工場、資源物はリサイクルセンター等へ分別して自己搬入",
+        "examples": "大型家具、畳、スプリング・木材入りのマットレス、ソファ、座椅子等",
+        "fee": "自己搬入は量によって有料",
+        "collection": "一般廃棄物収集運搬許可業者へ有料で引き取りを依頼可能",
+        "note": "市の通常集積所で収集できない大型・混合ごみが対象"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/life/gomi/dashikata/shori-gyosha.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・津波、液状化、洪水、土砂災害、高潮等の各種ハザードマップを公開する。",
+      "details": {
+        "maps": "地震・津波防災マップ、液状化危険度図、洪水、土砂災害、高潮ハザードマップ",
+        "evacuation": "避難場所や津波避難施設等を掲載",
+        "purpose": "自宅周辺の災害リスクと避難経路を事前に確認する",
+        "distribution": "市ホームページと各種冊子・地図で公開"
+      },
+      "source": {"url": "https://www.city.yaizu.lg.jp/safety/bosai/bosai-info/hazard-map/index.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
