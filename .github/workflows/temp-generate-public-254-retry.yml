@@ -1,4 +1,4 @@
-name: Temporary Generate Public 254 Retry
+name: Temporary Diagnose Kamifurano Validation
 
 on:
   push:
@@ -8,57 +8,34 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
-  generate:
+  diagnose:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: data/01460-kamifurano
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Generate public artifacts
-        run: |
-          set -euxo pipefail
-          cd jichitai-compare
-          npm ci
-          npm run generate
-          npm run progress
-          cd ..
-          python3 - <<'PY'
-          from pathlib import Path
-          path=Path('jichitai-compare/index.html')
-          text=path.read_text(encoding='utf-8')
-          old='<span>234自治体・9制度</span>'
-          new='<span>254自治体・9制度</span>'
-          if old not in text:
-              raise SystemExit('public count target not found')
-          path.write_text(text.replace(old,new,1),encoding='utf-8')
-          PY
-      - name: Create generated update PR
+      - name: Run validation and save output
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euxo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          branch='coord/generated-254-20260722-0555'
-          git checkout -b "$branch"
-          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
-          git commit -m '公開更新: 生成データと表示件数を254自治体へ同期'
-          git push origin "$branch"
-          gh pr create --base main --head "$branch" --title '公開更新: 生成データと表示件数を254自治体へ同期' --body '北日本10自治体の全国統合PR #465と中日本10自治体の全国統合PR #468を反映し、公開生成物を234自治体から254自治体へ更新します。変更は生成JSON、全国進捗、トップページの3ファイルのみです。'
-      - name: Remove temporary workflow
-        if: always()
-        run: |
-          set -euxo pipefail
-          git checkout main
-          git pull --ff-only origin main
-          git rm .github/workflows/temp-generate-public-254-retry.yml
-          git commit -m '公開更新: 一時生成ワークフローを削除'
-          git push origin main
+          set +e
+          cd jichitai-compare
+          npm run generate > /tmp/01460-validation.log 2>&1
+          npm run progress >> /tmp/01460-validation.log 2>&1
+          npm run validate >> /tmp/01460-validation.log 2>&1
+          status=$?
+          cd ..
+          printf '\nVALIDATE_EXIT=%s\n' "$status" >> /tmp/01460-validation.log
+          encoded=$(base64 -w0 /tmp/01460-validation.log)
+          gh api "repos/${GITHUB_REPOSITORY}/contents/diagnostics/01460-validation.txt" \
+            --method PUT \
+            -f message='統括診断: 上富良野町の検証結果を保存' \
+            -f content="$encoded" \
+            -f branch='coord/diag-01460'
