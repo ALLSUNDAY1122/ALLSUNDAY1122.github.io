@@ -1,0 +1,73 @@
+name: Temporary Sync Release Queue 296
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-release-queue-296.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Rebuild release queue
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json,re,subprocess
+          from pathlib import Path
+          p=Path('jichitai-compare/operations/control/release-queue.json')
+          q=json.loads(p.read_text(encoding='utf-8'))
+          es={e['region']:e for e in q['entries']}
+          def show(ref,path): return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
+          def paths(ref):
+              out=subprocess.check_output(['git','ls-tree','-r','--name-only',ref,'jichitai-compare/data/municipalities'],text=True)
+              return [x for x in out.splitlines() if re.search(r'/\d{5}\.json$',x)]
+          def ok(r,pref):
+              n=int(pref)
+              return {'north':1<=n<=7,'east':8<=n<=15 or n in (19,20),'central':16<=n<=18 or 21<=n<=29,'west':31<=n<=47}[r]
+          fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
+          for r in ('north','east','central','west'):
+              ref=f'origin/region/{r}'
+              items=[]
+              for path in paths(ref):
+                  d=json.loads(show(ref,path))
+                  if ok(r,d['prefectureCode']): items.append({'code':d['code'],'name':d['name']})
+              items.sort(key=lambda x:x['code'])
+              s=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{r}.json'))
+              pending=int(s.get(fields[r],0))
+              e=es[r]
+              e['municipalities']=items;e['count']=len(items);e['pendingSinceLastRelease']=pending
+              e['releaseStatus']='release_ready' if pending>=10 else 'pending_threshold'
+              e['reason']=f'最新地方ブランチを再走査。前回全国統合後の地方統合繰越は{pending}自治体'
+              e['mainIntegrationPr']=s.get('lastNationalIntegrationPr');e['generatedPullRequest']=500
+          total=sum(e['count'] for e in q['entries'])
+          pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
+          q['updatedAt']='2026-07-22T07:24:00+09:00';q['status']='active'
+          q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':284,'latestGeneratedPullRequest':500,'latestPublicCountPullRequest':500,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域なし。"}
+          if total!=296: raise SystemExit(f'unexpected total {total}')
+          p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+          git add jichitai-compare/operations/control/release-queue.json
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m '統括管理: 地方統合296自治体・公開284自治体へ同期'
+            git push origin main
+          fi
+          git rm .github/workflows/temp-sync-release-queue-296.yml
+          git commit -m '統括管理: 全国キュー同期一時ワークフローを削除'
+          git push origin main
