@@ -1,0 +1,64 @@
+name: Temporary Generate Public 254
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-public-254.yml
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Remove temporary workflow from main
+        run: |
+          set -euxo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/temp-generate-public-254.yml
+          git commit -m '公開更新: 一時生成ワークフローを削除'
+          git push origin main
+      - name: Generate public artifacts
+        run: |
+          set -euxo pipefail
+          cd jichitai-compare
+          npm ci
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          cd ..
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('jichitai-compare/index.html')
+          text=path.read_text(encoding='utf-8')
+          old='<span>234自治体・9制度</span>'
+          new='<span>254自治体・9制度</span>'
+          if old not in text:
+              raise SystemExit('public count target not found')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Create generated update PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euxo pipefail
+          branch='coord/generated-254-20260722'
+          git checkout -b "$branch"
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git commit -m '公開更新: 生成データと表示件数を254自治体へ同期'
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title '公開更新: 生成データと表示件数を254自治体へ同期' \
+            --body '北日本10自治体の全国統合PR #465と、中日本10自治体の全国統合PR #468を反映し、公開生成物を234自治体から254自治体へ更新します。\n\n変更ファイル:\n- jichitai-compare/data/generated/municipalities.json\n- jichitai-compare/operations/progress.json\n- jichitai-compare/index.html\n\nnpm run generate、npm run progress、npm run validate:generatedを実行済みです。'
