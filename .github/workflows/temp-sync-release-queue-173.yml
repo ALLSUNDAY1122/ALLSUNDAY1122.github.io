@@ -1,0 +1,60 @@
+name: Temporary sync release queue to 173
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-sync-release-queue-173.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Sync release queue
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+
+          path = Path('jichitai-compare/operations/control/release-queue.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          by_region = {entry['region']: entry for entry in data['entries']}
+
+          west = by_region['west']
+          existing = {m['code'] for m in west['municipalities']}
+          if '32501' not in existing:
+              west['municipalities'].append({'code': '32501', 'name': '津和野町'})
+          west['count'] = len(west['municipalities'])
+          west['pendingSinceLastRelease'] = 2
+          west['releaseStatus'] = 'pending_threshold'
+          west['reason'] = '浜田市から美郷町までの追加10自治体をPR #324でmainへ全国統合し、生成・公開をPR #325で134自治体へ更新。その後、邑南町・津和野町を地方統合'
+
+          data['updatedAt'] = datetime.now(timezone(timedelta(hours=9))).replace(second=0, microsecond=0).isoformat()
+          data['summary']['regionalMergedMunicipalities'] = sum(entry['count'] for entry in data['entries'])
+          data['summary']['waitingRegionalMergeMunicipalities'] = 0
+          data['summary']['releaseReadyRegions'] = []
+          data['summary']['auditBlockedRegions'] = []
+          data['nextAction'] = '東日本が前回全国統合後4自治体で先行。中日本3、西日本2、北日本1。最初に10自治体へ到達した地域を全国統合する。'
+          data['humanDecisionRequired'] = False
+
+          path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+      - name: Commit synchronized queue and remove temporary workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm .github/workflows/temp-sync-release-queue-173.yml
+          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-173.yml
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m '統括管理: 地方統合173自治体・公開164自治体へ同期'
+          git push origin main
