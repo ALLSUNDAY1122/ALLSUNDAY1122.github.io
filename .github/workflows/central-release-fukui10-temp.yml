@@ -1,0 +1,80 @@
+name: Central Fukui Release 10 Temporary
+
+on:
+  push:
+    branches:
+      - coord/central-release-10-20260721-0947
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot-and-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch central branch
+        run: git fetch origin region/central
+
+      - name: Copy verified municipality files
+        shell: bash
+        run: |
+          git checkout origin/region/central -- \
+            jichitai-compare/data/municipalities/18/18208.json \
+            jichitai-compare/operations/tasks/18208.json \
+            jichitai-compare/data/municipalities/18/18209.json \
+            jichitai-compare/operations/tasks/18209.json \
+            jichitai-compare/data/municipalities/18/18210.json \
+            jichitai-compare/operations/tasks/18210.json \
+            jichitai-compare/data/municipalities/18/18322.json \
+            jichitai-compare/operations/tasks/18322.json \
+            jichitai-compare/data/municipalities/18/18382.json \
+            jichitai-compare/operations/tasks/18382.json \
+            jichitai-compare/data/municipalities/18/18404.json \
+            jichitai-compare/operations/tasks/18404.json \
+            jichitai-compare/data/municipalities/18/18423.json \
+            jichitai-compare/operations/tasks/18423.json \
+            jichitai-compare/data/municipalities/18/18442.json \
+            jichitai-compare/operations/tasks/18442.json \
+            jichitai-compare/data/municipalities/18/18481.json \
+            jichitai-compare/operations/tasks/18481.json \
+            jichitai-compare/data/municipalities/18/18483.json \
+            jichitai-compare/operations/tasks/18483.json
+
+      - name: Commit snapshot
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            jichitai-compare/data/municipalities/18/18208.json \
+            jichitai-compare/operations/tasks/18208.json \
+            jichitai-compare/data/municipalities/18/18209.json \
+            jichitai-compare/operations/tasks/18209.json \
+            jichitai-compare/data/municipalities/18/18210.json \
+            jichitai-compare/operations/tasks/18210.json \
+            jichitai-compare/data/municipalities/18/18322.json \
+            jichitai-compare/operations/tasks/18322.json \
+            jichitai-compare/data/municipalities/18/18382.json \
+            jichitai-compare/operations/tasks/18382.json \
+            jichitai-compare/data/municipalities/18/18404.json \
+            jichitai-compare/operations/tasks/18404.json \
+            jichitai-compare/data/municipalities/18/18423.json \
+            jichitai-compare/operations/tasks/18423.json \
+            jichitai-compare/data/municipalities/18/18442.json \
+            jichitai-compare/operations/tasks/18442.json \
+            jichitai-compare/data/municipalities/18/18481.json \
+            jichitai-compare/operations/tasks/18481.json \
+            jichitai-compare/data/municipalities/18/18483.json \
+            jichitai-compare/operations/tasks/18483.json
+          if git diff --cached --quiet; then
+            echo "Snapshot already current."
+            exit 0
+          fi
+          git commit -m "全国統合: 中日本福井の追加10自治体を固定スナップショット化"
+          git push
