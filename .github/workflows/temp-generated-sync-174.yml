@@ -1,0 +1,51 @@
+name: Temporary Generated Sync 174
+
+on:
+  push:
+    branches:
+      - coord/generated-sync-174-20260722
+    paths:
+      - .github/workflows/temp-generated-sync-174.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/generated-sync-174-20260722
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Generate and validate public data
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          COUNT=$(node -e "const d=require('./data/generated/municipalities.json'); console.log(Array.isArray(d)?d.length:(d.municipalities||[]).length)")
+          test "$COUNT" = "174"
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const path = 'index.html';
+          const count = 174;
+          let html = fs.readFileSync(path, 'utf8');
+          html = html.replace(/164自治体/g, `${count}自治体`);
+          fs.writeFileSync(path, html);
+          NODE
+          npm run validate:generated
+          cd ..
+          git rm .github/workflows/temp-generated-sync-174.yml
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git commit -m "生成更新: 中日本全国統合後の174自治体を公開データへ反映"
+          git push origin coord/generated-sync-174-20260722
