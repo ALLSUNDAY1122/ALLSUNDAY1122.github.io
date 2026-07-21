@@ -1,0 +1,55 @@
+name: Temporary Generate Public 304 Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-public-304.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete workflow then generate on latest main
+        run: |
+          set -euxo pipefail
+          target='coord/generated-304-20260722-0843'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm .github/workflows/temp-generate-public-304.yml
+          git add .github/workflows/temp-generate-public-304.yml
+          git commit -m '統括管理: 公開304自治体生成ワークフローを削除'
+          git push origin main
+          git fetch origin main "$target"
+          git checkout -B "$target" origin/main
+          cd jichitai-compare
+          node ./scripts/generate-municipalities.mjs
+          node ./scripts/update-progress.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('294自治体','304自治体')
+          if '294自治体' in s: raise SystemExit('old public count remains')
+          if s.count('304自治体') < 2: raise SystemExit('expected at least two public count displays')
+          p.write_text(s,encoding='utf-8')
+          PY
+          node ./scripts/validate-data.mjs --require-generated
+          cd ..
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          python3 - <<'PY'
+          import subprocess
+          expected=sorted(['jichitai-compare/data/generated/municipalities.json','jichitai-compare/operations/progress.json','jichitai-compare/index.html'])
+          actual=sorted(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          if actual!=expected: raise SystemExit(f'unexpected generated diff: {actual}')
+          PY
+          git commit -m '公開更新: 生成データと表示件数を304自治体へ同期'
+          git push --force-with-lease origin "$target"
