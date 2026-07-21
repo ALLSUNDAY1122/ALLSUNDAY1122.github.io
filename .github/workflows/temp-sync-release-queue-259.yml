@@ -1,0 +1,82 @@
+name: Temporary release queue sync 259
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-sync-release-queue-259.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update release queue
+        shell: bash
+        run: |
+          git pull --rebase origin main
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+
+          path = Path('jichitai-compare/operations/control/release-queue.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          entries = {entry['region']: entry for entry in data['entries']}
+
+          additions = {
+              'north': [('01455', '比布町')],
+              'central': [('22206', '三島市'), ('22207', '富士宮市')],
+          }
+          for region, municipalities in additions.items():
+              entry = entries[region]
+              existing = {item['code'] for item in entry['municipalities']}
+              for code, name in municipalities:
+                  if code not in existing:
+                      entry['municipalities'].append({'code': code, 'name': name})
+              entry['municipalities'].sort(key=lambda item: item['code'])
+              entry['count'] = len(entry['municipalities'])
+
+          north = entries['north']
+          north['pendingSinceLastRelease'] = 8
+          north['releaseStatus'] = 'pending_threshold'
+          north['reason'] = '南幌町から妹背牛町までの追加10自治体をPR #436でmainへ統合し、PR #439で公開234自治体へ更新。その後、秩父別町・雨竜町・北竜町・沼田町・鷹栖町・東神楽町・当麻町・比布町を地方統合'
+          north['mainIntegrationPr'] = 436
+          north['generatedPullRequest'] = 439
+
+          central = entries['central']
+          central['pendingSinceLastRelease'] = 8
+          central['releaseStatus'] = 'pending_threshold'
+          central['reason'] = '揖斐川町から白川町までの追加10自治体をPR #437でmainへ統合し、PR #439で公開234自治体へ更新。その後、東白川村・御嵩町・静岡市・浜松市・沼津市・熱海市・三島市・富士宮市を地方統合'
+          central['mainIntegrationPr'] = 437
+          central['generatedPullRequest'] = 439
+          central['auditStatus'] = 'passed'
+
+          data['updatedAt'] = datetime.now(timezone(timedelta(hours=9))).replace(second=0, microsecond=0).isoformat()
+          data['summary']['regionalMergedMunicipalities'] = sum(entry['count'] for entry in data['entries'])
+          data['summary']['waitingRegionalMergeMunicipalities'] = 0
+          data['summary']['releaseReadyRegions'] = [entry['region'] for entry in data['entries'] if entry.get('pendingSinceLastRelease', 0) >= 10]
+          data['summary']['auditBlockedRegions'] = []
+          data['summary']['latestGeneratedMunicipalityCount'] = 234
+          data['summary']['latestGeneratedPullRequest'] = 439
+          data['summary']['latestPublicCountPullRequest'] = 439
+          data['nextAction'] = '北日本・中日本が前回全国統合後8自治体で先行。東日本6、西日本4。北日本または中日本であと2自治体が地方統合されると全国統合条件を満たす。'
+          data['humanDecisionRequired'] = False
+
+          path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/control/release-queue.json
+          git rm .github/workflows/temp-sync-release-queue-259.yml
+          git commit -m "統括管理: 地方統合259自治体・公開234自治体へ同期"
+          git push origin HEAD:main
