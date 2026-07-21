@@ -1,0 +1,36 @@
+name: Temporary Build Central Release 10
+
+on:
+  push:
+    branches:
+      - coord/central-release-10-20260722-0349
+    paths:
+      - .github/workflows/temp-build-central-release-10-0349.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/central-release-10-20260722-0349
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy fixed regional snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin region/central
+          codes='21401 21403 21404 21421 21501 21502 21503 21504 21505 21506'
+          for code in $codes; do
+            mkdir -p jichitai-compare/data/municipalities/21 jichitai-compare/operations/tasks
+            git show "origin/region/central:jichitai-compare/data/municipalities/21/${code}.json" > "jichitai-compare/data/municipalities/21/${code}.json"
+            git show "origin/region/central:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+          git add jichitai-compare/data/municipalities/21 jichitai-compare/operations/tasks
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 中日本追加10自治体を固定スナップショット化'
+          git push origin coord/central-release-10-20260722-0349
