@@ -1,4 +1,4 @@
-name: Temporary Generate Public 254 Without Install
+name: Temporary Fix Progress Status
 
 on:
   push:
@@ -8,62 +8,75 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
-  generate:
+  fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: coord/generated-254-retry
+          ref: coord/fix-progress-status-20260722
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Configure git
+      - name: Reconcile task statuses and fix assignment logic
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      - name: Mark generate stage
-        run: |
-          printf 'generate\n' > .generation-stage-254
-          git add .generation-stage-254
-          git commit -m '公開更新: 生成段階 generate' || true
-          git push origin coord/generated-254-retry
-      - name: Generate municipalities
-        run: |
-          cd jichitai-compare
-          npm run generate
-      - name: Mark progress stage
-        run: |
-          printf 'progress\n' > .generation-stage-254
-          git add .generation-stage-254
-          git commit -m '公開更新: 生成段階 progress'
-          git push origin coord/generated-254-retry
-      - name: Generate progress
-        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import glob, json, os, subprocess
+          from pathlib import Path
+
+          changed=[]
+          unresolved=[]
+          for filename in glob.glob('jichitai-compare/operations/tasks/*.json'):
+              path=Path(filename)
+              try:
+                  data=json.loads(path.read_text(encoding='utf-8'))
+              except Exception:
+                  continue
+              if data.get('status') != 'pr_open':
+                  continue
+              pr=data.get('pullRequestNumber')
+              if not isinstance(pr,int) or pr <= 0:
+                  unresolved.append((path.name,'PR番号なし'))
+                  continue
+              merged_at=subprocess.check_output([
+                  'gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/pulls/{pr}',
+                  '--jq','.merged_at // ""'
+              ],text=True).strip()
+              if merged_at:
+                  data['status']='merged'
+                  data['lastUpdatedAt']='2026-07-22T05:56:00+09:00'
+                  data['lastUpdatedBy']='全国進行統括'
+                  notes=data.setdefault('notes',[])
+                  note=f'PR #{pr}のmerged_atをGitHub APIで再確認し、task.statusをmergedへ補正。'
+                  if note not in notes:
+                      notes.append(note)
+                  path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+                  changed.append((path.name,pr))
+              else:
+                  unresolved.append((path.name,f'PR #{pr}は未マージ'))
+          print('changed=',changed)
+          print('unresolved=',unresolved)
+
+          script=Path('jichitai-compare/scripts/update-progress.mjs')
+          text=script.read_text(encoding='utf-8')
+          old="  if (Number.isInteger(task.pullRequestNumber) && task.pullRequestNumber > 0) return 'pr_open';"
+          new="  if (task.status === 'pr_open') return 'pr_open';"
+          if old not in text:
+              raise SystemExit('assignmentState target not found')
+          script.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
           cd jichitai-compare
           npm run progress
-      - name: Mark index stage
-        run: |
-          printf 'index\n' > .generation-stage-254
-          git add .generation-stage-254
-          git commit -m '公開更新: 生成段階 index'
-          git push origin coord/generated-254-retry
-      - name: Update public count and push artifacts
-        run: |
-          python3 - <<'PY'
-          import re
-          from pathlib import Path
-          path=Path('jichitai-compare/index.html')
-          text=path.read_text(encoding='utf-8')
-          new,count=re.subn(r'<span>\d+自治体・9制度</span>','<span>254自治体・9制度</span>',text,count=1)
-          if count != 1:
-              raise SystemExit('public count target not found')
-          path.write_text(new,encoding='utf-8')
-          PY
-          rm -f .generation-started-254 .generation-stage-254
-          git add -A .generation-started-254 .generation-stage-254 jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
-          git commit -m '公開更新: 生成データと表示件数を254自治体へ同期'
-          git push origin coord/generated-254-retry
+          cd ..
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/tasks jichitai-compare/scripts/update-progress.mjs jichitai-compare/operations/progress.json
+          git commit -m '統括管理: マージ済みtask状態と進捗集計を補正'
+          git push origin coord/fix-progress-status-20260722
