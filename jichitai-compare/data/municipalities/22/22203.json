@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "22203",
+  "prefectureCode": "22",
+  "prefecture": "静岡県",
+  "name": "沼津市",
+  "officialUrl": "https://www.city.numazu.shizuoka.jp/",
+  "status": "verified",
+  "summary": "沼津市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校3年生相当年齢まで、入院・通院の保険診療自己負担額と入院時食事療養費を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "高校3年生相当年齢まで",
+        "residence": "沼津市に住所があり健康保険に加入しているこども",
+        "outpatient": "無料",
+        "inpatient": "無料",
+        "inpatientMeals": "食事療養費標準負担額も助成対象"
+      },
+      "source": {"url": "https://city.numazu.shizuoka.jp/kurashi/kyoiku/kosodate/byoki/kodomoiryohi.htm", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気または回復期で集団保育が困難な児童を、看護師等がいる専用施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "condition": "保護者の勤務等により家庭で保育することが困難で、施設での保育が可能な児童",
+        "sickChildFacilities": "しょうえい幼稚園、サンカフェ・はらまち、パンダ保育園、竹の子保育園沼津大手町",
+        "recoveryFacility": "かぬき保育園で病後児保育を実施",
+        "application": "実施施設へ直接申込み",
+        "fee": "施設ごとに異なるため直接確認"
+      },
+      "source": {"url": "https://city.numazu.shizuoka.jp/kurashi/kyoiku/kosodate/byoki/byojihoiku.htm", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児について、幼児教育・保育の利用料を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "幼稚園、保育園、認定こども園等を利用する3～5歳児",
+        "underThree": "住民税非課税世帯の0～2歳児",
+        "otherFacilities": "認可外保育施設等は保育の必要性の認定と月額上限あり",
+        "excludedCosts": "送迎費、給食費、行事費等の実費は対象外",
+        "application": "施設区分により施設等利用給付認定が必要"
+      },
+      "source": {"url": "https://www.city.numazu.shizuoka.jp/kurashi/kyoiku/kosodate/tetsuzuki/mushouka.htm", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は市立小学校の給食費を全額公費負担とし、中学校の保護者負担額を前年度と同額に据え置く。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "小学校は保護者負担0円",
+        "juniorHighUnitPrice": "1食418円、年間183回を基本とするが、保護者負担額は2025年度と同額に据え置き",
+        "elementaryUnitPrice": "1食350円、年間183回相当を公費負担",
+        "support": "国交付金と地方創生臨時交付金を活用",
+        "assistance": "経済的に困難な世帯は就学援助で給食費等の一部援助対象"
+      },
+      "source": {"url": "https://www.city.numazu.shizuoka.jp/kurashi/kyoiku/kyoiku/numazushi/kyuushoku.htm", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子へ、医療機関・助産所での宿泊・通所または助産師の訪問による産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "ショートステイ、デイサービス標準・短時間、育児支援（訪問）",
+        "care": "授乳、育児相談、母体と乳児のケア",
+        "overnightFee": "課税世帯6,400円、非課税・生活保護世帯3,200円",
+        "dayFee": "標準は課税2,200円・減免1,100円、短時間は課税2,000円・減免1,000円",
+        "visitFee": "課税世帯800円、非課税・生活保護世帯400円"
+      },
+      "source": {"url": "https://www.city.numazu.shizuoka.jp/kurashi/kyoiku/kosodate/tetsuzuki/sangocare.htm", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "保育所、幼稚園、認定こども園、小規模保育等に通っていない児童を中心に対象",
+        "facility": "沼津っ子ふれあいセンター『ぽっぽ』ほか認定施設",
+        "limit": "1回5時間まで、月10時間まで",
+        "fee": "1時間300円。月10時間超過分等は一時預かりとして1時間600円"
+      },
+      "source": {"url": "https://city.numazu.shizuoka.jp/kurashi/kyoiku/kosodate/azukeru/daredemo.htm", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から沼津市へ移住して対象就業等を行う人へ、移住・就業支援金を交付する。",
+      "details": {
+        "program": "沼津市移住・就業支援金",
+        "single": "60万円",
+        "household": "2人以上の世帯は100万円",
+        "childAddition": "18歳未満の世帯員1人につき100万円加算",
+        "condition": "東京23区在住・通勤等の移住元要件、対象就業・起業・テレワーク等の要件、5年以上の居住意思等",
+        "deadline": "2026年度は2027年1月29日まで。予算到達時は終了"
+      },
+      "source": {"url": "https://www.city.numazu.shizuoka.jp/shisei/iju/howto/shien/shien.htm", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型・粗大ごみ等は地域の分別区分に従って排出し、多量の場合等は清掃プラントへ有料で自己搬入できる。",
+      "details": {
+        "separation": "品目別分別辞典と地域別年間収集計画表に従う",
+        "directCarry": "清掃プラントへ排出者本人が自己搬入。予約不要",
+        "hours": "平日と第1・第3・第5土曜日の8時30分～12時、13時～15時30分",
+        "fee": "最大積載量200キログラムまでの車両は1,240円。200キログラム超は100キログラムごとに620円加算",
+        "specialCollection": "排出困難な70歳以上のみの世帯等は事前申込みにより戸別収集対象"
+      },
+      "source": {"url": "https://www.city.numazu.shizuoka.jp/faq/answer/gomi/seikatu_05_06.htm", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、地震、津波、土砂災害等のハザード情報と避難所情報を防災ポータル等で公開する。",
+      "details": {
+        "portal": "気象警報、避難情報、開設避難所、各種ハザードマップを掲載",
+        "flood": "狩野川・黄瀬川、新中川、沼川・高橋川の洪水ハザードマップ",
+        "earthquakeTsunami": "震度、液状化、津波浸水区域・到達時間、避難ビル等を掲載",
+        "landslide": "土砂災害警戒区域、特別警戒区域、避難場所等を掲載",
+        "app": "公式防災アプリで防災マップと危機管理情報を提供"
+      },
+      "source": {"url": "https://www.city.numazu.shizuoka.jp/kurashi/anshin/bousai/portal/", "checkedAt": "2026-07-22"}
+    }
+  }
+}
