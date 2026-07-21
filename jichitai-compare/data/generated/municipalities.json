@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-22",
-    "municipalityCount": 174,
+    "municipalityCount": 184,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -9412,6 +9412,1774 @@
           "source": {
             "url": "https://www.town.imakane.lg.jp/gyousei/kurashi/syoubou/2710_1.html",
             "checkedAt": "2026-07-21"
+          }
+        }
+      }
+    },
+    {
+      "code": "01371",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "せたな町",
+      "officialUrl": "https://www.town.setana.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を調査し、8制度をせたな町・北部桧山衛生センター組合の公式情報で確認済み。病児・病後児保育は現行計画上の提供体制がないためunavailable。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達年度末まで、保険診療に係る医療費の自己負担額を全額助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "せたな町に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院、通院、調剤、治療用装具、指定訪問看護等の保険診療自己負担額",
+            "copay": "自己負担なし。現物給付非対応医療機関等で支払った場合は申請により払い戻し",
+            "excluded": "入院時食事代、差額室料、文書料、予防接種等の保険外費用",
+            "application": "受給者証の交付申請が必要",
+            "contact": "せたな町町民課国保医療係 0137-84-5113"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/kurashi/kenkou/post_1622.html",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "第3期子ども・子育て支援事業計画では、町内施設に必要設備がなく人材確保も困難として、令和8年度の病児・病後児保育の確保量を0としている。",
+          "source": {
+            "url": "https://www.town.setana.lg.jp/%E7%AC%AC3%E6%9C%9F%E3%81%9B%E3%81%9F%E3%81%AA%E7%94%BA%E5%AD%90%E3%81%A9%E3%82%82%E3%83%BB%E5%AD%90%E8%82%B2%E3%81%A6%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%E8%A8%88%E7%94%BB%EF%BC%88%E6%A1%88%EF%BC%89.pdf",
+            "checkedAt": "2026-07-21"
+          },
+          "notes": [
+            "近隣自治体との調整等を検討するとされているため、利用可否はこども家庭センターへ確認する。"
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳から5歳児等を無償化し、0歳から2歳児は町民税額・認定区分・きょうだい状況等で算定した保育料を町独自に軽減する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "freeAge": "3歳から5歳児は国制度により保育料無料。住民税非課税世帯の0歳から2歳児も無料",
+            "calculation": "その他の0歳から2歳児は世帯の市町村民税所得割額、認定区分、きょうだい状況等に基づき算定",
+            "townReduction": "国基準額からの町独自軽減、ひとり親・多子世帯等への減免あり",
+            "meal": "保育所・認定こども園の主食費・副食費を無償化",
+            "facilities": "認定こども園きたひやま、瀬棚保育所、大成保育園",
+            "contact": "せたな町健康推進課子ども子育て支援係 0137-84-5115"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/kodomo/post_1981.html",
+            "checkedAt": "2026-07-21"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.setana.lg.jp/industry/iju/post_1613.html",
+              "checkedAt": "2026-07-21"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内小中学校の学校給食費を無償化し、保護者負担を軽減している。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "support": "小中学校の給食費を無償化",
+            "schools": "せたな町立小学校・中学校",
+            "relatedSupport": "保育所・認定こども園の主食費・副食費も無償化",
+            "application": "通常の町立校在籍者について町が費用を負担。個別条件は教育委員会へ確認",
+            "contact": "せたな町教育委員会事務局"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/industry/iju/post_1613.html",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後に十分な家事・育児支援を受けられず、心身の不調や育児不安がある方へ、町外医療機関への委託による産後ケアを提供する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "産後に家族等から十分な家事・育児支援を受けられず、心身の不調や育児不安がある母子等",
+            "provider": "町外医療機関への委託により提供体制を確保",
+            "support": "助産師等の専門職による母体の休養、心身のケア、授乳・育児相談等",
+            "capacity": "第3期計画では令和8年度の確保量を年10人日としている",
+            "fee": "利用形態、対象月齢、自己負担額、利用日数はこども家庭センターへ確認",
+            "contact": "せたな町健康推進課こども家庭センター 0137-84-5115"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/%E7%AC%AC3%E6%9C%9F%E3%81%9B%E3%81%9F%E3%81%AA%E7%94%BA%E5%AD%90%E3%81%A9%E3%82%82%E3%83%BB%E5%AD%90%E8%82%B2%E3%81%A6%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%E8%A8%88%E7%94%BB%EF%BC%88%E6%A1%88%EF%BC%89.pdf",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度",
+            "target": "認定こども園、保育所、保育園に未入園の生後6か月から満3歳未満の子ども",
+            "limit": "1人あたり月10時間まで",
+            "fee": "1時間275円。世帯収入状況による減免あり",
+            "facilities": "認定こども園きたひやま、瀬棚保育所、大成保育園",
+            "application": "町への利用認定申請、利用者登録、施設との初回面談、予約が必要",
+            "contact": "せたな町健康推進課子ども子育て支援係 0137-84-5115"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/johobetsukosodate/post_1890.html",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内で自己居住用住宅を新築・購入し5年以上定住する方へ、町内業者による新築100万円、町外業者による新築30万円、中古住宅購入20万円を交付する。",
+          "details": {
+            "program": "移住定住促進住宅奨励事業",
+            "localNewBuild": "町内業者による住宅新築100万円",
+            "outsideNewBuild": "町外業者による住宅新築30万円",
+            "usedHouse": "既存住宅購入20万円",
+            "conditions": "自ら5年以上居住すること、移転補償対象でないこと等",
+            "application": "工事・購入前に申請し、完了後に住民票等を添えて完了届を提出",
+            "contact": "せたな町まちづくり推進課まちづくり推進係 0137-84-5111"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/industry/post_207.html",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "町と北部桧山衛生センター組合が、ごみ分別の手引きと地区別収集カレンダーで指定袋に入らない大型品等の排出方法を案内する。",
+          "details": {
+            "feeSystem": "品目、重量、収集・搬入方法により異なるため、分別の手引きまたは北部桧山衛生センターへ確認",
+            "application": "分別表で区分を確認し、地区別カレンダーの指定日に指定方法で排出。直接搬入の可否・料金は事前確認",
+            "guide": "町公式ページから分別表と北部桧山衛生センターの収集カレンダーを案内",
+            "contact": "北部桧山衛生センター組合 0137-86-0070"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/kurashi/kankyou/post_94.html",
+            "checkedAt": "2026-07-21"
+          },
+          "additionalSources": [
+            {
+              "url": "https://eiseicenter.or.jp/wakekata.html",
+              "checkedAt": "2026-07-21"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "令和6年2月更新の防災ハンドブックとWeb版防災マップで、津波、洪水、土砂災害、地震等の危険区域と避難場所を確認できる。",
+          "details": {
+            "coverage": "津波、洪水、土砂災害、地震、ため池等",
+            "access": "パソコン・スマートフォン対応のWeb版防災マップと保存版防災ハンドブックを公開",
+            "evacuation": "地区別の指定避難所・緊急避難場所、危険区域、避難経路を確認可能",
+            "additionalMaps": "土砂災害、後志利別川洪水、ため池等の個別ハザードマップも公開",
+            "contact": "せたな町総務課防災係 0137-84-5111"
+          },
+          "source": {
+            "url": "https://www.town.setana.lg.jp/kurashi/bousai/bousaimapweb.html",
+            "checkedAt": "2026-07-21"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.setana.lg.jp/kurashi/bousai/post_622.html",
+              "checkedAt": "2026-07-21"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "01391",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "島牧村",
+      "officialUrl": "https://www.vill.shimamaki.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を調査し、6制度を島牧村公式情報で確認済み。病児・病後児保育、学校給食費支援、産後ケアは現行公式案内で制度条件を確認できないためunavailable。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達年度末まで、保険診療に係る医療費を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "島牧村内に住所があり、健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院等の保険診療に係る自己負担額",
+            "excluded": "保険外費用、学校管理下の負傷等で日本スポーツ振興センター災害共済給付の対象となる場合等",
+            "application": "受給者証の交付申請が必要。公費負担制度に該当する場合は当該制度を優先",
+            "contact": "島牧村住民課保険係 0136-75-6213"
+          },
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=life&content=86",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "第3期子ども・子育て支援事業計画と現行の村公式子育て・保育案内を確認したが、村が実施する病児・病後児保育の利用条件を示す現行案内は確認できない。",
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=welfare&content=365",
+            "checkedAt": "2026-07-21"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.shimamaki.lg.jp/category/?category=welfare",
+              "checkedAt": "2026-07-21"
+            }
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "島牧保育所で教育・保育給付認定を受けた未就学児を受け入れ、保育料は世帯状況・課税額・認定区分等により決定する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "島牧保育所",
+            "fee": "3歳から5歳児等は幼児教育・保育無償化の対象。0歳から2歳児の具体的負担額は世帯の課税状況等により決定",
+            "siblingReduction": "多子世帯等の軽減は申込時に福祉課へ確認",
+            "application": "入所申込書、就労証明書等の必要書類を提出",
+            "contact": "島牧村福祉課・島牧保育所"
+          },
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=welfare&content=410",
+            "checkedAt": "2026-07-21"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.shimamaki.lg.jp/category/?category=welfare",
+              "checkedAt": "2026-07-21"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "村公式の学校教育ページと令和8年度の現行案内を確認したが、学校給食費の無償化・補助額・徴収額を示す公式制度案内は確認できない。",
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/?category=education",
+            "checkedAt": "2026-07-21"
+          },
+          "notes": [
+            "給食提供および保護者負担の現行条件は教育委員会または各学校へ確認する。"
+          ]
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "第3期子ども・子育て支援事業計画と村公式の乳幼児・母子保健案内を確認したが、産後ケアの利用形態、対象月齢、料金を示す現行制度案内は確認できない。",
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=welfare&content=365",
+            "checkedAt": "2026-07-21"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.shimamaki.lg.jp/category/?category=welfare",
+              "checkedAt": "2026-07-21"
+            }
+          ]
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を案内している。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "保育所等に通っていない生後6か月から満3歳未満の子ども",
+            "limit": "子ども1人につき月10時間まで",
+            "application": "利用認定後、総合支援システム等から施設面談・予約を行う",
+            "fee": "利用料、実施曜日・時間、減免条件は村の現行案内または施設へ確認",
+            "contact": "島牧村福祉課"
+          },
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=welfare&content=412",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "自宅の新築・中古住宅取得・リフォーム、賃貸住宅の建築・改修を対象とする住宅環境改善支援制度を設けている。",
+          "details": {
+            "program": "島牧村住宅環境改善支援条例に基づく奨励金制度",
+            "support": "自宅新築、中古物件取得、自宅リフォーム、賃貸住宅建築・リフォームを支援",
+            "conditions": "対象工事、申請時期、村内業者要件、補助額は公式チラシと企画課で事前確認",
+            "application": "事業着手前の相談・申請を推奨",
+            "contact": "島牧村企画課 0136-75-6212"
+          },
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=administration&content=302",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "令和8年度ごみ収集日程と分別案内により、指定袋に入らない大型品等の区分・収集日・排出方法を案内する。",
+          "details": {
+            "feeSystem": "品目や処理方法により異なるため、村の収集日程・分別案内または処理施設へ確認",
+            "application": "地区別収集日程と品目区分を確認し、指定された方法で排出",
+            "excluded": "家電リサイクル対象品等は村収集の対象外となる場合がある",
+            "contact": "島牧村住民課"
+          },
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=life&content=71",
+            "checkedAt": "2026-07-21"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "防災ハザードマップで津波、洪水、土砂災害の危険区域と避難情報を確認できる。",
+          "details": {
+            "coverage": "津波、洪水、土砂災害等",
+            "maps": "防災記事、津波・土砂災害ハザードマップ、洪水・土砂災害ハザードマップを分冊公開",
+            "evacuation": "危険区域、避難場所・避難経路を確認可能",
+            "additional": "令和8年指定の高潮浸水想定区域、8河川の洪水浸水想定区域も公式ページから確認できる",
+            "contact": "島牧村総務課防災対策室 0136-75-6265"
+          },
+          "source": {
+            "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=prevention&content=21",
+            "checkedAt": "2026-07-21"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=prevention&content=403",
+              "checkedAt": "2026-07-21"
+            },
+            {
+              "url": "https://www.vill.shimamaki.lg.jp/category/detail.php?category=prevention&content=282",
+              "checkedAt": "2026-07-21"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "01392",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "寿都町",
+      "officialUrl": "https://www.town.suttu.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を調査し、6制度を寿都町公式情報で確認済み。学校給食費支援、産後ケア、一時保育・誰でも通園は現行公式案内で制度条件を確認できないためunavailable。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳到達年度末までの子どもを対象に、保険診療に係る医療費を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "寿都町に住所がある出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院等の保険診療に係る自己負担額",
+            "application": "子ども医療費受給者証の交付申請が必要。変更・喪失時の届出様式も町公式ページで公開",
+            "fees": "保険外費用等の対象外項目と現行の窓口負担は町民課医療係へ確認",
+            "contact": "寿都町町民課医療係 0136-62-2523"
+          },
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/life/detail.php?id=4",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.suttu.lg.jp/common/img/content/cassette_24_pdf01_20241107_083352.pdf",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "児童が病気または回復期にあり、集団保育や家庭保育が困難な場合に専用施設で一時的に預かる病児・病後児保育事業を実施している。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "病児・病後児保育事業",
+            "support": "病気または回復期の児童を専用施設で一時的に預かり、保護者の就労と子育ての両立を支援",
+            "currentEvidence": "町の令和5年度決算主要施策で実施実績を確認",
+            "application": "対象年齢、施設、利用時間、料金、令和8年度の受付状況は町民課社会福祉係または寿都保育園へ確認",
+            "contact": "寿都町町民課社会福祉係 0136-62-2513"
+          },
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/common/img/content/cassette_24_pdf01_20241107_083352.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "寿都保育園で保育を必要とする未就学児を受け入れ、教育・保育給付認定と世帯状況等に基づき保育料を決定する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "寿都保育園",
+            "application": "保育園利用申込書と就労証明書等を提出",
+            "fee": "3歳から5歳児等は幼児教育・保育無償化の対象。0歳から2歳児の負担額は町民税額、認定区分、世帯状況等により決定",
+            "siblingReduction": "多子世帯等の軽減条件は入園申込時に寿都保育園へ確認",
+            "contact": "寿都保育園 0136-62-2637"
+          },
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/life/detail.php?id=4",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "町公式の現行くらし・教育案内と公開資料を確認したが、学校給食費の無償化、補助額または現行徴収額を示す制度案内は確認できない。",
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/life/",
+            "checkedAt": "2026-07-22"
+          },
+          "notes": [
+            "給食提供と保護者負担の現行条件は寿都町教育委員会または各学校へ確認する。"
+          ]
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "町公式の妊娠・出産・育児案内と母子保健事業の公開資料を確認したが、宿泊型・通所型・訪問型産後ケアの対象月齢、料金、利用日数を示す現行制度案内は確認できない。",
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/life/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "寿都保育園と放課後児童クラブの申込様式は確認できるが、未就園児を対象とする一時保育・一時預かり・こども誰でも通園制度の現行実施条件は確認できない。",
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/life/detail.php?id=4",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内の売却・賃貸希望空き家を登録し、利用希望者へ物件情報を提供する空き家等情報登録制度を運営する。",
+          "details": {
+            "program": "寿都町空き家等情報登録制度",
+            "support": "空き家等の所有者から登録を受け、購入・賃借を希望する方へ物件情報を提供",
+            "conditions": "登録物件、利用登録、売買・賃貸条件は町公式の住居情報と担当窓口で確認",
+            "transaction": "町は情報提供を行い、契約条件・仲介の有無は物件ごとに確認",
+            "contact": "寿都町役場企画課または施設課"
+          },
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/life/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "町公式のごみ・環境・衛生案内で、ごみの分別、収集、指定袋に入らない大型品等の処理方法を案内する。",
+          "details": {
+            "feeSystem": "品目、重量、収集または持込み方法により異なるため、町民課衛生係または処理施設へ確認",
+            "application": "町の分別・収集案内に従い、対象品目と収集日、直接搬入の可否を確認して排出",
+            "excluded": "家電リサイクル対象品等は町の通常収集対象外となる場合がある",
+            "contact": "寿都町町民課衛生係 0136-62-2523"
+          },
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/life/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "町公式サイトの防災・緊急情報から、災害情報、避難情報、防災資料を確認できる。",
+          "details": {
+            "coverage": "地震、津波、風水害、土砂災害等",
+            "access": "町公式サイトの防災・緊急情報を確認し、災害時は町の緊急情報と北海道防災情報を併用",
+            "evacuation": "指定避難所、危険区域、避難経路等の最新情報は役場防災担当へ確認",
+            "contact": "寿都町総務財政課防災担当 0136-62-2511"
+          },
+          "source": {
+            "url": "https://www.town.suttu.lg.jp/",
+            "checkedAt": "2026-07-22"
+          }
+        }
+      }
+    },
+    {
+      "code": "01393",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "黒松内町",
+      "officialUrl": "https://www.kuromatsunai.com/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を調査し、8制度を公式情報で確認済み。病児・病後児保育は現行実施を確認できないためunavailable。学校給食は町教育委員会の令和8年度料金表示を現行情報として登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達年度末まで、食事代を除く保険診療の自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "黒松内町に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "健康保険が適用される診療・調剤の自己負担分",
+            "copay": "乳幼児等医療費受給者証または高校生等医療費受給者証の利用により自己負担なし",
+            "incomeLimit": "主たる生計維持者の前年所得額830万円以内との案内あり",
+            "application": "受給者証の交付申請が必要。道外受診等は役場住民課で償還払い申請",
+            "contact": "黒松内町住民課 0136-72-3312"
+          },
+          "source": {
+            "url": "https://kurojyu.jimdofree.com/%E5%9B%BD%E4%BF%9D/%E5%8C%BB%E7%99%82%E8%B2%BB%E6%94%AF%E6%8F%B4%E5%88%B6%E5%BA%A6/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.pref.hokkaido.lg.jp/hf/kms/178410.html",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の子育て・児童案内、北海道の市町村支援一覧、保育園案内を確認したが、黒松内町が実施する病児・病後児保育の現行利用案内は確認できない。",
+          "source": {
+            "url": "https://www.kuromatsunai.com/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.pref.hokkaido.lg.jp/hf/kms/178410.html",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "第1子の保育料を引き下げ、第2子以降を無償化する町独自支援を実施する。3歳から5歳児等は国制度による無償化対象。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "認定こども園黒松内保育園",
+            "fee": "3歳から5歳児等は無償化。0歳から2歳児は世帯状況等に応じた保育料から町独自に第1子を軽減、第2子以降を無償化",
+            "meal": "1号・2号認定は給食費月額4,500円の施設案内あり。最新条件は施設へ確認",
+            "application": "教育・保育給付認定と入園申込が必要",
+            "contact": "黒松内町教育委員会子育て支援グループ 0136-72-3760"
+          },
+          "source": {
+            "url": "https://www.pref.hokkaido.lg.jp/hf/kms/178410.html",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://tsukushien.or.jp/price",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町学校給食センターが町内小中学校等へ給食を提供し、令和8年4月からの月額給食費を掲載している。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "schools": "町内小学校2校、中学校2校、道立養護学校1校へ1日約320食を提供",
+            "fee": "令和8年4月から小学校月額5,200円、中学校1・2年月額6,000円、中学校3年月額5,800円",
+            "note": "北海道公式支援一覧には無償化の記載もあるため、減免・町負担の適用条件は給食センターへ確認",
+            "contact": "黒松内町学校給食センター 0136-72-3132"
+          },
+          "source": {
+            "url": "https://kuromatsunaiedu.jimdofree.com/%E5%AD%A6%E6%A0%A1%E7%B5%A6%E9%A3%9F%E3%82%BB%E3%83%B3%E3%82%BF%E3%83%BC-%E4%BB%8A%E6%9C%88%E3%81%AE%E7%8C%AE%E7%AB%8B/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.pref.hokkaido.lg.jp/hf/kms/178410.html",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産前産後サポート・産後ケアとして、保健師等の訪問支援と助産師による母子の心身ケア、母乳相談を実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "types": "訪問・相談型",
+            "support": "妊娠期から産後、子育て期まで保健師等が訪問・母子保健事業で支援し、助産師が母子の心身ケアや授乳・身体の相談に対応",
+            "fee": "利用料、利用回数、対象月齢は子育て世代包括支援センターへ確認",
+            "contact": "黒松内町保健福祉課子育て世代包括支援センター 0136-72-4285"
+          },
+          "source": {
+            "url": "https://kuromatsunai.sakura.ne.jp/sblo_files/kuromatsunai-news/image/E4BA88E7AE97E381AEE38182E38289E381BEE38197E58D98E3839AE383BCE382B8.pdf",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://kuromatsunai.sakura.ne.jp/sblo_files/kuromatsunai-news/image/E9BB92E69DBEE58685E794BAE5AD90E882B2E381A6E694AFE68FB4E382B5E38393E382B9E6A682E8A681.pdf",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "黒松内保育園で、保育園に入園していない就学前児童を対象とする子育て一時預かりサービスを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "program": "子育て一時預かりサービス",
+            "target": "保育園に入園していない就学前児童。保護者の疾病、リフレッシュ等で保育が必要な場合",
+            "application": "事前登録が必要",
+            "fee": "利用料、利用時間、月間上限は黒松内保育園へ確認",
+            "contact": "黒松内保育園内子育て支援センター 0136-72-3230"
+          },
+          "source": {
+            "url": "https://kuromatsunai.sakura.ne.jp/sblo_files/kuromatsunai-news/image/E9BB92E69DBEE58685E794BAE5AD90E882B2E381A6E694AFE68FB4E382B5E38393E382B9E6A682E8A681.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住希望者向けのお試し移住体験ハウスを運営し、子育て世帯向け住宅整備と中古住宅取得・リフォーム支援の拡充を進める。",
+          "details": {
+            "trialHouse": "和風型・洋風型の2棟。2日間から最長6か月利用可能。1泊2日12,000円、1か月150,000円",
+            "currentPolicy": "共働き・子育て世帯向け住宅の整備、中古住宅取得・リフォーム支援の拡充を計画",
+            "application": "お試し移住体験ハウスは企画環境課へ予約後、使用申請書を提出",
+            "contact": "黒松内町企画環境課 0136-72-3376"
+          },
+          "source": {
+            "url": "https://www.kuromatsunai.com/kuro_immig/life-experience/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://kuromatsunai.sakura.ne.jp/sblo_files/kuromatsunai-news/image/E4BA88E7AE97E381AEE38182E38289E381BEE38197E58D98E3839AE383BCE382B8.pdf",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "町公式サイトのごみ・税金案内で家庭ごみの分別・排出方法を案内する。指定袋に入らない大型品の区分、料金、収集・持込方法は最新案内で確認が必要。",
+          "details": {
+            "feeSystem": "家庭ごみは一部有料化。粗大ごみの品目別料金は町公式の最新分別資料または企画環境課へ確認",
+            "application": "町公式サイトのごみ・税金カテゴリ、収集日程、分別資料に従って排出",
+            "contact": "黒松内町企画環境課 0136-72-3376"
+          },
+          "source": {
+            "url": "https://www.kuromatsunai.com/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "町公式サイトからハザードマップと地域防災計画を確認でき、洪水、土砂災害等の危険区域や避難情報を把握できる。",
+          "details": {
+            "coverage": "洪水・低地浸水、土砂災害、地震等",
+            "access": "町公式トップページの防災・ハザードマップから確認",
+            "preparedness": "地域防災計画に基づき、防災訓練・啓発、避難所・備蓄等の対策を実施",
+            "contact": "黒松内町総務課防災担当 0136-72-3311"
+          },
+          "source": {
+            "url": "https://www.kuromatsunai.com/",
+            "checkedAt": "2026-07-22"
+          }
+        }
+      }
+    },
+    {
+      "code": "01394",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "蘭越町",
+      "officialUrl": "https://www.town.rankoshi.hokkaido.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を調査し、7制度を蘭越町・北海道の公式情報で確認済み。病児・病後児保育と産後ケアは現行の町公式利用案内を確認できないためunavailable。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達年度末まで、入院・通院・歯科・調剤・訪問看護の健康保険自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "各種医療保険に加入し、蘭越町に住所を有する18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院、入院外、歯科、処方箋調剤、訪問看護の健康保険自己負担割合分",
+            "copay": "保険診療自己負担分を助成",
+            "excluded": "容器代、検診料、診断書、食事標準負担額、基本利用料、初診時特定療養費等",
+            "application": "受給者証の交付申請が必要。道外受診等は領収書を添えて償還払い申請",
+            "contact": "蘭越町住民福祉課医療保険係 0136-55-6431"
+          },
+          "source": {
+            "url": "https://www.town.rankoshi.hokkaido.jp/administration/education/detail.html?content=245",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の子育て・教育一覧、第3期子ども・子育て支援事業計画の案内、保育施設一覧を確認したが、病児・病後児保育の現行利用条件を示す案内は確認できない。",
+          "source": {
+            "url": "https://www.town.rankoshi.hokkaido.jp/administration/education/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳から5歳児等の無償化に加え、第1子の保育料を半額助成し、第2子以降を完全無償化する町独自支援を行う。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facilities": "蘭越保育所、昆布保育所、Bearsこども園等",
+            "freeAge": "3歳から5歳児等は幼児教育・保育無償化の対象",
+            "townReduction": "第1子の保育料を半額助成、第2子以降を完全無償化",
+            "bears": "Bearsこども園は生後6か月から3歳年度末まで、保育料は蘭越保育所と同額",
+            "application": "教育・保育給付認定と施設利用申込が必要",
+            "contact": "蘭越町健康推進課子ども家庭センター係 0136-57-6969"
+          },
+          "source": {
+            "url": "https://www.pref.hokkaido.lg.jp/hf/kms/178410.html",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.rankoshi.hokkaido.jp/administration/education/detail.html?content=226",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町学校給食センターが小中学校等へ給食を提供し、小・中学校の児童生徒分について給食費を半額助成する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "蘭越町立小学校・中学校の児童生徒",
+            "support": "平成29年度から学校給食費を半額助成",
+            "service": "小学校2校、蘭越中学校、蘭越高校、保育所2園、私立幼稚園等へ1日約530食を提供",
+            "payment": "年10回、5月から2月の各25日に納付。口座振替を推奨",
+            "contact": "蘭越町学校給食センター"
+          },
+          "source": {
+            "url": "https://town.rankoshi.hokkaido.jp/administration/education/detail.html?content=234",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "町公式の妊娠・出産・子育て案内と相談窓口を確認したが、宿泊型・通所型・訪問型産後ケアの対象月齢、利用料、利用日数を示す現行制度ページは確認できない。",
+          "source": {
+            "url": "https://www.town.rankoshi.hokkaido.jp/administration/education/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.rankoshi.hokkaido.jp/administration/education/detail.html?content=420",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保護者が一時的に児童を養育できない場合、北海愛星学園で満1歳から18歳までの児童を短期または短時間預かる費用を助成する。",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "子育て支援短期利用及び短時間利用事業",
+            "target": "保護者の疾病、出産、看護、事故、災害、冠婚葬祭、出張等により一時的に養育が困難な満1歳から18歳までの児童",
+            "shortStay": "1週間以内の短期利用",
+            "dayUse": "1日10時間以内の短時間利用",
+            "facility": "北海愛星学園",
+            "support": "一時的な養育に係る経費を助成し、家庭の経済的負担を軽減",
+            "contact": "蘭越町健康推進課子ども家庭センター係"
+          },
+          "source": {
+            "url": "https://www.town.rankoshi.hokkaido.jp/administration/education/detail.html?content=240",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住者の住宅準備、住宅取得、空き家登録準備を支援する移住支援条例と、子育て世帯向け定住促進住宅を運用する。",
+          "details": {
+            "program": "蘭越町移住支援条例",
+            "rentalSupport": "町営住宅・賃貸住宅へ入居する移住者の引越し費用、暖房器具、給湯器、ボイラー設置費等を助成",
+            "acquisition": "住宅取得奨励事業を実施",
+            "childHousing": "5年以上定住するIターン・Uターン者で中学生以下の子どもが1人以上いる世帯は定住促進住宅の対象",
+            "application": "転入・契約・購入前に要件と対象経費をまちづくり推進担当へ確認",
+            "contact": "蘭越町総務課まちづくり推進係"
+          },
+          "source": {
+            "url": "https://www.town.rankoshi.hokkaido.jp/administration/life/detail.html?content=665",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.rankoshi.hokkaido.jp/administration/life/detail.html?content=391",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "45リットル袋に入らない大型家電・家具・剪定木等を粗大ごみとし、処理券を貼って事前申込による戸別収集を利用する。",
+          "details": {
+            "definition": "45リットルのごみ袋に入らない大型家庭用電化製品、家具類、庭木の剪定木類等",
+            "application": "粗大ごみ処理券を貼り、3月から11月の月1回収集について、収集日の2週間前から前週金曜日までに申込み",
+            "collection": "申込み後に戸別収集",
+            "fee": "品目別の処理券枚数・料金は環境衛生係へ確認",
+            "contact": "蘭越町住民福祉課環境衛生係 0136-55-6438"
+          },
+          "source": {
+            "url": "https://www.town.rankoshi.hokkaido.jp/administration/life/detail.html?content=38",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "Web版防災マップとハザードマップで洪水、土砂災害等の防災情報、危険区域、避難情報を確認できる。",
+          "details": {
+            "coverage": "洪水、土砂災害、地震等",
+            "access": "蘭越町防災マップWeb版とハザードマップセレクトページを公開",
+            "evacuation": "災害発生情報、避難所開設状況、危険区域等を確認可能",
+            "contact": "蘭越町総務課防災担当 0136-57-5111"
+          },
+          "source": {
+            "url": "https://www.town.rankoshi.hokkaido.jp/webMap/index.html",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.rankoshi.hokkaido.jp/administration/detail.html?content=650",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "01395",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "ニセコ町",
+      "officialUrl": "https://www.town.niseko.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度をニセコ町公式情報で確認済み。18歳までの医療費助成、病児・病後児対応、令和8年度学校給食費無償化、産後ケア、こども誰でも通園制度等を登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "ニセコ町に住民登録がある18歳年度末までの子どもの保険診療医療費を全額助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "ニセコ町に住民登録があり、健康保険に加入する18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療に係る入院・通院・調剤等の自己負担額",
+            "copay": "医療費の自己負担なし",
+            "application": "ニセコ町こども医療費受給者証の交付申請が必要",
+            "excluded": "学校管理下の負傷等で日本スポーツ振興センター災害共済給付の対象となる場合、保険外費用等",
+            "contact": "ニセコ町保健福祉課保険医療係"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/kurashi/kenko_fukushi_kaigo/kodomo_teate_josei_/kodomo_iryo/3189",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "町委託のファミリーサポートセンターで、乳幼児から小学生までの病気時・病気回復時の預かりを有償で実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "ファミリーサポートセンター事業",
+            "target": "ニセコ町民で乳幼児から小学生までの子どもがいる利用会員",
+            "support": "病気時・病気回復時の預かり、送迎、一時的な預かり",
+            "fee": "病児・病後児は30分450円、時間外は30分500円。兄弟追加は30分につき1人200円加算",
+            "hours": "基本は平日9時から17時。サポーターが対応可能な場合は時間外・休日も実施",
+            "application": "利用会員登録と事前予約が必要",
+            "contact": "ファミサポニセコ 0136-55-8524"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/kurashi/kosodate/kosodateshien/familysupport/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳から5歳児と住民税非課税世帯の0歳から2歳児の保育料を無償化し、その他は認定区分・町民税額等で算定する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "ニセコ町幼児センターきらっと等",
+            "freeAge": "3歳から5歳児は保育料無料。住民税非課税世帯の0歳から2歳児も無料",
+            "calculation": "その他の0歳から2歳児は教育・保育認定、世帯の町民税額、保育必要量等に基づき算定",
+            "meal": "所得・多子要件により副食費免除あり",
+            "application": "教育・保育給付認定と施設利用申込が必要",
+            "contact": "ニセコ町幼児センター 0136-44-2700"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/kurashi/kosodate/kosodateshien/riyo/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度、町立小中学校に通学する児童生徒の保護者負担となる学校給食費を実質無償化する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "ニセコ町立小学校・中学校に通学する児童生徒",
+            "support": "学校給食費を無償化",
+            "fiscalYear": "令和8年度も無償化支援を継続",
+            "previousSupport": "従来は第2子以降の給食費免除制度を実施",
+            "contact": "ニセコ町学校給食センター"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/koho_niseko/r8/r0804/text/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.niseko.lg.jp/about_niseko/room/houshin/",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子を対象に、宿泊型・訪問型等の産後ケアを実施し、助産師による心身ケア、授乳指導、育児相談を提供する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "ニセコ町に住所がある産後1年未満の母子で、心身の不調や育児不安等により支援が必要な方",
+            "types": "宿泊型、訪問型等",
+            "support": "母体の休養・心身ケア、授乳・乳房ケア、育児相談・指導",
+            "application": "事前に保健福祉課健康づくり係へ相談・申請",
+            "fee": "利用形態、世帯区分、利用日数により異なるため令和8年度案内で確認",
+            "contact": "ニセコ町保健福祉課健康づくり係 0136-44-2121"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/resources/output/contents/file/release/1975/22208/2026sangokea.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児を月10時間まで受け入れるこども誰でも通園制度と、満1歳6か月以上の一時保育を実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "program": "こども誰でも通園制度・一時保育",
+            "anyoneTarget": "保育園等に通っていない生後6か月から満3歳未満の子ども。就労要件なし",
+            "anyoneLimit": "子ども1人につき月10時間まで",
+            "temporaryTarget": "ニセコ町在住で保育所等に通っていない満1歳6か月から就学前までの子ども",
+            "temporaryHours": "平日9時から16時のうち半日3時間30分。月12日まで",
+            "temporaryFee": "半日1,000円",
+            "facility": "ニセコ町地域子育て支援センターおひさま",
+            "contact": "おひさま 0136-44-2739"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/kurashi/kosodate/kosodateshien/ohisama",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "中学卒業までの子どもを持つ世帯の居住安定を目的とした子育て世帯向け町営住宅を整備・運用する。",
+          "details": {
+            "program": "子育て世帯向け町営住宅・公営住宅",
+            "target": "中学卒業までの子どもを持つ子育て世帯等。募集住戸ごとに所得・居住要件あり",
+            "support": "子育て世帯向け住戸を整備し、一般公営住宅と別枠の特定目的住宅として供給",
+            "application": "募集期間中に申込書・所得証明等を提出。最新の空室・家賃は都市建設課へ確認",
+            "currentStatus": "令和8年度も公営住宅入居者募集を実施",
+            "contact": "ニセコ町都市建設課住宅係"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/boshu/11671/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.niseko.lg.jp/kurashi/seikatsu/sumai/koeijutaku/koju_boshu/",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを含む家庭ごみを分別し、収集日の朝8時までに指定のごみステーションへ排出する。持込みも可能。",
+          "details": {
+            "sorting": "燃やすごみ、燃やさないごみ、生ごみ、資源ごみ、粗大ごみ等に分別",
+            "application": "地区別収集日と分別案内に従い、指定された方法でごみステーションへ排出",
+            "directDropOff": "収集日に出せない場合は有限会社塚越産業へ持込み可能",
+            "feeSystem": "粗大ごみの品目・料金は町公式のごみ処理料金表で確認",
+            "contact": "ニセコ町町民生活課環境衛生係"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/kurashi/gomi/ippan/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.niseko.lg.jp/kurashi/gomi/kingaku",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "防災ガイドマップで洪水、土砂災害、地震、火山災害等の危険区域と避難場所を確認できる。",
+          "details": {
+            "coverage": "洪水・内水、土砂災害、地震、火山災害、大規模火災等",
+            "maps": "令和3年4月発行の防災ガイドマップ、土砂災害警戒区域図を公開",
+            "evacuation": "災害種別ごとの指定緊急避難場所・指定避難所を掲載",
+            "information": "防災ラジオ、町ホームページ、SNS等で避難情報を発信",
+            "contact": "ニセコ町総務課防災係"
+          },
+          "source": {
+            "url": "https://www.town.niseko.lg.jp/kurashi/bosai_anzen/bosai/bousaigaidomappu/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.niseko.lg.jp/kurashi/bosai_anzen/bosai/shitei_hinan/",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "01396",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "真狩村",
+      "officialUrl": "https://www.vill.makkari.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を真狩村公式情報で調査し、8制度を確認済み。病児・病後児保育は現行の村実施案内を確認できないためunavailable。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から高校3年生年度末まで、入院・通院等の保険診療自己負担分を全額助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "真狩村に住民登録がある0歳から高校3年生年度末までの子ども",
+            "coverage": "医科・歯科の入院・外来、調剤、訪問看護の保険診療自己負担分",
+            "copay": "北海道内では受給者証等の提示により窓口負担なし",
+            "excluded": "保険適用外費用、入院時食事療養費等",
+            "application": "子ども医療費受給者証の交付申請が必要",
+            "contact": "真狩村住民課医療保険係 0136-45-3612"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/kurashi/kenko_fukushi/iryohijosei/nyuuyouji/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "村公式の子育て事業一覧、保育所、子育て支援センター、こども計画を確認したが、村が実施する病児・病後児保育の現行利用案内は確認できない。",
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/kurashi/kenko_fukushi/kosodate/",
+            "checkedAt": "2026-07-22"
+          },
+          "notes": [
+            "利用可能な近隣施設や広域利用の有無は住民課福祉係へ確認する。"
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳以上児と住民税非課税世帯の3歳未満児を無償化し、その他の3歳未満児にも国基準を超える無償・減額を実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "認定こども園まっかり保育所",
+            "freeAge": "3歳以上児は保育料無料。住民税非課税世帯の3歳未満児も無料",
+            "townReduction": "その他の3歳未満児は国基準を超えて無償または減額",
+            "meal": "3歳以上児の保育所給食費は全世帯無料",
+            "application": "教育・保育給付認定と施設利用申込が必要",
+            "contact": "真狩村住民課福祉係 0136-45-3612"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/resources/output/contents/file/release/1738/11762/kodomo_keikaku.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学費用の負担が困難な家庭へ、学校給食費や学用品費等を援助する就学援助制度を実施する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "真狩村在住で村民税非課税、児童扶養手当受給等の要件に該当し、教育委員会が認定した保護者",
+            "support": "学校給食費、学用品費等の学校生活に必要な費用",
+            "application": "通学する学校から申請用紙を受け取り、必要書類を学校へ提出",
+            "contact": "真狩村教育委員会学校教育係 0136-45-3336"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/kurashi/kosodate_kyoiku/kyouiku/kyouiku-zyosei/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1年以内の乳児と母を対象に、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "令和8年4月1日以降に出産し、申請・利用時点で真狩村に住所がある生後1年以内の乳児と母",
+            "types": "ショートステイ型、デイサービス型、アウトリーチ型",
+            "support": "産婦の心身ケア、授乳ケア、育児手技の指導・相談等",
+            "providers": "なみうち助産院、倶知安厚生病院",
+            "application": "予約前に住民課へ申請し、利用券の交付を受ける",
+            "contact": "真狩村住民課保健係 0136-45-3612"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/kurashi/kenko_fukushi/ninshin_shusan/shussan/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児を月10時間まで受け入れるこども誰でも通園制度と、1歳以上18歳未満対象の子育て短期支援を実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 17
+          },
+          "details": {
+            "anyoneTarget": "保育所等に通っていない生後6か月から満3歳未満の子ども。村内施設は1歳から3歳未満を受入れ",
+            "anyoneLimit": "子ども1人につき月10時間まで",
+            "anyoneFee": "1時間300円。所得に応じた減免あり",
+            "facility": "真狩村地域子育て支援センターゆうゆう",
+            "shortStay": "1歳以上18歳未満を北海愛星学園で原則7日以内預かるショートステイと夜間・休日のトワイライト事業を実施",
+            "application": "村への利用認定申請、施設面談・予約が必要",
+            "contact": "真狩村住民課福祉係 0136-45-3612"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/kurashi/kenko_fukushi/kosodate/daretuu/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.makkari.lg.jp/kurashi/kenko_fukushi/kosodate/tanki/",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "村外からの移住希望者向け住宅や世帯向け賃貸住宅を運営し、申込・選考により入居者を決定する。",
+          "details": {
+            "program": "移住・定住促進住宅",
+            "properties": "見晴ハウス、共済住宅等",
+            "miharashiFee": "見晴ハウスは月額家賃25,000円、敷金25,000円",
+            "miharashiTerm": "原則3年間、更新可能",
+            "conditions": "村外からの移住希望者、税等の滞納がないこと、家賃支払能力等",
+            "application": "申込書、住民票、所得証明、納税証明等を提出し選考",
+            "contact": "真狩村総務課財政係 0136-45-3610"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/iju_teiju/ijushien/miharashihouse/",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない大型品を粗大ごみとして年3回収集し、最終処分場への直接持込みでは1kgにつき20円で受け入れる。",
+          "details": {
+            "definition": "45リットルの指定袋に入らない、または袋の口を縛れない大型家庭ごみ",
+            "collection": "タンス、机、自転車等を年3回収集。家電リサイクル対象品は除く",
+            "directDropOff": "真狩村民は一般廃棄物最終処分場へ分別して直接持込み可能",
+            "fee": "直接持込みの粗大ごみは1kgにつき20円",
+            "winterClosure": "粗大ごみは12月から2月末まで直接受入れ休止",
+            "contact": "真狩村企画情報課環境衛生係 0136-45-3613"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/kurashi/gomi/saishushobunjo/",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.makkari.lg.jp/kurashi/gomi/bunbetsu",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "市街図・広域図のハザードマップと避難場所一覧で危険区域、指定避難所、福祉避難所を確認できる。",
+          "details": {
+            "maps": "真狩村ハザードマップ市街図・広域図",
+            "evacuation": "一時避難場所、指定避難所、福祉避難所の施設名・所在地を公開",
+            "welfareShelter": "真狩村保健福祉センターを福祉避難所として指定",
+            "contact": "真狩村総務課防災担当 0136-45-2121"
+          },
+          "source": {
+            "url": "https://www.vill.makkari.lg.jp/makkari_map/hinanbasho/",
+            "checkedAt": "2026-07-22"
+          }
+        }
+      }
+    },
+    {
+      "code": "01397",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "留寿都村",
+      "officialUrl": "https://www.vill.rusutsu.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を留寿都村公式情報で調査し、8制度を確認済み。病児・病後児保育は第3期計画で現行未実施のためunavailable。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの子どもの保険診療医療費を全額助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "留寿都村に住民登録がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険医療機関等でかかった保険診療自己負担額",
+            "copay": "北海道内では受給者証等の提示により窓口負担なし",
+            "excluded": "健康保険適用外費用、入院時食事療養費等",
+            "application": "子ども医療費受給者証の交付申請が必要",
+            "contact": "留寿都村保健医療課 0136-46-3131"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/kosodate/detail/00001886.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "第3期子ども・子育て支援事業計画では、病児・病後児保育は現状未実施で、実施体制の可能性を検討するとしている。",
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/hotnews/files/00002400/00002424/keikaku.pdf",
+            "checkedAt": "2026-07-22"
+          },
+          "notes": [
+            "近隣施設の広域利用可否は住民福祉課またはるすつ子どもセンターへ確認する。"
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "るすつこども園の利用者に対し、保育料等の助成を実施する。3歳から5歳児等は国制度による無償化対象。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "認定こども園るすつこども園",
+            "freeAge": "3歳から5歳児等は幼児教育・保育無償化の対象",
+            "townSupport": "留寿都村ふるさと応援基金子育て支援保育料等助成金を保育料等へ充当",
+            "meal": "令和8年度はこども園給食費の無償化を実施",
+            "application": "教育・保育給付認定、入園申込、助成関係書類の提出が必要",
+            "contact": "るすつ子どもセンター 0136-46-3253"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/kosodate/detail/00003962.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から村立小中学校の学校給食費を無償化し、保護者負担をゼロとする。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "留寿都村立小学校・中学校の児童生徒",
+            "support": "学校給食費を全額村負担とし保護者負担なし",
+            "alternativeLunch": "食物アレルギー等で給食を喫食せず昼食を持参する児童の保護者へ給食支援給付金を交付",
+            "contact": "留寿都村教育委員会学校教育係 0136-46-3321"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/hotnews/detail/00000230.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、通所型・宿泊型・訪問型の産後ケアを提供する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "留寿都村に住民登録がある産後1年未満の母と1歳未満の子ども",
+            "types": "デイサービス型、ショートステイ型、アウトリーチ型",
+            "limit": "子ども1人につき5回。宿泊1泊は2回分として算定",
+            "fee": "課税世帯は通所1回1,100円、宿泊1泊5,000円、訪問0円。非課税・生活保護世帯は0円",
+            "provider": "なみうち助産院等",
+            "application": "施設予約後、利用日の1週間前までに村へ申請し利用券の交付を受ける",
+            "contact": "留寿都村保健医療課 0136-46-3131"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/kosodate/detail/00004025.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "るすつこども園で、一時保育サービスを週3日を限度に実施し、令和8年度からこども誰でも通園制度も実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "るすつ子どもセンターぽっけ・るすつこども園",
+            "temporaryCare": "保護者の就労、疾病、出産、私的理由等により一時的に保育が必要な乳幼児を週3日まで受入れ",
+            "anyoneCare": "令和8年度から、就労要件を問わないこども誰でも通園制度をるすつこども園で実施",
+            "application": "事前登録、面談、予約が必要。対象月齢、料金、利用時間は施設へ確認",
+            "contact": "るすつ子どもセンター 0136-46-3253"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/kosodate/detail/00001754.html",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.rusutsu.lg.jp/hotnews/files/00002400/00002424/keikaku.pdf",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に村内で住宅を取得し5年超居住する移住者へ、新築・建売50万円、中古30万円、子育て世帯20万円加算を交付する。",
+          "details": {
+            "program": "留寿都村移住定住支援事業",
+            "newBuild": "新築住宅・建売住宅50万円",
+            "usedHouse": "中古住宅30万円",
+            "childAddition": "中学生以下の子どもがいる世帯または妊娠中の子がいる世帯は20万円加算",
+            "conditions": "令和8年度内に取得し、引渡し後5年を超えて居住、税等の滞納がないこと等",
+            "application": "工事着手または売買契約の1か月前までに申請",
+            "contact": "留寿都村企画観光課 0136-46-3131"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/hotnews/detail/00003775.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは事前申込後、ごみ処理券を貼って戸別収集を利用する。料金は材質と重量により200円から1,800円。",
+          "details": {
+            "items": "家具、自転車、ストーブ、ふとん、ベッド等",
+            "application": "住民福祉課へ窓口または電話で申込み、処理券を購入して対象品へ貼付し、収集日に屋外へ排出",
+            "fee": "木質・その他とも5kg未満200円。重量区分により最大1品1,800円",
+            "contact": "留寿都村住民福祉課 0136-46-3131"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/hotnews/detail/00000129.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "ハザードマップ、防災ガイド、避難所一覧、防災情報配信アプリで災害リスクと避難情報を確認できる。",
+          "details": {
+            "coverage": "洪水、土砂災害、地震等",
+            "access": "村公式ハザードマップ、防災ガイド、るすっぴーナビを公開",
+            "evacuation": "指定避難所と避難情報を村公式サイトで確認可能",
+            "contact": "留寿都村総務課防災担当 0136-46-3131"
+          },
+          "source": {
+            "url": "https://www.vill.rusutsu.lg.jp/hotnews/detail/00000269.html",
+            "checkedAt": "2026-07-22"
+          }
+        }
+      }
+    },
+    {
+      "code": "01398",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "喜茂別町",
+      "officialUrl": "https://www.town.kimobetsu.hokkaido.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を喜茂別町公式情報で調査し、全9制度を確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から中学校修了年度末までの子どもの保険診療自己負担額を全額助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "喜茂別町民の未就学児、小学生、中学生（満15歳到達後最初の3月31日まで）",
+            "coverage": "すべての通院・入院に係る保険診療の一部負担金",
+            "copay": "保険適用分を全額助成",
+            "application": "受給者証等の手続きは住民課住民係へ確認",
+            "contact": "喜茂別町住民課住民係 0136-33-2211"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/detail.php?content=66",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "喜茂別町保育所で病児・病後児保育を平日9時から17時30分まで、1日1,000円で実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "喜茂別町保育所",
+            "hours": "9時から17時30分",
+            "fee": "1日1,000円",
+            "conditions": "対象年齢、医師の診断・連絡票、受入可能な症状等は利用前に保育所へ確認",
+            "contact": "喜茂別町保育所 0136-33-2142"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/common/img/content/content_20240618_173509.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳以上児等の保育料を無償化し、0歳から2歳児は住民税額等に応じた保育料を設定する。3歳以上児の給食費は月額3,150円。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "喜茂別町保育所",
+            "freeAge": "3歳から5歳児等の利用者負担額は0円",
+            "underThree": "0歳から2歳児は生活保護・非課税世帯0円、課税世帯は住民税所得割額等に応じて算定",
+            "meal": "3歳以上児の副食費は月額3,150円。一定の所得・多子要件では免除対象",
+            "application": "教育・保育給付認定と入所申込みが必要",
+            "contact": "喜茂別町保育所 0136-33-2142"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/reiki/reiki_honbun/a073RG00000588.html",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.kimobetsu.hokkaido.jp/common/img/content/content_20240618_173509.pdf",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校の学校給食費を徴収し、経済的理由で就学困難と認定された世帯には就学援助で実費を支給する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "喜茂別町立小中学校の児童生徒のうち、要保護・準要保護として認定された世帯",
+            "support": "就学援助の対象費目に学校給食費を含み、実費を支給",
+            "universalSupport": "全児童生徒を対象とする一律無償化の現行公式案内は確認できない",
+            "application": "就学援助申請と教育委員会の認定が必要",
+            "contact": "喜茂別町教育委員会"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/reiki/reiki_honbun/a073RG00000650.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、通所型・訪問型の産後ケアを無料で提供する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "喜茂別町に住所がある産後1年未満の母と乳児で、心身の不調、育児不安、家族支援不足等がある方",
+            "types": "通所型、訪問型",
+            "support": "母体の身体・心理的ケア、授乳・乳房ケア、育児指導、保健指導・情報提供",
+            "fee": "無料。食事提供時は食事代が別途必要",
+            "application": "町へ申請後、利用券の交付を受けて施設を予約",
+            "contact": "喜茂別町元気応援課健康づくり係 0136-55-5101"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/detail.php?content=530",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "喜茂別町保育所で一時預かり保育と、令和8年度のこども誰でも通園制度を実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "temporaryCare": "一時預かり保育は8時30分から18時、1日2,000円。保育の必要性認定は不要",
+            "anyoneCare": "保育施設等に通っていない生後6か月から満3歳未満の子どもを月10時間まで受入れ",
+            "anyoneHours": "平日9時から11時、定員2名",
+            "anyoneFee": "1時間300円。非課税世帯等は減免あり",
+            "application": "申請、利用認定、初回面談、予約が必要",
+            "contact": "喜茂別町保育所 0136-33-2142"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/education/detail.php?content=597",
+            "checkedAt": "2026-07-22"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.kimobetsu.hokkaido.jp/common/img/content/content_20240618_173509.pdf",
+              "checkedAt": "2026-07-22"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "定住目的の住宅新築・中古取得・リフォーム費用を補助する。",
+          "details": {
+            "newBuild": "新築費用の10分の1以内、限度額100万円から250万円",
+            "usedHouse": "中古住宅取得費用の10分の2以内、限度額50万円から100万円",
+            "renovation": "住宅リフォーム工事費の10分の3以内、上限30万円",
+            "conditions": "定住、住宅・申請者、町税等に関する要件があり、契約・着工前の確認が必要",
+            "contact": "喜茂別町建設課管理係"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/detail.php?content=39",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない大型ごみは年4回、町内収集業者へ事前予約して軒先収集を利用する。",
+          "details": {
+            "items": "椅子、机、タンス、自転車、大型家電製品（家電リサイクル4品目を除く）、ストーブ、スキー、畳等",
+            "collection": "5月、8月、12月、3月",
+            "application": "株式会社日道建設運輸へ事前予約し、軒先へ排出",
+            "fee": "品目別料金は収集業者へ確認",
+            "contact": "株式会社日道建設運輸 0136-33-2629／喜茂別町住民課 0136-33-2211"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/detail.php?content=12",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "防災ハザードマップのPDF・Web版で洪水、土砂災害、避難所等を確認できる。",
+          "details": {
+            "coverage": "洪水浸水想定区域、土砂災害警戒区域等",
+            "access": "PDF版、Web版、携帯アプリ版を公開",
+            "evacuation": "避難所の位置と地区別の危険区域を掲載",
+            "preparedness": "防災バックチェックリスト等を掲載",
+            "contact": "喜茂別町まちづくり振興課 0136-33-2216"
+          },
+          "source": {
+            "url": "https://www.town.kimobetsu.hokkaido.jp/life/detail.php?content=104",
+            "checkedAt": "2026-07-22"
+          }
+        }
+      }
+    },
+    {
+      "code": "01399",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "京極町",
+      "officialUrl": "https://www.town-kyogoku.jp/",
+      "status": "verified",
+      "summary": "北日本調査班が対象9制度を京極町公式情報で調査し、8制度を確認済み。病児・病後児保育は第3期計画で町事業として現状未実施のためunavailable。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達年度末までの子どもの健康保険適用医療費自己負担額を全額助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "京極町に住所がある0歳から高校3年生相当の年度末までの子ども",
+            "coverage": "健康保険が適用される入院・通院・調剤等の自己負担額",
+            "copay": "自己負担なし",
+            "application": "受給者証の交付申請が必要。詳細は住民福祉課へ確認",
+            "contact": "京極町住民福祉課 0136-42-2111"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/uploaded/life/4176_4719_misc.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "第3期子ども・子育て支援事業計画では、病児・病後児保育を町事業として現状実施しておらず、令和7年度から11年度の確保量も0としている。",
+          "source": {
+            "url": "https://www.town-kyogoku.jp/uploaded/attachment/2478.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "令和7年4月から、所得にかかわらず全ての園児の保育料と給食費を完全無償化している。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "認定こども園京極保育園",
+            "target": "生後6か月から就学前までの入園児",
+            "fee": "保育料無料",
+            "meal": "主食費・副食費を含む給食費無料",
+            "application": "教育・保育給付認定と入園申込みが必要",
+            "contact": "京極町住民福祉課 0136-42-2111"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/page/1306.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和7年4月から、町内在住で町立小中学校に在籍する児童生徒の学校給食費を第1子から全額免除する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "京極町に住所があり、京極町立小学校・中学校に在籍する児童生徒",
+            "support": "学校給食費を全額免除",
+            "excluded": "生活保護、就学援助、特別支援教育就学奨励費その他の給食費助成を受ける場合は重複対象外",
+            "application": "学校を通じた案内に従う",
+            "contact": "京極町教育委員会 0136-42-2111"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/page/1416.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "育児支援が必要な産婦を対象に、町が委託した助産師が自宅を訪問する産後ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "type": "訪問型",
+            "target": "出産後、相談者がいない、授乳や乳児の世話・生活リズム等に不安があり支援を必要とする母子",
+            "support": "助産師による授乳、乳児の世話、生活リズム等の相談・支援",
+            "application": "事前申請が必要",
+            "fee": "利用条件・料金・回数は産後ケア事業案内または健康推進課へ確認",
+            "contact": "京極町健康推進課 0136-42-2111"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/uploaded/life/4176_4719_misc.pdf",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "1歳から就学前までの町内児童を対象に、一時預かり保育を平日7時30分から18時まで無料で実施する。",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "認定こども園京極保育園",
+            "target": "保護者の短時間就労・研修、傷病・介護・冠婚葬祭等の緊急時、育児負担軽減等で一時的な保育が必要な町内児童",
+            "hours": "平日7時30分から18時",
+            "limit": "原則週3日または月12日以内。1日定員3名",
+            "fee": "令和6年4月から所得にかかわらず無料",
+            "application": "原則利用日の7日前までに申込み。初回は面談が必要",
+            "contact": "認定こども園京極保育園 0136-42-2173"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/page/1305.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内で定住用住宅を新築・購入する方へ、新築最大300万円、中古住宅は購入額の10分の1・上限100万円を補助する。",
+          "details": {
+            "program": "京極町定住促進事業補助金",
+            "newBuild": "令和7年4月以降の新築は、町内業者・子育て世帯300万円、町内業者・その他150万円、町外業者・子育て世帯200万円、町外業者・その他100万円",
+            "usedHouse": "購入金額の10分の1、上限100万円",
+            "energyBonus": "北方型住宅2020等の要件を満たす場合は100万円加算",
+            "conditions": "住宅取得後に居住する所有者。5年未満の転居・譲渡・貸付は返還対象",
+            "application": "登記完了後速やかに関係書類を添えて申請",
+            "contact": "京極町企画振興課 0136-42-2111"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/page/1233.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "大型・粗大ごみは毎月第2・第4木曜日に、事前申込み制で収集する。",
+          "details": {
+            "collection": "毎月第2・第4木曜日",
+            "application": "収集前に町の案内に従って事前申込み",
+            "sorting": "指定袋に入らない大型品は粗大ごみとして分別",
+            "fee": "処理券・品目別料金等は申込時または最新の分別冊子で確認",
+            "contact": "京極町住民福祉課 0136-42-2111"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/page/1201.html",
+            "checkedAt": "2026-07-22"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水ハザードマップ、土砂災害情報、地域防災計画、避難所一覧で災害リスクと避難先を確認できる。",
+          "details": {
+            "coverage": "洪水浸水、土砂災害、地震等",
+            "maps": "洪水ハザードマップ等を町公式サイトで公開",
+            "evacuation": "指定緊急避難場所・指定避難所を確認可能",
+            "preparedness": "地域防災計画や防災情報に基づく備えを案内",
+            "contact": "京極町総務課防災担当 0136-42-2111"
+          },
+          "source": {
+            "url": "https://www.town-kyogoku.jp/page/1157.html",
+            "checkedAt": "2026-07-22"
           }
         }
       }
