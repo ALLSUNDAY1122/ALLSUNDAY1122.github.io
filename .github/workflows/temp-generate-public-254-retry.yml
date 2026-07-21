@@ -1,4 +1,4 @@
-name: Temporary Fix Progress Status
+name: Temporary Generate Public 254 Retry
 
 on:
   push:
@@ -8,75 +8,57 @@ on:
 
 permissions:
   contents: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
-  fix:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: coord/fix-progress-status-20260722
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Reconcile task statuses and fix assignment logic
+      - name: Generate public artifacts
+        run: |
+          set -euxo pipefail
+          cd jichitai-compare
+          npm ci
+          npm run generate
+          npm run progress
+          cd ..
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('jichitai-compare/index.html')
+          text=path.read_text(encoding='utf-8')
+          old='<span>234自治体・9制度</span>'
+          new='<span>254自治体・9制度</span>'
+          if old not in text:
+              raise SystemExit('public count target not found')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Create generated update PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euxo pipefail
-          python3 - <<'PY'
-          import glob, json, os, subprocess
-          from pathlib import Path
-
-          changed=[]
-          unresolved=[]
-          for filename in glob.glob('jichitai-compare/operations/tasks/*.json'):
-              path=Path(filename)
-              try:
-                  data=json.loads(path.read_text(encoding='utf-8'))
-              except Exception:
-                  continue
-              if data.get('status') != 'pr_open':
-                  continue
-              pr=data.get('pullRequestNumber')
-              if not isinstance(pr,int) or pr <= 0:
-                  unresolved.append((path.name,'PR番号なし'))
-                  continue
-              merged_at=subprocess.check_output([
-                  'gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/pulls/{pr}',
-                  '--jq','.merged_at // ""'
-              ],text=True).strip()
-              if merged_at:
-                  data['status']='merged'
-                  data['lastUpdatedAt']='2026-07-22T05:56:00+09:00'
-                  data['lastUpdatedBy']='全国進行統括'
-                  notes=data.setdefault('notes',[])
-                  note=f'PR #{pr}のmerged_atをGitHub APIで再確認し、task.statusをmergedへ補正。'
-                  if note not in notes:
-                      notes.append(note)
-                  path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-                  changed.append((path.name,pr))
-              else:
-                  unresolved.append((path.name,f'PR #{pr}は未マージ'))
-          print('changed=',changed)
-          print('unresolved=',unresolved)
-
-          script=Path('jichitai-compare/scripts/update-progress.mjs')
-          text=script.read_text(encoding='utf-8')
-          old="  if (Number.isInteger(task.pullRequestNumber) && task.pullRequestNumber > 0) return 'pr_open';"
-          new="  if (task.status === 'pr_open') return 'pr_open';"
-          if old not in text:
-              raise SystemExit('assignmentState target not found')
-          script.write_text(text.replace(old,new,1),encoding='utf-8')
-          PY
-          cd jichitai-compare
-          npm run progress
-          cd ..
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add jichitai-compare/operations/tasks jichitai-compare/scripts/update-progress.mjs jichitai-compare/operations/progress.json
-          git commit -m '統括管理: マージ済みtask状態と進捗集計を補正'
-          git push origin coord/fix-progress-status-20260722
+          branch='coord/generated-254-20260722-0555'
+          git checkout -b "$branch"
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git commit -m '公開更新: 生成データと表示件数を254自治体へ同期'
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title '公開更新: 生成データと表示件数を254自治体へ同期' --body '北日本10自治体の全国統合PR #465と中日本10自治体の全国統合PR #468を反映し、公開生成物を234自治体から254自治体へ更新します。変更は生成JSON、全国進捗、トップページの3ファイルのみです。'
+      - name: Remove temporary workflow
+        if: always()
+        run: |
+          set -euxo pipefail
+          git checkout main
+          git pull --ff-only origin main
+          git rm .github/workflows/temp-generate-public-254-retry.yml
+          git commit -m '公開更新: 一時生成ワークフローを削除'
+          git push origin main
