@@ -1,0 +1,102 @@
+name: Temporary Sync Release Queue 196
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-sync-release-queue-196.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync release queue and remove workflow
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const path = 'jichitai-compare/operations/control/release-queue.json';
+          const queue = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const addUnique = (entry, additions) => {
+            const seen = new Set(entry.municipalities.map(x => x.code));
+            for (const item of additions) {
+              if (!seen.has(item.code)) {
+                entry.municipalities.push(item);
+                seen.add(item.code);
+              }
+            }
+            entry.municipalities.sort((a, b) => a.code.localeCompare(b.code));
+            entry.count = entry.municipalities.length;
+          };
+          const north = queue.entries.find(x => x.region === 'north');
+          const east = queue.entries.find(x => x.region === 'east');
+          const central = queue.entries.find(x => x.region === 'central');
+          const west = queue.entries.find(x => x.region === 'west');
+          if (!north || !east || !central || !west) throw new Error('region entry not found');
+
+          addUnique(north, [
+            {code:'01399',name:'京極町'},
+            {code:'01400',name:'倶知安町'}
+          ]);
+          north.pendingSinceLastRelease = 1;
+          north.releaseStatus = 'pending_threshold';
+          north.reason = 'せたな町から京極町までの追加10自治体をPR #384でmainへ全国統合し、生成・公開をPR #386で184自治体へ更新。その後、倶知安町を地方統合';
+          north.mainIntegrationPr = 384;
+          north.generatedPullRequest = 386;
+
+          east.pendingSinceLastRelease = 7;
+          east.releaseStatus = 'pending_threshold';
+
+          addUnique(central, [
+            {code:'21221',name:'海津市'},
+            {code:'21302',name:'岐南町'}
+          ]);
+          central.pendingSinceLastRelease = 3;
+          central.releaseStatus = 'pending_threshold';
+          central.reason = '恵那市から郡上市までの追加10自治体をPR #377でmainへ全国統合し、生成・公開をPR #380で174自治体へ更新。その後、下呂市・海津市・岐南町を地方統合';
+          central.mainIntegrationPr = 377;
+          central.generatedPullRequest = 380;
+          central.auditStatus = 'passed';
+
+          west.pendingSinceLastRelease = 2;
+          west.releaseStatus = 'pending_threshold';
+
+          for (const entry of queue.entries) {
+            entry.municipalities.sort((a, b) => a.code.localeCompare(b.code));
+            entry.count = entry.municipalities.length;
+          }
+          queue.updatedAt = '2026-07-22T01:16:00+09:00';
+          queue.summary.regionalMergedMunicipalities = queue.entries.reduce((sum, x) => sum + x.count, 0);
+          queue.summary.waitingRegionalMergeMunicipalities = 0;
+          queue.summary.releaseReadyRegions = [];
+          queue.summary.auditBlockedRegions = [];
+          queue.summary.lastNationalIntegrationAt = '2026-07-22T01:11:53+09:00';
+          queue.summary.lastNationalIntegrationPr = 384;
+          queue.summary.latestGeneratedMunicipalityCount = 184;
+          queue.summary.latestGeneratedPullRequest = 386;
+          queue.summary.latestPublicCountPullRequest = 386;
+          queue.nextAction = '東日本が前回全国統合後7自治体で先行。中日本3、西日本2、北日本1。最初に10自治体へ到達した地域を全国統合する。';
+          queue.humanDecisionRequired = false;
+
+          if (north.count !== 62) throw new Error(`north count mismatch: ${north.count}`);
+          if (east.count !== 27) throw new Error(`east count mismatch: ${east.count}`);
+          if (central.count !== 74) throw new Error(`central count mismatch: ${central.count}`);
+          if (west.count !== 33) throw new Error(`west count mismatch: ${west.count}`);
+          if (queue.summary.regionalMergedMunicipalities !== 196) throw new Error(`total mismatch: ${queue.summary.regionalMergedMunicipalities}`);
+          fs.writeFileSync(path, JSON.stringify(queue));
+          NODE
+          git rm .github/workflows/temp-sync-release-queue-196.yml
+          git add jichitai-compare/operations/control/release-queue.json
+          git commit -m "統括管理: 地方統合196自治体・公開184自治体へ同期"
+          git push origin main
