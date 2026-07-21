@@ -1,0 +1,41 @@
+name: Temporary Reset East After 407
+
+on:
+  push:
+    branches: [region/east]
+    paths:
+      - .github/workflows/temp-reset-east-after-407.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: region/east
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update east state
+        run: |
+          set -euxo pipefail
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = 'jichitai-compare/operations/control/regions/east.json';
+          const state = JSON.parse(fs.readFileSync(path, 'utf8'));
+          state.lastUpdatedAt = '2026-07-22T02:24:00+09:00';
+          state.completedMunicipalitiesSinceLastNationalMerge = 0;
+          state.lastNationalIntegrationPr = 407;
+          state.lastNationalIntegrationAt = '2026-07-22T02:18:07+09:00';
+          state.lastGeneratedPullRequest = 408;
+          state.lastAction = '鹿嶋市（08222）から桜川市（08231）までの10自治体を全国統合PR #407・CI run #868でmainへ反映し、生成更新PR #408・CI run #871で公開204自治体へ同期。神栖市（08232）の作業ブランチとtaskを作成した。';
+          state.nextAction = '神栖市（08232）の9制度を公式情報から一括調査し、自治体JSON作成、検証、PR、CI、地方統合まで進める。';
+          fs.writeFileSync(path, JSON.stringify(state));
+          NODE
+          rm .github/workflows/temp-reset-east-after-407.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/control/regions/east.json .github/workflows/temp-reset-east-after-407.yml
+          git commit -m 'ops: 東日本の全国統合基準をPR #407後へ更新'
+          git push origin region/east
