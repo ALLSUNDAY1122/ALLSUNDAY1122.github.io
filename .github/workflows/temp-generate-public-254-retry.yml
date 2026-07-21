@@ -1,4 +1,4 @@
-name: Temporary Generate Public 254 Diagnostic
+name: Temporary Generate Public 254 Without Install
 
 on:
   push:
@@ -18,28 +18,18 @@ jobs:
           ref: coord/generated-254-retry
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Configure git
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      - name: Mark npm-ci stage
-        run: |
-          printf 'npm-ci\n' > .generation-stage-254
-          git add .generation-stage-254
-          git commit -m '公開更新: 生成段階 npm-ci' || true
-          git push origin coord/generated-254-retry
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Install dependencies
-        run: |
-          cd jichitai-compare
-          npm ci
       - name: Mark generate stage
         run: |
           printf 'generate\n' > .generation-stage-254
           git add .generation-stage-254
-          git commit -m '公開更新: 生成段階 generate'
+          git commit -m '公開更新: 生成段階 generate' || true
           git push origin coord/generated-254-retry
       - name: Generate municipalities
         run: |
