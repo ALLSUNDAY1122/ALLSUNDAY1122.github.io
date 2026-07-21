@@ -1,0 +1,105 @@
+name: Temporary Sync Release Queue 151
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-sync-release-queue-151.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync release queue and remove workflow
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const path = 'jichitai-compare/operations/control/release-queue.json';
+          const queue = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const addUnique = (entry, additions) => {
+            const seen = new Set(entry.municipalities.map(x => x.code));
+            for (const item of additions) {
+              if (!seen.has(item.code)) {
+                entry.municipalities.push(item);
+                seen.add(item.code);
+              }
+            }
+            entry.count = entry.municipalities.length;
+          };
+
+          const north = queue.entries.find(x => x.region === 'north');
+          const east = queue.entries.find(x => x.region === 'east');
+          const central = queue.entries.find(x => x.region === 'central');
+          const west = queue.entries.find(x => x.region === 'west');
+          if (!north || !east || !central || !west) throw new Error('region entry not found');
+
+          addUnique(north, [{code:'01343',name:'鹿部町'},{code:'01345',name:'森町'}]);
+          north.pendingSinceLastRelease = 2;
+          north.releaseStatus = 'pending_threshold';
+          north.reason = '北日本の41自治体をPR #299までにmainへ全国統合し、生成・公開をPR #300で114自治体へ更新。その後、鹿部町・森町を地方統合';
+          north.mainIntegrationPr = 299;
+          north.generatedPullRequest = 300;
+
+          addUnique(east, [{code:'08220',name:'つくば市'},{code:'08221',name:'ひたちなか市'},{code:'08222',name:'鹿嶋市'}]);
+          east.pendingSinceLastRelease = 1;
+          east.releaseStatus = 'pending_threshold';
+          east.reason = '下妻市からひたちなか市までの追加10自治体をPR #328でmainへ全国統合し、生成・公開をPR #331で144自治体へ更新。その後、鹿嶋市を地方統合';
+          east.mainIntegrationPr = 328;
+          east.generatedPullRequest = 331;
+
+          addUnique(central, [{code:'21201',name:'岐阜市'},{code:'21202',name:'大垣市'},{code:'21203',name:'高山市'}]);
+          central.pendingSinceLastRelease = 4;
+          central.releaseStatus = 'pending_threshold';
+          central.reason = '中日本の51自治体をPR #315までにmainへ全国統合し、生成・公開をPR #316で124自治体へ更新。その後、若狭町・岐阜市・大垣市・高山市を地方統合';
+          central.mainIntegrationPr = 315;
+          central.generatedPullRequest = 316;
+          central.auditStatus = 'passed';
+
+          addUnique(west, [{code:'32449',name:'邑南町'}]);
+          west.pendingSinceLastRelease = 1;
+          west.releaseStatus = 'pending_threshold';
+          west.reason = '浜田市から美郷町までの追加10自治体をPR #324でmainへ全国統合し、生成・公開をPR #325で134自治体へ更新。その後、邑南町を地方統合';
+          west.mainIntegrationPr = 324;
+          west.generatedPullRequest = 325;
+
+          for (const entry of queue.entries) entry.count = entry.municipalities.length;
+          queue.updatedAt = '2026-07-21T22:32:00+09:00';
+          queue.summary = {
+            regionalMergedMunicipalities: queue.entries.reduce((sum, x) => sum + x.count, 0),
+            waitingRegionalMergeMunicipalities: 0,
+            releaseReadyRegions: [],
+            auditBlockedRegions: [],
+            lastNationalIntegrationAt: '2026-07-21T22:28:00+09:00',
+            lastNationalIntegrationPr: 328,
+            latestGeneratedMunicipalityCount: 144,
+            latestGeneratedPullRequest: 331,
+            latestPublicCountPullRequest: 331
+          };
+          queue.nextAction = '中日本が前回全国統合後4自治体で先行。北日本2、東日本1、西日本1。各地方班の次自治体を監視し、最初に10自治体へ到達した地域を全国統合する。';
+          queue.humanDecisionRequired = false;
+
+          if (north.count !== 43) throw new Error(`north count mismatch: ${north.count}`);
+          if (east.count !== 21) throw new Error(`east count mismatch: ${east.count}`);
+          if (central.count !== 55) throw new Error(`central count mismatch: ${central.count}`);
+          if (west.count !== 32) throw new Error(`west count mismatch: ${west.count}`);
+          if (queue.summary.regionalMergedMunicipalities !== 151) {
+            throw new Error(`regional total mismatch: ${queue.summary.regionalMergedMunicipalities}`);
+          }
+          fs.writeFileSync(path, JSON.stringify(queue));
+          NODE
+          git rm .github/workflows/temp-sync-release-queue-151.yml
+          git add jichitai-compare/operations/control/release-queue.json
+          git commit -m "統括管理: 地方統合151自治体・公開144自治体へ同期"
+          git push origin main
