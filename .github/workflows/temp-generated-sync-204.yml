@@ -1,0 +1,69 @@
+name: Temporary Generated Sync 204
+
+on:
+  push:
+    branches:
+      - coord/generated-sync-204-20260722
+    paths:
+      - .github/workflows/temp-generated-sync-204.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout generated branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/generated-sync-204-20260722
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate and validate public data
+        working-directory: jichitai-compare
+        run: |
+          set -euxo pipefail
+          npm run generate
+          npm run progress
+          node - <<'NODE'
+          const fs = require('fs');
+          const generated = JSON.parse(fs.readFileSync('data/generated/municipalities.json', 'utf8'));
+          const count = generated.meta.municipalityCount;
+          if (count !== 204) throw new Error(`expected 204 municipalities, got ${count}`);
+          const path = 'index.html';
+          let html = fs.readFileSync(path, 'utf8');
+          html = html.replace(/\d+自治体・9制度/g, `${count}自治体・9制度`);
+          html = html.replace(/登録状況：\d+自治体の生成データを公開中/g, `登録状況：${count}自治体の生成データを公開中`);
+          if (!html.includes(`${count}自治体・9制度`)) throw new Error('hero count replacement failed');
+          if (!html.includes(`登録状況：${count}自治体の生成データを公開中`)) throw new Error('status count replacement failed');
+          fs.writeFileSync(path, html);
+          NODE
+          npm run validate:generated
+
+      - name: Commit generated files
+        run: |
+          set -euxo pipefail
+          rm .github/workflows/temp-generated-sync-204.yml
+          git add \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/index.html \
+            .github/workflows/temp-generated-sync-204.yml
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+            '.github/workflows/temp-generated-sync-204.yml',
+            'jichitai-compare/data/generated/municipalities.json',
+            'jichitai-compare/operations/progress.json',
+            'jichitai-compare/index.html',
+          }
+          actual = set(subprocess.check_output(['git','diff','--cached','--name-only'], text=True).splitlines())
+          if actual != expected:
+              raise SystemExit(f'unexpected generated files: {sorted(actual ^ expected)}')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "生成更新: 公開データを204自治体へ同期"
+          git push origin coord/generated-sync-204-20260722
