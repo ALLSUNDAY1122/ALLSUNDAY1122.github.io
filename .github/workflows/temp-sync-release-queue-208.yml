@@ -1,0 +1,49 @@
+name: Temporary Sync Release Queue 208
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-release-queue-208.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update release queue
+        run: |
+          set -euxo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'jichitai-compare/operations/control/release-queue.json';
+          const q = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const central = q.entries.find(e => e.region === 'central');
+          if (!central.municipalities.some(m => m.code === '21364')) central.municipalities.push({code:'21364', name:'神戸町'});
+          central.municipalities.sort((a,b) => a.code.localeCompare(b.code));
+          central.count = central.municipalities.length;
+          central.pendingSinceLastRelease = 8;
+          central.releaseStatus = 'pending_threshold';
+          central.reason = '恵那市から郡上市までの追加10自治体をPR #377でmainへ全国統合し、生成・公開をPR #380で174自治体へ更新。その後、下呂市・海津市・岐南町・笠松町・養老町・垂井町・関ケ原町・神戸町を地方統合';
+          q.updatedAt = '2026-07-22T02:10:00+09:00';
+          q.summary.regionalMergedMunicipalities = q.entries.reduce((sum,e) => sum + e.count,0);
+          q.summary.waitingRegionalMergeMunicipalities = 0;
+          q.summary.releaseReadyRegions = [];
+          q.summary.auditBlockedRegions = [];
+          q.nextAction = '東日本が前回全国統合後9自治体で先行。中日本8、北日本6、西日本2。桜川市（08231）の地方統合で東日本10自治体に到達したら直ちに全国統合する。';
+          q.humanDecisionRequired = false;
+          if (central.count !== 79) throw new Error(`central count mismatch: ${central.count}`);
+          if (q.summary.regionalMergedMunicipalities !== 208) throw new Error(`total mismatch: ${q.summary.regionalMergedMunicipalities}`);
+          fs.writeFileSync(path, JSON.stringify(q));
+          NODE
+          rm .github/workflows/temp-sync-release-queue-208.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-208.yml
+          git commit -m "統括管理: 地方統合208自治体・公開184自治体へ同期"
+          git push
