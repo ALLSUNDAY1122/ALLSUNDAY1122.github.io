@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "21201",
+  "prefectureCode": "21",
+  "prefecture": "岐阜県",
+  "name": "岐阜市",
+  "officialUrl": "https://www.city.gifu.lg.jp/",
+  "status": "verified",
+  "summary": "岐阜市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-21",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末まで、入院・外来の保険診療自己負担分を所得制限なしで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "coverage": "健康保険が適用される入院・外来の自己負担分",
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "incomeLimit": "所得による受給制限なし",
+        "application": "福祉医療費受給者証の交付申請が必要",
+        "outOfPrefecture": "岐阜県外受診は一旦自己負担し、後日払い戻し申請",
+        "exclusions": "保険外治療、健康診断、予防接種、文書料、入院時の部屋代・食事代等は対象外"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kenko/iryouhijosei/1004517/1004524/1004525.html", "checkedAt": "2026-07-21"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気中または回復期で集団保育が困難な小学3年生までの児童を、病院・診療所併設施設で預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 9},
+      "details": {
+        "types": "病児・病後児保育",
+        "condition": "保護者の勤務等により家庭保育ができず、病気中または回復期で集団保育が困難な児童",
+        "ageCondition": "小学校3年生まで",
+        "facilities": "福富医院すずらん、河村病院クララ、小牧内科クリニックピノキオ等の市内7施設",
+        "fee": "1日1人2,000円（診察料・昼食代等は別）",
+        "exemption": "生活保護世帯、市民税非課税世帯、18歳未満児童が3人以上いる世帯は利用料無料",
+        "application": "利用希望施設へ毎年度の事前登録と利用日の申込みが必要"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kosodate/kosodateshien/1003665/1003664.html", "checkedAt": "2026-07-21"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "認可保育施設の3～5歳児と、市民税非課税世帯の0～2歳児の保育料を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeToFive": "3歳児クラスから5歳児クラスの全児童の利用料を無償化",
+        "zeroToTwo": "0歳児クラスから2歳児クラスは市民税非課税世帯の利用料を無償化",
+        "multiChild": "同時入所する就学前児童は、年齢順で第2子半額、第3子以降無料等の軽減あり",
+        "foodCosts": "教材費、行事費、主食費・副食費等の実費は原則として無償化対象外",
+        "application": "認可保育所等の通常利用は原則として別途無償化手続き不要。対象施設・利用形態により認定手続きが必要"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kosodate/hoiku/1012359/1003690/1003717/index.html", "checkedAt": "2026-07-21"},
+      "additionalSources": [
+        {"url": "https://www.city.gifu.lg.jp/kosodate/hoiku/1012359/1012413/1003706.html", "checkedAt": "2026-07-21"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校給食費を国補助により月額130円まで軽減し、中学校は月額6,270円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "service": "市立小中学校、義務教育学校、特別支援学校、幼稚園で完全給食・統一献立を実施（草潤中学校を除く）",
+        "elementary": "令和8年度月額5,330円、国補助5,200円、保護者負担130円",
+        "juniorHigh": "令和8年度月額6,270円",
+        "kindergarten": "令和8年度月額4,620円",
+        "schoolAid": "経済的理由で就学困難な世帯には学用品費・給食費等の就学援助あり"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kosodate/gakkou/1003862/1003864.html", "checkedAt": "2026-07-21"},
+      "additionalSources": [
+        {"url": "https://www.city.gifu.lg.jp/kosodate/gakkou/1003894.html", "checkedAt": "2026-07-21"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、宿泊型・日帰り型・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "condition": "岐阜市に住民登録があり、産後1年未満で、専門的医療を必要とせず、家族等の援助を受けにくい母子",
+        "types": "短期入所型（宿泊）、通所型（日帰り）、訪問型",
+        "support": "母の心身の健康管理・生活支援、沐浴・授乳等の育児支援",
+        "fee": "宿泊1回8,500円、日帰り1回3,500円、訪問1回2,500円",
+        "usage": "宿泊・日帰りは組合せて最大7日、訪問は最大5日",
+        "exemption": "生活保護世帯・市民税非課税世帯は無料",
+        "application": "こども家庭センター各保健センター窓口等で事前申請"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kosodate/ninshin/1003549/1003563/1003566.html", "checkedAt": "2026-07-21"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "家庭保育が困難な場合、未就園の生後57日または6か月から就学前までの児童を教育・保育施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 5},
+      "details": {
+        "condition": "市内在住で保育所等に入所していない児童。開始月齢は施設により生後57日または6か月",
+        "reasons": "就労、通院・治療、看護、学習、資格取得、冠婚葬祭、引越し、出産、育児負担軽減等",
+        "days": "月14日以内",
+        "hours": "平日8時30分～16時30分、土曜8時30分～12時（延長は施設へ相談）",
+        "fee": "3歳未満は1日2,240円＋給食費360円、3歳以上は1日1,490円＋給食費300円、別途保険料",
+        "application": "利用希望の実施施設へ事前に申込み"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kosodate/kosodateshien/1003609/1003610.html", "checkedAt": "2026-07-21"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度の新婚夫婦に、住宅取得・リフォーム・賃借費用を最大60万円補助する。",
+      "details": {
+        "program": "岐阜市結婚新生活支援事業補助金",
+        "marriagePeriod": "令和8年1月1日から令和9年2月26日までに婚姻",
+        "age": "婚姻日時点で夫婦双方が39歳以下",
+        "income": "令和7年の夫婦所得合計500万円未満（貸与型奨学金返済額の控除あり）",
+        "amount": "夫婦双方29歳以下は上限60万円、それ以外は上限30万円",
+        "expenses": "住宅取得、住宅リフォーム、賃料・共益費4か月分",
+        "residency": "対象住居が市内にあり、夫婦双方が住民登録し、申請日から2年以上居住する意思が必要",
+        "application": "令和8年6月1日から令和9年2月26日までオンライン申請"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kosodate/kosodateshien/1003631/1004162.html", "checkedAt": "2026-07-21"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "事前予約のうえ、有料で市内3施設へ直接搬入するか、戸別収集を利用する。",
+      "details": {
+        "reservation": "直接搬入はオンライン受付または粗大ごみ受付センター、戸別収集は受付センターへの事前予約が必要",
+        "selfDelivery": "東部・北西部・南部の3自己搬入施設へ搬入",
+        "collection": "戸別収集は指定日の午前8時30分までに屋外へ出し、1回20点まで",
+        "fee": "直接搬入・戸別収集とも有料。処理券は10円・100円・210円・420円、処理袋は自己搬入用210円・戸別収集用420円",
+        "online": "直接搬入は24時間オンライン予約可能で、原則として申込翌々日以降1か月以内",
+        "restriction": "屋内からの搬出、事業所ごみの戸別収集は不可"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kurashi/gomi/1012143/1038453/1038458/index.html", "checkedAt": "2026-07-21"},
+      "additionalSources": [
+        {"url": "https://www.city.gifu.lg.jp/kurashi/gomi/1020035/1020036.html", "checkedAt": "2026-07-21"}
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・内水・土砂災害・地震・ため池等のハザードマップと避難所情報を公開している。",
+      "details": {
+        "coverage": "洪水、内水氾濫、土砂災害、地震、ため池等",
+        "comprehensiveGuide": "岐阜市総合防災安心読本に災害別ハザードマップ、防災行動、避難場所・避難所を収録",
+        "flood": "長良川・木曽川等の河川別に浸水深、家屋倒壊危険区域、避難所を掲載",
+        "landslide": "土砂災害警戒区域・特別警戒区域、避難所、避難経路を地区別に掲載",
+        "digital": "3D洪水ハザードマップやスマートフォンアプリ版も提供",
+        "preparedness": "自宅周辺の危険箇所と避難経路を平時に確認するよう案内"
+      },
+      "source": {"url": "https://www.city.gifu.lg.jp/kurashi/bousai/1001378/index.html", "checkedAt": "2026-07-21"},
+      "additionalSources": [
+        {"url": "https://www.city.gifu.lg.jp/kurashi/bousai/1001359/1001360.html", "checkedAt": "2026-07-21"},
+        {"url": "https://www.city.gifu.lg.jp/kurashi/bousai/1001359/1001362.html", "checkedAt": "2026-07-21"}
+      ]
+    }
+  }
+}
