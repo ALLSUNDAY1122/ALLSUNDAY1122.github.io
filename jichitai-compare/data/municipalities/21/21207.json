@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "21207",
+  "prefectureCode": "21",
+  "prefecture": "岐阜県",
+  "name": "美濃市",
+  "officialUrl": "https://www.city.mino.gifu.jp/",
+  "status": "verified",
+  "summary": "美濃市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-21",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "coverage": "健康保険が適用される入院・外来・調剤の自己負担分",
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "condition": "美濃市に住民登録があり健康保険に加入している子ども",
+        "application": "出生・転入日から30日以内に福祉医療費受給者証を申請",
+        "additionalSupport": "保護者に監護・扶養される大学生年代は入院費を22歳年度末まで別制度で助成"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/1290.html", "checkedAt": "2026-07-21"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学3年生までの病気回復期の児童を、美濃病院の病児保育室で預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "type": "病後児保育",
+        "condition": "病気の回復期で集団保育が困難かつ、保護者の就労等により家庭保育できない児童",
+        "hours": "平日8時から18時まで",
+        "limit": "1疾病につき7日まで",
+        "fee": "1人1日2,000円",
+        "application": "診療情報提供書を添えて原則前日16時までに申請",
+        "facility": "美濃病院 病児保育室"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/853.html", "checkedAt": "2026-07-21"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、令和8年1月から0～2歳児の市独自無償化を拡充している。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalCoverage": "3～5歳児と住民税非課税世帯の0～2歳児の利用料を無償化",
+        "cityExpansion": "令和8年1月利用分から市民税所得割額169,000円未満の世帯も0～2歳児保育料を無償化",
+        "siblingReduction": "所得割額169,000円以上の世帯は、保育所等を利用する第2子半額・第3子以降無料",
+        "certification": "施設・利用形態により保育の必要性の認定が必要",
+        "exclusions": "送迎費、食材料費、行事費等は原則別途"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/838.html", "checkedAt": "2026-07-21"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的理由で就学が困難な認定世帯に、学校給食費を含む就学援助を行う。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "就学援助制度",
+        "eligibleHouseholds": "美濃市内に住所があり、市立小中学校に通学する児童生徒のうち、生活保護世帯またはこれに準ずると認定された世帯",
+        "coveredCosts": "学校給食費、学用品費、通学用品費、新入学用品費、校外活動費、修学旅行費等",
+        "application": "通学する小中学校または教育振興課へ申請",
+        "note": "全世帯を対象とする通年一律無償化は確認できないため、現行の就学援助を登録"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/1646.html", "checkedAt": "2026-07-21"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、宿泊型・日帰り型・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "宿泊型、日帰り型、訪問型",
+        "condition": "美濃市内に住所がある産後1年未満の母と乳児で、医療を必要としない方",
+        "support": "母体管理、休息、乳房ケア、沐浴・授乳等の育児指導",
+        "fees": "宿泊型1泊2日6,000円、日帰り型1日2,500円、訪問型1回1,000円",
+        "limits": "宿泊型6泊7日、日帰り型7日、訪問型7回。合計7日以内",
+        "application": "利用前に電子申請または保健センターへ申請"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/543.html", "checkedAt": "2026-07-21"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "0歳から小学6年生までの子どもの一時預かりや送迎を、ファミリー・サポート・センターの会員相互援助で行う。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "program": "ファミリー・サポート・センター事業",
+        "condition": "市内在住で0歳から小学6年生までの子どもを養育し、一時的な育児支援を希望する保護者",
+        "support": "利用会員宅等での預かり、保育施設等への送迎、産前産後の乳幼児の世話",
+        "exclusion": "病気療養中の子どもは対象外",
+        "application": "利用会員として事前登録し、センターを通じて提供会員と調整"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/1559.html", "checkedAt": "2026-07-21"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から美濃市へ移住し、就業・起業等の要件を満たす世帯に100万円を交付し、18歳未満の子を帯同する場合は30万円を加算する。",
+      "details": {
+        "program": "東京圏から美濃市へ移住する方への移住支援金",
+        "eligibleMove": "東京圏から美濃市へ移住し、対象求人への就業、専門人材就業、テレワーク継続、関係人口、起業等の要件を満たす方",
+        "singleAmount": "単身60万円",
+        "householdAmount": "世帯100万円",
+        "childAddition": "18歳未満の世帯員を帯同する場合、1世帯につき30万円加算",
+        "application": "要件・転入時期等を確認して市担当課へ申請"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/2584.html", "checkedAt": "2026-07-21"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない2m以下・60kg以下の粗大ごみは、シールを貼ってステーションまたは予約制で自宅前へ排出する。",
+      "details": {
+        "collectionCondition": "指定袋に入らず、長さ2m以下・重さ60kg以下のもの",
+        "collectionMethod": "粗大ごみシールを貼り、ステーションまたは予約した自宅前に排出",
+        "reservation": "自宅前収集は清掃センターへ収集日の前日までに予約",
+        "largeWaste": "2mまたは60kgを超えるものや多量ごみはクリーンプラザ中濃へ直接搬入",
+        "selfDeliveryFee": "クリーンプラザ中濃は10kg当たり200円、美濃市埋立処分場は10kg当たり110円",
+        "excluded": "家電リサイクル対象品、処理困難物等は対象外"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/docs/2537137.html", "checkedAt": "2026-07-21"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・ため池浸水等のハザードマップと防災情報を公開している。",
+      "details": {
+        "coverage": "河川洪水浸水、土石流、がけ崩れ等の土砂災害、ため池浸水",
+        "maps": "洪水・土砂災害ハザードマップ、ため池浸水想定区域図を公開",
+        "shelters": "危険箇所と避難場所を地図で確認可能",
+        "alerts": "美濃市防災アプリ等で警報・避難情報を配信"
+      },
+      "source": {"url": "https://www.city.mino.gifu.jp/kurashi/bosai/hazad/", "checkedAt": "2026-07-21"}
+    }
+  }
+}
