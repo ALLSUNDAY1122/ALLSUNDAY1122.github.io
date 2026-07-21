@@ -1,0 +1,64 @@
+name: Temporary Sync Release Queue 229
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-release-queue-229.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update release queue
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('jichitai-compare/operations/control/release-queue.json')
+          data=json.loads(path.read_text(encoding='utf-8'))
+          for entry in data['entries']:
+              if entry['region']=='central':
+                  if not any(m['code']=='21502' for m in entry['municipalities']):
+                      entry['municipalities'].append({'code':'21502','name':'富加町'})
+                  entry['municipalities'].sort(key=lambda x:x['code'])
+                  entry['pendingSinceLastRelease']=6
+                  entry['reason']='下呂市から安八町までの追加10自治体をPR #404でmainへ全国統合し、生成・公開をPR #408で204自治体へ更新。その後、揖斐川町・大野町・池田町・北方町・坂祝町・富加町を地方統合'
+              entry['count']=len(entry['municipalities'])
+              entry['releaseStatus']='pending_threshold'
+          data['updatedAt']='2026-07-22T03:15:00+09:00'
+          data['summary']['regionalMergedMunicipalities']=sum(e['count'] for e in data['entries'])
+          data['summary']['waitingRegionalMergeMunicipalities']=0
+          data['summary']['releaseReadyRegions']=[]
+          data['summary']['auditBlockedRegions']=[]
+          data['summary']['latestGeneratedMunicipalityCount']=214
+          data['summary']['latestGeneratedPullRequest']=415
+          data['summary']['latestPublicCountPullRequest']=415
+          if data['summary']['regionalMergedMunicipalities'] != 229:
+              raise SystemExit(f"expected regional total 229, got {data['summary']['regionalMergedMunicipalities']}")
+          data['nextAction']='中日本が前回全国統合後6自治体で先行。北日本5、西日本3、東日本2。各地域をコード昇順で継続し、10自治体到達時に直ちに全国統合する。'
+          data['humanDecisionRequired']=False
+          path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+          PY
+          rm .github/workflows/temp-sync-release-queue-229.yml
+          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-229.yml
+          python3 - <<'PY'
+          import subprocess
+          expected={'.github/workflows/temp-sync-release-queue-229.yml','jichitai-compare/operations/control/release-queue.json'}
+          actual=set(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          if actual != expected:
+              raise SystemExit(f'unexpected files: {sorted(actual ^ expected)}')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '統括管理: 地方統合229自治体・公開214自治体へ同期'
+          git push origin main
