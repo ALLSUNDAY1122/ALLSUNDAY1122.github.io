@@ -1,0 +1,54 @@
+name: Temporary Orchestrate North Release 10
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-orchestrate-north-release-10.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build snapshot branch and clean workflow
+        run: |
+          set -euxo pipefail
+          git fetch origin region/north coord/north-release-10-20260722-0339 main
+          git checkout -B coord/north-release-10-20260722-0339 origin/coord/north-release-10-20260722-0339
+          codes='01423 01424 01425 01427 01428 01429 01430 01431 01432 01433'
+          for code in $codes; do
+            mkdir -p jichitai-compare/data/municipalities/01 jichitai-compare/operations/tasks
+            git show "origin/region/north:jichitai-compare/data/municipalities/01/${code}.json" > "jichitai-compare/data/municipalities/01/${code}.json"
+            git show "origin/region/north:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+          rm -f .github/workflows/temp-build-north-release-10-0339.yml
+          git add jichitai-compare/data/municipalities/01 jichitai-compare/operations/tasks .github/workflows/temp-build-north-release-10-0339.yml
+          python3 - <<'PY'
+          import subprocess
+          codes='01423 01424 01425 01427 01428 01429 01430 01431 01432 01433'.split()
+          wanted={f'jichitai-compare/data/municipalities/01/{c}.json' for c in codes}
+          wanted|={f'jichitai-compare/operations/tasks/{c}.json' for c in codes}
+          actual=set(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          extra=actual-wanted-{'.github/workflows/temp-build-north-release-10-0339.yml'}
+          missing=wanted-actual
+          if extra or missing:
+              raise SystemExit(f'extra={sorted(extra)} missing={sorted(missing)}')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 北日本追加10自治体を固定スナップショット化'
+          git push origin coord/north-release-10-20260722-0339
+
+          git checkout -B main origin/main
+          rm .github/workflows/temp-orchestrate-north-release-10.yml
+          git add .github/workflows/temp-orchestrate-north-release-10.yml
+          git commit -m '統括管理: 北日本全国統合の一時処理を削除'
+          git push origin main
