@@ -1,0 +1,54 @@
+name: Temporary East Release 10 20260722 0625
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-east-release-10-20260722-0625.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/east-release-10-20260722-0625
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy fixed east snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin region/east
+          paths=(
+            jichitai-compare/data/municipalities/08/08232.json
+            jichitai-compare/operations/tasks/08232.json
+            jichitai-compare/data/municipalities/08/08233.json
+            jichitai-compare/operations/tasks/08233.json
+            jichitai-compare/data/municipalities/08/08234.json
+            jichitai-compare/operations/tasks/08234.json
+            jichitai-compare/data/municipalities/08/08235.json
+            jichitai-compare/operations/tasks/08235.json
+            jichitai-compare/data/municipalities/08/08236.json
+            jichitai-compare/operations/tasks/08236.json
+            jichitai-compare/data/municipalities/08/08302.json
+            jichitai-compare/operations/tasks/08302.json
+            jichitai-compare/data/municipalities/08/08309.json
+            jichitai-compare/operations/tasks/08309.json
+            jichitai-compare/data/municipalities/08/08310.json
+            jichitai-compare/operations/tasks/08310.json
+            jichitai-compare/data/municipalities/08/08341.json
+            jichitai-compare/operations/tasks/08341.json
+            jichitai-compare/data/municipalities/08/08364.json
+            jichitai-compare/operations/tasks/08364.json
+          )
+          git checkout origin/region/east -- "${paths[@]}"
+          actual=$(git diff --name-only --cached | sort)
+          expected=$(printf '%s\n' "${paths[@]}" | sort)
+          test "$actual" = "$expected"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合: 東日本10自治体を固定スナップショット化'
+          git push origin coord/east-release-10-20260722-0625
