@@ -1,0 +1,47 @@
+name: Temporary Build North Release 10
+
+on:
+  push:
+    branches:
+      - coord/north-release-10-20260722-0339
+    paths:
+      - .github/workflows/temp-build-north-release-10-0339.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/north-release-10-20260722-0339
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy fixed regional snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin region/north
+          codes='01423 01424 01425 01427 01428 01429 01430 01431 01432 01433'
+          for code in $codes; do
+            mkdir -p jichitai-compare/data/municipalities/01 jichitai-compare/operations/tasks
+            git show "origin/region/north:jichitai-compare/data/municipalities/01/${code}.json" > "jichitai-compare/data/municipalities/01/${code}.json"
+            git show "origin/region/north:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+          rm .github/workflows/temp-build-north-release-10-0339.yml
+          git add jichitai-compare/data/municipalities/01 jichitai-compare/operations/tasks .github/workflows/temp-build-north-release-10-0339.yml
+          python3 - <<'PY'
+          import subprocess
+          codes='01423 01424 01425 01427 01428 01429 01430 01431 01432 01433'.split()
+          expected={f'jichitai-compare/data/municipalities/01/{c}.json' for c in codes}
+          expected|={f'jichitai-compare/operations/tasks/{c}.json' for c in codes}
+          expected.add('.github/workflows/temp-build-north-release-10-0339.yml')
+          actual=set(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          if actual != expected:
+              raise SystemExit(f'unexpected files: {sorted(actual ^ expected)}')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 北日本追加10自治体を固定スナップショット化'
+          git push origin coord/north-release-10-20260722-0339
