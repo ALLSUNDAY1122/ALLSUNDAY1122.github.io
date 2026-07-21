@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "22205",
+  "prefectureCode": "22",
+  "prefecture": "静岡県",
+  "name": "熱海市",
+  "officialUrl": "https://www.city.atami.lg.jp/",
+  "status": "verified",
+  "summary": "熱海市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で調査済み。病児・病後児保育のみ現行の提供条件を確認できずunavailableとした。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校3年生修了まで、入院・通院の保険診療自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "入院・通院とも高校3年生修了まで",
+        "coverage": "医療保険が適用される診療の自己負担分",
+        "payment": "静岡県内は受給者証による現物給付、県外受診等は償還払い",
+        "excluded": "保険適用外費用と入院時食事代は対象外"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kosodate/teate/1000970.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "現行の市公式サイトで、市民が利用できる病児・病後児保育の対象年齢、施設、料金、申込条件を確定できない。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "officialStatus": "市公式の保育園・幼稚園案内に現行の病児・病後児保育専用制度ページを確認できない",
+        "verification": "過去計画には在園児の体調不良対応の記載があるが、現行の一般利用条件とは判断しない",
+        "handling": "制度の有無や広域利用条件を推測せず、学校教育課教育保育推進室への確認が必要",
+        "reason": "現行公式情報で提供条件を確認できないためunavailable"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kosodate/hoikuen/index.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "市内在住児は、認可保育園・認定こども園・小規模保育事業所の0～5歳児保育料を無償とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "underThree": "令和7年4月から市独自に0～2歳児クラスの保育料を無償化",
+        "threeToFive": "国制度により3～5歳児クラスの保育料を無償化",
+        "facilities": "認可保育園、認定こども園、小規模保育事業所",
+        "excludedCosts": "教材費、学級費、主食費等の実費は対象外の場合がある",
+        "sideDish": "3～5歳児の副食費も上限額の範囲で市独自無償化"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kosodate/hoikuen/1001000.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度から公立小学校に加え、市独自に中学校の学校給食費も無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "国の令和8年度公立小学校給食費無償化を実施",
+        "juniorHigh": "市独自に中学校給食費を無償化",
+        "preschool": "令和8年度から就学前児童の主食費も市独自無償化",
+        "policy": "就学前から義務教育課程まで給食費の完全無償化を進める"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/mayor/shisei/1018112.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子へ、宿泊・日帰り・訪問型の産後ケアと保養型支援を提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "ショートステイ、デイケア、訪問型、保養型リフレッシュママ",
+        "support": "乳房ケア、授乳指導、育児相談、母体休養等",
+        "facility": "産科医療機関等で助産師・看護師の支援を受ける",
+        "reimbursement": "市外自治体・医療機関で利用した場合の償還払い制度あり",
+        "application": "利用希望日前に健康づくり課へ相談・申請"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kosodate/ninshin/1004186.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "condition": "保育所、認定こども園、地域型保育、企業主導型保育施設等を利用していない児童",
+        "limit": "児童1人につき月10時間まで",
+        "fee": "1時間当たり300円程度。給食代等の実費が別途必要な場合あり",
+        "application": "総合支援システムで利用認定、事前面談、予約を行う"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kosodate/kosodateshien/1001029/1017988.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から熱海市へ移住し、対象就業・起業等の要件を満たす人へ移住・就業支援金を交付する。",
+      "details": {
+        "single": "単身60万円",
+        "household": "2人以上世帯100万円",
+        "childAddition": "18歳未満の世帯員1人につき100万円加算",
+        "types": "就業一般、専門人材、テレワーク、関係人口、起業",
+        "condition": "申請前の事前相談が必要で、予算上限に達し次第終了"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kurashi/sumai/1000911/1013637.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "一辺50センチ以上を基本とする粗大ごみは、予約収集または環境センターへの自己搬入で有料処分する。",
+      "details": {
+        "definition": "家具、生活用品、寝具、電化製品等で基本的に一辺50センチ以上",
+        "collection": "電話予約後、処理券を購入して指定日の午前8時30分までにごみステーションへ排出",
+        "collectionFee": "1品200～1,400円",
+        "directCarry": "エコ・プラント姫の沢へ自己搬入",
+        "directFee": "1品100～700円",
+        "schedule": "予約収集は原則水曜日・金曜日"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kurashi/gomi/1000840/1003668/1003674.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震、津波、風水害、土砂災害、洪水・高潮、火山等を収録した防災ガイドブックを公開する。",
+      "details": {
+        "mapYear": "2025年12月作成、公式ページは令和8年1月更新",
+        "coverage": "地震、津波浸水、土砂災害、洪水・高潮、火山、液状化",
+        "evacuation": "避難情報、避難先、平時の備えを掲載",
+        "format": "全項版と分割版PDFを公開"
+      },
+      "source": {"url": "https://www.city.atami.lg.jp/kurashi/bousai/1011957/1000585.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
