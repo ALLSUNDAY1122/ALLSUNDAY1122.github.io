@@ -1,0 +1,54 @@
+name: Temporary Sync Release Queue 198
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-release-queue-198.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update release queue
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'jichitai-compare/operations/control/release-queue.json';
+          const q = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const byRegion = Object.fromEntries(q.entries.map(e => [e.region, e]));
+          function add(region, code, name) {
+            const e = byRegion[region];
+            if (!e.municipalities.some(m => m.code === code)) e.municipalities.push({code, name});
+            e.municipalities.sort((a, b) => a.code.localeCompare(b.code));
+            e.count = e.municipalities.length;
+          }
+          add('east', '08229', '稲敷市');
+          add('central', '21303', '笠松町');
+          byRegion.east.pendingSinceLastRelease = 8;
+          byRegion.east.releaseStatus = 'pending_threshold';
+          byRegion.east.reason = '下妻市からひたちなか市までの追加10自治体をPR #328でmainへ全国統合し、生成・公開をPR #331で144自治体へ更新。その後、鹿嶋市から稲敷市まで8自治体を地方統合';
+          byRegion.central.pendingSinceLastRelease = 4;
+          byRegion.central.releaseStatus = 'pending_threshold';
+          byRegion.central.reason = '恵那市から郡上市までの追加10自治体をPR #377でmainへ全国統合し、生成・公開をPR #380で174自治体へ更新。その後、下呂市・海津市・岐南町・笠松町を地方統合';
+          q.updatedAt = '2026-07-22T01:29:00+09:00';
+          q.summary.regionalMergedMunicipalities = 198;
+          q.summary.waitingRegionalMergeMunicipalities = 0;
+          q.summary.releaseReadyRegions = [];
+          q.summary.auditBlockedRegions = [];
+          q.nextAction = '東日本が前回全国統合後8自治体で先行。中日本4、西日本2、北日本1。東日本はあと2自治体で全国統合条件へ到達する。';
+          q.humanDecisionRequired = false;
+          fs.writeFileSync(path, JSON.stringify(q));
+          NODE
+          rm .github/workflows/temp-sync-release-queue-198.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-198.yml
+          git commit -m "統括管理: 地方統合198自治体へ同期"
+          git push
