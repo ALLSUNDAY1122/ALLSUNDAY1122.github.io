@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "22305",
+  "prefectureCode": "22",
+  "prefecture": "静岡県",
+  "name": "松崎町",
+  "officialUrl": "https://www.town.matsuzaki.shizuoka.jp/",
+  "status": "verified",
+  "summary": "松崎町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で調査済み。病児・病後児保育は現行計画で提供体制未整備のためunavailableとした。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校生相当年齢の年度末まで、保険診療の自己負担分と入院時食事療養費を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "coverage": "保険診療の自己負担分と入院時食事療養費",
+        "copayment": "入院・通院とも自己負担金なし、日数・回数制限なし",
+        "condition": "松崎町に住所があり健康保険に加入していること",
+        "excluded": "保険適用外費用等は対象外"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2016012800130/", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町の現行子ども・子育て支援事業計画では、病児・病後児保育の提供体制は未整備とされている。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "officialStatus": "第3期松崎町子ども・子育て支援事業計画で『現在本町では、サービスの提供体制を整えていません』と記載",
+        "demand": "令和7年度以降、年間約180～208人日の需要を見込む",
+        "futurePolicy": "広域を含めて医療機関等を利用した提供体制整備を検討",
+        "handling": "利用可能施設・対象年齢・料金を推測せず、健康福祉課への確認が必要",
+        "reason": "現行の町提供体制が未整備のためunavailable"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2025050900016/file_contents/keikakuhonpen.pdf", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象となり、その他の保育料は町の徴収基準額により決まる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeCoverage": "幼稚園・保育所等を利用する3～5歳児と、住民税非課税世帯の0～2歳児",
+        "taxableUnderThree": "課税世帯の0～2歳児は町の保育料徴収基準額により算定",
+        "facility": "町内保育園等",
+        "extendedCare": "長時間保育は町の長時間区分の保育料を別途適用",
+        "application": "健康福祉課へ支給認定申請書兼入所申込書等を提出"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2016012800161/", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的理由で就学が困難と認定された世帯へ、学校給食費を含む就学援助を実施する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "就学援助制度",
+        "target": "町内小中学校へ通う児童生徒の保護者で、準要保護世帯と認定された世帯",
+        "coverage": "給食費、新入学学用品費、学用品・通学用品費、修学旅行費、通学費等",
+        "payment": "学校を通じて年3回に分けて援助",
+        "generalFee": "一般世帯の現行給食費額は公式ページで確認できないため推測しない"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2016020500077/", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後12か月未満の乳児と母親へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "松崎町に住所があり、産後の体調や育児に不安があり支援を必要とする母親と生後12か月未満の乳児",
+        "types": "宿泊型、日帰り型、訪問型",
+        "care": "母子のケア、授乳相談、育児相談等",
+        "facilities": "臼井医院、桃太郎助産院等",
+        "condition": "医療行為が必要な場合は利用不可"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2018040600034/", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "家庭で一時的に保育が困難となった乳幼児を、町立児童館で一時預かりする。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 5},
+      "details": {
+        "program": "一時預かり事業",
+        "facility": "松崎町立児童館",
+        "target": "主に1歳から就学前までの乳幼児。最新の利用可否は児童館へ事前確認",
+        "limit": "令和5年度から月21時間以内に変更",
+        "status": "第3期計画で継続実施とサービス提供体制確保を明記",
+        "future": "松崎幼稚園、聖和保育園での提供体制整備も検討"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2025050900016/file_contents/keikakuhonpen.pdf", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内業者による10万円以上の住宅改修工事へ、工事費の20％、最大20万円を補助する。",
+      "details": {
+        "program": "住宅改修事業補助金",
+        "target": "町内に1年以上住民登録し、対象住宅に居住または工事後速やかに居住する人",
+        "eligibleWork": "町の資格登録を受けた町内業者が行う税抜10万円以上の増築・改築・修繕工事",
+        "amount": "工事費の20％以内、上限20万円、千円未満切捨て",
+        "application": "工事着手前の事前申請が必要",
+        "limit": "同一住宅・同一人につき1回限り"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2019040200019/", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは地区の毎月第1回目の収集日に、集積所へ整頓して排出する。",
+      "details": {
+        "collection": "粗大ごみは毎月第1回目に地区の集積所へ出す",
+        "deadline": "決められた日の午前8時15分まで",
+        "schedule": "町配布のごみカレンダーで地区別収集日を確認",
+        "facility": "町のごみ処理施設はクリーンピア松崎",
+        "fee": "粗大ごみの個別処理手数料は公式ページで確認できないため、生活環境課へ確認",
+        "note": "布団は指定ごみ袋に入れ、可燃ごみとして排出"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2016011900084/", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "最大クラスの津波を想定した津波ハザードマップと、土砂災害・洪水等の防災情報を公開する。",
+      "details": {
+        "map": "松崎町津波ハザードマップ（令和4年3月作成）",
+        "coverage": "最大クラスの津波による浸水区域、浸水深、避難場所、避難経路",
+        "otherHazards": "町公式サイトで土砂災害・洪水ハザードマップも公開",
+        "evacuation": "自宅・職場周辺の避難場所と高台への経路を事前確認",
+        "note": "地震発生時は津波警報等を待たずに速やかな避難を推奨"
+      },
+      "source": {"url": "https://www.town.matsuzaki.shizuoka.jp/docs/2022050200016/", "checkedAt": "2026-07-22"}
+    }
+  }
+}
