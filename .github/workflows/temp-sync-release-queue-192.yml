@@ -1,0 +1,90 @@
+name: Temporary sync release queue to 192
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-sync-release-queue-192.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Sync release queue
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+
+          path = Path('jichitai-compare/operations/control/release-queue.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          by_region = {entry['region']: entry for entry in data['entries']}
+
+          additions = {
+              'north': [('01397', '留寿都村'), ('01398', '喜茂別町')],
+              'east': [('08227', '筑西市'), ('08228', '坂東市')],
+              'central': [('21219', '郡上市'), ('21220', '下呂市')],
+          }
+          for region, municipalities in additions.items():
+              entry = by_region[region]
+              existing = {m['code'] for m in entry['municipalities']}
+              for code, name in municipalities:
+                  if code not in existing:
+                      entry['municipalities'].append({'code': code, 'name': name})
+                      existing.add(code)
+              entry['count'] = len(entry['municipalities'])
+
+          by_region['north']['pendingSinceLastRelease'] = 9
+          by_region['north']['releaseStatus'] = 'pending_threshold'
+          by_region['north']['reason'] = '鹿部町から今金町までの追加10自治体をPR #352でmainへ全国統合し、生成・公開をPR #355で164自治体へ更新。その後、せたな町から喜茂別町まで9自治体を地方統合'
+
+          by_region['east']['pendingSinceLastRelease'] = 7
+          by_region['east']['releaseStatus'] = 'pending_threshold'
+          by_region['east']['reason'] = '下妻市からひたちなか市までの追加10自治体をPR #328でmainへ全国統合し、生成・公開をPR #331で144自治体へ更新。その後、鹿嶋市から坂東市まで7自治体を地方統合'
+
+          by_region['central']['pendingSinceLastRelease'] = 1
+          by_region['central']['releaseStatus'] = 'pending_threshold'
+          by_region['central']['reason'] = '恵那市から郡上市までの追加10自治体をPR #377でmainへ全国統合し、生成・公開をPR #380で174自治体へ更新。その後、下呂市を地方統合'
+          by_region['central']['mainIntegrationPr'] = 377
+          by_region['central']['generatedPullRequest'] = 380
+          by_region['central']['auditStatus'] = 'passed'
+
+          by_region['west']['count'] = len(by_region['west']['municipalities'])
+          by_region['west']['pendingSinceLastRelease'] = 2
+          by_region['west']['releaseStatus'] = 'pending_threshold'
+
+          jst = timezone(timedelta(hours=9))
+          data['updatedAt'] = datetime.now(jst).replace(second=0, microsecond=0).isoformat()
+          data['summary']['regionalMergedMunicipalities'] = sum(entry['count'] for entry in data['entries'])
+          data['summary']['waitingRegionalMergeMunicipalities'] = 0
+          data['summary']['releaseReadyRegions'] = []
+          data['summary']['auditBlockedRegions'] = []
+          data['summary']['lastNationalIntegrationAt'] = '2026-07-22T00:58:28+09:00'
+          data['summary']['lastNationalIntegrationPr'] = 377
+          data['summary']['latestGeneratedMunicipalityCount'] = 174
+          data['summary']['latestGeneratedPullRequest'] = 380
+          data['summary']['latestPublicCountPullRequest'] = 380
+          data['nextAction'] = '北日本が前回全国統合後9自治体で先行。東日本7、西日本2、中日本1。北日本の次自治体が地方統合されたら追加10自治体を全国統合する。'
+          data['humanDecisionRequired'] = False
+
+          total = data['summary']['regionalMergedMunicipalities']
+          if total != 192:
+              raise SystemExit(f'unexpected regional total: {total}')
+          path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+      - name: Commit synchronized queue and remove temporary workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm .github/workflows/temp-sync-release-queue-192.yml
+          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-192.yml
+          git commit -m '統括管理: 地方統合192自治体・公開174自治体へ同期'
+          git push origin main
