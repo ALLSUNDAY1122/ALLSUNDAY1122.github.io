@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "22211",
+  "prefectureCode": "22",
+  "prefecture": "静岡県",
+  "name": "磐田市",
+  "officialUrl": "https://www.city.iwata.shizuoka.jp/",
+  "status": "verified",
+  "summary": "磐田市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校生年代までの子どもの通院・入院に係る保険診療自己負担額を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "outpatient": "無料",
+        "inpatient": "無料。食事療養費も助成対象",
+        "coverage": "健康保険が適用される医療費の自己負担分",
+        "payment": "県外受診や受給者証未使用等は払い戻し申請が必要"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/kosodate_hojo_josei_yuushi/iryouhi_josei/1001766.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気または回復期で家庭保育が困難な乳幼児・小学生を、市内の専用施設で預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "condition": "市内在住の乳幼児または小学生で、集団保育が困難かつ保護者の勤務等により家庭保育が困難なこと",
+        "period": "1回につき原則7日まで",
+        "fee": "1日1,000円、半日500円。飲食物等の実費は別途",
+        "facilities": "病児・病後児保育室みかん・めろん、こうのとり保育園、いずみ保育園等",
+        "application": "事前登録と医師の診断による受入可否確認が必要"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/hoikuen_youchien_kodomoen/1011082.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象で、多子世帯の保育料軽減も行う。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "3～5歳児クラスの全ての子ども、住民税非課税世帯の0～2歳児クラス",
+        "multiChildSupport": "保育所等利用児童の第2子は半額、第3子以降は無料。年収360万円未満相当世帯は第1子の年齢不問",
+        "sideDishExemption": "年収360万円未満相当世帯と第3子以降は副食費免除",
+        "otherFees": "教材費、行事費等の実費は別途必要な場合あり"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/hoikuen_youchien_kodomoen/1007407.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は公立小学校の給食費を無料とし、公立中学校は1食344円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "2026年4月から公立小学校の保護者負担額は0円",
+        "juniorHigh": "公立中学校は1食344円。牛乳欠食274円、牛乳のみ71円",
+        "calculation": "中学校は月の給食実施回数×1食単価",
+        "support": "経済的に困窮する認定世帯は就学援助の対象"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/kyuushoku/1010586.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・通所・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "磐田市に住民票がある出産後1年未満の母子で、医療行為が不要な方",
+        "types": "宿泊型、通所型（1日・半日）、訪問型",
+        "limit": "宿泊型7日まで、通所型と訪問型は合計4回まで",
+        "fee": "利用料金の2割。非課税世帯・生活保護世帯は無料",
+        "care": "母体の心身ケア、授乳・乳房ケア、育児相談"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/ninshin_shussan_shien/1008504.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に通っていない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "幼稚園、認可保育所、認定こども園等に通っていない子ども",
+        "limit": "月10時間の範囲内で1時間単位。最低1時間から30分単位で利用可能",
+        "fee": "1時間300円。給食・おやつ等の実費が必要な場合あり",
+        "reduction": "生活保護世帯と市町村民税所得割額77,101円未満の世帯は減免対象"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/kosodate_shien/1016040.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "市内の既存住宅を取得・改修する若者・子育て世帯等へ、費用の一部を補助する。",
+      "details": {
+        "program": "既存住宅取得等事業費補助金",
+        "youngHousehold": "世帯全員が39歳以下の世帯",
+        "childHousehold": "中学生以下の子ども（胎児を含む）が同居する世帯",
+        "coveredCosts": "若者・子育て世帯は建物購入費の10分の1、リフォーム費・除却費の2分の1",
+        "limits": "若者・子育て世帯は市外からの転居150万円、市内転居等100万円。その他の世帯は50万円",
+        "condition": "事業完了後10年間の居住見込み、自治会加入、市税滞納なし等"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kurashi_tetsuzuki/juutaku_pet_seikatsu/juutaku/1001513.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "運搬手段のない家庭を対象に、有料で粗大ごみを戸別収集する。",
+      "details": {
+        "collection": "月曜から金曜の予約制戸別収集。原則1世帯につき月1回",
+        "basicFee": "基本料金1,040円",
+        "itemFee": "1個につき210円",
+        "recycleAppliance": "家電リサイクル対象品は1個につき運搬料1,100円とリサイクル券が別途必要",
+        "condition": "本人または家族の立会いが必要で、事前に屋外へ搬出する"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/kurashi_tetsuzuki/gomi_recycle/gomi/1001449.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、高潮、地震、液状化、津波、ため池等のハザードマップを公開する。",
+      "details": {
+        "maps": "洪水、土砂災害、高潮、震度分布、液状化、津波、ため池ハザードマップ",
+        "digitalMap": "2026年1月から市地図情報提供サービスで洪水・土砂災害・高潮情報を公開",
+        "languages": "洪水ハザードマップは英語・ポルトガル語版も公開",
+        "purpose": "住所周辺の災害リスクと避難経路・避難場所の事前確認に利用"
+      },
+      "source": {"url": "https://www.city.iwata.shizuoka.jp/bousai_anzen/bousai/1001143.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
