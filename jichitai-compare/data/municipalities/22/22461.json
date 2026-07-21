@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "22461",
+  "prefectureCode": "22",
+  "prefecture": "静岡県",
+  "name": "森町",
+  "officialUrl": "https://www.town.morimachi.shizuoka.jp/",
+  "status": "verified",
+  "summary": "森町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、入院・通院の保険診療自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に到達する日以後の最初の3月31日まで",
+        "condition": "森町に住所があり、健康保険の扶養となっていること",
+        "copayment": "入院・通院とも無料",
+        "mealSupport": "入院時食事療養費の標準負担額も対象",
+        "excluded": "保険診療外費用、学校管理下の災害共済給付対象医療費等は対象外"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/kenkokodomoka/kodomokateikakari/2/1_1/2637.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から就学前までの病気または回復期の児童が、袋井市の病児・病後児保育室を広域利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 6},
+      "details": {
+        "facility": "病児・病後児保育室ぬくもり（袋井市）",
+        "condition": "入院不要だが集団保育が困難で、保護者の就労等により家庭保育ができないこと",
+        "fee": "1回2,000円。食事代・おやつ代等は別途",
+        "hours": "平日8時から17時30分まで",
+        "application": "事前登録、電話予約、医師連絡票が必要"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/kenkokodomoka/yochienhoikuenkakari/1/3110.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上児は保育料無料で、住民税非課税世帯の0～2歳児も無償化対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeToFive": "3歳以上児の保育料は無料",
+        "underThreeNonTax": "住民税非課税世帯の0～2歳児は無償化対象",
+        "otherUnderThree": "その他の0～2歳児は町民税額等に基づく保育料表で決定",
+        "application": "保育所等入所申込み時に必要書類を提出",
+        "excludedCosts": "給食費、教材費等の実費は別途必要"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/kenkokodomoka/yochienhoikuenkakari/1/6133.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は原材料価格上昇分を町が補助し、小中学校給食費の保護者負担を値上げしない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "support": "給食材料費の高騰分の一部を町が補助",
+        "effect": "小中学校給食費の保護者負担を値上げせず据え置く",
+        "fiscalYear": "令和8年度予算の子育て世帯負担軽減施策",
+        "separateSupport": "小中学校入学時は森っ子就学応援金として児童生徒1人3万円を交付",
+        "fee": "具体的な月額は学校・町の通知で確認"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/choseijoho/chochonoheya/6651.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "森町に住民票があり、心身の不調や育児不安、休養・育児指導等の必要がある産後1年未満の母子",
+        "types": "短期入所型、通所型、居宅訪問型",
+        "limit": "3類型合計7回まで。宿泊は1泊2日で2回と数える",
+        "care": "母子の健康管理、乳房ケア、授乳・育児相談、沐浴指導等",
+        "fee": "利用施設と課税状況により自己負担額が異なる"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/kosodate_kyoiku/ninshin_shussan/1457.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "condition": "認可保育所、幼稚園、認定こども園、地域型保育、企業主導型保育を定期利用していないこと",
+        "limit": "児童1人につき月10時間まで",
+        "fee": "町内実施施設は1時間300円。給食・おやつ・教材費等は別途",
+        "facilities": "ときわ保育園、ゆうな保育園"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/kenkokodomoka/yochienhoikuenkakari/kodomodaredemotsuuennseido/6609.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下・所得要件等を満たす新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を補助する。",
+      "details": {
+        "target": "令和8年1月1日から令和9年3月31日までに婚姻し、夫婦とも39歳以下、合計所得500万円未満等の要件を満たす世帯",
+        "under29": "夫婦とも29歳以下は上限60万円、補助率10分の10",
+        "under39": "夫婦とも39歳以下は上限30万円、補助率10分の10",
+        "coverage": "住宅購入費、賃料、敷金、礼金、共益費、仲介手数料、引越費用、リフォーム費用",
+        "residence": "森町内住宅に住民登録し、交付申請後1年以上居住すること"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/teijusuishinka/ijukoryugakari/2/izyusankouzyohou/4392.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "収集用コンテナに入らない燃やせない粗大ごみ等は、中遠広域粗大ごみ処理施設へ有料で直接搬入する。",
+      "details": {
+        "facility": "中遠広域粗大ごみ処理施設（磐田市新貝59-1）",
+        "target": "金属類、家庭用電化製品、蛍光管・電池類、がれき類、使い捨てライター等",
+        "hours": "平日9時～12時、13時～16時30分",
+        "combustible": "指定袋に入らない燃やせる粗大ごみや多量ごみは中遠クリーンセンターへ有料搬入",
+        "guide": "令和8年度家庭ごみ分別表・収集カレンダーで品目別方法を確認"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/juminseikatsuka/seikatsukankyokakari/1/1/1063.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害等の危険区域、避難所、防災施設を示した森町防災ハザードマップを公開する。",
+      "details": {
+        "risks": "土砂災害危険箇所、河川氾濫区域等を掲載",
+        "facilities": "指定避難所等の防災関係施設位置を掲載",
+        "additionalMaps": "ため池ハザードマップも公開",
+        "alerts": "公式LINE、ちゃっとメール、同報無線等で避難情報を配信",
+        "note": "自宅周辺の危険区域と避難経路を事前に確認する"
+      },
+      "source": {"url": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/kikikanrika/kikikanrikakari/4/854.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
