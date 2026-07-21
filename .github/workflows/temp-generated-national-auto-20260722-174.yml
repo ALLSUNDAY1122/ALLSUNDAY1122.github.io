@@ -1,0 +1,61 @@
+name: Temporary generate national data 174
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-generated-national-auto-20260722-174.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: jichitai-compare/package-lock.json
+      - name: Generate public data
+        run: |
+          cd jichitai-compare
+          npm ci
+          npm run generate
+          npm run progress
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          progress = json.loads(Path('operations/progress.json').read_text(encoding='utf-8'))
+          count = progress['registeredMunicipalities']
+          index = Path('index.html')
+          text = index.read_text(encoding='utf-8')
+          text, hero_n = re.subn(r'<span>\d+自治体・9制度</span>', f'<span>{count}自治体・9制度</span>', text)
+          text, about_n = re.subn(r'登録状況：\d+自治体の生成データを公開中', f'登録状況：{count}自治体の生成データを公開中', text)
+          if hero_n != 1 or about_n != 1:
+              raise SystemExit(f'count display replacement failed: hero={hero_n}, about={about_n}')
+          index.write_text(text, encoding='utf-8')
+          print(f'public count synchronized to {count}')
+          PY
+          npm run validate:generated
+      - name: Commit generated branch and remove temporary workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          branch='coord/generated-national-auto-20260722-174'
+          git switch -c "$branch"
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git commit -m '生成更新: 中日本全国統合後の174自治体を公開データへ反映'
+          git push origin "$branch"
+          git switch main
+          rm .github/workflows/temp-generated-national-auto-20260722-174.yml
+          git add .github/workflows/temp-generated-national-auto-20260722-174.yml
+          git commit -m 'ci: 174自治体公開生成用の一時ワークフローを削除'
+          git push origin main
