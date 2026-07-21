@@ -1,0 +1,95 @@
+name: Temporary East Release 10
+
+on:
+  push:
+    branches:
+      - coord/east-release-10-20260722-0216
+    paths:
+      - .github/workflows/temp-east-release-10-0216.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/east-release-10-20260722-0216
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy fixed municipality snapshot
+        run: |
+          set -euxo pipefail
+          SOURCE_COMMIT=0b98e3c2e26ab705a9bc145e102c1ae6d412d104
+          git fetch origin region/east
+          git cat-file -e "${SOURCE_COMMIT}^{commit}"
+
+          paths=(
+            jichitai-compare/data/municipalities/08/08222.json
+            jichitai-compare/operations/tasks/08222.json
+            jichitai-compare/data/municipalities/08/08223.json
+            jichitai-compare/operations/tasks/08223.json
+            jichitai-compare/data/municipalities/08/08224.json
+            jichitai-compare/operations/tasks/08224.json
+            jichitai-compare/data/municipalities/08/08225.json
+            jichitai-compare/operations/tasks/08225.json
+            jichitai-compare/data/municipalities/08/08226.json
+            jichitai-compare/operations/tasks/08226.json
+            jichitai-compare/data/municipalities/08/08227.json
+            jichitai-compare/operations/tasks/08227.json
+            jichitai-compare/data/municipalities/08/08228.json
+            jichitai-compare/operations/tasks/08228.json
+            jichitai-compare/data/municipalities/08/08229.json
+            jichitai-compare/operations/tasks/08229.json
+            jichitai-compare/data/municipalities/08/08230.json
+            jichitai-compare/operations/tasks/08230.json
+            jichitai-compare/data/municipalities/08/08231.json
+            jichitai-compare/operations/tasks/08231.json
+          )
+
+          for path in "${paths[@]}"; do
+            mkdir -p "$(dirname "$path")"
+            git show "${SOURCE_COMMIT}:${path}" > "$path"
+          done
+
+          rm .github/workflows/temp-east-release-10-0216.yml
+          git add "${paths[@]}" .github/workflows/temp-east-release-10-0216.yml
+
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+            '.github/workflows/temp-east-release-10-0216.yml',
+            'jichitai-compare/data/municipalities/08/08222.json',
+            'jichitai-compare/operations/tasks/08222.json',
+            'jichitai-compare/data/municipalities/08/08223.json',
+            'jichitai-compare/operations/tasks/08223.json',
+            'jichitai-compare/data/municipalities/08/08224.json',
+            'jichitai-compare/operations/tasks/08224.json',
+            'jichitai-compare/data/municipalities/08/08225.json',
+            'jichitai-compare/operations/tasks/08225.json',
+            'jichitai-compare/data/municipalities/08/08226.json',
+            'jichitai-compare/operations/tasks/08226.json',
+            'jichitai-compare/data/municipalities/08/08227.json',
+            'jichitai-compare/operations/tasks/08227.json',
+            'jichitai-compare/data/municipalities/08/08228.json',
+            'jichitai-compare/operations/tasks/08228.json',
+            'jichitai-compare/data/municipalities/08/08229.json',
+            'jichitai-compare/operations/tasks/08229.json',
+            'jichitai-compare/data/municipalities/08/08230.json',
+            'jichitai-compare/operations/tasks/08230.json',
+            'jichitai-compare/data/municipalities/08/08231.json',
+            'jichitai-compare/operations/tasks/08231.json',
+          }
+          actual = set(subprocess.check_output(['git','diff','--cached','--name-only'], text=True).splitlines())
+          if actual != expected:
+              raise SystemExit(f'unexpected staged files: {sorted(actual ^ expected)}')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "全国統合: 東日本10自治体の固定スナップショット"
+          git push origin coord/east-release-10-20260722-0216
