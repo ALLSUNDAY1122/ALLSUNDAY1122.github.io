@@ -1,0 +1,92 @@
+name: Temporary release queue sync 276
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-sync-release-queue-276-0623.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update release queue
+        shell: bash
+        run: |
+          git pull --rebase origin main
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+
+          path = Path('jichitai-compare/operations/control/release-queue.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          entries = {entry['region']: entry for entry in data['entries']}
+
+          additions = {
+              'north': [('01461', '中富良野町')],
+              'central': [('22214', '藤枝市')],
+              'west': [('33202', '倉敷市')],
+          }
+          for region, municipalities in additions.items():
+              entry = entries[region]
+              existing = {item['code'] for item in entry['municipalities']}
+              for code, name in municipalities:
+                  if code not in existing:
+                      entry['municipalities'].append({'code': code, 'name': name})
+              entry['municipalities'].sort(key=lambda item: item['code'])
+              entry['count'] = len(entry['municipalities'])
+
+          north = entries['north']
+          north['pendingSinceLastRelease'] = 4
+          north['releaseStatus'] = 'pending_threshold'
+          north['reason'] = '秩父別町から上川町までの追加10自治体をPR #465でmainへ全国統合し、PR #472で公開254自治体へ更新。その後、東川町・美瑛町・上富良野町・中富良野町を地方統合'
+          north['mainIntegrationPr'] = 465
+          north['generatedPullRequest'] = 472
+
+          central = entries['central']
+          central['pendingSinceLastRelease'] = 5
+          central['releaseStatus'] = 'pending_threshold'
+          central['reason'] = '東白川村から島田市までの追加10自治体をPR #468でmainへ全国統合し、PR #472で公開254自治体へ更新。その後、富士市・磐田市・焼津市・掛川市・藤枝市を地方統合'
+          central['mainIntegrationPr'] = 468
+          central['generatedPullRequest'] = 472
+          central['auditStatus'] = 'passed'
+
+          west = entries['west']
+          west['pendingSinceLastRelease'] = 5
+          west['releaseStatus'] = 'pending_threshold'
+          west['reason'] = '浜田市から美郷町までの追加10自治体をPR #324でmainへ全国統合し、PR #325で公開134自治体へ更新。その後、邑南町・津和野町・吉賀町・岡山市・倉敷市を地方統合'
+          west['mainIntegrationPr'] = 324
+          west['generatedPullRequest'] = 325
+
+          data['updatedAt'] = datetime.now(timezone(timedelta(hours=9))).replace(second=0, microsecond=0).isoformat()
+          data['summary']['regionalMergedMunicipalities'] = sum(entry['count'] for entry in data['entries'])
+          data['summary']['waitingRegionalMergeMunicipalities'] = 0
+          data['summary']['releaseReadyRegions'] = [entry['region'] for entry in data['entries'] if entry.get('pendingSinceLastRelease', 0) >= 10]
+          data['summary']['auditBlockedRegions'] = []
+          data['summary']['lastNationalIntegrationAt'] = '2026-07-22T05:37:18+09:00'
+          data['summary']['lastNationalIntegrationPr'] = 468
+          data['summary']['latestGeneratedMunicipalityCount'] = 254
+          data['summary']['latestGeneratedPullRequest'] = 472
+          data['summary']['latestPublicCountPullRequest'] = 472
+          data['nextAction'] = '東日本が前回全国統合後9自治体で先行。次の東日本自治体が地方統合された時点で追加10自治体を全国統合する。中日本・西日本5、北日本4。'
+          data['humanDecisionRequired'] = False
+
+          path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/control/release-queue.json
+          git rm .github/workflows/temp-sync-release-queue-276-0623.yml
+          git commit -m "統括管理: 地方統合276自治体・公開254自治体へ同期"
+          git push origin HEAD:main
