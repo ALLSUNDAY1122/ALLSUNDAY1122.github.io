@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "22210",
+  "prefectureCode": "22",
+  "prefecture": "静岡県",
+  "name": "富士市",
+  "officialUrl": "https://www.city.fuji.shizuoka.jp/",
+  "status": "verified",
+  "summary": "富士市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末までの子どもの保険診療費を助成し、2026年10月診療分から通院時の自己負担も無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "currentCopayment": "2026年9月診療分までは通院1回500円",
+        "futureCopayment": "2026年10月診療分から通院自己負担なし",
+        "inpatient": "入院は現行も無償で、食事療養標準負担額を含む",
+        "application": "こども医療費受給者証の交付申請が必要"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1023200000/p001559.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気または回復期で家庭保育が難しい小学生までの児童を、医療機関や保育園等の専用スペースで預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "condition": "保護者の就労等で家庭保育が難しく、医師が施設利用可能と判断した児童",
+        "sickFacilities": "トータルファミリーケア北西医院、こどもクリニック中山医院、さんめい保育園、長田小児センター、すまいるにじ保育園",
+        "recoveryFacilities": "富士見台リズム保育園、中里保育園、富士わかば保育園、認定こども園曙幼稚園、愛と希望の保育園、むく保育園",
+        "application": "医師の診察と証明を受け、各施設へ直接申込み",
+        "fee": "利用時間・料金は各実施施設へ確認"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1023100000/p001668.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象で、0～2歳児の第2子は半額、第3子以降は無償とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "3～5歳児と住民税非課税世帯の0～2歳児",
+        "multiChildSupport": "保育所等を利用する兄姉がいる場合、0～2歳児の第2子は半額、第3子以降は無償",
+        "calculation": "その他の0～2歳児保育料は世帯の市民税額等に応じて決定",
+        "facilities": "認可保育所、認定こども園、地域型保育事業所等",
+        "excludedCosts": "給食費や行事費等の実費は別途負担の場合あり"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1023100000/p001566.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は国の補助制度を活用し、市立小学校の学校給食費を無償とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "令和8年度の小学校給食費は無償",
+        "juniorHigh": "中学校給食費は公会計により市が徴収・管理",
+        "period": "2026年度",
+        "futureNote": "国の補助制度を活用した暫定措置で、制度変更時は令和9年度以降に保護者負担を求める可能性あり",
+        "payment": "小学生の給食費は口座振替なし"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/4005130000/p001763.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子が、産婦人科医院や助産所等で宿泊・日帰り・訪問型の産後ケアを利用できる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "period": "申請後、産後1年以内まで利用可能",
+        "types": "宿泊型、日帰り1日型、日帰り2時間型、訪問型",
+        "care": "母体の休息、授乳・乳房ケア、育児相談、体調相談",
+        "facilities": "市内・富士宮市の産婦人科医院、助産所等",
+        "application": "電子申請後、対象施設へ予約し、利用料を施設へ直接支払う"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1023150000/p001501.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に在園していない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "富士市乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "保育所、幼稚園、認定こども園等に在園していない児童",
+        "limit": "月10時間以内、時間単位で利用",
+        "fee": "施設ごとに設定。給食費等の実費が別途必要な場合あり",
+        "reduction": "生活保護世帯は1時間300円、住民税所得割額77,101円未満等の世帯は1時間200円を上限に軽減"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1023100000/p007672.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て・若者世帯が県外からUターンまたは東京圏からJIターンする場合、最大50万円の奨励金を交付する。",
+      "details": {
+        "program": "子育て・若者世帯F-UJIターン奨励金",
+        "childHousehold": "小学生までの子どもがいる、または母子健康手帳交付済みの妊婦がいる世帯",
+        "youngHousehold": "夫婦等のどちらかが39歳未満の世帯",
+        "amounts": "子育て世帯の県外Uターン最大50万円、東京圏JIターン最大30万円。若者世帯はUターン30万円、JIターン10万円",
+        "calculation": "基準額10万円、Uターン加算20万円、子ども1人10万円を2人まで加算",
+        "application": "転入から1年以内。移住就業支援補助金等との併用不可"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1005330000/p008803.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "木製家具、ソファ、マットレス等は不燃・粗大・危険ごみの日に集積所へ出すか、新環境クリーンセンターへ持ち込む。",
+      "details": {
+        "collection": "資源物集積所へ排出。通行等の妨げになる場合は新環境クリーンセンターへ自己搬入",
+        "transport": "自己搬入が困難な場合は一般廃棄物共同組合へ有料運搬を依頼可能",
+        "specialCollection": "65歳以上または重度身体障害者のみの世帯で家族等の協力が得られない場合は大型ごみ戸別収集対象",
+        "reuse": "処分前に市連携のリユースサービス活用を推奨",
+        "schedule": "地域の不燃・粗大・危険ごみ収集日に従う"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1030150000/p000602.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震、津波、富士山噴火、洪水、内水、土砂災害等の各種防災マップを公開する。",
+      "details": {
+        "generalMap": "富士市防災マップ第5版（2024年3月更新）",
+        "maps": "津波避難マップ、富士山火山防災マップ、洪水・内水ハザードマップ、土砂災害情報",
+        "evacuation": "指定避難所や津波避難施設、地域別避難行動を掲載",
+        "app": "公式防災アプリ『防災ふじ』で各種ハザードマップと避難所情報を確認可能",
+        "purpose": "家庭や地域で災害危険箇所と避難方法を事前確認する"
+      },
+      "source": {"url": "https://www.city.fuji.shizuoka.jp/1004050000/p000013.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
