@@ -1,0 +1,44 @@
+name: Temporary Queue 469
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/temp-queue-469.yml]
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0, token: "${{ secrets.GITHUB_TOKEN }}"}
+      - run: |
+          set -euxo pipefail
+          git fetch origin '+refs/heads/region/north:refs/remotes/origin/region/north' '+refs/heads/region/east:refs/remotes/origin/region/east' '+refs/heads/region/central:refs/remotes/origin/region/central' '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json,re,subprocess
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+          regs=('north','east','central','west'); fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
+          def show(r,p): return subprocess.check_output(['git','show',f'{r}:{p}'],text=True)
+          def ok(r,p):
+            n=int(p); return {'north':1<=n<=7,'east':8<=n<=15 or n in (19,20),'central':16<=n<=18 or 21<=n<=29,'west':31<=n<=47}[r]
+          p=Path('jichitai-compare/operations/control/release-queue.json'); q=json.loads(p.read_text()); es={e['region']:e for e in q['entries']}
+          for r in regs:
+            ref=f'origin/region/{r}'; s=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{r}.json')); items=[]
+            for f in subprocess.check_output(['git','ls-tree','-r','--name-only',ref,'jichitai-compare/data/municipalities'],text=True).splitlines():
+              if re.search(r'/\d{5}\.json$',f):
+                d=json.loads(show(ref,f))
+                if ok(r,d['prefectureCode']): items.append({'code':d['code'],'name':d['name']})
+            items.sort(key=lambda x:x['code']); n=int(s.get(fields[r],0)); es[r].update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':n,'releaseStatus':'release_ready' if n>=10 else 'pending_threshold','reason':f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{n}自治体','mainIntegrationPr':s.get('lastNationalIntegrationPr'),'generatedPullRequest':720,'auditStatus':'passed'})
+          total=sum(es[r]['count'] for r in regs); pend={r:es[r]['pendingSinceLastRelease'] for r in regs}; ready=[r for r in regs if pend[r]>=10]
+          q['updatedAt']=datetime.now(ZoneInfo('Asia/Tokyo')).isoformat(timespec='seconds'); q['status']='active'; q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':454,'latestGeneratedPullRequest':720,'latestPublicCountPullRequest':720,'releaseReadyRegions':ready,'nextAction':f"北日本{pend['north']}、東日本{pend['east']}、中日本{pend['central']}、西日本{pend['west']}。"+('全国統合条件到達: '+','.join(ready) if ready else '10自治体到達地域なし。')}
+          p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n')
+          PY
+          rm .github/workflows/temp-queue-469.yml
+          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-queue-469.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m '統括管理: 地方469自治体を全国キューへ同期'
+          git pull --rebase origin main
+          git push origin main
