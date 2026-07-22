@@ -79,7 +79,9 @@ node --check app.js
 - 中日本調査班: 16〜18、21〜30
 - 西日本調査班: 31〜47
 
-地方調査班は自治体単位の専用ブランチとPRで、割り当てられた自治体元データと進捗ファイルだけを編集します。`data/generated/municipalities.json`、`operations/progress.json`、共通スクリプト、共通画面ファイルは編集長・全国統括が管理します。
+2026年7月22日以降、各地方はA/Bの2セッション、合計8セッションで運用します。詳細な担当都道府県コードと分割時点の未調査数は`operations/session-split-policy.json`を正式基準とします。従来の4セッションはAとして継続します。
+
+地方統合ブランチは4本のまま共有します。A/Bは自治体単位の専用ブランチとPRで、割り当てられた自治体元データ、task、自分専用のsession checkpointだけを編集します。`data/generated/municipalities.json`、`operations/progress.json`、共有の地域・全国状態、共通スクリプト、共通画面ファイルは編集長・全国統括が管理します。
 
 ## データ方針
 
