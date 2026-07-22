@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23445",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "南知多町",
+  "officialUrl": "https://www.town.minamichita.lg.jp/",
+  "status": "verified",
+  "summary": "南知多町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認した。病児・病後児保育は町内未実施のためunavailableとした。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、入通院の保険診療自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳の年度末（3月31日）まで",
+        "coverage": "入院・通院の保険診療による自己負担額",
+        "payment": "愛知県内は受給者証による現物給付、県外受診は償還払い",
+        "application": "住民課または各サービスセンターで受給者証を申請",
+        "excluded": "入院時差額ベッド代、食事療養費等は対象外"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/kosodate/1003769/1003470/1001266.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町内の病児・病後児保育施設は現時点で実施されておらず、町外施設との広域利用を検討している。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "reason": "第3期子ども・子育て支援事業計画では令和6年度まで利用者数・実施箇所数とも0で、町内実施は困難と記載",
+        "future": "需要を把握し、町外の実施施設との連携による広域利用を検討",
+        "handling": "現行の提供施設・対象年齢・利用料を推測せず、健康こども課への個別確認が必要"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/_res/projects/default_project/_page_/001/005/171/s3-03.pdf", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等の無償化に加え、18歳未満の子を2人以上養育する世帯の第2子以降の3歳未満児保育料を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalProgram": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化対象",
+        "townProgram": "18歳未満の児童を2人以上養育する世帯の第2子以降で、3歳未満の児童の保育料・早朝延長保育料を無料化",
+        "mealFee": "令和8年4月から保育所の主食費・副食費を恒久的に無償化",
+        "calculation": "その他の3歳未満児保育料は市町村民税所得割額と年度当初年齢により決定",
+        "application": "保育所入所手続きと町の案内に従う"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/kosodate/hoiku/1001954/1001295.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は町立小中学校の学校給食費を完全無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "fiscalYear": "令和8年度",
+        "coverage": "町立小学校・中学校の児童生徒の学校給食費",
+        "fee": "保護者負担なし",
+        "evidence": "令和8年度就学援助案内でも、給食費無償化により給食費の支給なしと明記",
+        "note": "欠食・転校等の個別取扱いは学校給食センターへ確認"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/kosodate/gakkou/1001374.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "南知多町に住民票がある出産後1年未満の母子",
+        "types": "宿泊型、日帰り型、訪問型",
+        "fee": "宿泊型1泊2日5,000円、以後1日5,000円。日帰り型1日2,000円。訪問型2時間1,000円",
+        "multipleBirth": "宿泊型は多胎1,000円加算、日帰り型は500円加算",
+        "care": "母体の健康管理、授乳・乳房相談、育児相談、沐浴・発育確認等",
+        "application": "健康こども課へ事前相談・申請"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/kosodate/boshihoken/1002553.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "condition": "保育所等に在籍していない生後6か月から満3歳未満の児童",
+        "facility": "大井保育所",
+        "limit": "児童1人につき月10時間。1回1時間以上、以後30分単位",
+        "hours": "平日の9時～12時、13時～16時",
+        "fee": "1時間300円。生活保護世帯0円、非課税世帯60円等の減免あり",
+        "application": "総合支援システムで利用申請後、事前面談・予約が必要"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/kosodate/hoiku/1005649/index.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家バンク物件の賃貸・購入・改修等を支援し、移住・定住を促進する。",
+      "details": {
+        "program": "南知多町空き家バンク制度補助金",
+        "types": "空き家の登録補助、空き家対策総合支援事業の改修費補助等",
+        "condition": "居住者と物件が空き家バンクに登録され契約が成立し、税の滞納等がないこと",
+        "residence": "総合支援事業補助は物件へ10年以上定住する意思が必要",
+        "contractor": "改修は町内に営業所等を有する事業者が施工すること",
+        "application": "事前相談のうえ防災交通課へ申請。補助額は現行の金額一覧・要綱で確認"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/akiya/1000973.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家庭系粗大ごみは地区別収集またはクリーンセンターへの直接搬入を利用し、10kgごと100円を負担する。",
+      "details": {
+        "islands": "篠島・日間賀島の家庭系粗大ごみ収集は10kgまでごとに100円",
+        "directCarry": "家庭系ごみのクリーンセンター直接持込みは10kgごとに100円",
+        "mainland": "地区別収集対象外地域は知多南部クリーンセンター・広域環境センターへの直接搬入または許可業者を利用",
+        "categories": "木製粗大ごみ、資源粗大ごみ等を分別",
+        "business": "事業系の粗大ごみ等は直接搬入で10kgごと200円"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/kurashi/gomi/1000993/1003453/1003112.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波、土砂災害、高潮、洪水等の防災マップとデジタルハザードマップを公開する。",
+      "details": {
+        "maps": "津波、土砂災害、高潮、洪水防災マップ",
+        "digital": "危険箇所、浸水深、避難場所等を確認できるデジタルハザードマップ",
+        "flood": "内海川、山海川、五宝川流域の想定最大規模降雨による浸水区域・水深を掲載",
+        "areas": "本土各地区、篠島、日間賀島の地区別マップを公開",
+        "note": "町全域版の一部は修正中の場合があるため、地区別最新版とデジタル版を併用"
+      },
+      "source": {"url": "https://www.town.minamichita.lg.jp/kurashi/anzen/1001060/1001959/1004619/index.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
