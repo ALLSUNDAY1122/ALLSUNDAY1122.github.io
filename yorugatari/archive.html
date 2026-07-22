@@ -21,18 +21,19 @@
   <meta name="twitter:image" content="https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png">
   <link rel="stylesheet" href="assets/styles.css?v=20260719-112">
   <style>
-    .archive-summary{border:1px solid var(--line,#2b303a);border-radius:16px;padding:1.15rem 1.25rem;margin-top:1.5rem;background:rgba(255,255,255,.025)}
-    .archive-jump{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.5rem 0 2.5rem}
+    .archive-summary{min-height:132px;border:1px solid var(--line,#2b303a);border-radius:16px;padding:1.15rem 1.25rem;margin-top:1.5rem;background:rgba(255,255,255,.025)}
+    .archive-jump{min-height:48px;display:flex;flex-wrap:wrap;gap:.65rem;margin:1.5rem 0 2.5rem}
     .archive-jump a{border:1px solid var(--line,#2b303a);border-radius:999px;padding:.55rem .9rem;text-decoration:none}
-    .archive-section{margin-bottom:3.5rem;scroll-margin-top:2rem}
+    #archiveSections{min-height:100vh}
+    .archive-section{content-visibility:auto;contain-intrinsic-size:auto 1600px;margin-bottom:3.5rem;scroll-margin-top:2rem}
     .archive-list{display:grid;gap:.75rem}
-    .archive-item{display:grid;grid-template-columns:3.5rem 1fr;gap:1rem;align-items:start;padding:1rem 1.1rem;border:1px solid var(--line,#2b303a);border-radius:14px;text-decoration:none;background:rgba(255,255,255,.02)}
+    .archive-item{content-visibility:auto;contain-intrinsic-size:auto 96px;display:grid;grid-template-columns:3.5rem 1fr;gap:1rem;align-items:start;padding:1rem 1.1rem;border:1px solid var(--line,#2b303a);border-radius:14px;text-decoration:none;background:rgba(255,255,255,.02)}
     .archive-item:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28)}
     .archive-no{font-variant-numeric:tabular-nums;color:var(--muted,#a9afb9);font-size:.9rem;padding-top:.15rem}
     .archive-copy{display:grid;gap:.35rem}
     .archive-copy strong{font-size:1.05rem;color:var(--text,#f1f3f5)}
     .archive-copy small{line-height:1.65;color:var(--muted,#a9afb9)}
-    @media(max-width:640px){.archive-item{grid-template-columns:2.8rem 1fr;padding:.9rem}.archive-copy small{font-size:.84rem}}
+    @media(max-width:640px){.archive-summary{min-height:184px}.archive-section{contain-intrinsic-size:auto 1900px}.archive-item{contain-intrinsic-size:auto 108px;grid-template-columns:2.8rem 1fr;padding:.9rem}.archive-copy small{font-size:.84rem}}
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"夜語り 全100話アーカイブ","description":"夜語りで公開しているオリジナル怖い話100作品のカテゴリ別一覧。","url":"https://allsunday1122.github.io/yorugatari/archive.html","inLanguage":"ja","numberOfItems":100}</script>
 </head>
