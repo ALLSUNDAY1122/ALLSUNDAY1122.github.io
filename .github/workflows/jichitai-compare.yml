@@ -1,82 +1,77 @@
-name: Coordinator National Release 21
+name: Jichitai Compare CI
 
 on:
   pull_request:
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
     branches:
       - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-fixed-snapshot:
-    if: github.head_ref == 'coord/national-release-21-20260722-2208'
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - name: Checkout release branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: coord/national-release-21-20260722-2208
           fetch-depth: 0
 
-      - name: Fetch main and regional integration branches
-        run: |
-          git fetch origin \
-            +refs/heads/main:refs/remotes/origin/main \
-            +refs/heads/region/north:refs/remotes/origin/region/north \
-            +refs/heads/region/east:refs/remotes/origin/region/east \
-            +refs/heads/region/central:refs/remotes/origin/region/central \
-            +refs/heads/region/west:refs/remotes/origin/region/west
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Copy the approved 21 municipality snapshots
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
 
-          copy_pair() {
-            local branch="$1"
-            local code="$2"
-            local pref="${code:0:2}"
-            local data_path="jichitai-compare/data/municipalities/${pref}/${code}.json"
-            local task_path="jichitai-compare/operations/tasks/${code}.json"
-
-            if [[ -e "$data_path" || -e "$task_path" ]]; then
-              echo "release branch already contains ${code}; aborting to avoid overwrite"
-              exit 1
-            fi
-
-            mkdir -p "$(dirname "$data_path")" "$(dirname "$task_path")"
-            git show "origin/${branch}:${data_path}" > "$data_path"
-            git show "origin/${branch}:${task_path}" > "$task_path"
-
-            node --input-type=module - "$data_path" "$task_path" "$code" <<'NODE'
-          import fs from 'node:fs';
-          const [, , dataPath, taskPath, expectedCode] = process.argv;
-          const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
-          const taskCode = task.code ?? task.municipalityCode;
-          const completedCount = task.completedServiceCount ?? task.completedServices?.length ?? 0;
-          if (data.code !== expectedCode || taskCode !== expectedCode) throw new Error(`code mismatch for ${expectedCode}`);
-          if (task.status !== 'merged' || completedCount !== 9) throw new Error(`task is not a completed regional snapshot: ${expectedCode}`);
-          if (!data.services || Object.keys(data.services).length !== 9) throw new Error(`municipality data does not contain 9 services: ${expectedCode}`);
-          NODE
-          }
-
-          for code in 02323 02343 02361 02362 02367 02381 02384; do copy_pair region/north "$code"; done
-          for code in 10384 10421 10424 10425 10426; do copy_pair region/east "$code"; done
-          for code in 25204 25206 25207 25208 25209 25210 25211; do copy_pair region/central "$code"; done
-          for code in 33209 33210; do copy_pair region/west "$code"; done
-
-          copied_count="$(git status --short -- jichitai-compare/data/municipalities jichitai-compare/operations/tasks | wc -l)"
-          test "$copied_count" -eq 42
-
-      - name: Restore workflows and commit fixed snapshot
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          rm -f .github/workflows/coord-national-release-21.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Add 21 municipality national release snapshot'
-          git push origin HEAD:coord/national-release-21-20260722-2208
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
