@@ -135,7 +135,7 @@ jobs:
           if (!report.success) process.exitCode = 1;
           NODE
           status=$?
-          echo "$status" > yorugatari-live-status.txt
+          echo "$status" > "$RUNNER_TEMP/yorugatari-live-status.txt"
           exit 0
 
       - name: Commit verification report
@@ -143,14 +143,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add yorugatari/tools/live-verification.json
+          git add -f yorugatari/tools/live-verification.json
           if ! git diff --cached --quiet; then
             git commit -m "Record Yorugatari live verification [skip ci]"
-            git pull --rebase origin main
-            git push
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi
 
       - name: Enforce verification result
         shell: bash
         run: |
-          test "$(cat yorugatari-live-status.txt)" = "0"
+          test "$(cat "$RUNNER_TEMP/yorugatari-live-status.txt")" = "0"
