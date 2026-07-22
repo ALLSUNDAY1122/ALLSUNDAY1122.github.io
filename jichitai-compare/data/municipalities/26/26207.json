@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "26207",
+  "prefectureCode": "26",
+  "prefecture": "京都府",
+  "name": "城陽市",
+  "officialUrl": "https://www.city.joyo.kyoto.jp/",
+  "status": "verified",
+  "summary": "城陽市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から中学校卒業まで、保険診療の自己負担を1医療機関につき月200円に軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 15},
+      "details": {
+        "target": "城陽市内に住所があり健康保険に加入する0歳から中学校卒業までの子ども",
+        "inpatient": "0歳から中学生まで、1医療機関につき月200円",
+        "outpatient": "0歳から中学生まで、1医療機関につき月200円",
+        "pharmacy": "処方せんによる調剤薬局では自己負担なし",
+        "outsidePrefecture": "京都府外受診等は申請による償還払い",
+        "excluded": "保険適用外費用、入院時食事代、学校災害共済対象の負傷等は対象外"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/0000001648.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "保育所・幼稚園に通う市内在住児童を、京都きづ川病院のそよかぜルームで一時保育する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 6},
+      "details": {
+        "facility": "医療法人啓信会 京都きづ川病院 あゆみ保育園内 そよかぜルーム",
+        "target": "市内在住で保育所または幼稚園に通い、病気中または回復期で集団保育が困難な児童",
+        "hours": "月曜から金曜8時～18時、土曜8時～正午",
+        "closed": "日曜、祝日、12月29日～1月3日",
+        "capacity": "1日4人。疾患の組合せにより利用できない場合あり",
+        "fee": "日額2,000円、食事代を含む。離乳食・アレルギー対応食は持参",
+        "application": "事前の利用手続き・予約が必要"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/0000001509.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と市民税非課税世帯の0～2歳児は無償化対象で、一定の第3子以降には市独自の保育料・副食費無償化がある。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "agesThreeToFive": "幼児教育・保育の無償化により保育料0円",
+        "agesZeroToTwoNonTaxable": "市民税非課税世帯の0～2歳児は保育料0円",
+        "thirdChildZeroToTwo": "18歳未満の子どもが3人以上いる世帯の第3子以降で、市内保育施設の0～2歳児クラスに在園し、階層区分等の要件を満たす場合は保育料無償化",
+        "thirdChildThreeToFive": "同要件の3～5歳児クラスは副食費無償化",
+        "application": "第3子以降無償化は前期・後期ごとの申請が必要",
+        "excludedCosts": "送迎費、行事費等の実費は原則対象外"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/cmsfiles/contents/0000008/8068/dai3sitoha.pdf", "checkedAt": "2026-07-22"},
+      "additionalSources": [
+        {"url": "https://www.city.joyo.kyoto.jp/reiki_int/reiki_honbun/k109RG00001030.html", "checkedAt": "2026-07-22"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "学校給食センター方式で市立小中学校等へ給食を提供し、就学援助認定世帯には学校給食費等の一部を援助する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "system": "学校給食センターによる集中調理方式",
+        "target": "市立小学校・中学校等の児童生徒",
+        "menus": "月ごとの献立表、給食センターだより、食材情報を公開",
+        "generalFee": "一般世帯の現行給食費額は公式ウェブページで確定できないため記載しない",
+        "aid": "就学援助制度では所得判定に応じ、学校給食費等の所要経費の2分の1を援助"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/0000000742.html", "checkedAt": "2026-07-22"},
+      "additionalSources": [
+        {"url": "https://www.city.joyo.kyoto.jp/0000001231.html", "checkedAt": "2026-07-22"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "市内在住で出産後1年を経過しない産婦と乳児のうち、心身の不調や育児不安等がある人",
+        "types": "宿泊型、通所型、訪問型",
+        "limits": "宿泊型7泊、通所型7日、訪問型5日を上限",
+        "feeTaxable": "課税世帯は宿泊1泊6,000円、通所1日4,000円、訪問1日2,000円",
+        "feeExempt": "生活保護・市民税非課税世帯は0円",
+        "additionalAid": "1日または1泊につき2,500円を上限に、1回の出産につき5回まで利用料助成",
+        "care": "休養、授乳・育児相談、母子の健康確認等"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/reiki_int/reiki_honbun/k109RG00001037.html", "checkedAt": "2026-07-22"},
+      "additionalSources": [
+        {"url": "https://www.city.joyo.kyoto.jp/reiki_int/reiki_honbun/k109RG00001095.html", "checkedAt": "2026-07-22"}
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "令和8年度から乳児等通園支援事業（こども誰でも通園制度）を実施するため、市が設備・運営基準を条例化している。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "start": "令和8年度から全国制度として開始し、城陽市は2026年3月31日に関係条例を制定",
+        "target": "保育所等に在籍していない生後6か月から満3歳未満の児童を基本対象とする",
+        "employment": "保護者の就労要件を問わない制度",
+        "limit": "国制度の利用枠は児童1人につき月10時間",
+        "facilityFee": "城陽市内の実施施設・利用料金・申請方法は利用時点で市へ確認が必要"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/reiki_int/reiki_honbun/k109RG00001121.html", "checkedAt": "2026-07-22"},
+      "additionalSources": [
+        {"url": "https://www.city.joyo.kyoto.jp/0000012006.html", "checkedAt": "2026-07-22"}
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新たに三世代で近居・同居する世帯へ、住宅リフォーム費の2分の1・最大100万円、住宅取得仲介手数料の2分の1・最大40万円を補助する。",
+      "details": {
+        "program": "城陽市三世代近居・同居住宅支援事業補助金",
+        "child": "18歳年度末までの子ども、胎児を含む",
+        "nearby": "親子世帯と祖父母世帯が直線2キロメートル以内、または転居により三世代が市内居住となること",
+        "newArrangement": "申請時点では近居・同居でなく、申請年度に住所変更して新たに近居・同居となること",
+        "income": "子の親権者の年収合計750万円未満",
+        "renovation": "対象費用の2分の1、最大100万円",
+        "purchase": "住宅取得に係る仲介手数料の2分の1、最大40万円",
+        "application": "交付決定後に契約し、年度末までに完了・実績報告が必要"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/0000003823.html", "checkedAt": "2026-07-22"},
+      "additionalSources": [
+        {"url": "https://www.city.joyo.kyoto.jp/reiki_int/reiki_honbun/k109RG00001023.html", "checkedAt": "2026-07-22"}
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型ごみは有料・事前予約制で戸別収集し、品目や大きさに応じ200円から2,000円の手数料を設定する。",
+      "details": {
+        "application": "衛生センターへの事前予約が必要",
+        "feeExamples": "物干し竿200円、じゅうたん・乳母車600円、ベビーベッド・自転車等1,000円、ベッド・スプリングマットレス2,000円",
+        "otherUnderOnePointFive": "個別品目以外で最長辺1.5メートル以下は1,000円",
+        "otherOverOnePointFive": "個別品目以外で最長辺1.5メートル超は2,000円",
+        "payment": "申込み時に収集日・排出場所・支払方法等を確認"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/0000000843.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害、地震の被害想定と避難所等を掲載した城陽市ハザードマップ・防災ブックを公開する。",
+      "details": {
+        "maps": "城陽市ハザードマップ（水害編・地震編）および城陽市防災ブック",
+        "flood": "洪水時の浸水想定区域・浸水深等を掲載",
+        "sediment": "土砂災害警戒区域等を掲載",
+        "earthquake": "地震被害想定等を掲載",
+        "evacuation": "指定緊急避難場所・指定避難所等を掲載",
+        "additional": "浸水ナビや京都府マルチハザード情報提供システムも案内"
+      },
+      "source": {"url": "https://www.city.joyo.kyoto.jp/0000001149.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
