@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-22T22:01:30.188Z",
+  "auditedAt": "2026-07-22T22:09:49.219Z",
   "baseUrl": "https://allsunday1122.github.io/yorugatari",
   "success": true,
   "releaseCheck": {
@@ -7,37 +7,40 @@
     "topStatus": 200,
     "archiveStatus": 200,
     "storyStatus": 200,
+    "storyScriptStatus": 200,
     "progressiveApp": true,
     "analytics": true,
     "archiveReady": true,
-    "storyReady": true
+    "staticCirculation": true,
+    "storyReady": true,
+    "catalogFree": true
   },
   "runs": [
     {
       "target": "top",
       "profile": "mobile",
       "run": 1,
-      "fetchTime": "2026-07-22T22:01:41.411Z",
+      "fetchTime": "2026-07-22T22:10:03.055Z",
       "scores": {
-        "performance": 0.96,
+        "performance": 0.78,
         "bestPractices": 0.96,
         "seo": 1
       },
       "metrics": {
         "firstContentfulPaint": {
-          "score": 0.82,
-          "numericValue": 2082.8175,
-          "displayValue": "2.1 s"
+          "score": 0.94,
+          "numericValue": 1587.8625,
+          "displayValue": "1.6 s"
         },
         "largestContentfulPaint": {
-          "score": 0.96,
-          "numericValue": 2082.8175,
-          "displayValue": "2.1 s"
+          "score": 0.98,
+          "numericValue": 1794.8625,
+          "displayValue": "1.8 s"
         },
         "totalBlockingTime": {
-          "score": 0.95,
-          "numericValue": 145.5,
-          "displayValue": "150 ms"
+          "score": 0.31,
+          "numericValue": 911.5000000000002,
+          "displayValue": "910 ms"
         },
         "cumulativeLayoutShift": {
           "score": 1,
@@ -45,13 +48,13 @@
           "displayValue": "0"
         },
         "interactive": {
-          "score": 0.98,
-          "numericValue": 2388.7675,
-          "displayValue": "2.4 s"
+          "score": 0.96,
+          "numericValue": 2962.1125,
+          "displayValue": "3.0 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 35982,
+          "numericValue": 35888,
           "displayValue": "Total size was 35 KiB"
         }
       },
@@ -59,27 +62,27 @@
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 34873
+          "transferSize": 34768
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 26135
+          "transferSize": 26099
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4356
+          "transferSize": 4267
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3075
+          "transferSize": 3074
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 1307
+          "transferSize": 1328
         },
         {
           "resourceType": "image",
@@ -99,7 +102,7 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 34873
+          "transferSize": 34768
         }
       ]
     },
@@ -107,7 +110,7 @@
       "target": "top",
       "profile": "mobile",
       "run": 2,
-      "fetchTime": "2026-07-22T22:01:52.689Z",
+      "fetchTime": "2026-07-22T22:10:15.669Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -116,13 +119,13 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 952.9976999999999,
-          "displayValue": "1.0 s"
+          "numericValue": 904.7292,
+          "displayValue": "0.9 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 952.9976999999999,
-          "displayValue": "1.0 s"
+          "numericValue": 904.7292,
+          "displayValue": "0.9 s"
         },
         "totalBlockingTime": {
           "score": 1,
@@ -136,12 +139,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 952.9976999999999,
-          "displayValue": "1.0 s"
+          "numericValue": 904.7292,
+          "displayValue": "0.9 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 34054,
+          "numericValue": 33981,
           "displayValue": "Total size was 33 KiB"
         }
       },
@@ -149,17 +152,107 @@
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 34054
+          "transferSize": 33981
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 26166
+          "transferSize": 26104
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4333
+          "transferSize": 4252
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 3021
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 604
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 33981
+        }
+      ]
+    },
+    {
+      "target": "top",
+      "profile": "mobile",
+      "run": 3,
+      "fetchTime": "2026-07-22T22:10:23.875Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 941.1779,
+          "displayValue": "0.9 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 941.6758500000001,
+          "displayValue": "0.9 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 941.725645,
+          "displayValue": "0.9 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 34098,
+          "displayValue": "Total size was 33 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 34098
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 26240
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4317
         },
         {
           "resourceType": "document",
@@ -169,7 +262,7 @@
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 655
+          "transferSize": 641
         },
         {
           "resourceType": "image",
@@ -189,15 +282,465 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 34054
+          "transferSize": 34098
         }
       ]
     },
     {
       "target": "top",
+      "profile": "desktop",
+      "run": 1,
+      "fetchTime": "2026-07-22T22:10:32.082Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 246.27599999999995,
+          "displayValue": "0.2 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 250.27234999999996,
+          "displayValue": "0.3 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 250.67198499999995,
+          "displayValue": "0.3 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 34172,
+          "displayValue": "Total size was 33 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 34172
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 26228
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4338
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2907
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 699
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 34172
+        }
+      ]
+    },
+    {
+      "target": "archive",
+      "profile": "mobile",
+      "run": 1,
+      "fetchTime": "2026-07-22T22:10:41.125Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 906.132,
+          "displayValue": "0.9 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 906.132,
+          "displayValue": "0.9 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 906.1320000000001,
+          "displayValue": "0.9 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 31567,
+          "displayValue": "Total size was 31 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 16,
+          "transferSize": 31567
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 24534
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4439
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2398
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 2,
+          "transferSize": 196
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 16,
+          "transferSize": 31567
+        }
+      ]
+    },
+    {
+      "target": "archive",
+      "profile": "desktop",
+      "run": 1,
+      "fetchTime": "2026-07-22T22:10:49.416Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 248.2995,
+          "displayValue": "0.2 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 248.2995,
+          "displayValue": "0.2 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 248.29950000000002,
+          "displayValue": "0.2 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 31530,
+          "displayValue": "Total size was 31 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 16,
+          "transferSize": 31530
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 24551
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4413
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2369
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 2,
+          "transferSize": 197
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 16,
+          "transferSize": 31530
+        }
+      ]
+    },
+    {
+      "target": "story-032",
+      "profile": "mobile",
+      "run": 1,
+      "fetchTime": "2026-07-22T22:10:57.918Z",
+      "scores": {
+        "performance": 0.84,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 1023.0479,
+          "displayValue": "1.0 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 1023.0479,
+          "displayValue": "1.0 s"
+        },
+        "totalBlockingTime": {
+          "score": 0.47,
+          "numericValue": 628.5,
+          "displayValue": "630 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 1703.4979,
+          "displayValue": "1.7 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 15476,
+          "displayValue": "Total size was 15 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 7,
+          "transferSize": 15476
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 2,
+          "transferSize": 6997
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4449
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 3752
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 278
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 7,
+          "transferSize": 15476
+        }
+      ]
+    },
+    {
+      "target": "story-032",
+      "profile": "mobile",
+      "run": 2,
+      "fetchTime": "2026-07-22T22:11:05.652Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 903.1765,
+          "displayValue": "0.9 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 903.1765,
+          "displayValue": "0.9 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 903.1765,
+          "displayValue": "0.9 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 15616,
+          "displayValue": "Total size was 15 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 7,
+          "transferSize": 15616
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 2,
+          "transferSize": 7148
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4293
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 3863
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 312
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 7,
+          "transferSize": 15616
+        }
+      ]
+    },
+    {
+      "target": "story-032",
       "profile": "mobile",
       "run": 3,
-      "fetchTime": "2026-07-22T22:02:01.110Z",
+      "fetchTime": "2026-07-22T22:11:12.723Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -206,192 +749,12 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 917.1445,
+          "numericValue": 902.6614999999998,
           "displayValue": "0.9 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 958.6445,
-          "displayValue": "1.0 s"
-        },
-        "totalBlockingTime": {
-          "score": 1,
-          "numericValue": 33,
-          "displayValue": "30 ms"
-        },
-        "cumulativeLayoutShift": {
-          "score": 1,
-          "numericValue": 0,
-          "displayValue": "0"
-        },
-        "interactive": {
-          "score": 1,
-          "numericValue": 1000.1445,
-          "displayValue": "1.0 s"
-        },
-        "totalByteWeight": {
-          "score": 1,
-          "numericValue": 34045,
-          "displayValue": "Total size was 33 KiB"
-        }
-      },
-      "resources": [
-        {
-          "resourceType": "total",
-          "requestCount": 17,
-          "transferSize": 34045
-        },
-        {
-          "resourceType": "script",
-          "requestCount": 12,
-          "transferSize": 26144
-        },
-        {
-          "resourceType": "stylesheet",
-          "requestCount": 1,
-          "transferSize": 4320
-        },
-        {
-          "resourceType": "document",
-          "requestCount": 1,
-          "transferSize": 2975
-        },
-        {
-          "resourceType": "other",
-          "requestCount": 3,
-          "transferSize": 606
-        },
-        {
-          "resourceType": "image",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "media",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "font",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "third-party",
-          "requestCount": 17,
-          "transferSize": 34045
-        }
-      ]
-    },
-    {
-      "target": "top",
-      "profile": "desktop",
-      "run": 1,
-      "fetchTime": "2026-07-22T22:02:09.565Z",
-      "scores": {
-        "performance": 1,
-        "bestPractices": 1,
-        "seo": 1
-      },
-      "metrics": {
-        "firstContentfulPaint": {
-          "score": 1,
-          "numericValue": 284.33740000000006,
-          "displayValue": "0.3 s"
-        },
-        "largestContentfulPaint": {
-          "score": 1,
-          "numericValue": 284.33740000000006,
-          "displayValue": "0.3 s"
-        },
-        "totalBlockingTime": {
-          "score": 1,
-          "numericValue": 0,
-          "displayValue": "0 ms"
-        },
-        "cumulativeLayoutShift": {
-          "score": 1,
-          "numericValue": 0,
-          "displayValue": "0"
-        },
-        "interactive": {
-          "score": 1,
-          "numericValue": 284.3374000000001,
-          "displayValue": "0.3 s"
-        },
-        "totalByteWeight": {
-          "score": 1,
-          "numericValue": 34182,
-          "displayValue": "Total size was 33 KiB"
-        }
-      },
-      "resources": [
-        {
-          "resourceType": "total",
-          "requestCount": 17,
-          "transferSize": 34182
-        },
-        {
-          "resourceType": "script",
-          "requestCount": 12,
-          "transferSize": 26252
-        },
-        {
-          "resourceType": "stylesheet",
-          "requestCount": 1,
-          "transferSize": 4256
-        },
-        {
-          "resourceType": "document",
-          "requestCount": 1,
-          "transferSize": 2985
-        },
-        {
-          "resourceType": "other",
-          "requestCount": 3,
-          "transferSize": 689
-        },
-        {
-          "resourceType": "image",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "media",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "font",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "third-party",
-          "requestCount": 17,
-          "transferSize": 34182
-        }
-      ]
-    },
-    {
-      "target": "archive",
-      "profile": "mobile",
-      "run": 1,
-      "fetchTime": "2026-07-22T22:02:18.936Z",
-      "scores": {
-        "performance": 1,
-        "bestPractices": 1,
-        "seo": 1
-      },
-      "metrics": {
-        "firstContentfulPaint": {
-          "score": 1,
-          "numericValue": 918.2697000000003,
-          "displayValue": "0.9 s"
-        },
-        "largestContentfulPaint": {
-          "score": 1,
-          "numericValue": 918.2697000000003,
+          "numericValue": 902.6614999999998,
           "displayValue": "0.9 s"
         },
         "totalBlockingTime": {
@@ -406,192 +769,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 918.2697000000003,
+          "numericValue": 902.6614999999999,
           "displayValue": "0.9 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 31548,
-          "displayValue": "Total size was 31 KiB"
-        }
-      },
-      "resources": [
-        {
-          "resourceType": "total",
-          "requestCount": 16,
-          "transferSize": 31548
-        },
-        {
-          "resourceType": "script",
-          "requestCount": 12,
-          "transferSize": 24511
-        },
-        {
-          "resourceType": "stylesheet",
-          "requestCount": 1,
-          "transferSize": 4335
-        },
-        {
-          "resourceType": "document",
-          "requestCount": 1,
-          "transferSize": 2495
-        },
-        {
-          "resourceType": "other",
-          "requestCount": 2,
-          "transferSize": 207
-        },
-        {
-          "resourceType": "image",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "media",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "font",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "third-party",
-          "requestCount": 16,
-          "transferSize": 31548
-        }
-      ]
-    },
-    {
-      "target": "archive",
-      "profile": "desktop",
-      "run": 1,
-      "fetchTime": "2026-07-22T22:02:27.499Z",
-      "scores": {
-        "performance": 1,
-        "bestPractices": 1,
-        "seo": 1
-      },
-      "metrics": {
-        "firstContentfulPaint": {
-          "score": 1,
-          "numericValue": 293.85949999999997,
-          "displayValue": "0.3 s"
-        },
-        "largestContentfulPaint": {
-          "score": 1,
-          "numericValue": 293.85949999999997,
-          "displayValue": "0.3 s"
-        },
-        "totalBlockingTime": {
-          "score": 1,
-          "numericValue": 0,
-          "displayValue": "0 ms"
-        },
-        "cumulativeLayoutShift": {
-          "score": 1,
-          "numericValue": 0,
-          "displayValue": "0"
-        },
-        "interactive": {
-          "score": 1,
-          "numericValue": 293.8595,
-          "displayValue": "0.3 s"
-        },
-        "totalByteWeight": {
-          "score": 1,
-          "numericValue": 31533,
-          "displayValue": "Total size was 31 KiB"
-        }
-      },
-      "resources": [
-        {
-          "resourceType": "total",
-          "requestCount": 16,
-          "transferSize": 31533
-        },
-        {
-          "resourceType": "script",
-          "requestCount": 12,
-          "transferSize": 24609
-        },
-        {
-          "resourceType": "stylesheet",
-          "requestCount": 1,
-          "transferSize": 4256
-        },
-        {
-          "resourceType": "document",
-          "requestCount": 1,
-          "transferSize": 2470
-        },
-        {
-          "resourceType": "other",
-          "requestCount": 2,
-          "transferSize": 198
-        },
-        {
-          "resourceType": "image",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "media",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "font",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "third-party",
-          "requestCount": 16,
-          "transferSize": 31533
-        }
-      ]
-    },
-    {
-      "target": "story-032",
-      "profile": "mobile",
-      "run": 1,
-      "fetchTime": "2026-07-22T22:02:36.241Z",
-      "scores": {
-        "performance": 0.97,
-        "bestPractices": 1,
-        "seo": 1
-      },
-      "metrics": {
-        "firstContentfulPaint": {
-          "score": 1,
-          "numericValue": 965.8713,
-          "displayValue": "1.0 s"
-        },
-        "largestContentfulPaint": {
-          "score": 1,
-          "numericValue": 965.8713,
-          "displayValue": "1.0 s"
-        },
-        "totalBlockingTime": {
-          "score": 0.91,
-          "numericValue": 189.5,
-          "displayValue": "190 ms"
-        },
-        "cumulativeLayoutShift": {
-          "score": 1,
-          "numericValue": 0,
-          "displayValue": "0"
-        },
-        "interactive": {
-          "score": 1,
-          "numericValue": 1206.3213,
-          "displayValue": "1.2 s"
-        },
-        "totalByteWeight": {
-          "score": 1,
-          "numericValue": 15185,
+          "numericValue": 15504,
           "displayValue": "Total size was 15 KiB"
         }
       },
@@ -599,27 +782,27 @@
         {
           "resourceType": "total",
           "requestCount": 7,
-          "transferSize": 15185
+          "transferSize": 15504
         },
         {
           "resourceType": "script",
           "requestCount": 2,
-          "transferSize": 7003
+          "transferSize": 7028
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4264
+          "transferSize": 4417
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3612
+          "transferSize": 3758
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 306
+          "transferSize": 301
         },
         {
           "resourceType": "image",
@@ -639,7 +822,7 @@
         {
           "resourceType": "third-party",
           "requestCount": 7,
-          "transferSize": 15185
+          "transferSize": 15504
         }
       ]
     },
@@ -647,7 +830,7 @@
       "target": "story-032",
       "profile": "desktop",
       "run": 1,
-      "fetchTime": "2026-07-22T22:02:44.014Z",
+      "fetchTime": "2026-07-22T22:11:20.060Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -656,13 +839,13 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 255.85030000000003,
-          "displayValue": "0.3 s"
+          "numericValue": 242.60239999999996,
+          "displayValue": "0.2 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 255.85030000000003,
-          "displayValue": "0.3 s"
+          "numericValue": 242.60239999999996,
+          "displayValue": "0.2 s"
         },
         "totalBlockingTime": {
           "score": 1,
@@ -676,12 +859,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 255.85030000000006,
-          "displayValue": "0.3 s"
+          "numericValue": 242.6024,
+          "displayValue": "0.2 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 15185,
+          "numericValue": 15617,
           "displayValue": "Total size was 15 KiB"
         }
       },
@@ -689,27 +872,27 @@
         {
           "resourceType": "total",
           "requestCount": 7,
-          "transferSize": 15185
+          "transferSize": 15617
         },
         {
           "resourceType": "script",
           "requestCount": 2,
-          "transferSize": 7025
+          "transferSize": 7130
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4335
+          "transferSize": 4313
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3521
+          "transferSize": 3873
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 304
+          "transferSize": 301
         },
         {
           "resourceType": "image",
@@ -729,7 +912,7 @@
         {
           "resourceType": "third-party",
           "requestCount": 7,
-          "transferSize": 15185
+          "transferSize": 15617
         }
       ]
     }
@@ -739,7 +922,7 @@
       "target": "top",
       "profile": "mobile",
       "run": 2,
-      "fetchTime": "2026-07-22T22:01:52.689Z",
+      "fetchTime": "2026-07-22T22:10:15.669Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -748,13 +931,13 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 952.9976999999999,
-          "displayValue": "1.0 s"
+          "numericValue": 904.7292,
+          "displayValue": "0.9 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 952.9976999999999,
-          "displayValue": "1.0 s"
+          "numericValue": 904.7292,
+          "displayValue": "0.9 s"
         },
         "totalBlockingTime": {
           "score": 1,
@@ -768,12 +951,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 952.9976999999999,
-          "displayValue": "1.0 s"
+          "numericValue": 904.7292,
+          "displayValue": "0.9 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 34054,
+          "numericValue": 33981,
           "displayValue": "Total size was 33 KiB"
         }
       },
@@ -781,27 +964,27 @@
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 34054
+          "transferSize": 33981
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 26166
+          "transferSize": 26104
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4333
+          "transferSize": 4252
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2900
+          "transferSize": 3021
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 655
+          "transferSize": 604
         },
         {
           "resourceType": "image",
@@ -821,7 +1004,7 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 34054
+          "transferSize": 33981
         }
       ]
     },
@@ -829,7 +1012,7 @@
       "target": "top",
       "profile": "desktop",
       "run": 1,
-      "fetchTime": "2026-07-22T22:02:09.565Z",
+      "fetchTime": "2026-07-22T22:10:32.082Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -838,12 +1021,12 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 284.33740000000006,
-          "displayValue": "0.3 s"
+          "numericValue": 246.27599999999995,
+          "displayValue": "0.2 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 284.33740000000006,
+          "numericValue": 250.27234999999996,
           "displayValue": "0.3 s"
         },
         "totalBlockingTime": {
@@ -858,12 +1041,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 284.3374000000001,
+          "numericValue": 250.67198499999995,
           "displayValue": "0.3 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 34182,
+          "numericValue": 34172,
           "displayValue": "Total size was 33 KiB"
         }
       },
@@ -871,27 +1054,27 @@
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 34182
+          "transferSize": 34172
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 26252
+          "transferSize": 26228
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4256
+          "transferSize": 4338
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2985
+          "transferSize": 2907
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 689
+          "transferSize": 699
         },
         {
           "resourceType": "image",
@@ -911,7 +1094,7 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 34182
+          "transferSize": 34172
         }
       ]
     },
@@ -919,7 +1102,7 @@
       "target": "archive",
       "profile": "mobile",
       "run": 1,
-      "fetchTime": "2026-07-22T22:02:18.936Z",
+      "fetchTime": "2026-07-22T22:10:41.125Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -928,12 +1111,12 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 918.2697000000003,
+          "numericValue": 906.132,
           "displayValue": "0.9 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 918.2697000000003,
+          "numericValue": 906.132,
           "displayValue": "0.9 s"
         },
         "totalBlockingTime": {
@@ -948,12 +1131,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 918.2697000000003,
+          "numericValue": 906.1320000000001,
           "displayValue": "0.9 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 31548,
+          "numericValue": 31567,
           "displayValue": "Total size was 31 KiB"
         }
       },
@@ -961,27 +1144,27 @@
         {
           "resourceType": "total",
           "requestCount": 16,
-          "transferSize": 31548
+          "transferSize": 31567
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 24511
+          "transferSize": 24534
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4335
+          "transferSize": 4439
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2495
+          "transferSize": 2398
         },
         {
           "resourceType": "other",
           "requestCount": 2,
-          "transferSize": 207
+          "transferSize": 196
         },
         {
           "resourceType": "image",
@@ -1001,7 +1184,7 @@
         {
           "resourceType": "third-party",
           "requestCount": 16,
-          "transferSize": 31548
+          "transferSize": 31567
         }
       ]
     },
@@ -1009,7 +1192,7 @@
       "target": "archive",
       "profile": "desktop",
       "run": 1,
-      "fetchTime": "2026-07-22T22:02:27.499Z",
+      "fetchTime": "2026-07-22T22:10:49.416Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -1018,13 +1201,13 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 293.85949999999997,
-          "displayValue": "0.3 s"
+          "numericValue": 248.2995,
+          "displayValue": "0.2 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 293.85949999999997,
-          "displayValue": "0.3 s"
+          "numericValue": 248.2995,
+          "displayValue": "0.2 s"
         },
         "totalBlockingTime": {
           "score": 1,
@@ -1038,12 +1221,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 293.8595,
-          "displayValue": "0.3 s"
+          "numericValue": 248.29950000000002,
+          "displayValue": "0.2 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 31533,
+          "numericValue": 31530,
           "displayValue": "Total size was 31 KiB"
         }
       },
@@ -1051,27 +1234,27 @@
         {
           "resourceType": "total",
           "requestCount": 16,
-          "transferSize": 31533
+          "transferSize": 31530
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 24609
+          "transferSize": 24551
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4256
+          "transferSize": 4413
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2470
+          "transferSize": 2369
         },
         {
           "resourceType": "other",
           "requestCount": 2,
-          "transferSize": 198
+          "transferSize": 197
         },
         {
           "resourceType": "image",
@@ -1091,105 +1274,15 @@
         {
           "resourceType": "third-party",
           "requestCount": 16,
-          "transferSize": 31533
+          "transferSize": 31530
         }
       ]
     },
     {
       "target": "story-032",
       "profile": "mobile",
-      "run": 1,
-      "fetchTime": "2026-07-22T22:02:36.241Z",
-      "scores": {
-        "performance": 0.97,
-        "bestPractices": 1,
-        "seo": 1
-      },
-      "metrics": {
-        "firstContentfulPaint": {
-          "score": 1,
-          "numericValue": 965.8713,
-          "displayValue": "1.0 s"
-        },
-        "largestContentfulPaint": {
-          "score": 1,
-          "numericValue": 965.8713,
-          "displayValue": "1.0 s"
-        },
-        "totalBlockingTime": {
-          "score": 0.91,
-          "numericValue": 189.5,
-          "displayValue": "190 ms"
-        },
-        "cumulativeLayoutShift": {
-          "score": 1,
-          "numericValue": 0,
-          "displayValue": "0"
-        },
-        "interactive": {
-          "score": 1,
-          "numericValue": 1206.3213,
-          "displayValue": "1.2 s"
-        },
-        "totalByteWeight": {
-          "score": 1,
-          "numericValue": 15185,
-          "displayValue": "Total size was 15 KiB"
-        }
-      },
-      "resources": [
-        {
-          "resourceType": "total",
-          "requestCount": 7,
-          "transferSize": 15185
-        },
-        {
-          "resourceType": "script",
-          "requestCount": 2,
-          "transferSize": 7003
-        },
-        {
-          "resourceType": "stylesheet",
-          "requestCount": 1,
-          "transferSize": 4264
-        },
-        {
-          "resourceType": "document",
-          "requestCount": 1,
-          "transferSize": 3612
-        },
-        {
-          "resourceType": "other",
-          "requestCount": 3,
-          "transferSize": 306
-        },
-        {
-          "resourceType": "image",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "media",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "font",
-          "requestCount": 0,
-          "transferSize": 0
-        },
-        {
-          "resourceType": "third-party",
-          "requestCount": 7,
-          "transferSize": 15185
-        }
-      ]
-    },
-    {
-      "target": "story-032",
-      "profile": "desktop",
-      "run": 1,
-      "fetchTime": "2026-07-22T22:02:44.014Z",
+      "run": 2,
+      "fetchTime": "2026-07-22T22:11:05.652Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -1198,13 +1291,13 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 255.85030000000003,
-          "displayValue": "0.3 s"
+          "numericValue": 903.1765,
+          "displayValue": "0.9 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 255.85030000000003,
-          "displayValue": "0.3 s"
+          "numericValue": 903.1765,
+          "displayValue": "0.9 s"
         },
         "totalBlockingTime": {
           "score": 1,
@@ -1218,12 +1311,12 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 255.85030000000006,
-          "displayValue": "0.3 s"
+          "numericValue": 903.1765,
+          "displayValue": "0.9 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 15185,
+          "numericValue": 15616,
           "displayValue": "Total size was 15 KiB"
         }
       },
@@ -1231,27 +1324,27 @@
         {
           "resourceType": "total",
           "requestCount": 7,
-          "transferSize": 15185
+          "transferSize": 15616
         },
         {
           "resourceType": "script",
           "requestCount": 2,
-          "transferSize": 7025
+          "transferSize": 7148
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4335
+          "transferSize": 4293
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3521
+          "transferSize": 3863
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 304
+          "transferSize": 312
         },
         {
           "resourceType": "image",
@@ -1271,7 +1364,97 @@
         {
           "resourceType": "third-party",
           "requestCount": 7,
-          "transferSize": 15185
+          "transferSize": 15616
+        }
+      ]
+    },
+    {
+      "target": "story-032",
+      "profile": "desktop",
+      "run": 1,
+      "fetchTime": "2026-07-22T22:11:20.060Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 242.60239999999996,
+          "displayValue": "0.2 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 242.60239999999996,
+          "displayValue": "0.2 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 242.6024,
+          "displayValue": "0.2 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 15617,
+          "displayValue": "Total size was 15 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 7,
+          "transferSize": 15617
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 2,
+          "transferSize": 7130
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4313
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 3873
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 301
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 7,
+          "transferSize": 15617
         }
       ]
     }
