@@ -1,0 +1,55 @@
+name: Temporary Fix 10424 Source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-fix-10424-source.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fix source duplication on PR branch
+        run: |
+          set -euxo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin data/10424-naganohara
+          git checkout -B data/10424-naganohara origin/data/10424-naganohara
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          mpath=Path('jichitai-compare/data/municipalities/10/10424.json')
+          tpath=Path('jichitai-compare/operations/tasks/10424.json')
+          m=json.loads(mpath.read_text(encoding='utf-8'))
+          t=json.loads(tpath.read_text(encoding='utf-8'))
+          url='https://www.town.naganohara.gunma.jp/www/contents/1360302517351/index.html'
+          m['services']['postpartumCare']['source']={'url':url,'checkedAt':'2026-07-22'}
+          order=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention']
+          t['officialSources']=[m['services'][key]['source']['url'] for key in order]
+          if len(t['officialSources']) != len(set(t['officialSources'])):
+              raise SystemExit('officialSources remain duplicated')
+          t['lastUpdatedAt']='2026-07-22T20:22:00+09:00'
+          t['lastUpdatedBy']='統括'
+          t['notes'].append('CI run #1731の主出典URL重複を解消。産後ケアの主出典を町公式の妊娠・出産支援ページへ変更し、task.officialSourcesを9件一意に再構成。')
+          mpath.write_text(json.dumps(m,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          tpath.write_text(json.dumps(t,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+          git add jichitai-compare/data/municipalities/10/10424.json jichitai-compare/operations/tasks/10424.json
+          git commit -m 'fix: 長野原町の主出典URL重複を解消'
+          git push origin data/10424-naganohara
+          git checkout main
+          git pull --ff-only origin main
+          rm -f .github/workflows/temp-fix-10424-source.yml
+          git add .github/workflows/temp-fix-10424-source.yml
+          git commit -m '統括管理: 長野原町修正用一時ワークフローを削除'
+          git push origin main
