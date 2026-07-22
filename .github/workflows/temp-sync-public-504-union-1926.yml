@@ -1,0 +1,199 @@
+name: Temporary sync public 504 union 1926
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-public-504-union-1926.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build union-based release state
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            +refs/heads/main:refs/remotes/origin/main \
+            +refs/heads/region/north:refs/remotes/origin/region/north \
+            +refs/heads/region/east:refs/remotes/origin/region/east \
+            +refs/heads/region/central:refs/remotes/origin/region/central \
+            +refs/heads/region/west:refs/remotes/origin/region/west
+          git checkout -B coord/state-after-public-504-union-20260722-1926 origin/main
+          cat > /tmp/sync.py <<'PY'
+          # -*- coding: utf-8 -*-
+          import json
+          import re
+          import subprocess
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          root = Path('jichitai-compare')
+          queue_path = root / 'operations/control/release-queue.json'
+          global_path = root / 'operations/control/global-state.json'
+          audit_path = root / 'operations/control/audit-log.jsonl'
+          progress = json.loads((root / 'operations/progress.json').read_text(encoding='utf-8'))
+          assert progress['registeredMunicipalities'] == 504
+          assert progress['totalServices'] == 4536
+          assert progress['completedServices'] == 4536
+          assert progress['prOpenMunicipalities'] == 0
+
+          specs = {
+              'north': ('origin/region/north', lambda p: 1 <= p <= 7, 800),
+              'east': ('origin/region/east', lambda p: 8 <= p <= 15 or p in (19, 20), 768),
+              'central': ('origin/region/central', lambda p: 16 <= p <= 18 or 21 <= p <= 30, 780),
+              'west': ('origin/region/west', lambda p: 31 <= p <= 47, 716),
+          }
+
+          def rows(ref, accept):
+              output = subprocess.check_output(
+                  ['git', 'ls-tree', '-r', '--name-only', ref, str(root / 'data/municipalities')],
+                  text=True,
+              )
+              result = {}
+              for path in output.splitlines():
+                  match = re.fullmatch(r'jichitai-compare/data/municipalities/(\d{2})/(\d{5})\.json', path)
+                  if not match or not accept(int(match.group(1))):
+                      continue
+                  data = json.loads(subprocess.check_output(['git', 'show', f'{ref}:{path}'], text=True))
+                  code = match.group(2)
+                  result[code] = {'code': code, 'name': data.get('name') or data.get('municipalityName') or code}
+              return result
+
+          queue = json.loads(queue_path.read_text(encoding='utf-8'))
+          entries = {entry['region']: entry for entry in queue['entries']}
+          counts = {}
+          pending = {}
+          pending_rows = {}
+          total = 0
+          ready = []
+
+          for region, (ref, accept, integration_pr) in specs.items():
+              main_map = rows('HEAD', accept)
+              regional_map = rows(ref, accept)
+              union_map = dict(main_map)
+              union_map.update(regional_map)
+              delta_codes = sorted(set(regional_map) - set(main_map))
+              delta = [regional_map[code] for code in delta_codes]
+              union_rows = [union_map[code] for code in sorted(union_map)]
+              counts[region] = len(union_rows)
+              pending[region] = len(delta)
+              pending_rows[region] = delta
+              total += len(union_rows)
+              if len(delta) >= 10:
+                  ready.append(region)
+              entries[region].update({
+                  'municipalities': union_rows,
+                  'count': len(union_rows),
+                  'pendingSinceLastRelease': len(delta),
+                  'releaseStatus': 'release_ready' if len(delta) >= 10 else ('up_to_date' if not delta else 'pending_threshold'),
+                  'reason': f'Assignment-filtered union of main and region branch; pending region-minus-main: {len(delta)}',
+                  'mainIntegrationPr': integration_pr,
+                  'generatedPullRequest': 801,
+                  'auditStatus': 'passed',
+              })
+
+          now = datetime.now(ZoneInfo('Asia/Tokyo')).replace(microsecond=0).isoformat()
+          next_action = (
+              'Create fixed 10-municipality national integration for: ' + ', '.join(ready)
+              if ready else
+              'Continue regional integration. Pending: ' + ', '.join(f'{r} {pending[r]}' for r in ('north','east','central','west'))
+          )
+          queue.update({
+              'updatedAt': now,
+              'status': 'active',
+              'summary': {
+                  'regionalMergedMunicipalities': total,
+                  'latestGeneratedMunicipalityCount': 504,
+                  'latestGeneratedPullRequest': 801,
+                  'latestPublicCountPullRequest': 801,
+                  'releaseReadyRegions': ready,
+                  'nextAction': next_action,
+              },
+              'nextAction': next_action,
+              'humanDecisionRequired': False,
+          })
+          queue_path.write_text(json.dumps(queue, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+
+          global_state = json.loads(global_path.read_text(encoding='utf-8'))
+          global_state.update({
+              'updatedAt': now,
+              'phase': 'release-monitoring',
+              'regionalCompletedSinceLastRelease': {**pending, 'total': sum(pending.values())},
+              'priority': {'type': 'release-monitoring', 'nextAction': next_action},
+              'lastNationalIntegrationAt': '2026-07-22T19:09:38+09:00',
+              'lastNationalIntegrationPr': 800,
+              'latestGeneratedMunicipalityCount': 504,
+              'latestGeneratedPullRequest': 801,
+              'latestPublicCountPullRequest': 801,
+              'regionalMergedMunicipalities': total,
+              'openPullRequests': [],
+              'humanDecisionRequired': False,
+          })
+          global_path.write_text(json.dumps(global_state, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+
+          record = {
+              'timestamp': now,
+              'actor': '\u5168\u56fd\u9032\u884c\u7d71\u62ec',
+              'action': 'coordinator-union-sync-after-public-504',
+              'details': {
+                  'publicMunicipalityCount': 504,
+                  'publicServices': 4536,
+                  'regionalCounts': counts,
+                  'regionalMergedMunicipalities': total,
+                  'pendingSinceLatestNationalIntegration': {**pending, 'total': sum(pending.values())},
+                  'pendingMunicipalities': pending_rows,
+                  'nationalIntegrationPullRequest': 800,
+                  'publicationPullRequest': 801,
+                  'releaseReadyRegions': ready,
+              },
+              'humanDecisionRequired': False,
+          }
+          text = audit_path.read_text(encoding='utf-8')
+          if text and not text.endswith('\n'):
+              text += '\n'
+          audit_path.write_text(text + json.dumps(record, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          Path('/tmp/queue-summary').write_text(
+              f"{total} {pending['north']} {pending['east']} {pending['central']} {pending['west']}"
+          )
+          PY
+          python3 /tmp/sync.py
+          read total north east central west < /tmp/queue-summary
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          expected=(
+            jichitai-compare/operations/control/audit-log.jsonl
+            jichitai-compare/operations/control/global-state.json
+            jichitai-compare/operations/control/release-queue.json
+          )
+          test "${#changed[@]}" -eq 3
+          test "$(printf '%s\n' "${changed[@]}" | sort)" = "$(printf '%s\n' "${expected[@]}" | sort)"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "${expected[@]}"
+          git commit -m "統括管理: 公開504・地方統合${total}へ和集合同期（北${north} 東${east} 中${central} 西${west}）"
+          git push --force origin HEAD:coord/state-after-public-504-union-20260722-1926
+      - name: Remove temporary workflow
+        if: always()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin +refs/heads/main:refs/remotes/origin/main
+          git checkout -B main origin/main
+          if [ -f .github/workflows/temp-sync-public-504-union-1926.yml ]; then
+            git rm .github/workflows/temp-sync-public-504-union-1926.yml
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git commit -m '統括管理: 公開504和集合同期一時ワークフローを削除'
+            git push origin HEAD:main
+          fi
