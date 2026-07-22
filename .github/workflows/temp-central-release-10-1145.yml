@@ -1,0 +1,47 @@
+name: Temporary Central Release 10 1145
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-central-release-10-1145.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed snapshot
+        run: |
+          set -euxo pipefail
+          TARGET='coord/central-release-10-20260722-1145'
+          SOURCE='8e0534abc2ea698223b6a874388691fc14676849'
+          git fetch origin "$TARGET" region/central main
+          git checkout "$TARGET"
+          codes='23214 23215 23216 23217 23219 23220 23221 23222 23223 23224'
+          for code in $codes; do
+            pref=${code:0:2}
+            mkdir -p "jichitai-compare/data/municipalities/$pref" jichitai-compare/operations/tasks
+            git show "$SOURCE:jichitai-compare/data/municipalities/$pref/$code.json" > "jichitai-compare/data/municipalities/$pref/$code.json"
+            git show "$SOURCE:jichitai-compare/operations/tasks/$code.json" > "jichitai-compare/operations/tasks/$code.json"
+          done
+          changed=$(git status --short | wc -l)
+          test "$changed" -eq 20
+          git add jichitai-compare/data/municipalities jichitai-compare/operations/tasks
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合: 中日本追加10自治体の固定スナップショット'
+          git push origin "$TARGET"
+          git checkout main
+          git pull --ff-only origin main
+          rm .github/workflows/temp-central-release-10-1145.yml
+          git add .github/workflows/temp-central-release-10-1145.yml
+          git commit -m '統括管理: 中日本固定スナップショット一時処理を削除'
+          git push origin main
