@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-22T20:10:52.116Z",
+  "auditedAt": "2026-07-22T20:14:49.475Z",
   "success": false,
   "results": [
     {
@@ -45,8 +45,8 @@
     },
     {
       "name": "top: links have accessible names",
-      "ok": false,
-      "detail": 97
+      "ok": true,
+      "detail": 0
     },
     {
       "name": "top: has exactly one main landmark",
@@ -55,22 +55,13 @@
     },
     {
       "name": "top: first Tab exposes a visible skip link",
-      "ok": true,
+      "ok": false,
       "detail": {
         "tag": "A",
-        "className": "skip-link",
-        "href": "#main-content",
-        "text": "本文へ移動",
+        "className": "card",
+        "href": "stories/only-the-uniform-clocked-in.html",
+        "text": "人怖中編約5分\n    作業服だけが出勤しました制服レンタル会社は社員の本物の作業服と身体痕跡を侵入者へ貸し、元の所有者へ犯行証拠を集中させていた。\n    ●●●●○オリジナル作品",
         "visible": true
-      }
-    },
-    {
-      "name": "top: skip link moves focus to main content",
-      "ok": true,
-      "detail": {
-        "hash": "#main-content",
-        "activeId": "main-content",
-        "mainId": "main-content"
       }
     },
     {
@@ -103,59 +94,8 @@
     },
     {
       "name": "archive: no critical or serious axe violations",
-      "ok": false,
-      "detail": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "help": "Elements must meet minimum color contrast ratio thresholds",
-          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
-          "nodes": [
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(15) > .archive-no"
-              ],
-              "html": "<span class=\"archive-no\">094</span>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.8pt (14.4px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(15) > .archive-copy > strong"
-              ],
-              "html": "<strong>笑えたので復職可能です</strong>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.14 (foreground color: #edf0f5, background color: #ffffff, font size: 12.6pt (16.8px), font weight: bold). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(15) > .archive-copy > small"
-              ],
-              "html": "<small>療養中の社員が一瞬笑った映像だけが回復の証拠となり、恐怖や混乱を示した前後の時間は判定から除外された。</small>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.1pt (13.44px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(16) > .archive-no"
-              ],
-              "html": "<span class=\"archive-no\">100</span>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.8pt (14.4px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(16) > .archive-copy > strong"
-              ],
-              "html": "<strong>あなたの経験で採用されました</strong>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.14 (foreground color: #edf0f5, background color: #ffffff, font size: 12.6pt (16.8px), font weight: bold). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(16) > .archive-copy > small"
-              ],
-              "html": "<small>不採用者の実体験は採用されやすい別人へ提供され、先に採用された人物がその経歴の正規所有者になる。</small>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.1pt (13.44px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        }
-      ]
+      "ok": true,
+      "detail": []
     },
     {
       "name": "archive: document language is Japanese",
@@ -184,8 +124,8 @@
     },
     {
       "name": "archive: links have accessible names",
-      "ok": false,
-      "detail": 93
+      "ok": true,
+      "detail": 0
     },
     {
       "name": "archive: has exactly one main landmark",
@@ -194,22 +134,13 @@
     },
     {
       "name": "archive: first Tab exposes a visible skip link",
-      "ok": true,
+      "ok": false,
       "detail": {
         "tag": "A",
-        "className": "skip-link",
-        "href": "#archive-content",
-        "text": "一覧へ移動",
+        "className": "archive-item",
+        "href": "stories/hired-with-your-experience.html",
+        "text": "100\n    あなたの経験で採用されました不採用者の実体験は採用されやすい別人へ提供され、先に採用された人物がその経歴の正規所有者になる。",
         "visible": true
-      }
-    },
-    {
-      "name": "archive: skip link moves focus to main content",
-      "ok": true,
-      "detail": {
-        "hash": "#archive-content",
-        "activeId": "archive-content",
-        "mainId": "archive-content"
       }
     },
     {
@@ -322,70 +253,26 @@
   ],
   "failures": [
     {
-      "name": "top: links have accessible names",
+      "name": "top: first Tab exposes a visible skip link",
       "ok": false,
-      "detail": 97
+      "detail": {
+        "tag": "A",
+        "className": "card",
+        "href": "stories/only-the-uniform-clocked-in.html",
+        "text": "人怖中編約5分\n    作業服だけが出勤しました制服レンタル会社は社員の本物の作業服と身体痕跡を侵入者へ貸し、元の所有者へ犯行証拠を集中させていた。\n    ●●●●○オリジナル作品",
+        "visible": true
+      }
     },
     {
-      "name": "archive: no critical or serious axe violations",
+      "name": "archive: first Tab exposes a visible skip link",
       "ok": false,
-      "detail": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "help": "Elements must meet minimum color contrast ratio thresholds",
-          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
-          "nodes": [
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(15) > .archive-no"
-              ],
-              "html": "<span class=\"archive-no\">094</span>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.8pt (14.4px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(15) > .archive-copy > strong"
-              ],
-              "html": "<strong>笑えたので復職可能です</strong>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.14 (foreground color: #edf0f5, background color: #ffffff, font size: 12.6pt (16.8px), font weight: bold). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(15) > .archive-copy > small"
-              ],
-              "html": "<small>療養中の社員が一瞬笑った映像だけが回復の証拠となり、恐怖や混乱を示した前後の時間は判定から除外された。</small>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.1pt (13.44px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(16) > .archive-no"
-              ],
-              "html": "<span class=\"archive-no\">100</span>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.8pt (14.4px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(16) > .archive-copy > strong"
-              ],
-              "html": "<strong>あなたの経験で採用されました</strong>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.14 (foreground color: #edf0f5, background color: #ffffff, font size: 12.6pt (16.8px), font weight: bold). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "target": [
-                "#後味悪い > .archive-list > .archive-item:nth-child(16) > .archive-copy > small"
-              ],
-              "html": "<small>不採用者の実体験は採用されやすい別人へ提供され、先に採用された人物がその経歴の正規所有者になる。</small>",
-              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.17 (foreground color: #a8b0c0, background color: #ffffff, font size: 10.1pt (13.44px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "archive: links have accessible names",
-      "ok": false,
-      "detail": 93
+      "detail": {
+        "tag": "A",
+        "className": "archive-item",
+        "href": "stories/hired-with-your-experience.html",
+        "text": "100\n    あなたの経験で採用されました不採用者の実体験は採用されやすい別人へ提供され、先に採用された人物がその経歴の正規所有者になる。",
+        "visible": true
+      }
     }
   ]
 }
