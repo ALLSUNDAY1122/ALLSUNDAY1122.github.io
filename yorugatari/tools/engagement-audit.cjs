@@ -6,7 +6,9 @@ const ROOT = process.cwd();
 const SITE = path.join(ROOT, 'yorugatari');
 const STORIES = path.join(SITE, 'stories');
 const BASE = 'https://allsunday1122.github.io/yorugatari';
-const VERSION = '20260723-002';
+const ANALYTICS_VERSION = '20260723-002';
+const ENGAGEMENT_VERSION = '20260723-003';
+const STORY_VERSION = '20260723-007';
 const results = [];
 const failures = [];
 
@@ -23,24 +25,28 @@ function localAudit() {
 
   for (const filename of staticFiles) {
     const html = fs.readFileSync(path.join(SITE, filename), 'utf8');
-    if (!html.includes(`assets/analytics.js?v=${VERSION}`) || html.includes('assets/engagement.js')) errors.push({ file: filename, check: 'runtime' });
+    if (!html.includes(`assets/analytics.js?v=${ANALYTICS_VERSION}`) || html.includes('assets/engagement.js')) errors.push({ file: filename, check: 'runtime' });
     if (!html.includes('property="og:image:width" content="2172"') || !html.includes('property="og:image:height" content="724"')) errors.push({ file: filename, check: 'dimensions' });
   }
 
   for (const filename of storyFiles) {
     const html = fs.readFileSync(path.join(STORIES, filename), 'utf8');
-    if (!html.includes(`../assets/engagement.js?v=${VERSION}`) || html.includes('../assets/analytics.js')) errors.push({ file: `stories/${filename}`, check: 'runtime' });
+    if (!html.includes(`../assets/story.js?v=${STORY_VERSION}`)) errors.push({ file: `stories/${filename}`, check: 'story runtime' });
+    if (!html.includes(`../assets/engagement.js?v=${ENGAGEMENT_VERSION}`) || html.includes('../assets/analytics.js')) errors.push({ file: `stories/${filename}`, check: 'engagement runtime' });
+    if (!html.includes('class="hero-actions story-pagination"') || !html.includes('class="related"')) errors.push({ file: `stories/${filename}`, check: 'static circulation' });
     if (!html.includes('property="og:image:width" content="2172"') || !html.includes('property="og:image:height" content="724"')) errors.push({ file: `stories/${filename}`, check: 'dimensions' });
   }
 
+  const storyRuntime = fs.readFileSync(path.join(SITE, 'assets', 'story.js'), 'utf8');
   record('local: six static pages and 100 stories are covered', staticFiles.length === 6 && storyFiles.length === 100, { static: staticFiles.length, stories: storyFiles.length });
-  record('local: runtime modules and exact social dimensions are complete', errors.length === 0, errors);
+  record('local: runtime modules, social metadata, and static circulation are complete', errors.length === 0, errors);
+  record('local: story runtime no longer loads the 100-story catalog', !storyRuntime.includes('catalogSources') && !storyRuntime.includes('loadCatalogScript'));
 
   const privacy = fs.readFileSync(path.join(SITE, 'privacy.html'), 'utf8');
   record('local: privacy policy explains coarse source categories', privacy.includes('検索語') && privacy.includes('粗い区分') && privacy.includes('参照元URL'));
 
   const notFound = fs.readFileSync(path.join(ROOT, '404.html'), 'utf8');
-  record('local: custom 404 is noindex and recoverable', notFound.includes('noindex,follow') && notFound.includes('data-page-type="404"') && notFound.includes('/yorugatari/archive.html') && notFound.includes(`/yorugatari/assets/analytics.js?v=${VERSION}`));
+  record('local: custom 404 is noindex and recoverable', notFound.includes('noindex,follow') && notFound.includes('data-page-type="404"') && notFound.includes('/yorugatari/archive.html') && notFound.includes(`/yorugatari/assets/analytics.js?v=${ANALYTICS_VERSION}`));
 }
 
 async function metadata(page) {
@@ -62,11 +68,11 @@ async function metadata(page) {
   });
 }
 
-function metadataPresent(value) {
-  return Boolean(value.type && value.url && value.title && value.description && value.image && value.width && value.height && value.alt && value.card === 'summary_large_image' && value.twitterImage && value.twitterAlt);
+function metadataComplete(value) {
+  return Boolean(value.type && value.url && value.title && value.description && value.image && value.width === '2172' && value.height === '724' && value.alt && value.card === 'summary_large_image' && value.twitterImage && value.twitterAlt);
 }
 
-async function open(page, url, inspect, attempts = 8) {
+async function open(page, url, inspect, attempts = 10) {
   let detail = null;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
@@ -91,7 +97,7 @@ async function imageAudit() {
 
 async function browserAudit() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/1.7' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/1.8' });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', { configurable: true, value: async (payload) => { window.__YORUGATARI_SHARE_PAYLOAD__ = payload; } });
   });
@@ -107,24 +113,28 @@ async function browserAudit() {
       analytics: Boolean(window.YORUGATARI_ANALYTICS),
       source: window.YORUGATARI_ANALYTICS?.source,
       panel: Boolean(document.querySelector('#readerPanel'))
-    }), VERSION);
+    }), ANALYTICS_VERSION);
     const meta = await metadata(target);
-    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.panel && metadataPresent(meta), status: response?.status(), attempt, state, meta };
+    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.panel && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
   record('published: top uses lightweight source analytics and social metadata', top.ready && Boolean(top.state?.source), top);
 
   const story = await open(page, `${BASE}/stories/spare-key-returned.html`, async (target, response, attempt) => {
-    const state = await target.evaluate((version) => ({
-      engagementScript: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
-      analyticsScript: Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
+    const state = await target.evaluate(({ engagementVersion, storyVersion }) => ({
+      engagementScript: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${engagementVersion}`)),
+      storyScript: Array.from(document.scripts).some((script) => script.src.includes(`story.js?v=${storyVersion}`)),
+      catalogScripts: Array.from(document.scripts).filter((script) => /\/stories(?:-\d{3}-\d{3})?\.js/.test(script.src)).length,
       engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
       source: window.YORUGATARI_ENGAGEMENT?.source,
-      share: Boolean(document.querySelector('#shareButton'))
-    }), VERSION);
+      relatedReady: window.YORUGATARI_ENGAGEMENT?.relatedReady,
+      share: Boolean(document.querySelector('#shareButton')),
+      pagination: document.querySelectorAll('.story-pagination a').length,
+      related: document.querySelectorAll('.related a').length
+    }), { engagementVersion: ENGAGEMENT_VERSION, storyVersion: STORY_VERSION });
     const meta = await metadata(target);
-    return { ready: response?.status() === 200 && state.engagementScript && !state.analyticsScript && state.engagement && state.share && metadataPresent(meta), status: response?.status(), attempt, state, meta };
+    return { ready: response?.status() === 200 && state.engagementScript && state.storyScript && state.catalogScripts === 0 && state.engagement && state.relatedReady && state.share && state.pagination === 3 && state.related === 2 && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: story uses source-aware engagement and social metadata', story.ready && Boolean(story.state?.source), story);
+  record('published: story uses static circulation without catalog scripts', story.ready && Boolean(story.state?.source), story);
 
   try { await page.waitForFunction(() => Number.isFinite(window.YORUGATARI_ENGAGEMENT?.views), null, { timeout: 20000 }); } catch (error) {}
   const views = await page.evaluate(() => ({ value: window.YORUGATARI_ENGAGEMENT?.views, text: document.querySelector('.view-count strong')?.textContent.trim(), error: window.YORUGATARI_ENGAGEMENT?.error, sourceError: window.YORUGATARI_ENGAGEMENT?.sourceError }));
@@ -134,21 +144,20 @@ async function browserAudit() {
   const share = await page.evaluate(() => ({ payload: window.__YORUGATARI_SHARE_PAYLOAD__, status: document.querySelector('.share-status')?.textContent.trim() }));
   record('published: native share receives canonical story data', Boolean(share.payload && share.payload.url === `${BASE}/stories/spare-key-returned.html` && String(share.payload.title).includes('合鍵は返却済み') && share.status === '共有画面を開きました。'), share);
 
-  try { await page.waitForFunction(() => document.querySelectorAll('.related a').length >= 2, null, { timeout: 12000 }); } catch (error) {}
   const circulation = await page.evaluate(() => ({ pagination: Array.from(document.querySelectorAll('.story-pagination a')).map((link) => link.textContent.trim()), related: Array.from(document.querySelectorAll('.related a')).map((link) => link.textContent.trim()), archiveLinks: document.querySelectorAll('a[href*="archive.html"]').length }));
-  record('published: previous, archive, next, and related paths exist', circulation.pagination.length === 3 && circulation.related.length >= 2 && circulation.archiveLinks >= 1, circulation);
+  record('published: previous, archive, next, and two related paths exist', circulation.pagination.length === 3 && circulation.related.length === 2 && circulation.archiveLinks >= 1, circulation);
 
   const policy = await open(page, `${BASE}/about.html`, async (target, response, attempt) => {
     const meta = await metadata(target);
-    const scripts = await target.evaluate((version) => ({ analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)), engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')) }), VERSION);
-    return { ready: response?.status() === 200 && metadataPresent(meta) && scripts.analytics && !scripts.engagement, status: response?.status(), attempt, meta, scripts };
+    const scripts = await target.evaluate((version) => ({ analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)), engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')) }), ANALYTICS_VERSION);
+    return { ready: response?.status() === 200 && metadataComplete(meta) && scripts.analytics && !scripts.engagement, status: response?.status(), attempt, meta, scripts };
   }, 6);
   record('published: policy uses lightweight analytics and social metadata', policy.ready, policy);
   record('published: normal pages have no JavaScript errors', errors.length === 0, errors.slice());
   errors.length = 0;
 
   const missing = await open(page, `${BASE}/stories/missing-${Date.now()}.html`, async (target, response, attempt) => {
-    const detail = await target.evaluate((version) => ({ noindex: document.querySelector('meta[name="robots"]')?.content, pageType: document.body.dataset.pageType, archive: Boolean(document.querySelector('a[href="/yorugatari/archive.html"]')), top: Boolean(document.querySelector('a[href="/yorugatari/"]')), trackingPath: window.YORUGATARI_ANALYTICS?.trackingPath, analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)), engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')) }), VERSION);
+    const detail = await target.evaluate((version) => ({ noindex: document.querySelector('meta[name="robots"]')?.content, pageType: document.body.dataset.pageType, archive: Boolean(document.querySelector('a[href="/yorugatari/archive.html"]')), top: Boolean(document.querySelector('a[href="/yorugatari/"]')), trackingPath: window.YORUGATARI_ANALYTICS?.trackingPath, analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)), engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')) }), ANALYTICS_VERSION);
     return { ready: response?.status() === 404 && detail.pageType === '404' && detail.archive && detail.analytics && !detail.engagement, status: response?.status(), attempt, ...detail };
   }, 6);
   record('published: custom 404 is noindex, tracked, and recoverable', missing.ready && missing.noindex === 'noindex,follow' && missing.top && missing.trackingPath === '/yorugatari/404', missing);
