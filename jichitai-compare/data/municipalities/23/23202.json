@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23202",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "岡崎市",
+  "officialUrl": "https://www.city.okazaki.lg.jp/",
+  "status": "verified",
+  "summary": "岡崎市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "中学校卒業までは保険診療の自己負担分を助成し、高校生世代は入院分を18歳年度末まで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "throughJuniorHigh": "15歳到達年度末までは受給者証により保険診療の自己負担なし",
+        "highSchoolAge": "15歳到達年度末の翌日から18歳到達年度末までは、入院にかかる保険診療自己負担分を償還払いで助成",
+        "outpatientAfterJuniorHigh": "高校生世代の通院医療費は対象外",
+        "excluded": "個室使用料、食事代等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kosodate/ninshin/1012190/1012192/1003467.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気または回復期で集団保育が難しい生後6か月から小学6年生までの児童を一時保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "mainFacility": "病児・病後児保育室MON TAMIAは生後6か月から小学6年生まで",
+        "otherFacilities": "八帖保育園病後児保育施設と岡崎げんき館病後期一時託児室も実施。施設により対象条件が異なる",
+        "fee": "原則1日2,000円。施設・世帯区分により減免あり",
+        "condition": "かかりつけ医が利用可能と判断し、保護者の就労等で家庭保育が困難なこと",
+        "limit": "八帖保育園は1回の申込みにつき原則7日以内"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kosodate/kosodate/1012221/1012225/1003493.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児の利用料と、住民税非課税世帯の0～2歳児の利用料を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "agesThreeToFive": "保育所、認定こども園、幼稚園、対象認可外保育施設等の利用料が無償化対象",
+        "underThree": "0～2歳児は住民税非課税世帯が無償化対象",
+        "otherUnderThree": "無償化対象外の0～2歳児保育料は市町村民税額、年齢、認定区分等で決定",
+        "excludedCosts": "給食費、通園送迎費、行事費等の実費は原則として対象外"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kosodate/kosodate/1012221/1012222/1003626.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校給食費を完全無償化し、中学校は4月・12月を無償化して通常の保護者負担を1食355円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "standardCost": "食材料費は小学校1食345円、中学校1食400円",
+        "elementary": "令和8年度は国・県の負担軽減補助金を活用して完全無償化",
+        "juniorHigh": "値上げ分を市が負担し、通常の保護者負担は1食355円。4月分と12月分は無償化",
+        "nonEatingSupport": "恒常的に給食を喫食できない小学生には無償化相当額給付金を実施",
+        "assistance": "経済的に就学困難な世帯は給食費等の就学援助制度あり"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kosodate/kyouiku/1012240/1003780/1003781.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "市内在住の出産後1年以内の母子へ、宿泊・デイ・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "岡崎市内に住所を有する出産後1年以内の母子",
+        "types": "宿泊型、デイ型、訪問型",
+        "care": "母体の健康管理、乳房ケア・授乳助言、沐浴等の育児相談、乳児の発育確認、グリーフケア等",
+        "facilityAge": "宿泊・デイ型の受入月齢は実施施設により異なる",
+        "application": "こども家庭センターへ事前申請し、市の承認後に利用"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kosodate/kosodate/1012230/1012232/1003475.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "保育所、認定こども園、地域型保育、企業主導型保育等を利用していない児童",
+        "limit": "児童1人につき月10時間まで",
+        "facilities": "令和8年度は八帖保育園と島坂保育園",
+        "fee": "1時間当たり300円を予定",
+        "method": "月単位で同じ曜日・時間帯を利用する定期利用方式"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kosodate/kosodate/1012221/1012225/1014270.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京23区から岡崎市へ移住して対象法人への就業等の要件を満たす人へ、移住支援金を交付する。",
+      "details": {
+        "program": "岡崎市UIJターン就業・起業者移住費補助金",
+        "single": "単身60万円",
+        "household": "2人以上世帯100万円",
+        "childAddition": "18歳未満の世帯員1人につき100万円加算",
+        "condition": "東京23区在住者または通勤者が岡崎市へ移住し、対象法人への就業・起業等の要件を満たすこと",
+        "deadline": "令和8年度の申請期限は2026年9月30日。予算により早期終了の可能性あり"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/business/shushoku/1012302/1001956.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみはWEBまたは電話で予約し、料金分の粗大ごみシールを貼って有料戸別収集を利用する。",
+      "details": {
+        "reservation": "WEBまたは粗大ごみ受付センターへの電話で収集日を予約",
+        "fee": "品目別に900円、1,200円、1,500円、1,800円の4段階",
+        "procedure": "予約時に料金を確認後、粗大ごみシールを購入して貼付",
+        "schedule": "地域ごとの曜日に月曜から金曜で収集。混雑時は2週間から1か月程度待つ場合あり",
+        "alternative": "中央クリーンセンターへの直接搬入も可能"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kurashi/gomi/1012430/1002188/1014300/1002202.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害、水害リスク、ため池等のハザード情報と防災ガイドを公開する。",
+      "details": {
+        "portal": "市の『災害に備える』ページから各種防災情報へ案内",
+        "sediment": "土砂災害警戒区域・特別警戒区域を示す土砂災害ハザードマップを公開",
+        "flood": "水害リスク情報『みずから暮らしを守るマップ』と水害対応ガイドブックを公開",
+        "pond": "防災重点農業用ため池の浸水区域・浸水深を示すため池ハザードマップを公開",
+        "preparedness": "避難場所・避難経路と自宅周辺の危険箇所を事前に確認する"
+      },
+      "source": {"url": "https://www.city.okazaki.lg.jp/kurashi/bosai/1012542/index.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
