@@ -121,7 +121,7 @@ async function auditShareImage() {
   let detail = null;
   for (let attempt = 1; attempt <= 4; attempt += 1) {
     try {
-      const response = await fetch(url, { headers: { 'cache-control': 'no-cache' } });
+      const response = await fetch(url, { headers: { 'cache-control': 'no-cache', pragma: 'no-cache' } });
       const buffer = Buffer.from(await response.arrayBuffer());
       const png = buffer.length >= 24 && buffer.toString('ascii', 1, 4) === 'PNG';
       const width = png ? buffer.readUInt32BE(16) : 0;
@@ -142,7 +142,11 @@ async function browserAudit() {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Engagement-Audit/1.1'
+    userAgent: 'Yorugatari-Engagement-Audit/1.2',
+    extraHTTPHeaders: {
+      'cache-control': 'no-cache, no-store, max-age=0',
+      pragma: 'no-cache'
+    }
   });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', {
@@ -162,9 +166,16 @@ async function browserAudit() {
       script: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
       engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
       path: window.YORUGATARI_ENGAGEMENT?.path,
-      panel: Boolean(document.querySelector('#readerPanel'))
+      panel: Boolean(document.querySelector('#readerPanel')),
+      imageWidth: document.querySelector('meta[property="og:image:width"]')?.content,
+      imageHeight: document.querySelector('meta[property="og:image:height"]')?.content
     }), scriptVersion);
-    return { ready: response?.status() === 200 && state.script && state.engagement && state.panel, status: response?.status(), attempt, ...state };
+    return {
+      ready: response?.status() === 200 && state.script && state.engagement && state.panel && state.imageWidth === '2172' && state.imageHeight === '724',
+      status: response?.status(),
+      attempt,
+      ...state
+    };
   });
   record('published: top loads engagement module', top.ready && top.path === '/yorugatari', top);
   const topSocial = await socialMetadata(page);
@@ -175,9 +186,16 @@ async function browserAudit() {
       script: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
       engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
       share: Boolean(document.querySelector('#shareButton')),
-      viewText: document.querySelector('.view-count strong')?.textContent.trim() || ''
+      viewText: document.querySelector('.view-count strong')?.textContent.trim() || '',
+      imageWidth: document.querySelector('meta[property="og:image:width"]')?.content,
+      imageHeight: document.querySelector('meta[property="og:image:height"]')?.content
     }), scriptVersion);
-    return { ready: response?.status() === 200 && state.script && state.engagement && state.share, status: response?.status(), attempt, ...state };
+    return {
+      ready: response?.status() === 200 && state.script && state.engagement && state.share && state.imageWidth === '2172' && state.imageHeight === '724',
+      status: response?.status(),
+      attempt,
+      ...state
+    };
   });
   record('published: story loads view count and share controls', story.ready, story);
 
