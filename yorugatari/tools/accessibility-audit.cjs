@@ -52,6 +52,18 @@ async function openWithRetry(page, path, selector, readiness, name, attempts = 1
   return false;
 }
 
+async function materializeDeferredContent(page) {
+  await page.evaluate(async () => {
+    const deferred = Array.from(document.querySelectorAll('.card,.archive-section,.archive-item'));
+    for (let index = 0; index < deferred.length; index += 4) {
+      deferred[index].scrollIntoView({ block: 'center' });
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    }
+    window.scrollTo(0, 0);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
+}
+
 async function auditAxe(page, name) {
   const scan = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -76,8 +88,8 @@ async function auditDocumentStructure(page, name) {
       title: document.title,
       h1Count: document.querySelectorAll('h1').length,
       skipped,
-      unnamedButtons: Array.from(document.querySelectorAll('button')).filter((button) => !(button.innerText.trim() || button.getAttribute('aria-label'))).length,
-      unnamedLinks: Array.from(document.querySelectorAll('a[href]')).filter((link) => !(link.innerText.trim() || link.getAttribute('aria-label'))).length,
+      unnamedButtons: Array.from(document.querySelectorAll('button')).filter((button) => !((button.textContent || '').trim() || button.getAttribute('aria-label'))).length,
+      unnamedLinks: Array.from(document.querySelectorAll('a[href]')).filter((link) => !((link.textContent || '').trim() || link.getAttribute('aria-label'))).length,
       mainCount: document.querySelectorAll('main').length
     };
   });
@@ -154,6 +166,7 @@ async function auditTop(page) {
   );
   if (!loaded) return;
 
+  await materializeDeferredContent(page);
   await auditAxe(page, 'top');
   await auditDocumentStructure(page, 'top');
   await auditSkipLink(page, 'top');
@@ -174,6 +187,7 @@ async function auditTop(page) {
 async function auditArchive(page) {
   const loaded = await openWithRetry(page, '/archive.html', '.archive-item', null, 'archive', 6);
   if (!loaded) return;
+  await materializeDeferredContent(page);
   await auditAxe(page, 'archive');
   await auditDocumentStructure(page, 'archive');
   await auditSkipLink(page, 'archive');
@@ -183,6 +197,7 @@ async function auditArchive(page) {
 async function auditStory(page) {
   const loaded = await openWithRetry(page, '/stories/spare-key-returned.html', '.story-pagination', null, 'story', 6);
   if (!loaded) return;
+  await materializeDeferredContent(page);
   await auditAxe(page, 'story');
   await auditDocumentStructure(page, 'story');
   await auditSkipLink(page, 'story');
@@ -203,7 +218,7 @@ async function auditStory(page) {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Accessibility-Audit/1.1'
+    userAgent: 'Yorugatari-Accessibility-Audit/1.2'
   });
   const page = await context.newPage();
   const browserErrors = [];
