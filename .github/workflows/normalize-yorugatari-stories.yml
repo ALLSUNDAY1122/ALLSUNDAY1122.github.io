@@ -77,7 +77,7 @@ jobs:
             ['story-001', `${base}/stories/last-elevator.html`, ['YGT-001', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
             ['story-032', `${base}/stories/spare-key-returned.html`, ['YGT-032', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
             ['story-100', `${base}/stories/hired-with-your-experience.html`, ['YGT-100', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
-            ['story-js', `${base}/assets/story.js?v=20260723-006`, ['ensureBaseStoryMetadata', 'loadedSourceCount === catalogSources.length', 'ensureStoryPagination']]
+            ['story-js', `${base}/assets/story.js?v=20260723-006`, ['function normalizeBasicPage()', 'const completeCatalog = loadedCount === catalogSources.length;', 'buildStoryPagination(stories, currentIndex, completeCatalog);']]
           ];
           const results = [];
 
@@ -110,5 +110,5 @@ jobs:
             results
           };
           console.log(`YORUGATARI_LIVE_REPORT=${JSON.stringify(report)}`);
+          if (!report.success) process.exit(1);
           NODE
-          exit 1
