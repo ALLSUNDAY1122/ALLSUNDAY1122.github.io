@@ -16,6 +16,7 @@
     tracked: false,
     views: null,
     shareReady: false,
+    relatedReady: false,
     error: null
   };
   window.YORUGATARI_ENGAGEMENT = state;
@@ -103,9 +104,13 @@
     });
   }
 
+  function storyInfoBox() {
+    return document.querySelector('.story-side .story-info, .story-side .side-box, .story-side, .story-info');
+  }
+
   function installShareControl() {
     const slug = document.body && document.body.dataset.slug;
-    const infoBox = document.querySelector('.story-side .story-info, .story-side .side-box, .story-side, .story-info');
+    const infoBox = storyInfoBox();
     const heading = document.querySelector('.story-hero h1');
     if (!slug || !infoBox || !heading || infoBox.querySelector('#shareButton')) return;
 
@@ -144,6 +149,66 @@
     state.shareReady = true;
   }
 
+  function storyHref(story) {
+    const href = story && story.href ? story.href : ('stories/' + story.slug + '.html');
+    return href.replace(/^\.\.\//, '').replace(/^stories\//, '');
+  }
+
+  function buildRelatedStories(catalog) {
+    const slug = document.body && document.body.dataset.slug;
+    const infoBox = storyInfoBox();
+    const existing = document.querySelector('.related');
+    if (existing && existing.querySelectorAll('a').length >= 2) {
+      state.relatedReady = true;
+      return true;
+    }
+    if (!slug || !infoBox || !Array.isArray(catalog) || !catalog.length) return false;
+
+    const stories = Array.from(new Map(catalog.filter(function (story) {
+      return story && story.slug && story.title;
+    }).map(function (story) {
+      return [story.slug, story];
+    })).values());
+    const currentIndex = stories.findIndex(function (story) { return story.slug === slug; });
+    if (currentIndex < 0) return false;
+    const current = stories[currentIndex];
+    const sameCategory = stories
+      .map(function (story, index) { return { story: story, index: index }; })
+      .filter(function (entry) { return entry.story.slug !== slug && entry.story.category === current.category; })
+      .sort(function (left, right) {
+        return Math.abs(left.index - currentIndex) - Math.abs(right.index - currentIndex);
+      })
+      .map(function (entry) { return entry.story; });
+    const fallback = stories.filter(function (story) { return story.slug !== slug; });
+    const selected = Array.from(new Map(sameCategory.concat(fallback).map(function (story) {
+      return [story.slug, story];
+    })).values()).slice(0, 2);
+    if (selected.length < 2) return false;
+
+    const container = existing || document.createElement('div');
+    container.className = 'related';
+    container.innerHTML = '<h2>関連する怖い話</h2>';
+    selected.forEach(function (story) {
+      const link = document.createElement('a');
+      link.href = storyHref(story);
+      link.textContent = story.title;
+      container.appendChild(link);
+    });
+    if (!existing) infoBox.appendChild(container);
+    state.relatedReady = true;
+    return true;
+  }
+
+  function installRelatedStories(attempt) {
+    const catalog = Array.isArray(window.STORIES) ? window.STORIES : [];
+    if (catalog.length >= 100 || attempt >= 30) {
+      buildRelatedStories(catalog);
+      return;
+    }
+    setTimeout(function () { installRelatedStories(attempt + 1); }, 200);
+  }
+
   installShareControl();
+  installRelatedStories(0);
   startAnalytics();
 })();
