@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23212",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "安城市",
+  "officialUrl": "https://www.city.anjo.aichi.jp/",
+  "status": "verified",
+  "summary": "安城市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、入院・通院の保険診療自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳になる年度の年度末まで",
+        "coverage": "医療保険が適用される医療費の自己負担額",
+        "expanded": "令和6年4月から高校生世代の助成範囲を拡大",
+        "payment": "県内受診は受給者証による現物給付、県外受診等は償還払い",
+        "excluded": "入院時食事代、差額ベッド代等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/fukushikaigo/iryo/kodomo.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学3年生までの病気中または回復期の児童を一時的に預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "condition": "市内在住で、保護者の就労等により家庭での保育が困難な病児・病後児",
+        "facility": "病児・病後児保育室ぐんぐん。市内民間施設も利用可能",
+        "hours": "月曜から土曜の午前8時15分から午後6時まで",
+        "fee": "1人1日2,000円。課税状況により減免あり",
+        "limit": "連続7日間まで。年度ごとの事前登録と医療機関の事業連絡書が必要"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/kosodate/hoikuen/byojibyohojihoiku.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等の無償化に加え、同一世帯の第2子以降の3歳未満児の保育料を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "agesThreeToFive": "幼児教育・保育無償化により3～5歳児の利用料は原則無料",
+        "underThree": "住民税非課税世帯の0～2歳児は無償化対象。その他は市町村民税所得割額等で算定",
+        "multiChild": "第1子の年齢、入園状況、世帯所得にかかわらず、同一世帯の第2子以降は保育料無料",
+        "meal": "3歳児以上は給食費を負担。令和8年度の公立等は1食250円",
+        "otherCosts": "延長保育料等は別途必要"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/kosodate/hoikuen/hoikuryogenmen.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市立小中学校に在籍する児童生徒の学校給食費を無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "安城市立小学校・中学校に在籍する児童生徒",
+        "fee": "無料。保護者による手続きは不要",
+        "allergy": "食物アレルギー等で恒常的に欠食する場合は給食費相当額を補助",
+        "unitPrice": "補助額算定単価は小学生330円、中学生380円",
+        "outsideSchool": "市外・私立等の対象者にも要件に応じ給食費相当の給付制度あり"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/manabu/gakko/kyusyoku/mushoka202309.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ、宿泊・日帰り・短時間・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "安城市に住民登録がある産後1年未満の母親と乳児",
+        "types": "宿泊、日帰り、短時間、訪問プラン",
+        "fee": "宿泊1日2,500円、日帰り1日1,500円、短時間500円、訪問1,000円",
+        "limit": "宿泊・日帰りは合計7日、短時間・訪問は各2回まで",
+        "reduction": "市民税非課税世帯・生活保護世帯は事前申請により利用料免除"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/kenko/sodan/sangocare.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "保育所、幼稚園、認定こども園、地域型保育、企業主導型保育等に通っていない児童",
+        "facilities": "東部こども園、高棚こども園、三ツ川こども園",
+        "limit": "児童1人につき月10時間まで。1回2.5時間、月4枠",
+        "fee": "1回750円（1時間当たり300円）。第2子以降等は減免対象となる場合あり",
+        "hours": "平日の午前9時～11時30分または午後1時～3時30分"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/kosodate/hoikuen/daretsu.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "既存住宅のZEH水準への省エネ改修費等を補助するが、令和8年度受付は予算到達により終了している。",
+      "details": {
+        "program": "住宅省エネ改修促進補助金",
+        "target": "既存住宅の所有者等が行うZEH水準の全体改修または一定の部分改修",
+        "rate": "補助対象経費の5分の4",
+        "maximum": "1戸当たり上限70万円",
+        "status": "令和8年7月1日に予算額へ到達し受付終了",
+        "condition": "省エネ性能向上工事で、補助対象建材・設備や第三者評価等の要件を満たすこと"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/bika/zyuutakusyouene.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは予約制の戸別有料収集または処理施設への自己搬入で処分する。",
+      "details": {
+        "collection": "毎週火曜日・金曜日に予約制で戸別収集",
+        "application": "インターネットまたは電話で申込み、収集日の午前8時までに門口へ排出",
+        "fee": "1個につき800円の粗大ごみ処理券を購入",
+        "directCarry": "リサイクルプラザまたは環境クリーンセンターへ直接搬入可能",
+        "sizeLimit": "1辺2メートルを超えるものは2メートル以下にする必要がある"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/gomi/gomidashi/sodaigomi.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "水害・地震ハザードマップ、防災ガイドブック、避難情報を公開する。",
+      "details": {
+        "maps": "水害ハザードマップ、地震ハザードマップ",
+        "flood": "想定最大規模降雨による洪水、内水、高潮の浸水範囲・浸水深を掲載",
+        "earthquake": "震度分布、液状化危険度、建物・人的被害想定等を掲載",
+        "evacuation": "避難所、避難行動、災害情報の入手先を案内",
+        "app": "公式アプリ『安城防災ナビ』で緊急情報やマップを確認可能"
+      },
+      "source": {"url": "https://www.city.anjo.aichi.jp/kurasu/bosaibohan/index.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
