@@ -4,39 +4,19 @@
   "displayName": "北日本調査班A",
   "parentTeam": "北日本調査班",
   "integrationBranch": "region/north",
-  "prefectureCodes": [
-    "02",
-    "03",
-    "07"
-  ],
-  "updatedAt": "2026-07-22T22:45:00+09:00",
+  "prefectureCodes": ["02", "03", "07"],
+  "updatedAt": "2026-07-22T23:11:00+09:00",
   "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 107,
-  "currentMunicipality": {
-    "code": "02402",
-    "name": "七戸町",
-    "stage": "researching"
-  },
+  "currentMunicipality": {"code": "02402", "name": "七戸町", "stage": "pr_open"},
   "workingBranch": "data/02402-shichinohe",
-  "pullRequestNumber": null,
-  "ciStatus": "not_started",
+  "pullRequestNumber": 873,
+  "ciStatus": "in_progress",
   "completedSinceSplit": [
-    {
-      "code": "02387",
-      "name": "中泊町",
-      "pullRequestNumber": 844,
-      "ciStatus": "success",
-      "mergedAt": "2026-07-22T22:18:00+09:00"
-    },
-    {
-      "code": "02401",
-      "name": "野辺地町",
-      "pullRequestNumber": 856,
-      "ciStatus": "success",
-      "mergedAt": "2026-07-22T22:42:00+09:00"
-    }
+    {"code": "02387", "name": "中泊町", "pullRequestNumber": 844, "ciStatus": "success", "mergedAt": "2026-07-22T22:18:00+09:00"},
+    {"code": "02401", "name": "野辺地町", "pullRequestNumber": 856, "ciStatus": "success", "mergedAt": "2026-07-22T22:42:00+09:00"}
   ],
   "blocked": [],
-  "nextAction": "七戸町（02402）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
+  "nextAction": "PR #873のCI・競合・差分を確認し、成功後にregion/northへ統合する。"
 }
