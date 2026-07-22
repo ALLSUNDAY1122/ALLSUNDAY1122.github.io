@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { expectedPages } from './generate-sitemap.mjs';
 
 const repoRoot = process.cwd();
 const sitemapPath = path.join(repoRoot, 'yorugatari', 'sitemap.xml');
@@ -12,7 +13,9 @@ const endpoint = 'https://api.indexnow.org/indexnow';
 function extractUrls() {
   const xml = fs.readFileSync(sitemapPath, 'utf8');
   const urls = Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g), (match) => match[1]);
-  if (urls.length !== 106) throw new Error(`Expected 106 sitemap URLs, found ${urls.length}`);
+  const expectedCount = expectedPages().length;
+  if (urls.length !== expectedCount) throw new Error(`Expected ${expectedCount} sitemap URLs, found ${urls.length}`);
+  if (new Set(urls).size !== urls.length) throw new Error('Duplicate URLs found in sitemap');
   for (const url of urls) {
     const parsed = new URL(url);
     if (parsed.hostname !== host) throw new Error(`URL does not belong to ${host}: ${url}`);
@@ -25,7 +28,8 @@ async function waitForKey() {
   for (let attempt = 1; attempt <= 24; attempt += 1) {
     try {
       const response = await fetch(`${keyLocation}?indexnow=${Date.now()}-${attempt}`, {
-        headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-IndexNow/1.0' }
+        headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-IndexNow/1.1' },
+        signal: AbortSignal.timeout(30000)
       });
       const text = (await response.text()).trim();
       detail = { attempt, status: response.status, matches: text === key };
@@ -33,7 +37,7 @@ async function waitForKey() {
     } catch (error) {
       detail = { attempt, error: error.message };
     }
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    if (attempt < 24) await new Promise((resolve) => setTimeout(resolve, 10000));
   }
   throw new Error(`Published IndexNow key was not verified: ${JSON.stringify(detail)}`);
 }
@@ -46,9 +50,10 @@ async function submit(urlList) {
         method: 'POST',
         headers: {
           'content-type': 'application/json; charset=utf-8',
-          'user-agent': 'Yorugatari-IndexNow/1.0'
+          'user-agent': 'Yorugatari-IndexNow/1.1'
         },
-        body: JSON.stringify({ host, key, keyLocation, urlList })
+        body: JSON.stringify({ host, key, keyLocation, urlList }),
+        signal: AbortSignal.timeout(30000)
       });
       const body = await response.text();
       last = { attempt, status: response.status, body: body.slice(0, 500) };
@@ -62,9 +67,10 @@ async function submit(urlList) {
   throw new Error(`IndexNow submission failed: ${JSON.stringify(last)}`);
 }
 
-const urls = extractUrls();
+let urls = [];
 let report;
 try {
+  urls = extractUrls();
   const keyCheck = await waitForKey();
   const submission = await submit(urls);
   report = {
