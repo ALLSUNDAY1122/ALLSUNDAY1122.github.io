@@ -1,0 +1,207 @@
+{
+  "auditedAt": "2026-07-22T21:07:38.930Z",
+  "success": false,
+  "results": [
+    {
+      "name": "local: six static pages and 100 stories are covered",
+      "ok": true,
+      "detail": {
+        "static": 6,
+        "stories": 100
+      }
+    },
+    {
+      "name": "local: engagement and social metadata are complete",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "local: privacy policy explains page-view processing",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "local: 404 page is noindex and has recovery links",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "published: top loads engagement module",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "status": 200,
+        "attempt": 1,
+        "script": true,
+        "engagement": true,
+        "path": "/yorugatari",
+        "panel": true
+      }
+    },
+    {
+      "name": "published: top has complete social preview metadata",
+      "ok": true,
+      "detail": {
+        "type": "website",
+        "url": "https://allsunday1122.github.io/yorugatari/",
+        "title": "夜語り｜無料で読めるオリジナル怖い話100選",
+        "description": "心霊・人怖・意味怖・ネット怪談など、無料で読める一話完結のオリジナル怖い話100作品。約5分、眠る前にひとつだけ。",
+        "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+        "imageAlt": "月明かりと提灯が照らす夜の町並み",
+        "twitterCard": "summary_large_image",
+        "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+        "twitterImageAlt": "月明かりと提灯が照らす夜の町並み"
+      }
+    },
+    {
+      "name": "published: story loads view count and share controls",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "status": 200,
+        "attempt": 1,
+        "script": true,
+        "engagement": true,
+        "share": true,
+        "viewText": "0"
+      }
+    },
+    {
+      "name": "published: Page Views API count is displayed",
+      "ok": true,
+      "detail": {
+        "views": 0,
+        "text": "0",
+        "error": null
+      }
+    },
+    {
+      "name": "published: native sharing receives canonical story data",
+      "ok": true,
+      "detail": {
+        "payload": {
+          "title": "合鍵は返却済み｜夜語り",
+          "text": "約5分で読めるオリジナル怖い話「合鍵は返却済み」",
+          "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html"
+        },
+        "status": "共有画面を開きました。"
+      }
+    },
+    {
+      "name": "published: story has previous, archive, next, and related-story paths",
+      "ok": false,
+      "detail": {
+        "pagination": [
+          "← 前の話「閉宴後も二名」",
+          "全100話一覧",
+          "次の話「移行元の端末です」→"
+        ],
+        "related": [],
+        "archiveLinks": 5
+      }
+    },
+    {
+      "name": "published: story has complete social preview metadata",
+      "ok": true,
+      "detail": {
+        "type": "article",
+        "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
+        "title": "合鍵は返却済み｜夜語り",
+        "description": "無料防犯診断で複製された鍵が研修生の実地侵入に使われる約5分の人怖。",
+        "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+        "imageAlt": "月明かりと提灯が照らす夜の町並み",
+        "twitterCard": "summary_large_image",
+        "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+        "twitterImageAlt": "月明かりと提灯が照らす夜の町並み"
+      }
+    },
+    {
+      "name": "published: policy page has complete social preview metadata",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "status": 200,
+        "attempt": 1,
+        "meta": {
+          "type": "website",
+          "url": "https://allsunday1122.github.io/yorugatari/about.html",
+          "title": "夜語りについて・編集方針｜夜語り",
+          "description": "オリジナル怖い話サイト「夜語り」の運営目的、編集方針、AI利用方針、権利保護の考え方をご案内します。",
+          "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+          "imageAlt": "月明かりと提灯が照らす夜の町並み",
+          "twitterCard": "summary_large_image",
+          "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+          "twitterImageAlt": "月明かりと提灯が照らす夜の町並み"
+        }
+      }
+    },
+    {
+      "name": "published: custom 404 returns HTTP 404, noindex, and recovery paths",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "status": 404,
+        "attempt": 1,
+        "title": "ページが見つかりません｜夜語り",
+        "noindex": "noindex,follow",
+        "pageType": "404",
+        "archive": true,
+        "top": true,
+        "trackingPath": "/yorugatari/404"
+      }
+    },
+    {
+      "name": "published: engagement audit has no browser JavaScript errors",
+      "ok": false,
+      "detail": [
+        "console: Failed to load resource: the server responded with a status of 404 ()"
+      ]
+    },
+    {
+      "name": "published: social preview image is a valid PNG with declared dimensions",
+      "ok": false,
+      "detail": {
+        "status": 200,
+        "contentType": "image/png",
+        "bytes": 1874549,
+        "width": 2172,
+        "height": 724,
+        "attempt": 4
+      }
+    }
+  ],
+  "failures": [
+    {
+      "name": "published: story has previous, archive, next, and related-story paths",
+      "ok": false,
+      "detail": {
+        "pagination": [
+          "← 前の話「閉宴後も二名」",
+          "全100話一覧",
+          "次の話「移行元の端末です」→"
+        ],
+        "related": [],
+        "archiveLinks": 5
+      }
+    },
+    {
+      "name": "published: engagement audit has no browser JavaScript errors",
+      "ok": false,
+      "detail": [
+        "console: Failed to load resource: the server responded with a status of 404 ()"
+      ]
+    },
+    {
+      "name": "published: social preview image is a valid PNG with declared dimensions",
+      "ok": false,
+      "detail": {
+        "status": 200,
+        "contentType": "image/png",
+        "bytes": 1874549,
+        "width": 2172,
+        "height": 724,
+        "attempt": 4
+      }
+    }
+  ]
+}
