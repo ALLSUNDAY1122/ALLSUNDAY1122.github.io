@@ -6,6 +6,14 @@ on:
     branches:
       - main
     paths:
+      - yorugatari/index.html
+      - yorugatari/archive.html
+      - yorugatari/stories/**
+      - yorugatari/assets/app.js
+      - yorugatari/assets/archive.js
+      - yorugatari/assets/story.js
+      - yorugatari/assets/analytics.js
+      - yorugatari/assets/engagement.js
       - yorugatari/tools/normalize-story-pages.mjs
       - yorugatari/tools/ui-audit.cjs
       - .github/workflows/normalize-yorugatari-stories.yml
@@ -77,11 +85,11 @@ jobs:
           node <<'NODE'
           const base = 'https://allsunday1122.github.io/yorugatari';
           const targets = [
-            ['top', `${base}/`, ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-006']],
-            ['archive', `${base}/archive.html`, ['全100話アーカイブ', '"numberOfItems":100', 'assets/archive.js?v=20260723-004']],
-            ['story-001', `${base}/stories/last-elevator.html`, ['YGT-001', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
-            ['story-032', `${base}/stories/spare-key-returned.html`, ['YGT-032', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
-            ['story-100', `${base}/stories/hired-with-your-experience.html`, ['YGT-100', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
+            ['top', `${base}/`, ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-006', 'assets/analytics.js?v=20260723-001']],
+            ['archive', `${base}/archive.html`, ['全100話アーカイブ', '"numberOfItems":100', 'assets/archive.js?v=20260723-004', 'assets/analytics.js?v=20260723-001']],
+            ['story-001', `${base}/stories/last-elevator.html`, ['YGT-001', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006', '../assets/engagement.js?v=20260723-001']],
+            ['story-032', `${base}/stories/spare-key-returned.html`, ['YGT-032', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006', '../assets/engagement.js?v=20260723-001']],
+            ['story-100', `${base}/stories/hired-with-your-experience.html`, ['YGT-100', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006', '../assets/engagement.js?v=20260723-001']],
             ['story-js', `${base}/assets/story.js?v=20260723-006`, ['function normalizeBasicPage()', 'const completeCatalog = loadedCount === catalogSources.length;', 'buildStoryPagination(stories, currentIndex, completeCatalog);']]
           ];
           const results = [];
@@ -91,7 +99,7 @@ jobs:
               const separator = url.includes('?') ? '&' : '?';
               const response = await fetch(`${url}${separator}verify=${Date.now()}`, {
                 redirect: 'follow',
-                headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-Live-Check/1.1' }
+                headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-Live-Check/1.2' }
               });
               const text = await response.text();
               const missingTokens = tokens.filter((token) => !text.includes(token));
