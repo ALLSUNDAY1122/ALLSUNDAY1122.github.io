@@ -1,7 +1,18 @@
 {
-  "auditedAt": "2026-07-22T19:41:34.298Z",
-  "success": false,
+  "auditedAt": "2026-07-22T19:45:18.714Z",
+  "success": true,
   "results": [
+    {
+      "name": "top: latest accessibility release is published",
+      "ok": true,
+      "detail": {
+        "attempt": 1,
+        "skipLink": true,
+        "mainTarget": true,
+        "progressbar": true,
+        "appVersion": true
+      }
+    },
     {
       "name": "top: no critical or serious axe violations",
       "ok": true,
@@ -44,13 +55,22 @@
     },
     {
       "name": "top: first Tab exposes a visible skip link",
-      "ok": false,
+      "ok": true,
       "detail": {
         "tag": "A",
-        "className": "logo",
-        "href": "index.html",
-        "text": "夜語り",
+        "className": "skip-link",
+        "href": "#main-content",
+        "text": "本文へ移動",
         "visible": true
+      }
+    },
+    {
+      "name": "top: skip link moves focus to main content",
+      "ok": true,
+      "detail": {
+        "hash": "#main-content",
+        "activeId": "main-content",
+        "mainId": "main-content"
       }
     },
     {
@@ -233,17 +253,5 @@
       "detail": []
     }
   ],
-  "failures": [
-    {
-      "name": "top: first Tab exposes a visible skip link",
-      "ok": false,
-      "detail": {
-        "tag": "A",
-        "className": "logo",
-        "href": "index.html",
-        "text": "夜語り",
-        "visible": true
-      }
-    }
-  ]
+  "failures": []
 }
