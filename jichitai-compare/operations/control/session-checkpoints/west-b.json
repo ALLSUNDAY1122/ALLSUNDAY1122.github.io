@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-23T04:59:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T05:19:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 185,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 1007,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "35207",
+    "municipalityName": "下松市",
+    "prefectureCode": "35"
+  },
+  "workingBranch": "data/35207-kudamatsu-westb",
+  "pullRequestNumber": 1011,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -48,5 +52,5 @@
     {"code":"35206","name":"防府市","pullRequestNumber":1007,"ciRunNumber":2514}
   ],
   "blocked": [],
-  "nextAction": "下松市（35207）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "PR #1011のCI成功と競合なしを確認し、region/westへ統合する。"
 }
