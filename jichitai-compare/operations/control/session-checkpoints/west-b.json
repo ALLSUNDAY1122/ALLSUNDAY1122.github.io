@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-23T01:16:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T01:14:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 202,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 925,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "34213",
+    "municipalityName": "廿日市市",
+    "prefectureCode": "34"
+  },
+  "workingBranch": "data/34213-hatsukaichi-westb",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -31,5 +35,5 @@
     {"code":"34212","name":"東広島市","pullRequestNumber":925,"ciRunNumber":2171}
   ],
   "blocked": [],
-  "nextAction": "廿日市市（34213）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "廿日市市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
 }
