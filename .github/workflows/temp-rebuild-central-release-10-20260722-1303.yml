@@ -1,0 +1,65 @@
+name: Temporary Rebuild Central Release 10 20260722 1303
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-rebuild-central-release-10-20260722-1303.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/central-release-10-20260722-1303
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Rebuild fixed snapshot on latest main
+        run: |
+          set -euxo pipefail
+          git fetch origin main region/central coord/central-release-10-20260722-1303
+          source_sha=$(git rev-parse origin/region/central)
+          git reset --hard origin/main
+          paths=(
+            jichitai-compare/data/municipalities/23/23225.json
+            jichitai-compare/operations/tasks/23225.json
+            jichitai-compare/data/municipalities/23/23226.json
+            jichitai-compare/operations/tasks/23226.json
+            jichitai-compare/data/municipalities/23/23227.json
+            jichitai-compare/operations/tasks/23227.json
+            jichitai-compare/data/municipalities/23/23228.json
+            jichitai-compare/operations/tasks/23228.json
+            jichitai-compare/data/municipalities/23/23229.json
+            jichitai-compare/operations/tasks/23229.json
+            jichitai-compare/data/municipalities/23/23230.json
+            jichitai-compare/operations/tasks/23230.json
+            jichitai-compare/data/municipalities/23/23231.json
+            jichitai-compare/operations/tasks/23231.json
+            jichitai-compare/data/municipalities/23/23232.json
+            jichitai-compare/operations/tasks/23232.json
+            jichitai-compare/data/municipalities/23/23233.json
+            jichitai-compare/operations/tasks/23233.json
+            jichitai-compare/data/municipalities/23/23234.json
+            jichitai-compare/operations/tasks/23234.json
+          )
+          git checkout "$source_sha" -- "${paths[@]}"
+          git add "${paths[@]}"
+          mapfile -t actual < <(git diff --cached --name-only | sort)
+          mapfile -t expected < <(printf '%s\n' "${paths[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${actual[@]}")
+          test "${#actual[@]}" -eq 20
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for code in ('23225','23226','23227','23228','23229','23230','23231','23232','23233','23234'):
+              t=json.loads(Path(f'jichitai-compare/operations/tasks/{code}.json').read_text(encoding='utf-8'))
+              assert t['status']=='merged',(code,t['status'])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "全国統合準備: 中日本追加10自治体の固定スナップショット source ${source_sha}"
+          git push --force-with-lease origin HEAD:coord/central-release-10-20260722-1303
