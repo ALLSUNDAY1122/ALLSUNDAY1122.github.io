@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-22T23:02:15.936Z",
+  "auditedAt": "2026-07-22T23:21:38.704Z",
   "success": true,
   "results": [
     {
@@ -175,7 +175,9 @@
       "ok": true,
       "detail": {
         "ready": true,
-        "attempt": 1
+        "attempt": 1,
+        "canonical": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
+        "campaign": "onsite-share"
       }
     },
     {
@@ -199,6 +201,16 @@
     },
     {
       "name": "story explanation button: keyboard focus indicator is visible",
+      "ok": true,
+      "detail": {
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(242, 198, 109)",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "story share button: keyboard focus indicator is visible",
       "ok": true,
       "detail": {
         "outlineStyle": "solid",
@@ -246,6 +258,28 @@
       "name": "story: has exactly one main landmark",
       "ok": true,
       "detail": 1
+    },
+    {
+      "name": "story: tracked share control has an accessible name and live status",
+      "ok": true,
+      "detail": {
+        "label": "共有する",
+        "statusLive": "polite",
+        "canonical": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
+        "campaign": "onsite-share",
+        "shareUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_source=web_share&utm_medium=social&utm_campaign=onsite_share"
+      }
+    },
+    {
+      "name": "story: tracked URL preserves canonical metadata",
+      "ok": true,
+      "detail": {
+        "label": "共有する",
+        "statusLive": "polite",
+        "canonical": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
+        "campaign": "onsite-share",
+        "shareUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_source=web_share&utm_medium=social&utm_campaign=onsite_share"
+      }
     },
     {
       "name": "story: explanation opens by keyboard and updates aria-expanded",
