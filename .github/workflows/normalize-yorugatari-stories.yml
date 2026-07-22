@@ -15,6 +15,7 @@ on:
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
       - yorugatari/tools/normalize-story-pages.mjs
+      - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/ui-audit.cjs
       - .github/workflows/normalize-yorugatari-stories.yml
 
@@ -65,6 +66,7 @@ jobs:
           node --check yorugatari/assets/story.js
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/tools/normalize-story-pages.mjs
+          node --check yorugatari/tools/live-release-audit.mjs
 
       - name: Commit normalized pages
         shell: bash
@@ -93,55 +95,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
       - name: Verify published pages
-        shell: bash
-        run: |
-          node <<'NODE'
-          const base = 'https://allsunday1122.github.io/yorugatari';
-          const targets = [
-            { name: 'top', url: `${base}/`, required: ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-007', 'assets/analytics.js?v=20260723-002'], forbidden: [] },
-            { name: 'archive', url: `${base}/archive.html`, required: ['全100話アーカイブ', '"numberOfItems":100', 'assets/archive.js?v=20260723-004', 'assets/analytics.js?v=20260723-002'], forbidden: [] },
-            { name: 'story-001', url: `${base}/stories/last-elevator.html`, required: ['YGT-001', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
-            { name: 'story-032', url: `${base}/stories/spare-key-returned.html`, required: ['YGT-032', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
-            { name: 'story-100', url: `${base}/stories/hired-with-your-experience.html`, required: ['YGT-100', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
-            { name: 'story-js', url: `${base}/assets/story.js?v=20260723-007`, required: ['function normalizeBasicPage()', 'function ensureNavigationFallback()', "ensurePropertyMeta('og:image:width', '2172');"], forbidden: ['catalogSources', 'loadCatalogScript', 'buildStoryPagination'] },
-            { name: 'engagement-js', url: `${base}/assets/engagement.js?v=20260723-003`, required: ['relatedReady: document.querySelectorAll', 'function scheduleAnalytics()'], forbidden: ['installRelatedStories', 'buildRelatedStories'] }
-          ];
-          const results = [];
+        run: node yorugatari/tools/live-release-audit.mjs
 
-          for (const target of targets) {
-            try {
-              const separator = target.url.includes('?') ? '&' : '?';
-              const response = await fetch(`${target.url}${separator}verify=${Date.now()}`, {
-                redirect: 'follow',
-                headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-Live-Check/1.5' }
-              });
-              const text = await response.text();
-              const missingTokens = target.required.filter((token) => !text.includes(token));
-              const forbiddenTokens = target.forbidden.filter((token) => text.includes(token));
-              results.push({
-                name: target.name,
-                status: response.status,
-                finalUrl: response.url,
-                bytes: Buffer.byteLength(text),
-                missingTokens,
-                forbiddenTokens,
-                ok: response.status === 200 && missingTokens.length === 0 && forbiddenTokens.length === 0
-              });
-            } catch (error) {
-              results.push({ name: target.name, status: null, bytes: 0, missingTokens: target.required, forbiddenTokens: [], error: String(error), ok: false });
-            }
-          }
-
-          const report = {
-            verifiedAt: new Date().toISOString(),
-            baseUrl: base,
-            success: results.every((result) => result.ok),
-            results
-          };
-          console.log(`YORUGATARI_LIVE_REPORT=${JSON.stringify(report)}`);
-          if (!report.success) process.exit(1);
-          NODE
+      - name: Upload live verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-live-report
+          path: yorugatari-live-report.json
+          if-no-files-found: error
+          retention-days: 14
 
   ui-audit:
     needs: verify-live
