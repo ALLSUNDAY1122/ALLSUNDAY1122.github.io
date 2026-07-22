@@ -9,18 +9,18 @@
     "03",
     "07"
   ],
-  "updatedAt": "2026-07-22T22:40:00+09:00",
+  "updatedAt": "2026-07-22T22:45:00+09:00",
   "status": "researching",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 108,
+  "remainingUninvestigatedCount": 107,
   "currentMunicipality": {
-    "code": "02401",
-    "name": "野辺地町",
-    "stage": "pr_open"
+    "code": "02402",
+    "name": "七戸町",
+    "stage": "researching"
   },
-  "workingBranch": "data/02401-noheji",
-  "pullRequestNumber": 856,
-  "ciStatus": "queued",
+  "workingBranch": "data/02402-shichinohe",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {
       "code": "02387",
@@ -28,8 +28,15 @@
       "pullRequestNumber": 844,
       "ciStatus": "success",
       "mergedAt": "2026-07-22T22:18:00+09:00"
+    },
+    {
+      "code": "02401",
+      "name": "野辺地町",
+      "pullRequestNumber": 856,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-22T22:42:00+09:00"
     }
   ],
   "blocked": [],
-  "nextAction": "PR #856の差分・CI・競合を確認し、成功時はregion/northへ地方統合する。"
+  "nextAction": "七戸町（02402）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
 }
