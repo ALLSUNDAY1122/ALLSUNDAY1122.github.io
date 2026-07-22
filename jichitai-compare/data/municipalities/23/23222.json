@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23222",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "東海市",
+  "officialUrl": "https://www.city.tokai.aichi.jp/",
+  "status": "verified",
+  "summary": "東海市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達年度末まで、保険診療の自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日の属する年度の3月31日まで",
+        "coverage": "入院・通院の保険診療自己負担額",
+        "incomeLimit": "所得制限なし",
+        "schoolStatus": "高校等に在学していない高校生世代も対象",
+        "excluded": "保険適用外費用、入院時食事代等は対象外"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/health/1002539/1002544.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学3年生までの児童を、公立西知多総合病院併設施設で病児・病後児保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "target": "保護者が東海市在住・在勤・在学で、家庭保育ができず医師が利用可能と認めた児童",
+        "facility": "公立西知多総合病院院内保育所 さくらんぼハウス",
+        "hours": "月曜日から土曜日の8時から19時。祝日・年末年始を除く",
+        "limit": "連続3日以内、定員1日最大3名",
+        "fee": "1日3,000円。昼食・おやつ500円は別途",
+        "temperature": "利用当日の体温が38.5度を超えていないこと"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/kosodate/1002180/1010918.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等の国制度に加え、認可保育施設の第2子以降の0～2歳児保育料を市独自に無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "zeroToTwo": "住民税非課税世帯は第1子から無償、課税世帯も第2子以降は無償",
+        "threeToFive": "保育料は第1子から無償",
+        "mealSupport": "3～5歳児の副食費は第2子以降無償。主食費は有償",
+        "siblingDefinition": "同一世帯で年齢制限なく子どもを2人以上養育する場合の第2子以降",
+        "excluded": "早朝・延長保育等は有償"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/kosodate/1002180/1010883/1010990.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校給食費の保護者負担を0円とし、中学校は1食290円へ軽減する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "1食330円を国・県・市費で負担し、保護者負担0円",
+        "juniorHigh": "1食380円のうち市費90円、保護者負担290円",
+        "effectiveDate": "令和8年4月から",
+        "assistance": "経済的に就学困難な認定世帯は給食費等の就学援助対象"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/kosodate/1002337/1002343/1010509.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の母子へ、宿泊・日帰り・訪問型の産後ケアを合計7回まで提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "出産後1年以内の母親と自宅で養育可能な乳児",
+        "types": "宿泊型、日帰り型、訪問型",
+        "limit": "今回の妊娠・出産につき3類型合計7回まで。宿泊1泊2日は2回分",
+        "subsidy": "1日当たり12,500円を上限に市が負担",
+        "multipleBirth": "多胎児の2人目以降は1人1日4,000円を上限に追加負担",
+        "application": "利用予定の2週間前までを目安に健康推進課へ申込み"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/kosodate/1002070/1002078/1002081.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に通っていない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "保育園、幼稚園、認定こども園、認可外保育施設等に通っていない児童",
+        "limit": "児童1人当たり月10時間",
+        "fee": "1時間当たり300円",
+        "facilities": "大堀保育園、子育て総合支援センター、あすなろ学園等。施設ごとに受入月齢等が異なる"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/kosodate/1002180/1010888/1010891.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "義務教育終了前の子がいる世帯が三世代同居・近居を始める住宅取得等に、同居80万円・近居30万円を補助する。",
+      "details": {
+        "program": "三世代同居等住宅補助制度",
+        "target": "義務教育終了前の子を有する子世帯と父母・祖父母の親世帯が、市内で同居または近居を開始する場合",
+        "sameResidence": "三世代同居は80万円",
+        "nearResidence": "三世代近居は30万円",
+        "housing": "ZEH基準等を満たす住宅の新築・増築・購入、または中古住宅購入と省エネ改修",
+        "application": "対象住宅・改修内容により契約前または入居後に申請。予算の範囲内で先着順"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/kurashi/1001815/1001819/1008077.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは専用シールを貼り、市の分別・収集ルールに従って排出する。追加購入時は1枚550円。",
+      "details": {
+        "fee": "粗大ごみ用シール1枚550円",
+        "annualDistribution": "毎年の指定袋等一斉配布で1世帯3枚を無料配布",
+        "method": "品目に応じて粗大ごみ用シールを貼付し、家庭用ガイドブックと収集ルールに従って排出",
+        "note": "無料配布枚数を超える場合は指定取扱店で購入"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/kurashi/1001699/1001700/1001706/1001719.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "風水害・地震の地区別ハザードマップ、防災ハンドブック、津波・液状化・ため池情報を公開する。",
+      "details": {
+        "maps": "風水害編北・南地区、地震編北・南地区のハザードマップ",
+        "hazards": "洪水、高潮、土砂災害、地震、津波、液状化、ため池等",
+        "handbook": "避難所、避難方法、備蓄、マイ・タイムライン等を掲載した防災ハンドブックを公開",
+        "languages": "ハザードマップと防災ハンドブックを多言語で閲覧可能"
+      },
+      "source": {"url": "https://www.city.tokai.aichi.jp/iza/bosai/1003126/1003133.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
