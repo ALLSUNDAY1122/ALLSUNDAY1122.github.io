@@ -16,6 +16,10 @@ on:
       - yorugatari/tools/accessibility-audit.cjs
       - .github/workflows/yorugatari-accessibility.yml
 
+concurrency:
+  group: yorugatari-accessibility-audit
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -49,14 +53,17 @@ jobs:
         if: always()
         shell: bash
         run: |
-          cp yorugatari-accessibility-report.json yorugatari/tools/accessibility-audit-latest.json
+          test -f yorugatari-accessibility-report.json
+          cp yorugatari-accessibility-report.json /tmp/yorugatari-accessibility-report.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/yorugatari-accessibility-report.json yorugatari/tools/accessibility-audit-latest.json
           git add yorugatari/tools/accessibility-audit-latest.json
           if ! git diff --cached --quiet; then
             git commit -m "Record Yorugatari accessibility audit [skip ci]"
-            git pull --rebase origin main
-            git push
+            git push origin HEAD:main
           fi
 
       - name: Upload accessibility report
@@ -71,4 +78,5 @@ jobs:
       - name: Enforce accessibility result
         if: always()
         shell: bash
-        run: test "${{ steps.audit.outcome }}" = "success"
+        run: |
+          node -e "const report=require('./yorugatari-accessibility-report.json'); if(!report.success){console.error(JSON.stringify(report.failures,null,2)); process.exit(1)}"
