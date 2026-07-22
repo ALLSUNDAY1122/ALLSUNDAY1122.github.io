@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T01:43:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T02:11:00+09:00",
+  "status": "ci_pending",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 99,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": null,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "code": "04211",
+    "name": "岩沼市",
+    "stage": "pr_open"
+  },
+  "workingBranch": "data/04211-iwanuma",
+  "pullRequestNumber": 953,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -29,5 +33,5 @@
     "04209"
   ],
   "blocked": [],
-  "nextAction": "岩沼市（04211）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "PR #953のCI・競合・変更ファイルを確認し、成功後region/northへ地方統合する。"
 }
