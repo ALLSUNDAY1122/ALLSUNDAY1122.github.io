@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23302",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "東郷町",
+  "officialUrl": "https://www.town.aichi-togo.lg.jp/",
+  "status": "verified",
+  "summary": "東郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "coverage": "病院等で受診した保険診療分の自己負担額",
+        "payment": "愛知県内は受給者証等の提示で窓口負担なし、県外受診等は償還払い",
+        "expandedTarget": "社会人、健康保険の被保険者、婚姻している18歳年度末までの人も対象",
+        "excluded": "差額ベッド代、食事代、文書料等は対象外"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/iryo_kenko_fukushi/iryo_kenko/fukushi_iryo/5617.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学3年生までの病児・病後児を委託施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "condition": "病気または回復期で集団保育が難しく、保護者の勤務等により家庭看護が困難なこと",
+        "ageCondition": "生後6か月から小学3年生まで",
+        "application": "年度ごとの利用登録と施設予約、医師の連絡票等が必要",
+        "documents": "健康保険資格情報、子ども医療費受給者証、母子健康手帳等を準備",
+        "fee": "施設・利用条件により異なるため利用施設へ確認"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/kosodate_kyoiku/ikuji_mishugakuji/support_mishugakuji/6466.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は、認定条件に応じて幼児教育・保育無償化の対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "3～5歳児クラスの幼稚園、保育所、認定こども園等の利用料は無償化対象",
+        "underThree": "住民税非課税世帯の0～2歳児は無償化対象",
+        "certification": "施設類型や保育の必要性に応じた認定が必要",
+        "otherUnderThree": "その他の3号認定保育料は市町村民税所得割額、年齢、保育必要量等に基づき算定",
+        "excludedCosts": "給食費、通園費、行事費等は別途必要な場合がある"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kodomohoikuka/gyomuannai/1/2/1723.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校の給食費は定額制で、小学校月3,400円、中学校月3,600円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "method": "給食センターによる共同調理場方式",
+        "elementary": "月額3,400円、参考230円／食",
+        "juniorHigh": "月額3,600円、参考260円／食",
+        "schools": "小学校6校、中学校3校、ハートフルとうごうへ提供",
+        "aid": "経済的に就学困難な認定世帯は学校給食費を含む就学援助対象"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kyushokucenter/gyomuannai/4/3015.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "宿泊型、通所型、訪問型",
+        "care": "母体の休養、授乳・乳房ケア、乳児の発育確認、育児相談等",
+        "application": "こども保健推進室への事前相談・利用登録・申請が必要",
+        "deadline": "原則として宿泊・通所は開庁日3日前、訪問は7日前までに申請",
+        "reduction": "住民税非課税世帯または生活保護世帯は自己負担金免除申請が可能"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kenkosuishinka/gyomuannai/17/1/12463.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "condition": "保育所、認定こども園、地域型保育、企業主導型保育施設等を利用していない児童",
+        "facility": "東郷町立南部保育園",
+        "hours": "平日の午前9時～11時、午後1時～3時",
+        "limit": "児童1人につき月10時間まで、翌月繰越不可",
+        "fee": "1時間300円",
+        "application": "総合支援システムによる認定申請、初回面談、予約が必要"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kodomohoikuka/gyomuannai/1/2/2/13398.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "ZEHや住宅用省エネルギー設備の設置へ、設備区分に応じた補助金を交付する。",
+      "details": {
+        "program": "住宅用地球温暖化対策設備設置費補助金",
+        "zeh": "ZEHは1セット30万円",
+        "package": "太陽光発電・蓄電システム・HEMSの一体的導入は1セット20万円",
+        "individual": "HEMS上限1万円、蓄電システム・家庭用燃料電池・V2Hは各上限5万円",
+        "condition": "設備設置前に交付申請し、対象区分によってカーボンニュートラルクラブへの入会申込みが必要",
+        "budget": "予算範囲内で受付し、予算額到達時に終了"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/hojokin_joseikin/sumai/13261.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは電話予約制で、1世帯1回5個まで、1個510円で戸別収集する。",
+      "details": {
+        "definition": "町指定袋に入らず、縦・横・高さ合計4メートル以内、1辺2メートル以内、重量80キログラム以内のもの",
+        "application": "平日9時～17時に受付センターへ電話予約",
+        "limit": "1世帯1回5個まで",
+        "fee": "1個につき粗大ごみ収集券510円",
+        "collection": "申込み翌週の木曜日、朝8時までに玄関先等へ排出",
+        "directCarry": "尾三衛生組合東郷美化センターへの直接持込みも可能"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kankyoka/gyomuannai/1/2/2/3603.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "避難場所、洪水・土砂災害・内水・地震等を確認できる防災マップを公開する。",
+      "details": {
+        "map": "東郷町防災マップ",
+        "coverage": "避難場所、日頃の備え、災害時の心得を掲載",
+        "hazards": "洪水・土砂災害・内水・地震等の危険情報を確認可能",
+        "waterLaw": "水防法に基づくハザードマップを案内",
+        "use": "自宅周辺の危険箇所と避難経路の事前確認に利用"
+      },
+      "source": {"url": "https://www.town.aichi-togo.lg.jp/kurashi_tetsuzuki/anzen_anshin/bosai/1/5787.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
