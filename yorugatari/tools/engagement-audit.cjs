@@ -6,7 +6,8 @@ const root = process.cwd();
 const siteRoot = path.join(root, 'yorugatari');
 const storyRoot = path.join(siteRoot, 'stories');
 const base = 'https://allsunday1122.github.io/yorugatari';
-const scriptVersion = '20260723-001';
+const analyticsVersion = '20260723-001';
+const engagementVersion = '20260723-001';
 const results = [];
 const failures = [];
 
@@ -29,11 +30,13 @@ function localAudit() {
   for (const filePath of files) {
     const html = fs.readFileSync(filePath, 'utf8');
     const relative = path.relative(siteRoot, filePath).replace(/\\/g, '/');
-    const expectedScript = relative.startsWith('stories/')
-      ? `../assets/engagement.js?v=${scriptVersion}`
-      : `assets/engagement.js?v=${scriptVersion}`;
+    const isStory = relative.startsWith('stories/');
+    const expectedScript = isStory
+      ? `../assets/engagement.js?v=${engagementVersion}`
+      : `assets/analytics.js?v=${analyticsVersion}`;
+    const unwantedScript = isStory ? 'analytics.js' : 'engagement.js';
     const required = [
-      ['engagement script', html.includes(expectedScript)],
+      ['correct runtime script', html.includes(expectedScript) && !html.includes(unwantedScript)],
       ['og:type', countMatches(html, /<meta\s+property=["']og:type["']/gi) === 1],
       ['og:url', countMatches(html, /<meta\s+property=["']og:url["']/gi) === 1],
       ['og:title', countMatches(html, /<meta\s+property=["']og:title["']/gi) === 1],
@@ -52,7 +55,7 @@ function localAudit() {
   }
 
   record('local: six static pages and 100 stories are covered', files.length === 106, { static: staticFiles.length, stories: storyFiles.length });
-  record('local: engagement and social metadata are complete', errors.length === 0, errors);
+  record('local: split analytics, engagement, and social metadata are complete', errors.length === 0, errors);
 
   const privacy = fs.readFileSync(path.join(siteRoot, 'privacy.html'), 'utf8');
   record(
@@ -66,7 +69,8 @@ function localAudit() {
     notFound.includes('name="robots" content="noindex,follow"') &&
       notFound.includes('data-page-type="404"') &&
       notFound.includes('href="/yorugatari/archive.html"') &&
-      notFound.includes(`/yorugatari/assets/engagement.js?v=${scriptVersion}`)
+      notFound.includes(`/yorugatari/assets/analytics.js?v=${analyticsVersion}`) &&
+      !notFound.includes('engagement.js')
   );
 }
 
@@ -142,7 +146,7 @@ async function browserAudit() {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Engagement-Audit/1.2',
+    userAgent: 'Yorugatari-Engagement-Audit/1.3',
     extraHTTPHeaders: {
       'cache-control': 'no-cache, no-store, max-age=0',
       pragma: 'no-cache'
@@ -163,35 +167,37 @@ async function browserAudit() {
 
   const top = await openWithRetry(page, `${base}/`, async (targetPage, response, attempt) => {
     const state = await targetPage.evaluate((version) => ({
-      script: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
-      engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
-      path: window.YORUGATARI_ENGAGEMENT?.path,
+      script: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
+      noStoryModule: !Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
+      analytics: Boolean(window.YORUGATARI_ANALYTICS),
+      path: window.YORUGATARI_ANALYTICS?.path,
       panel: Boolean(document.querySelector('#readerPanel')),
       imageWidth: document.querySelector('meta[property="og:image:width"]')?.content,
       imageHeight: document.querySelector('meta[property="og:image:height"]')?.content
-    }), scriptVersion);
+    }), analyticsVersion);
     return {
-      ready: response?.status() === 200 && state.script && state.engagement && state.panel && state.imageWidth === '2172' && state.imageHeight === '724',
+      ready: response?.status() === 200 && state.script && state.noStoryModule && state.analytics && state.panel && state.imageWidth === '2172' && state.imageHeight === '724',
       status: response?.status(),
       attempt,
       ...state
     };
   });
-  record('published: top loads engagement module', top.ready && top.path === '/yorugatari', top);
+  record('published: top loads only the lightweight analytics module', top.ready && top.path === '/yorugatari', top);
   const topSocial = await socialMetadata(page);
   record('published: top has complete social preview metadata', completeSocial(topSocial), topSocial);
 
   const story = await openWithRetry(page, `${base}/stories/spare-key-returned.html`, async (targetPage, response, attempt) => {
     const state = await targetPage.evaluate((version) => ({
       script: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
+      noStaticModule: !Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
       engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
       share: Boolean(document.querySelector('#shareButton')),
       viewText: document.querySelector('.view-count strong')?.textContent.trim() || '',
       imageWidth: document.querySelector('meta[property="og:image:width"]')?.content,
       imageHeight: document.querySelector('meta[property="og:image:height"]')?.content
-    }), scriptVersion);
+    }), engagementVersion);
     return {
-      ready: response?.status() === 200 && state.script && state.engagement && state.share && state.imageWidth === '2172' && state.imageHeight === '724',
+      ready: response?.status() === 200 && state.script && state.noStaticModule && state.engagement && state.share && state.imageWidth === '2172' && state.imageHeight === '724',
       status: response?.status(),
       attempt,
       ...state
@@ -243,9 +249,13 @@ async function browserAudit() {
 
   const policy = await openWithRetry(page, `${base}/about.html`, async (targetPage, response, attempt) => {
     const meta = await socialMetadata(targetPage);
-    return { ready: response?.status() === 200 && completeSocial(meta), status: response?.status(), attempt, meta };
+    const moduleState = await targetPage.evaluate((version) => ({
+      analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
+      noStoryModule: !Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
+    }), analyticsVersion);
+    return { ready: response?.status() === 200 && completeSocial(meta) && moduleState.analytics && moduleState.noStoryModule, status: response?.status(), attempt, meta, moduleState };
   }, 6);
-  record('published: policy page has complete social preview metadata', policy.ready, policy);
+  record('published: policy page has complete social metadata and lightweight analytics', policy.ready, policy);
   record('published: normal pages have no browser JavaScript errors', browserErrors.length === 0, browserErrors.slice());
   browserErrors.length = 0;
 
@@ -257,12 +267,14 @@ async function browserAudit() {
       pageType: document.body.dataset.pageType,
       archive: Boolean(document.querySelector('a[href="/yorugatari/archive.html"]')),
       top: Boolean(document.querySelector('a[href="/yorugatari/"]')),
-      trackingPath: window.YORUGATARI_ENGAGEMENT?.trackingPath
+      trackingPath: window.YORUGATARI_ANALYTICS?.trackingPath,
+      analytics: Array.from(document.scripts).some((script) => script.src.includes('/analytics.js?v=')),
+      noStoryModule: !Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
     }));
-    return { ready: response?.status() === 404 && detail.pageType === '404' && detail.archive, status: response?.status(), attempt, ...detail };
+    return { ready: response?.status() === 404 && detail.pageType === '404' && detail.archive && detail.analytics && detail.noStoryModule, status: response?.status(), attempt, ...detail };
   }, 6);
   record(
-    'published: custom 404 returns HTTP 404, noindex, and recovery paths',
+    'published: custom 404 returns HTTP 404, noindex, analytics, and recovery paths',
     missing.ready && missing.noindex === 'noindex,follow' && missing.top && missing.trackingPath === '/yorugatari/404',
     missing
   );
