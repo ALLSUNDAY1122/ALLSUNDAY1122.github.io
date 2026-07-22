@@ -1,0 +1,42 @@
+name: Temporary Generate 454
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generated-454.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/generated-454-20260722-1612
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate public data
+        run: |
+          set -euxo pipefail
+          cd jichitai-compare
+          node ./scripts/generate-municipalities.mjs
+          node ./scripts/update-progress.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          if '434自治体' not in s:
+              raise SystemExit('434 municipality display not found')
+          s=s.replace('434自治体','454自治体')
+          p.write_text(s,encoding='utf-8')
+          PY
+          node ./scripts/validate-data.mjs --require-generated
+          git add data/generated/municipalities.json operations/progress.json index.html
+          test "$(git diff --cached --name-only | wc -l)" -eq 3
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '公開更新: 生成データと表示件数を454自治体へ同期'
+          git push origin HEAD:coord/generated-454-20260722-1612
