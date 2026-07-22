@@ -9,18 +9,18 @@
     "03",
     "07"
   ],
-  "updatedAt": "2026-07-23T04:11:00+09:00",
+  "updatedAt": "2026-07-23T04:16:00+09:00",
   "status": "researching",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 97,
+  "remainingUninvestigatedCount": 96,
   "currentMunicipality": {
-    "code": "03201",
-    "name": "盛岡市",
-    "stage": "pr_open"
+    "code": "03202",
+    "name": "宮古市",
+    "stage": "researching"
   },
-  "workingBranch": "data/03201-morioka",
-  "pullRequestNumber": 1004,
-  "ciStatus": "in_progress",
+  "workingBranch": "data/03202-miyako",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {
       "code": "02387",
@@ -105,8 +105,15 @@
       "pullRequestNumber": 989,
       "ciStatus": "success",
       "mergedAt": "2026-07-23T03:51:00+09:00"
+    },
+    {
+      "code": "03201",
+      "name": "盛岡市",
+      "pullRequestNumber": 1004,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T04:15:00+09:00"
     }
   ],
   "blocked": [],
-  "nextAction": "PR #1004の変更範囲・競合・CIを確認し、成功後にregion/northへ統合する。"
+  "nextAction": "宮古市（03202）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
 }
