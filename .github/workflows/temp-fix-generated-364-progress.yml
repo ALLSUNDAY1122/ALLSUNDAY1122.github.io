@@ -1,4 +1,4 @@
-name: Temporary Fix Generated 364 Progress
+name: Temporary Fix Generated 364 Progress Final
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: coord/generated-364-20260722-1149
+          ref: coord/fix-chita-status-20260722-1151
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Regenerate progress
         run: |
@@ -35,4 +35,4 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m '進捗修正: 公開364自治体・PR作成中0へ再生成'
-          git push origin HEAD:coord/generated-364-20260722-1149
+          git push origin HEAD:coord/fix-chita-status-20260722-1151
