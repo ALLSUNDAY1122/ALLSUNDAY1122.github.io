@@ -145,7 +145,10 @@ function ensureVisibleBreadcrumb(html, story) {
 function ensureFooterArchiveLink(html) {
   const footerNav = /(<nav\b[^>]*class=["'][^"']*\bfooter-links\b[^"']*["'][^>]*>)([\s\S]*?)(<\/nav>)/i;
   return html.replace(footerNav, (full, open, inner, close) => {
-    if (inner.includes('href="../archive.html"')) return full;
+    const archiveLink = /<a\b[^>]*href=["']\.\.\/archive\.html["'][^>]*>[\s\S]*?<\/a>/i;
+    if (archiveLink.test(inner)) {
+      return `${open}${inner.replace(archiveLink, '<a href="../archive.html">全100話一覧</a>')}${close}`;
+    }
     return `${open}<a href="../archive.html">全100話一覧</a>${inner}${close}`;
   });
 }
