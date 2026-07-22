@@ -1,0 +1,80 @@
+name: Temporary Build Central Release 1704
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-central-release-1704.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed 20-file snapshot and self-delete
+        run: |
+          set -euxo pipefail
+          BRANCH='coord/central-release-10-20260722-1704'
+          git fetch origin \
+            "+refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}" \
+            '+refs/heads/region/central:refs/remotes/origin/region/central'
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          paths=(
+            jichitai-compare/data/municipalities/24/24203.json
+            jichitai-compare/operations/tasks/24203.json
+            jichitai-compare/data/municipalities/24/24204.json
+            jichitai-compare/operations/tasks/24204.json
+            jichitai-compare/data/municipalities/24/24205.json
+            jichitai-compare/operations/tasks/24205.json
+            jichitai-compare/data/municipalities/24/24207.json
+            jichitai-compare/operations/tasks/24207.json
+            jichitai-compare/data/municipalities/24/24208.json
+            jichitai-compare/operations/tasks/24208.json
+            jichitai-compare/data/municipalities/24/24209.json
+            jichitai-compare/operations/tasks/24209.json
+            jichitai-compare/data/municipalities/24/24210.json
+            jichitai-compare/operations/tasks/24210.json
+            jichitai-compare/data/municipalities/24/24211.json
+            jichitai-compare/operations/tasks/24211.json
+            jichitai-compare/data/municipalities/24/24212.json
+            jichitai-compare/operations/tasks/24212.json
+            jichitai-compare/data/municipalities/24/24214.json
+            jichitai-compare/operations/tasks/24214.json
+          )
+          git checkout origin/region/central -- "${paths[@]}"
+          git add "${paths[@]}"
+          python3 - <<'PY'
+          import subprocess
+          expected={
+            'jichitai-compare/data/municipalities/24/24203.json','jichitai-compare/operations/tasks/24203.json',
+            'jichitai-compare/data/municipalities/24/24204.json','jichitai-compare/operations/tasks/24204.json',
+            'jichitai-compare/data/municipalities/24/24205.json','jichitai-compare/operations/tasks/24205.json',
+            'jichitai-compare/data/municipalities/24/24207.json','jichitai-compare/operations/tasks/24207.json',
+            'jichitai-compare/data/municipalities/24/24208.json','jichitai-compare/operations/tasks/24208.json',
+            'jichitai-compare/data/municipalities/24/24209.json','jichitai-compare/operations/tasks/24209.json',
+            'jichitai-compare/data/municipalities/24/24210.json','jichitai-compare/operations/tasks/24210.json',
+            'jichitai-compare/data/municipalities/24/24211.json','jichitai-compare/operations/tasks/24211.json',
+            'jichitai-compare/data/municipalities/24/24212.json','jichitai-compare/operations/tasks/24212.json',
+            'jichitai-compare/data/municipalities/24/24214.json','jichitai-compare/operations/tasks/24214.json',
+          }
+          actual=set(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          if actual != expected:
+              raise SystemExit(f'unexpected staged files: {sorted(actual)}')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合: 中日本の追加10自治体を固定スナップショット化'
+          git push origin "$BRANCH"
+          git checkout main
+          git pull --ff-only origin main
+          rm .github/workflows/temp-build-central-release-1704.yml
+          git add .github/workflows/temp-build-central-release-1704.yml
+          git commit -m '統括管理: 中日本固定スナップショット一時処理を削除'
+          git push origin main
