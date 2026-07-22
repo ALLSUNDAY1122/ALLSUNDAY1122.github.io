@@ -1,0 +1,85 @@
+name: Temporary build east central release 1608
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build fixed release branches
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin main region/east region/central
+          BASE=$(git rev-parse HEAD^)
+          ROOT=jichitai-compare
+
+          build_region() {
+            region="$1"
+            branch_ref="$2"
+            out_branch="$3"
+            accept_expr="$4"
+            mapfile -t codes < <(python3 - "$BASE" "$branch_ref" "$accept_expr" <<'PY'
+          import json,re,subprocess,sys
+          base,branch,expr=sys.argv[1:]
+          root='jichitai-compare/data/municipalities'
+          def collect(ref):
+              paths=subprocess.check_output(['git','ls-tree','-r','--name-only',ref,root],text=True).splitlines()
+              out=set()
+              for p in paths:
+                  m=re.fullmatch(rf'{root}/(\d{{2}})/(\d{{5}})\.json',p)
+                  if not m: continue
+                  pref=int(m.group(1)); code=m.group(2)
+                  if eval(expr,{'pref':pref}): out.add(code)
+              return out
+          pending=sorted(collect(branch)-collect(base))
+          if len(pending)<10:
+              raise SystemExit(f'{branch}: pending {len(pending)} < 10')
+          print('\n'.join(pending[:10]))
+          PY
+            )
+            test "${#codes[@]}" -eq 10
+            git checkout -B "$out_branch" "$BASE"
+            for code in "${codes[@]}"; do
+              pref=${code:0:2}
+              data="$ROOT/data/municipalities/$pref/$code.json"
+              task="$ROOT/operations/tasks/$code.json"
+              mkdir -p "$(dirname "$data")" "$(dirname "$task")"
+              git show "$branch_ref:$data" > "$data"
+              git show "$branch_ref:$task" > "$task"
+              python3 - "$task" <<'PY'
+          import json,sys
+          p=sys.argv[1]
+          d=json.load(open(p,encoding='utf-8'))
+          if d.get('status')!='merged':
+              raise SystemExit(f'{p}: task status is {d.get("status")}, expected merged')
+          PY
+            done
+            git add "$ROOT/data/municipalities" "$ROOT/operations/tasks"
+            changed=$(git diff --cached --name-only | wc -l)
+            test "$changed" -eq 20
+            test -z "$(git diff --cached --name-status | awk '$1=="D"{print}')"
+            git commit -m "全国統合: ${region}固定10自治体スナップショットを作成"
+            git push --force-with-lease origin "$out_branch"
+            printf '%s %s\n' "$region" "${codes[*]}"
+          }
+
+          build_region east origin/region/east coord/east-release-10-20260722-1608 '8 <= pref <= 15 or pref in (19,20)'
+          build_region central origin/region/central coord/central-release-10-20260722-1608 '16 <= pref <= 18 or 21 <= pref <= 30'
+
+          git fetch origin main
+          git checkout -B main origin/main
+          git rm .github/workflows/temp-build-east-central-release-1608.yml
+          git commit -m '統括管理: 東日本・中日本固定統合枝構築用一時ワークフローを削除'
+          git push origin main
