@@ -10,9 +10,11 @@ on:
       - yorugatari/archive.html
       - yorugatari/categories/**
       - yorugatari/feed.xml
+      - yorugatari/sitemap.xml
       - yorugatari/assets/stories*.js
       - yorugatari/tools/generate-discovery-pages.mjs
       - yorugatari/tools/discovery-audit.mjs
+      - yorugatari/tools/submit-indexnow.mjs
       - .github/workflows/yorugatari-discovery-audit.yml
 
 concurrency:
@@ -41,6 +43,7 @@ jobs:
         run: |
           node --check yorugatari/tools/generate-discovery-pages.mjs
           node --check yorugatari/tools/discovery-audit.mjs
+          node --check yorugatari/tools/submit-indexnow.mjs
 
       - name: Regenerate discovery files locally
         run: node yorugatari/tools/generate-discovery-pages.mjs
@@ -53,12 +56,19 @@ jobs:
         continue-on-error: true
         run: node yorugatari/tools/discovery-audit.mjs --live
 
-      - name: Preserve discovery audit
+      - name: Submit sitemap URLs through IndexNow
+        id: indexnow
+        continue-on-error: true
+        run: node yorugatari/tools/submit-indexnow.mjs
+
+      - name: Preserve discovery reports
         if: always()
         shell: bash
         run: |
           test -f yorugatari-discovery-report.json
+          test -f yorugatari-indexnow-report.json
           cp yorugatari-discovery-report.json /tmp/yorugatari-discovery-report.json
+          cp yorugatari-indexnow-report.json /tmp/yorugatari-indexnow-report.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           saved=false
@@ -66,7 +76,8 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/yorugatari-discovery-report.json yorugatari/tools/discovery-audit-latest.json
-            git add yorugatari/tools/discovery-audit-latest.json
+            cp /tmp/yorugatari-indexnow-report.json yorugatari/tools/indexnow-latest.json
+            git add yorugatari/tools/discovery-audit-latest.json yorugatari/tools/indexnow-latest.json
             if git diff --cached --quiet; then
               saved=true
               break
@@ -80,15 +91,19 @@ jobs:
           done
           test "$saved" = true
 
-      - name: Upload discovery audit
+      - name: Upload discovery reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: yorugatari-discovery-audit
-          path: yorugatari-discovery-report.json
+          path: |
+            yorugatari-discovery-report.json
+            yorugatari-indexnow-report.json
           if-no-files-found: error
           retention-days: 14
 
       - name: Enforce discovery result
         if: always()
-        run: test "${{ steps.live.outcome }}" = "success"
+        run: |
+          test "${{ steps.live.outcome }}" = "success"
+          test "${{ steps.indexnow.outcome }}" = "success"
