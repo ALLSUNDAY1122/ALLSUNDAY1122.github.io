@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 414 Final
+name: Temporary Sync Release Queue 414 Final 2
 
 on:
   push:
@@ -48,20 +48,19 @@ jobs:
               items.sort(key=lambda x:x['code'])
               state=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{region}.json'))
               pending=int(state.get(fields[region],0))
-              e=entries[region]
-              e.update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':pending,'releaseStatus':'release_ready' if pending>=10 else 'pending_threshold','reason':f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{pending}自治体','mainIntegrationPr':state.get('lastNationalIntegrationPr'),'generatedPullRequest':678,'auditStatus':'passed'})
+              entries[region].update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':pending,'releaseStatus':'release_ready' if pending>=10 else 'pending_threshold','reason':f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{pending}自治体','mainIntegrationPr':state.get('lastNationalIntegrationPr'),'generatedPullRequest':678,'auditStatus':'passed'})
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
           ready=[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10]
-          q['updatedAt']='2026-07-22T15:12:00+09:00'
-          q['status']='active'
+          if total != 439: raise SystemExit(f'unexpected regional total {total}')
+          q['updatedAt']='2026-07-22T15:15:00+09:00';q['status']='active'
           q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':414,'latestGeneratedPullRequest':678,'latestPublicCountPullRequest':678,'releaseReadyRegions':ready,'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。" + ('全国統合対象: '+','.join(ready) if ready else '10自治体到達地域なし。')}
-          p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
-          print('regional total',total,'pending',pending)
+          path=p
+          path.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           PY
           git add jichitai-compare/operations/control/release-queue.json
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 地方統合最新値・公開414自治体へ全国キュー同期'
+          git commit -m '統括管理: 地方統合439自治体・公開414自治体へ同期'
           git push origin main
