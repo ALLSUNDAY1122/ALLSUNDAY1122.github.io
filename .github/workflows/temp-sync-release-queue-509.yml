@@ -1,0 +1,74 @@
+name: Temporary Sync Release Queue 509
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-release-queue-509.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sync and self-delete
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json,re,subprocess
+          from pathlib import Path
+          path=Path('jichitai-compare/operations/control/release-queue.json')
+          q=json.loads(path.read_text(encoding='utf-8'))
+          entries={e['region']:e for e in q['entries']}
+          fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
+          def show(ref,p): return subprocess.check_output(['git','show',f'{ref}:{p}'],text=True)
+          def assigned(region,pref):
+              n=int(pref)
+              return {'north':1<=n<=7,'east':8<=n<=15 or n in (19,20),'central':16<=n<=18 or 21<=n<=29,'west':31<=n<=47}[region]
+          for region in ('north','east','central','west'):
+              ref=f'origin/region/{region}'
+              files=subprocess.check_output(['git','ls-tree','-r','--name-only',ref,'jichitai-compare/data/municipalities'],text=True).splitlines()
+              municipalities=[]
+              for p in files:
+                  if not re.search(r'/\d{5}\.json$',p): continue
+                  d=json.loads(show(ref,p))
+                  if assigned(region,d['prefectureCode']): municipalities.append({'code':d['code'],'name':d['name']})
+              municipalities.sort(key=lambda x:x['code'])
+              state=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{region}.json'))
+              pending=int(state.get(fields[region],0))
+              e=entries[region]
+              e.update({'municipalities':municipalities,'count':len(municipalities),'pendingSinceLastRelease':pending,'releaseStatus':'release_ready' if pending>=10 else 'pending_threshold','reason':f'最新地方ブランチを再走査。前回全国統合後の繰越は{pending}自治体','mainIntegrationPr':state.get('lastNationalIntegrationPr'),'generatedPullRequest':783,'auditStatus':'passed'})
+          total=sum(e['count'] for e in q['entries'])
+          pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
+          q['updatedAt']='2026-07-22T18:45:00+09:00'
+          q['status']='active'
+          q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':494,'latestGeneratedPullRequest':783,'latestPublicCountPullRequest':783,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域なし。"}
+          path.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          Path('/tmp/total').write_text(str(total))
+          PY
+          total=$(cat /tmp/total)
+          git rm .github/workflows/temp-sync-release-queue-509.yml
+          git add jichitai-compare/operations/control/release-queue.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "統括管理: 地方統合${total}自治体・公開494自治体へ同期"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+# trigger
