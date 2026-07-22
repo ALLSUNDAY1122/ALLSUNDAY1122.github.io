@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-23T03:05:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T03:20:00+09:00",
+  "status": "working",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 72,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "26463", "municipalityName": "伊根町"},
+  "workingBranch": "data/26463-ine",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"municipalityCode":"26100","municipalityName":"京都市","pullRequestNumber":840,"ciRunNumber":1761,"completedAt":"2026-07-22T22:14:00+09:00"},
     {"municipalityCode":"26201","municipalityName":"福知山市","pullRequestNumber":847,"ciRunNumber":1804,"completedAt":"2026-07-22T22:24:00+09:00"},
@@ -39,5 +39,5 @@
     {"municipalityCode":"26407","municipalityName":"京丹波町","pullRequestNumber":948,"ciRunNumber":2273,"completedAt":"2026-07-23T03:05:00+09:00"}
   ],
   "blocked": [],
-  "nextAction": "伊根町（26463）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "伊根町（26463）の3ファイル差分を検証し、地方統合PRを作成してCIを確認する。"
 }
