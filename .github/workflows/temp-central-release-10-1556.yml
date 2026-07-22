@@ -1,0 +1,43 @@
+name: Temporary Central Release 10 1556
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-central-release-10-1556.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/central-release-10-20260722-1556
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy fixed central snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin '+refs/heads/region/central:refs/remotes/origin/region/central'
+          paths=(
+            jichitai-compare/data/municipalities/22/22222.json jichitai-compare/operations/tasks/22222.json
+            jichitai-compare/data/municipalities/22/22223.json jichitai-compare/operations/tasks/22223.json
+            jichitai-compare/data/municipalities/22/22224.json jichitai-compare/operations/tasks/22224.json
+            jichitai-compare/data/municipalities/22/22225.json jichitai-compare/operations/tasks/22225.json
+            jichitai-compare/data/municipalities/22/22226.json jichitai-compare/operations/tasks/22226.json
+            jichitai-compare/data/municipalities/22/22301.json jichitai-compare/operations/tasks/22301.json
+            jichitai-compare/data/municipalities/22/22302.json jichitai-compare/operations/tasks/22302.json
+            jichitai-compare/data/municipalities/22/22304.json jichitai-compare/operations/tasks/22304.json
+            jichitai-compare/data/municipalities/22/22305.json jichitai-compare/operations/tasks/22305.json
+            jichitai-compare/data/municipalities/22/22306.json jichitai-compare/operations/tasks/22306.json
+          )
+          git checkout origin/region/central -- "${paths[@]}"
+          git add "${paths[@]}"
+          test "$(git diff --cached --name-only | wc -l)" -eq 20
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合: 中日本10自治体を固定スナップショット化'
+          git push origin HEAD:coord/central-release-10-20260722-1556
