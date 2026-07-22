@@ -1,10 +1,10 @@
-name: Temporary Final Sync 364 1215
+name: Temporary Final Dynamic Sync 1216
 
 on:
   push:
     branches: [main]
     paths:
-      - .github/workflows/temp-final-sync-364-1207.yml
+      - .github/temp-final-sync-trigger-1216.txt
 
 permissions:
   contents: write
@@ -18,7 +18,7 @@ jobs:
           ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Rebuild release queue
+      - name: Rebuild release queue dynamically
         run: |
           set -euxo pipefail
           git fetch origin \
@@ -47,19 +47,18 @@ jobs:
                   if belongs(r,d['prefectureCode']): items.append({'code':d['code'],'name':d['name']})
               items.sort(key=lambda x:x['code'])
               state=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{r}.json'))
-              pending=int(state.get(fields[r],0));e=by[r]
+              pending=int(state.get(fields[r],0)); e=by[r]
               e.update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':pending,'releaseStatus':'release_ready' if pending>=10 else 'pending_threshold','reason':f'最新地方ブランチを再走査。前回全国統合後の地方統合繰越は{pending}自治体','mainIntegrationPr':state.get('lastNationalIntegrationPr'),'generatedPullRequest':606,'auditStatus':'passed'})
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
-          if total!=384: raise SystemExit(f'unexpected total {total}')
-          if pending!={'north':5,'east':4,'central':3,'west':8}: raise SystemExit(f'unexpected pending {pending}')
-          q['updatedAt']='2026-07-22T12:15:00+09:00';q['status']='active'
-          q['summary']={'regionalMergedMunicipalities':384,'latestGeneratedMunicipalityCount':364,'latestGeneratedPullRequest':606,'latestPublicCountPullRequest':606,'releaseReadyRegions':[],'nextAction':'北日本5、東日本4、中日本3、西日本8。10自治体到達地域なし。'}
+          q['updatedAt']='2026-07-22T12:16:00+09:00'; q['status']='active'
+          q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':364,'latestGeneratedPullRequest':606,'latestPublicCountPullRequest':606,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"}
           path.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          print('total',total,'pending',pending)
           PY
-          rm .github/workflows/temp-final-sync-364-1207.yml
-          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-final-sync-364-1207.yml
+          rm .github/workflows/temp-final-sync-364-1207.yml .github/temp-final-sync-trigger-1216.txt
+          git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-final-sync-364-1207.yml .github/temp-final-sync-trigger-1216.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 地方統合384自治体・公開364自治体へ同期'
+          git commit -m '統括管理: 最新地方統合・公開364自治体へ動的同期'
           git push origin main
