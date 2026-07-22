@@ -1,0 +1,59 @@
+name: Temporary Generate Public 504 Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-public-504.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate public files
+        run: |
+          set -euxo pipefail
+          TARGET='coord/generated-504-20260722-1910'
+          git fetch origin "+refs/heads/${TARGET}:refs/remotes/origin/${TARGET}"
+          git switch -C "$TARGET" "origin/$TARGET"
+          cd jichitai-compare
+          node ./scripts/generate-municipalities.mjs
+          node ./scripts/update-progress.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          if text.count('494自治体') != 2:
+              raise SystemExit(f'unexpected 494 count: {text.count("494自治体")}')
+          text=text.replace('494自治体','504自治体')
+          p.write_text(text,encoding='utf-8')
+          PY
+          node ./scripts/validate-data.mjs --require-generated
+          cd ..
+          mapfile -t changed < <(git diff --name-only | sort)
+          printf '%s\n' \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/index.html \
+            jichitai-compare/operations/progress.json | sort > /tmp/expected
+          printf '%s\n' "${changed[@]}" > /tmp/actual
+          diff -u /tmp/expected /tmp/actual
+          test "${#changed[@]}" -eq 3
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '公開更新: 生成データを504自治体へ同期'
+          git push origin "$TARGET"
+          git switch main
+          git pull --ff-only origin main
+          rm .github/workflows/temp-generate-public-504.yml
+          git add .github/workflows/temp-generate-public-504.yml
+          git commit -m '統括管理: 公開504自治体生成一時処理を削除'
+          git push origin main
