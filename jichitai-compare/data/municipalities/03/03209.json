@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03209",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "一関市",
+  "officialUrl": "https://www.city.ichinoseki.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を一関市公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、所得制限なしで保険診療の自己負担額を全額助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "出生の日から18歳に達する日以後の最初の3月31日まで",
+        "copay": "保険診療の一部負担金を全額助成",
+        "incomeLimit": "受給制限なし",
+        "application": "本庁国保年金課または各支所市民福祉課で受給者証を申請",
+        "payment": "県内医療機関は受給者証提示による現物給付、県外受診は償還払い"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/contents-176142",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学生までの病児を、市内3か所の病児保育室で一時的に預かる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "program": "病児保育",
+        "facilityCount": 3,
+        "facilities": "病児保育室すまいる、病児保育室ぽかぽか、病児保育室ひこうき雲",
+        "target": "施設により生後6か月から就学前または小学生まで",
+        "capacity": "各施設1日2～4人",
+        "hours": "平日8時30分から17時または17時30分",
+        "fee": "4時間未満1,000円または1日2,000円。給食費300～350円。施設により減免あり",
+        "application": "事前登録・予約が必要。施設により医師の診療情報提供書が必要"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/contents-167575",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児に加え、市独自に世帯が扶養する第2子以降の保育料を無償化している。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "3～5歳児および0～2歳児の住民税非課税世帯は国制度で無償",
+        "siblingReduction": "世帯が扶養する第2子以降は年齢にかかわらず保育料無料",
+        "incomeCondition": "国制度の0～2歳児無償化は住民税非課税世帯。市独自の第2子以降無償化は扶養関係で判定",
+        "start": "第2子以降の市独自無償化は令和5年度から"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/contents-118697",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.ichinoseki.iwate.jp/index.cfm/28%2C180624%2Cc%2Chtml/180624/20250929-181550.pdf",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は市立小学校の給食費を徴収せず無償化し、中学校は物価上昇分を市が補填して保護者負担を据え置く。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "小学校は令和8年度の保護者負担なし。中学校は改定増額分を市が補填",
+        "schools": "一関市立小学校・中学校",
+        "elementarySchool": "1食351円・年額59,670円相当だが、令和8年度は保護者から徴収しない",
+        "juniorHighSchool": "保護者負担は1食336円、年額55,104円で据え置き",
+        "fiscalYear": "令和8年度"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/contents-180313",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に宿泊型・通所型・訪問型を実施し、令和8年度のサービス利用料は無料。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "一関市に住所がある産後1年未満の母子。メニューにより産後4か月未満または6か月未満",
+        "types": "宿泊型、通所型全日・半日、訪問型",
+        "fee": "令和8年度は国・岩手県・一関市の助成によりサービス利用料無料。食事・おやつ代等は実費",
+        "usageLimit": "各型を合わせて7回まで。宿泊型は1回、通所型は3回が上限",
+        "services": "母体の心身ケア、授乳ケア、乳児の発育確認、沐浴・育児相談",
+        "application": "宿泊型等は市こども家庭課、通所・訪問型は実施施設へ予約"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/contents-168024",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.ichinoseki.iwate.jp/uploads/public/archive_0000001560_00/R8%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E3%83%81%E3%83%A9%E3%82%B7%E5%AE%8C%E6%88%90%E7%89%88.pdf",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "一関市民で、保育所・認定こども園・幼稚園等に在籍していない0歳6か月から2歳",
+        "employmentRequirement": "なし",
+        "usageLimit": "子ども1人当たり月10時間",
+        "fee": "1時間300円。生活保護世帯0円、住民税非課税世帯60円などの軽減あり",
+        "start": "令和8年4月1日",
+        "application": "利用登録後、総合支援システムで初回面談と利用予約"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/contents-181474",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "30万円以上の住宅リフォーム費用を補助し、18歳未満の子がいる子育て世帯には加算がある。",
+      "details": {
+        "program": "令和8年度住宅環境改善リフォーム補助金",
+        "support": "基本額は対象工事費の10分の1、上限8万円。子育て世帯等は同率・上限8万円を加算",
+        "conditions": "市内居住の住宅所有者、市税滞納なし、対象工事費30万円以上、市内施工業者による交付決定後の工事",
+        "childHousehold": "令和8年4月1日時点で18歳未満の子どもがいる世帯",
+        "application": "本庁都市整備課または各支所産業建設課。予算到達時に受付終了"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/p20260312144712",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない粗大ごみは地域別の清掃センターへ直接搬入でき、家庭系粗大ごみは重量に応じた手数料がかかる。",
+      "details": {
+        "application": "受付時間内に対象地域の一関清掃センターまたは大東清掃センターへ直接搬入し、受付で申請",
+        "feeSystem": "家庭系粗大ごみは10キログラムにつき154円",
+        "regions": "一関・花泉地域は一関清掃センター、大東・千厩・東山・室根・川崎・藤沢地域は大東清掃センター",
+        "hours": "平日8時30分～11時45分、13時～16時30分。施設により土曜午前または第3日曜も受付",
+        "preparation": "ごみの分け方・出し方に従って分別し、現金を準備"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/kouiki-gyousei/garbage/21/45/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、ため池、防災施設、避難場所等を確認できる地域別・Web版防災マップを公開している。",
+      "details": {
+        "coverage": "洪水浸水想定区域、土砂災害警戒区域、土砂災害発生のおそれがある箇所、防災重点ため池、防災関連施設、避難場所",
+        "access": "市公式ページの地域別PDFおよびWeb版一関市防災マップ",
+        "webFeatures": "表示情報の選択、スマートフォンGPS、多言語情報へのリンク",
+        "regions": "一関、花泉、藤沢、千厩、室根、川崎、大東、東山の地域別マップ"
+      },
+      "source": {
+        "url": "https://www.city.ichinoseki.iwate.jp/archive/contents-155567",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
