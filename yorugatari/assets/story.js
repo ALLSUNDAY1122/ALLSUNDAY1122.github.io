@@ -112,7 +112,7 @@ if (explanationButton && explanation) {
   });
 }
 
-const storyInfoBox = document.querySelector('.story-side .side-box, .story-side .story-info, .story-side');
+const storyInfoBox = document.querySelector('.story-side .side-box, .story-side .story-info, .story-side, .story-info');
 let favoriteButton = document.querySelector('#favoriteBtn');
 if (!favoriteButton && storyInfoBox && slug) {
   favoriteButton = document.createElement('button');
@@ -250,7 +250,7 @@ const catalogSources = [
 function loadCatalogScript(source) {
   return new Promise(function (resolve, reject) {
     const script = document.createElement('script');
-    script.src = '../assets/' + source + '?v=20260723-001';
+    script.src = '../assets/' + source + '?v=20260723-002';
     script.async = false;
     script.onload = resolve;
     script.onerror = reject;
@@ -263,13 +263,117 @@ function storyPageHref(story) {
   return href.replace(/^\.\.\//, '').replace(/^stories\//, '');
 }
 
-function buildStoryPagination() {
-  if (!slug || document.querySelector('.story-pagination')) return;
-  const catalog = Array.isArray(window.STORIES) ? window.STORIES : [];
-  const stories = Array.from(new Map(catalog.map(function (story) { return [story.slug, story]; })).values());
-  const currentIndex = stories.findIndex(function (story) { return story.slug === slug; });
-  if (currentIndex < 0) return;
+function ensurePropertyMeta(property, content) {
+  let element = document.querySelector('meta[property="' + property + '"]');
+  if (!element) {
+    element = document.createElement('meta');
+    element.setAttribute('property', property);
+    document.head.appendChild(element);
+  }
+  element.setAttribute('content', content);
+}
 
+function ensurePreconnect() {
+  if (document.querySelector('link[rel="preconnect"][href="https://page-views-api.ratneshc.com"]')) return;
+  const link = document.createElement('link');
+  link.rel = 'preconnect';
+  link.href = 'https://page-views-api.ratneshc.com';
+  link.crossOrigin = 'anonymous';
+  const canonical = document.querySelector('link[rel="canonical"]');
+  document.head.insertBefore(link, canonical || document.head.firstChild);
+}
+
+function ensureBreadcrumbStructuredData(story) {
+  const canonical = document.querySelector('link[rel="canonical"]');
+  const pageUrl = canonical ? canonical.href : location.href.split('#')[0];
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '夜語り', item: 'https://allsunday1122.github.io/yorugatari/' },
+      { '@type': 'ListItem', position: 2, name: '全100話', item: 'https://allsunday1122.github.io/yorugatari/archive.html' },
+      { '@type': 'ListItem', position: 3, name: story.category, item: 'https://allsunday1122.github.io/yorugatari/archive.html#' + encodeURIComponent(story.category) },
+      { '@type': 'ListItem', position: 4, name: story.title, item: pageUrl }
+    ]
+  };
+  let target = null;
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(function (script) {
+    try {
+      const parsed = JSON.parse(script.textContent);
+      if (parsed && parsed['@type'] === 'BreadcrumbList') target = script;
+    } catch (error) {}
+  });
+  if (!target) {
+    target = document.createElement('script');
+    target.type = 'application/ld+json';
+    document.head.appendChild(target);
+  }
+  target.textContent = JSON.stringify(data);
+}
+
+function ensureStoryId(story, currentIndex) {
+  const storyInfo = document.querySelector('.story-info');
+  if (!storyInfo) return;
+  const storyId = 'YGT-' + String(currentIndex + 1).padStart(3, '0');
+  if (storyInfo.textContent.includes(storyId)) return;
+  const definitionList = storyInfo.querySelector('dl');
+  if (definitionList) {
+    const term = document.createElement('dt');
+    const value = document.createElement('dd');
+    term.textContent = 'ID';
+    value.textContent = storyId;
+    definitionList.insertBefore(value, definitionList.firstChild);
+    definitionList.insertBefore(term, value);
+    return;
+  }
+  const paragraph = document.createElement('p');
+  paragraph.textContent = 'ID：' + storyId;
+  const heading = storyInfo.querySelector('h2');
+  if (heading) heading.insertAdjacentElement('afterend', paragraph);
+  else storyInfo.insertAdjacentElement('afterbegin', paragraph);
+}
+
+function ensureFooterLinks() {
+  const footerInner = document.querySelector('.site-footer .footer-inner');
+  if (!footerInner) return;
+  let footerNav = footerInner.querySelector('.footer-links');
+  if (!footerNav) {
+    footerNav = document.createElement('nav');
+    footerNav.className = 'footer-links';
+    footerInner.appendChild(footerNav);
+  }
+  footerNav.setAttribute('aria-label', '運営情報');
+  [
+    ['../archive.html', '全100話一覧'],
+    ['../about.html', '運営・編集方針'],
+    ['../privacy.html', 'プライバシー'],
+    ['../terms.html', '利用規約'],
+    ['../contact.html', 'お問い合わせ']
+  ].forEach(function (entry) {
+    if (footerNav.querySelector('a[href="' + entry[0] + '"]')) return;
+    const link = document.createElement('a');
+    link.href = entry[0];
+    link.textContent = entry[1];
+    footerNav.appendChild(link);
+  });
+}
+
+function normalizeStoryPage(story, currentIndex) {
+  if (!story) return;
+  ensurePreconnect();
+  ensurePropertyMeta('og:image:width', '2048');
+  ensurePropertyMeta('og:image:height', '683');
+  ensurePropertyMeta('og:image:alt', '月明かりと提灯が照らす夜の町並み');
+  ensureBreadcrumbStructuredData(story);
+  ensureStoryId(story, currentIndex);
+  ensureFooterLinks();
+  if (mainNav) mainNav.setAttribute('aria-label', '主要メニュー');
+  if (progress) progress.setAttribute('aria-hidden', 'true');
+  if (headerMeta.length && story.minutes) headerMeta[headerMeta.length - 1].textContent = '約' + story.minutes + '分';
+}
+
+function buildStoryPagination(stories, currentIndex) {
+  if (!slug || document.querySelector('.story-pagination') || currentIndex < 0) return;
   const navigation = document.createElement('nav');
   navigation.className = 'hero-actions story-pagination';
   navigation.setAttribute('aria-label', '前後の怖い話');
@@ -306,7 +410,14 @@ function buildStoryPagination() {
 
 catalogSources.reduce(function (promise, source) {
   return promise.then(function () { return loadCatalogScript(source); });
-}, Promise.resolve()).then(buildStoryPagination).catch(function () {
+}, Promise.resolve()).then(function () {
+  const catalog = Array.isArray(window.STORIES) ? window.STORIES : [];
+  const stories = Array.from(new Map(catalog.map(function (story) { return [story.slug, story]; })).values());
+  const currentIndex = stories.findIndex(function (story) { return story.slug === slug; });
+  if (currentIndex < 0) return;
+  normalizeStoryPage(stories[currentIndex], currentIndex);
+  buildStoryPagination(stories, currentIndex);
+}).catch(function () {
   const storyShell = document.querySelector('.story-shell');
   if (!storyShell || document.querySelector('.story-pagination')) return;
   const fallback = document.createElement('nav');
