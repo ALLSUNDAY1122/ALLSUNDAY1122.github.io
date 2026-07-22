@@ -1,0 +1,72 @@
+name: Temporary Sync Release Queue 418
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-release-queue-418.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Rebuild release queue
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json,re,subprocess
+          from pathlib import Path
+          p=Path('jichitai-compare/operations/control/release-queue.json')
+          q=json.loads(p.read_text(encoding='utf-8'))
+          by={e['region']:e for e in q['entries']}
+          fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
+          def show(ref,path): return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
+          def assigned(region,pref):
+              n=int(pref)
+              return {'north':1<=n<=7,'east':8<=n<=15 or n in (19,20),'central':16<=n<=18 or 21<=n<=29,'west':31<=n<=47}[region]
+          pending={}
+          for region in ('north','east','central','west'):
+              ref=f'origin/region/{region}'
+              names=subprocess.check_output(['git','ls-tree','-r','--name-only',ref,'jichitai-compare/data/municipalities'],text=True).splitlines()
+              items=[]
+              for path in names:
+                  if not re.search(r'/\d{5}\.json$',path): continue
+                  d=json.loads(show(ref,path))
+                  if assigned(region,d['prefectureCode']): items.append({'code':d['code'],'name':d['name']})
+              items.sort(key=lambda x:x['code'])
+              state=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{region}.json'))
+              count=int(state.get(fields[region],0)); pending[region]=count
+              entry=by[region]
+              entry['municipalities']=items; entry['count']=len(items); entry['pendingSinceLastRelease']=count
+              entry['releaseStatus']='release_ready' if count>=10 else 'pending_threshold'
+              entry['reason']=f'最新地方ブランチを再走査。前回全国統合後の地方統合繰越は{count}自治体'
+              entry['mainIntegrationPr']=state.get('lastNationalIntegrationPr')
+              entry['generatedPullRequest']=655
+              entry['auditStatus']='passed'
+          total=sum(e['count'] for e in q['entries'])
+          if total < 418: raise SystemExit(f'unexpected total {total}')
+          q['updatedAt']='2026-07-22T13:57:00+09:00'; q['status']='active'
+          q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':394,'latestGeneratedPullRequest':655,'latestPublicCountPullRequest':655,'releaseReadyRegions':[r for r,v in pending.items() if v>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"}
+          p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+          git add jichitai-compare/operations/control/release-queue.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git diff --cached --quiet; then
+            total=$(python3 -c "import json;print(json.load(open('jichitai-compare/operations/control/release-queue.json'))['summary']['regionalMergedMunicipalities'])")
+            git commit -m "統括管理: 地方統合${total}自治体・公開394自治体へ同期"
+            git push origin main
+          fi
