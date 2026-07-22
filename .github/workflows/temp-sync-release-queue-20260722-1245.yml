@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 20260722 1245
+name: Temporary Sync Release Queue 20260722 1245 Final
 
 on:
   push:
@@ -51,7 +51,7 @@ jobs:
               e.update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':pending,'releaseStatus':'release_ready' if pending>=10 else 'pending_threshold','reason':f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{pending}自治体','mainIntegrationPr':s.get('lastNationalIntegrationPr'),'generatedPullRequest':606,'auditStatus':'passed'})
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
-          q['updatedAt']='2026-07-22T12:45:00+09:00'
+          q['updatedAt']='2026-07-22T12:49:00+09:00'
           q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':364,'latestGeneratedPullRequest':606,'latestPublicCountPullRequest':606,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域を全国統合する。"}
           qpath.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           print(total,pending)
