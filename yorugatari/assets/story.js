@@ -250,7 +250,7 @@ const catalogSources = [
 function loadCatalogScript(source) {
   return new Promise(function (resolve, reject) {
     const script = document.createElement('script');
-    script.src = '../assets/' + source + '?v=20260719-100';
+    script.src = '../assets/' + source + '?v=20260723-001';
     script.async = false;
     script.onload = resolve;
     script.onerror = reject;
@@ -258,120 +258,60 @@ function loadCatalogScript(source) {
   });
 }
 
-function recommendationLink(story, className) {
-  const link = document.createElement('a');
-  link.className = className;
-  link.href = story.slug + '.html';
-  const title = document.createElement('strong');
-  title.textContent = story.title;
-  const detail = document.createElement('span');
-  detail.textContent = story.category + '・約' + story.minutes + '分' + (completedStories.includes(story.slug) ? '・読了済み' : '');
-  link.appendChild(title);
-  link.appendChild(detail);
-  return link;
+function storyPageHref(story) {
+  const href = story && story.href ? story.href : (story.slug + '.html');
+  return href.replace(/^\.\.\//, '').replace(/^stories\//, '');
 }
 
-async function buildNextStoryGuide() {
-  if (!storyBody || !slug || storyBody.querySelector('.story-next')) return;
-  try {
-    window.STORIES = [];
-    await Promise.all(catalogSources.map(loadCatalogScript));
-    const catalog = Array.from(
-      new Map((Array.isArray(window.STORIES) ? window.STORIES : []).map((story) => [story.slug, story])).values()
-    );
-    const currentIndex = catalog.findIndex(function (story) { return story.slug === slug; });
-    if (currentIndex < 0) return;
+function buildStoryPagination() {
+  if (!slug || document.querySelector('.story-pagination')) return;
+  const catalog = Array.isArray(window.STORIES) ? window.STORIES : [];
+  const stories = Array.from(new Map(catalog.map(function (story) { return [story.slug, story]; })).values());
+  const currentIndex = stories.findIndex(function (story) { return story.slug === slug; });
+  if (currentIndex < 0) return;
 
-    const orderedAfterCurrent = catalog.slice(currentIndex + 1).concat(catalog.slice(0, currentIndex));
-    const nextUnread = orderedAfterCurrent.find(function (story) { return !completedStories.includes(story.slug); }) || orderedAfterCurrent[0];
-    const sameFear = orderedAfterCurrent.filter(function (story) {
-      return story.category === storyCategory && story.slug !== (nextUnread && nextUnread.slug);
-    }).sort(function (a, b) {
-      return Number(completedStories.includes(a.slug)) - Number(completedStories.includes(b.slug));
-    }).slice(0, 2);
-    if (!nextUnread) return;
+  const navigation = document.createElement('nav');
+  navigation.className = 'hero-actions story-pagination';
+  navigation.setAttribute('aria-label', '前後の怖い話');
 
-    const guide = document.createElement('section');
-    guide.className = 'story-next';
-    guide.setAttribute('data-nosnippet', '');
-    const eyebrow = document.createElement('span');
-    eyebrow.className = 'eyebrow';
-    eyebrow.textContent = 'One more story';
-    const heading = document.createElement('h2');
-    heading.textContent = 'まだ眠れませんか？';
-    const copy = document.createElement('p');
-    copy.textContent = '読了していない作品から、次の一話を選びました。';
-    guide.appendChild(eyebrow);
-    guide.appendChild(heading);
-    guide.appendChild(copy);
-    guide.appendChild(recommendationLink(nextUnread, 'next-primary'));
-    if (sameFear.length) {
-      const subheading = document.createElement('h3');
-      subheading.textContent = '同じ「' + storyCategory + '」を読む';
-      const related = document.createElement('div');
-      related.className = 'next-related';
-      sameFear.forEach(function (story) { related.appendChild(recommendationLink(story, 'next-related__item')); });
-      guide.appendChild(subheading);
-      guide.appendChild(related);
-    }
-    storyBody.appendChild(guide);
-  } catch (error) {}
-}
+  const previousStory = stories[currentIndex - 1];
+  const nextStory = stories[currentIndex + 1];
 
-buildNextStoryGuide();
-
-async function updateViewCount() {
-  if (!viewCount || !slug) return;
-  const productionHost = 'allsunday1122.github.io';
-  const productionPath = '/yorugatari/stories/' + slug + '.html';
-  const base = 'https://page-views-api.ratneshc.com/api/v1/';
-  const query = '?site=' + encodeURIComponent(productionHost) + '&path=' + encodeURIComponent(productionPath);
-  try {
-    if (location.hostname === productionHost) {
-      const tracked = await fetch(base + 'track' + query, { keepalive: true });
-      if (!tracked.ok) throw new Error('view tracking request failed');
-    }
-    const response = await fetch(base + 'views' + query);
-    if (!response.ok) throw new Error('view count request failed');
-    const data = await response.json();
-    const views = Number(data.views);
-    viewCount.textContent = Number.isFinite(views) ? views.toLocaleString('ja-JP') + '回' : '—';
-  } catch (error) {
-    viewCount.textContent = '取得できませんでした';
+  if (previousStory) {
+    const previousLink = document.createElement('a');
+    previousLink.className = 'btn';
+    previousLink.href = storyPageHref(previousStory);
+    previousLink.textContent = '← 前の話「' + previousStory.title + '」';
+    navigation.appendChild(previousLink);
   }
-}
-updateViewCount();
 
-const shareButton = document.querySelector('#shareBtn');
-if (shareButton) shareButton.setAttribute('type', 'button');
-if (shareButton) {
-  shareButton.addEventListener('click', async function () {
-    const shareText = '「' + storyTitle + '」を読みました。\n#夜語り #怖い話';
-    const data = { title: document.title, text: shareText, url: location.href };
-    try {
-      if (navigator.share) { await navigator.share(data); return; }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(shareText + '\n' + location.href);
-        const original = shareButton.textContent;
-        shareButton.textContent = 'URLをコピーしました';
-        setTimeout(function () { shareButton.textContent = original; }, 1800);
-        return;
-      }
-      window.prompt('このURLをコピーしてください', location.href);
-    } catch (error) {
-      if (!error || error.name !== 'AbortError') {
-        shareButton.textContent = '共有できませんでした';
-        setTimeout(function () { shareButton.textContent = '共有'; }, 1800);
-      }
-    }
-  });
+  const archiveLink = document.createElement('a');
+  archiveLink.className = 'btn';
+  archiveLink.href = '../archive.html';
+  archiveLink.textContent = '全100話一覧';
+  navigation.appendChild(archiveLink);
+
+  if (nextStory) {
+    const nextLink = document.createElement('a');
+    nextLink.className = 'btn btn-primary';
+    nextLink.href = storyPageHref(nextStory);
+    nextLink.textContent = '次の話「' + nextStory.title + '」→';
+    navigation.appendChild(nextLink);
+  }
+
+  const storyShell = document.querySelector('.story-shell');
+  if (storyShell) storyShell.insertAdjacentElement('afterend', navigation);
+  else if (mainContent) mainContent.appendChild(navigation);
 }
 
-const footer = document.querySelector('.footer-inner');
-if (footer && !footer.querySelector('.footer-links')) {
-  const links = document.createElement('nav');
-  links.className = 'footer-links';
-  links.setAttribute('aria-label', '運営情報');
-  links.innerHTML = '<a href="../about.html">運営・編集方針</a><a href="../privacy.html">プライバシー</a><a href="../terms.html">利用規約</a><a href="../contact.html">お問い合わせ</a>';
-  footer.appendChild(links);
-}
+catalogSources.reduce(function (promise, source) {
+  return promise.then(function () { return loadCatalogScript(source); });
+}, Promise.resolve()).then(buildStoryPagination).catch(function () {
+  const storyShell = document.querySelector('.story-shell');
+  if (!storyShell || document.querySelector('.story-pagination')) return;
+  const fallback = document.createElement('nav');
+  fallback.className = 'hero-actions story-pagination';
+  fallback.setAttribute('aria-label', '作品一覧');
+  fallback.innerHTML = '<a class="btn" href="../archive.html">全100話一覧</a>';
+  storyShell.insertAdjacentElement('afterend', fallback);
+});
