@@ -147,8 +147,14 @@ async function run() {
   });
   const readingPage = await readingContext.newPage();
   await readingPage.goto(`${base}/stories/spare-key-returned.html?reading=${Date.now()}`, { waitUntil: 'networkidle' });
-  await readingPage.evaluate(() => window.scrollTo(0, Math.floor(document.documentElement.scrollHeight * 0.45)));
-  await readingPage.waitForTimeout(1500);
+  await readingPage.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    const max = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    window.scrollTo(0, Math.floor(max * 0.55));
+  });
+  await readingPage.waitForTimeout(1200);
+  await readingPage.evaluate(() => window.dispatchEvent(new Event('scroll')));
+  await readingPage.waitForTimeout(300);
   const readingState = await readingPage.evaluate(() => JSON.parse(localStorage.getItem('yorugatari-last-reading') || 'null'));
   record(
     'reading position is saved',
