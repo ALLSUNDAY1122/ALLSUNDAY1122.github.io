@@ -1,0 +1,42 @@
+name: Temporary Regenerate Progress 384 20260722 1317
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-regenerate-progress-384-20260722-1317.yml
+
+permissions:
+  contents: write
+
+jobs:
+  progress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/fix-progress-384-20260722-1317
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Regenerate progress
+        run: |
+          set -euxo pipefail
+          cd jichitai-compare
+          npm run progress
+          cd ..
+          git add jichitai-compare/operations/progress.json
+          python3 - <<'PY'
+          import json
+          p=json.load(open('jichitai-compare/operations/progress.json',encoding='utf-8'))
+          assert p['registeredMunicipalities']==384,p['registeredMunicipalities']
+          assert p['mergedMunicipalities']==384,p['mergedMunicipalities']
+          assert p['prOpenMunicipalities']==0,p['prOpenMunicipalities']
+          PY
+          mapfile -t actual < <(git diff origin/main --name-only | sort)
+          expected=(jichitai-compare/operations/progress.json jichitai-compare/operations/tasks/01571.json)
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${actual[@]}")
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '進捗補正: 公開384自治体を全件mergedへ同期'
+          git push origin HEAD:coord/fix-progress-384-20260722-1317
