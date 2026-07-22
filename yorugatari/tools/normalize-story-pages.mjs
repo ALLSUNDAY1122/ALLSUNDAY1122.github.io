@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const SITE_ROOT = path.resolve(process.cwd(), 'yorugatari');
 const ASSETS_DIR = path.join(SITE_ROOT, 'assets');
 const STORIES_DIR = path.join(SITE_ROOT, 'stories');
-const STORY_SCRIPT_VERSION = '20260723-005';
+const STORY_SCRIPT_VERSION = '20260723-006';
 const SHARE_IMAGE_ALT = '月明かりと提灯が照らす夜の町並み';
 const CATALOG_FILES = [
   'stories.js',
