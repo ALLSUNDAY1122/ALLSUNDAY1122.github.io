@@ -1,17 +1,16 @@
 {
-  "auditedAt": "2026-07-22T21:45:19.288Z",
-  "success": true,
+  "auditedAt": "2026-07-22T21:49:01.399Z",
+  "success": false,
   "results": [
     {
       "name": "top: published page loaded",
       "ok": true,
       "detail": {
-        "attempt": 1,
-        "skipLink": true,
-        "mainTarget": true,
-        "progressbar": true,
-        "readerPanelReady": true,
-        "appVersion": true
+        "ready": true,
+        "attempt": 11,
+        "cards": 100,
+        "gridBusy": "false",
+        "readerPanelReady": true
       }
     },
     {
@@ -29,7 +28,6 @@
       "name": "top: skip link moves focus to main content",
       "ok": true,
       "detail": {
-        "hash": "#main-content",
         "activeId": "main-content",
         "mainId": "main-content"
       }
@@ -67,7 +65,7 @@
     {
       "name": "top: heading levels do not skip",
       "ok": true,
-      "detail": []
+      "detail": false
     },
     {
       "name": "top: buttons have accessible names",
@@ -98,8 +96,9 @@
       "name": "archive: published page loaded",
       "ok": true,
       "detail": {
+        "ready": true,
         "attempt": 1,
-        "ready": true
+        "items": 100
       }
     },
     {
@@ -117,7 +116,6 @@
       "name": "archive: skip link moves focus to main content",
       "ok": true,
       "detail": {
-        "hash": "#archive-content",
         "activeId": "archive-content",
         "mainId": "archive-content"
       }
@@ -134,8 +132,14 @@
     },
     {
       "name": "archive: no critical or serious axe violations",
-      "ok": true,
-      "detail": []
+      "ok": false,
+      "detail": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
     },
     {
       "name": "archive: document language is Japanese",
@@ -155,7 +159,7 @@
     {
       "name": "archive: heading levels do not skip",
       "ok": true,
-      "detail": []
+      "detail": false
     },
     {
       "name": "archive: buttons have accessible names",
@@ -176,8 +180,8 @@
       "name": "story: published page loaded",
       "ok": true,
       "detail": {
-        "attempt": 1,
-        "ready": true
+        "ready": true,
+        "attempt": 1
       }
     },
     {
@@ -195,7 +199,6 @@
       "name": "story: skip link moves focus to main content",
       "ok": true,
       "detail": {
-        "hash": "#story-content",
         "activeId": "story-content",
         "mainId": "story-content"
       }
@@ -233,7 +236,7 @@
     {
       "name": "story: heading levels do not skip",
       "ok": true,
-      "detail": []
+      "detail": false
     },
     {
       "name": "story: buttons have accessible names",
@@ -270,5 +273,17 @@
       "detail": []
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "name": "archive: no critical or serious axe violations",
+      "ok": false,
+      "detail": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    }
+  ]
 }
