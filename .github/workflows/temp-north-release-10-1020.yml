@@ -1,0 +1,68 @@
+name: Temporary north release 10 1020
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-north-release-10-1020.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Create exact north snapshot branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          git fetch origin region/north:refs/remotes/origin/region/north
+          BRANCH=coord/north-release-10-20260722-1020
+          git checkout -B "$BRANCH" origin/main
+          git checkout origin/region/north -- \
+            jichitai-compare/data/municipalities/01/01511.json \
+            jichitai-compare/data/municipalities/01/01512.json \
+            jichitai-compare/data/municipalities/01/01513.json \
+            jichitai-compare/data/municipalities/01/01514.json \
+            jichitai-compare/data/municipalities/01/01516.json \
+            jichitai-compare/data/municipalities/01/01517.json \
+            jichitai-compare/data/municipalities/01/01518.json \
+            jichitai-compare/data/municipalities/01/01519.json \
+            jichitai-compare/data/municipalities/01/01543.json \
+            jichitai-compare/data/municipalities/01/01544.json \
+            jichitai-compare/operations/tasks/01511.json \
+            jichitai-compare/operations/tasks/01512.json \
+            jichitai-compare/operations/tasks/01513.json \
+            jichitai-compare/operations/tasks/01514.json \
+            jichitai-compare/operations/tasks/01516.json \
+            jichitai-compare/operations/tasks/01517.json \
+            jichitai-compare/operations/tasks/01518.json \
+            jichitai-compare/operations/tasks/01519.json \
+            jichitai-compare/operations/tasks/01543.json \
+            jichitai-compare/operations/tasks/01544.json
+          python - <<'PY'
+          import subprocess
+          expected={
+          'jichitai-compare/data/municipalities/01/01511.json','jichitai-compare/data/municipalities/01/01512.json','jichitai-compare/data/municipalities/01/01513.json','jichitai-compare/data/municipalities/01/01514.json','jichitai-compare/data/municipalities/01/01516.json','jichitai-compare/data/municipalities/01/01517.json','jichitai-compare/data/municipalities/01/01518.json','jichitai-compare/data/municipalities/01/01519.json','jichitai-compare/data/municipalities/01/01543.json','jichitai-compare/data/municipalities/01/01544.json',
+          'jichitai-compare/operations/tasks/01511.json','jichitai-compare/operations/tasks/01512.json','jichitai-compare/operations/tasks/01513.json','jichitai-compare/operations/tasks/01514.json','jichitai-compare/operations/tasks/01516.json','jichitai-compare/operations/tasks/01517.json','jichitai-compare/operations/tasks/01518.json','jichitai-compare/operations/tasks/01519.json','jichitai-compare/operations/tasks/01543.json','jichitai-compare/operations/tasks/01544.json'}
+          actual=set(subprocess.check_output(['git','diff','--name-only','origin/main'],text=True).splitlines())
+          if actual != expected:
+              raise SystemExit(f'unexpected snapshot files: {sorted(actual ^ expected)}')
+          PY
+          git add --all
+          git commit -m "全国統合: 北日本の追加10自治体を固定スナップショット化"
+          git push --force-with-lease origin "$BRANCH"
+          git checkout main
+          git pull --rebase origin main
+          git rm .github/workflows/temp-north-release-10-1020.yml
+          git commit -m "統括管理: 北日本固定スナップショット一時ワークフローを削除"
+          git push origin main
