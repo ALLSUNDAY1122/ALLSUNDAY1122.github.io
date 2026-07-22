@@ -1,0 +1,41 @@
+name: Temporary Central Release 10 1802
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-central-release-10-1802.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/central-release-10-20260722-1802
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy fixed central snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin '+refs/heads/region/central:refs/remotes/origin/region/central'
+          codes='22222 22223 22224 22225 22226 22301 22302 22304 22305 22306'
+          for code in $codes; do
+            pref=${code:0:2}
+            data="jichitai-compare/data/municipalities/$pref/$code.json"
+            task="jichitai-compare/operations/tasks/$code.json"
+            mkdir -p "$(dirname "$data")" "$(dirname "$task")"
+            git show "origin/region/central:$data" > "$data"
+            git show "origin/region/central:$task" > "$task"
+          done
+          changed=$(git status --porcelain | wc -l)
+          test "$changed" -eq 20
+          git add jichitai-compare/data/municipalities/22/{22222,22223,22224,22225,22226,22301,22302,22304,22305,22306}.json \
+                  jichitai-compare/operations/tasks/{22222,22223,22224,22225,22226,22301,22302,22304,22305,22306}.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合: 中日本10自治体の固定スナップショット'
+          git push origin HEAD:coord/central-release-10-20260722-1802
