@@ -27,6 +27,14 @@ const staticPages = [
   'terms.html',
   'contact.html'
 ];
+const categoryPages = [
+  'categories/shinrei.html',
+  'categories/hitokowa.html',
+  'categories/imikowa.html',
+  'categories/net-kaidan.html',
+  'categories/urban-legend.html',
+  'categories/aftertaste.html'
+];
 
 function loadStories() {
   const sandbox = { window: { STORIES: [], NOTION_STORIES: [] } };
@@ -48,16 +56,19 @@ function loadStories() {
   return stories;
 }
 
+function japanDate() {
+  return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
 function gitLastModified(relativePath) {
   const repositoryPath = path.posix.join('yorugatari', relativePath.replaceAll('\\', '/'));
   const value = execFileSync('git', ['log', '-1', '--format=%cs', '--', repositoryPath], {
     cwd: repoRoot,
     encoding: 'utf8'
   }).trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    throw new Error(`Could not determine last modification date for ${repositoryPath}`);
-  }
-  return value;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  if (fs.existsSync(path.join(siteDir, relativePath))) return japanDate();
+  throw new Error(`Could not determine last modification date for ${repositoryPath}`);
 }
 
 function escapeXml(value) {
@@ -73,6 +84,7 @@ export function expectedPages() {
   const stories = loadStories();
   const pages = [
     ...staticPages,
+    ...categoryPages,
     ...stories.map((story) => `stories/${story.slug}.html`)
   ];
 
