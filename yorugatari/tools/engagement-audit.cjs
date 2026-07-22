@@ -6,9 +6,10 @@ const ROOT = process.cwd();
 const SITE = path.join(ROOT, 'yorugatari');
 const STORIES = path.join(SITE, 'stories');
 const BASE = 'https://allsunday1122.github.io/yorugatari';
-const ANALYTICS_VERSION = '20260723-002';
-const ENGAGEMENT_VERSION = '20260723-003';
+const ANALYTICS_VERSION = '20260723-003';
+const ENGAGEMENT_VERSION = '20260723-004';
 const STORY_VERSION = '20260723-007';
+const campaigns = JSON.parse(fs.readFileSync(path.join(SITE, 'tools', 'campaigns.json'), 'utf8'));
 const results = [];
 const failures = [];
 
@@ -38,12 +39,19 @@ function localAudit() {
   }
 
   const storyRuntime = fs.readFileSync(path.join(SITE, 'assets', 'story.js'), 'utf8');
+  const analyticsRuntime = fs.readFileSync(path.join(SITE, 'assets', 'analytics.js'), 'utf8');
+  const engagementRuntime = fs.readFileSync(path.join(SITE, 'assets', 'engagement.js'), 'utf8');
+  const launchKit = fs.readFileSync(path.join(SITE, 'tools', 'external-launch-kit.md'), 'utf8');
+  const campaignDefinitions = Array.isArray(campaigns.definitions) ? campaigns.definitions : [];
+
   record('local: six static pages and 100 stories are covered', staticFiles.length === 6 && storyFiles.length === 100, { static: staticFiles.length, stories: storyFiles.length });
   record('local: runtime modules, social metadata, and static circulation are complete', errors.length === 0, errors);
   record('local: story runtime no longer loads the 100-story catalog', !storyRuntime.includes('catalogSources') && !storyRuntime.includes('loadCatalogScript'));
+  record('local: four fixed launch links and onsite sharing are defined', campaignDefinitions.length === 4 && campaignDefinitions.every((item) => item.id && item.url && launchKit.includes(item.url)) && campaigns.onsiteShare?.id === 'onsite-share', campaignDefinitions);
+  record('local: unknown UTM values are not converted into campaign paths', analyticsRuntime.includes('knownCampaigns.get') && engagementRuntime.includes('knownCampaigns.get') && !analyticsRuntime.includes("'/yorugatari/__campaign/' + query") && !engagementRuntime.includes("'/yorugatari/__campaign/' + query"));
 
   const privacy = fs.readFileSync(path.join(SITE, 'privacy.html'), 'utf8');
-  record('local: privacy policy explains coarse source categories', privacy.includes('検索語') && privacy.includes('粗い区分') && privacy.includes('参照元URL'));
+  record('local: privacy policy explains coarse sources and fixed campaign codes', privacy.includes('粗い区分') && privacy.includes('固定キャンペーンコード') && privacy.includes('登録済みコードに一致しない値は破棄') && privacy.includes('参照元URL') && privacy.includes('検索語'));
 
   const notFound = fs.readFileSync(path.join(ROOT, '404.html'), 'utf8');
   record('local: custom 404 is noindex and recoverable', notFound.includes('noindex,follow') && notFound.includes('data-page-type="404"') && notFound.includes('/yorugatari/archive.html') && notFound.includes(`/yorugatari/assets/analytics.js?v=${ANALYTICS_VERSION}`));
@@ -97,7 +105,7 @@ async function imageAudit() {
 
 async function browserAudit() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/1.8' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/1.9' });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', { configurable: true, value: async (payload) => { window.__YORUGATARI_SHARE_PAYLOAD__ = payload; } });
   });
@@ -106,53 +114,73 @@ async function browserAudit() {
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
   page.on('console', (message) => { if (message.type() === 'error') errors.push(`console: ${message.text()}`); });
 
-  const top = await open(page, `${BASE}/`, async (target, response, attempt) => {
+  const topCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260723-x-top-100');
+  const top = await open(page, topCampaign.url, async (target, response, attempt) => {
     const state = await target.evaluate((version) => ({
       analyticsScript: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
       engagementScript: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
       analytics: Boolean(window.YORUGATARI_ANALYTICS),
       source: window.YORUGATARI_ANALYTICS?.source,
+      campaign: window.YORUGATARI_ANALYTICS?.campaign,
       panel: Boolean(document.querySelector('#readerPanel'))
     }), ANALYTICS_VERSION);
     const meta = await metadata(target);
-    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.panel && metadataComplete(meta), status: response?.status(), attempt, state, meta };
+    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.source === 'social' && state.campaign === topCampaign.id && state.panel && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: top uses lightweight source analytics and social metadata', top.ready && Boolean(top.state?.source), top);
+  record('published: top launch URL resolves and maps to its fixed social campaign', top.ready, top);
 
-  const story = await open(page, `${BASE}/stories/spare-key-returned.html`, async (target, response, attempt) => {
+  const storyCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260723-threads-spare-key');
+  const story = await open(page, storyCampaign.url, async (target, response, attempt) => {
     const state = await target.evaluate(({ engagementVersion, storyVersion }) => ({
       engagementScript: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${engagementVersion}`)),
       storyScript: Array.from(document.scripts).some((script) => script.src.includes(`story.js?v=${storyVersion}`)),
       catalogScripts: Array.from(document.scripts).filter((script) => /\/stories(?:-\d{3}-\d{3})?\.js/.test(script.src)).length,
       engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
       source: window.YORUGATARI_ENGAGEMENT?.source,
+      campaign: window.YORUGATARI_ENGAGEMENT?.campaign,
+      shareUrl: window.YORUGATARI_ENGAGEMENT?.shareUrl,
       relatedReady: window.YORUGATARI_ENGAGEMENT?.relatedReady,
       share: Boolean(document.querySelector('#shareButton')),
       pagination: document.querySelectorAll('.story-pagination a').length,
       related: document.querySelectorAll('.related a').length
     }), { engagementVersion: ENGAGEMENT_VERSION, storyVersion: STORY_VERSION });
     const meta = await metadata(target);
-    return { ready: response?.status() === 200 && state.engagementScript && state.storyScript && state.catalogScripts === 0 && state.engagement && state.relatedReady && state.share && state.pagination === 3 && state.related === 2 && metadataComplete(meta), status: response?.status(), attempt, state, meta };
+    return { ready: response?.status() === 200 && state.engagementScript && state.storyScript && state.catalogScripts === 0 && state.engagement && state.source === 'social' && state.campaign === storyCampaign.id && state.relatedReady && state.share && state.pagination === 3 && state.related === 2 && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: story uses static circulation without catalog scripts', story.ready && Boolean(story.state?.source), story);
+  record('published: story launch URL maps to its fixed campaign without catalog scripts', story.ready, story);
 
   try { await page.waitForFunction(() => Number.isFinite(window.YORUGATARI_ENGAGEMENT?.views), null, { timeout: 20000 }); } catch (error) {}
-  const views = await page.evaluate(() => ({ value: window.YORUGATARI_ENGAGEMENT?.views, text: document.querySelector('.view-count strong')?.textContent.trim(), error: window.YORUGATARI_ENGAGEMENT?.error, sourceError: window.YORUGATARI_ENGAGEMENT?.sourceError }));
+  const views = await page.evaluate(() => ({ value: window.YORUGATARI_ENGAGEMENT?.views, text: document.querySelector('.view-count strong')?.textContent.trim(), error: window.YORUGATARI_ENGAGEMENT?.error, sourceError: window.YORUGATARI_ENGAGEMENT?.sourceError, campaignError: window.YORUGATARI_ENGAGEMENT?.campaignError }));
   record('published: Page Views API count is displayed', Number.isFinite(views.value) && /^\d/.test(views.text || ''), views);
 
   await page.locator('#shareButton').click();
   const share = await page.evaluate(() => ({ payload: window.__YORUGATARI_SHARE_PAYLOAD__, status: document.querySelector('.share-status')?.textContent.trim() }));
-  record('published: native share receives canonical story data', Boolean(share.payload && share.payload.url === `${BASE}/stories/spare-key-returned.html` && String(share.payload.title).includes('合鍵は返却済み') && share.status === '共有画面を開きました。'), share);
+  const expectedShare = new URL(`${BASE}/stories/spare-key-returned.html`);
+  expectedShare.searchParams.set('utm_source', 'web_share');
+  expectedShare.searchParams.set('utm_medium', 'social');
+  expectedShare.searchParams.set('utm_campaign', 'onsite_share');
+  record('published: native share receives a canonical-based tracked URL', Boolean(share.payload && share.payload.url === expectedShare.href && String(share.payload.title).includes('合鍵は返却済み') && share.status === '共有画面を開きました。'), share);
 
   const circulation = await page.evaluate(() => ({ pagination: Array.from(document.querySelectorAll('.story-pagination a')).map((link) => link.textContent.trim()), related: Array.from(document.querySelectorAll('.related a')).map((link) => link.textContent.trim()), archiveLinks: document.querySelectorAll('a[href*="archive.html"]').length }));
   record('published: previous, archive, next, and two related paths exist', circulation.pagination.length === 3 && circulation.related.length === 2 && circulation.archiveLinks >= 1, circulation);
 
-  const policy = await open(page, `${BASE}/about.html`, async (target, response, attempt) => {
-    const meta = await metadata(target);
-    const scripts = await target.evaluate((version) => ({ analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)), engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')) }), ANALYTICS_VERSION);
-    return { ready: response?.status() === 200 && metadataComplete(meta) && scripts.analytics && !scripts.engagement, status: response?.status(), attempt, meta, scripts };
+  const unknown = await open(page, `${BASE}/?utm_source=x&utm_medium=social&utm_campaign=unknown&utm_content=unknown`, async (target, response, attempt) => {
+    const state = await target.evaluate(() => ({ source: window.YORUGATARI_ANALYTICS?.source, campaign: window.YORUGATARI_ANALYTICS?.campaign }));
+    return { ready: response?.status() === 200 && state.source === 'social' && state.campaign === null, status: response?.status(), attempt, state };
   }, 6);
-  record('published: policy uses lightweight analytics and social metadata', policy.ready, policy);
+  record('published: unregistered UTM values are discarded', unknown.ready, unknown);
+
+  const policy = await open(page, `${BASE}/privacy.html`, async (target, response, attempt) => {
+    const meta = await metadata(target);
+    const detail = await target.evaluate((version) => ({
+      analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
+      engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
+      fixedCodes: document.body.textContent.includes('固定キャンペーンコード'),
+      unknownDiscarded: document.body.textContent.includes('登録済みコードに一致しない値は破棄')
+    }), ANALYTICS_VERSION);
+    return { ready: response?.status() === 200 && metadataComplete(meta) && detail.analytics && !detail.engagement && detail.fixedCodes && detail.unknownDiscarded, status: response?.status(), attempt, meta, detail };
+  }, 6);
+  record('published: privacy policy and lightweight analytics match campaign behavior', policy.ready, policy);
   record('published: normal pages have no JavaScript errors', errors.length === 0, errors.slice());
   errors.length = 0;
 
