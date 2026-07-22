@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-23T04:04:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T04:21:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 188,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 987,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "35203",
+    "municipalityName": "山口市",
+    "prefectureCode": "35"
+  },
+  "workingBranch": "data/35203-yamaguchi-westb",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -45,5 +49,5 @@
     {"code":"35202","name":"宇部市","pullRequestNumber":987,"ciRunNumber":2436}
   ],
   "blocked": [],
-  "nextAction": "山口市（35203）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "山口市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
 }
