@@ -1,4 +1,4 @@
-name: Coordinator A-B Release 12
+name: Coordinator Diagnose A-B Release 12
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build-release:
+  diagnose-release:
     if: github.head_ref == 'coord/ab-release-12-20260722-2237'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -20,88 +20,69 @@ jobs:
           ref: coord/ab-release-12-20260722-2237
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Fetch regional branches
+      - name: Fetch main and regional branches
         run: |
           git fetch origin \
+            +refs/heads/main:refs/remotes/origin/main \
             +refs/heads/region/north:refs/remotes/origin/region/north \
             +refs/heads/region/east:refs/remotes/origin/region/east \
             +refs/heads/region/central:refs/remotes/origin/region/central \
             +refs/heads/region/west:refs/remotes/origin/region/west
 
-      - name: Copy 12 completed municipality snapshots
-        shell: bash
+      - name: Write release diagnostics
         run: |
-          set -euo pipefail
-          copy_pair() {
-            local branch="$1"
-            local code="$2"
-            local pref="${code:0:2}"
-            local data_path="jichitai-compare/data/municipalities/${pref}/${code}.json"
-            local task_path="jichitai-compare/operations/tasks/${code}.json"
-            if [[ -e "$data_path" || -e "$task_path" ]]; then
-              echo "main already contains ${code}; aborting duplicate release"
-              exit 1
-            fi
-            mkdir -p "$(dirname "$data_path")" "$(dirname "$task_path")"
-            git show "origin/${branch}:${data_path}" > "$data_path"
-            git show "origin/${branch}:${task_path}" > "$task_path"
-            node --input-type=module - "$data_path" "$task_path" "$code" <<'NODE'
-          import fs from 'node:fs';
-          const [, , dataPath, taskPath, expectedCode] = process.argv;
-          const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
-          const taskCode = task.code ?? task.municipalityCode;
-          const completedCount = task.completedServiceCount ?? task.completedServices?.length ?? 0;
-          if (data.code !== expectedCode || taskCode !== expectedCode) throw new Error(`code mismatch: ${expectedCode}`);
-          if (task.status !== 'merged' || completedCount !== 9) throw new Error(`incomplete task: ${expectedCode}`);
-          if (!data.services || Object.keys(data.services).length !== 9) throw new Error(`invalid service count: ${expectedCode}`);
-          NODE
-          }
-
-          copy_pair region/north 04100
-          for code in 10428 10429 11100; do copy_pair region/east "$code"; done
-          for code in 25212 25213 26100 26201 26202; do copy_pair region/central "$code"; done
-          for code in 32525 32526 33211; do copy_pair region/west "$code"; done
-
-          raw_count="$(git status --short -- jichitai-compare/data/municipalities jichitai-compare/operations/tasks | wc -l)"
-          test "$raw_count" -eq 24
-
-      - name: Generate and validate public data
-        working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
-          if (progress.registeredMunicipalities !== 557) {
-            throw new Error(`expected 557 municipalities, found ${progress.registeredMunicipalities}`);
-          }
-          let html = fs.readFileSync('index.html', 'utf8');
-          html = html.replace(/<span>\d+自治体・9制度<\/span>/u, '<span>557自治体・9制度</span>');
-          html = html.replace(/<li>登録状況：\d+自治体の生成データを公開中<\/li>/u, '<li>登録状況：557自治体の生成データを公開中</li>');
-          fs.writeFileSync('index.html', html);
+          import { execFileSync } from 'node:child_process';
+          const entries = [
+            ['region/north','04100'],
+            ['region/east','10428'],['region/east','10429'],['region/east','11100'],
+            ['region/central','25212'],['region/central','25213'],['region/central','26100'],['region/central','26201'],['region/central','26202'],
+            ['region/west','32525'],['region/west','32526'],['region/west','33211']
+          ];
+          const show = (ref, path) => {
+            try { return execFileSync('git',['show',`${ref}:${path}`],{encoding:'utf8',stdio:['ignore','pipe','pipe']}); }
+            catch { return null; }
+          };
+          const report = entries.map(([branch, code]) => {
+            const pref = code.slice(0,2);
+            const dataPath = `jichitai-compare/data/municipalities/${pref}/${code}.json`;
+            const taskPath = `jichitai-compare/operations/tasks/${code}.json`;
+            const sourceDataText = show(`origin/${branch}`, dataPath);
+            const sourceTaskText = show(`origin/${branch}`, taskPath);
+            const mainDataText = show('origin/main', dataPath);
+            const mainTaskText = show('origin/main', taskPath);
+            let parsed = {};
+            try {
+              const data = sourceDataText ? JSON.parse(sourceDataText) : null;
+              const task = sourceTaskText ? JSON.parse(sourceTaskText) : null;
+              parsed = {
+                dataCode: data?.code ?? null,
+                serviceCount: data?.services ? Object.keys(data.services).length : null,
+                taskCode: task?.code ?? task?.municipalityCode ?? null,
+                taskStatus: task?.status ?? null,
+                completedCount: task?.completedServiceCount ?? task?.completedServices?.length ?? null
+              };
+            } catch (error) {
+              parsed = { parseError: error.message };
+            }
+            return {
+              branch, code,
+              sourceDataExists: sourceDataText !== null,
+              sourceTaskExists: sourceTaskText !== null,
+              mainDataExists: mainDataText !== null,
+              mainTaskExists: mainTaskText !== null,
+              ...parsed
+            };
+          });
+          fs.writeFileSync('jichitai-compare/operations/release-diagnostic-854.json', JSON.stringify({generatedAt:new Date().toISOString(), report}, null, 2) + '\n');
           NODE
-          npm run validate:generated
-          npm run validate:sessions
-          node --check app.js
 
-      - name: Restore standard workflow and commit release
+      - name: Restore workflow and commit diagnostic
         run: |
-          git show HEAD^:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          changed_count="$(git status --short -- jichitai-compare | wc -l)"
-          if [[ "$changed_count" -ne 27 ]]; then
-            echo "expected 27 final project files, found ${changed_count}"
-            git status --short
-            exit 1
-          fi
+          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Publish 12 A-B session municipalities and synchronize 557 total'
+          git add .github/workflows/jichitai-compare.yml jichitai-compare/operations/release-diagnostic-854.json
+          git commit -m 'Add diagnostic report for A-B release 12'
           git push origin HEAD:coord/ab-release-12-20260722-2237
