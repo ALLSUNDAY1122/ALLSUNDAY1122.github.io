@@ -7,6 +7,10 @@ on:
     paths:
       - apps/ai-handover-log/source_chunks/**
       - .github/workflows/ai-handover-log-source-diagnostic.yml
+  pull_request:
+    paths:
+      - apps/ai-handover-log/source_chunks/**
+      - .github/workflows/ai-handover-log-source-diagnostic.yml
   workflow_dispatch:
 
 permissions:
