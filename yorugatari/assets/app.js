@@ -135,7 +135,7 @@ function buildReaderPanel() {
   const panel = document.createElement('aside');
   panel.className = 'reader-panel';
   panel.setAttribute('aria-label', 'あなたの読書状況');
-  panel.innerHTML = '<div class="reader-panel__head"><div><span class="eyebrow">Your night log</span><strong>' + completedCount + ' / ' + stories.length + '話 読了</strong></div><span>' + percent + '%</span></div><div class="reader-meter" aria-label="読了率 ' + percent + '%"><span style="width:' + percent + '%"></span></div><p>' + (completedCount === stories.length ? '全話読了。今夜はお気に入りをもう一度。' : completedCount ? '読了の印はこの端末に残ります。今夜も一話だけ。' : '読み終えると作品カードの色が変わります。') + '</p>';
+  panel.innerHTML = '<div class="reader-panel__head"><div><span class="eyebrow">Your night log</span><strong>' + completedCount + ' / ' + stories.length + '話 読了</strong></div><span>' + percent + '%</span></div><div class="reader-meter" role="progressbar" aria-label="読了率" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + percent + '"><span style="width:' + percent + '%"></span></div><p>' + (completedCount === stories.length ? '全話読了。今夜はお気に入りをもう一度。' : completedCount ? '読了の印はこの端末に残ります。今夜も一話だけ。' : '読み終えると作品カードの色が変わります。') + '</p>';
 
   const actions = document.createElement('div');
   actions.className = 'reader-panel__actions';
