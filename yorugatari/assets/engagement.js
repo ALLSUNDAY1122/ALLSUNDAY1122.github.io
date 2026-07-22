@@ -3,26 +3,49 @@
 
   const SITE_ID = 'allsunday1122.github.io';
   const API_BASE = 'https://page-views-api.ratneshc.com/api/v1';
+  const SOURCE_KEY = 'yorugatari-source-tracked';
   const canonical = document.querySelector('link[rel="canonical"]');
   const canonicalUrl = canonical ? canonical.href : location.href.split('#')[0];
   const actualPath = location.pathname.replace(/\/{2,}/g, '/').replace(/\/$/, '') || '/';
   const isYorugatari = actualPath === '/yorugatari' || actualPath.startsWith('/yorugatari/');
-  const isErrorPage = document.body && document.body.dataset.pageType === '404';
-  const trackingPath = isErrorPage ? '/yorugatari/404' : actualPath;
   const viewCount = document.querySelector('.view-count strong');
+
+  function sourceChannel() {
+    const campaign = (new URLSearchParams(location.search).get('utm_source') || '').toLowerCase();
+    if (campaign) {
+      if (/google|bing|yahoo|duckduckgo|baidu|yandex/.test(campaign)) return 'search';
+      if (/x|twitter|facebook|instagram|threads|line|tiktok/.test(campaign)) return 'social';
+      return 'campaign';
+    }
+    if (!document.referrer) return 'direct';
+    try {
+      const host = new URL(document.referrer).hostname.toLowerCase();
+      if (host === location.hostname) return 'internal';
+      if (/google\.|bing\.|search\.yahoo\.|duckduckgo\.|baidu\.|yandex\./.test(host)) return 'search';
+      if (/(^|\.)x\.com$|twitter\.com$|facebook\.com$|instagram\.com$|threads\.net$|line\.me$|tiktok\.com$/.test(host)) return 'social';
+      return 'referral';
+    } catch (error) {
+      return 'referral';
+    }
+  }
+
+  const source = sourceChannel();
   const state = {
     path: actualPath,
-    trackingPath: trackingPath,
+    trackingPath: actualPath,
+    source: source,
     tracked: false,
+    sourceTracked: false,
     views: null,
     shareReady: false,
     relatedReady: false,
-    error: null
+    error: null,
+    sourceError: null
   };
   window.YORUGATARI_ENGAGEMENT = state;
 
-  function endpoint(name) {
-    return API_BASE + '/' + name + '?site=' + encodeURIComponent(SITE_ID) + '&path=' + encodeURIComponent(trackingPath);
+  function endpoint(name, targetPath) {
+    return API_BASE + '/' + name + '?site=' + encodeURIComponent(SITE_ID) + '&path=' + encodeURIComponent(targetPath || actualPath);
   }
 
   async function request(url, options, attempts) {
@@ -36,33 +59,40 @@
       } catch (error) {
         lastError = error;
       }
-      if (attempt < attempts) {
-        await new Promise(function (resolve) { setTimeout(resolve, attempt * 400); });
-      }
+      if (attempt < attempts) await new Promise(function (resolve) { setTimeout(resolve, attempt * 400); });
     }
     throw lastError || new Error('Request failed');
   }
 
-  async function trackPageView() {
-    if (!isYorugatari || navigator.webdriver) return;
-    await request(endpoint('track'), {
+  function requestOptions(keepalive) {
+    return {
       method: 'GET',
       credentials: 'omit',
       cache: 'no-store',
-      keepalive: true,
+      keepalive: Boolean(keepalive),
       referrerPolicy: 'no-referrer'
-    }, 2);
+    };
+  }
+
+  async function trackPageView() {
+    if (!isYorugatari || navigator.webdriver) return;
+    await request(endpoint('track'), requestOptions(true), 2);
     state.tracked = true;
   }
 
+  async function trackSource() {
+    if (!isYorugatari || navigator.webdriver || source === 'internal') return;
+    let alreadyTracked = false;
+    try { alreadyTracked = sessionStorage.getItem(SOURCE_KEY) === '1'; } catch (error) {}
+    if (alreadyTracked) return;
+    await request(endpoint('track', '/yorugatari/__source/' + source), requestOptions(true), 2);
+    state.sourceTracked = true;
+    try { sessionStorage.setItem(SOURCE_KEY, '1'); } catch (error) {}
+  }
+
   async function loadViewCount() {
-    if (!viewCount || !isYorugatari || isErrorPage) return;
-    const response = await request(endpoint('views'), {
-      method: 'GET',
-      credentials: 'omit',
-      cache: 'no-store',
-      referrerPolicy: 'no-referrer'
-    }, 3);
+    if (!viewCount || !isYorugatari) return;
+    const response = await request(endpoint('views'), requestOptions(false), 3);
     const data = await response.json();
     const views = Number(data && data.views);
     if (!Number.isFinite(views) || views < 0) throw new Error('Invalid view count');
@@ -72,8 +102,9 @@
   }
 
   async function startAnalytics() {
+    try { await trackPageView(); } catch (error) { state.error = error && error.message ? error.message : String(error); }
+    try { await trackSource(); } catch (error) { state.sourceError = error && error.message ? error.message : String(error); }
     try {
-      await trackPageView();
       await loadViewCount();
     } catch (error) {
       state.error = error && error.message ? error.message : String(error);
@@ -82,9 +113,7 @@
   }
 
   function copyText(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text);
-    }
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
     return new Promise(function (resolve, reject) {
       const textarea = document.createElement('textarea');
       textarea.value = text;
@@ -175,9 +204,7 @@
     const sameCategory = stories
       .map(function (story, index) { return { story: story, index: index }; })
       .filter(function (entry) { return entry.story.slug !== slug && entry.story.category === current.category; })
-      .sort(function (left, right) {
-        return Math.abs(left.index - currentIndex) - Math.abs(right.index - currentIndex);
-      })
+      .sort(function (left, right) { return Math.abs(left.index - currentIndex) - Math.abs(right.index - currentIndex); })
       .map(function (entry) { return entry.story; });
     const fallback = stories.filter(function (story) { return story.slug !== slug; });
     const selected = Array.from(new Map(sameCategory.concat(fallback).map(function (story) {
