@@ -28,7 +28,7 @@ permissions:
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -56,14 +56,24 @@ jobs:
           cp yorugatari-performance-report.json /tmp/yorugatari-performance-report.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin main
-          git reset --hard origin/main
-          cp /tmp/yorugatari-performance-report.json yorugatari/tools/performance-audit-latest.json
-          git add yorugatari/tools/performance-audit-latest.json
-          if ! git diff --cached --quiet; then
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-performance-report.json yorugatari/tools/performance-audit-latest.json
+            git add yorugatari/tools/performance-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
             git commit -m "Record Yorugatari performance audit [skip ci]"
-            git push origin HEAD:main
-          fi
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
 
       - name: Upload Lighthouse report
         if: always()
