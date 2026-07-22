@@ -1,0 +1,43 @@
+name: Temporary Audit Main Task Status 20260722 1315
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-audit-main-task-status-20260722-1315.yml
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/audit-main-task-status-20260722-1315
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Audit task statuses
+        run: |
+          set -euxo pipefail
+          git fetch origin main
+          git reset --hard origin/main
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          rows=[]
+          for p in sorted(Path('jichitai-compare/operations/tasks').glob('*.json')):
+              try: d=json.loads(p.read_text(encoding='utf-8'))
+              except Exception: continue
+              if d.get('status')!='merged':
+                  rows.append({'code':d.get('municipalityCode'),'name':d.get('municipalityName'),'status':d.get('status'),'pr':d.get('pullRequestNumber'),'path':str(p)})
+          out=Path('jichitai-compare/operations/control/main-task-status-audit.json')
+          out.write_text(json.dumps({'nonMergedTasks':rows},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(rows)
+          PY
+          git add jichitai-compare/operations/control/main-task-status-audit.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '監査: main上の非merged taskを一覧化'
+          git push --force-with-lease origin HEAD:coord/audit-main-task-status-20260722-1315
