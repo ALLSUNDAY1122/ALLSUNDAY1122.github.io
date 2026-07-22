@@ -5,26 +5,28 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-22T22:26:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-22T22:29:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 216,
-  "currentMunicipality": {
-    "municipalityCode": "32526",
-    "municipalityName": "西ノ島町",
-    "prefectureCode": "32"
-  },
-  "workingBranch": "data/32526-nishinoshima-westb",
+  "remainingUninvestigatedCount": 215,
+  "currentMunicipality": null,
+  "workingBranch": null,
   "pullRequestNumber": 849,
-  "ciStatus": "pending",
+  "ciStatus": "success",
   "completedSinceSplit": [
     {
       "code": "32525",
       "name": "海士町",
       "pullRequestNumber": 841,
       "ciRunNumber": 1770
+    },
+    {
+      "code": "32526",
+      "name": "西ノ島町",
+      "pullRequestNumber": 849,
+      "ciRunNumber": 1807
     }
   ],
   "blocked": [],
-  "nextAction": "PR #849のCI成功と競合なしを確認し、region/westへ統合する。"
+  "nextAction": "知夫村（32527）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
 }
