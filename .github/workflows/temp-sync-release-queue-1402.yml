@@ -1,4 +1,4 @@
-name: Temporary Release Queue Sync 1402
+name: Temporary Release Queue Sync 1402 Final
 
 on:
   push:
@@ -52,7 +52,7 @@ jobs:
               e['reason']=f'最新地方ブランチを再走査。前回全国統合後の地方統合繰越は{count}自治体'
               e['mainIntegrationPr']=state.get('lastNationalIntegrationPr'); e['generatedPullRequest']=655; e['auditStatus']='passed'
           total=sum(e['count'] for e in q['entries'])
-          q['updatedAt']='2026-07-22T14:02:00+09:00'; q['status']='active'
+          q['updatedAt']='2026-07-22T14:03:00+09:00'; q['status']='active'
           q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':394,'latestGeneratedPullRequest':655,'latestPublicCountPullRequest':655,'releaseReadyRegions':[r for r,v in pending.items() if v>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"}
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           PY
