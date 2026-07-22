@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-23T01:19:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T01:24:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 201,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 932,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "34214",
+    "municipalityName": "安芸高田市",
+    "prefectureCode": "34"
+  },
+  "workingBranch": "data/34214-akitakata-westb",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -32,5 +36,5 @@
     {"code":"34213","name":"廿日市市","pullRequestNumber":932,"ciRunNumber":2202}
   ],
   "blocked": [],
-  "nextAction": "安芸高田市（34214）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "安芸高田市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
 }
