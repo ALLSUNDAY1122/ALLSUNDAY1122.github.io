@@ -131,35 +131,29 @@ function buildReaderPanel() {
   const dayNumber = Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 86400000);
   const tonightStory = stories[dayNumber % stories.length];
   const nextUnread = unread[0];
+  const message = completedCount === stories.length
+    ? '全話読了。今夜はお気に入りをもう一度。'
+    : completedCount
+      ? '読了の印はこの端末に残ります。今夜も一話だけ。'
+      : '読み終えると作品カードの色が変わります。';
 
-  const panel = document.createElement('aside');
+  let primaryAction = '';
+  if (lastStory && !completedStories.includes(lastStory.slug)) {
+    primaryAction = '<a class="btn btn-primary" href="' + storyHref(lastStory) + (Number(lastReading.progress) > 8 ? '#resume' : '') + '">「' + lastStory.title + '」の続き</a>';
+  } else if (nextUnread) {
+    primaryAction = '<a class="btn btn-primary" href="' + storyHref(nextUnread) + '">次の未読を読む</a>';
+  }
+
+  let panel = document.querySelector('#readerPanel');
+  if (!panel) {
+    panel = document.createElement('aside');
+    panel.id = 'readerPanel';
+    hero.appendChild(panel);
+  }
   panel.className = 'reader-panel';
   panel.setAttribute('aria-label', 'あなたの読書状況');
-  panel.innerHTML = '<div class="reader-panel__head"><div><span class="eyebrow">Your night log</span><strong>' + completedCount + ' / ' + stories.length + '話 読了</strong></div><span>' + percent + '%</span></div><div class="reader-meter" role="progressbar" aria-label="読了率" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + percent + '"><span style="width:' + percent + '%"></span></div><p>' + (completedCount === stories.length ? '全話読了。今夜はお気に入りをもう一度。' : completedCount ? '読了の印はこの端末に残ります。今夜も一話だけ。' : '読み終えると作品カードの色が変わります。') + '</p>';
-
-  const actions = document.createElement('div');
-  actions.className = 'reader-panel__actions';
-  if (lastStory && !completedStories.includes(lastStory.slug)) {
-    const resume = document.createElement('a');
-    resume.className = 'btn btn-primary';
-    resume.href = storyHref(lastStory) + (Number(lastReading.progress) > 8 ? '#resume' : '');
-    resume.textContent = '「' + lastStory.title + '」の続き';
-    actions.appendChild(resume);
-  } else if (nextUnread) {
-    const next = document.createElement('a');
-    next.className = 'btn btn-primary';
-    next.href = storyHref(nextUnread);
-    next.textContent = '次の未読を読む';
-    actions.appendChild(next);
-  }
-  const tonight = document.createElement('a');
-  tonight.className = 'btn';
-  tonight.href = storyHref(tonightStory);
-  tonight.textContent = '今夜の一話';
-  tonight.setAttribute('aria-label', '今夜の一話「' + tonightStory.title + '」を読む');
-  actions.appendChild(tonight);
-  panel.appendChild(actions);
-  hero.appendChild(panel);
+  panel.setAttribute('aria-busy', 'false');
+  panel.innerHTML = '<div class="reader-panel__head"><div><span class="eyebrow">Your night log</span><strong>' + completedCount + ' / ' + stories.length + '話 読了</strong></div><span>' + percent + '%</span></div><div class="reader-meter" role="progressbar" aria-label="読了率" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + percent + '"><span style="width:' + percent + '%"></span></div><p>' + message + '</p><div class="reader-panel__actions">' + primaryAction + '<a class="btn" href="' + storyHref(tonightStory) + '" aria-label="今夜の一話「' + tonightStory.title + '」を読む">今夜の一話</a></div>';
 }
 
 buildReaderPanel();
