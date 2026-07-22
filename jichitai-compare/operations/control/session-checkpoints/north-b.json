@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T04:43:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T05:19:00+09:00",
+  "status": "ci_pending",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 93,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": null,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "code": "04301",
+    "name": "蔵王町",
+    "stage": "pr_open"
+  },
+  "workingBranch": "data/04301-zao",
+  "pullRequestNumber": 1032,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -35,5 +39,5 @@
     "04216"
   ],
   "blocked": [],
-  "nextAction": "蔵王町（04301）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "PR #1032を最新region/northへ再適用。CI・競合・変更ファイルを再確認し、成功後に地方統合する。"
 }
