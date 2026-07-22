@@ -5,18 +5,14 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-22T22:44:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-22T22:46:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 214,
-  "currentMunicipality": {
-    "municipalityCode": "32528",
-    "municipalityName": "隠岐の島町",
-    "prefectureCode": "32"
-  },
-  "workingBranch": "data/32528-okinoshima-westb",
+  "remainingUninvestigatedCount": 213,
+  "currentMunicipality": null,
+  "workingBranch": null,
   "pullRequestNumber": 861,
-  "ciStatus": "pending",
+  "ciStatus": "success",
   "completedSinceSplit": [
     {
       "code": "32525",
@@ -35,8 +31,14 @@
       "name": "知夫村",
       "pullRequestNumber": 853,
       "ciRunNumber": 1829
+    },
+    {
+      "code": "32528",
+      "name": "隠岐の島町",
+      "pullRequestNumber": 861,
+      "ciRunNumber": 1862
     }
   ],
   "blocked": [],
-  "nextAction": "PR #861のCI成功と競合なしを確認し、region/westへ統合する。"
+  "nextAction": "広島市（34100）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
 }
