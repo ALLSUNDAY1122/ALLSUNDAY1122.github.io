@@ -6,7 +6,7 @@ window.STORIES.push(
     "category": "人怖",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "事故後の再現訓練を受けた人々は、現場にいなかった出来事を自分の記憶として証言し始める。",
     "tags": ["交通事故", "目撃証言", "記憶誘導", "再現室"]
   },
@@ -16,7 +16,7 @@ window.STORIES.push(
     "category": "ネット怪談",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "家族写真を成立させるため、削除された撮影者の代わりに一人の家族がレンズの後ろへ固定される。",
     "tags": ["クラウド写真", "家族アルバム", "撮影者", "顔認識"]
   },
@@ -26,7 +26,7 @@ window.STORIES.push(
     "category": "後味悪い",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "面会後に早く泣き止むほど、子どもは実親との関係を終えても安定できると評価されていく。",
     "tags": ["親子面会", "児童福祉", "安定時間", "養育家庭"]
   },
@@ -36,7 +36,7 @@ window.STORIES.push(
     "category": "意味怖",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "大学は受け入れられなかった献体登録者の名前と同意を、身元不明遺体へ付け替えていた。",
     "tags": ["献体", "医科大学", "身元不明遺体", "同意書"]
   },
@@ -46,7 +46,7 @@ window.STORIES.push(
     "category": "都市伝説風",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "閉鎖展望台の望遠鏡は、四回目の焦点調整で利用者の視点を扉のない部屋へ収容する。",
     "tags": ["閉鎖展望台", "望遠鏡", "四回目", "視点"]
   },
