@@ -1,0 +1,83 @@
+name: Temporary central release 10 0923
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-central-release-10-0923.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Create fixed central snapshot branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          git fetch origin region/central:refs/remotes/origin/region/central
+
+          BRANCH=coord/central-release-10-20260722-0923
+          git checkout -B "$BRANCH" origin/main
+          git checkout origin/region/central -- \
+            jichitai-compare/data/municipalities/22/22325.json \
+            jichitai-compare/data/municipalities/22/22341.json \
+            jichitai-compare/data/municipalities/22/22342.json \
+            jichitai-compare/data/municipalities/22/22344.json \
+            jichitai-compare/data/municipalities/22/22424.json \
+            jichitai-compare/data/municipalities/22/22429.json \
+            jichitai-compare/data/municipalities/22/22461.json \
+            jichitai-compare/data/municipalities/23/23201.json \
+            jichitai-compare/data/municipalities/23/23202.json \
+            jichitai-compare/data/municipalities/23/23203.json \
+            jichitai-compare/operations/tasks/22325.json \
+            jichitai-compare/operations/tasks/22341.json \
+            jichitai-compare/operations/tasks/22342.json \
+            jichitai-compare/operations/tasks/22344.json \
+            jichitai-compare/operations/tasks/22424.json \
+            jichitai-compare/operations/tasks/22429.json \
+            jichitai-compare/operations/tasks/22461.json \
+            jichitai-compare/operations/tasks/23201.json \
+            jichitai-compare/operations/tasks/23202.json \
+            jichitai-compare/operations/tasks/23203.json
+          git add \
+            jichitai-compare/data/municipalities/22/22325.json \
+            jichitai-compare/data/municipalities/22/22341.json \
+            jichitai-compare/data/municipalities/22/22342.json \
+            jichitai-compare/data/municipalities/22/22344.json \
+            jichitai-compare/data/municipalities/22/22424.json \
+            jichitai-compare/data/municipalities/22/22429.json \
+            jichitai-compare/data/municipalities/22/22461.json \
+            jichitai-compare/data/municipalities/23/23201.json \
+            jichitai-compare/data/municipalities/23/23202.json \
+            jichitai-compare/data/municipalities/23/23203.json \
+            jichitai-compare/operations/tasks/22325.json \
+            jichitai-compare/operations/tasks/22341.json \
+            jichitai-compare/operations/tasks/22342.json \
+            jichitai-compare/operations/tasks/22344.json \
+            jichitai-compare/operations/tasks/22424.json \
+            jichitai-compare/operations/tasks/22429.json \
+            jichitai-compare/operations/tasks/22461.json \
+            jichitai-compare/operations/tasks/23201.json \
+            jichitai-compare/operations/tasks/23202.json \
+            jichitai-compare/operations/tasks/23203.json
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "20"
+          git commit -m "全国統合: 中日本10自治体を固定スナップショット化"
+          git push --force-with-lease origin "$BRANCH"
+
+          git checkout main
+          git pull --rebase origin main
+          git rm .github/workflows/temp-central-release-10-0923.yml
+          git commit -m "統括管理: 中日本固定スナップショット一時ワークフローを削除"
+          git push origin main
