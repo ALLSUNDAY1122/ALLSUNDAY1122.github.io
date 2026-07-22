@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-23T06:22:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T06:33:00+09:00",
+  "status": "working",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 59,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "29212", "municipalityName": "宇陀市"},
+  "workingBranch": "data/29212-uda",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"municipalityCode":"26100","municipalityName":"京都市","pullRequestNumber":840,"ciRunNumber":1761,"completedAt":"2026-07-22T22:14:00+09:00"},
     {"municipalityCode":"26201","municipalityName":"福知山市","pullRequestNumber":847,"ciRunNumber":1804,"completedAt":"2026-07-22T22:24:00+09:00"},
@@ -52,5 +52,5 @@
     {"municipalityCode":"29211","municipalityName":"葛城市","pullRequestNumber":999,"ciRunNumber":2486,"completedAt":"2026-07-23T06:22:00+09:00"}
   ],
   "blocked": [],
-  "nextAction": "宇陀市（29212）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "宇陀市（29212）の3ファイル差分を検証し、地方統合PRを作成してCIを確認する。"
 }
