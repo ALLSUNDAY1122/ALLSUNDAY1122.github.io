@@ -1,0 +1,57 @@
+name: Temporary generate public 344 1118
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-generate-public-344-1118.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Generate public data branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          BRANCH=coord/generated-344-20260722-1118
+          git checkout -B "$BRANCH" origin/main
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+          count=json.loads(Path('operations/progress.json').read_text(encoding='utf-8'))['registeredMunicipalities']
+          if count != 344:
+              raise SystemExit(f'expected 344 municipalities, got {count}')
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+          text,n1=re.subn(r'<span>\d+自治体・9制度</span>',f'<span>{count}自治体・9制度</span>',text,count=1)
+          text,n2=re.subn(r'登録状況：\d+自治体の生成データを公開中',f'登録状況：{count}自治体の生成データを公開中',text,count=1)
+          if n1 != 1 or n2 != 1:
+              raise SystemExit(f'index replacements failed: hero={n1}, about={n2}')
+          path.write_text(text,encoding='utf-8')
+          PY
+          npm run validate:generated
+          git add data/generated/municipalities.json operations/progress.json index.html
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "3"
+          git commit -m "公開更新: 生成データと表示件数を344自治体へ同期"
+          git push --force-with-lease origin "$BRANCH"
+          cd ..
+          git checkout main
+          git pull --rebase origin main
+          git rm .github/workflows/temp-generate-public-344-1118.yml
+          git commit -m "統括管理: 公開344自治体の一時生成ワークフローを削除"
+          git push origin main
