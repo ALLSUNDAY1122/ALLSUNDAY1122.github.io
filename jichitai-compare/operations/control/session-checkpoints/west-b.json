@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-22T23:21:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T23:26:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 211,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 881,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "34203",
+    "municipalityName": "竹原市",
+    "prefectureCode": "34"
+  },
+  "workingBranch": "data/34203-takehara-westb",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {
       "code": "32525",
@@ -52,5 +56,5 @@
     }
   ],
   "blocked": [],
-  "nextAction": "竹原市（34203）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "竹原市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
 }
