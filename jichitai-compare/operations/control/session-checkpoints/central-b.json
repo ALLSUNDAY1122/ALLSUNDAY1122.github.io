@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-23T00:23:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T00:27:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 81,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "26214", "municipalityName": "木津川市"},
+  "workingBranch": "data/26214-kizugawa",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"municipalityCode":"26100","municipalityName":"京都市","pullRequestNumber":840,"ciRunNumber":1761,"completedAt":"2026-07-22T22:14:00+09:00"},
     {"municipalityCode":"26201","municipalityName":"福知山市","pullRequestNumber":847,"ciRunNumber":1804,"completedAt":"2026-07-22T22:24:00+09:00"},
@@ -30,5 +30,5 @@
     {"municipalityCode":"26213","municipalityName":"南丹市","pullRequestNumber":909,"ciRunNumber":2092,"completedAt":"2026-07-23T00:23:00+09:00"}
   ],
   "blocked": [],
-  "nextAction": "木津川市（26214）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "木津川市（26214）のPRをregion/central向けに作成し、CI成功後に地方統合する。"
 }
