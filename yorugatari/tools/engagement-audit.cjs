@@ -6,7 +6,7 @@ const ROOT = process.cwd();
 const SITE_ROOT = path.join(ROOT, 'yorugatari');
 const STORY_ROOT = path.join(SITE_ROOT, 'stories');
 const BASE = 'https://allsunday1122.github.io/yorugatari';
-const VERSION = '20260723-001';
+const VERSION = '20260723-002';
 const results = [];
 const failures = [];
 
@@ -52,7 +52,7 @@ function localAudit() {
   record('local: analytics, engagement, and social metadata are complete', errors.length === 0, errors);
 
   const privacy = fs.readFileSync(path.join(SITE_ROOT, 'privacy.html'), 'utf8');
-  record('local: privacy policy explains page-view processing', privacy.includes('サイト識別子とページのパス') && privacy.includes('参照元URL') && privacy.includes('2026年7月23日'));
+  record('local: privacy policy explains page-view and source processing', privacy.includes('検索語') && privacy.includes('粗い区分') && privacy.includes('2026年7月23日'));
 
   const notFound = fs.readFileSync(path.join(ROOT, '404.html'), 'utf8');
   record('local: 404 is noindex and recoverable',
@@ -125,7 +125,7 @@ async function browserAudit() {
     isMobile: true,
     hasTouch: true,
     serviceWorkers: 'block',
-    userAgent: 'Yorugatari-Engagement-Audit/1.4'
+    userAgent: 'Yorugatari-Engagement-Audit/1.5'
   });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', {
@@ -144,30 +144,33 @@ async function browserAudit() {
       engagementScript: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
       analytics: Boolean(window.YORUGATARI_ANALYTICS),
       path: window.YORUGATARI_ANALYTICS?.path,
+      source: window.YORUGATARI_ANALYTICS?.source,
       panel: Boolean(document.querySelector('#readerPanel'))
     }), VERSION);
     const meta = await metadata(target);
     return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.panel && completeMeta(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: top uses lightweight analytics and complete social metadata', top.ready && top.state?.path === '/yorugatari', top);
+  record('published: top uses lightweight source analytics and social metadata', top.ready && top.state?.path === '/yorugatari' && Boolean(top.state?.source), top);
 
   const story = await retry(page, `${BASE}/stories/spare-key-returned.html`, async (target, response, attempt) => {
     const state = await target.evaluate((version) => ({
       engagementScript: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
       analyticsScript: Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
       engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
+      source: window.YORUGATARI_ENGAGEMENT?.source,
       share: Boolean(document.querySelector('#shareButton'))
     }), VERSION);
     const meta = await metadata(target);
     return { ready: response?.status() === 200 && state.engagementScript && !state.analyticsScript && state.engagement && state.share && completeMeta(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: story uses engagement module and complete social metadata', story.ready, story);
+  record('published: story uses source-aware engagement and social metadata', story.ready && Boolean(story.state?.source), story);
 
   try { await page.waitForFunction(() => Number.isFinite(window.YORUGATARI_ENGAGEMENT?.views), null, { timeout: 20000 }); } catch (error) {}
   const views = await page.evaluate(() => ({
     value: window.YORUGATARI_ENGAGEMENT?.views,
     text: document.querySelector('.view-count strong')?.textContent.trim(),
-    error: window.YORUGATARI_ENGAGEMENT?.error
+    error: window.YORUGATARI_ENGAGEMENT?.error,
+    sourceError: window.YORUGATARI_ENGAGEMENT?.sourceError
   }));
   record('published: Page Views API count is displayed', Number.isFinite(views.value) && /^\d/.test(views.text || ''), views);
 
@@ -185,10 +188,10 @@ async function browserAudit() {
 
   const policy = await retry(page, `${BASE}/about.html`, async (target, response, attempt) => {
     const meta = await metadata(target);
-    const scripts = await target.evaluate(() => ({
-      analytics: Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
+    const scripts = await target.evaluate((version) => ({
+      analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
       engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
-    }));
+    }), VERSION);
     return { ready: response?.status() === 200 && completeMeta(meta) && scripts.analytics && !scripts.engagement, status: response?.status(), attempt, meta, scripts };
   }, 6);
   record('published: policy uses lightweight analytics and social metadata', policy.ready, policy);
@@ -196,15 +199,16 @@ async function browserAudit() {
   errors.length = 0;
 
   const missing = await retry(page, `${BASE}/stories/missing-${Date.now()}.html`, async (target, response, attempt) => {
-    const detail = await target.evaluate(() => ({
+    const detail = await target.evaluate((version) => ({
       noindex: document.querySelector('meta[name="robots"]')?.content,
       pageType: document.body.dataset.pageType,
       archive: Boolean(document.querySelector('a[href="/yorugatari/archive.html"]')),
       top: Boolean(document.querySelector('a[href="/yorugatari/"]')),
       trackingPath: window.YORUGATARI_ANALYTICS?.trackingPath,
-      analytics: Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
+      source: window.YORUGATARI_ANALYTICS?.source,
+      analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
       engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
-    }));
+    }), VERSION);
     return { ready: response?.status() === 404 && detail.pageType === '404' && detail.archive && detail.analytics && !detail.engagement, status: response?.status(), attempt, ...detail };
   }, 6);
   record('published: custom 404 is noindex, tracked, and recoverable', missing.ready && missing.noindex === 'noindex,follow' && missing.top && missing.trackingPath === '/yorugatari/404', missing);
