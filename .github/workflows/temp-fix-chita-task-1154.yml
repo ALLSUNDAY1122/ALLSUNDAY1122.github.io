@@ -1,0 +1,61 @@
+name: Temporary Fix Chita Task 1154
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-fix-chita-task-1154.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fix task and progress
+        run: |
+          set -euxo pipefail
+          TARGET='coord/fix-chita-task-20260722-1154'
+          git fetch origin "$TARGET" main
+          git checkout "$TARGET"
+          cd jichitai-compare
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('operations/tasks/23224.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          if d.get('status')!='pr_open': raise SystemExit(d.get('status'))
+          d['status']='merged'
+          notes=d.setdefault('notes',[])
+          note='全国統合PR #605でmainへ統合済みのためtask.statusをmergedへ補正。'
+          if note not in notes: notes.append(note)
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          node ./scripts/update-progress.mjs
+          node ./scripts/validate-data.mjs --require-generated
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('operations/progress.json').read_text(encoding='utf-8'))
+          assert d['registeredMunicipalities']==364
+          assert d['mergedMunicipalities']==364
+          assert d['prOpenMunicipalities']==0
+          PY
+          cd ..
+          git add jichitai-compare/operations/tasks/23224.json jichitai-compare/operations/progress.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '進捗修正: 知多市taskをmergedへ補正'
+          git push origin "$TARGET"
+          git checkout main
+          git pull --ff-only origin main
+          rm .github/workflows/temp-fix-chita-task-1154.yml
+          git add .github/workflows/temp-fix-chita-task-1154.yml
+          git commit -m '統括管理: 知多市task補正一時処理を削除'
+          git push origin main
