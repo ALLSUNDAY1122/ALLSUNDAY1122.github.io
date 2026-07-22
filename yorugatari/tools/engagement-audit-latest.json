@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-22T21:07:38.930Z",
+  "auditedAt": "2026-07-22T21:11:16.818Z",
   "success": false,
   "results": [
     {
@@ -89,14 +89,17 @@
     },
     {
       "name": "published: story has previous, archive, next, and related-story paths",
-      "ok": false,
+      "ok": true,
       "detail": {
         "pagination": [
           "← 前の話「閉宴後も二名」",
           "全100話一覧",
           "次の話「移行元の端末です」→"
         ],
-        "related": [],
+        "related": [
+          "姪としてお答えします",
+          "退職理由は作成済みです"
+        ],
         "archiveLinks": 5
       }
     },
@@ -171,19 +174,6 @@
     }
   ],
   "failures": [
-    {
-      "name": "published: story has previous, archive, next, and related-story paths",
-      "ok": false,
-      "detail": {
-        "pagination": [
-          "← 前の話「閉宴後も二名」",
-          "全100話一覧",
-          "次の話「移行元の端末です」→"
-        ],
-        "related": [],
-        "archiveLinks": 5
-      }
-    },
     {
       "name": "published: engagement audit has no browser JavaScript errors",
       "ok": false,
