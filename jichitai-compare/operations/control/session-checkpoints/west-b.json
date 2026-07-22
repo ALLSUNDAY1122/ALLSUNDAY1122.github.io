@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-23T00:38:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T00:48:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 205,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 908,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "34210",
+    "municipalityName": "庄原市",
+    "prefectureCode": "34"
+  },
+  "workingBranch": "data/34210-shobara-westb",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -28,5 +32,5 @@
     {"code":"34209","name":"三次市","pullRequestNumber":908,"ciRunNumber":2095}
   ],
   "blocked": [],
-  "nextAction": "庄原市（34210）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "庄原市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
 }
