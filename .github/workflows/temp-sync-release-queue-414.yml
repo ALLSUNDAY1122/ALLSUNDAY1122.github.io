@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 414
+name: Temporary Sync Release Queue 414 Final
 
 on:
   push:
@@ -33,8 +33,7 @@ jobs:
           q=json.loads(p.read_text(encoding='utf-8'))
           entries={e['region']:e for e in q['entries']}
           fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
-          def show(ref,path):
-              return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
+          def show(ref,path): return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
           def assigned(region,pref):
               n=int(pref)
               return {'north':1<=n<=7,'east':8<=n<=15 or n in (19,20),'central':16<=n<=18 or 21<=n<=29,'west':31<=n<=47}[region]
@@ -50,27 +49,13 @@ jobs:
               state=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{region}.json'))
               pending=int(state.get(fields[region],0))
               e=entries[region]
-              e['municipalities']=items
-              e['count']=len(items)
-              e['pendingSinceLastRelease']=pending
-              e['releaseStatus']='release_ready' if pending>=10 else 'pending_threshold'
-              e['reason']=f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{pending}自治体'
-              e['mainIntegrationPr']=state.get('lastNationalIntegrationPr')
-              e['generatedPullRequest']=678
-              e['auditStatus']='passed'
+              e.update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':pending,'releaseStatus':'release_ready' if pending>=10 else 'pending_threshold','reason':f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{pending}自治体','mainIntegrationPr':state.get('lastNationalIntegrationPr'),'generatedPullRequest':678,'auditStatus':'passed'})
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
           ready=[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10]
-          q['updatedAt']='2026-07-22T15:01:00+09:00'
+          q['updatedAt']='2026-07-22T15:12:00+09:00'
           q['status']='active'
-          q['summary']={
-            'regionalMergedMunicipalities':total,
-            'latestGeneratedMunicipalityCount':414,
-            'latestGeneratedPullRequest':678,
-            'latestPublicCountPullRequest':678,
-            'releaseReadyRegions':ready,
-            'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。" + ('全国統合対象: '+','.join(ready) if ready else '10自治体到達地域なし。')
-          }
+          q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':414,'latestGeneratedPullRequest':678,'latestPublicCountPullRequest':678,'releaseReadyRegions':ready,'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。" + ('全国統合対象: '+','.join(ready) if ready else '10自治体到達地域なし。')}
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           print('regional total',total,'pending',pending)
           PY
@@ -78,5 +63,5 @@ jobs:
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 公開414自治体基準で全国キューを再同期'
+          git commit -m '統括管理: 地方統合最新値・公開414自治体へ全国キュー同期'
           git push origin main
