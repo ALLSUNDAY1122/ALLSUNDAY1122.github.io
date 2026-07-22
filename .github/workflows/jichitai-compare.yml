@@ -1,88 +1,77 @@
-name: Coordinator Diagnose A-B Release 12
+name: Jichitai Compare CI
 
 on:
   pull_request:
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
     branches:
       - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  diagnose-release:
-    if: github.head_ref == 'coord/ab-release-12-20260722-2237'
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - name: Checkout release branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: coord/ab-release-12-20260722-2237
           fetch-depth: 0
 
-      - name: Fetch main and regional branches
-        run: |
-          git fetch origin \
-            +refs/heads/main:refs/remotes/origin/main \
-            +refs/heads/region/north:refs/remotes/origin/region/north \
-            +refs/heads/region/east:refs/remotes/origin/region/east \
-            +refs/heads/region/central:refs/remotes/origin/region/central \
-            +refs/heads/region/west:refs/remotes/origin/region/west
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Write release diagnostics
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import { execFileSync } from 'node:child_process';
-          const entries = [
-            ['region/north','04100'],
-            ['region/east','10428'],['region/east','10429'],['region/east','11100'],
-            ['region/central','25212'],['region/central','25213'],['region/central','26100'],['region/central','26201'],['region/central','26202'],
-            ['region/west','32525'],['region/west','32526'],['region/west','33211']
-          ];
-          const show = (ref, path) => {
-            try { return execFileSync('git',['show',`${ref}:${path}`],{encoding:'utf8',stdio:['ignore','pipe','pipe']}); }
-            catch { return null; }
-          };
-          const report = entries.map(([branch, code]) => {
-            const pref = code.slice(0,2);
-            const dataPath = `jichitai-compare/data/municipalities/${pref}/${code}.json`;
-            const taskPath = `jichitai-compare/operations/tasks/${code}.json`;
-            const sourceDataText = show(`origin/${branch}`, dataPath);
-            const sourceTaskText = show(`origin/${branch}`, taskPath);
-            const mainDataText = show('origin/main', dataPath);
-            const mainTaskText = show('origin/main', taskPath);
-            let parsed = {};
-            try {
-              const data = sourceDataText ? JSON.parse(sourceDataText) : null;
-              const task = sourceTaskText ? JSON.parse(sourceTaskText) : null;
-              parsed = {
-                dataCode: data?.code ?? null,
-                serviceCount: data?.services ? Object.keys(data.services).length : null,
-                taskCode: task?.code ?? task?.municipalityCode ?? null,
-                taskStatus: task?.status ?? null,
-                completedCount: task?.completedServiceCount ?? task?.completedServices?.length ?? null
-              };
-            } catch (error) {
-              parsed = { parseError: error.message };
-            }
-            return {
-              branch, code,
-              sourceDataExists: sourceDataText !== null,
-              sourceTaskExists: sourceTaskText !== null,
-              mainDataExists: mainDataText !== null,
-              mainTaskExists: mainTaskText !== null,
-              ...parsed
-            };
-          });
-          fs.writeFileSync('jichitai-compare/operations/release-diagnostic-854.json', JSON.stringify({generatedAt:new Date().toISOString(), report}, null, 2) + '\n');
-          NODE
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
 
-      - name: Restore workflow and commit diagnostic
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare/operations/release-diagnostic-854.json
-          git commit -m 'Add diagnostic report for A-B release 12'
-          git push origin HEAD:coord/ab-release-12-20260722-2237
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
