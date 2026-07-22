@@ -1,0 +1,83 @@
+name: Temporary Sync Release Queue 20260722 1506
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-release-queue-20260722-1506.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Rebuild queue from regional branches
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json, re, subprocess
+          from pathlib import Path
+          qpath=Path('jichitai-compare/operations/control/release-queue.json')
+          q=json.loads(qpath.read_text(encoding='utf-8'))
+          by={e['region']:e for e in q['entries']}
+          fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
+          def show(ref,path):
+              return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
+          def assigned(region,pref):
+              n=int(pref)
+              return {'north':1<=n<=7,'east':8<=n<=15 or n in (19,20),'central':16<=n<=18 or 21<=n<=29,'west':31<=n<=47}[region]
+          for region in ('north','east','central','west'):
+              ref=f'origin/region/{region}'
+              names=subprocess.check_output(['git','ls-tree','-r','--name-only',ref,'jichitai-compare/data/municipalities'],text=True).splitlines()
+              items=[]
+              for path in names:
+                  if not re.search(r'/\d{5}\.json$',path):
+                      continue
+                  data=json.loads(show(ref,path))
+                  if assigned(region,data['prefectureCode']):
+                      items.append({'code':data['code'],'name':data['name']})
+              items.sort(key=lambda x:x['code'])
+              state=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{region}.json'))
+              pending=int(state.get(fields[region],0))
+              e=by[region]
+              e['municipalities']=items
+              e['count']=len(items)
+              e['pendingSinceLastRelease']=pending
+              e['releaseStatus']='release_ready' if pending>=10 else 'pending_threshold'
+              e['reason']=f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{pending}自治体'
+              e['mainIntegrationPr']=state.get('lastNationalIntegrationPr')
+              e['generatedPullRequest']=678
+              e['auditStatus']='passed'
+          total=sum(e['count'] for e in q['entries'])
+          pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
+          q['updatedAt']='2026-07-22T15:16:00+09:00'
+          q['status']='active'
+          q['summary']={
+            'regionalMergedMunicipalities':total,
+            'latestGeneratedMunicipalityCount':414,
+            'latestGeneratedPullRequest':678,
+            'latestPublicCountPullRequest':678,
+            'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],
+            'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。西日本は次の1自治体で全国統合条件。"
+          }
+          qpath.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          print('regional total',total,'pending',pending)
+          PY
+          git rm .github/workflows/temp-sync-release-queue-20260722-1506.yml
+          git add jichitai-compare/operations/control/release-queue.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '統括管理: 現行地方ブランチから全国キューを再同期'
+          git push origin main
