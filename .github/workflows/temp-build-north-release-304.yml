@@ -1,0 +1,49 @@
+name: Temporary Build North Release 304 Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-north-release-304.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed north snapshot
+        run: |
+          set -euxo pipefail
+          target='coord/north-release-10-20260722-0838'
+          git fetch origin "+refs/heads/region/north:refs/remotes/origin/region/north" "+refs/heads/$target:refs/remotes/origin/$target"
+          git checkout -B "$target" "origin/$target"
+          codes='01470 01471 01472 01481 01482 01483 01484 01485 01486 01487'
+          for code in $codes; do
+            git checkout origin/region/north -- "jichitai-compare/data/municipalities/01/$code.json" "jichitai-compare/operations/tasks/$code.json"
+          done
+          git add jichitai-compare/data/municipalities/01 jichitai-compare/operations/tasks
+          python3 - <<'PY'
+          import subprocess
+          codes=['01470','01471','01472','01481','01482','01483','01484','01485','01486','01487']
+          expected=sorted([f'jichitai-compare/data/municipalities/01/{c}.json' for c in codes]+[f'jichitai-compare/operations/tasks/{c}.json' for c in codes])
+          actual=sorted(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          if actual!=expected:
+              raise SystemExit(f'unexpected snapshot diff\nexpected={expected}\nactual={actual}')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 北日本追加10自治体を固定'
+          git push origin "$target"
+          git checkout main
+          git pull --rebase origin main
+          rm .github/workflows/temp-build-north-release-304.yml
+          git add .github/workflows/temp-build-north-release-304.yml
+          git commit -m '統括管理: 北日本全国統合一時ワークフローを削除'
+          git push origin main
