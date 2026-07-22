@@ -8,6 +8,7 @@ on:
     paths:
       - yorugatari/index.html
       - yorugatari/archive.html
+      - yorugatari/privacy.html
       - yorugatari/assets/app.js
       - yorugatari/assets/archive.js
       - yorugatari/assets/story.js
@@ -15,6 +16,8 @@ on:
       - yorugatari/assets/engagement.js
       - yorugatari/assets/styles.css
       - yorugatari/stories/**
+      - yorugatari/tools/campaigns.json
+      - yorugatari/tools/normalize-engagement.mjs
       - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/accessibility-audit.cjs
       - .github/workflows/yorugatari-accessibility.yml
@@ -46,6 +49,8 @@ jobs:
         run: |
           node --check yorugatari/tools/live-release-audit.mjs
           node --check yorugatari/tools/accessibility-audit.cjs
+          node --check yorugatari/assets/analytics.js
+          node --check yorugatari/assets/engagement.js
 
       - name: Wait for published accessibility release
         run: node yorugatari/tools/live-release-audit.mjs
