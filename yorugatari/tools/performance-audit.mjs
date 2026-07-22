@@ -48,6 +48,7 @@ const report = {
   auditedAt: new Date().toISOString(),
   baseUrl: base,
   success: false,
+  releaseCheck: null,
   runs: [],
   errors: []
 };
@@ -57,6 +58,40 @@ function errorDetail(error) {
     message: error instanceof Error ? error.message : String(error),
     stack: error instanceof Error ? error.stack : null
   };
+}
+
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function waitForPublishedRelease() {
+  const attempts = 24;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const stamp = Date.now();
+      const [topResponse, archiveResponse] = await Promise.all([
+        fetch(`${base}/?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
+        fetch(`${base}/archive.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
+      ]);
+      const [topHtml, archiveHtml] = await Promise.all([topResponse.text(), archiveResponse.text()]);
+      const detail = {
+        attempt,
+        topStatus: topResponse.status,
+        archiveStatus: archiveResponse.status,
+        topOptimization: topHtml.includes('contain-intrinsic-size:auto 275px'),
+        archiveOptimization: archiveHtml.includes('contain-intrinsic-size:auto 1600px')
+      };
+      if (topResponse.ok && archiveResponse.ok && detail.topOptimization && detail.archiveOptimization) {
+        report.releaseCheck = detail;
+        return;
+      }
+      report.releaseCheck = detail;
+    } catch (error) {
+      report.releaseCheck = { attempt, ...errorDetail(error) };
+    }
+    if (attempt < attempts) await sleep(10000);
+  }
+  throw new Error(`Published performance release was not detected: ${JSON.stringify(report.releaseCheck)}`);
 }
 
 function auditValue(audits, id) {
@@ -155,6 +190,8 @@ function summarize(result, target, profile) {
 
 let chrome;
 try {
+  await waitForPublishedRelease();
+
   const [{ default: lighthouse }, chromeLauncher] = await Promise.all([
     import('lighthouse'),
     import('chrome-launcher')
