@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T03:20:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T03:39:00+09:00",
+  "status": "ready_for_review",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 96,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {
+    "code": "04214",
+    "name": "東松島市",
+    "stage": "ready_for_review"
+  },
+  "workingBranch": "data/04214-higashimatsushima",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -32,5 +36,5 @@
     "04213"
   ],
   "blocked": [],
-  "nextAction": "東松島市（04214）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "東松島市の3ファイル差分を検証し、region/north向けPRを作成してCI成功後に地方統合する。"
 }
