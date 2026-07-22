@@ -1,11 +1,19 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "asOf": "2026-01-01",
-  "updatedAt": "2026-07-19",
+  "updatedAt": "2026-07-22",
   "totalAssignedMunicipalities": 1741,
   "unassignedMunicipalities": 0,
   "duplicateAssignments": 0,
   "assignmentKey": "municipalityCode",
+  "sessionSplit": {
+    "required": true,
+    "policyFile": "operations/session-split-policy.json",
+    "checkpointDirectory": "operations/control/session-checkpoints",
+    "promptDirectory": "operations/session-prompts",
+    "rule": "親調査班だけで新規自治体を選定してはならない。session-split-policy.jsonで自セッションIDと担当都道府県コードを解決し、その範囲内だけを処理する。",
+    "legacySessionMigration": "従来の北日本・東日本・中日本・西日本セッションは各Aセッションとして継続する。"
+  },
   "resolver": {
     "description": "5桁自治体コードの先頭2桁を都道府県コードとして、prefectures配列のassignedTeamを適用する。",
     "prefectureCodeExpression": "municipalityCode.slice(0, 2)",
@@ -69,7 +77,7 @@
         "07"
       ],
       "assignedMunicipalityCount": 406,
-      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+      "selectionRule": "operations/session-split-policy.jsonで自セッションに割り当てられた都道府県内から、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
     },
     {
       "team": "東日本調査班",
@@ -86,7 +94,7 @@
         "20"
       ],
       "assignedMunicipalityCount": 450,
-      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+      "selectionRule": "operations/session-split-policy.jsonで自セッションに割り当てられた都道府県内から、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
     },
     {
       "team": "中日本調査班",
@@ -106,7 +114,7 @@
         "30"
       ],
       "assignedMunicipalityCount": 409,
-      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+      "selectionRule": "operations/session-split-policy.jsonで自セッションに割り当てられた都道府県内から、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
     },
     {
       "team": "西日本調査班",
@@ -130,7 +138,7 @@
         "47"
       ],
       "assignedMunicipalityCount": 476,
-      "selectionRule": "担当都道府県内で、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
+      "selectionRule": "operations/session-split-policy.jsonで自セッションに割り当てられた都道府県内から、未登録かつ未着手の自治体コードを昇順に選定する。既存task/branch/PRがある自治体は新規作成しない。"
     }
   ],
   "prefectures": [

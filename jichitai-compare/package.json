@@ -8,8 +8,9 @@
     "generate": "node ./scripts/generate-municipalities.mjs",
     "progress": "node ./scripts/update-progress.mjs",
     "validate": "node ./scripts/validate-data.mjs",
+    "validate:sessions": "node ./scripts/validate-session-split.mjs",
     "validate:generated": "node ./scripts/validate-data.mjs --require-generated",
     "smoke:public": "node ./scripts/smoke-public-site.mjs",
-    "check": "npm run generate && npm run progress && npm run validate:generated"
+    "check": "npm run generate && npm run progress && npm run validate:generated && npm run validate:sessions"
   }
 }
