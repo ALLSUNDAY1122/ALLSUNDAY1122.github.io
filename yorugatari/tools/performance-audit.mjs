@@ -1,6 +1,4 @@
 import fs from 'node:fs';
-import lighthouse from 'lighthouse';
-import chromeLauncher from 'chrome-launcher';
 
 const base = 'https://allsunday1122.github.io/yorugatari';
 const targets = [
@@ -45,6 +43,21 @@ const profiles = [
     }
   }
 ];
+
+const report = {
+  auditedAt: new Date().toISOString(),
+  baseUrl: base,
+  success: false,
+  runs: [],
+  errors: []
+};
+
+function errorDetail(error) {
+  return {
+    message: error instanceof Error ? error.message : String(error),
+    stack: error instanceof Error ? error.stack : null
+  };
+}
 
 function auditValue(audits, id) {
   const audit = audits[id];
@@ -99,11 +112,15 @@ function opportunities(audits) {
     'third-party-summary'
   ];
   return ids
-    .map((id) => ({ id, ...auditValue(audits, id) }))
-    .filter((item) => item.score !== null || item.numericValue !== null || item.displayValue);
+    .map((id) => {
+      const value = auditValue(audits, id);
+      return value ? { id, ...value } : null;
+    })
+    .filter(Boolean);
 }
 
 function summarize(result, target, profile) {
+  if (!result?.lhr) throw new Error('Lighthouse returned no report');
   const lhr = result.lhr;
   const audits = lhr.audits;
   return {
@@ -136,16 +153,16 @@ function summarize(result, target, profile) {
   };
 }
 
-const report = {
-  auditedAt: new Date().toISOString(),
-  baseUrl: base,
-  success: false,
-  runs: [],
-  errors: []
-};
-
 let chrome;
 try {
+  const [{ default: lighthouse }, chromeLauncher] = await Promise.all([
+    import('lighthouse'),
+    import('chrome-launcher')
+  ]);
+
+  if (typeof lighthouse !== 'function') throw new Error('Lighthouse default export is unavailable');
+  if (typeof chromeLauncher.launch !== 'function') throw new Error('chrome-launcher launch export is unavailable');
+
   chrome = await chromeLauncher.launch({
     chromeFlags: [
       '--headless=new',
@@ -169,26 +186,25 @@ try {
         });
         report.runs.push(summarize(result, target, profile));
       } catch (error) {
-        report.errors.push({
-          target: target.name,
-          profile: profile.name,
-          message: error instanceof Error ? error.message : String(error),
-          stack: error instanceof Error ? error.stack : null
-        });
+        report.errors.push({ target: target.name, profile: profile.name, ...errorDetail(error) });
       }
+    }
   }
 } catch (error) {
-  report.errors.push({
-    target: 'launcher',
-    profile: null,
-    message: error instanceof Error ? error.message : String(error),
-    stack: error instanceof Error ? error.stack : null
-  });
+  report.errors.push({ target: 'launcher', profile: null, ...errorDetail(error) });
 } finally {
-  if (chrome) await chrome.kill();
+  if (chrome) {
+    try {
+      await chrome.kill();
+    } catch (error) {
+      report.errors.push({ target: 'launcher-cleanup', profile: null, ...errorDetail(error) });
+    }
+  }
+
+  report.success = report.runs.length === targets.length * profiles.length && report.errors.length === 0;
+  fs.writeFileSync('yorugatari-performance-report.json', `${JSON.stringify(report, null, 2)}\n`);
+  console.log(`Yorugatari Lighthouse runs: ${report.runs.length}/${targets.length * profiles.length}; errors: ${report.errors.length}`);
+  if (report.errors.length) console.error(JSON.stringify(report.errors, null, 2));
 }
 
-report.success = report.runs.length === targets.length * profiles.length && report.errors.length === 0;
-fs.writeFileSync('yorugatari-performance-report.json', `${JSON.stringify(report, null, 2)}\n`);
-console.log(`YORUGATARI_PERFORMANCE_REPORT=${JSON.stringify(report)}`);
 if (!report.success) process.exit(1);
