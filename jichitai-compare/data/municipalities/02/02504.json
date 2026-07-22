@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "02504",
+  "prefectureCode": "02",
+  "prefecture": "青森県",
+  "name": "佐井村",
+  "officialUrl": "https://www.vill.sai.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を佐井村公式情報で調査。6制度をverified、病児・病後児保育と産後ケアをunavailable、学校給食費をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳までの子どもの医療費を完全無償化している。",
+      "eligibility": { "minAgeMonths": 0, "maxAgeYears": 18 },
+      "details": {
+        "program": "佐井村子ども医療費給付制度",
+        "coverage": "保険診療の自己負担分",
+        "target": "0歳から18歳まで"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/wp-content/uploads/2025/07/tenpushiryou.pdf",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.sai.lg.jp/reiki_int/reiki_kana/r_50_ko.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "病児・病後児保育事業は村内で実施しておらず、令和7年度から令和11年度までの確保方策も0人としている。",
+      "details": {
+        "currentStatus": "未実施",
+        "planPeriod": "令和7年度から令和11年度",
+        "securedCapacity": "各年度0人"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/wp-content/uploads/2025/04/kodomokosodatesienn.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "0歳から2歳までの保育料を完全無償化し、保育所等の副食費も無償化している。",
+      "eligibility": { "minAgeMonths": 0, "maxAgeYears": 2 },
+      "details": {
+        "facility": "佐井村保育所",
+        "feeSupport": "0歳から2歳までの保育料完全無償化",
+        "mealSupport": "保育所等の副食費無償化"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/wp-content/uploads/2025/07/tenpushiryou.pdf",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.sai.lg.jp/news/2025-11-27-hukusikennkouka-hoikusyonyuusyomousikomi/",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "needs_medium_review",
+      "summary": "村内小中学校の学校給食費完全無償化とスクールランチ無償化を令和7年度資料で確認したが、令和8年度の継続条件を確定できない。",
+      "details": {
+        "confirmed": "令和7年度の学校給食費無償化事業とスクールランチ無償化",
+        "reviewReason": "令和8年度の対象者、実施期間、保護者負担の継続条件が未掲載"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/wp-content/uploads/2025/07/tenpushiryou.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "産後1年未満の母子を対象とする産後ケア事業は現在実施しておらず、令和7年度から令和11年度までの確保方策も0人としている。",
+      "details": {
+        "currentStatus": "未実施",
+        "target": "出産後1年未満の母子",
+        "securedCapacity": "各年度0人"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/wp-content/uploads/2025/04/kodomokosodatesienn.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず佐井村保育所を利用できる。",
+      "eligibility": { "minAgeMonths": 6, "maxAgeYears": 3 },
+      "details": {
+        "program": "こども誰でも通園制度",
+        "start": "令和8年4月1日",
+        "facility": "佐井村保育所",
+        "usageLimit": "1人当たり月10時間まで",
+        "fee": "1人1時間300円。世帯状況により減免あり"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/news/20260401-hukusikenkou-daredemotuuen/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.sai.lg.jp/reiki_int/reiki_honbun/c057RG00000693.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住者・新婚世帯の住宅新築、中古住宅購入、修繕・増改築に補助金を交付する。",
+      "details": {
+        "program": "佐井村に住もう！住宅取得等支援事業補助金",
+        "immigrantNewBuild": "村内業者150万円、村外業者100万円",
+        "immigrantUsedHome": "費用の2分の1、上限80万円",
+        "applicationPeriod": "令和8年4月1日から12月28日まで"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/news/20260401-senryaku-juutakusyutokusienn/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家庭ごみを燃えるごみ、燃えないごみ、小型家電、資源ごみ、有害ごみ、粗大ごみの6種類に分別して収集する。",
+      "details": {
+        "classification": "粗大ごみを含む6種類",
+        "collection": "家庭ごみとして村が収集",
+        "businessWaste": "事業系ごみは村では回収しない"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/guide/%E5%AE%B6%E5%BA%AD%E3%81%94%E3%81%BF%E3%83%BB%E8%B3%87%E6%BA%90%E3%81%94%E3%81%BF%E3%81%AE%E5%88%86%E3%81%91%E6%96%B9%E3%83%BB%E5%87%BA%E3%81%97%E6%96%B9/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波、土砂災害、ため池の各ハザードマップと避難場所、地域防災計画を公開している。",
+      "details": {
+        "maps": "津波、土砂災害、ため池",
+        "additionalInformation": "避難場所、地域防災計画"
+      },
+      "source": {
+        "url": "https://www.vill.sai.lg.jp/guide_category/disasterprevention/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.sai.lg.jp/guide/%E6%B4%A5%E6%B3%A2%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.vill.sai.lg.jp/guide/%E5%9C%9F%E7%A0%82%E7%81%BD%E5%AE%B3%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}
