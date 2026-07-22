@@ -1,17 +1,89 @@
 {
-  "auditedAt": "2026-07-22T20:19:41.018Z",
+  "auditedAt": "2026-07-22T20:25:14.646Z",
   "success": false,
   "results": [
     {
       "name": "top: published page loaded",
-      "ok": false,
+      "ok": true,
       "detail": {
-        "attempt": 12,
+        "attempt": 1,
         "skipLink": true,
         "mainTarget": true,
         "progressbar": true,
-        "appVersion": false
+        "readerPanelReady": true,
+        "appVersion": true
       }
+    },
+    {
+      "name": "top: no critical or serious axe violations",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "top: document language is Japanese",
+      "ok": true,
+      "detail": "ja"
+    },
+    {
+      "name": "top: has one non-empty page title",
+      "ok": true,
+      "detail": "夜語り｜無料で読めるオリジナル怖い話100選"
+    },
+    {
+      "name": "top: has exactly one h1",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "top: heading levels do not skip",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "top: buttons have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "top: links have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "top: has exactly one main landmark",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "top: first Tab exposes a visible skip link",
+      "ok": false,
+      "detail": {
+        "tag": "A",
+        "className": "card",
+        "href": "stories/only-the-uniform-clocked-in.html",
+        "text": "人怖中編約5分\n    作業服だけが出勤しました制服レンタル会社は社員の本物の作業服と身体痕跡を侵入者へ貸し、元の所有者へ犯行証拠を集中させていた。\n    ●●●●○オリジナル作品",
+        "visible": true
+      }
+    },
+    {
+      "name": "top search field: keyboard focus indicator is visible",
+      "ok": true,
+      "detail": {
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(242, 198, 109)",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "top: search result count is announced through live region",
+      "ok": true,
+      "detail": "表示1話・この端末で0話読了"
+    },
+    {
+      "name": "top: category filter works with keyboard and exposes pressed state",
+      "ok": true,
+      "detail": null
     },
     {
       "name": "archive: published page loaded",
@@ -182,14 +254,14 @@
   ],
   "failures": [
     {
-      "name": "top: published page loaded",
+      "name": "top: first Tab exposes a visible skip link",
       "ok": false,
       "detail": {
-        "attempt": 12,
-        "skipLink": true,
-        "mainTarget": true,
-        "progressbar": true,
-        "appVersion": false
+        "tag": "A",
+        "className": "card",
+        "href": "stories/only-the-uniform-clocked-in.html",
+        "text": "人怖中編約5分\n    作業服だけが出勤しました制服レンタル会社は社員の本物の作業服と身体痕跡を侵入者へ貸し、元の所有者へ犯行証拠を集中させていた。\n    ●●●●○オリジナル作品",
+        "visible": true
       }
     },
     {
