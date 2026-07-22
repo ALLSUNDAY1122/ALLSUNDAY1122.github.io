@@ -1,0 +1,61 @@
+name: Temporary build north release 1732
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-north-release-1732.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed north snapshot
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin main region/north
+          git checkout -B coord/north-release-10-20260722-1732 origin/main
+          codes='01668 01691 01692 01693 01694 02201 02202 02203 02204 02205'
+          for code in $codes; do
+            pref=${code:0:2}
+            mkdir -p "jichitai-compare/data/municipalities/$pref" jichitai-compare/operations/tasks
+            git show "origin/region/north:jichitai-compare/data/municipalities/$pref/$code.json" > "jichitai-compare/data/municipalities/$pref/$code.json"
+            git show "origin/region/north:jichitai-compare/operations/tasks/$code.json" > "jichitai-compare/operations/tasks/$code.json"
+          done
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          test "${#changed[@]}" -eq 20
+          for path in "${changed[@]}"; do
+            case "$path" in
+              jichitai-compare/data/municipalities/01/*.json|jichitai-compare/data/municipalities/02/*.json|jichitai-compare/operations/tasks/*.json) ;;
+              *) echo "unexpected path: $path"; exit 1;;
+            esac
+          done
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/data/municipalities/01 jichitai-compare/data/municipalities/02 jichitai-compare/operations/tasks
+          git commit -m '全国統合: 北日本10自治体を固定スナップショット化'
+          git push --force-with-lease origin HEAD:coord/north-release-10-20260722-1732
+      - name: Remove temporary workflow
+        if: always()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin main
+          git checkout -B main origin/main
+          if [ -f .github/workflows/temp-build-north-release-1732.yml ]; then
+            git rm .github/workflows/temp-build-north-release-1732.yml
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git commit -m '統括管理: 北日本固定統合一時ワークフローを削除'
+            git push origin main
+          fi
