@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 513 Final
+name: Temporary Sync Release Queue 514 Final
 
 on:
   push:
@@ -59,8 +59,8 @@ jobs:
               e['auditStatus']='passed'
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
-          if total!=513: raise SystemExit(f'unexpected total {total}')
-          q['updatedAt']='2026-07-22T19:00:00+09:00'
+          if total!=514: raise SystemExit(f'unexpected total {total}')
+          q['updatedAt']='2026-07-22T19:02:00+09:00'
           q['status']='active'
           q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':494,'latestGeneratedPullRequest':783,'latestPublicCountPullRequest':783,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域なし。"}
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
@@ -69,5 +69,5 @@ jobs:
           git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-513.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 地方統合513自治体・公開494自治体へ同期'
+          git commit -m '統括管理: 地方統合514自治体・公開494自治体へ同期'
           git push origin main
