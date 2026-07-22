@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - agent/ai-handover-log-v04-binary
+  pull_request:
+    paths:
+      - source_parts/**
+      - .github/workflows/ai-handover-log-v04-binary-ci.yml
   workflow_dispatch:
 
 permissions:
