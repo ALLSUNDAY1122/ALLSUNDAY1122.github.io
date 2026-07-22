@@ -1,4 +1,4 @@
-name: Temporary Generate 394
+name: Temporary Generate 394 Final
 
 on:
   push:
@@ -32,8 +32,7 @@ jobs:
           text=p.read_text(encoding='utf-8')
           if text.count('384自治体') != 2:
               raise SystemExit(f'unexpected 384 count: {text.count("384自治体")}')
-          text=text.replace('384自治体','394自治体')
-          p.write_text(text,encoding='utf-8')
+          p.write_text(text.replace('384自治体','394自治体'),encoding='utf-8')
           PY
           npm run validate:generated
           cd ..
