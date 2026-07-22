@@ -10,18 +10,22 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-22T22:42:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T22:51:00+09:00",
+  "status": "ready_for_review",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 105,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {
+    "code": "04203",
+    "name": "塩竈市",
+    "stage": "ready_for_review"
+  },
+  "workingBranch": "data/04203-shiogama",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     "04100",
     "04202"
   ],
   "blocked": [],
-  "nextAction": "塩竈市（04203）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "塩竈市の3ファイル差分を検証し、region/north向けPRを作成してCI成功後に地方統合する。"
 }
