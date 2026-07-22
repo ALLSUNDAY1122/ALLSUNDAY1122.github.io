@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-22T23:02:10.775Z",
+  "auditedAt": "2026-07-22T23:03:51.450Z",
   "success": false,
   "results": [
     {
@@ -12,8 +12,13 @@
     },
     {
       "name": "local: runtime modules, social metadata, and static circulation are complete",
-      "ok": true,
-      "detail": []
+      "ok": false,
+      "detail": [
+        {
+          "file": "privacy.html",
+          "check": "runtime"
+        }
+      ]
     },
     {
       "name": "local: story runtime no longer loads the 100-story catalog",
@@ -96,8 +101,8 @@
       "name": "published: Page Views API count is displayed",
       "ok": true,
       "detail": {
-        "value": 7,
-        "text": "7",
+        "value": 8,
+        "text": "8",
         "error": null,
         "sourceError": null
       }
@@ -194,6 +199,16 @@
     }
   ],
   "failures": [
+    {
+      "name": "local: runtime modules, social metadata, and static circulation are complete",
+      "ok": false,
+      "detail": [
+        {
+          "file": "privacy.html",
+          "check": "runtime"
+        }
+      ]
+    },
     {
       "name": "published: native share receives canonical story data",
       "ok": false,
