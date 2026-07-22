@@ -45,10 +45,10 @@ async function waitForRelease() {
         storyStatus: storyResponse.status,
         storyScriptStatus: storyScriptResponse.status,
         progressiveApp: topHtml.includes('assets/app.js?v=20260723-007'),
-        analytics: topHtml.includes('assets/analytics.js?v=20260723-002'),
+        analytics: topHtml.includes('assets/analytics.js?v=20260723-003'),
         archiveReady: archiveHtml.includes('assets/archive.js?v=20260723-004'),
         staticCirculation: storyHtml.includes('class="hero-actions story-pagination"') && storyHtml.includes('class="related"'),
-        storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-003'),
+        storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-004'),
         catalogFree: !storyScript.includes('catalogSources') && !storyScript.includes('loadCatalogScript')
       };
       report.releaseCheck = detail;
