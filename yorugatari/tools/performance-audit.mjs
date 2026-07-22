@@ -1,47 +1,13 @@
 import fs from 'node:fs';
 
 const base = 'https://allsunday1122.github.io/yorugatari';
-const targets = [
-  { name: 'top', url: `${base}/` },
-  { name: 'archive', url: `${base}/archive.html` },
-  { name: 'story-032', url: `${base}/stories/spare-key-returned.html` }
-];
-
-const profiles = [
-  {
-    name: 'mobile',
-    flags: {
-      formFactor: 'mobile',
-      screenEmulation: {
-        mobile: true,
-        width: 390,
-        height: 844,
-        deviceScaleFactor: 2,
-        disabled: false
-      }
-    }
-  },
-  {
-    name: 'desktop',
-    flags: {
-      formFactor: 'desktop',
-      screenEmulation: {
-        mobile: false,
-        width: 1440,
-        height: 900,
-        deviceScaleFactor: 1,
-        disabled: false
-      },
-      throttling: {
-        rttMs: 40,
-        throughputKbps: 10240,
-        cpuSlowdownMultiplier: 1,
-        requestLatencyMs: 0,
-        downloadThroughputKbps: 0,
-        uploadThroughputKbps: 0
-      }
-    }
-  }
+const cases = [
+  { target: 'top', profile: 'mobile', url: `${base}/`, repeats: 3 },
+  { target: 'top', profile: 'desktop', url: `${base}/`, repeats: 1 },
+  { target: 'archive', profile: 'mobile', url: `${base}/archive.html`, repeats: 1 },
+  { target: 'archive', profile: 'desktop', url: `${base}/archive.html`, repeats: 1 },
+  { target: 'story-032', profile: 'mobile', url: `${base}/stories/spare-key-returned.html`, repeats: 1 },
+  { target: 'story-032', profile: 'desktop', url: `${base}/stories/spare-key-returned.html`, repeats: 1 }
 ];
 
 const report = {
@@ -50,122 +16,81 @@ const report = {
   success: false,
   releaseCheck: null,
   runs: [],
+  representativeRuns: [],
+  failures: [],
   errors: []
 };
 
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
 function errorDetail(error) {
-  return {
-    message: error instanceof Error ? error.message : String(error),
-    stack: error instanceof Error ? error.stack : null
-  };
+  return { message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : null };
 }
 
-function sleep(milliseconds) {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
-
-async function waitForPublishedRelease() {
-  const attempts = 24;
-  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+async function waitForRelease() {
+  for (let attempt = 1; attempt <= 24; attempt += 1) {
     try {
       const stamp = Date.now();
-      const [topResponse, archiveResponse] = await Promise.all([
+      const [topResponse, archiveResponse, storyResponse] = await Promise.all([
         fetch(`${base}/?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/archive.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
+        fetch(`${base}/archive.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
+        fetch(`${base}/stories/spare-key-returned.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
       ]);
-      const [topHtml, archiveHtml] = await Promise.all([topResponse.text(), archiveResponse.text()]);
+      const [topHtml, archiveHtml, storyHtml] = await Promise.all([topResponse.text(), archiveResponse.text(), storyResponse.text()]);
       const detail = {
         attempt,
         topStatus: topResponse.status,
         archiveStatus: archiveResponse.status,
-        topOptimization: topHtml.includes('.card:nth-child(n+9)'),
-        archiveOptimization: archiveHtml.includes('contain-intrinsic-size:auto 1600px')
+        storyStatus: storyResponse.status,
+        progressiveApp: topHtml.includes('assets/app.js?v=20260723-007'),
+        analytics: topHtml.includes('assets/analytics.js?v=20260723-002'),
+        archiveReady: archiveHtml.includes('assets/archive.js?v=20260723-004'),
+        storyReady: storyHtml.includes('../assets/engagement.js?v=20260723-002')
       };
-      if (topResponse.ok && archiveResponse.ok && detail.topOptimization && detail.archiveOptimization) {
-        report.releaseCheck = detail;
-        return;
-      }
       report.releaseCheck = detail;
+      if (topResponse.ok && archiveResponse.ok && storyResponse.ok && detail.progressiveApp && detail.analytics && detail.archiveReady && detail.storyReady) return;
     } catch (error) {
       report.releaseCheck = { attempt, ...errorDetail(error) };
     }
-    if (attempt < attempts) await sleep(10000);
+    if (attempt < 24) await sleep(10000);
   }
-  throw new Error(`Published performance release was not detected: ${JSON.stringify(report.releaseCheck)}`);
+  throw new Error(`Published release was not detected: ${JSON.stringify(report.releaseCheck)}`);
 }
 
-function auditValue(audits, id) {
-  const audit = audits[id];
-  if (!audit) return null;
+function profileFlags(profile) {
+  if (profile === 'desktop') {
+    return {
+      formFactor: 'desktop',
+      screenEmulation: { mobile: false, width: 1440, height: 900, deviceScaleFactor: 1, disabled: false },
+      throttling: { rttMs: 40, throughputKbps: 10240, cpuSlowdownMultiplier: 1, requestLatencyMs: 0, downloadThroughputKbps: 0, uploadThroughputKbps: 0 }
+    };
+  }
   return {
-    score: audit.score,
-    numericValue: Number.isFinite(audit.numericValue) ? audit.numericValue : null,
-    numericUnit: audit.numericUnit || null,
-    displayValue: audit.displayValue || null,
-    title: audit.title || id
+    formFactor: 'mobile',
+    screenEmulation: { mobile: true, width: 390, height: 844, deviceScaleFactor: 2, disabled: false }
   };
 }
 
-function resourceSummary(audits) {
-  const rows = audits['resource-summary']?.details?.items || [];
-  return rows.map((row) => ({
-    resourceType: row.resourceType,
-    requestCount: row.requestCount,
-    transferSize: row.transferSize
-  }));
-}
-
-function largestRequests(audits) {
-  const rows = audits['network-requests']?.details?.items || [];
-  return rows
-    .map((row) => ({
-      url: row.url,
-      resourceType: row.resourceType,
-      transferSize: row.transferSize,
-      resourceSize: row.resourceSize,
-      statusCode: row.statusCode,
-      mimeType: row.mimeType
-    }))
-    .filter((row) => Number.isFinite(row.transferSize))
-    .sort((a, b) => b.transferSize - a.transferSize)
-    .slice(0, 12);
-}
-
-function opportunities(audits) {
-  const ids = [
-    'render-blocking-resources',
-    'unused-javascript',
-    'unused-css-rules',
-    'modern-image-formats',
-    'uses-responsive-images',
-    'offscreen-images',
-    'uses-long-cache-ttl',
-    'unminified-javascript',
-    'unminified-css',
-    'bootup-time',
-    'mainthread-work-breakdown',
-    'third-party-summary'
-  ];
-  return ids
-    .map((id) => {
-      const value = auditValue(audits, id);
-      return value ? { id, ...value } : null;
-    })
-    .filter(Boolean);
-}
-
-function summarize(result, target, profile) {
-  if (!result?.lhr) throw new Error('Lighthouse returned no report');
-  const lhr = result.lhr;
-  const audits = lhr.audits;
+function auditValue(audits, id) {
+  const value = audits[id];
+  if (!value) return null;
   return {
-    target: target.name,
-    profile: profile.name,
-    requestedUrl: target.url,
-    finalUrl: lhr.finalDisplayedUrl || lhr.finalUrl,
+    score: value.score,
+    numericValue: Number.isFinite(value.numericValue) ? value.numericValue : null,
+    displayValue: value.displayValue || null
+  };
+}
+
+function summarize(result, currentCase, runNumber) {
+  const lhr = result?.lhr;
+  if (!lhr) throw new Error('Lighthouse returned no report');
+  const audits = lhr.audits;
+  const resourceRows = audits['resource-summary']?.details?.items || [];
+  return {
+    target: currentCase.target,
+    profile: currentCase.profile,
+    run: runNumber,
     fetchTime: lhr.fetchTime,
-    lighthouseVersion: lhr.lighthouseVersion,
-    userAgent: lhr.userAgent,
     scores: {
       performance: lhr.categories.performance?.score ?? null,
       bestPractices: lhr.categories['best-practices']?.score ?? null,
@@ -174,74 +99,82 @@ function summarize(result, target, profile) {
     metrics: {
       firstContentfulPaint: auditValue(audits, 'first-contentful-paint'),
       largestContentfulPaint: auditValue(audits, 'largest-contentful-paint'),
-      speedIndex: auditValue(audits, 'speed-index'),
       totalBlockingTime: auditValue(audits, 'total-blocking-time'),
       cumulativeLayoutShift: auditValue(audits, 'cumulative-layout-shift'),
       interactive: auditValue(audits, 'interactive'),
-      serverResponseTime: auditValue(audits, 'server-response-time'),
-      totalByteWeight: auditValue(audits, 'total-byte-weight'),
-      domSize: auditValue(audits, 'dom-size')
+      totalByteWeight: auditValue(audits, 'total-byte-weight')
     },
-    resources: resourceSummary(audits),
-    largestRequests: largestRequests(audits),
-    opportunities: opportunities(audits)
+    resources: resourceRows.map((row) => ({ resourceType: row.resourceType, requestCount: row.requestCount, transferSize: row.transferSize }))
   };
+}
+
+function medianRun(rows) {
+  const sorted = rows.slice().sort((left, right) => (left.scores.performance ?? -1) - (right.scores.performance ?? -1));
+  return sorted[Math.floor(sorted.length / 2)];
+}
+
+function validate(run) {
+  const mobile = run.profile === 'mobile';
+  const performanceMinimum = mobile ? 0.9 : 0.95;
+  const tbtMaximum = mobile ? 300 : 150;
+  const performance = run.scores.performance;
+  const bestPractices = run.scores.bestPractices;
+  const seo = run.scores.seo;
+  const tbt = run.metrics.totalBlockingTime?.numericValue;
+  const cls = run.metrics.cumulativeLayoutShift?.numericValue;
+  const checks = {
+    performance: Number.isFinite(performance) && performance >= performanceMinimum,
+    bestPractices: Number.isFinite(bestPractices) && bestPractices >= 0.9,
+    seo: seo === 1,
+    totalBlockingTime: Number.isFinite(tbt) && tbt <= tbtMaximum,
+    cumulativeLayoutShift: Number.isFinite(cls) && cls <= 0.1
+  };
+  if (!Object.values(checks).every(Boolean)) {
+    report.failures.push({ target: run.target, profile: run.profile, checks, scores: run.scores, metrics: run.metrics });
+  }
 }
 
 let chrome;
 try {
-  await waitForPublishedRelease();
+  await waitForRelease();
+  const [{ default: lighthouse }, chromeLauncher] = await Promise.all([import('lighthouse'), import('chrome-launcher')]);
+  chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
 
-  const [{ default: lighthouse }, chromeLauncher] = await Promise.all([
-    import('lighthouse'),
-    import('chrome-launcher')
-  ]);
-
-  if (typeof lighthouse !== 'function') throw new Error('Lighthouse default export is unavailable');
-  if (typeof chromeLauncher.launch !== 'function') throw new Error('chrome-launcher launch export is unavailable');
-
-  chrome = await chromeLauncher.launch({
-    chromeFlags: [
-      '--headless=new',
-      '--no-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu'
-    ]
-  });
-
-  for (const target of targets) {
-    for (const profile of profiles) {
+  for (const currentCase of cases) {
+    const group = [];
+    for (let runNumber = 1; runNumber <= currentCase.repeats; runNumber += 1) {
       try {
-        const result = await lighthouse(target.url, {
+        const result = await lighthouse(currentCase.url, {
           port: chrome.port,
           output: 'json',
           logLevel: 'error',
           onlyCategories: ['performance', 'best-practices', 'seo'],
           throttlingMethod: 'simulate',
           disableStorageReset: false,
-          ...profile.flags
+          ...profileFlags(currentCase.profile)
         });
-        report.runs.push(summarize(result, target, profile));
+        const row = summarize(result, currentCase, runNumber);
+        group.push(row);
+        report.runs.push(row);
       } catch (error) {
-        report.errors.push({ target: target.name, profile: profile.name, ...errorDetail(error) });
+        report.errors.push({ target: currentCase.target, profile: currentCase.profile, run: runNumber, ...errorDetail(error) });
       }
+    }
+    if (group.length) {
+      const representative = medianRun(group);
+      report.representativeRuns.push(representative);
+      validate(representative);
     }
   }
 } catch (error) {
   report.errors.push({ target: 'launcher', profile: null, ...errorDetail(error) });
 } finally {
   if (chrome) {
-    try {
-      await chrome.kill();
-    } catch (error) {
-      report.errors.push({ target: 'launcher-cleanup', profile: null, ...errorDetail(error) });
-    }
+    try { await chrome.kill(); } catch (error) { report.errors.push({ target: 'launcher-cleanup', profile: null, ...errorDetail(error) }); }
   }
-
-  report.success = report.runs.length === targets.length * profiles.length && report.errors.length === 0;
+  report.success = report.representativeRuns.length === cases.length && report.failures.length === 0 && report.errors.length === 0;
   fs.writeFileSync('yorugatari-performance-report.json', `${JSON.stringify(report, null, 2)}\n`);
-  console.log(`Yorugatari Lighthouse runs: ${report.runs.length}/${targets.length * profiles.length}; errors: ${report.errors.length}`);
-  if (report.errors.length) console.error(JSON.stringify(report.errors, null, 2));
+  console.log(`YORUGATARI_PERFORMANCE_REPORT=${JSON.stringify({ success: report.success, releaseCheck: report.releaseCheck, representativeRuns: report.representativeRuns.map((run) => ({ target: run.target, profile: run.profile, scores: run.scores, tbt: run.metrics.totalBlockingTime?.numericValue, cls: run.metrics.cumulativeLayoutShift?.numericValue })), failures: report.failures, errors: report.errors })}`);
 }
 
 if (!report.success) process.exit(1);
