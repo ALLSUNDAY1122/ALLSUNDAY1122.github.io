@@ -30,13 +30,32 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Decode source archive
+      - name: Decode and validate source archive
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/source"
-          cat apps/ai-handover-log/source_chunks/chunk_*.b64 | base64 --decode > "$RUNNER_TEMP/source.zip"
-          unzip -q "$RUNNER_TEMP/source.zip" -d "$RUNNER_TEMP/source"
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import zipfile
+
+          chunks = sorted(Path('apps/ai-handover-log/source_chunks').glob('chunk_*.b64'))
+          if not chunks:
+              raise SystemExit('No source chunks found')
+          encoded = ''.join(p.read_text(encoding='utf-8') for p in chunks)
+          encoded = ''.join(encoded.split())
+          raw = base64.b64decode(encoded, validate=True)
+          target = Path(r'${{ runner.temp }}/source.zip')
+          target.write_bytes(raw)
+          print(f'chunks={len(chunks)} base64_chars={len(encoded)} zip_bytes={len(raw)} sha256={hashlib.sha256(raw).hexdigest()}')
+          with zipfile.ZipFile(target) as archive:
+              bad = archive.testzip()
+              if bad:
+                  raise SystemExit(f'Corrupt zip member: {bad}')
+              archive.extractall(Path(r'${{ runner.temp }}/source'))
+          PY
           test -f "$RUNNER_TEMP/source/ai_handover_log_flutter/pubspec.yaml"
 
       - name: Generate clean Flutter project
@@ -113,7 +132,7 @@ jobs:
             ${{ runner.temp }}/pub-get.log
             ${{ runner.temp }}/flutter-version.txt
             ${{ runner.temp }}/pubspec-used.yaml
-          if-no-files-found: error
+          if-no-files-found: warn
 
       - name: Stop when dependency resolution failed
         if: steps.pubget.outcome == 'failure'
