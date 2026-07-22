@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T22:50:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T22:57:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 90,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "26205", "municipalityName": "宮津市"},
+  "workingBranch": "data/26205-miyazu",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {
       "municipalityCode": "26100",
@@ -51,5 +51,5 @@
     }
   ],
   "blocked": [],
-  "nextAction": "宮津市（26205）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "宮津市（26205）のPRをregion/central向けに作成し、CI成功後に地方統合する。"
 }
