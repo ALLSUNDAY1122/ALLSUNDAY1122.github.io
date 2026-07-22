@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "24470",
+  "prefectureCode": "24",
+  "prefecture": "三重県",
+  "name": "度会町",
+  "officialUrl": "https://www.town.watarai.lg.jp/",
+  "status": "verified",
+  "summary": "度会町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末までの子どもの保険診療自己負担相当額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "coverage": "入院・外来の保険診療自己負担相当額",
+        "payment": "三重県内は受給資格証による現物給付、県外受診等は償還払い",
+        "excluded": "高額療養費・付加給付、学校等での負傷に対する災害共済給付対象等は調整・対象外",
+        "expansion": "令和7年9月診療分から18歳年度末までへ拡大"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=cat&frmCd=1-1-2-0-0&frmId=914", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気で集団保育が難しく家庭でも保育できない小学6年生までの児童を、伊勢市の協定施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "facility": "病児・病後児保育えんぜる（伊勢市）",
+        "ageCondition": "町内在住で町内保育所・小学校に通う小学6年生まで",
+        "hours": "月曜日から金曜日の8時30分から17時30分。祝日・お盆・年末年始を除く",
+        "limit": "7日間以内（閉所日を除く）",
+        "fee": "有料",
+        "application": "かんだ小児科または伊勢市役所で事前登録し、利用前に診察・予約"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=kak&frmId=2236", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "保育料は幼児教育・保育無償化の対象区分を除き、保護者等の市町村民税額に基づき算定する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facilities": "長原・棚橋・中之郷保育所",
+        "ageCondition": "長原・棚橋は生後6か月から、中之郷は1歳から就学前",
+        "calculation": "3歳未満児等の保育料は保護者等の市町村民税額により算定",
+        "freeProgram": "3～5歳児および住民税非課税世帯の0～2歳児は国の無償化制度対象",
+        "extraHours": "早朝保育は月額1,000円、緊急の一時時間外利用は日額500円"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=cat&frmCd=1-1-3-0-0&frmId=2710", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和7年4月以降の学校給食費を町が約5割補助し、保護者負担を小学校月2,500～2,600円、中学校月2,900円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementaryLower": "給食費5,000円、町補助2,500円、保護者負担2,500円",
+        "elementaryUpper": "給食費5,200円、町補助2,600円、保護者負担2,600円",
+        "juniorHigh": "給食費5,800円、町補助2,900円、保護者負担2,900円",
+        "effectiveDate": "令和7年4月から",
+        "lowIncome": "令和8年度就学援助では学校給食費も給付対象"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=cat&frmCd=9-1-3-0-0&frmId=832", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "協力産科医療機関等で宿泊・通所・訪問型の産後ケアを行い、母子のケアや授乳・育児相談を支援する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "宿泊型、通所型、訪問型",
+        "care": "母体の健康管理、休養、授乳指導、乳房ケア、育児相談、乳児の発育確認等",
+        "provider": "協力産科医療機関・助産所等",
+        "condition": "母子ともに専門的治療を必要としないこと等",
+        "application": "保健こども課・こども家庭センターへ事前相談"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=kak&frmId=3496", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から3歳の誕生日の前々日までの未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "facility": "度会町立長原保育所",
+        "condition": "町内在住で、保育所・認定こども園・小規模保育等を利用していないこと。就労要件なし",
+        "hours": "月曜日から金曜日の9時から16時",
+        "limit": "児童1人につき月10時間、翌月繰越不可、1時間単位",
+        "fee": "1時間300円。減免制度あり。給食費・おやつ代・材料費等は別途",
+        "start": "令和8年4月1日受入開始"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=new&frmId=3622", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新婚世帯の住居取得・賃借、引越し、住宅リフォーム費用を1世帯30万円まで補助する。",
+      "details": {
+        "program": "度会町結婚新生活支援補助金",
+        "coverage": "住居取得費、賃料・敷金・礼金・共益費・仲介手数料、引越業者費用、住宅リフォーム費用",
+        "maximum": "1世帯30万円",
+        "period": "令和8年4月1日から令和9年3月31日までに支払った対象費用",
+        "condition": "婚姻日、年齢、所得、町内居住、町税滞納なし等の要件あり",
+        "application": "必要書類を添えて役場担当課へ申請"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=ser&frmId=2866", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを含む家庭ごみは分別表・収集カレンダーに従って排出し、美化センターへ平日に直接搬入できる。",
+      "details": {
+        "directCarry": "度会町美化センターへ直接搬入",
+        "hours": "平日8時30分から16時30分。12時から13時を除く",
+        "classification": "家具、姿見、スキー、ステレオ、石油ストーブ等は粗大ごみ分類",
+        "schedule": "令和8年度ごみ収集日程カレンダーで地域別収集日を確認",
+        "note": "搬入料金・受入条件は品目により異なるため、美化センターまたは環境水道課へ事前確認"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?co=cat&frmCd=10-2-2-0-0&frmId=911", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害、洪水、ため池、空中写真を収録した防災マップと避難情報を公開する。",
+      "details": {
+        "mapYear": "令和3年3月更新",
+        "maps": "土砂災害ハザードマップ、洪水ハザードマップ、ため池ハザードマップ、空中写真マップ",
+        "guidance": "啓発面に避難・地震対策等を掲載",
+        "alerts": "防災行政無線戸別受信機の無償貸与、スマートフォン確認、公式LINE等を案内",
+        "note": "自宅周辺の危険箇所・避難先を事前に確認する"
+      },
+      "source": {"url": "https://www.town.watarai.lg.jp/contents_detail.php?frmId=48", "checkedAt": "2026-07-22"}
+    }
+  }
+}

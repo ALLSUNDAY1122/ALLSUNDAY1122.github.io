@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "25201",
+  "prefectureCode": "25",
+  "prefecture": "滋賀県",
+  "name": "大津市",
+  "officialUrl": "https://www.city.otsu.lg.jp/",
+  "status": "verified",
+  "summary": "大津市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "未就学児は保険診療自己負担分を全額助成し、小学校1年生から18歳年度末までは所定の自己負担金を除いて助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "preschool": "未就学児は保険診療自己負担分を全額助成",
+        "schoolAge": "小学校1年生から18歳到達後最初の3月31日まで",
+        "outpatient": "1医療機関1か月当たり自己負担500円。院外調剤薬局は自己負担なし",
+        "inpatient": "1日1,000円、1医療機関1か月14,000円を上限",
+        "excluded": "保険適用外費用、入院時食事療養費・生活療養費等は対象外"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/kosodate/te/index.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気で通常保育が難しく、保護者が家庭で保育できない児童を、市内の病児保育施設で預かる。",
+      "eligibility": {"minAgeMonths": 3, "maxAgeYears": 12},
+      "details": {
+        "ageCondition": "施設により生後3か月または6か月・満1歳から、小学4年生または小学6年生まで",
+        "facilities": "すまいる唐崎病児保育室、におの浜保育園、南郷こども園、あおぞら保育園、レイクこどもクリニック病児保育室こっこ等",
+        "hours": "主に平日8時30分頃から17時30分頃まで。施設により異なる",
+        "application": "事前登録・予約と医師の連絡票が必要",
+        "fee": "利用料は施設ごとに異なるため利用施設へ確認"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/kosodate/i/y/h/b/3506.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象で、課税世帯の0～2歳児は住民税額等により算定する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeCoverage": "3～5歳児および保育の必要性がある住民税非課税世帯の0～2歳児",
+        "taxableUnderThree": "課税世帯の0～2歳児は父母等の市町村民税所得割額により算定",
+        "siblingReduction": "一定の就学前施設等を利用する兄弟姉妹を年齢順に数え、2人目は半額、3人目以降は免除",
+        "excluded": "食材料費、日用品代、行事費、延長保育料等は別途負担となる場合がある",
+        "notification": "保育料は利用者負担額決定通知で案内"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/kosodate/i/y/h/nt/p/35721.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度から市立小学校の全児童は給食費自己負担0とし、中学校は1食290円、第3子以降は申請により免除する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "令和8年4月から市立小学校の全児童は所得制限・申請なしで自己負担0",
+        "middle": "市立中学校は1食当たり290円を負担",
+        "thirdChild": "市立中学校に通う第3子以降は、要件を満たし毎年度申請すると給食費免除",
+        "actualCost": "令和8年度の実際の食材費相当は小学校318円、中学校386円で、差額を公費負担",
+        "note": "転入生の小学校児童も自己負担0の対象"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/kosodate/sc/k/p/61531.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子へ、居宅訪問・通所・短期入所型の産後ケアを通算7回まで提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "居宅訪問型、通所型、短期入所型",
+        "visit": "1回目無料、2～5回目は各1,000円、6・7回目は各1,600円",
+        "dayCare": "1～5回目は各1,700円、6・7回目は各3,400円",
+        "overnight": "1～7回目はいずれも1回8,300円。食事代は別途",
+        "reduction": "生活保護世帯・市民税非課税世帯は無料",
+        "application": "利用希望日の10日前までに、すこやか相談所へ来所または電話で申込み"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/kosodate/ss/se/67679.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "condition": "保育所等に普段通っていない児童。保護者の就労要件なし",
+        "ageCondition": "出生後6か月から3歳誕生日の前々日まで",
+        "limit": "児童1人につき月10時間まで。複数施設利用時も合計10時間",
+        "fee": "1時間当たり300円程度。施設ごとに定め、食事代等が別途必要な場合がある",
+        "application": "市の利用認定、施設との初回面談、総合支援システムでの予約が必要"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/soshiki/015/1488/g/ks/72157.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "市外から転入する世帯や市外の子・孫世帯と同居する世帯の住宅改修費を補助する。",
+      "details": {
+        "program": "大津市定住促進リフォーム補助金（令和8年度）",
+        "standard": "補助対象工事費の10％、上限30万円",
+        "childHousehold": "転入世帯に15歳未満の子または出産予定者がいる場合は20％、上限60万円",
+        "minimumWork": "税込20万円以上の工事",
+        "housing": "築1年以上で、申請者または2親等以内の親族が所有する住宅",
+        "contractor": "大津市内に本社登記がある事業者または市内住所の個人事業者",
+        "condition": "交付決定後に着工し、5年以上居住する意思等が必要"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/kurashi/j/r/h/7846.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家庭の大型ごみは、事前予約した戸別有料収集または処理施設への自己搬入で処分する。",
+      "details": {
+        "definition": "燃やせるごみは長さ40センチ以上または5キログラム以上、燃やせないごみは指定袋に入らないか5キログラム以上",
+        "homeCollection": "事前予約制で1日合計5点まで。重量区分に応じて350円、700円、1,400円、2,800円等の処理手数料券を使用",
+        "directCarry": "事前予約して処理施設へ搬入",
+        "directFee": "10キログラムまでごとに110円",
+        "hours": "月曜～土曜。平日は9時～12時・12時45分～16時、土曜は9時～12時",
+        "application": "戸別収集は原則1週間前、インターネットは5営業日前まで。自己搬入のインターネット予約は3営業日前まで"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/kurashi/g/b/s/ks/45936.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "学区別の土砂・洪水ハザードマップ、水害・ため池マップ、防災カルテ等を公開する。",
+      "details": {
+        "maps": "土砂・洪水、水害、ため池、大規模盛土造成地等のハザードマップ",
+        "coverage": "土砂災害警戒区域・特別警戒区域、琵琶湖・瀬田川・大戸川・草津川等の洪水浸水想定区域",
+        "districts": "市内の各小学校区別に土砂・洪水ハザードマップを公開",
+        "updateNote": "令和8年3月末に県の洪水浸水想定区域が更新され、市は令和8年度中に新マップ作成予定",
+        "app": "大津市防災ナビでハザードマップと避難・地震情報等を配信"
+      },
+      "source": {"url": "https://www.city.otsu.lg.jp/bosai/b/h/map/48521.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
