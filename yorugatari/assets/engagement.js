@@ -4,17 +4,25 @@
   const SITE_ID = 'allsunday1122.github.io';
   const API_BASE = 'https://page-views-api.ratneshc.com/api/v1';
   const SOURCE_KEY = 'yorugatari-source-tracked';
+  const CAMPAIGN_KEY_PREFIX = 'yorugatari-campaign-tracked:';
   const canonical = document.querySelector('link[rel="canonical"]');
   const canonicalUrl = canonical ? canonical.href : location.href.split('#')[0];
   const actualPath = location.pathname.replace(/\/{2,}/g, '/').replace(/\/$/, '') || '/';
   const isYorugatari = actualPath === '/yorugatari' || actualPath.startsWith('/yorugatari/');
   const viewCount = document.querySelector('.view-count strong');
+  const query = new URLSearchParams(location.search);
+  const knownCampaigns = new Map([
+    ['x|launch_20260723|top_100', 'launch-20260723-x-top-100'],
+    ['x|launch_20260723|last_elevator', 'launch-20260723-x-last-elevator'],
+    ['threads|launch_20260723|spare_key', 'launch-20260723-threads-spare-key'],
+    ['line|launch_20260723|hired_experience', 'launch-20260723-line-hired-experience']
+  ]);
 
   function sourceChannel() {
-    const campaign = (new URLSearchParams(location.search).get('utm_source') || '').toLowerCase();
-    if (campaign) {
-      if (/google|bing|yahoo|duckduckgo|baidu|yandex/.test(campaign)) return 'search';
-      if (/x|twitter|facebook|instagram|threads|line|tiktok/.test(campaign)) return 'social';
+    const source = (query.get('utm_source') || '').toLowerCase();
+    if (source) {
+      if (/^(google|bing|yahoo|duckduckgo|baidu|yandex)$/.test(source)) return 'search';
+      if (/^(x|twitter|facebook|instagram|threads|line|tiktok|web_share)$/.test(source)) return 'social';
       return 'campaign';
     }
     if (!document.referrer) return 'direct';
@@ -29,18 +37,39 @@
     }
   }
 
+  function campaignId() {
+    const source = (query.get('utm_source') || '').toLowerCase();
+    const campaign = (query.get('utm_campaign') || '').toLowerCase();
+    const content = (query.get('utm_content') || '').toLowerCase();
+    if (source === 'web_share' && campaign === 'onsite_share') return 'onsite-share';
+    return knownCampaigns.get([source, campaign, content].join('|')) || null;
+  }
+
+  function taggedShareUrl() {
+    const url = new URL(canonicalUrl);
+    url.searchParams.set('utm_source', 'web_share');
+    url.searchParams.set('utm_medium', 'social');
+    url.searchParams.set('utm_campaign', 'onsite_share');
+    return url.href;
+  }
+
   const source = sourceChannel();
+  const campaign = campaignId();
   const state = {
     path: actualPath,
     trackingPath: actualPath,
     source,
+    campaign,
     tracked: false,
     sourceTracked: false,
+    campaignTracked: false,
     views: null,
     shareReady: false,
+    shareUrl: taggedShareUrl(),
     relatedReady: document.querySelectorAll('.related a').length >= 2,
     error: null,
-    sourceError: null
+    sourceError: null,
+    campaignError: null
   };
   window.YORUGATARI_ENGAGEMENT = state;
 
@@ -90,6 +119,17 @@
     try { sessionStorage.setItem(SOURCE_KEY, '1'); } catch (error) {}
   }
 
+  async function trackCampaign() {
+    if (!isYorugatari || navigator.webdriver || !campaign) return;
+    const storageKey = CAMPAIGN_KEY_PREFIX + campaign;
+    let alreadyTracked = false;
+    try { alreadyTracked = sessionStorage.getItem(storageKey) === '1'; } catch (error) {}
+    if (alreadyTracked) return;
+    await request(endpoint('track', '/yorugatari/__campaign/' + campaign), requestOptions(true), 2);
+    state.campaignTracked = true;
+    try { sessionStorage.setItem(storageKey, '1'); } catch (error) {}
+  }
+
   async function loadViewCount() {
     if (!viewCount || !isYorugatari) return;
     const response = await request(endpoint('views'), requestOptions(false), 3);
@@ -104,6 +144,7 @@
   async function startAnalytics() {
     try { await trackPageView(); } catch (error) { state.error = error && error.message ? error.message : String(error); }
     try { await trackSource(); } catch (error) { state.sourceError = error && error.message ? error.message : String(error); }
+    try { await trackCampaign(); } catch (error) { state.campaignError = error && error.message ? error.message : String(error); }
     try {
       await loadViewCount();
     } catch (error) {
@@ -157,16 +198,17 @@
     const status = wrapper.querySelector('.share-status');
     const title = heading.textContent.trim() + '｜夜語り';
     const text = '約5分で読めるオリジナル怖い話「' + heading.textContent.trim() + '」';
+    const shareUrl = state.shareUrl;
 
     button.addEventListener('click', async function () {
       button.disabled = true;
       try {
         if (navigator.share) {
-          await navigator.share({ title, text, url: canonicalUrl });
+          await navigator.share({ title, text, url: shareUrl });
           status.textContent = '共有画面を開きました。';
         } else {
-          await copyText(canonicalUrl);
-          status.textContent = '作品URLをコピーしました。';
+          await copyText(shareUrl);
+          status.textContent = '計測用の作品URLをコピーしました。';
         }
       } catch (error) {
         if (error && error.name === 'AbortError') status.textContent = '';
