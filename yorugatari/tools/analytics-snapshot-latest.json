@@ -1,10 +1,11 @@
 {
-  "generatedAt": "2026-07-22T23:01:56.737Z",
+  "generatedAt": "2026-07-22T23:06:30.289Z",
   "success": true,
   "definitions": {
     "pageViews": "Page Views APIが30分単位で重複を除いた累計値",
     "sourceViews": "外部からの初回訪問時に1セッション1回だけ送信する粗い流入区分",
-    "privacy": "参照元URL、検索語、UTMの具体値は保存しない",
+    "campaignViews": "事前登録した告知リンクとサイト内共有だけを固定コードで1セッション1回集計",
+    "privacy": "参照元URL、検索語、任意のUTM値は保存せず、未登録のキャンペーン値は破棄する",
     "readiness": "作品順位は100作品閲覧・20作品以上の閲覧・7日分の観測が揃うまで変更しない"
   },
   "coverage": {
@@ -12,21 +13,24 @@
     "trackedPages": 107,
     "stories": 100,
     "sourceChannels": 5,
+    "campaignCodes": 5,
     "observedDays": 1
   },
   "totals": {
-    "pageViews": 51,
-    "storyViews": 29,
-    "sourceLandingViews": 11,
+    "pageViews": 55,
+    "storyViews": 30,
+    "sourceLandingViews": 12,
+    "campaignLandingViews": 0,
     "notFoundViews": 0
   },
   "analysis": {
     "japanDate": "2026-07-23",
     "deltasFromPreviousRun": {
-      "previousGeneratedAt": "2026-07-22T23:01:11.511Z",
-      "pageViews": 1,
-      "storyViews": 0,
+      "previousGeneratedAt": "2026-07-22T23:01:56.737Z",
+      "pageViews": 4,
+      "storyViews": 1,
       "sourceLandingViews": 1,
+      "campaignLandingViews": null,
       "notFoundViews": 0
     },
     "deltasFromPreviousDay": {
@@ -34,43 +38,50 @@
       "pageViews": null,
       "storyViews": null,
       "sourceLandingViews": null,
+      "campaignLandingViews": null,
       "notFoundViews": null
     },
     "metrics": {
-      "storyViewShare": 56.9,
+      "storyViewShare": 54.5,
       "activeStories": 23,
       "activeStoryRate": 23,
-      "topStoryShare": 24.1,
+      "topStoryShare": 26.7,
       "externalSourceViews": 0,
       "directSourceShare": 100,
+      "campaignShareOfSources": 0,
       "notFoundRate": 0
     },
     "dataReadiness": {
       "status": "collecting",
       "rankingReady": false,
       "acquisitionReady": false,
+      "campaignReady": false,
       "thresholds": {
         "rankingStoryViews": 100,
         "rankingActiveStories": 20,
         "rankingDays": 7,
-        "acquisitionSourceLandings": 30
+        "acquisitionSourceLandings": 30,
+        "campaignTotalLandings": 30,
+        "campaignVariantLandings": 10
       },
       "reasons": [
         "作品閲覧が100件未満のため、人気順位は偶然の影響が大きいです。",
         "日次データが7日分未満です。",
-        "流入区分の記録が30件未満です。"
+        "流入区分の記録が30件未満です。",
+        "固定キャンペーン流入が合計30件、かつ1リンク10件の比較基準に達していません。"
       ]
     },
     "actions": [
       "作品の並び順や「人気」表示は変更せず、データ収集を継続する。",
-      "検索・SNS・外部参照の流入がまだ0件のため、まず外部から1件でも到達する導線を作る。",
+      "external-launch-kit.mdの1日目リンクから、外部投稿を1本だけ公開する。",
+      "検索・SNS・外部参照の流入がまだ0件のため、外部投稿の着地を確認する。",
       "404は0件のため、リンク修正より新規流入獲得を優先する。"
     ]
   },
   "sources": [
     {
       "channel": "direct",
-      "views": 11
+      "views": 12
     },
     {
       "channel": "search",
@@ -89,12 +100,54 @@
       "views": 0
     }
   ],
+  "campaigns": [
+    {
+      "id": "launch-20260723-x-top-100",
+      "label": "X：100話トップ",
+      "source": "x",
+      "target": "https://allsunday1122.github.io/yorugatari/",
+      "url": "https://allsunday1122.github.io/yorugatari/?utm_source=x&utm_medium=social&utm_campaign=launch_20260723&utm_content=top_100",
+      "views": 0
+    },
+    {
+      "id": "launch-20260723-x-last-elevator",
+      "label": "X：最後のエレベーター",
+      "source": "x",
+      "target": "https://allsunday1122.github.io/yorugatari/stories/last-elevator.html",
+      "url": "https://allsunday1122.github.io/yorugatari/stories/last-elevator.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260723&utm_content=last_elevator",
+      "views": 0
+    },
+    {
+      "id": "launch-20260723-threads-spare-key",
+      "label": "Threads：合鍵は返却済み",
+      "source": "threads",
+      "target": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
+      "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260723&utm_content=spare_key",
+      "views": 0
+    },
+    {
+      "id": "launch-20260723-line-hired-experience",
+      "label": "LINE：あなたの経験で採用されました",
+      "source": "line",
+      "target": "https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.html",
+      "url": "https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.html?utm_source=line&utm_medium=social&utm_campaign=launch_20260723&utm_content=hired_experience",
+      "views": 0
+    },
+    {
+      "id": "onsite-share",
+      "label": "サイト内共有",
+      "source": "web_share",
+      "target": null,
+      "url": null,
+      "views": 0
+    }
+  ],
   "topStories": [
     {
       "path": "/yorugatari/stories/spare-key-returned.html",
       "title": "合鍵は返却済み｜夜語り",
       "type": "story",
-      "views": 7
+      "views": 8
     },
     {
       "path": "/yorugatari/stories/deceased-answered-that-way.html",
@@ -216,13 +269,13 @@
       "path": "/yorugatari",
       "title": "夜語り｜無料で読めるオリジナル怖い話100選",
       "type": "page",
-      "views": 12
+      "views": 13
     },
     {
       "path": "/yorugatari/archive.html",
       "title": "全100話アーカイブ｜夜語り",
       "type": "page",
-      "views": 10
+      "views": 12
     },
     {
       "path": "/yorugatari/about.html",
@@ -438,7 +491,7 @@
       "path": "/yorugatari/stories/spare-key-returned.html",
       "title": "合鍵は返却済み｜夜語り",
       "type": "story",
-      "views": 7
+      "views": 8
     },
     {
       "path": "/yorugatari/stories/source-device.html",
