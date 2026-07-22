@@ -1,4 +1,4 @@
-name: Temporary Sync Queue 334 Cleanup
+name: Temporary Dynamic Queue Sync Cleanup
 
 on:
   push:
@@ -58,16 +58,17 @@ jobs:
               entry['generatedPullRequest']=544
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
-          if total != 334: raise SystemExit(f'unexpected regional total: {total}')
-          q['updatedAt']='2026-07-22T09:39:00+09:00'
+          q['updatedAt']='2026-07-22T09:42:00+09:00'
           q['status']='active'
           q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':314,'latestGeneratedPullRequest':544,'latestPublicCountPullRequest':544,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域なし。"}
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          Path('/tmp/regional_total').write_text(str(total))
           PY
+          TOTAL="$(cat /tmp/regional_total)"
           git rm .github/workflows/temp-sync-queue-331-cleanup.yml
           git add jichitai-compare/operations/control/release-queue.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 地方統合334自治体・公開314自治体へ同期'
+          git commit -m "統括管理: 地方統合${TOTAL}自治体・公開314自治体へ同期"
           git push origin main
           git push origin --delete coord/central-release-10-20260722-0916 || true
