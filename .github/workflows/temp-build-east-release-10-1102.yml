@@ -1,0 +1,62 @@
+name: Temporary Build East Release 10 1102
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-east-release-10-1102.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed East snapshot
+        run: |
+          set -euxo pipefail
+          target='coord/east-release-10-20260722-1102'
+          source='2192be7673a82bccc92fb5863661a1f008d2e577'
+          paths=(
+            jichitai-compare/data/municipalities/08/08442.json
+            jichitai-compare/operations/tasks/08442.json
+            jichitai-compare/data/municipalities/08/08443.json
+            jichitai-compare/operations/tasks/08443.json
+            jichitai-compare/data/municipalities/08/08447.json
+            jichitai-compare/operations/tasks/08447.json
+            jichitai-compare/data/municipalities/08/08521.json
+            jichitai-compare/operations/tasks/08521.json
+            jichitai-compare/data/municipalities/08/08542.json
+            jichitai-compare/operations/tasks/08542.json
+            jichitai-compare/data/municipalities/08/08546.json
+            jichitai-compare/operations/tasks/08546.json
+            jichitai-compare/data/municipalities/08/08564.json
+            jichitai-compare/operations/tasks/08564.json
+            jichitai-compare/data/municipalities/09/09201.json
+            jichitai-compare/operations/tasks/09201.json
+            jichitai-compare/data/municipalities/09/09202.json
+            jichitai-compare/operations/tasks/09202.json
+            jichitai-compare/data/municipalities/09/09203.json
+            jichitai-compare/operations/tasks/09203.json
+          )
+          git fetch origin "$target" region/east
+          git switch "$target"
+          git checkout "$source" -- "${paths[@]}"
+          mapfile -t changed < <(git diff --name-only --cached | sort)
+          mapfile -t expected < <(printf '%s\n' "${paths[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${changed[@]}")
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 東日本10自治体の固定スナップショット'
+          git push origin "$target"
+          git switch main
+          git pull --ff-only origin main
+          git rm .github/workflows/temp-build-east-release-10-1102.yml
+          git commit -m '統括管理: 東日本固定スナップショット一時ワークフローを削除'
+          git push origin main
