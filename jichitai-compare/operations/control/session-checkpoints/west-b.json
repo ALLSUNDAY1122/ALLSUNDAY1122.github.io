@@ -6,7 +6,7 @@
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
   "updatedAt": "2026-07-22T23:56:00+09:00",
-  "status": "researching",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 208,
   "currentMunicipality": {
@@ -15,8 +15,8 @@
     "prefectureCode": "34"
   },
   "workingBranch": "data/34207-fukuyama-westb",
-  "pullRequestNumber": null,
-  "ciStatus": "not_started",
+  "pullRequestNumber": 895,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -29,5 +29,5 @@
     {"code":"34205","name":"尾道市","pullRequestNumber":892,"ciRunNumber":2012}
   ],
   "blocked": [],
-  "nextAction": "福山市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
+  "nextAction": "PR #895のCI成功と競合なしを確認し、region/westへ統合する。"
 }
