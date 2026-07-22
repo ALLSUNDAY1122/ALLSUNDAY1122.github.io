@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23208",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "津島市",
+  "officialUrl": "https://www.city.tsushima.lg.jp/",
+  "status": "verified",
+  "summary": "津島市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、入院・通院の保険診療自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "coverage": "入院・通院の保険診療自己負担分",
+        "condition": "津島市に住所があり健康保険に加入している子ども",
+        "payment": "受給者証による現物給付。県外受診や治療用装具等は償還払い",
+        "excluded": "保険適用外費用、入院時食事代、学校等での災害共済給付対象分等は対象外"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/fukushi/iryouhijyosei/kodomoiryouhijyosei.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生までの病気中・回復期の児童を神島田こども園で保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "condition": "市内在住で、病気の安定期または回復期に集団保育・教育が困難かつ保護者の就労等により家庭保育が困難な児童",
+        "facility": "神島田こども園",
+        "hours": "月曜から金曜8時から17時",
+        "limit": "原則として土日祝日を含め連続5日以内",
+        "fee": "1日1,500円。生活保護受給世帯は証明書提出により無料",
+        "capacity": "3名"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kosodate/hoikushisetsu/byoujibyougoji.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、扶養する子の第2子以降の保育料を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "agesThreeToFive": "3歳児クラスから5歳児クラスまで無料",
+        "underThree": "住民税非課税世帯の0～2歳児は無料。その他は市民税額等により算定",
+        "multiChild": "保護者が扶養する子の上から数えて第2子以降の保育料は0円",
+        "meal": "0～2歳児の保育料には給食費を含む",
+        "sideDish": "3～5歳児クラスの副食費は市の無償化事業対象"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kosodate/hoikushisetsu/hoikuryou/hoikuryou.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市立小中学校の学校給食費を所得制限なく完全無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "小中学校給食費完全無償化事業",
+        "effective": "令和5年7月から実施",
+        "elementary": "保護者負担0円",
+        "juniorHigh": "保護者負担0円",
+        "incomeLimit": "所得制限なし",
+        "assistance": "就学援助制度では認定世帯の学校給食費も支給対象"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kosodate/syocyugakkou/gakkoukyuusyoku/kyuusyokugaiyou.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年までの母子へ、医療機関で心身のケア、授乳・育児相談等を提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "津島市に住民票がある産後1年までの母親と乳児で、体調不良や育児不安がある方、家族等から支援を受けにくい方",
+        "care": "母体の心身のケア、授乳相談、育児相談、休養支援等",
+        "facility": "委託医療機関",
+        "fee": "実施医療機関が定める食費相当分等を利用者が負担",
+        "application": "利用希望者は保健センターへ事前相談",
+        "note": "流産・死産等を経験した方も利用可能"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kosodate/boshihoken-yobou/okosangaumaretekara.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "condition": "保育所、認定こども園、地域型保育、企業主導型保育等に在籍していない児童",
+        "limit": "児童1人につき月10時間まで",
+        "fee": "1時間300円。おやつ代等の実費が別途必要な場合あり",
+        "facilities": "東地区子育て支援センター、真こども園",
+        "application": "総合支援システムで市の認定申請を行い、施設予約・面談を実施"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kosodate/hoikushisetsu/kodomodaredemo.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "対象区域で住宅を取得・賃借する若年世帯等へ、固定資産税相当額と子育て・同居近居等の加算を交付する。",
+      "details": {
+        "program": "津島市定住促進補助金",
+        "newHousing": "家屋・土地それぞれ年10万円を上限に固定資産税相当額を3年間補助し、合計最大60万円",
+        "childAddition": "中学生以下の子1人につき10万円を1回加算",
+        "otherAdditions": "親世帯との同居近居50万円、長期優良住宅・2階建以上・GX志向型住宅等は各10万円加算（対象区分による）",
+        "renovation": "対象区域の中古住宅取得・賃借後のリフォームも補助区分あり",
+        "condition": "対象区域内の住宅を取得し、申請者または配偶者が取得時50歳未満で定住意思があること等"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kurashi/sumaikenchiku/67.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは事前予約し、500円額面の粗大ごみ証紙を必要枚数貼付して戸別収集に出す。",
+      "details": {
+        "reservation": "粗大ごみ受付センターへ事前に収集予約",
+        "sticker": "津島市粗大ごみ証紙は1枚500円",
+        "procedure": "予約時に案内された枚数の証紙へ氏名または受付番号を記入し、収集日の午前8時30分までに指定場所へ排出",
+        "pickupPlace": "自宅の玄関または門先の道路に接する場所",
+        "directCarry": "大型家具等は八穂クリーンセンターへの自己搬入も可能",
+        "note": "品目により必要な証紙枚数や搬入先が異なる"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kurashi/gomirecycle/kateigomishigen.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、内水、高潮、地震、液状化等を掲載した防災ハザードマップとデジタル版を公開する。",
+      "details": {
+        "updated": "令和8年3月更新",
+        "maps": "洪水、内水、高潮、地震、液状化、避難所等を掲載",
+        "digital": "自宅・学校・職場や通勤通学路の危険箇所を確認できるデジタルハザードマップを公開",
+        "distribution": "市内転入者へ市民課から冊子を配布",
+        "purpose": "災害リスクと避難経路を事前に確認し、的確な避難行動につなげる"
+      },
+      "source": {"url": "https://www.city.tsushima.lg.jp/kurashi/anshinanzen/bousai/saigaisonae/higaisoutei/hazaadomap.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
