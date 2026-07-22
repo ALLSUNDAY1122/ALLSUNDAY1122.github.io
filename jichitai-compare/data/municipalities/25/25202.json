@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "25202",
+  "prefectureCode": "25",
+  "prefecture": "滋賀県",
+  "name": "彦根市",
+  "officialUrl": "https://www.city.hikone.lg.jp/",
+  "status": "verified",
+  "summary": "彦根市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、健康保険が適用される医療費の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達した日以後の最初の3月31日まで",
+        "coverage": "健康保険が適用される通院・入院医療費の自己負担分",
+        "payment": "滋賀県内は福祉医療費受給券の提示による現物給付。県外受診等は償還払い",
+        "selfPay": "保険診療内の自己負担なし",
+        "excluded": "保険適用外費用、入院時食事代、差額ベッド代等は対象外"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kosodate/kosodate_shien/1/teate/11612.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "保護者が就労等で家庭保育できない場合、病気または回復期のおおむね10歳未満の児童を一時的に預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 9},
+      "details": {
+        "targetAreas": "彦根市、愛荘町、豊郷町、甲良町、多賀町の居住児童",
+        "facility": "病児保育室こあら（藤野こどもクリニック内）",
+        "hours": "平日8時30分から18時まで。土日祝、お盆、年末年始は休室",
+        "fee": "4時間以内1,000円、4時間超2,000円",
+        "reduction": "生活保護世帯は全額、前年度市町村民税非課税世帯は利用後に半額を助成",
+        "application": "原則前日までに施設へ連絡し、当日の医師診察後に利用可否を決定"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kosodate/kosodate_shien/2/3/7/11495.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育の無償化対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "3～5歳児の保育料は無償",
+        "underThree": "住民税非課税世帯の0～2歳児は無償化対象。その他は世帯の住民税額等により算定",
+        "facilities": "認可保育所、認定こども園、幼稚園、地域型保育等",
+        "excludedCosts": "給食費、通園送迎費、行事費等の実費は別途必要な場合がある",
+        "application": "施設区分に応じて利用申込みまたは施設等利用給付認定が必要"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kakuka/kodomo_mirai/7/4/10868.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は市立小学校給食費の保護者負担を0円とし、中学校給食費は値上がり分を市が負担する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "令和8年4月分から食材費相当額の全額を公費負担し、在籍児童の保護者負担額は0円",
+        "middle": "値上がり相当分として生徒1人当たり年額13,200円を市が負担",
+        "middleParentFee": "保護者負担額は令和7年度と同額の年額47,300円に据え置き",
+        "assistance": "経済的に就学困難な認定世帯は学校給食費等の就学援助対象",
+        "note": "小学校の負担軽減は学校に在籍する児童に適用"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kakuka/kyoiku_iinkai/8/29675.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の母子等へ、訪問・通所・短期入所型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "彦根市内に住所があり、産後ケアを必要とする出産後1年以内の女性等と新生児・乳児",
+        "specialRule": "早産児・低出生体重児は出産予定日から1年以内まで利用可能",
+        "types": "居宅訪問型、通所型、短期入所型",
+        "care": "母体の心身ケア、授乳相談、育児手技相談、乳児の成長発達確認、食事提供等",
+        "application": "事前申請後、指定施設または訪問で利用。施設により受入月齢等が異なる"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kosodate/kosodate_shien/2/2/3/11346.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に通っていない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "認可保育所、幼稚園、認定こども園、地域型保育、企業主導型保育施設を利用していない児童",
+        "workRequirement": "保護者の就労要件なし",
+        "limit": "児童1人につき月10時間まで。未利用時間の翌月繰越不可",
+        "fee": "1時間当たり300円程度。施設により異なり、給食・おやつ・教材費等が別途必要な場合がある",
+        "application": "市の利用認定後、総合支援システム等で施設を予約"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kosodate/kosodate_shien/1/other/30102.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "市外から移住し、多子世帯または三世代同居で住宅を取得する45歳以下の世帯へ、取得費の10分の1・上限50万円を補助する。",
+      "details": {
+        "program": "彦根市移住促進住宅取得費補助金",
+        "amount": "住宅取得費の10分の1、上限50万円",
+        "targetHousing": "自己居住用に新築または購入した戸建て・集合住宅。中古住宅も対象",
+        "ageCondition": "申請時に本人および配偶者が45歳以下",
+        "householdCondition": "18歳以下の子どもが2人以上いる多子世帯、または親・18歳以下の子ども等との三世代同居世帯",
+        "migrationCondition": "市外（愛荘町・豊郷町・甲良町・多賀町を除く）から転入し、契約前に移住相談を行うこと",
+        "application": "取得日から1年以内かつ令和9年3月12日まで。予算上限あり"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/ijyu/shien/hojyokin/12998.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家庭の粗大ごみは予約制の戸別収集または清掃センターへの直接搬入で処分する。",
+      "details": {
+        "collection": "LINEまたは電話で予約し、処理券を購入して収集日の8時30分までに指定場所へ排出",
+        "limit": "戸別収集は原則1回5点まで",
+        "fee": "戸別収集は最大辺50cm未満400円、50cm以上1m未満600円、1m以上1.5m未満900円、1.5m以上2m未満1,200円、2m以上3m未満1,500円",
+        "schedule": "小学校区ごとに月曜から金曜の収集曜日を設定。申込みから1週間後以降",
+        "directCarry": "清掃センターへの直接搬入は重量制で、戸別収集とは料金が異なる",
+        "excluded": "家電リサイクル法対象品とパソコン等は市の粗大ごみ対象外"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kurashi/gomi_kankyo/2_1/gomisigen_dasikata/14278.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "水害、土砂災害、地震、ため池、内水浸水等の各種ハザードマップと防災マニュアルを公開する。",
+      "details": {
+        "maps": "彦根市民防災マニュアル、地先の安全度マップ、土砂災害、地震、水害、農業用ため池、雨水出水浸水想定区域等",
+        "flood": "琵琶湖、愛知川、宇曽川、犬上川、芹川等の洪水浸水想定を掲載",
+        "earthquake": "海溝型地震、活断層地震等の最大震度分布と避難場所を掲載",
+        "evacuation": "防災マニュアルで避難情報、避難場所、災害時行動を確認可能",
+        "note": "居住地域ごとに複数の地図を確認する"
+      },
+      "source": {"url": "https://www.city.hikone.lg.jp/kurashi/bosai/3/17/index.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
