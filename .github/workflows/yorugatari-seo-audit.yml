@@ -66,7 +66,20 @@ jobs:
       - name: Audit published SEO
         id: live
         continue-on-error: true
-        run: node yorugatari/tools/seo-audit.mjs --live
+        shell: bash
+        run: |
+          status=1
+          for attempt in 1 2 3; do
+            echo "Published SEO audit attempt ${attempt}/3"
+            if node yorugatari/tools/seo-audit.mjs --live; then
+              exit 0
+            fi
+            status=$?
+            if [ "$attempt" -lt 3 ]; then
+              sleep 15
+            fi
+          done
+          exit "$status"
 
       - name: Preserve SEO report
         if: always()
