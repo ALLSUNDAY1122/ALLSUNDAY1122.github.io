@@ -1,0 +1,66 @@
+name: Temporary Build Central Release 1932 Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-central-release-1932.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed central snapshot
+        run: |
+          set -euxo pipefail
+          TARGET='coord/central-release-10-20260722-1932'
+          git fetch origin \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            "+refs/heads/${TARGET}:refs/remotes/origin/${TARGET}"
+          git switch -C "$TARGET" "origin/$TARGET"
+          paths=(
+            jichitai-compare/data/municipalities/24/24461.json
+            jichitai-compare/operations/tasks/24461.json
+            jichitai-compare/data/municipalities/24/24470.json
+            jichitai-compare/operations/tasks/24470.json
+            jichitai-compare/data/municipalities/24/24471.json
+            jichitai-compare/operations/tasks/24471.json
+            jichitai-compare/data/municipalities/24/24472.json
+            jichitai-compare/operations/tasks/24472.json
+            jichitai-compare/data/municipalities/24/24543.json
+            jichitai-compare/operations/tasks/24543.json
+            jichitai-compare/data/municipalities/24/24561.json
+            jichitai-compare/operations/tasks/24561.json
+            jichitai-compare/data/municipalities/24/24562.json
+            jichitai-compare/operations/tasks/24562.json
+            jichitai-compare/data/municipalities/25/25201.json
+            jichitai-compare/operations/tasks/25201.json
+            jichitai-compare/data/municipalities/25/25202.json
+            jichitai-compare/operations/tasks/25202.json
+            jichitai-compare/data/municipalities/25/25203.json
+            jichitai-compare/operations/tasks/25203.json
+          )
+          git checkout origin/region/central -- "${paths[@]}"
+          mapfile -t changed < <(git diff --name-only --cached | sort)
+          printf '%s\n' "${paths[@]}" | sort > /tmp/expected
+          printf '%s\n' "${changed[@]}" > /tmp/actual
+          diff -u /tmp/expected /tmp/actual
+          test "${#changed[@]}" -eq 20
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 中日本10自治体の固定スナップショット'
+          git push origin "$TARGET"
+          git switch main
+          git pull --ff-only origin main
+          rm .github/workflows/temp-build-central-release-1932.yml
+          git add .github/workflows/temp-build-central-release-1932.yml
+          git commit -m '統括管理: 中日本固定スナップショット一時処理を削除'
+          git push origin main
