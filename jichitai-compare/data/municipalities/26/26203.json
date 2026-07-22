@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "26203",
+  "prefectureCode": "26",
+  "prefecture": "京都府",
+  "name": "綾部市",
+  "officialUrl": "https://www.city.ayabe.lg.jp/",
+  "status": "verified",
+  "summary": "綾部市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "通院は中学3年生まで、入院は18歳年度末まで、保険診療自己負担を1か月1医療機関200円に軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "綾部市在住で健康保険に加入する子ども",
+        "outpatient": "0歳から中学3年生まで",
+        "inpatient": "0歳から18歳到達後最初の3月31日まで",
+        "copayment": "入院・通院それぞれ、1か月1医療機関ごとに200円",
+        "highSchool": "高校生世代の入院は受給者証を交付せず、申請による償還払い",
+        "outsidePrefecture": "京都府外受診等は申請により200円を控除した額を払い戻し",
+        "excluded": "保険適用外費用、入院時食事代、学校災害共済対象等は対象外"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000002480.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後4か月から小学6年生までの病児を、市立病院内のにじいろルームで一時的に預かる。",
+      "eligibility": {"minAgeMonths": 4, "maxAgeYears": 12},
+      "details": {
+        "facility": "綾部市立病院1階 綾部市病児保育室にじいろルーム",
+        "condition": "病気等で保育所・小学校に通えず、保護者の勤務等により家庭保育が困難な児童",
+        "residenceWork": "保護者が綾部市に居住または勤務",
+        "capacity": "1日5人",
+        "hours": "月曜から金曜の8時30分から18時",
+        "fee": "1日2,500円、5時間以内1,500円。昼食・おやつ代300円別途",
+        "reduction": "綾部市民の生活保護世帯・市民税非課税世帯は減免対象",
+        "application": "電話予約後、利用当日に綾部市立病院の発熱外来・小児科を受診"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000002614.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と市民税非課税世帯の0～2歳児は、認可保育施設等の保育料無償化対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "agesThreeToFive": "3～5歳児クラスの保育料は無償",
+        "agesZeroToTwo": "0～2歳児クラスは市民税非課税世帯のみ無償",
+        "recognition": "施設・サービスに応じて市の教育・保育給付認定または施設等利用給付認定が必要",
+        "mealCosts": "主食費・副食費は原則実費。低所得世帯や一定の第3子以降は副食費免除",
+        "otherCosts": "送迎費、行事費、延長保育料等は実費負担",
+        "unlicensed": "保育の必要性が認められる場合、認可外保育施設等は年齢・世帯条件に応じ月額上限内で無償化"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000002590.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的理由等で就学が困難と認められる世帯へ、就学援助制度により学校給食費の実費を援助する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "就学援助制度",
+        "target": "綾部市立小中学校等に在学し、所得基準等により就学費用の負担が困難と認められる児童生徒の保護者",
+        "mealSupport": "学校給食費の実費を援助",
+        "otherSupport": "学用品費、通学用品費、修学旅行費、学校病医療費等も対象",
+        "application": "学校または教育委員会を通じて申請し、認定を受ける",
+        "generalFee": "一般世帯の現行給食費額や一律無償化は公式ページで確認できないため記載しない"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000002926.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ、集団・個別通所、宿泊、訪問の4類型で産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "綾部市に住民票がある産後1年未満の母親と乳児",
+        "groupDayCare": "生後1～6か月頃、1回1,000円、4回まで",
+        "shortStay": "生後4か月頃まで、1日9,000円、7日まで",
+        "individualDayCare": "生後4か月頃まで、1回4,500円、7回まで",
+        "outreach": "生後12か月まで、1回1,000円、6回まで",
+        "ticket": "希望者に1回2,500円まで最大5回分の免除チケット",
+        "reduction": "生活保護世帯・非課税世帯は全額免除",
+        "care": "休息、授乳・育児相談、母体と乳児の健康確認等"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000003373.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "start": "2026年4月開始",
+        "target": "保育所、認定こども園、小規模保育施設等に在籍していない生後6か月から満3歳未満の児童",
+        "employment": "保護者の就労等の保育要件を問わない",
+        "facilities": "綾部保育園、綾東こども園、風の子共同保育園、市立物部保育園",
+        "limit": "児童1人につき月10時間まで。未利用時間の繰越不可",
+        "fee": "1時間300円。給食・おやつ代等は施設により別途",
+        "application": "つうえんポータルで認定申請後、施設面談・利用予約"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000006269.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育てのための住宅リフォーム費の2分の1を、子どもの人数に応じ最大30万円、三世代同居・近居は5万円加算して補助する。",
+      "details": {
+        "program": "綾部市子育て世帯住宅リフォーム支援事業",
+        "target": "子どもがいる世帯で、市・府税滞納なし、親権者所得合計550万円未満等の要件を満たす世帯",
+        "minimumCost": "対象工事費20万円以上",
+        "rate": "対象事業費の2分の1",
+        "maximum": "子ども1人10万円、2人20万円、3人以上30万円",
+        "threeGeneration": "三世代同居または近居の場合は5万円加算",
+        "targetWork": "リビング、台所、浴室、子ども部屋の増改築等",
+        "application": "原則4月から11月末まで。予算到達時に受付終了し、着工前の申請が必要"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000005382.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "1辺が40センチメートルを超える家庭ごみは、事前予約の戸別収集またはクリーンセンターへの直接搬入で処分する。",
+      "details": {
+        "definition": "縦・横・高さのいずれか1辺が40センチメートルを超えるもの。40センチ以下に解体しても粗大ごみ扱い",
+        "processingFee": "布団・寝具類は1kgまでごとに63円、その他は20kgまでごとに419円",
+        "collectionFee": "戸別収集は処理手数料に加え収集手数料1,048円",
+        "collection": "年4回の指定日収集。収集日2日前の正午までに電話予約",
+        "carryIn": "クリーンセンターへ直接搬入可能",
+        "limit": "家具等で1辺100センチメートル以上のものは戸別収集1回5点まで",
+        "excluded": "家電リサイクル法対象品や処理困難物等は別処理"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000001435.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "想定最大規模降雨による洪水浸水区域、土砂災害警戒区域、避難所等を地区別に掲載したハザードマップを公開する。",
+      "details": {
+        "map": "綾部市ハザードマップ",
+        "flood": "国・京都府管理河川の想定最大規模降雨による浸水エリアを掲載",
+        "sediment": "土砂災害警戒区域等を掲載",
+        "evacuation": "指定緊急避難場所・指定避難所を掲載",
+        "districts": "綾部、中筋、吉美、西八田、東八田、山家等の地区別PDFを公開",
+        "guidance": "避難行動や日頃の備えに関する啓発面を掲載"
+      },
+      "source": {"url": "https://www.city.ayabe.lg.jp/kikikanri/0000000026.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
