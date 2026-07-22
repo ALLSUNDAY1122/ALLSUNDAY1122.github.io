@@ -1,0 +1,62 @@
+name: Temporary Build Central Release 10 1941
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-central-release-10-1941.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed 10-municipality snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin region/central coord/central-release-10-20260722-1941
+          git checkout coord/central-release-10-20260722-1941
+          files=(
+            jichitai-compare/data/municipalities/22/22222.json
+            jichitai-compare/operations/tasks/22222.json
+            jichitai-compare/data/municipalities/22/22223.json
+            jichitai-compare/operations/tasks/22223.json
+            jichitai-compare/data/municipalities/22/22224.json
+            jichitai-compare/operations/tasks/22224.json
+            jichitai-compare/data/municipalities/22/22225.json
+            jichitai-compare/operations/tasks/22225.json
+            jichitai-compare/data/municipalities/22/22226.json
+            jichitai-compare/operations/tasks/22226.json
+            jichitai-compare/data/municipalities/22/22301.json
+            jichitai-compare/operations/tasks/22301.json
+            jichitai-compare/data/municipalities/22/22302.json
+            jichitai-compare/operations/tasks/22302.json
+            jichitai-compare/data/municipalities/22/22304.json
+            jichitai-compare/operations/tasks/22304.json
+            jichitai-compare/data/municipalities/22/22305.json
+            jichitai-compare/operations/tasks/22305.json
+            jichitai-compare/data/municipalities/22/22306.json
+            jichitai-compare/operations/tasks/22306.json
+          )
+          git checkout origin/region/central -- "${files[@]}"
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          mapfile -t expected < <(printf '%s\n' "${files[@]}" | sort)
+          test "${#changed[@]}" -eq 20
+          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${changed[@]}")
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${files[@]}"
+          git commit -m '全国統合: 中日本10自治体の固定スナップショット'
+          git push origin coord/central-release-10-20260722-1941
+          git checkout main
+          git pull --ff-only origin main
+          git rm .github/workflows/temp-build-central-release-10-1941.yml
+          git commit -m '統括管理: 中日本統合一時ワークフローを削除'
+          git push origin main
