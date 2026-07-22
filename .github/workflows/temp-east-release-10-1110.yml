@@ -1,0 +1,42 @@
+name: Temporary east release 10 1110
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-east-release-10-1110.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Create fixed east snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          git fetch origin region/east:refs/remotes/origin/region/east
+          BRANCH=coord/east-release-10-20260722-1110
+          git checkout -B "$BRANCH" origin/main
+          for code in 08442 08443 08447 08521 08542 08546 08564 09201 09202 09203; do
+            pref=${code:0:2}
+            git checkout origin/region/east -- "jichitai-compare/data/municipalities/$pref/$code.json" "jichitai-compare/operations/tasks/$code.json"
+          done
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "20"
+          git commit -m "全国統合: 東日本の追加10自治体を固定スナップショット化"
+          git push --force-with-lease origin "$BRANCH"
+          git checkout main
+          git pull --rebase origin main
+          git rm .github/workflows/temp-east-release-10-1110.yml
+          git commit -m "統括管理: 東日本固定スナップショット一時ワークフローを削除"
+          git push origin main
