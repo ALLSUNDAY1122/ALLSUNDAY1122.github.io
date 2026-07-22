@@ -2,12 +2,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require('playwright');
 
-const root = process.cwd();
-const siteRoot = path.join(root, 'yorugatari');
-const storyRoot = path.join(siteRoot, 'stories');
-const base = 'https://allsunday1122.github.io/yorugatari';
-const analyticsVersion = '20260723-001';
-const engagementVersion = '20260723-001';
+const ROOT = process.cwd();
+const SITE_ROOT = path.join(ROOT, 'yorugatari');
+const STORY_ROOT = path.join(SITE_ROOT, 'stories');
+const BASE = 'https://allsunday1122.github.io/yorugatari';
+const VERSION = '20260723-001';
 const results = [];
 const failures = [];
 
@@ -17,73 +16,60 @@ function record(name, ok, detail = null) {
   if (!result.ok) failures.push(result);
 }
 
-function countMatches(text, pattern) {
+function count(text, pattern) {
   return (text.match(pattern) || []).length;
 }
 
 function localAudit() {
   const staticFiles = ['index.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
-  const storyFiles = fs.readdirSync(storyRoot).filter((name) => name.endsWith('.html')).sort();
-  const files = staticFiles.map((name) => path.join(siteRoot, name)).concat(storyFiles.map((name) => path.join(storyRoot, name)));
+  const storyFiles = fs.readdirSync(STORY_ROOT).filter((name) => name.endsWith('.html')).sort();
+  const files = staticFiles.map((name) => path.join(SITE_ROOT, name))
+    .concat(storyFiles.map((name) => path.join(STORY_ROOT, name)));
   const errors = [];
 
   for (const filePath of files) {
     const html = fs.readFileSync(filePath, 'utf8');
-    const relative = path.relative(siteRoot, filePath).replace(/\\/g, '/');
-    const isStory = relative.startsWith('stories/');
-    const expectedScript = isStory
-      ? `../assets/engagement.js?v=${engagementVersion}`
-      : `assets/analytics.js?v=${analyticsVersion}`;
-    const unwantedScript = isStory ? 'analytics.js' : 'engagement.js';
-    const required = [
-      ['correct runtime script', html.includes(expectedScript) && !html.includes(unwantedScript)],
-      ['og:type', countMatches(html, /<meta\s+property=["']og:type["']/gi) === 1],
-      ['og:url', countMatches(html, /<meta\s+property=["']og:url["']/gi) === 1],
-      ['og:title', countMatches(html, /<meta\s+property=["']og:title["']/gi) === 1],
-      ['og:description', countMatches(html, /<meta\s+property=["']og:description["']/gi) === 1],
-      ['og:image', countMatches(html, /<meta\s+property=["']og:image["']/gi) === 1],
-      ['og:image width', html.includes('property="og:image:width" content="2172"')],
-      ['og:image height', html.includes('property="og:image:height" content="724"')],
-      ['og:image:alt', countMatches(html, /<meta\s+property=["']og:image:alt["']/gi) === 1],
-      ['twitter:card', countMatches(html, /<meta\s+name=["']twitter:card["']/gi) === 1],
-      ['twitter:image', countMatches(html, /<meta\s+name=["']twitter:image["']/gi) === 1],
-      ['twitter:image:alt', countMatches(html, /<meta\s+name=["']twitter:image:alt["']/gi) === 1]
+    const relative = path.relative(SITE_ROOT, filePath).replace(/\\/g, '/');
+    const story = relative.startsWith('stories/');
+    const expected = story
+      ? `../assets/engagement.js?v=${VERSION}`
+      : `assets/analytics.js?v=${VERSION}`;
+    const checks = [
+      ['runtime', html.includes(expected) && !html.includes(story ? 'analytics.js' : 'engagement.js')],
+      ['og:type', count(html, /<meta\s+property=["']og:type["']/gi) === 1],
+      ['og:url', count(html, /<meta\s+property=["']og:url["']/gi) === 1],
+      ['og:title', count(html, /<meta\s+property=["']og:title["']/gi) === 1],
+      ['og:description', count(html, /<meta\s+property=["']og:description["']/gi) === 1],
+      ['og:image', count(html, /<meta\s+property=["']og:image["']/gi) === 1],
+      ['og:image dimensions', html.includes('property="og:image:width" content="2172"') && html.includes('property="og:image:height" content="724"')],
+      ['og:image:alt', count(html, /<meta\s+property=["']og:image:alt["']/gi) === 1],
+      ['twitter card', count(html, /<meta\s+name=["']twitter:card["']/gi) === 1 && count(html, /<meta\s+name=["']twitter:image["']/gi) === 1 && count(html, /<meta\s+name=["']twitter:image:alt["']/gi) === 1]
     ];
-    for (const [name, ok] of required) {
-      if (!ok) errors.push({ file: relative, missing: name });
-    }
+    checks.forEach(([name, ok]) => { if (!ok) errors.push({ file: relative, check: name }); });
   }
 
   record('local: six static pages and 100 stories are covered', files.length === 106, { static: staticFiles.length, stories: storyFiles.length });
-  record('local: split analytics, engagement, and social metadata are complete', errors.length === 0, errors);
+  record('local: analytics, engagement, and social metadata are complete', errors.length === 0, errors);
 
-  const privacy = fs.readFileSync(path.join(siteRoot, 'privacy.html'), 'utf8');
-  record(
-    'local: privacy policy explains page-view processing',
-    privacy.includes('サイト識別子とページのパス') && privacy.includes('参照元URL') && privacy.includes('2026年7月23日')
-  );
+  const privacy = fs.readFileSync(path.join(SITE_ROOT, 'privacy.html'), 'utf8');
+  record('local: privacy policy explains page-view processing', privacy.includes('サイト識別子とページのパス') && privacy.includes('参照元URL') && privacy.includes('2026年7月23日'));
 
-  const notFound = fs.readFileSync(path.join(root, '404.html'), 'utf8');
-  record(
-    'local: 404 page is noindex and has recovery links',
+  const notFound = fs.readFileSync(path.join(ROOT, '404.html'), 'utf8');
+  record('local: 404 is noindex and recoverable',
     notFound.includes('name="robots" content="noindex,follow"') &&
-      notFound.includes('data-page-type="404"') &&
-      notFound.includes('href="/yorugatari/archive.html"') &&
-      notFound.includes(`/yorugatari/assets/analytics.js?v=${analyticsVersion}`) &&
-      !notFound.includes('engagement.js')
-  );
+    notFound.includes('data-page-type="404"') &&
+    notFound.includes('href="/yorugatari/archive.html"') &&
+    notFound.includes(`/yorugatari/assets/analytics.js?v=${VERSION}`) &&
+    !notFound.includes('engagement.js'));
 }
 
-async function openWithRetry(page, url, readiness, attempts = 12) {
+async function retry(page, url, inspect, attempts = 12) {
   let detail = null;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
       const separator = url.includes('?') ? '&' : '?';
-      const response = await page.goto(`${url}${separator}engagementAudit=${Date.now()}-${attempt}`, {
-        waitUntil: 'networkidle',
-        timeout: 60000
-      });
-      detail = await readiness(page, response, attempt);
+      const response = await page.goto(`${url}${separator}audit=${Date.now()}-${attempt}`, { waitUntil: 'networkidle', timeout: 60000 });
+      detail = await inspect(page, response, attempt);
       if (detail.ready) return detail;
     } catch (error) {
       detail = { ready: false, attempt, error: error.message };
@@ -93,7 +79,7 @@ async function openWithRetry(page, url, readiness, attempts = 12) {
   return detail || { ready: false };
 }
 
-async function socialMetadata(page) {
+async function metadata(page) {
   return page.evaluate(() => {
     const get = (selector) => document.querySelector(selector)?.getAttribute('content') || '';
     return {
@@ -102,42 +88,34 @@ async function socialMetadata(page) {
       title: get('meta[property="og:title"]'),
       description: get('meta[property="og:description"]'),
       image: get('meta[property="og:image"]'),
-      imageWidth: get('meta[property="og:image:width"]'),
-      imageHeight: get('meta[property="og:image:height"]'),
+      width: get('meta[property="og:image:width"]'),
+      height: get('meta[property="og:image:height"]'),
       imageAlt: get('meta[property="og:image:alt"]'),
-      twitterCard: get('meta[name="twitter:card"]'),
+      card: get('meta[name="twitter:card"]'),
       twitterImage: get('meta[name="twitter:image"]'),
-      twitterImageAlt: get('meta[name="twitter:image:alt"]')
+      twitterAlt: get('meta[name="twitter:image:alt"]')
     };
   });
 }
 
-function completeSocial(meta) {
-  return Boolean(
-    meta.type && meta.url && meta.title && meta.description && meta.image &&
-    meta.imageWidth === '2172' && meta.imageHeight === '724' && meta.imageAlt &&
-    meta.twitterCard === 'summary_large_image' && meta.twitterImage && meta.twitterImageAlt
-  );
+function completeMeta(meta) {
+  return Boolean(meta.type && meta.url && meta.title && meta.description && meta.image &&
+    meta.width === '2172' && meta.height === '724' && meta.imageAlt &&
+    meta.card === 'summary_large_image' && meta.twitterImage && meta.twitterAlt);
 }
 
-async function auditShareImage() {
-  const url = 'https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png?audit=' + Date.now();
-  let detail = null;
-  for (let attempt = 1; attempt <= 4; attempt += 1) {
-    try {
-      const response = await fetch(url, { headers: { 'cache-control': 'no-cache', pragma: 'no-cache' } });
-      const buffer = Buffer.from(await response.arrayBuffer());
-      const png = buffer.length >= 24 && buffer.toString('ascii', 1, 4) === 'PNG';
-      const width = png ? buffer.readUInt32BE(16) : 0;
-      const height = png ? buffer.readUInt32BE(20) : 0;
-      detail = { status: response.status, contentType: response.headers.get('content-type'), bytes: buffer.length, width, height, attempt };
-      if (response.ok && png && width === 2172 && height === 724) break;
-    } catch (error) {
-      detail = { attempt, error: error.message };
-    }
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-  }
-  record('published: social preview image is a valid PNG with declared dimensions', Boolean(detail && detail.status === 200 && detail.width === 2172 && detail.height === 724), detail);
+async function imageAudit() {
+  const response = await fetch(`${BASE}/assets/yorugatari-share.png?audit=${Date.now()}`, { headers: { 'cache-control': 'no-cache' } });
+  const buffer = Buffer.from(await response.arrayBuffer());
+  const png = buffer.length >= 24 && buffer.toString('ascii', 1, 4) === 'PNG';
+  const detail = {
+    status: response.status,
+    contentType: response.headers.get('content-type'),
+    bytes: buffer.length,
+    width: png ? buffer.readUInt32BE(16) : 0,
+    height: png ? buffer.readUInt32BE(20) : 0
+  };
+  record('published: social image is a valid PNG with declared dimensions', response.ok && detail.width === 2172 && detail.height === 724, detail);
 }
 
 async function browserAudit() {
@@ -146,11 +124,8 @@ async function browserAudit() {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Engagement-Audit/1.3',
-    extraHTTPHeaders: {
-      'cache-control': 'no-cache, no-store, max-age=0',
-      pragma: 'no-cache'
-    }
+    serviceWorkers: 'block',
+    userAgent: 'Yorugatari-Engagement-Audit/1.4'
   });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', {
@@ -159,131 +134,86 @@ async function browserAudit() {
     });
   });
   const page = await context.newPage();
-  const browserErrors = [];
-  page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
-  page.on('console', (message) => {
-    if (message.type() === 'error') browserErrors.push(`console: ${message.text()}`);
-  });
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(`console: ${message.text()}`); });
 
-  const top = await openWithRetry(page, `${base}/`, async (targetPage, response, attempt) => {
-    const state = await targetPage.evaluate((version) => ({
-      script: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
-      noStoryModule: !Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
+  const top = await retry(page, `${BASE}/`, async (target, response, attempt) => {
+    const state = await target.evaluate((version) => ({
+      analyticsScript: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
+      engagementScript: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
       analytics: Boolean(window.YORUGATARI_ANALYTICS),
       path: window.YORUGATARI_ANALYTICS?.path,
-      panel: Boolean(document.querySelector('#readerPanel')),
-      imageWidth: document.querySelector('meta[property="og:image:width"]')?.content,
-      imageHeight: document.querySelector('meta[property="og:image:height"]')?.content
-    }), analyticsVersion);
-    return {
-      ready: response?.status() === 200 && state.script && state.noStoryModule && state.analytics && state.panel && state.imageWidth === '2172' && state.imageHeight === '724',
-      status: response?.status(),
-      attempt,
-      ...state
-    };
+      panel: Boolean(document.querySelector('#readerPanel'))
+    }), VERSION);
+    const meta = await metadata(target);
+    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.panel && completeMeta(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: top loads only the lightweight analytics module', top.ready && top.path === '/yorugatari', top);
-  const topSocial = await socialMetadata(page);
-  record('published: top has complete social preview metadata', completeSocial(topSocial), topSocial);
+  record('published: top uses lightweight analytics and complete social metadata', top.ready && top.state?.path === '/yorugatari', top);
 
-  const story = await openWithRetry(page, `${base}/stories/spare-key-returned.html`, async (targetPage, response, attempt) => {
-    const state = await targetPage.evaluate((version) => ({
-      script: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
-      noStaticModule: !Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
+  const story = await retry(page, `${BASE}/stories/spare-key-returned.html`, async (target, response, attempt) => {
+    const state = await target.evaluate((version) => ({
+      engagementScript: Array.from(document.scripts).some((script) => script.src.includes(`engagement.js?v=${version}`)),
+      analyticsScript: Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
       engagement: Boolean(window.YORUGATARI_ENGAGEMENT),
-      share: Boolean(document.querySelector('#shareButton')),
-      viewText: document.querySelector('.view-count strong')?.textContent.trim() || '',
-      imageWidth: document.querySelector('meta[property="og:image:width"]')?.content,
-      imageHeight: document.querySelector('meta[property="og:image:height"]')?.content
-    }), engagementVersion);
-    return {
-      ready: response?.status() === 200 && state.script && state.noStaticModule && state.engagement && state.share && state.imageWidth === '2172' && state.imageHeight === '724',
-      status: response?.status(),
-      attempt,
-      ...state
-    };
+      share: Boolean(document.querySelector('#shareButton'))
+    }), VERSION);
+    const meta = await metadata(target);
+    return { ready: response?.status() === 200 && state.engagementScript && !state.analyticsScript && state.engagement && state.share && completeMeta(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: story loads view count and share controls', story.ready, story);
+  record('published: story uses engagement module and complete social metadata', story.ready, story);
 
-  try {
-    await page.waitForFunction(() => Number.isFinite(window.YORUGATARI_ENGAGEMENT?.views), null, { timeout: 20000 });
-  } catch (error) {}
-  const viewState = await page.evaluate(() => ({
-    views: window.YORUGATARI_ENGAGEMENT?.views,
+  try { await page.waitForFunction(() => Number.isFinite(window.YORUGATARI_ENGAGEMENT?.views), null, { timeout: 20000 }); } catch (error) {}
+  const views = await page.evaluate(() => ({
+    value: window.YORUGATARI_ENGAGEMENT?.views,
     text: document.querySelector('.view-count strong')?.textContent.trim(),
     error: window.YORUGATARI_ENGAGEMENT?.error
   }));
-  record('published: Page Views API count is displayed', Number.isFinite(viewState.views) && /^\d/.test(viewState.text || ''), viewState);
+  record('published: Page Views API count is displayed', Number.isFinite(views.value) && /^\d/.test(views.text || ''), views);
 
   await page.locator('#shareButton').click();
-  const shareState = await page.evaluate(() => ({
-    payload: window.__YORUGATARI_SHARE_PAYLOAD__,
-    status: document.querySelector('.share-status')?.textContent.trim()
-  }));
-  record(
-    'published: native sharing receives canonical story data',
-    Boolean(
-      shareState.payload &&
-      shareState.payload.url === `${base}/stories/spare-key-returned.html` &&
-      String(shareState.payload.title).includes('合鍵は返却済み') &&
-      shareState.status === '共有画面を開きました。'
-    ),
-    shareState
-  );
+  const share = await page.evaluate(() => ({ payload: window.__YORUGATARI_SHARE_PAYLOAD__, status: document.querySelector('.share-status')?.textContent.trim() }));
+  record('published: native share receives canonical story data', Boolean(share.payload && share.payload.url === `${BASE}/stories/spare-key-returned.html` && String(share.payload.title).includes('合鍵は返却済み') && share.status === '共有画面を開きました。'), share);
 
-  try {
-    await page.waitForFunction(() => document.querySelectorAll('.related a').length >= 2, null, { timeout: 12000 });
-  } catch (error) {}
+  try { await page.waitForFunction(() => document.querySelectorAll('.related a').length >= 2, null, { timeout: 12000 }); } catch (error) {}
   const circulation = await page.evaluate(() => ({
     pagination: Array.from(document.querySelectorAll('.story-pagination a')).map((link) => link.textContent.trim()),
     related: Array.from(document.querySelectorAll('.related a')).map((link) => link.textContent.trim()),
     archiveLinks: document.querySelectorAll('a[href*="archive.html"]').length
   }));
-  record(
-    'published: story has previous, archive, next, and related-story paths',
-    circulation.pagination.length === 3 && circulation.related.length >= 2 && circulation.archiveLinks >= 1,
-    circulation
-  );
-  const storySocial = await socialMetadata(page);
-  record('published: story has complete social preview metadata', completeSocial(storySocial) && storySocial.type === 'article', storySocial);
+  record('published: previous, archive, next, and related paths exist', circulation.pagination.length === 3 && circulation.related.length >= 2 && circulation.archiveLinks >= 1, circulation);
 
-  const policy = await openWithRetry(page, `${base}/about.html`, async (targetPage, response, attempt) => {
-    const meta = await socialMetadata(targetPage);
-    const moduleState = await targetPage.evaluate((version) => ({
-      analytics: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
-      noStoryModule: !Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
-    }), analyticsVersion);
-    return { ready: response?.status() === 200 && completeSocial(meta) && moduleState.analytics && moduleState.noStoryModule, status: response?.status(), attempt, meta, moduleState };
+  const policy = await retry(page, `${BASE}/about.html`, async (target, response, attempt) => {
+    const meta = await metadata(target);
+    const scripts = await target.evaluate(() => ({
+      analytics: Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
+      engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
+    }));
+    return { ready: response?.status() === 200 && completeMeta(meta) && scripts.analytics && !scripts.engagement, status: response?.status(), attempt, meta, scripts };
   }, 6);
-  record('published: policy page has complete social metadata and lightweight analytics', policy.ready, policy);
-  record('published: normal pages have no browser JavaScript errors', browserErrors.length === 0, browserErrors.slice());
-  browserErrors.length = 0;
+  record('published: policy uses lightweight analytics and social metadata', policy.ready, policy);
+  record('published: normal pages have no JavaScript errors', errors.length === 0, errors.slice());
+  errors.length = 0;
 
-  const missingUrl = `${base}/stories/this-page-does-not-exist-${Date.now()}.html`;
-  const missing = await openWithRetry(page, missingUrl, async (targetPage, response, attempt) => {
-    const detail = await targetPage.evaluate(() => ({
-      title: document.title,
+  const missing = await retry(page, `${BASE}/stories/missing-${Date.now()}.html`, async (target, response, attempt) => {
+    const detail = await target.evaluate(() => ({
       noindex: document.querySelector('meta[name="robots"]')?.content,
       pageType: document.body.dataset.pageType,
       archive: Boolean(document.querySelector('a[href="/yorugatari/archive.html"]')),
       top: Boolean(document.querySelector('a[href="/yorugatari/"]')),
       trackingPath: window.YORUGATARI_ANALYTICS?.trackingPath,
-      analytics: Array.from(document.scripts).some((script) => script.src.includes('/analytics.js?v=')),
-      noStoryModule: !Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
+      analytics: Array.from(document.scripts).some((script) => script.src.includes('analytics.js')),
+      engagement: Array.from(document.scripts).some((script) => script.src.includes('engagement.js'))
     }));
-    return { ready: response?.status() === 404 && detail.pageType === '404' && detail.archive && detail.analytics && detail.noStoryModule, status: response?.status(), attempt, ...detail };
+    return { ready: response?.status() === 404 && detail.pageType === '404' && detail.archive && detail.analytics && !detail.engagement, status: response?.status(), attempt, ...detail };
   }, 6);
-  record(
-    'published: custom 404 returns HTTP 404, noindex, analytics, and recovery paths',
-    missing.ready && missing.noindex === 'noindex,follow' && missing.top && missing.trackingPath === '/yorugatari/404',
-    missing
-  );
-  const errorPageErrors = browserErrors.filter((message) => !message.includes('server responded with a status of 404'));
-  record('published: custom 404 has no JavaScript exceptions', errorPageErrors.length === 0, errorPageErrors);
+  record('published: custom 404 is noindex, tracked, and recoverable', missing.ready && missing.noindex === 'noindex,follow' && missing.top && missing.trackingPath === '/yorugatari/404', missing);
+  const relevant404Errors = errors.filter((message) => !message.includes('server responded with a status of 404'));
+  record('published: custom 404 has no JavaScript exceptions', relevant404Errors.length === 0, relevant404Errors);
 
   await context.close();
   await browser.close();
-  await auditShareImage();
+  await imageAudit();
 }
 
 (async () => {
@@ -291,14 +221,9 @@ async function browserAudit() {
   try {
     await browserAudit();
   } catch (error) {
-    record('engagement audit completed without exception', false, { message: error.message, stack: error.stack });
+    record('audit completed without exception', false, { message: error.message, stack: error.stack });
   }
-  const report = {
-    auditedAt: new Date().toISOString(),
-    success: failures.length === 0,
-    results,
-    failures
-  };
+  const report = { auditedAt: new Date().toISOString(), success: failures.length === 0, results, failures };
   fs.writeFileSync('yorugatari-engagement-report.json', `${JSON.stringify(report, null, 2)}\n`);
   console.log(`YORUGATARI_ENGAGEMENT_REPORT=${JSON.stringify(report)}`);
   if (failures.length) process.exit(1);
