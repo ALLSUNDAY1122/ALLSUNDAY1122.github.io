@@ -130,10 +130,17 @@ jobs:
         run: exit 1
 
       - name: Format
+        id: format
+        continue-on-error: true
+        shell: bash
         working-directory: ${{ runner.temp }}/build
-        run: dart format lib test
+        run: |
+          set -o pipefail
+          dart format lib test 2>&1 | tee "$RUNNER_TEMP/format.log"
 
       - name: Analyze
+        id: analyze
+        continue-on-error: true
         shell: bash
         working-directory: ${{ runner.temp }}/build
         run: |
@@ -141,6 +148,8 @@ jobs:
           flutter analyze 2>&1 | tee "$RUNNER_TEMP/analyze.log"
 
       - name: Test
+        id: test
+        continue-on-error: true
         shell: bash
         working-directory: ${{ runner.temp }}/build
         run: |
@@ -148,6 +157,8 @@ jobs:
           flutter test --coverage 2>&1 | tee "$RUNNER_TEMP/test.log"
 
       - name: Build web release
+        id: webbuild
+        continue-on-error: true
         shell: bash
         working-directory: ${{ runner.temp }}/build
         run: |
@@ -155,6 +166,7 @@ jobs:
           flutter build web --release 2>&1 | tee "$RUNNER_TEMP/web-build.log"
 
       - name: Create v0.4 report and package
+        if: steps.format.outcome == 'success' && steps.analyze.outcome == 'success' && steps.test.outcome == 'success' && steps.webbuild.outcome == 'success'
         shell: bash
         working-directory: ${{ runner.temp }}/build
         run: |
@@ -194,9 +206,14 @@ jobs:
             ${{ runner.temp }}/release/AI_Handover_Log_Flutter_v0.4_2026-07-22.zip
             ${{ runner.temp }}/release/AI_Handover_Log_Flutter_v0.4_2026-07-22.sha256
             ${{ runner.temp }}/release/AI引継ぎ帳_v0.4_CI検証報告_2026-07-22.md
+            ${{ runner.temp }}/format.log
             ${{ runner.temp }}/analyze.log
             ${{ runner.temp }}/test.log
             ${{ runner.temp }}/web-build.log
             ${{ runner.temp }}/build/build/web
             ${{ runner.temp }}/build/coverage/lcov.info
           if-no-files-found: warn
+
+      - name: Stop when validation failed
+        if: steps.format.outcome == 'failure' || steps.analyze.outcome == 'failure' || steps.test.outcome == 'failure' || steps.webbuild.outcome == 'failure'
+        run: exit 1
