@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "25425",
+  "prefectureCode": "25",
+  "prefecture": "滋賀県",
+  "name": "愛荘町",
+  "officialUrl": "https://www.town.aisho.shiga.jp/",
+  "status": "verified",
+  "summary": "愛荘町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から高校生世代まで、入院・通院の保険診療自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "乳幼児は出生から就学前まで、あんしん子育て医療は小学校入学から中学校卒業まで、高校生世代は18歳到達後最初の3月31日まで",
+        "coverage": "入院・通院に係る健康保険適用医療費の自己負担分",
+        "programs": "乳幼児、あんしん子育て医療、高校生世代の各福祉医療費助成",
+        "application": "受給券・助成券の申請が必要で、有効日は申請月を基準とする",
+        "excluded": "保険適用外費用、高額療養費・附加給付等は対象外または調整対象"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/soshiki/juminka/1/2/3/869.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "町内在住の10歳未満の病児・病後児を、彦根市の病児保育室こあらで預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 9},
+      "details": {
+        "condition": "病気のため家庭での保育が困難な町内在住の10歳未満の児童",
+        "facility": "病児保育室こあら（藤野こどもクリニック併設、彦根市戸賀町36-6）",
+        "hours": "月曜から金曜の8時30分から18時。土日祝日、夏期中旬、年末年始を除く",
+        "capacity": "1日6人",
+        "fee": "1日2,000円、4時間以内1,000円。生活保護世帯・前年度町民税非課税世帯は助成あり",
+        "application": "原則として前日までに施設へ問い合わせ・予約する"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/soshiki/kodomo/1/1/1/2/3002.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "保育園・幼稚園等を利用する3～5歳児は保育料無償",
+        "underThree": "保育の必要性がある住民税非課税世帯の0～2歳児は保育料無償",
+        "otherUnderThree": "課税世帯の0～2歳児は世帯の住民税課税状況と児童年齢により保育料を決定",
+        "multiChild": "同時に2人以上が保育所等へ入所する場合、2人目は半額、3人目以降は0円",
+        "excludedCosts": "給食費、行事費、保護者会費等の実費は原則として別途負担",
+        "otherFacilities": "認可外保育施設等は認定を受けた場合に月額上限付きで無償化対象"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/soshiki/kodomo/1/2/hoikusho/1797.html", "checkedAt": "2026-07-22"},
+      "additionalSources": [
+        {"url": "https://www.town.aisho.shiga.jp/soshiki/kodomo/1/2/hoikusho/929.html", "checkedAt": "2026-07-22"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町学校給食センターが幼稚園・小中学校へ給食を提供し、掲載月額は幼稚園3,700円、小学校4,000円、中学校4,400円。",
+      "eligibility": {"minAgeMonths": 36, "maxAgeYears": 15},
+      "details": {
+        "kindergarten": "月額3,700円、1食単価210円",
+        "elementary": "月額4,000円、1食単価230円",
+        "middle": "月額4,400円、1食単価260円",
+        "provider": "愛荘町学校給食センター",
+        "allergy": "一般食に加えアレルギー対応食を調理",
+        "note": "町公式ページに掲載された標準額であり、減免・徴収月等は学校または給食センターへ確認が必要"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/kosodate/kyushoku/gaiyou/1668.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の母子へ、短期入所・通所・居宅訪問型の産後ケアを通算7日まで提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "町内に住所がある出産後1年以内の母親と乳児。流産・死産を経験した女性を含む",
+        "condition": "母親の心身の不調、育児不安等があり、医療入院を要しない者",
+        "types": "短期入所型、通所型、居宅訪問型",
+        "limit": "全類型を通算7日以内。町長が必要と認める場合は延長可能",
+        "fee": "住民税課税世帯は短期入所4,000円、通所1,000円、居宅訪問500円（各1回）",
+        "reduction": "生活保護世帯・市町村民税非課税世帯は自己負担0円",
+        "application": "町へ利用申請書を提出し、利用承認を受ける"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/section/reiki_honbun/r304RG00001467.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "condition": "保育所、幼稚園、認定こども園、小規模保育、企業主導型保育施設に在籍していない児童",
+        "facility": "町立つくし保育園",
+        "hours": "木曜・金曜の9時から12時、13時から16時",
+        "limit": "児童1人につき月10時間まで。他市町村施設利用分を含む",
+        "fee": "1時間500円。生活保護世帯・非課税世帯は異なる料金を適用",
+        "application": "前月1日から20日までに園へ予約し、町の認定、初回面談、利用申込書提出が必要"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/soshiki/kodomo/1/2/hoikusho/14785.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下の新婚世帯へ、空き家バンク登録住宅の取得・賃借・改修・引越費用を最大60万円補助する。",
+      "details": {
+        "program": "愛荘町結婚新生活支援補助金",
+        "condition": "2026年1月1日から2027年2月26日までに婚姻し、夫婦とも39歳以下、合算所得500万円未満、町税等の滞納がない世帯等",
+        "targetHousing": "愛荘町空き家バンクに登録された住宅",
+        "targetCosts": "住宅取得、賃料・敷金・礼金・共益費・仲介手数料、リフォーム、引越費用",
+        "amount": "夫婦とも29歳以下は上限60万円、夫婦とも39歳以下は上限30万円",
+        "application": "2026年4月1日から2027年2月26日まで。予算到達時に終了"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/soshiki/mirai/2/1_1/2/11751.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは事前に搬入確認書を取得し、町粗大ごみ収集プラントへ10キログラム当たり100円で直接搬入する。",
+      "details": {
+        "application": "役場くらし安全環境課または秦荘支所で、品目・個数・車両番号を記載して搬入確認書を申請",
+        "fee": "10キログラムにつき100円",
+        "days": "毎週木曜日と第3日曜日",
+        "hours": "9時から11時30分",
+        "facility": "愛荘町粗大ごみ収集プラント（東近江市小八木町19番地）",
+        "capacity": "受入件数に上限があり、希望日に受付できない場合がある",
+        "collectionAlternative": "有料の戸別収集制度もあり、小型1個600円、大型1個1,200円"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/soshiki/anzenkankyo/1/1/6944.html", "checkedAt": "2026-07-22"},
+      "additionalSources": [
+        {"url": "https://www.town.aisho.shiga.jp/soshiki/anzenkankyo/1/1/1_1/445.html", "checkedAt": "2026-07-22"}
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・浸水、土砂災害、避難場所等を掲載した防災ガイドブックとハザードマップを公開する。",
+      "details": {
+        "guide": "愛荘町防災ガイドブック",
+        "flood": "愛知川・宇曽川の浸水想定区域図と地先の安全度マップを重ねた水害ハザードマップを掲載",
+        "sediment": "土砂災害危険箇所を掲載",
+        "evacuation": "一時避難場所・拠点避難場所、避難経路、情報収集方法を案内",
+        "rainfall": "10年・100年・200年確率降雨に応じた浸水リスク情報を案内",
+        "preparedness": "非常持ち出し品、避難の心得、家族の連絡方法等を掲載"
+      },
+      "source": {"url": "https://www.town.aisho.shiga.jp/soshiki/anzenkankyo/5/1/map.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
