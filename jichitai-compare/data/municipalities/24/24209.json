@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "24209",
+  "prefectureCode": "24",
+  "prefecture": "三重県",
+  "name": "尾鷲市",
+  "officialUrl": "https://www.city.owase.lg.jp/",
+  "status": "verified",
+  "summary": "尾鷲市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で調査済み。病児・病後児保育は令和8年度時点で未実施のためunavailableとした。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "市内在住の子どもを対象に、18歳年度末まで保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳になった日以後最初の3月31日まで",
+        "coverage": "健康保険が適用される医療費の自己負担分",
+        "payment": "受給資格証による助成。県外受診や療養費等は申請による償還払い",
+        "excluded": "保険適用外費用や入院時食事療養費等は対象外"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/0000007740.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "病児・病後児保育は令和8年度時点で市内実施施設がなく、現行サービスとして利用できない。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "officialStatus": "第3期子ども・子育て支援事業計画で、施設・専門スタッフ確保の課題から未実施と明記",
+        "currentPlan": "令和7年度から令和10年度まで確保内容0人日・実施0か所",
+        "futurePlan": "令和11年度に24人日・1か所の確保を目標",
+        "targetIfImplemented": "小学校に就学している児童まで",
+        "reason": "現行の病児・病後児保育提供施設がないためunavailable"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/cmsfiles/contents/0000022/22256/keikaku.pdf", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯等の0～2歳児は保育料無償化対象で、3～5歳児の給食費も市独自に無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeCoverage": "すべての3～5歳児、住民税非課税世帯等の0～2歳児",
+        "taxableUnderThree": "住民税課税世帯等の0～2歳児は市民税所得割額に応じて保育料を算定",
+        "mealSupport": "すべての3～5歳児の主食費・副食費を市独自に無償化",
+        "periodCalculation": "4～8月は前年度、9～3月は当年度の市民税所得割額で決定"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/owasewanpaku/0000017836.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "尾鷲市立小中学校の学校給食費を無償化し、保護者の経済的負担を軽減する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "coverage": "市内小学校・中学校の学校給食費",
+        "fee": "無料",
+        "policy": "第3期子ども・子育て支援事業計画で、保育園・小中学校の給食費無償化を実施済み施策として明記",
+        "support": "就学援助対象世帯には学用品費等の援助制度もある"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/0000022682.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ、宿泊型・通所型の産後ケアを原則7日以内で提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "尾鷲市に住民票があり、産後ケアを必要とする産後1年未満の母親と乳児",
+        "types": "宿泊型、通所型",
+        "limit": "原則7日以内",
+        "overnightFee": "課税世帯は5日目まで1日1,000円、6日目以降1日3,000円。非課税・生活保護世帯は無料",
+        "dayFee": "課税世帯は5日目まで1日500円、6日目以降1日3,000円。非課税・生活保護世帯は無料",
+        "support": "母体の健康管理、乳房ケア、授乳指導、乳児の発育確認、育児相談"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/owasewanpaku/0000016067.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "condition": "保育園等に通っていない生後6か月から満3歳未満の児童",
+        "limit": "児童1人につき月10時間まで",
+        "fee": "1時間300円。1日利用時の給食・おやつ代は1回300円",
+        "hours": "平日は半日9時～11時または1日9時～14時、土曜日は半日9時～11時",
+        "facilities": "矢浜保育園、尾鷲乳児保育園、とちのもり保育園"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/owasewanpaku/0000023595.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下の新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を最大60万円補助する。",
+      "details": {
+        "program": "尾鷲市結婚新生活支援補助金",
+        "targetPeriod": "令和8年1月1日から令和9年3月31日までに婚姻届を提出し受理された世帯",
+        "ageCondition": "婚姻届受理日に夫婦とも39歳以下",
+        "amount": "夫婦とも29歳以下は最大60万円、夫婦とも39歳以下は最大30万円",
+        "eligibleCosts": "住宅の新築・購入、家賃・敷金・礼金・共益費・仲介手数料、リフォーム、引越業者等への支払費用",
+        "residence": "対象住宅が市内にあり、夫婦とも住民登録して居住し、2年以上継続居住する意思があること"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/0000018859.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型家具・自転車等は尾鷲市清掃工場へ直接持ち込み、重量に応じた処理手数料を支払う。",
+      "details": {
+        "facility": "尾鷲市清掃工場",
+        "items": "タンス、自転車、机、ソファー等のおおむね50cm以上・10kg以上の大型物",
+        "fee": "50kg以下は一律500円。50kgを超える場合は10kgごとに100円加算",
+        "hours": "平日9時～16時、第1・第3日曜日9時～15時",
+        "procedure": "指定袋は不要。事前に分別し、受付・計量後に自分で荷下ろし",
+        "excluded": "処理困難物、産業廃棄物、建設廃材等は受入不可"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/0000008885.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・土砂災害・河川洪水のハザードマップと避難情報を公開する。",
+      "details": {
+        "tsunami": "津波浸水域・浸水深と尾鷲、須賀利・行野浦、九鬼・早田等の地区別地図を公開",
+        "landslide": "土砂災害ハザードマップを公開",
+        "flood": "市内河川の洪水浸水想定区域図を公開",
+        "evacuation": "緊急避難場所・収容避難所一覧、津波避難計画を公開",
+        "updated": "津波ハザードマップ公式ページは2025年12月更新"
+      },
+      "source": {"url": "https://www.city.owase.lg.jp/0000012577.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
