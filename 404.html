@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="/yorugatari/assets/styles.css">
   <style>.error-shell{min-height:100dvh;display:grid;place-items:center;padding:32px}.error-box{width:min(100%,680px);text-align:center;background:rgba(12,15,22,.82);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(28px,7vw,64px)}.error-code{font-family:serif;font-size:clamp(4rem,18vw,8rem);line-height:1;color:var(--accent);margin:0}.error-box h1{font-family:serif}.error-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px}</style>
 </head>
-<body>
-  <main class="error-shell"><section class="error-box"><p class="error-code">404</p><h1>ページが見つかりません</h1><p>URLが違うか、まだ公開されていない怖い話です。</p><div class="error-actions"><a class="btn btn-primary" href="/yorugatari/">夜語りへ戻る</a><button class="btn" type="button" id="backButton">前のページへ戻る</button></div></section></main>
+<body data-page-type="404">
+  <main class="error-shell"><section class="error-box"><p class="error-code">404</p><h1>ページが見つかりません</h1><p>URLが違うか、まだ公開されていない怖い話です。</p><div class="error-actions"><a class="btn btn-primary" href="/yorugatari/">夜語りへ戻る</a><a class="btn" href="/yorugatari/archive.html">全100話から探す</a><button class="btn" type="button" id="backButton">前のページへ戻る</button></div></section></main>
   <script>document.querySelector('#backButton').addEventListener('click',()=>history.length>1?history.back():location.assign('/yorugatari/'));</script>
+  <script src="/yorugatari/assets/engagement.js?v=20260723-001"></script>
 </body>
 </html>
