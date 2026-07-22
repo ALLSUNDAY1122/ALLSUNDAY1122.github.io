@@ -1,0 +1,121 @@
+name: Yorugatari engagement audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 404.html
+      - yorugatari/index.html
+      - yorugatari/archive.html
+      - yorugatari/about.html
+      - yorugatari/privacy.html
+      - yorugatari/terms.html
+      - yorugatari/contact.html
+      - yorugatari/stories/**
+      - yorugatari/assets/engagement.js
+      - yorugatari/assets/yorugatari-share.png
+      - yorugatari/tools/normalize-engagement.mjs
+      - yorugatari/tools/engagement-audit.cjs
+      - .github/workflows/yorugatari-engagement-audit.yml
+
+concurrency:
+  group: yorugatari-engagement-audit
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  engagement-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Normalize engagement integration
+        run: node yorugatari/tools/normalize-engagement.mjs
+
+      - name: Check generated changes
+        run: git diff --check
+
+      - name: Commit normalized pages
+        shell: bash
+        run: |
+          if git diff --quiet -- 404.html yorugatari/index.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
+            echo "Engagement integration is already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 404.html yorugatari/index.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
+          git commit -m "Normalize Yorugatari engagement integration [skip ci]"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push; then
+              exit 0
+            fi
+            git rebase --abort || true
+            git fetch origin main
+            sleep 3
+          done
+          exit 1
+
+      - name: Install browser
+        shell: bash
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Audit published engagement
+        id: audit
+        continue-on-error: true
+        run: node yorugatari/tools/engagement-audit.cjs
+
+      - name: Preserve engagement report
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-engagement-report.json
+          cp yorugatari-engagement-report.json /tmp/yorugatari-engagement-report.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-engagement-report.json yorugatari/tools/engagement-audit-latest.json
+            git add yorugatari/tools/engagement-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari engagement audit [skip ci]"
+            if git push; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload engagement report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-engagement-report
+          path: yorugatari-engagement-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce engagement result
+        if: always()
+        run: test "${{ steps.audit.outcome }}" = "success"
