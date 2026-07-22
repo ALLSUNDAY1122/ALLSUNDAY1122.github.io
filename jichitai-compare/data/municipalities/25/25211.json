@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "25211",
+  "prefectureCode": "25",
+  "prefecture": "滋賀県",
+  "name": "湖南市",
+  "officialUrl": "https://www.city.shiga-konan.lg.jp/",
+  "status": "verified",
+  "summary": "湖南市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "乳幼児から高校生世代まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "乳幼児、小中学生、義務教育終了後から18歳到達後最初の3月31日までの高校生世代",
+        "coverage": "健康保険が適用される医療費の自己負担分",
+        "highSchool": "高校生世代は保険診療内の自己負担なし、所得制限なし",
+        "payment": "滋賀県内は受給券による現物給付、県外受診等は償還払い",
+        "excluded": "保険適用外費用、第三者行為による治療費、高額療養費・附加給付等は対象外または調整対象"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/soshiki/kenko_fukushi/hoken_nenkin/fukushiiryo/1140.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生までの病児・病後児を市内2施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "facilities": "病児保育室たっち、病児・病後児保育室かんがる～",
+        "condition": "病気または回復期で集団保育が難しく、保護者の勤務等により家庭保育が困難な児童",
+        "hours": "基本8時30分から17時30分。施設により18時または18時30分まで延長可能",
+        "fee": "生活保護世帯等0円、住民税非課税世帯1,000円、その他2,000円",
+        "extension": "延長保育利用料500円",
+        "application": "施設へ予約し、併設医療機関の診察後に利用申込書を提出。事前登録不要"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/soshiki/kodomomirai/kodomo_seisaku/kosodateshienn/1278.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育の無償化対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "保育園、認定こども園等を利用する3～5歳児は保育料無償化対象",
+        "underThree": "住民税非課税世帯の0～2歳児は保育料無償化対象",
+        "otherUnderThree": "その他の0～2歳児は世帯の市町村民税課税額等により保育料を決定",
+        "multiChild": "所得階層等に応じた多子世帯軽減制度あり",
+        "excludedCosts": "給食費等の実費は別途必要"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/material/files/group/16/nyuuennannnaisaisin.pdf", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年4月から市立小学校の給食費を無償化し、中学校も従来どおり無償とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "令和8年4月分から保護者負担なし。改定後の食材費相当額は月5,200円",
+        "middle": "令和5年度から保護者負担なし。改定後の食材費相当額は月6,000円",
+        "application": "新たな申請手続き不要",
+        "excluded": "無償化開始前の未納分は対象外",
+        "purpose": "安全で安心な給食提供の維持と子育て世帯の負担軽減"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/material/files/group/27/02000.pdf", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "湖南市に住民票がある産後1年未満の産婦と乳児",
+        "types": "短期入所型、通所型、居宅訪問型",
+        "fee": "短期入所1泊2日7,100円、通所1回2,300円、居宅訪問1回500円",
+        "limit": "短期入所型は7日まで。通所・訪問の利用回数は市へ事前確認",
+        "reduction": "生活保護世帯・市民税非課税世帯は事前申請により自己負担免除",
+        "application": "こども子育て応援課への事前相談・面談・申請が必要"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/soshiki/kodomomirai/kodomokosodate/ninshinshussan/35277.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等を利用していない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "保育所、認定こども園、地域型保育、事業所内保育、企業主導型保育に在籍していない児童",
+        "facility": "湖南市立岩根こども園",
+        "hours": "火曜から金曜、午前・午後の各2時間枠",
+        "limit": "児童1人につき月10時間まで",
+        "fee": "1時間300円",
+        "application": "市の認定、施設との事前面談、利用予約が必要"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/soshiki/kodomomirai/yoji_shisetsu/39402.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度、39歳以下の新婚世帯へ住居・リフォーム・引越費用を最大60万円補助する。",
+      "details": {
+        "program": "湖南市結婚新生活支援補助金",
+        "condition": "2026年1月1日以降に婚姻し、夫婦とも39歳以下、合算所得500万円未満等の条件を満たす世帯",
+        "basicAmount": "1世帯上限18万円",
+        "sameLotAddition": "市内在住の直系親族と同一敷地内で居住する場合、夫婦とも29歳以下は上限60万円、夫婦とも39歳以下は上限30万円",
+        "targetCosts": "住宅購入、賃料・敷金・礼金等、リフォーム、引越費用",
+        "application": "2026年6月1日から2027年2月26日まで。予算到達時に終了"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/topics/37832.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみはリサイクルプラザへの直接搬入または戸別収集で処分する。",
+      "details": {
+        "definition": "燃えないごみに出せず、縦・横・高さの合計が80センチメートル以上のもの等",
+        "directCarry": "リサイクルプラザへ直接搬入。処理費は戸別収集料金の半額で現金払い",
+        "collection": "戸別収集は毎週月曜。前週木曜までにリサイクルプラザへ申込み",
+        "fee": "1品につき500円から2,000円分の粗大ごみ処理券が必要",
+        "ticket": "処理券は1枚500円"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/life_scene/gomi_recycle/2/6559.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "浸水想定、土砂災害警戒区域、地震リスク、避難所等を掲載する防災マップを公開する。",
+      "details": {
+        "maps": "湖南市防災マップ、想定地震と地震対策資料",
+        "flood": "最新の浸水想定区域を掲載",
+        "sediment": "土砂災害警戒区域の位置情報を掲載",
+        "earthquake": "想定地震、揺れ・液状化等のリスクと対策を掲載",
+        "evacuation": "指定避難所、防災情報の入手方法、マイ・タイムライン等を案内"
+      },
+      "source": {"url": "https://www.city.shiga-konan.lg.jp/soshiki/sogo_seisaku/kikikanri/6/2425.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
