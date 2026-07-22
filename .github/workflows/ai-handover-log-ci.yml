@@ -58,10 +58,32 @@ jobs:
             rm -rf "$RUNNER_TEMP/build/assets"
             cp -R "$SOURCE/assets" "$RUNNER_TEMP/build/assets"
           fi
+          flutter --version > "$RUNNER_TEMP/flutter-version.txt"
+          cp "$RUNNER_TEMP/build/pubspec.yaml" "$RUNNER_TEMP/pubspec-used.yaml"
 
       - name: Resolve dependencies
+        id: pubget
+        continue-on-error: true
+        shell: bash
         working-directory: ${{ runner.temp }}/build
-        run: flutter pub get
+        run: |
+          set -o pipefail
+          flutter pub get 2>&1 | tee "$RUNNER_TEMP/pub-get.log"
+
+      - name: Upload dependency diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-dependency-diagnostics
+          path: |
+            ${{ runner.temp }}/pub-get.log
+            ${{ runner.temp }}/flutter-version.txt
+            ${{ runner.temp }}/pubspec-used.yaml
+          if-no-files-found: error
+
+      - name: Stop when dependency resolution failed
+        if: steps.pubget.outcome == 'failure'
+        run: exit 1
 
       - name: Verify formatting
         working-directory: ${{ runner.temp }}/build
