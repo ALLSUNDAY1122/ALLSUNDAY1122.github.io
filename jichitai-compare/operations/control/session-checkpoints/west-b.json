@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-23T03:49:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T03:56:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 189,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 986,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "35202",
+    "municipalityName": "宇部市",
+    "prefectureCode": "35"
+  },
+  "workingBranch": "data/35202-ube-westb",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -44,5 +48,5 @@
     {"code":"35201","name":"下関市","pullRequestNumber":986,"ciRunNumber":2429}
   ],
   "blocked": [],
-  "nextAction": "宇部市（35202）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "宇部市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
 }
