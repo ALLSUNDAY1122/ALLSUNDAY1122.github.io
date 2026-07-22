@@ -1,0 +1,94 @@
+name: Yorugatari discovery audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/index.html
+      - yorugatari/archive.html
+      - yorugatari/categories/**
+      - yorugatari/feed.xml
+      - yorugatari/assets/stories*.js
+      - yorugatari/tools/generate-discovery-pages.mjs
+      - yorugatari/tools/discovery-audit.mjs
+      - .github/workflows/yorugatari-discovery-audit.yml
+
+concurrency:
+  group: yorugatari-discovery-audit
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  discovery-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Validate generator and audit syntax
+        run: |
+          node --check yorugatari/tools/generate-discovery-pages.mjs
+          node --check yorugatari/tools/discovery-audit.mjs
+
+      - name: Regenerate discovery files locally
+        run: node yorugatari/tools/generate-discovery-pages.mjs
+
+      - name: Audit local discovery files
+        run: node yorugatari/tools/discovery-audit.mjs
+
+      - name: Audit published discovery files
+        id: live
+        continue-on-error: true
+        run: node yorugatari/tools/discovery-audit.mjs --live
+
+      - name: Preserve discovery audit
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-discovery-report.json
+          cp yorugatari-discovery-report.json /tmp/yorugatari-discovery-report.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-discovery-report.json yorugatari/tools/discovery-audit-latest.json
+            git add yorugatari/tools/discovery-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari discovery audit [skip ci]"
+            if git push; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload discovery audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-discovery-audit
+          path: yorugatari-discovery-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce discovery result
+        if: always()
+        run: test "${{ steps.live.outcome }}" = "success"
