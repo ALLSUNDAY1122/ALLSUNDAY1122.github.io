@@ -16,14 +16,17 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-22T22:43:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T22:51:00+09:00",
+  "status": "working",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 93,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 859,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "code": "25383",
+    "name": "日野町"
+  },
+  "workingBranch": "data/25383-hino",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {
       "code": "25212",
@@ -45,5 +48,5 @@
     }
   ],
   "blocked": [],
-  "nextAction": "日野町（25383）の重複を確認し、未着手なら調査を開始する。"
+  "nextAction": "日野町（25383）のPRを作成し、CI成功後にregion/centralへ統合する。"
 }
