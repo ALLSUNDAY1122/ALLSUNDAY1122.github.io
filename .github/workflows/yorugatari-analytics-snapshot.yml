@@ -1,0 +1,73 @@
+name: Yorugatari analytics snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 21 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/assets/analytics.js
+      - yorugatari/assets/engagement.js
+      - yorugatari/sitemap.xml
+      - yorugatari/tools/analytics-snapshot.mjs
+      - .github/workflows/yorugatari-analytics-snapshot.yml
+
+concurrency:
+  group: yorugatari-analytics-snapshot
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Generate analytics snapshot
+        run: node yorugatari/tools/analytics-snapshot.mjs
+
+      - name: Commit analytics snapshot
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp yorugatari/tools/analytics-snapshot-latest.json /tmp/analytics-snapshot-latest.json
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/analytics-snapshot-latest.json yorugatari/tools/analytics-snapshot-latest.json
+            git add yorugatari/tools/analytics-snapshot-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari analytics snapshot [skip ci]"
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload analytics snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-analytics-snapshot
+          path: yorugatari/tools/analytics-snapshot-latest.json
+          if-no-files-found: error
+          retention-days: 30
