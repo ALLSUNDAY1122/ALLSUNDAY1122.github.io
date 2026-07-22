@@ -1,0 +1,55 @@
+name: Temporary Generate Public 384 1310
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-public-384-20260722-1310.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/generated-384-20260722-1310
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate public artifacts
+        run: |
+          set -euxo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          if '364自治体' not in s:
+              raise SystemExit('expected 364自治体 display not found')
+          s=s.replace('364自治体','384自治体')
+          p.write_text(s,encoding='utf-8')
+          PY
+          npm run validate:generated
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('data/generated/municipalities.json','utf8'));
+          const progress=JSON.parse(fs.readFileSync('operations/progress.json','utf8'));
+          const count=Array.isArray(data)?data.length:(data.municipalities||[]).length;
+          if(count!==384) throw new Error(`generated count ${count}`);
+          if(progress.registeredMunicipalities!==384) throw new Error(`progress count ${progress.registeredMunicipalities}`);
+          NODE
+          cd ..
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          test ${#changed[@]} -eq 3
+          test "${changed[0]}" = 'jichitai-compare/data/generated/municipalities.json'
+          test "${changed[1]}" = 'jichitai-compare/index.html'
+          test "${changed[2]}" = 'jichitai-compare/operations/progress.json'
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '公開更新: 生成データと表示件数を384自治体へ同期'
+          git push origin coord/generated-384-20260722-1310
