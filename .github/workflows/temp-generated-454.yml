@@ -1,4 +1,4 @@
-name: Temporary Generate 454
+name: Temporary Generate 454 Trigger
 
 on:
   push:
@@ -30,8 +30,7 @@ jobs:
           s=p.read_text(encoding='utf-8')
           if '434自治体' not in s:
               raise SystemExit('434 municipality display not found')
-          s=s.replace('434自治体','454自治体')
-          p.write_text(s,encoding='utf-8')
+          p.write_text(s.replace('434自治体','454自治体'),encoding='utf-8')
           PY
           node ./scripts/validate-data.mjs --require-generated
           git add data/generated/municipalities.json operations/progress.json index.html
