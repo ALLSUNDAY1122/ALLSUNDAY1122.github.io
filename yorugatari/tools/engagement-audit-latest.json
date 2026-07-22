@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-22T21:14:26.602Z",
+  "auditedAt": "2026-07-22T21:23:38.522Z",
   "success": false,
   "results": [
     {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "name": "local: engagement and social metadata are complete",
+      "name": "local: split analytics, engagement, and social metadata are complete",
       "ok": true,
       "detail": []
     },
@@ -26,16 +26,19 @@
       "detail": null
     },
     {
-      "name": "published: top loads engagement module",
+      "name": "published: top loads only the lightweight analytics module",
       "ok": true,
       "detail": {
         "ready": true,
         "status": 200,
         "attempt": 1,
         "script": true,
-        "engagement": true,
+        "noStoryModule": true,
+        "analytics": true,
         "path": "/yorugatari",
-        "panel": true
+        "panel": true,
+        "imageWidth": "2172",
+        "imageHeight": "724"
       }
     },
     {
@@ -57,24 +60,27 @@
     },
     {
       "name": "published: story loads view count and share controls",
-      "ok": true,
+      "ok": false,
       "detail": {
-        "ready": true,
+        "ready": false,
         "status": 200,
-        "attempt": 1,
+        "attempt": 12,
         "script": true,
+        "noStaticModule": true,
         "engagement": true,
         "share": true,
-        "viewText": "0"
+        "viewText": "—",
+        "imageWidth": "2048",
+        "imageHeight": "683"
       }
     },
     {
       "name": "published: Page Views API count is displayed",
-      "ok": true,
+      "ok": false,
       "detail": {
-        "views": 0,
-        "text": "0",
-        "error": null
+        "views": null,
+        "text": "—",
+        "error": "Failed to fetch"
       }
     },
     {
@@ -123,7 +129,7 @@
       }
     },
     {
-      "name": "published: policy page has complete social preview metadata",
+      "name": "published: policy page has complete social metadata and lightweight analytics",
       "ok": true,
       "detail": {
         "ready": true,
@@ -141,16 +147,93 @@
           "twitterCard": "summary_large_image",
           "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "twitterImageAlt": "月明かりと提灯が照らす夜の町並み"
+        },
+        "moduleState": {
+          "analytics": true,
+          "noStoryModule": true
         }
       }
     },
     {
       "name": "published: normal pages have no browser JavaScript errors",
-      "ok": true,
-      "detail": []
+      "ok": false,
+      "detail": [
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED"
+      ]
     },
     {
-      "name": "published: custom 404 returns HTTP 404, noindex, and recovery paths",
+      "name": "published: custom 404 returns HTTP 404, noindex, analytics, and recovery paths",
       "ok": true,
       "detail": {
         "ready": true,
@@ -161,7 +244,9 @@
         "pageType": "404",
         "archive": true,
         "top": true,
-        "trackingPath": "/yorugatari/404"
+        "trackingPath": "/yorugatari/404",
+        "analytics": true,
+        "noStoryModule": true
       }
     },
     {
@@ -184,6 +269,31 @@
   ],
   "failures": [
     {
+      "name": "published: story loads view count and share controls",
+      "ok": false,
+      "detail": {
+        "ready": false,
+        "status": 200,
+        "attempt": 12,
+        "script": true,
+        "noStaticModule": true,
+        "engagement": true,
+        "share": true,
+        "viewText": "—",
+        "imageWidth": "2048",
+        "imageHeight": "683"
+      }
+    },
+    {
+      "name": "published: Page Views API count is displayed",
+      "ok": false,
+      "detail": {
+        "views": null,
+        "text": "—",
+        "error": "Failed to fetch"
+      }
+    },
+    {
       "name": "published: story has complete social preview metadata",
       "ok": false,
       "detail": {
@@ -199,6 +309,84 @@
         "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
         "twitterImageAlt": "月明かりと提灯が照らす夜の町並み"
       }
+    },
+    {
+      "name": "published: normal pages have no browser JavaScript errors",
+      "ok": false,
+      "detail": [
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED",
+        "console: Access to fetch at 'https://page-views-api.ratneshc.com/api/v1/views?site=allsunday1122.github.io&path=%2Fyorugatari%2Fstories%2Fspare-key-returned.html' from origin 'https://allsunday1122.github.io' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.",
+        "console: Failed to load resource: net::ERR_FAILED"
+      ]
     }
   ]
 }
