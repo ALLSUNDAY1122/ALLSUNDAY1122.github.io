@@ -1,0 +1,64 @@
+name: Yorugatari performance audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/tools/performance-audit.mjs
+      - .github/workflows/yorugatari-performance-audit.yml
+
+permissions:
+  contents: write
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Lighthouse tools
+        run: npm install --no-save lighthouse chrome-launcher
+
+      - name: Audit published performance
+        id: audit
+        continue-on-error: true
+        run: node yorugatari/tools/performance-audit.mjs
+
+      - name: Record performance report
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-performance-report.json
+          cp yorugatari-performance-report.json yorugatari/tools/performance-audit-latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add yorugatari/tools/performance-audit-latest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Yorugatari performance audit [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Upload Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-performance-report
+          path: yorugatari-performance-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce completed audit
+        if: always()
+        run: test "${{ steps.audit.outcome }}" = "success"
