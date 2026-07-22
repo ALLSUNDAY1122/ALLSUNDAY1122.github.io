@@ -1,0 +1,178 @@
+name: Temporary sync state 464 1718
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/sync-state-464-1718.txt
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Reconcile control state
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main region/north region/east region/central region/west
+            git checkout -B main origin/main
+            cat > /tmp/sync.py <<'PY'
+          import json
+          import re
+          import subprocess
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          root = 'jichitai-compare'
+          queue_path = Path(root) / 'operations/control/release-queue.json'
+          global_path = Path(root) / 'operations/control/global-state.json'
+          audit_path = Path(root) / 'operations/control/audit-log.jsonl'
+          progress = json.loads((Path(root) / 'operations/progress.json').read_text(encoding='utf-8'))
+          assert progress['registeredMunicipalities'] == 464
+
+          regions = {
+              'north': ('region/north', lambda p: 1 <= p <= 7, 717),
+              'east': ('region/east', lambda p: 8 <= p <= 15 or p in (19, 20), 708),
+              'central': ('region/central', lambda p: 16 <= p <= 18 or 21 <= p <= 30, 742),
+              'west': ('region/west', lambda p: 31 <= p <= 47, 716),
+          }
+
+          def load(ref, accept):
+              output = subprocess.check_output(
+                  ['git', 'ls-tree', '-r', '--name-only', ref, f'{root}/data/municipalities'], text=True
+              )
+              rows = []
+              for path in output.splitlines():
+                  match = re.fullmatch(
+                      rf'{re.escape(root)}/data/municipalities/(\d{{2}})/(\d{{5}})\.json', path
+                  )
+                  if not match:
+                      continue
+                  prefecture = int(match.group(1))
+                  code = match.group(2)
+                  if not accept(prefecture):
+                      continue
+                  data = json.loads(subprocess.check_output(['git', 'show', f'{ref}:{path}'], text=True))
+                  rows.append({'code': code, 'name': data.get('name') or data.get('municipalityName') or code})
+              return sorted(rows, key=lambda row: row['code'])
+
+          queue = json.loads(queue_path.read_text(encoding='utf-8'))
+          entries = {entry['region']: entry for entry in queue['entries']}
+          pending = {}
+          pending_rows = {}
+          counts = {}
+          total = 0
+          ready = []
+
+          for region, (branch, accept, integration_pr) in regions.items():
+              main_rows = load('HEAD', accept)
+              regional_rows = load(f'origin/{branch}', accept)
+              main_codes = {row['code'] for row in main_rows}
+              regional_codes = {row['code'] for row in regional_rows}
+              rows = [row for row in regional_rows if row['code'] not in main_codes]
+              missing = main_codes - regional_codes
+              pending[region] = len(rows)
+              pending_rows[region] = rows
+              counts[region] = len(regional_rows)
+              total += len(regional_rows)
+              if len(rows) >= 10:
+                  ready.append(region)
+              entries[region].update({
+                  'branch': branch,
+                  'municipalities': regional_rows,
+                  'count': len(regional_rows),
+                  'pendingSinceLastRelease': len(rows),
+                  'releaseStatus': 'ready' if len(rows) >= 10 else ('up_to_date' if not rows else 'pending_threshold'),
+                  'reason': f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{len(rows)}自治体' + (f'。mainのみ{len(missing)}自治体' if missing else ''),
+                  'mainIntegrationPr': integration_pr,
+                  'generatedPullRequest': 746,
+                  'auditStatus': 'passed' if not missing else 'needs_review',
+              })
+
+          now = datetime.now(ZoneInfo('Asia/Tokyo')).replace(microsecond=0).isoformat()
+          next_action = (
+              '10自治体到達地域を固定スナップショットで全国統合する。'
+              if ready else
+              '地方統合を継続。現在の公開後繰越: ' +
+              '、'.join(f'{key} {pending[key]}' for key in ('north', 'east', 'central', 'west')) + '。'
+          )
+          queue['updatedAt'] = now
+          queue['summary'] = {
+              'regionalMergedMunicipalities': total,
+              'latestGeneratedMunicipalityCount': 464,
+              'latestGeneratedPullRequest': 746,
+              'latestPublicCountPullRequest': 746,
+              'releaseReadyRegions': ready,
+              'nextAction': next_action,
+          }
+          queue['nextAction'] = next_action
+          queue['humanDecisionRequired'] = False
+          queue_path.write_text(json.dumps(queue, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+
+          global_state = json.loads(global_path.read_text(encoding='utf-8'))
+          global_state.update({
+              'updatedAt': now,
+              'phase': 'release-monitoring',
+              'regionalCompletedSinceLastRelease': {**pending, 'total': sum(pending.values())},
+              'priority': {'type': 'release-monitoring', 'nextAction': next_action},
+              'lastNationalIntegrationAt': '2026-07-22T17:06:50+09:00',
+              'lastNationalIntegrationPr': 742,
+              'latestGeneratedMunicipalityCount': 464,
+              'latestGeneratedPullRequest': 746,
+              'latestPublicCountPullRequest': 746,
+              'regionalMergedMunicipalities': total,
+              'openPullRequests': [],
+              'humanDecisionRequired': False,
+          })
+          global_path.write_text(json.dumps(global_state, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+
+          record = {
+              'timestamp': now,
+              'actor': '全国進行統括',
+              'action': 'coordinator-sync-after-public-464',
+              'details': {
+                  'publicMunicipalityCount': 464,
+                  'publicServices': 4176,
+                  'regionalCounts': counts,
+                  'regionalMergedMunicipalities': total,
+                  'pendingSinceLatestNationalIntegration': {**pending, 'total': sum(pending.values())},
+                  'pendingMunicipalities': pending_rows,
+                  'nationalIntegrationPullRequest': 742,
+                  'publicationPullRequest': 746,
+                  'releaseReadyRegions': ready,
+              },
+              'humanDecisionRequired': False,
+          }
+          text = audit_path.read_text(encoding='utf-8')
+          if text and not text.endswith('\n'):
+              text += '\n'
+          audit_path.write_text(text + json.dumps(record, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          Path('/tmp/state-summary').write_text(
+              f"{total} {pending['north']} {pending['east']} {pending['central']} {pending['west']}"
+          )
+          PY
+            python3 /tmp/sync.py
+            read total north east central west < /tmp/state-summary
+            git add jichitai-compare/operations/control/release-queue.json \
+              jichitai-compare/operations/control/global-state.json \
+              jichitai-compare/operations/control/audit-log.jsonl
+            git rm .github/workflows/temp-sync-state-464-1718.yml \
+              .github/triggers/sync-state-464-1718.txt
+            git commit -m "統括管理: 公開464・地方統合${total}へ同期（北${north} 東${east} 中${central} 西${west}）"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1
