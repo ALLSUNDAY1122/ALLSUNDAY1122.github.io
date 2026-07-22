@@ -5,18 +5,14 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-22T23:28:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-22T23:30:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 211,
-  "currentMunicipality": {
-    "municipalityCode": "34203",
-    "municipalityName": "竹原市",
-    "prefectureCode": "34"
-  },
-  "workingBranch": "data/34203-takehara-westb",
+  "remainingUninvestigatedCount": 210,
+  "currentMunicipality": null,
+  "workingBranch": null,
   "pullRequestNumber": 882,
-  "ciStatus": "pending",
+  "ciStatus": "success",
   "completedSinceSplit": [
     {
       "code": "32525",
@@ -53,8 +49,14 @@
       "name": "呉市",
       "pullRequestNumber": 881,
       "ciRunNumber": 1957
+    },
+    {
+      "code": "34203",
+      "name": "竹原市",
+      "pullRequestNumber": 882,
+      "ciRunNumber": 1966
     }
   ],
   "blocked": [],
-  "nextAction": "PR #882のCI成功と競合なしを確認し、region/westへ統合する。"
+  "nextAction": "三原市（34204）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
 }
