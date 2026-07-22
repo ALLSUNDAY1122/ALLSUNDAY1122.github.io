@@ -1,0 +1,147 @@
+{
+  "auditedAt": "2026-07-22T19:26:40.386Z",
+  "success": true,
+  "results": [
+    {
+      "name": "top renders 100 unique cards",
+      "ok": true,
+      "detail": 100
+    },
+    {
+      "name": "top mobile has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390
+      }
+    },
+    {
+      "name": "reader panel shows saved completion",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "search narrows to matching story",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "category filter shows only selected category",
+      "ok": true,
+      "detail": {
+        "categoryCount": 17,
+        "categories": [
+          "心霊"
+        ]
+      }
+    },
+    {
+      "name": "completed filter uses local storage",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "favorite filter uses local storage",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "random button navigates to a story",
+      "ok": true,
+      "detail": "https://allsunday1122.github.io/yorugatari/stories/last-elevator.html"
+    },
+    {
+      "name": "archive renders 100 unique items",
+      "ok": true,
+      "detail": 100
+    },
+    {
+      "name": "archive mobile has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390
+      }
+    },
+    {
+      "name": "archive favorite filter works",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "story mobile has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390
+      }
+    },
+    {
+      "name": "story pagination has previous archive and next links",
+      "ok": true,
+      "detail": [
+        "← 前の話「閉宴後も二名」",
+        "全100話一覧",
+        "次の話「移行元の端末です」→"
+      ]
+    },
+    {
+      "name": "story static breadcrumb visible",
+      "ok": true,
+      "detail": [
+        "夜語り›全100話›人怖"
+      ]
+    },
+    {
+      "name": "explanation control is available",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "explanation opens and updates state",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "story favorite button persists state",
+      "ok": true,
+      "detail": [
+        "neighbor-wifi",
+        "spare-key-returned"
+      ]
+    },
+    {
+      "name": "story completed button persists state",
+      "ok": true,
+      "detail": [
+        "last-elevator",
+        "spare-key-returned"
+      ]
+    },
+    {
+      "name": "reading position is saved",
+      "ok": true,
+      "detail": {
+        "slug": "spare-key-returned",
+        "progress": 54,
+        "updatedAt": 1784748398722
+      }
+    },
+    {
+      "name": "story desktop keeps two-column layout without overflow",
+      "ok": true,
+      "detail": {
+        "display": "grid",
+        "columns": "760px 320px",
+        "scrollWidth": 1440,
+        "clientWidth": 1440
+      }
+    },
+    {
+      "name": "no browser JavaScript errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "failures": []
+}
