@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 440
+name: Temporary Sync Release Queue 442
 
 on:
   push:
@@ -38,12 +38,11 @@ jobs:
             items.sort(key=lambda x:x['code']);s=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{r}.json'));n=int(s.get(fs[r],0));e=es[r]
             e.update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':n,'releaseStatus':'release_ready' if n>=10 else 'pending_threshold','reason':f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{n}自治体','mainIntegrationPr':s.get('lastNationalIntegrationPr'),'generatedPullRequest':678,'auditStatus':'passed'})
           total=sum(e['count'] for e in es.values());pending={r:es[r]['pendingSinceLastRelease'] for r in es};ready=[r for r in es if pending[r]>=10]
-          assert total==440,(total,pending)
-          q['updatedAt']='2026-07-22T15:16:00+09:00';q['status']='active';q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':414,'latestGeneratedPullRequest':678,'latestPublicCountPullRequest':678,'releaseReadyRegions':ready,'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"+('全国統合対象: '+','.join(ready) if ready else '10自治体到達地域なし。')}
+          assert total==442,(total,pending)
+          q['updatedAt']='2026-07-22T15:25:00+09:00';q['status']='active';q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':414,'latestGeneratedPullRequest':678,'latestPublicCountPullRequest':678,'releaseReadyRegions':ready,'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"+('全国統合対象: '+','.join(ready) if ready else '10自治体到達地域なし。')}
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n')
           PY
           git add jichitai-compare/operations/control/release-queue.json
-          if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]';git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 地方統合440自治体・公開414自治体へ同期'
+          git commit -m '統括管理: 地方統合442自治体・公開414自治体へ同期'
           git push origin main
