@@ -4,7 +4,8 @@ import path from 'node:path';
 const ROOT = process.cwd();
 const SITE_ROOT = path.join(ROOT, 'yorugatari');
 const STORIES_ROOT = path.join(SITE_ROOT, 'stories');
-const SCRIPT_VERSION = '20260723-001';
+const ANALYTICS_VERSION = '20260723-001';
+const ENGAGEMENT_VERSION = '20260723-001';
 const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png';
 const SHARE_WIDTH = '2172';
 const SHARE_HEIGHT = '724';
@@ -50,18 +51,16 @@ function ensureSocialMetadata(html) {
   return html;
 }
 
-function ensureEngagementScript(html, src) {
-  const versioned = `${src}?v=${SCRIPT_VERSION}`;
-  const existing = /<script\s+src=["'][^"']*engagement\.js(?:\?v=[^"']*)?["']\s*><\/script>/i;
-  if (existing.test(html)) return html.replace(existing, `<script src="${versioned}"></script>`);
-  return html.replace('</body>', `  <script src="${versioned}"></script>\n</body>`);
+function setRuntimeScript(html, src, version) {
+  html = html.replace(/\s*<script\s+src=["'][^"']*\/(?:analytics|engagement)\.js(?:\?v=[^"']*)?["']\s*><\/script>\s*/gi, '\n');
+  return html.replace('</body>', `  <script src="${src}?v=${version}"></script>\n</body>`);
 }
 
 function normalizeStaticPage(filename) {
   const filePath = path.join(SITE_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
   html = ensureSocialMetadata(html);
-  html = ensureEngagementScript(html, 'assets/engagement.js');
+  html = setRuntimeScript(html, 'assets/analytics.js', ANALYTICS_VERSION);
 
   if (filename === 'privacy.html') {
     html = html.replace(
@@ -83,7 +82,7 @@ function normalizeStoryPage(filename) {
   const filePath = path.join(STORIES_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
   html = ensureSocialMetadata(html);
-  html = ensureEngagementScript(html, '../assets/engagement.js');
+  html = setRuntimeScript(html, '../assets/engagement.js', ENGAGEMENT_VERSION);
   fs.writeFileSync(filePath, html, 'utf8');
 }
 
@@ -97,7 +96,7 @@ function normalize404() {
       '<a class="btn btn-primary" href="/yorugatari/">夜語りへ戻る</a><a class="btn" href="/yorugatari/archive.html">全100話から探す</a>'
     );
   }
-  html = ensureEngagementScript(html, '/yorugatari/assets/engagement.js');
+  html = setRuntimeScript(html, '/yorugatari/assets/analytics.js', ANALYTICS_VERSION);
   fs.writeFileSync(filePath, html, 'utf8');
 }
 
@@ -108,4 +107,4 @@ fs.readdirSync(STORIES_ROOT)
   .forEach(normalizeStoryPage);
 normalize404();
 
-console.log(`Normalized engagement for ${STATIC_PAGES.length} static pages and ${fs.readdirSync(STORIES_ROOT).filter((name) => name.endsWith('.html')).length} stories.`);
+console.log(`Normalized analytics for ${STATIC_PAGES.length} static pages, 100 stories, and the 404 page.`);
