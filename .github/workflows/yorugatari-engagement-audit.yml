@@ -18,8 +18,7 @@ on:
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
       - yorugatari/assets/yorugatari-share.png
-      - yorugatari/tools/normalize-story-pages.mjs
-      - yorugatari/tools/normalize-engagement.mjs
+      - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/engagement-audit.cjs
       - .github/workflows/yorugatari-engagement-audit.yml
 
@@ -45,67 +44,16 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Normalize engagement integration
-        run: node yorugatari/tools/normalize-engagement.mjs
-
-      - name: Check generated changes
-        run: git diff --check
-
-      - name: Commit normalized pages
+      - name: Validate audit syntax
         shell: bash
         run: |
-          if git diff --quiet -- 404.html yorugatari/index.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
-            echo "Engagement integration is already normalized."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 404.html yorugatari/index.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
-          git commit -m "Normalize Yorugatari engagement integration [skip ci]"
-          for attempt in 1 2 3; do
-            if git pull --rebase origin main && git push; then
-              exit 0
-            fi
-            git rebase --abort || true
-            git fetch origin main
-            sleep 3
-          done
-          exit 1
+          node --check yorugatari/tools/live-release-audit.mjs
+          node --check yorugatari/tools/engagement-audit.cjs
+          node --check yorugatari/assets/story.js
+          node --check yorugatari/assets/engagement.js
 
       - name: Wait for published engagement release
-        shell: bash
-        run: |
-          node <<'NODE'
-          const storyUrl = 'https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html';
-          const topUrl = 'https://allsunday1122.github.io/yorugatari/';
-          const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-          for (let attempt = 1; attempt <= 18; attempt += 1) {
-            try {
-              const headers = { 'cache-control': 'no-cache', pragma: 'no-cache', 'user-agent': 'Yorugatari-Release-Wait/1.3' };
-              const [storyResponse, topResponse] = await Promise.all([
-                fetch(`${storyUrl}?release=${Date.now()}-${attempt}`, { headers }),
-                fetch(`${topUrl}?release=${Date.now()}-${attempt}`, { headers })
-              ]);
-              const [storyText, topText] = await Promise.all([storyResponse.text(), topResponse.text()]);
-              const ready = storyResponse.status === 200 && topResponse.status === 200 &&
-                storyText.includes('property="og:image:width" content="2172"') &&
-                storyText.includes('property="og:image:height" content="724"') &&
-                storyText.includes('class="hero-actions story-pagination"') &&
-                storyText.includes('class="related"') &&
-                storyText.includes('../assets/story.js?v=20260723-007') &&
-                storyText.includes('../assets/engagement.js?v=20260723-003') &&
-                !storyText.includes('../assets/analytics.js') &&
-                topText.includes('assets/analytics.js?v=20260723-002') &&
-                !topText.includes('assets/engagement.js');
-              console.log(JSON.stringify({ attempt, storyStatus: storyResponse.status, topStatus: topResponse.status, ready }));
-              if (ready) process.exit(0);
-            } catch (error) {
-              console.log(JSON.stringify({ attempt, error: error.message }));
-            }
-            if (attempt < 18) await sleep(5000);
-          }
-          process.exit(1);
-          NODE
+        run: node yorugatari/tools/live-release-audit.mjs
 
       - name: Install browser
         shell: bash
@@ -137,7 +85,7 @@ jobs:
               break
             fi
             git commit -m "Record Yorugatari engagement audit [skip ci]"
-            if git push; then
+            if git push origin HEAD:main; then
               saved=true
               break
             fi
