@@ -28,6 +28,7 @@ jobs:
       - name: Normalize and validate story pages
         shell: bash
         run: |
+          # This run includes legacy footer normalization support.
           set +e
           node yorugatari/tools/normalize-story-pages.mjs > yorugatari-normalize.log 2>&1
           status=$?
