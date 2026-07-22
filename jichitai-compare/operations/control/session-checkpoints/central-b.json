@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T22:22:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-22T22:24:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 94,
-  "currentMunicipality": {"municipalityCode": "26201", "municipalityName": "福知山市"},
-  "workingBranch": "data/26201-fukuchiyama",
-  "pullRequestNumber": 847,
-  "ciStatus": "pending",
+  "remainingUninvestigatedCount": 93,
+  "currentMunicipality": null,
+  "workingBranch": null,
+  "pullRequestNumber": null,
+  "ciStatus": "success",
   "completedSinceSplit": [
     {
       "municipalityCode": "26100",
@@ -20,8 +20,15 @@
       "pullRequestNumber": 840,
       "ciRunNumber": 1761,
       "completedAt": "2026-07-22T22:14:00+09:00"
+    },
+    {
+      "municipalityCode": "26201",
+      "municipalityName": "福知山市",
+      "pullRequestNumber": 847,
+      "ciRunNumber": 1804,
+      "completedAt": "2026-07-22T22:24:00+09:00"
     }
   ],
   "blocked": [],
-  "nextAction": "PR #847のCI結果を確認し、成功・競合なしならregion/centralへ地方統合する。"
+  "nextAction": "舞鶴市（26202）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
 }
