@@ -1,23 +1,23 @@
 name: Coordinator National Release 21
 
 on:
-  push:
+  pull_request:
     branches:
-      - coord/national-release-21-20260722-2208
-    paths:
-      - '.github/workflows/jichitai-compare.yml'
+      - main
 
 permissions:
   contents: write
 
 jobs:
   build-fixed-snapshot:
+    if: github.head_ref == 'coord/national-release-21-20260722-2208'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout release branch
         uses: actions/checkout@v4
         with:
+          ref: coord/national-release-21-20260722-2208
           fetch-depth: 0
 
       - name: Fetch main and regional integration branches
@@ -55,15 +55,9 @@ jobs:
           const [, , dataPath, taskPath, expectedCode] = process.argv;
           const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
           const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
-          if (data.code !== expectedCode || task.code !== expectedCode) {
-            throw new Error(`code mismatch for ${expectedCode}`);
-          }
-          if (task.status !== 'merged' || task.completedServiceCount !== 9) {
-            throw new Error(`task is not a completed regional snapshot: ${expectedCode}`);
-          }
-          if (!data.services || Object.keys(data.services).length !== 9) {
-            throw new Error(`municipality data does not contain 9 services: ${expectedCode}`);
-          }
+          if (data.code !== expectedCode || task.code !== expectedCode) throw new Error(`code mismatch for ${expectedCode}`);
+          if (task.status !== 'merged' || task.completedServiceCount !== 9) throw new Error(`task is not a completed regional snapshot: ${expectedCode}`);
+          if (!data.services || Object.keys(data.services).length !== 9) throw new Error(`municipality data does not contain 9 services: ${expectedCode}`);
           NODE
           }
 
@@ -73,11 +67,7 @@ jobs:
           for code in 33209 33210; do copy_pair region/west "$code"; done
 
           copied_count="$(git status --short -- jichitai-compare/data/municipalities jichitai-compare/operations/tasks | wc -l)"
-          if [[ "$copied_count" -ne 42 ]]; then
-            echo "expected 42 copied files, found ${copied_count}"
-            git status --short
-            exit 1
-          fi
+          test "$copied_count" -eq 42
 
       - name: Restore workflows and commit fixed snapshot
         run: |
