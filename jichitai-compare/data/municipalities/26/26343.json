@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "26343",
+  "prefectureCode": "26",
+  "prefecture": "京都府",
+  "name": "井手町",
+  "officialUrl": "https://www.town.ide.kyoto.jp/",
+  "status": "verified",
+  "summary": "井手町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、保険診療の自己負担を全額助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "出生の日から満18歳に達する日以後最初の3月31日まで",
+        "copayment": "医療機関窓口で支払う保険診療自己負担を無料化",
+        "condition": "井手町内に住所があり、各種健康保険に加入している子ども",
+        "outsidePrefecture": "京都府外受診、受給者証交付前受診等は申請による償還払い",
+        "excluded": "生活保護・他の福祉医療対象者、保険適用外費用、学校管理下のけが等は対象外"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/hokeniryou/1394516260736.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生までの病児・病後児保育利用料を、所得区分に応じて助成する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "condition": "町内在住で、病気中または回復期にあり集団保育が困難かつ、保護者の勤務・傷病・出産等で家庭保育が困難な児童",
+        "service": "町が指定する医療機関等の病児・病後児保育施設を利用",
+        "nonTaxableSubsidy": "生活保護世帯・市町村民税非課税世帯は日額2,000円を助成",
+        "incomeTaxExemptSubsidy": "所得税非課税世帯は日額1,000円を助成",
+        "otherHouseholds": "その他世帯の利用料・施設・利用方法は町窓口へ確認",
+        "application": "利用後に必要書類を添えて町へ助成申請"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/section/reiki_int/reiki_honbun/k116RG00000677.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、町独自に第2子以降の保育料も無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "保育所・認定こども園等を利用する3～5歳児は保育料無償",
+        "underThree": "住民税非課税世帯の0～2歳児は保育料無償",
+        "secondChild": "令和5年4月から所得制限なしで第2子以降の保育料を無償化",
+        "otherServices": "保育の必要性が認められる認可外保育、一時預かり、病児保育等は3～5歳児月37,000円等の上限内で対象",
+        "mealSupport": "町立保育園の3～5歳児副食費は徴収せず、0～2歳児の給食費相当月5,000円も町が負担",
+        "excludedCosts": "延長保育料、行事費、送迎費等は対象外"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/kosodateshienka/hoikusho/6005.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ide.kyoto.jp/soshiki/kosodateshienka/hoikusho/6003.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町内小中学校の学校給食費を全額補助し、保護者負担を無料とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "coverage": "町内小学校・中学校の児童生徒",
+        "subsidy": "平成30年4月から学校給食費を全額補助",
+        "copayment": "保護者負担額0円",
+        "elementaryReference": "公表ページの参考額は1食250円、年額43,000円～43,500円相当",
+        "juniorHighReference": "公表ページの参考額は1食270円、年額45,900円～46,170円相当",
+        "continuity": "町の子育て独自施策ページでも学校給食無償化を案内"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/kyouikuiinkai/gkcenter/oshirase/1538709364481.html", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ短期入所・通所・居宅訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "町に住民票がある産後1年未満の母親と乳児。短期入所型は産後4か月未満",
+        "types": "短期入所型、通所型、居宅訪問型",
+        "limit": "短期入所型7回、通所型7回、居宅訪問型3回まで",
+        "fee": "短期入所型1回9,000円、通所型1回4,500円、居宅訪問型1回2,000円",
+        "reduction": "出産1回につき5回まで減免可能。短期入所・通所は2,500円、訪問は2,000円を減免",
+        "exemption": "町民税非課税世帯・生活保護世帯は無料",
+        "care": "母体の健康相談、乳児の発育確認、授乳・乳房ケア、沐浴等の育児支援"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/hokencenter/boshihoken/1560134227856.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町内在住の生後6か月以上の就学前児童を、就労・緊急・私的理由により一時的に預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 6},
+      "details": {
+        "facility": "井手町子育て支援センター",
+        "reasons": "保護者の仕事、傷病・入院、冠婚葬祭、育児負担軽減等",
+        "hours": "平日8時30分から16時30分、土曜8時30分から正午",
+        "underThreeFee": "3歳未満は1日2,000円、半日1,000円",
+        "threeAndOverFee": "3歳以上は1日1,800円、半日900円",
+        "mealCost": "給食費250円",
+        "application": "初回面談後、利用日の1か月前から1週間前までに申請。事前予約制"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/kosodateshienka/5983.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から井手町へ移住し、就業・テレワーク・起業等の要件を満たす人へ移住支援金を交付する。",
+      "details": {
+        "program": "井手町移住支援金交付事業",
+        "target": "東京都区部または東京圏からの移住歴要件を満たし、転入後1年以内に申請する方",
+        "residency": "申請日から井手町に5年以上継続居住する意思が必要",
+        "eligibleRoutes": "対象求人への就業、プロフェッショナル人材就業、テレワーク、起業、関係人口等",
+        "singleAmount": "単身60万円",
+        "householdAmount": "2人以上の世帯100万円",
+        "application": "予算に限りがあるため申請前に企画財政課へ事前相談"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/kikakuzaiseika/osirase/4586.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家具・自転車等の粗大ごみを、収集日の1週間前までの事前申込により4週に1回収集する。",
+      "details": {
+        "target": "中型・大型の家具類、自転車等",
+        "application": "収集日の1週間前までに産業環境課へ電話または来庁して申込み",
+        "frequency": "4週に1回収集",
+        "limit": "1世帯1回につき3点まで",
+        "carryOut": "屋内からの運び出しは行わないため、指定場所へ自ら搬出",
+        "fee": "町公式案内に粗大ごみ収集手数料の記載はないため、申込時に確認",
+        "excluded": "家電リサイクル4品目、パソコン、タイヤ、バイク、処理困難物、事業系廃棄物等は対象外"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/sangyoukankyou/oshirase/gomi_sinyou/sodai_gomi01.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "浸水・土砂災害・地震・避難所等をまとめた防災ハザードマップを公開する。",
+      "details": {
+        "map": "井手町防災ハザードマップ",
+        "flood": "浸水想定区域、浸水継続時間、家屋倒壊等氾濫想定区域を掲載",
+        "sediment": "土砂災害警戒区域を掲載",
+        "earthquake": "奈良盆地東縁断層帯・南海トラフ地震への備えを掲載",
+        "evacuation": "避難所一覧、避難情報の入手方法、マイタイムライン等を掲載",
+        "preparedness": "非常持出品、災害時の行動、自主防災組織等を案内"
+      },
+      "source": {"url": "https://www.town.ide.kyoto.jp/soshiki/anshinanzensuisinka/ansin_anzen/hazardmap/5065.html", "checkedAt": "2026-07-23"}
+    }
+  }
+}
