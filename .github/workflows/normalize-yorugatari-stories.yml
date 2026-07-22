@@ -59,8 +59,12 @@ jobs:
             exit "$status"
           fi
 
-      - name: Check generated diff
-        run: git diff --check
+      - name: Validate runtime syntax
+        shell: bash
+        run: |
+          node --check yorugatari/assets/story.js
+          node --check yorugatari/assets/engagement.js
+          node --check yorugatari/tools/normalize-story-pages.mjs
 
       - name: Commit normalized pages
         shell: bash
