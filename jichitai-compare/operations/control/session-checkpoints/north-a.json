@@ -1,1 +1,112 @@
-{"schemaVersion":"1.0.0","sessionId":"north-a","displayName":"北日本調査班A","parentTeam":"北日本調査班","integrationBranch":"region/north","prefectureCodes":["02","03","07"],"updatedAt":"2026-07-23T03:54:00+09:00","status":"researching","invocationIntervalMultiplier":2,"remainingUninvestigatedCount":97,"currentMunicipality":{"code":"03201","name":"盛岡市","stage":"researching"},"workingBranch":"data/03201-morioka","pullRequestNumber":null,"ciStatus":"not_started","completedSinceSplit":[{"code":"02387","name":"中泊町","pullRequestNumber":844,"ciStatus":"success","mergedAt":"2026-07-22T22:18:00+09:00"},{"code":"02401","name":"野辺地町","pullRequestNumber":856,"ciStatus":"success","mergedAt":"2026-07-22T22:42:00+09:00"},{"code":"02402","name":"七戸町","pullRequestNumber":873,"ciStatus":"success","mergedAt":"2026-07-22T23:18:00+09:00"},{"code":"02405","name":"六戸町","pullRequestNumber":886,"ciStatus":"success","mergedAt":"2026-07-22T23:43:00+09:00"},{"code":"02406","name":"横浜町","pullRequestNumber":898,"ciStatus":"success","mergedAt":"2026-07-23T00:12:00+09:00"},{"code":"02408","name":"東北町","pullRequestNumber":913,"ciStatus":"success","mergedAt":"2026-07-23T00:41:00+09:00"},{"code":"02411","name":"六ヶ所村","pullRequestNumber":924,"ciStatus":"success","mergedAt":"2026-07-23T01:11:00+09:00"},{"code":"02412","name":"おいらせ町","pullRequestNumber":939,"ciStatus":"success","mergedAt":"2026-07-23T01:42:00+09:00"},{"code":"02501","name":"大間町","pullRequestNumber":955,"ciStatus":"success","mergedAt":"2026-07-23T02:17:00+09:00"},{"code":"02502","name":"東通村","pullRequestNumber":968,"ciStatus":"success","mergedAt":"2026-07-23T02:46:00+09:00"},{"code":"02503","name":"風間浦村","pullRequestNumber":975,"ciStatus":"success","mergedAt":"2026-07-23T03:13:00+09:00"},{"code":"02504","name":"佐井村","pullRequestNumber":989,"ciStatus":"success","mergedAt":"2026-07-23T03:51:00+09:00"}],"blocked":[],"nextAction":"盛岡市（03201）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"}
+{
+  "schemaVersion": "1.0.0",
+  "sessionId": "north-a",
+  "displayName": "北日本調査班A",
+  "parentTeam": "北日本調査班",
+  "integrationBranch": "region/north",
+  "prefectureCodes": [
+    "02",
+    "03",
+    "07"
+  ],
+  "updatedAt": "2026-07-23T04:11:00+09:00",
+  "status": "researching",
+  "invocationIntervalMultiplier": 2,
+  "remainingUninvestigatedCount": 97,
+  "currentMunicipality": {
+    "code": "03201",
+    "name": "盛岡市",
+    "stage": "pr_open"
+  },
+  "workingBranch": "data/03201-morioka",
+  "pullRequestNumber": 1004,
+  "ciStatus": "in_progress",
+  "completedSinceSplit": [
+    {
+      "code": "02387",
+      "name": "中泊町",
+      "pullRequestNumber": 844,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-22T22:18:00+09:00"
+    },
+    {
+      "code": "02401",
+      "name": "野辺地町",
+      "pullRequestNumber": 856,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-22T22:42:00+09:00"
+    },
+    {
+      "code": "02402",
+      "name": "七戸町",
+      "pullRequestNumber": 873,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-22T23:18:00+09:00"
+    },
+    {
+      "code": "02405",
+      "name": "六戸町",
+      "pullRequestNumber": 886,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-22T23:43:00+09:00"
+    },
+    {
+      "code": "02406",
+      "name": "横浜町",
+      "pullRequestNumber": 898,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T00:12:00+09:00"
+    },
+    {
+      "code": "02408",
+      "name": "東北町",
+      "pullRequestNumber": 913,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T00:41:00+09:00"
+    },
+    {
+      "code": "02411",
+      "name": "六ヶ所村",
+      "pullRequestNumber": 924,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T01:11:00+09:00"
+    },
+    {
+      "code": "02412",
+      "name": "おいらせ町",
+      "pullRequestNumber": 939,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T01:42:00+09:00"
+    },
+    {
+      "code": "02501",
+      "name": "大間町",
+      "pullRequestNumber": 955,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T02:17:00+09:00"
+    },
+    {
+      "code": "02502",
+      "name": "東通村",
+      "pullRequestNumber": 968,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T02:46:00+09:00"
+    },
+    {
+      "code": "02503",
+      "name": "風間浦村",
+      "pullRequestNumber": 975,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T03:13:00+09:00"
+    },
+    {
+      "code": "02504",
+      "name": "佐井村",
+      "pullRequestNumber": 989,
+      "ciStatus": "success",
+      "mergedAt": "2026-07-23T03:51:00+09:00"
+    }
+  ],
+  "blocked": [],
+  "nextAction": "PR #1004の変更範囲・競合・CIを確認し、成功後にregion/northへ統合する。"
+}
