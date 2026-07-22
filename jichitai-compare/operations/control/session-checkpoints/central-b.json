@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-23T05:55:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T06:04:00+09:00",
+  "status": "working",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 61,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "29210", "municipalityName": "香芝市"},
+  "workingBranch": "data/29210-kashiba",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"municipalityCode":"26100","municipalityName":"京都市","pullRequestNumber":840,"ciRunNumber":1761,"completedAt":"2026-07-22T22:14:00+09:00"},
     {"municipalityCode":"26201","municipalityName":"福知山市","pullRequestNumber":847,"ciRunNumber":1804,"completedAt":"2026-07-22T22:24:00+09:00"},
@@ -50,5 +50,5 @@
     {"municipalityCode":"29209","municipalityName":"生駒市","pullRequestNumber":994,"ciRunNumber":2463,"completedAt":"2026-07-23T05:55:00+09:00"}
   ],
   "blocked": [],
-  "nextAction": "香芝市（29210）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "香芝市（29210）の3ファイル差分を検証し、地方統合PRを作成してCIを確認する。"
 }
