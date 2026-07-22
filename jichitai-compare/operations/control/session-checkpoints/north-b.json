@@ -10,19 +10,23 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-22T23:13:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T23:39:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 104,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {
+    "code": "04205",
+    "name": "気仙沼市",
+    "stage": "researching"
+  },
+  "workingBranch": "data/04205-kesennuma",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     "04100",
     "04202",
     "04203"
   ],
   "blocked": [],
-  "nextAction": "気仙沼市（04205）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "気仙沼市の市公式情報を基に必須9制度の自治体JSONとtaskを作成し、3ファイル差分を検証してregion/north向けPRを作成する。"
 }
