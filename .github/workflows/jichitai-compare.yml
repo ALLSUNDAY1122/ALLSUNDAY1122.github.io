@@ -1,4 +1,4 @@
-name: Fix Setouchi Temporary Childcare Eligibility
+name: Diagnose Setouchi Validation
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  fix-setouchi:
+  diagnose-setouchi:
     if: github.head_ref == 'data/33212-setouchi-v2'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -25,31 +25,31 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Add required age eligibility
+      - name: Patch eligibility and capture validation output
         working-directory: jichitai-compare
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const path = 'data/municipalities/33/33212.json';
           const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-          data.services.temporaryChildcare.eligibility = {
-            minAgeMonths: 0,
-            maxAgeYears: 5
-          };
+          data.services.temporaryChildcare.eligibility = { minAgeMonths: 0, maxAgeYears: 5 };
           data.services.temporaryChildcare.details.target = '未就学児を中心に、保護者の傷病、就労、負担軽減等で一時的な保育が必要な子ども。受入年齢・条件は施設ごとに異なるため利用先へ確認';
           fs.writeFileSync(path, JSON.stringify(data) + '\n');
           NODE
           npm run generate
           npm run progress
-          npm run validate:generated
-          npm run validate:sessions
+          set +e
+          npm run validate:generated > operations/diagnostic-862.log 2>&1
+          echo "exitCode=$?" >> operations/diagnostic-862.log
+          set -e
 
-      - name: Restore standard workflow and commit fix
+      - name: Restore workflow and commit diagnostic
         run: |
+          git fetch origin +refs/heads/region/west:refs/remotes/origin/region/west
           git restore jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
-          git show HEAD^:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+          git show origin/region/west:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare/data/municipalities/33/33212.json
-          git commit -m 'Fix Setouchi temporary childcare eligibility range'
+          git add .github/workflows/jichitai-compare.yml jichitai-compare/data/municipalities/33/33212.json jichitai-compare/operations/diagnostic-862.log
+          git commit -m 'Capture Setouchi validation diagnostics'
           git push origin HEAD:data/33212-setouchi-v2
