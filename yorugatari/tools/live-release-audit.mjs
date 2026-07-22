@@ -1,0 +1,70 @@
+import fs from 'node:fs';
+
+const base = 'https://allsunday1122.github.io/yorugatari';
+const attempts = 24;
+const delayMilliseconds = 5000;
+const targets = [
+  { name: 'top', url: `${base}/`, required: ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-007', 'assets/analytics.js?v=20260723-002'], forbidden: [] },
+  { name: 'archive', url: `${base}/archive.html`, required: ['全100話アーカイブ', '"numberOfItems":100', 'assets/archive.js?v=20260723-004', 'assets/analytics.js?v=20260723-002'], forbidden: [] },
+  { name: 'story-001', url: `${base}/stories/last-elevator.html`, required: ['YGT-001', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
+  { name: 'story-032', url: `${base}/stories/spare-key-returned.html`, required: ['YGT-032', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
+  { name: 'story-100', url: `${base}/stories/hired-with-your-experience.html`, required: ['YGT-100', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
+  { name: 'story-js', url: `${base}/assets/story.js?v=20260723-007`, required: ['function normalizeBasicPage()', 'function ensureNavigationFallback()', "ensurePropertyMeta('og:image:width', '2172');"], forbidden: ['catalogSources', 'loadCatalogScript', 'buildStoryPagination'] },
+  { name: 'engagement-js', url: `${base}/assets/engagement.js?v=20260723-003`, required: ['relatedReady: document.querySelectorAll', 'function scheduleAnalytics()'], forbidden: ['installRelatedStories', 'buildRelatedStories'] }
+];
+
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+async function inspect(target, attempt) {
+  try {
+    const separator = target.url.includes('?') ? '&' : '?';
+    const response = await fetch(`${target.url}${separator}verify=${Date.now()}-${attempt}`, {
+      redirect: 'follow',
+      headers: {
+        'cache-control': 'no-cache, no-store, max-age=0',
+        pragma: 'no-cache',
+        'user-agent': 'Yorugatari-Live-Check/1.6'
+      }
+    });
+    const text = await response.text();
+    const missingTokens = target.required.filter((token) => !text.includes(token));
+    const forbiddenTokens = target.forbidden.filter((token) => text.includes(token));
+    return {
+      name: target.name,
+      status: response.status,
+      finalUrl: response.url,
+      bytes: Buffer.byteLength(text),
+      missingTokens,
+      forbiddenTokens,
+      ok: response.status === 200 && missingTokens.length === 0 && forbiddenTokens.length === 0
+    };
+  } catch (error) {
+    return {
+      name: target.name,
+      status: null,
+      bytes: 0,
+      missingTokens: target.required,
+      forbiddenTokens: [],
+      error: error instanceof Error ? error.message : String(error),
+      ok: false
+    };
+  }
+}
+
+let report = null;
+for (let attempt = 1; attempt <= attempts; attempt += 1) {
+  const results = await Promise.all(targets.map((target) => inspect(target, attempt)));
+  report = {
+    verifiedAt: new Date().toISOString(),
+    attempt,
+    baseUrl: base,
+    success: results.every((result) => result.ok),
+    results
+  };
+  console.log(`YORUGATARI_LIVE_ATTEMPT=${JSON.stringify(report)}`);
+  if (report.success) break;
+  if (attempt < attempts) await sleep(delayMilliseconds);
+}
+
+fs.writeFileSync('yorugatari-live-report.json', `${JSON.stringify(report, null, 2)}\n`);
+if (!report?.success) process.exit(1);
