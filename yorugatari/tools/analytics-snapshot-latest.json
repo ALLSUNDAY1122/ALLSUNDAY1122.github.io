@@ -1,27 +1,76 @@
 {
-  "generatedAt": "2026-07-22T22:01:45.292Z",
+  "generatedAt": "2026-07-22T22:42:04.968Z",
   "success": true,
   "definitions": {
     "pageViews": "Page Views APIが30分単位で重複を除いた累計値",
     "sourceViews": "外部からの初回訪問時に1セッション1回だけ送信する粗い流入区分",
-    "privacy": "参照元URL、検索語、UTMの具体値は保存しない"
+    "privacy": "参照元URL、検索語、UTMの具体値は保存しない",
+    "readiness": "作品順位は100作品閲覧・20作品以上の閲覧・7日分の観測が揃うまで変更しない"
   },
   "coverage": {
     "sitemapUrls": 106,
     "trackedPages": 107,
     "stories": 100,
-    "sourceChannels": 5
+    "sourceChannels": 5,
+    "observedDays": 1
   },
   "totals": {
-    "pageViews": 43,
-    "storyViews": 26,
-    "sourceLandingViews": 8,
+    "pageViews": 49,
+    "storyViews": 28,
+    "sourceLandingViews": 10,
     "notFoundViews": 0
+  },
+  "analysis": {
+    "japanDate": "2026-07-23",
+    "deltasFromPreviousRun": {
+      "previousGeneratedAt": "2026-07-22T22:01:45.292Z",
+      "pageViews": 6,
+      "storyViews": 2,
+      "sourceLandingViews": 2,
+      "notFoundViews": 0
+    },
+    "deltasFromPreviousDay": {
+      "previousDate": null,
+      "pageViews": null,
+      "storyViews": null,
+      "sourceLandingViews": null,
+      "notFoundViews": null
+    },
+    "metrics": {
+      "storyViewShare": 57.1,
+      "activeStories": 22,
+      "activeStoryRate": 22,
+      "topStoryShare": 25,
+      "externalSourceViews": 0,
+      "directSourceShare": 100,
+      "notFoundRate": 0
+    },
+    "dataReadiness": {
+      "status": "collecting",
+      "rankingReady": false,
+      "acquisitionReady": false,
+      "thresholds": {
+        "rankingStoryViews": 100,
+        "rankingActiveStories": 20,
+        "rankingDays": 7,
+        "acquisitionSourceLandings": 30
+      },
+      "reasons": [
+        "作品閲覧が100件未満のため、人気順位は偶然の影響が大きいです。",
+        "日次データが7日分未満です。",
+        "流入区分の記録が30件未満です。"
+      ]
+    },
+    "actions": [
+      "作品の並び順や「人気」表示は変更せず、データ収集を継続する。",
+      "検索・SNS・外部参照の流入がまだ0件のため、まず外部から1件でも到達する導線を作る。",
+      "404は0件のため、リンク修正より新規流入獲得を優先する。"
+    ]
   },
   "sources": [
     {
       "channel": "direct",
-      "views": 8
+      "views": 10
     },
     {
       "channel": "search",
@@ -45,7 +94,7 @@
       "path": "/yorugatari/stories/spare-key-returned.html",
       "title": "合鍵は返却済み｜夜語り",
       "type": "story",
-      "views": 5
+      "views": 7
     },
     {
       "path": "/yorugatari/stories/deceased-answered-that-way.html",
@@ -167,13 +216,13 @@
       "path": "/yorugatari",
       "title": "夜語り｜無料で読めるオリジナル怖い話100選",
       "type": "page",
-      "views": 9
+      "views": 11
     },
     {
       "path": "/yorugatari/archive.html",
       "title": "全100話アーカイブ｜夜語り",
       "type": "page",
-      "views": 8
+      "views": 10
     },
     {
       "path": "/yorugatari/about.html",
@@ -389,7 +438,7 @@
       "path": "/yorugatari/stories/spare-key-returned.html",
       "title": "合鍵は返却済み｜夜語り",
       "type": "story",
-      "views": 5
+      "views": 7
     },
     {
       "path": "/yorugatari/stories/source-device.html",
