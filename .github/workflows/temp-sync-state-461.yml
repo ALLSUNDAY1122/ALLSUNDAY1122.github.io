@@ -1,4 +1,4 @@
-name: Temporary Sync State 461
+name: Temporary Sync State 461 Trigger
 
 on:
   push:
@@ -38,11 +38,9 @@ jobs:
           rq_path=Path('jichitai-compare/operations/control/release-queue.json')
           rq=json.loads(rq_path.read_text(encoding='utf-8'))
           entries={e['region']:e for e in rq['entries']}
-          states={}
           for region in regions:
               ref=f'origin/region/{region}'
               state=json.loads(show(ref,f'jichitai-compare/operations/control/regions/{region}.json'))
-              states[region]=state
               names=subprocess.check_output(['git','ls-tree','-r','--name-only',ref,'jichitai-compare/data/municipalities'],text=True).splitlines()
               municipalities=[]
               for path in names:
