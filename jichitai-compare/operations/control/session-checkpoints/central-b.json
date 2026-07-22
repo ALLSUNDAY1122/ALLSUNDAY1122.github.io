@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T22:31:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-22T22:33:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 93,
-  "currentMunicipality": {"municipalityCode": "26202", "municipalityName": "舞鶴市"},
-  "workingBranch": "data/26202-maizuru",
-  "pullRequestNumber": 852,
-  "ciStatus": "pending",
+  "remainingUninvestigatedCount": 92,
+  "currentMunicipality": null,
+  "workingBranch": null,
+  "pullRequestNumber": null,
+  "ciStatus": "success",
   "completedSinceSplit": [
     {
       "municipalityCode": "26100",
@@ -27,8 +27,15 @@
       "pullRequestNumber": 847,
       "ciRunNumber": 1804,
       "completedAt": "2026-07-22T22:24:00+09:00"
+    },
+    {
+      "municipalityCode": "26202",
+      "municipalityName": "舞鶴市",
+      "pullRequestNumber": 852,
+      "ciRunNumber": 1824,
+      "completedAt": "2026-07-22T22:33:00+09:00"
     }
   ],
   "blocked": [],
-  "nextAction": "PR #852のCI結果を確認し、成功・競合なしならregion/centralへ地方統合する。"
+  "nextAction": "綾部市（26203）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
 }
