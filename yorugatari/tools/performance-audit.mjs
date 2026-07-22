@@ -78,7 +78,7 @@ async function waitForPublishedRelease() {
         attempt,
         topStatus: topResponse.status,
         archiveStatus: archiveResponse.status,
-        topOptimization: topHtml.includes('contain-intrinsic-size:auto 275px'),
+        topOptimization: topHtml.includes('.card:nth-child(n+9)'),
         archiveOptimization: archiveHtml.includes('contain-intrinsic-size:auto 1600px')
       };
       if (topResponse.ok && archiveResponse.ok && detail.topOptimization && detail.archiveOptimization) {
