@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - robots.txt
+      - 173baadd8bd18212cc1286c5ae612fce.txt
       - yorugatari/index.html
       - yorugatari/archive.html
       - yorugatari/about.html
@@ -19,6 +20,7 @@ on:
       - yorugatari/tools/normalize-story-pages.mjs
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/seo-audit.mjs
+      - yorugatari/tools/submit-indexnow.mjs
       - .github/workflows/yorugatari-seo-audit.yml
 
 concurrency:
@@ -31,7 +33,7 @@ permissions:
 jobs:
   seo-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -81,12 +83,19 @@ jobs:
           done
           exit "$status"
 
-      - name: Preserve SEO report
+      - name: Submit URLs through IndexNow
+        id: indexnow
+        continue-on-error: true
+        run: node yorugatari/tools/submit-indexnow.mjs
+
+      - name: Preserve SEO reports
         if: always()
         shell: bash
         run: |
           test -f yorugatari-seo-report.json
+          test -f yorugatari-indexnow-report.json
           cp yorugatari-seo-report.json /tmp/yorugatari-seo-report.json
+          cp yorugatari-indexnow-report.json /tmp/yorugatari-indexnow-report.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           saved=false
@@ -94,12 +103,13 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/yorugatari-seo-report.json yorugatari/tools/seo-audit-latest.json
-            git add yorugatari/tools/seo-audit-latest.json
+            cp /tmp/yorugatari-indexnow-report.json yorugatari/tools/indexnow-latest.json
+            git add yorugatari/tools/seo-audit-latest.json yorugatari/tools/indexnow-latest.json
             if git diff --cached --quiet; then
               saved=true
               break
             fi
-            git commit -m "Record Yorugatari SEO audit [skip ci]"
+            git commit -m "Record Yorugatari search discovery audit [skip ci]"
             if git push; then
               saved=true
               break
@@ -108,15 +118,20 @@ jobs:
           done
           test "$saved" = true
 
-      - name: Upload SEO report
+      - name: Upload search discovery reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: yorugatari-seo-report
-          path: yorugatari-seo-report.json
+          name: yorugatari-search-discovery-reports
+          path: |
+            yorugatari-seo-report.json
+            yorugatari-indexnow-report.json
           if-no-files-found: error
           retention-days: 14
 
-      - name: Enforce published SEO result
+      - name: Enforce search discovery result
         if: always()
-        run: test "${{ steps.live.outcome }}" = "success"
+        shell: bash
+        run: |
+          test "${{ steps.live.outcome }}" = "success"
+          test "${{ steps.indexnow.outcome }}" = "success"
