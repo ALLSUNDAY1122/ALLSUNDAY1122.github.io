@@ -1,0 +1,217 @@
+name: Temporary Final State 454 459
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-final-state-454-459.yml
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/final-state-454-459-20260722-1616
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Reconcile control state
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json
+          import re
+          import subprocess
+          from pathlib import Path
+
+          ts = '2026-07-22T16:15:22+09:00'
+          root = 'jichitai-compare'
+          base = 'eeaa38ada7ffc8efc133e5ffe6fc646c9d0ea8b7'
+          refs = {
+              'north': '09c386eb1818ca8c7aa6cf563120f4326042f312',
+              'east': 'c6ef6a2473eabc25bf5cd62cc0086d4a6a7dd900',
+              'central': 'd5250f374213fc6eee664c1289356be7aa786274',
+              'west': '75b40636e1ac2c6b10b4eec119d5b371d6250d63',
+          }
+          predicates = {
+              'north': lambda p: 1 <= p <= 7,
+              'east': lambda p: 8 <= p <= 15 or p in (19, 20),
+              'central': lambda p: 16 <= p <= 18 or 21 <= p <= 30,
+              'west': lambda p: 31 <= p <= 47,
+          }
+          integration_pr = {'north': 717, 'east': 708, 'central': 709, 'west': 716}
+
+          def paths_at(ref):
+              out = subprocess.check_output(
+                  ['git', 'ls-tree', '-r', '--name-only', ref, f'{root}/data/municipalities'],
+                  text=True,
+              )
+              return [p for p in out.splitlines() if re.fullmatch(rf'{root}/data/municipalities/\d{{2}}/\d{{5}}\.json', p)]
+
+          main_codes = {Path(p).stem for p in paths_at(base)}
+          region_rows = {}
+          pending = {}
+          for region, ref in refs.items():
+              rows = []
+              for path in paths_at(ref):
+                  code = Path(path).stem
+                  pref = int(code[:2])
+                  if not predicates[region](pref):
+                      continue
+                  data = json.loads(subprocess.check_output(['git', 'show', f'{ref}:{path}'], text=True))
+                  rows.append({'code': code, 'name': data['name']})
+              rows.sort(key=lambda row: row['code'])
+              region_rows[region] = rows
+              pending[region] = [row for row in rows if row['code'] not in main_codes]
+
+          counts = {region: len(rows) for region, rows in region_rows.items()}
+          pending_counts = {region: len(rows) for region, rows in pending.items()}
+          regional_total = sum(counts.values())
+          pending_total = sum(pending_counts.values())
+          assert len(main_codes) == 454
+          assert counts == {'north': 162, 'east': 71, 'central': 185, 'west': 41}
+          assert pending_counts == {'north': 0, 'east': 1, 'central': 4, 'west': 0}
+          assert regional_total == 459 and pending_total == 5
+
+          global_path = Path(f'{root}/operations/control/global-state.json')
+          global_state = json.loads(global_path.read_text(encoding='utf-8'))
+          global_state.update({
+              'updatedAt': ts,
+              'phase': 'release-monitoring',
+              'regionalCompletedSinceLastRelease': {
+                  'north': 0, 'east': 1, 'central': 4, 'west': 0, 'total': 5
+              },
+              'priority': {
+                  'type': 'release-monitoring',
+                  'nextAction': 'central_remaining_6'
+              },
+              'lastNationalIntegrationAt': '2026-07-22T16:08:48+09:00',
+              'lastNationalIntegrationPr': 717,
+              'latestGeneratedMunicipalityCount': 454,
+              'latestGeneratedPullRequest': 720,
+              'latestPublicCountPullRequest': 720,
+              'regionalMergedMunicipalities': 459,
+              'openPullRequests': [],
+              'humanDecisionRequired': False,
+          })
+          global_path.write_text(
+              json.dumps(global_state, ensure_ascii=False, separators=(',', ':')) + '\n',
+              encoding='utf-8',
+          )
+
+          queue_path = Path(f'{root}/operations/control/release-queue.json')
+          queue = json.loads(queue_path.read_text(encoding='utf-8'))
+          queue['updatedAt'] = ts
+          queue['status'] = 'active'
+          for entry in queue['entries']:
+              region = entry['region']
+              n = pending_counts[region]
+              entry.update({
+                  'municipalities': region_rows[region],
+                  'count': counts[region],
+                  'pendingSinceLastRelease': n,
+                  'releaseStatus': 'up_to_date' if n == 0 else 'pending_threshold',
+                  'reason': f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{n}自治体',
+                  'mainIntegrationPr': integration_pr[region],
+                  'generatedPullRequest': 720,
+                  'auditStatus': 'passed',
+              })
+          queue['summary'] = {
+              'regionalMergedMunicipalities': 459,
+              'latestGeneratedMunicipalityCount': 454,
+              'latestGeneratedPullRequest': 720,
+              'latestPublicCountPullRequest': 720,
+              'releaseReadyRegions': [],
+              'nextAction': '中日本4、東日本1。10自治体到達地域を優先統合する。',
+          }
+          queue['nextAction'] = '地方統合を継続。現在の公開後繰越: north 0、east 1、central 4、west 0。'
+          queue['humanDecisionRequired'] = False
+          queue_path.write_text(
+              json.dumps(queue, ensure_ascii=False, separators=(',', ':')) + '\n',
+              encoding='utf-8',
+          )
+
+          audit_path = Path(f'{root}/operations/control/audit-log.jsonl')
+          record = {
+              'timestamp': ts,
+              'actor': '全国進行統括',
+              'action': 'coordinator-final-reconciliation-454',
+              'details': {
+                  'publicMunicipalityCount': 454,
+                  'publicServices': 4086,
+                  'completionRatePercent': 100,
+                  'needsMediumReviewServices': 0,
+                  'stalledMunicipalities': 0,
+                  'regionalCounts': counts,
+                  'regionalMergedMunicipalities': 459,
+                  'pendingSinceLatestNationalIntegration': {
+                      **pending_counts,
+                      'total': pending_total,
+                  },
+                  'pendingMunicipalities': pending,
+                  'nationalIntegrations': {
+                      'east': 708,
+                      'central': 709,
+                      'west': 716,
+                      'north': 717,
+                  },
+                  'publication': {
+                      'pullRequest': 720,
+                      'municipalityCount': 454,
+                      'services': 4086,
+                  },
+                  'sapporoReviewResolution': {
+                      'regionalPullRequest': 698,
+                      'mainPullRequest': 699,
+                      'remainingBlockers': 0,
+                  },
+                  'managementCleanup': {
+                      'statePullRequest': 694,
+                      'obsoleteWorkflowPullRequest': 697,
+                      'duplicatePublicationPullRequestClosed': 721,
+                  },
+                  'openMunicipalityPullRequests': 0,
+                  'ignoredUnrelatedOpenPullRequests': [549],
+                  'openExceptions': 0,
+              },
+              'humanDecisionRequired': False,
+          }
+          text = audit_path.read_text(encoding='utf-8')
+          if text and not text.endswith('\n'):
+              text += '\n'
+          audit_path.write_text(text + json.dumps(record, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+          changed="$(git status --short | awk '{print $2}' | sort)"
+          expected="$(printf '%s\n' \
+            jichitai-compare/operations/control/audit-log.jsonl \
+            jichitai-compare/operations/control/global-state.json \
+            jichitai-compare/operations/control/release-queue.json | sort)"
+          test "$changed" = "$expected"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/audit-log.jsonl jichitai-compare/operations/control/global-state.json jichitai-compare/operations/control/release-queue.json
+          git commit -m '統括管理: 公開454・地方統合459へ最終同期'
+          git push origin coord/final-state-454-459-20260722-1616
+      - name: Remove temporary workflow
+        if: always()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin main
+          git checkout -B main origin/main
+          if [ -f .github/workflows/temp-final-state-454-459.yml ]; then
+            git rm .github/workflows/temp-final-state-454-459.yml
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m '統括管理: 最終状態同期一時ワークフローを削除'
+            git push origin main
+          fi
