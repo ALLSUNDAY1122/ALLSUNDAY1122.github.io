@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T23:58:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T00:03:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 84,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "26211", "municipalityName": "京田辺市"},
+  "workingBranch": "data/26211-kyotanabe",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"municipalityCode":"26100","municipalityName":"京都市","pullRequestNumber":840,"ciRunNumber":1761,"completedAt":"2026-07-22T22:14:00+09:00"},
     {"municipalityCode":"26201","municipalityName":"福知山市","pullRequestNumber":847,"ciRunNumber":1804,"completedAt":"2026-07-22T22:24:00+09:00"},
@@ -27,5 +27,5 @@
     {"municipalityCode":"26210","municipalityName":"八幡市","pullRequestNumber":896,"ciRunNumber":2030,"completedAt":"2026-07-22T23:58:00+09:00"}
   ],
   "blocked": [],
-  "nextAction": "京田辺市（26211）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "京田辺市（26211）のPRをregion/central向けに作成し、CI成功後に地方統合する。"
 }
