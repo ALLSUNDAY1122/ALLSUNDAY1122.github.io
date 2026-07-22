@@ -10,6 +10,10 @@ on:
       - yorugatari/tools/ui-audit.cjs
       - .github/workflows/normalize-yorugatari-stories.yml
 
+concurrency:
+  group: yorugatari-normalize-ui
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -73,7 +77,7 @@ jobs:
           node <<'NODE'
           const base = 'https://allsunday1122.github.io/yorugatari';
           const targets = [
-            ['top', `${base}/`, ['オリジナル怖い話100作品', 'class="skip-link"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-005']],
+            ['top', `${base}/`, ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-006']],
             ['archive', `${base}/archive.html`, ['全100話アーカイブ', '"numberOfItems":100', 'assets/archive.js?v=20260723-004']],
             ['story-001', `${base}/stories/last-elevator.html`, ['YGT-001', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
             ['story-032', `${base}/stories/spare-key-returned.html`, ['YGT-032', '"timeRequired":"PT5M"', 'class="breadcrumb"', '../assets/story.js?v=20260723-006']],
@@ -87,7 +91,7 @@ jobs:
               const separator = url.includes('?') ? '&' : '?';
               const response = await fetch(`${url}${separator}verify=${Date.now()}`, {
                 redirect: 'follow',
-                headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-Live-Check/1.0' }
+                headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-Live-Check/1.1' }
               });
               const text = await response.text();
               const missingTokens = tokens.filter((token) => !text.includes(token));
@@ -144,14 +148,17 @@ jobs:
         if: always()
         shell: bash
         run: |
-          cp yorugatari-ui-report.json yorugatari/tools/ui-audit-latest.json
+          test -f yorugatari-ui-report.json
+          cp yorugatari-ui-report.json /tmp/yorugatari-ui-report.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/yorugatari-ui-report.json yorugatari/tools/ui-audit-latest.json
           git add yorugatari/tools/ui-audit-latest.json
           if ! git diff --cached --quiet; then
             git commit -m "Record Yorugatari UI audit [skip ci]"
-            git pull --rebase origin main
-            git push
+            git push origin HEAD:main
           fi
 
       - name: Upload UI audit report
@@ -166,4 +173,5 @@ jobs:
       - name: Enforce UI audit result
         if: always()
         shell: bash
-        run: test "${{ steps.audit.outcome }}" = "success"
+        run: |
+          node -e "const report=require('./yorugatari-ui-report.json'); if(!report.success){console.error(JSON.stringify(report.failures,null,2)); process.exit(1)}"
