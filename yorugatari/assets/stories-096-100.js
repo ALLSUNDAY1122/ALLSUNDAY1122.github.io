@@ -6,7 +6,7 @@ window.STORIES.push(
     "category": "都市伝説風",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "深夜の無人精米機が返す余分な一合を三度食卓へ出すと、死者が戻り、米を研いだ人が次の一合になる。",
     "tags": ["無人精米機", "余った一合", "家族の食卓", "午前二時二十二分"]
   },
@@ -16,7 +16,7 @@ window.STORIES.push(
     "category": "心霊",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "閉鎖するスケートリンクの未完周回を七周目まで滑ると、死者が出口へ届き、追った人が氷の下へ残る。",
     "tags": ["スケートリンク", "整氷車", "白い溝", "七周目"]
   },
@@ -26,7 +26,7 @@ window.STORIES.push(
     "category": "人怖",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "制服レンタル会社は社員の本物の作業服と身体痕跡を侵入者へ貸し、元の所有者へ犯行証拠を集中させていた。",
     "tags": ["作業服", "RFID", "制服レンタル", "証拠転嫁"]
   },
@@ -36,7 +36,7 @@ window.STORIES.push(
     "category": "ネット怪談",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "削除済みアカウントの八つの復旧要素は、別々の利用者の顔・声・住所・生活履歴から回収されていた。",
     "tags": ["アカウント復旧", "バックアップコード", "本人確認", "削除ユーザー"]
   },
@@ -46,7 +46,7 @@ window.STORIES.push(
     "category": "後味悪い",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "不採用者の実体験は採用されやすい別人へ提供され、先に採用された人物がその経歴の正規所有者になる。",
     "tags": ["就職支援", "面接練習", "経験共有", "採用"]
   }
