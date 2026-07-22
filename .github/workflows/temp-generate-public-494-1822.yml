@@ -1,0 +1,74 @@
+name: Temporary generate public 494 1822
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-public-494-1822.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate public data
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin +refs/heads/main:refs/remotes/origin/main
+          git checkout -B coord/generated-494-20260722-1822 origin/main
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          progress=json.loads(Path('operations/progress.json').read_text(encoding='utf-8'))
+          count=progress['registeredMunicipalities']
+          assert count == 494, count
+          assert progress['totalServices'] == 4446, progress['totalServices']
+          assert progress['completedServices'] == 4446, progress['completedServices']
+          assert progress['prOpenMunicipalities'] == 0, progress['prOpenMunicipalities']
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+          text=re.sub(r'\d+自治体・9制度',f'{count}自治体・9制度',text)
+          text=re.sub(r'登録状況：\d+自治体の生成データを公開中',f'登録状況：{count}自治体の生成データを公開中',text)
+          path.write_text(text,encoding='utf-8')
+          PY
+          npm run validate:generated
+          cd ..
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          expected=(
+            jichitai-compare/data/generated/municipalities.json
+            jichitai-compare/index.html
+            jichitai-compare/operations/progress.json
+          )
+          test "${#changed[@]}" -eq 3
+          test "$(printf '%s\n' "${changed[@]}" | sort)" = "$(printf '%s\n' "${expected[@]}" | sort)"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "${expected[@]}"
+          git commit -m '公開更新: 生成データと表示件数を494自治体へ同期'
+          git push --force origin HEAD:coord/generated-494-20260722-1822
+      - name: Remove temporary workflow
+        if: always()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin +refs/heads/main:refs/remotes/origin/main
+          git checkout -B main origin/main
+          if [ -f .github/workflows/temp-generate-public-494-1822.yml ]; then
+            git rm .github/workflows/temp-generate-public-494-1822.yml
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git commit -m '統括管理: 公開494生成一時ワークフローを削除'
+            git push origin HEAD:main
+          fi
