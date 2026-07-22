@@ -27,6 +27,31 @@ function compactViolation(violation) {
   };
 }
 
+async function openWithRetry(page, path, selector, readiness, name, attempts = 10) {
+  let detail = null;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const separator = path.includes('?') ? '&' : '?';
+      await page.goto(`${base}${path}${separator}audit=${Date.now()}-${attempt}`, {
+        waitUntil: 'networkidle',
+        timeout: 60000
+      });
+      await page.waitForSelector(selector, { timeout: 20000 });
+      const state = readiness ? await readiness(page) : { ready: true };
+      detail = { attempt, ...state };
+      if (Object.values(state).every(Boolean)) {
+        record(`${name}: published page loaded`, true, detail);
+        return true;
+      }
+    } catch (error) {
+      detail = { attempt, error: error.message };
+    }
+    if (attempt < attempts) await sleep(5000);
+  }
+  record(`${name}: published page loaded`, false, detail);
+  return false;
+}
+
 async function auditAxe(page, name) {
   const scan = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -50,7 +75,6 @@ async function auditDocumentStructure(page, name) {
       lang: document.documentElement.lang,
       title: document.title,
       h1Count: document.querySelectorAll('h1').length,
-      headings,
       skipped,
       unnamedButtons: Array.from(document.querySelectorAll('button')).filter((button) => !(button.innerText.trim() || button.getAttribute('aria-label'))).length,
       unnamedLinks: Array.from(document.querySelectorAll('a[href]')).filter((link) => !(link.innerText.trim() || link.getAttribute('aria-label'))).length,
@@ -67,7 +91,10 @@ async function auditDocumentStructure(page, name) {
 }
 
 async function auditSkipLink(page, name) {
-  await page.keyboard.press('Home');
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  });
   await page.keyboard.press('Tab');
   const focused = await page.evaluate(() => {
     const element = document.activeElement;
@@ -111,28 +138,22 @@ async function auditFocusIndicator(page, selector, name) {
   record(`${name}: keyboard focus indicator is visible`, visible, focus);
 }
 
-async function openPublishedTop(page) {
-  let state = null;
-  for (let attempt = 1; attempt <= 12; attempt += 1) {
-    await page.goto(`${base}/?a11y=${Date.now()}-${attempt}`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('.card');
-    state = await page.evaluate(() => ({
+async function auditTop(page) {
+  const loaded = await openWithRetry(
+    page,
+    '/',
+    '.card',
+    async (targetPage) => targetPage.evaluate(() => ({
       skipLink: Boolean(document.querySelector('a.skip-link[href="#main-content"]')),
       mainTarget: Boolean(document.querySelector('main#main-content[tabindex="-1"]')),
       progressbar: Boolean(document.querySelector('.reader-meter[role="progressbar"][aria-valuemin="0"][aria-valuemax="100"][aria-valuenow]')),
       appVersion: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-005'))
-    }));
-    if (Object.values(state).every(Boolean)) {
-      record('top: latest accessibility release is published', true, { attempt, ...state });
-      return;
-    }
-    if (attempt < 12) await sleep(10000);
-  }
-  record('top: latest accessibility release is published', false, state);
-}
+    })),
+    'top',
+    12
+  );
+  if (!loaded) return;
 
-async function auditTop(page) {
-  await openPublishedTop(page);
   await auditAxe(page, 'top');
   await auditDocumentStructure(page, 'top');
   await auditSkipLink(page, 'top');
@@ -151,8 +172,8 @@ async function auditTop(page) {
 }
 
 async function auditArchive(page) {
-  await page.goto(`${base}/archive.html?a11y=${Date.now()}`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('.archive-item');
+  const loaded = await openWithRetry(page, '/archive.html', '.archive-item', null, 'archive', 6);
+  if (!loaded) return;
   await auditAxe(page, 'archive');
   await auditDocumentStructure(page, 'archive');
   await auditSkipLink(page, 'archive');
@@ -160,8 +181,8 @@ async function auditArchive(page) {
 }
 
 async function auditStory(page) {
-  await page.goto(`${base}/stories/spare-key-returned.html?a11y=${Date.now()}`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('.story-pagination');
+  const loaded = await openWithRetry(page, '/stories/spare-key-returned.html', '.story-pagination', null, 'story', 6);
+  if (!loaded) return;
   await auditAxe(page, 'story');
   await auditDocumentStructure(page, 'story');
   await auditSkipLink(page, 'story');
@@ -182,7 +203,7 @@ async function auditStory(page) {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Accessibility-Audit/1.0'
+    userAgent: 'Yorugatari-Accessibility-Audit/1.1'
   });
   const page = await context.newPage();
   const browserErrors = [];
