@@ -79,7 +79,7 @@ jobs:
           const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
           for (let attempt = 1; attempt <= 18; attempt += 1) {
             try {
-              const headers = { 'cache-control': 'no-cache', pragma: 'no-cache', 'user-agent': 'Yorugatari-Release-Wait/1.1' };
+              const headers = { 'cache-control': 'no-cache', pragma: 'no-cache', 'user-agent': 'Yorugatari-Release-Wait/1.2' };
               const [storyResponse, topResponse] = await Promise.all([
                 fetch(`${storyUrl}?release=${Date.now()}-${attempt}`, { headers }),
                 fetch(`${topUrl}?release=${Date.now()}-${attempt}`, { headers })
@@ -88,9 +88,9 @@ jobs:
               const ready = storyResponse.status === 200 && topResponse.status === 200 &&
                 storyText.includes('property="og:image:width" content="2172"') &&
                 storyText.includes('property="og:image:height" content="724"') &&
-                storyText.includes('../assets/engagement.js?v=20260723-001') &&
+                storyText.includes('../assets/engagement.js?v=20260723-002') &&
                 !storyText.includes('../assets/analytics.js') &&
-                topText.includes('assets/analytics.js?v=20260723-001') &&
+                topText.includes('assets/analytics.js?v=20260723-002') &&
                 !topText.includes('assets/engagement.js');
               console.log(JSON.stringify({ attempt, storyStatus: storyResponse.status, topStatus: topResponse.status, ready }));
               if (ready) process.exit(0);
