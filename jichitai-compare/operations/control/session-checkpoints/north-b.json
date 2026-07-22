@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T00:17:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T00:43:00+09:00",
+  "status": "ready_for_review",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 102,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {
+    "code": "04207",
+    "name": "名取市",
+    "stage": "ready_for_review"
+  },
+  "workingBranch": "data/04207-natori",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -26,5 +30,5 @@
     "04206"
   ],
   "blocked": [],
-  "nextAction": "名取市（04207）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "名取市の3ファイル差分を検証し、region/north向けPRを作成してCI成功後に地方統合する。"
 }
