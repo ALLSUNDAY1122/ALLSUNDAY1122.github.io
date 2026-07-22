@@ -1,0 +1,227 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03201",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "盛岡市",
+  "officialUrl": "https://www.city.morioka.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を盛岡市公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生相当年齢まで、所得制限なしで保険診療の自己負担額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "乳幼児・小学生・中学生・高校生等医療費給付",
+        "target": "0歳から高校生相当年齢まで",
+        "incomeLimit": "なし",
+        "coverage": "保険診療の一部負担金の全額または一部",
+        "taxableHouseholdCopay": "高校生等はレセプトごとに外来750円、入院2,500円",
+        "nonTaxableHouseholdCopay": "なし",
+        "payment": "岩手県内は受給者証提示による現物給付、県外は償還払い"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kenkou/kaigoiryo/iryohikyufu/1041583.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.morioka.iwate.jp/kenkou/kaigoiryo/iryohikyufu/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "0歳児から小学6年生までを対象に、病気の治療中または回復期の児童を一時的に預かる。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "program": "病児保育",
+        "target": "盛岡市・滝沢市・矢巾町在住の0歳児から小学6年生",
+        "fee": "1日2,200円",
+        "feeExemption": "生活保護世帯、市民税非課税のひとり親・障がい者世帯等は無料の場合あり",
+        "reservation": "各施設へ事前予約",
+        "facilities": "たんぽぽ病児保育所、虹っ子ケアルーム、病児保育室フレンズ等",
+        "note": "病児保育室ままぽけっとは令和8年3月31日で廃止"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kosodate/boshikatei_shien/1041301.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等の国制度による無償化に加え、0～2歳児の第2子以降の保育料を所得制限なしで無償化する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "feeCalculation": "0～2歳児の第1子は父母等の市町村民税所得割額に応じて算定",
+        "citySupport": "世帯の第2子以降は、最年長児の年齢やきょうだいの施設利用を問わず保育料無料",
+        "incomeRequirement": "第2子以降の無償化は所得要件なし",
+        "nationalSupport": "3歳クラスから5歳クラスは幼児教育・保育の無償化対象",
+        "nonLicensedSupport": "認可外保育施設の第2子以降保育料や3～5歳児副食費も要件により助成"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kosodate/kodomo_azukeru/1053010.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.morioka.iwate.jp/kosodate/kodomo_azukeru/1042073.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.morioka.iwate.jp/kosodate/kodomo_azukeru/1031343.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校給食費を完全無償化し、中学校では給食食材費補助により保護者負担を軽減する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementarySchool": "小学校給食費を完全無償化",
+        "juniorHighSchool": "学校給食食材費補助を実施し保護者負担を軽減",
+        "fiscalYear": "令和8年度",
+        "funding": "小学校は国の支援額を超える分も市が地方創生臨時交付金を活用して完全無償化"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/shisei/shichoshitsu/mayor_kishakaiken/1055460/1055650.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子を対象に、訪問・デイサービス・宿泊型の産後ケアを実施し、令和8年度は利用料無料。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "盛岡市に住民票がある産後1年以内の母子",
+        "types": "訪問型、デイサービス型、宿泊型",
+        "services": "母体の心身ケア、乳房ケア、乳児の健康確認、授乳・沐浴指導、育児相談",
+        "usageLimit": "通算7日まで。デイサービス型と宿泊型は合わせて4日まで",
+        "lodgingLimit": "1泊2日を上限",
+        "fee": "令和8年度は課税世帯を含め利用料無料",
+        "excludedCosts": "食事代・オプション代は別途自己負担"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kosodate/ikuji/1002132/1023161.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "start": "令和8年4月1日",
+        "target": "保育所・認定こども園・幼稚園等に在籍していない0歳6か月から満3歳未満",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間",
+        "fee": "1時間300円、以降30分ごとに150円",
+        "feeReduction": "生活保護世帯は1時間300円、低所得世帯等は1時間200円を上限に減額",
+        "application": "認定申請後、総合支援システムで面談・利用予約"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kosodate/kodomo_azukeru/1055546.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家バンク登録物件の購入費を補助し、若者・移住者・子育て世帯には加算を設けている。",
+      "details": {
+        "program": "盛岡市空き家等購入費補助金",
+        "target": "空き家等バンク利用希望登録者で、購入物件に5年以上居住する意思がある人等",
+        "baseAmount": "20万円",
+        "youngOrOutsidePrefectureAddition": "39歳以下または岩手県外からの移住者は25万円加算",
+        "childRaisingAddition": "18歳未満の子と同居する子育て世帯はさらに10万円加算",
+        "otherAddition": "40歳以上の子育て世帯、転入者世帯等は10万円加算",
+        "subsidyLimit": "補助対象経費の2分の1以内",
+        "applicationStatus": "令和8年度は受付を一時停止中。都市計画課へ要確認"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kurashi/sumai/1019574.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.morioka.iwate.jp/kurashi/sumai/1042308.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "盛岡地域では事前申込み後に粗大ごみ処理券を貼って戸別収集を利用でき、リサイクルセンターへの自己搬入も可能。",
+      "details": {
+        "reservation": "収集センターへ事前申込み",
+        "collectionMethod": "粗大ごみ処理券を貼り、指定日に自宅前へ排出",
+        "restriction": "最長部3メートル以上または大人2人で運べない物は収集不可",
+        "feeUntilSeptember2026": "2メートル未満600円、2メートル以上1,200円",
+        "feeFromOctober2026": "通常900円、スプリング入りマットレス3,400円、除湿機3,500円、畳2,300円",
+        "directCarry": "不燃ごみ・粗大ごみ・資源ごみはリサイクルセンターへ持込み可能"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kurashi/gomi_recycle/gomidashikata/1001153.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.morioka.iwate.jp/kurashi/gomi_recycle/gomidashikata/1023218.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.morioka.iwate.jp/kurashi/gomi_recycle/recyclingcenter/1020526/1047352.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水浸水想定区域、土砂災害警戒区域、避難場所等を掲載した令和8年改訂の防災マップ・防災ガイドを公開している。",
+      "details": {
+        "map": "盛岡市防災マップ",
+        "guide": "盛岡市防災ガイド",
+        "revision": "令和8年2月改訂、令和8年3月公開更新",
+        "hazards": "洪水、土砂災害、内水、地震等",
+        "format": "地区別A2防災マップ、全市共通A4防災ガイド、WEB版防災マップ",
+        "distribution": "市内全戸へ配布しPDFも公開"
+      },
+      "source": {
+        "url": "https://www.city.morioka.iwate.jp/kurashi/anzen_anshin/bousai/hazardmap/1024098.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.morioka.iwate.jp/kurashi/anzen_anshin/bousai/hazardmap/1048476.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.morioka.iwate.jp/kurashi/anzen_anshin/bousai/hazardmap/1001090/1001092.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}
