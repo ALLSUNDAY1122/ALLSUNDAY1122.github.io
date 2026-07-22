@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-22T20:25:14.646Z",
-  "success": false,
+  "auditedAt": "2026-07-22T20:26:05.011Z",
+  "success": true,
   "results": [
     {
       "name": "top: published page loaded",
@@ -12,6 +12,36 @@
         "progressbar": true,
         "readerPanelReady": true,
         "appVersion": true
+      }
+    },
+    {
+      "name": "top: first Tab exposes a visible skip link",
+      "ok": true,
+      "detail": {
+        "tag": "A",
+        "className": "skip-link",
+        "href": "#main-content",
+        "text": "本文へ移動",
+        "visible": true
+      }
+    },
+    {
+      "name": "top: skip link moves focus to main content",
+      "ok": true,
+      "detail": {
+        "hash": "#main-content",
+        "activeId": "main-content",
+        "mainId": "main-content"
+      }
+    },
+    {
+      "name": "top search field: keyboard focus indicator is visible",
+      "ok": true,
+      "detail": {
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(242, 198, 109)",
+        "boxShadow": "none"
       }
     },
     {
@@ -55,27 +85,6 @@
       "detail": 1
     },
     {
-      "name": "top: first Tab exposes a visible skip link",
-      "ok": false,
-      "detail": {
-        "tag": "A",
-        "className": "card",
-        "href": "stories/only-the-uniform-clocked-in.html",
-        "text": "人怖中編約5分\n    作業服だけが出勤しました制服レンタル会社は社員の本物の作業服と身体痕跡を侵入者へ貸し、元の所有者へ犯行証拠を集中させていた。\n    ●●●●○オリジナル作品",
-        "visible": true
-      }
-    },
-    {
-      "name": "top search field: keyboard focus indicator is visible",
-      "ok": true,
-      "detail": {
-        "outlineStyle": "solid",
-        "outlineWidth": "3px",
-        "outlineColor": "rgb(242, 198, 109)",
-        "boxShadow": "none"
-      }
-    },
-    {
       "name": "top: search result count is announced through live region",
       "ok": true,
       "detail": "表示1話・この端末で0話読了"
@@ -91,6 +100,36 @@
       "detail": {
         "attempt": 1,
         "ready": true
+      }
+    },
+    {
+      "name": "archive: first Tab exposes a visible skip link",
+      "ok": true,
+      "detail": {
+        "tag": "A",
+        "className": "skip-link",
+        "href": "#archive-content",
+        "text": "一覧へ移動",
+        "visible": true
+      }
+    },
+    {
+      "name": "archive: skip link moves focus to main content",
+      "ok": true,
+      "detail": {
+        "hash": "#archive-content",
+        "activeId": "archive-content",
+        "mainId": "archive-content"
+      }
+    },
+    {
+      "name": "archive jump link: keyboard focus indicator is visible",
+      "ok": true,
+      "detail": {
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(242, 198, 109)",
+        "boxShadow": "none"
       }
     },
     {
@@ -134,32 +173,41 @@
       "detail": 1
     },
     {
-      "name": "archive: first Tab exposes a visible skip link",
-      "ok": false,
+      "name": "story: published page loaded",
+      "ok": true,
+      "detail": {
+        "attempt": 1,
+        "ready": true
+      }
+    },
+    {
+      "name": "story: first Tab exposes a visible skip link",
+      "ok": true,
       "detail": {
         "tag": "A",
-        "className": "archive-item",
-        "href": "stories/hired-with-your-experience.html",
-        "text": "100\n    あなたの経験で採用されました不採用者の実体験は採用されやすい別人へ提供され、先に採用された人物がその経歴の正規所有者になる。",
+        "className": "skip-link",
+        "href": "#story-content",
+        "text": "本文へ移動",
         "visible": true
       }
     },
     {
-      "name": "archive jump link: keyboard focus indicator is visible",
+      "name": "story: skip link moves focus to main content",
+      "ok": true,
+      "detail": {
+        "hash": "#story-content",
+        "activeId": "story-content",
+        "mainId": "story-content"
+      }
+    },
+    {
+      "name": "story explanation button: keyboard focus indicator is visible",
       "ok": true,
       "detail": {
         "outlineStyle": "solid",
         "outlineWidth": "3px",
         "outlineColor": "rgb(242, 198, 109)",
         "boxShadow": "none"
-      }
-    },
-    {
-      "name": "story: published page loaded",
-      "ok": true,
-      "detail": {
-        "attempt": 1,
-        "ready": true
       }
     },
     {
@@ -203,36 +251,6 @@
       "detail": 1
     },
     {
-      "name": "story: first Tab exposes a visible skip link",
-      "ok": true,
-      "detail": {
-        "tag": "A",
-        "className": "skip-link",
-        "href": "#story-content",
-        "text": "本文へ移動",
-        "visible": true
-      }
-    },
-    {
-      "name": "story: skip link moves focus to main content",
-      "ok": true,
-      "detail": {
-        "hash": "#story-content",
-        "activeId": "story-content",
-        "mainId": "story-content"
-      }
-    },
-    {
-      "name": "story explanation button: keyboard focus indicator is visible",
-      "ok": true,
-      "detail": {
-        "outlineStyle": "solid",
-        "outlineWidth": "3px",
-        "outlineColor": "rgb(242, 198, 109)",
-        "boxShadow": "none"
-      }
-    },
-    {
       "name": "story: explanation opens by keyboard and updates aria-expanded",
       "ok": true,
       "detail": null
@@ -252,28 +270,5 @@
       "detail": []
     }
   ],
-  "failures": [
-    {
-      "name": "top: first Tab exposes a visible skip link",
-      "ok": false,
-      "detail": {
-        "tag": "A",
-        "className": "card",
-        "href": "stories/only-the-uniform-clocked-in.html",
-        "text": "人怖中編約5分\n    作業服だけが出勤しました制服レンタル会社は社員の本物の作業服と身体痕跡を侵入者へ貸し、元の所有者へ犯行証拠を集中させていた。\n    ●●●●○オリジナル作品",
-        "visible": true
-      }
-    },
-    {
-      "name": "archive: first Tab exposes a visible skip link",
-      "ok": false,
-      "detail": {
-        "tag": "A",
-        "className": "archive-item",
-        "href": "stories/hired-with-your-experience.html",
-        "text": "100\n    あなたの経験で採用されました不採用者の実体験は採用されやすい別人へ提供され、先に採用された人物がその経歴の正規所有者になる。",
-        "visible": true
-      }
-    }
-  ]
+  "failures": []
 }
