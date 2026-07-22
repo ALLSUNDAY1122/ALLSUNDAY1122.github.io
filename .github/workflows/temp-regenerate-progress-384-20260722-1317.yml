@@ -1,4 +1,4 @@
-name: Temporary Regenerate Progress 384 20260722 1317 Final
+name: Temporary Regenerate Progress 384 20260722 1317 Rebuild
 
 on:
   push:
@@ -18,25 +18,31 @@ jobs:
           ref: coord/fix-progress-384-20260722-1317
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Regenerate progress
+      - name: Rebuild and regenerate progress
         run: |
           set -euxo pipefail
+          git fetch origin main region/north coord/fix-progress-384-20260722-1317
+          git reset --hard origin/main
+          git checkout origin/region/north -- jichitai-compare/operations/tasks/01571.json
           cd jichitai-compare
           npm run progress
           cd ..
-          git add jichitai-compare/operations/progress.json
+          git add jichitai-compare/operations/tasks/01571.json jichitai-compare/operations/progress.json
           python3 - <<'PY'
           import json
           p=json.load(open('jichitai-compare/operations/progress.json',encoding='utf-8'))
           assert p['registeredMunicipalities']==384,p['registeredMunicipalities']
           assert p['mergedMunicipalities']==384,p['mergedMunicipalities']
           assert p['prOpenMunicipalities']==0,p['prOpenMunicipalities']
+          t=json.load(open('jichitai-compare/operations/tasks/01571.json',encoding='utf-8'))
+          assert t['status']=='merged',t['status']
           PY
-          mapfile -t actual < <(git diff origin/main --name-only | sort)
+          mapfile -t actual < <(git diff --cached --name-only | sort)
           expected=(jichitai-compare/operations/progress.json jichitai-compare/operations/tasks/01571.json)
           mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
           diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${actual[@]}")
+          test "${#actual[@]}" -eq 2
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m '進捗補正: 公開384自治体を全件mergedへ同期'
-          git push origin HEAD:coord/fix-progress-384-20260722-1317
+          git push --force-with-lease origin HEAD:coord/fix-progress-384-20260722-1317
