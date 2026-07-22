@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "29426",
+  "prefectureCode": "29",
+  "prefecture": "奈良県",
+  "name": "広陵町",
+  "officialUrl": "https://www.town.koryo.nara.jp/",
+  "status": "verified",
+  "summary": "広陵町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児・病後児保育、令和8年1月からの学校給食費無償化、産後ケア、一時保育などを記録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末までの子どもを対象に、保険診療の自己負担額から一部負担金を差し引いた額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "outpatientCopayment": "1か月につき1医療機関ごと500円",
+        "inpatientCopayment": "1か月につき1医療機関ごと1,000円。14日未満は500円",
+        "pharmacy": "調剤薬局の一部負担金なし",
+        "payment": "奈良県内は受給資格証提示により一部負担金のみを支払う現物給付。県外等は償還払い",
+        "excluded": "保険適用外費用、学校管理下の傷病で災害共済給付対象となる場合等"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000006321.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気または回復期で集団保育が困難な生後6か月から小学6年生までの児童を、町内外の病児・病後児保育施設で預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "target": "病気または回復期にあり、保護者の勤務等により家庭保育が困難な児童",
+        "facilities": "広陵町が案内する町内外の病児・病後児保育施設",
+        "fee": "有料。利用料、食事代、減免条件は施設・世帯区分により異なる",
+        "procedure": "利用前に施設での事前登録が必要。予約・診察等の手順は各施設へ確認"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/kosodate/0000007851.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.koryo.nara.jp/0000003339.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児の保育料を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "主に3歳児から5歳児までの保育料は無償",
+        "nonTaxable": "住民税非課税世帯の0～2歳児は無償",
+        "taxableUnderThree": "課税世帯の0～2歳児は町の保育料算定に基づく",
+        "otherFacilities": "認可外保育施設や幼稚園の預かり保育は、保育の必要性の認定を受けた場合に基準額まで無償化",
+        "excludedCosts": "食材料費、教材費等の実費は保護者負担"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000003339.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年1月1日から令和9年3月31日まで、町立小学校・中学校の学校給食費を全額公費負担する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "広陵町立小学校・中学校に在籍する全児童・生徒",
+        "coverage": "学校給食費を全額公費負担",
+        "period": "2026年1月1日から2027年3月31日まで",
+        "application": "申請不要",
+        "future": "期間終了後は最新の町制度を再確認"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000007718.html", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "町内在住の1歳未満の乳児と母親を対象に、助産師による心身のケアと育児支援を提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "母親の体調や育児に不安がある、家事・育児支援者がいないなど、専門的支援を必要とする1歳未満の乳児と母親",
+        "care": "母親の心身のケア、授乳・育児の助言、乳児の健康・発育に関する支援",
+        "facilities": "広陵町と契約する助産院・医療機関等",
+        "types": "施設・利用条件に応じた通所、訪問等の産後ケア。具体的な類型は町の利用案内で確認",
+        "fee": "利用施設・世帯区分等で異なるため、町の自己負担金表で確認",
+        "application": "出産後に事前利用申請が必要"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000005030.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町内居住の満1歳から就学前までの児童を、保護者の急用・通院・育児負担軽減等のため一時的に預かる。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 6},
+      "details": {
+        "target": "町内居住の満1歳から就学前までの児童。里帰り等で住民票がなくても町内居住中は利用可能",
+        "hours": "午前8時30分から午後4時30分まで",
+        "frequency": "1か月につき7日程度まで",
+        "ageOneTwoFee": "満1～2歳は4時間以内1,800円、4時間超8時間以内3,600円",
+        "ageThreePlusFee": "満3歳以上は4時間以内900円、4時間超8時間以内1,800円",
+        "otherCosts": "給食代、間食代等の実費が別途必要",
+        "procedure": "希望施設へ電話し、利用日時決定後に申請。初回は施設との面談が必要"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000001117.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内に4年以上居住する方が町内登録事業者で住宅を改修する場合、対象経費の10％・上限10万円を補助する。令和8年度分は受付終了。",
+      "details": {
+        "program": "広陵町地域活性化対策住宅リフォーム補助金",
+        "amount": "対象工事費（税抜）の10％、上限10万円",
+        "minimumCost": "対象工事費20万円以上（税抜）",
+        "residentCondition": "町内に4年以上継続して住所を有し、対象住宅に4年以上居住していること等",
+        "contractor": "広陵町の登録事業者を利用",
+        "frequency": "同一住宅・同一人物につき1回",
+        "currentStatus": "令和8年度分は予算上限到達により2026年4月1日に受付終了",
+        "verificationPolicy": "現在申請可能な制度としては案内せず、年度ごとの受付状況を要確認"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000004849.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを月2回の地区別収集日に、午前8時までに集積場所へ排出する。1世帯1回最大3点。",
+      "details": {
+        "frequency": "月2回の決まった曜日",
+        "time": "収集日の午前8時まで",
+        "size": "幅1m・高さ1m・長さ1.8mまで、1点20kgまで",
+        "quantity": "1回の収集につき1世帯最大3点",
+        "label": "各品目に『不用品』の張り紙を付ける",
+        "accepted": "家電リサイクル法対象外の一般家電、家具、布団、指定袋に入らない不燃物等",
+        "excluded": "テレビ、洗濯機、衣類乾燥機、エアコン、冷蔵庫・冷凍庫、建築廃材等",
+        "fee": "収集手数料の記載を確認できないため推測しない"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000006941.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、地震、ため池、避難所等をまとめた広陵町総合防災マップを公開する。",
+      "details": {
+        "map": "広陵町総合防災マップ（保存版）",
+        "hazards": "洪水浸水想定区域、浸水継続時間、地震の揺れやすさ、ため池浸水想定",
+        "evacuation": "指定避難場所・指定緊急避難場所情報を掲載",
+        "updated": "2025年4月1日更新",
+        "notDesignated": "町公式の作成状況では内水氾濫、土砂災害、津波、高潮は指定なし",
+        "preparedness": "災害規模、日頃の備え方等の情報を集約"
+      },
+      "source": {"url": "https://www.town.koryo.nara.jp/0000007234.html", "checkedAt": "2026-07-23"}
+    }
+  }
+}
