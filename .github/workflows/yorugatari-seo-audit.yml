@@ -1,0 +1,108 @@
+name: Yorugatari SEO audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - robots.txt
+      - yorugatari/index.html
+      - yorugatari/archive.html
+      - yorugatari/about.html
+      - yorugatari/privacy.html
+      - yorugatari/terms.html
+      - yorugatari/contact.html
+      - yorugatari/sitemap.xml
+      - yorugatari/stories/**
+      - yorugatari/assets/stories*.js
+      - yorugatari/tools/generate-sitemap.mjs
+      - yorugatari/tools/seo-audit.mjs
+      - .github/workflows/yorugatari-seo-audit.yml
+
+concurrency:
+  group: yorugatari-seo-audit
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  seo-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Generate current sitemap
+        run: node yorugatari/tools/generate-sitemap.mjs
+
+      - name: Validate repository SEO
+        run: node yorugatari/tools/seo-audit.mjs
+
+      - name: Commit generated sitemap
+        shell: bash
+        run: |
+          if git diff --quiet -- yorugatari/sitemap.xml; then
+            echo "Sitemap is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add yorugatari/sitemap.xml
+          git commit -m "Update Yorugatari sitemap [skip ci]"
+          git pull --rebase origin main
+          git push
+
+      - name: Audit published SEO
+        id: live
+        continue-on-error: true
+        run: node yorugatari/tools/seo-audit.mjs --live
+
+      - name: Preserve SEO report
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-seo-report.json
+          cp yorugatari-seo-report.json /tmp/yorugatari-seo-report.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-seo-report.json yorugatari/tools/seo-audit-latest.json
+            git add yorugatari/tools/seo-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari SEO audit [skip ci]"
+            if git push; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload SEO report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-seo-report
+          path: yorugatari-seo-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce published SEO result
+        if: always()
+        run: test "${{ steps.live.outcome }}" = "success"
