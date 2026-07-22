@@ -1,27 +1,11 @@
 {
-  "auditedAt": "2026-07-22T19:39:37.911Z",
+  "auditedAt": "2026-07-22T19:41:34.298Z",
   "success": false,
   "results": [
     {
       "name": "top: no critical or serious axe violations",
-      "ok": false,
-      "detail": [
-        {
-          "id": "aria-prohibited-attr",
-          "impact": "serious",
-          "help": "Elements must only use permitted ARIA attributes",
-          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/aria-prohibited-attr?application=playwright",
-          "nodes": [
-            {
-              "target": [
-                ".reader-meter"
-              ],
-              "html": "<div class=\"reader-meter\" aria-label=\"読了率 0%\"><span style=\"width:0%\"></span></div>",
-              "failureSummary": "Fix all of the following:\n  aria-label attribute cannot be used on a div with no valid role attribute."
-            }
-          ]
-        }
-      ]
+      "ok": true,
+      "detail": []
     },
     {
       "name": "top: document language is Japanese",
@@ -250,27 +234,6 @@
     }
   ],
   "failures": [
-    {
-      "name": "top: no critical or serious axe violations",
-      "ok": false,
-      "detail": [
-        {
-          "id": "aria-prohibited-attr",
-          "impact": "serious",
-          "help": "Elements must only use permitted ARIA attributes",
-          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/aria-prohibited-attr?application=playwright",
-          "nodes": [
-            {
-              "target": [
-                ".reader-meter"
-              ],
-              "html": "<div class=\"reader-meter\" aria-label=\"読了率 0%\"><span style=\"width:0%\"></span></div>",
-              "failureSummary": "Fix all of the following:\n  aria-label attribute cannot be used on a div with no valid role attribute."
-            }
-          ]
-        }
-      ]
-    },
     {
       "name": "top: first Tab exposes a visible skip link",
       "ok": false,
