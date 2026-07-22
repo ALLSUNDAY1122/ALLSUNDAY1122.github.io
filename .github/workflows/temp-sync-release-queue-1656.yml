@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 1656
+name: Temporary Sync Release Queue 1656 Final
 
 on:
   push:
@@ -56,7 +56,7 @@ jobs:
               e['releaseStatus']='release_ready' if pending>=10 else 'pending_threshold'
               e['reason']=f'担当地方ブランチとmainを直接比較。公開後の未全国統合は{pending}自治体'
               e['mainIntegrationPr']=s.get('lastNationalIntegrationPr')
-              e['generatedPullRequest']=progress.get('lastGeneratedPullRequest',720)
+              e['generatedPullRequest']=720
               e['auditStatus']='passed'
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
