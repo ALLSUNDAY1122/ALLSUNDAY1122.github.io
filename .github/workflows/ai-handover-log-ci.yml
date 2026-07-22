@@ -1,0 +1,90 @@
+name: AI Handover Log Flutter CI
+
+on:
+  push:
+    branches:
+      - agent/ai-handover-log-ci-v03
+    paths:
+      - apps/ai-handover-log/**
+      - .github/workflows/ai-handover-log-ci.yml
+  pull_request:
+    paths:
+      - apps/ai-handover-log/**
+      - .github/workflows/ai-handover-log-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter 3.44.7
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+
+      - name: Decode source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/source"
+          cat apps/ai-handover-log/source_chunks/chunk_*.b64 | base64 --decode > "$RUNNER_TEMP/source.zip"
+          unzip -q "$RUNNER_TEMP/source.zip" -d "$RUNNER_TEMP/source"
+          test -f "$RUNNER_TEMP/source/ai_handover_log_flutter/pubspec.yaml"
+
+      - name: Generate clean Flutter project
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create \
+            --platforms=android,ios,web \
+            --project-name=aihandoverlog \
+            --org=jp.allsunday \
+            "$RUNNER_TEMP/build"
+          SOURCE="$RUNNER_TEMP/source/ai_handover_log_flutter"
+          rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
+          cp -R "$SOURCE/lib" "$RUNNER_TEMP/build/lib"
+          cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
+          cp "$SOURCE/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
+          cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          if [ -d "$SOURCE/assets" ]; then
+            rm -rf "$RUNNER_TEMP/build/assets"
+            cp -R "$SOURCE/assets" "$RUNNER_TEMP/build/assets"
+          fi
+
+      - name: Resolve dependencies
+        working-directory: ${{ runner.temp }}/build
+        run: flutter pub get
+
+      - name: Verify formatting
+        working-directory: ${{ runner.temp }}/build
+        run: dart format lib test
+
+      - name: Analyze
+        working-directory: ${{ runner.temp }}/build
+        run: flutter analyze
+
+      - name: Test
+        working-directory: ${{ runner.temp }}/build
+        run: flutter test --coverage
+
+      - name: Build web release
+        working-directory: ${{ runner.temp }}/build
+        run: flutter build web --release
+
+      - name: Upload web build and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-ci-output
+          path: |
+            ${{ runner.temp }}/build/build/web
+            ${{ runner.temp }}/build/coverage/lcov.info
+          if-no-files-found: warn
