@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 418
+name: Temporary Sync Release Queue 418 Final
 
 on:
   push:
@@ -58,7 +58,7 @@ jobs:
               entry['auditStatus']='passed'
           total=sum(e['count'] for e in q['entries'])
           if total < 418: raise SystemExit(f'unexpected total {total}')
-          q['updatedAt']='2026-07-22T13:57:00+09:00'; q['status']='active'
+          q['updatedAt']='2026-07-22T13:58:00+09:00'; q['status']='active'
           q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':394,'latestGeneratedPullRequest':655,'latestPublicCountPullRequest':655,'releaseReadyRegions':[r for r,v in pending.items() if v>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"}
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           PY
