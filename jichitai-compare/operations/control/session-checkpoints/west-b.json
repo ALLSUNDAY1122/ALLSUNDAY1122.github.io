@@ -5,14 +5,18 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-23T06:01:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T06:09:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 182,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 1020,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "municipalityCode": "35211",
+    "municipalityName": "長門市",
+    "prefectureCode": "35"
+  },
+  "workingBranch": "data/35211-nagato-westb",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"32525","name":"海士町","pullRequestNumber":841,"ciRunNumber":1770},
     {"code":"32526","name":"西ノ島町","pullRequestNumber":849,"ciRunNumber":1807},
@@ -51,5 +55,5 @@
     {"code":"35210","name":"光市","pullRequestNumber":1020,"ciRunNumber":2573}
   ],
   "blocked": [],
-  "nextAction": "長門市（35211）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
+  "nextAction": "長門市の自治体JSON・taskを検証し、region/west向けPRを作成する。"
 }
