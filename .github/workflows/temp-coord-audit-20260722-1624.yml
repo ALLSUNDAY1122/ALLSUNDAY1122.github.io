@@ -1,0 +1,82 @@
+name: Temporary Coordinator Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-coord-audit-20260722-1624.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Append live audit and self-delete
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json,re,subprocess
+          from pathlib import Path
+
+          state_fields={
+            'north':'completedMunicipalitiesSinceLastNationalMerge',
+            'east':'completedMunicipalitiesSinceLastNationalMerge',
+            'central':'completedSinceLastRelease',
+            'west':'completedMunicipalitiesSinceLastNationalMerge',
+          }
+          def show(ref,path):
+            return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
+          pending={}
+          for region in ('north','east','central','west'):
+            state=json.loads(show(f'origin/region/{region}',f'jichitai-compare/operations/control/regions/{region}.json'))
+            pending[region]=int(state.get(state_fields[region],0))
+          progress=json.loads(Path('jichitai-compare/operations/progress.json').read_text(encoding='utf-8'))
+          queue=json.loads(Path('jichitai-compare/operations/control/release-queue.json').read_text(encoding='utf-8'))
+          regional_total=int(queue['summary']['regionalMergedMunicipalities'])
+          open_prs=json.loads(subprocess.check_output([
+            'gh','pr','list','--state','open','--limit','100','--json','number,baseRefName,isDraft,title'
+          ],text=True))
+          municipality_prs=[p for p in open_prs if p['baseRefName'] in ('region/north','region/east','region/central','region/west')]
+          unrelated=[p['number'] for p in open_prs if p['baseRefName'] not in ('region/north','region/east','region/central','region/west')]
+          record={
+            'timestamp':'2026-07-22T16:24:00+09:00',
+            'actor':'全国進行統括',
+            'action':'live-state-audit',
+            'details':{
+              'publicMunicipalities':progress['registeredMunicipalities'],
+              'regionalMergedMunicipalities':regional_total,
+              'pendingSinceLastRelease':pending,
+              'releaseReadyRegions':[r for r,c in pending.items() if c>=10],
+              'openMunicipalityPullRequests':[p['number'] for p in municipality_prs],
+              'unrelatedOpenPullRequests':unrelated,
+              'needsMediumReviewMunicipalities':progress['needsMediumReviewMunicipalities'],
+              'blockedMunicipalities':progress['blockedMunicipalities'],
+              'temporaryWorkflowRemoved':True
+            },
+            'humanDecisionRequired':False
+          }
+          with Path('jichitai-compare/operations/control/audit-log.jsonl').open('a',encoding='utf-8') as f:
+            f.write(json.dumps(record,ensure_ascii=False,separators=(',',':'))+'\n')
+          print(json.dumps(record,ensure_ascii=False))
+          PY
+          rm .github/workflows/temp-coord-audit-20260722-1624.yml
+          git add jichitai-compare/operations/control/audit-log.jsonl .github/workflows/temp-coord-audit-20260722-1624.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '統括監査: 公開454自治体の最新進行状態を記録'
+          git push origin main
