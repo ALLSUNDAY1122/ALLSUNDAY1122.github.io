@@ -1,0 +1,62 @@
+name: Temporary sync public 504 1916
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-public-504-1916.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build assignment-filtered state
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            +refs/heads/main:refs/remotes/origin/main \
+            +refs/heads/region/north:refs/remotes/origin/region/north \
+            +refs/heads/region/east:refs/remotes/origin/region/east \
+            +refs/heads/region/central:refs/remotes/origin/region/central \
+            +refs/heads/region/west:refs/remotes/origin/region/west
+          git checkout -B coord/state-after-public-504-20260722-1916 origin/main
+          echo 'IyAtKi0gY29kaW5nOiB1dGYtOCAtKi0KaW1wb3J0IGpzb24KaW1wb3J0IHJlCmltcG9ydCBzdWJwcm9jZXNzCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aApmcm9tIHpvbmVpbmZvIGltcG9ydCBab25lSW5mbwoKcm9vdCA9IFBhdGgoImppY2hpdGFpLWNvbXBhcmUiKQpxdWV1ZV9wYXRoID0gcm9vdCAvICJvcGVyYXRpb25zL2NvbnRyb2wvcmVsZWFzZS1xdWV1ZS5qc29uIgpnbG9iYWxfcGF0aCA9IHJvb3QgLyAib3BlcmF0aW9ucy9jb250cm9sL2dsb2JhbC1zdGF0ZS5qc29uIgphdWRpdF9wYXRoID0gcm9vdCAvICJvcGVyYXRpb25zL2NvbnRyb2wvYXVkaXQtbG9nLmpzb25sIgoKcHJvZ3Jlc3MgPSBqc29uLmxvYWRzKChyb290IC8gIm9wZXJhdGlvbnMvcHJvZ3Jlc3MuanNvbiIpLnJlYWRfdGV4dChlbmNvZGluZz0idXRmLTgiKSkKYXNzZXJ0IHByb2dyZXNzWyJyZWdpc3RlcmVkTXVuaWNpcGFsaXRpZXMiXSA9PSA1MDQsIHByb2dyZXNzWyJyZWdpc3RlcmVkTXVuaWNpcGFsaXRpZXMiXQphc3NlcnQgcHJvZ3Jlc3NbInRvdGFsU2VydmljZXMiXSA9PSA0NTM2LCBwcm9ncmVzc1sidG90YWxTZXJ2aWNlcyJdCmFzc2VydCBwcm9ncmVzc1siY29tcGxldGVkU2VydmljZXMiXSA9PSA0NTM2LCBwcm9ncmVzc1siY29tcGxldGVkU2VydmljZXMiXQphc3NlcnQgcHJvZ3Jlc3NbInByT3Blbk11bmljaXBhbGl0aWVzIl0gPT0gMCwgcHJvZ3Jlc3NbInByT3Blbk11bmljaXBhbGl0aWVzIl0KCnNwZWNzID0gewogICAgIm5vcnRoIjogKCJvcmlnaW4vcmVnaW9uL25vcnRoIiwgbGFtYmRhIHA6IDEgPD0gcCA8PSA3LCA4MDApLAogICAgImVhc3QiOiAoIm9yaWdpbi9yZWdpb24vZWFzdCIsIGxhbWJkYSBwOiA4IDw9IHAgPD0gMTUgb3IgcCBpbiAoMTksIDIwKSwgNzY4KSwKICAgICJjZW50cmFsIjogKCJvcmlnaW4vcmVnaW9uL2NlbnRyYWwiLCBsYW1iZGEgcDogMTYgPD0gcCA8PSAxOCBvciAyMSA8PSBwIDw9IDMwLCA3ODApLAogICAgIndlc3QiOiAoIm9yaWdpbi9yZWdpb24vd2VzdCIsIGxhbWJkYSBwOiAzMSA8PSBwIDw9IDQ3LCA3MTYpLAp9CgpkZWYgbXVuaWNpcGFsaXR5X3Jvd3MocmVmLCBhY2NlcHQpOgogICAgb3V0cHV0ID0gc3VicHJvY2Vzcy5jaGVja19vdXRwdXQoCiAgICAgICAgWyJnaXQiLCAibHMtdHJlZSIsICItciIsICItLW5hbWUtb25seSIsIHJlZiwgc3RyKHJvb3QgLyAiZGF0YS9tdW5pY2lwYWxpdGllcyIpXSwKICAgICAgICB0ZXh0PVRydWUsCiAgICApCiAgICByb3dzID0gW10KICAgIGZvciBwYXRoIGluIG91dHB1dC5zcGxpdGxpbmVzKCk6CiAgICAgICAgbWF0Y2ggPSByZS5mdWxsbWF0Y2goCiAgICAgICAgICAgIHIiamljaGl0YWktY29tcGFyZS9kYXRhL211bmljaXBhbGl0aWVzLyhcZHsyfSkvKFxkezV9KVwuanNvbiIsIHBhdGgKICAgICAgICApCiAgICAgICAgaWYgbm90IG1hdGNoIG9yIG5vdCBhY2NlcHQoaW50KG1hdGNoLmdyb3VwKDEpKSk6CiAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgZGF0YSA9IGpzb24ubG9hZHMoCiAgICAgICAgICAgIHN1YnByb2Nlc3MuY2hlY2tfb3V0cHV0KFsiZ2l0IiwgInNob3ciLCBmIntyZWZ9OntwYXRofSJdLCB0ZXh0PVRydWUpCiAgICAgICAgKQogICAgICAgIHJvd3MuYXBwZW5kKHsKICAgICAgICAgICAgImNvZGUiOiBtYXRjaC5ncm91cCgyKSwKICAgICAgICAgICAgIm5hbWUiOiBkYXRhLmdldCgibmFtZSIpIG9yIGRhdGEuZ2V0KCJtdW5pY2lwYWxpdHlOYW1lIikgb3IgbWF0Y2guZ3JvdXAoMiksCiAgICAgICAgfSkKICAgIHJldHVybiBzb3J0ZWQocm93cywga2V5PWxhbWJkYSBpdGVtOiBpdGVtWyJjb2RlIl0pCgpxdWV1ZSA9IGpzb24ubG9hZHMocXVldWVfcGF0aC5yZWFkX3RleHQoZW5jb2Rpbmc9InV0Zi04IikpCmVudHJpZXMgPSB7ZW50cnlbInJlZ2lvbiJdOiBlbnRyeSBmb3IgZW50cnkgaW4gcXVldWVbImVudHJpZXMiXX0KY291bnRzID0ge30KcGVuZGluZyA9IHt9CnBlbmRpbmdfcm93cyA9IHt9CnRvdGFsID0gMApyZWFkeSA9IFtdCgpmb3IgcmVnaW9uLCAocmVmLCBhY2NlcHQsIGludGVncmF0aW9uX3ByKSBpbiBzcGVjcy5pdGVtcygpOgogICAgbWFpbl9yb3dzID0gbXVuaWNpcGFsaXR5X3Jvd3MoIkhFQUQiLCBhY2NlcHQpCiAgICByZWdpb25hbF9yb3dzID0gbXVuaWNpcGFsaXR5X3Jvd3MocmVmLCBhY2NlcHQpCiAgICBtYWluX2NvZGVzID0ge2l0ZW1bImNvZGUiXSBmb3IgaXRlbSBpbiBtYWluX3Jvd3N9CiAgICByZWdpb25hbF9jb2RlcyA9IHtpdGVtWyJjb2RlIl0gZm9yIGl0ZW0gaW4gcmVnaW9uYWxfcm93c30KICAgIG1pc3NpbmdfZnJvbV9yZWdpb24gPSBtYWluX2NvZGVzIC0gcmVnaW9uYWxfY29kZXMKICAgIGFzc2VydCBub3QgbWlzc2luZ19mcm9tX3JlZ2lvbiwgKHJlZ2lvbiwgc29ydGVkKG1pc3NpbmdfZnJvbV9yZWdpb24pKQogICAgZGVsdGEgPSBbaXRlbSBmb3IgaXRlbSBpbiByZWdpb25hbF9yb3dzIGlmIGl0ZW1bImNvZGUiXSBub3QgaW4gbWFpbl9jb2Rlc10KICAgIGNvdW50c1tyZWdpb25dID0gbGVuKHJlZ2lvbmFsX3Jvd3MpCiAgICBwZW5kaW5nW3JlZ2lvbl0gPSBsZW4oZGVsdGEpCiAgICBwZW5kaW5nX3Jvd3NbcmVnaW9uXSA9IGRlbHRhCiAgICB0b3RhbCArPSBsZW4ocmVnaW9uYWxfcm93cykKICAgIGlmIGxlbihkZWx0YSkgPj0gMTA6CiAgICAgICAgcmVhZHkuYXBwZW5kKHJlZ2lvbikKICAgIGVudHJpZXNbcmVnaW9uXS51cGRhdGUoewogICAgICAgICJtdW5pY2lwYWxpdGllcyI6IHJlZ2lvbmFsX3Jvd3MsCiAgICAgICAgImNvdW50IjogbGVuKHJlZ2lvbmFsX3Jvd3MpLAogICAgICAgICJwZW5kaW5nU2luY2VMYXN0UmVsZWFzZSI6IGxlbihkZWx0YSksCiAgICAgICAgInJlbGVhc2VTdGF0dXMiOiAicmVsZWFzZV9yZWFkeSIgaWYgbGVuKGRlbHRhKSA+PSAxMCBlbHNlICgidXBfdG9fZGF0ZSIgaWYgbm90IGRlbHRhIGVsc2UgInBlbmRpbmdfdGhyZXNob2xkIiksCiAgICAgICAgInJlYXNvbiI6IGYiQXNzaWdubWVudC1maWx0ZXJlZCByZWdpb24gYnJhbmNoIHZlcnN1cyBtYWluIGFmdGVyIHB1YmxpYyA1MDQ6IHtsZW4oZGVsdGEpfSBwZW5kaW5nIiwKICAgICAgICAibWFpbkludGVncmF0aW9uUHIiOiBpbnRlZ3JhdGlvbl9wciwKICAgICAgICAiZ2VuZXJhdGVkUHVsbFJlcXVlc3QiOiA4MDEsCiAgICAgICAgImF1ZGl0U3RhdHVzIjogInBhc3NlZCIsCiAgICB9KQoKbm93ID0gZGF0ZXRpbWUubm93KFpvbmVJbmZvKCJBc2lhL1Rva3lvIikpLnJlcGxhY2UobWljcm9zZWNvbmQ9MCkuaXNvZm9ybWF0KCkKaWYgcmVhZHk6CiAgICBuZXh0X2FjdGlvbiA9ICJDcmVhdGUgZml4ZWQgMTAtbXVuaWNpcGFsaXR5IG5hdGlvbmFsIGludGVncmF0aW9uIGZvcjogIiArICIsICIuam9pbihyZWFkeSkKZWxzZToKICAgIG5leHRfYWN0aW9uID0gIkNvbnRpbnVlIHJlZ2lvbmFsIGludGVncmF0aW9uLiBQZW5kaW5nOiAiICsgIiwgIi5qb2luKAogICAgICAgIGYie3JlZ2lvbn0ge3BlbmRpbmdbcmVnaW9uXX0iIGZvciByZWdpb24gaW4gKCJub3J0aCIsICJlYXN0IiwgImNlbnRyYWwiLCAid2VzdCIpCiAgICApCgpxdWV1ZS51cGRhdGUoewogICAgInVwZGF0ZWRBdCI6IG5vdywKICAgICJzdGF0dXMiOiAiYWN0aXZlIiwKICAgICJzdW1tYXJ5IjogewogICAgICAgICJyZWdpb25hbE1lcmdlZE11bmljaXBhbGl0aWVzIjogdG90YWwsCiAgICAgICAgImxhdGVzdEdlbmVyYXRlZE11bmljaXBhbGl0eUNvdW50IjogNTA0LAogICAgICAgICJsYXRlc3RHZW5lcmF0ZWRQdWxsUmVxdWVzdCI6IDgwMSwKICAgICAgICAibGF0ZXN0UHVibGljQ291bnRQdWxsUmVxdWVzdCI6IDgwMSwKICAgICAgICAicmVsZWFzZVJlYWR5UmVnaW9ucyI6IHJlYWR5LAogICAgICAgICJuZXh0QWN0aW9uIjogbmV4dF9hY3Rpb24sCiAgICB9LAogICAgIm5leHRBY3Rpb24iOiBuZXh0X2FjdGlvbiwKICAgICJodW1hbkRlY2lzaW9uUmVxdWlyZWQiOiBGYWxzZSwKfSkKcXVldWVfcGF0aC53cml0ZV90ZXh0KAogICAganNvbi5kdW1wcyhxdWV1ZSwgZW5zdXJlX2FzY2lpPUZhbHNlLCBzZXBhcmF0b3JzPSgiLCIsICI6IikpICsgIlxuIiwKICAgIGVuY29kaW5nPSJ1dGYtOCIsCikKCmdsb2JhbF9zdGF0ZSA9IGpzb24ubG9hZHMoZ2xvYmFsX3BhdGgucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpKQpnbG9iYWxfc3RhdGUudXBkYXRlKHsKICAgICJ1cGRhdGVkQXQiOiBub3csCiAgICAicGhhc2UiOiAicmVsZWFzZS1tb25pdG9yaW5nIiwKICAgICJyZWdpb25hbENvbXBsZXRlZFNpbmNlTGFzdFJlbGVhc2UiOiB7KipwZW5kaW5nLCAidG90YWwiOiBzdW0ocGVuZGluZy52YWx1ZXMoKSl9LAogICAgInByaW9yaXR5IjogeyJ0eXBlIjogInJlbGVhc2UtbW9uaXRvcmluZyIsICJuZXh0QWN0aW9uIjogbmV4dF9hY3Rpb259LAogICAgImxhc3ROYXRpb25hbEludGVncmF0aW9uQXQiOiAiMjAyNi0wNy0yMlQxOTowOTozOCswOTowMCIsCiAgICAibGFzdE5hdGlvbmFsSW50ZWdyYXRpb25QciI6IDgwMCwKICAgICJsYXRlc3RHZW5lcmF0ZWRNdW5pY2lwYWxpdHlDb3VudCI6IDUwNCwKICAgICJsYXRlc3RHZW5lcmF0ZWRQdWxsUmVxdWVzdCI6IDgwMSwKICAgICJsYXRlc3RQdWJsaWNDb3VudFB1bGxSZXF1ZXN0IjogODAxLAogICAgInJlZ2lvbmFsTWVyZ2VkTXVuaWNpcGFsaXRpZXMiOiB0b3RhbCwKICAgICJvcGVuUHVsbFJlcXVlc3RzIjogW10sCiAgICAiaHVtYW5EZWNpc2lvblJlcXVpcmVkIjogRmFsc2UsCn0pCmdsb2JhbF9wYXRoLndyaXRlX3RleHQoCiAgICBqc29uLmR1bXBzKGdsb2JhbF9zdGF0ZSwgZW5zdXJlX2FzY2lpPUZhbHNlLCBzZXBhcmF0b3JzPSgiLCIsICI6IikpICsgIlxuIiwKICAgIGVuY29kaW5nPSJ1dGYtOCIsCikKCnJlY29yZCA9IHsKICAgICJ0aW1lc3RhbXAiOiBub3csCiAgICAiYWN0b3IiOiAiXHU1MTY4XHU1NmZkXHU5MDMyXHU4ODRjXHU3ZDcxXHU2MmVjIiwKICAgICJhY3Rpb24iOiAiY29vcmRpbmF0b3Itc3luYy1hZnRlci1wdWJsaWMtNTA0IiwKICAgICJkZXRhaWxzIjogewogICAgICAgICJwdWJsaWNNdW5pY2lwYWxpdHlDb3VudCI6IDUwNCwKICAgICAgICAicHVibGljU2VydmljZXMiOiA0NTM2LAogICAgICAgICJyZWdpb25hbENvdW50cyI6IGNvdW50cywKICAgICAgICAicmVnaW9uYWxNZXJnZWRNdW5pY2lwYWxpdGllcyI6IHRvdGFsLAogICAgICAgICJwZW5kaW5nU2luY2VMYXRlc3ROYXRpb25hbEludGVncmF0aW9uIjogeyoqcGVuZGluZywgInRvdGFsIjogc3VtKHBlbmRpbmcudmFsdWVzKCkpfSwKICAgICAgICAicGVuZGluZ011bmljaXBhbGl0aWVzIjogcGVuZGluZ19yb3dzLAogICAgICAgICJuYXRpb25hbEludGVncmF0aW9uUHVsbFJlcXVlc3QiOiA4MDAsCiAgICAgICAgInB1YmxpY2F0aW9uUHVsbFJlcXVlc3QiOiA4MDEsCiAgICAgICAgInJlbGVhc2VSZWFkeVJlZ2lvbnMiOiByZWFkeSwKICAgIH0sCiAgICAiaHVtYW5EZWNpc2lvblJlcXVpcmVkIjogRmFsc2UsCn0KdGV4dCA9IGF1ZGl0X3BhdGgucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCmlmIHRleHQgYW5kIG5vdCB0ZXh0LmVuZHN3aXRoKCJcbiIpOgogICAgdGV4dCArPSAiXG4iCmF1ZGl0X3BhdGgud3JpdGVfdGV4dCgKICAgIHRleHQgKyBqc29uLmR1bXBzKHJlY29yZCwgZW5zdXJlX2FzY2lpPUZhbHNlLCBzZXBhcmF0b3JzPSgiLCIsICI6IikpICsgIlxuIiwKICAgIGVuY29kaW5nPSJ1dGYtOCIsCikKClBhdGgoIi90bXAvcXVldWUtc3VtbWFyeSIpLndyaXRlX3RleHQoCiAgICBmInt0b3RhbH0ge3BlbmRpbmdbJ25vcnRoJ119IHtwZW5kaW5nWydlYXN0J119IHtwZW5kaW5nWydjZW50cmFsJ119IHtwZW5kaW5nWyd3ZXN0J119IiwKICAgIGVuY29kaW5nPSJ1dGYtOCIsCikK' | base64 -d > /tmp/sync.py
+          python3 /tmp/sync.py
+          read total north east central west < /tmp/queue-summary
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          expected=(
+            jichitai-compare/operations/control/audit-log.jsonl
+            jichitai-compare/operations/control/global-state.json
+            jichitai-compare/operations/control/release-queue.json
+          )
+          test "${#changed[@]}" -eq 3
+          test "$(printf '%s\n' "${changed[@]}" | sort)" = "$(printf '%s\n' "${expected[@]}" | sort)"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "${expected[@]}"
+          git commit -m "統括管理: 公開504・地方統合${total}へ同期（北${north} 東${east} 中${central} 西${west}）"
+          git push --force origin HEAD:coord/state-after-public-504-20260722-1916
+      - name: Remove temporary workflow
+        if: always()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin +refs/heads/main:refs/remotes/origin/main
+          git checkout -B main origin/main
+          if [ -f .github/workflows/temp-sync-public-504-1916.yml ]; then
+            git rm .github/workflows/temp-sync-public-504-1916.yml
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git commit -m '統括管理: 公開504キュー同期一時ワークフローを削除'
+            git push origin HEAD:main
+          fi
