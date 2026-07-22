@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23206",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "春日井市",
+  "officialUrl": "https://www.city.kasugai.lg.jp/",
+  "status": "verified",
+  "summary": "春日井市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、入院・通院の保険診療自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "coverage": "入院・通院の保険診療分自己負担額",
+        "expanded": "令和5年4月診療分から高校生世代の通院費も対象",
+        "payment": "受給者証による現物給付。県外受診等は償還払い",
+        "excluded": "保険適用外費用、入院時食事代、差額ベッド代等は対象外"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kenko/iryo/kakusyuiryou/1024289.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "おおむね生後6か月から小学3年生までの病気中・回復期の児童を、市内2医院で一時保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "condition": "春日井市民で、保育園・幼稚園・小学校等に通い、病気等により集団保育が困難な児童",
+        "facilities": "市内2医院の病児・病後児保育施設",
+        "hours": "月曜から金曜8時30分～17時、土曜8時30分～13時",
+        "limit": "原則7日以内",
+        "fee": "生活保護・市民税非課税世帯は無料、市民税所得割非課税世帯は1日1,000円、その他は1日2,000円",
+        "meal": "食事・おやつ代1日600円"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kosodate/shien/1002339/byougo.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、多子世帯の保育料も軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "agesThreeToFive": "3歳児クラスから5歳児クラスまで無料",
+        "underThree": "住民税非課税世帯の0～2歳児クラスは無料。その他は課税額に応じて決定",
+        "multiChild": "きょうだいで2人以上が保育園・幼稚園等を利用する場合、第2子半額、第3子以降無料",
+        "expandedMultiChild": "18歳未満の子が2人以上いる世帯も、課税状況に応じて第2子無料または半額、第3子以降無料",
+        "excludedCosts": "給食費、送迎費、行事費、用品費等は原則実費負担"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kosodate/hoikuen/hoikuen/1037607.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は市立小学校の給食費を無料とし、中学校は保護者負担を1食285円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "baseCost": "食材費相当額は小学校1食335円、中学校1食385円",
+        "elementary": "令和8年度の保護者負担は0円",
+        "juniorHigh": "令和8年度の保護者負担は1食285円",
+        "multiChild": "市立中学校に同時に通う生徒が2人以上いる世帯は2人目以降無料",
+        "nonUseSupport": "小学校給食を1か月全く注文しない児童の保護者へ月額5,200円を支援する場合あり"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kosodate/kyouiku/kyushoku/1012060.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "春日井市民で、出産後1年未満かつ心身のケアや育児支援を必要とする母子",
+        "types": "ショートステイ、デイサービス、アウトリーチ",
+        "limit": "3類型を合わせて7日まで",
+        "fee": "課税世帯は宿泊1日3,000円、通所1日2,000円、訪問1回1,000円",
+        "reduction": "生活保護・市民税非課税世帯は無料",
+        "application": "原則利用開始日の7日前までに申請"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kosodate/ninshin/1002216/1033966.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月4時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "condition": "保育所、認定こども園、幼稚園、地域型保育、企業主導型保育を利用していない児童",
+        "limit": "児童1人につき月4時間まで、1時間単位",
+        "fee": "1時間300円",
+        "facilities": "あさひがおかこども園、神屋保育園、こまどり幼稚園、ナザレ幼稚園",
+        "application": "総合支援システムで認定申請、事前面談、予約を行う"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kosodate/shien/1002339/1037374.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から春日井市へ移住して対象法人へ就業・起業する人へ、移住支援金を交付する。",
+      "details": {
+        "program": "首都圏人材確保支援事業補助金",
+        "single": "単身60万円",
+        "household": "世帯100万円",
+        "childAddition": "18歳未満1人につき30万円加算。1世帯2人まで",
+        "condition": "東京23区在住または通勤者が春日井市へ移住し、対象法人への就業または起業等の要件を満たすこと",
+        "purpose": "UIJターン促進と市内中小企業等の人材確保"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/business/kigyo/jinzaikakuho/1016955.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは電話予約制の有料戸別収集で、品目別に案内された納付券を貼付して排出する。",
+      "details": {
+        "definition": "最長辺80センチ以上2メートル以下、重さ50キログラム以下の家庭ごみ",
+        "limit": "1回の収集につき3点まで",
+        "reservation": "清掃事業所へ電話で申込み、収集日・手数料・収集場所の案内を受ける",
+        "fee": "品目・区分に応じて申込時に案内される金額分の納付券を購入",
+        "pickup": "収集日の朝8時30分までに指定場所へ排出。立会い不要",
+        "directCarry": "クリーンセンターへの直接搬入も可能で、重量に応じた手数料を現金で支払う"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kurashi/1032702/1032853/1033052.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震、洪水、内水、土砂災害、ため池の各ハザードマップと避難所情報を公開する。",
+      "details": {
+        "maps": "地震防災、洪水、雨水出水・内水、土砂災害、農業用ため池ハザードマップ",
+        "earthquake": "想定地震の予測震度、情報収集方法、避難所等を掲載",
+        "flood": "想定最大規模降雨による地域別の浸水深と避難情報を掲載",
+        "evacuation": "避難所・避難場所と二次開設避難所を案内",
+        "gis": "道風くんの春日井まっぷでも防災情報を確認可能"
+      },
+      "source": {"url": "https://www.city.kasugai.lg.jp/kurashi/bosai/1025983/1025986/index.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
