@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-22T21:48:24.147Z",
+  "auditedAt": "2026-07-22T22:20:27.537Z",
   "success": true,
   "results": [
     {
@@ -11,9 +11,14 @@
       }
     },
     {
-      "name": "local: runtime modules and exact social dimensions are complete",
+      "name": "local: runtime modules, social metadata, and static circulation are complete",
       "ok": true,
       "detail": []
+    },
+    {
+      "name": "local: story runtime no longer loads the 100-story catalog",
+      "ok": true,
+      "detail": null
     },
     {
       "name": "local: privacy policy explains coarse source categories",
@@ -55,7 +60,7 @@
       }
     },
     {
-      "name": "published: story uses source-aware engagement and social metadata",
+      "name": "published: story uses static circulation without catalog scripts",
       "ok": true,
       "detail": {
         "ready": true,
@@ -63,10 +68,14 @@
         "attempt": 1,
         "state": {
           "engagementScript": true,
-          "analyticsScript": false,
+          "storyScript": true,
+          "catalogScripts": 0,
           "engagement": true,
           "source": "direct",
-          "share": true
+          "relatedReady": true,
+          "share": true,
+          "pagination": 3,
+          "related": 2
         },
         "meta": {
           "type": "article",
@@ -74,8 +83,8 @@
           "title": "合鍵は返却済み｜夜語り",
           "description": "無料防犯診断で複製された鍵が研修生の実地侵入に使われる約5分の人怖。",
           "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
-          "width": "2048",
-          "height": "683",
+          "width": "2172",
+          "height": "724",
           "alt": "月明かりと提灯が照らす夜の町並み",
           "card": "summary_large_image",
           "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
@@ -87,8 +96,8 @@
       "name": "published: Page Views API count is displayed",
       "ok": true,
       "detail": {
-        "value": 3,
-        "text": "3",
+        "value": 7,
+        "text": "7",
         "error": null,
         "sourceError": null
       }
@@ -106,7 +115,7 @@
       }
     },
     {
-      "name": "published: previous, archive, next, and related paths exist",
+      "name": "published: previous, archive, next, and two related paths exist",
       "ok": true,
       "detail": {
         "pagination": [
