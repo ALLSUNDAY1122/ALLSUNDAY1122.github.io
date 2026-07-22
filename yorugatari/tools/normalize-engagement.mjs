@@ -6,6 +6,8 @@ const SITE_ROOT = path.join(ROOT, 'yorugatari');
 const STORIES_ROOT = path.join(SITE_ROOT, 'stories');
 const SCRIPT_VERSION = '20260723-001';
 const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png';
+const SHARE_WIDTH = '2172';
+const SHARE_HEIGHT = '724';
 const SHARE_ALT = '月明かりと提灯が照らす夜の町並み';
 const STATIC_PAGES = ['index.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
 
@@ -39,8 +41,8 @@ function ensureSocialMetadata(html) {
   html = upsertMeta(html, 'og:title', title);
   html = upsertMeta(html, 'og:description', description);
   html = upsertMeta(html, 'og:image', SHARE_IMAGE);
-  html = upsertMeta(html, 'og:image:width', '2048');
-  html = upsertMeta(html, 'og:image:height', '683');
+  html = upsertMeta(html, 'og:image:width', SHARE_WIDTH);
+  html = upsertMeta(html, 'og:image:height', SHARE_HEIGHT);
   html = upsertMeta(html, 'og:image:alt', SHARE_ALT);
   html = upsertMeta(html, 'twitter:card', 'summary_large_image', 'name');
   html = upsertMeta(html, 'twitter:image', SHARE_IMAGE, 'name');
