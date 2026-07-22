@@ -1,0 +1,60 @@
+name: Temporary Generate Public 524
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-public-524.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate public 524 snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin coord/generated-524-20260722-1950
+          git checkout coord/generated-524-20260722-1950
+          cd jichitai-compare
+          node ./scripts/generate-municipalities.mjs
+          node ./scripts/update-progress.mjs
+          sed -i 's/514自治体/524自治体/g' index.html
+          node ./scripts/validate-data.mjs --require-generated
+          node - <<'NODE'
+          const fs = require('fs');
+          const generated = JSON.parse(fs.readFileSync('data/generated/municipalities.json','utf8'));
+          const progress = JSON.parse(fs.readFileSync('operations/progress.json','utf8'));
+          const count = Array.isArray(generated) ? generated.length : generated.municipalities.length;
+          if (count !== 524) throw new Error(`generated count ${count}`);
+          if (progress.registeredMunicipalities !== 524) throw new Error(`progress count ${progress.registeredMunicipalities}`);
+          const html = fs.readFileSync('index.html','utf8');
+          if (!html.includes('524自治体')) throw new Error('index count missing');
+          NODE
+          cd ..
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          expected=(
+            jichitai-compare/data/generated/municipalities.json
+            jichitai-compare/index.html
+            jichitai-compare/operations/progress.json
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#changed[@]}" -eq 3
+          diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${expected[@]}"
+          git commit -m '公開更新: 生成データと表示件数を524自治体へ同期'
+          git push origin coord/generated-524-20260722-1950
+          git checkout main
+          git pull --ff-only origin main
+          git rm .github/workflows/temp-generate-public-524.yml
+          git commit -m '統括管理: 公開524生成一時ワークフローを削除'
+          git push origin main
