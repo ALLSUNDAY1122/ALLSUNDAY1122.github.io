@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T23:00:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T23:12:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 89,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "26206", "municipalityName": "亀岡市"},
+  "workingBranch": "data/26206-kameoka",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {
       "municipalityCode": "26100",
@@ -58,5 +58,5 @@
     }
   ],
   "blocked": [],
-  "nextAction": "亀岡市（26206）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "亀岡市（26206）のPRをregion/central向けに作成し、CI成功後に地方統合する。"
 }
