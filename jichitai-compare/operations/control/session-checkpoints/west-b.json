@@ -5,18 +5,14 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-22T22:36:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-22T22:37:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 215,
-  "currentMunicipality": {
-    "municipalityCode": "32527",
-    "municipalityName": "知夫村",
-    "prefectureCode": "32"
-  },
-  "workingBranch": "data/32527-chibu-westb-v2",
+  "remainingUninvestigatedCount": 214,
+  "currentMunicipality": null,
+  "workingBranch": null,
   "pullRequestNumber": 853,
-  "ciStatus": "pending",
+  "ciStatus": "success",
   "completedSinceSplit": [
     {
       "code": "32525",
@@ -29,8 +25,14 @@
       "name": "西ノ島町",
       "pullRequestNumber": 849,
       "ciRunNumber": 1807
+    },
+    {
+      "code": "32527",
+      "name": "知夫村",
+      "pullRequestNumber": 853,
+      "ciRunNumber": 1829
     }
   ],
   "blocked": [],
-  "nextAction": "PR #853のCI成功と競合なしを確認し、region/westへ統合する。"
+  "nextAction": "隠岐の島町（32528）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
 }
