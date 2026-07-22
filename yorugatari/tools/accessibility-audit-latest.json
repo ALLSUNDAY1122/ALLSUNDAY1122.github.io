@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-22T21:54:47.561Z",
-  "success": true,
+  "auditedAt": "2026-07-22T22:02:46.357Z",
+  "success": false,
   "results": [
     {
       "name": "top: published page loaded",
@@ -172,94 +172,11 @@
     },
     {
       "name": "story: published page loaded",
-      "ok": true,
+      "ok": false,
       "detail": {
-        "ready": true,
-        "attempt": 1
+        "ready": false,
+        "attempt": 8
       }
-    },
-    {
-      "name": "story: first Tab exposes a visible skip link",
-      "ok": true,
-      "detail": {
-        "tag": "A",
-        "className": "skip-link",
-        "href": "#story-content",
-        "text": "本文へ移動",
-        "visible": true
-      }
-    },
-    {
-      "name": "story: skip link moves focus to main content",
-      "ok": true,
-      "detail": {
-        "activeId": "story-content",
-        "mainId": "story-content"
-      }
-    },
-    {
-      "name": "story explanation button: keyboard focus indicator is visible",
-      "ok": true,
-      "detail": {
-        "outlineStyle": "solid",
-        "outlineWidth": "3px",
-        "outlineColor": "rgb(242, 198, 109)",
-        "boxShadow": "none"
-      }
-    },
-    {
-      "name": "story: no critical or serious axe violations",
-      "ok": true,
-      "detail": []
-    },
-    {
-      "name": "story: document language is Japanese",
-      "ok": true,
-      "detail": "ja"
-    },
-    {
-      "name": "story: has one non-empty page title",
-      "ok": true,
-      "detail": "合鍵は返却済み｜夜語り"
-    },
-    {
-      "name": "story: has exactly one h1",
-      "ok": true,
-      "detail": 1
-    },
-    {
-      "name": "story: heading levels do not skip",
-      "ok": true,
-      "detail": false
-    },
-    {
-      "name": "story: buttons have accessible names",
-      "ok": true,
-      "detail": 0
-    },
-    {
-      "name": "story: links have accessible names",
-      "ok": true,
-      "detail": 0
-    },
-    {
-      "name": "story: has exactly one main landmark",
-      "ok": true,
-      "detail": 1
-    },
-    {
-      "name": "story: explanation opens by keyboard and updates aria-expanded",
-      "ok": true,
-      "detail": null
-    },
-    {
-      "name": "story: previous, archive, and next links have descriptive names",
-      "ok": true,
-      "detail": [
-        "← 前の話「閉宴後も二名」",
-        "全100話一覧",
-        "次の話「移行元の端末です」→"
-      ]
     },
     {
       "name": "accessibility audit: no browser JavaScript errors",
@@ -267,5 +184,14 @@
       "detail": []
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "name": "story: published page loaded",
+      "ok": false,
+      "detail": {
+        "ready": false,
+        "attempt": 8
+      }
+    }
+  ]
 }
