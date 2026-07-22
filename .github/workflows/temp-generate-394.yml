@@ -1,0 +1,50 @@
+name: Temporary Generate 394
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-394.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate public data on fixed branch
+        run: |
+          set -euxo pipefail
+          git fetch origin '+refs/heads/coord/generated-394-20260722-1343:refs/remotes/origin/coord/generated-394-20260722-1343'
+          git switch -C coord/generated-394-20260722-1343 origin/coord/generated-394-20260722-1343
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          if text.count('384自治体') != 2:
+              raise SystemExit(f'unexpected 384 count: {text.count("384自治体")}')
+          text=text.replace('384自治体','394自治体')
+          p.write_text(text,encoding='utf-8')
+          PY
+          npm run validate:generated
+          cd ..
+          mapfile -t changed < <(git diff --name-only | sort)
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 3
+          test "${changed[0]}" = 'jichitai-compare/data/generated/municipalities.json'
+          test "${changed[1]}" = 'jichitai-compare/index.html'
+          test "${changed[2]}" = 'jichitai-compare/operations/progress.json'
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '公開更新: 生成データと表示件数を394自治体へ同期'
+          git push origin coord/generated-394-20260722-1343
