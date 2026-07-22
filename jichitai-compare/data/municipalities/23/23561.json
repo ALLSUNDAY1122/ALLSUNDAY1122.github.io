@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23561",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "設楽町",
+  "officialUrl": "https://www.town.shitara.lg.jp/",
+  "status": "verified",
+  "summary": "設楽町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認した。病児・病後児保育と学校給食費は現行の具体的条件を確認できないためunavailableとした。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、保険診療の自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "満18歳に到達した日以後の最初の3月31日まで",
+        "incomeLimit": "保護者等の所得制限なし",
+        "coverage": "健康保険が適用される医療費の自己負担額",
+        "highSchoolCondition": "高校生等は保護者の住所が設楽町内にあること",
+        "payment": "受給者証による現物給付または後日の助成申請。受診内容により手続きが異なる"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/soshiki/3/1102.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "現行の町公式子育て情報では、病児・病後児保育の実施施設、対象年齢、利用料、申込方法を確認できない。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "reason": "町公式の出産・子育て分類および保育サービス案内に、現行の病児・病後児保育サービスの具体的提供条件が掲載されていない",
+        "confirmedRange": "一般保育、延長保育、一時保育、こども誰でも通園制度は案内されているが、病児・病後児保育の施設情報は確認できない",
+        "handling": "利用可否、広域利用、対象年齢、料金は町民課へ個別確認が必要",
+        "note": "近隣自治体の制度を設楽町民が利用できるとは推測しない"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/life/1/9/", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児の保育料を無料とし、一定の多子世帯では3歳未満の第2子以降も申請により無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "幼児教育・保育の無償化により3～5歳児の保育料は無料",
+        "underThree": "0～2歳児の保育料は所得額や児童の年齢等により決定",
+        "multiChild": "満18歳未満の児童が2人以上いる世帯のうち、年度4月1日時点で3歳未満の第2子以降は申請により無料",
+        "mealSupport": "3～5歳児の副食費は町が全額補助",
+        "facilities": "名倉保育園、田口・清嶺保育園、津具保育園"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/soshiki/3/1105.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "令和8年度の一般世帯に適用される学校給食費の金額・無償化・助成条件を、現行の町公式教育ページで確認できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "reason": "町公式の教育、小学校、中学校、入園・入学の現行公開ページに、令和8年度の給食費単価や一般世帯向け支援条件が掲載されていない",
+        "confirmedRange": "町立小中学校が給食を実施していることは確認できるが、過年度予算・議会資料の金額を現行制度として転用しない",
+        "handling": "現年度の給食費と助成・減免は教育課または在籍校へ個別確認が必要",
+        "note": "古い予算資料や会議録から現在額を推測しない"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/life/1/10/", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "設楽町内に住所を有する出産後1年未満の母子で、育児不安が強い、養育支援が必要、社会的支援が必要などの要件に該当する人",
+        "types": "宿泊型、デイサービス型、アウトリーチ型",
+        "care": "母体の休養・心理的ケア、乳房管理・授乳指導、乳児の発育確認、沐浴・スキンケア等の育児指導",
+        "excluded": "入院または医療的介入が必要な母子は対象外",
+        "application": "町への申請と利用承認が必要。利用日数・自己負担額は申請時に確認"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/online/reiki/reiki_honbun/r253RG00000697.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "condition": "保育所等に在籍していない0歳6か月から満3歳未満の児童",
+        "facility": "設楽町立田口清嶺保育園",
+        "limit": "児童1人につき月10時間まで。未利用時間の翌月繰越なし",
+        "fee": "1時間300円。給食費は別途必要",
+        "hours": "9時30分～14時30分、1日上限5時間",
+        "application": "総合支援システムで認定申請後、初回面談と利用予約が必要"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/soshiki/3/8333.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "条件を満たす若者が町内で住宅を取得・整備する場合、最大200万円を補助する。",
+      "details": {
+        "program": "設楽町若者定住促進住宅補助金",
+        "maximum": "上限200万円",
+        "purpose": "若者の定住促進を目的に住宅取得・整備を支援",
+        "condition": "申請者の年齢、住宅の所在地・所有、町内居住、税の滞納等について制度要件を満たすこと",
+        "application": "契約・着工前を含む所定の時期に企画ダム対策課へ事前相談し、確認申請・交付申請を行う",
+        "note": "対象経費、補助率、加算、併用可否は現行要綱と町の審査による"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/soshiki/5/1219.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "可燃性粗大ごみ等は分別ガイドブック・収集カレンダーに従い、中田クリーンセンターへの持込みなど指定方法で処分する。",
+      "details": {
+        "guide": "町公式のごみ・資源分別ガイドブックと令和8年度収集カレンダーで品目・地区別の方法を確認",
+        "directCarry": "可燃性粗大ごみは中田クリーンセンターへの持込み対象となる",
+        "collection": "可燃ごみは毎週、不燃ごみとプラスチック資源は隔週で収集。粗大ごみは通常袋収集と分けて確認",
+        "fee": "持込料金・受入日時・寸法制限は品目ごとに中田クリーンセンターまたは生活課へ確認",
+        "excluded": "家電4品目や処理困難物は通常の町収集とは異なる処分方法が必要"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/soshiki/4/8467.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震等の危険区域、避難所、防災行動を掲載した防災ガイドブックを公開する。",
+      "details": {
+        "guide": "令和8年4月更新の設楽町防災ガイドブック",
+        "risks": "洪水、土砂災害、地震等のハザード情報を掲載",
+        "evacuation": "指定緊急避難場所・指定避難所と避難行動を確認できる",
+        "digital": "設楽町防災アプリでハザードマップ、避難所情報、防災情報を確認可能",
+        "planning": "自宅周辺の危険箇所と避難経路を平時に確認する"
+      },
+      "source": {"url": "https://www.town.shitara.lg.jp/life/1/5/30/", "checkedAt": "2026-07-22"}
+    }
+  }
+}
