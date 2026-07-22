@@ -115,7 +115,7 @@ async function auditTop(page) {
   const loaded = await open(page, '/', async (target, attempt) => {
     try { await target.waitForFunction(() => document.querySelector('#storyGrid')?.getAttribute('aria-busy') === 'false' && document.querySelectorAll('.card').length === 100, null, { timeout: 20000 }); } catch (error) {}
     return target.evaluate((currentAttempt) => ({
-      ready: document.querySelectorAll('.card').length === 100 && document.querySelector('#storyGrid')?.getAttribute('aria-busy') === 'false' && Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-007')),
+      ready: document.querySelectorAll('.card').length === 100 && document.querySelector('#storyGrid')?.getAttribute('aria-busy') === 'false' && Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-007')) && Array.from(document.scripts).some((script) => script.src.includes('assets/analytics.js?v=20260723-003')),
       attempt: currentAttempt,
       cards: document.querySelectorAll('.card').length,
       gridBusy: document.querySelector('#storyGrid')?.getAttribute('aria-busy'),
@@ -141,7 +141,7 @@ async function auditTop(page) {
 }
 
 async function auditArchive(page) {
-  const loaded = await open(page, '/archive.html', async (target, attempt) => ({ ready: await target.locator('.archive-item').count() === 100, attempt, items: await target.locator('.archive-item').count() }), 'archive', 8);
+  const loaded = await open(page, '/archive.html', async (target, attempt) => ({ ready: await target.locator('.archive-item').count() === 100 && await target.locator('script[src*="analytics.js?v=20260723-003"]').count() === 1, attempt, items: await target.locator('.archive-item').count() }), 'archive', 8);
   if (!loaded) return;
   await skipLink(page, 'archive');
   await focusIndicator(page, '.archive-jump a', 'archive jump link');
@@ -151,13 +151,29 @@ async function auditArchive(page) {
 }
 
 async function auditStory(page) {
-  const loaded = await open(page, '/stories/spare-key-returned.html', async (target, attempt) => ({ ready: await target.locator('.story-pagination a').count() === 3, attempt }), 'story', 8);
+  const loaded = await open(page, '/stories/spare-key-returned.html?utm_source=web_share&utm_medium=social&utm_campaign=onsite_share', async (target, attempt) => ({
+    ready: await target.locator('.story-pagination a').count() === 3 && await target.locator('#shareButton').count() === 1 && await target.locator('script[src*="engagement.js?v=20260723-004"]').count() === 1,
+    attempt,
+    canonical: await target.locator('link[rel="canonical"]').getAttribute('href'),
+    campaign: await target.evaluate(() => window.YORUGATARI_ENGAGEMENT?.campaign)
+  }), 'story', 8);
   if (!loaded) return;
   await skipLink(page, 'story');
   await focusIndicator(page, '#explainBtn', 'story explanation button');
+  await focusIndicator(page, '#shareButton', 'story share button');
   await materialize(page);
   await axe(page, 'story');
   await structure(page, 'story');
+
+  const share = await page.evaluate(() => ({
+    label: document.querySelector('#shareButton')?.textContent.trim(),
+    statusLive: document.querySelector('.share-status')?.getAttribute('aria-live'),
+    canonical: document.querySelector('link[rel="canonical"]')?.href,
+    campaign: window.YORUGATARI_ENGAGEMENT?.campaign,
+    shareUrl: window.YORUGATARI_ENGAGEMENT?.shareUrl
+  }));
+  record('story: tracked share control has an accessible name and live status', share.label === '共有する' && share.statusLive === 'polite', share);
+  record('story: tracked URL preserves canonical metadata', share.canonical === `${base}/stories/spare-key-returned.html` && share.campaign === 'onsite-share' && String(share.shareUrl).includes('utm_campaign=onsite_share'), share);
 
   const button = page.locator('#explainBtn');
   await button.focus();
@@ -169,7 +185,7 @@ async function auditStory(page) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.6' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.7' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
