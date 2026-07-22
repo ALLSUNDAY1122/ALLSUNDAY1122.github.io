@@ -39,6 +39,8 @@ function localAudit() {
       ['og:title', countMatches(html, /<meta\s+property=["']og:title["']/gi) === 1],
       ['og:description', countMatches(html, /<meta\s+property=["']og:description["']/gi) === 1],
       ['og:image', countMatches(html, /<meta\s+property=["']og:image["']/gi) === 1],
+      ['og:image width', html.includes('property="og:image:width" content="2172"')],
+      ['og:image height', html.includes('property="og:image:height" content="724"')],
       ['og:image:alt', countMatches(html, /<meta\s+property=["']og:image:alt["']/gi) === 1],
       ['twitter:card', countMatches(html, /<meta\s+name=["']twitter:card["']/gi) === 1],
       ['twitter:image', countMatches(html, /<meta\s+name=["']twitter:image["']/gi) === 1],
@@ -96,6 +98,8 @@ async function socialMetadata(page) {
       title: get('meta[property="og:title"]'),
       description: get('meta[property="og:description"]'),
       image: get('meta[property="og:image"]'),
+      imageWidth: get('meta[property="og:image:width"]'),
+      imageHeight: get('meta[property="og:image:height"]'),
       imageAlt: get('meta[property="og:image:alt"]'),
       twitterCard: get('meta[name="twitter:card"]'),
       twitterImage: get('meta[name="twitter:image"]'),
@@ -106,7 +110,8 @@ async function socialMetadata(page) {
 
 function completeSocial(meta) {
   return Boolean(
-    meta.type && meta.url && meta.title && meta.description && meta.image && meta.imageAlt &&
+    meta.type && meta.url && meta.title && meta.description && meta.image &&
+    meta.imageWidth === '2172' && meta.imageHeight === '724' && meta.imageAlt &&
     meta.twitterCard === 'summary_large_image' && meta.twitterImage && meta.twitterImageAlt
   );
 }
@@ -122,13 +127,13 @@ async function auditShareImage() {
       const width = png ? buffer.readUInt32BE(16) : 0;
       const height = png ? buffer.readUInt32BE(20) : 0;
       detail = { status: response.status, contentType: response.headers.get('content-type'), bytes: buffer.length, width, height, attempt };
-      if (response.ok && png && width === 2048 && height === 683) break;
+      if (response.ok && png && width === 2172 && height === 724) break;
     } catch (error) {
       detail = { attempt, error: error.message };
     }
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
-  record('published: social preview image is a valid PNG with declared dimensions', Boolean(detail && detail.status === 200 && detail.width === 2048 && detail.height === 683), detail);
+  record('published: social preview image is a valid PNG with declared dimensions', Boolean(detail && detail.status === 200 && detail.width === 2172 && detail.height === 724), detail);
 }
 
 async function browserAudit() {
@@ -137,7 +142,7 @@ async function browserAudit() {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Engagement-Audit/1.0'
+    userAgent: 'Yorugatari-Engagement-Audit/1.1'
   });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', {
@@ -202,6 +207,9 @@ async function browserAudit() {
     shareState
   );
 
+  try {
+    await page.waitForFunction(() => document.querySelectorAll('.related a').length >= 2, null, { timeout: 12000 });
+  } catch (error) {}
   const circulation = await page.evaluate(() => ({
     pagination: Array.from(document.querySelectorAll('.story-pagination a')).map((link) => link.textContent.trim()),
     related: Array.from(document.querySelectorAll('.related a')).map((link) => link.textContent.trim()),
@@ -220,6 +228,8 @@ async function browserAudit() {
     return { ready: response?.status() === 200 && completeSocial(meta), status: response?.status(), attempt, meta };
   }, 6);
   record('published: policy page has complete social preview metadata', policy.ready, policy);
+  record('published: normal pages have no browser JavaScript errors', browserErrors.length === 0, browserErrors.slice());
+  browserErrors.length = 0;
 
   const missingUrl = `${base}/stories/this-page-does-not-exist-${Date.now()}.html`;
   const missing = await openWithRetry(page, missingUrl, async (targetPage, response, attempt) => {
@@ -238,8 +248,9 @@ async function browserAudit() {
     missing.ready && missing.noindex === 'noindex,follow' && missing.top && missing.trackingPath === '/yorugatari/404',
     missing
   );
+  const errorPageErrors = browserErrors.filter((message) => !message.includes('server responded with a status of 404'));
+  record('published: custom 404 has no JavaScript exceptions', errorPageErrors.length === 0, errorPageErrors);
 
-  record('published: engagement audit has no browser JavaScript errors', browserErrors.length === 0, browserErrors);
   await context.close();
   await browser.close();
   await auditShareImage();
