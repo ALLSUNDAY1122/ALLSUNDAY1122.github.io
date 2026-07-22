@@ -167,11 +167,11 @@ async function auditTop(page) {
   );
   if (!loaded) return;
 
+  await auditSkipLink(page, 'top');
+  await auditFocusIndicator(page, '#searchInput', 'top search field');
   await materializeDeferredContent(page);
   await auditAxe(page, 'top');
   await auditDocumentStructure(page, 'top');
-  await auditSkipLink(page, 'top');
-  await auditFocusIndicator(page, '#searchInput', 'top search field');
 
   const search = page.locator('#searchInput');
   await search.focus();
@@ -188,21 +188,21 @@ async function auditTop(page) {
 async function auditArchive(page) {
   const loaded = await openWithRetry(page, '/archive.html', '.archive-item', null, 'archive', 6);
   if (!loaded) return;
+  await auditSkipLink(page, 'archive');
+  await auditFocusIndicator(page, '.archive-jump a', 'archive jump link');
   await materializeDeferredContent(page);
   await auditAxe(page, 'archive');
   await auditDocumentStructure(page, 'archive');
-  await auditSkipLink(page, 'archive');
-  await auditFocusIndicator(page, '.archive-jump a', 'archive jump link');
 }
 
 async function auditStory(page) {
   const loaded = await openWithRetry(page, '/stories/spare-key-returned.html', '.story-pagination', null, 'story', 6);
   if (!loaded) return;
+  await auditSkipLink(page, 'story');
+  await auditFocusIndicator(page, '#explainBtn', 'story explanation button');
   await materializeDeferredContent(page);
   await auditAxe(page, 'story');
   await auditDocumentStructure(page, 'story');
-  await auditSkipLink(page, 'story');
-  await auditFocusIndicator(page, '#explainBtn', 'story explanation button');
 
   const button = page.locator('#explainBtn');
   await button.focus();
@@ -219,7 +219,7 @@ async function auditStory(page) {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Accessibility-Audit/1.3'
+    userAgent: 'Yorugatari-Accessibility-Audit/1.4'
   });
   const page = await context.newPage();
   const browserErrors = [];
