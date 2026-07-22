@@ -1,4 +1,4 @@
-name: Temporary Sync Jichitai Queue 505
+name: Temporary Sync Jichitai Queue 505 Final
 
 on:
   push:
@@ -33,7 +33,6 @@ jobs:
           q=json.loads(p.read_text(encoding='utf-8'))
           by={e['region']:e for e in q['entries']}
           fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
-          state_paths={r:f'jichitai-compare/operations/control/regions/{r}.json' for r in fields}
           def show(ref,path): return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
           def belongs(region,pref):
               n=int(pref)
@@ -47,7 +46,8 @@ jobs:
                   d=json.loads(show(ref,path))
                   if belongs(region,d['prefectureCode']): items.append({'code':d['code'],'name':d['name']})
               items.sort(key=lambda x:x['code'])
-              s=json.loads(show(ref,state_paths[region]))
+              state_path=f'jichitai-compare/operations/control/regions/{region}.json'
+              s=json.loads(show(ref,state_path))
               pending=int(s.get(fields[region],0))
               e=by[region]
               e['municipalities']=items;e['count']=len(items);e['pendingSinceLastRelease']=pending
