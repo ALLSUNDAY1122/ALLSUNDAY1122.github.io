@@ -52,8 +52,8 @@ jobs:
           rm -rf "$RUNNER_TEMP/build/lib" "$RUNNER_TEMP/build/test"
           cp -R "$SOURCE/lib" "$RUNNER_TEMP/build/lib"
           cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
-          cp "$SOURCE/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
           cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          cp apps/ai-handover-log/overrides/pubspec.yaml "$RUNNER_TEMP/build/pubspec.yaml"
           if [ -d "$SOURCE/assets" ]; then
             rm -rf "$RUNNER_TEMP/build/assets"
             cp -R "$SOURCE/assets" "$RUNNER_TEMP/build/assets"
