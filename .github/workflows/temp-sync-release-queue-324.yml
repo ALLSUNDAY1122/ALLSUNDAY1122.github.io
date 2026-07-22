@@ -1,4 +1,4 @@
-name: Temporary Sync Release Queue 324
+name: Temporary Sync Release Queue 324 Final
 
 on:
   push:
@@ -63,14 +63,7 @@ jobs:
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
           q['updatedAt']='2026-07-22T10:18:00+09:00'
           q['status']='active'
-          q['summary']={
-              'regionalMergedMunicipalities':total,
-              'latestGeneratedMunicipalityCount':324,
-              'latestGeneratedPullRequest':564,
-              'latestPublicCountPullRequest':564,
-              'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],
-              'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域を優先して全国統合する。"
-          }
+          q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':324,'latestGeneratedPullRequest':564,'latestPublicCountPullRequest':564,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域を優先して全国統合する。"}
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           print('regional total',total,'pending',pending)
           PY
