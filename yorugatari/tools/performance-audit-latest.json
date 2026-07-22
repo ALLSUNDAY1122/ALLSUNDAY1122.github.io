@@ -1,74 +1,81 @@
 {
-  "auditedAt": "2026-07-22T20:01:09.020Z",
+  "auditedAt": "2026-07-22T20:07:49.367Z",
   "baseUrl": "https://allsunday1122.github.io/yorugatari",
   "success": true,
+  "releaseCheck": {
+    "attempt": 1,
+    "topStatus": 200,
+    "archiveStatus": 200,
+    "topOptimization": true,
+    "archiveOptimization": true
+  },
   "runs": [
     {
       "target": "top",
       "profile": "mobile",
       "requestedUrl": "https://allsunday1122.github.io/yorugatari/",
       "finalUrl": "https://allsunday1122.github.io/yorugatari/",
-      "fetchTime": "2026-07-22T20:01:19.418Z",
+      "fetchTime": "2026-07-22T20:07:53.066Z",
       "lighthouseVersion": "13.4.1",
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "scores": {
-        "performance": 0.77,
+        "performance": 0.95,
         "bestPractices": 0.96,
         "seo": 1
       },
       "metrics": {
         "firstContentfulPaint": {
-          "score": 0.84,
-          "numericValue": 1992.912,
+          "score": 1,
+          "numericValue": 1056.9279999999999,
           "numericUnit": "millisecond",
-          "displayValue": "2.0 s",
+          "displayValue": "1.1 s",
           "title": "First Contentful Paint"
         },
         "largestContentfulPaint": {
-          "score": 0.97,
-          "numericValue": 1992.912,
+          "score": 1,
+          "numericValue": 1086.4279999999999,
           "numericUnit": "millisecond",
-          "displayValue": "2.0 s",
+          "displayValue": "1.1 s",
           "title": "Largest Contentful Paint"
         },
         "speedIndex": {
-          "score": 0.99,
-          "numericValue": 2299.020222475054,
+          "score": 1,
+          "numericValue": 1056.9279999999999,
           "numericUnit": "millisecond",
-          "displayValue": "2.3 s",
+          "displayValue": "1.1 s",
           "title": "Speed Index"
         },
         "totalBlockingTime": {
-          "score": 0.33,
-          "numericValue": 871.0000000000002,
+          "score": 1,
+          "numericValue": 2,
           "numericUnit": "millisecond",
-          "displayValue": "870 ms",
+          "displayValue": "0 ms",
           "title": "Total Blocking Time"
         },
         "cumulativeLayoutShift": {
-          "score": 1,
-          "numericValue": 0,
+          "score": 0.8,
+          "numericValue": 0.1341200158703196,
           "numericUnit": "unitless",
-          "displayValue": "0",
+          "displayValue": "0.134",
           "title": "Cumulative Layout Shift"
         },
         "interactive": {
-          "score": 0.96,
-          "numericValue": 2970.7120000000004,
+          "score": 1,
+          "numericValue": 1089.378,
           "numericUnit": "millisecond",
-          "displayValue": "3.0 s",
+          "displayValue": "1.1 s",
           "title": "Time to Interactive"
         },
         "serverResponseTime": {
           "score": 1,
-          "numericValue": 71,
+          "numericValue": 30,
           "numericUnit": "millisecond",
-          "displayValue": "Root document took 70 ms",
+          "displayValue": "Root document took 30 ms",
           "title": "Initial server response time was short"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 33132,
+          "numericValue": 33185,
           "numericUnit": "byte",
           "displayValue": "Total size was 32 KiB",
           "title": "Avoids enormous network payloads"
@@ -79,27 +86,27 @@
         {
           "resourceType": "total",
           "requestCount": 14,
-          "transferSize": 32082
+          "transferSize": 32144
         },
         {
           "resourceType": "script",
           "requestCount": 11,
-          "transferSize": 24279
+          "transferSize": 24416
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4403
+          "transferSize": 4272
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2730
+          "transferSize": 2803
         },
         {
           "resourceType": "other",
           "requestCount": 1,
-          "transferSize": 670
+          "transferSize": 653
         },
         {
           "resourceType": "image",
@@ -119,14 +126,14 @@
         {
           "resourceType": "third-party",
           "requestCount": 14,
-          "transferSize": 32082
+          "transferSize": 32144
         }
       ],
       "largestRequests": [
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
           "resourceType": "Stylesheet",
-          "transferSize": 4403,
+          "transferSize": 4272,
           "resourceSize": 14789,
           "statusCode": 200,
           "mimeType": "text/css"
@@ -134,7 +141,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/app.js?v=20260723-005",
           "resourceType": "Script",
-          "transferSize": 3052,
+          "transferSize": 3182,
           "resourceSize": 9207,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -142,7 +149,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2907,
+          "transferSize": 2928,
           "resourceSize": 6103,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -150,71 +157,71 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/",
           "resourceType": "Document",
-          "transferSize": 2730,
-          "resourceSize": 6390,
+          "transferSize": 2803,
+          "resourceSize": 6537,
           "statusCode": 200,
           "mimeType": "text/html"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2221,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2212,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2171,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2142,
+          "transferSize": 2271,
           "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2112,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2079,
-          "resourceSize": 4687,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2066,
+          "transferSize": 2251,
           "resourceSize": 4642,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2131,
+          "resourceSize": 4719,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2115,
+          "resourceSize": 4711,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2080,
+          "resourceSize": 4572,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2074,
+          "resourceSize": 4612,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2064,
+          "resourceSize": 4687,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2052,
+          "transferSize": 2044,
           "resourceSize": 4410,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -256,18 +263,18 @@
         {
           "id": "bootup-time",
           "score": 1,
-          "numericValue": 425.09200000000004,
+          "numericValue": 20.10399999999998,
           "numericUnit": "millisecond",
-          "displayValue": "0.4 s",
+          "displayValue": "0.0 s",
           "title": "JavaScript execution time"
         },
         {
           "id": "mainthread-work-breakdown",
-          "score": 0,
-          "numericValue": 3750.771999999998,
+          "score": 1,
+          "numericValue": 654.7880000000005,
           "numericUnit": "millisecond",
-          "displayValue": "3.8 s",
-          "title": "Minimize main-thread work"
+          "displayValue": "0.7 s",
+          "title": "Minimizes main-thread work"
         }
       ]
     },
@@ -276,41 +283,41 @@
       "profile": "desktop",
       "requestedUrl": "https://allsunday1122.github.io/yorugatari/",
       "finalUrl": "https://allsunday1122.github.io/yorugatari/",
-      "fetchTime": "2026-07-22T20:01:28.500Z",
+      "fetchTime": "2026-07-22T20:08:00.965Z",
       "lighthouseVersion": "13.4.1",
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "scores": {
-        "performance": 0.96,
+        "performance": 0.99,
         "bestPractices": 1,
         "seo": 1
       },
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 261.1816,
+          "numericValue": 277.9516,
           "numericUnit": "millisecond",
           "displayValue": "0.3 s",
           "title": "First Contentful Paint"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 364.6816,
+          "numericValue": 288.4516,
           "numericUnit": "millisecond",
-          "displayValue": "0.4 s",
+          "displayValue": "0.3 s",
           "title": "Largest Contentful Paint"
         },
         "speedIndex": {
           "score": 1,
-          "numericValue": 477.2771546639876,
+          "numericValue": 277.9516,
           "numericUnit": "millisecond",
-          "displayValue": "0.5 s",
+          "displayValue": "0.3 s",
           "title": "Speed Index"
         },
         "totalBlockingTime": {
-          "score": 0.88,
-          "numericValue": 156.5,
+          "score": 1,
+          "numericValue": 0,
           "numericUnit": "millisecond",
-          "displayValue": "160 ms",
+          "displayValue": "0 ms",
           "title": "Total Blocking Time"
         },
         "cumulativeLayoutShift": {
@@ -322,21 +329,21 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 467.7316,
+          "numericValue": 289.5016,
           "numericUnit": "millisecond",
-          "displayValue": "0.5 s",
+          "displayValue": "0.3 s",
           "title": "Time to Interactive"
         },
         "serverResponseTime": {
           "score": 1,
-          "numericValue": 19,
+          "numericValue": 18,
           "numericUnit": "millisecond",
           "displayValue": "Root document took 20 ms",
           "title": "Initial server response time was short"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 31603,
+          "numericValue": 31878,
           "numericUnit": "byte",
           "displayValue": "Total size was 31 KiB",
           "title": "Avoids enormous network payloads"
@@ -347,27 +354,27 @@
         {
           "resourceType": "total",
           "requestCount": 14,
-          "transferSize": 31603
+          "transferSize": 31878
         },
         {
           "resourceType": "script",
           "requestCount": 11,
-          "transferSize": 24276
+          "transferSize": 24416
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4399
+          "transferSize": 4271
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2544
+          "transferSize": 2754
         },
         {
           "resourceType": "other",
           "requestCount": 1,
-          "transferSize": 384
+          "transferSize": 437
         },
         {
           "resourceType": "image",
@@ -387,14 +394,14 @@
         {
           "resourceType": "third-party",
           "requestCount": 14,
-          "transferSize": 31603
+          "transferSize": 31878
         }
       ],
       "largestRequests": [
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
           "resourceType": "Stylesheet",
-          "transferSize": 4399,
+          "transferSize": 4271,
           "resourceSize": 14789,
           "statusCode": 200,
           "mimeType": "text/css"
@@ -402,7 +409,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/app.js?v=20260723-005",
           "resourceType": "Script",
-          "transferSize": 3035,
+          "transferSize": 3182,
           "resourceSize": 9207,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -410,7 +417,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2954,
+          "transferSize": 2916,
           "resourceSize": 6103,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -418,55 +425,39 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/",
           "resourceType": "Document",
-          "transferSize": 2544,
-          "resourceSize": 6390,
+          "transferSize": 2754,
+          "resourceSize": 6537,
           "statusCode": 200,
           "mimeType": "text/html"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2215,
-          "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2190,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2158,
-          "resourceSize": 4719,
+          "transferSize": 2265,
+          "resourceSize": 4687,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2140,
+          "transferSize": 2126,
           "resourceSize": 4711,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2107,
-          "resourceSize": 4687,
+          "transferSize": 2104,
+          "resourceSize": 4719,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2103,
+          "transferSize": 2100,
           "resourceSize": 4612,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -474,15 +465,31 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2062,
+          "transferSize": 2080,
           "resourceSize": 4572,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2070,
+          "resourceSize": 4618,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2070,
+          "resourceSize": 4410,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2049,
+          "transferSize": 2050,
           "resourceSize": 4642,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -524,7 +531,7 @@
         {
           "id": "bootup-time",
           "score": 1,
-          "numericValue": 0.805,
+          "numericValue": 0.8370000000000001,
           "numericUnit": "millisecond",
           "displayValue": "0.0 s",
           "title": "JavaScript execution time"
@@ -532,9 +539,9 @@
         {
           "id": "mainthread-work-breakdown",
           "score": 1,
-          "numericValue": 528.717,
+          "numericValue": 159.92,
           "numericUnit": "millisecond",
-          "displayValue": "0.5 s",
+          "displayValue": "0.2 s",
           "title": "Minimizes main-thread work"
         }
       ]
@@ -544,67 +551,67 @@
       "profile": "mobile",
       "requestedUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
       "finalUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
-      "fetchTime": "2026-07-22T20:01:36.415Z",
+      "fetchTime": "2026-07-22T20:08:09.148Z",
       "lighthouseVersion": "13.4.1",
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "scores": {
-        "performance": 0.7,
+        "performance": 1,
         "bestPractices": 1,
         "seo": 1
       },
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 922.3621,
+          "numericValue": 913.7621,
           "numericUnit": "millisecond",
           "displayValue": "0.9 s",
           "title": "First Contentful Paint"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 922.3621,
+          "numericValue": 913.7621,
           "numericUnit": "millisecond",
           "displayValue": "0.9 s",
           "title": "Largest Contentful Paint"
         },
         "speedIndex": {
           "score": 1,
-          "numericValue": 1333.3712476944515,
+          "numericValue": 913.7621,
           "numericUnit": "millisecond",
-          "displayValue": "1.3 s",
+          "displayValue": "0.9 s",
           "title": "Speed Index"
         },
         "totalBlockingTime": {
-          "score": 0.41,
-          "numericValue": 714,
+          "score": 1,
+          "numericValue": 0,
           "numericUnit": "millisecond",
-          "displayValue": "710 ms",
+          "displayValue": "0 ms",
           "title": "Total Blocking Time"
         },
         "cumulativeLayoutShift": {
-          "score": 0.5,
-          "numericValue": 0.2464454976303317,
+          "score": 1,
+          "numericValue": 0,
           "numericUnit": "unitless",
-          "displayValue": "0.246",
+          "displayValue": "0",
           "title": "Cumulative Layout Shift"
         },
         "interactive": {
           "score": 1,
-          "numericValue": 1688.2621000000001,
+          "numericValue": 913.7621000000001,
           "numericUnit": "millisecond",
-          "displayValue": "1.7 s",
+          "displayValue": "0.9 s",
           "title": "Time to Interactive"
         },
         "serverResponseTime": {
           "score": 1,
-          "numericValue": 63,
+          "numericValue": 18,
           "numericUnit": "millisecond",
-          "displayValue": "Root document took 60 ms",
+          "displayValue": "Root document took 20 ms",
           "title": "Initial server response time was short"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 29720,
+          "numericValue": 29799,
           "numericUnit": "byte",
           "displayValue": "Total size was 29 KiB",
           "title": "Avoids enormous network payloads"
@@ -615,22 +622,22 @@
         {
           "resourceType": "total",
           "requestCount": 13,
-          "transferSize": 29720
+          "transferSize": 29799
         },
         {
           "resourceType": "script",
           "requestCount": 11,
-          "transferSize": 23162
+          "transferSize": 23018
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4277
+          "transferSize": 4410
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2281
+          "transferSize": 2371
         },
         {
           "resourceType": "image",
@@ -655,14 +662,14 @@
         {
           "resourceType": "third-party",
           "requestCount": 13,
-          "transferSize": 29720
+          "transferSize": 29799
         }
       ],
       "largestRequests": [
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
           "resourceType": "Stylesheet",
-          "transferSize": 4277,
+          "transferSize": 4410,
           "resourceSize": 14789,
           "statusCode": 200,
           "mimeType": "text/css"
@@ -670,7 +677,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2972,
+          "transferSize": 2938,
           "resourceSize": 6103,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -678,39 +685,15 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/archive.html",
           "resourceType": "Document",
-          "transferSize": 2281,
-          "resourceSize": 5416,
+          "transferSize": 2371,
+          "resourceSize": 5725,
           "statusCode": 200,
           "mimeType": "text/html"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2221,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2182,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2165,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2153,
+          "transferSize": 2224,
           "resourceSize": 4618,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -718,7 +701,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2135,
+          "transferSize": 2206,
           "resourceSize": 4642,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -726,7 +709,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2118,
+          "transferSize": 2137,
           "resourceSize": 4711,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -734,7 +717,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2096,
+          "transferSize": 2122,
           "resourceSize": 4612,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -742,8 +725,32 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2082,
+          "transferSize": 2110,
           "resourceSize": 4687,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2104,
+          "resourceSize": 4719,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2092,
+          "resourceSize": 4410,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2065,
+          "resourceSize": 4572,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
@@ -792,7 +799,7 @@
         {
           "id": "bootup-time",
           "score": 1,
-          "numericValue": 7.188000000000001,
+          "numericValue": 7.596000000000001,
           "numericUnit": "millisecond",
           "displayValue": "0.0 s",
           "title": "JavaScript execution time"
@@ -800,9 +807,9 @@
         {
           "id": "mainthread-work-breakdown",
           "score": 1,
-          "numericValue": 1990.2199999999998,
+          "numericValue": 404.564,
           "numericUnit": "millisecond",
-          "displayValue": "2.0 s",
+          "displayValue": "0.4 s",
           "title": "Minimizes main-thread work"
         }
       ]
@@ -812,67 +819,67 @@
       "profile": "desktop",
       "requestedUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
       "finalUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
-      "fetchTime": "2026-07-22T20:01:43.497Z",
+      "fetchTime": "2026-07-22T20:08:16.237Z",
       "lighthouseVersion": "13.4.1",
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "scores": {
-        "performance": 0.75,
+        "performance": 1,
         "bestPractices": 1,
         "seo": 1
       },
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 261.2994,
+          "numericValue": 265.7892,
           "numericUnit": "millisecond",
           "displayValue": "0.3 s",
           "title": "First Contentful Paint"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 361.2994,
+          "numericValue": 265.7892,
           "numericUnit": "millisecond",
-          "displayValue": "0.4 s",
+          "displayValue": "0.3 s",
           "title": "Largest Contentful Paint"
         },
         "speedIndex": {
           "score": 1,
-          "numericValue": 494.3675011241686,
+          "numericValue": 342.2476365247533,
           "numericUnit": "millisecond",
-          "displayValue": "0.5 s",
+          "displayValue": "0.3 s",
           "title": "Speed Index"
         },
         "totalBlockingTime": {
-          "score": 0.9,
-          "numericValue": 149.5,
+          "score": 1,
+          "numericValue": 0,
           "numericUnit": "millisecond",
-          "displayValue": "150 ms",
+          "displayValue": "0 ms",
           "title": "Total Blocking Time"
         },
         "cumulativeLayoutShift": {
-          "score": 0.13,
-          "numericValue": 0.5513395711500975,
+          "score": 1,
+          "numericValue": 0,
           "numericUnit": "unitless",
-          "displayValue": "0.551",
+          "displayValue": "0",
           "title": "Cumulative Layout Shift"
         },
         "interactive": {
           "score": 1,
-          "numericValue": 460.8494,
+          "numericValue": 265.78920000000005,
           "numericUnit": "millisecond",
-          "displayValue": "0.5 s",
+          "displayValue": "0.3 s",
           "title": "Time to Interactive"
         },
         "serverResponseTime": {
           "score": 1,
-          "numericValue": 19,
+          "numericValue": 20,
           "numericUnit": "millisecond",
           "displayValue": "Root document took 20 ms",
           "title": "Initial server response time was short"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 29787,
+          "numericValue": 29792,
           "numericUnit": "byte",
           "displayValue": "Total size was 29 KiB",
           "title": "Avoids enormous network payloads"
@@ -883,22 +890,22 @@
         {
           "resourceType": "total",
           "requestCount": 13,
-          "transferSize": 29787
+          "transferSize": 29792
         },
         {
           "resourceType": "script",
           "requestCount": 11,
-          "transferSize": 23072
+          "transferSize": 23139
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4353
+          "transferSize": 4279
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2362
+          "transferSize": 2374
         },
         {
           "resourceType": "image",
@@ -923,14 +930,14 @@
         {
           "resourceType": "third-party",
           "requestCount": 13,
-          "transferSize": 29787
+          "transferSize": 29792
         }
       ],
       "largestRequests": [
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
           "resourceType": "Stylesheet",
-          "transferSize": 4353,
+          "transferSize": 4279,
           "resourceSize": 14789,
           "statusCode": 200,
           "mimeType": "text/css"
@@ -938,7 +945,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2940,
+          "transferSize": 2966,
           "resourceSize": 6103,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -946,31 +953,47 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/archive.html",
           "resourceType": "Document",
-          "transferSize": 2362,
-          "resourceSize": 5416,
+          "transferSize": 2374,
+          "resourceSize": 5725,
           "statusCode": 200,
           "mimeType": "text/html"
         },
         {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2204,
+          "resourceSize": 4711,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2201,
+          "transferSize": 2155,
           "resourceSize": 4719,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2173,
-          "resourceSize": 4711,
+          "transferSize": 2149,
+          "resourceSize": 4410,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
+          "resourceType": "Script",
+          "transferSize": 2134,
+          "resourceSize": 4618,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2173,
+          "transferSize": 2125,
           "resourceSize": 4612,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -978,39 +1001,23 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2134,
+          "transferSize": 2115,
           "resourceSize": 4642,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2112,
-          "resourceSize": 4410,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2107,
+          "transferSize": 2112,
           "resourceSize": 4687,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2090,
-          "resourceSize": 4618,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 2081,
+          "transferSize": 2090,
           "resourceSize": 4572,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -1018,7 +1025,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/archive.js?v=20260723-004",
           "resourceType": "Script",
-          "transferSize": 1793,
+          "transferSize": 1814,
           "resourceSize": 4819,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -1060,7 +1067,7 @@
         {
           "id": "bootup-time",
           "score": 1,
-          "numericValue": 0.903,
+          "numericValue": 0.8180000000000001,
           "numericUnit": "millisecond",
           "displayValue": "0.0 s",
           "title": "JavaScript execution time"
@@ -1068,9 +1075,9 @@
         {
           "id": "mainthread-work-breakdown",
           "score": 1,
-          "numericValue": 509.63200000000006,
+          "numericValue": 144.46000000000004,
           "numericUnit": "millisecond",
-          "displayValue": "0.5 s",
+          "displayValue": "0.1 s",
           "title": "Minimizes main-thread work"
         }
       ]
@@ -1080,7 +1087,7 @@
       "profile": "mobile",
       "requestedUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
       "finalUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-      "fetchTime": "2026-07-22T20:01:51.245Z",
+      "fetchTime": "2026-07-22T20:08:24.119Z",
       "lighthouseVersion": "13.4.1",
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "scores": {
@@ -1091,23 +1098,23 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 969.4205,
+          "numericValue": 899.7385,
           "numericUnit": "millisecond",
-          "displayValue": "1.0 s",
+          "displayValue": "0.9 s",
           "title": "First Contentful Paint"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 969.4205,
+          "numericValue": 899.7385,
           "numericUnit": "millisecond",
-          "displayValue": "1.0 s",
+          "displayValue": "0.9 s",
           "title": "Largest Contentful Paint"
         },
         "speedIndex": {
           "score": 1,
-          "numericValue": 969.4205,
+          "numericValue": 899.7385,
           "numericUnit": "millisecond",
-          "displayValue": "1.0 s",
+          "displayValue": "0.9 s",
           "title": "Speed Index"
         },
         "totalBlockingTime": {
@@ -1126,21 +1133,21 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 969.4205,
+          "numericValue": 899.7385000000002,
           "numericUnit": "millisecond",
-          "displayValue": "1.0 s",
+          "displayValue": "0.9 s",
           "title": "Time to Interactive"
         },
         "serverResponseTime": {
           "score": 1,
-          "numericValue": 70,
+          "numericValue": 44,
           "numericUnit": "millisecond",
-          "displayValue": "Root document took 70 ms",
+          "displayValue": "Root document took 40 ms",
           "title": "Initial server response time was short"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 34369,
+          "numericValue": 34450,
           "numericUnit": "byte",
           "displayValue": "Total size was 34 KiB",
           "title": "Avoids enormous network payloads"
@@ -1151,22 +1158,22 @@
         {
           "resourceType": "total",
           "requestCount": 13,
-          "transferSize": 34369
+          "transferSize": 34450
         },
         {
           "resourceType": "script",
           "requestCount": 11,
-          "transferSize": 26573
+          "transferSize": 26561
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4255
+          "transferSize": 4310
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3541
+          "transferSize": 3579
         },
         {
           "resourceType": "image",
@@ -1191,14 +1198,14 @@
         {
           "resourceType": "third-party",
           "requestCount": 13,
-          "transferSize": 34369
+          "transferSize": 34450
         }
       ],
       "largestRequests": [
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/story.js?v=20260723-006",
           "resourceType": "Script",
-          "transferSize": 5185,
+          "transferSize": 5160,
           "resourceSize": 17457,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -1206,7 +1213,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260720-117",
           "resourceType": "Stylesheet",
-          "transferSize": 4255,
+          "transferSize": 4310,
           "resourceSize": 14789,
           "statusCode": 200,
           "mimeType": "text/css"
@@ -1214,7 +1221,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
           "resourceType": "Document",
-          "transferSize": 3541,
+          "transferSize": 3579,
           "resourceSize": 7393,
           "statusCode": 200,
           "mimeType": "text/html"
@@ -1222,23 +1229,31 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2940,
+          "transferSize": 3048,
           "resourceSize": 6103,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-003",
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2201,
-          "resourceSize": 4572,
+          "transferSize": 2253,
+          "resourceSize": 4719,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-003",
+          "resourceType": "Script",
+          "transferSize": 2194,
+          "resourceSize": 4410,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2200,
+          "transferSize": 2127,
           "resourceSize": 4687,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -1246,40 +1261,32 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2169,
+          "transferSize": 2126,
           "resourceSize": 4711,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-003",
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2145,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2121,
-          "resourceSize": 4612,
+          "transferSize": 2122,
+          "resourceSize": 4572,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2118,
+          "transferSize": 2075,
           "resourceSize": 4642,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-003",
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2085,
-          "resourceSize": 4410,
+          "transferSize": 2073,
+          "resourceSize": 4612,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
@@ -1328,7 +1335,7 @@
         {
           "id": "bootup-time",
           "score": 1,
-          "numericValue": 39.47599999999999,
+          "numericValue": 7.2,
           "numericUnit": "millisecond",
           "displayValue": "0.0 s",
           "title": "JavaScript execution time"
@@ -1336,9 +1343,9 @@
         {
           "id": "mainthread-work-breakdown",
           "score": 1,
-          "numericValue": 439.96800000000013,
+          "numericValue": 470.54,
           "numericUnit": "millisecond",
-          "displayValue": "0.4 s",
+          "displayValue": "0.5 s",
           "title": "Minimizes main-thread work"
         }
       ]
@@ -1348,7 +1355,7 @@
       "profile": "desktop",
       "requestedUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
       "finalUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-      "fetchTime": "2026-07-22T20:01:57.870Z",
+      "fetchTime": "2026-07-22T20:08:30.148Z",
       "lighthouseVersion": "13.4.1",
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
       "scores": {
@@ -1359,21 +1366,21 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 259.2996,
+          "numericValue": 263.4352,
           "numericUnit": "millisecond",
           "displayValue": "0.3 s",
           "title": "First Contentful Paint"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 297.2996,
+          "numericValue": 303.4352,
           "numericUnit": "millisecond",
           "displayValue": "0.3 s",
           "title": "Largest Contentful Paint"
         },
         "speedIndex": {
           "score": 1,
-          "numericValue": 259.2996,
+          "numericValue": 263.4352,
           "numericUnit": "millisecond",
           "displayValue": "0.3 s",
           "title": "Speed Index"
@@ -1394,23 +1401,23 @@
         },
         "interactive": {
           "score": 1,
-          "numericValue": 297.2996,
+          "numericValue": 303.4352,
           "numericUnit": "millisecond",
           "displayValue": "0.3 s",
           "title": "Time to Interactive"
         },
         "serverResponseTime": {
           "score": 1,
-          "numericValue": 18,
+          "numericValue": 48,
           "numericUnit": "millisecond",
-          "displayValue": "Root document took 20 ms",
+          "displayValue": "Root document took 50 ms",
           "title": "Initial server response time was short"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 34268,
+          "numericValue": 34410,
           "numericUnit": "byte",
-          "displayValue": "Total size was 33 KiB",
+          "displayValue": "Total size was 34 KiB",
           "title": "Avoids enormous network payloads"
         },
         "domSize": null
@@ -1419,22 +1426,22 @@
         {
           "resourceType": "total",
           "requestCount": 13,
-          "transferSize": 34268
+          "transferSize": 34410
         },
         {
           "resourceType": "script",
           "requestCount": 11,
-          "transferSize": 26472
+          "transferSize": 26558
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4344
+          "transferSize": 4256
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3452
+          "transferSize": 3596
         },
         {
           "resourceType": "image",
@@ -1459,14 +1466,14 @@
         {
           "resourceType": "third-party",
           "requestCount": 13,
-          "transferSize": 34268
+          "transferSize": 34410
         }
       ],
       "largestRequests": [
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/story.js?v=20260723-006",
           "resourceType": "Script",
-          "transferSize": 5142,
+          "transferSize": 5164,
           "resourceSize": 17457,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -1474,7 +1481,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260720-117",
           "resourceType": "Stylesheet",
-          "transferSize": 4344,
+          "transferSize": 4256,
           "resourceSize": 14789,
           "statusCode": 200,
           "mimeType": "text/css"
@@ -1482,7 +1489,7 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
           "resourceType": "Document",
-          "transferSize": 3452,
+          "transferSize": 3596,
           "resourceSize": 7393,
           "statusCode": 200,
           "mimeType": "text/html"
@@ -1490,63 +1497,15 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 3003,
+          "transferSize": 2899,
           "resourceSize": 6103,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2207,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2190,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2148,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2139,
-          "resourceSize": 4642,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2124,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2096,
-          "resourceSize": 4618,
           "statusCode": 200,
           "mimeType": "application/javascript"
         },
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2088,
+          "transferSize": 2261,
           "resourceSize": 4572,
           "statusCode": 200,
           "mimeType": "application/javascript"
@@ -1554,8 +1513,56 @@
         {
           "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-003",
           "resourceType": "Script",
-          "transferSize": 2087,
+          "transferSize": 2222,
           "resourceSize": 4687,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-003",
+          "resourceType": "Script",
+          "transferSize": 2176,
+          "resourceSize": 4711,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-003",
+          "resourceType": "Script",
+          "transferSize": 2134,
+          "resourceSize": 4642,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-003",
+          "resourceType": "Script",
+          "transferSize": 2103,
+          "resourceSize": 4719,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-003",
+          "resourceType": "Script",
+          "transferSize": 2075,
+          "resourceSize": 4612,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-003",
+          "resourceType": "Script",
+          "transferSize": 2070,
+          "resourceSize": 4618,
+          "statusCode": 200,
+          "mimeType": "application/javascript"
+        },
+        {
+          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-003",
+          "resourceType": "Script",
+          "transferSize": 2045,
+          "resourceSize": 4410,
           "statusCode": 200,
           "mimeType": "application/javascript"
         }
@@ -1596,7 +1603,7 @@
         {
           "id": "bootup-time",
           "score": 1,
-          "numericValue": 3.409999999999997,
+          "numericValue": 0.79,
           "numericUnit": "millisecond",
           "displayValue": "0.0 s",
           "title": "JavaScript execution time"
@@ -1604,7 +1611,7 @@
         {
           "id": "mainthread-work-breakdown",
           "score": 1,
-          "numericValue": 113.17000000000003,
+          "numericValue": 122.50700000000002,
           "numericUnit": "millisecond",
           "displayValue": "0.1 s",
           "title": "Minimizes main-thread work"
