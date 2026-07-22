@@ -159,7 +159,8 @@ async function auditTop(page) {
       skipLink: Boolean(document.querySelector('a.skip-link[href="#main-content"]')),
       mainTarget: Boolean(document.querySelector('main#main-content[tabindex="-1"]')),
       progressbar: Boolean(document.querySelector('.reader-meter[role="progressbar"][aria-valuemin="0"][aria-valuemax="100"][aria-valuenow]')),
-      appVersion: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-005'))
+      readerPanelReady: document.querySelector('#readerPanel')?.getAttribute('aria-busy') === 'false',
+      appVersion: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-006'))
     })),
     'top',
     12
@@ -218,7 +219,7 @@ async function auditStory(page) {
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true,
-    userAgent: 'Yorugatari-Accessibility-Audit/1.2'
+    userAgent: 'Yorugatari-Accessibility-Audit/1.3'
   });
   const page = await context.newPage();
   const browserErrors = [];
