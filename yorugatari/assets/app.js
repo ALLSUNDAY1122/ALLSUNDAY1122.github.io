@@ -11,9 +11,13 @@ const stories = Array.from(
 const completedStorageKey = 'yorugatari-completed-stories';
 const favoritesStorageKey = 'yorugatari-favorites';
 const lastReadingStorageKey = 'yorugatari-last-reading';
+const initialCardCount = 18;
+const cardBatchSize = 18;
 let completedStories = [];
 let favoriteStories = [];
 let lastReading = null;
+let renderGeneration = 0;
+
 try {
   const storedCompleted = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
   completedStories = Array.isArray(storedCompleted) ? storedCompleted : [];
@@ -31,11 +35,13 @@ try {
 } catch (error) {
   lastReading = null;
 }
+
 let activeCategory = 'すべて';
 let activeReadingStatus = 'all';
 
 if (count) count.setAttribute('aria-live', 'polite');
 if (empty) empty.setAttribute('role', 'status');
+if (grid) grid.setAttribute('aria-busy', 'true');
 
 function storyHref(story) {
   return story.href || `stories/${story.slug}.html`;
@@ -52,11 +58,17 @@ function card(story) {
   </a>`;
 }
 
-function render() {
-  if (!grid || !empty || !count) return;
+function scheduleBatch(callback) {
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(callback, { timeout: 700 });
+  } else {
+    setTimeout(callback, 16);
+  }
+}
 
+function filteredStories() {
   const query = (search ? search.value : '').trim().toLowerCase();
-  const filtered = stories.filter(function (story) {
+  return stories.filter(function (story) {
     const categoryMatches = activeCategory === 'すべて' || story.category === activeCategory || story.series === activeCategory;
     const statusMatches = activeReadingStatus === 'all'
       || (activeReadingStatus === 'unread' && !completedStories.includes(story.slug))
@@ -66,11 +78,42 @@ function render() {
     const text = `${story.title} ${story.summary} ${story.category} ${story.series || ''} ${tags.join(' ')}`.toLowerCase();
     return categoryMatches && statusMatches && (!query || text.includes(query));
   });
+}
 
-  grid.innerHTML = filtered.map(card).join('');
-  empty.style.display = filtered.length ? 'none' : 'block';
+function render(options) {
+  if (!grid || !empty || !count) return;
+
+  const progressive = Boolean(options && options.progressive);
+  const filtered = filteredStories();
+  const generation = ++renderGeneration;
   const completedCount = stories.filter(function (story) { return completedStories.includes(story.slug); }).length;
+
+  empty.style.display = filtered.length ? 'none' : 'block';
   count.textContent = `表示${filtered.length}話・この端末で${completedCount}話読了`;
+
+  if (!progressive || filtered.length <= initialCardCount) {
+    grid.innerHTML = filtered.map(card).join('');
+    grid.setAttribute('aria-busy', 'false');
+    return;
+  }
+
+  grid.setAttribute('aria-busy', 'true');
+  grid.innerHTML = filtered.slice(0, initialCardCount).map(card).join('');
+  let nextIndex = initialCardCount;
+
+  function appendNextBatch() {
+    if (generation !== renderGeneration) return;
+    const endIndex = Math.min(nextIndex + cardBatchSize, filtered.length);
+    grid.insertAdjacentHTML('beforeend', filtered.slice(nextIndex, endIndex).map(card).join(''));
+    nextIndex = endIndex;
+    if (nextIndex < filtered.length) {
+      scheduleBatch(appendNextBatch);
+    } else {
+      grid.setAttribute('aria-busy', 'false');
+    }
+  }
+
+  scheduleBatch(appendNextBatch);
 }
 
 chips.forEach(function (chip) {
@@ -175,4 +218,4 @@ if (footerNav && !footerNav.querySelector('a[href="archive.html"]')) {
   footerNav.insertBefore(archiveLink, footerNav.firstChild);
 }
 
-render();
+render({ progressive: true });
