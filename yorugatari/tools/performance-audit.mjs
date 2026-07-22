@@ -6,7 +6,7 @@ const cases = [
   { target: 'top', profile: 'desktop', url: `${base}/`, repeats: 1 },
   { target: 'archive', profile: 'mobile', url: `${base}/archive.html`, repeats: 1 },
   { target: 'archive', profile: 'desktop', url: `${base}/archive.html`, repeats: 1 },
-  { target: 'story-032', profile: 'mobile', url: `${base}/stories/spare-key-returned.html`, repeats: 1 },
+  { target: 'story-032', profile: 'mobile', url: `${base}/stories/spare-key-returned.html`, repeats: 3 },
   { target: 'story-032', profile: 'desktop', url: `${base}/stories/spare-key-returned.html`, repeats: 1 }
 ];
 
@@ -31,24 +31,28 @@ async function waitForRelease() {
   for (let attempt = 1; attempt <= 24; attempt += 1) {
     try {
       const stamp = Date.now();
-      const [topResponse, archiveResponse, storyResponse] = await Promise.all([
+      const [topResponse, archiveResponse, storyResponse, storyScriptResponse] = await Promise.all([
         fetch(`${base}/?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
         fetch(`${base}/archive.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/stories/spare-key-returned.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
+        fetch(`${base}/stories/spare-key-returned.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
+        fetch(`${base}/assets/story.js?v=20260723-007&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
       ]);
-      const [topHtml, archiveHtml, storyHtml] = await Promise.all([topResponse.text(), archiveResponse.text(), storyResponse.text()]);
+      const [topHtml, archiveHtml, storyHtml, storyScript] = await Promise.all([topResponse.text(), archiveResponse.text(), storyResponse.text(), storyScriptResponse.text()]);
       const detail = {
         attempt,
         topStatus: topResponse.status,
         archiveStatus: archiveResponse.status,
         storyStatus: storyResponse.status,
+        storyScriptStatus: storyScriptResponse.status,
         progressiveApp: topHtml.includes('assets/app.js?v=20260723-007'),
         analytics: topHtml.includes('assets/analytics.js?v=20260723-002'),
         archiveReady: archiveHtml.includes('assets/archive.js?v=20260723-004'),
-        storyReady: storyHtml.includes('../assets/engagement.js?v=20260723-002')
+        staticCirculation: storyHtml.includes('class="hero-actions story-pagination"') && storyHtml.includes('class="related"'),
+        storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-003'),
+        catalogFree: !storyScript.includes('catalogSources') && !storyScript.includes('loadCatalogScript')
       };
       report.releaseCheck = detail;
-      if (topResponse.ok && archiveResponse.ok && storyResponse.ok && detail.progressiveApp && detail.analytics && detail.archiveReady && detail.storyReady) return;
+      if (topResponse.ok && archiveResponse.ok && storyResponse.ok && storyScriptResponse.ok && Object.values(detail).every((value) => value !== false)) return;
     } catch (error) {
       report.releaseCheck = { attempt, ...errorDetail(error) };
     }
