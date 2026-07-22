@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T07:49:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T08:17:00+09:00",
+  "status": "ci_pending",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 87,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": null,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "code": "04341",
+    "name": "丸森町",
+    "stage": "pr_open"
+  },
+  "workingBranch": "data/04341-marumori",
+  "pullRequestNumber": 1113,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -41,5 +45,5 @@
     "04324"
   ],
   "blocked": [],
-  "nextAction": "丸森町（04341）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "PR #1113のCI・競合・変更ファイルを確認し、成功後にregion/northへ地方統合する。"
 }
