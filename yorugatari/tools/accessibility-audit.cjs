@@ -32,9 +32,28 @@ async function open(page, pathname, ready, name, attempts = 10) {
   return false;
 }
 
+async function materialize(page) {
+  await page.evaluate(async () => {
+    const deferred = Array.from(document.querySelectorAll('.card,.archive-section,.archive-item'));
+    for (let index = 0; index < deferred.length; index += 4) {
+      deferred[index].scrollIntoView({ block: 'center' });
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    }
+    window.scrollTo(0, 0);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
+}
+
 async function axe(page, name) {
   const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
-  const blocking = scan.violations.filter((item) => item.impact === 'critical' || item.impact === 'serious').map((item) => ({ id: item.id, impact: item.impact, help: item.help }));
+  const blocking = scan.violations
+    .filter((item) => item.impact === 'critical' || item.impact === 'serious')
+    .map((item) => ({
+      id: item.id,
+      impact: item.impact,
+      help: item.help,
+      nodes: item.nodes.map((node) => ({ target: node.target, html: node.html, failureSummary: node.failureSummary }))
+    }));
   record(`${name}: no critical or serious axe violations`, blocking.length === 0, blocking);
 }
 
@@ -107,6 +126,7 @@ async function auditTop(page) {
 
   await skipLink(page, 'top');
   await focusIndicator(page, '#searchInput', 'top search field');
+  await materialize(page);
   await axe(page, 'top');
   await structure(page, 'top');
 
@@ -125,6 +145,7 @@ async function auditArchive(page) {
   if (!loaded) return;
   await skipLink(page, 'archive');
   await focusIndicator(page, '.archive-jump a', 'archive jump link');
+  await materialize(page);
   await axe(page, 'archive');
   await structure(page, 'archive');
 }
@@ -134,6 +155,7 @@ async function auditStory(page) {
   if (!loaded) return;
   await skipLink(page, 'story');
   await focusIndicator(page, '#explainBtn', 'story explanation button');
+  await materialize(page);
   await axe(page, 'story');
   await structure(page, 'story');
 
@@ -147,7 +169,7 @@ async function auditStory(page) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.5' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.6' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
