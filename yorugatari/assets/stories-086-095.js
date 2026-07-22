@@ -56,7 +56,7 @@ window.STORIES.push(
     "category": "心霊",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "災害放送の最後の七秒を待たずマイクを切ると、亡アナウンサーが操作者の声帯へ移る。",
     "tags": ["地域FM", "災害放送", "送信終了音", "声帯"]
   },
@@ -66,7 +66,7 @@ window.STORIES.push(
     "category": "人怖",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "見守り会社は高齢者宅の異常を遠隔で再現し、混乱した三十秒だけを法的証拠として保存する。",
     "tags": ["高齢者見守り", "映像審査", "遠隔操作", "介護施設"]
   },
@@ -76,7 +76,7 @@ window.STORIES.push(
     "category": "ネット怪談",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "退会済みの文字起こしサービスは、録音に存在しない問いかけを別の利用者の未来の発言から回収していた。",
     "tags": ["文字起こし", "欠落音声", "退会アカウント", "声紋"]
   },
@@ -86,7 +86,7 @@ window.STORIES.push(
     "category": "後味悪い",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "療養中の社員が一瞬笑った映像だけが回復の証拠となり、恐怖や混乱を示した前後の時間は判定から除外された。",
     "tags": ["復職支援", "表情判定", "療養休職", "映像評価"]
   },
@@ -96,7 +96,7 @@ window.STORIES.push(
     "category": "意味怖",
     "length": "中編",
     "fear": 4,
-    "minutes": 9,
+    "minutes": 5,
     "summary": "在室管理システムが数えていたのは人間ではなく登録IDだった。IDが退室すれば、身体が残っていても部屋は無人になる。",
     "tags": ["在室管理", "アクセスID", "データセンター", "消火設備"]
   }
