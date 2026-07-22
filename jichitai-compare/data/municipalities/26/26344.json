@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "26344",
+  "prefectureCode": "26",
+  "prefecture": "京都府",
+  "name": "宇治田原町",
+  "officialUrl": "https://www.town.ujitawara.kyoto.jp/",
+  "status": "verified",
+  "summary": "宇治田原町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、保険診療の自己負担を1か月1医療機関200円に軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "出生から満18歳に達した日以後最初の3月31日まで",
+        "copayment": "保険診療分は1医療機関につき1か月200円",
+        "condition": "町内に住所があり健康保険に加入している児童・生徒・高校生等",
+        "outsidePrefecture": "京都府外受診、受給者証交付前受診等は申請による償還払い",
+        "excluded": "保険診療外費用、第三者行為、学校管理下で災害共済給付対象となるけが等は対象外"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/kosodateshienka/iryo_kenko/2958.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後2か月から小学6年生までの病児・病後児を、宇治徳洲会病院の専用室で預かる。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 12},
+      "details": {
+        "facility": "宇治徳洲会病院 病児保育室ひまわりルーム",
+        "condition": "町内在住で、病気・けがにより通常保育が難しく、保護者の勤務等で家庭保育が困難な児童",
+        "hours": "平日7時から19時、土曜7時から18時",
+        "fee": "10時間まで1日2,000円、昼食・おやつ代300円、10時間超は1時間200円",
+        "reduction": "所得税非課税世帯は1,000円、生活保護・町民税非課税世帯は利用料免除",
+        "application": "施設へ直接申込み、医師連絡票と利用前受診が必要"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/kosodateshienka/kosodatejoho/2/903.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育の無償化対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "幼稚園、保育所、認定こども園等を利用する3～5歳児は利用料無償",
+        "underThree": "住民税非課税世帯の0～2歳児は利用料無償",
+        "privateKindergarten": "新制度未移行幼稚園は月額25,700円まで対象",
+        "preschoolCare": "保育の必要性が認定された預かり保育は月額11,300円等を上限に対象",
+        "multiChild": "世帯所得、兄姉の年齢・在園状況等に応じ、第2子軽減・第3子以降無償化あり",
+        "excludedCosts": "通園送迎費、食材料費、行事費等の実費は原則対象外"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/kosodateshienka/hoikusho_yochiennado/986.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/kosodateshienka/hoikusho_yochiennado/1/904.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校で学校給食を提供し、経済的に就学困難な世帯へ給食費実費を援助する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "coverage": "学校給食共同調理場から町立小中学校へ給食を提供",
+        "menu": "月別の給食だより・献立表を公開",
+        "financialAid": "就学援助認定世帯は学校給食費の保護者負担額を実費支給",
+        "incomeGuide": "所得基準は生活保護基準のおおむね1.3倍を目安に世帯構成等で判定",
+        "currentAmount": "一般給食費の現行額は学校または学校教育課へ確認",
+        "verificationPolicy": "公式ページで確認できない一般料金は推測しない"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/gakkokyoikuka/kyoiku/1/2636.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/gakkokyoikuka/kyoiku/4/2453.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ居宅訪問・通所・短期入所型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "町内に住所がある産後1年未満の母親と生後1歳未満の乳児。短期入所型は生後4か月未満",
+        "types": "居宅訪問型、通所型、短期入所型",
+        "limit": "訪問型3回、通所型7回、短期入所型7回まで",
+        "fee": "訪問型1回2,000円、通所型1回4,500円、短期入所型1回9,000円",
+        "reduction": "課税世帯は申請により訪問2,000円、通所・短期入所2,500円を減免",
+        "exemption": "生活保護世帯・住民税非課税世帯は無料",
+        "care": "乳房ケア、授乳・沐浴指導、母子の心身ケア等"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/kosodateshienka/kosodatejoho/4/3952.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "condition": "町内在住で保育所・認定こども園・幼稚園等に通っていない児童",
+        "employment": "保護者の就労要件なし",
+        "facility": "宇治田原町立保育所",
+        "hours": "平日9時から11時の間",
+        "limit": "子ども1人につき月10時間まで。翌月繰越不可",
+        "fee": "1時間300円。1時間未満でも1時間分",
+        "exemption": "生活保護世帯や災害等で納入困難な場合は申請により免除"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/kosodateshienka/hoikusho_yochiennado/1/3956.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世帯が行う育児負担軽減のための住宅リフォーム費を補助する。",
+      "details": {
+        "program": "ハートのまち子育ておうえん住宅支援事業費補助金",
+        "target": "18歳年度末までの子どもまたは胎児がいる子育て世帯、三世代同居・近居世帯",
+        "income": "子の親権者の所得合計550万円未満",
+        "eligibleWork": "リビング、台所、浴室、子ども部屋の育児負担軽減リフォームで対象経費20万円以上",
+        "rate": "補助対象経費の2分の1以内",
+        "cap": "1子10万円、2子20万円、3子以上30万円",
+        "threeGeneration": "三世代同居または近居は5万円加算",
+        "application": "工事着手前に申請が必要"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/machimiraisozo/iju_teiju/4/3748.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型ごみは事前申込により地域ごとの第2・第4収集日に排出する。",
+      "details": {
+        "category": "燃やさないごみのうち金属類・粗大ごみ類",
+        "application": "大型ごみは事前申込制",
+        "frequency": "A・B地域とも指定曜日の第2・第4週に収集",
+        "collection": "地域別のごみ収集日と分別方法に従って排出",
+        "selfCarry": "一時多量ごみは城南衛生管理組合へ自己搬入可能",
+        "fee": "戸別収集の手数料・点数上限は公式本文で確認できないため申込時に確認",
+        "warning": "無許可の不用品回収業者ではなく正規の収集・自己搬入を利用"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/kurashi_tetsuzuki/seikatsu_kankyo/gomi_recycle/1/1302.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・洪水・地震・ため池に関する各種ハザードマップを公開する。",
+      "details": {
+        "flood": "田原川等の洪水浸水想定区域、浸水深等を掲載",
+        "sediment": "土砂災害警戒区域等の危険箇所を掲載",
+        "earthquake": "揺れやすさと建物全壊割合を示す地域危険度を掲載",
+        "reservoir": "ため池決壊時の浸水想定区域と避難場所を掲載",
+        "evacuation": "避難場所、マイ・タイムライン、非常持出品等を案内"
+      },
+      "source": {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/somuka/anshin_anzen/3/2/487.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ujitawara.kyoto.jp/soshiki/somuka/anshin_anzen/3/2/485.html", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}
