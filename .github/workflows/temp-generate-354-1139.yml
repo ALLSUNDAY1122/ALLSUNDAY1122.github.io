@@ -1,0 +1,62 @@
+name: Temporary Generate 354 1139
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-generate-354-1139.yml
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate public data
+        run: |
+          set -euxo pipefail
+          TARGET='coord/generated-354-20260722-1139'
+          git fetch origin "$TARGET" main
+          git checkout "$TARGET"
+          cd jichitai-compare
+          node ./scripts/generate-municipalities.mjs
+          node ./scripts/update-progress.mjs
+          node ./scripts/validate-data.mjs --require-generated
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          progress=json.loads(Path('operations/progress.json').read_text(encoding='utf-8'))
+          generated=json.loads(Path('data/generated/municipalities.json').read_text(encoding='utf-8'))
+          if progress['registeredMunicipalities'] != 354:
+              raise SystemExit(f"unexpected progress count {progress['registeredMunicipalities']}")
+          items=generated if isinstance(generated,list) else generated.get('municipalities',[])
+          if len(items) != 354:
+              raise SystemExit(f'unexpected generated count {len(items)}')
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          text,n=re.subn(r'344自治体', '354自治体', text)
+          if n < 2:
+              raise SystemExit(f'unexpected index replacements {n}')
+          p.write_text(text,encoding='utf-8')
+          PY
+          node ./scripts/validate-data.mjs --require-generated
+          cd ..
+          git add jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html
+          changed=$(git diff --cached --name-only | wc -l)
+          test "$changed" -eq 3
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '公開更新: 生成データを354自治体へ同期'
+          git push origin "$TARGET"
+          git checkout main
+          git pull --ff-only origin main
+          rm .github/workflows/temp-generate-354-1139.yml
+          git add .github/workflows/temp-generate-354-1139.yml
+          git commit -m '統括管理: 公開354自治体生成一時処理を削除'
+          git push origin main
