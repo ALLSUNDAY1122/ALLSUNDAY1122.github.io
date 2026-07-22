@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-22T19:43:14.825Z",
-  "success": true,
+  "auditedAt": "2026-07-22T19:44:22.205Z",
+  "success": false,
   "results": [
     {
       "name": "top renders 100 unique cards",
@@ -120,11 +120,11 @@
     },
     {
       "name": "reading position is saved",
-      "ok": true,
+      "ok": false,
       "detail": {
         "slug": "spare-key-returned",
-        "progress": 55,
-        "updatedAt": 1784749393207
+        "progress": 0,
+        "updatedAt": 1784749460097
       }
     },
     {
@@ -143,5 +143,14 @@
       "detail": []
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "name": "reading position is saved",
+      "detail": {
+        "slug": "spare-key-returned",
+        "progress": 0,
+        "updatedAt": 1784749460097
+      }
+    }
+  ]
 }
