@@ -11,6 +11,8 @@ on:
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
       - yorugatari/sitemap.xml
+      - yorugatari/tools/campaigns.json
+      - yorugatari/tools/external-launch-kit.md
       - yorugatari/tools/analytics-snapshot.mjs
       - .github/workflows/yorugatari-analytics-snapshot.yml
 
@@ -35,6 +37,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Validate analytics configuration
+        shell: bash
+        run: |
+          node --check yorugatari/tools/analytics-snapshot.mjs
+          node --check yorugatari/assets/analytics.js
+          node --check yorugatari/assets/engagement.js
+          node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==4||!c.onsiteShare)process.exit(1)"
 
       - name: Generate analytics snapshot
         run: node yorugatari/tools/analytics-snapshot.mjs
