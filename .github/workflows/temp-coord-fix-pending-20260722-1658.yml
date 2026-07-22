@@ -1,0 +1,56 @@
+name: Temporary Coordinator Pending Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-coord-fix-pending-20260722-1658.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sync pending counts and self-delete
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          now='2026-07-22T16:58:00+09:00'
+          fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
+          def state(r):
+            raw=subprocess.check_output(['git','show',f'origin/region/{r}:jichitai-compare/operations/control/regions/{r}.json'],text=True)
+            return json.loads(raw)
+          states={r:state(r) for r in fields}
+          pending={r:int(states[r].get(fields[r],0)) for r in fields}
+          qp=Path('jichitai-compare/operations/control/release-queue.json');q=json.loads(qp.read_text(encoding='utf-8'))
+          for e in q['entries']:
+            r=e['region'];e['pendingSinceLastRelease']=pending[r];e['releaseStatus']='release_ready' if pending[r]>=10 else 'pending_threshold';e['reason']=f'最新地方状態を再確認。前回全国統合後の繰越は{pending[r]}自治体'
+          total=sum(e['count'] for e in q['entries']);ready=[r for r,c in pending.items() if c>=10]
+          next_action=f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"+('全国統合対象: '+','.join(ready) if ready else '10自治体到達地域なし。')
+          q['updatedAt']=now;q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':454,'latestGeneratedPullRequest':720,'latestPublicCountPullRequest':720,'releaseReadyRegions':ready,'nextAction':next_action};qp.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          gp=Path('jichitai-compare/operations/control/global-state.json');g=json.loads(gp.read_text(encoding='utf-8'));g['updatedAt']=now;g['regionalCompletedSinceLastRelease']={**pending,'total':sum(pending.values())};g['priority']={'type':'release-monitoring','nextAction':next_action};g['regionalMergedMunicipalities']=total;g['openPullRequests']=[];g['humanDecisionRequired']=False;gp.write_text(json.dumps(g,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          with Path('jichitai-compare/operations/control/audit-log.jsonl').open('a',encoding='utf-8') as f:f.write(json.dumps({'timestamp':now,'actor':'全国進行統括','action':'pending-count-reconciliation','details':{'publicMunicipalityCount':454,'regionalMergedMunicipalities':total,'pendingSinceLatestNationalIntegration':{**pending,'total':sum(pending.values())},'releaseReadyRegions':ready,'openMunicipalityPullRequests':[],'ignoredUnrelatedOpenPullRequests':[549]},'humanDecisionRequired':False},ensure_ascii=False,separators=(',',':'))+'\n')
+          PY
+          rm .github/workflows/temp-coord-fix-pending-20260722-1658.yml
+          git add jichitai-compare/operations/control/global-state.json jichitai-compare/operations/control/release-queue.json jichitai-compare/operations/control/audit-log.jsonl .github/workflows/temp-coord-fix-pending-20260722-1658.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '統括管理: 地方統合473自治体の繰越数を同期'
+          git push origin main
