@@ -15,6 +15,7 @@ on:
       - yorugatari/assets/engagement.js
       - yorugatari/assets/styles.css
       - yorugatari/stories/**
+      - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/accessibility-audit.cjs
       - .github/workflows/yorugatari-accessibility.yml
 
@@ -28,7 +29,7 @@ permissions:
 jobs:
   accessibility-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -39,6 +40,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Validate audit syntax
+        shell: bash
+        run: |
+          node --check yorugatari/tools/live-release-audit.mjs
+          node --check yorugatari/tools/accessibility-audit.cjs
+
+      - name: Wait for published accessibility release
+        run: node yorugatari/tools/live-release-audit.mjs
 
       - name: Install accessibility browser tools
         shell: bash
@@ -59,14 +69,24 @@ jobs:
           cp yorugatari-accessibility-report.json /tmp/yorugatari-accessibility-report.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin main
-          git reset --hard origin/main
-          cp /tmp/yorugatari-accessibility-report.json yorugatari/tools/accessibility-audit-latest.json
-          git add yorugatari/tools/accessibility-audit-latest.json
-          if ! git diff --cached --quiet; then
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-accessibility-report.json yorugatari/tools/accessibility-audit-latest.json
+            git add yorugatari/tools/accessibility-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
             git commit -m "Record Yorugatari accessibility audit [skip ci]"
-            git push origin HEAD:main
-          fi
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
 
       - name: Upload accessibility report
         if: always()
