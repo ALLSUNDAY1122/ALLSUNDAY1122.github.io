@@ -1,0 +1,34 @@
+name: Temporary Central Release 334
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-central-release-334.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin region/central coord/central-release-10-20260722-1032
+          git checkout coord/central-release-10-20260722-1032
+          git reset --hard origin/main
+          for code in 23204 23205 23206 23207 23208 23209 23210 23211 23212 23213; do
+            git checkout origin/region/central -- "jichitai-compare/data/municipalities/23/${code}.json" "jichitai-compare/operations/tasks/${code}.json"
+          done
+          test "$(git diff --cached --name-only | wc -l)" -eq 20
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合: 中日本・瀬戸市から西尾市までの追加10自治体を固定'
+          git push --force-with-lease origin coord/central-release-10-20260722-1032
