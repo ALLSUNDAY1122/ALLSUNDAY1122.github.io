@@ -1,13 +1,13 @@
 {
-  "auditedAt": "2026-07-22T21:49:01.399Z",
-  "success": false,
+  "auditedAt": "2026-07-22T21:54:47.561Z",
+  "success": true,
   "results": [
     {
       "name": "top: published page loaded",
       "ok": true,
       "detail": {
         "ready": true,
-        "attempt": 11,
+        "attempt": 1,
         "cards": 100,
         "gridBusy": "false",
         "readerPanelReady": true
@@ -132,14 +132,8 @@
     },
     {
       "name": "archive: no critical or serious axe violations",
-      "ok": false,
-      "detail": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "help": "Elements must meet minimum color contrast ratio thresholds"
-        }
-      ]
+      "ok": true,
+      "detail": []
     },
     {
       "name": "archive: document language is Japanese",
@@ -273,17 +267,5 @@
       "detail": []
     }
   ],
-  "failures": [
-    {
-      "name": "archive: no critical or serious axe violations",
-      "ok": false,
-      "detail": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "help": "Elements must meet minimum color contrast ratio thresholds"
-        }
-      ]
-    }
-  ]
+  "failures": []
 }
