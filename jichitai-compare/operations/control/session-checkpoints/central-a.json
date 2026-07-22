@@ -16,40 +16,23 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-22T22:55:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T23:02:00+09:00",
+  "status": "working",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 92,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 865,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "code": "25384",
+    "name": "竜王町"
+  },
+  "workingBranch": "data/25384-ryuoh",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
   "completedSinceSplit": [
-    {
-      "code": "25212",
-      "name": "高島市",
-      "pullRequestNumber": 838,
-      "ciRunNumber": 1757
-    },
-    {
-      "code": "25213",
-      "name": "東近江市",
-      "pullRequestNumber": 845,
-      "ciRunNumber": 1787
-    },
-    {
-      "code": "25214",
-      "name": "米原市",
-      "pullRequestNumber": 859,
-      "ciRunNumber": 1851
-    },
-    {
-      "code": "25383",
-      "name": "日野町",
-      "pullRequestNumber": 865,
-      "ciRunNumber": 1887
-    }
+    {"code": "25212", "name": "高島市", "pullRequestNumber": 838, "ciRunNumber": 1757},
+    {"code": "25213", "name": "東近江市", "pullRequestNumber": 845, "ciRunNumber": 1787},
+    {"code": "25214", "name": "米原市", "pullRequestNumber": 859, "ciRunNumber": 1851},
+    {"code": "25383", "name": "日野町", "pullRequestNumber": 865, "ciRunNumber": 1887}
   ],
   "blocked": [],
-  "nextAction": "竜王町（25384）の重複を確認し、未着手なら調査を開始する。"
+  "nextAction": "竜王町（25384）のPRを作成し、CI成功後にregion/centralへ統合する。"
 }
