@@ -69,6 +69,32 @@ jobs:
           done
           exit 1
 
+      - name: Wait for published engagement release
+        shell: bash
+        run: |
+          node <<'NODE'
+          const url = 'https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html';
+          const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+          for (let attempt = 1; attempt <= 18; attempt += 1) {
+            try {
+              const response = await fetch(`${url}?release=${Date.now()}-${attempt}`, {
+                headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-Release-Wait/1.0' }
+              });
+              const text = await response.text();
+              const ready = response.status === 200 &&
+                text.includes('property="og:image:width" content="2172"') &&
+                text.includes('property="og:image:height" content="724"') &&
+                text.includes('../assets/engagement.js?v=20260723-001');
+              console.log(JSON.stringify({ attempt, status: response.status, ready }));
+              if (ready) process.exit(0);
+            } catch (error) {
+              console.log(JSON.stringify({ attempt, error: error.message }));
+            }
+            if (attempt < 18) await sleep(5000);
+          }
+          process.exit(1);
+          NODE
+
       - name: Install browser
         shell: bash
         run: |
