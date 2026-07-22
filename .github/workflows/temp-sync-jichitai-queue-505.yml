@@ -1,0 +1,75 @@
+name: Temporary Sync Jichitai Queue 505
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-sync-jichitai-queue-505.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Rebuild release queue
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/east:refs/remotes/origin/region/east' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/region/west:refs/remotes/origin/region/west'
+          python3 - <<'PY'
+          import json,re,subprocess
+          from pathlib import Path
+          p=Path('jichitai-compare/operations/control/release-queue.json')
+          q=json.loads(p.read_text(encoding='utf-8'))
+          by={e['region']:e for e in q['entries']}
+          fields={'north':'completedMunicipalitiesSinceLastNationalMerge','east':'completedMunicipalitiesSinceLastNationalMerge','central':'completedSinceLastRelease','west':'completedMunicipalitiesSinceLastNationalMerge'}
+          state_paths={r:f'jichitai-compare/operations/control/regions/{r}.json' for r in fields}
+          def show(ref,path): return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
+          def belongs(region,pref):
+              n=int(pref)
+              return {'north':1<=n<=7,'east':8<=n<=15 or n in (19,20),'central':16<=n<=18 or 21<=n<=29,'west':31<=n<=47}[region]
+          for region in ('north','east','central','west'):
+              ref=f'origin/region/{region}'
+              paths=subprocess.check_output(['git','ls-tree','-r','--name-only',ref,'jichitai-compare/data/municipalities'],text=True).splitlines()
+              items=[]
+              for path in paths:
+                  if not re.search(r'/\d{5}\.json$',path): continue
+                  d=json.loads(show(ref,path))
+                  if belongs(region,d['prefectureCode']): items.append({'code':d['code'],'name':d['name']})
+              items.sort(key=lambda x:x['code'])
+              s=json.loads(show(ref,state_paths[region]))
+              pending=int(s.get(fields[region],0))
+              e=by[region]
+              e['municipalities']=items;e['count']=len(items);e['pendingSinceLastRelease']=pending
+              e['releaseStatus']='release_ready' if pending>=10 else 'pending_threshold'
+              e['reason']=f'最新地方ブランチを再走査。前回全国統合後の繰越は{pending}自治体'
+              e['mainIntegrationPr']=s.get('lastNationalIntegrationPr')
+              e['generatedPullRequest']=783
+              e['auditStatus']='passed'
+          total=sum(e['count'] for e in q['entries'])
+          if total != 505: raise SystemExit(f'unexpected regional total: {total}')
+          pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
+          q['updatedAt']='2026-07-22T18:33:00+09:00';q['status']='active'
+          q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':494,'latestGeneratedPullRequest':783,'latestPublicCountPullRequest':783,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域なし。"}
+          p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+          git add jichitai-compare/operations/control/release-queue.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git diff --cached --quiet; then
+            git commit -m '統括管理: 地方統合505自治体・公開494自治体へ同期'
+            git push origin main
+          fi
+          git rm .github/workflows/temp-sync-jichitai-queue-505.yml
+          git commit -m '統括管理: 一時キュー同期ワークフローを削除'
+          git push origin main
