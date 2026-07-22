@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "23207",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "豊川市",
+  "officialUrl": "https://www.city.toyokawa.lg.jp/",
+  "status": "verified",
+  "summary": "豊川市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-22",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、入院・通院の保険診療自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "coverage": "入院・通院の保険診療自己負担分",
+        "payment": "愛知県内は受給者証による現物給付。県外受診や治療用装具等は償還払い",
+        "expanded": "令和6年4月診療分から通院助成を高校3年生世代まで拡大",
+        "excluded": "保険適用外費用、入院時食事代、差額ベッド代等は対象外"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/iryo_kenko_fukushi/iryo_kenko/2/11207.html", "checkedAt": "2026-07-22"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後4か月から小学3年生までの病気中・回復期の児童を指定施設で一時保育する。",
+      "eligibility": {"minAgeMonths": 4, "maxAgeYears": 9},
+      "details": {
+        "condition": "豊川市内に住所があり、病気中または回復期で集団保育が困難かつ保護者の就労等により家庭保育が困難な児童",
+        "facilities": "市指定の病児・病後児保育施設",
+        "hours": "原則午前9時から午後5時",
+        "fee": "4時間以内1,000円、4時間超2,000円",
+        "extension": "平日午後5時以降は30分につき500円加算",
+        "freeProgram": "保育の必要性の認定等を受けた0～5歳児は無償化対象となる場合あり"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/kosodate_kyoiku/hoikuen_kodomoen_yochien/1/14684.html", "checkedAt": "2026-07-22"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、多子世帯の保育料を軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "agesThreeToFive": "3歳児クラスから5歳児クラスまで無料",
+        "underThree": "住民税非課税世帯の0～2歳児は無料。その他は父母等の市町村民税額により算定",
+        "multiChild": "保育施設等を利用するきょうだいの第2子は軽減、第3子以降は無料となる場合あり",
+        "townSupport": "18歳未満の子を3人以上養育する世帯の第3子に当たる3歳未満児は無料",
+        "excludedCosts": "通園送迎費、行事費、時間外保育料等は別途負担"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/kosodate_kyoiku/hoikuen_kodomoen_yochien/5/12552.html", "checkedAt": "2026-07-22"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年7月分から市立小学校の保護者負担を無料とし、中学校は1食110円とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "effective": "令和8年7月分から",
+        "elementary": "材料費1食340円を全額公費負担し、保護者負担0円",
+        "juniorHigh": "材料費1食385円のうち公費275円、保護者負担110円",
+        "assistance": "就学援助認定世帯は学校給食費の実費を援助",
+        "note": "公費負担の一部に国の重点支援地方交付金を活用"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/kosodate_kyoiku/shokuiku/1/14667.html", "checkedAt": "2026-07-22"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "豊川市に住所がある出産後1年未満の産婦と乳児で、心身の回復や育児支援を必要とする方",
+        "types": "宿泊型、デイサービス型、アウトリーチ型",
+        "care": "母体の休養、授乳相談、乳房ケア、育児方法の助言等",
+        "application": "原則として利用予定日の2週間前までに母子保健課へ連絡・申請",
+        "excluded": "感染性疾患がある方や医療行為が必要な方は利用不可",
+        "outsideArea": "里帰り先等の契約外施設利用は一定範囲で償還払いの対象"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/kosodate_kyoiku/ninshin_shussan/3/14540.html", "checkedAt": "2026-07-22"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "condition": "保育所、幼稚園、認定こども園、地域型保育、企業主導型保育等に通っていない児童",
+        "limit": "児童1人につき月10時間まで。週1回、1日2時間の定期利用",
+        "fee": "1時間300円。生活保護・低所得世帯は減免となる場合あり",
+        "facilities": "下長山保育園、御津北部保育園",
+        "meal": "給食・おやつの提供なし"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/soshiki/kodomokenkou/hoiku/2/3/6/22829.html", "checkedAt": "2026-07-22"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "都市機能誘導区域内に住宅を取得して転入・転居する世帯へ、固定資産税相当額と子育て奨励金を交付する。",
+      "details": {
+        "program": "豊川市まちなか居住補助金（拠点地区定住促進事業費補助金）",
+        "house": "居住部分280平方メートルを上限に、家屋の固定資産税相当額を最大3年間補助",
+        "land": "200平方メートルを上限に、土地の固定資産税相当額を最大3年間補助",
+        "childAddition": "世帯を構成する中学生以下の子1人につき10万円を1回交付",
+        "condition": "市外に5年以上居住して転入する方、または市内の災害想定区域から転居する方が対象区域内に住宅を取得し、10年以上定住すること等",
+        "housingTypes": "新築、分譲マンション、中古住宅も対象になり得る"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/shisei/seisaku/10/1/16698.html", "checkedAt": "2026-07-22"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは自己搬入または予約制の有料戸別収集で処分する。",
+      "details": {
+        "directCarry": "粗大ごみ受付センターへ直接持込み可能",
+        "pickup": "自分で運べない場合は電話予約による戸別収集を利用",
+        "fee": "戸別収集は原則1個1,050円。家電リサイクル法対象品は1個2,100円とリサイクル券が必要",
+        "procedure": "予約後、案内された枚数の粗大ごみシールを購入・貼付し、収集日の朝8時30分までに指定場所へ排出",
+        "schedule": "収集曜日は小学校区・地区により異なる"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/soshiki/sangyokankyo/seisoujigyo/2/1/8/4007.html", "checkedAt": "2026-07-22"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震、津波、液状化、土砂災害、洪水、高潮、内水等の防災・水害ハザードマップを公開する。",
+      "details": {
+        "updated": "令和8年1月更新",
+        "disasterMap": "南海トラフ地震の震度・液状化、津波災害警戒区域、土砂災害警戒区域等を掲載",
+        "floodMap": "河川洪水、高潮、内水の浸水想定区域・浸水深を掲載",
+        "evacuation": "指定避難所、指定緊急避難場所、水害時優先開設避難所等を掲載",
+        "electronic": "PC・スマートフォン対応の電子版で詳細なハザード情報を確認可能"
+      },
+      "source": {"url": "https://www.city.toyokawa.lg.jp/soshiki/kikikanri/gyomu/1/2/2/1158.html", "checkedAt": "2026-07-22"}
+    }
+  }
+}
