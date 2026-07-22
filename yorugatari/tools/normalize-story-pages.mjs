@@ -143,14 +143,31 @@ function ensureVisibleBreadcrumb(html, story) {
 }
 
 function ensureFooterArchiveLink(html) {
+  const desiredNav =
+    '<nav class="footer-links" aria-label="運営情報">' +
+    '<a href="../archive.html">全100話一覧</a>' +
+    '<a href="../about.html">運営・編集方針</a>' +
+    '<a href="../privacy.html">プライバシー</a>' +
+    '<a href="../terms.html">利用規約</a>' +
+    '<a href="../contact.html">お問い合わせ</a>' +
+    '</nav>';
   const footerNav = /(<nav\b[^>]*class=["'][^"']*\bfooter-links\b[^"']*["'][^>]*>)([\s\S]*?)(<\/nav>)/i;
-  return html.replace(footerNav, (full, open, inner, close) => {
-    const archiveLink = /<a\b[^>]*href=["']\.\.\/archive\.html["'][^>]*>[\s\S]*?<\/a>/i;
-    if (archiveLink.test(inner)) {
-      return `${open}${inner.replace(archiveLink, '<a href="../archive.html">全100話一覧</a>')}${close}`;
-    }
-    return `${open}<a href="../archive.html">全100話一覧</a>${inner}${close}`;
-  });
+
+  if (footerNav.test(html)) {
+    return html.replace(footerNav, (full, open, inner, close) => {
+      const archiveLink = /<a\b[^>]*href=["']\.\.\/archive\.html["'][^>]*>[\s\S]*?<\/a>/i;
+      if (archiveLink.test(inner)) {
+        return `${open}${inner.replace(archiveLink, '<a href="../archive.html">全100話一覧</a>')}${close}`;
+      }
+      return `${open}<a href="../archive.html">全100話一覧</a>${inner}${close}`;
+    });
+  }
+
+  const footerInner = /(<footer\b[^>]*class=["'][^"']*\bsite-footer\b[^"']*["'][^>]*>\s*<div\b[^>]*class=["'][^"']*\bfooter-inner\b[^"']*["'][^>]*>)([\s\S]*?)(<\/div>\s*<\/footer>)/i;
+  if (!footerInner.test(html)) {
+    throw new Error('Could not locate footer container');
+  }
+  return html.replace(footerInner, `$1$2${desiredNav}$3`);
 }
 
 function ensureStoryId(html, storyId) {
