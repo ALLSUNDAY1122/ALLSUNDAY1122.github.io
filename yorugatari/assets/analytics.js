@@ -7,13 +7,20 @@
   const isYorugatari = path === '/yorugatari' || path.startsWith('/yorugatari/');
   const trackingPath = document.body?.dataset.pageType === '404' ? '/yorugatari/404' : path;
   const sourceKey = 'yorugatari-source-tracked';
+  const campaignKeyPrefix = 'yorugatari-campaign-tracked:';
+  const query = new URLSearchParams(location.search);
+  const knownCampaigns = new Map([
+    ['x|launch_20260723|top_100', 'launch-20260723-x-top-100'],
+    ['x|launch_20260723|last_elevator', 'launch-20260723-x-last-elevator'],
+    ['threads|launch_20260723|spare_key', 'launch-20260723-threads-spare-key'],
+    ['line|launch_20260723|hired_experience', 'launch-20260723-line-hired-experience']
+  ]);
 
   function sourceChannel() {
-    const campaign = new URLSearchParams(location.search).get('utm_source') || '';
-    const source = campaign.toLowerCase();
+    const source = (query.get('utm_source') || '').toLowerCase();
     if (source) {
-      if (/google|bing|yahoo|duckduckgo|baidu|yandex/.test(source)) return 'search';
-      if (/x|twitter|facebook|instagram|threads|line|tiktok/.test(source)) return 'social';
+      if (/^(google|bing|yahoo|duckduckgo|baidu|yandex)$/.test(source)) return 'search';
+      if (/^(x|twitter|facebook|instagram|threads|line|tiktok|web_share)$/.test(source)) return 'social';
       return 'campaign';
     }
     if (!document.referrer) return 'direct';
@@ -28,8 +35,28 @@
     }
   }
 
+  function campaignId() {
+    const source = (query.get('utm_source') || '').toLowerCase();
+    const campaign = (query.get('utm_campaign') || '').toLowerCase();
+    const content = (query.get('utm_content') || '').toLowerCase();
+    if (source === 'web_share' && campaign === 'onsite_share') return 'onsite-share';
+    return knownCampaigns.get([source, campaign, content].join('|')) || null;
+  }
+
   const source = sourceChannel();
-  const state = { path, trackingPath, source, tracked: false, sourceTracked: false, error: null };
+  const campaign = campaignId();
+  const state = {
+    path,
+    trackingPath,
+    source,
+    campaign,
+    tracked: false,
+    sourceTracked: false,
+    campaignTracked: false,
+    error: null,
+    sourceError: null,
+    campaignError: null
+  };
   window.YORUGATARI_ANALYTICS = state;
 
   if (!isYorugatari || navigator.webdriver) return;
@@ -50,21 +77,48 @@
     });
   }
 
-  async function track() {
+  async function trackPage() {
     try {
       await send(trackingPath);
       state.tracked = true;
-
-      let sourceAlreadyTracked = false;
-      try { sourceAlreadyTracked = sessionStorage.getItem(sourceKey) === '1'; } catch (error) {}
-      if (source !== 'internal' && !sourceAlreadyTracked) {
-        await send('/yorugatari/__source/' + source);
-        state.sourceTracked = true;
-        try { sessionStorage.setItem(sourceKey, '1'); } catch (error) {}
-      }
     } catch (error) {
       state.error = error && error.message ? error.message : String(error);
     }
+  }
+
+  async function trackSource() {
+    if (source === 'internal') return;
+    let alreadyTracked = false;
+    try { alreadyTracked = sessionStorage.getItem(sourceKey) === '1'; } catch (error) {}
+    if (alreadyTracked) return;
+    try {
+      await send('/yorugatari/__source/' + source);
+      state.sourceTracked = true;
+      try { sessionStorage.setItem(sourceKey, '1'); } catch (error) {}
+    } catch (error) {
+      state.sourceError = error && error.message ? error.message : String(error);
+    }
+  }
+
+  async function trackCampaign() {
+    if (!campaign) return;
+    const storageKey = campaignKeyPrefix + campaign;
+    let alreadyTracked = false;
+    try { alreadyTracked = sessionStorage.getItem(storageKey) === '1'; } catch (error) {}
+    if (alreadyTracked) return;
+    try {
+      await send('/yorugatari/__campaign/' + campaign);
+      state.campaignTracked = true;
+      try { sessionStorage.setItem(storageKey, '1'); } catch (error) {}
+    } catch (error) {
+      state.campaignError = error && error.message ? error.message : String(error);
+    }
+  }
+
+  async function track() {
+    await trackPage();
+    await trackSource();
+    await trackCampaign();
   }
 
   function schedule() {
