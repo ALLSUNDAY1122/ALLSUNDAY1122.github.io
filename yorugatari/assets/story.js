@@ -1,21 +1,15 @@
 document.documentElement.classList.add('js');
 
-const readingMinutes = {
-  'last-elevator': 5,
-  'neighbor-wifi': 5,
-  'kind-manager': 5,
-  'family-photo': 5,
-  'three-knocks': 5,
-  'read-receipt': 5,
-  'night-bus': 5,
-  'delivery-box': 5,
-  'voice-memo': 5,
-  'missing-floor': 5,
-  'good-night': 5,
-  'window-reflection': 5
-};
-
 const mainContent = document.querySelector('main');
+const progress = document.querySelector('.progress');
+const slug = document.body.dataset.slug || '';
+const storyTitle = (document.querySelector('.story-hero h1') || {}).textContent || '';
+const storyCategory = (document.querySelector('.story-hero .badge') || {}).textContent || '怖い話';
+const headerMeta = document.querySelectorAll('.story-hero .meta span');
+const completedStorageKey = 'yorugatari-completed-stories';
+const lastReadingStorageKey = 'yorugatari-last-reading';
+const favoritesStorageKey = 'yorugatari-favorites';
+
 if (mainContent) {
   if (!mainContent.id) mainContent.id = 'story-content';
   if (!mainContent.hasAttribute('tabindex')) mainContent.setAttribute('tabindex', '-1');
@@ -28,58 +22,12 @@ if (mainContent) {
   }
 }
 
-const progress = document.querySelector('.progress');
 if (progress) progress.setAttribute('aria-hidden', 'true');
 addEventListener('scroll', function () {
   const documentElement = document.documentElement;
   const max = documentElement.scrollHeight - documentElement.clientHeight;
   if (progress) progress.style.width = (max ? documentElement.scrollTop / max * 100 : 0) + '%';
 }, { passive: true });
-
-const slug = document.body.dataset.slug;
-const completedStorageKey = 'yorugatari-completed-stories';
-const lastReadingStorageKey = 'yorugatari-last-reading';
-let completedStories = [];
-try {
-  const storedCompleted = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
-  completedStories = Array.isArray(storedCompleted) ? storedCompleted : [];
-} catch (error) {
-  completedStories = [];
-}
-
-function saveCompletedStories() {
-  try { localStorage.setItem(completedStorageKey, JSON.stringify(completedStories)); } catch (error) {}
-}
-
-function isCompleted() {
-  return Boolean(slug && completedStories.includes(slug));
-}
-
-const storyTitle = (document.querySelector('.story-hero h1') || {}).textContent || '';
-const storyCategory = (document.querySelector('.story-hero .badge') || {}).textContent || '怖い話';
-const storyHeroContent = document.querySelector('.story-hero .wrap');
-if (storyHeroContent && !storyHeroContent.querySelector('.breadcrumb')) {
-  const breadcrumb = document.createElement('nav');
-  breadcrumb.className = 'breadcrumb';
-  breadcrumb.setAttribute('aria-label', 'パンくずリスト');
-  breadcrumb.innerHTML = '<a href="../index.html">夜語り</a><span aria-hidden="true">›</span><a href="../archive.html">全100話</a><span aria-hidden="true">›</span><a href="../archive.html#' + encodeURIComponent(storyCategory) + '">' + storyCategory + '</a>';
-  storyHeroContent.insertAdjacentElement('afterbegin', breadcrumb);
-}
-const currentMinutes = readingMinutes[slug];
-const headerMeta = document.querySelectorAll('.story-hero .meta span');
-if (currentMinutes && headerMeta.length) {
-  headerMeta[headerMeta.length - 1].textContent = '約' + currentMinutes + '分';
-}
-
-document.querySelectorAll('.rank-item').forEach(function (item) {
-  const href = item.getAttribute('href') || '';
-  const relatedSlug = href.replace(/^.*\//, '').replace(/\.html(?:#.*)?$/, '');
-  const minutes = readingMinutes[relatedSlug];
-  const detail = item.querySelector('small');
-  const marker = item.querySelector('.rank-num');
-  if (minutes && detail) detail.textContent = detail.textContent.replace(/約\d+分/, '約' + minutes + '分');
-  if (marker) marker.setAttribute('aria-hidden', 'true');
-});
 
 const mainNav = document.querySelector('.site-header .nav');
 if (mainNav) {
@@ -88,11 +36,122 @@ if (mainNav) {
   if (rankingLink) rankingLink.textContent = 'おすすめ';
 }
 
+document.querySelectorAll('.rank-item').forEach(function (item) {
+  const detail = item.querySelector('small');
+  const marker = item.querySelector('.rank-num');
+  if (detail) detail.textContent = detail.textContent.replace(/約\d+分/, '約5分');
+  if (marker) marker.setAttribute('aria-hidden', 'true');
+});
+
 const fear = document.querySelector('.story-side .fear');
 if (fear) {
   const fearLevel = (fear.textContent.match(/●/g) || []).length;
   fear.setAttribute('aria-label', '怖さ ' + fearLevel + '/5');
 }
+
+function ensurePropertyMeta(property, content) {
+  let element = document.querySelector('meta[property="' + property + '"]');
+  if (!element) {
+    element = document.createElement('meta');
+    element.setAttribute('property', property);
+    document.head.appendChild(element);
+  }
+  element.setAttribute('content', content);
+}
+
+function ensurePreconnect() {
+  if (document.querySelector('link[rel="preconnect"][href="https://page-views-api.ratneshc.com"]')) return;
+  const link = document.createElement('link');
+  link.rel = 'preconnect';
+  link.href = 'https://page-views-api.ratneshc.com';
+  link.crossOrigin = 'anonymous';
+  const canonical = document.querySelector('link[rel="canonical"]');
+  document.head.insertBefore(link, canonical || document.head.firstChild);
+}
+
+function ensureVisibleBreadcrumb() {
+  const storyHeroContent = document.querySelector('.story-hero .wrap');
+  if (!storyHeroContent || storyHeroContent.querySelector('.breadcrumb')) return;
+  const breadcrumb = document.createElement('nav');
+  breadcrumb.className = 'breadcrumb';
+  breadcrumb.setAttribute('aria-label', 'パンくずリスト');
+  breadcrumb.innerHTML =
+    '<a href="../index.html">夜語り</a>' +
+    '<span aria-hidden="true">›</span>' +
+    '<a href="../archive.html">全100話</a>' +
+    '<span aria-hidden="true">›</span>' +
+    '<a href="../archive.html#' + encodeURIComponent(storyCategory) + '">' + storyCategory + '</a>';
+  storyHeroContent.insertAdjacentElement('afterbegin', breadcrumb);
+}
+
+function ensureBreadcrumbStructuredData(story) {
+  const canonical = document.querySelector('link[rel="canonical"]');
+  const pageUrl = canonical ? canonical.href : location.href.split('#')[0];
+  const category = story && story.category ? story.category : storyCategory;
+  const title = story && story.title ? story.title : storyTitle;
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '夜語り', item: 'https://allsunday1122.github.io/yorugatari/' },
+      { '@type': 'ListItem', position: 2, name: '全100話', item: 'https://allsunday1122.github.io/yorugatari/archive.html' },
+      { '@type': 'ListItem', position: 3, name: category, item: 'https://allsunday1122.github.io/yorugatari/archive.html#' + encodeURIComponent(category) },
+      { '@type': 'ListItem', position: 4, name: title, item: pageUrl }
+    ]
+  };
+  let target = null;
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(function (script) {
+    try {
+      const parsed = JSON.parse(script.textContent);
+      if (parsed && parsed['@type'] === 'BreadcrumbList') target = script;
+    } catch (error) {}
+  });
+  if (!target) {
+    target = document.createElement('script');
+    target.type = 'application/ld+json';
+    document.head.appendChild(target);
+  }
+  target.textContent = JSON.stringify(data);
+}
+
+function ensureFooterLinks() {
+  const footerInner = document.querySelector('.site-footer .footer-inner');
+  if (!footerInner) return;
+  let footerNav = footerInner.querySelector('.footer-links');
+  if (!footerNav) {
+    footerNav = document.createElement('nav');
+    footerNav.className = 'footer-links';
+    footerInner.appendChild(footerNav);
+  }
+  footerNav.setAttribute('aria-label', '運営情報');
+  [
+    ['../archive.html', '全100話一覧'],
+    ['../about.html', '運営・編集方針'],
+    ['../privacy.html', 'プライバシー'],
+    ['../terms.html', '利用規約'],
+    ['../contact.html', 'お問い合わせ']
+  ].forEach(function (entry) {
+    if (footerNav.querySelector('a[href="' + entry[0] + '"]')) return;
+    const link = document.createElement('a');
+    link.href = entry[0];
+    link.textContent = entry[1];
+    footerNav.appendChild(link);
+  });
+}
+
+function normalizeBasicPage() {
+  ensurePreconnect();
+  ensurePropertyMeta('og:image:width', '2048');
+  ensurePropertyMeta('og:image:height', '683');
+  ensurePropertyMeta('og:image:alt', '月明かりと提灯が照らす夜の町並み');
+  ensureVisibleBreadcrumb();
+  ensureBreadcrumbStructuredData(null);
+  ensureFooterLinks();
+  if (progress) progress.setAttribute('aria-hidden', 'true');
+  if (headerMeta.length) headerMeta[headerMeta.length - 1].textContent = '約5分';
+}
+
+normalizeBasicPage();
 
 const explanationButton = document.querySelector('#explainBtn');
 const explanation = document.querySelector('#explanation');
@@ -113,6 +172,12 @@ if (explanationButton && explanation) {
 }
 
 const storyInfoBox = document.querySelector('.story-side .side-box, .story-side .story-info, .story-side, .story-info');
+let favorites = [];
+try {
+  const stored = JSON.parse(localStorage.getItem(favoritesStorageKey) || '[]');
+  favorites = Array.isArray(stored) ? stored : [];
+} catch (error) {}
+
 let favoriteButton = document.querySelector('#favoriteBtn');
 if (!favoriteButton && storyInfoBox && slug) {
   favoriteButton = document.createElement('button');
@@ -121,14 +186,6 @@ if (!favoriteButton && storyInfoBox && slug) {
   storyInfoBox.insertAdjacentElement('afterbegin', favoriteButton);
 }
 if (favoriteButton) favoriteButton.setAttribute('type', 'button');
-const storageKey = 'yorugatari-favorites';
-let favorites = [];
-try {
-  const stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  favorites = Array.isArray(stored) ? stored : [];
-} catch (error) {
-  favorites = [];
-}
 
 function drawFavorite() {
   if (!favoriteButton) return;
@@ -140,26 +197,45 @@ function drawFavorite() {
 
 if (favoriteButton) {
   favoriteButton.addEventListener('click', function () {
-    favorites = favorites.includes(slug) ? favorites.filter(function (item) { return item !== slug; }) : favorites.concat(slug);
-    try { localStorage.setItem(storageKey, JSON.stringify(favorites)); } catch (error) {}
+    favorites = favorites.includes(slug)
+      ? favorites.filter(function (item) { return item !== slug; })
+      : favorites.concat(slug);
+    try { localStorage.setItem(favoritesStorageKey, JSON.stringify(favorites)); } catch (error) {}
     drawFavorite();
   });
 }
 drawFavorite();
 
+let completedStories = [];
+try {
+  const stored = JSON.parse(localStorage.getItem(completedStorageKey) || '[]');
+  completedStories = Array.isArray(stored) ? stored : [];
+} catch (error) {}
+
+function saveCompletedStories() {
+  try { localStorage.setItem(completedStorageKey, JSON.stringify(completedStories)); } catch (error) {}
+}
+
+function isCompleted() {
+  return Boolean(slug && completedStories.includes(slug));
+}
+
 let completedButton = null;
 let completedStatus = null;
-let viewCount = null;
-
-if (storyInfoBox && slug) {
+if (storyInfoBox && slug && !storyInfoBox.querySelector('.reading-status')) {
   const readingStatus = document.createElement('div');
   readingStatus.className = 'reading-status';
-  readingStatus.innerHTML = '<p class="view-count" aria-live="polite">閲覧数 <strong>—</strong></p><button class="btn completed-toggle" type="button"></button><p class="completed-note" aria-live="polite"></p>';
+  readingStatus.innerHTML =
+    '<p class="view-count" aria-live="polite">閲覧数 <strong>—</strong></p>' +
+    '<button class="btn completed-toggle" type="button"></button>' +
+    '<p class="completed-note" aria-live="polite"></p>';
   const actions = storyInfoBox.querySelector('.hero-actions');
   storyInfoBox.insertBefore(readingStatus, actions || null);
   completedButton = readingStatus.querySelector('.completed-toggle');
   completedStatus = readingStatus.querySelector('.completed-note');
-  viewCount = readingStatus.querySelector('.view-count strong');
+} else if (storyInfoBox) {
+  completedButton = storyInfoBox.querySelector('.completed-toggle');
+  completedStatus = storyInfoBox.querySelector('.completed-note');
 }
 
 function drawCompleted(automatic) {
@@ -206,7 +282,11 @@ function saveReadingPosition(force) {
   const max = documentElement.scrollHeight - documentElement.clientHeight;
   const readingProgress = Math.max(0, Math.min(99, Math.round((max ? documentElement.scrollTop / max : 0) * 100)));
   try {
-    localStorage.setItem(lastReadingStorageKey, JSON.stringify({ slug: slug, progress: readingProgress, updatedAt: Date.now() }));
+    localStorage.setItem(lastReadingStorageKey, JSON.stringify({
+      slug: slug,
+      progress: readingProgress,
+      updatedAt: Date.now()
+    }));
     lastPositionSavedAt = Date.now();
   } catch (error) {}
 }
@@ -217,7 +297,10 @@ if (location.hash === '#resume') {
     if (savedReading && savedReading.slug === slug && Number(savedReading.progress) > 0) {
       requestAnimationFrame(function () {
         const max = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        scrollTo({ top: max * Number(savedReading.progress) / 100, behavior: 'smooth' });
+        scrollTo({
+          top: max * Number(savedReading.progress) / 100,
+          behavior: 'smooth'
+        });
       });
     }
   } catch (error) {}
@@ -228,6 +311,7 @@ function markCompletedAtEnd() {
   const rect = storyBody.getBoundingClientRect();
   if (rect.bottom <= window.innerHeight + 80) setCompleted(true, true);
 }
+
 addEventListener('scroll', markCompletedAtEnd, { passive: true });
 addEventListener('scroll', function () { saveReadingPosition(false); }, { passive: true });
 addEventListener('pagehide', function () { saveReadingPosition(true); });
@@ -248,12 +332,12 @@ const catalogSources = [
 ];
 
 function loadCatalogScript(source) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     const script = document.createElement('script');
-    script.src = '../assets/' + source + '?v=20260723-002';
+    script.src = '../assets/' + source + '?v=20260723-003';
     script.async = false;
-    script.onload = resolve;
-    script.onerror = reject;
+    script.onload = function () { resolve(true); };
+    script.onerror = function () { resolve(false); };
     document.head.appendChild(script);
   });
 }
@@ -263,55 +347,8 @@ function storyPageHref(story) {
   return href.replace(/^\.\.\//, '').replace(/^stories\//, '');
 }
 
-function ensurePropertyMeta(property, content) {
-  let element = document.querySelector('meta[property="' + property + '"]');
-  if (!element) {
-    element = document.createElement('meta');
-    element.setAttribute('property', property);
-    document.head.appendChild(element);
-  }
-  element.setAttribute('content', content);
-}
-
-function ensurePreconnect() {
-  if (document.querySelector('link[rel="preconnect"][href="https://page-views-api.ratneshc.com"]')) return;
-  const link = document.createElement('link');
-  link.rel = 'preconnect';
-  link.href = 'https://page-views-api.ratneshc.com';
-  link.crossOrigin = 'anonymous';
-  const canonical = document.querySelector('link[rel="canonical"]');
-  document.head.insertBefore(link, canonical || document.head.firstChild);
-}
-
-function ensureBreadcrumbStructuredData(story) {
-  const canonical = document.querySelector('link[rel="canonical"]');
-  const pageUrl = canonical ? canonical.href : location.href.split('#')[0];
-  const data = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: '夜語り', item: 'https://allsunday1122.github.io/yorugatari/' },
-      { '@type': 'ListItem', position: 2, name: '全100話', item: 'https://allsunday1122.github.io/yorugatari/archive.html' },
-      { '@type': 'ListItem', position: 3, name: story.category, item: 'https://allsunday1122.github.io/yorugatari/archive.html#' + encodeURIComponent(story.category) },
-      { '@type': 'ListItem', position: 4, name: story.title, item: pageUrl }
-    ]
-  };
-  let target = null;
-  document.querySelectorAll('script[type="application/ld+json"]').forEach(function (script) {
-    try {
-      const parsed = JSON.parse(script.textContent);
-      if (parsed && parsed['@type'] === 'BreadcrumbList') target = script;
-    } catch (error) {}
-  });
-  if (!target) {
-    target = document.createElement('script');
-    target.type = 'application/ld+json';
-    document.head.appendChild(target);
-  }
-  target.textContent = JSON.stringify(data);
-}
-
-function ensureStoryId(story, currentIndex) {
+function ensureStoryId(story, currentIndex, completeCatalog) {
+  if (!completeCatalog) return;
   const storyInfo = document.querySelector('.story-info');
   if (!storyInfo) return;
   const storyId = 'YGT-' + String(currentIndex + 1).padStart(3, '0');
@@ -320,7 +357,7 @@ function ensureStoryId(story, currentIndex) {
   if (definitionList) {
     const term = document.createElement('dt');
     const value = document.createElement('dd');
-    term.textContent = 'ID';
+    term.textContent = '作品ID';
     value.textContent = storyId;
     definitionList.insertBefore(value, definitionList.firstChild);
     definitionList.insertBefore(term, value);
@@ -333,55 +370,14 @@ function ensureStoryId(story, currentIndex) {
   else storyInfo.insertAdjacentElement('afterbegin', paragraph);
 }
 
-function ensureFooterLinks() {
-  const footerInner = document.querySelector('.site-footer .footer-inner');
-  if (!footerInner) return;
-  let footerNav = footerInner.querySelector('.footer-links');
-  if (!footerNav) {
-    footerNav = document.createElement('nav');
-    footerNav.className = 'footer-links';
-    footerInner.appendChild(footerNav);
-  }
-  footerNav.setAttribute('aria-label', '運営情報');
-  [
-    ['../archive.html', '全100話一覧'],
-    ['../about.html', '運営・編集方針'],
-    ['../privacy.html', 'プライバシー'],
-    ['../terms.html', '利用規約'],
-    ['../contact.html', 'お問い合わせ']
-  ].forEach(function (entry) {
-    if (footerNav.querySelector('a[href="' + entry[0] + '"]')) return;
-    const link = document.createElement('a');
-    link.href = entry[0];
-    link.textContent = entry[1];
-    footerNav.appendChild(link);
-  });
-}
-
-function normalizeStoryPage(story, currentIndex) {
-  if (!story) return;
-  ensurePreconnect();
-  ensurePropertyMeta('og:image:width', '2048');
-  ensurePropertyMeta('og:image:height', '683');
-  ensurePropertyMeta('og:image:alt', '月明かりと提灯が照らす夜の町並み');
-  ensureBreadcrumbStructuredData(story);
-  ensureStoryId(story, currentIndex);
-  ensureFooterLinks();
-  if (mainNav) mainNav.setAttribute('aria-label', '主要メニュー');
-  if (progress) progress.setAttribute('aria-hidden', 'true');
-  if (headerMeta.length && story.minutes) headerMeta[headerMeta.length - 1].textContent = '約' + story.minutes + '分';
-}
-
-function buildStoryPagination(stories, currentIndex) {
-  if (!slug || document.querySelector('.story-pagination') || currentIndex < 0) return;
+function buildStoryPagination(stories, currentIndex, completeCatalog) {
+  if (!slug || document.querySelector('.story-pagination')) return;
   const navigation = document.createElement('nav');
   navigation.className = 'hero-actions story-pagination';
-  navigation.setAttribute('aria-label', '前後の怖い話');
+  navigation.setAttribute('aria-label', completeCatalog ? '前後の怖い話' : '作品一覧');
 
-  const previousStory = stories[currentIndex - 1];
-  const nextStory = stories[currentIndex + 1];
-
-  if (previousStory) {
+  if (completeCatalog && currentIndex > 0 && stories[currentIndex - 1]) {
+    const previousStory = stories[currentIndex - 1];
     const previousLink = document.createElement('a');
     previousLink.className = 'btn';
     previousLink.href = storyPageHref(previousStory);
@@ -395,7 +391,8 @@ function buildStoryPagination(stories, currentIndex) {
   archiveLink.textContent = '全100話一覧';
   navigation.appendChild(archiveLink);
 
-  if (nextStory) {
+  if (completeCatalog && currentIndex >= 0 && stories[currentIndex + 1]) {
+    const nextStory = stories[currentIndex + 1];
     const nextLink = document.createElement('a');
     nextLink.className = 'btn btn-primary';
     nextLink.href = storyPageHref(nextStory);
@@ -409,20 +406,28 @@ function buildStoryPagination(stories, currentIndex) {
 }
 
 catalogSources.reduce(function (promise, source) {
-  return promise.then(function () { return loadCatalogScript(source); });
-}, Promise.resolve()).then(function () {
+  return promise.then(function (loadedCount) {
+    return loadCatalogScript(source).then(function (loaded) {
+      return loadedCount + (loaded ? 1 : 0);
+    });
+  });
+}, Promise.resolve(0)).then(function (loadedCount) {
   const catalog = Array.isArray(window.STORIES) ? window.STORIES : [];
-  const stories = Array.from(new Map(catalog.map(function (story) { return [story.slug, story]; })).values());
-  const currentIndex = stories.findIndex(function (story) { return story.slug === slug; });
-  if (currentIndex < 0) return;
-  normalizeStoryPage(stories[currentIndex], currentIndex);
-  buildStoryPagination(stories, currentIndex);
-}).catch(function () {
-  const storyShell = document.querySelector('.story-shell');
-  if (!storyShell || document.querySelector('.story-pagination')) return;
-  const fallback = document.createElement('nav');
-  fallback.className = 'hero-actions story-pagination';
-  fallback.setAttribute('aria-label', '作品一覧');
-  fallback.innerHTML = '<a class="btn" href="../archive.html">全100話一覧</a>';
-  storyShell.insertAdjacentElement('afterend', fallback);
+  const stories = Array.from(new Map(catalog.map(function (story) {
+    return [story.slug, story];
+  })).values());
+  const currentIndex = stories.findIndex(function (story) {
+    return story.slug === slug;
+  });
+  const currentStory = currentIndex >= 0 ? stories[currentIndex] : null;
+  const completeCatalog = loadedCount === catalogSources.length;
+
+  if (currentStory) {
+    ensureBreadcrumbStructuredData(currentStory);
+    if (headerMeta.length && currentStory.minutes) {
+      headerMeta[headerMeta.length - 1].textContent = '約' + currentStory.minutes + '分';
+    }
+    ensureStoryId(currentStory, currentIndex, completeCatalog);
+  }
+  buildStoryPagination(stories, currentIndex, completeCatalog);
 });
