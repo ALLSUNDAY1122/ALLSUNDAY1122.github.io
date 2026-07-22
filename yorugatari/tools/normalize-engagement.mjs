@@ -4,8 +4,8 @@ import path from 'node:path';
 const ROOT = process.cwd();
 const SITE_ROOT = path.join(ROOT, 'yorugatari');
 const STORIES_ROOT = path.join(SITE_ROOT, 'stories');
-const ANALYTICS_VERSION = '20260723-001';
-const ENGAGEMENT_VERSION = '20260723-001';
+const ANALYTICS_VERSION = '20260723-002';
+const ENGAGEMENT_VERSION = '20260723-002';
 const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png';
 const SHARE_WIDTH = '2172';
 const SHARE_HEIGHT = '724';
@@ -69,8 +69,8 @@ function normalizeStaticPage(filename) {
     );
     html = html.replace('<h2>作品の閲覧数</h2>', '<h2>アクセス数の集計</h2>');
     html = html.replace(
-      'Page Views APIは、作品ページの閲覧数を30分単位で重複を除いて集計します。重複判定のためにIPアドレスとブラウザ情報から短期間有効なハッシュを生成しますが、IPアドレスそのもの、Cookie、当サイトの読了履歴は保存しません。',
-      'Page Views APIは、ページごとの閲覧数を30分単位で重複を除いて集計します。送信する内容はサイト識別子とページのパスです。重複判定のためにIPアドレスとブラウザ情報から短期間有効なハッシュを生成しますが、IPアドレスそのもの、Cookie、参照元URL、当サイトの読了履歴は保存しません。'
+      /<h2>アクセス数の集計<\/h2>\s*<p>[^<]*<\/p>/,
+      '<h2>アクセス数の集計</h2>\n      <p>Page Views APIは、ページごとの閲覧数を30分単位で重複を除いて集計します。送信する内容はサイト識別子とページのパスです。外部サイトから初めて訪れた場合は、参照元をブラウザ内で「検索」「SNS」「直接」「その他の参照」「キャンペーン」の粗い区分へ変換し、1セッションにつき1回だけ区分を送信します。参照元URL、検索語、UTMの具体的な値、IPアドレスそのもの、Cookie、当サイトの読了履歴は保存しません。</p>'
     );
     html = html.replace(/制定・最終更新：\d{4}年\d{1,2}月\d{1,2}日/, '制定・最終更新：2026年7月23日');
   }
@@ -107,4 +107,4 @@ fs.readdirSync(STORIES_ROOT)
   .forEach(normalizeStoryPage);
 normalize404();
 
-console.log(`Normalized analytics for ${STATIC_PAGES.length} static pages, 100 stories, and the 404 page.`);
+console.log(`Normalized source analytics for ${STATIC_PAGES.length} static pages, 100 stories, and the 404 page.`);
