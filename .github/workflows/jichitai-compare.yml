@@ -40,7 +40,7 @@ jobs:
         working-directory: jichitai-compare
         env:
           SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.sha }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: npm run check:scope
 
       - name: Generate public municipality data
