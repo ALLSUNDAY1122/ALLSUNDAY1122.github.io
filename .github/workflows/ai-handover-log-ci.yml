@@ -54,6 +54,11 @@ jobs:
           cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
           cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
           cp apps/ai-handover-log/overrides/pubspec.yaml "$RUNNER_TEMP/build/pubspec.yaml"
+          for item in docs scripts README.md CHANGELOG.md .gitignore; do
+            if [ -e "$SOURCE/$item" ]; then
+              cp -R "$SOURCE/$item" "$RUNNER_TEMP/build/$item"
+            fi
+          done
           if [ -d "$SOURCE/assets" ]; then
             rm -rf "$RUNNER_TEMP/build/assets"
             cp -R "$SOURCE/assets" "$RUNNER_TEMP/build/assets"
@@ -90,23 +95,48 @@ jobs:
         run: dart format lib test
 
       - name: Analyze
+        shell: bash
         working-directory: ${{ runner.temp }}/build
-        run: flutter analyze
+        run: |
+          set -o pipefail
+          flutter analyze 2>&1 | tee "$RUNNER_TEMP/analyze.log"
 
       - name: Test
+        shell: bash
         working-directory: ${{ runner.temp }}/build
-        run: flutter test --coverage
+        run: |
+          set -o pipefail
+          flutter test --coverage 2>&1 | tee "$RUNNER_TEMP/test.log"
 
       - name: Build web release
+        shell: bash
         working-directory: ${{ runner.temp }}/build
-        run: flutter build web --release
+        run: |
+          set -o pipefail
+          flutter build web --release 2>&1 | tee "$RUNNER_TEMP/web-build.log"
 
-      - name: Upload web build and coverage
+      - name: Package validated Flutter project
+        shell: bash
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/release"
+          zip -qr "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.3_2026-07-22.zip" . \
+            -x '.dart_tool/*' 'build/*' '.git/*'
+          sha256sum "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.3_2026-07-22.zip" \
+            > "$RUNNER_TEMP/release/AI_Handover_Log_Flutter_v0.3_2026-07-22.sha256"
+
+      - name: Upload validated project, logs, web build and coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ai-handover-log-ci-output
           path: |
+            ${{ runner.temp }}/release/AI_Handover_Log_Flutter_v0.3_2026-07-22.zip
+            ${{ runner.temp }}/release/AI_Handover_Log_Flutter_v0.3_2026-07-22.sha256
+            ${{ runner.temp }}/analyze.log
+            ${{ runner.temp }}/test.log
+            ${{ runner.temp }}/web-build.log
             ${{ runner.temp }}/build/build/web
             ${{ runner.temp }}/build/coverage/lcov.info
           if-no-files-found: warn
