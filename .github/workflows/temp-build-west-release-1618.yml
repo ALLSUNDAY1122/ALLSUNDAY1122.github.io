@@ -1,0 +1,73 @@
+name: Temporary build west release 1618
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build fixed west release branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin main region/west
+          BASE=$(git rev-parse HEAD^)
+          ROOT=jichitai-compare
+          mapfile -t codes < <(python3 - "$BASE" <<'PY'
+          import re,subprocess,sys
+          base=sys.argv[1]
+          root='jichitai-compare/data/municipalities'
+          def collect(ref):
+              out=set()
+              for p in subprocess.check_output(['git','ls-tree','-r','--name-only',ref,root],text=True).splitlines():
+                  m=re.fullmatch(rf'{root}/(\d{{2}})/(\d{{5}})\.json',p)
+                  if m and 31 <= int(m.group(1)) <= 47:
+                      out.add(m.group(2))
+              return out
+          pending=sorted(collect('origin/region/west')-collect(base))
+          if len(pending)<10:
+              raise SystemExit(f'west pending {len(pending)} < 10')
+          print('\n'.join(pending[:10]))
+          PY
+          )
+          test "${#codes[@]}" -eq 10
+          OUT=coord/west-release-10-20260722-1618
+          git checkout -B "$OUT" "$BASE"
+          for code in "${codes[@]}"; do
+            pref=${code:0:2}
+            data="$ROOT/data/municipalities/$pref/$code.json"
+            task="$ROOT/operations/tasks/$code.json"
+            mkdir -p "$(dirname "$data")" "$(dirname "$task")"
+            git show "origin/region/west:$data" > "$data"
+            git show "origin/region/west:$task" > "$task"
+            python3 - "$task" <<'PY'
+          import json,sys
+          p=sys.argv[1]
+          d=json.load(open(p,encoding='utf-8'))
+          if d.get('status')!='merged':
+              raise SystemExit(f'{p}: task status is {d.get("status")}, expected merged')
+          PY
+          done
+          git add "$ROOT/data/municipalities" "$ROOT/operations/tasks"
+          test "$(git diff --cached --name-only | wc -l)" -eq 20
+          test -z "$(git diff --cached --name-status | awk '$1=="D"{print}')"
+          git commit -m '全国統合: 西日本固定10自治体スナップショットを作成'
+          git push --force-with-lease origin "$OUT"
+          printf 'west %s\n' "${codes[*]}"
+
+          git fetch origin main
+          git checkout -B main origin/main
+          git rm .github/workflows/temp-build-west-release-1618.yml
+          git commit -m '統括管理: 西日本固定統合枝構築用一時ワークフローを削除'
+          git push origin main
