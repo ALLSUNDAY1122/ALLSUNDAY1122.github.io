@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
       - source_parts/**
+      - patches/**
       - .github/workflows/ai-handover-log-v04-binary-ci.yml
   workflow_dispatch:
 
@@ -39,6 +40,7 @@ jobs:
           echo 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234  '"$RUNNER_TEMP/source.tar.xz" | sha256sum -c -
           tar -tJf "$RUNNER_TEMP/source.tar.xz" > "$RUNNER_TEMP/source-files.txt"
           tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
+          python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
           test -f "$RUNNER_TEMP/source/pubspec.yaml"
           test -f "$RUNNER_TEMP/source/lib/main.dart"
           test -f "$RUNNER_TEMP/source/test/widget_test.dart"
