@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - .github/workflows/temp-sync-release-queue-484-1812.yml
+      - .github/triggers/sync-release-queue-484-1816.txt
 
 permissions:
   contents: write
@@ -174,7 +174,8 @@ jobs:
             git add jichitai-compare/operations/control/release-queue.json \
               jichitai-compare/operations/control/global-state.json \
               jichitai-compare/operations/control/audit-log.jsonl
-            git rm .github/workflows/temp-sync-release-queue-484-1812.yml
+            git rm .github/workflows/temp-sync-release-queue-484-1812.yml \
+              .github/triggers/sync-release-queue-484-1816.txt
             git commit -m "統括管理: 公開484・地方統合${total}へ再同期（北${north} 東${east} 中${central} 西${west}）"
             if git push origin HEAD:main; then
               exit 0
