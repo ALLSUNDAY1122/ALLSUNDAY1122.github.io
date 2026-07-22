@@ -1,23 +1,34 @@
-name: Diagnose Setouchi Validation
+name: Jichitai Compare CI
 
 on:
   pull_request:
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
     branches:
-      - region/west
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  diagnose-setouchi:
-    if: github.head_ref == 'data/33212-setouchi-v2'
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - name: Checkout Setouchi branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: data/33212-setouchi-v2
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -25,31 +36,42 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Patch eligibility and capture validation output
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const path = 'data/municipalities/33/33212.json';
-          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-          data.services.temporaryChildcare.eligibility = { minAgeMonths: 0, maxAgeYears: 5 };
-          data.services.temporaryChildcare.details.target = '未就学児を中心に、保護者の傷病、就労、負担軽減等で一時的な保育が必要な子ども。受入年齢・条件は施設ごとに異なるため利用先へ確認';
-          fs.writeFileSync(path, JSON.stringify(data) + '\n');
-          NODE
-          npm run generate
-          npm run progress
-          set +e
-          npm run validate:generated > operations/diagnostic-862.log 2>&1
-          echo "exitCode=$?" >> operations/diagnostic-862.log
-          set -e
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.sha }}
+        run: npm run check:scope
 
-      - name: Restore workflow and commit diagnostic
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          git fetch origin +refs/heads/region/west:refs/remotes/origin/region/west
-          git restore jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
-          git show origin/region/west:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare/data/municipalities/33/33212.json jichitai-compare/operations/diagnostic-862.log
-          git commit -m 'Capture Setouchi validation diagnostics'
-          git push origin HEAD:data/33212-setouchi-v2
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
