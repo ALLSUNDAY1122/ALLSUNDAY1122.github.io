@@ -1,0 +1,58 @@
+name: Temporary Build North Release 10 20260722 1259
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-north-release-10-20260722-1259.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/north-release-10-20260722-1259
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed 20-file snapshot
+        run: |
+          set -euxo pipefail
+          git fetch origin main region/north
+          git reset --hard origin/main
+          source_sha=eba44429f0b4cb2a4634512327da2607e2488e15
+          paths=(
+            jichitai-compare/data/municipalities/01/01561.json
+            jichitai-compare/operations/tasks/01561.json
+            jichitai-compare/data/municipalities/01/01562.json
+            jichitai-compare/operations/tasks/01562.json
+            jichitai-compare/data/municipalities/01/01563.json
+            jichitai-compare/operations/tasks/01563.json
+            jichitai-compare/data/municipalities/01/01564.json
+            jichitai-compare/operations/tasks/01564.json
+            jichitai-compare/data/municipalities/01/01571.json
+            jichitai-compare/operations/tasks/01571.json
+            jichitai-compare/data/municipalities/01/01631.json
+            jichitai-compare/operations/tasks/01631.json
+            jichitai-compare/data/municipalities/01/01632.json
+            jichitai-compare/operations/tasks/01632.json
+            jichitai-compare/data/municipalities/01/01633.json
+            jichitai-compare/operations/tasks/01633.json
+            jichitai-compare/data/municipalities/01/01634.json
+            jichitai-compare/operations/tasks/01634.json
+            jichitai-compare/data/municipalities/01/01635.json
+            jichitai-compare/operations/tasks/01635.json
+          )
+          git checkout "$source_sha" -- "${paths[@]}"
+          git add "${paths[@]}"
+          mapfile -t actual < <(git diff --cached --name-only | sort)
+          mapfile -t expected < <(printf '%s\n' "${paths[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${actual[@]}")
+          test "${#actual[@]}" -eq 20
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 北日本追加10自治体の固定スナップショット'
+          git push --force-with-lease origin HEAD:coord/north-release-10-20260722-1259
