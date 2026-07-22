@@ -1,0 +1,66 @@
+name: Temporary Build North Release 1906
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-north-release-1906.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed north snapshot
+        run: |
+          set -euxo pipefail
+          TARGET='coord/north-release-10-20260722-1906'
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            "+refs/heads/${TARGET}:refs/remotes/origin/${TARGET}"
+          git switch -C "$TARGET" "origin/$TARGET"
+          paths=(
+            jichitai-compare/data/municipalities/02/02206.json
+            jichitai-compare/operations/tasks/02206.json
+            jichitai-compare/data/municipalities/02/02207.json
+            jichitai-compare/operations/tasks/02207.json
+            jichitai-compare/data/municipalities/02/02208.json
+            jichitai-compare/operations/tasks/02208.json
+            jichitai-compare/data/municipalities/02/02209.json
+            jichitai-compare/operations/tasks/02209.json
+            jichitai-compare/data/municipalities/02/02210.json
+            jichitai-compare/operations/tasks/02210.json
+            jichitai-compare/data/municipalities/02/02301.json
+            jichitai-compare/operations/tasks/02301.json
+            jichitai-compare/data/municipalities/02/02303.json
+            jichitai-compare/operations/tasks/02303.json
+            jichitai-compare/data/municipalities/02/02304.json
+            jichitai-compare/operations/tasks/02304.json
+            jichitai-compare/data/municipalities/02/02307.json
+            jichitai-compare/operations/tasks/02307.json
+            jichitai-compare/data/municipalities/02/02321.json
+            jichitai-compare/operations/tasks/02321.json
+          )
+          git checkout origin/region/north -- "${paths[@]}"
+          mapfile -t changed < <(git diff --name-only --cached | sort)
+          printf '%s\n' "${paths[@]}" | sort > /tmp/expected
+          printf '%s\n' "${changed[@]}" > /tmp/actual
+          diff -u /tmp/expected /tmp/actual
+          test "${#changed[@]}" -eq 20
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '全国統合準備: 北日本10自治体の固定スナップショット'
+          git push origin "$TARGET"
+          git switch main
+          git pull --ff-only origin main
+          rm .github/workflows/temp-build-north-release-1906.yml
+          git add .github/workflows/temp-build-north-release-1906.yml
+          git commit -m '統括管理: 北日本固定スナップショット一時処理を削除'
+          git push origin main
