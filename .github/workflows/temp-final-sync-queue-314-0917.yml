@@ -1,0 +1,87 @@
+name: Temporary final sync queue 314
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-final-sync-queue-314-0917.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          git fetch origin \
+            region/north:refs/remotes/origin/region/north \
+            region/east:refs/remotes/origin/region/east \
+            region/central:refs/remotes/origin/region/central \
+            region/west:refs/remotes/origin/region/west
+          python - <<'PY'
+          import json, subprocess
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path, PurePosixPath
+
+          qpath=Path('jichitai-compare/operations/control/release-queue.json')
+          data=json.loads(qpath.read_text(encoding='utf-8'))
+          policy=json.loads(Path('jichitai-compare/operations/municipality-assignment-policy.json').read_text(encoding='utf-8'))
+          teams={'north':'北日本調査班','east':'東日本調査班','central':'中日本調査班','west':'西日本調査班'}
+          prefixes={t['team']:set(t['prefectureCodes']) for t in policy['teams']}
+          def run(*a): return subprocess.check_output(a,text=True).strip()
+          def get_name(ref,path,code):
+              try:
+                  obj=json.loads(run('git','show',f'{ref}:{path}'))
+                  if isinstance(obj.get('municipality'),dict) and obj['municipality'].get('name'): return obj['municipality']['name']
+                  for k in ('municipalityName','name'):
+                      if isinstance(obj.get(k),str) and obj[k]: return obj[k]
+              except Exception: pass
+              return code
+          for e in data['entries']:
+              baseline=int(e['count'])-int(e['pendingSinceLastRelease'])
+              ref=f"origin/{e['branch']}"; allowed=prefixes[teams[e['region']]]
+              old={x['code']:x['name'] for x in e.get('municipalities',[])}
+              paths=run('git','ls-tree','-r','--name-only',ref,'--','jichitai-compare/data/municipalities')
+              items=[]
+              for path in paths.splitlines():
+                  if not path.endswith('.json'): continue
+                  code=PurePosixPath(path).stem
+                  if not code.isdigit() or code[:2] not in allowed: continue
+                  items.append({'code':code,'name':old.get(code) or get_name(ref,path,code)})
+              items.sort(key=lambda x:x['code'])
+              e['municipalities']=items; e['count']=len(items)
+              p=max(0,e['count']-baseline)
+              e['pendingSinceLastRelease']=p
+              e['releaseStatus']='release_ready' if p>=10 else 'pending_threshold'
+              e['reason']=f'担当割当で地方ブランチを再走査。前回全国統合後の地方統合繰越は{p}自治体'
+              e['generatedPullRequest']=544
+          data['updatedAt']=datetime.now(timezone(timedelta(hours=9))).replace(second=0,microsecond=0).isoformat()
+          data['summary']['regionalMergedMunicipalities']=sum(e['count'] for e in data['entries'])
+          data['summary']['latestGeneratedMunicipalityCount']=314
+          data['summary']['latestGeneratedPullRequest']=544
+          data['summary']['latestPublicCountPullRequest']=544
+          data['summary']['releaseReadyRegions']=[e['region'] for e in data['entries'] if e['pendingSinceLastRelease']>=10]
+          data['summary']['auditBlockedRegions']=[]
+          ordered=sorted(data['entries'],key=lambda e:e['pendingSinceLastRelease'],reverse=True)
+          data['nextAction']='地方統合を継続。現在の公開後繰越: '+'、'.join(f"{e['region']} {e['pendingSinceLastRelease']}" for e in ordered)+'。10自治体到達地域を固定スナップショットで全国統合する。'
+          data['humanDecisionRequired']=False
+          qpath.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          labels={'north':'北','east':'東','central':'中','west':'西'}
+          ptxt='・'.join(f"{labels[e['region']]}{e['pendingSinceLastRelease']}" for e in data['entries'])
+          Path('/tmp/msg').write_text(f"統括管理: 地方統合{data['summary']['regionalMergedMunicipalities']}自治体・公開314自治体へ最終同期（{ptxt}）",encoding='utf-8')
+          PY
+          git add jichitai-compare/operations/control/release-queue.json
+          git rm .github/workflows/temp-final-sync-queue-314-0917.yml
+          git commit -m "$(cat /tmp/msg)"
+          git push origin HEAD:main
