@@ -1,0 +1,42 @@
+name: Temporary clean public 344 1128
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-clean-public-344-1128.yml
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Create clean public branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          git fetch origin coord/generated-344-20260722-1118:refs/remotes/origin/coord/generated-344-20260722-1118
+          BRANCH=coord/generated-344-clean-20260722-1128
+          git checkout -B "$BRANCH" origin/main
+          git checkout origin/coord/generated-344-20260722-1118 -- \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/index.html
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = "3"
+          git commit -m "公開更新: 生成データと表示件数を344自治体へ同期"
+          git push --force-with-lease origin "$BRANCH"
+          git checkout main
+          git pull --rebase origin main
+          git rm .github/workflows/temp-clean-public-344-1128.yml
+          git commit -m "統括管理: 公開344自治体のクリーン生成ワークフローを削除"
+          git push origin main
