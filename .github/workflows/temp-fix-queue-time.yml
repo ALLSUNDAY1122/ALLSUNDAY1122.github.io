@@ -1,0 +1,37 @@
+name: Temporary Fix Queue Timestamp
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-fix-queue-time.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fix timestamp and remove workflow
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+          p=Path('jichitai-compare/operations/control/release-queue.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          d['updatedAt']=datetime.now(ZoneInfo('Asia/Tokyo')).isoformat(timespec='seconds')
+          p.write_text(json.dumps(d,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+          git rm .github/workflows/temp-fix-queue-time.yml
+          git add jichitai-compare/operations/control/release-queue.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m '統括管理: 全国キュー更新時刻を実時計へ補正'
+          git push origin main
