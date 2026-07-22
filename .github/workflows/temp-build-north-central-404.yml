@@ -1,0 +1,54 @@
+name: Temporary Build North Central 404
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-north-central-404.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build fixed snapshots
+        run: |
+          set -euxo pipefail
+          git fetch origin \
+            '+refs/heads/region/north:refs/remotes/origin/region/north' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central' \
+            '+refs/heads/coord/north-release-10-20260722-1442:refs/remotes/origin/coord/north-release-10-20260722-1442' \
+            '+refs/heads/coord/central-release-10-20260722-1442:refs/remotes/origin/coord/central-release-10-20260722-1442'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          build_snapshot() {
+            target="$1"; source_ref="$2"; shift 2
+            git checkout -B "$target" "origin/$target"
+            for code in "$@"; do
+              pref="${code:0:2}"
+              json="jichitai-compare/data/municipalities/$pref/$code.json"
+              task="jichitai-compare/operations/tasks/$code.json"
+              git show "$source_ref:$json" >/dev/null
+              git show "$source_ref:$task" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["status"]=="merged", d'
+              git checkout "$source_ref" -- "$json" "$task"
+            done
+            git add jichitai-compare/data/municipalities jichitai-compare/operations/tasks
+            changed=$(git diff --cached --name-only | wc -l)
+            test "$changed" -eq 20
+            git commit -m "全国統合: 固定10自治体スナップショットを作成"
+            git push origin "$target"
+          }
+
+          build_snapshot coord/north-release-10-20260722-1442 origin/region/north \
+            01575 01636 01637 01638 01639 01641 01642 01643 01644 01645
+          git checkout main
+          build_snapshot coord/central-release-10-20260722-1442 origin/region/central \
+            23235 23236 23302 23342 23361 23362 23424 23425 23427 23441
