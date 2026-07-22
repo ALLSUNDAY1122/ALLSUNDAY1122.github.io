@@ -1,0 +1,52 @@
+name: Temporary Rebuild Central Release 1706
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-rebuild-central-release-1706.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete workflow, then build snapshot from latest main
+        run: |
+          set -euxo pipefail
+          BRANCH='coord/central-release-10-20260722-1706'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --ff-only origin main
+          rm .github/workflows/temp-rebuild-central-release-1706.yml
+          git add .github/workflows/temp-rebuild-central-release-1706.yml
+          git commit -m '統括管理: 中日本統合枝再構築の一時処理を削除'
+          git push origin main
+          git fetch origin \
+            '+refs/heads/main:refs/remotes/origin/main' \
+            '+refs/heads/region/central:refs/remotes/origin/region/central'
+          git checkout -B "$BRANCH" origin/main
+          paths=(
+            jichitai-compare/data/municipalities/24/24203.json jichitai-compare/operations/tasks/24203.json
+            jichitai-compare/data/municipalities/24/24204.json jichitai-compare/operations/tasks/24204.json
+            jichitai-compare/data/municipalities/24/24205.json jichitai-compare/operations/tasks/24205.json
+            jichitai-compare/data/municipalities/24/24207.json jichitai-compare/operations/tasks/24207.json
+            jichitai-compare/data/municipalities/24/24208.json jichitai-compare/operations/tasks/24208.json
+            jichitai-compare/data/municipalities/24/24209.json jichitai-compare/operations/tasks/24209.json
+            jichitai-compare/data/municipalities/24/24210.json jichitai-compare/operations/tasks/24210.json
+            jichitai-compare/data/municipalities/24/24211.json jichitai-compare/operations/tasks/24211.json
+            jichitai-compare/data/municipalities/24/24212.json jichitai-compare/operations/tasks/24212.json
+            jichitai-compare/data/municipalities/24/24214.json jichitai-compare/operations/tasks/24214.json
+          )
+          git checkout origin/region/central -- "${paths[@]}"
+          git add "${paths[@]}"
+          test "$(git diff --cached --name-only | wc -l)" -eq 20
+          git commit -m '全国統合: 中日本の追加10自治体を固定スナップショット化'
+          git push --force-with-lease origin "$BRANCH"
