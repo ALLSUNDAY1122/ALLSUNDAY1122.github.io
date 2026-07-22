@@ -1,0 +1,50 @@
+name: Temporary Build North Release 1731
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/temp-build-north-release-1731.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Remove workflow then build snapshot
+        run: |
+          set -euxo pipefail
+          BRANCH='coord/north-release-10-20260722-1731'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --ff-only origin main
+          rm .github/workflows/temp-build-north-release-1731.yml
+          git add .github/workflows/temp-build-north-release-1731.yml
+          git commit -m '統括管理: 北日本統合枝構築の一時処理を削除'
+          git push origin main
+          git fetch origin '+refs/heads/main:refs/remotes/origin/main' '+refs/heads/region/north:refs/remotes/origin/region/north'
+          git checkout -B "$BRANCH" origin/main
+          paths=(
+            jichitai-compare/data/municipalities/01/01668.json jichitai-compare/operations/tasks/01668.json
+            jichitai-compare/data/municipalities/01/01691.json jichitai-compare/operations/tasks/01691.json
+            jichitai-compare/data/municipalities/01/01692.json jichitai-compare/operations/tasks/01692.json
+            jichitai-compare/data/municipalities/01/01693.json jichitai-compare/operations/tasks/01693.json
+            jichitai-compare/data/municipalities/01/01694.json jichitai-compare/operations/tasks/01694.json
+            jichitai-compare/data/municipalities/02/02201.json jichitai-compare/operations/tasks/02201.json
+            jichitai-compare/data/municipalities/02/02202.json jichitai-compare/operations/tasks/02202.json
+            jichitai-compare/data/municipalities/02/02203.json jichitai-compare/operations/tasks/02203.json
+            jichitai-compare/data/municipalities/02/02204.json jichitai-compare/operations/tasks/02204.json
+            jichitai-compare/data/municipalities/02/02205.json jichitai-compare/operations/tasks/02205.json
+          )
+          git checkout origin/region/north -- "${paths[@]}"
+          git add "${paths[@]}"
+          test "$(git diff --cached --name-only | wc -l)" -eq 20
+          git commit -m '全国統合: 北日本の追加10自治体を固定スナップショット化'
+          git push --force-with-lease origin "$BRANCH"
