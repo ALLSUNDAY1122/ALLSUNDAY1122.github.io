@@ -1,112 +1,85 @@
 {
-  "auditedAt": "2026-07-22T21:47:53.588Z",
+  "auditedAt": "2026-07-22T21:50:56.685Z",
   "baseUrl": "https://allsunday1122.github.io/yorugatari",
-  "success": true,
+  "success": false,
   "releaseCheck": {
     "attempt": 1,
     "topStatus": 200,
     "archiveStatus": 200,
-    "topOptimization": true,
-    "archiveOptimization": true
+    "storyStatus": 200,
+    "progressiveApp": true,
+    "analytics": true,
+    "archiveReady": true,
+    "storyReady": true
   },
   "runs": [
     {
       "target": "top",
       "profile": "mobile",
-      "requestedUrl": "https://allsunday1122.github.io/yorugatari/",
-      "finalUrl": "https://allsunday1122.github.io/yorugatari/",
-      "fetchTime": "2026-07-22T21:48:04.325Z",
-      "lighthouseVersion": "13.4.1",
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:51:27.629Z",
       "scores": {
-        "performance": 0.95,
+        "performance": 0.57,
         "bestPractices": 0.96,
         "seo": 1
       },
       "metrics": {
         "firstContentfulPaint": {
-          "score": 0.78,
-          "numericValue": 2183.221,
-          "numericUnit": "millisecond",
-          "displayValue": "2.2 s",
-          "title": "First Contentful Paint"
+          "score": 0.59,
+          "numericValue": 2730.4515,
+          "displayValue": "2.7 s"
         },
         "largestContentfulPaint": {
-          "score": 0.95,
-          "numericValue": 2183.221,
-          "numericUnit": "millisecond",
-          "displayValue": "2.2 s",
-          "title": "Largest Contentful Paint"
-        },
-        "speedIndex": {
-          "score": 0.99,
-          "numericValue": 2183.221,
-          "numericUnit": "millisecond",
-          "displayValue": "2.2 s",
-          "title": "Speed Index"
+          "score": 0.72,
+          "numericValue": 3204.9515,
+          "displayValue": "3.2 s"
         },
         "totalBlockingTime": {
-          "score": 0.94,
-          "numericValue": 156,
-          "numericUnit": "millisecond",
-          "displayValue": "160 ms",
-          "title": "Total Blocking Time"
+          "score": 0.03,
+          "numericValue": 2941,
+          "displayValue": "2,940 ms"
         },
         "cumulativeLayoutShift": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "unitless",
-          "displayValue": "0",
-          "title": "Cumulative Layout Shift"
+          "displayValue": "0"
         },
         "interactive": {
-          "score": 0.98,
-          "numericValue": 2497.9210000000003,
-          "numericUnit": "millisecond",
-          "displayValue": "2.5 s",
-          "title": "Time to Interactive"
-        },
-        "serverResponseTime": {
-          "score": 1,
-          "numericValue": 3,
-          "numericUnit": "millisecond",
-          "displayValue": "Root document took 0 ms",
-          "title": "Initial server response time was short"
+          "score": 0.58,
+          "numericValue": 6575.0515000000005,
+          "displayValue": "6.6 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 35951,
-          "numericUnit": "byte",
-          "displayValue": "Total size was 35 KiB",
-          "title": "Avoids enormous network payloads"
-        },
-        "domSize": null
+          "numericValue": 36018,
+          "displayValue": "Total size was 35 KiB"
+        }
       },
       "resources": [
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 34853
+          "transferSize": 34895
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 26138
+          "transferSize": 26152
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4309
+          "transferSize": 4316
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3071
+          "transferSize": 3090
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 1335
+          "transferSize": 1337
         },
         {
           "resourceType": "image",
@@ -126,166 +99,15 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 34853
-        }
-      ],
-      "largestRequests": [
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
-          "resourceType": "Stylesheet",
-          "transferSize": 4309,
-          "resourceSize": 14789,
-          "statusCode": 200,
-          "mimeType": "text/css"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/app.js?v=20260723-006",
-          "resourceType": "Script",
-          "transferSize": 3350,
-          "resourceSize": 10263,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/",
-          "resourceType": "Document",
-          "transferSize": 3071,
-          "resourceSize": 7381,
-          "statusCode": 200,
-          "mimeType": "text/html"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2909,
-          "resourceSize": 6103,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2244,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2191,
-          "resourceSize": 4642,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2169,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2132,
-          "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2125,
-          "resourceSize": 4687,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2100,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2091,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2071,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        }
-      ],
-      "opportunities": [
-        {
-          "id": "unused-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused JavaScript"
-        },
-        {
-          "id": "unused-css-rules",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused CSS"
-        },
-        {
-          "id": "unminified-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify JavaScript"
-        },
-        {
-          "id": "unminified-css",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify CSS"
-        },
-        {
-          "id": "bootup-time",
-          "score": 1,
-          "numericValue": 555.3080000000001,
-          "numericUnit": "millisecond",
-          "displayValue": "0.6 s",
-          "title": "JavaScript execution time"
-        },
-        {
-          "id": "mainthread-work-breakdown",
-          "score": 0,
-          "numericValue": 2660.667999999994,
-          "numericUnit": "millisecond",
-          "displayValue": "2.7 s",
-          "title": "Minimize main-thread work"
+          "transferSize": 34895
         }
       ]
     },
     {
       "target": "top",
-      "profile": "desktop",
-      "requestedUrl": "https://allsunday1122.github.io/yorugatari/",
-      "finalUrl": "https://allsunday1122.github.io/yorugatari/",
-      "fetchTime": "2026-07-22T21:48:16.129Z",
-      "lighthouseVersion": "13.4.1",
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+      "profile": "mobile",
+      "run": 2,
+      "fetchTime": "2026-07-22T21:51:42.488Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -294,72 +116,135 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 256.1712,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "First Contentful Paint"
+          "numericValue": 1050.2854,
+          "displayValue": "1.1 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 268.1712,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Largest Contentful Paint"
-        },
-        "speedIndex": {
-          "score": 1,
-          "numericValue": 256.1712,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Speed Index"
+          "numericValue": 1050.2854,
+          "displayValue": "1.1 s"
         },
         "totalBlockingTime": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": "0 ms",
-          "title": "Total Blocking Time"
+          "displayValue": "0 ms"
         },
         "cumulativeLayoutShift": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "unitless",
-          "displayValue": "0",
-          "title": "Cumulative Layout Shift"
+          "displayValue": "0"
         },
         "interactive": {
           "score": 1,
-          "numericValue": 269.37120000000004,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Time to Interactive"
-        },
-        "serverResponseTime": {
-          "score": 1,
-          "numericValue": 1,
-          "numericUnit": "millisecond",
-          "displayValue": "Root document took 0 ms",
-          "title": "Initial server response time was short"
+          "numericValue": 1050.2854,
+          "displayValue": "1.1 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 33903,
-          "numericUnit": "byte",
-          "displayValue": "Total size was 33 KiB",
-          "title": "Avoids enormous network payloads"
-        },
-        "domSize": null
+          "numericValue": 33991,
+          "displayValue": "Total size was 33 KiB"
+        }
       },
       "resources": [
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 33903
+          "transferSize": 33991
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 26113
+          "transferSize": 26123
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4333
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2951
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 584
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 33991
+        }
+      ]
+    },
+    {
+      "target": "top",
+      "profile": "mobile",
+      "run": 3,
+      "fetchTime": "2026-07-22T21:51:50.731Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 1013.4169,
+          "displayValue": "1.0 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 1013.4169,
+          "displayValue": "1.0 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 1013.4169000000002,
+          "displayValue": "1.0 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 33994,
+          "displayValue": "Total size was 33 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 33994
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 26154
         },
         {
           "resourceType": "stylesheet",
@@ -369,12 +254,12 @@
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2896
+          "transferSize": 2961
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 597
+          "transferSize": 582
         },
         {
           "resourceType": "image",
@@ -394,166 +279,105 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 33903
+          "transferSize": 33994
         }
-      ],
-      "largestRequests": [
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
-          "resourceType": "Stylesheet",
-          "transferSize": 4297,
-          "resourceSize": 14789,
-          "statusCode": 200,
-          "mimeType": "text/css"
+      ]
+    },
+    {
+      "target": "top",
+      "profile": "desktop",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:51:58.942Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 276.6097,
+          "displayValue": "0.3 s"
         },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/app.js?v=20260723-006",
-          "resourceType": "Script",
-          "transferSize": 3478,
-          "resourceSize": 10263,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 284.1065,
+          "displayValue": "0.3 s"
         },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 3039,
-          "resourceSize": 6103,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
         },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/",
-          "resourceType": "Document",
-          "transferSize": 2896,
-          "resourceSize": 7381,
-          "statusCode": 200,
-          "mimeType": "text/html"
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
         },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2237,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
+        "interactive": {
+          "score": 1,
+          "numericValue": 284.85618,
+          "displayValue": "0.3 s"
         },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2123,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2112,
-          "resourceSize": 4687,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2100,
-          "resourceSize": 4642,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2100,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2096,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2090,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2089,
-          "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 34223,
+          "displayValue": "Total size was 33 KiB"
         }
-      ],
-      "opportunities": [
+      },
+      "resources": [
         {
-          "id": "unused-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused JavaScript"
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 34223
         },
         {
-          "id": "unused-css-rules",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused CSS"
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 26134
         },
         {
-          "id": "unminified-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify JavaScript"
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4270
         },
         {
-          "id": "unminified-css",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify CSS"
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2947
         },
         {
-          "id": "bootup-time",
-          "score": 1,
-          "numericValue": 0.792,
-          "numericUnit": "millisecond",
-          "displayValue": "0.0 s",
-          "title": "JavaScript execution time"
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 872
         },
         {
-          "id": "mainthread-work-breakdown",
-          "score": 1,
-          "numericValue": 187.64900000000003,
-          "numericUnit": "millisecond",
-          "displayValue": "0.2 s",
-          "title": "Minimizes main-thread work"
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 34223
         }
       ]
     },
     {
       "target": "archive",
       "profile": "mobile",
-      "requestedUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
-      "finalUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
-      "fetchTime": "2026-07-22T21:48:26.048Z",
-      "lighthouseVersion": "13.4.1",
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:08.252Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -562,87 +386,60 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 906.1424,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "First Contentful Paint"
+          "numericValue": 911.7613,
+          "displayValue": "0.9 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 906.1424,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "Largest Contentful Paint"
-        },
-        "speedIndex": {
-          "score": 1,
-          "numericValue": 906.1424,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "Speed Index"
+          "numericValue": 911.7613,
+          "displayValue": "0.9 s"
         },
         "totalBlockingTime": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": "0 ms",
-          "title": "Total Blocking Time"
+          "displayValue": "0 ms"
         },
         "cumulativeLayoutShift": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "unitless",
-          "displayValue": "0",
-          "title": "Cumulative Layout Shift"
+          "displayValue": "0"
         },
         "interactive": {
           "score": 1,
-          "numericValue": 906.1424,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "Time to Interactive"
-        },
-        "serverResponseTime": {
-          "score": 1,
-          "numericValue": 99,
-          "numericUnit": "millisecond",
-          "displayValue": "Root document took 100 ms",
-          "title": "Initial server response time was short"
+          "numericValue": 911.7613000000001,
+          "displayValue": "0.9 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 31437,
-          "numericUnit": "byte",
-          "displayValue": "Total size was 31 KiB",
-          "title": "Avoids enormous network payloads"
-        },
-        "domSize": null
+          "numericValue": 31491,
+          "displayValue": "Total size was 31 KiB"
+        }
       },
       "resources": [
         {
           "resourceType": "total",
           "requestCount": 16,
-          "transferSize": 31437
+          "transferSize": 31491
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 24490
+          "transferSize": 24506
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4306
+          "transferSize": 4319
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2401
+          "transferSize": 2460
         },
         {
           "resourceType": "other",
           "requestCount": 2,
-          "transferSize": 240
+          "transferSize": 206
         },
         {
           "resourceType": "image",
@@ -662,166 +459,15 @@
         {
           "resourceType": "third-party",
           "requestCount": 16,
-          "transferSize": 31437
-        }
-      ],
-      "largestRequests": [
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
-          "resourceType": "Stylesheet",
-          "transferSize": 4306,
-          "resourceSize": 14789,
-          "statusCode": 200,
-          "mimeType": "text/css"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 3038,
-          "resourceSize": 6103,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/archive.html",
-          "resourceType": "Document",
-          "transferSize": 2401,
-          "resourceSize": 6055,
-          "statusCode": 200,
-          "mimeType": "text/html"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2204,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2190,
-          "resourceSize": 4642,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2152,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2125,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2116,
-          "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2109,
-          "resourceSize": 4687,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2096,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2091,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/archive.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 1770,
-          "resourceSize": 4819,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        }
-      ],
-      "opportunities": [
-        {
-          "id": "unused-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused JavaScript"
-        },
-        {
-          "id": "unused-css-rules",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused CSS"
-        },
-        {
-          "id": "unminified-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify JavaScript"
-        },
-        {
-          "id": "unminified-css",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify CSS"
-        },
-        {
-          "id": "bootup-time",
-          "score": 1,
-          "numericValue": 11.452,
-          "numericUnit": "millisecond",
-          "displayValue": "0.0 s",
-          "title": "JavaScript execution time"
-        },
-        {
-          "id": "mainthread-work-breakdown",
-          "score": 1,
-          "numericValue": 437.372,
-          "numericUnit": "millisecond",
-          "displayValue": "0.4 s",
-          "title": "Minimizes main-thread work"
+          "transferSize": 31491
         }
       ]
     },
     {
       "target": "archive",
       "profile": "desktop",
-      "requestedUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
-      "finalUrl": "https://allsunday1122.github.io/yorugatari/archive.html",
-      "fetchTime": "2026-07-22T21:48:35.757Z",
-      "lighthouseVersion": "13.4.1",
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:16.674Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -830,87 +476,60 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 348.1328,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "First Contentful Paint"
+          "numericValue": 253.442,
+          "displayValue": "0.3 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 348.1328,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Largest Contentful Paint"
-        },
-        "speedIndex": {
-          "score": 1,
-          "numericValue": 348.1328,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Speed Index"
+          "numericValue": 253.942,
+          "displayValue": "0.3 s"
         },
         "totalBlockingTime": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": "0 ms",
-          "title": "Total Blocking Time"
+          "displayValue": "0 ms"
         },
         "cumulativeLayoutShift": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "unitless",
-          "displayValue": "0",
-          "title": "Cumulative Layout Shift"
+          "displayValue": "0"
         },
         "interactive": {
           "score": 1,
-          "numericValue": 348.1328,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Time to Interactive"
-        },
-        "serverResponseTime": {
-          "score": 1,
-          "numericValue": 3,
-          "numericUnit": "millisecond",
-          "displayValue": "Root document took 0 ms",
-          "title": "Initial server response time was short"
+          "numericValue": 253.99200000000002,
+          "displayValue": "0.3 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 31436,
-          "numericUnit": "byte",
-          "displayValue": "Total size was 31 KiB",
-          "title": "Avoids enormous network payloads"
-        },
-        "domSize": null
+          "numericValue": 31395,
+          "displayValue": "Total size was 31 KiB"
+        }
       },
       "resources": [
         {
           "resourceType": "total",
           "requestCount": 16,
-          "transferSize": 31436
+          "transferSize": 31395
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 24510
+          "transferSize": 24491
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4303
+          "transferSize": 4285
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 2401
+          "transferSize": 2413
         },
         {
           "resourceType": "other",
           "requestCount": 2,
-          "transferSize": 222
+          "transferSize": 206
         },
         {
           "resourceType": "image",
@@ -930,255 +549,77 @@
         {
           "resourceType": "third-party",
           "requestCount": 16,
-          "transferSize": 31436
-        }
-      ],
-      "largestRequests": [
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260719-112",
-          "resourceType": "Stylesheet",
-          "transferSize": 4303,
-          "resourceSize": 14789,
-          "statusCode": 200,
-          "mimeType": "text/css"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 3037,
-          "resourceSize": 6103,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/archive.html",
-          "resourceType": "Document",
-          "transferSize": 2401,
-          "resourceSize": 6055,
-          "statusCode": 200,
-          "mimeType": "text/html"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2237,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2123,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2121,
-          "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2101,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-066-075.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2098,
-          "resourceSize": 4642,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2098,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2063,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 2062,
-          "resourceSize": 4687,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/archive.js?v=20260723-004",
-          "resourceType": "Script",
-          "transferSize": 1775,
-          "resourceSize": 4819,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        }
-      ],
-      "opportunities": [
-        {
-          "id": "unused-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused JavaScript"
-        },
-        {
-          "id": "unused-css-rules",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused CSS"
-        },
-        {
-          "id": "unminified-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify JavaScript"
-        },
-        {
-          "id": "unminified-css",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify CSS"
-        },
-        {
-          "id": "bootup-time",
-          "score": 1,
-          "numericValue": 0.794,
-          "numericUnit": "millisecond",
-          "displayValue": "0.0 s",
-          "title": "JavaScript execution time"
-        },
-        {
-          "id": "mainthread-work-breakdown",
-          "score": 1,
-          "numericValue": 183.92300000000003,
-          "numericUnit": "millisecond",
-          "displayValue": "0.2 s",
-          "title": "Minimizes main-thread work"
+          "transferSize": 31395
         }
       ]
     },
     {
       "target": "story-032",
       "profile": "mobile",
-      "requestedUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-      "finalUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-      "fetchTime": "2026-07-22T21:48:44.934Z",
-      "lighthouseVersion": "13.4.1",
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:25.374Z",
       "scores": {
-        "performance": 0.95,
+        "performance": 0.8,
         "bestPractices": 1,
         "seo": 1
       },
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 916.4985,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "First Contentful Paint"
+          "numericValue": 1022.2053999999999,
+          "displayValue": "1.0 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 916.4985,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "Largest Contentful Paint"
-        },
-        "speedIndex": {
-          "score": 1,
-          "numericValue": 916.4985,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "Speed Index"
+          "numericValue": 1022.2053999999999,
+          "displayValue": "1.0 s"
         },
         "totalBlockingTime": {
-          "score": 0.84,
-          "numericValue": 255.5000000000001,
-          "numericUnit": "millisecond",
-          "displayValue": "260 ms",
-          "title": "Total Blocking Time"
+          "score": 0.32,
+          "numericValue": 892.5,
+          "displayValue": "890 ms"
         },
         "cumulativeLayoutShift": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "unitless",
-          "displayValue": "0",
-          "title": "Cumulative Layout Shift"
+          "displayValue": "0"
         },
         "interactive": {
-          "score": 1,
-          "numericValue": 1275.1485000000002,
-          "numericUnit": "millisecond",
-          "displayValue": "1.3 s",
-          "title": "Time to Interactive"
-        },
-        "serverResponseTime": {
-          "score": 1,
-          "numericValue": 107,
-          "numericUnit": "millisecond",
-          "displayValue": "Root document took 110 ms",
-          "title": "Initial server response time was short"
+          "score": 0.99,
+          "numericValue": 1974.8554,
+          "displayValue": "2.0 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 38345,
-          "numericUnit": "byte",
-          "displayValue": "Total size was 37 KiB",
-          "title": "Avoids enormous network payloads"
-        },
-        "domSize": null
+          "numericValue": 38193,
+          "displayValue": "Total size was 37 KiB"
+        }
       },
       "resources": [
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 38345
+          "transferSize": 38193
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 30209
+          "transferSize": 30025
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4295
+          "transferSize": 4318
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3521
+          "transferSize": 3539
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 320
+          "transferSize": 311
         },
         {
           "resourceType": "image",
@@ -1198,166 +639,15 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 38345
-        }
-      ],
-      "largestRequests": [
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/story.js?v=20260723-006",
-          "resourceType": "Script",
-          "transferSize": 5193,
-          "resourceSize": 17457,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260720-117",
-          "resourceType": "Stylesheet",
-          "transferSize": 4295,
-          "resourceSize": 14789,
-          "statusCode": 200,
-          "mimeType": "text/css"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/engagement.js?v=20260723-002",
-          "resourceType": "Script",
-          "transferSize": 3671,
-          "resourceSize": 9750,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-          "resourceType": "Document",
-          "transferSize": 3521,
-          "resourceSize": 7624,
-          "statusCode": 200,
-          "mimeType": "text/html"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2923,
-          "resourceSize": 6103,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2204,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2202,
-          "resourceSize": 4687,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2137,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2137,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2130,
-          "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2096,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2079,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        }
-      ],
-      "opportunities": [
-        {
-          "id": "unused-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused JavaScript"
-        },
-        {
-          "id": "unused-css-rules",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused CSS"
-        },
-        {
-          "id": "unminified-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify JavaScript"
-        },
-        {
-          "id": "unminified-css",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify CSS"
-        },
-        {
-          "id": "bootup-time",
-          "score": 1,
-          "numericValue": 357.49199999999996,
-          "numericUnit": "millisecond",
-          "displayValue": "0.4 s",
-          "title": "JavaScript execution time"
-        },
-        {
-          "id": "mainthread-work-breakdown",
-          "score": 1,
-          "numericValue": 938.5200000000001,
-          "numericUnit": "millisecond",
-          "displayValue": "0.9 s",
-          "title": "Minimizes main-thread work"
+          "transferSize": 38193
         }
       ]
     },
     {
       "target": "story-032",
       "profile": "desktop",
-      "requestedUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-      "finalUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-      "fetchTime": "2026-07-22T21:48:53.391Z",
-      "lighthouseVersion": "13.4.1",
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:33.269Z",
       "scores": {
         "performance": 1,
         "bestPractices": 1,
@@ -1366,87 +656,60 @@
       "metrics": {
         "firstContentfulPaint": {
           "score": 1,
-          "numericValue": 345.6607,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "First Contentful Paint"
+          "numericValue": 262.72249999999997,
+          "displayValue": "0.3 s"
         },
         "largestContentfulPaint": {
           "score": 1,
-          "numericValue": 345.6607,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Largest Contentful Paint"
-        },
-        "speedIndex": {
-          "score": 1,
-          "numericValue": 397.3789214166661,
-          "numericUnit": "millisecond",
-          "displayValue": "0.4 s",
-          "title": "Speed Index"
+          "numericValue": 262.72249999999997,
+          "displayValue": "0.3 s"
         },
         "totalBlockingTime": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": "0 ms",
-          "title": "Total Blocking Time"
+          "displayValue": "0 ms"
         },
         "cumulativeLayoutShift": {
           "score": 1,
           "numericValue": 0,
-          "numericUnit": "unitless",
-          "displayValue": "0",
-          "title": "Cumulative Layout Shift"
+          "displayValue": "0"
         },
         "interactive": {
           "score": 1,
-          "numericValue": 345.6607,
-          "numericUnit": "millisecond",
-          "displayValue": "0.3 s",
-          "title": "Time to Interactive"
-        },
-        "serverResponseTime": {
-          "score": 1,
-          "numericValue": 92,
-          "numericUnit": "millisecond",
-          "displayValue": "Root document took 90 ms",
-          "title": "Initial server response time was short"
+          "numericValue": 262.72249999999997,
+          "displayValue": "0.3 s"
         },
         "totalByteWeight": {
           "score": 1,
-          "numericValue": 38302,
-          "numericUnit": "byte",
-          "displayValue": "Total size was 37 KiB",
-          "title": "Avoids enormous network payloads"
-        },
-        "domSize": null
+          "numericValue": 38245,
+          "displayValue": "Total size was 37 KiB"
+        }
       },
       "resources": [
         {
           "resourceType": "total",
           "requestCount": 17,
-          "transferSize": 38302
+          "transferSize": 38245
         },
         {
           "resourceType": "script",
           "requestCount": 12,
-          "transferSize": 30167
+          "transferSize": 30062
         },
         {
           "resourceType": "stylesheet",
           "requestCount": 1,
-          "transferSize": 4255
+          "transferSize": 4300
         },
         {
           "resourceType": "document",
           "requestCount": 1,
-          "transferSize": 3559
+          "transferSize": 3556
         },
         {
           "resourceType": "other",
           "requestCount": 3,
-          "transferSize": 321
+          "transferSize": 327
         },
         {
           "resourceType": "image",
@@ -1466,157 +729,601 @@
         {
           "resourceType": "third-party",
           "requestCount": 17,
-          "transferSize": 38302
-        }
-      ],
-      "largestRequests": [
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/story.js?v=20260723-006",
-          "resourceType": "Script",
-          "transferSize": 5114,
-          "resourceSize": 17457,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/styles.css?v=20260720-117",
-          "resourceType": "Stylesheet",
-          "transferSize": 4255,
-          "resourceSize": 14789,
-          "statusCode": 200,
-          "mimeType": "text/css"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/engagement.js?v=20260723-002",
-          "resourceType": "Script",
-          "transferSize": 3611,
-          "resourceSize": 9750,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-          "resourceType": "Document",
-          "transferSize": 3559,
-          "resourceSize": 7624,
-          "statusCode": 200,
-          "mimeType": "text/html"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 3004,
-          "resourceSize": 6103,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-016-025.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2198,
-          "resourceSize": 4572,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-056-065.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2196,
-          "resourceSize": 4687,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-046-055.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2165,
-          "resourceSize": 4719,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-026-035.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2123,
-          "resourceSize": 4711,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-086-095.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2107,
-          "resourceSize": 4410,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-076-085.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2097,
-          "resourceSize": 4612,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        },
-        {
-          "url": "https://allsunday1122.github.io/yorugatari/assets/stories-036-045.js?v=20260723-003",
-          "resourceType": "Script",
-          "transferSize": 2093,
-          "resourceSize": 4618,
-          "statusCode": 200,
-          "mimeType": "application/javascript"
-        }
-      ],
-      "opportunities": [
-        {
-          "id": "unused-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused JavaScript"
-        },
-        {
-          "id": "unused-css-rules",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Reduce unused CSS"
-        },
-        {
-          "id": "unminified-javascript",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify JavaScript"
-        },
-        {
-          "id": "unminified-css",
-          "score": 1,
-          "numericValue": 0,
-          "numericUnit": "millisecond",
-          "displayValue": null,
-          "title": "Minify CSS"
-        },
-        {
-          "id": "bootup-time",
-          "score": 1,
-          "numericValue": 0.803,
-          "numericUnit": "millisecond",
-          "displayValue": "0.0 s",
-          "title": "JavaScript execution time"
-        },
-        {
-          "id": "mainthread-work-breakdown",
-          "score": 1,
-          "numericValue": 144.05400000000003,
-          "numericUnit": "millisecond",
-          "displayValue": "0.1 s",
-          "title": "Minimizes main-thread work"
+          "transferSize": 38245
         }
       ]
+    }
+  ],
+  "representativeRuns": [
+    {
+      "target": "top",
+      "profile": "mobile",
+      "run": 2,
+      "fetchTime": "2026-07-22T21:51:42.488Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 1050.2854,
+          "displayValue": "1.1 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 1050.2854,
+          "displayValue": "1.1 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 1050.2854,
+          "displayValue": "1.1 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 33991,
+          "displayValue": "Total size was 33 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 33991
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 26123
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4333
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2951
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 584
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 33991
+        }
+      ]
+    },
+    {
+      "target": "top",
+      "profile": "desktop",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:51:58.942Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 276.6097,
+          "displayValue": "0.3 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 284.1065,
+          "displayValue": "0.3 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 284.85618,
+          "displayValue": "0.3 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 34223,
+          "displayValue": "Total size was 33 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 34223
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 26134
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4270
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2947
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 872
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 34223
+        }
+      ]
+    },
+    {
+      "target": "archive",
+      "profile": "mobile",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:08.252Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 911.7613,
+          "displayValue": "0.9 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 911.7613,
+          "displayValue": "0.9 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 911.7613000000001,
+          "displayValue": "0.9 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 31491,
+          "displayValue": "Total size was 31 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 16,
+          "transferSize": 31491
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 24506
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4319
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2460
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 2,
+          "transferSize": 206
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 16,
+          "transferSize": 31491
+        }
+      ]
+    },
+    {
+      "target": "archive",
+      "profile": "desktop",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:16.674Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 253.442,
+          "displayValue": "0.3 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 253.942,
+          "displayValue": "0.3 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 253.99200000000002,
+          "displayValue": "0.3 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 31395,
+          "displayValue": "Total size was 31 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 16,
+          "transferSize": 31395
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 24491
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4285
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 2413
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 2,
+          "transferSize": 206
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 16,
+          "transferSize": 31395
+        }
+      ]
+    },
+    {
+      "target": "story-032",
+      "profile": "mobile",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:25.374Z",
+      "scores": {
+        "performance": 0.8,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 1022.2053999999999,
+          "displayValue": "1.0 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 1022.2053999999999,
+          "displayValue": "1.0 s"
+        },
+        "totalBlockingTime": {
+          "score": 0.32,
+          "numericValue": 892.5,
+          "displayValue": "890 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 0.99,
+          "numericValue": 1974.8554,
+          "displayValue": "2.0 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 38193,
+          "displayValue": "Total size was 37 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 38193
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 30025
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4318
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 3539
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 311
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 38193
+        }
+      ]
+    },
+    {
+      "target": "story-032",
+      "profile": "desktop",
+      "run": 1,
+      "fetchTime": "2026-07-22T21:52:33.269Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 262.72249999999997,
+          "displayValue": "0.3 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 262.72249999999997,
+          "displayValue": "0.3 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 1,
+          "numericValue": 262.72249999999997,
+          "displayValue": "0.3 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 38245,
+          "displayValue": "Total size was 37 KiB"
+        }
+      },
+      "resources": [
+        {
+          "resourceType": "total",
+          "requestCount": 17,
+          "transferSize": 38245
+        },
+        {
+          "resourceType": "script",
+          "requestCount": 12,
+          "transferSize": 30062
+        },
+        {
+          "resourceType": "stylesheet",
+          "requestCount": 1,
+          "transferSize": 4300
+        },
+        {
+          "resourceType": "document",
+          "requestCount": 1,
+          "transferSize": 3556
+        },
+        {
+          "resourceType": "other",
+          "requestCount": 3,
+          "transferSize": 327
+        },
+        {
+          "resourceType": "image",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "media",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "font",
+          "requestCount": 0,
+          "transferSize": 0
+        },
+        {
+          "resourceType": "third-party",
+          "requestCount": 17,
+          "transferSize": 38245
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "target": "story-032",
+      "profile": "mobile",
+      "checks": {
+        "performance": false,
+        "bestPractices": true,
+        "seo": true,
+        "totalBlockingTime": false,
+        "cumulativeLayoutShift": true
+      },
+      "scores": {
+        "performance": 0.8,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 1022.2053999999999,
+          "displayValue": "1.0 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 1022.2053999999999,
+          "displayValue": "1.0 s"
+        },
+        "totalBlockingTime": {
+          "score": 0.32,
+          "numericValue": 892.5,
+          "displayValue": "890 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "interactive": {
+          "score": 0.99,
+          "numericValue": 1974.8554,
+          "displayValue": "2.0 s"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 38193,
+          "displayValue": "Total size was 37 KiB"
+        }
+      }
     }
   ],
   "errors": []
