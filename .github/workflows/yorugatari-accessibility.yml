@@ -1,0 +1,74 @@
+name: Audit Yorugatari accessibility
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/index.html
+      - yorugatari/archive.html
+      - yorugatari/assets/app.js
+      - yorugatari/assets/archive.js
+      - yorugatari/assets/story.js
+      - yorugatari/assets/styles.css
+      - yorugatari/stories/**
+      - yorugatari/tools/accessibility-audit.cjs
+      - .github/workflows/yorugatari-accessibility.yml
+
+permissions:
+  contents: write
+
+jobs:
+  accessibility-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install accessibility browser tools
+        shell: bash
+        run: |
+          npm install --no-save playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+
+      - name: Audit published accessibility
+        id: audit
+        continue-on-error: true
+        run: node yorugatari/tools/accessibility-audit.cjs
+
+      - name: Record accessibility report
+        if: always()
+        shell: bash
+        run: |
+          cp yorugatari-accessibility-report.json yorugatari/tools/accessibility-audit-latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add yorugatari/tools/accessibility-audit-latest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Yorugatari accessibility audit [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Upload accessibility report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-accessibility-report
+          path: yorugatari-accessibility-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce accessibility result
+        if: always()
+        shell: bash
+        run: test "${{ steps.audit.outcome }}" = "success"
