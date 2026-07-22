@@ -1,4 +1,4 @@
-name: Temporary Final Sync 364 1207
+name: Temporary Final Sync 364 1207 Retry
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
               pending=int(state.get(fields[r],0));e=entries[r]
               e.update({'municipalities':items,'count':len(items),'pendingSinceLastRelease':pending,'releaseStatus':'release_ready' if pending>=10 else 'pending_threshold','reason':f'最新地方ブランチを再走査。前回全国統合後の地方統合繰越は{pending}自治体','mainIntegrationPr':state.get('lastNationalIntegrationPr'),'generatedPullRequest':606,'auditStatus':'passed'})
           total=sum(e['count'] for e in q['entries']);pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
-          q['updatedAt']='2026-07-22T12:07:00+09:00';q['status']='active';q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':364,'latestGeneratedPullRequest':606,'latestPublicCountPullRequest':606,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"}
+          q['updatedAt']='2026-07-22T12:08:00+09:00';q['status']='active';q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':364,'latestGeneratedPullRequest':606,'latestPublicCountPullRequest':606,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。"}
           if total!=381: raise SystemExit(f'unexpected total {total}')
           p.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           PY
