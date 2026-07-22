@@ -105,13 +105,16 @@
 
   function installShareControl() {
     const slug = document.body && document.body.dataset.slug;
-    const infoBox = document.querySelector('.story-side .story-info, .story-side .side-box, .story-side');
+    const infoBox = document.querySelector('.story-side .story-info, .story-side .side-box, .story-side, .story-info');
     const heading = document.querySelector('.story-hero h1');
     if (!slug || !infoBox || !heading || infoBox.querySelector('#shareButton')) return;
 
     const wrapper = document.createElement('div');
     wrapper.className = 'share-control';
-    wrapper.innerHTML = '<button class="btn" id="shareButton" type="button">共有する</button><p class="share-status" aria-live="polite"></p>';
+    wrapper.style.display = 'grid';
+    wrapper.style.gap = '.5rem';
+    wrapper.style.marginTop = '1rem';
+    wrapper.innerHTML = '<button class="btn" id="shareButton" type="button">共有する</button><p class="share-status" aria-live="polite" style="min-height:1.5em;margin:0;font-size:.85rem"></p>';
     const readingStatus = infoBox.querySelector('.reading-status');
     if (readingStatus) readingStatus.insertAdjacentElement('afterend', wrapper);
     else infoBox.insertAdjacentElement('afterbegin', wrapper);
