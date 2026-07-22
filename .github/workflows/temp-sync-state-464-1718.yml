@@ -1,20 +1,22 @@
 name: Temporary sync state 464 1718
 
 on:
-  push:
+  pull_request:
     branches: [main]
     paths:
-      - .github/triggers/sync-state-464-1718.txt
+      - .github/triggers/sync-state-464-pr.txt
 
 permissions:
   contents: write
 
 jobs:
   sync:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Reconcile control state
@@ -167,8 +169,7 @@ jobs:
             git add jichitai-compare/operations/control/release-queue.json \
               jichitai-compare/operations/control/global-state.json \
               jichitai-compare/operations/control/audit-log.jsonl
-            git rm .github/workflows/temp-sync-state-464-1718.yml \
-              .github/triggers/sync-state-464-1718.txt
+            git rm .github/workflows/temp-sync-state-464-1718.yml
             git commit -m "統括管理: 公開464・地方統合${total}へ同期（北${north} 東${east} 中${central} 西${west}）"
             if git push origin HEAD:main; then
               exit 0
