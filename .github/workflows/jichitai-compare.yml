@@ -1,23 +1,34 @@
-name: Coordinator Release 11 to 568
+name: Jichitai Compare CI
 
 on:
   pull_request:
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
     branches:
       - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-release:
-    if: github.head_ref == 'coord/release-11-568-20260722-2302'
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - name: Checkout release branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: coord/release-11-568-20260722-2302
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -25,63 +36,42 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Fetch main and regional branches
-        run: |
-          git fetch origin \
-            +refs/heads/main:refs/remotes/origin/main \
-            +refs/heads/region/north:refs/remotes/origin/region/north \
-            +refs/heads/region/east:refs/remotes/origin/region/east \
-            +refs/heads/region/central:refs/remotes/origin/region/central \
-            +refs/heads/region/west:refs/remotes/origin/region/west
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
 
-      - name: Copy 11 completed municipality snapshots
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
-          copy_pair() {
-            local branch="$1"
-            local code="$2"
-            local pref="${code:0:2}"
-            local data_path="jichitai-compare/data/municipalities/${pref}/${code}.json"
-            local task_path="jichitai-compare/operations/tasks/${code}.json"
-            if [[ -e "$data_path" || -e "$task_path" ]]; then
-              echo "main already contains ${code}; aborting duplicate release"
-              exit 1
-            fi
-            mkdir -p "$(dirname "$data_path")" "$(dirname "$task_path")"
-            git show "origin/${branch}:${data_path}" > "$data_path"
-            git show "origin/${branch}:${task_path}" > "$task_path"
-          }
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
 
-          copy_pair region/north 04202
-          for code in 10443 10444 11201; do copy_pair region/east "$code"; done
-          for code in 25214 25383 26203 26204; do copy_pair region/central "$code"; done
-          for code in 32527 32528 33212; do copy_pair region/west "$code"; done
-
-      - name: Generate and validate 568 municipalities
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
-          if (progress.registeredMunicipalities !== 568) throw new Error(`expected 568 municipalities, found ${progress.registeredMunicipalities}`);
-          if (progress.completedServices !== 5112) throw new Error(`expected 5112 completed services, found ${progress.completedServices}`);
-          let html = fs.readFileSync('index.html', 'utf8');
-          html = html.replace(/<span>\d+自治体・9制度<\/span>/u, '<span>568自治体・9制度</span>');
-          html = html.replace(/<li>登録状況：\d+自治体の生成データを公開中<\/li>/u, '<li>登録状況：568自治体の生成データを公開中</li>');
-          fs.writeFileSync('index.html', html);
-          NODE
-          npm run validate:generated
-          npm run validate:sessions
-          node --check app.js
-
-      - name: Restore standard workflow and commit release
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Publish 11 regional municipalities and synchronize 568 total'
-          git push origin HEAD:coord/release-11-568-20260722-2302
+        run: npm run smoke:public
