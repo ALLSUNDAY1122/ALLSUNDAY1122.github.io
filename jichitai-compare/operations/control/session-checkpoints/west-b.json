@@ -5,18 +5,14 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-22T23:20:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-22T23:21:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 212,
-  "currentMunicipality": {
-    "municipalityCode": "34202",
-    "municipalityName": "呉市",
-    "prefectureCode": "34"
-  },
-  "workingBranch": "data/34202-kure-westb",
+  "remainingUninvestigatedCount": 211,
+  "currentMunicipality": null,
+  "workingBranch": null,
   "pullRequestNumber": 881,
-  "ciStatus": "pending",
+  "ciStatus": "success",
   "completedSinceSplit": [
     {
       "code": "32525",
@@ -47,8 +43,14 @@
       "name": "広島市",
       "pullRequestNumber": 876,
       "ciRunNumber": 1931
+    },
+    {
+      "code": "34202",
+      "name": "呉市",
+      "pullRequestNumber": 881,
+      "ciRunNumber": 1957
     }
   ],
   "blocked": [],
-  "nextAction": "PR #881のCI成功と競合なしを確認し、region/westへ統合する。"
+  "nextAction": "竹原市（34203）のtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。"
 }
