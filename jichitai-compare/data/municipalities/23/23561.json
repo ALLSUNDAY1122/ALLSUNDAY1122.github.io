@@ -6,7 +6,7 @@
   "name": "設楽町",
   "officialUrl": "https://www.town.shitara.lg.jp/",
   "status": "verified",
-  "summary": "設楽町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認した。病児・病後児保育と学校給食費は現行の具体的条件を確認できないためunavailableとした。",
+  "summary": "設楽町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認した。病児・病後児保育のみ現行の具体的条件を確認できないためunavailableとした。",
   "updatedAt": "2026-07-22",
   "services": {
     "childMedical": {
@@ -28,7 +28,7 @@
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
       "details": {
         "reason": "町公式の出産・子育て分類および保育サービス案内に、現行の病児・病後児保育サービスの具体的提供条件が掲載されていない",
-        "confirmedRange": "一般保育、延長保育、一時保育、こども誰でも通園制度は案内されているが、病児・病後児保育の施設情報は確認できない",
+        "confirmedRange": "愛知県の病児保育事業担当課一覧には設楽町町民課が掲載されているが、施設・年齢・料金等は個別確認が必要",
         "handling": "利用可否、広域利用、対象年齢、料金は町民課へ個別確認が必要",
         "note": "近隣自治体の制度を設楽町民が利用できるとは推測しない"
       },
@@ -48,16 +48,17 @@
       "source": {"url": "https://www.town.shitara.lg.jp/soshiki/3/1105.html", "checkedAt": "2026-07-22"}
     },
     "schoolMeals": {
-      "status": "unavailable",
-      "summary": "令和8年度の一般世帯に適用される学校給食費の金額・無償化・助成条件を、現行の町公式教育ページで確認できない。",
+      "status": "verified",
+      "summary": "町立小中学校の学校給食費は、児童1食150円、生徒1食175円を徴収する。",
       "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
       "details": {
-        "reason": "町公式の教育、小学校、中学校、入園・入学の現行公開ページに、令和8年度の給食費単価や一般世帯向け支援条件が掲載されていない",
-        "confirmedRange": "町立小中学校が給食を実施していることは確認できるが、過年度予算・議会資料の金額を現行制度として転用しない",
-        "handling": "現年度の給食費と助成・減免は教育課または在籍校へ個別確認が必要",
-        "note": "古い予算資料や会議録から現在額を推測しない"
+        "standardUnitPrice": "児童300円、生徒350円",
+        "chargedUnitPrice": "児童150円、生徒175円",
+        "monthlyAmount": "徴収単価に当月の学校給食予定回数を乗じた額",
+        "collection": "4月から翌年3月まで、原則として各月末日に口座振替",
+        "adjustment": "転入・転出、連続5日以上の欠食、食物アレルギー、学級閉鎖、ラーケーション等は規則に基づき調整"
       },
-      "source": {"url": "https://www.town.shitara.lg.jp/life/1/10/", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.town.shitara.lg.jp/online/reiki/reiki_honbun/r253RG00000698.html", "checkedAt": "2026-07-22"}
     },
     "postpartumCare": {
       "status": "verified",
@@ -88,14 +89,13 @@
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "条件を満たす若者が町内で住宅を取得・整備する場合、最大200万円を補助する。",
+      "summary": "条件を満たす若者が町内で住宅を新築する場合、最大200万円を補助する。",
       "details": {
         "program": "設楽町若者定住促進住宅補助金",
         "maximum": "上限200万円",
-        "purpose": "若者の定住促進を目的に住宅取得・整備を支援",
-        "condition": "申請者の年齢、住宅の所在地・所有、町内居住、税の滞納等について制度要件を満たすこと",
-        "application": "契約・着工前を含む所定の時期に企画ダム対策課へ事前相談し、確認申請・交付申請を行う",
-        "note": "対象経費、補助率、加算、併用可否は現行要綱と町の審査による"
+        "targetHousing": "町内に新築し、令和9年2月末までに工事が完了する住宅",
+        "condition": "中学生以下の子を有する人、配偶者との年齢合計が80歳未満の人、または40歳未満の人等の要件を満たし、5年以上居住すること",
+        "application": "企画ダム対策課へ事前相談し、所定の確認申請・交付申請を行う"
       },
       "source": {"url": "https://www.town.shitara.lg.jp/soshiki/5/1219.html", "checkedAt": "2026-07-22"}
     },
