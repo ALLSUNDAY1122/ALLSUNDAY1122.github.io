@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-22T21:37:08.148Z",
-  "success": false,
+  "auditedAt": "2026-07-22T21:42:06.375Z",
+  "success": true,
   "results": [
     {
       "name": "local: six static pages and 100 stories are covered",
@@ -11,17 +11,17 @@
       }
     },
     {
-      "name": "local: analytics, engagement, and social metadata are complete",
+      "name": "local: runtime modules and exact social dimensions are complete",
       "ok": true,
       "detail": []
     },
     {
-      "name": "local: privacy policy explains page-view and source processing",
+      "name": "local: privacy policy explains coarse source categories",
       "ok": true,
       "detail": null
     },
     {
-      "name": "local: 404 is noindex and recoverable",
+      "name": "local: custom 404 is noindex and recoverable",
       "ok": true,
       "detail": null
     },
@@ -36,7 +36,6 @@
           "analyticsScript": true,
           "engagementScript": false,
           "analytics": true,
-          "path": "/yorugatari",
           "source": "direct",
           "panel": true
         },
@@ -48,7 +47,7 @@
           "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "width": "2172",
           "height": "724",
-          "imageAlt": "月明かりと提灯が照らす夜の町並み",
+          "alt": "月明かりと提灯が照らす夜の町並み",
           "card": "summary_large_image",
           "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "twitterAlt": "月明かりと提灯が照らす夜の町並み"
@@ -57,11 +56,11 @@
     },
     {
       "name": "published: story uses source-aware engagement and social metadata",
-      "ok": false,
+      "ok": true,
       "detail": {
-        "ready": false,
+        "ready": true,
         "status": 200,
-        "attempt": 12,
+        "attempt": 1,
         "state": {
           "engagementScript": true,
           "analyticsScript": false,
@@ -77,7 +76,7 @@
           "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "width": "2048",
           "height": "683",
-          "imageAlt": "月明かりと提灯が照らす夜の町並み",
+          "alt": "月明かりと提灯が照らす夜の町並み",
           "card": "summary_large_image",
           "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "twitterAlt": "月明かりと提灯が照らす夜の町並み"
@@ -137,7 +136,7 @@
           "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "width": "2172",
           "height": "724",
-          "imageAlt": "月明かりと提灯が照らす夜の町並み",
+          "alt": "月明かりと提灯が照らす夜の町並み",
           "card": "summary_large_image",
           "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "twitterAlt": "月明かりと提灯が照らす夜の町並み"
@@ -165,7 +164,6 @@
         "archive": true,
         "top": true,
         "trackingPath": "/yorugatari/404",
-        "source": "direct",
         "analytics": true,
         "engagement": false
       }
@@ -176,46 +174,15 @@
       "detail": []
     },
     {
-      "name": "published: social image is a valid PNG with declared dimensions",
+      "name": "published: social image is exactly 2172 by 724 pixels",
       "ok": true,
       "detail": {
         "status": 200,
-        "contentType": "image/png",
         "bytes": 1874549,
         "width": 2172,
         "height": 724
       }
     }
   ],
-  "failures": [
-    {
-      "name": "published: story uses source-aware engagement and social metadata",
-      "ok": false,
-      "detail": {
-        "ready": false,
-        "status": 200,
-        "attempt": 12,
-        "state": {
-          "engagementScript": true,
-          "analyticsScript": false,
-          "engagement": true,
-          "source": "direct",
-          "share": true
-        },
-        "meta": {
-          "type": "article",
-          "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-          "title": "合鍵は返却済み｜夜語り",
-          "description": "無料防犯診断で複製された鍵が研修生の実地侵入に使われる約5分の人怖。",
-          "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
-          "width": "2048",
-          "height": "683",
-          "imageAlt": "月明かりと提灯が照らす夜の町並み",
-          "card": "summary_large_image",
-          "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
-          "twitterAlt": "月明かりと提灯が照らす夜の町並み"
-        }
-      }
-    }
-  ]
+  "failures": []
 }
