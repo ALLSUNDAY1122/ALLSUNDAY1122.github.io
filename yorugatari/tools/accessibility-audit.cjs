@@ -5,6 +5,7 @@ const AxeBuilder = require('@axe-core/playwright').default;
 const base = 'https://allsunday1122.github.io/yorugatari';
 const results = [];
 const failures = [];
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 function record(name, ok, detail = null) {
   const result = { name, ok: Boolean(ok), detail };
@@ -110,9 +111,28 @@ async function auditFocusIndicator(page, selector, name) {
   record(`${name}: keyboard focus indicator is visible`, visible, focus);
 }
 
+async function openPublishedTop(page) {
+  let state = null;
+  for (let attempt = 1; attempt <= 12; attempt += 1) {
+    await page.goto(`${base}/?a11y=${Date.now()}-${attempt}`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('.card');
+    state = await page.evaluate(() => ({
+      skipLink: Boolean(document.querySelector('a.skip-link[href="#main-content"]')),
+      mainTarget: Boolean(document.querySelector('main#main-content[tabindex="-1"]')),
+      progressbar: Boolean(document.querySelector('.reader-meter[role="progressbar"][aria-valuemin="0"][aria-valuemax="100"][aria-valuenow]')),
+      appVersion: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-005'))
+    }));
+    if (Object.values(state).every(Boolean)) {
+      record('top: latest accessibility release is published', true, { attempt, ...state });
+      return;
+    }
+    if (attempt < 12) await sleep(10000);
+  }
+  record('top: latest accessibility release is published', false, state);
+}
+
 async function auditTop(page) {
-  await page.goto(`${base}/?a11y=${Date.now()}`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('.card');
+  await openPublishedTop(page);
   await auditAxe(page, 'top');
   await auditDocumentStructure(page, 'top');
   await auditSkipLink(page, 'top');
