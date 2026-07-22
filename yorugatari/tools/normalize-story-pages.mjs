@@ -142,6 +142,13 @@ function ensureVisibleBreadcrumb(html, story) {
   return html.replace(heroStart, `$1${markup}`);
 }
 
+function ensureHeaderNavigation(html) {
+  return html.replace(
+    /<a\b[^>]*href=["']\.\.\/index\.html#ranking["'][^>]*>[\s\S]*?<\/a>/gi,
+    '<a href="../index.html#readerPanel">読書記録</a>'
+  );
+}
+
 function ensureFooterArchiveLink(html) {
   const desiredNav =
     '<nav class="footer-links" aria-label="運営情報">' +
@@ -199,6 +206,7 @@ function normalizeStoryPage(story, index) {
 
   html = ensureHeadMetadata(html, story, pageUrl);
   html = ensureVisibleBreadcrumb(html, story);
+  html = ensureHeaderNavigation(html);
   html = ensureFooterArchiveLink(html);
   html = ensureStoryId(html, storyId);
   html = html.replace(
@@ -221,6 +229,9 @@ function normalizeStoryPage(story, index) {
     if (!html.includes(token)) {
       throw new Error(`${filename} is missing required token: ${token}`);
     }
+  }
+  if (html.includes('../index.html#ranking')) {
+    throw new Error(`${filename} still contains the retired #ranking link`);
   }
 
   fs.writeFileSync(filePath, html, 'utf8');
