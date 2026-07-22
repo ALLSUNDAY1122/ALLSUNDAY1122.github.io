@@ -1,4 +1,4 @@
-name: Temporary Sync Jichitai Release Queue 0949
+name: Temporary Sync Jichitai Release Queue 0951
 
 on:
   push:
@@ -54,14 +54,14 @@ jobs:
             e['mainIntegrationPr']=s.get('lastNationalIntegrationPr');e['generatedPullRequest']=544
           total=sum(e['count'] for e in q['entries'])
           pending={e['region']:e['pendingSinceLastRelease'] for e in q['entries']}
-          q['updatedAt']='2026-07-22T09:50:00+09:00';q['status']='active'
+          q['updatedAt']='2026-07-22T09:52:00+09:00';q['status']='active'
           q['summary']={'regionalMergedMunicipalities':total,'latestGeneratedMunicipalityCount':314,'latestGeneratedPullRequest':544,'latestPublicCountPullRequest':544,'releaseReadyRegions':[e['region'] for e in q['entries'] if e['pendingSinceLastRelease']>=10],'nextAction':f"北日本{pending['north']}、東日本{pending['east']}、中日本{pending['central']}、西日本{pending['west']}。10自治体到達地域なし。"}
-          if total!=339: raise SystemExit(f'unexpected total {total}')
+          if total!=340: raise SystemExit(f'unexpected total {total}')
           path.write_text(json.dumps(q,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
           PY
           rm .github/workflows/temp-sync-release-queue-0949.yml
           git add jichitai-compare/operations/control/release-queue.json .github/workflows/temp-sync-release-queue-0949.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '統括管理: 地方統合339自治体・公開314自治体へ同期'
+          git commit -m '統括管理: 地方統合340自治体・公開314自治体へ同期'
           git push origin main
