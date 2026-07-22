@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-23T02:15:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T02:28:00+09:00",
+  "status": "working",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 74,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "26367", "municipalityName": "南山城村"},
+  "workingBranch": "data/26367-minamiyamashiro",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"municipalityCode":"26100","municipalityName":"京都市","pullRequestNumber":840,"ciRunNumber":1761,"completedAt":"2026-07-22T22:14:00+09:00"},
     {"municipalityCode":"26201","municipalityName":"福知山市","pullRequestNumber":847,"ciRunNumber":1804,"completedAt":"2026-07-22T22:24:00+09:00"},
@@ -37,5 +37,5 @@
     {"municipalityCode":"26365","municipalityName":"和束町","pullRequestNumber":943,"ciRunNumber":2251,"completedAt":"2026-07-23T02:15:00+09:00"}
   ],
   "blocked": [],
-  "nextAction": "南山城村（26367）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "南山城村（26367）の3ファイル差分を検証し、地方統合PRを作成してCIを確認する。"
 }
