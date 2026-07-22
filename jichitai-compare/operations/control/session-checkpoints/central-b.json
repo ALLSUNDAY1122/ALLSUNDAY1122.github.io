@@ -5,14 +5,14 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T22:44:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-22T22:47:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 91,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {"municipalityCode": "26204", "municipalityName": "宇治市"},
+  "workingBranch": "data/26204-uji",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     {
       "municipalityCode": "26100",
@@ -44,5 +44,5 @@
     }
   ],
   "blocked": [],
-  "nextAction": "宇治市（26204）の既存task・ブランチ・PRを再確認し、重複がなければ次自治体として着手する。"
+  "nextAction": "宇治市（26204）のPRをregion/central向けに作成し、CI成功後に地方統合する。"
 }
