@@ -9,7 +9,13 @@ root = Path(sys.argv[1])
 def regex_replace(rel: str, pattern: str, replacement: str) -> None:
     path = root / rel
     text = path.read_text(encoding='utf-8')
-    changed, count = re.subn(pattern, replacement, text, count=1)
+    changed, count = re.subn(
+        pattern,
+        replacement,
+        text,
+        count=1,
+        flags=re.MULTILINE,
+    )
     if count != 1:
         raise SystemExit(f'v0.6 pattern not found in {rel}: {pattern!r}')
     path.write_text(changed, encoding='utf-8')
