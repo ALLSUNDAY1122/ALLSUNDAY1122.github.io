@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07445",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "金山町",
+  "officialUrl": "https://www.town.kaneyama.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を金山町公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担金を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児及び子ども医療費助成事業",
+        "target": "金山町に住民登録があり公的医療保険に加入する、18歳到達年度末までの子ども",
+        "support": "病気やけがで医療機関を受診した際の保険診療自己負担金を助成",
+        "application": "助成を受けるには申請が必要。金山町国民健康保険加入者はマイナ保険証等の提示により原則登録不要",
+        "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/soshiki/56/children-subsidy.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の保育所・子育て支援情報で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "保育所利用案内、子育て・医療制度一覧、令和8年度の保育所情報を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "availableAlternatives": "一時預かり、時間外保育、土曜保育、こども誰でも通園制度を実施",
+        "caution": "広域利用を含む利用可否は保健福祉課または川口保育所へ確認が必要"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/site/ijyuu/izyu-kosodate.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "町内保育所の通常保育料と延長保育料を無料とする。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 5},
+      "details": {
+        "facility": "川口保育所。横田保育所は休所中",
+        "target": "保育を必要とする事由の認定を受けた満1歳から就学前までの子ども",
+        "support": "少子化対策として通常保育料の負担なし。延長保育も無料",
+        "hours": "川口保育所は通常8時～16時、時間外7時30分～8時・16時～18時、特別延長18時～19時",
+        "excludedCosts": "保護者会費、教材代、おむつ処理袋代等は保護者負担"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/soshiki/48/hoikuriyou.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小学校・中学校の児童生徒の学校給食費を無料とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "金山町立小学校・中学校の児童生徒",
+        "support": "学校給食費を全額町が支援",
+        "additionalSupport": "教材費、入学時の運動着・制服各1セット、修学旅行費、町立中学校の漢検・英検受験料も無料",
+        "purpose": "義務教育に係る保護者負担の軽減"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/site/ijyuu/izyu-kosodate.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子を対象に、助産所で宿泊・日帰り型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア事業",
+        "target": "金山町に住所がある出産後1年未満の母親と乳児",
+        "types": "宿泊ケア、日帰りケア",
+        "services": "母体の休養、授乳・育児相談、母乳ケア、乳児の健康確認等",
+        "fee": "自己負担は宿泊1日3,000円（1泊2日6,000円）、日帰り1日1,500円。その他の経費を町が支援",
+        "application": "利用前に保健福祉課へ相談・申請"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/site/ijyuu/izyu-kosodate.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の満1歳から満3歳未満の子どもが、就労要件を問わず月10時間まで無料で利用できる。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "金山町に住所があり、幼稚園・保育所・認定こども園等に通っていない満1歳から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "facility": "川口保育所",
+        "hours": "月～金曜9時～15時",
+        "usageLimit": "子ども1人当たり月10時間まで",
+        "fee": "無料",
+        "application": "利用希望日の14日前までに認定申請書を提出し、事前面談を受ける"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/soshiki/48/daretsu.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内住宅取得費の2分の1を基本70万円まで補助し、若者・子育て、町内就業、町内業者施工で各10万円を加算する。",
+      "details": {
+        "program": "金山町住宅取得支援事業",
+        "target": "自ら居住する住宅を町内で取得し、事業完了翌年度から5年以上定住する等の要件を満たす方",
+        "rate": "住宅取得費の2分の1",
+        "base": "基本上限70万円",
+        "additions": "若者世帯または子育て世帯、世帯員の町内就業、町内建築事業者施工で各10万円加算",
+        "maximum": "町制度の基本・加算合計は最大100万円。県住宅取得支援制度と連携する場合あり",
+        "application": "予算に限りがあるため、取得・申請前に企画課へ相談"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/soshiki/54/akiya-jjyuutakusyutoku.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度は粗大ごみを年3回収集し、処理可能な家庭ごみは処理施設へ直接持ち込むこともできる。",
+      "details": {
+        "collection": "粗大ごみを年3回、地区別のごみ・資源収集日程表に基づき収集",
+        "placement": "収集日当日の午前8時までに、ごみ区分ごとに決められた場所へ排出",
+        "directCarry": "一般家庭ごみ、粗大ごみ、資源物は処理施設で扱える品目に限り直接持込み可能",
+        "sorting": "家庭ごみの分け方・出し方ガイドブックで品目別に確認",
+        "excluded": "家電リサイクル対象品や処理施設で処理できない物は別途処分が必要"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/soshiki/56/gomi2025.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.kaneyama.fukushima.jp/soshiki/56/mochikomi.html", "checkedAt": "2026-07-24"}]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "防災マップ、ため池ハザードマップ、地域防災計画を公開し、洪水・土砂災害等への避難情報を案内する。",
+      "details": {
+        "maps": "金山町防災マップ、横田・上横田・大塩ため池ハザードマップ",
+        "coverage": "洪水・土砂災害等の危険箇所、避難所、避難行動、防災情報",
+        "plan": "令和7年10月修正の地域防災計画（一般対策編・地震対策編・資料編）を公開",
+        "information": "防災行政無線、テレビ、緊急速報メール、河川・ダム情報等で災害情報を提供",
+        "guidance": "平時に自宅周辺の危険箇所と避難経路を確認"
+      },
+      "source": {"url": "https://www.town.kaneyama.fukushima.jp/soshiki/19/bousai.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
