@@ -20,6 +20,8 @@ on:
       - yorugatari/stories/**
       - yorugatari/assets/stories*.js
       - yorugatari/tools/normalize-story-pages.mjs
+      - yorugatari/tools/enhance-story-structured-data.mjs
+      - yorugatari/tools/story-structured-data-audit.mjs
       - yorugatari/tools/optimize-story-search-metadata.mjs
       - yorugatari/tools/story-search-audit.mjs
       - yorugatari/tools/generate-discovery-pages.mjs
@@ -39,7 +41,7 @@ permissions:
 jobs:
   seo-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -51,10 +53,15 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate story search scripts
+      - name: Validate story metadata scripts
         run: |
+          node --check yorugatari/tools/enhance-story-structured-data.mjs
+          node --check yorugatari/tools/story-structured-data-audit.mjs
           node --check yorugatari/tools/optimize-story-search-metadata.mjs
           node --check yorugatari/tools/story-search-audit.mjs
+
+      - name: Enhance all story structured data
+        run: node yorugatari/tools/enhance-story-structured-data.mjs
 
       - name: Optimize all story search metadata
         run: node yorugatari/tools/optimize-story-search-metadata.mjs
@@ -65,6 +72,9 @@ jobs:
       - name: Generate current sitemap
         run: node yorugatari/tools/generate-sitemap.mjs
 
+      - name: Validate story structured data
+        run: node yorugatari/tools/story-structured-data-audit.mjs
+
       - name: Validate story search metadata
         run: node yorugatari/tools/story-search-audit.mjs
 
@@ -74,7 +84,7 @@ jobs:
       - name: Validate repository SEO
         run: node yorugatari/tools/seo-audit.mjs
 
-      - name: Commit generated search and discovery files
+      - name: Commit generated story metadata and discovery files
         shell: bash
         run: |
           if git status --short -- \
@@ -85,9 +95,10 @@ jobs:
             yorugatari/sitemap.xml \
             yorugatari/stories \
             yorugatari/tools/discovery-manifest-latest.json \
-            yorugatari/tools/story-search-metadata-latest.json | grep -q .; then
+            yorugatari/tools/story-search-metadata-latest.json \
+            yorugatari/tools/story-structured-data-manifest-latest.json | grep -q .; then
             git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config user.email "4189822+github-actions[bot]@users.noreply.github.com"
             git add \
               yorugatari/index.html \
               yorugatari/archive.html \
@@ -96,12 +107,13 @@ jobs:
               yorugatari/sitemap.xml \
               yorugatari/stories \
               yorugatari/tools/discovery-manifest-latest.json \
-              yorugatari/tools/story-search-metadata-latest.json
-            git commit -m "Publish Yorugatari search metadata and discovery pages [skip ci]"
+              yorugatari/tools/story-search-metadata-latest.json \
+              yorugatari/tools/story-structured-data-manifest-latest.json
+            git commit -m "Publish Yorugatari story structured data and search metadata [skip ci]"
             git pull --rebase origin main
             git push
           else
-            echo "Story search metadata, discovery pages and sitemap are already current."
+            echo "Story structured data, search metadata, discovery pages and sitemap are already current."
           fi
 
       - name: Audit published SEO
@@ -121,6 +133,11 @@ jobs:
             fi
           done
           exit "$status"
+
+      - name: Audit published story structured data
+        id: story_schema
+        continue-on-error: true
+        run: node yorugatari/tools/story-structured-data-audit.mjs --live
 
       - name: Audit published story search metadata
         id: story_search
@@ -142,25 +159,29 @@ jobs:
         shell: bash
         run: |
           test -f yorugatari-seo-report.json
+          test -f yorugatari-story-structured-data-report.json
           test -f yorugatari-story-search-report.json
           test -f yorugatari-discovery-report.json
           test -f yorugatari-indexnow-report.json
           cp yorugatari-seo-report.json /tmp/yorugatari-seo-report.json
+          cp yorugatari-story-structured-data-report.json /tmp/yorugatari-story-structured-data-report.json
           cp yorugatari-story-search-report.json /tmp/yorugatari-story-search-report.json
           cp yorugatari-discovery-report.json /tmp/yorugatari-discovery-report.json
           cp yorugatari-indexnow-report.json /tmp/yorugatari-indexnow-report.json
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "4189822+github-actions[bot]@users.noreply.github.com"
           saved=false
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/yorugatari-seo-report.json yorugatari/tools/seo-audit-latest.json
+            cp /tmp/yorugatari-story-structured-data-report.json yorugatari/tools/story-structured-data-audit-latest.json
             cp /tmp/yorugatari-story-search-report.json yorugatari/tools/story-search-audit-latest.json
             cp /tmp/yorugatari-discovery-report.json yorugatari/tools/discovery-audit-latest.json
             cp /tmp/yorugatari-indexnow-report.json yorugatari/tools/indexnow-latest.json
             git add \
               yorugatari/tools/seo-audit-latest.json \
+              yorugatari/tools/story-structured-data-audit-latest.json \
               yorugatari/tools/story-search-audit-latest.json \
               yorugatari/tools/discovery-audit-latest.json \
               yorugatari/tools/indexnow-latest.json
@@ -168,7 +189,7 @@ jobs:
               saved=true
               break
             fi
-            git commit -m "Record Yorugatari search discovery audit [skip ci]"
+            git commit -m "Record Yorugatari story schema and search audit [skip ci]"
             if git push; then
               saved=true
               break
@@ -184,6 +205,7 @@ jobs:
           name: yorugatari-search-discovery-reports
           path: |
             yorugatari-seo-report.json
+            yorugatari-story-structured-data-report.json
             yorugatari-story-search-report.json
             yorugatari-discovery-report.json
             yorugatari-indexnow-report.json
@@ -195,6 +217,7 @@ jobs:
         shell: bash
         run: |
           test "${{ steps.live.outcome }}" = "success"
+          test "${{ steps.story_schema.outcome }}" = "success"
           test "${{ steps.story_search.outcome }}" = "success"
           test "${{ steps.discovery.outcome }}" = "success"
           test "${{ steps.indexnow.outcome }}" = "success"
