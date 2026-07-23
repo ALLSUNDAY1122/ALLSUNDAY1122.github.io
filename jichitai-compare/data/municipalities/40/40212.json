@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "40212",
+  "prefectureCode": "40",
+  "prefecture": "福岡県",
+  "name": "大川市",
+  "officialUrl": "https://www.city.okawa.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を大川市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "中学3年生まで入院・通院の保険診療自己負担を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "大川市に住所があり健康保険に加入する中学3年生年度末までの子ども",
+        "copay": "2025年10月診療分から入院・通院とも自己負担なし",
+        "incomeLimit": "所得制限なし",
+        "excluded": "入院時食事代、差額ベッド代、保険適用外費用等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s015/030/010/010/20150214184110.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後3か月から小学6年生までを無料で病児・病後児保育",
+      "eligibility": {
+        "minAgeMonths": 3,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "病気または回復期で家庭保育が困難な生後3か月から小学6年生まで",
+        "facility": "高邦病児保育室",
+        "hours": "月曜日から土曜日の7時30分から18時。祝日・年末年始を除く",
+        "fee": "大川市内居住者は無料。診療費・食事代等は別途",
+        "application": "年度ごとの事前登録、施設予約、かかりつけ医の連絡票が必要"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s090/010/020/030/20150320180146.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等を無償化し、0～2歳児保育料を約70％軽減、第3子以降は無償",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalSupport": "3～5歳児と0～2歳児の市民税非課税世帯は保育料無償",
+        "cityReduction": "課税世帯の3歳未満児保育料を国基準から約70％軽減",
+        "multiChild": "2025年9月から所得・兄姉の年齢にかかわらず0～2歳児の第3子以降を無償化",
+        "actualCosts": "延長保育料、行事費、給食費等は別途の場合あり"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s090/010/040/20220929101331.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.okawa.lg.jp/s090/010/020/020/20190911111641.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2025年10月から小中学校の学校給食費を無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "大川市立小中学校在籍者、および市内在住で市外小中学校等に在籍する児童生徒の保護者",
+        "support": "市立小中学校は学校への委任手続により保護者の支払い不要",
+        "outsideSchool": "市外在籍者には実費を補助し、小学校月4,300円・中学校月5,000円を上限とする",
+        "incomeLimit": "所得制限なし"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s077/010/020/010/20250724103714.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子に宿泊・通所・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "target": "大川市に住民票がある生後1年未満の乳児と母親で、感染症状や医療行為の必要がない方",
+        "types": "ショートステイ、デイサービス、母乳育児相談、アウトリーチ",
+        "fee": "課税世帯は宿泊1泊2日1,500円、通所500円、母乳相談無料、訪問200円。非課税・生活保護世帯は無料",
+        "usageLimit": "宿泊6泊7日、通所7日、母乳相談1回、訪問3回",
+        "application": "施設へ予約後、市へ利用申請する"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s086/003/020/20211129174532.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が月10時間まで利用可能",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "大川市在住で保育所・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "usageLimit": "月10時間まで。翌月への繰越不可",
+        "fee": "1時間300円。生活保護世帯は無料、非課税世帯等は1時間100円。教材費等は別途の場合あり",
+        "application": "総合支援システムで認定申請し、アカウント登録・施設面談後に予約する",
+        "start": "2026年4月1日開始"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s090/010/020/20260320154057.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下の夫婦等による住宅用地・住宅取得に30万円を支給",
+      "details": {
+        "target": "申請者と配偶者がともに39歳以下で、市内の対象住宅に居住し、住宅用地と住宅を取得する等の要件を満たす世帯",
+        "support": "1世帯30万円を初年度15万円・翌年度15万円の2回に分けて支給",
+        "property": "新築住宅、中古住宅の取得・リフォーム、分譲マンション等が対象",
+        "period": "2026年度申請期間は2026年6月1日から12月31日。登記から1年以内の申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s006/010/040/010/20260421170614.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "清掃センターへ直接搬入、または1点750円で戸別収集",
+      "details": {
+        "carryIn": "タンス、ソファ、自転車、布団等は大川市清掃センターへ直接搬入",
+        "carryInFee": "家庭系ごみの直接搬入は10kg当たり150円",
+        "collection": "清掃センター窓口で事前申込みし、月曜日・水曜日に戸別収集",
+        "collectionFee": "粗大ごみ1点につき750円",
+        "excluded": "家電リサイクル対象品は別途手続が必要"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s024/010/010/050/20180206172108.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.okawa.lg.jp/s024/010/010/060/20141216164139.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・津波・高潮・地震等の総合防災ハザードマップを公開",
+      "details": {
+        "coverage": "洪水、風水害、台風、津波、高潮、地震、火災等",
+        "shelters": "指定避難所・自主避難所一覧、避難行動、備蓄情報を掲載",
+        "formats": "総合防災ハザードマップと洪水・津波・高潮地図をPDFで公開",
+        "updated": "2026年4月1日更新"
+      },
+      "source": {
+        "url": "https://www.city.okawa.lg.jp/s013/020/030/070/20150205235257.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}

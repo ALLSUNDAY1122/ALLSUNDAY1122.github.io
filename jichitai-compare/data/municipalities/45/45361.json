@@ -1,0 +1,196 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "45361",
+  "prefectureCode": "45",
+  "prefecture": "宮崎県",
+  "name": "高原町",
+  "officialUrl": "https://www.town.takaharu.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を高原町公式情報で調査。8制度をverified、2026年度の現行給食費・無償化状況を公式公開情報で確定できない学校給食費をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "未就学児は無料、小中学生は1診療科ごと月1,000円・調剤無料で医療費を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "preschool": "小学校就学前児は入院・外来・調剤の保険診療自己負担なし",
+        "elementaryJuniorHigh": "小学1年生から中学3年生までは入院・外来が1診療科ごと月1,000円、調剤薬局は無料",
+        "application": "子ども医療費受給資格証の交付申請が必要",
+        "exclusion": "保険外診療、入院時食事代、差額室料、学校災害共済対象等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/soshiki/202304004/1137.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.takaharu.lg.jp/soshiki/202304004/1110.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月または1歳から小学6年生まで病児・病後児保育を実施し利用料を助成",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "高原町在住の生後6か月（病後児は1歳）から小学6年生まで",
+        "sickFacility": "病児お預かりセンターぽかぽか。平日8時～18時、連続7日、1日1,000円",
+        "postSickFacility": "石井記念神武の家。平日8時～18時、連続5日",
+        "support": "2024年度から町民の病児保育利用料を助成。町外施設利用時は償還払い",
+        "application": "年度ごとの事前登録、施設予約、利用前2日以内の医療機関受診と医師記入済み申込書が必要"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/soshiki/202304004/221727.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と住民税非課税世帯の0～2歳児等を国制度により無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "free": "3～5歳児クラスと住民税非課税世帯の0～2歳児クラスは対象施設の利用料を無償化",
+        "kindergarten": "幼稚園等は月額上限25,700円、預かり保育は認定により日額450円・月額上限11,300円等",
+        "unlicensed": "認可外保育施設等は3～5歳児月額37,000円、非課税世帯0～2歳児月額42,000円まで無償化",
+        "additionalCosts": "送迎費、食材料費、行事費等の実費は対象外",
+        "underThreeTaxable": "課税世帯の0～2歳児は所得等に基づく保育料"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/soshiki/202304004/5451.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "2023年度の改定額は公開されているが、2026年度の現行額・補助・無償化状況を確認できない",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "historical": "2023年度改定額は小学校1食274円・年53,704円、中学校1食310円・年60,450円",
+        "historicalSupport": "2023年度は学校給食費補助を予定と記載",
+        "currentStatus": "2026年度の徴収額、補助額または一律無償化の有無を公式公開情報で確定できない",
+        "confirmation": "教育総務課学校教育係への確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/soshiki/14/177696.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・通所・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "高原町に住所がある産後1年未満の母親と赤ちゃん",
+        "types": "宿泊型、通所型、訪問型",
+        "limit": "宿泊型は合計6泊7日まで、通所型と訪問型は各5回まで",
+        "fee": "宿泊型は課税世帯1日3,000円、非課税世帯1日1,500円、生活保護世帯無料。通所・訪問型は無料",
+        "care": "母親の心身ケア、授乳相談、乳房ケア、育児助言等",
+        "application": "健康課子育て支援係へ事前申請"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/uploaded/attachment/3544.pdf",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.takaharu.lg.jp/soshiki/31/289171.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就学児を町内保育施設で一時預かりし、年齢・施設別料金で利用可能",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "未就学の子ども",
+        "reasons": "保護者の病気、出産、冠婚葬祭、育児疲れ、短時間就労等で一時的に家庭保育が困難な場合",
+        "facilities": "並木保育園、遍照こども園",
+        "namiki": "月～金曜8時～17時。3歳未満1日1,500円、3歳以上1日1,000円",
+        "hensho": "月～金曜8時～18時30分。3歳未満は8時～16時1,600円・以後30分100円、3歳以上は8時～15時1,000円・以後200円。給食費別途200円",
+        "application": "空き状況を確認して施設へ直接申込み"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/uploaded/attachment/3544.pdf",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.takaharu.lg.jp/soshiki/31/289171.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "要件を満たす移住世帯へ100万円、18歳未満の世帯員1人につき100万円を加算",
+      "details": {
+        "programs": "宮崎県移住支援事業・マッチング支援事業、ひなた暮らし実現応援事業",
+        "household": "2人以上世帯100万円",
+        "single": "東京圏移住支援は単身60万円、ひなた暮らし実現応援は単身30万円",
+        "childAdd": "2人以上世帯で18歳未満の世帯員1人につき100万円加算",
+        "conditions": "対象地域からの移住、対象求人等への就業、転入後1年以内の申請、5年以上の居住意思等"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/site/iju/186535.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを霧島美化センターへ直接搬入し、品目別に1個・枚100～2,000円",
+      "details": {
+        "facility": "霧島美化センターごみ処理施設",
+        "target": "家庭から出る粗大ごみ・リサイクル品",
+        "procedure": "粗大ごみは町の分別案内を確認して施設へ直接搬入",
+        "fee": "条例上、粗大ごみ1個・枚当たり100円～2,000円",
+        "restriction": "家電リサイクル対象品や処理困難物等は別処理",
+        "guidance": "最新のごみ分別豆辞典・早見表で品目別の搬入方法を確認"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/soshiki/20230402/1123.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.takaharu.lg.jp/reikisyu/reiki_int/reiki_honbun/q621RG00000563.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "霧島山火山・地震・土砂災害・避難所等を掲載した町全体・地区別ハザードマップを公開",
+      "details": {
+        "coverage": "霧島山の火山活動、地震、土砂災害、避難所・避難経路等",
+        "maps": "町内全体版と狭野・広原等の地区別マップを公開",
+        "guidance": "居住地域の地形的特徴、危険区域、避難所までの経路を平時に確認",
+        "paper": "紙媒体は総務課危機管理係で配布・閲覧可能"
+      },
+      "source": {
+        "url": "https://www.town.takaharu.lg.jp/soshiki/7/1156.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
