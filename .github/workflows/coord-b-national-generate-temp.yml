@@ -4,13 +4,19 @@ on:
   push:
     branches:
       - coord/central-west-release-20260724
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
   generate:
-    if: github.actor != 'github-actions[bot]'
+    if: >-
+      (github.event_name == 'push' && github.actor != 'github-actions[bot]') ||
+      (github.event_name == 'pull_request' && github.head_ref == 'coord/central-west-release-20260724')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout release branch
