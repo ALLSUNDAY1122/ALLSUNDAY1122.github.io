@@ -5,23 +5,19 @@
   "parentTeam": "北日本調査班",
   "integrationBranch": "region/north",
   "prefectureCodes": ["01", "04", "05", "06"],
-  "updatedAt": "2026-07-23T22:45:00+09:00",
-  "status": "ci_pending",
+  "updatedAt": "2026-07-23T22:58:00+09:00",
+  "status": "ready",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 64,
-  "currentMunicipality": {
-    "code": "05211",
-    "name": "潟上市",
-    "stage": "pr_open"
-  },
-  "workingBranch": "data/05211-katagami",
-  "pullRequestNumber": 1416,
-  "ciStatus": "pending",
+  "remainingUninvestigatedCount": 63,
+  "currentMunicipality": null,
+  "workingBranch": null,
+  "pullRequestNumber": null,
+  "ciStatus": "success",
   "completedSinceSplit": [
     "04100", "04202", "04203", "04205", "04206", "04207", "04208", "04209", "04211", "04212", "04213", "04214", "04215", "04216",
     "04301", "04302", "04321", "04322", "04323", "04324", "04341", "04361", "04362", "04401", "04404", "04406", "04421", "04422", "04424", "04444", "04445", "04501", "04505", "04581", "04606",
-    "05201", "05202", "05203", "05204", "05209", "05213", "05214", "05215"
+    "05201", "05202", "05203", "05204", "05209", "05211", "05213", "05214", "05215"
   ],
   "blocked": [],
-  "nextAction": "PR #1416のCI・競合・変更ファイルを確認し、成功後にregion/northへ地方統合する。"
+  "nextAction": "担当範囲（01・04・05・06）の正式自治体コード一覧と既存task・ブランチ・PRを再照合し、最小の未着手自治体を選定する。旧チェックポイントの存在しないコード05216は再利用しない。"
 }
