@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "05366",
+  "prefectureCode": "05",
+  "prefecture": "秋田県",
+  "name": "井川町",
+  "officialUrl": "https://www.town.ikawa.akita.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが井川町公式情報で対象9制度を調査し、7制度を確認済み、病児・病後児保育と産後ケアの現行詳細を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、所得制限なく保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "乳幼児、小中学生および18歳到達後最初の3月31日までの高校生等",
+        "coverage": "福祉医療費受給者証により医療保険適用分の自己負担額を助成",
+        "incomeLimit": "子どもは所得制限なし",
+        "excluded": "高校生等で本人が事業所の社会保険被保険者である場合などは対象外",
+        "application": "町民生活課で福祉医療費受給者証の交付申請を行う"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/page/1549.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の現行子育て・教育案内で、病児・病後児保育の実施施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "confirmed": "こどもセンター、一時預かり、医療費助成等の子育て支援は公式サイトに掲載",
+        "unconfirmed": "病児保育または病後児保育の実施施設、利用対象、時間、料金、予約手順",
+        "guidance": "健康福祉課こども・子育て支援班へ現行の利用可否を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/life/2/13/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和7年4月から、こどもセンターを利用するすべての子どもの保育料を町が全額助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facility": "幼保連携型認定こども園こどもセンター",
+        "target": "0歳から5歳までの利用児童",
+        "fee": "2025年4月からすべての子どもの保育料を全額助成",
+        "hours": "保育園部は7時30分から19時、幼稚園部は8時30分から13時",
+        "application": "入園・教育保育給付認定の手続きを健康福祉課へ行う"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/page/1358.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的理由で就学が困難な児童生徒の保護者に、就学援助として学校給食費を支給する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "要保護・準要保護として認定された児童生徒の保護者",
+        "support": "学校給食費、学用品費、修学旅行費等を就学援助費として支給",
+        "scope": "全児童生徒を対象とする一律無償化ではなく、経済的要件を満たす認定世帯への支援",
+        "application": "教育委員会へ申請し、認定を受ける"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/reiki/reiki_honbun/c331RG00000451.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "健康福祉課の現行業務として産後ケア事業の実施は確認できるが、対象月齢、利用形態、料金、利用上限を案内する公式ページを確認できない。",
+      "details": {
+        "confirmed": "健康福祉課の所管業務に産後ケア事業を掲載",
+        "unconfirmed": "令和8年度の宿泊・通所・訪問の実施状況、対象期間、自己負担額、利用上限、申込方法",
+        "guidance": "健康福祉課健康づくり班へ現行条件を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/soshiki/7/", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未入園児をこどもセンターで7時30分から19時まで一時的に預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facility": "幼保連携型認定こども園こどもセンター",
+        "target": "病気や冠婚葬祭等により家庭で保育できない未入園児",
+        "hours": "7時30分から19時",
+        "fullDayFee": "乳児1,800円、1歳児以上1,100円",
+        "halfDayFee": "乳児1,100円、1歳児以上700円",
+        "application": "こどもセンターまたは健康福祉課へ事前に申し込む"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/page/1358.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度に婚姻した新婚世帯の住居費、リフォーム費、引越費用を最大30万円、夫婦とも29歳以下の場合は最大60万円補助する。",
+      "details": {
+        "program": "令和8年度井川町結婚新生活支援事業",
+        "target": "2026年1月1日から2027年3月31日までに婚姻し、夫婦とも39歳以下、合計所得500万円未満等の要件を満たす世帯",
+        "expenses": "2026年4月1日から2027年3月31日までに支払った住宅取得・賃借費、リフォーム費、引越費用",
+        "amount": "1世帯最大30万円。夫婦とも29歳以下の場合は最大60万円",
+        "conditions": "対象住宅が町内にあり、町税滞納がなく、2年間継続して町内に居住する意思があること等",
+        "application": "2027年3月31日までに町民生活課へ必要書類を提出"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/page/1575.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "燃える粗大ごみ・燃えない粗大ごみに分別し、町が事前に周知する収集日に排出する。",
+      "details": {
+        "classification": "家具等を材質に応じて燃える粗大ごみまたは燃えない粗大ごみに分別",
+        "collection": "収集日は町広報やごみ収集案内で事前に周知",
+        "size": "町の分別ポスターに定める大きさ・排出基準に従う",
+        "excludedItems": "家電リサイクル対象品、パソコン、タイヤ、バッテリー等は町収集対象外",
+        "guidance": "品目ごとの区分は町の正しいごみの分け方・出し方ポスターで確認"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/page/1551.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "井川および馬場目川の洪水浸水想定区域図や防災情報を公開し、避難行動の確認に利用できる。",
+      "details": {
+        "coverage": "井川・馬場目川等の洪水浸水想定区域、津波浸水想定、防災・避難情報",
+        "maps": "対象河川ごとの洪水浸水想定区域図をPDFで公開",
+        "guidance": "最寄りの指定緊急避難場所を確認し、浸水・土砂災害等の危険に応じた避難行動に活用",
+        "access": "町公式防災ページから区域図・関連防災情報を閲覧可能"
+      },
+      "source": {"url": "https://www.town.ikawa.akita.jp/page/4485.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
