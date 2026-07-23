@@ -6,25 +6,28 @@
   "name": "堺市",
   "officialUrl": "https://www.city.sakai.lg.jp/",
   "status": "verified",
-  "summary": "堺市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-23",
+  "summary": "堺市の子育て、教育、住宅、生活、防災に関する9制度を2026年度の公式情報で確認済み。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
-      "summary": "0歳から18歳年度末まで、保険診療の自己負担の一部を助成する。",
+      "summary": "0歳から18歳年度末まで、所得制限なしで保険診療の自己負担の一部を助成する。",
       "eligibility": {
         "minAgeMonths": 0,
         "maxAgeYears": 18
       },
       "details": {
         "target": "堺市内に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
-        "coverage": "保険診療が適用される医療費の一部",
+        "incomeLimit": "所得制限なし",
         "employmentOrMarriage": "就労・婚姻の有無にかかわらず対象",
-        "application": "子ども医療証の交付申請が必要"
+        "copayment": "1医療機関につき入院・外来それぞれ1日500円まで、月2日まで。調剤薬局は自己負担なし",
+        "monthlyCap": "複数医療機関を利用した場合も1か月の自己負担合計は2,500円が上限。超過額は振込口座登録後に自動償還",
+        "application": "子ども医療証の交付申請が必要",
+        "excluded": "保険外診療、入院時食事代、学校管理下のけがで災害共済給付対象となる場合等は対象外"
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kenko/iryokusuri/iryo/iryojigyou/josei/kodomo.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     },
     "sickChildCare": {
@@ -42,18 +45,18 @@
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/byoji/shisetsu_byoji.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       },
       "additionalSources": [
         {
           "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/byoji/houmon_byoji.html",
-          "checkedAt": "2026-07-23"
+          "checkedAt": "2026-07-24"
         }
       ]
     },
     "childcareFee": {
       "status": "verified",
-      "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、市独自に第2子以降0～2歳児も無償化する。",
+      "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、市独自に第2子以降の0～2歳児も無償化する。",
       "eligibility": {
         "minAgeMonths": 0,
         "maxAgeYears": 5
@@ -61,40 +64,41 @@
       "details": {
         "nationalSupport": "3歳児クラスから5歳児クラス、市町村民税非課税世帯の0歳児クラスから2歳児クラスは無償",
         "citySupport": "所得制限や上のきょうだいの年齢制限を設けず、第2子以降の0～2歳児の保育料を無償化",
-        "taxableFirstChild": "市町村民税課税世帯の0～2歳児第1子は所得階層別保育料"
+        "taxableFirstChild": "市町村民税課税世帯の0～2歳児第1子は所得階層別保育料",
+        "excluded": "給食費、送迎費、行事費、延長保育料等の実費は別途"
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/hoikuryou/musyoka.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       },
       "additionalSources": [
         {
           "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/hoikuryou/2019tashikeigen.html",
-          "checkedAt": "2026-07-23"
+          "checkedAt": "2026-07-24"
         }
       ]
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "市立小学校等は恒久無償化し、令和8年度は市立中学校等も無償化する。",
+      "summary": "市立小学校等は恒久無償化し、2026年度は市立中学校等も無償化する。",
       "eligibility": {
         "minAgeMonths": 72,
         "maxAgeYears": 15
       },
       "details": {
         "target": "堺市立小学校・中学校・特別支援学校の児童生徒",
-        "elementary": "小学校および特別支援学校小学部は全学年を恒久的に無償化",
-        "juniorHigh": "令和8年度の1年間、中学校および特別支援学校中学部の全学年を無償化",
-        "application": "給食費は無償だが給食喫食の申込みは必要"
+        "elementary": "小学校および特別支援学校小学部は2026年度から全学年を恒久的に無償化",
+        "juniorHigh": "2026年度の1年間、中学校および特別支援学校中学部の全学年を無償化",
+        "application": "給食費は無償だが、給食喫食の申込みは必要"
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kosodate/kyoiku/gakko/school_lunch/payment/hutankeigen.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "生後1歳未満の母子へ宿泊・デイサービス・訪問型の産後ケアを提供する。",
+      "summary": "産後1年未満の母子へ宿泊・デイサービス・訪問型の産後ケアを提供する。",
       "eligibility": {
         "minAgeMonths": 0,
         "maxAgeYears": 1
@@ -102,14 +106,16 @@
       "details": {
         "target": "堺市民で産後ケアを必要とする出産後1年未満の母親と乳児",
         "types": "宿泊型、デイサービス型、訪問型",
-        "limit": "宿泊型7泊、デイサービス型7日、訪問型3日。合計14日まで",
+        "expansion": "2026年4月から大阪府の集合契約に参加して利用可能施設を拡充し、宿泊型・デイサービス型の対象を産後6か月未満から産後1年未満へ拡大。訪問型は2時間または3時間を選択可能",
+        "limit": "宿泊型7泊、デイサービス型7日、訪問型3日。3類型合計14日まで",
         "fee": "宿泊型1泊5,200円、デイサービス型1日2,600円、訪問型1回3,500円",
-        "reduction": "減額利用および市民税非課税・生活保護世帯向け料金あり",
+        "reduction": "宿泊・デイ・訪問を合わせた最初の5回は減額利用があり、宿泊3,500円、デイ2,300円、訪問1,000円。市民税非課税・生活保護世帯は宿泊1,300円、デイ700円、訪問500円",
+        "cancellation": "利用日の2日前17時以降の取消しは原則として利用料全額が必要",
         "application": "居住区の子育て支援課へ事前申請"
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kosodate/hughug/ninshin_shusan/ninshin/sangokea-syukuhaku.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     },
     "temporaryChildcare": {
@@ -120,40 +126,51 @@
         "maxAgeYears": 3
       },
       "details": {
-        "target": "堺市民で、認定こども園・保育所・幼稚園・地域型保育・企業主導型保育を利用していない生後6か月から満3歳未満のこども",
+        "target": "堺市民で、認定こども園・保育所・幼稚園・地域型保育・企業主導型保育を利用していない生後6か月から満3歳未満の子ども",
         "employment": "保護者の就労要件なし",
-        "limit": "こども1人につき月10時間まで",
-        "application": "堺市の利用認定後、実施施設へ申込み"
+        "limit": "子ども1人につき月10時間まで",
+        "fee": "基本利用料は1時間300円程度。世帯区分による減免があり、給食・おやつ等の実費は施設により別途",
+        "facilities": "2026年度は市内36施設で実施",
+        "application": "市の給付認定を受けた後、利用施設との事前面談・予約が必要"
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/kodomo-daredemo-tsuen/index.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       },
       "additionalSources": [
         {
-          "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/kodomo-daredemo-tsuen/r8/R8tochujissigaiyou.html",
-          "checkedAt": "2026-07-23"
+          "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/kodomo-daredemo-tsuen/r8/gaiyo.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/kodomo-daredemo-tsuen/r8/r8genmen.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.sakai.lg.jp/kosodate/hughug/hoiku/kodomo-daredemo-tsuen/r8/jissisisetu.html",
+          "checkedAt": "2026-07-24"
         }
       ]
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "若年・子育て世帯が市内の空き家を購入して転入・転居する場合、購入費を最大120万円補助する。",
+      "summary": "若年・子育て世帯が市内の空き家を購入して転入・転居する場合、購入・建替費を最大120万円補助する。",
       "details": {
         "program": "堺市子育て世帯等空き家活用定住支援事業補助金",
         "target": "39歳以下の若年世帯または17歳以下の子を有する子育て世帯",
-        "housing": "市内の要件を満たす空き家を購入し、市外から転入または市内賃貸住宅から転居する世帯",
-        "amount": "補助上限120万円",
-        "applicationPeriod": "令和8年5月1日から令和9年1月29日まで。予算到達時は早期終了あり"
+        "existingHomeType": "市内の要件を満たす空き家を購入し、市外から転入または市内賃貸住宅から転居する世帯を対象に、購入費等の2分の1・上限120万円を補助",
+        "rebuildType": "2026年度から、1981年5月31日以前に建築された空き家を購入して除却し、同一敷地に住宅を新築する建替型を追加",
+        "amount": "対象経費の2分の1、上限120万円",
+        "applicationPeriod": "2026年5月1日から2027年1月29日まで。先着順で予算到達時は早期終了"
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kurashi/jutaku/jutaku/akiya_rikatsuyou/teiju_hojo.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       },
       "additionalSources": [
         {
           "url": "https://www.city.sakai.lg.jp/kurashi/jutaku/jutaku/akiya_rikatsuyou/teiju_hojo.files/R8akijuureaf.pdf",
-          "checkedAt": "2026-07-23"
+          "checkedAt": "2026-07-24"
         }
       ]
     },
@@ -169,7 +186,7 @@
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kurashi/gomi/gomi_recy/bunbetsu/shigen/sodaigomi/index.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     },
     "disasterPrevention": {
@@ -182,7 +199,7 @@
       },
       "source": {
         "url": "https://www.city.sakai.lg.jp/kurashi/bosai/kangaeru/pamphlet/bosai/bosaimap23/hazardmap.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     }
   }
