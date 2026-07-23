@@ -6,10 +6,12 @@ import 'package:aihandoverlog/controllers/relay_controller.dart';
 import 'package:aihandoverlog/models/relay_models.dart';
 import 'package:aihandoverlog/services/state_store.dart';
 
-Future<void> _loadJapaneseFont() async {
-  final loader = FontLoader('AppStoreNoto')
+Future<void> _loadJapaneseFonts() async {
+  final appFont = FontLoader('AppStoreNoto')
     ..addFont(rootBundle.load('assets/NotoSansJP.ttf'));
-  await loader.load();
+  final monospaceFont = FontLoader('monospace')
+    ..addFont(rootBundle.load('assets/NotoSansJP.ttf'));
+  await Future.wait([appFont.load(), monospaceFont.load()]);
 }
 
 Future<RelayController> _controller() async {
@@ -84,7 +86,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
 
-    await _loadJapaneseFont();
+    await _loadJapaneseFonts();
     final controller = await _controller();
     await tester.pumpWidget(AiHandoverLogApp(controller: controller));
     await tester.pumpAndSettle();
