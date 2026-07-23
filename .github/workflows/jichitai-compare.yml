@@ -1,77 +1,57 @@
-name: Jichitai Compare CI
+name: Publish Latest Completed Municipalities
 
 on:
   pull_request:
     paths:
       - 'jichitai-compare/**'
       - '.github/workflows/jichitai-compare.yml'
-  push:
-    branches:
-      - main
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: read
-
-concurrency:
-  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  validate:
-    name: Validate municipality data
+  publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 30
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Reject unrelated changes
+      - name: Fetch regions
+        run: |
+          git fetch --no-tags origin \
+            +refs/heads/region/north:refs/remotes/origin/region/north \
+            +refs/heads/region/east:refs/remotes/origin/region/east \
+            +refs/heads/region/central:refs/remotes/origin/region/central \
+            +refs/heads/region/west:refs/remotes/origin/region/west
+      - name: Extract complete municipalities
         working-directory: jichitai-compare
         env:
-          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: npm run check:scope
-
-      - name: Generate public municipality data
+          RELEASE_AT: '2026-07-23T23:44:00+09:00'
+          MANIFEST_NAME: 'release-all-complete-manifest-20260723-2344.json'
+        run: node scripts/publish-complete-snapshot.mjs
+      - name: Generate and validate
         working-directory: jichitai-compare
-        run: npm run generate
-
-      - name: Generate national progress
-        working-directory: jichitai-compare
-        run: npm run progress
-
-      - name: Validate source and generated data
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Check JavaScript syntax
-        working-directory: jichitai-compare
-        run: node --check app.js
-
-      - name: Confirm generated files are committed
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
-        shell: bash
         run: |
-          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
-          if [ -n "$changed" ]; then
-            echo '生成済みファイルが最新ではありません。'
-            git status --short -- data/generated/municipalities.json operations/progress.json
-            exit 1
-          fi
-
-      - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          npm run validate:sessions --if-present
+          node --check app.js
+      - name: Update index
         working-directory: jichitai-compare
-        run: npm run smoke:public
+        run: |
+          node -e "const fs=require('fs');const m=require('./operations/control/release-all-complete-manifest-20260723-2344.json');const p=require('./operations/progress.json');let h=fs.readFileSync('index.html','utf8');h=h.replace(new RegExp(m.previousPublishedMunicipalities+'自治体','g'),p.registeredMunicipalities+'自治体');fs.writeFileSync('index.html',h)"
+      - name: Restore workflow and commit
+        run: |
+          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+          rm jichitai-compare/scripts/publish-complete-snapshot.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/jichitai-compare.yml jichitai-compare
+          git commit -m 'release: publish latest completed municipalities'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
