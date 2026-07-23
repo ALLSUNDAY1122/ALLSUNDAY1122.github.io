@@ -127,7 +127,7 @@ jobs:
         run: |
           set -euo pipefail
           set -o pipefail
-          flutter test test/app_store_screenshots_test.dart 2>&1 | tee "$RUNNER_TEMP/logs/screenshot-test.log"
+          flutter test --update-goldens test/app_store_screenshots_test.dart 2>&1 | tee "$RUNNER_TEMP/logs/screenshot-test.log"
           test "$(find test/goldens -name '*_raw.png' | wc -l | tr -d ' ')" = '5'
 
       - name: Compose App Store images
