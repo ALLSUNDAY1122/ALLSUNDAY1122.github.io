@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-23T23:28:26.902Z",
-  "success": true,
+  "auditedAt": "2026-07-23T23:33:27.085Z",
+  "success": false,
   "results": [
     {
       "name": "local: seven static pages and 100 stories are covered",
@@ -12,8 +12,13 @@
     },
     {
       "name": "local: runtime modules, social metadata, and static circulation are complete",
-      "ok": true,
-      "detail": []
+      "ok": false,
+      "detail": [
+        {
+          "file": "5min-horror.html",
+          "check": "runtime"
+        }
+      ]
     },
     {
       "name": "local: story runtime no longer loads the 100-story catalog",
@@ -138,13 +143,13 @@
     },
     {
       "name": "published: five-minute launch URL maps to its fixed social campaign",
-      "ok": true,
+      "ok": false,
       "detail": {
-        "ready": true,
+        "ready": false,
         "status": 200,
-        "attempt": 1,
+        "attempt": 10,
         "state": {
-          "analyticsScript": true,
+          "analyticsScript": false,
           "engagementScript": false,
           "analytics": true,
           "source": "social",
@@ -322,5 +327,50 @@
       }
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "name": "local: runtime modules, social metadata, and static circulation are complete",
+      "ok": false,
+      "detail": [
+        {
+          "file": "5min-horror.html",
+          "check": "runtime"
+        }
+      ]
+    },
+    {
+      "name": "published: five-minute launch URL maps to its fixed social campaign",
+      "ok": false,
+      "detail": {
+        "ready": false,
+        "status": 200,
+        "attempt": 10,
+        "state": {
+          "analyticsScript": false,
+          "engagementScript": false,
+          "analytics": true,
+          "source": "social",
+          "campaign": "launch-20260724-x-five-minute",
+          "picks": 12,
+          "guides": 6,
+          "faq": 3,
+          "breadcrumb": 1,
+          "overflow": true
+        },
+        "meta": {
+          "type": "website",
+          "url": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
+          "title": "5分で読める怖い話｜一話完結の短編ホラー12選｜夜語り",
+          "description": "約5分で読める一話完結の怖い話を、心霊・人怖・意味怖・ネット怪談・都市伝説・後味の悪い話から12作品選定。無料・登録不要で読めます。",
+          "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+          "width": "2172",
+          "height": "724",
+          "alt": "月明かりと提灯が照らす夜の町並み",
+          "card": "summary_large_image",
+          "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+          "twitterAlt": "月明かりと提灯が照らす夜の町並み"
+        }
+      }
+    }
+  ]
 }
