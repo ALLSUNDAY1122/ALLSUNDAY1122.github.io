@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "02445",
+  "prefectureCode": "02",
+  "prefecture": "青森県",
+  "name": "南部町",
+  "officialUrl": "https://www.town.aomori-nanbu.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を南部町公式情報で調査し、7制度をverified、2制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額を給付する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "南部町乳幼児・子ども医療費給付制度",
+        "target": "南部町に住所があり健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "医科・歯科・調剤の保険診療一部負担金",
+        "fee": "受給者負担なし",
+        "payment": "県内は受給資格証による現物給付、県外等は償還払い",
+        "excluded": "健診、予防接種、文書料、差額室料、食事療養費等は対象外"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/1383.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.aomori-nanbu.lg.jp/page/1851.html", "checkedAt": "2026-07-24"}]
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "病児保育事業を無償化対象に含む制度情報は確認できるが、令和8年度の実施施設・対象年齢・料金・予約方法を確認できない。",
+      "details": {
+        "confirmedInformation": "幼児教育・保育無償化制度では、要件を満たす病児保育事業の利用料を償還払いの対象に含む",
+        "researchResult": "南部町民が利用できる現行施設、対象年齢、利用料金、予約方法を町公式サイトで確認できなかった",
+        "caution": "利用可否は健康こども課子育て支援班へ確認が必要"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/1695.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.aomori-nanbu.lg.jp/page/1982.html", "checkedAt": "2026-07-24"}]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "南部町民の0～2歳児保育料を無償化し、3～5歳児等の利用料と令和8年度の副食費も無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "zeroToTwo": "2025年4月から、町に住民票がある0～2歳児の保育料を無償化",
+        "threeToFive": "幼稚園・保育所・認定こども園等の3～5歳児利用料を無償化",
+        "meal": "2026年4月から町民の満3歳～5歳児の副食費を無償化",
+        "procedure": "認可施設の保育料・副食費は原則申請不要。認可外施設の副食費は請求手続きが必要",
+        "otherCosts": "送迎費、主食費、行事費等は施設により保護者負担"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/8297.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.town.aomori-nanbu.lg.jp/page/1982.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.town.aomori-nanbu.lg.jp/page/10664.html", "checkedAt": "2026-07-24"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町内小中学校の学校給食費を無償化し、町外校在籍の町民児童生徒にも相当額を給付する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "南部町小・中学校給食費給付事業",
+        "townSchools": "町内小中学校在籍者の給食費を無償化",
+        "outsideSchools": "町外小中学校・特別支援学校在籍者の保護者へ町基準額を給付",
+        "amount": "町基準は小学校1食270円、中学校1食300円",
+        "start": "2015年度から給食費無償化を実施"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/1454.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.aomori-nanbu.lg.jp/page/8629.html", "checkedAt": "2026-07-24"}]
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "助産院で休養・授乳指導等を受けられる産後ケア事業は確認できるが、令和8年度の対象月齢・利用類型・料金・利用上限を確定できない。",
+      "details": {
+        "confirmedSupport": "産婦と乳児が助産院で休養し、授乳指導等の支援を受けられる産後ケア事業を実施",
+        "researchResult": "現行利用者向けページから対象月齢、宿泊・通所・訪問の区分、自己負担額、利用上限を確認できなかった",
+        "caution": "詳細はこども家庭センターぴよすくへ確認が必要"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/site/nanbugurashi/10461.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、月10時間まで町内施設を利用でき、南部町民が町内施設を利用する場合は利用料等が無料となる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "南部町こども誰でも通園制度",
+        "target": "保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "子ども1人につき月10時間まで",
+        "fee": "各施設が設定。南部町民が町内施設を利用する場合は利用料・給食費・おやつ代を無料",
+        "application": "総合支援システム等で認定申請し、施設の面談・予約を行う"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/10663.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度、町内登録業者による住宅新築・改修または建売住宅取得費の一部を補助する。",
+      "details": {
+        "program": "南部町住宅新築・リフォーム支援事業",
+        "target": "2026年4月1日以降に登録業者と契約し、町内の自己居住用住宅を新築・改修または建売住宅を取得する方",
+        "eligibleCosts": "新築・建売住宅は税抜1,000万円以上、改修は税抜30万円以上等",
+        "support": "対象工事・取得費の一部を予算範囲内で補助",
+        "application": "着工・引渡し前に申請し、登録業者の施工等の要件を満たす必要がある"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/1757.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.aomori-nanbu.lg.jp/site/nanbugurashi/10474.html", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "不燃ごみ・粗大ごみを八戸リサイクルプラザへ直接搬入でき、木製品と木製品以外で受入日を分ける。",
+      "details": {
+        "facility": "八戸リサイクルプラザ",
+        "directCarry": "不燃ごみ・粗大ごみを自己搬入可能",
+        "woodenWaste": "令和8年度の木製粗大ごみは指定受入日に搬入",
+        "otherWaste": "木製以外の粗大ごみ・不燃ごみは木製受入日以外の平日に受入",
+        "hours": "9時～12時、13時～17時",
+        "collection": "町の粗大ごみ収集も木製品と木製品以外で日程を分ける"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/8166.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.aomori-nanbu.lg.jp/life/1/5/26/", "checkedAt": "2026-07-24"}]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・地震・土砂災害・ため池等の危険区域、避難所・防災知識を掲載した防災マップを公開する。",
+      "details": {
+        "map": "南部町防災マップ",
+        "coverage": "馬淵川最大規模洪水浸水想定、地震の揺れやすさ、地域危険度、土砂災害、避難所等",
+        "ponds": "防災重点ため池の所在地・浸水想定を掲載するため池ハザードマップを公開",
+        "information": "ほっとスルメール、河川ライブカメラ等で防災情報を提供",
+        "guidance": "平時に危険箇所・避難先・避難経路を確認"
+      },
+      "source": {"url": "https://www.town.aomori-nanbu.lg.jp/page/1821.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.aomori-nanbu.lg.jp/page/1822.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
