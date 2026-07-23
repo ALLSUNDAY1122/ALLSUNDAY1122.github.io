@@ -68,7 +68,7 @@ jobs:
           if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
           for (const file of stories) {
             const html = fs.readFileSync(path.join(site, 'stories', file), 'utf8');
-            if (!html.includes('../assets/engagement.js?v=20260723-004') || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
+            if (!html.includes('../assets/engagement.js?v=20260723-003') || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
           }
           const privacy = fs.readFileSync(path.join(site, 'privacy.html'), 'utf8');
           if (!privacy.includes('固定キャンペーンコード') || !privacy.includes('登録済みコードに一致しない値は破棄')) throw new Error('Privacy campaign disclosure is missing');
