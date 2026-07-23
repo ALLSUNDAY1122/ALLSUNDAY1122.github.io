@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1217,
+    "municipalityCount": 1219,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -61985,6 +61985,186 @@
       }
     },
     {
+      "code": "07502",
+      "prefectureCode": "07",
+      "prefecture": "福島県",
+      "name": "玉川村",
+      "officialUrl": "https://www.vill.tamakawa.fukushima.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Aが対象9制度を玉川村公式情報で調査し、7制度をverified、学校給食費と産後ケアをunavailableとして整理。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分と入院時食事療養費を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "こども医療費助成事業",
+            "target": "玉川村に住民登録があり、公的医療保険に加入する0歳から18歳年度末までの子ども",
+            "support": "保険診療の一部負担金と入院時食事療養費の標準負担額",
+            "application": "健康福祉課で受給資格登録が必要",
+            "excluded": "健康診断、予防接種、選定療養、文書料、差額ベッド代等の保険適用外費用は対象外"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/welfare/000158.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気の治療中または回復期にある生後6か月から小学6年生までを、郡山市の広域利用施設で1回2,000円で預かる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "病児・病後児保育事業",
+            "target": "玉川村に住所がある生後6か月から小学6年生までで、病気の治療中または回復期にあり家庭保育が困難な子ども",
+            "facility": "村内に専用施設がないため、郡山市の施設を広域利用",
+            "fee": "1回2,000円。実施施設へ直接支払い",
+            "application": "実施施設への予約・利用申込みが必要"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/welfare/000160.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等は幼児教育・保育無償化の対象となり、課税世帯の0～2歳児は国基準より減額した村の利用者負担額を適用する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化対象",
+            "taxableUnderThree": "課税世帯の0～2歳児は、国基準を上限として玉川村が負担軽減した利用者負担額を適用",
+            "facility": "認定こども園たまかわクックの森等の村内教育・保育施設",
+            "application": "保育施設利用申込みと教育・保育給付認定が必要",
+            "excludedCosts": "給食費、教材費、行事費、延長保育料等の実費は別途となる場合がある"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/education/006529.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "過年度に学校給食費の半額補助を実施したことは確認できるが、令和8年度の一般世帯負担額・無償化状況を公式ページで確定できない。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "pastSupport": "令和4年7月から令和5年2月まで、村内小中学校の給食費を半額補助",
+            "pastAmount": "半額補助後は小学生月2,600円、中学生月2,800円",
+            "researchResult": "令和8年度の給食費額、村独自補助、完全無償化の有無を現行公式ページで確認できなかった",
+            "caution": "現行負担額は教育委員会または学校給食担当へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/education/000238.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "妊産婦・子育て相談窓口や産後相談は確認できるが、産後ケア事業の対象月齢、利用類型、料金、利用上限を現行公式ページで確定できない。",
+          "details": {
+            "confirmedSupport": "玉川村こども家庭センターが妊娠・産後・子育てに関する相談に対応",
+            "researchResult": "令和8年度の宿泊・日帰り・訪問型産後ケアに関する利用者向け案内を確認できなかった",
+            "caution": "実施状況と現行条件は健康福祉課健康推進係へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/living/living_pregnancy/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで1時間300円で利用できる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          },
+          "details": {
+            "program": "こども誰でも通園制度",
+            "target": "こども園・保育所・幼稚園等に通っていない生後6か月から満3歳未満の子ども",
+            "employmentRequirement": "なし",
+            "facility": "認定こども園たまかわクックの森",
+            "hours": "平日9時～11時",
+            "capacity": "1時間当たり3人",
+            "usageLimit": "子ども1人につき月10時間まで",
+            "fee": "1時間300円",
+            "application": "こども誰でも通園制度総合支援システムで認定申請後、施設面談・予約"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/education/007153.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度、移住者・若年層世帯の新築・中古住宅取得に基本額と移住・子育て加算を交付する。",
+          "details": {
+            "program": "令和8年度玉川村移住定住促進補助事業",
+            "target": "新築または中古住宅を取得し、取得住宅へ住民登録して定住する移住者・若年層世帯等",
+            "migrantNew": "移住者の新築住宅取得は基本30万円、移住者加算20万円",
+            "childAddition": "15歳未満の第1子10万円、第2子以降1人20万円を加算",
+            "applicationDeadline": "対象住宅所在地へ住民登録後1年以内に申請",
+            "currentFiscalYear": "令和9年3月31日までに住宅を取得する方等が対象。予算により年度途中で受付終了する場合あり"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/plan/001638.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない粗大ごみは、有料シールを貼って申込制の戸別収集を利用する。",
+          "details": {
+            "definition": "可燃・不燃の指定袋に入らない家庭ごみ",
+            "collection": "ステーション収集ではなく、きららクリーンセンターへ申込みを行う戸別収集",
+            "fee": "10kg未満は500円シール、10kg以上50kg以下は1,000円シールを品目ごとに1枚貼付",
+            "calendar": "令和8年度ごみ分別収集カレンダーを地区別に公開",
+            "directCarry": "家庭ごみの直接搬入は指定袋使用時も有料",
+            "application": "きららクリーンセンターへ申込み"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/resi/000092.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.tamakawa.fukushima.jp/guide/resi/000102.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水浸水想定、土砂災害、避難行動等を掲載した防災マップと、ため池ハザードマップを公開する。",
+          "details": {
+            "maps": "玉川村防災マップ、地区別防災マップ、ため池ハザードマップ",
+            "coverage": "洪水時の浸水深、土砂災害のおそれがある箇所、大雨・地震・火災時の避難行動、避難場所等",
+            "districtMaps": "村全体および竜崎・岩法寺、北須釜、小高・蒜生、南須釜、川辺等の地区別図を公開",
+            "guidance": "平時に地域の危険箇所、避難先、避難経路を家族で確認"
+          },
+          "source": {
+            "url": "https://www.vill.tamakawa.fukushima.jp/guide/adms/000043.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.tamakawa.fukushima.jp/bousai/bousai-map.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        }
+      }
+    },
+    {
       "code": "08201",
       "prefectureCode": "08",
       "prefecture": "茨城県",
@@ -94170,6 +94350,184 @@
           },
           "source": {
             "url": "https://www.town.sugito.lg.jp/life/1/1/1/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "11465",
+      "prefectureCode": "11",
+      "prefecture": "埼玉県",
+      "name": "松伏町",
+      "officialUrl": "https://www.town.matsubushi.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を松伏町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "松伏町に住民登録があり健康保険に加入する18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の自己負担分を支給し、県内対応医療機関では受給資格証等の提示により原則現物給付",
+            "procedure": "出生・転入等の該当日から15日以内に受給資格登録を申請",
+            "excluded": "保険外診療、高額療養費・付加給付、他の医療助成制度の対象分等"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000002425.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "0歳から小学6年生の病児・病後児を会員制の緊急サポートで預かり",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "子育て緊急サポート事業",
+            "support": "風邪や発熱時の預かり、保育施設等からの急な呼び出し時の迎えと預かり、急を要する送迎等",
+            "condition": "病気の子どもの預かりには事前の医療機関受診が必要。全身状態が悪い場合や密な観察が必要な場合等は利用不可",
+            "fee": "8時から20時は1時間1,000円、20時から翌8時は1時間1,200円。病児は宿泊不可",
+            "procedure": "緊急サポートセンター埼玉へ事前に利用会員登録"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000002012.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化。新制度未移行幼稚園は月25,700円、認可外等は3～5歳月37,000円、非課税世帯0～2歳月42,000円等が上限",
+            "currentFee": "課税世帯の0～2歳児は保護者所得に応じた保育料が基本で、町独自の完全無償化は確認できない",
+            "mealSupport": "年収360万円未満相当世帯と第3子以降は副食費の減免・補助対象",
+            "excluded": "給食費、通園送迎費、教材費等の実費"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000002013.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小学校は給食費の徴収なし、中学校は2026年度前半24,000円を無償化し第3子以降を追加補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "町立小学校在籍児童は2026年度に学校給食費の徴収がなく、給食費負担なし",
+            "juniorHigh": "町立中学校在籍生徒は2026年度第1期から第4期分の計24,000円を無償化。年度全体の完全無償化とは確認できない",
+            "multiChild": "15歳年度末までの子どもを3人以上養育する世帯の第3子以降について、徴収済み給食費を申請により補助。中学生は無償化済み24,000円を補助額から控除",
+            "procedure": "第3子以降補助は電子申請または窓口申請が必要"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000002839.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・通所・訪問型の産後ケアを産後1年以内の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "松伏町に住民登録があり、母子とも医療行為を必要とせず感染症等がない産後1年以内の母親と赤ちゃん",
+            "types": "宿泊型、通所型、訪問型",
+            "limit": "3類型を合わせて原則7日以内",
+            "fee": "宿泊型1日5,000円、通所型1回2,000円、訪問型1回500円。非課税・生活保護世帯は無料",
+            "support": "母親の休息、授乳・乳房ケア、育児相談、助言・支援等"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000002317.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の満1歳から3歳未満を町立第一保育所で受け入れるこども誰でも通園制度",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "保育所等に在籍していない満1歳以上満3歳未満の子ども",
+            "facility": "松伏町立第一保育所。空き定員を活用する余裕活用型",
+            "hours": "月曜日から金曜日の9時から15時の範囲で、柔軟利用方式により受け入れ",
+            "meal": "在所児と同じ食事を提供",
+            "procedure": "利用上限、料金、認定・予約方法は町の最新利用案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/cmsfiles/contents/0000002/2019/haifusiryou2.pdf",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "新婚世帯の住宅取得・賃借・リフォーム・引越費用を最大60万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "2026年1月1日から2027年3月31日までに婚姻し、夫婦双方39歳以下、合計所得500万円未満等の要件を満たす世帯",
+            "costs": "町内住宅の取得費、賃料・共益費・敷金・礼金・仲介手数料、リフォーム費、引越業者等への費用",
+            "amount": "夫婦とも29歳以下は上限60万円、夫婦のいずれかが30～39歳は上限30万円",
+            "condition": "対象住宅に居住・住民登録し、町税滞納がなく、申請後3年以上町内居住意思があること等"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000000546.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを事前予約してリサイクルセンターへ持込みまたは戸別収集",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "directDelivery": "松伏町リサイクルセンターへ電話予約後に直接搬入。1世帯1回10点まで",
+            "fee": "直接搬入は10キログラム150円。ソファベッド・スプリング入りマットレスは1点1,000円加算",
+            "collection": "電話予約後、品目別手数料分の粗大ごみ処理券を購入し、自宅前に出して戸別収集",
+            "support": "自己搬入時に町の軽トラック無料貸出制度を利用可能"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000000824.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・洪水・土砂災害等のハザードマップと避難情報を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "松伏町地震・洪水ハザードマップ、土砂災害ハザードマップ、多言語・やさしい日本語版を公開",
+            "risks": "地震の揺れ、建物倒壊、液状化、河川洪水、土砂災害等",
+            "facilities": "避難先、避難経路、平時の備え、マイ・タイムライン等を掲載",
+            "support": "家庭や地域で被害想定と避難方法を事前確認するために利用可能"
+          },
+          "source": {
+            "url": "https://www.town.matsubushi.lg.jp/0000002286.html",
             "checkedAt": "2026-07-24"
           }
         }
