@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03303",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "岩手町",
+  "officialUrl": "https://town.iwate.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を岩手町公式情報で調査し、6制度をverified、3制度をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の窓口自己負担を完全無償化している。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子どもの医療費助成制度",
+        "target": "出生の日から18歳に達する日以後の最初の3月31日まで",
+        "support": "令和6年8月1日から医療費を完全無償化",
+        "copay": "県内医療機関等で受給者証と資格確認書等を提示すると保険診療の一部負担金支払い不要",
+        "outsidePrefecture": "県外受診等は窓口で支払い後、町へ給付申請",
+        "application": "町民課で新規認定手続きが必要",
+        "excluded": "学校管理下の負傷等は日本スポーツ振興センター制度を優先"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/life/nyuji-iryohihojo/", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "needs_medium_review",
+      "summary": "病児・病後児保育事業の体調不良児対応型実施要綱は確認できるが、一般利用者向けの対象年齢・施設・料金・申請方法を確認できない。",
+      "details": {
+        "program": "岩手町病児・病後児保育事業（体調不良児対応型）",
+        "confirmed": "町例規集に実施要綱を掲載",
+        "reviewReason": "体調不良児対応型は在園児への施設内対応を中心とする類型であり、一般の病児・病後児保育として利用できる施設、対象年齢、料金、予約方法を町公式利用案内で確定できない"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/reiki/reiki_taikei/r_taikei_08.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和5年4月から認可保育所・認定こども園の保育料を年齢や所得区分を問わず無償化している。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "support": "認可保育所、認定こども園の保育料無償化",
+        "start": "令和5年4月",
+        "target": "岩手町に住民登録があり対象保育施設を利用する児童",
+        "outsideFacilities": "町外施設を希望する場合も町への入所申込みが必要",
+        "excludedCosts": "延長保育料、一時預かり利用料等は自己負担",
+        "application": "保育施設入所申込みと支給認定手続きが必要"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/life/hoiku-nyusho-r6-2/", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "needs_medium_review",
+      "summary": "令和7年度分は納入済給食費相当額を補助したが、令和8年度の小中学校給食費と恒常的な無償化範囲を確認できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "confirmed": "令和7年度は町立小中学校の給食費負担保護者へ、精算後の納入済額相当を補助金として交付",
+        "excluded": "要保護・準要保護世帯は既存の公費支援を受けているため令和7年度補助の対象外",
+        "fiscal2026": "町議会では令和8年度の国制度、小学校・中学校の対応が議論されている",
+        "reviewReason": "令和8年度の対象学年、保護者負担額、申請要否、町独自の中学校支援を利用者向け案内で確定できない"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/life/kyushokuhi-shien/", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子を対象に、宿泊型・デイサービス型・訪問型の産後ケアを無料で合計6回まで実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "岩手町に住民登録がある産後1年以内の母親と満1歳までの子ども",
+        "types": "宿泊型、デイサービス型、訪問型",
+        "services": "母親の休息・乳房ケア、乳児の体重・健康確認、授乳指導・育児相談",
+        "usageLimit": "3類型合計6回。宿泊型・デイサービス型は合わせて4回まで、宿泊型は1泊2日を上限に2回と算定",
+        "fee": "無料。食事代、オプションサービスは自己負担",
+        "application": "利用申請書を健康こども課へ提出"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/life/sango-kea/", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "needs_medium_review",
+      "summary": "令和8年度のこども誰でも通園制度と水堀保育所での対応開始は確認できるが、料金・利用時間・申請方法の本文を取得できず中間確認とする。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "confirmed": "町公式の保育所カテゴリに利用案内を掲載し、令和8年4月広報で水堀保育所が制度対応を行うと案内",
+        "employmentRequirement": "制度上は就労要件なし",
+        "reviewReason": "岩手町の利用料金、月間上限、利用曜日・時間、認定申請・予約方法の最新本文を取得できない"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/life/iwatetowndaretu/", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から一定要件で移住・就業等をする世帯へ100万円を支給し、18歳未満の子ども1人につき100万円を加算する。",
+      "details": {
+        "program": "岩手町移住支援金",
+        "support": "単身60万円、2人以上世帯100万円",
+        "childAddition": "18歳未満の子どもを帯同して移住する場合、1人につき100万円加算",
+        "target": "東京23区在住・通勤等の移住元要件と、県内就業・起業・テレワーク・関係人口等の要件を満たす人",
+        "residence": "申請後5年以上岩手町に居住する意思が必要",
+        "applicationPeriod": "転入後3か月以上1年以内に申請"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/life/iju_support_funds/", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみや一時多量ごみは岩手・玉山清掃事業所へ直接搬入でき、家庭ごみは10キログラム当たり50円。",
+      "details": {
+        "facility": "岩手・玉山清掃事業所",
+        "target": "粗大ごみ、引っ越し・大掃除等で一時的に多量発生した家庭ごみなど",
+        "hours": "9時～12時、13時～16時",
+        "closed": "原則として土曜日、日曜日、年末年始",
+        "fee": "家庭ごみ10キログラム当たり50円",
+        "application": "自ら施設へ搬入するか、町の許可を受けた収集運搬業者へ依頼",
+        "notAccepted": "産業廃棄物、処理困難物、家電リサイクル対象品等は受入不可"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/accessmap/seisojigyosho/", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "町内5地区別の防災マップと、北上川の最大規模洪水浸水想定区域図、ため池ハザードマップを公開している。",
+      "details": {
+        "map": "岩手町防災マップ",
+        "districts": "沼宮内、水堀、川口、岩瀬張・北山形・南山形、一方井の地区別マップ",
+        "coverage": "避難場所、災害危険箇所、防災情報等",
+        "flood": "北上川の想定最大規模洪水浸水想定区域図を地区別に公開",
+        "ponds": "防災重点ため池のハザードマップを公開",
+        "access": "町公式防災ページからPDF等を閲覧可能"
+      },
+      "source": {"url": "https://town.iwate.iwate.jp/town/bosai/bosai-map/", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://town.iwate.iwate.jp/town/bosai/kouzuisinnsuisouteiarea/", "checkedAt": "2026-07-23"},
+        {"url": "https://town.iwate.iwate.jp/town/bosai/tameike-hazard-map/", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}
