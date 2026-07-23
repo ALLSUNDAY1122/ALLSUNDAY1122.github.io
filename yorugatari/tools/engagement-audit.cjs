@@ -20,7 +20,7 @@ function record(name, ok, detail = null) {
 }
 
 function localAudit() {
-  const staticFiles = ['index.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
+  const staticFiles = ['index.html', '5min-horror.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
   const storyFiles = fs.readdirSync(STORIES).filter((name) => name.endsWith('.html')).sort();
   const errors = [];
 
@@ -38,13 +38,18 @@ function localAudit() {
     if (!html.includes('property="og:image:width" content="2172"') || !html.includes('property="og:image:height" content="724"')) errors.push({ file: `stories/${filename}`, check: 'dimensions' });
   }
 
+  const landing = fs.readFileSync(path.join(SITE, '5min-horror.html'), 'utf8');
+  if ((landing.match(/class="pick"/g) || []).length !== 12) errors.push({ file: '5min-horror.html', check: '12 editorial picks' });
+  if ((landing.match(/class="guide-card"/g) || []).length !== 6) errors.push({ file: '5min-horror.html', check: 'six genre guides' });
+  if (!landing.includes('"@type":"FAQPage"') || !landing.includes('"@type":"CollectionPage"')) errors.push({ file: '5min-horror.html', check: 'structured data' });
+
   const storyRuntime = fs.readFileSync(path.join(SITE, 'assets', 'story.js'), 'utf8');
   const analyticsRuntime = fs.readFileSync(path.join(SITE, 'assets', 'analytics.js'), 'utf8');
   const engagementRuntime = fs.readFileSync(path.join(SITE, 'assets', 'engagement.js'), 'utf8');
   const launchKit = fs.readFileSync(path.join(SITE, 'tools', 'external-launch-kit.md'), 'utf8');
   const campaignDefinitions = Array.isArray(campaigns.definitions) ? campaigns.definitions : [];
 
-  record('local: six static pages and 100 stories are covered', staticFiles.length === 6 && storyFiles.length === 100, { static: staticFiles.length, stories: storyFiles.length });
+  record('local: seven static pages and 100 stories are covered', staticFiles.length === 7 && storyFiles.length === 100, { static: staticFiles.length, stories: storyFiles.length });
   record('local: runtime modules, social metadata, and static circulation are complete', errors.length === 0, errors);
   record('local: story runtime no longer loads the 100-story catalog', !storyRuntime.includes('catalogSources') && !storyRuntime.includes('loadCatalogScript'));
   record('local: four fixed launch links and onsite sharing are defined', campaignDefinitions.length === 4 && campaignDefinitions.every((item) => item.id && item.url && launchKit.includes(item.url)) && campaigns.onsiteShare?.id === 'onsite-share', campaignDefinitions);
@@ -105,7 +110,7 @@ async function imageAudit() {
 
 async function browserAudit() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/1.9' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/2.0' });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', { configurable: true, value: async (payload) => { window.__YORUGATARI_SHARE_PAYLOAD__ = payload; } });
   });
@@ -128,6 +133,22 @@ async function browserAudit() {
     return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.source === 'social' && state.campaign === topCampaign.id && state.panel && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
   record('published: top launch URL resolves and maps to its fixed social campaign', top.ready, top);
+
+  const landing = await open(page, `${BASE}/5min-horror.html`, async (target, response, attempt) => {
+    const state = await target.evaluate((version) => ({
+      analyticsScript: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
+      engagementScript: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
+      analytics: Boolean(window.YORUGATARI_ANALYTICS),
+      picks: document.querySelectorAll('.pick').length,
+      guides: document.querySelectorAll('.guide-card').length,
+      faq: document.querySelectorAll('.faq article').length,
+      breadcrumb: document.querySelectorAll('.breadcrumb').length,
+      overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
+    }), ANALYTICS_VERSION);
+    const meta = await metadata(target);
+    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.picks === 12 && state.guides === 6 && state.faq === 3 && state.breadcrumb === 1 && state.overflow && metadataComplete(meta), status: response?.status(), attempt, state, meta };
+  });
+  record('published: five-minute horror landing page is complete', landing.ready, landing);
 
   const storyCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260723-threads-spare-key');
   const story = await open(page, storyCampaign.url, async (target, response, attempt) => {
