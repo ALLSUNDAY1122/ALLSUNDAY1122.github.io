@@ -21,7 +21,7 @@ async function waitForTopCards(page) {
 
 async function run() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.2' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.3' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
@@ -38,9 +38,11 @@ async function run() {
     cards: document.querySelectorAll('.card').length,
     unique: new Set(Array.from(document.querySelectorAll('.card')).map((card) => card.getAttribute('href'))).size,
     busy: document.querySelector('#storyGrid')?.getAttribute('aria-busy'),
-    version: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-008'))
+    version: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-008')),
+    fiveMinuteLinks: document.querySelectorAll('a[href="5min-horror.html"]').length
   }));
   record('top progressively renders 100 unique cards', topState.cards === 100 && topState.unique === 100 && topState.busy === 'false' && topState.version, topState);
+  record('top exposes the five-minute horror landing', topState.fiveMinuteLinks >= 2, topState.fiveMinuteLinks);
   await noHorizontalOverflow(page, 'top mobile has no horizontal overflow');
   record('reader panel shows saved completion', (await page.locator('.reader-panel').innerText()).includes('1 / 100話 読了'));
 
@@ -76,9 +78,31 @@ async function run() {
   await page.waitForSelector('.archive-item');
   const archiveCount = await page.locator('.archive-item').count();
   record('archive renders 100 unique items', archiveCount === 100, archiveCount);
+  record('archive exposes the five-minute horror landing', await page.locator('a[href="5min-horror.html"]').count() >= 1, await page.locator('a[href="5min-horror.html"]').count());
   await noHorizontalOverflow(page, 'archive mobile has no horizontal overflow');
   await page.getByRole('button', { name: 'お気に入り', exact: true }).click();
   record('archive favorite filter works', await page.locator('.archive-item').count() === 1 && (await page.locator('.archive-item').first().getAttribute('href')).includes('neighbor-wifi'), await page.locator('.archive-item').count());
+
+  await page.goto(`${base}/5min-horror.html?ui=${Date.now()}`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('.pick');
+  const landing = await page.evaluate(() => {
+    const picks = Array.from(document.querySelectorAll('.pick'));
+    return {
+      picks: picks.length,
+      uniquePicks: new Set(picks.map((item) => item.getAttribute('href'))).size,
+      guides: document.querySelectorAll('.guide-card').length,
+      faq: document.querySelectorAll('.faq article').length,
+      h1: document.querySelectorAll('h1').length,
+      breadcrumb: document.querySelectorAll('.breadcrumb').length,
+      canonical: document.querySelector('link[rel="canonical"]')?.href,
+      analytics: Array.from(document.scripts).some((script) => script.src.includes('assets/analytics.js?v=20260723-003')),
+      engagement: Array.from(document.scripts).some((script) => script.src.includes('assets/engagement.js'))
+    };
+  });
+  record('five-minute landing renders 12 unique editorial picks', landing.picks === 12 && landing.uniquePicks === 12, landing);
+  record('five-minute landing renders six genre guides and three FAQ items', landing.guides === 6 && landing.faq === 3, landing);
+  record('five-minute landing has canonical metadata and lightweight analytics', landing.h1 === 1 && landing.breadcrumb === 1 && landing.canonical === `${base}/5min-horror.html` && landing.analytics && !landing.engagement, landing);
+  await noHorizontalOverflow(page, 'five-minute landing mobile has no horizontal overflow');
 
   await page.goto(`${base}/stories/spare-key-returned.html?ui=${Date.now()}`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.story-pagination');
