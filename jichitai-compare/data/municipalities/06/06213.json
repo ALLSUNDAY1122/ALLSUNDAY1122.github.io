@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06213",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "南陽市",
+  "officialUrl": "https://www.city.nanyo.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが南陽市公式情報で対象9制度を調査し、7制度を確認済み、学校給食費と住宅支援の令和8年度条件を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、外来・入院の保険診療自己負担額を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "南陽市に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+        "coverage": "山形県内の医療機関等で医療証を提示すると外来・入院の保険診療自己負担分が無料",
+        "excluded": "文書料、薬容器代、入院時食事代、差額室料、健診・予防接種等",
+        "outsidePrefecture": "県外受診は一旦支払い後、市へ還付申請"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/seiaktukosodate/836", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後3か月から就学前までの病気回復期の子どもを赤湯ふたば保育園で預かる。",
+      "eligibility": {"minAgeMonths": 3, "maxAgeYears": 5},
+      "details": {
+        "facility": "赤湯ふたば保育園",
+        "target": "感冒、胃腸炎、感染性・慢性疾患、骨折等の回復期で集団保育が困難な生後3か月から就学前児童",
+        "hours": "月曜日から土曜日の8時30分から17時30分。祝日・お盆・年末年始を除く",
+        "type": "病後児保育。病気の急性期ではなく回復期が対象",
+        "application": "施設へ事前相談・申込み"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/seikatuhoikuen/2969", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "国制度により3～5歳児と市民税非課税世帯の0～2歳児の保育料を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "preschool": "認可保育所、認定こども園等を利用する3歳から5歳児の利用料は無料",
+        "infants": "市民税非課税世帯の0歳から2歳児も無料",
+        "meals": "通園送迎費、主食費、副食費、行事費等は原則保護者負担",
+        "mealExemption": "年収約360万円未満相当世帯と多子算定基準を満たす第3子以降は副食費免除"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/seikatuhoikuen/2969", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "令和7年度の第3子以降への所得区分別助成は確認できるが、令和8年度の対象・助成率・申請方法を確認できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "lastConfirmed": "令和7年度は市内小中学校の第3子以降について、市民税所得割額に応じ100％・50％・25％を助成",
+        "otherSupport": "就学援助費・特別支援教育就学奨励費の給食費支援との重複分は調整",
+        "unconfirmed": "令和8年度の継続有無、所得基準、助成率、基準日、申請期間",
+        "guidance": "学校管理課へ現行条件の確認が必要"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/kanri/1472", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に短期入所・通所・訪問型産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "南陽市に住民票があり、産後ケアを必要とし、医療行為を必要としない母子",
+        "dayCare": "通所型は1回約1時間、1,000円",
+        "homeVisit": "訪問型は1回約1時間、1,500円",
+        "limit": "通所型・訪問型のいずれか2回まで",
+        "overnight": "短期入所型も実施。受入月齢や料金は医療機関ごとに異なるため申請時に調整",
+        "application": "妊娠32週以降にすこやか子育て課へ相談・申請"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/sukoyaka/5762", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "市内3施設で生後3か月または2歳から就学前児童の一時預かりを実施する。",
+      "eligibility": {"minAgeMonths": 3, "maxAgeYears": 5},
+      "details": {
+        "facilities": "宮内双葉保育園、赤湯ふたば保育園、赤湯乳幼児保育センター",
+        "ageRange": "施設により生後3か月から就学前、2歳から就学前、生後3か月から1歳児",
+        "hours": "月曜日から土曜日の8時30分から17時30分。祝日・お盆・年末年始を除く",
+        "freeCare": "保育の必要性の認定を受けた3～5歳児等は施設等利用費給付の対象となる場合がある",
+        "application": "利用施設へ事前申込み"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/seikatuhoikuen/2969", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "unavailable",
+      "summary": "令和7年度の結婚新生活・住宅取得・リフォーム支援は確認できるが、令和8年度の現行募集条件を確認できない。",
+      "details": {
+        "lastConfirmed": "令和7年度は39歳以下の新婚世帯に住宅取得・賃貸・リフォーム・引越費用を支援",
+        "lastAmount": "夫婦とも29歳以下は上限60万円、いずれかが30～39歳は上限30万円",
+        "unconfirmed": "令和8年度の募集有無、婚姻日・所得・年齢要件、申請期限、予算残額",
+        "guidance": "社会教育課結婚推進係または建設課へ現行制度を確認する必要がある"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/kekonsuisin/6087", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない大型品は粗大ごみとして市へ回収を申し込むか、処理施設へ自己搬入する。",
+      "details": {
+        "definition": "指定ごみ袋に入らない大きさの家庭用品等",
+        "collection": "市の年間回収日程に従い事前申込み。1月・2月は回収休止",
+        "directDelivery": "千代田クリーンセンターへ平日に自己搬入可能",
+        "facilityHours": "月曜日から金曜日の9時から12時、13時から16時",
+        "restricted": "家電リサイクル法対象品、パソコン、自動二輪車等は施設受入不可"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/gomidasikata/", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・ため池・地震のハザードマップと複数の防災情報配信手段を提供する。",
+      "details": {
+        "floodLandslide": "令和6年度版洪水・土砂災害ハザードマップを公開",
+        "pond": "農業用ため池ハザードマップを公開",
+        "earthquake": "山形県地震ハザードマップへの案内を掲載",
+        "alerts": "防災行政無線、防災X、LINE、Yahoo!防災速報等で情報を配信",
+        "shelters": "指定緊急避難場所・指定避難所情報を公開"
+      },
+      "source": {"url": "https://www.city.nanyo.yamagata.jp/bousai/", "checkedAt": "2026-07-24"}
+    }
+  }
+}
