@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07465",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "中島村",
+  "officialUrl": "https://www.vill-nakajima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を中島村公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担金と入院時食事代を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "中島村に住所があり健康保険に加入する0歳から18歳年度末までの子ども。生活保護受給者を除く",
+        "support": "保険診療一部負担金および入院時の食事代",
+        "payment": "加入保険・受診地域等により現物給付または償還払い",
+        "application": "あらかじめ受給資格登録が必要",
+        "excluded": "特定療養費、差額ベッド代、健診・予防接種等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/sp/page/page000070.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "満1歳から小学6年生まで、しらかわ病児保育室を1人2,000円で利用できる。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 12},
+      "details": {
+        "program": "しらかわ病児保育室",
+        "target": "中島村等の対象市町村に住所があり、病気中で保護者の勤務等により家庭保育が困難な満1歳から小学6年生までの児童",
+        "facility": "白河厚生総合病院敷地内 しらかわ病児保育室",
+        "hours": "平日8時～18時。土日祝日・年末年始休業、延長保育なし",
+        "capacity": "6名",
+        "fee": "1人2,000円。生活保護世帯・市町村民税非課税世帯は無料",
+        "application": "事前登録後、施設へ予約して利用"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/page000555.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "申請要件を満たす村内在住世帯の保育所保育料を無料とし、幼稚園の保育料・預かり保育料・給食費等も無料化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nursery": "保護者と子どもが村内に住所・生活実態を有し、村税等の滞納がない等の要件を満たして申請・決定を受けた場合、保育所利用者負担額を無料化",
+        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は国の幼児教育・保育無償化対象",
+        "kindergarten": "中島幼稚園は利用者負担額、預かり保育料・おやつ代、一時預かり保育料、給食費を村独自に無料化",
+        "application": "村独自無料化は申請と審査が必要",
+        "caution": "村税等の納付状況により無料化が取り消される場合がある"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/page000382.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.vill-nakajima.jp/page/page000651.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.vill-nakajima.jp/page/page000384.html", "checkedAt": "2026-07-24"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和4年度から村内在住の小中学生の学校給食費を無料とし、村外校等への就学者には補助金を交付する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "start": "令和4年度から実施",
+        "villageSchools": "村内に住所・生活実態があり、村立小中学校に在籍する児童生徒の給食費は申請不要で無料",
+        "outsideSchools": "村外の小中学校・特別支援学校等へ就学する村内在住児童生徒の保護者には、規則に定める年額を上限に補助",
+        "application": "村外校等の対象者は年度末までに補助金申請が必要",
+        "excluded": "生活保護の教育扶助受給者、村税等の滞納がある保護者は補助対象外"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/page000787.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子が、宿泊・日帰り・訪問型で助産師のケアや育児支援を受けられる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア事業",
+        "target": "中島村に住所がある産後1年以内の母親と乳児で、体調回復・育児・休養等の支援が必要な方",
+        "types": "宿泊型、通所型、訪問型",
+        "usageLimit": "原則7回まで。宿泊型は1泊2日を2回として計算",
+        "services": "健康状態確認、乳房ケア、沐浴・授乳指導、育児相談等",
+        "fee": "令和8年度は利用料金無料。食事代等が別途必要な場合がある",
+        "application": "施設の利用可否を確認後、こども家庭センターへ事前申請"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/page001263.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで1時間300円で利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで",
+        "facility": "中島保育所",
+        "fee": "1時間300円。実施要綱による減免対象者は無料",
+        "application": "保健福祉課へ申請し、承認後に施設との事前面談・利用日調整を行う"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/page001561.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "県外から移住して住宅を取得する方に、村・県補助を合わせ最大100万円を交付する。",
+      "details": {
+        "program": "中島村住宅取得支援事業",
+        "target": "県外から転入後1年以内または移住予定で、村内の新築・中古住宅を取得し、翌年度から3年以上定住する等の要件を満たす方",
+        "base": "対象経費の2分の1、上限20万円",
+        "additions": "中学生以下の世帯員、村内就業・事業経営、村内建築業者施工の各要件で10万円、最大30万円加算",
+        "prefectureAddition": "福島県制度の要件を満たす場合、村補助と同額を県分として上乗せ",
+        "maximum": "村・県合計最大100万円",
+        "application": "事前相談・確認書提出後、住宅取得日から6か月以内に申請"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/page001599.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "可燃性・不燃性の粗大ごみについて、村公式の分別冊子で処理方法と施設利用方法を案内する。",
+      "details": {
+        "guide": "資源とごみの正しい分け方と出し方",
+        "classification": "可燃性・不燃性の粗大ごみを区分し、品目別の処理方法を掲載",
+        "collectionRule": "通常の収集対象ごみは指定日の朝8時30分までに決められた集積所へ排出",
+        "facility": "処理施設の利用案内、持込み方法、受入できない品目を分別冊子で案内",
+        "excluded": "家電リサイクル対象品や施設で受入できない処理困難物は別の処分方法が必要",
+        "caution": "粗大ごみの具体的な排出・持込条件は冊子のP32～34および施設利用案内で確認"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/page000027.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害等の危険区域、避難所、ため池情報を確認できるハザードマップを公開する。",
+      "details": {
+        "map": "中島村ハザードマップ・避難所",
+        "coverage": "洪水浸水想定区域、土砂災害警戒区域、指定避難場所・避難所等",
+        "ponds": "防災重点農業用ため池のハザードマップも公開",
+        "information": "登録制メールおよび防災・災害情報発信アプリで防災情報を提供",
+        "guidance": "平時に自宅周辺の危険箇所と避難経路を確認"
+      },
+      "source": {"url": "https://www.vill-nakajima.jp/page/dir000853.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill-nakajima.jp/page/page001449.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
