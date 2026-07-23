@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07402",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "北塩原村",
+  "officialUrl": "https://www.vill.kitashiobara.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を北塩原村公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療分の医療費を全額助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児および児童医療費助成",
+        "target": "北塩原村に住所があり健康保険に加入する0歳から18歳年度末までの子ども。生活保護受給者を除く",
+        "support": "保険診療分の自己負担額を助成",
+        "application": "事前に受給資格登録が必要",
+        "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/site/kosodate/1089.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "令和8年度の子育て支援一覧と保育・子育て支援ページで、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "村公式の令和8年度子育て支援一覧、保育園案内、子育て支援メニューを確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "availableAlternatives": "生後6か月から6歳までの一時預かり、子育て短期支援事業等は実施",
+        "caution": "広域利用を含む利用可否は保健福祉課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/site/kosodate/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児の保育料を無償化し、認可外保育料の2分の1を月額1万5千円まで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "非課税世帯の0～2歳児と3～5歳児は保育料無料",
+        "otherHouseholds": "国基準より保育料を軽減し、多子世帯はさらに軽減",
+        "unlicensedSupport": "認可外保育施設の保育料の2分の1を月額15,000円まで助成",
+        "kindergarten": "村立さくら幼稚園・裏磐梯幼稚園は保育料と預かり保育料が無料",
+        "excludedCosts": "給食費、教材費、行事費等の実費は別途負担となる場合がある"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/site/kosodate/", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度も村立幼稚園・小学校・中学校の給食費を無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "村立幼稚園・小学校・中学校に在籍する園児・児童・生徒",
+        "support": "学校給食費を全額村が負担",
+        "fiscalYear": "令和8年度",
+        "estimatedBenefit": "幼稚園から中学校までの12年間で約85万円の家計負担軽減と案内"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/site/kosodate/", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子を対象に、宿泊・日帰り・訪問型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "北塩原村に住所がある産後1年以内の母親と乳児",
+        "types": "宿泊ケア、日帰りケア、訪問ケア",
+        "services": "母体の休養、授乳・乳房ケア、育児相談、乳児の健康確認等",
+        "usageLimit": "宿泊14日以内、日帰り5日以内、訪問5日以内",
+        "fee": "宿泊1泊2日3,000円、延泊1泊2,000円。日帰り・訪問は無料。生活保護・非課税世帯は無料",
+        "application": "利用申請書を保健センターへ提出"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/site/kosodate/5248.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "認可保育所、幼稚園、認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "子ども1人につき月10時間まで",
+        "fee": "1時間300円。生活保護世帯、村民税非課税世帯等は軽減あり",
+        "application": "村の案内に従い利用認定・施設予約等の手続きが必要"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/site/kosodate/9400.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住者の住宅取得費の2分の1を補助し、県外移住は最大220万円、県内移住は最大110万円を支援する。",
+      "details": {
+        "program": "移住促進住宅取得支援事業補助金",
+        "target": "村外に2年以上居住後、北塩原村へ移住して住宅を取得し、5年以上居住する等の要件を満たす方",
+        "rate": "住宅取得経費の2分の1",
+        "outsidePrefecture": "基本160万円、各種加算を含め最大220万円",
+        "insidePrefecture": "基本80万円、各種加算を含め最大110万円",
+        "additions": "若年・子育て世帯、村内就業、村内事業者施工の各要件で加算",
+        "application": "住宅取得日から1年以内。予算上限到達前に事前相談が必要"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/site/iju/1120.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家庭の粗大ごみは環境センター山都工場へ無料で自己搬入でき、許可業者への有料収集依頼も可能。",
+      "details": {
+        "definition": "指定ごみ袋に入らず、塵芥収集車に入らない家具・自転車・大型電化製品等",
+        "directCarry": "環境センター山都工場への個人搬入は無料",
+        "hours": "月～金曜8時30分～16時30分、土曜8時30分～12時。日曜・祝日・年末年始を除く",
+        "licensedCollector": "引越しや大量ごみ等は村の許可業者へ有料で依頼可能",
+        "excluded": "家電リサイクル対象品、パソコン、オートバイ、処理困難物等"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/soshiki/juminzeimu/1032.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害、洪水、地震、雪害、磐梯山火山等を掲載した令和8年版防災マップとWeb版ハザードマップを公開する。",
+      "details": {
+        "map": "北塩原村防災マップ・Web版ハザードマップ",
+        "coverage": "土砂災害警戒区域、洪水浸水想定区域、地震、雪害、火災、磐梯山火山、避難所・消防設備等",
+        "revision": "2026年4月1日に最新データへ更新",
+        "distribution": "冊子を各戸配布し、役場・出張所等でも配布",
+        "webMap": "パソコン・スマートフォンでハザード情報を閲覧可能"
+      },
+      "source": {"url": "https://www.vill.kitashiobara.fukushima.jp/soshiki/somukikaku/8983.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
