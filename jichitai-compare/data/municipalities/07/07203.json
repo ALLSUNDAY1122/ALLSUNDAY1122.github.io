@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07203",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "郡山市",
+  "officialUrl": "https://www.city.koriyama.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を郡山市公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額等を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "こども医療費助成制度",
+        "target": "郡山市に住民票があり健康保険に加入する0歳から18歳年度末までのこども",
+        "support": "保険診療・調剤の一部負担金と入院時食事療養費標準負担額",
+        "application": "こども医療費受給資格者証の交付手続きが必要",
+        "excluded": "生活保護の医療扶助対象者や保険適用外費用等は対象外"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/site/kosodate/36404.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気の治療中または回復期で集団保育が困難な乳幼児から小学6年生までを、市内複数施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "program": "病児保育事業",
+        "target": "郡山市在住で、病気の治療中または回復期にあり集団保育が困難な乳幼児から小学6年生まで",
+        "condition": "保護者が勤務等により家庭で保育できない場合",
+        "fee": "1日2,000円",
+        "exemption": "生活保護世帯、市民税非課税世帯、郡山市在住の対象ひとり親家庭は利用料免除",
+        "application": "実施施設へ予約後、利用申込書を提出"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/site/kosodate/7050.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等の国制度による無償化に加え、0～2歳児は所得・世帯状況に応じた市独自の第一子・多子軽減を実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育の無償化対象",
+        "baseFee": "0～2歳児は市町村民税額と保育時間区分に応じて決定",
+        "siblingReduction": "同時入所等の条件で第2子半額、第3子以降無料",
+        "cityFirstChild": "市民税所得割額133,000円未満の第一子について無料または月額5,000円軽減",
+        "excludedCosts": "給食費、教材費、行事費、送迎費、延長保育料等は別途負担"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/site/kosodate/7046.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.koriyama.lg.jp/site/kosodate/7058.html", "checkedAt": "2026-07-23"}]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市立小・中・義務教育学校の学校給食費を令和8年度も全額公費負担とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "郡山市立小学校・中学校・義務教育学校の児童生徒",
+        "support": "給食費全額公費負担（無償化）",
+        "continuation": "令和4年度第3学期からの制度を令和8年度も継続",
+        "quality": "国の小学校段階支援に市が上乗せし、給食の質を維持"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/soshiki/197/108076.html", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の母子等を対象に、ショートステイ、デイケア、アウトリーチの産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "郡山市に住民票がある出産後1年以内の母子、および死産・流産後1年以内の方",
+        "types": "ショートステイ（宿泊）、デイケア（日帰り）、アウトリーチ（訪問）",
+        "usageLimit": "各類型それぞれ原則7日間まで",
+        "services": "母体の休養・健康確認、乳房ケア、乳児の健康・体重・栄養確認、育児相談、授乳指導",
+        "application": "妊娠8か月（32週）から申請可能"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/site/kosodate/1400.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "市内在住で保育所・幼稚園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで",
+        "fee": "1時間300円。30分単位は150円。給食費等は別途実費",
+        "reduction": "生活保護世帯は1時間300円、市民税非課税世帯等は1時間200円を軽減"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/site/kosodate/138303.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "低所得のひとり親世帯を対象に、新たな住宅セーフティネット制度を活用した家賃・家賃債務保証料の減額支援を行う。",
+      "details": {
+        "program": "新たな住宅セーフティネット制度を活用したひとり親世帯への家賃等補助事業",
+        "target": "住宅確保要配慮者のうち収入が低いひとり親世帯",
+        "rentSupport": "賃貸人が本来家賃から公営住宅並み家賃まで減額した額を補助",
+        "guaranteeSupport": "初回契約分の家賃債務保証料減額分を補助",
+        "structure": "市が賃貸人・不動産事業者等と対象世帯のマッチングを支援"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/site/kosodate/46516.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家庭の粗大ごみは事前申込みにより1回5点まで無料で戸別収集する。",
+      "details": {
+        "definition": "長さ1m以上、重さ10kg以上、または三辺合計1.5m以上の大型家庭ごみ等",
+        "application": "インターネットまたはごみ減量推進課への電話で事前申込み",
+        "fee": "無料",
+        "limit": "1回5点まで。6点以上は翌週以降に再申込み",
+        "collection": "指定日の朝8時までに敷地内道路際へ出し、氏名等を記した貼り紙を付ける",
+        "excluded": "家電リサイクル対象品、パソコン、事業系ごみ、処理困難物等は対象外"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/soshiki/55/1046.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、内水、土砂災害、3次元浸水、液状化、ため池、火山など複数のハザードマップを公開する。",
+      "details": {
+        "maps": "洪水、内水、土砂災害、3次元浸水、液状化、ため池、安達太良山火山ハザードマップ",
+        "floodRevision": "洪水ハザードマップは2024年4月改訂",
+        "coverage": "浸水想定区域、浸水深、避難所、土砂災害警戒区域等",
+        "gis": "郡山市地理情報システムでも関連情報を確認可能",
+        "handbook": "わが家の防災ハンドブックも公開"
+      },
+      "source": {"url": "https://www.city.koriyama.lg.jp/soshiki/5/24999.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.koriyama.lg.jp/soshiki/126/2177.html", "checkedAt": "2026-07-23"}]
+    }
+  }
+}
