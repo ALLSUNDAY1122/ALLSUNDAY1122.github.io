@@ -10,7 +10,7 @@ const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatar
 const SHARE_WIDTH = '2172';
 const SHARE_HEIGHT = '724';
 const SHARE_ALT = '月明かりと提灯が照らす夜の町並み';
-const STATIC_PAGES = ['index.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
+const STATIC_PAGES = ['index.html', '5min-horror.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
 
 function escapeAttribute(value) {
   return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
