@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07561",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "新地町",
+  "officialUrl": "https://www.shinchi-town.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を新地町公式情報で調査し、8制度をverified、1制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担金と入院時食事療養費を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成事業",
+        "target": "新地町に住所があり健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "通院・入院の保険診療自己負担金および入院時食事療養費を助成",
+        "deduction": "高額療養費および健康保険の付加給付相当額は控除",
+        "application": "子ども医療費受給資格の登録が必要",
+        "payment": "受給資格者証の提示による現物給付または領収書等を添えた償還払い"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/site/kosodate/kodomo-iryou-jyosei.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育について、実施施設・対象年齢・料金・予約方法を町公式情報で確認できない。",
+      "details": {
+        "researchResult": "保健福祉課、子育て支援サイト、保育所関連ページを確認したが、現行の利用者向け病児・病後児保育案内を確認できなかった",
+        "caution": "広域利用を含む現行条件は保健福祉課こども家庭係へ確認が必要"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/soshiki/7/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等を無償化し、3歳未満児は国基準より低い保育料、同時入所2人目以降無料、月3,000円助成を適用する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeToFive": "保育所・認定こども園等の3～5歳児の利用料を無償化",
+        "zeroToTwoNonTax": "住民税非課税世帯の0～2歳児の利用料を無償化",
+        "zeroToTwoTaxable": "課税世帯の3歳未満児は町独自に国基準より低い保育料を設定",
+        "siblings": "同一世帯から保育所へ2人以上同時入所する場合、2人目以降の保育料は無料",
+        "subsidy": "保育料を完納した3歳未満児の保護者に月3,000円、年最大36,000円を助成",
+        "meal": "町立保育所の副食費を無料化"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/site/kosodate/hoikuryo-henko.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.shinchi-town.jp/site/kosodate/hoikuryou-keigen-jyosei.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.shinchi-town.jp/site/kosodate/youjikyouiku-musyouka.html", "checkedAt": "2026-07-24"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和7年4月から、新地町立小学校・中学校に在籍する児童生徒の学校給食費を無償化している。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "新地町立小中学校給食費無償化",
+        "target": "新地町立小学校および中学校に在籍する児童・生徒",
+        "start": "2025年4月分から",
+        "support": "学校給食費を全額無償化",
+        "purpose": "子育て世帯の経済的負担軽減と子育て支援の推進"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/site/shinchiiju/sinnchimatiniijuuteijuu1.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、宿泊・日帰り・訪問型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "令和8年度新地町産後ケア",
+        "target": "新地町に住民登録がある産後1年未満の母親と子どもで、医療的処置を必要としない方",
+        "types": "宿泊ケア、日帰りケア、訪問ケア",
+        "services": "母体の心身ケア、母乳・育児相談、乳児の身体計測・発育確認、授乳・沐浴支援",
+        "usageLimit": "訪問・日帰りは合計最大10回、宿泊は最大14日",
+        "fees": "宿泊1泊2日6,000円、日帰り1,900円、半日1,100円、訪問1,000円",
+        "additionalSubsidy": "1回2,500円を上限に、1回の出産につき5回目まで助成"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/site/kosodate/r8-sanngokea.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、月10時間まで1時間300円で町立3保育所を利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "新地町こども誰でも通園制度",
+        "target": "新地町内に居住し、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで",
+        "fee": "1時間300円。家庭状況による負担軽減あり",
+        "facilities": "新地保育所、福田保育所、駒ケ嶺保育所",
+        "hours": "平日9時～11時。施設により受入年齢が異なる",
+        "application": "総合支援システムで認定申請し、初回面談後に予約"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/soshiki/7/kodomodaredemotuuenseido.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住して住宅を新築または建売住宅を購入する子育て・新婚世帯に100万円、県外移住者は最大190万円を補助する。",
+      "details": {
+        "program": "新地町『来て しんち』住宅取得支援事業補助金",
+        "target": "町外から移住し、町内に自ら定住する住宅を建築または建売住宅を購入する子育て世帯・新婚世帯",
+        "townSupport": "対象経費の2分の1以内、上限100万円",
+        "prefectureAddition": "県外移住者で県要件を満たす場合は90万円を加算し、最大190万円",
+        "residency": "住宅取得翌年度から3年以上継続して居住",
+        "applicationPeriod": "建築・購入契約日から1年以内"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/soshiki/2/kiteshinchi1.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度ごみカレンダーと分別ガイドに従い、粗大ごみを含む家庭ごみを分別・排出する。",
+      "details": {
+        "calendar": "令和8年度ごみカレンダーを地区別に公開",
+        "sortingGuide": "ごみの分け方・出し方と分別リストを公開",
+        "method": "粗大ごみの分類・収集日・排出方法は年度カレンダーと分別ガイドに従う",
+        "contact": "不明な品目・収集条件は町民生活課生活環境係へ確認",
+        "caution": "家電リサイクル対象品や処理困難物は通常収集の対象外となる場合がある"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/soshiki/6/r8gomi-calender.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・洪水・土砂災害・ため池・避難所等を掲載した新地町防災マップを公開する。",
+      "details": {
+        "map": "新地町防災マップ",
+        "coverage": "地震、津波、洪水、土砂災害、ため池、避難所、避難行動ガイド等",
+        "materials": "町内全域図、詳細図、過去の水害区域、ため池ハザードマップ、安否確認カード等",
+        "information": "防災メール、Yahoo!防災速報、防災行政無線等でも情報を提供",
+        "guidance": "災害種別ごとの危険区域・避難場所・避難経路を平時に確認"
+      },
+      "source": {"url": "https://www.shinchi-town.jp/soshiki/1/bousaimap.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.shinchi-town.jp/life/1/36/106/", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
