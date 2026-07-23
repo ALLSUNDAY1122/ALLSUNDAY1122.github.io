@@ -1,8 +1,9 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const project = process.cwd();
+const project = dirname(dirname(fileURLToPath(import.meta.url)));
 const releaseAt = process.env.RELEASE_AT ?? new Date().toISOString();
 const checkedAt = releaseAt.slice(0, 10);
 const manifestName = process.env.MANIFEST_NAME ?? 'release-latest-complete.json';
