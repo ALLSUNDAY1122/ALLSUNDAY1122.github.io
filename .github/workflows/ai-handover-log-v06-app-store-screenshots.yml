@@ -109,6 +109,8 @@ jobs:
           test "$(find test/goldens -name '*_raw.png' | wc -l | tr -d ' ')" = '5'
 
       - name: Compose App Store images
+        id: compose
+        continue-on-error: true
         shell: bash
         working-directory: ${{ runner.temp }}/build
         run: |
@@ -119,7 +121,7 @@ jobs:
             "$RUNNER_TEMP/release/raw" \
             "$RUNNER_TEMP/release/final" \
             "$RUNNER_TEMP/build/docs/brand/AI_Handover_Log_AppIcon_1024.png" \
-            | tee "$RUNNER_TEMP/logs/compose.log"
+            2>&1 | tee "$RUNNER_TEMP/logs/compose.log"
           python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
@@ -136,6 +138,7 @@ jobs:
           PY
 
       - name: Package screenshots and report
+        if: steps.compose.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -157,9 +160,25 @@ jobs:
           sha256sum AI_Handover_Log_v0.6_AppStore_Screenshots_1290x2796.zip > AI_Handover_Log_v0.6_AppStore_Screenshots_1290x2796.sha256
 
       - name: Upload App Store screenshot package
+        if: steps.compose.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: ai-handover-log-v06-app-store-screenshots-${{ github.run_id }}
           path: ${{ runner.temp }}/release
           compression-level: 0
           if-no-files-found: error
+
+      - name: Upload screenshot diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-handover-log-v06-screenshot-diagnostics-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/logs
+            ${{ runner.temp }}/build/test/goldens
+            ${{ runner.temp }}/release
+          if-no-files-found: warn
+
+      - name: Stop when composition failed
+        if: steps.compose.outcome == 'failure'
+        run: exit 1
