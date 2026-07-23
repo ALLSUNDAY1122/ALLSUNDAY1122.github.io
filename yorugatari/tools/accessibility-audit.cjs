@@ -115,7 +115,7 @@ async function auditTop(page) {
   const loaded = await open(page, '/', async (target, attempt) => {
     try { await target.waitForFunction(() => document.querySelector('#storyGrid')?.getAttribute('aria-busy') === 'false' && document.querySelectorAll('.card').length === 100, null, { timeout: 20000 }); } catch (error) {}
     return target.evaluate((currentAttempt) => ({
-      ready: document.querySelectorAll('.card').length === 100 && document.querySelector('#storyGrid')?.getAttribute('aria-busy') === 'false' && Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-007')) && Array.from(document.scripts).some((script) => script.src.includes('assets/analytics.js?v=20260723-003')),
+      ready: document.querySelectorAll('.card').length === 100 && document.querySelector('#storyGrid')?.getAttribute('aria-busy') === 'false' && Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-008')) && Array.from(document.scripts).some((script) => script.src.includes('assets/analytics.js?v=20260723-003')),
       attempt: currentAttempt,
       cards: document.querySelectorAll('.card').length,
       gridBusy: document.querySelector('#storyGrid')?.getAttribute('aria-busy'),
