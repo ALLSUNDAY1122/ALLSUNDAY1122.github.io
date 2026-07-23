@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "01602",
+  "prefectureCode": "01",
+  "prefecture": "北海道",
+  "name": "平取町",
+  "officialUrl": "https://www.town.biratori.hokkaido.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが平取町公式情報で対象9制度を調査し、7制度を確認済み、病児・病後児保育と一時保育の現行詳細条件を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から小学校卒業前までを対象に、所得制限の範囲内で保険診療の自己負担を軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "target": "平取町に住所があり健康保険に加入する0歳から12歳の小学校卒業前までの子ども",
+        "incomeLimit": "主たる生計維持者の所得が児童手当と同じ基準額以下であること",
+        "coverage": "保険診療の医療費自己負担を年齢・世帯課税状況に応じて助成",
+        "application": "受給者証の交付申請が必要",
+        "additionalSupport": "町独自に医療費自己負担相当額の還元事業も実施"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/kurashi/kenko_fukushi_kaigo/iryo_kenko/1/798.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の現行子育て支援一覧で、病児・病後児保育の実施施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "confirmed": "保育所、認定こども園、児童館、子ども発達支援センター等の支援は掲載されている",
+        "unconfirmed": "令和8年度に利用できる病児・病後児保育施設、対象年齢、利用料、登録・予約方法",
+        "guidance": "保健福祉課子育て支援係へ広域利用を含む現行の利用可否を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/kurashi/kenko_fukushi_kaigo/fukushi_kaigo/2/index.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "町独自施策により、町内保育所を利用する町民の保育所利用料を年齢・課税区分を問わず全て無償化する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "target": "平取町在住で町内保育所または認定こども園保育所部分を利用する子ども",
+        "coverage": "国の3歳以上無償化対象を町独自に拡大し、0歳から2歳児を含む保育所利用料を全額無償化",
+        "excluded": "各施設が徴収する行事費、教材費等は対象外",
+        "facilities": "認定こども園バチラー保育園、振内保育所、弥生保育園、二風谷保育所"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/iju_teiju_kosodate/kosodate/1882.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的理由で就学が困難な小中学生の保護者へ、学校給食費を含む就学援助を行う。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "町内小中学校に通う児童生徒の保護者で、所得等の認定基準を満たす世帯",
+        "support": "学用品費、修学旅行費、学校給食費等を援助",
+        "universalFree": "全児童生徒の一律無償化ではなく、認定世帯を対象とする就学援助",
+        "application": "在籍学校または教育委員会へ申請"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/kurashi/kanko_bunka_sports/kyoikugyosei/1/2693.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、委託助産院の助産師が自宅を訪問して心身・授乳・育児のケアを行う。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ママ安心ケア事業",
+        "target": "平取町に住民登録がある産後1年未満の母親と乳児",
+        "type": "訪問型。里帰り等で委託助産院以外を利用した場合の費用助成あり",
+        "support": "母親の心身相談、乳房ケア、授乳支援、乳児の世話・育児手技相談",
+        "medicalCare": "医療行為は対象外"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/iju_teiju_kosodate/kosodate/1302.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "令和8年度の一時保育事業・乳幼児等通園支援事業の実施は確認できるが、対象年齢、利用時間、料金、施設、予約方法の本文を取得できない。",
+      "details": {
+        "confirmed": "2026年6月9日付で一時保育事業・こども誰でも通園制度の現行案内が公開されている",
+        "unconfirmed": "対象年齢、月間利用上限、利用料、実施施設、事前面談・予約方法",
+        "guidance": "保健福祉課子育て支援係へ令和8年度の利用条件を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/news.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内約360戸の公営住宅等について毎月空き住戸を募集し、所得・世帯等の資格に応じて入居を受け付ける。",
+      "details": {
+        "program": "平取町公営住宅等入居募集",
+        "housingStock": "町内に約360戸の入居可能な公営住宅等",
+        "application": "毎月の募集案内に従い、申込資格・所得・世帯条件を確認して必要書類を提出",
+        "selection": "応募集中時は選考または待機となる場合がある",
+        "otherSupport": "住宅リフォーム促進助成事業等の住宅関連助成も実施"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/kurashi/sumai_suido/zumai/2/825.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "ごみは有料で、種類に応じた指定袋・処理証紙を使用し、収集カレンダーによる排出または処理施設への直接搬入で処理する。",
+      "details": {
+        "collection": "分別ごとの収集日に午前8時30分までに指定場所へ排出",
+        "fee": "指定袋またはごみ処理証紙による有料処理",
+        "bulkyItems": "袋に収まらない品目は分別大辞典で処理証紙・搬入先を確認",
+        "directCarry": "ごみの種類ごとに指定された処理施設へ直接搬入可能",
+        "guidance": "品目別の具体的な証紙枚数・搬入先は最新の分別大辞典を確認"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/kurashi/seikatsukankyo/eisei/1/833.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、避難場所等を掲載した2025年11月改訂版防災ガイドマップを公開する。",
+      "details": {
+        "map": "平取町防災ガイドマップ2025年11月改訂版",
+        "hazards": "洪水、土砂災害等の危険区域と避難情報を掲載",
+        "revision": "土石流危険渓流の削除、避難場所情報等を修正",
+        "purpose": "災害前の備えと避難行動の確認に利用"
+      },
+      "source": {"url": "https://www.town.biratori.hokkaido.jp/kurashi/seikatsukankyo/bosai/851.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
