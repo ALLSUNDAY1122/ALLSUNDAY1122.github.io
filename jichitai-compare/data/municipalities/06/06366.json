@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06366",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "鮭川村",
+  "officialUrl": "https://www.vill.sakegawa.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが鮭川村公式情報で対象9制度を調査し、8制度を確認済み、病児・病後児保育の現行制度を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、県内医療機関で保険診療の自己負担をゼロとする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {"target": "鮭川村に住所がある0歳から高校生世代までの子ども。就学のため村外に住所があり村内保護者に扶養される場合も対象", "coverage": "子育て支援医療証と保険資格確認書等を県内医療機関に提示すると保険診療自己負担ゼロ", "incomeLimit": "公式ページに所得制限の記載なし", "excluded": "入院時食事代や保険適用外費用", "application": "健康福祉課で子育て支援医療証を申請"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/seikatsu/hoken-nenkin/453", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "村公式の現行子育て・保育情報で、病児・病後児保育の実施施設、対象年齢、料金、申込方法を確認できない。",
+      "details": {"confirmed": "保育所、一時保育、こども誰でも通園制度等の現行保育事業は公開されている", "unconfirmed": "病児保育または病後児保育の実施有無、対象施設、対象年齢、利用時間、料金、予約方法", "guidance": "健康福祉課へ現行の利用可否を確認する必要がある"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/kosodate/ninshin-syussan/68", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上児と第3子以降は保育料無料で、第2子には世帯状況・所得に応じた半額軽減を行う。",
+      "eligibility": {"minAgeMonths": 8, "maxAgeYears": 5},
+      "details": {"facilities": "鮭川保育所、こまどり保育所", "target": "生後8か月から満6歳までの乳幼児", "feeBasis": "0歳から2歳の第1子等は父母・扶養義務者の村民税課税状況に応じて決定", "freeCare": "課税状況や同時入所を問わず3歳以上児と第3子以降は無料", "secondChild": "第1子と第2子の同時入所時、または住民税所得割額77,100円以下の場合は第2子半額", "extension": "短時間認定児の延長保育は平日1回100円"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/kosodate/ninshin-syussan/68", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "村立小中学校の児童生徒の学校給食費を完全無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {"target": "鮭川村立小学校・中学校の児童生徒", "support": "保護者が負担していた学校給食費を村が負担し完全無償化", "start": "平成29年度から実施", "currentPublication": "村公式の現行学校教育ページに学校給食無償化事業として掲載", "application": "通常の在籍児童生徒は原則申請不要"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/topics/334", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "宿泊型・通所型・訪問型の産後ケアを無料で実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {"target": "鮭川村に住所があり、産後ケアを希望し医療行為を必要としない母子", "overnight": "産後2か月未満、山形県立新庄病院、最大4泊5日", "dayCare": "産後1年以内、山形県助産師会所属助産院、2回まで", "homeVisit": "産後1年以内、助産師が自宅訪問、2回まで", "fee": "無料", "application": "窓口で事前申請。宿泊型は原則利用希望日の7日前まで"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/kosodate/ninshin-syussan/1573", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後8か月から就学前児の一時保育と、未就園の生後8か月から満3歳未満児のこども誰でも通園制度を実施する。",
+      "eligibility": {"minAgeMonths": 8, "maxAgeYears": 5},
+      "details": {"facilities": "鮭川保育所、こまどり保育所", "temporaryTarget": "疾病、災害、事故、出産、冠婚葬祭等で家庭保育が一時的に困難な生後8か月から満6歳まで", "temporaryHours": "月曜から金曜8時30分から16時30分、第1・3・5土曜8時30分から11時", "temporaryFee": "1回2,000円", "temporaryApplication": "利用希望日の2週間前までに健康福祉課へ相談", "anyChildTarget": "保育所等に通っていない生後8か月から満3歳未満児", "anyChildLimit": "9時から16時の間で月10時間まで", "anyChildFee": "1時間300円"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/kosodate/ninshin-syussan/68", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度、子育て・移住・新婚世帯等の住宅リフォームに優遇補助率と上限額を適用する。",
+      "details": {"program": "令和8年度鮭川村住宅リフォーム総合支援事業", "target": "平成20年4月2日以降生まれの世帯員がいる子育て世帯、移住世帯、新婚世帯等", "wholeInsulation": "村内業者は工事費の3分の1・上限50万円、村外業者は4分の1・上限35万円", "windowRenovation": "村内業者は3分の1・上限30万円、村外業者は4分の1・上限15万円", "vacantHouse": "村内業者による空き家改修は3分の2・上限140万円。資材高騰対策上乗せ上限20万円あり", "application": "交付決定前に着工せず、農村整備課へ申請"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/seikatsu/jyutaku/1690", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "2026年地区別ごみ収集カレンダーと新庄もがみ地域ごみ分別表に従い、粗大ごみを指定日に排出する。",
+      "details": {"schedule": "2026ごみカレンダーを鮭川地区・大豊地区別に公開", "classification": "新庄もがみ地域ごみ分別表で粗大ごみを含む品目別処理方法を確認", "fee": "品目・搬入先等により有料となるため、カレンダーと分別表の現行料金を確認", "excluded": "家電リサイクル法対象品や塗料缶・農薬容器等は村の通常収集対象外", "guidance": "排出日・方法・料金は住民税務課危機管理係へ確認"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/seikatsu/gomi-recycle/1672", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、地震等の情報と避難所を掲載した全体・地区別防災ハザードマップを公開する。",
+      "details": {"map": "鮭川村防災ハザードマップ", "hazards": "洪水、土砂災害、地震、風水害等", "evacuation": "指定避難所等一覧と災害情報の入手方法を掲載", "areas": "全体図と地区別詳細図No.1からNo.8を公開", "preparedness": "警戒レベル、非常時持出品、家庭の防災チェック等も掲載"},
+      "source": {"url": "https://www.vill.sakegawa.yamagata.jp/seikatsu/bousai/64", "checkedAt": "2026-07-24"}
+    }
+  }
+}
