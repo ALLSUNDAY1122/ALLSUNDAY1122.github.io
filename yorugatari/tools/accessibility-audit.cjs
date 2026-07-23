@@ -34,7 +34,7 @@ async function open(page, pathname, ready, name, attempts = 10) {
 
 async function materialize(page) {
   await page.evaluate(async () => {
-    const deferred = Array.from(document.querySelectorAll('.card,.archive-section,.archive-item'));
+    const deferred = Array.from(document.querySelectorAll('.card,.archive-section,.archive-item,.pick,.guide-card,.faq article'));
     for (let index = 0; index < deferred.length; index += 4) {
       deferred[index].scrollIntoView({ block: 'center' });
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -155,6 +155,24 @@ async function auditArchive(page) {
   await structure(page, 'archive');
 }
 
+async function auditFiveMinute(page) {
+  const loaded = await open(page, '/5min-horror.html', async (target, attempt) => ({
+    ready: await target.locator('.pick').count() === 12 && await target.locator('.guide-card').count() === 6 && await target.locator('.faq article').count() === 3 && await target.locator('script[src*="analytics.js?v=20260723-003"]').count() === 1,
+    attempt,
+    picks: await target.locator('.pick').count(),
+    guides: await target.locator('.guide-card').count(),
+    faq: await target.locator('.faq article').count()
+  }), 'five-minute landing', 8);
+  if (!loaded) return;
+  await skipLink(page, 'five-minute landing');
+  await focusIndicator(page, '.pick', 'five-minute story pick');
+  await materialize(page);
+  await axe(page, 'five-minute landing');
+  await structure(page, 'five-minute landing');
+  const links = await page.locator('.pick').evaluateAll((items) => items.map((item) => item.getAttribute('href')));
+  record('five-minute landing: all 12 editorial picks have unique destinations', links.length === 12 && new Set(links).size === 12 && links.every(Boolean), links);
+}
+
 async function auditStory(page) {
   const loaded = await open(page, '/stories/spare-key-returned.html?utm_source=web_share&utm_medium=social&utm_campaign=onsite_share', async (target, attempt) => ({
     ready: await target.locator('.story-pagination a').count() === 3 && await target.locator('#shareButton').count() === 1 && await target.locator('script[src*="engagement.js?v=20260723-003"]').count() === 1,
@@ -190,7 +208,7 @@ async function auditStory(page) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.7' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.8' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
@@ -199,6 +217,7 @@ async function auditStory(page) {
   try {
     await auditTop(page);
     await auditArchive(page);
+    await auditFiveMinute(page);
     await auditStory(page);
     record('accessibility audit: no browser JavaScript errors', browserErrors.length === 0, browserErrors);
   } catch (error) {
