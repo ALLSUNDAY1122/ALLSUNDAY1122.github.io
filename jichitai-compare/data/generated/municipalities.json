@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1212,
+    "municipalityCount": 1215,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -53687,6 +53687,165 @@
       }
     },
     {
+      "code": "06302",
+      "prefectureCode": "06",
+      "prefecture": "山形県",
+      "name": "中山町",
+      "officialUrl": "https://www.town.nakayama.yamagata.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Bが中山町公式情報で対象9制度を調査し、7制度を確認済み、病児・病後児保育と令和8年度学校給食費の現行詳細を未確認として登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "新生児から高校卒業相当の年度末まで、保険診療の自己負担分を町が負担する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "中山町に住所がある新生児から18歳到達年度末までの子ども",
+            "coverage": "県内医療機関で医療証等を提示すると保険診療の窓口負担なし",
+            "outsidePrefecture": "県外受診等は一旦支払い後、申請により払い戻し",
+            "excluded": "健康保険が適用されない費用"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/soshiki/jumin_zeimu/jumin/129.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の現行子育て情報で、病児・病後児保育の実施施設、対象年齢、料金、申込方法を確認できない。",
+          "details": {
+            "confirmed": "子育てガイドブック、一時保育、こども誰でも通園制度等の案内は公開されている",
+            "unconfirmed": "病児保育または病後児保育の実施施設、対象、利用料、予約方法",
+            "guidance": "健康福祉課子育て支援グループへ現行の利用可否を確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/soshiki/kenkou_fukushi/kosodateshien/ChildRearingSupport/2483.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "令和8年度の保育所等利用を受け付け、0歳から2歳児の保育料は世帯の町民税額等に応じて算定し、国の幼児教育・保育無償化を適用する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facilities": "町立なかやま保育園、ぴーすこども園",
+            "application": "令和8年度利用申込書と保育を必要とする証明書等を提出",
+            "feeBasis": "0歳から2歳児は年齢と市区町村民税額等により算定",
+            "freeCare": "3歳から5歳児および市町村民税非課税世帯の0歳から2歳児は国制度の無償化対象",
+            "note": "町公式ページの掲載基準額表は令和7年度版で、制度改正時は変更される"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/soshiki/kenkou_fukushi/kosodateshien/HoikuenYouchien/2826.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "令和7年度の町立小中学校給食費無償化は確認できるが、令和8年度の継続内容を公式情報で確認できない。",
+          "details": {
+            "confirmed": "令和7年度は町立小中学校在籍児童生徒の給食費を保護者へ請求しない制度を実施",
+            "expiration": "令和7年度実施要綱は令和8年5月31日で失効",
+            "unconfirmed": "令和8年度の無償化継続、保護者負担額、町外通学者支援",
+            "guidance": "教育委員会教育課へ令和8年度の取扱いを確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/section/reiki/reiki_honbun/c416RG00001352.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "原則産後12か月までの母子を対象に、日帰り・宿泊・訪問型の産後ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "申請日・利用日に中山町に住所があり、産後ケアを希望し医療行為を必要としない母子",
+            "types": "日帰り型、宿泊型、訪問型",
+            "support": "母子の健康確認、授乳・沐浴・育児相談、乳房ケア等",
+            "visitFee": "訪問型は1回500円。双子の2人目は140円。非課税・生活保護世帯は無料",
+            "expansion": "令和8年4月から山形済生病院でも利用可能"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/soshiki/kenkou_fukushi/kosodateshien/ChildRearingSupport/1721.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から満3歳未満児が、就労要件を問わず月10時間まで利用できるこども誰でも通園制度を実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "保育所、幼稚園、認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+            "limit": "1か月10時間まで、1時間単位",
+            "fee": "1時間300円。生活保護世帯0円、非課税世帯60円、一定所得未満世帯90円",
+            "conditions": "保護者の就労要件を問わない",
+            "extraCost": "昼食代やおやつ代等の実費が必要な場合あり"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/soshiki/kenkou_fukushi/kosodateshien/ChildRearingSupport/3034.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯や町外からの移住世帯による住宅取得を支援し、条件に応じて最大50万円を補助する。",
+          "details": {
+            "program": "令和8年度中山町定住促進・住宅取得支援事業",
+            "target": "子育て世帯または町外からの移住世帯が町内で行う住宅取得",
+            "childcareAmount": "子育て世帯30万円",
+            "migrationAmount": "移住世帯30万円",
+            "combinedAmount": "子育て世帯かつ移住世帯は50万円",
+            "application": "住宅取得後、町の指定書類をまちづくり推進グループへ提出"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/soshiki/seisaku/machidukurisuishin/2056.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "有料粗大ごみは窓口で申し込み、搬入券を貼付して毎月第1・第3金曜日の朝8時までに自宅前へ出す。",
+          "details": {
+            "definition": "原則一辺1メートル以上1.8メートル未満、重量80キログラム以下のもの",
+            "application": "住民税務課または保健福祉センター窓口で申込み、料金を支払って搬入券を受け取る",
+            "schedule": "毎月第1・第3金曜日。朝8時までに自宅前へ排出",
+            "fees": "品目により500円、1,000円、2,000円",
+            "examples": "家具、ベッド、ソファー、自転車、ふとん、スキー等"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/material/files/group/6/121.pdf",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "最上川、須川、石子沢川等の洪水浸水想定区域、避難所等を掲載した洪水ハザードマップを公開する。",
+          "details": {
+            "flood": "最上川、須川、石子沢川等の浸水想定区域と浸水深を掲載",
+            "evacuation": "指定避難所、避難経路、緊急連絡先を掲載",
+            "landslide": "土砂災害警戒区域は町ハザードマップで確認可能",
+            "pond": "防災重点ため池マップも別途公開",
+            "gis": "町地図情報サイトで洪水、震度、断層帯、避難所等を閲覧可能"
+          },
+          "source": {
+            "url": "https://www.town.nakayama.yamagata.jp/soshiki/somu_kouho/kikikanri/1262.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "07201",
       "prefectureCode": "07",
       "prefecture": "福島県",
@@ -61271,6 +61430,184 @@
           "additionalSources": [
             {
               "url": "https://www.town.hanawa.fukushima.jp/page/page002157.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "07484",
+      "prefectureCode": "07",
+      "prefecture": "福島県",
+      "name": "鮫川村",
+      "officialUrl": "https://www.vill.samegawa.fukushima.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Aが対象9制度を鮫川村公式情報で調査し、7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして整理。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "こども医療費助成制度",
+            "target": "鮫川村に住所がある出生から18歳年度末までの子ども",
+            "support": "保険診療の一部負担金から付加給付等を除いた額を助成",
+            "application": "社会保険等加入者は受給資格登録を行い、受給資格証の交付を受ける",
+            "nationalHealthInsurance": "鮫川村国民健康保険加入者は原則として医療機関支払時に助成",
+            "excluded": "保険適用外費用、付加給付・高額療養費相当額等は対象外"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001642.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "村公式の子育て・保育・医療情報で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+          "details": {
+            "researchResult": "子育て支援制度、さめがわこどもセンター、一時預かり情報を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+            "caution": "広域利用を含む利用可否は住民福祉課またはこどもセンターへ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/page/page001694.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳以上と住民税非課税世帯の0～2歳児を無償化し、課税世帯は国基準の半額程度、第2子半額・第3子以降無料とする。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "さめがわこどもセンター",
+            "target": "1・2号認定の満3歳以上児、3号認定の生後6か月から満3歳未満児",
+            "nationalFree": "3歳以上児と住民税非課税世帯の0～2歳児は保育料無償化",
+            "taxableHouseholds": "課税世帯の0～2歳児は父母の村民税額を基準に算定し、村基準は国基準の半額程度",
+            "multipleChildren": "第2子は半額、第3子以降は無料",
+            "mealSupport": "給食費の副食費を無償化",
+            "busFee": "希望者の送迎バス利用料は月2,500円"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001652.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "1・2号認定幼児と村立小中学校の児童生徒の給食費を完全無償化する。",
+          "eligibility": {
+            "minAgeMonths": 36,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "1・2号認定を受ける幼児、鮫川小学校・鮫川中学校に在籍する児童生徒",
+            "support": "給食費を完全無償化",
+            "provider": "鮫川村学校給食センター",
+            "foodEducation": "村産農産物を優先する地産地消・食育を実施"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/ua.php?code=2542&now_type=1&type=1",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.samegawa.fukushima.jp/mobile/page/page000312.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後6か月未満の乳児と母親を対象に、助産師等による母体・乳児のケアと育児支援を行う。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "program": "産後ケア事業",
+            "target": "鮫川村に住所がある生後6か月未満の乳児と母親",
+            "services": "助産師等による母体の心身回復、乳児のケア、授乳・育児手技の指導と相談",
+            "application": "利用希望時は住民福祉課健康係へ相談",
+            "fee": "利用施設・類型等の現行条件は担当課へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/ua.php?code=2542&now_type=1&type=1",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "未就園児向け一時預かりの実施は確認できるが、令和8年度こども誰でも通園制度の施設・対象月齢・月上限・料金を確認できない。",
+          "details": {
+            "confirmed": "保育施設に入園していない子どもの一時預かりを実施",
+            "researchResult": "こども誰でも通園制度としての令和8年度利用者向け案内を確認できなかった",
+            "caution": "実施状況と利用条件はこどもセンターへ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/page/page001694.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "45歳未満の住宅取得者に基本額と移住・子育て・村内業者加算を交付し、移住者の新築は基本・移住加算で70万円から支援する。",
+          "details": {
+            "program": "鮫川村移住定住促進補助金",
+            "migrantNew": "45歳未満の移住者の新築住宅取得は基本30万円と移住者加算40万円",
+            "migrantUsed": "45歳未満の移住者の中古住宅取得は基本20万円と移住者加算40万円",
+            "residentNew": "45歳未満の村内定住者の新築住宅取得は基本40万円",
+            "childAddition": "15歳未満の子1人につき15万円加算",
+            "localContractor": "村内請負業者利用で10万円加算",
+            "application": "住宅取得後、必要書類を添えて申請し、事前相談を行う"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/page/page002217.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない粗大ごみ・多量ごみは、処理可能品目を確認して東白クリーンセンターへ直接搬入する。",
+          "details": {
+            "definition": "指定ごみ袋に入らないごみや集積所に出せない大型家庭ごみ",
+            "facility": "東白クリーンセンター",
+            "directCarry": "処理可能品目を施設へ確認した上で直接搬入",
+            "schedule": "令和8年度地区別ごみ収集日程表を公開",
+            "excluded": "家電リサイクル対象品、爆発物、農薬、汚泥、タイヤ、農機具、建築廃材等は集積所へ排出不可",
+            "caution": "搬入物によって受入不可となるため事前確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001722.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "大雨・洪水・土砂災害・地震・避難所等を掲載した防災マップと地域防災計画を公開する。",
+          "details": {
+            "map": "鮫川村防災マップ2023",
+            "coverage": "大雨・洪水、がけ崩れ・土石流等の土砂災害、地震、避難所・避難場所、防災情報",
+            "shelters": "指定緊急避難場所、指定避難所、地域避難所、福祉避難所を公開",
+            "plan": "令和5年3月一部改訂の地域防災計画を公開",
+            "guidance": "平時に危険区域、避難先、経路、家族の連絡方法を確認"
+          },
+          "source": {
+            "url": "https://www.vill.samegawa.fukushima.jp/page/page002671.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001632.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.samegawa.fukushima.jp/page/page000382.html",
               "checkedAt": "2026-07-24"
             }
           ]
@@ -93284,6 +93621,185 @@
           },
           "source": {
             "url": "https://www.town.miyashiro.lg.jp/0000025603.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "11464",
+      "prefectureCode": "11",
+      "prefecture": "埼玉県",
+      "name": "杉戸町",
+      "officialUrl": "https://www.town.sugito.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を杉戸町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "杉戸町に住所があり健康保険に加入する18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の自己負担分を助成し、県内対応医療機関では受給資格証等の提示により原則現物給付",
+            "procedure": "出生・転入時等に受給資格登録を行う。高校生年代は制度拡大に伴う登録が必要",
+            "excluded": "保険外費用、高額療養費・付加給付、他の公費医療、学校管理下の災害共済給付対象等"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/page/1026.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生の病児・病後児を医療機関運営施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "杉戸町病児保育事業",
+            "target": "保育所・幼稚園・小学校等に通い、病気または回復期で集団保育が困難かつ保護者の勤務等により家庭保育が困難な児童",
+            "facility": "病児保育室『とん ことり』",
+            "hours": "月曜日から土曜日の8時から18時。平日定員9人、土曜日3人、1回7日以内",
+            "fee": "5時間以上2,000円、5時間未満1,000円。生活保護世帯は申請により免除",
+            "procedure": "事前登録、医療機関受診と診療情報提供書、専用サイト等での予約が必要"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/site/youchien-hoikuen/2258.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "認可保育園・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "認可施設の対象児童は保育料全額、新制度未移行幼稚園や認可外施設等は制度上限まで無償化",
+            "upperLimits": "新制度未移行幼稚園は月25,700円、認可外等は3～5歳月37,000円、非課税世帯0～2歳月42,000円等",
+            "procedure": "施設利用申込や保育の必要性認定、施設等利用給付認定等が必要",
+            "excluded": "食材料費、通園送迎費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/site/youchien-hoikuen/1384.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は町立小学校の全児童と町立中学校の第2子以降の給食費を免除",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "町内在住で町立小学校に通う全児童の学校給食費を全額免除",
+            "juniorHigh": "町内在住で町立中学校に通う第2子以降の生徒の学校給食費を免除。第1子のみの中学生は対象外",
+            "amount": "小学校月額4,300円、中学校月額5,000円に相当する額",
+            "procedure": "保護者による申請・手続きは不要",
+            "condition": "生活保護の学校給食費に係る公的扶助を受けていないこと"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/site/kyouiku/26995.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・訪問・デイサービス型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "杉戸町に住民登録がある母親と赤ちゃん。訪問型は産後1年未満、宿泊・通所型は原則産後4か月未満で施設により対象月齢が異なる",
+            "types": "宿泊型、アウトリーチ（訪問）型、デイサービス（通所）型",
+            "limit": "3類型を合わせて7回まで。宿泊は初日・最終日を各1回として換算",
+            "fee": "課税世帯は宿泊1日5,400円、訪問初回1,400円・以後1,000円、通所3,000円。非課税世帯は半額、生活保護世帯は無料",
+            "support": "授乳・乳房ケア、沐浴等の育児相談、母子の健康確認、母親の休養支援"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/page/22254.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで高野台保育園で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "保育所・幼稚園・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで。未利用分の繰越不可",
+            "facility": "杉戸町立高野台保育園。午前9時から12時、午後13時から16時",
+            "fee": "1時間300円。生活保護世帯は300円、一定所得未満世帯・要支援家庭は200円の負担軽減"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/site/youchien-hoikuen/25166.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による20万円以上の住宅リフォーム工事費の5％を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "杉戸町に住民登録し、所有・居住する住宅へ今後5年以上居住予定で、町税滞納のない人",
+            "condition": "町内業者施工、税抜20万円以上、交付決定前未着工、年度の2月末までに完了届提出可能な工事",
+            "amount": "対象工事費の5％、上限10万円",
+            "procedure": "事前申請期間内に申請し、予算超過時は抽選。交付決定後に着工"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/page/25815.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを収集カレンダー・分別一覧に従い排出し、環境センターで処理",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "guide": "年度版のごみ収集カレンダーと分別50音順一覧表で粗大ごみの区分・収集方法を案内",
+            "facility": "杉戸町環境センターが家庭ごみを処理し、可燃性粗大ごみ切断設備等を設置",
+            "procedure": "品目ごとの区分・収集日・出し方を最新カレンダーで確認し、指定方法で排出または施設へ相談",
+            "excluded": "家電リサイクル法対象品や処理困難物等は通常の粗大ごみ収集対象外"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/page/18664.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・内水・地震等の複数ハザードマップと避難情報を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "最新の洪水ハザードマップ、内水浸水履歴マップ、地震ハザードマップを公開",
+            "risks": "利根川、江戸川、荒川、大落古利根川等の洪水、内水浸水、地震の揺れ・建物被害等",
+            "facilities": "避難所一覧、浸水深、避難時に役立つ情報、マイ・タイムライン等を掲載",
+            "support": "音訳版や避難所混雑情報サービス、防災情報配信も提供"
+          },
+          "source": {
+            "url": "https://www.town.sugito.lg.jp/life/1/1/1/",
             "checkedAt": "2026-07-24"
           }
         }
