@@ -1,16 +1,53 @@
 # 夜語り 外部流入獲得キット
 
-作成日：2026年7月23日
+更新日：2026年7月24日
 
 ## 運用ルール
 
-- 4本を同時に投稿せず、原則として1日1本ずつ投稿する。
+- 6本を同時に投稿せず、原則として1日1本ずつ投稿する。
+- まず「5分で読める12選」の2本を投稿し、その後に旧4本を使用する。
 - 投稿文と計測用URLは組み合わせを変更しない。
 - 投稿後24時間は削除・再投稿を避ける。
-- クリックが少なくても、最低7日または流入区分30件までは優劣を確定しない。
-- URLの `utm_` パラメータは検索順位用ではなく、夜語り内部の固定キャンペーンコードへ変換するために使用する。
+- 最低7日、または固定キャンペーン流入30件までは媒体の優劣を確定しない。
+- URLの `utm_` パラメータは検索順位用ではなく、夜語り内部の登録済み固定コードへ変換するために使用する。
 
-## 1日目：X／サイト全体
+## 優先1日目：X／5分で読める12選
+
+### 投稿文
+
+5分で読める怖い話を、12本だけ選びました。
+
+心霊、人怖、意味怖、ネット怪談、都市伝説、後味の悪い話。すべて一話完結・無料・登録不要です。
+
+眠る前に、ひとつだけ。
+
+#怖い話 #怪談 #短編ホラー
+
+### 計測用URL
+
+https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260724&utm_content=five_minute_12
+
+### 計測コード
+
+`launch-20260724-x-five-minute`
+
+## 優先2日目：Threads／5分で読める12選
+
+### 投稿文
+
+長いシリーズを追わず、今夜一話だけ読みたい人向けに、約5分で読める怖い話を12本選びました。
+
+幽霊だけでなく、人間、SNS、奇妙なルール、救いのない結末まで。すべて一話完結です。
+
+### 計測用URL
+
+https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260724&utm_content=five_minute_12
+
+### 計測コード
+
+`launch-20260724-threads-five-minute`
+
+## 3日目：X／サイト全体
 
 ### 投稿文
 
@@ -30,7 +67,7 @@ https://allsunday1122.github.io/yorugatari/?utm_source=x&utm_medium=social&utm_c
 
 `launch-20260723-x-top-100`
 
-## 2日目：X／最後のエレベーター
+## 4日目：X／最後のエレベーター
 
 ### 投稿文
 
@@ -50,7 +87,7 @@ https://allsunday1122.github.io/yorugatari/stories/last-elevator.html?utm_source
 
 `launch-20260723-x-last-elevator`
 
-## 3日目：Threads／合鍵は返却済み
+## 5日目：Threads／合鍵は返却済み
 
 ### 投稿文
 
@@ -68,7 +105,7 @@ https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_s
 
 `launch-20260723-threads-spare-key`
 
-## 4日目：LINE／あなたの経験で採用されました
+## 6日目：LINE／あなたの経験で採用されました
 
 ### 送信用文面
 
@@ -88,9 +125,7 @@ https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.ht
 
 ## サイト内共有
 
-各作品の「共有する」ボタンから渡されるURLには、次の固定コードを使う。
-
-`onsite-share`
+各作品の「共有する」ボタンから渡されるURLには、固定コード `onsite-share` を使用する。
 
 これは作品名、検索語、相手の情報を保存せず、サイト内共有リンクから再訪問が発生した回数だけを集計する。
 
@@ -98,5 +133,5 @@ https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.ht
 
 - 1投稿あたり10流入未満：参考値として継続観測する。
 - 1投稿あたり10流入以上：タイトルと投稿文の組み合わせを再利用候補にする。
-- 4本合計30流入以上：媒体・作品別比較を開始する。
+- 6本合計30流入以上：媒体・着地ページ別の比較を開始する。
 - 作品閲覧100件・7日分の観測前は、トップページの並び順を変えない。
