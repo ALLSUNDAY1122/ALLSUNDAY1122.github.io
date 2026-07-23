@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07547",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "浪江町",
+  "officialUrl": "https://www.town.namie.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を浪江町公式情報で調査し、7制度をverified、2制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担金を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "浪江町に住所がある0歳から18歳年度末までの子ども",
+        "support": "入院・通院・調剤の保険診療自己負担金を助成",
+        "application": "健康保険の種類等に応じて受給資格登録または助成申請が必要",
+        "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/soshiki/12/236.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育について、実施施設・対象年齢・料金・予約方法を町公式情報で確認できない。",
+      "details": {
+        "researchResult": "幼稚園・保育所・保育サービス、教育総務課、子育て支援の各ページを確認したが、現行の病児・病後児保育利用案内を確認できなかった",
+        "availableAlternative": "保護者の疾病・出産・介護等に対応する一時預かりを浪江にじいろこども園で実施",
+        "caution": "広域利用を含む現行条件は教育総務課子育て支援係へ確認が必要"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/life/14/36/119/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児の幼児教育・保育利用料を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeToFive": "満3歳後の最初の4月1日から就学前までの保育所・認定こども園等の利用料を無償化",
+        "zeroToTwo": "住民税非課税世帯の0～2歳児の利用料を無償化",
+        "otherServices": "保育の必要性認定等を満たす場合、認可外保育、一時預かり、病児保育、ファミリーサポートも国上限内で無償化対象",
+        "facility": "浪江にじいろこども園等",
+        "excludedCosts": "給食費、送迎費、行事費等の実費は原則対象外"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/soshiki/12/22452.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "令和8年度就学援助で学校給食費を実費援助することは確認できるが、一般世帯の給食費負担・無償化状況を確定できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "confirmedSupport": "経済的理由で就学困難な浪江町在住小中学生の保護者に、学校給食費を実費援助",
+        "payment": "就学先学校への実費調査により決定し、原則年3回支給",
+        "researchResult": "町内校を含む一般世帯の令和8年度給食費額、町独自補助、完全無償化の有無を確認できなかった",
+        "caution": "現行負担額は学校教育係へ確認が必要"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/soshiki/12/11088.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "浪江町に住民票がある1歳未満の乳児と母親を対象に、宿泊・日帰り・訪問型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "浪江町産後ケア事業",
+        "target": "浪江町に住民票がある1歳未満の乳児と母親で、産後の体調・育児・休息等に不安があり、医療行為を必要としない方",
+        "types": "宿泊ケア、日帰りケア、訪問ケア",
+        "services": "育児指導、乳房ケア、授乳指導、母親の心身ケア、生活相談等",
+        "application": "利用前に浪江町役場健康係へ申請",
+        "fee": "利用類型・施設・世帯区分により異なるため令和8年度案内で確認"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/soshiki/6/43840.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、月10時間まで1時間300円で利用でき、浪江町民は当分の間免除される。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "浪江町乳児等通園支援事業（こども誰でも通園制度）",
+        "target": "保育所、幼稚園、認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで",
+        "fee": "1時間300円。子どもの住民票が浪江町の場合は当分の間免除",
+        "facility": "浪江にじいろこども園",
+        "application": "総合支援システムまたは書面で利用認定を申請し、認定後に初回面談・予約"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/soshiki/12/41642.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "高校卒業までの子どもと町内賃貸住宅に同居する子育て世帯に、令和8年度家賃負担額の2分の1以内を補助する。",
+      "details": {
+        "program": "浪江町子育て支援家賃補助金",
+        "target": "浪江町に住民登録があり、高校卒業までの子どもと町内賃貸住宅に同居・養育し、家賃を支払う契約者",
+        "support": "令和8年度に支払った家賃から勤務先住宅手当等を控除した額の2分の1以内",
+        "excluded": "社宅・官舎・寮、2親等以内の親族所有住宅、他の公的家賃補助との重複は対象外",
+        "additionalSupport": "移住者住宅取得補助、帰還促進強化事業、個人住宅再建支援等も実施"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/soshiki/12/19831.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.namie.fukushima.jp/soshiki/37/43456.html", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定ごみ袋に入らない粗大ごみは、北部衛生センターへ持ち込むか、南部衛生センターへ予約して回収を依頼する。",
+      "details": {
+        "definition": "指定ごみ袋に入らない布団、自転車、家具、浴槽、畳、物干し、こたつ、対象外家電を除く家電製品等",
+        "directCarry": "北部衛生センターへ持込み",
+        "collection": "南部衛生センターへ回収依頼。事前予約が必要",
+        "placement": "粗大ごみはごみステーションへ排出不可",
+        "excluded": "家電リサイクル対象品、パソコン、建築廃材、処理困難物等は専門業者等へ依頼"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/soshiki/3/29578.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "令和8年3月改訂の防災ハザードマップと、ため池・内水等のハザードマップを公開する。",
+      "details": {
+        "map": "浪江町防災ハザードマップ（令和8年3月改訂）",
+        "coverage": "津波浸水想定、洪水、土砂災害、避難場所・避難経路等",
+        "ponds": "防災重点農業用ため池28か所の浸水範囲・深さ・到達時間・避難施設を公開",
+        "inlandWater": "内水氾濫の浸水想定区域を掲載する内水ハザードマップを公開",
+        "guidance": "平時に危険箇所、避難経路、避難場所を確認"
+      },
+      "source": {"url": "https://www.town.namie.fukushima.jp/site/bosai/18908.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.town.namie.fukushima.jp/site/bosai/26668.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.town.namie.fukushima.jp/site/bosai/40825.html", "checkedAt": "2026-07-24"}
+      ]
+    }
+  }
+}
