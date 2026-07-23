@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07521",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "三春町",
+  "officialUrl": "https://www.town.miharu.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を三春町公式情報で調査し、8制度をverified、学校給食費をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療分の自己負担を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子育て支援医療費助成制度",
+        "target": "三春町に住所があり、社会保険または三春町国民健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "病気やけがに係る保険診療分の自己負担を助成",
+        "application": "社会保険加入者は受給資格登録が必要。三春町国民健康保険加入者は原則申請不要",
+        "payment": "対応医療機関では受給資格証等の提示により現物給付。対象外の場合は償還払い",
+        "excluded": "保険適用外費用、高額療養費・付加給付等は制度条件により調整"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/25/kosodateshien-iryohi-joseiseido.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気の治療中または回復期にある生後6か月から小学6年生までを、町外2施設で1日2,000円で預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "program": "三春町病児・病後児保育事業",
+        "target": "病気の治療中または回復期で、保護者の就労等により家庭保育が困難な子ども",
+        "facilities": "菊池医院『らびっと』は生後6か月から小学6年生、星の森保育園は生後6か月から就学前まで",
+        "fee": "1日2,000円。生活保護世帯・町民税非課税世帯は免除",
+        "hours": "らびっとは平日8時30分～18時、土曜8時30分～15時。星の森保育園は平日8時30分～17時30分",
+        "application": "施設へ予約し、施設ごとの利用申込・登録手続きを行う"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/25/miharumachi-bixyouzi-hoiku.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等は幼児教育・保育無償化の対象となり、課税世帯の0～2歳児は住民税所得割額等に応じて保育料を算定する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "target": "三春町内の保育所・認定こども園等を利用する子ども",
+        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は保育料無償化対象",
+        "taxableUnderThree": "課税世帯の0～2歳児は保護者の住民税所得割額と保育必要量に応じて算定",
+        "multipleChildren": "多子世帯等による保育料軽減措置あり",
+        "excludedCosts": "給食費、預かり・延長保育料、教材費、保護者会費等の実費は施設・認定区分により別途"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/25/enjibosyuu.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "低所得世帯向け就学援助で学校給食費が対象となることは確認できるが、令和8年度の一般世帯の給食費額・無償化状況を公式ページで確定できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "confirmedSupport": "生活保護・町民税非課税等の認定基準に該当する世帯は、就学援助制度で学校給食費が援助対象",
+        "currentOperation": "町教育課が学校給食業務を所管し、給食用食材の検査結果を公表",
+        "researchResult": "一般世帯の令和8年度給食費単価、徴収額、町独自補助・完全無償化の有無を現行公式ページで確認できなかった",
+        "caution": "現行負担額は教育課学校教育グループへ確認が必要"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/11/05-0101gakkou_1.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "1歳未満の赤ちゃんと母親を対象に、宿泊・日帰り・訪問型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "令和8年度三春町産後ケア事業",
+        "target": "産後ケアを必要とする1歳未満の赤ちゃんと母親",
+        "types": "宿泊型、デイサービス型、訪問型",
+        "usageLimit": "宿泊型は最大6泊7日、デイサービス型は最大7日、訪問型は最大7回",
+        "facilities": "町が案内する医療機関・助産師会実施施設",
+        "application": "希望施設へ予約後、子育て支援課へ利用申請",
+        "fee": "施設・対象月齢・サービス区分により異なるため、令和8年度一覧で確認"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/25/sango-kea.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで1時間300～500円で利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "三春町乳児等通園支援事業（こども誰でも通園制度）",
+        "target": "三春町在住で、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "子ども1人につき月10時間まで。未利用時間の翌月繰越不可",
+        "fee": "1時間300円～500円。実施施設により異なり、世帯状況による減免あり",
+        "facilities": "町内5施設の利用定員の空き枠を活用",
+        "application": "認定申請、施設面談、予約等の手続きが必要"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/25/entry_5.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内業者を利用した住宅新築に基本20万円、子ども・町外移住加算を含め町奨励金最大40万円を交付する。",
+      "details": {
+        "program": "令和8年度三春町定住促進住宅取得奨励金",
+        "target": "町内建築業者を利用して自己所有住宅を新築し、5年以上居住する等の要件を満たす方",
+        "base": "20万円（うち3万円分はプリペイドカード）",
+        "childAddition": "18歳以下の子1人につき10万円加算",
+        "migrantAddition": "町外からの移住者は10万円加算",
+        "maximum": "町奨励金の基本・加算合計上限40万円。県制度該当時は最大57万円を追加加算",
+        "deadline": "令和9年3月26日。事前相談は原則令和8年12月末まで"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/8/jyutakusyutoku.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは清掃センターへの直接搬入または月1回・予約制の戸別収集を利用できる。",
+      "details": {
+        "directCarry": "三春町清掃センターへ直接搬入。家庭系ごみは10kg当たり50円",
+        "collection": "毎月最終木曜日に事前予約制の戸別収集。12月は変更の場合あり",
+        "fee": "縦・横・高さの合計が2m超は1点1,000円、2m以下は1点500円",
+        "limit": "1回5点まで、1日20件を上限",
+        "deadline": "原則、収集日の前週金曜日までに住民課または清掃センターへ電話予約",
+        "preparation": "収集日の朝までに玄関外へ搬出し、対象品すべてに『粗大ごみ』の貼り紙を付ける"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/4/entry_3.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・避難所等を掲載した冊子版・Web版防災ハザードマップを公開する。",
+      "details": {
+        "maps": "三春町防災ハザードマップ、三春町防災マップWeb版、マイ避難ノート",
+        "coverage": "洪水浸水想定、土砂災害警戒区域、指定避難所・地区避難所等",
+        "additionalInformation": "防災行政無線、気象庁、地域防災計画等へのリンクを掲載",
+        "guidance": "警戒レベル、避難先、避難経路を平時に確認"
+      },
+      "source": {"url": "https://www.town.miharu.fukushima.jp/soshiki/2/saigai-taisaku.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
