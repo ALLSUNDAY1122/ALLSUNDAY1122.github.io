@@ -1,0 +1,148 @@
+name: Coordinator B Central West Delta Temp
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  release:
+    if: github.head_ref == 'coord/central-west-delta-20260724-c' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/central-west-delta-20260724-c
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main:refs/remotes/origin/main
+          git fetch origin region/central:refs/remotes/origin/region/central
+          git fetch origin region/west:refs/remotes/origin/region/west
+
+      - name: Import fixed regional delta
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { execFileSync } = require('child_process');
+          const root = process.cwd();
+          const project = path.join(root, 'jichitai-compare');
+          const serviceIds = JSON.parse(fs.readFileSync(path.join(project, 'data/service-definitions.json'), 'utf8')).services.map((item) => item.id);
+          const timestamp = '2026-07-24T05:35:00+09:00';
+          const targets = [
+            { code: '28586', prefectureCode: '28', ref: 'origin/region/central', region: 'central', sourcePullRequestNumber: 1773 },
+            { code: '45205', prefectureCode: '45', ref: 'origin/region/west', region: 'west', sourcePullRequestNumber: 1782 }
+          ];
+          const git = (args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
+          const showJson = (ref, repoPath) => JSON.parse(git(['show', `${ref}:${repoPath}`]));
+          const writeJson = (repoPath, value) => {
+            const full = path.join(root, repoPath);
+            fs.mkdirSync(path.dirname(full), { recursive: true });
+            fs.writeFileSync(full, `${JSON.stringify(value, null, 2)}\n`);
+          };
+          const progress = JSON.parse(fs.readFileSync(path.join(project, 'operations/progress.json'), 'utf8'));
+          if (progress.registeredMunicipalities !== 1277) throw new Error(`基点の公開自治体数が変化しました: ${progress.registeredMunicipalities}`);
+          const manifestItems = [];
+          for (const target of targets) {
+            const municipalityPath = `jichitai-compare/data/municipalities/${target.prefectureCode}/${target.code}.json`;
+            const taskPath = `jichitai-compare/operations/tasks/${target.code}.json`;
+            try {
+              execFileSync('git', ['cat-file', '-e', `origin/main:${municipalityPath}`], { stdio: 'ignore' });
+              throw new Error(`${target.code}: mainに既に存在します`);
+            } catch (error) {
+              if (String(error.message).includes('mainに既に存在')) throw error;
+            }
+            const municipality = showJson(target.ref, municipalityPath);
+            const sourceTask = showJson(target.ref, taskPath);
+            const services = serviceIds.map((id) => municipality.services?.[id]);
+            if (services.some((service) => !service || !['verified', 'unavailable'].includes(service.status))) throw new Error(`${target.code}: 9制度が未完了です`);
+            municipality.status = 'verified';
+            municipality.updatedAt = '2026-07-24';
+            const verifiedCount = services.filter((service) => service.status === 'verified').length;
+            const unavailableCount = services.filter((service) => service.status === 'unavailable').length;
+            const task = {
+              ...sourceTask,
+              status: 'merged',
+              currentService: null,
+              nextServiceIndex: serviceIds.length,
+              completedServices: [...serviceIds],
+              verifiedCount,
+              researchingCount: 0,
+              unavailableCount,
+              needsMediumReviewCount: 0,
+              pullRequestNumber: null,
+              lastCheckedAt: '2026-07-24',
+              lastUpdatedAt: timestamp,
+              lastUpdatedBy: '統括B全国差分統合',
+              officialSources: [...new Set(services.map((service) => service.source?.url).filter((url) => /^https:\/\//.test(url ?? ''))) ],
+              blockers: []
+            };
+            writeJson(municipalityPath, municipality);
+            writeJson(taskPath, task);
+            manifestItems.push({
+              region: target.region,
+              team: task.assignedTeam,
+              code: target.code,
+              name: municipality.name,
+              prefecture: municipality.prefecture,
+              mode: 'add',
+              verifiedCount,
+              unavailableCount,
+              sourcePullRequestNumber: target.sourcePullRequestNumber
+            });
+          }
+          writeJson('jichitai-compare/operations/control/coord-b-delta-20260724-c.json', {
+            schemaVersion: '1.0.0',
+            createdAt: timestamp,
+            baseMainSha: git(['rev-parse', 'origin/main']),
+            centralSha: git(['rev-parse', 'origin/region/central']),
+            westSha: git(['rev-parse', 'origin/region/west']),
+            previousPublishedMunicipalities: 1277,
+            addedMunicipalities: 2,
+            updatedMunicipalities: 0,
+            expectedPublishedMunicipalities: 1279,
+            municipalities: manifestItems,
+            excludedCount: 0,
+            excluded: []
+          });
+          NODE
+
+      - name: Generate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          node <<'NODE'
+          const fs = require('fs');
+          const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
+          if (progress.registeredMunicipalities !== 1279) throw new Error(`公開自治体数が想定外です: ${progress.registeredMunicipalities}`);
+          if (progress.completedServices !== 11511) throw new Error(`完了制度数が想定外です: ${progress.completedServices}`);
+          if (progress.needsMediumReviewServices !== 0 || progress.needsRevisionServices !== 0 || progress.needsCoordinatorServices !== 0 || progress.blockedServices !== 0) throw new Error('未完了状態が残っています');
+          let html = fs.readFileSync('index.html', 'utf8');
+          html = html.replace(/\d+自治体・9制度/u, '1279自治体・9制度');
+          fs.writeFileSync('index.html', html);
+          NODE
+          npm run validate:generated
+
+      - name: Commit release
+        run: |
+          git add \
+            jichitai-compare/data/municipalities/28/28586.json \
+            jichitai-compare/operations/tasks/28586.json \
+            jichitai-compare/data/municipalities/45/45205.json \
+            jichitai-compare/operations/tasks/45205.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/index.html \
+            jichitai-compare/operations/control/coord-b-delta-20260724-c.json
+          git commit -m "release: 新温泉町・小林市を1279自治体へ反映"
+          git push origin HEAD:coord/central-west-delta-20260724-c
