@@ -173495,7 +173495,7 @@
       "name": "有田川町",
       "officialUrl": "https://www.town.aridagawa.lg.jp/",
       "status": "verified",
-      "summary": "有田川町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児保育、保育料無償化、学校給食、産後ケア、一時保育、住宅新築支援などを記録。",
+      "summary": "有田川町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児保育、保育料無償化、学校給食、産後ケア、こども誰でも通園制度・一時預かり、住宅新築支援などを記録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -173614,24 +173614,39 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "町内在住の生後6か月から就学前までの未就園児を、子育て支援センターで一時的に預かる。",
+          "summary": "未就園の生後6か月から満3歳未満を対象とするこども誰でも通園制度と、生後6か月から就学前までの一時預かりを地域子育て支援センターで実施する。",
           "eligibility": {
             "minAgeMonths": 6,
-            "maxAgeYears": 5
+            "maxAgeYears": 3
           },
           "details": {
-            "target": "町内在住で保育所・幼稚園・認定こども園等に在籍していない生後6か月から就学前までの児童",
-            "facility": "有田川町子育て支援センター",
-            "hours": "平日8時30分から17時、1日最大8時間",
-            "fullDayFee": "1日2,000円",
-            "halfDayFee": "4時間未満1,000円",
-            "procedure": "事前登録し、原則利用前日までに予約。1か月前から予約可能",
-            "capacity": "空き状況や受入可否は施設へ確認"
+            "anyoneUseProgram": "こども誰でも通園制度（乳児等通園支援事業）",
+            "anyoneUseTarget": "保育所等に通っていない生後6か月から満3歳未満。認可外保育施設利用児は対象",
+            "anyoneUseExcluded": "保育所、認定こども園、小規模保育、家庭的保育、事業所内保育、居宅訪問型保育、企業主導型保育等の利用児は対象外",
+            "anyoneUseLimit": "1人あたり月10時間まで、1時間単位、翌月繰越不可",
+            "anyoneUseFee": "1時間300円",
+            "anyoneUseReducedFee": "生活保護世帯は無料、市町村民税所得割合算額77,101円未満の世帯等は1時間100円",
+            "anyoneUseFacility": "地域子育て支援センター内専用室（下津野245番地1）",
+            "anyoneUseHours": "月曜日から金曜日の8時30分～11時30分、14時～16時",
+            "anyoneUseMeals": "給食・おやつ等の提供なし",
+            "anyoneUseProcedure": "総合支援システムで認定申請、初回面談、予約を行う",
+            "temporaryProgram": "一時預かり",
+            "temporaryTarget": "町内在住を優先し、保育所・幼稚園・認定こども園等に在籍していない生後6か月から就学前まで。里帰り中・町外の児童も利用可能",
+            "temporaryHours": "平日8時30分から17時、1日最大8時間",
+            "temporaryFullDayFee": "1日2,000円",
+            "temporaryHalfDayFee": "4時間未満1,000円",
+            "temporaryProcedure": "年度ごとに事前登録し、原則利用前日までに予約。1か月前から予約可能"
           },
           "source": {
-            "url": "https://www.town.aridagawa.lg.jp/top/kurashi_info/ninshin/hoikushisetsu/3947.html",
-            "checkedAt": "2026-07-23"
-          }
+            "url": "https://www.town.aridagawa.lg.jp/top/kakuka/kanaya/1/2/3/9883.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aridagawa.lg.jp/top/kurashi_info/ninshin/hoikushisetsu/3947.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
