@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T09:16:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T09:49:00+09:00",
+  "status": "ci_pending",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 84,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": null,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "code": "04401",
+    "name": "松島町",
+    "stage": "pr_open"
+  },
+  "workingBranch": "data/04401-matsushima",
+  "pullRequestNumber": 1147,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -44,5 +48,5 @@
     "04362"
   ],
   "blocked": [],
-  "nextAction": "松島町（04401）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "PR #1147を最新region/northへ再適用。CI・競合・変更ファイルを再確認し、成功後に地方統合する。"
 }
