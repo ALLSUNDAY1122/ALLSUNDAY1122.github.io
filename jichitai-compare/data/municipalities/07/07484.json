@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07484",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "鮫川村",
+  "officialUrl": "https://www.vill.samegawa.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を鮫川村公式情報で調査し、7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "こども医療費助成制度",
+        "target": "鮫川村に住所がある出生から18歳年度末までの子ども",
+        "support": "保険診療の一部負担金から付加給付等を除いた額を助成",
+        "application": "社会保険等加入者は受給資格登録を行い、受給資格証の交付を受ける",
+        "nationalHealthInsurance": "鮫川村国民健康保険加入者は原則として医療機関支払時に助成",
+        "excluded": "保険適用外費用、付加給付・高額療養費相当額等は対象外"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001642.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "村公式の子育て・保育・医療情報で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "子育て支援制度、さめがわこどもセンター、一時預かり情報を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "caution": "広域利用を含む利用可否は住民福祉課またはこどもセンターへ確認が必要"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/page/page001694.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上と住民税非課税世帯の0～2歳児を無償化し、課税世帯は国基準の半額程度、第2子半額・第3子以降無料とする。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "facility": "さめがわこどもセンター",
+        "target": "1・2号認定の満3歳以上児、3号認定の生後6か月から満3歳未満児",
+        "nationalFree": "3歳以上児と住民税非課税世帯の0～2歳児は保育料無償化",
+        "taxableHouseholds": "課税世帯の0～2歳児は父母の村民税額を基準に算定し、村基準は国基準の半額程度",
+        "multipleChildren": "第2子は半額、第3子以降は無料",
+        "mealSupport": "給食費の副食費を無償化",
+        "busFee": "希望者の送迎バス利用料は月2,500円"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001652.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "1・2号認定幼児と村立小中学校の児童生徒の給食費を完全無償化する。",
+      "eligibility": {"minAgeMonths": 36, "maxAgeYears": 15},
+      "details": {
+        "target": "1・2号認定を受ける幼児、鮫川小学校・鮫川中学校に在籍する児童生徒",
+        "support": "給食費を完全無償化",
+        "provider": "鮫川村学校給食センター",
+        "foodEducation": "村産農産物を優先する地産地消・食育を実施"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/ua.php?code=2542&now_type=1&type=1", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.samegawa.fukushima.jp/mobile/page/page000312.html", "checkedAt": "2026-07-24"}]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後6か月未満の乳児と母親を対象に、助産師等による母体・乳児のケアと育児支援を行う。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア事業",
+        "target": "鮫川村に住所がある生後6か月未満の乳児と母親",
+        "services": "助産師等による母体の心身回復、乳児のケア、授乳・育児手技の指導と相談",
+        "application": "利用希望時は住民福祉課健康係へ相談",
+        "fee": "利用施設・類型等の現行条件は担当課へ確認"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/ua.php?code=2542&now_type=1&type=1", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "未就園児向け一時預かりの実施は確認できるが、令和8年度こども誰でも通園制度の施設・対象月齢・月上限・料金を確認できない。",
+      "details": {
+        "confirmed": "保育施設に入園していない子どもの一時預かりを実施",
+        "researchResult": "こども誰でも通園制度としての令和8年度利用者向け案内を確認できなかった",
+        "caution": "実施状況と利用条件はこどもセンターへ確認が必要"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/page/page001694.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "45歳未満の住宅取得者に基本額と移住・子育て・村内業者加算を交付し、移住者の新築は基本・移住加算で70万円から支援する。",
+      "details": {
+        "program": "鮫川村移住定住促進補助金",
+        "migrantNew": "45歳未満の移住者の新築住宅取得は基本30万円と移住者加算40万円",
+        "migrantUsed": "45歳未満の移住者の中古住宅取得は基本20万円と移住者加算40万円",
+        "residentNew": "45歳未満の村内定住者の新築住宅取得は基本40万円",
+        "childAddition": "15歳未満の子1人につき15万円加算",
+        "localContractor": "村内請負業者利用で10万円加算",
+        "application": "住宅取得後、必要書類を添えて申請し、事前相談を行う"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/page/page002217.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない粗大ごみ・多量ごみは、処理可能品目を確認して東白クリーンセンターへ直接搬入する。",
+      "details": {
+        "definition": "指定ごみ袋に入らないごみや集積所に出せない大型家庭ごみ",
+        "facility": "東白クリーンセンター",
+        "directCarry": "処理可能品目を施設へ確認した上で直接搬入",
+        "schedule": "令和8年度地区別ごみ収集日程表を公開",
+        "excluded": "家電リサイクル対象品、爆発物、農薬、汚泥、タイヤ、農機具、建築廃材等は集積所へ排出不可",
+        "caution": "搬入物によって受入不可となるため事前確認が必要"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001722.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "大雨・洪水・土砂災害・地震・避難所等を掲載した防災マップと地域防災計画を公開する。",
+      "details": {
+        "map": "鮫川村防災マップ2023",
+        "coverage": "大雨・洪水、がけ崩れ・土石流等の土砂災害、地震、避難所・避難場所、防災情報",
+        "shelters": "指定緊急避難場所、指定避難所、地域避難所、福祉避難所を公開",
+        "plan": "令和5年3月一部改訂の地域防災計画を公開",
+        "guidance": "平時に危険区域、避難先、経路、家族の連絡方法を確認"
+      },
+      "source": {"url": "https://www.vill.samegawa.fukushima.jp/page/page002671.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.vill.samegawa.fukushima.jp/sp/page/page001632.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.vill.samegawa.fukushima.jp/page/page000382.html", "checkedAt": "2026-07-24"}
+      ]
+    }
+  }
+}
