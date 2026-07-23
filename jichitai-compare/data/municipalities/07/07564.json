@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07564",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "飯舘村",
+  "officialUrl": "https://www.vill.iitate.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を飯舘村公式情報で調査し、4制度をverified、5制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、医療費の保険診療自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児医療費助成",
+        "target": "飯舘村に住所がある0歳から18歳年度末までの子ども",
+        "support": "保険診療の個人負担分を助成",
+        "nationalHealthInsurance": "村国民健康保険加入者は原則として医療機関窓口の支払いなし",
+        "socialInsurance": "社会保険加入者は受給資格登録等の手続きが必要"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/soshiki/2/35.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育について、実施施設・対象年齢・料金・予約方法を村公式情報で確認できない。",
+      "details": {
+        "researchResult": "健康福祉課、子育て支援、教育委員会、こども園の各公式ページを確認したが、現行の利用者向け案内を確認できなかった",
+        "caution": "広域利用を含む現行条件は健康福祉課または教育委員会へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/soshiki/11/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "までいの里のこども園は保育料を全額無料とし、制服代・教材代・給食費等も無料としている。",
+      "eligibility": {"minAgeMonths": 4, "maxAgeYears": 5},
+      "details": {
+        "facility": "飯舘村立までいの里のこども園",
+        "target": "生後4か月から小学校就学前まで",
+        "fee": "保育料は全額無料",
+        "additionalCosts": "制服代・教材代・給食費等も無料",
+        "hours": "教育時間は平日8時30分～13時10分、保育時間は月～土曜7時～18時。延長保育あり"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/soshiki/6/3700.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "義務教育学校で給食を提供し教育費の多くを村が補助することは確認できるが、令和8年度の一般世帯の学校給食費負担・無償化状況を確定できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "school": "いいたて希望の里学園",
+        "confirmedOperation": "施設内で調理した給食を提供し、食材の放射性物質検査を実施",
+        "confirmedSupport": "認定こども園入園から義務教育学校卒業まで、一般的な教材費等の教育費の多くを村が補助",
+        "researchResult": "令和8年度の給食費単価、保護者負担額、全額無償化の有無を公式情報で確認できなかった",
+        "caution": "現行負担額は教育委員会へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/site/iju/3903.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "妊娠・出産・乳幼児健診等の支援は確認できるが、令和8年度産後ケア事業の対象月齢・利用類型・料金を確定できない。",
+      "details": {
+        "confirmedSupport": "妊産婦健康診査、母子手帳、乳幼児健診、子ども家庭総合支援拠点等を案内",
+        "researchResult": "宿泊・日帰り・訪問型産後ケアの現行利用者向け案内を村公式サイトで確認できなかった",
+        "caution": "実施状況・利用条件は健康福祉課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/life/3/11/", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "令和8年度こども誰でも通園制度は実施されているが、公式ページから利用料金を確定できない。",
+      "details": {
+        "program": "飯舘村こども誰でも通園制度",
+        "confirmedTarget": "村内在住で保育所等に在籍していない生後6か月から満3歳未満の子ども",
+        "usageLimit": "月10時間まで、1回1時間から",
+        "facility": "までいの里のこども園",
+        "employmentRequirement": "なし",
+        "researchResult": "令和8年度の利用料金・減免条件を取得できなかった",
+        "caution": "利用料金と予約条件は教育委員会またはこども園へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/soshiki/6/14512.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://iitate.schoolweb.ne.jp/0780001/download/document/18255569", "checkedAt": "2026-07-24"}]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "村外から移住・定住する方に、住宅新築最大500万円、空き家購入最大200万円、住宅修繕最大100万円を補助する。",
+      "details": {
+        "program": "飯舘村移住定住支援事業補助金",
+        "target": "2011年3月11日に村に住所がなく、2017年3月31日以降に村へ移住し定住意思がある等の要件を満たす方",
+        "newConstruction": "住宅新築は最大500万円",
+        "usedHousing": "定住用空き家購入は最大200万円",
+        "renovation": "購入した空き家等の修繕は最大100万円",
+        "additionalSupport": "県外からの移住者は福島県12市町村移住支援金の対象となる場合あり",
+        "application": "事業着手前に村または移住サポートセンターへ相談"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/site/iju/3782.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "unavailable",
+      "summary": "粗大ごみの受入・有料化は確認できるが、令和8年度の受入日・料金・申込条件を公式情報で確定できない。",
+      "details": {
+        "confirmedPastOperation": "村広報で粗大ごみの受入および有料化、令和7年11月の受入案内を確認",
+        "researchResult": "令和8年度の一般家庭向け受入日程、料金、対象品目、申込方法を確認できなかった",
+        "caution": "現行の処分方法は住民課住民係へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/site/kouhou/13818.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・洪水・ため池・避難所等を掲載した防災ハザードマップと、防災アプリ・メール配信を提供する。",
+      "details": {
+        "map": "飯舘村防災ハザードマップ",
+        "coverage": "土砂災害、洪水、ため池、避難所、災害時の行動等",
+        "additionalMaps": "岩部ダムハザードマップ、農業用ため池ハザードマップを公開",
+        "app": "飯舘村防災アプリで災害・避難情報をプッシュ通知",
+        "mail": "災害用メール配信サービスも運用",
+        "guidance": "自宅周辺の危険区域と避難経路を平時に確認"
+      },
+      "source": {"url": "https://www.vill.iitate.fukushima.jp/soshiki/1/9817.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.vill.iitate.fukushima.jp/soshiki/1/14328.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.vill.iitate.fukushima.jp/life/1/4/", "checkedAt": "2026-07-24"}
+      ]
+    }
+  }
+}
