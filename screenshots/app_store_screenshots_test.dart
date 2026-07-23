@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:aihandoverlog/app.dart';
 import 'package:aihandoverlog/controllers/relay_controller.dart';
 import 'package:aihandoverlog/models/relay_models.dart';
 import 'package:aihandoverlog/services/state_store.dart';
+
+Future<void> _loadJapaneseFont() async {
+  final loader = FontLoader('AppStoreNoto')
+    ..addFont(rootBundle.load('assets/NotoSansJP.ttf'));
+  await loader.load();
+}
 
 Future<RelayController> _controller() async {
   final controller = RelayController(store: MemoryStateStore());
@@ -77,6 +84,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
 
+    await _loadJapaneseFont();
     final controller = await _controller();
     await tester.pumpWidget(AiHandoverLogApp(controller: controller));
     await tester.pumpAndSettle();
