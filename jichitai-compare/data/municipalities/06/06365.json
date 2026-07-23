@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06365",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "大蔵村",
+  "officialUrl": "https://www.vill.ohkura.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが大蔵村公式情報で対象9制度を調査し、7制度を確認済み、病児保育と学校給食費の令和8年度詳細を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担分を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {"target": "大蔵村に住所がある高校生相当年齢までの子ども", "coverage": "外来・入院等の保険適用分を助成", "copay": "保険適用分の自己負担額は無料", "application": "出生・転入時に住民税務課へ申請し医療証を受領", "excluded": "入院時食事代や保険適用外費用"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/soshikikarasagasu/juminzeimuka/gyomuannai/1/2_1/592.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "村公式の現行子育て情報で、病児・病後児保育の実施施設、対象年齢、料金、申込方法を確認できない。",
+      "details": {"confirmed": "村の未就学児・子育て支援情報を公開", "unconfirmed": "病児保育または病後児保育の対象施設、対象年齢、利用時間、料金、予約方法", "guidance": "教育委員会または健康福祉課へ現行の利用可否を確認する必要がある"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/kosodate_kyoiku/ikuji_mishugakuji/support_mishugakuji/index.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和4年4月から、村独自事業として保育料を完全無償化する。",
+      "eligibility": {"minAgeMonths": 8, "maxAgeYears": 5},
+      "details": {"target": "生後8か月から就学前までの村内保育所利用児", "fee": "保育料完全無償", "facilities": "大蔵村保育所等", "hours": "標準時間は7時30分から18時30分", "application": "教育委員会へ保育認定・入所申込み"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/soshikikarasagasu/kyoikuiinkai/gyomuannai/2_1/573.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "村公式の現行教育情報で、令和8年度の学校給食費、無償化または一律補助の内容を確認できない。",
+      "details": {"confirmed": "過去に大蔵産米の主食を全量無償提供する支援を実施", "unconfirmed": "令和8年度の給食費保護者負担額、主食無償提供の継続、一律補助額、申請要否", "guidance": "教育委員会へ現行の学校給食費支援を確認する必要がある"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/kosodate_kyoiku/index.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "育児サポートが必要な産後の母子に、無料の通所型産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {"target": "出産後の育児・授乳・母体の体調等について支援を必要とする母子", "type": "通所型", "provider": "授乳相談室たかはし", "limit": "2回まで", "fee": "令和6年度から利用料金を全額助成し自己負担0円", "application": "健康福祉課へ事前相談・申請"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/iryo_kenko_fukushi/iryo_kenko/2382.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等を利用していない乳幼児が、就労要件を問わず利用できるこども誰でも通園制度を実施する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 2},
+      "details": {"program": "大蔵村乳児等通園支援事業", "target": "保育所等に通っていない生後6か月から満3歳未満の子ども", "conditions": "保護者の就労要件を問わない", "service": "保育施設での時間単位等の保育と子育て支援", "application": "村の利用認定と施設予約が必要"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/kosodate_kyoiku/ikuji_mishugakuji/support_mishugakuji/2343.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度、移住・新婚・子育て世帯の住宅リフォームに最大50万円を補助する。",
+      "details": {"program": "令和8年度大蔵村住宅リフォーム支援事業", "target": "平成20年4月2日以降生まれの世帯員がいる子育て世帯、移住世帯、新婚世帯等", "villageContractor": "村内業者施工は事業費の30%、上限50万円", "prefectureContractor": "県内業者施工は事業費の20%、上限20万円", "purchaseAddition": "移住者の住宅購入リフォームは50万円加算し最大100万円", "application": "工事着手前に地域整備課へ申請"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/soshikikarasagasu/chiikiseibika/gyomuannai/5/501.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは電話で申込み、品目別ステッカーを貼って翌月の指定日に戸別収集する。",
+      "details": {"reservation": "役場へ電話し品名と大きさを申告", "fee": "品目別料金に応じた所定のステッカーを購入して貼付", "schedule": "申込み月の翌月に村から収集日を通知", "placement": "収集日に玄関先へ排出", "assistance": "屋内からの持出しが困難な場合は村収集委託業者へ相談"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/kurashi_tetsuzuki/gomi_recycle/kateigomi/1132.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害等の危険区域、避難所、避難経路を掲載した全域・地区別ハザードマップを公開する。",
+      "details": {"map": "大蔵村ハザードマップ", "hazards": "洪水、土砂災害等", "areas": "全域版、役場周辺、赤松、南山、沼の台、肘折地区版を公開", "evacuation": "危険箇所、避難施設、避難経路を確認可能", "related": "防災重点ため池マップも公開"},
+      "source": {"url": "https://www.vill.ohkura.yamagata.jp/soshikikarasagasu/kikikanrishitsu/gyomuannai/1/3/1/543.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
