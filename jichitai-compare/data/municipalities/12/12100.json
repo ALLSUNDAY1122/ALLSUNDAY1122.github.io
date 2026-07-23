@@ -1,0 +1,183 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "12100",
+  "prefectureCode": "12",
+  "prefecture": "千葉県",
+  "name": "千葉市",
+  "officialUrl": "https://www.city.chiba.jp/",
+  "status": "verified",
+  "summary": "子育て・生活関連9制度を千葉市公式情報で確認し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末までの子どもの通院・入院・調剤費を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "千葉市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+        "coverage": "保険診療の通院・入院・調剤費を助成",
+        "copayment": "通院1回300円、入院1日300円、調剤無料。通院6回目以降・入院11日目以降、第3子以降、非課税世帯は無料",
+        "procedure": "受給券交付の申請が必要。高校生年代への拡大対象者も申請が必要",
+        "excluded": "保険外費用、高額療養費・付加給付等"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/kodomomirai/kodomomirai/kateishien/r6koiryou.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "診療所併設施設で病児・病後児を一時保育",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "市内在住または市内の保育所・認定こども園・幼稚園・小学校等に通い、病気または回復期で家庭保育が困難な子ども",
+        "facilities": "市内10か所の診療所併設病児・病後児保育施設",
+        "hours": "原則平日8時から18時、土曜日8時から13時。休室日は施設により異なる",
+        "fee": "1人1日2,050円、6時間まで1,230円。診察料等が別途必要な場合あり",
+        "procedure": "利用希望施設への事前登録と予約が必要。受入可否は病状・年齢等により医師が判断"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/kodomomirai/yojikyoiku/shien/byouji-byougoji.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児等を無償化し、課税世帯0～2歳児は所得等により算定",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "保育所・認定こども園等の3～5歳児と、市民税非課税世帯の0～2歳児等",
+        "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+        "currentFee": "課税世帯の0～2歳児は保護者の市民税所得割額等に基づく階層別保育料",
+        "multiChild": "対象となる0～2歳児について第2子半額、第3子以降無料となる多子軽減制度あり",
+        "excluded": "給食費、通園送迎費、行事費等の実費"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/kodomomirai/yojikyoiku/unei/hoikuryou29.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は小学校の保護者負担0円、中学校は1食320円で第3子以降等を無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "市立小学校1～6年生は国・市の交付金を活用し保護者負担0円",
+        "juniorHigh": "市立中学校・中等教育学校前期課程等は物価高騰支援後の保護者負担1食320円",
+        "multiChild": "扶養する子が3人以上いる世帯の第3子以降は要件を満たし年度ごとに申請すると学校給食費を無償化",
+        "specialSchool": "特別支援学校小学部は0円、中学部・高等部は1食349円",
+        "notes": "小中学校一律の完全無償化ではない"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/kyoiku/gakkokyoiku/hokentaiiku/kyushoku-tetsuduki.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "宿泊・日帰り・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "千葉市在住で、宿泊・日帰り型は産後5か月未満、訪問型は産後1年未満の母子",
+        "types": "宿泊型、日帰り型、訪問型",
+        "limit": "単胎は宿泊7日・日帰り7回・訪問7回、多胎は各10日・10回",
+        "fee": "課税世帯は利用料の10％、非課税世帯は5％、生活保護世帯は宿泊・日帰り300円、訪問無料",
+        "support": "母親の健康確認・休息・乳房ケア、乳児の発育確認、授乳・沐浴等の育児支援"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/hokenfukushi/kenkofukushi/shien/29sangokea.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を月10時間まで市内施設で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "target": "原則千葉市在住で、保育所・認定こども園・幼稚園等に在籍していない生後6か月から満3歳未満の子ども",
+        "hours": "子ども1人につき月10時間まで。1回1時間以上、30分単位。未利用分の繰越不可",
+        "fee": "一般世帯1時間300円、一定所得未満・要支援児童世帯100円、生活保護世帯無料",
+        "procedure": "利用認定申請、施設ごとの初回面談、予約が必要"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/kodomomirai/yojikyoiku/unei/r8daretuu.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "旧耐震住宅等の耐震診断・耐震改修・耐震シェルター設置費を補助",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "program": "住宅の耐震診断・耐震改修補助制度",
+        "target": "制度要件を満たす木造住宅や分譲マンション等",
+        "support": "耐震診断費、耐震改修工事費、耐震シェルター設置費の一部を補助",
+        "period": "2026年度は木造住宅の診断・工事を予算の範囲で先着受付",
+        "procedure": "契約・診断・工事前に建築指導課へ相談し、対象要件と必要書類を確認して申請"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/toshi/kenchiku/shido/news_juukankyou.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを予約制戸別収集または環境事業所等への自己搬入で処分",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "definition": "指定袋に入らない大きさの家庭ごみ等",
+        "collection": "電話・インターネット・LINE等で申し込み、品目別手数料を納付して戸別収集",
+        "directDelivery": "市内在住者は環境事業所へ1回10点まで自己搬入可能",
+        "fee": "品目により390円、780円、1,170円、1,560円。施設によっては重量制料金",
+        "hours": "環境事業所は平日9時から16時、土曜日9時から12時"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/kankyo/junkan/shushugyomu/chuo-mihama/sodaigomitojikohannyu.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・津波・洪水・内水・高潮・土砂災害等のWEBハザードマップを公開",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "maps": "千葉市地震・風水害ハザードマップWEB版と地区別土砂災害ハザードマップを公開",
+        "risks": "地震、津波、洪水、内水、高潮、土砂災害等",
+        "facilities": "指定緊急避難場所、避難所、浸水想定区域、避難経路等を住所検索や重ね合わせで確認可能",
+        "support": "避難行動判定フローと併用し、家庭の避難計画・事前対策に利用可能"
+      },
+      "source": {
+        "url": "https://www.city.chiba.jp/sogoseisaku/kikikanri/bosai/2019jisinfusuigaihazardmap.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
