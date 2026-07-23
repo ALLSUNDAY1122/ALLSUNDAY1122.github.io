@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "06213",
+  "municipalityName": "南陽市",
+  "prefectureCode": "06",
+  "prefectureName": "山形県",
+  "assignedTeam": "北日本調査班",
+  "status": "pr_open",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": ["childMedical", "sickChildCare", "childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport", "bulkyWaste", "disasterPrevention"],
+  "verifiedCount": 7,
+  "researchingCount": 0,
+  "unavailableCount": 2,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/06213-nanyo",
+  "pullRequestNumber": 1721,
+  "lastCheckedAt": "2026-07-24",
+  "lastUpdatedAt": "2026-07-24T06:09:00+09:00",
+  "lastUpdatedBy": "北日本調査班B",
+  "officialSources": [
+    "https://www.city.nanyo.yamagata.jp/seiaktukosodate/836",
+    "https://www.city.nanyo.yamagata.jp/seikatuhoikuen/2969",
+    "https://www.city.nanyo.yamagata.jp/kanri/1472",
+    "https://www.city.nanyo.yamagata.jp/sukoyaka/5762",
+    "https://www.city.nanyo.yamagata.jp/kekonsuisin/6087",
+    "https://www.city.nanyo.yamagata.jp/gomidasikata/",
+    "https://www.city.nanyo.yamagata.jp/bousai/"
+  ],
+  "notes": [
+    "南陽市の正式自治体コード06213を確認し、既存task・オープンPR・作業ブランチがないことを確認して着手。",
+    "必須9制度を市公式情報で調査し、7制度をverified、学校給食費と住宅支援をunavailableとして登録。",
+    "18歳年度末までの医療費無料、生後3か月から就学前までの病後児保育、国制度による保育料無償化を確認。",
+    "学校給食費は令和7年度第3子助成の情報まで、住宅支援は令和7年度結婚新生活支援まで確認できたが、令和8年度条件は未確認。",
+    "短期入所・通所・訪問型産後ケア、一時預かり、粗大ごみ収集・自己搬入、各種ハザードマップを確認。",
+    "PR #1721をregion/north向けに作成。",
+    "CI再計算仕様に合わせ、officialSourcesを初出順の一意URLへ修正。"
+  ],
+  "blockers": []
+}
