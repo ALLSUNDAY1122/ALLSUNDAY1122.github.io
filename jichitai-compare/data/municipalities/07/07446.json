@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07446",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "昭和村",
+  "officialUrl": "https://www.vill.showa.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を昭和村公式情報で調査し、7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子育て支援医療費助成制度",
+        "target": "昭和村に住所がある出生から18歳年度末までの子ども",
+        "support": "医療保険が適用される診療の自己負担分を助成",
+        "application": "受給資格登録後、受給資格者証の交付を受ける",
+        "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/148/", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.showa.fukushima.jp/reiki_int/reiki_honbun/c556RG00000343.html", "checkedAt": "2026-07-24"}]
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "村公式の子育て支援・保育所情報で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "子育て支援ガイドブック、保育所案内、子ども・子育て支援事業計画を確認したが、利用者向けの現行案内を確認できなかった",
+        "availableAlternatives": "保護者の仕事や病気等に対応する通常保育、育児相談、つどいの場等を実施",
+        "caution": "広域利用を含む利用可否は保健福祉課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/6441/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "昭和村保育所の入所児童に対する保育料を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facility": "昭和村保育所",
+        "target": "保護者の就労・病気等により家庭で保育できない就学前児童",
+        "support": "保育料を無料化",
+        "services": "通常保育のほか、保育所行事や育児相談等を実施",
+        "caution": "給食費、教材費、延長保育等の実費負担は保健福祉課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/6441/", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "昭和村立学校に在籍する児童生徒の学校給食費を無償とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "昭和村立小学校・中学校に在籍する児童生徒",
+        "support": "保護者が負担する学校給食費を全額無償化",
+        "allergySupport": "食物アレルギーにより弁当等を持参する場合は学校給食弁当代替者助成金を交付",
+        "provider": "昭和村学校給食センター"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/196/", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の産婦と乳児を対象に、助産院等で宿泊・日帰り型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア事業",
+        "target": "昭和村に住所がある出産後1年以内の産婦と乳児",
+        "types": "宿泊ケア、日帰りケア",
+        "services": "助産師・看護師による心身のケア、授乳指導、育児相談等",
+        "usageLimit": "宿泊ケア7日以内、日帰りケア5日以内",
+        "fee": "宿泊1泊2日3,000円、その後1泊ごと3,000円。日帰り1日1,500円",
+        "application": "申請書、印鑑、母子健康手帳を保健福祉課へ提出"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/6441/", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.showa.fukushima.jp/uploads/2025/06/kosodateguidebook2025.pdf", "checkedAt": "2026-07-24"}]
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "乳児等通園支援事業の基準条例は施行されているが、現行の利用施設、対象月齢、月間上限、料金、申込方法を公式案内で確定できない。",
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "confirmed": "令和7年12月に設備・運営基準および特定乳児等通園支援事業の運営基準を制定",
+        "researchResult": "利用者向けの令和8年度実施案内を確認できず、具体的条件を確定できなかった",
+        "caution": "実施状況と利用条件は保健福祉課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/reiki_int/reiki_honbun/c556RG00000446.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "住宅改修は対象経費150万円を限度に3分の2を助成し、県外移住者の住宅取得費は2分の1を補助する。",
+      "details": {
+        "program": "住宅改修援助金制度・昭和村移住促進住宅取得支援事業補助金",
+        "renovation": "住宅改修に要する経費150万円を限度として、その3分の2を助成",
+        "purchase": "県外移住者がマイホームまたは中古住宅を取得する費用の2分の1を補助",
+        "vacantHouse": "空き家バンク登録物件の改修・家財処分支援あり",
+        "application": "工事・取得前に産業建設課へ相談し、対象要件を確認"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/148/", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度の地区別ごみ収集カレンダーと、ごみの出し方ルール・分別早見表に従って粗大ごみを排出する。",
+      "details": {
+        "schedule": "小中津川～小野川地区、松山～下中津川地区の令和8年度収集カレンダーを公開",
+        "sorting": "ごみの出し方ルール・分別早見表で粗大ごみを含む品目別の分別方法を確認",
+        "placement": "地区別カレンダーに記載された収集日・排出場所・時間に従う",
+        "excluded": "家電リサイクル対象品や村で処理しない品目は指定方法で処分",
+        "smallElectronics": "パソコン等は村で回収せず、宅配回収またはメーカー回収を利用"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/458/", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "令和3年度作成の昭和村ハザードマップを公開し、地域の危険箇所と避難情報を案内する。",
+      "details": {
+        "map": "昭和村ハザードマップ",
+        "coverage": "洪水・土砂災害等の危険箇所、避難施設、消防水利、防災行動等",
+        "format": "全編・後編およびページ別PDFで公開",
+        "information": "防災行政無線放送履歴や防災アプリ等でも情報提供",
+        "guidance": "平時に自宅周辺の危険箇所と避難経路を確認"
+      },
+      "source": {"url": "https://www.vill.showa.fukushima.jp/procedure/2392/", "checkedAt": "2026-07-24"}
+    }
+  }
+}
