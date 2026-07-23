@@ -48,11 +48,20 @@ function localAudit() {
   const engagementRuntime = fs.readFileSync(path.join(SITE, 'assets', 'engagement.js'), 'utf8');
   const launchKit = fs.readFileSync(path.join(SITE, 'tools', 'external-launch-kit.md'), 'utf8');
   const campaignDefinitions = Array.isArray(campaigns.definitions) ? campaigns.definitions : [];
+  const requiredCampaigns = new Set([
+    'launch-20260723-x-top-100',
+    'launch-20260723-x-last-elevator',
+    'launch-20260723-threads-spare-key',
+    'launch-20260723-line-hired-experience',
+    'launch-20260724-x-five-minute',
+    'launch-20260724-threads-five-minute'
+  ]);
 
   record('local: seven static pages and 100 stories are covered', staticFiles.length === 7 && storyFiles.length === 100, { static: staticFiles.length, stories: storyFiles.length });
   record('local: runtime modules, social metadata, and static circulation are complete', errors.length === 0, errors);
   record('local: story runtime no longer loads the 100-story catalog', !storyRuntime.includes('catalogSources') && !storyRuntime.includes('loadCatalogScript'));
-  record('local: four fixed launch links and onsite sharing are defined', campaignDefinitions.length === 4 && campaignDefinitions.every((item) => item.id && item.url && launchKit.includes(item.url)) && campaigns.onsiteShare?.id === 'onsite-share', campaignDefinitions);
+  record('local: six fixed launch links and onsite sharing are defined', campaignDefinitions.length === 6 && campaignDefinitions.every((item) => item.id && item.url && requiredCampaigns.has(item.id) && launchKit.includes(item.url)) && campaigns.onsiteShare?.id === 'onsite-share', campaignDefinitions);
+  record('local: five-minute campaign codes exist only in the registered runtime map', analyticsRuntime.includes('launch-20260724-x-five-minute') && analyticsRuntime.includes('launch-20260724-threads-five-minute'));
   record('local: unknown UTM values are not converted into campaign paths', analyticsRuntime.includes('knownCampaigns.get') && engagementRuntime.includes('knownCampaigns.get') && !analyticsRuntime.includes("'/yorugatari/__campaign/' + query") && !engagementRuntime.includes("'/yorugatari/__campaign/' + query"));
 
   const privacy = fs.readFileSync(path.join(SITE, 'privacy.html'), 'utf8');
@@ -110,7 +119,7 @@ async function imageAudit() {
 
 async function browserAudit() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/2.0' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/2.1' });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', { configurable: true, value: async (payload) => { window.__YORUGATARI_SHARE_PAYLOAD__ = payload; } });
   });
@@ -134,11 +143,14 @@ async function browserAudit() {
   });
   record('published: top launch URL resolves and maps to its fixed social campaign', top.ready, top);
 
-  const landing = await open(page, `${BASE}/5min-horror.html`, async (target, response, attempt) => {
+  const landingCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260724-x-five-minute');
+  const landing = await open(page, landingCampaign.url, async (target, response, attempt) => {
     const state = await target.evaluate((version) => ({
       analyticsScript: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
       engagementScript: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
       analytics: Boolean(window.YORUGATARI_ANALYTICS),
+      source: window.YORUGATARI_ANALYTICS?.source,
+      campaign: window.YORUGATARI_ANALYTICS?.campaign,
       picks: document.querySelectorAll('.pick').length,
       guides: document.querySelectorAll('.guide-card').length,
       faq: document.querySelectorAll('.faq article').length,
@@ -146,9 +158,9 @@ async function browserAudit() {
       overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
     }), ANALYTICS_VERSION);
     const meta = await metadata(target);
-    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.picks === 12 && state.guides === 6 && state.faq === 3 && state.breadcrumb === 1 && state.overflow && metadataComplete(meta), status: response?.status(), attempt, state, meta };
+    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.source === 'social' && state.campaign === landingCampaign.id && state.picks === 12 && state.guides === 6 && state.faq === 3 && state.breadcrumb === 1 && state.overflow && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: five-minute horror landing page is complete', landing.ready, landing);
+  record('published: five-minute launch URL maps to its fixed social campaign', landing.ready, landing);
 
   const storyCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260723-threads-spare-key');
   const story = await open(page, storyCampaign.url, async (target, response, attempt) => {
