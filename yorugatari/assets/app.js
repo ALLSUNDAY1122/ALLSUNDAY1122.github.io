@@ -1,6 +1,6 @@
 const grid = document.querySelector('#storyGrid');
 const search = document.querySelector('#searchInput');
-const chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+const chips = Array.prototype.slice.call(document.querySelectorAll('button.chip[data-category]'));
 const empty = document.querySelector('#emptyState');
 const count = document.querySelector('#count');
 const coreStories = Array.isArray(window.STORIES) ? window.STORIES : [];
@@ -39,7 +39,10 @@ try {
 let activeCategory = 'すべて';
 let activeReadingStatus = 'all';
 
-if (count) count.setAttribute('aria-live', 'polite');
+if (count) {
+  count.setAttribute('aria-live', 'polite');
+  count.setAttribute('role', 'status');
+}
 if (empty) empty.setAttribute('role', 'status');
 if (grid) grid.setAttribute('aria-busy', 'true');
 
