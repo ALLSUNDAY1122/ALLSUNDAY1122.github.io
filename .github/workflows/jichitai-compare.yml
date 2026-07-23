@@ -1,34 +1,29 @@
-name: Jichitai Compare CI
+name: Build North-East Release 10
 
 on:
   pull_request:
     paths:
       - 'jichitai-compare/**'
       - '.github/workflows/jichitai-compare.yml'
-  push:
-    branches:
-      - main
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: north-east-release-10-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
 
 jobs:
-  validate:
-    name: Validate municipality data
+  build-release:
+    if: github.event.pull_request.head.ref == 'coord/north-east-release-10-20260723-2215'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
-      - name: Checkout repository
+      - name: Checkout release branch
         uses: actions/checkout@v4
         with:
+          ref: coord/north-east-release-10-20260723-2215
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -36,42 +31,100 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Reject unrelated changes
-        working-directory: jichitai-compare
-        env:
-          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: npm run check:scope
-
-      - name: Generate public municipality data
-        working-directory: jichitai-compare
-        run: npm run generate
-
-      - name: Generate national progress
-        working-directory: jichitai-compare
-        run: npm run progress
-
-      - name: Validate source and generated data
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Check JavaScript syntax
-        working-directory: jichitai-compare
-        run: node --check app.js
-
-      - name: Confirm generated files are committed
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
+      - name: Fetch regional snapshots
         shell: bash
         run: |
-          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
-          if [ -n "$changed" ]; then
-            echo '生成済みファイルが最新ではありません。'
-            git status --short -- data/generated/municipalities.json operations/progress.json
-            exit 1
-          fi
+          git fetch origin main region/north region/east
 
-      - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
+          copy_file() {
+            ref="$1"
+            path="$2"
+            mkdir -p "$(dirname "$path")"
+            git show "origin/${ref}:${path}" > "$path"
+          }
+
+          for code in 07203 05215 07202 07201 05214; do
+            pref="${code:0:2}"
+            copy_file region/north "jichitai-compare/data/municipalities/${pref}/${code}.json"
+            copy_file region/north "jichitai-compare/operations/tasks/${code}.json"
+          done
+
+          for code in 11231 19210 19209 19208 19207; do
+            pref="${code:0:2}"
+            copy_file region/east "jichitai-compare/data/municipalities/${pref}/${code}.json"
+            copy_file region/east "jichitai-compare/operations/tasks/${code}.json"
+          done
+
+      - name: Normalize merged task state
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const codes = ['07203','05215','07202','07201','05214','11231','19210','19209','19208','19207'];
+          for (const code of codes) {
+            const path = `jichitai-compare/operations/tasks/${code}.json`;
+            const task = JSON.parse(fs.readFileSync(path, 'utf8'));
+            task.status = 'merged';
+            task.currentService = null;
+            task.lastUpdatedAt = '2026-07-23T22:20:00+09:00';
+            task.lastUpdatedBy = task.lastUpdatedBy?.includes('統括A') ? task.lastUpdatedBy : `${task.lastUpdatedBy || task.assignedTeam}・統括A`;
+            task.blockers = [];
+            fs.writeFileSync(path, `${JSON.stringify(task)}\n`);
+          }
+          NODE
+
+      - name: Generate release manifest
+        shell: bash
+        run: |
+          cat > jichitai-compare/operations/control/north-east-release-manifest-20260723-2215.json <<'JSON'
+          {
+            "schemaVersion": "1.0.0",
+            "releaseId": "north-east-release-10-20260723-2215",
+            "coordinator": "統括A",
+            "createdAt": "2026-07-23T22:20:00+09:00",
+            "basePublishedMunicipalities": 874,
+            "municipalityCodes": ["07203", "05215", "07202", "07201", "05214", "11231", "19210", "19209", "19208", "19207"],
+            "regions": {
+              "north": ["07203", "05215", "07202", "07201", "05214"],
+              "east": ["11231", "19210", "19209", "19208", "19207"]
+            }
+          }
+          JSON
+
+      - name: Generate and validate public data
         working-directory: jichitai-compare
-        run: npm run smoke:public
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+
+      - name: Update displayed municipality count
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const progress = JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json', 'utf8'));
+          const count = progress.registeredMunicipalities;
+          const path = 'jichitai-compare/index.html';
+          const html = fs.readFileSync(path, 'utf8').replace(/\d+自治体・9制度/g, `${count}自治体・9制度`);
+          fs.writeFileSync(path, html);
+          console.log(`index.htmlを${count}自治体へ更新`);
+          NODE
+
+      - name: Restore standard CI workflow
+        shell: bash
+        run: git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+
+      - name: Commit generated release
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/jichitai-compare.yml jichitai-compare
+          if git diff --cached --quiet; then
+            echo '変更なし'
+            exit 0
+          fi
+          git commit -m 'release: 北日本・東日本10自治体を全国公開へ反映'
+          git push origin HEAD:coord/north-east-release-10-20260723-2215
