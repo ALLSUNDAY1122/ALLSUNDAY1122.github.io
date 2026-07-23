@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06322",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "西川町",
+  "officialUrl": "https://www.town.nishikawa.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが西川町公式情報で対象9制度を調査し、8制度を確認済み、学校給食費の現行町全体制度を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、所得制限なく保険診療の自己負担分を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "西川町に住民登録がある出生から18歳年度末までの子ども",
+        "coverage": "医療証と健康保険証の提示により保険診療の自己負担分を助成",
+        "incomeLimit": "なし",
+        "excluded": "入院時食事代等の保険外負担",
+        "application": "西川町保健センターで医療証交付申請"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/soshiki/kenko/1117.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "山形連携中枢都市圏の病児・病後児保育施設を相互利用でき、町が利用料の半額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facility": "寒河江市、河北町等の病児・病後児保育施設",
+        "target": "利用日に西川町内に住所を有し居住する保護者等の子ども",
+        "application": "施設への事前登録・予約と医師の診断が必要",
+        "subsidy": "利用料金の2分の1、1人1日上限1,000円",
+        "excluded": "飲食費、延長料金等"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/site/hoikuen/2238.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "にしかわ保育園の保育料は認定区分と保護者所得に応じて決定し、災害等の事情がある場合は減免する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "facility": "西川町立にしかわ保育園",
+        "feeBasis": "保育認定区分、保育必要量、保護者所得の階層区分に応じて決定",
+        "freeCare": "3歳から5歳児等は国の幼児教育・保育無償化の対象",
+        "reduction": "災害その他やむを得ない事情で納付困難と認められる場合は減免",
+        "application": "にしかわ保育園へ入園・保育認定手続き"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/site/hoikuen/1079.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "町公式の現行教育情報で、令和8年度の小中学校給食費、無償化または一律補助の内容を確認できない。",
+      "details": {
+        "confirmed": "西川小学校・西川中学校の学校情報と給食活動は公式サイトで公開されている",
+        "unconfirmed": "令和8年度の保護者負担額、無償化範囲、補助額、申請要否",
+        "guidance": "まなぶ課または各学校へ現行の給食費を確認する必要がある"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/site/e-nishikawa/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後4か月頃までの母子を対象に宿泊型・日帰り型の産後ケアを実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "産後の育児等に不安があり支援が必要な生後4か月頃までの母親と乳児",
+        "overnight": "1泊2日3,000円、4食付き。原則7泊まで",
+        "dayCare": "1日500円、昼食付き。原則7日まで",
+        "providers": "国井クリニック、すまいるレディースクリニック",
+        "application": "健康福祉課健康推進係へ事前相談・申請"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/soshiki/kenko/6600.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から就学前児を一時預かりし、未就園の6か月から3歳未満児には月10時間のこども誰でも通園制度も実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "facility": "西川町立にしかわ保育園",
+        "temporaryTarget": "保育園に入園していない生後6か月から小学校就学前まで",
+        "hours": "8時30分から16時30分、1時間単位",
+        "fee": "町内は3歳未満1時間320円、3歳以上1時間250円",
+        "anyChild": "保育園未利用の6か月から3歳未満児は就労要件なしで月10時間まで、1時間300円",
+        "application": "事前申込と面談等が必要"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/site/hoikuen/1075.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・子育て世代向け町営住宅を提供し、18歳以下の同居児童数に応じて家賃を月最大1万円減額する。",
+      "details": {
+        "program": "みどり住宅",
+        "target": "原則申込時50歳以下で構成された世帯等",
+        "housing": "2LDK・3LDK等の若者・子育て世代向け町営賃貸住宅",
+        "rentReduction": "18歳以下の同居児童1人は月5,000円、2人以上は月10,000円を家賃から控除",
+        "application": "建設水道課へ入居申込書と必要書類を提出"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/soshiki/kensetsu/9378.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない家庭系粗大ごみは、証紙を貼った予約制戸別収集またはクリーンセンターへの直接搬入で処理する。",
+      "details": {
+        "target": "家具、寝具、自転車、指定袋に入らない家電製品等",
+        "collection": "町民税務課へ窓口、FAXまたは電話で申込み",
+        "fee": "品目別料金分の粗大ごみ証紙を購入して貼付",
+        "schedule": "地区別の指定収集日当日午前8時までに排出",
+        "directDelivery": "寒河江地区クリーンセンターへ直接搬入可能",
+        "excluded": "家電リサイクル法対象品、パソコン等"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/soshiki/chomin/7168.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "防災ハザードマップ、ため池マップ、避難場所情報に加え、危険箇所と避難情報を確認できる多言語観光・防災マップを公開する。",
+      "details": {
+        "map": "西川町防災ハザードマップ",
+        "hazards": "洪水、土砂災害、ため池決壊等",
+        "evacuation": "指定避難場所と避難行動情報を公開",
+        "digital": "多言語観光＆防災マップで周辺の危険箇所や避難情報を確認可能",
+        "related": "山形県防災情報、土砂災害警戒システム、気象庁キキクルへのリンクを集約"
+      },
+      "source": {
+        "url": "https://www.town.nishikawa.yamagata.jp/soshiki/somu/2580.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
