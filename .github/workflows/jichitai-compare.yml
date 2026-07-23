@@ -1,69 +1,77 @@
-name: Rebuild Shirakawa Municipality PR
+name: Jichitai Compare CI
 
 on:
   pull_request:
     paths:
       - 'jichitai-compare/**'
       - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: rebuild-shirakawa-${{ github.event.pull_request.number }}
-  cancel-in-progress: false
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  rebuild:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Checkout clean branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
-      - name: Fetch source and base branches
-        run: |
-          git fetch --no-tags origin \
-            +refs/heads/data/07205-shirakawa:refs/remotes/origin/data/07205-shirakawa \
-            +refs/heads/region/north:refs/remotes/origin/region/north
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Copy validated Shirakawa files
-        run: |
-          mkdir -p jichitai-compare/data/municipalities/07 jichitai-compare/operations/tasks
-          git show origin/data/07205-shirakawa:jichitai-compare/data/municipalities/07/07205.json > jichitai-compare/data/municipalities/07/07205.json
-          git show origin/data/07205-shirakawa:jichitai-compare/operations/tasks/07205.json > jichitai-compare/operations/tasks/07205.json
-          node <<'NODE'
-          const fs = require('node:fs');
-          const file = 'jichitai-compare/operations/tasks/07205.json';
-          const task = JSON.parse(fs.readFileSync(file, 'utf8'));
-          task.status = 'pr_open';
-          task.currentService = null;
-          task.nextServiceIndex = 9;
-          task.pullRequestNumber = Number(process.env.PR_NUMBER);
-          task.lastCheckedAt = '2026-07-23';
-          task.lastUpdatedAt = '2026-07-23T23:04:00+09:00';
-          task.lastUpdatedBy = `${task.lastUpdatedBy || '北日本調査班A'}・統括⑤競合解消`;
-          task.blockers = [];
-          task.notes = [
-            ...(Array.isArray(task.notes) ? task.notes : []),
-            '旧PR #1413がregion/northの並行更新で競合したため、最新region/northからクリーンブランチへ確定済み2ファイルを再配置。'
-          ];
-          fs.writeFileSync(file, `${JSON.stringify(task, null, 2)}\n`);
-          NODE
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.sha }}
+        run: npm run check:scope
 
-      - name: Restore standard regional CI
-        run: git show origin/region/north:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
 
-      - name: Commit clean replacement
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare/data/municipalities/07/07205.json jichitai-compare/operations/tasks/07205.json
-          git commit -m 'data: rebase Shirakawa municipality onto latest north'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
