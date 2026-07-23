@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1371,
+    "municipalityCount": 1374,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -56852,6 +56852,173 @@
       }
     },
     {
+      "code": "06428",
+      "prefectureCode": "06",
+      "prefecture": "山形県",
+      "name": "庄内町",
+      "officialUrl": "https://www.town.shonai.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Bが庄内町公式情報で対象9制度を調査し、全制度を確認済みとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで、健康保険が適用される医療費の自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "マイナ保険証等と医療証の提示により窓口医療費無料",
+            "outsidePrefecture": "県外受診は一旦支払い後に申請して払い戻し",
+            "mealCost": "入院時食事代も申請により払い戻し",
+            "application": "出生・転入時に医療証交付申請"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/shien/kosodateshien_iryo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後3か月から小学6年生までを余目保育園の病児・病後児保育施設『ほっと』で預かる。",
+          "eligibility": {
+            "minAgeMonths": 3,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "余目保育園 病児・病後児保育施設『ほっと』",
+            "targetArea": "庄内町、酒田市、鶴岡市、三川町、遊佐町に住所がある子ども",
+            "condition": "病中または回復期で集団保育が困難だが入院不要と医師が認めた児童",
+            "period": "1回の申込みにつき連続7日以内",
+            "application": "事前登録が必要。令和8年度からオンライン申請対応"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/byuoujihoiku.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "令和8年度保育所等利用について保育料表を定め、3歳以上児等には国の無償化を適用する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "application": "令和8年度保育所・認定こども園等の入所申込を受付",
+            "zeroToTwo": "保育料表に基づき世帯の課税状況等で算定。非課税世帯は無償化対象",
+            "threeToFive": "国の幼児教育・保育無償化により保育料無料",
+            "conditions": "月64時間以上の就労、妊娠・出産、疾病、介護等の保育必要性認定が必要"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/hoikuen/kosodate0120250918135420190.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に困窮する町内小中学生の保護者に、学校給食費を含む就学援助を行う。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "庄内町に住所を有し、小学校または中学校に在籍する児童生徒の保護者で、要保護・準要保護と認定された者",
+            "support": "学用品費、通学用品費、修学旅行費、学校給食費等を支給",
+            "universalFree": "一律無償化ではなく認定世帯向け支援",
+            "application": "在籍学校または教育委員会で申請"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/syugaku/syugakuenzyo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子を対象に宿泊型・通所型・訪問型の産後ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "庄内町に住所を有する産後1年未満の母親と乳児。医療行為が必要な場合を除く",
+            "types": "宿泊型、通所型、訪問型",
+            "support": "母子の健康確認、乳房ケア、授乳・沐浴指導、育児相談等",
+            "limits": "1回の出産につき宿泊5泊、通所5回、訪問5回まで",
+            "feeReduction": "生活保護・非課税世帯は利用者負担を減免"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/bosihoken/akachangaumaretara/sanngokeajigyou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満児が、就労要件を問わず利用できるこども誰でも通園制度を実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "庄内町在住で保育園・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+            "conditions": "保護者の就労要件を問わない",
+            "purpose": "同世代との交流、家庭外での体験、保護者への子育て助言",
+            "start": "令和8年度から実施",
+            "application": "町の案内に従い利用登録・予約"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/shien/kodomodaredemo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に住宅取得・建築・リフォーム等を行う町民へ定住応援住まいづくり補助金を交付する。",
+          "details": {
+            "program": "庄内町定住応援住まいづくり補助金",
+            "target": "町内で住宅等の取得・建築・リフォーム等を行う者",
+            "categories": "住宅取得支援事業、住宅リフォーム支援事業",
+            "start": "2026年4月1日受付開始",
+            "conditions": "国の補助制度との併用不可。交付決定前の着工は対象外",
+            "childcareHousing": "町外在住で12歳以下の子がいる一定年齢未満の夫婦世帯向け子育て応援住宅も整備"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/kurashi/zyuutaku/kensetsu0320220321115915724.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "家庭の粗大ごみは広域処理施設へ有料で直接搬入するか、町内の許可業者へ回収を依頼する。",
+          "details": {
+            "directDelivery": "酒田地区広域行政組合へ平日・祝日に直接搬入",
+            "fee": "令和8年4月1日から10キログラムまでごとに180円。スプリング入りマットレス等は追加2,000円",
+            "collection": "町内の一般廃棄物収集運搬許可業者へ有料で依頼可能",
+            "recycle": "家電リサイクル対象品は郵便局で券を購入し指定取引場所へ搬入または許可業者へ依頼"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/gomi/gomi/sodaigomi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水、土砂、急傾斜、地すべり、避難所等を切り替えて確認できるWeb版災害ハザードマップを公開する。",
+          "details": {
+            "hazards": "洪水、土砂災害、急傾斜警戒区域、地すべり警戒区域",
+            "evacuation": "指定避難所や避難場所を表示",
+            "location": "スマートフォン等の位置情報から現在地周辺の危険情報と避難経路を確認可能",
+            "other": "PDF版で津波、地震、ため池ハザードマップも公開"
+          },
+          "source": {
+            "url": "https://www.town.shonai.lg.jp/kurashi/bousai/saigai/map-web/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "07201",
       "prefectureCode": "07",
       "prefecture": "福島県",
@@ -103213,6 +103380,186 @@
       }
     },
     {
+      "code": "12221",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "八千代市",
+      "officialUrl": "https://www.city.yachiyo.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を八千代市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの入院・通院・調剤費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "八千代市に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院・調剤に係る保険診療自己負担分を助成",
+            "copayment": "所得割課税世帯は入院1日300円・通院1回300円・調剤無料。入院11日目以降・通院6回目以降は無料。所得割非課税世帯は無料",
+            "procedure": "受給券の交付申請が必要",
+            "excluded": "保険外費用、高額療養費・付加給付、学校管理下の災害共済給付対象等"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/site/kosodate/3316.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後57日から小学6年生の病児・病後児を診療所付設施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 1,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "市内在住で病気の治療中または回復期にあり集団保育が難しく、保護者の就労・疾病等で日中の家庭保育が困難な生後57日から小学6年生",
+            "facility": "くまさん保育室（あべこどもクリニック付設）",
+            "procedure": "病児保育ネット予約サービスTeOTeの事前アカウント登録、医療機関受診、オンライン予約が必要",
+            "excluded": "全身状態が悪い場合、39度以上の発熱が前日または当日にある場合等は利用不可"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/site/kosodate/3265.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等の3～5歳児と住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は扶養義務者の市民税額等を保育料基準額表に当てはめて決定",
+            "procedure": "施設・サービスに応じた認定が必要。認可施設の在園児は原則新たな無償化手続き不要",
+            "excluded": "給食費、時間外保育料、教材費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/site/kosodate/3275.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費の保護者負担なし、中学校は第3子以降を申請により無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "市立小学校・義務教育学校前期課程は2026年度の給食費負担なしで申請不要",
+            "juniorHigh": "中学校・義務教育学校後期課程は通常有償。扶養する子が3人以上いる世帯の第3子以降は要件を満たし毎年度申請すると無償化",
+            "period": "2026年4月から2027年3月",
+            "condition": "生活保護・就学援助等で学校給食費の援助を受けていないこと等",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/soshiki/62/77763.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・デイケア・訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "市内在住で事前申請により利用承認を受け、母子とも治療を必要とせず感染症にかかっていない母子",
+            "types": "宿泊型、デイケア型、訪問型",
+            "age": "宿泊・デイケア型は産後4か月未満、訪問型は産後1年未満の母子。訪問型は流産・死産を経験した人も対象",
+            "support": "母体の心身ケア・休養、授乳・乳房ケア、乳児の発育確認、育児相談等",
+            "procedure": "事前に市へ申請し利用承認通知書の交付を受ける"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/site/kosodate/3385.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "保育所・認定こども園・地域型保育・企業主導型保育等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで。1回1時間以上、30分単位。未利用分の繰越不可",
+            "fee": "利用施設・世帯区分により異なるため実施施設一覧と利用案内を確認",
+            "procedure": "利用認定、施設面談、予約等が必要"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/site/kosodate/74198.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "平成12年5月以前着工の対象木造住宅の耐震診断・改修費を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "平成12年5月31日以前に着工された木造2階建て以下の一戸建て・併用住宅等で制度要件を満たす住宅",
+            "support": "市登録の耐震診断士による耐震診断費と、診断結果等の要件を満たす耐震改修工事費の一部を補助",
+            "period": "2026年度受付は5月15日から10月30日まで。予算上限到達時は終了",
+            "additional": "耐震改修と併せて行う対象リフォーム工事は3分の1、上限30万円を補助",
+            "procedure": "診断・契約・着工前に申請し、交付決定後に事業へ着手する"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/soshiki/44/3941.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを有料戸別収集または清掃センターへの自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "20リットル用の市指定ごみ袋の口が結べない、または袋からはみ出す大きさの家庭ごみ等",
+            "collection": "電話で申し込み、300円・600円・900円の品目別手数料分の処理券を購入し、指定日の8時30分までに排出",
+            "directDelivery": "清掃センターへ直接持ち込み可能。処理手数料は10キログラムにつき150円",
+            "procedure": "戸別収集は品目・寸法・重量を確認して事前予約。自己搬入時は本人確認書類と廃棄物処分申請書を用意",
+            "excluded": "家電リサイクル法対象品や処理困難物等"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/site/gomi-recycle/3800.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・洪水・内水・土砂災害等のWeb版防災ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "八千代市Web版防災ハザードマップを公開",
+            "risks": "地震のゆれやすさ・液状化、利根川・高崎川等の洪水、内水浸水実績、土砂災害警戒区域等",
+            "facilities": "避難所予定施設、危険箇所、浸水深等を住所検索や地図表示で確認可能",
+            "notes": "市は津波・高潮の浸水想定区域外のため、それらの市ハザードマップは作成していない"
+          },
+          "source": {
+            "url": "https://www.city.yachiyo.lg.jp/soshiki/11/2171.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "12227",
       "prefectureCode": "12",
       "prefecture": "千葉県",
@@ -139782,6 +140129,168 @@
           },
           "source": {
             "url": "https://www.vill-shimojo.jp/gyousei/kurashi/bousai/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20412",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "売木村",
+      "officialUrl": "https://www.urugi.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を売木村公式情報で確認し、3制度をverified、6制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳到達後最初の3月31日まで福祉医療費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "売木村に住所がある18歳到達後最初の3月31日までの子ども",
+            "procedure": "受給者証の交付申請が必要。県内医療機関では受給者証と保険資格確認書類を提示",
+            "reimbursement": "県外受診・受給者証未提示時の償還払い、自己負担、高額療養費等の調整は住民課へ確認",
+            "excluded": "保険適用外費用、学校災害共済、第三者行為等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/health_medical_care/welfare_medical_system/information_on_welfare_and_medical_expenses_procedures/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "令和8年度に利用できる病児・病後児保育施設、対象年齢、料金、予約方法を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "research": "村公式サイトの子育て・教育、健康・医療関連情報を確認",
+            "needsConfirmation": "広域利用施設、事前登録、医師連絡票、利用料、予約方法は住民課または教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/parenting_education/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "unavailable",
+          "summary": "売木村保育所の存在と食事提供は確認できるが、令和8年度の保育料・給食費・多子軽減を確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "confirmed": "村内に売木村保育所があり、未満児には主食・副食・おやつを提供",
+            "needsConfirmation": "令和8年度の受入年齢、0～2歳児保育料、3～5歳児無償化、給食費、延長保育、所得・多子軽減は教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/parenting_education/childcare_parenting/child_rearing_support_plan/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "売木小中学校の学校給食費を全額補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "売木小中学校の児童生徒。山村留学生も子育て支援の対象",
+            "coverage": "平成27年度から給食費を全額補助",
+            "other": "教科書以外の教材や社会見学・修学旅行等のバス代にも補助あり",
+            "procedure": "転入出・欠食・村外通学時の取扱いは教育委員会または学校へ確認"
+          },
+          "source": {
+            "url": "https://sanson.urugi.jp/bosyuu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "令和8年度の宿泊・通所・訪問型産後ケアの対象月齢、利用料、施設、申請方法を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "research": "村公式サイトの妊娠・出産、育児・子育て関連情報を確認",
+            "needsConfirmation": "実施類型、対象月齢、利用日数、自己負担、実施施設、申請・予約方法は住民課へ確認"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/parenting_education/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "令和8年度の一時預かり・こども誰でも通園制度の利用条件を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "research": "村公式サイトの保育園・子育て支援情報を確認",
+            "needsConfirmation": "実施施設、対象年齢、利用時間・上限、料金、事前登録、面談、予約方法は教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/parenting_education/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク、空き家改修、住宅新築・リフォーム等の移住定住支援を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "services": "空き家バンク、空き家改修補助、住宅新築補助、住宅リフォーム補助、U・Iターン助成等を案内",
+            "support": "共住推進員が家探しや移住・定住相談を支援",
+            "procedure": "補助率・上限・年齢・定住期間・着手前申請・予算残額は産業課または住宅担当へ確認",
+            "note": "空き家バンクは情報提供制度で、契約は当事者間で実施"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/migration_settlement/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "unavailable",
+          "summary": "家庭ごみの分別案内は確認できるが、令和8年度の粗大ごみ収集日・料金・持込先を確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "research": "村公式サイトの生活・環境情報と公開収集カレンダーを確認",
+            "outdated": "検索できた収集日程は過年度資料",
+            "needsConfirmation": "令和8年度の収集日、申込方法、処理手数料、持込施設、対象品・除外品は住民課へ確認"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "unavailable",
+          "summary": "防災関連情報と訓練の実施は確認できるが、現行の総合ハザードマップ・避難所一覧を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "confirmed": "村は防災訓練、備蓄・災害支援連携等を実施",
+            "needsConfirmation": "洪水・土砂災害等のハザードマップ、指定避難所、緊急情報配信、地域防災計画の最新版は総務課へ確認"
+          },
+          "source": {
+            "url": "https://www.urugi.jp/top/administration_living/",
             "checkedAt": "2026-07-24"
           }
         }
