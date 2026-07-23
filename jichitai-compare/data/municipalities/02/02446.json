@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "02446",
+  "prefectureCode": "02",
+  "prefecture": "青森県",
+  "name": "階上町",
+  "officialUrl": "https://www.town.hashikami.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが青森県40自治体の完全性監査で欠落を検出し、階上町の対象9制度を公式情報で調査。7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "乳幼児から18歳年度末まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "階上町乳幼児医療費助成事業・子ども医療費助成事業",
+        "target": "階上町に住民登録があり各種健康保険に加入する乳幼児から18歳年度末までの子ども",
+        "support": "保険診療による医療費の自己負担分を助成",
+        "extension": "令和5年4月1日から助成対象を18歳まで拡大",
+        "payment": "受給資格証を利用できない場合等は医療機関で支払った後に町へ請求",
+        "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/7,4331,17,101,html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.hashikami.lg.jp/index.cfm/7,4336,17,101,html", "checkedAt": "2026-07-24"}]
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町内に病児・病後児保育施設がないことと八戸市内施設の利用方針は計画で確認できるが、令和8年度の利用施設、対象年齢、料金、予約方法を利用者向け公式情報で確定できない。",
+      "details": {
+        "confirmed": "階上町こども計画では、町内に病児・病後児保育施設はなく、希望者が八戸市内の施設を利用する状況を記載",
+        "researchResult": "令和8年度の利用可能施設一覧、対象年齢、自己負担額、登録・予約方法を町公式HTMLで確認できなかった",
+        "caution": "現行の広域利用条件はすこやか健康課児童グループへ確認が必要"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/9,23129,c,html/23129/20250325-142436.pdf", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "町内在住の0～2歳児を含む保育料を無償化し、3～5歳児の主食費・副食費を上限額まで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "zeroToTwo": "令和6年10月分から、町内在住で保育所等を利用し保育料が発生する0～2歳児の保育料を無償化",
+        "threeToFive": "3歳以上の保育料は国の幼児教育・保育無償化対象",
+        "mealSupport": "町内在住の3～5歳児の主食費・副食費を町が上限額まで助成",
+        "facilities": "町外施設・認可外保育施設の利用者も要件により対象",
+        "application": "認可施設利用者は原則手続き不要。認可外施設利用者は請求手続きが必要",
+        "excludedCosts": "一時預かり保育料、延長保育料、施設が定めるその他実費は対象外"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/7,22318,17,102,html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町内小中学校の学校給食費を完全無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "学校給食費無償化事業",
+        "target": "階上町内小学校・中学校の児童生徒",
+        "support": "学校給食費を完全無償化",
+        "start": "令和2年度から実施",
+        "currentConfirmation": "青森県交付金活用事業の令和7年度実施見込みで継続を確認"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/9,23919,117,347,html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後4か月未満の母子を対象に、宿泊型・通所型の産後ケアを合計7回まで実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "階上町に住民登録がある産後4か月未満の母親と乳児",
+        "types": "宿泊型、通所型1日コース、通所型半日コース",
+        "services": "乳房ケア・授乳指導、母体の心身ケア・健康相談、休息、沐浴等の育児指導",
+        "usageLimit": "宿泊型は最大3回、通所型は7回以内。宿泊型と通所型を合わせて7回まで",
+        "lodgingFee": "1泊2日。1～5回目3,500円、6・7回目6,000円。食事代は別途負担",
+        "dayFee": "1日コースは1～5回目無料、6・7回目2,000円。半日コースは1～5回目無料、6・7回目1,000円",
+        "facility": "八戸市立市民病院",
+        "application": "利用希望日の1週間前までにすこやか健康課へ申請"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/7,22986,17,100,html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "令和8年度からのこども誰でも通園制度実施に向けた計画は確認できるが、現行の実施施設、対象月齢、月間利用時間、料金、申込方法を利用者向け公式情報で確定できない。",
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "confirmed": "階上町こども計画で令和8年度からの本格実施に向けた調査・検討と関係機関協議を記載",
+        "researchResult": "令和8年度の利用者向け案内、実施施設、利用枠、料金、認定・面談・予約手順を確認できなかった",
+        "caution": "実施状況と現行利用条件はすこやか健康課児童グループへ確認が必要"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/9,23129,c,html/23129/20250325-142436.pdf", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新築住宅取得に基本額と移住・町内施工・若年夫婦・子育て加算を合わせ最大140万円を補助し、令和8年度の性能向上リフォームも支援する。",
+      "details": {
+        "program": "はしかみ移住定住新築応援プロジェクト事業補助金",
+        "target": "町内に自己居住用新築住宅を取得し、10年以上定住、町税滞納なし、町内会加入等の要件を満たす方",
+        "base": "建築費・購入費の2％。居住誘導区域内上限40万円、区域外上限35万円",
+        "additions": "移住者30万円、町内建築業者施工30万円、若年夫婦世帯10万円、子育て世帯は1人10万円・上限30万円",
+        "maximum": "合計最大140万円",
+        "applicationPeriod": "令和8年4月1日から令和9年3月19日まで。予算到達で終了",
+        "renovation": "令和8年度安全安心住宅リフォーム促進支援は耐震関係23％・上限100万4千円、その他性能向上10％・上限20万円等"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/7,8144,107,175,html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.hashikami.lg.jp/index.cfm/7,831,107,175,html", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度の地区別粗大ごみ収集カレンダーを公開し、木製粗大ごみ等は八戸リサイクルプラザの指定受入日に搬入できる。",
+      "details": {
+        "calendar": "中央・西部地域、東部地域等の地区別粗大ごみ収集カレンダーを公開",
+        "sorting": "階上町ごみ分別一覧に従って排出",
+        "directCarry": "八戸リサイクルプラザへの自己搬入が可能",
+        "woodenWaste": "木製粗大ごみは年度ごとの指定受入日に搬入",
+        "otherWaste": "粗大ごみの材質・品目により収集日・受入方法が異なる",
+        "caution": "家電リサイクル対象品や処理困難物等は対象外"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/7,708,27,131,html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波、土砂災害、地震、防災重点農業用ため池について地区別ハザードマップと避難情報を公開する。",
+      "details": {
+        "maps": "階上町ハザードマップ",
+        "coverage": "津波、土砂災害、地震、防災重点農業用ため池",
+        "tsunami": "全域版津波ハザードマップ、津波緊急避難場所・避難所を公開",
+        "landslide": "土砂災害警戒区域等を行政区ごとの地図と避難経路図で公開",
+        "earthquake": "地域危険度マップと揺れやすさマップを公開",
+        "guidance": "平時に危険箇所、避難場所、避難経路を確認"
+      },
+      "source": {"url": "https://www.town.hashikami.lg.jp/index.cfm/9,0,43,174,html", "checkedAt": "2026-07-24"}
+    }
+  }
+}

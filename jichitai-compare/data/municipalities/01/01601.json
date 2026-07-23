@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "01601",
+  "prefectureCode": "01",
+  "prefecture": "北海道",
+  "name": "日高町",
+  "officialUrl": "https://www.town.hidaka.hokkaido.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが日高町公式情報で対象9制度を調査し、7制度を確認済み、2制度を現行条件未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校生世代まで所得制限なく入院・通院の保険診療自己負担を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "日高町在住で健康保険に加入する18歳年度末までの子ども",
+        "coverage": "入院・通院の保険診療自己負担なし",
+        "incomeLimit": "令和7年8月診療分から所得制限なし",
+        "exception": "訪問看護基本利用料の1割分は自己負担となり、月額上限あり",
+        "application": "助成を受けるには受給者証の申請が必要"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/welfare/?content=2980", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の現行子育て・保育案内で、病児・病後児保育の実施施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "confirmed": "保育所、一時保育、こども誰でも通園制度、子育て支援センター等は掲載されている",
+        "unconfirmed": "令和8年度に利用できる病児・病後児保育施設、対象、利用料、登録・予約方法",
+        "guidance": "子育て健康課子育て支援グループへ広域利用を含む現行の利用可否を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/kosodate/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳から5歳児と住民税非課税世帯の0歳から2歳児の保育料を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeToFive": "幼稚園、保育所、認定こども園等の利用料を無償化",
+        "zeroToTwo": "住民税非課税世帯の0歳から2歳児は無償化対象",
+        "mealFee": "給食費、送迎費、行事費等は原則実費負担",
+        "mealExemption": "年収360万円未満相当世帯と一定の第3子以降は副食費免除",
+        "otherServices": "認定を受けた一時預かり等も年齢・課税区分に応じた月額上限まで無償化対象"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=665", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "令和8年度就学援助の現行ページは確認できるが、学校給食費の支給対象・金額や全児童生徒の負担条件を公式HTMLで確定できない。",
+      "details": {
+        "confirmed": "経済的に困窮する小中学生世帯へ学用品費、修学旅行費等の就学援助を実施",
+        "unconfirmed": "令和8年度の学校給食費援助の有無・金額、一般世帯の一食単価・月額、無償化範囲",
+        "guidance": "教育委員会管理課または学校給食担当へ現行の保護者負担条件を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=3437", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、助産師が自宅を訪問する産後ケアを無料で最大5回実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "日高町に住所がある産後1年未満の母子で、体調・育児・授乳に不安がある、または家族支援が不十分な方",
+        "type": "訪問型",
+        "support": "母子の健康相談、授乳方法・乳房ケア、抱っこ・沐浴等の育児相談",
+        "limit": "最大5回、1回2時間以内",
+        "fee": "日高町民は無料。町外里帰り利用は1万5千円を上限に償還払い可能"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=674", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町内3保育所と認定こども園で、就労・疾病・看護・冠婚葬祭等に対応する一時保育を実施する。",
+      "eligibility": {"minAgeMonths": 24, "maxAgeYears": 5},
+      "details": {
+        "facilities": "日高保育所、門別わかば保育所、厚賀すずらん保育所、認定こども園富川ひばり幼稚園",
+        "hours": "平日・土曜日7時30分から18時",
+        "limit": "非定型的保育は週3回・月12日以内、緊急保育は月12日以内",
+        "fee": "3歳未満児日額2,800円、3歳児1,500円、4歳児以上1,300円",
+        "minimumAge": "3歳未満児は4月1日時点で2歳以上から受入"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=448", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住者の住宅取得に新築100万円・中古最大50万円を助成し、高校生以下の子ども1人につき10万円を加算する。",
+      "details": {
+        "program": "日高町移住定住促進助成金",
+        "target": "令和7年4月1日以降に転入し、過去3年間町内住民登録がなく、取得住宅へ5年以上定住する意思がある世帯等",
+        "newHouse": "一律100万円",
+        "usedHouse": "購入金額の4分の1、上限50万円",
+        "childAddition": "高校生以下の18歳以下の子ども1人につき10万円加算",
+        "application": "住宅所在地への異動日から1年以内に申請"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/life/?content=2019", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型ごみは黄色の300円処理証紙を使用し、地区別収集日または処理施設への直接搬入で処理する。",
+      "details": {
+        "fee": "大型ごみ処理証紙1枚300円",
+        "collection": "地区別の令和8年度ごみカレンダーに従い、ごみステーション等へ朝8時30分までに排出",
+        "ticket": "指定袋またはごみ処理証紙を使用しないごみは収集対象外",
+        "directCarry": "平取町外2町衛生施設組合の処理施設へ自己搬入可能",
+        "guide": "令和5年3月版ごみ分別大辞典と令和8年度地区別カレンダーを公開"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/life/?content=754", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・津波、洪水、土砂災害、避難所等を掲載した防災ガイドマップをPDF・Webで公開する。",
+      "details": {
+        "earthquakeTsunami": "地震・津波災害の解説と門別沿岸地区別津波ハザードマップを掲載",
+        "flood": "沙流川・厚別川等の地区別洪水ハザードマップを掲載",
+        "landslide": "風水害・土砂災害の解説と警戒情報を掲載",
+        "evacuation": "指定避難所・指定緊急避難場所、避難行動、情報受信方法を掲載",
+        "webMap": "Web版防災ガイドマップも提供"
+      },
+      "source": {"url": "https://www.town.hidaka.hokkaido.jp/prevention/?content=984", "checkedAt": "2026-07-24"}
+    }
+  }
+}

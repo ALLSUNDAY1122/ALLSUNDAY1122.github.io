@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "02450",
+  "prefectureCode": "02",
+  "prefecture": "青森県",
+  "name": "新郷村",
+  "officialUrl": "https://www.vill.shingo.aomori.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが青森県40自治体の完全性監査で欠落を検出し、新郷村の対象9制度を公式情報で調査。7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児医療費助成・子ども医療費助成",
+        "target": "新郷村に住所があり健康保険に加入する0歳から高校生年代までの子ども",
+        "support": "保険診療による医療費の自己負担分を助成",
+        "payment": "県内医療機関は受給資格証提示による現物給付、県外受診等は償還払い",
+        "application": "出生・転入時等に受給資格登録が必要",
+        "excluded": "保険診療外費用、入院時食事代、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/live/nenkeihukushi/kodomo-iryo/page-2272/", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.shingo.aomori.jp/live/nenkeihukushi/youji/josei/", "checkedAt": "2026-07-24"}]
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "村内に病児・病後児保育を提供できる環境がなく、近隣施設情報の提供を継続する方針だが、令和8年度の広域利用施設・対象年齢・料金を確定できない。",
+      "details": {
+        "currentSituation": "第3期子ども・子育て支援事業計画では、村内に対応できる医療機関がなく事業実施は困難としている",
+        "supportPolicy": "近隣市町の病児保育実施状況の情報提供を継続し、広域利用や環境整備を検討",
+        "pastInformation": "町公式ページには八戸市・十和田市の病児・病後児保育施設を紹介する過年度資料へのリンクがある",
+        "researchResult": "令和8年度に新郷村民が利用できる施設、対象年齢、利用料金、予約方法を現行案内で確定できなかった",
+        "caution": "現行の利用可否は住民課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/common/media/2025/02/93f589fdb6a00dbddf50407ac7bef85a.pdf", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.shingo.aomori.jp/public/ikujikyouiku/hoikusyo-2/", "checkedAt": "2026-07-24"}]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等は無償化対象となり、0～2歳児の課税世帯は市町村民税額と認定区分等に応じて保育料を算定する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeToFive": "国の幼児教育・保育無償化により3～5歳児クラスの保育料は無料",
+        "zeroToTwoNonTax": "住民税非課税世帯の0～2歳児は国制度の無償化対象",
+        "zeroToTwoTaxable": "課税世帯の0～2歳児は父母等の市町村民税額、認定区分、利用時間区分に基づき算定",
+        "facility": "しんごう保育園（幼保連携型認定こども園）",
+        "extendedCare": "延長保育は午後7時まで実施し別料金",
+        "temporaryCare": "一時預かりを午前7時から午後7時まで実施",
+        "excludedCosts": "延長保育料、給食費、教材費等の実費は別途負担となる場合がある"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/public/ikujikyouiku/hoikusyo-2/", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "村立小中学校の学校給食費を無償化し、保育園給食の無償化も継続する方針を掲げる。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "学校給食等無償化",
+        "target": "新郷村立小学校・中学校に在籍する児童生徒",
+        "support": "学校給食費を無料化",
+        "currentPolicy": "令和8年3月改訂のまち・ひと・しごと創生総合戦略で、学校給食及び保育園給食の無償化継続を明記",
+        "purpose": "子育て世帯の経済的負担を軽減"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/common/media/2026/04/21ccded3facd6dbb57a856e07e4994d5.pdf", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後4か月までの母子を対象に、宿泊型とデイサービス型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "新郷村産後ケア事業",
+        "target": "分娩施設退院後の生後4か月までの母子",
+        "types": "宿泊型、デイサービス型",
+        "services": "母親の身体的回復・心理的安定、授乳・育児支援、母子と家族の健やかな育児の支援",
+        "implementation": "第3期子ども・子育て支援事業計画では令和7年度から実施し、令和8年度も各類型2か所の提供量を見込む",
+        "futureExpansion": "必要に応じてアウトリーチ型や対象期間の拡充を検討",
+        "fee": "利用料金・利用上限は利用前に村へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/common/media/2025/02/93f589fdb6a00dbddf50407ac7bef85a.pdf", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.shingo.aomori.jp/live/nenkeihukushi/page-5726/page-30967/", "checkedAt": "2026-07-24"}]
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "生後6か月から3歳未満、月10時間程度の制度枠と令和8年度開始方針は確認できるが、委託先・料金・申込方法を確定できない。",
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "nationalTarget": "生後6か月から3歳未満の未就園児",
+        "usageFramework": "就労要件を問わず月10時間程度まで時間単位で利用",
+        "currentPlan": "第3期子ども・子育て支援事業計画では令和8年度から本格開始する事業として検討",
+        "provider": "計画策定時点で委託先未定",
+        "researchResult": "令和8年度の実施施設、料金、認定・面談・予約方法を利用者向け公式案内で確定できなかった",
+        "caution": "実施状況と現行条件は住民課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/common/media/2025/02/93f589fdb6a00dbddf50407ac7bef85a.pdf", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "40歳以下の夫婦・家族等を対象とする定住促進住宅を月額3万5千円で提供し、18歳以下の子1人につき月5千円を減額する。",
+      "details": {
+        "program": "新郷村定住促進住宅",
+        "target": "新たに村へ住所を有しようとする世帯主40歳以下の夫婦（婚姻予定者を含む）または家族",
+        "housing": "木造2階建て2LDK、駐車場付き",
+        "rent": "月額35,000円",
+        "childReduction": "同居する18歳以下の子ども1人につき家賃を月5,000円減額",
+        "transfer": "入居後22年が経過した場合、土地・家屋を無償譲渡",
+        "application": "募集期間内に申込書と関係書類を企画商工観光課へ提出"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/page-30945/", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.shingo.aomori.jp/live/touroku/akiya/", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは清掃工場への有料自己搬入または処理券を購入して月1回の戸別収集を利用できる。",
+      "details": {
+        "definition": "指定袋に入らない家具、自転車、寝具、家電等の大型家庭ごみ",
+        "directCarry": "清掃工場へ有料で自己搬入可能",
+        "homeCollection": "役場厚生課または西越支所で申込み・処理券購入後、収集日の朝8時までに敷地内の玄関先へ排出",
+        "fee": "120センチメートル未満は1個500円（税抜）、120センチメートル以上は1個1,000円（税抜）",
+        "schedule": "粗大ごみ収集は4月から11月の第3月曜日",
+        "excluded": "家電リサイクル対象品、処理困難物等は収集・清掃工場受入の対象外"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/public/anzeneisei/trush_main/trush_bunbetsu/", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.shingo.aomori.jp/public/anzeneisei/trush_main/trush_nittei2/", "checkedAt": "2026-07-24"}]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、地震、避難所等を掲載した総合防災マップと地区別ハザードマップを公開する。",
+      "details": {
+        "maps": "しんごう防災マップ、地震ハザードマップ、地区別土砂災害ハザードマップ",
+        "coverage": "最大想定規模の洪水浸水、土砂災害、地震、火災、防災知識、指定避難所・避難場所",
+        "districtMaps": "戸来・川代・小坂・西越地区の地震ハザードマップと、各地区の土砂災害ハザードマップを公開",
+        "guidance": "平時に自宅周辺の危険箇所、避難場所、避難経路、非常持出品を確認"
+      },
+      "source": {"url": "https://www.vill.shingo.aomori.jp/public/anzeneisei/kouzuimap/", "checkedAt": "2026-07-24"}
+    }
+  }
+}
