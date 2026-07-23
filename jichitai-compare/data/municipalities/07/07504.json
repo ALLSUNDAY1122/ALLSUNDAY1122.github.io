@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07504",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "浅川町",
+  "officialUrl": "https://www.town.asakawa.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を浅川町公式情報で調査し、8制度をverified、こども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児及び子ども医療費助成制度",
+        "target": "浅川町に住所があり健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "保険診療の一部負担金を現物給付または償還払いで助成",
+        "application": "受給資格登録後、受給資格証の交付を受ける",
+        "excluded": "予防接種、健康診断、薬の容器代、差額ベッド代等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/welfare/001207.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "あさかわこども園の通園児が保育中に体調不良となった場合、保護者の迎えまで園内で無料の緊急対応を行う。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "program": "体調不良児対応型病児保育事業",
+        "target": "あさかわこども園に通園し、保育中に微熱等の体調不良となり、保護者の迎えまで緊急対応が必要な児童",
+        "preExistingCondition": "登園前から体調不良でも、症状急変のおそれがなく事業に支障がないと医師が判断した場合は利用を認めることがある",
+        "facility": "浅川町立あさかわこども園内",
+        "staffing": "看護師・保健師・准看護師等を配置し、職員1人につき利用児童2人程度",
+        "fee": "無料",
+        "scope": "一般の病児保育専用施設ではなく、通園児の体調不良時対応型"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/reiki/reiki_honbun/c571RG00000680.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和8年度から浅川町民のあさかわこども園保育部保育料を無料とし、幼稚部は入園料・授業料・給食費も無料。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facility": "浅川町立あさかわこども園",
+        "nurseryTarget": "0～2歳児を中心とする保育部利用児童",
+        "nurseryFee": "浅川町に住所がある利用者は令和8年度から無料",
+        "kindergartenFee": "幼稚部の入園料・授業料・給食費・バス利用料は無料",
+        "preschoolCare": "幼稚部預かり保育は月2,000円のおやつ代・諸経費実費",
+        "excludedCosts": "延長保育料や教材費等は別途となる場合がある"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/kids/info/", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "幼稚部と町立小中学校の学校給食費を町独自に無償化する。",
+      "eligibility": {"minAgeMonths": 36, "maxAgeYears": 15},
+      "details": {
+        "target": "あさかわこども園幼稚部と浅川町立小学校・中学校の園児・児童生徒",
+        "support": "給食費を無償化",
+        "currentConfirmation": "令和7年12月町議会答弁で、町独自施策として幼稚部・小中学校給食費無償化の実施を確認",
+        "caution": "区域外就学や欠食時等の扱いは教育委員会へ確認"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/gikai/uploads/2026/02/R7.12.02.pdf", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年までの母親と乳児を対象に、助産所等で宿泊・日帰り型の産後ケアを実施し、利用者負担を軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "浅川町産後ケア事業",
+        "target": "産後の体調回復や育児に不安がある母親と乳児",
+        "types": "宿泊型、日帰り型",
+        "services": "母子の健康確認、母体の休養、授乳・育児相談等",
+        "feeSupport": "令和5年4月から利用者負担の減免を導入",
+        "application": "利用前に保健センターへ相談・申請"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/health/001112.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "令和8年度開始と専用ページの存在は確認できるが、対象月齢、月利用上限、料金、実施曜日等を公式ページから取得できない。",
+      "details": {
+        "program": "こども誰でも通園制度",
+        "confirmed": "あさかわこども園公式ページに制度専用ページを設置し、町議会資料で令和8年度開始を確認",
+        "researchResult": "利用者向け専用ページを取得できず、対象・利用時間・料金・申込方法を確定できなかった",
+        "caution": "現行条件はあさかわこども園へ確認が必要"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/kids/tsuen-seido/", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町外から住宅を取得して移住する世帯に、県外移住で最大210万円、県内町外移住で最大100万円を補助する。",
+      "details": {
+        "program": "来て『あさかわ』住宅取得支援事業",
+        "target": "町外から浅川町へ定住するため住宅を新築・購入し、要件を満たす世帯",
+        "outsidePrefecture": "県外移住は新築・建売等の基本額と若者・子育て・町内業者加算を合わせ最大210万円",
+        "withinPrefecture": "県内町外からの移住は最大100万円",
+        "rateLimit": "住宅取得費の2分の1と基本・加算合計のいずれか低い額",
+        "application": "住宅契約日から1年以内に申請し、申請の2週間前までに事前相談",
+        "budget": "予算額到達時に受付終了"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/residence/jutaku/kenchiku/001290.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない粗大ごみは、専用シールを貼ってきららクリーンセンターへ申し込み、戸別収集を利用する。",
+      "details": {
+        "definition": "自転車、タンス、机・椅子、こたつ、ストーブ等、可燃・不燃指定袋に入らない家庭ごみ",
+        "collection": "申込受付後に個別収集",
+        "application": "石川地方生活環境施設組合きららクリーンセンターへ申込み",
+        "fee": "10kg未満は500円シール、10kg以上50kg以下は1,000円シールを1点につき1枚貼付",
+        "excluded": "家電リサイクル対象品、タイヤ、バッテリー、ガスボンベ、農機具等は対象外"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/health/kankyou/000110.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・避難所等を掲載した防災ハザードマップと、内水ハザードマップを公開する。",
+      "details": {
+        "maps": "浅川町防災ハザードマップ、浅川町内水ハザードマップ",
+        "coverage": "災害想定区域、被害程度、避難所、避難経路等",
+        "internalFlood": "下水路・側溝等からの内水氾濫のおそれが高い区域を公開",
+        "guidance": "自宅周辺の危険箇所と避難先・経路を平時に確認"
+      },
+      "source": {"url": "https://www.town.asakawa.fukushima.jp/bousai/000064.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.asakawa.fukushima.jp/bousai/001975.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
