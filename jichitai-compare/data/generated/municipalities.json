@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1377,
+    "municipalityCount": 1378,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -103957,6 +103957,187 @@
           },
           "source": {
             "url": "https://www.city.abiko.chiba.jp/anshin/bousai/bousai_info/abikohazard_map.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "12223",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "鴨川市",
+      "officialUrl": "https://www.city.kamogawa.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を鴨川市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの入院・通院・調剤費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "鴨川市に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の入院・通院・調剤に係る自己負担分を助成",
+            "copayment": "入院・通院・調剤の自己負担は無料",
+            "procedure": "出生・転入等の際に受給券交付申請が必要",
+            "excluded": "保険外費用、高額療養費・付加給付、学校管理下の災害共済給付対象等"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/nobinobi-kamokko/511.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後57日から12歳年度末までの病児・病後児を施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 1,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "生後57日から12歳到達後最初の3月31日までで、病気または回復期にあり集団保育が困難かつ保護者の就労等で家庭保育が困難な子ども",
+            "facility": "亀田リハビリテーション病院内の亀田病児・病後児保育室かもがわ",
+            "hours": "平日7時45分から17時30分、定員4人",
+            "fee": "鴨川市民は1日1,200円。食事・おやつ代等は別途",
+            "procedure": "年度ごとの事前登録、医療機関受診、施設への予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/nobinobi-kamokko/518.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "3～5歳児の利用者負担額は幼児教育・保育の無償化により無料",
+            "currentFee": "課税世帯の0～2歳児は世帯の住民税所得割額、年齢、保育時間等により決定",
+            "procedure": "施設利用申込・教育保育給付認定等が必要",
+            "excluded": "給食費、延長保育料、教材費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/kodomoen-gakudo/509.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立中学校に在学する第3子以降の学校給食費を申請により無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "要件を満たす多子世帯で、市立中学校に在学する子どものうち第3子以降に該当する生徒",
+            "coverage": "無償化決定後、原則として年度末まで対象生徒の学校給食費を徴収しない",
+            "procedure": "保護者が年度ごとに申請し、市の審査・決定を受ける必要がある",
+            "notes": "市立小中学校全児童生徒の一律完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/school/18790.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年までの母子へ訪問・通所・短期入所型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "出産後1年までの母親と乳児で、産後の心身ケアや育児支援を必要とする人",
+            "types": "居宅訪問型、通所型、短期入所型。通所型には集団骨盤ケアもある",
+            "fee": "訪問型1,200円、通所型2,000円、集団骨盤ケア200円、短期入所1泊2日6,000円で以後1泊3,000円加算",
+            "limit": "短期入所は最大7日間宿泊可能",
+            "support": "授乳・乳房ケア、母子の健康確認、心理的ケア、育児相談、休養支援等",
+            "procedure": "原則として利用前に子ども家庭センターへ申請・相談"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/soshiki/57/27505.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで長狭認定こども園で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで",
+            "facility": "鴨川市立長狭認定こども園",
+            "fee": "標準1時間300円。行事参加費等の実費が生じる場合あり",
+            "procedure": "子ども支援課窓口で認定申請、初回面談、利用予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/nobinobi-kamokko/42280.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震基準の対象木造住宅の耐震改修・建替費を最大100万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "1981年5月31日以前に建築・着工され、耐震診断の総合評点が1.0未満等の要件を満たす木造住宅",
+            "support": "耐震改修工事と設計・工事監理、または同一敷地内での建替工事費の一部を補助",
+            "amount": "対象経費の5分の4、上限100万円",
+            "period": "2026年度申請期限は12月11日。予算上限到達時は受付終了",
+            "procedure": "契約・着工前に申請し交付決定を受ける"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/shinsei/1210.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ処理券を使用して集積所へ排出し、大量ごみ等は処理施設へ自己搬入",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "品目に応じた粗大ごみ処理券を貼り、収集日の朝8時30分までに指定集積所へ排出",
+            "directDelivery": "引越し等で大量に出る場合はクリーンステーション鴨川へ自己搬入可能",
+            "alternative": "自己搬入できない場合は市の一般廃棄物収集運搬許可業者へ依頼",
+            "procedure": "品目、処理券枚数、収集日、持込条件を市の最新分別案内で確認"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/gomino-bunbetsu/6994.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・洪水・土砂災害等を掲載したWeb版防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "鴨川市防災マップWeb版と冊子版を公開",
+            "risks": "津波、加茂川等の洪水、ため池決壊、土砂災害警戒区域・特別警戒区域等",
+            "facilities": "避難所、避難場所、津波避難ビル、浸水想定区域等を確認可能",
+            "notes": "県指定後に反映される情報もあるため、市・県の最新情報を併せて確認する"
+          },
+          "source": {
+            "url": "https://www.city.kamogawa.lg.jp/site/bousai/265.html",
             "checkedAt": "2026-07-24"
           }
         }
