@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1445,
+    "municipalityCount": 1447,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -109044,6 +109044,192 @@
       }
     },
     {
+      "code": "12237",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "山武市",
+      "officialUrl": "https://www.city.sammu.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を山武市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの保険診療自己負担額を全額助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "山武市在住で健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院・入院・保険調剤に係る保険診療自己負担額を全額助成",
+            "copayment": "保険診療分の自己負担なし",
+            "procedure": "受給資格登録申請により受給券の交付を受け、医療機関で提示。受給券が使えない場合は償還払い",
+            "excluded": "保険外診療、高額療養費・付加給付、他の公費負担等"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/page/page001381.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から就学前までの病後児をなるとうこども園で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "市内在住で保育園・こども園・幼稚園等に通い、病気の回復期で集団保育が困難かつ家庭保育が困難な生後6か月から就学前までの児童",
+            "facility": "山武市立なるとうこども園 病後児保育室",
+            "hours": "平日8時から18時、定員2人、1回連続7日以内",
+            "fee": "5時間まで500円、以後1時間ごとに100円。生活保護世帯は無料",
+            "procedure": "事前登録、医師が作成する利用連絡票、施設予約等が必要",
+            "notes": "病気の急性期を預かる病児保育ではなく回復期の病後児保育"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/kosodate-sammu/boshi/page001179.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等の国制度無償化に加え、2026年度から0～2歳児の第2子以降を市独自で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "national": "3～5歳児と住民税非課税世帯の0～2歳児等は国制度の範囲で無償化",
+            "citySupport": "2026年4月から、世帯収入にかかわらず18歳年度末までの子どもを年長順に数えた第2子以降の3歳未満児の保育料を無料化",
+            "facilities": "保育園、認定こども園、小規模保育、家庭的保育が対象。認可外保育施設は市独自無料化の対象外",
+            "procedure": "対象者は原則手続き不要",
+            "currentFee": "課税世帯の第1子となる0～2歳児は市民税額等に応じた保育料",
+            "excluded": "延長保育料、一時預かり保育料、給食費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/kosodate-sammu/info/page008102.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は要件を満たす第3子以降の市立中学生の学校給食費を申請により無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "市内在住で対象年齢の子を3人以上扶養し、第3子以降が山武市立中学校で給食を受ける等の要件を満たす保護者",
+            "coverage": "対象となる第3子以降の中学生の学校給食費を無償化",
+            "procedure": "対象生徒1人につき毎年度申請書と扶養確認書類の提出が必要",
+            "condition": "生活保護・就学援助等で給食費支援を受けておらず、扶養する子全員の給食費に滞納がないこと",
+            "currentFee": "対象外の小中学生は学校給食費を負担し、物価高騰分は公費で補填して料金を据え置き",
+            "notes": "小中学校全員の一律完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/kyouiku/gakkou-kyouiku/kyusyoku/page005500.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・日帰り・訪問型の産後ケアを産後1年未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "山武市に住民票がある産後1年未満の母親と乳児で、入院治療・医療的介入や感染症対応を必要としない方",
+            "types": "宿泊型、日帰り型、訪問型",
+            "limit": "各類型7日以内。日帰り・訪問型は1日1回2時間以内",
+            "support": "授乳・乳房ケア、沐浴・育児相談、母体と乳児の健康確認、休養支援等",
+            "fee": "類型・施設に応じた自己負担あり。非課税・生活保護世帯は全額免除",
+            "procedure": "市へ事前相談・利用申請し、承認後に施設と日程調整"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/kosodate-sammu/ninshin-tanjyo/page001391.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満をまつおこども園で月10時間まで無料受入",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園制度（こども誰でも通園制度）",
+            "target": "山武市に住民登録があり、保育園・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "facility": "山武市立まつおこども園",
+            "hours": "平日9時から12時・13時から16時の範囲で月10時間まで",
+            "capacity": "同時利用3人以内を基本",
+            "fee": "2027年3月31日まで無料",
+            "procedure": "前月の受付期間に施設へ電話し、利用決定後に申請書を提出"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/kosodate/kosodate-info/page006606.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅の耐震改修費を3分の1・上限50万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "housing": "2000年5月31日以前に着工した市内の木造戸建・併用住宅で、地上2階以下等の要件を満たすもの",
+            "target": "対象住宅を所有・居住する市民等で、市税等の滞納がなく過去に同補助を受けていない方",
+            "amount": "耐震改修に係る設計・工事施工・監理費の3分の1以内、上限50万円",
+            "period": "2026年度申請期間は4月1日から11月30日まで。予算上限で終了",
+            "procedure": "契約・工事着手前に交付申請し、交付決定後に実施"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/kurashi/jyutaku/taishin/page005620.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "家庭粗大ごみを地域別処理施設へ直接搬入または戸別収集で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "methods": "ごみ処理施設への直接持込み、または自宅回収の戸別収集",
+            "naruto": "成東地域は東金市外三市町環境クリーンセンターへ申込み",
+            "otherAreas": "山武・松尾・蓮沼地域は山武郡市環境衛生組合へ申込み",
+            "procedure": "居住地域、品目、搬入・収集条件、手数料を各処理施設の最新案内で確認"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/faq.php?c=11&code=100&lc=1&mode=detail",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "水害・土砂災害・津波・地震を選択表示できるWEB版ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "日本語・英語対応の山武市WEB版ハザードマップ",
+            "risks": "洪水等の水害、土砂災害、津波、地震の揺れ・液状化等",
+            "functions": "住所検索、災害種別の切替、避難所・周辺リスクの確認が可能",
+            "support": "自宅・職場周辺の危険性、避難経路・避難先を事前確認するために利用"
+          },
+          "source": {
+            "url": "https://www.city.sammu.lg.jp/bousai-syobo/saigai/webban/page007377.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "13101",
       "prefectureCode": "13",
       "prefecture": "東京都",
@@ -148593,6 +148779,186 @@
           },
           "source": {
             "url": "https://www.ikedamachi.net/0000000006.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20482",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "松川村",
+      "officialUrl": "https://www.vill.matsukawa.nagano.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を松川村公式情報で確認し、9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの保険診療自己負担分を窓口無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "松川村に住所がある18歳到達後最初の3月31日までの子ども。所得制限なし",
+            "coverage": "医療機関・薬局等の保険診療自己負担分を福祉医療費として助成",
+            "copay": "令和7年4月診療分から窓口負担0円",
+            "procedure": "受給者証と保険資格確認書類を提示。県外受診等は領収書等を添えて支給申請",
+            "excluded": "保険適用外費用、高額療養費等の他制度給付、学校災害共済、第三者行為等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/welfare/?content=165",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "満1歳から就学前までを大町総合病院の病児・病後児保育室で預かる",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "病気療養中または回復期で集団保育・家庭保育が困難な満1歳～就学前児",
+            "facility": "市立大町総合病院 病児・病後児保育室『北アルプスキッズルーム』",
+            "hours": "平日8時～18時、1日4人、原則連続5日まで",
+            "procedure": "年度ごとの事前登録、前日17時までの予約、医師の情報提供書が必要",
+            "fee": "利用料、食事代、減免条件は施設の現行案内で確認"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/education/?content=282",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、0～2歳児は所得・多子世帯に応じて軽減",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "threeToFive": "認定こども園等の3～5歳児と住民税非課税世帯の0～2歳児は無償",
+            "underThree": "課税世帯の0～2歳児は市町村民税額に応じて算定",
+            "multiChild": "生計同一の兄姉がいる場合、第2子半額・第3子以降0円等の軽減を実施",
+            "unlicensed": "認可外保育施設の3歳未満児は第2子半額・第3子以降全額助成。上限月21,000円・42,000円",
+            "excluded": "給食費、延長保育料、用品費等の実費は別途"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/education/?content=137",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "小中学校給食費を完全無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "松川村立小中学校の児童生徒の保護者",
+            "support": "令和8年6月時点の村政策目標で小中学校給食費完全無償化を実現済みと公表",
+            "procedure": "対象期間、欠食時の精算、村外通学者等の取扱いは教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/administration/?content=829",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子に宿泊・通所型産後ケアを提供し、5回まで1回2,500円を追加補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "松川村に住所があり、産後の心身回復・育児支援を必要とする母子",
+            "types": "宿泊型、通所型",
+            "care": "母体の健康管理、乳房ケア・授乳支援、沐浴等の育児相談、日常生活支援",
+            "support": "令和8年4月から利用者1人につき5回まで、1回2,500円を村が追加補助",
+            "procedure": "利用前に申請・面談を行い、実施施設、対象月齢、自己負担を確認"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/education/?content=1644",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から3歳未満の未就園児を月10時間、1時間300円で預かる",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "生後6か月～満3歳未満で保育園等に通っていない子ども",
+            "facility": "認定こども園松川北保育園",
+            "limit": "子ども1人につき月10時間まで",
+            "hours": "平日9時～13時",
+            "fee": "1時間300円",
+            "procedure": "総合支援システムで利用認定、施設面談、予約を行う"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/education/?content=1359",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住世帯を最大100万円支援し、空き家改修・片付け・解体補助も実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "migration": "移住・定住促進補助金で対象世帯へ最大100万円を支援",
+            "renovation": "空き家バンク物件のリフォーム・片付け費用を補助",
+            "demolition": "空き家の解体費用も補助対象",
+            "procedure": "契約・工事・処分の着手前に担当課へ相談し、交付決定後に実施",
+            "confirmation": "補助率、上限、加算、併用条件は申請年度の案内で確認"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/life/?content=311",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "年2回の粗大ごみ収集と穂高クリーンセンターへの有料直接搬入を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "令和8年度は6月7日・12月6日の8時30分～12時に粗大ごみを収集",
+            "facility": "可燃性粗大ごみは穂高クリーンセンターへ直接搬入可能",
+            "fee": "10kg未満は1回220円、10kg以上は10kgにつき220円",
+            "size": "長さ2m・幅1.2m・高さ1m以下、木材は直径または一辺20cm以下",
+            "excluded": "家電リサイクル対象品、処理困難物等は別処理"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/life/?content=155",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "乳川・芦間川・穂高川の洪水と土砂災害を掲載した令和8年更新ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "flood": "乳川・芦間川は24時間762mm、穂高川は48時間796mmの想定最大規模降雨を掲載",
+            "landslide": "川西地区の新規土砂災害警戒区域を反映",
+            "evacuation": "災害種別ごとの避難所利用可否と位置情報システムを提供",
+            "planning": "マイ・タイムライン作成資料を公開"
+          },
+          "source": {
+            "url": "https://www.vill.matsukawa.nagano.jp/prevention/?content=156",
             "checkedAt": "2026-07-24"
           }
         }
