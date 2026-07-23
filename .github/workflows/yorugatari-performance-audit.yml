@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - yorugatari/index.html
+      - yorugatari/5min-horror.html
       - yorugatari/archive.html
       - yorugatari/assets/app.js
       - yorugatari/assets/archive.js
@@ -20,7 +21,7 @@ on:
 
 concurrency:
   group: yorugatari-performance-audit
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -28,7 +29,7 @@ permissions:
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -39,6 +40,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Validate performance audit syntax
+        run: node --check yorugatari/tools/performance-audit.mjs
 
       - name: Install Lighthouse tools
         run: npm install --no-save lighthouse chrome-launcher
@@ -86,4 +90,6 @@ jobs:
 
       - name: Enforce completed audit
         if: always()
-        run: test "${{ steps.audit.outcome }}" = "success"
+        shell: bash
+        run: |
+          node -e "const report=require('./yorugatari-performance-report.json'); if(!report.success){console.error(JSON.stringify({failures:report.failures,errors:report.errors},null,2)); process.exit(1)}"
