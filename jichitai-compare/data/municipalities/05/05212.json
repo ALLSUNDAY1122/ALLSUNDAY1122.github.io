@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "05212",
+  "prefectureCode": "05",
+  "prefecture": "秋田県",
+  "name": "大仙市",
+  "officialUrl": "https://www.city.daisen.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが大仙市公式情報で対象9制度を調査し、9制度すべてを確認済みとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、所得制限なく保険診療の自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "保護者が大仙市に住民登録する0歳から18歳到達後最初の3月31日までの乳幼児・小中高生等",
+        "coverage": "県内医療機関で福祉医療費受給者証とマイナ保険証等を提示すると保険適用分の自己負担を助成",
+        "incomeLimit": "所得制限なし。ただし受給区分判定のため所得確認が必要",
+        "outsidePrefecture": "県外医療機関等では自己負担後の申請により全部または一部を払い戻し",
+        "application": "福祉医療費受給者証（マル福）の交付申請が必要"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/contents-10821", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後2か月を経過した児童から小学生までを、市内3施設で病児・病後児保育する。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 12},
+      "details": {
+        "target": "生後2か月経過後の保育所等利用児童または小学生で、病気・回復期にあり家庭保育が困難な児童",
+        "facilities": "大曲こどもクリニック、生和堂医院、太田診療所の病児・病後児保育園",
+        "hours": "原則8時から18時。施設・曜日により16時または13時まで",
+        "fee": "市民1日1,000円、市外在住者2,000円、生活保護世帯無料",
+        "limit": "1回につき休業日を除き連続7日以内",
+        "application": "事前に医療機関を受診し、利用施設へ直接申し込む"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/contents-12332", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和6年4月から年齢・所得を問わず全ての子どもの保育料を完全無償化し、副食費も月5,100円まで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "fee": "0～5歳の全ての子どもの保育料を完全無償化",
+        "incomeCondition": "所得・世帯区分を問わない",
+        "sideDish": "副食費は月額5,100円を上限に無償化し、上限超過分は実費負担",
+        "start": "2024年4月から市独自の完全無償化を実施",
+        "preschoolCare": "保育の必要性認定を受けた3～5歳児の預かり保育も無償化対象"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/contents-10468", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和7年10月から市立小中学校の給食費を完全無償化し、弁当持参者や市外校通学者にも相当額を補助する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "小学校は2025年10月分から無償化",
+        "juniorHigh": "中学校は2025年4月分から無償化",
+        "support": "食物アレルギー等による弁当持参者、市外小中学校・特別支援学校小学部中学部への通学者に給食費相当額を補助",
+        "application": "市立小中学校在籍者は原則手続き不要。相当額補助の対象者は申請が必要",
+        "exclusions": "生活保護の教育扶助・就学援助で給食費支給を受ける場合は重複対象外"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/p20250519085825", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子に宿泊型・通所型・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "大仙市に住所があり産後ケアを必要とする出産後1年未満の母親と乳児",
+        "types": "宿泊型、通所型、訪問型",
+        "support": "母親の心身ケア・産後生活助言、乳児の健康確認、授乳・沐浴指導、乳房ケア、育児相談等",
+        "application": "妊娠9か月から申請可能。こども家庭センターへ連絡して申し込む",
+        "fees": "利用施設・型・世帯区分別の料金を市の令和8年度料金表で案内"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/p20240926170249", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "家庭の事情で一時的に保育できない未就学児を市内施設で預かり、市内児童の料金を通常額の半額とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "target": "家庭の都合により一時的に保育できない就学前児童",
+        "hours": "8時30分から17時",
+        "fee": "通常は3歳未満1日4,800円・4時間2,400円、3歳以上1日2,000円・4時間1,000円。大仙市内児童は半額",
+        "application": "利用希望施設へ直接電話で申し込む",
+        "additionalProgram": "生後6か月から満3歳未満の未就園児には月10時間までのこども誰でも通園制度も実施"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/contents-10226", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "市外から移住して住宅を取得する世帯に、区分・加算に応じて新築最大300万円、中古最大80万円を補助する。",
+      "details": {
+        "target": "転入直前まで連続5年以上市外に住み、令和8年4月1日以降に大仙市へ転入して5年以上定住する移住者",
+        "support": "新築または中古住宅の取得費の一部を補助。住宅取得前・契約前の申請が必要",
+        "rate": "区分により対象経費の5分の1または3分の1",
+        "amount": "Uターン新築は加算込み最大300万円、Uターン以外の新築最大200万円、中古最大80万円",
+        "additions": "市内業者施工、45歳未満、中学生以下の子との同居、旧住宅解体等の加算。補助後の出生児1人につき30万円の出生加算支援金あり",
+        "conditions": "市税滞納がなく、対象住宅に継続居住すること等"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/contents-14061", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "地域別ごみカレンダーで粗大ごみの戸別収集日と申込方法を案内する。",
+      "details": {
+        "guide": "令和8年度版の地域別ごみカレンダーと分別案内を公開",
+        "collection": "粗大ごみは地域別に戸別収集を行い、カレンダー記載の方法で事前申込み",
+        "application": "各地域のカレンダーで申込先・受付期間・収集日を確認",
+        "sorting": "品目別の分別は市のごみナビくんで確認可能",
+        "contact": "各支所市民サービス課または生活環境課へ問い合わせ"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/contents-9635", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水浸水想定区域等を確認できるWeb版・PDF版の大仙市ハザードマップを公開する。",
+      "details": {
+        "coverage": "国・県作成の洪水浸水想定区域図を基にした浸水リスク、避難施設等",
+        "web": "大仙市Web版ハザードマップで住所周辺のリスクを確認可能",
+        "pdf": "大仙市全域のPDF版ハザードマップを公開",
+        "updates": "最新の洪水浸水想定区域は国土交通省・秋田県の情報も案内",
+        "caution": "航空写真の更新頻度は地区により異なるため最新状況を別途確認"
+      },
+      "source": {"url": "https://www.city.daisen.lg.jp/archive/contents-10962", "checkedAt": "2026-07-23"}
+    }
+  }
+}
