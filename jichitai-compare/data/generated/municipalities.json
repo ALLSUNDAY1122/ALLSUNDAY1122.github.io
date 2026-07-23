@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1306,
+    "municipalityCount": 1307,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -98212,6 +98212,188 @@
           },
           "source": {
             "url": "https://www.city.noda.chiba.jp/kurashi/anzen/bousai/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "12210",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "茂原市",
+      "officialUrl": "https://www.city.mobara.chiba.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を茂原市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの入院・通院・調剤に係る保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "茂原市に住民登録があり、健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の入院・通院・調剤を助成",
+            "copayment": "市民税所得割課税世帯は入院1日・通院1回各300円、同月同一医療機関で入院11日目以降・通院6回目以降は無料。非課税世帯と保険調剤は無料",
+            "procedure": "子ども医療費助成受給券の交付申請が必要",
+            "excluded": "保険外費用、学校管理下の災害共済給付対象、第三者行為等"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000000041.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "県内の病児・病後児保育施設利用料を2分の1・上限2,500円補助",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "生後6か月から小学6年生までの児童",
+            "facility": "県内で病児・病後児保育事業を行う施設。特定事業者の従業員児童のみを対象とする施設を除く",
+            "support": "飲食費等を除く利用料の2分の1、1回上限2,500円",
+            "start": "2026年4月1日利用分から",
+            "procedure": "申請書に領収書を添えて保育課へ持参または郵送"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000009293.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等を利用する3～5歳児と、保育の必要性がある住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を無償化。預かり保育や認可外保育施設等は認定区分に応じた月額上限あり",
+            "currentFee": "課税世帯の0～2歳児は市民税額等に基づく保育料で、市独自の一律完全無償化ではない",
+            "mealSupport": "年収360万円未満相当世帯、第3子以降等は副食費免除制度あり",
+            "excluded": "主食費・副食費、教材費、行事費、送迎費、制服代、延長保育料等の実費"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000005438.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度の市立小中学校給食費を完全無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "茂原市立小中学校で学校給食の提供を受ける児童生徒",
+            "coverage": "2026年度の学校給食費を公費で負担し、保護者負担を0円とする完全無償化",
+            "period": "2026年度",
+            "procedure": "市の案内に基づき、通常の学校給食提供対象者は追加負担なし",
+            "notes": "将来、社会情勢等により負担を求める場合は市が別途案内"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000008516.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・日帰り・訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "茂原市に住民登録があり、産後ケアを必要とする母親と赤ちゃん",
+            "types": "宿泊型、日帰り型、訪問型",
+            "age": "宿泊型は産後30日まで、日帰り型は産後4か月まで、訪問型は産後1年まで",
+            "limit": "宿泊型と日帰り型を合わせて7日以内、訪問型7日以内",
+            "fee": "課税世帯は宿泊1日3,000円または3,400円、日帰り2,000円または2,500円、訪問1,400円。非課税・生活保護世帯は軽減",
+            "support": "母体の休息・健康管理、乳房ケア、乳児の健康管理、沐浴・授乳指導、育児相談等"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000005410.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "保育所・認定こども園・地域型保育・企業主導型保育施設に通っていない生後6か月から満3歳未満の子ども",
+            "facility": "茂原市立鶴枝保育所",
+            "hours": "月曜日から金曜日の8時30分から16時、月10時間まで",
+            "fee": "一般世帯1時間300円、市町村民税所得割合算額77,101円未満世帯100円、生活保護世帯無料",
+            "procedure": "市の利用認定後、施設で面談・予約"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000009305.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅の耐震改修費を5分の4・最大115万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "茂原市内に住所があり、対象住宅を所有・居住し、市税等の滞納がない人",
+            "housing": "市内の2階建て以下の木造一戸建て・併用住宅で、1981年5月31日以前着工、在来軸組構法、耐震診断評点1.0未満等の要件を満たす住宅",
+            "amount": "耐震設計・改修工事・工事監理費の合計の5分の4、上限115万円。併せて行う対象リフォームは10分の1、上限20万円",
+            "procedure": "契約前に申請し、2026年度は4月15日から12月28日まで受付。予算到達時に終了"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000005923.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "重さ20キログラム・長さ1.8メートル以内の粗大ごみを月1回集積所収集",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "指定袋に入れず排出する自転車、ベビーカー、レンジ、掃除機、扇風機、衣装箱等の大型家庭ごみ",
+            "collection": "地区ごとの月1回の収集日に集積所へ排出。ごみか判別しにくい品には『粗大ごみ』と表示",
+            "limit": "集積所収集は重さ20キログラム以内、長さ1.8メートル以内",
+            "directDelivery": "上限を超えるものは環境衛生センターへ直接搬入",
+            "fee": "直接搬入は20キログラムごと478円（税込、10円未満切捨て）"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/0000000070.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・内水・地震・液状化・土砂災害・ため池等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "洪水ハザードマップ、内水ハザードマップ、地震ハザードマップ、防災重点ため池マップ等",
+            "risks": "一宮川・南白亀川等の洪水、内水氾濫、土砂災害、地震の揺れ・建物危険度・液状化、ため池等",
+            "facilities": "避難情報や指定避難所等と併せて確認可能",
+            "support": "自宅周辺の危険度、避難先・避難経路、災害情報の入手方法の確認に活用可能"
+          },
+          "source": {
+            "url": "https://www.city.mobara.chiba.jp/category/1-5-2-8-0-0-0-0-0-0.html",
             "checkedAt": "2026-07-24"
           }
         }
