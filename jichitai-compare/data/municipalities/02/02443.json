@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "02443",
+  "prefectureCode": "02",
+  "prefecture": "青森県",
+  "name": "田子町",
+  "officialUrl": "https://www.town.takko.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を田子町公式情報で調査し、6制度をverified、3制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生年代まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "田子町子ども医療費給付",
+        "target": "田子町内に住む0歳から高校生年代までの子どもの保護者",
+        "support": "医療機関等で支払った保険診療の自己負担分を助成",
+        "application": "出生・転入時や健康保険・住所等の変更時に受給資格の手続きが必要",
+        "payment": "受給資格証の提示による現物給付または領収書等を添えた償還払い"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/10,2289,24,243,html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.takko.lg.jp/index.cfm/10,1327,24,225,html", "checkedAt": "2026-07-24"}]
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "病後児保育を扱う過年度資料は確認できるが、令和8年度の実施施設・対象年齢・料金・予約方法を現行公式案内で確定できない。",
+      "details": {
+        "confirmedPastInformation": "過年度の幼稚園・保育園利用案内では田子保育園の有料病後児保育を掲載",
+        "researchResult": "令和8年度利用者向けの専用案内、対象年齢、利用料金、医師連絡票、予約方法を確認できなかった",
+        "caution": "現行の利用可否は住民課子育て定住移住支援室またはこども園へ確認が必要"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/10,0,24,html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等を無償化し、0～2歳児は市町村民税区分に応じて算定した保育料に町・県の軽減制度を適用する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeToFive": "国の幼児教育・保育無償化により対象児童の保育利用料を無償化",
+        "zeroToTwoNonTax": "市町村民税非課税世帯は利用者負担額0円",
+        "zeroToTwoTaxable": "課税世帯は市町村民税所得割額等に応じて保育料を算定",
+        "townReduction": "町公式案内では算定保育料の3分の1相当を町が負担する軽減を案内",
+        "prefectureReduction": "青森県保育料軽減事業に基づく軽減を規則に規定",
+        "application": "令和8年度幼稚園・認定こども園利用案内に従い申請"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/10,113,24,139,html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.town.takko.lg.jp/reiki/reiki_honbun/c061RG00000609.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.town.takko.lg.jp/index.cfm/10,114,24,139,html", "checkedAt": "2026-07-24"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2024年10月1日分から、田子町の小中学校に通う児童生徒の学校給食費を無償化している。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "田子町学校給食費無償化",
+        "target": "田子町の小中学校に通う児童生徒",
+        "support": "学校給食費の保護者負担分を無償化",
+        "start": "2024年10月1日分から",
+        "funding": "青森県学校給食費無償化等子育て支援市町村交付金を活用"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/10,0,32,445,html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "妊娠・出産支援と圏域の周産期連携は確認できるが、令和8年度産後ケア事業の対象月齢・利用類型・料金を確定できない。",
+      "details": {
+        "confirmedSupport": "妊娠届、保健師等との面談、妊産婦支援、八戸圏域の周産期医療連携を案内",
+        "researchResult": "宿泊型・日帰り型・訪問型の産後ケアについて、令和8年度の利用者向け制度案内を確認できなかった",
+        "caution": "実施状況・利用条件は地域包括支援課健康増進グループへ確認が必要"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/10,0,104,327,html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "乳児等通園支援事業の条例整備は確認できるが、令和8年度の実施施設・対象月齢・月上限・料金・申込方法を確定できない。",
+      "details": {
+        "confirmedLegalBasis": "田子町乳児等通園支援事業の設備及び運営に関する基準を定める条例を制定",
+        "researchResult": "利用者向けの実施施設、利用可能時間、料金、認定・予約方法を現行公式案内で確認できなかった",
+        "caution": "実施状況は住民課子育て定住移住支援室へ確認が必要"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/reiki/reiki_honbun/c061RG00000654.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度、町内業者による住宅新築・リフォーム費の一部を補助し、若年・子育て・Uターン世帯には家賃補助も設ける。",
+      "details": {
+        "program": "田子町住宅リフォーム支援事業",
+        "target": "町内の自己居住用住宅を新築・リフォームし、税等の滞納がない町民または事業完了時に町へ住民登録する方",
+        "newConstruction": "工事費の5％。規模により上限30万円または60万円",
+        "renovation": "対象工事費20万円以上の工事費10％、上限20万円。特定用途は15％、上限30万円",
+        "period": "2026年4月1日から2027年2月28日まで。予算到達で終了",
+        "rentSupport": "若年夫婦・子育て・Uターン世帯の民間賃貸住宅家賃を月額上限2万円補助"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/9,0,23,130,html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.takko.lg.jp/index.cfm/9,12199,82,231,html", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "町が指定する粗大ごみ収集日に、令和8年度ごみ収集カレンダーと案内に従って排出する。",
+      "details": {
+        "calendar": "令和8年度ごみ収集カレンダーを公開",
+        "collection": "町が夏期等の粗大ごみ収集日を全戸配布・公式サイトで案内",
+        "method": "対象品目・排出場所・時間は各回の粗大ごみ収集案内に従う",
+        "sorting": "家庭ごみの分別区分と収集日程を公式ページで案内",
+        "caution": "家電リサイクル対象品や処理困難物は通常収集の対象外となる場合がある"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/9,12323,20,120,html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.takko.lg.jp/index.cfm/9,86,20,120,html", "checkedAt": "2026-07-24"}]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震・火山等の危険区域、避難所・避難情報を掲載した防災マップを公開する。",
+      "details": {
+        "map": "田子町防災マップ",
+        "coverage": "洪水浸水想定区域、土砂災害警戒区域、地震の揺れやすさ、火山災害、避難所等",
+        "evacuation": "警戒レベル別の避難行動、避難場所・避難経路を掲載",
+        "regionalPlan": "田子町地域防災計画と八戸圏域国土強靱化地域計画も公開",
+        "guidance": "平時に自宅周辺の危険箇所と避難先を確認"
+      },
+      "source": {"url": "https://www.town.takko.lg.jp/index.cfm/9,0,22,html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.takko.lg.jp/index.cfm/9,5717,22,275,html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
