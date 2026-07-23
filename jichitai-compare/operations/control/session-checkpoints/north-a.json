@@ -5,14 +5,14 @@
   "parentTeam": "北日本調査班",
   "integrationBranch": "region/north",
   "prefectureCodes": ["02", "03", "07"],
-  "updatedAt": "2026-07-24T00:10:00+09:00",
-  "status": "researching",
+  "updatedAt": "2026-07-24T07:45:00+09:00",
+  "status": "completed",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 51,
-  "currentMunicipality": {"code": "07301", "name": "桑折町", "stage": "researching"},
-  "workingBranch": "data/07301-koori",
+  "remainingUninvestigatedCount": 0,
+  "currentMunicipality": null,
+  "workingBranch": null,
   "pullRequestNumber": null,
-  "ciStatus": "not_started",
+  "ciStatus": "success",
   "completedSinceSplit": [
     {"code":"02387","name":"中泊町","pullRequestNumber":844,"ciStatus":"success","mergedAt":"2026-07-22T22:18:00+09:00"},
     {"code":"02401","name":"野辺地町","pullRequestNumber":856,"ciStatus":"success","mergedAt":"2026-07-22T22:42:00+09:00"},
@@ -73,6 +73,15 @@
     {"code":"07213","name":"伊達市","pullRequestNumber":1492,"ciStatus":"success","mergedAt":"2026-07-24T00:03:00+09:00"},
     {"code":"07214","name":"本宮市","pullRequestNumber":1506,"ciStatus":"success","mergedAt":"2026-07-24T00:09:00+09:00"}
   ],
+  "completionAudit": {
+    "assignedPrefectureCodes": ["02", "03", "07"],
+    "assignedMunicipalityCount": 132,
+    "completedTaskCount": 132,
+    "remainingCount": 0,
+    "lastCompletedMunicipality": {"code": "07564", "name": "飯舘村", "pullRequestNumber": 1928},
+    "verifiedAt": "2026-07-24T07:45:00+09:00",
+    "evidence": "青森県・岩手県・福島県の自治体コード昇順で各末尾自治体までtask.status=mergedを確認"
+  },
   "blocked": [],
-  "nextAction": "桑折町（07301）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
+  "nextAction": "北日本A担当（青森県・岩手県・福島県）は全自治体完了。統括によるregion/northのmain統合・全国公開監査を待つ。"
 }
