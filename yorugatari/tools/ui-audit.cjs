@@ -44,7 +44,7 @@ async function run() {
   await noHorizontalOverflow(page, 'top mobile has no horizontal overflow');
   record('reader panel shows saved completion', (await page.locator('.reader-panel').innerText()).includes('1 / 100話 読了'));
 
-  await page.locator('#searchInput').fill('エレベーター');
+  await page.locator('#searchInput').fill('最後のエレベーター');
   const searchCards = page.locator('.card');
   record('search narrows to matching story', await searchCards.count() === 1 && (await searchCards.first().innerText()).includes('最後のエレベーター'), await searchCards.count());
 
