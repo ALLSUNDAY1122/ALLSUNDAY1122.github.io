@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03214",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "八幡平市",
+  "officialUrl": "https://www.city.hachimantai.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を八幡平市公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生世代まで、所得制限なしで保険診療の自己負担額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "八幡平市に住所を有する18歳到達後最初の3月31日までの子ども",
+        "incomeLimit": "なし",
+        "coverage": "医療機関・薬局に支払った保険適用分の自己負担額",
+        "exclusion": "学校管理下のけが等は災害共済給付制度を利用",
+        "application": "市へ受給者証の交付を申請"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/site/kosodate/1553.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "市の第3期子ども・子育て支援事業計画では、病児・病後児保育事業は市内未実施で、今後市内保育施設での実施を検討するとしている。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "病児・病後児保育事業",
+        "availability": "八幡平市では実施していない",
+        "serviceDescription": "発熱等の急な病気または回復期で、集団保育・家庭保育が困難な児童を医療機関等で一時保育する事業",
+        "plan": "令和9年度以降、市内保育施設1か所での実施を検討",
+        "plannedUsers": "令和9年度以降、年間10人を見込む"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/uploaded/attachment/26663.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児に加え、2人以上の子を扶養する世帯の第2子以降の3歳未満児は保育料無料。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalFree": "3歳児以上クラスと住民税非課税世帯の0～2歳児クラスは無償",
+        "citySupport": "2人以上の子どもを扶養する場合、第2子以降の3歳未満児は無償",
+        "mealSupport": "3歳児以上クラスの給食費は、市が月額4,800円を補助し、超過分は保護者負担",
+        "otherCosts": "延長保育料、行事費等は保護者負担",
+        "effectiveSince": "第2子以降無償化は令和5年度から"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/site/kosodate/2132.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年4月分から、市内小学校の学校給食費を保護者の申請不要・負担なしで実質無償化する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "program": "市内小学校の学校給食費無償化",
+        "target": "八幡平市立小学校の児童",
+        "start": "令和8年4月分から",
+        "parentPayment": "なし",
+        "application": "保護者による申請等の手続きは不要",
+        "annualAmount": "児童1人当たり年額52,800円見込み",
+        "targetStudents": "773人見込み",
+        "funding": "国の給食費負担軽減交付金を活用し、交付額を超える食材費を市が負担"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/uploaded/attachment/26775.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子に、訪問型と医療機関でのデイサービス型産後ケアを無料で提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "市内に住所がある産後1年未満の母親と乳児",
+        "types": "訪問型、デイサービス型",
+        "services": "母体の体調管理、心理的ケア、授乳・乳房ケア、沐浴等の育児指導、デイサービス型での子の一時預かり等",
+        "fee": "国・県の補助により無料。デイサービス型の食事代は自己負担",
+        "usageLimit": "訪問型2回、デイサービス型はコースを問わず2回まで",
+        "application": "健康こども課へ申請後、承認通知を受けて予約"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/site/kosodate/18186.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に在籍していない生後6か月から満3歳未満の子どもが、月10時間まで松尾保育所を利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "八幡平市乳児等通園支援事業（こども誰でも通園制度）",
+        "target": "6か月以上満3歳未満で、保育所・認定こども園・幼稚園等に在籍していない児童",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間",
+        "fee": "通常1時間300円。生活保護世帯無料、非課税世帯60円、所得等に応じ90円または150円",
+        "facility": "八幡平市立松尾保育所",
+        "hours": "平日9時から11時",
+        "application": "利用登録申請後、総合支援システムで初回面談を申請"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/site/kosodate/28374.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・移住者が空き家バンク物件を購入・改修する場合に補助し、18歳以下の子または妊婦がいる世帯には20万円を加算する。",
+      "details": {
+        "program": "八幡平市若者・移住者空き家住まい支援補助金",
+        "target": "39歳以下の若者、または県外居住中・県外から転入後1年以内の移住者で、空き家バンク物件を自ら居住するため取得・改修する人",
+        "purchaseLimit": "空き家購入費は上限30万円",
+        "renovationLimit": "改修工事費または自ら改修する場合の資材費は上限40万円",
+        "childAddition": "18歳年度末までの子または妊娠届出済みの妊婦がいる世帯は20万円加算",
+        "additionRule": "購入と改修の双方を行う場合、子育て加算はいずれか一方のみ"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/soshiki/machi/11371.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋や不燃物カゴに入らない粗大ごみは、八幡平市清掃センターへ直接搬入するか、許可業者へ依頼する。",
+      "details": {
+        "definition": "燃えるごみ指定袋または不燃物専用カゴに入らないごみ",
+        "facility": "八幡平市清掃センター",
+        "hours": "平日および第4日曜日の8時30分から16時30分",
+        "sundayRule": "第4日曜日は集積所に出せない粗大ごみのみ受付",
+        "procedure": "計量棟で受付・計量し、運転免許証等で本人確認",
+        "alternative": "市の収集運搬業許可業者へ依頼可能"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/soshiki/shiminka/24664.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水浸水想定区域、土砂災害警戒区域、避難所等を掲載した地区別防災マップを公開している。",
+      "details": {
+        "coverage": "洪水浸水想定区域、土砂災害警戒区域、避難所、防災情報",
+        "maps": "市内各地区の防災マップを分割PDFで公開",
+        "volcano": "岩手山火山防災マップを公開",
+        "pond": "ため池ハザードマップを公開",
+        "purpose": "地域の想定災害と避難行動を事前確認するための資料"
+      },
+      "source": {
+        "url": "https://www.city.hachimantai.lg.jp/soshiki/bouan/1573.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
