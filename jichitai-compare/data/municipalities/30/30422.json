@@ -6,8 +6,8 @@
   "name": "太地町",
   "officialUrl": "https://www.town.taiji.wakayama.jp/",
   "status": "verified",
-  "summary": "太地町の9制度を公式情報で再監査し、確認できた制度をverified、現行条件を確定できない制度をunavailableとして整理。",
-  "updatedAt": "2026-07-23",
+  "summary": "太地町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、保育料・学校給食費支援、移住支援金・空き家バンク、粗大ごみ、防災情報を記録し、現行の個別利用条件を確認できない3制度はunavailableとして登録した。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -20,7 +20,7 @@
         "ageCondition": "出生から18歳到達後最初の3月31日まで",
         "residency": "太地町に住所があり健康保険に加入する子ども",
         "coverage": "保険診療の自己負担分を助成",
-        "excluded": "保険適用外費用等は助成対象外となるため福祉課へ確認",
+        "excluded": "保険適用外費用等は助成対象外となるため住民福祉課へ確認",
         "procedure": "受給資格証の交付、県外受診時等の手続きを町窓口へ確認"
       },
       "source": {
@@ -40,17 +40,16 @@
     },
     "sickChildCare": {
       "status": "unavailable",
-      "summary": "町公式サイトに令和8年度の病児・病後児保育案内が掲載されているが、施設・対象年齢・料金等の本文条件は再確認が必要。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "summary": "令和8年度の病児病後児保育ページは公開されているが、取得できる町公式情報では施設、対象年齢、料金、予約方法等を確認できない。",
       "eligibility": {
         "minAgeMonths": 0,
         "maxAgeYears": 12
       },
       "details": {
-        "confirmed": "町公式トップページで令和8年4月16日付の病児病後児保育案内を確認",
-        "reviewReason": "実施施設、受入開始月齢、対象学年、利用時間、料金、予約方法を本文で確定できない",
-        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する",
-        "contact": "福祉課等へ現行利用条件を確認",
-        "availability": "現行の利用者向け公式条件を確定できないため情報未確認"
+        "confirmed": "町公式トップページで2026年4月16日付の病児病後児保育案内を確認",
+        "unconfirmed": "実施施設、広域利用の有無、受入開始月齢、対象学年、利用時間、料金、登録・予約方法",
+        "guidance": "現行の利用条件は太地町住民福祉課へ確認が必要",
+        "verificationPolicy": "近隣自治体の条件を太地町民の条件として転用しない"
       },
       "source": {
         "url": "https://www.town.taiji.wakayama.jp/lifestage/2026-0427-1645-11.html",
@@ -75,7 +74,7 @@
         "townSupport": "第2子は半額。所得要件を満たす第2子と第3子以降は無料",
         "underThree": "課税世帯0～2歳児の第1子等は所得等に応じた保育料の対象",
         "actualCosts": "延長保育料、用品費、行事費等は別途の場合あり",
-        "procedure": "世帯・きょうだい・所得要件を教育委員会または福祉担当へ確認"
+        "procedure": "世帯・きょうだい・所得要件を教育委員会または住民福祉課へ確認"
       },
       "source": {
         "url": "https://www.town.taiji.wakayama.jp/lifestage/nyugaku/nyuugaku901.html",
@@ -103,17 +102,17 @@
     },
     "postpartumCare": {
       "status": "unavailable",
-      "summary": "町公式資料で産後ケア事業の実施を確認したが、令和8年度の利用類型・対象月齢・回数・料金は再確認が必要。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "summary": "町公式の過年度広報で産後ケア事業の実施は確認できるが、令和8年度の類型、対象月齢、回数、料金、実施施設等を確認できない。",
       "eligibility": {
         "minAgeMonths": 0,
         "maxAgeYears": 1
       },
       "details": {
-        "confirmed": "町公式広報で産後1年未満の母子を対象とする産後ケア事業の実施実績を確認",
+        "confirmed": "町公式広報で産後1年未満の母子を対象とする産後ケア事業の過年度実施実績を確認",
         "pastType": "助産所等を利用する日帰り型の案内実績あり",
-        "reviewReason": "令和8年度の宿泊・通所・訪問型の実施有無、対象月齢、利用回数、自己負担額、実施施設を示す現行専用案内を確認できない",
-        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する",
-        "availability": "現行の利用者向け公式条件を確定できないため情報未確認"
+        "unconfirmed": "令和8年度の宿泊型・通所型・訪問型の実施状況、対象月齢、利用回数、自己負担額、実施施設、申請方法",
+        "guidance": "現行の利用可否と条件は太地町子育て世代包括支援センターまたは住民福祉課へ確認が必要",
+        "verificationPolicy": "過年度条件を現行制度として断定しない"
       },
       "source": {
         "url": "https://www.town.taiji.wakayama.jp/tyousei/kouhou/r02/files/r0205.pdf",
@@ -128,18 +127,18 @@
     },
     "temporaryChildcare": {
       "status": "unavailable",
-      "summary": "町公式サイトに令和8年度のこども誰でも通園制度案内が掲載されているが、対象月齢・時間・料金等の本文条件は再確認が必要。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "summary": "令和8年度のこども誰でも通園制度ページは公開されているが、取得できる町公式情報では実施施設、対象月齢、時間、料金、申込方法等を確認できない。",
       "eligibility": {
         "minAgeMonths": 6,
         "maxAgeYears": 3
       },
       "details": {
         "program": "こども誰でも通園制度",
-        "confirmed": "町公式トップページで令和8年4月17日付の制度案内を確認",
+        "confirmed": "町公式トップページで2026年4月17日付の制度案内を確認",
         "generalTarget": "保育所等に通っていない満3歳未満児を対象とする国制度",
-        "reviewReason": "太地町での受入開始月齢、実施施設、利用上限、時間帯、料金、予約方法を本文で確定できない",
-        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する",
-        "availability": "現行の利用者向け公式条件を確定できないため情報未確認"
+        "unconfirmed": "太地町の受入開始月齢、実施施設、利用上限、利用時間帯、料金、認定・予約方法",
+        "guidance": "現行条件は太地町住民福祉課または制度実施施設へ確認が必要",
+        "verificationPolicy": "国の標準条件や他自治体の料金を町固有条件として転用しない"
       },
       "source": {
         "url": "https://www.town.taiji.wakayama.jp/lifestage/2026-0427-1640-11.html",
@@ -153,22 +152,26 @@
       ]
     },
     "housingSupport": {
-      "status": "unavailable",
-      "summary": "町公式の住まい・移住案内に移住支援金と空き家バンクを掲載しているが、令和8年度の支給額・対象要件は再確認が必要。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "status": "verified",
+      "summary": "和歌山県移住支援事業の申請を町役場総務課で受け付け、県の空き家バンクを通じて物件情報を提供する。",
       "details": {
-        "confirmed": "町公式住まい情報に移住支援金および空き家バンクへの案内を掲載",
-        "vacantHouse": "空き家バンクで登録物件・利用手続きを案内",
-        "reviewReason": "移住支援金の地域・就業要件、世帯額、子ども加算、予算状況、空き家改修補助の有無を現行ページで確定できない",
-        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する",
-        "availability": "現行の利用者向け公式条件を確定できないため情報未確認"
+        "migrationProgram": "和歌山県及び県内市町村による移住支援事業を実施",
+        "application": "移住支援金の申請場所は太地町役場総務課",
+        "conditions": "対象地域、就業・起業・テレワーク等の要件、支給額、子ども加算、予算状況は県の現行要領と町総務課へ確認",
+        "vacantHouse": "和歌山県が運営する空き家バンクに登録し、所有者と居住希望者のマッチング情報を提供",
+        "contract": "物件の条件交渉や契約手続きに自治体は関与しない"
       },
       "source": {
-        "url": "https://www.town.taiji.wakayama.jp/lifestage/sumai/index.html",
+        "url": "https://www.town.taiji.wakayama.jp/lifestage/sumai/sumai002.html",
         "checkedAt": "2026-07-23"
       },
       "additionalSources": [
         {
           "url": "https://www.town.taiji.wakayama.jp/lifestage/sumai/sumai003.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.taiji.wakayama.jp/lifestage/sumai/index.html",
           "checkedAt": "2026-07-23"
         }
       ]

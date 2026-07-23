@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "37386",
+  "prefectureCode": "37",
+  "prefecture": "香川県",
+  "name": "宇多津町",
+  "officialUrl": "https://www.town.utazu.lg.jp/",
+  "status": "verified",
+  "summary": "宇多津町の必須9制度を公式情報で再監査。8制度をverified、一般世帯の学校給食費をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで保険診療の自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "宇多津町に住所があり健康保険に加入する、出生から満18歳到達後最初の3月31日までの子ども",
+        "support": "高額療養費等を控除した保険診療の自己負担分を助成。所得制限なし",
+        "application": "子ども医療費受給資格登録が必要"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/site/navi/1117.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "町外の病児・病後児保育施設利用料を助成し、多子世帯の対象児童は利用料を無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "generalSupport": "宇多津町在住児が他市町の病児・病後児保育施設を利用した場合、市外料金と施設所在市町住民料金との差額を助成",
+        "freeTarget": "第2子の3歳年度末まで、および第3子以降の就学前児童は食費等実費を除く利用料を無料化",
+        "procedure": "無料化は受給資格の事前登録、一般助成は領収書等を添えて申請",
+        "facility": "利用施設、対象年齢、開所時間は各施設へ確認"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/page/4185.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.utazu.lg.jp/page/1491.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児を無償化し、その他の0～2歳児は住民税額で算定",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "free": "3～5歳児と町民税非課税世帯の0～2歳児は保育料無料",
+        "underThree": "課税世帯0～2歳児は町民税所得割額等で算定",
+        "excludedCosts": "給食費、副食費、絵本代、保護者会費等は別途"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/page/1300.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "令和8年度の就学援助世帯の給食費無償と第3子以降無償化制度は確認できるが、一般世帯の給食費額・徴収条件を示す現行案内を確認できない。",
+      "details": {
+        "confirmed": "就学援助認定世帯の町立小中学校給食費は無償。第3子以降の給食費無償化制度も実施",
+        "unconfirmed": "一般世帯の給食費額、徴収方法、区域内居住世帯の第3子以降制度の詳細",
+        "guidance": "一般世帯の現行負担額は宇多津町教育委員会へ確認"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/page/1113.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.utazu.lg.jp/page/1475.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後1歳未満の乳児と家族へ訪問・通所・宿泊型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "target": "宇多津町に住所がある生後1歳未満の乳児と家族",
+        "types": "訪問型、ホテル通所型、医療機関・助産院の通所・宿泊型",
+        "limit": "2026年4月から各サービス通算上限10日"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/site/navi/1308.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満へ月10時間のこども誰でも通園制度を実施",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保育所等を利用していない生後6か月から満3歳未満",
+        "limit": "月10時間まで",
+        "facilities": "平山こども園、香川短期大学附属幼稚園",
+        "fee": "1時間300円",
+        "application": "町の給付認定、初回面談、つうえんポータル等による予約"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/page/4972.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家バンク住宅の改修を2分の1・上限100万円、家財処分を上限10万円補助",
+      "details": {
+        "renovation": "対象経費の2分の1、上限100万円",
+        "disposal": "家財道具処分は対象経費の2分の1、上限10万円",
+        "conditions": "年度内完了、交付決定前着工不可等"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/page/1192.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "電話申込後、品目別手数料分の粗大ごみ処理シールで戸別収集",
+      "details": {
+        "application": "住民生活課へ電話申込",
+        "fee": "処理シール1枚500円。品目・大きさに応じて必要枚数が異なる",
+        "attendance": "収集時の立会い不要"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/site/navi/1079.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・津波・洪水・土砂災害・高潮・内水等の総合防災ハザードマップを公開",
+      "details": {
+        "coverage": "地震、津波、洪水、土砂災害、高潮、雨水出水・内水等",
+        "purpose": "危険区域、避難場所、避難行動の事前確認"
+      },
+      "source": {
+        "url": "https://www.town.utazu.lg.jp/page/1085.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
