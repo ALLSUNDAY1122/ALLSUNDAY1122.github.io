@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07205",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "白河市",
+  "officialUrl": "https://www.city.shirakawa.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を白河市公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の一部負担金と入院時食事代を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "こども医療費助成",
+        "target": "市内在住で出生から18歳到達後最初の3月31日までのこども",
+        "support": "保険診療分の一部負担金と対象となる入院時食事代",
+        "application": "白河市国民健康保険加入者は原則申請不要、その他の健康保険加入者は受給資格登録が必要",
+        "payment": "受診地域や医療費額等により現物給付または償還払い",
+        "excluded": "保険適用外費用等は対象外"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page000366.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "満1歳から小学6年生までの病気中の児童を、平日8時から18時まで定員6名で預かる。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 12},
+      "details": {
+        "program": "しらかわ病児保育室",
+        "target": "白河市・西郷村・泉崎村・中島村・矢吹町在住で、病気中かつ保護者の勤務等により家庭保育が困難な満1歳から小学6年生までの児童",
+        "hours": "平日8時から18時まで。土日祝日・年末年始休業、延長保育なし",
+        "capacity": "6名",
+        "fee": "1人日額2,000円",
+        "exemption": "生活保護世帯または市町村民税非課税世帯は無料",
+        "application": "事前登録・予約のうえ利用"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page004773.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、0～2歳児の第2子半額・第3子以降無償を継続する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児の幼稚園・保育所・認定こども園等の利用料を無償化。幼稚園は月額上限25,700円",
+        "nonTaxFree": "住民税非課税世帯の0～2歳児も無償化対象",
+        "multipleChildren": "0～2歳児は第2子半額、第3子以降無償",
+        "baseFee": "その他の0～2歳児は保護者の市民税所得割額等に応じて決定",
+        "excludedCosts": "通園送迎費、食材料費、行事費等は原則別途負担",
+        "mealExemption": "年収360万円未満相当世帯と全世帯の第3子以降は副食費免除"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page005038.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は市立小学校の給食費を無償化し、中学校は食材高騰分を支援しつつ、第3子以降の給食費を全額助成する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "令和8年度の小学校給食費は1食407円を国309円・市98円で負担し、保護者負担0円",
+        "middleSchool": "中学校は食材価格高騰分を市が支援し、保護者負担額を前年水準に据え置く",
+        "multipleChildren": "同一世帯の18歳以下の兄弟姉妹が3人以上いる場合、義務教育を受ける第3子以降の給食費を全額助成。令和8年度は小学生が無償のため主に中学生が対象",
+        "application": "多子世帯助成は所定の申請が必要"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page010090.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.shirakawa.fukushima.jp/page/page004905.html", "checkedAt": "2026-07-23"}]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子を対象に、宿泊型と日帰り型の産後ケアを各7日以内で実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "白河市内に住所がある産後1年以内の母子。施設により利用可能月齢の定めあり",
+        "types": "宿泊ケア、日帰りケア",
+        "usageLimit": "宿泊ケア7日以内、日帰りケア7日以内。利用合計が3日を超える場合は市保健師との面談が必要",
+        "services": "母体の健康確認・乳房管理、乳児の健康確認・体重測定、沐浴・授乳指導、育児相談",
+        "fee": "利用料は原則無料で食費のみ自己負担。施設別に食費・キャンセル料あり",
+        "application": "希望施設へ予約後、市こども支援課へ利用申請"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page003123.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に通っていない生後6か月から3歳未満の子どもが、月10時間まで1時間300円で利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "令和8年度こども誰でも通園事業",
+        "target": "市内在住で保育園・認定こども園等に通っていない生後6か月から2歳までの児童。3歳誕生日の前々日まで利用可能",
+        "employmentRequirement": "なし",
+        "facilities": "わかば保育園は1・2歳児、さくら保育園は生後6か月から満1歳児を受入れ",
+        "hours": "平日9時から16時まで",
+        "usageLimit": "月10時間まで",
+        "fee": "1時間300円。食事代等の実費負担あり",
+        "reduction": "市民税課税額に応じた減免要件あり",
+        "application": "総合支援システムでオンライン申請。通常は利用希望日の15日前、初回は面談のため17日前まで"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page010564.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若年者・子育て世帯・新婚世帯等の市外からの移住住宅取得に、県外移住最大200万円、市外移住最大100万円を補助する。",
+      "details": {
+        "program": "来て『しらかわ』住宅取得支援事業補助金",
+        "target": "県外または市外から移住し、若年者・子育て世帯・新婚世帯のいずれかに該当して住宅を取得する世帯",
+        "outsidePrefecture": "住宅取得経費の2分の1以内で最大200万円。福島県補助金を含む",
+        "outsideCity": "住宅取得経費の2分の1以内で最大100万円",
+        "residenceRequirement": "補助年度翌年度から起算して3年以上、対象住宅に定住すること",
+        "application": "住宅取得から6か月以内に事前相談のうえ申請。予算到達時は早期終了の場合あり"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page003801.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない粗大ごみは、インターネットまたは電話で予約し、有料の戸別収集または自己搬入を利用する。",
+      "details": {
+        "definition": "燃えるごみ・燃えないごみの指定袋45Lに入らないもの",
+        "application": "施設への自己搬入、粗大ごみ戸別収集ともインターネットまたは電話で事前予約",
+        "collectionFee": "戸別収集は収集運搬料金1回1,500円に処理料金を加算",
+        "itemFee": "その他の粗大ごみは1点500円、タイヤ1本600円、廃家電4品目1台1,700円。廃家電は別途リサイクル料金が必要",
+        "directCarry": "家庭系ごみの自己搬入は10kg当たり150円",
+        "excluded": "家電リサイクル対象品等は別途所定の手続きが必要"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page003174.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.shirakawa.fukushima.jp/page/page008865.html", "checkedAt": "2026-07-23"}]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、河岸侵食、氾濫流、土砂災害、内水浸水、避難場所等を一冊にまとめた改訂防災マップを公開する。",
+      "details": {
+        "map": "白河市防災マップ（2026年1月改定）",
+        "coverage": "市内全域の洪水浸水、河岸侵食、氾濫流、土砂災害、内水浸水、指定避難場所等",
+        "format": "市全域図、中心図、地区別詳細図、内水ハザードマップをPDFで公開",
+        "update": "作成後に見直された洪水浸水想定区域は市の地域情報マップで確認可能",
+        "additionalMap": "集中豪雨による排水能力超過を想定した内水ハザードマップも公開"
+      },
+      "source": {"url": "https://www.city.shirakawa.fukushima.jp/page/page008351.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.shirakawa.fukushima.jp/page/page008000.html", "checkedAt": "2026-07-23"}]
+    }
+  }
+}
