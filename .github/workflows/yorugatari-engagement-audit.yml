@@ -20,6 +20,7 @@ on:
       - yorugatari/assets/yorugatari-share.png
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
+      - yorugatari/tools/normalize-legacy-story-attributes.mjs
       - yorugatari/tools/normalize-engagement.mjs
       - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/engagement-audit.cjs
@@ -51,9 +52,11 @@ jobs:
       - name: Normalize campaign runtime
         shell: bash
         run: |
+          node --check yorugatari/tools/normalize-legacy-story-attributes.mjs
           node --check yorugatari/tools/normalize-engagement.mjs
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
+          node yorugatari/tools/normalize-legacy-story-attributes.mjs
           node yorugatari/tools/normalize-engagement.mjs
           node <<'NODE'
           const fs = require('node:fs');
