@@ -126,6 +126,19 @@ function validatePage(relative) {
 
   if (relative === 'index.html' && !hasType(schemas, 'WebSite')) error(relative, 'Missing WebSite structured data');
   if (relative === 'archive.html' && !hasType(schemas, 'CollectionPage')) error(relative, 'Missing CollectionPage structured data');
+  if (relative === '5min-horror.html') {
+    if (!hasType(schemas, 'CollectionPage')) error(relative, 'Missing curated CollectionPage structured data');
+    if (!hasType(schemas, 'BreadcrumbList')) error(relative, 'Missing curated BreadcrumbList structured data');
+    if (!hasType(schemas, 'FAQPage')) error(relative, 'Missing FAQPage structured data');
+    const picks = html.match(/class=["'][^"']*\bpick\b[^"']*["']/gi) || [];
+    const guides = html.match(/class=["'][^"']*\bguide-card\b[^"']*["']/gi) || [];
+    const faqItems = html.match(/<div class=["']faq["']>[\s\S]*?<\/div>/i)?.[0].match(/<article\b/gi) || [];
+    const storyLinks = Array.from(html.matchAll(/href=["']stories\/([^"']+\.html)["']/gi), (match) => match[1]);
+    if (picks.length !== 12) error(relative, 'Curated landing must contain 12 story picks', picks.length);
+    if (guides.length !== 6) error(relative, 'Curated landing must contain six genre guides', guides.length);
+    if (faqItems.length !== 3) error(relative, 'Curated landing must contain three FAQ entries', faqItems.length);
+    if (new Set(storyLinks).size < 12) error(relative, 'Curated landing must link to 12 unique stories', { total: storyLinks.length, unique: new Set(storyLinks).size });
+  }
   if (relative.startsWith('categories/')) {
     if (!hasType(schemas, 'CollectionPage')) error(relative, 'Missing category CollectionPage structured data');
     if (!hasType(schemas, 'BreadcrumbList')) error(relative, 'Missing category BreadcrumbList structured data');
@@ -168,6 +181,10 @@ function validateLocal() {
   for (const value of lastmods) if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) error('sitemap.xml', 'Invalid lastmod format', value);
 
   for (const relative of EXPECTED_PAGES) validatePage(relative);
+  const index = fs.readFileSync(path.join(SITE, 'index.html'), 'utf8');
+  const archive = fs.readFileSync(path.join(SITE, 'archive.html'), 'utf8');
+  if (!index.includes('href="5min-horror.html"')) error('index.html', 'Homepage does not link to five-minute horror landing');
+  if (!archive.includes('href="5min-horror.html"')) error('archive.html', 'Archive does not link to five-minute horror landing');
   const titles = new Map();
   for (const page of pages) titles.set(page.title, [...(titles.get(page.title) || []), page.relativePath]);
   for (const [value, linked] of titles) if (value && linked.length > 1) error('titles', 'Duplicate page title', { title: value, pages: linked });
@@ -177,7 +194,7 @@ async function waitForSitemap(expected) {
   let detail = null;
   for (let attempt = 1; attempt <= 24; attempt += 1) {
     try {
-      const response = await fetch(`${BASE}/sitemap.xml?seo=${Date.now()}-${attempt}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.1' }, signal: AbortSignal.timeout(30000) });
+      const response = await fetch(`${BASE}/sitemap.xml?seo=${Date.now()}-${attempt}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.2' }, signal: AbortSignal.timeout(30000) });
       const text = await response.text();
       detail = { attempt, status: response.status, bytes: Buffer.byteLength(text), matches: text === expected };
       if (response.status === 200 && text === expected) return detail;
@@ -193,7 +210,7 @@ async function liveRequest(url, index) {
   let detail = null;
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
-      const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}seo=${Date.now()}-${index}-${attempt}`, { redirect: 'follow', headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.1' }, signal: AbortSignal.timeout(30000) });
+      const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}seo=${Date.now()}-${index}-${attempt}`, { redirect: 'follow', headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.2' }, signal: AbortSignal.timeout(30000) });
       const html = await response.text();
       detail = { status: response.status, canonical: canonical(html), title: title(html), description: Boolean(meta(html, 'name', 'description')), noindex: /noindex/i.test(meta(html, 'name', 'robots') || '') };
       if (response.status < 500) return detail;
@@ -210,7 +227,7 @@ async function validateLive() {
   const releaseCheck = await waitForSitemap(expectedSitemap);
   const liveErrors = [];
   const livePages = new Array(EXPECTED_URLS.length);
-  const robotsResponse = await fetch(`https://allsunday1122.github.io/robots.txt?seo=${Date.now()}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.1' } });
+  const robotsResponse = await fetch(`https://allsunday1122.github.io/robots.txt?seo=${Date.now()}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.2' } });
   const robotsText = await robotsResponse.text();
   if (robotsResponse.status !== 200 || !robotsText.includes(`Sitemap: ${BASE}/sitemap.xml`)) liveErrors.push({ scope: 'robots.txt', message: 'Published robots.txt is unavailable or incorrect', status: robotsResponse.status });
 
