@@ -48,7 +48,7 @@ async function waitForRelease() {
         analytics: topHtml.includes('assets/analytics.js?v=20260723-003'),
         archiveReady: archiveHtml.includes('assets/archive.js?v=20260723-004'),
         staticCirculation: storyHtml.includes('class="hero-actions story-pagination"') && storyHtml.includes('class="related"'),
-        storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-004'),
+        storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-003'),
         catalogFree: !storyScript.includes('catalogSources') && !storyScript.includes('loadCatalogScript')
       };
       report.releaseCheck = detail;
