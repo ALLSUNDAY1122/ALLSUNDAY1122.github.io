@@ -14,62 +14,35 @@ MINT = (34, 211, 197)
 WHITE = (248, 251, 255)
 
 
-def blend(a, b, t):
+def blend(a: tuple[int, int, int], b: tuple[int, int, int], t: float) -> tuple[int, int, int]:
     t = max(0.0, min(1.0, t))
     return tuple(round(x + (y - x) * t) for x, y in zip(a, b))
 
 
-def chunk(kind, data):
+def chunk(kind: bytes, data: bytes) -> bytes:
     return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data) & 0xFFFFFFFF)
 
 
-def composite(base, base_alpha, top, top_alpha):
-    if base_alpha == 0:
-        return top, top_alpha
-    return blend(base, top, top_alpha / 255.0), max(base_alpha, top_alpha)
-
-
-def rounded_rect(x, y, x1, y1, x2, y2, r):
-    if x1 + r <= x <= x2 - r and y1 <= y <= y2:
-        return True
-    if x1 <= x <= x2 and y1 + r <= y <= y2 - r:
-        return True
-    return any((x - cx) ** 2 + (y - cy) ** 2 <= r ** 2 for cx, cy in (
-        (x1 + r, y1 + r), (x2 - r, y1 + r), (x1 + r, y2 - r), (x2 - r, y2 - r)
-    ))
-
-
-def distance_to_segment(px, py, x1, y1, x2, y2):
-    dx, dy = x2 - x1, y2 - y1
-    if dx == dy == 0:
-        return math.hypot(px - x1, py - y1)
-    t = max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)))
-    return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
-
-
-def point_in_triangle(p, a, b, c):
-    def sign(p1, p2, p3):
-        return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])
-    d1, d2, d3 = sign(p, a, b), sign(p, b, c), sign(p, c, a)
-    return not ((d1 < 0 or d2 < 0 or d3 < 0) and (d1 > 0 or d2 > 0 or d3 > 0))
-
-
-def write_png(path, size, mark_scale=1.0, transparent=False):
+def write_png(path: Path, size: int, *, mark_scale: float = 1.0, transparent: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     channels = 4 if transparent else 3
-    rows = []
+    rows: list[bytes] = []
     for y in range(size):
         row = bytearray([0])
         v = y / max(1, size - 1)
         for x in range(size):
             u = x / max(1, size - 1)
             if transparent:
-                color, alpha = (0, 0, 0), 0
+                color = (0, 0, 0)
+                alpha = 0
             else:
                 color = blend(NAVY, BLUE, 0.55 * u + 0.45 * v)
                 glow = max(0.0, 1.0 - math.hypot(u - 0.78, v - 0.16) / 0.55)
-                color, alpha = blend(color, (84, 118, 238), glow * 0.28), 255
-            su, sv = (u - 0.5) / mark_scale + 0.5, (v - 0.5) / mark_scale + 0.5
+                color = blend(color, (84, 118, 238), glow * 0.28)
+                alpha = 255
+
+            su = (u - 0.5) / mark_scale + 0.5
+            sv = (v - 0.5) / mark_scale + 0.5
             if rounded_rect(su, sv, 0.30, 0.18, 0.72, 0.80, 0.055):
                 color, alpha = composite(color, alpha, (13, 30, 56), 95)
             if rounded_rect(su, sv, 0.25, 0.15, 0.67, 0.77, 0.055):
@@ -94,6 +67,7 @@ def write_png(path, size, mark_scale=1.0, transparent=False):
                 color, alpha = composite(color, alpha, MINT, 255)
             row.extend((*color, alpha) if channels == 4 else color)
         rows.append(bytes(row))
+
     color_type = 6 if channels == 4 else 2
     png = b'\x89PNG\r\n\x1a\n'
     png += chunk(b'IHDR', struct.pack('>IIBBBBB', size, size, 8, color_type, 0, 0, 0))
@@ -102,7 +76,38 @@ def write_png(path, size, mark_scale=1.0, transparent=False):
     path.write_bytes(png)
 
 
-def ios_icons(root):
+def composite(base: tuple[int, int, int], base_alpha: int, top: tuple[int, int, int], top_alpha: int):
+    if base_alpha == 0:
+        return top, top_alpha
+    return blend(base, top, top_alpha / 255.0), max(base_alpha, top_alpha)
+
+
+def rounded_rect(x: float, y: float, x1: float, y1: float, x2: float, y2: float, r: float) -> bool:
+    if x1 + r <= x <= x2 - r and y1 <= y <= y2:
+        return True
+    if x1 <= x <= x2 and y1 + r <= y <= y2 - r:
+        return True
+    return any((x - cx) ** 2 + (y - cy) ** 2 <= r ** 2 for cx, cy in (
+        (x1 + r, y1 + r), (x2 - r, y1 + r), (x1 + r, y2 - r), (x2 - r, y2 - r)
+    ))
+
+
+def distance_to_segment(px, py, x1, y1, x2, y2):
+    dx, dy = x2 - x1, y2 - y1
+    if dx == dy == 0:
+        return math.hypot(px - x1, py - y1)
+    t = max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)))
+    return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
+
+
+def point_in_triangle(p, a, b, c):
+    def sign(p1, p2, p3):
+        return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])
+    d1, d2, d3 = sign(p, a, b), sign(p, b, c), sign(p, c, a)
+    return not ((d1 < 0 or d2 < 0 or d3 < 0) and (d1 > 0 or d2 > 0 or d3 > 0))
+
+
+def ios_icons(root: Path) -> None:
     appicon = root / 'ios/Runner/Assets.xcassets/AppIcon.appiconset'
     data = json.loads((appicon / 'Contents.json').read_text())
     for image in data['images']:
@@ -121,7 +126,7 @@ def ios_icons(root):
     ))
 
 
-def android_icons(root):
+def android_icons(root: Path) -> None:
     for density, size in {'mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192}.items():
         write_png(root / f'android/app/src/main/res/mipmap-{density}/ic_launcher.png', size)
     for rel in ('android/app/src/main/res/drawable/launch_background.xml', 'android/app/src/main/res/drawable-v21/launch_background.xml'):
@@ -132,7 +137,7 @@ def android_icons(root):
         ))
 
 
-def web_icons(root):
+def web_icons(root: Path) -> None:
     write_png(root / 'web/favicon.png', 32)
     for filename, size, scale in (
         ('Icon-192.png', 192, 1.0), ('Icon-512.png', 512, 1.0),
@@ -146,13 +151,17 @@ def web_icons(root):
     path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
 
 
-def main():
+def main() -> None:
     root = Path(sys.argv[1]).resolve()
-    ios_icons(root)
-    android_icons(root)
-    web_icons(root)
-    write_png(root / 'docs/brand/AI_Handover_Log_AppIcon_1024.png', 1024)
-    write_png(root / 'docs/brand/AI_Handover_Log_LaunchMark_504.png', 504, mark_scale=0.88, transparent=True)
+    if (root / 'ios').exists():
+        ios_icons(root)
+    if (root / 'android').exists():
+        android_icons(root)
+    if (root / 'web').exists():
+        web_icons(root)
+    preview = root / 'docs/brand'
+    write_png(preview / 'AI_Handover_Log_AppIcon_1024.png', 1024)
+    write_png(preview / 'AI_Handover_Log_LaunchMark_504.png', 504, mark_scale=0.88, transparent=True)
     print('generated v0.5 brand assets')
 
 
