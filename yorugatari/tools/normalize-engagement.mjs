@@ -11,7 +11,7 @@ const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatar
 const SHARE_WIDTH = '2172';
 const SHARE_HEIGHT = '724';
 const SHARE_ALT = '月明かりと提灯が照らす夜の町並み';
-const STATIC_PAGES = ['index.html', '5min-horror.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
+const STATIC_PAGES = ['index.html', '5min-horror.html', 'bedtime-horror.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
 
 function escapeAttribute(value) {
   return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -61,7 +61,7 @@ function normalizeStaticPage(filename) {
   const filePath = path.join(SITE_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
   html = ensureSocialMetadata(html);
-  const analyticsVersion = filename === '5min-horror.html' ? LANDING_ANALYTICS_VERSION : ANALYTICS_VERSION;
+  const analyticsVersion = ['5min-horror.html', 'bedtime-horror.html'].includes(filename) ? LANDING_ANALYTICS_VERSION : ANALYTICS_VERSION;
   html = setRuntimeScript(html, 'assets/analytics.js', analyticsVersion);
 
   if (filename === 'privacy.html') {
