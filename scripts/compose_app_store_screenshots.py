@@ -46,7 +46,7 @@ ImageDraw.Draw(mask_icon).rounded_rectangle((0, 0, 87, 87), radius=22, fill=255)
 
 for index, (filename, title, subtitle) in enumerate(HEADERS, 1):
     raw = Image.open(root / filename).convert('RGB')
-    if raw.size != (W, H):
+    if raw.size not in {(430, 932), (1290, 2796)}:
         raise SystemExit(f'raw screenshot size mismatch: {filename} {raw.size}')
 
     canvas = Image.new('RGB', (W, H), '#EEF3FF')
@@ -78,6 +78,7 @@ for index, (filename, title, subtitle) in enumerate(HEADERS, 1):
     shot_w = 1090
     shot_h = round(H * shot_w / W)
     shot = raw.resize((shot_w, shot_h), Image.Resampling.LANCZOS)
+    shot = shot.filter(ImageFilter.UnsharpMask(radius=1.0, percent=115, threshold=2))
     radius = 46
     mask = Image.new('L', shot.size, 0)
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, shot_w - 1, shot_h - 1), radius=radius, fill=255)
