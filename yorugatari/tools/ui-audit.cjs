@@ -38,7 +38,7 @@ async function run() {
     cards: document.querySelectorAll('.card').length,
     unique: new Set(Array.from(document.querySelectorAll('.card')).map((card) => card.getAttribute('href'))).size,
     busy: document.querySelector('#storyGrid')?.getAttribute('aria-busy'),
-    version: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-007'))
+    version: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-008'))
   }));
   record('top progressively renders 100 unique cards', topState.cards === 100 && topState.unique === 100 && topState.busy === 'false' && topState.version, topState);
   await noHorizontalOverflow(page, 'top mobile has no horizontal overflow');
