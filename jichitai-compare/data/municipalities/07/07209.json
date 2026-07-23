@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07209",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "相馬市",
+  "officialUrl": "https://www.city.soma.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を相馬市公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額と入院時食事代を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "市内在住で健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "保険診療の一部負担金と入院時食事療養費の標準負担額",
+        "application": "相馬市国民健康保険以外の加入者は受給資格登録が必要",
+        "excluded": "生活保護、学校等でのけがに対する日本スポーツ振興センター給付、保険適用外費用等は対象外"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/kosodatesite/mokuteki/shien_jyosei/3523.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "令和8年の市公式子育てサイト、預ける事業一覧、施設一覧で現行の病児・病後児保育事業を確認できない。",
+      "details": {
+        "researchResult": "市公式の預ける事業一覧には幼稚園・保育園、相馬愛育園、児童館、放課後児童クラブ、こども誰でも通園制度等が掲載されるが、病児・病後児保育の現行案内は確認できなかった。",
+        "caution": "近隣自治体・医療機関の広域利用制度が存在する可能性があるため、利用希望時はこども家庭課へ確認が必要"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/kosodate_kyoiku/kosodate/kosodateshien/mokuteki/5966.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.soma.fukushima.jp/kosodatesite/shisetsu/index.html", "checkedAt": "2026-07-23"}]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上児と市民税非課税世帯の3歳未満児の保育料を無償化し、多子世帯の保育料を軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "threeAndOver": "当該年度4月1日時点で3歳以上の教育・保育認定児は保育料無料",
+        "underThree": "市民税非課税世帯の3歳未満児は無料",
+        "multiChild": "就学前の最年長児から数えて第2子半額、第3子以降無料。年収約360万円未満相当世帯は第1子の年齢制限なし",
+        "privateKindergarten": "新制度未移行幼稚園は月額25,700円を上限に無償化",
+        "excludedCosts": "給食費、副食費、教材費、行事費、送迎費等は原則保護者負担。所得等により副食費免除あり"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/kosodatesite/nenrei/3_6/5769.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.soma.fukushima.jp/kosodatesite/nenrei/3_6/5563.html", "checkedAt": "2026-07-23"}]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "平成30年度から市内小中学校に通う全児童生徒の学校給食費を無償化している。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "相馬市内の小学校・中学校に通学する全児童生徒",
+        "support": "学校給食費全額を市が負担",
+        "start": "2018年4月から実施",
+        "purpose": "子育て世帯の経済的負担軽減と地元食材を活用した食育支援"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/kosodatesite/mokuteki/kyoiku/sho_chugakkou/15154.html", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、訪問、日帰り、宿泊型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "相馬市に住民登録がある産後1年未満の母親と子ども",
+        "types": "訪問ケア、日帰りケア1日型・半日型、宿泊ケア",
+        "usageLimit": "訪問と日帰りは各合計5日以内、宿泊は合計14日以内",
+        "services": "乳房・授乳ケア、育児相談、母体の休養、乳児の身体計測・発育確認・沐浴等",
+        "fee": "施設・利用類型に応じた自己負担金が設定される"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/kosodate_kyoiku/kosodate/ninshin_shussan/5888.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "市内在住で保育所・認定こども園・幼稚園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "子ども1人につき月10時間まで",
+        "facility": "相馬保育園",
+        "fee": "1時間300円",
+        "application": "乳児等支援給付認定後、初回利用前に施設で事前面談"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/kosodate_kyoiku/kosodate/19685.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "40歳未満の県外移住者による住宅取得に、市補助最大90万円と同額の県上乗せを行う。",
+      "details": {
+        "program": "相馬市住宅取得支援事業補助金",
+        "target": "県外から移住し、自ら居住する住宅を取得して3年以上定住する40歳未満の方",
+        "cityBase": "補助対象経費の2分の1、上限70万円",
+        "additions": "配偶者または18歳未満の被扶養者がいる場合10万円、市内業者施工の場合10万円",
+        "prefectureAddition": "県上乗せ分は市補助金全体額と同額",
+        "maximum": "市分最大90万円、県上乗せを含む合計最大180万円"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/shinososhiki/kikakuseisakuka/izyutezyu/14172.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみと引越し等の多量ごみは市では収集せず、許可業者への依頼または処理施設への自己搬入が必要。",
+      "details": {
+        "collection": "市による戸別・集積所収集なし",
+        "disposal": "収集運搬業者または相双環境管理事業管理組合へ依頼するか、処理施設へ自己搬入",
+        "fee": "業者依頼・自己搬入とも有料",
+        "burnableFacility": "光陽クリーンセンター",
+        "nonBurnableAndBulkyFacility": "相馬リサイクルセンター"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/shinososhiki/seikatsukankyoka/kankyo_gomi_recycle/1/1258.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、内水、土砂災害、津波、地震等のハザードマップを公開し、避難場所や浸水深を案内する。",
+      "details": {
+        "maps": "洪水、内水、土砂災害、津波、地震関連マップ",
+        "flood": "宇多川・小泉川・地蔵川の浸水想定区域と避難所を掲載",
+        "inlandFlood": "令和8年1月15日公表の内水ハザードマップ",
+        "landslide": "県の土砂災害警戒区域を基に令和7年3月改訂・全戸配布",
+        "gis": "相馬市地図情報でも浸水区域、浸水深、指定避難所等を確認可能"
+      },
+      "source": {"url": "https://www.city.soma.fukushima.jp/shinososhiki/chiikibosaitaisakushitsu/saigainisonaete/hazard_map/index.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.city.soma.fukushima.jp/shinososhiki/chiikibosaitaisakushitsu/saigainisonaete/hazard_map/6950.html", "checkedAt": "2026-07-23"},
+        {"url": "https://www.city.soma.fukushima.jp/shinososhiki/chiikibosaitaisakushitsu/saigainisonaete/hazard_map/19355.html", "checkedAt": "2026-07-23"},
+        {"url": "https://www.city.soma.fukushima.jp/shinososhiki/chiikibosaitaisakushitsu/saigainisonaete/hazard_map/986.html", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}
