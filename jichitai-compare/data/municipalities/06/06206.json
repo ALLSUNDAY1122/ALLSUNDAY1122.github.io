@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06206",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "寒河江市",
+  "officialUrl": "https://www.city.sagae.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが寒河江市公式情報で対象9制度を調査し、9制度すべてを確認済みとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "就学前から高校3年生まで、所得制限なく保険診療の通院・入院自己負担を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "寒河江市に住所がある就学前児童から高校3年生相当までの子ども",
+        "coverage": "保険診療対象の通院費・入院費の自己負担分",
+        "incomeLimit": "所得制限なし",
+        "excluded": "入院時食事代や保険適用外費用等",
+        "application": "出生・転入時に子育て支援医療証の交付申請が必要"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/kosodatekyoiku/kosodatehoiku/kenshin/iryou/kosodate_sieniryou.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学3年生までを対象に、市内施設と広域連携施設で病児・病後児保育を実施する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "target": "病気中または回復期で集団保育が困難で、保護者が就労等により家庭保育できない子ども",
+        "facilities": "病児保育ゆうきの森、病後児保育あいはーと・げんきの森",
+        "fee": "5時間以内1,000円、5時間超2,000円。昼食・おやつ等の実費300円が必要な場合あり",
+        "application": "事前登録・ネット予約後、医師の診断を受けて利用",
+        "wideArea": "山形連携中枢都市圏の連携7市町の施設も利用可能"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/kosodatekyoiku/kosodatehoiku/hoiku/azukarisa-bisu/sagaebyouzibyougozi.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "国の幼児教育・保育無償化に加え、令和8年度は県と市の連携および市単独で0～2歳児保育料の負担軽減を拡充する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalSupport": "3歳から5歳児と市民税非課税世帯の0歳から2歳児は無償化対象",
+        "citySupport": "令和8年度は一定所得以上の世帯を含め、0歳から2歳児の保育料を2分の1軽減する制度を実施",
+        "calculation": "認可保育所の保育料は父母の市町村民税額と年度当初の児童年齢により決定",
+        "meals": "3歳以上児等の副食費は市内外の対象保育施設利用児童について無料化。施設設定額により実費が生じる場合あり"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/shisei/zaisei/R8yosanangaiyou.files/R8yosangaiyou.pdf", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "寒河江市立小中学校の学校給食費を完全無料化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "寒河江市立小中学校に通学する児童生徒の保護者",
+        "support": "令和3年度から学校給食費を完全無料化",
+        "application": "申請手続き不要",
+        "purpose": "子育て世帯の経済的負担軽減と社会全体での子育て支援"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/kosodatekyoiku/kyoiku/kyusyoku/kyushokuhi-zyosei.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "おおむね産後4か月未満の母子を対象に、医療機関で宿泊型・日帰り型産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 0},
+      "details": {
+        "target": "寒河江市に住所があり、疲労・育児不安がある、または家族等から十分な支援を受けられない母子",
+        "types": "ショートステイ（宿泊）とデイケア（日帰り）",
+        "support": "母体の回復・休息、育児指導、授乳や乳房ケア等",
+        "condition": "母子ともに入院治療が必要と診断されていないこと",
+        "application": "利用施設と希望日を調整し、市子育て推進課すくすく健康係へ申込み"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/kosodatekyoiku/ninsinsyussan/syussango/sangokea.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満児が、就労要件を問わず月10時間まで利用できるこども誰でも通園制度を実施する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 2},
+      "details": {
+        "target": "寒河江市在住で、幼稚園・保育所・認定こども園等を利用していない生後6か月から3歳未満児",
+        "facility": "なか保育所",
+        "hours": "月曜日から金曜日の9時から正午、月合計10時間まで",
+        "fee": "1時間300円。生活保護・市民税非課税等の世帯は減免あり",
+        "application": "オンライン登録後、施設との初回面談と利用予約が必要"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/kosodatekyoiku/kosodatehoiku/hoiku/azukarisa-bisu/sagaenyujitoutuuen.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世代や市外からの定住者が、市内住宅を新築・購入・リフォームする場合に補助する。",
+      "details": {
+        "program": "令和8年度寒河江市子育て定住住宅建築事業補助金",
+        "target": "中学3年生以下の子どもまたは妊婦がいる子育て世帯等",
+        "expenses": "市内住宅の新築、建売・中古住宅購入、既存住宅リフォーム等",
+        "amount": "居住・転入区分や工事内容により補助。子育て世代の市内在住者は新築・建売購入50万円等",
+        "application": "契約・着工・購入・住所異動前に申請し、交付決定後に事業開始"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/kurashi/sumai/jyutaku/jyutakushien/kosodateteizyu.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "袋に入らない家具・寝具・自転車等は、クリーンセンターへの直接搬入または事前申込による個別収集で処理する。",
+      "details": {
+        "directDelivery": "平日・第2土曜日・第4日曜日にクリーンセンターへ直接搬入可能",
+        "fee": "直接搬入は10キログラム当たり150円",
+        "collection": "直接搬入できない場合は指定収集日の1週間前までに市へ申し込み、粗大ごみ証紙を貼付して個別収集",
+        "excluded": "テレビ、洗濯機・衣類乾燥機、冷蔵庫・冷凍庫、エアコン等の家電リサイクル対象品は別処理"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/kurashi/gomi/bunbetu/discretion.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震等の危険区域、避難所、避難判断をまとめた防災マップを公開する。",
+      "details": {
+        "coverage": "洪水浸水、土砂災害、地震、地域別詳細図",
+        "evacuation": "指定避難所・福祉避難所一覧、避難行動判定フロー、警戒レベルを掲載",
+        "areas": "幸生・田代、白岩・谷沢、醍醐・三泉、高松・柴橋、寒河江・西根等の地域別詳細図",
+        "additional": "ため池ハザードマップも別途公開"
+      },
+      "source": {"url": "https://www.city.sagae.yamagata.jp/bousai/sonae/bousaimap.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
