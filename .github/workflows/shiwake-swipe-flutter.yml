@@ -38,7 +38,27 @@ jobs:
         run: dart format lib test
 
       - name: Analyze
-        run: flutter analyze --no-fatal-infos
+        id: analyze
+        continue-on-error: true
+        run: flutter analyze --no-fatal-infos 2>&1 | tee analyze.log
 
       - name: Test
-        run: flutter test
+        id: test
+        continue-on-error: true
+        run: flutter test 2>&1 | tee test.log
+
+      - name: Upload diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shiwake-swipe-ci-logs
+          path: |
+            shiwake-swipe/flutter_app/analyze.log
+            shiwake-swipe/flutter_app/test.log
+          if-no-files-found: warn
+
+      - name: Verify outcomes
+        if: always()
+        run: |
+          test "${{ steps.analyze.outcome }}" = "success"
+          test "${{ steps.test.outcome }}" = "success"
