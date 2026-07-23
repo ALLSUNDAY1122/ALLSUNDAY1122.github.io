@@ -25,6 +25,11 @@ function attribute(tag, name) {
   return match ? (match[1] ?? match[2] ?? match[3] ?? '') : null;
 }
 
+function countClassToken(html, token) {
+  const tags = html.match(/<[a-z][^>]*\bclass=(?:"[^"]*"|'[^']*')[^>]*>/gi) || [];
+  return tags.filter((tag) => (attribute(tag, 'class') || '').split(/\s+/).includes(token)).length;
+}
+
 function meta(html, key, value) {
   const tags = html.match(/<meta\b[^>]*>/gi) || [];
   const found = tags.find((tag) => attribute(tag, key)?.toLowerCase() === value.toLowerCase());
@@ -130,12 +135,12 @@ function validatePage(relative) {
     if (!hasType(schemas, 'CollectionPage')) error(relative, 'Missing curated CollectionPage structured data');
     if (!hasType(schemas, 'BreadcrumbList')) error(relative, 'Missing curated BreadcrumbList structured data');
     if (!hasType(schemas, 'FAQPage')) error(relative, 'Missing FAQPage structured data');
-    const picks = html.match(/class=["'][^"']*\bpick\b[^"']*["']/gi) || [];
-    const guides = html.match(/class=["'][^"']*\bguide-card\b[^"']*["']/gi) || [];
+    const picks = countClassToken(html, 'pick');
+    const guides = countClassToken(html, 'guide-card');
     const faqItems = html.match(/<div class=["']faq["']>[\s\S]*?<\/div>/i)?.[0].match(/<article\b/gi) || [];
     const storyLinks = Array.from(html.matchAll(/href=["']stories\/([^"']+\.html)["']/gi), (match) => match[1]);
-    if (picks.length !== 12) error(relative, 'Curated landing must contain 12 story picks', picks.length);
-    if (guides.length !== 6) error(relative, 'Curated landing must contain six genre guides', guides.length);
+    if (picks !== 12) error(relative, 'Curated landing must contain 12 story picks', picks);
+    if (guides !== 6) error(relative, 'Curated landing must contain six genre guides', guides);
     if (faqItems.length !== 3) error(relative, 'Curated landing must contain three FAQ entries', faqItems.length);
     if (new Set(storyLinks).size < 12) error(relative, 'Curated landing must link to 12 unique stories', { total: storyLinks.length, unique: new Set(storyLinks).size });
   }
@@ -194,7 +199,7 @@ async function waitForSitemap(expected) {
   let detail = null;
   for (let attempt = 1; attempt <= 24; attempt += 1) {
     try {
-      const response = await fetch(`${BASE}/sitemap.xml?seo=${Date.now()}-${attempt}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.2' }, signal: AbortSignal.timeout(30000) });
+      const response = await fetch(`${BASE}/sitemap.xml?seo=${Date.now()}-${attempt}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.3' }, signal: AbortSignal.timeout(30000) });
       const text = await response.text();
       detail = { attempt, status: response.status, bytes: Buffer.byteLength(text), matches: text === expected };
       if (response.status === 200 && text === expected) return detail;
@@ -210,7 +215,7 @@ async function liveRequest(url, index) {
   let detail = null;
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     try {
-      const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}seo=${Date.now()}-${index}-${attempt}`, { redirect: 'follow', headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.2' }, signal: AbortSignal.timeout(30000) });
+      const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}seo=${Date.now()}-${index}-${attempt}`, { redirect: 'follow', headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.3' }, signal: AbortSignal.timeout(30000) });
       const html = await response.text();
       detail = { status: response.status, canonical: canonical(html), title: title(html), description: Boolean(meta(html, 'name', 'description')), noindex: /noindex/i.test(meta(html, 'name', 'robots') || '') };
       if (response.status < 500) return detail;
@@ -227,7 +232,7 @@ async function validateLive() {
   const releaseCheck = await waitForSitemap(expectedSitemap);
   const liveErrors = [];
   const livePages = new Array(EXPECTED_URLS.length);
-  const robotsResponse = await fetch(`https://allsunday1122.github.io/robots.txt?seo=${Date.now()}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.2' } });
+  const robotsResponse = await fetch(`https://allsunday1122.github.io/robots.txt?seo=${Date.now()}`, { headers: { 'cache-control': 'no-cache', 'user-agent': 'Yorugatari-SEO-Audit/1.3' } });
   const robotsText = await robotsResponse.text();
   if (robotsResponse.status !== 200 || !robotsText.includes(`Sitemap: ${BASE}/sitemap.xml`)) liveErrors.push({ scope: 'robots.txt', message: 'Published robots.txt is unavailable or incorrect', status: robotsResponse.status });
 
