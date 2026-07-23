@@ -5,17 +5,17 @@
   "parentTeam": "北日本調査班",
   "integrationBranch": "region/north",
   "prefectureCodes": ["02", "03", "07"],
-  "updatedAt": "2026-07-23T16:36:00+09:00",
-  "status": "researching",
+  "updatedAt": "2026-07-23T17:05:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 73,
   "currentMunicipality": {
     "code": "03482",
     "name": "山田町",
-    "stage": "researching"
+    "stage": "ci_pending"
   },
-  "workingBranch": "data/03482-yamada",
-  "pullRequestNumber": null,
+  "workingBranch": "data/03482-yamada-v2",
+  "pullRequestNumber": 1303,
   "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"02387","name":"中泊町","pullRequestNumber":844,"ciStatus":"success","mergedAt":"2026-07-22T22:18:00+09:00"},
@@ -55,6 +55,12 @@
     {"code":"03441","name":"住田町","pullRequestNumber":1277,"ciStatus":"success","mergedAt":"2026-07-23T15:53:19+09:00"},
     {"code":"03461","name":"大槌町","pullRequestNumber":1288,"ciStatus":"success","mergedAt":"2026-07-23T16:30:44+09:00"}
   ],
-  "blocked": [],
-  "nextAction": "山田町（03482）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
+  "blocked": [
+    {
+      "municipalityCode": "03482",
+      "pullRequestNumber": 1303,
+      "reason": "pull_request Actionsイベントが生成されず、Jichitai Compare CIが未開始。変更範囲は自治体JSONとtaskの2ファイルのみで、branchはregion/northからbehind_by 0。"
+    }
+  ],
+  "nextAction": "PR #1303のActions生成とCIを再確認し、成功後にregion/northへ統合する。CI未生成の間はマージしない。"
 }
