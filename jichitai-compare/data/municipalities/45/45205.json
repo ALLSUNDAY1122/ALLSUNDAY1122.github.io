@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "45205",
+  "prefectureCode": "45",
+  "prefecture": "宮崎県",
+  "name": "小林市",
+  "officialUrl": "https://www.city.kobayashi.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を小林市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から中学校卒業までの保険診療自己負担を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "出生・転入から15歳到達年度末までの子ども",
+        "preschool": "1レセプトあたり自己負担350円、調剤無料",
+        "schoolAge": "小学生から中学生は1レセプトあたり自己負担800円、調剤無料",
+        "payment": "県内は受給資格証による現物給付、県外受診等は償還払い",
+        "application": "受給資格登録が必要",
+        "excluded": "学校・保育所等の管理下における災害共済対象、保険外診療等"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/soshikikarasagasu/kenkofukushibukosodateshienka/ikuji_shochugakusei/1127.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後2か月から小学6年生までの病後児保育利用料を日額2,000円まで助成",
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facility": "病後児ケアハウスこすもす",
+        "target": "病気の回復期で集団保育が困難かつ保護者が家庭保育できない児童",
+        "hours": "8時30分から17時まで",
+        "fee": "1日8時間以内1,500円、半日4時間未満800円、延長30分100円",
+        "support": "2023年10月から児童1人日額2,000円を上限に利用料助成",
+        "procedure": "事前登録と施設予約が必要"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/kosodate_kyoiku/kosodateshisetsu/7791.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と住民税非課税世帯の0～2歳児を無償化し、多子世帯を軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreePlus": "幼稚園・認定こども園の1号認定及び3～5歳の2号認定は保育料無料",
+        "underThree": "住民税非課税世帯の0～2歳児は無料。その他は市民税額等により算定",
+        "siblings": "所得・施設利用状況に応じ第2子半額、第3子以降無料等の多子軽減",
+        "specialHousehold": "所得要件を満たすひとり親・障がい者同居世帯等は第1子軽減、第2子以降無料",
+        "additionalCosts": "3～5歳児の副食費、教材費、行事費等は原則実費。一定世帯・第3子以降は副食費免除"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/soshikikarasagasu/kenkofukushibukosodateshienka/hoikuyoutien/7498.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "学校給食の食材費を保護者が給食費として負担",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "市立小中学校で学校給食を受ける児童生徒",
+        "status": "全校で完全給食を実施するが、一律無償化ではない",
+        "costRule": "施設・設備費や人件費は市が負担し、食材購入費は保護者が給食費として負担",
+        "calculation": "栄養摂取基準、食材価格、過去実績等を基に算定",
+        "support": "経済的に就学困難な世帯は就学援助の対象となる場合がある"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/soshikikarasagasu/kyoikubusportsshinkoka/ikuji_shochugakusei/1/918.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・通所・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "出産後1年未満で心身のケアや育児支援を必要とする母子",
+        "types": "宿泊型、通所型、訪問型",
+        "care": "母親の心身ケア、授乳・育児相談、休息支援等",
+        "application": "こども家庭センターへ相談・申請",
+        "facility": "利用形態・日程等は市と実施施設で調整",
+        "currentInfo": "2026年度親子健康づくり行事として継続実施"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/soshikikarasagasu/kenkofukushibukosodateshienka/bosihokenn/2156.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を月10時間、1時間300円程度で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "小林市在住で幼稚園・保育所・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentCondition": "保護者の就労要件を問わない",
+        "limit": "児童1人につき月10時間まで、1回最低1時間、その後30分単位",
+        "fee": "1時間300円程度。給食・おやつ等は別途実費の場合あり",
+        "facilities": "中央保育所、小林乳児保育園、細野保育園、まがた保育園等。市外施設も利用可能",
+        "start": "2026年4月から本格実施"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/kosodate_kyoiku/ikuji_mishugakuji/hoikujo_kodomoen_yochien/10407.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世帯の親世帯との同居・近居に伴う引越し等を最大20万円補助",
+      "details": {
+        "target": "夫婦とも就労し、18歳年度末までの子を養育または妊娠中の子ども世帯",
+        "purpose": "転入・転居により親世帯との同居または同一小学校区域内等で近居し、子育て支援を受けやすくする",
+        "eligibleCosts": "敷金、礼金、仲介手数料、退去費用等の賃貸借契約費用及び引越費用",
+        "amount": "親世帯との同居は上限20万円、近居は上限10万円",
+        "conditions": "税滞納なし、契約者要件、重複補助なし等",
+        "period": "2026年4月1日から2027年3月31日。予算到達で終了"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/soshikikarasagasu/kenkofukushibukosodateshienka/oshirase/6362.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "有料粗大ごみを分別して清掃工場へ直接搬入",
+      "details": {
+        "target": "指定袋に入らない布団・家具等の粗大ごみ",
+        "method": "分別後、小林市清掃工場へ直接搬入",
+        "identity": "搬入時に運転免許証等で住所確認",
+        "sorting": "集積場に出す場合と同様に分別し、指定袋対象品は指定袋へ入れる",
+        "handling": "荷下ろしは搬入者自身が行う",
+        "alternative": "高齢・障がい等で排出困難な世帯には、条件によりふれあい収集の個別収集あり"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/kurashi_tetsuzuki/gomi_recycle/3212.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・避難所等を掲載した地区別総合防災マップを公開",
+      "details": {
+        "coverage": "本庄川・岩瀬川の想定最大規模洪水、土石流・急傾斜地の警戒区域、避難所等",
+        "formats": "全体図、地区別PDF、防災対策・避難所一覧冊子",
+        "guidance": "自宅周辺の危険区域、避難場所、避難方法、非常持出品等を平時から確認",
+        "additional": "ため池ハザードマップ、県土砂災害マップ、重ねるハザードマップも案内",
+        "issued": "総合防災マップは2019年発行、公式ページで最新外部マップも併記"
+      },
+      "source": {
+        "url": "https://www.city.kobayashi.lg.jp/soshikikarasagasu/somubukikikanrika/anzen_anshin/2/1/1323.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
