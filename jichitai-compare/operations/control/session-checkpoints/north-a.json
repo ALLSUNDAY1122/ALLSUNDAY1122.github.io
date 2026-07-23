@@ -5,18 +5,18 @@
   "parentTeam": "北日本調査班",
   "integrationBranch": "region/north",
   "prefectureCodes": ["02", "03", "07"],
-  "updatedAt": "2026-07-23T15:26:00+09:00",
-  "status": "researching",
+  "updatedAt": "2026-07-23T15:50:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 75,
   "currentMunicipality": {
     "code": "03441",
     "name": "住田町",
-    "stage": "researching"
+    "stage": "pr_open"
   },
   "workingBranch": "data/03441-sumita",
-  "pullRequestNumber": null,
-  "ciStatus": "not_started",
+  "pullRequestNumber": 1277,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"code":"02387","name":"中泊町","pullRequestNumber":844,"ciStatus":"success","mergedAt":"2026-07-22T22:18:00+09:00"},
     {"code":"02401","name":"野辺地町","pullRequestNumber":856,"ciStatus":"success","mergedAt":"2026-07-22T22:42:00+09:00"},
@@ -54,5 +54,5 @@
     {"code":"03402","name":"平泉町","pullRequestNumber":1270,"ciStatus":"success","mergedAt":"2026-07-23T15:20:07+09:00"}
   ],
   "blocked": [],
-  "nextAction": "住田町（03441）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
+  "nextAction": "住田町（03441）のPR #1277について変更範囲・CIを確認し、region/northへ統合する。"
 }
