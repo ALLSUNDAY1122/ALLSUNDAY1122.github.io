@@ -131,8 +131,13 @@ async function auditTop(page) {
   await structure(page, 'top');
 
   await page.locator('#searchInput').fill('エレベーター');
-  const liveText = await page.locator('#count').innerText();
-  record('top: search result count is announced through live region', await page.locator('#count').getAttribute('aria-live') === 'polite' && liveText.includes('表示1話'), liveText);
+  const live = await page.locator('#count').evaluate((element) => ({
+    text: element.innerText,
+    ariaLive: element.getAttribute('aria-live'),
+    role: element.getAttribute('role'),
+    cards: document.querySelectorAll('#storyGrid .card').length
+  }));
+  record('top: search result count is announced through live region', live.ariaLive === 'polite' && live.role === 'status' && live.text.includes(`表示${live.cards}話`), live);
 
   const category = page.getByRole('button', { name: '心霊', exact: true });
   await category.focus();
@@ -152,7 +157,7 @@ async function auditArchive(page) {
 
 async function auditStory(page) {
   const loaded = await open(page, '/stories/spare-key-returned.html?utm_source=web_share&utm_medium=social&utm_campaign=onsite_share', async (target, attempt) => ({
-    ready: await target.locator('.story-pagination a').count() === 3 && await target.locator('#shareButton').count() === 1 && await target.locator('script[src*="engagement.js?v=20260723-004"]').count() === 1,
+    ready: await target.locator('.story-pagination a').count() === 3 && await target.locator('#shareButton').count() === 1 && await target.locator('script[src*="engagement.js?v=20260723-003"]').count() === 1,
     attempt,
     canonical: await target.locator('link[rel="canonical"]').getAttribute('href'),
     campaign: await target.evaluate(() => window.YORUGATARI_ENGAGEMENT?.campaign)
