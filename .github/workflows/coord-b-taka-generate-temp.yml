@@ -1,0 +1,110 @@
+name: Coordinator B Taka Generate Temp
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  generate:
+    if: github.head_ref == 'coord/central-release-taka-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/central-release-taka-20260724
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Import Taka snapshot
+        run: |
+          git fetch origin region/central:refs/remotes/origin/region/central
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { execFileSync } = require('child_process');
+          const root = process.cwd();
+          const project = path.join(root, 'jichitai-compare');
+          const serviceIds = JSON.parse(fs.readFileSync(path.join(project, 'data/service-definitions.json'), 'utf8')).services.map((item) => item.id);
+          const code = '28365';
+          const municipalityPath = `jichitai-compare/data/municipalities/28/${code}.json`;
+          const taskPath = `jichitai-compare/operations/tasks/${code}.json`;
+          const show = (repoPath) => JSON.parse(execFileSync('git', ['show', `origin/region/central:${repoPath}`], { encoding: 'utf8' }));
+          const write = (repoPath, value) => {
+            const full = path.join(root, repoPath);
+            fs.mkdirSync(path.dirname(full), { recursive: true });
+            fs.writeFileSync(full, `${JSON.stringify(value, null, 2)}\n`);
+          };
+          const municipality = show(municipalityPath);
+          const sourceTask = show(taskPath);
+          const services = serviceIds.map((id) => municipality.services?.[id]);
+          if (services.some((service) => !service || !['verified', 'unavailable'].includes(service.status))) throw new Error('28365: 9制度が未完了です');
+          municipality.status = 'verified';
+          municipality.updatedAt = '2026-07-24';
+          const task = {
+            ...sourceTask,
+            status: 'merged',
+            currentService: null,
+            nextServiceIndex: 9,
+            completedServices: [...serviceIds],
+            verifiedCount: services.filter((service) => service.status === 'verified').length,
+            researchingCount: 0,
+            unavailableCount: services.filter((service) => service.status === 'unavailable').length,
+            needsMediumReviewCount: 0,
+            pullRequestNumber: null,
+            lastCheckedAt: '2026-07-24',
+            lastUpdatedAt: '2026-07-24T04:50:00+09:00',
+            lastUpdatedBy: '統括B全国統合',
+            officialSources: [...new Set(services.map((service) => service.source?.url).filter((url) => /^https:\/\//.test(url ?? ''))) ],
+            blockers: []
+          };
+          write(municipalityPath, municipality);
+          write(taskPath, task);
+          write('jichitai-compare/operations/control/coord-b-release-taka-20260724.json', {
+            schemaVersion: '1.0.0',
+            createdAt: '2026-07-24T04:50:00+09:00',
+            previousPublishedMunicipalities: 1163,
+            addedMunicipalities: 1,
+            updatedMunicipalities: 0,
+            byRegion: { central: 1, west: 0 },
+            municipalities: [{ region: 'central', team: '中日本調査班', code, name: municipality.name, prefecture: municipality.prefecture, mode: 'add', sourcePullRequestNumber: 1683 }],
+            excludedCount: 0,
+            excluded: []
+          });
+          NODE
+
+      - name: Generate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          node <<'NODE'
+          const fs = require('fs');
+          const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
+          if (progress.registeredMunicipalities !== 1164) throw new Error(`公開自治体数が想定外です: ${progress.registeredMunicipalities}`);
+          let html = fs.readFileSync('index.html', 'utf8');
+          html = html.replace(/\d+自治体・9制度/u, `${progress.registeredMunicipalities}自治体・9制度`);
+          fs.writeFileSync('index.html', html);
+          NODE
+          npm run validate:generated
+
+      - name: Commit generated release
+        run: |
+          git add \
+            jichitai-compare/data/municipalities/28/28365.json \
+            jichitai-compare/operations/tasks/28365.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/index.html \
+            jichitai-compare/operations/control/coord-b-release-taka-20260724.json
+          git commit -m "release: 多可町を1164自治体へ反映"
+          git push origin HEAD:coord/central-release-taka-20260724
