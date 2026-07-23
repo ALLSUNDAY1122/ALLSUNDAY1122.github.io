@@ -108,7 +108,9 @@ function storyLastModified(story) {
 }
 
 function categoryLinks(prefix = '') {
-  return CATEGORIES.map((category) => `<a class="chip" href="${prefix}categories/${category.slug}.html">${category.linkLabel}</a>`).join('');
+  const fiveMinute = `<a class="chip" href="${prefix}5min-horror.html">5分で読める12選</a>`;
+  const categories = CATEGORIES.map((category) => `<a class="chip" href="${prefix}categories/${category.slug}.html">${category.linkLabel}</a>`).join('');
+  return `${fiveMinute}${categories}`;
 }
 
 function ensureFeedAndCategoryLinks() {
@@ -172,7 +174,7 @@ function categoryPage(category, stories) {
     ]
   };
   const items = stories.map((story) => `<a class="archive-item" href="../stories/${story.slug}.html"><span class="archive-no">${String(story.number).padStart(3, '0')}</span><span class="archive-copy"><strong>${escapeHtml(story.title)}</strong><small>${escapeHtml(story.summary)}</small><span class="meta"><span class="badge">${escapeHtml(story.category)}</span><span>約${story.minutes}分</span><span>怖さ ${'★'.repeat(story.fear)}${'☆'.repeat(Math.max(0, 5 - story.fear))}</span></span></span></a>`).join('');
-  const nav = CATEGORIES.map((item) => `<a class="chip${item.slug === category.slug ? ' active' : ''}" href="${item.slug}.html"${item.slug === category.slug ? ' aria-current="page"' : ''}>${item.linkLabel}</a>`).join('');
+  const nav = `<a class="chip" href="../5min-horror.html">5分で読める12選</a>${CATEGORIES.map((item) => `<a class="chip${item.slug === category.slug ? ' active' : ''}" href="${item.slug}.html"${item.slug === category.slug ? ' aria-current="page"' : ''}>${item.linkLabel}</a>`).join('')}`;
 
   return `<!doctype html>
 <html lang="ja">
@@ -205,12 +207,12 @@ function categoryPage(category, stories) {
 </head>
 <body>
   <a class="skip-link" href="#category-content">作品一覧へ移動</a>
-  <header class="site-header"><div class="wrap header-inner"><a class="logo" href="../index.html"><span class="logo-mark">夜</span>語り</a><nav class="nav" aria-label="主要メニュー"><a href="../index.html#stories">怖い話</a><a href="../archive.html">全100話</a><a href="../about.html">このサイトについて</a></nav></div></header>
+  <header class="site-header"><div class="wrap header-inner"><a class="logo" href="../index.html"><span class="logo-mark">夜</span>語り</a><nav class="nav" aria-label="主要メニュー"><a href="../index.html#stories">怖い話</a><a href="../5min-horror.html">5分で読む</a><a href="../archive.html">全100話</a><a href="../about.html">このサイトについて</a></nav></div></header>
   <main id="category-content" tabindex="-1">
     <section class="story-hero"><div class="wrap"><nav class="breadcrumb" aria-label="パンくずリスト"><a href="../index.html">夜語り</a><span aria-hidden="true">›</span><a href="../archive.html">全100話</a><span aria-hidden="true">›</span><span>${escapeHtml(category.heading)}</span></nav><div class="eyebrow">Horror category</div><h1>${escapeHtml(category.heading)}</h1><p class="category-summary">${escapeHtml(description)}</p><p class="section-note">全${stories.length}話・すべて約5分・一話完結</p><nav class="chips category-nav" aria-label="ほかのカテゴリ">${nav}</nav></div></section>
     <section class="wrap category-list" aria-label="${escapeHtml(category.heading)}の作品一覧">${items}</section>
   </main>
-  <footer class="site-footer"><div class="wrap footer-inner"><span>© 2026 夜語り</span><nav class="footer-links" aria-label="運営情報"><a href="../index.html">トップ</a><a href="../archive.html">全100話</a><a href="../feed.xml">RSS</a><a href="../about.html">運営・編集方針</a><a href="../privacy.html">プライバシー</a></nav></div></footer>
+  <footer class="site-footer"><div class="wrap footer-inner"><span>© 2026 夜語り</span><nav class="footer-links" aria-label="運営情報"><a href="../index.html">トップ</a><a href="../5min-horror.html">5分で読める怖い話</a><a href="../archive.html">全100話</a><a href="../feed.xml">RSS</a><a href="../about.html">運営・編集方針</a><a href="../privacy.html">プライバシー</a></nav></div></footer>
   <script src="../assets/analytics.js?v=${ANALYTICS_VERSION}"></script>
 </body>
 </html>
