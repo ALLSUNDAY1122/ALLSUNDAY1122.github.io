@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "41425",
+  "prefectureCode": "41",
+  "prefecture": "佐賀県",
+  "name": "白石町",
+  "officialUrl": "https://www.town.shiroishi.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を白石町公式情報で調査。8制度をverified、現行の実施施設・利用条件を確認できないこども誰でも通園制度をunavailableとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末までの保険診療自己負担を月額上限内に軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "白石町に住所を有する出生から18歳到達後最初の3月31日までのこども",
+        "inpatient": "1人1月1医療機関につき上限1,000円",
+        "outpatient": "1人1月1医療機関につき2回目受診まで各500円、3回目以降は自己負担なし",
+        "pharmacy": "調剤薬局は自己負担なし",
+        "method": "受給資格証による現物給付または償還払い"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/reiki/reiki_honbun/r080RG00000774.html?id=j4_k2",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.shiroishi.lg.jp/reiki/reiki_honbun/r080RG00000778.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後2か月から小学3年生までを近隣の病児・病後児保育施設で一時保育",
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 9
+      },
+      "details": {
+        "facility": "古賀小児科内科医院病児保育室スマイルルーム。武雄市のテトテも利用可能",
+        "target": "病気または回復期で集団保育が困難な生後2か月から小学3年生までの児童",
+        "hours": "スマイルルームは平日8時～18時、土曜日8時～13時",
+        "capacity": "スマイルルームは1日6人",
+        "fee": "1日1,000円、5時間以内500円",
+        "application": "事前登録と予約が必要"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/jyuumin/fukushi/kodomo/_8833.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "認可保育所・認定こども園等を利用する3～5歳児の利用料を無償化",
+        "ageZeroToTwo": "住民税非課税世帯の0～2歳児は無償化対象",
+        "mealCosts": "給食費・副食費は原則として施設へ直接支払い",
+        "calculation": "課税世帯の0～2歳児は町民税額等により保育料を算定"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/jyuumin/fukushi/kodomo/_8805/_8806.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は町内小学校・中学校の学校給食費を無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "白石町立小学校・中学校の児童生徒",
+        "support": "2026年4月から2027年3月までの学校給食費を公費負担",
+        "period": "令和8年度",
+        "scope": "小学校・中学校の給食費を無償化"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/chousei_machi/_3088/kouhou/_8331.html?media=pc",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊型・日帰り型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "2026年4月1日以降に出産し、白石町に住民票がある産後1年未満の母親と乳児",
+        "types": "宿泊型、日帰り型",
+        "limit": "宿泊型は最大7日、日帰り型は最大5日",
+        "fee": "宿泊型1泊5,000円、日帰り型1回1,000円。生活保護世帯は免除",
+        "care": "母体の心身・乳房ケア、授乳・沐浴等の育児支援、乳児の発育確認"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/jyuumin/kenkou/boshi_yobou/_7902.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "乳児等通園支援事業の実施基準・認可規則は制定済みだが、現行の実施施設・対象開始月齢・利用時間・料金を町公式ページで確認できない",
+      "details": {
+        "confirmed": "白石町乳児等通園支援事業の設備・運営基準条例および認可規則を2025年12月から2026年3月に制定",
+        "availability": "2026年度の実施施設、月利用上限、利用料、申込方法は担当課への確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/reiki/reiki_honbun/r080RG00001276.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・子育て世帯の町内住宅取得費を最大100万円補助",
+      "details": {
+        "target": "町内に住宅を取得して定住する若者世帯または子育て世帯で、2025年4月1日以降に対象契約を締結した世帯",
+        "support": "住宅の新築または購入に対して補助",
+        "amount": "最大100万円",
+        "conditions": "住宅・土地の取得費等の要件、年齢・子育て要件、町税滞納なし、継続居住等の要件あり",
+        "deadline": "申請受付期限は2028年2月28日"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/chousei_machi/iju_teiju/_5127.html?media=pc",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "2026年度の地区別ごみカレンダーに粗大ごみ収集日を設定",
+      "details": {
+        "collection": "白石・北明・須古・福富・有明等の地区別カレンダーに従い、粗大ごみを指定場所へ排出",
+        "schedule": "令和8年度ごみポスター・カレンダーで地区ごとの粗大ごみ収集日を確認",
+        "preparation": "分別ガイドに従い、対象品・排出方法・収集場所を確認",
+        "excluded": "家電リサイクル対象品、処理困難物、事業系廃棄物等は通常収集対象外"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/jyuumin/seikatsu/kankyou/gomi_recycle/_1230.html?media=pc",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.shiroishi.lg.jp/jyuumin/seikatsu/kankyou/gomi_recycle/_1228.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・高潮・津波等を掲載する白石町ハザードマップを公開",
+      "details": {
+        "coverage": "洪水浸水想定、土砂災害危険区域、高潮・津波、避難所・避難経路等",
+        "maps": "冊子版とWeb版のハザードマップを公開",
+        "guidance": "自宅周辺の危険区域、避難場所・避難経路を平時から確認するよう案内"
+      },
+      "source": {
+        "url": "https://www.town.shiroishi.lg.jp/jyuumin/bousai/_2905.html?media=pc",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.shiroishi.lg.jp/safety/agree.html?lay=kozui",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}

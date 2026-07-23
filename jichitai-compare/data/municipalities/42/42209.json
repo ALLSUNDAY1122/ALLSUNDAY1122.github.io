@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "42209",
+  "prefectureCode": "42",
+  "prefecture": "長崎県",
+  "name": "対馬市",
+  "officialUrl": "https://www.city.tsushima.nagasaki.jp/",
+  "status": "verified",
+  "summary": "必須9制度を対馬市公式情報で調査。8制度をverified、通常の病児・病後児保育施設の現行利用条件を確認できないため同制度をunavailableとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末までの保険診療自己負担を1医療機関月800円または1,600円に軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "対馬市に住所がある乳幼児から18歳到達年度末までのこども",
+        "copay": "1か月に1日のみ受診は医療機関ごと800円、2日以上は1,600円を控除した額を助成",
+        "pharmacy": "薬局分は全額助成",
+        "incomeLimit": "乳幼児・こどもは所得制限なし",
+        "payment": "乳幼児は県内、小中学生は市内医療機関で現物給付。その他は償還払い"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/kosodateshien/5154.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "自園型の緊急対応制度は条例上確認できるが、通常利用できる病児・病後児保育施設と現行条件を市公式案内で確認できない",
+      "details": {
+        "confirmed": "保育中に体調不良となった児童を保護者の迎えまで緊急対応する自園型事業の実施要綱は存在",
+        "availability": "一般利用できる実施施設、対象年齢、料金、予約方法の2026年度案内を確認できないため要問い合わせ"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/section/reiki_int/reiki_honbun/r013RG00000751.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化し、へき地保育所は全児童無料",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "幼稚園・こども園・保育所等の3歳児クラス以上は保育料無償",
+        "ageZeroToTwo": "0～2歳児クラスは住民税非課税世帯が無償。課税世帯は市民税額等に応じた保育料",
+        "remoteNursery": "へき地保育所は全児童の保育料を無償",
+        "application": "令和8年度の施設利用申込・継続手続きが必要"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/hoikusyo/3129.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.tsushima.nagasaki.jp/material/files/group/17/R8goannai.pdf",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的に就学困難な小中学生世帯へ学校給食費の実費を援助",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "市立小中学校の保護者のうち、生活保護停止・廃止、非課税、児童扶養手当受給、所得基準等で準要保護と認定された世帯",
+        "support": "学校給食費は実費を援助",
+        "application": "通学する学校で随時申込",
+        "universalSupport": "全児童生徒への一律無償化は市公式情報で確認できない"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/kyouiku/gakkokyoikuka/enjyo/685.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へショートステイ・デイケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "市内に住所があり、家族から十分な支援を得にくく心身の不調・育児不安がある産後1年未満の母親と乳児",
+        "types": "宿泊するショートステイ、日帰りのデイケア",
+        "fee": "ショートステイ1泊3,000円、デイケア1回300円",
+        "limit": "ショートステイ最大7日、デイケアは1歳未満まで回数制限なし",
+        "care": "母体の心身ケア、授乳・育児手技の指導・相談"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/hoken/kenkouzoushin/4557.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を豊玉こども園・雞知保育所で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保育所・認定こども園等に通っていない生後6か月から満3歳未満のこども",
+        "facilities": "豊玉こども園、雞知保育所",
+        "fee": "1時間300円。生活保護・住民税非課税世帯等は申請により軽減",
+        "application": "利用認定後、初回利用施設との面談と予約が必要",
+        "start": "2026年4月"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/notice/6962.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "多子世帯・新たな3世代同居近居世帯の住宅取得・新築・改修費を補助",
+      "details": {
+        "multiChild": "18歳未満の子が3人以上、または2人で第3子を希望する世帯の中古住宅取得・取得時改修を補助",
+        "threeGeneration": "小学生以下の子育て世帯と祖父母等が新たに同居・近居する住宅取得、新築、改修を補助",
+        "support": "対象経費の5分の1以内、上限50万円",
+        "application": "売買・工事契約または着工前に申請。通常11月末、新築は9月末まで",
+        "budget": "予算到達時は早期終了あり"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/kosodateshien/956.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを市の分別区分に従い収集へ出すか、対馬クリーンセンター等へ直接搬入",
+      "details": {
+        "definition": "指定袋に入らない家具・家電等の市指定品目を粗大ごみとして処理",
+        "collection": "地区別の令和8年度ごみ収集カレンダーに従って排出",
+        "carryIn": "市のごみ処理施設へ家庭ごみを直接搬入可能",
+        "fee": "2026年4月から家庭ごみ直接搬入は100kgまで300円、以後50kgごと100円",
+        "excluded": "家電リサイクル法対象4品目等は市の通常処理対象外"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/kurashi/gomi/1991.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地区別の土砂災害・洪水ハザードマップとデジタル地図を公開",
+      "details": {
+        "coverage": "土砂災害警戒区域、洪水浸水想定区域・浸水深、避難情報等",
+        "maps": "島内各地区の土砂災害マップと河川別洪水マップを公開",
+        "digital": "つしまっぷで土砂災害特別警戒・警戒区域や洪水浸水想定区域を重ねて閲覧可能",
+        "guidance": "危険箇所と避難場所・経路を平時から確認するよう案内"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/soumu/bousai/4161.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}

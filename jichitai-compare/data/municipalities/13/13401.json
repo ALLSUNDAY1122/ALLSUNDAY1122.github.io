@@ -1,0 +1,201 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "13401",
+  "prefectureCode": "13",
+  "prefecture": "東京都",
+  "name": "八丈町",
+  "officialUrl": "https://www.town.hachijo.tokyo.jp/",
+  "status": "verified",
+  "summary": "子育て・生活関連9制度を八丈町公式情報で確認し、7制度をverified、現行専用制度を確認できない2制度をunavailableとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "八丈町に居住し、日本の医療保険制度に加入する18歳到達後最初の3月31日までの子ども",
+        "coverage": "健康保険が適用される医療の自己負担分を乳幼児・義務教育就学児・高校生等医療費助成制度で助成",
+        "procedure": "年齢区分に応じた医療証の交付申請が必要",
+        "excluded": "保険適用外費用、他制度による公費負担対象分等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/kosodate-kyouiku/ninshin-shussan-kosodate/kosodate/nyuyouji-gimukyoiku/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の現行保育・子育て案内では専用の病児・病後児保育を確認できない",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "result": "町公式サイト、保育関係条例、子育て案内を確認したが、病気中または回復期の子どもを専用に預かる制度・施設は確認できなかった",
+        "existing": "条例上の一時保育・一時預かり保育は通常の一時的な保育であり、病児専用保育とは区別",
+        "restriction": "疾病等により他児童へ支障を及ぼすおそれがある場合は保育を実施しないことができる"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/reiki_int/reiki_honbun/g162RG00000530.html?id=j4",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "町立保育園の3歳未満児保育料を所得階層別に設定し、3歳以上児等は無償化対象",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "八丈町立むつみ・むつみ第二・若草・あおぞら保育園等で保育の実施を受ける児童",
+        "fee": "3歳未満児は市町村民税額等による月額0円から43,000円の階層制。生活保護・住民税非課税世帯等は0円",
+        "free": "幼児教育・保育無償化の対象となる3歳以上児等の基本保育料は0円",
+        "siblings": "同一生計世帯から2人以上入所する場合は2人目半額、3人目以降無料",
+        "excluded": "延長保育・一時保育等は1人1時間350円"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/reiki_int/reiki_honbun/g162RG00000530.html?id=j4",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "令和8年度の町立小中学校給食費無償化は現行公式情報で確認できない",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "result": "町公式の給食無償化ページは令和6年度（2024年度）分のみを掲載し、対象期間は令和7年3月31日までで終了している",
+        "past": "令和6年度は町立小中学校在籍児童生徒の給食費を補助し無償化",
+        "current": "令和8年度の継続・再実施を示す公式ページまたは施政方針上の明記を確認できなかった",
+        "alternative": "経済的理由で就学が困難な世帯には令和8年度就学援助制度がある"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/kosodate-kyouiku/shougaku-chuugaku/k-mushoka/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.hachijo.tokyo.jp/kosodate-kyouiku/shougaku-chuugaku/shugakuenjo/",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の心身不調や育児不安がある母子を対象とする産後ケア事業を令和8年度も実施",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "target": "八丈町に居住し、出産後の心身の不調や育児不安等により支援を必要とする母親と乳児",
+        "support": "令和8年度施政方針で産後ケア事業に500万円を計上し、切れ目のない母子支援を継続",
+        "related": "産婦健康診査、1か月児健康診査、島外分娩補助、オンライン産婦人科相談等も実施",
+        "note": "利用類型・回数・自己負担等の詳細は福祉健康課保健係への確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/kakuka/soumu/hoshin.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.hachijo.tokyo.jp/kosodate-kyouiku/ninshin-shussan-kosodate/ninshin-shussan/ikujishien/n-josehojo/",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町立保育園・こども家庭センターで一時保育・一時預かり保育を実施",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "保護者が一時的に保育することが困難となった就学前児童",
+        "facilities": "一時保育は町立むつみ保育園・あおぞら保育園、一時預かり保育は八丈町こども家庭センター",
+        "capacity": "同時刻に各制度3人まで",
+        "limit": "連続4時間以内",
+        "fee": "児童1人1時間350円",
+        "procedure": "利用施設へ申込み、承認を受ける必要がある"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/reiki_int/reiki_honbun/g162RG00000530.html?id=j4",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住就業・テレワーク世帯へ定住支援金を交付し、18歳未満の子ども1人につき100万円加算",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 17
+      },
+      "details": {
+        "target": "都内条件不利地域以外から八丈町へ転入し、就業またはテレワークを行い継続居住要件等を満たす方",
+        "employment": "対象事業者への就業等は単身60万円、2人以上世帯100万円",
+        "telework": "テレワークは単身30万円、2人以上世帯50万円",
+        "child": "令和8年度から18歳未満の世帯員を帯同する場合、子ども1人につき100万円を加算",
+        "conditions": "転入後1年以内、原則5年以上継続居住・就業する意思等が必要"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/iju/iju-guide/teijuu-shienkin/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを南原処理場へ搬入し、処理依頼または戸別収集を有料で利用",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "method": "粗大ごみは南原処理場へ搬入し計量して処理を依頼できるほか、住居等への戸別収集を依頼可能",
+        "fee": "処理依頼は10キログラムまで220円、超過分も10キログラムにつき220円",
+        "collection": "戸別収集は粗大ごみの個別収集手数料が必要",
+        "appliances": "家電リサイクル4品目はリサイクル料金を支払い南原処理場へ持込む別制度"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/kurashi/seikatsukankyo/ippanhaikibutsu-shori/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・津波・火山の各ハザードマップと避難計画を公開",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "landslide": "地区別の土砂災害警戒区域・危険箇所・避難行動を示すハザードマップを公開",
+        "tsunami": "津波浸水深・範囲、避難場所・避難所を示す津波防災マップと津波避難計画を公開",
+        "volcano": "八丈富士の噴火に備える火山防災ハザードマップ、しおり、避難計画を公開",
+        "plans": "震災・風水害・火山編の地域防災計画を公開",
+        "use": "自宅・学校・勤務先周辺の災害リスクと避難経路を事前確認"
+      },
+      "source": {
+        "url": "https://www.town.hachijo.tokyo.jp/bousai-anzen/dosyasaigai/d-hazardmap/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.hachijo.tokyo.jp/bousai-anzen/kazan/k-taisaku/",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.hachijo.tokyo.jp/bousai-anzen/higorokarano-sonae/hinan/",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}
