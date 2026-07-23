@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.ryuoh.shiga.jp/",
   "status": "verified",
   "summary": "竜王町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から高校生世代まで、入院・通院・調剤の保険診療自己負担額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "0歳から18歳到達後最初の3月31日まで",
         "coverage": "健康保険が適用される入院・通院・調剤薬局の自己負担額",
@@ -20,16 +23,28 @@
         "payment": "滋賀県内は受給券による現物給付、県外受診等は償還払い",
         "excluded": "保険適用外費用、入院時食事代、高額療養費・附加給付、第三者行為、日本スポーツ振興センター災害共済給付との重複分等"
       },
-      "source": {"url": "https://www.town.ryuoh.shiga.jp/life/kenko_iryou/fukushiiryou_junior_high.html", "checkedAt": "2026-07-22"},
+      "source": {
+        "url": "https://www.town.ryuoh.shiga.jp/life/kenko_iryou/fukushiiryou_junior_high.html",
+        "checkedAt": "2026-07-22"
+      },
       "additionalSources": [
-        {"url": "https://www.town.ryuoh.shiga.jp/life/kenko_iryou/fukushiiryou_nyuyouji.html", "checkedAt": "2026-07-22"},
-        {"url": "https://www.town.ryuoh.shiga.jp/life/kenko_iryou/fukushiiryou_junior.html", "checkedAt": "2026-07-22"}
+        {
+          "url": "https://www.town.ryuoh.shiga.jp/life/kenko_iryou/fukushiiryou_nyuyouji.html",
+          "checkedAt": "2026-07-22"
+        },
+        {
+          "url": "https://www.town.ryuoh.shiga.jp/life/kenko_iryou/fukushiiryou_junior.html",
+          "checkedAt": "2026-07-22"
+        }
       ]
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後6か月から6歳到達年度末までの在園児を町病児保育室で預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 6},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 6
+      },
       "details": {
         "condition": "病気または回復期で集団保育が困難かつ医師が利用適当と認めた町内在住の在園児",
         "facility": "竜王町病児保育室（竜王こども園内）",
@@ -38,12 +53,18 @@
         "fee": "一般2,000円、町民税非課税世帯・ひとり親世帯1,000円、生活保護世帯等は無料",
         "application": "事前登録、空き確認、指定医療機関受診、医師連絡票、利用予約が必要"
       },
-      "source": {"url": "https://ryu-suku.town.ryuoh.shiga.jp/hagukumu/kodomo_mannaka_byouji_hoiku.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://ryu-suku.town.ryuoh.shiga.jp/hagukumu/kodomo_mannaka_byouji_hoiku.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "幼稚園、保育園、認定こども園等を利用する3～5歳児は保育料無償",
         "underThree": "住民税非課税世帯の0～2歳児は保育料無償",
@@ -51,63 +72,105 @@
         "excludedCosts": "通園送迎費、食材料費、行事費等の実費は別途必要",
         "certification": "施設・サービスに応じて町の認定が必要"
       },
-      "source": {"url": "https://ryu-suku.town.ryuoh.shiga.jp/information/2019_12youho_mushouka/2019_12youho_mushouka.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://ryu-suku.town.ryuoh.shiga.jp/information/2019_12youho_mushouka/2019_12youho_mushouka.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "町立小中学校の学校給食費を無償化し、対象外児童生徒には同等額を補助する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "summary": "町立小中学校の給食費を無償化し、対象外児童生徒には令和8年度の町給食費相当額を補助する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "townSchools": "竜王町立小中学校の給食費は保護者負担なし",
         "outsideSchools": "町内在住で町立小中学校以外に在籍する児童生徒等の保護者へ町給食費相当額を補助",
         "allergy": "食物アレルギー等で学校給食を完全に喫食しない町立校児童生徒も補助対象",
-        "application": "対象外校在籍者等は補助金申請が必要",
-        "adjustment": "他制度により給食費負担がない場合等は対象外または調整"
+        "period": "令和8年4月1日から令和9年3月31日まで",
+        "monthlyLimit": "小学校・小学部は月4,600円、中学校・中等教育学校中等部は月5,100円を上限",
+        "calculation": "実際の給食費と上限額の低い方から、他の公的給食費補助を控除して算定",
+        "application": "令和9年2月12日から3月12日まで、教育総務課へ持参または郵送で申請",
+        "payment": "審査は約1～2週間、請求書提出から約1か月後に指定口座へ振込み"
       },
-      "source": {"url": "https://ryu-suku.town.ryuoh.shiga.jp/manabu/school_kyushoku_hojyokin.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://ryu-suku.town.ryuoh.shiga.jp/manabu/school_kyushoku_hojyokin.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子へ宿泊・通所・訪問型の産後ケアを通算7回まで提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
-        "target": "竜王町に住民票がある出産後1年未満の母子。流産・死産を経験した方を含む",
+        "target": "竜王町に住民票がある出産後1年未満の母子。流産・死産を経験した方を含み、医療行為が必要な母子・感染症の母子は除く",
         "types": "短期入所型、通所型、居宅訪問型",
+        "hours": "短期入所型は1泊2日・24時間以内、通所型は日帰り8時間以内、訪問型は2時間以内",
         "feeWithSubsidy": "短期入所1日5,000円、通所1日1,000円、訪問1回500円",
         "feeWithoutSubsidy": "短期入所1日7,500円、通所1日3,500円、訪問1回1,000円",
-        "limit": "全類型を通算7回まで。利用料補助は通算5日・回以内",
+        "limit": "全類型を通算7回まで。1日・回2,500円の利用料補助は通算5日・回以内",
+        "meal": "食事代は利用料金に含まれず別途必要",
         "reduction": "町民税非課税世帯・生活保護世帯は無料",
-        "application": "健康推進課への事前相談・申請と利用審査が必要"
+        "application": "健康推進課へ事前相談・申請し、保健師の聞き取りと審査、承認通知後に日程調整"
       },
-      "source": {"url": "https://ryu-suku.town.ryuoh.shiga.jp/hagukumu/sangocare.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://ryu-suku.town.ryuoh.shiga.jp/hagukumu/sangocare.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
-        "condition": "保育所・幼稚園・認定こども園・地域型保育・企業主導型保育等に通っていない生後6か月から満3歳未満の児童",
+        "condition": "保育所・幼稚園・認定こども園・地域型保育・企業主導型保育等に通っていない生後6か月から満3歳未満の児童。認可外保育所利用児は対象",
         "facility": "竜王町立竜王こども園",
         "hours": "水曜・木曜・金曜の9時から12時。祝日・年末年始等を除く",
-        "limit": "児童1人につき月10時間まで",
-        "fee": "1時間300円。生活保護世帯等は減免あり",
+        "limit": "児童1人につき月10時間まで。3歳の誕生日の前々日まで利用可能",
+        "fee": "1時間300円。生活保護世帯等は減免あり。利用当日に釣銭のないよう現金で支払う",
         "capacity": "1日3人まで",
-        "application": "つうえんポータルで認定申請、情報登録、初回面談、利用予約が必要"
+        "food": "給食・おやつの提供なし",
+        "application": "つうえんポータルで認定申請・児童情報登録・初回面談を行う",
+        "reservation": "初回面談終了後、利用希望日の21日前から7日前までつうえんポータルで予約",
+        "cancellation": "原則前日16時までに園へ連絡。前日16時以降の取消し・無断欠席・遅刻等は利用時間枠を消費し、利用料が発生する場合がある"
       },
-      "source": {"url": "https://ryu-suku.town.ryuoh.shiga.jp/manabu/kodomo_daredemo_tsuen.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://ryu-suku.town.ryuoh.shiga.jp/manabu/kodomo_daredemo_tsuen.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "40歳未満の新婚転入世帯へ住宅・リフォーム・家賃・引越費用を最大60万円補助する。",
+      "summary": "40歳未満・新婚・子育て世帯等の新築・リフォーム・家賃を若者定住補助で支援し、転入新婚世帯には別の結婚新生活支援も用意する。",
       "details": {
-        "program": "竜王町結婚新生活支援事業補助金",
-        "condition": "夫婦とも40歳未満、町外から転入、合計所得500万円未満、5年以上居住意思、指定講座受講等",
-        "targetCosts": "新築・住宅取得、住宅リフォーム、月額4万5千円以上の家賃、引越費用",
-        "rates": "新築・取得・リフォームは対象経費の20％以内、家賃は最大6か月分の50％以内、引越費用は50％以内",
-        "amount": "夫婦とも30歳未満は上限60万円、30歳以上40歳未満は上限30万円",
-        "application": "令和8年4月1日から令和9年2月26日まで、予算範囲内で先着順"
+        "program": "竜王町若者定住のための住まい補助金",
+        "target": "40歳未満の町内居住者・令和9年3月末までの転入者、対象期間に婚姻する町内居住者、18歳未満の子を養育する町内居住者等",
+        "newBuild": "工事費の20％以内。町内業者、空家利用、子育て、多子、多世代同居の加算により上限8万～80万円",
+        "renovation": "工事費の20％以内。各加算により上限4万～50万円",
+        "rent": "月額4万5千円以上の集合住宅について最大6か月分の家賃50％以内。1年目上限5万～20万円、2年目上限5万～10万円",
+        "condition": "新築・リフォームは着工前申請、令和9年3月19日までに完了・支払い。町内業者50万円以上、町外業者100万円以上の工事が対象",
+        "period": "令和8年4月6日から12月25日まで。予算上限で終了",
+        "residence": "新築・リフォーム・家賃のいずれも5年以上町内居住する誓約が必要",
+        "alternative": "町外から転入する40歳未満の新婚夫婦は、住宅取得・リフォーム・家賃・引越費用を上限30万または60万円とする結婚新生活支援の対象となる場合がある",
+        "nonDuplication": "若者定住のための住まい補助金と結婚新生活支援補助金は重複受給不可"
       },
-      "source": {"url": "https://www.town.ryuoh.shiga.jp/life/sumai/kekkon_shinseikatsu.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.ryuoh.shiga.jp/life/sumai/reform.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.ryuoh.shiga.jp/life/sumai/kekkon_shinseikatsu.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "bulkyWaste": {
       "status": "verified",
@@ -120,7 +183,10 @@
         "hours": "平日8時30分から12時、13時から16時30分。能登川清掃センターは原則第4日曜も搬入可能",
         "limits": "品目・寸法・1日搬入量に制限あり"
       },
-      "source": {"url": "https://www.town.ryuoh.shiga.jp/life/gomi_recycle/gomi_hannyu.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.ryuoh.shiga.jp/life/gomi_recycle/gomi_hannyu.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -133,10 +199,19 @@
         "evacuation": "指定避難所・指定緊急避難場所と対象地区を案内",
         "app": "公式アプリで気象警報・避難情報、ハザードマップ等を配信"
       },
-      "source": {"url": "https://www.town.ryuoh.shiga.jp/life/bousai/dosha_hazardmap.html", "checkedAt": "2026-07-22"},
+      "source": {
+        "url": "https://www.town.ryuoh.shiga.jp/life/bousai/dosha_hazardmap.html",
+        "checkedAt": "2026-07-22"
+      },
       "additionalSources": [
-        {"url": "https://www.town.ryuoh.shiga.jp/life/bousai/tameike_hazardmap.html", "checkedAt": "2026-07-22"},
-        {"url": "https://www.town.ryuoh.shiga.jp/life/bousai/hinanbasho.html", "checkedAt": "2026-07-22"}
+        {
+          "url": "https://www.town.ryuoh.shiga.jp/life/bousai/tameike_hazardmap.html",
+          "checkedAt": "2026-07-22"
+        },
+        {
+          "url": "https://www.town.ryuoh.shiga.jp/life/bousai/hinanbasho.html",
+          "checkedAt": "2026-07-22"
+        }
       ]
     }
   }
