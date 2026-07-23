@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "05463",
+  "prefectureCode": "05",
+  "prefecture": "秋田県",
+  "name": "羽後町",
+  "officialUrl": "https://www.town.ugo.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが羽後町公式情報で対象9制度を調査し、9制度すべてを確認済みとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、福祉医療費受給者証により保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "乳幼児および小中高生等の18歳到達後最初の3月31日までの子ども",
+        "coverage": "マル福カードを提示すると保険診療の自己負担分が無料",
+        "incomeLimit": "カード発行時に所得判定あり",
+        "excluded": "入院時食事代、文書料等の保険適用外費用は対象外",
+        "application": "健康福祉課で福祉医療費受給者証の交付申請を行う"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=200&id=69", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "にしもないこども園で病後児保育、みわこども園で体調不良児型保育を実施する。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 5},
+      "details": {
+        "facilities": "にしもないこども園、みわこども園",
+        "types": "にしもないこども園は病後児保育、みわこども園は体調不良児型保育",
+        "target": "認定こども園等を利用し、病気回復期または保育中の体調不良により集団保育が困難な児童",
+        "guidance": "利用可能時間、料金、医師連絡票等の必要書類は各園へ事前確認"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=74&id=136", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和7年9月分から0～2歳児を含む保育料を無償化し、3～5歳児の副食費も月額4,900円まで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "start": "2025年9月分から",
+        "under3": "0～2歳児クラスの保育料は無償。申請が必要",
+        "age3Plus": "3～5歳児クラスは国制度により保育料無償",
+        "meals": "副食費を月額4,900円まで助成。町内認定こども園では申請により保護者負担なし",
+        "application": "入所申込または継続届と併せてすこやか子育て支援事業の申請書を提出"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=74&id=2493", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的理由で就学が困難な認定世帯へ、就学援助として学校給食費を支給する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "生活保護、税・保険料減免、児童扶養手当、低所得等の要件により認定された小中学生世帯",
+        "support": "給食費、学用品費、修学旅行費、医療費、オンライン学習通信費等を援助",
+        "scope": "全児童生徒への一律無償化ではなく、就学援助認定世帯への支援",
+        "application": "在籍する学校で毎年度申請"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=75&id=2291", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子を対象に宿泊型、日帰り型、訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "羽後町に住民票があり、家族の支援が不足する、心身の不調・育児不安がある等の母親と乳児",
+        "types": "宿泊型（ショートステイ）、日帰り型（デイサービス）、訪問型",
+        "support": "母親の体調管理、乳房ケア、乳児の健康確認、育児・授乳・沐浴指導等",
+        "conditions": "母子とも医療行為を必要としないこと",
+        "application": "健康福祉課へ事前相談・利用申請"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=5&id=2986", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町内各こども園等の一時預かりに加え、生後6か月から満3歳未満の未就園児向けこども誰でも通園制度を実施する。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 5},
+      "details": {
+        "temporaryTarget": "生後8週後から就学前まで",
+        "temporaryHours": "8時30分から16時30分。1施設につき月14回まで",
+        "temporaryFee": "町内児童は1日1,000円、4時間以内500円。給食費無料",
+        "anyChildTarget": "保育施設を利用していない生後6か月から満3歳未満の子ども",
+        "anyChildLimit": "にしもないこども園で平日9時30分から15時30分、月10時間まで、1時間200円。給食費無料",
+        "application": "一時預かりは利用施設へ、こども誰でも通園制度は町へ事前申込み"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=189&id=3351", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世帯・移住定住世帯等の25万円以上の住宅リフォーム費を20％、上限20万円などで助成する。",
+      "details": {
+        "program": "令和8年度羽後町住宅リフォーム促進事業",
+        "target": "町内居住者の子育て世帯、一般世帯、県外から転入3年以内の移住定住世帯",
+        "minimumCost": "消費税込み25万円以上の住宅リフォーム工事",
+        "amount": "対象経費の20％。子育て世帯・移住定住世帯は上限20万円、一般世帯は上限5万円",
+        "contractor": "子育て・一般世帯は町内業者、移住定住世帯は県内業者",
+        "application": "工事着工前に建設課へ申請"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=168&id=2548", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない家具・電子機器等は粗大ごみ専用シールを貼り、地区の収集日に集積場へ排出する。",
+      "details": {
+        "target": "指定袋に入らない家具や電子機器など",
+        "collection": "令和8年度地区別ごみカレンダーの収集日に、朝6時から7時30分までに集積場へ排出",
+        "ticket": "品目別料金に応じた粗大ごみ専用シールを貼付。シールは町民生活課で購入",
+        "directDelivery": "処理施設への直接搬入も可能で、搬入先では重量に応じた処理料金を支払う",
+        "excludedItems": "家電リサイクル対象4品目等は受入対象外"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=160&id=167", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害、避難所、避難情報等を確認できるWEB版ハザードマップを公開する。",
+      "details": {
+        "coverage": "洪水・土砂災害の危険区域、避難所の位置・開設・混雑状況、避難情報",
+        "location": "スマートフォン等の位置情報から現在地周辺の危険情報を表示",
+        "route": "現在地から避難所までのルートを確認可能",
+        "access": "町公式ページからWEB版ハザードマップへアクセス"
+      },
+      "source": {"url": "https://www.town.ugo.lg.jp/life/detail.html?category_id=37&id=2399", "checkedAt": "2026-07-24"}
+    }
+  }
+}
