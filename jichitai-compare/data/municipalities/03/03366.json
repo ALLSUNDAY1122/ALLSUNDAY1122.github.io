@@ -1,0 +1,171 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03366",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "西和賀町",
+  "officialUrl": "https://www.town.nishiwaga.lg.jp/",
+  "status": "verified",
+  "summary": "西和賀町の9制度を公式情報で再監査し、確認できた制度をverified、現行条件を確定できない制度をunavailableとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、所得制限・自己負担なしで保険診療の医療費を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "出生から18歳に達する日以後の最初の3月31日まで",
+        "incomeLimit": "なし",
+        "copay": "なし",
+        "benefitMethod": "現物給付",
+        "application": "受給者証の交付申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/iryo_kenko_fukushi/iryo_kenko/2/1322.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "令和8年度予算で病児保育委託事業と施設整備費を確認したが、対象年齢・施設・料金・申請方法の利用者向け最新案内を確認できない。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "details": {
+        "program": "病児保育委託事業",
+        "fiscal2026": "事業費24,845千円を計上し、病児保育施設整備事業費補助金17,600千円を含む",
+        "background": "従来の委託医療機関が令和7年3月に閉院し、令和8年度以降の再実施を検討していた",
+        "reviewReason": "令和8年度の利用対象、開設施設、利用料、予約・申請方法を町公式の利用案内で確定できない",
+        "availability": "現行の利用者向け公式条件を確定できないため情報未確認",
+        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/material/files/group/24/00_R08yosansetumei.pdf",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.nishiwaga.lg.jp/material/files/group/27/kosodatesiennjigyoukeikaku3.pdf",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児に加え、町独自に所得要件なしで第2子以降の0～2歳児保育料を無償化する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "3～5歳児は国制度で無償、0～2歳児の住民税非課税世帯も無償",
+        "siblingReduction": "国制度の対象外世帯でも、保護者が監護する第2子以降の0～2歳児保育料を町基準で無償化",
+        "incomeRequirement": "第2子以降の町独自無償化は令和5年度分から所得要件を撤廃",
+        "mealSupport": "町内在住の3～5歳児クラスの副食費を町独自に無償化",
+        "excluded": "行事費等の保育料以外の経費は保護者負担"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/kosodate_kyoiku/ikuji_mishugakuji/4109.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "学校給食費は公会計で徴収し、経済的理由で就学困難と認定された小中学生には就学援助で給食費を助成する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "universalFree": "町内全児童生徒を対象とする無償化は確認できない",
+        "support": "準要保護児童生徒の就学援助対象経費に学校給食費を含む",
+        "target": "経済的理由により就学困難と認定された小学生・中学生の保護者",
+        "application": "希望する家庭に認定調査を行い、該当時に助成",
+        "accounting": "学校給食費は公会計で運用"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/material/files/group/24/00_R08yosansetumei.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "助産師が母子宅を訪問する産後サポートを実施しているが、対象月齢・料金・利用回数・申請方法の最新案内を確認できない。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "details": {
+        "type": "訪問型",
+        "provider": "町外助産師へ依頼",
+        "availability": "現行の利用者向け公式条件を確定できないため情報未確認",
+        "dayService": "デイサービス型は未実施。令和9年度中の施設開設を目標",
+        "reviewReason": "対象となる産後月齢、料金、利用上限、具体的申請方法を確定できない",
+        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/material/files/group/27/kosodatesiennjigyoukeikaku3.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "生後6か月から3歳未満を対象とする制度の検討方針は確認したが、令和8年度の実施施設・料金・申請方法を確認できない。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "targetFramework": "保育所等に通っていない生後6か月から3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "plan": "町の計画では令和8年度の量の見込みと確保目標量をゼロとし、今後の状況を見据えて実施を検討",
+        "reviewReason": "現行の利用者向け案内で実施施設、利用時間、料金、申請方法を確認できない",
+        "availability": "現行の利用者向け公式条件を確定できないため情報未確認",
+        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/material/files/group/27/kosodatesiennjigyoukeikaku3.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町への移住者が住宅を取得する際の費用を補助し、工事着手・購入前の申請を求めている。",
+      "details": {
+        "program": "西和賀町移住者住宅取得補助金",
+        "target": "西和賀町へ移住し、町内住宅を新築・購入する人等",
+        "support": "住宅取得費の一部を予算の範囲内で補助",
+        "applicationTiming": "工事着手前または購入前に交付申請が必要",
+        "consultation": "申請予定者は企画財政課へ事前相談"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/soshikikarasagasu/kikakuzaisei/2/1/2/860.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "燃える粗大ごみは規定寸法に整え、沢内清掃センターまたは岩手中部クリーンセンターへ直接搬入できる。",
+      "details": {
+        "definition": "町指定ごみ袋に入らない大きさのもの",
+        "preparation": "原則80センチ×60センチ以内、重ねる場合は高さ60センチ以内にしてひもで縛る",
+        "sawauchiFacility": "沢内清掃センターは5月～11月の月曜日13時～15時、事前電話が必要",
+        "regionalFacility": "岩手中部クリーンセンターは日曜日・年末年始を除く8時30分～17時",
+        "regionalFee": "10キログラムにつき130円",
+        "largeQuantity": "引越し等の多量の燃えるごみは岩手中部クリーンセンターへ直接搬入または処理業者へ依頼"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/mokutekibetsudesagasu/gomi/2256.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "和賀川の洪水浸水想定、土砂災害警戒区域、避難施設等を掲載した防災マップを公開している。",
+      "details": {
+        "map": "西和賀町防災マップ",
+        "coverage": "和賀川の浸水予測、想定最大規模の浸水想定・継続時間、土砂災害警戒区域、避難施設",
+        "preparedness": "防災情報、家庭の備蓄品、非常時持ち出し品、避難経路確認を掲載",
+        "onlineAccess": "町公式ページで表紙、学習記事、避難施設一覧、地区別地図等を分割公開"
+      },
+      "source": {
+        "url": "https://www.town.nishiwaga.lg.jp/kurashi_tetsuzuki/anzen_anshin/9/1539.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
