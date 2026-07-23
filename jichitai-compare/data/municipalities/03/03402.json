@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03402",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "平泉町",
+  "officialUrl": "https://www.town.hiraizumi.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を平泉町公式情報で調査し、7制度をverified、病児・病後児保育とこども誰でも通園制度をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達年度末まで、保険診療の一部負担金全額を助成し、県内受診では原則窓口負担がない。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "出生の日から18歳を迎えた最初の3月31日まで",
+        "support": "保険診療の一部負担金全額",
+        "inPrefecture": "加入医療保険が分かるものと受給者証の提示により窓口負担なし",
+        "outsidePrefecture": "一旦支払い後、領収書を添えて支給申請",
+        "excluded": "予防接種、入院時食事代、差額ベッド料、診断書など保険適用外"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/%E5%AD%90%E3%81%A9%E3%82%82%E5%8C%BB%E7%99%82%E8%B2%BB%E5%8A%A9%E6%88%90-2-23310/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "needs_medium_review",
+      "summary": "町公式の現行利用案内から、平泉町民が利用できる病児・病後児保育の対象年齢、施設、料金、申請方法を確定できない。",
+      "details": {
+        "reviewReason": "町公式の子育て関連ページと例規集を確認したが、利用者向けの現行制度案内を確認できない",
+        "requiredReview": "近隣自治体との広域利用協定、対象施設、対象年齢、料金、予約方法の確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/category/childcare-education/pregnancy-childcare/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は保育料無料で、多子世帯等には別途減免措置がある。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "3～5歳児クラスは保育料無料",
+        "nonTaxedUnderThree": "0～2歳児クラスの住民税非課税世帯は無料",
+        "otherUnderThree": "保護者の市町村民税額の合算額で決定",
+        "multiChild": "多子世帯等は保育料の減免措置あり",
+        "mealFee": "3～5歳児の副食費は認定区分により月額3,000円または4,500円。低所得世帯と第3子以降は免除"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/%E8%AA%8D%E5%AE%9A%E3%81%93%E3%81%A9%E3%82%82%E5%9C%92%E5%85%A5%E5%9C%92%E7%94%B3%E3%81%97%E8%BE%BC%E3%81%BF-33546/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校の学校給食費は保護者等から徴収し、就学援助認定者等には減免・給付制度がある。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "supportStatus": "全員一律の無償化ではなく学校給食費を徴収",
+        "amount": "1食当たりの所要額と年間給食予定日数を基準に町長が決定",
+        "payment": "学校給食費負担者が納付",
+        "reduction": "特別な理由がある場合は減免可能",
+        "assistance": "生活保護の教育扶助または就学援助認定者は学校給食費の援助対象"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/reiki/reiki_honbun/c134RG00000911.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.hiraizumi.iwate.jp/reiki/reiki_honbun/c134RG00000945.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に助産師による産後ケアを実施し、国等の補助により当面無料としている。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "産後1年未満の母親と乳児",
+        "fee": "国等の補助金活用により当面無料",
+        "services": "乳房ケア、母子の健康確認、授乳量・体重確認、授乳・育児相談",
+        "types": "町公式案内に掲載する2種類の産後ケアから選択",
+        "application": "町の産後ケア案内に従い事前に相談・申込み"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD-35254/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "needs_medium_review",
+      "summary": "町立認定こども園で乳児等通園支援事業を実施する規程は制定済みだが、利用者向け料金・時間・申請案内を確認できない。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "facility": "平泉町立認定こども園",
+        "startBasis": "令和8年3月30日付の運営規程を制定",
+        "employmentRequirement": "制度上、保護者の就労要件を問わない",
+        "reviewReason": "月間利用時間、料金、実施曜日、申請手順の利用者向け最新案内を確認できない"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/reiki/reiki_taikei/r_taikei_08.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下の若者世代または県外移住者が空き家バンク物件を取得・改修する費用を補助し、子育て世帯に20万円を加算する。",
+      "details": {
+        "program": "若者・移住者空き家住まい支援事業費補助金",
+        "target": "39歳以下の若者世代または県外からの移住者が、空き家バンク登録物件を取得・改修して5年以上居住する場合",
+        "purchase": "取得費の2分の1以内、上限30万円",
+        "renovation": "改修費の2分の1以内、上限40万円",
+        "childAddition": "18歳未満の子と同居する子育て世帯は上限20万円加算"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/%E5%B9%B3%E6%B3%89%E7%94%BA%E8%8B%A5%E8%80%85%E3%83%BB%E7%A7%BB%E4%BD%8F%E8%80%85%E7%A9%BA%E3%81%8D%E5%AE%B6%E4%BD%8F%E3%81%BE%E3%81%84%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%E8%B2%BB%E8%A3%9C%E5%8A%A9-23406/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない粗大ごみは、一関清掃センターへ直接持ち込むか、処理業者へ依頼する。",
+      "details": {
+        "target": "指定袋に入らない粗大ごみ等",
+        "facility": "一関清掃センター",
+        "method": "清掃センターへの直接搬入または一般廃棄物処理業者への依頼",
+        "guidance": "分別・受入品目・手数料は一関地区広域行政組合の案内を確認",
+        "application": "搬入前に清掃センターの受付条件を確認"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/%E5%8F%8E%E9%9B%86%E3%81%97%E3%81%AA%E3%81%84%E3%81%94%E3%81%BF%E3%81%AE%E5%87%BA%E3%81%97%E6%96%B9-20009/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・浸水、ため池、土砂災害、地震、避難所等を掲載した防災マップを令和7年3月に更新して公開している。",
+      "details": {
+        "map": "平泉町防災マップ",
+        "updated": "令和7年3月更新",
+        "coverage": "洪水・浸水害、ため池浸水、土砂災害、地震、避難行動、避難所、備蓄品",
+        "access": "町公式ページから一括版と分割版をダウンロード可能",
+        "otherMaps": "防災重点農業用ため池ハザードマップも別途公開"
+      },
+      "source": {
+        "url": "https://www.town.hiraizumi.iwate.jp/%E5%B9%B3%E6%B3%89%E7%94%BA%E9%98%B2%E7%81%BD%E3%83%9E%E3%83%83%E3%83%97-23090/",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
