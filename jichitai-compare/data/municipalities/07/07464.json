@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07464",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "泉崎村",
+  "officialUrl": "https://www.vill.izumizaki.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を泉崎村公式情報で調査し、7制度をverified、学校給食費とこども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、外来・入院の保険診療自己負担分を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "こども医療費助成制度",
+        "target": "泉崎村に住所があり健康保険に加入する、満18歳到達後最初の3月31日までの子ども",
+        "support": "外来・入院の保険診療一部負担金を助成。加入保険・受診地域により現物給付または償還払い",
+        "application": "出生・転入・加入保険変更時に受給資格登録が必要",
+        "excluded": "診断書料、予防接種料等の保険適用外費用、高額療養費・付加給付相当額は対象外"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kosodate-kenko-fukushi/kosodate/josei-teate/page000160.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "満1歳から小学6年生まで、しらかわ病児保育室を1日2,000円で利用できる。",
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "program": "しらかわ病児保育室",
+        "target": "泉崎村等の対象市町村に住所があり、病気中で保護者の勤務等により家庭保育が困難な満1歳から小学6年生までの児童",
+        "facility": "白河厚生総合病院敷地内 しらかわ病児保育室",
+        "hours": "平日8時～18時。土日祝日・年末年始休業",
+        "capacity": "1日6名",
+        "fee": "1日2,000円。生活保護世帯・市町村民税非課税世帯は無料",
+        "application": "事前登録後、施設へ予約し、医師連絡票等を提出"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kosodate-kenko-fukushi/page002001.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等は国の無償化対象となり、村内保育所等の第2子以降は村独自制度により保育料を無料とする。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象",
+        "villageSupport": "村内在住で村内保育所等に入所する第2子以降の児童は、村税等の滞納がないこと等を要件に保育料無料",
+        "firstChild": "課税世帯の0～2歳の第1子は世帯の税額等による保育料を負担",
+        "reduction": "同一世帯から複数児童が入所する場合の減免制度あり",
+        "application": "保育料無料化・減免は所定の手続きが必要",
+        "excludedCosts": "給食費、教材費、行事費、延長保育料等の実費は別途負担となる場合がある"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kyoiku-bunka-sports/news/page000277.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.izumizaki.fukushima.jp/hoikusho/contents07.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "学校給食センターによる給食提供は確認できるが、令和8年度の一般世帯の給食費額・無償化状況を公式HTMLで確定できない。",
+      "details": {
+        "confirmedOperation": "村教育委員会が学校給食センターを運営し、学校給食に関する業務を所管",
+        "researchResult": "令和8年度の保護者負担額、村独自補助、完全無償化の有無を現行の利用者向け公式案内で確認できなかった",
+        "caution": "現行の給食費負担は教育課または学校給食センターへ確認が必要"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kyoiku-bunka-sports/kyoikuiinkai/page000603.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後12か月以内の母子を対象に、宿泊型・日帰り型・居宅訪問型の産後ケアを無料で実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "program": "産後ケア事業",
+        "target": "泉崎村に住所がある母親と生後12か月以内の子どもで、母子とも感染がなく医療行為を必要としない方",
+        "types": "宿泊型、日帰り型、居宅訪問型",
+        "usageLimit": "各類型それぞれ7日まで",
+        "services": "母体の健康確認・乳房ケア・休息、乳児の健康・栄養確認、授乳・沐浴等の育児相談",
+        "fee": "産後ケア利用料は無料。食事代・オプション等は自己負担",
+        "application": "利用前にこども支援課へ相談・申請"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kosodate-kenko-fukushi/kosodate/page001748.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "令和8年度から生後6か月～3歳未満・月10時間の制度開始方針は確認できるが、泉崎村の実施施設・料金・申込方法を確定できない。",
+      "details": {
+        "program": "こども誰でも通園制度",
+        "confirmedFramework": "保育所等に通っていない生後6か月から3歳未満の子どもが月10時間まで利用する全国制度として案内",
+        "researchResult": "泉崎村内の実施施設、定員、利用時間、料金、申込方法を利用者向け公式ページで確認できなかった",
+        "caution": "村内での利用可否・条件はこども支援課へ確認が必要"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kurashi-tetsuduki/zeikin/kokuminkenkohokenzei/page002011.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "泉崎村へ転入後3年以内に住宅を取得する定住者・移住者等を対象に、住宅取得費の一部を補助する。",
+      "details": {
+        "program": "泉崎村住宅取得支援事業補助金",
+        "target": "村内で住宅を新築または購入し、転入後3年以内の取得、3年以上の定住、自治組合加入、村税滞納なし等の要件を満たす方",
+        "residentCategory": "住宅取得契約日に40歳以下の定住者向け区分あり",
+        "migrantCategory": "契約時に村外在住で、過去3年間のうち一定期間を県外または他市町村で居住した移住者向け区分あり",
+        "prefectureAddition": "県外移住者は福島県の住宅取得支援の対象となる場合あり",
+        "applicationPeriod": "住宅取得日から6か月以内、当該年度4月1日～12月31日に申請",
+        "application": "取得前後に総務課へ事前相談"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kurashi-tetsuduki/news/page002025.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "45リットル指定袋に入らない粗大ごみは、インターネットまたは電話で予約して戸別収集または処理施設へ持ち込む。",
+      "details": {
+        "definition": "指定袋（45リットル）に入らない家庭ごみ",
+        "collection": "集積所には出さず、インターネットまたはごみ処理受付センターへ予約して戸別収集を利用",
+        "directCarry": "処理施設へのごみ持込みも事前予約が必要",
+        "reservation": "インターネットは24時間、電話は平日9時～16時（12時～13時を除く）",
+        "calendar": "令和8年度ごみ収集カレンダーで粗大ごみ戸別収集日を案内",
+        "placement": "通常の収集対象ごみは収集当日8時30分までに指定集積所へ排出"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kurashi-tetsuduki/kankyo/gomi/page000045.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害等のハザード情報と避難場所を掲載した泉崎村防災マップを公開する。",
+      "details": {
+        "map": "泉崎村防災マップ",
+        "coverage": "村内全域の洪水浸水想定区域、土砂災害等のハザード情報、避難場所、防災知識",
+        "revision": "阿武隈川の浸水想定区域見直し等を反映して令和3年3月に更新",
+        "app": "防災情報・災害発生場所・避難所等を確認できる泉崎村防災案内アプリも案内",
+        "guidance": "平時に自宅周辺の危険箇所と避難経路を確認"
+      },
+      "source": {
+        "url": "https://www.vill.izumizaki.fukushima.jp/kurashi-tetsuduki/shobo-bosai/bousaiannai/bosai-guide/page001281.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.izumizaki.fukushima.jp/kurashi-tetsuduki/shobo-bosai/bousaiannai/page000999.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}
