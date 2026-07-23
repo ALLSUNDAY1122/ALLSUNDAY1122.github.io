@@ -52,9 +52,18 @@ class Question {
 
 class QuestionRepository {
   static Future<List<Question>> load() async {
-    final raw = await rootBundle.loadString('assets/questions.json');
-    final decoded = jsonDecode(raw) as Map<String, dynamic>;
-    final rows = (decoded['transactions'] as List<dynamic>? ?? const []);
+    const assetPaths = [
+      'assets/questions_1.json',
+      'assets/questions_2.json',
+      'assets/questions_3.json',
+      'assets/questions_4.json',
+    ];
+    final rows = <dynamic>[];
+    for (final path in assetPaths) {
+      final raw = await rootBundle.loadString(path);
+      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      rows.addAll(decoded['transactions'] as List<dynamic>? ?? const []);
+    }
     final questions = <Question>[];
 
     for (var index = 0; index < rows.length; index++) {
