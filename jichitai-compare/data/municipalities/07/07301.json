@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07301",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "桑折町",
+  "officialUrl": "https://www.town.koori.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を桑折町公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担金と入院時食事療養費を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "桑折町に住所があり健康保険に加入する出生から18歳年度末までの子ども",
+        "support": "外来・入院の保険診療負担金、入院時食事療養費、補装具等",
+        "application": "事前申請が必要",
+        "excluded": "生活保護受給者、高額療養費・付加給付相当額、保険適用外費用等は対象外"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/site/kosodate/3550.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "就学前児童が町外施設等の病児・病後児保育を利用した場合、利用料の2分の1を月額1万円まで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 6},
+      "details": {
+        "program": "病児・病後児保育利用助成事業",
+        "target": "桑折町在住の就学前乳幼児",
+        "support": "病児・病後児保育の保護者負担額の2分の1以内",
+        "upperLimit": "月額1万円。100円未満切捨て",
+        "facility": "町外の病児・病後児保育施設等を利用",
+        "application": "利用後、領収書等を添えて教育文化課へ申請"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/site/kosodate/1292.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.koori.fukushima.jp/soshiki/3/5645.html", "checkedAt": "2026-07-24"}]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と町民税非課税世帯の0～2歳児の保育料を無償化し、醸芳幼稚園の給食費を町独自に無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児の全員と、町民税非課税世帯の0～2歳児の保育料を無償化",
+        "privateKindergarten": "新制度未移行幼稚園は月額25,700円を上限に無償化",
+        "preschoolCare": "保育の必要性認定を受けた預かり保育は日額450円、月額11,300円を上限に無償化",
+        "unauthorizedCare": "認可外保育施設等は3～5歳児月額37,000円、非課税世帯の0～2歳児月額42,000円を上限に無償化",
+        "mealSupport": "醸芳幼稚園の給食費は町独自支援により無料",
+        "excludedCosts": "教材費、園外保育費、おやつ代等は原則対象外"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/site/kosodate/1547.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町内の幼稚園・小学校・中学校に在籍する子どもの給食費を無料とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "給食費負担軽減事業",
+        "target": "桑折町内の幼稚園および小中学校に在籍する園児・児童・生徒",
+        "elementary": "無料",
+        "middleSchool": "無料",
+        "kindergarten": "無料",
+        "purpose": "保護者の経済的負担を軽減し、子育てしやすい環境を整備"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/site/kosodate/1296.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子を対象に、県内助産所で宿泊または日帰り型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "桑折町に住民票がある出産後1年未満の母親と乳児で、家族の援助が十分に受けられず、母子とも医療行為が不要な方",
+        "types": "宿泊型、日帰り型",
+        "services": "母体の休養、授乳・乳房ケア、育児相談、乳児の健康・発育確認等",
+        "facility": "福島県内の委託助産所",
+        "application": "利用前に健康福祉課へ相談・申請",
+        "fee": "施設・利用類型により異なるため年度案内で確認"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/site/kosodate/1284.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "認可保育施設・企業主導型保育事業所・幼稚園等に通園していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "facility": "こおり青空こども園",
+        "hours": "月～金曜日9時30分～15時30分",
+        "usageLimit": "月10時間まで、1回最低1時間",
+        "fee": "1時間300円。生活保護世帯は全額、非課税世帯等は200円を軽減",
+        "application": "利用認定、施設との初回面談、予約が必要"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/soshiki/9/5441.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "45歳未満の住宅取得に基本30万円、町内業者利用や県外移住により最大90万円を補助する。",
+      "details": {
+        "program": "若者定住促進事業補助金",
+        "target": "申請者本人・配偶者・パートナーのいずれかが45歳未満で、町内に住宅を取得し10年以上定住する方",
+        "base": "住宅取得支援の基本額30万円",
+        "localBusinessAddition": "町内建築業者利用で10万円加算",
+        "prefectureAddition": "県外移住者は40万円、さらに町内業者利用で10万円加算",
+        "maximum": "町・県加算を合わせ最大90万円",
+        "renovation": "400万円以上の住宅リフォームは基本20万円、町内業者利用で10万円加算",
+        "otherSupport": "東京圏移住支援金は単身60万円、世帯100万円、18歳未満1人につき100万円加算"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/site/iju/1435.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.koori.fukushima.jp/site/iju/1433.html", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは収集カレンダーの指定日に集積所へ出すほか、指定日曜日または平日に清掃センターへ直接搬入できる。",
+      "details": {
+        "collection": "地区別ごみ収集カレンダーの粗大ごみ回収日に指定収集場所へ排出",
+        "directCarry": "伊達地方衛生処理組合清掃センターへ平日、12月29日・30日、指定日曜日に直接搬入可能",
+        "sundayLimit": "指定日曜日は一般家庭の粗大ごみのみ受付",
+        "hours": "8時40分～11時30分、13時～16時。12月30日は15時まで",
+        "preparation": "ストーブ等は燃料・乾電池を除去",
+        "excluded": "町で収集・処理できない品目は持ち帰りまたは専門業者へ依頼"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/soshiki/7/1201.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震、土砂災害、洪水、内水氾濫等の危険区域と避難所を地区別ハザードマップで公開する。",
+      "details": {
+        "map": "桑折町災害ハザードマップ",
+        "coverage": "阿武隈川・産ヶ沢川・佐久間川の浸水想定区域、内水氾濫、土砂災害警戒区域、地震、避難所",
+        "districts": "桑折地区、睦合地区、伊達崎地区、半田地区等の地区別PDF",
+        "latestInformation": "新たな土砂災害発生のおそれがある箇所も案内",
+        "guidance": "災害種別により使用できない避難所があるため、平時に避難経路と避難所を確認"
+      },
+      "source": {"url": "https://www.town.koori.fukushima.jp/soshiki/7/1255.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
