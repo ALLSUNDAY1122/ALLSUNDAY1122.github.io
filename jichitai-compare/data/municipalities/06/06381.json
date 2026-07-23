@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06381",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "高畠町",
+  "officialUrl": "https://www.town.takahata.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが高畠町公式情報で対象9制度を調査し、9制度すべてを確認済みとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "高畠町に住所がある0歳から18歳年度末までの子ども",
+        "coverage": "県内医療機関で医療証と保険資格確認書等を提示すると保険診療の自己負担分が無料",
+        "outsidePrefecture": "県外受診等は一旦支払い後に払い戻し申請",
+        "excluded": "入院時食事代、文書料、薬容器代など保険適用外費用",
+        "application": "町民課で子育て支援医療証の交付手続きを行う"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/soshiki/5/1167.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学3年生までの病児・病後児を病児保育施設まほろんで預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "details": {
+        "facility": "病児保育施設まほろん",
+        "target": "高畠町在住または保護者が町内事業所に勤務する生後6か月から小学3年生までの子ども",
+        "hours": "平日8時30分から17時30分",
+        "fee": "5時間超2,000円、5時間以内1,000円。生活保護世帯・住民税非課税世帯は無料",
+        "capacity": "1日3人",
+        "application": "事前登録、予約、医療機関記入の利用連絡書等が必要"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/site/kosodate/1377.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳から5歳児と住民税非課税世帯の0歳から2歳児を無償化し、一定所得未満の0歳から2歳児も町独自で無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFreeCare": "3歳から5歳児と住民税非課税世帯の0歳から2歳児は利用料無料",
+        "townRelief": "国制度対象外の0歳から2歳児でも、保育認定を受け父母の市町村民税所得割額合計が97,000円未満の場合は無償化",
+        "multiChild": "18歳未満の第1子から数えて第3子以降は教育・保育利用料と給食費を全額助成",
+        "excluded": "園児服、遠足代等や制度対象外の実費は別途負担",
+        "application": "対象制度に応じて保育認定、利用料軽減または助成金申請を行う"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/site/kosodate/1383.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校に3人以上在籍する世帯の第3子以降について、申請により学校給食費を無料化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "対象児童生徒と保護者が町内在住で、町立小中学校に3人以上在籍する世帯の年長から数えて第3子以降",
+        "condition": "学校給食費に未納がないこと",
+        "support": "対象児童生徒の学校給食費を無料化",
+        "excluded": "生活保護受給世帯は本事業の対象外",
+        "application": "学校を通じて送付される申請書の提出が必要"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/soshiki/13/1512.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子に、宿泊型・通所型・訪問型等の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "高畠町に住所があり、支援を必要とし、母子とも医療行為を必要としない産後1年未満の母子",
+        "support": "母体の健康管理、乳房ケア、休息、授乳・育児相談、乳児の健康確認等",
+        "types": "宿泊型、通所日帰り型、訪問型等",
+        "ageVariation": "ケアの種類や利用施設により対象月齢が異なる",
+        "application": "健康子育て課へ事前相談・申請"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/site/kosodate/1366.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の未就学児を、就労、通院、緊急事情、リフレッシュ等に応じて町内保育施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "target": "保育園、児童館、幼稚園、認定こども園に在籍していない未就学児",
+        "regularLimit": "保護者の就労等の場合は概ね週3日程度",
+        "emergencyLimit": "疾病等の緊急・一時的利用は概ね月14日程度",
+        "refreshLimit": "リフレッシュ等は概ね週2日程度",
+        "fee": "4時間以内1,200円、8時間以内2,400円、8時間超3,000円。施設により異なる場合あり",
+        "application": "希望施設へ直接連絡し、事前登録する"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/site/kosodate/1386.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度、移住・新婚・子育て世帯の対象住宅リフォーム費用の3分の1、上限30万円を助成する。",
+      "details": {
+        "program": "住宅リフォーム支援事業助成金",
+        "target": "移住世帯、新婚世帯、子育て世帯等",
+        "eligibleWork": "やまぽっかリノベ、バリアフリー化、克雪化、県産木材使用等",
+        "support": "対象費用の3分の1、上限30万円",
+        "generalHousehold": "一般世帯は対象費用の5分の1、上限16万円",
+        "application": "工事着手前に建設課へ申請。先着順・予算の範囲内"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/soshiki/10/1422.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度は電話予約後、1枚300円の粗大ごみ用証紙を貼って町の指定日に回収する。",
+      "details": {
+        "reservation": "町民課環境衛生係へ電話で品目、大きさ、重さ、数を申し込む",
+        "limit": "1家庭につき5品まで",
+        "fee": "必要枚数分の粗大ごみ用証紙を1枚300円で購入し貼付",
+        "directDelivery": "置賜広域行政事務組合千代田クリーンセンターへ直接搬入する場合は10キログラム180円",
+        "guidance": "収集日、証紙枚数、排出場所は申込時の案内に従う"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/soshiki/5/1157.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "令和7年10月改訂の防災マップで、洪水、土砂災害、地震等の危険区域と避難所を公開する。",
+      "details": {
+        "map": "高畠町防災マップ最新版",
+        "hazards": "洪水浸水、土砂災害、地震、風水害等",
+        "areas": "町全体図と詳細図No.1からNo.11を公開",
+        "evacuation": "指定避難所一覧、避難情報、マイ・タイムライン等を掲載",
+        "revision": "令和7年10月改訂、2026年2月26日更新"
+      },
+      "source": {"url": "https://www.town.takahata.yamagata.jp/kurashi/juminnokatahe/bosaishouboukokuminhogo/bousai/bousaimappu/1486.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
