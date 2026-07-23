@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "05211",
+  "municipalityName": "潟上市",
+  "prefectureCode": "05",
+  "prefectureName": "秋田県",
+  "assignedTeam": "北日本調査班",
+  "status": "pr_open",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": ["childMedical", "sickChildCare", "childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport", "bulkyWaste", "disasterPrevention"],
+  "verifiedCount": 7,
+  "researchingCount": 0,
+  "unavailableCount": 2,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/05211-katagami",
+  "pullRequestNumber": 1416,
+  "lastCheckedAt": "2026-07-23",
+  "lastUpdatedAt": "2026-07-23T22:52:00+09:00",
+  "lastUpdatedBy": "北日本調査班B",
+  "officialSources": [
+    "https://www.city.katagami.lg.jp/soshiki/fukushihoken/shakaifukushi/shakaifukushi/1099.html",
+    "https://www.city.katagami.lg.jp/soshiki/fukushihoken/kosodateouenka/shisetsuuneishien/kosodate_1/977.html",
+    "https://www.city.katagami.lg.jp/soshiki/kyoikuiinkai_kyoiku/kyouikusoumu/somugakuji/shugakuenjo/731.html",
+    "https://www.city.katagami.lg.jp/soshiki/fukushihoken/kosodateouenka/kodomokenkoushien/hahatoko/4994.html",
+    "https://www.city.katagami.lg.jp/soshiki/fukushihoken/kosodateouenka/shisetsuuneishien/kosodate_1/472.html",
+    "https://www.city.katagami.lg.jp/soshiki/kensetsubu/toshikensetsu/toshikeikaku/993.html",
+    "https://www.city.katagami.lg.jp/soshiki/shiminseikatsu/chiikidukurika/kurinsenta/gomi/435.html",
+    "https://www.city.katagami.lg.jp/soshiki/somu/somu/kikikanri/bosai/5382.html"
+  ],
+  "notes": [
+    "チェックポイントに記載されていた05216は存在しないため、e-Statで潟上市の正式コード05211を確認して修正した。",
+    "潟上市の必須9制度を市公式情報で調査し、7制度をverified、病児・病後児保育と小中学校の全員向け給食費支援をunavailableとして登録。",
+    "子ども医療費は18歳年度末まで全額助成だが父母の所得判定がある。",
+    "産後1年までのデイサービス型・宿泊型産後ケア、一時預かり、住宅・移住支援、粗大ごみ、WEBハザードマップを確認。",
+    "PR #1416をregion/north向けに作成。",
+    "CI再計算仕様に合わせ、officialSourcesを各制度のprimary sourceのみ・重複排除順へ修正。"
+  ],
+  "blockers": []
+}
