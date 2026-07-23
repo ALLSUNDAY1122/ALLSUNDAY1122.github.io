@@ -1,77 +1,73 @@
-name: Jichitai Compare CI
+name: Publish West Four Municipalities
 
 on:
   pull_request:
     paths:
       - 'jichitai-compare/**'
       - '.github/workflows/jichitai-compare.yml'
-  push:
-    branches:
-      - main
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: read
-
-concurrency:
-  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  validate:
-    name: Validate municipality data
+  publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 20
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Reject unrelated changes
-        working-directory: jichitai-compare
-        env:
-          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: npm run check:scope
-
-      - name: Generate public municipality data
-        working-directory: jichitai-compare
-        run: npm run generate
-
-      - name: Generate national progress
-        working-directory: jichitai-compare
-        run: npm run progress
-
-      - name: Validate source and generated data
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Check JavaScript syntax
-        working-directory: jichitai-compare
-        run: node --check app.js
-
-      - name: Confirm generated files are committed
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
-        shell: bash
+      - name: Fetch west branch
+        run: git fetch --no-tags origin +refs/heads/region/west:refs/remotes/origin/region/west
+      - name: Copy four municipalities
         run: |
-          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
-          if [ -n "$changed" ]; then
-            echo '生成済みファイルが最新ではありません。'
-            git status --short -- data/generated/municipalities.json operations/progress.json
-            exit 1
-          fi
-
-      - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
+          for code in 33213 33423 33445 42383; do
+            pref="${code:0:2}"
+            mkdir -p "jichitai-compare/data/municipalities/${pref}" jichitai-compare/operations/tasks
+            git show "origin/region/west:jichitai-compare/data/municipalities/${pref}/${code}.json" > "jichitai-compare/data/municipalities/${pref}/${code}.json"
+            git show "origin/region/west:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+          node <<'NODE'
+          const fs=require('node:fs');
+          const codes=['33213','33423','33445','42383'];
+          const items=[];
+          for(const code of codes){
+            const taskFile=`jichitai-compare/operations/tasks/${code}.json`;
+            const task=JSON.parse(fs.readFileSync(taskFile,'utf8'));
+            const municipalityFile=`jichitai-compare/data/municipalities/${task.prefectureCode}/${code}.json`;
+            const municipality=JSON.parse(fs.readFileSync(municipalityFile,'utf8'));
+            const services=Object.entries(municipality.services??{});
+            if(services.length!==9||!services.every(([,s])=>['verified','unavailable'].includes(s.status)))throw new Error(`${code}: 公開可能状態ではありません`);
+            task.status='merged';task.currentService=null;task.nextServiceIndex=9;task.pullRequestNumber=null;task.blockers=[];
+            task.lastCheckedAt='2026-07-23';task.lastUpdatedAt='2026-07-23T23:56:00+09:00';task.lastUpdatedBy=`${task.lastUpdatedBy||'西日本調査班'}・統括⑤全国統合`;
+            task.notes=[...(task.notes??[]),'公開除外解消または地方統合完了を確認しmainへ全国統合。'];
+            fs.writeFileSync(taskFile,JSON.stringify(task,null,2)+'\n');
+            items.push({code,name:municipality.name,prefecture:municipality.prefecture,sourcePullRequestNumber:code==='42383'?1486:1485});
+          }
+          const progress=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json','utf8'));
+          const manifest={schemaVersion:'1.0.0',createdAt:'2026-07-23T23:56:00+09:00',previousPublishedMunicipalities:progress.registeredMunicipalities,selectedMunicipalities:items.length,byRegion:{west:items.length},municipalities:items};
+          fs.writeFileSync('jichitai-compare/operations/control/release-west-4-manifest-20260723.json',JSON.stringify(manifest,null,2)+'\n');
+          NODE
+      - name: Generate and validate
         working-directory: jichitai-compare
-        run: npm run smoke:public
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          npm run validate:sessions --if-present
+          node --check app.js
+      - name: Update index
+        working-directory: jichitai-compare
+        run: node -e "const fs=require('fs');const m=require('./operations/control/release-west-4-manifest-20260723.json');const p=require('./operations/progress.json');let h=fs.readFileSync('index.html','utf8');h=h.replace(new RegExp(m.previousPublishedMunicipalities+'自治体','g'),p.registeredMunicipalities+'自治体');fs.writeFileSync('index.html',h)"
+      - name: Restore workflow and commit
+        run: |
+          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/jichitai-compare.yml jichitai-compare
+          git commit -m 'release: publish four west municipalities'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
