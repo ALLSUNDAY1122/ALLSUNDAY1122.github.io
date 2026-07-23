@@ -7,7 +7,7 @@
   "officialUrl": "https://www.town.susami.lg.jp/",
   "status": "verified",
   "summary": "すさみ町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、保育料完全無償化、学校給食費無償化、産後ケア、こども誰でも通園、定住住宅支援、粗大ごみ、防災情報を記録し、病児・病後児保育は現行専用案内未確認としてunavailableに整理した。",
-  "updatedAt": "2026-07-23",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -25,7 +25,7 @@
       },
       "source": {
         "url": "https://www.town.susami.lg.jp/kenkofukushi/03/2015102900231.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     },
     "sickChildCare": {
@@ -40,12 +40,12 @@
       },
       "source": {
         "url": "https://www.town.susami.lg.jp/kenkofukushi/03/2026-0221-1639-22.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       },
       "additionalSources": [
         {
           "url": "https://www.town.susami.lg.jp/kenkofukushi/03/",
-          "checkedAt": "2026-07-23"
+          "checkedAt": "2026-07-24"
         }
       ]
     },
@@ -65,7 +65,7 @@
       },
       "source": {
         "url": "https://www.town.susami.lg.jp/kenkofukushi/03/2024120400029.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     },
     "schoolMeals": {
@@ -103,34 +103,38 @@
       },
       "source": {
         "url": "https://www.pref.wakayama.lg.jp/prefg/041200/d00208668.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       },
       "additionalSources": [
         {
           "url": "https://www.town.susami.lg.jp/kenkofukushi/03/2026-0221-1639-22.html",
-          "checkedAt": "2026-07-23"
+          "checkedAt": "2026-07-24"
         }
       ]
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "保育施設等に通っていない子どもを、周参見保育所で月10時間まで1時間300円で預かる。",
+      "summary": "制度上は生後6か月から満3歳未満の未就園児が対象で、町立周参見保育所では生後10か月から月10時間まで預かる。",
       "eligibility": {
-        "minAgeMonths": 10,
+        "minAgeMonths": 6,
         "maxAgeYears": 3
       },
       "details": {
         "program": "こども誰でも通園制度",
-        "target": "保育施設等に通っていない0歳10か月から3歳未満の児童",
+        "generalTarget": "保育施設等に通っていない生後6か月から満3歳未満の児童",
+        "localFacilityTarget": "町立周参見保育所では生後10か月から満3歳未満を受け入れる",
         "limit": "子ども1人につき月10時間まで",
         "facility": "町立周参見保育所",
         "hours": "月～金曜日の9時～16時（祝日・年末年始を除く）",
-        "fee": "1時間300円。給食・おやつの提供なし",
-        "procedure": "総合支援システムで申請、親子面談、町の認定、利用予約が必要"
+        "fee": "1時間300円",
+        "food": "給食・おやつの提供なし。補食を持参する場合は親子面談時に相談",
+        "procedure": "総合支援システムで申請、初回親子面談、町の認定・認定証発行、利用予約が必要",
+        "otherFacilities": "全国の制度実施施設にも申込み可能で、施設により対象月齢・利用時間が異なる場合がある",
+        "latePickup": "迎え時間を超過した場合は超過料金が発生"
       },
       "source": {
         "url": "https://www.town.susami.lg.jp/kenkofukushi/03/2026-0306-0939-22.html",
-        "checkedAt": "2026-07-23"
+        "checkedAt": "2026-07-24"
       }
     },
     "housingSupport": {

@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "45202",
+  "prefectureCode": "45",
+  "prefecture": "宮崎県",
+  "name": "都城市",
+  "officialUrl": "https://www.city.miyakonojo.miyazaki.jp/",
+  "status": "verified",
+  "summary": "必須9制度を都城市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から中学校卒業までの入院・通院・調剤の保険診療自己負担を無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "都城市に住所がある0歳から15歳到達後最初の3月31日までの子ども",
+        "coverage": "入院・通院・調剤薬局の保険診療自己負担",
+        "copay": "無料",
+        "application": "出生・転入時に子ども医療費受給資格登録申請が必要。転入時は原則15日以内",
+        "payment": "宮崎県内は受給資格証による現物給付、県外受診等は償還払い",
+        "exclusion": "保険外診療、入院時食事代、学校管理下の災害共済対象等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/66/4186.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後3か月または6か月から小学6年生までを市内4施設で病児・病後児保育",
+      "eligibility": {
+        "minAgeMonths": 3,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "病気中または回復期で集団保育が困難かつ保護者の就労等により家庭保育できない児童",
+        "facilities": "さつき病後児保育室、シックキッズケアまるの、病児保育室ぶどうのみ、森のほけんしつ",
+        "age": "施設により生後3か月または6か月から小学6年生まで",
+        "procedure": "施設ごとの初回利用登録、利用申込書、前日または当日の受診と医師の署名・押印が必要",
+        "reservation": "施設へ直接予約。予約システムcohana対応施設あり",
+        "fee": "利用料金等は各施設の条件による"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/66/4352.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "2023年4月から0～2歳児も含む全児童の保育料を完全無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageZeroToTwo": "市内在住の0～2歳児の認可保育所・認定こども園等の保育料を市独自に全額無料",
+        "ageThreeToFive": "国制度により3～5歳児の保育料を無償化",
+        "wideArea": "都城市民が他市町村の施設を利用する場合も対象",
+        "recognizedNonLicensed": "保育の必要性認定を受けた0～2歳児の認可外保育、一時預かり、病児保育等は月額42,000円を上限に無料",
+        "additionalCosts": "主食費、3歳以上児の副食費、教材費、行事費等は原則実費"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/89/53897.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度も学校給食費を月ごとに徴収し、指定納期限までに納付",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "都城市立小・中学校等で学校給食を受ける児童生徒の保護者",
+        "status": "2026年度も給食費の徴収を実施し、4月分から3月分まで納期限を設定",
+        "payment": "金融機関窓口、口座振替等で納付",
+        "freeProgram": "全児童生徒を対象とする一律無償化は実施していない",
+        "assistance": "経済的に就学困難な世帯には就学援助、特別支援学級等には就学奨励費による給食費支援あり"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/61/85451.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後1年未満の母子へ宿泊・日帰り・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "都城市に住民登録があり、生後1年未満の乳児と母親で、産後の心身の回復や育児相談を必要とする人",
+        "types": "ショートステイ型、デイサービス型2時間・4時間、アウトリーチ型",
+        "fee": "宿泊型1泊2日5,500円、日帰り2時間500円・4時間1,000円、訪問型500円",
+        "reduction": "生活保護世帯・市民税非課税世帯は利用料減免あり",
+        "care": "母親の休息・心身ケア、乳房ケア、授乳・沐浴・育児相談等",
+        "application": "都城市保健センターへ相談・申請。相談後はオンライン申請可能"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/35/70790.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満児を月10時間、1時間300円で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "都城市在住で保育所・幼稚園・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentCondition": "保護者の就労要件を問わない",
+        "limit": "子ども1人につき月10時間まで。未利用分の翌月繰越不可",
+        "fee": "1時間300円。おやつ代等の実費が別途必要な場合あり",
+        "reduction": "生活保護世帯は300円、市町村民税所得割額77,101円未満世帯等は200円を減免",
+        "start": "2026年4月開始"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/89/82999.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住要件を満たす世帯へ100万円、18歳未満の子1人につき100万円を最大3人まで加算",
+      "details": {
+        "target": "転出前に移住相談登録を行い、圏域外に3年以上居住後に転入し、就業・起業・就農等の要件を満たす人",
+        "singleAmount": "単身60万円",
+        "familyAmount": "2人以上の世帯100万円",
+        "childAddition": "18歳未満の世帯員1人につき100万円、最大3人・300万円",
+        "mountainAddition": "中山間地域居住は20万円加算、最大100万円",
+        "residency": "都城市に10年以上居住する意思が必要",
+        "applicationPeriod": "転入後3か月以上1年以内。会社都合の転勤、新卒採用者、国家公務員等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/site/iju/62718.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "直接搬入、許可業者委託または市の予約制戸別収集で粗大ごみを処理",
+      "details": {
+        "direct": "燃やせる粗大ごみはクリーンセンター、燃やせない粗大ごみはリサイクルプラザ、陶磁器・がれき等は最終処分場へ事前確認後に直接搬入",
+        "collection": "直接搬入が困難な場合、市へ電話予約して戸別収集を依頼可能",
+        "limit": "市の戸別収集は1回4点まで",
+        "fee": "1品目220円から1,650円",
+        "schedule": "収集日は火曜日・金曜日（祝日を除く）",
+        "excluded": "家電4品目等は各施設へ持込み不可"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/30/28647.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・ため池等を掲載した総合防災マップとWEB版を公開",
+      "details": {
+        "coverage": "洪水浸水想定区域、家屋倒壊等氾濫想定区域、土砂災害危険箇所、ため池、指定避難所等",
+        "formats": "A4冊子版総合防災マップ、A2洪水ハザードマップ、WEB版防災マップ、地区別PDF",
+        "webFunctions": "災害種別ごとに危険区域を選択して閲覧可能",
+        "guidance": "自宅周辺の危険箇所、指定避難所、避難経路を平時から確認するよう案内",
+        "updated": "総合防災マップは2022年2月改訂"
+      },
+      "source": {
+        "url": "https://www.city.miyakonojo.miyazaki.jp/soshiki/1/3984.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}

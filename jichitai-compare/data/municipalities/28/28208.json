@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "28208",
+  "prefectureCode": "28",
+  "prefecture": "兵庫県",
+  "name": "相生市",
+  "officialUrl": "https://www.city.aioi.lg.jp/",
+  "status": "verified",
+  "summary": "相生市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認した。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までの保険診療自己負担額を入院・通院とも助成し、2026年7月から所得制限を撤廃する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "相生市に住所があり健康保険に加入する、18歳到達後最初の3月31日までの子ども",
+        "incomeLimit": "2026年7月1日から所得制限なし",
+        "copayment": "入院・通院とも一部負担なし",
+        "application": "福祉医療費受給者証の交付申請が必要",
+        "excluded": "入院時食事療養費、差額ベッド代、保険外診療、日本スポーツ振興センター災害共済給付対象等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/soshiki/shimin/fukusiiryou.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後3か月を超える子どもから小学校6年生までの病後児を一時的に預かる。",
+      "eligibility": {
+        "minAgeMonths": 3,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "市内在住または市内保育所・幼稚園・認定こども園・小学校に在籍し、病気の回復期で集団保育が困難な子ども",
+        "condition": "保護者の勤務等により家庭保育が困難で、医師の病後児保育連絡票があること",
+        "fee": "1日2,000円。生活保護・市民税非課税世帯は無料、所得税非課税世帯は1,000円。食事代等は別途",
+        "hours": "平日9時から17時、連続7日以内",
+        "application": "施設への事前登録、予約、医療機関受診と連絡票取得が必要"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/soshiki/kosodategenki/byougozihoiku.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と非課税世帯の0～2歳児を無償化し、課税世帯の0～2歳児は市民税額に応じて算定する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "3歳児以上の基本保育料は無償",
+        "ageZeroToTwo": "生活保護・市民税非課税世帯は0円。課税世帯は市民税所得割額と保育時間区分に応じ、月額6,000円から78,000円",
+        "calculation": "2026年4～8月分は2025年度市民税額、2026年9月～2027年3月分は2026年度市民税額で算定",
+        "siblings": "所得区分ときょうだいの利用状況により第2子半額・第3子以降無料等の軽減あり",
+        "meal": "0～2歳児の給食費は保育料に含む。3～5歳児は主食費・副食費が別途必要だが、免除・市独自補助あり"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/uploaded/attachment/25044.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市内に住所を有する市立幼稚園児・小学校児童・中学校生徒の給食費を無料化する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "市立小学校の給食費は無料",
+        "juniorHigh": "市立中学校の給食費は無料",
+        "start": "2011年度から無料化を継続",
+        "support": "2026年度も学校給食費助成金を予算計上"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/site/kyoikuiinkaitop/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.aioi.lg.jp/uploaded/attachment/24737.pdf",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子等へ訪問・通所・宿泊型の産後ケアを提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "相生市に住民登録がある産後1年以内の母子、または流産・死産後1年以内の方",
+        "types": "訪問型、通所型、宿泊型",
+        "fee": "訪問1時間500円、通所1時間400円、宿泊1日3,100円",
+        "limit": "訪問は通算7日・14時間以内、通所は通算7日・28時間以内、宿泊は通算4日以内",
+        "application": "こども家庭センターへ相談・申請し、利用券発行後に実施機関を予約"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/site/kosodatesedaihoukatu/sangocare.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件なく月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "target": "保育所・認定こども園に通園していない生後6か月から満3歳未満の子ども",
+        "employment": "保護者の就労要件なし",
+        "limit": "子ども1人につき月10時間まで",
+        "fee": "1時間300円。市民税課税状況等による減免あり",
+        "start": "2026年4月開始"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/soshiki/kosodategenki/daredemotuuen.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新婚応援金受給夫婦または18歳未満の子どもを養育する転入夫婦の住宅取得に30万～50万円を交付する。",
+      "details": {
+        "target": "相生市内に住宅を取得した、新婚応援金受給後5年度以内の夫婦または18歳未満の子どもを養育する転入夫婦",
+        "housing": "自己居住用の新築・中古住宅で、所有権割合5割以上等の要件を満たす住宅",
+        "amount": "新婚応援金受給者は50万円、転入夫婦は30万円",
+        "condition": "世帯全員に市税滞納がなく、同じ住宅取得に国・県・市等の補助を受けていないこと",
+        "period": "2026年4月1日から2027年3月31日まで。住宅取得日から6か月以内に申請"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/soshiki/teiju/ainomachi.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "地域別の指定日に粗大ごみシール券を貼付して有料収集し、美化センターへの直接持込みにも対応する。",
+      "details": {
+        "collection": "地域別コースごとに原則月1回の粗大ごみ収集日を設定",
+        "payment": "重量10kgごとに70円の粗大ごみシール券を購入して貼付",
+        "directCarry": "美化センターへの直接持込みは窓口で現金納付し、シール券は使用しない",
+        "separation": "可燃・不燃や蛍光管・電池等を分別し、収集日の午前8時30分までに排出"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/soshiki/kankyo/gomitesuuryou.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.aioi.lg.jp/soshiki/kankyo/gomishushu-a.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・津波・高潮・地震等の危険区域と避難情報をハザードマップで公開する。",
+      "details": {
+        "hazards": "洪水、土砂災害、津波、高潮、地震、液状化",
+        "contents": "浸水想定、危険区域、避難所、警戒レベル、避難時の行動等を掲載",
+        "formats": "災害種別・地域別のPDF版ハザードマップ",
+        "use": "自宅・勤務先・通学経路の災害リスクと避難先確認に活用"
+      },
+      "source": {
+        "url": "https://www.city.aioi.lg.jp/soshiki/kikikanri/hazard2-map.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}

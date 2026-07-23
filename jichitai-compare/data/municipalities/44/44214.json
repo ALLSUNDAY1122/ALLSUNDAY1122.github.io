@@ -1,0 +1,192 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "44214",
+  "prefectureCode": "44",
+  "prefecture": "大分県",
+  "name": "国東市",
+  "officialUrl": "https://www.city.kunisaki.oita.jp/",
+  "status": "verified",
+  "summary": "必須9制度を国東市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで入院・通院・歯科・調剤・入院時食事療養費を無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "国東市に住民登録があり医療保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+        "coverage": "入院、通院、歯科、調剤の保険診療自己負担額と入院時食事療養費",
+        "copay": "全対象区分で自己負担無料",
+        "expansion": "2023年10月診療分から高校生等の通院費も無料",
+        "application": "事前の登録申請と受給資格者証の取得が必要"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/site/kosodate/kodomoiryohi.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "市内2施設で生後6か月から小学6年生までの病児・病後児を受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facilities": "国東市民病院内すくすくルーム、国東こども園キッズケアLuce",
+        "target": "大分県内在住の生後6か月から小学6年生まで",
+        "hours": "月～金曜7:30～18:00。祝日・年末年始等を除く",
+        "fee": "1日1,700円、半日1,000円、給食300円。生活保護・市民税非課税世帯は利用料減免",
+        "capacity": "すくすくルーム6人、Luce3人",
+        "application": "テオテ等で利用登録・予約し、医療機関記入済み利用申請書を提出"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/site/kosodate/kosodateshien2.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kunisaki.oita.jp/site/kosodate/byogojihoikuluce.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "国・県制度と市独自施策により0～5歳児の保育料を全年齢無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalProgram": "3～5歳児と住民税非課税世帯の0～2歳児は国制度で無償化",
+        "citySupport": "3歳未満第1子を市独自に無償化",
+        "siblings": "大分にこにこ保育支援事業で3歳未満第2子以降を無償化",
+        "result": "国東市に住所がある子どもは全年齢で保育料負担なし",
+        "additionalCosts": "主食費、消耗品、送迎費、行事費等は別途実費となる場合がある"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/site/kosodate/musyouka.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kunisaki.oita.jp/site/kosodate/reiwanihoikuennnyuuenn.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2025年4月から市内小中学校・幼稚園・義務教育学校の学校給食費を無償化",
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "国東市内の小学校、中学校、幼稚園、義務教育学校へ通う子ども",
+        "support": "給食費の保護者負担額を全額無償化",
+        "start": "2025年4月提供分から",
+        "funding": "市外寄附者によるふるさと納税を財源として案内",
+        "procedure": "給食費の徴収なし。長期欠食時は学校へ届出"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/soshiki/kyusyoku/kyuwusyokuhi-1.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後1歳頃までの母子へ宿泊・日帰り・訪問型産後ケアを合計7回まで提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "国東市に住民登録がある生後1歳頃までの母親と乳児で産後ケアを必要とする人",
+        "types": "宿泊型、デイサービス型、訪問型",
+        "limit": "3形態を合わせて7回まで",
+        "fee": "宿泊型1泊2日3,400円と食事代、デイサービス型1回1,900円と食事代、訪問型1回1,000円",
+        "exemption": "生活保護・非課税世帯は利用料・食事代0円",
+        "application": "施設へ仮予約後、おおむね利用3日前までに市へ申請"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/site/kosodate/sanngokea.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "国東市に住民登録があり保育所・こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentCondition": "保護者の就労要件を問わない",
+        "limit": "1人当たり月10時間まで",
+        "fee": "1時間200円。生活保護世帯は無料、市町村民税所得割合算額7万7,101円未満世帯は1時間100円",
+        "additionalCosts": "給食・おやつ代は別途の場合あり"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/site/kosodate/kodomodaretu.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世帯の住宅改修費を20％・上限50万円、多子世帯は上限70万円補助",
+      "details": {
+        "target": "18歳未満の子どもがいる世帯で、世帯員全員の直近所得総額が600万円未満",
+        "eligibleWork": "子ども部屋の増築・内装、トイレ・浴室・洗面所、対面キッチン、テレワークスペース等の30万円以上の工事",
+        "support": "補助対象経費の20％以内",
+        "amount": "一般子育て世帯は上限50万円、18歳未満の子ども3人以上は上限70万円",
+        "threeGeneration": "三世代同居型は50％・上限75万円、多子世帯は上限95万円",
+        "conditions": "市内本店の施工業者を利用し、工事前に申請・審査を受けること"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/site/kosodate/renovation2020.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを含む家庭の一時的多量ごみを広域クリーンセンターへ直接搬入可能",
+      "details": {
+        "facility": "宇佐・高田・国東広域事務組合クリーンセンター",
+        "target": "一般家庭から排出される一時的多量ごみ・粗大ごみ等",
+        "fee": "2026年4月から10kgにつき44円。支払時は10円未満を切り捨て",
+        "examples": "10kgは40円、100kgは440円",
+        "guidance": "搬入可能品目、分別、受付時間を事前に確認し、家電リサイクル法対象品等は別処理"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/soshiki/kankyo-eisei/sennta-ukeire.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "河川洪水・土砂災害・津波・高潮・ため池を確認できるWEB・冊子版ハザードマップを公開",
+      "details": {
+        "coverage": "河川の氾濫、土砂災害、津波、高潮、ため池決壊等",
+        "access": "WEB版と総合防災ハザードマップPDF版を公開",
+        "evacuation": "避難所一覧、避難情報、災害別の注意事項を掲載",
+        "guidance": "自宅周辺の危険箇所、避難場所、避難経路を平時から確認"
+      },
+      "source": {
+        "url": "https://www.city.kunisaki.oita.jp/hazardmap/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kunisaki.oita.jp/soshiki/kikikanri/hazardmap.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}

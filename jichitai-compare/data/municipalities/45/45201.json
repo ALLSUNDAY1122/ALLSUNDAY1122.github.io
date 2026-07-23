@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "45201",
+  "prefectureCode": "45",
+  "prefecture": "宮崎県",
+  "name": "宮崎市",
+  "officialUrl": "https://www.city.miyazaki.miyazaki.jp/",
+  "status": "verified",
+  "summary": "必須9制度を宮崎市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から中学3年生までの保険診療自己負担を助成し、小中学生の通院は1医療機関あたり月200円",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "宮崎市に住民登録があり健康保険に加入する0歳から15歳到達後最初の3月31日までの子ども",
+        "coverage": "通院・入院・調剤・治療用補装具等の保険診療自己負担",
+        "copay": "未就学児は県内医療機関で自己負担なし。小中学生の通院は1医療機関につき月200円、入院・調剤は自己負担なし",
+        "payment": "県内は受給資格証による現物給付、県外受診等は償還払い",
+        "application": "子ども医療費受給資格証の交付申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/education/childbirth/399034.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "0歳から小学6年生までの病児・病後児を市内施設で受け入れ、利用料を1回2,000円まで助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "病気または回復期で集団保育が困難かつ保護者の勤務・疾病等により家庭保育できない0歳から小学6年生までの児童",
+        "types": "病児対応型、病後児対応型",
+        "duration": "連続7日以内",
+        "support": "1回の利用につき2,000円まで市が助成。生活保護・市民税非課税世帯は無料",
+        "costs": "昼食・おやつ代等の実費は別途負担",
+        "procedure": "施設への事前登録・予約、医師の現症連絡票が必要"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/education/nursery/particular/12270.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と住民税非課税世帯の0～2歳児の利用料を無償化し、多子世帯の保育料を軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreePlus": "3歳児から5歳児クラスの幼稚園・保育所・認定こども園等の利用料を無償化",
+        "underThree": "市民税非課税世帯の0歳児から2歳児クラスは無償化",
+        "siblings": "年収360万円未満相当世帯は第2子4分の1、第3子以降無料。その他の第2子も市独自軽減を実施",
+        "certification": "施設・サービスに応じ教育・保育給付認定または施設等利用給付認定が必要",
+        "additionalCosts": "食材料費、通園送迎費、行事費等は原則実費"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/education/nursery/childcarecost/203265.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年4月から宮崎市立小学校の学校給食費を無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "宮崎市立小学校に在籍する児童",
+        "support": "国の給食費負担軽減交付金に市財源を上乗せし、学校給食費を全額無償化",
+        "start": "2026年4月",
+        "procedure": "保護者の申請不要",
+        "middleSchool": "市立中学校は一律無償化の対象外",
+        "alternative": "アレルギー・宗教上の理由等で恒常的に弁当対応する児童には給食費相当額補助制度あり"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/education/school/schools/410029.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子へ訪問・日帰り・宿泊型ケアを自由に組み合わせて合計5回まで提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "宮崎市に住民票がある母親と、訪問型は生後1年未満、日帰り・宿泊型は原則生後4か月未満の乳児",
+        "types": "アウトリーチ型2時間・4時間、デイサービス型3時間・6時間、ショートステイ型1泊2日から3泊4日",
+        "limit": "1回の出産につき合計5回まで。5回超は全額自己負担",
+        "care": "母体の心身ケア、授乳・乳房ケア、乳児の発育確認、育児相談、休息支援",
+        "application": "利用施設等と日程調整後、市へオンライン申請"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/education/childbirth/388224.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を54施設で月10時間、1時間300円程度で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保育所・幼稚園・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentCondition": "保護者の就労要件を問わない",
+        "limit": "子ども1人につき月10時間まで",
+        "fee": "1時間300円程度。施設により異なり、おやつ代等の実費が別途必要な場合あり",
+        "reduction": "生活保護世帯は1時間300円、市民税所得割額等の要件を満たす世帯は200円の負担軽減",
+        "facilities": "2026年度は私立51施設・公立3施設の計54施設",
+        "procedure": "総合支援システム登録、市の確認、施設との初回面談後に予約"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/education/nursery/daycaresystem/399477.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "宮崎県外からの移住・就業等の要件を満たす子育て世帯へ最大200万円を給付",
+      "details": {
+        "target": "指定地域から宮崎市へ移住し、就業・起業等の要件を満たす人",
+        "familyAmount": "2人以上の家族・世帯は100万円",
+        "childAddition": "18歳未満の世帯員を帯同する家族・世帯は200万円",
+        "singleAmount": "主要制度は単身60万円。別制度では30万円の場合あり",
+        "conditions": "移住元地域・居住期間・就業等の要件、転入後の申請期限、5年以上の継続居住意思等を満たすこと",
+        "availability": "予算枠に達し次第受付終了。宮崎市移住センターへ事前予約が必要"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/business/loan/286647.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "原則いずれかの辺が1メートル以上の家庭ごみを事前申込みで収集または有料直接搬入",
+      "details": {
+        "target": "原則として縦・横・高さのいずれかが1メートル以上のもの及び指定品目",
+        "methods": "市の戸別収集またはエコクリーンプラザみやざきへの直接搬入",
+        "application": "電話またはオンラインで事前申込み",
+        "limit": "戸別収集は1回3点まで",
+        "collectionFee": "受付後に案内された手数料分の粗大ごみシールを購入。シールは1枚500円",
+        "directFee": "家庭ごみの直接搬入は2025年4月から100kgごと440円、100kg未満も440円",
+        "collection": "受付後おおむね7～14日で収集し、指定日の8時30分までに排出"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/life/trash/fractionation/34204.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・津波・高潮・土砂災害・ため池等のWEB・PDFハザードマップを公開",
+      "details": {
+        "coverage": "洪水浸水想定区域、津波・高潮浸水想定、土砂災害警戒区域、ため池、避難所等",
+        "formats": "WEB版、地区別PDF、多言語・やさしい日本語版",
+        "flood": "住所検索や地点選択で想定浸水深を確認可能",
+        "tsunami": "南海トラフ地震等を想定した浸水範囲・深さ・避難情報を掲載",
+        "app": "防災アプリHazardonで防災情報、避難所開設・混雑状況、ハザードマップを13言語表示"
+      },
+      "source": {
+        "url": "https://www.city.miyazaki.miyazaki.jp/life/fire_department/hazard_map/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
