@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07342",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "鏡石町",
+  "officialUrl": "https://www.town.kagamiishi.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を鏡石町公式情報で調査し、8制度をverified、こども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額と入院時食事療養費を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "鏡石町に住所があり健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "保険診療の一部負担金。入院時食事療養費は加入保険等の条件により申請対象",
+        "application": "事前に受給資格登録が必要",
+        "excluded": "高額療養費・付加給付相当額、学校管理下の負傷、保険適用外費用等は対象外"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kodomo/fukushi/008290.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "乳幼児から小学6年生まで、郡山市の菊池医院病児保育室らびっとを広域利用できる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "program": "病児・病後児保育広域利用",
+        "facility": "医療法人仁寿会菊池医院 病児保育室らびっと",
+        "target": "病気の治療中または回復期で集団保育が困難な乳幼児から小学6年生まで",
+        "agreement": "鏡石町は令和2年4月から郡山市と広域利用協定を締結",
+        "hours": "平日8時30分～17時30分、土曜日8時30分～15時",
+        "fee": "1回2,000円。生活保護・市町村民税非課税世帯は必要書類により免除",
+        "application": "事前登録・施設予約・利用申込が必要"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kodomo/fukushi/008266.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と町民税非課税世帯の0～2歳児の保育料を無償化し、世帯状況に応じた軽減制度を設ける。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児の全員と、町民税非課税世帯の0～2歳児は保育料無償化対象",
+        "otherHouseholds": "0～2歳児の課税世帯は認定区分・保護者の町民税額等により保育料を算定",
+        "reductions": "ひとり親・障害者同居・低所得・多子世帯等に軽減制度あり",
+        "preschoolCare": "保育の必要性認定を受けた3歳から就学前児童の預かり保育は、国上限超過分を月額12,000円まで町独自支援",
+        "excludedCosts": "給食費、教材費、行事費、延長保育料等の実費は原則対象外"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kodomo/hoikuen/012037.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.kagamiishi.fukushima.jp/iju/life/support.html", "checkedAt": "2026-07-24"}]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校の給食を利用する児童生徒について、物価高騰対策として1人当たり最大1万円を支援する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "program": "学校給食費物価高騰支援",
+        "target": "鏡石町立小学校・中学校に在籍し学校給食を利用する児童生徒",
+        "support": "児童生徒1人当たり最大10,000円を給食費負担軽減に充当",
+        "funding": "物価高騰対応重点支援地方創生臨時交付金等を活用",
+        "note": "学校給食費の完全無償化ではなく一部負担軽減"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kyouiku/gakkou/013211.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kyouiku/gakkou/013494.html", "checkedAt": "2026-07-24"}]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子を対象に、助産所等で宿泊型・日帰り型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア事業",
+        "target": "鏡石町に住所があり、産後の回復・授乳・育児等に不安があり、母子とも医療行為を必要としない方",
+        "types": "宿泊型、日帰り型",
+        "services": "母体の休養、授乳・乳房ケア、育児相談、乳児の健康・発育確認等",
+        "lodgingFee": "1泊2日6,000円。双子は9,000円。延泊は別途加算",
+        "dayFee": "日帰り型2,500円",
+        "application": "利用前に健康環境課へ相談・申請"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kodomo/shussan/008730.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "町の子ども・子育て支援事業計画は確認できるが、令和8年度のこども誰でも通園制度について利用施設・対象月齢・利用時間・料金・申込方法を公式HTMLで確定できない。",
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "researchResult": "第3期鏡石町子ども・子育て支援事業計画を確認したが、現行の利用者向け実施案内を確認できなかった",
+        "caution": "実施状況・利用条件は福祉こども課へ確認が必要"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kodomo/fukushi/012991.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・子育て世帯等の住宅取得に町補助最大50万円、県外移住者は県加算を含め最大120万円を支援する。",
+      "details": {
+        "program": "来てかがみいし住宅取得支援事業補助金",
+        "target": "世帯主が40歳未満の夫婦世帯、中学生以下の子がいる世帯、多世代同居・近居世帯等で、町内住宅を取得し5年以上定住する方",
+        "base": "新築20万円、中古10万円、多世代同居の改修10万円",
+        "additions": "子育て10万円、町内業者利用10万円、多世代同居・近居10万円等",
+        "townMaximum": "町補助最大50万円",
+        "prefectureAddition": "県外移住者は県補助最大70万円を加算可能",
+        "combinedMaximum": "町・県合計最大120万円",
+        "application": "契約・着工前に町へ事前相談が必要"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kurashi_tetuzuki/013488.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kurashi_tetuzuki/008744.html", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "60センチメートル以上の粗大ごみを地区別に年4回収集し、予約による衛生センターへの自己搬入も受け付ける。",
+      "details": {
+        "definition": "おおむね60センチメートル以上の大型ごみ",
+        "collection": "地区別に年4回、月曜日に指定場所で収集。日程・場所は年度ごみ収集カレンダーで確認",
+        "directCarry": "引越し等の多量ごみは、予約後に須賀川地方衛生センターへ自己搬入可能",
+        "hours": "平日8時30分～11時、13時～15時30分",
+        "licensedCollector": "一度に処分する場合は町許可業者への有料依頼も可能",
+        "specialCollection": "高齢者・障害者等の一定世帯には無料戸別収集制度あり"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kurashi_tetuzuki/kankyo/000173.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kurashi_tetuzuki/kankyo/012523.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/kurashi_tetuzuki/kankyo/010850.html", "checkedAt": "2026-07-24"}
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・浸水、土砂災害、避難所等を掲載した防災マップと、ため池ハザードマップを公開する。",
+      "details": {
+        "map": "鏡石町防災マップ",
+        "coverage": "大雨・洪水時の浸水想定区域、土砂災害警戒区域、指定緊急避難場所・避難所、防災情報",
+        "edition": "令和4年3月版",
+        "ponds": "防災重点農業用ため池について浸水深、到達時間、避難場所等を公開",
+        "guidance": "自宅周辺の危険箇所、避難所、避難経路を平時に確認"
+      },
+      "source": {"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/seikatu_bousai/000667.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.kagamiishi.fukushima.jp/kurashi/seikatu_bousai/bousai/010436.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
