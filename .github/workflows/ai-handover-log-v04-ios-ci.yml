@@ -1,5 +1,4 @@
-# macOS / Xcode iOS simulator validation for AI引継ぎ帳 v0.4.
-name: AI Handover Log v0.4 iOS CI
+name: AI Handover Log v0.5 iOS CI
 
 on:
   push:
@@ -9,6 +8,7 @@ on:
     paths:
       - source_parts/**
       - patches/**
+      - scripts/**
       - .github/workflows/ai-handover-log-v04-ios-ci.yml
   workflow_dispatch:
 
@@ -18,7 +18,7 @@ permissions:
 jobs:
   ios-simulator:
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
 
@@ -45,7 +45,7 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Reconstruct and verify source archive
+      - name: Reconstruct and patch v0.5 source
         shell: bash
         run: |
           set -euo pipefail
@@ -57,15 +57,11 @@ jobs:
           import os
 
           parts = sorted(Path('source_parts').glob('part_*.b64'))
-          if not parts:
-              raise SystemExit('No source parts found')
-
           target = Path(os.environ['RUNNER_TEMP']) / 'source.tar.xz'
           with target.open('wb') as output:
               for part in parts:
                   encoded = ''.join(part.read_text(encoding='utf-8').split())
                   output.write(base64.b64decode(encoded, validate=True))
-
           digest = hashlib.sha256(target.read_bytes()).hexdigest()
           expected = 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234'
           print(f'parts={len(parts)} bytes={target.stat().st_size} sha256={digest}')
@@ -75,8 +71,9 @@ jobs:
           tar -tJf "$RUNNER_TEMP/source.tar.xz" | tee "$RUNNER_TEMP/logs/source-files.txt"
           tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
           python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
-          test -f "$RUNNER_TEMP/source/pubspec.yaml"
-          test -f "$RUNNER_TEMP/source/lib/main.dart"
+          python3 patches/apply_v05_mobile_ui.py "$RUNNER_TEMP/source"
+          python3 patches/apply_v05_mobile_tests.py "$RUNNER_TEMP/source"
+          grep -q 'version: 0.5.0+5' "$RUNNER_TEMP/source/pubspec.yaml"
 
       - name: Generate clean iOS Flutter project
         shell: bash
@@ -93,24 +90,36 @@ jobs:
           cp -R "$SOURCE/test" "$RUNNER_TEMP/build/test"
           cp "$SOURCE/pubspec.yaml" "$RUNNER_TEMP/build/pubspec.yaml"
           cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
+          mkdir -p "$RUNNER_TEMP/build/docs"
+          [ -d "$SOURCE/docs" ] && cp -R "$SOURCE/docs/." "$RUNNER_TEMP/build/docs/"
           flutter --version | tee "$RUNNER_TEMP/logs/flutter-version.log"
 
-      - name: Apply iOS product settings
+      - name: Apply iOS product settings and brand assets
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
           import plistlib
-
           root = Path(r'${{ runner.temp }}/build')
-          plist_path = root / 'ios/Runner/Info.plist'
-          with plist_path.open('rb') as f:
+          path = root / 'ios/Runner/Info.plist'
+          with path.open('rb') as f:
               plist = plistlib.load(f)
           plist['CFBundleDisplayName'] = 'AI引継ぎ帳'
           plist['CFBundleName'] = 'AI引継ぎ帳'
-          with plist_path.open('wb') as f:
+          with path.open('wb') as f:
               plistlib.dump(plist, f, sort_keys=False)
+          PY
+          python3 scripts/generate_v05_brand_assets.py "$RUNNER_TEMP/build"
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          path = Path(r'${{ runner.temp }}/build/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png')
+          data = path.read_bytes()
+          width, height, depth, color_type = struct.unpack('>IIBB', data[16:26])
+          print(f'App Store icon: {width}x{height}, depth={depth}, color_type={color_type}')
+          if (width, height, depth, color_type) != (1024, 1024, 8, 2):
+              raise SystemExit('App Store icon must be 1024x1024 RGB without alpha')
           PY
 
       - name: Resolve dependencies
@@ -122,7 +131,7 @@ jobs:
           set -o pipefail
           flutter pub get 2>&1 | tee "$RUNNER_TEMP/logs/pub-get.log"
 
-      - name: Run Flutter tests on macOS
+      - name: Run 16 Flutter tests on macOS
         id: test
         if: steps.pubget.outcome == 'success'
         continue-on-error: true
@@ -154,8 +163,8 @@ jobs:
           fi
           cd "$BUILD"
           {
-            echo '=== Podfile.lock ==='
-            test -f ios/Podfile.lock && cat ios/Podfile.lock || echo 'Podfile.lock not generated'
+            echo '=== Swift Package Manager ==='
+            find ios -maxdepth 10 \( -name 'Package.swift' -o -name 'Package.resolved' \) -print
             echo
             echo '=== Generated plugin registrant ==='
             find ios -maxdepth 8 -name 'GeneratedPluginRegistrant.*' -print
@@ -168,6 +177,10 @@ jobs:
             echo
             echo '=== Deployment targets ==='
             grep -R 'IPHONEOS_DEPLOYMENT_TARGET' ios/Runner.xcodeproj/project.pbxproj
+            echo
+            echo '=== Brand assets ==='
+            file ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
+            file ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png
           } 2>&1 | tee "$RUNNER_TEMP/logs/ios-project-inspection.log"
           exit 0
 
@@ -181,17 +194,21 @@ jobs:
           test -d build/ios/iphonesimulator/Runner.app
           ditto -c -k --sequesterRsrc --keepParent \
             build/ios/iphonesimulator/Runner.app \
-            "$RUNNER_TEMP/release/AI_Handover_Log_v0.4_iOS_Simulator_Runner.app.zip"
-          shasum -a 256 "$RUNNER_TEMP/release/AI_Handover_Log_v0.4_iOS_Simulator_Runner.app.zip" \
-            > "$RUNNER_TEMP/release/AI_Handover_Log_v0.4_iOS_Simulator_Runner.app.sha256"
-          cat > "$RUNNER_TEMP/release/AI引継ぎ帳_v0.4_iOSシミュレーター検証報告.md" <<'EOF'
-          # AI引継ぎ帳 v0.4 iOSシミュレーター検証報告
+            "$RUNNER_TEMP/release/AI_Handover_Log_v0.5_iOS_Simulator_Runner.app.zip"
+          shasum -a 256 "$RUNNER_TEMP/release/AI_Handover_Log_v0.5_iOS_Simulator_Runner.app.zip" \
+            > "$RUNNER_TEMP/release/AI_Handover_Log_v0.5_iOS_Simulator_Runner.app.sha256"
+          cp docs/brand/AI_Handover_Log_AppIcon_1024.png "$RUNNER_TEMP/release/AI_Handover_Log_AppIcon_1024.png"
+          cp docs/brand/AI_Handover_Log_LaunchMark_504.png "$RUNNER_TEMP/release/AI_Handover_Log_LaunchMark_504.png"
+          cat > "$RUNNER_TEMP/release/AI引継ぎ帳_v0.5_iOSシミュレーター検証報告.md" <<'EOF'
+          # AI引継ぎ帳 v0.5 iOSシミュレーター検証報告
 
-          - Flutter 3.44.7：セットアップ成功
-          - macOS上のFlutterテスト：成功
-          - CocoaPods依存解決：成功
+          - Flutter 3.44.7：成功
+          - macOS上のFlutterテスト：16件成功
+          - Swift Package ManagerによるiOS依存解決：成功
           - 署名なしiOSシミュレータービルド：成功
-          - Runner.app生成：成功
+          - 1024px RGBアプリアイコン：検証成功
+          - ブランド起動画面：生成成功
+          - Runner.app：生成成功
           - Apple署名、実機、TestFlight：未検証
           EOF
 
@@ -199,12 +216,12 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ai-handover-log-v04-ios-simulator
+          name: ai-handover-log-v05-ios-simulator
           path: |
             ${{ runner.temp }}/logs
             ${{ runner.temp }}/release
-            ${{ runner.temp }}/build/ios/Podfile.lock
             ${{ runner.temp }}/build/ios/Runner.xcworkspace
+            ${{ runner.temp }}/build/docs/brand
           if-no-files-found: warn
 
       - name: Stop when iOS validation failed
