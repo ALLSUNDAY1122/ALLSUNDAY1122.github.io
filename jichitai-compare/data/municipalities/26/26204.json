@@ -7,12 +7,15 @@
   "officialUrl": "https://www.city.uji.kyoto.jp/",
   "status": "verified",
   "summary": "宇治市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から中学3年生までの保険診療自己負担額を、1医療機関につき月200円を基本として助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
       "details": {
         "target": "宇治市に住所があり健康保険に加入する、15歳到達後最初の3月31日までの子ども",
         "copayment": "入院・通院とも1医療機関につき月200円を基本とする",
@@ -21,12 +24,18 @@
         "outsidePrefecture": "京都府外受診等は申請による償還払い",
         "excluded": "保険適用外費用、入院時食事療養費、高額療養費等は対象外または調整対象"
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/site/kosodate/5539.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/site/kosodate/5539.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後2か月から小学6年生までの病児・病後児を、市内2施設で一時的に預かる。",
-      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 12
+      },
       "details": {
         "facilities": "浅妻医院パピールーム、宇治徳洲会病院ひまわりルーム",
         "condition": "病気中または回復期で集団保育が困難かつ、保護者の勤務等で家庭保育が難しい児童",
@@ -36,12 +45,18 @@
         "reduction": "生活保護世帯・市民税非課税世帯等に減免制度あり",
         "application": "施設への事前予約と医師の診察・利用連絡書等が必要"
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/site/kosodate/26481.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/site/kosodate/26481.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と市民税非課税世帯の0～2歳児は、幼児教育・保育の無償化対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "agesThreeToFive": "保育所、認定こども園等を利用する3～5歳児の保育料は無償",
         "agesZeroToTwo": "市民税非課税世帯の0～2歳児は無償化対象",
@@ -49,66 +64,100 @@
         "multiChild": "世帯状況に応じた多子軽減制度あり",
         "excludedCosts": "給食費、送迎費、行事費、延長保育料等の実費は原則対象外"
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/site/kosodate/7028.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/site/kosodate/7028.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "市立小学校で学校給食を実施し、令和8年度から市立中学校等でも全員制給食を開始する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "elementary": "市立小学校で学校給食を実施",
-        "middle": "令和8年度から市立中学校および宇治西小倉学園で全員制中学校給食を開始",
-        "center": "新学校給食センターで最大約6,500食を調理",
-        "menu": "宇治市学校給食会が献立作成と食材調達を一元的に行う",
-        "generalFee": "一般世帯の現行給食費額は公式ページで確定できないため推測しない"
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/site/kosodate/93915.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "elementary": "市立小学校で全員制学校給食を実施",
+        "middle": "令和8年度から市立中学校および宇治西小倉学園で全員制給食を開始",
+        "center": "宇治市五ケ庄三番割の学校給食センターで最大約6,500食を調理",
+        "menu": "宇治市学校給食会が小中学校の献立作成と食材調達を行う",
+        "generalFee": "一般世帯の現行給食費額は公式HTML本文で確定できないため推測しない"
+      },
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/site/kosodate/93915.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "産後1年未満の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
-      "details": {
-        "target": "宇治市に住民票がある産後1年未満の母親と乳児",
-        "types": "ショートステイ（宿泊型）、デイサービス（通所型）、アウトリーチ（訪問型）",
-        "care": "母体の休養、授乳・育児相談、母子の健康確認等",
-        "fee": "サービス種別と市民税所得割額等の区分により異なる",
-        "reduction": "生活保護世帯・市民税非課税世帯等に減免制度あり",
-        "application": "利用前に市への申請・相談と利用決定が必要"
+      "summary": "産後1年未満の未就園の母子へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/site/kosodate/7151.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "target": "宇治市に住民票があり、産後の疲れや育児不安がある生後1歳未満の母親と乳児。対象児が保育園・こども園に入園している場合は対象外",
+        "types": "宿泊型、日帰り型、助産師による訪問型",
+        "care": "母体の休養、授乳・乳房ケア、育児相談、母子の健康確認等",
+        "shortStayLimit": "24時間以内を1日として6泊7日まで。多胎児1人につき6泊7日で、双子は13泊14日まで",
+        "shortStayFee": "所得割区分により24時間あたり9,000円、6,000円、4,000円、非課税・生活保護600円。多胎児加算あり",
+        "outreachLimit": "1日1回90～120分、2日まで。多胎児1人につき2日で、双子は4日まで",
+        "outreachFee": "助産師訪問は所得割区分により3,000円、2,000円、1,300円、非課税・生活保護300円。多胎児加算あり",
+        "childcareWorker": "多胎や年齢の近い上の子がいる場合等は、別料金で保育士の同時訪問支援を利用可能",
+        "dayCare": "市内旅館は11時～14時30分で1日4組、吉川助産院は10時～16時で1日1組。児童1人につき2回まで",
+        "dayCareFee": "所得割区分と施設により、旅館型4,500～300円、吉川助産院6,000～400円。多胎児加算あり",
+        "application": "保健推進課へ相談・申請し、審査・承認後に利用",
+        "cancellation": "利用前日までに変更・中止の連絡がない場合は利用したものとみなし、利用料の支払いが必要"
+      },
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/site/kosodate/7151.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "乳児等通園支援事業（こども誰でも通園制度）",
-        "target": "保育所、認定こども園、地域型保育等に在籍していない生後6か月から満3歳未満の児童",
+        "target": "保育所、認定こども園、地域型保育等に在籍していない生後6か月から満3歳未満の児童。3歳の誕生日の前々日まで利用可能",
         "employment": "保護者の就労要件を問わない",
-        "limit": "児童1人につき月10時間まで",
-        "fee": "おおむね1時間300円。施設により設定",
-        "reduction": "世帯状況に応じた利用料減免制度あり",
-        "additionalCosts": "給食・おやつ等の実費が別途必要な場合あり",
-        "application": "市の認定後、施設との事前面談・予約が必要"
+        "limit": "児童1人につき月10時間まで。複数施設の併用も可能",
+        "noCarryover": "月の未利用時間は翌月へ繰り越せない",
+        "fee": "1時間あたり300円程度。世帯状況に応じた減免があり、食事・おやつ等の実費が別途必要な場合がある",
+        "facilities": "あさひ保育園、登りこども園、三室戸こども園、南浦くすのきこども園、いずみこども園、ひいらぎこども園、同胞こども園、こひつじこども園、伊勢田こども園、明星っ子こども園、槇島ひいらぎこども園、のぞみこども園等",
+        "facilityStatus": "登りこども園は新規面談・利用受付を休止中。こざくら幼稚園・みのり幼稚園は令和8年度内開始へ準備中",
+        "application": "0歳5か月到達後から市へ初回申込が可能。承認・アカウント発行後、つうえんポータルで施設検索、初回面談、予約を行う",
+        "usageMethod": "定期利用と柔軟利用があり、一時預かり事業との併用も可能"
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/site/kosodate/77687.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/site/kosodate/77687.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "18歳年度末までの子どもがいる世帯等の住宅改修費を2分の1、加算を含め最大40万円補助する。",
+      "summary": "18歳年度末までの子どもまたは胎児がいる世帯の住宅改修費を2分の1、加算を含め最大40万円補助する。",
       "details": {
-        "program": "令和8年度宇治市子育て世帯住宅確保支援事業補助金",
-        "target": "18歳年度末までの子どもまたは胎児がいる世帯で、親権者等の所得合計550万円未満、市税滞納なし等の要件を満たす世帯",
-        "targetWork": "居間、台所、浴室、子ども部屋等の子育て環境を改善する改修工事",
+        "program": "令和8年度宇治市子育て世帯住宅確保おうえん事業補助金",
+        "target": "18歳年度末までの子どもまたは胎児がいる世帯で、親権者等の所得合計550万円未満、市税・府税滞納なし等の要件を満たす世帯",
+        "targetWork": "居間、台所、浴室・脱衣所、子ども部屋の子育て環境を改善する改修工事",
         "minimumCost": "対象工事費20万円以上",
-        "rate": "対象工事費の2分の1",
-        "basicMaximum": "子ども1人10万円、2人20万円、3人以上30万円",
+        "completion": "令和9年3月1日までに工事を完了",
+        "contract": "原則として工事契約日は補助金交付決定日以降。交付決定前に着手する場合は指令前着手届が必要",
+        "rate": "対象工事費の2分の1と補助基準額の少ない方",
+        "basicMaximum": "1子世帯10万円、2子世帯20万円、多子世帯30万円",
         "additions": "空き家活用5万円、三世代同居・近居5万円を加算可能",
         "maximum": "加算を含め最大40万円",
-        "application": "2026年5月25日から12月25日まで。予算到達時に終了し、着工前申請が必要"
+        "application": "2026年5月25日から12月25日まで。予算到達時に終了する先着順で、住宅課窓口へ提出。郵送不可"
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/soshiki/48/87999.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/soshiki/48/87999.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -121,7 +170,10 @@
         "alternatives": "通常のもえないごみに出せる大きさまで解体する方法や、市施設への自己搬入あり",
         "excluded": "家電リサイクル法対象品や処理困難物等、市で処理できない品目あり"
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/site/gomi/5249.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/site/gomi/5249.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -135,7 +187,10 @@
         "collapse": "家屋倒壊等氾濫想定区域を掲載",
         "evacuation": "指定緊急避難場所・指定避難所等を掲載"
       },
-      "source": {"url": "https://www.city.uji.kyoto.jp/soshiki/25/5123.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.uji.kyoto.jp/soshiki/25/5123.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
