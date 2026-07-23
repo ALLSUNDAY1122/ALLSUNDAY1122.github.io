@@ -1,0 +1,192 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07210",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "二本松市",
+  "officialUrl": "https://www.city.nihonmatsu.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を二本松市公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の一部負担金を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "二本松市内に住所がある出生から18歳年度末までの子ども",
+        "support": "医科・歯科・調剤等の保険診療一部負担金",
+        "application": "受給資格登録後、受給資格者証を交付",
+        "excluded": "高額療養費・付加給付分、保険適用外費用等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/mama/shien_jyosei/page001370.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学生までを対象に、市内外の複数施設で病児・病後児保育を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facilities": "アイグラン保育園油井、チャイルドケアハウスこどもの家、郡山市らびっと、ファミリーサポートセンター病児保育室",
+        "aigran": "生後6か月から就学前、病児・病後児、平日8時～18時、1日2,000円",
+        "kodomonoie": "おおむね1歳から小学生、病後児、4時間以内1,500円・超過3,000円",
+        "rabbit": "生後6か月から小学生、病児・病後児、1日2,000円",
+        "familySupport": "病後児、8時～18時、1時間800円",
+        "application": "事前登録・予約と医師作成の診療情報提供書等が必要"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/mama/k_azuke/page007543.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "国制度の無償化に加え、市独自に低所得世帯や第2子以降の保育料を全額助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalFree": "3～5歳児と市民税非課税世帯の0～2歳児は保育料無償化対象",
+        "cityLowIncome": "2号・3号認定の1～3階層は全額助成",
+        "cityGeneral": "4-1階層以上は一律月5,000円助成",
+        "multiChild": "第2子以降の対象児童は全額助成",
+        "privateKindergarten": "新制度未移行幼稚園は月額25,700円を上限に無償化",
+        "excludedCosts": "給食費、教材費、行事費、送迎費等は原則保護者負担。低所得世帯・第3子以降は副食費免除あり"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/mama/hoiku/page004566.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nihonmatsu.lg.jp/mama/hoiku/page002069.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は市立小中学校の給食費を実質無償化する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "県の給食費負担軽減交付金等を活用し、小学校給食費を無償化",
+        "middleSchool": "市の給食費負担金支援事業により中学校給食費を実質無償化",
+        "scope": "市立小中学校の児童生徒の給食費保護者負担を軽減・無償化",
+        "fiscalYear": "令和8年度"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/shicyo_room/r8/page014158.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nihonmatsu.lg.jp/shicyo_room/r8/page013824.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.nihonmatsu.lg.jp/shicyo_room/shicyo_letter/page014204.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の母子を対象に、日帰り・訪問・宿泊型の広域産後ケアを実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "二本松市に住民票がある出産後1年以内の母親と子ども等",
+        "types": "デイサービス型1日・半日、訪問型、宿泊型",
+        "services": "乳房ケア、授乳・育児相談、休養、乳児の身体計測・発育確認・沐浴等",
+        "transportSupport": "産後ケア通所等交通費助成あり",
+        "application": "電話申込み後、市へ利用申請書等を提出"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/mama/k_umaretara/page007186.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "児童1人につき月10時間まで",
+        "fee": "1時間当たり基本300円。施設により異なる場合あり",
+        "application": "総合支援システムで利用申請・施設選択・初回面談・予約"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/mama/k_azuke/page013004.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "県外から移住して住宅を取得する方に、基本160万円と加算を合わせ最大220万円を補助する。",
+      "details": {
+        "program": "来てにほんまつ住宅取得支援事業",
+        "target": "県外から二本松市へ移住し、取得住宅に3年以上居住する方",
+        "base": "補助基本額160万円",
+        "additions": "40歳未満、創業支援、市内業者施工、長期優良住宅の各要件で20万円加算",
+        "maximum": "加算上限60万円、合計最大220万円",
+        "costLimit": "住宅取得費の2分の1が上限。土地・外構費等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/ijyu_teijyu/shiru/hojyo/page013028.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは無料で直接搬入するか、月2回の有料戸別収集を利用できる。",
+      "details": {
+        "definition": "指定袋に入らない大型家具、自転車、ストーブ、大型玩具等",
+        "directCarry": "もとみやクリーンセンターへ直接搬入。原則無料",
+        "directCarryException": "畳・ふとん・マットレスは10kg当たり130円",
+        "homeCollection": "毎月10日・25日を基本とする月2回の戸別収集",
+        "fee": "1個1,350円。4個は2割引、5個以上は3割引",
+        "limit": "2人で持てる重さ、目安55kg以下。屋外へ排出"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/kurashi_tetsuduki/gomi_eisei/page001946.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、地震、火山、ため池・ダム等をまとめた総合ハザードマップを公開する。",
+      "details": {
+        "map": "二本松市総合ハザードマップ",
+        "coverage": "阿武隈川等の浸水想定区域、土砂災害警戒区域、地震、火山、ため池・ダム、避難所・避難場所",
+        "revision": "令和5年3月改訂",
+        "updates": "油井川・杉田川・水原川の浸水想定、令和元年台風19号の浸水実績、ため池・ダム情報等を追加",
+        "distribution": "市役所、各支所、住民センターで冊子を配布"
+      },
+      "source": {
+        "url": "https://www.city.nihonmatsu.lg.jp/kurashi_tetsuduki/bousai_saigai/bousai/page001923.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
