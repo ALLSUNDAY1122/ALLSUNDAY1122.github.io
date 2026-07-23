@@ -9,6 +9,7 @@ on:
       - 404.html
       - yorugatari/index.html
       - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
       - yorugatari/archive.html
       - yorugatari/about.html
       - yorugatari/privacy.html
@@ -63,10 +64,10 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const site = 'yorugatari';
-          const staticFiles = ['index.html','5min-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
+          const staticFiles = ['index.html','5min-horror.html','bedtime-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
           for (const file of staticFiles) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
-            const expectedVersion = file === '5min-horror.html' ? '20260724-004' : '20260723-003';
+            const expectedVersion = ['5min-horror.html','bedtime-horror.html'].includes(file) ? '20260724-004' : '20260723-003';
             if (!html.includes(`assets/analytics.js?v=${expectedVersion}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
           }
           const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
@@ -84,13 +85,13 @@ jobs:
       - name: Commit normalized pages
         shell: bash
         run: |
-          if git diff --quiet -- 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
+          if git diff --quiet -- 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
             echo "Campaign runtime is already normalized."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
+          git add 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
           git commit -m "Normalize Yorugatari campaign runtime [skip ci]"
           for attempt in 1 2 3; do
             if git pull --rebase origin main && git push origin HEAD:main; then
