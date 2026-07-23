@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "29343",
+  "prefectureCode": "29",
+  "prefecture": "奈良県",
+  "name": "三郷町",
+  "officialUrl": "https://www.town.sango.nara.jp/",
+  "status": "verified",
+  "summary": "三郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、第2子保育料無償化、病児保育、産後ケアなどを記録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までの子どもの保険診療自己負担相当分を所得制限・定額一部負担金なしで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "0歳から18歳に達する日以後の最初の3月31日まで",
+        "incomeLimit": "なし",
+        "fixedCopayment": "なし",
+        "coverage": "各種医療保険が適用される医療費自己負担相当分を助成",
+        "procedure": "子ども医療費受給資格証の交付手続きが必要",
+        "excluded": "保険適用外費用、入院時食事代等は対象外"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/soshiki/11/2369.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "西和地域病児保育室いちごルームで、生後6か月から小学6年生までの病気中または回復期の児童を一時保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "facility": "西和地域病児保育室いちごルーム",
+        "target": "三郷町等の西和5町に住所を有する生後6か月から小学6年生までの児童",
+        "hours": "祝日・年末年始を除く月曜日から金曜日の8時から18時まで",
+        "fee": "1日2,000円。生活保護・住民税非課税世帯は無料",
+        "staff": "保育士と看護師が対応",
+        "procedure": "町こども未来課または施設での事前登録、予約、医師連絡票等が必要"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/site/kosodate/2299.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ikaruga.nara.jp/0000001629.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、町独自に保育園・幼稚園等へ2人以上同時在園する場合の第2子以降も無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児クラスと住民税非課税世帯の0～2歳児クラスは保育料無償",
+        "localExpansion": "保育園・幼稚園等に2人以上在園している場合、第2子以降は年齢・世帯収入を問わず保育料無償",
+        "firstChild": "課税世帯0～2歳児の第1子は市町村民税所得割額等で算定",
+        "simultaneousAttendance": "町独自無償化は2人以上が在園している場合の条件を確認する必要がある",
+        "excludedCosts": "給食費、物品費、その他実費徴収分は保護者負担"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/site/kosodate/13912.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "学校給食センターが町立小中学校の給食を調理・提供する。全児童生徒の一律無償化は確認できず、要件世帯には就学援助がある。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "provider": "三郷町学校給食センター",
+        "schools": "三郷中学校、三郷小学校、三郷北小学校等の給食を調理",
+        "currentService": "令和8年度も学校給食管理システム導入業務を実施し、給食提供を継続",
+        "universalFreeStatus": "令和8年度の全児童生徒一律無償化は確認できないため無償とは記録しない",
+        "aid": "要保護・準要保護世帯には学校給食費を含む就学援助あり。ただし公式案内上、学校給食費の援助は中学生のみ",
+        "feeVerification": "現行月額は公式HTML本文で確認できないため推測しない"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/soshiki/26/14054.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.sango.nara.jp/site/kosodate/2333.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "町内在住の産後1年未満の母子を対象に、宿泊型・通所型・訪問型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "町内に住所を有する産後1年未満の母親と乳児で、心身の不調、育児不安、家族支援不足等がある方",
+        "types": "ショートステイ、デイケア、アウトリーチ",
+        "shortStay": "利用開始から24時間以内、最長6泊",
+        "dayCare": "10時から18時、最大7日間",
+        "outreach": "9時から17時の間で1回2時間以内、最大7日間",
+        "taxableFees": "課税世帯は宿泊3,500円、5回目以降6,000円。通所は4回目まで無料、5回目以降2,500円。訪問1,000円",
+        "reduction": "生活保護・町民税非課税世帯は無料または5回目以降の低額負担",
+        "care": "母体の健康・乳房ケア、沐浴・授乳、育児・生活相談等"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/soshiki/15/2393.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "西部保育園等で、生後6か月から就学前までの児童を保護者の就労・疾病等に応じて一時預かりする。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "facilities": "西部保育園、希望ケ丘保育園、希望ケ丘第二保育園、一時預かりルームちーも",
+        "seibuTarget": "生後6か月以降から就学前まで",
+        "seibuHours": "月曜日から金曜日の8時30分から16時30分まで",
+        "seibuLimit": "週3日以内。緊急時は相談可",
+        "seibuFee": "1日1,800円。給食・おやつ代を含む",
+        "reduction": "生活保護世帯は無料",
+        "procedure": "施設ごとに直接申込。西部保育園は利用申込書を提出"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/soshiki/14/9076.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内の空き家を取得・改修して5年以上定住する方に、改修費の2分の1・上限50万円を補助し、子ども・転入加算を設ける。",
+      "details": {
+        "program": "三郷町定住化促進空き家活用補助金",
+        "target": "町内の対象空き家を購入または取得した20歳以上で、交付後5年以上定住予定の方",
+        "rate": "対象改修費の2分の1以内",
+        "baseLimit": "上限50万円",
+        "childAddition": "同居する中学生以下の子ども1人につき10万円",
+        "moveInAddition": "一定期間内に対象空き家へ転入する場合、一律10万円",
+        "application": "取得から6か月以内かつ工事着工・契約前に申請",
+        "otherProgram": "若年夫婦・子育て世帯の家賃助成は月1万円を最長1年。ただし令和8年7月申込で新規受付終了"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/soshiki/16/1981.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.sango.nara.jp/soshiki/4/2222.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "地域を収集コースに分け、令和8年度のごみ分別カレンダーで粗大ごみを含む家庭ごみの収集日・分別方法を案内する。",
+      "details": {
+        "calendar": "令和8年度のコース別ごみ分別カレンダーを4か月単位で公開",
+        "courses": "居住地域ごとに1コース・2コース等へ区分",
+        "sorting": "カレンダーと家庭ごみガイドに従い、品目別に分別して指定日に排出",
+        "latestRule": "ガイドブックと現行分別が異なる場合があるため、最新のごみカレンダーを優先",
+        "fee": "粗大ごみの個別手数料・申込方法・点数上限は公式HTML本文で確認できないため推測しない"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/soshiki/17/2261.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.sango.nara.jp/soshiki/17/2267.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、地震の揺れやすさ、避難所・防災施設等を確認できるハザードマップを公開する。",
+      "details": {
+        "map": "三郷町ハザードマップ",
+        "hazards": "洪水浸水、土砂災害警戒区域、地震の揺れやすさ等",
+        "evacuation": "指定避難所、補助避難所、一時避難地、防災関連施設を掲載",
+        "preparedness": "避難時の注意事項、自宅からの避難方法・ルート検討に利用",
+        "earthquakeMethod": "震源断層の規模・位置と町内の地盤条件から50メートル単位の揺れやすさを表示"
+      },
+      "source": {"url": "https://www.town.sango.nara.jp/site/shobo-bousai/2017.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.sango.nara.jp/site/shobo-bousai/2292.html", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}

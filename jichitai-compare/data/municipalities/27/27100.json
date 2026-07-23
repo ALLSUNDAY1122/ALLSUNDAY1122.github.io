@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "27100",
+  "prefectureCode": "27",
+  "prefecture": "大阪府",
+  "name": "大阪市",
+  "officialUrl": "https://www.city.osaka.lg.jp/",
+  "status": "verified",
+  "summary": "大阪市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、保険診療の自己負担の一部を所得制限なしで助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "大阪市内在住で公的医療保険に加入する0歳から18歳到達後最初の3月31日までのこども",
+        "incomeLimit": "令和6年4月から所得制限なし",
+        "coverage": "保険診療が適用される医療費と訪問看護利用料",
+        "copayment": "1医療機関ごと1日最大500円、月2日まで。複数医療機関を含む月額上限は2,500円",
+        "pharmacy": "院外処方箋による薬局の自己負担は原則なし",
+        "excluded": "保険適用外費用、入院時食事代等"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kodomo/page/0000369443.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "就学前児を基本対象に、市内施設で病児・病後児保育を実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "大阪市内在住で、病気または回復期にあり家庭保育が困難なこども。基本は就学前、一部施設は小学6年生まで",
+        "types": "病児保育施設と病後児保育施設",
+        "fee": "生活保護・市民税非課税世帯は無料、所得税非課税世帯1,200円、所得税課税世帯2,500円。ひとり親世帯は軽減あり",
+        "additionalCosts": "食事費等の実費、延長30分ごと200円の場合あり",
+        "application": "利用施設で事前登録し、利用時に申請。施設により医師連絡票が必要"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kodomo/page/0000002449.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.osaka.lg.jp/kodomo/page/0000002450.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和8年9月から認可保育施設を利用する全てのこどもの月額保育料を無償化する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "currentSupport": "3～5歳児、住民税非課税世帯0～2歳児、0～2歳児の第2子以降は既に無償",
+        "expansion": "令和8年9月分から住民税課税世帯0～2歳児の第1子も無償",
+        "facilities": "保育所、認定こども園（2号・3号）、地域型保育事業",
+        "covered": "保育必要量の認定時間内の月額保育料",
+        "excluded": "延長保育利用料などその他の保育サービス費用",
+        "application": "保護者の申請は不要"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kodomo/page/0000501253.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "大阪市立小中学校等の学校給食費を本格的に無償化している。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "大阪市立小学校、中学校、義務教育学校等の給食対象児童生徒",
+        "support": "令和5年度から学校給食費の無償化を本格実施",
+        "referenceRates": "令和8年度基準額は小学校日額337～343円、中学校日額410円だが、保護者負担は無償化",
+        "system": "小学校282校、中学校126校、義務教育学校1校で実施"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kyoiku/page/0000292260.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子へ宿泊・通所・訪問型の産後ケアを提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "大阪市に住所がある出産後1年未満の母親と乳児で産後ケアを必要とする方",
+        "types": "ショートステイ（宿泊型）、デイケア（通所型）、アウトリーチ（訪問型）",
+        "fee": "宿泊型1泊2日4,250円、以後1日2,125円。通所型1日1,500円。訪問型1回500円",
+        "limit": "宿泊型・通所型は各通算7日まで、訪問型は通算5回まで",
+        "reduction": "市府民税非課税世帯・生活保護世帯は減額または無料",
+        "application": "事前登録申請が必要。オンライン申請または各区保健福祉センターで手続き"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kodomo/page/0000370578.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "target": "認定こども園、保育所、地域型保育、企業主導型保育を利用していない生後6か月から満3歳未満のこども",
+        "employment": "保護者の就労要件なし",
+        "limit": "こども1人につき月10時間まで",
+        "fee": "施設ごとに設定。生活保護世帯・市民税非課税世帯等への負担軽減あり",
+        "facilities": "令和8年6月時点で民間26施設、公立6施設",
+        "application": "事前に市町村認定を受け、利用施設へ申し込む"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kodomo/page/0000643027.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新婚・子育て世帯の初回住宅取得ローンへ最大50万円の利子補給を行う。",
+      "details": {
+        "program": "大阪市新婚・子育て世帯向け分譲住宅購入融資利子補給制度",
+        "target": "夫婦とも40歳未満で婚姻後5年以内の新婚世帯、または小学6年生以下のこどもがいる子育て世帯",
+        "housing": "市内で初めて取得する新築・中古の自己居住用住宅",
+        "support": "住宅ローン利率の年0.5％以内を最長5年間補給",
+        "amount": "年間最大10万円、総額最大50万円",
+        "application": "契約日や返済開始日に応じた申込期限があり、窓口またはオンラインで申請"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/toshiseibi/page/0000110240.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.osaka.lg.jp/toshiseibi/page/0000529137.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは事前申込制で、品目ごとに200円・400円・700円・1,000円の手数料を支払う。",
+      "details": {
+        "application": "インターネット、チャットボット、電話、ファックス、はがきで事前申込み",
+        "collection": "申込時に収集日と収集場所を指定",
+        "fee": "1点につき200円、400円、700円、1,000円の4区分",
+        "payment": "粗大ごみ処理手数料券またはインターネット申込時のキャッシュレス決済",
+        "excluded": "家電リサイクル法対象品目等は市では収集不可"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kankyo/page/0000369355.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.osaka.lg.jp/kankyo/page/0000384507.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "河川氾濫・内水氾濫・高潮・津波の浸水想定と避難情報を区別の水害ハザードマップで公開する。",
+      "details": {
+        "hazards": "淀川、大和川等の河川氾濫、内水氾濫、高潮、東南海・南海地震および南海トラフ巨大地震の津波",
+        "maps": "全24区分の水害ハザードマップと各区防災マップ",
+        "content": "浸水想定区域、浸水深、避難方法、防災関連施設等",
+        "online": "マップナビおおさかで詳細な浸水想定と最新の防災関連施設を確認可能"
+      },
+      "source": {
+        "url": "https://www.city.osaka.lg.jp/kikikanrishitsu/page/0000299877.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.osaka.lg.jp/kikikanrishitsu/page/0000139402.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "29201",
+  "prefectureCode": "29",
+  "prefecture": "奈良県",
+  "name": "奈良市",
+  "officialUrl": "https://www.city.nara.lg.jp/",
+  "status": "verified",
+  "summary": "奈良市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。高校生世代までの医療費助成、病児・病後児保育、第2子以降の保育料無償化、中学校給食費無償化、産後ケアなどを記録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "健康保険に加入する18歳年度末までの子どもを対象に、保険診療自己負担額から月単位の一部負担金を除いて助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達した日以後の最初の3月31日まで。高校在学の有無は問わない",
+        "preschoolOutpatient": "乳幼児の通院は1医療機関につき月500円",
+        "schoolAgeOutpatient": "小学生・中学生・高校生世代の通院は1医療機関につき月1,000円",
+        "inpatient": "入院は1医療機関につき月1,000円。14日未満の入院は500円",
+        "pharmacy": "調剤薬局は一部負担金なし",
+        "payment": "奈良県内は受給資格証による現物給付、県外受診等は償還払い",
+        "excluded": "保険外医療費、入院時食事代、学校管理下の災害共済給付対象等は対象外"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/kosodate/31125.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "市内在住の生後6か月から小学6年生までを対象に、病児・病後児専用施設で一時保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "targetSituation": "病気または回復期で入院治療は不要だが安静が必要で、保護者の勤務等により家庭保育できない児童",
+        "facilities": "病児保育いちご保育園・きらきら保育園・mランド保育園、病後児保育あかねほっとルームこばと・ギンモクセイ",
+        "hours": "施設により平日午前8時または8時30分から午後5時～6時。延長対応施設あり",
+        "fee": "1日2,000円、食事・おやつ代等の実費別途",
+        "exemption": "生活保護世帯・市町村民税非課税世帯は利用料免除制度あり",
+        "period": "1回の利用につき7日以内",
+        "procedure": "施設ごとの事前登録・予約、医療機関の医師連絡票が必要"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/kosodate/10642.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償。課税世帯0～2歳児は所得割額により算定し、第2子以降は市独自に無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "保育所・認定こども園等の3～5歳児クラスは保育料無料",
+        "nonTaxable": "住民税非課税世帯の0～2歳児クラスは無償化対象",
+        "taxableFirstChild": "課税世帯0～2歳児の第1子は保護者の市区町村民税所得割額を基に月額表で決定",
+        "secondChild": "令和5年度から、所得・子どもの年齢等にかかわらず、生計を一にする第2子以降の保育料を無料化",
+        "reductions": "収入急減、疾病、災害、児童の全月欠席等に減免制度あり",
+        "excludedCosts": "実費・上乗せ徴収等は施設ごとに別途"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/kosodate/5660.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.city.nara.lg.jp/site/kosodate/171130.html", "checkedAt": "2026-07-23"},
+        {"url": "https://www.city.nara.lg.jp/site/kosodate/1282.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は中学校給食費を無償化し、小学校は1食350円のうち保護者負担を1食56円に軽減する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "schools": "奈良市立小学校42校・中学校21校で約22,000食を提供",
+        "elementaryCost": "給食費1食350円、令和8年度の保護者負担は1食56円",
+        "juniorHighCost": "給食費1食450円、令和8年度の保護者負担は無償",
+        "billing": "毎月の喫食回数に応じて翌月に市が口座振替等で徴収",
+        "aid": "経済的に困窮する世帯には就学援助制度で学校給食費等を援助"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/school-lunch/214214.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.city.nara.lg.jp/site/kosodate/9087.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、宿泊型・日帰り型・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "奈良市に住民登録のある産後1年未満の母親と乳児",
+        "types": "ショートステイ（宿泊型）、デイケア（日帰り型）、アウトリーチ（訪問型）",
+        "care": "母子の体調管理、乳房ケア・授乳相談、乳児の世話・育児相談、母親の不安相談",
+        "shortStay": "おおむね24時間、上限7泊、1泊1,000円",
+        "dayCare": "おおむね6～9時間、宿泊型と合わせて7日、1日500円",
+        "outreach": "午前9時～午後5時のうちおおむね2時間。利用時間・料金等は施設案内で確認",
+        "publicAssistance": "生活保護世帯は無料",
+        "application": "原則として利用希望日の平日14日前までに申請"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/kosodate/9071.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "家庭での保育が一時的に困難な場合や育児負担軽減のため、市内保育所・認定こども園等で一時預かりを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 6},
+      "details": {
+        "target": "施設により0歳または生後6か月・1歳から就学前まで",
+        "facilities": "奈良ルーテル保育園、桃の木保育園、桜華こども園、あいづ保育園等の複数施設",
+        "capacity": "施設により1～15人程度。年齢等で増減あり",
+        "hours": "施設により平日午前8時～9時頃から午後3時30分～6時頃。土曜対応施設あり",
+        "fee": "1日約1,800円から5,000円、給食・間食代等の実費別途",
+        "procedure": "利用登録・予約等は各実施施設へ直接確認"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/kosodate/10114.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下の若年子育て世帯が市外から転入して市内住宅を購入する場合、基本30万円・対象区域加算10万円の最大40万円を支給する。",
+      "details": {
+        "program": "奈良市子育て移住・定住支援金",
+        "start": "令和8年7月7日受付開始",
+        "target": "夫婦とも39歳以下で中学生以下の子どもがいる世帯。ひとり親世帯を含む",
+        "housing": "令和8年7月7日以降に奈良市内の新築・中古住宅、一戸建て・マンションを購入",
+        "migration": "物件契約後6か月以内かつ奈良市への転入前に事前申出が必要",
+        "base": "1世帯30万円",
+        "areaBonus": "居住誘導区域または居住環境維持区域への移住は10万円加算",
+        "cap": "最大40万円",
+        "budget": "申請が予算枠に達した時点で受付終了"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/nararhythm/259382.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型ごみは事前申込制で戸別収集し、令和8年6月以降は2か月に1回、1回最大4点まで申し込める。",
+      "details": {
+        "application": "インターネットまたは市の案内する受付方法で事前申込み",
+        "frequency": "2か月に1回。令和8年6月1日から令和9年3月31日までの受付回数は年間2回",
+        "limit": "1回最大4点。有害ごみは点数に含めない",
+        "label": "各品目にB5サイズ以上の張り紙で『奈良市申込品 名前（名字）』を表示",
+        "size": "品目により最大辺1m未満、1m以上1.8m未満、1.8m以上2.5m未満の区分を申告",
+        "excluded": "落ち葉・雑草・せん定枝木は令和8年6月以降、大型ごみとして申込み不可",
+        "fee": "処理手数料の記載を公式HTML本文で確認できないため推測しない"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/gomi-syusyu/4464.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、防災重点ため池、避難所等を掲載した東部版・西部版ハザードマップと地震ハザードマップを公開する。",
+      "details": {
+        "map": "奈良市ハザードマップ（西部版・東部版）",
+        "flood": "想定最大規模降雨の洪水浸水想定区域と家屋倒壊等氾濫想定区域を掲載",
+        "sediment": "土砂災害警戒区域・特別警戒区域を掲載",
+        "pond": "防災重点ため池を掲載",
+        "evacuation": "指定避難所、指定緊急避難場所、要配慮者利用施設等を掲載",
+        "earthquake": "揺れやすさマップと地域危険度マップを公開",
+        "distribution": "令和6年1月更新版を市内全世帯へ配布し、地図情報公開サイトでも確認可能"
+      },
+      "source": {"url": "https://www.city.nara.lg.jp/site/bousai-saigai/89308.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.city.nara.lg.jp/site/bousai-saigai/2028.html", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}
