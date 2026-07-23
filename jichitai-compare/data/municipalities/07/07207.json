@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07207",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "須賀川市",
+  "officialUrl": "https://www.city.sukagawa.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を須賀川市公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の一部負担金と入院時食事代を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "こども医療費助成制度",
+        "target": "須賀川市在住で健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "保険診療の一部負担金および入院時食事代",
+        "application": "事前に受給資格登録が必要",
+        "excluded": "差額ベッド代、健診、予防接種など保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/kosodate_kyoiku/boshi-kenko/iryohi/1003097.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生までの病児・病後児を、広域利用施設を含む複数施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "program": "病児・病後児保育",
+        "target": "病気の治療中または回復期で集団保育・家庭保育が困難な子ども",
+        "facilities": "郡山市の病児・病後児保育室らびっと、須賀川病院付属病後児保育室など",
+        "fee": "須賀川市民は1日2,000円",
+        "ageRange": "らびっとは生後6か月～小学6年生、須賀川病院は満1歳～小学6年生",
+        "application": "施設への事前登録・予約と医師の利用連絡票等が必要"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/kosodate_kyoiku/ikuji/azukari/1006751.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と非課税世帯の0～2歳児の保育料を無償化し、市内居住の3～5歳児の給食費も上限付きで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児と、市民税非課税世帯で保育の必要性が認定された0～2歳児は無償化対象",
+        "cityMealSupport": "市内居住の3～5歳児の主食費・副食費を公立・私立を問わず上限付きで無償化",
+        "upperLimit": "令和8年4月から幼稚園以外の給付上限は月額5,900円",
+        "excludedCosts": "上限超過分や施設独自費用等は保護者負担となる場合がある"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/kosodate_kyoiku/ikuji/hoiku-yochien/1002982.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は市立小学校の給食費を無償化し、中学校についても保護者負担を軽減する支援を進める。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "令和8年度の小学校給食費を無償化",
+        "middleSchool": "保護者負担を軽減する支援を準備・実施方針",
+        "background": "物価高騰対応重点支援地方創生臨時交付金等を活用した子育て支援",
+        "scopeNote": "具体的な適用方法や中学校支援額は学校・市の最新案内で確認が必要"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/shisei/shicho/7/shoshinhyomei/1017268_1/1017269/9113.html", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、県内委託施設で宿泊ケアと日帰りケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "須賀川市に住民票がある産後1年未満の母親と乳児で医療を必要としない方",
+        "types": "宿泊ケア、日帰りケア",
+        "usageLimit": "宿泊ケア6泊7日まで、日帰りケア5回まで",
+        "fee": "宿泊1泊2日は施設区分により5,000円または7,000円、日帰りは1,500円または2,500円",
+        "application": "施設へ仮予約後、原則利用日の7日前までに市へ申請"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/kosodate_kyoiku/ninshin-syussan/support/1003106.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所・幼稚園等に在籍していない生後6か月から満3歳未満の市内児童",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで、1回最低1時間",
+        "fee": "1時間300円。生活保護世帯は0円、市民税所得割額77,101円未満世帯等は100円",
+        "application": "つうえんポータル等で申請し、市の認定後に施設を予約"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/kosodate_kyoiku/ikuji/azukari/8744.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から要件を満たして移住する世帯に最大100万円を支給し、18歳未満の帯同者1人につき100万円を加算する。",
+      "details": {
+        "program": "ふるさとすかがわ移住支援金",
+        "target": "東京23区在住・通勤歴や就業・テレワーク・関係人口等の要件を満たして須賀川市へ移住する方",
+        "single": "単身世帯60万円",
+        "household": "複数人世帯100万円",
+        "childAddition": "18歳未満の世帯員を帯同する場合、1人につき100万円加算",
+        "applicationPeriod": "令和8年度は2026年4月1日から2027年1月15日まで。予算到達時終了"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/jigyosya/koyo_kinrosha/syushoku_shien/1003804.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは地域に応じた予約制戸別収集等により、1回3点まで無料で収集する。",
+      "details": {
+        "collection": "須賀川地域は予約制戸別収集。長沼・岩瀬地域はステーション収集と予約制戸別収集を実施",
+        "fee": "無料",
+        "limit": "1回の申込みにつき3点まで",
+        "application": "環境課への電話または市公式LINEで予約",
+        "leadTime": "通常おおむね2週間、混雑時は3～4週間以上かかる場合がある"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/kurashi/gomi_recycle/gomi_katei/1002291/1002297.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害、内水、農業用ため池等のハザードマップと防災ガイドブックを公開する。",
+      "details": {
+        "maps": "洪水・土砂災害ハザードマップ、内水ハザードマップ、農業用ため池ハザードマップ",
+        "coverage": "阿武隈川・釈迦堂川・滑川等の浸水想定区域、土砂災害警戒区域、避難所・避難場所",
+        "formats": "地域別PDF、防災ガイドブック、市地図情報システム",
+        "distribution": "市役所危機管理課および各行政センターでも防災ガイドブックを配布"
+      },
+      "source": {"url": "https://www.city.sukagawa.fukushima.jp/kurashi/bosai/1013390/1005776/index.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.city.sukagawa.fukushima.jp/kurashi/bosai/1013390/index.html", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}
