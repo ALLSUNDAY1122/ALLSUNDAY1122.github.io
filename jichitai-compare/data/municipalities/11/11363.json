@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "11363",
+  "prefectureCode": "11",
+  "prefecture": "埼玉県",
+  "name": "長瀞町",
+  "officialUrl": "https://www.town.nagatoro.saitama.jp/",
+  "status": "verified",
+  "summary": "子育て・生活関連9制度を長瀞町公式情報で確認し、8制度をverified、町内未実施の病児保育をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "長瀞町に住所があり健康保険に加入する18歳到達後最初の年度末までの子どもの保護者",
+        "coverage": "健康保険制度による医療費自己負担分を助成し、県内対応医療機関では受給資格証提示により原則現物給付",
+        "procedure": "健康保険証と保護者名義口座等を用意して受給資格登録",
+        "excluded": "入院時食事療養費、高額療養費・付加給付、学校管理下の災害共済給付対象等"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/life/kodomo1407/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町内の病児保育事業は未実施で、県内緊急サポート事業等を活用した支援体制を検討",
+      "details": {
+        "current": "長瀞町こども計画で病児保育事業は未実施と明記",
+        "relatedSupport": "生後6か月から小学6年生までを対象とする秩父ファミリー・サポート・センターの通常預かりは利用可能",
+        "future": "県内の緊急サポート事業を活用するなど必要な支援体制の確保を検討",
+        "notes": "町内の看護師等を配置した専用病児・病後児保育施設は確認できない"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/wp-content/uploads/2025/11/6689489e82dfa07a70a4cf3516f72450.pdf",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児等の保育料を無償化し、多子世帯を軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "保育所・認定こども園等を利用する3～5歳児と、町民税非課税世帯の0～2歳児等",
+        "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+        "multiChild": "対象範囲内で第2子は半額、第3子以降は無料",
+        "excluded": "給食費、通園送迎費、教材費等の実費。一定世帯と第3子以降は副食費免除"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/life/youzikyoiku/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小・中学校の学校給食費を完全無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "長瀞町立小・中学校に在籍する児童生徒の保護者",
+        "coverage": "学校給食費を町が負担し、保護者負担を無償化",
+        "amount": "町案内では小学生年49,610円、中学生年58,080円を町が負担",
+        "period": "令和5年度から開始し、令和6年度の給食費改定後も無償化を継続"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/43936-2/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "宿泊・通所・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "長瀞町に住所があり、産後の体調不良や育児不安等がある母親と赤ちゃん",
+        "types": "宿泊型、通所型、訪問型",
+        "period": "宿泊型は出産後3か月まで、通所型・訪問型は出産後1年まで",
+        "support": "休養、授乳・育児相談、助産師訪問による育児方法の支援等"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/life/%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "target": "保育所・認定こども園・幼稚園等に在籍していない生後6か月から満3歳未満の子ども",
+        "hours": "子ども1人につき月10時間まで。未利用分の繰越不可",
+        "facilities": "高砂保育園、たけのこ保育園（令和8年7月開始予定）",
+        "fee": "標準1時間300円程度。施設差・実費負担・所得等による軽減あり"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/life/%E3%81%93%E3%81%A9%E3%82%82%E8%AA%B0%E3%81%A7%E3%82%82%E9%80%9A%E5%9C%92%E5%88%B6%E5%BA%A6%EF%BC%88%E4%B9%B3%E5%85%90%E7%AD%89%E9%80%9A%E5%9C%92%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%EF%BC%89/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新婚世帯の住宅取得・賃借・引越し・リフォーム費用を補助",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "target": "令和8年1月1日から令和9年3月31日までに婚姻し、夫婦とも39歳以下、合計所得500万円未満等の要件を満たす世帯",
+        "costs": "町内住宅の取得費、賃料・敷金・礼金等、引越費用、修繕・増改築・設備更新費",
+        "amount": "婚姻時に夫婦とも29歳以下は上限60万円、それ以外は上限30万円",
+        "condition": "補助後3年以上町内居住意思があり、町税滞納がないこと等"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/life/%E7%B5%90%E5%A9%9A%E6%96%B0%E7%94%9F%E6%B4%BB%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%E8%B2%BB%E8%A3%9C%E5%8A%A9%E9%87%91/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型ごみを粗大ごみ収集依頼または処理施設への直接搬入で処分",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "collection": "集積所に出せない大きな物は粗大ごみ収集を依頼可能",
+        "directDelivery": "可燃ごみは秩父クリーンセンター、不燃・資源ごみは秩父環境衛生センターへ直接搬入",
+        "hours": "平日と毎月第3日曜日の9時から12時、13時から16時",
+        "fee": "40キログラムまで200円、超過分は10キログラムごと50円加算"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/life/gomi2/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・水害・地震等のハザードマップと防災ガイドを公開",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "maps": "災害対応ガイドブックに土砂災害、水害、地震マップ等を掲載",
+        "risks": "土砂災害、河川水害、地震、風水害、雪害等",
+        "facilities": "避難所一覧、警戒レベル、避難行動判定フロー、マイタイムラインを掲載",
+        "support": "家庭の備蓄・避難経路・災害時行動の事前確認に利用可能"
+      },
+      "source": {
+        "url": "https://www.town.nagatoro.saitama.jp/safety/hazardmap/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}

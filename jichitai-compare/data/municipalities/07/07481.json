@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07481",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "棚倉町",
+  "officialUrl": "https://www.town.tanagura.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を棚倉町公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "健やか子育て医療費助成",
+        "target": "棚倉町の受給資格がある0歳から18歳年度末までの子ども",
+        "support": "保険診療の一部負担金を現物給付または償還払いで助成",
+        "payment": "社会保険加入者は全国、国民健康保険組合加入者は県内の対応医療機関等で受給資格証を提示すると原則窓口負担なし",
+        "mealCost": "国民健康保険加入者の入院時食事代は申請により助成対象",
+        "excluded": "容器代、選定療養費等の保険診療外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/kenko-byoki-iryo/page002449.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式情報で現行の病児・病後児保育専用施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "町の子育て・医療・保育情報を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "familySupport": "ファミリーサポートセンターは生後6か月から小学6年生まで利用できるが、子どもの病気時は原則預かり不可",
+        "caution": "広域利用を含む利用可否はこども未来課へ確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/kosodate/tanaguramachi-familysupport/page000552.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等は幼児教育・保育無償化の対象となり、課税世帯の0～2歳児は町の保育料額表により算定する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象",
+        "otherHouseholds": "課税世帯の0～2歳児は認定区分、年齢、世帯の町民税額等に応じて保育料を算定",
+        "currentTable": "町公式ページで2026年度の保育料額表を公開",
+        "application": "保育施設利用申込みと支給認定手続きが必要",
+        "excludedCosts": "給食費、教材費、行事費、延長保育料等の実費は別途負担となる場合がある"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/page003105.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立幼稚園・小学校・中学校で給食を提供し、保護者負担額は1食単価と実施日数に基づき算定する。",
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "棚倉町立幼稚園、小学校、中学校に在園・在学する園児、児童、生徒",
+        "parentUnitPrice": "規則別表の保護者負担1食単価は幼稚園203円、小学校224円、中学校259円",
+        "calculation": "1食単価に実施日数を乗じ、5月から翌年2月までの10回に分けて徴収",
+        "reduction": "幼稚園副食費は所得・多子要件により徴収免除となる場合がある",
+        "lowIncomeSupport": "要保護・準要保護世帯は就学援助制度で学校給食費が援助対象"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/reiki/reiki_honbun/c564RG00000629.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.tanagura.fukushima.jp/jumin/kyoiku/yochien-shogakko-chugakko/page000430.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子を対象に、宿泊・日帰り・訪問型の産後ケアを実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "program": "産後ケア事業",
+        "target": "棚倉町に住所がある産後1年以内の赤ちゃんと母親で、体調回復・育児等の支援が必要な方",
+        "types": "宿泊型、日帰り型、助産師による訪問型",
+        "services": "母体の体調管理・乳房ケア・休息、乳児の発育・栄養・スキンケア確認、育児相談等",
+        "facilities": "令和8年度の近隣医療機関、県医師会・県助産師会関連施設",
+        "application": "施設へ予約後、こども未来課へ利用申請し、承認後に利用",
+        "fee": "利用施設・類型に応じた自己負担額を施設へ支払う"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/kosodate/kosodatejigyo/page002946.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満の子どもが、就労要件を問わず月10時間まで1時間300円で利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "町内在住で保育所等に通っていない生後6か月から2歳までの子ども（3歳の前々日まで）",
+        "employmentRequirement": "なし",
+        "facility": "棚倉保育園",
+        "hours": "火曜日・水曜日の9時～11時",
+        "capacity": "0歳児、1歳児、2歳児各1名",
+        "usageLimit": "月10時間まで、1時間単位",
+        "fee": "1時間300円。生活保護世帯・町民税非課税世帯等は減免あり。おやつ代等が別途必要な場合あり",
+        "application": "こども未来課で利用認定後、棚倉保育園で事前面談・予約"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/kosodate/page003130.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・子育て世帯の住宅取得・増改築等に基本5万～30万円、要件に応じ最大30万円を加算する。",
+      "details": {
+        "program": "たな暮らし住宅取得等支援事業",
+        "target": "夫婦いずれかが45歳未満の婚姻世帯、18歳以下の子がいる世帯、多世代同居・近居のため増改築する子育て世帯等",
+        "residenceRequirement": "棚倉町に10年以上定住する意思があること等",
+        "base": "住宅・宅地の取得形態、転入時期、増改築内容に応じ5万円～30万円",
+        "childAddition": "18歳以下の子1人につき10万円加算",
+        "otherAdditions": "県多世代同居・近居推進事業、町空き家バンク住宅、浄化槽整備等の要件ごとに10万円加算",
+        "additionMaximum": "加算額は合計上限30万円",
+        "application": "対象住宅取得者には固定資産税納入通知書と併せて案内し、年度内に申請"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/page002905.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "2026年度ごみ収集日程表と分別ガイドを公開し、粗大ごみの処分は東白クリーンセンターまたは町許可業者へ確認・依頼する。",
+      "details": {
+        "guides": "2026年度ごみ収集日程表、2024年版ごみ分別ガイドブック・簡易版を公開",
+        "facility": "東白クリーンセンター（塙町大字上渋井字岩下18-7）",
+        "contractor": "引越し等で発生する粗大ごみの収集運搬を依頼する場合は、棚倉町の一般廃棄物処理業許可業者を利用",
+        "sorting": "指定袋に氏名を記入し、品目・地区別の日程と分別方法に従う",
+        "excluded": "家電リサイクル対象品等は別の処分手続きが必要",
+        "caution": "品目、搬入可否、料金等は東白クリーンセンターまたは許可業者へ事前確認"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/sumai-kankyo-eisei/page000170.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.tanagura.fukushima.jp/jumin/sumai-kankyo-eisei/page002469.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "避難所、洪水、土砂災害、ため池浸水エリア等を掲載した棚倉町防災マップを公開する。",
+      "details": {
+        "map": "棚倉町防災マップ",
+        "coverage": "指定緊急避難場所・避難所、洪水ハザード情報、土砂ハザード情報、ため池浸水エリア等",
+        "preparedness": "自宅・学校・勤務先から避難所までの経路、災害ごとの避難先、連絡方法を平時に確認",
+        "additionalInformation": "気象情報、町の避難情報、河川・雨量情報等への参照先を掲載",
+        "revision": "2026年3月にリニューアル版を公開"
+      },
+      "source": {
+        "url": "https://www.town.tanagura.fukushima.jp/jumin/bousai-saigaiinfo/bousai-info/page000242.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
