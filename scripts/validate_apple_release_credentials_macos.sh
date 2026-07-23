@@ -111,11 +111,29 @@ if expected not in actual:
 PY
 
 grep -q "BEGIN PRIVATE KEY" "$API_KEY" || { echo "ERROR: invalid .p8 key." >&2; exit 1; }
-API_ARGS=(--key "$API_KEY" --key-id "$KEY_ID" --issuer-id "$ISSUER_ID" --output "$OUTPUT_DIR/app-store-connect-api-validation.json")
+API_RESULT="$OUTPUT_DIR/app-store-connect-api-validation.json"
+API_ARGS=(--key "$API_KEY" --key-id "$KEY_ID" --issuer-id "$ISSUER_ID" --output "$API_RESULT")
 (( OFFLINE_API == 1 )) && API_ARGS+=(--offline-only)
 python3 "$SCRIPT_DIR/verify_app_store_connect_api_key.py" "${API_ARGS[@]}"
 
-export OUTPUT_DIR BUNDLE_ID TEAM_ID KEY_ID ISSUER_ID PROFILE_NAME PROFILE_UUID PROFILE_EXPIRATION CERT_NOT_AFTER
+API_AUTHENTICATED="$(python3 - "$API_RESULT" "$OFFLINE_API" <<'PY'
+import json, sys
+with open(sys.argv[1], encoding='utf-8') as handle:
+    data = json.load(handle)
+offline = sys.argv[2] == '1'
+if offline:
+    valid = data.get('jwt_created') is True and data.get('jwt_signature_bytes') == 64
+else:
+    valid = data.get('app_store_connect_api', {}).get('authenticated') is True
+print(str(valid).lower())
+PY
+)"
+[[ "$API_AUTHENTICATED" == "true" ]] || {
+  echo "ERROR: App Store Connect API authentication failed." >&2
+  exit 1
+}
+
+export OUTPUT_DIR BUNDLE_ID TEAM_ID KEY_ID ISSUER_ID PROFILE_NAME PROFILE_UUID PROFILE_EXPIRATION CERT_NOT_AFTER API_AUTHENTICATED OFFLINE_API
 export P12_SHA256="$(shasum -a 256 "$CERTIFICATE" | awk '{print $1}')"
 export PROFILE_SHA256="$(shasum -a 256 "$PROFILE" | awk '{print $1}')"
 export API_KEY_SHA256="$(shasum -a 256 "$API_KEY" | awk '{print $1}')"
@@ -128,7 +146,13 @@ report = {
   'team_id': os.environ['TEAM_ID'],
   'certificate': {'type': 'Apple Distribution', 'expires': os.environ['CERT_NOT_AFTER'], 'p12_sha256': os.environ['P12_SHA256'], 'private_key_present': True},
   'profile': {'name': os.environ['PROFILE_NAME'], 'uuid': os.environ['PROFILE_UUID'], 'expires': os.environ['PROFILE_EXPIRATION'], 'profile_sha256': os.environ['PROFILE_SHA256'], 'type': 'App Store Connect distribution'},
-  'api_key': {'key_id': os.environ['KEY_ID'], 'issuer_id': os.environ['ISSUER_ID'], 'p8_sha256': os.environ['API_KEY_SHA256']},
+  'api_key': {
+      'key_id': os.environ['KEY_ID'],
+      'issuer_id': os.environ['ISSUER_ID'],
+      'p8_sha256': os.environ['API_KEY_SHA256'],
+      'network_validation_performed': os.environ['OFFLINE_API'] != '1',
+      'authenticated_or_offline_jwt_valid': os.environ['API_AUTHENTICATED'] == 'true'
+  },
   'validation': {'team_match': True, 'bundle_match': True, 'certificate_match': True, 'sensitive_values_in_report': False}
 }
 path = Path(os.environ['OUTPUT_DIR']) / 'apple-release-credential-validation.json'
@@ -138,4 +162,5 @@ PY
 
 echo "APPLE_RELEASE_CREDENTIALS_VALID"
 echo "Profile: $PROFILE_NAME"
+echo "API validation: $API_AUTHENTICATED"
 echo "Sanitized report: $OUTPUT_DIR/apple-release-credential-validation.json"
