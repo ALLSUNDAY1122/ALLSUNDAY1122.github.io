@@ -1,36 +1,35 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re
 import sys
 
 root = Path(sys.argv[1])
 
 
-def regex_replace(rel: str, pattern: str, replacement: str) -> None:
+def replace_version(rel: str, new_value: str, old_values: tuple[str, ...]) -> None:
     path = root / rel
     text = path.read_text(encoding='utf-8')
-    changed, count = re.subn(
-        pattern,
-        replacement,
-        text,
-        count=1,
-        flags=re.MULTILINE,
-    )
-    if count != 1:
-        raise SystemExit(f'v0.6 pattern not found in {rel}: {pattern!r}')
-    path.write_text(changed, encoding='utf-8')
+    for old in old_values:
+        if old in text:
+            path.write_text(text.replace(old, new_value, 1), encoding='utf-8')
+            print(f'{rel}: {old} -> {new_value}')
+            return
+    raise SystemExit(f'v0.6 version marker not found in {rel}')
 
 
-regex_replace('pubspec.yaml', r'^version:\s*0\.[45]\.0\+[45]\s*$', 'version: 0.6.0+6')
-regex_replace(
-    'lib/screens/settings_screen.dart',
-    r'バージョン 0\.[45]\.0\\n端末内保存・オフライン設計',
-    r'バージョン 0.6.0\\n端末内保存・オフライン設計',
+replace_version(
+    'pubspec.yaml',
+    'version: 0.6.0+6',
+    ('version: 0.5.0+5', 'version: 0.4.0+4'),
 )
-regex_replace(
+replace_version(
+    'lib/screens/settings_screen.dart',
+    'バージョン 0.6.0',
+    ('バージョン 0.5.0', 'バージョン 0.4.0'),
+)
+replace_version(
     'test/widget_test.dart',
-    r'バージョン 0\.[45]\.0\\n端末内保存・オフライン設計',
-    r'バージョン 0.6.0\\n端末内保存・オフライン設計',
+    'バージョン 0.6.0',
+    ('バージョン 0.5.0', 'バージョン 0.4.0'),
 )
 
 changelog = root / 'CHANGELOG.md'
