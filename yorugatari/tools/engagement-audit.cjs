@@ -7,6 +7,7 @@ const SITE = path.join(ROOT, 'yorugatari');
 const STORIES = path.join(SITE, 'stories');
 const BASE = 'https://allsunday1122.github.io/yorugatari';
 const ANALYTICS_VERSION = '20260723-003';
+const LANDING_ANALYTICS_VERSION = '20260724-004';
 const ENGAGEMENT_VERSION = '20260723-003';
 const STORY_VERSION = '20260723-007';
 const campaigns = JSON.parse(fs.readFileSync(path.join(SITE, 'tools', 'campaigns.json'), 'utf8'));
@@ -26,7 +27,8 @@ function localAudit() {
 
   for (const filename of staticFiles) {
     const html = fs.readFileSync(path.join(SITE, filename), 'utf8');
-    if (!html.includes(`assets/analytics.js?v=${ANALYTICS_VERSION}`) || html.includes('assets/engagement.js')) errors.push({ file: filename, check: 'runtime' });
+    const expectedVersion = filename === '5min-horror.html' ? LANDING_ANALYTICS_VERSION : ANALYTICS_VERSION;
+    if (!html.includes(`assets/analytics.js?v=${expectedVersion}`) || html.includes('assets/engagement.js')) errors.push({ file: filename, check: 'runtime' });
     if (!html.includes('property="og:image:width" content="2172"') || !html.includes('property="og:image:height" content="724"')) errors.push({ file: filename, check: 'dimensions' });
   }
 
@@ -119,7 +121,7 @@ async function imageAudit() {
 
 async function browserAudit() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/2.1' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/2.2' });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', { configurable: true, value: async (payload) => { window.__YORUGATARI_SHARE_PAYLOAD__ = payload; } });
   });
@@ -156,7 +158,7 @@ async function browserAudit() {
       faq: document.querySelectorAll('.faq article').length,
       breadcrumb: document.querySelectorAll('.breadcrumb').length,
       overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
-    }), ANALYTICS_VERSION);
+    }), LANDING_ANALYTICS_VERSION);
     const meta = await metadata(target);
     return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.source === 'social' && state.campaign === landingCampaign.id && state.picks === 12 && state.guides === 6 && state.faq === 3 && state.breadcrumb === 1 && state.overflow && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
