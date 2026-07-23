@@ -6,24 +6,40 @@
   "prefectureName": "岩手県",
   "assignedTeam": "北日本調査班",
   "status": "researching",
-  "currentService": "childMedical",
-  "nextServiceIndex": 0,
-  "completedServices": [],
-  "verifiedCount": 0,
-  "researchingCount": 9,
+  "currentService": "sickChildCare",
+  "nextServiceIndex": 1,
+  "completedServices": [
+    "childMedical",
+    "childcareFee",
+    "schoolMeals",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 6,
+  "researchingCount": 0,
   "unavailableCount": 0,
-  "needsMediumReviewCount": 0,
+  "needsMediumReviewCount": 3,
   "currentBranch": "data/03506-kunohe",
   "pullRequestNumber": null,
   "lastCheckedAt": "2026-07-23",
-  "lastUpdatedAt": "2026-07-23T19:52:00+09:00",
+  "lastUpdatedAt": "2026-07-23T19:55:00+09:00",
   "lastUpdatedBy": "北日本調査班A",
-  "officialSources": [],
+  "officialSources": [
+    "https://www.vill.kunohe.iwate.jp/docs/296.html",
+    "https://www.vill.kunohe.iwate.jp/docs/1691.html",
+    "https://www.vill.kunohe.iwate.jp/docs/1459.html",
+    "https://www.vill.kunohe.iwate.jp/docs/1991.html",
+    "https://www.vill.kunohe.iwate.jp/docs/1472.html"
+  ],
   "notes": [
-    "軽米町（03501）と野田村（03503）の地方統合完了後、次の未登録自治体として九戸村を選定。",
-    "task・自治体JSON・オープンPRの重複がないことを確認。",
-    "最新のregion/northからdata/03506-kunoheブランチを作成。",
-    "次回は必須9制度を九戸村公式情報から一括調査する。"
+    "必須9制度を九戸村公式情報で一括調査し、6制度をverified、3制度をneeds_medium_reviewとして整理。",
+    "出生から18歳年度末までの医療費助成、0歳から就学前までの保育料・副食費無償化を確認。",
+    "村内小中学校と伊保内高校の学校給食費無料化を確認。",
+    "病児・病後児保育は現行の利用者向け公式案内を確認できず中間確認とした。",
+    "産後うつ対策ヘルパー費補助、産婦健診、保健師家庭訪問は確認したが、正式な産後ケア事業の利用条件を確認できず中間確認とした。",
+    "こども誰でも通園制度は通常の一時保育案内のみ確認でき、乳児等通園支援事業の施設・料金・申請方法を確認できず中間確認とした。",
+    "住宅新築・リフォーム助成、粗大ごみ直接搬入、防災マップを確認。"
   ],
   "blockers": []
 }
