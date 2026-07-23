@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import math
 import struct
+import subprocess
 import sys
 import zlib
 from pathlib import Path
@@ -151,10 +152,21 @@ def web_icons(root: Path) -> None:
     path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
 
 
+def harden_v06_submission(root: Path) -> None:
+    pubspec = root / 'pubspec.yaml'
+    hardener = Path(__file__).with_name('harden_v06_ios_submission.py')
+    if not pubspec.exists() or 'version: 0.6.0+6' not in pubspec.read_text():
+        return
+    if not hardener.exists():
+        raise FileNotFoundError(f'missing v0.6 hardener: {hardener}')
+    subprocess.run([sys.executable, str(hardener), str(root)], check=True)
+
+
 def main() -> None:
     root = Path(sys.argv[1]).resolve()
     if (root / 'ios').exists():
         ios_icons(root)
+        harden_v06_submission(root)
     if (root / 'android').exists():
         android_icons(root)
     if (root / 'web').exists():
