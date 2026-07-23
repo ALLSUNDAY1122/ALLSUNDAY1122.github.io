@@ -16,6 +16,7 @@ on:
       - yorugatari/assets/engagement.js
       - yorugatari/tools/normalize-legacy-story-attributes.mjs
       - yorugatari/tools/normalize-story-pages.mjs
+      - yorugatari/tools/repair-story-category-breadcrumbs.mjs
       - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/ui-audit.cjs
       - .github/workflows/normalize-yorugatari-stories.yml
@@ -48,8 +49,10 @@ jobs:
           set +e
           {
             node --check yorugatari/tools/normalize-legacy-story-attributes.mjs
+            node --check yorugatari/tools/repair-story-category-breadcrumbs.mjs
             node yorugatari/tools/normalize-legacy-story-attributes.mjs
             node yorugatari/tools/normalize-story-pages.mjs
+            node yorugatari/tools/repair-story-category-breadcrumbs.mjs
           } > yorugatari-normalize.log 2>&1
           status=$?
           cat yorugatari-normalize.log
@@ -72,6 +75,7 @@ jobs:
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/tools/normalize-legacy-story-attributes.mjs
           node --check yorugatari/tools/normalize-story-pages.mjs
+          node --check yorugatari/tools/repair-story-category-breadcrumbs.mjs
           node --check yorugatari/tools/live-release-audit.mjs
 
       - name: Commit normalized pages
