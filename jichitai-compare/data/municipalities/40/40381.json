@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "40381",
+  "prefectureCode": "40",
+  "prefecture": "福岡県",
+  "name": "芦屋町",
+  "officialUrl": "https://www.town.ashiya.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を芦屋町公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生世代まで入院・通院の保険診療自己負担を無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "芦屋町に住所があり健康保険に加入する18歳年度末までの子ども。所得制限なし",
+        "support": "入院・通院とも保険診療自己負担なし",
+        "excluded": "保険適用外費用、入院時食事代、室料差額等は対象外",
+        "application": "子ども医療証を申請し、医療機関で資格確認書またはマイナ保険証と併せて提示する"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/soshiki/11/2347.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後4か月から小学6年生までを無料で病児・病後児保育",
+      "eligibility": {
+        "minAgeMonths": 4,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facility": "病児・病後児保育室ぞうさんルーム",
+        "target": "遠賀郡または中間市に住所があり、病気または回復期で入院を必要としない生後4か月から小学6年生までの子ども",
+        "hours": "月曜日から金曜日の8時05分から17時30分",
+        "fee": "利用料無料。給食・おやつ代700円税別等は別途",
+        "application": "事前登録・予約を行い、医師紹介カード等を提出する"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/site/kosodate/2091.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等に加え、0～2歳児の第2子以降を所得・兄姉年齢を問わず無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalSupport": "3～5歳児と0～2歳児の住民税非課税世帯は保育料無償",
+        "secondChild": "2025年4月から、生計を一にする子どもの第2子以降に当たる0～2歳児の保育料を所得・同時利用・兄姉年齢にかかわらず無償化",
+        "firstChild": "第1子の保育料も国基準額から約26％軽減",
+        "application": "認可外施設・企業主導型保育施設等は施設区分に応じた認定・償還払い手続が必要"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/site/kosodate/34952.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度の就学援助認定世帯へ学校給食費を全額補助",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "経済的理由で町内小中学校への就学が困難と認められる児童生徒の保護者",
+        "support": "学校給食費を全額補助し、学用品費・新入学用品費・修学旅行費等も援助",
+        "application": "2026年度の申請期間・方法に従い教育委員会へ申請する",
+        "note": "校納金の一般無償化ではなく、就学援助認定世帯向けの支援"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/site/kosodate/24166.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子に宿泊・通所・短時間・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "target": "芦屋町に住所がありケアを必要とする産後1年未満の母子。流産・死産後1年未満の女性も対象",
+        "types": "宿泊型、通所型、通所短時間型、居宅訪問型",
+        "usageLimit": "各類型を合わせて7回まで",
+        "fee": "課税世帯の1～5回目は宿泊3,000円、通所1,000円、短時間500円、訪問500円。6・7回目や世帯区分で異なる",
+        "application": "世帯区分等に応じ町で事前手続後、利用施設へ直接予約する"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/site/kosodate/16660.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が月10時間まで利用可能",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保育所・認定こども園・幼稚園等に在籍していない生後6か月から満3歳未満の子ども",
+        "usageLimit": "月10時間まで。翌月への繰越不可",
+        "facility": "緑ヶ丘保育園",
+        "hours": "月曜日から金曜日の9時から11時",
+        "fee": "1時間300円。町民税非課税世帯等は減額される場合あり",
+        "application": "総合支援システムで認定申請、初回面談、利用予約を行う"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/site/kosodate/39391.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町外から転入する子育て世帯の民間賃貸住宅家賃を最大72万円補助",
+      "details": {
+        "target": "2028年3月31日までに町外から転入し、未就学児と町内民間賃貸住宅に居住する世帯等",
+        "support": "月額上限1万円を最長72か月、最大72万円分の町商工会商品券で補助",
+        "conditions": "町税・家賃滞納なし、自治区加入、適正な賃貸借契約等の要件がある",
+        "application": "年度ごとの案内に従い環境住宅課へ申請する"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/soshiki/7/16158.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみシール1枚524円で排出し、処理施設への自己搬入も可能",
+      "details": {
+        "fee": "粗大ごみシール1枚524円",
+        "application": "町の収集ルールに従って必要枚数のシールを購入・貼付する",
+        "carryIn": "遠賀・中間リレーセンターへ自己搬入可能",
+        "carryInFee": "10kg未満220円、10kg以上は10kgごとに220円"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/soshiki/7/1195.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・高潮・津波・地震等の総合防災マップを公開",
+      "details": {
+        "coverage": "洪水浸水、土砂災害警戒区域、高潮・津波浸水想定、地震、避難施設等",
+        "formats": "一括版と災害種別・地区別PDFを公開",
+        "support": "マイ・タイムライン作成方法と指定避難所・緊急避難場所を確認可能"
+      },
+      "source": {
+        "url": "https://www.town.ashiya.lg.jp/site/bousai/2509.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
