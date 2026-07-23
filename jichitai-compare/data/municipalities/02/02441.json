@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "02441",
+  "prefectureCode": "02",
+  "prefecture": "青森県",
+  "name": "三戸町",
+  "officialUrl": "https://www.town.sannohe.aomori.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を三戸町公式情報で調査し、8制度をverified、1制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達年度末までの通院・入院に係る保険診療自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "三戸町子ども医療費助成事業",
+        "target": "三戸町に住所がある0歳から18歳年度末までの子ども",
+        "support": "通院・入院の保険診療一部負担額",
+        "excluded": "入院時食事療養費、差額ベッド代、文書料、学校管理下の災害給付対象医療費等",
+        "application": "受給資格証の交付申請が必要"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/soshiki/juuminfukushi/kosodate/iryouhi/768.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気の回復期にある生後6か月から小学6年生までを、病後児保育室ジャブで一時保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "program": "三戸町病後児保育『ジャブ』",
+        "target": "町内在住の生後6か月から小学6年生までで、病気の回復期にあり集団生活が困難な子ども",
+        "facility": "三戸町病後児保育室ジャブ",
+        "capacity": "4人",
+        "hours": "月～土曜7時30分～18時",
+        "fee": "4時間未満500円、4時間以上8時間未満1,000円、8時間超は30分200円",
+        "application": "事前登録、前日までの予約、医師連絡票等が必要"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/soshiki/juuminfukushi/kosodate/jigyou/2895.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "三戸町民の保育施設在園児について、0～2歳児を含む保育料を完全無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "program": "三戸町保育料完全無償化",
+        "target": "三戸町に住所があり、町内外の保育施設に在園する子ども",
+        "zeroToTwo": "2024年8月から0～2歳児の保育料を無償化",
+        "threeToFive": "国の幼児教育・保育無償化対象",
+        "recognizedFacilities": "認可保育施設は手続不要。認可外施設は申請が必要"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/soshiki/juuminfukushi/4940.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町内小中学校等の学校給食費無償化を継続して実施する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 18},
+      "details": {
+        "program": "三戸町学校給食費無償化",
+        "target": "町内小中学校および三戸高等学校の児童生徒等",
+        "support": "学校給食費または昼食提供に係る保護者負担を無償化",
+        "background": "2023年6月から実施し、町公式の子育て支援事業として継続",
+        "additionalSupport": "経済的要件を満たす小中学生には令和8年度就学援助制度も実施"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/kosodate_kyoiku/kosodate/1/5440.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.sannohe.aomori.jp/soshiki/kyouikuiinkaijimukyoku/gakkou/1184.html", "checkedAt": "2026-07-24"}]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満を中心に、委託医療機関・助産院で通所型・宿泊型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "三戸町産後ケア事業",
+        "target": "三戸町に住所があり、産後の休養・育児支援等を必要とする母子",
+        "types": "通所型、宿泊型",
+        "facilities": "き子キッズ助産院、八戸市立市民病院、苫米地レディースクリニック等",
+        "ageLimit": "助産院は産後1年未満、医療機関は産後4か月未満など施設により異なる",
+        "application": "町への利用申請後、実施施設に料金を支払う"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/soshiki/kenkouchouju/kenkoudukuri/ninshin_shussan/884.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "一般型一時預かり等は実施しているが、令和8年度こども誰でも通園制度の対象月齢・月上限・料金・申込方法を確認できない。",
+      "details": {
+        "confirmedAlternatives": "ミューズ保育園等で一般型一時預かり、町で子育て短期支援事業を実施",
+        "researchResult": "乳児等通園支援事業の現行利用者向け案内を町公式サイトで確認できなかった",
+        "caution": "実施状況は住民福祉課へ確認が必要"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/soshiki/juuminfukushi/kosodate/jigyou/2899.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.sannohe.aomori.jp/soshiki/juuminfukushi/kosodate/5659.html", "checkedAt": "2026-07-24"}]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度、移住・定住を目的とする住宅の新築、中古住宅購入、増改築・リフォーム費の一部を補助する。",
+      "details": {
+        "program": "令和8年度三戸町移住定住応援事業補助金",
+        "target": "町内で住宅を新築・購入・増改築し、定住等の要件を満たす方",
+        "eligibleCosts": "住宅新築、中古住宅購入、増改築・リフォーム",
+        "categories": "移住者と移住者以外で補助区分・加算を設定",
+        "application": "事業着手前にまちづくり課へ相談・申請"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/oshirase/5212.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみ処理券を貼り、令和8年度地区別粗大ごみカレンダーに従って収集場所へ排出する。",
+      "details": {
+        "method": "粗大ごみ処理券を貼り、通行に支障がないよう地区指定場所へ排出",
+        "collection": "小字単位で収集し、令和8年度粗大ごみ収集カレンダーを公開",
+        "ticket": "粗大ごみ処理券は1世帯2枚まで住民福祉課で配布",
+        "deadline": "収集日の午前8時まで",
+        "excluded": "畳等の回収できない品目、事業系ごみ、分別不十分なものは収集しない"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/soshiki/juuminfukushi/gomi_kankyou_petto/1/2548.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害等の危険区域、避難所・避難経路を掲載した地区別防災ハザードマップを公開する。",
+      "details": {
+        "map": "三戸町防災ハザードマップ",
+        "coverage": "洪水浸水、土砂災害警戒区域、避難所・避難場所、防災情報等",
+        "format": "町内地区別地図と全体図を公開",
+        "updated": "2026年4月更新",
+        "guidance": "平時に自宅周辺の危険箇所と避難経路を確認"
+      },
+      "source": {"url": "https://www.town.sannohe.aomori.jp/soshiki/soumu/anzenanshin_bousai/saigai/2658.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
