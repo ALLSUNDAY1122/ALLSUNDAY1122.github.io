@@ -5,14 +5,14 @@
   "parentTeam": "北日本調査班",
   "integrationBranch": "region/north",
   "prefectureCodes": ["02", "03", "07"],
-  "updatedAt": "2026-07-23T22:42:00+09:00",
-  "status": "researching",
+  "updatedAt": "2026-07-23T23:20:00+09:00",
+  "status": "pr_open",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 60,
-  "currentMunicipality": {"code": "07205", "name": "白河市", "stage": "researching"},
-  "workingBranch": "data/07205-shirakawa",
-  "pullRequestNumber": null,
-  "ciStatus": "not_started",
+  "remainingUninvestigatedCount": 59,
+  "currentMunicipality": {"code": "07207", "name": "須賀川市", "stage": "pr_open"},
+  "workingBranch": "data/07207-sukagawa",
+  "pullRequestNumber": 1444,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     {"code":"02387","name":"中泊町","pullRequestNumber":844,"ciStatus":"success","mergedAt":"2026-07-22T22:18:00+09:00"},
     {"code":"02401","name":"野辺地町","pullRequestNumber":856,"ciStatus":"success","mergedAt":"2026-07-22T22:42:00+09:00"},
@@ -62,8 +62,9 @@
     {"code":"07201","name":"福島市","pullRequestNumber":1392,"ciStatus":"success","mergedAt":"2026-07-23T21:18:46+09:00"},
     {"code":"07202","name":"会津若松市","pullRequestNumber":1399,"ciStatus":"success","mergedAt":"2026-07-23T21:48:13+09:00"},
     {"code":"07203","name":"郡山市","pullRequestNumber":1406,"ciStatus":"success","mergedAt":"2026-07-23T22:04:54+09:00"},
-    {"code":"07204","name":"いわき市","pullRequestNumber":1410,"ciStatus":"success","mergedAt":"2026-07-23T22:38:00+09:00"}
+    {"code":"07204","name":"いわき市","pullRequestNumber":1410,"ciStatus":"success","mergedAt":"2026-07-23T22:38:00+09:00"},
+    {"code":"07205","name":"白河市","pullRequestNumber":1430,"ciStatus":"success","mergedAt":"2026-07-23T23:06:58+09:00"}
   ],
   "blocked": [],
-  "nextAction": "白河市（07205）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
+  "nextAction": "須賀川市（07207）のPR #1444のCIを確認し、成功後にregion/northへ統合する。"
 }
