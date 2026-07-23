@@ -1,0 +1,59 @@
+name: 仕訳スワイプ サポート
+description: 問題の誤り、不具合、操作上の質問、改善要望を送信します。
+title: "[仕訳スワイプ] "
+body:
+  - type: dropdown
+    id: category
+    attributes:
+      label: 問い合わせ種別
+      options:
+        - 問題文・正解・解説の誤り
+        - アプリの不具合
+        - 操作方法の質問
+        - 改善要望
+        - その他
+    validations:
+      required: true
+
+  - type: input
+    id: question_id
+    attributes:
+      label: 問題ID
+      description: 問題に関する問い合わせの場合、表示されている問題IDを入力してください。分からない場合は空欄で構いません。
+      placeholder: q001
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 利用環境
+      options:
+        - iPhoneアプリ
+        - iPadアプリ
+        - Web版（Safari）
+        - Web版（Chrome）
+        - Web版（その他）
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: 内容
+      description: 発生したこと、期待した動作、再現手順などを記載してください。個人情報は入力しないでください。
+    validations:
+      required: true
+
+  - type: input
+    id: app_version
+    attributes:
+      label: アプリのバージョン
+      placeholder: 1.0.0
+
+  - type: checkboxes
+    id: public_notice
+    attributes:
+      label: 公開情報について
+      options:
+        - label: この問い合わせ内容が公開されることを理解し、個人情報を記載していません。
+          required: true
