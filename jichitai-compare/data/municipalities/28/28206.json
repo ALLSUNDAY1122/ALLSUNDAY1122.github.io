@@ -1,0 +1,193 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "28206",
+  "prefectureCode": "28",
+  "prefecture": "兵庫県",
+  "name": "芦屋市",
+  "officialUrl": "https://www.city.ashiya.lg.jp/",
+  "status": "verified",
+  "summary": "芦屋市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認した。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までの子どもを対象に、年齢・所得区分に応じて保険診療自己負担額を助成し、入院は全区分無料とする。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "芦屋市に住所があり健康保険に加入する、18歳到達後最初の3月31日までの子ども",
+        "ageZero": "0歳は所得制限なしで外来・入院とも自己負担なし",
+        "ageOneToJuniorHigh": "1歳から中学3年生は所得基準未満なら外来・入院とも無料。所得基準以上は外来1日800円を限度に月2回まで、入院無料",
+        "highSchool": "高校生相当は所得制限なしで外来1日800円を限度に月2回まで、入院無料",
+        "application": "乳幼児等・こども医療費受給者証の交付申請が必要",
+        "excluded": "保険適用外費用、入院時食事療養費等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/fukushi/iryou/nyuuyoujikodomo_kakudai0607.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学校6年生までの病児・病後児を、平日に専用施設で一時的に預かる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "芦屋市在住または市内保育所等在籍の生後6か月から小学校6年生までで、病気・けがの急性期または回復期にあり集団保育が困難な子ども",
+        "condition": "保護者の就労、傷病、事故、冠婚葬祭等で家庭保育が困難なこと",
+        "fee": "1人1日2,000円。給食費500円、必要時の医療費は別途。生活保護世帯や一定のひとり親非課税世帯等は利用料無料",
+        "hours": "月曜日から金曜日の7時30分から18時まで。連続7日以内",
+        "application": "事前登録、施設への電話予約、医療機関受診・医師連絡票、利用申込みが必要"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/kodomo/byouji.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と住民税非課税世帯の0～2歳児を無償化し、課税世帯の0～2歳児は市民税額等に応じて算定する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "保育所・認定こども園等の3～5歳児の基本保育料は無償",
+        "ageZeroToTwo": "住民税非課税世帯は無償。課税世帯は市町村民税所得割額、年齢、保育必要量等に基づき決定",
+        "calculation": "2026年4～8月分は2025年度、2026年9月～2027年3月分は2026年度の市町村民税所得割額で算定",
+        "siblings": "多子世帯の負担軽減を継続。年収約360万円未満相当世帯では第1子の年齢を問わず算定",
+        "meal": "通園送迎費、給食費、行事費等は原則別途。一定所得未満世帯と第3子以降は副食費免除"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/kodomo/hoikuryo28.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.ashiya.lg.jp/kodomo/mushoka.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年4月現在、市立学校の給食費は小学校1食343円、中学校1食400円とする。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "小学校は1食343円",
+        "juniorHigh": "中学校は1食400円",
+        "use": "保護者負担分は主食、牛乳、おかず、調味料等の食材費に充当",
+        "cityCost": "調理員人件費、給食施設・設備整備費等は市が負担"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/gakkoukyouiku/gakkoukyushoku8.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子等へ訪問・通所・宿泊型の産後ケアを合計7日以内で提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "芦屋市に住民票がある産後1年未満の母親と乳児で産後ケアを必要とする方。流産・死産後の方も利用可能",
+        "types": "訪問型、通所型、宿泊型",
+        "fee": "一般世帯は宿泊1日5,000円、通所1時間750円、訪問1時間500円。夫婦合算所得1,500万円以上は宿泊9,000円、通所1,300円、訪問1,000円。生活保護・非課税世帯は宿泊1,000円、通所100円、訪問無料",
+        "limit": "訪問・通所・宿泊を合わせて7日以内",
+        "support": "母体の健康管理、心理面のケア、授乳・乳房ケア、沐浴等の育児支援、休息、乳児の発育確認",
+        "application": "事前申請後、利用施設と日程調整"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/kenkou/sangokeajigyou.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件なく月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "target": "利用開始日時点で生後6か月から満3歳未満で、保育所・幼稚園・認定こども園等に在籍していない子ども",
+        "employment": "保護者の就労要件なし",
+        "limit": "子ども1人につき月10時間まで",
+        "fee": "市立施設は1時間300円。私立施設は1時間300～1,000円等、施設により異なる。給食・おやつ等の実費は別途の場合あり",
+        "reduction": "生活保護世帯は1時間300円、一定所得未満世帯等は1時間200円の軽減を申請可能。ただし施設により適用外の場合あり",
+        "application": "総合支援システムから認定申請後、初回面談・予約を行う"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/kodomoseisaku/daredemotuen/documents.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新婚・子育て世帯が一定の中古・空き住宅を取得または賃借する場合、取得費等を最大100万円補助する。",
+      "details": {
+        "target": "中学生以下の子どもがいる子育て世帯、または夫婦とも39歳以下の新婚世帯で、世帯所得合計800万円未満等の要件を満たす世帯",
+        "housing": "市内にあり、2026年4月1日以降に契約し、築20年以上、6か月以上未使用、専用面積55平方メートル以上、耐震基準を満たす住宅等",
+        "residency": "世帯全員が住民登録し、5年以上継続居住する意思が必要",
+        "amountPurchase": "住宅取得費用と引越費用は1世帯上限100万円",
+        "amountRent": "賃借費用と引越費用は、夫婦とも29歳以下の新婚世帯で上限60万円、その他の新婚・子育て世帯で上限30万円",
+        "period": "2026年5月1日から2027年2月26日まで。予算終了時は早期終了"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/juutaku/iiieatta.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "一定サイズ以上の家具等を、事前予約・有料で戸別収集する。",
+      "details": {
+        "target": "最長辺50センチ以上の燃やすごみ、または最長辺30センチ以上のその他燃やさないごみ等",
+        "application": "粗大ごみ予約センターへ電話で事前申込み。電話困難時はFAXで仮受付",
+        "payment": "申込時に案内された枚数の粗大ごみ処理券を購入。処理券は1枚300円",
+        "collection": "収集日の午前8時30分までに、氏名を記入した処理券を貼って指定場所へ排出",
+        "directCarry": "環境処理センターへの予約持込みも可能。10kgまでは1日1回1車両に限り無料",
+        "excluded": "家電4品目、パソコン、事業系ごみ等は市の粗大ごみ収集対象外"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/kankyoushori/sodai.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.ashiya.lg.jp/kankyoushori/sodai_tesuuryou.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・津波・高潮・洪水・内水の危険区域と避難施設をWeb・紙面の防災情報マップで公開する。",
+      "details": {
+        "hazards": "土砂災害、津波、高潮、洪水、内水",
+        "contents": "災害別の危険区域・浸水深、避難所、広域避難場所、津波一時避難施設、福祉避難所等を掲載",
+        "formats": "Web版防災情報マップと紙面版マップ",
+        "use": "自宅・勤務先・通学経路の災害リスク、避難先、避難経路の事前確認に活用"
+      },
+      "source": {
+        "url": "https://www.city.ashiya.lg.jp/bousai/map.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.ashiya.lg.jp/hazardmap/flow_01.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}
