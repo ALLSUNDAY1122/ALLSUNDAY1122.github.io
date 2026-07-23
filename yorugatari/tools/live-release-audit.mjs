@@ -11,7 +11,7 @@ const targets = [
   { name: 'story-032', url: `${base}/stories/spare-key-returned.html`, required: ['YGT-032', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
   { name: 'story-100', url: `${base}/stories/hired-with-your-experience.html`, required: ['YGT-100', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
   { name: 'story-js', url: `${base}/assets/story.js?v=20260723-007`, required: ['function normalizeBasicPage()', 'function ensureNavigationFallback()', "ensurePropertyMeta('og:image:width', '2172');"], forbidden: ['catalogSources', 'loadCatalogScript', 'buildStoryPagination'] },
-  { name: 'analytics-js', url: `${base}/assets/analytics.js?v=20260723-003`, required: ['knownCampaigns', 'function campaignId()', 'campaignTracked', "'/yorugatari/__campaign/' + campaign"], forbidden: ["'/yorugatari/__campaign/' + query"] },
+  { name: 'analytics-js', url: `${base}/assets/analytics.js?v=20260723-003`, required: ['knownCampaigns', 'function campaignId()', 'campaignTracked', "'/yorugatari/__campaign/' + campaign", 'launch-20260724-x-five-minute', 'launch-20260724-threads-five-minute'], forbidden: ["'/yorugatari/__campaign/' + query"] },
   { name: 'engagement-js', url: `${base}/assets/engagement.js?v=20260723-003`, required: ['relatedReady: document.querySelectorAll', 'function taggedShareUrl()', 'function trackCampaign()', 'campaignTracked'], forbidden: ['installRelatedStories', 'buildRelatedStories', "'/yorugatari/__campaign/' + query"] }
 ];
 
@@ -25,7 +25,7 @@ async function inspect(target, attempt) {
       headers: {
         'cache-control': 'no-cache, no-store, max-age=0',
         pragma: 'no-cache',
-        'user-agent': 'Yorugatari-Live-Check/1.7'
+        'user-agent': 'Yorugatari-Live-Check/1.8'
       }
     });
     const text = await response.text();
