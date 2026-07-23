@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07344",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "天栄村",
+  "officialUrl": "https://www.vill.tenei.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を天栄村公式情報で調査し、7制度をverified、学校給食費とこども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担金と入院時食事療養費を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "こども医療費助成制度",
+        "target": "天栄村に住所があり健康保険に加入する0歳から18歳年度末までの子ども。生活保護受給者を除く",
+        "support": "病院・歯科医院・薬局の保険診療一部負担金および入院時食事療養費の標準負担額",
+        "application": "健康福祉課または湯本支所で受給資格登録を行い、受給資格者証の交付を受ける",
+        "excluded": "健康診断、予防接種、差額ベッド代、文書料等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/soshiki/38/kodomo-iryou2.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生まで、郡山市の菊池医院病児・病後児保育室らびっとを広域利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "program": "病児保育広域利用",
+        "facility": "菊池医院 病児・病後児保育室らびっと",
+        "target": "病気または回復期で集団保育が困難で、家庭保育ができない生後6か月から小学6年生までの子ども",
+        "hours": "平日8時30分～17時30分、土曜日8時30分～15時",
+        "fee": "1回2,000円。生活保護世帯・村県民税非課税世帯は必要書類により免除",
+        "application": "実施施設へWebまたは電話で予約し、利用申込書等を提出"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/soshiki/38/byouji.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "天栄村に住所がある子どもの保育所保育料を全額無償とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facility": "天栄保育所等",
+        "target": "天栄村に住所があり、保育必要性の認定を受けて保育施設を利用する子ども",
+        "support": "通常保育料を全額無償化",
+        "nationalProgram": "3～5歳児等は国の幼児教育・保育無償化対象",
+        "excludedCosts": "延長保育料、給食費、教材費、行事費等の実費は別途負担となる場合がある"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/soshiki/38/tenei-hoikusho.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "低所得世帯向け就学援助で学校給食費が対象となることは確認できるが、令和8年度の一般世帯の給食費負担・無償化状況を公式HTMLで確定できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "confirmedSupport": "要保護・準要保護世帯の就学援助対象経費に学校給食費を含む",
+        "currentOperation": "村の給食センターが小中学校給食を提供",
+        "researchResult": "令和8年度の一般世帯の給食費額、村独自補助、完全無償化の有無を現行公式HTMLで確認できなかった",
+        "caution": "現行負担額は教育課または給食センターへ確認が必要"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/soshiki/7/shuugakuennjyo.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "母子を対象に宿泊・日帰り・訪問型の産後ケアを実施し、各類型を原則7日・回まで利用できる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "天栄村に住所があり、感染症や入院加療・医療行為を必要としない母親と乳児",
+        "types": "宿泊型、日帰り型、訪問型",
+        "services": "母体の健康管理・休息・乳房ケア、乳児の健康管理、授乳・沐浴指導、育児相談等",
+        "lodgingFee": "医療機関1泊2日3,000円、助産所4,000円。多胎加算あり",
+        "dayFee": "1日型1,500～2,000円、半日型1,000円。施設により異なる",
+        "visitFee": "500円。多胎加算250円、交通費が別途必要な場合あり",
+        "usageLimit": "各類型原則7日・回まで",
+        "application": "施設へ仮予約後、こども家庭センターへ事前申請"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/soshiki/38/sangocare.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "村公式サイトにこども誰でも通園制度の案内ページがあることは確認できるが、令和8年度の対象月齢・利用施設・時間・料金・申込方法を取得できない。",
+      "details": {
+        "program": "こども誰でも通園制度",
+        "published": "村公式サイトで2025年4月1日更新の制度案内を掲載",
+        "researchResult": "現行の利用者向け詳細を取得できず、対象・施設・利用上限・料金・申込方法を確定できなかった",
+        "caution": "利用可否と現行条件は健康福祉課へ確認が必要"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/soshiki/38/kodomodaredemotuuen.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から要件を満たして移住する方に、単身60万円、世帯100万円、18歳未満1人につき100万円を加算する。",
+      "details": {
+        "program": "天栄村移住支援金給付事業",
+        "target": "東京23区の居住・通勤歴、就業・テレワーク・関係人口等の要件を満たして天栄村へ移住する方",
+        "single": "単身世帯60万円",
+        "household": "複数人世帯100万円",
+        "childAddition": "18歳未満の世帯員1人につき100万円加算",
+        "application": "移住前に村へ事前相談し、移住後1年以内に申請",
+        "residenceRequirement": "受給後の転出等では返還対象となる場合がある"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/site/iju/iju-support.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.tenei.fukushima.jp/site/iju/shinseikatu-sumaidukuriouen.html", "checkedAt": "2026-07-24"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "おおむね60センチメートル以上の粗大ごみを、氏名を付けて指定日にリサイクルハウス外へ出す。",
+      "details": {
+        "definition": "おおむね60センチメートル以上の家具、家電、寝具、自転車、畳等",
+        "collection": "氏名を付け、地区の指定日にリサイクルハウスの外へ排出",
+        "preparation": "布団類は縛り、ストーブ等は灯油を完全に除去",
+        "excluded": "テレビ、冷蔵庫・冷凍庫、洗濯機、衣類乾燥機、エアコンは収集対象外",
+        "calendar": "令和8年度分別ポスター・くらしの健康カレンダーで地区別収集日を確認",
+        "specialSupport": "一定の高齢者・障害者世帯向けに粗大ごみ戸別運搬事業あり"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/soshiki/3/gomi-dashikata1.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.tenei.fukushima.jp/soshiki/3/r8gomi-posuta-.html", "checkedAt": "2026-07-24"}]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害等の危険箇所を閲覧できる冊子版・Web版防災マップと、ため池ハザードマップを公開する。",
+      "details": {
+        "maps": "天栄村防災マップ、Web版防災マップ、ため池ハザードマップ",
+        "coverage": "洪水浸水想定区域、土砂災害危険箇所・警戒区域、避難所等",
+        "webMap": "パソコン・スマートフォンで洪水・土砂災害の危険箇所を閲覧可能",
+        "ponds": "防災重点ため池について浸水範囲・深さ・到達時間・避難場所を掲載",
+        "guidance": "平時に自宅周辺の危険箇所と避難経路を確認"
+      },
+      "source": {"url": "https://www.vill.tenei.fukushima.jp/site/bousai/h-map.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.vill.tenei.fukushima.jp/site/bousai/tameike.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
