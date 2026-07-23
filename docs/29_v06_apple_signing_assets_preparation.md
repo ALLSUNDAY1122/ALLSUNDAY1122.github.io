@@ -128,12 +128,12 @@ Team API Keyは全アプリへ適用され、特定アプリだけに制限で�
 
 ## 6. ローカル検証
 
-MacinCloudで同梱スクリプトを実行します。
+MacinCloudで既存の検証スクリプトを実行します。
 
 ```bash
-chmod +x scripts/validate_apple_signing_assets_macos.sh
+chmod +x scripts/validate_apple_release_credentials_macos.sh
 
-scripts/validate_apple_signing_assets_macos.sh \
+scripts/validate_apple_release_credentials_macos.sh \
   --certificate "/安全な保存先/AI_Handover_Apple_Distribution.p12" \
   --profile "/安全な保存先/AI_Handover_Log_AppStore_Build6.mobileprovision" \
   --api-key "/安全な保存先/AuthKey_XXXXXXXXXX.p8" \
@@ -150,19 +150,19 @@ scripts/validate_apple_signing_assets_macos.sh \
 - `.p12`内の秘密鍵
 - 証明書のTeam ID
 - 証明書期限
+- プロファイルに対象証明書が含まれること
 - プロファイルのTeam ID
 - `application-identifier`
 - Bundle ID
-- iOSプラットフォーム
 - `get-task-allow=false`
-- `beta-reports-active=true`
 - 端末UDIDが入っていないこと
 - Enterprise profileではないこと
 - プロファイル期限
-- `.p8`の構造
-- Key IDとIssuer IDの形式
+- `.p8`からのES256 JWT生成
+- Key IDとIssuer ID
+- 通常実行時のApp Store Connect API認証
 
-出力JSONにはパスワードや秘密鍵の内容を保存しません。
+出力JSONにはパスワードや秘密鍵の内容を保存しません。ネットワーク接続なしでJWT生成だけを検査する場合は、末尾に`--offline-api`を追加します。
 
 ## 7. 保管
 
@@ -193,7 +193,7 @@ GitHub Actionsへ登録する場合は、Environment `testflight-production`のS
 
 ## 現在の状態
 
-この手順と検証スクリプトの作成だけを行いました。
+この手順を既存のCI検証済みツールへ統合しました。
 
 - 実際の証明書：未作成
 - 実際のプロファイル：未作成
