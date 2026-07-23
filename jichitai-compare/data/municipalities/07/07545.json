@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07545",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "大熊町",
+  "officialUrl": "https://www.town.okuma.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を大熊町公式情報で調査し、7制度をverified、2制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担金を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児・子ども医療費助成制度",
+        "target": "大熊町に住所がある0歳から18歳年度末までの子ども",
+        "support": "保険診療の自己負担金を助成",
+        "application": "社会保険加入者は受給資格登録が必要。国民健康保険加入者は原則登録不要",
+        "payment": "受給資格証等の提示により原則現物給付。条件により償還払い",
+        "excluded": "健康診断、予防接種、差額ベッド代、文書料等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/soshiki/hukushi/1499.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "病児保育利用料助成の規定は確認できるが、令和8年度の利用施設・対象年齢・料金・予約方法を確定できない。",
+      "details": {
+        "confirmedSupport": "原子力災害被災者向け保育所負担金助成要綱では、やむを得ず病児保育等を利用した場合、納付保育料の7割、月3万円上限の助成を規定",
+        "researchResult": "現行の病児・病後児保育施設と利用者向け条件を町公式サイトで確認できなかった",
+        "caution": "現行利用可否は福祉課子育て支援係へ確認が必要"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/reikishu/reiki_honbun/c584RG00000353.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児を無償化し、課税世帯の0～2歳児や食材料費にも町独自助成を設ける。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "zeroToTwoNonTax": "住民税非課税世帯は保育所・認定こども園の利用料無料",
+        "zeroToTwoTaxable": "課税世帯は町徴収基準額の3割を自己負担とし、超過額を町が助成",
+        "threeToFive": "保育所・認定こども園の利用料は全世帯無料",
+        "mealSupport": "3～5歳児が負担した食材料費を町が助成。1号認定は1食260円まで等",
+        "otherFacilities": "認可外施設・預かり保育にも国上限超過分等の町助成あり",
+        "application": "利用施設・認定区分により町または避難先自治体への申請が必要"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/soshiki/kyoikusoumu/12402.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "学校給食費が就学援助の対象であることは確認できるが、令和8年度の一般世帯負担額・無償化状況を確定できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "confirmedSupport": "要保護・準要保護世帯の就学援助対象経費に学校給食費を含む",
+        "pastDisasterSupport": "令和7年度の被災児童生徒就学援助では小中学生の学校給食費を実費支給",
+        "researchResult": "令和8年度の一般世帯の給食費額、町独自補助、完全無償化の有無を確認できなかった",
+        "caution": "現行負担額は教育総務課へ確認が必要"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/reikishu/reiki_honbun/c584RG00000738.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母親を対象に、宿泊・日帰り・訪問型の産後ケアを実施し、助成範囲内の費用を町が負担する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "大熊町産後ケア事業",
+        "target": "大熊町に住民票がある産後1年未満の母親で、回復・休養・育児不安等への保健指導を必要とし、医療行為を必要としない方",
+        "types": "宿泊ケア、日帰りケア、訪問ケア",
+        "services": "産後の体調管理、休養、母乳ケア、沐浴・育児相談等",
+        "usageLimit": "宿泊最大7日、日帰り最大5日、訪問最大5回",
+        "fee": "助成範囲内は町が負担。消耗品等の実費は自己負担",
+        "application": "事前に町保健師へ相談・申請し、審査後に利用"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/site/kosodate-portal/1113.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、月10時間まで無料で学び舎ゆめの森を利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "大熊町こども誰でも通園制度",
+        "target": "大熊町に住民登録があり、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "facility": "大熊町立認定こども園学び舎ゆめの森",
+        "usageLimit": "子ども1人につき月10時間まで",
+        "hours": "平日9時～12時",
+        "capacity": "0歳・1歳・2歳各1人",
+        "fee": "無料。おやつ代は別途徴収",
+        "application": "つうえんポータルで認定申請、事前面談、予約を行う"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/site/kosodate-portal/33749.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住者の町内住宅取得・修繕について、新築上限420万円、中古上限120万円、修繕上限250万円を補助する。",
+      "details": {
+        "program": "来て おおくま住宅取得等支援事業補助金",
+        "target": "町外から移住し、町内で自ら居住する住宅を取得・修繕し、5年以上定住する等の要件を満たす方",
+        "newConstruction": "取得額の50％、上限420万円",
+        "usedHousing": "取得額の50％、上限120万円",
+        "renovation": "修繕額の50％、上限250万円。30万円以下の修繕費等は対象外",
+        "prefectureAddition": "県外移住者は県住宅取得支援の加算対象となる場合あり",
+        "application": "取得等の契約日から12か月以内に申請"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/soshiki/seikatushien/27678.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは南部衛生センターへ自己搬入するか、同センターへ収集を依頼する。",
+      "details": {
+        "calendar": "令和8年度大熊町ごみカレンダーを公開",
+        "placement": "通常の収集ごみは収集日の8時30分までにごみステーションへ排出",
+        "directCarry": "粗大ごみは自分で南部衛生センターへ搬入可能",
+        "collection": "南部衛生センターへ電話して収集を依頼可能",
+        "sorting": "ごみと資源の分け方・出し方の日本語版・英語版を公開",
+        "caution": "指定袋・処理券の販売店や収集日は年度カレンダーで確認"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/soshiki/kankyoutaisaku/23908.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・土砂災害・原子力災害の避難ルートと避難所を掲載したハザードマップを公開する。",
+      "details": {
+        "map": "大熊町防災マップ",
+        "coverage": "津波、土砂災害、原子力災害避難ルート、避難所一覧",
+        "revision": "2024年6月1日に福島県の災害危険箇所見直しを反映して更新",
+        "threeD": "土砂災害警戒区域・避難所を確認できる3D鳥瞰図を提供",
+        "routes": "原子力災害避難ルートと津波・土砂災害避難ルートを公開",
+        "guidance": "平時に危険箇所・避難先・避難経路を確認"
+      },
+      "source": {"url": "https://www.town.okuma.fukushima.jp/soshiki/kankyoutaisaku/19999.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
