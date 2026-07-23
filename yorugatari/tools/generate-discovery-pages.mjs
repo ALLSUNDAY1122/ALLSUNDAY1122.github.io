@@ -21,12 +21,54 @@ const CATALOG_FILES = [
   'assets/stories-096-100.js'
 ];
 const CATEGORIES = [
-  { name: '心霊', slug: 'shinrei', description: '幽霊、死者、古い家、事故現場など、目に見えない存在が日常へ入り込むオリジナル怖い話。' },
-  { name: '人怖', slug: 'hitokowa', description: '監視、侵入、支配、詐欺など、人間の意図と行動が生む現実的な恐怖を描いた怖い話。' },
-  { name: '意味怖', slug: 'imikowa', description: '最後の一文や隠された事実によって、それまでの出来事の意味が反転する怖い話。' },
-  { name: 'ネット怪談', slug: 'net-kaidan', description: 'スマートフォン、SNS、クラウド、録音、通信機器を通じて広がる現代の怪談。' },
-  { name: '都市伝説風', slug: 'urban-legend', description: '学校、駅、道路、施設などに残る奇妙な規則や噂を題材にした都市伝説風の怖い話。' },
-  { name: '後味悪い', slug: 'aftertaste', description: '事件が終わっても救い切れず、不穏な余韻や割り切れなさが残る怖い話。' }
+  {
+    name: '心霊',
+    slug: 'shinrei',
+    linkLabel: '心霊・幽霊',
+    heading: '心霊・幽霊の怖い話',
+    titleLabel: '心霊・幽霊の怖い話',
+    description: (count) => `幽霊、死者、事故現場、古い家を題材にした心霊・幽霊の怖い話を${count}話掲載。無料で約5分、一話完結で読めます。`
+  },
+  {
+    name: '人怖',
+    slug: 'hitokowa',
+    linkLabel: '人が怖い話',
+    heading: '人が怖い話（人怖）',
+    titleLabel: '人が怖い話｜人怖・実話風ホラー',
+    description: (count) => `監視、侵入、支配、詐欺など、人間の悪意が生む「人が怖い話」を${count}話掲載。人怖・実話風ホラーを無料で約5分、一話完結で読めます。`
+  },
+  {
+    name: '意味怖',
+    slug: 'imikowa',
+    linkLabel: '意味がわかると怖い話',
+    heading: '意味がわかると怖い話（意味怖）',
+    titleLabel: '意味がわかると怖い話｜意味怖',
+    description: (count) => `最後の一文や隠された事実で意味が反転する「意味がわかると怖い話」を${count}話掲載。意味怖を無料で約5分、一話完結で読めます。`
+  },
+  {
+    name: 'ネット怪談',
+    slug: 'net-kaidan',
+    linkLabel: 'ネット・SNS怪談',
+    heading: 'ネット・SNSの怖い話',
+    titleLabel: 'ネット・SNSの怖い話｜現代怪談',
+    description: (count) => `スマートフォン、SNS、クラウド、録音、通信機器から広がるネット・SNSの怖い話を${count}話掲載。現代怪談を無料で約5分、一話完結で読めます。`
+  },
+  {
+    name: '都市伝説風',
+    slug: 'urban-legend',
+    linkLabel: '都市伝説・奇妙なルール',
+    heading: '都市伝説・奇妙なルールの怖い話',
+    titleLabel: '都市伝説・奇妙なルールの怖い話',
+    description: (count) => `学校、駅、道路、施設に残る噂や奇妙なルールを題材にした都市伝説風の怖い話を${count}話掲載。無料で約5分、一話完結で読めます。`
+  },
+  {
+    name: '後味悪い',
+    slug: 'aftertaste',
+    linkLabel: '後味の悪い話',
+    heading: '後味の悪い怖い話',
+    titleLabel: '後味の悪い怖い話｜救いのない怪談',
+    description: (count) => `事件が終わっても救い切れず、不穏な余韻が残る後味の悪い怖い話を${count}話掲載。救いのない怪談を無料で約5分、一話完結で読めます。`
+  }
 ];
 
 function loadStories() {
@@ -66,7 +108,7 @@ function storyLastModified(story) {
 }
 
 function categoryLinks(prefix = '') {
-  return CATEGORIES.map((category) => `<a class="chip" href="${prefix}categories/${category.slug}.html">${category.name}</a>`).join('');
+  return CATEGORIES.map((category) => `<a class="chip" href="${prefix}categories/${category.slug}.html">${category.linkLabel}</a>`).join('');
 }
 
 function ensureFeedAndCategoryLinks() {
@@ -74,30 +116,36 @@ function ensureFeedAndCategoryLinks() {
   const indexPath = path.join(SITE, 'index.html');
   let index = fs.readFileSync(indexPath, 'utf8');
   if (!index.includes('rel="alternate" type="application/rss+xml"')) index = index.replace('</head>', `${feedTag}</head>`);
-  if (!index.includes('aria-label="カテゴリ別の怖い話ページ"')) {
-    index = index.replace(
-      '<div class="grid" id="storyGrid"></div>',
-      `<nav class="chips category-page-links" aria-label="カテゴリ別の怖い話ページ">${categoryLinks()}</nav><div class="grid" id="storyGrid"></div>`
-    );
+  const indexCategoryNav = `<nav class="chips category-page-links" aria-label="カテゴリ別の怖い話ページ">${categoryLinks()}</nav>`;
+  if (/<nav class="chips category-page-links"[^>]*>[\s\S]*?<\/nav>/.test(index)) {
+    index = index.replace(/<nav class="chips category-page-links"[^>]*>[\s\S]*?<\/nav>/, indexCategoryNav);
+  } else {
+    index = index.replace('<div class="grid" id="storyGrid"></div>', `${indexCategoryNav}<div class="grid" id="storyGrid"></div>`);
+  }
+  if (!index.includes('href="feed.xml">RSS</a>')) {
+    index = index.replace('<a href="contact.html">お問い合わせ</a>', '<a href="feed.xml">RSS</a><a href="contact.html">お問い合わせ</a>');
   }
   fs.writeFileSync(indexPath, index);
 
   const archivePath = path.join(SITE, 'archive.html');
   let archive = fs.readFileSync(archivePath, 'utf8');
   if (!archive.includes('rel="alternate" type="application/rss+xml"')) archive = archive.replace('</head>', `${feedTag}</head>`);
-  if (!archive.includes('aria-label="カテゴリ別ページ"')) {
-    archive = archive.replace(
-      '<nav class="archive-jump" id="archiveJump" aria-label="カテゴリへ移動"></nav>',
-      `<nav class="archive-jump" id="archiveJump" aria-label="カテゴリへ移動"></nav><nav class="archive-jump" aria-label="カテゴリ別ページ">${categoryLinks()}</nav>`
-    );
+  const archiveCategoryNav = `<nav class="archive-jump" aria-label="カテゴリ別ページ">${categoryLinks()}</nav>`;
+  if (/<nav class="archive-jump" aria-label="カテゴリ別ページ">[\s\S]*?<\/nav>/.test(archive)) {
+    archive = archive.replace(/<nav class="archive-jump" aria-label="カテゴリ別ページ">[\s\S]*?<\/nav>/, archiveCategoryNav);
+  } else {
+    archive = archive.replace('<nav class="archive-jump" id="archiveJump" aria-label="カテゴリへ移動"></nav>', `<nav class="archive-jump" id="archiveJump" aria-label="カテゴリへ移動"></nav>${archiveCategoryNav}`);
+  }
+  if (!archive.includes('href="feed.xml">RSS</a>')) {
+    archive = archive.replace('<a href="contact.html">お問い合わせ</a>', '<a href="feed.xml">RSS</a><a href="contact.html">お問い合わせ</a>');
   }
   fs.writeFileSync(archivePath, archive);
 }
 
 function categoryPage(category, stories) {
   const canonical = `${BASE}/categories/${category.slug}.html`;
-  const title = `${category.name}の怖い話${stories.length}選｜夜語り`;
-  const description = `${category.description}約5分で読める一話完結作品を${stories.length}話掲載しています。`;
+  const title = `${category.titleLabel}${stories.length}選｜夜語り`;
+  const description = category.description(stories.length);
   const listItems = stories.map((story, index) => ({
     '@type': 'ListItem',
     position: index + 1,
@@ -107,7 +155,7 @@ function categoryPage(category, stories) {
   const collection = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${category.name}の怖い話`,
+    name: category.heading,
     description,
     url: canonical,
     inLanguage: 'ja',
@@ -120,11 +168,11 @@ function categoryPage(category, stories) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: '夜語り', item: `${BASE}/` },
       { '@type': 'ListItem', position: 2, name: '全100話', item: `${BASE}/archive.html` },
-      { '@type': 'ListItem', position: 3, name: category.name, item: canonical }
+      { '@type': 'ListItem', position: 3, name: category.heading, item: canonical }
     ]
   };
   const items = stories.map((story) => `<a class="archive-item" href="../stories/${story.slug}.html"><span class="archive-no">${String(story.number).padStart(3, '0')}</span><span class="archive-copy"><strong>${escapeHtml(story.title)}</strong><small>${escapeHtml(story.summary)}</small><span class="meta"><span class="badge">${escapeHtml(story.category)}</span><span>約${story.minutes}分</span><span>怖さ ${'★'.repeat(story.fear)}${'☆'.repeat(Math.max(0, 5 - story.fear))}</span></span></span></a>`).join('');
-  const nav = CATEGORIES.map((item) => `<a class="chip${item.slug === category.slug ? ' active' : ''}" href="${item.slug}.html"${item.slug === category.slug ? ' aria-current="page"' : ''}>${item.name}</a>`).join('');
+  const nav = CATEGORIES.map((item) => `<a class="chip${item.slug === category.slug ? ' active' : ''}" href="${item.slug}.html"${item.slug === category.slug ? ' aria-current="page"' : ''}>${item.linkLabel}</a>`).join('');
 
   return `<!doctype html>
 <html lang="ja">
@@ -159,8 +207,8 @@ function categoryPage(category, stories) {
   <a class="skip-link" href="#category-content">作品一覧へ移動</a>
   <header class="site-header"><div class="wrap header-inner"><a class="logo" href="../index.html"><span class="logo-mark">夜</span>語り</a><nav class="nav" aria-label="主要メニュー"><a href="../index.html#stories">怖い話</a><a href="../archive.html">全100話</a><a href="../about.html">このサイトについて</a></nav></div></header>
   <main id="category-content" tabindex="-1">
-    <section class="story-hero"><div class="wrap"><nav class="breadcrumb" aria-label="パンくずリスト"><a href="../index.html">夜語り</a><span aria-hidden="true">›</span><a href="../archive.html">全100話</a><span aria-hidden="true">›</span><span>${category.name}</span></nav><div class="eyebrow">Horror category</div><h1>${category.name}の怖い話</h1><p class="category-summary">${escapeHtml(category.description)}</p><p class="section-note">全${stories.length}話・すべて約5分・一話完結</p><nav class="chips category-nav" aria-label="ほかのカテゴリ">${nav}</nav></div></section>
-    <section class="wrap category-list" aria-label="${category.name}の作品一覧">${items}</section>
+    <section class="story-hero"><div class="wrap"><nav class="breadcrumb" aria-label="パンくずリスト"><a href="../index.html">夜語り</a><span aria-hidden="true">›</span><a href="../archive.html">全100話</a><span aria-hidden="true">›</span><span>${escapeHtml(category.heading)}</span></nav><div class="eyebrow">Horror category</div><h1>${escapeHtml(category.heading)}</h1><p class="category-summary">${escapeHtml(description)}</p><p class="section-note">全${stories.length}話・すべて約5分・一話完結</p><nav class="chips category-nav" aria-label="ほかのカテゴリ">${nav}</nav></div></section>
+    <section class="wrap category-list" aria-label="${escapeHtml(category.heading)}の作品一覧">${items}</section>
   </main>
   <footer class="site-footer"><div class="wrap footer-inner"><span>© 2026 夜語り</span><nav class="footer-links" aria-label="運営情報"><a href="../index.html">トップ</a><a href="../archive.html">全100話</a><a href="../feed.xml">RSS</a><a href="../about.html">運営・編集方針</a><a href="../privacy.html">プライバシー</a></nav></div></footer>
   <script src="../assets/analytics.js?v=${ANALYTICS_VERSION}"></script>
@@ -206,7 +254,7 @@ for (const category of CATEGORIES) {
   const matching = stories.filter((story) => story.category === category.name);
   if (!matching.length) throw new Error(`No stories found for category ${category.name}`);
   fs.writeFileSync(path.join(CATEGORY_DIR, `${category.slug}.html`), categoryPage(category, matching));
-  categoryReport.push({ name: category.name, slug: category.slug, stories: matching.length });
+  categoryReport.push({ name: category.name, slug: category.slug, heading: category.heading, stories: matching.length });
 }
 fs.writeFileSync(path.join(SITE, 'feed.xml'), buildFeed(stories));
 const totalAssigned = categoryReport.reduce((sum, row) => sum + row.stories, 0);
