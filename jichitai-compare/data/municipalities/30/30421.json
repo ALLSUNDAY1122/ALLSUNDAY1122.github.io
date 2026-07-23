@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "30421",
+  "prefectureCode": "30",
+  "prefecture": "和歌山県",
+  "name": "那智勝浦町",
+  "officialUrl": "https://www.town.nachikatsuura.wakayama.jp/",
+  "status": "verified",
+  "summary": "那智勝浦町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、広域病児保育、保育無償化、産後ケア、こども誰でも通園制度、空き家改修、粗大ごみ、防災情報を記録し、令和8年度学校給食費の現行適用条件を再確認対象とした。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳になって最初の3月31日までの子どもの保険診療自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "residency": "那智勝浦町に住所があり医療保険に加入する子ども",
+        "coverage": "保険診療の自己負担分",
+        "excluded": "保険適用外費用や学校管理下の災害共済給付対象医療等は対象外",
+        "procedure": "受給資格証の交付、県外受診時の償還払い等は住民課へ確認"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/Info/481", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "令和8年4月から新宮市病児病後児保育施設あんしんルームを広域利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "facility": "新宮市病児病後児保育施設 あんしんルーム",
+        "target": "那智勝浦町在住または町内保育所・認定こども園・学校等に通う生後6か月から小学6年生まで",
+        "start": "令和8年4月",
+        "condition": "病気または回復期で集団生活が困難かつ家庭保育ができない児童",
+        "procedure": "事前登録、予約、医師の診察・連絡票等が必要",
+        "fee": "利用料・減免条件は施設の現行案内を確認"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/Info/1757", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯0～2歳児の保育料を無償化し、3～5歳児の主食費・副食費も町が負担する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeTarget": "3～5歳児、および住民税非課税世帯の0～2歳児",
+        "underThree": "課税世帯0～2歳児は所得等に応じた保育料の対象",
+        "foodCost": "3～5歳児は主食費に加え副食費も町が負担",
+        "actualCosts": "延長保育料、用品費、行事費等は別途の場合あり",
+        "procedure": "施設・認定区分ごとの手続きをこども未来課へ確認"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/info/746", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "needs_medium_review",
+      "summary": "町の第3期子ども・子育て支援事業計画で小中学校給食費無償化の実施方針を確認したが、令和8年度の対象・申請条件は再確認が必要。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "confirmed": "第3期子ども・子育て支援事業計画に小中学校給食費無償化の実施を明記",
+        "existingSupport": "就学援助制度では認定世帯の学校給食費を援助",
+        "reviewReason": "令和8年度の全児童生徒への一律適用、対象学校、申請要否、町外・特別支援学校の扱いを示す利用者向け現行案内を確認できない",
+        "verificationPolicy": "過年度の第3子以降無償化や一部学校の補助を全員一律無償化として扱わない"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/div/kodomo/pdf/R7jigyoukeikaku.pdf", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.nachikatsuura.wakayama.jp/info/424", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に訪問型・通所型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "那智勝浦町に住民票があり、生後1歳の誕生日前日までの子どもをもつ保護者",
+        "types": "アウトリーチ（訪問）型、デイサービス（通所）型",
+        "care": "乳児の成長・発達・養育相談、授乳指導、産婦の体調管理、育児支援",
+        "duration": "訪問型は2時間以上4時間未満、通所型は4時間未満",
+        "limit": "訪問型と通所型の合計7回まで",
+        "procedure": "町役場こども家庭センターへ申請"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/info/1258", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "公立保育所・こども園で、生後10か月から2歳児クラス年齢までを月10時間、1時間300円で受け入れる。",
+      "eligibility": {"minAgeMonths": 10, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所等に通っていない生後10か月から2歳児クラス年齢（3歳の誕生日を迎えた年度末）まで",
+        "start": "令和8年4月",
+        "limit": "子ども1人につき月10時間まで",
+        "fee": "1時間300円。生活保護・住民税非課税世帯等は減免あり",
+        "hours": "公表時点の予定は平日9時から11時。施設別予約枠は総合支援システムで確認",
+        "procedure": "総合支援システムで認定申請、事前面談、予約"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/info/1746", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.nachikatsuura.wakayama.jp/info/604", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町外からの移住者等が町内空き家を改修して居住する場合、改修費の3分の2・上限100万円を補助する。",
+      "details": {
+        "program": "那智勝浦町空き家改修支援事業補助金",
+        "target": "町外から移住し空き家を購入・賃借して居住する方、または移住者向けに改修する空き家所有者等",
+        "coverage": "内外装、屋根・外壁、水回り、居室等の一般的な改修",
+        "amount": "対象経費の3分の2、上限100万円",
+        "deadline": "令和8年度募集期限と予算状況を申請前に確認",
+        "conditions": "契約・着工前申請、インスペクション、原則町内事業者への発注等"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/info/1401", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみはクリーンセンターへ直接搬入し、重量料金と大型ごみ加算を支払って処理する。",
+      "details": {
+        "selfDelivery": "家庭の粗大ごみをクリーンセンターへ直接持ち込み",
+        "weightFee": "家庭ごみは10kgごとに80円",
+        "largeSurcharge": "大型区分により1枚250円または1個1,000円等を重量料金に加算",
+        "classification": "可燃・不燃、寸法、品目により大型加算区分が異なる",
+        "contractor": "自己搬入できない場合は一般廃棄物収集運搬許可業者へ依頼可能",
+        "procedure": "搬入日時・受入可否をクリーンセンターへ確認"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/Info/1532", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.nachikatsuura.wakayama.jp/info/362", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・洪水、津波、ため池等のハザードマップを公開する。",
+      "details": {
+        "maps": "土砂災害・洪水ハザードマップ、津波ハザードマップ、ため池ハザードマップ",
+        "hazards": "洪水浸水、土砂災害警戒区域・特別警戒区域、津波浸水、ため池決壊等",
+        "evacuation": "避難場所・避難経路、浸水深等を地区別地図で確認",
+        "preparedness": "想定区域外でも被害が発生し得るため早期避難を案内",
+        "updates": "災害種別ごとの最新版を町防災ページで確認"
+      },
+      "source": {"url": "https://www.town.nachikatsuura.wakayama.jp/info/1383", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.nachikatsuura.wakayama.jp/info/1384", "checkedAt": "2026-07-23"},
+        {"url": "https://www.town.nachikatsuura.wakayama.jp/info/1385", "checkedAt": "2026-07-23"},
+        {"url": "https://www.town.nachikatsuura.wakayama.jp/info/1391", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}
