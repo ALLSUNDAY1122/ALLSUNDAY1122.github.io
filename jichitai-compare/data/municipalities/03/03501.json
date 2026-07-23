@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03501",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "軽米町",
+  "officialUrl": "https://www.town.karumai.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を軽米町公式情報で調査し、7制度をverified、病児・病後児保育をunavailable、産後ケアをneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達年度末まで、所得制限なしで保険診療の一部負担金全額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "乳幼児・児童生徒等医療費助成",
+        "target": "出生の日から18歳に到達した年度末まで",
+        "incomeLimit": "なし",
+        "coverage": "医療機関・歯科・薬局で支払う保険診療の一部負担金全額",
+        "inPrefecture": "県内医療機関では受給者証の提示により原則窓口負担なし",
+        "outsidePrefecture": "県外受診等は一度支払い、領収書を添えて給付申請",
+        "application": "町へ受給者証の交付申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/education/teatejosei/josei/entry-basename-1.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町の第3期子ども・子育て支援事業計画では病児・病後児保育を実施しておらず、必要に応じて町外施設の利用を検討するとしている。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "病児・病後児保育事業",
+        "availability": "町内では実施していない",
+        "plannedCapacity": "令和7年度から令和11年度まで確保量0人",
+        "futurePolicy": "必要に応じて町外の病児・病後児保育施設の利用を検討",
+        "serviceDescription": "病気または回復期で集団保育・家庭保育が困難な児童を医療機関等で一時的に預かる事業"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/.assets/%E8%BB%BD%E7%B1%B3%E7%94%BA%E3%81%93%E3%81%A9%E3%82%82%E8%A8%88%E7%94%BB%EF%BC%88%E6%A1%88%EF%BC%89.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "町内の保育所・認定こども園等の基本保育料を、3歳未満児を含め無料としている。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "support": "保育所・認定こども園・幼稚園等の基本保育料無料",
+        "underThree": "国制度の対象外となる3歳未満児も町独自支援で無料",
+        "target": "軽米町に住所を有し、教育・保育施設等を利用する未就学児",
+        "otherCosts": "延長保育、行事費、教材費等は施設ごとに別途負担となる場合がある",
+        "application": "施設利用申込みと教育・保育給付認定が必要"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/education/teatejosei/entry-basename.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和3年度から町立小中学校の学校給食費を全額無償化し、保護者の手続きは不要としている。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "program": "小中学校給食費無償化",
+        "start": "令和3年度",
+        "schools": "軽米町立小学校・中学校",
+        "parentPayment": "なし",
+        "application": "不要",
+        "referenceAmount": "小学校1食320円・年額57,600円、中学校1食360円・年額64,800円相当を町が負担"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/education/teatejosei/josei/entry-basename-3.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "needs_medium_review",
+      "summary": "妊産婦・乳児と家族を対象とする相談、訪問、乳房ケア等の産後支援は確認できたが、産後ケア事業としての現行対象月齢、料金、利用回数を確定できない。",
+      "details": {
+        "program": "産前産後サポート・産後ケア",
+        "confirmed": "妊産婦、乳児、家族を対象に家庭訪問、健康相談、授乳・乳房ケア、栄養相談、ベビーマッサージ等を実施",
+        "locations": "自宅、健康ふれあいセンター、子育て支援センターぴよぴよ等",
+        "application": "電話予約による相談・訪問調整",
+        "reviewReason": "産後ケア事業としての対象月齢、利用形態別料金、利用回数、委託施設を現行案内で確定できない"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/education/entry-basename-7.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に通っていない生後6か月から満3歳未満児を対象に、花のまち軽米こども園で月10時間まで無料で実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "target": "保育所・認定こども園等に在籍していない生後6か月から満3歳未満の児童",
+        "employmentRequirement": "なし",
+        "facility": "花のまち軽米こども園",
+        "usageLimit": "月10時間",
+        "fee": "町の保育料無償化方針により利用者負担なし",
+        "start": "令和8年4月",
+        "application": "町への利用登録、施設での事前面談、利用予約が必要"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/education/kosodatesupport/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.karumai.iwate.jp/article/gyosei/gikai/yoteikekka/entry-basename-276.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.karumai.iwate.jp/article/.assets/20260302_%E7%AC%AC21%E5%9B%9E%E5%AE%9A%E4%BE%8B%E4%BC%9A_%E4%B8%80%E8%88%AC%E8%B3%AA%E5%95%8F.pdf",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・移住者による空き家購入費を補助し、18歳未満の子がいる世帯は補助上限を50万円とする。",
+      "details": {
+        "program": "若者・移住者空き家住宅取得支援事業補助金",
+        "target": "町の空き家バンク等に登録された住宅を取得して居住する若者・移住者等",
+        "support": "住宅取得費の2分の1以内",
+        "standardLimit": "上限30万円",
+        "childHousehold": "18歳未満の子どもと同居する世帯は上限50万円",
+        "application": "売買契約・転入時期等の要件があるため、取得前に町へ相談"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/mokuteki/hikkoshi/jutakusumai/entry-basename-1.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは指定収集日に集積所へ出すほか、二戸地区クリーンセンター等へ直接搬入できる。",
+      "details": {
+        "collection": "家庭ごみ収集日程表の粗大ごみ収集日に、当日8時30分までに指定集積所へ排出",
+        "sizeLimit": "一辺がおおむね1メートル以内、長さ1.8メートル以内で人力で積込み可能なもの",
+        "directCarry": "収集月以外の布団・家具等は二戸地区クリーンセンターまたは岩手・玉山清掃事業所へ直接搬入可能",
+        "facilityFee": "二戸地区クリーンセンターは10キログラム当たり100円",
+        "excluded": "家電リサイクル対象品、処理困難物等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/kurashitetsuduki/trash/dashikata/entry-basename-11.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、地震、避難所等を掲載した令和5年度更新の軽米町防災マップを公開している。",
+      "details": {
+        "map": "軽米町防災マップ",
+        "updated": "令和5年度に更新し令和6年3月作成",
+        "coverage": "警戒レベル、洪水浸水想定区域、土砂災害警戒区域、地震、避難所、防災情報",
+        "rivers": "雪谷川、瀬月内川等の洪水浸水想定を掲載",
+        "access": "町公式ページから地区別PDFを閲覧可能"
+      },
+      "source": {
+        "url": "https://www.town.karumai.iwate.jp/article/kurashitetsuduki/bosaibohan/bousai/entry-basename.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
