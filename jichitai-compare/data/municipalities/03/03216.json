@@ -1,0 +1,203 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03216",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "滝沢市",
+  "officialUrl": "https://www.city.takizawa.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を滝沢市公式情報で調査し、8制度をverified、学校給食費をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日までを対象に、所得制限なしで保険診療の自己負担額の全部または一部を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費給付",
+        "target": "出生の日から18歳に達する日以後の最初の3月31日まで",
+        "incomeLimit": "令和6年4月診療分から全年齢で所得制限なし",
+        "copay": "3歳未満は全額助成。3歳から未就学児は1医療機関ごとに通院月750円・入院月2,500円、小中高校生は通院月1,500円・入院月5,000円の自己負担あり",
+        "exemption": "住民税非課税世帯は一部を除き全額助成",
+        "application": "保険年金課へ申請し受給者証の交付を受ける"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/todokede-tetsuzuki/iryohikyufu/kodomoiryohikyufu",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後3か月から小学6年生までの病児を、市内および盛岡市・矢巾町の協定施設等で一時的に預かる。",
+      "eligibility": {
+        "minAgeMonths": 3,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "program": "滝沢市病児保育事業",
+        "target": "0歳児の生後3か月以降から小学6年生まで",
+        "facilities": "市内のキッズケアルーム風船ほか、盛岡市・矢巾町との広域協定施設",
+        "fee": "協定市町の住民は1日2,200円。生活保護世帯・市町村民税非課税世帯は無料",
+        "application": "利用施設へ直接申込み",
+        "payment": "利用月の翌月に市から送付される請求書で納付"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/ikuji-kyoiku/hoikuen-yochien/kosodateshien/contents-1461",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児に加え、保護者が監護する第2子以降の3歳未満児の保育料を無償化している。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalFree": "3～5歳児および住民税非課税世帯の0～2歳児は無償",
+        "citySupport": "令和5年度から第2子以降の3歳未満児を無償化",
+        "siblingDefinition": "保護者が監護・生計管理する子のうち最年長者を除く子",
+        "excludedCosts": "送迎費、食材料費、行事費等は原則対象外",
+        "recognizedOutsideFacilities": "対象外となる0～2歳児の認可外保育施設利用にも第2子以降向け給付金制度あり"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/ikuji-kyoiku/hoikuen-yochien/contents-12122/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.takizawa.iwate.jp/kurashi/ikuji-kyoiku/hoikuen-yochien/contents-12122/p20241216082432",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "needs_medium_review",
+      "summary": "令和8年度も市立小中学校で給食費を徴収していることは確認できるが、改定後の確定額と令和8年度の公費負担内容を確認できず中間確認とする。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "coverage": "市内小学校9校・中学校6校、約5,000人分の給食を提供",
+        "confirmed": "令和8年度運営委員会で学校給食費の収納状況を報告。令和7年度は物価高騰分の一部に地方創生交付金を充当",
+        "needsReview": "令和8年度の小学校・中学校別給食費、改定時期、公費補填額、保護者負担額",
+        "incomeSupport": "経済的理由のある世帯は就学援助で学校給食費が対象"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/ikuji-kyoiku/gakkokyushoku/contents-5326",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.takizawa.iwate.jp/kurashi/ikuji-kyoiku/gakkokyushoku/contents-4523",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を中心に、訪問型、市直営施設型、医療機関型の産後ケアを無料で実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "滝沢市に住民票があり、母子とも医療行為が不要で感染症状がない方",
+        "types": "訪問型、市直営施設型、医療機関型",
+        "ageLimit": "訪問型・市直営施設型は産後1年未満、医療機関型は最大産後5か月未満",
+        "fee": "利用料無料。食事代やオプションは自己負担",
+        "usageLimit": "訪問型2回。市直営施設型と医療機関型は合わせて5回",
+        "services": "乳房ケア、休息、体調管理、乳児の健康確認、授乳・沐浴・育児相談",
+        "application": "申請・承認後、訪問型と市直営施設型はこども家庭センター、医療機関型は各医療機関へ予約"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/ikuji-kyoiku/ninshin-shussan/contents-15136",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "target": "滝沢市民で、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "子ども1人当たり月10時間",
+        "fee": "1時間300円、以後30分ごと150円。生活保護世帯は全額、非課税世帯等は1時間200円を上限に減免",
+        "facility": "ふじなでしここども園（9時～11時、一般型）",
+        "application": "市へ認定申請後、つうえんポータルで初回面談と利用予約"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/ikuji-kyoiku/hoikuen-yochien/kosodateshien/p20260316122741",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "転入1年未満または転入予定の移住者が市内の空家を取得・賃借して改修する場合、工事費の一部を補助する。",
+      "details": {
+        "program": "滝沢市移住定住促進空家等改修補助金",
+        "target": "滝沢市へ転入して1年未満または転入予定で、取得・賃借した市内空家に10年以上居住する意思がある方",
+        "support": "補助対象経費の3分の2以内。市外事業者施工は上限20万円、市内事業者施工は上限30万円",
+        "eligibleProperty": "1年以上使用されていない市内の一戸建て専用住宅または併用住宅",
+        "eligibleWorks": "増改築、外装・内装、建具、電気・ガス、給排水等の居住に必要な改修",
+        "conditions": "市税滞納なし、交付決定後に着工し申請年度2月末までに完了"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/tochi-sumai/p20250530154958",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみや集積所に出せないごみは、滝沢清掃センターへ直接搬入できる。家庭系ごみは1回200kg未満まで無料。",
+      "details": {
+        "facility": "滝沢・雫石環境組合 滝沢清掃センター（ごみちゃんセンター）",
+        "directCarry": "ソファー、タンス、ベッド等の粗大ごみや、1.5m超・30kg超のごみを直接搬入",
+        "reservation": "通常は事前予約不要。引越しや草刈り等の多量搬入は事前連絡を推奨",
+        "fee": "家庭系ごみは1回200kg未満まで無料。200kg以上は超過分10kgまでごと30円",
+        "hours": "月～金曜9時～16時、土曜9時～12時・13時～16時。日曜と1月1日～3日は休業",
+        "identification": "滝沢市または雫石町の家庭ごみであることを確認するため住所確認書類が必要"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/gomi-calendar/gomi-dictionary/take-out",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.gomichan-center.or.jp/center/cleaning/",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、岩手山火山災害、避難場所等を確認できる防災マップとWeb地図を公開している。",
+      "details": {
+        "coverage": "洪水浸水想定区域、過去の浸水実績、土砂災害警戒区域、岩手山火山災害、避難所・避難場所",
+        "map": "冊子版滝沢市防災マップ",
+        "webMap": "たきざわeマップで洪水浸水想定区域等を閲覧可能",
+        "floodUpdate": "令和5年2月に洪水浸水想定区域等の情報を更新",
+        "additionalMap": "防災重点ため池について、浸水区域・水深・到達時間・避難場所を示すため池ハザードマップも公開"
+      },
+      "source": {
+        "url": "https://www.city.takizawa.iwate.jp/kurashi/anzenanshin/contents-12051",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.takizawa.iwate.jp/business/noringyo/p20250311091848",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}
