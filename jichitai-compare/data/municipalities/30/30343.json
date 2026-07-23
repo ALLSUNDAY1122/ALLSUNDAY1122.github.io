@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "30343",
+  "prefectureCode": "30",
+  "prefecture": "和歌山県",
+  "name": "九度山町",
+  "officialUrl": "https://www.town.kudoyama.lg.jp/",
+  "status": "verified",
+  "summary": "九度山町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、保育料・給食費支援、産後ケア、こども誰でも通園制度、空き家移住支援などを記録。学校給食費の令和8年度の現行状況は中間確認とした。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、所得制限なく保険診療の自己負担額を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成制度",
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "incomeLimit": "所得制限なし",
+        "coverage": "医療保険を利用した保険診療の自己負担額",
+        "prefectureTreatment": "和歌山県内は受給資格証と保険資格確認書類を提示",
+        "outsidePrefecture": "県外受診等は一旦支払い後に払戻し申請",
+        "excludedCosts": "保険適用外費用等は助成対象外"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/fukushi/iryouhi-keigen.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町民が利用できる病児・病後児保育の専用利用案内を町公式サイトで確認できない。制度不存在とは断定しない。",
+      "details": {
+        "confirmed": "町の子育て支援一覧、保育所案内、短期利用支援等を確認",
+        "unconfirmed": "専用施設、広域利用、対象年齢、料金、予約方法",
+        "distinction": "通常保育や子育て短期支援とは区別して確認",
+        "verificationPolicy": "利用可否は九度山町福祉課へ確認する"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/fukushi/kosodate-shien/", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児は保育料無償。課税世帯の0～2歳児は住民税額に応じて算定し、多子軽減等を実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeTarget": "3～5歳児および住民税非課税世帯の0～2歳児",
+        "taxableUnderThree": "課税世帯の0～2歳児は市町村民税額等に応じた保育料",
+        "reductions": "国・県の多子世帯、低所得世帯、ひとり親世帯等の軽減措置あり",
+        "mealUnderThree": "0～2歳児の給食費は保育料に含む",
+        "mealThreeToFive": "九度山保育所の町内在住3～5歳児は令和6年10月から給食費を全額補助",
+        "important": "課税世帯0～2歳児の保育料まで完全無償とは記録しない"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/fukushi/kosodate-shien/hoikuryo.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "needs_medium_review",
+      "summary": "町公式ページでは令和5年7月から令和6年3月までの時限的な学校給食費無償化を確認できるが、令和8年度の現行実施状況を確定できない。",
+      "details": {
+        "confirmed": "令和2年度から令和4年度、ならびに令和5年7月から令和6年3月まで学校給食費を無償化",
+        "currentIssue": "令和8年度の無償化継続、保護者負担額、対象校・学年を示す現行案内を確認できない",
+        "additionalSupport": "小中学校入学時に5万円の入学祝金制度あり",
+        "verificationPolicy": "過去の時限支援を現行制度として扱わず、教育委員会へ再確認する"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/kyouiku/gakkou/syuugakusien.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.kudoyama.lg.jp/kyouiku/gakkou/2021-0409-1451-45.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子を対象に、ショートステイ型・デイサービス型・アウトリーチ型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "町民で、家族等の支援が十分でなく、産後の身体回復や育児に不安がある産婦と乳児",
+        "types": "ショートステイ型、デイサービス型、アウトリーチ型",
+        "limits": "ショートステイ7回、デイサービス10回、アウトリーチ10回",
+        "taxableFee": "課税世帯は宿泊1回6,000円、デイ・訪問1回500円",
+        "nonTaxableFee": "非課税世帯は宿泊1回3,000円、デイ・訪問1回300円",
+        "publicAssistance": "生活保護世帯は無料",
+        "care": "母体管理、精神的支援、乳房ケア、授乳・沐浴指導、乳児の発育観察"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/jumin/kosodate/sangocare.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "target": "九度山町民で、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間。未利用時間の翌月繰越なし",
+        "facility": "集まれ！！Chicks＆Mommy。町外実施施設の広域利用も可能",
+        "hours": "月・火・水・金曜日9時30分～14時30分。1日5時間、月2日まで",
+        "fee": "1時間300円。生活保護世帯は300円、一定所得未満世帯は200円を減額",
+        "application": "町の認定後、総合支援システムで事前面談・予約"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/fukushi/kosodate-shien/kodomodaredemotuuennseido.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家バンク登録住宅を購入して移住する世帯へ、子育て世帯等は50万円を補助する。",
+      "details": {
+        "program": "九度山町空き家移住推進補助金",
+        "singleAmount": "単身世帯20万円",
+        "householdAmount": "2名以上世帯30万円",
+        "familyAmount": "2名以上の新婚世帯または子育て世帯50万円",
+        "housingRequirement": "わかやま空き家バンク登録の町内物件を自己居住用に購入",
+        "residenceRequirement": "転入前1年間町内住所なし、5年以上定住意思等",
+        "application": "対象住宅への転入完了年度内に申請",
+        "additionalSupport": "新築・建売購入100万円、民間賃貸の新婚・子育て世帯へ月上限27,000円・最大7年間の支援案内もあり"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/kikaku/seisaku/akiya-izyuu.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.kudoyama.lg.jp/kikaku/seisaku/izyu-sien.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは1枚220円の収集シールを貼って排出し、広域ごみ処理場への直接搬入も利用できる。",
+      "details": {
+        "classification": "町の粗大ごみ回収一覧表・家庭ごみ分別ガイドに従って分別",
+        "collectionSticker": "粗大ごみ収集シール1枚220円（税込）",
+        "purchase": "町内取扱店または役場で収集シールを購入",
+        "selfDelivery": "広域ごみ処理場への直接搬入は収集シール不要",
+        "schedule": "地区別収集日・品目ごとの必要シール枚数は最新一覧表を確認"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/jumin/gomi/bunbetsu.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水浸水、土砂災害、地震、ため池、避難場所等を掲載した冊子版・WEB版防災マップを公開する。",
+      "details": {
+        "map": "九度山町防災マップ（令和4年3月改訂）",
+        "hazards": "紀の川洪水浸水、河岸浸食・氾濫流、土砂災害、地震、ため池",
+        "evacuation": "指定避難所一覧、警戒レベル、避難行動を掲載",
+        "webMap": "現在地・縮尺・航空写真切替等に対応するWEB版を公開",
+        "preparedness": "非常持出品、備蓄品、防災情報の確認方法を掲載",
+        "latestPage": "防災マップ案内ページは令和8年6月更新"
+      },
+      "source": {"url": "https://www.town.kudoyama.lg.jp/bousai/bousai/bousai-map.html", "checkedAt": "2026-07-23"}
+    }
+  }
+}
