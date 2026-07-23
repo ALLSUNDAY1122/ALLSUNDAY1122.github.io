@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "30422",
+  "prefectureCode": "30",
+  "prefecture": "和歌山県",
+  "name": "太地町",
+  "officialUrl": "https://www.town.taiji.wakayama.jp/",
+  "status": "verified",
+  "summary": "太地町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳までの医療費助成、保育料・学校給食費支援、粗大ごみ、防災情報を記録し、病児保育、産後ケア、こども誰でも通園制度、住宅支援の現行個別条件を再確認対象とした。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までの子どもの保険診療自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "出生から18歳到達後最初の3月31日まで",
+        "residency": "太地町に住所があり健康保険に加入する子ども",
+        "coverage": "保険診療の自己負担分を助成",
+        "excluded": "保険適用外費用等は助成対象外となるため福祉課へ確認",
+        "procedure": "受給資格証の交付、県外受診時等の手続きを町窓口へ確認"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/lifestage/nyugaku/nyuugaku901.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taiji.wakayama.jp/fukushi/kodomo/nyuyouji-jyosei.html", "checkedAt": "2026-07-23"},
+        {"url": "https://www.town.taiji.wakayama.jp/fukushi/kodomo/shuugakuji.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "sickChildCare": {
+      "status": "needs_medium_review",
+      "summary": "町公式サイトに令和8年度の病児・病後児保育案内が掲載されているが、施設・対象年齢・料金等の本文条件は再確認が必要。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "details": {
+        "confirmed": "町公式トップページで令和8年4月16日付の病児病後児保育案内を確認",
+        "reviewReason": "実施施設、受入開始月齢、対象学年、利用時間、料金、予約方法を本文で確定できない",
+        "verificationPolicy": "近隣自治体の利用条件を太地町民の条件として転用しない",
+        "contact": "福祉課等へ現行利用条件を確認"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/lifestage/2026-0427-1645-11.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taiji.wakayama.jp/", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "国制度による3～5歳児等の無償化に加え、第2子半額・所得要件を満たす第2子と第3子以降の無料化を実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFreeTarget": "3～5歳児、および住民税非課税世帯の0～2歳児",
+        "townSupport": "第2子は半額。所得要件を満たす第2子と第3子以降は無料",
+        "underThree": "課税世帯0～2歳児の第1子等は所得等に応じた保育料の対象",
+        "actualCosts": "延長保育料、用品費、行事費等は別途の場合あり",
+        "procedure": "世帯・きょうだい・所得要件を教育委員会または福祉担当へ確認"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/lifestage/nyugaku/nyuugaku901.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立学校等で栄養バランスに配慮した学校給食を無料で提供する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "太地町立小学校・中学校等の児童生徒",
+        "coverage": "学校給食費を無料化",
+        "nursery": "保育施設を含む町内各施設で無料給食を提供する旨を町公式案内に掲載",
+        "purpose": "子育て世帯の負担軽減と食育・健康づくり",
+        "exceptions": "町外就学者、欠食・弁当対応等の扱いは教育委員会へ確認"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/lifestage/nyugaku/nyuugaku901.html", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "needs_medium_review",
+      "summary": "町公式資料で産後ケア事業の実施を確認したが、令和8年度の利用類型・対象月齢・回数・料金は再確認が必要。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "confirmed": "町公式広報で産後1年未満の母子を対象とする産後ケア事業の実施実績を確認",
+        "pastType": "助産所等を利用する日帰り型の案内実績あり",
+        "reviewReason": "令和8年度の宿泊・通所・訪問型の実施有無、対象月齢、利用回数、自己負担額、実施施設を示す現行専用案内を確認できない",
+        "verificationPolicy": "過年度条件を現行制度として断定せず、保健福祉センター等へ確認"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/tyousei/kouhou/r02/files/r0205.pdf", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taiji.wakayama.jp/lifestage/syussei/index.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "needs_medium_review",
+      "summary": "町公式サイトに令和8年度のこども誰でも通園制度案内が掲載されているが、対象月齢・時間・料金等の本文条件は再確認が必要。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "confirmed": "町公式トップページで令和8年4月17日付の制度案内を確認",
+        "generalTarget": "保育所等に通っていない満3歳未満児を対象とする国制度",
+        "reviewReason": "太地町での受入開始月齢、実施施設、利用上限、時間帯、料金、予約方法を本文で確定できない",
+        "verificationPolicy": "国の標準条件や他自治体の料金を町固有条件として転用しない"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/lifestage/2026-0427-1640-11.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taiji.wakayama.jp/", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "housingSupport": {
+      "status": "needs_medium_review",
+      "summary": "町公式の住まい・移住案内に移住支援金と空き家バンクを掲載しているが、令和8年度の支給額・対象要件は再確認が必要。",
+      "details": {
+        "confirmed": "町公式住まい情報に移住支援金および空き家バンクへの案内を掲載",
+        "vacantHouse": "空き家バンクで登録物件・利用手続きを案内",
+        "reviewReason": "移住支援金の地域・就業要件、世帯額、子ども加算、予算状況、空き家改修補助の有無を現行ページで確定できない",
+        "verificationPolicy": "一般的な国・県の移住支援金額を町の確定額として記録しない"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/lifestage/sumai/index.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taiji.wakayama.jp/lifestage/sumai/sumai003.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "布団・家具・家電等を品目別区分に従って収集日に排出するか、クリーンセンターへ直接搬入する。",
+      "details": {
+        "combustibleLarge": "布団、毛布、衣類、カーテン、カーペット、網、靴、ホース、シーツ等を可燃性大型品として案内",
+        "otherItems": "家電・金属製品等は資源・不燃ごみの日または直接搬入等、品目別ルールに従う",
+        "selfDelivery": "クリーンセンターへ平日・土曜・祝日の8時30分から16時まで直接搬入可能",
+        "calendar": "地区別の収集曜日・時間に従って排出",
+        "fee": "品目別処理料金が明記されていない場合はクリーンセンターへ確認"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/kurashi/gomi/index.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・土砂災害等のハザードマップ、避難所、高台施設を公開する。",
+      "details": {
+        "maps": "津波ハザードマップ、土砂災害ハザードマップ等",
+        "hazards": "津波浸水、土砂災害警戒区域等",
+        "evacuation": "指定避難所・指定緊急避難場所を公開",
+        "highGround": "学校や保育施設等を高台に配置する防災面の取組を案内",
+        "preparedness": "自宅周辺の危険区域、避難場所、避難経路を平時に確認"
+      },
+      "source": {"url": "https://www.town.taiji.wakayama.jp/bousai/", "checkedAt": "2026-07-23"}
+    }
+  }
+}
