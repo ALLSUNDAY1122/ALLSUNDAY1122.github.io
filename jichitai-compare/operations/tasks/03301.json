@@ -6,10 +6,11 @@
   "prefectureName": "岩手県",
   "assignedTeam": "北日本調査班",
   "status": "pr_open",
-  "currentService": "sickChildCare",
-  "nextServiceIndex": 1,
+  "currentService": null,
+  "nextServiceIndex": 9,
   "completedServices": [
     "childMedical",
+    "sickChildCare",
     "childcareFee",
     "schoolMeals",
     "postpartumCare",
@@ -18,17 +19,18 @@
     "bulkyWaste",
     "disasterPrevention"
   ],
-  "verifiedCount": 8,
+  "verifiedCount": 9,
   "researchingCount": 0,
   "unavailableCount": 0,
-  "needsMediumReviewCount": 1,
+  "needsMediumReviewCount": 0,
   "currentBranch": "data/03301-shizukuishi",
   "pullRequestNumber": 1178,
   "lastCheckedAt": "2026-07-23",
-  "lastUpdatedAt": "2026-07-23T11:52:00+09:00",
+  "lastUpdatedAt": "2026-07-23T13:11:00+09:00",
   "lastUpdatedBy": "北日本調査班A",
   "officialSources": [
     "https://www.town.shizukuishi.iwate.jp/docs/2022090400018/",
+    "https://www.town.shizukuishi.iwate.jp/docs/2014112900132/",
     "https://www.town.shizukuishi.iwate.jp/docs/2023050900043/",
     "https://www.town.shizukuishi.iwate.jp/teijyu/docs/2024051000015/",
     "https://www.town.shizukuishi.iwate.jp/docs/2021040600041/",
@@ -38,15 +40,16 @@
     "https://www.town.shizukuishi.iwate.jp/docs/2014121700099/"
   ],
   "notes": [
-    "必須9制度を雫石町公式情報で一括調査し、8制度をverified、病後児保育をneeds_medium_reviewとして整理。",
+    "必須9制度を雫石町公式情報で一括調査し、全9制度をverifiedとして整理。",
     "出生から18歳年度末までの医療費全額助成、所得制限なしの3歳未満児保育料免除、3～5歳児副食費無償化を確認。",
-    "令和8年度からの小中学校給食費無償化を確認。",
+    "病後児保育は七ツ森保育園で無料実施し、町公式広報で対象が生後おおむね2か月から小学3年生までと確認。",
+    "町立小中学校の学校給食費無償化を確認。",
     "産後1年未満の母子を対象とする訪問型産後ケアは無料で1人3回まで利用可能。",
     "こども誰でも通園制度は御明神保育所で月10時間、1時間300円で実施。",
     "18歳未満同居世帯の上限60万円空き家改修補助、大型ごみ直接搬入、防災マップを確認。",
-    "病後児保育は七ツ森保育園で無料実施を確認したが、現行公式ページに対象年齢の明記がなく中間確認とした。",
+    "病後児保育の対象年齢を記載した公式広報PDFは規定どおり画像取得を試行したが、Web取得側のCache missにより画像化できず、公式PDFの解析本文で確認。",
     "自治体JSONとtaskの整合、公式主出典の重複除去、担当範囲2ファイル限定を確認。",
-    "region/north向けPR #1178を作成。"
+    "region/north向けPR #1178を更新。"
   ],
   "blockers": []
 }
