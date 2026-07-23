@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03321",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "紫波町",
+  "officialUrl": "https://www.town.shiwa.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を紫波町公式情報で調査し、8制度をverified、産後ケアをneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月末まで、所得制限なしで保険診療の自己負担額の一部または全部を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "出生から18歳に達する日以後最初の3月31日まで",
+        "incomeLimit": "なし。所得確認は実施",
+        "copay": "3歳未満児と町民税非課税世帯は全額給付。その他の高校生年齢までは医療機関ごとに通院月750円・入院月2,500円を超える額を給付",
+        "application": "出生・転入時などに町民課で受給者証を申請",
+        "outsidePrefecture": "県外受診は領収書を添えて町へ申請"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/soshiki/1/1_1/318.html/", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後2か月から小学6年生までの病気中の子どもを、紫波中央病児保育室で預かる。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 12},
+      "details": {
+        "program": "紫波町病児保育事業",
+        "facility": "紫波中央病児保育室（紫波中央小児科併設）",
+        "target": "生後2か月から小学6年生まで",
+        "condition": "病気の回復期に至っておらず、保護者の就労等により家庭で保育できない児童",
+        "capacity": "6名",
+        "hours": "平日8時30分から17時。希望により18時まで延長可能",
+        "fee": "紫波町民1日2,200円。生活保護世帯・町民税非課税世帯は事前申請により無料",
+        "application": "利用前に施設へ予約し、所定の手続きを行う"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/soshiki/5_2/4_3/2673.html/", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯の0～2歳児を無償化し、年齢制限なく数えた第2子以降の保育料を国基準額からさらに半額に軽減する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalSupport": "3～5歳児は全世帯、0～2歳児は町民税非課税世帯が無償化対象",
+        "siblingReduction": "子どもの年齢制限なしで第2子以降に該当する場合、保育料を国基準額からさらに半額",
+        "start": "多子世帯軽減拡充は令和5年4月から",
+        "unlicensedFacilities": "認可外保育施設等を利用する第2子以降の0～2歳児には要件を満たす場合に保育料給付金を支給"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/soshiki/5_2/4_3/9472.html/", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.town.shiwa.iwate.jp/kosodate/azukeru1/azukeru2/169811642525350/", "checkedAt": "2026-07-23"}]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度から町立小学校の学校給食費を無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 12},
+      "details": {
+        "support": "小学校給食費無償化",
+        "start": "令和8年度",
+        "target": "紫波町立小学校の児童",
+        "purpose": "子育て世代の経済的負担軽減",
+        "otherSupport": "食材費高騰分は町が補填"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/soshiki/4/1_14_2/10264.html/", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "needs_medium_review",
+      "summary": "母子の心身のケア、育児相談・支援を行う産後ケア事業は確認できたが、現行の対象月齢・利用形態・料金をHTMLで確定できない。",
+      "details": {
+        "program": "産後ケア事業",
+        "services": "母子の心身のケア、育児相談、育児支援",
+        "application": "健康福祉課こども家庭センター母子保健係へ申請・相談",
+        "reviewReason": "詳細を掲載した町公式PDFがWeb取得側のCache missとなり、対象月齢・利用形態・料金・回数を確定できない"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/soshiki/1_2/3_5/17157431147431/", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設に在籍していない生後6か月から満3歳未満児を、古館保育所で月10時間まで預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "target": "保育所・認定こども園等に在籍していない生後6か月から満3歳未満の乳児等",
+        "employmentRequirement": "なし",
+        "facility": "紫波町立古館保育所",
+        "usage": "月10時間まで",
+        "fee": "基準額1時間300円。施設により異なる場合があり、負担軽減制度あり",
+        "application": "町こども課へ利用認定申請後、システムで事前面談・利用予約を行う"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/soshiki/5_2/4/176795067528793/", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "若者・県外移住者の空き家取得・改修費を補助し、18歳未満の子と同居する子育て世帯には20万円を加算する。",
+      "details": {
+        "program": "若者・移住者空き家取得等支援補助金",
+        "target": "空き家バンク登録物件を取得する39歳以下の人または県外からの移住者など",
+        "purchaseSupport": "空き家取得費を上限30万円まで補助",
+        "renovationSupport": "リフォーム費の2分の1、上限40万円",
+        "childHousehold": "18歳年度末までの子または胎児と同居する世帯",
+        "childAddition": "空き家取得またはリフォームの補助額に20万円加算",
+        "residenceRequirement": "交付決定後5年以上継続して居住する意思が必要"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/soshiki/3_1/2_akiya/168474156015020/", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型・重量物や一時多量ごみは、前日までに予約して盛岡・紫波地区環境施設組合清掃センターへ有料で直接搬入する。",
+      "details": {
+        "facility": "盛岡・紫波地区環境施設組合清掃センター",
+        "target": "ベッド類、畳、ドラム缶、引越しごみ、3辺合計3メートル以上または最長辺2メートル以上、重量60キログラム超など",
+        "fee": "直接搬入は有料",
+        "hours": "月～土曜日の8時30分～10時、13時～15時。年末年始を除く",
+        "reservation": "前日までに電話またはインターネットで予約"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/kurashi/gomi/1_bunebetsu/2357.html/", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "令和5年3月更新の防災マップを全体版と9地区別に公開している。",
+      "details": {
+        "map": "紫波町防災マップ",
+        "updated": "令和5年3月",
+        "districts": "日詰、古館、水分、志和、赤石、彦部、佐比内、赤沢、長岡",
+        "coverage": "洪水・土砂災害等の危険箇所、避難場所、災害時の行動に関する情報",
+        "access": "町公式ページから全体図と地区別PDFを確認可能"
+      },
+      "source": {"url": "https://www.town.shiwa.iwate.jp/bosai_kurashi_app/kinkyusonae1/kinkyusonae2/5115.html/", "checkedAt": "2026-07-23"}
+    }
+  }
+}
