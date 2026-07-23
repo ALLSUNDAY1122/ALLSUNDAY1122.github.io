@@ -1,169 +1,77 @@
-name: Coordinator Regional Missing Audit
+name: Jichitai Compare CI
 
 on:
   pull_request:
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
     branches:
       - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  audit-regional-missing:
-    if: github.head_ref == 'coord/audit-regional-missing-20260723-1741'
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - name: Checkout audit branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: coord/audit-regional-missing-20260723-1741
           fetch-depth: 0
 
-      - name: Fetch main and regional branches
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          git fetch origin \
-            +refs/heads/main:refs/remotes/origin/main \
-            +refs/heads/region/north:refs/remotes/origin/region/north \
-            +refs/heads/region/east:refs/remotes/origin/region/east \
-            +refs/heads/region/central:refs/remotes/origin/region/central \
-            +refs/heads/region/west:refs/remotes/origin/region/west
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
 
-      - name: Audit completed regional municipalities missing from main
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import { execFileSync } from 'node:child_process';
-
-          const regions = ['north', 'east', 'central', 'west'];
-          const dataPrefix = 'jichitai-compare/data/municipalities/';
-          const taskPrefix = 'jichitai-compare/operations/tasks/';
-
-          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' });
-          const exists = (ref, path) => {
-            try {
-              execFileSync('git', ['cat-file', '-e', `${ref}:${path}`], { stdio: 'ignore' });
-              return true;
-            } catch {
-              return false;
-            }
-          };
-          const readJson = (ref, path) => JSON.parse(git('show', `${ref}:${path}`));
-
-          const report = {
-            generatedAt: new Date().toISOString(),
-            mainRegisteredCount: 0,
-            totalCompletedMissing: 0,
-            invalidMissing: [],
-            duplicatesAcrossRegions: [],
-            regions: {}
-          };
-
-          const mainFiles = git('ls-tree', '-r', '--name-only', 'origin/main', dataPrefix)
-            .split('\n')
-            .filter((path) => /^jichitai-compare\/data\/municipalities\/\d{2}\/\d{5}\.json$/u.test(path));
-          report.mainRegisteredCount = mainFiles.length;
-
-          const seenMissing = new Map();
-
-          for (const region of regions) {
-            const ref = `origin/region/${region}`;
-            const dataFiles = git('ls-tree', '-r', '--name-only', ref, dataPrefix)
-              .split('\n')
-              .filter((path) => /^jichitai-compare\/data\/municipalities\/\d{2}\/\d{5}\.json$/u.test(path));
-
-            const completedMissing = [];
-            const skippedAlreadyMain = [];
-
-            for (const dataPath of dataFiles) {
-              const code = dataPath.match(/(\d{5})\.json$/u)?.[1];
-              if (!code) continue;
-              const taskPath = `${taskPrefix}${code}.json`;
-
-              if (exists('origin/main', dataPath) || exists('origin/main', taskPath)) {
-                skippedAlreadyMain.push(code);
-                continue;
-              }
-
-              if (!exists(ref, taskPath)) {
-                report.invalidMissing.push({ region, code, reason: 'task_missing' });
-                continue;
-              }
-
-              try {
-                const data = readJson(ref, dataPath);
-                const task = readJson(ref, taskPath);
-                const taskCode = task.municipalityCode ?? task.code;
-                const completedCount = task.completedServices?.length ?? task.completedServiceCount ?? 0;
-                const serviceCount = data.services ? Object.keys(data.services).length : 0;
-                const completedStatuses = Object.values(data.services ?? {}).filter((service) => ['verified', 'unavailable'].includes(service?.status)).length;
-
-                if (data.code !== code || taskCode !== code || task.status !== 'merged' || completedCount !== 9 || serviceCount !== 9 || completedStatuses !== 9) {
-                  report.invalidMissing.push({
-                    region,
-                    code,
-                    name: data.name ?? task.municipalityName ?? null,
-                    reason: 'not_complete',
-                    dataCode: data.code ?? null,
-                    taskCode,
-                    taskStatus: task.status ?? null,
-                    completedCount,
-                    serviceCount,
-                    completedStatuses
-                  });
-                  continue;
-                }
-
-                const item = {
-                  code,
-                  name: data.name,
-                  prefectureCode: data.prefectureCode,
-                  prefecture: data.prefecture,
-                  verifiedCount: task.verifiedCount,
-                  unavailableCount: task.unavailableCount,
-                  dataPath,
-                  taskPath
-                };
-                completedMissing.push(item);
-
-                if (seenMissing.has(code)) {
-                  report.duplicatesAcrossRegions.push({ code, firstRegion: seenMissing.get(code), secondRegion: region });
-                } else {
-                  seenMissing.set(code, region);
-                }
-              } catch (error) {
-                report.invalidMissing.push({ region, code, reason: 'parse_error', message: error.message });
-              }
-            }
-
-            completedMissing.sort((a, b) => a.code.localeCompare(b.code));
-            report.regions[region] = {
-              regionalDataCount: dataFiles.length,
-              alreadyInMainCount: skippedAlreadyMain.length,
-              completedMissingCount: completedMissing.length,
-              completedMissing
-            };
-            report.totalCompletedMissing += completedMissing.length;
-          }
-
-          fs.writeFileSync(
-            'jichitai-compare/operations/control/regional-missing-audit-20260723.json',
-            `${JSON.stringify(report, null, 2)}\n`
-          );
-          console.log(JSON.stringify({
-            mainRegisteredCount: report.mainRegisteredCount,
-            totalCompletedMissing: report.totalCompletedMissing,
-            invalidMissingCount: report.invalidMissing.length,
-            duplicateCount: report.duplicatesAcrossRegions.length,
-            byRegion: Object.fromEntries(Object.entries(report.regions).map(([key, value]) => [key, value.completedMissingCount]))
-          }, null, 2));
-          NODE
-
-      - name: Restore standard workflow and commit audit
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare/operations/control/regional-missing-audit-20260723.json
-          git commit -m 'Audit completed regional municipalities missing from main'
-          git push origin HEAD:coord/audit-regional-missing-20260723-1741
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
