@@ -13,7 +13,9 @@
     ['x|launch_20260723|top_100', 'launch-20260723-x-top-100'],
     ['x|launch_20260723|last_elevator', 'launch-20260723-x-last-elevator'],
     ['threads|launch_20260723|spare_key', 'launch-20260723-threads-spare-key'],
-    ['line|launch_20260723|hired_experience', 'launch-20260723-line-hired-experience']
+    ['line|launch_20260723|hired_experience', 'launch-20260723-line-hired-experience'],
+    ['x|launch_20260724|five_minute_12', 'launch-20260724-x-five-minute'],
+    ['threads|launch_20260724|five_minute_12', 'launch-20260724-threads-five-minute']
   ]);
 
   function sourceChannel() {
