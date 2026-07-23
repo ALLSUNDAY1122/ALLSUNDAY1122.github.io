@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03215",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "奥州市",
+  "officialUrl": "https://www.city.oshu.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を奥州市公式情報で調査し、8制度をverified、学校給食費無償化をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日までの子どもを対象に、保険診療の自己負担分を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "出生から18歳に達する日以後最初の3月31日まで",
+        "coverage": "保険診療の一部負担金",
+        "application": "市への申請により受給者証を交付",
+        "start": "新生児は出生日から、その他は原則として申請月の初日から"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/iryo_kenko_fukushi/iryo_kenko/3/8297.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.oshu.iwate.jp/faq/2/1/3/7707.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生までの病気回復期の子どもを、病後児保育所こぐま園で預かる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "program": "病後児保育所こぐま園",
+        "target": "生後6か月から小学6年生まで",
+        "condition": "病気の回復期で安静が必要であり、保護者による家庭保育が困難な場合",
+        "hours": "平日8時から18時",
+        "capacity": "1日最大6名",
+        "fee": "生活保護・市民税非課税世帯0円、均等割のみ課税世帯1,000円、所得割課税世帯2,000円",
+        "application": "事前登録後、オンラインまたは電話で申込み"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/soshiki/9/1066/12561.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳児クラス以上に加え、保護者が扶養する第2子以降の0～2歳児クラスの保育料を無償化する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalSupport": "3歳児クラス以上は第1子・第2子を問わず無償化",
+        "citySupport": "保護者が扶養する第2子以降の0～2歳児クラスを無償化",
+        "siblingRule": "第1子が小学生以上または別居している場合も対象になる可能性あり",
+        "start": "市独自拡充は令和5年4月開始"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/life_scene/nyuen_nyugaku/12565.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "needs_medium_review",
+      "summary": "令和8年6月補正予算で学校給食費無償化事業が可決されたが、開始日・対象範囲・非喫食者の取扱いを利用者向け案内で確定できず中間確認とする。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "confirmed": "令和8年度一般会計補正予算第3号に学校給食費無償化事業を計上し、令和8年6月25日に可決",
+        "purpose": "物価高騰下の子育て世帯支援",
+        "needsReview": "実施開始月、対象となる学校・学年、保護者負担額、非喫食者への助成方法",
+        "existingSupport": "要保護・準要保護世帯は令和8年度就学援助で給食費が援助対象"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/gikai/teireikai_rinjikai/18_3/r08teirei2/17468.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.oshu.iwate.jp/kosodate_kyoiku/gakko/4/8504.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に宿泊・日帰り・訪問ケアを実施し、補助金により利用料を無料としている。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "types": "宿泊ケア、日帰りケア、訪問ケア",
+        "target": "市内在住の産後1年未満の母子。医療的処置が必要でない方",
+        "fee": "利用料は補助金により無料",
+        "limits": "宿泊ケア3回、日帰りケア7回、訪問ケア7回まで",
+        "ageConditions": "病院・宿泊施設は産後5か月未満、保育施設の日帰りケアは産後5か月以上1年未満、訪問は産後1年未満",
+        "services": "母体の心身ケア、乳房ケア、授乳・沐浴支援、乳児の健康観察、育児相談"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/kosodate/ninshin_shussan/2/2184.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "target": "児童・保護者ともに奥州市民で、保育所等に在籍していない生後6か月から満3歳未満",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間。翌月への繰越不可",
+        "fee": "基本1時間300円。施設により異なる場合があり、食事・おやつは別途実費",
+        "reduction": "令和8年度は生活保護世帯0円、一定所得未満世帯・要支援児童等の世帯は1時間100円",
+        "application": "市の給付認定後、国の総合支援システムで施設面談・予約"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/soshiki/9/1066/15312.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から要件を満たして移住する世帯に100万円、18歳未満の子ども1人につき100万円を加算する。",
+      "details": {
+        "program": "奥州市移住支援金",
+        "singleAmount": "60万円",
+        "householdAmount": "100万円",
+        "childAddition": "18歳未満の子ども1人につき100万円加算",
+        "target": "東京23区等での居住・通勤歴、奥州市への転入、就業・起業・テレワーク・関係人口等の要件を満たす方",
+        "applicationDeadline": "転入後1年以内",
+        "fiscalYear": "令和8年度の申請対象者は事前相談可能"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/kurashi_tetsuzuki/sumai/7063.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "家庭から出る粗大ごみ等を胆江地区衛生センターへ有料で直接搬入できる。",
+      "details": {
+        "facility": "奥州金ケ崎行政事務組合 胆江地区衛生センター",
+        "target": "奥州市内の家庭から出る可燃・不燃・粗大ごみ等。搬入可否は事前確認が必要",
+        "fee": "家庭ごみは100キログラムまで500円、200キログラムまで1,700円、以後重量区分に応じ加算",
+        "sorting": "可燃ごみと不燃ごみを正しく分別して搬入",
+        "restriction": "施設で処理できない品目は搬入不可"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/kurashi_tetsuzuki/gomi_recycle/2/6888.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水浸水想定区域、土砂災害警戒区域、避難所等を掲載した地域別ハザードマップを令和8年3月に改訂している。",
+      "details": {
+        "map": "奥州市ハザードマップ",
+        "hazards": "洪水・浸水、土砂災害",
+        "areas": "水沢地域、江刺地域、前沢・胆沢・衣川地域",
+        "features": "危険箇所、浸水想定区域、土砂災害警戒区域、避難所等を掲載",
+        "updated": "令和8年3月改訂"
+      },
+      "source": {
+        "url": "https://www.city.oshu.iwate.jp/soshiki/5/1052/4/1/4089.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
