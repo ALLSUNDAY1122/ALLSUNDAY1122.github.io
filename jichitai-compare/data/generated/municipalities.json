@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1450,
+    "municipalityCount": 1453,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -24497,6 +24497,169 @@
           },
           "source": {
             "url": "https://www.town.biratori.hokkaido.jp/kurashi/seikatsukankyo/bosai/851.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "01604",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "新冠町",
+      "officialUrl": "https://www.niikappu.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Bが新冠町公式情報で対象9制度を調査し、8制度を確認済み、病児・病後児保育の現行条件を未確認として登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで、入院・通院・訪問看護の保険診療自己負担分を全額助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "新冠町に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院、通院、訪問看護の保険診療自己負担分を全額助成",
+            "excluded": "入院時食事療養標準負担額等の保険外費用",
+            "application": "受給者証の交付申請が必要",
+            "start": "2026年4月1日から18歳年度末まで全額助成"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/kenko/kodomoiryo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の2026年子育てガイドで、病児・病後児保育の実施施設、対象年齢、料金、予約方法を確認できない。",
+          "details": {
+            "confirmed": "認定こども園、子育て支援センター、児童館、発達支援センター等は掲載されている",
+            "unconfirmed": "令和8年度に利用できる病児・病後児保育施設、対象、利用料、登録・予約方法",
+            "guidance": "保健福祉課または子育て支援窓口へ広域利用を含む現行の利用可否を確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/life/kosodate.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "令和8年4月から、0歳から5歳児の認定こども園保育料を完全無償化する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "認定こども園ド・レ・ミの幼稚園型・保育所型利用児童",
+            "coverage": "令和8年4月から全認定区分の保育料を完全無償化",
+            "mealFee": "給食費も無償",
+            "otherCosts": "保護者会費、制服、教材等は実費負担",
+            "hours": "保育標準時間は平日7時30分から18時"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/kosodate/ninteikodomoen/hoikusho.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小学校・中学校の学校給食費を平成30年度から無料化している。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "新冠町立小学校・中学校の児童生徒",
+            "coverage": "学校給食費を全額無料化",
+            "start": "2018年度から実施",
+            "purpose": "子育て世帯支援と教育環境充実"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/kyoiku/kyoiku/gakko/kyusyokuhi_muryouka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子を対象に、委託医療機関等での乳房ケア・授乳・育児相談費用を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "新冠町に居住する産後1年未満の母親と乳児で、心身・育児等に不安がある方",
+            "providers": "新ひだか町立静内病院助産師外来、要助産院",
+            "support": "乳房マッサージ、産後の心身相談、授乳・抱っこ・育児相談",
+            "excluded": "医療行為が必要な場合は対象外",
+            "application": "町の案内に従い委託機関の利用・助成手続を行う"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/kosodate/sangokea.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "認定こども園の幼稚園型園児を対象に、平日午後と就労世帯向け土曜日の一時預かりを実施する。",
+          "eligibility": {
+            "minAgeMonths": 36,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "認定こども園ド・レ・ミ",
+            "target": "幼稚園型の満3歳以上児",
+            "typeI": "月曜日から金曜日の13時から16時",
+            "typeII": "保護者就労の場合、土曜日9時から16時",
+            "application": "預かり事業の利用には別途申込みが必要",
+            "other": "こども誰でも通園制度も別途申込制で実施"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/kosodate/ninteikodomoen/hoikusho.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅取得に最大200万円を交付し、中学生以下の子どもの人数に応じて固定資産税相当額を最大5年間支援する。",
+          "details": {
+            "program": "第5期定住・移住促進制度（令和7年度から令和9年度）",
+            "newLocalBuilder": "町内業者による新築は200万円",
+            "newOtherBuilder": "町外業者による新築は100万円",
+            "usedHouse": "中古住宅取得は25万円",
+            "childSupport": "中学生以下の子ども1人は固定資産税の3分の1、2人は3分の2、3人以上は全額相当を最大5年間支援",
+            "conditions": "取得前の事前申請、町税滞納なし等の要件あり"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/sekatsu/sumai/teijyu/lifestyle/seido.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは1枚300円のごみ処理券を貼り、収集カレンダーに従って排出する。",
+          "details": {
+            "fee": "粗大ごみ処理券1枚300円",
+            "ticket": "町内販売店でごみ処理券を購入",
+            "collection": "分別ガイドブックと地区別収集日に従い、指定日の午前8時までに排出",
+            "guidance": "品目別の必要枚数・排出方法は最新のごみ分別ガイドブックで確認"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/sekatsu/gomi/gomifukuro.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・津波の浸水区域、危険箇所、避難場所を掲載したハザードマップを公開する。",
+          "details": {
+            "flood": "大雨災害時の危険箇所と避難場所を掲載",
+            "tsunami": "最大クラス津波の浸水区域と緊急避難場所を掲載",
+            "evacuation": "避難場所一覧・緊急連絡先を公開",
+            "learning": "大雨・地震・津波への備えをまとめた防災学習ノートも公開"
+          },
+          "source": {
+            "url": "https://www.niikappu.jp/kurashi/bosai/index.html",
             "checkedAt": "2026-07-24"
           }
         }
@@ -109413,6 +109576,191 @@
       }
     },
     {
+      "code": "12239",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "大網白里市",
+      "officialUrl": "https://www.city.oamishirasato.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を大網白里市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "大網白里市内に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院・調剤等の保険診療自己負担分を助成",
+            "procedure": "事前に受給資格登録・受給券交付申請が必要。出生・転入から1か月以内の申請は資格日まで遡及",
+            "excluded": "保険外診療、高額療養費・付加給付、他の公費負担等"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000014688.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "0歳から小学6年生までの病児をあひる保育園で一時保育",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "病気の回復期に至っていないが症状の急変が認められず、集団保育が困難な0歳から小学6年生までの子ども",
+            "facility": "あひる保育園 病児保育専用スペース",
+            "hours": "平日8時30分から17時30分",
+            "fee": "市内住民1日2,500円、市外住民3,500円",
+            "capacity": "1日2人",
+            "procedure": "施設へ直接申し込み、利用前の受診・必要書類等は施設案内を確認",
+            "related": "みどりが丘保育園では病気の回復期を対象とする病後児保育も実施"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000013684.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と市民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・保育所・認定こども園等を利用する3～5歳児と、市民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+            "upperLimits": "新制度未移行幼稚園月25,700円、認可外施設等は3～5歳月37,000円、非課税世帯0～2歳月42,000円等",
+            "procedure": "施設・サービスに応じて教育・保育給付認定または施設等利用給付認定が必要",
+            "currentFee": "課税世帯の0～2歳児は一律完全無償化の対象ではない",
+            "excluded": "給食費、通園送迎費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000009715.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費を負担0円とし、中学校は一部補助・第3子以降を申請により無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "月額6,430円の全額を国・県交付金と市負担金で補助し、保護者負担0円",
+            "juniorHigh": "月額7,450円のうち2,250円を補助し、一般の保護者負担は月額5,200円",
+            "multiChild": "中学1年生以上の子を3人以上扶養し、要件を満たす第3子以降の市立中学生は毎年度申請により給食費を無償化",
+            "procedure": "補助制度は学校を通じて申請。第3子以降無償化は専用申請書の提出が必要",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000002861.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "短期入所・通所1日・通所短時間・訪問型の産後ケアを産後1年以内の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "大網白里市に住民登録がある出産後1年以内の母親と乳児で、入院管理・感染症対応を必要としない方",
+            "types": "短期入所型、通所1日型、通所1回型、訪問型",
+            "limit": "利用可能日数は通算7日以内",
+            "support": "母親の休養、授乳・乳房ケア、乳児の健康確認、育児相談・支援等",
+            "fee": "課税世帯は利用料の1割、非課税・生活保護世帯は無料。市独自助成は1回2,500円を1出産5回まで",
+            "procedure": "妊娠28週から利用希望日の7日前までに健康増進課へ申請し、決定後に施設予約"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000011108.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を市内2施設で月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "市内在住で保育所・認定こども園・小規模保育等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "月10時間まで",
+            "facilities": "みどりが丘保育園、子育て支援館。子育て支援館は1歳誕生日の翌月から",
+            "fee": "実施施設の設定に基づき支払い。生活保護世帯は1時間300円、非課税・一定所得未満世帯は1時間200円を軽減",
+            "procedure": "市へ給付認定申請し、総合支援システムで施設面談・予約"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000014636.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅の耐震診断費を3分の2・上限8万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "housing": "1981年5月31日以前に着工した市内の在来軸組工法による地上2階以下の戸建・併用木造住宅",
+            "target": "対象住宅を所有・居住し、市の住民基本台帳に記載され、世帯全員が市税等を完納している方",
+            "amount": "耐震診断費の3分の2、上限8万円",
+            "procedure": "耐震診断の契約・実施前に申請し、交付決定後に実施",
+            "related": "診断結果等の要件を満たす住宅には別途耐震改修補助制度あり"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000002980.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない家庭粗大ごみを有料戸別収集または自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "指定袋に入らず、原則180センチ×120センチ×80センチ以内の家庭ごみ",
+            "collection": "東金市外三市町環境クリーンセンターへ電話申込し、料金分の処理手数料納付券を購入して指定日の朝8時までに排出",
+            "limit": "1回10点まで、地区別に平日の収集曜日を設定",
+            "directDelivery": "環境クリーンセンターへの自己搬入も可能。事前に最新の受入条件を確認",
+            "excluded": "家電リサイクル対象品・家庭用パソコン等は別制度で処分"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000005860.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・津波・土砂災害・ため池・避難所等を表示するWEB防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "大網白里市WEB版ハザードマップと地震ハザードマップを公開",
+            "risks": "河川洪水、過去の冠水箇所、津波浸水、土砂災害、ため池浸水、地震の揺れ・液状化等",
+            "facilities": "指定緊急避難場所・指定避難所・津波避難施設・福祉避難所等を表示",
+            "support": "スマートフォンやパソコンで住所周辺の危険性・避難先を事前確認可能"
+          },
+          "source": {
+            "url": "https://www.city.oamishirasato.lg.jp/0000013551.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "13101",
       "prefectureCode": "13",
       "prefecture": "東京都",
@@ -149500,6 +149848,181 @@
           },
           "source": {
             "url": "https://www.vill.otari.nagano.jp/soshiki/somu-shomu/gyomu/1/5/1/77.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20521",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "坂城町",
+      "officialUrl": "https://www.town.sakaki.nagano.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を坂城町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を窓口無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "坂城町に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "外来・入院の保険診療自己負担分を福祉医療制度で助成",
+            "copay": "令和7年8月1日から受給者負担額を0円とし、県内対応医療機関等の窓口負担を無料化",
+            "procedure": "福祉医療費受給者証を保険資格確認書類とともに提示",
+            "excluded": "保険適用外費用、高額療養費等の他制度給付、学校災害共済等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/2844.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "広域施設やファミリーサポートによる病児・病後児支援の経緯は確認できるが、令和8年度の現行利用条件を確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "research": "第3期子ども・子育て支援事業計画、町議会資料、子育て支援情報を確認",
+            "needsConfirmation": "現在利用できる施設、対象年齢、広域利用の範囲、利用料、医師情報提供書、登録・予約方法は教育文化課子ども支援室へ確認"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/www/contents/1750063355710/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、3歳未満児の多子・低所得世帯を独自軽減",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "threeToFive": "3～5歳児と住民税非課税世帯の0～2歳児は国の無償化対象",
+            "multiChild": "年収360万円相当以上は第2子半額・第3子以降無償、同未満は第1子半額・第2子以降無償",
+            "meals": "町内在住の3～5歳児は副食費も無料とし、保育料を含め完全無償化",
+            "calculation": "その他の0～2歳児は町民税額と保育時間等で算定",
+            "excluded": "延長保育料、主食費、用品費等の実費は別途"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/1041.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内小中学校の学校給食費を無償化し、町外就学者にも給食費相当額を支援",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "free": "坂城町立小中学校で給食を喫食する町内在住児童生徒の給食費を無償化",
+            "outside": "町外小中学校・特別支援学校等へ通う町内在住児童生徒にも給食費相当額を補助",
+            "procedure": "町外就学者の申請方法、補助上限、欠食時の取扱いは教育文化課へ確認"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/1210.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子に産後ケアを提供し、令和8年度から利用料を軽減",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "坂城町に住民登録がある産後1年未満の母と乳児で、心身の回復・育児不安・家族支援不足等がある人",
+            "care": "母体の心身・乳房ケア、授乳・育児支援、乳児の健康確認等",
+            "support": "利用料の一部を町が負担し、令和8年4月から自己負担を軽減",
+            "procedure": "保健センターへ利用申請し、実施施設、形態、日数、自己負担額を確認"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/1005.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から3歳未満の未就園児を月10時間、1時間300円で預かる",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "生後6か月～満3歳に達する前日までで、保育所・幼稚園等に在籍していない子ども",
+            "facility": "南条保育園",
+            "limit": "子ども1人につき月10時間まで、1回1時間以上・30分単位",
+            "hours": "平日9時～16時",
+            "fee": "1時間300円。給食380円、おやつ60円。低所得世帯等は減免あり",
+            "procedure": "町の認定後、施設面談・つうえんポータル予約"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/13409.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク物件の家財整理・改修工事を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "坂城町空き家バンク登録物件の所有者・利用者で要件を満たす人",
+            "support": "住宅内の家財道具等の片付け費用と住宅改修工事費を補助",
+            "procedure": "片付け・工事着手前に建設課へ申請し、対象経費、補助率、上限額、居住要件を確認",
+            "bank": "空き家バンクで賃貸・売却希望物件と利用希望者をマッチング"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/10082.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "毎月第1・第3日曜日のサンデーリサイクルで粗大ごみを有料回収",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "指定袋に入らない物や5kgを超える家庭ごみを粗大ごみとして有料回収",
+            "schedule": "毎月第1・第3日曜日のサンデーリサイクルで回収",
+            "fee": "品目ごとに料金が異なる",
+            "pickup": "自己搬入が困難な場合は専門業者による戸別引取を相談可能",
+            "excluded": "家電リサイクル対象品、建築廃材、農薬・医療器具等の処理困難物は別処理"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/2716.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・避難所等を防災ハザードマップで公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "hazards": "河川洪水、土砂災害警戒区域等を掲載",
+            "evacuation": "指定避難場所と自宅からの避難経路を確認可能",
+            "update": "地図面・記事面は令和6年10月更新版を公開",
+            "planning": "マイ・タイムライン等で家庭の避難行動を事前整理"
+          },
+          "source": {
+            "url": "https://www.town.sakaki.nagano.jp/page/1382.html",
             "checkedAt": "2026-07-24"
           }
         }
