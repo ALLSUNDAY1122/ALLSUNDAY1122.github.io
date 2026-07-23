@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06205",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "新庄市",
+  "officialUrl": "https://www.city.shinjo.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが新庄市公式情報で対象9制度を調査し、9制度すべてを確認済みとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、外来・調剤・入院・訪問看護の保険診療自己負担額を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "新庄市に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+        "coverage": "外来、調剤、入院、訪問看護ステーション利用の保険診療自己負担額",
+        "excluded": "入院時食事代、差額室料、診断書料、予防接種代、学校管理下の災害共済給付対象等",
+        "application": "子育て推進課で子育て支援医療証の交付申請を行う"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s007/060/20150225202800.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後3か月から小学3年生までを対象に、看護師と保育士が専用施設で病児保育を実施する。",
+      "eligibility": {"minAgeMonths": 3, "maxAgeYears": 9},
+      "details": {
+        "target": "急な発熱や病気で集団保育が困難な生後3か月から小学3年生までの子ども",
+        "facility": "NPO法人オープンハウスこんぺいとう",
+        "hours": "月曜日から金曜日の8時30分から17時30分。土日祝日・年末年始を除く",
+        "capacity": "1日3人まで",
+        "fee": "新庄市民1日1,250円、年度初回に年間総合保障保険料1,500円",
+        "application": "事前登録後、施設へ申込み"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s007/111/20171106142657.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "国の幼児教育・保育無償化に加え、市独自に第2子を半額、第3子以降を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalSupport": "3歳から5歳児と市民税非課税世帯の0歳から2歳児は国制度による無償化対象",
+        "secondChild": "保護者が養育する22歳以下の子どものうち第2子は、きょうだいの同時入所を問わず半額",
+        "thirdChild": "第3子以降は無料",
+        "nonLicensed": "認可外保育施設利用者も市独自の多子軽減対象となる場合がある",
+        "meals": "3歳児クラス以上の副食費は原則別途負担。所得区分等により免除あり"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s007/030/010/20230616153203.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度から市立小学校給食費を無償化し、中学生には全員1食100円補助と多子世帯の半額・無償支援を実施する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "elementary": "市立小学校・義務教育学校前期課程は2026年4月分から保護者負担なし",
+        "allJuniorHigh": "多子世帯補助に該当しない市立中学校等の生徒にも1食100円を補助",
+        "secondJuniorHigh": "市内在住の中学生が2人以上いる世帯の第2子は、上限1食460円として給食費半額補助",
+        "thirdJuniorHigh": "市内在住の中学生が3人以上いる世帯の第3子以降は、上限1食460円として給食費無償化",
+        "outsideSchools": "市立以外の学校在籍者等は申請により補助を受けられる場合がある"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s017/20260412123632.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子への通所・訪問型と、産後2か月以内の母子への宿泊型産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "助産師による育児相談や個別ケアを希望する産婦と乳児",
+        "dayVisit": "通所型・訪問型は産後1年未満が対象で無料、各2回まで、1回約90分",
+        "overnight": "宿泊型は産後2か月以内が対象で県立新庄病院を利用。1泊2,500円、4泊5日まで",
+        "combinedLimit": "通所・訪問・宿泊を合わせて5回まで。1泊を1回として計算",
+        "support": "授乳・育児相談、乳房ケア、母親の休息・食事、乳児の健康・体重・哺乳確認",
+        "application": "健康課へ事前申請"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s009/20220414115736.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満児を対象に、こども誰でも通園制度を実施する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 2},
+      "details": {
+        "target": "新庄市に住所があり、保育所・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "facility": "金沢南保育園",
+        "purpose": "保護者の就労要件を問わず、月の利用上限の範囲で定期的または柔軟に通園できる制度",
+        "fee": "1時間当たりおおむね300円。所得区分による減免が適用される場合あり",
+        "application": "市の認定を受け、実施施設へ利用申込み"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s007/020/r8_daretuu.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和8年度住宅リフォーム補助で、子育て世帯等は工事費の3分の1、上限30万円を補助する。",
+      "details": {
+        "program": "令和8年度新庄市住宅リフォーム補助金",
+        "childcareHousehold": "平成20年4月2日以降に生まれた子どもがいる世帯。妊娠中を含む",
+        "amount": "移住・新婚・子育て世帯は工事費の3分の1、上限30万円",
+        "insulationAdditions": "全体断熱改修は上限50万円、部分断熱改修は上限40万円",
+        "contractor": "新庄市内の個人事業者または市内に本店がある法人による工事",
+        "application": "契約・着工前に申請。先着順で予算終了まで"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s012/080/000/20210328152300.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定ごみ袋に収まらない大型品は粗大ごみとして分別し、リサイクルプラザもがみへの直接搬入等で処理する。",
+      "details": {
+        "definition": "市指定ごみ袋からはみ出す、または袋の口が閉じられない大型品等",
+        "examples": "大型のおもちゃ、指定袋に入らない傘や大型家庭用品等",
+        "directDelivery": "不燃ごみ・粗大ごみは舟形町のリサイクルプラザもがみへ直接搬入可能",
+        "fee": "施設への直接搬入は重量に応じた有料処理",
+        "restrictions": "タイヤ、消火器、バッテリー等は市で収集せず、販売店や専門業者へ依頼"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s008/100/010/20150303190940.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "最大規模の河川氾濫による浸水想定区域、土砂災害警戒区域、避難所等を掲載した地区別洪水ハザードマップを公開する。",
+      "details": {
+        "coverage": "最上川・鮭川や市内河川の洪水浸水想定区域、土砂災害警戒区域・特別警戒区域",
+        "districts": "北部、北東部、市街地、南西部、南部、西部の地区別マップを公開",
+        "shelters": "避難所情報と学習面を掲載",
+        "reservoir": "ため池ハザードマップも別途公開",
+        "use": "平時に自宅周辺の浸水想定と避難経路の安全性を確認する"
+      },
+      "source": {"url": "https://www.city.shinjo.yamagata.jp/s050/020/015/20200110090355.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
