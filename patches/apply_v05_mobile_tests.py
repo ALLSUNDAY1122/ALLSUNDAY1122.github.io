@@ -64,7 +64,6 @@ addition = r'''
   ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(393, 852);
-    tester.view.viewInsets = const FakeViewPadding(bottom: 320);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetViewInsets);
@@ -74,9 +73,11 @@ addition = r'''
     await controller.loadDemo();
     await tester.pumpWidget(AiHandoverLogApp(controller: controller));
     await tester.pumpAndSettle();
+    tester.view.viewInsets = const FakeViewPadding(bottom: 320);
+    await tester.pump();
 
     final future = showTaskEditor(
-      tester.element(find.byType(AiHandoverLogApp)),
+      tester.element(find.byTooltip('設定・バックアップ')),
       project: controller.activeProject!,
     );
     await tester.pumpAndSettle();
