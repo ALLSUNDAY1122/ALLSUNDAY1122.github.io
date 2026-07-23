@@ -1,0 +1,188 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03482",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "山田町",
+  "officialUrl": "https://www.town.yamada.iwate.jp/",
+  "status": "verified",
+  "summary": "山田町の9制度を公式情報で再監査し、確認できた制度をverified、現行条件を確定できない制度をunavailableとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、所得制限・一部負担なしで保険診療の自己負担額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "乳幼児・児童生徒医療費助成",
+        "target": "出生または転入の日から18歳到達後最初の3月31日まで",
+        "incomeLimit": "なし",
+        "copay": "なし",
+        "payment": "県内医療機関では受給者証とマイナンバーカード等を提示する現物給付",
+        "application": "事前に医療費助成受給者証の交付手続きが必要"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/7776.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "山田はまぎくこども園で病児保育を実施しているが、町公式ページで対象年齢、利用単位、現行料金を確定できない。 現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "details": {
+        "program": "病児保育",
+        "facility": "幼保連携型認定こども園 山田はまぎくこども園",
+        "condition": "集団保育が困難な病中の子どもで、保護者の仕事等により家庭保育ができない場合",
+        "fee": "有料。対象年齢、利用単位、具体額は施設への確認が必要",
+        "reviewReason": "対象年齢、利用単位、現行料金の明記を町公式ページで確認できない",
+        "availability": "現行の利用者向け公式条件を確定できないため情報未確認",
+        "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/397.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "国制度の3～5歳児に加え、町独自に0～2歳児の保育料も無償化し、3～5歳児の副食費を月5,100円まで助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "zeroToTwo": "令和2年4月から町独自支援により保育料を無償化",
+        "threeToFive": "国の幼児教育・保育無償化により保育料無料",
+        "mealSupport": "町内在住の3～5歳児の副食費を月額5,100円まで申請不要で助成",
+        "excludedCosts": "一時保育、延長保育、休日保育などの利用料は無償化対象外"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/397.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "子育て支援の一環として町内小学校に在籍する児童の学校給食費を無償化している。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "support": "学校給食費無償化",
+        "target": "町内小学校に在籍する児童",
+        "provider": "山田町立学校給食センター",
+        "currentStatus": "令和8年度も町立学校給食センターが給食を提供"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/iju_famirly.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yamada.iwate.jp/docs/9985.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子を対象に相談型・休養型・訪問型の産後ケアを無料・回数制限なしで実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "program": "産後ケア",
+        "target": "産後1年以内の母親と赤ちゃん",
+        "types": "保健センターの相談型、オランダ島ハウスの休養型、自宅での訪問型",
+        "services": "成長確認、授乳・離乳食・育児相談、乳房ケア、家族・生活相談、母体の休養と心身ケア",
+        "fee": "無料",
+        "usageLimit": "回数制限なし",
+        "other": "里帰り出産の人も利用可能"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/417.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町内の未就園の生後6か月から満3歳未満児を対象に、月10時間までこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "乳児等支援給付（こども誰でも通園制度）",
+        "target": "山田町民で、保育所・認定こども園・幼稚園等に在籍しない生後6か月から満3歳未満の児童",
+        "employmentRequirement": "なし",
+        "usage": "児童1人あたり月10時間まで",
+        "facilities": "とよまねこども園、山田はまぎくこども園",
+        "fee": "有料。具体額は利用施設へ確認",
+        "application": "国の総合支援システムまたは認定申請書を健康子ども課へ提出"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/397.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住者の住宅取得費を補助し、中古住宅を取得する18歳以下の子どもまたは妊婦がいる世帯は取得額の2分の1、上限100万円。",
+      "details": {
+        "program": "移住定住住宅取得費等補助事業",
+        "target": "対象地域外から転入し、町内に5年以上定住するなどの要件を満たす人",
+        "newHouse": "取得額の2分の1、上限100万円。町内業者による新築は上限120万円",
+        "usedHouse": "通常は取得額の4分の1、上限100万円",
+        "childHousehold": "18歳以下の子どもまたは妊婦がいる世帯の中古住宅取得は取得額の2分の1、上限100万円",
+        "rent": "賃貸住宅の家賃12か月分を上限36万円まで補助",
+        "application": "転入日や住民登録日から所定期間内に申請"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/4585.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを含む家庭ごみは宮古清掃センターへ直接搬入でき、燃やせる・燃やせないごみは50キログラムまで無料。",
+      "details": {
+        "facility": "宮古清掃センター（宮古地区広域行政組合）",
+        "hours": "月曜日から土曜日の8時30分～12時、13時～16時30分",
+        "closed": "日曜日、1月1日～3日",
+        "accepted": "燃やせるごみ、燃やせないごみ、資源物、動物の死体。粗大ごみは袋に入れず搬入可能",
+        "feeSystem": "家庭の燃やせる・燃やせないごみは50キログラムまで無料、超過分は10キログラムごと50円。資源物は無料",
+        "preparation": "指定袋を使用し、種類ごとに分別して搬入"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/1272.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害、地震・津波、避難場所等を地区別に掲載した総合防災ハザードマップを公開している。",
+      "details": {
+        "map": "山田町総合防災ハザードマップ",
+        "coverage": "洪水、土砂災害、地震、津波、避難行動、指定緊急避難場所・指定避難所",
+        "districts": "豊間根、大沢、山田、織笠、船越、田の浜、大浦などの地区別マップ",
+        "online": "全ページ版と分割PDFを町公式ページで公開",
+        "planning": "令和8年2月決定の地域防災計画も公開"
+      },
+      "source": {
+        "url": "https://www.town.yamada.iwate.jp/docs/5447.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yamada.iwate.jp/docs/298.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}
