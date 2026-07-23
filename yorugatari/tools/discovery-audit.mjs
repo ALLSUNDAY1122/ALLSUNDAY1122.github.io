@@ -6,12 +6,12 @@ const SITE = path.join(ROOT, 'yorugatari');
 const BASE = 'https://allsunday1122.github.io/yorugatari';
 const LIVE = process.argv.includes('--live');
 const CATEGORIES = [
-  { name: '心霊', slug: 'shinrei', heading: '心霊・幽霊の怖い話', titlePhrase: '心霊・幽霊の怖い話', descriptionPhrase: '心霊・幽霊の怖い話' },
-  { name: '人怖', slug: 'hitokowa', heading: '人が怖い話（人怖）', titlePhrase: '人が怖い話｜人怖・実話風ホラー', descriptionPhrase: '人が怖い話' },
-  { name: '意味怖', slug: 'imikowa', heading: '意味がわかると怖い話（意味怖）', titlePhrase: '意味がわかると怖い話｜意味怖', descriptionPhrase: '意味がわかると怖い話' },
-  { name: 'ネット怪談', slug: 'net-kaidan', heading: 'ネット・SNSの怖い話', titlePhrase: 'ネット・SNSの怖い話｜現代怪談', descriptionPhrase: 'ネット・SNSの怖い話' },
-  { name: '都市伝説風', slug: 'urban-legend', heading: '都市伝説・奇妙なルールの怖い話', titlePhrase: '都市伝説・奇妙なルールの怖い話', descriptionPhrase: '都市伝説風の怖い話' },
-  { name: '後味悪い', slug: 'aftertaste', heading: '後味の悪い怖い話', titlePhrase: '後味の悪い怖い話｜救いのない怪談', descriptionPhrase: '後味の悪い怖い話' }
+  { name: '心霊', slug: 'shinrei', linkLabel: '心霊・幽霊', heading: '心霊・幽霊の怖い話', titlePhrase: '心霊・幽霊の怖い話', descriptionPhrase: '心霊・幽霊の怖い話' },
+  { name: '人怖', slug: 'hitokowa', linkLabel: '人が怖い話', heading: '人が怖い話（人怖）', titlePhrase: '人が怖い話｜人怖・実話風ホラー', descriptionPhrase: '人が怖い話' },
+  { name: '意味怖', slug: 'imikowa', linkLabel: '意味がわかると怖い話', heading: '意味がわかると怖い話（意味怖）', titlePhrase: '意味がわかると怖い話｜意味怖', descriptionPhrase: '意味がわかると怖い話' },
+  { name: 'ネット怪談', slug: 'net-kaidan', linkLabel: 'ネット・SNS怪談', heading: 'ネット・SNSの怖い話', titlePhrase: 'ネット・SNSの怖い話｜現代怪談', descriptionPhrase: 'ネット・SNSの怖い話' },
+  { name: '都市伝説風', slug: 'urban-legend', linkLabel: '都市伝説・奇妙なルール', heading: '都市伝説・奇妙なルールの怖い話', titlePhrase: '都市伝説・奇妙なルールの怖い話', descriptionPhrase: '都市伝説風の怖い話' },
+  { name: '後味悪い', slug: 'aftertaste', linkLabel: '後味の悪い話', heading: '後味の悪い怖い話', titlePhrase: '後味の悪い怖い話｜救いのない怪談', descriptionPhrase: '後味の悪い怖い話' }
 ];
 const results = [];
 const failures = [];
@@ -71,7 +71,7 @@ function localAudit() {
   for (const page of ['index.html', 'archive.html']) {
     const html = fs.readFileSync(path.join(SITE, page), 'utf8');
     const categoryTargets = CATEGORIES.filter((category) => html.includes(`categories/${category.slug}.html`));
-    const searchLabels = CATEGORIES.filter((category) => html.includes(category.heading.replace('（人怖）', '').replace('（意味怖）', '')) || html.includes(category.descriptionPhrase));
+    const searchLabels = CATEGORIES.filter((category) => html.includes(`>${category.linkLabel}</a>`));
     record(`local: ${page} exposes RSS and all search-friendly category pages`, html.includes('rel="alternate" type="application/rss+xml"') && html.includes('href="feed.xml">RSS</a>') && categoryTargets.length === 6 && searchLabels.length === 6, { categories: categoryTargets.length, labels: searchLabels.length });
   }
 }
@@ -83,7 +83,7 @@ async function fetchText(url, attempts = 12) {
       const separator = url.includes('?') ? '&' : '?';
       const response = await fetch(`${url}${separator}discovery=${Date.now()}-${attempt}`, {
         redirect: 'follow',
-        headers: { 'cache-control': 'no-cache, no-store, max-age=0', 'user-agent': 'Yorugatari-Discovery-Audit/1.1' },
+        headers: { 'cache-control': 'no-cache, no-store, max-age=0', 'user-agent': 'Yorugatari-Discovery-Audit/1.2' },
         signal: AbortSignal.timeout(30000)
       });
       const text = await response.text();
@@ -100,7 +100,8 @@ async function fetchText(url, attempts = 12) {
 async function liveAudit() {
   const top = await fetchText(`${BASE}/`);
   const topCategories = CATEGORIES.filter((category) => top.text.includes(`categories/${category.slug}.html`));
-  record('published: top exposes RSS and six category links', top.status === 200 && top.text.includes('rel="alternate" type="application/rss+xml"') && top.text.includes('href="feed.xml">RSS</a>') && topCategories.length === 6, { status: top.status, attempt: top.attempt, categories: topCategories.length });
+  const topLabels = CATEGORIES.filter((category) => top.text.includes(`>${category.linkLabel}</a>`));
+  record('published: top exposes RSS and six search-friendly category links', top.status === 200 && top.text.includes('rel="alternate" type="application/rss+xml"') && top.text.includes('href="feed.xml">RSS</a>') && topCategories.length === 6 && topLabels.length === 6, { status: top.status, attempt: top.attempt, categories: topCategories.length, labels: topLabels.length });
 
   const linkedStories = [];
   for (const category of CATEGORIES) {
