@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07367",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "只見町",
+  "officialUrl": "https://www.town.tadami.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を只見町および福島県の公式情報で調査し、7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、健康保険が適用される医療費の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "只見町子ども医療費助成",
+        "target": "只見町に住所があり、医療保険の被保険者または被扶養者である0歳から18歳年度末までの子ども",
+        "support": "保険診療の自己負担分を助成",
+        "application": "保護者が受給資格登録等の手続きを行う",
+        "excluded": "高額療養費・付加給付相当額、健康診断や予防接種等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www1.g-reiki.net/town.tadami/reiki_honbun/c537RG00000314.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の保育・子育て支援案内で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "保育所・認定こども園・放課後児童対策等の案内を確認したが、病児・病後児保育の利用者向け現行案内を確認できなかった",
+        "caution": "広域利用を含む利用可否は保健福祉課または教育委員会へ確認が必要"
+      },
+      "source": {"url": "https://www.town.tadami.lg.jp/lifeguide/cat02/cat1/index.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "只見町では1歳児から5歳以上児までの保育料を無償化する。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 5},
+      "details": {
+        "target": "町内保育施設を利用する1歳児から5歳以上児",
+        "support": "通常保育料を無償化",
+        "background": "国基準より保育料を低く設定したうえで町独自支援を実施",
+        "excludedCosts": "延長保育料、一時保育料、給食費・教材費等の実費は別途負担となる場合がある"
+      },
+      "source": {"url": "https://www.town.tadami.lg.jp/lifeguide/cat02/cat1/001831.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和3年度から町立小中学校の児童生徒の学校給食費を完全無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "只見町立小学校・中学校の児童生徒",
+        "support": "学校給食費に係る保護者負担を全額町が支援",
+        "start": "令和3年度から完全無償化",
+        "purpose": "子育て世帯の経済的負担軽減"
+      },
+      "source": {"url": "https://www.town.tadami.lg.jp/lifeguide/cat02/cat1/003713.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満で保健指導を必要とする産婦を対象に、宿泊または日帰り型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "只見町に住所があり、出産後1年未満で保健指導を必要とする産婦と乳児",
+        "types": "宿泊型、日帰り型",
+        "services": "母体の休養、授乳・育児相談、母子の健康確認等の保健指導",
+        "provider": "福島県助産師会への委託により実施",
+        "application": "利用前に町の保健担当窓口へ相談・申請",
+        "fee": "利用施設・類型により異なるため申請時に確認"
+      },
+      "source": {"url": "https://www.pref.fukushima.lg.jp/uploaded/attachment/401466.pdf", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "町公式サイトに乳児等通園支援事業の案内ページはあるが、令和8年度の対象月齢、利用施設、時間、料金、申込方法を確認できない。",
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "published": "町公式の子育て・教育ページから制度案内へリンクされている",
+        "researchResult": "利用者向けページの内容を取得できず、現行条件を確定できなかった",
+        "caution": "利用可否と現行条件は保健福祉課または教育委員会へ確認が必要"
+      },
+      "source": {"url": "https://www.town.tadami.lg.jp/lifeguide/cat02/005938.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内で住宅を取得して居住する世帯主への住宅取得補助と、空き家改修・家財処分等の補助を実施する。",
+      "details": {
+        "program": "住宅取得支援事業補助金・空き家関連補助金",
+        "target": "町内に住宅を取得して居住する世帯主や、空き家を活用して移住・定住する方等",
+        "support": "住宅取得費の一部、空き家改修費、家財処分費、空き家解体費等を要件に応じて補助",
+        "snowSupport": "住宅等の克雪対策工事に対する補助制度も実施",
+        "application": "契約・着工前を含め、事前に交流推進課へ相談し要綱を確認"
+      },
+      "source": {"url": "https://www.town.tadami.lg.jp/abouttown/ui-jyutaku.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度の地区別ごみカレンダーと南会津の分別辞典に基づき、粗大ごみを指定日に排出する。",
+      "details": {
+        "schedule": "只見地区、朝日・明和地区ごとの令和8年度ごみカレンダーで収集日を確認",
+        "sorting": "南会津のごみ分別辞典で品目ごとの分別・排出方法を確認",
+        "collection": "粗大ごみはカレンダー記載の指定日・指定場所へ排出",
+        "excluded": "家電リサイクル対象品、処理困難物等は通常収集の対象外",
+        "contact": "不明な品目は町民生活課生活安全係へ確認"
+      },
+      "source": {"url": "https://www.town.tadami.lg.jp/lifeguide/cat01/cat5/005070.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地域防災計画、防災マップ、洪水・土砂災害等のハザードマップを緊急災害情報サイトで公開する。",
+      "details": {
+        "maps": "只見町防災マップ、ハザードマップ、地域防災計画",
+        "coverage": "洪水浸水想定区域、土砂災害警戒区域、避難場所・避難所等",
+        "liveInformation": "只見川水位情報、道路・ライフライン・施設の緊急情報へリンク",
+        "guidance": "平時に危険箇所と避難経路を確認し、災害時は緊急災害情報サイトを利用"
+      },
+      "source": {"url": "https://www.town.tadami.lg.jp/emergency/index.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
