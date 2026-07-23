@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import subprocess
 import sys
 
-path = Path(sys.argv[1]) / 'test/widget_test.dart'
+root = Path(sys.argv[1])
+path = root / 'test/widget_test.dart'
 text = path.read_text(encoding='utf-8')
 text = text.replace(
     "import 'package:aihandoverlog/services/state_store.dart';",
@@ -96,4 +98,8 @@ if index < 0:
     raise SystemExit('widget test closing brace not found')
 text = text[:index] + addition + text[index:]
 path.write_text(text, encoding='utf-8')
-print('added v0.5 mobile widget tests')
+subprocess.run(
+    [sys.executable, 'patches/fix_v05_dialog_controller_disposal.py', str(root)],
+    check=True,
+)
+print('added v0.5 mobile widget tests and dialog disposal fix')
