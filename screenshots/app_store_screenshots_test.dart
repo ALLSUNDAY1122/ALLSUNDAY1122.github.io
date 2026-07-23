@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:aihandoverlog/app.dart';
 import 'package:aihandoverlog/controllers/relay_controller.dart';
@@ -72,19 +76,36 @@ Future<RelayController> _controller() async {
 
 void main() {
   testWidgets('generate five App Store screenshots', (tester) async {
-    tester.view.devicePixelRatio = 3;
-    tester.view.physicalSize = const Size(1290, 2796);
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(430, 932);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
 
     final controller = await _controller();
-    await tester.pumpWidget(AiHandoverLogApp(controller: controller));
+    const screenshotKey = ValueKey<String>('app-store-screenshot');
+    await tester.pumpWidget(
+      RepaintBoundary(
+        key: screenshotKey,
+        child: AiHandoverLogApp(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     Future<void> capture(String name) async {
-      await expectLater(
-        find.byType(Scaffold).first,
-        matchesGoldenFile('goldens/$name.png'),
+      final boundary = tester.renderObject<RenderRepaintBoundary>(
+        find.byKey(screenshotKey),
+      );
+      final image = await boundary.toImage(pixelRatio: 3);
+      final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
+      if (bytes == null) {
+        throw StateError('PNG encoding failed: $name');
+      }
+      final directory = Directory('test/goldens');
+      await directory.create(recursive: true);
+      await File('${directory.path}/$name.png').writeAsBytes(
+        bytes.buffer.asUint8List(),
+        flush: true,
       );
     }
 
