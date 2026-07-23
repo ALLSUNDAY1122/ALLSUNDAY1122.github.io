@@ -66,7 +66,8 @@ jobs:
           const staticFiles = ['index.html','5min-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
           for (const file of staticFiles) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
-            if (!html.includes('assets/analytics.js?v=20260723-003') || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
+            const expectedVersion = file === '5min-horror.html' ? '20260724-004' : '20260723-003';
+            if (!html.includes(`assets/analytics.js?v=${expectedVersion}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
           }
           const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
           if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
