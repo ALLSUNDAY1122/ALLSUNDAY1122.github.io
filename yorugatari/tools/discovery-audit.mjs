@@ -6,12 +6,12 @@ const SITE = path.join(ROOT, 'yorugatari');
 const BASE = 'https://allsunday1122.github.io/yorugatari';
 const LIVE = process.argv.includes('--live');
 const CATEGORIES = [
-  ['心霊', 'shinrei'],
-  ['人怖', 'hitokowa'],
-  ['意味怖', 'imikowa'],
-  ['ネット怪談', 'net-kaidan'],
-  ['都市伝説風', 'urban-legend'],
-  ['後味悪い', 'aftertaste']
+  { name: '心霊', slug: 'shinrei', heading: '心霊・幽霊の怖い話', titlePhrase: '心霊・幽霊の怖い話', descriptionPhrase: '心霊・幽霊の怖い話' },
+  { name: '人怖', slug: 'hitokowa', heading: '人が怖い話（人怖）', titlePhrase: '人が怖い話｜人怖・実話風ホラー', descriptionPhrase: '人が怖い話' },
+  { name: '意味怖', slug: 'imikowa', heading: '意味がわかると怖い話（意味怖）', titlePhrase: '意味がわかると怖い話｜意味怖', descriptionPhrase: '意味がわかると怖い話' },
+  { name: 'ネット怪談', slug: 'net-kaidan', heading: 'ネット・SNSの怖い話', titlePhrase: 'ネット・SNSの怖い話｜現代怪談', descriptionPhrase: 'ネット・SNSの怖い話' },
+  { name: '都市伝説風', slug: 'urban-legend', heading: '都市伝説・奇妙なルールの怖い話', titlePhrase: '都市伝説・奇妙なルールの怖い話', descriptionPhrase: '都市伝説風の怖い話' },
+  { name: '後味悪い', slug: 'aftertaste', heading: '後味の悪い怖い話', titlePhrase: '後味の悪い怖い話｜救いのない怪談', descriptionPhrase: '後味の悪い怖い話' }
 ];
 const results = [];
 const failures = [];
@@ -30,26 +30,38 @@ function itemCount(xml) {
   return (xml.match(/<item>/g) || []).length;
 }
 
+function extractMetaDescription(html) {
+  return html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i)?.[1] || '';
+}
+
 function localAudit() {
   const manifestPath = path.join(SITE, 'tools', 'discovery-manifest-latest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   record('local: discovery manifest reports six categories and 100 stories', manifest.success && manifest.categories.length === 6 && manifest.totalStories === 100 && manifest.feedItems === 30, manifest);
 
   const allStoryLinks = [];
-  for (const [name, slug] of CATEGORIES) {
-    const filePath = path.join(SITE, 'categories', `${slug}.html`);
+  const descriptions = [];
+  for (const category of CATEGORIES) {
+    const filePath = path.join(SITE, 'categories', `${category.slug}.html`);
     const html = fs.readFileSync(filePath, 'utf8');
     const links = storyLinks(html);
+    const description = extractMetaDescription(html);
+    descriptions.push(description);
     allStoryLinks.push(...links);
-    record(`local: ${name} category page is indexable and structured`,
-      html.includes(`<title>${name}の怖い話`) &&
-      html.includes(`<link rel="canonical" href="${BASE}/categories/${slug}.html">`) &&
+    record(`local: ${category.name} category page uses search-friendly language and structure`,
+      html.includes(`<title>${category.titlePhrase}`) &&
+      html.includes(`<h1>${category.heading}</h1>`) &&
+      description.includes(category.descriptionPhrase) &&
+      description.includes('無料') &&
+      description.includes('約5分') &&
+      html.includes(`<link rel="canonical" href="${BASE}/categories/${category.slug}.html">`) &&
       html.includes('rel="alternate" type="application/rss+xml"') &&
       html.includes('"@type":"CollectionPage"') &&
       html.includes('"@type":"BreadcrumbList"') &&
       links.length > 0,
-      { slug, storyLinks: links.length });
+      { slug: category.slug, heading: category.heading, description, storyLinks: links.length });
   }
+  record('local: category descriptions are unique', new Set(descriptions).size === CATEGORIES.length, { descriptions: descriptions.length, unique: new Set(descriptions).size });
   record('local: category pages link to all 100 stories exactly once', allStoryLinks.length === 100 && new Set(allStoryLinks).size === 100, { links: allStoryLinks.length, unique: new Set(allStoryLinks).size });
 
   const feed = fs.readFileSync(path.join(SITE, 'feed.xml'), 'utf8');
@@ -58,8 +70,9 @@ function localAudit() {
 
   for (const page of ['index.html', 'archive.html']) {
     const html = fs.readFileSync(path.join(SITE, page), 'utf8');
-    const categoryTargets = CATEGORIES.filter(([, slug]) => html.includes(`categories/${slug}.html`));
-    record(`local: ${page} exposes RSS and all category pages`, html.includes('rel="alternate" type="application/rss+xml"') && categoryTargets.length === 6, { categories: categoryTargets.length });
+    const categoryTargets = CATEGORIES.filter((category) => html.includes(`categories/${category.slug}.html`));
+    const searchLabels = CATEGORIES.filter((category) => html.includes(category.heading.replace('（人怖）', '').replace('（意味怖）', '')) || html.includes(category.descriptionPhrase));
+    record(`local: ${page} exposes RSS and all search-friendly category pages`, html.includes('rel="alternate" type="application/rss+xml"') && html.includes('href="feed.xml">RSS</a>') && categoryTargets.length === 6 && searchLabels.length === 6, { categories: categoryTargets.length, labels: searchLabels.length });
   }
 }
 
@@ -70,7 +83,7 @@ async function fetchText(url, attempts = 12) {
       const separator = url.includes('?') ? '&' : '?';
       const response = await fetch(`${url}${separator}discovery=${Date.now()}-${attempt}`, {
         redirect: 'follow',
-        headers: { 'cache-control': 'no-cache, no-store, max-age=0', 'user-agent': 'Yorugatari-Discovery-Audit/1.0' },
+        headers: { 'cache-control': 'no-cache, no-store, max-age=0', 'user-agent': 'Yorugatari-Discovery-Audit/1.1' },
         signal: AbortSignal.timeout(30000)
       });
       const text = await response.text();
@@ -86,17 +99,18 @@ async function fetchText(url, attempts = 12) {
 
 async function liveAudit() {
   const top = await fetchText(`${BASE}/`);
-  const topCategories = CATEGORIES.filter(([, slug]) => top.text.includes(`categories/${slug}.html`));
-  record('published: top exposes RSS and six category links', top.status === 200 && top.text.includes('rel="alternate" type="application/rss+xml"') && topCategories.length === 6, { status: top.status, attempt: top.attempt, categories: topCategories.length });
+  const topCategories = CATEGORIES.filter((category) => top.text.includes(`categories/${category.slug}.html`));
+  record('published: top exposes RSS and six category links', top.status === 200 && top.text.includes('rel="alternate" type="application/rss+xml"') && top.text.includes('href="feed.xml">RSS</a>') && topCategories.length === 6, { status: top.status, attempt: top.attempt, categories: topCategories.length });
 
   const linkedStories = [];
-  for (const [name, slug] of CATEGORIES) {
-    const response = await fetchText(`${BASE}/categories/${slug}.html`);
-    const canonical = `${BASE}/categories/${slug}.html`;
+  for (const category of CATEGORIES) {
+    const response = await fetchText(`${BASE}/categories/${category.slug}.html`);
+    const canonical = `${BASE}/categories/${category.slug}.html`;
     const links = storyLinks(response.text);
+    const description = extractMetaDescription(response.text);
     linkedStories.push(...links);
-    const ok = response.status === 200 && response.text.includes(`<link rel="canonical" href="${canonical}">`) && response.text.includes(`<h1>${name}の怖い話</h1>`) && links.length > 0;
-    record(`published: ${name} category page is available`, ok, { status: response.status, attempt: response.attempt, links: links.length, canonical });
+    const ok = response.status === 200 && response.text.includes(`<link rel="canonical" href="${canonical}">`) && response.text.includes(`<title>${category.titlePhrase}`) && response.text.includes(`<h1>${category.heading}</h1>`) && description.includes(category.descriptionPhrase) && description.includes('無料') && links.length > 0;
+    record(`published: ${category.name} category page uses search-friendly language`, ok, { status: response.status, attempt: response.attempt, links: links.length, canonical, heading: category.heading, description });
   }
   record('published: six category pages cover 100 unique stories', linkedStories.length === 100 && new Set(linkedStories).size === 100, { links: linkedStories.length, unique: new Set(linkedStories).size });
 
