@@ -31,14 +31,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Japanese fonts and image tools
+      - name: Download Japanese font and image tools
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y fonts-noto-cjk
           python3 -m pip install --disable-pip-version-check pillow
-          fc-cache -f
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/NotoSansJP.ttf" \
+            'https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf'
+          test "$(stat -c%s "$RUNNER_TEMP/NotoSansJP.ttf")" -gt 1000000
 
       - name: Set up Flutter 3.44.7
         uses: subosito/flutter-action@v2
@@ -90,14 +91,14 @@ jobs:
           cp -R "$SOURCE/docs" "$RUNNER_TEMP/build/docs"
           cp screenshots/app_store_screenshots_test.dart "$RUNNER_TEMP/build/test/app_store_screenshots_test.dart"
           mkdir -p "$RUNNER_TEMP/build/assets"
-          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc "$RUNNER_TEMP/build/assets/NotoSansCJK-Regular.ttc"
+          cp "$RUNNER_TEMP/NotoSansJP.ttf" "$RUNNER_TEMP/build/assets/NotoSansJP.ttf"
           python3 - <<'PY'
           from pathlib import Path
           root = Path(r'${{ runner.temp }}/build')
           pubspec = root / 'pubspec.yaml'
           text = pubspec.read_text(encoding='utf-8')
           old = 'flutter:\n  uses-material-design: true'
-          new = "flutter:\n  uses-material-design: true\n  fonts:\n    - family: AppStoreNoto\n      fonts:\n        - asset: assets/NotoSansCJK-Regular.ttc"
+          new = "flutter:\n  uses-material-design: true\n  fonts:\n    - family: AppStoreNoto\n      fonts:\n        - asset: assets/NotoSansJP.ttf"
           if old not in text:
               raise SystemExit('pubspec flutter anchor not found')
           pubspec.write_text(text.replace(old, new, 1), encoding='utf-8')
@@ -143,6 +144,7 @@ jobs:
             "$RUNNER_TEMP/release/raw" \
             "$RUNNER_TEMP/release/final" \
             "$RUNNER_TEMP/build/docs/brand/AI_Handover_Log_AppIcon_1024.png" \
+            "$RUNNER_TEMP/NotoSansJP.ttf" \
             2>&1 | tee "$RUNNER_TEMP/logs/compose.log"
           python3 - <<'PY'
           from pathlib import Path
