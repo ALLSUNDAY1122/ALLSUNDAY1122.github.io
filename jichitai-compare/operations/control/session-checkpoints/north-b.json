@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T15:21:57+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T15:47:00+09:00",
+  "status": "ci_pending",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 78,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": null,
-  "ciStatus": "success",
+  "currentMunicipality": {
+    "code": "04444",
+    "name": "色麻町",
+    "stage": "pr_open"
+  },
+  "workingBranch": "data/04444-shikama",
+  "pullRequestNumber": 1276,
+  "ciStatus": "pending",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -50,5 +54,5 @@
     "04424"
   ],
   "blocked": [],
-  "nextAction": "色麻町（04444）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "PR #1276のCI・競合・変更ファイルを確認し、成功後にregion/northへ地方統合する。"
 }
