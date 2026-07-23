@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07541",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "広野町",
+  "officialUrl": "https://www.town.hirono.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を広野町公式情報で調査し、6制度をverified、病児・病後児保育、産後ケア、こども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "広野町に住民登録がある0歳から18歳年度末まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児・児童医療費助成制度",
+        "target": "広野町に住民登録がある0歳から18歳到達後最初の3月31日までの子ども",
+        "support": "保険診療の自己負担分を助成",
+        "application": "社会保険・国保組合加入者はこども家庭課で受給資格登録を行う",
+        "payment": "福島県内医療機関では受給者証等の提示により原則窓口負担なし。県外受診等は償還払い",
+        "specialRule": "原子力災害等に伴う医療費免除証明書がある場合は免除制度を優先"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/kosodate/teate/1003696.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式計画では病児保育事業を実施していないとされ、令和8年度の利用施設・広域利用条件も確認できない。",
+      "details": {
+        "researchResult": "町の子ども・子育て支援計画および現行子育てページを確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "caution": "町外施設の広域利用を含む利用可否はこども家庭課へ確認が必要"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/kosodate/shien/index.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "広野町民の0～2歳児の保育料を無償化し、3～5歳児の給食費も無償化する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "facility": "広野こども園および町外の認可保育所・認定こども園等",
+        "target": "広野町に住所があり、認定施設を利用する0～5歳児",
+        "underThree": "0～2歳児の保育料を無償化。町外施設利用者には負担軽減助成金で対応",
+        "threeToFive": "3～5歳児は国の無償化対象で、広野こども園等の給食費も町が無償化",
+        "facilityAge": "広野こども園は生後6か月から就学前まで受入",
+        "excludedCosts": "延長保育料、教材費、行事費等は別途となる場合がある"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/ijyu/1003460.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.hirono.fukushima.jp/kosodate/hojokin/1004834.html", "checkedAt": "2026-07-24"}]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和3年4月から広野小学校・広野中学校の学校給食費を所得制限なく無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "広野町立広野小学校・広野中学校で学校給食を喫食する児童生徒",
+        "support": "保護者負担の学校給食費を町が全額負担",
+        "start": "令和3年4月",
+        "incomeLimit": "なし",
+        "application": "手続き不要"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/kosodate/gakkou/1001564/1001906.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "町公式サイトに産後ケア事業ページはあるが、対象月齢、利用類型、料金、利用上限等の現行条件を確認できない。",
+      "details": {
+        "confirmed": "町公式の子育て支援一覧に産後ケア事業を掲載",
+        "researchResult": "制度ページ本文に利用者向け詳細が掲載されておらず、令和8年度の対象・施設・自己負担額等を確定できなかった",
+        "caution": "現行条件はこども家庭課または広野町こども家庭センターへ確認が必要"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/kosodate/shien/1003960/index.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "令和8年度こども誰でも通園制度について、広野町内の実施施設、対象月齢、月上限、料金、申込方法を確認できない。",
+      "details": {
+        "researchResult": "町の認定こども園・児童館・子育て支援ページを確認したが、利用者向け現行案内を確認できなかった",
+        "caution": "実施状況と利用条件はこども家庭課または広野こども園へ確認が必要"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/kosodate/index.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "広野駅東ニュータウンで住宅用地を取得する子育て・若年夫婦世帯に300万円を補助する。",
+      "details": {
+        "program": "広野駅東ニュータウン住宅用地取得支援事業補助金",
+        "target": "広野駅東ニュータウンで定住目的の住宅用地を取得する子育て世帯または若年夫婦世帯",
+        "support": "300万円",
+        "otherSupport": "県外移住者の空き家改修等は住宅改修・片付け合計上限250万円、改修のみ上限200万円、片付けのみ上限50万円",
+        "application": "取得・工事前に復興企画課の移住相談窓口へ要件を確認"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/ijyu/005.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは家庭ごみカレンダーを確認し、南部衛生センターへ連絡して収集・搬入方法を確認する。",
+      "details": {
+        "schedule": "令和8年度家庭ごみ収集日カレンダーを公開",
+        "application": "粗大ごみを出す際は南部衛生センターへ事前連絡",
+        "facility": "南部衛生センター",
+        "sorting": "指定袋に入らない品目は粗大ごみとして分別し、センターの指示に従う",
+        "caution": "品目別の収集日・料金・搬入可否は南部衛生センターへ確認"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/kurashi/gomi/1001751/1001788.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震・津波・原子力災害、避難所・避難経路等を掲載した総合防災マップを公開する。",
+      "details": {
+        "maps": "広野町防災マップ、土砂災害ハザードマップ",
+        "coverage": "洪水、土砂災害、地震、津波、原子力災害、危険箇所、避難所、避難経路等",
+        "app": "ひろのアプリや福島県防災アプリから防災情報・避難所等を確認可能",
+        "guidance": "平時に自宅周辺の危険箇所、避難先、避難経路を確認"
+      },
+      "source": {"url": "https://www.town.hirono.fukushima.jp/kurashi/anzen/1001527/1001794.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.hirono.fukushima.jp/kurashi/anzen/1001527/1001791.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
