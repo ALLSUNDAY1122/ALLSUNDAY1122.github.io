@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "42411",
+  "prefectureCode": "42",
+  "prefecture": "長崎県",
+  "name": "新上五島町",
+  "officialUrl": "https://official.shinkamigoto.net/",
+  "status": "verified",
+  "summary": "必須9制度を新上五島町公式情報で調査。8制度をverified、現在休止中の病後児保育をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "中学生以下の保険診療自己負担を全額助成し、高校生世代も月800円または1,600円を超える額を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "出生から18歳到達後最初の3月31日までの子ども",
+        "copay": "乳幼児と小学1年生から中学3年生は保険診療自己負担を全額助成。高校生世代は医療機関ごと1日800円、月2日以上は月上限1,600円を除く額を助成",
+        "pharmacy": "調剤薬局の薬剤一部負担金も支給対象",
+        "application": "福祉医療費受給者証の取得と、対象区分に応じた現物給付または償還払いの手続きが必要"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_faq_full.php?eid=04803&fcid=f00009x0&g6=1&wcid=f00009x0",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町の病後児保育は現在休止中",
+      "details": {
+        "service": "病気の回復期で通常保育が難しい子どもを預かる病後児保育",
+        "currentStatus": "町公式ページで現在休止と案内",
+        "availability": "再開時期、対象年齢、料金、申込方法は福祉課へ要確認"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=06510&r=1&wcid=i00004x7",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児は月額3万7,000円、非課税世帯の0～2歳児は月額4万2,000円まで認可外保育料を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "対象となる認可外保育施設の利用料を上限まで無償化",
+        "nationalProgram": "3～5歳児は月額37,000円まで、住民税非課税世帯の0～2歳児は月額42,000円まで",
+        "incomeCondition": "0～2歳児は住民税非課税世帯が対象",
+        "application": "町内の公立・私立保育所を利用せず、保育の必要性の認定と申請が必要"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=03996&r=1&wcid=i00004x5",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費等を支援",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "経済的理由などで就学費用に困っている小中学生のいる世帯",
+        "support": "学用品費、学校給食費など必要な経費を援助",
+        "schools": "町内小学校・中学校等の認定対象児童生徒",
+        "application": "学校教育課へ相談・申請し、要件に基づいて認定"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_business_full.php?eid=06506&wcid=100",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・デイサービス・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "出産後1年未満の母子",
+        "types": "宿泊型、デイサービス型、アウトリーチ型、町直営デイサービス型",
+        "limit": "広域宿泊型は産後4か月未満で1回、広域デイサービス型は産後1年未満で3回、訪問型は産後1か月未満で1回。多胎児は回数拡大あり",
+        "application": "出生届時に福祉課で申請し、クーポン券の発行を受ける",
+        "care": "母体の回復、心理的安定、母子の愛着形成と育児支援"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=06505&r=1&wcid=i00004x1",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町内3保育施設で家庭保育中の子どもの一時保育を実施",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "自宅で育児中で、一時的な保育を必要とする就学前児童",
+        "types": "保護者の用事、就労、疾病等に応じた一時保育",
+        "facilities": "白菊保育園、つぼみ幼児園、福見保育園",
+        "fee": "対象年齢、時間、利用料、空き状況は各保育園へ直接確認",
+        "application": "利用希望施設へ事前相談・申込"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_culture_full.php?eid=06509&wcid=100",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "40歳以下の住宅新築・建替えを10％・上限200万円、購入を上限100万円補助し、子ども1人25万円を加算",
+      "details": {
+        "target": "町内居住者または転入予定者で、申請日に40歳以下、補助後10年以上居住する人",
+        "support": "新築・建替えは対象費の10％、購入も対象費の10％",
+        "amount": "新築・建替え上限200万円、住宅購入上限100万円",
+        "childAddition": "中学生以下の子ども1人につき25万円、町分譲地での新築は50万円加算",
+        "application": "新築・建替えは着工前、購入は売買契約後に地域づくり課へ申請"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_faq_full.php?eid=03719&fcid=f00021x0&g6=1&wcid=f00021x0",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大可燃・粗大不燃ごみは町指定の粗大ごみ処理券を使用して排出",
+      "details": {
+        "feeSystem": "町指定の粗大ごみ処理券を取扱所で購入。指定袋は燃やせるごみ小10枚200円・中300円・大400円、燃やせないごみ中300円・大400円",
+        "application": "粗大可燃ごみ・粗大不燃ごみに処理券を付け、地区別収集日と分別ルールに従って排出",
+        "collection": "処理券と指定袋は町指定取扱所で販売",
+        "directCarry": "施設への直接搬入条件と重量料金は品目・施設ごとに事前確認"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_faq_full.php?eid=00446&fcid=f00027x0&g6=1&r=1&wcid=i00005x5",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・洪水の地区別ハザードマップと公開型GISを提供",
+      "details": {
+        "coverage": "土砂災害特別警戒区域・警戒区域、避難場所、気象情報、前兆現象、河川洪水浸水範囲・浸水深等",
+        "access": "地区別土砂災害ハザードマップPDF、釣道川洪水ハザードマップ、町公開型GISで確認",
+        "gis": "2026年5月時点の公開型GISにハザードマップを掲載",
+        "guidance": "危険区域、避難場所、情報入手方法を平時から確認するよう案内"
+      },
+      "source": {
+        "url": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=01367&r=1&wcid=i00001x3",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://official.shinkamigoto.net/goto_chosei_full.php?eid=07825&r=4&wcid=l00008",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}

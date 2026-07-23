@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "40202",
+  "prefectureCode": "40",
+  "prefecture": "福岡県",
+  "name": "大牟田市",
+  "officialUrl": "https://www.city.omuta.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を大牟田市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "15歳年度末まで入院・通院の保険診療自己負担を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "大牟田市に住所があり健康保険に加入する15歳到達後最初の3月31日までの子ども",
+        "copay": "0歳から就学前の通院は無料。小中学生の通院は1医療機関あたり月500円まで。入院と薬局は対象年齢を通じて無料",
+        "incomeLimit": "所得制限なし",
+        "application": "市へ子ども医療証の交付申請を行う"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji0031060/index.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後おおむね6か月から小学6年生までを病児保育室で一時保育",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facility": "マリア病児ルームおひさま",
+        "hours": "月曜日から土曜日の8時30分から17時30分。連続利用は原則7日以内",
+        "fee": "大牟田市民および福岡県内居住で市内勤務の世帯は無料。県外居住で市内勤務の場合は1日2,000円、半日1,000円。昼食代等は別途",
+        "application": "事前登録と予約が必要で、利用時に医師連絡票等を提出する"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji0031031/index.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と0～2歳児非課税世帯を無償化し、第2子以降を独自軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "0～2歳児は市民税額、年齢、認定区分、保育時間等に応じて決定。住民税非課税世帯と3～5歳児は無償",
+        "siblingReduction": "2025年11月から所得やきょうだいの年齢にかかわらず、0～2歳児の第2子を半額、第3子以降を無料化",
+        "mealSupport": "第3子以降は副食費も無料化",
+        "application": "保育所等の利用申込みと認定手続きを行う"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji0031041/index.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.omuta.lg.jp/kiji00320792/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校等に加え、市独自で中学校等の給食費も無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "fiscalYear": "2026年度",
+        "elementarySchool": "国の小学校給食費負担軽減措置に対応して無償化",
+        "juniorHighSchool": "市独自施策により中学校等の給食費も無償化",
+        "support": "保護者負担を軽減し、義務教育段階の給食費無償化を実施"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji00321515/index.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子に宿泊型・通所型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "target": "大牟田市に住所がある産後1年未満の母親と乳児で、感染症や医療行為を必要とせず産後ケアを必要とする方",
+        "types": "宿泊型と通所型",
+        "usageLimit": "宿泊型は6泊、通所型は7日まで",
+        "fee": "課税世帯は宿泊型1泊2日2,000円、通所型700円。非課税・生活保護世帯は軽減あり",
+        "application": "利用希望日の原則1週間前までに市へ相談・申請する"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji0039347/index.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が月10時間まで利用可能",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "大牟田市に住所があり、保育所・幼稚園・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "fee": "1時間300円。給食費・材料費等の実費は別途",
+        "usageLimit": "月10時間まで。翌月への繰越不可",
+        "application": "総合支援システムで利用認定申請後、実施施設との面談と予約を行う"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji00321285/index.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家改修等を2分の1、最大50万円で支援",
+      "details": {
+        "target": "1年以上使用されていない一戸建て住宅の所有者等で、制度要件を満たす方",
+        "support": "改修工事・家財整理等の対象経費の2分の1、上限50万円。家財整理のみは上限20万円",
+        "additions": "子育て・若者世帯加算10万円、居住誘導区域加算10万円があり、条件により最大70万円",
+        "availability": "2026年度は予算残額が少なく、税抜10万円を超える申請受付を終了。少額申請は事前相談が必要",
+        "application": "契約・着工前に市へ申請する"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji00321463/index.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "事前申込制で1品420円の大型ごみ指定シールを貼って排出",
+      "details": {
+        "target": "40リットルの市指定袋に入らない家具・家電等",
+        "fee": "大型ごみ指定シール1枚420円を品目ごとに貼付",
+        "application": "大型ごみ受付センターへ電話し、受付番号、収集日、排出場所の指定を受ける",
+        "collection": "指定日の朝までに受付番号を記載したシールを貼り、指定場所へ排出する",
+        "temporaryCollection": "大量排出時は2トントラック1台相当2,200円の臨時収集制度あり"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji003782/index.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・内水・土砂災害・高潮・津波等のハザードマップを公開",
+      "details": {
+        "coverage": "河川洪水、内水氾濫、土砂災害、高潮、津波等の危険区域・浸水想定",
+        "shelters": "地区別地図で避難所や避難経路を確認可能",
+        "formats": "総合防災ハザードマップと地区別地図を公式サイトで公開"
+      },
+      "source": {
+        "url": "https://www.city.omuta.lg.jp/kiji00314214/index.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.omuta.lg.jp/kiji00320615/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}
