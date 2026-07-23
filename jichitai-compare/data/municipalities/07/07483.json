@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07483",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "塙町",
+  "officialUrl": "https://www.town.hanawa.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を塙町公式情報で調査し、6制度をverified、病児・病後児保育、保育料、学校給食費をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "こども医療費助成制度",
+        "target": "塙町に住所があり健康保険に加入する、18歳到達年度末までの子ども",
+        "support": "保険診療の一部負担金を助成",
+        "nationalHealthInsurance": "塙町国民健康保険加入者は県内医療機関等で原則窓口負担なし",
+        "otherInsurance": "受給資格証を対応医療機関等で提示すると原則窓口負担なし。対象外地域等では償還払い申請",
+        "mealCost": "入院時食事代は条件により申請対象",
+        "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/page000133.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の福祉・子育て、保育園、医療情報で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "町公式の子育て制度一覧、はなわこども園、近隣医療情報を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "caution": "広域利用を含む利用可否は健康福祉課またははなわこども園へ確認が必要"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/dir000003.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "unavailable",
+      "summary": "令和8年度はなわこども園の募集要項は公開されているが、保育部の年齢別・所得階層別保育料と町独自軽減を公式HTMLで確定できない。",
+      "details": {
+        "facility": "塙町立はなわこども園",
+        "confirmed": "令和8年度保育園・幼稚園入園児童募集要項を公式ページで公開",
+        "researchResult": "募集要項がPDF掲載のため、保育部の受入月齢、保育料表、多子軽減、副食費等を公式HTMLで確定できなかった",
+        "caution": "現行保育料・実費負担ははなわこども園へ確認が必要"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/page002439.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "町立幼稚園・小学校・中学校への給食提供は確認できるが、令和8年度の一般世帯の給食費額・無償化状況を公式HTMLで確定できない。",
+      "details": {
+        "provider": "塙町学校給食センター",
+        "target": "塙町立の幼稚園、小学校、中学校",
+        "confirmed": "令和8年度の献立表・給食だよりを毎月公開",
+        "lowIncomeSupport": "要保護・準要保護世帯は就学援助制度の対象となる場合がある",
+        "researchResult": "一般世帯の給食費単価、徴収額、町独自補助・無償化の有無を現行公式HTMLで確認できなかった",
+        "caution": "現行負担額は学校教育課または学校給食センターへ確認が必要"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/page002539.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "塙町に住所がある産後6か月未満の産婦を対象に、宿泊・日帰り型の産後ケアを各原則7日以内で実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア事業",
+        "target": "塙町に住所があり、産後の体調または子育てに不安がある産後6か月未満の産婦",
+        "types": "宿泊ケア、日帰りケア",
+        "services": "母体の休養、育児指導、母乳ケア、授乳指導等",
+        "usageLimit": "宿泊・日帰りとも原則7日以内",
+        "facilities": "福島県助産師会施設、塙厚生病院、岩佐医院等",
+        "fee": "施設・利用内容により異なるため健康福祉課へ確認",
+        "application": "妊娠中または産後に町へ申込み"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/page000702.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の塙町民が、就労要件を問わず月10時間まで1時間300円で利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "塙町に住所があり、保育所等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "facility": "塙町立はなわこども園内",
+        "usageLimit": "子ども1人当たり月10時間まで",
+        "fee": "1時間300円",
+        "application": "利用認定・施設面談・予約等の手続きが必要"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/page002496.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "県外から塙町へ移住して住宅を新築・購入する方に、基本上限140万円と加算を合わせ最大200万円を補助する。",
+      "details": {
+        "program": "塙町住宅取得支援事業補助金",
+        "target": "県外から塙町へ移住し、町内に定住する意思を持って住宅を新築または購入する等の要件を満たす方",
+        "base": "基本額上限140万円",
+        "additions": "子どもの人数、就業状況等に応じた加算",
+        "maximum": "基本額・加算額合計で最大200万円",
+        "otherSupport": "多世代同居・近居支援は基本25万円と加算を合わせ最大50万円",
+        "application": "住宅取得・着工前に担当課へ要件と予算状況を確認"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/sp/page/page000968.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度ごみ収集日程を公開し、家庭の粗大ごみ等は東白クリーンセンターへ平日または予約制の日曜日に自己搬入できる。",
+      "details": {
+        "schedule": "令和8年度地区別ごみ収集日程表を公開",
+        "facility": "東白クリーンセンター",
+        "weekdayCarry": "平日の搬入は事前予約不要",
+        "sundayCarry": "毎月第2・第4日曜日の搬入は、パソコン・スマートフォン・電話による事前予約が必要",
+        "required": "日曜搬入時は受付番号と運転免許証を提示",
+        "sorting": "町の分別・収集案内と指定袋・品目区分に従う",
+        "caution": "品目別の受入可否・料金は東白クリーンセンターへ確認"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/page002503.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.hanawa.fukushima.jp/page/page002112.html", "checkedAt": "2026-07-24"}]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "町内全域の洪水・土砂災害・地震・避難所等を掲載した防災マップと、内水・ため池ハザードマップを公開する。",
+      "details": {
+        "maps": "塙町防災マップ、内水ハザードマップ、ため池ハザードマップ",
+        "coverage": "久慈川・川上川等の洪水浸水想定、土砂災害警戒情報、地震・火災対策、指定避難所・緊急避難場所",
+        "internalFlood": "集中豪雨による下水路・側溝等からの内水氾濫想定を公開",
+        "ponds": "防災重点農業用ため池の浸水想定等を公開",
+        "guidance": "自宅・学校・職場周辺の危険箇所と避難経路を平時に確認"
+      },
+      "source": {"url": "https://www.town.hanawa.fukushima.jp/page/page000199.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.hanawa.fukushima.jp/page/page002157.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
