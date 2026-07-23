@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T20:53:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T21:12:00+09:00",
+  "status": "ready_for_review",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 66,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {
+    "code": "05214",
+    "name": "にかほ市",
+    "stage": "ready_for_review"
+  },
+  "workingBranch": "data/05214-nikaho",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -62,5 +66,5 @@
     "05213"
   ],
   "blocked": [],
-  "nextAction": "にかほ市（05214）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "にかほ市の3ファイル差分を検証し、region/north向けPRを作成してCI成功後に地方統合する。"
 }
