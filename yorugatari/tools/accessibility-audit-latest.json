@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-23T21:13:08.421Z",
-  "success": true,
+  "auditedAt": "2026-07-23T21:30:32.489Z",
+  "success": false,
   "results": [
     {
       "name": "top: published page loaded",
@@ -302,9 +302,19 @@
     },
     {
       "name": "accessibility audit: no browser JavaScript errors",
-      "ok": true,
-      "detail": []
+      "ok": false,
+      "detail": [
+        "console: Failed to load resource: the server responded with a status of 503 ()"
+      ]
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "name": "accessibility audit: no browser JavaScript errors",
+      "ok": false,
+      "detail": [
+        "console: Failed to load resource: the server responded with a status of 503 ()"
+      ]
+    }
+  ]
 }
