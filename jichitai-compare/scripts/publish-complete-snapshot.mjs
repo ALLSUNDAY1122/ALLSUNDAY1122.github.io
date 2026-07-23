@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const project = dirname(dirname(fileURLToPath(import.meta.url)));
+const repository = dirname(project);
 const releaseAt = process.env.RELEASE_AT ?? new Date().toISOString();
 const checkedAt = releaseAt.slice(0, 10);
 const manifestName = process.env.MANIFEST_NAME ?? 'release-latest-complete.json';
@@ -16,6 +17,7 @@ const regions = [
 
 function git(...args) {
   return execFileSync('git', args, {
+    cwd: repository,
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024
   });
