@@ -1,0 +1,195 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03441",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "住田町",
+  "officialUrl": "https://www.town.sumita.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を住田町公式情報で調査し、7制度をverified、病児・病後児保育をunavailable、こども誰でも通園制度をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生・転入から18歳到達年度末まで、他の医療費助成制度に該当しない子どもも町独自制度で保険診療の自己負担額全額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子育て支援医療費助成制度",
+        "target": "出生または転入から18歳到達後最初の3月31日までの子ども",
+        "coverage": "医療保険各法に基づく自己負担額相当額の全額",
+        "incomeLimit": "他制度の所得制限等で対象外となる子どもを町独自制度で補完",
+        "application": "住民税務課で受給者証の交付申請が必要",
+        "payment": "県内医療機関は受給者証提示で窓口負担無料。県外等は領収書を添えて償還払い",
+        "excluded": "入院時食事代、差額ベッド料、往診車代など保険適用外費用"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2018092700034/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "第3期子ども・子育て支援事業計画では町内に病児・病後児対応施設がなく、令和9年度からの実施を検討している。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "病児・病後児保育事業",
+        "availability": "町内では未実施",
+        "currentSituation": "対応施設がなく、医療機関等との協力関係も未構築",
+        "plan": "令和9年度から広域利用または病後児ルーム設置等による1施設での実施を検討",
+        "plannedDemand": "令和8年度72人、令和9年度69人の延べ利用を見込む"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2016050600013/files/20260327kodomokosodate3.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和5年度から住田町に住所がある全園児の保育料と副食費を、所得や年齢を問わず無料としている。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "support": "町内住所を有する全園児の保育料・副食費無料",
+        "incomeLimit": "なし",
+        "ageCondition": "年齢を問わない",
+        "facilities": "住田町立世田米保育園・有住保育園等",
+        "effectiveSince": "令和5年度"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2015022300036/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "学校給食費は保護者から徴収しており、食材費高騰分を公費で補填して給食費を据え置く負担軽減を行っている。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "feeStatus": "無償化ではなく学校給食費を徴収",
+        "fiscal2026Revenue": "令和8年度一般会計予算の学校給食費徴収金は1,205万5千円",
+        "priceSupport": "食料品高騰による賄材料費の増額分を公費補填し、保護者負担額を据え置き",
+        "specialSupport": "経済的に就学困難な世帯は就学援助制度で給食費等の援助対象となる場合がある"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2026022500012/files/R08ippan.pdf",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sumita.iwate.jp/docs/2026042100018/files/r07katsuyoujoukyou.pdf",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.sumita.iwate.jp/docs/2015022000141/",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内の母子を対象に訪問型を実施し、令和7年7月から県立大船渡病院で通所型も開始している。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "program": "産後ケア事業",
+        "target": "出産後1年以内の母子",
+        "types": "訪問型、県立大船渡病院のデイサービス型",
+        "services": "母子の心身状態に応じた保健指導、療養に伴う世話、育児相談・支援",
+        "daycareStart": "令和7年7月",
+        "application": "詳細は住田町保健福祉課または県立大船渡病院へ確認"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2016050600013/files/20260327kodomokosodate3.pdf",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sumita.iwate.jp/lifeevent/ninshin.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "needs_medium_review",
+      "summary": "令和8年度から町立2保育園でこども誰でも通園制度を実施する計画は確認できたが、料金・利用時間・申請方法の利用者向け案内を確認できない。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "乳児等通園支援事業（こども誰でも通園制度）",
+        "target": "保育所等に入所していない乳幼児",
+        "employmentRequirement": "なし",
+        "start": "令和8年度",
+        "facilities": "世田米保育園、有住保育園",
+        "plannedUsers": "令和8年度以降2人",
+        "reviewReason": "町公式の利用者向け案内で対象月齢の詳細、月間利用上限、料金、申請・予約方法を確認できない"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2016050600013/files/20260327kodomokosodate3.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "住宅新築では子育て世帯に150万円を加算し、子育て世帯の対象リフォームは補助率2分の1・上限150万円とする。",
+      "details": {
+        "program": "住宅建築事業費補助金・住宅リフォーム事業費補助金",
+        "newConstruction": "最大500万円かつ工事費の20％上限。子育て世帯は150万円加算",
+        "renovation": "子育て世帯は対象製品と設置・作業費の50％、上限150万円",
+        "childHousehold": "18歳未満の子どもを養育する世帯等、町の要件による",
+        "application": "工事着手前に建設課へ事前相談・申請",
+        "otherConditions": "対象者、町内施工、町産材等の条件に応じて加算・対象範囲を決定"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2025060300028/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみ等は大船渡地区クリーンセンターへ直接持ち込みでき、家庭系ごみは100キログラムまで無料。",
+      "details": {
+        "facility": "大船渡地区クリーンセンター",
+        "application": "受付時間内に直接搬入。多量ごみは事前相談",
+        "hours": "平日9時～12時・13時～16時、第3日曜日9時～12時",
+        "limit": "通常は1日5袋まで",
+        "feeSystem": "家庭系一般廃棄物は100キログラムまで無料。超過分は10キログラムごと200円",
+        "collectionSupport": "65歳以上または重度障害者のみの世帯で直接搬入困難な場合、軽トラック1台分まで粗大ごみ収集を相談可能",
+        "excluded": "家電リサイクル法対象品目は持ち込み不可"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2015022500054/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害、洪水・浸水、地震、避難施設等を掲載した地区別の住田町防災マップを公開している。",
+      "details": {
+        "map": "住田町防災マップ",
+        "coverage": "土砂災害、洪水・浸水害、地震対策、警戒レベル、備蓄、指定緊急避難場所・避難所",
+        "areas": "町全体図と新切、土倉、火の土などの地区別マップ",
+        "online": "町公式ページから項目別・地区別PDFを閲覧可能",
+        "contact": "総務課防災担当"
+      },
+      "source": {
+        "url": "https://www.town.sumita.iwate.jp/docs/2016011800018/",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
