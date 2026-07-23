@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1386,
+    "municipalityCount": 1390,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -23587,6 +23587,162 @@
       }
     },
     {
+      "code": "01581",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "厚真町",
+      "officialUrl": "https://www.town.atsuma.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Bが厚真町公式情報で対象9制度を調査し、7制度を確認済み、病児・病後児保育と学校給食費の現行利用条件を未確認として登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳までの医療費自己負担額相当分を、町内で利用できるポイントとして全額還元する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "子育て支援医療費還元事業",
+            "target": "厚真町に住所がある0歳から18歳までの子どもの保護者",
+            "support": "乳幼児の初診時一部負担金、小学生から高校生までの入院・通院に係る医療費自己負担相当額をあつまるポイントで還元",
+            "amount": "高額療養費等を控除した医療費自己負担額全額",
+            "application": "領収書等を添えて住民課子育て支援グループまたは上厚真支所で申請"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/page/1293.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の現行育児・保育案内で、病児・病後児保育の実施施設、対象年齢、料金、予約方法を確認できない。",
+          "details": {
+            "confirmed": "こども園、一時預かり、子育て支援センター等の現行サービスは掲載されている",
+            "unconfirmed": "令和8年度に利用できる病児・病後児保育施設、対象、利用料、登録・予約方法",
+            "guidance": "住民課子育て支援グループへ広域利用を含む現行の利用可否を確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/life/2/13/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳から5歳児等は国制度で保育料無償となり、0歳から2歳児には町の軽減措置を適用する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facilities": "こども園つみき、宮の森こども園",
+            "targetAge": "おおむね生後6か月から就学前まで",
+            "threeToFive": "幼児教育・保育無償化により満3歳後の4月1日から就学前まで保育料無償",
+            "zeroToTwo": "町民税額等に応じて算定し、国基準保育料の軽減措置と多子世帯軽減を継続",
+            "mealFee": "給食費、教材費、延長保育料等は別途負担となる場合がある"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/page/1030.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "令和8年度の学校給食提供と給食センター運営は確認できるが、児童生徒別の保護者負担額・無償範囲を町公式HTMLで確定できない。",
+          "details": {
+            "confirmed": "厚真町学校給食センターを運営し、町内小中学校へ給食を提供している",
+            "unconfirmed": "令和8年度の小学生・中学生それぞれの保護者負担額、無償化対象、申請の要否",
+            "guidance": "教育委員会学校給食センターへ現行負担条件を確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/soshiki/3.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "町内の産後おおむね1年以内の母子を対象に、訪問型・通所型・宿泊型の産後ケアを無料で実施・助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "厚真町に住所があるおおむね産後1年以内の産婦と新生児・乳児",
+            "types": "訪問型、通所型ショート・ロング、宿泊型",
+            "support": "母親の心身ケア、授乳・乳房ケア、育児手技、乳児の健康・成長相談",
+            "fee": "町制度の利用料は無料。償還払いは類型別の助成上限あり",
+            "limits": "訪問・通所は原則各5回、宿泊は2回。多胎は上限拡大"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/page/1288.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設に在籍しない1歳6か月から就学前の子どもを、こども園または子育て支援センターで一時的に預かる。",
+          "eligibility": {
+            "minAgeMonths": 18,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所等に在籍しない1歳6か月から就学前の幼児",
+            "facilities": "町内こども園または子育て支援センター",
+            "reasons": "就労、求職活動、保護者の疾病・出産、私的理由等",
+            "usage": "利用理由に応じて非定期的または緊急・一時的に利用",
+            "application": "利用施設または住民課子育て支援グループへ事前申込み"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/page/1304.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "18歳までの子どもがいる町内賃貸住宅入居世帯へ、子ども1人あたり月額最大3,000円相当を還元する。",
+          "details": {
+            "program": "子育て世帯の賃貸住宅家賃一部助成",
+            "target": "18歳までの子どもがいて町内賃貸住宅に入居し、所得・家賃・税滞納等の要件を満たす世帯",
+            "amount": "子ども1人あたり月額最大3,000円分のあつまるポイント",
+            "calculation": "月額家賃から48,000円を差し引いた額を上限として還元",
+            "application": "町公式LINEまたは窓口で家賃支払確認書類等を添えて申請"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/page/1294.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "大型ごみは収集業者へ電話予約し、役場で処理券を購入して指定日に戸別収集する。",
+          "details": {
+            "application": "東胆振清掃企業組合へ住所・氏名・品目・個数を電話で申込み",
+            "fee": "申込時に案内された金額分の大型ごみ処理券を役場で購入",
+            "collection": "処理券を貼り、指定された収集日に排出",
+            "excluded": "家電リサイクル対象品、事業系ごみ、危険物等は収集対象外"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/page/1370.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害、洪水、津波等を確認できる防災ハザードマップと、ため池ハザードマップを公開する。",
+          "details": {
+            "map": "厚真町防災ハザードマップをWeb公開",
+            "hazards": "土砂災害、洪水、津波、地震等の危険区域と避難所を確認可能",
+            "pond": "ため池ハザードマップもPDFで公開",
+            "updated": "町公式案内を2026年4月に更新"
+          },
+          "source": {
+            "url": "https://www.town.atsuma.lg.jp/page/3820.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "01631",
       "prefectureCode": "01",
       "prefecture": "北海道",
@@ -34360,6 +34516,213 @@
           "additionalSources": [
             {
               "url": "https://www.town.takko.lg.jp/index.cfm/9,5717,22,275,html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "02445",
+      "prefectureCode": "02",
+      "prefecture": "青森県",
+      "name": "南部町",
+      "officialUrl": "https://www.town.aomori-nanbu.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Aが対象9制度を南部町公式情報で調査し、7制度をverified、2制度をunavailableとして整理。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額を給付する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "南部町乳幼児・子ども医療費給付制度",
+            "target": "南部町に住所があり健康保険に加入する0歳から18歳年度末までの子ども",
+            "support": "医科・歯科・調剤の保険診療一部負担金",
+            "fee": "受給者負担なし",
+            "payment": "県内は受給資格証による現物給付、県外等は償還払い",
+            "excluded": "健診、予防接種、文書料、差額室料、食事療養費等は対象外"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/1383.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/page/1851.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "病児保育事業を無償化対象に含む制度情報は確認できるが、令和8年度の実施施設・対象年齢・料金・予約方法を確認できない。",
+          "details": {
+            "confirmedInformation": "幼児教育・保育無償化制度では、要件を満たす病児保育事業の利用料を償還払いの対象に含む",
+            "researchResult": "南部町民が利用できる現行施設、対象年齢、利用料金、予約方法を町公式サイトで確認できなかった",
+            "caution": "利用可否は健康こども課子育て支援班へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/1695.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/page/1982.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "南部町民の0～2歳児保育料を無償化し、3～5歳児等の利用料と令和8年度の副食費も無償化する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "zeroToTwo": "2025年4月から、町に住民票がある0～2歳児の保育料を無償化",
+            "threeToFive": "幼稚園・保育所・認定こども園等の3～5歳児利用料を無償化",
+            "meal": "2026年4月から町民の満3歳～5歳児の副食費を無償化",
+            "procedure": "認可施設の保育料・副食費は原則申請不要。認可外施設の副食費は請求手続きが必要",
+            "otherCosts": "送迎費、主食費、行事費等は施設により保護者負担"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/8297.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/page/1982.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/page/10664.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内小中学校の学校給食費を無償化し、町外校在籍の町民児童生徒にも相当額を給付する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "program": "南部町小・中学校給食費給付事業",
+            "townSchools": "町内小中学校在籍者の給食費を無償化",
+            "outsideSchools": "町外小中学校・特別支援学校在籍者の保護者へ町基準額を給付",
+            "amount": "町基準は小学校1食270円、中学校1食300円",
+            "start": "2015年度から給食費無償化を実施"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/1454.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/page/8629.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "助産院で休養・授乳指導等を受けられる産後ケア事業は確認できるが、令和8年度の対象月齢・利用類型・料金・利用上限を確定できない。",
+          "details": {
+            "confirmedSupport": "産婦と乳児が助産院で休養し、授乳指導等の支援を受けられる産後ケア事業を実施",
+            "researchResult": "現行利用者向けページから対象月齢、宿泊・通所・訪問の区分、自己負担額、利用上限を確認できなかった",
+            "caution": "詳細はこども家庭センターぴよすくへ確認が必要"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/site/nanbugurashi/10461.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から満3歳未満の子どもが、月10時間まで町内施設を利用でき、南部町民が町内施設を利用する場合は利用料等が無料となる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          },
+          "details": {
+            "program": "南部町こども誰でも通園制度",
+            "target": "保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "employmentRequirement": "なし",
+            "usageLimit": "子ども1人につき月10時間まで",
+            "fee": "各施設が設定。南部町民が町内施設を利用する場合は利用料・給食費・おやつ代を無料",
+            "application": "総合支援システム等で認定申請し、施設の面談・予約を行う"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/10663.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度、町内登録業者による住宅新築・改修または建売住宅取得費の一部を補助する。",
+          "details": {
+            "program": "南部町住宅新築・リフォーム支援事業",
+            "target": "2026年4月1日以降に登録業者と契約し、町内の自己居住用住宅を新築・改修または建売住宅を取得する方",
+            "eligibleCosts": "新築・建売住宅は税抜1,000万円以上、改修は税抜30万円以上等",
+            "support": "対象工事・取得費の一部を予算範囲内で補助",
+            "application": "着工・引渡し前に申請し、登録業者の施工等の要件を満たす必要がある"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/1757.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/site/nanbugurashi/10474.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "不燃ごみ・粗大ごみを八戸リサイクルプラザへ直接搬入でき、木製品と木製品以外で受入日を分ける。",
+          "details": {
+            "facility": "八戸リサイクルプラザ",
+            "directCarry": "不燃ごみ・粗大ごみを自己搬入可能",
+            "woodenWaste": "令和8年度の木製粗大ごみは指定受入日に搬入",
+            "otherWaste": "木製以外の粗大ごみ・不燃ごみは木製受入日以外の平日に受入",
+            "hours": "9時～12時、13時～17時",
+            "collection": "町の粗大ごみ収集も木製品と木製品以外で日程を分ける"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/8166.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/life/1/5/26/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・地震・土砂災害・ため池等の危険区域、避難所・防災知識を掲載した防災マップを公開する。",
+          "details": {
+            "map": "南部町防災マップ",
+            "coverage": "馬淵川最大規模洪水浸水想定、地震の揺れやすさ、地域危険度、土砂災害、避難所等",
+            "ponds": "防災重点ため池の所在地・浸水想定を掲載するため池ハザードマップを公開",
+            "information": "ほっとスルメール、河川ライブカメラ等で防災情報を提供",
+            "guidance": "平時に危険箇所・避難先・避難経路を確認"
+          },
+          "source": {
+            "url": "https://www.town.aomori-nanbu.lg.jp/page/1821.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aomori-nanbu.lg.jp/page/1822.html",
               "checkedAt": "2026-07-24"
             }
           ]
@@ -142532,6 +142895,379 @@
           },
           "source": {
             "url": "https://www.vill.takagi.lg.jp/doc/2018041000024/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20416",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "豊丘村",
+      "officialUrl": "https://www.vill.nagano-toyooka.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を豊丘村公式情報で確認し、9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担分を窓口無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "豊丘村に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "外来・入院の保険診療自己負担分を福祉医療費として助成",
+            "copay": "令和7年4月診療分から、1か月1医療機関・1レセプト当たりの受給者負担額を0円に軽減",
+            "procedure": "受給者証と保険資格確認書類を医療機関等で提示。県外受診や未提示時は村へ払い戻し申請",
+            "excluded": "入院時食事療養費、保険診療外費用、高額療養費等の他制度給付、学校災害共済等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/08hoken/03fukushi/03sikyuunaiyou/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気や回復期の子どもが飯田市病児保育施設おひさまはるるを利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "target": "病気または回復期で集団保育が困難かつ家庭保育ができない子ども",
+            "facility": "健和会病院内の飯田市病児保育施設『おひさまはるる』",
+            "age": "利用対象年齢は施設の現行案内に従い、生後6か月～小学3年生を基本とする",
+            "procedure": "予約アプリによる事前登録・予約と医師連絡票が必要",
+            "fee": "利用時間・課税区分により異なるため、村子育て支援係と施設へ確認",
+            "limitations": "定員、症状、感染症等により利用できない場合あり"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/11child/02shien/kosodateshien.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、3歳未満児の多子・低所得世帯を軽減",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "threeToFive": "保育所等を利用する3～5歳児と住民税非課税世帯の0～2歳児は無償化対象",
+            "underThree": "課税世帯の3歳未満児は市町村民税額等に応じて算定",
+            "prefectureSupport": "長野県保育料軽減事業により、算定人数の年齢要件を設けず多子世帯を軽減",
+            "villageSupport": "国・県制度に加え、同時入所の第2子が3歳未満児の場合等に村独自軽減を実施",
+            "excluded": "副食費、延長保育料、用品費、行事費等の実費は別途"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/11child/01hoikusho/2010-0621-1056-28.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から村内小中学校の学校給食費を完全無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "豊丘村立小中学校に在籍する児童生徒の保護者",
+            "support": "令和8年度当初予算に学校給食費の完全無償化対応経費を計上",
+            "procedure": "対象期間、欠食時の精算、村外通学者等の取扱いは教育委員会へ確認",
+            "supportForLowIncome": "就学援助制度の対象世帯はその他の就学費用についても支援対象となる場合あり"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/16toyooka/01sontyoumessage/2026-0303-1358-16.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子に宿泊・日帰り型等の産後ケアと授乳育児相談助成を提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "豊丘村に住所があり、産後の心身ケアや育児支援を必要とする母子",
+            "types": "宿泊型、日帰り型、授乳育児相談助成等",
+            "care": "母体の休養・心身ケア、授乳支援、乳房ケア、育児相談、乳児の健康確認等",
+            "fee": "宿泊型の例では課税世帯1日3,000円、非課税世帯1日1,500円。施設・類型で異なる",
+            "procedure": "実施施設へ予約後、村へ産後ケア事業利用申請書を提出",
+            "period": "施設ごとの受入月齢・利用上限を申請時に確認"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/11child/02shien/03center.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.nagano-toyooka.lg.jp/70reiki/reiki_honbun/e764RG00000857.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から3歳未満の未就園児を月10時間まで預かるこども誰でも通園制度",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "豊丘村内に住所があり、保育園等に通っていない生後6か月～満3歳未満の子ども",
+            "facility": "豊丘中央保育園",
+            "limit": "子ども1人につき月10時間まで",
+            "hours": "月～金曜日9時～15時。保育園休園日を除く",
+            "capacity": "原則3人",
+            "fee": "生活保護世帯0円、住民税所得割合算額77,101円未満世帯100円、その他300円（1時間当たり）",
+            "procedure": "中央保育園または子育て支援係へ書類を提出し、利用手続きを行う"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/11child/02shien/kosodateshien.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "定住住宅の用地取得・新築・中古住宅購入を最大60～80万円助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "世帯全員に税滞納がなく、自治組織へ加入して地域活動に参加し、村内へ定住する人",
+            "land": "住宅用地取得費の3分の1、上限60万円",
+            "housing": "新築購入費の10分の1または中古住宅購入費の2分の1、上限60万円",
+            "mountainArea": "山間地区の中古住宅購入等は上限80万円となる場合あり",
+            "procedure": "土地・住宅取得後の申請期限、必要書類、併用制限を企画財政課へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/21oidenansyo/03josei/01youchi/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "年2回の粗大ごみ収集と、指定施設への直接搬入等で処理",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "村の粗大ごみ・有料家電・布団類収集を実施し、指定日時・場所へ自己搬入",
+            "frequency": "村の一般廃棄物処理計画では粗大ごみ収集を年2回実施",
+            "direct": "大量ごみ等は稲葉クリーンセンター等への直接搬入を利用可能。施設使用料は最新案内を確認",
+            "information": "品目別の分別・収集日はごみ分別アプリ『さんあ～る』で確認可能",
+            "excluded": "家電リサイクル対象品、処理困難物、事業系ごみ等は指定方法で処理"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/09sumai/03gomi/2024-1008-1040-7.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.nagano-toyooka.lg.jp/09sumai/03gomi/02how_to/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害のWeb版防災マップと防災行政アプリを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "洪水ハザードマップと土砂災害ハザードマップをWeb上で公開",
+            "evacuation": "避難所、避難経路、危険区域を確認可能",
+            "notification": "同報無線、エリアメール、防災行政アプリ『ライフビジョン』等で災害情報を配信",
+            "monitoring": "村内の気象データや河川監視カメラ映像を確認可能",
+            "preparation": "家庭・地域で避難路、避難所、非常持出品を平時に確認"
+          },
+          "source": {
+            "url": "https://www.vill.nagano-toyooka.lg.jp/06bousai/01bousai/hazardmap/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20417",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "大鹿村",
+      "officialUrl": "https://www.vill.ooshika.nagano.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を大鹿村公式情報で確認し、6制度をverified、3制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "子どもの保険診療自己負担分を福祉医療費として無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "大鹿村に住所を有し、福祉医療受給者証の交付を受けた子ども",
+            "coverage": "保険診療の自己負担分を村が助成",
+            "procedure": "受給者証の交付申請、県外受診・証未提示時の払い戻し手続きは保健福祉課へ確認",
+            "excluded": "保険診療外費用、入院時食事代、他制度給付、学校災害共済等は個別確認"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/sansonryugaku/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "現行の病児・病後児保育施設、対象年齢、料金、予約方法を村公式情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "research": "村公式サイトの子育て・教育、保育所、保健福祉関連情報を確認",
+            "needsConfirmation": "飯田下伊那地域の病児保育施設利用可否、対象年齢、利用料、医師連絡票、事前登録・予約方法は保健福祉課または教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/category/oshika-board-education/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "unavailable",
+          "summary": "保育所と特別保育の実施は確認できるが、令和8年度の通常保育料表を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "confirmed": "大鹿村立保育所は原則満1歳以上から就学前までを対象に通常保育・延長保育・一時保育を実施",
+            "needsConfirmation": "3～5歳児等の無償化適用、0～2歳児の階層別保育料、多子軽減、給食費・副食費、延長保育料は教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/ooshika_hosikujo/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "大鹿小学校・大鹿中学校の学校給食費を全額補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "大鹿村立小中学校に通う児童生徒の保護者",
+            "support": "学校給食費を村が全額補助",
+            "school": "令和8年度は村立小学校1校・中学校1校で学校教育を実施",
+            "procedure": "山村留学世帯、欠食時、村外通学等の取扱いは教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/sansonryugaku/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "令和8年度の産後ケアの類型、対象月齢、利用料、申請方法を村公式情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "research": "村公式サイトの妊娠・出産・保健医療関連情報を確認",
+            "needsConfirmation": "宿泊・通所・訪問型の実施有無、受入施設、対象時期、利用日数、自己負担、申請方法は保健福祉課へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/category/living_info/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "満1歳以上の未就学児を週3日程度・月12日以内で一時保育",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "災害、事故、疾病、冠婚葬祭等により家庭で保育できない満1歳以上の就学前児童",
+            "facility": "大鹿村立保育所",
+            "limit": "週3日程度、月12日以内",
+            "days": "平日の保育日に実施",
+            "fee": "一時保育の現行利用料、給食費、申込期限は保育所へ確認",
+            "procedure": "利用前に保育所へ相談・申込み"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/ooshika_hosikujo/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "45歳以下の住宅新築・中古取得を最大200～250万円等補助",
+          "eligibility": {
+            "minAgeMonths": 216,
+            "maxAgeYears": 45
+          },
+          "details": {
+            "target": "大鹿村を生活の本拠として永住意思がある45歳以下の主たる生計者",
+            "newHousing": "新築・中古住宅取得費の3分の1。新築上限200万円、村内業者施工は250万円、中古住宅取得は100万円",
+            "renovation": "改築費の2分の1、上限50万円。村内業者施工は60万円",
+            "land": "住宅用地取得費の3分の1、上限60万円",
+            "procedure": "新築・用地取得は契約から6か月以内、改築は着工前に申請"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/shinchiku_hojo/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "村の分別ルールに従い粗大ごみを指定方法で排出",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "guide": "令和7年4月改定のごみ分別・排出案内を公開",
+            "procedure": "粗大ごみの対象品、指定日、集積場所、処理手数料、直接搬入の可否は最新の分別表・住民税務課案内で確認",
+            "excluded": "家電リサイクル対象品、処理困難物、事業系ごみ等は別処理",
+            "sorting": "可燃・不燃・資源物等を村の指定方法で分別"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/%E3%81%94%E3%81%BF%E3%81%AE%E5%87%BA%E3%81%97%E6%96%B9-2/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "大河原・鹿塩地区のハザードマップとWeb版防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "大河原地区・鹿塩地区のハザードマップを公開",
+            "web": "Web版ハザードマップで災害リスクと避難所を確認可能",
+            "evacuation": "避難場所・避難経路、防災倉庫、非常持出品を平時に確認するよう案内",
+            "support": "高齢者・障害者等への地域での避難支援を推奨"
+          },
+          "source": {
+            "url": "https://www.vill.ooshika.nagano.jp/hazard_map-2/",
             "checkedAt": "2026-07-24"
           }
         }
