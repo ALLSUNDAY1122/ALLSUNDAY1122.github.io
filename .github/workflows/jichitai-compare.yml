@@ -1,28 +1,34 @@
-name: Resolve Five Single-Service Reviews
+name: Jichitai Compare CI
 
 on:
   pull_request:
     paths:
       - 'jichitai-compare/**'
       - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: resolve-single-five-${{ github.event.pull_request.number }}
-  cancel-in-progress: false
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  resolve-release:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
-      - name: Checkout release branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -30,223 +36,42 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Fetch regional branches
-        run: |
-          git fetch --no-tags origin \
-            +refs/heads/region/north:refs/remotes/origin/region/north \
-            +refs/heads/region/west:refs/remotes/origin/region/west
-
-      - name: Resolve five municipalities
-        run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const path = require('node:path');
-          const { execFileSync } = require('node:child_process');
-
-          const project = 'jichitai-compare';
-          const updatedAt = '2026-07-23T22:55:00+09:00';
-          const checkedAt = '2026-07-23';
-          const definitions = [
-            {
-              code: '03215', prefectureCode: '03', ref: 'origin/region/north', serviceId: 'schoolMeals',
-              status: 'verified',
-              summary: '2026年6月25日、学校給食費無償化事業を計上した令和8年度補正予算が市議会で可決された。',
-              eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
-              details: {
-                program: '学校給食費無償化事業',
-                decision: '令和8年度一般会計補正予算（第3号）で事業費を可決',
-                decisionDate: '2026-06-25',
-                purpose: '物価高騰下の子育て世帯の負担軽減',
-                caution: '対象範囲、開始時期、非喫食者への対応等は市の実施案内を確認'
-              },
-              source: { url: 'https://www.city.oshu.iwate.jp/gikai/teireikai_rinjikai/18_3/r08teirei2/17468.html', checkedAt }
-            },
-            {
-              code: '03321', prefectureCode: '03', ref: 'origin/region/north', serviceId: 'postpartumCare',
-              status: 'verified',
-              summary: '母子の心身のケア、育児相談、育児サポートを受けられる産後ケア事業を実施する。',
-              eligibility: { minAgeMonths: 0, maxAgeYears: 1 },
-              details: {
-                program: '紫波町産後ケア事業',
-                support: '母子の心身のケア、育児相談、育児サポート',
-                application: '健康福祉課こども家庭センター母子保健係へ申請',
-                feeAndTypes: '利用類型・対象月齢・料金等は町の最新案内PDFまたは窓口で確認'
-              },
-              source: { url: 'https://www.town.shiwa.iwate.jp/soshiki/1_2/3_5/17157431147431/', checkedAt }
-            },
-            {
-              code: '03501', prefectureCode: '03', ref: 'origin/region/north', serviceId: 'postpartumCare',
-              status: 'verified',
-              summary: '妊産婦、乳児と家族を対象に、家庭訪問、健康相談、授乳・乳房ケア、栄養相談等の産後ケアを提供する。',
-              eligibility: { minAgeMonths: 0, maxAgeYears: 1 },
-              details: {
-                program: '産前・産後サポート・産後ケア',
-                target: '妊産婦、乳児とその家族',
-                support: '家庭訪問、健康相談、授乳・乳房ケア、栄養相談、ベビーマッサージ等',
-                locations: '自宅、健康ふれあいセンター、子育て支援センター等',
-                application: '町の案内に従い電話で相談・予約'
-              },
-              source: { url: 'https://www.town.karumai.iwate.jp/article/education/entry-basename-7.html', checkedAt }
-            },
-            {
-              code: '33666', prefectureCode: '33', ref: 'origin/region/west', serviceId: 'schoolMeals',
-              status: 'verified',
-              summary: '2026年度は小学校給食費無償化を町の方針とし、給食費の値上げ分1食35～40円を町が支援する。',
-              eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
-              details: {
-                elementary: '2026年度は小学校給食費無償化を実施する方針',
-                inflationSupport: '給食費値上げ分として1食35～40円を町が支援',
-                juniorHigh: '中学校課程は保護者負担があり、就学援助認定世帯等は給食費支援の対象',
-                caution: '学校・課程別の最終保護者負担額は学校または教育委員会へ確認'
-              },
-              source: { url: 'https://www.town.okayama-misaki.lg.jp/kakuka/somu/gyomu/6/5/3704.html', checkedAt },
-              additionalSources: [
-                { url: 'https://www.town.okayama-misaki.lg.jp/kakuka/somu/gyomu/6/3/3759.html', checkedAt },
-                { url: 'https://www.town.okayama-misaki.lg.jp/kakuka/kyoikusomu/gyomu/2/128.html', checkedAt }
-              ]
-            },
-            {
-              code: '39205', prefectureCode: '39', ref: 'origin/region/west', serviceId: 'sickChildCare',
-              status: 'unavailable',
-              summary: '土佐市こども計画では市民病院等と連携して病児保育の事業実施に向けた体制整備を進める段階で、現行の利用者向け実施案内はない。',
-              eligibility: { minAgeMonths: 0, maxAgeYears: 18 },
-              details: {
-                program: '病児保育事業',
-                availability: '現時点で市の利用者向け実施施設・予約案内は確認できない',
-                futurePolicy: '土佐市民病院、関係機関と連携し、事業実施に向けて体制を整備',
-                caution: '広域利用や事業開始状況は市子育て支援課へ確認'
-              },
-              source: { url: 'https://www.city.tosa.lg.jp/life/detail.php?hdnKey=6436', checkedAt }
-            }
-          ];
-
-          function git(...args) {
-            return execFileSync('git', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-          }
-          function showJson(ref, file) {
-            return JSON.parse(git('show', `${ref}:${file}`));
-          }
-
-          const previousProgress = JSON.parse(fs.readFileSync(`${project}/operations/progress.json`, 'utf8'));
-          const resolved = [];
-
-          for (const def of definitions) {
-            const municipalityPath = `${project}/data/municipalities/${def.prefectureCode}/${def.code}.json`;
-            const taskPath = `${project}/operations/tasks/${def.code}.json`;
-            if (fs.existsSync(municipalityPath) || fs.existsSync(taskPath)) {
-              throw new Error(`${def.code}: main側に既存ファイルがあります`);
-            }
-
-            const municipality = showJson(def.ref, municipalityPath);
-            const task = showJson(def.ref, taskPath);
-            const oldService = municipality.services?.[def.serviceId];
-            if (!oldService) throw new Error(`${def.code}/${def.serviceId}: 対象制度がありません`);
-
-            municipality.services[def.serviceId] = {
-              ...oldService,
-              status: def.status,
-              summary: def.summary,
-              eligibility: def.eligibility ?? oldService.eligibility,
-              details: { ...(oldService.details ?? {}), ...def.details },
-              source: def.source,
-              ...(def.additionalSources ? { additionalSources: def.additionalSources } : {})
-            };
-            municipality.summary = `${municipality.name}の対象9制度を公式情報で再確認し、全制度をverifiedまたはunavailableとして確定。`;
-            municipality.updatedAt = checkedAt;
-
-            const services = Object.entries(municipality.services);
-            if (services.length !== 9 || !services.every(([, service]) => ['verified', 'unavailable'].includes(service.status))) {
-              throw new Error(`${def.code}: 9制度が公開可能状態ではありません`);
-            }
-            const verifiedCount = services.filter(([, service]) => service.status === 'verified').length;
-            const unavailableCount = services.filter(([, service]) => service.status === 'unavailable').length;
-            const officialSources = [];
-            for (const [, service] of services) {
-              const url = service?.source?.url;
-              if (url && !officialSources.includes(url)) officialSources.push(url);
-            }
-
-            const normalizedTask = {
-              ...task,
-              status: 'merged',
-              currentService: null,
-              nextServiceIndex: 9,
-              completedServices: services.map(([serviceId]) => serviceId),
-              verifiedCount,
-              unavailableCount,
-              researchingCount: 0,
-              needsMediumReviewCount: 0,
-              pullRequestNumber: null,
-              blockers: [],
-              lastCheckedAt: checkedAt,
-              lastUpdatedAt: updatedAt,
-              lastUpdatedBy: `${task.lastUpdatedBy || task.assignedTeam}・統括⑤要確認解消`,
-              officialSources,
-              notes: [
-                ...(Array.isArray(task.notes) ? task.notes : []),
-                `${def.serviceId}を現行公式情報で再確認し、${def.status}へ確定。`,
-                '単一制度要確認を解消し、全国公開対象として統合。'
-              ]
-            };
-
-            fs.mkdirSync(path.dirname(municipalityPath), { recursive: true });
-            fs.writeFileSync(municipalityPath, `${JSON.stringify(municipality, null, 2)}\n`);
-            fs.writeFileSync(taskPath, `${JSON.stringify(normalizedTask, null, 2)}\n`);
-            resolved.push({
-              code: def.code,
-              name: municipality.name,
-              prefecture: municipality.prefecture,
-              serviceId: def.serviceId,
-              finalStatus: def.status,
-              sourceUrl: def.source.url
-            });
-          }
-
-          const manifest = {
-            schemaVersion: '1.0.0',
-            createdAt: updatedAt,
-            previousPublishedMunicipalities: previousProgress.registeredMunicipalities,
-            resolvedMunicipalities: resolved.length,
-            municipalities: resolved
-          };
-          fs.writeFileSync(
-            `${project}/operations/control/resolved-single-review-5-20260723.json`,
-            `${JSON.stringify(manifest, null, 2)}\n`
-          );
-          console.log(JSON.stringify(manifest, null, 2));
-          NODE
-
-      - name: Generate and validate public data
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          npm run validate:sessions --if-present
-          node --check app.js
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
 
-      - name: Update displayed municipality count
-        run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const manifest = JSON.parse(fs.readFileSync('jichitai-compare/operations/control/resolved-single-review-5-20260723.json', 'utf8'));
-          const progress = JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json', 'utf8'));
-          const oldCount = manifest.previousPublishedMunicipalities;
-          const newCount = progress.registeredMunicipalities;
-          const indexPath = 'jichitai-compare/index.html';
-          let html = fs.readFileSync(indexPath, 'utf8');
-          html = html.replace(new RegExp(`${oldCount}自治体`, 'g'), `${newCount}自治体`);
-          fs.writeFileSync(indexPath, html);
-          console.log(`${oldCount}自治体から${newCount}自治体へ更新しました。`);
-          NODE
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
 
-      - name: Restore standard CI workflow
-        run: git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
 
-      - name: Commit resolved release
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare
-          git commit -m 'release: resolve five single-service reviews'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
