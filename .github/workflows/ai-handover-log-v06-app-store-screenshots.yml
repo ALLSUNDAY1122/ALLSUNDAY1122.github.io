@@ -89,6 +89,28 @@ jobs:
           cp "$SOURCE/analysis_options.yaml" "$RUNNER_TEMP/build/analysis_options.yaml"
           cp -R "$SOURCE/docs" "$RUNNER_TEMP/build/docs"
           cp screenshots/app_store_screenshots_test.dart "$RUNNER_TEMP/build/test/app_store_screenshots_test.dart"
+          mkdir -p "$RUNNER_TEMP/build/assets"
+          cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc "$RUNNER_TEMP/build/assets/NotoSansCJK-Regular.ttc"
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path(r'${{ runner.temp }}/build')
+          pubspec = root / 'pubspec.yaml'
+          text = pubspec.read_text(encoding='utf-8')
+          old = 'flutter:\n  uses-material-design: true'
+          new = "flutter:\n  uses-material-design: true\n  fonts:\n    - family: AppStoreNoto\n      fonts:\n        - asset: assets/NotoSansCJK-Regular.ttc"
+          if old not in text:
+              raise SystemExit('pubspec flutter anchor not found')
+          pubspec.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          app = root / 'lib/app.dart'
+          text = app.read_text(encoding='utf-8')
+          old = '      useMaterial3: true,\n      colorScheme: scheme,'
+          new = "      useMaterial3: true,\n      fontFamily: 'AppStoreNoto',\n      colorScheme: scheme,"
+          if old not in text:
+              raise SystemExit('ThemeData anchor not found')
+          app.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+          python3 scripts/generate_v05_brand_assets.py "$RUNNER_TEMP/build"
           flutter --version | tee "$RUNNER_TEMP/logs/flutter-version.log"
 
       - name: Resolve dependencies
@@ -105,7 +127,7 @@ jobs:
         run: |
           set -euo pipefail
           set -o pipefail
-          flutter test --update-goldens test/app_store_screenshots_test.dart 2>&1 | tee "$RUNNER_TEMP/logs/screenshot-test.log"
+          flutter test test/app_store_screenshots_test.dart 2>&1 | tee "$RUNNER_TEMP/logs/screenshot-test.log"
           test "$(find test/goldens -name '*_raw.png' | wc -l | tr -d ' ')" = '5'
 
       - name: Compose App Store images
