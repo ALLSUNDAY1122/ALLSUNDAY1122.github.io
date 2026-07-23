@@ -1,0 +1,165 @@
+name: Coordinator B Central West Release 0844
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  release:
+    if: github.head_ref == 'coord/central-west-release-20260724-0844' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/central-west-release-20260724-0844
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main:refs/remotes/origin/main
+          git fetch origin region/central:refs/remotes/origin/region/central
+          git fetch origin region/west:refs/remotes/origin/region/west
+
+      - name: Import completed central-west changes
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { execFileSync } = require('child_process');
+          const root = process.cwd();
+          const project = path.join(root, 'jichitai-compare');
+          const serviceIds = JSON.parse(fs.readFileSync(path.join(project, 'data/service-definitions.json'), 'utf8')).services.map((x) => x.id);
+          const completed = new Set(['verified', 'unavailable']);
+          const timestamp = '2026-07-24T08:44:00+09:00';
+          const regions = [
+            { region: 'central', ref: 'origin/region/central' },
+            { region: 'west', ref: 'origin/region/west' }
+          ];
+          const git = (args, options = {}) => execFileSync('git', args, { encoding: 'utf8', ...options }).trim();
+          const exists = (ref, p) => {
+            try { execFileSync('git', ['cat-file', '-e', `${ref}:${p}`], { stdio: 'ignore' }); return true; }
+            catch { return false; }
+          };
+          const readJson = (ref, p) => JSON.parse(git(['show', `${ref}:${p}`]));
+          const commitTime = (ref, p) => Number(git(['log', '-1', '--format=%ct', ref, '--', p]) || 0);
+          const writeJson = (p, value) => {
+            const full = path.join(root, p);
+            fs.mkdirSync(path.dirname(full), { recursive: true });
+            fs.writeFileSync(full, `${JSON.stringify(value, null, 2)}\n`);
+          };
+          const previous = JSON.parse(fs.readFileSync(path.join(project, 'operations/progress.json'), 'utf8'));
+          if (previous.registeredMunicipalities !== 1447) throw new Error(`基点変化: ${previous.registeredMunicipalities}`);
+          const selected = new Map();
+          const excluded = [];
+          for (const region of regions) {
+            const files = git(['ls-tree', '-r', '--name-only', region.ref, '--', 'jichitai-compare/data/municipalities'])
+              .split('\n').filter((p) => /\/\d{5}\.json$/.test(p));
+            for (const municipalityPath of files) {
+              let municipality;
+              try { municipality = readJson(region.ref, municipalityPath); }
+              catch { excluded.push({ region: region.region, path: municipalityPath, reason: 'invalid_municipality_json' }); continue; }
+              const code = municipality.code;
+              const taskPath = `jichitai-compare/operations/tasks/${code}.json`;
+              if (!exists(region.ref, taskPath)) { excluded.push({ region: region.region, code, reason: 'task_missing' }); continue; }
+              let sourceTask;
+              try { sourceTask = readJson(region.ref, taskPath); }
+              catch { excluded.push({ region: region.region, code, reason: 'invalid_task_json' }); continue; }
+              const services = serviceIds.map((id) => municipality.services?.[id]);
+              if (services.some((s) => !s || !completed.has(s.status))) continue;
+              const mainHasMunicipality = exists('origin/main', municipalityPath);
+              const mainHasTask = exists('origin/main', taskPath);
+              const regionalTime = Math.max(commitTime(region.ref, municipalityPath), commitTime(region.ref, taskPath));
+              let mainTime = 0;
+              let mode = null;
+              if (!mainHasMunicipality || !mainHasTask) mode = 'add';
+              else {
+                const mainMunicipality = readJson('origin/main', municipalityPath);
+                const mainTask = readJson('origin/main', taskPath);
+                if (JSON.stringify(mainMunicipality) === JSON.stringify(municipality) && JSON.stringify(mainTask) === JSON.stringify(sourceTask)) continue;
+                mainTime = Math.max(commitTime('origin/main', municipalityPath), commitTime('origin/main', taskPath));
+                if (regionalTime > mainTime) mode = 'update';
+              }
+              if (!mode) continue;
+              const old = selected.get(code);
+              if (!old || old.regionalTime < regionalTime) selected.set(code, { region: region.region, code, municipalityPath, taskPath, municipality, sourceTask, services, mode, regionalTime, mainTime });
+            }
+          }
+          const candidates = [...selected.values()].sort((a, b) => a.code.localeCompare(b.code));
+          const added = candidates.filter((x) => x.mode === 'add').length;
+          const updated = candidates.filter((x) => x.mode === 'update').length;
+          if (candidates.length < 1 || candidates.length > 100) throw new Error(`候補数異常: total=${candidates.length}, add=${added}, update=${updated}`);
+          const items = [];
+          for (const item of candidates) {
+            const municipality = item.municipality;
+            municipality.status = 'verified';
+            municipality.updatedAt = '2026-07-24';
+            const verifiedCount = item.services.filter((s) => s.status === 'verified').length;
+            const unavailableCount = item.services.filter((s) => s.status === 'unavailable').length;
+            const officialSources = [...new Set(item.services.map((s) => s.source?.url).filter((url) => /^https:\/\//.test(url ?? '')))];
+            const task = {
+              ...item.sourceTask,
+              status: 'merged',
+              currentService: null,
+              nextServiceIndex: serviceIds.length,
+              completedServices: [...serviceIds],
+              verifiedCount,
+              researchingCount: 0,
+              unavailableCount,
+              needsMediumReviewCount: 0,
+              pullRequestNumber: null,
+              lastCheckedAt: '2026-07-24',
+              lastUpdatedAt: timestamp,
+              lastUpdatedBy: '統括B全国統合',
+              officialSources,
+              blockers: []
+            };
+            writeJson(item.municipalityPath, municipality);
+            writeJson(item.taskPath, task);
+            items.push({ region: item.region, team: task.assignedTeam, code: item.code, name: municipality.name, prefecture: municipality.prefecture, mode: item.mode, verifiedCount, unavailableCount, sourcePullRequestNumber: item.sourceTask.pullRequestNumber ?? null, regionalCommitTime: item.regionalTime, mainCommitTime: item.mainTime });
+          }
+          writeJson('jichitai-compare/operations/control/coord-b-release-20260724-0844.json', {
+            schemaVersion: '1.0.0', createdAt: timestamp,
+            baseMainSha: git(['rev-parse', 'origin/main']),
+            centralSha: git(['rev-parse', 'origin/region/central']),
+            westSha: git(['rev-parse', 'origin/region/west']),
+            previousPublishedMunicipalities: previous.registeredMunicipalities,
+            addedMunicipalities: added,
+            updatedMunicipalities: updated,
+            expectedPublishedMunicipalities: previous.registeredMunicipalities + added,
+            byRegion: { central: items.filter((x) => x.region === 'central').length, west: items.filter((x) => x.region === 'west').length },
+            municipalities: items,
+            excludedCount: excluded.length,
+            excluded
+          });
+          NODE
+
+      - name: Generate and validate nationwide data
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          node <<'NODE'
+          const fs = require('fs');
+          const manifest = JSON.parse(fs.readFileSync('operations/control/coord-b-release-20260724-0844.json', 'utf8'));
+          const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
+          if (progress.registeredMunicipalities !== manifest.expectedPublishedMunicipalities) throw new Error(`件数不一致 ${progress.registeredMunicipalities}/${manifest.expectedPublishedMunicipalities}`);
+          if (progress.completedServices !== progress.registeredMunicipalities * 9) throw new Error(`制度数不一致 ${progress.completedServices}`);
+          if (progress.needsMediumReviewServices || progress.needsRevisionServices || progress.needsCoordinatorServices || progress.blockedServices) throw new Error('未完了状態混入');
+          let html = fs.readFileSync('index.html', 'utf8');
+          html = html.replace(/\d+自治体・9制度/u, `${progress.registeredMunicipalities}自治体・9制度`);
+          fs.writeFileSync('index.html', html);
+          NODE
+          npm run validate:generated
+
+      - name: Commit release
+        run: |
+          git add jichitai-compare/data/municipalities jichitai-compare/operations/tasks jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html jichitai-compare/operations/control/coord-b-release-20260724-0844.json
+          git commit -m "release: 中日本・西日本の追加地方差分を全国反映"
+          git push origin HEAD:coord/central-west-release-20260724-0844
