@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03381",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "金ケ崎町",
+  "officialUrl": "https://www.town.kanegasaki.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を金ケ崎町公式情報で調査し、8制度をverified、一般利用型の病児・病後児保育をunavailableとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達年度末まで、保険診療の自己負担額を全額助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "出生から18歳に達する日以後最初の3月31日まで",
+        "support": "保険診療の自己負担額を全額助成",
+        "application": "受給者証の交付申請が必要",
+        "excluded": "保険適用外費用、入院時食事療養費などは対象外"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/articles/2024062100018/", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "一般利用型の病児・病後児保育は町公式情報で確認できず、町内3施設で在園中の体調不良児対応型のみ実施している。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 5},
+      "details": {
+        "availableService": "病児保育事業（体調不良児対応型）",
+        "facilities": "金ケ崎保育園、たんぽぽ保育園、認定こども園たいよう保育園",
+        "scope": "保育中に体調不良となった在園児への対応",
+        "generalUse": "家庭から予約して利用する一般利用型の病児・病後児保育は確認できない",
+        "reviewBasis": "町公式の保育所案内に掲載された特別保育事業を確認"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/docs/2020052600018/", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "生計を一にする子どものうち、第2子以降の0～2歳児保育料を無料としている。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "support": "第2子以降の保育料無料",
+        "siblingCount": "生計を一にする子どもの中できょうだい順位を判定",
+        "start": "令和5年4月",
+        "age3to5": "3～5歳児は国の幼児教育・保育無償化の対象",
+        "firstChild": "0～2歳児の第1子は世帯の住民税額等により保育料を算定"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/docs/2020052600018/", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和5年度から町内小中学校に通う児童生徒の学校給食費を完全無償化している。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "support": "学校給食費完全無償化",
+        "start": "令和5年度",
+        "target": "町内の小中学校に通う児童生徒",
+        "parentCost": "保護者の学校給食費負担なし"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/articles/2024102800014/", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の産婦を対象に、助産師による訪問型産後ケアを1人5回まで無料で実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア訪問",
+        "target": "産後ケアを希望する産後1年未満の産婦",
+        "type": "訪問型",
+        "services": "産後の心身のケア、乳房ケア、授乳・沐浴等の育児助言",
+        "usageLimit": "1人5回まで",
+        "fee": "無料",
+        "application": "電話または申込フォームによる完全予約制"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/articles/2022051700096/", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育施設等に在籍していない生後6か月から満3歳未満児を対象に、月10時間まで実施する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度（乳児等通園支援事業）",
+        "target": "町内在住で保育所等に在籍していない生後6か月から満3歳未満の児童",
+        "employmentRequirement": "なし",
+        "usage": "月10時間まで",
+        "facilities": "認定こども園たいよう保育園、あおぞら保育園",
+        "fee": "たいよう保育園は1時間400円、あおぞら保育園は1時間300円。減免制度あり",
+        "application": "総合支援システムで認定申請後、初回面談と利用予約が必要"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/articles/2026033000013/", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下または県外転入者が空き家バンクで取得した住宅の取得費を上限30万円補助し、18歳未満の子がいる世帯は20万円を加算する。",
+      "details": {
+        "program": "空き家利活用補助金（取得）",
+        "target": "39歳以下または県外から転入し、空き家バンクを利用して自己居住用住宅を取得した人など",
+        "support": "対象経費と30万円のいずれか少ない額",
+        "childAddition": "世帯員に18歳未満の子がいる場合20万円加算",
+        "residenceRequirement": "対象住宅に住民登録し3年以上居住",
+        "applicationPeriod": "令和8年5月1日から令和9年1月29日まで"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/articles/2025041500010/", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない大きさのごみや多量ごみは、胆江地区衛生センターへ直接搬入できる。",
+      "details": {
+        "facility": "胆江地区衛生センター",
+        "target": "収集日以外に処分するごみ、引越し等の一時多量ごみ、指定ごみ袋に入らない大きさのごみ",
+        "method": "排出者が直接搬入",
+        "bagRequirement": "直接搬入時は町指定ごみ袋への収納不要",
+        "rules": "搬入方法と受入条件は胆江地区衛生センターの案内に従う"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/docs/2021120800026/", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・ため池・避難施設などを掲載した防災マップを公開している。",
+      "details": {
+        "map": "金ケ崎町防災マップ",
+        "updated": "令和5年3月更新",
+        "coverage": "洪水浸水想定区域、土砂災害、地震・火災対策、避難施設、ため池ハザード情報",
+        "riverUpdate": "黒沢川、永沢川、宿内川、渋川の想定最大規模洪水浸水想定区域図を掲載",
+        "access": "町公式ページから全体図・地区別PDF・詳細地図を閲覧可能"
+      },
+      "source": {"url": "https://www.town.kanegasaki.iwate.jp/docs/2023041700027/", "checkedAt": "2026-07-23"}
+    }
+  }
+}
