@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "06401",
+  "prefectureCode": "06",
+  "prefecture": "山形県",
+  "name": "小国町",
+  "officialUrl": "https://www.town.oguni.yamagata.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが小国町公式情報で対象9制度を調査し、7制度を確認済み、学校給食費と一時預かりの令和8年度詳細を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "小国町に住所がある0歳から高校生相当年齢までの子ども",
+        "coverage": "県内医療機関で医療証と保険資格確認書等を提示すると保険診療自己負担分を助成",
+        "outsidePrefecture": "医療証を利用できない場合は一旦支払い後に払い戻し申請",
+        "excluded": "入院時食事代、文書料等の保険適用外費用",
+        "application": "町民課で子育て支援医療証の交付手続きを行う"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/choumin/1437.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "満1歳から小学3年生までの病気回復期の子どもを健康管理センター内の病後児保育室で預かる。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 9},
+      "details": {
+        "facility": "小国町病後児保育室（健康管理センター内）",
+        "target": "町内在住または保護者が町内事業所等に勤務する満1歳から小学3年生までの病後児",
+        "hours": "平日8時から18時",
+        "fee": "1日2,000円、5時間以内1,000円",
+        "capacity": "1日2人",
+        "limit": "1回の利用につき連続7日以内",
+        "application": "利用登録届、利用申請書兼連絡票等を提出し予約"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/kenkou/4254.html", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "令和7年4月から町独自制度を拡充し、0歳から5歳までの保育料と副食費を無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "target": "町内の認可保育所・認定こども園等を利用する0歳から5歳児",
+        "fee": "国制度対象外の0歳から2歳児を含め保育料をすべて無償化",
+        "meals": "副食費も無償",
+        "facilities": "白百合保育園、すみれ保育園等",
+        "application": "施設利用に必要な教育・保育給付認定と入所申込みを行う"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/kenkou/5020.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "就学援助で給食代を援助する制度はあるが、令和8年度の認定基準・支給内容や一律無償化の有無を町公式情報で確認できない。",
+      "details": {
+        "confirmed": "経済的理由で就学が困難な町立小中学校児童生徒世帯に、学用品や給食代等を援助する制度を案内",
+        "unconfirmed": "令和8年度の認定基準、支給額、申請期間、一律または多子世帯向け給食費無償化の有無",
+        "guidance": "教育委員会教育振興課または在籍校へ現行制度を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/kyouiku/1419.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後4か月未満の母子に宿泊型、産後1年未満の母子に無料の訪問型産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "小国町に住所があり、産後の体調や育児に支援を必要とする母子",
+        "overnightTarget": "産後4か月未満の母子",
+        "overnightFee": "最初の1泊2日5,500円、追加1日2,750円、利用は1回",
+        "homeVisitTarget": "産後1年未満の母子",
+        "homeVisitFee": "無料",
+        "support": "助産師による母体・乳児のケア、授乳・育児相談等",
+        "application": "健康福祉課へ事前相談・申請"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/kenkou/8951.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "こども家庭センターが一時預かりへの案内を行っていることは確認できるが、令和8年度の実施施設、対象年齢、料金、利用上限を確認できない。",
+      "details": {
+        "confirmed": "小国町こども家庭センターが保育園・こども園の入所、一時預かり等の支援メニューへつなぐ",
+        "unconfirmed": "令和8年度の一時預かり実施施設、対象年齢、利用時間、料金、月間利用上限、予約方法",
+        "guidance": "健康福祉課またはこども家庭センターへ現行の利用条件を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/kenkou/6132.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住者の住宅購入・改修や賃貸住宅改修を支援し、住宅購入後の改修費用等は1件最大30万円を助成する。",
+      "details": {
+        "program": "小国の住宅総合支援事業・小国町移住者向けリフォーム支援事業",
+        "target": "要件を満たす移住者等",
+        "purchaseRenovation": "住宅を購入し対象リフォームを行う場合、改修費用等を1件上限30万円助成",
+        "rentalRenovation": "移住者が賃借する住宅の対象リフォーム費用等を助成",
+        "related": "令和8年度住宅リフォーム総合支援事業費補助金も実施",
+        "application": "工事着手前に町担当課へ要件確認・申請"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/site/ogoodlife/subsidy.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "令和8年度の粗大ごみ収集を町民課で受付し、町の案内する申込み・収集方法により処分する。",
+      "details": {
+        "currentNotice": "2026年7月17日更新の町公式案内で粗大ごみ収集の受付を実施",
+        "application": "町民課町民生活担当へ申込み",
+        "schedule": "町が指定する収集日・排出方法に従う",
+        "fee": "品目・大きさ等に応じた手数料が必要となるため申込時に確認",
+        "related": "2026年4月から2027年3月の地区別ごみ収集カレンダーも公開"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/choumin/5073.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、地震等の危険区域と避難所を掲載した小国町防災マップを公開する。",
+      "details": {
+        "map": "小国町防災マップ",
+        "hazards": "洪水浸水、土砂災害、地震等",
+        "areas": "町全域と地区別の危険区域を確認可能",
+        "evacuation": "指定避難所・指定緊急避難場所等を掲載",
+        "preparedness": "災害時の避難行動や日頃の備えを案内"
+      },
+      "source": {"url": "https://www.town.oguni.yamagata.jp/soshiki/choumin/1563.html", "checkedAt": "2026-07-24"}
+    }
+  }
+}
