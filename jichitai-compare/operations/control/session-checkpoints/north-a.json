@@ -5,17 +5,17 @@
   "parentTeam": "北日本調査班",
   "integrationBranch": "region/north",
   "prefectureCodes": ["02", "03", "07"],
-  "updatedAt": "2026-07-23T17:05:00+09:00",
-  "status": "pr_open",
+  "updatedAt": "2026-07-23T17:32:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 73,
+  "remainingUninvestigatedCount": 72,
   "currentMunicipality": {
-    "code": "03482",
-    "name": "山田町",
-    "stage": "ci_pending"
+    "code": "03483",
+    "name": "岩泉町",
+    "stage": "researching"
   },
-  "workingBranch": "data/03482-yamada-v2",
-  "pullRequestNumber": 1303,
+  "workingBranch": "data/03483-iwaizumi",
+  "pullRequestNumber": null,
   "ciStatus": "not_started",
   "completedSinceSplit": [
     {"code":"02387","name":"中泊町","pullRequestNumber":844,"ciStatus":"success","mergedAt":"2026-07-22T22:18:00+09:00"},
@@ -53,14 +53,9 @@
     {"code":"03381","name":"金ケ崎町","pullRequestNumber":1259,"ciStatus":"success","mergedAt":"2026-07-23T14:47:36+09:00"},
     {"code":"03402","name":"平泉町","pullRequestNumber":1270,"ciStatus":"success","mergedAt":"2026-07-23T15:20:07+09:00"},
     {"code":"03441","name":"住田町","pullRequestNumber":1277,"ciStatus":"success","mergedAt":"2026-07-23T15:53:19+09:00"},
-    {"code":"03461","name":"大槌町","pullRequestNumber":1288,"ciStatus":"success","mergedAt":"2026-07-23T16:30:44+09:00"}
+    {"code":"03461","name":"大槌町","pullRequestNumber":1288,"ciStatus":"success","mergedAt":"2026-07-23T16:30:44+09:00"},
+    {"code":"03482","name":"山田町","pullRequestNumber":1309,"ciStatus":"success","mergedAt":"2026-07-23T17:29:23+09:00"}
   ],
-  "blocked": [
-    {
-      "municipalityCode": "03482",
-      "pullRequestNumber": 1303,
-      "reason": "pull_request Actionsイベントが生成されず、Jichitai Compare CIが未開始。変更範囲は自治体JSONとtaskの2ファイルのみで、branchはregion/northからbehind_by 0。"
-    }
-  ],
-  "nextAction": "PR #1303のActions生成とCIを再確認し、成功後にregion/northへ統合する。CI未生成の間はマージしない。"
+  "blocked": [],
+  "nextAction": "岩泉町（03483）の必須9制度を公式情報から調査し、自治体JSON・task・PR・CI・地方統合まで進める。"
 }
