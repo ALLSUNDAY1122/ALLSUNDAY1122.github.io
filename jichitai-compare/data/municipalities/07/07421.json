@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07421",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "会津坂下町",
+  "officialUrl": "https://www.town.aizubange.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を会津坂下町公式情報で調査し、6制度をverified、病児・病後児保育、学校給食費、こども誰でも通園制度をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額と入院時食事療養費を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児・児童医療費助成",
+        "target": "会津坂下町に住所がある0歳から18歳年度末までの子ども",
+        "support": "保険適用診療分の自己負担額および入院時食事療養費を助成",
+        "payment": "加入保険・受診医療機関・医療費額に応じ、現物給付または申請による償還払い",
+        "application": "社会保険・国民健康保険組合加入者は受給資格証の申請が必要",
+        "excluded": "差額ベッド代、容器代等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/soshiki/31/226.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町の子ども・子育て支援計画では町内医療機関・保育施設による病児保育を実施していない旨を確認したが、現行の広域利用施設、対象年齢、料金、予約方法を確定できない。",
+      "details": {
+        "researchResult": "町公式の保育・子育て支援情報と現行計画を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "availableAlternatives": "ファミリーサポート事業、子育て短期支援事業、一時保育等を実施",
+        "caution": "広域利用を含む利用可否は子ども課子ども支援班へ確認が必要"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/life/2/15/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等は幼児教育・保育無償化の対象となり、0～2歳児の保育料は世帯の町民税額等に応じた町の利用者負担額を適用する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は国の無償化対象",
+        "otherHouseholds": "課税世帯の0～2歳児は認定区分、年齢、世帯の町民税額等により保育料を算定",
+        "scope": "町内在住者は利用施設が町内外のいずれでも町の利用者負担額を適用",
+        "facilities": "ばんげ保育所および町内小規模保育施設等",
+        "excludedCosts": "給食費、教材費、延長保育料、行事費等の実費は別途負担となる場合がある"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/soshiki/31/11072.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "要保護・準要保護世帯の就学援助対象経費に学校給食費を含むことは確認できるが、令和8年度の一般世帯の給食費額・完全無償化・一律補助を確定できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "confirmedSupport": "経済的理由で就学が困難と認められる児童生徒の保護者に、学校給食費等を就学援助",
+        "researchResult": "令和8年度の一般世帯の給食費額、完全無償化、町独自の一律補助を公式HTMLで確認できなかった",
+        "caution": "現行の保護者負担額は教育課または学校給食センターへ確認が必要"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/soshiki/30/11351.html", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "令和8年度も出産後の母子を対象とした産後ケア事業を実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "令和8年度 会津坂下町産後ケア事業",
+        "target": "会津坂下町に住所があり、出産後の休養、授乳、育児等の支援を必要とする母子",
+        "services": "母体の休養、授乳・乳房ケア、育児相談、乳児の健康確認等",
+        "application": "利用前に子ども課子ども支援班へ相談・申請",
+        "fee": "利用施設・利用類型・世帯区分により異なるため令和8年度案内で確認"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/life/2/14/", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "令和8年度からこども誰でも通園制度を開始し申請受付を行っているが、対象月齢、利用施設、月間上限、料金等を公式HTMLで確定できない。",
+      "details": {
+        "program": "会津坂下町こども誰でも通園制度",
+        "confirmed": "2026年4月1日から制度を開始し、利用登録・事業利用申請を子ども課で受付",
+        "researchResult": "利用者向け説明が画像・申請書中心で、対象月齢、施設、利用時間、料金、定員を公式HTMLから確定できなかった",
+        "caution": "現行条件は子ども課子ども支援班へ確認が必要"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/soshiki/31/19154.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "住宅取得費の10分の1を基本額として、町内在住者は最大30万円、町外からの移住者は町補助最大70万円、県外移住者は県加算を含め最大90万円を支援する。",
+      "details": {
+        "program": "会津坂下町住宅取得支援事業補助金",
+        "target": "町内で新築または中古住宅を取得し、5年以上居住する等の要件を満たす方",
+        "base": "取得価格の10分の1、上限30万円",
+        "migrantAdditions": "40歳未満10万円、18歳未満の子ども同居10万円、町内業者利用10万円、配偶者同居10万円",
+        "townMaximum": "町外からの移住者は町補助最大70万円",
+        "outsidePrefecture": "県外移住者は県補助の上乗せを含め最大90万円",
+        "application": "契約締結から12か月以内に申請し、事業完了後3か月以内に実績報告"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/soshiki/2/13535.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "2026年度の地区別家庭ごみ収集カレンダーに基づき、粗大ごみを指定された収集日・排出場所へ出す。",
+      "details": {
+        "schedule": "坂下A・B・C・D地区ごとの2026年度家庭ごみ収集カレンダーで粗大ごみ収集日を確認",
+        "target": "指定袋に入らない家具、寝具、自転車等の家庭から出る大型ごみ",
+        "collection": "地区別の指定日・指定場所・時間に排出",
+        "sorting": "町のごみ分別早見表で品目別の排出方法を確認",
+        "excluded": "家電リサイクル対象品、処理困難物、事業系ごみ等は通常収集の対象外"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/soshiki/27/19022.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、地震、避難所等を掲載した地区別防災マップと、ため池ハザードマップを公開する。",
+      "details": {
+        "maps": "会津坂下町防災マップ、坂下・若宮・金上・広瀬・川西・八幡・高寺地区別防災マップ、ため池ハザードマップ",
+        "coverage": "洪水浸水想定区域、土砂災害警戒区域、避難場所・避難所、防災情報等",
+        "ponds": "ため池決壊時の浸水深・範囲・避難場所等を掲載",
+        "guidance": "平時に自宅周辺の危険箇所、避難先、避難経路を確認"
+      },
+      "source": {"url": "https://www.town.aizubange.fukushima.jp/soshiki/26/135.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.aizubange.fukushima.jp/soshiki/29/7557.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
