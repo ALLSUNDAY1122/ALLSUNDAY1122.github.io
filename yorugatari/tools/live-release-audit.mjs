@@ -4,7 +4,7 @@ const base = 'https://allsunday1122.github.io/yorugatari';
 const attempts = 24;
 const delayMilliseconds = 5000;
 const targets = [
-  { name: 'top', url: `${base}/`, required: ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-007', 'assets/analytics.js?v=20260723-003'], forbidden: ['assets/engagement.js'] },
+  { name: 'top', url: `${base}/`, required: ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-008', 'assets/analytics.js?v=20260723-003'], forbidden: ['assets/engagement.js'] },
   { name: 'archive', url: `${base}/archive.html`, required: ['全100話アーカイブ', '"numberOfItems":100', 'assets/archive.js?v=20260723-004', 'assets/analytics.js?v=20260723-003'], forbidden: ['assets/engagement.js'] },
   { name: 'privacy', url: `${base}/privacy.html`, required: ['固定キャンペーンコード', '登録済みコードに一致しない値は破棄', 'assets/analytics.js?v=20260723-003'], forbidden: ['assets/engagement.js'] },
   { name: 'story-001', url: `${base}/stories/last-elevator.html`, required: ['YGT-001', '"timeRequired":"PT5M"', 'class="breadcrumb"', 'class="hero-actions story-pagination"', 'class="related"', '../assets/story.js?v=20260723-007', '../assets/engagement.js?v=20260723-003'], forbidden: ['../assets/analytics.js'] },
