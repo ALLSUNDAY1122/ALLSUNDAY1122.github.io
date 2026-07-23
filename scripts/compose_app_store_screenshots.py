@@ -6,6 +6,7 @@ import sys
 root = Path(sys.argv[1])
 out = Path(sys.argv[2])
 icon_path = Path(sys.argv[3])
+custom_font_path = Path(sys.argv[4]) if len(sys.argv) > 4 else None
 out.mkdir(parents=True, exist_ok=True)
 
 W, H = 1290, 2796
@@ -17,12 +18,12 @@ HEADERS = [
     ('05_handoff_raw.png', '次のAIへ渡す文章を自動生成', 'コピーして、そのまま作業を再開'),
 ]
 
-font_candidates = [
+font_candidates = ([str(custom_font_path)] if custom_font_path and custom_font_path.exists() else []) + [
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc',
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
     '/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc',
 ]
-regular_candidates = [
+regular_candidates = ([str(custom_font_path)] if custom_font_path and custom_font_path.exists() else []) + [
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc',
     '/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc',
