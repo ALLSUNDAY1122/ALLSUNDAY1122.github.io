@@ -62,6 +62,12 @@ function japanDate() {
 
 function gitLastModified(relativePath) {
   const repositoryPath = path.posix.join('yorugatari', relativePath.replaceAll('\\', '/'));
+  const workingTreeStatus = execFileSync('git', ['status', '--porcelain', '--', repositoryPath], {
+    cwd: repoRoot,
+    encoding: 'utf8'
+  }).trim();
+  if (workingTreeStatus) return japanDate();
+
   const value = execFileSync('git', ['log', '-1', '--format=%cs', '--', repositoryPath], {
     cwd: repoRoot,
     encoding: 'utf8'
