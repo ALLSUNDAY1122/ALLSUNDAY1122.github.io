@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "29344",
+  "prefectureCode": "29",
+  "prefecture": "奈良県",
+  "name": "斑鳩町",
+  "officialUrl": "https://www.town.ikaruga.nara.jp/",
+  "status": "verified",
+  "summary": "斑鳩町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、在園第2子の保育料無償化、病児保育、産後ケアなどを記録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までの子どもについて、保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "0歳から18歳に達する日以後の最初の3月31日まで",
+        "coverage": "入院・通院の保険診療に係る自己負担分を助成",
+        "procedure": "国保医療課で受給資格証の交付申請が必要",
+        "requiredItems": "子どもの健康保険資格がわかるもの、申請者の振込先口座、個人番号がわかるもの等",
+        "excluded": "保険適用外費用、入院時食事代等は対象外"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000036.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "西和地域病児保育室いちごルームで、生後6か月から小学6年生までの病気中または回復期の児童を一時保育する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "facility": "西和地域病児保育室いちごルーム",
+        "target": "斑鳩町・平群町・三郷町・上牧町・王寺町に住所を有する生後6か月から小学6年生まで",
+        "hours": "祝日・年末年始を除く月曜日から金曜日の8時から18時まで",
+        "fee": "1日2,000円。生活保護・住民税非課税世帯は無料",
+        "capacity": "1日6人",
+        "period": "1回の利用につき7日まで",
+        "procedure": "子育て支援課またはいちごルームで事前登録が必要"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000001629.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、令和7年4月から町独自に在園第2子の保育料も0円とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3歳以上児と住民税非課税世帯の0～2歳児は保育料無料",
+        "localExpansion": "令和7年4月から、同一年度に就学前施設等を利用する在園第2子の保育料を0円",
+        "firstChild": "課税世帯0～2歳児の第1子は住民税課税状況等により算定",
+        "localRate": "町の0～2歳児保育料は国基準額の80％に軽減し、階層も細分化",
+        "excludedCosts": "3～5歳児の給食費等は別途負担"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000002850.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ikaruga.nara.jp/0000002340.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校全学年と中学3年生の給食費を無償化し、中学1・2年生と町立幼稚園は負担軽減を行う。",
+      "eligibility": {"minAgeMonths": 36, "maxAgeYears": 15},
+      "details": {
+        "fiscalYear": "令和8年度",
+        "elementary": "町立小学校の全学年を完全無償化。国の支援額を超える費用を町が追加補助",
+        "juniorHighThree": "中学3年生を町独自事業として無償化",
+        "juniorHighOneTwo": "中学1・2年生は給食費を軽減",
+        "kindergarten": "町立幼稚園在園児も給食費を軽減",
+        "aid": "経済的要件を満たす世帯には学校給食費を含む就学援助あり",
+        "futureStatus": "年度施策のため令和9年度以降は再確認が必要"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/cmsfiles/contents/0000000/234/R8-5-1.pdf", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ikaruga.nara.jp/0000002945.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "町内在住の出産後1年未満の母子を対象に、宿泊型・通所型・訪問型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "町内に住所を有する出産後1年未満の母親と乳児で産後ケアを必要とする方",
+        "types": "ショートステイ、デイケア、アウトリーチ",
+        "limits": "宿泊型6泊、通所型7日、訪問型2回を上限",
+        "care": "母体管理、乳房ケア、授乳・沐浴、発育発達、育児・生活相談、心理面のケア等",
+        "reduction": "一般世帯は乳児1人につき5回まで1回2,500円を限度に軽減し、非課税・生活保護世帯は1回5,000円を限度に軽減",
+        "procedure": "初回利用前に保健センターへ相談し、利用申請が必要"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000078.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ikaruga.nara.jp/reiki_int/reiki_honbun/k417RG00000836.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "あわ保育園で、保護者の就労形態や疾病等により一時的な保育が必要な児童を預かる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facility": "あわ保育園",
+        "reasons": "保護者の就労形態の多様化に伴う一時的保育、疾病等による緊急保育等",
+        "feeUnderThree": "3歳未満児は1日1,360円",
+        "feeThreePlus": "3歳以上児は1日640円",
+        "meal": "3歳以上児は主食費1日40円",
+        "capacityNote": "入所児童数により利用希望に添えない場合あり",
+        "ageNote": "受入可能月齢は施設へ事前確認が必要"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000001900.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京23区在住・通勤等の要件を満たして斑鳩町へ移住し就業・起業等を行う方に、移住支援金を交付する。",
+      "details": {
+        "program": "斑鳩町移住支援金",
+        "single": "単身60万円",
+        "household": "2人以上の世帯100万円",
+        "childAddition": "18歳未満の世帯員を帯同して移住する場合、1人につき100万円加算",
+        "residence": "申請時に転入後1年未満で、斑鳩町に5年以上継続して居住する意思が必要",
+        "work": "県マッチングサイト掲載求人への就業、移住元業務のテレワーク、起業支援金の交付決定等の要件あり",
+        "restriction": "東京圏からの移住等、複数の移住元・就業・世帯要件を満たす必要がある"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/settle/0000002317.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.ikaruga.nara.jp/reiki_int/reiki_honbun/k417RG00000926.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは粗大ごみ処理予約事務所へ事前予約し、予約日時に軒先等で収集を受ける。",
+      "details": {
+        "application": "斑鳩町粗大ごみ処理予約事務所へ電話またはFAXで予約",
+        "contact": "0745-75-3663",
+        "collection": "予約日時に収集員が訪問して収集",
+        "payment": "収集時に粗大ごみ処理手数料を現金で支払う",
+        "sorting": "町のごみ・資源物の分け方・出し方に従う",
+        "fee": "品目別手数料は対象品の確認が必要なため単一額として登録しない"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000126.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震、風水害、土砂災害、ため池決壊、避難所等を確認できる防災ハザードマップを公開する。",
+      "details": {
+        "map": "令和6年度更新の斑鳩町防災ハザードマップ",
+        "hazards": "地震災害、風水害、土砂災害、ため池決壊等",
+        "rivers": "三代川、芦川、服部川、イツボ川、秋葉川の浸水想定区域を反映",
+        "evacuation": "指定緊急避難場所、指定避難所、避難情報、マイタイムライン等を掲載",
+        "preparedness": "持出品チェックリスト、情報伝達・収集方法、災害別の備えを掲載"
+      },
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000002024.html", "checkedAt": "2026-07-23"}
+    }
+  }
+}

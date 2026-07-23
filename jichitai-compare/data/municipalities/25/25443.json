@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "25443",
+  "prefectureCode": "25",
+  "prefecture": "滋賀県",
+  "name": "多賀町",
+  "officialUrl": "https://www.town.taga.lg.jp/",
+  "status": "verified",
+  "summary": "多賀町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認し、8制度をverified、病児・病後児保育をunavailableとして整理した。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生世代まで、保険診療の自己負担分を所得制限なしで助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "0歳から18歳到達後最初の3月31日まで",
+        "coverage": "健康保険が適用される医療費の自己負担分",
+        "incomeLimit": "乳幼児・子育て応援・高校生世代はいずれも所得制限なし",
+        "payment": "滋賀県内は受給券による現物給付、県外受診等は償還払い",
+        "excluded": "保険適用外費用、入院時食事代、文書料、交通費、容器代、差額室料等"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/zeimujumin/1/2/1/188.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "病児・病後児保育を含む子育て支援の相談窓口は確認できるが、町民向けの現行実施施設・対象年齢・料金・予約方法を公式公開情報で確定できない。",
+      "details": {
+        "confirmed": "多賀町子ども・家庭応援センターが子育て支援の相談窓口とハンドブックを案内している",
+        "notConfirmed": "現行の利用施設、対象年齢、利用料金、予約・登録方法",
+        "contact": "多賀町子ども・家庭応援センターまたは教育総務課へ確認が必要"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/7/408.html", "checkedAt": "2026-07-23"},
+      "notes": ["近隣自治体や過年度の制度条件を推定していない。"]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象となる。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "保育所・認定こども園等を利用する3～5歳児は保育料無償",
+        "underThree": "住民税非課税世帯の0～2歳児は保育料無償",
+        "taxableHouseholds": "課税世帯の0～2歳児は世帯の所得状況等に応じて保育料を決定",
+        "excludedCosts": "給食費、送迎費、行事費等の実費は別途必要となる場合がある",
+        "application": "施設入所は町への申込みと保育の必要性の認定・利用調整が必要"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/2/2/583.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taga.lg.jp/soshiki/fukushihoken/1/7/2191.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "扶養する子のうち第3子以降の小中学校等給食費を無償化し、経済的に困難な世帯には就学援助で給食費等を支援する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "thirdChild": "一定要件を満たす第3子以降の小中学校・保育所等の給食費を無償化",
+        "start": "第3子以降の給食費等無償化は令和5年度から実施",
+        "incomeSupport": "経済的理由で就学費用の負担が困難な世帯に学校給食費等の一部を就学援助",
+        "generalFee": "全児童生徒一律の給食費無償化は公式ページで確認できない",
+        "application": "第3子以降無償化、就学援助とも所定の申請が必要"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/1/2/578.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taga.lg.jp/kosodate_kyoiku/kenzenikusei_seishonen/2/1641.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子へ宿泊・日帰り・訪問型の産後ケアを提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "多賀町内に住所を有する出産後1年未満の女性と赤ちゃん。流産・死産を経験した方を含む",
+        "types": "ショートステイ、デイケア、アウトリーチ",
+        "fee": "宿泊1回8,000円、日帰り1回3,000円、訪問1回1,000円",
+        "limit": "宿泊6泊まで、日帰り7日間まで、訪問1回まで",
+        "reduction": "非課税世帯は無料。一般世帯は5回まで1回2,500円の割引",
+        "application": "原則として利用希望日の2週間前までに福祉保健課へ相談・申請"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/fukushihoken/1/13/1/221.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "condition": "保育所・認定こども園等に通っていない生後6か月から満3歳未満の児童",
+        "facility": "大滝たきのみやこども園",
+        "hours": "9時から11時30分",
+        "limit": "児童1人につき月最大10時間",
+        "fee": "1時間300円",
+        "application": "つうえんポータルで利用申請、初回面談、予約を行う"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/2/1/2004.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/2/1/726.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "39歳以下・所得要件等を満たす新婚世帯へ、町内住宅の賃借費用と引越費用を最大30万円補助する。",
+      "details": {
+        "program": "多賀町結婚新生活支援補助金",
+        "condition": "令和8年1月1日から令和9年3月31日までに婚姻し、夫婦とも39歳以下、合計所得500万円未満、5年以上居住意思等",
+        "targetCosts": "町内住宅の家賃・敷金・礼金等の住居賃貸費と引越業者等へ支払う引越費用",
+        "amount": "上限30万円",
+        "targetPeriod": "令和8年1月1日から令和9年3月15日までに発生し支払済みの費用",
+        "application": "令和8年4月1日から令和9年3月10日まで。予算がなくなり次第終了"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/kikaku/1/15/438.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "町指定の日程・会場で、家庭から出る粗大ごみを地域別に持ち込み収集する。",
+      "details": {
+        "method": "春・秋の指定日に対象地域ごとの会場へ直接持ち込む",
+        "springSchedule": "令和8年度春は4月11日、18日、25日の7時から9時に地域別で実施",
+        "fee": "公式案内に処理手数料の記載はなく、収集会場への持ち込み方式",
+        "accepted": "家具、一定寸法以上の家庭用品、小型家電等。品目ごとの分別基準あり",
+        "excluded": "家電リサイクル対象品、布団・カーペット、バイク、タイヤ、事業・農業活動由来品等",
+        "notice": "指定時間外、前日持込み、収集不可品の持込みは不可"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/soshiki/sangyokankyo/1/1/5/2144.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taga.lg.jp/soshiki/sangyokankyo/1/1/5/587.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・風水害の被害想定、避難行動、情報収集方法等をまとめた総合防災マップを公開する。",
+      "details": {
+        "map": "多賀町総合防災マップ（マルチハザードマップ）",
+        "earthquake": "地震被害想定、避難、日頃の備えを掲載",
+        "flood": "洪水・土砂災害等のリスク、避難行動、情報収集方法を掲載",
+        "pond": "芹川ダム、奥谷田池、多賀・土田池、木曽池等のため池ハザードマップも公開",
+        "use": "家族や地域で避難先・行動を確認するために利用"
+      },
+      "source": {"url": "https://www.town.taga.lg.jp/kurashi_tetsuzuki/anzen_anshin/8/1535.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.taga.lg.jp/soshiki/sangyokankyo/1/2/1/705.html", "checkedAt": "2026-07-23"}
+      ]
+    }
+  }
+}

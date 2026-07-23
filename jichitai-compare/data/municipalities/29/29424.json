@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "29424",
+  "prefectureCode": "29",
+  "prefecture": "奈良県",
+  "name": "上牧町",
+  "officialUrl": "https://www.town.kanmaki.nara.jp/",
+  "status": "verified",
+  "summary": "上牧町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、広域病児保育、第2子以降の保育料無償化、産後ケア、こども誰でも通園制度、移住支援金などを記録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで、奈良県内の保険診療は月単位の一部負担金のみを窓口で支払う。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "copayment": "通院は1医療機関につき月500円、調剤薬局は負担なし。入院は月1,000円、14日未満は月500円",
+        "payment": "奈良県内は受給資格証等の提示による現物給付",
+        "coverage": "健康保険が適用される診療分",
+        "excluded": "入院時食事代、差額室料、文書料等の保険適用外費用"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/site/1187.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学6年生までの病児・回復期児童を、町外3施設で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "facilities": "ぞうさんのおうち、いちごルーム、病児保育室ぽっぽ",
+        "target": "上牧町在住で、病気または病気回復期にあり集団保育等が困難で、保護者の勤務等により家庭看護が困難な児童",
+        "fee": "原則1日2,000円。生活保護世帯・町民税非課税世帯は無料。食事・おやつ代等は施設により別途",
+        "hours": "施設により平日8時または8時30分から17時30分または18時まで",
+        "limit": "いちごルームは1回の利用につき7日まで",
+        "procedure": "事前登録、予約、医師連絡票等が必要。ぽっぽは令和8年4月からWEB予約方式を変更"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/kodomo/gyomu/ikuji_mishugakuji/hoikusho_yochien/994.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.kanmaki.nara.jp/material/files/group/11/byoujihoiku2kai.pdf", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と非課税世帯0～2歳児は無償。同一世帯で保育所・幼稚園等に通う第2子以降も無償とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "4月1日時点で3歳以上の児童は無償",
+        "nonTaxable": "市町村民税非課税世帯の0～2歳児は無償",
+        "secondChild": "同一世帯で保育所・幼稚園等に通う子どものうち、年長者から数えて2人目以降は無償",
+        "firstChild": "課税世帯の3歳未満第1子は市町村民税額等に応じた保育料",
+        "startAge": "第1保育所・慈光保育園は生後満6か月の翌月から、西大和黎明保育園・やまびこ保育園は生後満3か月の翌月から",
+        "excludedCosts": "延長保育料、食材料費、行事費等は別途"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/kodomo/gyomu/ikuji_mishugakuji/hoikusho_yochien/hoikusho/689.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.kanmaki.nara.jp/soshiki/kodomo/gyomu/ikuji_mishugakuji/hoikusho_yochien/492.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立幼稚園・小中学校の給食費を公会計で徴収し、経済的に困難な世帯には就学援助で給食費等を援助する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "accounting": "令和2年度から学校給食費・幼稚園給食費を公会計化",
+        "collection": "町が給食費を徴収・管理する制度を実施",
+        "assistance": "経済的理由により給食費等の支払いが困難な保護者を対象に就学援助制度あり",
+        "allFreeStatus": "令和8年度の町内一律給食費無償化を示す公式ページは確認できない",
+        "verificationPolicy": "学校給食の実施、公会計、就学援助を記録し、未確認の一律無償化や現行月額は推測しない"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/kyoiku_somu/gyomu/ikuji_mishugakuji/hoikusho_yochien/yochien/1059.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.kanmaki.nara.jp/soshiki/kyoiku_somu/gyomu/ikuji_mishugakuji/hoikusho_yochien/yochien/1173.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、助産師による心身のケアと育児支援を提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "上牧町在住の産後1年未満の母子で、町の利用条件を満たす方",
+        "care": "助産師による母親の心身のケア、授乳・育児の相談と助言",
+        "providers": "心友助産院、助産院カンガルーホーム、助産所わ、のんの助産院、MotheringHouse美月、ぽこあぽこ、ソエル助産院、なんのレディースクリニック、JCHO大和郡山病院等",
+        "relatedSupport": "産後全戸電話相談と、おおむね生後3か月までの赤ちゃん訪問も実施",
+        "feeAndLimit": "利用類型、自己負担額、利用上限は申請時にこども家庭センターへ確認"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/kosodate_kyoiku/ninshin_shutsusan/2836.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等を利用していない生後6か月から満3歳未満の子どもを、月10時間まで1時間300円で預かる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "上牧町こども誰でも通園制度",
+        "target": "上牧町在住で、利用日時点に0歳6か月から満3歳未満、保育所等を利用していない子ども",
+        "facility": "令和8年4月開始時点は上牧町立第1保育所",
+        "monthlyLimit": "子ども1人につき月10時間まで。未利用時間の翌月繰越なし",
+        "fee": "1人1時間300円",
+        "procedure": "利用認定申請、総合支援システムのアカウント発行、初回面談、予約が必要",
+        "hours": "実施曜日・時間は総合支援システムまたは施設へ確認"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/kodomo/gyomu/ikuji_mishugakuji/hoikusho_yochien/hoikusho/5038.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "東京圏から要件を満たして移住・就業等をする方へ、単身60万円・世帯100万円を交付し、18歳未満の子ども1人につき100万円を加算する。",
+      "details": {
+        "program": "上牧町移住支援金",
+        "single": "単身世帯60万円",
+        "household": "2人以上世帯100万円",
+        "childAddition": "就業要件を満たし18歳未満の世帯員を帯同する場合、子ども1人につき100万円加算。人数上限なし",
+        "target": "東京23区居住・通勤歴等の移住元要件と、対象就業・起業・テレワーク等の要件を満たす方",
+        "application": "上牧町への転入後1年以内に申請",
+        "budget": "予算上限に達した場合は受付・支給終了のため事前相談が必要",
+        "residency": "申請日から5年以上継続して町内に居住する意思が必要"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/kikaku_zaisei/gyomu/iju_teiju/336.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは電話・ファクスで予約し、品目別の利用券を貼って玄関先等から戸別収集を受ける。",
+      "details": {
+        "definition": "町指定ごみ袋に入らない大型ごみ",
+        "application": "ごみ中継施設へ電話またはファクスで収集日時・品目・個数を予約",
+        "ticket": "粗大ごみ収集利用券は1枚200円。品目ごとに必要枚数が異なる",
+        "placement": "利用券を貼り、予約日時に玄関先または通常の集積場所へ排出",
+        "insideCollection": "収集員は家の中に入らない",
+        "feeExamples": "品目別手数料は分別一覧で200円から1,000円等。申込時に最新金額を確認"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/kensetsu/gyomu/gomikankyo/gomi/2872.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震、土砂災害、ため池、避難所運営等を掲載した防災ガイドブックと各種ハザードマップを公開する。",
+      "details": {
+        "guidebook": "上牧町防災ガイドブック",
+        "hazards": "地震揺れやすさ、土砂災害、ため池決壊時の浸水想定等",
+        "evacuation": "避難所運営マニュアルを掲載",
+        "pond": "町内の防災重点ため池についてハザードマップを作成",
+        "updated": "防災ガイドブック公開ページは2026年5月更新",
+        "verificationPolicy": "実際の避難時は町・奈良県・気象庁の最新情報を併用"
+      },
+      "source": {"url": "https://www.town.kanmaki.nara.jp/soshiki/somu/gyomu/anzen_anshin/bosai/345.html", "checkedAt": "2026-07-23"}
+    }
+  }
+}

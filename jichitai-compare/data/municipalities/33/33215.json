@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "33215",
+  "prefectureCode": "33",
+  "prefecture": "岡山県",
+  "name": "美作市",
+  "officialUrl": "https://www.city.mimasaka.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を美作市公式情報で調査し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末まで県内医療機関の保険診療自己負担を原則無料化",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "美作市に住民登録があり、健康保険に加入する満18歳到達後最初の3月31日までの方",
+        "copay": "県内医療機関でマイナンバーカード等と若年者医療費受給資格者証を提示すると保険診療は原則無料",
+        "outOfPrefecture": "県外受診等は一度支払った後に給付申請",
+        "excluded": "保険外診療、食事療養費、差額ベッド代等は対象外"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/hoken/kodomo/zyakunensya/1448690284596.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月から小学校6年生までを対象に2施設で病児・病後児保育を実施",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "details": {
+        "target": "病気または回復期で集団保育が困難かつ、保護者の就労等で家庭保育が困難な児童",
+        "facilities": "美作市立大原病院『さくらんぼ』、医療法人豊医会原医院隣『はるる』",
+        "fee": "市内利用者は1日1,500円。生活保護・ひとり親家庭医療費受給・市町村民税非課税世帯は1,000円。希望者は昼食代400円",
+        "outsideCity": "市外在住でも保護者が市内勤務の場合は利用でき、料金は1日2,000円",
+        "application": "事前登録と施設予約が必要"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/hoken/kodomo/boshi/1462753540537.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上児、非課税世帯の3歳未満児、第3子以降の保育料を無償化",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "free": "3歳以上児、市町村民税非課税世帯の3歳未満児、戸籍上の第3子以降は保育料無料",
+        "mealSupport": "年収360万円未満相当世帯の3歳以上児と第3子以降は副食費免除",
+        "unauthorized": "認可外保育施設、一時預かり、幼稚園預かり、病児保育、ファミリーサポートも条件により無償化対象",
+        "otherFees": "延長保育料、給食費等は別途負担となる場合がある"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/seisaku/sogoseisaku/info/1457397878839.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.mimasaka.lg.jp/soshiki/hoken/kodomo/boshi/shinsei/1567668312761.html", "checkedAt": "2026-07-23"}]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は食材価格高騰による学校給食費の不足分を市が負担",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "美作市内の小中学校に通う児童・生徒の保護者",
+        "support": "食材価格の高騰によって生じる給食費の不足分を市が負担",
+        "period": "2026年4月から2027年3月までの1年間",
+        "application": "申請不要",
+        "note": "給食費そのものの完全無償化ではなく、食材価格高騰分への公費負担"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/seisaku/sogoseisaku/info/8572.html", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年以内を中心に訪問・宿泊・日帰り型の産後ケアと家事育児支援を実施",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 0},
+      "details": {
+        "target": "美作市に住所がある出産後1年以内の産婦等で、相談支援や家族からの援助が必要な方",
+        "types": "産前産後ヘルパー派遣、訪問型産後ケア、産後ショートステイ、産後デイサービス",
+        "visit": "訪問型産後ケアは1回の出産につき3回、1回1,000円。生活保護世帯は無料",
+        "shortStay": "産後ショートステイは1回の出産につき通算7回まで",
+        "dayService": "産後デイサービスはショート・ロング通算12日まで",
+        "application": "子ども政策課へ事前相談・申請後、保健師等が利用調整"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/hoken/kodomo/boshi/josei/1527487071307.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "市内保育園で家庭保育が一時的に困難な乳幼児を預かる一時保育を実施",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "target": "保護者の就労、傷病、入院、出産、看護、介護、冠婚葬祭等により一時的に家庭保育が困難な健康な乳幼児",
+        "facilities": "勝田ひまわり園、江見保育園",
+        "fee": "1日1人あたり3歳未満児2,000円、3歳以上児1,500円",
+        "limit": "非定型的利用は原則週3日以内、緊急利用は原則月12日以内",
+        "application": "各保育園または教育委員会へ申込書を提出"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/kyouiku/soumu/hoikuen/1450692650757.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.mimasaka.lg.jp/section/reiki/reiki_honbun/r140RG00000563.html", "checkedAt": "2026-07-23"}]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住定住者の新築・中古住宅取得や空き家改修に補助金を交付",
+      "details": {
+        "period": "2025年4月から2030年3月までの5年間",
+        "new": "新築住宅の建築・購入費の10％、上限130万円に市内事業者・児童生徒・若者加算",
+        "used": "中古住宅購入費の10％、上限50万円。購入と同時のリフォームは費用の50％、上限50万円を加算",
+        "vacantHouse": "空き家バンク登録住宅の所有者または賃借人による改修は費用の50％、上限50万円に加算あり",
+        "conditions": "原則5年以上定住、税滞納なし、親族間購入は対象外。申請期限は住宅取得日から1年以内"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/seisaku/sogoseisaku/ijyu_teijyu/1446803527999.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "申込み制の家庭系粗大ごみ戸別収集を有料で実施",
+      "details": {
+        "target": "最大辺2.2メートル未満、重さ50キログラム以下で指定ごみ袋に入らない家庭系粗大ごみ",
+        "application": "環境対策課、美作クリーンセンター、各総合支所の窓口または電話で申込み",
+        "limit": "1回あたり5品まで",
+        "fee": "最大辺45センチ以上1メートル未満550円、1メートル以上1.8メートル未満1,100円、1.8メートル以上2.2メートル未満1,650円",
+        "excluded": "家電リサイクル法対象品、事業所ごみ、タイヤ、農業用機械等は収集不可"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/kurashi/gomikankyo/gomi/8542.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震・避難所を確認できる防災マップを公開",
+      "details": {
+        "coverage": "吉井川、吉野川、梶並川、滝川等の洪水浸水想定、土砂災害、避難所、浸水実績、地震のゆれやすさ・危険度",
+        "map": "全ページ版と地域別分割PDFを公開",
+        "updated": "防災マップは2022年3月作成、最新修正は2022年8月。避難場所等は随時反映",
+        "additional": "県統合GIS、防災ポータル、国ハザードマップポータルへの案内も掲載"
+      },
+      "source": {"url": "https://www.city.mimasaka.lg.jp/soshiki/soumu/kikikanri/1462153723350.html", "checkedAt": "2026-07-23"}
+    }
+  }
+}

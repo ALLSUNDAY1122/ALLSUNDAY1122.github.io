@@ -1,23 +1,34 @@
-name: Coordinator Publish All Completed Regional Data
+name: Jichitai Compare CI
 
 on:
   pull_request:
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
     branches:
       - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-national-release:
-    if: github.head_ref == 'coord/release-all-complete-20260723-1746'
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
+
     steps:
-      - name: Checkout release branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: coord/release-all-complete-20260723-1746
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -25,178 +36,42 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Fetch main and regional branches
-        run: |
-          git fetch origin \
-            +refs/heads/main:refs/remotes/origin/main \
-            +refs/heads/region/north:refs/remotes/origin/region/north \
-            +refs/heads/region/east:refs/remotes/origin/region/east \
-            +refs/heads/region/central:refs/remotes/origin/region/central \
-            +refs/heads/region/west:refs/remotes/origin/region/west
-
-      - name: Copy every completed municipality missing from main
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import path from 'node:path';
-          import { execFileSync } from 'node:child_process';
-
-          const regions = ['north', 'east', 'central', 'west'];
-          const dataPrefix = 'jichitai-compare/data/municipalities/';
-          const taskPrefix = 'jichitai-compare/operations/tasks/';
-          const git = (...args) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 1024 * 1024 * 100 });
-          const exists = (ref, filePath) => {
-            try {
-              execFileSync('git', ['cat-file', '-e', `${ref}:${filePath}`], { stdio: 'ignore' });
-              return true;
-            } catch {
-              return false;
-            }
-          };
-          const readText = (ref, filePath) => git('show', `${ref}:${filePath}`);
-          const readJson = (ref, filePath) => JSON.parse(readText(ref, filePath));
-
-          const mainDataFiles = git('ls-tree', '-r', '--name-only', 'HEAD', dataPrefix)
-            .split('\n')
-            .filter((filePath) => /^jichitai-compare\/data\/municipalities\/\d{2}\/\d{5}\.json$/u.test(filePath));
-          const mainCount = mainDataFiles.length;
-          const release = [];
-          const invalid = [];
-          const seen = new Map();
-          const regionalShas = {};
-
-          for (const region of regions) {
-            const ref = `origin/region/${region}`;
-            regionalShas[region] = git('rev-parse', ref).trim();
-            const dataFiles = git('ls-tree', '-r', '--name-only', ref, dataPrefix)
-              .split('\n')
-              .filter((filePath) => /^jichitai-compare\/data\/municipalities\/\d{2}\/\d{5}\.json$/u.test(filePath));
-
-            for (const dataPath of dataFiles) {
-              const code = dataPath.match(/(\d{5})\.json$/u)?.[1];
-              if (!code) continue;
-              const taskPath = `${taskPrefix}${code}.json`;
-
-              if (fs.existsSync(dataPath) || fs.existsSync(taskPath)) continue;
-              if (!exists(ref, taskPath)) {
-                invalid.push({ region, code, reason: 'task_missing' });
-                continue;
-              }
-
-              try {
-                const data = readJson(ref, dataPath);
-                const task = readJson(ref, taskPath);
-                const taskCode = task.municipalityCode ?? task.code;
-                const completedCount = task.completedServices?.length ?? task.completedServiceCount ?? 0;
-                const services = Object.values(data.services ?? {});
-                const completedStatuses = services.filter((service) => ['verified', 'unavailable'].includes(service?.status)).length;
-                const isComplete =
-                  data.code === code &&
-                  taskCode === code &&
-                  task.status === 'merged' &&
-                  completedCount === 9 &&
-                  services.length === 9 &&
-                  completedStatuses === 9;
-
-                if (!isComplete) {
-                  invalid.push({
-                    region,
-                    code,
-                    name: data.name ?? task.municipalityName ?? null,
-                    reason: 'not_complete',
-                    taskStatus: task.status ?? null,
-                    completedCount,
-                    serviceCount: services.length,
-                    completedStatuses
-                  });
-                  continue;
-                }
-
-                if (seen.has(code)) {
-                  throw new Error(`duplicate completed municipality ${code}: ${seen.get(code)} and ${region}`);
-                }
-                seen.set(code, region);
-
-                fs.mkdirSync(path.dirname(dataPath), { recursive: true });
-                fs.mkdirSync(path.dirname(taskPath), { recursive: true });
-                fs.writeFileSync(dataPath, readText(ref, dataPath));
-                fs.writeFileSync(taskPath, readText(ref, taskPath));
-
-                release.push({
-                  region,
-                  code,
-                  name: data.name,
-                  prefectureCode: data.prefectureCode,
-                  prefecture: data.prefecture,
-                  verifiedCount: task.verifiedCount,
-                  unavailableCount: task.unavailableCount,
-                  dataPath,
-                  taskPath
-                });
-              } catch (error) {
-                throw new Error(`${region}/${code}: ${error.message}`);
-              }
-            }
-          }
-
-          release.sort((a, b) => a.code.localeCompare(b.code));
-          if (release.length < 302) {
-            throw new Error(`expected at least 302 completed missing municipalities, found ${release.length}`);
-          }
-
-          const expectedTotal = mainCount + release.length;
-          const manifest = {
-            schemaVersion: '1.0.0',
-            generatedAt: new Date().toISOString(),
-            baseMainSha: git('rev-parse', 'HEAD').trim(),
-            regionalShas,
-            mainMunicipalityCountBeforeRelease: mainCount,
-            releasedMunicipalityCount: release.length,
-            expectedMunicipalityCountAfterRelease: expectedTotal,
-            invalidExcludedCount: invalid.length,
-            invalidExcluded: invalid,
-            releasedMunicipalities: release
-          };
-          const manifestPath = 'jichitai-compare/operations/control/national-release-manifest-20260723.json';
-          fs.mkdirSync(path.dirname(manifestPath), { recursive: true });
-          fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-          fs.appendFileSync(process.env.GITHUB_ENV, `RELEASE_COUNT=${release.length}\nEXPECTED_TOTAL=${expectedTotal}\n`);
-          console.log(JSON.stringify({ mainCount, releaseCount: release.length, expectedTotal, invalidExcludedCount: invalid.length }, null, 2));
-          NODE
-
-      - name: Generate public data and synchronize displayed count
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const expectedTotal = Number(process.env.EXPECTED_TOTAL);
-          const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
-          if (progress.registeredMunicipalities !== expectedTotal) {
-            throw new Error(`expected ${expectedTotal} municipalities, found ${progress.registeredMunicipalities}`);
-          }
-          if (progress.completedServices !== expectedTotal * 9) {
-            throw new Error(`expected ${expectedTotal * 9} completed services, found ${progress.completedServices}`);
-          }
-          let html = fs.readFileSync('index.html', 'utf8');
-          html = html.replace(/<span>\d+自治体・9制度<\/span>/u, `<span>${expectedTotal}自治体・9制度</span>`);
-          html = html.replace(/<li>登録状況：\d+自治体の生成データを公開中<\/li>/u, `<li>登録状況：${expectedTotal}自治体の生成データを公開中</li>`);
-          fs.writeFileSync('index.html', html);
-          NODE
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
 
-      - name: Validate source, generated data, sessions, and JavaScript
+      - name: Generate public municipality data
         working-directory: jichitai-compare
-        run: |
-          npm run validate:generated
-          npm run validate:sessions
-          node --check app.js
+        run: npm run generate
 
-      - name: Restore standard workflow and commit national release
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m "Publish ${RELEASE_COUNT} completed regional municipalities (${EXPECTED_TOTAL} total)"
-          git push origin HEAD:coord/release-all-complete-20260723-1746
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public

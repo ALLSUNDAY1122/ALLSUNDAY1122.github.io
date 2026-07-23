@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "29443",
+  "prefectureCode": "29",
+  "prefecture": "奈良県",
+  "name": "下市町",
+  "officialUrl": "https://www.town.shimoichi.lg.jp/",
+  "status": "verified",
+  "summary": "下市町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末まで窓口負担なしの医療費助成、広域病後児保育、一時預かり、住宅リフォーム助成などを記録。産後ケアは町公式の専用利用案内を確認できず unavailable とした。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "下市町在住の子どもを18歳年度末まで対象とし、奈良県内の保険診療について窓口自己負担を0円とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "ageCondition": "18歳に達する日以後の最初の3月31日まで",
+        "copayment": "2023年8月診療分から助成後の一部負担金なし",
+        "payment": "2024年8月診療分から全年齢で現物給付。奈良県内の医療機関等で受給資格証を提示した場合は保険診療窓口負担なし",
+        "outsidePrefecture": "県外受診や受給資格証未提示等は一旦支払い後に償還払い申請",
+        "excluded": "保険適用外費用、入院時食事療養費等",
+        "schoolAccident": "学校管理下の傷病は日本スポーツ振興センター災害共済給付を優先"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/0000000313.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "満1歳から小学3年生までの病気・けがの回復期児童を、大淀町の病後児保育室で広域受入する。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 9},
+      "details": {
+        "program": "大淀町・下市町・吉野町の広域病後児保育",
+        "facility": "大淀町子育て支援拠点施設未来樹内 病後児保育室にじ",
+        "targetSituation": "病気・けがの回復期で集団保育や家庭保育が困難な児童",
+        "hours": "平日午前8時30分から午後6時30分",
+        "fee": "1日2,000円。住民税非課税世帯は免除措置あり",
+        "otherCosts": "昼食・おやつ代200円、布団リース100円",
+        "capacity": "1日4人",
+        "procedure": "事前登録、予約、前日の医師診察と医師連絡票が必要"
+      },
+      "source": {"url": "https://www.town.oyodo.lg.jp/0000001677.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象。課税世帯0～2歳児は町の徴収規則に基づき所得階層等で算定する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "freeAges": "保育所・認定こども園等の3～5歳児は保育料無償",
+        "nonTaxable": "住民税非課税世帯の0～2歳児は無償化対象",
+        "taxableUnderThree": "課税世帯0～2歳児は市町村民税額、保育必要量、年齢等により算定",
+        "multiChild": "きょうだい数や世帯所得等に応じた軽減は町の保育料表・適用条件で確認",
+        "excludedCosts": "給食費、おやつ代、教材費、延長保育料等の実費は別途となる場合がある"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/kids/reiki/reiki_honbun/k438RG00000219.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.shimoichi.lg.jp/kids/reiki/reiki_honbun/k438RG00000565.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "義務教育学校下市あきつ学園で学校給食を実施する。令和6年度には給食無償化事業を実施したが、令和8年度の恒常無償化は専用案内で再確認が必要。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "school": "下市町立義務教育学校 下市あきつ学園",
+        "operation": "町教育委員会学校保健係が学校給食を所管",
+        "verifiedSupport": "令和6年度のふるさと寄附金活用実績に給食無償化事業1,450万円を掲載",
+        "currentStatus": "2026年度について町内全児童生徒を対象とした専用の無償化案内を確認できないため、最新の徴収・無償化状況は教育委員会へ確認が必要",
+        "verificationPolicy": "過年度実績を恒常制度とは扱わず、現在の月額や対象期間を推測しない"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/0000000081.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.shimoichi.lg.jp/kids/reiki/reiki_honbun/k438RG00000175.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "postpartumCare": {
+      "status": "unavailable",
+      "summary": "町公式サイトの母子保健情報で、宿泊型・通所型・訪問型の産後ケア利用案内を確認できない。",
+      "details": {
+        "verification": "下市町公式サイトの母子保健一覧、妊娠・出産関連ページ、公式サイト内検索を確認したが、対象月齢、利用類型、自己負担額、申込方法を示す産後ケア専用案内を確認できなかった",
+        "interpretation": "制度が存在しないと断定せず、利用可否や近隣施設との広域利用について健康福祉課へ確認が必要",
+        "relatedSupport": "妊産婦および就学前児の保護者を対象とするタクシー利用券等の周辺支援は別制度として存在",
+        "contact": "下市町役場健康福祉課"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/soshiki/1-4-0-0-0_7.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.shimoichi.lg.jp/0000001817.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "下市こども園に在籍していない満1歳から就学前までの児童を、保護者の就労・疾病・育児負担軽減等の際に一時的に預かる。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 6},
+      "details": {
+        "facility": "下市こども園",
+        "target": "町内居住を基本とする、通常保育を利用していない満1歳から就学前までの児童",
+        "reasons": "保護者の就労、通院・疾病、出産、看護・介護、冠婚葬祭、育児負担軽減等",
+        "hours": "午前8時30分から午後4時30分",
+        "halfDayFee": "4時間以内750円",
+        "fullDayFee": "4時間超1,500円",
+        "procedure": "事前に申請し、児童の健康状態や受入可能日を園・担当課と確認"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/0000000985.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.shimoichi.lg.jp/0000001818.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町内登録事業者と町内産木材を利用する20万円以上の住宅改修に、木材購入額相当・上限20万円を補助する。",
+      "details": {
+        "program": "令和8年度下市町住宅リフォーム助成制度",
+        "target": "町内住宅の所有者または使用者で町税等を滞納していない方",
+        "minimumCost": "対象工事費20万円以上",
+        "contractor": "町内登録事業者による施工",
+        "localTimber": "下市町内で製材・加工された木材を使用",
+        "amount": "対象となる町内産木材購入額相当、上限20万円",
+        "frequency": "同一住宅につき原則1回",
+        "applicationDeadline": "2027年1月8日まで。予算到達時は早期終了",
+        "completionDeadline": "2027年3月19日までに工事完了・実績報告"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/0000000852.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [
+        {"url": "https://www.town.shimoichi.lg.jp/0000001863.html", "checkedAt": "2026-07-23"}
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "正しく分別した粗大ごみを、事前予約のうえ紫水苑へ平日午後に直接持ち込める。",
+      "details": {
+        "facility": "南和広域衛生組合 紫水苑",
+        "accepted": "正しく分別された町指定袋入りごみまたは粗大ごみ",
+        "reservation": "生活環境課へ事前に電話し、持込日を調整",
+        "reservationHours": "月曜日から金曜日の午前9時から正午。祝日・年末年始を除く",
+        "dropOffHours": "月曜日から金曜日の午後1時から午後4時。祝日・年末年始を除く",
+        "identity": "運転免許証・マイナンバーカード等、下市町住民であることを確認できる物が必要",
+        "fee": "品目・重量等に応じた処理手数料は申込時に生活環境課へ確認し、推測しない"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/cmsfiles/contents/0000001/1584/R7.3.pdf", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "町内を北部・南部に分けた下市町防災マップで、災害リスクと避難関連情報を確認できる。",
+      "details": {
+        "map": "下市町防災マップ",
+        "areas": "北部版・南部版を公開",
+        "hazards": "河川氾濫・浸水、土砂災害等の町内災害リスクを地図で確認",
+        "evacuation": "避難所・避難経路の検討に必要な情報を掲載",
+        "format": "町公式ページからPDF版・画像版を閲覧可能",
+        "updated": "町公式ページは2026年5月1日更新"
+      },
+      "source": {"url": "https://www.town.shimoichi.lg.jp/0000000101.html", "checkedAt": "2026-07-23"}
+    }
+  }
+}
