@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "05327",
+  "prefectureCode": "05",
+  "prefecture": "秋田県",
+  "name": "上小阿仁村",
+  "officialUrl": "https://www.vill.kamikoani.akita.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが上小阿仁村公式情報で対象9制度を調査し、7制度を確認済み、病児・病後児保育と粗大ごみの現行詳細を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、所得制限なく保険診療の自己負担分を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "0歳から高校修了相当の18歳到達後最初の3月31日までの子ども",
+        "coverage": "福祉医療費受給者証を健康保険証等とともに提示し、保険診療の自己負担分を助成",
+        "incomeLimit": "所得制限なし。ただし所得確認あり",
+        "application": "申請により福祉医療費受給者証の交付を受ける"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/151", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "村公式の令和8年4月現在の子育てサービス一覧と保育園案内で、病児・病後児保育の実施を確認できない。",
+      "details": {
+        "confirmed": "一時保育、延長保育、保育料無償化等の保育サービスは公式一覧に掲載",
+        "unconfirmed": "病児保育または病後児保育の実施施設、対象年齢、利用時間、料金、申込方法",
+        "guidance": "住民福祉課またはかみこあに保育園へ現行の利用可否を確認する必要がある"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/755", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "すこやか子育て支援事業により、年齢・所得にかかわらず保育料を全額無料としている。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "facility": "上小阿仁村立かみこあに保育園",
+        "target": "おおむね生後6か月から就学前までの入園児",
+        "fee": "年齢・所得にかかわらず全額無料",
+        "hours": "通常保育は平日・土曜7時30分から18時30分",
+        "meals": "1～2歳児は完全給食、3歳以上も令和6年5月から完全給食"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/29", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "村内に住所を有する小中学生について、保護者が負担する学校給食費を全額補助して無償化する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "上小阿仁村に住所を有する小学生・中学生",
+        "support": "保護者が負担すべき学校給食費を全額補助",
+        "application": "年度初めに教育委員会から対象者へ案内"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/755", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子を対象に、宿泊型と通所型の産後ケアを原則合計7日以内で提供する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "types": "宿泊型（ショートステイ）と通所型（デイサービス）",
+        "target": "宿泊型は生後4か月未満の乳児と母、通所型は生後7か月未満の乳児と母",
+        "facilities": "能代厚生医療センター、ふじ産婦人科・内科",
+        "limit": "原則7日以内で分割利用可能",
+        "dayUse": "通所型は10時入所・16時退所で昼食とおやつ付き",
+        "application": "利用の2週間前までに住民福祉課健康推進班へ申請"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/736", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育園に入園していない1歳から就学前の子どもを、かみこあに保育園で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 5},
+      "details": {
+        "facility": "上小阿仁村立かみこあに保育園",
+        "target": "1歳から就学前までの保育園に入園していない子ども",
+        "hours": "7時30分から18時30分の希望する時間",
+        "fee": "4時間以内1,000円、4時間超2,000円",
+        "meals": "昼をまたぐ場合は園児と同じ給食を提供",
+        "application": "かみこあに保育園へ直接連絡"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/29", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "村内で居住用住宅を新築する場合、村内業者施工は自己資金の2分の1・上限200万円、村外業者施工は上限50万円を補助する。",
+      "details": {
+        "target": "村内の土地に居住目的の住宅を新築する者",
+        "villageContractor": "村内業者施工は自己資金の2分の1、上限200万円",
+        "outsideContractor": "村内業者以外の施工は自己資金の2分の1、上限50万円",
+        "taxSupport": "新築住宅の居住部分に係る不動産取得税も補助対象",
+        "conditions": "村税・保育料・公共料金を完納し、賃貸・別荘目的でないこと等",
+        "application": "新築住宅への入居前までに申請。不動産取得税分は納付日から30日以内に申請"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/756", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "unavailable",
+      "summary": "村公式のごみ・リサイクルページが準備中で、粗大ごみの現行収集方法・料金・申込手順を確認できない。",
+      "details": {
+        "confirmed": "村公式サイトにごみ・リサイクル案内ページが存在する",
+        "unconfirmed": "粗大ごみの定義、収集日、戸別収集または集積所方式、手数料、申込先、直接搬入方法",
+        "guidance": "上小阿仁村役場へ現行の排出方法を確認する必要がある"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/519", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "小阿仁川の洪水リスクと避難情報を確認できる2021年度版洪水ハザードマップを公開する。",
+      "details": {
+        "map": "小阿仁川洪水ハザードマップ2021年度版",
+        "revision": "令和2年度に見直し、令和3年3月に発行",
+        "access": "全編版とページ分割版を村公式サイトからPDFで閲覧可能",
+        "related": "村内避難場所一覧、地域防災計画、防災情報メール配信サービスも公開"
+      },
+      "source": {"url": "https://www.vill.kamikoani.akita.jp/info/99", "checkedAt": "2026-07-24"}
+    }
+  }
+}
