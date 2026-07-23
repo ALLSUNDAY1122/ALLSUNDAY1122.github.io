@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-23T14:01:35.226Z",
-  "success": false,
+  "auditedAt": "2026-07-23T22:04:28.125Z",
+  "success": true,
   "results": [
     {
       "name": "local: six static pages and 100 stories are covered",
@@ -113,13 +113,13 @@
     },
     {
       "name": "published: story launch URL maps to its fixed campaign without catalog scripts",
-      "ok": false,
+      "ok": true,
       "detail": {
-        "ready": false,
+        "ready": true,
         "status": 200,
-        "attempt": 10,
+        "attempt": 1,
         "state": {
-          "engagementScript": false,
+          "engagementScript": true,
           "storyScript": true,
           "catalogScripts": 0,
           "engagement": true,
@@ -150,8 +150,8 @@
       "name": "published: Page Views API count is displayed",
       "ok": true,
       "detail": {
-        "value": 9,
-        "text": "9",
+        "value": 13,
+        "text": "13",
         "error": null,
         "sourceError": null,
         "campaignError": null
@@ -263,41 +263,5 @@
       }
     }
   ],
-  "failures": [
-    {
-      "name": "published: story launch URL maps to its fixed campaign without catalog scripts",
-      "ok": false,
-      "detail": {
-        "ready": false,
-        "status": 200,
-        "attempt": 10,
-        "state": {
-          "engagementScript": false,
-          "storyScript": true,
-          "catalogScripts": 0,
-          "engagement": true,
-          "source": "social",
-          "campaign": "launch-20260723-threads-spare-key",
-          "shareUrl": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_source=web_share&utm_medium=social&utm_campaign=onsite_share",
-          "relatedReady": true,
-          "share": true,
-          "pagination": 3,
-          "related": 2
-        },
-        "meta": {
-          "type": "article",
-          "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-          "title": "合鍵は返却済み｜人が怖い話｜夜語り",
-          "description": "人が怖い話「合鍵は返却済み」。無料防犯診断で複製された鍵は、研修生の実地侵入に使われていた。住人が自分の記憶を疑うまで、会社は同じ家へ何度も入り続ける。 約5分で読める一話完結の創作怪談。",
-          "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
-          "width": "2172",
-          "height": "724",
-          "alt": "月明かりと提灯が照らす夜の町並み",
-          "card": "summary_large_image",
-          "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
-          "twitterAlt": "月明かりと提灯が照らす夜の町並み"
-        }
-      }
-    }
-  ]
+  "failures": []
 }
