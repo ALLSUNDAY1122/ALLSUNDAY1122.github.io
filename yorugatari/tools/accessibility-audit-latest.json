@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-22T23:21:38.704Z",
-  "success": true,
+  "auditedAt": "2026-07-23T13:32:34.088Z",
+  "success": false,
   "results": [
     {
       "name": "top: published page loaded",
@@ -44,8 +44,58 @@
     },
     {
       "name": "top: no critical or serious axe violations",
-      "ok": true,
-      "detail": []
+      "ok": false,
+      "detail": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"shinrei.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/shinrei.html\" aria-pressed=\"false\">心霊・幽霊</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"hitokowa.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/hitokowa.html\" aria-pressed=\"false\">人が怖い話</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"imikowa.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/imikowa.html\" aria-pressed=\"false\">意味がわかると怖い話</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"net-kaidan.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/net-kaidan.html\" aria-pressed=\"false\">ネット・SNS怪談</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"urban-legend.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/urban-legend.html\" aria-pressed=\"false\">都市伝説・奇妙なルール</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"aftertaste.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/aftertaste.html\" aria-pressed=\"false\">後味の悪い話</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "top: document language is Japanese",
@@ -232,7 +282,7 @@
     {
       "name": "story: has one non-empty page title",
       "ok": true,
-      "detail": "合鍵は返却済み｜夜語り"
+      "detail": "合鍵は返却済み｜人が怖い話｜夜語り"
     },
     {
       "name": "story: has exactly one h1",
@@ -301,5 +351,61 @@
       "detail": []
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "name": "top: no critical or serious axe violations",
+      "ok": false,
+      "detail": [
+        {
+          "id": "aria-allowed-attr",
+          "impact": "critical",
+          "help": "Elements must only use supported ARIA attributes",
+          "nodes": [
+            {
+              "target": [
+                "a[href$=\"shinrei.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/shinrei.html\" aria-pressed=\"false\">心霊・幽霊</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"hitokowa.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/hitokowa.html\" aria-pressed=\"false\">人が怖い話</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"imikowa.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/imikowa.html\" aria-pressed=\"false\">意味がわかると怖い話</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"net-kaidan.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/net-kaidan.html\" aria-pressed=\"false\">ネット・SNS怪談</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"urban-legend.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/urban-legend.html\" aria-pressed=\"false\">都市伝説・奇妙なルール</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            },
+            {
+              "target": [
+                "a[href$=\"aftertaste.html\"]"
+              ],
+              "html": "<a class=\"chip\" href=\"categories/aftertaste.html\" aria-pressed=\"false\">後味の悪い話</a>",
+              "failureSummary": "Fix all of the following:\n  ARIA attribute is not allowed: aria-pressed=\"false\""
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
