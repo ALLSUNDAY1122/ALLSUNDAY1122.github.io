@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T13:23:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T14:15:00+09:00",
+  "status": "ready_for_review",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 81,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {
+    "code": "04421",
+    "name": "大和町",
+    "stage": "ready_for_review"
+  },
+  "workingBranch": "data/04421-taiwa",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -47,5 +51,5 @@
     "04406"
   ],
   "blocked": [],
-  "nextAction": "大和町（04421）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "大和町の3ファイル差分を検証し、region/north向けPRを作成してCI成功後に地方統合する。"
 }
