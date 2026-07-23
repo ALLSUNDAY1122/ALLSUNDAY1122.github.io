@@ -6,190 +6,131 @@
   "name": "雫石町",
   "officialUrl": "https://www.town.shizukuishi.iwate.jp/",
   "status": "verified",
-  "summary": "北日本調査班Aが対象9制度を雫石町公式情報で調査し、8制度をverified、病後児保育をneeds_medium_reviewとして整理。",
+  "summary": "北日本調査班Aが対象9制度を雫石町公式情報で調査し、全9制度をverifiedとして整理。",
   "updatedAt": "2026-07-23",
   "services": {
     "childMedical": {
       "status": "verified",
-      "summary": "出生から18歳到達年度末まで、保険診療の一部負担金を全額助成する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
+      "summary": "出生から18歳到達年度末まで、所得制限で県制度の対象外となる場合も町独自制度で保険診療の一部負担金を全額助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
       "details": {
         "program": "子ども医療費助成・安心子育て医療費助成",
         "target": "出生の日から18歳に到達した年度末まで",
-        "copay": "保険診療分の一部負担金を全額助成し、子どもの自己負担なし",
-        "incomeLimit": "所得制限で県制度対象外となる場合も町独自制度で助成",
+        "copay": "保険診療分の一部負担金を全額助成",
+        "incomeLimit": "県制度の所得制限で対象外となる場合も町独自制度で助成",
         "application": "受給者証の交付申請が必要",
         "excluded": "健診、予防接種、文書料、入院時食事代、差額ベッド代など保険適用外は対象外"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2022090400018/",
-        "checkedAt": "2026-07-23"
-      }
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2022090400018/", "checkedAt": "2026-07-23"}
     },
     "sickChildCare": {
-      "status": "needs_medium_review",
-      "summary": "七ツ森保育園で病気回復期の子どもを無料で預かる病後児保育を実施しているが、現行案内で対象年齢の確定記載を確認できない。",
+      "status": "verified",
+      "summary": "生後おおむね2か月から小学3年生までの病気回復期の子どもを、七ツ森保育園で無料で預かる。",
+      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 9},
       "details": {
-        "program": "病後児保育",
+        "program": "病後児等保育事業",
         "facility": "七ツ森保育園",
-        "condition": "病気の回復途中で通常の集団保育が困難で、家庭で保育できない児童",
+        "target": "生後おおむね2か月から小学3年生まで。町外児童は町内保育所利用児童に限る",
+        "condition": "病気の回復期で通常の集団保育が困難かつ家庭で保育できない場合",
+        "hours": "月曜日から土曜日、7時15分から18時15分。祝日・年末年始を除く",
         "fee": "無料",
-        "application": "事前登録、申込書、医師連絡票が必要",
-        "hours": "七ツ森保育園の開所日・開所時間に準じる",
-        "reviewReason": "現行町公式ページに対象年齢の明記がなく、最新の年齢範囲を確定できない"
+        "application": "事前登録・予約の上、申込書と医師連絡票を提出"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2014112900132/",
-        "checkedAt": "2026-07-23"
-      }
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2014112900132/", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.town.shizukuishi.iwate.jp/docs/2021080200058/file_contents/No877_hp.pdf", "checkedAt": "2026-07-23"}]
     },
     "childcareFee": {
       "status": "verified",
-      "summary": "町独自に3歳未満児の認可保育施設等の保育料を所得制限なく免除し、3～5歳児の副食費も無償化する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 5
-      },
+      "summary": "町内在住の3歳未満児の保育料を所得制限なく申請により免除し、3～5歳児の副食費も町独自に無償化する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
       "details": {
-        "fee": "3歳未満児の保育所、認定こども園、地域型保育事業の保育料を免除",
-        "incomeLimit": "所得制限なし",
-        "application": "3歳未満児保育料免除申請書の提出が必要",
-        "outsideFacilities": "町外の対象施設利用者も対象",
-        "unlicensedFacilities": "認可外保育施設は月額上限内の償還払い給付",
+        "support": "3歳未満児の保育料免除",
+        "target": "雫石町に住所があり、保育所・認定こども園・地域型保育事業を利用する3歳未満児",
+        "incomeLimit": "なし",
+        "application": "3歳未満児保育料免除申請書をこども課へ提出",
+        "preschool": "3～5歳児の利用料は国制度で無償",
         "mealSupport": "3～5歳児全員の副食費を町独自に無償化",
         "excluded": "延長保育料、休日保育料、行事費等は保護者負担"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2023050900043/",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.town.shizukuishi.iwate.jp/docs/2019100100020/",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2023050900043/", "checkedAt": "2026-07-23"}
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "令和8年度から町立小中学校の学校給食費を無償化している。",
-      "eligibility": {
-        "minAgeMonths": 72,
-        "maxAgeYears": 15
-      },
+      "summary": "町立小中学校の学校給食費を無償化している。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
       "details": {
-        "support": "小中学校の学校給食費無償化",
-        "start": "令和8年度",
+        "support": "小中学校給食費無償化",
         "schools": "雫石町立小学校・中学校",
-        "mealSystem": "各学校で調理し、町内産農産物を使用した給食を提供",
-        "application": "詳細は学校教育課へ確認"
+        "mealPolicy": "各学校で調理し、町内産農産物を活用した給食を提供"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/teijyu/docs/2024051000015/",
-        "checkedAt": "2026-07-23"
-      }
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/teijyu/docs/2024051000015/", "checkedAt": "2026-07-23"}
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "産後1年未満の母子を対象に、助産師が自宅を訪問する無料の産後ケアを1人3回まで実施する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 1
-      },
+      "summary": "産後1年未満の母子を対象に、助産師による訪問型産後ケアを1人3回まで無料で実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
       "details": {
-        "target": "町内住所がある産後1年未満の母子で、家族の十分な支援がなく、心身の不調や育児不安がある人",
+        "target": "町内在住の産後1年未満の母子で、家族の十分な支援を受けられず、心身の不調や育児不安がある人",
         "type": "訪問型",
-        "provider": "しずくいし訪問看護ステーション心の助産師",
-        "fee": "無料",
+        "services": "乳房ケア、授乳相談、産後の体調相談、沐浴等の育児相談",
         "usageLimit": "1人3回まで",
-        "services": "乳房・授乳相談、産後の体調相談、沐浴や乳児の世話など育児相談",
-        "application": "利用前に健康推進課へ連絡"
+        "fee": "無料",
+        "provider": "しずくいし訪問看護ステーション心の助産師",
+        "application": "事前に健康推進課へ連絡"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2021040600041/",
-        "checkedAt": "2026-07-23"
-      }
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2021040600041/", "checkedAt": "2026-07-23"}
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "保育施設に通っていない生後6か月から満3歳未満の子どもを、御明神保育所で月10時間まで預かる。",
-      "eligibility": {
-        "minAgeMonths": 6,
-        "maxAgeYears": 3
-      },
+      "summary": "保育施設に通っていない生後6か月から3歳未満児を対象に、御明神保育所で月10時間まで実施する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
       "details": {
-        "program": "こども誰でも通園制度（乳児等通園支援事業）",
-        "target": "保育所、認定こども園、地域型保育施設等に通っていない生後6か月から満3歳未満の児童",
+        "program": "こども誰でも通園制度",
+        "target": "保育所等に通っていない生後6か月から満3歳未満の児童",
         "employmentRequirement": "なし",
         "facility": "雫石町立御明神保育所",
         "usage": "月10時間まで",
-        "hours": "火曜日・水曜日9時～11時",
-        "fee": "1時間300円。おやつ等は別途実費、減免制度あり",
-        "application": "こども課へ認定申請後、施設との初回面談と利用予約が必要"
+        "hours": "火曜日・水曜日の9時から11時",
+        "fee": "1時間300円。減免制度あり。おやつ等は実費の場合あり",
+        "application": "こども課で認定申請後、施設との初回面談・予約が必要"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2026022600040/",
-        "checkedAt": "2026-07-23"
-      }
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2026022600040/", "checkedAt": "2026-07-23"}
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "定住目的の空き家改修費を補助し、18歳未満の子がいる世帯は補助率2分の1、上限60万円とする。",
+      "summary": "定住目的の空き家改修費を補助し、18歳未満の同居者がいる世帯は補助率2分の1・上限60万円とする。",
       "details": {
         "program": "空き家改修等補助金",
-        "target": "町内の空き家を購入または賃借し、転入・転居して10年以上定住する人など",
-        "eligibleCosts": "町内事業者が行う空き家の改修等",
+        "target": "町内の空き家を購入または賃借して転入・転居し、10年以上定住する人など",
+        "eligibleCosts": "町内事業者による空き家の改修等",
         "childHousehold": "同居世帯に18歳未満の人がいる場合",
-        "support": "子育て世帯は対象経費の2分の1以下、上限60万円",
-        "otherHouseholds": "その他の世帯は対象経費の3分の1以下、上限30万円",
-        "application": "契約後1年以内などの要件を確認し、地域整備課へ申請"
+        "support": "対象経費の2分の1以下、上限60万円",
+        "standardSupport": "その他の世帯は対象経費の3分の1以下、上限30万円"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2016072600053/",
-        "checkedAt": "2026-07-23"
-      }
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2016072600053/", "checkedAt": "2026-07-23"}
     },
     "bulkyWaste": {
       "status": "verified",
-      "summary": "大型ごみや集積所に出せないごみは滝沢清掃センターへ直接搬入でき、家庭ごみは1回200kg未満まで無料。",
+      "summary": "大型ごみや200キログラムを超える家庭ごみは滝沢清掃センターへ直接搬入できる。",
       "details": {
         "facility": "滝沢清掃センター（ごみちゃんセンター）",
-        "target": "大型ごみ、200kgを超える家庭ごみ、集積所に出せないごみ",
-        "application": "通常は予約不要。多量搬入時は事前連絡を推奨",
-        "hours": "月～金9時～16時、土曜9時～12時・13時～16時。受付は終了15分前まで",
-        "feeSystem": "家庭系ごみは1回200kg未満まで無料。200kg以上は超過分10kgまでごとに30円",
-        "identification": "雫石町内から発生したごみであることを確認するため運転免許証等を提示",
-        "resourceWaste": "雫石町の資源ごみは雫石リサイクルセンターへ搬入"
+        "target": "大型ごみ、200キログラムを超える家庭ごみ、集積所に出せないごみ",
+        "hours": "月～金9時～16時、土曜9時～12時・13時～16時",
+        "feeSystem": "家庭系ごみは200キログラムまで無料、以降10キログラム増すごとに30円",
+        "resourceWaste": "資源ごみは雫石リサイクルセンターへ搬入"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2014120200040/",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.gomichan-center.or.jp/center/cleaning/",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2014120200040/", "checkedAt": "2026-07-23"}
     },
     "disasterPrevention": {
       "status": "verified",
-      "summary": "洪水浸水想定区域や避難情報等を掲載した防災マップを公開し、新たに指定された5河川の浸水想定図も案内している。",
+      "summary": "洪水浸水想定区域や避難情報を掲載した町防災マップを公開し、新たに指定された5河川の浸水想定情報も案内している。",
       "details": {
         "map": "雫石町防災マップ",
-        "coverage": "洪水浸水想定区域、避難場所、防災情報、災害時の行動",
-        "distribution": "令和3年4月に全世帯へ配布し、町公式ページでも公開",
-        "updated": "町公式ページは令和7年6月13日更新",
-        "additionalRivers": "葛根田川、矢櫃川、南川、鴬宿川、外桝沢川の洪水浸水想定区域図を追加案内",
-        "access": "町公式ページから分割PDFと県の浸水想定区域図を確認可能"
+        "coverage": "洪水浸水想定区域、避難所・避難行動等の防災情報",
+        "distribution": "令和3年4月に全世帯へ配布し、町公式サイトで分割PDFを公開",
+        "riverUpdate": "葛根田川、矢櫃川、南川、鴬宿川、外桝沢川の新たな洪水浸水想定区域情報を案内"
       },
-      "source": {
-        "url": "https://www.town.shizukuishi.iwate.jp/docs/2014121700099/",
-        "checkedAt": "2026-07-23"
-      }
+      "source": {"url": "https://www.town.shizukuishi.iwate.jp/docs/2014121700099/", "checkedAt": "2026-07-23"}
     }
   }
 }
