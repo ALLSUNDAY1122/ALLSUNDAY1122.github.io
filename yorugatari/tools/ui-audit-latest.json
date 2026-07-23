@@ -1,5 +1,5 @@
 {
-  "auditedAt": "2026-07-23T22:32:15.792Z",
+  "auditedAt": "2026-07-23T22:43:32.386Z",
   "success": true,
   "results": [
     {
@@ -9,8 +9,14 @@
         "cards": 100,
         "unique": 100,
         "busy": "false",
-        "version": true
+        "version": true,
+        "fiveMinuteLinks": 4
       }
+    },
+    {
+      "name": "top exposes the five-minute horror landing",
+      "ok": true,
+      "detail": 4
     },
     {
       "name": "top mobile has no horizontal overflow",
@@ -61,6 +67,11 @@
       "detail": 100
     },
     {
+      "name": "archive exposes the five-minute horror landing",
+      "ok": true,
+      "detail": 1
+    },
+    {
       "name": "archive mobile has no horizontal overflow",
       "ok": true,
       "detail": {
@@ -72,6 +83,59 @@
       "name": "archive favorite filter works",
       "ok": true,
       "detail": 1
+    },
+    {
+      "name": "five-minute landing renders 12 unique editorial picks",
+      "ok": true,
+      "detail": {
+        "picks": 12,
+        "uniquePicks": 12,
+        "guides": 6,
+        "faq": 3,
+        "h1": 1,
+        "breadcrumb": 1,
+        "canonical": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
+        "analytics": true,
+        "engagement": false
+      }
+    },
+    {
+      "name": "five-minute landing renders six genre guides and three FAQ items",
+      "ok": true,
+      "detail": {
+        "picks": 12,
+        "uniquePicks": 12,
+        "guides": 6,
+        "faq": 3,
+        "h1": 1,
+        "breadcrumb": 1,
+        "canonical": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
+        "analytics": true,
+        "engagement": false
+      }
+    },
+    {
+      "name": "five-minute landing has canonical metadata and lightweight analytics",
+      "ok": true,
+      "detail": {
+        "picks": 12,
+        "uniquePicks": 12,
+        "guides": 6,
+        "faq": 3,
+        "h1": 1,
+        "breadcrumb": 1,
+        "canonical": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
+        "analytics": true,
+        "engagement": false
+      }
+    },
+    {
+      "name": "five-minute landing mobile has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390
+      }
     },
     {
       "name": "story mobile has no horizontal overflow",
@@ -129,7 +193,7 @@
       "detail": {
         "slug": "spare-key-returned",
         "progress": 55,
-        "updatedAt": 1784845934492
+        "updatedAt": 1784846611185
       }
     },
     {
