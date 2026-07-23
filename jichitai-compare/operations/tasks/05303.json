@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "05303",
+  "municipalityName": "小坂町",
+  "prefectureCode": "05",
+  "prefectureName": "秋田県",
+  "assignedTeam": "北日本調査班",
+  "status": "pr_open",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": ["childMedical", "sickChildCare", "childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport", "bulkyWaste", "disasterPrevention"],
+  "verifiedCount": 8,
+  "researchingCount": 0,
+  "unavailableCount": 1,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/05303-kosaka-r3",
+  "pullRequestNumber": 1489,
+  "lastCheckedAt": "2026-07-24",
+  "lastUpdatedAt": "2026-07-24T00:02:00+09:00",
+  "lastUpdatedBy": "北日本調査班B",
+  "officialSources": [
+    "https://www.town.kosaka.akita.jp/machinososhiki/chominka/chominseikatsuhan/5/1053.html",
+    "https://www.town.kosaka.akita.jp/iju_teiju/kosodate_kekkon/2628.html",
+    "https://www.town.kosaka.akita.jp/iju_teiju/kosodate_kekkon/2625.html",
+    "https://www.town.kosaka.akita.jp/machinososhiki/kyoikuiinkaijimukyoku/somuhan/315.html",
+    "https://www.town.kosaka.akita.jp/kurashi_gyosei/kosodate_kyoiku/ninshin_shussan/2932.html",
+    "https://www.town.kosaka.akita.jp/material/files/group/10/2025041601.pdf",
+    "https://www.town.kosaka.akita.jp/machinososhiki/somuka/kikakuzaiseihan/2/203.html",
+    "https://www.town.kosaka.akita.jp/machinososhiki/chominka/chominseikatsuhan/1/184.html",
+    "https://www.town.kosaka.akita.jp/machinososhiki/somuka/somukanzaihan/6/2/164.html"
+  ],
+  "notes": [
+    "e-Statで小坂町の正式自治体コード05303を確認し、既存task・ブランチ・オープンPRがないことを確認して着手。",
+    "必須9制度を町公式情報で調査し、8制度をverified、産後ケアをunavailableとして登録。",
+    "18歳年度末まで所得制限なしの医療費助成、生後8週から小学6年生の病児保育、町内保育施設の保育料無料を確認。",
+    "学校給食費半額助成、一時預かり、住宅取得補助、粗大ごみ案内、防災ハザードマップを確認。",
+    "産後ケア事業の掲載は確認できたが、現行の対象期間・利用形態・料金・回数を取得できなかった。",
+    "旧PR #1482はCI成功後にregion/northが進行して競合したため閉鎖。最新地方ブランチからdata/05303-kosaka-r3を作成して再適用。",
+    "差し替えPR #1489をregion/north向けに作成。"
+  ],
+  "blockers": []
+}
