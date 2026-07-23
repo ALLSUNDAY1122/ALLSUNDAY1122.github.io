@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1146,
+    "municipalityCount": 1150,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -51676,6 +51676,177 @@
       }
     },
     {
+      "code": "06203",
+      "prefectureCode": "06",
+      "prefecture": "山形県",
+      "name": "鶴岡市",
+      "officialUrl": "https://www.city.tsuruoka.lg.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Bが鶴岡市公式情報で対象9制度を調査し、9制度すべてを確認済みとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "鶴岡市に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "子育て支援医療証により、保険診療の自己負担額を助成",
+            "outsideCityStudent": "高校等への進学で市外転出した子どもも、保護者が市内在住等の要件を満たす場合は対象となることがある",
+            "excluded": "保険適用外費用、入院時食事代、学校管理下の負傷・疾病等",
+            "application": "市役所または地域庁舎で医療証の交付申請を行う"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kyoiku/nenrei/zero/kosodatesieniryou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後2か月または3か月から小学6年生までを対象に、市内2施設で病児保育を実施する。",
+          "eligibility": {
+            "minAgeMonths": 2,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facilities": "ちわら菜の花こども園『はなな』、南部保育園『らっこルーム』",
+            "target": "鶴岡市・三川町・庄内町に住所がある小学6年生までの児童。施設により生後2か月または3か月から",
+            "hours": "月曜日から土曜日の8時から18時。祝日と年末年始を除く",
+            "fee": "1回2,000円。給食費280円または300円。所得区分による減免あり",
+            "application": "予約サービス『テオテ』で事前登録・予約し、医療機関作成の利用連絡票を提出"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kyoiku/kosodate/enjyo/kosodate01byouji.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "令和8年9月から、鶴岡市民の保育所・認定こども園等の保育料を年齢・所得・きょうだい数を問わず完全無償化する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "start": "2026年9月1日",
+            "target": "鶴岡市に住所を有し、保育所、認定こども園の保育園部分、地域型保育事業所等を利用する児童",
+            "support": "0歳から2歳児を含め保育料を市独自に完全無償化",
+            "procedures": "認可施設利用者は無償化のための新たな手続き不要。認可外施設等は認定申請が必要",
+            "excluded": "給食費、延長保育料、各園が徴収する実費等は対象外"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kyoiku/nyuen/adukeru/hoikuryoumusyouka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "鶴岡市に住所を有する小中学生の学校給食費を無償化し、市外校等の対象者にも給付金で支援する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "鶴岡市内に住所を有する小中学生の保護者",
+            "citySchools": "市立小中学校と県立致道館中学校の対象児童生徒は給食費の請求なし",
+            "referenceCost": "令和8年度は小学生1食約380円、中学生1食約455円",
+            "otherSchools": "市外学校、特別支援学校、給食を喫食しない児童生徒等には要件に応じて給付金で支援",
+            "priority": "他制度による無償化・援助がある場合はその制度を優先"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kyoiku/gakko/kyushoku/kyusyoku20260703.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年未満の母子を対象に、日帰り型・宿泊型・訪問型の産後母子ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "鶴岡市に住所がある出産後1年未満の母親と赤ちゃん。施設により対象期間が異なる",
+            "types": "日帰り型、宿泊型、訪問型",
+            "support": "母親の休息・乳房ケア・健康相談、乳児の健康・体重確認、授乳・沐浴・育児相談",
+            "limit": "日帰り1日または宿泊1泊を1回として合計5回まで",
+            "application": "利用希望日の1週間前までにこども家庭センター窓口または電子申請",
+            "areaExpansion": "令和8年度から酒田市管内の施設も利用可能"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kyoiku/ninshin/shien/kodomokateisangokea.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "一時預かりと、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "temporaryCare": "生後6か月以上の未就園児を、保護者の通院、冠婚葬祭、休養等の際に保育園・認定こども園等で一時的に預かる",
+            "anyChildTarget": "保育所等に通っていない生後6か月から満3歳未満の子ども",
+            "anyChildLimit": "子ども1人につき月10時間",
+            "anyChildFee": "1時間300円。生活保護・市民税非課税世帯等の負担軽減あり。給食・おやつ代は別途の場合あり",
+            "application": "総合支援システムで認定申請後、実施施設へ予約する"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kyoiku/nyuen/adukeru/daretuu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度住宅リフォーム支援事業で、子育て世帯等に工事費の3分の1、上限30万円を基本補助する。",
+          "details": {
+            "program": "令和8年度鶴岡市住宅リフォーム支援事業補助金",
+            "target": "自己または2親等以内の親族が所有し、自ら居住する住宅を市内業者で改修する方",
+            "childcareAmount": "移住・新婚・子育て世帯は対象工事費の3分の1、上限30万円",
+            "specialFrames": "移住世帯の空き家活用は上限200万円、中心市街地内の空き家活用は要件により上限300万円",
+            "additions": "鶴岡産木材、空き家活用、断熱改修等に加算あり",
+            "application": "工事着手前に申請。募集区分により先着または抽選"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kurashi/jyutaku/kenchiku/kenthiku0320220.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない粗大ごみは市による戸別収集を行わず、リサイクルプラザへの有料持込みまたは許可業者への依頼で処分する。",
+          "details": {
+            "definition": "耐久消費財を中心とする比較的大型の固形廃棄物で、指定袋に入らないもの",
+            "collection": "市の粗大ごみ戸別収集は実施していない",
+            "directDelivery": "リサイクルプラザへ有料で直接持込み可能。布団はごみ焼却施設へ持込む",
+            "contractor": "一般廃棄物収集運搬許可業者へ有料で収集運搬を依頼可能",
+            "restrictions": "家電リサイクル対象品や産業廃棄物等は市施設で受入不可または条件あり"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/kurashi/gomi-seikatsu/gomishigen/sodai.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・ため池・地震の各種ハザードマップとWEB版マップを公開する。",
+          "details": {
+            "coverage": "洪水、土砂災害、津波、ため池、地震の揺れやすさ・液状化",
+            "webMap": "パソコン・スマートフォンから洪水、土砂、津波等の被害想定を電子地図で確認可能",
+            "shelters": "指定緊急避難場所と指定避難所の情報を掲載",
+            "use": "自宅周辺の危険箇所、安全な避難経路、避難先の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.tsuruoka.lg.jp/anzen/hazardmap/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "07201",
       "prefectureCode": "07",
       "prefecture": "福島県",
@@ -56906,6 +57077,175 @@
               "checkedAt": "2026-07-24"
             }
           ]
+        }
+      }
+    },
+    {
+      "code": "07422",
+      "prefectureCode": "07",
+      "prefecture": "福島県",
+      "name": "湯川村",
+      "officialUrl": "https://www.vill.yugawa.fukushima.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Aが対象9制度を湯川村公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして整理。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "子ども医療費助成制度",
+            "target": "湯川村に住所がある0歳から18歳年度末までの子ども",
+            "support": "保険診療の一部自己負担額を助成",
+            "application": "受給資格登録等の手続きが必要",
+            "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/fukushi-top/hoiku-jidou-fukushi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "村公式の子育て・保育情報で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+          "details": {
+            "researchResult": "村公式の子育て情報、保育所情報、子育て・就学支援施策を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+            "availableAlternatives": "一時保育、子育て短期支援事業、長時間保育等を実施",
+            "caution": "広域利用を含む利用可否は住民課福祉係または教育委員会へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/fukushi-top/hoiku-jidou-fukushi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "村内在住で湯川村保育所を利用する世帯の保育料を全額無償化し、ゆがわ幼稚園の授業料も無料とする。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "nursery": "湯川村保育所は生後6か月から2歳児を対象とし、村内在住利用者の保育料を全額無料",
+            "kindergarten": "ゆがわ幼稚園は3～5歳児を対象とし、授業料・通園バス無料",
+            "hours": "保育所は11時間保育、幼稚園は登園前・降園後・土曜・長期休業中の預かり保育あり",
+            "excludedCosts": "給食費、おやつ代、保険料、教材費等の実費は別途負担となる場合がある"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/kurashi-top/kosodate-2-2.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "湯川村に住所があり村立小中学校へ通う児童生徒の学校給食費を全額無償化する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "湯川村に住所があり、湯川村立小学校・中学校へ通う児童生徒",
+            "support": "学校給食費を全額村が負担",
+            "additionalSupport": "就学援助世帯は給食費免除、第3子以降の幼稚園・学校給食費免除制度も実施",
+            "purpose": "子育て世帯の経済的負担軽減"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/yugawa-44project/live.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後12か月以内の母子を対象に、県内助産院等で宿泊・日帰り型の産後ケアを実施し、費用の一部を村が負担する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "program": "産後ケア事業",
+            "target": "湯川村に住所がある生後12か月以内の乳児と母親",
+            "types": "宿泊型、日帰り型",
+            "services": "産後の疲労回復、母乳育児支援、育児相談、母子の健康確認等",
+            "support": "利用費用の一部を村が負担",
+            "application": "利用前に住民課福祉係または保健センターへ相談・申請"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/kurashi-top/kosodate-2-2.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで湯川村保育所を利用できる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          },
+          "details": {
+            "program": "こども誰でも通園制度",
+            "target": "保育所・認定こども園・企業主導型保育施設等に通っていない生後6か月から満3歳未満の子ども",
+            "employmentRequirement": "なし",
+            "usageLimit": "月10時間まで",
+            "hours": "平日9時～11時",
+            "fee": "1時間300円。おやつ代・保険料等の実費が別途必要",
+            "facility": "湯川村保育所",
+            "application": "つうえんポータルで申請後、村の認定と保育所面談を経て利用日を決定"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/soshiki/kyouiku/kodomodaredemo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "45歳未満の住宅新築・建売取得に、村民最大70万円、村外転入者最大90万円を補助し、県外転入者は県加算の対象となる場合がある。",
+          "details": {
+            "program": "湯川村若者定住促進事業補助金",
+            "target": "満45歳未満で村内に住宅を新築または建売住宅を取得し、10年以上定住する等の要件を満たす方",
+            "rate": "住宅取得費の8分の1以内",
+            "resident": "村民は基本40万円、各種加算を含め最大70万円",
+            "migrant": "村外転入者は基本60万円、各種加算を含め最大90万円",
+            "additions": "18歳未満の子がいる世帯、村内就業、村内建築事業者利用で各10万円加算",
+            "prefectureAddition": "県外転入者は福島県制度により最大70万円が加算される場合あり",
+            "application": "検査済証発行日または売買契約日から12か月以内に申請"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/kurashi-top/teiju-2-2-2.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "村は粗大ごみの定期回収日を設けず、有料の許可業者依頼または証明書を取得して環境センターへ自己搬入する。",
+          "details": {
+            "collection": "粗大ごみの村による定期収集日はなし",
+            "licensedCollector": "村の一般廃棄物収集運搬許可業者へ有料で依頼可能。料金は業者へ確認",
+            "directCarry": "住民課で当日有効の証明書を受け取り、会津若松地方広域市町村圏整備組合環境センターへ自己搬入",
+            "hours": "平日8時30分～12時、13時～16時30分",
+            "conditions": "家庭から出たごみを本人または家族が搬入し、事前に分別すること",
+            "sizeLimit": "長さ2メートル以内、木くずは太さ15センチメートル以内"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/kurashi-top/sodai.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地域防災計画と資料編を公開し、災害対応、避難所、要援護者支援等の防災体制を定める。",
+          "details": {
+            "plans": "湯川村地域防災計画（計画編・資料編）、災害時要援護者避難支援プラン、国民保護計画",
+            "coverage": "風水害、地震等の災害対応、避難所、情報伝達、要援護者支援、応急対策等",
+            "publicInformation": "村公式サイトの防災・安全ページと防災メールで情報を提供",
+            "guidance": "平時に地域防災計画、避難先、連絡方法を確認"
+          },
+          "source": {
+            "url": "https://www.vill.yugawa.fukushima.jp/site/gyousei-top/various-plans.html",
+            "checkedAt": "2026-07-24"
+          }
         }
       }
     },
@@ -86834,6 +87174,181 @@
       }
     },
     {
+      "code": "11348",
+      "prefectureCode": "11",
+      "prefecture": "埼玉県",
+      "name": "鳩山町",
+      "officialUrl": "https://www.town.hatoyama.saitama.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を鳩山町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "鳩山町に住所があり各種健康保険に加入する18歳到達後最初の年度末までの子ども",
+            "coverage": "保険診療による一部負担金を助成",
+            "procedure": "登録申請後に受給資格証を交付",
+            "excluded": "保険外費用、高額療養費・付加給付、他法令給付、学校管理下の災害共済給付対象等"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/hatonet/consultation/financial_support/medical_subsidy_for_children.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "小学6年生までの病児・病後児を会員制で預かる緊急支援を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "ファミリーサポートセンター・緊急サポートセンター事業",
+            "target": "町内在住で小学6年生までの子どもがいる利用会員",
+            "support": "病児・病後児の預かりや受診、保育所等からの急な呼び出し対応等",
+            "fee": "緊急サポートは7時から19時まで1時間900円、時間外1,100円、宿泊10,000円",
+            "procedure": "事前の会員登録が必要"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/kurashi/kosodate_hoiku/page003308.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯の0～2歳児等を無償化し、第2子以降も支援",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+            "multiChild": "町内在住の第2子以降の保育園等保育料を無償化",
+            "excluded": "食材料費、行事費、通園送迎費等の実費"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/kurashi/kosodate_hoiku/childcare_facility/page000490.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立幼稚園・小学校・中学校の給食費を無償化",
+          "eligibility": {
+            "minAgeMonths": 36,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "鳩山町立幼稚園・小学校・中学校に在籍する幼児・児童・生徒の保護者",
+            "coverage": "町立幼・小・中学校の学校給食費を町が負担し、保護者負担を無償化",
+            "period": "令和6年度から実施し、町の現行子育て支援策として案内",
+            "support": "令和8年度は給食食材費予算に給食充実追加費用も計上"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/akiya_bank/hatoyama_charm.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・通所・訪問型の産後ケアを産後1年以内の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "鳩山町に住所がある出産後1年以内の母親と赤ちゃんで、医療行為を必要とせず感染症にかかっていない母子",
+            "types": "宿泊型、通所型、訪問型",
+            "limit": "宿泊4泊5日まで、通所5日まで、訪問7回まで",
+            "fee": "宿泊1日2,500円、通所1日1,100円、訪問無料。食費等は実費"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/kurashi/ninsin_shussan/page003235.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "町内在住で保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで。未利用分の繰越不可",
+            "facility": "ひばりゆりかご保育園",
+            "fee": "1時間300円。課税状況等による減免、食事・おやつ等の別途費用あり"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/hatonet/consultation/page004385.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による住宅リフォーム工事費の一部を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "町内に住民登録があり、所有・居住する住宅を町内業者が改修する町税滞納のない人",
+            "condition": "消費税を除く20万円以上の個人住宅改修工事で、交付決定前に着工していないこと",
+            "amount": "対象工事費の5％、上限10万円",
+            "notes": "町は耐震診断・耐震改修の独自補助を現在実施していないため、住宅リフォーム補助を登録"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/kurashi/sumai_hikkosi/rifomujyokyakuhojyo/page002772.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを戸別収集または処理施設への直接搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "一辺の長さが80センチメートルを超える物または重量10キログラムを超える家庭ごみ",
+            "collection": "埼玉西部環境保全組合の戸別収集を利用可能",
+            "directDelivery": "可燃系は高倉クリーンセンター、不燃系は川角リサイクルプラザへ直接搬入",
+            "procedure": "最新の受付方法・手数料は町または埼玉西部環境保全組合の案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/kurashi/gomi_seikatsukankyo/gomi_recycle/gomi_recycling.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・地震・ため池等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "洪水・土砂災害、地震、ため池の各ハザードマップを公開",
+            "risks": "越辺川・鳩川の洪水浸水、土砂災害、地震の揺れ・建物被害・液状化、ため池決壊等",
+            "facilities": "浸水区域、避難場所、地域の危険度等を掲載",
+            "support": "家庭の避難経路・備蓄・地震対策の事前確認に利用可能"
+          },
+          "source": {
+            "url": "https://www.town.hatoyama.saitama.jp/kurashi/bousai_bouhan_koutsuanzen/bousai/hazardmap/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "12203",
       "prefectureCode": "12",
       "prefecture": "千葉県",
@@ -116168,6 +116683,208 @@
           },
           "source": {
             "url": "https://www.city.suwa.lg.jp/site/bousai/4380.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20207",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "須坂市",
+      "officialUrl": "https://www.city.suzaka.nagano.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を須坂市公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "令和8年4月診療分から0歳～18歳年度末までの保険診療自己負担を窓口無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "須坂市の福祉医療費受給者証を持つ0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の自己負担分を助成し、令和8年4月診療分から1か月1医療機関・1レセプト500円の自己負担を0円へ減額",
+            "procedure": "県内の対応医療機関等で新しい受給者証と保険資格確認書類を提示",
+            "reimbursement": "受給者証未提示や県外受診等は一旦支払い、必要書類を添えて申請",
+            "excluded": "学校管理下の負傷等で日本スポーツ振興センター災害共済給付の対象となる場合、保険適用外費用、第三者行為等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/2040/4/8254.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "未就学児は市内2施設、小学生はやすらぎ病児保育園で病児・病後児保育を利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "須坂市内在住で、病気または回復期のため集団保育・学校生活が困難かつ家庭保育ができない児童",
+            "facilities": "未就学児はさかた山風の子保育園『つくし』とやすらぎ病児保育園、小学生はやすらぎ病児保育園",
+            "capacity": "つくし1日4人、やすらぎ1日6人",
+            "hours": "つくしは平日8時～17時または当日申込9時～17時、やすらぎは平日8時30分～17時。小学生は17時30分まで",
+            "fee": "市内在住の未就学児は無料（3歳以上は主食代100円）、延長30分100円。市内在住小学生は4時間未満1,000円、4～8時間未満2,000円に食事等実費",
+            "procedure": "年度ごとの事前登録、施設への予約、利用申込書と診療情報提供書の提出が必要"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/10020/1/2/544.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.suzaka.nagano.jp/soshiki/10010/1/1365.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯の0～2歳児を無償化し、多子・低所得世帯の保育料を軽減",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "threeToFive": "保育園・認定こども園等の3～5歳児クラスは無償",
+            "underThree": "住民税非課税世帯の0～2歳児クラスは無償",
+            "calculation": "課税世帯の0～2歳児は市民税所得割額、保育時間、11階層区分により算定",
+            "multiChild": "生計を同一にする子どもを年齢制限なく第1子、第2子、第3子と数え、多子世帯や低所得世帯の軽減を実施",
+            "excluded": "バス代、給食費、教材費、制服代、延長保育料等の実費は別途"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/10020/1/1/515.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.suzaka.nagano.jp/soshiki/10020/1/1/516.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "令和8年度も小中学校給食を提供しているが、一般世帯の1食単価・月額・年額を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "confirmed": "令和8年4月以降の小学校・中学校・須坂支援学校の献立表と日々の給食提供を確認",
+            "support": "経済的理由で就学が困難な世帯には、就学援助制度で学校給食費を援助",
+            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、物価高騰対策等による公費負担後の一般世帯負担額、欠食時精算は学校給食センターまたは在籍校へ確認"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/10010/2/576.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.suzaka.nagano.jp/soshiki/10010/4/614.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1歳未満の母子に宿泊・通所・訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "須坂市に住所があり、家族等から十分な支援を受けにくい、育児不安や心身の不調等がある母と生後1歳未満の乳児",
+            "types": "宿泊型、通所型、訪問型。実施施設ごとに対応類型と受入月齢が異なる",
+            "care": "母体の休養・心身ケア、乳房ケア・授乳支援、沐浴等の育児相談、乳児の健康確認",
+            "fee": "訪問型はおおむね2時間1,600円。宿泊・通所型は施設・日数・世帯区分で異なり、市の減免制度あり",
+            "procedure": "健康づくり課へ利用申請し、承認後に希望施設・助産師と予約調整"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/2010/5/525.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から3歳未満の未就園児が月10時間まで利用できるこども誰でも通園制度を実施",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "須坂市に住所があり、生後6か月～満3歳未満で保育所・認定こども園・幼稚園等に在籍していない子ども",
+            "limit": "子ども1人につき月10時間まで",
+            "condition": "保護者の就労等の保育要件を問わず利用可能",
+            "fee": "施設ごとに設定し、国の標準額は1時間300円程度。給食・おやつ等の実費が別途必要な場合あり",
+            "procedure": "つうえんポータルから利用認定申請後、施設との初回面談と予約を行う",
+            "facilities": "市内の認定こども園・保育施設等で実施"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/10020/1/10/7659.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク登録住宅の購入・賃貸改修や家財処分等を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "cleanout": "家財道具等の処分費を2分の1、上限10万円補助",
+            "rentalRenovation": "賃貸空き家の改修費を2分の1、上限40万円。家財処分補助を使わない場合は上限50万円",
+            "purchaseRenovation": "購入空き家の改修費を2分の1、一般上限40万円・移住者上限60万円。家財処分補助を使わない場合は一般50万円・移住者70万円",
+            "sewer": "公共下水道接続工事費を上限50万円加算",
+            "registration": "相続登記費用を上限5万円補助",
+            "procedure": "改修・処分等の着手前に申請し、交付決定後に実施"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/mokuteki/hojokin_joseikin/4/3621.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "7～12月の間に地区ごと年1回、シール制の粗大ごみ特別収集を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "schedule": "各地区で7月から12月の間に年1回、土曜日午前に実施。日時・会場は地区回覧等で通知",
+            "target": "高さ・幅・奥行きのいずれかが50cm以上の家庭用可燃・不燃・資源物系粗大ごみ",
+            "fee": "粗大ごみ1点につき50円のシールを1枚貼り、氏名を記入して排出",
+            "sorting": "可燃性粗大ごみ、不燃性粗大ごみ、資源物として分別",
+            "excluded": "事業系ごみ、スプリング入りマットレス・ソファー、市で処理できないもの等は対象外",
+            "direct": "引越し等の大量ごみは品目に応じて処理施設へ直接搬入可能"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/3030/1/271.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "2025年3月改訂の洪水・土砂災害ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "flood": "千曲川、松川、八木沢川、百々川、鮎川の氾濫時の浸水想定区域を掲載",
+            "landslide": "土砂災害警戒区域・危険区域を掲載",
+            "evacuation": "指定緊急避難場所・避難所と避難経路、避難時の注意事項を案内",
+            "update": "2025年3月改訂版を全戸配布し、市公式サイトでも公開",
+            "preparation": "自宅周辺の危険区域、避難場所、経路を平時に確認"
+          },
+          "source": {
+            "url": "https://www.city.suzaka.nagano.jp/soshiki/1010/8/1/499.html",
             "checkedAt": "2026-07-24"
           }
         }
