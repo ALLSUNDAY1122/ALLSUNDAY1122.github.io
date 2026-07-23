@@ -1,74 +1,77 @@
-name: Finalize Miyaki Regional Merge
+name: Jichitai Compare CI
 
 on:
   pull_request:
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
     branches:
-      - region/west
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  finalize-miyaki:
-    if: github.head_ref == 'data/41346-miyaki-westb'
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - name: Checkout Miyaki branch
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: data/41346-miyaki-westb
           fetch-depth: 0
 
-      - name: Fetch regional base
-        run: git fetch origin +refs/heads/region/west:refs/remotes/origin/region/west
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Finalize task and west-b checkpoint
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
 
-          const taskPath = 'operations/tasks/41346.json';
-          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
-          task.status = 'merged';
-          task.pullRequestNumber = 1325;
-          task.lastUpdatedAt = '2026-07-23T18:24:00+09:00';
-          task.lastUpdatedBy = '西日本調査班B・統括⑤';
-          task.notes = Array.isArray(task.notes) ? task.notes : [];
-          const taskNote = 'CI run #3733成功後、地方統合用statusへ更新。';
-          if (!task.notes.includes(taskNote)) task.notes.push(taskNote);
-          fs.writeFileSync(taskPath, `${JSON.stringify(task)}\n`);
-
-          const checkpointPath = 'operations/control/session-checkpoints/west-b.json';
-          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
-          checkpoint.completedSinceSplit = Array.isArray(checkpoint.completedSinceSplit) ? checkpoint.completedSinceSplit : [];
-          if (!checkpoint.completedSinceSplit.some((item) => item?.code === '41346')) {
-            checkpoint.completedSinceSplit.push({
-              code: '41346',
-              name: 'みやき町',
-              pullRequestNumber: 1325,
-              ciRunNumber: 3733
-            });
-            checkpoint.remainingUninvestigatedCount = Math.max(0, Number(checkpoint.remainingUninvestigatedCount ?? 0) - 1);
-          }
-          checkpoint.updatedAt = '2026-07-23T18:24:00+09:00';
-          checkpoint.status = 'ready';
-          checkpoint.currentMunicipality = null;
-          checkpoint.workingBranch = null;
-          checkpoint.pullRequestNumber = 1325;
-          checkpoint.ciStatus = 'success';
-          checkpoint.nextAction = '西日本調査班Bの次対象自治体についてtask・ブランチ・PR重複を確認し、未着手なら必須9制度調査を開始する。';
-          fs.writeFileSync(checkpointPath, `${JSON.stringify(checkpoint)}\n`);
-          NODE
-
-      - name: Restore standard workflow and commit
-        run: |
-          git show origin/region/west:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml \
-            jichitai-compare/operations/tasks/41346.json \
-            jichitai-compare/operations/control/session-checkpoints/west-b.json
-          git commit -m 'Finalize Miyaki regional merge state'
-          git push origin HEAD:data/41346-miyaki-westb
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
