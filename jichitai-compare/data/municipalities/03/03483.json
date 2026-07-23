@@ -1,0 +1,170 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03483",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "岩泉町",
+  "officialUrl": "https://www.town.iwaizumi.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を岩泉町公式情報で調査し、8制度をverified、病児・病後児保育をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達年度末まで、所得制限なく保険診療の自己負担額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "医療費給付事業（子ども）",
+        "target": "出生の日から18歳到達後最初の3月31日まで",
+        "incomeLimit": "なし",
+        "copay": "高校生以下は受給者負担額なしのため、保険診療分の一部負担金を助成",
+        "application": "受給者証の交付申請が必要",
+        "excluded": "保険適用外費用や他制度から給付される額は対象外"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2019100100020/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "needs_medium_review",
+      "summary": "町の現行子育て案内と計画で専用の病児・病後児保育について、実施施設・対象年齢・料金・予約方法を確定できない。",
+      "details": {
+        "reviewReason": "現行公式ページでは小児科オンライン相談等は確認できるが、子どもを預かる専用事業の利用案内を確認できない",
+        "historicalStatus": "過去の町議会資料では病後児保育を実施していない旨が示されているが、現行状況の確定には追加確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/category/lifescene/kosodate/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "町内在住で町立こども園を利用する0～5歳児の基本保育料を、年齢・人数・所得にかかわらず無償化している。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "support": "町立こども園の基本保育料完全無償化",
+        "target": "岩泉町内に居住する全ての園児",
+        "start": "令和5年7月",
+        "incomeLimit": "なし",
+        "excluded": "延長保育、一時保育、休日保育等の特別保育料や実費は対象外"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2023061300016/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度予算に学校給食無償化事業を計上し、学校給食費の無償化を継続している。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "program": "学校給食無償化事業",
+        "fiscalYear": "令和8年度",
+        "budget": "2,717万円",
+        "target": "町の学校給食提供対象となる小中学生",
+        "application": "通常の学校給食について保護者の給食費負担を軽減"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2026032600047/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、授乳・育児相談や母親の心身ケアを行う産後ケア事業を実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "program": "産後ケア事業",
+        "target": "産後1年未満の母親と乳児",
+        "services": "授乳・育児相談、母親の身体的・心理的ケア、育児支援",
+        "implementation": "町の第3期子ども・子育て支援事業計画で継続実施",
+        "usagePlan": "計画上、年間24人程度の利用を見込む",
+        "reviewNote": "利用形態、料金、回数は申請時に町へ確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2025052900021/file_contents/kodomoshienplan3.pdf",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件なしで月10時間まで利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所・認定こども園等を利用していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで",
+        "facility": "いわいずみこども園",
+        "fee": "1時間300円。生活保護世帯・住民税非課税世帯等に減免あり",
+        "application": "町へ認定申請後、総合支援システムで初回面談・利用予約"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2026030500011/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "住宅取得・改修、空き家の片付け・解体を対象とする住まいるづくり事業補助金を実施している。",
+      "details": {
+        "program": "岩泉町住まいるづくり事業補助金",
+        "supportTypes": "住宅取得補助、住宅改修補助、空き家片付け等補助、空き家解体補助",
+        "application": "交付申請書と必要書類を住宅対策室へ提出",
+        "conditions": "対象者・住宅・工事内容・着手時期等は各補助制度の要件による",
+        "currentStatus": "町公式ページで申請様式と交付要綱を公開"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2025033100013/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは事前申込みのうえ指定場所へ出し、1回5点まで収集を依頼できる。",
+      "details": {
+        "program": "粗大ごみ収集",
+        "application": "収集日の前日までに町へ電話で申込み",
+        "collection": "5月から10月まで、各地区年2回程度",
+        "limit": "1回5点まで",
+        "preparation": "粗大ごみ処理券を購入して貼付し、指定された場所へ搬出",
+        "largeAmount": "引越し等の多量ごみは処理施設への直接搬入を案内"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2024060500032/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・洪水・内水氾濫・土砂災害の危険箇所と避難所を確認できるWEB版ハザードマップを公開している。",
+      "details": {
+        "map": "岩泉町WEB版ハザードマップ",
+        "coverage": "津波、洪水、内水氾濫、土砂災害",
+        "facilities": "指定避難所、指定緊急避難場所、消防水利等",
+        "features": "地図・航空写真切替、縮尺変更、任意地点の印刷",
+        "languages": "英語、中国語、韓国語に対応"
+      },
+      "source": {
+        "url": "https://www.town.iwaizumi.lg.jp/docs/2026022700023/",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
