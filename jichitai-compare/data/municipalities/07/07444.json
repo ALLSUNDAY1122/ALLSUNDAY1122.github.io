@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07444",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "三島町",
+  "officialUrl": "https://www.town.mishima.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を三島町公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "三島町に住所がある乳幼児・子どもの保険診療の自己負担分を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "乳幼児・子ども医療費助成",
+        "target": "三島町に住所があり健康保険に加入する乳幼児・18歳年度末までの子ども",
+        "support": "保険診療の自己負担分を町が助成",
+        "additionalSupport": "インフルエンザを含む予防接種費用、町営バス料金も無料と案内",
+        "application": "受給資格登録等の手続きは町民課保健福祉係へ確認",
+        "excluded": "保険適用外費用、高額療養費・付加給付相当額等は対象外"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/site/ijyu/44.html", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の子育て・保育所情報で、現行の病児・病後児保育施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "researchResult": "町公式の子育て支援一覧、保育所情報、町民課情報を確認したが、利用者向け病児・病後児保育案内を確認できなかった",
+        "availableAlternatives": "保護者の傷病等に対応する一時保育を三島保育所で実施",
+        "caution": "広域利用を含む利用可否は町民課保健福祉係または教育委員会へ確認が必要"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/life/3/11/45/", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "生後6か月から就学前まで、保育所の利用料と給食費を無料とする。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "details": {
+        "facility": "三島保育所",
+        "target": "保育所入所要件を満たす生後6か月から就学前までの子ども",
+        "support": "保育料および給食費を無料化",
+        "hours": "月～土曜7時30分～18時30分。土曜利用は事前申込が必要",
+        "temporaryCare": "入所要件を満たさない場合も保護者の傷病等により一時保育を利用可能。半日500円、1日900円"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/site/ijyu/44.html", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "三島町立小学校・中学校の学校給食費を無料とする。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "三島町立小学校・中学校の児童生徒",
+        "support": "小中学校の学校給食費を全額無料化",
+        "additionalSupport": "全児童生徒へのタブレット・モバイルWi-Fi無償貸出、英語検定料全額補助等も実施",
+        "purpose": "子育て世帯の教育費負担軽減"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/site/ijyu/44.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.mishima.fukushima.jp/soshiki/shougai-gakushuu/2902.html", "checkedAt": "2026-07-24"}]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "町内在住の1歳未満の乳児と母親を対象に、助産所等で産後ケアを実施し、町が利用料金の約9割を負担する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "program": "産後ケア事業",
+        "target": "三島町に住所がある1歳未満の乳児と、産後の心身不調や育児不安がある母親",
+        "services": "助産師による母乳ケア、育児相談・指導、母体の心身の疲労回復促進等",
+        "provider": "助産所等の委託施設",
+        "support": "町が利用料金の9割程度を負担",
+        "application": "利用前に町民課保健福祉係へ相談・申請"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/site/ijyu/44.html", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間の範囲内で時間単位利用",
+        "fee": "1時間当たりの利用料負担あり。具体額は三島保育所または教育委員会へ確認",
+        "facility": "三島保育所",
+        "application": "事前申請と面談が必要"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/soshiki/shougai-gakushuu/7230.html", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家取得・改修は対象経費の3分の2以内で上限100万円、町内業者による住宅新築は上限150万円を補助する。",
+      "details": {
+        "program": "三島町空き家・住宅取得改修費等補助金",
+        "vacantHouse": "移住・定住に伴う空き家取得・改修は対象経費の3分の2以内、上限100万円",
+        "newConstruction": "町内事業者利用は上限150万円、町外事業者利用は上限100万円",
+        "housingRenovation": "新たな世帯員増加を伴う住宅増築・改修は上限100万円",
+        "requirements": "原則5年以上の定住、町税等の滞納なし、交付決定前に着手しないこと等",
+        "prefectureAddition": "県外移住者で県制度要件を満たす場合は加算対象となる場合あり"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/site/ijyu/3021.html", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "一辺70センチメートルを超える家具・楽器・健康器具等を粗大ごみとして分別し、品目別の排出方法に従う。",
+      "details": {
+        "definition": "指定袋に入らない、または一辺70センチメートルを超える大型家庭ごみ",
+        "examples": "カラーボックス、カラオケ機器、弦楽器、健康器具、三輪車、ベッドマット等",
+        "preparation": "スプリング入り製品はスプリングを外し、原動機付自転車は燃料を抜く",
+        "classification": "町の『ゴミ あいうえお分別分類表』で品目ごとに粗大・可燃・不燃・有料ごみ等を確認",
+        "caution": "農機具・処理困難物等は有料回収または専門業者への相談が必要"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/soshiki/choumin/122.html", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害、風水害、避難施設等を掲載した防災マップ2024と、ため池ハザードマップを公開する。",
+      "details": {
+        "maps": "三島町防災マップ2024、三島町ため池ハザードマップ",
+        "coverage": "土砂災害、風水害、避難行動、非常時持出品、避難施設等",
+        "ponds": "ため池決壊時の浸水想定範囲、所在地、貯水量、緊急連絡先等を掲載",
+        "guidance": "平時に地域の危険箇所と避難経路を確認"
+      },
+      "source": {"url": "https://www.town.mishima.fukushima.jp/soshiki/soumu/263.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [{"url": "https://www.town.mishima.fukushima.jp/soshiki/sangyou-kensetsu/170.html", "checkedAt": "2026-07-24"}]
+    }
+  }
+}
