@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "41387",
+  "prefectureCode": "41",
+  "prefecture": "佐賀県",
+  "name": "玄海町",
+  "officialUrl": "https://www.town.genkai.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を玄海町公式情報で調査し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までの保険診療自己負担を月額上限内に軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "玄海町に住所があり健康保険に加入する、18歳到達後最初の3月31日までのこども",
+        "outpatient": "1月1医療機関につき1回目・2回目各500円、3回目以降は自己負担なし",
+        "inpatient": "1月1医療機関につき1,000円",
+        "pharmacy": "調剤薬局は自己負担なし",
+        "incomeLimit": "所得制限なし"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/24/1200.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後3か月から小学6年生までを病後児保育施設で一時保育",
+      "eligibility": {
+        "minAgeMonths": 3,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facility": "病後児保育施設わんわん",
+        "target": "病気回復期にあり集団保育が困難な生後3か月から小学6年生までの児童",
+        "hours": "月曜日から金曜日の8時30分から17時30分",
+        "fee": "1回1,000円",
+        "application": "事前登録と利用申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/24/33214.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化し、3～5歳児の副食費も町独自に支援",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "認可保育所・認定こども園等の3～5歳児は保育料無償",
+        "ageZeroToTwo": "住民税非課税世帯の0～2歳児は保育料無償",
+        "mealCosts": "町内在住の3～5歳児について、町独自に副食費を無償化。町外施設利用者は償還払いに対応",
+        "excludedCosts": "主食費、送迎費、行事費等の実費は原則対象外"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/24/35876.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.genkai.lg.jp/soshiki/24/36834.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町内在住の小中学生等の学校給食に要する経費を補助",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "玄海町に住所があり、町立または町外の小中学校・特別支援学校等に通学する児童生徒の保護者",
+        "support": "学校給食に要する経費を補助し、子育て世帯の負担を軽減",
+        "application": "在籍校や通学状況に応じて町への申請・確認が必要",
+        "scope": "一律無償化の表現は避け、町公式案内で確認できる給食経費補助として登録"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/8/44924.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後の母子へ宿泊型・日帰り型・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "玄海町に住所があり、産後の心身ケアや育児支援を必要とする産後1年未満の母親と乳児。利用類型・施設により対象月齢が異なる",
+        "types": "宿泊型、日帰り型、訪問型",
+        "care": "母体の心身・乳房ケア、授乳・沐浴等の育児相談、乳児の健康確認",
+        "application": "利用前にこども・ほけん課へ相談・申請"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/24/83154.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を月10時間、1時間300円で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保育所・認定こども園等に通っていない生後6か月から満3歳未満のこども",
+        "facilities": "あおば園、ふたば園",
+        "limit": "1人につき月10時間まで",
+        "fee": "1時間300円。生活保護世帯は無料、住民税非課税世帯等は所得区分に応じて減額",
+        "application": "町で利用認定後、実施施設への事前面談・予約が必要"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/24/92582.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を補助し、子育て世帯には加算を実施",
+      "details": {
+        "target": "空き家バンク登録物件の購入者・賃借者等で、改修後5年以上居住する意思がある方",
+        "support": "利用者による改修は対象経費の2分の1、町内業者施工の場合は3分の2",
+        "amount": "上限200万円。15歳以下の子ども1人につき50万円を加算",
+        "ownerSupport": "所有者による改修や家財処分等にも別枠の補助あり",
+        "application": "契約・着工前の申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/8/73094.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定袋に入らない粗大ごみを地区別収集または処理施設への直接搬入で処理",
+      "details": {
+        "definition": "町指定ごみ袋に入らない家具・寝具・自転車等を粗大ごみとして区分",
+        "collection": "地区別のごみ収集カレンダーに従って指定場所へ排出",
+        "carryIn": "多量ごみは分別後、唐津市清掃センターへの直接搬入または一般廃棄物収集運搬許可業者への依頼に対応",
+        "excluded": "家電リサイクル対象品、処理困難物、事業系廃棄物等は通常収集対象外"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/soshiki/9/62396.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・洪水・土砂災害・高潮・津波等の地域別ハザードマップを公開",
+      "details": {
+        "coverage": "地震、洪水、土砂災害、高潮、津波、避難所・避難経路等",
+        "maps": "2025年3月更新の災害種別・地区別ハザードマップを公開",
+        "guidance": "自宅周辺の危険区域と避難場所・経路を平時から確認するよう案内"
+      },
+      "source": {
+        "url": "https://www.town.genkai.lg.jp/site/bousai-portal/62678.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}

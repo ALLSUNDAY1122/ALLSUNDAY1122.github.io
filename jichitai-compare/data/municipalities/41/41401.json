@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "41401",
+  "prefectureCode": "41",
+  "prefecture": "佐賀県",
+  "name": "有田町",
+  "officialUrl": "https://www.town.arita.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を有田町公式情報で調査し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までの保険診療自己負担を月額上限内に軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "有田町に住民登録がある0歳から18歳到達後最初の3月31日までのこども",
+        "inpatient": "1月1医療機関につき1,000円まで",
+        "outpatient": "未就学児は1月1医療機関2回まで各500円、小中高校生は1月1医療機関1,000円まで",
+        "pharmacy": "調剤薬局は自己負担なし",
+        "method": "県内等は受給資格証による現物給付、その他は償還払い"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kiji003887/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "1歳から小学3年生までを町内病後児保育室で一時保育",
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 9
+      },
+      "details": {
+        "facility": "病後児保育室さくらんぼ",
+        "target": "町内在住の1歳から小学3年生までで、病気回復期にあり集団保育が困難な児童",
+        "capacity": "1日2人",
+        "fee": "4時間まで900円、1日1,800円",
+        "otherFacilities": "町内在園児施設や近隣自治体の病児・病後児保育施設も案内"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kiji0031114/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "認可保育所・認定こども園等の3歳以上児は保育料無償",
+        "ageZeroToTwo": "生活保護・住民税非課税世帯の0～2歳児は保育料無償",
+        "mealCosts": "所得区分・世帯状況により副食費を免除。0～2歳児は保育料に給食費を含む",
+        "calculation": "課税世帯の0～2歳児保育料は市町村民税額等により決定"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kiji003386/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校の学校給食費の一部を補助し、物価高騰による負担を軽減",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "有田町立小学校・中学校に在籍する児童生徒の保護者",
+        "support": "学校長を通じて給食食材費等の一部を補助し、保護者負担を軽減",
+        "amount": "補助額は年度予算と交付要綱の別表等に基づき決定",
+        "scope": "全額無償化とは断定せず、公式要綱で確認できる負担軽減補助として登録"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/reiki_int/reiki_honbun/r306RG00001154.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊型・日帰り型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "有田町に住所がある出産後1年未満の母親と乳児。施設により対象月齢が異なる",
+        "types": "ショートステイ（宿泊型）、デイサービス（日帰り型）",
+        "limit": "宿泊型は通算最大5泊、日帰り型は通算最大5日",
+        "fee": "利用料は原則公費負担で、実施機関ごとの食事代を自己負担。生活保護世帯は無料",
+        "care": "母体の体調・乳房ケア、休養、授乳・沐浴等の育児相談"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kosodate/kiji0033288/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から2歳児を町内全園で週1～2回定期的に受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "target": "町内在住で保育所等に通っていない生後6か月から2歳児。年度途中に3歳になった場合は年度末まで利用可能",
+        "facilities": "町内の保育所・認定こども園8園",
+        "frequency": "月曜日から金曜日のうち週1回または週2回",
+        "fee": "週1回は月額6,000円、週2回は月額12,000円。低所得世帯等は減免の場合あり",
+        "purpose": "集団生活経験、保護者負担軽減、継続的な子育て相談支援"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kosodate/kiji0033123/",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き物件インフォメーション登録住宅の改修費を2分の1、最大50万円補助",
+      "details": {
+        "target": "登録された住居用空き家を売買で取得し、有田町へ移住して入居する購入者",
+        "support": "20万円以上の対象改修費の2分の1",
+        "amount": "上限50万円",
+        "conditions": "対象物件入居後1年以内で、工事内容・契約・支払いを確認できること",
+        "excluded": "別棟、解体のみ、外構、太陽光設備、家具・エアコン購入等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kiji003693/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみシールを貼って指定集積所へ排出し、処理施設への直接搬入にも対応",
+      "details": {
+        "collection": "品物1点につき300円の粗大ごみシール1枚を貼り、指定日に指定集積所へ排出",
+        "reservation": "通常の粗大ごみ収集は予約不要",
+        "carryIn": "さが西部クリーンセンターまたは有田町リサイクルプラザへ直接搬入可能。搬入料金が必要",
+        "largeVolume": "引越し等の多量ごみは集積所に出さず、分別して直接搬入",
+        "excluded": "家電リサイクル対象品等は通常収集対象外"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kiji003801/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震・ダム越水等のハザードマップを公開",
+      "details": {
+        "coverage": "有田川水系の洪水浸水想定、土砂災害警戒区域・特別警戒区域、地震、避難所、ダム越水等",
+        "maps": "冊子版とWeb版の有田町ハザードマップを公開",
+        "guidance": "危険箇所と避難場所・避難経路を平時から確認するよう案内"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/bousai/kiji0032283/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}

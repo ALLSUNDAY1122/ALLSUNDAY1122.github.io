@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "42201",
+  "prefectureCode": "42",
+  "prefecture": "長崎県",
+  "name": "長崎市",
+  "officialUrl": "https://www.city.nagasaki.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を長崎市公式情報で調査し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "高校生世代までの保険診療自己負担を月額上限内に軽減し、2026年度は0歳児を無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "長崎市に住所がある0歳から18歳到達後最初の3月31日までのこども",
+        "copay": "医療機関ごと1日800円、同一医療機関で月1,600円上限。調剤薬局は自己負担なし",
+        "infant": "2026年度は0歳児の福祉医療費自己負担額を無料化",
+        "method": "未就学児・小中学生は対象地域で現物給付、高校生世代は原則償還払い"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/site/e-kao/6488.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nagasaki.lg.jp/page/2404.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "乳幼児から小学6年生までを市内の病児・病後児保育施設で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "市内在住の乳児・幼児および小学6年生までの児童",
+        "fee": "1人1日2,000円。食事代等は別途。生活保護世帯・市民税非課税世帯は利用料無料",
+        "facilities": "医療機関併設等の複数施設で実施",
+        "application": "事前登録・予約が必要。利用時間や休所日は施設ごとに異なる"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/site/e-kao/6449.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と対象となる第2子以降の0～2歳児の保育料を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "3～5歳児クラスの保育料を国制度で無償化",
+        "ageZeroToTwo": "住民税非課税世帯の0～2歳児は無償",
+        "siblings": "小学校就学前の範囲で施設を同時利用する2人目以降は0円。所得割97,000円未満世帯はおおむね18歳までの最年長児から数える",
+        "excludedCosts": "給食費、延長保育料、送迎費、行事費等は原則対象外"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/site/e-kao/45621.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nagasaki.lg.jp/site/e-kao/20145.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は市立小学校給食費を無償化し、中学校は年額48,400円",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "市立小学校児童の保護者負担額は0円",
+        "juniorHigh": "市立中学校は年額48,400円",
+        "support": "小学校は国交付金と市負担で無償化。中学校は物価高騰分を市が負担し保護者負担を据え置き",
+        "fiscalYear": "令和8年度"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/page/4447.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子へ宿泊・日帰り・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "長崎市に住所があり産後ケアを希望する産後1年以内の母親と乳児",
+        "types": "産婦人科・助産院での宿泊型、日帰り型、訪問型",
+        "subsidy": "一般世帯は1回2,500円を上限に5回まで減免",
+        "feeReduction": "市県民税非課税世帯・生活保護世帯は無料"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/site/e-kao/6493.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を月10時間、標準1時間300円で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "認可保育所、認定こども園、幼稚園等に在籍していない生後6か月から満3歳未満のこども",
+        "limit": "1人あたり月10時間まで",
+        "fee": "標準1時間300円。生活保護世帯0円、市民税非課税世帯100円",
+        "additionalCosts": "給食・おやつ等を利用する場合は別途料金がかかる場合あり"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/site/e-kao/52794.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て・多子世帯の中古住宅取得または改修費を5分の1、最大60万円補助",
+      "details": {
+        "target": "18歳未満の子がいる子育て世帯または3人以上いる多子世帯で、市内の中古住宅を取得・改修する世帯",
+        "support": "補助対象経費の5分の1以内",
+        "amount": "子育て世帯上限40万円、空き家は50万円。多子世帯上限50万円、空き家は60万円",
+        "conditions": "売買契約・改修着手前の申請、市内業者施工、居住面積60平方メートル以上等",
+        "availability": "2026年7月8日時点の予算残額は150万円で、予算到達時に受付終了"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/page/5259.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "事前申込後、処理券を貼付して指定場所へ出す有料戸別収集",
+      "details": {
+        "application": "粗大ごみ受付センターへ事前申込",
+        "fee": "2026年4月以降、長さ1m以下・30kg以下は730円、1m超2m未満・30kg超60kg未満は1,460円",
+        "payment": "指定金融機関等で粗大ごみステッカーを購入し、受付番号または氏名を記入して貼付",
+        "collection": "指定日の指定場所へ排出。原則、家屋内からの搬出は行わない"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/page/3031.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震・津波・ため池等のハザードマップを公開",
+      "details": {
+        "coverage": "洪水浸水想定、土砂災害警戒区域、地震、津波、ため池、大規模盛土造成地等",
+        "maps": "災害種別のハザードマップと地域防災マップを公開",
+        "updated": "洪水ハザードマップは2025年8月更新、地域防災マップは2026年6月更新",
+        "guidance": "自宅周辺の危険区域と避難場所・経路を平時から確認するよう案内"
+      },
+      "source": {
+        "url": "https://www.city.nagasaki.lg.jp/life/6/49/197/index.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}

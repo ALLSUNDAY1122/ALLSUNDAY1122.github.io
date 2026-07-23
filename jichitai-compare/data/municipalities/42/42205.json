@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "42205",
+  "prefectureCode": "42",
+  "prefecture": "長崎県",
+  "name": "大村市",
+  "officialUrl": "https://www.city.omura.nagasaki.jp/",
+  "status": "verified",
+  "summary": "必須9制度を大村市公式情報で調査し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校生世代までの保険診療自己負担を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "大村市に住民票がある0歳から18歳到達後最初の3月31日までの子ども",
+        "copay": "1か月・1医療機関ごとに1日800円、2日以上1,600円を自己負担。院外薬局は自己負担なし",
+        "scope": "健康保険適用の医療費。入院時食事療養費や保険外診療等は対象外",
+        "application": "受給資格認定申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/fukushiiryo/kenko/fukushi/fukushiiryo/nyuyoji.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "0歳から小学6年生までを市内2医療機関の病児保育で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "facilities": "野口内科こども医院、田川小児科",
+        "hours": "月曜日から土曜日。施設により8時または8時30分から18時",
+        "fee": "1人1日2,000円。市民税非課税世帯・生活保護世帯は無料。時間外は延長料500円",
+        "application": "事前登録と医師の診断が必要"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/kodomokyufu/kenko/kosodate/nyuyoujishouni/byojihoiku.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上児等を無償化し、同時利用の第2子以降も保育料無料",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "幼稚園・保育所等を利用する3歳以上児は保育料無料",
+        "ageZeroToTwo": "住民税非課税世帯の0～2歳児は無料",
+        "siblings": "同一世帯から2人以上が同時に保育所等を利用する場合、第2子以降を無償化",
+        "excludedCosts": "主食費・副食費・送迎費等は原則実費"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/kodomoriyo/kenko/kosodate/hoikujo/hoikuryou.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度から市立小中学校の給食費を完全無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "大村市立小学校・中学校の児童生徒",
+        "support": "保護者の給食費負担はゼロ。申請不要",
+        "reference": "小学校年額60,230円、中学校年額74,260円相当",
+        "additional": "アレルギー・長期欠席・市外学校在学等には給食費相当額補助制度あり"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/kyuusyoku/kyoiku/kyoiku/shiritsugakko/kyushoku/kyushokuhi.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・通所・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "大村市に住所がある産後1年未満の人",
+        "types": "宿泊型、通所型、訪問型",
+        "limit": "3類型を合わせて7日以内",
+        "fee": "宿泊型は5日目まで1日1,200円、通所・訪問型は5日目まで無料。6日目以降は類型別負担あり",
+        "care": "母体の体調管理、授乳・沐浴・育児相談等"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/oyako/kenko/ninshin/jose/sangocare.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "市内在住で保育所等に在園していない生後6か月から満3歳未満の子ども",
+        "limit": "1人あたり月10時間まで。翌月繰越不可",
+        "fee": "1時間300円程度。施設により異なり、所得等に応じた減免あり",
+        "application": "市の利用認定後、総合支援システムで初回面談と予約が必要"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/kodomoriyo/kenko/kosodate/sonota/kodomo-daredemo.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新たな3世代同居・近居に伴う住宅取得・改修費を補助",
+      "details": {
+        "target": "2026年4月1日以降に新たに同居または近居する3世代世帯",
+        "eligibleWorks": "住宅の新築、取得、改修工事",
+        "support": "補助対象経費の5分の1",
+        "amount": "上限40万円",
+        "period": "2026年5月7日から12月25日まで。予算終了で締切"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/kenchikushidou/kurashi/sumai/jutaku/sannsedaidoukyokinnkyo.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは環境センターへの直接搬入または許可業者へ依頼",
+      "details": {
+        "collection": "ベッド、タンス、ソファー、マットレス等はごみ集積所へ排出不可",
+        "carryIn": "当日に環境センターへ電話連絡し、直接搬入",
+        "fee": "搬入ごみ手数料が必要",
+        "alternative": "市の許可を受けた収集運搬業者へ有料で依頼可能"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/kankyousoumu/faq/kurashi/gomi/dashikata/025.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・津波・高潮等を掲載する防災マップを公開",
+      "details": {
+        "coverage": "洪水浸水想定区域、土砂災害、津波、高潮、避難所等",
+        "updated": "2026年に河川の浸水想定区域見直しと高潮ハザードマップ追加を反映",
+        "distribution": "市役所・各出張所で配布し、市公式サイトでも公開",
+        "guidance": "平時から避難場所・経路と危険箇所を確認するよう案内"
+      },
+      "source": {
+        "url": "https://www.city.omura.nagasaki.jp/bousai/kurashi/anzen/bosai/hazardmap/bousaimap.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}

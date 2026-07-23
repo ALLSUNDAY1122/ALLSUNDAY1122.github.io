@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "42204",
+  "prefectureCode": "42",
+  "prefecture": "長崎県",
+  "name": "諫早市",
+  "officialUrl": "https://www.city.isahaya.nagasaki.jp/",
+  "status": "verified",
+  "summary": "必須9制度を諫早市公式情報で調査。8制度をverified、現行の対象年齢・料金を市公式ページで確認できない病児保育をunavailableとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "中学校卒業までの子どもと高校生世代の保険診療費の一部を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "諫早市に住所がある中学校卒業までの子どもおよび高校生世代",
+        "support": "健康保険が適用される医療費の自己負担額の一部を支給",
+        "application": "受給資格認定と、対象区分に応じた現物給付または支給申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/18/1131.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "市が前田小児科・ますだ小児科内科医院へ委託して病児保育を実施しているが、現行の対象年齢・料金を市公式ページで確認できない",
+      "details": {
+        "facilities": "前田小児科、ますだ小児科内科医院",
+        "confirmed": "病気中のこどもを保護者に代わって一時保育",
+        "availability": "対象年齢、利用料金、利用時間は外部の子育てネットまたは担当課への確認が必要"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/17/1137.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等を無償化し、認可保育施設の同時在園第2子以降の保育料も無料",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreeToFive": "国制度により3～5歳児クラスの保育料を無償化",
+        "ageZeroToTwo": "住民税非課税世帯の0～2歳児は国制度により無償化",
+        "siblingsHighIncome": "市民税所得割57,700円以上は、就学前児童のうち同時入所する第2子以降を無料",
+        "siblingsLowIncome": "市民税所得割57,700円未満は、第1子の年齢に関係なく世帯の第2子以降を無料"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/17/12846.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市立小・中学校の学校給食費を完全無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "諫早市立小学校・中学校に在籍する児童生徒の保護者",
+        "support": "2024年4月以降に提供する学校給食費を無償化",
+        "application": "無償化のみの手続きは不要。新入学・転入時等は給食申込書が必要",
+        "exclusion": "生活保護の教育扶助を受ける保護者は制度上の対象外"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/84/22868.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ短期入所・通所・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "諫早市に住所があり、心身の不調や育児不安等で産後ケアを必要とする出産後1年未満の母親と乳児",
+        "types": "短期入所型、通所型、訪問型",
+        "care": "母親の心身・乳房ケア、乳児の発育相談、授乳・沐浴等の育児指導",
+        "fee": "食事代等の実費が別途必要な場合あり。生活保護世帯は無料"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/22/37179.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を諫早中央保育所で月10時間まで受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保育所等に通っていない生後6か月から満3歳未満のこども",
+        "facility": "諫早中央保育所",
+        "limit": "こども1人につき月10時間まで",
+        "start": "2026年4月",
+        "application": "原則オンライン申請後、審査・面談を経て利用"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/17/41909.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "新たに3世代で同居・近居する住宅の新築・改修・取得費を最大40万円補助",
+      "details": {
+        "target": "新たに3世代で同居または近居するため住宅を新築・改修・取得する世帯",
+        "support": "補助対象経費の5分の1以内",
+        "amount": "住宅1件あたり上限40万円",
+        "conditions": "改修は市内事業者施工。交付決定前の工事・売買契約は対象外",
+        "applicationPeriod": "2026年4月7日から12月18日。予算到達時は早期終了"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/64/1523.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを月1回収集し、1点310円の収集券を貼って排出",
+      "details": {
+        "target": "タンス、机、ソファー、自転車など指定袋に入らない長尺物以外のもの",
+        "collection": "月1回の指定日に収集。夏季は収集なし",
+        "fee": "粗大ごみ用収集券1枚310円",
+        "preparation": "木製家具の金属・ガラス部分は取り外して分別。解体して指定袋に入る場合は区分ごとに通常排出可能",
+        "excluded": "家電リサイクル法対象機器、処理困難物等は市収集対象外"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/38/1797.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・ため池と地域別防災マップを公開",
+      "details": {
+        "coverage": "河川洪水浸水想定区域、土砂災害警戒区域・特別警戒区域、農業用ため池決壊時の浸水想定、避難場所・避難経路",
+        "maps": "災害種別のハザードマップと町内会・自治会作成の地域防災マップを公開",
+        "guidance": "地域の危険箇所や一時避難場所を確認し、訓練等を通じて定期的に更新するよう案内"
+      },
+      "source": {
+        "url": "https://www.city.isahaya.nagasaki.jp/soshiki/3/36862.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}

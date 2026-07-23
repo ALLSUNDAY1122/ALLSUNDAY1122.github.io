@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "42207",
+  "prefectureCode": "42",
+  "prefecture": "長崎県",
+  "name": "平戸市",
+  "officialUrl": "https://www.city.hirado.nagasaki.jp/",
+  "status": "verified",
+  "summary": "必須9制度を平戸市公式情報で調査し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳年度末までの保険診療自己負担を1医療機関1日800円、月上限1,600円に軽減",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "平戸市に住民登録がある出生から18歳到達後最初の3月31日までのこども",
+        "copay": "1医療機関ごと1日800円、月上限1,600円。院外処方の薬局分は0円",
+        "payment": "2026年4月から高校生世代も平戸市内医療機関で現物給付",
+        "excluded": "保険適用外、学校災害共済給付対象等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/learn/childcare/cc06.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.hirado.nagasaki.jp/kurashi/learn/childcare/2026-0212-1839-103.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "市内に実施施設はないが、西九州させぼ広域都市圏の病児・病後児保育施設を相互利用可能",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "cityFacility": "平戸市内の病児・病後児保育実施施設はなし",
+        "wideArea": "佐世保市、松浦市、西海市、東彼杵町等の連携施設を利用可能",
+        "ages": "佐世保市の病児保育施設は0歳から小学6年生、病後児施設は施設により小学3年生または6年生まで",
+        "application": "利用条件、料金、予約方法は各施設へ確認"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/learn/kyouiku-hoiku/2021-0929-1152-103.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "0～2歳児を含む全年齢児クラスの保育料を完全無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "support": "2023年度から国制度の対象外となる0～2歳児クラスも市独自に無償化",
+        "scope": "認可保育所、認定こども園等の全年齢児クラスで保育料負担なし",
+        "otherCosts": "給食費等も市独自の子育て支援利用料無料化の対象となる費用あり。施設条件を確認"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/learn/kyouiku-hoiku/hoikusyo.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は市立小学校の給食費を無償化し、中学校は月額5,800円",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "elementary": "2026年度から平戸市立小学校の児童は給食費無償。手続き不要",
+        "juniorHigh": "月額5,800円。市内小中学校在籍人数に応じ第1・2子100円から第5子400円まで控除",
+        "specialSchool": "佐世保特別支援学校北松分校小学部は一旦月額5,000円を納付し県から相当額助成"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/learn/educate/2026-0317-1845-137.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満へ宿泊・デイケア・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "平戸市内に住民票がある出産後1年未満の産婦",
+        "types": "宿泊型、デイサービス型3時間・7時間、家庭訪問型",
+        "fee": "宿泊1泊2日2,500円、2泊3日5,000円。デイケアと訪問は無料。食費実費",
+        "limit": "宿泊は1泊2日を2回または2泊3日を1回、デイケア・訪問は合計6回まで",
+        "lowIncome": "生活保護・非課税世帯は宿泊も無料"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/learn/birth/2018-1116-0849-106.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ、利用料を当分の間無料化",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "幼稚園、保育所、認定こども園等に通っていない生後6か月以上満3歳未満のこども",
+        "limit": "1人につき月10時間まで",
+        "facility": "みのりこども園内のみのりの森乳児等通園支援事業所ほか全国の対象事業所",
+        "fee": "標準1時間300円程度だが、市が1時間300円を上限に利用料を当分の間無料化。食事等は別途"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/learn/kyouiku-hoiku/2026-0109-1056-103.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住・定住者の住宅取得、空き家改修、UIターン改修等を支援",
+      "details": {
+        "newResident": "新規転入者の新築住宅取得は市内業者施工で上限200万円、市外業者施工で上限100万円",
+        "usedHome": "空き家バンク登録中古住宅は取得費の7％または50万円の低い額",
+        "currentResident": "市内業者新築30万円に高校生以下1人10万円加算、中古住宅は上限50万円",
+        "renovation": "空き家バンク中古住宅改修は2分の1・上限50万円、UIターン住宅改修は2分の1・上限30万円に子ども加算",
+        "conditions": "定住・自治会加入意思等が必要。着工前申請となる制度あり"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/life/sumai/inaka/2026-0519-1541-215.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを地区別収集または北松北部クリーンセンターへの自己搬入で処理",
+      "details": {
+        "collection": "地区別収集日に粗大ごみを排出。地域により月1回、月2回等",
+        "carryIn": "北松北部クリーンセンターへ平日9時～16時（12～13時除く）に家具・対象家電等を自己搬入可能",
+        "separation": "市指定ごみ袋の分別区分に従って分別して搬入",
+        "excluded": "家電4品目、タイヤ、バッテリー、処理困難物等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.hirado.nagasaki.jp/kurashi/life/eco/gomi/gomi04.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.hirado.nagasaki.jp/kurashi/life/eco/gomi/gomi05.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・地震等の地域別ハザードマップと避難情報を公開",
+      "details": {
+        "coverage": "土砂災害危険箇所、がけ崩れ・土石流・地すべり、地震の揺れやすさ、避難関連情報",
+        "areas": "平戸島・度島版、生月町・田平町・大島村版を公開",
+        "guidance": "自宅周辺の危険箇所と避難経路を平時から確認し早期避難するよう案内",
+        "additional": "防災重点ため池マップも公開"
+      },
+      "source": {
+        "url": "https://www.bousai.city.hirado.nagasaki.jp/approach/hazardmap.html",
+        "checkedAt": "2026-07-23"
+      }
+    }
+  }
+}
