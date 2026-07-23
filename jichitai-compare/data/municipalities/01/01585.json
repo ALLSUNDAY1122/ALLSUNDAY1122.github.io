@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "01585",
+  "prefectureCode": "01",
+  "prefecture": "北海道",
+  "name": "安平町",
+  "officialUrl": "https://www.town.abira.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Bが安平町公式情報で対象9制度を調査し、7制度を確認済み、病児・病後児保育と学校給食費の現行条件を未確認として登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、入院・通院の保険診療自己負担額を助成し、窓口負担を無料とする。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "target": "安平町に住所があり、保護者に扶養・監護される0歳から18歳到達後最初の3月31日までの子ども",
+        "coverage": "通院・入院の保険診療",
+        "copayment": "自己負担なし",
+        "excluded": "入院時食事代等の保険外費用",
+        "outsideHokkaido": "道外受診は一旦支払い後に払い戻し申請"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/kosodate/kosodate-guide/anshin-jujitsu/215", "checkedAt": "2026-07-24"}
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式の現行子育て案内で、病児・病後児保育の実施施設、対象年齢、料金、予約方法を確認できない。",
+      "details": {
+        "unconfirmed": "令和8年度に利用できる病児・病後児保育施設、対象年齢、利用料、登録・予約方法",
+        "guidance": "健康福祉課または子育て支援窓口へ広域利用を含む現行の利用可否を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/kosodate", "checkedAt": "2026-07-24"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "幼稚園利用は無償で、3歳未満の保育所利用料を国基準の半額とし、第2子半額・第3子無料の軽減を行う。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "kindergarten": "幼児教育無償化により1号認定の保育料は無料",
+        "zeroToTwo": "3歳未満児の保育料は国基準額の半額",
+        "multiChild": "第2子半額、第3子無料",
+        "calculation": "4月から8月は前年度、9月から3月は現年度の町民税所得割額に基づく",
+        "meal": "3歳以上児の給食費は別途。令和8年度の園別金額を掲載し、課税状況による一部免除あり"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/kosodate/kosodate-guide/kosodate-shisetsu/232", "checkedAt": "2026-07-24"}
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "令和8年度の学校給食提供と保護者負担軽減事業は確認できるが、児童生徒別の給食費・軽減後負担額を公式HTMLで確定できない。",
+      "details": {
+        "confirmed": "令和8年度の学校給食献立を公開し、学校給食保護者負担軽減臨時対策事業を実施",
+        "unconfirmed": "小学生・中学生別の一食単価、月額、軽減後の保護者負担、申請の要否",
+        "guidance": "教育委員会学校教育グループまたは学校給食センターへ現行負担条件を確認する必要がある"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/oshirase/22/20293", "checkedAt": "2026-07-24"}
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子を対象に、訪問型・通所型の産後ケアを合計10回まで実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "安平町に居住する産後1年未満の母子で、家族等から十分な支援を受けられず、医療措置が不要な方",
+        "types": "訪問型、通所型",
+        "support": "母子の心身ケア、授乳指導・相談、育児指導・相談",
+        "limit": "産後1年を経過するまで10回",
+        "application": "健康福祉課または総合支所の窓口へ申請"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/kosodate/kosodate-guide/ninshin-syussan/1769", "checkedAt": "2026-07-24"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "満1歳から就学前までの幼児を対象に、子ども園で一時預かり・休日保育を実施する。",
+      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 5},
+      "details": {
+        "facility": "はやきた子ども園、おいわけ子ども園",
+        "target": "満1歳から就学前までの幼児。園により離乳食完了等の条件あり",
+        "hours": "短時間利用からおおむね7時台から18時までの一日利用",
+        "fee": "町内利用者は短時間600円から900円程度、一日利用1,100円から1,900円程度。園・年齢・時間で異なる",
+        "application": "原則7日前までのネット予約等。初回登録料が必要な場合あり"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/kosodate/kosodate-guide/kosodate-shisetsu/230", "checkedAt": "2026-07-24"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "移住・定住世帯の住宅建設を支援し、15歳以下の子どもがいる世帯へ10万円分のポイントを加算する。",
+      "details": {
+        "program": "安平町定住促進条例による転入奨励助成金・子育て助成金",
+        "baseSupport": "町分譲地への住宅建設は最大20万円分、その他の土地は10万円相当のポイント",
+        "childAddition": "15歳以下の子どもがいる対象世帯へ10万円分のポイント",
+        "currency": "町内加盟店で利用できるポイントあびら",
+        "mortgage": "条件を満たす場合はフラット35地域連携型を利用可能"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/chiikishinko/ijuteiju/support", "checkedAt": "2026-07-24"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "大型ごみは処理場へ有料で自己搬入するか、500円の処理券を貼って電話予約による戸別収集を利用する。",
+      "details": {
+        "examples": "タンス、ソファー、ガスコンロ、電子レンジ、自転車、布団、ベッド等",
+        "directCarry": "じん芥処理場へ自己搬入。10kgまで50円、以後10kgごとに50円加算",
+        "collection": "東胆振清掃企業組合へ電話申込み",
+        "ticket": "大型ごみ処理券1枚500円。原則1点につき1枚",
+        "schedule": "早来地区は第1・第3水曜日、追分地区は第2・第4火曜日の指定収集"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/kurashi/kurashi-guide/seikatsu", "checkedAt": "2026-07-24"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、ため池、地震、液状化、避難所等を重ねて確認できるWebハザードマップを公開する。",
+      "details": {
+        "flood": "想定最大規模・計画規模の洪水浸水想定区域を表示",
+        "landslide": "土砂災害警戒区域・特別警戒区域を表示",
+        "earthquake": "震度、液状化確率、急傾斜地崩壊危険度を表示",
+        "pond": "町内ため池の危険情報を表示",
+        "evacuation": "指定緊急避難場所・指定避難所を表示"
+      },
+      "source": {"url": "https://www.town.abira.lg.jp/kurashi/bosai/hazard-map", "checkedAt": "2026-07-24"}
+    }
+  }
+}
