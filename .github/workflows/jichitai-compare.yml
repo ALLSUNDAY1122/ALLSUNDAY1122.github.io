@@ -1,109 +1,77 @@
-name: Normalize Source-Backed Multi-Service Reviews
+name: Jichitai Compare CI
 
 on:
   pull_request:
     paths:
       - 'jichitai-compare/**'
       - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  normalize:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Fetch regional branches
-        run: |
-          git fetch --no-tags origin \
-            +refs/heads/region/north:refs/remotes/origin/region/north \
-            +refs/heads/region/east:refs/remotes/origin/region/east \
-            +refs/heads/region/central:refs/remotes/origin/region/central \
-            +refs/heads/region/west:refs/remotes/origin/region/west
-      - name: Normalize source-backed multi-service reviews
-        run: |
-          node <<'NODE'
-          const fs=require('node:fs'),path=require('node:path');
-          const {execFileSync}=require('node:child_process');
-          const P='jichitai-compare',at='2026-07-23T23:30:00+09:00';
-          const regions=[['north','北日本調査班'],['east','東日本調査班'],['central','中日本調査班'],['west','西日本調査班']];
-          const git=(...a)=>execFileSync('git',a,{encoding:'utf8',maxBuffer:64*1024*1024});
-          const show=(r,f)=>JSON.parse(git('show',`${r}:${f}`));
-          const before=JSON.parse(fs.readFileSync(`${P}/operations/progress.json`,'utf8'));
-          const existing=new Set(fs.readdirSync(`${P}/operations/tasks`).filter(n=>/^\d{5}\.json$/u.test(n)).map(n=>n.slice(0,5)));
-          const normalized=[],excluded=[],seen=new Set();
-          const validSource=s=>typeof s?.source?.url==='string'&&s.source.url.startsWith('https://')&&/^\d{4}-\d{2}-\d{2}$/u.test(s?.source?.checkedAt??'');
-          for(const [region,team] of regions){
-            const ref=`origin/region/${region}`;
-            const listing=git('ls-tree','-r','--name-only',ref,`${P}/operations/tasks`).trim();
-            for(const taskPath of listing?listing.split('\n'):[]){
-              if(!/\/\d{5}\.json$/u.test(taskPath))continue;
-              let task;try{task=show(ref,taskPath)}catch{continue}
-              const code=task?.municipalityCode;
-              if(!/^\d{5}$/u.test(code??'')||existing.has(code)||seen.has(code))continue;
-              const mPath=`${P}/data/municipalities/${task.prefectureCode}/${code}.json`;
-              let m;try{m=show(ref,mPath)}catch{continue}
-              const services=Object.entries(m.services??{});
-              if(services.length!==9)continue;
-              const review=services.filter(([,s])=>s?.status==='needs_medium_review');
-              const otherInvalid=services.filter(([,s])=>!['verified','unavailable','needs_medium_review'].includes(s?.status));
-              if(review.length<2||otherInvalid.length)continue;
-              const missingSources=review.filter(([,s])=>!validSource(s)).map(([id])=>id);
-              if(missingSources.length){
-                excluded.push({region,team,code,name:m.name,prefecture:m.prefecture,reviewServiceIds:review.map(([id])=>id),missingOfficialSourceServiceIds:missingSources,reason:'要確認制度の一部に公式HTTPS source.urlまたはcheckedAtがないため推測補完せず除外'});
-                seen.add(code);continue;
-              }
-              for(const [serviceId,service] of review){
-                const oldSummary=service.summary??'';
-                m.services[serviceId]={...service,status:'unavailable',summary:`${oldSummary} 現行公式情報で利用条件を確定できないため、情報未確認として整理する。`.trim(),details:{...(service.details??{}),availability:'現行の利用者向け公式条件を確定できないため情報未確認',verificationPolicy:'対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する'}};
-              }
-              const finalServices=Object.entries(m.services);
-              if(!finalServices.every(([,s])=>['verified','unavailable'].includes(s.status)))continue;
-              const verifiedCount=finalServices.filter(([,s])=>s.status==='verified').length;
-              const unavailableCount=finalServices.filter(([,s])=>s.status==='unavailable').length;
-              m.summary=`${m.name}の9制度を公式情報で再監査し、確認できた制度をverified、現行条件を確定できない制度をunavailableとして整理。`;
-              m.updatedAt='2026-07-23';
-              fs.mkdirSync(path.dirname(mPath),{recursive:true});fs.writeFileSync(mPath,JSON.stringify(m,null,2)+'\n');
-              const sources=[];for(const [,s] of finalServices){const u=s?.source?.url;if(u&&!sources.includes(u))sources.push(u)}
-              task={...task,status:'merged',currentService:null,nextServiceIndex:9,completedServices:finalServices.map(([id])=>id),verifiedCount,unavailableCount,researchingCount:0,needsMediumReviewCount:0,pullRequestNumber:null,blockers:[],officialSources:sources,lastCheckedAt:'2026-07-23',lastUpdatedAt:at,lastUpdatedBy:`${task.lastUpdatedBy||team}・統括⑤複数要確認正規化`,notes:[...(task.notes??[]),`${review.map(([id])=>id).join('、')}は現行公式利用条件を確定できないためunavailableへ正規化。推測値は登録していない。`,'9制度を公開可能状態へ更新しmainへ全国統合。']};
-              fs.writeFileSync(taskPath,JSON.stringify(task,null,2)+'\n');
-              normalized.push({region,team,code,name:m.name,prefecture:m.prefecture,serviceIds:review.map(([id])=>id),sources:review.map(([id,s])=>({serviceId:id,url:s.source.url,checkedAt:s.source.checkedAt}))});seen.add(code);
-            }
-          }
-          normalized.sort((a,b)=>a.code.localeCompare(b.code));excluded.sort((a,b)=>a.code.localeCompare(b.code));
-          if(!normalized.length)throw new Error('公式sourceのある複数制度要確認自治体なし');
-          const byRegion=Object.fromEntries(regions.map(([r])=>[r,normalized.filter(x=>x.region===r).length]));
-          const byService={};for(const x of normalized)for(const id of x.serviceIds)byService[id]=(byService[id]??0)+1;
-          const manifest={schemaVersion:'1.0.0',createdAt:at,previousPublishedMunicipalities:before.registeredMunicipalities,normalizedMunicipalities:normalized.length,byRegion,byService,municipalities:normalized,excludedMunicipalities:excluded.length,excluded};
-          fs.writeFileSync(`${P}/operations/control/normalized-multi-review-all-20260723.json`,JSON.stringify(manifest,null,2)+'\n');
-          console.log(JSON.stringify({normalized:normalized.length,excluded:excluded.length,byRegion,byService},null,2));
-          NODE
-      - name: Generate and validate
+
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          npm run validate:sessions --if-present
-          node --check app.js
-      - name: Update index
-        run: |
-          node <<'NODE'
-          const fs=require('node:fs');const m=JSON.parse(fs.readFileSync('jichitai-compare/operations/control/normalized-multi-review-all-20260723.json','utf8'));const p=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json','utf8'));const f='jichitai-compare/index.html';let h=fs.readFileSync(f,'utf8');h=h.replace(new RegExp(`${m.previousPublishedMunicipalities}自治体`,'g'),`${p.registeredMunicipalities}自治体`);fs.writeFileSync(f,h);
-          NODE
-      - name: Restore workflow and commit
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare
-          git commit -m 'release: normalize source-backed multi-service reviews'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public

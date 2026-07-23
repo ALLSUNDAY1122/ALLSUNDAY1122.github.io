@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "03303",
+  "municipalityName": "岩手町",
+  "prefectureCode": "03",
+  "prefectureName": "岩手県",
+  "assignedTeam": "北日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 6,
+  "researchingCount": 0,
+  "unavailableCount": 3,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/03303-iwate-v2",
+  "pullRequestNumber": null,
+  "lastCheckedAt": "2026-07-23",
+  "lastUpdatedAt": "2026-07-23T23:30:00+09:00",
+  "lastUpdatedBy": "北日本調査班A・統括⑤複数要確認正規化",
+  "officialSources": [
+    "https://town.iwate.iwate.jp/town/life/nyuji-iryohihojo/",
+    "https://town.iwate.iwate.jp/reiki/reiki_taikei/r_taikei_08.html",
+    "https://town.iwate.iwate.jp/town/life/hoiku-nyusho-r6-2/",
+    "https://town.iwate.iwate.jp/town/life/kyushokuhi-shien/",
+    "https://town.iwate.iwate.jp/town/life/sango-kea/",
+    "https://town.iwate.iwate.jp/town/life/iwatetowndaretu/",
+    "https://town.iwate.iwate.jp/town/life/iju_support_funds/",
+    "https://town.iwate.iwate.jp/town/accessmap/seisojigyosho/",
+    "https://town.iwate.iwate.jp/town/bosai/bosai-map/"
+  ],
+  "notes": [
+    "必須9制度を岩手町公式情報で一括調査し、6制度をverified、3制度をneeds_medium_reviewとして整理。",
+    "子ども医療費完全無償化、保育料無償化、無料産後ケア、子ども加算付き移住支援金、粗大ごみ直接搬入、防災マップを確認。",
+    "病児・病後児保育、令和8年度学校給食費、こども誰でも通園制度の町独自利用条件は中間確認とした。",
+    "初回PR #1208はregion/northの並行更新により競合したため閉鎖。",
+    "最新region/northからdata/03303-iwate-v2を再作成し、変更対象を自治体JSONとtaskの2ファイルに限定。",
+    "後継PR #1211はCI成功・競合なしを確認後、region/northへ統合。",
+    "sickChildCare、schoolMeals、temporaryChildcareは現行公式利用条件を確定できないためunavailableへ正規化。推測値は登録していない。",
+    "9制度を公開可能状態へ更新しmainへ全国統合。"
+  ],
+  "blockers": []
+}
