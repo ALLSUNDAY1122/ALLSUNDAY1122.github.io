@@ -6,13 +6,16 @@
   "name": "みなべ町",
   "officialUrl": "https://www.town.minabe.lg.jp/",
   "status": "verified",
-  "summary": "みなべ町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、広域病児保育、保育料多子軽減、第3子以降給食費助成、産後ケア、一時預かり、住宅取得・空き家改修支援、粗大ごみ、防災情報を記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "みなべ町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、広域病児保育、保育料多子軽減、第3子以降給食費助成、産後ケア、こども誰でも通園制度・一時預かり、住宅取得・空き家改修支援、粗大ごみ、防災情報を記録。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末まで、所得制限なく保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達した日以後の最初の3月31日まで",
         "incomeLimit": "保護者所得に関係なく対象",
@@ -21,12 +24,18 @@
         "outsidePrefecture": "県外受診等は領収書を添えて償還払いを申請",
         "excludedCosts": "食事代、差額ベッド料等の保険適用外費用は対象外"
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/kosodate/04/03/2013090900295.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/kosodate/04/03/2013090900295.html",
+        "checkedAt": "2026-07-23"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後6か月から小学6年生まで、田辺市の病児保育にじ色ひろばを利用でき、対象世帯には町の利用費助成がある。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
       "details": {
         "facility": "病児保育 にじ色ひろば（赤ちゃんとこどものクリニック「ビィ」内）",
         "target": "生後6か月から小学6年生までの病気中・回復期の児童",
@@ -35,15 +44,24 @@
         "supportLimit": "1世帯年間15,000円を上限",
         "application": "施設予約後に利用し、町助成は領収書を添えて子育て推進課へ申請"
       },
-      "source": {"url": "https://www.city.tanabe.lg.jp/soshiki/hokenfukushi/3/1/1_2/952.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.tanabe.lg.jp/soshiki/hokenfukushi/3/1/1_2/952.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.town.minabe.lg.jp/kosodate/05/01/2024-0903-1352-47.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.minabe.lg.jp/kosodate/05/01/2024-0903-1352-47.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3歳以上児と非課税世帯0～2歳児は無償。課税世帯0～2歳児は所得階層別で、第3子以降等に町独自補助がある。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeTarget": "3歳以上児、および住民税非課税世帯の0～2歳児",
         "taxableUnderThree": "課税世帯の0～2歳児は年齢・世帯状況・市町村民税所得割額による階層制",
@@ -51,12 +69,18 @@
         "secondChild": "所得割額要件を満たす第2子以降にも補助",
         "foodCost": "3歳以上児は保育料無償だが、主食費・副食費等の実費負担が基本"
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/kosodate/02/2013091100441.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/kosodate/02/2013091100441.html",
+        "checkedAt": "2026-07-23"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "小中高校相当の児童生徒を3人以上養育する世帯の第3子以降について、町立小中学校の給食費を申請により助成する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "program": "みなべ町第3子以降子育て応援学校給食費助成事業",
         "householdCondition": "小中学校・高校相当に在学する児童生徒3人以上を生計を一にして養育する保護者",
@@ -65,12 +89,18 @@
         "application": "毎年度申請が必要。原則4月30日までに学校へ提出",
         "notUniversal": "町内児童生徒全員の一律無償化ではない"
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/kosodate/05/01/2014033100017.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/kosodate/05/01/2014033100017.html",
+        "checkedAt": "2026-07-23"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子を対象に、宿泊・日帰り・家庭訪問による産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "みなべ町に住民票があり、産後の体調不良や育児不安等がある産後1年未満の母子",
         "types": "助産所での宿泊・日帰り利用、助産師等による家庭訪問",
@@ -78,23 +108,41 @@
         "application": "母子健康手帳を持参して子育て推進課へ申請",
         "reservation": "利用決定後、実施機関へ予約"
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/kosodate/05/01/sanngokea2024-0412-1612-37.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/kosodate/05/01/sanngokea2024-0412-1612-37.html",
+        "checkedAt": "2026-07-23"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "生後6か月から就学前の未就園児を平日8時30分～16時30分に町内3施設で一時預かりする。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 6},
-      "details": {
-        "facilities": "みなべ愛之園こども園、上南部こども園、高城こども園",
-        "time": "月曜から金曜の8時30分～16時30分（休園日・行事日等を除く）",
-        "underThreeFee": "6か月～2歳児は1日2,800円、半日は半額",
-        "threeAndOverFee": "3歳児～就学前は1日1,800円、半日は半額",
-        "freeTickets": "4か月健診時に4時間まで利用できる無料チケット10枚を配布",
-        "procedure": "事前に利用施設へ申込み・面談が必要"
+      "summary": "未就園の生後6か月から満3歳未満を対象とするこども誰でも通園制度と、生後6か月から就学前までの一時預かりを実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/kosodate/02/itizuazukari.html", "checkedAt": "2026-07-23"},
+      "details": {
+        "anyoneUseProgram": "こども誰でも通園制度（乳児等通園支援事業）",
+        "anyoneUseTarget": "保育所、幼稚園、認定こども園、地域型保育事業所、企業主導型保育所等に通っていない生後6か月から満3歳未満",
+        "anyoneUseLimit": "子ども1人につき月10時間まで。1時間から利用でき、1時間を超える場合は30分単位",
+        "anyoneUseFee": "標準利用料金は1時間300円。施設により異なる場合がある",
+        "anyoneUseFacility": "町内はみなべ愛之園こども園。町外は乳児等通園支援事業の認可施設",
+        "anyoneUseProcedure": "総合支援システムで利用申請、認定証発行、初回面談、利用予約を行う",
+        "temporaryFacilities": "みなべ愛之園こども園、上南部こども園、高城こども園",
+        "temporaryTime": "月曜から金曜の8時30分～16時30分（休園日・行事日等を除く）",
+        "temporaryUnderThreeFee": "6か月～2歳児は1日2,800円、半日は半額",
+        "temporaryThreeAndOverFee": "3歳児～就学前は1日1,800円、半日は半額",
+        "temporaryFreeTickets": "4か月健診時に4時間まで利用できる無料チケット10枚を配布",
+        "temporaryProcedure": "事前に利用施設へ申込み・面談が必要"
+      },
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/kosodate/02/2026-0331-0853-47.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.minabe.lg.jp/kosodate/02/2026-0331-0853-47.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.minabe.lg.jp/kosodate/02/itizuazukari.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "housingSupport": {
@@ -109,9 +157,15 @@
         "vacantHouseTarget": "わかやま空き家バンク登録物件を活用する移住者、Uターン者、二地域居住者等",
         "condition": "交付決定前着工は対象外。定住・地域活動・税滞納なし等の要件あり"
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/kurashi/03/01/2022053100016.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/kurashi/03/01/2022053100016.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.town.minabe.lg.jp/kurashi/03/01/2022060200037.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.minabe.lg.jp/kurashi/03/01/2022060200037.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "bulkyWaste": {
@@ -125,9 +179,15 @@
         "calendar": "通常ごみ・資源ごみは令和8年度地区別収集日カレンダーを確認",
         "verificationPolicy": "処理料金・特別収集条件は最新案内で確認"
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/kurashi/09/01/2013092400052.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/kurashi/09/01/2013092400052.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.town.minabe.lg.jp/kurashi/09/01/2026-0226-1621-29.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.minabe.lg.jp/kurashi/09/01/2026-0226-1621-29.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "disasterPrevention": {
@@ -141,10 +201,19 @@
         "pond": "防災重点ため池の決壊時浸水・避難情報を公開",
         "preparedness": "災害種別ごとに自宅周辺の危険区域と避難先を事前確認"
       },
-      "source": {"url": "https://www.town.minabe.lg.jp/bousai/02/", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.minabe.lg.jp/bousai/02/",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.town.minabe.lg.jp/bousai/02/2013091000543.html", "checkedAt": "2026-07-23"},
-        {"url": "https://www.town.minabe.lg.jp/kurashi/05/02/2026-0331-0958-29.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.minabe.lg.jp/bousai/02/2013091000543.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.minabe.lg.jp/kurashi/05/02/2026-0331-0958-29.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     }
   }

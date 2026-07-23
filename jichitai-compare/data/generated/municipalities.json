@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1162,
+    "municipalityCount": 1163,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -174691,7 +174691,7 @@
       "name": "みなべ町",
       "officialUrl": "https://www.town.minabe.lg.jp/",
       "status": "verified",
-      "summary": "みなべ町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、広域病児保育、保育料多子軽減、第3子以降給食費助成、産後ケア、一時預かり、住宅取得・空き家改修支援、粗大ごみ、防災情報を記録。",
+      "summary": "みなべ町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、広域病児保育、保育料多子軽減、第3子以降給食費助成、産後ケア、こども誰でも通園制度・一時預かり、住宅取得・空き家改修支援、粗大ごみ、防災情報を記録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -174799,27 +174799,33 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後6か月から就学前の未就園児を平日8時30分～16時30分に町内3施設で一時預かりする。",
+          "summary": "未就園の生後6か月から満3歳未満を対象とするこども誰でも通園制度と、生後6か月から就学前までの一時預かりを実施する。",
           "eligibility": {
             "minAgeMonths": 6,
-            "maxAgeYears": 6
+            "maxAgeYears": 3
           },
           "details": {
-            "facilities": "みなべ愛之園こども園、上南部こども園、高城こども園",
-            "time": "月曜から金曜の8時30分～16時30分（休園日・行事日等を除く）",
-            "underThreeFee": "6か月～2歳児は1日2,800円、半日は半額",
-            "threeAndOverFee": "3歳児～就学前は1日1,800円、半日は半額",
-            "freeTickets": "4か月健診時に4時間まで利用できる無料チケット10枚を配布",
-            "procedure": "事前に利用施設へ申込み・面談が必要"
+            "anyoneUseProgram": "こども誰でも通園制度（乳児等通園支援事業）",
+            "anyoneUseTarget": "保育所、幼稚園、認定こども園、地域型保育事業所、企業主導型保育所等に通っていない生後6か月から満3歳未満",
+            "anyoneUseLimit": "子ども1人につき月10時間まで。1時間から利用でき、1時間を超える場合は30分単位",
+            "anyoneUseFee": "標準利用料金は1時間300円。施設により異なる場合がある",
+            "anyoneUseFacility": "町内はみなべ愛之園こども園。町外は乳児等通園支援事業の認可施設",
+            "anyoneUseProcedure": "総合支援システムで利用申請、認定証発行、初回面談、利用予約を行う",
+            "temporaryFacilities": "みなべ愛之園こども園、上南部こども園、高城こども園",
+            "temporaryTime": "月曜から金曜の8時30分～16時30分（休園日・行事日等を除く）",
+            "temporaryUnderThreeFee": "6か月～2歳児は1日2,800円、半日は半額",
+            "temporaryThreeAndOverFee": "3歳児～就学前は1日1,800円、半日は半額",
+            "temporaryFreeTickets": "4か月健診時に4時間まで利用できる無料チケット10枚を配布",
+            "temporaryProcedure": "事前に利用施設へ申込み・面談が必要"
           },
           "source": {
-            "url": "https://www.town.minabe.lg.jp/kosodate/02/itizuazukari.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.town.minabe.lg.jp/kosodate/02/2026-0331-0853-47.html",
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
-              "url": "https://www.town.minabe.lg.jp/kosodate/02/2026-0331-0853-47.html",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.town.minabe.lg.jp/kosodate/02/itizuazukari.html",
+              "checkedAt": "2026-07-24"
             }
           ]
         },
@@ -213895,6 +213901,179 @@
           },
           "source": {
             "url": "https://www.town.ojika.lg.jp/soshiki/soumu/1/12/268.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "44341",
+      "prefectureCode": "44",
+      "prefecture": "大分県",
+      "name": "日出町",
+      "officialUrl": "https://www.town.hiji.lg.jp/",
+      "status": "verified",
+      "summary": "必須9制度を日出町公式情報で調査し、全制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで入院・通院・歯科・調剤の保険診療自己負担を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "日出町に住所があり医療保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院、通院、歯科、調剤の保険診療自己負担額",
+            "copay": "2026年4月診療分から未就学児・小中学生・高校生世代の全区分で自己負担なし",
+            "application": "子ども医療費受給資格者証の交付申請が必要",
+            "exclusion": "保険外診療、入院時食事代等は対象外"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kosodate_kyoiku/teate_josei/kodomonoiryohijosei/1584.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "町内病後児保育室と大分県内の広域病児・病後児保育施設を利用可能",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "病後児保育室たんぽぽ（藤原こども園）",
+            "target": "病気または回復期で集団保育が困難かつ家庭で保育を受けることが困難な乳幼児・児童",
+            "fee": "町内施設は4時間以内1,000円、4時間超1,800円。昼食・おやつ代込み",
+            "wideArea": "2021年10月から大分県内の他市町村施設を統一料金で利用可能",
+            "reservation": "町への事前登録は不要で、利用施設へ直接予約。施設によりネット予約サービス対応"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kosodate_kyoiku/azukeru/yamaijihoikujigyo/955.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳以上の保育料を無償化し、3歳未満は第2子以降を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "kindergarten": "町立幼稚園の通常保育料は0円",
+            "ageThreePlus": "満3歳以上の1号認定及び3歳以上の2号認定は月額0円",
+            "underThree": "3号認定は世帯状況により月額0～55,000円",
+            "siblings": "3歳未満の第2子以降は保育料0円",
+            "additionalCosts": "教材費、給食費、預かり保育料等の実費が別途必要な場合がある"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kosodate_kyoiku/azukeru/ninkakyoiku_hoikushisetsu/1605.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年4月から町立幼稚園・小学校・中学校の学校給食費を完全無償化",
+          "eligibility": {
+            "minAgeMonths": 60,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "日出町立幼稚園、小学校、中学校に在籍する園児・児童・生徒",
+            "support": "学校給食費の保護者負担を全額無償化",
+            "start": "2026年4月提供分から",
+            "incomeLimit": "所得制限なし",
+            "procedure": "保護者による申請手続き不要"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kosodate_kyoiku/kyoiku/gakkokyushokucenter/4206.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1年未満の母子へ宿泊・日帰り型産後ケアを合計7回まで提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "日出町に住所がある生後1年未満の乳児と母親で産後ケアを必要とする人",
+            "types": "宿泊型、デイサービス型",
+            "limit": "2形態を合わせて7回まで",
+            "fee": "宿泊型1泊2日3,000円、デイサービス型1日1,500円。生活保護世帯は0円",
+            "care": "母体の身体・心理ケア、保健・栄養指導、乳房ケア、授乳・育児相談等",
+            "application": "利用希望日の5～28日前までに町へ申請・面談"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kosodate_kyoiku/ninshin_shussan/sangocarejigyo/1598.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "日出町に住民登録があり、認可保育所・認定こども園・地域型保育・企業主導型保育施設に在籍していない生後6か月から満3歳未満の子ども",
+            "employmentCondition": "保護者の就労要件を問わない",
+            "limit": "1人当たり月最大10時間。翌月への繰越し・前倒し不可",
+            "fee": "1時間300円、所得等に応じた減免あり",
+            "facilityRule": "同一月に利用できる施設は1施設"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kosodate_kyoiku/azukeru/daretu/4220.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限50万円、多子世帯は上限70万円補助",
+          "details": {
+            "target": "18歳未満の子どもまたは出産予定の胎児がいる世帯で、世帯員の前年所得合計が600万円未満",
+            "eligibleWork": "子ども部屋、浴室・便所・洗面所、キッチン、安全対策等の30万円以上の改修工事",
+            "support": "補助対象工事費の20％",
+            "amount": "一般子育て世帯は上限50万円、18歳未満の子ども3人以上の多子世帯は上限70万円",
+            "threeGeneration": "三世代同居型は工事費50％、一般上限75万円、多子世帯上限95万円",
+            "period": "2026年6月15日から12月18日まで"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kurashi_tetsuzuki/seikatsu_sumai/jutaku/3851.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "事前申込み後、処理券を貼って月例収集へ出し、1点400円または800円",
+          "details": {
+            "target": "日出町指定ごみ袋に入らない家庭ごみ",
+            "application": "オンラインまたは電話・窓口で事前申込み",
+            "limit": "1世帯1回につき3点まで",
+            "fee": "一般品目は1点400円。最長辺150cm以上の家具類・家電や指定大型品目は1点800円",
+            "ticket": "指定ごみ袋取扱店または役場で処理券を購入し、収集日・氏名を記入して貼付",
+            "collection": "地区別収集日の8時30分までに申込場所へ排出"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kurashi_tetsuzuki/gomi_kankyo_eisei/gomi_recycle/3436.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・洪水・土砂災害・高潮・中小河川・ため池等のWEB・PDFハザードマップを公開",
+          "details": {
+            "coverage": "津波浸水想定区域、土砂災害警戒区域、洪水、高潮、中小河川、ため池等",
+            "formats": "総合ハザードマップPDFとWEB版を公開",
+            "evacuation": "現在地周辺の避難所検索、避難ルート表示に対応",
+            "additional": "道路規制情報、河川・道路ライブカメラ、地区別土砂災害マップを提供",
+            "guidance": "自宅周辺の災害リスクと避難場所・経路を平時から確認"
+          },
+          "source": {
+            "url": "https://www.town.hiji.lg.jp/kurashi_tetsuzuki/bosai_bohan_shobo_kotsuanzen/bosai/map/452.html",
             "checkedAt": "2026-07-24"
           }
         }
