@@ -22,6 +22,7 @@ const catalogFiles = [
 const staticPages = [
   'index.html',
   '5min-horror.html',
+  'bedtime-horror.html',
   'archive.html',
   'about.html',
   'privacy.html',
