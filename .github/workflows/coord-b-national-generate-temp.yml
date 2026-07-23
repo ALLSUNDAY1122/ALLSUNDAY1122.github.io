@@ -145,7 +145,6 @@ jobs:
       - name: Generate public data and progress
         working-directory: jichitai-compare
         run: |
-          npm ci
           npm run generate
           npm run progress
           node <<'NODE'
