@@ -98,7 +98,7 @@ jobs:
             yorugatari/tools/story-search-metadata-latest.json \
             yorugatari/tools/story-structured-data-manifest-latest.json | grep -q .; then
             git config user.name "github-actions[bot]"
-            git config user.email "4189822+github-actions[bot]@users.noreply.github.com"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add \
               yorugatari/index.html \
               yorugatari/archive.html \
@@ -169,7 +169,7 @@ jobs:
           cp yorugatari-discovery-report.json /tmp/yorugatari-discovery-report.json
           cp yorugatari-indexnow-report.json /tmp/yorugatari-indexnow-report.json
           git config user.name "github-actions[bot]"
-          git config user.email "4189822+github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           saved=false
           for attempt in 1 2 3; do
             git fetch origin main
