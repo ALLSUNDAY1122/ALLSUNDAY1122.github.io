@@ -1,4 +1,4 @@
-# Registered workflow; this update triggers PR synchronization.
+# macOS / Xcode iOS simulator validation for AI引継ぎ帳 v0.4.
 name: AI Handover Log v0.4 iOS CI
 
 on:
@@ -49,13 +49,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/source"
-          : > "$RUNNER_TEMP/source.tar.xz"
-          for part in source_parts/part_*.b64; do
-            base64 --decode "$part" >> "$RUNNER_TEMP/source.tar.xz"
-          done
-          echo 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234  '"$RUNNER_TEMP/source.tar.xz" | shasum -a 256 -c -
-          tar -tJf "$RUNNER_TEMP/source.tar.xz" > "$RUNNER_TEMP/logs/source-files.txt"
+          mkdir -p "$RUNNER_TEMP/source" "$RUNNER_TEMP/logs"
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import os
+
+          parts = sorted(Path('source_parts').glob('part_*.b64'))
+          if not parts:
+              raise SystemExit('No source parts found')
+
+          target = Path(os.environ['RUNNER_TEMP']) / 'source.tar.xz'
+          with target.open('wb') as output:
+              for part in parts:
+                  encoded = ''.join(part.read_text(encoding='utf-8').split())
+                  output.write(base64.b64decode(encoded, validate=True))
+
+          digest = hashlib.sha256(target.read_bytes()).hexdigest()
+          expected = 'cdb7067a29385d346edadb7506f39f7e5cfd567a07e930e5b43344ae4f50e234'
+          print(f'parts={len(parts)} bytes={target.stat().st_size} sha256={digest}')
+          if digest != expected:
+              raise SystemExit(f'SHA-256 mismatch: expected {expected}, got {digest}')
+          PY
+          tar -tJf "$RUNNER_TEMP/source.tar.xz" | tee "$RUNNER_TEMP/logs/source-files.txt"
           tar -xJf "$RUNNER_TEMP/source.tar.xz" -C "$RUNNER_TEMP/source"
           python3 patches/fix_v04_migration.py "$RUNNER_TEMP/source"
           test -f "$RUNNER_TEMP/source/pubspec.yaml"
@@ -128,18 +145,23 @@ jobs:
       - name: Inspect generated iOS project
         if: always()
         shell: bash
-        working-directory: ${{ runner.temp }}/build
         run: |
           set +e
+          BUILD="$RUNNER_TEMP/build"
+          if [ ! -d "$BUILD" ]; then
+            echo 'Build directory was not generated.' | tee "$RUNNER_TEMP/logs/ios-project-inspection.log"
+            exit 0
+          fi
+          cd "$BUILD"
           {
             echo '=== Podfile.lock ==='
-            cat ios/Podfile.lock
+            test -f ios/Podfile.lock && cat ios/Podfile.lock || echo 'Podfile.lock not generated'
             echo
             echo '=== Generated plugin registrant ==='
-            find ios -name 'GeneratedPluginRegistrant.*' -maxdepth 8 -print
+            find ios -maxdepth 8 -name 'GeneratedPluginRegistrant.*' -print
             echo
             echo '=== Simulator app ==='
-            find build/ios/iphonesimulator -maxdepth 2 -type d -name '*.app' -print
+            find build/ios/iphonesimulator -maxdepth 2 -type d -name '*.app' -print 2>/dev/null
             echo
             echo '=== Bundle identifier settings ==='
             grep -R 'PRODUCT_BUNDLE_IDENTIFIER' ios/Runner.xcodeproj/project.pbxproj
@@ -147,6 +169,7 @@ jobs:
             echo '=== Deployment targets ==='
             grep -R 'IPHONEOS_DEPLOYMENT_TARGET' ios/Runner.xcodeproj/project.pbxproj
           } 2>&1 | tee "$RUNNER_TEMP/logs/ios-project-inspection.log"
+          exit 0
 
       - name: Package iOS simulator result
         if: steps.pubget.outcome == 'success' && steps.test.outcome == 'success' && steps.iosbuild.outcome == 'success'
