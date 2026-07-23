@@ -34,6 +34,14 @@ function extractMetaDescription(html) {
   return html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i)?.[1] || '';
 }
 
+function categoryReady(html, category) {
+  const description = extractMetaDescription(html);
+  return html.includes(`<title>${category.titlePhrase}`) &&
+    html.includes(`<h1>${category.heading}</h1>`) &&
+    description.includes(category.descriptionPhrase) &&
+    description.includes('無料');
+}
+
 function localAudit() {
   const manifestPath = path.join(SITE, 'tools', 'discovery-manifest-latest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
@@ -49,10 +57,7 @@ function localAudit() {
     descriptions.push(description);
     allStoryLinks.push(...links);
     record(`local: ${category.name} category page uses search-friendly language and structure`,
-      html.includes(`<title>${category.titlePhrase}`) &&
-      html.includes(`<h1>${category.heading}</h1>`) &&
-      description.includes(category.descriptionPhrase) &&
-      description.includes('無料') &&
+      categoryReady(html, category) &&
       description.includes('約5分') &&
       html.includes(`<link rel="canonical" href="${BASE}/categories/${category.slug}.html">`) &&
       html.includes('rel="alternate" type="application/rss+xml"') &&
@@ -76,21 +81,22 @@ function localAudit() {
   }
 }
 
-async function fetchText(url, attempts = 12) {
+async function fetchText(url, ready = () => true, attempts = 18) {
   let detail = null;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
       const separator = url.includes('?') ? '&' : '?';
       const response = await fetch(`${url}${separator}discovery=${Date.now()}-${attempt}`, {
         redirect: 'follow',
-        headers: { 'cache-control': 'no-cache, no-store, max-age=0', 'user-agent': 'Yorugatari-Discovery-Audit/1.2' },
+        headers: { 'cache-control': 'no-cache, no-store, max-age=0', 'pragma': 'no-cache', 'user-agent': 'Yorugatari-Discovery-Audit/1.3' },
         signal: AbortSignal.timeout(30000)
       });
       const text = await response.text();
-      detail = { attempt, status: response.status, text };
-      if (response.status === 200) return detail;
+      const current = response.status === 200 && ready(text);
+      detail = { attempt, status: response.status, text, current };
+      if (current) return detail;
     } catch (error) {
-      detail = { attempt, status: null, text: '', error: error.message };
+      detail = { attempt, status: null, text: '', current: false, error: error.message };
     }
     if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, 5000));
   }
@@ -98,26 +104,27 @@ async function fetchText(url, attempts = 12) {
 }
 
 async function liveAudit() {
-  const top = await fetchText(`${BASE}/`);
+  const topReady = (html) => CATEGORIES.every((category) => html.includes(`categories/${category.slug}.html`) && html.includes(`>${category.linkLabel}</a>`)) && html.includes('href="feed.xml">RSS</a>');
+  const top = await fetchText(`${BASE}/`, topReady);
   const topCategories = CATEGORIES.filter((category) => top.text.includes(`categories/${category.slug}.html`));
   const topLabels = CATEGORIES.filter((category) => top.text.includes(`>${category.linkLabel}</a>`));
-  record('published: top exposes RSS and six search-friendly category links', top.status === 200 && top.text.includes('rel="alternate" type="application/rss+xml"') && top.text.includes('href="feed.xml">RSS</a>') && topCategories.length === 6 && topLabels.length === 6, { status: top.status, attempt: top.attempt, categories: topCategories.length, labels: topLabels.length });
+  record('published: top exposes RSS and six search-friendly category links', top.status === 200 && top.current && top.text.includes('rel="alternate" type="application/rss+xml"') && topCategories.length === 6 && topLabels.length === 6, { status: top.status, attempt: top.attempt, current: top.current, categories: topCategories.length, labels: topLabels.length });
 
   const linkedStories = [];
   for (const category of CATEGORIES) {
-    const response = await fetchText(`${BASE}/categories/${category.slug}.html`);
+    const response = await fetchText(`${BASE}/categories/${category.slug}.html`, (html) => categoryReady(html, category));
     const canonical = `${BASE}/categories/${category.slug}.html`;
     const links = storyLinks(response.text);
     const description = extractMetaDescription(response.text);
     linkedStories.push(...links);
-    const ok = response.status === 200 && response.text.includes(`<link rel="canonical" href="${canonical}">`) && response.text.includes(`<title>${category.titlePhrase}`) && response.text.includes(`<h1>${category.heading}</h1>`) && description.includes(category.descriptionPhrase) && description.includes('無料') && links.length > 0;
-    record(`published: ${category.name} category page uses search-friendly language`, ok, { status: response.status, attempt: response.attempt, links: links.length, canonical, heading: category.heading, description });
+    const ok = response.status === 200 && response.current && response.text.includes(`<link rel="canonical" href="${canonical}">`) && categoryReady(response.text, category) && links.length > 0;
+    record(`published: ${category.name} category page uses search-friendly language`, ok, { status: response.status, attempt: response.attempt, current: response.current, links: links.length, canonical, heading: category.heading, description });
   }
   record('published: six category pages cover 100 unique stories', linkedStories.length === 100 && new Set(linkedStories).size === 100, { links: linkedStories.length, unique: new Set(linkedStories).size });
 
-  const feed = await fetchText(`${BASE}/feed.xml`);
+  const feed = await fetchText(`${BASE}/feed.xml`, (xml) => xml.includes('<rss version="2.0"') && itemCount(xml) === 30);
   const feedLinks = Array.from(feed.text.matchAll(/<guid isPermaLink="true">([^<]+)<\/guid>/g), (match) => match[1]);
-  record('published: RSS feed is valid and contains 30 unique stories', feed.status === 200 && feed.text.includes('<rss version="2.0"') && itemCount(feed.text) === 30 && new Set(feedLinks).size === 30, { status: feed.status, attempt: feed.attempt, items: itemCount(feed.text), unique: new Set(feedLinks).size });
+  record('published: RSS feed is valid and contains 30 unique stories', feed.status === 200 && feed.current && itemCount(feed.text) === 30 && new Set(feedLinks).size === 30, { status: feed.status, attempt: feed.attempt, current: feed.current, items: itemCount(feed.text), unique: new Set(feedLinks).size });
 }
 
 if (LIVE) await liveAudit();
