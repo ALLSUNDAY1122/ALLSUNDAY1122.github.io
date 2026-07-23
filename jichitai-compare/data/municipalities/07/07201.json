@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07201",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "福島市",
+  "officialUrl": "https://www.city.fukushima.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を福島市公式情報で調査し、全9制度をverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達年度末まで、保険診療の一部負担金と入院時食事療養費定額負担金を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "福島市内に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+        "support": "保険診療の一部負担金と入院時食事療養費定額負担金",
+        "deduction": "高額療養費や健康保険の附加給付金がある場合は差し引く",
+        "application": "あらかじめ登録手続きが必要",
+        "excluded": "生活保護適用者や施設入所等で医療費負担がない場合は対象外"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/kosodate-portal/mokuteki/kenkou_iryou_yobou/14913.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後2か月から小学6年生までを施設ごとの対象範囲で預かる病児・病後児保育を市内3施設で実施する。",
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "program": "病児・病後児保育",
+        "facilities": "みらい・ゆめ保育園、アイグラン保育園福島大森、病児保育室ほっこりパンダっこ",
+        "target": "施設により生後2か月または6か月から就学前・小学6年生まで",
+        "hours": "平日8時～17時を基本とし、ほっこりパンダっこは月～水・金・土の8時30分～18時",
+        "fee": "みらい・ゆめ保育園は1時間250円と給食費250円、アイグランは1日2,000円、ほっこりパンダっこは4時間以内1,000円・4時間超2,000円",
+        "application": "施設ごとの事前登録・予約と医師の診断等が必要"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/kosodate-portal/ichiziazukari/9807.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、多子世帯の第2子を半額、第3子以降を無料とする。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "free": "3～5歳児クラスの全児童と市町村民税非課税世帯の0～2歳児クラスは無料",
+        "charged": "その他の0～2歳児クラスは世帯所得等に応じて算定",
+        "siblingReduction": "生計を一にする最年長の子から数え、第2子は半額、第3子以降は無料",
+        "singleParent": "対象階層のひとり親世帯等は第2子から無料",
+        "privateKindergarten": "新制度未移行幼稚園等は月額25,700円を上限に無償化"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/soshiki/10/1053/2/13384.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.fukushima.fukushima.jp/kosodate-portal/nenrei/zerosai/hoikushisetsu/13336.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年4月7日提供分から市立小中学校等の学校給食費を完全無償化している。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "program": "福島型給食推進事業（学校給食費無償化）",
+        "start": "令和8年4月7日提供分",
+        "target": "市立小学校、中学校、義務教育学校、特別支援学校小学部・中学部の児童生徒",
+        "support": "学校給食費完全無償化",
+        "quality": "無償化後も給食の質・量と栄養バランスを維持",
+        "otherSupport": "就学援助等の対象者は各制度を活用して無償化"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/kosodate-kyoiku/gakko/4/1/17572.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後12か月未満の母子を対象に宿泊型と日帰り型の産後ケアを各7日まで実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "program": "産後ケア事業",
+        "target": "福島市に住民票がある産後12か月未満の母子で、母子とも感染症状や医療行為がない場合",
+        "types": "宿泊（ショートステイ）、日帰り（デイケア）",
+        "usageLimit": "宿泊・日帰りをそれぞれ合計7日まで",
+        "fee": "宿泊は1泊2日6,000円から、日帰りは1,500円。多胎加算等あり",
+        "exemption": "生活保護世帯・市民税非課税世帯は事前連絡と申請により無料",
+        "application": "施設へ仮予約後、利用希望日の1か月前から3日前までに市へ本申請"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/kosodate-portal/mokuteki/ninshin_syussan/1730.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "保育所等に通っていない生後6か月から3歳未満の市民を対象に、複数施設で時間単位のこども誰でも通園を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "福島市民で、保育所・認定こども園・企業主導型保育事業所・幼稚園等に通っていない生後6か月から満3歳未満の児童",
+        "employmentRequirement": "なし",
+        "facilities": "もりあい認定こども園、にじとはとのおうち、ほくしん保育園、てぞーろ保育園等",
+        "fee": "施設ごとに1時間当たり料金を設定し、実費負担が生じる場合あり",
+        "reduction": "生活保護世帯は1時間300円、一定所得未満世帯等は1時間200円を減額可能",
+        "application": "市への認定申請、施設ごとの親子面談、総合支援システムでの予約が必要"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/kosodate-kyoiku/hokenjo-yochien/2/13543.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世帯等が対象住宅へ公営住宅並み家賃で入居できるよう、家賃差額を月4万円まで補助する。",
+      "details": {
+        "program": "わかもの住まい支援事業",
+        "target": "18歳年度末までの子どもを養育する子育て世帯または39歳以下の若者夫婦世帯",
+        "support": "本来家賃と公営住宅並み家賃との差額を上限月4万円まで賃貸人へ補助",
+        "period": "子育て世帯は最大5年間、若者夫婦世帯は最大3年間",
+        "income": "子育て世帯は所得月額21万4千円以下、多子世帯は25万9千円以下",
+        "fiscal2026": "令和8年度は7戸程度を先着募集",
+        "application": "市の入居資格確認後、対象住宅の入居申込・賃貸借契約を行う"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/soshiki/12/1064/1/3770.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは1回5点以内の無料戸別収集または地区別クリーンセンターへの無料自己搬入で処分できる。",
+      "details": {
+        "collection": "専用ダイヤルまたはオンライン仮受付後の電話確認による戸別収集",
+        "limit": "戸別収集は1回5点以内",
+        "fee": "戸別収集・自己搬入とも無料",
+        "leadTime": "戸別収集は回収まで3週間程度",
+        "setOut": "指定日の朝8時30分までに道路沿いの指定場所へ出し、各品に氏名を書いた紙を貼付",
+        "directDelivery": "地区に対応するクリーンセンターへ本人確認書類等を持参して自己搬入可能"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/soshiki/8/1036/1/1/1/676.html",
+        "checkedAt": "2026-07-23"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "想定最大規模降雨に基づく河川別洪水ハザードマップと、土砂災害警戒区域のハザードマップを公開している。",
+      "details": {
+        "floodMap": "阿武隈川・荒川、松川、大森川・濁川など河川別の想定最大規模洪水ハザードマップ",
+        "coverage": "洪水浸水想定区域、家屋倒壊等氾濫想定区域、避難所、早期避難が必要な区域等",
+        "update": "令和8年に追加指定された河川の浸水想定を受け、洪水ハザードマップを更新予定",
+        "landslide": "土砂災害警戒区域・特別警戒区域と避難所等を掲載する地区別マップ",
+        "app": "公式防災アプリで災害・避難情報を通知し、各種ハザードマップへアクセス可能"
+      },
+      "source": {
+        "url": "https://www.city.fukushima.fukushima.jp/bosai-anzen/bosai/1/12157.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.fukushima.fukushima.jp/kasen-kanri/bosai/bosaikiki/hazard/kasen-kanri1.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.fukushima.fukushima.jp/bosai-anzen/bosai/2/12176.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
+    }
+  }
+}
