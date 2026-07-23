@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "03485",
+  "prefectureCode": "03",
+  "prefecture": "岩手県",
+  "name": "普代村",
+  "officialUrl": "https://www.vill.fudai.iwate.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を普代村公式情報で調査し、6制度をverified、3制度をneeds_medium_reviewとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担額を全額助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "出生から18歳に達する日以後最初の3月31日まで",
+        "copay": "医療機関・歯科・院外薬局で支払う保険診療の一部負担金全額",
+        "incomeLimit": "子どもについて所得制限の記載なし",
+        "application": "受給者証の交付申請が必要",
+        "excluded": "保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/docs/753.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "needs_medium_review",
+      "summary": "村公式の現行子育て案内で、家庭から予約して利用する病児・病後児保育の実施施設、対象年齢、料金を確認できない。",
+      "details": {
+        "confirmed": "村公式子育て支援案内には一時預かり事業を掲載",
+        "needsReview": "病児・病後児保育の実施有無、対象年齢、施設、料金、申請方法"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/docs/308.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "はまゆり子ども園の0～5歳児の通常保育料を無料とし、給食費も無料化している。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "facility": "認定こども園はまゆり子ども園",
+        "fee": "通常保育料無料",
+        "mealFee": "給食費無料",
+        "materialFee": "教材費は0～2歳児月1,000円、3～5歳児月1,500円",
+        "exemption": "教材費は村基準に該当する家庭を免除",
+        "temporaryCare": "一時預かりは4時間未満500円、4時間以上1,000円"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/docs/308.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "村立小中学校の学校給食費無償化を継続実施する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "support": "学校給食費完全無償化",
+        "schools": "普代村立小学校・中学校",
+        "policyPeriod": "第1期普代村教育振興基本計画（令和8～12年度）で継続実施",
+        "purpose": "経済的困難により子どもの健康や学習機会が損なわれないよう支援"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/fs/6/9/5/1/_/_1______________.pdf", "checkedAt": "2026-07-23"}
+    },
+    "postpartumCare": {
+      "status": "needs_medium_review",
+      "summary": "妊娠・出産支援や産後健康診査費助成は確認できるが、産後ケア事業の対象月齢、利用形態、料金、回数の現行案内を確認できない。",
+      "details": {
+        "confirmed": "産後健康診査費助成等の母子保健支援を実施",
+        "needsReview": "産後ケア事業の実施有無、対象、宿泊・通所・訪問の別、料金、利用回数"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/lifescene/ninshin.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "needs_medium_review",
+      "summary": "一時預かり事業は確認できるが、令和8年度のこども誰でも通園制度について対象月齢、利用時間、料金、実施施設の現行案内を確認できない。",
+      "details": {
+        "confirmed": "はまゆり子ども園で一時預かり事業を実施",
+        "needsReview": "乳児等通園支援事業の実施有無、対象、月上限、料金、施設、申請方法"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/docs/308.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "令和7年度の東京圏からの移住支援金は、子育て世帯に100万円と18歳未満の子1人につき100万円を支給する。",
+      "details": {
+        "program": "普代村移住支援金",
+        "target": "東京23区在住または東京圏から東京23区へ通勤していた期間等の要件を満たし普代村へ移住する方",
+        "householdSupport": "世帯移住100万円",
+        "childAddition": "18歳未満の子1人につき100万円加算",
+        "singleSupport": "単身移住60万円",
+        "application": "転入後の所定期間内に政策推進室へ申請",
+        "fiscalYear": "令和7年度案内"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/docs/muraijyushienkin.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.vill.fudai.iwate.jp/docs/876.html", "checkedAt": "2026-07-23"}]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは久慈地区粗大ごみ処理場へ直接持ち込める。",
+      "details": {
+        "facility": "久慈地区粗大ごみ処理場",
+        "location": "久慈市夏井町字鳥谷4-23-6",
+        "application": "村の分別方法を確認し、施設へ直接搬入",
+        "sorting": "村公式のごみ分別・出し方案内に従う",
+        "contact": "処理場または普代村住民福祉課へ確認"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/lifescene/gomi.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・土砂災害情報を更新し、普代川の洪水浸水想定を追加した防災マップを公開している。",
+      "details": {
+        "map": "普代村防災マップ",
+        "coverage": "津波、土砂災害、普代川の洪水浸水想定、避難・情報収集",
+        "update": "2023年公表版で既存情報を更新し普代川浸水想定を追加",
+        "access": "検索機能付きデジタル版PDFを村公式ページで公開",
+        "relatedPlan": "地域防災計画の本編・地震津波対策編等も公開"
+      },
+      "source": {"url": "https://www.vill.fudai.iwate.jp/bousai/hazardmap/", "checkedAt": "2026-07-23"}
+    }
+  }
+}
