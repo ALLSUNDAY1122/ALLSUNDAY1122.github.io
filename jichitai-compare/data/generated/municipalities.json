@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1360,
+    "municipalityCount": 1365,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -56523,6 +56523,167 @@
       }
     },
     {
+      "code": "06403",
+      "prefectureCode": "06",
+      "prefecture": "山形県",
+      "name": "飯豊町",
+      "officialUrl": "https://www.town.iide.yamagata.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Bが飯豊町公式情報で対象9制度を調査し、8制度を確認済み、病児・病後児保育の現行町公式制度を未確認として登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "飯豊町に住所がある0歳から18歳年度末までの子ども",
+            "coverage": "県内医療機関では医療証等の提示により外来・調剤・入院の保険診療自己負担なし",
+            "outsidePrefecture": "県外受診は一旦支払い後に申請して払い戻し",
+            "excluded": "初診時選定療養費、健康診断、差額ベッド代等の保険外費用"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/005/kosodatesieniryousyou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の現行子育て支援一覧で、病児・病後児保育の実施施設、対象年齢、料金、申込方法を確認できない。",
+          "details": {
+            "confirmed": "一時預かり、ファミリーサポート、こども誰でも通園制度等は町公式に掲載されている",
+            "unconfirmed": "病児保育または病後児保育の実施施設、対象、利用料、予約方法",
+            "guidance": "健康福祉課子ども家庭健康室へ現行の利用可否を確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/001/teijyuu_kekkonkosodate.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳以上児等は国制度で無償となり、多子世帯では第2子・第3子以降の保育料や給食費を軽減する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "feeBasis": "3歳未満児は世帯の町民税所得割額と保育必要量に応じて算定",
+            "freeCare": "3歳から5歳児および非課税世帯の0歳から2歳児は国制度の無償化対象",
+            "multiChild": "一定所得以下の第2子は半額、第3子以降は無料。18歳以下の子を3人以上養育する世帯の第3子以降も無料",
+            "mealFee": "低所得世帯や第3子以降等は3歳以上児の給食費を徴収しない"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/reiki_int/reiki_honbun/c433RG00000262.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月1日から町内小学校に通う全児童の給食費を全額免除する。中学生は対象外。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "町内小学校に通う全ての児童",
+            "startDate": "2026-04-01",
+            "coverage": "昼食として提供される小学校給食費を全額免除",
+            "application": "特別な手続きは不要",
+            "juniorHigh": "現段階では中学生は無償化対象外"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/007/KyusyokuMusyouka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子を対象に、宿泊型・通所型・訪問型の産後ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "飯豊町に住民登録があり、育児支援や心身のケアを必要とする産後1年以内の母子",
+            "types": "宿泊型、通所型、訪問型",
+            "support": "母体の健康管理、乳房ケア、授乳相談、乳児の発育確認、育児相談等",
+            "overnight": "原則2泊3日まで。一般世帯は1泊2日5,000円、2泊3日7,500円",
+            "dayVisit": "通所・訪問型は助成2回まで無料。以後は自費",
+            "reduction": "非課税世帯は宿泊料金半額、生活保護世帯は無料"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/002/sangokeajigyo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "家庭での保育が一時的に困難な概ね1歳以上の未就園児を、仕事・通院・リフレッシュ等の理由で預かる。",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "飯豊町内に住所がある概ね1歳以上の未就園児",
+            "reasons": "仕事・就職活動・職業訓練、通院・看護・緊急時、保護者のリフレッシュ",
+            "limits": "非定型的保育と私的理由は週3日以内、緊急保育は月14日以内",
+            "application": "NPO法人ほっとへ事前予約が必要"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/007/ichijihoiku_iide.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度の住宅リフォームを支援し、子育て世帯等は補助率・上限額の優遇対象となる。",
+          "details": {
+            "program": "令和8年度飯豊町住宅リフォーム支援事業",
+            "target": "町内住宅のリフォーム等工事を行い、町税等を完納している者",
+            "childcarePreference": "子育て世帯等は通常世帯より高い補助率・上限額を適用",
+            "maximum": "町内業者施工の場合は条件により上限80万円、町外業者施工の場合は上限50万円",
+            "conditions": "交付決定前の着工不可。他制度との併用不可の場合あり",
+            "availability": "予算上限に達した時点で受付終了"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/003/R8rifomu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "通常収集できない大型ごみを年1回、電話申込による有料戸別回収で処理する。",
+          "details": {
+            "application": "住民課生活環境室へ受付期間内に電話で申込み",
+            "collection": "地区別の指定日に回収",
+            "fee": "品目別料金。通知書確認後、料金分の粗大ごみ用証紙を購入して貼付",
+            "excluded": "家電リサイクル対象品等、町で回収できない品目あり"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/005/gbg_bg.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水浸水想定区域、土砂災害警戒区域、避難所等を掲載した防災ハザードマップを公開する。",
+          "details": {
+            "flood": "置賜白川・萩生川等の想定最大規模降雨による浸水範囲と深さを掲載",
+            "landslide": "土砂災害警戒区域を地区別地図に掲載",
+            "evacuation": "指定避難所・避難場所、避難行動ガイド、情報取得方法を掲載",
+            "other": "地震対策、防災学習情報、ため池ハザードマップも公開"
+          },
+          "source": {
+            "url": "https://www.town.iide.yamagata.jp/013/2021_hazard-map.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "07201",
       "prefectureCode": "07",
       "prefecture": "福島県",
@@ -67039,6 +67200,178 @@
           "additionalSources": [
             {
               "url": "https://www.shinchi-town.jp/life/1/36/106/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "07564",
+      "prefectureCode": "07",
+      "prefecture": "福島県",
+      "name": "飯舘村",
+      "officialUrl": "https://www.vill.iitate.fukushima.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Aが対象9制度を飯舘村公式情報で調査し、4制度をverified、5制度をunavailableとして整理。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳到達後最初の3月31日まで、医療費の保険診療自己負担分を助成する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "program": "乳幼児医療費助成",
+            "target": "飯舘村に住所がある0歳から18歳年度末までの子ども",
+            "support": "保険診療の個人負担分を助成",
+            "nationalHealthInsurance": "村国民健康保険加入者は原則として医療機関窓口の支払いなし",
+            "socialInsurance": "社会保険加入者は受給資格登録等の手続きが必要"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/soshiki/2/35.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "令和8年度の病児・病後児保育について、実施施設・対象年齢・料金・予約方法を村公式情報で確認できない。",
+          "details": {
+            "researchResult": "健康福祉課、子育て支援、教育委員会、こども園の各公式ページを確認したが、現行の利用者向け案内を確認できなかった",
+            "caution": "広域利用を含む現行条件は健康福祉課または教育委員会へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/soshiki/11/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "までいの里のこども園は保育料を全額無料とし、制服代・教材代・給食費等も無料としている。",
+          "eligibility": {
+            "minAgeMonths": 4,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "飯舘村立までいの里のこども園",
+            "target": "生後4か月から小学校就学前まで",
+            "fee": "保育料は全額無料",
+            "additionalCosts": "制服代・教材代・給食費等も無料",
+            "hours": "教育時間は平日8時30分～13時10分、保育時間は月～土曜7時～18時。延長保育あり"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/soshiki/6/3700.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "義務教育学校で給食を提供し教育費の多くを村が補助することは確認できるが、令和8年度の一般世帯の学校給食費負担・無償化状況を確定できない。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "school": "いいたて希望の里学園",
+            "confirmedOperation": "施設内で調理した給食を提供し、食材の放射性物質検査を実施",
+            "confirmedSupport": "認定こども園入園から義務教育学校卒業まで、一般的な教材費等の教育費の多くを村が補助",
+            "researchResult": "令和8年度の給食費単価、保護者負担額、全額無償化の有無を公式情報で確認できなかった",
+            "caution": "現行負担額は教育委員会へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/site/iju/3903.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "妊娠・出産・乳幼児健診等の支援は確認できるが、令和8年度産後ケア事業の対象月齢・利用類型・料金を確定できない。",
+          "details": {
+            "confirmedSupport": "妊産婦健康診査、母子手帳、乳幼児健診、子ども家庭総合支援拠点等を案内",
+            "researchResult": "宿泊・日帰り・訪問型産後ケアの現行利用者向け案内を村公式サイトで確認できなかった",
+            "caution": "実施状況・利用条件は健康福祉課へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/life/3/11/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "令和8年度こども誰でも通園制度は実施されているが、公式ページから利用料金を確定できない。",
+          "details": {
+            "program": "飯舘村こども誰でも通園制度",
+            "confirmedTarget": "村内在住で保育所等に在籍していない生後6か月から満3歳未満の子ども",
+            "usageLimit": "月10時間まで、1回1時間から",
+            "facility": "までいの里のこども園",
+            "employmentRequirement": "なし",
+            "researchResult": "令和8年度の利用料金・減免条件を取得できなかった",
+            "caution": "利用料金と予約条件は教育委員会またはこども園へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/soshiki/6/14512.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://iitate.schoolweb.ne.jp/0780001/download/document/18255569",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "村外から移住・定住する方に、住宅新築最大500万円、空き家購入最大200万円、住宅修繕最大100万円を補助する。",
+          "details": {
+            "program": "飯舘村移住定住支援事業補助金",
+            "target": "2011年3月11日に村に住所がなく、2017年3月31日以降に村へ移住し定住意思がある等の要件を満たす方",
+            "newConstruction": "住宅新築は最大500万円",
+            "usedHousing": "定住用空き家購入は最大200万円",
+            "renovation": "購入した空き家等の修繕は最大100万円",
+            "additionalSupport": "県外からの移住者は福島県12市町村移住支援金の対象となる場合あり",
+            "application": "事業着手前に村または移住サポートセンターへ相談"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/site/iju/3782.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "unavailable",
+          "summary": "粗大ごみの受入・有料化は確認できるが、令和8年度の受入日・料金・申込条件を公式情報で確定できない。",
+          "details": {
+            "confirmedPastOperation": "村広報で粗大ごみの受入および有料化、令和7年11月の受入案内を確認",
+            "researchResult": "令和8年度の一般家庭向け受入日程、料金、対象品目、申込方法を確認できなかった",
+            "caution": "現行の処分方法は住民課住民係へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/site/kouhou/13818.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・洪水・ため池・避難所等を掲載した防災ハザードマップと、防災アプリ・メール配信を提供する。",
+          "details": {
+            "map": "飯舘村防災ハザードマップ",
+            "coverage": "土砂災害、洪水、ため池、避難所、災害時の行動等",
+            "additionalMaps": "岩部ダムハザードマップ、農業用ため池ハザードマップを公開",
+            "app": "飯舘村防災アプリで災害・避難情報をプッシュ通知",
+            "mail": "災害用メール配信サービスも運用",
+            "guidance": "自宅周辺の危険区域と避難経路を平時に確認"
+          },
+          "source": {
+            "url": "https://www.vill.iitate.fukushima.jp/soshiki/1/9817.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.iitate.fukushima.jp/soshiki/1/14328.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.iitate.fukushima.jp/life/1/4/",
               "checkedAt": "2026-07-24"
             }
           ]
@@ -102348,6 +102681,183 @@
           },
           "source": {
             "url": "https://www.city.katsuura.lg.jp/site/bousai/1592.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "12219",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "市原市",
+      "officialUrl": "https://www.city.ichihara.chiba.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を市原市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "市原市に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の通院・入院・調剤に係る自己負担分を助成",
+            "copayment": "通院・入院は原則1回または1日300円、調剤は無料。世帯区分等により無料となる場合あり",
+            "procedure": "受給券の交付申請が必要。出生・転入・高校生年代への拡大等に応じて手続きを行う",
+            "excluded": "保険外費用、高額療養費・付加給付、他制度の助成対象分等"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=645dc8681a180d758da811f2",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生の病児を診療所併設施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "市内在住で病気のため集団保育が困難であり、保護者の勤務等により家庭保育が困難な生後6か月から小学6年生",
+            "facility": "千葉労災病院内の病児保育室コスモスルーム",
+            "hours": "平日8時から18時、定員1日6人",
+            "fee": "1日2,000円、5時間以内1,000円。診療費等は別途",
+            "procedure": "事前登録、医療機関受診、利用予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=60237b75ece4651c88c18c5c",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "国制度の無償化に加え、認可保育施設等の第2子以降の保育料を市独自に無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "3～5歳児、住民税非課税世帯の0～2歳児、および市内在住で認可保育施設等を利用する第2子以降の対象児童",
+            "coverage": "国制度対象の利用料を無償化し、市独自制度では第1子の年齢や保護者所得にかかわらず第2子以降の保育料を無償化",
+            "procedure": "施設利用申込・認定等が必要。施設・サービスによって償還払い手続きあり",
+            "excluded": "給食費、通園送迎費、教材費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=64d4298b87ac3c158d59f8ea",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "学校給食費を徴収し、要件を満たす第3子以降を申請により免除",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "amount": "市の現行規則上、1食当たり小学校257円、中学校303円を基準とし、月額納付額は小学校4,500円、中学校5,000円等",
+            "multiChild": "扶養する子が3人以上いる世帯の第3子以降は、要件を満たし申請すると学校給食費を免除",
+            "procedure": "第3子以降の免除は年度ごとの申請が必要",
+            "notes": "国・県の負担軽減策により実際の請求額が変更される場合があるため、市からの年度別通知を確認する"
+          },
+          "source": {
+            "url": "https://www1.g-reiki.net/city.ichihara.chiba/reiki_honbun/g020RG00001285.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子に心身のケア、授乳・育児相談、休養支援を提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "市原市に住所があり、産後の心身ケアや育児支援を必要とする母親と乳児",
+            "support": "母体の健康確認・休養、乳房ケア、授乳・沐浴等の育児相談、乳児の発育確認等",
+            "types": "宿泊・通所・訪問等の利用可能な類型や委託施設は市の最新案内で確認",
+            "procedure": "子育てネウボラセンター等へ相談し、事前申請・利用調整を行う"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=62cc030c958ba07588af064b",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の乳幼児を対象に、保護者の就労要件を問わず定期的な通園機会を提供",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "国制度の基準に基づき子ども1人につき月10時間を上限として実施",
+            "fee": "利用施設・世帯区分によるため、市の最新案内を確認",
+            "procedure": "利用認定、施設面談、予約等が必要"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=62cc030c958ba07588af064b",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震基準の木造住宅の耐震診断・耐震改修費を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "制度要件を満たす市内の旧耐震基準木造住宅の所有者等",
+            "support": "耐震診断費および耐震改修工事費の一部を補助",
+            "amount": "耐震改修は制度要件に応じて最大115万円",
+            "procedure": "契約・着工前に市へ相談し、交付決定後に事業へ着手する",
+            "notes": "建築時期、構造、居住状況、税滞納の有無等の要件あり"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=6423c36133c1ad7dd610c45e",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを事前申込制の有料戸別収集で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "電話またはインターネット等で申し込み、案内された手数料を納付して指定日に排出",
+            "fee": "品目ごとに設定された処理手数料が必要",
+            "procedure": "品目、大きさ、収集日、排出場所を申込時に確認する",
+            "excluded": "家電リサイクル法対象品、処理困難物、事業系ごみ等は通常の粗大ごみ収集対象外"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=61d4dbf230842a1397804852",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・洪水・内水・高潮・土砂災害等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "市原市総合防災マップと各種ハザードマップを公開",
+            "risks": "津波、河川洪水、内水浸水、高潮、土砂災害等",
+            "facilities": "指定緊急避難場所、避難所、浸水想定区域、避難経路等を確認可能",
+            "support": "家庭の避難計画、備蓄、マイ・タイムライン等の事前確認に利用できる"
+          },
+          "source": {
+            "url": "https://www.city.ichihara.chiba.jp/article?articleId=62cf5a34958ba07588af5e58",
             "checkedAt": "2026-07-24"
           }
         }
@@ -138402,6 +138912,347 @@
           },
           "source": {
             "url": "https://www.vill.achi.lg.jp/soshiki/2/20170217hazaadomaltupu.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20409",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "平谷村",
+      "officialUrl": "https://www.hirayamura.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を平谷村公式情報で確認し、5制度をverified、4制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末まで、1回300円の受給者負担で保険診療費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "平谷村に住所がある18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の自己負担分を福祉医療費制度で助成",
+            "copay": "医療機関等の利用1回につき受給者負担金300円",
+            "procedure": "受給者証の交付、県外受診・受給者証未提示時の償還払い、高額療養費等の調整は住民課へ確認",
+            "excluded": "保険適用外費用、学校災害共済、第三者行為等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/221/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "令和8年度に利用できる病児・病後児保育施設、対象年齢、料金、予約方法を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "research": "村公式サイトの子育て支援・医療・保育関連情報を確認",
+            "needsConfirmation": "広域利用できる施設、対象年齢、事前登録、医師連絡票、利用料、予約方法は住民課へ確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/317/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "平谷村保育所の保育料・給食費・おやつ代を無料化",
+          "eligibility": {
+            "minAgeMonths": 24,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "平谷村保育所",
+            "age": "原則3歳以上。2歳児は11月から入所可能で、0～2歳児は村外の広域保育を利用可能",
+            "hours": "平日8時30分～16時30分、延長は18時まで30分100円。希望保育の土曜日は8時30分～16時30分で午前無料、午後30分100円",
+            "fee": "保育料は無料。給食費・おやつ代も全額無料",
+            "procedure": "入所要件、広域保育、年度途中入所は住民課・保育所へ確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/330/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "平谷小学校の給食費を無料化し、中学生には給食・通学費として月額4,500円を支援",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "平谷小学校の学校給食費を全額無料化",
+            "juniorHigh": "阿智中学校へ通学する中学生に月額4,500円を支援",
+            "breakdown": "給食費分2,500円、通学費分2,000円",
+            "procedure": "支給時期、欠食・転出入時の精算、申請要否は教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/221/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "産後の母乳・育児相談助成は確認できるが、宿泊・通所・訪問型産後ケアの現行利用条件を確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "confirmed": "西澤病院での産後母乳・育児相談について、1時間3,000円を5回分助成",
+            "needsConfirmation": "令和8年度の宿泊型・通所型・訪問型の実施有無、対象月齢、利用日数、自己負担、申請・予約方法は住民課へ確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/317/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "令和8年度の一時預かり・こども誰でも通園制度の対象年齢、利用時間、料金、予約方法を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "research": "平谷村保育所と子育て支援の公式案内を確認",
+            "needsConfirmation": "一時預かり、緊急保育、こども誰でも通園制度の実施施設、対象年齢、月間上限、利用料、事前登録・予約方法は住民課へ確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/317/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "新築住宅に最大100万円、空き家取得・改修に最大50万円を補助",
+          "eligibility": {
+            "minAgeMonths": 216,
+            "maxAgeYears": 60
+          },
+          "details": {
+            "newLarge": "50歳以下で100平方メートル以上の住宅新築に100万円",
+            "newSmall": "60歳以下で20平方メートル以上の住宅新築に25万円",
+            "vacantHouse": "60歳以下の空き家取得・改修費を2分の1、上限50万円補助",
+            "publicHousing": "村営住宅は月額1万円からの案内あり",
+            "procedure": "年齢・居住・定住期間、工事着手前申請、対象経費、併用制限を総務課へ確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/221/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "unavailable",
+          "summary": "ごみ分別と令和8年4月からのプラスチック資源回収は確認できるが、粗大ごみの現行収集日・料金・持込先を確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "confirmed": "村公式サイトで家庭ごみ分別と令和8年4月からのプラスチック資源回収拡大を案内",
+            "outdated": "公開されている収集カレンダーは令和7年度版",
+            "needsConfirmation": "令和8年度の粗大ごみ収集日、申込方法、処理手数料、持込施設、対象品・除外品は住民課へ確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/100/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害ハザードマップと指定避難所情報を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "flood": "長野県が令和5年11月に公表した上村川、平谷川、相川の洪水浸水想定区域を反映",
+            "landslide": "土砂災害警戒区域・特別警戒区域を掲載",
+            "evacuation": "指定緊急避難場所・指定避難所と避難時の注意事項を案内",
+            "preparation": "自宅周辺の危険区域、避難場所、避難経路を平時に確認"
+          },
+          "source": {
+            "url": "https://www.hirayamura.jp/pages/54/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20410",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "根羽村",
+      "officialUrl": "https://www.nebamura.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を根羽村公式情報で確認し、5制度をverified、4制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高校卒業年度までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "根羽村に住所がある高校卒業年度までの子ども。扶養実態がある村外住所の高校生等も対象となる場合あり",
+            "coverage": "保険診療の自己負担分を福祉医療費給付事業で助成",
+            "procedure": "県内医療機関等では受給者証と保険資格確認書類を提示。県外受診等は領収書を住民課へ提出",
+            "copay": "現物給付対象外の場合は1レセプト300円の事務処理額等を控除",
+            "deadline": "県外受診等の請求期限は1年以内",
+            "excluded": "保険適用外費用、高額療養費・付加給付、入院時食事療養費、学校災害共済等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/wp-content/uploads/2019/06/%E5%BA%83%E5%A0%B1%E3%81%AD%E3%81%AF%E3%82%99192%E5%8F%B7.pdf",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "令和8年度に利用できる病児・病後児保育施設、対象年齢、料金、予約方法を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "research": "村公式サイトの保育所・子育て・福祉関連情報を確認",
+            "needsConfirmation": "飯田下伊那地域等の広域利用施設、事前登録、医師連絡票、利用料、予約方法は住民課または教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebalife/resident/childcare/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "unavailable",
+          "summary": "根羽村保育所の保育時間・延長料金は確認できるが、令和8年度の通常保育料と給食費負担を確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "facility": "根羽村保育所。2025年4月時点で未満児5人・以上児15人",
+            "hours": "平日8時～16時、土曜日8時～正午。平日7時30分～8時は無料延長、16時～18時は30分50円と17時のおやつ代50円",
+            "needsConfirmation": "令和8年度の0～2歳児保育料、3～5歳児の無償化、給食・主食・副食費、所得・多子世帯軽減は教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebalife/resident/childcare/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "根羽学園で給食を実施しているが、令和8年度の一般世帯負担額・無償化状況を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "confirmed": "根羽村立義務教育学校根羽学園で1～9年生の学校教育を実施",
+            "pastReference": "令和7年度の親子山村留学案内では学校給食費無償と案内",
+            "needsConfirmation": "令和8年度の給食費無償化継続、1食単価・月額・年額、欠食時精算、村外通学者の支援は教育委員会へ確認"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebalife/school/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "令和8年度の宿泊・通所・訪問型産後ケアの対象月齢、利用料、施設、申請方法を公式公開情報で確定できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "research": "村公式サイトの保健衛生・子育て関連情報と行動計画を確認",
+            "needsConfirmation": "産後ケアの実施類型、利用日数、自己負担、実施施設、助産師訪問、申請・予約方法は住民課へ確認"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebalife/resident/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "1歳から就学前の児童を週3日程度・月12日以内で一時保育",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "1歳～就学前で、保護者の就労・就学・疾病・災害・出産・看護・育児負担等により一時保育が必要な児童",
+            "limit": "原則週3日程度、月12日以内",
+            "hours": "月～金曜日8時30分～16時、土曜日8時30分～正午。1時間単位で申込可能",
+            "extension": "延長保育も相談可能",
+            "procedure": "役場または根羽村保育所へ事前相談・申込み",
+            "fee": "通常時間帯の利用料と食事等実費は申込時に確認"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebalife/resident/childcare/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅用太陽光発電設備の設置費を最大20万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "村内に住所があり、自ら居住する住宅に10kW未満の住宅用太陽光発電システムを設置する人",
+            "conditions": "世帯全員に村税等滞納がなく、年度内に工事完了し、村内または飯田下伊那地域の事業者から購入",
+            "amount": "最大出力1kW当たり5万円、上限20万円",
+            "deadline": "補助を受ける会計年度の1月31日まで",
+            "other": "空き家活用官民連携事業も実施し、空き家所有者と利用希望者のマッチングを支援"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebalife/resident/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "ごみカレンダーに基づき粗大ごみ・小型家電を時間指定で収集",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "fiscal2025Change": "令和8年3月の粗大ごみ・小型家電収集を3月8日から3月15日へ変更し、9時～11時に実施",
+            "procedure": "年度ごとのごみカレンダーと村からの変更通知を確認して指定日時・場所へ排出",
+            "needsConfirmation": "令和8年度内の次回収集日、会場、品目別手数料、対象品・除外品は住民課へ確認",
+            "excluded": "家電リサイクル対象品は販売店等への引取り依頼が必要"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebatopics/news/3110/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "根羽村防災マップと気象・河川砂防情報へのリンクを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "map": "村公式の防災マップ全頁を公開",
+            "weather": "気象庁のキキクル、警報・注意報、今後の雨へ案内",
+            "river": "長野県河川砂防情報ステーションへ案内",
+            "preparation": "自宅周辺の危険区域、避難場所・経路と情報取得方法を平時に確認"
+          },
+          "source": {
+            "url": "https://www.nebamura.jp/nebatopics/news/3053/",
             "checkedAt": "2026-07-24"
           }
         }
