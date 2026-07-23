@@ -1,0 +1,70 @@
+name: Fix 40601 Publication Readiness
+
+on:
+  pull_request:
+    branches: [region/west]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix:
+    if: github.head_ref == 'fix/40601-publication-readiness-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/40601-publication-readiness-20260724
+          fetch-depth: 0
+      - name: Normalize municipality and task
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const municipalityPath = 'jichitai-compare/data/municipalities/40/40601.json';
+          const taskPath = 'jichitai-compare/operations/tasks/40601.json';
+          const workflowPath = '.github/workflows/fix-40601-publication-readiness.yml';
+          const sourceUrl = 'https://www.town.kawara.fukuoka.jp/020/010/050/';
+          const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+          const service = municipality.services.temporaryChildcare;
+          service.status = 'unavailable';
+          service.summary = '2026年度のこども誰でも通園制度案内は掲載されているが、対象年齢・利用上限・料金・実施施設・認定予約条件を公式本文で確定できない。';
+          service.notes = [
+            '香春町公式サイトに2026年5月15日付の「こども誰でも通園制度について」の掲載を確認。',
+            '比較に必要な対象年齢、月間利用上限、料金、実施施設、認定・面談・予約方法は公開本文で確認できないため推測しない。',
+            '利用前に香春町福祉課こども未来係へ確認が必要。'
+          ];
+          service.source = { url: sourceUrl, checkedAt: '2026-07-24' };
+          municipality.status = 'verified';
+          municipality.summary = '必須9制度を香春町公式情報で調査。8制度をverified、利用条件未確定のこども誰でも通園制度をunavailableとして登録。';
+          municipality.updatedAt = '2026-07-24';
+          fs.writeFileSync(municipalityPath, JSON.stringify(municipality) + '\n');
+
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          task.status = 'pr_open';
+          task.currentService = null;
+          task.nextServiceIndex = 9;
+          task.completedServices = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          task.verifiedCount = 8;
+          task.researchingCount = 0;
+          task.unavailableCount = 1;
+          task.needsMediumReviewCount = 0;
+          task.currentBranch = 'fix/40601-publication-readiness-20260724';
+          task.pullRequestNumber = Number(process.env.PR_NUMBER);
+          task.lastCheckedAt = '2026-07-24';
+          task.lastUpdatedAt = '2026-07-24T08:24:00+09:00';
+          task.lastUpdatedBy = '統括B';
+          task.officialSources = [...new Set([...(task.officialSources || []), sourceUrl])];
+          task.notes = (task.notes || []).filter((note) => !note.includes('要確認として登録'));
+          task.notes.push('こども誰でも通園制度は案内掲載を確認したが比較条件を確定できないためunavailableへ正規化。');
+          task.blockers = [];
+          fs.writeFileSync(taskPath, JSON.stringify(task) + '\n');
+          fs.unlinkSync(workflowPath);
+          NODE
+          git add jichitai-compare/data/municipalities/40/40601.json jichitai-compare/operations/tasks/40601.json .github/workflows/fix-40601-publication-readiness.yml
+          git commit -m "fix: 香春町の公開除外制度を確認待ちへ正規化"
+          git push origin HEAD:fix/40601-publication-readiness-20260724
