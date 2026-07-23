@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "05464",
+  "municipalityName": "東成瀬村",
+  "prefectureCode": "05",
+  "prefectureName": "秋田県",
+  "assignedTeam": "北日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 7,
+  "researchingCount": 0,
+  "unavailableCount": 2,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/05464-higashinaruse",
+  "pullRequestNumber": null,
+  "lastCheckedAt": "2026-07-24",
+  "lastUpdatedAt": "2026-07-24T00:06:00+09:00",
+  "lastUpdatedBy": "北日本調査班B・統括A全国統合",
+  "officialSources": [
+    "https://vill.higashinaruse.lg.jp/villager/welfare/fukushi-iryou/post-24300/",
+    "https://vill.higashinaruse.lg.jp/sonmin/welfare/",
+    "https://vill.higashinaruse.lg.jp/iju/",
+    "https://vill.higashinaruse.lg.jp/villager/parenting/post-29137/",
+    "https://vill.higashinaruse.lg.jp/villager/parenting/kekkon/post-23169/",
+    "https://vill.higashinaruse.lg.jp/sonmin/page-24971/",
+    "https://vill.higashinaruse.lg.jp/hazardmap/index.html"
+  ],
+  "notes": [
+    "東成瀬村の正式自治体コード05464を確認し、既存task・オープンPR・作業ブランチがないことを確認して着手。",
+    "必須9制度を村公式情報で調査し、7制度をverified、病児・病後児保育と産後ケアをunavailableとして登録。",
+    "18歳年度末まで村独自拡大を含む医療費助成、保育料・保育園給食費・小中学校給食費無料を確認。",
+    "なるせ保育園の一時保育、新婚世帯住宅支援、不燃・粗大ごみ地区別収集、WEB版ハザードマップを確認。",
+    "病児・病後児保育と産後ケアは現行の利用条件を案内する公式ページを確認できなかった。",
+    "PR #1597はCI成功後にregion/northへマージ済み。",
+    "統括Aの北日本・東日本全件監査によりmainへ全国統合。"
+  ],
+  "blockers": []
+}

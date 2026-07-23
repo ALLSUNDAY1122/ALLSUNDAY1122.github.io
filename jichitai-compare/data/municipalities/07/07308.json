@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07308",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "川俣町",
+  "officialUrl": "https://www.town.kawamata.lg.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を川俣町公式情報で調査し、7制度をverified、病児・病後児保育と学校給食費をunavailableとして整理。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担額と入院時食事療養費を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "program": "子ども医療費助成制度",
+        "target": "川俣町に住所があり健康保険に加入する出生から18歳年度末までの子ども。生活保護受給者を除く",
+        "support": "入院・外来の保険診療一部負担金および入院時食事療養費",
+        "application": "川俣町国民健康保険以外の加入者は受給資格登録が必要",
+        "excluded": "健診・予防接種等の保険適用外費用、高額療養費・付加給付相当額、第三者行為等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/kodomoiryouhi.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "ファミリーサポート事業で病児・病後児の緊急時預かりと料金は確認できるが、対象年齢・受入条件を町公式情報で確定できない。",
+      "details": {
+        "program": "川俣町ファミリーサポート事業",
+        "operator": "特定非営利活動法人コミュニティちゃばたけ",
+        "service": "病児・病後児の緊急時預かり、子どもの一時預かり、送迎等",
+        "fee": "病児・病後児は1時間800円",
+        "registration": "事前にファミサポ会員登録が必要",
+        "infantSupport": "令和5年4月以降に生まれた0歳児家庭は、基本利用料40時間分の助成券を申請可能。割増・実費は対象外",
+        "researchResult": "病児・病後児預かりの対象年齢、症状範囲、受入可否判断の条件を公開HTMLで確認できなかった",
+        "caution": "利用希望時はファミリーサポートセンターへ対象年齢と受入条件の確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/famisapo-kosodate.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "かわまた認定こども園の0～2歳児利用料と3～5歳児給食費を町独自に無償化し、3～5歳児等は国制度の無償化対象とする。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "zeroToTwo": "川俣町に住所があり、かわまた認定こども園に在園する0～2歳の3号認定児の利用料を町が助成し無償化",
+        "threeToFive": "3～5歳児は国の幼児教育・保育無償化対象",
+        "mealSupport": "町内在住で同園に在園する3～5歳の1号・2号認定児の給食費を町が助成し無償化",
+        "application": "町独自の利用料・給食費助成は手続きが必要",
+        "excludedCosts": "延長保育料、行事費等の実費は原則対象外"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/kodomoen-riyouryou.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/kodomoen-kyuusyokuhi.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/youjikyouikuhoikumusyouka.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "小中学校給食費の無償化開始は過年度予算で確認できるが、令和8年度の保護者負担額を現行の町公式HTMLで確定できない。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "pastProgram": "令和4年度予算で小中学校給食費無償化を計上",
+        "currentOperation": "令和8年度も福島市・川俣町学校給食センターが川俣小学校・川俣中学校・山木屋中学校等へ給食を提供",
+        "researchResult": "令和8年度予算概要・学校給食ページでは現在の保護者負担額を確認できなかった",
+        "caution": "現行の無償化・負担額は学校教育課または学校給食センターへの確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/chosei-shisetsu/yosan04.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/kyuusyoku.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "出産後1年未満の母子を対象に、助産所で宿泊または日帰り型の産後ケアを実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "川俣町に住民票があり、母子とも感染症症状や医療行為の必要がない出産後1年未満の母親と乳児",
+        "types": "宿泊型、日帰り型",
+        "services": "授乳・育児相談、母体の休養、乳房ケア、乳児の健康・発育確認等",
+        "facility": "委託助産所",
+        "application": "利用前に保健福祉課へ相談・申請",
+        "fee": "年度・施設・利用類型により異なるため現行案内で確認"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/sango.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用でき、川俣町民は無料。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所・こども園等に通っていない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで",
+        "facility": "子育てにこにこ広場（かわまた認定こども園内）",
+        "hours": "毎週月・火曜日の9時から正午まで。定員2人",
+        "fee": "川俣町民は無料、町外利用者は1時間300円",
+        "application": "町への利用申請、施設での親子面談、3時間の親子通園、予約が必要"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kosodate-iryo/daredemotuen.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "福島県外から要件を満たして移住する方に、単身最大120万円、2人以上世帯最大200万円を支給する。",
+      "details": {
+        "program": "福島12市町村移住支援金",
+        "target": "福島県外から川俣町へ移住し、就業・起業・定住等の要件を満たす方",
+        "single": "最大120万円",
+        "household": "2人以上の世帯は最大200万円",
+        "professionalAddition": "要件を満たす医療・介護・福祉等の有資格職への就業は1人当たり120万円加算",
+        "applicationPeriod": "令和8年度は2026年4月1日から2027年1月29日まで",
+        "otherSupport": "民間賃貸住宅での移住・二地域居住には最大30万円の支援制度あり"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kurashi-tetsuzuki/hukushima12.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kawamata.lg.jp/site/kurashi-tetsuzuki/ijunichiiki.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは地区別に月2回の指定日に収集し、伊達地方衛生処理組合清掃センターへの自己搬入も可能。",
+      "details": {
+        "mondayThursdayCourse": "粗大ごみは第1・第3水曜日",
+        "tuesdayFridayCourse": "粗大ごみは第2・第4水曜日",
+        "placement": "収集日の朝8時までに指定場所へ排出",
+        "directCarry": "伊達地方衛生処理組合清掃センターへ自己搬入可能",
+        "sorting": "金属を含むもの、規格内の木材・枝木類等は粗大ごみ処理施設へ搬入",
+        "excluded": "太さ12cm・長さ1.8m以上の木材等、処理困難物は受入不可"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kurashi-tetsuzuki/gomi-shuushuu4.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kawamata.lg.jp/site/kurashi-tetsuzuki/gomizikohannnyuu.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.kawamata.lg.jp/site/kurashi-tetsuzuki/gomi-handbook.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水、土砂災害、避難所等を掲載した川俣町防災マップと、12か所のため池ハザードマップを公開する。",
+      "details": {
+        "map": "川俣町防災マップ",
+        "coverage": "河川氾濫による浸水想定区域、土砂災害警戒区域、避難場所・避難所、防災学習情報",
+        "revision": "令和5年3月作成",
+        "myEvacuation": "警戒レベルに応じた行動を記入するマイ避難シートを掲載",
+        "ponds": "防災重点農業用ため池12か所の浸水範囲・深さ・避難場所・避難経路を公開"
+      },
+      "source": {
+        "url": "https://www.town.kawamata.lg.jp/site/kurashi-tetsuzuki/shouboukoutsuu-bousaimap.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kawamata.lg.jp/site/kurashi-tetsuzuki/tameike-hazard-map.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}
