@@ -10,14 +10,18 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-23T15:50:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-23T16:13:00+09:00",
+  "status": "ready_for_review",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 77,
-  "currentMunicipality": null,
-  "workingBranch": null,
+  "currentMunicipality": {
+    "code": "04445",
+    "name": "加美町",
+    "stage": "ready_for_review"
+  },
+  "workingBranch": "data/04445-kami",
   "pullRequestNumber": null,
-  "ciStatus": "success",
+  "ciStatus": "not_started",
   "completedSinceSplit": [
     "04100",
     "04202",
@@ -51,5 +55,5 @@
     "04444"
   ],
   "blocked": [],
-  "nextAction": "加美町（04445）はtask・同名ブランチ・オープンPRなし。次回、region/northから作業ブランチを作成し、必須9制度調査を開始する。"
+  "nextAction": "加美町の3ファイル差分を検証し、region/north向けPRを作成してCI成功後に地方統合する。"
 }
