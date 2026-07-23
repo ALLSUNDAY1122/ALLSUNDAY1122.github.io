@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1453,
+    "municipalityCount": 1456,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -24660,6 +24660,166 @@
           },
           "source": {
             "url": "https://www.niikappu.jp/kurashi/bosai/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "01607",
+      "prefectureCode": "01",
+      "prefecture": "北海道",
+      "name": "浦河町",
+      "officialUrl": "https://www.town.urakawa.hokkaido.jp/",
+      "status": "verified",
+      "summary": "北日本調査班Bが浦河町公式情報で対象9制度を調査し、8制度を確認済み、病児・病後児保育の現行利用条件を未確認として登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担額を、月1世帯8万円を上限として地域ポイントで支援する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "浦河町内に住所があり18歳年度末までの子どもを扶養する保護者",
+            "coverage": "健康保険対象の医療費自己負担額",
+            "method": "うらかわタウンポイントUP-Cへ1ポイント1円で行政ポイントを付与",
+            "monthlyLimit": "1世帯月8万円",
+            "deadline": "診療月の翌月から3か月以内に申請"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/education/?content=627",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "体調不良児対応への補助実績は確認できるが、令和8年度の利用施設、対象年齢、料金、登録・予約方法を町公式の現行案内で確定できない。",
+          "details": {
+            "confirmed": "認定こども園で保育中に体調不良となった児童へ対応する事業への補助実績がある",
+            "unconfirmed": "一般利用できる病児・病後児保育施設、対象年齢、利用料、利用時間、予約方法",
+            "guidance": "子育て医療課へ現行の利用条件を確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/kosodate/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳から5歳児と住民税非課税世帯の0歳から2歳児は保育料無償化の対象となり、その他の0歳から2歳児は町民税額等に応じて算定する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "threeToFive": "保育所・認定こども園等の保育料を無償化",
+            "zeroToTwo": "住民税非課税世帯は無償化。課税世帯は所得階層に応じた保育料",
+            "multipleChildren": "一定所得未満世帯は第2子以降無料。その他も第2子半額・第3子以降無料の区分あり",
+            "mealFee": "給食費や送迎費等は原則実費。一定世帯は副食費免除"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/education/?content=619",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "小学校給食費は無償、中学校は月4,300円を基本とし、多子世帯の第2子は半額、第3子以降は全額免除する。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "月額0円（無償化）",
+            "juniorHigh": "月額4,300円",
+            "multipleChildren": "18歳以下の子どもが2人以上いる世帯は第2子半額、第3子以降全額免除",
+            "assistance": "就学援助認定世帯は中学校給食費も実費支援",
+            "application": "多子世帯減免と就学援助は申請が必要"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/education/?content=217",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後4か月未満の乳児と産後4か月未満の産婦を対象に、宿泊型・日帰り型の産後ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "浦河町に住民票がある生後4か月未満の乳児と産後4か月未満の産婦",
+            "types": "宿泊型、日帰り型",
+            "support": "産婦の健康管理、授乳・乳房ケア、沐浴支援、乳児の発育確認、育児相談",
+            "excluded": "医療行為または感染症対応が必要な場合"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/education/?content=3946",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等を利用していない生後6か月から満3歳未満児を、就労要件を問わず月10時間まで預かるこども誰でも通園制度を実施する。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "保育の3号認定を受けていない生後6か月から満3歳未満児",
+            "limit": "児童1人につき月10時間まで",
+            "condition": "保護者の就労要件を問わない",
+            "application": "町公式LINEのオンライン申請または子育て医療課窓口で利用認定申請"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/news/detail.html?content=843",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による100万円以上の住宅新築・増改築・リフォームを10万～30万円補助し、18歳未満の子ども1人につき10万円を加算する。",
+          "details": {
+            "program": "浦河町住宅新築リフォーム等支援補助事業",
+            "baseAmount": "対象工事費100万円以上で10万円、以降50万円刻みで増額し300万円以上は30万円",
+            "childAddition": "18歳未満の子または孫1人につき10万円加算",
+            "contractor": "町内建設業者による工事",
+            "application": "工事着手前に申込みが必要"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/life/?content=86",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみはクリーンプラザへ直接搬入するか、事前予約による第1・第3土曜日の戸別回収を利用する。",
+          "details": {
+            "directCarry": "月曜日から金曜日8時30分～17時、第1・第3土曜日8時30分～12時",
+            "collection": "第1・第3土曜日の予約制戸別回収",
+            "booking": "回収日の3日前までに委託事業者へ電話申込み",
+            "fee": "品目別料金を回収時に支払う",
+            "excluded": "家電リサイクル法対象品等"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/life/?content=4627",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波、洪水・内水、土砂災害の危険区域、浸水深、避難場所を掲載したPDF・Webハザードマップを公開する。",
+          "details": {
+            "tsunami": "想定浸水範囲・水位と避難場所を掲載",
+            "flood": "洪水・内水の浸水範囲・水深と避難場所を掲載",
+            "landslide": "土砂災害警戒区域・特別警戒区域と避難場所を掲載",
+            "webMap": "3災害の危険区域を重ねて表示できるWeb版を提供"
+          },
+          "source": {
+            "url": "https://www.town.urakawa.hokkaido.jp/gyosei/prevention/?content=227",
             "checkedAt": "2026-07-24"
           }
         }
@@ -109761,6 +109921,184 @@
       }
     },
     {
+      "code": "12322",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "酒々井町",
+      "officialUrl": "https://www.town.shisui.chiba.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を酒々井町公式情報で確認し、8制度をverified、町公式で専用事業を確認できない病児・病後児保育をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高校3年生等までの入院・通院・調剤の保険診療費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "酒々井町に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院・調剤の保険診療自己負担分を助成",
+            "copayment": "通院1回・入院1日200円、調剤無料。非課税・均等割のみ課税世帯は無料で、同一月同一医療機関の入院11日・通院6回以降も無料",
+            "procedure": "町へ受給券交付申請が必要。県外受診等は償還払い",
+            "excluded": "保険外診療、第三者行為、高額療養費、学校管理下の災害共済給付対象等"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2014021806228/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式情報では専用の病児・病後児保育事業を確認できない",
+          "details": {
+            "current": "酒々井町公式の子育てサービス一覧・担当課案内では、専用の病児・病後児保育施設や町事業を確認できない",
+            "relatedSupport": "生後6か月から小学6年生までを対象とするファミリー・サポート・センターの通常預かり・送迎支援はあるが、病児対応は公式案内に明記されていない",
+            "notes": "病気中・回復期の子どもを専門に預かるサービスの利用可否は、こども課へ最新状況を確認する必要がある"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/category/bunya/kurashi/kosodate/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・保育園・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+            "limits": "新制度未移行幼稚園は月25,700円、認可外施設等は3～5歳月37,000円、非課税世帯0～2歳月42,000円等",
+            "procedure": "預かり保育・認可外施設・一時預かり等は保育の必要性を含む施設等利用給付認定が必要",
+            "currentFee": "課税世帯の0～2歳児は一律完全無償化の対象ではない",
+            "excluded": "給食費、通園バス代、教材費、時間外保育料等の実費"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2019090600012/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "要件を満たす第3子以降の町立小中学生の学校給食費を申請により免除",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "小学校から大学等の教育施設に子どもを3人以上扶養・就学させ、要件を満たす世帯の第3子以降で酒々井町立小中学校に就学する児童生徒",
+            "coverage": "対象となる第3子以降の学校給食費を免除",
+            "procedure": "教育委員会学校教育課へ申請書と添付書類を持参。免除決定後、申請月の翌月分から適用",
+            "currentFee": "対象外の児童生徒は学校給食費を負担し、小中学校全員の一律無償化ではない",
+            "notes": "富里市学校給食センター共同利用後も町の献立・アレルギー情報を公開"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2017071300012/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・通所・訪問型の産後ケアを生後1年未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "酒々井町に住所がある母親と生後1年未満の乳児で、入院・治療や感染症対応を必要としない方",
+            "types": "宿泊型、通所型、訪問型",
+            "support": "母子の健康相談、乳房ケア・授乳、沐浴等の育児相談・指導、母親の休養支援",
+            "fee": "課税世帯は宿泊単胎3,000円、通所単胎1,600円、訪問単胎1,400円等。非課税世帯は半額、生活保護世帯は無料",
+            "procedure": "保健センターへ申請し利用券の交付後、希望施設または助産師へ予約",
+            "facilityAge": "宿泊・通所型は施設により対象1か月未満から6か月未満、訪問型は1歳未満"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2023061300016/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間・1時間300円で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "酒々井町民で、保育園・幼稚園等に通っていない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで。平日9時から11時または13時から15時、1時間単位",
+            "facility": "酒々井町子育て支援センターあいあい",
+            "fee": "1時間300円。生活保護、非課税、一定所得未満、要支援児童世帯等は減免対象",
+            "procedure": "町へ認定申請・問診票を提出し、認定後に総合支援システムで面談・予約"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2025082100026/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による20万円以上の住宅リフォーム費を10％・上限10万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "酒々井町に居住・住民登録し、対象住宅に居住する世帯全員に町税等の滞納がない方",
+            "condition": "税抜20万円以上で、町内施工業者が行い、契約・着工前に申請し翌年2月末までに実績報告できる工事",
+            "amount": "対象経費の10％以内、上限10万円。要件を満たす雨水抑制施設設置時は2万円加算",
+            "period": "2026年度受付は4月13日から11月30日まで。予算到達時終了",
+            "procedure": "契約・着工前にまちづくり課へ相談・申請"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2020021000016/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを清掃組合へ自己搬入または予約制戸別収集で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "directDelivery": "佐倉市酒々井町清掃組合へ直接搬入。手数料は10キログラム単位350円",
+            "collection": "居住区域を担当する許可業者へ平日に予約し、粗大ごみ処理券または処理袋を購入して指定場所へ排出",
+            "fee": "処理券1枚500円、処理袋1袋250円",
+            "target": "家具・寝具・小型電気製品・自転車等の指定袋に入らない家庭ごみ",
+            "excluded": "スプリング入りベッド・ソファ等の収集不可品、家電リサイクル対象品、事業ごみ等"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2018062500053/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・地震等の防災ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "Web版防災ハザードマップ、洪水・地震・土砂災害ハザードマップを公開",
+            "risks": "利根川・高崎川・印旛沼・中川等の洪水、土砂災害、地震の揺れ等",
+            "functions": "Web版は災害情報切替、拡大縮小、印刷、時系列浸水シミュレーション、避難所情報等を提供",
+            "support": "自宅周辺のリスク、避難場所・避難経路、情報収集手段の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.town.shisui.chiba.jp/docs/2023070400035/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "13101",
       "prefectureCode": "13",
       "prefecture": "東京都",
@@ -150023,6 +150361,191 @@
           },
           "source": {
             "url": "https://www.town.sakaki.nagano.jp/page/1382.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "20541",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "name": "小布施町",
+      "officialUrl": "https://www.town.obuse.nagano.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を小布施町公式情報で確認し、9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳年度末まで、1レセプト最大300円の負担で医療費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "小布施町に住所がある出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の自己負担分を福祉医療費給付制度で助成",
+            "copay": "県内医療機関等では1レセプトにつき最大300円を窓口負担",
+            "procedure": "福祉医療費受給者証の交付申請後、保険資格確認書類と受給者証を提示",
+            "reimbursement": "県外受診や受給者証未提示等は一旦支払い、必要書類を添えて申請",
+            "excluded": "保険外費用、高額療養費等の他制度給付、学校災害共済等は対象外または調整"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/1981.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "長野市・須坂市の病後児保育施設を広域利用可能",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "病気回復期で集団保育が困難かつ保護者が家庭保育できない子ども",
+            "service": "小布施町民も長野市・須坂市の病後児保育施設を利用可能",
+            "procedure": "利用施設への事前登録、予約、医師の診療情報提供書等が必要",
+            "fee": "対象年齢、利用料、食事代、利用時間は各施設へ確認",
+            "limitations": "病状、感染症、定員等により受入できない場合あり"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/2604.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯の0～2歳児を無償化し、課税世帯は町民税額等で算定",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "threeToFive": "保育園・認定こども園等の3～5歳児クラスは無償",
+            "underThree": "住民税非課税世帯の0～2歳児クラスは無償",
+            "taxed": "課税世帯の0～2歳児は町民税額、保育必要量、世帯状況等により算定",
+            "multiChild": "多子世帯・低所得世帯は国・県・町制度による軽減対象となる場合あり",
+            "excluded": "給食費、延長保育料、用品費、行事費等の実費は別途"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/317388.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を無償化し、中学校は年額37,884円",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "小学校は1食344円、年間199日、年額68,456円を全額町補助し保護者負担なし",
+            "juniorHigh": "中学校は1食403円、年間199日、年額80,197円のうち42,313円を町補助",
+            "parentBurden": "中学校の保護者負担は年額37,884円",
+            "period": "令和8年4月から改定",
+            "review": "物価動向を踏まえ、今後は毎年給食費を見直す方針"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/323844.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子に宿泊・日帰り・訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "小布施町に住所がある産後1年未満の母と乳児で、心身のケアや育児支援を希望する人",
+            "types": "宿泊ケア、デイケア、訪問ケア",
+            "care": "母体・乳児の健康確認、乳房ケア、授乳・沐浴指導、育児相談等",
+            "fee": "施設・類型で異なり、生活保護・非課税世帯は利用料無料。食事・交通費等は別途",
+            "example": "1日デイケアは通常3,000円、クーポン利用後500円の施設あり",
+            "procedure": "町へ利用申請後、希望施設へ予約"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/sangokeajigyou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から3歳未満の未就園児を月10時間、1時間300円で預かる",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "保育所・認定こども園等に在籍していない生後6か月～満3歳未満の子ども",
+            "facilities": "みらいく小布施、つすみ保育園",
+            "hours": "平日9時～16時30分を基本に施設日程で調整",
+            "limit": "子ども1人につき月10時間まで",
+            "fee": "1時間300円。給食200円、おやつ50円等の実費が別途",
+            "procedure": "総合支援システムで利用認定申請後、施設面談・予約"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/328154.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家の改修費を2分の1、子育て・町内業者加算込み最大60万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "空き家の売買・賃貸借契約を結び3年以上居住する人、または空き家バンク登録所有者",
+            "renovation": "空き家改修工事費の2分の1、上限40万円",
+            "addition": "町内事業者施工で10万円、子育て世帯で10万円を加算",
+            "disposal": "家財道具等処分費の2分の1、上限10万円",
+            "procedure": "契約・空き家バンク登録後、工事や処分の着手前に申請し、交付決定後に実施"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/36516.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "令和8年度の分別・収集カレンダーに基づき粗大ごみを排出・処理",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "guide": "令和8年度家庭ごみ・資源物の分別と出し方、品目別分別表、地区別収集カレンダーを公開",
+            "target": "指定袋に入らない家具等を粗大ごみとして品目に応じて処理",
+            "procedure": "品目別分別表で収集・持込方法、処理先、料金を確認",
+            "excluded": "家電リサイクル対象機器、パソコン、事業系ごみ等は別処理",
+            "note": "収集日は祝日・年末年始等で変更される場合があるため最新カレンダーを確認"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/240837.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "千曲川・松川の洪水浸水想定と避難所を水害ハザードマップで公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "flood": "千曲川・松川の想定最大規模降雨による浸水区域・浸水深・家屋倒壊等氾濫想定区域を掲載",
+            "evacuation": "水害時に開設予定の指定避難所、その他の避難所・緊急避難場所を掲載",
+            "planning": "非常持出品、情報収集、家庭の避難計画等を案内",
+            "update": "地図面・記事面は令和4年12月更新版",
+            "information": "防災情報配信、河川水位情報等の関連情報を案内"
+          },
+          "source": {
+            "url": "https://www.town.obuse.nagano.jp/docs/1934.html",
             "checkedAt": "2026-07-24"
           }
         }
