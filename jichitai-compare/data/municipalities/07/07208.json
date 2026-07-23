@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "07208",
+  "prefectureCode": "07",
+  "prefecture": "福島県",
+  "name": "喜多方市",
+  "officialUrl": "https://www.city.kitakata.fukushima.jp/",
+  "status": "verified",
+  "summary": "北日本調査班Aが対象9制度を喜多方市公式情報で調査し、9制度すべてをverifiedとして整理。",
+  "updatedAt": "2026-07-23",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額と入院時食事代を助成する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {
+        "program": "子ども医療費助成",
+        "target": "喜多方市に住所があり健康保険に加入する0歳から18歳年度末までの子ども",
+        "support": "入院・外来・調剤の保険診療自己負担額と入院時食事代",
+        "application": "事前登録後に受給資格者証を交付",
+        "excluded": "健診、予防接種、差額ベッド代、文書料等の保険適用外費用は対象外"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/site/kosodate/29232.html", "checkedAt": "2026-07-23"}
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "満3か月から小学3年生までの病気回復期の子どもを、東町のびやか保育園で一時的に預かる。",
+      "eligibility": {"minAgeMonths": 3, "maxAgeYears": 9},
+      "details": {
+        "program": "病後児保育",
+        "target": "喜多方市在住で病気回復期にあり家庭で保育できない満3か月から小学3年生までの子ども",
+        "facility": "東町のびやか保育園",
+        "fee": "1日2,000円、半日1,000円。1日利用は食事・おやつを含む",
+        "application": "医師の署名がある申込書を実施施設へ提出"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/site/kosodate/1529.html", "checkedAt": "2026-07-23"}
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と市民税非課税世帯の0～2歳児の保育料を無償化し、対象世帯の副食費も免除する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {
+        "nationalFree": "3～5歳児の保育料と、市民税非課税世帯の0～2歳児の保育料を無償化",
+        "privateKindergarten": "新制度未移行幼稚園は月額25,700円を上限に無償化",
+        "otherServices": "認可外保育、一時預かり、病児保育、ファミリーサポートも条件により無償化対象",
+        "mealReduction": "年収約360万円未満世帯や第3子以降は副食費免除",
+        "excludedCosts": "施設維持費、送迎費、延長保育料などは原則対象外"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/site/kosodate/20438.html", "checkedAt": "2026-07-23"}
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度から市内小中学校の給食費を完全無償化し、市外校等の児童生徒にも同等額を補助する。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {
+        "target": "喜多方市立小中学校の児童生徒および条件を満たす市外校等の児童生徒",
+        "support": "市内小中学校は年間給食費を無償化。市外校等は市内校と同等額を補助",
+        "annualReference": "小学校平均約70,800円、中学校平均約82,600円",
+        "unitPrice": "小学校1食400円、中学校1食464円。実質負担額0円",
+        "application": "市内小中学校在籍者は申請不要"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/soshiki/gakkyou/62021.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.kitakata.fukushima.jp/soshiki/gakkyou/17366.html", "checkedAt": "2026-07-23"}]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "生後12か月以内の母子を対象に、宿泊・日帰り・訪問型の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "details": {
+        "target": "喜多方市に住所がある生後12か月以内の乳児と母親で産後ケアを必要とし医療行為が不要な方",
+        "types": "宿泊ケア、日帰りケア、訪問ケア",
+        "usageLimit": "各類型原則7回まで。宿泊1泊2日は2回として算定",
+        "fee": "施設・ケア類型により異なる。非課税世帯・生活保護世帯には免除制度あり",
+        "application": "利用施設と日程調整後、原則7日前までに市へ申請"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/site/kosodate/15524.html", "checkedAt": "2026-07-23"}
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {
+        "program": "こども誰でも通園制度",
+        "target": "保育所・認定こども園等を利用していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "なし",
+        "usageLimit": "月10時間まで、1回最低1時間",
+        "fee": "1時間300円を基本とし施設により異なる。給食代等は別途の場合あり",
+        "application": "つうえんポータルで認定申請後、施設ごとの初回面談と予約を実施"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/soshiki/kodomo/60732.html", "checkedAt": "2026-07-23"}
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "県外から移住して住宅を取得する方に、新築最大160万円、中古最大40万円を補助する。",
+      "details": {
+        "program": "喜多方市移住者住宅取得支援事業",
+        "target": "県外から市内へ移住し、新築または中古住宅を取得して5年以上定住する方",
+        "newUnder40": "40歳未満の新築は基本80万円と県外移住者加算80万円で最大160万円",
+        "newOver40": "40歳以上の新築は基本40万円と加算40万円で最大80万円",
+        "used": "中古住宅は基本20万円と加算20万円で最大40万円",
+        "application": "事前相談が必要。令和8年度は2026年4月30日から予算終了まで受付"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/site/iju-info/23805.html", "checkedAt": "2026-07-23"}
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "市の粗大ごみ回収は年3回実施し、事前申込みと品目別処理ステッカーの購入が必要。",
+      "details": {
+        "collection": "年3回、5月・8月・11月頃に戸別回収を実施",
+        "application": "受付期間中に市民生活課または各総合支所住民課へ申込み",
+        "fee": "1品につき500円、1,000円または1,500円の処理ステッカーを購入",
+        "placement": "指定日の朝8時30分までにステッカーを貼って家の外へ排出",
+        "alternative": "許可業者への依頼や処理施設への自己搬入も可能"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/soshiki/kankyo/478.html", "checkedAt": "2026-07-23"}
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・ため池のリスクと避難所を確認できるWeb版ハザードマップを公開する。",
+      "details": {
+        "maps": "土砂災害、洪水災害、ため池の各マップ",
+        "rivers": "阿賀川、日橋川、大塩川、田付川、濁川、押切川、姥堂川、境見川、三の森川等",
+        "coverage": "浸水想定水深、土砂災害警戒区域、ため池決壊リスク、避難所・避難場所",
+        "formats": "日本語・英語対応のWeb版ハザードマップと関連PDF"
+      },
+      "source": {"url": "https://www.city.kitakata.fukushima.jp/soshiki/seikatsu/7858.html", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.city.kitakata.fukushima.jp/hazardmap/index.html", "checkedAt": "2026-07-23"}]
+    }
+  }
+}
