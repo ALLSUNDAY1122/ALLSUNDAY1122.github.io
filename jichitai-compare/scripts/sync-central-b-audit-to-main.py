@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Temporary Issue-triggered runner for Central B audit synchronization.
 import json
 import subprocess
 from collections import Counter
