@@ -5,7 +5,8 @@ const ROOT = process.cwd();
 const SITE_ROOT = path.join(ROOT, 'yorugatari');
 const STORIES_ROOT = path.join(SITE_ROOT, 'stories');
 const ANALYTICS_VERSION = '20260723-003';
-const LANDING_ANALYTICS_VERSION = '20260724-004';
+const FIVE_MINUTE_ANALYTICS_VERSION = '20260724-004';
+const BEDTIME_ANALYTICS_VERSION = '20260724-005';
 const ENGAGEMENT_VERSION = '20260723-003';
 const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png';
 const SHARE_WIDTH = '2172';
@@ -61,7 +62,11 @@ function normalizeStaticPage(filename) {
   const filePath = path.join(SITE_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
   html = ensureSocialMetadata(html);
-  const analyticsVersion = ['5min-horror.html', 'bedtime-horror.html'].includes(filename) ? LANDING_ANALYTICS_VERSION : ANALYTICS_VERSION;
+  const analyticsVersion = filename === '5min-horror.html'
+    ? FIVE_MINUTE_ANALYTICS_VERSION
+    : filename === 'bedtime-horror.html'
+      ? BEDTIME_ANALYTICS_VERSION
+      : ANALYTICS_VERSION;
   html = setRuntimeScript(html, 'assets/analytics.js', analyticsVersion);
 
   if (filename === 'privacy.html') {
