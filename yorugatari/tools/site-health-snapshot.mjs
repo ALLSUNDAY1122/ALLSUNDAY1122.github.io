@@ -5,7 +5,7 @@ const ROOT = process.cwd();
 const TOOLS = path.join(ROOT, 'yorugatari', 'tools');
 const OUTPUT_JSON = path.join(TOOLS, 'site-health-latest.json');
 const OUTPUT_MD = path.join(TOOLS, 'site-health-latest.md');
-const REPORT_VERSION = '20260724-002';
+const REPORT_VERSION = '20260724-003';
 
 const reportDefinitions = [
   { id: 'seo', label: 'SEO', file: 'seo-audit-latest.json', timestampKeys: ['auditedAt', 'generatedAt'] },
@@ -67,9 +67,14 @@ const quality = reportDefinitions.map((definition) => {
 const cleanLoaded = readJson('analytics-clean-latest.json');
 const rawLoaded = readJson('analytics-snapshot-latest.json');
 const conversionLoaded = readJson('landing-conversion-latest.json');
+const launchLoaded = readJson('external-launch-status.json');
 const clean = cleanLoaded.value || {};
 const raw = rawLoaded.value || {};
 const conversion = conversionLoaded.value || {};
+const launch = launchLoaded.value || {};
+const launchRows = Array.isArray(launch.campaigns) ? launch.campaigns : [];
+const publishedLaunches = launchRows.filter((row) => row?.status === 'published');
+const readyLaunches = launchRows.filter((row) => row?.status === 'ready_not_posted');
 const metrics = {
   analyticsMode: 'audit-filtered',
   analyticsGeneratedAt: clean.generatedAt || null,
@@ -90,7 +95,14 @@ const metrics = {
   landingViewsAfterBaseline: conversion.totals?.landingViews ?? null,
   storyStartsAfterBaseline: conversion.totals?.storyStarts ?? null,
   landingStartRate: conversion.totals?.startRate ?? null,
-  conversionComparisonReady: conversion.comparisonReady ?? false
+  conversionComparisonReady: conversion.comparisonReady ?? false,
+  externalLaunch: {
+    statusFileExists: launchLoaded.exists,
+    publishedCount: publishedLaunches.length,
+    readyNotPostedCount: readyLaunches.length,
+    nextCampaignId: launch.nextCampaignId || null,
+    updatedAt: launch.updatedAt || null
+  }
 };
 
 const failedQuality = quality.filter((row) => !row.exists || !row.success);
@@ -98,7 +110,11 @@ const staleQuality = quality.filter((row) => Number.isFinite(row.ageHours) && ro
 const actions = [];
 if (failedQuality.length) actions.push(`失敗または未保存の監査を修正する：${failedQuality.map((row) => row.label).join('、')}`);
 if (staleQuality.length) actions.push(`48時間以上更新されていない監査を再実行する：${staleQuality.map((row) => row.label).join('、')}`);
-if ((metrics.externalSourceViews ?? 0) === 0) actions.push('追跡URLを使った外部投稿を1本だけ実行し、検索・SNS・参照流入の着地を確認する。');
+if (metrics.externalLaunch.publishedCount === 0) {
+  actions.push(`外部投稿は未実施。追跡URL付きの次候補${metrics.externalLaunch.nextCampaignId ? `「${metrics.externalLaunch.nextCampaignId}」` : ''}を1本だけ公開し、着地を確認する。`);
+} else if ((metrics.externalSourceViews ?? 0) === 0) {
+  actions.push('外部投稿の証跡はあるが流入は0件。記録した投稿URLと媒体側の公開状態を確認する。');
+}
 if (!metrics.conversionComparisonReady) actions.push('各特集の基準値設定後閲覧が30件に達するまで、見出しや作品選定の優劣を判断しない。');
 if (!metrics.rankingReady) actions.push('人気順位や作品の並び順は変更せず、除外後の作品閲覧100件・7日分の観測まで収集を続ける。');
 if ((metrics.notFoundViews ?? 0) > 0) actions.push('除外後の404発生パスを確認し、内部リンクまたはサイトマップを修正する。');
@@ -134,6 +150,7 @@ const metricLines = [
   `- 基準値設定後の特集閲覧: ${metrics.landingViewsAfterBaseline ?? '不明'}`,
   `- 基準値設定後の作品開始: ${metrics.storyStartsAfterBaseline ?? '不明'}`,
   `- 特集開始率: ${metrics.landingStartRate == null ? '判定前' : `${metrics.landingStartRate}%`}`,
+  `- 外部投稿証跡: ${metrics.externalLaunch.publishedCount}本（準備済み未投稿${metrics.externalLaunch.readyNotPostedCount}本）`,
   `- 作品順位判定: ${metrics.rankingReady ? '可能' : '保留'}`,
   `- 特集比較判定: ${metrics.conversionComparisonReady ? '可能' : '保留'}`
 ];
