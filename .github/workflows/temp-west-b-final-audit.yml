@@ -1,0 +1,59 @@
+name: Temporary West B Final Audit Integration
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check correction is on main
+        id: gate
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p = 'jichitai-compare/data/municipalities/47/47302.json';
+          const d = JSON.parse(fs.readFileSync(p, 'utf8'));
+          const expected = 'https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000549.html';
+          if (d.services.childcareFee.source.url !== expected) process.exit(78);
+          NODE
+      - name: Build clean audit branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if test -f jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-review-20260725.json; then
+            exit 0
+          fi
+          git fetch origin audit/west-b-rough-validation-cycles-09-10-20260725
+          git checkout -B audit/west-b-final-cycles09-10-review-20260725 origin/main
+          git show origin/audit/west-b-rough-validation-cycles-09-10-20260725:jichitai-compare/operations/audits/west-b-rough-validation-cycle-09-20260725.json > jichitai-compare/operations/audits/west-b-rough-validation-cycle-09-20260725.json
+          git show origin/audit/west-b-rough-validation-cycles-09-10-20260725:jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-20260725.json > jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-20260725.json
+          export CORRECTION_REF=$(git log -1 --format=%H -- jichitai-compare/data/municipalities/47/47302.json)
+          node .github/temp-west-b-final-audit.mjs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-09-20260725.json
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-09-review-20260725.json
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-20260725.json
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-review-20260725.json
+          git commit -m "audit: 西日本B概略検証 第9・10回を確定"
+          git push --force-with-lease origin HEAD:audit/west-b-final-cycles09-10-review-20260725
+          if ! gh pr view audit/west-b-final-cycles09-10-review-20260725 --json number >/dev/null 2>&1; then
+            gh pr create --base main --head audit/west-b-final-cycles09-10-review-20260725 \
+              --title "audit: 西日本B概略検証 第9・10回（宮崎残・沖縄）" \
+              --body "西日本B概略検証の第9・10回を確定します。計50自治体・450制度・500URLを監査し、構造不整合0件、内容訂正1件、出典保守5件を修正済みです。10自治体の手動抜き取りはすべて公式情報と一致しました。"
+          fi
