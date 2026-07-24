@@ -3,7 +3,7 @@
   "auditId": "central-a-scope-verification-20260724",
   "session": "中日本調査班A",
   "purpose": "担当範囲の誤調査・状態不整合を都道府県単位で10回に分けて概略再検証する",
-  "branch": "audit/central-a-scope-verification-round-02-20260725",
+  "branch": "audit/central-a-scope-verification-round-03-20260725",
   "startedAt": "2026-07-24T23:50:00+09:00",
   "status": "in_progress",
   "batchCount": 10,
@@ -102,16 +102,30 @@
         "17205"
       ],
       "completedAt": "2026-07-25T00:22:00+09:00"
+    },
+    {
+      "batch": 3,
+      "prefectureCode": "18",
+      "prefectureName": "福井県",
+      "municipalityCount": 17,
+      "status": "structural_checked",
+      "checkedMunicipalities": 17,
+      "checkedServices": 153,
+      "structuralFindingCount": 0,
+      "unavailableCount": 0,
+      "substantiveSuspectCount": 6,
+      "report": "operations/control/central-a-scope-round-03-fukui-20260725.json",
+      "nextStep": "制度内容疑義を公式情報で重点照合する"
     }
   ],
   "summary": {
     "completedBatches": 2,
-    "checkedMunicipalities": 34,
+    "checkedMunicipalities": 51,
     "confirmedErrors": 6,
     "needsFurtherReview": 0,
     "correctedErrors": 6
   },
-  "nextAction": "第3回として福井県17自治体を監査する",
+  "nextAction": "福井県の構造監査結果と制度内容疑義を確認し、明確な誤りを修正する",
   "rebuiltFrom": "audit/central-a-scope-verification-20260724",
   "rebuiltAt": "2026-07-25T00:11:00+09:00"
 }
