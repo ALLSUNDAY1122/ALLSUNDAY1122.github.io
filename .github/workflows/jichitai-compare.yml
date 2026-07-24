@@ -50,7 +50,6 @@ jobs:
             fs.rmSync(taskPath, { force: true });
           }
           const selected = [];
-          const copiedCodes = new Set();
           function gitShow(ref, file) {
             return execFileSync('git', ['show', `${ref}:${file}`], { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 });
           }
@@ -59,7 +58,6 @@ jobs:
             fs.mkdirSync(path.dirname(taskPath), { recursive: true });
             fs.writeFileSync(dataPath, gitShow(`origin/region/${region}`, dataPath));
             fs.writeFileSync(taskPath, gitShow(`origin/region/${region}`, taskPath));
-            copiedCodes.add(code);
             if (isNew) selected.push({ region, code });
           }
           for (const [region, prefixes] of Object.entries(regionPrefixes)) {
@@ -70,8 +68,7 @@ jobs:
               const code = match[1];
               if (!prefixes.has(code.slice(0,2))) continue;
               const taskPath = `${project}/operations/tasks/${code}.json`;
-              const isNew = !fs.existsSync(dataPath);
-              if (isNew) copyFromRegion(region, code, dataPath, taskPath, true);
+              if (!fs.existsSync(dataPath)) copyFromRegion(region, code, dataPath, taskPath, true);
             }
           }
           for (const code of ['40210']) {
@@ -79,7 +76,7 @@ jobs:
             const taskPath = `${project}/operations/tasks/${code}.json`;
             copyFromRegion('west', code, dataPath, taskPath, !fs.existsSync(dataPath));
           }
-          for (const { region, code } of selected) {
+          for (const { code } of selected) {
             const dataPath = `${project}/data/municipalities/${code.slice(0,2)}/${code}.json`;
             const taskPath = `${project}/operations/tasks/${code}.json`;
             const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
@@ -94,7 +91,7 @@ jobs:
             task.researchingCount = keys.filter((key) => services[key]?.status === 'researching').length;
             task.unavailableCount = keys.filter((key) => services[key]?.status === 'unavailable').length;
             task.needsMediumReviewCount = keys.filter((key) => services[key]?.status === 'needs_medium_review').length;
-            task.lastUpdatedAt = '2026-07-24T20:40:00+09:00';
+            task.lastUpdatedAt = '2026-07-24T20:45:00+09:00';
             task.lastUpdatedBy = '全国統括';
             fs.writeFileSync(taskPath, `${JSON.stringify(task)}\n`);
           }
@@ -104,22 +101,32 @@ jobs:
         run: |
           git show origin/region/west:jichitai-compare/scripts/validate-municipality-identity.mjs > jichitai-compare/scripts/validate-municipality-identity.mjs
           git show origin/region/west:jichitai-compare/package.json > jichitai-compare/package.json
-      - name: Generate and validate national data
+      - name: Run separated generation and validation diagnostics
         working-directory: jichitai-compare
+        shell: bash
         run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          node --check app.js
-      - name: Upload identity diagnostics
-        if: failure()
+          mkdir -p diagnostics
+          set +e
+          npm run generate > diagnostics/generate.log 2>&1; GENERATE=$?
+          npm run progress > diagnostics/progress.log 2>&1; PROGRESS=$?
+          npm run validate:identity > diagnostics/identity.log 2>&1; IDENTITY=$?
+          node ./scripts/validate-data.mjs --require-generated > diagnostics/data.log 2>&1; DATA=$?
+          node --check app.js > diagnostics/syntax.log 2>&1; SYNTAX=$?
+          printf 'generate=%s\nprogress=%s\nidentity=%s\ndata=%s\nsyntax=%s\n' "$GENERATE" "$PROGRESS" "$IDENTITY" "$DATA" "$SYNTAX" | tee diagnostics/status.txt
+          for file in diagnostics/*.log; do echo "===== $file ====="; cat "$file"; done
+          if [ "$GENERATE" -ne 0 ] || [ "$PROGRESS" -ne 0 ] || [ "$IDENTITY" -ne 0 ] || [ "$DATA" -ne 0 ] || [ "$SYNTAX" -ne 0 ]; then exit 1; fi
+      - name: Upload national diagnostics
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: national-identity-errors
-          path: jichitai-compare/identity-validation-errors.json
-          if-no-files-found: ignore
+          name: national-validation-diagnostics
+          path: |
+            jichitai-compare/diagnostics
+            jichitai-compare/identity-validation-errors.json
+          if-no-files-found: warn
           retention-days: 7
       - name: Write release manifest and homepage count
+        if: success()
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -131,12 +138,9 @@ jobs:
             return { region, code, name: data.name, prefecture: data.prefecture, sourcePullRequestNumber: task.pullRequestNumber ?? null };
           }).sort((a,b) => a.code.localeCompare(b.code));
           const manifest = {
-            schemaVersion: '1.0.0',
-            createdAt: '2026-07-24T20:40:00+09:00',
-            previousPublishedMunicipalities: meta.previous,
-            removedInvalidCodes: meta.removed,
-            addedMunicipalities: municipalities.length,
-            municipalities,
+            schemaVersion: '1.0.0', createdAt: '2026-07-24T20:45:00+09:00',
+            previousPublishedMunicipalities: meta.previous, removedInvalidCodes: meta.removed,
+            addedMunicipalities: municipalities.length, municipalities,
             refreshedMunicipalityCodes: ['40210'],
             publishedMunicipalities: progress.registeredMunicipalities,
             remainingMunicipalities: progress.remainingMunicipalities
@@ -146,6 +150,7 @@ jobs:
           fs.writeFileSync(index, fs.readFileSync(index, 'utf8').replace(/\d+自治体・9制度/g, `${progress.registeredMunicipalities}自治体・9制度`));
           NODE
       - name: Restore strengthened standard workflow and commit
+        if: success()
         run: |
           git show origin/region/west:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
           git config user.name 'github-actions[bot]'
