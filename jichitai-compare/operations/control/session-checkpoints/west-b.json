@@ -5,7 +5,7 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-24T22:57:00+09:00",
+  "updatedAt": "2026-07-24T23:05:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -34,6 +34,8 @@
     "regionalCompletionSyncCiRunNumber": 6705,
     "publicRegionalSmokePullRequestNumber": 2826,
     "publicRegionalSmokeCiRunNumber": 6781,
+    "allMunicipalityOfficialLinkValidationPullRequestNumber": 2844,
+    "allMunicipalityOfficialLinkValidationCiRunNumber": 6826,
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
@@ -64,7 +66,7 @@
     ]
   },
   "publicSiteMonitoring": {
-    "auditedAt": "2026-07-24T22:57:00+09:00",
+    "auditedAt": "2026-07-24T23:05:00+09:00",
     "status": "passed",
     "pullRequestNumber": 2826,
     "ciRunNumber": 6781,
@@ -85,6 +87,42 @@
     ],
     "repositoryGeneratedPageValidation": "success",
     "prDataAndSyntaxValidation": "success",
-    "westBSample": "与那国町（47382）"
+    "westBSample": "与那国町（47382）",
+    "allMunicipalityOfficialLinkValidation": {
+      "status": "passed",
+      "municipalityCount": 1741,
+      "pullRequestNumber": 2844,
+      "ciRunNumber": 6826,
+      "checks": [
+        "元データofficialUrlと自治体公式サイトhrefの一致",
+        "自治体名公式サイトのリンク文言",
+        "比較画面リンクの自治体コード",
+        "比較画面リンクの都道府県コード"
+      ]
+    },
+    "westBPrefectureSampleAudit": {
+      "status": "passed",
+      "auditedAt": "2026-07-24T23:02:00+09:00",
+      "sampleCount": 11,
+      "samples": [
+        {"prefectureCode": "31", "code": "31201", "name": "鳥取市"},
+        {"prefectureCode": "32", "code": "32201", "name": "松江市"},
+        {"prefectureCode": "34", "code": "34100", "name": "広島市"},
+        {"prefectureCode": "35", "code": "35203", "name": "山口市"},
+        {"prefectureCode": "36", "code": "36201", "name": "徳島市"},
+        {"prefectureCode": "38", "code": "38201", "name": "松山市"},
+        {"prefectureCode": "41", "code": "41201", "name": "佐賀市"},
+        {"prefectureCode": "42", "code": "42201", "name": "長崎市"},
+        {"prefectureCode": "44", "code": "44201", "name": "大分市"},
+        {"prefectureCode": "45", "code": "45201", "name": "宮崎市"},
+        {"prefectureCode": "47", "code": "47382", "name": "与那国町"}
+      ],
+      "checks": [
+        "生成HTMLの存在",
+        "自治体名h1",
+        "canonical URL",
+        "自治体公式サイト導線"
+      ]
+    }
   }
 }
