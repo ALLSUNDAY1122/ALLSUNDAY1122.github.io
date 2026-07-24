@@ -3,6 +3,7 @@ const { chromium } = require('playwright');
 const AxeBuilder = require('@axe-core/playwright').default;
 
 const base = 'https://allsunday1122.github.io/yorugatari';
+const landingAnalyticsVersion = '20260724-004';
 const results = [];
 const failures = [];
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -34,7 +35,7 @@ async function open(page, pathname, ready, name, attempts = 10) {
 
 async function materialize(page) {
   await page.evaluate(async () => {
-    const deferred = Array.from(document.querySelectorAll('.card,.archive-section,.archive-item,.pick,.guide-card,.faq article'));
+    const deferred = Array.from(document.querySelectorAll('.card,.archive-section,.archive-item,.pick,.guide-card,.mood-card,.faq article'));
     for (let index = 0; index < deferred.length; index += 4) {
       deferred[index].scrollIntoView({ block: 'center' });
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -157,7 +158,7 @@ async function auditArchive(page) {
 
 async function auditFiveMinute(page) {
   const loaded = await open(page, '/5min-horror.html', async (target, attempt) => ({
-    ready: await target.locator('.pick').count() === 12 && await target.locator('.guide-card').count() === 6 && await target.locator('.faq article').count() === 3 && await target.locator('script[src*="analytics.js?v=20260723-003"]').count() === 1,
+    ready: await target.locator('.pick').count() === 12 && await target.locator('.guide-card').count() === 6 && await target.locator('.faq article').count() === 3 && await target.locator(`script[src*="analytics.js?v=${landingAnalyticsVersion}"]`).count() === 1,
     attempt,
     picks: await target.locator('.pick').count(),
     guides: await target.locator('.guide-card').count(),
@@ -171,6 +172,24 @@ async function auditFiveMinute(page) {
   await structure(page, 'five-minute landing');
   const links = await page.locator('.pick').evaluateAll((items) => items.map((item) => item.getAttribute('href')));
   record('five-minute landing: all 12 editorial picks have unique destinations', links.length === 12 && new Set(links).size === 12 && links.every(Boolean), links);
+}
+
+async function auditBedtime(page) {
+  const loaded = await open(page, '/bedtime-horror.html', async (target, attempt) => ({
+    ready: await target.locator('.pick').count() === 8 && await target.locator('.mood-card').count() === 4 && await target.locator('.faq article').count() === 3 && await target.locator(`script[src*="analytics.js?v=${landingAnalyticsVersion}"]`).count() === 1,
+    attempt,
+    picks: await target.locator('.pick').count(),
+    moods: await target.locator('.mood-card').count(),
+    faq: await target.locator('.faq article').count()
+  }), 'bedtime landing', 8);
+  if (!loaded) return;
+  await skipLink(page, 'bedtime landing');
+  await focusIndicator(page, '.pick', 'bedtime story pick');
+  await materialize(page);
+  await axe(page, 'bedtime landing');
+  await structure(page, 'bedtime landing');
+  const links = await page.locator('.pick').evaluateAll((items) => items.map((item) => item.getAttribute('href')));
+  record('bedtime landing: all eight editorial picks have unique destinations', links.length === 8 && new Set(links).size === 8 && links.every(Boolean), links);
 }
 
 async function auditStory(page) {
@@ -208,7 +227,7 @@ async function auditStory(page) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.8' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.9' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
@@ -218,6 +237,7 @@ async function auditStory(page) {
     await auditTop(page);
     await auditArchive(page);
     await auditFiveMinute(page);
+    await auditBedtime(page);
     await auditStory(page);
     record('accessibility audit: no browser JavaScript errors', browserErrors.length === 0, browserErrors);
   } catch (error) {
