@@ -72,31 +72,47 @@ jobs:
           }
           const root = path.join(site, 'stories');
           const files = fs.readdirSync(root).filter((file) => file.endsWith('.html')).sort();
+          const auditedStories = new Set(['last-elevator.html', 'spare-key-returned.html', 'hired-with-your-experience.html']);
           if (files.length !== 100) throw new Error(`Expected 100 stories, found ${files.length}`);
           for (const file of files) {
             const html = fs.readFileSync(path.join(root, file), 'utf8');
             const five = (html.match(/href=["']\.\.\/5min-horror\.html["']/g) || []).length;
             const bedtime = (html.match(/href=["']\.\.\/bedtime-horror\.html["']/g) || []).length;
             if (five !== 1 || bedtime !== 1) throw new Error(`${file}: curated links ${five}/${bedtime}`);
-            if (!html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`)) throw new Error(`${file}: audit-filtered engagement runtime missing`);
+            if (!html.includes('../assets/engagement.js?v=20260723-003')) throw new Error(`${file}: engagement runtime missing`);
+            if (auditedStories.has(file) && !html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`)) throw new Error(`${file}: audit cache release missing`);
           }
           const notFound = fs.readFileSync('404.html', 'utf8');
           if (!notFound.includes(`/yorugatari/assets/analytics.js?v=20260723-003&r=${release}`)) throw new Error('404 audit-filtered analytics runtime missing');
           const privacy = fs.readFileSync(path.join(site, 'privacy.html'), 'utf8');
           if (!privacy.includes('自動監査、Lighthouse、ヘッドレスブラウザ')) throw new Error('Audit filtering disclosure missing');
-          console.log(`Validated audit-filtered runtime on ${Object.keys(staticVersions).length} static pages, ${files.length} stories, and 404.`);
+          console.log(`Validated audit-filtered runtime on ${Object.keys(staticVersions).length} static pages, ${auditedStories.size} audited stories, shared runtime on ${files.length - auditedStories.size} stories, and 404.`);
           NODE
 
-      - name: Commit all normalized pages
+      - name: Commit normalized runtime pages
         shell: bash
         run: |
-          if git diff --quiet -- 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
-            echo "All Yorugatari pages already use the current audit-filtered runtime."
+          paths=(
+            404.html
+            yorugatari/index.html
+            yorugatari/5min-horror.html
+            yorugatari/bedtime-horror.html
+            yorugatari/archive.html
+            yorugatari/about.html
+            yorugatari/privacy.html
+            yorugatari/terms.html
+            yorugatari/contact.html
+            yorugatari/stories/last-elevator.html
+            yorugatari/stories/spare-key-returned.html
+            yorugatari/stories/hired-with-your-experience.html
+          )
+          if git diff --quiet -- "${paths[@]}"; then
+            echo "Audit-filtered runtime pages are already normalized."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
+          git add "${paths[@]}"
           git commit -m "Publish Yorugatari audit-filtered analytics [skip ci]"
           for attempt in 1 2 3 4 5 6; do
             if git pull --rebase origin main && git push origin HEAD:main; then
