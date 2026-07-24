@@ -1,0 +1,88 @@
+{
+  "auditedAt": "2026-07-24T06:04:28.413Z",
+  "success": true,
+  "version": "20260724-001",
+  "releaseCheck": {
+    "attempt": 1,
+    "pageStatus": 200,
+    "runtimeStatus": 200,
+    "pageReady": true,
+    "runtimeReady": true
+  },
+  "runs": [
+    {
+      "profile": "mobile",
+      "fetchTime": "2026-07-24T06:04:45.027Z",
+      "scores": {
+        "performance": 0.94,
+        "bestPractices": 0.96,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 0.69,
+          "numericValue": 2449,
+          "displayValue": "2.4 s"
+        },
+        "largestContentfulPaint": {
+          "score": 0.89,
+          "numericValue": 2519.5,
+          "displayValue": "2.5 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 64,
+          "displayValue": "60 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 15214,
+          "displayValue": "Total size was 15 KiB"
+        }
+      }
+    },
+    {
+      "profile": "desktop",
+      "fetchTime": "2026-07-24T06:04:53.283Z",
+      "scores": {
+        "performance": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "firstContentfulPaint": {
+          "score": 1,
+          "numericValue": 232.5797,
+          "displayValue": "0.2 s"
+        },
+        "largestContentfulPaint": {
+          "score": 1,
+          "numericValue": 232.5797,
+          "displayValue": "0.2 s"
+        },
+        "totalBlockingTime": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0 ms"
+        },
+        "cumulativeLayoutShift": {
+          "score": 1,
+          "numericValue": 0,
+          "displayValue": "0"
+        },
+        "totalByteWeight": {
+          "score": 1,
+          "numericValue": 13899,
+          "displayValue": "Total size was 14 KiB"
+        }
+      }
+    }
+  ],
+  "failures": [],
+  "errors": []
+}
