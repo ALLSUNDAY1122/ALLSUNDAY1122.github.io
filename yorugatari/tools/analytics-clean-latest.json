@@ -1,12 +1,16 @@
 {
-  "generatedAt": "2026-07-24T04:14:21.896Z",
+  "generatedAt": "2026-07-24T04:14:21.955Z",
+  "japanDate": "2026-07-24",
   "success": true,
+  "baseline": {
+    "resetId": "audit-filtered-20260724",
+    "establishedAt": "2026-07-24T04:14:21.938Z",
+    "rawGeneratedAt": "2026-07-24T04:14:21.896Z"
+  },
   "definitions": {
-    "pageViews": "Page Views APIが30分単位で重複を除いた累計値",
-    "sourceViews": "外部からの初回訪問時に1セッション1回だけ送信する粗い流入区分",
-    "campaignViews": "事前登録した告知リンクとサイト内共有だけを固定コードで1セッション1回集計",
-    "privacy": "参照元URL、検索語、任意のUTM値は保存せず、未登録のキャンペーン値は破棄する",
-    "readiness": "作品順位は100作品閲覧・20作品以上の閲覧・7日分の観測が揃うまで変更しない"
+    "views": "自動監査アクセス除外ランタイム公開後の増分",
+    "cumulativeViews": "Page Views API上の累計参考値",
+    "privacy": "参照元URL、検索語、任意のUTM値は保存せず、未登録のキャンペーン値は破棄する"
   },
   "coverage": {
     "sitemapUrls": 114,
@@ -14,89 +18,101 @@
     "stories": 100,
     "sourceChannels": 5,
     "campaignCodes": 9,
-    "observedDays": 2
+    "observedDays": 1
+  },
+  "rawReference": {
+    "generatedAt": "2026-07-24T04:14:21.896Z",
+    "totals": {
+      "pageViews": 166,
+      "storyViews": 65,
+      "sourceLandingViews": 48,
+      "campaignLandingViews": 0,
+      "notFoundViews": 0
+    }
   },
   "totals": {
-    "pageViews": 166,
-    "storyViews": 65,
-    "sourceLandingViews": 48,
+    "pageViews": 0,
+    "storyViews": 0,
+    "sourceLandingViews": 0,
     "campaignLandingViews": 0,
     "notFoundViews": 0
   },
   "analysis": {
-    "japanDate": "2026-07-24",
     "deltasFromPreviousRun": {
-      "previousGeneratedAt": "2026-07-24T04:05:44.665Z",
-      "pageViews": 0,
-      "storyViews": 0,
-      "sourceLandingViews": 0,
-      "campaignLandingViews": 0,
-      "notFoundViews": 0
-    },
-    "deltasFromPreviousDay": {
-      "previousDate": "2026-07-23",
-      "pageViews": 111,
-      "storyViews": 35,
-      "sourceLandingViews": 36,
-      "campaignLandingViews": 0,
-      "notFoundViews": 0
+      "previousGeneratedAt": null,
+      "pageViews": null,
+      "storyViews": null,
+      "sourceLandingViews": null,
+      "campaignLandingViews": null,
+      "notFoundViews": null
     },
     "metrics": {
-      "storyViewShare": 39.2,
-      "activeStories": 35,
-      "activeStoryRate": 35,
-      "topStoryShare": 46.2,
+      "storyViewShare": null,
+      "activeStories": 0,
+      "activeStoryRate": 0,
+      "topStoryShare": null,
       "externalSourceViews": 0,
-      "directSourceShare": 100,
-      "campaignShareOfSources": 0,
-      "notFoundRate": 0
+      "directSourceShare": null,
+      "campaignShareOfSources": null,
+      "notFoundRate": null
     },
     "dataReadiness": {
       "status": "collecting",
       "rankingReady": false,
-      "acquisitionReady": true,
+      "acquisitionReady": false,
       "campaignReady": false,
       "thresholds": {
         "rankingStoryViews": 100,
         "rankingActiveStories": 20,
         "rankingDays": 7,
-        "acquisitionSourceLandings": 30,
+        "acquisitionExternalLandings": 30,
         "campaignTotalLandings": 30,
         "campaignVariantLandings": 10
       },
       "reasons": [
-        "作品閲覧が100件未満のため、人気順位は偶然の影響が大きいです。",
-        "日次データが7日分未満です。",
+        "除外後の作品閲覧が100件未満です。",
+        "除外後に閲覧のある作品が20話未満です。",
+        "除外後の日次データが7日分未満です。",
+        "検索・SNS・外部参照の流入が30件未満です。",
         "固定キャンペーン流入が合計30件、かつ1リンク10件の比較基準に達していません。"
       ]
     },
     "actions": [
-      "作品の並び順や「人気」表示は変更せず、データ収集を継続する。",
-      "external-launch-kit.mdの1日目リンクから、外部投稿を1本だけ公開する。",
-      "検索・SNS・外部参照の流入がまだ0件のため、外部投稿の着地を確認する。",
-      "404は0件のため、リンク修正より新規流入獲得を優先する。"
+      "作品の並び順や人気表示は変更せず、除外後データを収集する。",
+      "外部投稿は未実施のため、投稿後の検索・SNS・参照流入を確認する。",
+      "固定キャンペーンは投稿証跡があるものだけを比較し、母数到達まで優劣を決めない。"
     ]
   },
   "sources": [
     {
       "channel": "direct",
-      "views": 48
+      "views": 0,
+      "cumulativeViews": 48,
+      "baselineViews": 48
     },
     {
       "channel": "search",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "channel": "social",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "channel": "referral",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "channel": "campaign",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     }
   ],
   "campaigns": [
@@ -106,7 +122,9 @@
       "source": "x",
       "target": "https://allsunday1122.github.io/yorugatari/",
       "url": "https://allsunday1122.github.io/yorugatari/?utm_source=x&utm_medium=social&utm_campaign=launch_20260723&utm_content=top_100",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "launch-20260723-x-last-elevator",
@@ -114,7 +132,9 @@
       "source": "x",
       "target": "https://allsunday1122.github.io/yorugatari/stories/last-elevator.html",
       "url": "https://allsunday1122.github.io/yorugatari/stories/last-elevator.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260723&utm_content=last_elevator",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "launch-20260723-threads-spare-key",
@@ -122,7 +142,9 @@
       "source": "threads",
       "target": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
       "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260723&utm_content=spare_key",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "launch-20260723-line-hired-experience",
@@ -130,7 +152,9 @@
       "source": "line",
       "target": "https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.html",
       "url": "https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.html?utm_source=line&utm_medium=social&utm_campaign=launch_20260723&utm_content=hired_experience",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "launch-20260724-x-five-minute",
@@ -138,7 +162,9 @@
       "source": "x",
       "target": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
       "url": "https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260724&utm_content=five_minute_12",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "launch-20260724-threads-five-minute",
@@ -146,7 +172,9 @@
       "source": "threads",
       "target": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
       "url": "https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260724&utm_content=five_minute_12",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "launch-20260724-x-bedtime",
@@ -154,7 +182,9 @@
       "source": "x",
       "target": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
       "url": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260724&utm_content=bedtime_8",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "launch-20260724-threads-bedtime",
@@ -162,7 +192,9 @@
       "source": "threads",
       "target": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
       "url": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260724&utm_content=bedtime_8",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "id": "onsite-share",
@@ -170,129 +202,171 @@
       "source": "web_share",
       "target": null,
       "url": null,
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     }
   ],
   "topStories": [
     {
-      "path": "/yorugatari/stories/spare-key-returned.html",
-      "title": "合鍵は返却済み｜人が怖い話｜夜語り",
+      "path": "/yorugatari/stories/after-exit-decisions.html",
+      "title": "退出後の決定事項｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 30
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
-      "path": "/yorugatari/stories/delivery-box.html",
-      "title": "宅配ボックスの住人｜人が怖い話｜夜語り",
+      "path": "/yorugatari/stories/all-neighbors-are-complaining.html",
+      "title": "近隣住民全員が迷惑しています｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 2
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
+    },
+    {
+      "path": "/yorugatari/stories/all-registered-occupants-left.html",
+      "title": "在室者は全員退室しました｜意味がわかると怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
+    },
+    {
+      "path": "/yorugatari/stories/answering-as-niece.html",
+      "title": "姪としてお答えします｜人が怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/assigned-by-deleted-user.html",
       "title": "削除済みユーザーから割り当てられました｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
+    },
+    {
+      "path": "/yorugatari/stories/assigned-to-your-free-time.html",
+      "title": "空いている時間に割り当てました｜ネット・SNSの怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
+    },
+    {
+      "path": "/yorugatari/stories/baggage-one-person-lighter.html",
+      "title": "お荷物は一名分軽くなりました｜意味がわかると怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
+    },
+    {
+      "path": "/yorugatari/stories/blind-spot-footage-confirmed.html",
+      "title": "死角の映像は確認済みです｜意味がわかると怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
+    },
+    {
+      "path": "/yorugatari/stories/borrowed-tears.html",
+      "title": "代わりに泣く席｜後味の悪い怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/bow-only-once.html",
       "title": "礼は一度まで｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
+    },
+    {
+      "path": "/yorugatari/stories/breathing-after-drainage.html",
+      "title": "排水後も息をしています｜心霊・幽霊の怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
+    },
+    {
+      "path": "/yorugatari/stories/closed-third-register.html",
+      "title": "閉店後の三番レジ｜都市伝説・奇妙なルールの怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
+    },
+    {
+      "path": "/yorugatari/stories/copy-arrives-first.html",
+      "title": "控えは先に届きます｜都市伝説・奇妙なルールの怖い話｜夜語り",
+      "type": "story",
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/deceased-answered-that-way.html",
       "title": "故人はそのように回答しました｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
-      "path": "/yorugatari/stories/do-not-look-at-windows-trackless-crossing.html",
-      "title": "線路のない踏切で窓を見ないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
+      "path": "/yorugatari/stories/delivery-box.html",
+      "title": "宅配ボックスの住人｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 2,
+      "baselineViews": 2
     },
     {
-      "path": "/yorugatari/stories/do-not-serve-the-extra-cup-of-rice.html",
-      "title": "余った一合を家族に出さないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
+      "path": "/yorugatari/stories/discharged-as-hearing-child.html",
+      "title": "聞こえる子として退院しました｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
-      "path": "/yorugatari/stories/do-not-step-on-the-fourteenth-stripe.html",
-      "title": "十四本目の白線を踏まないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
+      "path": "/yorugatari/stories/do-not-buy-three-room-cans.html",
+      "title": "部屋が映る自販機で三本買わないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
-      "path": "/yorugatari/stories/empty-container-confirmed-alive.html",
-      "title": "空容器は生存確認済みです｜意味がわかると怖い話｜夜語り",
+      "path": "/yorugatari/stories/do-not-call-names-in-steam.html",
+      "title": "湯気の中では名前を呼ばない｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
-      "path": "/yorugatari/stories/family-photo.html",
-      "title": "家族写真の空席｜心霊・幽霊の怖い話｜夜語り",
+      "path": "/yorugatari/stories/do-not-focus-night-telescope-four-times.html",
+      "title": "夜景の望遠鏡は四回合わせないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
-      "path": "/yorugatari/stories/fourth-id-photo.html",
-      "title": "証明写真の四枚目｜都市伝説・奇妙なルールの怖い話｜夜語り",
+      "path": "/yorugatari/stories/do-not-hang-up-third-phone.html",
+      "title": "三台目の公衆電話は切らないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/full-dry-means-no-owner.html",
-      "title": "完全乾燥は持ち主不明です｜都市伝説・奇妙なルールの怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/hired-with-your-experience.html",
-      "title": "あなたの経験で採用されました｜後味の悪い怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/home-one-station-ahead.html",
-      "title": "帰宅先は一駅先｜都市伝説・奇妙なルールの怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/last-vacancy-check.html",
-      "title": "最後の退去確認｜心霊・幽霊の怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/leftovers-deducted-at-home.html",
-      "title": "残した分は家で引かれます｜後味の悪い怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/neighbor-wifi.html",
-      "title": "隣人のWi-Fi｜ネット・SNSの怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/one-person-short.html",
-      "title": "点呼は一人足りない｜意味がわかると怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/one-return-to-work-slot.html",
-      "title": "復職枠は一人分｜後味の悪い怖い話｜夜語り",
-      "type": "story",
-      "views": 1
-    },
-    {
-      "path": "/yorugatari/stories/one-slot-opened.html",
-      "title": "一名分、空きが出ました｜意味がわかると怖い話｜夜語り",
-      "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     }
   ],
   "pages": [
@@ -300,691 +374,921 @@
       "path": "/yorugatari",
       "title": "夜語り｜無料で読めるオリジナル怖い話100選",
       "type": "page",
-      "views": 39
+      "views": 0,
+      "cumulativeViews": 39,
+      "baselineViews": 39
     },
     {
       "path": "/yorugatari/5min-horror.html",
       "title": "5分で読める怖い話｜一話完結の短編ホラー12選｜夜語り",
       "type": "page",
-      "views": 16
+      "views": 0,
+      "cumulativeViews": 16,
+      "baselineViews": 16
     },
     {
       "path": "/yorugatari/bedtime-horror.html",
       "title": "寝る前に読む怖い話｜静かに怖い短編8選｜夜語り",
       "type": "page",
-      "views": 12
+      "views": 0,
+      "cumulativeViews": 12,
+      "baselineViews": 12
     },
     {
       "path": "/yorugatari/archive.html",
       "title": "全100話アーカイブ｜夜語り",
       "type": "page",
-      "views": 34
+      "views": 0,
+      "cumulativeViews": 34,
+      "baselineViews": 34
     },
     {
       "path": "/yorugatari/about.html",
       "title": "夜語りについて・編集方針｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/privacy.html",
       "title": "プライバシーポリシー｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/terms.html",
       "title": "利用規約｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/contact.html",
       "title": "お問い合わせ｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/categories/shinrei.html",
       "title": "心霊・幽霊の怖い話17選｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/categories/hitokowa.html",
       "title": "人が怖い話｜人怖・実話風ホラー17選｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/categories/imikowa.html",
       "title": "意味がわかると怖い話｜意味怖17選｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/categories/net-kaidan.html",
       "title": "ネット・SNSの怖い話｜現代怪談17選｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/categories/urban-legend.html",
       "title": "都市伝説・奇妙なルールの怖い話16選｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/categories/aftertaste.html",
       "title": "後味の悪い怖い話｜救いのない怪談16選｜夜語り",
       "type": "page",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/last-elevator.html",
       "title": "最後のエレベーター｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/neighbor-wifi.html",
       "title": "隣人のWi-Fi｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/kind-manager.html",
       "title": "優しい店長｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/family-photo.html",
       "title": "家族写真の空席｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/three-knocks.html",
       "title": "三回ノック｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/read-receipt.html",
       "title": "既読がつかない｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/night-bus.html",
       "title": "終点の先｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/delivery-box.html",
       "title": "宅配ボックスの住人｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 2
+      "views": 0,
+      "cumulativeViews": 2,
+      "baselineViews": 2
     },
     {
       "path": "/yorugatari/stories/voice-memo.html",
       "title": "自動保存された音声｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/missing-floor.html",
       "title": "存在しない四階｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/good-night.html",
       "title": "おやすみの順番｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/window-reflection.html",
       "title": "窓に映る人数｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/return-by-morning.html",
       "title": "返却期限は明日の朝｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/second-visitor-form.html",
       "title": "面会票の二枚目｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/scheduled-for-deletion.html",
       "title": "削除予定は午前六時｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/borrowed-tears.html",
       "title": "代わりに泣く席｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/one-person-short.html",
       "title": "点呼は一人足りない｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/tomorrows-lost-item.html",
       "title": "明日の忘れ物｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/pickup-signature.html",
       "title": "お迎えの署名｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/relic-sample-shelf.html",
       "title": "遺品の見本棚｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/after-exit-decisions.html",
       "title": "退出後の決定事項｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/safest-house.html",
       "title": "一番安全だった家｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/forgotten-companion.html",
       "title": "忘れ物はお連れ様｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/closed-third-register.html",
       "title": "閉店後の三番レジ｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/last-vacancy-check.html",
       "title": "最後の退去確認｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/answering-as-niece.html",
       "title": "姪としてお答えします｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/guardian-updated.html",
       "title": "保護者を更新しました｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/leave-one-seat-empty.html",
       "title": "空席をひとつ残す｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/returned-without-wearer.html",
       "title": "着用者なしで返却｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/fourth-id-photo.html",
       "title": "証明写真の四枚目｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/two-remain-after-closing.html",
       "title": "閉宴後も二名｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/spare-key-returned.html",
       "title": "合鍵は返却済み｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 30
+      "views": 0,
+      "cumulativeViews": 30,
+      "baselineViews": 30
     },
     {
       "path": "/yorugatari/stories/source-device.html",
       "title": "移行元の端末です｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/one-return-to-work-slot.html",
       "title": "復職枠は一人分｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/one-slot-opened.html",
       "title": "一名分、空きが出ました｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/home-one-station-ahead.html",
       "title": "帰宅先は一駅先｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/reserve-light-until-dawn.html",
       "title": "予備灯は夜明けまで｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/exit-reason-prepared.html",
       "title": "退職理由は作成済みです｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/subtitle-provider-is-you.html",
       "title": "字幕提供者はあなたです｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/similar-pet-found.html",
       "title": "よく似た子が見つかりました｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/tasting-for-five.html",
       "title": "試食は五名分です｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/copy-arrives-first.html",
       "title": "控えは先に届きます｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/bow-only-once.html",
       "title": "礼は一度まで｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/forgotten-conversation.html",
       "title": "お忘れ物は会話です｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/removal-request-verified.html",
       "title": "削除申請は本人確認済み｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/habits-included.html",
       "title": "癖までお使いください｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/sounds-for-next-tenant.html",
       "title": "生活音は次の方へ｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/tomorrow-you-will-collect.html",
       "title": "明日のあなたが受け取ります｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/unnamed-pot-grows-at-night.html",
       "title": "名札のない鉢は夜に育つ｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/we-wont-show-your-family.html",
       "title": "ご家族には見せません｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/zero-follower-posted-it.html",
       "title": "フォロワー0が投稿しました｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/discharged-as-hearing-child.html",
       "title": "聞こえる子として退院しました｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/empty-container-confirmed-alive.html",
       "title": "空容器は生存確認済みです｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/select-passenger-count.html",
       "title": "洗車後の乗車人数を選んでください｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-call-names-in-steam.html",
       "title": "湯気の中では名前を呼ばない｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/todays-life-completed.html",
       "title": "本日の生活は完了しました｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/assigned-by-deleted-user.html",
       "title": "削除済みユーザーから割り当てられました｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/some-words-cannot-be-returned.html",
       "title": "返却できない言葉があります｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/recipient-is-current-resident.html",
       "title": "受取人は現在も生活中です｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/full-dry-means-no-owner.html",
       "title": "完全乾燥は持ち主不明です｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/breathing-after-drainage.html",
       "title": "排水後も息をしています｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/deceased-answered-that-way.html",
       "title": "故人はそのように回答しました｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/i-remember-what-was-not-sent.html",
       "title": "送っていないことを覚えています｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/leftovers-deducted-at-home.html",
       "title": "残した分は家で引かれます｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/one-extra-portrait.html",
       "title": "遺影は一人分余っています｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-step-on-the-fourteenth-stripe.html",
       "title": "十四本目の白線を踏まないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/still-weighs-one-person-after-discharge.html",
       "title": "退院後も一人分重いです｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/we-apologize-as-family.html",
       "title": "ご家族としてお詫びします｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/still-watching-after-cancellation.html",
       "title": "退会後も視聴中です｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/guided-to-the-quiet-room.html",
       "title": "静かな部屋へご案内しました｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/baggage-one-person-lighter.html",
       "title": "お荷物は一名分軽くなりました｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-hang-up-third-phone.html",
       "title": "三台目の公衆電話は切らないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-tune-the-last-note.html",
       "title": "最後の音だけ調律しないで｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/subject-does-not-want-contact.html",
       "title": "本人は連絡を希望していません｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/sharing-location-after-deletion.html",
       "title": "削除後の現在地を共有します｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/the-student-attended-graduation.html",
       "title": "卒業式には本人が出席しました｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/service-stop-before-death.html",
       "title": "停止日は死亡日の前日です｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-look-at-windows-trackless-crossing.html",
       "title": "線路のない踏切で窓を見ないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/the-nameband-that-could-not-leave.html",
       "title": "退院できない名前を外さないで｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/all-neighbors-are-complaining.html",
       "title": "近隣住民全員が迷惑しています｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/assigned-to-your-free-time.html",
       "title": "空いている時間に割り当てました｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/we-received-your-decline-call.html",
       "title": "辞退のお電話を受けました｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/blind-spot-footage-confirmed.html",
       "title": "死角の映像は確認済みです｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-buy-three-room-cans.html",
       "title": "部屋が映る自販機で三本買わないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-let-the-owner-wind-the-watch.html",
       "title": "持ち主に竜頭を巻かせないで｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/three-witnesses-are-ready.html",
       "title": "目撃者は三名そろっています｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/photographer-has-been-deleted.html",
       "title": "撮影者が削除されています｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/visit-ended-when-crying-stopped.html",
       "title": "泣き止んだので面会は終了です｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/the-donation-was-the-persons-wish.html",
       "title": "献体は本人の希望でした｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/do-not-focus-night-telescope-four-times.html",
       "title": "夜景の望遠鏡は四回合わせないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/voice-of-the-last-person-who-cut-the-mic.html",
       "title": "最後にマイクを切った人の声です｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/we-saved-only-necessary-scenes.html",
       "title": "必要な場面だけ保存しました｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/playback-of-unrecorded-conversation.html",
       "title": "録音されなかった会話を再生します｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/smile-means-ready-to-return.html",
       "title": "笑えたので復職可能です｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/all-registered-occupants-left.html",
       "title": "在室者は全員退室しました｜意味がわかると怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/do-not-serve-the-extra-cup-of-rice.html",
       "title": "余った一合を家族に出さないで｜都市伝説・奇妙なルールの怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/do-not-trace-the-final-lap-groove.html",
       "title": "最終周回の溝をなぞらないで｜心霊・幽霊の怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/only-the-uniform-clocked-in.html",
       "title": "作業服だけが出勤しました｜人が怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/stories/you-are-the-final-recovery-code.html",
       "title": "最後の復旧コードはあなたです｜ネット・SNSの怖い話｜夜語り",
       "type": "story",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     },
     {
       "path": "/yorugatari/stories/hired-with-your-experience.html",
       "title": "あなたの経験で採用されました｜後味の悪い怖い話｜夜語り",
       "type": "story",
-      "views": 1
+      "views": 0,
+      "cumulativeViews": 1,
+      "baselineViews": 1
     },
     {
       "path": "/yorugatari/404",
       "title": "404 ページが見つかりません",
       "type": "404",
-      "views": 0
+      "views": 0,
+      "cumulativeViews": 0,
+      "baselineViews": 0
     }
   ],
   "errors": []
