@@ -3,7 +3,7 @@
   "auditId": "central-a-scope-verification-20260724",
   "session": "中日本調査班A",
   "purpose": "担当範囲の誤調査・状態不整合を都道府県単位で10回に分けて概略再検証する",
-  "branch": "audit/central-a-scope-verification-round-04-20260725",
+  "branch": "audit/central-a-scope-verification-round-05-20260725",
   "startedAt": "2026-07-24T23:50:00+09:00",
   "status": "in_progress",
   "batchCount": 10,
@@ -179,18 +179,51 @@
       ],
       "nextStep": "第5回として静岡県35自治体を監査する",
       "completedAt": "2026-07-25T01:13:00+09:00"
+    },
+    {
+      "batch": 5,
+      "prefectureCode": "22",
+      "prefectureName": "静岡県",
+      "municipalityCount": 35,
+      "status": "completed_with_corrections_and_review",
+      "checkedMunicipalities": 35,
+      "checkedServices": 315,
+      "structuralFindingCount": 0,
+      "unavailableCount": 5,
+      "initialSubstantiveSuspectCount": 46,
+      "substantiveSuspectCount": 4,
+      "report": "operations/control/central-a-scope-round-05-shizuoka-20260725.json",
+      "confirmedErrors": 3,
+      "correctedMunicipalityCodes": [
+        "22100",
+        "22208",
+        "22224"
+      ],
+      "confirmedAccurateSuspectCodes": [
+        "22213",
+        "22215"
+      ],
+      "needsFurtherReviewCodes": [
+        "22219",
+        "22305",
+        "22424",
+        "22429"
+      ],
+      "nextStep": "第6回として愛知県54自治体を監査する",
+      "completedAt": "2026-07-25T01:39:00+09:00"
     }
   ],
   "summary": {
-    "completedBatches": 4,
-    "checkedMunicipalities": 93,
-    "confirmedErrors": 32,
-    "needsFurtherReview": 2,
-    "correctedErrors": 32
+    "completedBatches": 5,
+    "checkedMunicipalities": 128,
+    "confirmedErrors": 35,
+    "needsFurtherReview": 6,
+    "correctedErrors": 35
   },
-  "nextAction": "第5回として静岡県35自治体を監査する",
+  "nextAction": "第6回として愛知県54自治体を監査する",
   "rebuiltFrom": "audit/central-a-scope-verification-20260724",
   "rebuiltAt": "2026-07-25T00:11:00+09:00",
   "rebuiltRound3At": "2026-07-25T00:37:00+09:00",
-  "rebuiltRound4At": "2026-07-25T01:13:00+09:00"
+  "rebuiltRound4At": "2026-07-25T01:13:00+09:00",
+  "rebuiltRound5At": "2026-07-25T01:39:00+09:00"
 }
