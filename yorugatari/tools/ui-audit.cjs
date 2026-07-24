@@ -23,7 +23,7 @@ async function waitForTopCards(page) {
 
 async function run() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.5' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.6' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
@@ -138,9 +138,16 @@ async function run() {
 
   await page.goto(`${base}/stories/spare-key-returned.html?ui=${Date.now()}`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.story-pagination');
+  await page.waitForFunction(() => document.querySelectorAll('.site-footer a[href="../5min-horror.html"], .site-footer a[href="../bedtime-horror.html"]').length === 2, null, { timeout: 20000 });
   await noHorizontalOverflow(page, 'story mobile has no horizontal overflow');
   record('story pagination has previous archive and next links', await page.locator('.story-pagination a').count() === 3, await page.locator('.story-pagination a').allTextContents());
   record('story static breadcrumb visible', await page.locator('.breadcrumb').count() === 1, await page.locator('.breadcrumb').allTextContents());
+  const storyCuratedLinks = {
+    fiveMinute: await page.locator('.site-footer a[href="../5min-horror.html"]').count(),
+    bedtime: await page.locator('.site-footer a[href="../bedtime-horror.html"]').count(),
+    runtimeReady: await page.evaluate(() => window.YORUGATARI_ENGAGEMENT?.curatedLinksReady === true)
+  };
+  record('story exposes both curated landing links', storyCuratedLinks.fiveMinute === 1 && storyCuratedLinks.bedtime === 1 && storyCuratedLinks.runtimeReady, storyCuratedLinks);
 
   const explainButton = page.locator('#explainBtn');
   record('explanation control is available', await explainButton.isVisible());
