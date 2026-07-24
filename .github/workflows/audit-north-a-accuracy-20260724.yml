@@ -1,0 +1,23 @@
+name: Audit North A Accuracy 20260724
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  audit-round:
+    if: github.head_ref == 'quality/north-a-accuracy-audit-20260724'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit active North A batch
+        working-directory: jichitai-compare
+        run: node scripts/audit-north-a-accuracy-round.mjs
