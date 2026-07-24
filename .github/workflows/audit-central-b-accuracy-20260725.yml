@@ -25,34 +25,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Apply Round 8 confirmed corrections
-        working-directory: jichitai-compare
-        run: |
-          if node --input-type=module <<'NODE'
-          import { readFile } from 'node:fs/promises';
-          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
-          const round = audit.batches.find((item) => item.round === 8);
-          process.exit(round?.status === 'completed' ? 1 : 0);
-          NODE
-          then
-            node scripts/fix-central-b-accuracy-round8.mjs apply
-          else
-            echo 'Round 8 corrections already finalized.'
-          fi
-      - name: Normalize Round 8 task source lists
+      - name: Start Round 9 audit batch
         working-directory: jichitai-compare
         run: |
           node --input-type=module <<'NODE'
           import { readFile, writeFile } from 'node:fs/promises';
-          const entries = ['30206','30207','30208','30209','30304','30341','30344','30361'];
-          for (const code of entries) {
-            const municipality = JSON.parse(await readFile(`data/municipalities/30/${code}.json`, 'utf8'));
-            const taskPath = `operations/tasks/${code}.json`;
-            const task = JSON.parse(await readFile(taskPath, 'utf8'));
-            task.officialSources = [...new Set(Object.values(municipality.services)
-              .map((service) => service?.source?.url)
-              .filter(Boolean))];
-            await writeFile(taskPath, JSON.stringify(task) + '\n', 'utf8');
+          const path = 'operations/audits/central-b-accuracy-audit-20260725.json';
+          const audit = JSON.parse(await readFile(path, 'utf8'));
+          const round = audit.batches.find((item) => item.round === 9);
+          if (!round) throw new Error('Round 9 batch is missing.');
+          if (round.status === 'completed') {
+            console.log('Round 9 already completed.');
+          } else {
+            round.status = 'in_progress';
+            await writeFile(path, JSON.stringify(audit, null, 2) + '\n', 'utf8');
           }
           NODE
       - name: Regenerate and validate municipality data
@@ -72,37 +58,7 @@ jobs:
           path: jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           if-no-files-found: error
           retention-days: 14
-      - name: Finalize Round 8 audit record
-        working-directory: jichitai-compare
-        run: |
-          if node --input-type=module <<'NODE'
-          import { readFile } from 'node:fs/promises';
-          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
-          const output = JSON.parse(await readFile('operations/audits/central-b-accuracy-round-output.json', 'utf8'));
-          const round = audit.batches.find((item) => item.round === 8);
-          process.exit(output.round === 8 && output.errorCount === 0 && round?.status !== 'completed' ? 0 : 1);
-          NODE
-          then
-            node scripts/fix-central-b-accuracy-round8.mjs finalize
-          else
-            echo 'Round 8 finalization is not required.'
-          fi
-      - name: Normalize Round 8 source changes
-        working-directory: jichitai-compare
-        run: |
-          node --input-type=module <<'NODE'
-          import { readFile, writeFile } from 'node:fs/promises';
-          const entries = ['30206','30207','30208','30209','30304','30341','30344','30361'];
-          for (const code of entries) {
-            const municipalityPath = `data/municipalities/30/${code}.json`;
-            const municipality = JSON.parse(await readFile(municipalityPath, 'utf8'));
-            await writeFile(municipalityPath, JSON.stringify(municipality) + '\n', 'utf8');
-            const taskPath = `operations/tasks/${code}.json`;
-            const task = JSON.parse(await readFile(taskPath, 'utf8'));
-            await writeFile(taskPath, JSON.stringify(task) + '\n', 'utf8');
-          }
-          NODE
-      - name: Commit Round 8 audit results
+      - name: Commit Round 9 audit state
         run: |
           git restore --source=origin/region/central -- \
             jichitai-compare/data/generated/municipalities.json \
@@ -110,27 +66,10 @@ jobs:
           rm -f jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            jichitai-compare/data/municipalities/30/30206.json \
-            jichitai-compare/data/municipalities/30/30207.json \
-            jichitai-compare/data/municipalities/30/30208.json \
-            jichitai-compare/data/municipalities/30/30209.json \
-            jichitai-compare/data/municipalities/30/30304.json \
-            jichitai-compare/data/municipalities/30/30341.json \
-            jichitai-compare/data/municipalities/30/30344.json \
-            jichitai-compare/data/municipalities/30/30361.json \
-            jichitai-compare/operations/tasks/30206.json \
-            jichitai-compare/operations/tasks/30207.json \
-            jichitai-compare/operations/tasks/30208.json \
-            jichitai-compare/operations/tasks/30209.json \
-            jichitai-compare/operations/tasks/30304.json \
-            jichitai-compare/operations/tasks/30341.json \
-            jichitai-compare/operations/tasks/30344.json \
-            jichitai-compare/operations/tasks/30361.json \
-            jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json
+          git add jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json
           if git diff --cached --quiet; then
-            echo 'No Round 8 changes to commit.'
+            echo 'No Round 9 state change to commit.'
           else
-            git commit -m 'audit: 中日本B第8回の誤調査を訂正'
+            git commit -m 'audit: 中日本B第9回の監査状態を更新'
             git push origin HEAD:${{ github.head_ref }}
           fi
