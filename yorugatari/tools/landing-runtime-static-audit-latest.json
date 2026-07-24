@@ -1,6 +1,6 @@
 {
-  "testedAt": "2026-07-24T02:44:48.000Z",
-  "japanTime": "2026-07-24 11:44:48",
+  "testedAt": "2026-07-24T03:20:17.000Z",
+  "japanTime": "2026-07-24 12:20:17",
   "success": true,
   "scope": "リポジトリ上の共有ランタイムと作品開始ランタイムを、模擬DOM・sessionStorage・fetch環境で実行した監査",
   "files": [
@@ -10,7 +10,7 @@
     },
     {
       "path": "yorugatari/assets/landing-start-20260724-001.js",
-      "blobSha": "3625742a8f2e6d256db3e002a934b3e2bff72eaa"
+      "blobSha": "8f5908d48f40d3896ac0a74991d1f99741a852c1"
     },
     {
       "path": "yorugatari/5min-horror.html",
@@ -29,11 +29,13 @@
     "bedtimeAggregatePath": "/yorugatari/__landing-start/bedtime",
     "oneStartRequestPerSession": true,
     "rapidDoubleClickPrevented": true,
+    "retryPossibleAfterFailedRequest": true,
     "storyIdentifierExcludedFromStartRequest": true,
     "shareUrlUsesCanonicalLanding": true,
     "shareUrlUsesRegisteredUtmValues": true,
     "storyIdentifierExcludedFromShareUrl": true,
-    "sharingAndStartTrackingSeparated": true
+    "sharingAndStartTrackingSeparated": true,
+    "explicitAggregatePathDefinitions": true
   },
-  "note": "公開GitHub Pagesを用いるPlaywright・Lighthouse監査とは別の監査。公開監査レポートはActions実行時に別ファイルへ保存される。"
+  "note": "公開GitHub PagesのLighthouse監査は成功済み。公開Playwright監査レポートはエンゲージメントActions実行時に別ファイルへ保存する。"
 }
