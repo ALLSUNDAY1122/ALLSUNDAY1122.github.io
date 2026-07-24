@@ -103688,229 +103688,171 @@
       "name": "市川市",
       "officialUrl": "https://www.city.ichikawa.lg.jp/",
       "status": "verified",
-      "summary": "東京都に隣接。子ども医療費、病児・病後児保育、保育料支援、学校給食費、産後ケア、一時保育、子育て世帯向け住宅支援、粗大ごみ、防災情報を確認済み。",
+      "summary": "子育て・生活関連9制度を令和8年度の市川市公式情報で再監査し、必須eligibilityを含む全9制度をverifiedとして正規化。",
       "services": {
         "childMedical": {
           "status": "verified",
-          "summary": "0歳から高校生相当年齢まで",
+          "summary": "0歳から18歳年度末までの保険診療自己負担分を助成",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "incomeLimit": "なし",
-            "copay": "入院1日300円、通院1回300円、調剤無料（一定回数以降は無料）",
-            "application": "登録申請が必要"
+            "target": "市川市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "copay": "入院1日300円、通院1回300円、調剤無料。一定回数以降や世帯区分等により無料となる場合あり",
+            "procedure": "受給券の登録申請を行い、対応医療機関で保険資格確認書類と受給券を提示"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/4375.html",
-            "checkedAt": "2026-07-18"
+            "checkedAt": "2026-07-24"
           }
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "生後57日目以降から小学3年生まで",
+          "summary": "生後57日目以降から小学3年生までの病児・病後児保育を実施",
           "eligibility": {
             "minAgeMonths": 2,
             "maxAgeYears": 9
           },
           "details": {
-            "facilityCount": 5,
-            "fee": "利用施設の案内で確認"
+            "target": "病気中または回復期で集団保育が困難かつ保護者の事情により家庭保育が難しい子ども",
+            "facilities": "市内の病児・病後児保育施設で受入れ",
+            "procedure": "施設への事前登録、医療機関受診、予約等が必要。料金・時間は施設案内を確認"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/chi03/1531000001.html",
-            "checkedAt": "2026-07-18"
+            "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {
           "status": "verified",
-          "summary": "第2子以降は所得制限なく無償、2026年9月から第1子まで拡大予定",
+          "summary": "3～5歳児等と第2子以降を無償化し、2026年9月から第1子まで拡大予定",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "fee": "3歳児から5歳児と、市民税非課税世帯の0歳児から2歳児は国制度で基本保育料を無償化。2026年9月から認可保育園等の基本保育料を第1子まで拡大し、すべての児童を無償化予定",
-            "siblingReduction": "0歳児から2歳児の第2子以降は、第1子の年齢や所得を問わず市独自に無償化",
-            "incomeCondition": "第2子以降の市独自無償化は所得制限なし",
-            "application": "認可保育所等の国制度による無償化は原則手続き不要。2026年9月開始分の詳細な手続きは市が改めて案内予定",
-            "exclusions": "延長保育料、給食費、通園送迎費、行事費などの実費は無償化の対象外"
+            "nationalCoverage": "3～5歳児と市民税非課税世帯の0～2歳児は国制度の対象範囲で無償化",
+            "citySupport": "0～2歳児の第2子以降は第1子の年齢・所得を問わず市独自に無償化",
+            "plannedExpansion": "2026年9月から認可保育園等の基本保育料を第1子まで拡大し、全児童を無償化予定",
+            "excluded": "延長保育料、給食費、通園送迎費、行事費等の実費"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/7252.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/5701.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.ichikawa.lg.jp/chi03/kosodate.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "2023年4月から市立学校の学校給食費を無償化",
+          "summary": "市立小中学校等の学校給食費を無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "support": "市立学校の学校給食費を無償化。保護者負担額は0円。食物アレルギー等で給食提供を受けず弁当を持参するなど、所定条件を満たす場合は申請により補助金の対象",
-            "schools": "市川市立の小学校、中学校、義務教育学校、特別支援学校",
-            "start": "市立中学校等は2023年1月から、市立学校全体は2023年4月から無償化",
-            "unitCost": "2026年度の市負担単価は小学校等1食347円、中学校等1食443円",
-            "application": "通常の給食費無償化について保護者の支払手続きは不要"
+            "target": "市川市立の小学校、中学校、義務教育学校、特別支援学校の児童生徒",
+            "coverage": "市立学校の学校給食費を無償化し、保護者負担額は0円",
+            "alternativeSupport": "アレルギー等で給食提供を受けず弁当を持参するなど所定要件を満たす場合は申請により補助対象",
+            "unitCost": "2026年度の市負担単価は小学校等1食347円、中学校等1食443円"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/4409.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.ichikawa.lg.jp/edu08/0000445097.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/4702.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "宿泊型・日帰り型・訪問型を合計最大7日まで利用可能",
+          "summary": "宿泊・日帰り・訪問型の産後ケアを合計最大7日まで提供",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 0
+            "maxAgeYears": 1
           },
           "details": {
-            "types": "宿泊型・デイサービス型・訪問型。宿泊型は産後60日未満、デイサービス型は産後120日未満、訪問型は産後1年未満",
-            "fee": "課税世帯は宿泊型1日2,700円、日帰り型1日1,600円、訪問型1日1,320円。非課税世帯は各半額、生活保護世帯は無料。多胎加算と施設ごとの実費が発生する場合がある",
-            "target": "市川市に住民票がある産婦および乳児",
-            "usageLimit": "宿泊型・デイサービス型・訪問型を合わせて最大7日。宿泊型の1泊2日は2日として数える",
-            "services": "宿泊型と日帰り型は施設で休養、乳房ケア、授乳・沐浴指導、育児相談等を実施。訪問型は助産師が自宅を訪問して乳房ケア、授乳指導、育児相談等を実施",
-            "application": "出産予定日の3か月前からオンラインで登録申請し、市の利用可否決定通知書を受領後、希望する施設または助産院へ直接予約。通知書発送まではおおむね2週間",
-            "restrictions": "医療行為が必要な場合や感染症の疑いがある場合、乳児のみの預かり、託児・家事支援目的、兄弟の利用は対象外"
+            "target": "市川市に住民票がある産婦と乳児",
+            "types": "宿泊型、デイサービス型、訪問型",
+            "ageLimits": "宿泊型は産後60日未満、デイサービス型は産後120日未満、訪問型は産後1年未満",
+            "limit": "3類型を合わせて最大7日。宿泊型1泊2日は2日として数える",
+            "fee": "課税世帯は宿泊1日2,700円、日帰り1日1,600円、訪問1日1,320円。世帯区分による減免あり",
+            "procedure": "出産予定日の3か月前から登録申請し、利用可否決定通知後に施設へ直接予約"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/7071.html",
-            "checkedAt": "2026-07-19"
+            "checkedAt": "2026-07-24"
           }
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "認可保育施設の一時預かりと、月10時間のこども誰でも通園制度を実施",
+          "summary": "一時預かりと月10時間のこども誰でも通園制度を実施",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
           },
           "details": {
-            "types": "一時預かりとこども誰でも通園制度",
-            "oneTimeCare": "一時預かりは市内在住の7か月以上から就学前で、幼稚園・保育園等に原則在園していない子が対象。就労・通院・出産・介護等は月15日まで、育児リフレッシュは月2日まで",
-            "universalCare": "こども誰でも通園制度は生後6か月から満3歳未満で、保育所・認定こども園・幼稚園・地域型保育・企業主導型保育に在籍していない子が対象。就労要件を問わず月10時間まで1時間単位で利用可能",
-            "hours": "一時預かりは原則平日9時から17時。こども誰でも通園制度は平日10時から16時",
-            "fee": "一時預かりは原則3歳未満300円/時間、3歳以上200円/時間、昼食300円。こども誰でも通園制度は一般300円/時間、生活保護世帯0円、低所得・要支援家庭100円/時間、昼食300円",
-            "application": "一時預かりは希望施設へ空き確認と直接申込み。こども誰でも通園制度は国の総合支援システムで認定申請し、利用者アカウント発行後に施設の初回面談を受け、システム上で利用日を予約"
+            "universalCareTarget": "生後6か月から満3歳未満で、保育所・認定こども園・幼稚園等に在籍していない子ども",
+            "universalCareHours": "就労要件を問わず月10時間まで、1時間単位。未利用分の繰越不可",
+            "universalCareFee": "一般1時間300円、生活保護世帯0円、一定所得未満・要支援家庭100円、昼食300円",
+            "facilities": "令和8年3月時点で市立平田保育園、市立行徳保育園、市立曽谷保育園",
+            "procedure": "国の総合支援システムで認定申請後、施設の初回面談と予約を行う"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/2406.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/3076.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "未就学児のいる世帯が祖父母との同居・近居のため住宅を購入等する場合、最大30万円を補助",
+          "summary": "子育て世帯の祖父母との同居・近居開始に伴う住宅購入等を最大30万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
           "details": {
-            "support": "子育て世帯が祖父母世帯との同居または近居を開始するため、市内で住宅の購入、新築、建替えを行う場合に費用の一部を補助",
-            "conditions": "申請時点で小学校就学前の子ども（出産予定を含む）がいること。祖父母世帯と同一小学校区内または直線1.2km以内で同居・近居を開始し、対象住宅を子育て世帯員が所有・居住することなど",
-            "amount": "基本額10万円。市外からの転入で10万円、ZEH住宅で10万円を加算し、要件をすべて満たす場合は最大30万円",
-            "period": "2026年度の申請期間は2026年5月1日から2027年3月31日まで。住宅の登記と住民登録は2025年4月1日から2027年3月31日までに完了すること",
-            "application": "オンライン、郵送または窓口で申請。戸籍、登記事項証明書、住宅契約書、必要に応じて母子健康手帳やBELS評価書等を提出",
-            "otherSupport": "18歳年度末までの子を養育する住宅困窮世帯を含む対象者向けに、民間賃貸住宅のあっせん制度も実施"
+            "target": "小学校就学前の子ども（出産予定を含む）がいる世帯で、祖父母世帯との同居・近居を開始するため市内住宅を購入・新築・建替えする世帯",
+            "distance": "同一小学校区内または直線距離1.2キロメートル以内",
+            "amount": "基本10万円、市外転入10万円加算、ZEH住宅10万円加算で最大30万円",
+            "period": "2026年度申請期間は2026年5月1日から2027年3月31日",
+            "procedure": "オンライン、郵送または窓口で必要書類を添えて申請"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/4902.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/3820.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/1387.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
-          "summary": "ポリタンク相当以上の大型ごみは事前申込みで戸別収集、持込は事前予約制",
+          "summary": "大型ごみを事前申込みの戸別収集または予約制自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
           "details": {
-            "scope": "灯油用18リットルポリタンク（高さ40cm×幅30cm×奥行20cm）以上の大きさのものや、鉄アレイなど重量のある家庭ごみが目安",
-            "feeSystem": "戸別収集は品目別料金。処理券は520円券と1,050円券を組み合わせる。インターネットまたはLINE申込みではクレジットカードかPayPayによるオンライン決済も可能",
-            "application": "電話、インターネットまたはLINEで事前申込み。1世帯1回5点までで、次回申込みまで7日以上あける。収集日の午前8時までに指定場所へ排出し、立会いは不要",
-            "carryIn": "クリーンセンターへの家庭ごみ持込は事前予約制。月曜から土曜の午後1時から4時まで受入れ、10kgにつき220円。市内住所の本人確認書類と予約受付番号が必要",
-            "excluded": "事業系ごみ・業務用機器、テレビ・エアコン・冷蔵庫・洗濯機等の家電リサイクル対象品、パソコン、原付バイク等は大型ごみ収集の対象外"
+            "scope": "18リットルポリタンク相当以上の大きさの家庭ごみや重量物等",
+            "collection": "電話・インターネット・LINEで申し込み、1世帯1回5点まで。処理券またはオンライン決済を利用",
+            "carryIn": "クリーンセンターへの持込みは事前予約制で、月曜から土曜の13時から16時、10キログラム220円",
+            "excluded": "家電リサイクル対象品、パソコン、事業系ごみ、処理困難物等"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/4312.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/2788.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/2789.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "disasterPrevention": {
           "status": "verified",
-          "summary": "水害ハザードマップ、地区別減災マップ、避難所一覧、災害ポータルを提供",
+          "summary": "2026年改訂の水害・地区別減災マップと避難情報を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
           "details": {
-            "coverage": "2026年4月改訂の水害ハザードマップで、江戸川洪水、中小河川洪水、内水浸水、高潮、土砂災害の想定区域と避難所を確認可能。2026年1月改訂の地区別減災マップでは地震時の避難場所・避難所、備蓄品、連絡手段等を掲載",
-            "shelters": "指定緊急避難場所、広域避難場所、指定避難所、指定福祉避難所、ペット同伴避難所を一覧化。災害種別や開設状況を確認して避難する必要がある",
-            "access": "市川市災害ポータルで避難情報、防災行政無線の放送内容、避難所情報、気象情報、河川・洪水リスクを確認可能。市公式LINEでは避難所の開設・混雑状況や防災行政無線も確認できる",
-            "alerts": "市公式Webサイト、X、Facebook、LINE、緊急速報メール、メール情報配信サービス、市川うららFM等で緊急情報を配信。携帯電話を持たない高齢者・障害者向けに電話・FAX一斉配信サービスもある",
-            "latestMap": "水害ハザードマップは2026年4月改訂版、地区別減災マップは2026年1月改訂版を公開"
+            "maps": "2026年4月改訂の水害ハザードマップと2026年1月改訂の地区別減災マップ",
+            "risks": "江戸川等の洪水、中小河川洪水、内水浸水、高潮、土砂災害、地震等",
+            "facilities": "指定緊急避難場所、広域避難場所、指定避難所、福祉避難所、ペット同伴避難所等",
+            "alerts": "災害ポータル、市公式Web・SNS・LINE、緊急速報メール、防災行政無線等で情報提供"
           },
           "source": {
             "url": "https://www.city.ichikawa.lg.jp/page/4985.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/40332.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/4627.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/4999.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.ichikawa.lg.jp/page/4768.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         }
       }
     },
