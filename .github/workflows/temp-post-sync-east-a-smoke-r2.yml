@@ -1,0 +1,71 @@
+name: Temporary post-sync East A smoke r2
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: temp-post-sync-east-a-smoke-r2
+  cancel-in-progress: false
+
+jobs:
+  smoke-public:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: ops/post-sync-east-a-smoke-20260725-r2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify published GitHub Pages site
+        working-directory: jichitai-compare
+        run: npm run smoke:public
+      - name: Verify fifteen updated municipality pages
+        working-directory: jichitai-compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+
+          const BASE_URL = 'https://allsunday1122.github.io/jichitai-compare';
+          const codes = [
+            '10367', '04323', '04401', '14100', '13123',
+            '10424', '13361', '13362', '13363', '13364',
+            '19364', '19425', '19429', '19442', '19443'
+          ];
+          const generated = JSON.parse(await readFile('data/generated/municipalities.json', 'utf8'));
+          const byCode = new Map(generated.municipalities.map((item) => [item.code, item]));
+          const escapeHtml = (value) => String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+
+          for (const code of codes) {
+            const municipality = byCode.get(code);
+            if (!municipality) throw new Error(`${code}: generated municipality is missing`);
+            const response = await fetch(`${BASE_URL}/municipality/${code}/`, {
+              headers: { 'cache-control': 'no-cache' },
+              redirect: 'follow'
+            });
+            if (!response.ok) throw new Error(`${code}: HTTP ${response.status}`);
+            const html = await response.text();
+            if (!html.includes(`<h1>${escapeHtml(municipality.name)}</h1>`)) throw new Error(`${code}: h1 mismatch`);
+            if (!html.includes(`<p>${escapeHtml(municipality.summary)}</p>`)) throw new Error(`${code}: municipality summary mismatch`);
+            for (const [serviceKey, service] of Object.entries(municipality.services || {})) {
+              const expected = `<strong class="cell-main">${escapeHtml(service.summary)}</strong>`;
+              if (!html.includes(expected)) throw new Error(`${code} ${serviceKey}: service summary mismatch`);
+            }
+          }
+          console.log(`published static pages match generated data for ${codes.length} updated municipalities`);
+          NODE
