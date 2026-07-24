@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "36401",
+  "prefectureCode": "36",
+  "prefecture": "徳島県",
+  "name": "松茂町",
+  "officialUrl": "https://www.town.matsushige.tokushima.jp/",
+  "status": "verified",
+  "summary": "誤って36368で登録されていた松茂町を正しい自治体コード36401へ移管し、必須9制度を全件verifiedとして保持。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末までの保険診療自己負担を所得制限なく無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "松茂町に住民票があり健康保険に加入する18歳年度末までの子ども",
+        "copay": "2024年4月から保険診療自己負担なし",
+        "incomeLimit": "所得制限なし"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2015111300305/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "乳幼児・小学生が徳島県内の広域病児保育施設を利用可能",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "病気中・回復期で集団保育が困難な乳幼児・小学生",
+        "fee": "日額1,800円。世帯区分により減免",
+        "application": "施設予約、診察、利用申請書が必要"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2015111300350/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "認可保育施設の0～5歳児保育料を所得制限なく無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageZeroToTwo": "2025年9月から所得制限なく無償化",
+        "ageThreeToFive": "国制度により無償化",
+        "additionalCosts": "給食費、用品費等は別途となる場合がある"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2025082600021/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町給食センターが幼稚園・小中学校へ給食を提供",
+      "eligibility": {
+        "minAgeMonths": 60,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "facilities": "町内幼稚園・小学校・中学校",
+        "publishedFee": "掲載単価は幼稚園・小学校1食270円、中学校305円",
+        "universalFree": "一律無償化は確認できない"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2015111700211/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子へ宿泊型・通所型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "生後12か月未満の乳児と母親",
+        "types": "宿泊型、通所型",
+        "limit": "合わせて最大7回",
+        "fee": "施設費用の1割。非課税・生活保護世帯は無料"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2025050900016/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満児を月10時間まで受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保育所等に在籍していない生後6か月から満3歳未満",
+        "limit": "月10時間",
+        "employmentCondition": "保護者の就労要件を問わない"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2026032000014/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "2026年度の新婚世帯へ住宅・引越費用を最大60万円補助",
+      "details": {
+        "expenses": "住宅賃借、購入、リフォーム、引越費用",
+        "amount": "夫婦とも29歳以下は最大60万円、その他の対象区分は30万円または15万円",
+        "application": "事前相談等が必要"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2024032100024/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "分別ガイドに従う収集と第二環境センターへの自己搬入に対応",
+      "details": {
+        "collection": "ごみ分別ガイド・収集カレンダーに従って排出",
+        "carryIn": "松茂町第二環境センターへ自己搬入可能",
+        "excluded": "家電リサイクル対象品等は別処理"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2015111600467/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・洪水・高潮のハザードマップと避難所情報を公開",
+      "details": {
+        "coverage": "津波、洪水、高潮",
+        "map": "浸水範囲・深さ・継続時間、指定避難場所・避難所を掲載",
+        "guidance": "南海トラフ地震や台風等に備え事前確認"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2026032900024/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
