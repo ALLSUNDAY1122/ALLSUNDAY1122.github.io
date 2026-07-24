@@ -9,13 +9,13 @@ permissions:
 
 jobs:
   confirm:
-    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ops/east-a-final-public-confirm-20260725'
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'audit/east-a-final-round10-20260725'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ops/east-a-final-public-confirm-20260725
+          ref: audit/east-a-final-round10-20260725
           fetch-depth: 0
       - name: Verify published East-A data and pages
         shell: bash
@@ -102,7 +102,7 @@ jobs:
             git add -A
             git diff --cached --check
             git commit -m 'ops: 東日本A最終公開確認を記録'
-            git push --force-with-lease origin HEAD:ops/east-a-final-public-confirm-20260725
+            git push --force-with-lease origin HEAD:audit/east-a-final-round10-20260725
             exit 0
           done
           echo 'main kept advancing; public confirmation not committed' >&2
