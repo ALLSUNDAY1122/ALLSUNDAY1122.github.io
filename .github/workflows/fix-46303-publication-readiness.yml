@@ -1,0 +1,120 @@
+name: Fix Mishima Publication Readiness
+
+on:
+  pull_request:
+    branches: [region/west]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix:
+    if: github.head_ref == 'fix/46303-publication-readiness-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/46303-publication-readiness-20260724
+          fetch-depth: 0
+      - name: Normalize Mishima data and task
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const municipalityPath = 'jichitai-compare/data/municipalities/46/46303.json';
+          const taskPath = 'jichitai-compare/operations/tasks/46303.json';
+          const serviceIds = JSON.parse(fs.readFileSync('jichitai-compare/data/service-definitions.json', 'utf8')).services.map((item) => item.id);
+          const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          municipality.status = 'verified';
+          municipality.summary = '必須9制度を三島村公式情報で調査。4制度をverified、2026年度の利用条件を確定できない5制度をunavailableとして登録。';
+          municipality.updatedAt = '2026-07-24';
+          municipality.services.sickChildCare = {
+            status: 'unavailable',
+            summary: '島内診療・島外通院支援は確認できるが、一般利用型病児保育の2026年度条件を確定できない',
+            eligibility: { minAgeMonths: 0, maxAgeYears: 18 },
+            details: {
+              confirmed: '各島の診療所、巡回診療、遠隔医療、島外通院費等助成を実施',
+              unconfirmed: '病児・病後児保育の実施施設、対象年齢、料金、時間、定員、予約方法、島外施設利用助成',
+              contact: '三島村役場民生課へ確認'
+            },
+            notes: ['医療体制・島外通院支援を、病児保育事業の実施条件として扱わない。'],
+            source: { url: 'https://mishimamura.com/book/pageindices/index24.html', checkedAt: '2026-07-24' }
+          };
+          municipality.services.childcareFee = {
+            status: 'unavailable',
+            summary: '教育・保育施設の運営条例は確認できるが、2026年度の保育施設・保育料条件を確定できない',
+            eligibility: { minAgeMonths: 0, maxAgeYears: 5 },
+            details: {
+              confirmed: '特定教育・保育施設等の運営基準条例と国制度上の費用区分が存在',
+              unconfirmed: '村内利用施設、課税世帯0～2歳児の保育料、3～5歳児の実費、多子軽減、申込方法',
+              contact: '三島村役場民生課へ確認'
+            },
+            notes: ['条例の存在を、現行施設や具体的保育料の根拠として扱わない。'],
+            source: { url: 'https://mishimamura.com/reiki_int/reiki_honbun/q718RG00000453.html', checkedAt: '2026-07-24' }
+          };
+          municipality.services.schoolMeals = {
+            status: 'unavailable',
+            summary: '就学援助の給食費支援は確認できるが、2026年度一般世帯の給食費条件を確定できない',
+            eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
+            details: {
+              confirmed: '経済的理由で就学困難な世帯に学校給食費等を援助する制度を実施',
+              unconfirmed: '一般世帯の給食費額、全体無償化・村独自補助、徴収方法、対象学校・期間',
+              contact: '三島村教育委員会事務局へ確認'
+            },
+            notes: ['就学援助の給食費支援を、一般世帯の給食費無償化の根拠として扱わない。'],
+            source: { url: 'https://mishimamura.com/education-culture-history/%E5%B0%B1%E5%AD%A6%E6%8F%B4%E5%8A%A9%E5%88%B6%E5%BA%A6%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/', checkedAt: '2026-07-24' },
+            additionalSources: [{ url: 'https://mishimamura.com/reiki_int/reiki_honbun/q718RG00000483.html', checkedAt: '2026-07-24' }]
+          };
+          municipality.services.postpartumCare = {
+            status: 'unavailable',
+            summary: '産後ケア事業の存在は確認できるが、2026年度の利用条件を確定できない',
+            eligibility: { minAgeMonths: 0, maxAgeYears: 1 },
+            details: {
+              confirmed: '村公式パンフレットで産後ケア事業と産婦健康診査費助成を案内',
+              unconfirmed: '対象月齢、宿泊・通所・訪問の形態、島外施設、利用上限、料金、交通支援、申請方法',
+              contact: '三島村役場民生課母子保健係へ確認'
+            },
+            notes: ['事業名称の掲載を、2026年度の具体的利用条件の根拠として扱わない。'],
+            source: { url: 'https://mishimamura.com/book/pageindices/index24.html', checkedAt: '2026-07-24' },
+            additionalSources: [{ url: 'https://mishimamura.com/reiki_int/reiki_honbun/q718RG00000506.html', checkedAt: '2026-07-24' }]
+          };
+          municipality.services.temporaryChildcare = {
+            status: 'unavailable',
+            summary: '子育て広場等の支援は確認できるが、2026年度こども誰でも通園制度の条件を確定できない',
+            eligibility: { minAgeMonths: 6, maxAgeYears: 2 },
+            details: {
+              confirmed: '各島で子育て広場を実施し、無料の子育て支援を提供',
+              unconfirmed: '乳児等通園支援事業の実施有無、施設、対象、月10時間等の上限、料金、面談・予約方法',
+              contact: '三島村役場民生課へ確認'
+            },
+            notes: ['子育て広場を、こども誰でも通園制度と同一制度として扱わない。'],
+            source: { url: 'https://mishimamura.com/book/pageindices/index24.html', checkedAt: '2026-07-24' }
+          };
+          const services = serviceIds.map((id) => municipality.services[id]);
+          const officialSources = [...new Set(services.map((service) => service.source?.url).filter((url) => /^https:\/\//u.test(url ?? '')))];
+          task.status = 'pr_open';
+          task.currentService = null;
+          task.nextServiceIndex = serviceIds.length;
+          task.completedServices = [...serviceIds];
+          task.verifiedCount = services.filter((service) => service.status === 'verified').length;
+          task.researchingCount = 0;
+          task.unavailableCount = services.filter((service) => service.status === 'unavailable').length;
+          task.needsMediumReviewCount = 0;
+          task.currentBranch = 'fix/46303-publication-readiness-20260724';
+          task.pullRequestNumber = null;
+          task.lastCheckedAt = '2026-07-24';
+          task.lastUpdatedAt = '2026-07-24T16:02:00+09:00';
+          task.lastUpdatedBy = '統括B';
+          task.officialSources = officialSources;
+          task.notes = [...(task.notes ?? []), '病児保育、保育料、学校給食費、産後ケア、こども誰でも通園制度は、関連制度・事業の存在は確認したが2026年度利用条件を確定できないためunavailableへ正規化。'];
+          task.blockers = [];
+          fs.writeFileSync(municipalityPath, `${JSON.stringify(municipality, null, 2)}\n`);
+          fs.writeFileSync(taskPath, `${JSON.stringify(task, null, 2)}\n`);
+          NODE
+          git rm .github/workflows/fix-46303-publication-readiness.yml
+          git add jichitai-compare/data/municipalities/46/46303.json jichitai-compare/operations/tasks/46303.json
+          git commit -m "fix: 三島村を4 verified・5 unavailableへ正規化"
+          git push origin HEAD:fix/46303-publication-readiness-20260724
