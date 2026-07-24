@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
 const base = 'https://allsunday1122.github.io/yorugatari';
-const attempts = 24;
+const attempts = 36;
 const delayMilliseconds = 5000;
 const targets = [
   { name: 'top', url: `${base}/`, required: ['オリジナル怖い話100作品', 'class="skip-link"', 'id="readerPanel"', 'assets/stories-096-100.js?v=20260723-004', 'assets/app.js?v=20260723-008', 'assets/analytics.js?v=20260723-003'], forbidden: ['assets/engagement.js'] },
@@ -29,7 +29,7 @@ async function inspect(target, attempt) {
       headers: {
         'cache-control': 'no-cache, no-store, max-age=0',
         pragma: 'no-cache',
-        'user-agent': 'Yorugatari-Live-Check/2.4'
+        'user-agent': 'Yorugatari-Live-Check/2.5'
       }
     });
     const text = await response.text();
