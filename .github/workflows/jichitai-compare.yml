@@ -83,10 +83,12 @@ jobs:
             const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
             const services = data.services ?? {};
             const keys = Object.keys(services);
+            const completedKeys = keys.filter((key) => ['verified', 'unavailable'].includes(services[key]?.status));
+            const pendingKey = keys.find((key) => ['researching', 'needs_medium_review'].includes(services[key]?.status)) ?? null;
             task.status = 'merged';
-            task.currentService = null;
-            task.nextServiceIndex = keys.length;
-            task.completedServices = keys;
+            task.currentService = pendingKey;
+            task.nextServiceIndex = pendingKey === null ? keys.length : keys.indexOf(pendingKey);
+            task.completedServices = completedKeys;
             task.verifiedCount = keys.filter((key) => services[key]?.status === 'verified').length;
             task.researchingCount = keys.filter((key) => services[key]?.status === 'researching').length;
             task.unavailableCount = keys.filter((key) => services[key]?.status === 'unavailable').length;
