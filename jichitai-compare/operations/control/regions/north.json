@@ -1,1 +1,33 @@
-{"schemaVersion":"1.0.0","region":"north","team":"北日本調査班","currentMunicipalityCode":null,"currentMunicipalityName":null,"currentStage":"completed","completedServiceCount":3654,"pendingServices":[],"workingBranch":null,"pullRequestNumber":null,"ciStatus":"success","blockers":[],"lastAction":"北日本A・Bの両チェックポイントを監査し、北海道・青森県・岩手県・宮城県・秋田県・山形県・福島県の全406自治体、必須9制度3654件が調査・region/north統合済みであることを確認。北日本向けオープンPRと未完了taskは0件。","nextAction":"新規自治体調査は停止する。統括がregion/northの完成データ、north-a・north-bチェックポイント、親地域状態をmainへ同期し、全国公開状態を最終監査する。公式情報変更、CI異常、差戻しが発生した場合のみ品質再監査を行う。","updatedAt":"2026-07-24T14:45:00+09:00","completedMunicipalitiesSinceLastNationalMerge":0,"lastNationalIntegrationPr":868,"lastNationalIntegrationAt":"2026-07-22T23:04:00+09:00","lastGeneratedPullRequest":868}
+{
+  "schemaVersion": "1.0.0",
+  "region": "north",
+  "assignedTeam": "北日本調査班",
+  "branch": "region/north",
+  "integrationBranch": "region/north",
+  "updatedAt": "2026-07-24T22:34:00+09:00",
+  "status": "completed",
+  "stage": "nationwide_complete",
+  "currentMunicipality": null,
+  "completedSinceLastRelease": 0,
+  "completedMunicipalities": [],
+  "regionalQueue": [],
+  "pendingRegionalPullRequests": [],
+  "blocked": [],
+  "openPullRequestCount": 0,
+  "completenessAudit": {
+    "status": "passed",
+    "expectedMunicipalities": 406,
+    "registeredMunicipalities": 406,
+    "requiredServices": 3654,
+    "completedServices": 3654,
+    "nationwidePublishedMunicipalities": 1741,
+    "nationwideRemainingMunicipalities": 0,
+    "checkedAt": "2026-07-24T22:34:00+09:00"
+  },
+  "lastAction": "北日本406自治体を含む全国1,741自治体・15,669制度の完全公開を確認し、region/northに残っていた旧全国統合待ち状態をnationwide_completeへ同期した。",
+  "nextAction": "新規自治体調査を停止し、自治体公式情報の更新・差し戻し・CI失敗が発生した場合のみ品質監査を再開する。",
+  "lastNationalIntegrationPr": 2791,
+  "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
+  "lastGeneratedPullRequest": 2792,
+  "humanDecisionRequired": false
+}
