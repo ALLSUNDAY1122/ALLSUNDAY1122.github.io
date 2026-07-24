@@ -1,0 +1,117 @@
+name: Fix Soo Ichikikushikino Publication Readiness
+
+on:
+  pull_request:
+    branches: [region/west]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix:
+    if: github.head_ref == 'fix/46217-46219-publication-readiness-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/46217-46219-publication-readiness-20260724
+          fetch-depth: 0
+      - name: Normalize municipalities and tasks
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const serviceIds = JSON.parse(fs.readFileSync('jichitai-compare/data/service-definitions.json', 'utf8')).services.map((item) => item.id);
+          const completed = new Set(['verified', 'unavailable']);
+          const timestamp = '2026-07-24T15:50:00+09:00';
+          const cases = [
+            {
+              code: '46219',
+              summary: '必須9制度をいちき串木野市公式情報で調査。8制度をverified、2026年度の給食費適用条件を確定できない学校給食費をunavailableとして登録。',
+              services: {
+                schoolMeals: {
+                  status: 'unavailable',
+                  summary: '2026年度の学校給食実施は確認できるが、給食費無償化・徴収条件を確定できない',
+                  eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
+                  details: {
+                    confirmed: '令和8年度4月から7月の市立学校給食献立表を公開している。令和7年度は私立小中学校在籍者へ市立給食費相当額を給付していた',
+                    unconfirmed: '令和8年度の市立小中学校給食費、無償化継続の対象・期間、市外・私立通学者の給付条件、徴収・申請方法',
+                    contact: 'いちき串木野市教育委員会または学校給食センターへ確認'
+                  },
+                  notes: ['令和8年度の給食提供を、給食費無償化または令和7年度私立学校給付の継続根拠として扱わない。'],
+                  source: { url: 'https://www.city.ichikikushikino.lg.jp/kyushoku1/konndade.html', checkedAt: '2026-07-24' },
+                  additionalSources: [{ url: 'https://www.city.ichikikushikino.lg.jp/kyosomu1/shiritsukyuhu.html', checkedAt: '2026-07-24' }]
+                }
+              },
+              note: '学校給食費は令和8年度献立と令和7年度私立学校給付を確認したが、令和8年度の無償化・徴収条件を確定できないためunavailableへ正規化。'
+            },
+            {
+              code: '46217',
+              summary: '必須9制度を曽於市公式情報で調査。7制度をverified、2026年度の具体的条件を確定できない学校給食費とこども誰でも通園制度をunavailableとして登録。',
+              services: {
+                schoolMeals: {
+                  status: 'unavailable',
+                  summary: '学校給食費全額補助の実績は確認できるが、2026年度の継続条件を確定できない',
+                  eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
+                  details: {
+                    confirmed: '令和6年度から市内小中学校在籍児童生徒等の学校給食費を全額補助し、令和7年度も保護者負担0円としていた',
+                    unconfirmed: '令和8年度の全額補助継続、対象期間、市外通学者等の対象条件、申請・給付・精算方法',
+                    contact: '曽於市教育委員会教育総務課学校給食係へ確認'
+                  },
+                  notes: ['令和7年度までの全額補助を、令和8年度の継続根拠として扱わない。'],
+                  source: { url: 'https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/gakkoukyuusyoku/2025-0718-1040-30.html', checkedAt: '2026-07-24' }
+                },
+                temporaryChildcare: {
+                  status: 'unavailable',
+                  summary: '2026年4月開始と対象年齢は確認できるが、利用条件の詳細を確定できない',
+                  eligibility: { minAgeMonths: 6, maxAgeYears: 2 },
+                  details: {
+                    confirmed: '保育所・認定こども園に入所していない生後6か月から満3歳未満を対象に、令和8年4月から制度を開始',
+                    unconfirmed: '月間利用上限、利用料金、実施施設、利用可能時間、定員、面談・予約・取消方法',
+                    contact: '曽於市こども未来課へ確認'
+                  },
+                  notes: ['制度開始と対象年齢を、未掲載の料金・施設・時間等の根拠として扱わない。'],
+                  source: { url: 'https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/hoikuenn/kodomodaredemotuuenseido.html', checkedAt: '2026-07-24' }
+                }
+              },
+              note: '学校給食費とこども誰でも通園制度は事業実績・開始を確認したが、令和8年度の利用者向け具体条件を確定できないためunavailableへ正規化。'
+            }
+          ];
+
+          for (const item of cases) {
+            const municipalityPath = `jichitai-compare/data/municipalities/46/${item.code}.json`;
+            const taskPath = `jichitai-compare/operations/tasks/${item.code}.json`;
+            const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+            const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+            municipality.status = 'verified';
+            municipality.summary = item.summary;
+            municipality.updatedAt = '2026-07-24';
+            Object.assign(municipality.services, item.services);
+            const services = serviceIds.map((id) => municipality.services[id]);
+            const officialSources = [...new Set(services.filter((service) => completed.has(service.status)).map((service) => service.source?.url).filter((url) => /^https:\/\//u.test(url ?? '')))];
+            task.status = 'pr_open';
+            task.currentService = null;
+            task.nextServiceIndex = serviceIds.length;
+            task.completedServices = [...serviceIds];
+            task.verifiedCount = services.filter((service) => service.status === 'verified').length;
+            task.researchingCount = 0;
+            task.unavailableCount = services.filter((service) => service.status === 'unavailable').length;
+            task.needsMediumReviewCount = 0;
+            task.currentBranch = 'fix/46217-46219-publication-readiness-20260724';
+            task.pullRequestNumber = null;
+            task.lastCheckedAt = '2026-07-24';
+            task.lastUpdatedAt = timestamp;
+            task.lastUpdatedBy = '統括B';
+            task.officialSources = officialSources;
+            task.notes = [...(task.notes ?? []), item.note];
+            task.blockers = [];
+            fs.writeFileSync(municipalityPath, `${JSON.stringify(municipality, null, 2)}\n`);
+            fs.writeFileSync(taskPath, `${JSON.stringify(task, null, 2)}\n`);
+          }
+          NODE
+          git rm .github/workflows/fix-46217-46219-publication-readiness.yml
+          git add jichitai-compare/data/municipalities/46/46217.json jichitai-compare/operations/tasks/46217.json jichitai-compare/data/municipalities/46/46219.json jichitai-compare/operations/tasks/46219.json
+          git commit -m "fix: 曽於市・いちき串木野市を公開可能状態へ正規化"
+          git push origin HEAD:fix/46217-46219-publication-readiness-20260724
