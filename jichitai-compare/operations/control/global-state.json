@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-25T05:55:00+09:00",
+  "updatedAt": "2026-07-25T06:57:00+09:00",
   "phase": "published",
   "mainBranch": "main",
   "regionalBranches": {
@@ -21,24 +21,24 @@
     "total": 0
   },
   "priority": {
-    "type": "quality-followup",
-    "nextAction": "統括A引継ぎIssue #3166の長野県20自治体・30制度を公式情報で確定し、needs_medium_reviewを0へ解消する。中日本Aの非阻害継続確認25項目はIssue #3141で管理する。"
+    "type": "release-monitoring",
+    "nextAction": "全国1,741自治体・15,669制度は完了。公式情報更新、CI異常、公開文言異常が発生した場合に保守を再開する。中日本Aの継続確認25項目はIssue #3141、栄村公式サイト復旧後の再監査はIssue #2847で非ブロッキング追跡する。"
   },
   "publication": {
     "status": "published",
     "requestedAt": "2026-07-24T23:47:00+09:00",
-    "lastConfirmedAt": "2026-07-25T05:52:00+09:00",
+    "lastConfirmedAt": "2026-07-25T06:56:00+09:00",
     "sourceBranch": "main",
-    "latestStateCommit": "b2e8c246cde33596da83893a89c04d703bdf45f0",
+    "latestStateCommit": "bfb5c518d03f2148e8ecf32411b8c714241bb5c9",
     "method": "main-branch-push",
     "sitePath": "/jichitai-compare/"
   },
-  "lastNationalIntegrationAt": "2026-07-25T05:52:00+09:00",
-  "lastNationalIntegrationPr": 3165,
+  "lastNationalIntegrationAt": "2026-07-25T06:56:00+09:00",
+  "lastNationalIntegrationPr": 3169,
   "latestGeneratedMunicipalityCount": 1741,
   "latestGeneratedServiceCount": 15669,
-  "latestGeneratedPullRequest": 3165,
-  "latestPublicCountPullRequest": 3165,
+  "latestGeneratedPullRequest": 3169,
+  "latestPublicCountPullRequest": 3169,
   "regionalMergedMunicipalities": 1741,
   "remainingMunicipalities": 0,
   "taskState": {
@@ -50,27 +50,34 @@
   },
   "serviceQualityState": {
     "totalServices": 15669,
-    "completedServices": 15639,
-    "completionRatePercent": 99.81,
+    "completedServices": 15669,
+    "completionRatePercent": 100,
     "todoServices": 0,
     "researchingServices": 0,
-    "needsMediumReviewServices": 30,
+    "needsMediumReviewServices": 0,
     "needsRevisionServices": 0,
     "needsCoordinatorServices": 0,
     "prOpenServices": 0,
     "blockedServices": 0,
-    "trackingIssueNumber": 3166,
-    "trackingOwner": "統括A・東日本調査班",
-    "affectedPrefectureCode": "20",
-    "affectedPrefectureName": "長野県",
-    "affectedMunicipalityCount": 20
+    "resolutionPullRequestNumber": 3169,
+    "resolutionCiRunNumber": 7747,
+    "resolvedTrackingIssueNumber": 3166,
+    "resolvedTrackingIssueStatus": "closed"
   },
   "nonBlockingFollowUps": [
     {
       "scope": "中日本調査班A",
       "itemCount": 25,
       "trackingIssueNumber": 3141,
-      "status": "published_with_followup"
+      "status": "published_waiting_for_more_specific_official_information",
+      "latestRecheckPullRequestNumber": 3168,
+      "latestRecheckCiRunNumber": 7735
+    },
+    {
+      "scope": "東日本調査班A・栄村",
+      "itemCount": 9,
+      "trackingIssueNumber": 2847,
+      "status": "published_as_unavailable_waiting_for_official_site_recovery"
     }
   ],
   "openPullRequests": [],
