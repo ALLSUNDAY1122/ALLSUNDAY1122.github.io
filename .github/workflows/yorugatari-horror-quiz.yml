@@ -1,0 +1,155 @@
+name: Yorugatari horror quiz
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/horror-quiz.html
+      - yorugatari/assets/horror-quiz.js
+      - yorugatari/tools/horror-quiz-audit.cjs
+      - yorugatari/tools/ensure-horror-quiz.mjs
+      - yorugatari/tools/generate-sitemap.mjs
+      - yorugatari/tools/generate-discovery-pages.mjs
+      - yorugatari/index.html
+      - yorugatari/archive.html
+      - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
+      - yorugatari/categories/**
+      - .github/workflows/yorugatari-horror-quiz.yml
+
+concurrency:
+  group: yorugatari-horror-quiz
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Normalize quiz discovery and sitemap
+        shell: bash
+        run: |
+          node --check yorugatari/assets/horror-quiz.js
+          node --check yorugatari/tools/ensure-horror-quiz.mjs
+          node --check yorugatari/tools/generate-sitemap.mjs
+          node --check yorugatari/tools/horror-quiz-audit.cjs
+          node yorugatari/tools/ensure-horror-quiz.mjs
+          node yorugatari/tools/generate-sitemap.mjs
+          node <<'NODE'
+          const fs = require('node:fs');
+          const page = fs.readFileSync('yorugatari/horror-quiz.html', 'utf8');
+          if ((page.match(/<fieldset\b/g) || []).length !== 3) throw new Error('Expected three quiz questions');
+          if (!page.includes('assets/horror-quiz.js?v=20260724-001')) throw new Error('Quiz runtime version mismatch');
+          if (!page.includes('assets/analytics.js?v=20260723-003')) throw new Error('Quiz analytics runtime missing');
+          const sitemap = fs.readFileSync('yorugatari/sitemap.xml', 'utf8');
+          if (!sitemap.includes('/yorugatari/horror-quiz.html')) throw new Error('Quiz sitemap entry missing');
+          const required = ['index.html','archive.html','5min-horror.html','bedtime-horror.html'];
+          for (const file of required) {
+            const html = fs.readFileSync(`yorugatari/${file}`, 'utf8');
+            if (!html.includes('horror-quiz.html')) throw new Error(`Quiz discovery link missing: ${file}`);
+          }
+          NODE
+
+      - name: Commit normalized quiz release
+        shell: bash
+        run: |
+          if git diff --quiet -- yorugatari/index.html yorugatari/archive.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/categories yorugatari/sitemap.xml; then
+            echo "Quiz release is already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add yorugatari/index.html yorugatari/archive.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/categories yorugatari/sitemap.xml
+          git commit -m "Normalize Yorugatari horror quiz release [skip ci]"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            git fetch origin main
+            sleep 3
+          done
+          exit 1
+
+  browser-audit:
+    needs: normalize
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install browser audit tools
+        shell: bash
+        run: |
+          npm install --no-save playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+
+      - name: Audit published horror quiz
+        id: audit
+        continue-on-error: true
+        run: node yorugatari/tools/horror-quiz-audit.cjs
+
+      - name: Record horror quiz audit
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-horror-quiz-report.json
+          cp yorugatari-horror-quiz-report.json /tmp/yorugatari-horror-quiz-report.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-horror-quiz-report.json yorugatari/tools/horror-quiz-audit-latest.json
+            git add yorugatari/tools/horror-quiz-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari horror quiz audit [skip ci]"
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload horror quiz report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-horror-quiz-report
+          path: yorugatari-horror-quiz-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce horror quiz audit
+        if: always()
+        run: test "${{ steps.audit.outcome }}" = "success"
