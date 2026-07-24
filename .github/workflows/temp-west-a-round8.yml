@@ -1,0 +1,75 @@
+name: Temporary West-A round 8 audit update
+
+on:
+  push:
+    branches:
+      - 'audit/west-a-research-verification-r8-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[round8-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Update round 8 audit evidence
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const base = 'jichitai-compare';
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+
+          const auditPath = `${base}/operations/audits/west-a-research-verification-20260725.json`;
+          const audit = read(auditPath);
+          audit.updatedAt = '2026-07-25T01:45:00+09:00';
+          audit.completedRoundCount = 8;
+          audit.rounds[audit.rounds.findIndex((r) => r.round === 8)] = {
+            round: 8,
+            title: '防災マップの災害種別、避難所、公開URL監査',
+            status: 'completed',
+            method: '担当6県から各1自治体を抽出し、防災マップの災害種別、避難場所・避難所導線、公式公開URLの有効性を再照合',
+            sampleMunicipalityCount: 6,
+            checkedServiceCount: 6,
+            samples: [
+              {code:'33100',name:'岡山市',result:'matched',registeredClaim:'WEB版で洪水・土砂、高潮、地震、津波、避難所開設状況・経路を確認可能。内水等の関連マップも公開',officialUrls:['https://www.city.okayama.jp/0000047403.html','https://www.city.okayama.jp/0000012077.html']},
+              {code:'37202',name:'丸亀市',result:'matched',registeredClaim:'洪水浸水、土砂災害、ため池氾濫、津波浸水、指定緊急避難場所と災害別対策を掲載。Web地図とPDFを公開',officialUrls:['https://www.city.marugame.lg.jp/site/bousaiinfo/2424.html']},
+              {code:'39204',name:'南国市',result:'matched',registeredClaim:'地震・津波、物部川・国分川洪水、土砂災害、雨水出水内水、ため池の個別ハザードマップを公式URLで公開',officialUrls:['https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=2170','https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=1588','https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=1587','https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=9934','https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8062']},
+              {code:'40100',name:'北九州市',result:'matched',registeredClaim:'土砂災害、洪水、高潮・台風、地震、津波を扱う防災ガイドブックと区別ハザードマップを公開',officialUrls:['https://www.city.kitakyushu.lg.jp/contents/13801096.html']},
+              {code:'43202',name:'八代市',result:'matched',registeredClaim:'2026年3月更新の校区版で球磨川等の洪水、高潮、津波、土砂災害、地震の揺れやすさ、避難場所を掲載し、Web版も公開',officialUrls:['https://www.city.yatsushiro.lg.jp/bousai/kiji00326174/index.html','https://www.city.yatsushiro.lg.jp/bousai/hazardmap/agree.html?lay=saigai-01']},
+              {code:'46218',name:'霧島市',result:'matched',registeredClaim:'洪水・内水・高潮・津波、土砂災害等の浸水想定・警戒区域と避難情報を確認できるハザードマップを公開',officialUrls:['https://www.city-kirishima.jp/anshin/hazard_map.html']}
+            ],
+            result:'passed',
+            materialErrorCount:0
+          };
+          audit.summary.materialErrorCount = 1;
+          audit.summary.correctionAppliedCount = 1;
+          audit.summary.correctionRequiredCount = 0;
+          audit.summary.roundsRemaining = 2;
+          audit.summary.currentAssessment = '第8回は6自治体の防災マップ掲載範囲・避難導線・公式URLが一致。累計重大誤り1件は修正済みで、未修正0件。';
+          audit.nextAction = '第9回として、unavailableへ整理した75自治体・189制度から西日本A担当分を抽出し、公式制度の見落としがないかリスク監査する。';
+          write(auditPath, audit);
+
+          const checkpointPath = `${base}/operations/control/session-checkpoints/west-a.json`;
+          const checkpoint = read(checkpointPath);
+          checkpoint.updatedAt = '2026-07-25T01:45:00+09:00';
+          checkpoint.nextAction = '10回の誤調査検証の第9回として、unavailableへ整理した制度から西日本A担当分を抽出し、公式制度の見落としがないかリスク監査する。';
+          Object.assign(checkpoint.researchVerificationAudit, {completedRoundCount:8,lastCompletedRound:8,nextRound:9,materialErrorCount:1,correctionAppliedCount:1,correctionRequiredCount:0,lastAuditedAt:'2026-07-25T01:45:00+09:00'});
+          checkpoint.integrityAudit.auditedAt = '2026-07-25T01:45:00+09:00';
+          if (!checkpoint.integrityAudit.notes.some((n) => n.includes('第8回監査'))) checkpoint.integrityAudit.notes.push('第8回監査で6自治体の防災マップ掲載範囲・避難導線・公式URLを再照合し、全件一致。');
+          write(checkpointPath, checkpoint);
+          NODE
+      - name: Commit audit update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-research-verification-20260725.json jichitai-compare/operations/control/session-checkpoints/west-a.json
+          git commit -m '[round8-applied] audit: record West-A verification round 8'
+          git push
