@@ -84,6 +84,6 @@ jobs:
           fi
 
       - name: Verify published GitHub Pages site
-        if: github.event_name == 'push' || github.head_ref == 'audit/west-a-public-smoke-20260725'
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
         run: npm run smoke:public
