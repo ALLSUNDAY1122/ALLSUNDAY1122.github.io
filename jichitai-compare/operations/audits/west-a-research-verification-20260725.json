@@ -4,9 +4,9 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T01:25:00+09:00",
+  "updatedAt": "2026-07-25T01:38:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 5,
+  "completedRoundCount": 6,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -343,7 +343,71 @@
     {
       "round": 6,
       "title": "住宅支援の対象、補助率、上限、受付状況監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、住宅支援の対象、補助率、上限、申請期間・受付状況を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 6,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "registeredClaim": "空き家中古住宅の購入・リフォーム費の3分の1、通常上限60万円、子育て世帯上限70万円。令和8年度受付は5月1日～12月18日、予算到達で終了",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000080603.html",
+            "https://www.city.okayama.jp/kurashi/0000006210.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "registeredClaim": "離島の空き家を移住者用住宅へ改修する場合90％・上限200万円、店舗等は50％・上限200万円",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/1668.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "registeredClaim": "耐震性の低い木造住宅除却費の23％等、上限30万円。令和8年度はキャンセル分1棟を7月13日～8月14日に再募集",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=10034"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "registeredClaim": "市外から転入する若者・子育て世帯の住宅取得は1人15万円・最大50万円。新婚・子育て賃貸は家賃2か月相当・最大20万円",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/07400239_00002.html",
+            "https://www.city.kitakyushu.lg.jp/contents/07400243_00004.html",
+            "https://www.city.kitakyushu.lg.jp/contents/07400241_00003.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "registeredClaim": "空き家バンク物件の不要物撤去・改修・引越費用を50％補助し、上限5万円・40万円・5万円、併用最大50万円",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji0036921/index.html"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "registeredClaim": "令和8年4月～令和11年3月の中山間地域移住・転居者に住宅取得・増改築・家賃補助。40歳未満既婚者20万円、子1人10万円・最大30万円加算",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/kyodo/shise/ijuteju/support/hurusatosouseiseido.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 7,
@@ -369,9 +433,9 @@
   "summary": {
     "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 5,
-    "currentAssessment": "第5回は6自治体12項目が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
+    "roundsRemaining": 4,
+    "currentAssessment": "第6回は6自治体の住宅支援が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
     "correctionAppliedCount": 1
   },
-  "nextAction": "第6回として、住宅支援の対象世帯、補助率、上限、申請期間・受付状況を担当6県の複雑事例で再照合する。"
+  "nextAction": "第7回として、粗大ごみの料金、予約方法、直接搬入条件を担当6県の複雑事例で再照合する。"
 }
