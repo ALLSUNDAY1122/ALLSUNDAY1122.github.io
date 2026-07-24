@@ -16,11 +16,23 @@
   const id = ids[pagePath];
   if (!id) return;
 
+  const query = new URLSearchParams(location.search);
+  function isAutomatedRequest() {
+    const userAgent = String(navigator.userAgent || '');
+    const automatedUserAgent = /(HeadlessChrome|Chrome-Lighthouse|Lighthouse|Yorugatari[-/ ].*(?:Audit|Check|Test)|Yorugatari-Live-Check)/i.test(userAgent);
+    const automatedQuery = Array.from(query.keys()).some(function (key) {
+      return /(?:^|[-_])(audit|verify|release|performance|lighthouse|accessibility|a11y|ui)(?:$|[-_])/i.test(key);
+    });
+    return Boolean(navigator.webdriver || window.__YORUGATARI_AUTOMATION__ === true || automatedUserAgent || automatedQuery);
+  }
+
   const trackingPath = trackingPaths[id];
   const storageKey = 'yorugatari-landing-start:' + id;
+  const automated = isAutomatedRequest();
   const state = {
     version: VERSION,
     path: trackingPath,
+    automated,
     attempted: false,
     inFlight: false,
     tracked: false,
@@ -28,7 +40,7 @@
   };
   window.YORUGATARI_LANDING_START = state;
 
-  if (navigator.webdriver && !window.__YORUGATARI_ALLOW_TRACKING_TEST__) return;
+  if (automated && !window.__YORUGATARI_ALLOW_TRACKING_TEST__) return;
 
   function endpoint() {
     return API + '?site=' + encodeURIComponent(SITE) + '&path=' + encodeURIComponent(trackingPath);
