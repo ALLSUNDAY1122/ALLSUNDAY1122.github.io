@@ -1,11 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-25T03:14:00+09:00",
+  "generatedAt": "2026-07-25T03:34:28+09:00",
   "sessionId": "north-a",
   "auditPullRequestNumber": 2910,
   "auditMainMergeSha": "999517dbf941133ef4dc2e78780a45431ca6bbf1",
   "checkpointPullRequestNumber": 3053,
   "checkpointMainMergeSha": "2e6c0e76a7e3286a517e29266d423eb2522ad7b3",
+  "generatedPageEvidencePullRequestNumber": 3073,
+  "generatedPageEvidenceMainMergeSha": "54a0eb424e92e7a3c3c628210915c63c83dedc30",
   "finalAudit": {
     "rounds": 10,
     "structurallyCheckedMunicipalities": 132,
@@ -63,8 +65,23 @@
     "northNeedsReviewServices": 0
   },
   "externalHttpSmoke": {
-    "performed": false,
-    "note": "この証跡はmain上の公開HTMLとCIの一致確認。GitHub Pages配信先への独立HTTP疎通確認とは区別する。"
+    "performed": true,
+    "verifiedAt": "2026-07-25T03:34:28+09:00",
+    "executionEnvironment": "GitHub Actions ubuntu-24.04 hosted runner",
+    "workflowName": "Temporary North A Live HTTP Smoke",
+    "workflowRunNumber": 1,
+    "workflowRunId": 30117450118,
+    "jobId": 89561500791,
+    "status": "success",
+    "baseUrl": "https://allsunday1122.github.io/jichitai-compare/municipality/",
+    "checkedMunicipalityCodes": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
+    "checkedPageCount": 12,
+    "http200Count": 12,
+    "markerMatchedCount": 12,
+    "failedCount": 0,
+    "retryLimit": 5,
+    "result": "external_live_pages_verified",
+    "note": "GitHub Pages配信先へ独立HTTPアクセスし、各ページでHTTP 200と監査修正を示す固有文字列を確認した。"
   },
-  "status": "generated_pages_verified"
+  "status": "published_verified"
 }
