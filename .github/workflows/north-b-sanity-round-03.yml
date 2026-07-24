@@ -1,0 +1,113 @@
+name: North B sanity audit round 03
+
+on:
+  push:
+    branches:
+      - audit/north-b-sanity-round-03-20260725
+    paths:
+      - .github/workflows/north-b-sanity-round-03.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: audit/north-b-sanity-round-03-20260725
+          fetch-depth: 0
+      - name: Apply round 03 correction
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+
+          const municipalityPath = 'jichitai-compare/data/municipalities/04/04205.json';
+          const municipality = read(municipalityPath);
+          municipality.summary = '気仙沼市の子育て・暮らしに関する9制度のうち8制度を確認済みで、1制度は公式情報で詳細未確認です。';
+          municipality.updatedAt = '2026-07-25';
+          municipality.services.sickChildCare = {
+            status: 'unavailable',
+            summary: '市公式の現行公開情報では、病児・病後児保育の実施施設、対象年齢、利用料、登録・予約方法を確認できない。',
+            details: {
+              confirmed: '2026年更新の市子育て支援一覧、認可保育所・認定こども園一覧、令和8年度入所案内を確認したが、利用者向けの病児・病後児保育案内は掲載されていない',
+              unconfirmed: '現行の実施施設、受入年齢、利用時間、利用料、登録・予約方法',
+              guidance: '子ども家庭課へ市外施設の広域利用を含む現行の利用可否を確認する必要がある'
+            },
+            source: {
+              url: 'https://www.kesennuma.miyagi.jp/kosodate/010/index.html',
+              checkedAt: '2026-07-25'
+            },
+            additionalSources: [
+              {
+                url: 'https://www.kesennuma.miyagi.jp/kosodate/k006/20190815102628.html',
+                checkedAt: '2026-07-25'
+              },
+              {
+                url: 'https://www.kesennuma.miyagi.jp/kosodate/k006/020/020/040/20160927093637.html',
+                checkedAt: '2026-07-25'
+              }
+            ]
+          };
+          write(municipalityPath, municipality);
+
+          const taskPath = 'jichitai-compare/operations/tasks/04205.json';
+          const task = read(taskPath);
+          task.verifiedCount = 8;
+          task.unavailableCount = 1;
+          task.currentBranch = null;
+          task.lastCheckedAt = '2026-07-25';
+          task.lastUpdatedAt = '2026-07-25T00:41:00+09:00';
+          task.lastUpdatedBy = '北日本調査班B';
+          task.officialSources = municipality.services && Object.values(municipality.services).map((s) => s.source?.url).filter(Boolean);
+          task.notes.push('北日本B誤調査ざっくり再検証 第3回: 病児保育をverifiedとしていたが、根拠は幼児教育・保育無償化制度が病児保育事業を一般的な対象類型として列挙した2022年ページであり、気仙沼市の現行実施施設・対象・料金・予約方法を確認していなかった。2026年の市子育て支援一覧等にも利用者向け案内がないためunavailableへ訂正。');
+          write(taskPath, task);
+
+          const auditPath = 'jichitai-compare/operations/audits/north-b-research-sanity-20260725.json';
+          const audit = read(auditPath);
+          audit.completedRounds = 3;
+          audit.remainingRounds = 7;
+          audit.auditedMunicipalityCount = 33;
+          audit.remainingMunicipalityCount = 74;
+          audit.auditedAt = '2026-07-25T00:41:00+09:00';
+          audit.round03 = {
+            codes: ['04203','04205','04206','04207','04208','04209','04211','04212','04213','04214','04215'],
+            municipalityCount: 11,
+            serviceCount: 99,
+            highRiskChecks: 25,
+            confirmedErrorCount: 1,
+            confirmedErrors: [
+              {
+                code: '04205',
+                municipality: '気仙沼市',
+                service: 'sickChildCare',
+                before: 'verified（現行施設・対象・料金・予約方法は未確認）',
+                after: 'unavailable',
+                reason: '参照していた2022年ページは無償化対象事業の一般的な類型説明にすぎず、2026年の市公式子育て支援一覧・施設一覧にも利用者向けの現行制度案内を確認できない'
+              }
+            ],
+            noConfirmedErrorCodes: ['04203','04206','04207','04208','04209','04211','04212','04213','04214','04215']
+          };
+          write(auditPath, audit);
+
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const checkpoint = read(checkpointPath);
+          checkpoint.updatedAt = '2026-07-25T00:41:00+09:00';
+          checkpoint.workingBranch = 'audit/north-b-sanity-round-03-20260725';
+          checkpoint.pullRequestNumber = null;
+          checkpoint.ciStatus = 'pending';
+          checkpoint.nextAction = '北日本B担当107自治体の誤調査ざっくり再検証を10回に分けて実施中。第3回は塩竈市、気仙沼市、白石市、名取市、角田市、多賀城市、岩沼市、登米市、栗原市、東松島市、大崎市の11自治体・99制度を構造確認し、高リスク25項目を公式情報で重点照合。気仙沼市の病児保育は、一般制度の無償化対象類型を根拠にverifiedとしていた誤りを確認し、現行の実施条件を確認できないためunavailableへ訂正。監査完了3/10回、33/107自治体、残り7回・74自治体。';
+          write(checkpointPath, checkpoint);
+
+          fs.unlinkSync('.github/workflows/north-b-sanity-round-03.yml');
+          NODE
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "audit: 北日本B誤調査再検証 第3回を反映"
+          git push origin HEAD:audit/north-b-sanity-round-03-20260725
