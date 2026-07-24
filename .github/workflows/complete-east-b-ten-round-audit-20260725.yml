@@ -27,6 +27,7 @@ jobs:
           import os
           from pathlib import Path
 
+          checkpoint_pr = int(os.environ.get('CHECKPOINT_PR') or '3050')
           checkpoint_path = Path('jichitai-compare/operations/control/session-checkpoints/east-b.json')
           with checkpoint_path.open(encoding='utf-8') as f:
               data = json.load(f)
@@ -50,7 +51,7 @@ jobs:
           campaign['nextAction'] = '東日本Bの誤調査10回段階監査は完了。制度事実の明確な誤認0件。判定誤り2件、出典保守不備1件、産後ケア記載不足2自治体、粗大ごみ将来料金記載不足1自治体、防災地図鮮度注意不足1自治体を修正・補完し、全国公開mainまで同期済み。以後は新規の公式制度改定、リンク切れ、公開ページ差分が発生した場合のみ再監査する。'
 
           data['updatedAt'] = '2026-07-25T04:18:00+09:00'
-          data['pullRequestNumber'] = int(os.environ['CHECKPOINT_PR'])
+          data['pullRequestNumber'] = checkpoint_pr
           data['ciStatus'] = 'success'
 
           with checkpoint_path.open('w', encoding='utf-8') as f:
@@ -83,10 +84,11 @@ jobs:
                   'remainingMunicipalities': 0,
                   'status': 'success'
               },
-              'checkpointPullRequestNumber': int(os.environ['CHECKPOINT_PR']),
+              'checkpointPullRequestNumber': checkpoint_pr,
               'status': 'completed'
           }
           record_path = Path('jichitai-compare/operations/audits/east-b-ten-round-verification-20260725.json')
+          record_path.parent.mkdir(parents=True, exist_ok=True)
           with record_path.open('w', encoding='utf-8') as f:
               json.dump(record, f, ensure_ascii=False, indent=2)
               f.write('\n')
