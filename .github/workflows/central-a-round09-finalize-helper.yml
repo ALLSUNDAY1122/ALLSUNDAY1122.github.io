@@ -1,0 +1,113 @@
+name: Central A Round09 Finalize Helper
+
+on:
+  push:
+    branches: ['audit/central-a-round09-helper-20260725']
+    paths: ['.github/workflows/central-a-round09-finalize-helper.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round09-work-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Apply confirmed corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/finalize-round09.mjs <<'NODE'
+          import fs from 'node:fs'; import path from 'node:path';
+          const root='jichitai-compare', checkedAt='2026-07-25';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const expected={'27100':'大阪市','27140':'堺市','27202':'岸和田市','27203':'豊中市','27204':'池田市','27205':'吹田市','27206':'泉大津市','27207':'高槻市','27208':'貝塚市','27209':'守口市','27210':'枚方市','27211':'茨木市','27212':'八尾市','27213':'泉佐野市','27214':'富田林市','27215':'寝屋川市','27216':'河内長野市','27217':'松原市','27218':'大東市','27219':'和泉市','27220':'箕面市','27221':'柏原市','27222':'羽曳野市','27223':'門真市','27224':'摂津市','27225':'高石市','27226':'藤井寺市','27227':'東大阪市','27228':'泉南市','27229':'四條畷市','27230':'交野市','27231':'大阪狭山市','27232':'阪南市','27301':'島本町','27321':'豊能町','27322':'能勢町','27341':'忠岡町','27361':'熊取町','27362':'田尻町','27366':'岬町','27381':'太子町','27382':'河南町','27383':'千早赤阪村'};
+          const write=(p,v)=>fs.writeFileSync(p,JSON.stringify(v,null,2)+'\n');
+          const dataPath=code=>path.join(root,'data','municipalities','27',code+'.json');
+          const taskPath=code=>path.join(root,'operations','tasks',code+'.json');
+          const load=code=>JSON.parse(fs.readFileSync(dataPath(code),'utf8'));
+          const save=(code,d)=>{d.updatedAt=checkedAt;write(dataPath(code),d);};
+          const recomputeTask=(code,note)=>{
+            const d=load(code),p=taskPath(code),t=JSON.parse(fs.readFileSync(p,'utf8'));
+            const done=keys.filter(k=>['verified','unavailable'].includes(d.services[k].status));
+            t.completedServices=done;t.verifiedCount=keys.filter(k=>d.services[k].status==='verified').length;t.unavailableCount=keys.filter(k=>d.services[k].status==='unavailable').length;t.needsMediumReviewCount=keys.filter(k=>d.services[k].status==='needs_medium_review').length;t.researchingCount=keys.filter(k=>d.services[k].status==='researching').length;t.nextServiceIndex=done.length===9?9:keys.findIndex(k=>!['verified','unavailable'].includes(d.services[k].status));t.currentService=done.length===9?null:keys[t.nextServiceIndex];t.status=done.length===9?'merged':t.status;t.officialSources=[...new Set(done.map(k=>d.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))];t.lastCheckedAt=checkedAt;t.lastUpdatedAt='2026-07-25T04:52:00+09:00';t.lastUpdatedBy='中日本調査班A';if(note){t.notes=(t.notes||[]).filter(n=>!n.includes('担当範囲再検証'));t.notes.push(note);}write(p,t);
+          };
+          // 阪南市：現行の令和8年度産後ケア案内を確認
+          {
+            const d=load('27232');
+            d.services.postpartumCare={status:'verified',summary:'出産後の母子を対象に、令和8年度も産後ケア事業を実施し、契約施設で専門職による心身・授乳・育児支援を提供する。',eligibility:{minAgeMonths:0,maxAgeYears:1},details:{fiscalYear:'令和8年度',care:'母親の心身のケア、授乳支援、育児相談・指導',facility:'市が案内する産後ケア実施施設',application:'こどもすこやかセンターへ相談し、令和8年度案内チラシと施設一覧で利用条件を確認'},source:{url:'https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo/boshi_hoken/1524124047656.html',checkedAt}};
+            d.summary='阪南市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。病児・病後児保育のみ現行の一般利用条件を継続確認とした。';
+            save('27232',d);recomputeTask('27232','担当範囲再検証で、令和8年度産後ケア事業の現行案内を確認し、誤ったunavailableをverifiedへ修正。');
+          }
+          // 島本町：9制度すべてを公式ページで再構成
+          {
+            const d=load('27301');
+            d.summary='島本町の子育て、教育、住宅、生活、防災に関する9制度を町公式情報で再確認し、全制度をverifiedへ修正した。';
+            d.services.childMedical={status:'verified',summary:'0歳から18歳年度末までの子どもの保険診療自己負担等を助成する。',eligibility:{minAgeMonths:0,maxAgeYears:18},details:{age:'18歳到達後最初の3月31日まで',incomeLimit:'なし',coverage:'保険適用医療費の自己負担分と入院時食事療養費',selfPayment:'1医療機関1日500円以内、月2日限度。月額合計2,500円超は申請で償還',excluded:'保険適用外費用等'},source:{url:'https://www.town.shimamoto.lg.jp/site/kosodate/2735.html',checkedAt}};
+            d.services.sickChildCare={status:'verified',summary:'病気または回復期で家庭保育が困難な子どもを、認定こども園ゆいの詩の病児保育室で一時的に預かる。',eligibility:{minAgeMonths:0,maxAgeYears:18},details:{facility:'認定こども園ゆいの詩 病児保育室',condition:'病気または回復期で、保護者の勤務等により家庭での保育が困難な場合',application:'施設へ利用条件・空き状況を確認',ageNote:'対象年齢・料金等の詳細は施設へ確認'},source:{url:'https://www.town.shimamoto.lg.jp/site/kosodate/27824.html',checkedAt}};
+            d.services.childcareFee={status:'verified',summary:'3～5歳児等と住民税非課税世帯の0～2歳児は、令和8年度も幼児教育・保育無償化の対象となる。',eligibility:{minAgeMonths:0,maxAgeYears:5},details:{freeAges:'認可保育施設等の3～5歳児',underThree:'住民税非課税世帯の0～2歳児',excluded:'給食費、送迎費、行事費等の実費',application:'施設形態等により施設等利用給付認定が必要'},source:{url:'https://www.town.shimamoto.lg.jp/site/kosodate/27885.html',checkedAt}};
+            d.services.schoolMeals={status:'verified',summary:'令和8年度は中学校給食費を町が無償化し、小学校も国施策による無償化予定として保護者負担を軽減する。',eligibility:{minAgeMonths:72,maxAgeYears:15},details:{fiscalYear:'令和8年度',juniorHigh:'物価高騰対応重点支援地方創生臨時交付金を活用して無償化',elementary:'国の施策として無償化予定',aid:'就学援助では学校給食費を含む費用を援助'},source:{url:'https://www.town.shimamoto.lg.jp/soshiki/5/33680.html',checkedAt},additionalSources:[{url:'https://www.town.shimamoto.lg.jp/soshiki/22/35932.html',checkedAt}]};
+            d.services.postpartumCare={status:'verified',summary:'産後の母子へ宿泊型・通所型の産後ケアを提供する。',eligibility:{minAgeMonths:0,maxAgeYears:1},details:{types:'宿泊型、通所型',dayCareTarget:'生後1歳までの赤ちゃんと母親',stayTarget:'原則産後4か月未満の母子',dayCareLimit:'7日まで',dayCareFee:'1日2,000円。非課税世帯・生活保護世帯は無料',care:'母体の心身ケア、授乳支援、育児相談・指導'},source:{url:'https://www.town.shimamoto.lg.jp/site/kosodate/7005.html',checkedAt},additionalSources:[{url:'https://www.town.shimamoto.lg.jp/site/kosodate/32303.html',checkedAt}]};
+            d.services.temporaryChildcare={status:'verified',summary:'生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。',eligibility:{minAgeMonths:6,maxAgeYears:3},details:{program:'こども誰でも通園制度（乳児等通園支援事業）',start:'令和8年4月1日',condition:'保育所・幼稚園・認定こども園等に通っていない子ども。就労要件なし',limit:'月10時間',facilities:'しまもと里山認定こども園、認定こども園ゆいの詩等',fee:'施設により異なる',application:'こども誰でも通園制度総合支援システムで町の認定を受け、施設と面談・予約'},source:{url:'https://www.town.shimamoto.lg.jp/site/kosodate/33348.html',checkedAt}};
+            d.services.housingSupport={status:'verified',summary:'旧耐震基準の木造住宅等を対象に、令和8年度も耐震診断・設計・改修・除却費を補助する。',details:{program:'建物の耐震改修等補助',target:'昭和56年5月31日以前に建築された木造住宅等',diagnosis:'耐震診断費を上限5万円',design:'耐震設計費を上限10万円',retrofit:'耐震改修費を上限75万円または97.5万円',deadline:'令和8年11月20日'},source:{url:'https://www.town.shimamoto.lg.jp/soshiki/14/2662.html',checkedAt}};
+            d.services.bulkyWaste={status:'verified',summary:'1辺1メートル以上または一人で持ち上げられない大型ごみを、事前申込により有料収集する。',details:{fee:'2トン車1台3,000円',days:'月・火・木・金曜日の午後1時～3時',application:'電話は希望日の1か月前から前日正午まで。オンラインは30日前から10日前まで',preparation:'収集車が横付けできる場所まで排出。町は屋内から運び出さない',directCarry:'清掃工場への持込みは家庭ごみ10kgにつき100円'},source:{url:'https://www.town.shimamoto.lg.jp/soshiki/17/1534.html',checkedAt},additionalSources:[{url:'https://www.town.shimamoto.lg.jp/soshiki/17/1458.html',checkedAt}]};
+            d.services.disasterPrevention={status:'verified',summary:'洪水・土砂災害・地震のハザードマップと避難所情報を公開する。',details:{maps:'淀川・水無瀬川の洪水・土砂災害ハザードマップ、地震ハザードマップ',revision:'避難所一覧を令和7年4月に修正',contents:'浸水範囲・浸水深、家屋倒壊等氾濫想定区域、土砂災害区域、避難所',webMap:'しまもとマップでも防災情報を公開'},source:{url:'https://www.town.shimamoto.lg.jp/site/bousai/30122.html',checkedAt}};
+            save('27301',d);recomputeTask('27301','担当範囲再検証で、町トップページのみを根拠に9制度をunavailableとしていた誤りを修正し、各制度の公式専用ページへ置換。');
+          }
+          // 豊能町：明確に確認できる5制度を修正
+          {
+            const d=load('27321');
+            d.services.childMedical={status:'verified',summary:'0歳から18歳年度末までの子どもの保険診療自己負担を助成する。',eligibility:{minAgeMonths:0,maxAgeYears:18},details:{age:'18歳到達後最初の3月31日まで',selfPayment:'1医療機関等1日500円、月2日限度。3日目以降は全額助成',coverage:'保険診療に係る自己負担金の一部',application:'町窓口で医療証の交付申請'},source:{url:'https://www.town.toyono.osaka.jp/kenkou-iryou-fukushi/iryou/iryouhi-josei/page000113.html',checkedAt}};
+            d.services.schoolMeals={status:'verified',summary:'令和8年度予算の主要事業として、義務教育学校の給食費支援事業を実施する。',eligibility:{minAgeMonths:72,maxAgeYears:15},details:{fiscalYear:'令和8年度',program:'義務教育学校給食費支援事業',target:'町立義務教育学校の児童生徒',note:'具体的な保護者負担額は学校・教育委員会の現行案内を確認'},source:{url:'https://www.town.toyono.osaka.jp/gyousei/gikai/news/page008101.html',checkedAt}};
+            d.services.housingSupport={status:'verified',summary:'空き家バンク登録住宅のリフォーム費等を補助し、令和8年度は空き家除却補助も実施する。',details:{programs:'空き家バンク家財処分・リフォーム補助、既存空き家除却補助',renovation:'対象リフォーム費の2分の1、上限40万円',demolition:'除却費の30％、上限75万円',purpose:'空き家流通と移住・定住促進'},source:{url:'https://www.town.toyono.osaka.jp/sumou/toyonono-sumai/page007656.html',checkedAt},additionalSources:[{url:'https://www.town.toyono.osaka.jp/kurashi/machidukuri/machidukuri/page007609.html',checkedAt}]};
+            d.services.bulkyWaste={status:'verified',summary:'最大辺40cm以上の家具・電化製品等は、事前電話予約により粗大ごみとして収集する。',details:{definition:'最大辺40cm以上',application:'環境課へ事前電話予約',limit:'1回5点まで',collection:'令和8年4月から水曜日の粗大ごみ収集を民間委託',setOut:'指定日に案内された場所へ排出'},source:{url:'https://www.town.toyono.osaka.jp/kurashi/recycle-gomi-kankyou/gomi/page002458.html',checkedAt},additionalSources:[{url:'https://www.town.toyono.osaka.jp/kurashi/recycle-gomi-kankyou/gomi/page007941.html',checkedAt}]};
+            d.services.disasterPrevention={status:'verified',summary:'土砂災害警戒区域、浸水想定、避難施設等を掲載した総合防災マップを公開する。',details:{map:'豊能町総合防災マップ',hazards:'地震、風水害、土砂災害、内水、ため池',contents:'警戒区域、浸水想定、避難所、防災情報',web:'電子ハザードマップも公開'},source:{url:'https://www.town.toyono.osaka.jp/bousai-anzen/bousai/hazard-map/page002164.html',checkedAt}};
+            d.summary='豊能町の9制度を再確認し、子ども医療費、学校給食費支援、住宅支援、粗大ごみ、防災情報をverifiedへ修正。病児・病後児保育は継続確認とした。';
+            save('27321',d);recomputeTask('27321','担当範囲再検証で、公式専用ページが存在する5制度の誤ったunavailableをverifiedへ修正。');
+          }
+          // 能勢町：明確に確認できる4制度を修正
+          {
+            const d=load('27322');
+            d.services.childMedical={status:'verified',summary:'0歳から18歳年度末までの子どもの保険診療自己負担を助成する。',eligibility:{minAgeMonths:0,maxAgeYears:18},details:{age:'18歳到達後最初の3月31日まで',selfPayment:'1医療機関等1日500円、月2日限度',monthlyCap:'月2,500円を超える額を申請で償還',excluded:'保険適用外費用等'},source:{url:'https://www.town.nose.osaka.jp/soshiki/jyuuminka/hokeniryo/iryo/684.html',checkedAt}};
+            d.services.housingSupport={status:'verified',summary:'移住相談窓口と空き家バンクを設け、空き家物件の紹介や利活用相談を行う。',details:{program:'能勢町移住相談窓口・空き家バンク',support:'移住相談、協定不動産事業者を通じた物件紹介、空き家活用個別相談会',online:'予約によりオンライン相談にも対応',purpose:'空き家活用と移住促進'},source:{url:'https://www.town.nose.osaka.jp/soshiki/soumuka/seisakusuishin/kyodo_machi/shisaku/1278.html',checkedAt}};
+            d.services.bulkyWaste={status:'verified',summary:'粗大ごみは全量有料・事前予約制で、処理券を貼って排出する。',details:{fee:'粗大ごみ処理券1枚400円',condition:'一辺40cmを超える品目等',application:'事前予約制',directCarry:'国崎クリーンセンターへの持込み制度あり'},source:{url:'https://www.town.nose.osaka.jp/soshiki/midorikankyou/kankyoueisei/faq/2375.html',checkedAt}};
+            d.services.disasterPrevention={status:'verified',summary:'洪水・土砂災害ハザードマップを地区別に公開し、最新の浸水想定区域を案内する。',details:{map:'洪水・土砂災害ハザードマップ',distribution:'令和7年6月版を全戸配布',areas:'歌垣、田尻、東郷、久佐々、岐尼、天王地区',additional:'ため池ハザードマップも公開'},source:{url:'https://www.town.nose.osaka.jp/soshiki/jyuuminka/jichibosai/kinkyu_bosai/1327.html',checkedAt},additionalSources:[{url:'https://www.town.nose.osaka.jp/soshiki/midorikankyou/midorisinko/oshirase/9715.html',checkedAt}]};
+            d.summary='能勢町の9制度を再確認し、子ども医療費、移住・空き家支援、粗大ごみ、防災情報をverifiedへ修正。令和8年度学校給食費は継続確認とした。';
+            save('27322',d);recomputeTask('27322','担当範囲再検証で、公式専用ページが存在する4制度の誤ったunavailableをverifiedへ修正。');
+          }
+          // 大阪狭山市：完了済みtaskの状態のみ修正
+          {
+            const p=taskPath('27231'),t=JSON.parse(fs.readFileSync(p,'utf8'));t.status='merged';t.currentService=null;t.nextServiceIndex=9;t.lastCheckedAt=checkedAt;t.lastUpdatedAt='2026-07-25T04:52:00+09:00';t.lastUpdatedBy='中日本調査班A';t.notes=(t.notes||[]).filter(n=>!n.includes('担当範囲再検証'));t.notes.push('担当範囲再検証で、9制度完了済みにもかかわらずpr_openだったtask statusをmergedへ修正。');write(p,t);
+          }
+          // 監査レポートを修正後状態で再構成
+          const unavailable=[],municipalities=[];
+          for(const [code,name] of Object.entries(expected)){
+            const d=load(code),t=JSON.parse(fs.readFileSync(taskPath(code),'utf8'));const counts={verified:0,unavailable:0,needs_medium_review:0};
+            for(const k of keys){counts[d.services[k].status]=(counts[d.services[k].status]||0)+1;if(d.services[k].status==='unavailable')unavailable.push({code,name,service:k,summary:d.services[k].summary||'',source:d.services[k].source?.url||''});}
+            const official=[...new Set(keys.filter(k=>['verified','unavailable'].includes(d.services[k].status)).map(k=>d.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))];const highRisk={};for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){const s=d.services[k];highRisk[k]={status:s.status,summary:s.summary,source:s.source?.url||'',checkedAt:s.source?.checkedAt||null};}
+            municipalities.push({code,name,status:d.status,updatedAt:d.updatedAt,taskStatus:t.status,taskLastCheckedAt:t.lastCheckedAt,verifiedCount:counts.verified||0,unavailableCount:counts.unavailable||0,needsMediumReviewCount:counts.needs_medium_review||0,officialSourceCount:official.length,taskOfficialSourceCount:(t.officialSources||[]).length,highRisk});
+          }
+          const needsFurtherReview=[
+            {code:'27232',name:'阪南市',service:'sickChildCare',detail:'一般利用できる病児・病後児保育の現行施設・対象・料金・予約方法を確定できない'},
+            {code:'27321',name:'豊能町',service:'sickChildCare',detail:'町が実施・委託する一般利用可能な病児・病後児保育の現行条件を確定できない'},
+            {code:'27322',name:'能勢町',service:'schoolMeals',detail:'令和8年度の一般世帯の学校給食費・負担軽減条件を公式公開情報だけでは確定できない'},
+            {code:'27366',name:'岬町',service:'sickChildCare',detail:'一般利用できる病児・病後児保育の現行施設・対象・料金・予約方法を確定できない'}
+          ];
+          const reportPath=path.join(root,'operations','control','central-a-scope-round-09-osaka-20260725.json'),report=JSON.parse(fs.readFileSync(reportPath,'utf8'));
+          Object.assign(report,{generatedAt:'2026-07-25T04:52:00+09:00',checkedMunicipalityCount:43,checkedServiceCount:387,structuralFindingCount:0,unavailableCount:unavailable.length,substantiveSuspectCount:needsFurtherReview.length,findings:[],unavailable,substantiveSuspects:needsFurtherReview,municipalities,initialStructuralFindingCount:1,resolvedStructuralFindingCount:1,initialUnavailableCount:26,initialSubstantiveSuspectCount:13,confirmedErrorCount:20,correctedMunicipalityCodes:['27231','27232','27301','27321','27322'],confirmedCorrections:[{type:'task_status_mismatch',count:1,municipalityCodes:['27231'],detail:'9制度完了済みの大阪狭山市task statusをpr_openからmergedへ修正'},{type:'false_unavailable',count:19,municipalityCodes:['27232','27301','27321','27322'],detail:'阪南市1制度、島本町9制度、豊能町5制度、能勢町4制度を公式専用ページに基づきverifiedへ修正'}],confirmedAccurateExamples:[{code:'27214',service:'temporaryChildcare',detail:'富田林市の生後6か月から満3歳未満の定期利用制度を確認'},{code:'27221',service:'postpartumCare',detail:'柏原市の生後1歳未満母子向け産後ケアを確認'},{code:'27228',service:'sickChildCare',detail:'泉南市は一般利用型ではなく施設内体調不良児対応のみ確認'},{code:'27362',service:'schoolMeals',detail:'田尻町の小中学校給食費無償化を確認'},{code:'27362',service:'sickChildCare',detail:'田尻町こども計画で病児・病後児保育未実施を確認'},{code:'27366',service:'schoolMeals',detail:'岬町の小中学校給食費無償化と町外在籍者補助を確認'},{code:'27383',service:'sickChildCare',detail:'千早赤阪村公式情報で村実施・委託制度を確認できず、現状記録を維持'}],needsFurtherReview});write(reportPath,report);
+          const trackerPath=path.join(root,'operations','control','central-a-scope-verification-20260724.json'),tracker=JSON.parse(fs.readFileSync(trackerPath,'utf8'));
+          tracker.branch='audit/central-a-scope-verification-round-09-20260725';tracker.batches=tracker.batches.filter(b=>b.batch!==9);tracker.batches.push({batch:9,prefectureCode:'27',prefectureName:'大阪府',municipalityCount:43,status:'completed_with_corrections_and_review',checkedMunicipalities:43,checkedServices:387,initialStructuralFindingCount:1,structuralFindingCount:0,resolvedStructuralFindingCount:1,initialUnavailableCount:26,unavailableCount:unavailable.length,initialSubstantiveSuspectCount:13,substantiveSuspectCount:needsFurtherReview.length,report:'operations/control/central-a-scope-round-09-osaka-20260725.json',confirmedErrors:20,correctedMunicipalityCodes:['27231','27232','27301','27321','27322'],confirmedAccurateSuspectCodes:['27214','27221','27228','27362','27366','27383'],needsFurtherReviewCodes:['27232','27321','27322','27366'],nextStep:'第10回として兵庫県41自治体を監査する',completedAt:'2026-07-25T04:52:00+09:00'});tracker.summary={completedBatches:9,checkedMunicipalities:273,confirmedErrors:74,needsFurtherReview:25,correctedErrors:74};tracker.nextAction='第10回として兵庫県41自治体を監査する';tracker.rebuiltRound9At='2026-07-25T04:52:00+09:00';write(trackerPath,tracker);
+          NODE
+          node /tmp/finalize-round09.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/27/27232.json jichitai-compare/data/municipalities/27/27301.json jichitai-compare/data/municipalities/27/27321.json jichitai-compare/data/municipalities/27/27322.json jichitai-compare/operations/tasks/27231.json jichitai-compare/operations/tasks/27232.json jichitai-compare/operations/tasks/27301.json jichitai-compare/operations/tasks/27321.json jichitai-compare/operations/tasks/27322.json jichitai-compare/operations/control/central-a-scope-round-09-osaka-20260725.json jichitai-compare/operations/control/central-a-scope-verification-20260724.json
+          git commit -m 'audit: 大阪府監査の確定誤り20件を修正'
+          git push origin HEAD:audit/central-a-round09-work-20260725
