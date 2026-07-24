@@ -75,6 +75,13 @@ const SAMPLE_MUNICIPALITIES = [
     region: 'west-a-wadomari',
     expectedText: '粗大ごみは沖永良部クリーンセンターへ直接搬入し、10kg当たり100円',
     forbiddenText: ['粗大ごみは沖永良部クリーンセンターへ直接搬入</strong>', 'https://www.town.wadomari.lg.jp/documents/2843/1.pdf']
+  },
+  {
+    code: '33643',
+    name: '西粟倉村',
+    region: 'west-a-nishiawakura',
+    expectedText: '保育園は所得に応じ月額0～14,000円、幼稚園の基本・預かり・延長保育は無償',
+    forbiddenText: ['基本保育料月額2,500円', '午後預かり200円', '長期休業400円/日']
   }
 ];
 
