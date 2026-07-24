@@ -1,0 +1,121 @@
+name: Temporary East three-city quality sync
+
+on:
+  push:
+    branches:
+      - coord/sync-audits-12203-13123-20260724
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temp-sync-audits-12203-13123
+  cancel-in-progress: true
+
+jobs:
+  sync-and-validate:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/sync-audits-12203-13123-20260724
+          fetch-depth: 0
+
+      - name: Import region east audited sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin region/east:refs/remotes/origin/region/east
+          for code in 12203 13123; do
+            pref="${code:0:2}"
+            git show "origin/region/east:jichitai-compare/data/municipalities/${pref}/${code}.json" > "jichitai-compare/data/municipalities/${pref}/${code}.json"
+            git show "origin/region/east:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+
+      - name: Regenerate and validate nationwide data
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run check
+
+      - name: Verify fixed totals and audited states
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const generated = JSON.parse(fs.readFileSync('jichitai-compare/data/generated/municipalities.json', 'utf8'));
+          const progress = JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json', 'utf8'));
+          const municipalities = generated.municipalities;
+          const expected = {
+            '12203': { pr: 2688, ci: 6498 },
+            '12227': { pr: 2690, ci: 6500 },
+            '13123': { pr: 2695, ci: 6507 }
+          };
+          for (const [code, evidence] of Object.entries(expected)) {
+            const item = municipalities.find((x) => x.code === code);
+            if (!item) throw new Error(`${code} is missing from generated data`);
+            if (Object.keys(item.services || {}).length !== 9) throw new Error(`${code} service count is not 9`);
+            for (const [key, service] of Object.entries(item.services || {})) {
+              if (!service.eligibility) throw new Error(`${code} ${key} eligibility is missing`);
+            }
+            const page = fs.readFileSync(`jichitai-compare/municipality/${code}/index.html`, 'utf8');
+            if (!page.includes(`<h1>${item.name}</h1>`)) throw new Error(`${code} static page is stale`);
+            if (!page.includes(item.summary)) throw new Error(`${code} summary is missing from static page`);
+            if (code !== '12227') {
+              const task = JSON.parse(fs.readFileSync(`jichitai-compare/operations/tasks/${code}.json`, 'utf8'));
+              if (task.status !== 'merged' || task.pullRequestNumber !== evidence.pr || task.ciRunNumber !== evidence.ci || task.ciConclusion !== 'success') {
+                throw new Error(`${code} task is not the region/east merged source`);
+              }
+            }
+          }
+          if (progress.registeredMunicipalities !== 1741 || progress.remainingMunicipalities !== 0 || progress.completedServices !== 15669) {
+            throw new Error('nationwide fixed totals changed unexpectedly');
+          }
+          const audit = {
+            schemaVersion: '1.0.0',
+            purpose: 'sync-region-east-audited-12203-13123-and-refresh-three-static-pages',
+            generatedAt: new Date().toISOString(),
+            generationRunId: process.env.GITHUB_RUN_ID,
+            generationRunNumber: Number(process.env.GITHUB_RUN_NUMBER),
+            municipalities: [
+              { code: '12203', name: '市川市', regionalPullRequestNumber: 2688, regionalCiRunNumber: 6498 },
+              { code: '12227', name: '浦安市', nationalPullRequestNumber: 2813, nationalCiRunNumber: 6780 },
+              { code: '13123', name: '江戸川区', regionalPullRequestNumber: 2695, regionalCiRunNumber: 6507 }
+            ],
+            nationwide: { municipalities: 1741, services: 15669, remaining: 0 },
+            staticPagesRegenerated: ['12203', '12227', '13123']
+          };
+          fs.writeFileSync('jichitai-compare/operations/control/publish-audit-12203-13123-20260724.json', `${JSON.stringify(audit, null, 2)}\n`);
+          NODE
+
+      - name: Commit generated result and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/temp-sync-audits-12203-13123.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add \
+            jichitai-compare/data/municipalities/12/12203.json \
+            jichitai-compare/data/municipalities/13/13123.json \
+            jichitai-compare/operations/tasks/12203.json \
+            jichitai-compare/operations/tasks/13123.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/data/generated/municipality-pages.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/operations/control/publish-audit-12203-13123-20260724.json \
+            jichitai-compare/municipality/12203/index.html \
+            jichitai-compare/municipality/12227/index.html \
+            jichitai-compare/municipality/13123/index.html \
+            jichitai-compare/sitemap.xml \
+            .github/workflows/temp-sync-audits-12203-13123.yml
+          git diff --cached --check
+          git commit -m '全国品質同期: 市川市・江戸川区と東日本3静的ページを更新'
+          git push origin HEAD:coord/sync-audits-12203-13123-20260724
