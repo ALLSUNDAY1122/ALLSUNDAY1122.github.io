@@ -1,0 +1,189 @@
+name: Temporary West-A Soft Audit State Sync
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-west-a-soft-audit-state-sync.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-and-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Prepare updater
+        shell: bash
+        run: |
+          cat > /tmp/update-west-a-state.cjs <<'NODE'
+          const fs = require('fs');
+
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/west-a.json';
+          const westPath = 'jichitai-compare/operations/control/regions/west.json';
+          const updatedAt = '2026-07-25T05:02:00+09:00';
+
+          const read = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+          const write = (path, value) => fs.writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
+          const pushUnique = (array, value) => {
+            if (!array.includes(value)) array.push(value);
+          };
+
+          const checkpoint = read(checkpointPath);
+          checkpoint.updatedAt = updatedAt;
+          checkpoint.nextAction = '公式情報更新、出典URL異常、CI異常、公開文言異常が発生した場合のみ再調査する。公式出典のハード失敗・ソフト警告とも未解決0件。';
+          checkpoint.completionEvidence = checkpoint.completionEvidence || {};
+          Object.assign(checkpoint.completionEvidence, {
+            westAPublicSmokeSampleCount: 15,
+            westASourceLinkSoftWarningAuditFile: 'jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json',
+            westASourceLinkSoftWarningCount: 159,
+            westASourceLinkSoftWarningMaterialCorrectionCount: 1,
+            westANishiawakuraCorrectionCommitSha: '275e40b00bee57963ac4dc4cb172e17a85053dbf',
+            westANishiawakuraPublicSmokeCommitSha: '69222a39a877ead3903155bf05c747e8015a1448',
+            westANishiawakuraLiveSmokeCommitSha: '8d120e09caf0183a03c65e0f5f773ba71f67c7fb'
+          });
+          checkpoint.integrityAudit = checkpoint.integrityAudit || {};
+          checkpoint.integrityAudit.auditedAt = updatedAt;
+          checkpoint.integrityAudit.publicCopyValidation = checkpoint.integrityAudit.publicCopyValidation || {};
+          checkpoint.integrityAudit.publicCopyValidation.westAPublicSmoke = checkpoint.integrityAudit.publicCopyValidation.westAPublicSmoke || {};
+          const publicSmoke = checkpoint.integrityAudit.publicCopyValidation.westAPublicSmoke;
+          publicSmoke.correctedMunicipalityCodes = publicSmoke.correctedMunicipalityCodes || [];
+          pushUnique(publicSmoke.correctedMunicipalityCodes, '33643');
+          publicSmoke.permanentSampleCount = 15;
+          publicSmoke.nishiawakuraCorrectionCommitSha = '275e40b00bee57963ac4dc4cb172e17a85053dbf';
+          publicSmoke.nishiawakuraSmokeCommitSha = '69222a39a877ead3903155bf05c747e8015a1448';
+          publicSmoke.nishiawakuraLiveSmokeCommitSha = '8d120e09caf0183a03c65e0f5f773ba71f67c7fb';
+          publicSmoke.status = 'enabled';
+          checkpoint.integrityAudit.sourceLinkAudit = checkpoint.integrityAudit.sourceLinkAudit || {};
+          checkpoint.integrityAudit.sourceLinkAudit.softWarningAudit = {
+            auditFile: 'jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json',
+            warningCount: 159,
+            statusCounts: { '403': 8, '429': 5, timeout: 98, fetchFailed: 48 },
+            warningDomainCount: 21,
+            remainingSuspectedBrokenLinkCount: 0,
+            remainingUnclassifiedWarningCount: 0,
+            materialCorrectionCount: 1,
+            correctedMunicipalityCode: '33643',
+            correctedMunicipalityName: '西粟倉村',
+            status: 'completed_with_one_material_correction'
+          };
+          checkpoint.integrityAudit.notes = checkpoint.integrityAudit.notes || [];
+          pushUnique(checkpoint.integrityAudit.notes, '公式出典URL監査の403・429・タイムアウト・接続失敗159件を分類し、リンク切れ0件・未分類0件を確認。西粟倉村の旧保育料記載1件を現行公式案内へ修正した。');
+          pushUnique(checkpoint.integrityAudit.notes, '西粟倉村を公開スモークへ追加し、代表15自治体について修正後文言と訂正前文言不存在をGitHub Pages実環境で確認する。');
+          checkpoint.sourceLinkAudit = checkpoint.sourceLinkAudit || {};
+          Object.assign(checkpoint.sourceLinkAudit, {
+            softWarningAuditFile: 'jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json',
+            softWarningCount: 159,
+            remainingSoftWarningCount: 0,
+            softWarningMaterialCorrectionCount: 1,
+            totalMaterialResearchErrorCount: 4,
+            latestCorrectedMunicipalityCode: '33643',
+            latestCorrectedMunicipalityName: '西粟倉村',
+            latestCorrectionCommitSha: '275e40b00bee57963ac4dc4cb172e17a85053dbf',
+            status: 'completed_with_corrections'
+          });
+          write(checkpointPath, checkpoint);
+
+          const west = read(westPath);
+          west.updatedAt = updatedAt;
+          west.completenessAudit = west.completenessAudit || {};
+          west.completenessAudit.checkedAt = updatedAt;
+          west.latestSourceLinkAudit = west.latestSourceLinkAudit || {};
+          Object.assign(west.latestSourceLinkAudit, {
+            softWarningAuditFile: 'jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json',
+            softWarningCount: 159,
+            remainingSoftWarningCount: 0,
+            softWarningMaterialCorrectionCount: 1,
+            totalMaterialResearchErrorCount: 4,
+            latestCorrectedMunicipalityCode: '33643',
+            latestCorrectedMunicipalityName: '西粟倉村',
+            latestCorrectionCommitSha: '275e40b00bee57963ac4dc4cb172e17a85053dbf',
+            status: 'completed_with_corrections'
+          });
+          west.publicCopyValidation = west.publicCopyValidation || {};
+          west.publicCopyValidation.westAPublicSmokeSampleCount = 15;
+          west.publicCopyValidation.westAPublicSmokeCorrectedMunicipalityCodes = west.publicCopyValidation.westAPublicSmokeCorrectedMunicipalityCodes || [];
+          pushUnique(west.publicCopyValidation.westAPublicSmokeCorrectedMunicipalityCodes, '33643');
+          west.publicCopyValidation.westANishiawakuraCorrectionCommitSha = '275e40b00bee57963ac4dc4cb172e17a85053dbf';
+          west.publicCopyValidation.westANishiawakuraPublicSmokeCommitSha = '69222a39a877ead3903155bf05c747e8015a1448';
+          west.publicCopyValidation.westANishiawakuraLiveSmokeCommitSha = '8d120e09caf0183a03c65e0f5f773ba71f67c7fb';
+          west.lastAction = '西日本A担当6県226自治体の公式出典2,444 URLを横断監査し、ハード失敗28 URLとソフト警告159件を未解決0件まで分類した。西粟倉村の旧保育料記載を現行案内へ修正し、代表15自治体を恒久公開スモークで監視している。';
+          west.lastPublicSmokeCommit = '69222a39a877ead3903155bf05c747e8015a1448';
+          west.lastPublicSmokeLiveVerificationCommit = '8d120e09caf0183a03c65e0f5f773ba71f67c7fb';
+          write(westPath, west);
+          NODE
+
+      - name: Update main evidence and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          node /tmp/update-west-a-state.cjs
+          cp jichitai-compare/operations/control/session-checkpoints/west-a.json /tmp/west-a-main.json
+          cp jichitai-compare/operations/control/regions/west.json /tmp/west-main.json
+          git rm .github/workflows/temp-west-a-soft-audit-state-sync.yml
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          cd ..
+          unexpected="$(git status --porcelain | grep -v -E 'session-checkpoints/west-a.json|control/regions/west.json|temp-west-a-soft-audit-state-sync.yml' || true)"
+          if [ -n "$unexpected" ]; then
+            echo 'mainに予期しない差分があります。'
+            printf '%s\n' "$unexpected"
+            exit 1
+          fi
+          git add jichitai-compare/operations/control/session-checkpoints/west-a.json jichitai-compare/operations/control/regions/west.json
+          git commit -m 'ops: 西日本Aソフト警告監査と公開スモーク証跡を確定'
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              break
+            fi
+            git pull --rebase origin main
+          done
+
+      - name: Update region/west evidence and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin region/west
+          git checkout -B sync-region-west origin/region/west
+          node /tmp/update-west-a-state.cjs
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          cd ..
+          unexpected="$(git status --porcelain | grep -v -E 'session-checkpoints/west-a.json|control/regions/west.json' || true)"
+          if [ -n "$unexpected" ]; then
+            echo 'region/westに予期しない差分があります。'
+            printf '%s\n' "$unexpected"
+            exit 1
+          fi
+          git add jichitai-compare/operations/control/session-checkpoints/west-a.json jichitai-compare/operations/control/regions/west.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'ops: 西日本Aソフト警告監査と公開スモーク証跡を地域同期'
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:region/west; then
+              exit 0
+            fi
+            git pull --rebase origin region/west
+          done
+          exit 1
