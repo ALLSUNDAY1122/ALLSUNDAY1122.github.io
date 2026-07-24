@@ -4,7 +4,7 @@
   "assignedTeam": "西日本調査班",
   "branch": "region/west",
   "integrationBranch": "region/west",
-  "updatedAt": "2026-07-24T23:54:00+09:00",
+  "updatedAt": "2026-07-25T00:01:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -22,7 +22,7 @@
     "completedServices": 4284,
     "nationwidePublishedMunicipalities": 1741,
     "nationwideRemainingMunicipalities": 0,
-    "checkedAt": "2026-07-24T23:54:00+09:00"
+    "checkedAt": "2026-07-25T00:01:00+09:00"
   },
   "latestQualityAudit": {
     "municipalityCode": "40130",
@@ -41,6 +41,11 @@
     "summaryConsistencyGuardPullRequestNumber": 2879,
     "summaryConsistencyGuardCiRunNumber": 6911,
     "westAPrefectureDetectedCountInLegacyBroadAudit": 0,
+    "westAPublicSummaryGuardPullRequestNumber": 2915,
+    "westAPublicSummaryGuardCiRunNumber": 6968,
+    "westAPublicSummaryGuardMunicipalityCount": 226,
+    "westAPublicSummaryGuardPrefectureCodes": ["33", "37", "39", "40", "43", "46"],
+    "westAForbiddenPhrases": ["調査班", "初期登録対象", "移行監査", "地域正本"],
     "westBPublicSummaryCleanupPullRequestNumber": 2871,
     "westBPublicSummaryCleanupCiRunNumber": 6905,
     "westBPublicSummaryCleanupMunicipalityCount": 27,
@@ -56,15 +61,15 @@
     "failureArtifactName": "jichitai-validation-report",
     "status": "passed"
   },
-  "lastAction": "福岡市の公開要約修正後、全国向け内部作業文言ガードと全1,741静的ページの要約一致検証を導入した。西日本Bでは鳥取県18・島根県9の計27自治体から内部調査班文言を除去し、担当250自治体の再混入を通常CIで恒久監視している。",
+  "lastAction": "福岡市の公開要約修正後、全国向け内部作業文言ガードと全1,741静的ページの要約一致検証を導入した。西日本A担当6県226自治体と西日本B担当11県250自治体は、内部運用語4種の再混入を通常CIで恒久監視している。",
   "nextAction": "新規自治体調査を停止し、自治体公式情報の更新、差し戻し、識別異常、CI失敗、公開文言異常、生成JSONと静的ページの要約不一致が発生した場合のみ品質監査を再開する。",
   "lastNationalIntegrationPr": 2791,
   "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
   "lastGeneratedPullRequest": 2871,
   "lastRegionalQualityPr": 2829,
   "lastNationalQualityPr": 2871,
-  "lastPublicCopyGuardPr": 2891,
-  "lastWestAPublicCopyGuardPr": 2869,
+  "lastPublicCopyGuardPr": 2915,
+  "lastWestAPublicCopyGuardPr": 2915,
   "lastWestBPublicCopyGuardPr": 2891,
   "lastSummaryConsistencyGuardPr": 2879,
   "humanDecisionRequired": false
