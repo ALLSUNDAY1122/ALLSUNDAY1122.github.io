@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const site = path.join(root, 'yorugatari');
+const normalizationGeneration = '20260724-003';
 const shareVersion = '20260724-002';
 const startRuntime = 'landing-start-20260724-001.js';
 const files = ['5min-horror.html', 'bedtime-horror.html'];
@@ -40,4 +41,4 @@ for (const filename of files) {
   }
 }
 
-console.log(`Ensured curated landing sharing and cache-safe start tracking on ${files.length} pages; changed ${changed}.`);
+console.log(`Ensured curated landing sharing and cache-safe start tracking (${normalizationGeneration}) on ${files.length} pages; changed ${changed}.`);
