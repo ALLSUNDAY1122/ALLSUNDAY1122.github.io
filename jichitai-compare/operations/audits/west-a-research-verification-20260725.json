@@ -4,9 +4,9 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T01:45:00+09:00",
+  "updatedAt": "2026-07-25T01:55:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 8,
+  "completedRoundCount": 9,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -552,7 +552,42 @@
     {
       "round": 9,
       "title": "unavailableへ整理した75自治体・189制度のリスク抽出監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "unavailableへ整理した75自治体・189制度を対象に、誤判定リスクが高い子ども医療費3自治体を最優先で公式条例・公式広報・現行支援リンクから再照合",
+      "reviewedMunicipalityCount": 75,
+      "reviewedServiceCount": 189,
+      "prioritySampleCount": 3,
+      "samples": [
+        {
+          "code": "39307",
+          "name": "芸西村",
+          "service": "childMedical",
+          "result": "retained_unavailable",
+          "finding": "令和8年3月掲載の村支援制度一覧で医療費無料制度の実施は再確認できたが、リンク先制度ページの本文取得が不安定で、対象年齢・除外条件を確定できないため保守的判定を維持",
+          "officialUrl": "https://www.vill.geisei.kochi.jp/pages/m001787.php"
+        },
+        {
+          "code": "40448",
+          "name": "東峰村",
+          "service": "childMedical",
+          "result": "corrected",
+          "finding": "現行条例で18歳年度末まで、保険診療自己負担相当額の支給、医療証による現物給付を確認",
+          "officialUrl": "https://www1.g-reiki.net/vill.toho/reiki_honbun/r158RG00000188.html"
+        },
+        {
+          "code": "46530",
+          "name": "徳之島町",
+          "service": "childMedical",
+          "result": "corrected",
+          "finding": "町広報で課税世帯は未就学児、非課税世帯は18歳年度末まで、2025年4月受診分から窓口負担無料を確認",
+          "officialUrl": "https://www.tokunoshima-town.org/kikakuka/chose/koho/kohoshi/2025koho.html"
+        }
+      ],
+      "result": "corrected",
+      "materialErrorCount": 2,
+      "correctionAppliedCount": 2,
+      "retainedUnavailableCount": 1,
+      "note": "初期抽出では3件を誤判定候補としたが、芸西村は制度実施のみ確認でき、現行条件の本文を安定取得できないためunavailableを維持。東峰村・徳之島町の2件のみverifiedへ修正。"
     },
     {
       "round": 10,
@@ -561,11 +596,11 @@
     }
   ],
   "summary": {
-    "materialErrorCount": 1,
+    "materialErrorCount": 3,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 2,
-    "currentAssessment": "第8回は6自治体の防災マップ掲載範囲・避難導線・公式URLが一致。累計重大誤り1件は修正済みで、未修正0件。",
-    "correctionAppliedCount": 1
+    "roundsRemaining": 1,
+    "currentAssessment": "第9回でunavailable判定から2件の誤りを検出・修正。累計重大誤り3件はすべて修正済みで、未修正0件。",
+    "correctionAppliedCount": 3
   },
-  "nextAction": "第9回として、unavailableへ整理した75自治体・189制度から西日本A担当分を抽出し、公式制度の見落としがないかリスク監査する。"
+  "nextAction": "第10回として、発見3件の再検証、CI・生成ページ確認、最終集計を行う。"
 }
