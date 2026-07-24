@@ -1,0 +1,30 @@
+name: Cleanup West Resolution Release
+
+on:
+  pull_request:
+    branches: [region/west]
+    types: [synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.head_ref == 'quality/west-resolve-needs-review-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: quality/west-resolve-needs-review-20260724
+          fetch-depth: 0
+      - name: Remove diagnostic and regional generated files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin region/west:refs/remotes/origin/region/west
+          git checkout origin/region/west -- jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
+          rm -f jichitai-compare/west-resolution-validation.log
+          git rm .github/workflows/cleanup-west-resolution.yml
+          git add -A
+          git commit -m 'chore: 西日本品質確定PRの不要生成物を除外'
+          git push origin HEAD:quality/west-resolve-needs-review-20260724
