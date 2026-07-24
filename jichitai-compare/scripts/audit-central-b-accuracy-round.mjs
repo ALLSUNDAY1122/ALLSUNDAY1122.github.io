@@ -17,10 +17,11 @@ const expectedServices = definitions.map((item) => item.id);
 const ageRangeServices = new Set(
   definitions.filter((item) => item.eligibilityRule === 'ageRange').map((item) => item.id)
 );
-const batch = audit.batches.find((item) => item.status === 'in_progress');
+const batch = audit.batches.find((item) => item.status === 'in_progress')
+  ?? audit.batches.find((item) => item.status === 'pending');
 
 if (!batch) {
-  const result = { status: 'waiting', message: 'in_progress の監査バッチはありません' };
+  const result = { status: 'waiting', message: '未完了の監査バッチはありません' };
   await writeFile(OUTPUT_PATH, JSON.stringify(result, null, 2) + '\n', 'utf8');
   console.log(JSON.stringify(result, null, 2));
   process.exit(0);
