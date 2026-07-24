@@ -1,0 +1,79 @@
+name: Fix Minamisatsuma Publication Readiness
+
+on:
+  pull_request:
+    branches: [region/west]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix:
+    if: github.head_ref == 'fix/46220-publication-readiness-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/46220-publication-readiness-20260724
+          fetch-depth: 0
+      - name: Normalize Minamisatsuma data and task
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const municipalityPath = 'jichitai-compare/data/municipalities/46/46220.json';
+          const taskPath = 'jichitai-compare/operations/tasks/46220.json';
+          const definitionsPath = 'jichitai-compare/data/service-definitions.json';
+          const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          const serviceIds = JSON.parse(fs.readFileSync(definitionsPath, 'utf8')).services.map((item) => item.id);
+
+          municipality.status = 'verified';
+          municipality.summary = '必須9制度を南さつま市公式情報で調査。8制度をverified、2026年度の課税世帯0～2歳児保育料条件を確定できない保育料をunavailableとして登録。';
+          municipality.updatedAt = '2026-07-24';
+          municipality.services.childcareFee = {
+            status: 'unavailable',
+            summary: '幼児教育・保育無償化の対象施設等は確認できるが、2026年度の課税世帯0～2歳児保育料条件を確定できない',
+            details: {
+              confirmed: '市公式ページで幼児教育・保育無償化の対象施設・対象サービスを案内している',
+              unconfirmed: '2026年度の市民税階層別保育料、課税世帯0～2歳児の具体額、多子・ひとり親等の軽減条件、副食費条件',
+              contact: '南さつま市こども未来課または保育担当窓口へ確認'
+            },
+            notes: [
+              '国の無償化対象案内を、2026年度の課税世帯0～2歳児の具体的な市保育料条件の根拠として扱わない。'
+            ],
+            source: {
+              url: 'https://www.city.minamisatsuma.lg.jp/living/kenko-iryo-fukushi/hoikuen/e021927.html',
+              checkedAt: '2026-07-24'
+            }
+          };
+
+          const services = serviceIds.map((id) => municipality.services[id]);
+          const completed = new Set(['verified', 'unavailable']);
+          const officialSources = [...new Set(services.filter((service) => completed.has(service.status)).map((service) => service.source?.url).filter((url) => /^https:\/\//u.test(url ?? '')))];
+          task.status = 'pr_open';
+          task.currentService = null;
+          task.nextServiceIndex = serviceIds.length;
+          task.completedServices = [...serviceIds];
+          task.verifiedCount = services.filter((service) => service.status === 'verified').length;
+          task.researchingCount = 0;
+          task.unavailableCount = services.filter((service) => service.status === 'unavailable').length;
+          task.needsMediumReviewCount = 0;
+          task.currentBranch = 'fix/46220-publication-readiness-20260724';
+          task.pullRequestNumber = null;
+          task.lastCheckedAt = '2026-07-24';
+          task.lastUpdatedAt = '2026-07-24T15:20:00+09:00';
+          task.lastUpdatedBy = '統括B';
+          task.officialSources = officialSources;
+          task.notes = [...(task.notes ?? []), '保育料は無償化対象施設を確認したが、2026年度の課税世帯0～2歳児の階層別条件を確定できないためunavailableへ正規化。'];
+          task.blockers = [];
+
+          fs.writeFileSync(municipalityPath, `${JSON.stringify(municipality, null, 2)}\n`);
+          fs.writeFileSync(taskPath, `${JSON.stringify(task, null, 2)}\n`);
+          NODE
+          git rm .github/workflows/fix-46220-publication-readiness.yml
+          git add jichitai-compare/data/municipalities/46/46220.json jichitai-compare/operations/tasks/46220.json
+          git commit -m "fix: 南さつま市を8 verified・1 unavailableへ正規化"
+          git push origin HEAD:fix/46220-publication-readiness-20260724
