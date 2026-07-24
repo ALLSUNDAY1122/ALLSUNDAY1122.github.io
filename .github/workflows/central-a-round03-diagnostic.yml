@@ -1,0 +1,48 @@
+name: Diagnose Central A Round 03 CI
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-03-r2-20260725']
+    paths: ['.github/workflows/central-a-round03-diagnostic.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-03-r2-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Capture validation command and output
+        shell: bash
+        run: |
+          set -u
+          OUT=jichitai-compare/operations/control/central-a-round03-ci-diagnostic.txt
+          : > "$OUT"
+          echo '=== WORKFLOW MATCHES ===' >> "$OUT"
+          grep -R -n -B 4 -A 14 'Validate source and generated data' .github/workflows >> "$OUT" 2>&1 || true
+          echo '=== VALIDATION SCRIPTS ===' >> "$OUT"
+          find jichitai-compare -type f \( -name '*validat*.mjs' -o -name '*validat*.js' \) -print | sort >> "$OUT"
+          echo '=== RUN VALIDATORS ===' >> "$OUT"
+          for f in $(find jichitai-compare -type f \( -name '*validat*.mjs' -o -name '*validat*.js' \) -print | sort); do
+            echo "--- $f ---" >> "$OUT"
+            node "$f" >> "$OUT" 2>&1
+            echo "exit=$?" >> "$OUT"
+          done
+          rm .github/workflows/central-a-round03-diagnostic.yml
+      - name: Commit diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'debug: 福井県監査CIの検証失敗を記録'
+          git push origin HEAD:audit/central-a-scope-verification-round-03-r2-20260725
