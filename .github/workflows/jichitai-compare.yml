@@ -1,51 +1,77 @@
-name: Reconcile North-East Release 0935
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  release:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
-        with: {node-version: '20'}
-      - run: git fetch origin main region/north region/east
-      - name: Reconcile source data
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
-          previous="$(node -p "require('./jichitai-compare/operations/progress.json').registeredMunicipalities")"
-          removed=0
-          if [ -f jichitai-compare/data/municipalities/04/04423.json ]; then rm jichitai-compare/data/municipalities/04/04423.json; removed=1; fi
-          rm -f jichitai-compare/operations/tasks/04423.json
-          : > /tmp/s.tsv
-          for r in north east; do
-            git ls-tree -r --name-only "origin/region/$r" -- jichitai-compare/data/municipalities | grep -E '/[0-9]{5}\.json$' | while read -r f; do
-              if ! git cat-file -e "HEAD:$f" 2>/dev/null; then
-                mkdir -p "$(dirname "$f")"; git show "origin/region/$r:$f" > "$f"
-                c="$(basename "$f" .json)"; t="jichitai-compare/operations/tasks/$c.json"; mkdir -p "$(dirname "$t")"; git show "origin/region/$r:$t" > "$t"; printf '%s\t%s\n' "$r" "$c" >> /tmp/s.tsv
-              fi
-            done
-          done
-          PREVIOUS="$previous" REMOVED="$removed" node <<'NODE'
-          const fs=require('fs'),rows=fs.readFileSync('/tmp/s.tsv','utf8').trim().split(/\r?\n/).filter(Boolean).map(x=>x.split('\t')),previous=Number(process.env.PREVIOUS),removed=Number(process.env.REMOVED),m=[];
-          for(const [region,code] of rows){const dp=`jichitai-compare/data/municipalities/${code.slice(0,2)}/${code}.json`,tp=`jichitai-compare/operations/tasks/${code}.json`,d=JSON.parse(fs.readFileSync(dp)),t=JSON.parse(fs.readFileSync(tp));t.status='merged';t.currentService=null;t.nextServiceIndex=9;t.lastUpdatedAt='2026-07-24T09:35:00+09:00';const u='統括A';if(Array.isArray(t.lastUpdatedBy)){if(!t.lastUpdatedBy.includes(u))t.lastUpdatedBy.push(u)}else if(t.lastUpdatedBy){if(!String(t.lastUpdatedBy).includes(u))t.lastUpdatedBy+=`, ${u}`}else t.lastUpdatedBy=u;fs.writeFileSync(tp,JSON.stringify(t)+'\n');m.push({region,team:region==='north'?'北日本調査班':'東日本調査班',code,name:d.name,prefecture:d.prefecture,sourcePullRequestNumber:t.pullRequestNumber??null});}
-          m.sort((a,b)=>a.code.localeCompare(b.code));fs.writeFileSync('jichitai-compare/operations/control/coord-a-reconcile-north-east-20260724-0935.json',JSON.stringify({schemaVersion:'1.0.0',createdAt:'2026-07-24T09:35:00+09:00',previousPublishedMunicipalities:previous,removedMunicipalities:removed?[{region:'north',code:'04423',name:'大衡村（誤コード）',reason:'現行コード04424との重複'}]:[],selectedMunicipalities:m.length,byRegion:{north:m.filter(x=>x.region==='north').length,east:m.filter(x=>x.region==='east').length},municipalities:m,expectedPublishedMunicipalities:previous-removed+m.length,excludedCount:0,excluded:[]},null,2)+'\n');
-          NODE
-      - name: Generate and validate
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
-        run: npm run generate && npm run progress && npm run validate:generated && node --check app.js
-      - name: Homepage count
-        run: node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json')),f='jichitai-compare/index.html';fs.writeFileSync(f,fs.readFileSync(f,'utf8').replace(/\\d+自治体・9制度/g,p.registeredMunicipalities+'自治体・9制度'))"
-      - name: Commit
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'; git add -A; git commit -m 'Remove obsolete 04423 and publish north-east additions'; git push origin HEAD
+        run: npm run smoke:public
