@@ -1,0 +1,79 @@
+(function () {
+  'use strict';
+
+  const path = location.pathname.replace(/\/{2,}/g, '/').replace(/\/$/, '');
+  const configs = {
+    '/yorugatari/5min-horror.html': {
+      title: '5分で読める怖い話｜夜語り',
+      text: '約5分で読める一話完結の怖い話12選。無料・登録不要です。',
+      content: 'five_minute_12'
+    },
+    '/yorugatari/bedtime-horror.html': {
+      title: '寝る前に読む怖い話｜夜語り',
+      text: '寝る前に一話だけ読みたい人向けの、静かに怖い短編8選です。',
+      content: 'bedtime_8'
+    }
+  };
+  const config = configs[path];
+  const shareButton = document.querySelector('#landingShareButton');
+  const copyButton = document.querySelector('#landingCopyButton');
+  const status = document.querySelector('#landingShareStatus');
+  if (!config || !shareButton || !copyButton || !status) return;
+
+  const canonical = document.querySelector('link[rel="canonical"]')?.href || location.href.split('?')[0];
+  const trackedUrl = new URL(canonical);
+  trackedUrl.searchParams.set('utm_source', 'web_share');
+  trackedUrl.searchParams.set('utm_medium', 'social');
+  trackedUrl.searchParams.set('utm_campaign', 'onsite_share');
+  trackedUrl.searchParams.set('utm_content', config.content);
+
+  const state = {
+    title: config.title,
+    text: config.text,
+    url: trackedUrl.href,
+    lastAction: null,
+    error: null
+  };
+  window.YORUGATARI_LANDING_SHARE = state;
+
+  function announce(message) {
+    status.textContent = message;
+  }
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(state.url);
+      state.lastAction = 'copy';
+      state.error = null;
+      announce('共有用リンクをコピーしました。');
+      return true;
+    } catch (error) {
+      state.error = error && error.message ? error.message : String(error);
+      announce('リンクをコピーできませんでした。');
+      return false;
+    }
+  }
+
+  shareButton.addEventListener('click', async function () {
+    if (typeof navigator.share !== 'function') {
+      await copyLink();
+      return;
+    }
+    try {
+      await navigator.share({ title: state.title, text: state.text, url: state.url });
+      state.lastAction = 'share';
+      state.error = null;
+      announce('共有画面を開きました。');
+    } catch (error) {
+      if (error && error.name === 'AbortError') {
+        state.lastAction = 'cancel';
+        announce('共有をキャンセルしました。');
+        return;
+      }
+      state.error = error && error.message ? error.message : String(error);
+      announce('共有画面を開けませんでした。');
+    }
+  });
+
+  copyButton.addEventListener('click', copyLink);
+})();
