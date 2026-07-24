@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "40213",
+  "prefectureCode": "40",
+  "prefecture": "福岡県",
+  "name": "行橋市",
+  "officialUrl": "https://www.city.yukuhashi.fukuoka.jp/",
+  "status": "verified",
+  "summary": "必須9制度を行橋市公式情報で調査。8制度をverified、こども誰でも通園制度をneeds_medium_reviewとして登録。 確認待ち制度は、現行具体条件未確定としてunavailableへ正規化。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末まで入院・通院の保険診療自己負担を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "行橋市に住所があり医療保険に加入する18歳到達後最初の3月31日までの子ども",
+        "underThree": "3歳未満は自己負担なし",
+        "ageThreePlus": "3歳以上18歳年度末までは外来1医療機関月600円上限、入院1日500円・月7日上限",
+        "pharmacy": "調剤は原則自己負担なし"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/11325.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後4か月から小学6年生までを病児・病後児保育",
+      "eligibility": {
+        "minAgeMonths": 4,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "行橋市・苅田町・みやこ町に住所がある生後4か月から小学6年生までの病児・病後児",
+        "facility": "行橋京都病児病後児保育室アンファン",
+        "fee": "福岡県内居住者は利用料無償化。診察・食事等の実費は別途",
+        "application": "事前登録後、かかりつけ医の医師連絡票を取得し、原則前日18時までに予約する"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/2213.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等を無償化し、0～2歳児の第3子以降も所得等にかかわらず無償",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "nationalSupport": "3～5歳児と0～2歳児の市民税非課税世帯は保育料無償",
+        "multiChild": "2025年9月から第1子・第2子の年齢や世帯収入にかかわらず、0～2歳児の第3子以降を無償化",
+        "actualCosts": "日用品、教材、行事費、食事提供費等は対象外",
+        "application": "原則手続不要だが、生計同一で別住所の子がいる場合等は申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/39467.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/2247.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は市立小中学校の給食費を完全無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "行橋市立小学校・中学校に在籍する児童生徒",
+        "elementarySchool": "年額61,820円を国県・市が補助し、保護者負担0円",
+        "juniorHighSchool": "年額74,140円を市が全額補助し、保護者負担0円",
+        "application": "保護者の手続不要"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/soshiki/38/44247.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "宿泊・通所・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "target": "行橋市に住民票がある産後の母親と乳児で、母子とも医療行為を必要としない方",
+        "types": "ショートステイ、デイサービス、アウトリーチ",
+        "age": "宿泊型は産後6か月未満、通所・訪問型は産後12か月未満",
+        "fee": "宿泊型は所得区分により1日1,250円または2,500円、非課税・生活保護世帯は無料。通所・訪問も所得区分別料金",
+        "usageLimit": "宿泊型は原則7日まで。通所・訪問型も各制度の利用上限あり",
+        "application": "妊娠32週以降または産後に市へ申請する"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/33545.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/33587.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/33586.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/33588.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "対象・利用上限・料金は確認できるが実施施設を確定できない",
+      "notes": [
+        "対象は生後6か月から満3歳未満の未就園児、月10時間、1時間300円程度で、世帯状況による減免がある。",
+        "市公式ページでは実施施設を『決まり次第、ホームページでお知らせします』としており、2026年度の実施施設・利用開始可能日・施設別時間を確定できないため要確認とする。",
+        "統括B公開準備: 公式情報で制度または関連事業は確認したが、現行の具体条件を確定できないため、推測せずunavailableへ正規化。"
+      ],
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/site/kosodate/42336.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "旧耐震基準の木造戸建ての耐震・省エネ改修等を補助",
+      "details": {
+        "target": "1981年5月31日以前に着工した市内木造戸建て住宅の所有者等で、耐震性不足等の要件を満たす方",
+        "seismic": "耐震改修費の50％、上限60万円",
+        "energySaving": "耐震改修と同時に行う省エネ改修費の25％、上限20万円",
+        "demolition": "建替え等に伴う除却費の23％、上限30万円",
+        "period": "2026年度申込期間は5月7日から9月30日。着工前相談・申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/soshiki/24/1530.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみ指定シールを貼り地区別収集日に排出",
+      "details": {
+        "method": "指定袋に入らない物は品目・材質に応じて燃える粗大ごみまたは燃えない粗大ごみとして排出",
+        "fee": "粗大ごみ指定シールは2026年8月以降も減額を継続し1枚150円",
+        "schedule": "行政区ごとの燃える粗大ごみ・燃えないごみ収集日を確認する",
+        "disposal": "指定シールを貼り、地区指定の場所・日時に出す"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/soshiki/30/28931.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.yukuhashi.fukuoka.jp/soshiki/30/1269.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・高潮・津波・ため池等の防災マップを公開",
+      "details": {
+        "coverage": "洪水、高潮、津波、ため池、土砂災害等",
+        "maps": "校区・地区別洪水マップ、高潮・津波マップ等をPDFで公開",
+        "distribution": "市役所防災危機管理室と各公民館で冊子を配布",
+        "use": "危険区域、避難場所、避難経路を確認可能"
+      },
+      "source": {
+        "url": "https://www.city.yukuhashi.fukuoka.jp/site/bosai/2098.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}

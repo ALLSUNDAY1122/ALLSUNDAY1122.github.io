@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "39386",
+  "prefectureCode": "39",
+  "prefecture": "高知県",
+  "name": "いの町",
+  "officialUrl": "https://www.town.ino.kochi.jp/",
+  "status": "verified",
+  "summary": "必須9制度をいの町公式情報で調査。8制度をverified、2026年度の一般世帯向け学校給食費をneeds_medium_reviewとして登録。 確認待ち制度は、現行具体条件未確定としてunavailableへ正規化。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳到達後最初の3月末まで医療費の自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "いの町に住所を有する0歳から18歳到達後最初の3月31日までの乳幼児・児童",
+        "copay": "入院・通院に係る保険診療の自己負担分を助成",
+        "incomeLimit": "制度区分に応じた認定・更新手続が必要",
+        "application": "乳児医療から幼児医療への更新や受給者証の申請手続を行う"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/kurashi/kokumin/1948/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.ino.kochi.jp/kosodate/ninshin/ninshin_jyosei/5677/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "病気の回復期にある生後6か月から小学3年生までを3施設で預かる",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 9
+      },
+      "details": {
+        "facilityCount": 3,
+        "fee": "利用料は利用当日に施設へ提出。金額は利用のしおりで確認する",
+        "target": "町内在住で、病気やけがの回復期にあり、集団生活が困難で家庭保育も困難な子ども",
+        "hours": "そらいろは平日7時30分から18時30分、吾北分室は9時から16時30分、本川分室は9時30分から16時",
+        "application": "年度ごとの登録と、原則として利用前日の午前中までの電話予約、医師の診療情報提供書が必要"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/kosodate/hoiku/10768/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.ino.kochi.jp/sukoyaka/sorairo/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳から5歳は利用料無料、0歳から2歳は住民税非課税世帯で無料",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "fee": "3歳から5歳までの利用料を無償化。0歳から2歳は住民税非課税世帯が対象",
+        "siblingReduction": "届出認可外保育施設利用者向けの多子世帯保育料軽減制度も実施",
+        "incomeCondition": "0歳から2歳の無償化は住民税非課税世帯が対象",
+        "meal": "給食費のうち副食費も無償"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/sukoyaka/free2.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.ino.kochi.jp/kosodate/hoiku/5685/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "就学援助による学校給食費支援はあるが、2026年度一般世帯の負担額を確定できない",
+      "notes": [
+        "町立小中学校等の就学援助では、対象世帯の学校給食費が援助対象となることを確認した。",
+        "令和8年度の一般世帯向け給食費額、国の小学校給食費負担軽減への町対応、一般無償化の有無、徴収方法を示す町公式情報を確認できないため要確認とした。",
+        "統括B公開準備: 公式情報で制度または関連事業は確認したが、現行の具体条件を確定できないため、推測せずunavailableへ正規化。"
+      ],
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/kosodate/gakko/2032/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子に訪問・通所・宿泊型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "types": "訪問型、通所型、宿泊型",
+        "fee": "3タイプそれぞれ1回無料。宿泊型は1泊2日が無料",
+        "target": "いの町に住民票がある産後1年未満の母子。宿泊型は産後4か月未満",
+        "usageLimit": "訪問型と通所型は合わせて5回、宿泊型は7日まで",
+        "application": "利用希望日の2週間前までに母子健康手帳と申請書等を提出し、承認後に施設へ予約する"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/sukoyaka/care_proposal.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "生後6か月から満3歳未満の未就園児が月10時間まで利用可能",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "types": "家庭的保育事業所あんずのぽっけ、認定こども園ごほくで実施",
+        "fee": "1時間300円。生活保護世帯0円、住民税非課税世帯等100円",
+        "target": "町内在住で保育所等に在籍していない生後6か月から満3歳未満の子ども",
+        "usageLimit": "子ども1人につき月10時間まで",
+        "application": "原則オンライン申請後、町の認定、初回面談、施設予約を行う"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/kosodate/hoiku/15254/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世帯・若年夫婦世帯の住宅取得に最大120万円を交付",
+      "details": {
+        "target": "18歳未満の子がいる子育て世帯、または夫婦とも39歳以下で10年以上定住する意思がある世帯",
+        "support": "移住者は都市計画区域内の新築100万円、区域外の新築・購入120万円。町内転居は50万円または60万円",
+        "conditions": "町税滞納なし、所定額以上の住宅取得、過去の交付申請なし、住民票移転・登記時期等の要件あり",
+        "application": "6月1日から1月31日まで、原則電子申請または郵送"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/kurashi/koseki/kakusyu/13817/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみを地区別の収集日程に従い、ごみステーションへ排出",
+      "details": {
+        "feeSystem": "粗大ごみは指定袋を使用しない区分。個別処理手数料の掲載はない",
+        "application": "年度ごとの地区別収集日程表を確認し、決められたごみステーションへ出す",
+        "examples": "タンス、机、ソファー、いす、ふとん、カーペット、自転車、ベビーカー、大型家電製品など",
+        "rules": "剪定枝は1m以内に揃えて束ね、石油ストーブは灯油を抜く。家電4品目等は収集対象外"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/kurashi/gomi/1954/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.ino.kochi.jp/kurashi/gomi/9016/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・洪水・地震・内水等の各種ハザードマップを公開",
+      "details": {
+        "coverage": "土砂災害警戒区域、仁淀川・宇治川の洪水浸水想定、地震の揺れやすさ・建物危険度・液状化、枝川地区の内水リスク",
+        "access": "町公式の防災マップページから地域別PDFを閲覧できる",
+        "use": "危険区域、浸水想定、避難場所等を事前に確認できる"
+      },
+      "source": {
+        "url": "https://www.town.ino.kochi.jp/bousai/bousai2/shoubou_map/1712/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.ino.kochi.jp/bousai/bousai2/shoubou_map/1735/",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.ino.kochi.jp/bousai/bousai2/shoubou_map/1736/",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.ino.kochi.jp/bousai/bousai2/shoubou_map/1713/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}
