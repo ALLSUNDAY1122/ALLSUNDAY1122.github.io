@@ -1,0 +1,90 @@
+name: Yorugatari runtime release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/tools/normalize-engagement.mjs
+      - yorugatari/tools/generate-discovery-pages.mjs
+      - yorugatari/index.html
+      - yorugatari/archive.html
+      - yorugatari/categories/**
+      - yorugatari/stories/**
+      - .github/workflows/yorugatari-runtime-release.yml
+
+concurrency:
+  group: yorugatari-runtime-release
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Normalize every public page
+        shell: bash
+        run: |
+          node --check yorugatari/tools/normalize-engagement.mjs
+          node yorugatari/tools/normalize-engagement.mjs
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const release = '20260724-001';
+          const site = 'yorugatari';
+          const staticFiles = ['index.html','5min-horror.html','bedtime-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
+          const categoryFiles = ['shinrei.html','hitokowa.html','imikowa.html','net-kaidan.html','urban-legend.html','aftertaste.html'];
+          for (const file of staticFiles) {
+            const html = fs.readFileSync(path.join(site, file), 'utf8');
+            const version = file === '5min-horror.html' ? '20260724-004' : file === 'bedtime-horror.html' ? '20260724-005' : '20260723-003';
+            if (!html.includes(`assets/analytics.js?v=${version}&r=${release}`)) throw new Error(`Static page not normalized: ${file}`);
+          }
+          for (const file of categoryFiles) {
+            const html = fs.readFileSync(path.join(site, 'categories', file), 'utf8');
+            if (!html.includes(`../assets/analytics.js?v=20260723-003&r=${release}`)) throw new Error(`Category not normalized: ${file}`);
+            if (!html.includes('../bedtime-horror.html')) throw new Error(`Bedtime link missing: ${file}`);
+          }
+          const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
+          if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
+          for (const file of stories) {
+            const html = fs.readFileSync(path.join(site, 'stories', file), 'utf8');
+            if (!html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`)) throw new Error(`Story not normalized: ${file}`);
+          }
+          NODE
+
+      - name: Commit normalized release
+        shell: bash
+        run: |
+          paths=(404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/categories yorugatari/stories)
+          if git diff --quiet -- "${paths[@]}"; then
+            echo "Full-site runtime release is already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${paths[@]}"
+          git commit -m "Release audit-filtered Yorugatari runtime [skip ci]"
+          for attempt in 1 2 3 4 5 6; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            git fetch origin main
+            sleep 3
+          done
+          exit 1
