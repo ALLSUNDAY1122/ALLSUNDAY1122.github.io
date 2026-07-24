@@ -278256,23 +278256,24 @@
       "name": "東峰村",
       "officialUrl": "https://vill.toho-info.com/",
       "status": "verified",
-      "summary": "必須9制度を東峰村公式情報で調査。6制度をverified、子ども医療費、病児・病後児保育、こども誰でも通園制度をneeds_medium_reviewとして登録。 公式公開情報で現行条件を確定できない制度は、推測せずunavailableとして整理。",
+      "summary": "必須9制度を東峰村公式情報で調査。7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして登録。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子ども医療費助成の現行対象年齢・自己負担条件を確認できない",
-          "notes": [
-            "村の予算・事業実績で子ども医療費事業の実施は確認できる。",
-            "2026年度の入院・通院対象年齢、自己負担上限、医療証・償還払い条件を示す村公式情報を確認できないため推測で補完しない。"
-          ],
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
           "details": {
-            "reviewDisposition": "自治体公式の公開情報だけでは2026年度の対象・料金・実施施設・申請条件等を確定できないため、推測せずunavailableとして公開。制度不存在を断定せず、詳細は自治体窓口で確認する。",
-            "previousStatus": "needs_medium_review",
-            "sourceBasis": "専用制度ページを公式公開情報で確定できないため、自治体公式トップページを確認元として記録。詳細条件は自治体窓口で確認する。"
+            "target": "東峰村に住所があり、医療保険に加入する18歳到達後最初の3月31日までの子ども（生活保護受給者を除く）",
+            "support": "保険診療に係る自己負担相当額を支給。入院時食事療養標準負担額は対象外",
+            "incomeCondition": "条例上の所得制限規定なし",
+            "application": "事前に受給資格認定を受けて子ども医療証の交付を受け、対象医療機関等で医療証を提示する"
           },
           "source": {
-            "url": "https://vill.toho-info.com/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www1.g-reiki.net/vill.toho/reiki_honbun/r158RG00000188.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "sickChildCare": {
@@ -309790,24 +309791,31 @@
       "name": "徳之島町",
       "officialUrl": "https://www.tokunoshima-town.org/",
       "status": "verified",
-      "summary": "必須9制度を徳之島町公式情報で調査。4制度をverified、子ども医療費、病児・病後児保育、2026年度保育料、産後ケア、こども誰でも通園制度をneeds_medium_reviewとして登録。 公式公開情報で現行条件を確定できない制度は、推測せずunavailableとして整理。",
+      "summary": "必須9制度を徳之島町公式情報で調査。5制度をverified、病児・病後児保育、2026年度保育料、産後ケア、こども誰でも通園制度をunavailableとして登録。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子ども医療費給付制度の実施は確認できるが2026年度の対象・給付条件を確定できない",
-          "notes": [
-            "2026年2月・4月・7月の町広報で、子ども医療費給付受給資格者登録申請および子ども医療費給付制度の案内掲載を確認した。",
-            "対象年齢、入院・通院別の給付範囲、窓口負担、所得制限、現物給付・償還払い、町外受診時の手続きを本文で確定できないため推測で補完しない。"
-          ],
+          "status": "verified",
+          "summary": "課税世帯は未就学児、非課税世帯は18歳年度末まで保険診療の窓口負担を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
           "details": {
-            "reviewDisposition": "自治体公式の公開情報だけでは2026年度の対象・料金・実施施設・申請条件等を確定できないため、推測せずunavailableとして公開。制度不存在を断定せず、詳細は自治体窓口で確認する。",
-            "previousStatus": "needs_medium_review",
-            "sourceBasis": "専用制度ページを公式公開情報で確定できないため、自治体公式トップページを確認元として記録。詳細条件は自治体窓口で確認する。"
+            "target": "徳之島町に住所があり健康保険に加入する子ども。住民税課税世帯は未就学児、住民税非課税世帯は18歳到達後最初の3月31日まで",
+            "support": "2025年4月1日受診分から、対象となる保険診療の窓口負担を無料化",
+            "application": "子ども医療費給付受給資格者登録申請が必要",
+            "excluded": "保険適用外費用等は給付対象外"
           },
           "source": {
-            "url": "https://www.tokunoshima-town.org/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.tokunoshima-town.org/kikakuka/chose/koho/kohoshi/2025koho.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.pref.kagoshima.jp/aa02/tayori89.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "sickChildCare": {
           "status": "unavailable",
