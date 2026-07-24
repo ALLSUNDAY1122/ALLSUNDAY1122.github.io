@@ -1,10 +1,11 @@
-import { readdir, readFile } from 'node:fs/promises';
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_DIR = resolve(SCRIPT_DIR, '..');
 const MUNICIPALITY_DIR = join(PROJECT_DIR, 'data', 'municipalities');
+const REPORT_FILE = join(PROJECT_DIR, 'identity-validation-errors.json');
 
 const PREFECTURE_NAMES = new Map([
   ['01', '北海道'], ['02', '青森県'], ['03', '岩手県'], ['04', '宮城県'],
@@ -21,11 +22,11 @@ const PREFECTURE_NAMES = new Map([
   ['45', '宮崎県'], ['46', '鹿児島県'], ['47', '沖縄県']
 ]);
 
-let errors = 0;
+const issues = [];
 
 function error(message) {
   console.error(`ERROR: ${message}`);
-  errors += 1;
+  issues.push(message);
 }
 
 function normalizeText(value) {
@@ -72,17 +73,29 @@ function sourceFingerprint(municipality) {
   return urls.length >= 5 ? urls.join('\n') : '';
 }
 
-function registerUnique(map, key, record, label) {
+function registerUnique(map, key, record, type, label) {
   if (!key) return;
   const previous = map.get(key);
   if (previous && previous.code !== record.code) {
-    error(`${label}が重複しています: ${previous.code} ${previous.name} / ${record.code} ${record.name}`);
+    const message = `${label}が重複しています: ${previous.code} ${previous.name} / ${record.code} ${record.name}`;
+    error(message);
+    const lastIssue = issues.at(-1);
+    if (typeof lastIssue === 'string') {
+      issues[issues.length - 1] = {
+        type,
+        message,
+        first: previous,
+        second: record
+      };
+    }
     return;
   }
   map.set(key, record);
 }
 
 async function main() {
+  await rm(REPORT_FILE, { force: true });
+
   const files = await collectJsonFiles(MUNICIPALITY_DIR);
   const namesByPrefecture = new Map();
   const officialUrls = new Map();
@@ -120,24 +133,33 @@ async function main() {
       namesByPrefecture,
       `${prefectureCode}:${name}`,
       record,
+      'duplicate_name_in_prefecture',
       `同一都道府県内の自治体名「${name}」`
     );
     registerUnique(
       officialUrls,
       normalizeUrl(municipality.officialUrl),
       record,
+      'duplicate_official_url',
       `自治体公式URL「${municipality.officialUrl}」`
     );
     registerUnique(
       sourceFingerprints,
       sourceFingerprint(municipality),
       record,
+      'duplicate_source_fingerprint',
       '5制度以上で完全一致する一次情報URL構成'
     );
   }
 
-  if (errors > 0) {
-    console.error(`自治体識別検証失敗: ${errors}件のエラー`);
+  if (issues.length > 0) {
+    await writeFile(REPORT_FILE, `${JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      municipalityCount: files.length,
+      errorCount: issues.length,
+      issues
+    }, null, 2)}\n`, 'utf8');
+    console.error(`自治体識別検証失敗: ${issues.length}件のエラー`);
     process.exitCode = 1;
     return;
   }
@@ -145,7 +167,8 @@ async function main() {
   console.log(`自治体識別検証成功: ${files.length}自治体（コード・都道府県・名称重複・公式URL重複・source複製を確認）`);
 }
 
-main().catch((cause) => {
+main().catch(async (cause) => {
   console.error(cause);
+  await writeFile(REPORT_FILE, `${JSON.stringify({ fatal: cause.message }, null, 2)}\n`, 'utf8');
   process.exitCode = 1;
 });
