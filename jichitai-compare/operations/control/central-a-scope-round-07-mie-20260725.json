@@ -4,20 +4,13 @@
   "prefectureCode": "24",
   "prefectureName": "三重県",
   "expectedMunicipalityCount": 29,
-  "checkedMunicipalityCount": 28,
-  "checkedServiceCount": 252,
-  "generatedAt": "2026-07-25T03:10:00+09:00",
-  "structuralFindingCount": 1,
-  "unavailableCount": 5,
-  "substantiveSuspectCount": 18,
-  "findings": [
-    {
-      "severity": "high",
-      "type": "missing_municipality_file",
-      "code": "24341",
-      "name": "菰野町"
-    }
-  ],
+  "checkedMunicipalityCount": 29,
+  "checkedServiceCount": 261,
+  "generatedAt": "2026-07-25T03:07:00+09:00",
+  "structuralFindingCount": 0,
+  "unavailableCount": 4,
+  "substantiveSuspectCount": 7,
+  "findings": [],
   "unavailable": [
     {
       "code": "24209",
@@ -41,13 +34,6 @@
       "source": "https://www.town.mie-kihoku.lg.jp/2025/03/25/4378/"
     },
     {
-      "code": "24543",
-      "name": "紀北町",
-      "service": "postpartumCare",
-      "summary": "妊娠期から子育て期の相談支援窓口は設置されているが、産後ケア事業の対象月齢・利用形態・料金を現行公式情報で確定できない。",
-      "source": "https://www.town.mie-kihoku.lg.jp/2025/03/25/4355/"
-    },
-    {
       "code": "24562",
       "name": "紀宝町",
       "service": "sickChildCare",
@@ -57,148 +43,46 @@
   ],
   "substantiveSuspects": [
     {
-      "type": "school_meal_currentness_check",
       "code": "24205",
       "name": "桑名市",
       "service": "schoolMeals",
-      "summary": "経済的理由で就学が困難と認められる世帯へ、学校給食費を含む就学援助を行う。",
-      "source": "https://www.city.kuwana.lg.jp/kyoikusoumu/kosodatekyouiku/school/24-11076-302-713.html"
+      "detail": "令和8年度の一般世帯の学校給食費・負担軽減条件を公式公開情報だけでは確定できない"
     },
     {
-      "type": "possible_any_child_access_omission",
       "code": "24205",
       "name": "桑名市",
       "service": "temporaryChildcare",
-      "summary": "家庭で保育されている未就園児を、保護者の就労・緊急事情・育児負担軽減等に応じて一時的に預かる。",
-      "source": "https://www.city.kuwana.lg.jp/hoiku/kosodatekyouiku/kosodate/24-11007-231-390.html"
+      "detail": "通常の一時保育は確認できるが、こども誰でも通園制度の現行実施条件を確定できない"
     },
     {
-      "type": "school_meal_currentness_check",
-      "code": "24209",
-      "name": "尾鷲市",
-      "service": "schoolMeals",
-      "summary": "尾鷲市立小中学校の学校給食費を無償化し、保護者の経済的負担を軽減する。",
-      "source": "https://www.city.owase.lg.jp/0000022682.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "24212",
-      "name": "熊野市",
-      "service": "schoolMeals",
-      "summary": "市内在住の児童生徒について、市立学校等の学校給食に係る保護者負担費用を市が全額補助する。",
-      "source": "https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00001184.html"
-    },
-    {
-      "type": "postpartum_scope_check",
-      "code": "24212",
-      "name": "熊野市",
-      "service": "postpartumCare",
-      "summary": "出産後に育児支援や保健指導が必要な母子へ、医療機関・助産所で7日以内の産後ケアを提供する。",
-      "source": "https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00000978.html"
-    },
-    {
-      "type": "possible_false_unavailable",
       "code": "24212",
       "name": "熊野市",
       "service": "temporaryChildcare",
-      "summary": "乳児等通園支援事業の設備・運営基準条例は施行済みだが、現行の実施施設、利用枠、料金等を公式公開情報で確認できない。",
-      "source": "https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00001321.html"
+      "detail": "乳児等通園支援事業の条例は施行済みだが、現行施設・利用枠・料金を確定できない"
     },
     {
-      "type": "school_meal_currentness_check",
-      "code": "24214",
-      "name": "いなべ市",
-      "service": "schoolMeals",
-      "summary": "令和7年4月から、市立小中学校の児童生徒の保護者から学校給食費を徴収しない。",
-      "source": "https://www2.city.inabe.mie.jp/reiki/reiki_honbun/r031RG00001258.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "24215",
-      "name": "志摩市",
-      "service": "schoolMeals",
-      "summary": "市内の小中学校に在籍する全児童生徒の学校給食費を完全無償化する。",
-      "source": "https://www.city.shima.mie.jp/kakuka/kyouiku/kyoikusomuka/gakkokyushoku/1585544349334.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "24216",
-      "name": "伊賀市",
-      "service": "schoolMeals",
-      "summary": "伊賀市立小中学校で提供する学校給食費を無償化する。",
-      "source": "https://www.city.iga.lg.jp/igakids/0000011429.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
       "code": "24441",
       "name": "多気町",
       "service": "schoolMeals",
-      "summary": "町内小中学校に同時に3人以上就学する世帯へ、第3子以降の学校給食費の3分の1を補助する。",
-      "source": "https://www.town.taki.mie.jp/section/reiki_int/reiki_honbun/r362RG00000252.html"
+      "detail": "第3子以降補助は確認できるが、令和8年度の一般世帯の給食費条件を確定できない"
     },
     {
-      "type": "postpartum_scope_check",
-      "code": "24442",
-      "name": "明和町",
-      "service": "postpartumCare",
-      "summary": "退院後の母子に心身のケアや育児支援を行う産後ケア事業を実施する。",
-      "source": "https://www.town.meiwa.mie.jp/main/soshiki/kodomo/kodomok/1663234482662.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "24461",
-      "name": "玉城町",
-      "service": "schoolMeals",
-      "summary": "学校給食の食材費高騰分と保護者負担を合わせ、児童生徒1人につき月2,000円相当を公費補助する。",
-      "source": "https://kizuna.town.tamaki.mie.jp/kosodatekyoiku/hoikukyoiku/gakko/gakko.html"
-    },
-    {
-      "type": "possible_any_child_access_omission",
       "code": "24461",
       "name": "玉城町",
       "service": "temporaryChildcare",
-      "summary": "満1歳以上の未就学児を対象とする一時保育制度があるが、現在は受入れを休止している。",
-      "source": "https://kizuna.town.tamaki.mie.jp/kosodatekyoiku/kosodate/ichijihoiku/ichijihoiku.html"
+      "detail": "通常の一時保育休止は確認できるが、こども誰でも通園制度の実施条件を確定できない"
     },
     {
-      "type": "school_meal_currentness_check",
       "code": "24471",
       "name": "大紀町",
       "service": "schoolMeals",
-      "summary": "町立小中学校の児童生徒について、保護者が負担する学校給食費の8割を町が助成する。",
-      "source": "https://www.town.taiki.mie.jp/soshiki/kyoikuiinkai/gyomu/school/409.html"
+      "detail": "8割助成制度は確認できるが、令和8年度の実負担条件を確定できない"
     },
     {
-      "type": "postpartum_scope_check",
-      "code": "24471",
-      "name": "大紀町",
-      "service": "postpartumCare",
-      "summary": "出産後の母子に対し、関係機関と連携して心身のケアと育児支援を行う産後ケア事業を実施する。",
-      "source": "https://www.town.taiki.mie.jp/material/files/group/7/kek_kodomokeikau_dai3ki_R703.pdf"
-    },
-    {
-      "type": "school_meal_currentness_check",
       "code": "24543",
       "name": "紀北町",
       "service": "schoolMeals",
-      "summary": "経済的理由で就学が困難と認められる小中学生の保護者へ、学校給食費を含む就学援助を行う。",
-      "source": "https://www.town.mie-kihoku.lg.jp/2024/06/07/100/"
-    },
-    {
-      "type": "possible_false_unavailable",
-      "code": "24543",
-      "name": "紀北町",
-      "service": "postpartumCare",
-      "summary": "妊娠期から子育て期の相談支援窓口は設置されているが、産後ケア事業の対象月齢・利用形態・料金を現行公式情報で確定できない。",
-      "source": "https://www.town.mie-kihoku.lg.jp/2025/03/25/4355/"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "24562",
-      "name": "紀宝町",
-      "service": "schoolMeals",
-      "summary": "町立保育所・幼稚園・小学校・中学校等の給食費を無償化する。",
-      "source": "https://www.town.kiho.lg.jp/tourism/kyuukyokuhimusyouka/"
+      "detail": "就学援助は確認できるが、令和8年度の一般世帯の給食費条件を確定できない"
     }
   ],
   "municipalities": [
@@ -827,6 +711,45 @@
       }
     },
     {
+      "code": "24341",
+      "name": "菰野町",
+      "status": "verified",
+      "updatedAt": "2026-07-25",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は町立小学校の学校給食費を国・町の負担軽減により保護者負担0円とする。",
+          "source": "https://www2.town.komono.mie.jp/site/kyouiku/9712.html",
+          "checkedAt": "2026-07-25"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後12か月未満の母子へ、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www2.town.komono.mie.jp/soshiki/8/2268.html",
+          "checkedAt": "2026-07-25"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www2.town.komono.mie.jp/soshiki/8/7040.html",
+          "checkedAt": "2026-07-25"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内空き家の売買・賃貸を空き家バンクで仲介し、移住・定住希望者へ物件情報を提供する。",
+          "source": "https://www2.town.komono.mie.jp/soshiki/10/1591.html",
+          "checkedAt": "2026-07-25"
+        }
+      }
+    },
+    {
       "code": "24343",
       "name": "朝日町",
       "status": "verified",
@@ -1181,11 +1104,11 @@
       "code": "24543",
       "name": "紀北町",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
-      "verifiedCount": 7,
-      "unavailableCount": 2,
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "needsMediumReviewCount": 0,
       "officialSourceCount": 9,
       "taskOfficialSourceCount": 9,
@@ -1197,10 +1120,10 @@
           "checkedAt": "2026-07-22"
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "妊娠期から子育て期の相談支援窓口は設置されているが、産後ケア事業の対象月齢・利用形態・料金を現行公式情報で確定できない。",
-          "source": "https://www.town.mie-kihoku.lg.jp/2025/03/25/4355/",
-          "checkedAt": "2026-07-22"
+          "status": "verified",
+          "summary": "支援が必要な出産後1年以内の母子へ、宿泊型・通所型・居宅訪問型の産後ケアを提供する。",
+          "source": "https://www.town.mie-kihoku.lg.jp/wp-content/uploads/2020/05/b6f0e70867176cc9aaa9a7c3a2f848f5.pdf",
+          "checkedAt": "2026-07-25"
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -1293,6 +1216,115 @@
           "checkedAt": "2026-07-22"
         }
       }
+    }
+  ],
+  "initialStructuralFindingCount": 1,
+  "resolvedStructuralFindingCount": 1,
+  "initialUnavailableCount": 5,
+  "initialSubstantiveSuspectCount": 18,
+  "confirmedErrorCount": 2,
+  "correctedMunicipalityCodes": [
+    "24341",
+    "24543"
+  ],
+  "confirmedCorrections": [
+    {
+      "type": "missing_municipality_and_task",
+      "count": 1,
+      "municipalityCodes": [
+        "24341"
+      ],
+      "detail": "菰野町の自治体JSONとtaskが欠落していたため9制度を公式情報から新規作成"
+    },
+    {
+      "type": "false_unavailable",
+      "service": "postpartumCare",
+      "count": 1,
+      "municipalityCodes": [
+        "24543"
+      ],
+      "detail": "紀北町第3期子ども・子育て支援事業計画で令和8年度の産後ケア実施を確認"
+    }
+  ],
+  "confirmedAccurateExamples": [
+    {
+      "code": "24209",
+      "service": "schoolMeals",
+      "detail": "尾鷲市の令和8年度学校給食費無償化を確認"
+    },
+    {
+      "code": "24212",
+      "service": "schoolMeals",
+      "detail": "熊野市の学校給食費全額補助を確認"
+    },
+    {
+      "code": "24214",
+      "service": "schoolMeals",
+      "detail": "いなべ市の市立小中学校給食費無償化を確認"
+    },
+    {
+      "code": "24215",
+      "service": "schoolMeals",
+      "detail": "志摩市の小中学校給食費完全無償化を確認"
+    },
+    {
+      "code": "24216",
+      "service": "schoolMeals",
+      "detail": "伊賀市の市立小中学校給食費無償化を確認"
+    },
+    {
+      "code": "24442",
+      "service": "postpartumCare",
+      "detail": "明和町の産後ケア事業を確認"
+    },
+    {
+      "code": "24562",
+      "service": "schoolMeals",
+      "detail": "紀宝町の保育所・幼稚園・小中学校等の給食費無償化を確認"
+    }
+  ],
+  "needsFurtherReview": [
+    {
+      "code": "24205",
+      "name": "桑名市",
+      "service": "schoolMeals",
+      "detail": "令和8年度の一般世帯の学校給食費・負担軽減条件を公式公開情報だけでは確定できない"
+    },
+    {
+      "code": "24205",
+      "name": "桑名市",
+      "service": "temporaryChildcare",
+      "detail": "通常の一時保育は確認できるが、こども誰でも通園制度の現行実施条件を確定できない"
+    },
+    {
+      "code": "24212",
+      "name": "熊野市",
+      "service": "temporaryChildcare",
+      "detail": "乳児等通園支援事業の条例は施行済みだが、現行施設・利用枠・料金を確定できない"
+    },
+    {
+      "code": "24441",
+      "name": "多気町",
+      "service": "schoolMeals",
+      "detail": "第3子以降補助は確認できるが、令和8年度の一般世帯の給食費条件を確定できない"
+    },
+    {
+      "code": "24461",
+      "name": "玉城町",
+      "service": "temporaryChildcare",
+      "detail": "通常の一時保育休止は確認できるが、こども誰でも通園制度の実施条件を確定できない"
+    },
+    {
+      "code": "24471",
+      "name": "大紀町",
+      "service": "schoolMeals",
+      "detail": "8割助成制度は確認できるが、令和8年度の実負担条件を確定できない"
+    },
+    {
+      "code": "24543",
+      "name": "紀北町",
+      "service": "schoolMeals",
+      "detail": "就学援助は確認できるが、令和8年度の一般世帯の給食費条件を確定できない"
     }
   ]
 }
