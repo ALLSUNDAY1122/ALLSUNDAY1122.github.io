@@ -40,7 +40,7 @@ jobs:
         working-directory: jichitai-compare
         env:
           SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.sha }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: npm run check:scope
 
       - name: Generate public municipality data
@@ -54,15 +54,6 @@ jobs:
       - name: Validate source and generated data
         working-directory: jichitai-compare
         run: npm run validate:generated
-
-      - name: Upload municipality identity errors
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: municipality-identity-errors
-          path: jichitai-compare/identity-validation-errors.json
-          if-no-files-found: ignore
-          retention-days: 7
 
       - name: Check JavaScript syntax
         working-directory: jichitai-compare
