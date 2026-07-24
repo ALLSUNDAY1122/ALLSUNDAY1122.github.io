@@ -4,7 +4,7 @@
   "assignedTeam": "東日本調査班",
   "branch": "region/east",
   "integrationBranch": "region/east",
-  "updatedAt": "2026-07-25T05:21:00+09:00",
+  "updatedAt": "2026-07-25T06:54:00+09:00",
   "status": "completed",
   "stage": "quality_audit_completed",
   "currentMunicipality": null,
@@ -20,14 +20,15 @@
     "registeredMunicipalities": 450,
     "requiredServices": 4050,
     "completedServices": 4050,
+    "needsMediumReviewServices": 0,
     "nationwidePublishedMunicipalities": 1741,
     "nationwideRemainingMunicipalities": 0,
-    "checkedAt": "2026-07-25T05:21:00+09:00"
+    "checkedAt": "2026-07-25T06:54:00+09:00"
   },
   "qualityVerification": {
     "coordinatorSession": "統括A②",
     "status": "completed_with_nonblocking_follow_up",
-    "finalizedAt": "2026-07-25T05:21:00+09:00",
+    "finalizedAt": "2026-07-25T06:54:00+09:00",
     "sessions": {
       "east-a": {
         "status": "completed",
@@ -48,22 +49,35 @@
         "checkpointSyncCiRunNumber": 7697
       }
     },
+    "postCompletionResolution": {
+      "trackingIssueNumber": 3166,
+      "trackingIssueStatus": "closed",
+      "pullRequestNumber": 3169,
+      "ciRunNumber": 7747,
+      "resolvedMunicipalityCount": 20,
+      "resolvedServiceCount": 30,
+      "verifiedServiceCount": 23,
+      "unavailableServiceCount": 7,
+      "needsMediumReviewServicesAfter": 0,
+      "nationwideCompletedServicesAfter": 15669,
+      "status": "success"
+    },
     "openEastPullRequestCount": 0,
     "qualityFollowUps": [
       {
         "issueNumber": 2847,
         "municipalityCode": "20602",
         "municipalityName": "栄村",
-        "reason": "公式サイトのタイムアウトが継続しているため、復旧後に公式条件を再確認する。",
+        "reason": "公式サイト停止中のため9制度をunavailableで安全公開し、復旧後に令和8年度条件を再確認する。",
         "publicationBlocking": false,
-        "status": "official_site_recovery_wait"
+        "status": "published_as_unavailable_waiting_for_official_site_recovery"
       }
     ]
   },
-  "lastAction": "東日本A・Bの10回精度監査、確定修正、全国同期、CI、公開確認を完了し、東日本B checkpointをmainへ同期した。",
+  "lastAction": "長野県20自治体・30制度の中確度状態をPR #3169・CI #7747で解消し、23制度をverified、栄村7制度をunavailableへ確定。東日本4,050制度のneeds_medium_reviewを0件とした。",
   "nextAction": "栄村公式サイト復旧後にIssue #2847を再監査する。その他は公式制度更新、公開差分、CI失敗、または新規修正依頼が発生した場合のみ再開する。",
-  "lastNationalIntegrationPr": 3130,
-  "lastNationalIntegrationAt": "2026-07-25T04:42:00+09:00",
-  "lastGeneratedPullRequest": 3130,
+  "lastNationalIntegrationPr": 3169,
+  "lastNationalIntegrationAt": "2026-07-25T06:50:00+09:00",
+  "lastGeneratedPullRequest": 3169,
   "humanDecisionRequired": false
 }
