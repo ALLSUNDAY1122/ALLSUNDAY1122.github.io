@@ -1,57 +1,77 @@
-name: Inspect e-Stat Municipality DOM
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  inspect:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.12'}
-      - run: python -m pip install --disable-pip-version-check beautifulsoup4
-      - name: Inspect page one
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          python <<'PY'
-          import json, urllib.request
-          from pathlib import Path
-          from bs4 import BeautifulSoup
-          url='https://www.e-stat.go.jp/municipalities/cities/areacode?year=2026&month=1&day=1&page=1'
-          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 municipality-audit/1.0'})
-          with urllib.request.urlopen(req,timeout=30) as r: html=r.read().decode('utf-8','replace')
-          soup=BeautifulSoup(html,'html.parser')
-          def describe_node(node):
-              out=[]; cur=node
-              for _ in range(7):
-                  if cur is None: break
-                  if getattr(cur,'name',None):
-                      out.append({'tag':cur.name,'attrs':dict(cur.attrs),'text':' '.join(cur.stripped_strings)[:500],'html':str(cur)[:2000]})
-                  cur=getattr(cur,'parent',None)
-              return out
-          code_nodes=[s for s in soup.find_all(string=lambda x:x and x.strip()=='01100')]
-          name_nodes=[s for s in soup.find_all(string=lambda x:x and x.strip()=='札幌市')]
-          tables=[]
-          for i,table in enumerate(soup.find_all('table')):
-              rows=[]
-              for tr in table.find_all('tr')[:5]:
-                  rows.append([' '.join(c.stripped_strings) for c in tr.find_all(['th','td'])])
-              tables.append({'index':i,'attrs':dict(table.attrs),'rows':rows,'text':' '.join(table.stripped_strings)[:1500]})
-          report={'url':url,'codeNodeCount':len(code_nodes),'nameNodeCount':len(name_nodes),'codeAncestors':[describe_node(n) for n in code_nodes[:3]],'nameAncestors':[describe_node(n) for n in name_nodes[:6]],'tables':tables}
-          Path('jichitai-compare/operations/control/e-stat-dom-debug-20260724.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
-          PY
-      - name: Commit DOM diagnostics
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Record e-Stat municipality DOM diagnostics'
-          git push origin HEAD
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
