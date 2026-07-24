@@ -1,0 +1,54 @@
+name: Central A Round07 Validation Helper
+
+on:
+  push:
+    branches: ['audit/central-a-round07-audit-helper-20260725']
+    paths: ['.github/workflows/central-a-round07-validation-helper.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round07-work-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run standard data checks
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+      - name: Record successful validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -- jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
+          cat > jichitai-compare/operations/control/central-a-scope-round-07-validation-20260725.json <<'JSON'
+          {
+            "schemaVersion": "1.0.0",
+            "auditId": "central-a-scope-round-07-mie-20260725",
+            "validatedAt": "2026-07-25T03:15:00+09:00",
+            "checks": {
+              "generatePublicMunicipalityData": "passed",
+              "generateNationalProgress": "passed",
+              "validateSourceAndGeneratedData": "passed",
+              "javascriptSyntax": "passed"
+            },
+            "result": "passed"
+          }
+          JSON
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/central-a-scope-round-07-validation-20260725.json
+          git commit -m 'ci: 三重県監査の標準データ検証成功を記録'
+          git push origin HEAD:audit/central-a-round07-work-20260725
