@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1562,
+    "municipalityCount": 1565,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -272563,6 +272563,497 @@
           },
           "source": {
             "url": "https://www.vill.mizukami.lg.jp/kiji003208/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "43510",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "name": "相良村",
+      "officialUrl": "https://www.vill.sagara.lg.jp/",
+      "status": "verified",
+      "summary": "相良村の必須9制度を公式情報で調査。6制度をverified、3制度をunavailableとして公開可能状態へ正規化。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで保険診療の自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "相良村に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "support": "健康保険適用の通院・入院、柔道整復術、治療用装具等の自己負担額を助成",
+            "payment": "県内外来は受給者証提示により原則窓口無料。県外外来・入院等は償還払い",
+            "excluded": "健康保険適用外費用、入院時食事療養費、学校管理下のけが等は対象外"
+          },
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/q/aview/17/2313.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "病後児保育の実施施設は確認できるが、2026年度の詳細条件を確定できない",
+          "notes": [
+            "暁保育園で病後児保育事業を実施していることは確認した。",
+            "2026年度の対象年齢、利用料金、開所時間、定員、登録・予約方法、病児対応の可否を示す村公式の現行案内を確認できないため推測で補完しない。",
+            "2026年度の比較条件を自治体公式公開情報だけでは確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
+          ],
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "unavailable",
+          "summary": "無償化対象施設と保育料軽減は確認できるが、2026年度の0～2歳児負担を確定できない",
+          "notes": [
+            "認可保育所等が幼児教育・保育無償化の対象であること、満3歳以上児の副食費助成制度、村独自の保育料軽減施策があることは確認した。",
+            "2026年度の0～2歳児保育料表、多子軽減、副食費・延長保育料の村独自支援を示す公式情報を確認できないため推測で補完しない。",
+            "2026年度の比較条件を自治体公式公開情報だけでは確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
+          ],
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "村立小中学校の学校給食費は保護者負担0円",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "相良村立小学校・中学校の児童生徒",
+            "elementarySchool": "給食費月額4,500円に対し、保護者等が納める額は0円",
+            "juniorHighSchool": "給食費月額5,000円に対し、保護者等が納める額は0円",
+            "application": "学校給食申込書を提出し、在籍中は申込みが継続する"
+          },
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/reiki/reiki_honbun/q479RG00000714.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "短期入所・通所・居宅訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "相良村に住所があり、産後の心身の回復や育児支援を必要とする母子",
+            "types": "短期入所型、通所型、居宅訪問型",
+            "support": "母親の休養、授乳・乳房ケア、育児相談、乳児の発育確認等を提供し、村が利用料を助成",
+            "application": "保健師へ相談後、村へ申請し、委託医療機関等で利用する"
+          },
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/q/aview/17/2703.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年度こども誰でも通園制度の現行利用条件を確認できない",
+          "notes": [
+            "村内保育園では従来の一時預かり事業を実施している。",
+            "一時預かりとは別に、2026年度の対象年齢、月間利用上限、料金、実施施設、利用時間、認定・面談・予約方法を示す村公式利用案内を確認できないため推測で補完しない。",
+            "2026年度の比較条件を自治体公式公開情報だけでは確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
+          ],
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住者の住宅取得を最大100万円、空き家改修を2分の1・上限100万円で支援",
+          "details": {
+            "target": "2024年4月1日以降に住宅取得・リフォームを予定し、補助住宅に5年間居住する等の要件を満たす移住者・定住者",
+            "housingPurchase": "移住者の住宅取得は上限100万円、定住者は上限50万円。40歳未満や中学生以下の扶養者には加算あり",
+            "renovation": "空き家の購入・賃借に伴うリフォームは費用の2分の1、上限100万円",
+            "other": "空き家解体後の新築は上限300万円、家財処分は上限10万円"
+          },
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/q/aview/201/1709.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.sagara.lg.jp/reiki/reiki_honbun/q479RG00000769.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ等を人吉球磨クリーンプラザへ直接搬入し、10kg当たり150円",
+          "details": {
+            "method": "相良村のごみ分別案内に従い、粗大ごみ等は人吉球磨クリーンプラザへ直接搬入する",
+            "fee": "2026年4月1日から10kg当たり150円。10kg未満は10kgとして計算",
+            "hours": "日曜日から金曜日の8時30分から17時。土曜日、祝日等は休場",
+            "excluded": "家電リサイクル法対象4品目等はクリーンプラザで回収せず、販売店・指定引取場所等で処理する"
+          },
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/q/aview/204/77.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.hitoyoshikuma.com/garbage/2004624",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.hitoyoshikuma.com/garbage/2000213",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・地震・ため池等の総合防災マップを公開",
+          "details": {
+            "coverage": "洪水浸水想定、土砂災害警戒区域、地震、避難所・避難場所、ため池等",
+            "formats": "相良村総合防災マップ、Web版防災マップ、ため池ハザードマップを公開",
+            "use": "住所や地図から災害リスクと避難場所・避難経路を確認できる"
+          },
+          "source": {
+            "url": "https://www.vill.sagara.lg.jp/q/aview/802/173.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.sagara.lg.jp/q/aview/802/1663.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "code": "43511",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "name": "五木村",
+      "officialUrl": "https://www.vill.itsuki.lg.jp/",
+      "status": "verified",
+      "summary": "五木村の必須9制度を公式情報で調査。6制度をverified、3制度をunavailableとして公開可能状態へ正規化。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで保険診療の自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "五木村に住所があり、18歳到達後最初の3月31日までの子ども",
+            "support": "健康保険適用の医療費から高額療養費・付加給付等を除いた自己負担額を助成",
+            "excluded": "生活保護、他の公費医療、学校管理下の災害共済給付等が優先される場合は対象外または調整",
+            "application": "保護者が受給資格認定を申請し、受給者証の交付を受ける"
+          },
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/reiki/reiki_honbun/q480RG00000694.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "2026年度の病児・病後児保育の利用条件を確認できない",
+          "notes": [
+            "村の計画等では病中・病後児保育の充実が課題として扱われている。",
+            "2026年度の実施施設、対象年齢、利用料金、開所時間、定員、登録・予約方法を示す村公式利用案内を確認できないため推測で補完しない。",
+            "2026年度の比較条件を自治体公式公開情報だけでは確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
+          ],
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "いつき保育園の保育料と副食費を全園児無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "いつき保育園を利用する園児",
+            "fee": "保育料を全園児無料",
+            "meal": "副食費も全園児無料",
+            "policy": "2026年度実施計画でも保育料無償化事業を継続"
+          },
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/kiji0032221/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "村立学校の学校給食費を無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "五木村立学校の児童生徒",
+            "support": "給食無料化事業として保護者負担を村が軽減し、学校給食費を無償化",
+            "fiscalYear": "2026年度実施計画に事業を計上",
+            "application": "村立学校在籍者の給食費負担軽減として実施"
+          },
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/kiji0032221/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "産後ケア事業の実施要綱は確認できるが、2026年度の利用条件を確定できない",
+          "notes": [
+            "2024年12月施行の五木村産後ケア事業実施要綱が現行例規に掲載されている。",
+            "対象期間、宿泊・通所・訪問等の利用形態、料金、利用上限、委託施設、申請方法を示す村民向け公式案内を確認できないため推測で補完しない。",
+            "2026年度の比較条件を自治体公式公開情報だけでは確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
+          ],
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年度こども誰でも通園制度の利用条件を確認できない",
+          "notes": [
+            "保育所・一時預かりに関する村の案内は確認できる。",
+            "一時預かりとは別に、2026年度の対象年齢、月間利用上限、料金、実施施設、利用時間、認定・面談・予約方法を示す村公式利用案内を確認できないため推測で補完しない。",
+            "2026年度の比較条件を自治体公式公開情報だけでは確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
+          ],
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク物件の改修・修繕費を5分の4、上限200万円補助",
+          "details": {
+            "target": "空き家バンク物件へ新たに入居し、5年以上居住する意思がある移住者等",
+            "support": "10万円以上の改修・修繕対象経費の5分の4以内、上限200万円",
+            "works": "補修、間取り変更、屋根・外壁、台所・浴室・トイレ、電気・給排水設備等",
+            "application": "賃貸借契約日から半年以内に、着工前の見積書・写真・契約書等を添えて申請する"
+          },
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/reiki/reiki_honbun/q480RG00000980.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "2026年度収集日程に従うほか、粗大ごみ等をクリーンプラザへ直接搬入可能",
+          "details": {
+            "collection": "地区別の2026年度ごみ収集カレンダーに従って排出する",
+            "directCarry": "粗大ごみ等は人吉球磨クリーンプラザへ直接搬入できる",
+            "fee": "2026年4月1日から直接搬入ごみは10kg当たり150円。10kg未満は10kgとして計算",
+            "excluded": "家電リサイクル法対象4品目は村収集・クリーンプラザの対象外"
+          },
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/kiji0032191/index.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.hitoyoshikuma.com/garbage/2004624",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.itsuki.lg.jp/kiji003368/index.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "風水害・土砂災害・地震・洪水浸水等の防災マップを公開",
+          "details": {
+            "coverage": "避難・風水害、土砂災害、地震、想定最大規模の洪水浸水区域等",
+            "maps": "村全図と西部・東部・南部・北部、五木小川・川辺川の地区別地図を公開",
+            "shelters": "避難所、持出品、避難経路等を確認できる"
+          },
+          "source": {
+            "url": "https://www.vill.itsuki.lg.jp/bousai/kiji0031042/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "43512",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "name": "山江村",
+      "officialUrl": "https://www.vill.yamae.lg.jp/",
+      "status": "verified",
+      "summary": "山江村の必須9制度を公式情報で調査。8制度をverified、1制度をunavailableとして公開可能状態へ正規化。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで保険診療の自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "山江村に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "support": "健康保険適用の医療費自己負担額を助成。入院時食事代、ベッド代、保険外負担等は対象外",
+            "payment": "熊本県内の外来は受給者証提示により原則窓口負担なし。県外受診や入院等は償還払い",
+            "application": "健康福祉課で受給者証の交付を受け、必要時は領収書等を添えて助成申請する"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/kiji003743/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "乳幼児から小学3年生までを人吉市との共同病児・病後児保育で預かる",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "facility": "人吉市の増田クリニック内『あひるハウス』",
+            "target": "保育所入所中の乳幼児または小学3年生までで、病気等により集団保育が困難かつ保護者が家庭保育できない子ども",
+            "hours": "平日8時15分から17時30分。土日祝日・医院休診日は休み",
+            "capacity": "人吉市利用者を含め定員10名",
+            "fee": "1日2,000円。連日利用は2日目以降1日1,000円。昼食・おやつ等は持参",
+            "application": "初回登録後、原則前日までに施設へ予約し、医師連絡票等を提出する"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/kiji003169/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "村独自に保育料と副食費を所得制限なしで完全無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "山江村に在住し、山江村から保育認定・入所決定を受けた子ども",
+            "free": "2025年4月から従来有償対象だった世帯を含め、保育料と副食費を所得制限なしで無償化",
+            "application": "無償化の適用には事前申請が必要",
+            "excluded": "延長保育料、教材費、行事費等の実費は施設により別途必要となる場合がある"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/kiji0031408/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "村内在住で村立小中学校に在籍する児童生徒の学校給食費を免除",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "村内の学校に在籍し、村内に住所を有する児童・生徒の保護者",
+            "support": "山江村学校給食費の管理に関する条例に基づき、原則として保護者が負担する学校給食費を免除",
+            "excluded": "教育扶助、就学援助、他市町村制度等で学校給食費の支給を受ける場合は重複免除の対象外",
+            "application": "村立学校の給食実施・管理制度により取り扱う"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/section/reiki_int/reiki_honbun/q481RG00000864.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・通所・訪問型産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "山江村に住民登録がある産後1年未満の母子で、家族の支援不足、心身の不調または育児不安がある方",
+            "types": "宿泊型、通所型、訪問型",
+            "usageLimit": "宿泊型5泊、通所型7回、訪問型3回。組合せて最大15回まで申請可能",
+            "facilities": "愛甲産婦人科医院、人吉さくら助産院、助産院COCORO等",
+            "application": "健康福祉課へ事前申請し、利用決定後に希望施設へ直接予約する"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/kiji0031138/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年度こども誰でも通園制度の現行利用条件を確認できない",
+          "notes": [
+            "保育所・認定こども園の入所案内や従来の子育て支援は確認できる。",
+            "2026年度の対象年齢、月間利用上限、料金、実施施設、利用時間、認定・面談・予約方法を示す村公式利用案内を確認できないため推測で補完しない。",
+            "2026年度の比較条件を自治体公式公開情報だけでは確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
+          ],
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "村内業者による住宅リフォーム費の2割、上限20万円を助成",
+          "details": {
+            "target": "山江村の住民基本台帳に登録され、本人・世帯員に村税等の滞納がなく、他制度の補助を受けていない方",
+            "works": "本人所有・居住部分について村内施工業者が行う税抜20万円以上の対象リフォーム工事",
+            "support": "対象工事費の20％、上限20万円。同一住宅につき1回限り",
+            "application": "契約・着工前に見積書、工事箇所写真、図面、納税証明等を添えて申請する"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/ijuu/kiji003318/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは人吉球磨クリーンプラザへ直接搬入し、10kg当たり150円",
+          "details": {
+            "method": "たんす、ソファ、ベッド等の粗大ごみは村の収集ステーションへ出さず、人吉球磨クリーンプラザへ直接搬入する",
+            "fee": "2026年4月1日から直接搬入ごみは10kg当たり150円。10kg未満は10kgとして計算",
+            "hours": "日曜日から金曜日の8時30分から17時。土曜日、祝日等は休場",
+            "excluded": "家電リサイクル法対象4品目等は販売店・指定引取場所等で処理する"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/kiji00361/index.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.hitoyoshikuma.com/garbage/2004624",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.yamae.lg.jp/kiji00364/index.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "全16行政区の洪水・土砂災害等を示す地域版防災マップを公開",
+          "details": {
+            "coverage": "河川氾濫時の浸水想定区域、土砂災害警戒区域、住民が確認した地域固有の危険箇所等",
+            "maps": "村内全16行政区の地域版防災マップを公開",
+            "latest": "第5・6・9・10区は2026年3月更新。村内各地区の更新版を順次公開",
+            "use": "居住地区の災害リスクと避難経路を事前確認できる"
+          },
+          "source": {
+            "url": "https://www.vill.yamae.lg.jp/bousai/kiji003537/index.html",
             "checkedAt": "2026-07-24"
           }
         }
