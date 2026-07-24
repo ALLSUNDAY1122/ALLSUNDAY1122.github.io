@@ -1,0 +1,21 @@
+
+> jichitai-compare-mvp@0.1.0 generate
+> node ./scripts/generate-municipalities.mjs
+
+415自治体の公開用JSONを生成しました: data/generated/municipalities.json
+generate_exit=0
+
+> jichitai-compare-mvp@0.1.0 progress
+> node ./scripts/update-progress.mjs
+
+415自治体・3735制度の全国進捗を生成しました: operations/progress.json
+progress_exit=0
+
+> jichitai-compare-mvp@0.1.0 validate:generated
+> node ./scripts/validate-data.mjs --require-generated
+
+ERROR: 豊郷町 / postpartumCare: eligibility.minAgeMonthsが不正です
+ERROR: 豊郷町 / postpartumCare: eligibility.maxAgeYearsが不正です
+検証失敗: 2件のエラー、0件の警告
+validate_exit=1
+syntax_exit=0
