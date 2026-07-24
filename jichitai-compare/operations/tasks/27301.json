@@ -1,1 +1,49 @@
-{"schemaVersion":"1.0.0","municipalityCode":"27301","municipalityName":"島本町","prefectureCode":"27","prefectureName":"大阪府","assignedTeam":"中日本調査班","status":"merged","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":0,"researchingCount":0,"unavailableCount":9,"needsMediumReviewCount":0,"currentBranch":"data/central-final-six-20260724","pullRequestNumber":2787,"lastCheckedAt":"2026-07-24","lastUpdatedAt":"2026-07-24T22:08:00+09:00","lastUpdatedBy":"中日本調査班A","officialSources":["https://www.town.shimamoto.lg.jp/"],"notes":["割当台帳と地域ブランチの完全性監査で欠落を検出し新規登録。","自治体公式公開情報で2026年度条件を確定できない制度は、制度不存在を断定せずunavailableとした。","PR #2787をregion/centralへ統合済み。最終CI run #6683はsuccess。"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "27301",
+  "municipalityName": "島本町",
+  "prefectureCode": "27",
+  "prefectureName": "大阪府",
+  "assignedTeam": "中日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 9,
+  "researchingCount": 0,
+  "unavailableCount": 0,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/central-final-six-20260724",
+  "pullRequestNumber": 2787,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T04:52:00+09:00",
+  "lastUpdatedBy": "中日本調査班A",
+  "officialSources": [
+    "https://www.town.shimamoto.lg.jp/site/kosodate/2735.html",
+    "https://www.town.shimamoto.lg.jp/site/kosodate/27824.html",
+    "https://www.town.shimamoto.lg.jp/site/kosodate/27885.html",
+    "https://www.town.shimamoto.lg.jp/soshiki/5/33680.html",
+    "https://www.town.shimamoto.lg.jp/site/kosodate/7005.html",
+    "https://www.town.shimamoto.lg.jp/site/kosodate/33348.html",
+    "https://www.town.shimamoto.lg.jp/soshiki/14/2662.html",
+    "https://www.town.shimamoto.lg.jp/soshiki/17/1534.html",
+    "https://www.town.shimamoto.lg.jp/site/bousai/30122.html"
+  ],
+  "notes": [
+    "割当台帳と地域ブランチの完全性監査で欠落を検出し新規登録。",
+    "自治体公式公開情報で2026年度条件を確定できない制度は、制度不存在を断定せずunavailableとした。",
+    "PR #2787をregion/centralへ統合済み。最終CI run #6683はsuccess。",
+    "担当範囲再検証で、町トップページのみを根拠に9制度をunavailableとしていた誤りを修正し、各制度の公式専用ページへ置換。"
+  ],
+  "blockers": []
+}
