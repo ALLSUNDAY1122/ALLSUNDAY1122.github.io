@@ -4,22 +4,29 @@
   "coordinatorSession": "統括A②",
   "regions": ["north", "east"],
   "status": "completed_with_nonblocking_follow_up",
-  "finalizedAt": "2026-07-25T05:21:00+09:00",
+  "finalizedAt": "2026-07-25T06:54:00+09:00",
   "nationwideInventory": {
     "registeredMunicipalities": 1741,
     "remainingMunicipalities": 0,
     "totalServices": 15669,
-    "progressBlobSha": "bedd671ec3c3759970be92ee7b5b18eb901dcce1"
+    "completedServices": 15669,
+    "verifiedServices": 14446,
+    "unavailableServices": 1223,
+    "needsMediumReviewServices": 0,
+    "completionRatePercent": 100,
+    "progressBlobSha": "f5454307c06a39d6a1ab6c17c565b91fc25763fd"
   },
   "regionalCompleteness": {
     "north": {
       "municipalities": 406,
       "requiredServices": 3654,
+      "needsMediumReviewServices": 0,
       "status": "passed"
     },
     "east": {
       "municipalities": 450,
       "requiredServices": 4050,
+      "needsMediumReviewServices": 0,
       "status": "passed"
     }
   },
@@ -57,6 +64,21 @@
       "checkpointBlobSha": "af722fc0a16cff3ffd419cb5e4c1315a8c4c92b1"
     }
   },
+  "postCompletionResolution": {
+    "trackingIssueNumber": 3166,
+    "trackingIssueStatus": "closed",
+    "pullRequestNumber": 3169,
+    "mergeSha": "bfb5c518d03f2148e8ecf32411b8c714241bb5c9",
+    "generationWorkflowRunId": 30128836668,
+    "finalCiRunNumber": 7747,
+    "finalCiRunId": 30128959652,
+    "resolvedMunicipalityCount": 20,
+    "resolvedServiceCount": 30,
+    "verifiedServiceCount": 23,
+    "unavailableServiceCount": 7,
+    "needsMediumReviewServicesAfter": 0,
+    "status": "success"
+  },
   "openRegionalPullRequests": {
     "north": 0,
     "east": 0
@@ -66,10 +88,12 @@
       "issueNumber": 2847,
       "municipalityCode": "20602",
       "municipalityName": "栄村",
+      "serviceCount": 9,
+      "publishedStatus": "unavailable",
       "status": "official_site_recovery_wait",
       "publicationBlocking": false
     }
   ],
   "temporaryWorkflowCleanup": "completed",
-  "nextAction": "Issue #2847の栄村公式サイト復旧を待ち、復旧後に再監査する。その他は公式制度更新、公開差分、CI失敗、または明示的な修正依頼が発生した場合のみ再開する。"
+  "nextAction": "Issue #2847の栄村公式サイト復旧を待ち、復旧後に9制度を令和8年度公式情報で再監査する。その他は公式制度更新、公開差分、CI失敗、または明示的な修正依頼が発生した場合のみ再開する。"
 }
