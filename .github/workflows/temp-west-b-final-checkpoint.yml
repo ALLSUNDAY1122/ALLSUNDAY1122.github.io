@@ -1,0 +1,35 @@
+name: Temporary West B Final Checkpoint
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  update:
+    if: github.event.issue.title == 'run-west-b-final-checkpoint-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build checkpoint branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git checkout -B ops/west-b-final-checkpoint-20260725 origin/main
+          node .github/temp-west-b-final-checkpoint.mjs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git commit -m "ops: 西日本B概略検証10回の完了状態を記録"
+          git push --force origin HEAD:ops/west-b-final-checkpoint-20260725
+          gh issue close "${{ github.event.issue.number }}" --comment "西日本Bの完了チェックポイントブランチを作成しました。"
