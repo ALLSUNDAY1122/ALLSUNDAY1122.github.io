@@ -25,10 +25,10 @@ jobs:
 
       - name: Audit 25 West B municipalities
         run: |
-          node <<'NODE'
-          const { readFile, writeFile, mkdir } = require('node:fs/promises');
-          const { dirname } = require('node:path');
-          const { URL } = require('node:url');
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile, mkdir } from 'node:fs/promises';
+          import { dirname } from 'node:path';
+          import { URL } from 'node:url';
 
           const codes = [
             '31201','31202','31203','31204','31325','31328','31329','31364','31370','31371',
