@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.happo.lg.jp/",
   "status": "verified",
   "summary": "八峰町の子育て・暮らしに関する9制度のうち8制度を確認済みで、1制度は公式情報で詳細未確認です。",
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳到達後最初の3月31日まで、所得制限なく保険診療の自己負担相当額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "target": "0歳から18歳到達後最初の3月31日までの児童",
         "coverage": "福祉医療費受給者証により医療保険の自己負担相当額を助成",
@@ -20,7 +23,10 @@
         "excluded": "健康診断、予防接種、入院時食事代、文書料、交通費等の保険適用外費用は対象外",
         "application": "福祉保健課で福祉医療費受給者証の交付申請を行う"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/contents-244", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/archive/contents-244",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
@@ -30,36 +36,54 @@
         "unconfirmed": "病児保育または病後児保育の現行実施施設、対象年齢、利用時間、料金、予約手順",
         "guidance": "福祉保健課または学校教育課へ現行の利用可否を確認する必要がある"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/genre/kurashi/lifeevent/kosodate", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/genre/kurashi/lifeevent/kosodate",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "令和7年度から町内子ども園等の保育料を完全無償化している。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "target": "町内の保育施設を利用する乳幼児",
         "fee": "2025年度から保育料を完全無償化",
         "facilities": "八森子ども園、峰浜ポンポコ子ども園等",
         "application": "入園・保育認定の手続きを学校教育課へ行う"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/p20230215123721", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/archive/p20230215123721",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "町立小中学校の学校給食費を半額助成する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "target": "八峰町の小中学校に通う児童生徒の保護者",
         "support": "小中学校の給食費を半額助成",
         "additionalSupport": "経済的に就学が困難な認定世帯には就学援助として学校給食費等を支援",
         "guidance": "助成の反映方法や町外通学者の取扱いは学校教育課へ確認"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/p20230215123721", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/archive/p20230215123721",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "生後4か月未満の乳児と母親を対象に、能代厚生医療センターで宿泊型産後ケアを最大7日提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 0},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
       "details": {
         "target": "生後4か月未満の子どもと母親で、母子ともに医療行為を必要としない方",
         "type": "宿泊型",
@@ -69,20 +93,39 @@
         "limit": "最大7日。生後4か月まで分割利用可能",
         "application": "利用希望日の1週間前までに福祉保健課へ申請"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/p20251209093915", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/archive/p20251209093915",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "疾病、出産、病人の付き添い等で家庭保育が困難な場合、町内子ども園で月14日以内の一時保育を利用できる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
-      "details": {
-        "facilities": "八森子ども園、峰浜ポンポコ子ども園",
-        "reasons": "保護者の疾病、出産、病人等の付き添いその他一時的に家庭保育が困難な場合",
-        "limit": "月14日以内",
-        "fee": "1日1,500円",
-        "application": "一時保育事業利用申込書を提出"
+      "summary": "通常の一時保育に加え、未就園の生後6か月から満3歳未満児が町内2園で月10時間まで無料利用できるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/contents-165", "checkedAt": "2026-07-24"}
+      "details": {
+        "temporaryFacilities": "八森子ども園、峰浜ポンポコ子ども園",
+        "temporaryReasons": "疾病、出産、病人の付き添い等で家庭保育が困難な場合",
+        "temporaryLimit": "月14日以内",
+        "temporaryFee": "1日1,500円",
+        "anyoneTarget": "保育所、認定こども園、幼稚園等に通っていない生後6か月から満3歳未満の子ども",
+        "anyoneFacilities": "八森子ども園、峰浜ポンポコ子ども園",
+        "anyoneLimit": "子ども1人につき月10時間まで",
+        "anyoneFee": "1時間300円だが、八峰町民は全額免除",
+        "application": "学校教育課へ利用認定を申請し、認定後に利用施設と面談・予約を行う"
+      },
+      "source": {
+        "url": "https://www.town.happo.lg.jp/uploads/public/archive_0000002863_00/%EF%BC%94%E6%9C%88%E5%8F%B7/240%5B01-28%5D.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.happo.lg.jp/archive/contents-165",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -94,7 +137,10 @@
         "purpose": "子育てしやすい環境づくりと安全・安心で快適な住環境の整備",
         "application": "予算がなくなり次第終了するため、工事着手前に建設課へ相談・申請"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/contents-65", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/archive/contents-65",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -105,7 +151,10 @@
         "collection": "毎月発行されるごみ収集予定表に従い、決められた時間までに排出",
         "businessWaste": "事業ごみは町収集対象外で、許可業者または処理場との直接契約が必要"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/contents-75", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/archive/contents-75",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -116,7 +165,10 @@
         "webMap": "現在地から最寄り避難所までのルート、距離、所要時間を検索可能",
         "access": "町公式サイトからPDF版とWEB版を閲覧可能"
       },
-      "source": {"url": "https://www.town.happo.lg.jp/archive/contents-129", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.happo.lg.jp/archive/contents-129",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }
