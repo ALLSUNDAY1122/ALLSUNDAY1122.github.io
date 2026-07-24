@@ -23,10 +23,10 @@
   "researchingCount": 0,
   "unavailableCount": 1,
   "needsMediumReviewCount": 0,
-  "currentBranch": "fix/coordinator-b-west-publication-2",
+  "currentBranch": "audit/33606-school-meals-fy2026",
   "pullRequestNumber": null,
   "lastCheckedAt": "2026-07-24",
-  "lastUpdatedAt": "2026-07-24T02:45:00+09:00",
+  "lastUpdatedAt": "2026-07-24T18:45:00+09:00",
   "lastUpdatedBy": "統括B全国統合",
   "officialSources": [
     "https://www.town.kagamino.lg.jp/site/kosodatesien/1884.html",
@@ -40,11 +40,13 @@
     "https://www.town.kagamino.lg.jp/soshiki/31/6465.html"
   ],
   "notes": [
-    "必須9制度を鏡野町公式情報で確認。",
-    "8制度はverified。",
-    "学校給食は令和8年度献立表と共同調理場運営を確認したが、一般世帯の小中学校給食費額、無償化・減免条件、申請方法を示す現行公式案内を確認できないため unavailable とした。",
-    "献立表や納付要件だけから金額・無償化条件を推測しない。",
-    "全国公開除外原因だったneeds_medium_reviewを解消し、9制度完了へ同期。"
+    "必須9制度を鏡野町公式情報で再監査し、8制度verified・1制度unavailableを維持。",
+    "2026年度献立表と学校給食共同調理場の運営を確認。",
+    "町の指定公金事務一覧に学校給食費が掲載され、個人情報ファイル簿には保護者等から給食費を徴収する給食費徴収台帳が記載されている。",
+    "2026年度一般世帯の小中学校給食費額、一般無償化、就学援助・減免条件、申請方法、徴収回数を示す利用者向け公式案内は未確認。",
+    "徴収事務の存在から金額や減免条件を推測せず、schoolMealsのunavailable判定を維持。",
+    "旧PR #1495統合後もtaskがpr_openだったためmergedへ同期。",
+    "PR #2702をregion/west向けに作成。"
   ],
   "blockers": []
 }

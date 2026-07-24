@@ -6,13 +6,16 @@
   "name": "海南市",
   "officialUrl": "https://www.city.kainan.lg.jp/",
   "status": "verified",
-  "summary": "海南市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病後児保育、学校給食費無償化、産後ケア、こども誰でも通園制度、空家改修補助、粗大ごみ、防災情報などを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "海南市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。令和8年度のこども誰でも通園制度、学校給食費無償化、産後ケア、若者世帯向け空家改修補助などを現行化。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "満18歳年度末までの子どもについて、保険診療の自己負担額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "満18歳に達する日以後の最初の3月31日まで",
         "start": "令和6年4月1日診療分から高校生相当年齢まで拡大",
@@ -20,12 +23,18 @@
         "schoolAccident": "学校管理下の負傷等で日本スポーツ振興センター災害共済給付対象となる場合は同制度を優先",
         "procedure": "転居・転出・保護者の住民票異動等がある場合は手続きが必要"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kenko_iryo/iryohijosei/1491289107908.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kenko_iryo/iryohijosei/1491289107908.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "市内3こども園で病後児保育を実施し、病児保育は他市町村施設を利用できる場合がある。",
-      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 12
+      },
       "details": {
         "sickChild": "海南市内では病児保育を実施していないが、海南市民が他市町村の病児保育施設を利用できる場合がある",
         "postIllnessFacilities": "きらら子ども園、みらい子ども園、五月山こども園",
@@ -34,82 +43,149 @@
         "fee": "公立2施設は無料、五月山こども園は1日2,500円と給食・おやつ等実費",
         "application": "前日までに施設へ空き状況を確認し、申請書・診療情報提供書等を提出"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/hoikushoninteikodomoen/1571363343498.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/hoikushoninteikodomoen/1571363343498.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/shien/1557625023702.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/shien/1557625023702.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と市民税非課税世帯0～2歳児は保育料無償。課税世帯0～2歳児は所得等に基づき算定する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeProgram": "3～5歳児と市町村民税非課税世帯0～2歳児の利用者負担額は無償",
         "taxableUnderThree": "課税世帯0～2歳児は保護者の市町村民税額等により決定",
         "unlicensedSecondChild": "認可外保育施設を利用する第2子以降の0～2歳児には一定額を限度とする助成制度あり",
-        "meal": "給食費等の実費は保育料無償化と別。3～5歳児の給食費は市独自施策で一定額まで無償化",
+        "meal": "海南市内の3～5歳児等の給食費を独自施策で一定額まで無償化",
+        "mealLimit": "施設内調理の幼稚園・保育所・認定こども園は月額6,100円または日額305円を限度",
         "verificationPolicy": "施設種別、認定区分、世帯課税状況ごとの負担を入園前に確認"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kosodate/kosodate_shien_joho/3459.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kosodate/kosodate_shien_joho/3459.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.city.kainan.lg.jp/kosodate/hoikusho/3455.html", "checkedAt": "2026-07-23"},
-        {"url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/shien/1573187883283.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kainan.lg.jp/kosodate/hoikusho/3455.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/shien/1573187883283.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "令和8年度も市立小中学校の学校給食費を無償化し、市外通学者等には給食費相当額を補助する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "target": "海南市立小学校・中学校の児童生徒",
         "period": "令和8年4月提供分から令和9年3月提供分まで給食費を徴収しない",
         "outsideSchools": "市内に住民票があり市外小中学校等へ通う児童生徒の保護者に相当額を補助",
         "allergy": "市立校でアレルギーにより給食を食べられず弁当を持参する児童生徒も補助対象",
-        "maximum": "補助額計算の上限は小学校1日300円・中学校1日350円"
+        "maximum": "補助額計算の上限は小学校1日300円・中学校1日350円",
+        "schoolAid": "令和8年度の就学援助における学校給食費は無償のため実費0円"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kakubusho/kyoikuiinkai/somuka/oshirase/6788.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kakubusho/kyoikuiinkai/somuka/oshirase/6788.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kainan.lg.jp/kosodate/gakko/1456900999184.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "産後1年未満の母子を対象に、宿泊型・通所型・居宅訪問型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "summary": "産後1年未満の母子と流産・死産後1年未満の方を対象に、宿泊型・通所型・居宅訪問型の産後ケアを提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "海南市に住民登録がある産後1年未満の母親と乳児。令和8年度から流産・死産後1年未満の方も対象",
         "types": "短期入所型、通所型、居宅訪問型",
-        "shortStay": "課税世帯1泊6,000円、非課税世帯3,000円、生活保護世帯無料、6日まで",
-        "dayAndVisit": "通所型は時間区分により300円または500円、訪問型500円。非課税世帯は軽減、生活保護世帯無料",
+        "shortStay": "午前10時から翌日午前10時。課税世帯6,000円、非課税世帯3,000円、生活保護世帯無料、6日まで",
+        "dayCareShort": "30分以上2時間未満。課税世帯300円、非課税世帯200円、生活保護世帯無料",
+        "dayCareLong": "2時間以上4時間以内。課税世帯500円、非課税世帯300円、生活保護世帯無料",
+        "homeVisit": "1回3時間以内。課税世帯500円、非課税世帯300円、生活保護世帯無料",
         "limit": "通所型と居宅訪問型は合計10回まで",
-        "application": "市へ申請後、利用票を受け取り、希望施設へ直接予約"
+        "application": "QRコード・オンラインフォームまたは健康課窓口で申請",
+        "flow": "市から利用票を郵送後、希望施設へ直接予約し、利用券を提出して施設へ直接支払う"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kenkoka/oshirase/4903.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kenkoka/oshirase/4903.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "保育施設に在籍していない生後6か月から3歳未満の子どもを、就労要件なしで月10時間まで預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 2},
+      "summary": "保育施設に在籍していない生後6か月から満3歳未満の子どもを、就労要件なしで月10時間まで預かる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
       "details": {
         "program": "乳児等通園支援事業（こども誰でも通園制度）",
-        "target": "海南市在住で保育所・認定こども園等に在籍していない0歳6か月から満3歳未満",
+        "target": "海南市在住で保育所・認定こども園・地域型保育・企業主導型保育施設に在籍していない0歳6か月から満3歳未満",
         "facility": "五月山こども園",
-        "hours": "平日9時～11時、13時～15時。子ども1人あたり月10時間まで",
+        "hours": "月曜～金曜の9時～11時、13時～15時。祝日、お盆、年末年始、年度末を除く",
         "capacity": "0歳・1歳・2歳各1人、計3人",
-        "fee": "1時間300円。生活保護世帯や低所得・要支援家庭は減免あり",
-        "procedure": "市の認定、施設での事前面談、総合支援システムでの予約が必要"
+        "limit": "子ども1人につき月10時間。未利用時間は翌月へ繰越不可",
+        "fee": "1時間300円。生活保護世帯は300円、所得割合算額7万7,101円未満世帯と要支援家庭は200円を1時間当たり免除",
+        "application": "初回利用希望月の前月15日までに子育て推進課へ認定申請。前年度認定者も年度ごとに再申請",
+        "account": "認定後、総合支援システムのログインIDが発行され、子どものアレルギー等を登録",
+        "interview": "システムで事前面談を申し込み、母子手帳を持参して安全確保に必要な情報を確認",
+        "reservation": "面談後、システムで空き状況を確認して予約",
+        "payment": "利用当日に施設へ直接支払う",
+        "care": "給食提供なし、水・お茶は提供。原則午睡なし、与薬なし",
+        "cancellation": "前日までにシステム手続きと施設連絡。当日キャンセルは予約時間分を利用済みとして月間枠から減算。利用料の扱いは施設確認"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/shien/7926.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kosodatesuishinka/kosodatesuishinkatorikumi/shien/7926.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "市外から移住して空家を改修する方に、工事費の3分の2・最大100万円を補助する。",
+      "summary": "令和8年度、移住者や若者世帯が空家を改修する費用の3分の2を、住宅区分に応じ最大120万円補助する。",
       "details": {
-        "program": "海南市空家リフォーム工事補助事業",
-        "target": "転居または移住に伴い空家を購入・譲受け・賃借し、リフォーム工事を行う方",
-        "migrantRate": "市外から移住する方は工事費の3分の2",
-        "maximum": "移住者向け上限100万円",
-        "conditions": "補助対象となる空家、居住期間、住民登録、工事着手前申請等の要件あり",
-        "mortgage": "要件に該当しフラット35を利用する場合、地域連携型による金利引下げの対象となる場合あり"
+        "program": "令和8年度海南市空家リフォーム工事補助事業",
+        "target": "移住に伴い空家を購入・譲受け、または空き家バンク登録物件を賃借してリフォームする方",
+        "purchaseMigrant": "購入・譲受け物件で市外から移住する方は工事費の3分の2、上限100万円",
+        "purchaseYoung": "購入・譲受け物件の若者世帯は工事費の3分の2、上限120万円",
+        "rentMigrant": "賃借物件で市外から移住する方は工事費の3分の2、上限50万円",
+        "rentYoung": "賃借物件の若者世帯は工事費の3分の2、上限60万円",
+        "youngDefinition": "40歳以下で中学生以下の子を扶養する方、または結婚5年以内の方。夫婦はいずれかが40歳以下で可",
+        "capacity": "募集10件程度、先着順。予算到達時は仮受付または終了の場合あり",
+        "application": "工事着手前に都市整備課へ事前確認・申込み",
+        "mortgage": "交付要件に該当しフラット35を利用する場合、当初5年間年0.5％の金利引下げ対象となる場合あり"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kakubusho/machizukuribu/toshiseibika/izyu/8165.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kakubusho/machizukuribu/toshiseibika/akiya_kanren/1604298898087.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kainan.lg.jp/kakubusho/machizukuribu/toshiseibika/izyu/5982.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "bulkyWaste": {
       "status": "verified",
@@ -123,7 +199,10 @@
         "directDelivery": "海南市クリーンセンターへの自己搬入は無料",
         "verificationPolicy": "処理券の単価は公式HTML本文で確認できないため推測しない"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kankyoka/cleancenter/oshirase/5823.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kakubusho/kurashibu/kankyoka/cleancenter/oshirase/5823.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -135,9 +214,15 @@
         "shelters": "指定緊急避難場所・指定避難所一覧を公開",
         "preparedness": "自宅・勤務先周辺の危険区域、避難場所、避難経路、所要時間を事前確認"
       },
-      "source": {"url": "https://www.city.kainan.lg.jp/kakubusho/soumubu/kikikanrika/saigaijoho/hazardmap/index.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kainan.lg.jp/kakubusho/soumubu/kikikanrika/saigaijoho/hazardmap/index.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.city.kainan.lg.jp/bosai/hinannituite/2975.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kainan.lg.jp/bosai/hinannituite/2975.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     }
   }
