@@ -1,0 +1,144 @@
+name: Yorugatari curated landing sharing
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
+      - yorugatari/assets/landing-share.js
+      - yorugatari/tools/ensure-landing-sharing.mjs
+      - yorugatari/tools/landing-share-audit.cjs
+      - yorugatari/tools/normalize-engagement.mjs
+      - yorugatari/tools/generate-discovery-pages.mjs
+      - .github/workflows/yorugatari-landing-sharing.yml
+
+concurrency:
+  group: yorugatari-curated-landing-sharing
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  ensure-sharing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Ensure landing sharing controls
+        shell: bash
+        run: |
+          node --check yorugatari/assets/landing-share.js
+          node --check yorugatari/tools/ensure-landing-sharing.mjs
+          node --check yorugatari/tools/landing-share-audit.cjs
+          node yorugatari/tools/ensure-landing-sharing.mjs
+          node <<'NODE'
+          const fs = require('node:fs');
+          for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
+            const html = fs.readFileSync(`yorugatari/${file}`, 'utf8');
+            if (!html.includes('id="landingShareButton"')) throw new Error(`Share button missing: ${file}`);
+            if (!html.includes('id="landingCopyButton"')) throw new Error(`Copy button missing: ${file}`);
+            if (!html.includes('assets/landing-share.js?v=20260724-001')) throw new Error(`Share runtime missing: ${file}`);
+          }
+          NODE
+
+      - name: Commit normalized landing pages
+        shell: bash
+        run: |
+          if git diff --quiet -- yorugatari/5min-horror.html yorugatari/bedtime-horror.html; then
+            echo "Curated landing sharing is already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add yorugatari/5min-horror.html yorugatari/bedtime-horror.html
+          git commit -m "Normalize Yorugatari landing sharing [skip ci]"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            git rebase --abort || true
+            git fetch origin main
+            sleep 3
+          done
+          exit 1
+
+  audit-sharing:
+    needs: ensure-sharing
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install browser
+        shell: bash
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Audit published landing sharing
+        id: audit
+        continue-on-error: true
+        run: node yorugatari/tools/landing-share-audit.cjs
+
+      - name: Record landing share report
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-landing-share-report.json
+          cp yorugatari-landing-share-report.json /tmp/yorugatari-landing-share-report.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-landing-share-report.json yorugatari/tools/landing-share-audit-latest.json
+            git add yorugatari/tools/landing-share-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari landing share audit [skip ci]"
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload landing share report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-landing-share-report
+          path: yorugatari-landing-share-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce sharing audit
+        if: always()
+        run: test "${{ steps.audit.outcome }}" = "success"
