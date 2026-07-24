@@ -4,9 +4,9 @@
   "assignedTeam": "北日本調査班",
   "branch": "region/north",
   "integrationBranch": "region/north",
-  "updatedAt": "2026-07-24T22:18:00+09:00",
+  "updatedAt": "2026-07-25T05:21:00+09:00",
   "status": "completed",
-  "stage": "nationwide_complete",
+  "stage": "quality_audit_completed",
   "currentMunicipality": null,
   "completedSinceLastRelease": 0,
   "completedMunicipalities": [],
@@ -22,12 +22,39 @@
     "completedServices": 3654,
     "nationwidePublishedMunicipalities": 1741,
     "nationwideRemainingMunicipalities": 0,
-    "checkedAt": "2026-07-24T22:18:00+09:00"
+    "checkedAt": "2026-07-25T05:21:00+09:00"
   },
-  "lastAction": "北日本406自治体を含む全国1,741自治体・15,669制度の完全公開と通常CI成功を確認した。",
-  "nextAction": "新規自治体調査を停止し、自治体公式情報の更新・差し戻し・CI失敗が発生した場合のみ品質監査を再開する。",
-  "lastNationalIntegrationPr": 2791,
-  "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
-  "lastGeneratedPullRequest": 2792,
+  "qualityVerification": {
+    "coordinatorSession": "統括A②",
+    "status": "completed",
+    "finalizedAt": "2026-07-25T05:21:00+09:00",
+    "sessions": {
+      "north-a": {
+        "status": "completed",
+        "completedRounds": 10,
+        "ciStatus": "success",
+        "auditedMunicipalities": 132,
+        "confirmedCorrections": 13,
+        "publicationVerification": "success",
+        "publicationPullRequestNumber": 3093
+      },
+      "north-b": {
+        "status": "completed",
+        "completedRounds": 10,
+        "ciStatus": "success",
+        "auditedMunicipalities": 107,
+        "auditedServices": 963,
+        "confirmedCorrections": 28,
+        "nationwidePullRequestNumber": 3133
+      }
+    },
+    "openNorthPullRequestCount": 0,
+    "qualityFollowUps": []
+  },
+  "lastAction": "北日本A・Bの10回精度監査、確定修正、全国同期、CI、公開確認を完了した。",
+  "nextAction": "自治体公式情報の更新、公開差分、CI失敗、または新規修正依頼が発生した場合のみ品質監査を再開する。",
+  "lastNationalIntegrationPr": 3133,
+  "lastNationalIntegrationAt": "2026-07-25T04:16:13+09:00",
+  "lastGeneratedPullRequest": 3133,
   "humanDecisionRequired": false
 }
