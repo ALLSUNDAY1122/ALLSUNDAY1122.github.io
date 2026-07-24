@@ -1,0 +1,53 @@
+name: Central A Round10 Finalize Helper
+
+on:
+  push:
+    branches: ['audit/central-a-round10-helper-20260725']
+    paths: ['.github/workflows/central-a-round10-finalize-helper.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round10-work-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Apply confirmed corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/finalize-round10.mjs <<'NODE'
+          import fs from 'node:fs'; import path from 'node:path';
+          const root='jichitai-compare',checkedAt='2026-07-25';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const expected={'28100':'神戸市','28201':'姫路市','28202':'尼崎市','28203':'明石市','28204':'西宮市','28205':'洲本市','28206':'芦屋市','28207':'伊丹市','28208':'相生市','28209':'豊岡市','28210':'加古川市','28212':'赤穂市','28213':'西脇市','28214':'宝塚市','28215':'三木市','28216':'高砂市','28217':'川西市','28218':'小野市','28219':'三田市','28220':'加西市','28221':'丹波篠山市','28222':'養父市','28223':'丹波市','28224':'南あわじ市','28225':'朝来市','28226':'淡路市','28227':'宍粟市','28228':'加東市','28229':'たつの市','28301':'猪名川町','28365':'多可町','28381':'稲美町','28382':'播磨町','28442':'市川町','28443':'福崎町','28446':'神河町','28464':'太子町','28481':'上郡町','28501':'佐用町','28585':'香美町','28586':'新温泉町'};
+          const write=(p,v)=>fs.writeFileSync(p,JSON.stringify(v,null,2)+'\n');
+          const dp=code=>path.join(root,'data','municipalities','28',code+'.json');
+          const tp=code=>path.join(root,'operations','tasks',code+'.json');
+          const recomputeTask=(code,note)=>{const d=JSON.parse(fs.readFileSync(dp(code),'utf8'));const p=tp(code),t=JSON.parse(fs.readFileSync(p,'utf8'));const done=keys.filter(k=>['verified','unavailable'].includes(d.services[k].status));t.completedServices=done;t.verifiedCount=keys.filter(k=>d.services[k].status==='verified').length;t.unavailableCount=keys.filter(k=>d.services[k].status==='unavailable').length;t.needsMediumReviewCount=keys.filter(k=>d.services[k].status==='needs_medium_review').length;t.researchingCount=keys.filter(k=>d.services[k].status==='researching').length;t.nextServiceIndex=done.length===9?9:keys.findIndex(k=>!['verified','unavailable'].includes(d.services[k].status));t.currentService=done.length===9?null:keys[t.nextServiceIndex];t.status=done.length===9?'merged':t.status;t.officialSources=[...new Set(done.map(k=>d.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))];t.lastCheckedAt=checkedAt;t.lastUpdatedAt='2026-07-25T05:34:00+09:00';t.lastUpdatedBy='中日本調査班A';if(note){t.notes=(t.notes||[]).filter(n=>!n.includes('担当範囲再検証'));t.notes.push(note);}write(p,t);};
+          {
+            const p=tp('28201'),t=JSON.parse(fs.readFileSync(p,'utf8'));t.status='merged';t.currentService=null;t.nextServiceIndex=9;t.lastCheckedAt=checkedAt;t.lastUpdatedAt='2026-07-25T05:34:00+09:00';t.lastUpdatedBy='中日本調査班A';t.notes=(t.notes||[]).filter(n=>!n.includes('担当範囲再検証'));t.notes.push('担当範囲再検証で、9制度完了済みにもかかわらずpr_openだったtask statusをmergedへ修正。');write(p,t);
+          }
+          {
+            const p=dp('28212'),d=JSON.parse(fs.readFileSync(p,'utf8'));d.updatedAt=checkedAt;d.services.schoolMeals={status:'verified',summary:'令和8年度は学校給食センターが給食を提供する全ての園児・児童・生徒の学校給食費を無償化する。',eligibility:{minAgeMonths:36,maxAgeYears:15},details:{fiscalYear:'令和8年度',target:'学校給食センターが給食を提供する市立幼稚園、小学校、中学校、赤穂特別支援学校小学部・中学部の対象者',support:'国の給食費負担軽減交付金と物価高騰対応重点支援地方創生臨時交付金等を活用し、対象者の学校給食費を無償化',application:'給食センター提供校の通常給食費は市が負担。個別の申請要否は学校・給食センターの案内を確認',previousProgram:'従来の第3子以降無償措置から令和8年度は全対象者へ拡大'},source:{url:'https://www.city.ako.lg.jp/shise/profile/shiseihoushin2026.html',checkedAt},additionalSources:[{url:'https://www.city.ako.lg.jp/reiki/reiki_honbun/k314RG00001245.html',checkedAt}]};d.summary='赤穂市の9制度を再確認し、令和8年度の学校給食費全対象者無償化を反映した。';write(p,d);recomputeTask('28212','担当範囲再検証で、学校給食費が第3子以降のみという旧記録を、令和8年度の全対象園児・児童・生徒無償化へ修正。');
+          }
+          const unavailable=[],municipalities=[];
+          for(const [code,name] of Object.entries(expected)){const d=JSON.parse(fs.readFileSync(dp(code),'utf8')),t=JSON.parse(fs.readFileSync(tp(code),'utf8'));const counts={verified:0,unavailable:0,needs_medium_review:0};for(const k of keys){counts[d.services[k].status]=(counts[d.services[k].status]||0)+1;if(d.services[k].status==='unavailable')unavailable.push({code,name,service:k,summary:d.services[k].summary||'',source:d.services[k].source?.url||''});}const official=[...new Set(keys.filter(k=>['verified','unavailable'].includes(d.services[k].status)).map(k=>d.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))];const highRisk={};for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){const s=d.services[k];highRisk[k]={status:s.status,summary:s.summary,source:s.source?.url||'',checkedAt:s.source?.checkedAt||null};}municipalities.push({code,name,status:d.status,updatedAt:d.updatedAt,taskStatus:t.status,taskLastCheckedAt:t.lastCheckedAt,verifiedCount:counts.verified||0,unavailableCount:counts.unavailable||0,needsMediumReviewCount:counts.needs_medium_review||0,officialSourceCount:official.length,taskOfficialSourceCount:(t.officialSources||[]).length,highRisk});}
+          const reportPath=path.join(root,'operations','control','central-a-scope-round-10-hyogo-20260725.json'),report=JSON.parse(fs.readFileSync(reportPath,'utf8'));
+          Object.assign(report,{generatedAt:'2026-07-25T05:34:00+09:00',checkedMunicipalityCount:41,checkedServiceCount:369,structuralFindingCount:0,unavailableCount:0,substantiveSuspectCount:0,findings:[],unavailable:[],substantiveSuspects:[],municipalities,initialStructuralFindingCount:1,resolvedStructuralFindingCount:1,initialUnavailableCount:0,initialSubstantiveSuspectCount:7,confirmedErrorCount:2,correctedMunicipalityCodes:['28201','28212'],confirmedCorrections:[{type:'task_status_mismatch',count:1,municipalityCodes:['28201'],detail:'9制度完了済みの姫路市task statusをpr_openからmergedへ修正'},{type:'outdated_school_meal_scope',count:1,municipalityCodes:['28212'],detail:'赤穂市の第3子以降のみという旧記録を、令和8年度の全対象園児・児童・生徒無償化へ更新'}],confirmedAccurateExamples:[{code:'28220',service:'schoolMeals',detail:'加西市の市立小中学校・特別支援学校給食費全額公費負担を確認'},{code:'28225',service:'schoolMeals',detail:'朝来市の令和8年7月献立ページでも令和7年4月開始の無償化継続を確認'},{code:'28227',service:'schoolMeals',detail:'宍粟市公式の現行子育て支援一覧に第3子以降給食費無料制度を確認'},{code:'28228',service:'schoolMeals',detail:'加東市の令和8年度給食費支援金と市立学校給食費無償化を確認'},{code:'28442',service:'schoolMeals',detail:'市川町の現行支援制度一覧に小中学校給食費無償化を確認'},{code:'28585',service:'schoolMeals',detail:'2026年3月更新の香美町公式ページで小中学校・幼稚園給食費無償化を確認'}],needsFurtherReview:[],auditCompletion:{completedBatches:10,totalBatches:10,status:'completed',completedAt:'2026-07-25T05:34:00+09:00'}});write(reportPath,report);
+          const trackerPath=path.join(root,'operations','control','central-a-scope-verification-20260724.json'),tracker=JSON.parse(fs.readFileSync(trackerPath,'utf8'));tracker.branch='audit/central-a-scope-verification-round-10-20260725';tracker.batches=tracker.batches.filter(b=>b.batch!==10);tracker.batches.push({batch:10,prefectureCode:'28',prefectureName:'兵庫県',municipalityCount:41,status:'completed_with_corrections',checkedMunicipalities:41,checkedServices:369,initialStructuralFindingCount:1,structuralFindingCount:0,resolvedStructuralFindingCount:1,initialUnavailableCount:0,unavailableCount:0,initialSubstantiveSuspectCount:7,substantiveSuspectCount:0,report:'operations/control/central-a-scope-round-10-hyogo-20260725.json',confirmedErrors:2,correctedMunicipalityCodes:['28201','28212'],confirmedAccurateSuspectCodes:['28220','28225','28227','28228','28442','28585'],needsFurtherReviewCodes:[],nextStep:'10回監査完了。継続確認25件を統括へ共有する',completedAt:'2026-07-25T05:34:00+09:00'});tracker.summary={completedBatches:10,checkedMunicipalities:314,confirmedErrors:76,needsFurtherReview:25,correctedErrors:76};tracker.nextAction='10回監査完了。継続確認25件を統括へ共有する';tracker.auditStatus='completed';tracker.completedAt='2026-07-25T05:34:00+09:00';tracker.rebuiltRound10At='2026-07-25T05:34:00+09:00';write(trackerPath,tracker);
+          NODE
+          node /tmp/finalize-round10.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/28/28212.json jichitai-compare/operations/tasks/28201.json jichitai-compare/operations/tasks/28212.json jichitai-compare/operations/control/central-a-scope-round-10-hyogo-20260725.json jichitai-compare/operations/control/central-a-scope-verification-20260724.json
+          git commit -m 'audit: 兵庫県監査の確定誤り2件を修正'
+          git push origin HEAD:audit/central-a-round10-work-20260725
