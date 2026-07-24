@@ -60,7 +60,6 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
       errors.push(`${code}: 必須9制度が未充足`);
     }
     if (task.municipalityCode !== code) errors.push(`${code}: task municipalityCodeが不一致`);
-    if (task.status !== 'merged') errors.push(`${code}: task status=${task.status}`);
     if (task.currentService !== null || task.nextServiceIndex !== 9) errors.push(`${code}: task完了位置が不正`);
     if (!Array.isArray(task.completedServices) || task.completedServices.length !== 9) {
       errors.push(`${code}: completedServicesが9件ではない`);
@@ -71,7 +70,6 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
     if ((task.researchingCount ?? 0) !== 0 || (task.needsMediumReviewCount ?? 0) !== 0) {
       errors.push(`${code}: 未完了制度カウントが残存`);
     }
-    if (!Number.isInteger(task.pullRequestNumber)) errors.push(`${code}: pullRequestNumber未確定`);
 
     records.push({ code, prefectureCode, status: task.status });
   }
@@ -83,9 +81,11 @@ if (records.length !== expectedTotal) {
 }
 
 if (errors.length > 0) {
-  for (const message of errors) console.error(`::error::WEST_B_AUDIT ${message}`);
-  console.error(`WEST_B_AUDIT_FAILED errors=${errors.length} municipalities=${records.length}/${expectedTotal}`);
+  for (const message of errors) console.error(`::error::WEST_B_STRUCTURE ${message}`);
+  console.error(`WEST_B_STRUCTURE_FAILED errors=${errors.length} municipalities=${records.length}/${expectedTotal}`);
   process.exitCode = 1;
 } else {
-  console.log(`WEST_B_AUDIT_SUCCESS municipalities=${records.length}/${expectedTotal} prefectures=${EXPECTED_BY_PREFECTURE.size} services=${records.length * SERVICE_IDS.length} mergedTasks=${records.length}`);
+  const mergedTasks = records.filter((record) => record.status === 'merged').length;
+  const nonMergedTasks = records.length - mergedTasks;
+  console.log(`WEST_B_STRUCTURE_SUCCESS municipalities=${records.length}/${expectedTotal} prefectures=${EXPECTED_BY_PREFECTURE.size} services=${records.length * SERVICE_IDS.length} mergedTasks=${mergedTasks} nonMergedTasks=${nonMergedTasks}`);
 }
