@@ -1,0 +1,77 @@
+name: Temporary East B checkpoint main sync v2
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ops/east-b-checkpoint-main-sync-v2-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TARGET_BRANCH: ops/east-b-checkpoint-main-sync-v2-20260725
+      TRIGGER_FILE: jichitai-compare/operations/control/east-b-checkpoint-main-sync-v2-trigger.txt
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/east-b-checkpoint-main-sync-v2-20260725
+          fetch-depth: 0
+      - name: Sync checkpoint when triggered
+        run: |
+          set -euo pipefail
+          if [ ! -f "${TRIGGER_FILE}" ]; then
+            echo 'trigger file absent; checkpoint already generated'
+            exit 0
+          fi
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main region/east
+            base_sha="$(git rev-parse origin/main)"
+            git reset --hard "${base_sha}"
+            git checkout origin/region/east -- jichitai-compare/operations/control/session-checkpoints/east-b.json
+
+            python <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('jichitai-compare/operations/control/session-checkpoints/east-b.json')
+          data=json.loads(path.read_text(encoding='utf-8'))
+          assert data['status']=='completed'
+          assert data['ciStatus']=='success'
+          assert data['verificationCampaign']['completedRounds']==10
+          assert data['verificationCampaign']['status']=='completed'
+          assert data['remainingUninvestigatedCount']==0
+          data['mainCheckpointSync']={
+              'sourceBranch':'region/east',
+              'sourcePullRequestNumber':3096,
+              'syncPullRequestNumber':3153,
+              'syncedAt':'2026-07-25T05:12:00+09:00',
+              'status':'success'
+          }
+          path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+            pushd jichitai-compare
+            npm run validate:generated
+            node --check app.js
+            popd
+
+            git fetch origin main
+            if [ "$(git rev-parse origin/main)" != "${base_sha}" ]; then
+              echo 'main advanced; retrying'
+              continue
+            fi
+
+            rm -f "${TRIGGER_FILE}"
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add -A
+            git diff --cached --check
+            git commit -m 'ops: 東日本Bの10回監査完了checkpointをmainへ同期'
+            git push --force-with-lease origin HEAD:${TARGET_BRANCH}
+            exit 0
+          done
+          echo 'main kept advancing; checkpoint not committed' >&2
+          exit 1
