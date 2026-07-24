@@ -29,6 +29,7 @@ jobs:
           node <<'NODE'
           const fs=require('fs'),path=require('path');
           const root='data/municipalities';
+          const serviceIds=JSON.parse(fs.readFileSync('data/service-definitions.json','utf8')).services.map((service)=>service.id);
           const westPrefixes=new Set(['31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47']);
           const files=[];
           function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else if(/^\d{5}\.json$/.test(e.name))files.push(p)}}
@@ -51,11 +52,22 @@ jobs:
             data.updatedAt='2026-07-24';
             fs.writeFileSync(file,JSON.stringify(data)+'\n');
             const taskPath=`operations/tasks/${code}.json`; const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
-            const keys=Object.keys(data.services??{});
-            task.status='merged'; task.currentService=null; task.nextServiceIndex=9; task.completedServices=keys;
-            task.verifiedCount=keys.filter(k=>data.services[k]?.status==='verified').length;
-            task.researchingCount=0; task.unavailableCount=keys.filter(k=>data.services[k]?.status==='unavailable').length;
-            task.needsMediumReviewCount=0; task.lastCheckedAt='2026-07-24'; task.lastUpdatedAt='2026-07-24T21:15:00+09:00'; task.lastUpdatedBy='全国統括'; task.blockers=[];
+            const entries=serviceIds.map((id)=>[id,data.services?.[id]]);
+            task.status='merged';
+            task.currentService=null;
+            task.nextServiceIndex=serviceIds.length;
+            task.completedServices=[...serviceIds];
+            task.verifiedCount=entries.filter(([,service])=>service?.status==='verified').length;
+            task.researchingCount=0;
+            task.unavailableCount=entries.filter(([,service])=>service?.status==='unavailable').length;
+            task.needsMediumReviewCount=0;
+            task.officialSources=[...new Set(entries
+              .filter(([,service])=>['verified','unavailable'].includes(service?.status)&&/^https:\/\//u.test(service?.source?.url??''))
+              .map(([,service])=>service.source.url))];
+            task.lastCheckedAt='2026-07-24';
+            task.lastUpdatedAt='2026-07-24T21:15:00+09:00';
+            task.lastUpdatedBy='全国統括';
+            task.blockers=[];
             task.notes=Array.isArray(task.notes)?task.notes:task.notes?[String(task.notes)]:[];
             task.notes.push(`2026-07-24: needs_medium_reviewの${converted.length}制度を、公式公開情報で現行条件を確定できないためunavailableへ保守的に確定。制度不存在は断定しない。`);
             fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
