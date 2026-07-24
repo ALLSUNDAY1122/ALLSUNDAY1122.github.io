@@ -17,7 +17,7 @@
     "45",
     "47"
   ],
-  "updatedAt": "2026-07-25T01:34:00+09:00",
+  "updatedAt": "2026-07-25T02:05:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -27,7 +27,7 @@
   "ciStatus": "success",
   "completedSinceSplit": [],
   "blocked": [],
-  "nextAction": "概略検証第5回として、徳島県の残り4自治体、愛媛県20自治体、佐賀県1自治体をコード順で検証する。全10回程度で担当250自治体を網羅する。",
+  "nextAction": "概略検証第6回として、佐賀県の残り自治体から開始し、長崎県へ進む。",
   "completionEvidence": {
     "assignedPrefectureCount": 11,
     "assignedMunicipalityCount": 250,
@@ -255,29 +255,35 @@
   "roughValidation": {
     "status": "in_progress",
     "plannedCycles": 10,
-    "completedCycles": 4,
-    "auditedMunicipalityCount": 100,
-    "auditedServiceCount": 900,
-    "remainingMunicipalityCount": 150,
-    "detectedResearchContentErrorCount": 0,
-    "detectedSourceMaintenanceIssueCount": 3,
-    "correctedSourceMaintenanceIssueCount": 3,
+    "completedCycles": 5,
+    "auditedMunicipalityCount": 125,
+    "auditedServiceCount": 1125,
+    "remainingMunicipalityCount": 125,
+    "detectedResearchContentErrorCount": 1,
+    "detectedSourceMaintenanceIssueCount": 4,
+    "correctedSourceMaintenanceIssueCount": 4,
     "lastCycle": {
-      "cycle": 4,
-      "auditPullRequestNumber": 2973,
-      "auditCiRunNumber": 7235,
-      "auditMergeCommit": "3263aba63c88b9b3aa53e729b60db91581e8b6b6",
-      "auditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-04-20260725.json",
-      "aggregateReviewFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycles-03-04-review-20260725.json",
+      "cycle": 5,
+      "auditPullRequestNumber": 3005,
+      "auditCiRunNumber": 7319,
+      "auditMergeCommit": "00c349840f04636c1577d641bc25901db12657db",
+      "auditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-05-20260725.json",
+      "reviewFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-05-review-20260725.json",
       "municipalityCount": 25,
       "serviceCount": 225,
       "prefectureCodes": [
-        "35",
-        "36"
+        "36",
+        "38",
+        "41"
       ],
       "manualSpotCheckCount": 5,
-      "contentErrorCount": 0,
-      "sourceMaintenanceIssueCount": 0
+      "contentErrorCount": 1,
+      "correctedContentErrorCount": 1,
+      "sourceMaintenanceIssueCount": 1,
+      "correctedSourceMaintenanceIssueCount": 1,
+      "correctionPullRequestNumber": 3011,
+      "correctionCiRunNumber": 7307,
+      "correctionMergeCommit": "5ca3e822317f908c3aa369a9f78fa25a4c837e70"
     },
     "cycleHistory": [
       {
@@ -315,12 +321,25 @@
         "sourceMaintenanceIssueCount": 0,
         "auditPullRequestNumber": 2973,
         "auditCiRunNumber": 7235
+      },
+      {
+        "cycle": 5,
+        "municipalityCount": 25,
+        "serviceCount": 225,
+        "contentErrorCount": 1,
+        "correctedContentErrorCount": 1,
+        "sourceMaintenanceIssueCount": 1,
+        "auditPullRequestNumber": 3005,
+        "auditCiRunNumber": 7319,
+        "correctionPullRequestNumber": 3011,
+        "correctionCiRunNumber": 7307
       }
     ],
     "nextCycle": {
-      "cycle": 5,
+      "cycle": 6,
       "plannedMunicipalityCount": 25,
-      "scopePolicy": "徳島県の残り4自治体、愛媛県20自治体、佐賀県1自治体をコード順で検証する"
-    }
+      "scopePolicy": "佐賀県の残り自治体から開始し、長崎県へ進む"
+    },
+    "correctedResearchContentErrorCount": 1
   }
 }
