@@ -226587,7 +226587,7 @@
       "name": "和歌山市",
       "officialUrl": "https://www.city.wakayama.wakayama.jp/",
       "status": "verified",
-      "summary": "和歌山市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児保育、学校給食費無償化、産後ケア、三世代住宅助成、粗大ごみ、防災情報などを記録。",
+      "summary": "和歌山市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児保育、学校給食費無償化、産後ケア、令和8年度こども誰でも通園制度、三世代住宅助成、粗大ごみ、防災情報などを記録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -226605,7 +226605,7 @@
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1001105/1001751.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "sickChildCare": {
@@ -226625,7 +226625,7 @@
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1034190/1001795.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {
@@ -226644,7 +226644,7 @@
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1001104/1010398/1001802.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "schoolMeals": {
@@ -226663,7 +226663,7 @@
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/kurashi/gakkou_kyouiku/1008317/1050471/1050464.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "postpartumCare": {
@@ -226675,40 +226675,67 @@
           },
           "details": {
             "target": "申請・利用時に和歌山市に住民登録がある産後1年未満の母親と乳児で、母子とも医療行為を必要としない方",
+            "miscarriageStillbirth": "流産・死産後に心身の不調や育児不安等がある方も相談・利用対象",
             "types": "宿泊型、デイサービス型、アウトリーチ型",
             "limit": "宿泊型は原則6日以内、デイサービス型と訪問型は合わせて5回以内",
+            "time": "デイサービス型は1回4時間、訪問型は1回おおむね2時間",
             "taxableFee": "宿泊型1泊6,000円、デイサービス型1回500円、訪問型1回1,000円",
             "nonTaxableFee": "宿泊型1泊3,000円、デイサービス型1回300円、訪問型1回500円",
-            "publicAssistance": "生活保護世帯は無料"
+            "publicAssistance": "生活保護世帯は無料",
+            "application": "市公式のオンライン申請または所定申請書で事前申請",
+            "fiscalYearTransition": "令和7年度に利用承認済みでも、2026年4月1日以降の利用は令和8年度の自己負担額を適用"
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1001102/1013174.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1001102/1063636.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "家庭での保育が一時的に困難となった就学前児童を、公立保育所・認定こども園等で預かる。",
+          "summary": "従来の一時預かりに加え、令和8年度は未就園の生後6か月から満3歳未満を月10時間まで預かるこども誰でも通園制度を実施する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "target": "保護者の傷病、就労、出産、災害、冠婚葬祭等により家庭保育が困難な就学前児童",
-            "publicFee": "公立保育所・認定こども園は1日1,900円",
-            "hours": "8時30分から16時30分",
-            "limit": "利用理由により月12日以内または月2日以内等",
-            "privateFacilities": "民間施設は年齢・施設により1日2,500～3,000円等",
-            "freeProgram": "保育認定を受けた3～5歳児および非課税世帯1～2歳児は無償化対象となる場合あり"
+            "traditionalTemporaryCare": {
+              "target": "保護者の傷病、就労、出産、災害、冠婚葬祭等により家庭保育が困難な就学前児童",
+              "publicFee": "公立保育所・認定こども園は1日1,900円",
+              "hours": "8時30分から16時30分",
+              "limit": "利用理由により月12日以内または月2日以内等",
+              "privateFacilities": "民間施設は年齢・施設により1日2,500～3,000円等",
+              "freeProgram": "保育認定を受けた3～5歳児および非課税世帯1～2歳児は無償化対象となる場合あり"
+            },
+            "anyoneUseChildcare": {
+              "fiscalYear": "令和8年度",
+              "target": "保育所、幼稚園、認定こども園、地域型保育事業所、企業主導型保育施設を利用していない生後6か月から満3歳未満の子ども。満3歳の誕生日の前々日まで",
+              "unlicensedChildcare": "認可外保育施設を利用している子どもは対象になり得る",
+              "employment": "保護者の就労要件なし",
+              "limit": "子ども1人につき月10時間まで",
+              "application": "こども誰でも通園制度総合支援システム『つうえんポータル』から、初回利用希望日の30日前までを目安に認定申請",
+              "certification": "市の認定後に利用者IDが発行される",
+              "interview": "利用希望施設へ子ども同伴の初回面談を申し込み、面談後に利用予約",
+              "facilityConditions": "実施施設、利用時間、利用料、給食・おやつ等の実費、予約・取消条件は施設一覧と各施設の案内で確認"
+            }
           },
           "source": {
-            "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1034190/1001793.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1001104/1061597.html",
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
+              "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1034190/1001793.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
               "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1034190/index.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-24"
             }
           ]
         },
@@ -226717,15 +226744,16 @@
           "summary": "市外から転入する子世帯が三世代で同居・近居する住宅取得・リフォーム費を最大30万円助成する。",
           "details": {
             "program": "和歌山市三世代ファミリー助成金",
+            "fiscalYear": "令和8年度は2026年4月1日から予算範囲内で受付",
             "target": "市外から転入し、中学生以下の子とその親を含む子世帯が、市内在住の親・祖父母世帯と新たに同居または直線2km以内で近居する場合",
             "rate": "住宅取得または対象リフォーム費の10分の1",
             "maximum": "1戸あたり上限30万円",
-            "application": "住宅取得・リフォーム支払・転入等のうち基準日から30日以内",
-            "budget": "令和8年度は予算範囲内で受付"
+            "application": "住宅取得・リフォーム支払・転入等の基準日から30日以内に申請。対象要件と基準日の事前確認が必要",
+            "budget": "予算額に達した場合は受付終了"
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/kurashi/kosodate/1001103/1012174.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "bulkyWaste": {
@@ -226741,7 +226769,7 @@
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/faq/gomikankyou/1007991/1007994.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "disasterPrevention": {
@@ -226756,7 +226784,7 @@
           },
           "source": {
             "url": "https://www.city.wakayama.wakayama.jp/kurashi/bousai_bouhan_koutsu/1000032/1036426/index.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         }
       }
