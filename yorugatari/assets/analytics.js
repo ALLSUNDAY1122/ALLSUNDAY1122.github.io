@@ -15,7 +15,9 @@
     ['threads|launch_20260723|spare_key', 'launch-20260723-threads-spare-key'],
     ['line|launch_20260723|hired_experience', 'launch-20260723-line-hired-experience'],
     ['x|launch_20260724|five_minute_12', 'launch-20260724-x-five-minute'],
-    ['threads|launch_20260724|five_minute_12', 'launch-20260724-threads-five-minute']
+    ['threads|launch_20260724|five_minute_12', 'launch-20260724-threads-five-minute'],
+    ['x|launch_20260724|bedtime_8', 'launch-20260724-x-bedtime'],
+    ['threads|launch_20260724|bedtime_8', 'launch-20260724-threads-bedtime']
   ]);
 
   function sourceChannel() {
