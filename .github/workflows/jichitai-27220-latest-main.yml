@@ -1,0 +1,55 @@
+name: Jichitai 27220 Latest Main Autogenerate
+
+on:
+  push:
+    branches:
+      - coord/sync-audit-27220-20260724-final
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Reset to latest main and restore Minoh audit
+        run: |
+          cp jichitai-compare/data/municipalities/27/27220.json /tmp/27220-municipality.json
+          cp jichitai-compare/operations/tasks/27220.json /tmp/27220-task.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/27220-municipality.json jichitai-compare/data/municipalities/27/27220.json
+          cp /tmp/27220-task.json jichitai-compare/operations/tasks/27220.json
+
+      - name: Generate and validate latest outputs
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Commit generated outputs and remove temporary workflow
+        run: |
+          rm .github/workflows/jichitai-27220-latest-main.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A \
+            .github/workflows/jichitai-27220-latest-main.yml \
+            jichitai-compare/data/municipalities/27/27220.json \
+            jichitai-compare/operations/tasks/27220.json \
+            jichitai-compare/data/generated \
+            jichitai-compare/municipality/27220 \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/sitemap.xml
+          git commit -m "chore: 最新main基準で箕面市全国同期を再生成"
+          git push --force-with-lease origin "HEAD:${GITHUB_REF_NAME}"
