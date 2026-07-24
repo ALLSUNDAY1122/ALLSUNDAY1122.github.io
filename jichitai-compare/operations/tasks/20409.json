@@ -1,1 +1,53 @@
-{"schemaVersion":"1.0.0","municipalityCode":"20409","municipalityName":"平谷村","prefectureCode":"20","prefectureName":"長野県","assignedTeam":"東日本調査班","status":"merged","currentService":"postpartumCare","nextServiceIndex":4,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":6,"researchingCount":0,"unavailableCount":2,"needsMediumReviewCount":1,"currentBranch":null,"pullRequestNumber":2640,"lastCheckedAt":"2026-07-25","lastUpdatedAt":"2026-07-25T04:22:00+09:00","lastUpdatedBy":"統括A","officialSources":["https://www.hirayamura.jp/pages/221/","https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001311.html","https://www.hirayamura.jp/pages/330/","https://www.hirayamura.jp/pages/317/","https://www.hirayamura.jp/pages/100/","https://www.hirayamura.jp/pages/54/"],"notes":["初回調査では5制度verified・4制度unavailableとしてPR #1927でregion/eastへ統合。","品質再監査として飯田市と平谷村の定住自立圏協定、飯田市病児保育事業実施要綱、おひさまはるる現行案内、平谷村子育てサポートを確認。","病児・病後児保育は生後6か月～小学校在学中、健和会病院内おひさまはるる、1日6人、8時～18時、5時間以上2,000円・5時間未満1,000円、非課税世帯等の減免と確認しverifiedへ改善。","産後支援は西澤病院の授乳・育児相談を1時間3,000円・5回分助成すると確認し、unavailableからneeds_medium_reviewへ改善。","一般的な一時預かり・こども誰でも通園制度と粗大ごみは令和8年度利用条件を確定できずunavailableを維持。","再監査後は6制度verified・1制度needs_medium_review・2制度unavailable。","CI run #6426で自治体データ・全国進捗・task整合・JavaScript検証が成功。","PR #2640をregion/eastへ統合。","merge SHA: 7a3fd8fea97ca56ba85779e259beec67b12b46ed","東日本A最終整合監査で検出した地方正本未同期を最新mainへ全国品質同期。"],"blockers":["宿泊型・通所型・訪問型産後ケアの実施施設、対象月齢、利用日数、自己負担、申請方法は住民課への最終確認が必要。","一時預かり・乳児等通園支援事業の実施施設、対象年齢、利用料、予約方法は住民課への確認が必要。","粗大ごみの令和8年度収集日、申込方法、処理手数料、持込施設は住民課への確認が必要。"]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "20409",
+  "municipalityName": "平谷村",
+  "prefectureCode": "20",
+  "prefectureName": "長野県",
+  "assignedTeam": "東日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 7,
+  "researchingCount": 0,
+  "unavailableCount": 2,
+  "needsMediumReviewCount": 0,
+  "currentBranch": null,
+  "pullRequestNumber": 2640,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T06:46:00+09:00",
+  "lastUpdatedBy": "統括A",
+  "officialSources": [
+    "https://www.hirayamura.jp/pages/221/",
+    "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001311.html",
+    "https://www.hirayamura.jp/pages/330/",
+    "https://www.hirayamura.jp/pages/317/",
+    "https://www.hirayamura.jp/pages/100/",
+    "https://www.hirayamura.jp/pages/54/"
+  ],
+  "notes": [
+    "初回調査では5制度verified・4制度unavailableとしてPR #1927でregion/eastへ統合。",
+    "品質再監査として飯田市と平谷村の定住自立圏協定、飯田市病児保育事業実施要綱、おひさまはるる現行案内、平谷村子育てサポートを確認。",
+    "病児・病後児保育は生後6か月～小学校在学中、健和会病院内おひさまはるる、1日6人、8時～18時、5時間以上2,000円・5時間未満1,000円、非課税世帯等の減免と確認しverifiedへ改善。",
+    "産後支援は西澤病院の授乳・育児相談を1時間3,000円・5回分助成すると確認し、unavailableからneeds_medium_reviewへ改善。",
+    "一般的な一時預かり・こども誰でも通園制度と粗大ごみは令和8年度利用条件を確定できずunavailableを維持。",
+    "再監査後は6制度verified・1制度needs_medium_review・2制度unavailable。",
+    "CI run #6426で自治体データ・全国進捗・task整合・JavaScript検証が成功。",
+    "PR #2640をregion/eastへ統合。",
+    "merge SHA: 7a3fd8fea97ca56ba85779e259beec67b12b46ed",
+    "東日本A最終整合監査で検出した地方正本未同期を最新mainへ全国品質同期。",
+    "Issue #3166の中確度30制度を再判定。制度の中核条件を公式情報で確認済みの23件はverifiedへ確定し、公式サイト停止中の栄村7件は推測せずunavailableへ統一。"
+  ],
+  "blockers": []
+}

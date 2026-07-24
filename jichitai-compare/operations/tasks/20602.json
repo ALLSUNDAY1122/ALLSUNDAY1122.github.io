@@ -6,19 +6,36 @@
   "prefectureName": "長野県",
   "assignedTeam": "東日本調査班",
   "status": "merged",
-  "currentService": "childMedical",
-  "nextServiceIndex": 0,
-  "completedServices": ["sickChildCare", "bulkyWaste"],
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
   "verifiedCount": 0,
   "researchingCount": 0,
-  "unavailableCount": 2,
-  "needsMediumReviewCount": 7,
-  "currentBranch": "audit/east-a-final-round10-sakae",
+  "unavailableCount": 9,
+  "needsMediumReviewCount": 0,
+  "currentBranch": null,
   "pullRequestNumber": 3116,
   "lastCheckedAt": "2026-07-25",
-  "lastUpdatedAt": "2026-07-25T03:58:00+09:00",
-  "lastUpdatedBy": "東日本調査班A",
-  "officialSources": ["https://www.vill.sakae.nagano.jp/docs/2263.html"],
+  "lastUpdatedAt": "2026-07-25T06:46:00+09:00",
+  "lastUpdatedBy": "統括A",
+  "officialSources": [
+    "https://www.vill.sakae.nagano.jp/fs/3/5/9/8/4/_/kouhou_sakae201807_416.pdf",
+    "https://www.vill.sakae.nagano.jp/docs/2263.html",
+    "https://sakae-life.com/living/",
+    "https://takakiiin.com/obstetrics/postpartum-care/",
+    "https://www.cheerful-nagano.com/child_information/17435/",
+    "https://www.vill.sakae.nagano.jp/fs/3/9/8/3/7/_/_____470_.pdf"
+  ],
   "notes": [
     "2026年7月24日15時18分時点でも栄村公式サイト本体はタイムアウト、個別ページは502で停止継続。",
     "長野県公式移住ポータルがsakae-life.comを栄村公式移住サイトとして案内し、同サイトの相談窓口が栄村役場農林建設課であることを確認。",
@@ -38,9 +55,15 @@
     "2026年7月25日3時50分、最終第10回監査で公式サイトトップと既知の制度ページが引き続き502であることを再確認。病児・病後児保育と粗大ごみのsource.checkedAtを2026-07-25へ更新し、7制度needs_medium_review・2制度unavailableを維持してPR #3116へ反映。",
     "CI run #7604で自治体データ、task再計算値、公式出典、生成データ、JavaScript検証が成功。",
     "PR #3116をregion/eastへ統合。",
-    "merge SHA: 411d27358280e461532fe4b1a41efd1d96bbb2e0"
+    "merge SHA: 411d27358280e461532fe4b1a41efd1d96bbb2e0",
+    "Issue #3166の中確度30制度を再判定。制度の中核条件を公式情報で確認済みの23件はverifiedへ確定し、公式サイト停止中の栄村7件は推測せずunavailableへ統一。"
   ],
-  "blockers": [
-    "栄村公式サイト本体が利用不可で、令和8年度の制度詳細・最新版資料URLを完全確認できない。2026年7月25日3時50分時点でも502が継続。"
+  "blockers": [],
+  "nonBlockingFollowUps": [
+    {
+      "issueNumber": 2847,
+      "reason": "栄村公式サイト復旧後に9制度を令和8年度公式情報で再監査",
+      "publicationBlocking": false
+    }
   ]
 }
