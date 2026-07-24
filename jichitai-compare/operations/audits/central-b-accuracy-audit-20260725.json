@@ -143,7 +143,7 @@
         "30344",
         "30361"
       ],
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "round": 9,
@@ -175,11 +175,11 @@
     }
   ],
   "progress": {
-    "completedRounds": 7,
-    "structurallyCheckedMunicipalities": 70,
-    "deepCheckedMunicipalities": 63,
-    "confirmedErrors": 31,
-    "correctedErrors": 31
+    "completedRounds": 8,
+    "structurallyCheckedMunicipalities": 79,
+    "deepCheckedMunicipalities": 72,
+    "confirmedErrors": 39,
+    "correctedErrors": 39
   },
   "preflightFindings": [
     {
@@ -1407,6 +1407,211 @@
           "service": "housingSupport",
           "before": "verified / 一般空き家・年齢要件のみの住宅制度を混在",
           "after": "verified / 18歳未満の子または妊婦を含む世帯の家賃助成に現行化",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "auditedAt": "2026-07-24T17:36:53.388Z",
+      "codes": [
+        "30206",
+        "30207",
+        "30208",
+        "30209",
+        "30304",
+        "30341",
+        "30343",
+        "30344",
+        "30361"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 9,
+        "errors": 0,
+        "warnings": 3,
+        "workflowRunId": 30113337925,
+        "artifactId": 8604413156,
+        "artifactDigest": "sha256:8f21ffbaeabd608b9a91d08074f102d6e4c99b300a89dfd0da0f3739fa85de4e",
+        "postCorrectionWorkflowRunId": 30113667417,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "30206",
+          "name": "田辺市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。住宅支援を18歳未満1人100万円加算の移住支援金へ限定。"
+        },
+        {
+          "code": "30207",
+          "name": "新宮市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般空き家改修助成を除外。"
+        },
+        {
+          "code": "30208",
+          "name": "紀の川市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。住宅取得奨励金の児童加算10万円を明確化。"
+        },
+        {
+          "code": "30209",
+          "name": "岩出市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "産後ケア・誰でも通園は一致。給食費は現行負担未確認の警告を維持。一般新婚住宅支援と受付未確認の移住支援を除外。"
+        },
+        {
+          "code": "30304",
+          "name": "紀美野町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育は利用条件未公表のunavailable判定が妥当。給食費無償化、産後ケア、誰でも通園は一致。住宅支援を子育て世帯10万円加算へ限定。"
+        },
+        {
+          "code": "30341",
+          "name": "かつらぎ町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般空き家改修補助を除外。"
+        },
+        {
+          "code": "30343",
+          "name": "九度山町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食費徴収、産後ケア、誰でも通園、新婚・子育て世帯向け家賃補助と地域優良賃貸住宅を確認。"
+        },
+        {
+          "code": "30344",
+          "name": "高野町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育料無償化・誰でも通園は一致。産後ケアの令和8年度条件未確認警告は妥当。子ども要件のない一般移住住宅補助を除外。"
+        },
+        {
+          "code": "30361",
+          "name": "湯浅町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。住宅支援を18歳未満1人100万円加算の移住支援金へ限定。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "30206",
+          "service": "housingSupport",
+          "before": "verified / 子ども加算付き移住支援と一般空き家・新婚制度を混在",
+          "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30207",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない県外移住者向け空き家改修",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30208",
+          "service": "housingSupport",
+          "before": "verified / 一般若年住宅取得支援と児童加算を混在",
+          "after": "verified / 16歳未満児童等の10万円加算を明確化",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30209",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない新婚住宅支援と受付未確認の移住支援",
+          "after": "unavailable / 現行の子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30304",
+          "service": "housingSupport",
+          "before": "verified / 一般・移住・新婚・子育て加算を混在",
+          "after": "verified / 子育て世帯または出産予定世帯の10万円加算に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30341",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般空き家改修・片付け補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30344",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般移住住宅補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30361",
+          "service": "housingSupport",
+          "before": "verified / 年齢要件のみの住宅取得支援等を混在",
+          "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
           "status": "corrected_in_audit_pr_2926"
         }
       ]
