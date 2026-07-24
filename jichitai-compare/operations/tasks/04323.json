@@ -26,11 +26,10 @@
   "currentBranch": null,
   "pullRequestNumber": 2958,
   "lastCheckedAt": "2026-07-25",
-  "lastUpdatedAt": "2026-07-25T01:03:00+09:00",
+  "lastUpdatedAt": "2026-07-25T01:33:00+09:00",
   "lastUpdatedBy": "北日本調査班B",
   "officialSources": [
     "https://www.town.shibata.miyagi.jp/index.cfm/90%2C26849%2C200%2C391%2Chtml",
-    "https://www.town.shibata.miyagi.jp/index.cfm/90%2C38367%2C200%2C392%2Chtml",
     "https://www.town.shibata.miyagi.jp/index.cfm/90%2C38367%2C200%2C392%2Chtml",
     "https://www02.town.shibata.miyagi.jp/news/index.cfm/detail.73.68850.html",
     "https://www.town.shibata.miyagi.jp/index.cfm/90%2C60725%2C138%2Chtml",
@@ -50,7 +49,8 @@
     "PR #1091をregion/northへマージ。",
     "merge SHA: 7bc76658b5be720b02c715cbfdb0c3ddbb537eee",
     "北日本B誤調査ざっくり再検証 第4回: 令和8年4月開始のこども誰でも通園制度が未反映だったため、生後6か月から満3歳未満、月10時間、1時間300円等の現行条件をtemporaryChildcareへ追加。",
-    "PR #2958の初回通常CIが実行承認待ちとなったため、監査内容を保持したまま通常CIを再起動。"
+    "PR #2958の初回通常CIが実行承認待ちとなったため、監査内容を保持したまま通常CIを再起動。",
+    "通常CI #7151でtask officialSourcesの同一URL重複を検出したため、自治体データの再計算値に合わせて重複1件を除去。"
   ],
   "blockers": []
 }
