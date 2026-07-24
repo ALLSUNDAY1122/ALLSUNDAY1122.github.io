@@ -1,202 +1,77 @@
 {
-  "schemaVersion": "1.0.0",
-  "code": "07212",
-  "prefectureCode": "07",
-  "prefecture": "福島県",
-  "name": "南相馬市",
-  "officialUrl": "https://www.city.minamisoma.lg.jp/",
-  "status": "verified",
-  "summary": "対象9制度を南相馬市公式情報で確認し、8制度を公式情報で確認済み、粗大ごみを公式情報で詳細未確認。",
-  "updatedAt": "2026-07-23",
-  "services": {
-    "childMedical": {
-      "status": "verified",
-      "summary": "出生から18歳到達後最初の3月31日まで、保険診療の自己負担額と入院時食事代を助成する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
-      "details": {
-        "program": "子ども医療費助成事業",
-        "target": "南相馬市に住所がある出生から18歳年度末までの子ども",
-        "support": "保険診療分の自己負担額と入院時食事代",
-        "application": "受給資格登録後に資格証を交付。オンライン申請にも対応",
-        "excluded": "保険適用外費用、高額療養費・付加給付相当分等は対象外"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/sections/15/1510/15102/4/2/1566.html",
-        "checkedAt": "2026-07-23"
-      }
+  "schemaVersion":"1.0.0",
+  "code":"07212",
+  "prefectureCode":"07",
+  "prefecture":"福島県",
+  "name":"南相馬市",
+  "officialUrl":"https://www.city.minamisoma.lg.jp/",
+  "status":"verified",
+  "summary":"対象9制度を南相馬市公式情報で再監査し、7制度を公式情報で確認済み。産後ケアと粗大ごみは令和8年度の現行条件を確定できないため公式情報で詳細未確認。",
+  "updatedAt":"2026-07-25",
+  "services":{
+    "childMedical":{
+      "status":"verified",
+      "summary":"出生から18歳到達後最初の3月31日まで、保険診療の自己負担額と入院時食事代を助成する。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":18},
+      "details":{"program":"子ども医療費助成事業","target":"南相馬市に住所がある出生から18歳年度末までの子ども","support":"保険診療分の自己負担額と入院時食事代","application":"受給資格登録後に資格証を交付。オンライン申請にも対応","excluded":"保険適用外費用、高額療養費・付加給付相当分等は対象外"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/sections/15/1510/15102/4/2/1566.html","checkedAt":"2026-07-23"}
     },
-    "sickChildCare": {
-      "status": "verified",
-      "summary": "生後6か月から小学6年生までの病児・病後児を、保育室にこにこで一時的に預かる。",
-      "eligibility": {
-        "minAgeMonths": 6,
-        "maxAgeYears": 12
-      },
-      "details": {
-        "program": "病児・病後児保育",
-        "facility": "はらまちスマイルクリニック 病児・病後児保育室にこにこ",
-        "target": "市内在住で病中または回復期にあり、入院不要の生後6か月から小学6年生までの子ども",
-        "hours": "月～水・金曜8時45分～17時30分、木・土曜8時45分～12時30分",
-        "fee": "1日2,000円。生活保護・住民税非課税世帯は必要書類提出により無料",
-        "application": "原則前日までに実施施設へ予約"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/sections/15/1510/15102/4/1/25912.html",
-        "checkedAt": "2026-07-23"
-      }
+    "sickChildCare":{
+      "status":"verified",
+      "summary":"生後6か月から小学6年生までの病児・病後児を、保育室にこにこで一時的に預かる。",
+      "eligibility":{"minAgeMonths":6,"maxAgeYears":12},
+      "details":{"program":"病児・病後児保育","facility":"はらまちスマイルクリニック 病児・病後児保育室にこにこ","target":"市内在住で病中または回復期にあり、入院不要の生後6か月から小学6年生までの子ども","hours":"月～水・金曜8時45分～17時30分、木・土曜8時45分～12時30分","fee":"1日2,000円。生活保護・住民税非課税世帯は必要書類提出により無料","application":"原則前日までに実施施設へ予約"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/sections/15/1510/15102/4/1/25912.html","checkedAt":"2026-07-23"}
     },
-    "childcareFee": {
-      "status": "verified",
-      "summary": "国制度に加え、市内認可保育施設を利用する0～2歳児を含む0～5歳児の保育料を市独自に無料化する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 5
-      },
-      "details": {
-        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は国制度で無償化",
-        "cityFree": "南相馬市に住民登録があり市内認可保育施設に通う、国制度対象外の0～2歳児も市独自で無料化",
-        "privateFacilities": "施設により当初から0円または一度支払い後に年度末等に全額助成",
-        "mealSupport": "公立施設の給食費は無料。私立幼稚園は月8,000円上限、私立保育園等は食材費補助",
-        "excludedCosts": "教材費、おやつ代等の実費は対象外となる場合がある"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/sections/15/1520/15201/2/10163.html",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.minamisoma.lg.jp/portal/service/lifeevent/2/5/21718.html",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+    "childcareFee":{
+      "status":"verified",
+      "summary":"国制度に加え、市内認可保育施設を利用する0～2歳児を含む0～5歳児の保育料を市独自に無料化する。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":5},
+      "details":{"nationalFree":"3～5歳児と住民税非課税世帯の0～2歳児は国制度で無償化","cityFree":"南相馬市に住民登録があり市内認可保育施設に通う、国制度対象外の0～2歳児も市独自で無料化","privateFacilities":"施設により当初から0円または一度支払い後に年度末等に全額助成","mealSupport":"公立施設の給食費は無料。私立幼稚園は月8,000円上限、私立保育園等は食材費補助","excludedCosts":"教材費、おやつ代等の実費は対象外となる場合がある"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/sections/15/1520/15201/2/10163.html","checkedAt":"2026-07-23"},
+      "additionalSources":[{"url":"https://www.city.minamisoma.lg.jp/portal/service/lifeevent/2/5/21718.html","checkedAt":"2026-07-23"}]
     },
-    "schoolMeals": {
-      "status": "verified",
-      "summary": "南相馬市立小中学校の児童生徒の学校給食費を全額公費負担する。",
-      "eligibility": {
-        "minAgeMonths": 72,
-        "maxAgeYears": 15
-      },
-      "details": {
-        "target": "南相馬市立小中学校に在籍する児童生徒。避難等により通学する児童生徒を含む",
-        "support": "学校給食費全額を市が負担",
-        "start": "令和4年4月から実施",
-        "application": "原則申請不要。学校から案内がある場合は委任状を提出"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/childcare/gakkokyoiku/2/shien/19526.html",
-        "checkedAt": "2026-07-23"
-      }
+    "schoolMeals":{
+      "status":"verified",
+      "summary":"南相馬市立小中学校の児童生徒の学校給食費を全額公費負担する。",
+      "eligibility":{"minAgeMonths":72,"maxAgeYears":15},
+      "details":{"target":"南相馬市立小中学校に在籍する児童生徒。避難等により通学する児童生徒を含む","support":"学校給食費全額を市が負担","start":"令和4年4月から実施","application":"原則申請不要。学校から案内がある場合は委任状を提出"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/childcare/gakkokyoiku/2/shien/19526.html","checkedAt":"2026-07-23"}
     },
-    "postpartumCare": {
-      "status": "verified",
-      "summary": "令和8年度は訪問・日帰り・宿泊型の産後ケアを実施する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 1
-      },
-      "details": {
-        "types": "訪問ケア、日帰りケア、宿泊ケア",
-        "services": "母体の健康確認、乳房・母乳相談、授乳・沐浴指導、乳児の体重・健康確認、育児相談",
-        "professionalSupport": "助産師等の専門スタッフが対応",
-        "application": "令和8年度申込書と施設利用案内を確認し、こども家庭課母子健康係へ申請",
-        "fee": "利用施設・類型ごとに異なるため、令和8年度施設利用案内で確認"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/childcare/shussan_kosodate/3/5279.html",
-        "checkedAt": "2026-07-23"
-      }
+    "postpartumCare":{
+      "status":"unavailable",
+      "summary":"訪問・日帰り・宿泊型の産後ケア実施は確認できるが、現行公式ページで確認できる利用案内は令和7年度までで、令和8年度の料金・利用条件を確定できない。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":1},
+      "details":{"confirmed":"訪問ケア、日帰りケア、宿泊ケアを実施","services":"母体の健康確認、乳房・母乳相談、授乳・沐浴指導、乳児の体重・健康確認、育児相談","reviewReason":"現行公式ページの添付資料は令和7年度版であり、令和8年度の対象月齢、料金、利用回数、実施施設を確定できない","availability":"現行の利用者向け公式条件を確定できないため情報未確認","verificationPolicy":"過年度案内から令和8年度条件を推測せず、自治体の最新案内確認を要する"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/sections/15/1510/15104/8/2182.html","checkedAt":"2026-07-25"}
     },
-    "temporaryChildcare": {
-      "status": "verified",
-      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
-      "eligibility": {
-        "minAgeMonths": 6,
-        "maxAgeYears": 3
-      },
-      "details": {
-        "program": "こども誰でも通園制度",
-        "target": "保育園・認定こども園に通っていない生後6か月から満3歳未満の子ども",
-        "employmentRequirement": "なし",
-        "usageLimit": "月10時間まで、1時間単位",
-        "fee": "1時間300円。生活保護世帯0円、非課税世帯等100円",
-        "facilities": "かみまの保育園、かしま保育園、おだか認定こども園、はらまち認定こども園聖桜",
-        "application": "つうえんポータルで認定申請・初回面談・予約"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/childcare/shussan_kosodate/5/11717.html",
-        "checkedAt": "2026-07-23"
-      }
+    "temporaryChildcare":{
+      "status":"verified",
+      "summary":"未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility":{"minAgeMonths":6,"maxAgeYears":3},
+      "details":{"program":"こども誰でも通園制度","target":"保育園・認定こども園に通っていない生後6か月から満3歳未満の子ども","employmentRequirement":"なし","usageLimit":"月10時間まで、1時間単位","fee":"1時間300円。生活保護世帯0円、非課税世帯等100円","facilities":"かみまの保育園、かしま保育園、おだか認定こども園、はらまち認定こども園聖桜","application":"つうえんポータルで認定申請・初回面談・予約"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/childcare/shussan_kosodate/5/11717.html","checkedAt":"2026-07-23"}
     },
-    "housingSupport": {
-      "status": "verified",
-      "summary": "多子・多世代・移住定住世帯等の住宅取得に基礎額100万円と各種加算を交付する。",
-      "details": {
-        "program": "住宅購入等世帯定住促進事業奨励金",
-        "target": "多世代同居・近居世帯、18歳以下の子が3人以上の多子世帯、一定要件の移住定住世帯",
-        "base": "新築・中古住宅とも基礎額100万円",
-        "additions": "旧避難指示区域での取得25万円、転入後5年以内の取得25万円等の加算あり",
-        "consultation": "申請前に市へ事前相談が必要",
-        "otherSupport": "対象移住者の民間賃貸住宅家賃を月1万円、最長36か月支援する制度もある"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/service/subsidies/1/jutaku/25276.html",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.minamisoma.lg.jp/portal/life/jutaku_tochi_petto/2/14961.html",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+    "housingSupport":{
+      "status":"verified",
+      "summary":"多子・多世代・移住定住世帯等の住宅取得に基礎額100万円と各種加算を交付する。",
+      "details":{"program":"住宅購入等世帯定住促進事業奨励金","target":"多世代同居・近居世帯、18歳以下の子が3人以上の多子世帯、一定要件の移住定住世帯","base":"新築・中古住宅とも基礎額100万円","additions":"旧避難指示区域での取得25万円、転入後5年以内の取得25万円等の加算あり","consultation":"申請前に市へ事前相談が必要","otherSupport":"対象移住者の民間賃貸住宅家賃を月1万円、最長36か月支援する制度もある"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/service/subsidies/1/jutaku/25276.html","checkedAt":"2026-07-23"},
+      "additionalSources":[{"url":"https://www.city.minamisoma.lg.jp/portal/life/jutaku_tochi_petto/2/14961.html","checkedAt":"2026-07-23"}]
     },
-    "bulkyWaste": {
-      "status": "unavailable",
-      "summary": "令和8年度の収集カレンダー、分別検索、リユース案内は確認できるが、粗大ごみの標準的な収集・搬入方法と料金を市公式ページで一括確認できない。",
-      "details": {
-        "availableInformation": "地区別の家庭ごみ収集カレンダーと、ごみ分別辞典ごみサクを公開",
-        "reuse": "粗大ごみ排出前のリユースサービス利用を案内",
-        "excludedService": "要配慮者向け家庭ごみ戸別収集は粗大ごみを対象外としている",
-        "caution": "品目・居住地区ごとの処分方法は、ごみサクまたは生活環境課へ確認が必要"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/life/gomi_recycle/1/7382.html",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.minamisoma.lg.jp/portal/sections/13/1320/13202/3/1/29208.html",
-          "checkedAt": "2026-07-23"
-        },
-        {
-          "url": "https://www.city.minamisoma.lg.jp/portal/service/gomi_search/recycle/27102.html",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+    "bulkyWaste":{
+      "status":"unavailable",
+      "summary":"令和8年度の収集カレンダー、分別検索、リユース案内は確認できるが、粗大ごみの標準的な収集・搬入方法と料金を市公式ページで一括確認できない。",
+      "details":{"availableInformation":"地区別の家庭ごみ収集カレンダーと、ごみ分別辞典ごみサクを公開","reuse":"粗大ごみ排出前のリユースサービス利用を案内","excludedService":"要配慮者向け家庭ごみ戸別収集は粗大ごみを対象外としている","caution":"品目・居住地区ごとの処分方法は、ごみサクまたは生活環境課へ確認が必要"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/life/gomi_recycle/1/7382.html","checkedAt":"2026-07-23"},
+      "additionalSources":[{"url":"https://www.city.minamisoma.lg.jp/portal/sections/13/1320/13202/3/1/29208.html","checkedAt":"2026-07-23"},{"url":"https://www.city.minamisoma.lg.jp/portal/service/gomi_search/recycle/27102.html","checkedAt":"2026-07-23"}]
     },
-    "disasterPrevention": {
-      "status": "verified",
-      "summary": "洪水・土砂災害、地震・津波、内水、ため池等の防災マップを公開する。",
-      "details": {
-        "maps": "洪水・土砂災害編、地震・津波編、内水、農業用ため池ハザードマップ",
-        "flood": "真野川、新田川、太田川、小高川等の浸水想定区域と避難所を掲載",
-        "landslide": "土砂災害警戒区域・特別警戒区域180か所を掲載",
-        "tsunami": "想定最大規模の津波浸水想定区域を掲載",
-        "distribution": "市役所・各区役所で冊子版を配布"
-      },
-      "source": {
-        "url": "https://www.city.minamisoma.lg.jp/portal/safety/bosai/2/3585.html",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.minamisoma.lg.jp/portal/safety/bosai/2/index.html",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+    "disasterPrevention":{
+      "status":"verified",
+      "summary":"洪水・土砂災害、地震・津波、内水、ため池等の防災マップを公開する。",
+      "details":{"maps":"洪水・土砂災害編、地震・津波編、内水、農業用ため池ハザードマップ","flood":"真野川、新田川、太田川、小高川等の浸水想定区域と避難所を掲載","landslide":"土砂災害警戒区域・特別警戒区域180か所を掲載","tsunami":"想定最大規模の津波浸水想定区域を掲載","distribution":"市役所・各区役所で冊子版を配布"},
+      "source":{"url":"https://www.city.minamisoma.lg.jp/portal/safety/bosai/2/3585.html","checkedAt":"2026-07-23"},
+      "additionalSources":[{"url":"https://www.city.minamisoma.lg.jp/portal/safety/bosai/2/index.html","checkedAt":"2026-07-23"}]
     }
   }
 }
