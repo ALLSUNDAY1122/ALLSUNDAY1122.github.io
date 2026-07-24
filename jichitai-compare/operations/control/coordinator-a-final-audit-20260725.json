@@ -2,9 +2,12 @@
   "schemaVersion": "1.0.0",
   "auditId": "coordinator-a-final-audit-20260725",
   "coordinatorSession": "統括A②",
-  "regions": ["north", "east"],
+  "regions": [
+    "north",
+    "east"
+  ],
   "status": "completed_with_nonblocking_follow_up",
-  "finalizedAt": "2026-07-25T06:54:00+09:00",
+  "finalizedAt": "2026-07-25T08:39:00+09:00",
   "nationwideInventory": {
     "registeredMunicipalities": 1741,
     "remainingMunicipalities": 0,
@@ -95,5 +98,16 @@
     }
   ],
   "temporaryWorkflowCleanup": "completed",
-  "nextAction": "Issue #2847の栄村公式サイト復旧を待ち、復旧後に9制度を令和8年度公式情報で再監査する。その他は公式制度更新、公開差分、CI失敗、または明示的な修正依頼が発生した場合のみ再開する。"
+  "nextAction": "Issue #2847の栄村公式サイト復旧を待ち、復旧後に9制度を令和8年度公式情報で再監査する。その他は公式制度更新、公開差分、CI失敗、または明示的な修正依頼が発生した場合のみ再開する。",
+  "fullPublicIntegrityAudit": {
+    "status": "success",
+    "workflowRunId": 30134336210,
+    "checkedAt": "2026-07-25T08:39:00+09:00",
+    "municipalityCount": 856,
+    "serviceCount": 7704,
+    "canonicalMatchedPages": 856,
+    "summaryMatchedServices": 7704,
+    "failures": 0,
+    "evidenceFile": "operations/control/public-integrity-audit-north-east-20260725.json"
+  }
 }
