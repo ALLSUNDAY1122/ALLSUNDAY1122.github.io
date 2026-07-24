@@ -1,0 +1,101 @@
+name: Temporary West B Public Summary Cleanup 31-32
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/west-b-public-summary-cleanup-31-32-20260724
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Remove internal team wording from West B summaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          codes = [
+              '31201', '31202', '31203', '31204', '31325', '31328', '31329',
+              '31364', '31370', '31371', '31372', '31384', '31386', '31389',
+              '31390', '31401', '31402', '31403', '32201', '32202', '32203',
+              '32204', '32205', '32207', '32209', '32343', '32386'
+          ]
+          prefix = '西日本調査班の調査対象。'
+          timestamp = '2026-07-24T23:17:00+09:00'
+          note = '公開要約から内部運用文言「西日本調査班の調査対象」を除去。'
+
+          for code in codes:
+              pref = code[:2]
+              municipality_path = Path(f'jichitai-compare/data/municipalities/{pref}/{code}.json')
+              municipality = json.loads(municipality_path.read_text(encoding='utf-8'))
+              summary = municipality.get('summary', '')
+              if not summary.startswith(prefix):
+                  raise SystemExit(f'{code}: unexpected summary: {summary!r}')
+              municipality['summary'] = summary[len(prefix):]
+              municipality['updatedAt'] = '2026-07-24'
+              municipality_path.write_text(
+                  json.dumps(municipality, ensure_ascii=False, indent=2) + '\n',
+                  encoding='utf-8'
+              )
+
+              task_path = Path(f'jichitai-compare/operations/tasks/{code}.json')
+              task = json.loads(task_path.read_text(encoding='utf-8'))
+              notes = task.setdefault('notes', [])
+              if note not in notes:
+                  notes.append(note)
+              task['lastCheckedAt'] = '2026-07-24'
+              task['lastUpdatedAt'] = timestamp
+              task['lastUpdatedBy'] = '西日本調査班B（完了後公開品質監査）'
+              task_path.write_text(
+                  json.dumps(task, ensure_ascii=False, indent=2) + '\n',
+                  encoding='utf-8'
+              )
+          PY
+
+      - name: Regenerate and validate public files
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          codes = [
+              '31201', '31202', '31203', '31204', '31325', '31328', '31329',
+              '31364', '31370', '31371', '31372', '31384', '31386', '31389',
+              '31390', '31401', '31402', '31403', '32201', '32202', '32203',
+              '32204', '32205', '32207', '32209', '32343', '32386'
+          ]
+          for code in codes:
+              pref = code[:2]
+              source = json.loads(Path(f'data/municipalities/{pref}/{code}.json').read_text(encoding='utf-8'))
+              if '調査班' in source.get('summary', ''):
+                  raise SystemExit(f'{code}: internal wording remains in source summary')
+              page = Path(f'municipality/{code}/index.html').read_text(encoding='utf-8')
+              if '西日本調査班の調査対象' in page:
+                  raise SystemExit(f'{code}: internal wording remains in generated page')
+          PY
+
+      - name: Remove temporary workflow and commit synchronized files
+        run: |
+          rm .github/workflows/temp-west-b-public-summary-cleanup-31-32.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .github/workflows/temp-west-b-public-summary-cleanup-31-32.yml jichitai-compare
+          git commit -m 'fix: remove internal wording from Tottori and Shimane summaries'
+          git push origin HEAD:coord/west-b-public-summary-cleanup-31-32-20260724
