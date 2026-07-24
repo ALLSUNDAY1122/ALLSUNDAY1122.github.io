@@ -5,7 +5,7 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
-  "updatedAt": "2026-07-24T23:16:00+09:00",
+  "updatedAt": "2026-07-24T23:45:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -19,7 +19,7 @@
     {"code": "46206", "name": "阿久根市", "pullRequestNumber": 2740, "ciRunNumber": 6577}
   ],
   "blocked": [],
-  "nextAction": "担当自治体の新規調査は停止。全国1,741自治体の完全公開後は、公式情報更新、差し戻し、自治体識別異常、CI失敗、公開文言異常が発生した場合のみ品質監査を再開する。",
+  "nextAction": "担当自治体の新規調査は停止。公式情報更新、差し戻し、自治体識別異常、CI失敗、公開文言異常、生成JSONと静的ページの要約不一致が発生した場合のみ品質監査を再開する。",
   "completionEvidence": {
     "lastMunicipalityCode": "46206",
     "lastMunicipalityName": "阿久根市",
@@ -37,10 +37,14 @@
     "latestPostReleaseNationalPullRequestNumber": 2848,
     "latestPostReleaseNationalCiRunNumber": 6847,
     "latestPostReleaseNationalMergedAt": "2026-07-24T23:09:52+09:00",
+    "internalWorkflowCopyGuardPullRequestNumber": 2869,
+    "internalWorkflowCopyGuardCiRunNumber": 6889,
+    "summaryConsistencyGuardPullRequestNumber": 2879,
+    "summaryConsistencyGuardCiRunNumber": 6911,
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-24T23:16:00+09:00",
+    "auditedAt": "2026-07-24T23:45:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -68,6 +72,27 @@
       "nationalCiRunNumber": 6847,
       "status": "resolved"
     },
+    "publicCopyValidation": {
+      "internalWorkflowPhraseGuard": {
+        "pullRequestNumber": 2869,
+        "ciRunNumber": 6889,
+        "scope": "全国1,741自治体の公開要約、15,669制度summary、1,741静的詳細ページ",
+        "status": "passed"
+      },
+      "summaryConsistencyGuard": {
+        "pullRequestNumber": 2879,
+        "ciRunNumber": 6911,
+        "scope": "生成JSONの自治体summaryと全1,741静的ページ冒頭要約の一致、失敗時JSON artifact保存",
+        "status": "passed"
+      },
+      "legacyBroadAudit": {
+        "pullRequestNumber": 2856,
+        "ciRunNumber": 6871,
+        "detectedMunicipalityCount": 400,
+        "westAPrefectureDetectedCount": 0,
+        "disposition": "調査班を一律禁止する旧検査は過広範のため未マージ。西日本A担当6県に該当なし。"
+      }
+    },
     "restoredMunicipalities": [
       {"code": "46206", "name": "阿久根市"}
     ],
@@ -75,8 +100,9 @@
     "notes": [
       "正式自治体コードの欠番を単純連番で補完しない。",
       "自治体数不一致時は都道府県別コード一覧を診断artifactから確認する。",
-      "全国完全公開後は新規調査を停止し、更新・差し戻し・CI異常・公開文言異常時のみ再開する。",
-      "福岡市の制度判定・公式出典・verified 9は変更せず、公開要約だけを利用者向けに修正した。"
+      "全国完全公開後は新規調査を停止し、更新・差し戻し・CI異常・公開文言異常・要約不一致時のみ再開する。",
+      "福岡市の制度判定・公式出典・verified 9は変更せず、公開要約だけを利用者向けに修正した。",
+      "公開文言検査失敗時はjichitai-validation-report artifactから自治体コードと発生箇所を確認する。"
     ]
   }
 }
