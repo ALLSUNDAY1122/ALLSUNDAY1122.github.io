@@ -6,10 +6,10 @@
   "expectedMunicipalityCount": 19,
   "checkedMunicipalityCount": 19,
   "checkedServiceCount": 171,
-  "generatedAt": "2026-07-25T03:45:00+09:00",
+  "generatedAt": "2026-07-25T03:56:00+09:00",
   "structuralFindingCount": 0,
-  "unavailableCount": 5,
-  "substantiveSuspectCount": 8,
+  "unavailableCount": 4,
+  "substantiveSuspectCount": 3,
   "findings": [],
   "unavailable": [
     {
@@ -18,13 +18,6 @@
       "service": "sickChildCare",
       "summary": "令和8年度に病児保育事業所利用者支援を開始する方針は確認できるが、利用対象・施設・料金・申請方法の現行専用案内を確認できない。",
       "source": "https://www.town.shiga-hino.lg.jp/0000008680.html"
-    },
-    {
-      "code": "25441",
-      "name": "豊郷町",
-      "service": "postpartumCare",
-      "summary": "助産所・医療機関で健康相談や育児相談等を行う産後ケア事業は確認できたが、対象期間・類型・利用回数・料金の現行条件を本文から確定できない。",
-      "source": "https://www.town.toyosato.shiga.jp/0000000203.html"
     },
     {
       "code": "25441",
@@ -50,68 +43,22 @@
   ],
   "substantiveSuspects": [
     {
-      "type": "school_meal_currentness_check",
-      "code": "25207",
-      "name": "守山市",
-      "service": "schoolMeals",
-      "summary": "市立小中学校の給食費は月額制で、経済的に就学困難な世帯には給食費を含む就学援助を行う。",
-      "source": "https://www2.city.moriyama.lg.jp/reiki_int/reiki_honbun/i400RG00002497.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "25210",
-      "name": "野洲市",
-      "service": "schoolMeals",
-      "summary": "市立小中学校の学校給食費は、小学校月4,200円、中学校月4,900円を基本額とする。",
-      "source": "https://www.city.yasu.lg.jp/section/reiki_int/reiki_honbun/r042RG00001018.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "25212",
-      "name": "高島市",
-      "service": "schoolMeals",
-      "summary": "令和3年4月から市立小中学校の学校給食費を無償化し、対象外の市内児童生徒には補助制度を設ける。",
-      "source": "https://www.city.takashima.lg.jp/soshiki/kyoikushidobu/gakkokyushokuka/1/1/1/5/2373.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
       "code": "25425",
       "name": "愛荘町",
       "service": "schoolMeals",
-      "summary": "町学校給食センターが幼稚園・小中学校へ給食を提供し、掲載月額は幼稚園3,700円、小学校4,000円、中学校4,400円。",
-      "source": "https://www.town.aisho.shiga.jp/kosodate/kyushoku/gaiyou/1668.html"
+      "detail": "掲載中の給食費月額は確認できるが、令和8年度の保護者負担額として改定の有無を確定できない"
     },
     {
-      "type": "possible_false_unavailable",
-      "code": "25441",
-      "name": "豊郷町",
-      "service": "postpartumCare",
-      "summary": "助産所・医療機関で健康相談や育児相談等を行う産後ケア事業は確認できたが、対象期間・類型・利用回数・料金の現行条件を本文から確定できない。",
-      "source": "https://www.town.toyosato.shiga.jp/0000000203.html"
-    },
-    {
-      "type": "possible_false_unavailable",
       "code": "25441",
       "name": "豊郷町",
       "service": "temporaryChildcare",
-      "summary": "令和8年度に子育て支援センターを中心としてこども誰でも通園制度へ取り組む方針は確認できたが、現行の利用案内を確定できない。",
-      "source": "https://www.town.toyosato.shiga.jp/0000000926.html"
+      "detail": "令和8年度の実施方針と条例は確認できるが、対象月齢・時間・料金・予約条件を確定できない"
     },
     {
-      "type": "possible_false_unavailable",
       "code": "25442",
       "name": "甲良町",
       "service": "temporaryChildcare",
-      "summary": "令和8年度から乳児等通園支援事業を実施する計画は確認できるが、現行の対象月齢・施設・料金・定員・予約条件を確定できない。",
-      "source": "https://www.kouratown.jp/gyosei/sogokakusyukeikau/2723.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "25443",
-      "name": "多賀町",
-      "service": "schoolMeals",
-      "summary": "扶養する子のうち第3子以降の小中学校等給食費を無償化し、経済的に困難な世帯には就学援助で給食費等を支援する。",
-      "source": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/1/2/578.html"
+      "detail": "令和8年度からの実施計画は確認できるが、対象月齢・施設・料金・定員・予約条件を確定できない"
     }
   ],
   "municipalities": [
@@ -743,11 +690,11 @@
       "code": "25441",
       "name": "豊郷町",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
-      "verifiedCount": 7,
-      "unavailableCount": 2,
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "needsMediumReviewCount": 0,
       "officialSourceCount": 8,
       "taskOfficialSourceCount": 8,
@@ -759,10 +706,10 @@
           "checkedAt": "2026-07-22"
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "助産所・医療機関で健康相談や育児相談等を行う産後ケア事業は確認できたが、対象期間・類型・利用回数・料金の現行条件を本文から確定できない。",
+          "status": "verified",
+          "summary": "産婦の心身のケアのため、助産所・医療機関で健康相談、赤ちゃんの育児相談、助言等の産後ケアを実施する。",
           "source": "https://www.town.toyosato.shiga.jp/0000000203.html",
-          "checkedAt": "2026-07-22"
+          "checkedAt": "2026-07-25"
         },
         "temporaryChildcare": {
           "status": "unavailable",
@@ -855,6 +802,67 @@
           "checkedAt": "2026-07-23"
         }
       }
+    }
+  ],
+  "initialStructuralFindingCount": 0,
+  "resolvedStructuralFindingCount": 0,
+  "initialUnavailableCount": 5,
+  "initialSubstantiveSuspectCount": 8,
+  "confirmedErrorCount": 1,
+  "correctedMunicipalityCodes": [
+    "25441"
+  ],
+  "confirmedCorrections": [
+    {
+      "type": "false_unavailable",
+      "service": "postpartumCare",
+      "count": 1,
+      "municipalityCodes": [
+        "25441"
+      ],
+      "detail": "2026年5月28日更新の豊郷町公式母子保健サービスページで現行の産後ケア実施を確認"
+    }
+  ],
+  "confirmedAccurateExamples": [
+    {
+      "code": "25207",
+      "service": "schoolMeals",
+      "detail": "守山市の小学校月4,300円・中学校月4,900円と令和8年度就学援助を確認"
+    },
+    {
+      "code": "25210",
+      "service": "schoolMeals",
+      "detail": "野洲市の小学校月4,200円・中学校月4,900円が令和8年4月から適用されることを規則で確認"
+    },
+    {
+      "code": "25212",
+      "service": "schoolMeals",
+      "detail": "高島市の小中学校給食費無償化が令和8年度も継続していることを確認"
+    },
+    {
+      "code": "25443",
+      "service": "schoolMeals",
+      "detail": "多賀町の第3子以降学校給食費等無償化と令和8年度就学援助を確認"
+    }
+  ],
+  "needsFurtherReview": [
+    {
+      "code": "25425",
+      "name": "愛荘町",
+      "service": "schoolMeals",
+      "detail": "掲載中の給食費月額は確認できるが、令和8年度の保護者負担額として改定の有無を確定できない"
+    },
+    {
+      "code": "25441",
+      "name": "豊郷町",
+      "service": "temporaryChildcare",
+      "detail": "令和8年度の実施方針と条例は確認できるが、対象月齢・時間・料金・予約条件を確定できない"
+    },
+    {
+      "code": "25442",
+      "name": "甲良町",
+      "service": "temporaryChildcare",
+      "detail": "令和8年度からの実施計画は確認できるが、対象月齢・施設・料金・定員・予約条件を確定できない"
     }
   ]
 }

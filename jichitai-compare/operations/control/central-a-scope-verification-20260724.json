@@ -3,7 +3,7 @@
   "auditId": "central-a-scope-verification-20260724",
   "session": "中日本調査班A",
   "purpose": "担当範囲の誤調査・状態不整合を都道府県単位で10回に分けて概略再検証する",
-  "branch": "audit/central-a-scope-verification-round-07-20260725",
+  "branch": "audit/central-a-scope-verification-round-08-20260725",
   "startedAt": "2026-07-24T23:50:00+09:00",
   "status": "in_progress",
   "batchCount": 10,
@@ -301,21 +301,56 @@
       ],
       "nextStep": "第8回として滋賀県19自治体を監査する",
       "completedAt": "2026-07-25T03:07:00+09:00"
+    },
+    {
+      "batch": 8,
+      "prefectureCode": "25",
+      "prefectureName": "滋賀県",
+      "municipalityCount": 19,
+      "status": "completed_with_corrections_and_review",
+      "checkedMunicipalities": 19,
+      "checkedServices": 171,
+      "initialStructuralFindingCount": 0,
+      "structuralFindingCount": 0,
+      "resolvedStructuralFindingCount": 0,
+      "initialUnavailableCount": 5,
+      "unavailableCount": 4,
+      "initialSubstantiveSuspectCount": 8,
+      "substantiveSuspectCount": 3,
+      "report": "operations/control/central-a-scope-round-08-shiga-20260725.json",
+      "confirmedErrors": 1,
+      "correctedMunicipalityCodes": [
+        "25441"
+      ],
+      "confirmedAccurateSuspectCodes": [
+        "25207",
+        "25210",
+        "25212",
+        "25443"
+      ],
+      "needsFurtherReviewCodes": [
+        "25425",
+        "25441",
+        "25442"
+      ],
+      "nextStep": "第9回として大阪府43自治体を監査する",
+      "completedAt": "2026-07-25T03:56:00+09:00"
     }
   ],
   "summary": {
-    "completedBatches": 7,
-    "checkedMunicipalities": 211,
-    "confirmedErrors": 53,
-    "needsFurtherReview": 18,
-    "correctedErrors": 53
+    "completedBatches": 8,
+    "checkedMunicipalities": 230,
+    "confirmedErrors": 54,
+    "needsFurtherReview": 21,
+    "correctedErrors": 54
   },
-  "nextAction": "第8回として滋賀県19自治体を監査する",
+  "nextAction": "第9回として大阪府43自治体を監査する",
   "rebuiltFrom": "audit/central-a-scope-verification-20260724",
   "rebuiltAt": "2026-07-25T00:11:00+09:00",
   "rebuiltRound3At": "2026-07-25T00:37:00+09:00",
   "rebuiltRound4At": "2026-07-25T01:13:00+09:00",
   "rebuiltRound5At": "2026-07-25T01:39:00+09:00",
   "rebuiltRound6At": "2026-07-25T02:48:00+09:00",
-  "rebuiltRound7At": "2026-07-25T03:07:00+09:00"
+  "rebuiltRound7At": "2026-07-25T03:07:00+09:00",
+  "rebuiltRound8At": "2026-07-25T03:56:00+09:00"
 }
