@@ -16,6 +16,7 @@ on:
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
       - yorugatari/assets/landing-share.js
+      - yorugatari/assets/landing-start-20260724-001.js
       - yorugatari/assets/styles.css
       - yorugatari/assets/stories*.js
       - yorugatari/tools/performance-audit.mjs
@@ -23,7 +24,7 @@ on:
 
 concurrency:
   group: yorugatari-performance-audit
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -36,6 +37,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -44,7 +46,9 @@ jobs:
           node-version: '24'
 
       - name: Validate performance audit syntax
-        run: node --check yorugatari/tools/performance-audit.mjs
+        run: |
+          node --check yorugatari/tools/performance-audit.mjs
+          node --check yorugatari/assets/landing-start-20260724-001.js
 
       - name: Install Lighthouse tools
         run: npm install --no-save lighthouse chrome-launcher
