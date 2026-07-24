@@ -5,7 +5,7 @@ const ROOT = process.cwd();
 const TOOLS = path.join(ROOT, 'yorugatari', 'tools');
 const OUTPUT_JSON = path.join(TOOLS, 'site-health-latest.json');
 const OUTPUT_MD = path.join(TOOLS, 'site-health-latest.md');
-const REPORT_VERSION = '20260724-004';
+const REPORT_VERSION = '20260724-005';
 
 const reportDefinitions = [
   { id: 'seo', label: 'SEO', file: 'seo-audit-latest.json', timestampKeys: ['auditedAt', 'generatedAt'] },
@@ -134,12 +134,14 @@ if ((metrics.notFoundViews ?? 0) > 0) actions.push('除外後の404発生パス�
 if (!actions.length) actions.push('品質監査と判断基準は正常。日次データ収集を継続する。');
 
 const status = failedQuality.length ? 'degraded' : pendingQuality.length ? 'verification_pending' : staleQuality.length ? 'stale' : 'healthy';
+const operational = failedQuality.length === 0;
 const snapshot = {
   generatedAt: now.toISOString(),
   generatedAtJapan: japanTimestamp(now),
   version: REPORT_VERSION,
   status,
-  success: failedQuality.length === 0 && pendingQuality.length === 0,
+  success: operational,
+  verificationPending: pendingQuality.length > 0,
   quality,
   metrics,
   actions
@@ -168,10 +170,10 @@ const metricLines = [
   `- 特集比較判定: ${metrics.conversionComparisonReady ? '可能' : '保留'}`
 ];
 const actionLines = actions.map((action, index) => `${index + 1}. ${action}`);
-const statusLabel = status === 'healthy' ? '正常' : status === 'stale' ? '監査更新待ち' : status === 'verification_pending' ? '監査基盤の再検証待ち' : '要対応';
+const statusLabel = status === 'healthy' ? '正常' : status === 'stale' ? '監査更新待ち' : status === 'verification_pending' ? '運用正常・監査基盤の再検証待ち' : '要対応';
 const markdown = `# 夜語り サイト運用サマリー\n\n生成：${snapshot.generatedAtJapan}（日本時間）  \n状態：${statusLabel}\n\n自動監査アクセス除外後の値を運用判断に使用します。累計値は診断用です。\n\n## 品質監査\n\n${qualityLines.join('\n')}\n\n## 計測値\n\n${metricLines.join('\n')}\n\n## 次の判断\n\n${actionLines.join('\n')}\n`;
 
 fs.writeFileSync(OUTPUT_JSON, `${JSON.stringify(snapshot, null, 2)}\n`);
 fs.writeFileSync(OUTPUT_MD, markdown);
-console.log(`YORUGATARI_SITE_HEALTH=${JSON.stringify({ status, success: snapshot.success, failed: failedQuality.map((row) => row.id), pending: pendingQuality.map((row) => row.id), stale: staleQuality.map((row) => row.id), metrics, actions })}`);
-if (!snapshot.success) process.exitCode = 1;
+console.log(`YORUGATARI_SITE_HEALTH=${JSON.stringify({ status, success: snapshot.success, verificationPending: snapshot.verificationPending, failed: failedQuality.map((row) => row.id), pending: pendingQuality.map((row) => row.id), stale: staleQuality.map((row) => row.id), metrics, actions })}`);
+if (failedQuality.length) process.exitCode = 1;
