@@ -1,0 +1,39 @@
+{
+  "testedAt": "2026-07-24T02:44:48.000Z",
+  "japanTime": "2026-07-24 11:44:48",
+  "success": true,
+  "scope": "リポジトリ上の共有ランタイムと作品開始ランタイムを、模擬DOM・sessionStorage・fetch環境で実行した監査",
+  "files": [
+    {
+      "path": "yorugatari/assets/landing-share.js",
+      "blobSha": "0881ce9be29e6d6783659b46c8420f2e4548b02d"
+    },
+    {
+      "path": "yorugatari/assets/landing-start-20260724-001.js",
+      "blobSha": "3625742a8f2e6d256db3e002a934b3e2bff72eaa"
+    },
+    {
+      "path": "yorugatari/5min-horror.html",
+      "blobSha": "fea5c28a276d1f618ba7a6c05f872a8f66a3b598"
+    },
+    {
+      "path": "yorugatari/bedtime-horror.html",
+      "blobSha": "ed182463a3663266128ed24b024478269dabf001"
+    }
+  ],
+  "checks": {
+    "javascriptSyntax": true,
+    "startCases": 2,
+    "shareCases": 2,
+    "fiveMinuteAggregatePath": "/yorugatari/__landing-start/five-minute",
+    "bedtimeAggregatePath": "/yorugatari/__landing-start/bedtime",
+    "oneStartRequestPerSession": true,
+    "rapidDoubleClickPrevented": true,
+    "storyIdentifierExcludedFromStartRequest": true,
+    "shareUrlUsesCanonicalLanding": true,
+    "shareUrlUsesRegisteredUtmValues": true,
+    "storyIdentifierExcludedFromShareUrl": true,
+    "sharingAndStartTrackingSeparated": true
+  },
+  "note": "公開GitHub Pagesを用いるPlaywright・Lighthouse監査とは別の監査。公開監査レポートはActions実行時に別ファイルへ保存される。"
+}
