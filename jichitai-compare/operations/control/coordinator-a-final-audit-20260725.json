@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "coordinator-a-final-audit-20260725",
+  "coordinatorSession": "統括A②",
+  "regions": ["north", "east"],
+  "status": "completed_with_nonblocking_follow_up",
+  "finalizedAt": "2026-07-25T05:21:00+09:00",
+  "nationwideInventory": {
+    "registeredMunicipalities": 1741,
+    "remainingMunicipalities": 0,
+    "totalServices": 15669,
+    "progressBlobSha": "bedd671ec3c3759970be92ee7b5b18eb901dcce1"
+  },
+  "regionalCompleteness": {
+    "north": {
+      "municipalities": 406,
+      "requiredServices": 3654,
+      "status": "passed"
+    },
+    "east": {
+      "municipalities": 450,
+      "requiredServices": 4050,
+      "status": "passed"
+    }
+  },
+  "sessions": {
+    "north-a": {
+      "status": "completed",
+      "completedRounds": 10,
+      "ciStatus": "success",
+      "publicationVerification": "success",
+      "checkpointBlobSha": "689af62887cb479577596ee71e58aca4b14093bb"
+    },
+    "north-b": {
+      "status": "completed",
+      "completedRounds": 10,
+      "ciStatus": "success",
+      "nationwidePullRequestNumber": 3133,
+      "checkpointBlobSha": "4cbdb6825923235946c41f7441585ee2e8499e11"
+    },
+    "east-a": {
+      "status": "completed",
+      "completedRounds": 10,
+      "ciStatus": "success",
+      "nationwidePullRequestNumber": 3130,
+      "publicGeneratedMunicipalityCount": 1741,
+      "verifiedPageCount": 49,
+      "checkpointBlobSha": "252c3df34274e028e865fb195709fb651472a946"
+    },
+    "east-b": {
+      "status": "completed",
+      "completedRounds": 10,
+      "ciStatus": "success",
+      "nationwidePullRequestNumber": 3040,
+      "checkpointSyncPullRequestNumber": 3154,
+      "checkpointSyncCiRunNumber": 7697,
+      "checkpointBlobSha": "af722fc0a16cff3ffd419cb5e4c1315a8c4c92b1"
+    }
+  },
+  "openRegionalPullRequests": {
+    "north": 0,
+    "east": 0
+  },
+  "nonblockingFollowUps": [
+    {
+      "issueNumber": 2847,
+      "municipalityCode": "20602",
+      "municipalityName": "栄村",
+      "status": "official_site_recovery_wait",
+      "publicationBlocking": false
+    }
+  ],
+  "temporaryWorkflowCleanup": "completed",
+  "nextAction": "Issue #2847の栄村公式サイト復旧を待ち、復旧後に再監査する。その他は公式制度更新、公開差分、CI失敗、または明示的な修正依頼が発生した場合のみ再開する。"
+}
