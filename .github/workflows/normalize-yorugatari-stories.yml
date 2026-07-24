@@ -8,6 +8,7 @@ on:
     paths:
       - yorugatari/index.html
       - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
       - yorugatari/archive.html
       - yorugatari/stories/**
       - yorugatari/assets/app.js
@@ -34,9 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out repository
+      - name: Check out latest main
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Set up Node.js
@@ -106,8 +108,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out repository
+      - name: Check out latest main
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -129,11 +133,12 @@ jobs:
   ui-audit:
     needs: verify-live
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 16
     steps:
-      - name: Check out repository
+      - name: Check out latest main
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Set up Node.js
