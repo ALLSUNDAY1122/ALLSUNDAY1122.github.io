@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.agui.lg.jp/",
   "status": "verified",
   "summary": "阿久比町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "出生から18歳年度末まで、保険診療の自己負担額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達する年度の末日まで",
         "incomeLimit": "所得制限なし",
@@ -20,12 +23,18 @@
         "excluded": "入院時食事代、予防接種、差額ベッド代など保険診療外費用は対象外",
         "application": "出生・転入時に受給者証の交付申請が必要"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000000377.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000000377.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "1歳から小学3年生までの病児・病後児を、あぐい病児の森で一時的に預かる。",
-      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 9},
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 9
+      },
       "details": {
         "facility": "あぐい病児の森",
         "condition": "医師が利用を認め、保護者の就労・傷病等により家庭保育が困難な児童",
@@ -34,12 +43,18 @@
         "fee": "町内在住児童は1日3,000円。施設が徴収する費用が別途必要",
         "application": "事前登録、仮予約、医療機関受診、利用予約が必要"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000005328.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000005328.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "0～2歳児クラスの第2子について所得区分により保育料を無料または半額とし、第3子以降は無料とする。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 2},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 2
+      },
       "details": {
         "start": "令和7年10月から",
         "target": "18歳年度末までの子どもを2人以上養育・監護する世帯の第2子で、0～2歳児クラスの児童",
@@ -48,25 +63,43 @@
         "thirdChild": "第3子以降の保育料は従来どおり無料",
         "application": "原則として手続き不要"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000008058.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000008058.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "経済的理由で就学が困難と認められる世帯へ、学校給食費を含む就学援助を行う。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "program": "要保護・準要保護就学援助制度",
-        "coverage": "学校給食費、学用品費、通学用品費、修学旅行費等",
-        "mealSupport": "準要保護世帯は学校が保護者に徴収する給食費の全額を援助",
-        "condition": "生活保護世帯または生活保護世帯に準ずる程度に困窮していると認められる世帯",
-        "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+      "summary": "令和8年度は小学校給食費を無償化し、中学校の保護者負担を1食300円とする。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000000100.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "fiscalYear": "令和8年度",
+        "elementaryParentBurden": "0円",
+        "juniorHighParentBurden": "1食300円",
+        "funding": "国の交付金を活用して負担を軽減"
+      },
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000008282.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.agui.lg.jp/0000000100.html",
+          "checkedAt": "2026-07-22",
+          "description": "経済的理由で就学困難な世帯への就学援助"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "出産後4か月未満の母子へ、宿泊型・デイサービス型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "阿久比町に住民票があり、産後の体調や子育てに不安がある出産後4か月未満の母子",
         "types": "宿泊型、デイサービス型",
@@ -75,12 +108,18 @@
         "support": "生活保護世帯・住民税非課税世帯は町負担額が拡大",
         "application": "利用希望日の概ね1週間前に申請"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000004209.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000004209.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "乳児等通園支援事業（こども誰でも通園制度）",
         "condition": "町内在住で、保育所・幼稚園・認定こども園等を利用していない児童",
@@ -89,7 +128,10 @@
         "hours": "平日の9時30分～11時30分または14時～16時の2時間単位",
         "fee": "1回600円、1時間当たり300円。世帯状況による減免あり"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000008174.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000008174.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -102,7 +144,10 @@
         "housingRequirement": "令和7年4月1日以降の契約に基づく適法な住宅で、耐震性や最低居住面積等の要件を満たすこと",
         "application": "三世代同居・近居開始日から6か月以内に申請"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000007799.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000007799.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -115,7 +160,10 @@
         "excluded": "家電4品目、家庭用パソコン、処理困難物等は町収集対象外",
         "fee": "個別料金は現行公式ページで確認できた範囲を超えて推測しない"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000005620.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000005620.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -127,7 +175,10 @@
         "preparation": "家庭・地域での備えとマイ・タイムライン作成を案内",
         "note": "自宅周辺の危険区域と避難経路を事前に確認する"
       },
-      "source": {"url": "https://www.town.agui.lg.jp/0000000256.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.agui.lg.jp/0000000256.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }

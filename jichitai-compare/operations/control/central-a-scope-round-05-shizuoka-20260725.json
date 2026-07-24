@@ -1,0 +1,1884 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-scope-round-05-shizuoka-20260725",
+  "prefectureCode": "22",
+  "prefectureName": "静岡県",
+  "expectedMunicipalityCount": 35,
+  "checkedMunicipalityCount": 35,
+  "checkedServiceCount": 315,
+  "generatedAt": "2026-07-25T02:14:00+09:00",
+  "structuralFindingCount": 0,
+  "unavailableCount": 5,
+  "substantiveSuspectCount": 4,
+  "findings": [],
+  "unavailable": [
+    {
+      "code": "22205",
+      "name": "熱海市",
+      "service": "sickChildCare",
+      "summary": "現行の市公式サイトで、市民が利用できる病児・病後児保育の対象年齢、施設、料金、申込条件を確定できない。"
+    },
+    {
+      "code": "22305",
+      "name": "松崎町",
+      "service": "sickChildCare",
+      "summary": "町の現行子ども・子育て支援事業計画では、病児・病後児保育の提供体制は未整備とされている。"
+    },
+    {
+      "code": "22306",
+      "name": "西伊豆町",
+      "service": "sickChildCare",
+      "summary": "町の現行子ども・子育て支援事業計画では、病児・病後児保育を現在実施していない。"
+    },
+    {
+      "code": "22429",
+      "name": "川根本町",
+      "service": "sickChildCare",
+      "summary": "町公式サイトで病児・病後児保育の現行施設、対象年齢、料金、利用方法を確認できない。"
+    },
+    {
+      "code": "22429",
+      "name": "川根本町",
+      "service": "postpartumCare",
+      "summary": "町公式サイトで産後ケア事業の現行利用対象、宿泊・通所・訪問型の提供施設、料金を確認できない。"
+    }
+  ],
+  "substantiveSuspects": [
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22219",
+      "name": "下田市",
+      "service": "temporaryChildcare",
+      "detail": "乳児等通園支援事業条例は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22305",
+      "name": "松崎町",
+      "service": "temporaryChildcare",
+      "detail": "条例制定議案は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22424",
+      "name": "吉田町",
+      "service": "temporaryChildcare",
+      "detail": "乳児等通園支援事業条例は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22429",
+      "name": "川根本町",
+      "service": "temporaryChildcare",
+      "detail": "こども計画は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    }
+  ],
+  "municipalities": [
+    {
+      "code": "22100",
+      "name": "静岡市",
+      "status": "verified",
+      "updatedAt": "2026-07-25",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から市立小学校の給食費を無償化し、経済的に就学が困難な世帯には中学校を含む学校給食費等を就学援助する。",
+          "source": "https://www.city.shizuoka.lg.jp/s2934/s013120.html",
+          "checkedAt": "2026-07-25"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年未満の母子へ、宿泊・日帰り2類型・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.shizuoka.lg.jp/s2873/s001907.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.shizuoka.lg.jp/s4936/s012276.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "県外から移住して就職・起業等をする若年者または子育て世帯へ、住宅確保費の一部を補助する。",
+          "source": "https://www.city.shizuoka.lg.jp/ijuteiju/s000081.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22130",
+      "name": "浜松市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校の給食費を無償化し、中学校も1食346円へ負担を軽減する。",
+          "source": "https://www.city.hamamatsu.shizuoka.jp/kenkou/kyushokukeihi.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、宿泊・日帰り・短時間・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.hamamatsu.shizuoka.jp/zaisek/budget/budget07/detail/d_072.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.hamamatsu.shizuoka.jp/koho2/pr/kouhou_all/2605/5regular-06.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市外からの移住者へ、住宅取得や引越移転にかかる費用を補助する。",
+          "source": "https://www.city.hamamatsu.shizuoka.jp/hamalife/oshirase/hamalifejyutakusyutokuhitouhojyokin.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22203",
+      "name": "沼津市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校の給食費を全額公費負担とし、中学校の保護者負担額を前年度と同額に据え置く。",
+          "source": "https://www.city.numazu.shizuoka.jp/kurashi/kyoiku/kyoiku/numazushi/kyuushoku.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ、医療機関・助産所での宿泊・通所または助産師の訪問による産後ケアを提供する。",
+          "source": "https://www.city.numazu.shizuoka.jp/kurashi/kyoiku/kosodate/tetsuzuki/sangocare.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://city.numazu.shizuoka.jp/kurashi/kyoiku/kosodate/azukeru/daredemo.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から沼津市へ移住して対象就業等を行う人へ、移住・就業支援金を交付する。",
+          "source": "https://www.city.numazu.shizuoka.jp/shisei/iju/howto/shien/shien.htm",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22205",
+      "name": "熱海市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から公立小学校に加え、市独自に中学校の学校給食費も無償化する。",
+          "source": "https://www.city.atami.lg.jp/mayor/shisei/1018112.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ、宿泊・日帰り・訪問型の産後ケアと保養型支援を提供する。",
+          "source": "https://www.city.atami.lg.jp/kosodate/ninshin/1004186.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.atami.lg.jp/kosodate/kosodateshien/1001029/1017988.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から熱海市へ移住し、対象就業・起業等の要件を満たす人へ移住・就業支援金を交付する。",
+          "source": "https://www.city.atami.lg.jp/kurashi/sumai/1000911/1013637.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22206",
+      "name": "三島市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を0円とし、中学校は1食345円とする。",
+          "source": "https://www.city.mishima.shizuoka.jp/page/2257.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後に支援を必要とする市内の母子へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.mishima.shizuoka.jp/site/kosodate/1982.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.mishima.shizuoka.jp/site/hoikusa-bisu/29659.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "若い移住世帯等が市内住宅を取得する場合、区分に応じて最大100万円を交付する。",
+          "source": "https://www.city.mishima.shizuoka.jp/page/2536.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22207",
+      "name": "富士宮市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市内公立小学校給食費を実質無償化し、中学校の物価高騰分を市費負担する。",
+          "source": "https://www.city.fujinomiya.lg.jp/3010600000/p002612.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.fujinomiya.lg.jp/1035600000/p000758.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.fujinomiya.lg.jp/1035460000/p000772.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "県外から移住し住宅取得等を行う若者世帯へ、加算を含め最大200万円を交付する。",
+          "source": "https://www.city.fujinomiya.lg.jp/1015100000/p002952.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22208",
+      "name": "伊東市",
+      "status": "verified",
+      "updatedAt": "2026-07-25",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度も市立小・中学校の給食費無償化を継続し、食物アレルギー等で弁当を持参する家庭には給食費相当額を補助する。",
+          "source": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/hisyokouhouka/shiseijoho/4/14181.html",
+          "checkedAt": "2026-07-25"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ、訪問・宿泊・通所・ホテル型の産後ケアを提供する。",
+          "source": "https://www.city.ito.shizuoka.jp/gyosei/benri/kurashi/2/13458.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/yojikyoikuka/kosodate_kyoiku/2/1/2/14204.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "45歳未満の移住者が市内住宅取得のため借り入れた指定住宅ローンの利子を補給する。",
+          "source": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/gyoseikeieika/shiseijoho/1/1/ijyuteijyu/11852.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22209",
+      "name": "島田市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費の保護者負担を0円とし、中学校は支援後の月額負担を5,350円とする。",
+          "source": "https://www.city.shimada.shizuoka.jp/kurashi-docs/kyushoku_gaiyou.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.shimada.shizuoka.jp/kurashi-docs/797426005.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.shimada.shizuoka.jp/kurashi-docs/882986686.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市内の中古住宅購入者へ、住宅取得・改修・子育て・移住等の要件に応じ最大80万円を交付する。",
+          "source": "https://www.city.shimada.shizuoka.jp/kurashi-docs/chyukojutakukounyuusyoureikin.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22210",
+      "name": "富士市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は国の補助制度を活用し、市立小学校の学校給食費を無償とする。",
+          "source": "https://www.city.fuji.shizuoka.jp/4005130000/p001763.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子が、産婦人科医院や助産所等で宿泊・日帰り・訪問型の産後ケアを利用できる。",
+          "source": "https://www.city.fuji.shizuoka.jp/1023150000/p001501.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在園していない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.fuji.shizuoka.jp/1023100000/p007672.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て・若者世帯が県外からUターンまたは東京圏からJIターンする場合、最大50万円の奨励金を交付する。",
+          "source": "https://www.city.fuji.shizuoka.jp/1005330000/p008803.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22211",
+      "name": "磐田市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は公立小学校の給食費を無料とし、公立中学校は1食344円とする。",
+          "source": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/kyuushoku/1010586.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・通所・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/ninshin_shussan_shien/1008504.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設等に通っていない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/kosodate_shien/1016040.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市内の既存住宅を取得・改修する若者・子育て世帯等へ、費用の一部を補助する。",
+          "source": "https://www.city.iwata.shizuoka.jp/kurashi_tetsuzuki/juutaku_pet_seikatsu/juutaku/1001513.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22212",
+      "name": "焼津市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校の給食費を無償化し、中学校は市負担後の保護者負担を1食302円とする。",
+          "source": "https://www.city.yaizu.lg.jp/child-edu/education/kyushoku/more-info/statistics.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.yaizu.lg.jp/child-edu/kodomo/mokuteki/torikumi/support/sango-care.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.yaizu.lg.jp/child-edu/kodomo/mokuteki/day-care/tsuenshienjigyo/use.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市外から転入する子育て世帯・若者夫婦世帯が市内で新築住宅を取得する場合に補助する。",
+          "source": "https://www.city.yaizu.lg.jp/life/iju-marriage/support-iju/kosodatesetaitou_teijyusokushin/kosodatesetaitou_teijyusokushin.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22213",
+      "name": "掛川市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "最新の公式公開ページでは、令和6年度予算ベースの1食当たり保護者負担額を公表している。",
+          "source": "https://www.city.kakegawa.shizuoka.jp/gyosei/docs/8036.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子へ、宿泊・通所・訪問型の産後ケアを合計7日まで提供する。",
+          "source": "https://www.city.kakegawa.shizuoka.jp/kakekko/docs/303816.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.kakegawa.shizuoka.jp/kakekko/docs/965970.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京23区等から掛川市へ移住し、就業・起業・テレワーク等の要件を満たす人へ移住・就業支援金を交付する。",
+          "source": "https://www.city.kakegawa.shizuoka.jp/gyosei/docs/7393.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22214",
+      "name": "藤枝市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市立小中学校の学校給食費は現行規則で小学校月4,300円、中学校月5,100円と定める。",
+          "source": "https://www.city.fujieda.shizuoka.jp/static/reiki_int/reiki_honbun/g315RG00001497.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年未満の母子へ、宿泊・通所・居宅訪問型の産後ケアを提供する。",
+          "source": "https://www.city.fujieda.shizuoka.jp/soshiki/sukoyaka/kenkosuishin/gyomu/7/17605.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.fujieda.shizuoka.jp/kosodate/hoikuen/26500.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "18歳以下の子どもがいる世帯の市内住宅取得・転居・中古住宅改修費を補助する。",
+          "source": "https://www.city.fujieda.shizuoka.jp/soshiki/toshikensetsu/akiya/gyomu/hojyokin/1450661881654.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22215",
+      "name": "御殿場市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市内3給食センターで令和8年度に各小中学校185日の給食を実施し、認定世帯には給食費を就学援助する。",
+          "source": "https://www.city.gotemba.lg.jp/kyouiku/d-2/d-2-3/176.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ日帰り・訪問型の産後ケアを提供し、健康確認、授乳・育児支援を行う。",
+          "source": "https://www.gotemba-kosodate.jp/syussan/%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設に在園していない生後6か月から満3歳未満の子どもが、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.gotemba-kosodate.jp/azukeru/%E3%81%93%E3%81%A9%E3%82%82%E8%AA%B0%E3%81%A7%E3%82%82%E9%80%9A%E5%9C%92%E5%88%B6%E5%BA%A6%E3%81%8C%E5%A7%8B%E3%81%BE%E3%82%8A%E3%81%BE%E3%81%99",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "一定の所得・年齢要件を満たす新婚世帯へ、住宅取得・賃借・改修・引越費用を補助する。",
+          "source": "https://www.city.gotemba.lg.jp/kenkou/c-4/c-4-10/12080.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22216",
+      "name": "袋井市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難と認定された世帯へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.city.fukuroi.shizuoka.jp/kosodate_kyoiku/gakko/kyoiku_gakushu/1425446967860.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
+          "source": "https://www.city.fukuroi.shizuoka.jp/soshiki/100/oyakokenkoukakari/kosodate_iryo/13210.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.fukuroi.shizuoka.jp/kosodate_kyoiku/kyoikuiin/mokutekibetu/seido_soudan/daredemotuen/14408.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から袋井市へ移住し、就業・テレワーク等の要件を満たす人へ移住・就業支援金を交付する。",
+          "source": "https://www.city.fukuroi.shizuoka.jp/soshiki/brand/brandkakari/ijyuteijyu/11183.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22219",
+      "name": "下田市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難と認定された世帯へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.city.shimoda.shizuoka.jp/category/240200gakkou/121916.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、宿泊型と日帰り型の産後ケアを提供する。",
+          "source": "https://www.city.shimoda.shizuoka.jp/category/220000ninshin_syussan/157377.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "出生後10か月を超える未就園児を、下田保育所で一時的に預かる緊急・リフレッシュ保育を実施する。",
+          "source": "https://www.city.shimoda.shizuoka.jp/category/230200hoiku_youtien/110216.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から下田市へ移住し、就業・起業・テレワーク等の要件を満たす人へ移住・就業支援金を交付する。",
+          "source": "https://www.city.shimoda.shizuoka.jp/category/081800koryukyoju/149842.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22220",
+      "name": "裾野市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市立小学校の給食費を無償化し、中学校は月額5,900円とする。",
+          "source": "https://www.city.susono.shizuoka.jp/kosodate/1/1/2577.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "裾野市民の産後の母子へ、宿泊型・通所型の産後ケアを提供する。",
+          "source": "https://www.city.susono.shizuoka.jp/kosodate/2/9/20787.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.susono.shizuoka.jp/kosodate/2/3/21447.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から裾野市へ移住し、就業・起業・テレワーク等の要件を満たす人へ支援金を交付する。",
+          "source": "https://www.city.susono.shizuoka.jp/kurashi/10/18122.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22221",
+      "name": "湖西市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市立小学校・中学校の学校給食費を無償化し、保護者負担を0円とする。",
+          "source": "https://www.city.kosai.shizuoka.jp/soshikiichiran/kyoikusomuka/gyomuannai/1_2/18718.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、宿泊型・デイサービス型・訪問型の産後ケアを合計7日以内提供する。",
+          "source": "https://www.city.kosai.shizuoka.jp/kosodate_kyoiku/kosodate/nenreibetsu/ninshin-shussan/kenshin-kyoshitsu-yobosesshu/17677.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.kosai.shizuoka.jp/kosodate_kyoiku/kosodate/nenreibetsu/0sai/18438.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から湖西市へ移住して就業・起業等の要件を満たす人へ、移住就業支援補助金を交付する。",
+          "source": "https://www.city.kosai.shizuoka.jp/kosai_saiko/hojoseido/6565.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22222",
+      "name": "伊豆市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難な認定世帯へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.city.izu.shizuoka.jp/kosodate_kyoiku/3/1/3095.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ宿泊・日帰り・訪問型の産後ケアを全種別合計10日まで提供する。",
+          "source": "https://www.city.izu.shizuoka.jp/soshiki/1010/7/823.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.izu.shizuoka.jp/kosodate_kyoiku/2/6471.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "若者夫婦・子育て世帯の住宅取得またはリフォームへ、費用の一部を最大100万円まで補助する。",
+          "source": "https://iju.city.izu.shizuoka.jp/query1.html?c1=2",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22223",
+      "name": "御前崎市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市内在住で市管内公立園・小中学校に在籍する園児・児童生徒の給食費を無償化する。",
+          "source": "https://www.city.omaezaki.shizuoka.jp/soshiki/onkyu/kyusyokuhi/kyushokuhi.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ、宿泊・通所・訪問型の産後ケアを合計7日まで提供する。",
+          "source": "https://www.city.omaezaki.shizuoka.jp/kurashi/kosodate_kyoiku/ninshin_shussan/shussan/9975.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.omaezaki.shizuoka.jp/soshiki/kodomomirai/kosodateservice/11217.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市内の空家を取得・賃借して10年以上居住する方のリフォーム費を50％、最大40万円補助する。",
+          "source": "https://www.city.omaezaki.shizuoka.jp/soshiki/toshiseibi/akiya/akiyareformsienjigyouhojokin.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22224",
+      "name": "菊川市",
+      "status": "verified",
+      "updatedAt": "2026-07-25",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を0円へ減免し、中学校は1食299円、認定こども園は1食300円とする。",
+          "source": "https://www.city.kikugawa.shizuoka.jp/kyuushokucenter/gakkoukyuushokuhi.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "市内在住の1歳未満の乳児と母を対象に、助産師による身体ケア、授乳指導、育児相談等を提供する。",
+          "source": "https://www.city.kikugawa.shizuoka.jp/kosodate/sangokea.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、保護者の就労要件を問わず、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.kikugawa.shizuoka.jp/kodomoseisaku/kodomodaredemo.html",
+          "checkedAt": "2026-07-25"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "40歳未満の若者・子育て世帯の市内住宅取得へ、一般世帯最大25万円、三世代同居・隣接住宅最大40万円を補助する。",
+          "source": "https://www.city.kikugawa.shizuoka.jp/toshikeikaku/jyuutakuhojyo.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22225",
+      "name": "伊豆の国市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市立小学校の給食費を無償化し、中学校と公立幼稚園・保育園等は保護者負担を据え置く。",
+          "source": "https://www.city.izunokuni.shizuoka.jp/hisyo/20240222.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の乳児と母を対象に、産科医療機関等で心身のケアや育児サポートを行う。",
+          "source": "https://www.city.izunokuni.shizuoka.jp/kenkou/kenko/ninshin/shussan.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.izunokuni.shizuoka.jp/youji/manabi/ichiji/documents/daredemotuuennseido.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏からの移住者へ、単身60万円、2人以上世帯100万円、18歳未満1人につき100万円を加算する。",
+          "source": "https://www.city.izunokuni.shizuoka.jp/seisaku/ijuu/shiennkinn.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22226",
+      "name": "牧之原市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難と認められる世帯へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.city.makinohara.shizuoka.jp/soshiki/31/1200.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の産婦を対象に、助産院等で心身のケアや授乳・育児相談を提供する。",
+          "source": "https://www.city.makinohara.shizuoka.jp/soshiki/17/52175.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.makinohara.shizuoka.jp/soshiki/14/60319.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "若い夫婦または中学生以下の子がいる世帯が市内住宅を新築・購入した場合、基本10万円と各種加算を交付する。",
+          "source": "https://www.city.makinohara.shizuoka.jp/site/makinohara-life/48565.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22301",
+      "name": "東伊豆町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難と認められる児童生徒へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.town.higashiizu.lg.jp/soshiki/kyouikuiinkai_jimusyoku/1/6/419.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後から乳児が1歳になるまでの母子へ、宿泊・日帰り型の産後ケアを提供する。",
+          "source": "https://www.town.higashiizu.lg.jp/soshiki/kenkodukurika/1/7/21/468.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.higashiizu.lg.jp/soshiki/jyumin_fukushika/1/10/26/2454.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から町へ移住し、就業等の要件を満たす人へ移住・就業支援金を交付する。",
+          "source": "https://www.town.higashiizu.lg.jp/soshiki/kikaku_cyoseika/2/4/509.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22302",
+      "name": "河津町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校へ学校給食センターから給食を提供し、献立・アレルギー対応等は学校と給食センターへ確認する。",
+          "source": "https://www.town.kawazu.shizuoka.jp/choumin/educational-institutions/",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後4か月未満の母子へ、宿泊・日帰り型の産後ケアを提供する。",
+          "source": "https://www.town.kawazu.shizuoka.jp/choumin/sangokeajigyou/",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から2歳児までの未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.kawazu.shizuoka.jp/choumin/kodomodaredemotuuennseido/",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から町へ移住し、就業等の要件を満たす人へ移住・就業支援金を交付する。",
+          "source": "https://www.town.kawazu.shizuoka.jp/choumin/c205/",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22304",
+      "name": "南伊豆町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 8,
+      "taskOfficialSourceCount": 8,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校で学校給食を実施し、地元食材や食文化を取り入れた給食の充実を進めている。",
+          "source": "https://www.town.minamiizu.shizuoka.jp/docs/2025042300022/file_contents/kodomo.pdf",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子に対し、医療機関等で心身のケア、授乳・育児相談を行う産後ケア事業を実施する。",
+          "source": "https://www.town.minamiizu.shizuoka.jp/docs/2025042300022/file_contents/kodomo.pdf",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.minamiizu.shizuoka.jp/docs/2026051400024/",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による住宅リフォーム費用の一部を補助し、工事費に応じて最大30万円を交付する。",
+          "source": "https://www.town.minamiizu.shizuoka.jp/docs/2013031301211/",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22305",
+      "name": "松崎町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 8,
+      "taskOfficialSourceCount": 8,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難と認定された世帯へ、学校給食費を含む就学援助を実施する。",
+          "source": "https://www.town.matsuzaki.shizuoka.jp/docs/2016020500077/",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後12か月未満の乳児と母親へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.matsuzaki.shizuoka.jp/docs/2018040600034/",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "家庭で一時的に保育が困難となった乳幼児を、町立児童館で一時預かりする。",
+          "source": "https://www.town.matsuzaki.shizuoka.jp/docs/2025050900016/file_contents/keikakuhonpen.pdf",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による10万円以上の住宅改修工事へ、工事費の20％、最大20万円を補助する。",
+          "source": "https://www.town.matsuzaki.shizuoka.jp/docs/2019040200019/",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22306",
+      "name": "西伊豆町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難な児童生徒の保護者へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.town.nishiizu.shizuoka.jp/reiki/reiki_honbun/r153RG00000764.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の支援を必要とする母親と乳児へ、宿泊・通所・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.nishiizu.shizuoka.jp/kakuka/kenkou/kenkou/nyuuyouji.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設等に通っていない生後6か月から3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.nishiizu.shizuoka.jp/forms/47/231.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク登録物件の改修費を2分の1・最大50万円、家財処分費を5分の4・最大10万円補助する。",
+          "source": "https://www.town.nishiizu.shizuoka.jp/kakuka/machizukuri/kikaku/akiyahojo.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22325",
+      "name": "函南町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を無償化し、中学校は1食355円・通常月額5,900円とする。",
+          "source": "https://www.town.kannami.shizuoka.jp/kosodate_kyoiku/kyoikuiinkai/gakkoukyuusyoku/6172.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子等へ、訪問・宿泊・日帰り・短時間型などの産後ケアを提供する。",
+          "source": "https://www.town.kannami.shizuoka.jp/soshiki/1008/5/1090.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "令和8年4月から、保育所等を定期利用していない乳幼児を対象にこども誰でも通園制度を実施する。",
+          "source": "https://www.town.kannami.shizuoka.jp/soshiki/1010/5/6246.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から函南町へ移住して就業・起業等の要件を満たす人へ、移住・就業支援金を交付する。",
+          "source": "https://www.town.kannami.shizuoka.jp/kurashi_tetsuzuki/iju_teiju/2362.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22341",
+      "name": "清水町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食の保護者負担を0円とし、中学校は公費軽減後1食330円とする。",
+          "source": "https://www.town.shimizu.shizuoka.jp/kyouiku/kyouiku00063.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "町内在住の母子等へ、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.shimizu.shizuoka.jp/kenko/kenko00266.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.shimizu.shizuoka.jp/kodomo/kodomo00179.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から清水町へ移住して就業・起業等の要件を満たす人へ、移住・就業支援金を交付する。",
+          "source": "https://www.town.shimizu.shizuoka.jp/kikaku/kikaku00195.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22342",
+      "name": "長泉町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を実質無償化し、中学校は改定前と同じ月額5,600円とする。",
+          "source": "https://www.town.nagaizumi.lg.jp/soshiki/kyuusyoku/10905.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.nagaizumi.lg.jp/soshiki/kenko/1/1/5191.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、専用保育室Pluttを月10時間まで利用できる。",
+          "source": "https://www.town.nagaizumi.lg.jp/soshiki/kodomo/1_1/3/11704.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から長泉町へ移住して就業・起業等の要件を満たす人へ、移住・就業支援金を交付する。",
+          "source": "https://www.town.nagaizumi.lg.jp/soshiki/sangyo/5/2/7841.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22344",
+      "name": "小山町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由で就学が困難な小中学生の保護者へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.fuji-oyama.jp/oyama/reiki/reiki_honbun/g340RG00000609.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ、助産師や保健師等による心身のケアと子育て相談を提供する。",
+          "source": "https://www.fuji-oyama.jp/page/1176.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.fuji-oyama.jp/page/2914.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から小山町へ移住し、就業・テレワーク・関係人口・起業等の要件を満たす人へ支援金を交付する。",
+          "source": "https://www.fuji-oyama.jp/page/1228.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22424",
+      "name": "吉田町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を無償化し、中学校は単価上昇分を町が負担して保護者負担を前年度と同水準に据え置く。",
+          "source": "https://www.town.yoshida.shizuoka.jp/9720.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後おおむね1年以内の母子へ、宿泊・デイサービス・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.yoshida.shizuoka.jp/8273.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後9か月から就学前までの児童を、保護者の就労・入院・冠婚葬祭等の際に一時的に預かる。",
+          "source": "https://www.town.yoshida.shizuoka.jp/2514.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "東京圏から吉田町へ移住し、対象要件を満たして就業・起業等した人へ移住・就業支援金を交付する。",
+          "source": "https://www.town.yoshida.shizuoka.jp/7706.htm",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22429",
+      "name": "川根本町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 7,
+      "unavailableCount": 2,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学1～6年生の給食費を無償化し、中学1～3年生は負担軽減を継続する。",
+          "source": "https://www.town.kawanehon.shizuoka.jp/soshiki/degital/degitalu/16550.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "町公式サイトで産後ケア事業の現行利用対象、宿泊・通所・訪問型の提供施設、料金を確認できない。",
+          "source": "https://www.town.kawanehon.shizuoka.jp/kosodate/syussann/index.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設に在籍していない就学前児童を、保護者の就労・傷病・育児負担軽減等の際に一時的に預かる。",
+          "source": "https://www.town.kawanehon.shizuoka.jp/section/reiki_int/reiki_honbun/r225RG00000893.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内へ定住する若者・子育て世帯等へ、住宅賃借費と住宅取得費を補助する。",
+          "source": "https://www.town.kawanehon.shizuoka.jp/soshiki/keiei/teijyuijyu/13362.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "22461",
+      "name": "森町",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は原材料価格上昇分を町が補助し、小中学校給食費の保護者負担を値上げしない。",
+          "source": "https://www.town.morimachi.shizuoka.jp/gyosei/choseijoho/chochonoheya/6651.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
+          "source": "https://www.town.morimachi.shizuoka.jp/gyosei/kosodate_kyoiku/ninshin_shussan/1457.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/kenkokodomoka/yochienhoikuenkakari/kodomodaredemotsuuennseido/6609.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下・所得要件等を満たす新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を補助する。",
+          "source": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/teijusuishinka/ijukoryugakari/2/izyusankouzyohou/4392.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    }
+  ],
+  "initialStructuralFindingCount": 0,
+  "resolvedStructuralFindingCount": 0,
+  "initialSubstantiveSuspectCount": 46,
+  "confirmedErrorCount": 3,
+  "correctedMunicipalityCodes": [
+    "22100",
+    "22208",
+    "22224"
+  ],
+  "confirmedCorrections": [
+    {
+      "type": "current_program_omission",
+      "service": "schoolMeals",
+      "count": 2,
+      "municipalityCodes": [
+        "22100",
+        "22208"
+      ]
+    },
+    {
+      "type": "current_program_omission",
+      "service": "temporaryChildcare",
+      "count": 1,
+      "municipalityCodes": [
+        "22224"
+      ]
+    }
+  ],
+  "confirmedAccurateExamples": [
+    {
+      "code": "22213",
+      "service": "schoolMeals",
+      "detail": "掛川市公式の現行公開ページは令和7年1月以降の負担額を掲載し、令和8年度の無償化は確認できないため既存記録を維持"
+    },
+    {
+      "code": "22215",
+      "service": "schoolMeals",
+      "detail": "御殿場市公式ページは令和8年度給食費納入通知を掲載しており、全世帯無償化とは確認できないため既存記録を維持"
+    }
+  ],
+  "needsFurtherReview": [
+    {
+      "code": "22219",
+      "name": "下田市",
+      "service": "temporaryChildcare",
+      "detail": "乳児等通園支援事業条例は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "code": "22305",
+      "name": "松崎町",
+      "service": "temporaryChildcare",
+      "detail": "条例制定議案は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "code": "22424",
+      "name": "吉田町",
+      "service": "temporaryChildcare",
+      "detail": "乳児等通園支援事業条例は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "code": "22429",
+      "name": "川根本町",
+      "service": "temporaryChildcare",
+      "detail": "こども計画は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    }
+  ],
+  "initialSubstantiveSuspects": [
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22100",
+      "name": "静岡市",
+      "summary": "県外から移住して就職・起業等をする若年者または子育て世帯へ、住宅確保費の一部を補助する。",
+      "source": "https://www.city.shizuoka.lg.jp/ijuteiju/s000081.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22130",
+      "name": "浜松市",
+      "summary": "2026年度は市立小学校の給食費を無償化し、中学校も1食346円へ負担を軽減する。",
+      "source": "https://www.city.hamamatsu.shizuoka.jp/kenkou/kyushokukeihi.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22130",
+      "name": "浜松市",
+      "summary": "市外からの移住者へ、住宅取得や引越移転にかかる費用を補助する。",
+      "source": "https://www.city.hamamatsu.shizuoka.jp/hamalife/oshirase/hamalifejyutakusyutokuhitouhojyokin.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22203",
+      "name": "沼津市",
+      "summary": "2026年度は市立小学校の給食費を全額公費負担とし、中学校の保護者負担額を前年度と同額に据え置く。",
+      "source": "https://www.city.numazu.shizuoka.jp/kurashi/kyoiku/kyoiku/numazushi/kyuushoku.htm"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22203",
+      "name": "沼津市",
+      "summary": "東京圏から沼津市へ移住して対象就業等を行う人へ、移住・就業支援金を交付する。",
+      "source": "https://www.city.numazu.shizuoka.jp/shisei/iju/howto/shien/shien.htm"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22205",
+      "name": "熱海市",
+      "summary": "令和8年度から公立小学校に加え、市独自に中学校の学校給食費も無償化する。",
+      "source": "https://www.city.atami.lg.jp/mayor/shisei/1018112.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22205",
+      "name": "熱海市",
+      "summary": "東京圏から熱海市へ移住し、対象就業・起業等の要件を満たす人へ移住・就業支援金を交付する。",
+      "source": "https://www.city.atami.lg.jp/kurashi/sumai/1000911/1013637.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22206",
+      "name": "三島市",
+      "summary": "令和8年度は小学校給食費を0円とし、中学校は1食345円とする。",
+      "source": "https://www.city.mishima.shizuoka.jp/page/2257.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22207",
+      "name": "富士宮市",
+      "summary": "令和8年度は市内公立小学校給食費を実質無償化し、中学校の物価高騰分を市費負担する。",
+      "source": "https://www.city.fujinomiya.lg.jp/3010600000/p002612.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22208",
+      "name": "伊東市",
+      "summary": "食物アレルギーで学校給食を受けられず弁当を持参する市立小中学生の保護者へ、給食費相当額を補助する。",
+      "source": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/kyoikusomuka/kosodate_kyoiku/1/2/2/14075.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22208",
+      "name": "伊東市",
+      "summary": "45歳未満の移住者が市内住宅取得のため借り入れた指定住宅ローンの利子を補給する。",
+      "source": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/gyoseikeieika/shiseijoho/1/1/ijyuteijyu/11852.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22209",
+      "name": "島田市",
+      "summary": "令和8年度は小学校給食費の保護者負担を0円とし、中学校は支援後の月額負担を5,350円とする。",
+      "source": "https://www.city.shimada.shizuoka.jp/kurashi-docs/kyushoku_gaiyou.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22209",
+      "name": "島田市",
+      "summary": "市内の中古住宅購入者へ、住宅取得・改修・子育て・移住等の要件に応じ最大80万円を交付する。",
+      "source": "https://www.city.shimada.shizuoka.jp/kurashi-docs/chyukojutakukounyuusyoureikin.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22210",
+      "name": "富士市",
+      "summary": "令和8年度は国の補助制度を活用し、市立小学校の学校給食費を無償とする。",
+      "source": "https://www.city.fuji.shizuoka.jp/4005130000/p001763.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22211",
+      "name": "磐田市",
+      "summary": "2026年度は公立小学校の給食費を無料とし、公立中学校は1食344円とする。",
+      "source": "https://www.city.iwata.shizuoka.jp/kosodate_kyouiku/kyuushoku/1010586.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22212",
+      "name": "焼津市",
+      "summary": "2026年度は市立小学校の給食費を無償化し、中学校は市負担後の保護者負担を1食302円とする。",
+      "source": "https://www.city.yaizu.lg.jp/child-edu/education/kyushoku/more-info/statistics.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22213",
+      "name": "掛川市",
+      "summary": "最新の公式公開ページでは、令和6年度予算ベースの1食当たり保護者負担額を公表している。",
+      "source": "https://www.city.kakegawa.shizuoka.jp/gyosei/docs/8036.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22214",
+      "name": "藤枝市",
+      "summary": "18歳以下の子どもがいる世帯の市内住宅取得・転居・中古住宅改修費を補助する。",
+      "source": "https://www.city.fujieda.shizuoka.jp/soshiki/toshikensetsu/akiya/gyomu/hojyokin/1450661881654.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22215",
+      "name": "御殿場市",
+      "summary": "市内3給食センターで令和8年度に各小中学校185日の給食を実施し、認定世帯には給食費を就学援助する。",
+      "source": "https://www.city.gotemba.lg.jp/kyouiku/d-2/d-2-3/176.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22215",
+      "name": "御殿場市",
+      "summary": "一定の所得・年齢要件を満たす新婚世帯へ、住宅取得・賃借・改修・引越費用を補助する。",
+      "source": "https://www.city.gotemba.lg.jp/kenkou/c-4/c-4-10/12080.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22216",
+      "name": "袋井市",
+      "summary": "経済的理由で就学が困難と認定された世帯へ、学校給食費を含む就学援助を行う。",
+      "source": "https://www.city.fukuroi.shizuoka.jp/kosodate_kyoiku/gakko/kyoiku_gakushu/1425446967860.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22216",
+      "name": "袋井市",
+      "summary": "東京圏から袋井市へ移住し、就業・テレワーク等の要件を満たす人へ移住・就業支援金を交付する。",
+      "source": "https://www.city.fukuroi.shizuoka.jp/soshiki/brand/brandkakari/ijyuteijyu/11183.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22219",
+      "name": "下田市",
+      "summary": "出生後10か月を超える未就園児を、下田保育所で一時的に預かる緊急・リフレッシュ保育を実施する。",
+      "source": "https://www.city.shimoda.shizuoka.jp/category/230200hoiku_youtien/110216.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22219",
+      "name": "下田市",
+      "summary": "経済的理由で就学が困難と認定された世帯へ、学校給食費を含む就学援助を行う。",
+      "source": "https://www.city.shimoda.shizuoka.jp/category/240200gakkou/121916.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22219",
+      "name": "下田市",
+      "summary": "東京圏から下田市へ移住し、就業・起業・テレワーク等の要件を満たす人へ移住・就業支援金を交付する。",
+      "source": "https://www.city.shimoda.shizuoka.jp/category/081800koryukyoju/149842.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22220",
+      "name": "裾野市",
+      "summary": "令和8年度は市立小学校の給食費を無償化し、中学校は月額5,900円とする。",
+      "source": "https://www.city.susono.shizuoka.jp/kosodate/1/1/2577.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22220",
+      "name": "裾野市",
+      "summary": "東京圏から裾野市へ移住し、就業・起業・テレワーク等の要件を満たす人へ支援金を交付する。",
+      "source": "https://www.city.susono.shizuoka.jp/kurashi/10/18122.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22221",
+      "name": "湖西市",
+      "summary": "令和8年度は市立小学校・中学校の学校給食費を無償化し、保護者負担を0円とする。",
+      "source": "https://www.city.kosai.shizuoka.jp/soshikiichiran/kyoikusomuka/gyomuannai/1_2/18718.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22223",
+      "name": "御前崎市",
+      "summary": "市内在住で市管内公立園・小中学校に在籍する園児・児童生徒の給食費を無償化する。",
+      "source": "https://www.city.omaezaki.shizuoka.jp/soshiki/onkyu/kyusyokuhi/kyushokuhi.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22224",
+      "name": "菊川市",
+      "summary": "おおむね生後6か月から就学前までの未就園児を、月10日以内で一時的に預かる。",
+      "source": "https://www.city.kikugawa.shizuoka.jp/yojikyoiku/refresh_ichijihoiku.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22224",
+      "name": "菊川市",
+      "summary": "令和8年度は小学校給食費を0円へ減免し、中学校は1食299円、認定こども園は1食300円とする。",
+      "source": "https://www.city.kikugawa.shizuoka.jp/kyuushokucenter/gakkoukyuushokuhi.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22225",
+      "name": "伊豆の国市",
+      "summary": "令和8年度は市立小学校の給食費を無償化し、中学校と公立幼稚園・保育園等は保護者負担を据え置く。",
+      "source": "https://www.city.izunokuni.shizuoka.jp/hisyo/20240222.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22225",
+      "name": "伊豆の国市",
+      "summary": "東京圏からの移住者へ、単身60万円、2人以上世帯100万円、18歳未満1人につき100万円を加算する。",
+      "source": "https://www.city.izunokuni.shizuoka.jp/seisaku/ijuu/shiennkinn.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22226",
+      "name": "牧之原市",
+      "summary": "若い夫婦または中学生以下の子がいる世帯が市内住宅を新築・購入した場合、基本10万円と各種加算を交付する。",
+      "source": "https://www.city.makinohara.shizuoka.jp/site/makinohara-life/48565.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22305",
+      "name": "松崎町",
+      "summary": "家庭で一時的に保育が困難となった乳幼児を、町立児童館で一時預かりする。",
+      "source": "https://www.town.matsuzaki.shizuoka.jp/docs/2025050900016/file_contents/keikakuhonpen.pdf"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22325",
+      "name": "函南町",
+      "summary": "令和8年度は小学校給食費を無償化し、中学校は1食355円・通常月額5,900円とする。",
+      "source": "https://www.town.kannami.shizuoka.jp/kosodate_kyoiku/kyoikuiinkai/gakkoukyuusyoku/6172.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22325",
+      "name": "函南町",
+      "summary": "東京圏から函南町へ移住して就業・起業等の要件を満たす人へ、移住・就業支援金を交付する。",
+      "source": "https://www.town.kannami.shizuoka.jp/kurashi_tetsuzuki/iju_teiju/2362.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22341",
+      "name": "清水町",
+      "summary": "令和8年度は小学校給食の保護者負担を0円とし、中学校は公費軽減後1食330円とする。",
+      "source": "https://www.town.shimizu.shizuoka.jp/kyouiku/kyouiku00063.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22342",
+      "name": "長泉町",
+      "summary": "令和8年度は小学校給食費を実質無償化し、中学校は改定前と同じ月額5,600円とする。",
+      "source": "https://www.town.nagaizumi.lg.jp/soshiki/kyuusyoku/10905.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22342",
+      "name": "長泉町",
+      "summary": "東京圏から長泉町へ移住して就業・起業等の要件を満たす人へ、移住・就業支援金を交付する。",
+      "source": "https://www.town.nagaizumi.lg.jp/soshiki/sangyo/5/2/7841.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22424",
+      "name": "吉田町",
+      "summary": "生後9か月から就学前までの児童を、保護者の就労・入院・冠婚葬祭等の際に一時的に預かる。",
+      "source": "https://www.town.yoshida.shizuoka.jp/2514.htm"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22424",
+      "name": "吉田町",
+      "summary": "令和8年度は小学校給食費を無償化し、中学校は単価上昇分を町が負担して保護者負担を前年度と同水準に据え置く。",
+      "source": "https://www.town.yoshida.shizuoka.jp/9720.htm"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "22429",
+      "name": "川根本町",
+      "summary": "保育施設に在籍していない就学前児童を、保護者の就労・傷病・育児負担軽減等の際に一時的に預かる。",
+      "source": "https://www.town.kawanehon.shizuoka.jp/section/reiki_int/reiki_honbun/r225RG00000893.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22429",
+      "name": "川根本町",
+      "summary": "令和8年度は小学1～6年生の給食費を無償化し、中学1～3年生は負担軽減を継続する。",
+      "source": "https://www.town.kawanehon.shizuoka.jp/soshiki/degital/degitalu/16550.html"
+    },
+    {
+      "severity": "review",
+      "type": "school_meal_currentness_check",
+      "code": "22461",
+      "name": "森町",
+      "summary": "令和8年度は原材料価格上昇分を町が補助し、小中学校給食費の保護者負担を値上げしない。",
+      "source": "https://www.town.morimachi.shizuoka.jp/gyosei/choseijoho/chochonoheya/6651.html"
+    },
+    {
+      "severity": "review",
+      "type": "housing_currentness_check",
+      "code": "22461",
+      "name": "森町",
+      "summary": "39歳以下・所得要件等を満たす新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を補助する。",
+      "source": "https://www.town.morimachi.shizuoka.jp/gyosei/machinososhiki/teijusuishinka/ijukoryugakari/2/izyusankouzyohou/4392.html"
+    }
+  ],
+  "validatorSemantics": "task officialSourcesはverified/unavailable制度の主出典のみを制度順に重複排除"
+}
