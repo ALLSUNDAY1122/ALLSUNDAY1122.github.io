@@ -1,0 +1,92 @@
+name: Merge Minoh and Kashiwara on Latest Main
+
+on:
+  push:
+    branches:
+      - coord/sync-audits-27220-27221-20260724
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate-and-merge:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ALLSUNDAY1122/ALLSUNDAY1122.github.io
+      PR_NUMBER: "2851"
+      BRANCH: coord/sync-audits-27220-27221-20260724
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Preserve audited source files
+        run: |
+          cp jichitai-compare/data/municipalities/27/27220.json /tmp/27220-municipality.json
+          cp jichitai-compare/operations/tasks/27220.json /tmp/27220-task.json
+          cp jichitai-compare/data/municipalities/27/27221.json /tmp/27221-municipality.json
+          cp jichitai-compare/operations/tasks/27221.json /tmp/27221-task.json
+
+      - name: Regenerate on latest main and merge PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for attempt in 1 2 3 4 5; do
+            echo "Attempt ${attempt}: refresh from latest main"
+            git fetch origin main
+            git reset --hard origin/main
+
+            cp /tmp/27220-municipality.json jichitai-compare/data/municipalities/27/27220.json
+            cp /tmp/27220-task.json jichitai-compare/operations/tasks/27220.json
+            cp /tmp/27221-municipality.json jichitai-compare/data/municipalities/27/27221.json
+            cp /tmp/27221-task.json jichitai-compare/operations/tasks/27221.json
+
+            cd jichitai-compare
+            npm run generate
+            npm run progress
+            npm run validate:generated
+            node --check app.js
+            cd ..
+
+            rm -f .github/workflows/jichitai-27220-27221-merge-latest.yml
+            git add -A \
+              .github/workflows/jichitai-27220-27221-merge-latest.yml \
+              jichitai-compare/data/municipalities/27/27220.json \
+              jichitai-compare/data/municipalities/27/27221.json \
+              jichitai-compare/operations/tasks/27220.json \
+              jichitai-compare/operations/tasks/27221.json \
+              jichitai-compare/data/generated \
+              jichitai-compare/municipality/27220 \
+              jichitai-compare/municipality/27221 \
+              jichitai-compare/operations/progress.json \
+              jichitai-compare/sitemap.xml
+
+            git commit -m "全国品質同期: 箕面市・柏原市を最新mainへ反映"
+            git push --force origin "HEAD:${BRANCH}"
+            HEAD_SHA=$(git rev-parse HEAD)
+
+            sleep 3
+            if gh api --method PUT "repos/${REPO}/pulls/${PR_NUMBER}/merge" \
+              -f merge_method=merge \
+              -f sha="${HEAD_SHA}"; then
+              echo "PR ${PR_NUMBER} merged at ${HEAD_SHA}"
+              exit 0
+            fi
+
+            echo "Main moved or mergeability not ready; retrying"
+            sleep 3
+          done
+
+          echo "Could not merge after 5 validated latest-main attempts" >&2
+          exit 1
