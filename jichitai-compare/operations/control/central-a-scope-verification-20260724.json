@@ -3,7 +3,7 @@
   "auditId": "central-a-scope-verification-20260724",
   "session": "中日本調査班A",
   "purpose": "担当範囲の誤調査・状態不整合を都道府県単位で10回に分けて概略再検証する",
-  "branch": "audit/central-a-scope-verification-round-09-20260725",
+  "branch": "audit/central-a-scope-verification-round-10-20260725",
   "startedAt": "2026-07-24T23:50:00+09:00",
   "status": "in_progress",
   "batchCount": 10,
@@ -376,16 +376,49 @@
       ],
       "nextStep": "第10回として兵庫県41自治体を監査する",
       "completedAt": "2026-07-25T04:52:00+09:00"
+    },
+    {
+      "batch": 10,
+      "prefectureCode": "28",
+      "prefectureName": "兵庫県",
+      "municipalityCount": 41,
+      "status": "completed_with_corrections",
+      "checkedMunicipalities": 41,
+      "checkedServices": 369,
+      "initialStructuralFindingCount": 1,
+      "structuralFindingCount": 0,
+      "resolvedStructuralFindingCount": 1,
+      "initialUnavailableCount": 0,
+      "unavailableCount": 0,
+      "initialSubstantiveSuspectCount": 7,
+      "substantiveSuspectCount": 0,
+      "report": "operations/control/central-a-scope-round-10-hyogo-20260725.json",
+      "confirmedErrors": 2,
+      "correctedMunicipalityCodes": [
+        "28201",
+        "28212"
+      ],
+      "confirmedAccurateSuspectCodes": [
+        "28220",
+        "28225",
+        "28227",
+        "28228",
+        "28442",
+        "28585"
+      ],
+      "needsFurtherReviewCodes": [],
+      "nextStep": "10回監査完了。継続確認25件を統括へ共有する",
+      "completedAt": "2026-07-25T05:34:00+09:00"
     }
   ],
   "summary": {
-    "completedBatches": 9,
-    "checkedMunicipalities": 273,
-    "confirmedErrors": 74,
+    "completedBatches": 10,
+    "checkedMunicipalities": 314,
+    "confirmedErrors": 76,
     "needsFurtherReview": 25,
-    "correctedErrors": 74
+    "correctedErrors": 76
   },
-  "nextAction": "第10回として兵庫県41自治体を監査する",
+  "nextAction": "10回監査完了。継続確認25件を統括へ共有する",
   "rebuiltFrom": "audit/central-a-scope-verification-20260724",
   "rebuiltAt": "2026-07-25T00:11:00+09:00",
   "rebuiltRound3At": "2026-07-25T00:37:00+09:00",
@@ -394,5 +427,8 @@
   "rebuiltRound6At": "2026-07-25T02:48:00+09:00",
   "rebuiltRound7At": "2026-07-25T03:07:00+09:00",
   "rebuiltRound8At": "2026-07-25T03:56:00+09:00",
-  "rebuiltRound9At": "2026-07-25T04:52:00+09:00"
+  "rebuiltRound9At": "2026-07-25T04:52:00+09:00",
+  "auditStatus": "completed",
+  "completedAt": "2026-07-25T05:34:00+09:00",
+  "rebuiltRound10At": "2026-07-25T05:34:00+09:00"
 }
