@@ -1,0 +1,16 @@
+{
+  "round":9,
+  "auditedAt":"2026-07-25T02:16:00+09:00",
+  "codes":["07447","07461","07464","07465","07466","07481","07482","07483","07484","07501","07502","07503","07504"],
+  "structuralAudit":{"result":"passed","checkedMunicipalities":13,"errors":0},
+  "deepChecks":[
+    {"code":"07447","name":"会津美里町","services":["sickChildCare","schoolMeals","postpartumCare","temporaryChildcare"],"result":"no_confirmed_error","note":"軽度の病児・病後児を対象とするファミリーサポートと、2026年6月更新の宿泊・日帰り産後ケアは登録内容と一致。学校給食費の一般世帯負担と誰でも通園制度の詳細条件は公式情報から確定できないためunavailableを維持。"},
+    {"code":"07461","name":"西郷村","services":["childcareFee","schoolMeals","postpartumCare","temporaryChildcare"],"result":"no_confirmed_error","note":"令和8年度保育園の受入月齢、学校給食費実質無償化、2026年4月更新の産後ケア、誰でも通園制度の生後6か月・月10時間・1時間300円が登録内容と一致。"},
+    {"code":"07481","name":"棚倉町","services":["schoolMeals","postpartumCare","temporaryChildcare"],"result":"no_confirmed_error","note":"学校給食の保護者負担単価、宿泊・日帰り・訪問型産後ケア、棚倉保育園の誰でも通園制度の対象・月10時間・1時間300円に確定的な矛盾を確認しなかった。"},
+    {"code":"07501","name":"石川町","services":["schoolMeals","postpartumCare","temporaryChildcare","housingSupport"],"result":"corrected_accuracy_error","note":"学校給食無償化と令和8年度誰でも通園制度は確認できた。産後ケアは町が公開する利用案内が令和6年度版で、住宅取得補助は令和7年度分が2026年3月31日に終了しているため、両制度をverifiedからunavailableへ修正。"}
+  ],
+  "confirmedErrors":[
+    {"code":"07501","path":"services.postpartumCare.status","before":"verified","after":"unavailable","severity":"medium","corrected":true},
+    {"code":"07501","path":"services.housingSupport.status","before":"verified","after":"unavailable","severity":"medium","corrected":true}
+  ]
+}
