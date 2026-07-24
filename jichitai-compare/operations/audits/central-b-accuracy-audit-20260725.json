@@ -64,7 +64,7 @@
         "29203",
         "29204"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "round": 4,
@@ -175,11 +175,11 @@
     }
   ],
   "progress": {
-    "completedRounds": 2,
-    "structurallyCheckedMunicipalities": 20,
-    "deepCheckedMunicipalities": 13,
-    "confirmedErrors": 9,
-    "correctedErrors": 9
+    "completedRounds": 3,
+    "structurallyCheckedMunicipalities": 30,
+    "deepCheckedMunicipalities": 23,
+    "confirmedErrors": 14,
+    "correctedErrors": 14
   },
   "preflightFindings": [
     {
@@ -452,6 +452,201 @@
           "service": "housingSupport",
           "before": "verified / 一般移住支援金",
           "after": "verified / 子育てUターン世帯向け公営住宅申込",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "auditedAt": "2026-07-24T15:59:42Z",
+      "codes": [
+        "26365",
+        "26366",
+        "26367",
+        "26407",
+        "26463",
+        "26465",
+        "29201",
+        "29202",
+        "29203",
+        "29204"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 2,
+        "workflowRunId": 30107113817,
+        "artifactId": 8602040561,
+        "artifactDigest": "sha256:d5870294f190b00a8607847d690e0d91ec10f61421cc3e9b67b928ff52b6d07a",
+        "postCorrectionWorkflowRunId": 30107561356,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "26365",
+          "name": "和束町",
+          "services": [
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度の産後ケア、誰でも通園関連、子育て住宅リフォーム・新婚住宅支援を確認し、明確な誤りなし。"
+        },
+        {
+          "code": "26366",
+          "name": "精華町",
+          "services": [
+            "schoolMeals",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "学校給食完全無償化の継続を確認。一般住宅向け太陽光等補助を子育て住宅支援としていたためhousingSupportをunavailableへ訂正。"
+        },
+        {
+          "code": "26367",
+          "name": "南山城村",
+          "services": [
+            "sickChildCare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "広域病児保育の対象を生後6か月から小学6年生、所得区分別料金まで公式情報で確定。定住促進奨励金は子育て世帯要件があり妥当。"
+        },
+        {
+          "code": "26407",
+          "name": "京丹波町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度の給食徴収額、産後ケア、誰でも通園、子育て住宅改修支援を照合し、明確な誤りなし。"
+        },
+        {
+          "code": "26463",
+          "name": "伊根町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "誰でも通園月3時間・無料は一致。一般の若年・移住世帯向け定住促進住宅補助を子育て世帯専用としていたためunavailableへ訂正。"
+        },
+        {
+          "code": "26465",
+          "name": "与謝野町",
+          "services": [
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "産後ケア3類型、誰でも通園月10時間、子育て世帯移住定住支援の対象・加算を確認し、明確な誤りなし。"
+        },
+        {
+          "code": "29201",
+          "name": "奈良市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食負担、産後ケア3類型、誰でも通園月10時間、子育て移住定住支援金を確認し一致。"
+        },
+        {
+          "code": "29202",
+          "name": "大和高田市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "小中学校給食費無償化、産後ケア、誰でも通園を確認。子育て世帯専用住宅支援未確認のunavailable判定は妥当。"
+        },
+        {
+          "code": "29203",
+          "name": "大和郡山市",
+          "services": [
+            "schoolMeals",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "小中学校給食費無償化を現行表現へ修正。一般エコ改修を除外し、18歳未満1人につき100万円加算の移住支援へ絞った。"
+        },
+        {
+          "code": "29204",
+          "name": "天理市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食費無償化、産後ケア、誰でも通園、18歳未満1人につき100万円加算の移住支援を確認し一致。"
+        },
+        {
+          "code": "26364",
+          "name": "笠置町",
+          "services": [
+            "sickChildCare"
+          ],
+          "result": "corrected_cross_round",
+          "note": "第2回では条件未確認としていたが、広域連携先の公式情報で生後6か月から小学6年生、料金・利用方法を確認しverifiedへ訂正。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "26366",
+          "service": "housingSupport",
+          "before": "verified / 一般住宅向け太陽光・蓄電設備補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26463",
+          "service": "housingSupport",
+          "before": "verified / 一般の若年・移住世帯向け定住促進住宅補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29203",
+          "service": "housingSupport",
+          "before": "verified / 一般エコ改修と移住支援を混在",
+          "after": "verified / 18歳未満1人につき100万円加算の移住支援に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26364",
+          "service": "sickChildCare",
+          "before": "unavailable / 広域病児保育の条件未確認",
+          "after": "verified / 生後6か月から小学6年生・所得区分別料金を確認",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26367",
+          "service": "sickChildCare",
+          "before": "verified / 対象年齢を0歳からと推定し料金未確認",
+          "after": "verified / 生後6か月から小学6年生・所得区分別料金を確認",
           "status": "corrected_in_audit_pr_2926"
         }
       ]
