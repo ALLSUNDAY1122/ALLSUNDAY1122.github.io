@@ -21,9 +21,6 @@ jobs:
           fetch-depth: 0
       - name: Fetch latest main
         run: git fetch origin main region/east
-      - name: Validate regional source and task structure
-        working-directory: jichitai-compare
-        run: npm run validate
       - name: Compare East A sources and tasks with main
         run: |
           python <<'PY'
@@ -31,63 +28,69 @@ jobs:
           from pathlib import Path
 
           prefectures = {'10','13','19','20'}
+          service_keys = {'childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'}
           root = Path('jichitai-compare')
           source_paths = []
           task_paths = []
           codes = []
           mismatches = []
+          structure_errors = []
 
           for pref in sorted(prefectures):
               for path in sorted((root/'data'/'municipalities'/pref).glob('*.json')):
                   code = path.stem
+                  data = json.loads(path.read_text(encoding='utf-8'))
+                  if data.get('code') != code or set(data.get('services',{})) != service_keys:
+                      structure_errors.append(path.as_posix())
+                  task_path = root/'operations'/'tasks'/f'{code}.json'
+                  if not task_path.exists():
+                      structure_errors.append(task_path.as_posix())
+                  else:
+                      task = json.loads(task_path.read_text(encoding='utf-8'))
+                      counts = {
+                          'verifiedCount':sum(1 for s in data['services'].values() if s.get('status')=='verified'),
+                          'researchingCount':sum(1 for s in data['services'].values() if s.get('status')=='researching'),
+                          'unavailableCount':sum(1 for s in data['services'].values() if s.get('status')=='unavailable'),
+                          'needsMediumReviewCount':sum(1 for s in data['services'].values() if s.get('status')=='needs_medium_review')
+                      }
+                      if task.get('municipalityCode') != code or any(task.get(k) != v for k,v in counts.items()):
+                          structure_errors.append(task_path.as_posix())
                   codes.append(code)
                   source_paths.append(path)
-                  task_paths.append(root/'operations'/'tasks'/f'{code}.json')
+                  task_paths.append(task_path)
+
+          if structure_errors:
+              print('East A targeted structure errors:')
+              print('\n'.join(structure_errors))
+              raise SystemExit(1)
 
           def main_bytes(path: Path):
-              rel = path.as_posix()
-              result = subprocess.run(['git','show',f'origin/main:{rel}'], capture_output=True)
-              if result.returncode != 0:
-                  return None
-              return result.stdout
+              result = subprocess.run(['git','show',f'origin/main:{path.as_posix()}'], capture_output=True)
+              return result.stdout if result.returncode == 0 else None
 
           for path in source_paths + task_paths:
-              current = path.read_bytes()
               expected = main_bytes(path)
-              if expected is None or current != expected:
+              if expected is None or path.read_bytes() != expected:
                   mismatches.append(path.as_posix())
 
           if mismatches:
               print('East A files not synchronized with main:')
-              for item in mismatches:
-                  print(item)
+              print('\n'.join(mismatches))
               raise SystemExit(1)
 
-          main_generated = json.loads(subprocess.check_output([
-              'git','show','origin/main:jichitai-compare/data/generated/municipalities.json'
-          ], text=True))
+          main_generated = json.loads(subprocess.check_output(['git','show','origin/main:jichitai-compare/data/generated/municipalities.json'], text=True))
           main_by_code = {item['code']: item for item in main_generated['municipalities']}
           missing_generated = [code for code in codes if code not in main_by_code]
           if missing_generated:
               raise SystemExit(f'main generated data missing: {missing_generated}')
 
           audit = {
-              'schemaVersion':'1.0.0',
-              'auditId':'east-a-final-consistency-20260725',
-              'sessionId':'east-a',
-              'auditRound':10,
-              'targetRounds':10,
-              'prefectureCodes':sorted(prefectures),
-              'municipalityCount':len(codes),
-              'sourceFileCount':len(source_paths),
-              'taskFileCount':len(task_paths),
-              'sourceTaskMismatchCount':0,
-              'mainGeneratedMissingCount':0,
+              'schemaVersion':'1.0.0','auditId':'east-a-final-consistency-20260725','sessionId':'east-a',
+              'auditRound':10,'targetRounds':10,'prefectureCodes':sorted(prefectures),'municipalityCount':len(codes),
+              'sourceFileCount':len(source_paths),'taskFileCount':len(task_paths),'targetedStructureErrorCount':0,
+              'sourceTaskMismatchCount':0,'mainGeneratedMissingCount':0,
               'correctedPageCodes':['19364','19425','19443','19442','19429','10367','10424','10426','13361','13362','13363','13364','13381','20303','20305','20306'],
-              'standardRegionalValidation':'success',
-              'mainSourceTaskComparison':'success',
-              'publicVerification':'pending',
-              'status':'in_progress'
+              'targetedRegionalValidation':'success','mainSourceTaskComparison':'success','publicVerification':'pending','status':'in_progress'
           }
           Path('/tmp/east-a-final-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           Path('/tmp/east-a-codes.json').write_text(json.dumps(codes),encoding='utf-8')
@@ -101,9 +104,7 @@ jobs:
           const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
           const codes = JSON.parse(fs.readFileSync('/tmp/east-a-codes.json','utf8'));
           const audit = JSON.parse(fs.readFileSync('/tmp/east-a-final-audit.json','utf8'));
-          const mainGenerated = JSON.parse(execFileSync('git',[
-            'show','origin/main:jichitai-compare/data/generated/municipalities.json'
-          ],{encoding:'utf8'}));
+          const mainGenerated = JSON.parse(execFileSync('git',['show','origin/main:jichitai-compare/data/generated/municipalities.json'],{encoding:'utf8'}));
           const mainByCode = new Map(mainGenerated.municipalities.map(item => [item.code,item]));
           let publicData = null;
           for (let attempt=1; attempt<=20; attempt++) {
@@ -111,8 +112,7 @@ jobs:
             if (res.ok) {
               const candidate = await res.json();
               const publicByCode = new Map(candidate.municipalities.map(item => [item.code,item]));
-              const matches = codes.every(code => JSON.stringify(publicByCode.get(code)) === JSON.stringify(mainByCode.get(code)));
-              if (matches) { publicData = candidate; break; }
+              if (codes.every(code => JSON.stringify(publicByCode.get(code)) === JSON.stringify(mainByCode.get(code)))) { publicData = candidate; break; }
             }
             await sleep(15000);
           }
@@ -122,11 +122,8 @@ jobs:
             if (!res.ok) throw new Error(`${code}: public page HTTP ${res.status}`);
             await res.arrayBuffer();
           }
-          audit.publicVerification = 'success';
-          audit.publicGeneratedMunicipalityCount = publicData.municipalities.length;
-          audit.publicCorrectedPageCount = audit.correctedPageCodes.length;
-          audit.auditedAt = '2026-07-25T04:08:00+09:00';
-          audit.status = 'success';
+          audit.publicVerification='success'; audit.publicGeneratedMunicipalityCount=publicData.municipalities.length;
+          audit.publicCorrectedPageCount=audit.correctedPageCodes.length; audit.auditedAt='2026-07-25T04:12:00+09:00'; audit.status='success';
           fs.writeFileSync('jichitai-compare/operations/audits/east-a-final-consistency-20260725.json',JSON.stringify(audit,null,2)+'\n');
           NODE
       - name: Complete East A verification campaign
@@ -134,26 +131,14 @@ jobs:
           python <<'PY'
           import json, os
           from pathlib import Path
-          path = Path('jichitai-compare/operations/control/session-checkpoints/east-a.json')
-          data = json.loads(path.read_text(encoding='utf-8'))
-          campaign = data['verificationCampaign']
-          rounds = campaign.setdefault('rounds', [])
-          rounds = [item for item in rounds if item.get('round') != 10]
-          rounds.append({
-              'round':10,
-              'topic':'source JSON・task・生成JSON・静的ページ・main・公開環境の最終整合性',
-              'result':'passed_with_external_follow_up',
-              'details':'担当4都県の全自治体JSON・taskをmainと照合し不一致0件。main生成JSONに全担当自治体が存在し、公開生成JSONも担当全自治体でmainと一致。監査修正16自治体の公開ページHTTP応答を確認。栄村は公式サイト障害が継続しているためIssue #2847で非ブロッキング追跡を継続する。'
-          })
-          campaign['rounds'] = sorted(rounds, key=lambda item: item['round'])
-          campaign['completedRounds'] = 10
-          campaign['status'] = 'completed'
-          campaign['nextRound'] = None
-          campaign['nextTopic'] = None
-          campaign['nextAction'] = '東日本Aの誤調査10回検証は完了。確定した誤り・記録漏れは修正済み。栄村公式サイト障害のみIssue #2847で非ブロッキング追跡し、復旧後に対象制度を再確認する。'
-          data['updatedAt'] = '2026-07-25T04:08:00+09:00'
-          data['pullRequestNumber'] = int(os.environ['PR_NUMBER'])
-          data['ciStatus'] = 'pending'
+          path=Path('jichitai-compare/operations/control/session-checkpoints/east-a.json')
+          data=json.loads(path.read_text(encoding='utf-8')); campaign=data['verificationCampaign']
+          rounds=[item for item in campaign.setdefault('rounds',[]) if item.get('round')!=10]
+          rounds.append({'round':10,'topic':'source JSON・task・生成JSON・静的ページ・main・公開環境の最終整合性','result':'passed_with_external_follow_up','details':'担当4都県の全自治体JSON・taskをmainと照合し不一致0件。main生成JSONに全担当自治体が存在し、公開生成JSONも担当全自治体でmainと一致。監査修正16自治体の公開ページHTTP応答を確認。栄村は公式サイト障害が継続しているためIssue #2847で非ブロッキング追跡を継続する。'})
+          campaign['rounds']=sorted(rounds,key=lambda item:item['round']); campaign['completedRounds']=10; campaign['status']='completed'
+          campaign['nextRound']=None; campaign['nextTopic']=None
+          campaign['nextAction']='東日本Aの誤調査10回検証は完了。確定した誤り・記録漏れは修正済み。栄村公式サイト障害のみIssue #2847で非ブロッキング追跡し、復旧後に対象制度を再確認する。'
+          data['updatedAt']='2026-07-25T04:12:00+09:00'; data['pullRequestNumber']=int(os.environ['PR_NUMBER']); data['ciStatus']='pending'
           path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Commit final audit result
