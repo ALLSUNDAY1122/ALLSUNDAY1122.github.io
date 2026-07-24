@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-25T08:41:00+09:00",
+  "trackingIssueNumber": 3141,
+  "previousAudit": "operations/audits/central-a-followup-recheck-20260725-0600.json",
+  "scope": {
+    "recheckedItemCount": 25,
+    "updatedMunicipalityCount": 1,
+    "updatedServiceItemCount": 1,
+    "fullyResolvedItemCount": 0,
+    "remainingItemCount": 25
+  },
+  "method": [
+    "自治体公式ドメインの令和8年度専用ページ、予算、実施計画、条例、保育・教育案内を制度別に再検索",
+    "利用者向けの対象、料金または負担額、期間、施設、予約条件を優先",
+    "一部条件だけ確定できた場合は確認済み情報のみを補強し、未公開条件を推測しない"
+  ],
+  "updatedFinding": {
+    "code": "23235",
+    "name": "弥富市",
+    "service": "schoolMeals",
+    "result": "partial_information_updated_followup_continues",
+    "confirmed": {
+      "program": "中学校給食費補助事業",
+      "period": "2026年4月から2027年3月まで",
+      "support": "食材価格高騰分を市が補助し、給食の質を維持しながら保護者負担の増加を防止する",
+      "budget": "6,600,000円",
+      "assistance": "就学援助認定世帯は小学校年額10,800円、中学校年額66,600円の給食費援助範囲"
+    },
+    "pending": "令和8年度一般世帯の通常徴収額または補助後の確定負担額",
+    "officialSources": [
+      {
+        "url": "https://www.city.yatomi.lg.jp/_res/projects/default_project/_page_/001/007/139/R8kouka.pdf",
+        "checkedAt": "2026-07-25",
+        "role": "令和8年度物価高騰対応重点支援地方創生臨時交付金実施計画"
+      },
+      {
+        "url": "https://www.city.yatomi.lg.jp/kurashi/1000269/1000290/1000274.html",
+        "checkedAt": "2026-07-25",
+        "role": "令和8年度就学援助案内"
+      }
+    ],
+    "changedFiles": [
+      "data/municipalities/23/23235.json",
+      "operations/tasks/23235.json"
+    ]
+  },
+  "unchangedFindings": {
+    "itemCount": 24,
+    "conclusion": "再検索時点では、前回監査後に完了条件を満たす利用者向け公式情報を確認できなかった。",
+    "status": "pending_without_data_change"
+  },
+  "publication": {
+    "blocker": false,
+    "nationalTotalsMustRemain": {
+      "municipalities": 1741,
+      "services": 15669,
+      "remainingMunicipalities": 0,
+      "needsMediumReviewServices": 0
+    }
+  },
+  "nextAction": "弥富市は通常徴収額のみ継続確認し、他24項目と合わせてIssue #3141を継続する。"
+}
