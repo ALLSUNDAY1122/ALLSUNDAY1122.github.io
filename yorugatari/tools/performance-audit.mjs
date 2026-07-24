@@ -155,19 +155,59 @@ function validate(run) {
   }
 }
 
+async function waitForDebugger(port) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= 20; attempt += 1) {
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/json/version`, { signal: AbortSignal.timeout(1500) });
+      if (response.ok) return;
+      lastError = new Error(`Debugger HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await sleep(250);
+  }
+  throw lastError || new Error('Chrome debugger did not become ready');
+}
+
 async function launchChrome(chromeLauncher) {
   let lastError = null;
   for (let attempt = 1; attempt <= 3; attempt += 1) {
+    let launched = null;
     try {
-      const launched = await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
-      await sleep(1500);
+      launched = await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
+      await waitForDebugger(launched.port);
       return launched;
     } catch (error) {
       lastError = error;
+      if (launched) {
+        try { await launched.kill(); } catch {}
+      }
       if (attempt < 3) await sleep(attempt * 2000);
     }
   }
   throw lastError || new Error('Chrome failed to start');
+}
+
+async function runLighthouse(lighthouse, currentCase, runNumber, port) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      return await lighthouse(currentCase.url, {
+        port,
+        output: 'json',
+        logLevel: 'error',
+        onlyCategories: ['performance', 'best-practices', 'seo'],
+        throttlingMethod: 'simulate',
+        disableStorageReset: false,
+        ...profileFlags(currentCase.profile)
+      });
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await sleep(attempt * 1000);
+    }
+  }
+  throw new Error(`${currentCase.target}/${currentCase.profile}/run-${runNumber}: ${lastError?.message || 'Lighthouse failed'}`);
 }
 
 let chrome;
@@ -180,15 +220,7 @@ try {
     const group = [];
     for (let runNumber = 1; runNumber <= currentCase.repeats; runNumber += 1) {
       try {
-        const result = await lighthouse(currentCase.url, {
-          port: chrome.port,
-          output: 'json',
-          logLevel: 'error',
-          onlyCategories: ['performance', 'best-practices', 'seo'],
-          throttlingMethod: 'simulate',
-          disableStorageReset: false,
-          ...profileFlags(currentCase.profile)
-        });
+        const result = await runLighthouse(lighthouse, currentCase, runNumber, chrome.port);
         const row = summarize(result, currentCase, runNumber);
         group.push(row);
         report.runs.push(row);
