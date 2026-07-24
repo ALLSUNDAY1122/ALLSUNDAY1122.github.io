@@ -1,0 +1,796 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-completion-20260724-v3",
+  "auditedAt": "2026-07-24T16:03:00+09:00",
+  "integrationBranch": "region/west",
+  "prefectureCodes": [
+    "31",
+    "32",
+    "34",
+    "35",
+    "36",
+    "38",
+    "41",
+    "42",
+    "44",
+    "45",
+    "47"
+  ],
+  "expectedByPrefecture": {
+    "31": 19,
+    "32": 19,
+    "34": 23,
+    "35": 19,
+    "36": 24,
+    "38": 20,
+    "41": 20,
+    "42": 21,
+    "44": 18,
+    "45": 26,
+    "47": 41
+  },
+  "actualByPrefecture": {
+    "31": 19,
+    "32": 19,
+    "34": 23,
+    "35": 19,
+    "36": 24,
+    "38": 20,
+    "41": 20,
+    "42": 21,
+    "44": 18,
+    "45": 26,
+    "47": 41
+  },
+  "expectedMunicipalityCount": 250,
+  "actualMunicipalityCount": 250,
+  "mandatoryServiceCountPerMunicipality": 9,
+  "expectedCompletedServiceCount": 2250,
+  "actualCompletedServiceCount": 2250,
+  "normalizedTaskCount": 5,
+  "normalizedTasks": [
+    "36368",
+    "36383",
+    "36387",
+    "36388",
+    "36401"
+  ],
+  "municipalitiesWithUnavailableServices": 90,
+  "unavailableByMunicipality": [
+    {
+      "code": "32441",
+      "name": "川本町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "32448",
+      "name": "美郷町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "32525",
+      "name": "海士町",
+      "services": [
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "32526",
+      "name": "西ノ島町",
+      "services": [
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "32527",
+      "name": "知夫村",
+      "services": [
+        "childcareFee",
+        "schoolMeals",
+        "postpartumCare",
+        "temporaryChildcare",
+        "housingSupport",
+        "bulkyWaste"
+      ]
+    },
+    {
+      "code": "34208",
+      "name": "府中市",
+      "services": [
+        "housingSupport"
+      ]
+    },
+    {
+      "code": "34210",
+      "name": "庄原市",
+      "services": [
+        "housingSupport"
+      ]
+    },
+    {
+      "code": "34211",
+      "name": "大竹市",
+      "services": [
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "34302",
+      "name": "府中町",
+      "services": [
+        "housingSupport"
+      ]
+    },
+    {
+      "code": "34307",
+      "name": "熊野町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "34368",
+      "name": "安芸太田町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "34369",
+      "name": "北広島町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "34431",
+      "name": "大崎上島町",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "35213",
+      "name": "美祢市",
+      "services": [
+        "housingSupport"
+      ]
+    },
+    {
+      "code": "35305",
+      "name": "周防大島町",
+      "services": [
+        "sickChildCare",
+        "childcareFee"
+      ]
+    },
+    {
+      "code": "35321",
+      "name": "和木町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "35341",
+      "name": "上関町",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "35502",
+      "name": "阿武町",
+      "services": [
+        "sickChildCare",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "36201",
+      "name": "徳島市",
+      "services": [
+        "housingSupport"
+      ]
+    },
+    {
+      "code": "36204",
+      "name": "阿南市",
+      "services": [
+        "housingSupport"
+      ]
+    },
+    {
+      "code": "36205",
+      "name": "吉野川市",
+      "services": [
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "36301",
+      "name": "勝浦町",
+      "services": [
+        "sickChildCare",
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "36321",
+      "name": "佐那河内村",
+      "services": [
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "36342",
+      "name": "神山町",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "36368",
+      "name": "那賀町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "36383",
+      "name": "牟岐町",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "36404",
+      "name": "板野町",
+      "services": [
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "36405",
+      "name": "上板町",
+      "services": [
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "36468",
+      "name": "つるぎ町",
+      "services": [
+        "postpartumCare",
+        "bulkyWaste"
+      ]
+    },
+    {
+      "code": "38214",
+      "name": "西予市",
+      "services": [
+        "postpartumCare",
+        "bulkyWaste"
+      ]
+    },
+    {
+      "code": "38356",
+      "name": "上島町",
+      "services": [
+        "sickChildCare",
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "38422",
+      "name": "内子町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "38442",
+      "name": "伊方町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "38506",
+      "name": "愛南町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "41201",
+      "name": "佐賀市",
+      "services": [
+        "housingSupport"
+      ]
+    },
+    {
+      "code": "41346",
+      "name": "みやき町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "41423",
+      "name": "大町町",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "41425",
+      "name": "白石町",
+      "services": [
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "42204",
+      "name": "諫早市",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "42208",
+      "name": "松浦市",
+      "services": [
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "42209",
+      "name": "対馬市",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "42211",
+      "name": "五島市",
+      "services": [
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "42212",
+      "name": "西海市",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "42214",
+      "name": "南島原市",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "42321",
+      "name": "東彼杵町",
+      "services": [
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "42383",
+      "name": "小値賀町",
+      "services": [
+        "sickChildCare",
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "42411",
+      "name": "新上五島町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "44213",
+      "name": "由布市",
+      "services": [
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "44322",
+      "name": "姫島村",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "45208",
+      "name": "西都市",
+      "services": [
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "45341",
+      "name": "三股町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "45361",
+      "name": "高原町",
+      "services": [
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "45382",
+      "name": "国富町",
+      "services": [
+        "sickChildCare",
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "45383",
+      "name": "綾町",
+      "services": [
+        "childMedical",
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "45401",
+      "name": "高鍋町",
+      "services": [
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "45402",
+      "name": "新富町",
+      "services": [
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "45403",
+      "name": "西米良村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "45404",
+      "name": "木城町",
+      "services": [
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "45405",
+      "name": "川南町",
+      "services": [
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "45406",
+      "name": "都農町",
+      "services": [
+        "sickChildCare",
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "45429",
+      "name": "諸塚村",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "45430",
+      "name": "椎葉村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "45431",
+      "name": "美郷町",
+      "services": [
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "45441",
+      "name": "高千穂町",
+      "services": [
+        "schoolMeals",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "45442",
+      "name": "日之影町",
+      "services": [
+        "schoolMeals",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "45443",
+      "name": "五ヶ瀬町",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "47214",
+      "name": "宮古島市",
+      "services": [
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47302",
+      "name": "大宜味村",
+      "services": [
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47303",
+      "name": "東村",
+      "services": [
+        "sickChildCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47306",
+      "name": "今帰仁村",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "47308",
+      "name": "本部町",
+      "services": [
+        "sickChildCare",
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "47311",
+      "name": "恩納村",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "47313",
+      "name": "宜野座村",
+      "services": [
+        "sickChildCare",
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47314",
+      "name": "金武町",
+      "services": [
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "47315",
+      "name": "伊江村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47325",
+      "name": "嘉手納町",
+      "services": [
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "47328",
+      "name": "中城村",
+      "services": [
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47348",
+      "name": "与那原町",
+      "services": [
+        "sickChildCare"
+      ]
+    },
+    {
+      "code": "47353",
+      "name": "渡嘉敷村",
+      "services": [
+        "sickChildCare",
+        "schoolMeals",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47354",
+      "name": "座間味村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "47355",
+      "name": "粟国村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "postpartumCare",
+        "temporaryChildcare"
+      ]
+    },
+    {
+      "code": "47356",
+      "name": "渡名喜村",
+      "services": [
+        "sickChildCare",
+        "schoolMeals",
+        "postpartumCare",
+        "temporaryChildcare",
+        "disasterPrevention"
+      ]
+    },
+    {
+      "code": "47357",
+      "name": "南大東村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "47358",
+      "name": "北大東村",
+      "services": [
+        "childMedical",
+        "sickChildCare",
+        "schoolMeals",
+        "postpartumCare",
+        "temporaryChildcare",
+        "bulkyWaste"
+      ]
+    },
+    {
+      "code": "47359",
+      "name": "伊平屋村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "postpartumCare",
+        "temporaryChildcare",
+        "bulkyWaste"
+      ]
+    },
+    {
+      "code": "47360",
+      "name": "伊是名村",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "temporaryChildcare",
+        "bulkyWaste"
+      ]
+    },
+    {
+      "code": "47361",
+      "name": "久米島町",
+      "services": [
+        "sickChildCare",
+        "postpartumCare"
+      ]
+    },
+    {
+      "code": "47375",
+      "name": "多良間村",
+      "services": [
+        "sickChildCare",
+        "postpartumCare",
+        "bulkyWaste"
+      ]
+    },
+    {
+      "code": "47381",
+      "name": "竹富町",
+      "services": [
+        "sickChildCare",
+        "schoolMeals"
+      ]
+    },
+    {
+      "code": "47382",
+      "name": "与那国町",
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "temporaryChildcare"
+      ]
+    }
+  ],
+  "firstMunicipality": {
+    "code": "31201",
+    "name": "鳥取市",
+    "prefectureCode": "31",
+    "pullRequestNumber": 114,
+    "verifiedCount": 9,
+    "unavailableCount": 0
+  },
+  "finalMunicipality": {
+    "code": "47382",
+    "name": "与那国町",
+    "prefectureCode": "47",
+    "pullRequestNumber": 2458,
+    "verifiedCount": 6,
+    "unavailableCount": 3
+  },
+  "errors": [],
+  "result": "completed"
+}
