@@ -1,0 +1,201 @@
+name: North B sanity audit round 06
+
+on:
+  push:
+    branches:
+      - audit/north-b-sanity-round-06-20260725
+    paths:
+      - .github/workflows/north-b-sanity-round-06.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/north-b-sanity-round-06-20260725
+          fetch-depth: 0
+      - name: Apply round 06 corrections
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const read = p => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+          const base = 'jichitai-compare/data/municipalities/05';
+          const taskBase = 'jichitai-compare/operations/tasks';
+          const now = '2026-07-25T02:22:00+09:00';
+
+          const changes = {
+            '05204': {
+              summary: '保育園等に入園していない就学前児童の一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。',
+              eligibility: { minAgeMonths: 0, maxAgeYears: 6 },
+              details: {
+                temporaryTarget: '大館市在住または里帰り出産で市内に一時帰省し、保育園等に入園していない就学前児童',
+                temporaryReasons: '一時的就労、冠婚葬祭、入院・介護、育児負担軽減等',
+                temporaryFacilities: '白百合ホーム、たしろ保育園',
+                anyoneTarget: '保育所等に通っていない生後6か月から満3歳未満の子ども',
+                anyoneLimit: '子ども1人につき月10時間まで',
+                anyoneFacilities: '大館乳児保育園、釈迦内保育園、十二所保育園、東館保育園、西館保育園',
+                application: '市へ利用認定申請を行い、認定後に施設利用手続きを行う'
+              },
+              source: { url: 'https://www.city.odate.lg.jp/kosodate/guide/birth/ikuji/p12801', checkedAt: '2026-07-25' },
+              additionalSources: [{ url: 'https://www.city.odate.lg.jp/kosodate/guide/birth/ikuji', checkedAt: '2026-07-25' }]
+            },
+            '05206': {
+              summary: '通常の一時保育に加え、未就園の生後6か月から満3歳未満児を船越こども園で月10時間まで無料で受け入れるこども誰でも通園制度を実施する。',
+              eligibility: { minAgeMonths: 0, maxAgeYears: 5 },
+              details: {
+                temporaryReasons: '育児リフレッシュ、パート就労、保護者の急病、家族の介護等',
+                temporaryFacilities: '船川こども園、船越こども園、脇本保育園、北浦保育園、わかみベビー園',
+                temporaryFee: '1日1,110円（傷害保険料を含む）',
+                anyoneTarget: '保育園や認定こども園等に通っていない生後6か月から満3歳未満の子ども。市外居住者も利用可能',
+                anyoneFacility: '男鹿市立船越こども園',
+                anyoneHours: '毎週火・水・木・金曜日の9時から11時',
+                anyoneLimit: '子ども1人につき月10時間まで。1回2時間で月5回まで',
+                anyoneFee: '市内・市外を問わず無料',
+                application: 'こども未来課窓口で認定申請後、つうえんポータルで面談・予約を行う'
+              },
+              source: { url: 'https://www.city.oga.akita.jp/living_information/kosodate_kyoiku/kodomowoazukeru/yochien_hoikuen/1/8305.html', checkedAt: '2026-07-25' },
+              additionalSources: [{ url: 'https://www.city.oga.akita.jp/soshik/kosodatekenkouka/kosodateshien/3/1138.html', checkedAt: '2026-07-25' }]
+            },
+            '05207': {
+              summary: '通常の一時預かりに加え、未就園の生後6か月から満3歳未満児が市内2施設で月10時間まで利用できるこども誰でも通園制度を実施する。',
+              eligibility: { minAgeMonths: 0, maxAgeYears: 5 },
+              details: {
+                temporaryTarget: '専業主婦家庭等を含め、一時的な保育需要がある就学前児童',
+                temporaryReasons: '育児疲れ、保護者の急病、断続的勤務・短時間勤務等',
+                anyoneTarget: '保育園、認定こども園等を利用していない生後6か月から満3歳未満の子ども',
+                anyoneFacilities: '双葉幼稚園、湯沢よつばこども園',
+                anyoneHours: '平日8時30分から16時30分',
+                anyoneLimit: '子ども1人につき月10時間まで',
+                anyoneFee: '標準1時間300円。施設ごとに設定し、給食・おやつ代等は別途の場合あり。世帯状況による負担軽減あり',
+                application: 'つうえんポータルまたは子ども未来課で認定申請後、施設面談と予約を行う'
+              },
+              source: { url: 'https://www.city-yuzawa.jp/site/kosodate-navi/5500.html', checkedAt: '2026-07-25' },
+              additionalSources: [{ url: 'https://www.city-yuzawa.jp/site/kosodate-navi/2310.html', checkedAt: '2026-07-25' }]
+            },
+            '05209': {
+              summary: '通常の一時預かりに加え、未就園の生後6か月から満3歳未満児が毛馬内保育園を月10時間まで利用できるこども誰でも通園制度を実施する。',
+              eligibility: { minAgeMonths: 0, maxAgeYears: 5 },
+              details: {
+                temporaryTarget: '保育園に入園していない児童',
+                temporaryFacilities: '花輪さくら保育園、毛馬内保育園、八幡平なかよしセンター等',
+                temporaryLimit: '週3日、月14日まで',
+                anyoneTarget: '生後6か月から満3歳未満で、保育所・認定こども園・地域型保育事業所に在籍していない子ども',
+                anyoneFacility: '毛馬内保育園',
+                anyoneLimit: '子ども1人につき月10時間まで。1回最低1時間',
+                anyoneFee: '1時間300円を標準とし、施設が定めた額',
+                application: 'つうえんポータルで認定申請後、施設面談と利用予約を行う'
+              },
+              source: { url: 'https://www.city.kazuno.lg.jp/kosodate_kyoiku/ninshin_shussan_kosodate/6/1/14549.html', checkedAt: '2026-07-25' },
+              additionalSources: [{ url: 'https://www.city.kazuno.lg.jp/kosodate_kyoiku/ninshin_shussan_kosodate/6/1/3632.html', checkedAt: '2026-07-25' }]
+            },
+            '05211': {
+              summary: '通常の一時預かりに加え、未就園の生後6か月から満3歳未満児が市内2施設で月10時間まで利用できるこども誰でも通園制度を実施する。',
+              eligibility: { minAgeMonths: 0, maxAgeYears: 5 },
+              details: {
+                temporaryTarget: '市内在住で保育所・幼稚園・認定こども園等に通っていない就学前児童',
+                temporaryReasons: '保護者の勤務、傷病、育児疲れのリフレッシュ等',
+                temporaryLimit: '週3日、1か月14日以内',
+                anyoneTarget: '利用日時点で生後6か月から満3歳未満で、保育園・幼稚園・認定こども園等に通っていない子ども',
+                anyoneFacilities: '潟上市立若竹幼児教育センター、天王こども園',
+                anyoneLimit: '子ども1人につき月10時間まで',
+                anyoneFee: '1時間300円。減免制度あり。給食264円・おやつ77円は利用時に別途',
+                application: 'つうえんポータルで認定申請後、施設面談と利用日の予約を行う'
+              },
+              source: { url: 'https://www.city.katagami.lg.jp/soshiki/fukushihoken/kosodateouenka/shisetsuuneishien/kosodate_1/6129.html', checkedAt: '2026-07-25' },
+              additionalSources: [{ url: 'https://www.city.katagami.lg.jp/soshiki/fukushihoken/kosodateouenka/shisetsuuneishien/kosodate_1/472.html', checkedAt: '2026-07-25' }]
+            },
+            '05212': {
+              summary: '通常の一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。',
+              eligibility: { minAgeMonths: 0, maxAgeYears: 5 },
+              details: {
+                temporaryTarget: '家庭の事情で一時的に保育できない就学前児童',
+                temporaryHours: '8時30分から17時',
+                temporaryFee: '通常料金から大仙市内児童は半額',
+                anyoneTarget: '大仙市民で、生後6か月から満3歳未満かつ保育所・認定こども園等に在籍していない子ども',
+                anyoneFacilities: 'COZYキッズコーナー、日の出ベビー保育園',
+                anyoneLimit: '子ども1人につき月10時間まで。1回最低1時間',
+                anyoneFee: '標準1時間300円。施設ごとに設定',
+                application: 'つうえんポータルで認定申請後、施設面談と予約を行う'
+              },
+              source: { url: 'https://www.city.daisen.lg.jp/archive/p20260225142055', checkedAt: '2026-07-25' },
+              additionalSources: [{ url: 'https://www.city.daisen.lg.jp/archive/contents-10226', checkedAt: '2026-07-25' }]
+            }
+          };
+
+          for (const [code, service] of Object.entries(changes)) {
+            const mp = `${base}/${code}.json`;
+            const m = read(mp);
+            m.updatedAt = '2026-07-25';
+            m.services.temporaryChildcare = { status: 'verified', ...service };
+            write(mp, m);
+
+            const tp = `${taskBase}/${code}.json`;
+            const t = read(tp);
+            t.lastCheckedAt = '2026-07-25';
+            t.lastUpdatedAt = now;
+            t.lastUpdatedBy = '北日本調査班B';
+            t.currentBranch = null;
+            t.officialSources = [...new Set(Object.values(m.services).map(s => s.source?.url).filter(Boolean))];
+            t.notes = Array.isArray(t.notes) ? t.notes : [];
+            t.notes.push(code === '05212'
+              ? '北日本B誤調査ざっくり再検証 第6回: こども誰でも通園制度は本文に記載済みだったが、直接の現行制度ページへ一次出典を差し替え、対象・施設・月上限・料金・申請方法を補強。'
+              : '北日本B誤調査ざっくり再検証 第6回: 令和8年度のこども誰でも通園制度がtemporaryChildcareへ未反映だったため、現行の対象・施設・月上限・料金・申請方法を追加。');
+            write(tp, t);
+          }
+
+          const auditPath = 'jichitai-compare/operations/audits/north-b-research-sanity-20260725.json';
+          const audit = read(auditPath);
+          audit.completedRounds = 6;
+          audit.remainingRounds = 4;
+          audit.auditedMunicipalityCount = 66;
+          audit.remainingMunicipalityCount = 41;
+          audit.auditedAt = now;
+          audit.round06 = {
+            codes: ['05204','05206','05207','05209','05210','05211','05212','05213','05214','05215','05303'],
+            municipalityCount: 11,
+            serviceCount: 99,
+            highRiskChecks: 28,
+            confirmedErrorCount: 5,
+            confirmedErrors: [
+              { code: '05204', municipality: '大館市', service: 'temporaryChildcare', before: '通常の一時預かりのみ', after: 'こども誰でも通園制度を併記', reason: '2026年4月開始の市公式制度が未反映' },
+              { code: '05206', municipality: '男鹿市', service: 'temporaryChildcare', before: '通常の一時保育のみ', after: '船越こども園のこども誰でも通園制度を併記', reason: '2026年度開始の市公式制度が未反映' },
+              { code: '05207', municipality: '湯沢市', service: 'temporaryChildcare', before: '通常の一時預かりのみ', after: '市内2施設のこども誰でも通園制度を併記', reason: '2026年6月更新の市公式制度が未反映' },
+              { code: '05209', municipality: '鹿角市', service: 'temporaryChildcare', before: '通常の一時預かりのみ', after: '毛馬内保育園のこども誰でも通園制度を併記', reason: '2026年6月更新の市公式制度が未反映' },
+              { code: '05211', municipality: '潟上市', service: 'temporaryChildcare', before: '通常の一時預かりのみ', after: '市内2施設のこども誰でも通園制度を併記', reason: '2026年5月更新の市公式制度が未反映' }
+            ],
+            sourceCorrectionCount: 1,
+            sourceCorrections: [
+              { code: '05212', municipality: '大仙市', service: 'temporaryChildcare', change: 'こども誰でも通園制度の直接ページを一次出典へ変更し、対象・施設・月上限・料金・申請方法を補強' }
+            ],
+            evidenceLimitations: [
+              { code: '05213', municipality: '北秋田市', service: 'temporaryChildcare', note: '令和8年度の利用者向け直接案内を取得できず、通常の一時預かり情報を維持' },
+              { code: '05214', municipality: 'にかほ市', service: 'temporaryChildcare', note: '現行の利用者向け制度条件を自治体公式本文で確認できず、推測による変更は行わなかった' },
+              { code: '05215', municipality: '仙北市', service: 'temporaryChildcare', note: '事業者募集と事業開始予定は確認したが、利用者向け施設・料金・申請条件を取得できず変更しなかった' },
+              { code: '05303', municipality: '小坂町', service: 'temporaryChildcare', note: '現行の利用者向け制度案内を取得できず、通常の一時預かり情報を維持' }
+            ],
+            noConfirmedErrorCodes: ['05210','05212','05213','05214','05215','05303']
+          };
+          write(auditPath, audit);
+
+          const cpPath = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const cp = read(cpPath);
+          cp.updatedAt = now;
+          cp.workingBranch = 'audit/north-b-sanity-round-06-20260725';
+          cp.pullRequestNumber = null;
+          cp.ciStatus = 'pending';
+          cp.nextAction = '北日本B誤調査ざっくり再検証第6回は11自治体・99制度、高リスク28項目を確認。大館市、男鹿市、湯沢市、鹿角市、潟上市のこども誰でも通園制度反映漏れ5件を訂正し、大仙市の一次出典を直接ページへ補正。監査完了6/10回、66/107自治体、残り4回・41自治体。地域PR作成、CI、region/north統合、main同期を行う。';
+          write(cpPath, cp);
+
+          fs.unlinkSync('.github/workflows/north-b-sanity-round-06.yml');
+          NODE
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "audit: 北日本B誤調査再検証 第6回を反映"
+          git push origin HEAD:audit/north-b-sanity-round-06-20260725
