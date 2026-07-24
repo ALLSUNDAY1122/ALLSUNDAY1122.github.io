@@ -12,7 +12,7 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T02:19:00+09:00",
+  "updatedAt": "2026-07-25T02:41:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -80,10 +80,14 @@
     "westAPublicSummaryGuardPullRequestNumber": 2915,
     "westAPublicSummaryGuardCiRunNumber": 6968,
     "westAPublicSummaryGuardMunicipalityCount": 226,
-    "detailsSource": "jichitai-compare/operations/tasks"
+    "detailsSource": "jichitai-compare/operations/tasks",
+    "westAPublicSmokePullRequestNumber": 3036,
+    "westAPublicSmokeLiveCiRunNumber": 7391,
+    "westAPublicSmokeCleanCiRunNumber": 7400,
+    "westAPublicSmokeSampleCount": 10
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-25T02:19:00+09:00",
+    "auditedAt": "2026-07-25T02:41:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -156,6 +160,24 @@
         "detectedMunicipalityCount": 400,
         "westAPrefectureDetectedCount": 0,
         "disposition": "調査班を一律禁止する旧検査は過広範のため未マージ。西日本A担当6県に該当なし。"
+      },
+      "westAPublicSmoke": {
+        "pullRequestNumber": 3036,
+        "liveCiRunNumber": 7391,
+        "cleanCiRunNumber": 7400,
+        "correctedMunicipalityCodes": [
+          "46218",
+          "40448",
+          "46530"
+        ],
+        "checks": [
+          "公開生成JSONとmain生成JSONの一致",
+          "修正後代表文言の存在",
+          "訂正前旧文言の不存在",
+          "h1・canonical・公式情報リンク・sitemap"
+        ],
+        "permanentSampleCount": 10,
+        "status": "enabled"
       }
     },
     "restoredMunicipalities": [
@@ -185,7 +207,7 @@
       "第8回監査で6自治体の防災マップ掲載範囲・避難導線・公式URLを再照合し、全件一致。",
       "第9回監査で東峰村・徳之島町の子ども医療費をunavailableからverifiedへ修正。芸西村は現行条件を確定できずunavailableを維持。",
       "10回の誤調査検証を完了。重大誤り3件を全件修正し、未修正0件。全2,034制度の構造監査と高リスク64項目の公式再照合を実施。",
-      "10回の誤調査検証を完了。重大誤り3件を全件修正し、未修正0件。全2,034制度の構造監査と高リスク64項目の公式再照合を実施。"
+      "霧島市・東峰村・徳之島町を公開スモークの恒久対象へ追加し、修正後文言と旧文言不存在をCIで確認する。"
     ]
   }
 }
