@@ -1,102 +1,77 @@
-name: Publish Awashimaura After Complete-Service Gate
+name: Jichitai Compare CI
 
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  publish:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Fetch main and east region
-        run: git fetch origin main region/east
-      - name: Copy and validate Awashimaura
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('fs');
-          const path = require('path');
-          const { execFileSync } = require('child_process');
-          const code = '15586';
-          const dataPath = `jichitai-compare/data/municipalities/15/${code}.json`;
-          const taskPath = `jichitai-compare/operations/tasks/${code}.json`;
-          const requiredServices = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
-          if (fs.existsSync(dataPath) || fs.existsSync(taskPath)) throw new Error('粟島浦村は既にmainへ存在します');
-          const show = (file) => execFileSync('git', ['show', `origin/region/east:${file}`], { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 });
-          const data = JSON.parse(show(dataPath));
-          const task = JSON.parse(show(taskPath));
-          if (data.code !== code || data.name !== '粟島浦村' || data.prefectureCode !== '15') throw new Error('自治体識別不一致');
-          const keys = Object.keys(data.services ?? {});
-          if (keys.length !== 9 || !requiredServices.every((key) => keys.includes(key))) throw new Error('必須9制度不一致');
-          if (!requiredServices.every((key) => ['verified','unavailable'].includes(data.services[key]?.status))) throw new Error('未完了制度を含みます');
-          if (task.status !== 'merged' || task.researchingCount !== 0 || task.needsMediumReviewCount !== 0 || (task.blockers ?? []).length !== 0) throw new Error('task公開ゲート違反');
-          task.status = 'merged';
-          task.currentService = null;
-          task.nextServiceIndex = 9;
-          task.completedServices = requiredServices;
-          task.verifiedCount = requiredServices.filter((key) => data.services[key].status === 'verified').length;
-          task.unavailableCount = requiredServices.filter((key) => data.services[key].status === 'unavailable').length;
-          task.researchingCount = 0;
-          task.needsMediumReviewCount = 0;
-          task.blockers = [];
-          task.lastUpdatedAt = '2026-07-24T21:25:00+09:00';
-          task.lastUpdatedBy = '全国統括';
-          fs.mkdirSync(path.dirname(dataPath), { recursive: true });
-          fs.mkdirSync(path.dirname(taskPath), { recursive: true });
-          fs.writeFileSync(dataPath, `${JSON.stringify(data)}\n`);
-          fs.writeFileSync(taskPath, `${JSON.stringify(task)}\n`);
-          NODE
-      - name: Generate and validate safe release
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          npm run validate:identity
-          node --check app.js
-          node <<'NODE'
-          const fs = require('fs');
-          const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
-          if (progress.registeredMunicipalities !== 1660) throw new Error(`公開件数不一致: ${progress.registeredMunicipalities}/1660`);
-          if (progress.completedServices !== 14940 || progress.totalServices !== 14940) throw new Error(`制度数不一致: ${progress.completedServices}/${progress.totalServices}`);
-          if (progress.remainingMunicipalities !== 81) throw new Error(`残件数不一致: ${progress.remainingMunicipalities}/81`);
-          if (progress.needsMediumReviewServices || progress.needsRevisionServices || progress.needsCoordinatorServices || progress.blockedServices || progress.blockedMunicipalities || progress.assignmentSummary?.blocked) throw new Error('公開ゲート違反が残っています');
-          const manifest = {
-            schemaVersion: '1.0.0',
-            createdAt: '2026-07-24T21:25:00+09:00',
-            publicationGate: 'all nine services verified or unavailable; task blockers empty',
-            addedMunicipalities: 1,
-            municipalities: [{ region: 'east', code: '15586', name: '粟島浦村', prefecture: '新潟県', sourcePullRequestNumber: 2682 }],
-            publishedMunicipalities: 1660,
-            completedServices: 14940,
-            remainingMunicipalities: 81,
-            validation: 'success'
-          };
-          fs.writeFileSync('operations/control/completed-municipalities-release-20260724.json', `${JSON.stringify(manifest, null, 2)}\n`);
-          let html = fs.readFileSync('index.html', 'utf8');
-          html = html.replace(/\d+自治体・9制度/g, '1660自治体・9制度');
-          fs.writeFileSync('index.html', html);
-          NODE
-      - name: Restore standard workflow and commit
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          rm -f jichitai-compare/identity-validation-errors.json
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'release: publish completed Awashimaura municipality data'
-          git push origin HEAD
+        run: npm run smoke:public
