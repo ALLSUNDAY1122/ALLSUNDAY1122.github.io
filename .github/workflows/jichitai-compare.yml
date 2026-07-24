@@ -1,58 +1,77 @@
-name: Add Four Niigata Municipalities 1651
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  add:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Fetch east and add completed municipalities
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
-          git fetch origin region/east main
-          node <<'NODE'
-          const fs=require('fs'),cp=require('child_process'),path=require('path');
-          const root='jichitai-compare',ref='origin/region/east',codes=['15213','15216','15217','15218'];
-          const run=c=>cp.execFileSync('bash',['-lc',c],{encoding:'utf8'}).trim(),read=p=>JSON.parse(fs.readFileSync(p,'utf8')),readRef=p=>JSON.parse(run(`git show ${ref}:${p}`));
-          const ids=read(`${root}/data/service-definitions.json`).services.map(x=>x.id),previous=read(`${root}/operations/progress.json`).registeredMunicipalities,added=[];
-          for(const code of codes){
-            const dp=`${root}/data/municipalities/15/${code}.json`,tp=`${root}/operations/tasks/${code}.json`;
-            if(fs.existsSync(dp)) continue;
-            const d=readRef(dp),entries=ids.map(id=>[id,d.services[id]]);
-            if(entries.some(([,s])=>!['verified','unavailable'].includes(s?.status))) throw new Error(`${code} is incomplete`);
-            const t=readRef(tp);fs.mkdirSync(path.dirname(dp),{recursive:true});fs.writeFileSync(dp,JSON.stringify(d)+'\n');
-            t.status='merged';t.currentService=null;t.nextServiceIndex=9;t.completedServices=ids;t.verifiedCount=entries.filter(([,s])=>s.status==='verified').length;t.unavailableCount=entries.filter(([,s])=>s.status==='unavailable').length;t.researchingCount=0;t.needsMediumReviewCount=0;t.lastCheckedAt=d.updatedAt;t.lastUpdatedAt='2026-07-24T16:51:00+09:00';t.lastUpdatedBy='統括A';t.officialSources=[...new Set(entries.map(([,s])=>s.source?.url).filter(Boolean))];t.notes=Array.isArray(t.notes)?t.notes:[];t.blockers=[];
-            fs.writeFileSync(tp,JSON.stringify(t)+'\n');added.push({code,name:d.name,prefecture:d.prefecture,pullRequestNumber:t.pullRequestNumber??null});
-          }
-          const mp=`${root}/operations/control/coord-a-niigata-four-20260724.json`;fs.writeFileSync(mp,JSON.stringify({schemaVersion:'1.0.0',createdAt:'2026-07-24T16:51:00+09:00',previousPublishedMunicipalities:previous,addedCount:added.length,added},null,2)+'\n');
-          NODE
-      - name: Generate and validate
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
-        run: npm run generate && npm run progress && npm run validate:generated && node --check app.js
-      - name: Verify count
-        run: |
-          node <<'NODE'
-          const fs=require('fs'),m=JSON.parse(fs.readFileSync('jichitai-compare/operations/control/coord-a-niigata-four-20260724.json')),p=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json'));
-          if(p.registeredMunicipalities!==m.previousPublishedMunicipalities+m.addedCount) throw new Error('count mismatch');
-          NODE
-      - name: Restore CI and commit
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'release: 新潟県4自治体を全国追補'
-          git push origin HEAD
+        run: npm run smoke:public
