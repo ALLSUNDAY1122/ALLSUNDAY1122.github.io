@@ -208218,11 +208218,11 @@
       "name": "摂津市",
       "officialUrl": "https://www.city.settsu.osaka.jp/",
       "status": "verified",
-      "summary": "摂津市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "摂津市の子育て、教育、住宅、生活、防災に関する9制度を2026年度の公式情報で確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
-          "summary": "0歳から18歳年度末までの子どもの保険診療自己負担額の一部を助成する。",
+          "summary": "0歳から18歳年度末までの子どもの保険診療自己負担額の一部を所得制限なく助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
@@ -208230,98 +208230,121 @@
           "details": {
             "target": "摂津市に住所があり健康保険に加入する、18歳到達後最初の3月31日までの子ども",
             "incomeLimit": "所得制限なし",
-            "copayment": "1医療機関につき1日最大500円、月2日まで。1か月の自己負担上限は2,500円",
-            "application": "子ども医療証の交付申請が必要"
+            "copayment": "1医療機関につき1日最大500円、同一月2日目まで。入院・通院、歯科・歯科以外は別計算",
+            "monthlyCap": "複数医療機関等で支払った一部自己負担額は1人あたり月額2,500円が上限。超過分は申請により払戻し",
+            "coverage": "健康保険が適用される入院・通院、訪問看護、治療用装具等の自己負担分を助成",
+            "excluded": "入院時食事療養費、差額ベッド代、健診、予防接種、文書料等の保険適用外費用は対象外",
+            "application": "出生・転入時等に子ども医療証の交付申請が必要。窓口・郵送申請に対応し、大阪府外受診等は払戻し申請"
           },
           "source": {
-            "url": "https://www.city.settsu.osaka.jp/bamen/teate/joseihojokin/kosodate/15734.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.settsu.osaka.jp/bamen/ninshin/kosodateshien/teatejosei/kyuufu/15733.html",
+            "checkedAt": "2026-07-24"
           }
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "生後3か月から就学前までの病気または回復期の子どもを、専用施設で一時的に預かる。",
+          "summary": "生後3か月から就学前までの病気または回復期の子どもを、専用の2施設で一時的に預かる。",
           "eligibility": {
             "minAgeMonths": 3,
             "maxAgeYears": 5
           },
           "details": {
-            "target": "市内在住で保育の必要性があり、病気等のため集団保育が困難な生後3か月から就学前までの子ども",
-            "facilities": "遊育園こどもクリニック病児保育室、エキスポキッズ",
-            "fee": "施設により1日2,500円または4,000円。市の利用料補助により一般世帯の実質負担が軽減される場合がある",
-            "application": "事前登録、施設予約、医師の診察・連絡票等が必要"
+            "target": "摂津市在住で保育の必要性の認定を受け、病気・回復期のため集団保育が困難な生後3か月から就学前までの子ども",
+            "facilities": "遊育園こどもクリニック病児保育室、吹田徳洲会病院7階の病児・病後児保育室エキスポキッズ",
+            "hours": "エキスポキッズは平日8時から19時。施設ごとに利用時間・休室日が異なる",
+            "fee": "遊育園こどもクリニックは1日2,500円、エキスポキッズは1日4,000円。診察料・処方代等は別途負担",
+            "subsidy": "エキスポキッズ利用の一般世帯は1日2,000円、生活保護世帯は4,000円を補助。遊育園こどもクリニック利用の生活保護世帯は2,000円を補助",
+            "application": "年度初回の登録票、利用ごとの届出書、ネットまたは電話予約、施設での問診・健康観察等が必要。補助金は利用後に申請"
           },
           "source": {
             "url": "https://www.city.settsu.osaka.jp/soshiki/kodomokateibu/hoikukyouikuka/ichiji/1266.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {
           "status": "verified",
-          "summary": "3歳児クラス以上の保育料を無償化し、0～2歳児は市民税額等に応じて決定する。",
+          "summary": "3～5歳児等と住民税非課税世帯の0～2歳児の保育料を無償化し、その他の0～2歳児は市民税額等に応じて決定する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "ageThreeAndOver": "3歳児クラス以上の利用者負担額は0円",
-            "ageZeroToTwo": "保護者等の市民税額に基づく階層別の保育料を適用",
-            "otherCosts": "給食費、教材費、行事費等の実費は原則として保護者負担",
-            "application": "令和8年度の保育所等利用申込み案内を公開"
+            "free": "認可保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児の保育料は無償化対象",
+            "ageZeroToTwo": "無償化対象外の0～2歳児は、保護者等の市民税所得割額と世帯状況に基づく階層別保育料を適用",
+            "privateKindergarten": "新制度対象外幼稚園は月額25,700円まで無償化",
+            "extendedCare": "保育の必要性がある幼稚園預かり保育は月額11,300円まで、非課税世帯の満3歳児は月額16,300円まで",
+            "unlicensed": "保育の必要性がある3～5歳児は認可外保育施設等を月額37,000円まで、非課税世帯の0～2歳児は月額42,000円まで無償化",
+            "otherCosts": "3～5歳児の給食費、通園送迎費、行事費、日用品費等の実費は原則別途負担。生活保護世帯等には実費補助あり",
+            "application": "施設区分により施設等利用給付認定が必要。2026年度の保育所等入所案内と月別申込期限を公開"
           },
           "source": {
-            "url": "https://www.city.settsu.osaka.jp/section/reiki/reiki_honbun/v100RG00000774.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.settsu.osaka.jp/kosodate/kosodatekyouiku/hoikushoyouchien/youchien/15495.html",
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
               "url": "https://www.city.settsu.osaka.jp/soshiki/kodomokateibu/hoikukyouikuka/hoikuennyusho/25723.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-24"
             }
           ]
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "小学校給食と中学校の選択制デリバリー給食を実施し、中学校給食費は令和8年4月から1食400円とする。",
+          "summary": "2026年度は小学校給食費を無償化し、中学校は2027年1月から全員喫食方式へ移行して無償化する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "elementary": "市立小学校で学校給食を実施し、献立表や給食だよりを公開",
-            "middle": "市立中学校で選択制デリバリー方式の給食を実施",
-            "middleFee": "令和8年4月から1食400円",
-            "future": "令和9年1月から中学校給食を全員喫食方式へ移行予定"
+            "elementary": "2026年度は市立小学校の学校給食費を無償化し、食物アレルギー等により給食を食べられず持参食を利用する家庭へ補助を実施",
+            "middleUntilDecember": "市立中学校は2026年12月まで選択制デリバリー給食を実施。2026年4月から1食400円",
+            "middleFromJanuary": "2027年1月からデリバリー食缶方式による全員喫食へ移行し、給食費を無償化。アレルギー等による持参食家庭への補助も実施",
+            "reservation": "選択制期間はインターネット予約とコンビニエンスストア等での支払いに対応",
+            "documents": "2026年度の小中学校献立表、給食だより、アレルゲン情報を公開"
           },
           "source": {
-            "url": "https://www.city.settsu.osaka.jp/soshiki/kyouikusoumubu/kyouikuseisakuka/chuugakkoukyuushoku/chuugakkoukyuushokunitsuite/2542.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.settsu.osaka.jp/material/files/group/31/R8syuyouzigyou.pdf",
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
+              "url": "https://www.city.settsu.osaka.jp/soshiki/kyouikusoumubu/kyouikuseisakuka/chuugakkoukyuushoku/chuugakkoukyuushokunitsuite/2542.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
               "url": "https://www.city.settsu.osaka.jp/kyouiku/kyouiku/hokenkyuushoku/shougakkou/4818.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-24"
             }
           ]
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "出産後1年未満の母子へ宿泊・日帰り・訪問型の産後ケアを提供する。",
+          "summary": "出産後1年未満の母子等へ宿泊・日帰り・訪問型の産後ケアを提供し、2026年4月から大阪府集合契約施設も利用できる。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "target": "摂津市に住民票がある出産後1年未満の母親と赤ちゃんで、産後ケアを必要とする人",
-            "types": "短期入所型、通所型、居宅訪問型",
-            "support": "母体の休養・健康管理、授乳・育児相談、乳児の発育確認等",
-            "limit": "短期入所型7日、通所型7日、居宅訪問型3日まで",
-            "fee": "短期入所型は日額1,750円から、通所型2,000円、居宅訪問型1,000円"
+            "target": "摂津市に住民票がある産後1年未満の母親と乳児で、家族の十分な支援を受けにくい、体調不良・育児不安がある等の人。流産・死産等から1年未満の人も対象",
+            "types": "宿泊（短期入所）型、デイサービス（通所）型、訪問型",
+            "facilities": "2026年4月から大阪府の産後ケア事業委託集合契約参加施設と、摂津市が個別契約する医療機関・助産院を利用可能",
+            "fee": "課税世帯は宿泊型1日1,750円（利用方法により6日目以降3,000円）、日帰り型2,000円、訪問型1,000円。多胎児は型ごとの加算あり",
+            "reduction": "市民税非課税・生活保護世帯は減免対象で、基本額は宿泊型1日1,250円、日帰り型1,000円、訪問型500円",
+            "limit": "宿泊型は6泊7日以内、日帰り型は7日以内、訪問型は3日以内",
+            "hours": "府集合契約施設は宿泊型33時間、日帰り型9時間、訪問型2時間を基本とし、市個別契約の訪問型は90分以内",
+            "support": "母体の休養・健康管理、授乳・乳房ケア、沐浴・育児相談、乳児の発育確認、食事提供等",
+            "application": "妊娠中から相談できるが、出産後に申請・利用決定。審査と施設調整に約1週間を要するため余裕をもって申請"
           },
           "source": {
-            "url": "https://www.city.settsu.osaka.jp/soshiki/kodomokateibu/shussannikuji/kosodatesuport/17401.html",
-            "checkedAt": "2026-07-23"
-          }
+            "url": "https://www.city.settsu.osaka.jp/soshiki/jisedaiikuseibu/shussannikuji/kosodatesuport/24119.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.settsu.osaka.jp/section/reiki/reiki_honbun/v100RG00000921.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -208331,59 +208354,67 @@
             "maxAgeYears": 3
           },
           "details": {
-            "target": "摂津市在住で保育所・認定こども園等を利用していない生後6か月から満3歳未満の子ども",
-            "employment": "保護者の就労要件なし",
-            "limit": "子ども1人につき月10時間まで",
-            "fee": "1時間300円。世帯状況により減免あり",
-            "application": "市の利用認定後、施設との面談・予約が必要"
+            "target": "摂津市在住で、認定こども園、保育所、地域型保育、企業主導型保育を利用していない生後6か月から満3歳未満の子ども。施設により1歳から",
+            "employment": "保護者の就労等の保育要件は不要",
+            "limit": "子ども1人につき月10時間まで。市内施設では原則1回2.5時間で利用",
+            "facilities": "KENTOひまわり園、せっつあそびまち遊育園、つるのひまわり園、正雀愛育園、一津屋愛育園、とりかいひがし遊育園の6施設",
+            "capacity": "各施設1日最大2人または3人で、実施曜日・対象月齢は施設ごとに異なる",
+            "fee": "利用料と支払方法は各施設が設定し、利用当日に施設へ直接支払う",
+            "application": "総合支援システムで市の認定を申請。認定まで1～2週間程度。初めて利用する施設では事前面談が必須",
+            "reservation": "初回面談後、原則利用日前月1日から先着順で予約。利用開始・終了時に施設のQRコードを読み込む"
           },
           "source": {
             "url": "https://www.city.settsu.osaka.jp/soshiki/kodomokateibu/hoikukyouikuka/kodomodaredemo/26872.html",
-            "checkedAt": "2026-07-23"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.settsu.osaka.jp/soshiki/kodomokateibu/hoikukyouikuka/ichiji/1749.html",
-              "checkedAt": "2026-07-23"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "旧耐震基準の木造住宅を対象に耐震改修・除却等の費用を補助する。",
+          "summary": "2026年度は旧耐震基準の住宅を対象に耐震診断・計画・改修・耐震シェルター・除却費用を補助する。",
           "details": {
-            "target": "原則として昭和56年5月31日以前に建築された市内の木造住宅等",
-            "support": "耐震改修や除却等に要する費用の一部を補助",
-            "application": "契約・工事着手前に市への事前相談と交付申請が必要",
-            "condition": "年度予算や対象要件があるため、事前確認が必要"
+            "target": "原則1981年5月31日以前に建築確認を受け、耐震診断の上部構造評点が1.0未満の木造住宅等",
+            "applicant": "対象建築物の所有者・居住者。改修等は個人所有者で世帯の年間課税所得合計507万円未満。除却は預貯金・有価証券等1,000万円以下",
+            "diagnosis": "木造住宅の耐震診断費から5,000円を除いた額を、1棟5万円または1平方メートル1,100円の低い方まで補助",
+            "design": "耐震改修計画作成費の7割、上限10万円。設計費のみの申請は不可",
+            "retrofit": "耐震改修工事費の10割、上限70万円。世帯月額所得21万4,000円以下の場合は上限90万円",
+            "demolition": "除却工事費の10割、1戸上限40万円。長屋・共同住宅は1戸40万円で建物上限80万円",
+            "notice": "2026年度受付中で、ブロック塀等撤去補助事業は2026年3月末で終了",
+            "application": "交付決定前の診断・契約・工事着手は対象外。予算到達時は早期終了し、12月以降の着工は事前相談が必要"
           },
           "source": {
             "url": "https://www.city.settsu.osaka.jp/soshiki/kensetsubu/kenchikuka/taishinka/2210.html",
-            "checkedAt": "2026-07-23"
-          }
-        },
-        "bulkyWaste": {
-          "status": "verified",
-          "summary": "基準内の大型家具等は大型の普通ごみとして収集し、基準超過品や多量ごみは有料の臨時ごみとして申し込む。",
-          "details": {
-            "ordinary": "木製・プラスチック製の大型品など、指定基準内の品物は普通ごみの大型ごみ日に排出",
-            "sizeLimit": "例としてたんす等は最大130cm×70cm×180cmまで。基準超過品は臨時ごみ扱い",
-            "temporary": "引越し等の多量ごみや基準超過品は有料の臨時ごみとして事前申込み",
-            "fee": "臨時ごみは10kgにつき180円",
-            "application": "臨時ごみは電話で申し込み。オンライン受付の実証も案内"
-          },
-          "source": {
-            "url": "https://www.city.settsu.osaka.jp/soshiki/seikatukannkyou/kannkyougyoumuka/gomi_2/wakekata/26343.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
-              "url": "https://www.city.settsu.osaka.jp/soshiki/seikatukannkyou/kannkyougyoumuka/gomi_2/wakekata/26334.html",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.city.settsu.osaka.jp/bamen/teate/joseihojokin/taishin/5895.html",
+              "checkedAt": "2026-07-24"
             },
             {
+              "url": "https://www.city.settsu.osaka.jp/soshiki/kensetsubu/kenchikuka/oshirase/12239.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "基準内の大型家具等は定期収集し、基準超過品や引越し等の多量ごみは10kg単位の有料臨時ごみとして収集する。",
+          "details": {
+            "ordinary": "木製・プラスチック製の大型品など指定基準内の品物は、地域の普通ごみ・大型ごみ収集日に排出",
+            "sizeLimit": "たんす等は例として最大130cm×70cm×180cmまで。基準超過品、引越し等の多量ごみは臨時ごみ扱い",
+            "temporaryFee": "臨時ごみは10kgにつき180円",
+            "application": "臨時ごみは環境業務課へ電話で事前申込み。2026年6月からオンライン申込みの実証実験も開始",
+            "online": "オンライン受付は件数を限定し、事前周知なく一時休止・終了する場合がある。希望日を選べない場合は電話で申込み",
+            "excluded": "家電リサイクル対象品、処理困難物、事業系ごみ等は市の通常収集対象外"
+          },
+          "source": {
+            "url": "https://www.city.settsu.osaka.jp/soshiki/seikatukannkyou/kannkyougyoumuka/gomi_2/wakekata/26343.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
               "url": "https://www.city.settsu.osaka.jp/soshiki/seikatukannkyou/kannkyougyoumuka/oshirase/30041.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-24"
             }
           ]
         },
@@ -208391,14 +208422,22 @@
           "status": "verified",
           "summary": "洪水・内水・土砂災害等のリスクと避難行動を確認できる防災ガイドブック・ハザードマップを公開する。",
           "details": {
-            "contents": "淀川・安威川等の洪水、内水、土砂災害の想定区域や避難情報を掲載",
-            "evacuation": "指定避難所、警戒レベル、情報収集方法、避難行動を確認可能",
-            "use": "自宅周辺の災害リスクと避難経路の確認に利用できる"
+            "hazards": "淀川・安威川等の洪水、内水、土砂災害、地震等のリスクを確認可能",
+            "contents": "浸水想定区域、指定避難所、警戒レベル、情報収集方法、広域避難、家庭の備蓄等を掲載",
+            "streetSigns": "河川氾濫時の想定浸水深や避難所を電柱・施設等へ表示する『まるごとまちごとハザードマップ』を整備",
+            "updated": "2025年度に鳥飼八町・鳥飼新町・鳥飼中・鳥飼上等へ浸水深標識を追加し、2026年3月に設置一覧を更新",
+            "use": "自宅・勤務先周辺の災害リスクと避難経路を確認し、早期の広域避難計画作成に利用できる"
           },
           "source": {
             "url": "https://www.city.settsu.osaka.jp/kurashi/housai/hazardmap/25518.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.settsu.osaka.jp/soshiki/soumubu/bousaikikannrika/bousai/suigaitaisaku/19028.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         }
       }
     },
