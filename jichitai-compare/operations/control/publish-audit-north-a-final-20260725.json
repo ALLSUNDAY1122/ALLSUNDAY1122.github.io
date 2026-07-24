@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-25T03:14:00+09:00",
+  "sessionId": "north-a",
+  "auditPullRequestNumber": 2910,
+  "auditMainMergeSha": "999517dbf941133ef4dc2e78780a45431ca6bbf1",
+  "checkpointPullRequestNumber": 3053,
+  "checkpointMainMergeSha": "2e6c0e76a7e3286a517e29266d423eb2522ad7b3",
+  "finalAudit": {
+    "rounds": 10,
+    "structurallyCheckedMunicipalities": 132,
+    "deepCheckedMunicipalities": 40,
+    "confirmedErrors": 13,
+    "correctedErrors": 13,
+    "openErrors": 0
+  },
+  "finalCi": {
+    "workflowName": "Jichitai Compare CI",
+    "workflowRunNumber": 7424,
+    "workflowRunId": 30114152746,
+    "status": "success"
+  },
+  "generatedPageVerification": {
+    "verificationBasis": "main上の自治体元JSON、全国生成JSON、自治体別公開HTMLおよびPR CI",
+    "regeneratedMunicipalityPageCount": 12,
+    "representativeMunicipalityCodes": ["02411", "03203", "07547"],
+    "checks": [
+      {
+        "code": "02411",
+        "name": "六ヶ所村",
+        "expected": "一時預かり要約が村内4施設",
+        "result": "matched"
+      },
+      {
+        "code": "03203",
+        "name": "大船渡市",
+        "expected": "令和8年度の0～5歳保育料完全無償化と副食費上限を表示",
+        "result": "matched"
+      },
+      {
+        "code": "07547",
+        "name": "浪江町",
+        "expected": "令和8年度産後ケアの施設類型・月齢別料金を表示",
+        "result": "matched"
+      }
+    ],
+    "result": "success"
+  },
+  "postMergeIntegrity": {
+    "comparisonBaseSha": "2e6c0e76a7e3286a517e29266d423eb2522ad7b3",
+    "comparisonHeadSha": "c13fc361cb53b0b8f20279c6ef85b5812d7ae8b9",
+    "commitsChecked": 23,
+    "sourceMunicipalityJsonOverwritten": false,
+    "taskFilesOverwritten": false,
+    "finalAuditRecordOverwritten": false,
+    "note": "後続変更で北日本Aの公開HTML12件は再生成されたが、担当元JSON・task・最終監査記録への上書きはない。北日本Bの後続修正は山形県コード06のため担当範囲外。"
+  },
+  "nationwideState": {
+    "municipalities": 1741,
+    "services": 15669,
+    "remainingMunicipalities": 0,
+    "northMunicipalities": 406,
+    "northNeedsReviewServices": 0
+  },
+  "externalHttpSmoke": {
+    "performed": false,
+    "note": "この証跡はmain上の公開HTMLとCIの一致確認。GitHub Pages配信先への独立HTTP疎通確認とは区別する。"
+  },
+  "status": "generated_pages_verified"
+}
