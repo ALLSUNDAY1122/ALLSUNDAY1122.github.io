@@ -1,0 +1,99 @@
+name: Temporary West-A public smoke
+
+on:
+  push:
+    branches:
+      - 'audit/west-a-public-smoke-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: ${{ !contains(github.event.head_commit.message, '[west-a-public-smoke]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify corrected West-A pages on GitHub Pages
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const BASE = 'https://allsunday1122.github.io/jichitai-compare';
+          const samples = [
+            {
+              code: '46218', name: '霧島市', service: 'sickChildCare',
+              expected: ['小学6年生までを病児・病後児保育7施設で受け入れ', '1日1,200円', '半日600円'],
+              forbidden: ['病児・病後児保育4施設', '1日1,000円']
+            },
+            {
+              code: '40448', name: '東峰村', service: 'childMedical',
+              expected: ['18歳年度末までの子どもの保険診療自己負担額を助成'],
+              forbidden: ['子ども医療費助成の現行対象年齢・自己負担条件を確認できない']
+            },
+            {
+              code: '46530', name: '徳之島町', service: 'childMedical',
+              expected: ['課税世帯は未就学児、非課税世帯は18歳年度末まで保険診療の窓口負担を無料化'],
+              forbidden: ['子ども医療費給付制度の実施は確認できるが2026年度の対象・給付条件を確定できない']
+            }
+          ];
+          const sleep = ms => new Promise(r => setTimeout(r, ms));
+          const canonical = value => Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object'
+            ? Object.fromEntries(Object.entries(value).sort(([a],[b]) => a.localeCompare(b)).map(([k,v]) => [k, canonical(v)]))
+            : value;
+          const sameJson = (a,b) => JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
+          const publicMunicipality = municipality => {
+            const { schemaVersion, updatedAt, ...rest } = municipality;
+            return rest;
+          };
+          async function fetchText(url) {
+            const response = await fetch(`${url}?audit=${Date.now()}`, { headers: { 'cache-control': 'no-cache' }, redirect: 'follow' });
+            if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+            return response.text();
+          }
+          async function run() {
+            const liveResponse = await fetch(`${BASE}/data/generated/municipalities.json?audit=${Date.now()}`, { headers: { 'cache-control': 'no-cache' } });
+            if (!liveResponse.ok) throw new Error(`generated JSON: HTTP ${liveResponse.status}`);
+            const live = await liveResponse.json();
+            const results = [];
+            for (const sample of samples) {
+              const local = JSON.parse(fs.readFileSync(`jichitai-compare/data/municipalities/${sample.code.slice(0,2)}/${sample.code}.json`, 'utf8'));
+              const liveMunicipality = live.municipalities.find(item => item.code === sample.code);
+              if (!liveMunicipality) throw new Error(`${sample.code}: live generated JSONに自治体がありません`);
+              if (!sameJson(liveMunicipality, publicMunicipality(local))) throw new Error(`${sample.code}: live generated JSONがmain相当データと一致しません`);
+              const html = await fetchText(`${BASE}/municipality/${sample.code}/`);
+              if (!html.includes(`<h1>${sample.name}</h1>`)) throw new Error(`${sample.code}: h1不一致`);
+              for (const text of sample.expected) if (!html.includes(text)) throw new Error(`${sample.code}: 公開ページに期待文言がありません: ${text}`);
+              for (const text of sample.forbidden) if (html.includes(text)) throw new Error(`${sample.code}: 公開ページに旧文言が残っています: ${text}`);
+              results.push({ code: sample.code, name: sample.name, service: sample.service, result: 'passed', expectedTextCount: sample.expected.length, forbiddenTextCount: sample.forbidden.length, liveGeneratedJsonMatched: true });
+            }
+            const report = {
+              schemaVersion: '1.0.0',
+              auditId: 'west-a-public-smoke-20260725',
+              checkedAt: new Date().toISOString(),
+              baseUrl: BASE,
+              municipalityCount: results.length,
+              result: 'passed',
+              samples: results
+            };
+            fs.writeFileSync('jichitai-compare/operations/audits/west-a-public-smoke-20260725.json', JSON.stringify(report, null, 2) + '\n');
+          }
+          let lastError;
+          for (let attempt = 1; attempt <= 30; attempt++) {
+            try { await run(); process.exitCode = 0; break; }
+            catch (error) { lastError = error; console.warn(`[${attempt}/30] ${error.message}`); if (attempt < 30) await sleep(15000); }
+          }
+          if (lastError && !fs.existsSync('jichitai-compare/operations/audits/west-a-public-smoke-20260725.json')) throw lastError;
+          NODE
+      - name: Commit public smoke evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-public-smoke-20260725.json
+          git commit -m '[west-a-public-smoke] audit: record live corrected page verification'
+          git push
