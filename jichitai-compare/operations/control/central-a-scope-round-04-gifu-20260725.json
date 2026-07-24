@@ -6,50 +6,129 @@
   "expectedMunicipalityCount": 42,
   "checkedMunicipalityCount": 42,
   "checkedServiceCount": 378,
-  "generatedAt": "2026-07-25T00:51:00+09:00",
-  "structuralFindingCount": 6,
-  "unavailableCount": 9,
-  "substantiveSuspectCount": 24,
-  "findings": [
+  "generatedAt": "2026-07-25T01:13:00+09:00",
+  "initialStructuralFindingCount": 6,
+  "structuralFindingCount": 0,
+  "resolvedStructuralFindingCount": 6,
+  "unavailableCount": 8,
+  "substantiveSuspectCount": 2,
+  "confirmedErrorCount": 21,
+  "correctedMunicipalityCodes": [
+    "21201",
+    "21202",
+    "21203",
+    "21204",
+    "21205",
+    "21206",
+    "21208",
+    "21209",
+    "21210",
+    "21211",
+    "21212",
+    "21213",
+    "21215",
+    "21218",
+    "21303",
+    "21341",
+    "21361",
+    "21362",
+    "21381",
+    "21604"
+  ],
+  "findings": [],
+  "resolvedStructuralFindings": [
     {
-      "severity": "high",
-      "type": "missing_municipality_file",
-      "code": "21381",
-      "name": "神戸町"
+      "type": "municipality_code_correction",
+      "oldCode": "21364",
+      "newCode": "21381",
+      "name": "神戸町",
+      "detail": "全国地方公共団体コードに合わせて自治体JSONとtaskを改名・修正"
     },
     {
-      "severity": "high",
-      "type": "name_mismatch",
-      "code": "21364",
-      "actual": "神戸町"
+      "type": "audit_logic_false_positive",
+      "municipalityCodes": [
+        "21383",
+        "21507",
+        "21521",
+        "21604"
+      ],
+      "detail": "verifiedCountが9未満でもunavailableを含め9制度が完了しており、task状態は正常"
+    }
+  ],
+  "confirmedCorrections": [
+    {
+      "type": "municipality_code_error",
+      "count": 1,
+      "municipalityCodes": [
+        "21381"
+      ]
     },
     {
-      "severity": "medium",
-      "type": "task_completion_mismatch",
-      "code": "21383",
-      "verifiedCount": 8,
-      "completedServices": 9
+      "type": "current_program_omission",
+      "service": "temporaryChildcare",
+      "count": 19,
+      "municipalityCodes": [
+        "21201",
+        "21202",
+        "21203",
+        "21204",
+        "21205",
+        "21206",
+        "21208",
+        "21209",
+        "21210",
+        "21211",
+        "21212",
+        "21213",
+        "21215",
+        "21218",
+        "21303",
+        "21341",
+        "21361",
+        "21362",
+        "21381"
+      ]
     },
     {
-      "severity": "medium",
-      "type": "task_completion_mismatch",
-      "code": "21507",
-      "verifiedCount": 8,
-      "completedServices": 9
+      "type": "incorrect_unavailable",
+      "service": "housingSupport",
+      "count": 1,
+      "municipalityCodes": [
+        "21604"
+      ]
+    }
+  ],
+  "sourceRefreshes": [
+    {
+      "code": "21206",
+      "service": "housingSupport",
+      "detail": "令和8年度の現行公式案内へ主出典を更新"
+    }
+  ],
+  "confirmedAccurateSuspects": [
+    {
+      "code": "21217",
+      "service": "housingSupport",
+      "detail": "令和8年度完成分の受付終了と令和9年度計画承認受付を既に記録"
     },
     {
-      "severity": "medium",
-      "type": "task_completion_mismatch",
-      "code": "21521",
-      "verifiedCount": 8,
-      "completedServices": 9
+      "code": "21218",
+      "service": "schoolMeals",
+      "detail": "令和8年4月からの小学校給食費無償化を現行公式情報と照合"
+    }
+  ],
+  "needsFurtherReview": [
+    {
+      "code": "21207",
+      "name": "美濃市",
+      "service": "temporaryChildcare",
+      "detail": "現行のこども誰でも通園制度の自治体公式実施条件を確定できない"
     },
     {
-      "severity": "medium",
-      "type": "task_completion_mismatch",
-      "code": "21604",
-      "verifiedCount": 3,
-      "completedServices": 9
+      "code": "21504",
+      "name": "七宗町",
+      "service": "temporaryChildcare",
+      "detail": "現行のこども誰でも通園制度の自治体公式実施条件を確定できない"
     }
   ],
   "unavailable": [
@@ -100,206 +179,6 @@
       "name": "白川村",
       "service": "temporaryChildcare",
       "summary": "一時預かり・こども誰でも通園制度は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない"
-    },
-    {
-      "code": "21604",
-      "name": "白川村",
-      "service": "housingSupport",
-      "summary": "住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない"
-    }
-  ],
-  "substantiveSuspects": [
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21201",
-      "name": "岐阜市",
-      "summary": "家庭保育が困難な場合、未就園の生後57日または6か月から就学前までの児童を教育・保育施設で一時的に預かる。",
-      "source": "https://www.city.gifu.lg.jp/kosodate/kosodateshien/1003609/1003610.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21202",
-      "name": "大垣市",
-      "summary": "未就園の乳幼児を、保護者の就労・傷病・入院・リフレッシュ等の際に一時保育する。",
-      "source": "https://www.city.ogaki.lg.jp/0000001206.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21203",
-      "name": "高山市",
-      "summary": "保護者の仕事・冠婚葬祭・リフレッシュ等により一時的な保育が必要な未就園児を、4時間800円で受け入れる。",
-      "source": "https://www.city.takayama.lg.jp/kurashi/1000019/1020166/1022744.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21204",
-      "name": "多治見市",
-      "summary": "保護者の病気・出産・介護・冠婚葬祭・就労等で一時的に保育が必要な未就園児を市内保育施設で受け入れる。",
-      "source": "https://www.city.tajimi.lg.jp/kosodate_tajimikko/mokuteki/1009182/1006282.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21205",
-      "name": "関市",
-      "summary": "生後6か月から就学前までの未就園児を、就労・傷病・出産・育児疲れ等の理由で月12日以内預かる。",
-      "source": "https://www.city.seki.lg.jp/0000003989.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21206",
-      "name": "中津川市",
-      "summary": "市内在住の生後8か月から3歳または未就園児を、ひと・まちテラス子育て支援センターで一時預かりする。",
-      "source": "https://www.city.nakatsugawa.lg.jp/kosodate/genre/2/37354.html"
-    },
-    {
-      "severity": "review",
-      "type": "housing_currentness_check",
-      "code": "21206",
-      "name": "中津川市",
-      "summary": "新婚・子育て・移住世帯等の空き家取得に30万円、空き家改修に工事費の2分の1・上限50万円を助成する。",
-      "source": "https://www.city.nakatsugawa.lg.jp/soshikikarasagasu/tiikidukurikyodoka/4/2/38700.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21207",
-      "name": "美濃市",
-      "summary": "0歳から小学6年生までの子どもの一時預かりや送迎を、ファミリー・サポート・センターの会員相互援助で行う。",
-      "source": "https://www.city.mino.gifu.jp/docs/1559.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21208",
-      "name": "瑞浪市",
-      "summary": "生後6か月から就学前までの未就園児を、保護者の傷病・出産・育児疲れ・社会参加等の際に一時的に預かる。",
-      "source": "https://www.city.mizunami.lg.jp/kosodate/kosodateshien/1004151/1001283/1002132.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21209",
-      "name": "羽島市",
-      "summary": "就学前児童を対象に、保護者の急病や育児疲れ等の際、市内保育園・認定こども園で一時預かりを行う。",
-      "source": "https://www.city.hashima.lg.jp/2021.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21210",
-      "name": "恵那市",
-      "summary": "就労、育児負担、傷病、冠婚葬祭等で家庭保育が困難な就学前児童を一時的に預かる。",
-      "source": "https://www.city.ena.lg.jp/life_scene/kosodate/ikujisupport/8576.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21211",
-      "name": "美濃加茂市",
-      "summary": "生後8か月から就学前までの未就園児を、就労・通院・冠婚葬祭・負担軽減等の理由で月12日まで預かる。",
-      "source": "https://www.city.minokamo.lg.jp/soshiki/7/1382.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21212",
-      "name": "土岐市",
-      "summary": "生後57日から就学前までの児童を、保護者の就労・傷病・冠婚葬祭・育児負担軽減等の理由で月14日以内預かる。",
-      "source": "https://www.city.toki.lg.jp/kosodate/1010076/1010082/1003445.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21213",
-      "name": "各務原市",
-      "summary": "生後4か月から就学前までの未就園児を、傷病・就労・冠婚葬祭・リフレッシュ等の理由で一時的に預かる。",
-      "source": "https://www.city.kakamigahara.lg.jp/internet/shinseisho/1004668/1004678.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21215",
-      "name": "山県市",
-      "summary": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。",
-      "source": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html"
-    },
-    {
-      "severity": "review",
-      "type": "housing_currentness_check",
-      "code": "21217",
-      "name": "飛騨市",
-      "summary": "市内で定住用住宅を新築・購入する人に助成し、ZEH水準住宅等への加算も設ける。",
-      "source": "https://www.city.hida.gifu.jp/soshiki/23/80985.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21218",
-      "name": "本巣市",
-      "summary": "満1歳から就学前までの未就園児を、就労・傷病・出産・冠婚葬祭・育児負担軽減等の理由で一時的に預かる。",
-      "source": "https://www.city.motosu.lg.jp/0000002909.html"
-    },
-    {
-      "severity": "review",
-      "type": "school_meal_currentness_check",
-      "code": "21218",
-      "name": "本巣市",
-      "summary": "令和8年4月から市立小学校の給食費を無償化し、幼児園と中学校は値上げせず据え置く。",
-      "source": "https://www.city.motosu.lg.jp/0000003028.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21303",
-      "name": "笠松町",
-      "summary": "保護者の疾病・入院・冠婚葬祭等の際、生後3か月から就学前までを施設ごとの年齢条件で一時預かりする。",
-      "source": "https://www.town.kasamatsu.gifu.jp/docs/2012121100734/"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21341",
-      "name": "養老町",
-      "summary": "町内在住で未就園の満1歳以上から就学前までの児童を、疾病・就労・冠婚葬祭・リフレッシュ等の際に一時保育する。",
-      "source": "https://www.town.yoro.gifu.jp/yorokko/1002888/1001995/1003192/1001975.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21361",
-      "name": "垂井町",
-      "summary": "町内在住の生後4か月から就学前までを、就労・緊急・私的理由に応じて一時的に預かる。",
-      "source": "https://www.town.tarui.lg.jp/site/sukoyaka/1158.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21362",
-      "name": "関ケ原町",
-      "summary": "保護者の事情で一時的な保育が必要な未就園児を、町内こども園で月5日まで預かる。",
-      "source": "https://www.town.sekigahara.gifu.jp/6858.htm"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21364",
-      "name": "神戸町",
-      "summary": "町内在住で幼児園等に入園していない1歳以上の就学前児童を、月14日以内・1時間300円で一時保育する。",
-      "source": "https://www.town.godo.gifu.jp/life/koso/koso18.html"
-    },
-    {
-      "severity": "review",
-      "type": "possible_any_child_access_omission",
-      "code": "21504",
-      "name": "七宗町",
-      "summary": "家庭で一時的に保育できない未就園児を、町立保育園で一時保育する。",
-      "source": "https://www.hichiso.jp/top/life/bosi/nursery/"
     }
   ],
   "municipalities": [
@@ -307,15 +186,14 @@
       "code": "21201",
       "name": "岐阜市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -331,9 +209,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "家庭保育が困難な場合、未就園の生後57日または6か月から就学前までの児童を教育・保育施設で一時的に預かる。",
-          "source": "https://www.city.gifu.lg.jp/kosodate/kosodateshien/1003609/1003610.html",
-          "checkedAt": "2026-07-21"
+          "summary": "家庭保育が困難な場合、未就園の生後57日または6か月から就学前までの児童を教育・保育施設で一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.gifu.lg.jp/kosodate/hoiku/1032839.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -347,15 +225,14 @@
       "code": "21202",
       "name": "大垣市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -371,9 +248,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "未就園の乳幼児を、保護者の就労・傷病・入院・リフレッシュ等の際に一時保育する。",
-          "source": "https://www.city.ogaki.lg.jp/0000001206.html",
-          "checkedAt": "2026-07-21"
+          "summary": "未就園の乳幼児を、保護者の就労・傷病・入院・リフレッシュ等の際に一時保育する。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.ogaki.lg.jp/0000069025.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -387,15 +264,14 @@
       "code": "21203",
       "name": "高山市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -411,9 +287,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保護者の仕事・冠婚葬祭・リフレッシュ等により一時的な保育が必要な未就園児を、4時間800円で受け入れる。",
-          "source": "https://www.city.takayama.lg.jp/kurashi/1000019/1020166/1022744.html",
-          "checkedAt": "2026-07-21"
+          "summary": "保護者の仕事・冠婚葬祭・リフレッシュ等により一時的な保育が必要な未就園児を、4時間800円で受け入れる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.takayama.lg.jp/kurashi/1000019/1020166/1023177.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -427,15 +303,14 @@
       "code": "21204",
       "name": "多治見市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -451,9 +326,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保護者の病気・出産・介護・冠婚葬祭・就労等で一時的に保育が必要な未就園児を市内保育施設で受け入れる。",
-          "source": "https://www.city.tajimi.lg.jp/kosodate_tajimikko/mokuteki/1009182/1006282.html",
-          "checkedAt": "2026-07-21"
+          "summary": "保護者の病気・出産・介護・冠婚葬祭・就労等で一時的に保育が必要な未就園児を市内保育施設で受け入れる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.tajimi.lg.jp/kosodate_tajimikko/mokuteki/1006224/1010198.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -467,15 +342,14 @@
       "code": "21205",
       "name": "関市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -491,9 +365,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後6か月から就学前までの未就園児を、就労・傷病・出産・育児疲れ等の理由で月12日以内預かる。",
-          "source": "https://www.city.seki.lg.jp/0000003989.html",
-          "checkedAt": "2026-07-21"
+          "summary": "生後6か月から就学前までの未就園児を、就労・傷病・出産・育児疲れ等の理由で月12日以内預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.seki.lg.jp/0000022587.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -507,15 +381,14 @@
       "code": "21206",
       "name": "中津川市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -531,15 +404,15 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "市内在住の生後8か月から3歳または未就園児を、ひと・まちテラス子育て支援センターで一時預かりする。",
-          "source": "https://www.city.nakatsugawa.lg.jp/kosodate/genre/2/37354.html",
-          "checkedAt": "2026-07-21"
+          "summary": "市内在住の生後8か月から3歳または未就園児を、ひと・まちテラス子育て支援センターで一時預かりする。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.nakatsugawa.lg.jp/pe/kinder/38045.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
           "summary": "新婚・子育て・移住世帯等の空き家取得に30万円、空き家改修に工事費の2分の1・上限50万円を助成する。",
-          "source": "https://www.city.nakatsugawa.lg.jp/soshikikarasagasu/tiikidukurikyodoka/4/2/38700.html",
-          "checkedAt": "2026-07-21"
+          "source": "https://www.city.nakatsugawa.lg.jp/life/life/4/38702.html",
+          "checkedAt": "2026-07-25"
         }
       }
     },
@@ -555,7 +428,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -587,15 +459,14 @@
       "code": "21208",
       "name": "瑞浪市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -611,9 +482,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後6か月から就学前までの未就園児を、保護者の傷病・出産・育児疲れ・社会参加等の際に一時的に預かる。",
-          "source": "https://www.city.mizunami.lg.jp/kosodate/kosodateshien/1004151/1001283/1002132.html",
-          "checkedAt": "2026-07-21"
+          "summary": "生後6か月から就学前までの未就園児を、保護者の傷病・出産・育児疲れ・社会参加等の際に一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.mizunami.lg.jp/kosodate/kosodateshien/1004151/1001283/1011632.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -627,15 +498,14 @@
       "code": "21209",
       "name": "羽島市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -651,9 +521,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "就学前児童を対象に、保護者の急病や育児疲れ等の際、市内保育園・認定こども園で一時預かりを行う。",
-          "source": "https://www.city.hashima.lg.jp/2021.html",
-          "checkedAt": "2026-07-21"
+          "summary": "就学前児童を対象に、保護者の急病や育児疲れ等の際、市内保育園・認定こども園で一時預かりを行う。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.hashima.lg.jp/item/6478.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -667,15 +537,14 @@
       "code": "21210",
       "name": "恵那市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -691,9 +560,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "就労、育児負担、傷病、冠婚葬祭等で家庭保育が困難な就学前児童を一時的に預かる。",
-          "source": "https://www.city.ena.lg.jp/life_scene/kosodate/ikujisupport/8576.html",
-          "checkedAt": "2026-07-21"
+          "summary": "就労、育児負担、傷病、冠婚葬祭等で家庭保育が困難な就学前児童を一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.ena.lg.jp/kosodate_kyoiku/kyoiku/kodomoen/20592.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -707,15 +576,14 @@
       "code": "21211",
       "name": "美濃加茂市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -731,9 +599,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後8か月から就学前までの未就園児を、就労・通院・冠婚葬祭・負担軽減等の理由で月12日まで預かる。",
-          "source": "https://www.city.minokamo.lg.jp/soshiki/7/1382.html",
-          "checkedAt": "2026-07-21"
+          "summary": "生後8か月から就学前までの未就園児を、就労・通院・冠婚葬祭・負担軽減等の理由で月12日まで預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.minokamo.lg.jp/soshiki/7/21005.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -747,15 +615,14 @@
       "code": "21212",
       "name": "土岐市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-21",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -771,9 +638,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後57日から就学前までの児童を、保護者の就労・傷病・冠婚葬祭・育児負担軽減等の理由で月14日以内預かる。",
-          "source": "https://www.city.toki.lg.jp/kosodate/1010076/1010082/1003445.html",
-          "checkedAt": "2026-07-21"
+          "summary": "生後57日から就学前までの児童を、保護者の就労・傷病・冠婚葬祭・育児負担軽減等の理由で月14日以内預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.toki.lg.jp/kosodate/1010076/1010082/1010774.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -787,15 +654,14 @@
       "code": "21213",
       "name": "各務原市",
       "status": "verified",
-      "updatedAt": "2026-07-21",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -811,9 +677,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後4か月から就学前までの未就園児を、傷病・就労・冠婚葬祭・リフレッシュ等の理由で一時的に預かる。",
-          "source": "https://www.city.kakamigahara.lg.jp/internet/shinseisho/1004668/1004678.html",
-          "checkedAt": "2026-07-21"
+          "summary": "生後4か月から就学前までの未就園児を、傷病・就労・冠婚葬祭・リフレッシュ等の理由で一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.kakamigahara.lg.jp/kodomo/hoiku/1026114/1026115.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -835,7 +701,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -867,15 +732,14 @@
       "code": "21215",
       "name": "山県市",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
-      "primarySourceCount": 8,
-      "taskOfficialSourceCount": 8,
-      "sharedPrimarySourceCount": 1,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -891,9 +755,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。",
-          "source": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html",
-          "checkedAt": "2026-07-22"
+          "summary": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.yamagata.gifu.jp/site/yamanavi/51836.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -915,7 +779,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -955,7 +818,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -987,15 +849,14 @@
       "code": "21218",
       "name": "本巣市",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1011,9 +872,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "満1歳から就学前までの未就園児を、就労・傷病・出産・冠婚葬祭・育児負担軽減等の理由で一時的に預かる。",
-          "source": "https://www.city.motosu.lg.jp/0000002909.html",
-          "checkedAt": "2026-07-22"
+          "summary": "満1歳から就学前までの未就園児を、就労・傷病・出産・冠婚葬祭・育児負担軽減等の理由で一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.city.motosu.lg.jp/0000002673.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -1035,7 +896,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1075,7 +935,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1115,7 +974,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1155,7 +1013,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1187,15 +1044,14 @@
       "code": "21303",
       "name": "笠松町",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1211,9 +1067,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保護者の疾病・入院・冠婚葬祭等の際、生後3か月から就学前までを施設ごとの年齢条件で一時預かりする。",
-          "source": "https://www.town.kasamatsu.gifu.jp/docs/2012121100734/",
-          "checkedAt": "2026-07-22"
+          "summary": "保護者の疾病・入院・冠婚葬祭等の際、生後3か月から就学前までを施設ごとの年齢条件で一時預かりする。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.town.kasamatsu.gifu.jp/docs/2026022400022/",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -1227,15 +1083,14 @@
       "code": "21341",
       "name": "養老町",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1251,9 +1106,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "町内在住で未就園の満1歳以上から就学前までの児童を、疾病・就労・冠婚葬祭・リフレッシュ等の際に一時保育する。",
-          "source": "https://www.town.yoro.gifu.jp/yorokko/1002888/1001995/1003192/1001975.html",
-          "checkedAt": "2026-07-22"
+          "summary": "町内在住で未就園の満1歳以上から就学前までの児童を、疾病・就労・冠婚葬祭・リフレッシュ等の際に一時保育する。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.town.yoro.gifu.jp/yorokko/1002888/1001995/1003492.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -1267,15 +1122,14 @@
       "code": "21361",
       "name": "垂井町",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1291,9 +1145,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "町内在住の生後4か月から就学前までを、就労・緊急・私的理由に応じて一時的に預かる。",
-          "source": "https://www.town.tarui.lg.jp/site/sukoyaka/1158.html",
-          "checkedAt": "2026-07-22"
+          "summary": "町内在住の生後4か月から就学前までを、就労・緊急・私的理由に応じて一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.town.tarui.lg.jp/site/sukoyaka/16648.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -1307,15 +1161,14 @@
       "code": "21362",
       "name": "関ケ原町",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1331,9 +1184,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保護者の事情で一時的な保育が必要な未就園児を、町内こども園で月5日まで預かる。",
-          "source": "https://www.town.sekigahara.gifu.jp/6858.htm",
-          "checkedAt": "2026-07-22"
+          "summary": "保護者の事情で一時的な保育が必要な未就園児を、町内こども園で月5日まで預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.town.sekigahara.gifu.jp/6960.htm",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -1344,18 +1197,17 @@
       }
     },
     {
-      "code": "21364",
+      "code": "21381",
       "name": "神戸町",
       "status": "verified",
-      "updatedAt": "2026-07-22",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-22",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1371,9 +1223,9 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "町内在住で幼児園等に入園していない1歳以上の就学前児童を、月14日以内・1時間300円で一時保育する。",
-          "source": "https://www.town.godo.gifu.jp/life/koso/koso18.html",
-          "checkedAt": "2026-07-22"
+          "summary": "町内在住で幼児園等に入園していない1歳以上の就学前児童を、月14日以内・1時間300円で一時保育する。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+          "source": "https://www.town.godo.gifu.jp/life/koso/koso34.html",
+          "checkedAt": "2026-07-25"
         },
         "housingSupport": {
           "status": "verified",
@@ -1395,7 +1247,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1435,7 +1286,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1475,7 +1325,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1515,7 +1364,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1555,7 +1403,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1595,7 +1442,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1635,7 +1481,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1675,7 +1520,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1715,7 +1559,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1755,7 +1598,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 8,
       "taskOfficialSourceCount": 8,
-      "sharedPrimarySourceCount": 1,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1795,7 +1637,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1835,7 +1676,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1875,7 +1715,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 7,
       "taskOfficialSourceCount": 7,
-      "sharedPrimarySourceCount": 2,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1915,7 +1754,6 @@
       "needsMediumReviewCount": 0,
       "primarySourceCount": 9,
       "taskOfficialSourceCount": 9,
-      "sharedPrimarySourceCount": 0,
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
@@ -1947,15 +1785,14 @@
       "code": "21604",
       "name": "白川村",
       "status": "verified",
-      "updatedAt": "2026-07-24",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-24",
-      "verifiedCount": 3,
-      "unavailableCount": 6,
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 4,
+      "unavailableCount": 5,
       "needsMediumReviewCount": 0,
-      "primarySourceCount": 4,
-      "taskOfficialSourceCount": 4,
-      "sharedPrimarySourceCount": 5,
+      "primarySourceCount": 5,
+      "taskOfficialSourceCount": 5,
       "highRisk": {
         "schoolMeals": {
           "status": "unavailable",
@@ -1976,10 +1813,10 @@
           "checkedAt": "2026-07-24"
         },
         "housingSupport": {
-          "status": "unavailable",
-          "summary": "住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "source": "https://www.vill.shirakawa.lg.jp/",
-          "checkedAt": "2026-07-24"
+          "status": "verified",
+          "summary": "定住者・移住者向けに、融雪・落雪住宅整備、空き家再生、民間賃貸住宅の入居費・家賃を支援する。",
+          "source": "https://www.vill.shirakawa.lg.jp/2767.htm",
+          "checkedAt": "2026-07-25"
         }
       }
     }
