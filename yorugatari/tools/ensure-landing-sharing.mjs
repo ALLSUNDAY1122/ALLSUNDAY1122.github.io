@@ -32,6 +32,8 @@ for (const filename of files) {
   const before = fs.readFileSync(filePath, 'utf8');
   let after = ensureShareSection(before);
   after = ensureRuntimeScripts(after);
+  const startCount = (after.match(new RegExp(`assets/${startRuntime.replace('.', '\\.')}`, 'g')) || []).length;
+  if (startCount !== 1) throw new Error(`Expected one landing start runtime in ${filename}, found ${startCount}`);
   if (after !== before) {
     fs.writeFileSync(filePath, after, 'utf8');
     changed += 1;
