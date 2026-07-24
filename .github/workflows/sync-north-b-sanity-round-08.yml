@@ -1,0 +1,47 @@
+name: Sync North B sanity audit round 08
+
+on:
+  push:
+    branches:
+      - 'coord/sync-north-b-sanity-round-08-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: ${{ !contains(github.event.head_commit.message, '[north-b-round08-main-sync]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: jichitai-compare/package-lock.json
+      - name: Sync regional source files and generate public files
+        run: |
+          git fetch origin region/north
+          git checkout origin/region/north -- \
+            jichitai-compare/data/municipalities/06/06204.json \
+            jichitai-compare/data/municipalities/06/06212.json \
+            jichitai-compare/operations/tasks/06204.json \
+            jichitai-compare/operations/tasks/06212.json \
+            jichitai-compare/operations/audits/north-b-research-sanity-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json
+          cd jichitai-compare
+          npm ci
+          npm run generate
+          npm run progress
+          npm run check
+      - name: Commit nationwide synchronization
+        run: |
+          rm .github/workflows/sync-north-b-sanity-round-08.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m '[north-b-round08-main-sync] audit: publish North-B sanity round 08'
+          git push
