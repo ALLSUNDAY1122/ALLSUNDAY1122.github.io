@@ -13,7 +13,7 @@ async function writeJson(relativePath, value) {
 }
 
 function primarySourceUrls(municipality) {
-  return Object.values(municipality.services).map((service) => service.source.url);
+  return [...new Set(Object.values(municipality.services).map((service) => service.source.url))];
 }
 
 async function updateMunicipality(code, updater) {
