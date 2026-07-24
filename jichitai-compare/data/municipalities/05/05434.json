@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.misato.akita.jp/",
   "status": "verified",
   "summary": "美郷町の子育て・暮らしに関する9制度を自治体公式情報で確認できます。",
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳到達年度末まで、所得制限なく保険診療の自己負担額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "target": "乳幼児および小中高生等の18歳到達後最初の3月31日までの児童生徒",
         "coverage": "福祉医療費受給者証により保険診療の自己負担額を助成",
@@ -20,24 +23,36 @@
         "copay": "自己負担なし",
         "application": "福祉保健課で福祉医療費受給者証の交付手続きを行う"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/contents-4016", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/archive/contents-4016",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "病児・病後児保育施設を利用した園児の保護者に、施設利用料の2分の1を助成する。",
-      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 5
+      },
       "details": {
         "target": "生後8週を経過し認定こども園・幼稚園・保育所等に入園中で、病気療養中または回復期にあり集団保育が困難な町内児童",
         "support": "施設利用料支払額の2分の1を助成。10円未満切り捨て",
         "facility": "町内外の病児・病後児保育施設の利用が対象",
         "application": "申請書と領収書等を町内各園またはこども子育て課へ提出"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/kyoiku_kosodate/791", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/kyoiku_kosodate/791",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "令和6年4月から所得制限なく第1子から保育料と園児給食費を無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "target": "美郷町に住民登録がある認定こども園等の利用児童",
         "fee": "2024年4月から第1子より保育料無料。所得制限なし",
@@ -45,36 +60,64 @@
         "outsideFacilities": "町外施設利用時は町の助成上限を超える分が保護者負担となる場合がある",
         "application": "無償化に伴う新たな手続きは不要"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/contents-787", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/archive/contents-787",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "経済的理由により就学費用の負担が困難な世帯へ、就学援助として学校給食費を支給する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "target": "小中学校に在学する児童生徒がいる、経済的理由により就学費用の負担に困っている世帯",
-        "support": "学校給食費、学用品費、修学旅行費、医療費等の一部を援助",
-        "scope": "全児童生徒への一律無償化ではなく、就学援助認定世帯への支援",
-        "application": "毎年2月から3月中旬を中心に教育委員会へ申請。年度途中の申請も可能"
+      "summary": "2026年1月から町立小中学校の給食費を無償化し、令和8年度も継続予定として案内する。対象外校通学者や弁当持参者には相当額を補助する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/contents-832/", "checkedAt": "2026-07-24"}
+      "details": {
+        "start": "2026年1月分から町立小中学校の学校給食費を無償化",
+        "fiscal2026": "町公式広報で2026年4月から2027年3月までの継続予定を案内",
+        "alternativeSupport": "食物アレルギー等で弁当を持参する児童生徒や町外・特別支援学校等の対象者へ、町の1食当たり給食費相当額を上限に補助",
+        "meansTested": "就学援助認定世帯には給食費を含む就学援助も実施"
+      },
+      "source": {
+        "url": "https://www.town.misato.akita.jp/uploads/public/archive_0000002343_00/202601_koho-all.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.misato.akita.jp/uploads/public/archive_0000000155_00/r07-12t-03-1211.pdf",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "url": "https://www.town.misato.akita.jp/archive/contents-832/",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後7か月未満の母子を対象に、通所型産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 0},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
       "details": {
         "target": "美郷町に住所があり、産後7か月未満で心身の疲れや育児不安がある母親と乳児。母子とも医療的治療が不要であること",
         "type": "通所型（デイサービス）",
         "support": "母親の休息・体調相談、母乳相談・マッサージ、抱っこ・沐浴指導、育児相談、乳児の体重確認",
         "application": "利用施設を予約後、予約確定時にこども子育て課へ連絡して申請"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/contents-4909", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/archive/contents-4909",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "認定こども園の一時保育と、生後6か月から満3歳未満の未就園児向けこども誰でも通園制度を実施する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
+      },
       "details": {
         "temporaryCare": "保護者の急な仕事や疾病等により家庭保育が困難な場合、町立認定こども園で一時保育を実施",
         "facilities": "千畑なかよし園、六郷わくわく園、仙南すこやか園",
@@ -82,7 +125,10 @@
         "limit": "こども誰でも通園制度は月10時間まで",
         "application": "こども子育て課へ認定申請後、ポータルで面談・予約を行う"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/p20260218092122", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/archive/p20260218092122",
+        "checkedAt": "2026-07-24"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -95,7 +141,10 @@
         "disasterSupport": "自然災害復旧工事は対象費用の20％、上限10万円",
         "application": "工事着手前に建設課へ申請"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/contents-659/", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/archive/contents-659/",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -107,7 +156,10 @@
         "sorting": "町の家庭ごみ分別ルール・ごみ検索に従い、指定日時と場所へ排出",
         "excludedItems": "収集対象外品は販売店や処理業者へ相談"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/contents-642", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/archive/contents-642",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -118,7 +170,10 @@
         "access": "町公式サイトからPDF版を閲覧可能",
         "guidance": "自宅周辺の危険区域、避難経路、避難場所の事前確認に活用"
       },
-      "source": {"url": "https://www.town.misato.akita.jp/archive/contents-4577", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.misato.akita.jp/archive/contents-4577",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }
