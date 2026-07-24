@@ -15,7 +15,9 @@ on:
       - yorugatari/privacy.html
       - yorugatari/terms.html
       - yorugatari/contact.html
-      - yorugatari/stories/**
+      - yorugatari/stories/last-elevator.html
+      - yorugatari/stories/spare-key-returned.html
+      - yorugatari/stories/hired-with-your-experience.html
       - yorugatari/assets/story.js
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
@@ -55,7 +57,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Normalize campaign runtime and story circulation
+      - name: Normalize campaign runtime and audited circulation
         shell: bash
         run: |
           node --check yorugatari/tools/normalize-legacy-story-attributes.mjs
@@ -76,11 +78,7 @@ jobs:
           const staticFiles = ['index.html','5min-horror.html','bedtime-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
           for (const file of staticFiles) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
-            const expectedVersion = file === '5min-horror.html'
-              ? '20260724-004'
-              : file === 'bedtime-horror.html'
-                ? '20260724-005'
-                : '20260723-003';
+            const expectedVersion = file === '5min-horror.html' ? '20260724-004' : file === 'bedtime-horror.html' ? '20260724-005' : '20260723-003';
             if (!html.includes(`assets/analytics.js?v=${expectedVersion}&r=${release}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
           }
           for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
@@ -89,8 +87,7 @@ jobs:
             if (!html.includes(`assets/landing-start-20260724-001.js?r=${release}`)) throw new Error(`Landing start runtime mismatch: ${file}`);
             if (!html.includes('特集単位の合計だけを匿名で集計します')) throw new Error(`Landing privacy copy mismatch: ${file}`);
           }
-          const runtimeFiles = ['analytics.js', 'engagement.js', 'landing-start-20260724-001.js'];
-          for (const file of runtimeFiles) {
+          for (const file of ['analytics.js', 'engagement.js', 'landing-start-20260724-001.js']) {
             const runtime = fs.readFileSync(path.join(site, 'assets', file), 'utf8');
             for (const token of ['isAutomatedRequest', 'HeadlessChrome', 'automatedQuery']) {
               if (!runtime.includes(token)) throw new Error(`Automated traffic filter missing from ${file}: ${token}`);
@@ -101,10 +98,12 @@ jobs:
             if (!landingStart.includes(token)) throw new Error(`Landing story start token missing: ${token}`);
           }
           const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
+          const auditedStories = new Set(['last-elevator.html', 'spare-key-returned.html', 'hired-with-your-experience.html']);
           if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
           for (const file of stories) {
             const html = fs.readFileSync(path.join(site, 'stories', file), 'utf8');
-            if (!html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`) || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
+            if (!html.includes('../assets/engagement.js?v=20260723-003') || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
+            if (auditedStories.has(file) && !html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`)) throw new Error(`Audit story cache release mismatch: ${file}`);
             if ((html.match(/href=["']\.\.\/5min-horror\.html["']/g) || []).length !== 1) throw new Error(`Five-minute landing link mismatch: ${file}`);
             if ((html.match(/href=["']\.\.\/bedtime-horror\.html["']/g) || []).length !== 1) throw new Error(`Bedtime landing link mismatch: ${file}`);
           }
@@ -114,18 +113,32 @@ jobs:
           if (!notFound.includes(`/yorugatari/assets/analytics.js?v=20260723-003&r=${release}`)) throw new Error('404 runtime mismatch');
           NODE
 
-      - name: Commit normalized pages
+      - name: Commit normalized audited pages
         shell: bash
         run: |
-          if git diff --quiet -- 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
-            echo "Campaign, landing, story circulation, and audit filtering are already normalized."
+          paths=(
+            404.html
+            yorugatari/index.html
+            yorugatari/5min-horror.html
+            yorugatari/bedtime-horror.html
+            yorugatari/archive.html
+            yorugatari/about.html
+            yorugatari/privacy.html
+            yorugatari/terms.html
+            yorugatari/contact.html
+            yorugatari/stories/last-elevator.html
+            yorugatari/stories/spare-key-returned.html
+            yorugatari/stories/hired-with-your-experience.html
+          )
+          if git diff --quiet -- "${paths[@]}"; then
+            echo "Campaign, landing, and audited story runtimes are already normalized."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
+          git add "${paths[@]}"
           git commit -m "Normalize Yorugatari audit-filtered analytics [skip ci]"
-          for attempt in 1 2 3 4 5; do
+          for attempt in 1 2 3 4 5 6; do
             if git pull --rebase origin main && git push origin HEAD:main; then
               exit 0
             fi
@@ -164,7 +177,7 @@ jobs:
           node --check yorugatari/assets/landing-start-20260724-001.js
           node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
 
-      - name: Wait for published campaign release
+      - name: Wait for published filtered release
         run: node yorugatari/tools/live-release-audit.mjs
 
       - name: Install browser
