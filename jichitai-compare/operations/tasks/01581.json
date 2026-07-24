@@ -1,1 +1,57 @@
-{"schemaVersion":"1.0.0","municipalityCode":"01581","municipalityName":"厚真町","prefectureCode":"01","prefectureName":"北海道","assignedTeam":"北日本調査班","status":"merged","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":7,"researchingCount":0,"unavailableCount":2,"needsMediumReviewCount":0,"currentBranch":null,"pullRequestNumber":1995,"lastCheckedAt":"2026-07-24","lastUpdatedAt":"2026-07-24T07:38:00+09:00","lastUpdatedBy":"北日本調査班B, 統括A","officialSources":["https://www.town.atsuma.lg.jp/page/1293.html","https://www.town.atsuma.lg.jp/life/2/13/","https://www.town.atsuma.lg.jp/page/1030.html","https://www.town.atsuma.lg.jp/soshiki/3.html","https://www.town.atsuma.lg.jp/page/1288.html","https://www.town.atsuma.lg.jp/page/1304.html","https://www.town.atsuma.lg.jp/page/1294.html","https://www.town.atsuma.lg.jp/page/1370.html","https://www.town.atsuma.lg.jp/page/3820.html"],"notes":["北海道179自治体の完全性監査で厚真町（01581）の自治体JSON・task欠落を検出し、既存branch・PRがないことを確認して着手。","必須9制度を町公式情報で調査し、7制度をverified、病児・病後児保育と学校給食費をunavailableとして登録。","18歳までの医療費自己負担相当額ポイント還元、3歳以上等の保育料無償と町独自軽減を確認。","産後おおむね1年以内の訪問・通所・宿泊型産後ケア、1歳6か月から就学前の一時保育を確認。","子育て世帯賃貸住宅家賃助成、大型ごみ予約収集、防災ハザードマップを確認。","病児・病後児保育は令和8年度の実施施設・対象・料金を公式公開情報で確定できず、担当課確認事項として整理。","学校給食は現行提供とセンター運営を確認したが、令和8年度の児童生徒別保護者負担・無償範囲を専用HTMLで確定できず、担当課確認事項として整理。","PR #1995をregion/north向けに作成。","CI全工程成功後、PR #1995をregion/northへ統合。"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "01581",
+  "municipalityName": "厚真町",
+  "prefectureCode": "01",
+  "prefectureName": "北海道",
+  "assignedTeam": "北日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 7,
+  "researchingCount": 0,
+  "unavailableCount": 2,
+  "needsMediumReviewCount": 0,
+  "currentBranch": null,
+  "pullRequestNumber": 2933,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T00:30:00+09:00",
+  "lastUpdatedBy": "北日本調査班B",
+  "officialSources": [
+    "https://www.town.atsuma.lg.jp/page/1293.html",
+    "https://www.town.atsuma.lg.jp/life/2/13/",
+    "https://www.town.atsuma.lg.jp/page/1030.html",
+    "https://www.town.atsuma.lg.jp/soshiki/3.html",
+    "https://www.town.atsuma.lg.jp/page/1288.html",
+    "https://www.town.atsuma.lg.jp/page/1304.html",
+    "https://www.town.atsuma.lg.jp/page/1294.html",
+    "https://www.town.atsuma.lg.jp/page/1370.html",
+    "https://www.town.atsuma.lg.jp/page/3820.html"
+  ],
+  "notes": [
+    "北海道179自治体の完全性監査で厚真町（01581）の自治体JSON・task欠落を検出し、既存branch・PRがないことを確認して着手。",
+    "必須9制度を町公式情報で調査し、7制度をverified、病児・病後児保育と学校給食費をunavailableとして登録。",
+    "18歳までの医療費自己負担相当額ポイント還元、3歳以上等の保育料無償と町独自軽減を確認。",
+    "産後おおむね1年以内の訪問・通所・宿泊型産後ケア、1歳6か月から就学前の一時保育を確認。",
+    "子育て世帯賃貸住宅家賃助成、大型ごみ予約収集、防災ハザードマップを確認。",
+    "病児・病後児保育は令和8年度の実施施設・対象・料金を公式公開情報で確定できず、担当課確認事項として整理。",
+    "学校給食は現行提供とセンター運営を確認したが、令和8年度の児童生徒別保護者負担・無償範囲を専用HTMLで確定できず、担当課確認事項として整理。",
+    "PR #1995をregion/north向けに作成。",
+    "CI全工程成功後、PR #1995をregion/northへ統合。",
+    "北日本B誤調査ざっくり再検証 第2回: 一時預かりの対象年齢を1歳6か月以上としていたが、2026年6月更新の町公式こども園案内は満1歳以上と明記しているため、minAgeMonthsを18から12へ訂正。",
+    "PR #2929の初回Actionsが実行承認待ちとなったため、通常CI再起動用に監査時刻を更新。",
+    "main同期PR #2933で全国生成JSON・静的ページを再生成し、通常CIを再起動。"
+  ],
+  "blockers": []
+}
