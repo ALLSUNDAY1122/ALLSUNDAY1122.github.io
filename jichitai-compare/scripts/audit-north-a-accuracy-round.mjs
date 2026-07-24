@@ -14,7 +14,10 @@ const VALID_STATUSES = new Set(['verified', 'unavailable']);
 
 const audit = JSON.parse(await readFile(AUDIT_PATH, 'utf8'));
 const batch = audit.batches.find((item) => item.status === 'in_progress');
-if (!batch) throw new Error('in_progress の監査バッチがありません');
+if (!batch) {
+  console.log(JSON.stringify({ status: 'waiting', message: 'in_progress の監査バッチはありません' }, null, 2));
+  process.exit(0);
+}
 
 const errors = [];
 const warnings = [];
