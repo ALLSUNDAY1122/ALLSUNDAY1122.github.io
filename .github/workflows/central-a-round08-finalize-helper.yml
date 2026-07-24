@@ -1,0 +1,74 @@
+name: Central A Round08 Finalize Helper
+
+on:
+  push:
+    branches: ['audit/central-a-round08-audit-helper-20260725']
+    paths: ['.github/workflows/central-a-round08-finalize-helper.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round08-work-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Apply confirmed correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/finalize-round08.mjs <<'NODE'
+          import fs from 'node:fs'; import path from 'node:path';
+          const root='jichitai-compare', checkedAt='2026-07-25';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const expected={'25201':'大津市','25202':'彦根市','25203':'長浜市','25204':'近江八幡市','25206':'草津市','25207':'守山市','25208':'栗東市','25209':'甲賀市','25210':'野洲市','25211':'湖南市','25212':'高島市','25213':'東近江市','25214':'米原市','25383':'日野町','25384':'竜王町','25425':'愛荘町','25441':'豊郷町','25442':'甲良町','25443':'多賀町'};
+          const write=(p,v)=>fs.writeFileSync(p,JSON.stringify(v,null,2)+'\n');
+          const mp=path.join(root,'data','municipalities','25','25441.json');
+          const d=JSON.parse(fs.readFileSync(mp,'utf8'));
+          d.updatedAt=checkedAt;
+          d.summary='豊郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認し、こども誰でも通園制度の詳細条件のみ継続確認とした。';
+          d.services.postpartumCare={status:'verified',summary:'産婦の心身のケアのため、助産所・医療機関で健康相談、赤ちゃんの育児相談、助言等の産後ケアを実施する。',details:{provider:'助産所・医療機関',care:'産婦のからだ・心のケア、健康相談、赤ちゃんの育児相談、助言等',currentConfirmation:'2026年5月28日更新の町公式母子保健サービスページで現行実施を確認',application:'対象期間、利用類型、回数、料金等の詳細は公式掲載チラシまたは保健福祉課で確認'},source:{url:'https://www.town.toyosato.shiga.jp/0000000203.html',checkedAt}};
+          write(mp,d);
+          const tp=path.join(root,'operations','tasks','25441.json'); const t=JSON.parse(fs.readFileSync(tp,'utf8'));
+          const done=keys.filter(k=>['verified','unavailable'].includes(d.services[k].status));
+          t.completedServices=done; t.verifiedCount=keys.filter(k=>d.services[k].status==='verified').length; t.unavailableCount=keys.filter(k=>d.services[k].status==='unavailable').length; t.researchingCount=0; t.needsMediumReviewCount=0; t.currentService=null; t.nextServiceIndex=9; t.status='merged'; t.officialSources=[...new Set(done.map(k=>d.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))]; t.lastCheckedAt=checkedAt; t.lastUpdatedAt='2026-07-25T03:56:00+09:00'; t.lastUpdatedBy='中日本調査班A';
+          t.notes=(t.notes||[]).filter(n=>!n.startsWith('対象9制度を')&&!n.startsWith('産後ケアは実施を確認'));
+          t.notes.unshift('対象9制度を豊郷町公式情報で確認し、8制度をverified、こども誰でも通園制度をunavailableとして整理した。');
+          t.notes.push('担当範囲再検証で、2026年5月28日更新の町公式ページに現行の産後ケア実施案内を確認し、誤ったunavailableをverifiedへ修正。');
+          write(tp,t);
+          const unavailable=[], municipalities=[];
+          for(const [code,name] of Object.entries(expected)){
+            const m=JSON.parse(fs.readFileSync(path.join(root,'data','municipalities','25',code+'.json'),'utf8'));
+            const task=JSON.parse(fs.readFileSync(path.join(root,'operations','tasks',code+'.json'),'utf8'));
+            const counts={verified:0,unavailable:0,needs_medium_review:0};
+            for(const k of keys){counts[m.services[k].status]=(counts[m.services[k].status]||0)+1;if(m.services[k].status==='unavailable') unavailable.push({code,name,service:k,summary:m.services[k].summary||'',source:m.services[k].source?.url||''});}
+            const official=[...new Set(keys.filter(k=>['verified','unavailable'].includes(m.services[k].status)).map(k=>m.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))];
+            const highRisk={}; for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){const s=m.services[k]; highRisk[k]={status:s.status,summary:s.summary,source:s.source?.url||'',checkedAt:s.source?.checkedAt||null};}
+            municipalities.push({code,name,status:m.status,updatedAt:m.updatedAt,taskStatus:task.status,taskLastCheckedAt:task.lastCheckedAt,verifiedCount:counts.verified||0,unavailableCount:counts.unavailable||0,needsMediumReviewCount:counts.needs_medium_review||0,officialSourceCount:official.length,taskOfficialSourceCount:(task.officialSources||[]).length,highRisk});
+          }
+          const needsFurtherReview=[
+            {code:'25425',name:'愛荘町',service:'schoolMeals',detail:'掲載中の給食費月額は確認できるが、令和8年度の保護者負担額として改定の有無を確定できない'},
+            {code:'25441',name:'豊郷町',service:'temporaryChildcare',detail:'令和8年度の実施方針と条例は確認できるが、対象月齢・時間・料金・予約条件を確定できない'},
+            {code:'25442',name:'甲良町',service:'temporaryChildcare',detail:'令和8年度からの実施計画は確認できるが、対象月齢・施設・料金・定員・予約条件を確定できない'}
+          ];
+          const reportPath=path.join(root,'operations','control','central-a-scope-round-08-shiga-20260725.json'); const report=JSON.parse(fs.readFileSync(reportPath,'utf8'));
+          Object.assign(report,{generatedAt:'2026-07-25T03:56:00+09:00',checkedMunicipalityCount:19,checkedServiceCount:171,structuralFindingCount:0,unavailableCount:unavailable.length,substantiveSuspectCount:needsFurtherReview.length,findings:[],unavailable,substantiveSuspects:needsFurtherReview,municipalities,initialStructuralFindingCount:0,resolvedStructuralFindingCount:0,initialUnavailableCount:5,initialSubstantiveSuspectCount:8,confirmedErrorCount:1,correctedMunicipalityCodes:['25441'],confirmedCorrections:[{type:'false_unavailable',service:'postpartumCare',count:1,municipalityCodes:['25441'],detail:'2026年5月28日更新の豊郷町公式母子保健サービスページで現行の産後ケア実施を確認'}],confirmedAccurateExamples:[{code:'25207',service:'schoolMeals',detail:'守山市の小学校月4,300円・中学校月4,900円と令和8年度就学援助を確認'},{code:'25210',service:'schoolMeals',detail:'野洲市の小学校月4,200円・中学校月4,900円が令和8年4月から適用されることを規則で確認'},{code:'25212',service:'schoolMeals',detail:'高島市の小中学校給食費無償化が令和8年度も継続していることを確認'},{code:'25443',service:'schoolMeals',detail:'多賀町の第3子以降学校給食費等無償化と令和8年度就学援助を確認'}],needsFurtherReview});
+          write(reportPath,report);
+          const trackerPath=path.join(root,'operations','control','central-a-scope-verification-20260724.json'); const tracker=JSON.parse(fs.readFileSync(trackerPath,'utf8'));
+          tracker.branch='audit/central-a-scope-verification-round-08-20260725'; tracker.batches=tracker.batches.filter(b=>b.batch!==8);
+          tracker.batches.push({batch:8,prefectureCode:'25',prefectureName:'滋賀県',municipalityCount:19,status:'completed_with_corrections_and_review',checkedMunicipalities:19,checkedServices:171,initialStructuralFindingCount:0,structuralFindingCount:0,resolvedStructuralFindingCount:0,initialUnavailableCount:5,unavailableCount:unavailable.length,initialSubstantiveSuspectCount:8,substantiveSuspectCount:needsFurtherReview.length,report:'operations/control/central-a-scope-round-08-shiga-20260725.json',confirmedErrors:1,correctedMunicipalityCodes:['25441'],confirmedAccurateSuspectCodes:['25207','25210','25212','25443'],needsFurtherReviewCodes:['25425','25441','25442'],nextStep:'第9回として大阪府43自治体を監査する',completedAt:'2026-07-25T03:56:00+09:00'});
+          tracker.summary={completedBatches:8,checkedMunicipalities:230,confirmedErrors:54,needsFurtherReview:21,correctedErrors:54}; tracker.nextAction='第9回として大阪府43自治体を監査する'; tracker.rebuiltRound8At='2026-07-25T03:56:00+09:00'; write(trackerPath,tracker);
+          NODE
+          node /tmp/finalize-round08.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/25/25441.json jichitai-compare/operations/tasks/25441.json jichitai-compare/operations/control/central-a-scope-round-08-shiga-20260725.json jichitai-compare/operations/control/central-a-scope-verification-20260724.json
+          git commit -m 'audit: 滋賀県監査の確定誤り1件を修正'
+          git push origin HEAD:audit/central-a-round08-work-20260725
