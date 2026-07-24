@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1637,
+    "municipalityCount": 1638,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -134202,6 +134202,183 @@
           },
           "source": {
             "url": "https://www.city.sado.niigata.jp/site/bousai/17752.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "15225",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "魚沼市",
+      "officialUrl": "https://www.city.uonuma.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を魚沼市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの保険診療自己負担額を全額助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "魚沼市に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "健康保険適用医療費の自己負担額を全額助成し、一部負担金なし",
+            "procedure": "子ども医療費受給者証の交付申請が必要",
+            "condition": "所得制限なし"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/site/mamenko/2651.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "保育園児等から小学生の病児・病後児を小出病院内で一時保育",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "市内在住または保護者が市内勤務で、保育園・幼稚園・こども園・小学校に通い、病気・けがまたは回復期で集団保育が困難な児童",
+            "facility": "魚沼市立小出病院 病児・病後児保育室",
+            "hours": "月曜日から金曜日の8時から18時",
+            "fee": "1日1,200円。生活保護世帯は無料",
+            "procedure": "事前登録、利用申込書、主治医の医師連絡票、予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/site/mamenko/2668.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "2025年度から市内の保育園・認定こども園・幼稚園の保育料を全児童0円",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "市内のすべての保育園、認定こども園、幼稚園を利用する児童",
+            "coverage": "保育料0円、副食費0円。主食費は月800円を上限に助成",
+            "start": "2025年4月から全世帯・全児童の保育料を無料化",
+            "excluded": "延長保育料等の実費は別途徴収される場合あり"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/site/mamenko/2647.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市内小学校給食費を無償化し、中学校は食材費高騰分を市負担",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "2026年4月1日から2027年3月31日まで、市内小学校の給食費を無償化し保護者負担なし",
+            "juniorHigh": "中学校は1食あたり市負担を90円から100円へ増額し、食材費高騰分を市が負担。保護者は従来と同額を納入",
+            "materialSupport": "小学校も賄材料費の市負担を1食10円増額",
+            "notes": "小中学校一律完全無償化とは記録しない"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/site/mamenko/1015586.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後4か月頃までの母子へ宿泊型・日帰り型の産後ケア費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "魚沼市に住所があり、育児支援や休養を必要とする出産後4か月頃までの母親と赤ちゃん。受入月齢は委託医療機関により異なる",
+            "types": "宿泊型、日帰り型",
+            "limit": "宿泊型・日帰り型を通算して7日以内が助成対象",
+            "fee": "利用者負担は1日3,000円×日数を基本とし、市が残額の一部を負担",
+            "support": "母親の休養、乳房ケア、体調管理、授乳・沐浴等の育児相談"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/site/mamenko/2711.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで堀之内なかよし保育園で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "保育所・認定こども園・地域型保育・企業主導型保育施設等に在園していない生後6か月から満3歳未満の子ども",
+            "facility": "堀之内なかよし保育園",
+            "hours": "8時30分から16時、子ども1人につき月10時間まで、時間単位",
+            "fee": "1時間300円。食事・おやつ等の実費が必要な場合あり"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/site/mamenko/1038596.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市内業者による住宅リフォーム費を世帯区分等に応じて最大100万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "市内に住民登録し、対象住宅の所有者または二親等以内の居住親族で、市税等滞納のない人。空き家活用者は市外居住でも申請可能",
+            "general": "一般世帯は税抜20万円以上の工事費の20％、上限10万円",
+            "priority": "子育て・高齢者・障がい者・ひとり親等の世帯要件該当者は税抜10万円以上の工事費の40％、上限20万円。窓断熱化は5万円加算",
+            "vacantHome": "空き家への市内転居は30％・上限60万円、市外からの転入は50％・上限100万円",
+            "period": "2026年4月1日から予算到達まで"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/page/2328.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "大型ごみを月2回の予約制戸別収集で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "大型ごみの収集は予約制で、地区ごとに月2回実施",
+            "procedure": "収集日前日17時までに電話またはメールで品名・数量等を予約し、品目区分に応じた大型ごみ処理券を貼る",
+            "placement": "収集日に玄関先まで搬出し、市は家屋内へ入らない",
+            "guide": "大型ごみの区分は分別表またはごみ分別アプリ『エコうお』で確認"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/page/2050.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "9河川の洪水浸水・土砂災害警戒区域・避難所を掲載したハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "魚野川、破間川、佐梨川、羽根川、田河川、三用川、水無川、和田川、西川の洪水・土砂災害ハザードマップを地域別に公開",
+            "risks": "最大想定規模降雨の浸水想定区域と土砂災害特別警戒・警戒区域",
+            "facilities": "指定緊急避難場所・避難所、防災情報入手方法、避難行動等を掲載",
+            "support": "電子版GISと紙版を提供し、マイ・タイムライン作成に利用可能"
+          },
+          "source": {
+            "url": "https://www.city.uonuma.lg.jp/site/bousai/1769.html",
             "checkedAt": "2026-07-24"
           }
         }
