@@ -112,7 +112,7 @@
         "29446",
         "29447"
       ],
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "round": 7,
@@ -175,11 +175,11 @@
     }
   ],
   "progress": {
-    "completedRounds": 5,
-    "structurallyCheckedMunicipalities": 50,
-    "deepCheckedMunicipalities": 43,
-    "confirmedErrors": 21,
-    "correctedErrors": 21
+    "completedRounds": 6,
+    "structurallyCheckedMunicipalities": 60,
+    "deepCheckedMunicipalities": 53,
+    "confirmedErrors": 26,
+    "correctedErrors": 26
   },
   "preflightFindings": [
     {
@@ -1018,6 +1018,196 @@
           "code": "29362",
           "service": "housingSupport",
           "before": "verified / 子ども要件のない一般中古住宅取得支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "auditedAt": "2026-07-24T17:01:54.451Z",
+      "codes": [
+        "29424",
+        "29425",
+        "29426",
+        "29427",
+        "29441",
+        "29442",
+        "29443",
+        "29444",
+        "29446",
+        "29447"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 2,
+        "workflowRunId": 30110717765,
+        "artifactId": 8603406901,
+        "artifactDigest": "sha256:d624180dfbae24f2f8e468b4aadd614eb5d579e413326b7e4c808ecff3b6c1dc",
+        "postCorrectionWorkflowRunId": 30111369551,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "29424",
+          "name": "上牧町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "誰でも通園・産後ケアを確認。移住支援は令和7年2月期限の過年度案内のみで、令和8年度未確認のunavailable判定は妥当。"
+        },
+        {
+          "code": "29425",
+          "name": "王寺町",
+          "services": [
+            "childcareFee",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "第2子保育料無償化は令和8年度も継続。一般U-40住宅取得支援を、義務教育修了前の子を含む三世代世帯向け住宅取得・リフォーム補助へ訂正。"
+        },
+        {
+          "code": "29426",
+          "name": "広陵町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "誰でも通園の現行条件を確認。一般住宅リフォームは受付終了済みで、子育て住宅支援未確認のunavailable判定は妥当。"
+        },
+        {
+          "code": "29427",
+          "name": "河合町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "誰でも通園は一致。子ども要件のない一般住宅リフォーム助成を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29441",
+          "name": "吉野町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "一時預かりは一致。子ども要件のない一般空き家改修補助を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29442",
+          "name": "大淀町",
+          "services": [
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "令和8年度産後ケアを確認。子ども要件のない結婚新生活支援を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29443",
+          "name": "下市町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "誰でも通園は一致。学校給食は過年度実績と現行未確認を区別しており妥当。一般住宅リフォーム助成を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29444",
+          "name": "黒滝村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "給食費全額補助、産後ケア予算、15歳未満の子がいる40歳以下世帯向け住宅支援を確認。"
+        },
+        {
+          "code": "29446",
+          "name": "天川村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "学校給食・産後ケア未確認のunavailable判定、子ども人数による定住促進住宅家賃減免を確認。"
+        },
+        {
+          "code": "29447",
+          "name": "野迫川村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "学校給食費無償、産後ケア・誰でも通園未確認の判定、小学生以下の子を有する転入世帯向け奨励金を確認。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "29425",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般U-40住宅取得支援",
+          "after": "verified / 義務教育修了前の子を含む三世代世帯向け住宅取得・リフォーム補助",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29427",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般住宅リフォーム助成",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29441",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般空き家改修補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29442",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない結婚新生活支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29443",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般住宅リフォーム助成",
           "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
           "status": "corrected_in_audit_pr_2926"
         }
