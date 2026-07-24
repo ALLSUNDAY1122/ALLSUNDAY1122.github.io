@@ -2,7 +2,8 @@ const fs = require('node:fs');
 const { chromium } = require('playwright');
 
 const base = 'https://allsunday1122.github.io/yorugatari';
-const landingAnalyticsVersion = '20260724-004';
+const fiveMinuteAnalyticsVersion = '20260724-004';
+const bedtimeAnalyticsVersion = '20260724-005';
 const results = [];
 const failures = [];
 
@@ -22,7 +23,7 @@ async function waitForTopCards(page) {
 
 async function run() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.4' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.5' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
@@ -105,7 +106,7 @@ async function run() {
       engagement: Array.from(document.scripts).some((script) => script.src.includes('assets/engagement.js')),
       bedtimeLinks: document.querySelectorAll('a[href="bedtime-horror.html"]').length
     };
-  }, landingAnalyticsVersion);
+  }, fiveMinuteAnalyticsVersion);
   record('five-minute landing renders 12 unique editorial picks', fiveMinute.picks === 12 && fiveMinute.uniquePicks === 12, fiveMinute);
   record('five-minute landing renders six genre guides and three FAQ items', fiveMinute.guides === 6 && fiveMinute.faq === 3, fiveMinute);
   record('five-minute landing has canonical metadata and lightweight analytics', fiveMinute.h1 === 1 && fiveMinute.breadcrumb === 1 && fiveMinute.canonical === `${base}/5min-horror.html` && fiveMinute.analytics && !fiveMinute.engagement, fiveMinute);
@@ -128,7 +129,7 @@ async function run() {
       engagement: Array.from(document.scripts).some((script) => script.src.includes('assets/engagement.js')),
       fiveMinuteLinks: document.querySelectorAll('a[href="5min-horror.html"]').length
     };
-  }, landingAnalyticsVersion);
+  }, bedtimeAnalyticsVersion);
   record('bedtime landing renders eight unique editorial picks', bedtime.picks === 8 && bedtime.uniquePicks === 8, bedtime);
   record('bedtime landing renders four mood guides and three FAQ items', bedtime.moods === 4 && bedtime.faq === 3, bedtime);
   record('bedtime landing has canonical metadata and lightweight analytics', bedtime.h1 === 1 && bedtime.breadcrumb === 1 && bedtime.canonical === `${base}/bedtime-horror.html` && bedtime.analytics && !bedtime.engagement, bedtime);
