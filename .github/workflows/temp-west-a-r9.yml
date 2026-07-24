@@ -1,0 +1,172 @@
+name: Temporary West-A round 9 corrections
+
+on:
+  push:
+    branches:
+      - 'audit/west-a-research-verification-r9-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[west-a-r9-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply confirmed round 9 corrections
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const root = 'jichitai-compare';
+          const read = p => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'));
+          const write = (p, value) => fs.writeFileSync(path.join(root, p), JSON.stringify(value, null, 2) + '\n');
+          const stamp = '2026-07-25T01:55:00+09:00';
+          const day = '2026-07-25';
+
+          const toho = read('data/municipalities/40/40448.json');
+          toho.updatedAt = day;
+          toho.services.childMedical = {
+            status: 'verified',
+            summary: '18歳年度末までの子どもの保険診療自己負担額を助成',
+            eligibility: { minAgeMonths: 0, maxAgeYears: 18 },
+            details: {
+              target: '東峰村に住所があり、医療保険に加入する18歳到達後最初の3月31日までの子ども（生活保護受給者を除く）',
+              support: '保険診療に係る自己負担相当額を支給。入院時食事療養標準負担額は対象外',
+              incomeCondition: '条例上の所得制限規定なし',
+              application: '事前に受給資格認定を受けて子ども医療証の交付を受け、対象医療機関等で医療証を提示する'
+            },
+            source: {
+              url: 'https://www1.g-reiki.net/vill.toho/reiki_honbun/r158RG00000188.html',
+              checkedAt: day
+            }
+          };
+          toho.summary = '必須9制度を東峰村公式情報で調査。7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして登録。';
+          write('data/municipalities/40/40448.json', toho);
+
+          const tokunoshima = read('data/municipalities/46/46530.json');
+          tokunoshima.updatedAt = day;
+          tokunoshima.services.childMedical = {
+            status: 'verified',
+            summary: '課税世帯は未就学児、非課税世帯は18歳年度末まで保険診療の窓口負担を無料化',
+            eligibility: { minAgeMonths: 0, maxAgeYears: 18 },
+            details: {
+              target: '徳之島町に住所があり健康保険に加入する子ども。住民税課税世帯は未就学児、住民税非課税世帯は18歳到達後最初の3月31日まで',
+              support: '2025年4月1日受診分から、対象となる保険診療の窓口負担を無料化',
+              application: '子ども医療費給付受給資格者登録申請が必要',
+              excluded: '保険適用外費用等は給付対象外'
+            },
+            source: {
+              url: 'https://www.tokunoshima-town.org/kikakuka/chose/koho/kohoshi/2025koho.html',
+              checkedAt: day
+            },
+            additionalSources: [
+              {
+                url: 'https://www.pref.kagoshima.jp/aa02/tayori89.html',
+                checkedAt: day
+              }
+            ]
+          };
+          tokunoshima.summary = '必須9制度を徳之島町公式情報で調査。5制度をverified、病児・病後児保育、2026年度保育料、産後ケア、こども誰でも通園制度をunavailableとして登録。';
+          write('data/municipalities/46/46530.json', tokunoshima);
+
+          for (const code of ['40448', '46530']) {
+            const task = read(`operations/tasks/${code}.json`);
+            const municipality = code === '40448' ? toho : tokunoshima;
+            const statuses = Object.values(municipality.services).map(s => s.status);
+            task.verifiedCount = statuses.filter(s => s === 'verified').length;
+            task.researchingCount = statuses.filter(s => s === 'researching').length;
+            task.unavailableCount = statuses.filter(s => s === 'unavailable').length;
+            task.needsMediumReviewCount = statuses.filter(s => s === 'needs_medium_review').length;
+            task.lastCheckedAt = day;
+            task.lastUpdatedAt = stamp;
+            task.lastUpdatedBy = '西日本調査班A';
+            const newUrl = code === '40448'
+              ? 'https://www1.g-reiki.net/vill.toho/reiki_honbun/r158RG00000188.html'
+              : 'https://www.tokunoshima-town.org/kikakuka/chose/koho/kohoshi/2025koho.html';
+            task.officialSources = [...new Set([...(task.officialSources || []), newUrl])];
+            task.notes = [...(task.notes || []), code === '40448'
+              ? '2026-07-25: 第9回監査で現行条例を確認し、子ども医療費をunavailableからverifiedへ修正。18歳年度末まで、保険診療自己負担相当額を助成。'
+              : '2026-07-25: 第9回監査で町広報を確認し、子ども医療費をunavailableからverifiedへ修正。課税世帯は未就学児、非課税世帯は18歳年度末まで、2025年4月受診分から窓口負担無料。'];
+            write(`operations/tasks/${code}.json`, task);
+          }
+
+          const auditPath = 'operations/audits/west-a-research-verification-20260725.json';
+          const audit = read(auditPath);
+          audit.updatedAt = stamp;
+          audit.completedRoundCount = 9;
+          const round9 = audit.rounds.find(r => r.round === 9);
+          Object.assign(round9, {
+            status: 'completed',
+            method: 'unavailableへ整理した75自治体・189制度を対象に、誤判定リスクが高い子ども医療費3自治体を最優先で公式条例・公式広報・現行支援リンクから再照合',
+            reviewedMunicipalityCount: 75,
+            reviewedServiceCount: 189,
+            prioritySampleCount: 3,
+            samples: [
+              {
+                code: '39307',
+                name: '芸西村',
+                service: 'childMedical',
+                result: 'retained_unavailable',
+                finding: '令和8年3月掲載の村支援制度一覧で医療費無料制度の実施は再確認できたが、リンク先制度ページの本文取得が不安定で、対象年齢・除外条件を確定できないため保守的判定を維持',
+                officialUrl: 'https://www.vill.geisei.kochi.jp/pages/m001787.php'
+              },
+              {
+                code: '40448',
+                name: '東峰村',
+                service: 'childMedical',
+                result: 'corrected',
+                finding: '現行条例で18歳年度末まで、保険診療自己負担相当額の支給、医療証による現物給付を確認',
+                officialUrl: 'https://www1.g-reiki.net/vill.toho/reiki_honbun/r158RG00000188.html'
+              },
+              {
+                code: '46530',
+                name: '徳之島町',
+                service: 'childMedical',
+                result: 'corrected',
+                finding: '町広報で課税世帯は未就学児、非課税世帯は18歳年度末まで、2025年4月受診分から窓口負担無料を確認',
+                officialUrl: 'https://www.tokunoshima-town.org/kikakuka/chose/koho/kohoshi/2025koho.html'
+              }
+            ],
+            result: 'corrected',
+            materialErrorCount: 2,
+            correctionAppliedCount: 2,
+            retainedUnavailableCount: 1,
+            note: '初期抽出では3件を誤判定候補としたが、芸西村は制度実施のみ確認でき、現行条件の本文を安定取得できないためunavailableを維持。東峰村・徳之島町の2件のみverifiedへ修正。'
+          });
+          audit.summary.materialErrorCount = 3;
+          audit.summary.correctionAppliedCount = 3;
+          audit.summary.correctionRequiredCount = 0;
+          audit.summary.roundsRemaining = 1;
+          audit.summary.currentAssessment = '第9回でunavailable判定から2件の誤りを検出・修正。累計重大誤り3件はすべて修正済みで、未修正0件。';
+          audit.nextAction = '第10回として、発見3件の再検証、CI・生成ページ確認、最終集計を行う。';
+          write(auditPath, audit);
+
+          const checkpointPath = 'operations/control/session-checkpoints/west-a.json';
+          const checkpoint = read(checkpointPath);
+          checkpoint.updatedAt = stamp;
+          checkpoint.nextAction = '10回の誤調査検証の第10回として、発見3件の再検証、CI・生成ページ確認、最終集計を行う。';
+          checkpoint.researchVerificationAudit.completedRoundCount = 9;
+          checkpoint.researchVerificationAudit.lastCompletedRound = 9;
+          checkpoint.researchVerificationAudit.nextRound = 10;
+          checkpoint.researchVerificationAudit.materialErrorCount = 3;
+          checkpoint.researchVerificationAudit.correctionAppliedCount = 3;
+          checkpoint.researchVerificationAudit.correctionRequiredCount = 0;
+          checkpoint.researchVerificationAudit.lastAuditedAt = stamp;
+          checkpoint.integrityAudit.auditedAt = stamp;
+          checkpoint.integrityAudit.notes = [...(checkpoint.integrityAudit.notes || []), '第9回監査で東峰村・徳之島町の子ども医療費をunavailableからverifiedへ修正。芸西村は現行条件を確定できずunavailableを維持。'];
+          write(checkpointPath, checkpoint);
+          NODE
+      - name: Commit corrections
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare
+          git commit -m '[west-a-r9-applied] audit: correct two child medical false negatives'
+          git push
