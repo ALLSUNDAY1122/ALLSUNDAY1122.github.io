@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "39212",
+  "prefectureCode": "39",
+  "prefecture": "高知県",
+  "name": "香美市",
+  "officialUrl": "https://www.city.kami.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を香美市公式情報で再監査。7制度をverified、一般利用型の病児・病後児保育と2026年度一般世帯の学校給食費情報をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで入院・通院の保険診療自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "香美市に住所を有する0歳から18歳到達後最初の3月31日までの子ども",
+        "support": "入院・通院でかかった保険診療分の自己負担分を助成",
+        "excluded": "入院時食事代、保険適用外の診断書料、薬容器代、差額ベッド料等は対象外",
+        "application": "福祉事務所社会福祉係または各支所で医療費受給者証を申請する"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/17/nyuuyouji02.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "市内は在園中の体調不良児対応型2施設のみで、一般利用型の病児・病後児対応型は未整備",
+      "details": {
+        "currentService": "第3期計画では、なかよし保育園とひまわり保育園で体調不良児対応型を実施",
+        "notImplemented": "家庭から予約して利用する病児対応型、病後児対応型、非施設型（訪問型）は実施施設として確保されていない",
+        "plan": "病児対応型・病後児対応型・訪問型は必要性を含めて調査・検討する方針",
+        "judgment": "一般利用型の病児・病後児保育は現時点で利用できないためunavailableとする"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/uploaded/attachment/50076.pdf",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "free": "3～5歳児クラスは全世帯、0～2歳児クラスは住民税非課税世帯の保育料を無償化",
+        "multipleChildren": "同時入所の第2子は半額、第3子以降は無料。年収約360万円未満相当世帯は施設利用の有無を問わず最年長の子から数える",
+        "excluded": "副食費、時間外保育料、行事費等は原則として保護者負担"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/47/youjikyouiku-hoikunomusyouka.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "2026年度一般世帯の給食費額・負担軽減内容を示す決定済み公式案内が公開されていない",
+      "details": {
+        "publishedRates": "公式ページには2024年4月施行の基準月額として小学校5,440円、中学校5,950円を掲載",
+        "previousSupport": "2025年度は4月から12月まで負担軽減額を設定し、2026年1月から3月は全額支援",
+        "currentYear": "同ページは2026年度4月以降の対応を検討中としており、2026年度一般世帯の徴収額・無償化・補助を確定できない",
+        "lowIncomeSupport": "2026年度就学援助認定世帯は学校給食費が援助対象",
+        "judgment": "一般世帯の2026年度現行負担情報が利用できないためunavailableとする"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/59/kyushokuhi.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kami.lg.jp/soshiki/46/syugakuenjo.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊型・通所型・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "香美市に住民票がある産後1年未満の母親と赤ちゃん",
+        "types": "宿泊型、通所型、訪問型",
+        "support": "乳房ケア・授乳相談、母子の健康管理や生活相談、育児相談、母親の休息支援",
+        "limit": "宿泊型5泊、通所型5回、訪問型2回まで",
+        "fee": "宿泊型・通所型は施設別自己負担額があり、減免チケットを宿泊・通所合計5回まで利用可能。訪問型は無料",
+        "application": "妊娠8か月から事前申請可能"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/18/sangokeajigyou.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "2025年4月1日以前生まれの満3歳未満児へ月10時間のこども誰でも通園制度を実施",
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "2025年4月1日以前生まれで、満3歳に達していない子ども",
+        "facility": "香美市立片地保育園",
+        "hours": "月曜日から金曜日の9時から15時",
+        "limit": "子ども1人につき月10時間まで",
+        "fee": "1時間300円。減免制度あり",
+        "application": "幼保支援係へ事前相談し、利用希望時間・健康状態の確認後に申請する"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/47/daredemotuuenseido.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家バンク物件の改修等を3分の2、上限180万円補助",
+      "details": {
+        "target": "空き家バンク登録物件の所有者、または市外に5年以上居住し市内へ移住して10年以上居住する意思がある利用者等",
+        "support": "住宅改修・耐震化費用の3分の2、上限180万円。家財道具等処分費は2分の1、上限50万円",
+        "conditions": "所有者・利用者双方の空き家バンク登録、交付決定前の着工禁止、事業完了後の居住・賃貸継続等の要件がある"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/9/akiyahojo.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "指定日に粗大ごみ処理施設へ直接持ち込み、車両区分別手数料を支払う",
+      "details": {
+        "method": "市立一般廃棄物処理場または香北町永野粗大ごみ仮置き場へ指定日に直接持ち込む",
+        "hours": "市立処理場は毎月第3日曜日と翌月曜日、香北町仮置き場は毎月第3日曜日。9時30分から12時、13時から16時",
+        "fee": "一輪車・自転車・バイク200円、最大積載量250kg以下1,000円、251～500kg以下2,000円、501～1,000kg以下4,100円、1,001～2,000kg以下8,300円",
+        "excluded": "事業系ごみ、家電4品目、パソコン、建築廃材、危険物等は持込不可"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/12/sodaigomi.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "洪水・土砂災害・地震等の危険区域と避難情報をハザードマップで公開",
+      "details": {
+        "coverage": "洪水浸水想定、土砂災害警戒区域、地震被害、ため池等の災害リスク",
+        "shelters": "指定緊急避難場所・指定避難所等を確認可能",
+        "formats": "市全域・地区別のハザードマップ、マイ・タイムライン作成資料等を公開"
+      },
+      "source": {
+        "url": "https://www.city.kami.lg.jp/soshiki/10/hazardmap.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "39301",
+  "prefectureCode": "39",
+  "prefecture": "高知県",
+  "name": "東洋町",
+  "officialUrl": "https://www.town.toyo.kochi.jp/",
+  "status": "verified",
+  "summary": "必須9制度を東洋町公式情報で再監査。7制度をverified、一般利用型の病児・病後児保育と利用者向け条件を確定できないこども誰でも通園制度をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで保険診療の自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "東洋町に住所があり健康保険に加入する、0歳から18歳到達後最初の3月31日までの子ども",
+        "support": "保険診療に係る自己負担分を助成",
+        "conditions": "町税等の滞納がない世帯であること",
+        "excluded": "入院時食事療養費、保険適用外費用等は対象外",
+        "application": "受給者証の交付申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/info0400.php",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "一般利用型の病児・病後児保育について利用者向け現行条件が公開されていない",
+      "details": {
+        "plan": "第3期子ども・子育て支援事業計画を確認",
+        "currentInformation": "町公式サイトに一般家庭が予約利用する病児・病後児保育の実施施設、対象年齢、料金、開所時間、登録・予約方法の案内がない",
+        "judgment": "現時点で利用可能な一般利用型サービスを確認できないためunavailableとする"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/pbfile/m000745/pbf20250421154144_XFtqJFMYL8mm.pdf",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "町内保育所の保育料を無料化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "free": "町内の銀杏保育園・甲浦保育園の保育料を無料化",
+        "excluded": "給食材料費、延長保育料、行事費等の実費負担は別途発生する場合がある"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/info0054.php",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校の学校給食費を無料化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "東洋町内の小学校・中学校における学校給食費を無料化",
+        "target": "町立小中学校の児童・生徒"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/info0686.php",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ産後ケアを無料で原則3回提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "東洋町に住所がある産後1年未満の母親と赤ちゃんで、医療行為を必要としない人",
+        "support": "母子の健康管理、授乳・乳房ケア、育児相談、母親の心身の休息等を支援",
+        "limit": "原則3回まで",
+        "fee": "無料",
+        "application": "住民課へ相談・申請する"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/info0635.php",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://web.town.toyo.kochi.jp/joho/reiki_int/reiki_honbun/g900RG00000811.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "2026年度のこども誰でも通園制度案内は掲載されているが利用条件本文を確定できない",
+      "details": {
+        "published": "町公式サイトで2026年4月2日付の『子ども誰でも通園制度について』掲載を確認",
+        "unconfirmed": "対象年齢、月間利用上限、利用料金、実施施設、利用時間、認定・予約方法を取得できない",
+        "judgment": "比較掲載に必要な利用者向け条件が揃わないためunavailableとする"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/a02b05.php",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修等を上限270万円補助",
+      "details": {
+        "target": "空き家バンク登録物件の所有者、または町外から移住し長期居住する意思がある利用者等",
+        "support": "住宅改修等を上限270万円補助",
+        "conditions": "物件所有者は改修後10年間移住者向け住宅として提供し、利用者は10年以上居住する意思が必要。旧耐震住宅は耐震改修を行い、交付決定前に着工しないこと",
+        "application": "事業開始前に町へ申請する"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/info0559.php",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://web.town.toyo.kochi.jp/joho/reiki_int/reiki_honbun/g900RG00000776.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは有料で、シルバー人材センターへ申し込んで収集を依頼",
+      "details": {
+        "target": "市販の袋に入らない大きさ、または袋が破れる重さの机、ベッド、たんす、布団、毛布等",
+        "application": "東洋町シルバー人材センターへ電話で連絡する",
+        "fee": "有料。品目別の料金と収集条件は申込時に確認する",
+        "contact": "東洋町シルバー人材センター 0887-24-3211"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/info0408.php",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・土砂災害・ため池等のハザードマップを公開",
+      "details": {
+        "coverage": "甲浦・生見・野根地区の津波浸水・避難情報、土砂災害警戒区域、ため池決壊時の浸水想定等",
+        "shelters": "避難場所や避難経路を地区別地図で確認可能",
+        "formats": "地区別津波避難マップ、土砂災害ハザードマップ、ため池ハザードマップをPDFで公開"
+      },
+      "source": {
+        "url": "https://www.town.toyo.kochi.jp/contents/info0006.php",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.toyo.kochi.jp/contents/info0296.php",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.toyo.kochi.jp/contents/info0016.php",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}
