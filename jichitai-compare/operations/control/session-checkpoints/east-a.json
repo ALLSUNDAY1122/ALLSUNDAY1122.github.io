@@ -5,21 +5,24 @@
   "parentTeam": "東日本調査班",
   "integrationBranch": "region/east",
   "prefectureCodes": ["10", "13", "19", "20"],
-  "updatedAt": "2026-07-24T22:33:00+09:00",
+  "updatedAt": "2026-07-24T23:20:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 2797,
+  "pullRequestNumber": null,
   "ciStatus": "success",
   "completedSinceSplit": [],
   "blocked": [
     {
       "code": "20602",
       "name": "栄村",
-      "reason": "2026-07-24 22:18再確認でも公式サイトのトップページはタイムアウトし、既知の対象ページはBad Gatewayで取得不能。公開済み自治体データは変更せず、病児・病後児保育、粗大ごみ、2026年度最終条件をサイト復旧後に再監査する。"
+      "trackingIssueNumber": 2847,
+      "blockingNationwidePublication": false,
+      "lastCheckedAt": "2026-07-24T23:19:00+09:00",
+      "reason": "公式サイトのトップページは統括再確認でもタイムアウトし、既知の対象ページはBad Gatewayで取得不能。全国公開済み自治体データは変更せず、公式サイト復旧後に必須9制度を再監査する。"
     }
   ],
-  "nextAction": "担当4都県の全201自治体は全国公開済み。栄村（20602）の公式サイト復旧を確認し、病児・病後児保育、粗大ごみ、2026年度最終条件を再監査する。その他は公式情報変更、CI異常、差戻し、または統括からの修正依頼が発生した場合のみ品質再監査を行う。"
+  "nextAction": "担当4都県の全201自治体は全国公開済み。Issue #2847で栄村（20602）の公式サイト復旧を追跡し、復旧後に必須9制度、自治体JSON、task、静的詳細ページを再監査する。その他は公式情報変更、CI異常、差戻し、または統括からの修正依頼が発生した場合のみ品質再監査を行う。"
 }
