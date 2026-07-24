@@ -1,0 +1,1234 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-scope-round-03-fukui-20260725",
+  "prefectureCode": "18",
+  "prefectureName": "福井県",
+  "expectedMunicipalityCount": 17,
+  "checkedMunicipalityCount": 17,
+  "checkedServiceCount": 153,
+  "generatedAt": "2026-07-25T00:27:00+09:00",
+  "structuralFindingCount": 0,
+  "unavailableCount": 0,
+  "substantiveSuspectCount": 6,
+  "findings": [],
+  "unavailable": [],
+  "substantiveSuspects": [
+    {
+      "severity": "review",
+      "type": "postpartum_age_currentness_check",
+      "code": "18209",
+      "name": "越前市",
+      "summary": "産後1年未満の母子を対象に宿泊型・通所型を、産後6か月未満には訪問型も提供する。",
+      "source": "https://www.city.echizen.lg.jp/office/050/030/sangokea.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "18404",
+      "name": "南越前町",
+      "summary": "保育施設に在籍していない生後6か月から就学前までを、非定型・緊急・リフレッシュ目的で一時的に受け入れる。",
+      "source": "https://www.town.minamiechizen.lg.jp/kurasi/102/121/p011150.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "18423",
+      "name": "越前町",
+      "summary": "保育所等に在籍していない就学前児童を、就労・疾病・冠婚葬祭・リフレッシュ等の理由で一時的に受け入れる。",
+      "source": "https://www.town.echizen.fukui.jp/kodomo/02/04/p008875.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "18481",
+      "name": "高浜町",
+      "summary": "保護者の疾病・出産・冠婚葬祭・育児疲れ等で家庭保育が困難な未就園児を町内施設で一時預かりする。",
+      "source": "https://www.town.takahama.fukui.jp/page/sougouseisaku/p007556.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "18483",
+      "name": "おおい町",
+      "summary": "保護者の病気・出産・勤務・育児疲れ等で一時的に保育が必要な就学前児童を施設で受け入れ、町民の利用料を無料とする。",
+      "source": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p24008.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "18501",
+      "name": "若狭町",
+      "summary": "就職活動、通院、冠婚葬祭、行事、リフレッシュ等で家庭養育が困難な場合に、事業所や保育園で一時預かりを行う。",
+      "source": "https://www.town.fukui-wakasa.lg.jp/kosodate_kyoiku/jidofukushi_hitorioyafukushi/1837.html"
+    }
+  ],
+  "sourceDomains": [
+    "kosodate-tsuruga.com",
+    "www.city.awara.lg.jp",
+    "www.city.echizen.lg.jp",
+    "www.city.fukui-sakai.lg.jp",
+    "www.city.fukui.lg.jp",
+    "www.city.katsuyama.fukui.jp",
+    "www.city.ono.fukui.jp",
+    "www.city.sabae.fukui.jp",
+    "www.city.tsuruga.lg.jp",
+    "www.fukuisakai-kouiki.jp",
+    "www.pref.fukui.lg.jp",
+    "www.town.echizen.fukui.jp",
+    "www.town.eiheiji.lg.jp",
+    "www.town.fukui-mihama.lg.jp",
+    "www.town.fukui-wakasa.lg.jp",
+    "www.town.ikeda.fukui.jp",
+    "www.town.minamiechizen.lg.jp",
+    "www.town.ohi.fukui.jp",
+    "www.town.takahama.fukui.jp",
+    "www1.city.obama.fukui.jp"
+  ],
+  "municipalities": [
+    {
+      "code": "18201",
+      "name": "福井市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月から福井市立小学校の学校給食費を完全無償化する。中学校給食費は従来どおり徴収する。",
+          "source": "https://www.city.fukui.lg.jp/kyoiku/kyusyoku/kyusyoku/p072686.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子等を対象に、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.fukui.lg.jp/fukusi/kosodate/ninsin/p020864.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の市民を、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.city.fukui.lg.jp/fukusi/kosodate/sien/p072788.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に新婚・子育て・U・Iターン世帯等の中古住宅取得、改修、家賃、同居・近居を支援する複数の住宅補助を実施する。",
+          "source": "https://www.city.fukui.lg.jp/sisei/hojyo/kurasi/jutaku_seisaku31.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18202",
+      "name": "敦賀市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度も市立小学校の学校給食費を完全無償化し、中学校は月額5,000円を徴収する。",
+          "source": "https://www.city.tsuruga.lg.jp/page/9687.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "敦賀市に住民票がある産後1年未満の母子を対象に、宿泊・日帰り・母乳育児相談・訪問型の産後ケアを提供する。",
+          "source": "https://kosodate-tsuruga.com/?p=110",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://kosodate-tsuruga.com/daredemotsuen/",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "新婚・子育て世帯や移住者の空き家購入・リフォーム、多世帯同居・近居を支援する。",
+          "source": "https://www.city.tsuruga.lg.jp/page/1583.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18204",
+      "name": "小浜市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月から市立小学校の学校給食費を完全無償化し、市立中学校は月額5,700円の保護者負担とする。",
+          "source": "https://www1.city.obama.fukui.jp/kosodate-kyoiku/kyoiku/p007126.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子を対象に、わかさ助産師会うぶごえ等で通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.pref.fukui.lg.jp/doc/kodomo/sangocare.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育園等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www1.city.obama.fukui.jp/obm/kosodate/6545",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て・新婚・移住世帯等の空き家購入・改修や多世帯同居改修を支援するが、令和8年度は予算上限到達により受付を終了している。",
+          "source": "https://www1.city.obama.fukui.jp/kurashi/sumaiakiya/juutaku_hojo/4857.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18205",
+      "name": "大野市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市立小学校の学校給食費を無償化し、中学生等の第3子以降には給食費助成を行う。",
+          "source": "https://www.city.ono.fukui.jp/kosodate/sho-chugakkou/3ninkko.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子を対象に、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.ono.fukui.jp/kosodate/ninshin/kodomo00120250314.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.city.ono.fukui.jp/kosodate/hoikuen/kodomodaredemo.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て・新婚・移住世帯等の中古住宅取得、改修、多世帯同居を支援する令和8年度住宅補助を実施する。",
+          "source": "https://www.city.ono.fukui.jp/kurashi/kankyo-sumai/teijushien/kurashi_sumai.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18206",
+      "name": "勝山市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から市立小学校・中学校の学校給食費を完全無償化している。",
+          "source": "https://www.city.katsuyama.fukui.jp/site/mayor7/35971.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子を対象に、通所型・訪問型・宿泊型の産後ケアを合計7回まで提供する。",
+          "source": "https://www.city.katsuyama.fukui.jp/site/kosodate/24113.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.city.katsuyama.fukui.jp/site/kosodate/32576.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に新築・中古住宅取得、空き家改修、多世帯同居改修を支援し、対象世帯の中古購入・改修は合計最大200万円。",
+          "source": "https://www.city.katsuyama.fukui.jp/soshiki/16/31798.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18207",
+      "name": "鯖江市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から市立小学校の学校給食費を完全無償化し、中学校給食費も公費により保護者負担を軽減する。",
+          "source": "https://www.city.sabae.fukui.jp/about_city/shichonoheya/shoshinhyomei/reiwa7/CmsAdmin202602181.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子を対象に、宿泊型・通所型・訪問型・集団型の産後ケアを提供する。",
+          "source": "https://www.city.sabae.fukui.jp/kosodate_kyoiku/ninshin_shussan/oshirase/sangocare.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.city.sabae.fukui.jp/kosodate_kyoiku/nyuen_nyugaku/oshirase/HoYoji0120260126095.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て・新婚・移住・多世帯同居近居世帯の空き家購入・改修や子ども部屋改修を支援するが、令和8年度募集は終了している。",
+          "source": "https://www.city.sabae.fukui.jp/kurashi_tetsuduki/tochi/jutaku_hojokin/akiya_hojokin/540-348-629.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18208",
+      "name": "あわら市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和7年10月から市立小学校・中学校の学校給食費を完全無償化している。",
+          "source": "https://www.city.awara.lg.jp/shitsumon/education-culture/kyuusyoku/p007018.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子を対象に、訪問型・通所型・宿泊型の産後ケアを提供する。",
+          "source": "https://www.city.awara.lg.jp/mokuteki/health/kenkouiryou/boshihoken/sangocare-awara.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "認定こども園等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.city.awara.lg.jp/mokuteki/health/health02/health0202/p015284.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク登録住宅の取得・リフォームを支援し、移住・子育て・新婚世帯等は取得と改修を合わせて最大200万円。",
+          "source": "https://www.city.awara.lg.jp/mokuteki/life/jyutaku1/p011117.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18209",
+      "name": "越前市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由により就学が困難な小中学生の世帯へ、学校給食費を含む就学援助を行う。",
+          "source": "https://www.city.echizen.lg.jp/office/090/020/syuugakuenjo.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子を対象に宿泊型・通所型を、産後6か月未満には訪問型も提供する。",
+          "source": "https://www.city.echizen.lg.jp/office/050/030/sangokea.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.city.echizen.lg.jp/office/050/020/kodomodaredemotsuuenseido.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に新築・中古住宅取得と中古住宅リフォームを支援し、中古住宅取得は条件により最大190万円。",
+          "source": "https://www.city.echizen.lg.jp/office/070/040/teijyu/hojyo.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18210",
+      "name": "坂井市",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月から市立小学校・中学校の学校給食費を完全無償化している。",
+          "source": "https://www.city.fukui-sakai.lg.jp/gakko/kosodate/kyoiku/kyushoku/kyushoku.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年までの母子等を対象に、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.fukui-sakai.lg.jp/kosodate2/kosodate-kyouiku/ninsinsyussan/syussan/sanngokea.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず時間単位で受け入れる。",
+          "source": "https://www.city.fukui-sakai.lg.jp/hoiku/daredemotuuen-2.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に移住・子育て・新婚・多世帯同居近居世帯等の空き家取得を支援し、居住誘導区域内は最大130万円。",
+          "source": "https://www.city.fukui-sakai.lg.jp/iju/kurashi/sumai/sumai/hojo/teiju-akiya.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18322",
+      "name": "永平寺町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "永平寺町に住民票がある小中学生の学校給食費を無償化し、町外学校在籍者にも町内単価を上限に実費を助成する。",
+          "source": "https://www.town.eiheiji.lg.jp/1029/1031/p010727.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子を対象に、宿泊型・6時間通所型・1時間通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.eiheiji.lg.jp/1029/1030/p011781.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.town.eiheiji.lg.jp/1029/1031/p011893.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住・子育て・新婚・多世帯同居近居世帯等の空き家購入・改修を支援し、購入は条件により最大170万円。",
+          "source": "https://www.town.eiheiji.lg.jp/200/206/235/237/p002801.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18382",
+      "name": "池田町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "池田小学校・池田中学校へ学校給食を提供し、月額給食費は小学校3,800円、中学校4,200円。困窮世帯には給食費を含む就学援助を行う。",
+          "source": "https://www.town.ikeda.fukui.jp/kurashi/kosodate/1284/p001182.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子を対象に、県内登録施設で宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.pref.fukui.lg.jp/doc/kodomo/sangocare.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない生後6か月から満3歳未満の子どもを、就労要件を問わず月10時間まで受け入れる。",
+          "source": "https://www.town.ikeda.fukui.jp/kurashi/kosodate/1276/p002991.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に39歳以下の新婚世帯の住宅取得・賃借・リフォーム・引越費用を支援し、夫婦とも29歳以下は最大60万円。",
+          "source": "https://www.town.ikeda.fukui.jp/kurashi/kosodate/1265/p002867.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18404",
+      "name": "南越前町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由により就学困難な小中学生の世帯へ、学校給食費の実費相当額を含む就学援助を行う。",
+          "source": "https://www.town.minamiechizen.lg.jp/kurasi/103/125/syou_chu/p002352.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子を対象に、訪問型・通所型・宿泊型の産後ケアを合計7日以内で提供する。",
+          "source": "https://www.town.minamiechizen.lg.jp/kurasi/102/121/p002426.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設に在籍していない生後6か月から就学前までを、非定型・緊急・リフレッシュ目的で一時的に受け入れる。",
+          "source": "https://www.town.minamiechizen.lg.jp/kurasi/102/121/p011150.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住・子育て・新婚・多世帯同居近居世帯等の空き家購入・改修を支援し、登録物件は基本上限90万円に加算がある。",
+          "source": "https://www.town.minamiechizen.lg.jp/izyu/jyuutakuhojyokinn/p001564.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18423",
+      "name": "越前町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校で学校給食を提供し、経済的理由で就学困難な世帯には学校給食費の実費を就学援助する。",
+          "source": "https://www.town.echizen.fukui.jp/kodomo/03/01/p005483.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年までの産婦を対象に、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.echizen.fukui.jp/kodomo/01/03/p005580.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に在籍していない就学前児童を、就労・疾病・冠婚葬祭・リフレッシュ等の理由で一時的に受け入れる。",
+          "source": "https://www.town.echizen.fukui.jp/kodomo/02/04/p008875.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度に若者の新築住宅取得、空き家購入・改修、多世帯同居改修等を支援し、組合せにより最大180万円。",
+          "source": "https://www.town.echizen.fukui.jp/kurashi/04/07/p007529.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18442",
+      "name": "美浜町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内小学校3校・中学校1校へ学校給食を提供し、経済的理由がある世帯には学校給食費を含む就学援助を行う。",
+          "source": "https://www.town.fukui-mihama.lg.jp/soshiki/36/",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年までの母子を対象に、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.fukui-mihama.lg.jp/soshiki/46/13964.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育施設に在籍していない生後6か月から満3歳未満の子どもを、月10時間まで1時間300円で受け入れる。",
+          "source": "https://www.town.fukui-mihama.lg.jp/soshiki/46/15884.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "若者・子育て・移住・多世帯同居近居世帯の住宅取得・改修・家賃を支援し、取得・改修は最大100万円。",
+          "source": "https://www.town.fukui-mihama.lg.jp/site/iju/10268.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18481",
+      "name": "高浜町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 7,
+      "taskOfficialSourceCount": 7,
+      "sharedPrimarySourceCount": 2,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "高浜町内在住の小中学生の学校給食費を完全無償化している。",
+          "source": "https://www.town.takahama.fukui.jp/page/kyouiku/kyusyoku/p006654.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年までの産婦を対象に、デイサービスと訪問型の産後ケアを提供する。",
+          "source": "https://www.town.takahama.fukui.jp/page/sougouseisaku/p007556.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保護者の疾病・出産・冠婚葬祭・育児疲れ等で家庭保育が困難な未就園児を町内施設で一時預かりする。",
+          "source": "https://www.town.takahama.fukui.jp/page/sougouseisaku/p007556.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て・新婚世帯の新築・住宅取得を支援し、町内業者による新築・建売購入は120万円を補助する。",
+          "source": "https://www.town.takahama.fukui.jp/page/kensetuseibi/p007665.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18483",
+      "name": "おおい町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から町内小学校・中学校の学校給食費を完全無償化している。",
+          "source": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p23817.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子を対象に、通所型・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.ohi.fukui.jp/1001/1206/36/p24848.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保護者の病気・出産・勤務・育児疲れ等で一時的に保育が必要な就学前児童を施設で受け入れ、町民の利用料を無料とする。",
+          "source": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p24008.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住・新婚・子育て世帯の新築・既存住宅取得・改修を支援し、移住者の町内業者による新築は最大100万円。",
+          "source": "https://www.town.ohi.fukui.jp/1001/1208/54/p13511.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    },
+    {
+      "code": "18501",
+      "name": "若狭町",
+      "status": "verified",
+      "updatedAt": "2026-07-21",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-21",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "primarySourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "sharedPrimarySourceCount": 0,
+      "extraTaskSourceCount": 0,
+      "serviceStatuses": {
+        "childMedical": "verified",
+        "sickChildCare": "verified",
+        "childcareFee": "verified",
+        "schoolMeals": "verified",
+        "postpartumCare": "verified",
+        "temporaryChildcare": "verified",
+        "housingSupport": "verified",
+        "bulkyWaste": "verified",
+        "disasterPrevention": "verified"
+      },
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和7年9月分から、町内の全小学校・中学校で学校給食費を無償化している。",
+          "source": "https://www.town.fukui-wakasa.lg.jp/material/files/group/1/vol247-1-10.pdf",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "町内在住の生後4か月までの乳児と母を対象に、医療機関・助産院での宿泊・日帰り型と町内民宿での産後ケアを実施する。",
+          "source": "https://www.town.fukui-wakasa.lg.jp/kosodate_kyoiku/boshi_kenko/3102.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "就職活動、通院、冠婚葬祭、行事、リフレッシュ等で家庭養育が困難な場合に、事業所や保育園で一時預かりを行う。",
+          "source": "https://www.town.fukui-wakasa.lg.jp/kosodate_kyoiku/jidofukushi_hitorioyafukushi/1837.html",
+          "checkedAt": "2026-07-21",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度の新婚世帯に、住宅取得・リフォーム・賃貸・引越し費用を最大70万円補助する。",
+          "source": "https://www.town.fukui-wakasa.lg.jp/soshiki/kankoumatizukurika/gyomuannai/7/2281.html",
+          "checkedAt": "2026-07-21"
+        }
+      }
+    }
+  ],
+  "substantiveResolutions": [
+    {
+      "code": "18209",
+      "name": "越前市",
+      "service": "postpartumCare",
+      "result": "confirmed_accurate",
+      "detail": "宿泊・通所は産後1年未満、訪問型は産後6か月未満という現行公式案内と一致。",
+      "checkedAt": "2026-07-25"
+    },
+    {
+      "code": "18404",
+      "name": "南越前町",
+      "service": "temporaryChildcare",
+      "result": "corrected_current_program_omission"
+    },
+    {
+      "code": "18423",
+      "name": "越前町",
+      "service": "temporaryChildcare",
+      "result": "corrected_current_program_omission"
+    },
+    {
+      "code": "18481",
+      "name": "高浜町",
+      "service": "temporaryChildcare",
+      "result": "corrected_current_program_omission"
+    },
+    {
+      "code": "18483",
+      "name": "おおい町",
+      "service": "temporaryChildcare",
+      "result": "corrected_current_program_omission"
+    },
+    {
+      "code": "18501",
+      "name": "若狭町",
+      "service": "temporaryChildcare",
+      "result": "corrected_current_program_omission"
+    }
+  ],
+  "finalResult": {
+    "status": "completed_with_corrections",
+    "structuralErrors": 0,
+    "substantiveErrors": 5,
+    "correctedMunicipalityCodes": [
+      "18404",
+      "18423",
+      "18481",
+      "18483",
+      "18501"
+    ],
+    "confirmedAccurateSuspectCodes": [
+      "18209"
+    ],
+    "needsFurtherReview": 0,
+    "completedAt": "2026-07-25T00:34:00+09:00"
+  }
+}
