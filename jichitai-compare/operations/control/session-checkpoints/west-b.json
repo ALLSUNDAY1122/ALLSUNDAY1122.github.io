@@ -17,7 +17,7 @@
     "45",
     "47"
   ],
-  "updatedAt": "2026-07-25T03:23:00+09:00",
+  "updatedAt": "2026-07-25T03:44:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -27,7 +27,7 @@
   "ciStatus": "success",
   "completedSinceSplit": [],
   "blocked": [],
-  "nextAction": "概略検証第8回として、大分県の残り8自治体と宮崎県17自治体をコード順で検証する。全10回程度で担当250自治体を網羅する。",
+  "nextAction": "概略検証第9回として、宮崎県の残り9自治体と沖縄県16自治体をコード順で検証する。全10回程度で担当250自治体を網羅する。",
   "completionEvidence": {
     "assignedPrefectureCount": 11,
     "assignedMunicipalityCount": 250,
@@ -255,42 +255,39 @@
   "roughValidation": {
     "status": "in_progress",
     "plannedCycles": 10,
-    "completedCycles": 7,
-    "auditedMunicipalityCount": 175,
-    "auditedServiceCount": 1575,
-    "remainingMunicipalityCount": 75,
+    "completedCycles": 8,
+    "auditedMunicipalityCount": 200,
+    "auditedServiceCount": 1800,
+    "remainingMunicipalityCount": 50,
     "detectedResearchContentErrorCount": 2,
-    "detectedSourceMaintenanceIssueCount": 8,
-    "correctedSourceMaintenanceIssueCount": 8,
+    "detectedSourceMaintenanceIssueCount": 9,
+    "correctedSourceMaintenanceIssueCount": 9,
     "lastCycle": {
-      "cycle": 7,
-      "auditPullRequestNumber": 3035,
-      "auditCiRunNumber": 7522,
-      "auditMergeCommit": "3d234c2ceabce4026b360854572fb0b17b2ed80a",
-      "auditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-07-20260725.json",
-      "reviewFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-07-review-20260725.json",
+      "cycle": 8,
+      "auditPullRequestNumber": 3095,
+      "auditCiRunNumber": 7575,
+      "auditMergeCommit": "6312db1251054f444c5e5b968ecebc81aeeea66b",
+      "auditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-08-20260725.json",
+      "reviewFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-08-review-20260725.json",
       "municipalityCount": 25,
       "serviceCount": 225,
       "prefectureCodes": [
-        "42",
-        "44"
+        "44",
+        "45"
       ],
       "manualSpotCheckCount": 5,
-      "contentErrorCount": 1,
-      "correctedContentErrorCount": 1,
-      "sourceMaintenanceIssueCount": 4,
-      "correctedSourceMaintenanceIssueCount": 4,
+      "contentErrorCount": 0,
+      "correctedContentErrorCount": 0,
+      "sourceMaintenanceIssueCount": 1,
+      "correctedSourceMaintenanceIssueCount": 1,
       "correctionPullRequestNumbers": [
-        3042,
-        3072
+        3101
       ],
       "correctionCiRunNumbers": [
-        7436,
-        7504
+        7568
       ],
       "correctionMergeCommits": [
-        "5569dfd869cb59426b975f3e064f129ab571dca9",
-        "b1f3ad7c6c108004c6d8d66b83ae69ce6685afc8"
+        "942bfb37cf6210cc542c46f08b9302abecaeffcf"
       ]
     },
     "cycleHistory": [
@@ -370,12 +367,29 @@
           7436,
           7504
         ]
+      },
+      {
+        "cycle": 8,
+        "municipalityCount": 25,
+        "serviceCount": 225,
+        "contentErrorCount": 0,
+        "correctedContentErrorCount": 0,
+        "sourceMaintenanceIssueCount": 1,
+        "correctedSourceMaintenanceIssueCount": 1,
+        "auditPullRequestNumber": 3095,
+        "auditCiRunNumber": 7575,
+        "correctionPullRequestNumbers": [
+          3101
+        ],
+        "correctionCiRunNumbers": [
+          7568
+        ]
       }
     ],
     "nextCycle": {
-      "cycle": 8,
+      "cycle": 9,
       "plannedMunicipalityCount": 25,
-      "scopePolicy": "大分県の残り8自治体と宮崎県17自治体をコード順で検証する"
+      "scopePolicy": "宮崎県の残り9自治体と沖縄県16自治体をコード順で検証する"
     },
     "correctedResearchContentErrorCount": 2
   }
