@@ -123563,18 +123563,19 @@
           "summary": "住宅に困窮する家族世帯向け町営住宅を随時募集",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 18
+            "maxAgeYears": 120
           },
           "details": {
             "target": "現に同居または同居しようとする親族があり、住宅に困窮する家族世帯",
             "residency": "原則として大島町に1年以上居住、または町内勤務場所に1年以上勤務",
             "income": "公営住宅法等に基づく所得基準を満たす必要がある",
             "housing": "空室のある町営住宅を随時募集し、家賃は世帯所得・住宅条件により決定",
-            "procedure": "住民票、所得証明、納税証明等を添えて申込み"
+            "procedure": "住民票、所得証明、納税証明等を添えて申込み",
+            "ageCondition": "制度上の年齢上限は確認できないため、検索用上限を120歳へ正規化"
           },
           "source": {
             "url": "https://www.town.oshima.tokyo.jp/soshiki/kensetsu/choei-jutaku-kazoku-zuizibosyu.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -123643,21 +123644,27 @@
       "services": {
         "childMedical": {
           "status": "verified",
-          "summary": "乳幼児および義務教育就学児の医療費助成を実施",
+          "summary": "乳幼児から18歳年度末までの子どもの医療費助成を実施",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 15
+            "maxAgeYears": 18
           },
           "details": {
-            "target": "利島村の乳幼児および義務教育就学児",
-            "support": "乳幼児医療助成と義務教育就学児童医療助成を村の福祉事業として実施",
-            "procedure": "対象条件、医療証交付、償還払い等の詳細は住民課へ確認",
-            "note": "村公式ページでは高校生等医療費助成の案内は確認できない"
+            "target": "利島村に住所があり公的医療保険に加入する、乳幼児から18歳到達後最初の3月31日までの子ども",
+            "support": "乳幼児医療、義務教育就学児医療、高校生等医療費助成により、年齢区分を連続してカバー",
+            "procedure": "年齢区分に応じた医療証の交付申請が必要。所得要件、窓口負担、償還払い等は利島村住民課へ確認",
+            "basis": "東京都内の全区市町村で令和5年4月から高校生等医療費助成事業を実施"
           },
           "source": {
-            "url": "https://www.toshimamura.org/life/pension/welfare.html",
-            "checkedAt": "2026-07-23"
-          }
+            "url": "https://www.fukushi.metro.tokyo.lg.jp/seikatsu/josei/maruao",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.toshimamura.org/life/pension/welfare.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "sickChildCare": {
           "status": "unavailable",
@@ -123780,17 +123787,18 @@
           "summary": "住宅困窮世帯へ低廉な村営住宅等を随時募集",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 18
+            "maxAgeYears": 120
           },
           "details": {
             "target": "住宅に困窮し、公営住宅法・村条例の収入基準等を満たす世帯",
             "housing": "公営住宅のほか、村単独住宅や空家を借り上げた村営一般住宅を運営",
             "application": "空室発生と修繕完了後に島内掲示板で随時募集し、担当課へ相談の上で申込み",
-            "note": "村内に民間不動産業者はなく、空室は少ない。子育て世帯専用給付ではなく低廉な公営住宅制度として登録"
+            "note": "村内に民間不動産業者はなく、空室は少ない。子育て世帯専用給付ではなく低廉な公営住宅制度として登録",
+            "ageCondition": "公営住宅法・村条例上の収入・住宅困窮等の要件を用い、子どもの年齢上限は設定されていない"
           },
           "source": {
             "url": "https://www.toshimamura.org/life/living/public-housing.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -123990,18 +123998,19 @@
           "summary": "空き家バンク物件の改修・伐開費を支援する定住化対策交付金を実施",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 18
+            "maxAgeYears": 120
           },
           "details": {
             "target": "村の空き家バンクに登録された住宅を購入または賃借し、原則10年以上定住する意思がある方",
             "support": "対象住宅の改修工事や敷地の伐開・整備等に必要な経費を予算の範囲で交付",
             "conditions": "村税等の滞納がないこと、交付決定前に工事へ着手していないこと等",
             "period": "令和8年度募集は令和8年5月1日から6月12日まで。追加募集等は企画財政課へ確認",
-            "note": "子育て世帯専用制度ではなく、家族を含む定住希望者向け住宅支援として登録"
+            "note": "子育て世帯専用制度ではなく、家族を含む定住希望者向け住宅支援として登録",
+            "ageCondition": "空き家所有者・利用者に年齢上限はなく、10年以上の定住意思や税滞納のないこと等が要件"
           },
           "source": {
             "url": "https://www.niijima.com/gyousei/hojokin_joseikin/hojoshurui/teijyukataisaku.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -124203,22 +124212,23 @@
           "summary": "空き家バンク物件の改修・除却・伐採費の一部を助成",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 18
+            "maxAgeYears": 120
           },
           "details": {
             "target": "空き家バンクを通じて物件を購入または賃借し、神津島村へ移住・定住する意思がある個人等",
             "support": "住宅の改修、不要部分の除却、敷地の伐採等の対象経費を予算の範囲で助成",
             "conditions": "契約、定住意思、税滞納がないこと、交付決定前に工事へ着手しないこと等の条件あり",
-            "note": "子育て世帯専用ではないが、家族を含む移住・定住者が利用できる住宅支援として登録"
+            "note": "子育て世帯専用ではないが、家族を含む移住・定住者が利用できる住宅支援として登録",
+            "ageCondition": "空き家の所有者・購入者・賃借人等を対象とし、年齢上限は要綱に定められていない"
           },
           "source": {
             "url": "https://www.vill.kouzushima.tokyo.jp/2017-0403/",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.vill.kouzushima.tokyo.jp/reiki/reiki_honbun/g159RG00000420.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -124417,18 +124427,19 @@
           "summary": "空き家の改修費を最大100万円、家財処分・清掃費を最大10万円補助",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 18
+            "maxAgeYears": 120
           },
           "details": {
             "target": "三宅村内の空き家を購入・賃借・賃貸し、定住または空き家活用を行う所有者・利用者等",
             "renovation": "村内施工業者による改修費の2分の1を上限100万円まで補助",
             "clearance": "家財道具の運搬・処分、屋内外清掃費の10分の8を上限10万円まで補助",
             "conditions": "貸し手と借り手が所有者等の3親等以内の親族でないこと等。予算終了時まで",
-            "note": "子育て世帯専用ではないが、家族を含む移住・定住者が利用できる住宅支援として登録"
+            "note": "子育て世帯専用ではないが、家族を含む移住・定住者が利用できる住宅支援として登録",
+            "ageCondition": "空き家の所有者・購入者・賃借人等を対象とし、年齢上限は設けられていない"
           },
           "source": {
             "url": "https://www.vill.miyake.tokyo.jp/kakuka/kikakuzaisei/news/2019-0116-1618-10.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -151570,18 +151581,19 @@
           "summary": "産後4か月までの母子を対象に宿泊型産後ケアを提供",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 1
+            "maxAgeYears": 0
           },
           "details": {
             "target": "山中湖村に住所を有する産後4か月までの母と乳児で、育児・体調不安等がある人",
             "facility": "健康科学大学産前産後ケアセンター",
             "care": "母体の休養・ケア、授乳・沐浴等の育児指導、相談支援",
             "fee": "1泊2食6,100円。非課税世帯5,000円、その他2,500円の追加補助を5日分まで実施",
-            "procedure": "村へ利用登録申請後、連絡票を受け取り、施設へ直接予約"
+            "procedure": "村へ利用登録申請後、連絡票を受け取り、施設へ直接予約",
+            "ageNormalization": "産後4か月までのため、年齢検索用の上限は0歳として登録"
           },
           "source": {
             "url": "https://www.vill.yamanakako.lg.jp/info/56",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "temporaryChildcare": {
