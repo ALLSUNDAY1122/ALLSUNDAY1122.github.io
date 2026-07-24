@@ -8,7 +8,7 @@
     "generate": "node ./scripts/generate-municipalities.mjs",
     "progress": "node ./scripts/update-progress.mjs",
     "validate": "node ./scripts/validate-data.mjs",
-    "audit:west-b": "AUDIT_MODE=structure AUDIT_PREFECTURES=31,32,34 node ./scripts/audit-west-b-completion.mjs",
+    "audit:west-b": "AUDIT_MODE=structure AUDIT_PREFECTURES=35,36,38 node ./scripts/audit-west-b-completion.mjs",
     "validate:generated": "node ./scripts/validate-data.mjs --require-generated && npm run audit:west-b",
     "smoke:public": "node ./scripts/smoke-public-site.mjs",
     "check": "npm run generate && npm run progress && npm run validate:generated"
