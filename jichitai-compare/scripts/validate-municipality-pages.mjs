@@ -15,7 +15,8 @@ const INTERNAL_WORKFLOW_PHRASES = [
   'mainへ',
   'マージ後',
   '最終検証を実施',
-  '次の自治体'
+  '次の自治体',
+  '調査班'
 ];
 
 const generated = JSON.parse(await readFile(GENERATED_FILE, 'utf8'));
