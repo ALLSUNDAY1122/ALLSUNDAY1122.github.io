@@ -4,9 +4,9 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T01:40:00+09:00",
+  "updatedAt": "2026-07-25T01:45:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 7,
+  "completedRoundCount": 8,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -480,7 +480,74 @@
     {
       "round": 8,
       "title": "防災マップの災害種別、避難所、公開URL監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、防災マップの災害種別、避難場所・避難所導線、公式公開URLの有効性を再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 6,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "registeredClaim": "WEB版で洪水・土砂、高潮、地震、津波、避難所開設状況・経路を確認可能。内水等の関連マップも公開",
+          "officialUrls": [
+            "https://www.city.okayama.jp/0000047403.html",
+            "https://www.city.okayama.jp/0000012077.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "registeredClaim": "洪水浸水、土砂災害、ため池氾濫、津波浸水、指定緊急避難場所と災害別対策を掲載。Web地図とPDFを公開",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/site/bousaiinfo/2424.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "registeredClaim": "地震・津波、物部川・国分川洪水、土砂災害、雨水出水内水、ため池の個別ハザードマップを公式URLで公開",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=2170",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=1588",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=1587",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=9934",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8062"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "registeredClaim": "土砂災害、洪水、高潮・台風、地震、津波を扱う防災ガイドブックと区別ハザードマップを公開",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/13801096.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "registeredClaim": "2026年3月更新の校区版で球磨川等の洪水、高潮、津波、土砂災害、地震の揺れやすさ、避難場所を掲載し、Web版も公開",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/bousai/kiji00326174/index.html",
+            "https://www.city.yatsushiro.lg.jp/bousai/hazardmap/agree.html?lay=saigai-01"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "registeredClaim": "洪水・内水・高潮・津波、土砂災害等の浸水想定・警戒区域と避難情報を確認できるハザードマップを公開",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/anshin/hazard_map.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 9,
@@ -496,9 +563,9 @@
   "summary": {
     "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 3,
-    "currentAssessment": "第7回は6自治体の粗大ごみ料金・予約・搬入条件が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
+    "roundsRemaining": 2,
+    "currentAssessment": "第8回は6自治体の防災マップ掲載範囲・避難導線・公式URLが一致。累計重大誤り1件は修正済みで、未修正0件。",
     "correctionAppliedCount": 1
   },
-  "nextAction": "第8回として、防災マップの災害種別、避難所、公開URLを担当6県の複雑事例で再照合する。"
+  "nextAction": "第9回として、unavailableへ整理した75自治体・189制度から西日本A担当分を抽出し、公式制度の見落としがないかリスク監査する。"
 }
