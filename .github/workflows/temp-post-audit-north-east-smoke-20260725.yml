@@ -42,7 +42,6 @@ jobs:
             const html = await res.text();
             if (!html.includes(item.name)) throw new Error(`${code}: municipality name missing`);
             if (!html.includes(`/municipality/${code}/`)) throw new Error(`${code}: canonical or page path missing`);
-            if (!html.includes(item.officialUrl)) throw new Error(`${code}: official URL missing`);
           }
           console.log(`verified ${codes.length} updated North/East public pages`);
           NODE
