@@ -158,7 +158,7 @@
         "30392",
         "30401"
       ],
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "round": 10,
@@ -175,11 +175,11 @@
     }
   ],
   "progress": {
-    "completedRounds": 8,
-    "structurallyCheckedMunicipalities": 79,
-    "deepCheckedMunicipalities": 72,
-    "confirmedErrors": 39,
-    "correctedErrors": 39
+    "completedRounds": 9,
+    "structurallyCheckedMunicipalities": 88,
+    "deepCheckedMunicipalities": 81,
+    "confirmedErrors": 50,
+    "correctedErrors": 50
   },
   "preflightFindings": [
     {
@@ -1612,6 +1612,241 @@
           "service": "housingSupport",
           "before": "verified / 年齢要件のみの住宅取得支援等を混在",
           "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "auditedAt": "2026-07-24T17:58:21.324Z",
+      "codes": [
+        "30362",
+        "30366",
+        "30381",
+        "30382",
+        "30383",
+        "30390",
+        "30391",
+        "30392",
+        "30401"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 9,
+        "errors": 0,
+        "warnings": 2,
+        "workflowRunId": 30114670240,
+        "artifactId": 8604926759,
+        "artifactDigest": "sha256:270543418e921c9e75f29ca58f15026fdcd6e5c832d7206713d2ce90451def74",
+        "postCorrectionWorkflowRunId": 30115068206,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "30362",
+          "name": "広川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケアは一致。子ども要件のない一般住宅取得・改修制度を住宅支援から除外。"
+        },
+        {
+          "code": "30366",
+          "name": "有田川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、産後ケア、誰でも通園は一致。一般新築住宅取得給付金を住宅支援から除外。"
+        },
+        {
+          "code": "30381",
+          "name": "美浜町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "御坊広域病児保育を追加。町個別条件未公表の誰でも通園をunavailableへ変更し、一般耐震支援を住宅支援から除外。"
+        },
+        {
+          "code": "30382",
+          "name": "日高町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "御坊広域病児保育を追加。令和7年度給食無償化と令和8年度未確認を区別する既存警告は妥当。"
+        },
+        {
+          "code": "30383",
+          "name": "由良町",
+          "services": [
+            "childMedical",
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "広域病児保育・産後ケアは一致。一般の空き家物件情報制度を住宅費支援から除外。給食は過年度実績と現行未確認を区別。"
+        },
+        {
+          "code": "30390",
+          "name": "印南町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケアは一致。年齢要件のみの若者一般向け家賃・住宅取得助成を除外。"
+        },
+        {
+          "code": "30391",
+          "name": "みなべ町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、産後ケア、誰でも通園は一致。住宅支援を中学生以下の子と同居・扶養する世帯区分へ限定。"
+        },
+        {
+          "code": "30392",
+          "name": "日高川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。住宅支援を中学生以下の子と同居・扶養する世帯区分へ限定。"
+        },
+        {
+          "code": "30401",
+          "name": "白浜町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。移住支援の18歳未満1人100万円加算を明確化。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "30362",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般住宅取得・改修支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30366",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般新築住宅取得給付金",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30381",
+          "service": "sickChildCare",
+          "before": "unavailable / 美浜町民の広域利用を未確認",
+          "after": "verified / 御坊市の病児保育室ひまわりを利用可能",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30381",
+          "service": "temporaryChildcare",
+          "before": "verified / 県の全市町村開始案内のみ",
+          "after": "unavailable / 美浜町の利用者向け個別条件を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30381",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般耐震支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30382",
+          "service": "sickChildCare",
+          "before": "unavailable / 制度記事はあるが条件未確認",
+          "after": "verified / 御坊市の病児保育室ひまわりを利用可能",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30383",
+          "service": "housingSupport",
+          "before": "verified / 一般の空き家バンク情報支援",
+          "after": "unavailable / 子育て世帯専用住宅費支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30390",
+          "service": "housingSupport",
+          "before": "verified / 18～44歳の若者一般向け家賃・住宅取得助成",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30391",
+          "service": "housingSupport",
+          "before": "verified / 年齢要件のみの若者区分と子育て区分を混在",
+          "after": "verified / 中学生以下の子と同居・扶養する世帯区分に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30392",
+          "service": "housingSupport",
+          "before": "verified / 年齢要件のみの若者区分と子育て区分を混在",
+          "after": "verified / 中学生以下の子と同居・扶養する世帯区分に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30401",
+          "service": "housingSupport",
+          "before": "verified / 子ども加算額が不明な一般移住支援表示",
+          "after": "verified / 18歳未満1人100万円加算を明確化",
           "status": "corrected_in_audit_pr_2926"
         }
       ]
