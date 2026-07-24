@@ -18,6 +18,7 @@ on:
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
       - yorugatari/tools/external-launch-status.json
+      - yorugatari/tools/generate-external-launch-next.mjs
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/analytics-snapshot.mjs
       - yorugatari/tools/analytics-clean-snapshot.mjs
@@ -57,6 +58,7 @@ jobs:
           node --check yorugatari/tools/analytics-clean-snapshot.mjs
           node --check yorugatari/tools/landing-conversion-snapshot.mjs
           node --check yorugatari/tools/build-analytics-insights.mjs
+          node --check yorugatari/tools/generate-external-launch-next.mjs
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/assets/landing-share.js
@@ -89,8 +91,9 @@ jobs:
           if (!privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Landing conversion privacy disclosure is missing');
           NODE
 
-      - name: Generate raw, audit-filtered, and conversion snapshots
+      - name: Generate next launch card and analytics snapshots
         run: |
+          node yorugatari/tools/generate-external-launch-next.mjs
           node yorugatari/tools/analytics-snapshot.mjs
           node yorugatari/tools/analytics-clean-snapshot.mjs
           node yorugatari/tools/landing-conversion-snapshot.mjs
@@ -102,6 +105,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for file in \
+            external-launch-next.md \
             analytics-snapshot-latest.json analytics-history.json analytics-insights-latest.md \
             analytics-clean-baseline.json analytics-clean-latest.json analytics-clean-history.json \
             landing-conversion-baseline.json landing-conversion-latest.json landing-conversion-history.json; do
@@ -112,6 +116,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             for file in \
+              external-launch-next.md \
               analytics-snapshot-latest.json analytics-history.json analytics-insights-latest.md \
               analytics-clean-baseline.json analytics-clean-latest.json analytics-clean-history.json \
               landing-conversion-baseline.json landing-conversion-latest.json landing-conversion-history.json; do
@@ -122,7 +127,7 @@ jobs:
               saved=true
               break
             fi
-            git commit -m "Record Yorugatari raw and audit-filtered analytics [skip ci]"
+            git commit -m "Record Yorugatari analytics and next launch card [skip ci]"
             if git push origin HEAD:main; then
               saved=true
               break
@@ -136,6 +141,7 @@ jobs:
         with:
           name: yorugatari-analytics-reports
           path: |
+            yorugatari/tools/external-launch-next.md
             yorugatari/tools/analytics-snapshot-latest.json
             yorugatari/tools/analytics-history.json
             yorugatari/tools/analytics-insights-latest.md
