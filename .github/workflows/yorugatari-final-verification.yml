@@ -1,0 +1,112 @@
+name: Yorugatari final verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/tools/accessibility-audit.cjs
+      - yorugatari/tools/landing-share-audit.cjs
+      - yorugatari/tools/live-release-audit.mjs
+      - yorugatari/assets/landing-share.js
+      - yorugatari/assets/landing-start-20260724-001.js
+      - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
+      - .github/workflows/yorugatari-final-verification.yml
+
+concurrency:
+  group: yorugatari-final-verification
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Validate current verification code
+        run: |
+          node --check yorugatari/tools/live-release-audit.mjs
+          node --check yorugatari/tools/accessibility-audit.cjs
+          node --check yorugatari/tools/landing-share-audit.cjs
+          node --check yorugatari/assets/landing-share.js
+          node --check yorugatari/assets/landing-start-20260724-001.js
+
+      - name: Wait for the current public release
+        run: node yorugatari/tools/live-release-audit.mjs
+
+      - name: Install browser tools
+        run: |
+          npm install --no-save playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+
+      - name: Run accessibility verification
+        id: accessibility
+        continue-on-error: true
+        run: node yorugatari/tools/accessibility-audit.cjs
+
+      - name: Run landing sharing and start verification
+        id: landing
+        continue-on-error: true
+        run: node yorugatari/tools/landing-share-audit.cjs
+
+      - name: Preserve current verification reports
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-accessibility-report.json
+          test -f yorugatari-landing-share-report.json
+          cp yorugatari-accessibility-report.json /tmp/yorugatari-accessibility-report.json
+          cp yorugatari-landing-share-report.json /tmp/yorugatari-landing-share-report.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3 4 5 6; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-accessibility-report.json yorugatari/tools/accessibility-audit-latest.json
+            cp /tmp/yorugatari-landing-share-report.json yorugatari/tools/landing-share-audit-latest.json
+            git add yorugatari/tools/accessibility-audit-latest.json yorugatari/tools/landing-share-audit-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari final verification [skip ci]"
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 4
+          done
+          test "$saved" = true
+
+      - name: Upload verification reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-final-verification
+          path: |
+            yorugatari-accessibility-report.json
+            yorugatari-landing-share-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce final verification
+        if: always()
+        run: |
+          test "${{ steps.accessibility.outcome }}" = "success"
+          test "${{ steps.landing.outcome }}" = "success"
