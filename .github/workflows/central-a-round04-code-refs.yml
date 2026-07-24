@@ -1,0 +1,30 @@
+name: Central A Round04 Code References
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-04-20260725']
+    paths: ['.github/workflows/central-a-round04-code-refs.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-04-20260725
+          fetch-depth: 0
+      - name: Capture references
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=jichitai-compare/operations/control/central-a-round04-21364-references.txt
+          grep -RIl --exclude-dir=generated --exclude='central-a-round04-21364-references.txt' '21364' jichitai-compare | sort > "$OUT" || true
+          rm .github/workflows/central-a-round04-code-refs.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUT" .github/workflows/central-a-round04-code-refs.yml
+          git commit -m 'audit: 神戸町旧コード参照を抽出'
+          git push origin HEAD:audit/central-a-scope-verification-round-04-20260725
