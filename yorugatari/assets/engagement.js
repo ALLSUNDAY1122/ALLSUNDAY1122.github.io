@@ -76,6 +76,7 @@
     campaignTracked: false,
     views: null,
     shareReady: false,
+    curatedLinksReady: false,
     shareUrl: taggedShareUrl(),
     relatedReady: document.querySelectorAll('.related a').length >= 2,
     error: null,
@@ -189,6 +190,25 @@
     return document.querySelector('.story-side .story-info, .story-side .side-box, .story-side, .story-info');
   }
 
+  function ensureCuratedLinks() {
+    const footer = document.querySelector('.site-footer .footer-links');
+    if (!footer) return;
+    [
+      ['../5min-horror.html', '5分で読める12選'],
+      ['../bedtime-horror.html', '寝る前の8選']
+    ].forEach(function (entry) {
+      if (footer.querySelector('a[href="' + entry[0] + '"]')) return;
+      const link = document.createElement('a');
+      link.href = entry[0];
+      link.textContent = entry[1];
+      footer.insertAdjacentElement('afterbegin', link);
+    });
+    state.curatedLinksReady = Boolean(
+      footer.querySelector('a[href="../5min-horror.html"]') &&
+      footer.querySelector('a[href="../bedtime-horror.html"]')
+    );
+  }
+
   function installShareControl() {
     const slug = document.body && document.body.dataset.slug;
     const infoBox = storyInfoBox();
@@ -239,6 +259,7 @@
     }
   }
 
+  ensureCuratedLinks();
   installShareControl();
   scheduleAnalytics();
 })();
