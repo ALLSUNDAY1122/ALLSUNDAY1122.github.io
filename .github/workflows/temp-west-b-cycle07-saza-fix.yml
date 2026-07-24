@@ -62,10 +62,11 @@ jobs:
           task.lastCheckedAt = '2026-07-25';
           task.lastUpdatedAt = '2026-07-25T02:52:00+09:00';
           task.lastUpdatedBy = '西日本調査班B';
-          task.officialSources = Array.isArray(task.officialSources) ? task.officialSources.filter(url => url !== 'https://www.sazacho-nagasaki.jp/kyouiku/kiji0034032/index.html') : [];
-          for (const url of ['https://www.sazacho-nagasaki.jp/kyouiku/list01003.html','https://www.sazacho-nagasaki.jp/kyouiku/kiji0036225/index.html']) {
-            if (!task.officialSources.includes(url)) task.officialSources.push(url);
-          }
+          task.officialSources = Array.isArray(task.officialSources)
+            ? task.officialSources.map(url => url === 'https://www.sazacho-nagasaki.jp/kyouiku/kiji0034032/index.html'
+              ? 'https://www.sazacho-nagasaki.jp/kyouiku/list01003.html'
+              : url)
+            : [];
           task.notes = Array.isArray(task.notes) ? task.notes : [];
           const note = '概略検証第7回で学校給食費補助の旧2023年ページ失効を確認。2026年度の補助率・申請条件を現行公式情報で確認できないためunavailableへ訂正。';
           if (!task.notes.includes(note)) task.notes.push(note);
