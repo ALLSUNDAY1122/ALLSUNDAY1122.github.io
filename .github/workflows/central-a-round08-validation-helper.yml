@@ -1,4 +1,4 @@
-name: Central A Round08 Validation Helper v2
+name: Central A Round08 Validation Debug v3
 
 on:
   push:
@@ -9,46 +9,35 @@ permissions:
   contents: write
 
 jobs:
-  validate:
+  debug:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: audit/central-a-round08-work-20260725
+          ref: audit/central-a-scope-verification-round-08-20260725
           fetch-depth: 0
           persist-credentials: true
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run standard data checks
+      - name: Capture validation output
+        shell: bash
         working-directory: jichitai-compare
         run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          node --check app.js
-      - name: Record successful validation
-        shell: bash
-        run: |
-          set -euo pipefail
-          git checkout -- jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
-          cat > jichitai-compare/operations/control/central-a-scope-round-08-validation-20260725.json <<'JSON'
-          {
-            "schemaVersion": "1.0.0",
-            "auditId": "central-a-scope-round-08-shiga-20260725",
-            "validatedAt": "2026-07-25T04:00:00+09:00",
-            "checks": {
-              "generatePublicMunicipalityData": "passed",
-              "generateNationalProgress": "passed",
-              "validateSourceAndGeneratedData": "passed",
-              "javascriptSyntax": "passed"
-            },
-            "result": "passed"
-          }
-          JSON
+          set +e
+          npm run generate > /tmp/round08-debug.txt 2>&1
+          echo "generate_exit=$?" >> /tmp/round08-debug.txt
+          npm run progress >> /tmp/round08-debug.txt 2>&1
+          echo "progress_exit=$?" >> /tmp/round08-debug.txt
+          npm run validate:generated >> /tmp/round08-debug.txt 2>&1
+          echo "validate_exit=$?" >> /tmp/round08-debug.txt
+          node --check app.js >> /tmp/round08-debug.txt 2>&1
+          echo "syntax_exit=$?" >> /tmp/round08-debug.txt
+          set -e
+          cp /tmp/round08-debug.txt operations/control/central-a-scope-round-08-validation-debug.txt
+          git checkout -- data/generated/municipalities.json operations/progress.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add jichitai-compare/operations/control/central-a-scope-round-08-validation-20260725.json
-          git commit -m 'ci: 滋賀県監査の標準データ検証成功を記録'
-          git push origin HEAD:audit/central-a-round08-work-20260725
+          git add operations/control/central-a-scope-round-08-validation-debug.txt
+          git commit -m 'debug: 滋賀県監査の検証エラーを記録'
+          git push origin HEAD:audit/central-a-round08-debug-output-20260725
