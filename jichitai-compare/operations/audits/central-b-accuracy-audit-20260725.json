@@ -171,15 +171,15 @@
         "30427",
         "30428"
       ],
-      "status": "pending"
+      "status": "completed"
     }
   ],
   "progress": {
-    "completedRounds": 9,
-    "structurallyCheckedMunicipalities": 88,
-    "deepCheckedMunicipalities": 81,
-    "confirmedErrors": 50,
-    "correctedErrors": 50
+    "completedRounds": 10,
+    "structurallyCheckedMunicipalities": 95,
+    "deepCheckedMunicipalities": 88,
+    "confirmedErrors": 57,
+    "correctedErrors": 57
   },
   "preflightFindings": [
     {
@@ -1847,6 +1847,183 @@
           "service": "housingSupport",
           "before": "verified / 子ども加算額が不明な一般移住支援表示",
           "after": "verified / 18歳未満1人100万円加算を明確化",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "auditedAt": "2026-07-24T18:20:05.132Z",
+      "codes": [
+        "30404",
+        "30406",
+        "30421",
+        "30422",
+        "30424",
+        "30427",
+        "30428"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 7,
+        "errors": 0,
+        "warnings": 0,
+        "workflowRunId": 30116052212,
+        "artifactId": 8605455009,
+        "artifactDigest": "sha256:6a2090559967ef8fde9cb89117363d2950bc22a94f8aab030a2f3285fd186ef3",
+        "postCorrectionWorkflowRunId": 30116481267,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "30404",
+          "name": "上富田町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。住宅支援を18歳未満1人100万円加算の移住支援金へ限定。"
+        },
+        {
+          "code": "30406",
+          "name": "すさみ町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般定住住宅支援を除外。"
+        },
+        {
+          "code": "30421",
+          "name": "那智勝浦町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般空き家改修支援を除外。"
+        },
+        {
+          "code": "30422",
+          "name": "太地町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、誰でも通園は一致。県移住支援事業の18歳未満帯同者加算へ表示を限定。"
+        },
+        {
+          "code": "30424",
+          "name": "古座川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育料・給食費無償化は維持。子ども要件を確認できない一般移住定住住宅支援を除外。"
+        },
+        {
+          "code": "30427",
+          "name": "北山村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育料・給食費無償化は一致。住宅取得・空き家改修の小学生以下1人25万円加算を明確化。"
+        },
+        {
+          "code": "30428",
+          "name": "串本町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。子ども要件・加算のない一般住宅・移住支援を除外。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "30404",
+          "service": "housingSupport",
+          "before": "verified / 一般紀州材住宅支援と子ども加算未記載の移住支援を混在",
+          "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30406",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般定住住宅支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30421",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般空き家改修支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30422",
+          "service": "housingSupport",
+          "before": "verified / 移住支援と空き家バンクを混在し子ども加算不明",
+          "after": "verified / 県移住支援事業の18歳未満帯同者加算に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30424",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件を確認できない一般移住定住住宅支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30427",
+          "service": "housingSupport",
+          "before": "verified / 一般住宅取得・定住住宅の概要のみ",
+          "after": "verified / 小学生以下1人25万円加算の住宅取得・空き家改修支援",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30428",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない紀州材住宅支援",
+          "after": "unavailable / 現行要綱に子育て世帯専用住宅支援を確認できない",
           "status": "corrected_in_audit_pr_2926"
         }
       ]
