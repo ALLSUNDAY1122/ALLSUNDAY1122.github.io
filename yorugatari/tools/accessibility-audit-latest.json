@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-24T00:35:32.893Z",
-  "success": false,
+  "auditedAt": "2026-07-24T00:41:40.095Z",
+  "success": true,
   "results": [
     {
       "name": "top: published page loaded",
@@ -275,14 +275,97 @@
     },
     {
       "name": "bedtime landing: published page loaded",
-      "ok": false,
+      "ok": true,
       "detail": {
-        "ready": false,
-        "attempt": 8,
+        "ready": true,
+        "attempt": 1,
         "picks": 8,
         "moods": 4,
         "faq": 3
       }
+    },
+    {
+      "name": "bedtime landing: first Tab exposes a visible skip link",
+      "ok": true,
+      "detail": {
+        "tag": "A",
+        "className": "skip-link",
+        "href": "#bedtime-content",
+        "text": "作品一覧へ移動",
+        "visible": true
+      }
+    },
+    {
+      "name": "bedtime landing: skip link moves focus to main content",
+      "ok": true,
+      "detail": {
+        "activeId": "bedtime-content",
+        "mainId": "bedtime-content"
+      }
+    },
+    {
+      "name": "bedtime story pick: keyboard focus indicator is visible",
+      "ok": true,
+      "detail": {
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(242, 198, 109)",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "bedtime landing: no critical or serious axe violations",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "bedtime landing: document language is Japanese",
+      "ok": true,
+      "detail": "ja"
+    },
+    {
+      "name": "bedtime landing: has one non-empty page title",
+      "ok": true,
+      "detail": "寝る前に読む怖い話｜静かに怖い短編8選｜夜語り"
+    },
+    {
+      "name": "bedtime landing: has exactly one h1",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "bedtime landing: heading levels do not skip",
+      "ok": true,
+      "detail": false
+    },
+    {
+      "name": "bedtime landing: buttons have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "bedtime landing: links have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "bedtime landing: has exactly one main landmark",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "bedtime landing: all eight editorial picks have unique destinations",
+      "ok": true,
+      "detail": [
+        "stories/good-night.html",
+        "stories/voice-memo.html",
+        "stories/read-receipt.html",
+        "stories/window-reflection.html",
+        "stories/return-by-morning.html",
+        "stories/three-knocks.html",
+        "stories/missing-floor.html",
+        "stories/night-bus.html"
+      ]
     },
     {
       "name": "story: published page loaded",
@@ -415,17 +498,5 @@
       "detail": []
     }
   ],
-  "failures": [
-    {
-      "name": "bedtime landing: published page loaded",
-      "ok": false,
-      "detail": {
-        "ready": false,
-        "attempt": 8,
-        "picks": 8,
-        "moods": 4,
-        "faq": 3
-      }
-    }
-  ]
+  "failures": []
 }
