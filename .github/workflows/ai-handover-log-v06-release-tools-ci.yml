@@ -72,6 +72,46 @@ jobs:
           print('METADATA_VALID')
           PY
 
+      - name: Test triple production confirmation offline
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import importlib.util
+          import json
+          from pathlib import Path
+          from types import SimpleNamespace
+
+          script = Path('scripts/audit_apply_app_store_metadata_ja.py')
+          spec = importlib.util.spec_from_file_location('metadata_tool', script)
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+
+          data = json.loads(Path('config/app_store_metadata_ja_v06.json').read_text(encoding='utf-8'))
+          app = data['app']
+          version = data['version']
+
+          good = SimpleNamespace(
+              confirm_bundle_id=app['bundle_id'],
+              confirm_version=version['version_string'],
+              confirm_apply=module.APPLY_CONFIRMATION,
+          )
+          module.verify_apply_confirmation(good, app, version)
+
+          invalid = [
+              SimpleNamespace(confirm_bundle_id='wrong.bundle', confirm_version=version['version_string'], confirm_apply=module.APPLY_CONFIRMATION),
+              SimpleNamespace(confirm_bundle_id=app['bundle_id'], confirm_version='9.9.9', confirm_apply=module.APPLY_CONFIRMATION),
+              SimpleNamespace(confirm_bundle_id=app['bundle_id'], confirm_version=version['version_string'], confirm_apply='APPLY'),
+          ]
+          for case in invalid:
+              try:
+                  module.verify_apply_confirmation(case, app, version)
+              except SystemExit:
+                  continue
+              raise SystemExit('invalid production confirmation was accepted')
+
+          print('TRIPLE_CONFIRMATION_VALID')
+          PY
+
       - name: Test ES256 JWT creation offline
         run: |
           set -euo pipefail
@@ -108,6 +148,12 @@ jobs:
           text = Path('scripts/audit_apply_app_store_metadata_ja.py').read_text(encoding='utf-8')
           required = [
               'parser.add_argument("--apply", action="store_true")',
+              'parser.add_argument("--confirm-bundle-id")',
+              'parser.add_argument("--confirm-version")',
+              'parser.add_argument("--confirm-apply")',
+              'APPLY_CONFIRMATION = "APPLY_METADATA"',
+              'verify_apply_confirmation',
+              'save_report(args.output, report)',
               'submission_performed',
               'build_selected',
               'screenshots_uploaded',
