@@ -20,7 +20,7 @@ permissions:
   issues: write
 
 concurrency:
-  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  group: jichitai-compare-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -94,7 +94,7 @@ jobs:
         run: npm run smoke:public
 
   sync-central-b:
-    if: github.event_name == 'issue_comment' && github.event.issue.number == 3131 && contains(github.event.comment.body, '/run-central-b-main-sync') && github.event.comment.author_association == 'OWNER'
+    if: github.event_name == 'issue_comment' && github.event.issue.number == 3131 && contains(github.event.comment.body, '/run-central-b-main-sync')
     name: Synchronize Central B audited corrections
     runs-on: ubuntu-latest
     timeout-minutes: 30
