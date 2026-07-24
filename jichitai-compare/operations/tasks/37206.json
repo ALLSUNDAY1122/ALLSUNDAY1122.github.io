@@ -23,10 +23,10 @@
   "researchingCount": 0,
   "unavailableCount": 2,
   "needsMediumReviewCount": 0,
-  "currentBranch": "fix/coordinator-b-kagawa-publication-1",
+  "currentBranch": "audit/37206-task-sync-fy2026",
   "pullRequestNumber": null,
   "lastCheckedAt": "2026-07-24",
-  "lastUpdatedAt": "2026-07-24T02:45:00+09:00",
+  "lastUpdatedAt": "2026-07-24T18:45:00+09:00",
   "lastUpdatedBy": "統括B全国統合",
   "officialSources": [
     "https://www.city.sanuki.kagawa.jp/life/childcare/support2",
@@ -40,16 +40,12 @@
     "https://www.city.sanuki.kagawa.jp/life/safety"
   ],
   "notes": [
-    "必須9制度をさぬき市公式情報で調査。",
-    "6制度はverified。",
-    "学校給食費、こども誰でも通園制度、空き家改修支援は2026年度の現行条件を示す市公式根拠が不足するためneeds_medium_reviewとした。",
-    "PR #1161をregion/west向けに作成。",
-    "CI run #3162の全検証成功を確認。",
-    "地方統合前の最終状態としてmergedへ更新。",
-    "学校給食費は令和7年4月改定後も、市負担により保護者負担を小学校1食120円、中学校1食135円に据え置く公式資料を確認。",
-    "こども誰でも通園制度は条例整備を確認したが、令和8年度の施設・料金・利用上限・予約方法を示す案内がないためunavailable。",
-    "空き家改修支援は令和7年度受付終了後、令和8年度条件を確認できないためunavailable。",
-    "公開除外要因だったneeds_medium_review 3件を解消。"
+    "必須9制度をさぬき市公式情報で再監査し、7制度verified・2制度unavailableで確定。",
+    "学校給食費は市負担により保護者負担を小学校1食120円・中学校1食135円に据え置く公式資料を確認しverified。",
+    "乳児等通園支援事業は条例と2026年度実施方針を確認したが、実施施設、対象月齢、料金、利用上限、認定・予約方法を示す利用者向け案内は未確認のためunavailable。",
+    "空き家バンク登録住宅の改修支援は2025年度受付終了と最大110万円の過年度条件を確認したが、2026年度募集条件は未公開のためunavailable。",
+    "旧PR #1624統合後もtaskがpr_openだったためmergedへ同期。",
+    "PR #2706をregion/west向けに作成。"
   ],
   "blockers": []
 }

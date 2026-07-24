@@ -6,7 +6,7 @@
   "name": "姫島村",
   "officialUrl": "https://www.himeshima.jp/",
   "status": "verified",
-  "summary": "必須9制度を姫島村公式情報で調査。8制度をverified、村公式サイトで実施情報を確認できない病児・病後児保育をunavailableとして登録。",
+  "summary": "必須9制度を姫島村及び大分県の現行公式情報で再監査し、全9制度をverifiedとして登録。",
   "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
@@ -29,16 +29,30 @@
       }
     },
     "sickChildCare": {
-      "status": "unavailable",
-      "summary": "村公式サイトで病児・病後児保育の実施施設・利用条件を確認できない",
+      "status": "verified",
+      "summary": "大分県内居住者として県内の病児・病後児保育施設を住所地を問わず利用可能",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
       "details": {
-        "availability": "姫島村公式サイトの子育て・保育所案内では病児・病後児保育の実施情報が掲載されていない",
-        "inquiry": "利用可能な村外施設や広域利用の有無は住民福祉課または健康推進課への確認が必要"
+        "target": "大分県内に住所があり、病気または回復期のため集団保育が困難で、保護者の就労等により家庭で保育できない小学6年生までの子ども",
+        "wideArea": "2021年10月から県内広域利用を実施し、居住市町村にかかわらず県内の対象施設を利用可能",
+        "fee": "市町村内外で同一料金。具体額は利用施設により異なる",
+        "reservation": "2026年4月から病児保育ネット予約サービス『テオテ』で空き状況確認・一部施設の予約が可能",
+        "facility": "姫島村内の専用施設ではなく、大分県が公開する県内対象施設を利用",
+        "inquiry": "姫島村住民福祉課（0978-87-2278）または利用施設へ確認"
       },
       "source": {
-        "url": "https://www.himeshima.jp/kurashi/hoikujo/",
+        "url": "https://www.pref.oita.jp/site/byoujitokusetsu/index.html",
         "checkedAt": "2026-07-24"
-      }
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.pref.oita.jp/soshiki/12520/byouji.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "childcareFee": {
       "status": "verified",

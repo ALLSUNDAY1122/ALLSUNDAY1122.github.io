@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "39303",
+  "municipalityName": "田野町",
+  "prefectureCode": "39",
+  "prefectureName": "高知県",
+  "assignedTeam": "西日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 6,
+  "researchingCount": 0,
+  "unavailableCount": 3,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "fix/39303-publication-readiness",
+  "pullRequestNumber": null,
+  "lastCheckedAt": "2026-07-24",
+  "lastUpdatedAt": "2026-07-24T18:45:00+09:00",
+  "lastUpdatedBy": "統括B全国統合",
+  "officialSources": [
+    "https://tanocho.jp/life/detail.php?hdnKey=215",
+    "https://tanocho.jp/download/?fid=1651&id=451&t=LD",
+    "https://tanocho.jp/life/detail.php?hdnKey=145",
+    "https://tanocho.jp/life/detail.php?hdnKey=127",
+    "https://tanocho.jp/life/detail.php?hdnKey=279",
+    "https://tanocho.jp/life/list.php?hdnCat=200",
+    "https://tanocho.jp/life/detail.php?hdnKey=584",
+    "https://tanocho.jp/life/detail.php?hdnKey=151",
+    "https://tanocho.jp/life/detail.php?hdnKey=470"
+  ],
+  "notes": [
+    "必須9制度を田野町公式情報で再監査。",
+    "6制度をverifiedとして登録。",
+    "第3期子ども・子育て支援事業計画で病児・病後児保育の令和7～11年度確保方策が0のためunavailable。",
+    "2026年6月更新の支援制度一覧等に産後ケアの利用条件が掲載されていないためunavailableへ正規化。",
+    "町公式の子育て・教育一覧にこども誰でも通園制度の利用案内がなく、対象・上限・料金・施設・認定予約条件を確認できないためunavailableへ正規化。",
+    "公開除外要因だったneeds_medium_review 2件を解消。",
+    "PR #2666をregion/west向けに作成。"
+  ],
+  "blockers": []
+}

@@ -23,15 +23,15 @@
   "researchingCount": 0,
   "unavailableCount": 3,
   "needsMediumReviewCount": 0,
-  "currentBranch": "data/47382-yonaguni-westb",
+  "currentBranch": "audit/47382-r8-childcare-source",
   "pullRequestNumber": null,
   "lastCheckedAt": "2026-07-24",
-  "lastUpdatedAt": "2026-07-24T15:40:00+09:00",
+  "lastUpdatedAt": "2026-07-24T18:45:00+09:00",
   "lastUpdatedBy": "統括B全国統合",
   "officialSources": [
     "https://www.town.yonaguni.okinawa.jp/docs/2018042400106/",
     "https://www.town.yonaguni.okinawa.jp/category/mokuteki/kosodate/",
-    "https://www.town.yonaguni.okinawa.jp/category/mokuteki/nyugaku/",
+    "https://www.town.yonaguni.okinawa.jp/docs/2026022000031/",
     "https://www.town.yonaguni.okinawa.jp/reiki_int/reiki_honbun/q954RG00000343.html",
     "https://www.town.yonaguni.okinawa.jp/docs/2022032500011/",
     "https://www.town.yonaguni.okinawa.jp/docs/2025021000011/",
@@ -40,11 +40,10 @@
     "https://www.town.yonaguni.okinawa.jp/docs/2024081500011/"
   ],
   "notes": [
-    "task・自治体PRの重複なしを確認。並行作成済みの空作業ブランチを引き継ぎ。",
     "必須9制度を与那国町公式情報で調査済み。",
     "こども医療費は0歳から中学3年生まで助成し、現物給付に対応。",
     "病児・病後児保育の実施施設・島外広域利用・料金等を確認できずunavailable。",
-    "2026年度保育所入所案内は確認したが、保育料・無償化・多子軽減の具体条件を確認できずunavailable。",
+    "2026年度保育所入所の個別公式ページを再監査で特定したが、保育料・無償化・多子軽減の具体条件は掲載本文から確認できずunavailableを維持。",
     "町立小中学校給食費・幼稚園ミルク費の補助制度を実施。",
     "産後ケアは宿泊・通所・訪問型を合計7回まで。",
     "2026年度預かり保育の対象・時間・料金・申込条件を確認できずunavailable。",
@@ -52,8 +51,9 @@
     "粗大ごみは町指定袋に入らないごみとして毎週水曜日に収集。",
     "津波・土砂災害等のハザードマップを公開。",
     "unavailable制度は制度不存在と断定せず、担当課への確認事項を自治体JSONへ記録。",
-    "PR #2458をregion/west向けに作成。",
-    "PR #2458はCI run #6075成功後にregion/westへ統合済み。"
+    "完了後品質監査として、childcareFeeの一次出典をカテゴリ一覧から令和8年度個別案内へ変更。",
+    "品質監査PR #2683をregion/west向けに作成。",
+    "品質監査PR #2683をCI run #6492成功後にregion/westへ統合。"
   ],
   "blockers": []
 }

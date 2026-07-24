@@ -6,13 +6,16 @@
   "name": "新宮市",
   "officialUrl": "https://www.city.shingu.lg.jp/",
   "status": "verified",
-  "summary": "新宮市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児病後児保育、学校給食費無償化、産後ケア、通園制度、空き家改修、粗大ごみ、防災情報などを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "新宮市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児病後児保育、学校給食費無償化、産後ケア、こども誰でも通園制度、空き家改修、粗大ごみ、防災情報などを記録。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "高校生世代までの子どもについて、保険診療自己負担分相当額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "満18歳到達後最初の3月31日まで",
         "residence": "新宮市に住民票があること",
@@ -20,12 +23,18 @@
         "excluded": "保険適用外費用、他制度の給付対象部分等は対象外",
         "procedure": "受給資格証の交付を受け、県外受診等は償還手続きが必要となる場合あり"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/463", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/463",
+        "checkedAt": "2026-07-23"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "0歳6か月から小学6年生までの病児・病後児を、あんしんルームで預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
       "details": {
         "facility": "新宮市病児病後児保育施設 あんしんルーム",
         "target": "新宮市・那智勝浦町・太地町在住等で、医師が利用可能と認め、家庭保育が困難な児童",
@@ -35,12 +44,18 @@
         "meal": "3歳から12歳は給食注文可。未就学児250円、小学生300円",
         "procedure": "事前登録、Web仮予約、医療機関受診、診療情報提供書が必要"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/2704", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/2704",
+        "checkedAt": "2026-07-23"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と非課税世帯0～2歳児は保育料無償。0～2歳児は所得・多子条件による軽減がある。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeProgram": "3歳以上児と市町村民税非課税世帯0～2歳児は保育料無償",
         "taxableUnderThree": "課税世帯0～2歳児は保護者の税額等で算定",
@@ -48,58 +63,105 @@
         "meal": "主食費・副食費等の実費は原則無償化対象外だが、所得・多子条件で副食費免除あり",
         "procedure": "認可外施設等の無償化給付は保育の必要性認定と申請が必要"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/989", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/989",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.city.shingu.lg.jp/info/579", "checkedAt": "2026-07-23"},
-        {"url": "https://www.city.shingu.lg.jp/div/soumu-1/htm/d1w_reiki/H430902500040/print.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.shingu.lg.jp/info/579",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.shingu.lg.jp/div/soumu-1/htm/d1w_reiki/H430902500040/print.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "令和4年4月から市立小中学校の学校給食費を無償化している。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "target": "新宮市立小学校・中学校の児童生徒",
         "start": "2022年4月1日",
         "fee": "学校給食費の保護者負担なし",
-        "outsideSchools": "学校給食の提供を受けない私立中学校等の児童生徒には相当額支援制度あり",
+        "unitPrice": "令和8年4月1日から小学校1食323円、中学校1食390円を公費負担",
+        "outsideSchools": "学校給食の提供を受けない私立・市外小中学校等や食物アレルギー等で給食を受けない児童生徒には相当額支援制度あり",
         "funding": "地方交付税臨時交付金等を活用"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/2766", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/2766",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.city.shingu.lg.jp/info/2439", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.shingu.lg.jp/info/2439",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "生後1歳未満の母子を対象に、宿泊型・日帰り型・訪問型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
-        "target": "新宮市に住民票がある生後1歳未満の母子で、育児支援不足、体調不安、育児不安等がある方",
+        "target": "新宮市に住民票がある生後1歳未満の母子で、家族支援を得にくい、体調不安、育児不安・疲れ、授乳不安等がある方",
+        "excluded": "医療行為が必要な方は利用不可",
         "types": "宿泊型、日帰りデイサービス、アウトリーチ型",
         "dayVisitLimit": "日帰り・訪問は通算10回以内",
         "shortStayLimit": "宿泊型は通算7日以内",
         "care": "母体の体調管理、授乳相談、沐浴・育児手技、乳児の発育相談等",
         "verificationPolicy": "料金・施設別受入月齢は申請時の現行案内で確認"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/1145", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/1145",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "保育施設に在籍していない乳幼児を、一般一時預かりやこども誰でも通園制度で預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
-      "details": {
-        "generalProgram": "市内5施設で、冠婚葬祭・通院・育児疲れ等を理由とする一時預かりを月14日まで実施",
-        "generalProcedure": "施設へ電話し面接・利用説明を受けて申込み",
-        "anyoneProgram": "保育所等に在籍していない生後6か月から3歳未満を月10時間まで預かる",
-        "anyoneFacility": "蓬莱保育所",
-        "anyoneHours": "平日9時～12時、13時～16時",
-        "anyoneFee": "1時間300円、超過30分ごと150円。減免あり",
-        "capacity": "こども誰でも通園制度は4名"
+      "summary": "従来の一時預かりに加え、未就園の生後6か月から満3歳未満を月10時間まで預かるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/578", "checkedAt": "2026-07-23"},
+      "details": {
+        "traditionalTemporaryCare": {
+          "program": "市内5施設で、冠婚葬祭・通院・育児疲れ等を理由とする一時預かりを月14日まで実施",
+          "procedure": "施設へ電話し面接・利用説明を受けて申込み"
+        },
+        "anyoneUseChildcare": {
+          "start": "令和8年4月1日",
+          "target": "保育所・認定こども園等に通っていない生後6か月から満3歳未満。3歳の誕生日の前々日まで。認可外保育施設利用児は対象",
+          "employment": "保護者の就労要件なし",
+          "facility": "蓬莱保育所",
+          "limit": "子ども1人につき月10時間",
+          "hours": "月曜から金曜の9時～12時、13時～16時。祝日・年末年始を除く",
+          "fee": "1時間300円、1時間超は30分ごと150円。減免あり",
+          "capacity": "4名",
+          "meals": "給食・おやつの提供なし。ミルク・おやつ持参は施設へ相談",
+          "application": "つうえんポータルで申請。通常2～3日程度で市認定とアカウント発行",
+          "interview": "初めて利用する施設では子どもの情報登録後に初回面談予約・実施が必要",
+          "reservation": "つうえんポータルから施設利用を予約し、利用後のお迎え時に料金を支払う",
+          "checkInOut": "登所・降所時に二次元コードを使用するため携帯電話を持参"
+        }
+      },
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/2900",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.city.shingu.lg.jp/info/2900", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.shingu.lg.jp/info/578",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "housingSupport": {
@@ -111,9 +173,19 @@
         "rate": "改修費用から和歌山県補助金等を除いた金額の2分の1",
         "maximum": "上限50万円、1物件1回",
         "conditions": "県空き家改修補助金対象物件、市税滞納なし、契約前インスペクション等の要件あり",
-        "application": "改修前の申請が必要"
+        "application": "改修前の申請が必要",
+        "generalRenovationFY2026": "市民向け住宅リフォーム助成は市内業者施工・税抜20万円以上・2027年3月10日までの完了が条件だったが、2026年5月22日に受付終了"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/2712", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/2712",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.shingu.lg.jp/Info/2415",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "bulkyWaste": {
       "status": "verified",
@@ -126,10 +198,19 @@
         "verificationPolicy": "品目別金額は最新手数料表で確認し、未確認の個別料金を推測しない",
         "alternative": "自己搬入が困難な家電等は許可業者・小売店の回収制度を利用"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/2739", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/2739",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.city.shingu.lg.jp/info/2737", "checkedAt": "2026-07-23"},
-        {"url": "https://www.city.shingu.lg.jp/info/702", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.shingu.lg.jp/info/2737",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.shingu.lg.jp/info/702",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "disasterPrevention": {
@@ -142,9 +223,15 @@
         "tsunami": "津波一時避難施設・場所を指定",
         "preparedness": "自宅周辺の浸水範囲・深さ、警戒区域、避難経路を事前確認"
       },
-      "source": {"url": "https://www.city.shingu.lg.jp/info/1132", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.shingu.lg.jp/info/1132",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.city.shingu.lg.jp/info/123", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.shingu.lg.jp/info/123",
+          "checkedAt": "2026-07-23"
+        }
       ]
     }
   }
