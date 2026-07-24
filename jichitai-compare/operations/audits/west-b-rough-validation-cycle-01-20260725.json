@@ -470,5 +470,54 @@
       "externalPrimarySourceHosts": []
     }
   ],
-  "conclusion": "no_structural_error_detected"
+  "conclusion": "no_research_content_error_detected_one_stale_source_url_corrected",
+  "reviewedAt": "2026-07-25T00:23:00+09:00",
+  "detectedResearchContentErrorCount": 0,
+  "detectedSourceMaintenanceIssueCount": 1,
+  "correctedSourceMaintenanceIssueCount": 1,
+  "warningReview": [
+    {
+      "code": "31325",
+      "name": "若桜町",
+      "service": "temporaryChildcare",
+      "classification": "transient_or_bot_http_warning",
+      "result": "公式ページをブラウザで再取得し、対象・時間・料金が登録内容と一致"
+    },
+    {
+      "code": "31364",
+      "name": "三朝町",
+      "service": "childcareFee",
+      "classification": "source_availability_warning",
+      "result": "町が案内する子育てポータルは自動取得できなかったが、第2子以降保育料無償化の記載は検索索引と鳥取県公式の無償化制度案内で整合を確認"
+    },
+    {
+      "code": "31384",
+      "name": "日吉津村",
+      "service": "disasterPrevention",
+      "classification": "stale_source_url_corrected",
+      "result": "旧個別URLを現行公式ハザードマップ一覧URLへ更新。制度内容は変更なし",
+      "correctionPullRequestNumber": 2930,
+      "correctionCiRunNumber": 7006,
+      "correctionMergeCommit": "944d058742713111d3afc6846dc6e7095e0798fa"
+    },
+    {
+      "code": "31386",
+      "name": "大山町",
+      "service": "officialUrl",
+      "classification": "timeout",
+      "result": "町公式の制度ページは取得でき、公式サイトと自治体識別に誤りなし"
+    },
+    {
+      "code": "31386",
+      "name": "大山町",
+      "service": "sickChildCare",
+      "classification": "redirect_or_bot_http_warning",
+      "result": "公式ページをブラウザで再取得し、病児・病後児の対象年齢と施設が登録内容と一致"
+    }
+  ],
+  "nextCycle": {
+    "cycle": 2,
+    "plannedMunicipalityCount": 25,
+    "scopePolicy": "第1回未対象の島根県自治体から開始し、担当250自治体を約10回で網羅"
+  }
 }
