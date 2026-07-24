@@ -1,0 +1,85 @@
+name: Temporary West B Progress Cycle 06
+
+on:
+  push:
+    branches:
+      - ops/west-b-rough-validation-progress-06-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/west-b-rough-validation-progress-06-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Update West B checkpoint
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const file = 'jichitai-compare/operations/control/session-checkpoints/west-b.json';
+          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          data.updatedAt = '2026-07-25T02:16:00+09:00';
+          data.nextAction = '概略検証第7回として、長崎県の残り自治体から開始し、大分県へ進む25自治体を検証する。全10回程度で担当250自治体を網羅する。';
+          const rv = data.roughValidation;
+          rv.status = 'in_progress';
+          rv.plannedCycles = 10;
+          rv.completedCycles = 6;
+          rv.auditedMunicipalityCount = 150;
+          rv.auditedServiceCount = 1350;
+          rv.remainingMunicipalityCount = 100;
+          rv.detectedResearchContentErrorCount = 1;
+          rv.correctedResearchContentErrorCount = 1;
+          rv.detectedSourceMaintenanceIssueCount = 4;
+          rv.correctedSourceMaintenanceIssueCount = 4;
+          rv.lastCycle = {
+            cycle: 6,
+            auditPullRequestNumber: 3020,
+            auditCiRunNumber: 7333,
+            auditMergeCommit: '7c636a7c93fa8b7188e93cd17a10c8ec0117cad4',
+            auditFile: 'jichitai-compare/operations/audits/west-b-rough-validation-cycle-06-20260725.json',
+            reviewFile: 'jichitai-compare/operations/audits/west-b-rough-validation-cycle-06-review-20260725.json',
+            municipalityCount: 25,
+            serviceCount: 225,
+            prefectureCodes: ['41','42'],
+            manualSpotCheckCount: 5,
+            contentErrorCount: 0,
+            correctedContentErrorCount: 0,
+            sourceMaintenanceIssueCount: 0,
+            correctedSourceMaintenanceIssueCount: 0
+          };
+          rv.cycleHistory = Array.isArray(rv.cycleHistory) ? rv.cycleHistory.filter(v => v.cycle !== 6) : [];
+          rv.cycleHistory.push({
+            cycle: 6,
+            municipalityCount: 25,
+            serviceCount: 225,
+            contentErrorCount: 0,
+            correctedContentErrorCount: 0,
+            sourceMaintenanceIssueCount: 0,
+            auditPullRequestNumber: 3020,
+            auditCiRunNumber: 7333
+          });
+          rv.cycleHistory.sort((a,b) => a.cycle - b.cycle);
+          rv.nextCycle = {
+            cycle: 7,
+            plannedMunicipalityCount: 25,
+            scopePolicy: '長崎県の残り自治体から開始し、大分県へ進む'
+          };
+          fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n');
+          NODE
+      - name: Remove temporary workflow and commit checkpoint
+        shell: bash
+        run: |
+          rm .github/workflows/temp-west-b-progress-cycle-06.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git add .github/workflows/temp-west-b-progress-cycle-06.yml
+          git commit -m "ops: 西日本B概略検証第6回の進捗を記録"
+          git push origin HEAD:ops/west-b-rough-validation-progress-06-20260725
