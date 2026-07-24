@@ -5,15 +5,36 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
-  "updatedAt": "2026-07-22T20:36:00+09:00",
-  "status": "researching",
+  "updatedAt": "2026-07-24T22:20:00+09:00",
+  "status": "completed",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 215,
-  "currentMunicipality": {"code": "33211", "name": "備前市", "stage": "researching"},
-  "workingBranch": "data/33211-bizen",
-  "pullRequestNumber": null,
-  "ciStatus": "not_started",
-  "completedSinceSplit": [],
+  "assignedMunicipalityCount": 226,
+  "remainingUninvestigatedCount": 0,
+  "currentMunicipality": null,
+  "workingBranch": null,
+  "pullRequestNumber": 2772,
+  "ciStatus": "success",
   "blocked": [],
-  "nextAction": "備前市の必須9制度調査から地方統合まで継続する。"
+  "qualityState": {
+    "regionalAuditScopeMunicipalityCount": 476,
+    "convertedMunicipalityCount": 75,
+    "convertedServiceCount": 189,
+    "remainingNeedsMediumReviewCount": 0,
+    "blockedMunicipalityCount": 0
+  },
+  "nationalRelease": {
+    "westReleasePullRequestNumber": 2778,
+    "finalNationwidePullRequestNumber": 2791,
+    "finalNationwideCiRunNumber": 6692,
+    "finalNationwideMergeCommitSha": "92aa5e660fc8c52fbb8d67445aeb15a63b58739b",
+    "publishedMunicipalityCount": 1741,
+    "remainingMunicipalityCount": 0
+  },
+  "evidence": {
+    "identityValidationPullRequestNumber": 2740,
+    "identityValidationCiRunNumber": 6577,
+    "qualityResolutionPullRequestNumber": 2772,
+    "qualityResolutionCiRunNumber": 6657
+  },
+  "nextAction": "新規差し戻し、CI失敗、公式制度更新、自治体コード改定、mainとの公開不一致を監視する。"
 }
