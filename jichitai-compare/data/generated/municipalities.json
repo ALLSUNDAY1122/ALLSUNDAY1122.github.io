@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1547,
+    "municipalityCount": 1549,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -127658,6 +127658,371 @@
           },
           "source": {
             "url": "https://www.city.yamato.lg.jp/gyosei/kurashi/bosai_anzenanshin/saigai_bosai/bosaimap_hazardmap/13590.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14214",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "伊勢原市",
+      "officialUrl": "https://www.city.isehara.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を伊勢原市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "伊勢原市に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院に係る保険診療医療費の自己負担額を助成",
+            "incomeLimit": "所得制限なし。ただし県補助申請のため所得確認を実施",
+            "procedure": "こども医療証の交付申請が必要",
+            "excluded": "保険外診療、健康診査、入院時食事代、高額療養費・付加給付、他制度対象分等"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2013062700038/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "急性期から回復期の子どもを病児・病後児保育室で一時保育",
+          "eligibility": {
+            "minAgeMonths": 2,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "facility": "伊勢原協同病院 病児・病後児保育室ひまわり",
+            "target": "病児は生後6か月から小学3年生、病後児は生後8週間経過後から小学3年生",
+            "hours": "平日7時30分から17時、定員6人",
+            "fee": "1人1日2,000円。生活保護世帯は免除。給食・おやつ代380円、医師連絡票作成料等は別",
+            "procedure": "前日までの予約、医療機関受診と医師連絡票、年度初回の利用登録が必要"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2014081400053/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園、保育所、認定こども園等を利用する3～5歳児と、市民税非課税世帯の0～2歳児等",
+            "coverage": "認可施設等は対象年齢の保育料を無償化。私学助成幼稚園は月25,700円上限、認可外施設等は認定と上限額あり",
+            "currentFee": "課税世帯の0～2歳児は所得・課税状況等に応じた利用者負担額が基本",
+            "multiChild": "兄弟姉妹の有無や課税状況に応じた負担軽減制度あり",
+            "excluded": "通園送迎費、給食費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2019052400018/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費を無償化し、中学校は予約制・有償を継続",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "令和8年度の市立小学校給食費は保護者負担なし。月額約5,564円のうち国・県交付金5,200円と市の重点支援地方交付金で対応",
+            "juniorHigh": "中学校給食費は従来の納入方法を継続し、選択・予約制の有償給食。物価高騰分は交付金で補填し保護者負担額を増やさない",
+            "procedure": "小学校は給食費徴収なし。中学校は利用登録後、クレジットカードまたは払込票で前払いし予約",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2025010800028/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・個別通所・集団通所・訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "伊勢原市在住で産後ケアを必要とする母親と赤ちゃん。訪問型は産後1年未満、集団通所は産後1か月から概ね4か月まで等、形態により対象期間が異なる",
+            "types": "ショートステイ（宿泊型）、個別デイサービス、集団デイサービス、アウトリーチ（訪問型）",
+            "fee": "宿泊型1日6,000円、個別通所1日3,000円、集団通所・訪問型は無料。食事代等は別。非課税・生活保護世帯は減免あり",
+            "support": "母体の回復・休息、授乳・乳房ケア、育児相談、助産師等による支援",
+            "procedure": "宿泊・個別通所は利用券を事前申請後、施設へ予約。集団通所・訪問は担当へ電話申込み"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2025012900030/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "伊勢原市在住で、保育所・認定こども園・地域型保育・企業主導型保育に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで。未利用分の翌月繰越なし",
+            "facility": "伊勢原八雲幼稚園で2歳児・定員3人から実施。実施施設は順次更新",
+            "fee": "標準1時間300円。施設により異なり、世帯状況等による減免と飲食物等の実費負担あり",
+            "procedure": "つうえんポータルで認定申請、初回面談、利用予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2026021000049/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅の耐震診断・耐震改修・除却費用の一部を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "市内の対象木造住宅を所有・居住し、市税滞納がない人。所有者の承諾を得た配偶者・一親等親族を含む場合あり",
+            "building": "旧耐震基準で建築された在来木造住宅等、制度の構造・用途・階数要件を満たす住宅",
+            "support": "耐震診断、耐震改修工事、除却工事等の費用の一部を補助",
+            "procedure": "診断・工事等の着手前に建築住宅課へ相談・申請。令和8年度受付中",
+            "notes": "補助率・上限額は工事区分や対象住宅により異なるため最新案内を確認"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2017021300161/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "一辺50cm以上等の粗大ごみを予約制戸別回収または自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "一番長い辺が50cm以上の家庭ごみを基本とし、一部は大きさにかかわらず粗大ごみ・複数点扱い",
+            "collection": "清掃リサイクル課へ電話またはLINEで予約し、1回5個まで戸別回収",
+            "fee": "必要枚数の伊勢原市収入証紙を購入。証紙1枚500円で、品目ごとの点数に応じて貼付",
+            "procedure": "収集日の朝8時30分までに予約品へ証紙を貼り、屋外の回収しやすい場所へ排出",
+            "alternative": "環境美化センターへの自己搬入も市の案内に従い利用可能"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2021081700038/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・内水等のハザードマップとWeb地図を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "洪水・土砂災害ハザードマップ、内水ハザードマップ、いせはらWebMapsを公開",
+            "risks": "相模川、玉川、金目川水系、市管理河川等の洪水、内水浸水、土砂災害等",
+            "facilities": "浸水想定区域・深さ・継続時間、土砂災害区域、避難関連情報等を確認可能",
+            "support": "住所検索できるWeb地図や耳で聴くハザードマップも提供し、事前の避難計画に利用可能"
+          },
+          "source": {
+            "url": "https://www.city.isehara.kanagawa.jp/docs/2010061500041/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14215",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "海老名市",
+      "officialUrl": "https://www.city.ebina.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を海老名市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "海老名市に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院の保険診療自己負担分を助成",
+            "incomeLimit": "所得制限なし。ただし県補助事業のため所得確認を実施",
+            "procedure": "子ども医療証の交付申請が必要。医療証と医療保険情報を提示すると原則窓口負担なし",
+            "excluded": "保険外費用、入院時食事代、高額療養費・付加給付、他制度対象分等"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/guide/kosodate/teate/1003026.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生の病児・病後児を施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "ほほえみさくら保育園 ほほえみ病児・病後児保育室（ほほえみルーム）ほか県央広域連携施設",
+            "target": "生後6か月から小学6年生で、病気中または回復期にあり保護者の就労等で家庭保育が困難な子ども",
+            "hours": "平日8時から18時。定員3人で市内在住・在勤者優先",
+            "fee": "市内在住・在勤者2,000円、その他3,000円。給食300円、医師連絡票1,000円等は別",
+            "procedure": "専用電話で予約後、医療機関を受診して利用"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/guide/kosodate/1006671/1003036.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児の保育料を無償化し、2歳児以下は所得等に応じて算定",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等を利用する3～5歳児クラスと、国制度上の対象となる非課税世帯0～2歳児等",
+            "coverage": "3～5歳児クラスの月額保育料は0円。認可外施設等は保育の必要性認定と上限額あり",
+            "currentFee": "2歳児クラス以下の課税世帯は保護者等の市民税額に応じて保育料を算定",
+            "procedure": "在園児は毎年4月・9月に算定。世帯状況・課税額変更時は届出",
+            "excluded": "給食費、延長保育料、教材費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/guide/kosodate/hoikuen/1003010.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費の国基準分を軽減し超過分を徴収、中学校も有償を継続",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "国の基準額月5,200円分を負担軽減し、市の給食費が基準額を上回る部分は保護者負担",
+            "juniorHigh": "学校給食費は保護者が市へ直接納入する有償方式を継続",
+            "procedure": "市から送付される納入通知書・納付書等により納付。口座・電子決済等の案内に従う",
+            "support": "スクールライフサポート認定世帯は給食費の援助対象",
+            "notes": "小中学校一律の完全無償化ではない。教材費無償化とは別制度"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/mayor/shoshin/1018684.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・通所・訪問型の産後ケアを生後1年までの母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "海老名市に住民登録があり産後ケアを必要とする母親と生後1年までの赤ちゃん",
+            "types": "宿泊型、通所型、訪問型",
+            "period": "宿泊・通所は原則産後5か月未満で施設により異なり、訪問型は産後1年未満",
+            "limit": "宿泊型は1泊2日から2泊3日、通所型は1日7時間以内で計6回まで、訪問型は1日2時間以内",
+            "fee": "課税世帯は宿泊1日6,000円、通所4,000円、訪問無料。非課税世帯は半額、生活保護世帯は無料",
+            "support": "母子の健康確認、授乳・沐浴等の育児相談、母親の休息・心身ケア"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/guide/kosodate/boshi/1015599.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の1歳から3歳未満を月10時間まで市立保育園で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "1歳から満3歳未満で、認定こども園・幼稚園・保育所等に在籍していない子ども",
+            "hours": "子ども1人につき月10時間まで。1回1時間以上、30分単位",
+            "facility": "市立門沢橋保育園。平日9時から12時、13時から16時",
+            "fee": "1時間300円程度。施設により異なり、世帯状況による負担軽減あり",
+            "procedure": "総合支援システムで認定申請し、市の審査・アカウント発行後に利用予約"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/guide/kosodate/1018550.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "木造住宅の耐震診断・改修計画・改修・解体等を支援",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "対象木造住宅を所有する個人または親族で、市税等滞納がなく同一補助の受給歴がない人",
+            "building": "平成12年5月31日以前の基準で建築された在来工法・2階建て以下の木造住宅等。解体は昭和56年5月31日以前等の要件",
+            "support": "耐震診断士派遣、耐震改修計画書作成、耐震改修工事、解体、防災ベッド・耐震シェルター等を支援",
+            "diagnosis": "令和8年度から専門家による耐震診断士派遣を無料で実施",
+            "procedure": "契約・診断・工事前に住宅まちづくり課へ相談・申請し、年度内に実績報告"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/guide/sumai/jutaku/1003437.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを予約制戸別収集または予約不要の直接持込みで処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "電話またはLINEで事前予約し、収集シールを貼って朝8時30分までに指定場所へ排出",
+            "collectionFee": "最長辺50cm以上1m未満は500円、1m以上3m未満は700円",
+            "directDelivery": "第二高齢者生きがい会館へ市内在住確認書類を持参して直接搬入。通常予約不要",
+            "deliveryFee": "最長辺50cm以上1m未満は200円、1m以上3m未満は300円",
+            "excluded": "市で処理できない品目や事業系ごみ等は対象外"
+          },
+          "source": {
+            "url": "https://www.city.ebina.kanagawa.jp/guide/kurashi/wakekata/1011256.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "2026年全面改訂の防災ガイドブックと洪水・内水・土砂災害ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "海老名市防災ガイドブック、電子ブック、海老名市防災マップを公開",
+            "risks": "相模川・目久尻川・永池川・鳩川の洪水、内水、土砂災害、地震の揺れ・液状化等",
+            "update": "2026年6月に県の浸水想定区域修正や地震被害想定調査を反映して全面改訂",
+            "facilities": "避難所、マイ・タイムライン、災害別の備え・行動等を掲載",
+            "notes": "市では高潮・津波の浸水想定なし"
+          },
+          "source": {
+            "url": "https://www.bousai.city.ebina.kanagawa.jp/guidebook/hazardmap/",
             "checkedAt": "2026-07-24"
           }
         }
