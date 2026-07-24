@@ -1,1 +1,63 @@
-{"schemaVersion":"1.0.0","sessionId":"west-a","displayName":"西日本調査班A","parentTeam":"西日本調査班","integrationBranch":"region/west","prefectureCodes":["33","37","39","40","43","46"],"updatedAt":"2026-07-24T21:25:00+09:00","status":"completed","invocationIntervalMultiplier":2,"remainingUninvestigatedCount":0,"currentMunicipality":null,"workingBranch":null,"pullRequestNumber":2772,"ciStatus":"success","completedSinceSplit":[{"code":"46534","name":"知名町","pullRequestNumber":2621,"ciRunNumber":6399},{"code":"46535","name":"与論町","pullRequestNumber":2617,"ciRunNumber":null},{"code":"46206","name":"阿久根市","pullRequestNumber":2740,"ciRunNumber":6577}],"blocked":[],"nextAction":"西日本調査班Aの担当476自治体は初回調査・地域統合・品質終端化を完了。PR #2772で75自治体・189制度のneeds_medium_reviewを保守的にunavailableへ整理し、CI #6657成功、region/west統合済み。全国統括が完成自治体限定の公開手順でmainへ反映する。以後は自治体識別CIと2026年度公式情報の定期再監査を行う。","completionEvidence":{"lastMunicipalityCode":"46206","lastMunicipalityName":"阿久根市","lastRegionalPullRequestNumber":2740,"stateNormalizationPullRequestNumber":2743,"qualityResolutionPullRequestNumber":2772,"qualityResolutionCiRunNumber":6657,"pendingNationalReleasePullRequestNumber":null,"supersededNationalReleasePullRequestNumber":2742,"detailsSource":"jichitai-compare/operations/tasks"},"integrityAudit":{"auditedAt":"2026-07-24T21:25:00+09:00","expectedWestMunicipalityCount":476,"actualWestMunicipalityCount":476,"prefectureCountValidation":"success","identityValidation":"success","identityValidationPullRequestNumber":2740,"identityValidationCiRunNumber":6577,"taskNormalizationPullRequestNumber":2743,"taskNormalizationCiRunNumber":6583,"qualityResolution":{"pullRequestNumber":2772,"ciRunNumber":6657,"convertedMunicipalityCount":75,"convertedServiceCount":189,"remainingNeedsMediumReviewCount":0,"policy":"公式公開情報で2026年度条件を確定できない制度は、制度不存在を断定せず、自治体窓口での確認事項を明記したunavailableとして終端化。"},"restoredMunicipalities":[{"code":"46206","name":"阿久根市"}],"removedInvalidCodes":["40208","40209","46410"],"notes":["正式自治体コードの欠番を単純連番で補完しない。","自治体数不一致時は都道府県別コード一覧を診断artifactから確認する。","旧全国再同期PR #2742は競合終了。全国公開は最新main基点の完成自治体限定手順で統括セッションが実施する。"]}}
+{
+  "schemaVersion": "1.0.0",
+  "sessionId": "west-a",
+  "displayName": "西日本調査班A",
+  "parentTeam": "西日本調査班",
+  "integrationBranch": "region/west",
+  "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+  "updatedAt": "2026-07-24T22:29:00+09:00",
+  "status": "completed",
+  "invocationIntervalMultiplier": 2,
+  "remainingUninvestigatedCount": 0,
+  "currentMunicipality": null,
+  "workingBranch": null,
+  "pullRequestNumber": 2772,
+  "ciStatus": "success",
+  "completedSinceSplit": [
+    {"code": "46534", "name": "知名町", "pullRequestNumber": 2621, "ciRunNumber": 6399},
+    {"code": "46535", "name": "与論町", "pullRequestNumber": 2617, "ciRunNumber": null},
+    {"code": "46206", "name": "阿久根市", "pullRequestNumber": 2740, "ciRunNumber": 6577}
+  ],
+  "blocked": [],
+  "nextAction": "担当自治体の新規調査は停止。全国1,741自治体の完全公開後は、公式情報更新、差し戻し、自治体識別異常、CI失敗が発生した場合のみ品質監査を再開する。",
+  "completionEvidence": {
+    "lastMunicipalityCode": "46206",
+    "lastMunicipalityName": "阿久根市",
+    "lastRegionalPullRequestNumber": 2740,
+    "stateNormalizationPullRequestNumber": 2743,
+    "qualityResolutionPullRequestNumber": 2772,
+    "qualityResolutionCiRunNumber": 6657,
+    "nationalReleasePullRequestNumber": 2791,
+    "nationalReleaseMergedAt": "2026-07-24T22:08:44+09:00",
+    "releaseCopyPullRequestNumber": 2792,
+    "detailsSource": "jichitai-compare/operations/tasks"
+  },
+  "integrityAudit": {
+    "auditedAt": "2026-07-24T22:29:00+09:00",
+    "expectedWestMunicipalityCount": 476,
+    "actualWestMunicipalityCount": 476,
+    "expectedWestServiceCount": 4284,
+    "actualWestServiceCount": 4284,
+    "nationwidePublishedMunicipalityCount": 1741,
+    "nationwideRemainingMunicipalityCount": 0,
+    "prefectureCountValidation": "success",
+    "identityValidation": "success",
+    "qualityResolution": {
+      "pullRequestNumber": 2772,
+      "ciRunNumber": 6657,
+      "convertedMunicipalityCount": 75,
+      "convertedServiceCount": 189,
+      "remainingNeedsMediumReviewCount": 0,
+      "policy": "公式公開情報で2026年度条件を確定できない制度は、制度不存在を断定せず、自治体窓口での確認事項を明記したunavailableとして終端化。"
+    },
+    "restoredMunicipalities": [
+      {"code": "46206", "name": "阿久根市"}
+    ],
+    "removedInvalidCodes": ["40208", "40209", "46410"],
+    "notes": [
+      "正式自治体コードの欠番を単純連番で補完しない。",
+      "自治体数不一致時は都道府県別コード一覧を診断artifactから確認する。",
+      "全国完全公開後は新規調査を停止し、更新・差し戻し・CI異常時のみ再開する。"
+    ]
+  }
+}
