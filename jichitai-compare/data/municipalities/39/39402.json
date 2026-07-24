@@ -1,0 +1,173 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "39402",
+  "prefectureCode": "39",
+  "prefecture": "高知県",
+  "name": "佐川町",
+  "officialUrl": "https://www.town.sakawa.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を佐川町公式情報で調査。6制度をverified、休止中の病後児保育をunavailable、保育料とこども誰でも通園制度をneeds_medium_reviewとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳到達後最初の3月末まで乳幼児・児童の医療費を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "佐川町に住民登録があり、健康保険の扶養家族として認定されている乳幼児・児童",
+        "copay": "保険診療の自己負担相当額を助成。高額療養費の範囲、入院時食事代等を除く",
+        "application": "健康保険資格情報と印鑑等を持参し健康福祉課で申請する",
+        "conditions": "1歳以上就学前児は課税証明書が必要となる場合がある"
+      },
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=547",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "佐川町病後児保育施設『にこっと』は町公式案内上で休止中",
+      "notes": [
+        "休止前は保育園・幼稚園・認定こども園・小学校に通う児童を対象とし、平日7時30分から18時30分、町内児童は日額1,000円で実施していた。",
+        "利用再開時期や代替となる一般利用型病児・病後児保育の案内は確認できない。"
+      ],
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=1412",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "unavailable",
+      "summary": "令和8年度保育園利用案内は公開済みだが保育料の詳細条件を確定できない",
+      "notes": [
+        "令和8年度保育園・保育所の入園手続、利用のしおり、申込様式が公開されている。",
+        "0～2歳児の階層別保育料、多子軽減、3～5歳児無償化、副食費、延長保育等の負担条件はPDF本文を取得できず要確認とした。",
+        "統括B公開準備: 公式情報で制度または関連事業は確認したが、現行の具体条件を確定できないため、推測せずunavailableへ正規化。"
+      ],
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=3093",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "学校給食費の無償措置を令和8年度も実施",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "佐川町学校給食費の無償措置に関する要綱に基づき、対象となる児童生徒の給食費を無償とする",
+        "fiscalYear": "令和8年4月1日施行の改正要綱を確認",
+        "additional": "町外小中学校等の在籍者やアレルギー対応で弁当を持参する児童生徒の保護者には、町立小中学校給食費を基礎とする補助制度がある",
+        "application": "町外校在籍・弁当持参等の補助対象者は教育委員会へ申請する"
+      },
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/reiki/reiki_honbun/o339RG00001101.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=2340",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子に宿泊・通所・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 0
+      },
+      "details": {
+        "types": "ショートステイ、デイケア、訪問型",
+        "target": "佐川町に住民票がある産後1年未満の母子。宿泊型は産後4か月未満",
+        "fee": "宿泊型1泊5,000円、通所型1回2,000円、訪問型1回1,000円。初回から5回目まで減額があり、非課税世帯は免除",
+        "usageLimit": "宿泊型7日、通所型7回、訪問型4回まで",
+        "application": "妊娠8か月以降にこども家庭センターへ申請し、承認後に施設を予約する"
+      },
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=3249",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "こども誰でも通園制度は令和8年度に開始済みだが利用条件の詳細を確定できない",
+      "notes": [
+        "2026年5月11日付で『こども誰でも通園制度がはじまります』との町公式案内を確認した。",
+        "対象月齢、月間利用上限、料金、実施施設、利用時間、認定・予約方法の本文を取得できないため要確認とした。",
+        "別制度として、保育施設に未入所の就学前児を対象とする令和8年度一時保育も実施している。",
+        "統括B公開準備: 公式情報で制度または関連事業は確認したが、現行の具体条件を確定できないため、推測せずunavailableへ正規化。"
+      ],
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=3193",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=1278",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "子育て世帯・若年夫婦世帯の住宅取得に新築等150万円、中古住宅75万円を交付",
+      "details": {
+        "target": "夫婦とも39歳以下の若年夫婦世帯、18歳未満の子がいる子育て世帯または妊娠中の世帯等",
+        "support": "新築住宅・建売住宅150万円、中古住宅75万円。中古住宅は取得費の2分の1以内",
+        "conditions": "取得後1年以内、申請者名義、世帯員全員が対象住宅に居住すること等",
+        "additional": "移住者向け空き家改修は上限270万円、荷物整理等は上限10万円"
+      },
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=3189",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=2416",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは地区別収集または高吾北清掃センターへの直接持込みに対応",
+      "details": {
+        "feeSystem": "家庭の大量ごみは、年1回申請できる無料処理券1枚につき5回まで高吾北清掃センターへ持込み可能",
+        "application": "住民課窓口で無料処理券を申請。発行日から1か月有効",
+        "dropOff": "平日8時30分から16時まで（正午から13時を除く）、2トン車まで。身分証提示が必要",
+        "rules": "地区別カレンダーの粗大ごみ収集日に朝8時までに排出。スプリング入りマットレス等は直接持込み推奨"
+      },
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=2894",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=2640",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "令和8年3月改定の洪水・土砂災害・地震等ハザードマップを公開",
+      "details": {
+        "coverage": "最大浸水想定区域、土砂災害警戒区域、新たな防災気象情報、南海トラフ地震の震度分布等",
+        "maps": "町全体の防災ハザードマップと、土石流・急傾斜地・地すべりの地区別詳細図12区分",
+        "access": "町公式ページから啓発面・地図面・地区別土砂災害マップを閲覧できる",
+        "distribution": "令和8年3月に全戸配布"
+      },
+      "source": {
+        "url": "https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=1343",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
