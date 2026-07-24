@@ -89172,22 +89172,31 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "町のこども園で10か月程度から就学前までの児童を一時保育",
+          "summary": "生後6か月から3歳未満の未就園児を月10時間まで受け入れる乳児等通園支援事業",
           "eligibility": {
-            "minAgeMonths": 10,
-            "maxAgeYears": 5
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
           },
           "details": {
-            "target": "こども園の入園児童と同じ、0歳児（10か月程度）から就学前までの児童",
-            "reasons": "保護者の短時間就労・就学、疾病・事故・出産・介護・冠婚葬祭、育児負担軽減などで一時的に家庭保育が困難な場合",
-            "facility": "長野原町のこども園",
-            "fee": "利用後に町から納付書が送付される。具体額は申込み時に確認",
-            "application": "事前に教育課子ども子育て支援係またはこども園へ確認・申込み"
+            "target": "長野原町に住所があり、生後6か月から満3歳未満で、保育所・幼稚園・認定こども園・地域型保育事業等を利用していない子ども",
+            "employmentRequirement": "保護者の就労要件なし",
+            "facility": "長野原町立認定こども園",
+            "hours": "原則として開園日の午前9時から正午までのうち1日2時間以内。施設の受入体制により実施",
+            "limit": "子ども1人につき月10時間まで",
+            "fee": "1時間300円。災害その他やむを得ない理由がある場合は減免可能",
+            "procedure": "町へ利用申込書を提出し、利用決定後に利用",
+            "distinction": "従来の一時保育とは別に、令和8年4月から乳児等通園支援事業を実施"
           },
           "source": {
-            "url": "https://www.town.naganohara.gunma.jp/education/?content=51",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www1.g-reiki.net/naganohara/reiki_honbun/e245RG00000982.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.naganohara.gunma.jp/education/?content=51",
+              "checkedAt": "2026-07-22"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -123258,7 +123267,7 @@
       "name": "大島町",
       "officialUrl": "https://www.town.oshima.tokyo.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を大島町公式情報で確認し、8制度をverified、専用の病児・病後児保育をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を大島町公式情報で再監査し、7制度をverified、病児・病後児保育と専用産後ケアをunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -123352,22 +123361,32 @@
           }
         },
         "postpartumCare": {
-          "status": "verified",
-          "summary": "こども家庭センターが妊産婦・乳幼児への相談と家庭訪問を一体的に実施",
+          "status": "unavailable",
+          "summary": "母子保健相談・家庭訪問は確認できるが、宿泊・通所・居宅訪問型の産後ケア事業を確認できない",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 0
           },
           "details": {
-            "target": "大島町の妊産婦、乳幼児とその家庭",
-            "support": "保健師等の専門職が妊娠・出産・子育ての相談を受け、母子保健と児童福祉を一体的に支援",
-            "homeVisit": "必要に応じて妊産婦・新生児・乳幼児家庭への訪問、健康確認、育児相談、母子保健サービス案内を行う",
-            "note": "宿泊型・通所型の専用産後ケア事業ではなく、町の母子保健相談・訪問支援として登録"
+            "confirmed": "こども家庭センターが妊産婦・乳幼児家庭の相談、関係機関との調整、必要に応じた家庭訪問を実施",
+            "classification": "一般の母子保健相談・訪問支援は、助産師等が母体の休養、乳房ケア、授乳・育児支援等を提供する産後ケア事業とは別制度",
+            "result": "町公式のこども家庭センター、妊娠・出産支援案内で宿泊型・通所型・居宅訪問型の利用期間、回数、料金、委託施設を確認できない",
+            "contact": "島内外で利用可能な産後ケアの有無は福祉けんこう課へ確認"
           },
           "source": {
             "url": "https://www.town.oshima.tokyo.jp/soshiki/kodomo-c/kateishien.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.oshima.tokyo.jp/soshiki/kenkou/ninsin.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.town.oshima.tokyo.jp/soshiki/kenkou/ninpusien.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -123469,7 +123488,7 @@
       "name": "利島村",
       "officialUrl": "https://www.toshimamura.org/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を利島村公式情報で確認し、7制度をverified、病児・病後児保育と一時預かりをunavailableとして登録。2制度の未実施状況は東京都公式一覧でも再確認済み。",
+      "summary": "子育て・生活関連9制度を利島村・東京都公式情報で再監査し、7制度をverified、病児・病後児保育と専用産後ケアをunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -123555,55 +123574,53 @@
           }
         },
         "postpartumCare": {
-          "status": "verified",
-          "summary": "妊婦訪問とこんにちは赤ちゃん訪問等による母子保健支援を実施",
+          "status": "unavailable",
+          "summary": "妊婦・新生児訪問や島外出産助成は確認できるが、宿泊・通所・居宅訪問型の産後ケア事業を確認できない",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 0
           },
           "details": {
-            "target": "利島村の妊婦、出産後の母子および乳幼児家庭",
-            "support": "妊婦訪問で体調管理や出産・育児を案内し、出産後はこんにちは赤ちゃん訪問、乳幼児健診・相談等を実施",
-            "birthSupport": "村内に産婦人科がないため島外出産を支援し、要件を満たす住民へ出生児1人につき50万円の出産助成金を支給",
-            "note": "宿泊型・通所型の専用産後ケアではなく、村の訪問・相談型母子保健支援として登録"
+            "confirmed": "妊婦訪問、こんにちは赤ちゃん訪問、乳幼児健診・相談、島外出産時の出産助成金を実施",
+            "classification": "これらは一般の母子保健訪問・相談および出産費用助成であり、助産師等が産後の母子へケアを提供する産後ケア事業とは別制度",
+            "result": "村公式の妊娠・出産、福祉、子育て案内で宿泊型・通所型・居宅訪問型の利用条件、回数、料金、委託施設を確認できない",
+            "contact": "利用可能な島外産後ケアや費用助成の有無は住民課へ確認"
           },
           "source": {
             "url": "https://www.toshimamura.org/life/marriage/birth.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.toshimamura.org/life/pension/welfare.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "村公式案内と東京都公式の区市町村別一覧で、一時預かり事業の実施を確認できない",
+          "status": "verified",
+          "summary": "東京都認定ベビーシッターの一時預かり利用料を児童1人年144時間まで補助",
           "eligibility": {
-            "minAgeMonths": 6,
-            "maxAgeYears": 5
+            "minAgeMonths": 0,
+            "maxAgeYears": 6
           },
           "details": {
-            "villageCheck": "村公式サイトの子育て・保育園案内では、保護者の就労要件を問わない一時預かりやこども誰でも通園制度の利用案内はない",
-            "metropolitanCheck": "東京都福祉局の子育て支援情報一覧では、利島村の一時預かり事業欄に実施表示がない",
-            "existing": "未就学児と保護者向けの子育て広場を月1～2回開催しているが、保育・預かり事業ではない",
-            "nursery": "村立保育園は保護者の就労、疾病、妊娠・出産等により保育を必要とする子どもを対象とする",
-            "conclusion": "令和8年7月時点の公開情報では村事業として利用できる一時預かりを確認できない。東京都ベビーシッター利用支援等の個別適用は住民課へ確認"
+            "target": "利島村に居住し、突発的事情・社会参加等による一時保育または共同保育を必要とすると村が認める保護者と、満6歳になる年度末までの児童",
+            "period": "令和8年4月1日から令和9年3月31日まで",
+            "limit": "児童1人につき年度内144時間。多胎児は児童1人につき288時間",
+            "support": "7時から22時は1時間上限2,500円、22時から翌7時は1時間上限3,500円",
+            "provider": "東京都が認定するベビーシッター事業者と保護者が直接契約",
+            "procedure": "対象要件・申請書類・島内で利用可能な事業者を利島村住民課へ確認",
+            "classification": "保育園の一時預かりやこども誰でも通園制度とは別の、居宅訪問型ベビーシッター一時預かり利用支援"
           },
           "source": {
-            "url": "https://www.toshimamura.org/life/marriage/child-rearing.html",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.fukushi.metro.tokyo.lg.jp/kodomo/hoiku/bs/bsitijiazukari",
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.toshimamura.org/life/marriage/kindergarten.html",
-              "checkedAt": "2026-07-24"
-            },
-            {
-              "url": "https://www.fukushi.metro.tokyo.lg.jp/kodomo/kosodate/jouhou",
-              "checkedAt": "2026-07-24"
+              "url": "https://www.fukushi.metro.tokyo.lg.jp/documents/d/fukushi/tosimamura",
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -123671,7 +123688,7 @@
       "name": "新島村",
       "officialUrl": "https://www.niijima.com/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を新島村公式情報で再確認し、9制度すべてをverifiedとして登録済みです。",
+      "summary": "子育て・生活関連9制度を新島村公式情報で再監査し、8制度をverified、専用産後ケアをunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -123760,31 +123777,30 @@
           }
         },
         "postpartumCare": {
-          "status": "verified",
-          "summary": "島外出産の交通・宿泊費助成と母子訪問・助産師相談を実施",
+          "status": "unavailable",
+          "summary": "島外出産助成、母子訪問、オンライン助産師相談は確認できるが、専用産後ケア事業を確認できない",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 0
           },
           "details": {
-            "target": "新島村に住所がある妊産婦と出生後の母子",
-            "transport": "島外出産に伴う交通費を1回2万5,000円、最大8回助成",
-            "stay": "出産前の宿泊費を1泊5,000円・最大8泊、退院後から1か月健診までを1泊2,000円・最大30泊助成",
-            "care": "妊産婦・新生児・乳幼児訪問、健康相談、オンライン助産師相談等を実施",
-            "note": "宿泊型・通所型の専用産後ケアではなく、離島の出産環境に対応した交通・宿泊・訪問相談支援として登録"
+            "confirmed": "島外出産に伴う交通・宿泊費助成、妊産婦・新生児・乳幼児訪問、健康相談、東京都のオンライン助産師相談を実施",
+            "classification": "交通・宿泊費助成、一般の母子保健訪問、オンライン相談は、宿泊・通所・居宅訪問型の産後ケア事業とは別制度",
+            "result": "村公式の母子保健サービス、現行例規で産後ケアの利用類型、回数、自己負担、委託施設を確認できない",
+            "contact": "島外施設を含む産後ケア利用や費用助成の有無はさわやか健康センターへ確認"
           },
           "source": {
-            "url": "https://www.niijima.com/facility/health-center_clinic/sawayakakenkou-center/boshihoken-service/boshikenkoutechou.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.niijima.com/facility/health-center_clinic/sawayakakenkou-center/boshihoken-service/index.html",
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.niijima.com/facility/health-center_clinic/sawayakakenkou-center/boshihoken-service/index.html",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.niijima.com/facility/health-center_clinic/sawayakakenkou-center/boshihoken-service/ninsanpu-online.html",
+              "checkedAt": "2026-07-25"
             },
             {
               "url": "https://www.niijima.com/reiki_int/reiki_honbun/g158RG00000532.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -123889,7 +123905,7 @@
       "name": "神津島村",
       "officialUrl": "https://www.vill.kouzushima.tokyo.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を神津島村公式情報で確認し、8制度をverified、専用の病児・病後児保育をunavailableとして登録済みです。",
+      "summary": "子育て・生活関連9制度を神津島村公式情報で再監査し、7制度をverified、専用の病児・病後児保育と産後ケアをunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -123985,31 +124001,30 @@
           }
         },
         "postpartumCare": {
-          "status": "verified",
-          "summary": "島外出産の宿泊・交通費助成と母子保健相談を実施",
+          "status": "unavailable",
+          "summary": "島外出産の宿泊・交通費助成と母子保健相談は確認できるが、専用産後ケア事業を確認できない",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 0
           },
           "details": {
-            "target": "神津島村に住民登録があり、妊婦健康診査受診票の交付を受け島外で出産する妊産婦",
-            "stay": "妊娠34週以降から出産後31日までの宿泊費を1泊2,000円、最大74泊助成",
-            "transport": "島外の里帰り先までの往復交通費の2分の1を上限14万8,000円まで助成",
-            "other": "出産支援特別助成金として1回4万円の制度もあり、母子保健相談・訪問は保健医療課が実施",
-            "note": "宿泊型・通所型の専用産後ケアではなく、離島の出産環境に対応する出産前後支援として登録"
+            "confirmed": "島外出産に伴う妊娠34週以降から出産後31日までの宿泊費、里帰り先までの交通費、出産支援特別助成金、一般の母子保健相談を実施",
+            "classification": "島外出産の移動・滞在費助成と一般相談は、宿泊・通所・居宅訪問型で母体の休養、乳房ケア、授乳・育児支援等を提供する産後ケア事業とは別制度",
+            "result": "村公式の出産支援・保健医療案内と現行例規で産後ケアの利用期間、回数、自己負担、委託施設を確認できない",
+            "contact": "島外施設を含む産後ケア利用や費用助成の有無は保健医療課へ確認"
           },
           "source": {
             "url": "https://www.vill.kouzushima.tokyo.jp/reiki/reiki_honbun/g159RG00000449.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.vill.kouzushima.tokyo.jp/reiki/reiki_honbun/g159RG00000202.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             },
             {
               "url": "https://www.vill.kouzushima.tokyo.jp/busyo/hokeniryou/",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -149606,7 +149621,7 @@
       "name": "早川町",
       "officialUrl": "https://www.town.hayakawa.yamanashi.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を早川町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を早川町・山梨県公式情報で再確認し、9制度すべてをverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -149628,25 +149643,28 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "町計画に病児・病後児保育の方針はあるが、現行の利用施設・料金・予約方法は町への確認が必要",
+          "status": "verified",
+          "summary": "山梨県内の全ての病児・病後児保育施設を広域利用可能",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
           },
           "details": {
-            "plan": "第3期子ども・子育て支援事業計画に、病気回復期の児童を専用施設で一時的に預かる事業を位置付け",
-            "notConfirmed": "2026年7月時点で早川町民が利用できる具体的施設、対象年齢、利用料、予約方法を町公式案内から確定できない",
-            "contact": "福祉保健課へ現在の利用可否と近隣施設との連携状況を確認"
+            "target": "病気中または病気の回復期で、保護者の就労等により家庭で保育できない子ども。対象年齢は施設ごとに異なる",
+            "area": "山梨県内のどの市町村に住んでいても、県内全ての病児・病後児保育施設を利用可能",
+            "types": "病児対応型と病後児対応型の施設を利用可能",
+            "fee": "市内利用は概ね1日2,000円、市外利用は概ね1日2,500円。施設により異なるため事前確認が必要",
+            "procedure": "利用施設へ事前登録・予約し、施設所定の申請書や医師連絡票等を提出",
+            "limitations": "病状、感染症、定員、施設の受入基準等により利用できない場合がある"
           },
           "source": {
-            "url": "https://www.town.hayakawa.yamanashi.jp/people/child-care/sukusukuplan.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.pref.yamanashi.jp/kosodate/hoikushisetsuyouchien/byojihoiku.html",
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
-              "url": "https://www.town.hayakawa.yamanashi.jp/people/child-care/images/No3sukusukuPlan.pdf",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.pref.yamanashi.jp/kosodate/byojihoiku_kouikika.html",
+              "checkedAt": "2026-07-24"
             }
           ]
         },
@@ -151263,7 +151281,7 @@
       "name": "山中湖村",
       "officialUrl": "https://www.vill.yamanakako.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を山中湖村公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を山中湖村・山梨県公式情報で再確認し、9制度すべてをverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -151285,20 +151303,30 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "病児・病後児保育の継続方針は確認できるが、現行の利用施設・対象年齢・料金・予約方法を確定できない",
+          "status": "verified",
+          "summary": "山梨県内の全ての病児・病後児保育施設を広域利用可能",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
           },
           "details": {
-            "confirmed": "令和8年度から令和11年度の村づくり計画で病児・病後児保育事業を推進",
-            "needsConfirmation": "利用できる施設、広域利用の対象市町村、年齢、利用料、医師連絡票、予約方法は福祉健康課へ確認"
+            "target": "病気中または病気の回復期で、保護者の就労等により家庭で保育できない子ども。対象年齢は施設ごとに異なる",
+            "area": "山梨県内のどの市町村に住んでいても、県内全ての病児・病後児保育施設を利用可能",
+            "types": "病児対応型と病後児対応型の施設を利用可能",
+            "fee": "市内利用は概ね1日2,000円、市外利用は概ね1日2,500円。施設により異なるため事前確認が必要",
+            "procedure": "利用施設へ事前登録・予約し、施設所定の申請書や医師連絡票等を提出",
+            "limitations": "病状、感染症、定員、施設の受入基準等により利用できない場合がある"
           },
           "source": {
-            "url": "https://www.vill.yamanakako.lg.jp/div/kikaku/pdf/muradukurikeikaku.pdf",
+            "url": "https://www.pref.yamanashi.jp/kosodate/hoikushisetsuyouchien/byojihoiku.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.pref.yamanashi.jp/kosodate/byojihoiku_kouikika.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -151470,7 +151498,7 @@
       "name": "鳴沢村",
       "officialUrl": "https://www.vill.narusawa.yamanashi.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を鳴沢村公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を鳴沢村・国の公式情報で再監査し、8制度をverified、1制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -151570,25 +151598,27 @@
           }
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "令和8年度の一時預かり・こども誰でも通園制度の対象年齢、時間、料金、予約方法を公式案内で確定できない",
+          "status": "verified",
+          "summary": "令和8年度から生後6か月～3歳未満の未就園児が月10時間まで利用できるこども誰でも通園制度",
           "eligibility": {
             "minAgeMonths": 6,
-            "maxAgeYears": 5
+            "maxAgeYears": 2
           },
           "details": {
-            "research": "令和8年度保育所案内と第3期子ども・子育て支援事業計画を確認",
-            "needsConfirmation": "鳴沢保育所等での一時預かりの実施有無、対象年齢、利用理由、定員、利用時間、料金、事前登録・予約方法は住民課へ確認",
-            "alternative": "満1歳翌月から3歳年度末まで家庭内保育する対象世帯には月額2万円の支援金制度あり"
+            "target": "鳴沢村に住民登録があり、保育所・認定こども園・幼稚園・地域型保育・企業主導型保育施設等に通っていない生後6か月から満3歳未満の子ども",
+            "basis": "村議会は乳児等通園支援事業を村の認可事業として位置付ける設備・運営基準条例を令和7年12月に制定",
+            "limit": "子ども1人につき月10時間を基本とし、就労要件を問わず時間単位で利用",
+            "procedure": "村の利用認定後、総合支援システムで実施事業所を確認し、事前面談と予約を行う",
+            "confirmation": "実施事業所、開始日、受入時間、利用料、給食等の実費は住民課または総合支援システムで確認"
           },
           "source": {
-            "url": "https://www.vill.narusawa.yamanashi.jp/gyosei/soshikikarasagasu/juminka/keikaku_seisaku/1/500.html",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.vill.narusawa.yamanashi.jp/gyosei/soshikikarasagasu/gikaijimukyoku/shingijoho/17_2/2633.html",
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.vill.narusawa.yamanashi.jp/gyosei/soshikikarasagasu/juminka/hojokin_joseiseido/3/2188.html",
-              "checkedAt": "2026-07-24"
+              "url": "https://www.cfa.go.jp/policies/hoiku/daredemo-tsuen/",
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -151879,7 +151909,7 @@
       "name": "小菅村",
       "officialUrl": "https://www.vill.kosuge.yamanashi.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を小菅村公式情報と現行例規で再監査し、3制度をverified、6制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を小菅村・山梨県・国の公式情報で再監査し、5制度をverified、4制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -151901,19 +151931,21 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "現行の病児・病後児保育施設、対象年齢、料金、予約方法を村公式情報で確定できない",
+          "status": "verified",
+          "summary": "0歳から小学6年生まで県内すべての病児・病後児保育施設を広域利用可能",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "村公式サイトと地方創生総合戦略を確認",
-            "needsConfirmation": "県内広域利用の可否、利用施設、事前登録、医師連絡票、利用料は住民課へ確認"
+            "target": "山梨県内に住所があり、病気中または回復期で集団保育が難しく、保護者が家庭で保育できない0歳から小学6年生までの子ども",
+            "service": "小菅村内に専用施設がなくても、山梨県内すべての病児・病後児保育施設を利用できる",
+            "procedure": "利用施設ごとの事前登録、予約、医師の連絡票等が必要",
+            "fee": "利用料、食事代、予約締切、持ち物は利用施設ごとに確認"
           },
           "source": {
-            "url": "https://www.vill.kosuge.yamanashi.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.pref.yamanashi.jp/kosodate/hoikushisetsuyouchien/byojihoiku.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "childcareFee": {
@@ -151967,20 +151999,29 @@
           }
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "令和8年4月施行の乳児等通園支援事業の運営基準は確認できるが、実施施設・利用時間・料金を確定できない",
+          "status": "verified",
+          "summary": "令和8年度から生後6か月～3歳未満の未就園児が月10時間まで利用できるこども誰でも通園制度",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 2
           },
           "details": {
-            "confirmed": "令和7年12月12日に特定乳児等通園支援事業の運営基準条例を制定し、令和8年4月1日施行。利用定員、面談、費用、運営規程等の基準を規定",
-            "needsConfirmation": "小菅村内での実施事業者、対象月齢の詳細、月間利用枠、利用時間、保護者負担額、申請・面談・予約方法は住民課へ確認"
+            "target": "小菅村に住民登録があり、保育所・認定こども園・幼稚園・地域型保育・企業主導型保育施設等に通っていない生後6か月から満3歳未満の子ども",
+            "basis": "村は特定乳児等通園支援事業の運営基準条例を制定し、令和8年4月1日に施行",
+            "limit": "子ども1人につき月10時間を基本とし、時間単位で利用",
+            "procedure": "村の利用認定後、総合支援システムで実施事業所を確認し、事前面談と予約を行う",
+            "confirmation": "実施事業所、受入時間、利用料、給食等の実費は住民課または総合支援システムで確認"
           },
           "source": {
             "url": "https://www1.g-reiki.net/vill.kosuge/reiki_honbun/e664RG00000427.html",
-            "checkedAt": "2026-07-24"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.cfa.go.jp/policies/hoiku/daredemo-tsuen/",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -152042,7 +152083,7 @@
       "name": "丹波山村",
       "officialUrl": "https://www.vill.tabayama.yamanashi.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を丹波山村公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を丹波山村・山梨県公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -152069,20 +152110,29 @@
           ]
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "現行の病児・病後児保育施設、対象年齢、料金、予約方法を村公式情報で確定できない",
+          "status": "verified",
+          "summary": "0歳から小学6年生まで県内全ての病児・病後児保育施設を広域利用可能",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "村公式サイト、暮らしガイド、子育て関連計画を確認",
-            "needsConfirmation": "県内広域施設の利用可否、事前登録、医師連絡票、利用料、予約方法は住民生活課へ確認"
+            "target": "山梨県内に住所があり、病気中または回復期で集団保育が難しく、保護者が家庭で保育できない0歳から小学6年生までの子ども",
+            "service": "丹波山村内に専用施設がなくても、山梨県内にある全ての病児・病後児保育施設を利用可能",
+            "types": "容態が安定した病気中の子どもを預かる病児対応型と、回復期の子どもを預かる病後児対応型",
+            "fee": "市外利用料は概ね1日2,500円。施設により料金、食事代、減免条件が異なる",
+            "procedure": "利用施設ごとの事前登録、予約、医師の連絡票等が必要"
           },
           "source": {
-            "url": "https://www.vill.tabayama.yamanashi.jp/gyousei/plan.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.pref.yamanashi.jp/kosodate/hoikushisetsuyouchien/byojihoiku.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.pref.yamanashi.jp/kosodate/byojihoiku_kouikika.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
