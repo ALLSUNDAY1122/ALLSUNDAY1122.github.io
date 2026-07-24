@@ -1,18 +1,17 @@
 name: Temporary West B Final Corrections V2
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
-  push:
-    branches:
-      - fix/west-b-cycles09-10-corrections-20260725
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   fix:
+    if: github.event.issue.title == 'run-west-b-final-corrections-20260725'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,13 +57,9 @@ jobs:
           git add jichitai-compare/municipality/47328/index.html
           git add jichitai-compare/municipality/47350/index.html
           git add jichitai-compare/operations/progress.json
-          if git diff --cached --quiet; then
-            exit 0
-          fi
           git commit -m "fix: 西日本B最終監査の内容・出典修正を反映"
-          git push --force-with-lease origin HEAD:fix/west-b-cycles09-10-corrections-20260725
-          if ! gh pr view fix/west-b-cycles09-10-corrections-20260725 --json number >/dev/null 2>&1; then
-            gh pr create --base main --head fix/west-b-cycles09-10-corrections-20260725 \
-              --title "fix: 西日本B第9・10回の内容・出典修正を反映" \
-              --body "西日本B概略検証第9・10回で確定した内容訂正1件と出典保守5件を反映します。大宜味村の保育料・給食費無償化内容を現行規則へ訂正し、日之影町2件、五ヶ瀬町1件、中城村1件、南風原町1件の失効出典を現行公式URLへ更新します。自治体元データ、task、全国生成JSON、自治体ページ、進捗を再生成・検証済みです。"
-          fi
+          git push --force origin HEAD:fix/west-b-cycles09-10-corrections-20260725
+          gh pr create --base main --head fix/west-b-cycles09-10-corrections-20260725 \
+            --title "fix: 西日本B第9・10回の内容・出典修正を反映" \
+            --body "西日本B概略検証第9・10回で確定した内容訂正1件と出典保守5件を反映します。大宜味村の保育料・給食費無償化内容を現行規則へ訂正し、日之影町2件、五ヶ瀬町1件、中城村1件、南風原町1件の失効出典を現行公式URLへ更新します。自治体元データ、task、全国生成JSON、自治体ページ、進捗を再生成・検証済みです。"
+          gh issue close "${{ github.event.issue.number }}" --comment "訂正ブランチとPRを作成しました。"
