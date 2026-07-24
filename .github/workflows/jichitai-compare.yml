@@ -1,4 +1,4 @@
-name: Refresh Minoh and Kashiwara Audits Latest Main
+name: Merge Minoh and Kashiwara Audits Latest Main
 
 on:
   pull_request:
@@ -7,80 +7,100 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
-  sync:
+  validate-and-merge:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ALLSUNDAY1122/ALLSUNDAY1122.github.io
+      PR_NUMBER: "2851"
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
           persist-credentials: true
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Rebase worktree onto latest main
-        shell: bash
-        run: |
-          set -euo pipefail
-          branch="${{ github.event.pull_request.head.ref }}"
-          git fetch origin main region/central
-          git reset --hard origin/main
-          git checkout -B "$branch"
-      - name: Apply audits
-        shell: bash
-        run: |
-          set -euo pipefail
-          for code in 27220 27221; do
-            git show "origin/region/central:jichitai-compare/data/municipalities/27/${code}.json" > "jichitai-compare/data/municipalities/27/${code}.json"
-            git show "origin/region/central:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
-          done
-          node <<'NODE'
-          const fs = require('fs');
-          for (const [code, pr] of [['27220', 2820], ['27221', 2837]]) {
-            const path = `jichitai-compare/operations/tasks/${code}.json`;
-            const task = JSON.parse(fs.readFileSync(path, 'utf8'));
-            task.status = 'merged';
-            task.currentService = null;
-            task.nextServiceIndex = 9;
-            task.pullRequestNumber = pr;
-            task.lastUpdatedAt = '2026-07-24T23:12:00+09:00';
-            const actor = '全国統合';
-            if (Array.isArray(task.lastUpdatedBy)) {
-              if (!task.lastUpdatedBy.includes(actor)) task.lastUpdatedBy.push(actor);
-            } else if (task.lastUpdatedBy) {
-              if (!String(task.lastUpdatedBy).includes(actor)) task.lastUpdatedBy += `, ${actor}`;
-            } else task.lastUpdatedBy = actor;
-            fs.writeFileSync(path, JSON.stringify(task) + '\n');
-          }
-          NODE
-      - name: Generate and validate
-        working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          node --check app.js
-          node --check scripts/generate-municipality-pages.mjs
-          node --check scripts/validate-municipality-pages.mjs
-          node --check scripts/smoke-public-site.mjs
-          node - <<'NODE'
-          const fs = require('fs');
-          const p = JSON.parse(fs.readFileSync('operations/progress.json'));
-          const pages = JSON.parse(fs.readFileSync('data/generated/municipality-pages.json'));
-          if (p.registeredMunicipalities !== 1741 || p.remainingMunicipalities !== 0 || p.totalServices !== 15669 || p.completedServices !== 15669) throw new Error(JSON.stringify(p));
-          if (pages.municipalityCount !== 1741) throw new Error(JSON.stringify(pages));
-          for (const key of ['todoServices','researchingServices','needsMediumReviewServices','needsRevisionServices','needsCoordinatorServices','prOpenServices','blockedServices']) if (p[key] !== 0) throw new Error(`${key}=${p[key]}`);
-          NODE
-      - name: Commit and force-update PR branch
+
+      - name: Refresh, validate and merge
         shell: bash
         run: |
           set -euo pipefail
           branch="${{ github.event.pull_request.head.ref }}"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'quality: refresh Minoh and Kashiwara audits on latest main'
-          git push --force-with-lease origin "HEAD:$branch"
+
+          for attempt in 1 2 3 4 5; do
+            echo "Attempt ${attempt}: rebuild from latest main"
+            git fetch origin main region/central
+            git reset --hard origin/main
+            git checkout -B "$branch"
+
+            for code in 27220 27221; do
+              git show "origin/region/central:jichitai-compare/data/municipalities/27/${code}.json" > "jichitai-compare/data/municipalities/27/${code}.json"
+              git show "origin/region/central:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+            done
+
+            node <<'NODE'
+            const fs = require('fs');
+            for (const [code, pr] of [['27220', 2820], ['27221', 2837]]) {
+              const path = `jichitai-compare/operations/tasks/${code}.json`;
+              const task = JSON.parse(fs.readFileSync(path, 'utf8'));
+              task.status = 'merged';
+              task.currentService = null;
+              task.nextServiceIndex = 9;
+              task.pullRequestNumber = pr;
+              task.lastUpdatedAt = '2026-07-24T23:16:00+09:00';
+              const actor = '全国統合';
+              if (Array.isArray(task.lastUpdatedBy)) {
+                if (!task.lastUpdatedBy.includes(actor)) task.lastUpdatedBy.push(actor);
+              } else if (task.lastUpdatedBy) {
+                if (!String(task.lastUpdatedBy).includes(actor)) task.lastUpdatedBy += `, ${actor}`;
+              } else task.lastUpdatedBy = actor;
+              fs.writeFileSync(path, JSON.stringify(task) + '\n');
+            }
+            NODE
+
+            cd jichitai-compare
+            npm run generate
+            npm run progress
+            npm run validate:generated
+            node --check app.js
+            node --check scripts/generate-municipality-pages.mjs
+            node --check scripts/validate-municipality-pages.mjs
+            node --check scripts/smoke-public-site.mjs
+            node - <<'NODE'
+            const fs = require('fs');
+            const p = JSON.parse(fs.readFileSync('operations/progress.json'));
+            const pages = JSON.parse(fs.readFileSync('data/generated/municipality-pages.json'));
+            if (p.registeredMunicipalities !== 1741 || p.remainingMunicipalities !== 0 || p.totalServices !== 15669 || p.completedServices !== 15669) throw new Error(JSON.stringify(p));
+            if (pages.municipalityCount !== 1741) throw new Error(JSON.stringify(pages));
+            for (const key of ['todoServices','researchingServices','needsMediumReviewServices','needsRevisionServices','needsCoordinatorServices','prOpenServices','blockedServices']) if (p[key] !== 0) throw new Error(`${key}=${p[key]}`);
+            NODE
+            cd ..
+
+            git add -A
+            git commit -m '全国品質同期: 箕面市・柏原市を最新mainへ反映'
+            git push --force origin "HEAD:$branch"
+            head_sha="$(git rev-parse HEAD)"
+            sleep 3
+
+            if gh api --method PUT "repos/${REPO}/pulls/${PR_NUMBER}/merge" \
+              -f merge_method=merge \
+              -f sha="$head_sha"; then
+              echo "Merged PR ${PR_NUMBER} at ${head_sha}"
+              exit 0
+            fi
+
+            echo 'Main advanced or mergeability is still computing; retrying.'
+            sleep 3
+          done
+
+          echo 'Failed to merge after five fully validated latest-main attempts.' >&2
+          exit 1
