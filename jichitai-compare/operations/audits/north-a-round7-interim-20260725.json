@@ -1,0 +1,16 @@
+{
+  "round":7,
+  "auditedAt":"2026-07-25T01:36:00+09:00",
+  "codes":["07209","07210","07211","07212","07213","07214","07301","07303","07308","07322","07342","07344","07362"],
+  "structuralAudit":{"result":"passed","checkedMunicipalities":13,"errors":0},
+  "deepChecks":[
+    {"code":"07212","name":"南相馬市","services":["schoolMeals","postpartumCare","temporaryChildcare"],"result":"corrected_accuracy_error","note":"市立小中学校給食費無償化と令和8年度こども誰でも通園制度は公式案内と一致。産後ケアは訪問・日帰り・宿泊型の実施を確認できるが、現行公式ページの利用案内が令和7年度版までのため、令和8年度条件を推測せずverifiedからunavailableへ修正。"},
+    {"code":"07213","name":"伊達市","services":["schoolMeals","postpartumCare","temporaryChildcare"],"result":"no_confirmed_error","note":"令和8年度は小学校給食費全額支援、中学校は1食157円負担となる支援継続。訪問型無料・回数制限なし、宿泊・デイ型各7日までの産後ケアと、保原保育園の誰でも通園制度の条件が一致。"},
+    {"code":"07301","name":"桑折町","services":["schoolMeals","childcareFee","temporaryChildcare"],"result":"no_confirmed_error","note":"幼稚園・小中学校給食費無料、国制度に基づく保育料無償化と醸芳幼稚園給食費無料、こおり青空こども園の誰でも通園制度の対象・月10時間・1時間300円が一致。"},
+    {"code":"07362","name":"下郷町","services":["schoolMeals","postpartumCare","housingSupport"],"result":"corrected_minor_error","note":"町立小中学校給食費全額補助と令和8年度住宅取得支援の基本50万円・各種加算は一致。2026年5月更新の母子保健事業ページで産後ケアに訪問型も明記されていたため、summaryとtypesへ訪問ケアを追加。"}
+  ],
+  "confirmedErrors":[
+    {"code":"07212","path":"services.postpartumCare.status","before":"verified","after":"unavailable","severity":"medium","corrected":true},
+    {"code":"07362","path":"services.postpartumCare.details.types","before":"宿泊ケア、日帰りケア","after":"宿泊ケア、日帰りケア、訪問ケア","severity":"minor","corrected":true}
+  ]
+}
