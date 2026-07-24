@@ -1,0 +1,23 @@
+name: Audit Central B Accuracy 20260725
+
+on:
+  pull_request:
+    branches: [region/central]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  audit-round:
+    if: github.head_ref == 'quality/central-b-accuracy-audit-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit active Central B batch
+        working-directory: jichitai-compare
+        run: node scripts/audit-central-b-accuracy-round.mjs
