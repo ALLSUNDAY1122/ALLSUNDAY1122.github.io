@@ -1,0 +1,90 @@
+name: Temporary West B Cycle 07 Saza Fix
+
+on:
+  push:
+    branches:
+      - fix/west-b-cycle07-saza-school-meals-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/west-b-cycle07-saza-school-meals-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Correct Saza school meal status
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root = path.join(process.cwd(), 'jichitai-compare');
+          const sourcePath = path.join(root, 'data', 'municipalities', '42', '42391.json');
+          const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+          source.services.schoolMeals = {
+            status: 'unavailable',
+            summary: '旧補助制度ページは失効しており、2026年度の補助率・対象・申請条件を町公式サイトで確認できない',
+            details: {
+              confirmed: '2023年更新の給食費負担軽減事業ページでは世帯内の子どもの人数に応じた補助を案内していたが、現在はページが404となり教育分類にも掲載されていない',
+              currentStatus: '令和8年度から学校給食費の公会計移行は確認できるが、同年度の保護者負担軽減率、対象世帯、申請方法は現行公式ページで確認できない',
+              guidance: '現行制度の有無と条件は佐々町教育委員会への確認が必要'
+            },
+            source: {
+              url: 'https://www.sazacho-nagasaki.jp/kyouiku/list01003.html',
+              checkedAt: '2026-07-25'
+            },
+            additionalSources: [
+              {
+                url: 'https://www.sazacho-nagasaki.jp/kyouiku/kiji0036225/index.html',
+                checkedAt: '2026-07-25'
+              }
+            ]
+          };
+          source.summary = '必須9制度を佐々町公式情報で再確認し、8制度をverified、2026年度の現行条件を確認できない学校給食費支援をunavailableとして登録。';
+          source.updatedAt = '2026-07-25';
+          fs.writeFileSync(sourcePath, JSON.stringify(source, null, 2) + '\n');
+
+          const taskPath = path.join(root, 'operations', 'tasks', '42391.json');
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          task.verifiedCount = 8;
+          task.unavailableCount = 1;
+          task.lastCheckedAt = '2026-07-25';
+          task.lastUpdatedAt = '2026-07-25T02:52:00+09:00';
+          task.lastUpdatedBy = '西日本調査班B';
+          task.officialSources = Array.isArray(task.officialSources) ? task.officialSources.filter(url => url !== 'https://www.sazacho-nagasaki.jp/kyouiku/kiji0034032/index.html') : [];
+          for (const url of ['https://www.sazacho-nagasaki.jp/kyouiku/list01003.html','https://www.sazacho-nagasaki.jp/kyouiku/kiji0036225/index.html']) {
+            if (!task.officialSources.includes(url)) task.officialSources.push(url);
+          }
+          task.notes = Array.isArray(task.notes) ? task.notes : [];
+          const note = '概略検証第7回で学校給食費補助の旧2023年ページ失効を確認。2026年度の補助率・申請条件を現行公式情報で確認できないためunavailableへ訂正。';
+          if (!task.notes.includes(note)) task.notes.push(note);
+          fs.writeFileSync(taskPath, JSON.stringify(task, null, 2) + '\n');
+          NODE
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+      - name: Remove temporary files and commit
+        shell: bash
+        run: |
+          rm .github/workflows/temp-west-b-cycle07-saza-fix.yml
+          rm -f .github/west-b-cycle07-saza-fix.trigger
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/data/municipalities/42/42391.json
+          git add jichitai-compare/operations/tasks/42391.json
+          git add jichitai-compare/data/generated/municipalities.json
+          git add jichitai-compare/municipality/42391/index.html
+          git add jichitai-compare/operations/progress.json
+          git add .github/workflows/temp-west-b-cycle07-saza-fix.yml
+          git add .github/west-b-cycle07-saza-fix.trigger
+          git commit -m "fix: 佐々町の学校給食費支援を現行確認不能へ訂正"
+          git push origin HEAD:fix/west-b-cycle07-saza-school-meals-20260725
