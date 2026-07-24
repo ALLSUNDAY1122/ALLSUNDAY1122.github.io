@@ -1,4 +1,4 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -6,6 +6,7 @@ const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const PROJECT_DIR = resolve(SCRIPT_DIR, '..');
 const AUDIT_PATH = join(PROJECT_DIR, 'operations', 'audits', 'central-b-accuracy-audit-20260725.json');
 const DEFINITIONS_PATH = join(PROJECT_DIR, 'data', 'service-definitions.json');
+const OUTPUT_PATH = join(PROJECT_DIR, 'operations', 'audits', 'central-b-accuracy-round-output.json');
 const VALID_STATUSES = new Set(['verified', 'unavailable']);
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const DATETIME_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/;
@@ -19,7 +20,9 @@ const ageRangeServices = new Set(
 const batch = audit.batches.find((item) => item.status === 'in_progress');
 
 if (!batch) {
-  console.log(JSON.stringify({ status: 'waiting', message: 'in_progress の監査バッチはありません' }, null, 2));
+  const result = { status: 'waiting', message: 'in_progress の監査バッチはありません' };
+  await writeFile(OUTPUT_PATH, JSON.stringify(result, null, 2) + '\n', 'utf8');
+  console.log(JSON.stringify(result, null, 2));
   process.exit(0);
 }
 
@@ -137,13 +140,18 @@ for (const code of batch.codes) {
   });
 }
 
-console.log(JSON.stringify({
+const result = {
   round: batch.round,
   codes: batch.codes,
   checkedMunicipalities: rows.length,
   rows,
+  errorCount: errors.length,
+  warningCount: warnings.length,
   errors,
   warnings
-}, null, 2));
+};
+
+await writeFile(OUTPUT_PATH, JSON.stringify(result, null, 2) + '\n', 'utf8');
+console.log(JSON.stringify(result, null, 2));
 
 if (errors.length > 0) process.exit(1);
