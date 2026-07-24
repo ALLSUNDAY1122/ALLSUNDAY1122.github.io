@@ -4,9 +4,9 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T01:15:00+09:00",
+  "updatedAt": "2026-07-25T01:25:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 4,
+  "completedRoundCount": 5,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -263,7 +263,82 @@
     {
       "round": 5,
       "title": "産後ケア・一時預かりの月齢、回数、料金監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、産後ケアと一時預かり・こども誰でも通園の計12項目を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 12,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。単胎は宿泊・日帰り合計7日、訪問3回、多胎は合計10日、訪問5回。施設料金から市負担額を控除",
+          "temporaryChildcareClaim": "市内在住の就学前児等を施設別条件で一時預かり。公立園は満1歳以上、9時～17時30分",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000020851.html",
+            "https://www.city.okayama.jp/kurashi/0000005017.html",
+            "https://www.city.okayama.jp/kurashi/0000018418.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年以内。宿泊7日、通所5回、訪問5回。課税世帯は宿泊1日5,000円、通所1,000円、訪問無料",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満の未就園児、月10時間、1時間300円、虎岳保育園で実施",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/2244.html",
+            "https://www.city.marugame.lg.jp/page/40442.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "postpartumCareClaim": "産後12か月未満。訪問4回、通所7回、宿泊7日。令和8年度料金条件を登録",
+          "temporaryChildcareClaim": "満1歳から就学前、原則週3日以内、1日2,000円・半日1,000円。令和8年8月以降は長岡西部保育所休止、あけぼの保育所上限4名",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=4996",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8519"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。4類型通算最大7日、短時間型は産後4か月未満・最大3日。一般世帯500～3,000円",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満、月10時間、1時間300円。生活保護世帯無料、一定所得以下は100円",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/11700307.html",
+            "https://www.city.kitakyushu.lg.jp/contents/28800075.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。宿泊最大6泊、通所・訪問最大6回、組合せ合計6回。課税世帯700～2,500円等",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満、月10時間、1時間300円程度、生活保護300円・一定所得以下200円を減免、10施設",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji00316768/index.html",
+            "https://www.city.yatsushiro.lg.jp/kiji00325882/"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。4類型合計7日、最初の5日無料、非課税・生活保護世帯は6日目以降も免除申請可能",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満、月10時間、1時間300円程度、生活保護300円・一定所得以下200円を軽減、8施設",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/kenkou/sanngokeajigyou.html",
+            "https://www.city-kirishima.jp/jidou/20250901.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0,
+      "note": "南国市の一時保育は2026年8月以降の施設休止・定員変更を確認したが、登録済みの対象年齢・週上限・料金に影響する誤りはない。"
     },
     {
       "round": 6,
@@ -294,9 +369,9 @@
   "summary": {
     "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 6,
-    "currentAssessment": "第4回は6自治体12項目が公式情報と一致。累計では第3回の霧島市1件を修正済みで、未修正0件。",
+    "roundsRemaining": 5,
+    "currentAssessment": "第5回は6自治体12項目が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
     "correctionAppliedCount": 1
   },
-  "nextAction": "第5回として、産後ケア・一時預かりの対象月齢、利用回数、料金を担当6県の複雑事例で再照合する。"
+  "nextAction": "第6回として、住宅支援の対象世帯、補助率、上限、申請期間・受付状況を担当6県の複雑事例で再照合する。"
 }
