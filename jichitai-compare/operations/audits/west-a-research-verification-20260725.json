@@ -4,9 +4,9 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T01:38:00+09:00",
+  "updatedAt": "2026-07-25T01:40:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 6,
+  "completedRoundCount": 7,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -412,7 +412,70 @@
     {
       "round": 7,
       "title": "粗大ごみの料金、予約、持込条件監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、粗大ごみの料金、予約方法、直接搬入、本人・住所確認条件を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 6,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "registeredClaim": "戸別収集は200円・500円・1,000円・1,500円等、直接持込みは無料。電話・インターネットで予約し、東部・西部リサイクルプラザへ搬入",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000005008.html",
+            "https://www.city.okayama.jp/kurashi/0000005299.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "registeredClaim": "クリントピア丸亀へ平日・特別持込日の13時～16時に搬入。家庭ごみ10kg当たり100円、粗大ごみシール不要、住所確認、代理搬入は委任状",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/2394.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "registeredClaim": "一般廃棄物最終処分場へ事前予約して本人が搬入。10kg未満150円、10～20kg未満300円、以降10kgごと150円。受付カードと免許証を確認",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=3756",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=9607"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "registeredClaim": "指定袋45Lに入らない物等を事前申込制で地区別に収集。1個300円・500円・700円・1,000円、納付券またはオンライン決済、朝8時30分までに排出",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/924_10259.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "registeredClaim": "エコエイトやつしろへ平日・土曜午前、月1回の日曜特別開設日に搬入。10kg当たり150円、品目別追加手数料の場合あり、免許証で住所確認",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji0039012/index.html"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "registeredClaim": "地区別に霧島市クリーンセンターまたは牧園横川クリーンステーション等へ直接搬入。市内発生ごみ確認のため顔写真付き本人確認書類が必要",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/kankyo/kurashi/gomi/shushu/mochikomi.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 8,
@@ -433,9 +496,9 @@
   "summary": {
     "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 4,
-    "currentAssessment": "第6回は6自治体の住宅支援が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
+    "roundsRemaining": 3,
+    "currentAssessment": "第7回は6自治体の粗大ごみ料金・予約・搬入条件が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
     "correctionAppliedCount": 1
   },
-  "nextAction": "第7回として、粗大ごみの料金、予約方法、直接搬入条件を担当6県の複雑事例で再照合する。"
+  "nextAction": "第8回として、防災マップの災害種別、避難所、公開URLを担当6県の複雑事例で再照合する。"
 }
