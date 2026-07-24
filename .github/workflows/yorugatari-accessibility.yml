@@ -26,7 +26,7 @@ on:
 
 concurrency:
   group: yorugatari-accessibility-audit
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -34,7 +34,7 @@ permissions:
 jobs:
   accessibility-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 22
     steps:
       - name: Check out latest main
         uses: actions/checkout@v4
@@ -78,7 +78,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           saved=false
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4 5; do
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/yorugatari-accessibility-report.json yorugatari/tools/accessibility-audit-latest.json
