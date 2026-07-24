@@ -14,7 +14,7 @@
     "correctionPolicy": "明確な誤りは同一監査サイクルで修正し、地方正本へ統合する。公開差分はmain同期PRで反映する"
   },
   "batches": [
-    {"round": 1, "codes": ["26100", "26201", "26202", "26203", "26204", "26205", "26206", "26207", "26208", "26209"], "status": "in_progress"},
+    {"round": 1, "codes": ["26100", "26201", "26202", "26203", "26204", "26205", "26206", "26207", "26208", "26209"], "status": "completed"},
     {"round": 2, "codes": ["26210", "26211", "26212", "26213", "26214", "26303", "26322", "26343", "26344", "26364"], "status": "pending"},
     {"round": 3, "codes": ["26365", "26366", "26367", "26407", "26463", "26465", "29201", "29202", "29203", "29204"], "status": "pending"},
     {"round": 4, "codes": ["29205", "29206", "29207", "29208", "29209", "29210", "29211", "29212", "29322", "29342"], "status": "pending"},
@@ -26,11 +26,11 @@
     {"round": 10, "codes": ["30404", "30406", "30421", "30422", "30424", "30427", "30428"], "status": "pending"}
   ],
   "progress": {
-    "completedRounds": 0,
-    "structurallyCheckedMunicipalities": 0,
-    "deepCheckedMunicipalities": 0,
-    "confirmedErrors": 1,
-    "correctedErrors": 1
+    "completedRounds": 1,
+    "structurallyCheckedMunicipalities": 10,
+    "deepCheckedMunicipalities": 5,
+    "confirmedErrors": 2,
+    "correctedErrors": 2
   },
   "preflightFindings": [
     {
@@ -41,5 +41,76 @@
       "note": "令和8年度一般会計予算に学校給食費徴収金4,147千円が計上されていることを確認し、現行負担不明のunavailable判定から、徴収予定を示すverified判定へ訂正。PR #2909・CI #6979でregion/centralへ統合済み。"
     }
   ],
-  "findings": []
+  "findings": [
+    {
+      "round": 1,
+      "auditedAt": "2026-07-25T00:25:00+09:00",
+      "codes": ["26100", "26201", "26202", "26203", "26204", "26205", "26206", "26207", "26208", "26209"],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 1,
+        "workflowRunId": 30104643968,
+        "artifactId": 8601057519,
+        "artifactDigest": "sha256:2b64a5419327cc7d49303242f8f9c11361d02d9a23d9ff537bdb093c69010fdd",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "26100",
+          "name": "京都市",
+          "services": ["childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport"],
+          "result": "no_confirmed_error",
+          "note": "第2子以降0～2歳児保育料無償、中学校選択制給食1食310円、産後ケア訪問型の令和8年8月開始、誰でも通園月12時間、既存住宅取得・改修支援を公式情報と照合し一致。"
+        },
+        {
+          "code": "26201",
+          "name": "福知山市",
+          "services": ["schoolMeals", "postpartumCare", "temporaryChildcare"],
+          "result": "no_confirmed_error",
+          "note": "令和8年度の小学校給食費保護者負担なし・中学校1食350円、日帰り型産後ケア7回・1回1,000円、誰でも通園月10時間・1時間300円を公式情報と照合し一致。"
+        },
+        {
+          "code": "26204",
+          "name": "宇治市",
+          "services": ["schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport"],
+          "result": "no_confirmed_error",
+          "note": "令和8年度中学校全員制給食、宿泊・日帰り・訪問型産後ケア、誰でも通園月10時間、令和8年度子育て世帯住宅改修補助の対象・上限を公式情報と照合し一致。"
+        },
+        {
+          "code": "26207",
+          "name": "城陽市",
+          "services": ["housingSupport"],
+          "result": "no_confirmed_error",
+          "note": "三世代近居・同居住宅支援の要綱は存続するが、利用者向け案内は令和6年度受付終了で、令和8年度の募集・予算・受付状況を確認できない。unavailable判定は妥当。"
+        },
+        {
+          "code": "26209",
+          "name": "長岡京市",
+          "services": ["housingSupport"],
+          "result": "corrected",
+          "note": "生活困窮者全般を対象とする住居確保給付事業を、子育て世帯向け住宅支援としてverified記録していたカテゴリ誤りを確認。令和8年度の子育て世帯向け住宅取得・改修・家賃支援は確認できず、unavailableへ訂正。verified 9→8、unavailable 0→1。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "26209",
+          "service": "housingSupport",
+          "before": "verified / 生活困窮者向け住居確保給付事業",
+          "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    }
+  ]
 }
