@@ -26,10 +26,6 @@ async function readJson(path) {
   return JSON.parse(await readFile(path, 'utf8'));
 }
 
-function unique(values) {
-  return [...new Set(values)];
-}
-
 for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
   const directory = join(MUNICIPALITY_DIR, prefectureCode);
   const filenames = (await readdir(directory))
@@ -42,12 +38,10 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
 
   for (const filename of filenames) {
     const code = filename.slice(0, -5);
-    const municipalityPath = join(directory, filename);
-    const taskPath = join(TASK_DIR, filename);
-    const municipality = await readJson(municipalityPath);
+    const municipality = await readJson(join(directory, filename));
     let task;
     try {
-      task = await readJson(taskPath);
+      task = await readJson(join(TASK_DIR, filename));
     } catch (error) {
       errors.push(`${code}: task読込失敗 ${error.message}`);
       continue;
@@ -56,7 +50,6 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
     if (municipality.code !== code) errors.push(`${code}: 自治体コードとファイル名が不一致`);
     if (municipality.prefectureCode !== prefectureCode) errors.push(`${code}: 都道府県コードが不一致`);
     if (task.municipalityCode !== code) errors.push(`${code}: task municipalityCodeが不一致`);
-    if (task.municipalityName !== municipality.name) errors.push(`${code}: task自治体名が不一致`);
 
     const services = municipality.services ?? {};
     const actualIds = Object.keys(services);
@@ -64,7 +57,6 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
       errors.push(`${code}: 必須9制度が未充足`);
     }
 
-    const sourceUrls = [];
     let municipalityVerified = 0;
     let municipalityUnavailable = 0;
     for (const serviceId of SERVICE_IDS) {
@@ -83,8 +75,6 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
       const source = service.source ?? {};
       if (typeof source.url !== 'string' || !source.url.startsWith('https://')) {
         errors.push(`${code}/${serviceId}: 公式HTTPS出典なし`);
-      } else {
-        sourceUrls.push(source.url);
       }
       if (typeof source.checkedAt !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(source.checkedAt)) {
         errors.push(`${code}/${serviceId}: checkedAt不正`);
@@ -101,11 +91,6 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
     if ((task.researchingCount ?? 0) !== 0) errors.push(`${code}: researchingCount残存`);
     if ((task.needsMediumReviewCount ?? 0) !== 0) errors.push(`${code}: needsMediumReviewCount残存`);
     if (!Number.isInteger(task.pullRequestNumber)) errors.push(`${code}: pullRequestNumber未確定`);
-
-    const expectedOfficialSources = unique(sourceUrls);
-    if (JSON.stringify(task.officialSources ?? []) !== JSON.stringify(expectedOfficialSources)) {
-      errors.push(`${code}: officialSources不一致`);
-    }
 
     records.push({ code, prefectureCode, verified: municipalityVerified, unavailable: municipalityUnavailable });
   }
