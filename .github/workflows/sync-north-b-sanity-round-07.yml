@@ -1,0 +1,59 @@
+name: Sync North B sanity audit round 07
+
+on:
+  push:
+    branches:
+      - coord/sync-north-b-sanity-round-07-20260725
+    paths:
+      - .github/workflows/sync-north-b-sanity-round-07.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/sync-north-b-sanity-round-07-20260725
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Sync regional data and regenerate public files
+        shell: bash
+        run: |
+          git fetch origin region/north
+          git checkout origin/region/north -- \
+            jichitai-compare/data/municipalities/05/05349.json \
+            jichitai-compare/data/municipalities/05/05363.json \
+            jichitai-compare/data/municipalities/05/05434.json \
+            jichitai-compare/operations/tasks/05349.json \
+            jichitai-compare/operations/tasks/05363.json \
+            jichitai-compare/operations/tasks/05434.json \
+            jichitai-compare/operations/audits/north-b-research-sanity-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json
+          cd jichitai-compare
+          npm ci
+          npm run generate
+          npm run progress
+          npm run check
+          cd ..
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+          data.updatedAt = '2026-07-25T02:35:00+09:00';
+          data.workingBranch = 'coord/sync-north-b-sanity-round-07-20260725';
+          data.pullRequestNumber = null;
+          data.ciStatus = 'pending';
+          data.nextAction = '北日本B誤調査ざっくり再検証第7回は地域PR #3023・CI #7354・#7355成功でregion/northへ統合済み。八峰町、八郎潟町、美郷町の自治体JSON、task、監査記録、全国生成JSON、静的ページをmainへ同期する。監査完了7/10回・実質76/107自治体・残り31自治体。';
+          fs.writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
+          NODE
+          rm .github/workflows/sync-north-b-sanity-round-07.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "全国品質同期: 北日本B誤調査再検証 第7回を反映"
+          git push origin HEAD:coord/sync-north-b-sanity-round-07-20260725
