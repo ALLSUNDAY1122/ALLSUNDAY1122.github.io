@@ -4,7 +4,7 @@
   "assignedTeam": "西日本調査班",
   "branch": "region/west",
   "integrationBranch": "region/west",
-  "updatedAt": "2026-07-24T22:29:00+09:00",
+  "updatedAt": "2026-07-24T23:16:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -22,13 +22,25 @@
     "completedServices": 4284,
     "nationwidePublishedMunicipalities": 1741,
     "nationwideRemainingMunicipalities": 0,
-    "checkedAt": "2026-07-24T22:29:00+09:00"
+    "checkedAt": "2026-07-24T23:16:00+09:00"
   },
-  "lastAction": "西日本476自治体の品質終端化（PR #2772）と全国1,741自治体の完全公開（PR #2791）を確認し、region/westの共有地域状態をmainの完了状態へ同期した。",
-  "nextAction": "新規自治体調査を停止し、自治体公式情報の更新、差し戻し、識別異常、CI失敗が発生した場合のみ品質監査を再開する。",
+  "latestQualityAudit": {
+    "municipalityCode": "40130",
+    "municipalityName": "福岡市",
+    "finding": "公開要約に内部作業文言が残存",
+    "resolution": "利用者向け要約へ置換し、全国生成JSONと静的詳細ページを再生成",
+    "regionalPullRequestNumber": 2829,
+    "regionalCiRunNumber": 6794,
+    "nationalPullRequestNumber": 2848,
+    "nationalCiRunNumber": 6847,
+    "status": "resolved"
+  },
+  "lastAction": "福岡市（40130）の公開要約に残っていた内部作業文言を検出し、PR #2829・CI #6794でregion/west正本を修正後、PR #2848・CI #6847で全国生成JSONと静的詳細ページへ反映した。",
+  "nextAction": "新規自治体調査を停止し、自治体公式情報の更新、差し戻し、識別異常、CI失敗、公開文言異常が発生した場合のみ品質監査を再開する。",
   "lastNationalIntegrationPr": 2791,
   "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
-  "lastGeneratedPullRequest": 2792,
-  "lastRegionalQualityPr": 2772,
+  "lastGeneratedPullRequest": 2848,
+  "lastRegionalQualityPr": 2829,
+  "lastNationalQualityPr": 2848,
   "humanDecisionRequired": false
 }
