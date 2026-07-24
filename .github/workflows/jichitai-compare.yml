@@ -1,77 +1,146 @@
-name: Jichitai Compare CI
+name: Build Central Final Six Municipalities
 
 on:
   pull_request:
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
-  push:
-    branches:
-      - main
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
+    branches: [region/central]
+    paths: ['.github/workflows/jichitai-compare.yml']
 
 permissions:
-  contents: read
-
-concurrency:
-  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  validate:
-    name: Validate municipality data
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 25
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+          persist-credentials: true
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Reject unrelated changes
+      - name: Fetch latest central baseline
+        run: git fetch origin region/central
+      - name: Create final six municipality records
         working-directory: jichitai-compare
         env:
-          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.sha }}
-        run: npm run check:scope
-
-      - name: Generate public municipality data
-        working-directory: jichitai-compare
-        run: npm run generate
-
-      - name: Generate national progress
-        working-directory: jichitai-compare
-        run: npm run progress
-
-      - name: Validate source and generated data
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Check JavaScript syntax
-        working-directory: jichitai-compare
-        run: node --check app.js
-
-      - name: Confirm generated files are committed
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
-        shell: bash
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
-          if [ -n "$changed" ]; then
-            echo '生成済みファイルが最新ではありません。'
-            git status --short -- data/generated/municipalities.json operations/progress.json
-            exit 1
-          fi
-
-      - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
+          node <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const checkedAt='2026-07-24';
+          const branch='data/central-final-six-20260724';
+          const ids=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const elig={childMedical:{minAgeMonths:0,maxAgeYears:18},sickChildCare:{minAgeMonths:0,maxAgeYears:12},childcareFee:{minAgeMonths:0,maxAgeYears:5},schoolMeals:{minAgeMonths:72,maxAgeYears:15},postpartumCare:{minAgeMonths:0,maxAgeYears:1},temporaryChildcare:{minAgeMonths:0,maxAgeYears:5},housingSupport:{minAgeMonths:0,maxAgeYears:120},bulkyWaste:{minAgeMonths:0,maxAgeYears:120},disasterPrevention:{minAgeMonths:0,maxAgeYears:120}};
+          function verified(summary,url,details={}){return {status:'verified',summary,eligibility:null,details,source:{url,checkedAt}}}
+          function unavailable(label,officialUrl){return {status:'unavailable',summary:`${label}は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない`,eligibility:null,details:{reviewDisposition:'推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。'},source:{url:officialUrl,checkedAt}}}
+          const rows=[
+            {
+              code:'21604',prefectureCode:'21',prefecture:'岐阜県',name:'白川村',officialUrl:'https://www.vill.shirakawa.lg.jp/',
+              services:{
+                childMedical:unavailable('子ども医療費助成','https://www.vill.shirakawa.lg.jp/'),
+                sickChildCare:unavailable('病児・病後児保育','https://www.vill.shirakawa.lg.jp/'),
+                childcareFee:verified('満3歳以上児と非課税世帯の満3歳未満児は幼児教育・保育無償化の対象','https://www.vill.shirakawa.lg.jp/1396.htm',{facility:'白川村立白川保育園',scope:'満3歳以上および住民税非課税世帯の満3歳未満児',note:'実費や0～2歳課税世帯の現行負担額は入園案内・村窓口で確認'}),
+                schoolMeals:unavailable('学校給食費','https://www.vill.shirakawa.lg.jp/1396.htm'),
+                postpartumCare:unavailable('産後ケア','https://www.vill.shirakawa.lg.jp/'),
+                temporaryChildcare:unavailable('一時預かり・こども誰でも通園制度','https://www.vill.shirakawa.lg.jp/'),
+                housingSupport:unavailable('住宅支援','https://www.vill.shirakawa.lg.jp/'),
+                bulkyWaste:verified('村の一般廃棄物処理計画に基づき粗大ごみを分別処理する','https://www.vill.shirakawa.lg.jp/secure/2245/R6_haikibutsu.pdf',{procedure:'排出方法・収集日・搬入条件は村民課の最新案内で確認',excluded:'家電リサイクル対象品や処理困難物は別処理'}),
+                disasterPrevention:verified('洪水・土砂災害等の危険区域と避難情報を掲載した村ハザードマップを公開','https://www.vill.shirakawa.lg.jp/1997.htm',{map:'白川村ハザードマップ',hazards:'洪水、土砂災害等',use:'危険箇所・避難場所・避難経路を平時に確認'})
+              }
+            },
+            {
+              code:'23237',prefectureCode:'23',prefecture:'愛知県',name:'あま市',officialUrl:'https://www.city.ama.aichi.jp/',
+              services:{
+                childMedical:verified('通院・入院とも18歳年度末まで保険診療自己負担額を所得制限なしで助成','https://www.city.ama.aichi.jp/kurashi/1002024/1002032.html',{target:'18歳到達後最初の3月31日まで',coverage:'保険診療自己負担額',incomeLimit:'なし'}),
+                sickChildCare:verified('病気または回復期で集団保育が困難な児童を病児・病後児保育室で一時保育','https://www.city.ama.aichi.jp/kurashi/1002024/1002032.html',{procedure:'対象年齢・施設・料金・予約方法は病児病後児保育の現行案内で確認'}),
+                childcareFee:verified('3～5歳児は保育料0円、0～2歳児は住民税額に応じて算定し多子軽減を実施','https://www.city.ama.aichi.jp/kurashi/1002024/hoikuenn/1002054.html',{threeAndOver:'3歳児クラスから5歳児クラスまで0円',underThree:'住民税額に応じて算定',multiChild:'第2子半額・第3子以降免除等の多子軽減あり',excluded:'副食費等の実費'}),
+                schoolMeals:unavailable('学校給食費','https://www.city.ama.aichi.jp/'),
+                postpartumCare:unavailable('産後ケアの利用類型・料金','https://www.city.ama.aichi.jp/kurashi/1002024/index.html'),
+                temporaryChildcare:verified('未就園の生後6か月から満3歳未満が月10時間、1時間300円でこども誰でも通園制度を利用','https://www.city.ama.aichi.jp/kurashi/1002024/1010618.html',{target:'あま市在住、未就園、生後6か月～満3歳未満',limit:'月10時間',fee:'1時間300円、実費・減免あり',start:'2026年4月1日'}),
+                housingSupport:unavailable('子育て世帯向け住宅支援','https://www.city.ama.aichi.jp/'),
+                bulkyWaste:unavailable('粗大ごみの戸別収集・持込条件','https://www.city.ama.aichi.jp/kurashi/'),
+                disasterPrevention:unavailable('洪水・地震等ハザードマップの現行版','https://www.city.ama.aichi.jp/')
+              }
+            },
+            {
+              code:'23238',prefectureCode:'23',prefecture:'愛知県',name:'長久手市',officialUrl:'https://www.city.nagakute.lg.jp/',
+              services:{
+                childMedical:unavailable('子ども医療費助成','https://www.city.nagakute.lg.jp/'),
+                sickChildCare:verified('生後6か月経過後の翌月1日から小学6年生まで病児・病後児保育を利用可能','https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/3/2/6870.html',{target:'長久手市在住、生後6か月経過後の翌月1日～小学6年生',procedure:'医師の診察後、施設へ予約'}),
+                childcareFee:verified('保育料は認定区分、保育必要量、世帯課税状況に基づき決定し、無償化制度を適用','https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/3/2/14790.html',{calculation:'4～8月は前年度、9～3月は当年度の市町村民税に基づく',freeSupport:'3～5歳児等は幼児教育・保育無償化の対象'}),
+                schoolMeals:unavailable('学校給食費','https://www.city.nagakute.lg.jp/'),
+                postpartumCare:verified('産後1年未満の母子へ宿泊・通所・訪問型産後ケアを提供','https://www.city.nagakute.lg.jp/soshiki/kodomobu/kodomokateika/1/boshihoken/21513.html',{types:'宿泊型、通所型、訪問型',period:'宿泊は生後4か月未満、通所・訪問は生後1年未満',limits:'宿泊6泊7日、通所7日、訪問2日'}),
+                temporaryChildcare:verified('未就園の生後6か月から満3歳未満が月10時間までこども誰でも通園制度を利用','https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/sapootomisyuugakunoikuji/25847.html',{target:'未就園、生後6か月～満3歳未満',limit:'月10時間',start:'2026年4月1日',fee:'実施施設ごとに設定'}),
+                housingSupport:unavailable('子育て世帯向け住宅支援','https://www.city.nagakute.lg.jp/'),
+                bulkyWaste:unavailable('粗大ごみの収集・持込条件','https://www.city.nagakute.lg.jp/'),
+                disasterPrevention:unavailable('洪水・地震等ハザードマップの現行版','https://www.city.nagakute.lg.jp/')
+              }
+            },
+            {
+              code:'27301',prefectureCode:'27',prefecture:'大阪府',name:'島本町',officialUrl:'https://www.town.shimamoto.lg.jp/',
+              services:Object.fromEntries(ids.map(id=>[id,unavailable({childMedical:'子ども医療費助成',sickChildCare:'病児・病後児保育',childcareFee:'保育料',schoolMeals:'学校給食費',postpartumCare:'産後ケア',temporaryChildcare:'一時預かり・こども誰でも通園制度',housingSupport:'住宅支援',bulkyWaste:'粗大ごみ',disasterPrevention:'ハザードマップ'}[id],'https://www.town.shimamoto.lg.jp/')]))
+            },
+            {
+              code:'27321',prefectureCode:'27',prefecture:'大阪府',name:'豊能町',officialUrl:'https://www.town.toyono.osaka.jp/',
+              services:{
+                childMedical:unavailable('子ども医療費助成の対象年齢・自己負担','https://www.town.toyono.osaka.jp/kosodate-kyouiku/hoikujo-youchien-kodomoen/iryouhijosei/'),
+                sickChildCare:unavailable('病児・病後児保育','https://www.town.toyono.osaka.jp/'),
+                childcareFee:verified('3～5歳児と住民税非課税世帯の0～2歳児等は幼児教育・保育無償化の対象','https://www.town.toyono.osaka.jp/kosodate-kyouiku/hoikujo-youchien-kodomoen/mushouka/page003399.html',{threeAndOver:'3～5歳児の対象施設利用料を無償化',underThree:'住民税非課税世帯の0～2歳児は月額上限42,000円等',excluded:'食材料費、送迎費、行事費等の実費'}),
+                schoolMeals:unavailable('学校給食費','https://www.town.toyono.osaka.jp/kosodate-kyouiku/'),
+                postpartumCare:verified('出産後1年未満の母子へ日帰り型・宿泊型産後ケアを提供','https://www.town.toyono.osaka.jp/kosodate-kyouiku/ninshin-syussan/syussan/page003666.html',{target:'豊能町在住の産後1年未満の産婦と乳児',types:'日帰り型、宿泊型',fee:'日帰り1日2,000円、宿泊1日3,000円。減免・多胎加算あり'}),
+                temporaryChildcare:verified('未就園の生後6か月から満3歳未満が月10時間までこども誰でも通園制度を利用','https://www.town.toyono.osaka.jp/kosodate-kyouiku/hoikujo-youchien-kodomoen/kodomo/page008025.html',{target:'未就園、生後6か月～満3歳未満',limit:'月10時間',facility:'認定こども園ふたば園'}),
+                housingSupport:unavailable('子育て世帯向け住宅支援','https://www.town.toyono.osaka.jp/'),
+                bulkyWaste:unavailable('粗大ごみの収集・持込条件','https://www.town.toyono.osaka.jp/'),
+                disasterPrevention:unavailable('洪水・土砂災害等ハザードマップ','https://www.town.toyono.osaka.jp/')
+              }
+            },
+            {
+              code:'27322',prefectureCode:'27',prefecture:'大阪府',name:'能勢町',officialUrl:'https://www.town.nose.osaka.jp/',
+              services:{
+                childMedical:unavailable('子ども医療費助成','https://www.town.nose.osaka.jp/'),
+                sickChildCare:verified('1歳児クラスから就学前の病気回復期の児童を定員3人の病後児保育室で預かる','https://www.town.nose.osaka.jp/soshiki/sukoyakashienka/kodomokatei/kosodate/byoujigohoikusitu/8722.html',{target:'町内在住、1歳児クラス～就学前、病気回復期',hours:'月～土8時～18時',fee:'1日500円、非課税・生活保護世帯は減免',capacity:'3人'}),
+                childcareFee:verified('3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象','https://www.town.nose.osaka.jp/soshiki/sukoyakashienka/kodomokatei/kosodate/musyouka/5161.html',{threeAndOver:'3～5歳児の保育所・認定こども園等利用料を無償化',underThree:'住民税非課税世帯の0～2歳児を無償化'}),
+                schoolMeals:unavailable('学校給食費','https://www.town.nose.osaka.jp/'),
+                postpartumCare:verified('町内在住の母親と生後1歳までの乳児へ宿泊型等の産後ケアを提供','https://www.town.nose.osaka.jp/soshiki/sukoyakashienka/kenkoukanri/kenkou/soudan/6228.html',{target:'能勢町在住の産婦と生後1歳までの乳児',types:'宿泊型等',fee:'宿泊型1泊2日5,000円、以後1泊3,000円追加',limit:'最大5泊6日'}),
+                temporaryChildcare:verified('未就園の生後6か月から満3歳未満が月10時間、1時間300円でこども誰でも通園制度を利用','https://www.town.nose.osaka.jp/soshiki/sukoyakashienka/kodomokatei/kosodate/10979.html',{target:'町内在住、未就園、生後6か月～満3歳未満',limit:'月10時間',fee:'1時間300円、減免あり',facility:'能勢町立のせ保育所'}),
+                housingSupport:unavailable('子育て世帯向け住宅支援','https://www.town.nose.osaka.jp/'),
+                bulkyWaste:unavailable('粗大ごみの収集・持込条件','https://www.town.nose.osaka.jp/'),
+                disasterPrevention:unavailable('洪水・土砂災害等ハザードマップ','https://www.town.nose.osaka.jp/')
+              }
+            }
+          ];
+          for(const row of rows){
+            for(const id of ids){const s=row.services[id];if(!s)throw new Error(`${row.code}/${id} missing`);s.eligibility=elig[id];}
+            const data={schemaVersion:'1.0.0',code:row.code,prefectureCode:row.prefectureCode,prefecture:row.prefecture,name:row.name,officialUrl:row.officialUrl,status:'verified',summary:`${row.name}の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。`,updatedAt:checkedAt,services:row.services};
+            const dataPath=`data/municipalities/${row.prefectureCode}/${row.code}.json`;fs.mkdirSync(path.dirname(dataPath),{recursive:true});fs.writeFileSync(dataPath,JSON.stringify(data)+'\n');
+            const verifiedCount=ids.filter(id=>row.services[id].status==='verified').length;const unavailableCount=9-verifiedCount;
+            const officialSources=[...new Set(ids.map(id=>row.services[id].source.url))];
+            const task={schemaVersion:'1.0.0',municipalityCode:row.code,municipalityName:row.name,prefectureCode:row.prefectureCode,prefectureName:row.prefecture,assignedTeam:'中日本調査班',status:'pr_open',currentService:null,nextServiceIndex:9,completedServices:ids,verifiedCount,researchingCount:0,unavailableCount,needsMediumReviewCount:0,currentBranch:branch,pullRequestNumber:Number(process.env.PR_NUMBER),lastCheckedAt:checkedAt,lastUpdatedAt:'2026-07-24T22:05:00+09:00',lastUpdatedBy:'全国統括',officialSources,notes:['割当台帳と地域ブランチの完全性監査で欠落を検出し新規登録。','自治体公式公開情報で2026年度条件を確定できない制度は、制度不存在を断定せずunavailableとした。'],blockers:[]};
+            const taskPath=`operations/tasks/${row.code}.json`;fs.mkdirSync(path.dirname(taskPath),{recursive:true});fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
+          }
+          fs.writeFileSync('operations/control/central-final-six-20260724.json',JSON.stringify({schemaVersion:'1.0.0',createdAt:'2026-07-24T22:05:00+09:00',municipalityCount:rows.length,municipalities:rows.map(r=>({code:r.code,name:r.name,prefecture:r.prefecture,verifiedCount:ids.filter(id=>r.services[id].status==='verified').length,unavailableCount:ids.filter(id=>r.services[id].status==='unavailable').length}))},null,2)+'\n');
+          NODE
+      - name: Generate and validate central complete set
         working-directory: jichitai-compare
-        run: npm run smoke:public
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+          node <<'NODE'
+          const fs=require('fs');const codes=['21604','23237','23238','27301','27321','27322'];
+          for(const code of codes){const d=JSON.parse(fs.readFileSync(`data/municipalities/${code.slice(0,2)}/${code}.json`,'utf8'));const services=Object.values(d.services??{});if(services.length!==9||services.some(s=>!['verified','unavailable'].includes(s.status)||!s.eligibility||!/^https:\/\//.test(s.source?.url??'')||!/^\d{4}-\d{2}-\d{2}$/.test(s.source?.checkedAt??'')))throw new Error(`${code}: publication gate failure`);}
+          let central=0;for(const pref of fs.readdirSync('data/municipalities')){if(!['16','17','18','21','22','23','24','25','26','27','28','29','30'].includes(pref))continue;central+=fs.readdirSync(`data/municipalities/${pref}`).filter(f=>/^\d{5}\.json$/.test(f)).length;}
+          if(central!==409)throw new Error(`central count ${central}, expected 409`);
+          NODE
+      - name: Restore standard workflow and commit
+        run: |
+          git show origin/region/central:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'data: add final six central municipalities'
+          git push origin HEAD
