@@ -7,12 +7,15 @@
   "officialUrl": "https://www.city.yamagata.gifu.jp/",
   "status": "verified",
   "summary": "山県市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末まで、所得制限なく入院・外来の保険診療自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳到達後最初の3月31日まで",
         "incomeLimit": "なし",
@@ -20,12 +23,18 @@
         "application": "福祉医療費受給者証の交付申請が必要",
         "categories": "乳幼児、小学生、中学生、高校生年代を対象"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/site/yamanavi/1008.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/1008.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後10か月から小学6年生までの病気中・回復期の児童を、市内外の協定施設で預かる。",
-      "eligibility": {"minAgeMonths": 10, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 10,
+        "maxAgeYears": 12
+      },
       "details": {
         "condition": "病気の進行期または回復期で集団保育が困難かつ家庭保育できない児童",
         "localFacility": "山県市社会福祉協議会病児保育室おひさま",
@@ -33,12 +42,18 @@
         "fee": "1日2,000円",
         "assistance": "生活保護、非課税、多子世帯は1日2,000円を上限に利用料全額助成"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/site/yamanavi/1518.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/1518.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "山県市内教育・保育施設の保育料を無償とし、市立保育園の3～5歳児副食費も無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "localPolicy": "保育料は無償だが、国等への申請のため所得情報に基づく算定は実施",
         "nationalCoverage": "3～5歳児と住民税非課税世帯の0～2歳児は国の無償化対象",
@@ -46,12 +61,18 @@
         "exclusions": "延長保育料、通園送迎費等の実費は対象外",
         "incomeDeclaration": "利用者負担額算定のため父母等の所得申告が必要"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "市立小中学校の学校給食費を無償化している。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "start": "令和4年度2学期から市内小中学校で無償化",
         "target": "山県市立小中学校の児童生徒",
@@ -59,12 +80,18 @@
         "operation": "自校調理・ランチルームでの給食を継続",
         "basis": "山県市学校給食費無償化補助金交付要綱に基づく"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/site/sityou/32078.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/site/sityou/32078.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "1歳までの乳児をもつ母を対象に、訪問・通所・宿泊型の産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "types": "アウトリーチ型、通所型、宿泊型",
         "support": "母体の回復、乳房ケア、授乳・沐浴等の育児支援",
@@ -73,21 +100,43 @@
         "overnight": "1泊3,500円、6泊まで。通所・宿泊合計6回超は6,000円",
         "reduction": "生活保護世帯は無料"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/soshiki/kodomo/30389.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/soshiki/kodomo/30389.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。",
-      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 5},
+      "summary": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 12,
+        "maxAgeYears": 5
+      },
       "details": {
         "condition": "山県市民で保育園・幼稚園・認定こども園等に通っていない就学前児童",
         "limit": "1か月14日以内",
         "hours": "8時30分～16時30分",
         "feeUnder3": "1時間350円",
         "feeOver3": "1時間250円",
-        "meal": "給食・おやつ346円、給食のみ296円、おやつのみ50円"
+        "meal": "給食・おやつ346円、給食のみ296円、おやつのみ50円",
+        "ordinaryTemporaryCare": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。",
+        "programs": "通常の一時預かり、こども誰でも通園制度（乳児等通園支援事業）",
+        "anyChildAccessTarget": "保育所・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+        "employmentRequirement": "保護者の就労要件を問わない",
+        "anyChildAccessLimit": "子ども1人につき月10時間まで",
+        "anyChildAccessStart": "令和8年4月"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/51836.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html",
+          "checkedAt": "2026-07-22",
+          "description": "通常の一時預かり事業の公式案内"
+        }
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -100,7 +149,10 @@
         "floorArea": "課税床面積50平方メートル以上",
         "residency": "定住に関する誓約書等の提出が必要"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/soshiki/kensetsu/35324.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/soshiki/kensetsu/35324.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -113,7 +165,10 @@
         "vehicle": "搬入車両は2トン車まで",
         "fee": "品目別手数料表により受付時に案内"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/site/gomi/1012.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/site/gomi/1012.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -125,7 +180,10 @@
         "pond": "令和8年4月更新のため池ハザードマップを公開",
         "evacuation": "指定避難所・指定緊急避難場所の情報も公開"
       },
-      "source": {"url": "https://www.city.yamagata.gifu.jp/site/bousai/list19-66.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.yamagata.gifu.jp/site/bousai/list19-66.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
