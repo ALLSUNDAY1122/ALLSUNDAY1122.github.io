@@ -148596,7 +148596,7 @@
       "name": "根羽村",
       "officialUrl": "https://www.nebamura.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を根羽村公式情報で確認し、5制度をverified、4制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を根羽村公式情報で確認し、6制度をverified、3制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -148620,17 +148620,17 @@
         },
         "sickChildCare": {
           "status": "unavailable",
-          "summary": "令和8年度に利用できる病児・病後児保育施設、対象年齢、料金、予約方法を公式公開情報で確定できない",
+          "summary": "第3期子ども・子育て支援事業計画に病児・病後児保育事業を位置付けているが、現行の利用施設・対象年齢・料金・予約方法を確定できない",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "村公式サイトの保育所・子育て・福祉関連情報を確認",
-            "needsConfirmation": "飯田下伊那地域等の広域利用施設、事前登録、医師連絡票、利用料、予約方法は住民課または教育委員会へ確認"
+            "confirmed": "令和8年3月改定の第3期子ども・子育て支援事業計画に病児・病後児保育事業を掲載",
+            "needsConfirmation": "飯田下伊那地域等の利用施設、事前登録、医師連絡票、対象年齢、利用料、予約方法は住民課または教育委員会へ確認"
           },
           "source": {
-            "url": "https://www.nebamura.jp/nebalife/resident/childcare/",
+            "url": "https://www.nebamura.jp/wp-content/uploads/2026/04/%E4%BB%A4%E5%92%8C%EF%BC%98%E5%B9%B4%EF%BC%93%E6%9C%88%E5%AE%9A%E4%BE%8B%E4%BC%9A%E4%BC%9A%E8%AD%B0%E9%8C%B2.pdf",
             "checkedAt": "2026-07-24"
           }
         },
@@ -148669,38 +148669,42 @@
           }
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "令和8年度の宿泊・通所・訪問型産後ケアの対象月齢、利用料、施設、申請方法を公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "令和7年度途中から産後ケア事業を開始し、助産院・産婦人科と連携して実施",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "research": "村公式サイトの保健衛生・子育て関連情報と行動計画を確認",
-            "needsConfirmation": "産後ケアの実施類型、利用日数、自己負担、実施施設、助産師訪問、申請・予約方法は住民課へ確認"
+            "start": "令和7年度途中に新規事業として開始",
+            "purpose": "産婦の身体的回復と心理的安定を促し、セルフケア能力を育み、産婦と家族が安心して育児できる体制を確保",
+            "providers": "助産院や産婦人科と連携し、村が実施先と契約して提供",
+            "plan": "令和7年4月から令和12年3月までの第3期子ども・子育て支援事業計画に位置付け",
+            "needsConfirmation": "宿泊・通所・訪問の実施類型、対象月齢、利用日数、自己負担、具体的な実施施設、申請・予約方法は住民課へ確認"
           },
           "source": {
-            "url": "https://www.nebamura.jp/nebalife/resident/",
+            "url": "https://www.nebamura.jp/wp-content/uploads/2026/04/%E4%BB%A4%E5%92%8C%EF%BC%98%E5%B9%B4%EF%BC%93%E6%9C%88%E5%AE%9A%E4%BE%8B%E4%BC%9A%E4%BC%9A%E8%AD%B0%E9%8C%B2.pdf",
             "checkedAt": "2026-07-24"
           }
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "1歳から就学前の児童を週3日程度・月12日以内で一時保育",
+          "summary": "生後6か月から満3歳までの未就園児を月おおむね10時間、午前中に預かるこども誰でも通園制度を実施",
           "eligibility": {
-            "minAgeMonths": 12,
-            "maxAgeYears": 5
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
           },
           "details": {
-            "target": "1歳～就学前で、保護者の就労・就学・疾病・災害・出産・看護・育児負担等により一時保育が必要な児童",
-            "limit": "原則週3日程度、月12日以内",
-            "hours": "月～金曜日8時30分～16時、土曜日8時30分～正午。1時間単位で申込可能",
-            "extension": "延長保育も相談可能",
-            "procedure": "役場または根羽村保育所へ事前相談・申込み",
-            "fee": "通常時間帯の利用料と食事等実費は申込時に確認"
+            "target": "保育所等に通っていない生後6か月から満3歳までの未就園児",
+            "condition": "保護者の就労状況を問わず利用可能",
+            "limit": "子ども1人につき月おおむね10時間、1日当たり1人を上限",
+            "hours": "午前中のみ",
+            "meals": "給食提供なし",
+            "procedure": "こども家庭センター等から利用の提案・紹介を受け、認定・面談・予約の具体手順と利用料は教育委員会へ確認",
+            "other": "従来の根羽村保育所の一時預かり事業も継続し、移住・親子留学希望者の体験入所等を含め年間3人の利用見込みへ改定"
           },
           "source": {
-            "url": "https://www.nebamura.jp/nebalife/resident/childcare/",
+            "url": "https://www.nebamura.jp/wp-content/uploads/2026/04/%E4%BB%A4%E5%92%8C%EF%BC%98%E5%B9%B4%EF%BC%93%E6%9C%88%E5%AE%9A%E4%BE%8B%E4%BC%9A%E4%BC%9A%E8%AD%B0%E9%8C%B2.pdf",
             "checkedAt": "2026-07-24"
           }
         },
