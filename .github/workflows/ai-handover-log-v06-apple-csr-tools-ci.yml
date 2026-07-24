@@ -6,6 +6,7 @@ on:
       - .github/workflows/ai-handover-log-v06-apple-csr-tools-ci.yml
       - scripts/generate_apple_distribution_csr_macos.sh
       - scripts/build_apple_distribution_p12_macos.sh
+      - scripts/capture_apple_release_evidence_macos.sh
   push:
     branches:
       - agent/ai-handover-log-v04-binary
@@ -13,6 +14,7 @@ on:
       - .github/workflows/ai-handover-log-v06-apple-csr-tools-ci.yml
       - scripts/generate_apple_distribution_csr_macos.sh
       - scripts/build_apple_distribution_p12_macos.sh
+      - scripts/capture_apple_release_evidence_macos.sh
   workflow_dispatch:
 
 permissions:
@@ -30,11 +32,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate shell syntax
+      - name: Validate shell syntax and safe help output
         run: |
           set -euo pipefail
           bash -n scripts/generate_apple_distribution_csr_macos.sh
           bash -n scripts/build_apple_distribution_p12_macos.sh
+          bash -n scripts/capture_apple_release_evidence_macos.sh
+          bash scripts/capture_apple_release_evidence_macos.sh --help \
+            | grep -q "sanitized Apple release evidence report"
 
       - name: Generate encrypted private key and CSR
         run: |
@@ -84,7 +89,7 @@ jobs:
             -nocerts -nodes \
             | grep -q "BEGIN PRIVATE KEY"
 
-      - name: Verify reports contain no passwords or private-key material
+      - name: Verify reports and evidence tool source contain no unsafe output behavior
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -92,23 +97,37 @@ jobs:
           import os
           from pathlib import Path
 
-          files = [
+          reports = [
               Path(os.environ["RUNNER_TEMP"]) / "csr/AppleDistribution.csr-report.json",
               Path(os.environ["RUNNER_TEMP"]) / "AppleDistribution-CI-report.json",
           ]
-          forbidden = [
+          forbidden_report_values = [
               os.environ["CSR_PRIVATE_KEY_PASSWORD"],
               os.environ["P12_OUTPUT_PASSWORD"],
               "BEGIN PRIVATE KEY",
               "BEGIN ENCRYPTED PRIVATE KEY",
           ]
-          for path in files:
+          for path in reports:
               text = path.read_text(encoding="utf-8")
               json.loads(text)
-              for marker in forbidden:
+              for marker in forbidden_report_values:
                   if marker in text:
                       raise SystemExit(f"sensitive marker found in {path.name}")
-          print("CSR_P12_REPORTS_SAFE")
+
+          evidence = Path("scripts/capture_apple_release_evidence_macos.sh").read_text(
+              encoding="utf-8"
+          )
+          required_safety_markers = [
+              "read -r -s -p",
+              "private_key_exported_to_report\": False",
+              "password_exported_to_report\": False",
+              "Private material was detected in sanitized output",
+              "rm -f \"$REPORT_JSON\" \"$REPORT_MD\"",
+          ]
+          for marker in required_safety_markers:
+              if marker not in evidence:
+                  raise SystemExit(f"evidence safety marker missing: {marker}")
+          print("CSR_P12_EVIDENCE_TOOLS_SAFE")
           PY
 
       - name: Delete CI signing material
