@@ -5,13 +5,13 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
-  "updatedAt": "2026-07-24T23:34:00+09:00",
+  "updatedAt": "2026-07-25T00:01:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 2829,
+  "pullRequestNumber": 2915,
   "ciStatus": "success",
   "completedSinceSplit": [
     {"code": "46534", "name": "知名町", "pullRequestNumber": 2621, "ciRunNumber": 6399},
@@ -41,10 +41,13 @@
     "internalWorkflowCopyGuardCiRunNumber": 6889,
     "summaryConsistencyGuardPullRequestNumber": 2879,
     "summaryConsistencyGuardCiRunNumber": 6911,
+    "westAPublicSummaryGuardPullRequestNumber": 2915,
+    "westAPublicSummaryGuardCiRunNumber": 6968,
+    "westAPublicSummaryGuardMunicipalityCount": 226,
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-24T23:34:00+09:00",
+    "auditedAt": "2026-07-25T00:01:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -85,6 +88,15 @@
         "scope": "生成JSONの自治体summaryと全1,741静的ページ冒頭要約の一致、失敗時JSON artifact保存",
         "status": "passed"
       },
+      "westAPublicSummaryGuard": {
+        "pullRequestNumber": 2915,
+        "ciRunNumber": 6968,
+        "municipalityCount": 226,
+        "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+        "forbiddenPhrases": ["調査班", "初期登録対象", "移行監査", "地域正本"],
+        "checks": ["自治体summary", "9制度summary", "自治体別静的ページ", "違反時JSON監査レポート"],
+        "status": "enabled"
+      },
       "legacyBroadAudit": {
         "pullRequestNumber": 2856,
         "ciRunNumber": 6871,
@@ -102,6 +114,7 @@
       "自治体数不一致時は都道府県別コード一覧を診断artifactから確認する。",
       "全国完全公開後は新規調査を停止し、更新・差し戻し・CI異常・公開文言異常・要約不一致時のみ再開する。",
       "福岡市の制度判定・公式出典・verified 9は変更せず、公開要約だけを利用者向けに修正した。",
+      "西日本A担当6県226自治体の公開要約内部運用語を通常CIで恒久監視する。",
       "公開文言検査失敗時はjichitai-validation-report artifactから自治体コードと発生箇所を確認する。"
     ]
   }
