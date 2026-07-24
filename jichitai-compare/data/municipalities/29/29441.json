@@ -6,8 +6,8 @@
   "name": "吉野町",
   "officialUrl": "https://www.town.yoshino.nara.jp/",
   "status": "verified",
-  "summary": "吉野町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末まで自己負担なしの医療費助成、0～5歳児保育料・学校給食費の無償化、病後児保育、産後ケアなどを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "吉野町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末まで自己負担なしの医療費助成、0～5歳児保育料・学校給食費の無償化、病後児保育、3類型の産後ケア、空き家改修支援などを記録。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -19,7 +19,7 @@
         "payment": "高校卒業相当年齢まで現物給付方式",
         "excluded": "保険適用外費用、入院時食事療養費等は対象外となるため町民税務課へ確認"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/chominzeimu/fukushi-service/162.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/chominzeimu/fukushi-service/162.html", "checkedAt": "2026-07-24"}
     },
     "sickChildCare": {
       "status": "verified",
@@ -35,7 +35,7 @@
         "otherCosts": "昼食・おやつ代200円、布団代100円",
         "procedure": "利用前の事前登録が必要"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/182.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/182.html", "checkedAt": "2026-07-24"}
     },
     "childcareFee": {
       "status": "verified",
@@ -43,12 +43,16 @@
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
       "details": {
         "coverage": "町内外のこども園・保育所等を利用する0～5歳児クラスの保育料を原則無償化",
-        "townFacilityMeals": "町内のよしのこども園は給食費・通園費も無償",
+        "townFacility": "よしのこども園は生後6か月から5歳児までを受入れ",
+        "townFacilityMeals": "町内のよしのこども園は給食費・通園バス利用料も無償",
         "outsideFacilityMeals": "町外認可保育施設等は施設が定める給食費等を負担",
         "unlicensed": "保育の必要性の認定を受けた世帯は、3～5歳月3万7,000円、0～2歳月4万2,000円を上限に補助",
         "temporaryExclusion": "一時預かりの利用料は町の0～5歳保育料無償化の対象外"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/140.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/140.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/194.html", "checkedAt": "2026-07-24"}
+      ]
     },
     "schoolMeals": {
       "status": "verified",
@@ -61,36 +65,51 @@
         "procedure": "在籍児童生徒の手続きや町外通学者の取扱いは教育総務課へ確認",
         "verificationPolicy": "金額・対象期間等の専用案内を確認できない項目は推測しない"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/1900.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/1900.html", "checkedAt": "2026-07-24"}
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子を対象に、宿泊・通所・訪問による産後ケアを合計7回以内で提供する。",
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
       "details": {
-        "target": "出産後に育児不安、支援者不足、授乳の悩み等があり支援を必要とする母子",
-        "care": "母親の心身・育児相談、乳児の健康・発育確認、授乳・乳房ケア、休息支援",
-        "types": "ショートステイ、2・4・6・8時間のデイサービス、約2時間のアウトリーチ",
-        "limit": "利用者1名につき7回以内。ショートステイ1泊は2回換算",
-        "ageByType": "ショートステイ等は施設により産後4か月以内、デイサービス・訪問は産後1年以内",
-        "fee": "課税区分、施設、利用時間、多胎等により異なる。訪問型は0円",
-        "application": "保健センターへの事前連絡・申請・面談・審査後に施設へ予約"
+        "target": "産後1年未満の母子で、育児不安、支援者不足、授乳の悩み等があり支援を必要とする方",
+        "care": "母親の健康・育児・不安相談、乳児の健康・発育確認、授乳・乳房ケア、休息支援",
+        "shortStay": "午前10時から翌午前10時まで。芽愛助産院で実施",
+        "dayCare": "A型2時間、B型4時間、C型6時間、D型8時間。芽愛助産院で午前10時から午後6時まで",
+        "outreach": "町委託の助産師等が自宅へ約2時間訪問",
+        "limit": "合計7回以内。ショートステイ1泊は2回、デイサービス・アウトリーチは1回として算定",
+        "ageByType": "各類型とも産後1年未満",
+        "taxableFees": "課税世帯は宿泊5,750円、通所A550円・B1,250円・C1,750円・D2,250円、訪問無料",
+        "multipleFees": "多胎世帯は宿泊3,875円、通所A375円・B925円・C1,275円・D1,625円、訪問無料",
+        "exemptFees": "非課税・生活保護世帯は宿泊2,750円、通所A150円・B500円・C750円・D1,000円、訪問無料",
+        "exemptMultipleFees": "非課税・生活保護かつ多胎世帯は宿泊3,750円、通所A250円・B800円・C1,150円・D1,500円、訪問無料",
+        "thirdBabyAddition": "対象乳児3人目以降は1人につき宿泊1,000円、通所A100円・B300円・C400円・D500円を加算",
+        "application": "保健センターへ事前連絡後、申請・保健師面談・審査を受け、利用決定通知書と利用証の交付後に施設へ直接予約",
+        "cancellation": "変更・取消は利用予定日の前日12時までに施設へ連絡。期限後はキャンセル料が発生",
+        "payment": "利用時に利用証を提示し、利用料を実施施設へ直接支払う"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/chojufukushi/iryo/bishihokenjigyou/ninshinshussan/1609.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/chojufukushi/iryo/bishihokenjigyou/ninshinshussan/1609.html", "checkedAt": "2026-07-24"}
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "満1歳から小学校入学前までの児童を、保護者の仕事・疾病・出産・リフレッシュ等の際によしのこども園で一時的に預かる。",
       "eligibility": {"minAgeMonths": 12, "maxAgeYears": 6},
       "details": {
-        "residency": "町内外を問わず利用可能",
-        "facility": "よしのこども園",
-        "weekdayHours": "平日8時30分から16時30分",
-        "saturdayHours": "土曜日8時30分から12時30分",
-        "fee": "4時間以上1,500円、4時間未満750円。おやつ代等を含む",
-        "application": "利用希望日の10日前までに教育委員会事務局へ申請書を提出"
+        "traditionalTemporaryCare": {
+          "residency": "町内外を問わず利用可能",
+          "facility": "よしのこども園",
+          "weekdayHours": "平日8時30分から16時30分",
+          "saturdayHours": "土曜日8時30分から12時30分",
+          "fee": "4時間以上1,500円、4時間未満750円。おやつ代等を含む",
+          "application": "利用希望日の10日前までに教育委員会事務局へ申請書を提出"
+        },
+        "anyoneUseVerification": "2026年7月24日時点で、町公式の子育て支援一覧・子育てページに、令和8年度こども誰でも通園制度の対象月齢、施設、料金、利用時間、認定・予約方法を示す利用者向け案内を確認できない。制度不存在とは断定せず、教育総務課へ確認する。"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/129.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/129.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/1900.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.town.yoshino.nara.jp/soshiki/kyoikusomu/kosodate/index.html", "checkedAt": "2026-07-24"}
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -101,11 +120,14 @@
         "amount": "対象改修経費の2分の1、上限50万円",
         "contractor": "町内に本店・支店・営業所がある法人または町内在住の個人施工業者",
         "residence": "改修後に住所移転し5年以上居住すること。所有者側も5年以上利用させること",
+        "twoRegion": "二地域居住者は吉野町へのふるさと納税を5年以上行い、つながり住民吉野へ登録すること",
+        "taxCondition": "町税等の滞納がないこと",
+        "completion": "当該年度内に改修を完了すること",
         "coveredWork": "内外壁・床・天井・屋根・水回り・建具・間取り等の修繕・模様替え",
         "excluded": "機器備品、害虫駆除、造成・造園・外構、家財処分等",
         "procedure": "着工前の補助金交付手続きが必要"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/kurashi/sumai/akiya/768.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/kurashi/sumai/akiya/768.html", "checkedAt": "2026-07-24"}
     },
     "bulkyWaste": {
       "status": "verified",
@@ -119,7 +141,7 @@
         "householdFee": "一般家庭の持込みは10kgにつき63円",
         "preparation": "種類ごとに分別し、木材等は長さ40cm以内に切断"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kankyotaisaku/seikatsukankyo/407.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.yoshino.nara.jp/soshiki/kankyotaisaku/seikatsukankyo/407.html", "checkedAt": "2026-07-24"}
     },
     "disasterPrevention": {
       "status": "verified",
@@ -132,9 +154,9 @@
         "additional": "防災重点ため池マップ、奈良県土砂災害・防災情報システムも案内",
         "updated": "町公式ページは2026年6月に更新"
       },
-      "source": {"url": "https://www.town.yoshino.nara.jp/kurashi/bosai-anzen/795.html", "checkedAt": "2026-07-23"},
+      "source": {"url": "https://www.town.yoshino.nara.jp/kurashi/bosai-anzen/795.html", "checkedAt": "2026-07-24"},
       "additionalSources": [
-        {"url": "https://www.town.yoshino.nara.jp/section/hazardmap/agree.html?lay=dosya", "checkedAt": "2026-07-23"}
+        {"url": "https://www.town.yoshino.nara.jp/section/hazardmap/agree.html?lay=dosya", "checkedAt": "2026-07-24"}
       ]
     }
   }
