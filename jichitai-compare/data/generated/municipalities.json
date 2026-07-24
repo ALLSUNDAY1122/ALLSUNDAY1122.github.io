@@ -125132,7 +125132,7 @@
       "name": "小笠原村",
       "officialUrl": "https://www.vill.ogasawara.tokyo.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を小笠原村公式情報で確認し、5制度をverified、現行制度を確認できない4制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を小笠原村公式情報で再確認し、6制度をverified、現行制度を確認できない3制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -125255,26 +125255,30 @@
           }
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "乳児等通園支援事業（こども誰でも通園制度）は村内実施箇所なし",
+          "status": "verified",
+          "summary": "令和8年度ベビーシッター一時預かり利用料を児童1人年144時間まで補助",
           "eligibility": {
-            "minAgeMonths": 6,
-            "maxAgeYears": 2
+            "minAgeMonths": 0,
+            "maxAgeYears": 6
           },
           "details": {
-            "result": "第3期子ども・子育て支援事業計画では乳児等通園支援事業を未実施としている",
-            "targetCount": "令和7年度から令和11年度まで実施箇所目標は各年度0箇所",
-            "reason": "法体系に準じた事業整備が困難",
-            "alternative": "父島の有償預かり『めかじきっず』とベビーシッター利用助成を実施するが、誰でも通園制度とは別制度"
+            "target": "申請日と利用日に児童とともに村内居住し、突発的事情や社会参加等により一時的な保育または共同保育を必要とする保護者",
+            "child": "満6歳になる年度の末日までの児童",
+            "period": "令和8年4月1日から令和9年3月31日まで",
+            "limit": "児童1人当たり年度内144時間。障害児・ひとり親家庭・多胎児は288時間",
+            "support": "7時から22時は1時間上限2,500円、22時から翌7時は1時間上限3,500円",
+            "provider": "東京都認定のベビーシッター事業者から選び、保護者が直接契約",
+            "procedure": "利用料を事業者へ支払った後、要件証明書、領収書、利用明細書等を添えて村へ補助金申請",
+            "excluded": "入会金、会費、交通費、キャンセル料、おむつ代等の実費・付随料金は補助対象外"
           },
           "source": {
-            "url": "https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/2025/03/4da20b614f12546ddace87159231e7ca.pdf",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.vill.ogasawara.tokyo.jp/sonmin/kosodate/",
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
-              "url": "https://www.vill.ogasawara.tokyo.jp/sonmin/kosodate/",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.vill.ogasawara.tokyo.jp/wp-content/uploads/sites/2/2026/03/66017dc96921312d4baa344782bddffa.pdf",
+              "checkedAt": "2026-07-24"
             }
           ]
         },
@@ -153463,7 +153467,7 @@
       "name": "諏訪市",
       "officialUrl": "https://www.city.suwa.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を諏訪市公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を諏訪市公式情報で確認し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -153525,21 +153529,36 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助で給食費実費を支給する制度は確認できるが、令和8年度の一般世帯の給食費額を公式公開情報で確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度も学校給食費を徴収し、中学校の食材料費高騰分を市が補助",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "要保護・準要保護世帯には学校給食費を含む就学費用の一部または実費を支給",
-            "currentDecision": "令和8年1月教育委員会で令和8年度学校給食費が議決されたことを確認",
-            "needsConfirmation": "小学校・中学校別の1食単価、月額・年額、物価高騰分公費補助後の保護者負担額は教育総務課または在籍校へ確認"
+            "confirmed": "令和8年1月教育委員会で令和8年度学校給食費を議決し、児童手当から学校給食費等を徴収できる現行規則を確認",
+            "priceSupport": "物価高騰対応重点支援地方創生臨時交付金の実施計画に、中学校の学校給食費物価高騰分補助事業887万3,000円を計上",
+            "incomeSupport": "要保護・準要保護世帯には学校給食費の実費を就学援助で支給",
+            "reviewReason": "令和8年度の小学校・中学校別1食単価、月額・年額、補助後の保護者負担額は教育総務課または在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.city.suwa.lg.jp/site/kosodate/4242.html",
+            "url": "https://www.city.suwa.lg.jp/uploaded/attachment/50280.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.suwa.lg.jp/site/kosodate/4242.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.suwa.lg.jp/reiki/reiki_honbun/e707RG00000959.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.suwa.lg.jp/reiki/reiki_honbun/e707RG00001327.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -153602,22 +153621,34 @@
           }
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "令和8年度の収集カレンダーは公開されているが、大型ごみの品目別持込先・料金を現行公式ページで確定できない",
+          "status": "verified",
+          "summary": "大型可燃物は諏訪湖周クリーンセンター等へ10kg110円で直接搬入",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "confirmed": "令和8年度家庭ごみ収集カレンダーを市役所・各公民館等で配布しPDF公開",
-            "general": "大型可燃物・不燃物や一時多量ごみは処理施設へ直接持込または市許可業者へ依頼する方式",
-            "needsConfirmation": "令和8年度の諏訪湖周クリーンセンター等の持込料金、受付時間、品目別持込先、大型可燃物常設ステーションの利用条件は環境課へ確認",
-            "excluded": "家電リサイクル対象品は販売店・指定引取場所等で処理"
+            "target": "布団、たんす、じゅうたんなど指定ごみ袋に入らず、ごみステーションへ出せない大型可燃物",
+            "facility": "諏訪湖周クリーンセンター（岡谷市字内山4769番地14）または株式会社信州タケエイ",
+            "hours": "諏訪湖周クリーンセンターは平日8時30分～16時、土曜日8時30分～正午。12月31日～1月3日は休業",
+            "fee": "搬入時に計量し、10kgにつき110円を現金で支払う",
+            "procedure": "自ら直接搬入するか、有料で一般廃棄物収集運搬業許可業者へ依頼",
+            "excluded": "大型不燃物・家電リサイクル対象品・処理困難物は品目別の指定先へ持込みまたは販売店等へ依頼"
           },
           "source": {
-            "url": "https://www.city.suwa.lg.jp/soshiki/10/80644.html",
+            "url": "https://www.city.suwa.lg.jp/soshiki/10/2127.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.suwa.lg.jp/soshiki/10/2090.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.suwa.lg.jp/soshiki/10/80644.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "disasterPrevention": {
           "status": "verified",
@@ -153646,7 +153677,7 @@
       "name": "須坂市",
       "officialUrl": "https://www.city.suzaka.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を須坂市公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を須坂市公式情報で確認し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -153719,22 +153750,27 @@
           ]
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度も小中学校給食を提供しているが、一般世帯の1食単価・月額・年額を公式公開情報で確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度も小中学校給食を提供し、国交付金を活用した物価高騰負担軽減対策を実施",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
             "confirmed": "令和8年4月以降の小学校・中学校・須坂支援学校の献立表と日々の給食提供を確認",
+            "budgetSupport": "2026年度当初予算で、国の交付金を活用した学校給食費物価高騰の負担軽減対策1億8,856万円を計上",
             "support": "経済的理由で就学が困難な世帯には、就学援助制度で学校給食費を援助",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、物価高騰対策等による公費負担後の一般世帯負担額、欠食時精算は学校給食センターまたは在籍校へ確認"
+            "reviewReason": "令和8年度の小学校・中学校別1食単価、月額・年額、負担軽減後の一般世帯負担額、欠食時精算は学校給食センターまたは在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.city.suzaka.nagano.jp/soshiki/10010/2/576.html",
+            "url": "https://www.city.suzaka.nagano.jp/material/files/group/4/2026tosyoyosangaiyou.pdf",
             "checkedAt": "2026-07-24"
           },
           "additionalSources": [
+            {
+              "url": "https://www.city.suzaka.nagano.jp/soshiki/10010/2/576.html",
+              "checkedAt": "2026-07-24"
+            },
             {
               "url": "https://www.city.suzaka.nagano.jp/soshiki/10010/4/614.html",
               "checkedAt": "2026-07-24"
@@ -153848,7 +153884,7 @@
       "name": "小諸市",
       "officialUrl": "https://www.city.komoro.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を小諸市公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を小諸市公式情報で確認し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -153909,21 +153945,36 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助による給食費支給は確認できるが、令和8年度の一般世帯負担額を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度は小学校全児童の給食費を全額公費負担し、中学校は保護者負担を継続",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "経済的理由で就学困難な世帯には就学援助制度で学校給食費等を支給",
-            "pastReference": "令和7年度は小学校1食330円のうち保護者280円、中学校1食380円のうち保護者330円と案内されていた",
-            "needsConfirmation": "令和8年度の小中学校別1食単価、月額・年額、公費補助後の一般世帯負担額、欠食時精算は学校教育課または在籍校へ確認"
+            "elementary": "令和8年度は小学校全児童の給食費を全額公費負担。一般会計に小学校給食費負担金1億296万円を国庫負担金10分の10として計上",
+            "juniorHigh": "中学校給食費は無償化対象外で保護者負担を継続。令和7年度は1食380円のうち保護者330円だった",
+            "support": "経済的理由で就学困難な世帯には就学援助制度で学校給食費等を支給",
+            "reviewReason": "令和8年度の中学校1食単価、月額・年額、物価高騰分の市補助後負担額、欠食時精算は学校教育課または在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.city.komoro.lg.jp/soshikikarasagasu/kyoikuiinkaijimukyoku/gakkokyoikuka/1/1/576.html",
+            "url": "https://www.city.komoro.lg.jp/material/files/group/4/R8ippankaikei.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.komoro.lg.jp/material/files/group/3/202604P10-11.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.komoro.lg.jp/material/files/group/29/R0803ichiran.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.komoro.lg.jp/soshikikarasagasu/kyoikuiinkaijimukyoku/gakkokyoikuka/1/1/576.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -154997,7 +155048,7 @@
       "name": "茅野市",
       "officialUrl": "https://www.city.chino.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を茅野市公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を茅野市公式情報で確認し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -155061,21 +155112,30 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "市立小中学校で給食を提供しているが、令和8年度の一般世帯の1食単価・月額・年額を公式公開情報で確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度は小学校の年間給食費を約1万4,000円へ大幅軽減し、中学校は1食60円を補助",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "学校教育課が学校給食事務を所管し、市内9小学校・4中学校で給食を実施",
-            "support": "経済的理由で就学が困難な世帯は就学援助費の対象となる場合がある",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、物価高騰対策等による公費負担、欠食時精算は学校教育課または在籍校へ確認"
+            "elementary": "国の給食費負担軽減交付金を活用し、小学校給食費の保護者負担を令和7年度の年間約6万円から令和8年度は約1万4,000円へ軽減",
+            "budget": "小学校給食費負担軽減支援に係る費用として、令和8年度予算で1億4,700万円の増額要因を計上",
+            "juniorHigh": "賄材料費等の物価高騰対策として、中学校を含む学校給食1食当たり60円を市が補助",
+            "continuation": "従来の1食15円補助を、令和8年度は国の物価高騰対策交付金を活用して60円へ拡充し継続",
+            "incomeSupport": "経済的理由で就学が困難な世帯は就学援助費の対象となる場合がある",
+            "reviewReason": "令和8年度の中学校1食単価、月額・年額、60円補助後の一般世帯負担額、欠食時精算は学校教育課または在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.city.chino.lg.jp/soshiki/gakkoukyouiku/index.html",
+            "url": "https://www.city.chino.lg.jp/uploaded/attachment/40947.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.chino.lg.jp/soshiki/gakkoukyouiku/index.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -155184,7 +155244,7 @@
       "name": "塩尻市",
       "officialUrl": "https://www.city.shiojiri.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を塩尻市公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を塩尻市公式情報で確認し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -155246,21 +155306,35 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度の就学援助で給食費を支給する制度は確認できるが、一般世帯の現行給食費を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度は小学校給食費を無償化し、中学校は食材費高騰分を市が負担して保護者負担を軽減",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "令和8年度の要保護・準要保護児童生徒には学校給食費を含む就学援助費を支給",
-            "pastReference": "市公式の給食費ページには小学校1日300円・年額59,400円、中学校1日350円・年額69,300円の記載があるが、年度表記と更新時期が一致せず令和8年度額として確定できない",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、物価高騰対策等による公費負担後の一般世帯負担額、欠食時精算は教育総務課または在籍校へ確認"
+            "elementary": "国の学校給食費負担軽減制度の基準額を活用し、基準額を超える分も市が負担することで小学校の保護者負担を0円とする",
+            "elementaryBudget": "小学校給食運営事業諸経費として4,900万円を計上",
+            "juniorHigh": "中学校は給食食材費の高騰分を市が負担し、保護者負担の増加を抑制",
+            "juniorHighBudget": "中学校給食運営事業諸経費として2,100万円を計上",
+            "pastReference": "令和7年度の公式案内では小学校1日300円・年額59,400円、中学校1日350円・年額69,300円",
+            "incomeSupport": "令和8年度の要保護・準要保護児童生徒には学校給食費を含む就学援助費を支給",
+            "reviewReason": "令和8年度の中学校1食単価、月額・年額、食材費高騰分の市負担後の一般世帯負担額、欠食時精算は教育総務課または在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.city.shiojiri.lg.jp/soshiki/39/31287.html",
+            "url": "https://www.city.shiojiri.lg.jp/soshiki/8/62304.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.shiojiri.lg.jp/soshiki/39/2791.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.shiojiri.lg.jp/soshiki/39/31287.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -155372,7 +155446,7 @@
       "name": "佐久市",
       "officialUrl": "https://www.city.saku.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を佐久市公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を佐久市公式情報で確認し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -155434,22 +155508,28 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度の小中学校給食提供と就学援助は確認できるが、一般世帯の現行負担額を公式公開情報で確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度は小学校給食費を無償化し、全センターの食材費高騰分を市が補助",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "令和8年度も南部・北部・臼田・望月の各給食センターから市立小中学校へ給食を提供",
-            "support": "経済的理由で学校給食費等の負担が困難な保護者には要保護・準要保護就学援助制度を実施",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、物価高騰対策等による公費負担後の一般世帯負担額、欠食時精算は学校給食課または在籍校へ確認"
+            "elementary": "国の給食費負担軽減に伴い、小学校給食費の基準額分を無償化。給食費負担軽減補助金3億125万8,000円を新規計上",
+            "priceSupport": "小中学校を含む各給食センターの食材費物価高騰対策として、給食センター物価高騰対策事業補助金7,341万円を計上",
+            "operation": "令和8年度も南部・北部・臼田・望月の各給食センターから市立小中学校へ給食を提供",
+            "incomeSupport": "経済的理由で学校給食費等の負担が困難な保護者には要保護・準要保護就学援助制度を実施",
+            "reviewReason": "令和8年度の中学校1食単価、月額・年額、食材費高騰補助後の一般世帯負担額、欠食時精算は学校給食課または在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.city.saku.nagano.jp/kyoiku/kyoiku/shochugakko/kyuusyoku/konndate29-5.html",
+            "url": "https://www.city.saku.nagano.jp/shisei/zaisei/yosan/reiwa8.files/r8-1.pdf",
             "checkedAt": "2026-07-24"
           },
           "additionalSources": [
+            {
+              "url": "https://www.city.saku.nagano.jp/kyoiku/kyoiku/shochugakko/kyuusyoku/konndate29-5.html",
+              "checkedAt": "2026-07-24"
+            },
             {
               "url": "https://www.city.saku.nagano.jp/kyoiku/kyoiku/shochugakko/shugakuenjo.html",
               "checkedAt": "2026-07-24"
@@ -155764,7 +155844,7 @@
       "name": "東御市",
       "officialUrl": "https://www.city.tomi.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を東御市公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を東御市公式情報で確認し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -155828,22 +155908,29 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度も市立小中学校で給食を提供し就学援助で実費を支給するが、一般世帯の現行負担額を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度は小学校給食費の負担軽減、中学校の改定激変緩和、食材費高騰分補填を実施",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "東部地区は自校方式、北御牧地区はセンター方式で市立小中学校へ給食を提供",
-            "support": "令和8年度就学援助の認定世帯には学校給食費の保護者負担実費を支給",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、物価高騰対策等による公費負担後の一般世帯負担額、欠食時精算は教育課または在籍校へ確認"
+            "operation": "東部地区は自校方式、北御牧地区はセンター方式で令和8年度も市立小中学校へ給食を提供",
+            "elementary": "小学校向け給食費負担軽減交付金7,836万4,000円を計上",
+            "juniorHigh": "給食費改定に伴う中学校保護者の激変緩和措置として380万円を計上",
+            "priceSupport": "小中学校の物価高騰による食材費上乗せ分の補填として1,211万円を計上",
+            "incomeSupport": "令和8年度就学援助の認定世帯には学校給食費の保護者負担実費を支給",
+            "reviewReason": "令和8年度の小学校・中学校別1食単価、月額・年額、各補助後の一般世帯負担額、欠食時精算は教育課または在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.city.tomi.nagano.jp/category/nyuugaku/130293.html",
+            "url": "https://www.city.tomi.nagano.jp/file/183193.pdf",
             "checkedAt": "2026-07-24"
           },
           "additionalSources": [
+            {
+              "url": "https://www.city.tomi.nagano.jp/category/nyuugaku/130293.html",
+              "checkedAt": "2026-07-24"
+            },
             {
               "url": "https://www.city.tomi.nagano.jp/category/kyusyoku/166396.html",
               "checkedAt": "2026-07-24"
@@ -156359,7 +156446,7 @@
       "name": "川上村",
       "officialUrl": "https://www.vill.kawakami.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を川上村公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を川上村公式情報で確認し、7制度をverified、1制度をneeds_medium_review、1制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -156455,24 +156542,33 @@
           ]
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "助産師訪問・母子保健相談は確認できるが、令和8年度産後ケア事業の類型・料金・利用上限を確定できない",
+          "status": "needs_medium_review",
+          "summary": "公式計画と保健資料で産後ケア事業の実施を確認したが、令和8年度の類型・料金・利用上限は最終確認が必要",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "confirmed": "村は新生児家庭訪問、助産師訪問、乳児健診、子育て支援窓口等の母子保健支援を実施",
-            "consultation": "子育てに関する相談はヘルシーパークかわかみの保健福祉課窓口で平日8時30分～17時に対応",
-            "needsConfirmation": "宿泊型・通所型・訪問型産後ケアの実施有無、対象月齢、施設、利用日数・回数、自己負担額、申請方法は保健福祉課へ確認"
+            "confirmed": "第2次いのち支える自殺対策計画の母子保健施策と第2期まち・ひと・しごと創生戦略に産後ケア事業を明記",
+            "guidance": "村公式の保健だよりでも、産後の身体・心・授乳・育児の悩みがある家庭へ産後ケア事業の利用を案内し、保健福祉課保健係を相談先としている",
+            "currentPlan": "令和8年度母子保健事業計画が公式サイトに掲載されていることを確認",
+            "reviewReason": "令和8年度の宿泊・通所・訪問型の実施範囲、対象月齢、利用可能施設、利用日数・回数、自己負担額、申請・予約方法を公開情報だけでは確定できない"
           },
           "source": {
-            "url": "https://www.vill.kawakami.nagano.jp/www/contents/1001000000031/index.html",
+            "url": "https://www.vill.kawakami.nagano.jp/www/contents/1749514627792/simple/inotisasaeru.pdf",
             "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
-              "url": "https://www.vill.kawakami.nagano.jp/www/contents/1747876167480/index.html",
+              "url": "https://www.vill.kawakami.nagano.jp/www/contents/1489387415899/simple/senryaku.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.kawakami.nagano.jp/www/contents/1718781695504/simple/hokendayori1.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.kawakami.nagano.jp/www/section/1487637332554/index.html",
               "checkedAt": "2026-07-24"
             }
           ]
@@ -156956,24 +157052,34 @@
       "name": "北相木村",
       "officialUrl": "https://www.vill.kitaaiki.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を公式・公的情報で確認し、4制度をverified、5制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を公式・公的情報で再監査し、5制度をverified、3制度をunavailable、1制度をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子どもの医療費補助実施は確認できるが、令和8年度の対象年齢・自己負担額・申請方法を公式サイト障害のため確定できない",
+          "status": "verified",
+          "summary": "18歳年度末までの保険診療自己負担分を1レセプト500円で助成",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "confirmed": "令和8年度親子山村留学生向け村公式資料で、村民が受けられる行政サービスとして医療費補助を案内",
-            "needsConfirmation": "対象となる年齢上限、受給者負担金、現物給付・償還払いの条件、県外受診時の手続き、学校災害共済との調整は住民福祉課へ確認",
-            "siteStatus": "村公式サイトが一時的にアクセスできない状態のため、最新制度ページを確認できない"
+            "target": "北相木村に住所がある、18歳到達後最初の3月31日までの子ども",
+            "coverage": "福祉医療費給付事業の現物給付方式により、保険診療の自己負担分を助成",
+            "copay": "令和8年8月1日時点の県資料では、医療機関等の窓口で1レセプトにつき500円を負担",
+            "meals": "入院時食事療養費の助成なし",
+            "procedure": "村へ受給者証を申請し、県内の対応医療機関等で受給者証と保険資格確認書類を提示",
+            "reimbursement": "県外受診や受給者証未提示時の償還払い、高額療養費・学校災害共済等との調整は住民福祉課へ確認",
+            "siteStatus": "村公式サイト本体は一時的にアクセスできないため、県の令和8年8月1日現在資料と村の令和8年度公式募集資料で確認"
           },
           "source": {
-            "url": "https://www.vill.kitaaiki.nagano.jp/fs/7/9/1/2/0/_/__8__________.pdf",
+            "url": "https://www.pref.nagano.lg.jp/kenko-fukushi/kenko/fukushi/fukushi/documents/r808jissijokyo_kenmin.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.kitaaiki.nagano.jp/fs/7/9/1/2/0/_/__8__________.pdf",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "sickChildCare": {
           "status": "unavailable",
@@ -157107,19 +157213,21 @@
           }
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "令和8年度の洪水・土砂災害ハザードマップと指定避難所を公式サイト障害のため確認できない",
+          "status": "needs_medium_review",
+          "summary": "県公式情報で土砂災害警戒区域・特別警戒区域と最新確認経路を確認したが、村の最新避難所・洪水マップは要確認",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "needsConfirmation": "相木川等の洪水浸水想定、土砂災害警戒区域・特別警戒区域、指定緊急避難場所・避難所、地区別防災マップの最新版を総務企画課へ確認",
-            "alternative": "国土交通省ハザードマップポータルと長野県統合型GISでも周辺危険区域を補完確認",
-            "siteStatus": "村公式サイトが一時的にアクセスできず、最新の村防災資料を確認できない"
+            "confirmed": "長野県佐久建設事務所は、北相木村の土砂災害警戒区域・特別警戒区域の指定と、信州砂防情報マップによる最新指定状況の確認方法を公開",
+            "hazards": "土石流、急傾斜地の崩壊、地すべりの警戒区域が村内に指定されている",
+            "map": "信州砂防情報マップと県統合型GISで土砂災害警戒区域等を確認可能",
+            "needsConfirmation": "村版ハザードマップの最新版、相木川と支流の洪水浸水想定、地域別指定避難所、避難情報の受信方法は村公式サイト復旧後または総務企画課へ確認",
+            "siteStatus": "村公式サイト本体は一時的にアクセスできない状態"
           },
           "source": {
-            "url": "https://www.vill.kitaaiki.nagano.jp/",
+            "url": "https://www.pref.nagano.lg.jp/sakuken/jigyo/doshahositei.html",
             "checkedAt": "2026-07-24"
           }
         }
@@ -157889,7 +157997,7 @@
       "name": "青木村",
       "officialUrl": "https://www.vill.aoki.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を青木村公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を公式情報で再監査し、8制度をverified、1制度をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -157910,20 +158018,31 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "令和8年度に青木村民が利用できる病児・病後児保育施設、対象年齢、料金、予約方法を村公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "青木村民は上田市内2か所の病児・病後児保育センターを1日1,000円で利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 12
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
           },
           "details": {
-            "research": "村公式の子育て支援ページ、申請書・補助金一覧、住民福祉課案内を確認",
-            "needsConfirmation": "上田地域等の広域利用可否、利用施設、事前登録、医師連絡票、対象年齢、利用料、予約方法は住民福祉課へ確認"
+            "target": "青木村、上田市、長和町に在住する病気療養中または回復期の子どもで、集団保育が困難かつ保護者が家庭で看護できない場合",
+            "facilities": "上田病院病児保育センター、丸子中央病院病児保育センター",
+            "age": "上田病院は生後6か月～小学3年生、丸子中央病院は1歳～小学3年生",
+            "hours": "月～金曜日8時～17時、必要時は18時まで延長。祝日・年末年始を除く",
+            "capacity": "各施設1日6人",
+            "fee": "1人1日1,000円。診療費・食事等の実費と17時以降の延長料金は別途",
+            "procedure": "事前登録後、原則前日までに仮予約し、医療機関の診療情報提供書を用意して予約を確定"
           },
           "source": {
-            "url": "https://www.vill.aoki.nagano.jp/kosodate.html",
+            "url": "https://www.city.ueda.nagano.jp/soshiki/kosodate-k/2730.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://ueda-hp.or.jp/%E7%97%85%E5%85%90%E4%BF%9D%E8%82%B2%E3%82%BB%E3%83%B3%E3%82%BF%E3%83%BC",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -157945,20 +158064,28 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和7年度の保育園・小中学校給食費無償化は確認できるが、令和8年度の継続・一般世帯負担額を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度重点支援地方交付金の活用計画は公開済みだが、学校給食費無償化の継続内容はPDF本文の確認が必要",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "令和7年度は物価高騰対応交付金を活用して、青木村保育園・小学校・中学校の給食費を無料化し、村外通園・通学者にも相当額を補助",
-            "needsConfirmation": "令和8年度の無償化継続、小中学校別1食単価・月額・年額、村外通学者補助、欠食時精算は教育委員会へ確認"
+            "pastConfirmed": "令和7年度は物価高騰対応交付金を活用して保育園・小学校・中学校の給食費を無料化し、村外通園・通学者にも相当額を補助",
+            "currentPlan": "村公式サイトで令和8年6月現在の重点支援地方交付金活用状況PDFが公開されていることを確認",
+            "needsConfirmation": "令和8年度計画に給食費軽減事業が含まれるか、無償化対象、村外通学者補助、小中学校別単価、実施期間をPDF本文または教育委員会で確認",
+            "fetchStatus": "公開PDFは確認できたが、調査時に自治体サイトのキャッシュ制限で本文取得ができなかった"
           },
           "source": {
-            "url": "https://www.vill.aoki.nagano.jp/topic?_anch_=971&id=8",
+            "url": "https://www.vill.aoki.nagano.jp/asset/00032/gyousei/soumuka/zigyoushuishin/deta/20260716.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.aoki.nagano.jp/topic?_anch_=971&id=8",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -158834,7 +158961,7 @@
       "name": "辰野町",
       "officialUrl": "https://www.town.tatsuno.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を辰野町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を辰野町公式情報で再監査し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -158897,21 +159024,36 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助の給食費支給上限は確認できるが、令和8年度の一般世帯負担額を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度の学校給食提供・就学援助・当初予算を確認。一般世帯の現行負担額は最終確認が必要",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "令和8年度就学援助では学校給食費について小学校年額58,000円、中学校年額65,340円を上限として支給",
-            "needsConfirmation": "一般世帯の小学校・中学校別1食単価、月額・年額、公費負担後の負担額、欠食時精算は教育委員会または在籍校へ確認",
-            "reason": "学校給食の実施と就学援助額は確認できたが、一般世帯向けの令和8年度徴収額を公式公開情報で確定できない"
+            "operation": "令和8年度も町内小中学校で学校給食を提供し、給食調理員募集と給食室改修事業を実施",
+            "assistance": "令和8年度就学援助は学校給食費を小学校年額58,000円、中学校年額65,340円を上限として支給",
+            "budget": "令和8年度一般会計予算100億5,000万円の下で、こども・子育て環境強化と学校給食運営を継続",
+            "needsConfirmation": "一般世帯の小学校・中学校別1食単価、月額・年額、公費負担後の負担額、欠食時精算は教育委員会または在籍校へ最終確認"
           },
           "source": {
             "url": "https://www.town.tatsuno.lg.jp/gyosei/soshiki/gakkoshienka/kosodate_kyoiku/4/446.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.tatsuno.lg.jp/gyosei/soshiki/machizukuriseisakuka/choseijoho/8/745.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.town.tatsuno.lg.jp/gyosei/soshiki/somuka/choseijoho/4/737.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.town.tatsuno.lg.jp/gyosei/soshiki/machizukuriseisakuka/shigoto_sangyo/3/932.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -159615,7 +159757,7 @@
       "name": "中川村",
       "officialUrl": "https://www.vill.nakagawa.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を中川村公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を中川村公式情報で再監査し、8制度をverified、学校給食費をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -159675,21 +159817,37 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度の小学校給食食材費無償化方針は確認できるが、中学校を含む一般世帯の現行負担額を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度は小学校給食食材費を補正予算で無償化する方針。小中学生世帯への給食費等支援も実施するが、中学校の最終負担額は確認が必要",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "令和8年度に国方針に沿って小学校給食食材費の無償化を補正予算対応する基本方針を確認",
+            "elementary": "国の方針に従い、小学校給食食材費の無償化を遅れなく補正予算対応する基本方針",
+            "familySupport": "令和7年度補正で小・中学生子育て世帯の給食費等支援に1,319万円を配分し、令和8年度にも関係する負担軽減を実施",
             "existingSupport": "村産米代全額や食材高騰分等を村が支援してきた実績あり",
-            "needsConfirmation": "小学校無償化の開始月・対象範囲、中学校の1食単価・月額・年額、公費補助後の保護者負担、欠食時精算は教育委員会または在籍校へ確認"
+            "currentDiscussion": "令和8年3月議会で中学校給食費無償化、6月議会で学校給食費の抜本的負担軽減が一般質問事項となっている",
+            "needsConfirmation": "小学校無償化の開始月・対象範囲、中学校の1食単価・月額・年額、公費補助後の保護者負担、欠食時精算は教育委員会または在籍校へ最終確認"
           },
           "source": {
             "url": "https://www.vill.nakagawa.nagano.jp/site/soncho/12859.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.nakagawa.nagano.jp/site/soncho/12665.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.nakagawa.nagano.jp/site/gikai/12806.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.nakagawa.nagano.jp/site/gikai/13124.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -159807,7 +159965,7 @@
       "name": "宮田村",
       "officialUrl": "https://www.vill.miyada.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を宮田村例規集等の公式情報で確認し、5制度をverified、4制度をunavailableとして登録。",
+      "summary": "宮田村の学校給食費・乳児等通園支援事業・防災を公式予算方針・例規・国県公開情報で再監査し、5制度をverified、3制度をneeds_medium_review、1制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -159872,21 +160030,28 @@
           ]
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "宮田小学校・宮田中学校で学校給食を実施しているが、令和8年度の保護者負担額を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度当初予算の重点事業として小中学校給食費無償化の実施方針を確認。最終単価・対象期間等は確認が必要",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "宮田小学校には給食棟、宮田中学校にはランチルームがあり、学校給食を実施",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、公費負担・無償化の有無、欠食時精算は教育委員会または在籍校へ確認",
-            "reason": "学校給食の実施は確認できたが、一般世帯向けの現行徴収額を公式公開情報で確定できない"
+            "confirmed": "宮田小学校・宮田中学校で学校給食を実施し、令和8年度当初予算の重点事業として小中学校給食費無償化が示されている",
+            "facility": "宮田小学校には給食棟、宮田中学校にはランチルームがある",
+            "needsConfirmation": "無償化の開始月、対象となる児童生徒・村外通学者、1食単価・月額・年額、欠食・転入出時の精算は教育委員会または在籍校へ最終確認",
+            "reviewReason": "村の公式移住教育案内と令和8年度予算方針を確認できたが、村公式サイトの利用者向け徴収案内を取得できないため中確度レビューとする"
           },
           "source": {
             "url": "https://go2miyada.net/education",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.miyadajin.net/post/seiji20260217",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -159909,21 +160074,32 @@
           }
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "乳児等通園支援事業の実施基準は制定済みだが、現行の施設・時間・料金・予約方法を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度施行の乳児等通園支援事業の条例・運営基準を制定。利用施設・料金等は最終確認が必要",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 2
           },
           "details": {
-            "confirmed": "令和8年度施行の乳児等通園支援事業について、一般型・余裕活用型の設備運営基準を制定",
-            "needsConfirmation": "利用施設、対象月齢、月間利用上限、利用料、給食等実費、面談・予約方法は教育委員会へ確認",
-            "reason": "制度の運営基準は確認できたが、宮田村で利用者向けに適用される現行条件を公式公開情報で確定できない"
+            "confirmed": "令和8年度からの乳児等通園支援事業について条例、施行規則、一般型・余裕活用型の設備運営基準を整備",
+            "nationalFramework": "保育所等を利用していない生後6か月から満3歳未満の子どもが、就労要件を問わず月一定時間利用する全国制度",
+            "needsConfirmation": "宮田村の実施施設、開始日、対象月齢、月10時間枠の適用、1時間当たり利用料、給食等実費、認定・面談・予約方法は教育委員会へ最終確認",
+            "reviewReason": "村の制度実施基盤は公式例規で確認できるが、利用者向けの現行施設一覧・料金案内を取得できないため中確度レビューとする"
           },
           "source": {
             "url": "https://www1.g-reiki.net/miyada/reiki_honbun/e750RG00000840.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www1.g-reiki.net/miyada/reiki_taikei/r_taikei_07_01.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.cfa.go.jp/policies/hoiku/daredemo-tsuen/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -159963,21 +160139,32 @@
           }
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "防災行政無線による災害情報提供体制は確認できるが、現行ハザードマップの掲載内容を確定できない",
+          "status": "needs_medium_review",
+          "summary": "防災行政無線と国・県の公開ハザード情報で宮田村の災害危険区域を確認可能。村版地図・避難所最新版は確認が必要",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
             "confirmed": "地震、火災、台風等の非常事態に関する情報を防災行政無線で常時運用する規定を確認",
-            "needsConfirmation": "洪水・土砂災害・地震等の現行ハザードマップ、指定避難所、避難情報配信手段の最新版は総務課へ確認",
-            "reason": "公開サイトがJavaScript構成で、令和8年度時点の地図・避難所情報を公式公開ページから確定できない"
+            "hazardInformation": "国土地理院ハザードマップポータルに宮田村の公開ハザードマップ窓口が登録され、長野県・信州防災アプリでも水害・土砂災害の危険度を確認可能",
+            "needsConfirmation": "宮田村版の洪水・土砂災害・地震等ハザードマップの改訂年、指定緊急避難場所・指定避難所一覧、村独自の防災情報配信手段は総務課へ最終確認",
+            "reviewReason": "村公式サイトがJavaScript構成で利用者向け地図本文を取得できないため中確度レビューとする"
           },
           "source": {
             "url": "https://www1.g-reiki.net/miyada/reiki_honbun/e750RG00000281.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://disaportal.gsi.go.jp/hazardmap/publicate/tablelist.html?hazardcode=1",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.pref.nagano.lg.jp/bosai/shinsyubosai.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         }
       }
     },
@@ -160368,146 +160555,204 @@
       "name": "阿南町",
       "officialUrl": "https://www.town.anan.nagano.jp/",
       "status": "verified",
-      "summary": "阿南町公式サイトが一時停止中のため、必須9制度は推測せずunavailableとして確認事項を登録。",
+      "summary": "町公式サイト停止中のため現行例規・公式広域資料で9制度を再監査し、6制度をverified、2制度をneeds_medium_review、1制度をunavailableとして登録。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "町公式サイト停止中のため、令和8年度の対象年齢・自己負担・申請方法を確定できない",
+          "status": "verified",
+          "summary": "出生から18歳年度末までの保険診療自己負担分を福祉医療費として助成",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "confirmed": "阿南町公式サイトへの接続を複数回試行したが、一時停止案内となった",
-            "needsConfirmation": "対象年齢、所得制限、受給者証、窓口給付・償還払い、自己負担額を民生課へ確認"
+            "target": "阿南町に住所を有する、出生の日から18歳到達後最初の3月31日までの子ども",
+            "coverage": "医療保険が適用される診療・調剤等の自己負担分から、保険給付・入院時食事療養費・他制度給付・別に定める受給者負担額等を控除して助成",
+            "procedure": "事前に受給者証の交付申請が必要。協力医療機関等では保険資格確認書類と受給者証を提示",
+            "payment": "18歳年度末までの子どもは、協力医療機関等からの情報に基づき医療機関へ給付金を支払う現物給付に対応",
+            "reimbursement": "県外受診等で申請が必要な場合は、療養を受けた月の初日から1年以内に手続き",
+            "excluded": "保険適用外費用、入院時食事療養費、高額療養費・付加給付、他制度給付、第三者行為等は対象外または調整"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000334.html",
             "checkedAt": "2026-07-24"
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "町公式サイト停止中のため、現行の病児・病後児保育施設・対象年齢・料金を確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学6年生まで、飯田地域の病児・病後児保育を利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "needsConfirmation": "飯田・伊南地域の広域利用可否、実施施設、対象年齢、事前登録、医師連絡票、料金、予約方法を教育委員会または民生課へ確認"
+            "target": "阿南町に住所がある生後6か月から小学校在学中までの児童で、病気または回復期にあり入院不要だが安静への配慮が必要で、保護者が家庭保育できない場合",
+            "area": "飯田市との定住自立圏形成協定に基づく病児・病後児保育施設を利用",
+            "fee": "5時間以上2,000円、5時間未満1,000円",
+            "reduction": "生活保護世帯と一定の非課税母子世帯等は全額減額、その他の非課税世帯は5時間以上1,000円・5時間未満500円を減額",
+            "procedure": "事前登録、利用申込み、施設予約、診療情報提供書等の要否を利用施設へ確認",
+            "limitations": "入院治療が必要な場合、定員超過、症状等により受入不可の場合あり"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000285.html",
             "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {
-          "status": "unavailable",
-          "summary": "町公式サイト停止中のため、令和8年度の0～2歳児保育料・多子軽減・副食費を確定できない",
+          "status": "verified",
+          "summary": "3歳以上児等を無償化し、3歳未満児は所得階層・保育時間と多子軽減により算定",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "confirmed": "国制度による3～5歳児等の無償化対象となる可能性があるが、町独自制度を含む現行条件は未確認",
-            "needsConfirmation": "0～2歳児保育料表、多子・低所得軽減、副食費、延長保育等の実費を教育委員会へ確認"
+            "threeAndOver": "3～5歳児等は幼児教育・保育無償化の対象。給食費、延長保育料等の実費は別途確認",
+            "underThree": "生活保護・町民税非課税世帯は0円。課税世帯は町民税所得割額と標準時間・短時間に応じ、現行基準表で月額8,450円～32,800円等を設定",
+            "multiChild": "中学校卒業までの子を年齢順に数え、第2子は基準額の概ね半額、第3子以降は0円となる区分を設定",
+            "dailyRate": "法令上の休園等で保育提供がない場合、満3歳未満児の利用者負担額を25日基礎で日割計算",
+            "confirmation": "令和8年度の個別決定額、副食費、延長保育等は入所決定時に教育委員会へ確認"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000370.html",
             "checkedAt": "2026-07-24"
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "町公式サイト停止中のため、令和8年度の小中学校給食費・無償化範囲を確定できない",
+          "status": "verified",
+          "summary": "令和8年4月から小中学校の保護者負担給食費を原則無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "needsConfirmation": "小学校・中学校別の1食単価、月額・年額、公費補助・無償化、町外就学者の扱いを教育委員会へ確認"
+            "free": "令和8年4月1日施行の条例改正により、児童・生徒の保護者が負担する学校給食費は原則徴収しない",
+            "exceptions": "生活保護の教育扶助または就学援助で学校給食費の支給を受ける保護者は例外となり、規則上は決定した1食単価の5分の1を負担",
+            "unitPrice": "1食単価は学校給食運営委員会に諮って決定",
+            "refund": "学校・学年・学級単位の行事等による欠食分は、欠食回数に単価を乗じ年度末に還付",
+            "period": "令和8年4月1日から適用"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000270.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000271.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "町公式サイト停止中のため、令和8年度産後ケアの類型・対象月齢・料金を確定できない",
+          "status": "verified",
+          "summary": "生後5か月未満の母子に医療機関・助産所で宿泊または通所型産後ケアを提供",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "needsConfirmation": "宿泊・通所・訪問型の実施有無、対象月齢、利用回数、自己負担、申請方法、実施施設を民生課へ確認"
+            "target": "阿南町に住所がある産婦と生後5か月未満の乳児で、産後の身体回復、心理的不調・育児不安、家族支援不足等があり保健指導を必要とする母子。医療行為が必要な場合を除く",
+            "types": "受託医療機関・助産所への入院または通院によるケア",
+            "care": "母体の身体的・心理的ケア、保健・栄養指導、乳房ケア・授乳支援、育児手技の指導・相談、生活支援",
+            "limit": "母1人につき延べ7日以内。町長が必要と認める場合は延長可能",
+            "procedure": "原則利用前に利用申請書を町へ提出し、承認後に受託医療機関等を利用",
+            "fee": "利用者負担額は町と受託医療機関等の委託契約で定め、ケア以外の実費は利用者負担"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000377.html",
             "checkedAt": "2026-07-24"
           }
         },
         "temporaryChildcare": {
           "status": "unavailable",
-          "summary": "町公式サイト停止中のため、こども誰でも通園制度・一時預かりの現行条件を確定できない",
+          "summary": "子育て短期支援事業は確認できるが、令和8年度の一般的な一時預かり・こども誰でも通園制度の利用条件を確定できない",
           "eligibility": {
             "minAgeMonths": 6,
-            "maxAgeYears": 2
+            "maxAgeYears": 5
           },
           "details": {
-            "needsConfirmation": "対象年齢、月利用上限、料金、実施施設、利用認定・面談・予約方法を教育委員会へ確認"
+            "confirmedAlternative": "町内18歳未満の児童について、保護者の疾病等で一時的に養育困難となった場合の短期入所生活援助等を例規で確認",
+            "needsConfirmation": "保育園等で行う一般的な一時預かりまたは乳児等通園支援事業の実施施設、対象月齢、月利用上限、料金、利用認定・面談・予約方法は教育委員会へ確認",
+            "website": "町公式サイト本体が一時停止中で、令和8年度の利用者向け案内を取得できない"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000382.html",
             "checkedAt": "2026-07-24"
           }
         },
         "housingSupport": {
-          "status": "unavailable",
-          "summary": "空き家活用・住宅新築等の支援実績は確認できるが、令和8年度の受付条件を確定できない",
+          "status": "verified",
+          "summary": "空き家改修を2分の1・最大100万円、新築住宅・土地取得等も補助",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "pastReference": "令和7年度の町公式支援一覧では空き家改修最大100万円・解体最大50万円、住宅新築100～150万円、土地取得最大100万円等を掲載",
-            "strategy": "町の後期基本計画では空き家利用促進事業補助金の活用を継続目標としている",
-            "needsConfirmation": "令和8年度の制度継続、対象者、補助率・上限、申請期限、着手前申請を振興課・建設環境課へ確認"
+            "vacantHouse": "空き家の改修費を2分の1以内、1件最大100万円まで補助。町内業者施工、補助対象空き家・申請者等の要件あり",
+            "newHome": "65歳未満等の定住要件を満たす住宅新築者に100万円、町内業者施工の場合は50万円加算",
+            "land": "住宅新築に伴う土地取得費の2分の1、最大100万円を補助",
+            "procedure": "いずれも予算の範囲内で、工事・解体等の着手前に対象要件と交付申請時期を担当課へ確認",
+            "excluded": "他の補助対象工事、外構・備品購入等は空き家改修補助の対象外"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/storage/2025/05/%E5%BA%83%E5%A0%B1%E3%81%82%E3%81%AA%E3%82%93%EF%BC%95%E6%9C%88%E5%8F%B7%E3%80%80%E5%88%A5%E5%86%8A.pdf",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000189.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000647.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "町公式サイト停止中のため、令和8年度の粗大ごみ収集日・搬入先・料金を確定できない",
+          "status": "needs_medium_review",
+          "summary": "一般廃棄物の個人搬入料金は確認できるが、粗大ごみの品目別受入条件・搬入先は最終確認が必要",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "needsConfirmation": "地区別収集、処理券・料金、直接搬入施設、受付時間、家電リサイクル・処理困難物の扱いを建設環境課へ確認"
+            "confirmed": "町が行う一般廃棄物の個人搬入は、軽自動車または普通乗用車1台（貨物車は積載350kgまで）2,000円、乗用以外の普通自動車1台（2t未満）12,000円",
+            "bags": "燃やすごみ指定袋10枚は大800円・小550円、不燃物指定袋10枚は大400円・小200円",
+            "needsConfirmation": "粗大ごみとして受け入れる家具・寝具等の品目、搬入施設、受付日・時間、事前申込、車両制限、処理困難物は建設環境課へ確認",
+            "reviewReason": "現行条例で個人搬入手数料は確定できるが、令和8年度の利用者向け粗大ごみ案内を町サイト停止により取得できないため中確度レビューとする"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000476.html",
             "checkedAt": "2026-07-24"
           }
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "町公式サイト停止中のため、現行ハザードマップ・避難所・情報配信手段を確認できない",
+          "status": "needs_medium_review",
+          "summary": "町全域の防災行政無線と国・県の洪水・土砂災害情報を利用可能。町版地図・避難所最新版は確認が必要",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "needsConfirmation": "洪水・土砂災害・地震・ため池等のハザードマップ、指定避難所、地域防災計画、緊急情報配信方法を総務課危機管理防災係へ確認"
+            "radio": "阿南町全域を対象とする防災行政無線を設置し、災害・行政情報を放送",
+            "hazards": "国土地理院の重ねるハザードマップと長野県の信州防災アプリ・土砂災害情報等で、阿南町の洪水・土砂災害等の危険度を確認可能",
+            "support": "避難行動要支援者名簿と避難支援体制を例規で整備",
+            "needsConfirmation": "阿南町版ハザードマップの改訂年、指定緊急避難場所・指定避難所一覧、地域防災計画の最新版、戸別受信・メール等の情報配信手段は総務課へ確認",
+            "reviewReason": "町公式サイト本体が一時停止中で、町版防災マップ・避難所の利用者向け最新版を取得できないため中確度レビューとする"
           },
           "source": {
-            "url": "https://www.town.anan.nagano.jp/",
+            "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000075.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://disaportal.gsi.go.jp/",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.pref.nagano.lg.jp/bosai/shinsyubosai.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www1.g-reiki.net/town.anan.nagano/reiki_honbun/e753RG00000081.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         }
       }
     },
@@ -160715,7 +160960,7 @@
       "name": "平谷村",
       "officialUrl": "https://www.hirayamura.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を平谷村公式情報で確認し、5制度をverified、4制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を平谷村公式情報と飯田地域広域制度で再監査し、6制度をverified、1制度をneeds_medium_review、2制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -160737,20 +160982,35 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "令和8年度に利用できる病児・病後児保育施設、対象年齢、料金、予約方法を公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学校在学中まで、飯田市病児保育施設おひさまはるるを利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "村公式サイトの子育て支援・医療・保育関連情報を確認",
-            "needsConfirmation": "広域利用できる施設、対象年齢、事前登録、医師連絡票、利用料、予約方法は住民課へ確認"
+            "target": "平谷村を含む飯田地域定住自立圏の協定町村に住所があり、生後6か月から小学校在学中で、病気または回復期のため入院不要だが安静への配慮が必要かつ家庭保育が困難な子ども",
+            "facility": "社会医療法人健和会・健和会病院内の飯田市病児保育施設『おひさまはるる』",
+            "capacity": "1日6人",
+            "hours": "午前8時～午後6時",
+            "fee": "5時間以上2,000円、5時間未満1,000円。生活保護・非課税世帯等に減免あり",
+            "procedure": "利用登録、施設予約、かかりつけ医の診察等が必要。令和7年4月から予約アプリに対応",
+            "limitations": "感染症、入院加療が必要な病状、定員超過等により利用できない場合あり"
           },
           "source": {
-            "url": "https://www.hirayamura.jp/pages/317/",
+            "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001311.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001194.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -160790,15 +161050,17 @@
           }
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "産後の母乳・育児相談助成は確認できるが、宿泊・通所・訪問型産後ケアの現行利用条件を確定できない",
+          "status": "needs_medium_review",
+          "summary": "産後の授乳・育児相談を1回3,000円、5回分助成。宿泊・通所・訪問型産後ケアの利用条件は最終確認が必要",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "confirmed": "西澤病院での産後母乳・育児相談について、1時間3,000円を5回分助成",
-            "needsConfirmation": "令和8年度の宿泊型・通所型・訪問型の実施有無、対象月齢、利用日数、自己負担、申請・予約方法は住民課へ確認"
+            "confirmed": "平谷村公式の子育てサポートで、西澤病院における産後の授乳・育児相談を1時間3,000円、5回分助成すると案内",
+            "care": "産後の授乳、母乳、育児に関する相談支援",
+            "needsConfirmation": "令和8年度に利用できる宿泊型・通所型・訪問型産後ケアの実施施設、対象月齢、利用日数、自己負担、申請・予約方法は住民課へ確認",
+            "reviewReason": "村独自の産後相談助成は現行公式ページで確認できるが、母子保健法上の産後ケア事業の3類型に関する利用者向け案内を確定できないため中確度レビューとする"
           },
           "source": {
             "url": "https://www.hirayamura.jp/pages/317/",
@@ -160884,7 +161146,7 @@
       "name": "根羽村",
       "officialUrl": "https://www.nebamura.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を根羽村公式情報で確認し、6制度をverified、3制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を根羽村公式情報と飯田地域広域制度で再監査し、7制度をverified、2制度をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -160907,54 +161169,94 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "第3期子ども・子育て支援事業計画に病児・病後児保育事業を位置付けているが、現行の利用施設・対象年齢・料金・予約方法を確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学校在学中まで、飯田市病児保育施設おひさまはるるを利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "confirmed": "令和8年3月改定の第3期子ども・子育て支援事業計画に病児・病後児保育事業を掲載",
-            "needsConfirmation": "飯田下伊那地域等の利用施設、事前登録、医師連絡票、対象年齢、利用料、予約方法は住民課または教育委員会へ確認"
+            "target": "根羽村を含む飯田地域定住自立圏の協定町村に住所があり、生後6か月から小学校在学中で、病気または回復期のため入院不要だが安静への配慮が必要かつ家庭保育が困難な子ども",
+            "facility": "健和会病院内の飯田市病児保育施設『おひさまはるる』",
+            "capacity": "1日6人",
+            "hours": "午前8時～午後6時",
+            "fee": "5時間以上2,000円、5時間未満1,000円。生活保護・非課税世帯等に減免あり",
+            "period": "原則連続7日以内",
+            "procedure": "事前登録、施設予約、かかりつけ医の診察等が必要。令和7年4月から予約アプリに対応"
           },
           "source": {
-            "url": "https://www.nebamura.jp/wp-content/uploads/2026/04/%E4%BB%A4%E5%92%8C%EF%BC%98%E5%B9%B4%EF%BC%93%E6%9C%88%E5%AE%9A%E4%BE%8B%E4%BC%9A%E4%BC%9A%E8%AD%B0%E9%8C%B2.pdf",
+            "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001312.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001194.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
-          "status": "unavailable",
-          "summary": "根羽村保育所の保育時間・延長料金は確認できるが、令和8年度の通常保育料と給食費負担を確定できない",
+          "status": "needs_medium_review",
+          "summary": "根羽村保育所の保育時間・延長料金と給食提供を確認。令和8年度の通常保育料・給食費は最終確認が必要",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
             "facility": "根羽村保育所。2025年4月時点で未満児5人・以上児15人",
-            "hours": "平日8時～16時、土曜日8時～正午。平日7時30分～8時は無料延長、16時～18時は30分50円と17時のおやつ代50円",
-            "needsConfirmation": "令和8年度の0～2歳児保育料、3～5歳児の無償化、給食・主食・副食費、所得・多子世帯軽減は教育委員会へ確認"
+            "hours": "平日8時～16時、土曜日8時～正午",
+            "extension": "平日7時30分～8時は無料、16時～18時は30分50円、17時のおやつ代50円",
+            "meals": "給食提供あり。令和7年度親子山村留学案内では保育園児は主食（白米）持参と案内",
+            "needsConfirmation": "令和8年度の0～2歳児基準保育料、3～5歳児無償化、主食・副食費、所得・多子軽減は教育委員会へ最終確認",
+            "reviewReason": "現行施設案内と村の子育て支援方針は確認できるが、令和8年度の利用者負担表を取得できないため中確度レビューとする"
           },
           "source": {
             "url": "https://www.nebamura.jp/nebalife/resident/childcare/",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.nebamura.jp/wp-content/uploads/2025/07/R%EF%BC%97%E5%B9%B4%E5%BA%A6%E5%B1%B1%E6%9D%91%E7%95%99%E5%AD%A6%E3%83%91%E3%83%B3%E3%83%95%E3%83%AC%E3%83%83%E3%83%88.pdf",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "根羽学園で給食を実施しているが、令和8年度の一般世帯負担額・無償化状況を公式公開情報で確定できない",
+          "status": "needs_medium_review",
+          "summary": "根羽学園の学校給食費無償化は複数年の村公式資料で継続実績を確認。令和8年度の適用条件・精算は最終確認が必要",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "根羽村立義務教育学校根羽学園で1～9年生の学校教育を実施",
-            "pastReference": "令和7年度の親子山村留学案内では学校給食費無償と案内",
-            "needsConfirmation": "令和8年度の給食費無償化継続、1食単価・月額・年額、欠食時精算、村外通学者の支援は教育委員会へ確認"
+            "confirmed": "令和5年度予算で学校給食無償化事業を実施し、令和6年公式広報でも子育て支援拡充として学校給食費無償化を確認",
+            "recent": "令和7年度親子山村留学案内でも学校給食費無償と案内",
+            "currentPlan": "令和8年6月策定の第二次根羽村教育振興基本計画が公開されている",
+            "needsConfirmation": "令和8年度の無償化継続対象、1食単価・月額・年額、欠食・転入出時の精算、村外通学者の扱いは教育委員会へ最終確認",
+            "reviewReason": "複数年の村公式資料で無償化実績を確認できるが、令和8年度の利用者向け徴収案内を直接確認できないため中確度レビューとする"
           },
           "source": {
-            "url": "https://www.nebamura.jp/nebalife/school/",
+            "url": "https://www.nebamura.jp/wp-content/uploads/2025/07/R%EF%BC%97%E5%B9%B4%E5%BA%A6%E5%B1%B1%E6%9D%91%E7%95%99%E5%AD%A6%E3%83%91%E3%83%B3%E3%83%95%E3%83%AC%E3%83%83%E3%83%88.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.nebamura.jp/wp-content/uploads/2023/05/%E5%BA%83%E5%A0%B1%E3%81%AD%E3%81%B0215%E5%8F%B7.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.nebamura.jp/wp-content/uploads/2024/01/%E5%BA%83%E5%A0%B1%E3%81%AD%E3%81%B0220%E5%8F%B7.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.nebamura.jp/nebalife/plan/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -161438,7 +161740,7 @@
       "name": "天龍村",
       "officialUrl": "https://www.vill-tenryu.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を天龍村公式情報で再確認し、6制度をverified、3制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を天龍村・飯田市公式情報で再確認し、7制度をverified、2制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -161459,20 +161761,30 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "病児保育の実施検討は確認できるが、令和8年度の利用施設・対象年齢・料金・予約方法を確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学6年生まで、飯田市病児保育施設おひさまはるるを利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "confirmed": "村内懇談で病児保育の実施が課題として扱われている",
-            "needsConfirmation": "利用可能施設、広域利用、事前登録、医師連絡票、利用料、予約方法は福祉課または教育委員会へ確認"
+            "target": "飯田市または下伊那の町村に住所がある生後6か月～小学6年生で、病気または回復期のため集団生活が困難、入院不要で家庭保育が難しい児童",
+            "facility": "健和会病院内 飯田市病児保育施設『おひさまはるる』",
+            "hours": "平日8時～18時。祝日・お盆・年末年始を除く",
+            "capacity": "1日6人、原則連続7日以内",
+            "fee": "生活保護世帯等は無料、市民税非課税世帯は5時間以内500円・5時間超1,000円、その他世帯は5時間以内1,000円・5時間超2,000円。給食希望時は実費400円",
+            "procedure": "事前登録、かかりつけ医の診察・医師連絡票、施設への予約が必要"
           },
           "source": {
-            "url": "https://www.vill-tenryu.jp/category/administrative/education/",
+            "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001194.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "unavailable",
@@ -162214,7 +162526,7 @@
       "name": "大鹿村",
       "officialUrl": "https://www.vill.ooshika.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を大鹿村公式情報で確認し、6制度をverified、3制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を大鹿村・飯田市公式情報で再確認し、7制度をverified、2制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -162235,20 +162547,30 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "現行の病児・病後児保育施設、対象年齢、料金、予約方法を村公式情報で確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学6年生まで、飯田市病児保育施設おひさまはるるを利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "村公式サイトの子育て・教育、保育所、保健福祉関連情報を確認",
-            "needsConfirmation": "飯田下伊那地域の病児保育施設利用可否、対象年齢、利用料、医師連絡票、事前登録・予約方法は保健福祉課または教育委員会へ確認"
+            "target": "飯田市または下伊那の町村に住所がある生後6か月～小学6年生で、病気または回復期のため集団生活が困難、入院不要で家庭保育が難しい児童",
+            "facility": "健和会病院内 飯田市病児保育施設『おひさまはるる』",
+            "hours": "平日8時～18時。祝日・お盆・年末年始を除く",
+            "capacity": "1日6人、原則連続7日以内",
+            "fee": "生活保護世帯等は無料、市民税非課税世帯は5時間以内500円・5時間超1,000円、その他世帯は5時間以内1,000円・5時間超2,000円。給食希望時は実費400円",
+            "procedure": "事前登録、かかりつけ医の診察・医師連絡票、施設への予約が必要"
           },
           "source": {
-            "url": "https://www.vill.ooshika.nagano.jp/category/oshika-board-education/",
+            "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001194.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "unavailable",
@@ -162738,7 +163060,7 @@
       "name": "木祖村",
       "officialUrl": "https://www.vill.kiso.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を木祖村公式情報で確認し、5制度をverified、4制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を木祖村公式情報で再確認し、7制度をverified、2制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -162760,18 +163082,22 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "現行の病児・病後児保育施設、対象年齢、料金、予約方法を村公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "生後5か月から小学3年生まで、松本市内4施設の病児保育を利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 12
+            "minAgeMonths": 5,
+            "maxAgeYears": 9
           },
           "details": {
-            "research": "村公式サイトの子育て・教育、保育園、子育て支援センター情報を確認",
-            "needsConfirmation": "木曽地域の利用可能施設、対象年齢、事前登録、医師連絡票、利用料、予約方法は教育委員会へ確認"
+            "target": "当面病状の急変が認められず、病気の回復期に至らない生後5か月～小学3年生で、集団保育が困難かつ保護者の勤務等により家庭保育ができない児童",
+            "start": "令和8年4月から松本市の病児保育ネットワークを利用可能",
+            "facilities": "相澤病院ひだまり、梓川診療所ハイジ、丸の内病院わかば、まつもと医療センターひまわりハウス",
+            "hours": "月～金曜日8時～18時。祝日・12月29日～1月3日を除く。4施設合わせて原則1回連続5日以内",
+            "fee": "保育園等在籍児は8時間以内無料、その他児童は4時間以内650円・4時間超8時間以内1,300円。8時間超は30分100円",
+            "procedure": "利用施設への事前登録・予約、医師診察・必要書類等を施設へ確認"
           },
           "source": {
-            "url": "https://www.vill.kiso.nagano.jp/kosodate_kyoiku/",
+            "url": "https://www.vill.kiso.nagano.jp/gyoseijoho/koho/kouhouR7/395.pdf",
             "checkedAt": "2026-07-24"
           }
         },
@@ -162794,18 +163120,20 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度の学校給食費、無償化・助成状況を村公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "令和8年度から木祖小学校・木祖中学校の給食費を無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "research": "村公式サイトの子育て・教育、補助制度、学校関連情報を確認",
-            "needsConfirmation": "木祖小学校・木祖中学校の令和8年度1食単価、月額・年額、村独自助成、欠食時精算は教育委員会へ確認"
+            "target": "木祖村立小中学校に通う児童生徒の保護者",
+            "support": "令和8年度の新規子育て支援策として小中学校給食費を無償化",
+            "budget": "令和8年度一般会計当初予算に小中学校給食費無償化1,738万円を計上",
+            "procedure": "欠食時、転入出、村外通学等の取扱いは教育委員会または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.vill.kiso.nagano.jp/kosodate_kyoiku/",
+            "url": "https://www.vill.kiso.nagano.jp/gyoseijoho/koho/kouhouR7/395.pdf",
             "checkedAt": "2026-07-24"
           }
         },
@@ -162834,7 +163162,7 @@
           },
           "details": {
             "facility": "子育て支援センターみやのもり",
-            "temporary": "未就園児を平日8時30分～17時、土曜8時30分～13時30分で預かる。1時間400円、村内世帯は40時間まで無料",
+            "temporary": "未就園児を平日8時30分～17時、土曜8時30分～13時30分で預かる。30分200円、村内世帯は40時間まで無料",
             "anyChild": "生後6か月～3歳未満の未就園児が平日9時30分～15時30分、月10時間まで利用可能",
             "anyChildFee": "1時間300円",
             "procedure": "一時保育は電話またはコドモン、通園制度は総合支援システムで申込み"
@@ -163112,7 +163440,7 @@
       "name": "大桑村",
       "officialUrl": "https://www.vill.okuwa.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を大桑村公式情報で確認し、6制度をverified、3制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を大桑村公式情報で再確認し、7制度をverified、2制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -163191,18 +163519,21 @@
           }
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "木曽地域出産宿泊協定と産婦健診助成は確認できるが、産後ケアの現行利用条件を確定できない",
+          "status": "verified",
+          "summary": "産後に心身の不調や育児不安がある母子へ医療機関で産後ケアを提供",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "confirmed": "令和8年度に木曽地域出産宿泊協定を締結し、産後2週間・1か月の産婦健診費を上限5,000円で助成",
-            "needsConfirmation": "宿泊・通所・訪問型産後ケアの実施有無、対象月齢、利用日数、実施施設、自己負担、申請方法は福祉健康課保健係へ確認"
+            "target": "大桑村に住所があり、産後の心身の不調または育児不安等がある母子",
+            "care": "医療機関で母体の心身ケア、授乳・育児相談等の支援を実施",
+            "facilities": "木曽病院、長野県内の対象助産院、林メディカルクリニック",
+            "procedure": "福祉健康課保健係へ事前相談・申込み",
+            "needsConfirmation": "宿泊・通所・訪問型の区分、対象月齢、利用日数、自己負担額は申込み時に確認"
           },
           "source": {
-            "url": "https://www.vill.okuwa.lg.jp/kosodate-kyoiku/nyuyoji/kosodateshiencenter/kosodate-guidebook.html",
+            "url": "https://www.vill.okuwa.lg.jp/kosodate-kyoiku/nyuyoji/kosodateshiencenter/documents/kosodate_guidebook/kosodate-guidebook.pdf",
             "checkedAt": "2026-07-24"
           }
         },
@@ -163288,7 +163619,7 @@
       "name": "木曽町",
       "officialUrl": "https://www.town-kiso.com/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を木曽町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を木曽町公式情報で再確認し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -163348,18 +163679,21 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食の実施と就学援助制度は確認できるが、令和8年度一般世帯の給食費を確定できない",
+          "status": "verified",
+          "summary": "令和8年度から小中学校給食費を完全無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "町内小中学校で学校給食を実施し、要保護・準要保護世帯には就学援助を実施",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、公費負担後の一般世帯負担額、欠食時の精算は学校教育係または在籍校へ確認"
+            "target": "木曽町立小中学校に在籍する児童生徒の保護者",
+            "support": "子育て施策の拡充として小中学校の給食費を完全無償化",
+            "budget": "令和8年度当初予算に小中学校給食経費6,279万円を計上",
+            "period": "令和8年度から実施",
+            "procedure": "欠食時、転入出、町外通学者等の取扱いは学校教育係または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.town-kiso.com/kodomo/hojyokin2/100110/100296/",
+            "url": "https://www.town-kiso.com/files/file/box/40/4057072e0427b176fdc3b2a9a85efedf5c6ba16e.pdf",
             "checkedAt": "2026-07-24"
           }
         },
@@ -163478,7 +163812,7 @@
       "name": "麻績村",
       "officialUrl": "https://www.vill.omi.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を麻績村公式情報で確認し、6制度をverified、3制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を麻績村公式情報で再確認し、7制度をverified、2制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -163535,18 +163869,19 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助で学校給食費を支給する制度は確認できるが、令和8年度一般世帯の給食費を確定できない",
+          "status": "verified",
+          "summary": "保育所・小学校・中学校の給食費を無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "経済的理由で就学困難な世帯には、学用品費・修学旅行費・学校給食費等を援助",
-            "needsConfirmation": "麻績小学校・筑北中学校等の令和8年度1食単価、月額・年額、村独自助成、公費負担後の一般世帯負担額、欠食時精算は教育委員会または在籍校へ確認"
+            "target": "麻績村の保育所、小学校、中学校を利用する子どもの保護者",
+            "support": "麻績村総合教育会議の公式議事録で、保小中の給食費は既に無償化されていることを確認",
+            "procedure": "対象期間、欠食時の精算、村外通学者等の取扱いは教育委員会または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.vill.omi.nagano.jp/kurashi/kyoiku/kyoiku316.html",
+            "url": "https://www.vill.omi.nagano.jp/files/kyoiku/R7sougo1.pdf",
             "checkedAt": "2026-07-24"
           }
         },
@@ -163830,7 +164165,7 @@
       "name": "山形村",
       "officialUrl": "https://www.vill.yamagata.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を山形村公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を山形村公式情報で再監査し、9制度すべてをverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -163890,20 +164225,42 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "山形小学校の学校給食実施と就学援助は確認できるが、令和8年度一般世帯の負担額を確定できない",
+          "status": "verified",
+          "summary": "村立小学校の給食費を保護者から徴収し、5月から翌年2月まで10期で納付。減免規定あり",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "村立小学校で学校給食を実施し、要保護・準要保護世帯には学校給食費を含む就学援助を実施",
-            "needsConfirmation": "令和8年度の小学校給食費、組合立鉢盛中学校の給食費、月額・年額、公費補助、欠食時精算は教育委員会または在籍校へ確認"
+            "elementary": "山形村学校給食費管理条例に基づき、村立小学校で学校給食を提供し、保護者から学校給食費を徴収",
+            "amount": "具体額は同条例施行規則で定めるため、令和8年度の金額は教育委員会または在籍校へ確認",
+            "payment": "徴収月は5月から翌年2月までの10か月。各月の納期限は施行規則で定める",
+            "reduction": "災害その他特別の理由があると認められる場合、村長が学校給食費を減額または免除できる",
+            "support": "要保護・準要保護世帯の就学援助、特別支援学級等の就学奨励費では学校給食費を支援対象に含む",
+            "juniorHigh": "組合立鉢盛中学校の給食費額・徴収方法は、学校または松塩筑木曽老人福祉施設組合等の所管窓口へ確認"
           },
           "source": {
-            "url": "https://www.vill.yamagata.nagano.jp/docs/2128.html",
+            "url": "https://www.vill.yamagata.nagano.jp/contents/reiki_int/reiki_honbun/e787RG00000682.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.yamagata.nagano.jp/contents/reiki_int/reiki_taikei/r_taikei_11_02.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.yamagata.nagano.jp/docs/2128.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.yamagata.nagano.jp/docs/2130.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.yamagata.nagano.jp/childcare/schools/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -164009,7 +164366,7 @@
       "name": "朝日村",
       "officialUrl": "https://www.vill.asahi.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を朝日村公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を朝日村公式情報で再確認し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -164069,18 +164426,21 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助による学校給食費支給は確認できるが、令和8年度一般世帯の給食費を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は朝日小学校の学校給食費を無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "経済的理由で就学困難な世帯には、学用品費・修学旅行費・学校給食費等を援助",
-            "needsConfirmation": "朝日小学校および鉢盛中学校の令和8年度1食単価、月額・年額、村独自助成、公費負担後の一般世帯負担額、欠食時精算は教育委員会または在籍校へ確認"
+            "elementary": "令和8年度当初予算の主要事業として小学校給食費無償化事業を実施",
+            "budget": "事業費1,484万円。国・県支出金1,212万6千円、一般財源271万4千円を計上",
+            "purpose": "子育て支援として保護者の給食費負担を軽減",
+            "juniorHigh": "組合立鉢盛中学校の令和8年度給食費・構成市村の助成後負担額は中学校組合または教育委員会へ確認",
+            "procedure": "転入出、欠食時等の取扱いは教育委員会または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.vill.asahi.nagano.jp/official/soshikikarasagasu/kyoikuiinkai/kyouikuseisakuka/kosodateshientanto/4/1815.html",
+            "url": "https://www.vill.asahi.nagano.jp/material/files/group/11/04.pdf",
             "checkedAt": "2026-07-24"
           }
         },
@@ -164188,7 +164548,7 @@
       "name": "筑北村",
       "officialUrl": "https://www.vill.chikuhoku.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を筑北村公式情報で確認し、5制度をverified、4制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を筑北村公式情報で再監査し、8制度をverified、通常保育料1制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -164210,53 +164570,83 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "子育て相談・支援体制は確認できるが、現行の病児・病後児保育施設と利用条件を確定できない",
+          "status": "verified",
+          "summary": "専用病児保育施設は未整備だが、育児サポート事業で軽度の病気・病後児を1時間700円で預かる",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "こども家庭センター、子育て支援情報、こども計画を確認",
-            "needsConfirmation": "利用可能施設、対象年齢、広域利用、利用料、医師連絡票、事前登録・予約方法は教育委員会こども支援係へ確認"
+            "sickChild": "筑北村こども計画では令和8年度の病児保育・広域実施の確保量は0で、近隣自治体と連携した実施を検討",
+            "afterSick": "病後児保育は育児サポート事業として実施。依頼会員と提供会員の相互援助により、軽度の病気または病気の予後の子どもを預かる",
+            "condition": "軽度の病気・病後児は体温37.5度未満を原則とし、提供会員宅または必要時に依頼会員宅で保育",
+            "fee": "病後児保育は1時間700円。複数児は2人目の3歳以上児から半額。食事・おやつは原則依頼会員が用意",
+            "procedure": "育児サポート事業への会員登録後、事務局を通じて提供会員へ依頼。緊急時に直接依頼した場合も事務局へ報告",
+            "limitations": "提供会員不足等により希望日に利用できない場合があり、急性期の専用病児保育とは異なる"
           },
           "source": {
-            "url": "https://www.vill.chikuhoku.lg.jp/kosodate-kyoiku/kosodate/",
+            "url": "https://www.vill.chikuhoku.lg.jp/fs/9/8/3/3/_/%E3%80%90%E8%A8%88%E7%94%BB%E6%9B%B8%E3%80%91%E7%AD%91%E5%8C%97%E6%9D%91%E3%81%93%E3%81%A9%E3%82%82%E8%A8%88%E7%94%BB.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.chikuhoku.lg.jp/fs/1/2/2/6/_/1bd76386b2d7ae23ca5b55458aa0ed52.pdf",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "unavailable",
-          "summary": "令和8年度の村立保育園入園案内は確認できるが、0～2歳児保育料・多子軽減・給食費を確定できない",
+          "summary": "令和8年度の村立保育園入園案内は確認できるが、課税世帯0～2歳児の保育料額を確定できない",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "confirmed": "筑北ひまわり保育園・坂井保育園への教育・保育給付認定と入園申込みを受付",
+            "confirmed": "筑北ひまわり保育園・坂井保育園への教育・保育給付認定と入園申込みを受付。令和8年度案内では未満児保育料に低所得・多子世帯軽減があることを確認",
             "nationalSupport": "3～5歳児と住民税非課税世帯の0～2歳児は国の無償化対象",
-            "needsConfirmation": "課税世帯0～2歳児の令和8年度保育料表、多子軽減、副食費・給食費、延長保育料、用品費等は各保育園または教育委員会へ確認"
+            "meals": "村の総合戦略では保育園副食費の無償化を令和8年度まで推進",
+            "needsConfirmation": "課税世帯0～2歳児の令和8年度階層別保育料額、軽減後の個別額、延長保育料、用品費等は各保育園または教育委員会へ確認"
           },
           "source": {
             "url": "https://www.vill.chikuhoku.lg.jp/docs/95.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.chikuhoku.lg.jp/fs/9/6/9/0/_/%E7%AC%AC2%E6%9C%9F%E7%B7%8F%E5%90%88%E6%88%A6%E7%95%A5%EF%BC%88%E6%94%B9%E5%AE%9A%E7%89%88%EF%BC%89_20250331.pdf",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助制度は確認できるが、令和8年度一般世帯の学校給食費を確定できない",
+          "status": "verified",
+          "summary": "令和8年度も小中学校給食費を無償化し、当初予算に2,477万5千円を計上",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "筑北小学校・聖南中学校の就学困難世帯に学用品費等を援助",
-            "needsConfirmation": "令和8年度の小中学校別1食単価、月額・年額、給食費の援助対象額、村独自助成、公費負担後の一般世帯負担額は教育委員会または在籍校へ確認"
+            "free": "第2期筑北村まち・ひと・しごと創生総合戦略で、小中学校給食費の無償化を継続施策として明記",
+            "budget": "令和8年度一般会計当初予算の主要事業に給食費無償化事業24,775千円を計上",
+            "target": "筑北小学校・聖南中学校等の村立小中学校に在籍する児童生徒の保護者負担を軽減",
+            "support": "就学困難世帯には就学援助制度も実施",
+            "procedure": "対象校、欠食時精算、村外通学者等の取扱いは教育委員会または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.vill.chikuhoku.lg.jp/docs/391.html",
+            "url": "https://www.vill.chikuhoku.lg.jp/fs/1/2/8/0/8/_/R8%E4%BA%88%E7%AE%97%E5%88%86%E6%9E%90%E8%B3%87%E6%96%99.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.chikuhoku.lg.jp/fs/9/6/9/0/_/%E7%AC%AC2%E6%9C%9F%E7%B7%8F%E5%90%88%E6%88%A6%E7%95%A5%EF%BC%88%E6%94%B9%E5%AE%9A%E7%89%88%EF%BC%89_20250331.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.chikuhoku.lg.jp/docs/391.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -164278,20 +164668,30 @@
           }
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "子育て支援センターの相談・交流支援は確認できるが、一時預かり・こども誰でも通園制度の現行条件を確定できない",
+          "status": "verified",
+          "summary": "村立保育園等で未就学児の一時預かりを実施し、令和8年度は年間延べ87人分を確保",
           "eligibility": {
-            "minAgeMonths": 6,
+            "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "confirmed": "こども家庭センターとして妊娠期から18歳までの育児・発達相談等を実施",
-            "needsConfirmation": "一時預かり・こども誰でも通園制度の実施施設、対象年齢、月上限、時間、料金、定員、認定・予約方法はこども支援係へ確認"
+            "target": "家庭での保育が一時的に困難になった未就学児。里帰り出産等で一時的な保育が必要な家庭も対象",
+            "facility": "村内に幼稚園がないため、村立保育園で預かり保育・一時預かりを実施",
+            "capacity": "筑北村こども計画では令和8年度のその他の一時預かりについて年間延べ87人の量の見込みと同数の確保量を設定",
+            "support": "育児サポート事業でも、保育園通園前後、保護者の傷病・介護・冠婚葬祭等の一時的な預かりを実施",
+            "fee": "育児サポートの一般保育は平日7時～17時が1時間600円、その他時間帯・日祝は1時間700円。保育園一時預かりの料金・時間・年齢は施設へ確認",
+            "procedure": "村立保育園の一時預かりは教育委員会こども支援係または各保育園へ申込み。育児サポートは会員登録後に事務局へ依頼"
           },
           "source": {
-            "url": "https://www.vill.chikuhoku.lg.jp/education/child/introduction/",
+            "url": "https://www.vill.chikuhoku.lg.jp/fs/9/8/3/3/_/%E3%80%90%E8%A8%88%E7%94%BB%E6%9B%B8%E3%80%91%E7%AD%91%E5%8C%97%E6%9D%91%E3%81%93%E3%81%A9%E3%82%82%E8%A8%88%E7%94%BB.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.chikuhoku.lg.jp/fs/1/2/2/6/_/1bd76386b2d7ae23ca5b55458aa0ed52.pdf",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -164363,7 +164763,7 @@
       "name": "池田町",
       "officialUrl": "https://www.ikedamachi.net/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を池田町公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を池田町公式情報で再監査し、9制度すべてをverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -164404,37 +164804,61 @@
           }
         },
         "childcareFee": {
-          "status": "unavailable",
-          "summary": "令和8年度認定こども園入園案内は確認できるが、0～2歳児保育料・多子軽減・給食費を確定できない",
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、0～2歳児は基準額表で算定。第2子半額・第3子以降無料など町独自軽減",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "confirmed": "認定こども園池田保育園と令和8年4月開園の野あそび保育あいそめの入園申込みを受付",
-            "nationalSupport": "3～5歳児と住民税非課税世帯の0～2歳児は国の無償化対象",
-            "needsConfirmation": "課税世帯0～2歳児の令和8年度保育料表、多子軽減、副食費・給食費、延長保育料、用品費等は学校保育課または各園へ確認"
+            "threeToFive": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象",
+            "underThree": "課税世帯の0～2歳児は池田町保育等利用者負担基準額表と市町村民税額に基づき算定し、毎年9月に算定年度を切替",
+            "multiChild": "同時通園に関係なく、最年長の子から数えて第2子は半額、第3子以降は無料",
+            "lowIncome": "市町村民税所得割額57,700円未満の世帯は第1子半額、第2子以降無料",
+            "singleParent": "ひとり親・在宅障害児者等の対象世帯は、所得割額77,101円未満で第1子半額、第2子以降無料",
+            "meals": "認定こども園池田保育園に通う3歳以上児の副食費月額4,500円を町独自に無償化",
+            "collection": "公立認定こども園は町、私立認定こども園は施設が保育料を徴収"
           },
           "source": {
-            "url": "https://www.ikedamachi.net/0000003964.html",
+            "url": "https://www.ikedamachi.net/cmsfiles/contents/0000003/3964/guide.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.ikedamachi.net/0000003964.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助で学校給食費実費を支給する制度は確認できるが、令和8年度一般世帯の給食費を確定できない",
+          "status": "verified",
+          "summary": "令和8年度も小中学校給食費を完全無償化し、当初予算に4,114万円を計上",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "経済的理由で就学困難な小中学生の保護者へ学校給食費実費等を援助",
-            "needsConfirmation": "池田小学校・高瀬中学校の令和8年度1食単価、月額・年額、町独自助成、公費負担後の一般世帯負担額、欠食時精算は学校保育課または在籍校へ確認"
+            "free": "池田町の令和8年度予算説明書で小中学校給食費無償化を継続事業として実施",
+            "elementary": "小学生1人当たり年額71,400円、対象343人分を町が負担",
+            "juniorHigh": "中学生1人当たり年額81,600円、対象204人分を町が負担",
+            "budget": "令和8年度当初予算額41,140千円",
+            "support": "低所得世帯には学用品費等を対象とする就学援助制度も継続",
+            "procedure": "対象校、欠食・転出入時の精算、アレルギー等で給食を受けない場合の取扱いは学校保育課または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.ikedamachi.net/0000000089.html",
+            "url": "https://www.ikedamachi.net/cmsfiles/contents/0000001/1139/R08_machinoshigoto_ikedamachi.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.ikedamachi.net/0000000137.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.ikedamachi.net/0000000089.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -165079,7 +165503,7 @@
       "name": "坂城町",
       "officialUrl": "https://www.town.sakaki.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を坂城町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を坂城町公式情報で確認し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -165101,20 +165525,30 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "広域施設やファミリーサポートによる病児・病後児支援の経緯は確認できるが、令和8年度の現行利用条件を確定できない",
+          "status": "verified",
+          "summary": "長野地域連携中枢都市圏9市町村の病児・病後児保育施設を相互利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "第3期子ども・子育て支援事業計画、町議会資料、子育て支援情報を確認",
-            "needsConfirmation": "現在利用できる施設、対象年齢、広域利用の範囲、利用料、医師情報提供書、登録・予約方法は教育文化課子ども支援室へ確認"
+            "target": "長野地域連携中枢都市圏内に在住、または圏内の保育園・幼稚園等に在籍し、病気中・回復期で集団保育が困難な子ども。年齢上限は施設ごとに異なる",
+            "parent": "保護者が就労、傷病、妊娠・出産、冠婚葬祭等により家庭で保育できない場合",
+            "area": "坂城町内に専用施設はないが、長野市・須坂市・千曲市・小布施町・高山村・信濃町・小川村・飯綱町を含む圏域施設を利用可能",
+            "facilities": "長野赤十字病院、長野松代総合病院、篠ノ井総合病院、長野市民病院、須坂市2施設、千曲中央病院、飯綱町病後児保育室等",
+            "fee": "未就学児の主な利用料は半日1,000円前後、1日2,000～2,200円。小学生対応、食事代、連続利用日数は施設ごとに異なる",
+            "procedure": "利用施設へ直接連絡し、事前登録、予約、医師の診療情報提供書等の必要書類を確認"
           },
           "source": {
-            "url": "https://www.town.sakaki.nagano.jp/www/contents/1750063355710/index.html",
+            "url": "https://www.town.sakaki.nagano.jp/uploaded/attachment/1261.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagano.nagano.jp/n117000/kosodate/p001489.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -165439,7 +165873,7 @@
       "name": "高山村",
       "officialUrl": "https://www.vill.takayama.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を高山村公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を高山村公式情報で確認し、8制度をverified、学校給食費をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -165461,20 +165895,30 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "子育て支援体制は確認できるが、令和8年度の病児・病後児保育施設と利用条件を確定できない",
+          "status": "verified",
+          "summary": "長野地域連携中枢都市圏9市町村の病児・病後児保育施設を相互利用し、村が利用料を助成",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "子育て支援サイト、保育園案内、子育てパンフレットを確認",
-            "needsConfirmation": "利用可能施設、対象年齢、広域利用、利用料、医師情報提供書、登録・予約方法は教育委員会へ確認"
+            "target": "長野地域連携中枢都市圏内に在住、または圏内の保育園・幼稚園等に在籍し、病気中・回復期で集団保育が困難な子ども。利用年齢は施設ごとに異なる",
+            "parent": "保護者が就労、傷病、妊娠・出産、冠婚葬祭等により家庭で保育できない場合",
+            "area": "高山村を含む長野市、須坂市、千曲市、坂城町、小布施町、信濃町、小川村、飯綱町の9市町村で施設を相互利用可能",
+            "facilities": "長野市4施設、須坂市2施設、千曲市1施設、飯綱町1施設の計8施設",
+            "fee": "主な利用料は半日1,000円前後、1日2,000～2,200円。令和8年度高山村当初予算で病児・病後児保育施設利用料助成を継続",
+            "procedure": "利用施設へ直接連絡し、事前登録、予約、医師の診療情報提供書等を確認"
           },
           "source": {
-            "url": "https://www.vill.takayama.nagano.jp/childcare/",
+            "url": "https://www.city.nagano.nagano.jp/n117000/kosodate/p001489.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.takayama.nagano.jp/docs/8000491.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -165614,7 +166058,7 @@
       "name": "山ノ内町",
       "officialUrl": "https://www.town.yamanouchi.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を山ノ内町公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を山ノ内町公式情報で再確認し、8制度をverified、病児・病後児保育をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -165671,20 +166115,34 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食の継続提供と就学援助は確認できるが、令和8年度一般世帯の負担額を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を実質無償化し、中学校給食費を町が半額補助",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "町内小中学校へ学校給食センターから給食を提供し、就学困難世帯には給食費等を援助",
-            "needsConfirmation": "小中学校別1食単価、月額・年額、町補助後の一般世帯負担額、欠食時精算は学校給食センターまたは在籍校へ確認"
+            "elementary": "国・長野県の支援を受け、令和8年度の町立小学校給食費を実質無償化",
+            "juniorHigh": "中学校給食費は町が半額を補助し、保護者負担を軽減",
+            "unitPrice": "給食費基準額は小学校1食360円、中学校1食420円",
+            "juniorHighCopay": "中学校は1食420円の半額相当を町が補助するため、通常の保護者負担は1食210円相当",
+            "collection": "学校給食費徴収条例を制定し、中学生・教職員・臨時喫食者等の徴収方法を規定",
+            "period": "令和8年度"
           },
           "source": {
-            "url": "https://www.town.yamanouchi.nagano.jp/soshiki/gakko_kyushoku/gyomu/school/kyushoku/587.html",
+            "url": "https://www.town.yamanouchi.nagano.jp/material/files/group/38/R080323_saisyubi.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.yamanouchi.nagano.jp/material/files/group/39/2025_12_kyushoku.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.town.yamanouchi.nagano.jp/material/files/group/52/R804kondatehyo_kouhan.pdf",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -166316,7 +166774,7 @@
       "name": "小川村",
       "officialUrl": "https://www.vill.ogawa.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を小川村公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を小川村公式情報で確認し、8制度をverified、学校給食費をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -166338,20 +166796,30 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "子育て支援計画は確認できるが、令和8年度に利用できる病児・病後児保育施設と条件を確定できない",
+          "status": "verified",
+          "summary": "長野地域連携中枢都市圏9市町村の病児・病後児保育施設を相互利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "小川村子育て支援情報と令和8年3月改訂の子ども・子育て支援事業計画を確認",
-            "needsConfirmation": "利用可能施設、対象年齢、長野圏域の広域利用、利用料、医師書類、事前登録・予約方法は住民福祉課または保育園・子育て支援センターへ確認"
+            "target": "長野地域連携中枢都市圏内に在住、または圏内の保育園・幼稚園等に在籍し、病気中・回復期で集団保育が困難な子ども。利用年齢は施設ごとに異なる",
+            "parent": "保護者が就労、傷病、妊娠・出産、冠婚葬祭等により家庭で保育できない場合",
+            "area": "小川村を含む長野市、須坂市、千曲市、坂城町、小布施町、高山村、信濃町、飯綱町の9市町村で施設を相互利用可能",
+            "facilities": "長野市4施設、須坂市2施設、千曲市1施設、飯綱町1施設の計8施設",
+            "fee": "主な利用料は半日1,000円前後、1日2,000～2,200円。食事代・対象年齢・連続利用日数は施設ごとに異なる",
+            "procedure": "利用施設へ直接連絡し、事前登録、予約、医師の診療情報提供書等を確認"
           },
           "source": {
-            "url": "https://www.vill.ogawa.nagano.jp/education/support/",
+            "url": "https://www.city.nagano.nagano.jp/n117000/kosodate/p001489.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.ogawa.nagano.jp/docs/53743.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -166500,7 +166968,7 @@
       "name": "飯綱町",
       "officialUrl": "https://www.town.iizuna.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を飯綱町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を飯綱町公式情報で確認し、8制度をverified、1制度をneeds_medium_reviewとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -166566,21 +167034,37 @@
           ]
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度の学校給食提供と献立は確認できるが、一般世帯の現行負担額を確定できない",
+          "status": "needs_medium_review",
+          "summary": "令和8年度の給食提供・献立、予算資料の公開、国の小学校給食費無償化を踏まえた議会検討を確認",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "町立小中学校へ学校給食共同調理場から給食を提供し、令和8年度献立表を公開",
-            "support": "経済的理由で就学困難な世帯には学校給食費等を援助",
-            "needsConfirmation": "小学校・中学校別1食単価、月額・年額、食材費改定後の町負担・一般世帯負担、欠食時精算は学校給食係または在籍校へ確認"
+            "confirmed": "町立2小学校・1中学校へ学校給食共同調理場から給食を提供し、令和8年度献立表を公開",
+            "budget": "令和8年度当初予算の概要・予算説明資料を町公式サイトで公開",
+            "council": "令和8年3月定例会で、国の小学校給食費無償化を端緒とする町の子育て支援のあり方が一般質問として扱われた",
+            "support": "就学援助では、学校が報告する保護者の実負担額に応じて学校給食費を支給",
+            "needsConfirmation": "小学校・中学校別1食単価、月額・年額、令和8年度の負担軽減後の一般世帯負担額、欠食時精算は学校給食係または在籍校への最終確認が必要"
           },
           "source": {
-            "url": "https://www.town.iizuna.nagano.jp/docs/5161.html",
+            "url": "https://www.town.iizuna.nagano.jp/docs/653.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.iizuna.nagano.jp/docs/5161.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.town.iizuna.nagano.jp/docs/13694.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.town.iizuna.nagano.jp/docs/444.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -166684,10 +167168,10 @@
       "name": "栄村",
       "officialUrl": "https://www.vill.sakae.nagano.jp/",
       "status": "verified",
-      "summary": "栄村の必須9制度を公式静的資料で再監査。0制度をverified、9制度をunavailableとして公開可能状態へ正規化。",
+      "summary": "栄村公式サイト本体は一時利用不可。公式静的PDF、栄村役場の移住定住ポータル、長野県公式子育て情報、産後ケア実施施設の現行案内で7制度をneeds_medium_review、2制度をunavailableとして登録。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
+          "status": "needs_medium_review",
           "summary": "満18歳までの保険診療自己負担を助成し、県内医療機関では受給者証提示により窓口負担なしとする制度を公式静的資料で確認",
           "eligibility": {
             "minAgeMonths": 0,
@@ -166696,8 +167180,8 @@
           "details": {
             "target": "満18歳までの乳幼児・児童生徒",
             "coverage": "保険診療の自己負担分を福祉医療費給付金として助成",
-            "procedure": "受給者証の交付申請後、県内医療機関では受給者証提示により窓口負担なし。県外受診等は領収書を添えて償還払い申請",
-            "reviewReason": "公式静的資料と計画資料で制度継続を確認したが、公式サイト本体停止中のため令和8年度受給者証・所得制限・対象外費用の最終確認が必要"
+            "procedure": "受給者証交付後、県内医療機関では窓口負担なし。県外受診等は償還払い",
+            "reviewReason": "公式サイト本体停止中のため令和8年度の対象外費用等を最終確認できない"
           },
           "source": {
             "url": "https://www.vill.sakae.nagano.jp/fs/3/5/9/8/4/_/kouhou_sakae201807_416.pdf",
@@ -166707,14 +167191,7 @@
             {
               "url": "https://www.vill.sakae.nagano.jp/fs/4/1/2/8/1/_/______________R4.9____.pdf",
               "checkedAt": "2026-07-24"
-            },
-            {
-              "url": "https://www.vill.sakae.nagano.jp/fs/4/2/5/9/0/_/_____213_.pdf",
-              "checkedAt": "2026-07-24"
             }
-          ],
-          "notes": [
-            "公式静的資料で制度の存在または過去運用は確認できるが、令和8年度の完全な利用条件と最新版URLを確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
           ]
         },
         "sickChildCare": {
@@ -166725,91 +167202,110 @@
             "maxAgeYears": 12
           },
           "details": {
-            "reason": "栄村公式サイト本体が一時利用不可で、公式静的資料から現行の利用条件を確定できない",
-            "needsConfirmation": "利用施設、対象年齢、広域利用、利用料、医師情報提供書、事前登録・予約方法は子ども子育てセンターへ確認"
+            "reason": "2026年7月25日3時50分時点でも公式サイト本体と既知の制度ページが502で、代替公式資料からも現行条件を確定できない",
+            "needsConfirmation": "利用施設、対象年齢、広域利用、利用料、医師情報提供書、登録・予約方法を確認"
           },
           "source": {
             "url": "https://www.vill.sakae.nagano.jp/docs/2263.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "childcareFee": {
-          "status": "unavailable",
-          "summary": "令和8年度の0～2歳児保育料・多子軽減・給食費を確認できない",
+          "status": "needs_medium_review",
+          "summary": "3歳未満児は所得に応じた保育料、3歳以上児は給食費を除き無料とする案内を栄村役場の移住定住ポータルで確認",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "reason": "栄村公式サイト本体が一時利用不可で、保育園入園案内・保育料表を確認できない",
-            "needsConfirmation": "課税世帯0～2歳児の保育料、3～5歳児等の無償化、多子軽減、副食費・給食費、延長保育料は教育委員会または保育園へ確認"
+            "underThree": "3歳未満児は所得に応じた保育料",
+            "threeAndOver": "3歳以上児は一律無料、給食費は別途",
+            "other": "延長保育と一時預かり保育を実施",
+            "reviewReason": "案内は令和7年8月時点で、令和8年度保育料表等の最終確認が必要"
           },
           "source": {
-            "url": "https://www.vill.sakae.nagano.jp/docs/2263.html",
+            "url": "https://sakae-life.com/living/",
             "checkedAt": "2026-07-24"
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "令和8年度の小中学校給食費と村補助を確認できない",
+          "status": "needs_medium_review",
+          "summary": "小中学校給食費を1食当たり200円補助する制度を栄村役場の移住定住ポータルで確認",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "reason": "栄村公式サイト本体が一時利用不可で、学校給食の現行案内を確認できない",
-            "needsConfirmation": "小学校・中学校別1食単価、月額・年額、村補助後の一般世帯負担額、多子・就学援助、欠食時精算は教育委員会または在籍校へ確認"
+            "support": "小中学校の給食費を1食当たり200円補助",
+            "other": "無料スクールバスと小学校入学祝い金10万円も案内",
+            "reviewReason": "案内は令和7年8月時点で、令和8年度単価と補助後負担額の最終確認が必要"
           },
           "source": {
-            "url": "https://www.vill.sakae.nagano.jp/docs/2263.html",
+            "url": "https://sakae-life.com/living/",
             "checkedAt": "2026-07-24"
           }
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "令和8年度の産後ケア実施形態・対象・料金を確認できない",
+          "status": "needs_medium_review",
+          "summary": "栄村が産後ケア実施施設の公費補助契約自治体に含まれることを現行施設案内で確認",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "reason": "栄村公式サイト本体が一時利用不可で、現行産後ケア案内を確認できない",
-            "needsConfirmation": "宿泊・通所・訪問型の実施有無、対象月齢、利用日数、実施施設、自己負担、申請方法は子ども子育てセンターへ確認"
+            "confirmed": "たかき医院、助産所ほやほや等の案内で栄村を産後ケア契約自治体として確認",
+            "reviewReason": "対象月齢、利用日数、自己負担、申請方法、全実施施設を村公式ページで最終確認できない"
           },
           "source": {
-            "url": "https://www.vill.sakae.nagano.jp/docs/2263.html",
+            "url": "https://takakiiin.com/obstetrics/postpartum-care/",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://hoyahoya.onrender.com/care.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "令和8年度の一時預かり・こども誰でも通園制度の条件を確認できない",
+          "status": "needs_medium_review",
+          "summary": "未就園児の一時預かり保育を実施していることを栄村役場ポータルと長野県公式子育て情報で確認",
           "eligibility": {
-            "minAgeMonths": 6,
+            "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "reason": "栄村公式サイト本体が一時利用不可で、現行利用案内を確認できない",
-            "needsConfirmation": "実施施設、対象年齢、月上限、利用時間、料金、定員、認定・予約方法は教育委員会または保育園へ確認"
+            "confirmed": "栄村保育園で一時預かり保育に対応し、長野県公式サイトに栄村の担当窓口を掲載",
+            "reviewReason": "令和8年度の実施施設、対象月齢、利用時間、料金、定員、予約方法の最終確認が必要"
           },
           "source": {
-            "url": "https://www.vill.sakae.nagano.jp/docs/2263.html",
+            "url": "https://www.cheerful-nagano.com/child_information/17435/",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://sakae-life.com/living/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "housingSupport": {
-          "status": "unavailable",
-          "summary": "令和8年度の住宅取得・改修・空き家補助制度を確認できない",
+          "status": "needs_medium_review",
+          "summary": "若者定住住宅取得、空き家購入、住宅リフォーム、克雪住宅工事の補助を栄村役場の移住定住ポータルで確認",
           "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
+            "minAgeMonths": 216,
+            "maxAgeYears": 45
           },
           "details": {
-            "reason": "栄村公式サイト本体が一時利用不可で、現行移住・住宅支援案内を確認できない",
-            "needsConfirmation": "新築・中古住宅取得、空き家改修・家財処分、補助率・上限、居住要件、着手前申請は商工観光課または総務課へ確認"
+            "newHouse": "400万円以上の新築住宅購入に200万円",
+            "usedHouse": "200万円以上の中古住宅購入に100万円",
+            "vacantHouse": "空き家バンク登録住宅購入費の2分の1、上限100万円",
+            "renovation": "村内業者による50万円以上のリフォームに10万円、空き家活用住宅は20万円",
+            "snow": "自然落雪工事は5分の1・上限60万円、安全対策工事は2分の1・上限8万円",
+            "reviewReason": "案内は令和7年8月時点で、令和8年度予算と申請条件の最終確認が必要"
           },
           "source": {
-            "url": "https://www.vill.sakae.nagano.jp/docs/2263.html",
+            "url": "https://sakae-life.com/living/",
             "checkedAt": "2026-07-24"
           }
         },
@@ -166821,25 +167317,32 @@
             "maxAgeYears": 120
           },
           "details": {
-            "reason": "栄村公式サイト本体が一時利用不可で、当年度ごみカレンダーを確認できない",
-            "needsConfirmation": "粗大ごみ収集日、回収場所、処理施設、品目・重量別料金、家電リサイクル対象品等は民生課へ確認"
+            "reason": "2026年7月25日3時50分時点でも公式サイト本体と既知の制度ページが502で、当年度ごみカレンダーを確認できない",
+            "confirmed": "栄村は岳北広域行政組合の構成村でエコパーク寒川が稼働中",
+            "needsConfirmation": "収集日、回収場所、持込先、品目・重量別料金を確認"
           },
           "source": {
             "url": "https://www.vill.sakae.nagano.jp/docs/2263.html",
-            "checkedAt": "2026-07-24"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.plantec.inc/news/eco-park-samukawa-overhaul",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "disasterPrevention": {
-          "status": "unavailable",
+          "status": "needs_medium_review",
           "summary": "洪水・土砂災害等の地域防災計画とハザードマップ運用を公式静的資料で確認",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "confirmed": "地域防災計画で洪水、土砂崩落、地すべり、土石流等の危険箇所把握・警戒避難体制を規定",
-            "hazardMap": "公式広報で洪水・土砂災害ハザードマップとWEB版ハザードマップの運用、令和5年度の修正・全戸配布方針を確認",
-            "reviewReason": "公式サイト本体停止中のため、令和8年度時点の指定避難所、緊急情報配信手段、最新版PDF・WEB地図URLの最終確認が必要"
+            "confirmed": "地域防災計画で洪水、土砂崩落、地すべり、土石流等の警戒避難体制を規定",
+            "hazardMap": "公式広報で洪水・土砂災害ハザードマップとWEB版の運用を確認",
+            "reviewReason": "令和8年度の避難所、情報配信手段、最新版URLの最終確認が必要"
           },
           "source": {
             "url": "https://www.vill.sakae.nagano.jp/fs/3/9/8/3/7/_/_____470_.pdf",
@@ -166850,9 +167353,6 @@
               "url": "https://www.vill.sakae.nagano.jp/fs/1/3/7/8/7/_/keikaku3.pdf",
               "checkedAt": "2026-07-24"
             }
-          ],
-          "notes": [
-            "公式静的資料で制度の存在または過去運用は確認できるが、令和8年度の完全な利用条件と最新版URLを確定できないため、推測せずunavailableとして窓口確認事項を維持する。"
           ]
         }
       }
