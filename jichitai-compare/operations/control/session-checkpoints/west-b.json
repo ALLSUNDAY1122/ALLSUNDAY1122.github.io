@@ -17,7 +17,7 @@
     "45",
     "47"
   ],
-  "updatedAt": "2026-07-25T03:44:00+09:00",
+  "updatedAt": "2026-07-25T05:02:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -27,7 +27,7 @@
   "ciStatus": "success",
   "completedSinceSplit": [],
   "blocked": [],
-  "nextAction": "概略検証第9回として、宮崎県の残り9自治体と沖縄県16自治体をコード順で検証する。全10回程度で担当250自治体を網羅する。",
+  "nextAction": "概略検証10回は完了。新規調査は再開せず、公式情報更新・差し戻し・識別異常・CI失敗・公開ページ不具合が発生した場合のみ保守対応する。",
   "completionEvidence": {
     "assignedPrefectureCount": 11,
     "assignedMunicipalityCount": 250,
@@ -253,41 +253,42 @@
     }
   },
   "roughValidation": {
-    "status": "in_progress",
+    "status": "completed",
     "plannedCycles": 10,
-    "completedCycles": 8,
-    "auditedMunicipalityCount": 200,
-    "auditedServiceCount": 1800,
-    "remainingMunicipalityCount": 50,
-    "detectedResearchContentErrorCount": 2,
-    "detectedSourceMaintenanceIssueCount": 9,
-    "correctedSourceMaintenanceIssueCount": 9,
+    "completedCycles": 10,
+    "auditedMunicipalityCount": 250,
+    "auditedServiceCount": 2250,
+    "remainingMunicipalityCount": 0,
+    "detectedResearchContentErrorCount": 3,
+    "detectedSourceMaintenanceIssueCount": 14,
+    "correctedSourceMaintenanceIssueCount": 14,
     "lastCycle": {
-      "cycle": 8,
-      "auditPullRequestNumber": 3095,
-      "auditCiRunNumber": 7575,
-      "auditMergeCommit": "6312db1251054f444c5e5b968ecebc81aeeea66b",
-      "auditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-08-20260725.json",
-      "reviewFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-08-review-20260725.json",
+      "cycle": 10,
+      "auditPullRequestNumber": 3147,
+      "auditCiRunNumber": 7670,
+      "auditMergeCommit": "830a138e4f5ccc8764f746f97f7244ff18acf839",
+      "auditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-20260725.json",
+      "reviewFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-review-20260725.json",
       "municipalityCount": 25,
       "serviceCount": 225,
+      "checkedUrlCount": 250,
       "prefectureCodes": [
-        "44",
-        "45"
+        "47"
       ],
       "manualSpotCheckCount": 5,
       "contentErrorCount": 0,
       "correctedContentErrorCount": 0,
-      "sourceMaintenanceIssueCount": 1,
-      "correctedSourceMaintenanceIssueCount": 1,
+      "sourceMaintenanceIssueCount": 2,
+      "correctedSourceMaintenanceIssueCount": 2,
+      "networkOnlyWarningCount": 1,
       "correctionPullRequestNumbers": [
-        3101
+        3142
       ],
       "correctionCiRunNumbers": [
-        7568
+        7663
       ],
       "correctionMergeCommits": [
-        "942bfb37cf6210cc542c46f08b9302abecaeffcf"
+        "908a8a04af5fd6c62e73ff75cc875d6a430fded5"
       ]
     },
     "cycleHistory": [
@@ -384,13 +385,56 @@
         "correctionCiRunNumbers": [
           7568
         ]
+      },
+      {
+        "cycle": 9,
+        "municipalityCount": 25,
+        "serviceCount": 225,
+        "checkedUrlCount": 250,
+        "contentErrorCount": 1,
+        "correctedContentErrorCount": 1,
+        "sourceMaintenanceIssueCount": 3,
+        "correctedSourceMaintenanceIssueCount": 3,
+        "networkOnlyWarningCount": 1,
+        "manualSpotCheckCount": 5,
+        "auditPullRequestNumber": 3147,
+        "auditCiRunNumber": 7670,
+        "correctionPullRequestNumber": 3142,
+        "correctionCiRunNumber": 7663
+      },
+      {
+        "cycle": 10,
+        "municipalityCount": 25,
+        "serviceCount": 225,
+        "checkedUrlCount": 250,
+        "contentErrorCount": 0,
+        "correctedContentErrorCount": 0,
+        "sourceMaintenanceIssueCount": 2,
+        "correctedSourceMaintenanceIssueCount": 2,
+        "networkOnlyWarningCount": 1,
+        "manualSpotCheckCount": 5,
+        "auditPullRequestNumber": 3147,
+        "auditCiRunNumber": 7670,
+        "correctionPullRequestNumber": 3142,
+        "correctionCiRunNumber": 7663
       }
     ],
-    "nextCycle": {
-      "cycle": 9,
-      "plannedMunicipalityCount": 25,
-      "scopePolicy": "宮崎県の残り9自治体と沖縄県16自治体をコード順で検証する"
-    },
-    "correctedResearchContentErrorCount": 2
+    "nextCycle": null,
+    "correctedResearchContentErrorCount": 3,
+    "completedAt": "2026-07-25T05:02:00+09:00",
+    "totalCheckedUrlCount": 2500,
+    "totalManualSpotCheckCount": 50,
+    "completionSummary": {
+      "municipalityCount": 250,
+      "serviceCount": 2250,
+      "checkedUrlCount": 2500,
+      "manualSpotCheckCount": 50,
+      "detectedResearchContentErrorCount": 3,
+      "correctedResearchContentErrorCount": 3,
+      "detectedSourceMaintenanceIssueCount": 14,
+      "correctedSourceMaintenanceIssueCount": 14,
+      "unresolvedIssueCount": 0,
+      "conclusion": "西日本B担当250自治体・2,250制度の概略検証10回を完了し、検出した内容誤りと出典保守問題を全件修正した。"
+    }
   }
 }
