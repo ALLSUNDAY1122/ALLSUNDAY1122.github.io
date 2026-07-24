@@ -6,13 +6,16 @@
   "name": "曽爾村",
   "officialUrl": "https://www.vill.soni.nara.jp/",
   "status": "verified",
-  "summary": "曽爾村の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費無償化、保育料・保育所給食費無償、一時保育、定住促進奨励金などを記録。病児・病後児保育は専用案内未確認。",
-  "updatedAt": "2026-07-23",
+  "summary": "曽爾村の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。保育料・保育所給食費無償、一時保育、定住促進奨励金を記録し、病児保育と専用産後ケアは利用条件未確認として保存。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "出生から18歳年度末まで、奈良県内の保険診療について医療機関窓口の自己負担を無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達する日以後の最初の3月31日まで",
         "copayment": "令和6年8月受診分から奈良県内の保険診療窓口負担なし",
@@ -20,7 +23,10 @@
         "coverage": "健康保険が適用される診療分",
         "excluded": "予防接種、健康診断、保険適用外費用、入院時食事代等"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/info/223", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/info/223",
+        "checkedAt": "2026-07-23"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
@@ -31,15 +37,24 @@
         "verificationPolicy": "宇陀地域等の広域利用協定の有無、対象年齢、料金は保健福祉課または保育園へ確認",
         "notAssertion": "専用案内を確認できないことをもって制度が存在しないとは判断しない"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/menu/45", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/menu/45",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.soni.nara.jp/info/364", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.soni.nara.jp/info/364",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "曽爾保育園は村内児童の0～5歳児保育料と保育所給食費を無償とする。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "facility": "曽爾村立曽爾保育園",
         "underThree": "村内の3歳未満児は月額保育料無料",
@@ -48,56 +63,95 @@
         "hours": "通常保育8時30分～16時30分",
         "extendedCare": "16時30分～18時30分の延長保育は日額110円"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/Info/27", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/Info/27",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.soni.nara.jp/div/soumu/htm/reiki_int/reiki_honbun/k426RG00000676.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.soni.nara.jp/div/soumu/htm/reiki_int/reiki_honbun/k426RG00000676.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "曽爾小中学校で学校給食を実施する。現行の給食費額・一律無償化は公式公開情報で確認できないため推測しない。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "summary": "曽爾小中学校で学校給食を実施し、村の学校給食費助成制度により保護者負担を支援する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "school": "施設一体型義務教育学校・曽爾村立曽爾小中学校",
-        "operation": "学校給食関係事務を教育委員会が所管し、東宇陀学校給食センターに関する現行情報を公開",
-        "feeStatus": "令和8年度の保護者負担額または一律無償化を示す専用公式ページは確認できない",
-        "verificationPolicy": "給食実施の事実のみを記録し、料金・減免内容は教育委員会へ確認",
-        "notAssertion": "過年度情報や児童手当からの徴収規定だけで現行負担額を判断しない"
+        "operation": "学校給食関係事務を教育委員会が所管し、東宇陀学校給食センターが給食を提供",
+        "latestDetailedGrant": "令和7年度の村公式補助金一覧では、村に住民登録がある曽爾小中学校在籍児童生徒の学校給食費を全額助成",
+        "currentPublication": "令和8年6月号でも村の各種補助金・助成金一覧を掲載。令和8年度の個別適用は教育委員会へ確認",
+        "otherEducationSupport": "制服購入費・修学旅行費にも補助制度あり",
+        "verificationPolicy": "過年度の徴収規定だけで現行保護者負担額を判断しない"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/info/74", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/info/74",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.soni.nara.jp/info/686", "checkedAt": "2026-07-23"},
-        {"url": "https://www.vill.soni.nara.jp/div/soumu/htm/reiki_int/reiki_honbun/k426RG00000179.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.soni.nara.jp/info/686",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.soni.nara.jp/div/kouhou/pdf/R7/2025_06.pdf",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.soni.nara.jp/div/soumu/htm/reiki_int/reiki_honbun/k426RG00000179.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "postpartumCare": {
-      "status": "verified",
-      "summary": "出産・退院後の母子を保健師が訪問し、乳幼児の発達・栄養・育児相談を随時実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "status": "unavailable",
+      "summary": "新生児訪問・乳幼児相談は確認できるが、宿泊型・通所型・訪問型の産後ケア事業について現行の対象、施設、料金、申請方法を確認できない。",
       "details": {
-        "newbornVisit": "出産・退院後、保健師が新生児と母親の健康状態を確認する訪問を実施",
-        "consultation": "保健師または栄養士が発達、栄養、育児等の相談に随時対応",
-        "healthChecks": "乳幼児健康診査・歯科健康診査を年齢区分ごとに実施",
-        "formalCare": "宿泊型・通所型等の産後ケア専用利用案内は村公式サイトで確認できない",
-        "verificationPolicy": "確認できた訪問・相談支援を記録し、未確認の宿泊・通所サービスは推測しない"
+        "confirmedSupport": "出産・退院後の保健師による新生児訪問、乳幼児の発達・栄養・育児相談、乳幼児健診を実施",
+        "serviceDistinction": "新生児訪問・育児相談は、宿泊型・通所型・訪問型の産後ケア専用事業とは区別して記録",
+        "missingConditions": "現行の産後ケア事業の類型、対象月齢、実施施設、利用日数、料金、申請方法を村公式利用案内で確認できない",
+        "contact": "保健福祉課へ産後ケア事業の実施有無と利用条件を確認"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/info/88", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/info/88",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "曽爾保育園で乳幼児の一時保育を日額1,100円で実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
-      "details": {
-        "facility": "曽爾村立曽爾保育園",
-        "target": "乳幼児。具体的な受入月齢・利用理由・定員は保育園へ確認",
-        "fee": "日額1,100円",
-        "basis": "曾爾村一時保育の実施に関する条例を例規集に掲載",
-        "procedure": "利用日、時間、給食、申込期限等は保育園へ事前確認",
-        "verificationPolicy": "公式ページにない詳細条件は推測しない"
+      "summary": "曽爾保育園で乳幼児の一時保育を日額1,100円で実施する。こども誰でも通園制度の村内利用条件は未確認。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/Info/27", "checkedAt": "2026-07-23"},
+      "details": {
+        "traditionalTemporaryCare": {
+          "facility": "曽爾村立曽爾保育園",
+          "target": "乳幼児。具体的な受入月齢・利用理由・定員は保育園へ確認",
+          "fee": "日額1,100円",
+          "basis": "曾爾村一時保育の実施に関する条例を例規集に掲載",
+          "procedure": "利用日、時間、給食、申込期限等は保育園へ事前確認"
+        },
+        "anyoneUseChildcare": {
+          "nationalProgram": "令和8年度から全国実施の制度であることは確認",
+          "townSpecificStatus": "曽爾村の実施施設、利用料、利用時間、認定・面談・予約方法を示す利用者向け案内は確認できない",
+          "verificationPolicy": "国の一般条件を曽爾村の実施条件として転記しない"
+        }
+      },
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/Info/27",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.soni.nara.jp/div/soumu/htm/reiki_int/reiki_honbun/k426RG00000829.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.soni.nara.jp/div/soumu/htm/reiki_int/reiki_honbun/k426RG00000829.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "housingSupport": {
@@ -105,15 +159,32 @@
       "summary": "45歳以下のUターン・転入者等へ定住促進奨励金を交付し、子どもがいる世帯には継続加算を行う。",
       "details": {
         "program": "曽爾村定住促進奨励金",
-        "uTurn": "Uターン世帯20万円、単身5万円。指定産業等への従事者は世帯30万円、単身10万円",
-        "moveIn": "転入世帯10万円。対象は原則45歳以下で定住意思がある方",
-        "childAddition": "村内施設で就学する義務教育修了前の子どもがいる世帯は1年当たり2万円を支給",
-        "housingOptions": "若者定住促進住宅、移住定住促進住宅、空き家相談窓口等も整備",
-        "conditions": "就業、年齢、居住、子どもの就学等の要件は申請前に確認"
+        "uTurn": "Uターン世帯20万円、単身5万円。農林業・指定産業従事者は世帯30万円、単身10万円",
+        "moveIn": "転入世帯10万円、単身5万円。農林業・指定産業従事者は世帯30万円、単身10万円",
+        "ageCondition": "Uターン・転入は原則45歳以下",
+        "childAddition": "村内施設で就学する義務教育修了前の子どもがいる世帯は1人当たり年2万円を追加",
+        "settlement": "定住は村に5年以上住所を有し継続居住すること",
+        "paymentTiming": "Uターン・転入奨励金は5年経過時に交付し、要件充足後1年以内に申請",
+        "taxCondition": "税滞納等がある場合は交付されないことがある",
+        "otherHousing": "若者定住促進住宅、村営住宅、若者定住促進住宅用地の無償分譲、空き家相談を案内"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/Info/660", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/Info/660",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.soni.nara.jp/info/654", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.soni.nara.jp/info/654",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.soni.nara.jp/Info/664",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.soni.nara.jp/Info/662",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "bulkyWaste": {
@@ -128,7 +199,10 @@
         "separation": "ガラス、金具、スプリング等の不燃物を取り外す",
         "directDelivery": "大量ごみ等は事前連絡のうえ東宇陀クリーンセンターへ本人が直接搬入"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/info/133", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/info/133",
+        "checkedAt": "2026-07-23"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -141,9 +215,15 @@
         "otherInformation": "雨量・河川水位、河川カメラ、避難・救急情報等も防災メニューで案内",
         "currency": "防災マップは2021年公開のため、避難時は最新の村・県情報を併用"
       },
-      "source": {"url": "https://www.vill.soni.nara.jp/info/419", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.soni.nara.jp/info/419",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.soni.nara.jp/menu/2", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.soni.nara.jp/menu/2",
+          "checkedAt": "2026-07-23"
+        }
       ]
     }
   }

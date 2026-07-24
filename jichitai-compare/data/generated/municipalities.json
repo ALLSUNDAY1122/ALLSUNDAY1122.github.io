@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1581,
+    "municipalityCount": 1583,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -215045,7 +215045,7 @@
       "name": "曽爾村",
       "officialUrl": "https://www.vill.soni.nara.jp/",
       "status": "verified",
-      "summary": "曽爾村の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費無償化、保育料・保育所給食費無償、一時保育、定住促進奨励金などを記録。病児・病後児保育は専用案内未確認。",
+      "summary": "曽爾村の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。保育料・保育所給食費無償、一時保育、定住促進奨励金を記録し、病児保育と専用産後ケアは利用条件未確認として保存。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -215077,7 +215077,7 @@
           },
           "source": {
             "url": "https://www.vill.soni.nara.jp/menu/45",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
@@ -215103,7 +215103,7 @@
           },
           "source": {
             "url": "https://www.vill.soni.nara.jp/Info/27",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
@@ -215114,26 +215114,31 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "曽爾小中学校で学校給食を実施する。現行の給食費額・一律無償化は公式公開情報で確認できないため推測しない。",
+          "summary": "曽爾小中学校で学校給食を実施し、村の学校給食費助成制度により保護者負担を支援する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
             "school": "施設一体型義務教育学校・曽爾村立曽爾小中学校",
-            "operation": "学校給食関係事務を教育委員会が所管し、東宇陀学校給食センターに関する現行情報を公開",
-            "feeStatus": "令和8年度の保護者負担額または一律無償化を示す専用公式ページは確認できない",
-            "verificationPolicy": "給食実施の事実のみを記録し、料金・減免内容は教育委員会へ確認",
-            "notAssertion": "過年度情報や児童手当からの徴収規定だけで現行負担額を判断しない"
+            "operation": "学校給食関係事務を教育委員会が所管し、東宇陀学校給食センターが給食を提供",
+            "latestDetailedGrant": "令和7年度の村公式補助金一覧では、村に住民登録がある曽爾小中学校在籍児童生徒の学校給食費を全額助成",
+            "currentPublication": "令和8年6月号でも村の各種補助金・助成金一覧を掲載。令和8年度の個別適用は教育委員会へ確認",
+            "otherEducationSupport": "制服購入費・修学旅行費にも補助制度あり",
+            "verificationPolicy": "過年度の徴収規定だけで現行保護者負担額を判断しない"
           },
           "source": {
             "url": "https://www.vill.soni.nara.jp/info/74",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
               "url": "https://www.vill.soni.nara.jp/info/686",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.soni.nara.jp/div/kouhou/pdf/R7/2025_06.pdf",
+              "checkedAt": "2026-07-24"
             },
             {
               "url": "https://www.vill.soni.nara.jp/div/soumu/htm/reiki_int/reiki_honbun/k426RG00000179.html",
@@ -215142,42 +215147,43 @@
           ]
         },
         "postpartumCare": {
-          "status": "verified",
-          "summary": "出産・退院後の母子を保健師が訪問し、乳幼児の発達・栄養・育児相談を随時実施する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 1
-          },
+          "status": "unavailable",
+          "summary": "新生児訪問・乳幼児相談は確認できるが、宿泊型・通所型・訪問型の産後ケア事業について現行の対象、施設、料金、申請方法を確認できない。",
           "details": {
-            "newbornVisit": "出産・退院後、保健師が新生児と母親の健康状態を確認する訪問を実施",
-            "consultation": "保健師または栄養士が発達、栄養、育児等の相談に随時対応",
-            "healthChecks": "乳幼児健康診査・歯科健康診査を年齢区分ごとに実施",
-            "formalCare": "宿泊型・通所型等の産後ケア専用利用案内は村公式サイトで確認できない",
-            "verificationPolicy": "確認できた訪問・相談支援を記録し、未確認の宿泊・通所サービスは推測しない"
+            "confirmedSupport": "出産・退院後の保健師による新生児訪問、乳幼児の発達・栄養・育児相談、乳幼児健診を実施",
+            "serviceDistinction": "新生児訪問・育児相談は、宿泊型・通所型・訪問型の産後ケア専用事業とは区別して記録",
+            "missingConditions": "現行の産後ケア事業の類型、対象月齢、実施施設、利用日数、料金、申請方法を村公式利用案内で確認できない",
+            "contact": "保健福祉課へ産後ケア事業の実施有無と利用条件を確認"
           },
           "source": {
             "url": "https://www.vill.soni.nara.jp/info/88",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "曽爾保育園で乳幼児の一時保育を日額1,100円で実施する。",
+          "summary": "曽爾保育園で乳幼児の一時保育を日額1,100円で実施する。こども誰でも通園制度の村内利用条件は未確認。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "facility": "曽爾村立曽爾保育園",
-            "target": "乳幼児。具体的な受入月齢・利用理由・定員は保育園へ確認",
-            "fee": "日額1,100円",
-            "basis": "曾爾村一時保育の実施に関する条例を例規集に掲載",
-            "procedure": "利用日、時間、給食、申込期限等は保育園へ事前確認",
-            "verificationPolicy": "公式ページにない詳細条件は推測しない"
+            "traditionalTemporaryCare": {
+              "facility": "曽爾村立曽爾保育園",
+              "target": "乳幼児。具体的な受入月齢・利用理由・定員は保育園へ確認",
+              "fee": "日額1,100円",
+              "basis": "曾爾村一時保育の実施に関する条例を例規集に掲載",
+              "procedure": "利用日、時間、給食、申込期限等は保育園へ事前確認"
+            },
+            "anyoneUseChildcare": {
+              "nationalProgram": "令和8年度から全国実施の制度であることは確認",
+              "townSpecificStatus": "曽爾村の実施施設、利用料、利用時間、認定・面談・予約方法を示す利用者向け案内は確認できない",
+              "verificationPolicy": "国の一般条件を曽爾村の実施条件として転記しない"
+            }
           },
           "source": {
             "url": "https://www.vill.soni.nara.jp/Info/27",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
@@ -215191,20 +215197,31 @@
           "summary": "45歳以下のUターン・転入者等へ定住促進奨励金を交付し、子どもがいる世帯には継続加算を行う。",
           "details": {
             "program": "曽爾村定住促進奨励金",
-            "uTurn": "Uターン世帯20万円、単身5万円。指定産業等への従事者は世帯30万円、単身10万円",
-            "moveIn": "転入世帯10万円。対象は原則45歳以下で定住意思がある方",
-            "childAddition": "村内施設で就学する義務教育修了前の子どもがいる世帯は1年当たり2万円を支給",
-            "housingOptions": "若者定住促進住宅、移住定住促進住宅、空き家相談窓口等も整備",
-            "conditions": "就業、年齢、居住、子どもの就学等の要件は申請前に確認"
+            "uTurn": "Uターン世帯20万円、単身5万円。農林業・指定産業従事者は世帯30万円、単身10万円",
+            "moveIn": "転入世帯10万円、単身5万円。農林業・指定産業従事者は世帯30万円、単身10万円",
+            "ageCondition": "Uターン・転入は原則45歳以下",
+            "childAddition": "村内施設で就学する義務教育修了前の子どもがいる世帯は1人当たり年2万円を追加",
+            "settlement": "定住は村に5年以上住所を有し継続居住すること",
+            "paymentTiming": "Uターン・転入奨励金は5年経過時に交付し、要件充足後1年以内に申請",
+            "taxCondition": "税滞納等がある場合は交付されないことがある",
+            "otherHousing": "若者定住促進住宅、村営住宅、若者定住促進住宅用地の無償分譲、空き家相談を案内"
           },
           "source": {
             "url": "https://www.vill.soni.nara.jp/Info/660",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
               "url": "https://www.vill.soni.nara.jp/info/654",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.soni.nara.jp/Info/664",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.vill.soni.nara.jp/Info/662",
+              "checkedAt": "2026-07-24"
             }
           ]
         },
@@ -282287,6 +282304,183 @@
       }
     },
     {
+      "code": "46215",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "name": "薩摩川内市",
+      "officialUrl": "https://www.city.satsumasendai.lg.jp/",
+      "status": "verified",
+      "summary": "必須9制度を薩摩川内市公式情報で調査し、全制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末まで県内医療機関等の保険診療窓口負担を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "薩摩川内市内に住所がある保護者等に監護される18歳年度末までの子ども",
+            "support": "2025年4月診療分から、県内医療機関等で資格者証を提示すると保険診療自己負担が無料",
+            "outsidePrefecture": "県外受診等は領収書等を添えて償還払いを申請",
+            "excluded": "保険外費用、学校管理下の災害共済給付、高額療養費等は除外"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/lifescene/kosodate/1/5599.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "小学校低学年までを2施設で病児・病後児保育",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "target": "市内居住の乳幼児から小学校低学年までで、病気または回復期にあり家庭保育が困難な児童",
+            "facilities": "病児保育施設ぐうちょきぱー、病後児保育室tetote",
+            "hours": "月曜日から土曜日の8時30分から18時",
+            "fee": "1日1,000円、昼食・おやつ代込み。生活保護世帯は無料",
+            "application": "事前登録後、施設へ直接予約し、利用申込書・医師記入欄・家庭との連絡票等を提出"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/soshiki/1026/1/1/3/2876.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と0～2歳児非課税世帯の保育料を無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "free": "幼児教育・保育無償化により3～5歳児クラスと0～2歳児の住民税非課税世帯は利用料無償",
+            "underThree": "その他の0～2歳児は世帯の市民税額・認定区分等に応じて算定",
+            "meal": "3～5歳児の主食費・副食費等は施設へ直接納付。所得・多子条件により副食費免除あり",
+            "application": "保育施設の利用申込みと教育・保育給付認定手続きを行う"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/soshiki/1026/1/1/1/1594.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費を全額無償化し、中学校は価格高騰分を補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementarySchool": "2026年4月から小学校・義務教育学校前期課程の給食費を国の補助金等で全額無償化",
+            "juniorHighSchool": "中学校給食費は高騰分1食103円を市が補助し、保護者負担額を据え置き",
+            "kindergarten": "幼稚園給食費も高騰分1食81円を補助",
+            "assistance": "経済的に就学困難な認定世帯は就学援助で給食費等を支援"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/soshiki/1010/2/1/1/1/2046.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ短期入所型産後ケアと応援券を提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "薩摩川内市に住所があり、産後の心身の回復や育児支援を必要とする母親と乳児",
+            "type": "市が委託する医療機関・助産院で短期入所型産後ケアを提供",
+            "support": "母体の休養、授乳・乳房ケア、育児相談等",
+            "additional": "産後ケア応援券つんPayを発行し、対象サービスの利用を支援",
+            "application": "利用施設を予約後、市の専用申請フォーム等から申請する"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/kosodate_kyoiku/kosodate/6/6805.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.satsumasendai.lg.jp/kosodate_kyoiku/kosodate/6773.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が月10時間まで利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "保育所・認定こども園・幼稚園・企業主導型保育施設等に在籍していない生後6か月から満3歳未満の子ども",
+            "usageLimit": "子ども1人当たり月10時間",
+            "fee": "1時間300円程度を標準に各施設が設定。おやつ代等の実費が別途の場合あり",
+            "facilities": "市内17施設で実施",
+            "application": "つうえんポータルで利用者認定申請後、施設との事前面談・利用予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/20250808/19291.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "転入者の定住住宅リフォーム費50％、上限30～50万円に子育て加算50万円",
+          "details": {
+            "target": "2026年4月から2029年3月末までの転入者で、市内業者を利用し指定地域の住宅を改修して5年以上定住する等の要件を満たす人",
+            "works": "自己負担30万円以上の対象リフォーム工事",
+            "support": "工事費50％。甑島地域は上限50万円、その他指定地域は上限30万円",
+            "childAddition": "転入時に中学生以下を帯同する世帯は50万円加算",
+            "application": "転入日から1年以内に窓口へ申請"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/ijuteiju/josei_shien/2_1/10177.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ等をクリーンセンターへ直接搬入し家庭系100kg以下300円",
+          "details": {
+            "method": "粗大ごみ・多量ごみは地域のクリーンセンターや粗大ごみ中継施設へ直接搬入",
+            "fee": "計量施設は家庭系ごみ100kg以下300円、100kg超過ごとに300円加算",
+            "facilities": "川内・上甑島・下甑クリーンセンター、樋脇・入来・祁答院粗大ごみ中継施設等",
+            "alternative": "自力搬入が困難な場合は一般廃棄物処理許可業者へ依頼"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/soshiki/1005/1/2/2/2837.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・洪水・津波・原子力等の防災マップを公開",
+          "details": {
+            "coverage": "土砂災害警戒区域、河川洪水浸水想定区域、津波、原子力災害、ため池等",
+            "maps": "2024年更新の地区別防災マップ、ハザードマップ、災救マップを公開",
+            "shelters": "災救マップで避難所の開設・混雑状況等を確認可能",
+            "accessibility": "地図情報を音声確認できるQRコード等を掲載"
+          },
+          "source": {
+            "url": "https://www.city.satsumasendai.lg.jp/kurashi_tetsuzuki/genshiryoku/1_1/4/13430.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.satsumasendai.lg.jp/soshiki/1046/1/2/2/2/16724.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        }
+      }
+    },
+    {
       "code": "46216",
       "prefectureCode": "46",
       "prefecture": "鹿児島県",
@@ -288935,6 +289129,189 @@
           },
           "source": {
             "url": "https://www.town.kumejima.okinawa.jp/docs/2023031000021/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "47362",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "八重瀬町",
+      "officialUrl": "https://www.town.yaese.lg.jp/",
+      "status": "verified",
+      "summary": "必須9制度を八重瀬町公式情報で調査し、全制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "2026年度から高校生世代まで対象を拡充し、保険診療の自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "八重瀬町に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療による入院・通院・歯科・調剤の自己負担分",
+            "expansion": "2026年度から高校生世代まで対象を拡充",
+            "payment": "受給資格者証の提示による現物給付・自動償還払い・窓口申請による償還払いに対応",
+            "exclusion": "予防接種、健康診断、文書料、差額ベッド代、入院時食事療養費等は対象外",
+            "application": "出生・転入時に児童家庭課で受給資格者証の交付手続きが必要"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2026033100027/",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.yaese.lg.jp/docs/2014030900276/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生までを南部徳洲会病院の病児保育室で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "南部徳洲会病院7階 病児保育室",
+            "target": "風邪・発熱・下痢等により集団保育が困難で、医師の診断後に預かりが可能な子ども",
+            "fee": "1日2,000円＋食事代500円、半日1,500円＋食事代500円。診断料は別途",
+            "hours": "7時30分から18時30分。迎えは18時まで",
+            "application": "初回は利用登録申請書を病院または町児童家庭課へ提出し、当日診察が必要",
+            "reservation": "7時30分から予約受付。満床・症状・検査結果により受入不可の場合あり"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2016052000019/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等と住民税非課税世帯の0～2歳児について幼児教育・保育の無償化を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "free": "認可保育所・認定こども園等の3～5歳児と、住民税非課税世帯の0～2歳児の保育料を無償化",
+            "certification": "認可外保育施設、預かり保育等は施設等利用給付認定と保育の必要性確認が必要",
+            "annualReview": "無償化給付認定を継続する場合は毎年度現況確認書類の提出が必要",
+            "application": "2026年度の新規・継続給付認定申請を児童家庭課で受付",
+            "additionalCosts": "給食費、教材費、行事費等の実費は施設・認定区分により別途負担となる場合あり"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2024122400034/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は町立小学校・中学校の学校給食費を完全無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "八重瀬町立小学校・中学校の児童生徒",
+            "support": "学校給食費の保護者負担を全額無償化",
+            "period": "令和8年度",
+            "procedure": "通常の町立学校在籍者について就学援助の給食費支給は行わず、全児童生徒を無償化対象とする",
+            "incomeLimit": "所得制限なしの一律無償化"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2026033100058/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1年未満の母子へ訪問・日帰り・宿泊型の産後ケアを合計6回まで提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "八重瀬町に住民登録があり、産後ケアを必要とする出産後1年未満の母親と乳児",
+            "types": "訪問型、日帰り型、宿泊型",
+            "limit": "各形態を合わせて6回まで",
+            "care": "母体の心身ケア、乳房ケア、授乳相談、育児相談、休養支援等",
+            "fee": "訪問型・日帰り型は初回から5回目まで無料。宿泊型は施設・日数により自己負担があり、6回目は各形態で追加負担あり",
+            "application": "利用前に児童家庭課へ申請し、利用承認後に実施施設等と日程調整"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2026041400010/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "八重瀬町に住民登録があり、保育所・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+            "employmentCondition": "保護者の就労要件を問わない",
+            "limit": "子ども1人につき月10時間まで。時間単位で利用",
+            "fee": "1時間300円。世帯状況に応じた減免制度あり",
+            "facility": "風の音保育園等の町指定実施施設",
+            "start": "2026年4月1日利用開始、認定申請は2026年3月9日から受付"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2026021800014/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2026年度、町内事業者による住宅リフォーム費を20％または40％、上限20万円補助",
+          "details": {
+            "target": "町税等の滞納がなく、八重瀬町に住民登録し対象住宅に居住中または工事後に居住予定の人",
+            "housing": "建築後1年以上の自己所有住宅、1年以上空き家の自己所有住宅、所有者許可のある借家等",
+            "eligibleWork": "20万円以上のバリアフリー、省エネ、空き家、耐久性向上、テレワーク対応等の改修工事",
+            "support": "バリアフリー工事は工事費の40％以内、その他は20％以内",
+            "limit": "補助上限20万円",
+            "period": "2026年7月22日から2027年1月31日まで。予算到達時は終了",
+            "application": "交付決定前の契約・着工は対象外。町内施工業者を利用し土木建設課へ事前申請"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2026070600030/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "電話で事前申込みし、粗大ごみ処理券を貼付して1回原則4点まで戸別回収",
+          "details": {
+            "application": "八重瀬町シルバー人材センターへ電話で事前申込み",
+            "ticket": "町内コンビニ・スーパー等で粗大ごみ処理券を購入し対象品へ貼付",
+            "limit": "1回の申込みは原則4点まで",
+            "collection": "回収日は申込み時に案内",
+            "hours": "受付は平日9時から17時まで。12時から13時を除く",
+            "exclusion": "テレビ、冷蔵庫・冷凍庫、洗濯機・衣類乾燥機、エアコンは町回収対象外で販売店等へ依頼"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2015032000018/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "住宅地図機能と災害リスク・避難情報を備えた町防災マップをPDFで公開",
+          "details": {
+            "formats": "記事面、地図面北、地図面南等のPDF版防災マップを公開",
+            "coverage": "津波、洪水、土砂災害等の危険区域と避難施設・避難経路の確認に利用",
+            "features": "建物ごとの住所地番を表示し、住宅地図としても活用可能",
+            "evacuation": "災害種別ごとの避難可否、指定避難所・避難場所等を掲載",
+            "guidance": "自宅・職場周辺の災害リスクと避難経路を平時から確認"
+          },
+          "source": {
+            "url": "https://www.town.yaese.lg.jp/docs/2014042500044/",
             "checkedAt": "2026-07-24"
           }
         }
