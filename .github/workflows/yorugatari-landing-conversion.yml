@@ -1,0 +1,93 @@
+name: Yorugatari curated landing conversion
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 21 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
+      - yorugatari/assets/landing-share.js
+      - yorugatari/tools/landing-conversion-snapshot.mjs
+      - .github/workflows/yorugatari-landing-conversion.yml
+
+concurrency:
+  group: yorugatari-curated-landing-conversion
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Validate conversion tracking
+        shell: bash
+        run: |
+          node --check yorugatari/assets/landing-share.js
+          node --check yorugatari/tools/landing-conversion-snapshot.mjs
+          node <<'NODE'
+          const fs = require('node:fs');
+          const runtime = fs.readFileSync('yorugatari/assets/landing-share.js', 'utf8');
+          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime']) {
+            if (!runtime.includes(token)) throw new Error(`Missing conversion path: ${token}`);
+          }
+          const privacy = fs.readFileSync('yorugatari/privacy.html', 'utf8');
+          if (!privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Privacy disclosure is missing');
+          NODE
+
+      - name: Generate conversion snapshot
+        run: node yorugatari/tools/landing-conversion-snapshot.mjs
+
+      - name: Commit conversion reports
+        shell: bash
+        run: |
+          cp yorugatari/tools/landing-conversion-latest.json /tmp/landing-conversion-latest.json
+          cp yorugatari/tools/landing-conversion-history.json /tmp/landing-conversion-history.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/landing-conversion-latest.json yorugatari/tools/landing-conversion-latest.json
+            cp /tmp/landing-conversion-history.json yorugatari/tools/landing-conversion-history.json
+            git add yorugatari/tools/landing-conversion-latest.json yorugatari/tools/landing-conversion-history.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari landing conversion [skip ci]"
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload conversion reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-landing-conversion
+          path: |
+            yorugatari/tools/landing-conversion-latest.json
+            yorugatari/tools/landing-conversion-history.json
+          if-no-files-found: error
+          retention-days: 30
