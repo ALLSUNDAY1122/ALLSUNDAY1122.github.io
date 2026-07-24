@@ -1,0 +1,104 @@
+name: Complete East B Ten Round Audit 20260725
+
+on:
+  pull_request:
+    branches: [region/east]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  complete:
+    if: github.head_ref == 'ops/east-b-ten-round-audit-complete-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Complete checkpoint and audit record
+        env:
+          CHECKPOINT_PR: ${{ github.event.pull_request.number }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          checkpoint_path = Path('jichitai-compare/operations/control/session-checkpoints/east-b.json')
+          with checkpoint_path.open(encoding='utf-8') as f:
+              data = json.load(f)
+
+          campaign = data['verificationCampaign']
+          round10 = {
+              'round': 10,
+              'topic': 'source JSON・task・生成JSON・静的ページ・mainの最終整合性',
+              'result': 'passed_with_publication_sync',
+              'details': '代表10自治体のうち過去9回で変更した市川市12203、横浜市14100、江戸川区13123、新潟市15100、粟島浦村15586を優先し、region/eastとmainのsource JSON・taskを個別照合。横浜市は既に一致。main未反映だった市川市の病児保育正規URL、江戸川区の2026年10月粗大ごみ持込料金改定、新潟市ハザードマップの鮮度注意、粟島浦村の保育料・こども誰でも通園制度訂正を全国同期PR #3040で反映。全国生成JSON、進捗JSON、4自治体静的ページを最新main基点で再生成し、通常CI #7433で変更範囲、生成、進捗、source・生成整合、ページ検証、JavaScript構文が全て成功。全国1741自治体・15669制度・残り0を維持し、PR #3040をmainへsquash merge（fb9672c2b9e53574c5bf30aabd4c47c4a7543f3c）。'
+          }
+          rounds = campaign.get('rounds', [])
+          rounds = [r for r in rounds if r.get('round') != 10]
+          rounds.append(round10)
+          rounds.sort(key=lambda r: r.get('round', 0))
+          campaign['rounds'] = rounds
+          campaign['completedRounds'] = 10
+          campaign['status'] = 'completed'
+          campaign['nextRound'] = None
+          campaign['nextTopic'] = None
+          campaign['nextAction'] = '東日本Bの誤調査10回段階監査は完了。制度事実の明確な誤認0件。判定誤り2件、出典保守不備1件、産後ケア記載不足2自治体、粗大ごみ将来料金記載不足1自治体、防災地図鮮度注意不足1自治体を修正・補完し、全国公開mainまで同期済み。以後は新規の公式制度改定、リンク切れ、公開ページ差分が発生した場合のみ再監査する。'
+
+          data['updatedAt'] = '2026-07-25T04:18:00+09:00'
+          data['pullRequestNumber'] = int(os.environ['CHECKPOINT_PR'])
+          data['ciStatus'] = 'success'
+
+          with checkpoint_path.open('w', encoding='utf-8') as f:
+              json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
+              f.write('\n')
+
+          record = {
+              'schemaVersion': '1.0.0',
+              'sessionId': 'east-b',
+              'issueNumber': 2908,
+              'completedAt': '2026-07-25T04:18:00+09:00',
+              'targetRounds': 10,
+              'completedRounds': 10,
+              'representativeMunicipalities': ['08201','09201','11100','12100','14100','15100','15586','12203','12227','13123'],
+              'results': {
+                  'clearFactualErrors': 0,
+                  'judgmentCorrections': 2,
+                  'sourceMaintenanceCorrections': 1,
+                  'postpartumDetailCompletions': 2,
+                  'futureBulkyWasteFeeCompletion': 1,
+                  'hazardMapCurrencyCompletion': 1,
+                  'unresolvedCorrections': 0
+              },
+              'nationwidePublication': {
+                  'pullRequestNumber': 3040,
+                  'ciRunNumber': 7433,
+                  'mergeCommitSha': 'fb9672c2b9e53574c5bf30aabd4c47c4a7543f3c',
+                  'municipalities': 1741,
+                  'services': 15669,
+                  'remainingMunicipalities': 0,
+                  'status': 'success'
+              },
+              'checkpointPullRequestNumber': int(os.environ['CHECKPOINT_PR']),
+              'status': 'completed'
+          }
+          record_path = Path('jichitai-compare/operations/audits/east-b-ten-round-verification-20260725.json')
+          with record_path.open('w', encoding='utf-8') as f:
+              json.dump(record, f, ensure_ascii=False, indent=2)
+              f.write('\n')
+          PY
+      - name: Commit completion and remove temporary workflow
+        run: |
+          rm .github/workflows/complete-east-b-ten-round-audit-20260725.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            jichitai-compare/operations/control/session-checkpoints/east-b.json \
+            jichitai-compare/operations/audits/east-b-ten-round-verification-20260725.json \
+            .github/workflows/complete-east-b-ten-round-audit-20260725.yml
+          git commit -m "ops: 東日本B誤調査10回監査を完了"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
