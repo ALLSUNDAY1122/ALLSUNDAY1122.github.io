@@ -12,14 +12,20 @@
     "childMedical": {
       "status": "verified",
       "summary": "出生から高校卒業相当の年度末まで、保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "target": "山辺町に住所があり、医療保険に加入する出生から18歳到達年度末までの子ども",
         "coverage": "県内医療機関で保険証等と医療証を提示すると保険診療の自己負担分が無料",
         "excluded": "保険適用外費用、生活保護受給者、児童福祉施設措置費の支弁対象者等",
         "application": "出生・転入等の際に子育て支援医療証の交付手続きを行う"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/7/202412maruko.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/7/202412maruko.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
@@ -29,19 +35,34 @@
         "unconfirmed": "病児保育または病後児保育の実施施設、利用対象、利用料、申込方法",
         "guidance": "保健福祉課子育て支援係へ現行の利用可否を確認する必要がある"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/life/2/10/57/", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/life/2/10/57/",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3歳から5歳児等の国制度による無償化に加え、令和8年度は3歳から5歳児クラスの副食費を月額5,100円まで補助する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "feeCalculation": "0歳から2歳児の保育料は児童の年齢と父母の市区町村民税額等により算定",
         "nationalSupport": "3歳から5歳児および市町村民税非課税世帯の0歳から2歳児は幼児教育・保育無償化の対象",
         "mealSupport": "町内在住の3歳から5歳児クラスは副食費を月額5,100円まで補助",
         "application": "町内施設では原則手続不要。町外施設で支払いがある場合は町へ申請"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/hoikushoriyou2025.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/hoiku.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/hoikushoriyou2025.html",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "schoolMeals": {
       "status": "unavailable",
@@ -51,24 +72,36 @@
         "unconfirmed": "令和8年度の保護者負担額、無償化または一律補助の範囲、申請要否",
         "guidance": "教育委員会事務局教育課または学校給食センターへ確認する必要がある"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/12.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/12.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後の母子を対象に、相談型、ショートデイ、デイケア、ショートステイ等の産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "山辺町に住所があり、産後の心身のケアや育児支援を必要とする母子",
         "support": "授乳・乳房トラブル、育児の困りごと、母体の休養等への支援",
         "types": "相談型、ショートデイ、デイケア、ショートステイ等",
         "application": "利用前に保健福祉センターへ連絡し申請"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/19/hoken-boshi.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/19/hoken-boshi.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 2},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
       "details": {
         "target": "認可保育所等に在籍していない生後6か月から3歳未満の児童",
         "limit": "児童1人につき月10時間まで",
@@ -76,7 +109,10 @@
         "facility": "山辺町立安達峰一郎記念保育所",
         "conditions": "保護者の就労要件を問わない"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/kodomodaredemo.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/kodomodaredemo.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -89,7 +125,10 @@
         "childcareDefinition": "平成20年4月2日以降に出生した世帯員がいる世帯",
         "statusNote": "令和8年度分は受付終了"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/10/zyuutaku7.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/10/zyuutaku7.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -101,7 +140,10 @@
         "placement": "指定日の朝8時までに自宅前等の指定場所へ排出",
         "fee": "申込時に品目ごとの料金を案内"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/7/sodaigomi.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/7/sodaigomi.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -113,7 +155,10 @@
         "earthquake": "地震対策と避難行動情報を掲載",
         "evacuation": "指定避難所、避難経路、防災情報の入手方法を掲載"
       },
-      "source": {"url": "https://www.town.yamanobe.yamagata.jp/soshiki/29/disasterpreventionmap.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yamanobe.yamagata.jp/soshiki/29/disasterpreventionmap.html",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }

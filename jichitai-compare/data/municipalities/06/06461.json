@@ -6,13 +6,16 @@
   "name": "遊佐町",
   "officialUrl": "https://www.town.yuza.yamagata.jp/",
   "status": "verified",
-  "summary": "遊佐町の子育て・暮らしに関する9制度のうち8制度を確認済みで、1制度は公式情報で詳細未確認です。",
-  "updatedAt": "2026-07-24",
+  "summary": "遊佐町の子育て・暮らしに関する9制度を自治体公式情報で確認できます。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担額全額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "program": "子育て支援医療制度",
         "target": "遊佐町に住所を有する0歳から18歳年度末までの子ども",
@@ -21,23 +24,51 @@
         "outsidePrefecture": "県外受診や医療証未提示の場合は一旦支払い後に償還払い申請",
         "excluded": "入院時食事代、差額室料、健康診断、予防接種等の保険適用外費用は対象外"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/archive/contents-402", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/archive/contents-402",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
-      "status": "unavailable",
-      "summary": "町単独での病児・病後児保育実施は困難との公式説明があり、令和8年度の利用施設・対象年齢・料金・予約方法を確認できない。",
-      "details": {
-        "confirmedSituation": "町議会資料で、町単独の病児・病後児保育実施は困難な状況と説明",
-        "researchResult": "子育て支援ページと第3期子ども・子育て支援事業計画を確認したが、現行の利用者向け施設・対象・料金・手続を確定できなかった",
-        "caution": "広域利用を含む現行の利用可否は健康福祉課子育て支援係へ確認が必要"
+      "status": "verified",
+      "summary": "遊佐町の子どもは、酒田市・三川町・庄内町の病児・病後児保育施設を広域利用できる。",
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 12
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/archive/contents-545", "checkedAt": "2026-07-24"},
-      "additionalSources": [{"url": "https://www.town.yuza.yamagata.jp/uploads/contents/archive_0000002007_00/507_1.pdf", "checkedAt": "2026-07-24"}]
+      "details": {
+        "availability": "遊佐町公式案内により、酒田市・三川町・庄内町の病児・病後児保育事業を利用可能",
+        "facilities": "酒田市あきほ病児・病後児保育所、三川町病児・病後児保育施設にこっと、庄内町の病児・病後児保育施設等",
+        "target": "施設により生後2か月または3か月から小学3年生・小学6年生まで",
+        "sakataFee": "酒田市あきほ病児・病後児保育所を遊佐町民が利用する場合は日額2,000円、給食費250円が別途必要",
+        "procedure": "毎年度の事前登録、施設への予約、医療機関が記載する利用連絡票等が必要。利用条件は施設ごとに確認"
+      },
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/archive/contents-545",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.sakata.lg.jp/kosodate/kosodate/hoikuen/byouji-byougo.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "url": "https://www.town.mikawa.yamagata.jp/child/kosodate/byoujihoiku.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/byuoujihoiku.html",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児等を無償化し、課税世帯0～2歳児も町独自に保育料を軽減する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "threeToFive": "国の幼児教育・保育無償化により3～5歳児の保育料を無償化",
         "zeroToTwoNonTax": "住民税非課税世帯の0～2歳児を無償化",
@@ -46,16 +77,28 @@
         "meal": "町立保育園の副食費は月4,500円。所得等により免除あり",
         "determination": "0～2歳児の保育料は認定区分と市町村民税所得割課税状況等で決定"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/archive/p20250918165512", "checkedAt": "2026-07-24"},
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/archive/p20250918165512",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.yuza.yamagata.jp/archive/contents-547", "checkedAt": "2026-07-24"},
-        {"url": "https://www.town.yuza.yamagata.jp/archive/contents-552", "checkedAt": "2026-07-24"}
+        {
+          "url": "https://www.town.yuza.yamagata.jp/archive/contents-547",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.yuza.yamagata.jp/archive/contents-552",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "町内小中学校の児童生徒の給食費を無償化し、町外校に在籍する町民児童生徒の保護者にも相当額を補助する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "program": "遊佐町学校給食費無償化事業",
         "townSchools": "町内小中学校に在籍する児童生徒の保護者負担を無償化",
@@ -63,13 +106,24 @@
         "amount": "町内小中学校の保護者が負担する一食当たり給食費相当額を上限",
         "application": "町外校在籍者等は町所定の申請が必要"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/reiki/reiki_honbun/c442RG00001077.html", "checkedAt": "2026-07-24"},
-      "additionalSources": [{"url": "https://www.town.yuza.yamagata.jp/reiki/reiki_honbun/c442RG00001091.html", "checkedAt": "2026-07-24"}]
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/reiki/reiki_honbun/c442RG00001077.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yuza.yamagata.jp/reiki/reiki_honbun/c442RG00001091.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子を対象に、宿泊型・通所型・訪問型の産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "program": "遊佐町産後ケア事業",
         "target": "遊佐町に住所がある産後1年未満の母親と乳児。施設により対象月齢が異なる",
@@ -79,12 +133,18 @@
         "visitFee": "訪問型のごっと助産院は1回800円",
         "application": "利用施設や健康福祉課の案内に従い事前申請"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/archive/p20251031151239", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/archive/p20251031151239",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、月10時間まで1時間300円で町立保育園を利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "遊佐町乳児等通園支援事業（こども誰でも通園制度）",
         "target": "保育所等に通っていない生後6か月から満3歳未満の子ども",
@@ -95,8 +155,16 @@
         "capacity": "各施設3人以内",
         "application": "町の利用認定後、利用の1週間前までに施設へ申請し、事前面談を受ける"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/genre/section/kenkofukushi/kosodate", "checkedAt": "2026-07-24"},
-      "additionalSources": [{"url": "https://www.town.yuza.yamagata.jp/uploads/contents/archive_0000003941_00/%E3%80%90%E9%81%8A%E4%BD%90%E7%94%BA%E7%89%88%E3%80%91%E5%88%A9%E7%94%A8%E8%80%85%E5%90%91%E3%81%91%E3%83%AA%E3%83%BC%E3%83%95%E3%83%AC%E3%83%83%E3%83%88.pdf", "checkedAt": "2026-07-24"}]
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/genre/section/kenkofukushi/kosodate",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yuza.yamagata.jp/uploads/contents/archive_0000003941_00/%E3%80%90%E9%81%8A%E4%BD%90%E7%94%BA%E7%89%88%E3%80%91%E5%88%A9%E7%94%A8%E8%80%85%E5%90%91%E3%81%91%E3%83%AA%E3%83%BC%E3%83%95%E3%83%AC%E3%83%83%E3%83%88.pdf",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -109,7 +177,10 @@
         "applicationPeriod": "2026年4月15日から2027年1月29日。予算到達で終了する場合あり",
         "conditions": "転居前または売買契約前の事業認定申請、税・水道料等の滞納なし、排水設備接続等"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/archive/p20260305185813", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/archive/p20260305185813",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -122,10 +193,19 @@
         "guide": "2026年2月更新のごみ分別ガイドブックを公開",
         "caution": "家電リサイクル対象品・処理困難物は通常の粗大ごみ収集対象外となる場合がある"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/archive/p20260213133350", "checkedAt": "2026-07-24"},
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/archive/p20260213133350",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.yuza.yamagata.jp/gomi-navi", "checkedAt": "2026-07-24"},
-        {"url": "https://www.town.yuza.yamagata.jp/genre/living/environment/garbage", "checkedAt": "2026-07-24"}
+        {
+          "url": "https://www.town.yuza.yamagata.jp/gomi-navi",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.yuza.yamagata.jp/genre/living/environment/garbage",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "disasterPrevention": {
@@ -138,10 +218,19 @@
         "guide": "平時の備え、災害情報の取得方法、避難方法等を掲載",
         "updates": "土砂災害警戒区域の更新や地域防災計画改定情報も公開"
       },
-      "source": {"url": "https://www.town.yuza.yamagata.jp/genre/living/safety", "checkedAt": "2026-07-24"},
+      "source": {
+        "url": "https://www.town.yuza.yamagata.jp/genre/living/safety",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.yuza.yamagata.jp/archive/259", "checkedAt": "2026-07-24"},
-        {"url": "https://www.town.yuza.yamagata.jp/genre/bousai-portal", "checkedAt": "2026-07-24"}
+        {
+          "url": "https://www.town.yuza.yamagata.jp/archive/259",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.yuza.yamagata.jp/genre/bousai-portal",
+          "checkedAt": "2026-07-24"
+        }
       ]
     }
   }
