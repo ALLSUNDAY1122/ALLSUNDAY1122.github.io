@@ -21,8 +21,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: jichitai-compare/package-lock.json
 
       - name: Update source and task
         run: |
@@ -64,7 +62,6 @@ jobs:
       - name: Regenerate and validate public data
         working-directory: jichitai-compare
         run: |
-          npm ci
           npm run check
           ! grep -R -F 'PR提出前の最終検証を実施する' data/generated/municipalities.json municipality/40130/index.html
           grep -F '福岡市の子育て、教育、住宅、生活、防災に関する9制度を自治体公式情報で確認済み。' municipality/40130/index.html
