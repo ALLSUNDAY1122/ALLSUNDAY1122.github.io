@@ -1,0 +1,523 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycle-01-20260725",
+  "sessionId": "west-b",
+  "cycle": 1,
+  "plannedCycles": 10,
+  "auditedAt": "2026-07-25T00:14:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "codes": [
+      "31201",
+      "31202",
+      "31203",
+      "31204",
+      "31325",
+      "31328",
+      "31329",
+      "31364",
+      "31370",
+      "31371",
+      "31372",
+      "31384",
+      "31386",
+      "31389",
+      "31390",
+      "31401",
+      "31402",
+      "31403",
+      "32201",
+      "32202",
+      "32203",
+      "32204",
+      "32205",
+      "32207",
+      "32209"
+    ],
+    "prefectureCodes": [
+      "31",
+      "32"
+    ],
+    "serviceCount": 225
+  },
+  "methodology": [
+    "自治体コード・都道府県コード・自治体名・公式URLを確認",
+    "必須9制度、状態、要約、主出典URL、確認日を確認",
+    "公式URLと225件の制度主出典URLをHTTP取得",
+    "5自治体の制度内容を公式ページで手動抜き取り照合"
+  ],
+  "structuralErrorCount": 0,
+  "structuralErrors": [],
+  "networkCheckedUrlCount": 250,
+  "networkWarningCount": 5,
+  "networkWarnings": [
+    {
+      "code": "31325",
+      "field": "services.temporaryChildcare.source",
+      "url": "https://www.town.wakasa.tottori.jp/soshikikarasagasu/chominka/2/588.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.wakasa.tottori.jp/soshikikarasagasu/chominka/2/588.html"
+    },
+    {
+      "code": "31364",
+      "field": "services.childcareFee.source",
+      "url": "https://www.kosodate-misasa.jp/1103/9922.html",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "31384",
+      "field": "services.disasterPrevention.source",
+      "url": "https://www.hiezu.jp/list/soumu/y121/u509/e970/z228/",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.hiezu.jp/list/soumu/y121/u509/e970/z228/"
+    },
+    {
+      "code": "31386",
+      "field": "officialUrl",
+      "url": "https://www.daisen.jp/",
+      "status": null,
+      "ok": false,
+      "error": "timeout"
+    },
+    {
+      "code": "31386",
+      "field": "services.sickChildCare.source",
+      "url": "https://www.daisen.jp/1/10/18/18/z594/",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.daisen.jp/10/18/18/z594/"
+    }
+  ],
+  "manualSpotChecks": [
+    {
+      "code": "31201",
+      "name": "鳥取市",
+      "service": "schoolMeals",
+      "status": "passed"
+    },
+    {
+      "code": "31204",
+      "name": "境港市",
+      "service": "postpartumCare",
+      "status": "passed"
+    },
+    {
+      "code": "31370",
+      "name": "湯梨浜町",
+      "service": "housingSupport",
+      "status": "passed"
+    },
+    {
+      "code": "32201",
+      "name": "松江市",
+      "service": "childMedical",
+      "status": "passed"
+    },
+    {
+      "code": "32209",
+      "name": "雲南市",
+      "service": "schoolMeals",
+      "status": "passed"
+    }
+  ],
+  "records": [
+    {
+      "code": "31201",
+      "name": "鳥取市",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.city.tottori.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31202",
+      "name": "米子市",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.city.yonago.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31203",
+      "name": "倉吉市",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.city.kurayoshi.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31204",
+      "name": "境港市",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.city.sakaiminato.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31325",
+      "name": "若桜町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town.wakasa.tottori.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31328",
+      "name": "智頭町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www1.town.chizu.tottori.jp/1/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31329",
+      "name": "八頭町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town.yazu.tottori.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31364",
+      "name": "三朝町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town.misasa.tottori.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "sickChildCare",
+          "host": "www.city.kurayoshi.lg.jp"
+        },
+        {
+          "service": "childcareFee",
+          "host": "www.kosodate-misasa.jp"
+        }
+      ]
+    },
+    {
+      "code": "31370",
+      "name": "湯梨浜町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.yurihama.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31371",
+      "name": "琴浦町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town.kotoura.tottori.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31372",
+      "name": "北栄町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.e-hokuei.net/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31384",
+      "name": "日吉津村",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.hiezu.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31386",
+      "name": "大山町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.daisen.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31389",
+      "name": "南部町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town.nanbu.tottori.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31390",
+      "name": "伯耆町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.houki-town.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31401",
+      "name": "日南町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town.nichinan.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "childMedical",
+          "host": "www.pref.tottori.lg.jp"
+        }
+      ]
+    },
+    {
+      "code": "31402",
+      "name": "日野町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town.hino.tottori.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "31403",
+      "name": "江府町",
+      "prefectureCode": "31",
+      "officialUrl": "https://www.town-kofu.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "sickChildCare",
+          "host": "www.hinohp.com"
+        }
+      ]
+    },
+    {
+      "code": "32201",
+      "name": "松江市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.matsue.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32202",
+      "name": "浜田市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.hamada.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32203",
+      "name": "出雲市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.izumo.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32204",
+      "name": "益田市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.masuda.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32205",
+      "name": "大田市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.oda.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32207",
+      "name": "江津市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.gotsu.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32209",
+      "name": "雲南市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.unnan.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    }
+  ],
+  "conclusion": "no_research_content_error_detected_one_stale_source_url_corrected",
+  "reviewedAt": "2026-07-25T00:23:00+09:00",
+  "detectedResearchContentErrorCount": 0,
+  "detectedSourceMaintenanceIssueCount": 1,
+  "correctedSourceMaintenanceIssueCount": 1,
+  "warningReview": [
+    {
+      "code": "31325",
+      "name": "若桜町",
+      "service": "temporaryChildcare",
+      "classification": "transient_or_bot_http_warning",
+      "result": "公式ページをブラウザで再取得し、対象・時間・料金が登録内容と一致"
+    },
+    {
+      "code": "31364",
+      "name": "三朝町",
+      "service": "childcareFee",
+      "classification": "source_availability_warning",
+      "result": "町が案内する子育てポータルは自動取得できなかったが、第2子以降保育料無償化の記載は検索索引と鳥取県公式の無償化制度案内で整合を確認"
+    },
+    {
+      "code": "31384",
+      "name": "日吉津村",
+      "service": "disasterPrevention",
+      "classification": "stale_source_url_corrected",
+      "result": "旧個別URLを現行公式ハザードマップ一覧URLへ更新。制度内容は変更なし",
+      "correctionPullRequestNumber": 2930,
+      "correctionCiRunNumber": 7006,
+      "correctionMergeCommit": "944d058742713111d3afc6846dc6e7095e0798fa"
+    },
+    {
+      "code": "31386",
+      "name": "大山町",
+      "service": "officialUrl",
+      "classification": "timeout",
+      "result": "町公式の制度ページは取得でき、公式サイトと自治体識別に誤りなし"
+    },
+    {
+      "code": "31386",
+      "name": "大山町",
+      "service": "sickChildCare",
+      "classification": "redirect_or_bot_http_warning",
+      "result": "公式ページをブラウザで再取得し、病児・病後児の対象年齢と施設が登録内容と一致"
+    }
+  ],
+  "nextCycle": {
+    "cycle": 2,
+    "plannedMunicipalityCount": 25,
+    "scopePolicy": "第1回未対象の島根県自治体から開始し、担当250自治体を約10回で網羅"
+  }
+}
