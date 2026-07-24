@@ -1,0 +1,13 @@
+{
+  "round": 3,
+  "auditedAt": "2026-07-25T00:16:00+09:00",
+  "codes": ["02411","02412","02441","02442","02443","02445","02446","02450","02501","02502","02503","02504","03201"],
+  "structuralAudit": {"result":"passed","checkedMunicipalities":13,"errors":0},
+  "deepChecks": [
+    {"code":"02411","name":"六ヶ所村","services":["postpartumCare","temporaryChildcare"],"result":"corrected_minor_error","note":"産後1年未満、宿泊7回・通所10回・訪問10回、利用料無料は公式案内と一致。一時預かりの制度内容も一致したが、要約の『町内4施設』を『村内4施設』へ修正。"},
+    {"code":"02442","name":"五戸町","services":["childcareFee","schoolMeals"],"result":"no_confirmed_error","note":"令和8年度の保育料・副食費無償化継続と学校給食費無償化継続を公式案内で確認。"},
+    {"code":"02504","name":"佐井村","services":["temporaryChildcare","schoolMeals","postpartumCare"],"result":"no_confirmed_error","note":"令和8年4月開始の誰でも通園制度の対象・月10時間・1時間300円が一致。学校給食費と産後ケアは令和8年度条件を確定できないためunavailable維持。"},
+    {"code":"03201","name":"盛岡市","services":["schoolMeals","postpartumCare","childcareFee"],"result":"no_confirmed_error","note":"令和8年度小学校給食費完全無償化、中学校食材費補助、産後ケア無料、第2子以降保育料助成が公式情報と一致。"}
+  ],
+  "confirmedErrors": [{"code":"02411","path":"services.temporaryChildcare.summary","before":"町内4施設","after":"村内4施設","severity":"minor","corrected":true}]
+}
