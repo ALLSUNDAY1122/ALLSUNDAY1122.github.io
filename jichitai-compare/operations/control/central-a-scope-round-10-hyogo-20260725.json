@@ -6,77 +6,13 @@
   "expectedMunicipalityCount": 41,
   "checkedMunicipalityCount": 41,
   "checkedServiceCount": 369,
-  "generatedAt": "2026-07-25T05:20:00+09:00",
-  "structuralFindingCount": 1,
+  "generatedAt": "2026-07-25T05:34:00+09:00",
+  "structuralFindingCount": 0,
   "unavailableCount": 0,
-  "substantiveSuspectCount": 7,
-  "findings": [
-    {
-      "severity": "medium",
-      "type": "task_status_mismatch",
-      "code": "28201",
-      "actual": "pr_open"
-    }
-  ],
+  "substantiveSuspectCount": 0,
+  "findings": [],
   "unavailable": [],
-  "substantiveSuspects": [
-    {
-      "type": "school_meal_currentness_check",
-      "code": "28212",
-      "name": "赤穂市",
-      "service": "schoolMeals",
-      "summary": "18歳以下の子どもを3人以上養育する世帯について、市立小・中学校等に在籍する第3子以降の学校給食費を無償化する。",
-      "source": "https://www.city.ako.lg.jp/reiki/reiki_honbun/k314RG00001245.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "28220",
-      "name": "加西市",
-      "service": "schoolMeals",
-      "summary": "市立小学校・中学校・特別支援学校の給食費を所得制限なしで全額公費負担する。",
-      "source": "https://www.city.kasai.hyogo.jp/site/kyoiku/30422.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "28225",
-      "name": "朝来市",
-      "service": "schoolMeals",
-      "summary": "2025年4月から市立小・中学校の学校給食費を所得制限・申請なしで無償化している。",
-      "source": "https://www.city.asago.hyogo.jp/site/kyoiku/20062.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "28227",
-      "name": "宍粟市",
-      "service": "schoolMeals",
-      "summary": "18歳未満の子どもを3人以上養育する世帯について、第3子以降の市立小・中学校給食費を免除する。",
-      "source": "https://www.city.shiso.lg.jp/kosodadekyoiku/joseiteate/1524104540649.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "28228",
-      "name": "加東市",
-      "service": "schoolMeals",
-      "summary": "2024年4月から市立小学校・中学校・義務教育学校の学校給食費を無償化している。",
-      "source": "https://www.city.kato.lg.jp/kakukanogoannai/kyouikushinkoubu/gakkoukyuusyoku-center/gakkoukyuushoku-goannnai/13937.html"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "28442",
-      "name": "市川町",
-      "service": "schoolMeals",
-      "summary": "町立小学校・中学校の学校給食費を無償化する。",
-      "source": "https://www.town.ichikawa.lg.jp/Info/1851"
-    },
-    {
-      "type": "school_meal_currentness_check",
-      "code": "28585",
-      "name": "香美町",
-      "service": "schoolMeals",
-      "summary": "町立小学校・中学校・幼稚園の学校給食費を無償化する。",
-      "source": "https://www.town.mikata-kami.lg.jp/soshiki/kyoikusomu/5/3/166.html"
-    }
-  ],
+  "substantiveSuspects": [],
   "municipalities": [
     {
       "code": "28100",
@@ -122,8 +58,8 @@
       "name": "姫路市",
       "status": "verified",
       "updatedAt": "2026-07-23",
-      "taskStatus": "pr_open",
-      "taskLastCheckedAt": "2026-07-23",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
@@ -511,9 +447,9 @@
       "code": "28212",
       "name": "赤穂市",
       "status": "verified",
-      "updatedAt": "2026-07-24",
+      "updatedAt": "2026-07-25",
       "taskStatus": "merged",
-      "taskLastCheckedAt": "2026-07-24",
+      "taskLastCheckedAt": "2026-07-25",
       "verifiedCount": 9,
       "unavailableCount": 0,
       "needsMediumReviewCount": 0,
@@ -522,9 +458,9 @@
       "highRisk": {
         "schoolMeals": {
           "status": "verified",
-          "summary": "18歳以下の子どもを3人以上養育する世帯について、市立小・中学校等に在籍する第3子以降の学校給食費を無償化する。",
-          "source": "https://www.city.ako.lg.jp/reiki/reiki_honbun/k314RG00001245.html",
-          "checkedAt": "2026-07-24"
+          "summary": "令和8年度は学校給食センターが給食を提供する全ての園児・児童・生徒の学校給食費を無償化する。",
+          "source": "https://www.city.ako.lg.jp/shise/profile/shiseihoushin2026.html",
+          "checkedAt": "2026-07-25"
         },
         "postpartumCare": {
           "status": "verified",
@@ -1677,5 +1613,71 @@
         }
       }
     }
-  ]
+  ],
+  "initialStructuralFindingCount": 1,
+  "resolvedStructuralFindingCount": 1,
+  "initialUnavailableCount": 0,
+  "initialSubstantiveSuspectCount": 7,
+  "confirmedErrorCount": 2,
+  "correctedMunicipalityCodes": [
+    "28201",
+    "28212"
+  ],
+  "confirmedCorrections": [
+    {
+      "type": "task_status_mismatch",
+      "count": 1,
+      "municipalityCodes": [
+        "28201"
+      ],
+      "detail": "9制度完了済みの姫路市task statusをpr_openからmergedへ修正"
+    },
+    {
+      "type": "outdated_school_meal_scope",
+      "count": 1,
+      "municipalityCodes": [
+        "28212"
+      ],
+      "detail": "赤穂市の第3子以降のみという旧記録を、令和8年度の全対象園児・児童・生徒無償化へ更新"
+    }
+  ],
+  "confirmedAccurateExamples": [
+    {
+      "code": "28220",
+      "service": "schoolMeals",
+      "detail": "加西市の市立小中学校・特別支援学校給食費全額公費負担を確認"
+    },
+    {
+      "code": "28225",
+      "service": "schoolMeals",
+      "detail": "朝来市の令和8年7月献立ページでも令和7年4月開始の無償化継続を確認"
+    },
+    {
+      "code": "28227",
+      "service": "schoolMeals",
+      "detail": "宍粟市公式の現行子育て支援一覧に第3子以降給食費無料制度を確認"
+    },
+    {
+      "code": "28228",
+      "service": "schoolMeals",
+      "detail": "加東市の令和8年度給食費支援金と市立学校給食費無償化を確認"
+    },
+    {
+      "code": "28442",
+      "service": "schoolMeals",
+      "detail": "市川町の現行支援制度一覧に小中学校給食費無償化を確認"
+    },
+    {
+      "code": "28585",
+      "service": "schoolMeals",
+      "detail": "2026年3月更新の香美町公式ページで小中学校・幼稚園給食費無償化を確認"
+    }
+  ],
+  "needsFurtherReview": [],
+  "auditCompletion": {
+    "completedBatches": 10,
+    "totalBatches": 10,
+    "status": "completed",
+    "completedAt": "2026-07-25T05:34:00+09:00"
+  }
 }
