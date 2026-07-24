@@ -5,7 +5,8 @@ const tools = path.join(process.cwd(), 'yorugatari', 'tools');
 const status = JSON.parse(fs.readFileSync(path.join(tools, 'external-launch-status.json'), 'utf8'));
 const campaigns = JSON.parse(fs.readFileSync(path.join(tools, 'campaigns.json'), 'utf8'));
 const kit = fs.readFileSync(path.join(tools, 'external-launch-kit.md'), 'utf8');
-const output = path.join(tools, 'external-launch-next.md');
+const markdownOutput = path.join(tools, 'external-launch-next.md');
+const textOutput = path.join(tools, 'external-launch-next.txt');
 
 const nextStatus = status.campaigns.find((row) => row.id === status.nextCampaignId);
 const campaign = campaigns.definitions.find((row) => row.id === status.nextCampaignId);
@@ -30,6 +31,7 @@ const sectionUrl = section.slice(urlHeading + 1).find((line) => /^https:\/\//.te
 if (!postCopy || !sectionUrl) throw new Error(`Post copy or URL is empty: ${campaign.id}`);
 if (sectionUrl !== campaign.url) throw new Error(`Campaign URL mismatch for ${campaign.id}`);
 
+const copyReadyText = `${postCopy}\n\n${campaign.url}\n`;
 const platformValidation = {
   platform: campaign.source,
   postCharacters: Array.from(postCopy).length,
@@ -53,7 +55,8 @@ const generatedAtJapan = new Intl.DateTimeFormat('ja-JP', {
 const lengthLine = platformValidation.maximumCharacters
   ? `推定文字数：${platformValidation.estimatedTotalCharacters}／${platformValidation.maximumCharacters}（URLは23文字換算）  `
   : `本文文字数：${platformValidation.postCharacters}  `;
-const markdown = `# 夜語り 次の外部投稿\n\n生成日時（日本時間）：${generatedAtJapan}  \n状態：未投稿  \n優先順位：${nextStatus.priority}  \n媒体：${campaign.source}  \n${lengthLine}\n\n## 投稿文\n\n${postCopy}\n\n## 追跡URL\n\n${campaign.url}\n\n## 計測コード\n\n\`${campaign.id}\`\n\n## 投稿後に記録する項目\n\n投稿を実際に完了した場合だけ、\`external-launch-status.json\` の該当行を次のように更新する。\n\n- \`status\`: \`published\`\n- \`publishedAt\`: 実際の投稿日時\n- \`postUrl\`: 公開された投稿URL\n- \`nextCampaignId\`: 次の \`ready_not_posted\` キャンペーン\n\n投稿していない段階では、これらを変更しない。\n`;
+const markdown = `# 夜語り 次の外部投稿\n\n生成日時（日本時間）：${generatedAtJapan}  \n状態：未投稿  \n優先順位：${nextStatus.priority}  \n媒体：${campaign.source}  \n${lengthLine}\n\n## 一括コピー用完成文\n\n\`\`\`text\n${copyReadyText.trimEnd()}\n\`\`\`\n\n## 投稿文\n\n${postCopy}\n\n## 追跡URL\n\n${campaign.url}\n\n## 計測コード\n\n\`${campaign.id}\`\n\n## 投稿後に記録する項目\n\n投稿を実際に完了した場合だけ、\`external-launch-status.json\` の該当行を次のように更新する。\n\n- \`status\`: \`published\`\n- \`publishedAt\`: 実際の投稿日時\n- \`postUrl\`: 公開された投稿URL\n- \`nextCampaignId\`: 次の \`ready_not_posted\` キャンペーン\n\n投稿していない段階では、これらを変更しない。\n`;
 
-fs.writeFileSync(output, markdown, 'utf8');
-console.log(`Generated ${path.relative(process.cwd(), output)} for ${campaign.id}: ${JSON.stringify(platformValidation)}`);
+fs.writeFileSync(markdownOutput, markdown, 'utf8');
+fs.writeFileSync(textOutput, copyReadyText, 'utf8');
+console.log(`Generated ${path.relative(process.cwd(), markdownOutput)} and ${path.relative(process.cwd(), textOutput)} for ${campaign.id}: ${JSON.stringify(platformValidation)}`);
