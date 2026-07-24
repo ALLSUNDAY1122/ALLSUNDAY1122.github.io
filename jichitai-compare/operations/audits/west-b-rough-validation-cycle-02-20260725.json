@@ -1,0 +1,562 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycle-02-20260725",
+  "sessionId": "west-b",
+  "cycle": 2,
+  "plannedCycles": 10,
+  "auditedAt": "2026-07-25T00:33:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "codes": [
+      "32206",
+      "32343",
+      "32386",
+      "32441",
+      "32448",
+      "32449",
+      "32501",
+      "32505",
+      "32525",
+      "32526",
+      "32527",
+      "32528",
+      "34100",
+      "34202",
+      "34203",
+      "34204",
+      "34205",
+      "34207",
+      "34208",
+      "34209",
+      "34210",
+      "34211",
+      "34212",
+      "34213",
+      "34214"
+    ],
+    "prefectureCodes": [
+      "32",
+      "34"
+    ],
+    "serviceCount": 225
+  },
+  "methodology": [
+    "自治体コード・都道府県コード・自治体名・公式URLを確認",
+    "必須9制度、状態、要約、主出典URL、確認日を確認",
+    "公式URL25件と制度主出典225件をHTTP取得",
+    "安来市、隠岐の島町、広島市、福山市、安芸高田市を公式ページで抜き取り照合"
+  ],
+  "structuralErrorCount": 0,
+  "structuralErrors": [],
+  "networkCheckedUrlCount": 250,
+  "networkWarningCount": 10,
+  "networkWarnings": [
+    {
+      "code": "32525",
+      "field": "services.childcareFee.source",
+      "url": "https://www.town.ama.shimane.jp/kurashi-tetsuduki/kosodate-kyoiku/kosodate/00u5pgi8df",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "32527",
+      "field": "officialUrl",
+      "url": "https://www.vill.chibu.lg.jp/",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "32527",
+      "field": "services.childcareFee.source",
+      "url": "https://www.vill.chibu.lg.jp/gyosei/reiki/153",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "32527",
+      "field": "services.schoolMeals.source",
+      "url": "https://www.vill.chibu.lg.jp/files/original/202106151952340245377.pdf",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "32527",
+      "field": "services.temporaryChildcare.source",
+      "url": "https://www.vill.chibu.lg.jp/gyosei/reiki/153",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "32527",
+      "field": "services.housingSupport.source",
+      "url": "https://www.vill.chibu.lg.jp/files/original/202106151952340245377.pdf",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "32527",
+      "field": "services.bulkyWaste.source",
+      "url": "https://www.vill.chibu.lg.jp/gyosei/reiki/153",
+      "status": null,
+      "ok": false,
+      "error": "fetch failed"
+    },
+    {
+      "code": "32528",
+      "field": "services.bulkyWaste.source",
+      "url": "https://www.town.okinoshima.shimane.jp/www/contents/1673928417591/simple/guidebook.pdf",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.okinoshima.shimane.jp/www/contents/1673928417591/simple/guidebook.pdf"
+    },
+    {
+      "code": "34211",
+      "field": "services.postpartumCare.source",
+      "url": "https://www.city.otake.hiroshima.jp/material/files/group/25/sangokea2025.pdf",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.city.otake.hiroshima.jp/material/files/group/25/sangokea2025.pdf"
+    },
+    {
+      "code": "34214",
+      "field": "services.schoolMeals.source",
+      "url": "https://www.akitakata.jp/reiki/reiki_honbun/r382RG00001878.html?id=j6",
+      "status": 403,
+      "ok": false,
+      "finalUrl": "https://www1.g-reiki.net/akitakata/reiki_honbun/r382RG00001878.html?id=j6"
+    }
+  ],
+  "manualSpotChecks": [
+    {
+      "code": "32206",
+      "name": "安来市",
+      "service": "schoolMeals",
+      "status": "passed"
+    },
+    {
+      "code": "32528",
+      "name": "隠岐の島町",
+      "service": "childMedical",
+      "status": "passed"
+    },
+    {
+      "code": "34100",
+      "name": "広島市",
+      "service": "childMedical",
+      "status": "passed"
+    },
+    {
+      "code": "34207",
+      "name": "福山市",
+      "service": "schoolMeals",
+      "status": "reviewed"
+    },
+    {
+      "code": "34214",
+      "name": "安芸高田市",
+      "service": "schoolMeals",
+      "status": "passed"
+    }
+  ],
+  "records": [
+    {
+      "code": "32206",
+      "name": "安来市",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.city.yasugi.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32343",
+      "name": "奥出雲町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.okuizumo.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32386",
+      "name": "飯南町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.iinan.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32441",
+      "name": "川本町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.shimane-kawamoto.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32448",
+      "name": "美郷町",
+      "prefectureCode": "32",
+      "officialUrl": "https://gov.town.shimane-misato.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32449",
+      "name": "邑南町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.ohnan.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "sickChildCare",
+          "host": "www.ohchihospital.jp"
+        }
+      ]
+    },
+    {
+      "code": "32501",
+      "name": "津和野町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.tsuwano.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "32505",
+      "name": "吉賀町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.yoshika.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "postpartumCare",
+          "host": "www.pref.shimane.lg.jp"
+        }
+      ]
+    },
+    {
+      "code": "32525",
+      "name": "海士町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.ama.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 7,
+      "unavailableCount": 2,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "childMedical",
+          "host": "www.pref.shimane.lg.jp"
+        },
+        {
+          "service": "postpartumCare",
+          "host": "www.pref.shimane.lg.jp"
+        }
+      ]
+    },
+    {
+      "code": "32526",
+      "name": "西ノ島町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.nishinoshima.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "sickChildCare",
+          "host": "www.pref.shimane.lg.jp"
+        },
+        {
+          "service": "postpartumCare",
+          "host": "www.pref.shimane.lg.jp"
+        }
+      ]
+    },
+    {
+      "code": "32527",
+      "name": "知夫村",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.vill.chibu.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 3,
+      "unavailableCount": 6,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "childMedical",
+          "host": "www.pref.shimane.lg.jp"
+        },
+        {
+          "service": "sickChildCare",
+          "host": "www.pref.shimane.lg.jp"
+        },
+        {
+          "service": "postpartumCare",
+          "host": "www.pref.shimane.lg.jp"
+        },
+        {
+          "service": "disasterPrevention",
+          "host": "www.pref.shimane.lg.jp"
+        }
+      ]
+    },
+    {
+      "code": "32528",
+      "name": "隠岐の島町",
+      "prefectureCode": "32",
+      "officialUrl": "https://www.town.okinoshima.shimane.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "postpartumCare",
+          "host": "www.pref.shimane.lg.jp"
+        }
+      ]
+    },
+    {
+      "code": "34100",
+      "name": "広島市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.hiroshima.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34202",
+      "name": "呉市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.kure.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": [
+        {
+          "service": "childMedical",
+          "host": "kure-kosodate.com"
+        },
+        {
+          "service": "childcareFee",
+          "host": "kure-kosodate.com"
+        },
+        {
+          "service": "postpartumCare",
+          "host": "kureto.city.kure.lg.jp"
+        },
+        {
+          "service": "temporaryChildcare",
+          "host": "kure-kosodate.com"
+        }
+      ]
+    },
+    {
+      "code": "34203",
+      "name": "竹原市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.takehara.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34204",
+      "name": "三原市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.mihara.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34205",
+      "name": "尾道市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.onomichi.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34207",
+      "name": "福山市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.fukuyama.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34208",
+      "name": "府中市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.fuchu.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34209",
+      "name": "三次市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.miyoshi.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34210",
+      "name": "庄原市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.shobara.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34211",
+      "name": "大竹市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.otake.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34212",
+      "name": "東広島市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.higashihiroshima.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34213",
+      "name": "廿日市市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.city.hatsukaichi.hiroshima.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    },
+    {
+      "code": "34214",
+      "name": "安芸高田市",
+      "prefectureCode": "34",
+      "officialUrl": "https://www.akitakata.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "externalPrimarySourceHosts": []
+    }
+  ],
+  "conclusion": "no_structural_error_detected"
+}
