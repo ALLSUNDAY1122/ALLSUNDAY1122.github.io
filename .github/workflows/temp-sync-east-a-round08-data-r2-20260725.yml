@@ -31,7 +31,7 @@ jobs:
               p=Path(f'jichitai-compare/operations/tasks/{code}.json')
               d=json.loads(p.read_text(encoding='utf-8'))
               d['status']='merged'; d['currentBranch']=None
-              d['lastCheckedAt']='2026-07-25'; d['lastUpdatedAt']='2026-07-25T03:44:00+09:00'; d['lastUpdatedBy']='統括A'
+              d['lastCheckedAt']='2026-07-25'; d['lastUpdatedAt']='2026-07-25T03:46:00+09:00'; d['lastUpdatedBy']='統括A'
               n='東日本A誤調査検証第8回を最新mainへ再同期。'
               if n not in d.setdefault('notes',[]): d['notes'].append(n)
               p.write_text(json.dumps(d,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
@@ -50,7 +50,7 @@ jobs:
       - name: Audit and commit
         run: |
           cat > jichitai-compare/operations/control/publish-audit-east-a-round08-data-20260725.json <<'EOF'
-          {"schemaVersion":"1.0.0","generatedAt":"2026-07-25T03:44:00+09:00","pullRequestNumber":3075,"regionalPullRequestNumber":3065,"municipalityCodes":["13361","13362","13363","13364","13381","19425"],"standardValidation":"success","status":"generation_success_final_ci_pending"}
+          {"schemaVersion":"1.0.0","generatedAt":"2026-07-25T03:46:00+09:00","pullRequestNumber":3080,"regionalPullRequestNumber":3065,"municipalityCodes":["13361","13362","13363","13364","13381","19425"],"standardValidation":"success","status":"generation_success_final_ci_pending"}
           EOF
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
