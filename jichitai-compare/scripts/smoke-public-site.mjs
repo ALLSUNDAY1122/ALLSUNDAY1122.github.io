@@ -8,9 +8,21 @@ const SAMPLE_MUNICIPALITIES = [
   { code: '13123', name: '江戸川区', region: 'east' },
   { code: '27100', name: '大阪市', region: 'central' },
   {
+    code: '26100',
+    name: '京都市',
+    region: 'central-b-kyoto',
+    expectedText: '月12時間'
+  },
+  {
+    code: '29201',
+    name: '奈良市',
+    region: 'central-b-nara',
+    expectedText: '月10時間'
+  },
+  {
     code: '30343',
     name: '九度山町',
-    region: 'central-b',
+    region: 'central-b-wakayama',
     expectedText: '月10時間',
     expectUnavailable: true
   },
