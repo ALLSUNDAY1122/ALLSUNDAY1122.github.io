@@ -1,0 +1,109 @@
+name: Temporary East A final public confirmation
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  confirm:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ops/east-a-final-public-confirm-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/east-a-final-public-confirm-20260725
+          fetch-depth: 0
+      - name: Verify published East-A data and pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            git fetch origin main
+            base_sha="$(git rev-parse origin/main)"
+            git reset --hard "${base_sha}"
+
+            node <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const base='https://allsunday1122.github.io/jichitai-compare';
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const root='jichitai-compare';
+          const prefs=new Set(['10','13','19','20']);
+          const codes=[];
+          for(const pref of [...prefs].sort()){
+            const dir=path.join(root,'data','municipalities',pref);
+            for(const file of fs.readdirSync(dir).filter(x=>x.endsWith('.json')).sort()) codes.push(file.slice(0,-5));
+          }
+          const main=JSON.parse(fs.readFileSync(path.join(root,'data','generated','municipalities.json'),'utf8'));
+          const mainMap=new Map(main.municipalities.map(item=>[item.code,item]));
+          let published=null;
+          for(let attempt=1;attempt<=20;attempt++){
+            const response=await fetch(`${base}/data/generated/municipalities.json?v=${Date.now()}`);
+            if(response.ok){
+              const candidate=await response.json();
+              const candidateMap=new Map(candidate.municipalities.map(item=>[item.code,item]));
+              if(codes.every(code=>JSON.stringify(candidateMap.get(code))===JSON.stringify(mainMap.get(code)))){
+                published=candidate;
+                break;
+              }
+            }
+            await sleep(15000);
+          }
+          if(!published) throw new Error('published East-A generated data did not match main');
+          const corrected=['19364','19425','19443','19442','19429','10367','10424','10426','13361','13362','13363','13364','13381','20303','20305','20306','13421','20206','20207','20208','20214','20215','20217','20219','20304','20307','20349','20382','20386','20388','20404','20409','20410','20413','20417','20425','20430','20432','20446','20450','20451','20452','20481','20521','20543','20561','20588','20590','20602'];
+          for(const code of corrected){
+            const response=await fetch(`${base}/municipality/${code}/?v=${Date.now()}`);
+            if(!response.ok) throw new Error(`${code}: HTTP ${response.status}`);
+            await response.arrayBuffer();
+          }
+          const auditPath=path.join(root,'operations','audits','east-a-final-consistency-20260725.json');
+          const audit=JSON.parse(fs.readFileSync(auditPath,'utf8'));
+          audit.finalCiStatus='success';
+          audit.finalCiRun={workflowRunId:30121173097,runNumber:7654,status:'success'};
+          audit.mainMerge={pullRequestNumber:3130,mergeSha:'8cbf05825b5b7941850d01f855f693d6be9995ca'};
+          audit.publicVerification='success';
+          audit.publicGeneratedMunicipalityCount=published.municipalities.length;
+          audit.publicCorrectedPageCount=corrected.length;
+          audit.publicVerifiedAt='2026-07-25T04:43:00+09:00';
+          audit.status='completed';
+          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
+
+          const checkpointPath=path.join(root,'operations','control','session-checkpoints','east-a.json');
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          checkpoint.updatedAt='2026-07-25T04:43:00+09:00';
+          checkpoint.ciStatus='success';
+          checkpoint.pullRequestNumber=3130;
+          checkpoint.verificationCampaign.nextAction='東日本A誤調査10回検証・main同期・公開確認は完了。栄村公式サイト障害のみIssue #2847で非ブロッキング追跡する。';
+          checkpoint.publicationConfirmation={
+            pullRequestNumber:3130,
+            mergeSha:'8cbf05825b5b7941850d01f855f693d6be9995ca',
+            ciRunNumber:7654,
+            publicGeneratedMunicipalityCount:published.municipalities.length,
+            verifiedPageCount:corrected.length,
+            verifiedAt:'2026-07-25T04:43:00+09:00',
+            status:'success'
+          };
+          fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+          NODE
+
+            git fetch origin main
+            if [ "$(git rev-parse origin/main)" != "${base_sha}" ]; then
+              echo 'main advanced during public verification; retrying'
+              continue
+            fi
+
+            rm -f .github/workflows/temp-east-a-final-public-confirm-20260725.yml
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add -A
+            git diff --cached --check
+            git commit -m 'ops: 東日本A最終公開確認を記録'
+            git push --force-with-lease origin HEAD:ops/east-a-final-public-confirm-20260725
+            exit 0
+          done
+          echo 'main kept advancing; public confirmation not committed' >&2
+          exit 1
