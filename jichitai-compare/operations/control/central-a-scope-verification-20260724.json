@@ -7,7 +7,18 @@
   "startedAt": "2026-07-24T23:50:00+09:00",
   "status": "in_progress",
   "batchCount": 10,
-  "prefectureOrder": ["16", "17", "18", "21", "22", "23", "24", "25", "27", "28"],
+  "prefectureOrder": [
+    "16",
+    "17",
+    "18",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "27",
+    "28"
+  ],
   "method": {
     "structural": "全自治体について自治体コード、名称、都道府県、上位status、9制度status、task状態、公式ドメインを確認",
     "substantive": "誤りが出やすい学校給食、産後ケア、こども誰でも通園、住宅支援を中心に公式情報を抜き取り再確認",
@@ -19,20 +30,35 @@
       "prefectureCode": "16",
       "prefectureName": "富山県",
       "municipalityCount": 15,
-      "status": "in_progress",
+      "status": "corrected",
       "checkedMunicipalities": 15,
-      "officialSpotChecks": ["16201", "16202", "16204", "16205", "16210", "16321", "16343"],
+      "officialSpotChecks": [
+        "16201",
+        "16202",
+        "16204",
+        "16205",
+        "16210",
+        "16321",
+        "16343"
+      ],
       "findings": [
         {
           "severity": "medium",
           "type": "top_level_status_mismatch",
-          "municipalityCodes": ["16202", "16204", "16205", "16206"],
+          "municipalityCodes": [
+            "16202",
+            "16204",
+            "16205",
+            "16206"
+          ],
           "detail": "9制度が全てverifiedでtaskもmergedだが、自治体JSON上位statusがneeds_coordinatorのまま残存"
         },
         {
           "severity": "medium",
           "type": "current_program_omission",
-          "municipalityCodes": ["16210"],
+          "municipalityCodes": [
+            "16210"
+          ],
           "service": "temporaryChildcare",
           "detail": "南砺市で2026年4月開始のこども誰でも通園制度が公式掲載されているが、自治体JSONは一時預かりのみを記録"
         }
@@ -44,15 +70,23 @@
         "富山市の2026年度産後ケア応援室料金",
         "朝日町の小中学校給食費無償化・産後ケア・こども誰でも通園制度",
         "舟橋村のこども誰でも通園制度"
-      ]
+      ],
+      "correctedMunicipalityCodes": [
+        "16202",
+        "16204",
+        "16205",
+        "16206",
+        "16210"
+      ],
+      "completedAt": "2026-07-24T23:55:00+09:00"
     }
   ],
   "summary": {
-    "completedBatches": 0,
+    "completedBatches": 1,
     "checkedMunicipalities": 15,
     "confirmedErrors": 5,
     "needsFurtherReview": 0,
-    "correctedErrors": 0
+    "correctedErrors": 5
   },
-  "nextAction": "富山県の5件を修正してCI確認後、石川県19自治体を監査する"
+  "nextAction": "第2回として石川県19自治体を監査する"
 }
