@@ -4,11 +4,11 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 6,
-  "remainingRounds": 4,
+  "completedRounds": 7,
+  "remainingRounds": 3,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 66,
-  "remainingMunicipalityCount": 41,
+  "auditedMunicipalityCount": 76,
+  "remainingMunicipalityCount": 31,
   "auditedAt": "2026-07-25T02:22:00+09:00",
   "round01": {
     "codes": [
@@ -418,6 +418,93 @@
       "05214",
       "05215",
       "05303"
+    ]
+  },
+  "bookkeepingCorrections": [
+    {
+      "type": "duplicate-audited-code",
+      "code": "05215",
+      "municipality": "仙北市",
+      "duplicatedIn": [
+        "round01",
+        "round06"
+      ],
+      "correction": "第6回終了時の集計66件には重複1件が含まれていたため、実質65件へ補正してから第7回の新規11自治体を加算し76件とした"
+    }
+  ],
+  "round07": {
+    "codes": [
+      "05327",
+      "05346",
+      "05348",
+      "05349",
+      "05361",
+      "05363",
+      "05366",
+      "05368",
+      "05434",
+      "05463",
+      "06202"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 29,
+    "confirmedErrorCount": 3,
+    "confirmedErrors": [
+      {
+        "code": "05349",
+        "municipality": "八峰町",
+        "service": "temporaryChildcare",
+        "before": "通常の一時保育のみ",
+        "after": "町内2園のこども誰でも通園制度を併記",
+        "reason": "2026年4月開始の町公式制度が未反映"
+      },
+      {
+        "code": "05363",
+        "municipality": "八郎潟町",
+        "service": "schoolMeals",
+        "before": "就学援助認定世帯への給食費支援のみ",
+        "after": "全児童生徒対象の学校給食費助成と就学援助を併記",
+        "reason": "令和8年度当初予算資料で全児童生徒対象の助成金を確認"
+      },
+      {
+        "code": "05434",
+        "municipality": "美郷町",
+        "service": "schoolMeals",
+        "before": "就学援助認定世帯への給食費支援のみ",
+        "after": "2026年1月開始の無償化、令和8年度継続予定、対象外校等への相当額補助を反映",
+        "reason": "町公式広報・議会資料の現行制度が未反映"
+      }
+    ],
+    "evidenceLimitations": [
+      {
+        "code": "05327",
+        "municipality": "上小阿仁村",
+        "service": "temporaryChildcare",
+        "note": "令和8年度の利用者向けこども誰でも通園制度案内を確認できず、通常の一時保育情報を維持"
+      },
+      {
+        "code": "05366",
+        "municipality": "井川町",
+        "service": "temporaryChildcare",
+        "note": "乳児等通園支援事業の運営規程制定は確認したが、対象・料金・時間・予約方法の利用者向け現行案内を取得できず変更しなかった"
+      },
+      {
+        "code": "05366",
+        "municipality": "井川町",
+        "service": "schoolMeals",
+        "note": "義務教育学校給食費助成の存在は確認したが、令和8年度の助成額・対象条件を直接資料で特定できず、就学援助の記載を維持"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "05327",
+      "05346",
+      "05348",
+      "05361",
+      "05366",
+      "05368",
+      "05463",
+      "06202"
     ]
   }
 }
