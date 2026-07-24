@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1594,
+    "municipalityCount": 1595,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -130563,6 +130563,182 @@
           },
           "source": {
             "url": "https://www.town.manazuru.kanagawa.jp/soshiki/soumubosai/bousai/disasterprevention/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14384",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "湯河原町",
+      "officialUrl": "https://www.town.yugawara.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を湯河原町公式情報で確認し、7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの通院・入院の保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "湯河原町に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院・入院時の保険診療自己負担分を助成",
+            "procedure": "小児医療証の交付申請が必要。県外受診等は払戻し手続き",
+            "excluded": "健康診断、予防接種、選定療養費、薬容器代、差額ベッド代、入院時食事療養費、文書料等"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/1014.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の現行子育て制度一覧で病児・病後児保育の実施案内を確認できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "currentStatus": "健康こどもみらい課・子育て支援の現行制度一覧を確認したが、町営・委託・広域利用の病児または病後児保育施設、対象年齢、料金、申請方法の案内は掲載されていない",
+            "relatedSupport": "保護者の病気・用事等に対応する一時預かり、ファミリーサポートセンターは別制度として実施",
+            "guidance": "利用可能な近隣制度の有無は健康こどもみらい課へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等の3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は保護者の町民税額等を基に保育料を算定",
+            "procedure": "保育所利用申込み、教育・保育給付認定、必要に応じ課税証明等の提出が必要",
+            "excluded": "給食費、通園送迎費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/26680.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "学校給食費は有償で、食材高騰相当分を町が公費補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "町内小中学校に就学する児童生徒の保護者等",
+            "support": "給食食材等の物価高騰相当分を公費補助し、保護者負担の増加を抑制",
+            "latestPublishedAmount": "最新の個別金額公表ページでは、小学校月額5,500円から2,500円補助し保護者負担3,000円、中学1・2年は月額6,200円から700円補助し5,500円、中学3年は月額5,530円から730円補助し4,800円",
+            "notes": "一律完全無償化ではない。2026年度の最終負担額は学校教育課の年度案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/29/27354.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "通所型・訪問型の産後ケアを予約制で提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "湯河原町に住所があり、産後の心身の不調や育児不安等がある母子",
+            "types": "通所型、訪問型",
+            "implementation": "2025年4月から従来の通所型に加えて訪問型を開始し、2026年度は新たな事業所を追加",
+            "support": "母親の休養・心身ケア、授乳・乳房ケア、育児相談等",
+            "procedure": "予約制。健康こどもみらい課へ相談し利用申請後、実施事業所を予約",
+            "notes": "対象月齢、回数、利用料は2026年度産後ケア事業チラシ・町窓口で確認"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/2514.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "こども誰でも通園制度の現行利用案内を町公式サイトで確認できない",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "currentStatus": "町議会資料では制度検討を確認できるが、2026年7月時点で実施施設、月間利用上限、料金、認定・予約方法を示す町民向け現行利用案内を確認できない",
+            "relatedService": "満1歳から就学前児童を対象とする通常の一時預かりは別制度として実施",
+            "notes": "現行利用案内が公表されるまでは、こども誰でも通園制度を利用可能制度として登録しない"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/9/25331.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "平成12年5月以前着工の木造住宅の耐震診断・設計・改修費を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "平成12年5月31日以前に着工した在来工法の2階建て以下の自己用木造住宅等で、町税等滞納がない所有者",
+            "diagnosis": "耐震診断費の2分の1、上限5万円",
+            "design": "耐震補強設計費の2分の1、上限10万円",
+            "retrofit": "耐震改修工事費の2分の1、上限35万円",
+            "procedure": "契約・診断・工事前に申請し、年度内の期限までに実績報告"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/5/1070.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "一辺50cm以上2m未満の粗大ごみを1点500円の予約制戸別収集等で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "一辺が50センチメートル以上2メートル未満の大型家庭ごみ等",
+            "collection": "毎月第2・第4水曜日の前週金曜日までに電話・来庁で申込み、粗大ごみ収集券を購入",
+            "fee": "戸別収集は原則1点500円。自転車、スプリングベッド等の特定品目は美化センター処理手数料を別途加算",
+            "directDelivery": "湯河原美化センターへの直接持込みも可能",
+            "procedure": "受付番号を確認し、収集券を貼って指定場所へ排出"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/7/1235.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・津波・風水害・土砂災害・洪水・高潮の防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "2025年度版ゆがわら防災マップと災害種別ごとのハザードマップを公開",
+            "risks": "地震、津波、土石流、がけ崩れ、藤木川・千歳川・新崎川等の洪水、高潮等",
+            "facilities": "広域避難場所、避難施設、緊急避難場所、津波避難ビルの一覧と位置図を掲載",
+            "support": "自宅・生活圏の災害リスク、避難先、避難経路、災害時の対処法を事前確認可能"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/69/1890.html",
             "checkedAt": "2026-07-24"
           }
         }
