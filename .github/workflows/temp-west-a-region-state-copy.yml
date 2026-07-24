@@ -42,11 +42,16 @@ jobs:
           git checkout -B sync-region-west origin/region/west
           cp /tmp/west-a.json jichitai-compare/operations/control/session-checkpoints/west-a.json
           cp /tmp/west.json jichitai-compare/operations/control/regions/west.json
+          cp jichitai-compare/operations/control/session-checkpoints/west-a.json /tmp/west-a-validated.json
+          cp jichitai-compare/operations/control/regions/west.json /tmp/west-validated.json
           cd jichitai-compare
           npm run generate
           npm run progress
           npm run validate:generated
           cd ..
+          git reset --hard HEAD
+          cp /tmp/west-a-validated.json jichitai-compare/operations/control/session-checkpoints/west-a.json
+          cp /tmp/west-validated.json jichitai-compare/operations/control/regions/west.json
           unexpected="$(git status --porcelain | grep -v -E 'session-checkpoints/west-a.json|control/regions/west.json' || true)"
           if [ -n "$unexpected" ]; then
             echo 'region/westに予期しない差分があります。'
@@ -54,13 +59,15 @@ jobs:
             exit 1
           fi
           git add jichitai-compare/operations/control/session-checkpoints/west-a.json jichitai-compare/operations/control/regions/west.json
-          git commit -m 'ops: 西日本Aソフト警告監査証跡を地域へ同期'
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:region/west; then
-              break
-            fi
-            git pull --rebase origin region/west
-          done
+          if ! git diff --cached --quiet; then
+            git commit -m 'ops: 西日本Aソフト警告監査証跡を地域へ同期'
+            for attempt in 1 2 3 4 5; do
+              if git push origin HEAD:region/west; then
+                break
+              fi
+              git pull --rebase origin region/west
+            done
+          fi
 
       - name: Remove temporary workflow from main
         shell: bash
