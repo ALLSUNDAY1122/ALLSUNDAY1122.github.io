@@ -7,7 +7,8 @@ const SITE = path.join(ROOT, 'yorugatari');
 const STORIES = path.join(SITE, 'stories');
 const BASE = 'https://allsunday1122.github.io/yorugatari';
 const ANALYTICS_VERSION = '20260723-003';
-const LANDING_ANALYTICS_VERSION = '20260724-004';
+const FIVE_MINUTE_ANALYTICS_VERSION = '20260724-004';
+const BEDTIME_ANALYTICS_VERSION = '20260724-005';
 const ENGAGEMENT_VERSION = '20260723-003';
 const STORY_VERSION = '20260723-007';
 const campaigns = JSON.parse(fs.readFileSync(path.join(SITE, 'tools', 'campaigns.json'), 'utf8'));
@@ -20,14 +21,20 @@ function record(name, ok, detail = null) {
   if (!item.ok) failures.push(item);
 }
 
+function staticVersion(filename) {
+  if (filename === '5min-horror.html') return FIVE_MINUTE_ANALYTICS_VERSION;
+  if (filename === 'bedtime-horror.html') return BEDTIME_ANALYTICS_VERSION;
+  return ANALYTICS_VERSION;
+}
+
 function localAudit() {
-  const staticFiles = ['index.html', '5min-horror.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
+  const staticFiles = ['index.html', '5min-horror.html', 'bedtime-horror.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
   const storyFiles = fs.readdirSync(STORIES).filter((name) => name.endsWith('.html')).sort();
   const errors = [];
 
   for (const filename of staticFiles) {
     const html = fs.readFileSync(path.join(SITE, filename), 'utf8');
-    const expectedVersion = filename === '5min-horror.html' ? LANDING_ANALYTICS_VERSION : ANALYTICS_VERSION;
+    const expectedVersion = staticVersion(filename);
     if (!html.includes(`assets/analytics.js?v=${expectedVersion}`) || html.includes('assets/engagement.js')) errors.push({ file: filename, check: 'runtime' });
     if (!html.includes('property="og:image:width" content="2172"') || !html.includes('property="og:image:height" content="724"')) errors.push({ file: filename, check: 'dimensions' });
   }
@@ -40,10 +47,15 @@ function localAudit() {
     if (!html.includes('property="og:image:width" content="2172"') || !html.includes('property="og:image:height" content="724"')) errors.push({ file: `stories/${filename}`, check: 'dimensions' });
   }
 
-  const landing = fs.readFileSync(path.join(SITE, '5min-horror.html'), 'utf8');
-  if ((landing.match(/class="pick"/g) || []).length !== 12) errors.push({ file: '5min-horror.html', check: '12 editorial picks' });
-  if ((landing.match(/class="guide-card"/g) || []).length !== 6) errors.push({ file: '5min-horror.html', check: 'six genre guides' });
-  if (!landing.includes('"@type":"FAQPage"') || !landing.includes('"@type":"CollectionPage"')) errors.push({ file: '5min-horror.html', check: 'structured data' });
+  const fiveMinute = fs.readFileSync(path.join(SITE, '5min-horror.html'), 'utf8');
+  if ((fiveMinute.match(/class="pick"/g) || []).length !== 12) errors.push({ file: '5min-horror.html', check: '12 editorial picks' });
+  if ((fiveMinute.match(/class="guide-card"/g) || []).length !== 6) errors.push({ file: '5min-horror.html', check: 'six genre guides' });
+  if (!fiveMinute.includes('"@type":"FAQPage"') || !fiveMinute.includes('"@type":"CollectionPage"')) errors.push({ file: '5min-horror.html', check: 'structured data' });
+
+  const bedtime = fs.readFileSync(path.join(SITE, 'bedtime-horror.html'), 'utf8');
+  if ((bedtime.match(/class="pick"/g) || []).length !== 8) errors.push({ file: 'bedtime-horror.html', check: 'eight editorial picks' });
+  if ((bedtime.match(/class="mood-card"/g) || []).length !== 4) errors.push({ file: 'bedtime-horror.html', check: 'four mood guides' });
+  if (!bedtime.includes('"@type":"FAQPage"') || !bedtime.includes('"@type":"CollectionPage"')) errors.push({ file: 'bedtime-horror.html', check: 'structured data' });
 
   const storyRuntime = fs.readFileSync(path.join(SITE, 'assets', 'story.js'), 'utf8');
   const analyticsRuntime = fs.readFileSync(path.join(SITE, 'assets', 'analytics.js'), 'utf8');
@@ -56,14 +68,16 @@ function localAudit() {
     'launch-20260723-threads-spare-key',
     'launch-20260723-line-hired-experience',
     'launch-20260724-x-five-minute',
-    'launch-20260724-threads-five-minute'
+    'launch-20260724-threads-five-minute',
+    'launch-20260724-x-bedtime',
+    'launch-20260724-threads-bedtime'
   ]);
 
-  record('local: seven static pages and 100 stories are covered', staticFiles.length === 7 && storyFiles.length === 100, { static: staticFiles.length, stories: storyFiles.length });
+  record('local: eight static pages and 100 stories are covered', staticFiles.length === 8 && storyFiles.length === 100, { static: staticFiles.length, stories: storyFiles.length });
   record('local: runtime modules, social metadata, and static circulation are complete', errors.length === 0, errors);
   record('local: story runtime no longer loads the 100-story catalog', !storyRuntime.includes('catalogSources') && !storyRuntime.includes('loadCatalogScript'));
-  record('local: six fixed launch links and onsite sharing are defined', campaignDefinitions.length === 6 && campaignDefinitions.every((item) => item.id && item.url && requiredCampaigns.has(item.id) && launchKit.includes(item.url)) && campaigns.onsiteShare?.id === 'onsite-share', campaignDefinitions);
-  record('local: five-minute campaign codes exist only in the registered runtime map', analyticsRuntime.includes('launch-20260724-x-five-minute') && analyticsRuntime.includes('launch-20260724-threads-five-minute'));
+  record('local: eight fixed launch links and onsite sharing are defined', campaignDefinitions.length === 8 && campaignDefinitions.every((item) => item.id && item.url && requiredCampaigns.has(item.id) && launchKit.includes(item.url)) && campaigns.onsiteShare?.id === 'onsite-share', campaignDefinitions);
+  record('local: curated landing campaign codes exist only in the registered runtime map', analyticsRuntime.includes('launch-20260724-x-five-minute') && analyticsRuntime.includes('launch-20260724-threads-five-minute') && analyticsRuntime.includes('launch-20260724-x-bedtime') && analyticsRuntime.includes('launch-20260724-threads-bedtime'));
   record('local: unknown UTM values are not converted into campaign paths', analyticsRuntime.includes('knownCampaigns.get') && engagementRuntime.includes('knownCampaigns.get') && !analyticsRuntime.includes("'/yorugatari/__campaign/' + query") && !engagementRuntime.includes("'/yorugatari/__campaign/' + query"));
 
   const privacy = fs.readFileSync(path.join(SITE, 'privacy.html'), 'utf8');
@@ -121,7 +135,7 @@ async function imageAudit() {
 
 async function browserAudit() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/2.2' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block', userAgent: 'Yorugatari-Engagement-Audit/2.3' });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'share', { configurable: true, value: async (payload) => { window.__YORUGATARI_SHARE_PAYLOAD__ = payload; } });
   });
@@ -145,8 +159,8 @@ async function browserAudit() {
   });
   record('published: top launch URL resolves and maps to its fixed social campaign', top.ready, top);
 
-  const landingCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260724-x-five-minute');
-  const landing = await open(page, landingCampaign.url, async (target, response, attempt) => {
+  const fiveMinuteCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260724-x-five-minute');
+  const fiveMinute = await open(page, fiveMinuteCampaign.url, async (target, response, attempt) => {
     const state = await target.evaluate((version) => ({
       analyticsScript: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
       engagementScript: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
@@ -158,11 +172,30 @@ async function browserAudit() {
       faq: document.querySelectorAll('.faq article').length,
       breadcrumb: document.querySelectorAll('.breadcrumb').length,
       overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
-    }), LANDING_ANALYTICS_VERSION);
+    }), FIVE_MINUTE_ANALYTICS_VERSION);
     const meta = await metadata(target);
-    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.source === 'social' && state.campaign === landingCampaign.id && state.picks === 12 && state.guides === 6 && state.faq === 3 && state.breadcrumb === 1 && state.overflow && metadataComplete(meta), status: response?.status(), attempt, state, meta };
+    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.source === 'social' && state.campaign === fiveMinuteCampaign.id && state.picks === 12 && state.guides === 6 && state.faq === 3 && state.breadcrumb === 1 && state.overflow && metadataComplete(meta), status: response?.status(), attempt, state, meta };
   });
-  record('published: five-minute launch URL maps to its fixed social campaign', landing.ready, landing);
+  record('published: five-minute launch URL maps to its fixed social campaign', fiveMinute.ready, fiveMinute);
+
+  const bedtimeCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260724-x-bedtime');
+  const bedtime = await open(page, bedtimeCampaign.url, async (target, response, attempt) => {
+    const state = await target.evaluate((version) => ({
+      analyticsScript: Array.from(document.scripts).some((script) => script.src.includes(`analytics.js?v=${version}`)),
+      engagementScript: Array.from(document.scripts).some((script) => script.src.includes('engagement.js')),
+      analytics: Boolean(window.YORUGATARI_ANALYTICS),
+      source: window.YORUGATARI_ANALYTICS?.source,
+      campaign: window.YORUGATARI_ANALYTICS?.campaign,
+      picks: document.querySelectorAll('.pick').length,
+      moods: document.querySelectorAll('.mood-card').length,
+      faq: document.querySelectorAll('.faq article').length,
+      breadcrumb: document.querySelectorAll('.breadcrumb').length,
+      overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
+    }), BEDTIME_ANALYTICS_VERSION);
+    const meta = await metadata(target);
+    return { ready: response?.status() === 200 && state.analyticsScript && !state.engagementScript && state.analytics && state.source === 'social' && state.campaign === bedtimeCampaign.id && state.picks === 8 && state.moods === 4 && state.faq === 3 && state.breadcrumb === 1 && state.overflow && metadataComplete(meta), status: response?.status(), attempt, state, meta };
+  });
+  record('published: bedtime launch URL maps to its fixed social campaign', bedtime.ready, bedtime);
 
   const storyCampaign = campaigns.definitions.find((item) => item.id === 'launch-20260723-threads-spare-key');
   const story = await open(page, storyCampaign.url, async (target, response, attempt) => {
