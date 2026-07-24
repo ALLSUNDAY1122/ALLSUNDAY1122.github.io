@@ -48,7 +48,7 @@ jobs:
           node --check yorugatari/tools/analytics-snapshot.mjs
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
-          node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==6||!c.onsiteShare)process.exit(1)"
+          node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
 
       - name: Generate analytics snapshot
         run: node yorugatari/tools/analytics-snapshot.mjs
