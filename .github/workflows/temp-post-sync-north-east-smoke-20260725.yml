@@ -1,0 +1,51 @@
+name: Temporary post-sync North East smoke 20260725
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: temp-post-sync-north-east-smoke-20260725
+  cancel-in-progress: false
+
+jobs:
+  smoke-public:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: ops/post-sync-north-east-smoke-20260725
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify published GitHub Pages site
+        working-directory: jichitai-compare
+        run: npm run smoke:public
+      - name: Verify five updated public pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const checks = [
+            ['10367', '月10時間'],
+            ['04323', '生後6か月'],
+            ['04401', '月10時間'],
+            ['14100', '14日'],
+            ['13123', '宿泊型']
+          ];
+          for (const [code, expected] of checks) {
+            const response = await fetch(`${base}/municipality/${code}/`, { headers: { 'cache-control': 'no-cache' } });
+            if (!response.ok) throw new Error(`${code}: HTTP ${response.status}`);
+            const html = await response.text();
+            if (!html.includes(expected)) throw new Error(`${code}: expected text not published: ${expected}`);
+          }
+          console.log('five updated municipality pages are published');
+          NODE
