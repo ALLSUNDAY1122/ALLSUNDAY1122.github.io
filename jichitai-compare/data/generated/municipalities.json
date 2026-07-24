@@ -59011,23 +59011,24 @@
           }
         },
         "temporaryChildcare": {
-          "status": "verified",
-          "summary": "令和8年度から、未就園の生後6か月から満3歳未満児を就労要件なしで預かるこども誰でも通園制度を実施する。",
-          "eligibility": {
-            "minAgeMonths": 6,
-            "maxAgeYears": 2
-          },
+          "status": "unavailable",
+          "summary": "令和8年度からの実施計画と事業基準は確認できるが、現行の実施施設、対象、料金、利用時間、認定・予約方法を示す利用者向け村公式案内を確認できない。",
           "details": {
-            "target": "保育園等を利用していない生後6か月から満3歳未満の子ども",
-            "conditions": "保護者の就労要件を問わない",
-            "start": "令和8年度から本格実施",
-            "capacityPlan": "第三期子ども・子育て支援事業計画で令和8年度以降の実施体制と利用量を計画",
-            "application": "健康福祉課または実施施設へ利用認定・予約方法を確認"
+            "planFinding": "第三期子ども・子育て支援事業計画は、令和8年度からの本格実施に合わせて提供体制を整備するとしている",
+            "regulatoryFinding": "令和8年3月に乳児等通園支援事業の設備・運営基準を制定している",
+            "unconfirmed": "2026年度に実際に利用できる施設、受入開始日、対象月齢、利用時間、月上限、料金、認定・面談・予約方法",
+            "verificationPolicy": "計画・基準の存在だけでは利用可能な現行サービスと確定できないため、詳細未確認として扱う"
           },
           "source": {
-            "url": "https://www.vill.tozawa.yamagata.jp/files/libs/3542/202511121442542467.pdf",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.vill.tozawa.yamagata.jp/life/kosodate/",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.vill.tozawa.yamagata.jp/files/libs/3542/202511121442542467.pdf",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -59352,23 +59353,32 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後6か月から就学前児を小松保育所で月8回まで一時保育する。",
+          "summary": "生後6か月から就学前児の一時保育に加え、生後6か月から3歳までと町が案内する未就園児向けのこども誰でも通園制度を実施する。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
           },
           "details": {
-            "facility": "川西町立小松保育所",
-            "target": "生後6か月から小学校就学前までの子ども",
-            "hours": "平日8時30分から17時",
-            "fee": "1日3歳未満4,000円・3歳以上2,000円、半日3歳未満2,000円・3歳以上1,000円、給食270円",
-            "limit": "月8回まで",
-            "application": "申請書を提出し、事前に施設へ利用可否を確認"
+            "temporaryFacility": "川西町立小松保育所",
+            "temporaryTarget": "生後6か月から小学校就学前までの子ども",
+            "temporaryHours": "平日8時30分から17時",
+            "temporaryFee": "1日3歳未満4,000円・3歳以上2,000円、半日3歳未満2,000円・3歳以上1,000円、給食270円",
+            "temporaryLimit": "月8回まで",
+            "anyChildTarget": "町公式保育園だよりが案内する、生後6か月から3歳までの未就園児",
+            "anyChildPurpose": "子どもの育ちを応援し、保護者の育児負担を軽減する",
+            "anyChildApplication": "利用前に事前申請とアカウント登録が必要",
+            "anyChildUnconfirmed": "実施施設、利用時間、月間利用上限、利用料の詳細は同案内では特定できないため、健康子育て課へ確認が必要"
           },
           "source": {
-            "url": "https://town.kawanishi.yamagata.jp/kenko/kosodateshien/2024-0906-1025-68.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.kawanishi.yamagata.jp/kenko/hoikuen/0804tayori.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://town.kawanishi.yamagata.jp/kenko/kosodateshien/2024-0906-1025-68.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -59847,21 +59857,31 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "家庭での保育が一時的に困難な概ね1歳以上の未就園児を、仕事・通院・リフレッシュ等の理由で預かる。",
+          "summary": "概ね1歳以上の未就園児向け一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
           "eligibility": {
-            "minAgeMonths": 12,
+            "minAgeMonths": 6,
             "maxAgeYears": 5
           },
           "details": {
-            "target": "飯豊町内に住所がある概ね1歳以上の未就園児",
-            "reasons": "仕事・就職活動・職業訓練、通院・看護・緊急時、保護者のリフレッシュ",
-            "limits": "非定型的保育と私的理由は週3日以内、緊急保育は月14日以内",
-            "application": "NPO法人ほっとへ事前予約が必要"
+            "temporaryTarget": "飯豊町内に住所がある概ね1歳以上の未就園児",
+            "temporaryReasons": "仕事・就職活動・職業訓練、通院・看護・緊急時、保護者のリフレッシュ",
+            "temporaryLimits": "非定型的保育と私的理由は週3日以内、緊急保育は月14日以内",
+            "anyChildTarget": "飯豊町に住所があり、保育所・幼稚園・認定こども園等に通っていない生後6か月から満3歳未満の子ども",
+            "anyChildFacility": "飯豊すくすくこども園（在園児の定員に空きがある範囲で受入）",
+            "anyChildLimit": "子ども1人につき月10時間、1時間単位",
+            "anyChildFee": "1時間300円。食事等の実費が必要な場合があり、世帯状況による負担軽減あり",
+            "anyChildApplication": "初回利用希望日の原則2週間前までに認定申請し、認定後に施設面談と利用予約を行う"
           },
           "source": {
-            "url": "https://www.town.iide.yamagata.jp/007/ichijihoiku_iide.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.iide.yamagata.jp/002/kodomodaredemo.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.iide.yamagata.jp/007/ichijihoiku_iide.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -60014,22 +60034,33 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後6か月から小学3年生までを子育て支援センターで4時間以内、一時預かりする。",
+          "summary": "生後6か月から小学3年生までの一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 9
           },
           "details": {
-            "facility": "三川町子育て支援センター（テオトル内）",
-            "target": "生後6か月から小学3年生。小学生は町内在住かつ町内小学校在籍",
-            "limit": "1回4時間以内",
-            "fee": "未就学児1時間400円、小学生1時間200円",
-            "application": "利用3日前までに事前登録と申請が必要"
+            "temporaryFacility": "三川町子育て支援センター（テオトル内）",
+            "temporaryTarget": "生後6か月から小学3年生。小学生は町内在住かつ町内小学校在籍",
+            "temporaryLimit": "1回4時間以内",
+            "temporaryFee": "未就学児1時間400円、小学生1時間200円",
+            "anyChildTarget": "三川町に住所があり、保育所・認定こども園・幼稚園等に通っていない生後6か月から満3歳未満の子ども",
+            "anyChildFacility": "みかわ保育園",
+            "anyChildHours": "平日9時から12時、13時から16時",
+            "anyChildLimit": "子ども1人につき月10時間。1回1時間以上、30分単位",
+            "anyChildFee": "1時間300円。世帯状況による負担軽減あり",
+            "anyChildApplication": "総合支援システムで認定申請と利用登録を行い、初回面談後に予約する"
           },
           "source": {
-            "url": "https://www.town.mikawa.yamagata.jp/child/kosodate/shien-center.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.mikawa.yamagata.jp/child/kosodate/daredemotuuenseido.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.mikawa.yamagata.jp/child/kosodate/shien-center.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",

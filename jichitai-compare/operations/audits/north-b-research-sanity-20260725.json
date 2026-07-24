@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 9,
-  "remainingRounds": 1,
+  "completedRounds": 10,
+  "remainingRounds": 0,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 97,
-  "remainingMunicipalityCount": 10,
-  "auditedAt": "2026-07-25T04:01:00+09:00",
+  "auditedMunicipalityCount": 107,
+  "remainingMunicipalityCount": 0,
+  "auditedAt": "2026-07-25T04:02:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -659,5 +659,105 @@
       "06363",
       "06364"
     ]
+  },
+  "round10": {
+    "codes": [
+      "06365",
+      "06366",
+      "06367",
+      "06381",
+      "06382",
+      "06401",
+      "06402",
+      "06403",
+      "06426",
+      "06428"
+    ],
+    "municipalityCount": 10,
+    "serviceCount": 90,
+    "highRiskChecks": 30,
+    "confirmedErrorCount": 4,
+    "confirmedErrors": [
+      {
+        "code": "06367",
+        "municipality": "戸沢村",
+        "service": "temporaryChildcare",
+        "before": "verified（第三期計画を根拠に令和8年度実施として掲載）",
+        "after": "unavailable",
+        "reason": "現行の実施施設・対象・料金・利用時間・認定予約方法を示す利用者向け村公式案内を確認できず、計画・基準のみでは利用可能な制度と確定できない"
+      },
+      {
+        "code": "06382",
+        "municipality": "川西町",
+        "service": "temporaryChildcare",
+        "before": "通常の一時保育のみ",
+        "after": "こども誰でも通園制度の開始案内を併記",
+        "reason": "町公式保育園だよりの現行案内が未反映"
+      },
+      {
+        "code": "06403",
+        "municipality": "飯豊町",
+        "service": "temporaryChildcare",
+        "before": "概ね1歳以上の一時預かりのみ、minAgeMonths 12",
+        "after": "こども誰でも通園制度を併記、minAgeMonths 6",
+        "reason": "町公式の2026年度利用案内が未反映"
+      },
+      {
+        "code": "06426",
+        "municipality": "三川町",
+        "service": "temporaryChildcare",
+        "before": "子育て支援センターの一時預かりのみ",
+        "after": "みかわ保育園のこども誰でも通園制度を併記",
+        "reason": "2026年4月更新の町公式利用案内が未反映"
+      }
+    ],
+    "evidenceLimitations": [
+      {
+        "code": "06365",
+        "municipality": "大蔵村",
+        "service": "schoolMeals",
+        "note": "令和8年度の給食費保護者負担、主食無償提供の継続、補助範囲を直接確認できずunavailableを維持"
+      },
+      {
+        "code": "06381",
+        "municipality": "高畠町",
+        "service": "temporaryChildcare",
+        "note": "令和8年度予算・例規で乳児等通園支援事業の存在は確認したが、対象・施設・料金・月上限・予約方法を示す利用者向け直接案内を取得できず変更しなかった"
+      },
+      {
+        "code": "06382",
+        "municipality": "川西町",
+        "service": "schoolMeals",
+        "note": "町公式就学援助ページが令和7年度案内のままで、令和8年度の認定基準・支給内容を確定できずunavailableを維持"
+      },
+      {
+        "code": "06401",
+        "municipality": "小国町",
+        "service": "temporaryChildcare",
+        "note": "令和8年の乳児等通園支援事業条例は確認したが、実施施設・対象・料金・月上限・利用手順の現行案内を確認できずunavailableを維持"
+      },
+      {
+        "code": "06401",
+        "municipality": "小国町",
+        "service": "schoolMeals",
+        "note": "令和8年度の就学援助条件・給食費支給内容または一律無償化を直接確認できずunavailableを維持"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "06365",
+      "06366",
+      "06381",
+      "06401",
+      "06402",
+      "06428"
+    ]
+  },
+  "finalSummary": {
+    "status": "completed",
+    "roundsCompleted": 10,
+    "uniqueMunicipalitiesAudited": 107,
+    "servicesStructurallyReviewed": 963,
+    "confirmedErrorsCorrected": 28,
+    "nationwideCountsUnchanged": true
   }
 }
