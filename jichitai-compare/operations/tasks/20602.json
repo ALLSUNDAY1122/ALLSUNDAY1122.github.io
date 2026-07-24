@@ -1,1 +1,51 @@
-{"schemaVersion":"1.0.0","municipalityCode":"20602","municipalityName":"栄村","prefectureCode":"20","prefectureName":"長野県","assignedTeam":"東日本調査班","status":"merged","currentService":"childMedical","nextServiceIndex":0,"completedServices":["sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste"],"verifiedCount":0,"researchingCount":0,"unavailableCount":7,"needsMediumReviewCount":2,"currentBranch":"audit/20602-sakae-static-official","pullRequestNumber":2366,"lastCheckedAt":"2026-07-24","lastUpdatedAt":"2026-07-24T13:38:00+09:00","lastUpdatedBy":"東日本調査班A, 統括A","officialSources":["https://www.vill.sakae.nagano.jp/docs/2263.html"],"notes":["2026年7月24日13時18分時点で栄村公式サイト本体はタイムアウトし、停止状態が継続。","同一公式ドメインの静的PDFは取得可能であることを確認し、公式広報・地域防災計画・過疎地域持続的発展計画・議会報を再監査。","子ども医療費は満18歳までの助成と県内窓口負担なしの制度根拠を確認したが、令和8年度受給者証等の最終条件が未確認のためneeds_medium_review。","防災は洪水・土砂災害等の地域防災計画、洪水・土砂災害ハザードマップとWEB版の運用根拠を確認したが、令和8年度の最新版URL等が未確認のためneeds_medium_review。","残る7制度は現行対象・料金・申請方法を公式静的資料だけでは確定できずunavailableを維持。","9制度unavailableから、7制度unavailable・2制度needs_medium_reviewへ品質改善。","PR #2366をregion/east向けに作成。","初回CI run #5920はservice.status表記を修正。CI run #5924はneeds_medium_reviewが完了扱いではないためtask再計算値と不一致となり、completedServices・currentService・nextServiceIndex・officialSourcesを修正。","CI run #5927で自治体データ・全国進捗・task整合・JavaScript検証が成功。","PR #2366をregion/eastへ統合。","merge SHA: 65330215f9533be574881e14b6e12ed13983066a"],"blockers":["栄村公式サイト本体が一時利用不可で、令和8年度の制度詳細・最新版資料URLを完全確認できない。"]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "20602",
+  "municipalityName": "栄村",
+  "prefectureCode": "20",
+  "prefectureName": "長野県",
+  "assignedTeam": "東日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 0,
+  "researchingCount": 0,
+  "unavailableCount": 9,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "audit/20602-sakae-static-official",
+  "pullRequestNumber": 2366,
+  "lastCheckedAt": "2026-07-24",
+  "lastUpdatedAt": "2026-07-24T13:55:00+09:00",
+  "lastUpdatedBy": "統括B全国公開監査",
+  "officialSources": [
+    "https://www.vill.sakae.nagano.jp/fs/3/5/9/8/4/_/kouhou_sakae201807_416.pdf",
+    "https://www.vill.sakae.nagano.jp/docs/2263.html",
+    "https://www.vill.sakae.nagano.jp/fs/3/9/8/3/7/_/_____470_.pdf"
+  ],
+  "notes": [
+    "2026年7月24日13時18分時点で栄村公式サイト本体はタイムアウトし、停止状態が継続。",
+    "同一公式ドメインの静的PDFは取得可能であることを確認し、公式広報・地域防災計画・過疎地域持続的発展計画・議会報を再監査。",
+    "子ども医療費は満18歳までの助成と県内窓口負担なしの制度根拠を確認したが、令和8年度受給者証等の最終条件が未確認のためneeds_medium_review。",
+    "防災は洪水・土砂災害等の地域防災計画、洪水・土砂災害ハザードマップとWEB版の運用根拠を確認したが、令和8年度の最新版URL等が未確認のためneeds_medium_review。",
+    "残る7制度は現行対象・料金・申請方法を公式静的資料だけでは確定できずunavailableを維持。",
+    "9制度unavailableから、7制度unavailable・2制度needs_medium_reviewへ品質改善。",
+    "PR #2366をregion/east向けに作成。",
+    "初回CI run #5920はservice.status表記を修正。CI run #5924はneeds_medium_reviewが完了扱いではないためtask再計算値と不一致となり、completedServices・currentService・nextServiceIndex・officialSourcesを修正。",
+    "CI run #5927で自治体データ・全国進捗・task整合・JavaScript検証が成功。",
+    "PR #2366をregion/eastへ統合。",
+    "merge SHA: 65330215f9533be574881e14b6e12ed13983066a",
+    "統括監査でchildMedical、disasterPreventionをunavailableへ正規化し、9制度完了・blockers 0を確認。"
+  ],
+  "blockers": []
+}
