@@ -67,7 +67,11 @@ jobs:
           const staticFiles = ['index.html','5min-horror.html','bedtime-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
           for (const file of staticFiles) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
-            const expectedVersion = ['5min-horror.html','bedtime-horror.html'].includes(file) ? '20260724-004' : '20260723-003';
+            const expectedVersion = file === '5min-horror.html'
+              ? '20260724-004'
+              : file === 'bedtime-horror.html'
+                ? '20260724-005'
+                : '20260723-003';
             if (!html.includes(`assets/analytics.js?v=${expectedVersion}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
           }
           const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
@@ -127,7 +131,7 @@ jobs:
           node --check yorugatari/assets/story.js
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
-          node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==6||!c.onsiteShare)process.exit(1)"
+          node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
 
       - name: Wait for published campaign release
         run: node yorugatari/tools/live-release-audit.mjs
