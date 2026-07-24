@@ -94,6 +94,8 @@ jobs:
       - name: Generate next launch card and analytics snapshots
         run: |
           node yorugatari/tools/generate-external-launch-next.mjs
+          test -s yorugatari/tools/external-launch-next.md
+          test -s yorugatari/tools/external-launch-next.txt
           node yorugatari/tools/analytics-snapshot.mjs
           node yorugatari/tools/analytics-clean-snapshot.mjs
           node yorugatari/tools/landing-conversion-snapshot.mjs
@@ -105,7 +107,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for file in \
-            external-launch-next.md \
+            external-launch-next.md external-launch-next.txt \
             analytics-snapshot-latest.json analytics-history.json analytics-insights-latest.md \
             analytics-clean-baseline.json analytics-clean-latest.json analytics-clean-history.json \
             landing-conversion-baseline.json landing-conversion-latest.json landing-conversion-history.json; do
@@ -116,7 +118,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             for file in \
-              external-launch-next.md \
+              external-launch-next.md external-launch-next.txt \
               analytics-snapshot-latest.json analytics-history.json analytics-insights-latest.md \
               analytics-clean-baseline.json analytics-clean-latest.json analytics-clean-history.json \
               landing-conversion-baseline.json landing-conversion-latest.json landing-conversion-history.json; do
@@ -142,6 +144,7 @@ jobs:
           name: yorugatari-analytics-reports
           path: |
             yorugatari/tools/external-launch-next.md
+            yorugatari/tools/external-launch-next.txt
             yorugatari/tools/analytics-snapshot-latest.json
             yorugatari/tools/analytics-history.json
             yorugatari/tools/analytics-insights-latest.md
