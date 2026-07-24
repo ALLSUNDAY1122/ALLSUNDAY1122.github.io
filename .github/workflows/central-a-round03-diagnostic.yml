@@ -4,6 +4,9 @@ on:
   push:
     branches: ['audit/central-a-scope-verification-round-03-r2-20260725']
     paths: ['.github/workflows/central-a-round03-diagnostic.yml']
+  pull_request:
+    branches: ['region/central']
+    paths: ['.github/workflows/central-a-round03-diagnostic.yml']
 
 permissions:
   contents: write
