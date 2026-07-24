@@ -1,0 +1,36 @@
+name: West B Finalize PR
+
+on:
+  pull_request:
+    branches:
+      - region/west
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ github.head_ref == 'ops/west-b-finalize-20260724' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Audit and finalize west-b
+        run: node jichitai-compare/scripts/finalize-west-b-once.cjs
+
+      - name: Commit finalized state
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "ops: 西日本Bを完了状態へ同期 [west-b-finalized]"
+          git push origin HEAD:${GITHUB_HEAD_REF}
