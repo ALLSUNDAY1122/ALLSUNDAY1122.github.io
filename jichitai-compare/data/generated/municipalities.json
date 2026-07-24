@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "updatedAt": "2026-07-24",
+    "updatedAt": "2026-07-25",
     "municipalityCount": 1741,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
@@ -25199,9 +25199,19 @@
             "application": "通常の無償化は学校側で処理し、就学援助は申請が必要"
           },
           "source": {
-            "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009418.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009501.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009418.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009420.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -56598,9 +56608,15 @@
             "application": "町内施設では原則手続不要。町外施設で支払いがある場合は町へ申請"
           },
           "source": {
-            "url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/hoikushoriyou2025.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/hoiku.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.yamanobe.yamagata.jp/soshiki/8/hoikushoriyou2025.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "schoolMeals": {
           "status": "unavailable",
@@ -60039,7 +60055,7 @@
       "name": "遊佐町",
       "officialUrl": "https://www.town.yuza.yamagata.jp/",
       "status": "verified",
-      "summary": "遊佐町の子育て・暮らしに関する9制度のうち8制度を確認済みで、1制度は公式情報で詳細未確認です。",
+      "summary": "遊佐町の子育て・暮らしに関する9制度を自治体公式情報で確認できます。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -60062,21 +60078,35 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "町単独での病児・病後児保育実施は困難との公式説明があり、令和8年度の利用施設・対象年齢・料金・予約方法を確認できない。",
+          "status": "verified",
+          "summary": "遊佐町の子どもは、酒田市・三川町・庄内町の病児・病後児保育施設を広域利用できる。",
+          "eligibility": {
+            "minAgeMonths": 2,
+            "maxAgeYears": 12
+          },
           "details": {
-            "confirmedSituation": "町議会資料で、町単独の病児・病後児保育実施は困難な状況と説明",
-            "researchResult": "子育て支援ページと第3期子ども・子育て支援事業計画を確認したが、現行の利用者向け施設・対象・料金・手続を確定できなかった",
-            "caution": "広域利用を含む現行の利用可否は健康福祉課子育て支援係へ確認が必要"
+            "availability": "遊佐町公式案内により、酒田市・三川町・庄内町の病児・病後児保育事業を利用可能",
+            "facilities": "酒田市あきほ病児・病後児保育所、三川町病児・病後児保育施設にこっと、庄内町の病児・病後児保育施設等",
+            "target": "施設により生後2か月または3か月から小学3年生・小学6年生まで",
+            "sakataFee": "酒田市あきほ病児・病後児保育所を遊佐町民が利用する場合は日額2,000円、給食費250円が別途必要",
+            "procedure": "毎年度の事前登録、施設への予約、医療機関が記載する利用連絡票等が必要。利用条件は施設ごとに確認"
           },
           "source": {
             "url": "https://www.town.yuza.yamagata.jp/archive/contents-545",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.town.yuza.yamagata.jp/uploads/contents/archive_0000002007_00/507_1.pdf",
-              "checkedAt": "2026-07-24"
+              "url": "https://www.city.sakata.lg.jp/kosodate/kosodate/hoikuen/byouji-byougo.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.town.mikawa.yamagata.jp/child/kosodate/byoujihoiku.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.town.shonai.lg.jp/kurashi/kosodate/byuoujihoiku.html",
+              "checkedAt": "2026-07-25"
             }
           ]
         },

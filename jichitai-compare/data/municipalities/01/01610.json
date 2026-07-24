@@ -12,14 +12,20 @@
     "childMedical": {
       "status": "verified",
       "summary": "0歳から15歳年度末まで、入院・通院・訪問看護の保険診療自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
       "details": {
         "target": "新ひだか町に住所があり健康保険に加入する0歳から15歳年度末までの子ども",
         "coverage": "入院、通院、訪問看護の保険診療自己負担分",
         "excluded": "入院時食事療養費、差額室料、文書料等の保険外費用",
         "application": "子ども医療費受給者証の交付申請が必要"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00000057.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00000057.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
@@ -29,55 +35,92 @@
         "unconfirmed": "令和8年度の病児保育または病後児保育の施設、対象、利用料、利用時間、予約方法",
         "guidance": "福祉課または健康推進課へ広域利用を含む現行の利用可否を確認する必要がある"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/lifeevent/2.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/lifeevent/2.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3歳から5歳児と住民税非課税世帯の0歳から2歳児は保育料無償化の対象で、その他の0歳から2歳児は町民税額等に応じて算定する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "threeToFive": "保育所・認定こども園等の利用料は無償化対象",
         "zeroToTwo": "住民税非課税世帯は無償化。課税世帯は所得階層に応じて算定",
         "application": "令和8年度入所申込みと保育を必要とする証明書等を提出",
         "otherCosts": "給食費、行事費、教材費等は施設・世帯条件により実費負担の場合がある"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00008998.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00008998.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "令和8年度は町立小学校の給食費を無償化し、中学生についても町の無償化・就学援助制度で負担軽減を行う。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "elementary": "令和8年度の町立小学校給食費は保護者負担なし",
         "juniorHigh": "町公式教育情報で中学生給食費無償化を案内",
         "assistance": "就学援助認定世帯は学校給食費等の実費支援対象",
         "application": "通常の無償化は学校側で処理し、就学援助は申請が必要"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009418.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009501.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009418.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00009420.html",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子を対象に、宿泊型・通所型・訪問型の産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "新ひだか町に住所がある産後1年未満の母親と乳児で支援を必要とする方",
         "types": "宿泊型、通所型、訪問型",
         "support": "母体の休養、授乳・乳房ケア、沐浴、乳児の発育確認、育児相談",
         "application": "健康推進課へ事前相談・申請が必要"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00008569.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00008569.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "保育所等に在籍していない就学前児を対象に一時保育を実施し、2歳未満児の保護者向けリフレッシュ利用支援も行う。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "target": "町内に居住し保育所・認定こども園等に在籍していない就学前児。受入年齢は施設により異なる",
         "purpose": "保護者の就労、通院、冠婚葬祭、育児負担軽減等",
         "refresh": "2歳未満児の保護者に一時保育利用券6枚を交付し、1回最大4時間利用可能",
         "application": "利用施設への事前登録・予約が必要"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00008535.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00008535.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -90,7 +133,10 @@
         "deadline": "工事完了・引渡し・売買契約の日から60日以内",
         "conditions": "町税等の滞納がないこと等"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00002867.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00002867.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -102,7 +148,10 @@
         "directFee": "家庭系ごみは10キログラムにつき180円",
         "conditions": "大きさ・重量・品目に制限があり、家電リサイクル法対象品等は対象外"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00003727.html", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/hotnews/detail/00003727.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -113,7 +162,10 @@
         "evacuation": "指定緊急避難場所・指定避難所を公開",
         "guidance": "災害種別に応じた避難行動と防災情報へのリンクを提供"
       },
-      "source": {"url": "https://www.shinhidaka-hokkaido.jp/bousai/", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.shinhidaka-hokkaido.jp/bousai/",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }
