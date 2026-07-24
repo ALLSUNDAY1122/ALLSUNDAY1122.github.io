@@ -1,64 +1,77 @@
-name: Build North-East Sync Release 1831
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  release:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
-        with: {node-version: '20'}
-      - run: git fetch origin main region/north region/east
-      - name: Extract publishable differences
-        shell: bash
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs=require('fs'),path=require('path'),cp=require('child_process');
-          const services=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
-          const timestamp='2026-07-24T18:31:00+09:00';
-          const previous=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json','utf8')).registeredMunicipalities;
-          const selected=[],excluded=[];
-          const show=(ref,f)=>{try{return cp.execFileSync('git',['show',`${ref}:${f}`],{encoding:'utf8',stdio:['ignore','pipe','ignore']})}catch{return null}};
-          const canon=x=>{if(x==null)return null;try{return JSON.stringify(JSON.parse(x))}catch{return x.trim()}};
-          for(const region of ['north','east']){
-            const ref=`origin/region/${region}`;
-            const files=cp.execFileSync('git',['ls-tree','-r','--name-only',ref,'--','jichitai-compare/data/municipalities'],{encoding:'utf8'}).split(/\r?\n/).filter(f=>/\/[0-9]{5}\.json$/.test(f));
-            for(const f of files){
-              const rt=show(ref,f),mt=show('HEAD',f); if(canon(rt)===canon(mt))continue;
-              let d; try{d=JSON.parse(rt)}catch{excluded.push({region,file:f,reason:'invalid_json'});continue}
-              const statuses=services.map(s=>d.services?.[s]?.status);
-              if(!statuses.every(s=>s==='verified'||s==='unavailable')){excluded.push({region,code:d.code,name:d.name,reason:'incomplete_status'});continue}
-              const code=String(d.code||path.basename(f,'.json')),tp=`jichitai-compare/operations/tasks/${code}.json`,tt=show(ref,tp); if(!tt){excluded.push({region,code,name:d.name,reason:'missing_task'});continue}
-              const t=JSON.parse(tt); fs.mkdirSync(path.dirname(f),{recursive:true}); fs.writeFileSync(f,JSON.stringify(d)+'\n');
-              t.status='merged';t.currentService=null;t.nextServiceIndex=9;t.completedServices=services;t.verifiedCount=statuses.filter(x=>x==='verified').length;t.researchingCount=0;t.unavailableCount=statuses.filter(x=>x==='unavailable').length;t.needsMediumReviewCount=0;t.blockers=[];t.lastUpdatedAt=timestamp;
-              const a='統括A'; if(Array.isArray(t.lastUpdatedBy)){if(!t.lastUpdatedBy.includes(a))t.lastUpdatedBy.push(a)}else if(t.lastUpdatedBy){if(!String(t.lastUpdatedBy).includes(a))t.lastUpdatedBy+=`, ${a}`}else t.lastUpdatedBy=a;
-              fs.writeFileSync(tp,JSON.stringify(t)+'\n'); selected.push({type:mt?'refresh':'add',region,code,name:d.name,prefecture:d.prefecture,sourcePullRequestNumber:t.pullRequestNumber??null});
-            }
-          }
-          selected.sort((a,b)=>a.code.localeCompare(b.code));
-          fs.writeFileSync('jichitai-compare/operations/control/coord-a-release-north-east-sync-20260724-1831.json',JSON.stringify({schemaVersion:'1.0.0',createdAt:timestamp,previousPublishedMunicipalities:previous,selectedMunicipalities:selected.length,addedMunicipalities:selected.filter(x=>x.type==='add').length,refreshedMunicipalities:selected.filter(x=>x.type==='refresh').length,byRegion:{north:selected.filter(x=>x.region==='north').length,east:selected.filter(x=>x.region==='east').length},municipalities:selected,excludedCount:excluded.length,excluded},null,2)+'\n');
-          NODE
-      - name: Generate and validate
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
-        run: npm run generate && npm run progress && npm run validate:generated && node --check app.js
-      - name: Update homepage count
-        run: node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json')),f='jichitai-compare/index.html';fs.writeFileSync(f,fs.readFileSync(f,'utf8').replace(/\\d+自治体・9制度/g,p.registeredMunicipalities+'自治体・9制度'))"
-      - name: Commit release
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          if git diff --cached --quiet; then echo 'No publishable differences.'; exit 0; fi
-          git commit -m 'Sync latest north and east municipality improvements'
-          git push origin HEAD
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
