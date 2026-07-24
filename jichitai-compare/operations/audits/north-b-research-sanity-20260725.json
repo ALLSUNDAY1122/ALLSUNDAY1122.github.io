@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 8,
-  "remainingRounds": 2,
+  "completedRounds": 9,
+  "remainingRounds": 1,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 87,
-  "remainingMunicipalityCount": 20,
-  "auditedAt": "2026-07-25T03:05:00+09:00",
+  "auditedMunicipalityCount": 97,
+  "remainingMunicipalityCount": 10,
+  "auditedAt": "2026-07-25T04:01:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -581,6 +581,83 @@
       "06210",
       "06211",
       "06213"
+    ]
+  },
+  "round09": {
+    "codes": [
+      "06302",
+      "06321",
+      "06322",
+      "06323",
+      "06324",
+      "06341",
+      "06361",
+      "06362",
+      "06363",
+      "06364"
+    ],
+    "municipalityCount": 10,
+    "serviceCount": 90,
+    "highRiskChecks": 28,
+    "confirmedErrorCount": 1,
+    "confirmedErrors": [
+      {
+        "code": "06361",
+        "municipality": "金山町",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "2026年度のこども誰でも通園制度を併記",
+        "reason": "2026年3月31日更新の町公式利用案内が未反映"
+      }
+    ],
+    "evidenceLimitations": [
+      {
+        "code": "06302",
+        "municipality": "中山町",
+        "service": "schoolMeals",
+        "note": "令和7年度無償化要綱は2026年5月31日で失効し、令和8年度の継続を直接確認できないためunavailableを維持"
+      },
+      {
+        "code": "06322",
+        "municipality": "西川町",
+        "service": "schoolMeals",
+        "note": "令和8年度予算に給食費負担軽減交付金を確認したが、対象範囲・保護者負担額・申請要否を利用者向け直接資料で確定できず変更しなかった"
+      },
+      {
+        "code": "06341",
+        "municipality": "大石田町",
+        "service": "schoolMeals",
+        "note": "令和8年度予算書・教育方針は公開されているが、全児童生徒向け無償化・一律補助の条件を直接確認できずunavailableを維持"
+      },
+      {
+        "code": "06362",
+        "municipality": "最上町",
+        "service": "schoolMeals",
+        "note": "教育長挨拶の公立小学校給食無償化は国全体の動向を示す記述で、町独自の対象・保護者負担を確定できず変更しなかった"
+      },
+      {
+        "code": "06363",
+        "municipality": "舟形町",
+        "service": "temporaryChildcare",
+        "note": "令和8年度の利用者向けこども誰でも通園制度案内を町公式サイトで取得できず、通常の一時保育情報を維持"
+      },
+      {
+        "code": "06363",
+        "municipality": "舟形町",
+        "service": "sickChildCare",
+        "note": "町公式支援一覧に病後児保育の存在はあるが、施設・対象年齢・料金・申込方法を確定できずunavailableを維持"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "06302",
+      "06321",
+      "06322",
+      "06323",
+      "06324",
+      "06341",
+      "06362",
+      "06363",
+      "06364"
     ]
   }
 }
