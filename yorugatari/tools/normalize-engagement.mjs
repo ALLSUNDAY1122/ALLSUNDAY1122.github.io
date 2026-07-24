@@ -8,6 +8,7 @@ const ANALYTICS_VERSION = '20260723-003';
 const FIVE_MINUTE_ANALYTICS_VERSION = '20260724-004';
 const BEDTIME_ANALYTICS_VERSION = '20260724-005';
 const ENGAGEMENT_VERSION = '20260723-003';
+const RUNTIME_RELEASE = '20260724-001';
 const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png';
 const SHARE_WIDTH = '2172';
 const SHARE_HEIGHT = '724';
@@ -55,7 +56,7 @@ function ensureSocialMetadata(html) {
 
 function setRuntimeScript(html, src, version) {
   html = html.replace(/\s*<script\s+src=["'][^"']*\/(?:analytics|engagement)\.js(?:\?v=[^"']*)?["']\s*><\/script>\s*/gi, '\n');
-  return html.replace('</body>', `  <script src="${src}?v=${version}"></script>\n</body>`);
+  return html.replace('</body>', `  <script src="${src}?v=${version}&r=${RUNTIME_RELEASE}"></script>\n</body>`);
 }
 
 function ensureStoryCuratedLinks(html) {
@@ -87,7 +88,7 @@ function normalizeStaticPage(filename) {
     html = html.replace('<h2>作品の閲覧数</h2>', '<h2>アクセス数の集計</h2>');
     html = html.replace(
       /<h2>アクセス数の集計<\/h2>\s*<p>[^<]*<\/p>/,
-      '<h2>アクセス数の集計</h2>\n      <p>Page Views APIは、ページごとの閲覧数を30分単位で重複を除いて集計します。送信する内容はサイト識別子とページのパスです。外部サイトから初めて訪れた場合は、参照元をブラウザ内で「検索」「SNS」「直接」「その他の参照」「キャンペーン」の粗い区分へ変換し、1セッションにつき1回だけ区分を送信します。夜語りが事前に用意した告知リンクでは、媒体と投稿内容の組合せを表す固定キャンペーンコードも送信します。特集ページから作品を開いた場合は、「5分で読める12選」または「寝る前の8選」のどちらから作品閲覧を開始したかを、特集単位で1セッションにつき1回だけ送信します。開いた作品名や作品URLはこの集計へ含めません。任意に付けられたUTM値は保存せず、登録済みコードに一致しない値は破棄します。参照元URL、検索語、IPアドレスそのもの、Cookie、当サイトの読了履歴は保存しません。</p>'
+      '<h2>アクセス数の集計</h2>\n      <p>Page Views APIは、ページごとの閲覧数を30分単位で重複を除いて集計します。送信する内容はサイト識別子とページのパスです。外部サイトから初めて訪れた場合は、参照元をブラウザ内で「検索」「SNS」「直接」「その他の参照」「キャンペーン」の粗い区分へ変換し、1セッションにつき1回だけ区分を送信します。夜語りが事前に用意した告知リンクでは、媒体と投稿内容の組合せを表す固定キャンペーンコードも送信します。特集ページから作品を開いた場合は、「5分で読める12選」または「寝る前の8選」のどちらから作品閲覧を開始したかを、特集単位で1セッションにつき1回だけ送信します。開いた作品名や作品URLはこの集計へ含めません。自動監査、Lighthouse、ヘッドレスブラウザによる品質確認は閲覧数と作品開始数に含めません。任意に付けられたUTM値は保存せず、登録済みコードに一致しない値は破棄します。参照元URL、検索語、IPアドレスそのもの、Cookie、当サイトの読了履歴は保存しません。</p>'
     );
     html = html.replace(/制定・最終更新：\d{4}年\d{1,2}月\d{1,2}日/, '制定・最終更新：2026年7月24日');
   }
@@ -125,4 +126,4 @@ fs.readdirSync(STORIES_ROOT)
   .forEach(normalizeStoryPage);
 normalize404();
 
-console.log(`Normalized campaign-aware analytics, curated story links, and social metadata for ${STATIC_PAGES.length} static pages, 100 stories, and the 404 page.`);
+console.log(`Normalized audit-filtered analytics, curated story links, and social metadata for ${STATIC_PAGES.length} static pages, 100 stories, and the 404 page.`);
