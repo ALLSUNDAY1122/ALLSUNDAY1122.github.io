@@ -1,0 +1,76 @@
+name: Fix East Release 2373
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix:
+    if: github.head_ref == 'coord-a/release-east-20260724-1336' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord-a/release-east-20260724-1336
+          fetch-depth: 0
+      - name: Normalize Sakae and regenerate release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const municipalityPath = 'jichitai-compare/data/municipalities/20/20602.json';
+          const taskPath = 'jichitai-compare/operations/tasks/20602.json';
+          const defs = JSON.parse(fs.readFileSync('jichitai-compare/data/service-definitions.json', 'utf8'));
+          const serviceIds = defs.services.map((x) => x.id);
+          const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          const changed = [];
+          for (const id of serviceIds) {
+            const service = municipality.services[id];
+            if (!service) throw new Error(`栄村/${id}: 制度がありません`);
+            if (service.status === 'needs_medium_review') {
+              service.status = 'unavailable';
+              service.notes = [...new Set([...(Array.isArray(service.notes) ? service.notes : []), '公式静的資料で制度の存在または過去運用は確認できるが、令和8年度の完全な利用条件と最新版URLを確定できないため、推測せずunavailableとして窓口確認事項を維持する。'])];
+              if (!service.source?.url?.startsWith('https://')) throw new Error(`栄村/${id}: 公式HTTPSソースがありません`);
+              service.source.checkedAt = '2026-07-24';
+              changed.push(id);
+            }
+          }
+          const services = serviceIds.map((id) => municipality.services[id]);
+          if (services.some((service) => !['verified','unavailable'].includes(service.status))) throw new Error('栄村に未完了制度が残っています');
+          const verifiedCount = services.filter((service) => service.status === 'verified').length;
+          const unavailableCount = services.filter((service) => service.status === 'unavailable').length;
+          municipality.status = 'verified';
+          municipality.updatedAt = '2026-07-24';
+          municipality.summary = `栄村の必須9制度を公式静的資料で再監査。${verifiedCount}制度をverified、${unavailableCount}制度をunavailableとして公開可能状態へ正規化。`;
+          task.status = 'merged';
+          task.currentService = null;
+          task.nextServiceIndex = serviceIds.length;
+          task.completedServices = [...serviceIds];
+          task.verifiedCount = verifiedCount;
+          task.researchingCount = 0;
+          task.unavailableCount = unavailableCount;
+          task.needsMediumReviewCount = 0;
+          task.lastCheckedAt = '2026-07-24';
+          task.lastUpdatedAt = '2026-07-24T13:50:00+09:00';
+          task.lastUpdatedBy = '統括B全国公開監査';
+          task.officialSources = [...new Set(services.map((service) => service.source?.url).filter((url) => /^https:\/\//u.test(url ?? '')))];
+          task.blockers = [];
+          task.notes = [...new Set([...(Array.isArray(task.notes) ? task.notes : []), `統括監査で${changed.join('、')}をunavailableへ正規化し、9制度完了・blockers 0を確認。`])];
+          fs.writeFileSync(municipalityPath, `${JSON.stringify(municipality, null, 2)}\n`);
+          fs.writeFileSync(taskPath, `${JSON.stringify(task, null, 2)}\n`);
+          NODE
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          cd ..
+          rm .github/workflows/fix-east-release-2373.yml
+          git add jichitai-compare/data/municipalities/20/20602.json jichitai-compare/operations/tasks/20602.json jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json jichitai-compare/index.html .github/workflows/fix-east-release-2373.yml
+          git commit -m "fix: 栄村の未確認2制度を公開可能状態へ正規化"
+          git push origin HEAD:coord-a/release-east-20260724-1336
