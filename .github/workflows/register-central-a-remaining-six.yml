@@ -1,0 +1,93 @@
+name: Register Central A Remaining Six
+
+on:
+  pull_request:
+    branches: [region/central]
+
+permissions:
+  contents: write
+
+jobs:
+  register:
+    if: github.head_ref == 'ops/central-a-remaining-six-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/central-a-remaining-six-20260724
+          fetch-depth: 0
+      - name: Update corrected audit and checkpoint
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const project = 'jichitai-compare';
+          const checkpointPath = path.join(project, 'operations/control/session-checkpoints/central-a.json');
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          const pending = [
+            { code: '21604', name: '白川村', prefectureCode: '21', prefecture: '岐阜県' },
+            { code: '23237', name: 'あま市', prefectureCode: '23', prefecture: '愛知県' },
+            { code: '23238', name: '長久手市', prefectureCode: '23', prefecture: '愛知県' },
+            { code: '27301', name: '島本町', prefectureCode: '27', prefecture: '大阪府' },
+            { code: '27321', name: '豊能町', prefectureCode: '27', prefecture: '大阪府' },
+            { code: '27322', name: '能勢町', prefectureCode: '27', prefecture: '大阪府' }
+          ];
+          checkpoint.updatedAt = '2026-07-24T21:45:00+09:00';
+          checkpoint.status = 'active';
+          checkpoint.remainingUninvestigatedCount = pending.length;
+          checkpoint.currentMunicipality = pending[0];
+          checkpoint.workingBranch = null;
+          checkpoint.pullRequestNumber = null;
+          checkpoint.ciStatus = 'pending';
+          checkpoint.pendingMunicipalities = pending;
+          checkpoint.reopenedReason = '全国進捗1,735/1,741の残り6自治体を、正しい地方割当とe-Stat現行コードから特定。旧監査PR #2780は茨城県・栃木県を中日本へ誤配分していたため破棄。';
+          checkpoint.nextAction = '21604 白川村から昇順に、1自治体ずつ9制度調査・JSON・task・PR・CI・region/central統合を実施する。';
+          fs.writeFileSync(checkpointPath, `${JSON.stringify(checkpoint, null, 2)}\n`);
+
+          const auditPath = path.join(project, 'operations/control/remaining-six-corrected-audit-20260724.json');
+          fs.writeFileSync(auditPath, `${JSON.stringify({
+            schemaVersion: '1.0.0',
+            createdAt: '2026-07-24T21:45:00+09:00',
+            sourceProgress: {
+              registeredMunicipalities: 1735,
+              totalMunicipalities: 1741,
+              remainingMunicipalities: 6
+            },
+            assignmentPolicy: {
+              centralPrefectureCodes: ['16','17','18','21','22','23','24','25','26','27','28','29','30'],
+              eastPrefectureCodes: ['08','09','10','11','12','13','14','15','19','20'],
+              correctedFormerAuditPullRequest: 2780,
+              correction: '08茨城県・09栃木県は東日本。中日本の実不足は21岐阜1件、23愛知2件、27大阪3件の計6件。'
+            },
+            missingMunicipalities: pending,
+            repositoryChecks: {
+              mainMunicipalityFilesAbsent: true,
+              centralMunicipalityFilesAbsent: true,
+              openOrClosedPullRequestsFound: 0,
+              matchingWorkBranchesFound: 0
+            },
+            codeAuthority: 'e-Stat standard municipality codes',
+            status: 'assigned_to_central_a'
+          }, null, 2)}\n`);
+          NODE
+      - name: Confirm checkpoint consistency
+        working-directory: jichitai-compare
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const checkpoint = JSON.parse(fs.readFileSync('operations/control/session-checkpoints/central-a.json', 'utf8'));
+          const audit = JSON.parse(fs.readFileSync('operations/control/remaining-six-corrected-audit-20260724.json', 'utf8'));
+          const expected = ['21604','23237','23238','27301','27321','27322'];
+          if (checkpoint.status !== 'active') throw new Error('central-a status is not active');
+          if (checkpoint.remainingUninvestigatedCount !== 6) throw new Error('remaining count mismatch');
+          if (JSON.stringify(checkpoint.pendingMunicipalities.map(x => x.code)) !== JSON.stringify(expected)) throw new Error('checkpoint queue mismatch');
+          if (JSON.stringify(audit.missingMunicipalities.map(x => x.code)) !== JSON.stringify(expected)) throw new Error('audit queue mismatch');
+          NODE
+      - name: Commit and remove temporary workflow
+        run: |
+          git rm .github/workflows/register-central-a-remaining-six.yml
+          git add jichitai-compare/operations/control/session-checkpoints/central-a.json jichitai-compare/operations/control/remaining-six-corrected-audit-20260724.json
+          git commit -m 'ops: 中日本Aへ全国残り6自治体を再割当'
+          git push origin HEAD:ops/central-a-remaining-six-20260724
