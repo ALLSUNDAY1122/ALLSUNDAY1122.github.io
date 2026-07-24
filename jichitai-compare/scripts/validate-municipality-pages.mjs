@@ -1,4 +1,4 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +7,7 @@ const PROJECT_DIR = resolve(SCRIPT_DIR, '..');
 const GENERATED_FILE = join(PROJECT_DIR, 'data', 'generated', 'municipalities.json');
 const MANIFEST_FILE = join(PROJECT_DIR, 'data', 'generated', 'municipality-pages.json');
 const SITEMAP_FILE = join(PROJECT_DIR, 'sitemap.xml');
+const FAILURE_REPORT_FILE = join(PROJECT_DIR, 'operations', 'audits', 'public-summary-validation-report.json');
 const PUBLIC_SUMMARY_FORBIDDEN_PATTERNS = [
   { label: '調査班', pattern: /調査班/u },
   { label: 'PR提出前', pattern: /PR提出前/u },
@@ -23,6 +24,7 @@ const sitemap = await readFile(SITEMAP_FILE, 'utf8');
 const municipalities = generated.municipalities ?? [];
 const pages = manifest.pages ?? [];
 const errors = [];
+const publicSummaryViolations = [];
 
 if (manifest.schemaVersion !== '1.0.0') errors.push(`manifest schemaVersionが不正です: ${manifest.schemaVersion}`);
 if (manifest.municipalityCount !== municipalities.length) {
@@ -71,6 +73,14 @@ for (let start = 0; start < pages.length; start += 100) {
       for (const forbidden of PUBLIC_SUMMARY_FORBIDDEN_PATTERNS) {
         if (forbidden.pattern.test(publicSummary)) {
           errors.push(`${page.code}: 公開要約に内部運用語「${forbidden.label}」が残っています`);
+          publicSummaryViolations.push({
+            code: page.code,
+            prefectureCode: municipality?.prefectureCode ?? null,
+            prefecture: municipality?.prefecture ?? null,
+            name: municipality?.name ?? null,
+            forbiddenLabel: forbidden.label,
+            summary: publicSummary
+          });
         }
       }
     } catch (cause) {
@@ -84,9 +94,24 @@ const expectedSitemapCount = municipalities.length + 3;
 if (sitemapCount !== expectedSitemapCount) errors.push(`sitemap件数が不一致です: ${sitemapCount}/${expectedSitemapCount}`);
 
 if (errors.length > 0) {
+  await mkdir(dirname(FAILURE_REPORT_FILE), { recursive: true });
+  await writeFile(
+    FAILURE_REPORT_FILE,
+    JSON.stringify({
+      schemaVersion: '1.0.0',
+      generatedAt: new Date().toISOString(),
+      municipalityCount: municipalities.length,
+      errorCount: errors.length,
+      publicSummaryViolationCount: publicSummaryViolations.length,
+      publicSummaryViolations,
+      errors
+    }, null, 2) + '\n',
+    'utf8'
+  );
   console.error(`自治体別ページ検証失敗: ${errors.length}件`);
   errors.slice(0, 100).forEach((error) => console.error(`- ${error}`));
   if (errors.length > 100) console.error(`...ほか${errors.length - 100}件`);
+  console.error(`検証レポート: ${FAILURE_REPORT_FILE}`);
   process.exit(1);
 }
 
