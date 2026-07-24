@@ -5,7 +5,7 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-24T22:38:00+09:00",
+  "updatedAt": "2026-07-24T22:57:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -32,6 +32,8 @@
     "nationalReleaseMergedAt": "2026-07-24T22:08:44+09:00",
     "regionalCompletionSyncPullRequestNumber": 2799,
     "regionalCompletionSyncCiRunNumber": 6705,
+    "publicRegionalSmokePullRequestNumber": 2826,
+    "publicRegionalSmokeCiRunNumber": 6781,
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
@@ -60,5 +62,29 @@
       "西日本476自治体・4,284制度は完了状態で、全国公開残数は0。",
       "新規調査は再開せず、公式情報更新・差し戻し・識別異常・CI失敗を再開条件とする。"
     ]
+  },
+  "publicSiteMonitoring": {
+    "auditedAt": "2026-07-24T22:57:00+09:00",
+    "status": "passed",
+    "pullRequestNumber": 2826,
+    "ciRunNumber": 6781,
+    "configuredSampleCount": 4,
+    "samples": [
+      {"region": "north", "code": "01100", "name": "札幌市"},
+      {"region": "east", "code": "13123", "name": "江戸川区"},
+      {"region": "central", "code": "27100", "name": "大阪市"},
+      {"region": "west-b", "code": "47382", "name": "与那国町"}
+    ],
+    "checks": [
+      "自治体別ページのHTTP取得",
+      "h1自治体名",
+      "canonical URL",
+      "自治体公式情報リンク",
+      "unavailable旧誤表示の不存在",
+      "sitemap収録"
+    ],
+    "repositoryGeneratedPageValidation": "success",
+    "prDataAndSyntaxValidation": "success",
+    "westBSample": "与那国町（47382）"
   }
 }
