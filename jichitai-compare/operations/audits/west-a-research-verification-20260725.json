@@ -2,11 +2,11 @@
   "schemaVersion": "1.0.0",
   "auditId": "west-a-research-verification-20260725",
   "sessionId": "west-a",
-  "status": "in_progress",
+  "status": "completed",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T01:55:00+09:00",
+  "updatedAt": "2026-07-25T02:19:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 9,
+  "completedRoundCount": 10,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -592,15 +592,57 @@
     {
       "round": 10,
       "title": "発見事項の再検証、修正、最終集計",
-      "status": "planned"
+      "status": "completed",
+      "method": "発見3件を公式情報で再検証し、地域CI・全国公開反映・生成JSON・静的ページ・task件数の整合性を確認して最終集計",
+      "findingsReverified": [
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "service": "sickChildCare",
+          "result": "resolved",
+          "evidence": "公式ページで7施設、1日1,200円、半日600円、生活保護世帯無料を再確認",
+          "regionalPullRequestNumber": 2960,
+          "regionalCiRunNumber": 7133,
+          "nationalPullRequestNumber": 2986,
+          "nationalCiRunNumber": 7223
+        },
+        {
+          "code": "40448",
+          "name": "東峰村",
+          "service": "childMedical",
+          "result": "resolved",
+          "evidence": "現行条例で18歳年度末まで、保険診療自己負担相当額の支給、医療証による現物給付を再確認",
+          "regionalPullRequestNumber": 3021,
+          "regionalCiRunNumber": 7346
+        },
+        {
+          "code": "46530",
+          "name": "徳之島町",
+          "service": "childMedical",
+          "result": "resolved",
+          "evidence": "町広報で課税世帯は未就学児、非課税世帯は18歳年度末まで、2025年4月受診分から窓口負担無料を再確認",
+          "regionalPullRequestNumber": 3021,
+          "regionalCiRunNumber": 7346
+        }
+      ],
+      "structuralAuditMunicipalityCount": 226,
+      "structuralAuditServiceCount": 2034,
+      "directOfficialRecheckCount": 64,
+      "unavailableInventoryMunicipalityCount": 75,
+      "unavailableInventoryServiceCount": 189,
+      "materialErrorCount": 3,
+      "correctionAppliedCount": 3,
+      "unresolvedErrorCount": 0,
+      "result": "completed_with_corrections",
+      "limitation": "担当226自治体・2,034制度の構造と生成整合性は全件検証したが、全制度本文を1件ずつ公式ページで再読したものではない。直接公式再照合は高変動・高リスク項目を中心とする64項目。"
     }
   ],
   "summary": {
     "materialErrorCount": 3,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 1,
-    "currentAssessment": "第9回でunavailable判定から2件の誤りを検出・修正。累計重大誤り3件はすべて修正済みで、未修正0件。",
+    "roundsRemaining": 0,
+    "currentAssessment": "10回監査を完了。重大誤り3件を検出し全件修正済み。未修正0件。構造監査は226自治体・2,034制度、直接公式再照合は64項目。",
     "correctionAppliedCount": 3
   },
-  "nextAction": "第10回として、発見3件の再検証、CI・生成ページ確認、最終集計を行う。"
+  "nextAction": "通常の完了後監査へ戻り、公式情報更新、CI異常、公開文言異常が発生した場合のみ再調査する。"
 }

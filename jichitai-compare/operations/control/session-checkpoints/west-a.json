@@ -12,7 +12,7 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T01:55:00+09:00",
+  "updatedAt": "2026-07-25T02:19:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -41,18 +41,20 @@
     }
   ],
   "blocked": [],
-  "nextAction": "10回の誤調査検証の第10回として、発見3件の再検証、CI・生成ページ確認、最終集計を行う。",
+  "nextAction": "10回の誤調査検証は完了。通常の完了後監査へ戻り、公式情報更新、CI異常、公開文言異常が発生した場合のみ再調査する。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
-    "completedRoundCount": 9,
-    "lastCompletedRound": 9,
-    "nextRound": 10,
-    "status": "in_progress",
+    "completedRoundCount": 10,
+    "lastCompletedRound": 10,
+    "nextRound": null,
+    "status": "completed",
     "materialErrorCount": 3,
     "correctionRequiredCount": 0,
-    "lastAuditedAt": "2026-07-25T01:55:00+09:00",
-    "correctionAppliedCount": 3
+    "lastAuditedAt": "2026-07-25T02:19:00+09:00",
+    "correctionAppliedCount": 3,
+    "directOfficialRecheckCount": 64,
+    "finalAssessment": "completed_with_corrections"
   },
   "completionEvidence": {
     "lastMunicipalityCode": "46206",
@@ -81,7 +83,7 @@
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-25T01:55:00+09:00",
+    "auditedAt": "2026-07-25T02:19:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -181,7 +183,9 @@
       "第6回監査で6自治体の住宅支援を再照合し、全件一致。",
       "第7回監査で6自治体の粗大ごみ料金・予約・直接搬入条件を再照合し、全件一致。",
       "第8回監査で6自治体の防災マップ掲載範囲・避難導線・公式URLを再照合し、全件一致。",
-      "第9回監査で東峰村・徳之島町の子ども医療費をunavailableからverifiedへ修正。芸西村は現行条件を確定できずunavailableを維持。"
+      "第9回監査で東峰村・徳之島町の子ども医療費をunavailableからverifiedへ修正。芸西村は現行条件を確定できずunavailableを維持。",
+      "10回の誤調査検証を完了。重大誤り3件を全件修正し、未修正0件。全2,034制度の構造監査と高リスク64項目の公式再照合を実施。",
+      "10回の誤調査検証を完了。重大誤り3件を全件修正し、未修正0件。全2,034制度の構造監査と高リスク64項目の公式再照合を実施。"
     ]
   }
 }
