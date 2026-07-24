@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-24T09:28:00+09:00",
+  "updatedAt": "2026-07-24T09:35:00+09:00",
   "totalMunicipalities": 1741,
   "totalMunicipalitiesSource": {
     "value": 1741,
@@ -11,8 +11,8 @@
     "calculation": "市町村計1724（北方4島の6村を含み、特別区を含まない）- 6村 + 23特別区 = 1741",
     "scope": "現に自治体行政が行われている市町村および東京都23特別区"
   },
-  "registeredMunicipalities": 1482,
-  "remainingMunicipalities": 259,
+  "registeredMunicipalities": 1485,
+  "remainingMunicipalities": 256,
   "todoMunicipalities": 0,
   "researchingMunicipalities": 0,
   "verifiedMunicipalities": 0,
@@ -21,21 +21,21 @@
   "needsRevisionMunicipalities": 0,
   "needsCoordinatorMunicipalities": 0,
   "prOpenMunicipalities": 0,
-  "mergedMunicipalities": 1482,
+  "mergedMunicipalities": 1485,
   "blockedMunicipalities": 0,
   "assignmentSummary": {
-    "unassigned": 106,
-    "assigned": 1375,
+    "unassigned": 105,
+    "assigned": 1378,
     "pr_open": 0,
-    "blocked": 1
+    "blocked": 2
   },
-  "totalServices": 13338,
-  "completedServices": 13338,
+  "totalServices": 13365,
+  "completedServices": 13365,
   "completionRatePercent": 100,
   "todoServices": 0,
   "researchingServices": 0,
-  "verifiedServices": 12486,
-  "unavailableServices": 852,
+  "verifiedServices": 12501,
+  "unavailableServices": 864,
   "needsMediumReviewServices": 0,
   "needsRevisionServices": 0,
   "needsCoordinatorServices": 0,
@@ -44,11 +44,11 @@
   "blockedServices": 0,
   "teams": {
     "北日本調査班": {
-      "registeredMunicipalities": 407,
+      "registeredMunicipalities": 406,
       "assignedMunicipalities": 365,
       "prOpenMunicipalities": 0,
       "blockedMunicipalities": 0,
-      "verifiedServices": 3216,
+      "verifiedServices": 3207,
       "researchingServices": 0,
       "unavailableServices": 447,
       "needsReviewServices": 0,
@@ -334,7 +334,6 @@
         "04406",
         "04421",
         "04422",
-        "04423",
         "04424",
         "04444",
         "04445",
@@ -464,13 +463,13 @@
       ]
     },
     "東日本調査班": {
-      "registeredMunicipalities": 375,
-      "assignedMunicipalities": 311,
+      "registeredMunicipalities": 379,
+      "assignedMunicipalities": 315,
       "prOpenMunicipalities": 0,
-      "blockedMunicipalities": 1,
-      "verifiedServices": 3182,
+      "blockedMunicipalities": 2,
+      "verifiedServices": 3206,
       "researchingServices": 0,
-      "unavailableServices": 193,
+      "unavailableServices": 205,
       "needsReviewServices": 0,
       "blockedServices": 0,
       "municipalityCodes": [
@@ -685,6 +684,8 @@
         "12349",
         "12403",
         "12409",
+        "12410",
+        "12421",
         "13101",
         "13102",
         "13103",
@@ -848,7 +849,9 @@
         "20562",
         "20563",
         "20583",
-        "20588"
+        "20588",
+        "20590",
+        "20602"
       ]
     },
     "中日本調査班": {
@@ -1588,6 +1591,17 @@
       "pullRequestNumber": 1888,
       "blockers": [
         "阿南町公式サイト停止により、令和8年度の9制度の現行詳細を確認できない。"
+      ]
+    },
+    {
+      "code": "20602",
+      "name": "栄村",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "currentBranch": "data/20602-sakae",
+      "pullRequestNumber": 2166,
+      "blockers": [
+        "栄村公式サイトが一時利用不可で、令和8年度の制度詳細を確認できない。"
       ]
     }
   ],
@@ -7190,26 +7204,6 @@
       "lastCheckedAt": "2026-07-23",
       "lastUpdatedAt": "2026-07-23T15:10:00+09:00",
       "lastUpdatedBy": "北日本調査班B",
-      "blockers": []
-    },
-    {
-      "code": "04423",
-      "name": "大衡村",
-      "prefectureCode": "04",
-      "prefecture": "宮城県",
-      "assignedTeam": "北日本調査班",
-      "status": "merged",
-      "assignmentState": "unassigned",
-      "currentBranch": null,
-      "pullRequestNumber": 2052,
-      "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
-      "researchingCount": 0,
-      "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T08:34:00+09:00",
-      "lastUpdatedBy": "北日本調査班A, 統括A",
       "blockers": []
     },
     {
@@ -13953,6 +13947,46 @@
       "blockers": []
     },
     {
+      "code": "12410",
+      "name": "横芝光町",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "assignmentState": "assigned",
+      "currentBranch": "data/12410-yokoshibahikari",
+      "pullRequestNumber": 2159,
+      "completedServiceCount": 9,
+      "verifiedCount": 7,
+      "unavailableCount": 2,
+      "researchingCount": 0,
+      "currentService": null,
+      "lastCheckedAt": "2026-07-24",
+      "lastUpdatedAt": "2026-07-24T09:35:00+09:00",
+      "lastUpdatedBy": "東日本調査班B, 統括A",
+      "blockers": []
+    },
+    {
+      "code": "12421",
+      "name": "一宮町",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "assignmentState": "assigned",
+      "currentBranch": "data/12421-ichinomiya",
+      "pullRequestNumber": null,
+      "completedServiceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "researchingCount": 0,
+      "currentService": null,
+      "lastCheckedAt": "2026-07-24",
+      "lastUpdatedAt": "2026-07-24T09:35:00+09:00",
+      "lastUpdatedBy": "東日本調査班B, 統括A",
+      "blockers": []
+    },
+    {
       "code": "13101",
       "name": "千代田区",
       "prefectureCode": "13",
@@ -18253,6 +18287,48 @@
       "lastUpdatedAt": "2026-07-24T09:28:00+09:00",
       "lastUpdatedBy": "東日本調査班A, 統括A",
       "blockers": []
+    },
+    {
+      "code": "20590",
+      "name": "飯綱町",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "assignmentState": "assigned",
+      "currentBranch": "data/20590-iizuna",
+      "pullRequestNumber": 2156,
+      "completedServiceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "researchingCount": 0,
+      "currentService": null,
+      "lastCheckedAt": "2026-07-24",
+      "lastUpdatedAt": "2026-07-24T09:35:00+09:00",
+      "lastUpdatedBy": "東日本調査班A, 統括A",
+      "blockers": []
+    },
+    {
+      "code": "20602",
+      "name": "栄村",
+      "prefectureCode": "20",
+      "prefecture": "長野県",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "assignmentState": "blocked",
+      "currentBranch": "data/20602-sakae",
+      "pullRequestNumber": 2166,
+      "completedServiceCount": 9,
+      "verifiedCount": 0,
+      "unavailableCount": 9,
+      "researchingCount": 0,
+      "currentService": null,
+      "lastCheckedAt": "2026-07-24",
+      "lastUpdatedAt": "2026-07-24T09:35:00+09:00",
+      "lastUpdatedBy": "東日本調査班A, 統括A",
+      "blockers": [
+        "栄村公式サイトが一時利用不可で、令和8年度の制度詳細を確認できない。"
+      ]
     },
     {
       "code": "21201",
