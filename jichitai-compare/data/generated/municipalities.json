@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1656,
+    "municipalityCount": 1658,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -136013,6 +136013,365 @@
       }
     },
     {
+      "code": "15504",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "刈羽村",
+      "officialUrl": "https://www.vill.kariwa.niigata.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を刈羽村公式情報で確認し、8制度をverified、専用産後ケア1制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担額から制度上の一部負担金を除いて助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "刈羽村に住所があり健康保険に加入する出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の自己負担額から一部負担金を控除した額を助成",
+            "copayment": "外来は医療機関ごと1日530円で同一月5回目以降無料、入院は1日1,200円、訪問看護は1日250円",
+            "procedure": "受給者証の交付を申請し、医療機関で保険資格確認書類と受給者証を提示。現物給付を受けられない場合は6か月以内に償還払い申請",
+            "excluded": "保険外費用、高額療養費・付加給付、他の公費医療等"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/reiki_int/reiki_honbun/e478RG00000701.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "2026年度から村の病児保育事業を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "病児保育事業",
+            "currentStatus": "刈羽村は2026年4月1日付で現行の病児保育事業利用案内を公開",
+            "target": "病気中または回復期で集団保育・登校が困難かつ、保護者の事情により家庭保育が難しい子ども",
+            "procedure": "利用対象年齢、施設、利用時間、料金、予約・医師書類等は村の最新利用案内に従う",
+            "notes": "取得できた公式公開情報の範囲を超えて施設名・料金等を推測しない"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/www/info/detail.jsp?id=8978",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児等を無償化し、課税世帯0～2歳児は村の使用料基準で算定",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等を利用する3～5歳児と住民税非課税世帯の0～2歳児等",
+            "coverage": "国の幼児教育・保育無償化対象となる利用料を無償化",
+            "currentFee": "課税世帯の0～2歳児は保護者の村民税額等に基づき保育所使用料を決定",
+            "meal": "3歳以上児の副食費等は村の副食費徴収要綱・施設案内に基づく",
+            "procedure": "入園申込みと教育・保育給付認定等の手続きを行う"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/reiki_int/reiki_honbun/e478RG00000498.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "中学校給食は保護者負担額を1食410円とし物価高騰分を村が補助、低所得世帯へ就学援助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "currentStatus": "学校給食費の保護者負担制度があり、教育委員会所管補助制度で食材価格高騰分等を支援",
+            "juniorHigh": "中学校給食の保護者負担額は1食410円を基準とする現行規定",
+            "lowIncome": "経済的理由で就学が困難な世帯へ、学校給食費・学用品費等の一部を就学援助",
+            "procedure": "通常の給食費は学校の案内に従い納付し、就学援助は年度ごとに申請",
+            "notes": "村立小中学校全員を対象とする一律完全無償化とは確認できない"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/reiki_int/reiki_honbun/e478RG00000861.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "宿泊・日帰り・訪問型等の専用産後ケア事業の現行利用案内を村公式情報で確認できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "currentStatus": "村公式の妊娠・出産・子育て支援情報と例規を確認したが、専用産後ケア事業の対象月齢・類型・料金・申請方法を示す現行利用案内は確認できない",
+            "alternative": "妊娠期から概ね2歳までの伴走型相談支援、出産・子育て応援給付、妊産婦医療費助成等を実施",
+            "procedure": "産後の休養・授乳・育児不安等の支援が必要な場合は福祉保健課またはこども家庭センターへ相談",
+            "notes": "制度不存在を断定せず、公開中の専用利用案内を確認できない状態として記録"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/reiki_int/reiki_honbun/e478RG00000832.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "2026年度から乳児等通園支援事業（こども誰でも通園制度）を実施",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "currentStatus": "2026年4月1日施行の村実施要綱と現行利用案内を公開",
+            "hours": "国制度の利用上限に基づき月10時間の範囲で利用",
+            "procedure": "村の利用認定、実施施設との面談・予約等の最新案内に従う",
+            "notes": "施設・料金等は村の公開中利用案内で確認"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/www/info/detail.jsp?id=8976",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "新婚世帯の住宅取得・賃借・リフォーム・引越費用を最大60万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "program": "令和8年度刈羽村結婚新生活支援補助金",
+            "target": "2026年1月1日から2027年2月28日に婚姻し、夫婦双方39歳以下、合計所得500万円未満、村内居住等の要件を満たす世帯",
+            "costs": "住宅取得・新築、住宅賃借、住宅リフォーム、引越費用",
+            "amount": "夫婦とも29歳以下は上限60万円、それ以外の夫婦双方39歳以下世帯は上限30万円",
+            "period": "2026年4月1日から2027年3月1日までに支払った対象費用",
+            "procedure": "必要書類を添えて村へ申請し、予算・制度要件を確認"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/www/info/detail.jsp?id=7708",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを事前申込みし、処理券を貼付して毎週金曜日に戸別収集",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "原則毎週金曜日に粗大ごみを戸別収集",
+            "procedure": "収集日前週の金曜日までに申込み、品目に応じた粗大ごみ処理券を購入・貼付し、収集日午前8時までに指定場所へ排出",
+            "limit": "1回につき軽トラック1台程度を目安",
+            "excluded": "家電リサイクル法対象品、処理困難物、事業系・多量ごみ等",
+            "notes": "品目別料金と受付方法は村の最新案内を確認"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/www/info/detail.jsp?id=311",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・避難場所等を掲載した地区別ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "刈羽村洪水・土砂災害ハザードマップと地区別マップを公開",
+            "risks": "別山川等の洪水浸水、土砂災害警戒区域等",
+            "scenario": "想定最大規模降雨を含む浸水想定を反映",
+            "facilities": "指定避難所・避難場所、避難経路、防災情報取得方法等を案内",
+            "support": "自宅周辺の危険区域・浸水深・避難先を平時に確認するため利用可能"
+          },
+          "source": {
+            "url": "https://www.vill.kariwa.niigata.jp/www/info/detail.jsp?id=957",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "15581",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "関川村",
+      "officialUrl": "https://www.vill.sekikawa.niigata.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を自治体・新潟県・共同実施自治体の公式情報で確認し、4制度をverified、2026年度の詳細を確定できない5制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高校卒業相当の18歳年度末まで子どもの医療費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "関川村に住所があり健康保険に加入する出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の自己負担額の一部を助成",
+            "procedure": "村で受給資格登録を行い、受給者証等を医療機関で提示。現物給付対象外は村へ償還払い申請",
+            "notes": "一部負担金、保険外費用、高額療養費等の扱いは受給者証交付時の村案内を確認"
+          },
+          "source": {
+            "url": "https://komusubiken.pref.niigata.lg.jp/kosodate/service/municipalit?id=581",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生まで、村上市のあらかわ病児保育センターを利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "あらかわ病児保育センター",
+            "target": "村上市または関川村在住で、病中または回復期にあり通園・通学が困難かつ家庭保育が難しい生後6か月から小学6年生",
+            "hours": "平日8時から18時、定員4人",
+            "fee": "日額1,000円。生活保護世帯無料、ひとり親家庭等医療費助成受給世帯は半額",
+            "procedure": "年度ごとの事前登録、医療機関受診、施設予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.murakami.lg.jp/site/kodomo/arakawa-byouzi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "unavailable",
+          "summary": "保育園・未満児保育等は実施しているが、2026年度の保育料表と独自無償化範囲を公式公開情報から確定できず",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "currentStatus": "村は未満児保育と待機児童ゼロを子育て支援施策として掲げている",
+            "nationalRule": "一般に3～5歳児と住民税非課税世帯0～2歳児は国制度の無償化対象",
+            "unconfirmed": "課税世帯0～2歳児の2026年度保育料階層、村独自軽減、副食費の扱いを示す現行表を確認できない",
+            "procedure": "入園申込み時に健康福祉課へ最新の保育料・軽減制度を確認"
+          },
+          "source": {
+            "url": "https://www.vill.sekikawa.niigata.jp/politics/90/835ece27535c/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "小中学校共同調理場による給食提供は確認できるが、2026年度の給食費・無償化範囲を確定できず",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "currentStatus": "関川村学校給食共同調理場が関川小学校・関川中学校へ給食を提供",
+            "unconfirmed": "2026年度の1食単価、月額、全員無償化または多子・低所得世帯支援の現行内容を示す公式案内を確認できない",
+            "notes": "一律完全無償化とは記録せず、学校・教育課の最新徴収案内を確認",
+            "procedure": "就学援助を含む負担軽減制度は教育課へ確認"
+          },
+          "source": {
+            "url": "https://www.vill.sekikawa.niigata.jp/politics/11/77/b3dd6ecc71ea/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "育児不安のある母親と乳児が医療機関に宿泊し、心身のケアと育児指導を受ける産後ケア事業を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "type": "医療機関への宿泊型産後ケア",
+            "target": "関川村在住で、産後の心身の不調や育児不安があり支援を必要とする母親と赤ちゃん",
+            "support": "母親の休養・心身ケア、授乳や育児の相談・指導等",
+            "procedure": "利用希望者は村の保健師・健康福祉課へ事前相談し、対象月齢、施設、利用日数、自己負担額を確認",
+            "notes": "県公式の市町村サービス一覧で村の産後ケア事業実施を確認"
+          },
+          "source": {
+            "url": "https://komusubiken.pref.niigata.lg.jp/kosodate/service/municipalit?id=581",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "子育て支援施設の開放は確認できるが、2026年度の一時保育・こども誰でも通園制度の利用条件を確定できず",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "relatedFacility": "光兎こども館を土日祝日に親子へ開放し、平日は事前申請で利用可能",
+            "unconfirmed": "保護者不在で児童を預かる一時保育、または乳児等通園支援事業について、対象年齢・月上限・料金・予約方法を示す現行案内を確認できない",
+            "notes": "親子同伴の施設開放を一時預かりとして扱わない",
+            "procedure": "健康福祉課へ利用可能な一時保育・通園支援を確認"
+          },
+          "source": {
+            "url": "https://www.vill.sekikawa.niigata.jp/life/626/2877/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "unavailable",
+          "summary": "前年度の結婚新生活支援は確認できるが、2026年度の受付・対象期間を示す現行案内を確認できず",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "previousProgram": "2025年度は新婚世帯の住宅購入・リフォーム・賃借・引越費用を、29歳以下最大60万円、39歳以下最大30万円補助",
+            "expiredPeriod": "確認できた案内の受付期限は2026年3月31日で終了",
+            "unconfirmed": "2026年度の継続実施、婚姻・支払対象期間、申請期限を示す更新案内を確認できない",
+            "procedure": "地域政策課へ2026年度の継続有無を確認"
+          },
+          "source": {
+            "url": "https://www.vill.sekikawa.niigata.jp/life/16/3637/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "80×50×40センチ以上かつ15キログラム超の粗大ごみは村で収集せず、許可業者等へ依頼",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "タンス、ベッド等で80センチ×50センチ×40センチ以上かつ15キログラムを超えるもの",
+            "collection": "村の通常収集対象外",
+            "procedure": "ごみ分別冊子を確認し、村の一般廃棄物収集運搬許可業者等へ処理を依頼",
+            "excluded": "家電リサイクル品、パソコン、タイヤ・農機具・建築廃材等の処理困難物も通常収集対象外",
+            "notes": "可燃・不燃ごみは指定袋による有料収集、資源ごみは無料収集"
+          },
+          "source": {
+            "url": "https://www.vill.sekikawa.niigata.jp/life/12/679/79/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "unavailable",
+          "summary": "豪雨・洪水・土砂災害への防災対応は確認できるが、現行ハザードマップのHTML案内を取得できず",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "risks": "2022年豪雨では住宅浸水、道路・河川・農地の被害が発生し、村は洪水・土砂災害への備えを実施",
+            "currentSupport": "防災メール登録促進、防災行政無線更新、避難所・地域防災計画等の施策を推進",
+            "unconfirmed": "住所別浸水深、土砂災害警戒区域、避難所を確認できる現行ハザードマップの公開ページを取得できない",
+            "procedure": "総務課へ最新の防災マップ・避難所一覧を確認"
+          },
+          "source": {
+            "url": "https://www.vill.sekikawa.niigata.jp/topic/4421/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "16201",
       "prefectureCode": "16",
       "prefecture": "富山県",
@@ -160454,7 +160813,7 @@
       "name": "売木村",
       "officialUrl": "https://www.urugi.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を売木村公式情報で再確認し、4制度をverified、5制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を売木村公式情報と飯田地域広域制度で再監査し、6制度をverified、3制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -160475,20 +160834,35 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "令和8年度に利用できる病児・病後児保育施設、対象年齢、料金、予約方法を公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学校在学中まで、飯田市病児保育施設おひさまはるるを利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "research": "村公式サイトの子育て・教育、健康・医療関連情報を確認",
-            "needsConfirmation": "広域利用施設、事前登録、医師連絡票、利用料、予約方法は住民課または教育委員会へ確認"
+            "target": "売木村を含む飯田地域定住自立圏の協定町村に住所があり、生後6か月から小学校在学中で、病気または回復期のため入院不要だが安静への配慮が必要かつ家庭保育が困難な子ども",
+            "facility": "健和会病院内の飯田市病児保育施設『おひさまはるる』",
+            "capacity": "1日6人",
+            "hours": "午前8時～午後6時",
+            "fee": "5時間以上2,000円、5時間未満1,000円。生活保護・非課税世帯等に減免あり",
+            "period": "原則連続7日以内",
+            "procedure": "事前登録、施設予約、かかりつけ医の診察等が必要。令和7年4月から予約アプリに対応"
           },
           "source": {
-            "url": "https://www.urugi.jp/top/administration_living/parenting_education/",
+            "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001314.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001194.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -160552,11 +160926,12 @@
             "maxAgeYears": 5
           },
           "details": {
-            "research": "村公式サイトの保育園・子育て支援情報を確認",
-            "needsConfirmation": "実施施設、対象年齢、利用時間・上限、料金、事前登録、面談、予約方法は教育委員会へ確認"
+            "research": "村公式サイトの保育園・子育て支援情報と子育て支援センター案内を確認",
+            "confirmed": "子育て支援センター『わんぱくハウス』で育児相談、親子交流、子育てサークル支援等を実施",
+            "needsConfirmation": "一時預かり・乳児等通園支援事業の実施施設、対象年齢、利用時間・上限、料金、事前登録、面談、予約方法は教育委員会へ確認"
           },
           "source": {
-            "url": "https://www.urugi.jp/top/administration_living/parenting_education/",
+            "url": "https://www.urugi.jp/top/administration_living/parenting_education/childcare_parenting/wanpaku_house/",
             "checkedAt": "2026-07-24"
           }
         },
@@ -160596,18 +160971,20 @@
           }
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "防災関連情報と訓練の実施は確認できるが、現行の総合ハザードマップ・避難所一覧を公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "村公式の地震風水害ハザードマップで危険箇所・避難場所を確認可能",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "confirmed": "村は防災訓練、備蓄・災害支援連携等を実施",
-            "needsConfirmation": "洪水・土砂災害等のハザードマップ、指定避難所、緊急情報配信、地域防災計画の最新版は総務課へ確認"
+            "map": "村公式『地震風水害の備え』ページでハザードマップの記事版・地図版を公開",
+            "contents": "災害危険箇所と避難場所を確認でき、紙地図は総務課で相談可能",
+            "procedure": "自宅周辺の危険区域、避難場所、避難経路を平時に確認",
+            "needsConfirmation": "マップの改訂年月、指定緊急避難場所・指定避難所の変更は総務課へ確認"
           },
           "source": {
-            "url": "https://www.urugi.jp/top/administration_living/",
+            "url": "https://www.urugi.jp/top/administration_living/living_procedures/what_if/disasters/",
             "checkedAt": "2026-07-24"
           }
         }
