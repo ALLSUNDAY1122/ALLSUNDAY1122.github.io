@@ -1,109 +1,77 @@
-name: Build East Release 1336
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  release:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
-        with: {node-version: '20'}
-      - run: git fetch origin main region/east
-      - name: Extract, refresh audit and advance checkpoint
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
-          : > /tmp/selected.tsv
-          git ls-tree -r --name-only origin/region/east -- jichitai-compare/data/municipalities | grep -E '/[0-9]{5}\.json$' | while read -r file; do
-            if ! git cat-file -e "HEAD:$file" 2>/dev/null; then
-              mkdir -p "$(dirname "$file")"
-              git show "origin/region/east:$file" > "$file"
-              code="$(basename "$file" .json)"
-              task="jichitai-compare/operations/tasks/$code.json"
-              mkdir -p "$(dirname "$task")"
-              git show "origin/region/east:$task" > "$task"
-              printf '%s\n' "$code" >> /tmp/selected.tsv
-            fi
-          done
-          refresh_code=20602
-          refresh_data="jichitai-compare/data/municipalities/${refresh_code:0:2}/${refresh_code}.json"
-          refresh_task="jichitai-compare/operations/tasks/${refresh_code}.json"
-          git show "origin/region/east:$refresh_data" > "$refresh_data"
-          git show "origin/region/east:$refresh_task" > "$refresh_task"
-          node <<'NODE'
-          const fs = require('fs');
-          const project='jichitai-compare';
-          const selectedCodes=fs.readFileSync('/tmp/selected.tsv','utf8').trim().split(/\r?\n/).filter(Boolean).sort();
-          const refreshCodes=['20602'];
-          const prOverrides={'14218':2368};
-          const progress=JSON.parse(fs.readFileSync(`${project}/operations/progress.json`,'utf8'));
-          const auditPath=`${project}/operations/control/east-remaining-audit-20260724.json`;
-          const audit=JSON.parse(fs.readFileSync(auditPath,'utf8'));
-          function updateTask(code, complete){
-            const taskPath=`${project}/operations/tasks/${code}.json`;
-            const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
-            if(complete){task.status='merged';task.currentService=null;task.nextServiceIndex=9;task.blockers=[];}
-            if(prOverrides[code] && !task.pullRequestNumber)task.pullRequestNumber=prOverrides[code];
-            task.lastUpdatedAt='2026-07-24T13:38:00+09:00';
-            const actor='統括A';
-            if(Array.isArray(task.lastUpdatedBy)){if(!task.lastUpdatedBy.includes(actor))task.lastUpdatedBy.push(actor)}
-            else if(task.lastUpdatedBy){if(!String(task.lastUpdatedBy).includes(actor))task.lastUpdatedBy+=`, ${actor}`}
-            else task.lastUpdatedBy=actor;
-            fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
-            return task;
-          }
-          const selected=[];
-          for(const code of selectedCodes){
-            const data=JSON.parse(fs.readFileSync(`${project}/data/municipalities/${code.slice(0,2)}/${code}.json`,'utf8'));
-            const task=updateTask(code,true);
-            selected.push({code,name:data.name,prefectureCode:code.slice(0,2),prefecture:data.prefecture,sourcePullRequestNumber:task.pullRequestNumber??null});
-          }
-          const refreshed=[];
-          for(const code of refreshCodes){
-            const data=JSON.parse(fs.readFileSync(`${project}/data/municipalities/${code.slice(0,2)}/${code}.json`,'utf8'));
-            const task=updateTask(code,false);
-            refreshed.push({code,name:data.name,prefectureCode:code.slice(0,2),prefecture:data.prefecture,sourcePullRequestNumber:task.pullRequestNumber??null});
-          }
-          const selectedSet=new Set(selectedCodes);
-          const remaining=(audit.remaining??[]).filter(item=>!selectedSet.has(item.code));
-          const eastA=remaining.filter(item=>item.sessionId==='east-a');
-          const eastB=remaining.filter(item=>item.sessionId==='east-b');
-          audit.createdAt='2026-07-24T13:38:00+09:00';
-          audit.release={previousPublishedMunicipalities:progress.registeredMunicipalities,selectedMunicipalities:selected.length,selected,refreshedMunicipalities:refreshed.length,refreshed};
-          audit.summary={publishedMunicipalities:450-remaining.length,regionalCompleteUnpublishedMunicipalities:0,remainingMunicipalities:remaining.length,eastARemaining:eastA.length,eastBRemaining:eastB.length,unstarted:remaining.filter(x=>x.state==='unstarted').length,branchExists:remaining.filter(x=>x.state==='branch_exists').length};
-          audit.nextTargets={'east-a':eastA.find(x=>x.state==='unstarted')??eastA[0]??null,'east-b':eastB.find(x=>x.state==='unstarted')??eastB[0]??null};
-          audit.byPrefecture=(audit.byPrefecture??[]).map(row=>{const rem=remaining.filter(x=>x.prefectureCode===row.prefectureCode).length;return {...row,published:row.assigned-rem,remaining:rem}});
-          audit.regionalCompleteUnpublished=[];audit.remaining=remaining;
-          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
-          const checkpointPath=`${project}/operations/control/session-checkpoints/east-b.json`;
-          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
-          const next=audit.nextTargets['east-b'];
-          checkpoint.updatedAt='2026-07-24T13:38:00+09:00';checkpoint.remainingUninvestigatedCount=eastB.length;
-          checkpoint.currentMunicipality=next?{code:next.code,name:next.name,stage:'ready'}:null;
-          checkpoint.workingBranch=null;checkpoint.pullRequestNumber=null;checkpoint.ciStatus=next?'not_started':'success';checkpoint.status=next?'ready':'completed';checkpoint.blocked=[];
-          checkpoint.nextAction=next?`${next.name}（${next.code}）の必須9制度を公式情報で調査し、自治体JSON・task・PR・CI・region/east統合まで一括実行する。`:'担当範囲の全自治体が全国公開済み。新規調査を停止する。';
-          fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
-          fs.writeFileSync(`${project}/operations/control/coord-a-release-east-20260724-1336.json`,JSON.stringify({schemaVersion:'1.0.0',createdAt:'2026-07-24T13:38:00+09:00',previousPublishedMunicipalities:progress.registeredMunicipalities,selectedMunicipalities:selected.length,refreshedMunicipalities:refreshed.length,byRegion:{east:selected.length},municipalities:selected,refreshed,excludedCount:0,excluded:[]},null,2)+'\n');
-          NODE
-      - name: Generate and validate
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
-        run: npm run generate && npm run progress && npm run validate:generated && node --check app.js
-      - name: Update homepage count
-        run: node -e "const fs=require('fs'),p=require('./jichitai-compare/operations/progress.json'),f='jichitai-compare/index.html';fs.writeFileSync(f,fs.readFileSync(f,'utf8').replace(/\\d+自治体・9制度/g,p.registeredMunicipalities+'自治体・9制度'))"
-      - name: Commit release
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Publish latest east municipality and refresh Sakae audit'
-          git push origin HEAD
+        run: npm run smoke:public
