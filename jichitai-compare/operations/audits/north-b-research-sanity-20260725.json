@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 3,
-  "remainingRounds": 7,
+  "completedRounds": 4,
+  "remainingRounds": 6,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 33,
-  "remainingMunicipalityCount": 74,
-  "auditedAt": "2026-07-25T00:41:00+09:00",
+  "auditedMunicipalityCount": 44,
+  "remainingMunicipalityCount": 63,
+  "auditedAt": "2026-07-25T01:08:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -189,6 +189,62 @@
       "04213",
       "04214",
       "04215"
+    ]
+  },
+  "round04": {
+    "codes": [
+      "04216",
+      "04301",
+      "04302",
+      "04321",
+      "04322",
+      "04323",
+      "04324",
+      "04341",
+      "04361",
+      "04362",
+      "04401"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 26,
+    "confirmedErrorCount": 2,
+    "confirmedErrors": [
+      {
+        "code": "04323",
+        "municipality": "柴田町",
+        "service": "temporaryChildcare",
+        "before": "満10か月以上の一時保育のみを掲載、minAgeMonths 10",
+        "after": "こども誰でも通園制度を併記、minAgeMonths 6",
+        "reason": "2026年4月開始の町公式制度は未就園の生後6か月から満3歳未満を月10時間まで対象としている"
+      },
+      {
+        "code": "04401",
+        "municipality": "松島町",
+        "service": "temporaryChildcare",
+        "before": "1歳以上の一時預かりのみを掲載、minAgeMonths 12",
+        "after": "こども誰でも通園制度を併記、minAgeMonths 6",
+        "reason": "2026年6月更新の町公式制度は未就園の生後6か月から3歳未満を月10時間まで対象としている"
+      }
+    ],
+    "evidenceLimitations": [
+      {
+        "code": "04301",
+        "municipality": "蔵王町",
+        "service": "temporaryChildcare",
+        "note": "2026年4月1日のこども誰でも通園制度開始告知は確認したが、対象・料金・実施施設等の利用者向け直接本文を取得できず、推測によるデータ変更は行わなかった"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "04216",
+      "04301",
+      "04302",
+      "04321",
+      "04322",
+      "04324",
+      "04341",
+      "04361",
+      "04362"
     ]
   }
 }

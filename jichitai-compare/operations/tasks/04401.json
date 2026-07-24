@@ -1,1 +1,56 @@
-{"schemaVersion":"1.0.0","municipalityCode":"04401","municipalityName":"松島町","prefectureCode":"04","prefectureName":"宮城県","assignedTeam":"北日本調査班","status":"merged","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":8,"researchingCount":0,"unavailableCount":1,"needsMediumReviewCount":0,"currentBranch":"data/04401-matsushima","pullRequestNumber":1147,"lastCheckedAt":"2026-07-23","lastUpdatedAt":"2026-07-23T09:53:00+09:00","lastUpdatedBy":"北日本調査班B","officialSources":["https://www.town.miyagi-matsushima.lg.jp/page/1235.html","https://www.town.miyagi-matsushima.lg.jp/page/1360.html","https://www.town.miyagi-matsushima.lg.jp/index.cfm/6%2C36300%2C17%2C124%2Chtml","https://www.town.miyagi-matsushima.lg.jp/page/1270.html","https://www.town.miyagi-matsushima.lg.jp/index.cfm/6%2C39792%2Cc%2Chtml/39792/20260324-113052.pdf","https://www.town.miyagi-matsushima.lg.jp/page/1104.html","https://www.town.miyagi-matsushima.lg.jp/site/ijyuu/1374.html","https://www.town.miyagi-matsushima.lg.jp/page/1503.html","https://www.town.miyagi-matsushima.lg.jp/page/1407.html"],"notes":["松島町の必須9制度を町公式情報で調査し、8制度をverified、病児保育をunavailableとして登録。","子ども医療費は18歳年度末まで・所得制限なし。病児保育は町内未実施で、周辺自治体への広域受入れを検討。","3～5歳と非課税世帯0～2歳の保育料無償化を確認。学校給食費は保護者負担があり、就学援助認定世帯を支援。","産後1年未満の宿泊・通所・訪問型産後ケア、1歳以上就学前の一時預かりを確認。","新婚世帯住宅支援、粗大ごみ直接搬入、総合防災・WEBハザードマップを確認。","PR #1147をregion/north向けに作成。","初回CI run #3105は成功したが、region/northが6コミット先行したため最新地方ブランチへ3ファイルを再適用。","再適用後のCI run #3115（workflow run 29970167818）は全工程成功。","PR #1147をregion/northへマージ。","merge SHA: 43667e5ec3c67bf0786e3bfb75a9a4014c3e3181"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "04401",
+  "municipalityName": "松島町",
+  "prefectureCode": "04",
+  "prefectureName": "宮城県",
+  "assignedTeam": "北日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 8,
+  "researchingCount": 0,
+  "unavailableCount": 1,
+  "needsMediumReviewCount": 0,
+  "currentBranch": null,
+  "pullRequestNumber": null,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T01:08:00+09:00",
+  "lastUpdatedBy": "北日本調査班B",
+  "officialSources": [
+    "https://www.town.miyagi-matsushima.lg.jp/page/1235.html",
+    "https://www.town.miyagi-matsushima.lg.jp/page/1360.html",
+    "https://www.town.miyagi-matsushima.lg.jp/index.cfm/6%2C36300%2C17%2C124%2Chtml",
+    "https://www.town.miyagi-matsushima.lg.jp/page/1270.html",
+    "https://www.town.miyagi-matsushima.lg.jp/index.cfm/6%2C39792%2Cc%2Chtml/39792/20260324-113052.pdf",
+    "https://www.town.miyagi-matsushima.lg.jp/page/5229.html",
+    "https://www.town.miyagi-matsushima.lg.jp/site/ijyuu/1374.html",
+    "https://www.town.miyagi-matsushima.lg.jp/page/1503.html",
+    "https://www.town.miyagi-matsushima.lg.jp/page/1407.html"
+  ],
+  "notes": [
+    "松島町の必須9制度を町公式情報で調査し、8制度をverified、病児保育をunavailableとして登録。",
+    "子ども医療費は18歳年度末まで・所得制限なし。病児保育は町内未実施で、周辺自治体への広域受入れを検討。",
+    "3～5歳と非課税世帯0～2歳の保育料無償化を確認。学校給食費は保護者負担があり、就学援助認定世帯を支援。",
+    "産後1年未満の宿泊・通所・訪問型産後ケア、1歳以上就学前の一時預かりを確認。",
+    "新婚世帯住宅支援、粗大ごみ直接搬入、総合防災・WEBハザードマップを確認。",
+    "PR #1147をregion/north向けに作成。",
+    "初回CI run #3105は成功したが、region/northが6コミット先行したため最新地方ブランチへ3ファイルを再適用。",
+    "再適用後のCI run #3115（workflow run 29970167818）は全工程成功。",
+    "PR #1147をregion/northへマージ。",
+    "merge SHA: 43667e5ec3c67bf0786e3bfb75a9a4014c3e3181",
+    "北日本B誤調査ざっくり再検証 第4回: 令和8年6月更新のこども誰でも通園制度が未反映だったため、生後6か月から3歳未満、月10時間、高城保育所、1時間300円等の現行条件をtemporaryChildcareへ追加。"
+  ],
+  "blockers": []
+}
