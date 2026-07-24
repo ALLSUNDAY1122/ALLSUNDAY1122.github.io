@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-25T06:57:00+09:00",
+  "updatedAt": "2026-07-25T07:10:00+09:00",
   "phase": "published",
   "mainBranch": "main",
   "regionalBranches": {
@@ -22,23 +22,30 @@
   },
   "priority": {
     "type": "release-monitoring",
-    "nextAction": "全国1,741自治体・15,669制度は完了。公式情報更新、CI異常、公開文言異常が発生した場合に保守を再開する。中日本Aの継続確認25項目はIssue #3141、栄村公式サイト復旧後の再監査はIssue #2847で非ブロッキング追跡する。"
+    "nextAction": "全国1,741自治体・15,669制度は完了・公開確認済み。公式情報更新、CI異常、公開文言異常が発生した場合に保守を再開する。中日本Aの継続確認25項目はIssue #3141、栄村公式サイト復旧後の再監査はIssue #2847で非ブロッキング追跡する。"
   },
   "publication": {
-    "status": "published",
+    "status": "published_verified",
     "requestedAt": "2026-07-24T23:47:00+09:00",
-    "lastConfirmedAt": "2026-07-25T06:56:00+09:00",
+    "lastConfirmedAt": "2026-07-25T07:04:00+09:00",
     "sourceBranch": "main",
     "latestStateCommit": "bfb5c518d03f2148e8ecf32411b8c714241bb5c9",
     "method": "main-branch-push",
-    "sitePath": "/jichitai-compare/"
+    "sitePath": "/jichitai-compare/",
+    "verificationPullRequestNumber": 3173,
+    "verificationWorkflowRunId": 30129853395,
+    "verificationCiRunNumber": 7758,
+    "verifiedMunicipalityCount": 20,
+    "verifiedPageCount": 20,
+    "publicGeneratedMunicipalityCount": 1741,
+    "verificationStatus": "success"
   },
   "lastNationalIntegrationAt": "2026-07-25T06:56:00+09:00",
   "lastNationalIntegrationPr": 3169,
   "latestGeneratedMunicipalityCount": 1741,
   "latestGeneratedServiceCount": 15669,
   "latestGeneratedPullRequest": 3169,
-  "latestPublicCountPullRequest": 3169,
+  "latestPublicCountPullRequest": 3173,
   "regionalMergedMunicipalities": 1741,
   "remainingMunicipalities": 0,
   "taskState": {
