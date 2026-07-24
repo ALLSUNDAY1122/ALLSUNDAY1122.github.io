@@ -8,6 +8,10 @@ permissions:
   contents: write
   pull-requests: read
 
+concurrency:
+  group: audit-central-b-accuracy-${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   audit-round:
     if: github.head_ref == 'quality/central-b-accuracy-audit-20260725'
@@ -21,20 +25,33 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Apply Round 2 confirmed corrections
-        working-directory: jichitai-compare
-        run: node scripts/fix-central-b-accuracy-round2.mjs apply
-      - name: Normalize task timestamps
+      - name: Normalize Round 1 and 2 corrected files
         working-directory: jichitai-compare
         run: |
           node --input-type=module <<'NODE'
           import { readFile, writeFile } from 'node:fs/promises';
-          const codes = ['26210','26211','26213','26214','26303','26322','26343'];
+
+          const noteFilters = {
+            '26210': ['住居確保給付金の家賃補助', '転居費用補助は', '住居確保給付金を再監査'],
+            '26211': ['住居確保給付金'],
+            '26213': ['産前・産後ケア専門員等の訪問', '産後ほっこりの日'],
+            '26214': ['移住促進特別区域', '耐震改修A', '耐震シェルター'],
+            '26303': ['住宅窓断熱改修', '木造住宅耐震改修'],
+            '26322': ['太陽光発電', '蓄電設備', '住宅用断熱改修'],
+            '26343': ['移住支援金']
+          };
+          const codes = ['26209','26210','26211','26213','26214','26303','26322','26343'];
+
           for (const code of codes) {
-            const path = `operations/tasks/${code}.json`;
-            const task = JSON.parse(await readFile(path, 'utf8'));
-            task.lastUpdatedAt = task.lastUpdatedAt.replace(/\.\d{3}(?=[+-]\d{2}:\d{2}$)/u, '');
-            await writeFile(path, JSON.stringify(task, null, 2) + '\n', 'utf8');
+            const municipalityPath = `data/municipalities/${code.slice(0, 2)}/${code}.json`;
+            const municipality = JSON.parse(await readFile(municipalityPath, 'utf8'));
+            await writeFile(municipalityPath, JSON.stringify(municipality) + '\n', 'utf8');
+
+            const taskPath = `operations/tasks/${code}.json`;
+            const task = JSON.parse(await readFile(taskPath, 'utf8'));
+            const filters = noteFilters[code] ?? [];
+            task.notes = (task.notes ?? []).filter((note) => !filters.some((pattern) => note.includes(pattern)));
+            await writeFile(taskPath, JSON.stringify(task) + '\n', 'utf8');
           }
           NODE
       - name: Regenerate and validate municipality data
@@ -54,18 +71,18 @@ jobs:
           path: jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           if-no-files-found: error
           retention-days: 14
-      - name: Finalize Round 2 audit record
-        working-directory: jichitai-compare
-        run: node scripts/fix-central-b-accuracy-round2.mjs finalize
-      - name: Commit confirmed corrections
+      - name: Commit normalized source changes
         run: |
+          git restore --source=origin/region/central -- \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json
           rm -f jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -u jichitai-compare
+          git add -u jichitai-compare/data/municipalities jichitai-compare/operations/tasks
           if git diff --cached --quiet; then
-            echo 'No correction changes to commit.'
+            echo 'No normalization changes to commit.'
           else
-            git commit -m 'audit: 中日本B第2回の誤調査を訂正'
+            git commit -m 'audit: 中日本B第2回差分を正規化'
             git push origin HEAD:${{ github.head_ref }}
           fi
