@@ -1,0 +1,86 @@
+name: East A Checkpoint Sync
+
+on:
+  push:
+    branches:
+      - ops/east-a-checkpoint-complete-20260724
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconcile checkpoint from merged tasks
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/east-a.json';
+          const tasksDir = 'jichitai-compare/operations/tasks';
+          const workflowPath = '.github/workflows/east-a-checkpoint-sync.yml';
+          const targetPrefectures = new Set(['10', '13', '19', '20']);
+
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          const previousPr = Number(checkpoint.pullRequestNumber || 0);
+          const existingCodes = new Set((checkpoint.completedSinceSplit || []).map((entry) => entry.code));
+
+          const additions = [];
+          for (const filename of fs.readdirSync(tasksDir)) {
+            if (!filename.endsWith('.json')) continue;
+            const task = JSON.parse(fs.readFileSync(path.join(tasksDir, filename), 'utf8'));
+            if (task.assignedTeam !== '東日本調査班') continue;
+            if (!targetPrefectures.has(String(task.prefectureCode))) continue;
+            if (task.status !== 'merged') continue;
+            const pr = Number(task.pullRequestNumber || 0);
+            if (pr <= previousPr || existingCodes.has(String(task.municipalityCode))) continue;
+
+            const notes = Array.isArray(task.notes) ? task.notes.join(' ') : '';
+            const match = notes.match(/CI(?: run)?\s*#(\d+)/i);
+            if (!match) {
+              throw new Error(`CI run number not found in task ${task.municipalityCode}`);
+            }
+            additions.push({
+              code: String(task.municipalityCode),
+              name: task.municipalityName,
+              pullRequestNumber: pr,
+              ciRunNumber: Number(match[1])
+            });
+          }
+
+          additions.sort((a, b) => a.code.localeCompare(b.code));
+          if (additions.length !== Number(checkpoint.remainingUninvestigatedCount)) {
+            throw new Error(`Expected ${checkpoint.remainingUninvestigatedCount} remaining tasks, found ${additions.length} merged additions`);
+          }
+
+          checkpoint.completedSinceSplit = [...(checkpoint.completedSinceSplit || []), ...additions];
+          checkpoint.updatedAt = '2026-07-24T09:56:00+09:00';
+          checkpoint.status = 'complete';
+          checkpoint.remainingUninvestigatedCount = 0;
+          checkpoint.currentMunicipality = null;
+          checkpoint.workingBranch = null;
+          checkpoint.pullRequestNumber = additions.at(-1).pullRequestNumber;
+          checkpoint.ciStatus = 'success';
+          checkpoint.blocked = checkpoint.blocked || [];
+          checkpoint.nextAction = '担当4都県（群馬県・東京都・山梨県・長野県）の新規自治体調査は完了。栄村公式サイト復旧後の再監査と、統括Aの全国公開・品質監査指示を待つ。';
+
+          fs.writeFileSync(checkpointPath, `${JSON.stringify(checkpoint)}\n`);
+          fs.unlinkSync(workflowPath);
+          console.log(`Appended ${additions.length} municipalities; remaining=0`);
+          NODE
+
+      - name: Commit reconciled checkpoint
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "checkpoint: 東日本Aの担当自治体完了を同期"
+          git push origin HEAD
