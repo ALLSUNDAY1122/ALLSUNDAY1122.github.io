@@ -7,6 +7,17 @@ const PROJECT_DIR = resolve(SCRIPT_DIR, '..');
 const GENERATED_FILE = join(PROJECT_DIR, 'data', 'generated', 'municipalities.json');
 const MANIFEST_FILE = join(PROJECT_DIR, 'data', 'generated', 'municipality-pages.json');
 const SITEMAP_FILE = join(PROJECT_DIR, 'sitemap.xml');
+const INTERNAL_WORKFLOW_PHRASES = [
+  'PR提出前',
+  'PR提出',
+  '作業ブランチ',
+  'CI run',
+  'mainへ',
+  'region/',
+  'マージ後',
+  '最終検証を実施',
+  '次の自治体'
+];
 
 const generated = JSON.parse(await readFile(GENERATED_FILE, 'utf8'));
 const manifest = JSON.parse(await readFile(MANIFEST_FILE, 'utf8'));
@@ -30,6 +41,16 @@ for (const page of pages) {
 }
 for (const municipality of municipalities) {
   if (!seen.has(municipality.code)) errors.push(`ページがmanifestにありません: ${municipality.code}`);
+
+  const publicSummaries = [
+    municipality.summary,
+    ...Object.values(municipality.services ?? {}).map((service) => service?.summary)
+  ].filter((value) => typeof value === 'string');
+  for (const phrase of INTERNAL_WORKFLOW_PHRASES) {
+    if (publicSummaries.some((summary) => summary.includes(phrase))) {
+      errors.push(`${municipality.code}: 公開要約に内部作業文言「${phrase}」が含まれています`);
+    }
+  }
 }
 
 for (let start = 0; start < pages.length; start += 100) {
@@ -55,6 +76,11 @@ for (let start = 0; start < pages.length; start += 100) {
       if (!html.includes(officialLink)) errors.push(`${page.code}: 自治体公式サイトリンクが元データのofficialUrlと一致しません`);
       if (!html.includes(compareLink)) errors.push(`${page.code}: 比較画面への自治体指定リンクが不正です`);
       if (!sitemap.includes(`<loc>${canonical}</loc>`)) errors.push(`${page.code}: sitemapにURLがありません`);
+      for (const phrase of INTERNAL_WORKFLOW_PHRASES) {
+        if (html.includes(phrase)) {
+          errors.push(`${page.code}: 公開ページに内部作業文言「${phrase}」が含まれています`);
+        }
+      }
     } catch (cause) {
       errors.push(`${page.code}: ページを読み込めません: ${cause.message}`);
     }
@@ -72,7 +98,7 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公式サイト/比較導線・sitemap ${sitemapCount} URL`);
+console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公式サイト/比較導線・内部作業文言なし・sitemap ${sitemapCount} URL`);
 
 function escapeHtml(value) {
   return String(value)
