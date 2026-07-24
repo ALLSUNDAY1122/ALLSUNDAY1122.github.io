@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.aichi-togo.lg.jp/",
   "status": "verified",
   "summary": "東郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "出生から18歳年度末まで、保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達する日以後の最初の3月31日まで",
         "coverage": "病院等で受診した保険診療分の自己負担額",
@@ -20,12 +23,18 @@
         "expandedTarget": "社会人、健康保険の被保険者、婚姻している18歳年度末までの人も対象",
         "excluded": "差額ベッド代、食事代、文書料等は対象外"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/iryo_kenko_fukushi/iryo_kenko/fukushi_iryo/5617.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/iryo_kenko_fukushi/iryo_kenko/fukushi_iryo/5617.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後6か月から小学3年生までの病児・病後児を委託施設で一時的に預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 9
+      },
       "details": {
         "condition": "病気または回復期で集団保育が難しく、保護者の勤務等により家庭看護が困難なこと",
         "ageCondition": "生後6か月から小学3年生まで",
@@ -33,12 +42,18 @@
         "documents": "健康保険資格情報、子ども医療費受給者証、母子健康手帳等を準備",
         "fee": "施設・利用条件により異なるため利用施設へ確認"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/kosodate_kyoiku/ikuji_mishugakuji/support_mishugakuji/6466.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/kosodate_kyoiku/ikuji_mishugakuji/support_mishugakuji/6466.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は、認定条件に応じて幼児教育・保育無償化の対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "3～5歳児クラスの幼稚園、保育所、認定こども園等の利用料は無償化対象",
         "underThree": "住民税非課税世帯の0～2歳児は無償化対象",
@@ -46,25 +61,43 @@
         "otherUnderThree": "その他の3号認定保育料は市町村民税所得割額、年齢、保育必要量等に基づき算定",
         "excludedCosts": "給食費、通園費、行事費等は別途必要な場合がある"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kodomohoikuka/gyomuannai/1/2/1723.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kodomohoikuka/gyomuannai/1/2/1723.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "町立小中学校の給食費は定額制で、小学校月3,400円、中学校月3,600円とする。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "method": "給食センターによる共同調理場方式",
-        "elementary": "月額3,400円、参考230円／食",
-        "juniorHigh": "月額3,600円、参考260円／食",
-        "schools": "小学校6校、中学校3校、ハートフルとうごうへ提供",
-        "aid": "経済的に就学困難な認定世帯は学校給食費を含む就学援助対象"
+      "summary": "令和8年4月から町立小学校の学校給食費を無償化する。中学校の給食費は別途保護者負担とする。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kyushokucenter/gyomuannai/4/3015.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "fiscalYear": "令和8年度",
+        "start": "2026年4月",
+        "elementary": "国の給食費負担軽減交付金と町の支援により保護者負担0円",
+        "juniorHigh": "小学校無償化の対象外で、別途給食費を負担"
+      },
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/material/files/group/27/gikaidayori159sokuhou.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kyushokucenter/gyomuannai/4/3015.html",
+          "checkedAt": "2026-07-22",
+          "description": "従前の学校給食費定額案内"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "types": "宿泊型、通所型、訪問型",
         "care": "母体の休養、授乳・乳房ケア、乳児の発育確認、育児相談等",
@@ -72,12 +105,18 @@
         "deadline": "原則として宿泊・通所は開庁日3日前、訪問は7日前までに申請",
         "reduction": "住民税非課税世帯または生活保護世帯は自己負担金免除申請が可能"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kenkosuishinka/gyomuannai/17/1/12463.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kenkosuishinka/gyomuannai/17/1/12463.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "condition": "保育所、認定こども園、地域型保育、企業主導型保育施設等を利用していない児童",
         "facility": "東郷町立南部保育園",
@@ -86,7 +125,10 @@
         "fee": "1時間300円",
         "application": "総合支援システムによる認定申請、初回面談、予約が必要"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kodomohoikuka/gyomuannai/1/2/2/13398.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kodomohoikuka/gyomuannai/1/2/2/13398.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -99,7 +141,10 @@
         "condition": "設備設置前に交付申請し、対象区分によってカーボンニュートラルクラブへの入会申込みが必要",
         "budget": "予算範囲内で受付し、予算額到達時に終了"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/hojokin_joseikin/sumai/13261.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/hojokin_joseikin/sumai/13261.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -112,7 +157,10 @@
         "collection": "申込み翌週の木曜日、朝8時までに玄関先等へ排出",
         "directCarry": "尾三衛生組合東郷美化センターへの直接持込みも可能"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kankyoka/gyomuannai/1/2/2/3603.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/soshikikarasagasu/kankyoka/gyomuannai/1/2/2/3603.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -124,7 +172,10 @@
         "waterLaw": "水防法に基づくハザードマップを案内",
         "use": "自宅周辺の危険箇所と避難経路の事前確認に利用"
       },
-      "source": {"url": "https://www.town.aichi-togo.lg.jp/kurashi_tetsuzuki/anzen_anshin/bosai/1/5787.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.aichi-togo.lg.jp/kurashi_tetsuzuki/anzen_anshin/bosai/1/5787.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
