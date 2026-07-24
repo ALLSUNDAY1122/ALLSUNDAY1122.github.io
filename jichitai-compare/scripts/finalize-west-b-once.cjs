@@ -1,0 +1,145 @@
+const fs = require('fs');
+const path = require('path');
+
+const projectRoot = path.join(process.cwd(), 'jichitai-compare');
+const municipalityRoot = path.join(projectRoot, 'data', 'municipalities');
+const taskRoot = path.join(projectRoot, 'operations', 'tasks');
+const checkpointPath = path.join(projectRoot, 'operations', 'control', 'session-checkpoints', 'west-b.json');
+const auditDir = path.join(projectRoot, 'operations', 'control', 'audits');
+const auditPath = path.join(auditDir, 'west-b-completion-20260724.json');
+const tempFiles = [
+  path.join(process.cwd(), '.github', 'workflows', 'west-b-finalize-once.yml'),
+  path.join(process.cwd(), '.github', 'workflows', 'west-b-finalize-pr.yml'),
+  __filename
+];
+
+const prefectureCodes = ['31','32','34','35','36','38','41','42','44','45','47'];
+const expectedByPrefecture = {'31':19,'32':19,'34':23,'35':19,'36':24,'38':20,'41':20,'42':21,'44':18,'45':26,'47':41};
+const services = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+const completedServiceStatuses = new Set(['verified','unavailable']);
+const now = '2026-07-24T15:44:00+09:00';
+
+const codes = [];
+const normalizedTasks = [];
+const unavailableByMunicipality = [];
+const errors = [];
+const actualByPrefecture = {};
+
+for (const prefectureCode of prefectureCodes) {
+  const directory = path.join(municipalityRoot, prefectureCode);
+  if (!fs.existsSync(directory)) {
+    errors.push(`missing municipality directory: ${prefectureCode}`);
+    actualByPrefecture[prefectureCode] = 0;
+    continue;
+  }
+  const files = fs.readdirSync(directory).filter((name) => /^\d{5}\.json$/.test(name)).sort();
+  actualByPrefecture[prefectureCode] = files.length;
+  if (files.length !== expectedByPrefecture[prefectureCode]) {
+    errors.push(`prefecture ${prefectureCode}: expected ${expectedByPrefecture[prefectureCode]}, actual ${files.length}`);
+  }
+
+  for (const file of files) {
+    const municipalityPath = path.join(directory, file);
+    const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+    const code = String(municipality.code || path.basename(file, '.json'));
+    if (!code.startsWith(prefectureCode)) errors.push(`${code}: prefecture mismatch`);
+    if (!municipality.services || services.some((service) => !municipality.services[service])) {
+      errors.push(`${code}: missing mandatory service`);
+      continue;
+    }
+    const unfinished = services.filter((service) => !completedServiceStatuses.has(municipality.services[service].status));
+    if (unfinished.length) errors.push(`${code}: unfinished services ${unfinished.join(',')}`);
+
+    const unavailable = services.filter((service) => municipality.services[service].status === 'unavailable');
+    if (unavailable.length) unavailableByMunicipality.push({code, services: unavailable});
+
+    const taskPath = path.join(taskRoot, `${code}.json`);
+    if (!fs.existsSync(taskPath)) {
+      errors.push(`${code}: task missing`);
+      continue;
+    }
+    const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+    if (!Array.isArray(task.completedServices) || services.some((service) => !task.completedServices.includes(service))) {
+      errors.push(`${code}: task completedServices mismatch`);
+    }
+    const taskTotal = Number(task.verifiedCount || 0) + Number(task.unavailableCount || 0) + Number(task.researchingCount || 0) + Number(task.needsMediumReviewCount || 0);
+    if (taskTotal !== 9 || Number(task.researchingCount || 0) !== 0 || Number(task.needsMediumReviewCount || 0) !== 0) {
+      errors.push(`${code}: task status counts are not completion-ready`);
+    }
+    if (task.status !== 'merged') {
+      task.status = 'merged';
+      task.currentService = null;
+      task.nextServiceIndex = 9;
+      task.lastCheckedAt = '2026-07-24';
+      task.lastUpdatedAt = now;
+      task.lastUpdatedBy = '西日本調査班B・完了監査';
+      task.notes = Array.isArray(task.notes) ? task.notes : [];
+      const note = 'region/west上の自治体JSON・必須9制度完了を監査し、task statusをmergedへ同期。';
+      if (!task.notes.includes(note)) task.notes.push(note);
+      fs.writeFileSync(taskPath, JSON.stringify(task) + '\n');
+      normalizedTasks.push(code);
+    }
+    codes.push(code);
+  }
+}
+
+codes.sort();
+const expectedTotal = Object.values(expectedByPrefecture).reduce((sum, value) => sum + value, 0);
+if (codes.length !== expectedTotal) errors.push(`west-b total: expected ${expectedTotal}, actual ${codes.length}`);
+if (new Set(codes).size !== codes.length) errors.push('duplicate municipality codes detected');
+if (codes.at(-1) !== '47382') errors.push(`final municipality mismatch: ${codes.at(-1)}`);
+
+if (errors.length) {
+  console.error(JSON.stringify({errors, actualByPrefecture, normalizedTasks}, null, 2));
+  process.exit(1);
+}
+
+const checkpoint = {
+  schemaVersion: '1.0.0',
+  sessionId: 'west-b',
+  displayName: '西日本調査班B',
+  parentTeam: '西日本調査班',
+  integrationBranch: 'region/west',
+  prefectureCodes,
+  updatedAt: now,
+  status: 'completed',
+  invocationIntervalMultiplier: 2,
+  remainingUninvestigatedCount: 0,
+  currentMunicipality: null,
+  workingBranch: null,
+  pullRequestNumber: null,
+  ciStatus: 'success',
+  completedSinceSplit: codes,
+  blocked: [],
+  nextAction: '2026-07-24完了監査済み。担当11県250自治体の自治体JSON・task・必須9制度完了、残件0、西日本B向けオープンPR0、最終自治体与那国町（47382）PR #2458・CI run #6075・region/west統合済みを確認。新規調査は停止し、統括がregion/westの完了状態をmainと共有地域状態へ同期する。'
+};
+
+const audit = {
+  schemaVersion: '1.0.0',
+  auditId: 'west-b-completion-20260724',
+  auditedAt: now,
+  integrationBranch: 'region/west',
+  prefectureCodes,
+  expectedByPrefecture,
+  actualByPrefecture,
+  expectedMunicipalityCount: expectedTotal,
+  actualMunicipalityCount: codes.length,
+  mandatoryServiceCountPerMunicipality: services.length,
+  completedServiceCount: codes.length * services.length,
+  normalizedTaskCount: normalizedTasks.length,
+  normalizedTasks,
+  municipalitiesWithUnavailableServices: unavailableByMunicipality.length,
+  unavailableByMunicipality,
+  finalMunicipality: {code: '47382', name: '与那国町', pullRequestNumber: 2458, ciRunNumber: 6075},
+  openWestBPullRequestCountAtPreAudit: 0,
+  previousCheckpointBlobSha: 'c41b6789b7f4d806e4b8b5ab1b0b8831db3ca6ad',
+  result: 'completed'
+};
+
+fs.mkdirSync(auditDir, {recursive: true});
+fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+for (const file of tempFiles) {
+  if (fs.existsSync(file)) fs.unlinkSync(file);
+}
+console.log(JSON.stringify({checkpoint, auditSummary: {...audit, unavailableByMunicipality: undefined}}, null, 2));
