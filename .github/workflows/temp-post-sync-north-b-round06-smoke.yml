@@ -1,0 +1,54 @@
+name: Temporary post-sync North B round06 smoke
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-public:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: ops/post-sync-north-b-round06-smoke
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify published GitHub Pages site
+        working-directory: jichitai-compare
+        run: npm run smoke:public
+      - name: Verify six updated pages
+        working-directory: jichitai-compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const codes = ['05204','05206','05207','05209','05211','05212'];
+          const generated = JSON.parse(await readFile('data/generated/municipalities.json', 'utf8'));
+          const byCode = new Map(generated.municipalities.map((item) => [item.code, item]));
+          const escapeHtml = (value) => String(value)
+            .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+          for (const code of codes) {
+            const item = byCode.get(code);
+            if (!item) throw new Error(`${code}: generated data missing`);
+            const response = await fetch(`${base}/municipality/${code}/`, { headers: { 'cache-control': 'no-cache' }, redirect: 'follow' });
+            if (!response.ok) throw new Error(`${code}: HTTP ${response.status}`);
+            const html = await response.text();
+            if (!html.includes(`<p>${escapeHtml(item.summary)}</p>`)) throw new Error(`${code}: municipality summary mismatch`);
+            for (const [serviceKey, service] of Object.entries(item.services || {})) {
+              const expected = `<strong class="cell-main">${escapeHtml(service.summary)}</strong>`;
+              if (!html.includes(expected)) throw new Error(`${code} ${serviceKey}: service summary mismatch`);
+            }
+          }
+          console.log('North B round06 public pages match generated data');
+          NODE
