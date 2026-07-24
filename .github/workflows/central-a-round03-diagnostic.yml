@@ -26,20 +26,22 @@ jobs:
       - name: Capture validation command and output
         shell: bash
         run: |
-          set -u
+          set +e
+          set +o pipefail
           OUT=jichitai-compare/operations/control/central-a-round03-ci-diagnostic.txt
           : > "$OUT"
           echo '=== WORKFLOW MATCHES ===' >> "$OUT"
-          grep -R -n -B 4 -A 14 'Validate source and generated data' .github/workflows >> "$OUT" 2>&1 || true
+          grep -R -n -B 4 -A 14 'Validate source and generated data' .github/workflows >> "$OUT" 2>&1
           echo '=== VALIDATION SCRIPTS ===' >> "$OUT"
           find jichitai-compare -type f \( -name '*validat*.mjs' -o -name '*validat*.js' \) -print | sort >> "$OUT"
           echo '=== RUN VALIDATORS ===' >> "$OUT"
-          for f in $(find jichitai-compare -type f \( -name '*validat*.mjs' -o -name '*validat*.js' \) -print | sort); do
+          while IFS= read -r f; do
             echo "--- $f ---" >> "$OUT"
             node "$f" >> "$OUT" 2>&1
             echo "exit=$?" >> "$OUT"
-          done
+          done < <(find jichitai-compare -type f \( -name '*validat*.mjs' -o -name '*validat*.js' \) -print | sort)
           rm .github/workflows/central-a-round03-diagnostic.yml
+          exit 0
       - name: Commit diagnostic
         shell: bash
         run: |
