@@ -1,4 +1,4 @@
-name: Temporary sync East A final Sakae v2
+name: Temporary East A final main sync
 
 on:
   pull_request:
@@ -8,16 +8,18 @@ permissions:
   contents: write
 
 jobs:
-  sync:
-    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'coord/sync-east-a-final-sakae-v2-20260725'
+  sync-and-audit:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'audit/east-a-final-round10-20260725'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: coord/sync-east-a-final-sakae-v2-20260725
+          ref: audit/east-a-final-round10-20260725
           fetch-depth: 0
-      - name: Sync latest region east final state into main candidate
+      - name: Sync latest region state and complete final audit
         shell: bash
         run: |
           set -euo pipefail
@@ -39,23 +41,119 @@ jobs:
             node --check app.js
             popd
 
+            python <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          prefs = {'10', '13', '19', '20'}
+          task_keys = [
+              'municipalityCode','municipalityName','prefectureCode','prefectureName',
+              'assignedTeam','currentService','nextServiceIndex','completedServices',
+              'verifiedCount','researchingCount','unavailableCount',
+              'needsMediumReviewCount','officialSources','blockers'
+          ]
+
+          def region_json(path):
+              result = subprocess.run(
+                  ['git','show',f'origin/region/east:{path.as_posix()}'],
+                  capture_output=True,text=True,check=False
+              )
+              return json.loads(result.stdout) if result.returncode == 0 else None
+
+          def norm(key, value):
+              if key in {'completedServices','officialSources'}:
+                  return sorted(value or [])
+              if key == 'blockers':
+                  return value or []
+              return value
+
+          codes=[]; source_bad=[]; task_bad=[]; structure_bad=[]
+          for pref in sorted(prefs):
+              for path in sorted((root/'data'/'municipalities'/pref).glob('*.json')):
+                  code=path.stem; codes.append(code)
+                  local=json.loads(path.read_text(encoding='utf-8'))
+                  regional=region_json(path)
+                  if len(local.get('services',{})) != 9:
+                      structure_bad.append(path.as_posix())
+                  if regional is None or local != regional:
+                      source_bad.append(path.as_posix())
+                  task_path=root/'operations'/'tasks'/f'{code}.json'
+                  task=json.loads(task_path.read_text(encoding='utf-8'))
+                  regional_task=region_json(task_path)
+                  if regional_task is None or any(norm(k,task.get(k)) != norm(k,regional_task.get(k)) for k in task_keys):
+                      task_bad.append(task_path.as_posix())
+
+          generated=json.loads((root/'data'/'generated'/'municipalities.json').read_text(encoding='utf-8'))
+          generated_codes={item['code'] for item in generated['municipalities']}
+          missing=[code for code in codes if code not in generated_codes]
+          if structure_bad or source_bad or task_bad or missing:
+              print('structure',structure_bad)
+              print('source',source_bad)
+              print('task',task_bad)
+              print('generated_missing',missing)
+              raise SystemExit(1)
+
+          corrected=['19364','19425','19443','19442','19429','10367','10424','10426','13361','13362','13363','13364','13381','20303','20305','20306','13421','20206','20207','20208','20214','20215','20217','20219','20304','20307','20349','20382','20386','20388','20404','20409','20410','20413','20417','20425','20430','20432','20446','20450','20451','20452','20481','20521','20543','20561','20588','20590','20602']
+          audit={
+              'schemaVersion':'1.0.0',
+              'auditId':'east-a-final-consistency-20260725',
+              'sessionId':'east-a',
+              'auditRound':10,
+              'targetRounds':10,
+              'prefectureCodes':sorted(prefs),
+              'municipalityCount':len(codes),
+              'sourceMismatchCount':0,
+              'taskEssentialMismatchCount':0,
+              'structureErrorCount':0,
+              'generatedMissingCount':0,
+              'correctedPageCodes':corrected,
+              'regionConsistency':'success',
+              'mainSyncCandidate':'success',
+              'publicVerification':'pending_main_push_smoke',
+              'auditedAt':'2026-07-25T04:26:00+09:00',
+              'status':'success'
+          }
+          audit_path=root/'operations'/'audits'/'east-a-final-consistency-20260725.json'
+          audit_path.parent.mkdir(parents=True,exist_ok=True)
+          audit_path.write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          checkpoint_path=root/'operations'/'control'/'session-checkpoints'/'east-a.json'
+          checkpoint=json.loads(checkpoint_path.read_text(encoding='utf-8'))
+          campaign=checkpoint['verificationCampaign']
+          rounds=[item for item in campaign.setdefault('rounds',[]) if item.get('round') != 10]
+          rounds.append({
+              'round':10,
+              'topic':'source JSON・task・全国生成・main同期候補の最終整合性',
+              'result':'passed_with_external_follow_up',
+              'details':'担当201自治体のregion/east正本、task主要項目、全国生成JSONを照合し不一致0件。第10回診断で発見したmain未同期33自治体はPR #3124で解消し、最終栄村更新をPR #3130で同期する。公開環境はmain統合後のpush CIで確認する。栄村公式サイト障害のみIssue #2847で非ブロッキング追跡を継続する。'
+          })
+          campaign['rounds']=sorted(rounds,key=lambda item:item['round'])
+          campaign['completedRounds']=10
+          campaign['status']='completed'
+          campaign['nextRound']=None
+          campaign['nextTopic']=None
+          campaign['nextAction']='東日本A誤調査10回検証は完了。確定誤り・記録漏れ・全国未同期は修正済み。栄村公式サイト障害のみIssue #2847で非ブロッキング追跡する。'
+          checkpoint['updatedAt']='2026-07-25T04:26:00+09:00'
+          checkpoint['pullRequestNumber']=int(os.environ['PR_NUMBER'])
+          checkpoint['ciStatus']='pending'
+          checkpoint_path.write_text(json.dumps(checkpoint,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
             git fetch origin main
             if [ "$(git rev-parse origin/main)" != "${base_sha}" ]; then
               echo 'main advanced during generation; retrying from latest main'
               continue
             fi
 
+            rm -f jichitai-compare/operations/audits/east-a-final-diagnostic-20260725.json
             rm -f .github/workflows/temp-sync-east-a-final-sakae-v2-20260725.yml
             git config user.name github-actions[bot]
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
             git add -A
             git diff --cached --check
-            if git diff --cached --quiet; then
-              echo 'No sync differences remain.'
-              exit 0
-            fi
-            git commit -m '全国品質同期: 東日本A最終栄村更新を反映'
-            git push --force-with-lease origin HEAD:coord/sync-east-a-final-sakae-v2-20260725
+            git commit -m '全国品質同期: 東日本A誤調査検証10回を最終確定'
+            git push --force-with-lease origin HEAD:audit/east-a-final-round10-20260725
             exit 0
           done
           echo 'main kept advancing; sync was not committed' >&2
