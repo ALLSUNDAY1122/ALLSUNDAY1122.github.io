@@ -1,187 +1,74 @@
 {
-  "schemaVersion": "1.0.0",
-  "code": "03206",
-  "prefectureCode": "03",
-  "prefecture": "岩手県",
-  "name": "北上市",
-  "officialUrl": "https://www.city.kitakami.iwate.jp/",
-  "status": "verified",
-  "summary": "対象9制度を北上市公式情報で確認し、9制度すべてを公式情報で確認済み。",
-  "updatedAt": "2026-07-23",
-  "services": {
-    "childMedical": {
-      "status": "verified",
-      "summary": "出生から18歳到達後最初の3月31日まで、所得制限なしで保険診療の自己負担額を助成する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
-      "details": {
-        "program": "子ども医療費助成制度",
-        "target": "出生から18歳に達する日以後の最初の3月31日まで",
-        "incomeLimit": "なし。自己負担区分の判定のため所得確認あり",
-        "copay": "乳幼児と市町村民税非課税世帯は自己負担なし。その他の小中高生はレセプトごとに入院月2,500円、入院外月750円",
-        "coverage": "保険診療の自己負担分",
-        "application": "受給者証の交付申請が必要"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/kenko_fukushi_kaigo/iryou_1/iryohijosei/9598.html",
-        "checkedAt": "2026-07-23"
-      }
+  "schemaVersion":"1.0.0",
+  "code":"03206",
+  "prefectureCode":"03",
+  "prefecture":"岩手県",
+  "name":"北上市",
+  "officialUrl":"https://www.city.kitakami.iwate.jp/",
+  "status":"verified",
+  "summary":"対象9制度を北上市公式情報で確認し、9制度すべてを公式情報で確認済み。",
+  "updatedAt":"2026-07-25",
+  "services":{
+    "childMedical":{
+      "status":"verified",
+      "summary":"出生から18歳到達後最初の3月31日まで、所得制限なしで保険診療の自己負担額を助成する。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":18},
+      "details":{"program":"子ども医療費助成制度","target":"出生から18歳に達する日以後の最初の3月31日まで","incomeLimit":"なし。自己負担区分の判定のため所得確認あり","copay":"乳幼児と市町村民税非課税世帯は自己負担なし。その他の小中高生はレセプトごとに入院月2,500円、入院外月750円","coverage":"保険診療の自己負担分","application":"受給者証の交付申請が必要"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/kenko_fukushi_kaigo/iryou_1/iryohijosei/9598.html","checkedAt":"2026-07-23"}
     },
-    "sickChildCare": {
-      "status": "verified",
-      "summary": "病気の回復期にある生後6か月から小学6年生までの児童を、市内2か所の病後児保育室で預かる。",
-      "eligibility": {
-        "minAgeMonths": 6,
-        "maxAgeYears": 12
-      },
-      "details": {
-        "program": "病後児保育室",
-        "target": "保護者が就労、病気、冠婚葬祭等で家庭保育できない病気回復期の児童",
-        "facilityCount": 2,
-        "hours": "平日8時から18時",
-        "fee": "5時間まで500円から1,000円、5時間以上1,000円から2,000円。施設・年齢により異なる",
-        "application": "医師の診断、事前登録、施設への予約が必要"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/kosodate_kyoiku/kosodate/byogojihoiku/10345.html",
-        "checkedAt": "2026-07-23"
-      }
+    "sickChildCare":{
+      "status":"verified",
+      "summary":"病気の回復期にある生後6か月から小学6年生までの児童を、市内2か所の病後児保育室で預かる。",
+      "eligibility":{"minAgeMonths":6,"maxAgeYears":12},
+      "details":{"program":"病後児保育室","target":"保護者が就労、病気、冠婚葬祭等で家庭保育できない病気回復期の児童","facilityCount":2,"hours":"平日8時から18時","fee":"5時間まで500円から1,000円、5時間以上1,000円から2,000円。施設・年齢により異なる","application":"医師の診断、事前登録、施設への予約が必要"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/kosodate_kyoiku/kosodate/byogojihoiku/10345.html","checkedAt":"2026-07-23"}
     },
-    "childcareFee": {
-      "status": "verified",
-      "summary": "0～2歳児の第2子以降の保育料を無償化し、第1子の保育料を従来額の半額に軽減する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 5
-      },
-      "details": {
-        "fee": "0～2歳児の第1子は父母等の市民税額により算定し、令和5年9月から従来額の半額",
-        "siblingReduction": "生計を一にする子どもの第2子以降は保育料無償",
-        "incomeCondition": "第2子以降の無償化は全世帯対象で手続不要",
-        "nationalSupport": "3～5歳児と市民税非課税世帯の0～2歳児は国制度の無償化対象",
-        "mealCost": "公立保育園の3～5歳児副食費は月額4,800円。所得・多子条件による免除あり"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/kosodateshienka/hoiku/9/5265.html",
-        "checkedAt": "2026-07-23"
-      }
+    "childcareFee":{
+      "status":"verified",
+      "summary":"0～2歳児の第2子以降の保育料を無償化し、第1子の保育料を従来額の半額に軽減する。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":5},
+      "details":{"fee":"0～2歳児の第1子は父母等の市民税額により算定し、令和5年9月から従来額の半額","siblingReduction":"生計を一にする子どもの第2子以降は保育料無償","incomeCondition":"第2子以降の無償化は全世帯対象で手続不要","nationalSupport":"3～5歳児と市民税非課税世帯の0～2歳児は国制度の無償化対象","mealCost":"公立保育園の3～5歳児副食費は月額4,800円。所得・多子条件による免除あり"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/kosodateshienka/hoiku/9/5265.html","checkedAt":"2026-07-23"}
     },
-    "schoolMeals": {
-      "status": "verified",
-      "summary": "令和8年度から北上市立小学校の給食費を無償化する。",
-      "eligibility": {
-        "minAgeMonths": 72,
-        "maxAgeYears": 15
-      },
-      "details": {
-        "support": "市立小学校の学校給食費を無償化",
-        "schools": "北上市立小学校",
-        "juniorHighSchool": "中学校の一律無償化は市公式案内から確認できない",
-        "fiscalYear": "令和8年度開始",
-        "application": "市立小学校在籍児童は原則として学校を通じて適用"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/seisakukikakuka/hishogakari/oshirase/29315.html",
-        "checkedAt": "2026-07-23"
-      }
+    "schoolMeals":{
+      "status":"verified",
+      "summary":"令和8年度から北上市立小学校の給食費を無償化する。",
+      "eligibility":{"minAgeMonths":72,"maxAgeYears":12},
+      "details":{"support":"市立小学校の学校給食費を無償化","schools":"北上市立小学校","juniorHighSchool":"中学校の一律無償化は市公式案内から確認できない","fiscalYear":"令和8年度開始","application":"市立小学校在籍児童は原則として学校を通じて適用"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/seisakukikakuka/hishogakari/oshirase/29315.html","checkedAt":"2026-07-23"}
     },
-    "postpartumCare": {
-      "status": "verified",
-      "summary": "市内在住の産後の母子を対象に、1日・半日のデイサービス型と訪問型の産後ケアを実施する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 1
-      },
-      "details": {
-        "target": "デイサービス型は産後5か月未満、訪問型は産後1年未満の市内在住の母子",
-        "types": "1日デイサービス、半日デイサービス、訪問型",
-        "services": "乳房・骨盤ケア、体重測定、沐浴、授乳相談、育児相談、休息支援等",
-        "facilities": "産前産後ケアハウスまんまるだっこ、ここままルーム、にこにこ助産婦",
-        "application": "実施先またはこども家庭センターへ相談・予約",
-        "fee": "利用先・コースごとの案内を確認"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/kosodatesedai/boshihokenkakari/2/6/13756.html",
-        "checkedAt": "2026-07-23"
-      }
+    "postpartumCare":{
+      "status":"verified",
+      "summary":"市内在住の産後の母子を対象に、1日・半日のデイサービス型と訪問型の産後ケアを実施する。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":1},
+      "details":{"target":"デイサービス型は産後5か月未満、訪問型は産後1年未満の市内在住の母子","types":"1日デイサービス、半日デイサービス、訪問型","services":"乳房・骨盤ケア、体重測定、沐浴、授乳相談、育児相談、休息支援等","facilities":"産前産後ケアハウスまんまるだっこ、ここままルーム、にこにこ助産婦","application":"実施先またはこども家庭センターへ相談・予約","fee":"利用先・コースごとの案内を確認"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/kosodatesedai/boshihokenkakari/2/6/13756.html","checkedAt":"2026-07-23"}
     },
-    "temporaryChildcare": {
-      "status": "verified",
-      "summary": "保育施設等に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
-      "eligibility": {
-        "minAgeMonths": 6,
-        "maxAgeYears": 3
-      },
-      "details": {
-        "program": "こども誰でも通園制度（乳児等通園支援事業）",
-        "target": "保育所、認定こども園、地域型保育事業所、幼稚園、企業主導型保育施設に在籍していない児童",
-        "employmentRequirement": "なし",
-        "usageLimit": "1人当たり月10時間",
-        "fee": "1時間300円。生活保護世帯は無料、市民税非課税世帯等は1時間100円",
-        "application": "つうえんポータルで給付認定を申請し、施設面談・予約"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/kosodate_kyoiku/kosodate/29491.html",
-        "checkedAt": "2026-07-23"
-      }
+    "temporaryChildcare":{
+      "status":"verified",
+      "summary":"保育施設等に在籍していない生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
+      "eligibility":{"minAgeMonths":6,"maxAgeYears":3},
+      "details":{"program":"こども誰でも通園制度（乳児等通園支援事業）","target":"保育所、認定こども園、地域型保育事業所、幼稚園、企業主導型保育施設に在籍していない児童","employmentRequirement":"なし","usageLimit":"1人当たり月10時間","fee":"1時間300円。生活保護世帯は無料、市民税非課税世帯等は1時間100円","application":"つうえんポータルで給付認定を申請し、施設面談・予約"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/kosodate_kyoiku/kosodate/29491.html","checkedAt":"2026-07-23"}
     },
-    "housingSupport": {
-      "status": "verified",
-      "summary": "人口減少地域で新築住宅を取得する世帯に補助し、義務教育終了前の子がいる世帯には子育て加算を設ける。",
-      "details": {
-        "program": "人口減少地域の新築住宅取得費補助金",
-        "support": "新築住宅50万円、地域拠点・準拠点内100万円。空き家解体加算35万円または70万円、子育て世帯加算15万円または30万円",
-        "maximum": "合計最大200万円",
-        "conditions": "指定8地区内で一定要件を満たす新築一戸建て住宅を取得し、年度内に登記・住民票異動。子育て加算は義務教育終了前の子の保護者が属する世帯",
-        "application": "建築確認済証受理後に都市計画課へ交付申請",
-        "fiscalYear": "令和8年度予算あり"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/kitakamishidekurasu/iju_teijukanrenjoho/16693.html",
-        "checkedAt": "2026-07-23"
-      }
+    "housingSupport":{
+      "status":"verified",
+      "summary":"人口減少地域で新築住宅を取得する世帯に補助し、義務教育終了前の子がいる世帯には子育て加算を設ける。",
+      "details":{"program":"人口減少地域の新築住宅取得費補助金","support":"新築住宅50万円、地域拠点・準拠点内100万円。空き家解体加算35万円または70万円、子育て世帯加算15万円または30万円","maximum":"合計最大200万円","conditions":"指定8地区内で一定要件を満たす新築一戸建て住宅を取得し、年度内に登記・住民票異動。子育て加算は義務教育終了前の子の保護者が属する世帯","application":"建築確認済証受理後に都市計画課へ交付申請","fiscalYear":"令和8年度予算あり"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/kitakamishidekurasu/iju_teijukanrenjoho/16693.html","checkedAt":"2026-07-23"}
     },
-    "bulkyWaste": {
-      "status": "verified",
-      "summary": "指定袋に入らない家庭ごみはシール券を貼って排出でき、布団・カーペット等は事前予約回収や処理施設への直接搬入を利用できる。",
-      "details": {
-        "feeSystem": "家庭ごみシール券は1枚100円。指定袋に入らないごみに貼付して排出",
-        "application": "布団・カーペット等はごみ分別アプリまたは電話で事前回収予約",
-        "directCarry": "燃えないごみ・資源ごみは北上市清掃事業所、燃えるごみは岩手中部クリーンセンターへ直接搬入",
-        "hours": "北上市清掃事業所は平日8時30分～正午・13時～16時30分、土曜日8時30分～正午",
-        "notes": "市で処理できない品目を除き、分別ルールと大きさの基準を確認する"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/kurashi_tetsuduki/gomi/2/24575.html",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/kankyoseisakuka/gomigenryogakari/1/1/22188.html",
-          "checkedAt": "2026-07-23"
-        },
-        {
-          "url": "https://www.city.kitakami.iwate.jp/life/kurashi_tetsuduki/gomi/1/16783.html",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+    "bulkyWaste":{
+      "status":"verified",
+      "summary":"指定袋に入らない家庭ごみはシール券を貼って排出でき、布団・カーペット等は事前予約回収や処理施設への直接搬入を利用できる。",
+      "details":{"feeSystem":"家庭ごみシール券は1枚100円。指定袋に入らないごみに貼付して排出","application":"布団・カーペット等はごみ分別アプリまたは電話で事前回収予約","directCarry":"燃えないごみ・資源ごみは北上市清掃事業所、燃えるごみは岩手中部クリーンセンターへ直接搬入","hours":"北上市清掃事業所は平日8時30分～正午・13時～16時30分、土曜日8時30分～正午","notes":"市で処理できない品目を除き、分別ルールと大きさの基準を確認する"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/kurashi_tetsuduki/gomi/2/24575.html","checkedAt":"2026-07-23"},
+      "additionalSources":[{"url":"https://www.city.kitakami.iwate.jp/life/soshikikarasagasu/kankyoseisakuka/gomigenryogakari/1/1/22188.html","checkedAt":"2026-07-23"},{"url":"https://www.city.kitakami.iwate.jp/life/kurashi_tetsuduki/gomi/1/16783.html","checkedAt":"2026-07-23"}]
     },
-    "disasterPrevention": {
-      "status": "verified",
-      "summary": "令和8年4月暫定版の洪水・土砂災害ハザードマップとデジタル版防災情報を公開している。",
-      "details": {
-        "coverage": "洪水浸水想定区域、土砂災害警戒区域、避難所、農業用ため池等",
-        "access": "市内7ブロック別PDF、市内全域図、デジタル版わが街ガイドで確認",
-        "updated": "令和8年4月暫定版",
-        "changes": "新たな洪水浸水想定区域5河川と土砂災害警戒区域を追加",
-        "notes": "避難所の安全性検証と見直し後に正式版を作成予定"
-      },
-      "source": {
-        "url": "https://www.city.kitakami.iwate.jp/life/shisei/koho/shiseiyouran/12282.html",
-        "checkedAt": "2026-07-23"
-      }
+    "disasterPrevention":{
+      "status":"verified",
+      "summary":"令和8年4月暫定版の洪水・土砂災害ハザードマップとデジタル版防災情報を公開している。",
+      "details":{"coverage":"洪水浸水想定区域、土砂災害警戒区域、避難所、農業用ため池等","access":"市内7ブロック別PDF、市内全域図、デジタル版わが街ガイドで確認","updated":"令和8年4月暫定版","changes":"新たな洪水浸水想定区域5河川と土砂災害警戒区域を追加","notes":"避難所の安全性検証と見直し後に正式版を作成予定"},
+      "source":{"url":"https://www.city.kitakami.iwate.jp/life/shisei/koho/shiseiyouran/12282.html","checkedAt":"2026-07-23"}
     }
   }
 }
