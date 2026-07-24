@@ -1,0 +1,183 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "47208",
+  "prefectureCode": "47",
+  "prefecture": "沖縄県",
+  "name": "浦添市",
+  "officialUrl": "https://www.city.urasoe.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を浦添市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から中学校修了前まで入院・外来の保険診療自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "浦添市に住所があり健康保険に加入する0歳から15歳到達後最初の3月31日までの子ども",
+        "coverage": "外来・入院・調剤等の保険診療一部負担金",
+        "application": "受給資格者証の交付申請が必要",
+        "payment": "沖縄県内の対応医療機関では資格者証提示による現物給付、県外等は償還払い",
+        "deduction": "高額療養費、附加給付金等を控除",
+        "exclusion": "保険外診療、学校管理下の災害共済対象等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/6248f14273fe266fe59a99e2/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "契約医療機関で病児・病後児保育を実施し利用料は1日2,000円程度",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "病気又は回復期で集団保育が困難かつ保護者の就労・冠婚葬祭等で家庭保育が困難な子ども",
+        "facilities": "まちなと小児クリニック病児保育室lala、ありんクリニック小児科等の市内外契約施設",
+        "hours": "施設により異なり、まちなと小児クリニックは平日8時45分～18時",
+        "fee": "浦添市民は1日2,000円を基本。食費等が別途必要な場合あり",
+        "care": "医師診察後、看護師・保育士が預かり",
+        "application": "施設へ事前登録・予約し、必要な診療・書類手続きを行う"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/611f59421221e3489c6f380f/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と住民税非課税世帯0～2歳児等の保育料・施設利用料を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreePlus": "幼稚園、保育所、認定こども園等の3～5歳児クラス利用料を無償化",
+        "underThree": "住民税非課税世帯で保育の必要性が認定された0～2歳児クラスの利用料を無償化",
+        "unlicensed": "認可外保育施設等は3～5歳児月37,000円、非課税世帯0～2歳児月42,000円を上限に給付",
+        "application": "施設等利用給付認定又は教育・保育給付認定が必要",
+        "requirements": "保育認定は月64時間以上の就労、妊娠・出産、疾病、介護、就学等の要件あり",
+        "additionalCosts": "延長保育料、給食費、教材費、行事費等の実費は原則対象外"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/2024111500080/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年度は浦添市立小学校・中学校の給食費を全額無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "period": "2026年4月から2027年3月まで",
+        "target": "浦添市立小中学校で給食提供を受ける児童生徒",
+        "elementary": "月額5,700円を全額補助",
+        "juniorHigh": "月額6,500円を全額補助",
+        "application": "学校からの喫食者情報で処理するため保護者申請不要",
+        "exclusion": "生活保護法の教育扶助による支援対象者は重複対象外"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/2026032600054/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年以内の母子へ訪問・通所・短期入所型を合計最大7回提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "浦添市に住所があり産後ケアを必要とする産後1年以内の母親と乳児",
+        "types": "訪問型、通所型3時間・6時間、短期入所型1泊2日",
+        "limit": "3類型を合わせて最大7回、短期入所型は2回まで",
+        "fee": "1～5回目は訪問・通所0円、短期入所2,500円。6・7回目は訪問1,400円、通所1,200～2,400円、短期入所5,000円",
+        "exemption": "住民税非課税世帯・生活保護世帯は1～7回目無料",
+        "application": "電子又は窓口で事前申請し、利用決定後に委託施設へ予約"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/2026033000099/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満児が月10時間、原則1時間300円で誰でも通園制度を利用可能",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "保護者が浦添市民で、保育所・幼稚園・認定こども園等を利用していない生後6か月から満3歳未満児",
+        "employmentCondition": "保護者の就労要件なし",
+        "limit": "子ども1人当たり月10時間、繰越・前借り不可",
+        "fee": "多くの実施施設で1時間300円。給食・おやつ等の実費が別途必要な場合あり",
+        "reduction": "生活保護世帯300円、非課税世帯等200円を目安に減免",
+        "application": "市へ認定申請後、つうえんポータルで施設面談・利用予約",
+        "facilities": "市立こども園、宮城ヶ原保育所、認可保育園等で実施"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/2026012600081/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "離職・収入減等で住居喪失のおそれがある世帯へ家賃相当額を支給",
+      "details": {
+        "program": "住居確保給付金（家賃補助）",
+        "target": "離職・廃業又は本人都合によらない収入減により経済的に困窮し、住居を失った又は失うおそれがある人",
+        "timing": "離職・廃業等から原則2年以内。出産・育児・傷病等がある場合は最大4年以内",
+        "requirements": "世帯収入、金融資産、求職活動、類似給付未受給等の要件あり",
+        "support": "住宅扶助基準額を上限に家賃相当額を支給",
+        "application": "自立サポートセンター・てだこ未来へ事前相談・予約後に申請",
+        "additional": "収入が著しく減少した世帯には転居費用補助制度もあり"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/609e73f03d59ae2434bfdc85/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみはオンライン・LINE・電話で事前予約し処理券を貼って戸別収集",
+      "details": {
+        "target": "指定ごみ袋に入らない家庭ごみ、電子レンジ・ガスコンロ等の指定品目",
+        "application": "オンライン、浦添市公式LINE、電話又は環境保全課窓口で予約",
+        "limit": "1回の予約で15点まで",
+        "fee": "10kg未満は300円、10kg以上は600円分の粗大ごみ処理券。50kg超は要相談",
+        "procedure": "予約時に案内された回収日の朝8時までに処理券を貼って排出",
+        "collection": "地域ごとに週1回、予約状況により翌週以降になる場合あり",
+        "restriction": "市民によるクリーンセンターへの直接持込みは不可"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/610cdde91221e3489c6e3826/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "2026年3月更新の洪水・津波・土砂災害等の多言語防災マップを公開",
+      "details": {
+        "coverage": "洪水浸水想定区域、津波災害警戒区域、土砂災害警戒区域、避難所・避難場所等",
+        "update": "2026年3月更新版",
+        "formats": "日本語・英語・簡体中文・繁体中文・韓国語のPDF・JPEG及びGIS版",
+        "evacuation": "災害種別ごとの指定避難所、指定緊急避難場所、津波避難ビルを公開",
+        "guidance": "最新の県地図情報システムと併用し、自宅周辺の危険区域と避難経路を確認"
+      },
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/609e79ed3d59ae2434bfe670/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}

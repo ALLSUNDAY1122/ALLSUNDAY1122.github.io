@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "47209",
+  "prefectureCode": "47",
+  "prefecture": "沖縄県",
+  "name": "名護市",
+  "officialUrl": "https://www.city.nago.okinawa.jp/",
+  "status": "verified",
+  "summary": "必須9制度を名護市公式情報で調査し、全制度をverifiedとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校3年生年代まで入院・外来・調剤の保険診療自己負担分を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "名護市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+        "coverage": "入院・外来・調剤等の保険診療自己負担分。入院時食事療養費は除外",
+        "application": "出生・転入時に窓口又はオンラインで資格認定申請が必要",
+        "payment": "県内協力医療機関は現物給付又は自動償還、非対応医療機関等は領収書申請",
+        "deadline": "領収書申請は診療月の翌月1日から2年以内",
+        "exclusion": "保険外診療、第三者行為、学校管理下の災害共済対象等は対象外"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2024030800025/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "市内2施設で生後6か月から小学3年生までの病児保育を実施",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 9
+      },
+      "details": {
+        "target": "名護市に住所を有する生後6か月から小学校3年生までの子ども",
+        "facilities": "育ちのクリニック病児保育ばんび、アイビス名護保育園",
+        "registration": "毎年9月切替の事前登録が必要で、原則電子申請",
+        "fee": "生活保護・市民税非課税世帯0円。市民税所得割額に応じ500円、1,000円、1,500円、2,000円",
+        "care": "病気又は回復期で集団保育が困難かつ保護者の就労等で家庭保育が困難な場合に一時保育",
+        "restriction": "感染症・既往歴等により施設ごとの受入制限あり"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2018071700321/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "名護市内保育施設等を利用する全児童の保育料負担を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "national": "3歳児クラス以上及び非課税世帯0～2歳児は国制度で保育料0円",
+        "citySupport": "国制度対象外の課税世帯0～2歳児も名護市幼保助成事業により保育料負担なし",
+        "food": "副食費は月4,900円まで、主食費は全世帯月900円まで助成",
+        "copay": "助成上限内は保護者負担なし。食費の上限超過分やその他実費は自己負担",
+        "application": "教育・保育給付認定、階層認定及び必要書類提出が必要",
+        "currentYear": "令和8年度利用案内で市内保育施設等利用児の保育料負担なしを確認"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2018071800809/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "市立幼稚園・小学校・中学校の学校給食食材費を無償化",
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "名護市立幼稚園園児、小学校児童、中学校生徒",
+        "support": "名護市学校給食事業等により食材費の保護者負担を無償化",
+        "referenceFee": "幼稚園・小学生月5,200円、中学生月5,800円を市が負担",
+        "copay": "対象園児・児童生徒の学校給食費自己負担なし",
+        "staff": "教諭・その他職員は月5,800円の負担あり",
+        "lowIncome": "生活保護・就学援助・特別支援対象者も既存制度で無償"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2018071300217/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・通所・訪問型を原則5回提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "名護市に住所があり、産後ケアを必要とし、母子に感染症状・医療行為の必要がない産後1年未満の母子",
+        "types": "宿泊型、通所型6時間・3時間・1時間、訪問型",
+        "limit": "原則5回。多胎育児や継続する育児不安等は追加利用を相談可能",
+        "fee": "1～5回目は宿泊型2,200円、通所型・訪問型無料。6回目以降は宿泊4,700円、通所550～2,100円、訪問1,200円",
+        "care": "母体の心身ケア、休養、乳房・授乳支援、乳児の発育確認、沐浴等の育児指導",
+        "application": "妊娠中からこども家庭センターへ事前申請可能"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2025060400032/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満児が月10時間、1時間300円で誰でも通園制度を利用可能",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "認可保育所等又は対象企業主導型保育事業所を利用していない生後6か月から満3歳未満児",
+        "employmentCondition": "保護者の就労要件なし",
+        "limit": "子ども1人当たり月10時間まで",
+        "fee": "実施施設の利用料は1時間300円。緑風こども園は給食200円・おやつ100円等の実費あり",
+        "facilities": "緑風こども園、みらいじゅごん保育園、みらいぱいなっぷる保育園、みらいシークヮーサー保育園",
+        "application": "つうえんポータルで利用申請し、市認定後に施設との初回面談・予約を行う"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2025121800030/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "離職・休業等で住居喪失のおそれがある世帯へ一定期間家賃相当額を支給",
+      "details": {
+        "program": "住居確保給付金",
+        "target": "離職、廃業又は休業等による収入減少で経済的に困窮し、住宅を失った又は失うおそれがある人",
+        "support": "就職に向けた活動を条件に一定期間の家賃相当額を市から貸主等へ支給",
+        "requirements": "世帯収入・金融資産・求職活動等の要件あり",
+        "application": "くらしと仕事の応援センターさぽんちゅへ事前連絡して相談・申請",
+        "additional": "専門支援員による就労・生活相談を併用可能"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2020042000033/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "10kg以上又は長さ50cm以上の粗大ごみをLINE・電話予約で戸別収集",
+      "details": {
+        "target": "重さ10kg以上又は長さ50cm以上の家庭ごみ。スプリングマットレスや家電リサイクル品等を除く",
+        "application": "市公式LINE又は電話で事前予約",
+        "fee": "粗大ごみ処理券1枚300円。LINE申込みではオンライン決済も選択可能",
+        "procedure": "受付番号・氏名を記載した処理券又は申込番号表示を貼り、収集日の朝8時30分までに指定場所へ排出",
+        "refund": "オンライン決済後は取消時も返金不可",
+        "capacity": "先着順のため予約から回収まで日数を要する場合あり"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2025012200017/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "土砂災害・洪水・津波等のWeb版・行政区版ハザードマップを公開",
+      "details": {
+        "coverage": "土砂災害、洪水・浸水、津波、避難所・避難予定所等",
+        "formats": "日本語版・英語版Webハザードマップ、行政区版ハザードマップ",
+        "webMap": "住所周辺の災害リスクと避難情報を地図上で確認可能",
+        "district": "行政区ごとの危険区域・避難先をPDFで確認可能",
+        "additional": "防災重点農業用ため池の浸水想定図も公開",
+        "guidance": "自宅・職場周辺の危険区域と避難経路を平時から確認"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2018071900592/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
