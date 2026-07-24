@@ -1,4 +1,4 @@
-name: Central A Round09 Finalize Helper
+name: Central A Round09 Finalize Helper v2
 
 on:
   push:
@@ -39,14 +39,12 @@ jobs:
             const done=keys.filter(k=>['verified','unavailable'].includes(d.services[k].status));
             t.completedServices=done;t.verifiedCount=keys.filter(k=>d.services[k].status==='verified').length;t.unavailableCount=keys.filter(k=>d.services[k].status==='unavailable').length;t.needsMediumReviewCount=keys.filter(k=>d.services[k].status==='needs_medium_review').length;t.researchingCount=keys.filter(k=>d.services[k].status==='researching').length;t.nextServiceIndex=done.length===9?9:keys.findIndex(k=>!['verified','unavailable'].includes(d.services[k].status));t.currentService=done.length===9?null:keys[t.nextServiceIndex];t.status=done.length===9?'merged':t.status;t.officialSources=[...new Set(done.map(k=>d.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))];t.lastCheckedAt=checkedAt;t.lastUpdatedAt='2026-07-25T04:52:00+09:00';t.lastUpdatedBy='中日本調査班A';if(note){t.notes=(t.notes||[]).filter(n=>!n.includes('担当範囲再検証'));t.notes.push(note);}write(p,t);
           };
-          // 阪南市：現行の令和8年度産後ケア案内を確認
           {
             const d=load('27232');
             d.services.postpartumCare={status:'verified',summary:'出産後の母子を対象に、令和8年度も産後ケア事業を実施し、契約施設で専門職による心身・授乳・育児支援を提供する。',eligibility:{minAgeMonths:0,maxAgeYears:1},details:{fiscalYear:'令和8年度',care:'母親の心身のケア、授乳支援、育児相談・指導',facility:'市が案内する産後ケア実施施設',application:'こどもすこやかセンターへ相談し、令和8年度案内チラシと施設一覧で利用条件を確認'},source:{url:'https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo/boshi_hoken/1524124047656.html',checkedAt}};
             d.summary='阪南市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。病児・病後児保育のみ現行の一般利用条件を継続確認とした。';
             save('27232',d);recomputeTask('27232','担当範囲再検証で、令和8年度産後ケア事業の現行案内を確認し、誤ったunavailableをverifiedへ修正。');
           }
-          // 島本町：9制度すべてを公式ページで再構成
           {
             const d=load('27301');
             d.summary='島本町の子育て、教育、住宅、生活、防災に関する9制度を町公式情報で再確認し、全制度をverifiedへ修正した。';
@@ -61,7 +59,6 @@ jobs:
             d.services.disasterPrevention={status:'verified',summary:'洪水・土砂災害・地震のハザードマップと避難所情報を公開する。',details:{maps:'淀川・水無瀬川の洪水・土砂災害ハザードマップ、地震ハザードマップ',revision:'避難所一覧を令和7年4月に修正',contents:'浸水範囲・浸水深、家屋倒壊等氾濫想定区域、土砂災害区域、避難所',webMap:'しまもとマップでも防災情報を公開'},source:{url:'https://www.town.shimamoto.lg.jp/site/bousai/30122.html',checkedAt}};
             save('27301',d);recomputeTask('27301','担当範囲再検証で、町トップページのみを根拠に9制度をunavailableとしていた誤りを修正し、各制度の公式専用ページへ置換。');
           }
-          // 豊能町：明確に確認できる5制度を修正
           {
             const d=load('27321');
             d.services.childMedical={status:'verified',summary:'0歳から18歳年度末までの子どもの保険診療自己負担を助成する。',eligibility:{minAgeMonths:0,maxAgeYears:18},details:{age:'18歳到達後最初の3月31日まで',selfPayment:'1医療機関等1日500円、月2日限度。3日目以降は全額助成',coverage:'保険診療に係る自己負担金の一部',application:'町窓口で医療証の交付申請'},source:{url:'https://www.town.toyono.osaka.jp/kenkou-iryou-fukushi/iryou/iryouhi-josei/page000113.html',checkedAt}};
@@ -72,7 +69,6 @@ jobs:
             d.summary='豊能町の9制度を再確認し、子ども医療費、学校給食費支援、住宅支援、粗大ごみ、防災情報をverifiedへ修正。病児・病後児保育は継続確認とした。';
             save('27321',d);recomputeTask('27321','担当範囲再検証で、公式専用ページが存在する5制度の誤ったunavailableをverifiedへ修正。');
           }
-          // 能勢町：明確に確認できる4制度を修正
           {
             const d=load('27322');
             d.services.childMedical={status:'verified',summary:'0歳から18歳年度末までの子どもの保険診療自己負担を助成する。',eligibility:{minAgeMonths:0,maxAgeYears:18},details:{age:'18歳到達後最初の3月31日まで',selfPayment:'1医療機関等1日500円、月2日限度',monthlyCap:'月2,500円を超える額を申請で償還',excluded:'保険適用外費用等'},source:{url:'https://www.town.nose.osaka.jp/soshiki/jyuuminka/hokeniryo/iryo/684.html',checkedAt}};
@@ -82,11 +78,9 @@ jobs:
             d.summary='能勢町の9制度を再確認し、子ども医療費、移住・空き家支援、粗大ごみ、防災情報をverifiedへ修正。令和8年度学校給食費は継続確認とした。';
             save('27322',d);recomputeTask('27322','担当範囲再検証で、公式専用ページが存在する4制度の誤ったunavailableをverifiedへ修正。');
           }
-          // 大阪狭山市：完了済みtaskの状態のみ修正
           {
             const p=taskPath('27231'),t=JSON.parse(fs.readFileSync(p,'utf8'));t.status='merged';t.currentService=null;t.nextServiceIndex=9;t.lastCheckedAt=checkedAt;t.lastUpdatedAt='2026-07-25T04:52:00+09:00';t.lastUpdatedBy='中日本調査班A';t.notes=(t.notes||[]).filter(n=>!n.includes('担当範囲再検証'));t.notes.push('担当範囲再検証で、9制度完了済みにもかかわらずpr_openだったtask statusをmergedへ修正。');write(p,t);
           }
-          // 監査レポートを修正後状態で再構成
           const unavailable=[],municipalities=[];
           for(const [code,name] of Object.entries(expected)){
             const d=load(code),t=JSON.parse(fs.readFileSync(taskPath(code),'utf8'));const counts={verified:0,unavailable:0,needs_medium_review:0};
