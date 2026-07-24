@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "36383",
+  "prefectureCode": "36",
+  "prefecture": "徳島県",
+  "name": "牟岐町",
+  "officialUrl": "https://www.town.tokushima-mugi.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を牟岐町公式情報で調査し、7制度をverified、病児保育・こども誰でも通園制度をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "18歳年度末までの保険診療自己負担を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "牟岐町内に住所があり健康保険に加入する18歳年度末までの子ども",
+        "coverage": "入院・通院の保険診療自己負担",
+        "payment": "県内対応医療機関は受給者証、県外等は償還払い"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/doc/2024122000456/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式サイトで令和8年度の病児・病後児保育の実施条件を確認できない",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "reason": "子育て支援事業・医療体制を確認したが、施設、対象年齢、料金、申込方法の現行案内を特定できない。"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/doc/2024040100221/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と非課税世帯の0～2歳児の保育料を無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "threeToFive": "認定こども園等の3～5歳児利用料を無償化",
+        "underThree": "住民税非課税世帯の0～2歳児は無償化",
+        "additionalCosts": "給食費、行事費等は別途となる場合がある"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/doc/2019092700024/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立学校給食センターによる給食を実施し、就学援助対象世帯へ給食費を支援",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "system": "町立学校給食センターが学校給食を提供",
+        "universalFree": "令和8年度の全児童生徒一律無償化は町公式情報で確認できない",
+        "support": "経済的に困難な世帯は就学援助制度の確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/reiki/reiki_honbun/o020RG00000282.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "宿泊型・日帰り型・訪問型の産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "types": "宿泊型、通所型、訪問型",
+        "fee": "宿泊型・通所型は自己負担あり、訪問型は無料",
+        "care": "母体の休養、授乳・育児相談等",
+        "application": "健康生活課へ申込み"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/doc/2024040100238/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "乳児等通園支援事業の条例は確認できるが、令和8年度の施設・対象・時間・料金の利用者向け案内を確認できない",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "reason": "制度基盤のみ確認。利用条件は町へ確認が必要。"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/reiki/reiki_taikei/r_taikei_08_01.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "空き家改修・除却費の2分の1を補助",
+      "details": {
+        "target": "町内の対象空き家を活用または除却する要件該当者",
+        "support": "対象経費の2分の1",
+        "application": "工事着手前の申請と町の交付決定が必要"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/doc/2024112500010/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみに指定ごみ袋（大）1枚を付けて地区収集へ排出",
+      "details": {
+        "method": "粗大ごみ1点につき指定ごみ袋（大）1枚を付ける",
+        "collection": "地区別ごみ収集カレンダーの粗大ごみ収集日に排出",
+        "guidance": "町が収集できない品目は許可業者等へ相談"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/doc/2012020100255/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・土砂災害・洪水等のハザードマップを公開",
+      "details": {
+        "coverage": "津波、土砂災害、洪水・高潮等",
+        "formats": "災害種別のハザードマップを公開",
+        "guidance": "自宅周辺の危険区域、避難場所、経路を事前確認"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/category/bunya/bosai/hazardmap/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
