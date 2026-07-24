@@ -12,11 +12,12 @@ on:
       - 'jichitai-compare/**'
       - '.github/workflows/jichitai-compare.yml'
   issue_comment:
-    types:
-      - created
+    types: [created]
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
+  issues: write
 
 concurrency:
   group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
@@ -93,22 +94,11 @@ jobs:
         run: npm run smoke:public
 
   sync-central-b:
-    if: >-
-      github.event_name == 'issue_comment' &&
-      github.event.issue.number == 3131 &&
-      contains(github.event.comment.body, '/run-central-b-main-sync') &&
-      (github.event.comment.author_association == 'OWNER' ||
-       github.event.comment.author_association == 'MEMBER' ||
-       github.event.comment.author_association == 'COLLABORATOR')
+    if: github.event_name == 'issue_comment' && github.event.issue.number == 3131 && contains(github.event.comment.body, '/run-central-b-main-sync') && github.event.comment.author_association == 'OWNER'
     name: Synchronize Central B audited corrections
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
     env:
-      SYNC_BRANCH: coord/central-b-main-sync-final-20260725
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -123,81 +113,5 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Fetch audited regional source
-        run: git fetch origin region/central:refs/remotes/origin/region/central
-
-      - name: Create clean synchronization branch
-        run: git checkout -B "$SYNC_BRANCH" origin/main
-
-      - name: Apply 57 audited services
-        run: python3 jichitai-compare/scripts/sync-central-b-audit-to-main.py
-
-      - name: Regenerate data, pages and progress
-        working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-
-      - name: Validate generated result
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Restore standard CI and remove temporary runner files
-        run: |
-          cp jichitai-compare/scripts/jichitai-compare.original.yml .github/workflows/jichitai-compare.yml
-          rm jichitai-compare/scripts/jichitai-compare.original.yml
-          rm jichitai-compare/scripts/sync-central-b-audit-to-main.py
-
-      - name: Commit and push synchronized result
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --quiet && { echo "No synchronization changes found"; exit 1; }
-          git commit -m "全国品質同期: 中日本B監査訂正57件をmainへ反映"
-          git push --force-with-lease origin HEAD:"$SYNC_BRANCH"
-
-      - name: Create or locate synchronization pull request
-        id: pr
-        run: |
-          EXISTING=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$SYNC_BRANCH" --base main --state open --json number,url --jq '.[0].url // empty')
-          if [ -n "$EXISTING" ]; then
-            PR_URL="$EXISTING"
-          else
-            PR_URL=$(gh pr create \
-              --repo "$GITHUB_REPOSITORY" \
-              --base main \
-              --head "$SYNC_BRANCH" \
-              --title "全国品質同期: 中日本B監査訂正57件をmainへ反映" \
-              --body $'Issue #3131対応。\n\n中日本Bの10回監査で確定した57制度を、最新mainを基準にregion/centralからサービス単位で同期します。全国生成データ・静的ページ・進捗を再生成し、validate:generated成功済みです。\n\nCloses #3131')
-          fi
-          echo "url=$PR_URL" >> "$GITHUB_OUTPUT"
-          echo "number=${PR_URL##*/}" >> "$GITHUB_OUTPUT"
-
-      - name: Record synchronization PR number
-        run: |
-          python3 - "${{ steps.pr.outputs.number }}" <<'PY'
-          import json
-          import sys
-          from pathlib import Path
-
-          root = Path('jichitai-compare')
-          pr_number = int(sys.argv[1])
-          report_path = root / 'operations/audits/central-b-main-sync-20260725.json'
-          report = json.loads(report_path.read_text(encoding='utf-8'))
-          report['synchronizationPullRequest'] = pr_number
-          report_path.write_text(json.dumps(report, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
-          for code in report['municipalityCodes']:
-              task_path = root / 'operations/tasks' / f'{code}.json'
-              if not task_path.exists():
-                  continue
-              task = json.loads(task_path.read_text(encoding='utf-8'))
-              task['pullRequestNumber'] = pr_number
-              task_path.write_text(json.dumps(task, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
-          PY
-          git add jichitai-compare/operations/audits/central-b-main-sync-20260725.json jichitai-compare/operations/tasks
-          git commit -m "ops: 中日本B全国同期PR番号を記録"
-          git push origin HEAD:"$SYNC_BRANCH"
-
-      - name: Comment result on issue
-        run: gh issue comment 3131 --repo "$GITHUB_REPOSITORY" --body "中日本B監査訂正57件の同期PRを作成しました: ${{ steps.pr.outputs.url }}"
+      - name: Run synchronization
+        run: bash jichitai-compare/scripts/run-central-b-main-sync.sh
