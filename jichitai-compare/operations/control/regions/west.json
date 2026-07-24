@@ -4,7 +4,7 @@
   "assignedTeam": "西日本調査班",
   "branch": "region/west",
   "integrationBranch": "region/west",
-  "updatedAt": "2026-07-24T23:16:00+09:00",
+  "updatedAt": "2026-07-24T23:34:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -22,7 +22,7 @@
     "completedServices": 4284,
     "nationwidePublishedMunicipalities": 1741,
     "nationwideRemainingMunicipalities": 0,
-    "checkedAt": "2026-07-24T23:16:00+09:00"
+    "checkedAt": "2026-07-24T23:34:00+09:00"
   },
   "latestQualityAudit": {
     "municipalityCode": "40130",
@@ -35,12 +35,23 @@
     "nationalCiRunNumber": 6847,
     "status": "resolved"
   },
-  "lastAction": "福岡市（40130）の公開要約に残っていた内部作業文言を検出し、PR #2829・CI #6794でregion/west正本を修正後、PR #2848・CI #6847で全国生成JSONと静的詳細ページへ反映した。",
-  "nextAction": "新規自治体調査を停止し、自治体公式情報の更新、差し戻し、識別異常、CI失敗、公開文言異常が発生した場合のみ品質監査を再開する。",
+  "publicCopyValidation": {
+    "internalWorkflowPhraseGuardPullRequestNumber": 2869,
+    "internalWorkflowPhraseGuardCiRunNumber": 6889,
+    "summaryConsistencyGuardPullRequestNumber": 2879,
+    "summaryConsistencyGuardCiRunNumber": 6911,
+    "westAPrefectureDetectedCountInLegacyBroadAudit": 0,
+    "failureArtifactName": "jichitai-validation-report",
+    "status": "passed"
+  },
+  "lastAction": "福岡市の公開要約修正後、PR #2869・CI #6889で内部作業文言ガードを導入し、PR #2879・CI #6911で生成JSONと全1,741静的ページの要約一致および失敗レポート保存を検証した。西日本A担当6県の旧広範検査該当は0件。",
+  "nextAction": "新規自治体調査を停止し、自治体公式情報の更新、差し戻し、識別異常、CI失敗、公開文言異常、生成JSONと静的ページの要約不一致が発生した場合のみ品質監査を再開する。",
   "lastNationalIntegrationPr": 2791,
   "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
   "lastGeneratedPullRequest": 2848,
   "lastRegionalQualityPr": 2829,
   "lastNationalQualityPr": 2848,
+  "lastPublicCopyGuardPr": 2869,
+  "lastSummaryConsistencyGuardPr": 2879,
   "humanDecisionRequired": false
 }
