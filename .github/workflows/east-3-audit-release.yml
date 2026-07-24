@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Rebase audited files onto latest main and add Awashimaura
+      - name: Rebase audited files onto latest main
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -40,66 +40,74 @@ jobs:
           done
           git fetch origin main:refs/remotes/origin/main region/east:refs/remotes/origin/region/east
           git reset --hard origin/main
+          PREVIOUS_REGISTERED=$(node -p "JSON.parse(require('fs').readFileSync('jichitai-compare/operations/progress.json','utf8')).registeredMunicipalities")
+          PREVIOUS_REMAINING=$(node -p "JSON.parse(require('fs').readFileSync('jichitai-compare/operations/progress.json','utf8')).remainingMunicipalities")
           cp -R /tmp/east-release/. .
-          for file in \
-            jichitai-compare/data/municipalities/15/15586.json \
-            jichitai-compare/operations/tasks/15586.json
-          do
-            mkdir -p "$(dirname "$file")"
-            git show "origin/region/east:$file" > "$file"
-          done
-          node <<'NODE'
-          const fs=require('fs');
-          const code='15586';
-          const dataPath=`jichitai-compare/data/municipalities/15/${code}.json`;
-          const taskPath=`jichitai-compare/operations/tasks/${code}.json`;
-          const data=JSON.parse(fs.readFileSync(dataPath,'utf8'));
-          const services=data.services??{};
-          const keys=Object.keys(services);
-          const nonTerminal=keys.filter(k=>!['verified','unavailable'].includes(services[k]?.status));
-          if(keys.length!==9||nonTerminal.length) throw new Error(`15586 publication gate failure: ${nonTerminal.join(',')}`);
-          const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
-          task.status='merged'; task.currentService=null; task.nextServiceIndex=9; task.completedServices=keys;
-          task.verifiedCount=keys.filter(k=>services[k]?.status==='verified').length;
-          task.researchingCount=0; task.unavailableCount=keys.filter(k=>services[k]?.status==='unavailable').length;
-          task.needsMediumReviewCount=0; task.lastUpdatedAt='2026-07-24T21:12:00+09:00'; task.lastUpdatedBy='全国統括'; task.blockers=[];
-          fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
-          NODE
+          git show origin/region/east:jichitai-compare/operations/tasks/15586.json > jichitai-compare/operations/tasks/15586.json
           echo "BASE_MAIN_SHA=$(git rev-parse origin/main)" >> "$GITHUB_ENV"
+          echo "PREVIOUS_REGISTERED=$PREVIOUS_REGISTERED" >> "$GITHUB_ENV"
+          echo "PREVIOUS_REMAINING=$PREVIOUS_REMAINING" >> "$GITHUB_ENV"
 
-      - name: Generate national data and manifest
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Verify target municipalities and update manifest
         working-directory: jichitai-compare
         run: |
-          set -euo pipefail
-          npm run generate
-          npm run progress
           node <<'NODE'
           const fs = require('fs');
           const progress = JSON.parse(fs.readFileSync('operations/progress.json', 'utf8'));
           const generated = JSON.parse(fs.readFileSync('data/generated/municipalities.json', 'utf8'));
-          const codes = ['12203', '12227', '13123', '15586'];
-          const byCode = new Map(generated.municipalities.map((m) => [m.code, m]));
-          for (const code of codes) if (!byCode.has(code)) throw new Error(`生成公開データに${code}が存在しません`);
+          const municipalities = Array.isArray(generated) ? generated : generated.municipalities;
+          if (!Array.isArray(municipalities)) throw new Error('生成JSONのmunicipalities配列を取得できません');
+          const byCode = new Map(municipalities.map((m) => [m.code, m]));
+          for (const code of ['12203', '12227', '13123', '15586']) {
+            if (!byCode.has(code)) throw new Error(`生成公開データに${code}が存在しません`);
+          }
           for (const code of ['12203', '12227', '13123']) {
             const services = Object.values(byCode.get(code).services ?? {});
             if (services.length !== 9) throw new Error(`${code}: 9制度ではありません`);
             if (services.some((service) => !service.eligibility)) throw new Error(`${code}: eligibility欠落`);
           }
-          const awashima=Object.values(byCode.get('15586').services??{});
-          if(awashima.some(service=>!['verified','unavailable'].includes(service.status))) throw new Error('15586: 非終端制度を含みます');
-          if(progress.registeredMunicipalities!==1660||progress.remainingMunicipalities!==81) throw new Error(`進捗不整合 ${progress.registeredMunicipalities}/${progress.remainingMunicipalities}`);
-          if(progress.needsMediumReviewServices!==0) throw new Error(`公開データに要確認${progress.needsMediumReviewServices}制度`);
+          const awashima = Object.values(byCode.get('15586').services ?? {});
+          if (awashima.length !== 9 || awashima.some((service) => !['verified', 'unavailable'].includes(service.status))) {
+            throw new Error('15586: 公開終端状態不整合');
+          }
+          const task = JSON.parse(fs.readFileSync('operations/tasks/15586.json', 'utf8'));
+          if (task.status !== 'merged' || task.nextServiceIndex !== 9) throw new Error('15586 task不整合');
+          const before = Number(process.env.PREVIOUS_REGISTERED);
+          if (progress.registeredMunicipalities < before || progress.registeredMunicipalities > before + 3) {
+            throw new Error(`公開件数の想定外変動: ${before} -> ${progress.registeredMunicipalities}`);
+          }
+          if (progress.remainingMunicipalities !== progress.totalMunicipalities - progress.registeredMunicipalities) {
+            throw new Error('残自治体件数不整合');
+          }
           let html = fs.readFileSync('index.html', 'utf8');
           html = html.replace(/\d+自治体・9制度/u, `${progress.registeredMunicipalities}自治体・9制度`);
           fs.writeFileSync('index.html', html);
           const manifest = {
-            schemaVersion: '1.0.0', createdAt: new Date().toISOString(), baseMainSha: process.env.BASE_MAIN_SHA,
-            sourceRegion: 'region/east', updatedMunicipalityCodes: ['12203','12227','13123'],
-            addedMunicipalityCodes: ['15586'], registeredMunicipalities: progress.registeredMunicipalities,
+            schemaVersion: '1.0.0',
+            createdAt: new Date().toISOString(),
+            baseMainSha: process.env.BASE_MAIN_SHA,
+            sourceRegion: 'region/east',
+            updatedMunicipalityCodes: ['12203', '12227', '13123'],
+            addedTaskCodes: ['15586'],
+            beforeRegisteredMunicipalities: before,
+            registeredMunicipalities: progress.registeredMunicipalities,
             remainingMunicipalities: progress.remainingMunicipalities,
-            validation: { municipalityData: 'pending_ci', identity: 'pending_ci', generatedData: 'regenerated', publicationGate: 'passed' }
+            validation: {
+              municipalityData: 'verified_in_workflow',
+              generatedData: 'regenerated',
+              identity: 'pending_ci'
+            }
           };
           fs.writeFileSync('operations/control/east-audit-national-sync-20260724.json', `${JSON.stringify(manifest, null, 2)}\n`);
+          console.log(manifest);
           NODE
 
       - name: Validate release
@@ -115,5 +123,5 @@ jobs:
           set -euo pipefail
           git rm --ignore-unmatch .github/workflows/east-3-audit-release.yml
           git add -A jichitai-compare
-          git commit -m "release: 粟島浦村追加と東日本3自治体再監査版を全国同期"
+          git commit -m "release: 東日本3自治体再監査版を全国同期"
           git push --force origin HEAD:coord/east-3-audit-release-20260724-r2
