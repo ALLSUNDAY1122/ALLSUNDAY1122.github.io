@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-rough-validation-cycle-08-review-20260725",
+  "auditId": "west-b-rough-validation-cycle-08-20260725",
+  "sessionId": "west-b",
+  "cycle": 8,
+  "plannedCycles": 10,
+  "reviewedAt": "2026-07-25T03:42:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "serviceCount": 225,
+    "checkedUrlCount": 250,
+    "prefectureCodes": ["44", "45"],
+    "prefectureCounts": {"44": 8, "45": 17},
+    "codes": [
+      "44211", "44212", "44213", "44214", "44322", "44341", "44461", "44462",
+      "45201", "45202", "45203", "45204", "45205", "45206", "45207", "45208", "45209",
+      "45341", "45361", "45382", "45383", "45401", "45402", "45403", "45404"
+    ]
+  },
+  "results": {
+    "structuralErrorCount": 0,
+    "detectedResearchContentErrorCount": 0,
+    "correctedResearchContentErrorCount": 0,
+    "detectedSourceMaintenanceIssueCount": 1,
+    "correctedSourceMaintenanceIssueCount": 1,
+    "networkOnlyWarningCount": 3,
+    "manualSpotCheckCount": 5,
+    "manualSpotCheckFailureCount": 0
+  },
+  "sourceMaintenanceCorrections": [
+    {
+      "code": "45402",
+      "name": "新富町",
+      "service": "childMedical",
+      "oldUrl": "https://www.town.shintomi.lg.jp/item/1602.htm",
+      "newUrl": "https://www.town.shintomi.lg.jp/1061.htm",
+      "reason": "旧ページが404となり、現行の福祉医療費助成ページで18歳年度末まで入院・外来・調剤の自己負担なしという登録内容を確認したため",
+      "correctionPullRequest": 3101,
+      "correctionCiRunNumber": 7568,
+      "correctionMergeCommit": "942bfb37cf6210cc542c46f08b9302abecaeffcf"
+    }
+  ],
+  "networkOnlyWarnings": [
+    {
+      "code": "44462",
+      "name": "玖珠町",
+      "service": "disasterPrevention",
+      "reason": "監査時404だったが、同一公式URLの防災マップページを再確認できたため一時的応答と判定"
+    },
+    {
+      "code": "45401",
+      "name": "高鍋町",
+      "service": "postpartumCare",
+      "reason": "監査時404だったが、同一公式URLの2026年5月更新『助産師ケアのご案内』を再確認できたため一時的応答と判定"
+    },
+    {
+      "code": "45402",
+      "name": "新富町",
+      "service": "sickChildCare",
+      "reason": "監査時404だったが、同一公式URLの病児・病後児保育利用料助成ページを再確認できたため一時的応答と判定"
+    }
+  ],
+  "manualSpotChecks": [
+    {
+      "code": "44211",
+      "name": "宇佐市",
+      "service": "schoolMeals",
+      "result": "passed",
+      "finding": "2026年度の市立小中学校・宇佐支援学校小学部中学部の給食費無償化を確認"
+    },
+    {
+      "code": "44322",
+      "name": "姫島村",
+      "service": "disasterPrevention",
+      "result": "passed",
+      "finding": "2026年版防災マップに津波浸水想定区域・土砂災害警戒区域・避難所等の掲載を確認"
+    },
+    {
+      "code": "45201",
+      "name": "宮崎市",
+      "service": "schoolMeals",
+      "result": "passed",
+      "finding": "2026年4月から市立小学校の学校給食費無償化を確認"
+    },
+    {
+      "code": "45341",
+      "name": "三股町",
+      "service": "childcareFee",
+      "result": "passed",
+      "finding": "2025年9月から0〜2歳児クラスの制度上第2子保育料がおおむね半額となることを確認"
+    },
+    {
+      "code": "45403",
+      "name": "西米良村",
+      "service": "housingSupport",
+      "result": "passed",
+      "finding": "要件を満たす新築住宅の固定資産税を一定期間2分の1に減額する制度を確認"
+    }
+  ],
+  "conclusion": "passed_after_correction"
+}

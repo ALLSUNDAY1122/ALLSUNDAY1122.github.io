@@ -1,0 +1,445 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycle-08-20260725",
+  "sessionId": "west-b",
+  "cycle": 8,
+  "plannedCycles": 10,
+  "auditedAt": "2026-07-25T03:31:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "codes": [
+      "44211",
+      "44212",
+      "44213",
+      "44214",
+      "44322",
+      "44341",
+      "44461",
+      "44462",
+      "45201",
+      "45202",
+      "45203",
+      "45204",
+      "45205",
+      "45206",
+      "45207",
+      "45208",
+      "45209",
+      "45341",
+      "45361",
+      "45382",
+      "45383",
+      "45401",
+      "45402",
+      "45403",
+      "45404"
+    ],
+    "names": [
+      "宇佐市",
+      "豊後大野市",
+      "由布市",
+      "国東市",
+      "姫島村",
+      "日出町",
+      "九重町",
+      "玖珠町",
+      "宮崎市",
+      "都城市",
+      "延岡市",
+      "日南市",
+      "小林市",
+      "日向市",
+      "串間市",
+      "西都市",
+      "えびの市",
+      "三股町",
+      "高原町",
+      "国富町",
+      "綾町",
+      "高鍋町",
+      "新富町",
+      "西米良村",
+      "木城町"
+    ],
+    "prefectureCodes": [
+      "44",
+      "45"
+    ],
+    "prefectureCounts": {
+      "44": 8,
+      "45": 17
+    },
+    "serviceCount": 225
+  },
+  "methodology": [
+    "既存第1〜7回監査の175自治体を除外し、担当コード順で次の25自治体を選定",
+    "自治体コード・都道府県コード・自治体名・公式URLを確認",
+    "必須9制度、状態、要約、主出典URL、確認日を確認",
+    "公式URL25件と制度主出典225件をHTTP取得",
+    "5自治体を手動抜き取り候補として記録"
+  ],
+  "priorAuditedMunicipalityCount": 175,
+  "remainingBeforeCycleCount": 75,
+  "structuralErrorCount": 0,
+  "structuralErrors": [],
+  "networkCheckedUrlCount": 250,
+  "networkWarningCount": 4,
+  "networkWarnings": [
+    {
+      "code": "44462",
+      "name": "玖珠町",
+      "field": "services.disasterPrevention.source",
+      "service": "disasterPrevention",
+      "url": "https://www.town.kusu.oita.jp/kurashi_tetsuzuki/anzen_anshin/4/2850.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.kusu.oita.jp/kurashi_tetsuzuki/anzen_anshin/4/2850.html",
+      "attempt": 2
+    },
+    {
+      "code": "45401",
+      "name": "高鍋町",
+      "field": "services.postpartumCare.source",
+      "service": "postpartumCare",
+      "url": "https://www.town.takanabe.lg.jp/soshiki/kodomokateicenter/4896.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.takanabe.lg.jp/soshiki/kodomokateicenter/4896.html",
+      "attempt": 2
+    },
+    {
+      "code": "45402",
+      "name": "新富町",
+      "field": "services.childMedical.source",
+      "service": "childMedical",
+      "url": "https://www.town.shintomi.lg.jp/item/1602.htm",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.shintomi.lg.jp/item/1602.htm",
+      "attempt": 2
+    },
+    {
+      "code": "45402",
+      "name": "新富町",
+      "field": "services.sickChildCare.source",
+      "service": "sickChildCare",
+      "url": "https://www.town.shintomi.lg.jp/soshiki/fukushi/gyomu/3/byouzibyougozihoiku/index.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.shintomi.lg.jp/soshiki/fukushi/gyomu/3/byouzibyougozihoiku/index.html",
+      "attempt": 2
+    }
+  ],
+  "manualSpotCheckCandidates": [
+    {
+      "code": "44211",
+      "name": "宇佐市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.usa.oita.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで通院・入院・調剤の保険診療自己負担を助成",
+          "sourceUrl": "https://www.city.usa.oita.jp/usacoco/kosodate/12/2/15235.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内2施設で0歳から小学生までの病児・病後児を受け入れ",
+          "sourceUrl": "https://www.city.usa.oita.jp/usacoco/kosodate/8/123456/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "保育所・認定こども園等を利用する0～5歳児の保育料を全年齢無償化",
+          "sourceUrl": "https://www.city.usa.oita.jp/usacoco/kosodate/9/3/20925.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度に市立小中学校・宇佐支援学校小学部中学部の学校給食費を無償化",
+          "sourceUrl": "https://www.city.usa.oita.jp/sougo/soshiki/18/gakkokyushoku/1_1/20969.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1歳未満の母子へ宿泊・日帰り・訪問型産後ケアを合計7回まで提供",
+          "sourceUrl": "https://www.city.usa.oita.jp/usacoco/kosodate/2/2/17427.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.city.usa.oita.jp/usacoco/kosodate/9/1/23856.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "都市計画区域外に住宅を新築する市内在住子育て世帯へ15万円を交付",
+          "sourceUrl": "https://www.city.usa.oita.jp/sougo/soshiki/10/machizukurisuishinka/2/2/2_1/16897.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "2026年度から無料拠点回収を廃止し、広域クリーンセンターへの有料搬入または対象世帯向け回収支援を実施",
+          "sourceUrl": "https://www.city.usa.oita.jp/sougo/soshiki/11/seikatsukankyo/recycle/sodai/23759.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・高潮・ため池等を確認できるWEB版ハザードマップを公開",
+          "sourceUrl": "https://www.city.usa.oita.jp/sougo/2_1/8/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44322",
+      "name": "姫島村",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.himeshima.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで入院・通院・歯科・調剤の保険診療自己負担を助成",
+          "sourceUrl": "https://www.himeshima.jp/kurashi/ikuji-hoken-kodomoiryou/",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "大分県内居住者として県内の病児・病後児保育施設を住所地を問わず利用可能",
+          "sourceUrl": "https://www.pref.oita.jp/site/byoujitokusetsu/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "保育所保育料と幼稚園利用料を無料化",
+          "sourceUrl": "https://www.himeshima.jp/ijuu/",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "保育所から中学校までの給食費を無料化",
+          "sourceUrl": "https://www.himeshima.jp/ijuu/",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年の乳児と母親へ宿泊・日帰り・訪問型産後ケアを合計7回まで提供",
+          "sourceUrl": "https://www.himeshima.jp/kurashi/sango/",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "家庭で一時的に保育できない場合、姫島村保育所で月7日まで一時保育を実施",
+          "sourceUrl": "https://www.himeshima.jp/kurashi/hoikujo/",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住者等の空き家改修費を3分の2・上限100万円、空き家購入費も上限100万円補助",
+          "sourceUrl": "https://www.himeshima.jp/kurashi/akiyahojokin/",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "家具・寝具・ソファー等の粗大ごみを清掃センター前の粗大ごみ置き場へ直接搬入",
+          "sourceUrl": "https://www.himeshima.jp/kurashi/gomi-shuushuu/",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波浸水想定区域・土砂災害警戒区域・避難所等を掲載した2026年版防災マップを公開",
+          "sourceUrl": "https://www.himeshima.jp/kurashi/bousaimap/",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "45201",
+      "name": "宮崎市",
+      "prefectureCode": "45",
+      "officialUrl": "https://www.city.miyazaki.miyazaki.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から中学3年生までの保険診療自己負担を助成し、小中学生の通院は1医療機関あたり月200円",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/education/childbirth/399034.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "0歳から小学6年生までの病児・病後児を市内施設で受け入れ、利用料を1回2,000円まで助成",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/education/nursery/particular/12270.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等と住民税非課税世帯の0～2歳児の利用料を無償化し、多子世帯の保育料を軽減",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/education/nursery/childcarecost/203265.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年4月から宮崎市立小学校の学校給食費を無償化",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/education/school/schools/410029.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ訪問・日帰り・宿泊型ケアを自由に組み合わせて合計5回まで提供",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/education/childbirth/388224.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を54施設で月10時間、1時間300円程度で受け入れ",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/education/nursery/daycaresystem/399477.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "宮崎県外からの移住・就業等の要件を満たす子育て世帯へ最大200万円を給付",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/business/loan/286647.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "原則いずれかの辺が1メートル以上の家庭ごみを事前申込みで収集または有料直接搬入",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/life/trash/fractionation/34204.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・津波・高潮・土砂災害・ため池等のWEB・PDFハザードマップを公開",
+          "sourceUrl": "https://www.city.miyazaki.miyazaki.jp/life/fire_department/hazard_map/",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "45341",
+      "name": "三股町",
+      "prefectureCode": "45",
+      "officialUrl": "https://www.town.mimata.lg.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "乳幼児は無料、小中学生は外来月最大200円・薬局と入院無料で医療費を助成",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/42.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式サイトで病児・病後児保育の現行実施施設・対象年齢・料金を確認できない",
+          "sourceUrl": "https://www.town.mimata.lg.jp/categories/index/itijitekinaazukari",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、0～2歳第2子は2025年9月からおおむね半額",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/1690.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "三股中学校の給食費月額4,600円を無償化し、小学校は町独自の一律無償化未実施",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/1678.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1歳未満の母子へ訪問・日帰り・宿泊型産後ケアを提供",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/1360.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/2470.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "県外等からの移住世帯へ100万円、18歳未満帯同で100万円を加算",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/2132.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ・引越しごみを三股町リサイクルセンターへ直接搬入",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/584.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害区域、避難所等を確認できる防災アプリと地区別ハザードマップを公開",
+          "sourceUrl": "https://www.town.mimata.lg.jp/contents/2328.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "45403",
+      "name": "西米良村",
+      "prefectureCode": "45",
+      "officialUrl": "https://www.vill.nishimera.lg.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "乳幼児から中学3年生まで入院・通院の保険診療自己負担なし",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/a-00-villagelife/a-05/10000183",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "村公式サイトで病児・病後児保育の現行施設・対象年齢・料金・広域利用条件を確認できない",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/category/a-00-villagelife/a-05",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "unavailable",
+          "summary": "村立ふたば園の保育時間等は確認できるが、2026年度保育料・無償化範囲を確定できない",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/a-00-villagelife/a-05/10001322",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "就学援助による給食費支給は確認できるが、2026年度の一般世帯負担額・一律無償化状況を確定できない",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/a-00-villagelife/a-06/10001340",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宮崎県公式一覧で宿泊・通所・訪問型の産後ケア実施を確認",
+          "sourceUrl": "https://www.pref.miyazaki.lg.jp/kenkozoshin/kurashi/hoken/sangocare.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "こども誰でも通園制度の実施案内は確認できるが、対象月齢・料金・施設等の詳細を取得できない",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/category/a-00-villagelife/a-05/a-05-03",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "要件を満たす新築住宅の固定資産税を2分の1に減額",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/a-00-villagelife/10000967",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "家庭ごみ分別・収集資料で粗大ごみを含む出し方を案内",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/a-00-villagelife/10000448",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "防災情報・避難所・災害危険箇所を掲載した総合防災マップを公開",
+          "sourceUrl": "https://www.vill.nishimera.lg.jp/village/%E6%9C%AA%E5%88%86%E9%A1%9E/10004163",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    }
+  ]
+}
