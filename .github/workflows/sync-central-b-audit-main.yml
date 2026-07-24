@@ -6,6 +6,7 @@ on:
       - main
     types:
       - opened
+      - reopened
       - synchronize
   workflow_dispatch:
 
@@ -20,7 +21,7 @@ jobs:
       - name: Checkout synchronization branch
         uses: actions/checkout@v4
         with:
-          ref: coord/central-b-main-audit-sync-v2-20260725
+          ref: test/jichitai-public-central-b-sample-20260724
           fetch-depth: 0
 
       - name: Fetch audited regional source
@@ -51,4 +52,4 @@ jobs:
           git add -A
           git diff --cached --quiet && exit 1
           git commit -m "全国品質同期: 中日本B監査訂正57件をmain向けに反映"
-          git push origin HEAD:coord/central-b-main-audit-sync-v2-20260725
+          git push origin HEAD:test/jichitai-public-central-b-sample-20260724
