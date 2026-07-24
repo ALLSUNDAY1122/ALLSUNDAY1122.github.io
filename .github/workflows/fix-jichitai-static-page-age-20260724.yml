@@ -1,0 +1,47 @@
+name: Fix Jichitai Static Page Age 20260724
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix-and-regenerate:
+    if: github.head_ref == 'feat/jichitai-static-municipality-pages-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/jichitai-static-municipality-pages-20260724
+          fetch-depth: 0
+      - name: Fix informational age display and regenerate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'jichitai-compare/scripts/generate-municipality-pages.mjs';
+          let source = fs.readFileSync(path, 'utf8');
+          const before = `  const age = formatAge(service.eligibility);`;
+          const after = `  const age = definition.eligibilityRule === 'ageRange' ? formatAge(service.eligibility) : null;`;
+          if (!source.includes(before)) throw new Error('年齢表示の修正対象がありません');
+          source = source.replace(before, after);
+          fs.writeFileSync(path, source);
+          NODE
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          if grep -R "年齢目安：生後0か月から120歳まで" municipality; then
+            echo '年齢非依存制度に不正な年齢表示が残っています。'
+            exit 1
+          fi
+          cd ..
+          git rm .github/workflows/fix-jichitai-static-page-age-20260724.yml
+          git add jichitai-compare/scripts/generate-municipality-pages.mjs jichitai-compare/municipality jichitai-compare/data/generated/municipality-pages.json jichitai-compare/sitemap.xml
+          git commit -m "fix: 年齢非依存制度の静的ページ表示を修正"
+          git push origin HEAD:feat/jichitai-static-municipality-pages-20260724
