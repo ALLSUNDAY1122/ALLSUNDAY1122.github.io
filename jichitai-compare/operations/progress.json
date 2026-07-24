@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-24T13:35:00+09:00",
+  "updatedAt": "2026-07-24T13:38:00+09:00",
   "totalMunicipalities": 1741,
   "totalMunicipalitiesSource": {
     "value": 1741,
@@ -11,8 +11,8 @@
     "calculation": "市町村計1724（北方4島の6村を含み、特別区を含まない）- 6村 + 23特別区 = 1741",
     "scope": "現に自治体行政が行われている市町村および東京都23特別区"
   },
-  "registeredMunicipalities": 1565,
-  "remainingMunicipalities": 176,
+  "registeredMunicipalities": 1567,
+  "remainingMunicipalities": 174,
   "todoMunicipalities": 0,
   "researchingMunicipalities": 0,
   "verifiedMunicipalities": 0,
@@ -21,22 +21,22 @@
   "needsRevisionMunicipalities": 0,
   "needsCoordinatorMunicipalities": 0,
   "prOpenMunicipalities": 0,
-  "mergedMunicipalities": 1565,
+  "mergedMunicipalities": 1567,
   "blockedMunicipalities": 0,
   "assignmentSummary": {
     "unassigned": 0,
-    "assigned": 1565,
+    "assigned": 1566,
     "pr_open": 0,
-    "blocked": 0
+    "blocked": 1
   },
-  "totalServices": 14085,
-  "completedServices": 14085,
-  "completionRatePercent": 100,
+  "totalServices": 14103,
+  "completedServices": 14101,
+  "completionRatePercent": 99.99,
   "todoServices": 0,
   "researchingServices": 0,
-  "verifiedServices": 13161,
-  "unavailableServices": 924,
-  "needsMediumReviewServices": 0,
+  "verifiedServices": 13179,
+  "unavailableServices": 922,
+  "needsMediumReviewServices": 2,
   "needsRevisionServices": 0,
   "needsCoordinatorServices": 0,
   "prOpenServices": 0,
@@ -463,14 +463,14 @@
       ]
     },
     "東日本調査班": {
-      "registeredMunicipalities": 405,
-      "assignedMunicipalities": 405,
+      "registeredMunicipalities": 407,
+      "assignedMunicipalities": 407,
       "prOpenMunicipalities": 0,
-      "blockedMunicipalities": 0,
-      "verifiedServices": 3436,
+      "blockedMunicipalities": 1,
+      "verifiedServices": 3454,
       "researchingServices": 0,
-      "unavailableServices": 209,
-      "needsReviewServices": 0,
+      "unavailableServices": 207,
+      "needsReviewServices": 2,
       "blockedServices": 0,
       "municipalityCodes": [
         "08201",
@@ -774,6 +774,8 @@
         "14215",
         "14216",
         "14217",
+        "14218",
+        "14301",
         "19201",
         "19202",
         "19204",
@@ -1661,7 +1663,19 @@
       ]
     }
   },
-  "stalledMunicipalities": [],
+  "stalledMunicipalities": [
+    {
+      "code": "20602",
+      "name": "栄村",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "currentBranch": "audit/20602-sakae-static-official",
+      "pullRequestNumber": 2366,
+      "blockers": [
+        "栄村公式サイト本体が一時利用不可で、令和8年度の制度詳細・最新版資料URLを完全確認できない。"
+      ]
+    }
+  ],
   "municipalities": [
     {
       "code": "01100",
@@ -15804,6 +15818,46 @@
       "blockers": []
     },
     {
+      "code": "14218",
+      "name": "綾瀬市",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "assignmentState": "assigned",
+      "currentBranch": "data/14218-ayase",
+      "pullRequestNumber": 2368,
+      "completedServiceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "researchingCount": 0,
+      "currentService": null,
+      "lastCheckedAt": "2026-07-24",
+      "lastUpdatedAt": "2026-07-24T13:38:00+09:00",
+      "lastUpdatedBy": "東日本調査班B, 統括A",
+      "blockers": []
+    },
+    {
+      "code": "14301",
+      "name": "葉山町",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "assignedTeam": "東日本調査班",
+      "status": "merged",
+      "assignmentState": "assigned",
+      "currentBranch": "data/14301-hayama",
+      "pullRequestNumber": null,
+      "completedServiceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "researchingCount": 0,
+      "currentService": null,
+      "lastCheckedAt": "2026-07-24",
+      "lastUpdatedAt": "2026-07-24T13:38:00+09:00",
+      "lastUpdatedBy": "東日本調査班B, 統括A",
+      "blockers": []
+    },
+    {
       "code": "16201",
       "name": "富山市",
       "prefectureCode": "16",
@@ -18890,18 +18944,20 @@
       "prefecture": "長野県",
       "assignedTeam": "東日本調査班",
       "status": "merged",
-      "assignmentState": "assigned",
-      "currentBranch": "data/20602-sakae",
-      "pullRequestNumber": 2166,
-      "completedServiceCount": 9,
+      "assignmentState": "blocked",
+      "currentBranch": "audit/20602-sakae-static-official",
+      "pullRequestNumber": 2366,
+      "completedServiceCount": 7,
       "verifiedCount": 0,
-      "unavailableCount": 9,
+      "unavailableCount": 7,
       "researchingCount": 0,
-      "currentService": null,
+      "currentService": "childMedical",
       "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T12:20:00+09:00",
+      "lastUpdatedAt": "2026-07-24T13:38:00+09:00",
       "lastUpdatedBy": "東日本調査班A, 統括A",
-      "blockers": []
+      "blockers": [
+        "栄村公式サイト本体が一時利用不可で、令和8年度の制度詳細・最新版資料URLを完全確認できない。"
+      ]
     },
     {
       "code": "21201",
