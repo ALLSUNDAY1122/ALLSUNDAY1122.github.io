@@ -1,0 +1,207 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "47381",
+  "prefectureCode": "47",
+  "prefecture": "沖縄県",
+  "name": "竹富町",
+  "officialUrl": "https://www.town.taketomi.lg.jp/",
+  "status": "verified",
+  "summary": "必須9制度を竹富町公式情報で調査。7制度をverified、病児・病後児保育と2026年度学校給食費の具体条件を確認できないためunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から高校3年生まで保険診療の自己負担を助成し、現物給付・自動償還・償還払いに対応",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "竹富町に住所がある0歳から高校3年生までの子ども",
+        "coverage": "健康保険が適用される医療費の自己負担分",
+        "payment": "現物給付、自動償還、窓口申請による償還払いの3方式",
+        "exclusion": "健康診断、予防接種、入院時食事療養費、差額ベッド代、自由診療等は対象外",
+        "application": "健康保険情報と振込口座等を届け出て受給資格者証の交付を受ける",
+        "schoolAccident": "学校・保育所等でのけがは日本スポーツ振興センター災害共済給付を優先"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/guide/kosodate/kodomo_kenkou/1531276571/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式サイトで病児・病後児保育の実施施設、石垣市等の広域利用、対象年齢、料金、予約方法を確認できない",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "publishedStatus": "子育て・教育及び子育て支援ページに病児・病後児保育の現行案内がない",
+        "related": "ファミリーサポートセンターは一時預かり・送迎支援であり、病児保育施設とは確認できない",
+        "missing": "実施施設、島外広域利用可否、対象年齢、利用料、医師連絡票、登録・予約方法",
+        "confirmation": "こども未来課または健康づくり課への確認が必要",
+        "avoidInference": "通常保育所、診療所、ファミサポを病児保育として扱わない"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/guide/kosodate/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.taketomi.lg.jp/guide/kosodate/kosodateshien/1531297228/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3歳以上と非課税世帯の3歳未満児は無料、課税世帯の3歳未満児は月5,000円",
+      "eligibility": {
+        "minAgeMonths": 24,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "threePlus": "4月1日時点で3歳以上の児童は保育料無料",
+        "underThreeNonTax": "3歳未満の住民税非課税世帯は無料",
+        "underThreeTax": "3歳未満の課税世帯は児童1人月額5,000円",
+        "siblings": "同一保護者が2人以上を保育所へ入所させる場合、2人目以降は1人につき月額4,000円を加算",
+        "acceptance": "町立保育所は原則満2歳の誕生月翌月第1開所日から就学前まで",
+        "payment": "毎月25日納期限。口座振替、役場・金融機関・コンビニ・スマホ決済に対応"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/guide/kosodate/1632457515/1756787143/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "学校給食共同調理場と町立学校での給食実施は確認できるが、2026年度の給食費額・補助・無償化状況を確認できない",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "publishedStatus": "東部・西部地区学校給食共同調理場と町立小中学校で給食を提供",
+        "missing": "2026年度の月額または1食単価、町独自補助、就学援助、一律無償化の有無、徴収方法",
+        "confirmation": "竹富町教育委員会教育課または各共同調理場への確認が必要",
+        "avoidInference": "学校活動日誌の給食提供情報だけで費用や無償化を推定しない"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/guide/kosodate/elementary_junior/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.taketomi.lg.jp/administration/shisetsu/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・日帰り・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "竹富町に住民登録があり、心身の不調、支援者不足、休養・栄養管理等の相談を必要とする産後1年未満の母親と乳児",
+        "facility": "おおそこ助産院（石垣市）",
+        "types": "宿泊型、日帰り3時間・6時間、訪問型2時間",
+        "fees": "宿泊1泊2日3,000円、日帰り3時間1,000円・6時間2,000円、訪問1,200円",
+        "limits": "宿泊型4泊5日まで、日帰り型4回まで、訪問型4回まで",
+        "exemption": "町民税非課税世帯・生活保護世帯は利用者負担免除制度あり",
+        "travel": "産後ケア利用に係る渡航費助成あり",
+        "application": "子育て世代包括支援センターへ相談後、申請書兼同意書を提出"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/guide/kosodate/ninshin_shussan/1703055970/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "町立幼稚園で教育時間後と長期休業中の預かり保育を実施",
+      "eligibility": {
+        "minAgeMonths": 48,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "竹富町立幼稚園に在園する4歳児・5歳児",
+        "weekdays": "通常教育終了後から17時まで",
+        "schoolBreaks": "春・夏・冬休みの月曜から金曜は8時30分から17時まで預かり保育を実施",
+        "application": "令和8年度幼稚園入園申込と必要書類をこども未来課・幼稚園等へ提出",
+        "fee": "預かり保育料・減免の具体額は令和8年度入園案内、幼稚園またはこども未来課へ確認",
+        "classification": "未就園児向けこども誰でも通園制度ではなく、幼稚園在園児向け預かり保育として登録"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/guide/kosodate/1632457515/1756787143/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.taketomi.lg.jp/guide/kosodate/kosodateshien/1531297228/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "2026年度、10万円以上の住宅改修費を20％・上限50万円補助",
+      "details": {
+        "target": "町内に居住し、対象住宅を所有または所有者の承諾を得て居住する等、交付要綱の要件を満たす人",
+        "eligibleWork": "バリアフリー、省エネ、空き家、耐久性向上等の住宅リフォーム工事",
+        "minimum": "補助対象工事費10万円以上",
+        "support": "補助対象工事費の20％以内",
+        "limit": "上限50万円",
+        "period": "2026年6月29日から7月31日まで",
+        "selection": "申請総額が予算を超えた場合は公開抽選",
+        "application": "交付要綱を確認し、見積書、写真、登記・固定資産資料、住民票等を提出"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/topics/taketomireform/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "インターネットで事前申込みし、処理券を貼付して1回3品目まで収集",
+      "details": {
+        "target": "竹富町内の一般家庭から排出される粗大ごみ",
+        "application": "町公式の粗大ごみインターネット受付から申込み",
+        "ticket": "最寄りのスーパーまたは売店で粗大ごみ処理券を購入し対象物へ貼付",
+        "limit": "1回の申込みは3品目まで",
+        "collection": "家庭ごみ収集表では第2・第4木曜日が申込み制粗大ごみ収集日",
+        "cancellation": "取消時はまちづくり課へ連絡",
+        "confirmation": "処理券価格、島・品目別の収集条件はごみ分別百科事典またはまちづくり課へ確認"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/guide/gomi_recycle/1531132418/1694413470/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.taketomi.lg.jp/guide/gomi_recycle/1531132126/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・高潮・土砂災害等を収録した島別防災マップとWEB版ハザードマップを公開",
+      "details": {
+        "updated": "2024年3月に沖縄県の最新ハザード情報を反映して更新",
+        "coverage": "津波、高潮、土砂災害、洪水、地震、風水害・台風等",
+        "formats": "WEB版ハザードマップと竹富・小浜・黒島・新城・西表・鳩間・波照間の島別PDF",
+        "evacuation": "指定避難所・避難場所、AED・ヘリポート、避難時の注意点等を掲載",
+        "guidance": "自宅・学校・職場周辺の危険性と最寄り避難場所・経路を平時から確認",
+        "line": "町公式LINEから現在地付近の津波避難場所・経路検索が可能"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/bousai/bousaimap/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
