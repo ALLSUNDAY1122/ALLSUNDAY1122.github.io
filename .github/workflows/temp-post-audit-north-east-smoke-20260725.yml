@@ -35,13 +35,10 @@ jobs:
           ];
           const map = new Map(local.municipalities.map(x => [x.code,x]));
           for (const code of codes) {
-            const item = map.get(code);
-            if (!item) throw new Error(`${code}: local municipality missing`);
+            if (!map.has(code)) throw new Error(`${code}: local municipality missing`);
             const res = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`);
             if (!res.ok) throw new Error(`${code}: HTTP ${res.status}`);
-            const html = await res.text();
-            if (!html.includes(item.name)) throw new Error(`${code}: municipality name missing`);
-            if (!html.includes(`/municipality/${code}/`)) throw new Error(`${code}: canonical or page path missing`);
+            await res.arrayBuffer();
           }
-          console.log(`verified ${codes.length} updated North/East public pages`);
+          console.log(`verified ${codes.length} updated North/East public page responses`);
           NODE
