@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const { chromium } = require('playwright');
 
 const base = 'https://allsunday1122.github.io/yorugatari';
+const landingAnalyticsVersion = '20260724-004';
 const results = [];
 const failures = [];
 
@@ -21,7 +22,7 @@ async function waitForTopCards(page) {
 
 async function run() {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.3' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-UI-Audit/1.4' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
@@ -39,10 +40,11 @@ async function run() {
     unique: new Set(Array.from(document.querySelectorAll('.card')).map((card) => card.getAttribute('href'))).size,
     busy: document.querySelector('#storyGrid')?.getAttribute('aria-busy'),
     version: Array.from(document.scripts).some((script) => script.src.includes('assets/app.js?v=20260723-008')),
-    fiveMinuteLinks: document.querySelectorAll('a[href="5min-horror.html"]').length
+    fiveMinuteLinks: document.querySelectorAll('a[href="5min-horror.html"]').length,
+    bedtimeLinks: document.querySelectorAll('a[href="bedtime-horror.html"]').length
   }));
   record('top progressively renders 100 unique cards', topState.cards === 100 && topState.unique === 100 && topState.busy === 'false' && topState.version, topState);
-  record('top exposes the five-minute horror landing', topState.fiveMinuteLinks >= 2, topState.fiveMinuteLinks);
+  record('top exposes both curated horror landings', topState.fiveMinuteLinks >= 2 && topState.bedtimeLinks >= 2, topState);
   await noHorizontalOverflow(page, 'top mobile has no horizontal overflow');
   record('reader panel shows saved completion', (await page.locator('.reader-panel').innerText()).includes('1 / 100話 読了'));
 
@@ -77,15 +79,19 @@ async function run() {
   await page.goto(`${base}/archive.html?ui=${Date.now()}`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.archive-item');
   const archiveCount = await page.locator('.archive-item').count();
+  const archiveLandings = {
+    fiveMinute: await page.locator('a[href="5min-horror.html"]').count(),
+    bedtime: await page.locator('a[href="bedtime-horror.html"]').count()
+  };
   record('archive renders 100 unique items', archiveCount === 100, archiveCount);
-  record('archive exposes the five-minute horror landing', await page.locator('a[href="5min-horror.html"]').count() >= 1, await page.locator('a[href="5min-horror.html"]').count());
+  record('archive exposes both curated horror landings', archiveLandings.fiveMinute >= 1 && archiveLandings.bedtime >= 1, archiveLandings);
   await noHorizontalOverflow(page, 'archive mobile has no horizontal overflow');
   await page.getByRole('button', { name: 'お気に入り', exact: true }).click();
   record('archive favorite filter works', await page.locator('.archive-item').count() === 1 && (await page.locator('.archive-item').first().getAttribute('href')).includes('neighbor-wifi'), await page.locator('.archive-item').count());
 
   await page.goto(`${base}/5min-horror.html?ui=${Date.now()}`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.pick');
-  const landing = await page.evaluate(() => {
+  const fiveMinute = await page.evaluate((version) => {
     const picks = Array.from(document.querySelectorAll('.pick'));
     return {
       picks: picks.length,
@@ -95,14 +101,39 @@ async function run() {
       h1: document.querySelectorAll('h1').length,
       breadcrumb: document.querySelectorAll('.breadcrumb').length,
       canonical: document.querySelector('link[rel="canonical"]')?.href,
-      analytics: Array.from(document.scripts).some((script) => script.src.includes('assets/analytics.js?v=20260723-003')),
-      engagement: Array.from(document.scripts).some((script) => script.src.includes('assets/engagement.js'))
+      analytics: Array.from(document.scripts).some((script) => script.src.includes(`assets/analytics.js?v=${version}`)),
+      engagement: Array.from(document.scripts).some((script) => script.src.includes('assets/engagement.js')),
+      bedtimeLinks: document.querySelectorAll('a[href="bedtime-horror.html"]').length
     };
-  });
-  record('five-minute landing renders 12 unique editorial picks', landing.picks === 12 && landing.uniquePicks === 12, landing);
-  record('five-minute landing renders six genre guides and three FAQ items', landing.guides === 6 && landing.faq === 3, landing);
-  record('five-minute landing has canonical metadata and lightweight analytics', landing.h1 === 1 && landing.breadcrumb === 1 && landing.canonical === `${base}/5min-horror.html` && landing.analytics && !landing.engagement, landing);
+  }, landingAnalyticsVersion);
+  record('five-minute landing renders 12 unique editorial picks', fiveMinute.picks === 12 && fiveMinute.uniquePicks === 12, fiveMinute);
+  record('five-minute landing renders six genre guides and three FAQ items', fiveMinute.guides === 6 && fiveMinute.faq === 3, fiveMinute);
+  record('five-minute landing has canonical metadata and lightweight analytics', fiveMinute.h1 === 1 && fiveMinute.breadcrumb === 1 && fiveMinute.canonical === `${base}/5min-horror.html` && fiveMinute.analytics && !fiveMinute.engagement, fiveMinute);
+  record('five-minute landing links to bedtime selection', fiveMinute.bedtimeLinks >= 1, fiveMinute.bedtimeLinks);
   await noHorizontalOverflow(page, 'five-minute landing mobile has no horizontal overflow');
+
+  await page.goto(`${base}/bedtime-horror.html?ui=${Date.now()}`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('.pick');
+  const bedtime = await page.evaluate((version) => {
+    const picks = Array.from(document.querySelectorAll('.pick'));
+    return {
+      picks: picks.length,
+      uniquePicks: new Set(picks.map((item) => item.getAttribute('href'))).size,
+      moods: document.querySelectorAll('.mood-card').length,
+      faq: document.querySelectorAll('.faq article').length,
+      h1: document.querySelectorAll('h1').length,
+      breadcrumb: document.querySelectorAll('.breadcrumb').length,
+      canonical: document.querySelector('link[rel="canonical"]')?.href,
+      analytics: Array.from(document.scripts).some((script) => script.src.includes(`assets/analytics.js?v=${version}`)),
+      engagement: Array.from(document.scripts).some((script) => script.src.includes('assets/engagement.js')),
+      fiveMinuteLinks: document.querySelectorAll('a[href="5min-horror.html"]').length
+    };
+  }, landingAnalyticsVersion);
+  record('bedtime landing renders eight unique editorial picks', bedtime.picks === 8 && bedtime.uniquePicks === 8, bedtime);
+  record('bedtime landing renders four mood guides and three FAQ items', bedtime.moods === 4 && bedtime.faq === 3, bedtime);
+  record('bedtime landing has canonical metadata and lightweight analytics', bedtime.h1 === 1 && bedtime.breadcrumb === 1 && bedtime.canonical === `${base}/bedtime-horror.html` && bedtime.analytics && !bedtime.engagement, bedtime);
+  record('bedtime landing links to five-minute selection', bedtime.fiveMinuteLinks >= 1, bedtime.fiveMinuteLinks);
+  await noHorizontalOverflow(page, 'bedtime landing mobile has no horizontal overflow');
 
   await page.goto(`${base}/stories/spare-key-returned.html?ui=${Date.now()}`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.story-pagination');
