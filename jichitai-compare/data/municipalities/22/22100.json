@@ -7,12 +7,15 @@
   "officialUrl": "https://www.city.shizuoka.lg.jp/",
   "status": "verified",
   "summary": "静岡市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末まで、入院・通院の保険診療分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳到達後の最初の3月31日まで",
         "underOne": "0歳から1歳の誕生月末までは通院・入院・院外処方薬の自己負担なし",
@@ -20,12 +23,18 @@
         "payment": "静岡県内は受給者証による現物給付、県外受診等は払い戻し申請",
         "excluded": "保険適用外費用、学校管理下の災害共済対象等は対象外"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/s2873/s001931.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/s2873/s001931.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後56日経過後から小学6年生年度末まで、病気・回復期の児童を専用施設で預かる。",
-      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 12
+      },
       "details": {
         "target": "静岡市内在住または市内のこども園・保育園・幼稚園等に通う児童",
         "condition": "保護者が就労等で家庭保育できず、集団保育が困難で重篤な基礎疾患がなく経口で水分摂取できること",
@@ -34,12 +43,18 @@
         "feeReduced": "所得税非課税世帯は800円、生活保護・市民税非課税世帯は無料",
         "facilities": "こうのとり、虹いろ、輝き、なでしこ"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/s8493/s002018.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/s8493/s002018.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児等を無償化し、市独自に0～2歳児クラスの第2子以降の保育料も無料とする。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "3～5歳児クラス、住民税非課税・生活保護・里親世帯の0～2歳児クラスは無料",
         "firstChild": "課税世帯の0～2歳児クラス第1子は市民税額、認定区分、保育必要量により算定",
@@ -47,25 +62,44 @@
         "meals": "0～2歳児クラスは保育料に給食費を含む",
         "additionalCosts": "園により実費徴収・上乗せ徴収がある場合がある"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/s5783/s002038.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/s5783/s002038.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "経済的理由で就学が困難な世帯へ、学校給食費を含む費用の一部を援助する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "program": "就学援助制度",
-        "target": "静岡市に居住し、公立小中学校に通う児童生徒の保護者で、市の認定基準に該当する世帯",
-        "coverage": "学校給食費は保護者負担分を援助。学用品費、通学用品費、修学旅行費等も対象",
-        "application": "各小学校・中学校へ申請",
-        "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+      "summary": "令和8年度から市立小学校の給食費を無償化し、経済的に就学が困難な世帯には中学校を含む学校給食費等を就学援助する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/kyoiku/s002285.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "fiscalYear": "令和8年度",
+        "elementary": "市立小学校の学校給食費を無償化",
+        "juniorHighSupport": "中学校を含め、就学援助認定世帯は学校給食費の保護者負担分を援助",
+        "otherAssistance": "学用品費、通学用品費、修学旅行費等も就学援助対象",
+        "application": "就学援助は各小学校・中学校へ申請"
+      },
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/s2934/s013120.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.shizuoka.lg.jp/kyoiku/s002285.html",
+          "checkedAt": "2026-07-22",
+          "note": "就学援助制度の対象・申請方法"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "出産後1年未満の母子へ、宿泊・日帰り2類型・訪問型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "静岡市に居住する出産後1年未満の母と乳児で、産後ケアを必要とする人",
         "overnight": "1出産につき7日まで。1日6,300円、1泊2日12,600円。生活保護・市民税非課税世帯は減額",
@@ -73,12 +107,18 @@
         "dayShortAndVisit": "短時間日帰りと訪問を合わせて7回まで、1回2,300円",
         "care": "母体の身体・心理ケア、授乳支援、育児手技の相談・指導"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/s2873/s001907.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/s2873/s001907.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "こども誰でも通園制度（乳児等通園支援事業）",
         "condition": "保育所・幼稚園・認定こども園・地域型保育・企業主導型保育に通園していない児童",
@@ -87,7 +127,10 @@
         "reduction": "生活保護世帯は1時間最大300円、非課税・年収360万円未満相当世帯は最大200円を減免",
         "facilities": "2026年4月1日時点で市内16施設"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/s4936/s012276.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/s4936/s012276.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -100,7 +143,10 @@
         "registration": "転入前から転入後3か月以内に事前登録し、転入日から1年半以内に申請",
         "residence": "申請後10年以上の継続居住意思等が必要"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/ijuteiju/s000081.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/ijuteiju/s000081.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -113,7 +159,10 @@
         "excess": "7点超は翌月以降に再申込または清掃工場へ直接搬入",
         "fee": "公式案内に個別収集料金の記載がないため料金は推測しない"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/gomi/s000679.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/gomi/s000679.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -125,7 +174,10 @@
         "update": "地震・津波・土砂災害版は2026年2月更新",
         "flood": "河川浸水想定区域と土砂災害警戒区域を掲載"
       },
-      "source": {"url": "https://www.city.shizuoka.lg.jp/s4268/s000309.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.shizuoka.lg.jp/s4268/s000309.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }

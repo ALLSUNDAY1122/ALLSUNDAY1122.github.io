@@ -6,10 +6,10 @@
   "expectedMunicipalityCount": 35,
   "checkedMunicipalityCount": 35,
   "checkedServiceCount": 315,
-  "generatedAt": "2026-07-25T01:27:00+09:00",
+  "generatedAt": "2026-07-25T01:39:00+09:00",
   "structuralFindingCount": 0,
   "unavailableCount": 5,
-  "substantiveSuspectCount": 46,
+  "substantiveSuspectCount": 4,
   "findings": [],
   "unavailable": [
     {
@@ -1778,6 +1778,72 @@
           "checkedAt": "2026-07-22"
         }
       }
+    }
+  ],
+  "initialStructuralFindingCount": 0,
+  "resolvedStructuralFindingCount": 0,
+  "initialSubstantiveSuspectCount": 46,
+  "confirmedErrorCount": 3,
+  "correctedMunicipalityCodes": [
+    "22100",
+    "22208",
+    "22224"
+  ],
+  "confirmedCorrections": [
+    {
+      "type": "current_program_omission",
+      "service": "schoolMeals",
+      "count": 2,
+      "municipalityCodes": [
+        "22100",
+        "22208"
+      ]
+    },
+    {
+      "type": "current_program_omission",
+      "service": "temporaryChildcare",
+      "count": 1,
+      "municipalityCodes": [
+        "22224"
+      ]
+    }
+  ],
+  "confirmedAccurateExamples": [
+    {
+      "code": "22213",
+      "service": "schoolMeals",
+      "detail": "掛川市公式の現行公開ページは令和7年1月以降の負担額を掲載し、令和8年度の無償化は確認できないため既存記録を維持"
+    },
+    {
+      "code": "22215",
+      "service": "schoolMeals",
+      "detail": "御殿場市公式ページは令和8年度給食費納入通知を掲載しており、全世帯無償化とは確認できないため既存記録を維持"
+    }
+  ],
+  "needsFurtherReview": [
+    {
+      "code": "22219",
+      "name": "下田市",
+      "service": "temporaryChildcare",
+      "detail": "乳児等通園支援事業条例は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "code": "22305",
+      "name": "松崎町",
+      "service": "temporaryChildcare",
+      "detail": "条例制定議案は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "code": "22424",
+      "name": "吉田町",
+      "service": "temporaryChildcare",
+      "detail": "乳児等通園支援事業条例は確認できるが、現行の利用対象・施設・料金ページを確認できない"
+    },
+    {
+      "code": "22429",
+      "name": "川根本町",
+      "service": "temporaryChildcare",
+      "detail": "こども計画は確認できるが、現行の利用対象・施設・料金ページを確認できない"
     }
   ]
 }
