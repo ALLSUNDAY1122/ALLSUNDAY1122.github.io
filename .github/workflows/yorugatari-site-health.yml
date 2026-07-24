@@ -5,6 +5,11 @@ on:
   workflow_run:
     workflows:
       - Audit Yorugatari accessibility
+      - Normalize Yorugatari story pages
+      - Yorugatari performance audit
+      - Yorugatari engagement audit
+      - Yorugatari final verification
+      - Yorugatari analytics snapshot
     types:
       - completed
   schedule:
@@ -24,6 +29,8 @@ on:
       - yorugatari/tools/analytics-snapshot-latest.json
       - yorugatari/tools/landing-conversion-latest.json
       - yorugatari/tools/external-launch-status.json
+      - yorugatari/tools/external-launch-next.md
+      - yorugatari/tools/external-launch-next.txt
       - .github/workflows/yorugatari-site-health.yml
 
 concurrency:
