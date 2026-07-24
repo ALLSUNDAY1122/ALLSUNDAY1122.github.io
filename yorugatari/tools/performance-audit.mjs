@@ -35,21 +35,23 @@ async function waitForRelease() {
   for (let attempt = 1; attempt <= 24; attempt += 1) {
     try {
       const stamp = Date.now();
-      const [topResponse, fiveMinuteResponse, bedtimeResponse, archiveResponse, storyResponse, storyScriptResponse] = await Promise.all([
+      const [topResponse, fiveMinuteResponse, bedtimeResponse, archiveResponse, storyResponse, storyScriptResponse, landingShareResponse] = await Promise.all([
         fetch(`${base}/?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
         fetch(`${base}/5min-horror.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
         fetch(`${base}/bedtime-horror.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
         fetch(`${base}/archive.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
         fetch(`${base}/stories/spare-key-returned.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/assets/story.js?v=20260723-007&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
+        fetch(`${base}/assets/story.js?v=20260723-007&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
+        fetch(`${base}/assets/landing-share.js?v=20260724-002&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
       ]);
-      const [topHtml, fiveMinuteHtml, bedtimeHtml, archiveHtml, storyHtml, storyScript] = await Promise.all([
+      const [topHtml, fiveMinuteHtml, bedtimeHtml, archiveHtml, storyHtml, storyScript, landingShareScript] = await Promise.all([
         topResponse.text(),
         fiveMinuteResponse.text(),
         bedtimeResponse.text(),
         archiveResponse.text(),
         storyResponse.text(),
-        storyScriptResponse.text()
+        storyScriptResponse.text(),
+        landingShareResponse.text()
       ]);
       const detail = {
         attempt,
@@ -59,17 +61,19 @@ async function waitForRelease() {
         archiveStatus: archiveResponse.status,
         storyStatus: storyResponse.status,
         storyScriptStatus: storyScriptResponse.status,
+        landingShareStatus: landingShareResponse.status,
         progressiveApp: topHtml.includes('assets/app.js?v=20260723-008'),
         analytics: topHtml.includes('assets/analytics.js?v=20260723-003'),
-        fiveMinuteReady: fiveMinuteHtml.includes('href="stories/last-elevator.html"') && (fiveMinuteHtml.match(/class="pick"/g) || []).length === 12 && fiveMinuteHtml.includes('assets/analytics.js?v=20260724-004'),
-        bedtimeReady: bedtimeHtml.includes('href="stories/good-night.html"') && (bedtimeHtml.match(/class="pick"/g) || []).length === 8 && (bedtimeHtml.match(/class="mood-card"/g) || []).length === 4 && bedtimeHtml.includes('assets/analytics.js?v=20260724-005'),
+        fiveMinuteReady: fiveMinuteHtml.includes('href="stories/last-elevator.html"') && (fiveMinuteHtml.match(/class="pick"/g) || []).length === 12 && fiveMinuteHtml.includes('assets/landing-share.js?v=20260724-002') && fiveMinuteHtml.includes('特集単位の合計だけを匿名で集計します') && fiveMinuteHtml.includes('assets/analytics.js?v=20260724-004'),
+        bedtimeReady: bedtimeHtml.includes('href="stories/good-night.html"') && (bedtimeHtml.match(/class="pick"/g) || []).length === 8 && (bedtimeHtml.match(/class="mood-card"/g) || []).length === 4 && bedtimeHtml.includes('assets/landing-share.js?v=20260724-002') && bedtimeHtml.includes('特集単位の合計だけを匿名で集計します') && bedtimeHtml.includes('assets/analytics.js?v=20260724-005'),
+        landingConversionReady: landingShareResponse.ok && landingShareScript.includes("RUNTIME_VERSION = '20260724-002'") && landingShareScript.includes('/yorugatari/__landing-start/five-minute') && landingShareScript.includes('/yorugatari/__landing-start/bedtime') && landingShareScript.includes('storyStartInFlight'),
         archiveReady: archiveHtml.includes('assets/archive.js?v=20260723-004'),
         staticCirculation: storyHtml.includes('class="hero-actions story-pagination"') && storyHtml.includes('class="related"'),
         storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-003'),
         catalogFree: !storyScript.includes('catalogSources') && !storyScript.includes('loadCatalogScript')
       };
       report.releaseCheck = detail;
-      if (topResponse.ok && fiveMinuteResponse.ok && bedtimeResponse.ok && archiveResponse.ok && storyResponse.ok && storyScriptResponse.ok && Object.values(detail).every((value) => value !== false)) return;
+      if (topResponse.ok && fiveMinuteResponse.ok && bedtimeResponse.ok && archiveResponse.ok && storyResponse.ok && storyScriptResponse.ok && landingShareResponse.ok && Object.values(detail).every((value) => value !== false)) return;
     } catch (error) {
       report.releaseCheck = { attempt, ...errorDetail(error) };
     }
