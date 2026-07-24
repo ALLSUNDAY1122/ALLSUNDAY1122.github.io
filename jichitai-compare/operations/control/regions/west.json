@@ -1,1 +1,33 @@
-{"schemaVersion":"1.0.0","region":"west","assignedTeam":"西日本調査班","branch":"region/west","integrationBranch":"region/west","updatedAt":"2026-07-24T20:00:00+09:00","status":"active","stage":"quality_audit","currentMunicipality":null,"completedSinceLastRelease":0,"completedMunicipalities":[],"pendingRegionalPullRequests":[],"blocked":[],"lastAction":"西日本B担当11県250自治体・必須2,250制度の最終監査を完了し、未調査残数0・checkpoint status=completedを確認。全国統合PR #2532で西日本12自治体をmainへ選択公開後、品質監査で自治体コード40210の八女市重複を検出し、PR #2723で正式な大川市9制度データへ訂正してregion/westへ統合した。","nextAction":"統括はmain向け共有地域状態同期PR #2710を確認・統合し、次回の選択公開で大川市（40210）の訂正データをmainへ反映する。west-aは完了後品質監査を継続し、west-bは新規調査を停止して統合・状態同期を支援する。","completedMunicipalitiesSinceLastNationalMerge":0,"lastNationalIntegrationPr":2532,"lastNationalIntegrationAt":"2026-07-24T16:25:55+09:00","lastGeneratedPullRequest":2553,"lastRegionalCorrectionPr":2723,"humanDecisionRequired":false}
+{
+  "schemaVersion": "1.0.0",
+  "region": "west",
+  "assignedTeam": "西日本調査班",
+  "branch": "region/west",
+  "integrationBranch": "region/west",
+  "updatedAt": "2026-07-24T22:18:00+09:00",
+  "status": "completed",
+  "stage": "nationwide_complete",
+  "currentMunicipality": null,
+  "completedSinceLastRelease": 0,
+  "completedMunicipalities": [],
+  "regionalQueue": [],
+  "pendingRegionalPullRequests": [],
+  "blocked": [],
+  "openPullRequestCount": 0,
+  "completenessAudit": {
+    "status": "passed",
+    "expectedMunicipalities": 476,
+    "registeredMunicipalities": 476,
+    "requiredServices": 4284,
+    "completedServices": 4284,
+    "nationwidePublishedMunicipalities": 1741,
+    "nationwideRemainingMunicipalities": 0,
+    "checkedAt": "2026-07-24T22:18:00+09:00"
+  },
+  "lastAction": "西日本476自治体を含む全国1,741自治体・15,669制度の完全公開と通常CI成功を確認した。",
+  "nextAction": "新規自治体調査を停止し、自治体公式情報の更新・差し戻し・CI失敗が発生した場合のみ品質監査を再開する。",
+  "lastNationalIntegrationPr": 2791,
+  "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
+  "lastGeneratedPullRequest": 2792,
+  "humanDecisionRequired": false
+}
