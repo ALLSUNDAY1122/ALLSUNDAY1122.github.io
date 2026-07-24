@@ -1,115 +1,86 @@
-name: Resolve West Needs Review Conservatively
+name: Jichitai Compare CI
 
 on:
   pull_request:
-    branches: [region/west]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  normalize:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Fetch west baseline
-        run: git fetch origin region/west
-      - name: Convert unresolved official conditions to unavailable
+
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
-        run: |
-          node <<'NODE'
-          const fs=require('fs'),path=require('path');
-          const root='data/municipalities';
-          const serviceIds=JSON.parse(fs.readFileSync('data/service-definitions.json','utf8')).services.map((service)=>service.id);
-          const westPrefixes=new Set(['31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47']);
-          const files=[];
-          function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else if(/^\d{5}\.json$/.test(e.name))files.push(p)}}
-          walk(root);
-          const changed=[]; let convertedServices=0;
-          for(const file of files){
-            const code=path.basename(file,'.json'); if(!westPrefixes.has(code.slice(0,2))) continue;
-            const data=JSON.parse(fs.readFileSync(file,'utf8')); const converted=[];
-            for(const [key,service] of Object.entries(data.services??{})){
-              if(service.status!=='needs_medium_review') continue;
-              service.status='unavailable';
-              service.details=service.details&&typeof service.details==='object'?service.details:{};
-              service.details.reviewDisposition='自治体公式の公開情報だけでは2026年度の対象・料金・実施施設・申請条件等を確定できないため、推測せずunavailableとして公開。制度不存在を断定せず、詳細は自治体窓口で確認する。';
-              service.details.previousStatus='needs_medium_review';
-              converted.push(key); convertedServices++;
-            }
-            if(!converted.length) continue;
-            data.status='verified';
-            data.summary=`${data.summary??''} 公式公開情報で現行条件を確定できない制度は、推測せずunavailableとして整理。`.trim();
-            data.updatedAt='2026-07-24';
-            fs.writeFileSync(file,JSON.stringify(data)+'\n');
-            const taskPath=`operations/tasks/${code}.json`; const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
-            const entries=serviceIds.map((id)=>[id,data.services?.[id]]);
-            task.status='merged';
-            task.currentService=null;
-            task.nextServiceIndex=serviceIds.length;
-            task.completedServices=[...serviceIds];
-            task.verifiedCount=entries.filter(([,service])=>service?.status==='verified').length;
-            task.researchingCount=0;
-            task.unavailableCount=entries.filter(([,service])=>service?.status==='unavailable').length;
-            task.needsMediumReviewCount=0;
-            task.officialSources=[...new Set(entries
-              .filter(([,service])=>['verified','unavailable'].includes(service?.status)&&/^https:\/\//u.test(service?.source?.url??''))
-              .map(([,service])=>service.source.url))];
-            task.lastCheckedAt='2026-07-24';
-            task.lastUpdatedAt='2026-07-24T21:15:00+09:00';
-            task.lastUpdatedBy='全国統括';
-            task.blockers=[];
-            task.notes=Array.isArray(task.notes)?task.notes:task.notes?[String(task.notes)]:[];
-            task.notes.push(`2026-07-24: needs_medium_reviewの${converted.length}制度を、公式公開情報で現行条件を確定できないためunavailableへ保守的に確定。制度不存在は断定しない。`);
-            fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
-            changed.push({code,name:data.name,prefecture:data.prefecture,convertedServices:converted});
-          }
-          if(changed.length!==75||convertedServices!==189) throw new Error(`expected 75 municipalities/189 services, got ${changed.length}/${convertedServices}`);
-          fs.writeFileSync('operations/control/west-needs-review-resolution-20260724.json',JSON.stringify({schemaVersion:'1.0.0',createdAt:'2026-07-24T21:15:00+09:00',municipalityCount:changed.length,convertedServiceCount:convertedServices,policy:'公式公開情報で現行条件を確定できない制度は、推測せずunavailableとして公開し、制度不存在を断定しない。',municipalities:changed},null,2)+'\n');
-          console.log(`normalized ${changed.length} municipalities / ${convertedServices} services`);
-          NODE
-      - name: Generate and validate west complete state
-        id: validation
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Upload municipality identity errors
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: municipality-identity-errors
+          path: jichitai-compare/identity-validation-errors.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
         shell: bash
         run: |
-          set +e
-          {
-            npm run generate
-            npm run progress
-            npm run validate:generated
-            node --check app.js
-            node <<'NODE'
-          const fs=require('fs'),path=require('path');let review=0,municipalities=0;
-          for(const pref of fs.readdirSync('data/municipalities')){if(!/^(3[1-9]|4[0-7])$/.test(pref))continue;for(const file of fs.readdirSync(`data/municipalities/${pref}`)){if(!/^\d{5}\.json$/.test(file))continue;municipalities++;const d=JSON.parse(fs.readFileSync(`data/municipalities/${pref}/${file}`,'utf8'));review+=Object.values(d.services??{}).filter(s=>s.status==='needs_medium_review').length;}}
-          if(municipalities!==476||review!==0)throw new Error(`west validation mismatch municipalities=${municipalities} review=${review}`);
-          NODE
-          } > west-resolution-validation.log 2>&1
-          status=$?
-          cat west-resolution-validation.log
-          exit $status
-      - name: Upload full validation log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: west-resolution-validation-log
-          path: jichitai-compare/west-resolution-validation.log
-          if-no-files-found: error
-          retention-days: 7
-      - name: Restore standard workflow and commit
-        run: |
-          git show origin/region/west:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'quality: resolve 189 west review services conservatively'
-          git push origin HEAD
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public

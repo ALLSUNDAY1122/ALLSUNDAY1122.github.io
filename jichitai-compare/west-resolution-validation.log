@@ -1,0 +1,332 @@
+
+> jichitai-compare-mvp@0.1.0 generate
+> node ./scripts/generate-municipalities.mjs
+
+481自治体の公開用JSONを生成しました: data/generated/municipalities.json
+
+> jichitai-compare-mvp@0.1.0 progress
+> node ./scripts/update-progress.mjs
+
+481自治体・4329制度の全国進捗を生成しました: operations/progress.json
+
+> jichitai-compare-mvp@0.1.0 validate:generated
+> npm run validate:identity && node ./scripts/validate-data.mjs --require-generated
+
+
+> jichitai-compare-mvp@0.1.0 validate:identity
+> node ./scripts/validate-municipality-identity.mjs
+
+自治体識別検証成功: 481自治体（西日本476自治体の件数、コード・都道府県・名称・URL・source複製を確認）
+ERROR: 安田町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 安田町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 安田町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 安田町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 安田町 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 安田町 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 北川村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 北川村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 北川村 / childcareFee: unavailableには公式HTTPS source.urlが必要です
+ERROR: 北川村 / childcareFee: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 北川村 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 北川村 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 北川村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 北川村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 北川村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 北川村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 馬路村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 馬路村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 馬路村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 馬路村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 馬路村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 馬路村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 芸西村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 芸西村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 本山町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 本山町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 本山町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 本山町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大豊町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大豊町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大豊町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大豊町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大豊町 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大豊町 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大豊町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大豊町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 土佐町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 土佐町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 土佐町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 土佐町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大川村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大川村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大川村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大川村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大川村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大川村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大川村 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大川村 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 仁淀川町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 仁淀川町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 中土佐町 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 中土佐町 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 越知町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 越知町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 越知町 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 越知町 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 越知町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 越知町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 梼原町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 梼原町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 日高村 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 日高村 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 津野町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 津野町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大月町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大月町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 三原村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 三原村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 三原村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 三原村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 黒潮町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 黒潮町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 黒潮町 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 黒潮町 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 田川市 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 田川市 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 柳川市 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 柳川市 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 柳川市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 柳川市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 豊前市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 豊前市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 豊前市 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 豊前市 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 古賀市 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 古賀市 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 古賀市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 古賀市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 福津市 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 福津市 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 福津市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 福津市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: うきは市 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: うきは市 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: うきは市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: うきは市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: うきは市 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: うきは市 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 宮若市 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 宮若市 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 朝倉市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 朝倉市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 糸島市 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 糸島市 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 須恵町 / housingSupport: unavailableには公式HTTPS source.urlが必要です
+ERROR: 須恵町 / housingSupport: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 久山町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 久山町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 小竹町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 小竹町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 筑前町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 筑前町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 東峰村 / childMedical: unavailableには公式HTTPS source.urlが必要です
+ERROR: 東峰村 / childMedical: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 東峰村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 東峰村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 東峰村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 東峰村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大木町 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大木町 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 川崎町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 川崎町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 赤村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 赤村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 赤村 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 赤村 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 赤村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 赤村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 赤村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 赤村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 赤村 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 赤村 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 福智町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 福智町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 苅田町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 苅田町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: みやこ町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: みやこ町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 吉富町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 吉富町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 築上町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 築上町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 築上町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 築上町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 人吉市 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 人吉市 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 人吉市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 人吉市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 人吉市 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 人吉市 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 荒尾市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 荒尾市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 荒尾市 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 荒尾市 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 山鹿市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 山鹿市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 宇土市 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 宇土市 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 上天草市 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 上天草市 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 合志市 / housingSupport: unavailableには公式HTTPS source.urlが必要です
+ERROR: 合志市 / housingSupport: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 美里町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 美里町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 美里町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 美里町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 南小国町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 南小国町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 南小国町 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 南小国町 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 南小国町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 南小国町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 小国町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 小国町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 産山村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 産山村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 産山村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 産山村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 産山村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 産山村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 西原村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 西原村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 西原村 / childcareFee: unavailableには公式HTTPS source.urlが必要です
+ERROR: 西原村 / childcareFee: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 西原村 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 西原村 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 西原村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 西原村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 御船町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 御船町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 嘉島町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 嘉島町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 益城町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 益城町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 甲佐町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 甲佐町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 球磨村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 球磨村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 球磨村 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 球磨村 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 球磨村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 球磨村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 球磨村 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 球磨村 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: あさぎり町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: あさぎり町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: あさぎり町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: あさぎり町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: あさぎり町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: あさぎり町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 苓北町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 苓北町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 苓北町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 苓北町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 苓北町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 苓北町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 枕崎市 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 枕崎市 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 指宿市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 指宿市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 西之表市 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 西之表市 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 西之表市 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 西之表市 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 十島村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 十島村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 十島村 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 十島村 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 十島村 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 十島村 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 長島町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 長島町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 長島町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 長島町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 湧水町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 湧水町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 湧水町 / childcareFee: unavailableには公式HTTPS source.urlが必要です
+ERROR: 湧水町 / childcareFee: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 湧水町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 湧水町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大崎町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大崎町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大崎町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大崎町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 東串良町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 東串良町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 東串良町 / childcareFee: unavailableには公式HTTPS source.urlが必要です
+ERROR: 東串良町 / childcareFee: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 東串良町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 東串良町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 錦江町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 錦江町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 錦江町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 錦江町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 錦江町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 錦江町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 錦江町 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 錦江町 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 肝付町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 肝付町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 中種子町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 中種子町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 南種子町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 南種子町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 南種子町 / housingSupport: unavailableには公式HTTPS source.urlが必要です
+ERROR: 南種子町 / housingSupport: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 南種子町 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 南種子町 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 屋久島町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 屋久島町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 屋久島町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 屋久島町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 屋久島町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 屋久島町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大和村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大和村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大和村 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大和村 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大和村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大和村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 大和村 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 大和村 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 宇検村 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 宇検村 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 宇検村 / childcareFee: unavailableには公式HTTPS source.urlが必要です
+ERROR: 宇検村 / childcareFee: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 宇検村 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 宇検村 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 宇検村 / bulkyWaste: unavailableには公式HTTPS source.urlが必要です
+ERROR: 宇検村 / bulkyWaste: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 龍郷町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 龍郷町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 喜界町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 喜界町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 喜界町 / childcareFee: unavailableには公式HTTPS source.urlが必要です
+ERROR: 喜界町 / childcareFee: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 喜界町 / schoolMeals: unavailableには公式HTTPS source.urlが必要です
+ERROR: 喜界町 / schoolMeals: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 喜界町 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 喜界町 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 喜界町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 喜界町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 徳之島町 / childMedical: unavailableには公式HTTPS source.urlが必要です
+ERROR: 徳之島町 / childMedical: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 徳之島町 / sickChildCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 徳之島町 / sickChildCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 徳之島町 / childcareFee: unavailableには公式HTTPS source.urlが必要です
+ERROR: 徳之島町 / childcareFee: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 徳之島町 / postpartumCare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 徳之島町 / postpartumCare: source.checkedAtはYYYY-MM-DD形式にしてください
+ERROR: 徳之島町 / temporaryChildcare: unavailableには公式HTTPS source.urlが必要です
+ERROR: 徳之島町 / temporaryChildcare: source.checkedAtはYYYY-MM-DD形式にしてください
+検証失敗: 312件のエラー、0件の警告
