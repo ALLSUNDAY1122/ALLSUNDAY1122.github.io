@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 5,
-  "remainingRounds": 5,
+  "completedRounds": 6,
+  "remainingRounds": 4,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 55,
-  "remainingMunicipalityCount": 52,
-  "auditedAt": "2026-07-25T01:39:00+09:00",
+  "auditedMunicipalityCount": 66,
+  "remainingMunicipalityCount": 41,
+  "auditedAt": "2026-07-25T02:22:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -314,6 +314,110 @@
       "04444",
       "04501",
       "05202"
+    ]
+  },
+  "round06": {
+    "codes": [
+      "05204",
+      "05206",
+      "05207",
+      "05209",
+      "05210",
+      "05211",
+      "05212",
+      "05213",
+      "05214",
+      "05215",
+      "05303"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 28,
+    "confirmedErrorCount": 5,
+    "confirmedErrors": [
+      {
+        "code": "05204",
+        "municipality": "大館市",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "こども誰でも通園制度を併記",
+        "reason": "2026年4月開始の市公式制度が未反映"
+      },
+      {
+        "code": "05206",
+        "municipality": "男鹿市",
+        "service": "temporaryChildcare",
+        "before": "通常の一時保育のみ",
+        "after": "船越こども園のこども誰でも通園制度を併記",
+        "reason": "2026年度開始の市公式制度が未反映"
+      },
+      {
+        "code": "05207",
+        "municipality": "湯沢市",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "市内2施設のこども誰でも通園制度を併記",
+        "reason": "2026年6月更新の市公式制度が未反映"
+      },
+      {
+        "code": "05209",
+        "municipality": "鹿角市",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "毛馬内保育園のこども誰でも通園制度を併記",
+        "reason": "2026年6月更新の市公式制度が未反映"
+      },
+      {
+        "code": "05211",
+        "municipality": "潟上市",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "市内2施設のこども誰でも通園制度を併記",
+        "reason": "2026年5月更新の市公式制度が未反映"
+      }
+    ],
+    "sourceCorrectionCount": 1,
+    "sourceCorrections": [
+      {
+        "code": "05212",
+        "municipality": "大仙市",
+        "service": "temporaryChildcare",
+        "change": "こども誰でも通園制度の直接ページを一次出典へ変更し、対象・施設・月上限・料金・申請方法を補強"
+      }
+    ],
+    "evidenceLimitations": [
+      {
+        "code": "05213",
+        "municipality": "北秋田市",
+        "service": "temporaryChildcare",
+        "note": "令和8年度の利用者向け直接案内を取得できず、通常の一時預かり情報を維持"
+      },
+      {
+        "code": "05214",
+        "municipality": "にかほ市",
+        "service": "temporaryChildcare",
+        "note": "現行の利用者向け制度条件を自治体公式本文で確認できず、推測による変更は行わなかった"
+      },
+      {
+        "code": "05215",
+        "municipality": "仙北市",
+        "service": "temporaryChildcare",
+        "note": "事業者募集と事業開始予定は確認したが、利用者向け施設・料金・申請条件を取得できず変更しなかった"
+      },
+      {
+        "code": "05303",
+        "municipality": "小坂町",
+        "service": "temporaryChildcare",
+        "note": "現行の利用者向け制度案内を取得できず、通常の一時預かり情報を維持"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "05210",
+      "05212",
+      "05213",
+      "05214",
+      "05215",
+      "05303"
     ]
   }
 }
