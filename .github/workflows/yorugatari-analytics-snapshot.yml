@@ -20,6 +20,7 @@ on:
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/analytics-snapshot.mjs
       - yorugatari/tools/landing-conversion-snapshot.mjs
+      - yorugatari/tools/build-analytics-insights.mjs
       - .github/workflows/yorugatari-analytics-snapshot.yml
 
 concurrency:
@@ -50,6 +51,7 @@ jobs:
         run: |
           node --check yorugatari/tools/analytics-snapshot.mjs
           node --check yorugatari/tools/landing-conversion-snapshot.mjs
+          node --check yorugatari/tools/build-analytics-insights.mjs
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/assets/landing-share.js
@@ -69,10 +71,11 @@ jobs:
           if (!privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Landing conversion privacy disclosure is missing');
           NODE
 
-      - name: Generate analytics snapshots
+      - name: Generate analytics snapshots and combined insights
         run: |
           node yorugatari/tools/analytics-snapshot.mjs
           node yorugatari/tools/landing-conversion-snapshot.mjs
+          node yorugatari/tools/build-analytics-insights.mjs
 
       - name: Commit analytics reports
         shell: bash
