@@ -3,12 +3,14 @@ import path from 'node:path';
 
 const root = process.cwd();
 const site = path.join(root, 'yorugatari');
-const version = '20260724-001';
+const version = '20260724-002';
 const files = ['5min-horror.html', 'bedtime-horror.html'];
-const shareSection = `    <section class="section landing-share" aria-labelledby="landing-share-title"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Share</div><h2 id="landing-share-title">この特集を共有する</h2></div></div><p class="landing-intro">共有用リンクには作品名や個人情報を含めず、この特集から再訪問があったことだけを匿名で集計します。</p><div class="hero-actions"><button class="btn btn-primary" id="landingShareButton" type="button">共有する</button><button class="btn" id="landingCopyButton" type="button">リンクをコピー</button></div><p class="share-status" id="landingShareStatus" role="status" aria-live="polite"></p></div></section>\n\n`;
+const shareSection = `    <section class="section landing-share" aria-labelledby="landing-share-title"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Share</div><h2 id="landing-share-title">この特集を共有する</h2></div></div><p class="landing-intro">共有用リンクには作品名や個人情報を含めません。特集から作品を開いた回数は、特集単位の合計だけを匿名で集計します。</p><div class="hero-actions"><button class="btn btn-primary" id="landingShareButton" type="button">共有する</button><button class="btn" id="landingCopyButton" type="button">リンクをコピー</button></div><p class="share-status" id="landingShareStatus" role="status" aria-live="polite"></p></div></section>\n\n`;
 
 function ensureShareSection(html) {
-  if (html.includes('id="landingShareButton"')) return html;
+  if (html.includes('id="landingShareButton"')) {
+    return html.replace(/<section class="section landing-share"[\s\S]*?<\/section>\n\n/, shareSection);
+  }
   const faq = '    <section class="section"><div class="wrap"><div class="section-head"><div><div class="eyebrow">FAQ</div>';
   if (!html.includes(faq)) throw new Error('FAQ insertion point was not found');
   return html.replace(faq, shareSection + faq);
