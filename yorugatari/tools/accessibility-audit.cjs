@@ -228,7 +228,12 @@ async function auditStory(page) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/2.0' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/2.1' });
+  await context.route('https://page-views-api.ratneshc.com/**', async (route) => {
+    const requestUrl = new URL(route.request().url());
+    const isViewsRequest = requestUrl.pathname.endsWith('/views');
+    await route.fulfill({ status: 200, contentType: 'application/json', body: isViewsRequest ? '{"views":0}' : '{"ok":true,"views":0}' });
+  });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
