@@ -2,10 +2,10 @@ const fs = require('node:fs');
 const { chromium } = require('playwright');
 
 const base = 'https://allsunday1122.github.io/yorugatari';
-const version = '20260724-001';
+const version = '20260724-002';
 const cases = [
-  { name: 'five-minute', path: '/5min-horror.html', canonical: `${base}/5min-horror.html`, content: 'five_minute_12', picks: 12 },
-  { name: 'bedtime', path: '/bedtime-horror.html', canonical: `${base}/bedtime-horror.html`, content: 'bedtime_8', picks: 8 }
+  { name: 'five-minute', path: '/5min-horror.html', canonical: `${base}/5min-horror.html`, content: 'five_minute_12', picks: 12, startPath: '/yorugatari/__landing-start/five-minute' },
+  { name: 'bedtime', path: '/bedtime-horror.html', canonical: `${base}/bedtime-horror.html`, content: 'bedtime_8', picks: 8, startPath: '/yorugatari/__landing-start/bedtime' }
 ];
 const results = [];
 const failures = [];
@@ -45,7 +45,15 @@ async function openReady(page, currentCase) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Landing-Share-Audit/1.0' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Landing-Share-Audit/1.1' });
+  const trackedPaths = [];
+  await context.route('https://page-views-api.ratneshc.com/**', async (route) => {
+    try {
+      const value = new URL(route.request().url()).searchParams.get('path');
+      if (value) trackedPaths.push(value);
+    } catch (error) {}
+    await route.fulfill({ status: 200, contentType: 'application/json', body: '{"views":1}' });
+  });
   await context.addInitScript(() => {
     window.__LANDING_SHARE_PAYLOAD__ = null;
     window.__LANDING_COPIED_URL__ = null;
@@ -86,6 +94,17 @@ async function openReady(page, currentCase) {
       await page.locator('#landingCopyButton').click();
       const copied = await page.evaluate(() => ({ url: window.__LANDING_COPIED_URL__, status: document.querySelector('#landingShareStatus')?.textContent.trim(), action: window.YORUGATARI_LANDING_SHARE?.lastAction }));
       record(`${currentCase.name}: copy button copies the same tracked URL`, copied.url === state.url && copied.status === '共有用リンクをコピーしました。' && copied.action === 'copy', copied);
+
+      const beforeCount = trackedPaths.filter((value) => value === currentCase.startPath).length;
+      await page.locator('.pick').first().evaluate((link) => link.addEventListener('click', (event) => event.preventDefault()));
+      await page.locator('.pick').first().click();
+      await page.waitForTimeout(250);
+      await page.locator('.pick').nth(1).evaluate((link) => link.addEventListener('click', (event) => event.preventDefault()));
+      await page.locator('.pick').nth(1).click();
+      await page.waitForTimeout(250);
+      const afterCount = trackedPaths.filter((value) => value === currentCase.startPath).length;
+      const startState = await page.evaluate(() => ({ path: window.YORUGATARI_LANDING_SHARE?.storyStartPath, attempted: window.YORUGATARI_LANDING_SHARE?.storyStartAttempted, tracked: window.YORUGATARI_LANDING_SHARE?.storyStartTracked, error: window.YORUGATARI_LANDING_SHARE?.storyStartError }));
+      record(`${currentCase.name}: story start is sent once per session without a story identifier`, afterCount - beforeCount === 1 && startState.path === currentCase.startPath && startState.attempted && startState.tracked && !startState.error, { beforeCount, afterCount, startState });
     }
     record('landing sharing: no browser JavaScript errors', browserErrors.length === 0, browserErrors);
   } catch (error) {
