@@ -13,7 +13,6 @@ const INTERNAL_WORKFLOW_PHRASES = [
   '作業ブランチ',
   'CI run',
   'mainへ',
-  'region/',
   'マージ後',
   '最終検証を実施',
   '次の自治体'
