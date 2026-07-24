@@ -44,11 +44,11 @@ jobs:
           const fs = require('fs');
           const path = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
           const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-          data.updatedAt = '2026-07-25T02:35:00+09:00';
+          data.updatedAt = '2026-07-25T02:39:00+09:00';
           data.workingBranch = 'coord/sync-north-b-sanity-round-07-20260725';
-          data.pullRequestNumber = null;
+          data.pullRequestNumber = 3028;
           data.ciStatus = 'pending';
-          data.nextAction = '北日本B誤調査ざっくり再検証第7回は地域PR #3023・CI #7354・#7355成功でregion/northへ統合済み。八峰町、八郎潟町、美郷町の自治体JSON、task、監査記録、全国生成JSON、静的ページをmainへ同期する。監査完了7/10回・実質76/107自治体・残り31自治体。';
+          data.nextAction = '北日本B誤調査ざっくり再検証第7回は地域PR #3023・CI #7354・#7355成功でregion/northへ統合済み。全国同期PR #3028で八峰町、八郎潟町、美郷町の自治体JSON、task、監査記録、全国生成JSON、静的ページをmainへ同期する。監査完了7/10回・実質76/107自治体・残り31自治体。';
           fs.writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
           NODE
           rm .github/workflows/sync-north-b-sanity-round-07.yml
