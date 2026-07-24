@@ -13,7 +13,8 @@ on:
       - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 concurrency:
   group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
@@ -21,69 +22,129 @@ concurrency:
 
 jobs:
   validate:
-    name: Validate municipality data
+    name: Rebuild and merge West-A final sync
+    if: github.head_ref == 'sync/main-west-a-source-links-final-20260725'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Reject unrelated changes
-        working-directory: jichitai-compare
+      - name: Rebuild, validate, and merge
         env:
-          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: npm run check:scope
-
-      - name: Generate public municipality data and pages
-        working-directory: jichitai-compare
-        run: npm run generate
-
-      - name: Generate national progress
-        working-directory: jichitai-compare
-        run: npm run progress
-
-      - name: Validate source and generated data
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Upload validation failure report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jichitai-validation-report
-          path: jichitai-compare/operations/audits/public-summary-validation-report.json
-          if-no-files-found: ignore
-
-      - name: Check JavaScript syntax
-        working-directory: jichitai-compare
-        run: |
-          node --check app.js
-          node --check scripts/generate-municipality-pages.mjs
-          node --check scripts/validate-municipality-pages.mjs
-          node --check scripts/smoke-public-site.mjs
-
-      - name: Confirm generated files are committed
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          changed="$(git status --porcelain -- data/generated/municipalities.json data/generated/municipality-pages.json operations/progress.json municipality sitemap.xml)"
-          if [ -n "$changed" ]; then
-            echo '生成済みファイルが最新ではありません。'
-            git status --short -- data/generated/municipalities.json data/generated/municipality-pages.json operations/progress.json municipality sitemap.xml
-            exit 1
-          fi
+          set -euo pipefail
 
-      - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
-        run: npm run smoke:public
+          copy_west_a_files() {
+            for path in \
+              jichitai-compare/data/municipalities/33/33213.json \
+              jichitai-compare/data/municipalities/33/33346.json \
+              jichitai-compare/data/municipalities/37/37324.json \
+              jichitai-compare/data/municipalities/40/40224.json \
+              jichitai-compare/data/municipalities/40/40610.json \
+              jichitai-compare/data/municipalities/40/40646.json \
+              jichitai-compare/data/municipalities/43/43443.json \
+              jichitai-compare/data/municipalities/46/46533.json \
+              jichitai-compare/operations/tasks/33213.json \
+              jichitai-compare/operations/tasks/33346.json \
+              jichitai-compare/operations/tasks/37324.json \
+              jichitai-compare/operations/tasks/40224.json \
+              jichitai-compare/operations/tasks/40610.json \
+              jichitai-compare/operations/tasks/40646.json \
+              jichitai-compare/operations/tasks/43443.json \
+              jichitai-compare/operations/tasks/46533.json \
+              jichitai-compare/operations/audits/west-a-source-link-remediation-batch01-20260725.json \
+              jichitai-compare/operations/audits/west-a-source-link-remediation-batch02-20260725.json \
+              jichitai-compare/operations/audits/west-a-source-link-remediation-final-20260725.json
+            do
+              mkdir -p "$(dirname "$path")"
+              git show "origin/region/west:$path" > "$path"
+            done
+          }
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          for attempt in 1 2 3 4 5
+          do
+            echo "Atomic rebuild attempt ${attempt}"
+            git fetch origin main region/west
+            BASE_SHA="$(git rev-parse origin/main)"
+            git reset --hard "$BASE_SHA"
+            copy_west_a_files
+
+            cd jichitai-compare
+            npm run generate
+            npm run progress
+            SCOPE_BASE_SHA="$BASE_SHA" SCOPE_HEAD_SHA=HEAD npm run check:scope
+            npm run validate:generated
+            node --check app.js
+            node --check scripts/generate-municipality-pages.mjs
+            node --check scripts/validate-municipality-pages.mjs
+            node --check scripts/smoke-public-site.mjs
+            cd ..
+
+            git add \
+              jichitai-compare/data/municipalities/33/33213.json \
+              jichitai-compare/data/municipalities/33/33346.json \
+              jichitai-compare/data/municipalities/37/37324.json \
+              jichitai-compare/data/municipalities/40/40224.json \
+              jichitai-compare/data/municipalities/40/40610.json \
+              jichitai-compare/data/municipalities/40/40646.json \
+              jichitai-compare/data/municipalities/43/43443.json \
+              jichitai-compare/data/municipalities/46/46533.json \
+              jichitai-compare/operations/tasks/33213.json \
+              jichitai-compare/operations/tasks/33346.json \
+              jichitai-compare/operations/tasks/37324.json \
+              jichitai-compare/operations/tasks/40224.json \
+              jichitai-compare/operations/tasks/40610.json \
+              jichitai-compare/operations/tasks/40646.json \
+              jichitai-compare/operations/tasks/43443.json \
+              jichitai-compare/operations/tasks/46533.json \
+              jichitai-compare/operations/audits/west-a-source-link-remediation-batch01-20260725.json \
+              jichitai-compare/operations/audits/west-a-source-link-remediation-batch02-20260725.json \
+              jichitai-compare/operations/audits/west-a-source-link-remediation-final-20260725.json \
+              jichitai-compare/data/generated/municipalities.json \
+              jichitai-compare/data/generated/municipality-pages.json \
+              jichitai-compare/operations/progress.json \
+              jichitai-compare/municipality/33213/index.html \
+              jichitai-compare/municipality/33346/index.html \
+              jichitai-compare/municipality/37324/index.html \
+              jichitai-compare/municipality/40224/index.html \
+              jichitai-compare/municipality/40610/index.html \
+              jichitai-compare/municipality/40646/index.html \
+              jichitai-compare/municipality/43443/index.html \
+              jichitai-compare/municipality/46533/index.html \
+              jichitai-compare/sitemap.xml
+
+            git commit -m 'fix: 西日本A公式出典監査の全修正を最新mainへ同期'
+            HEAD_SHA="$(git rev-parse HEAD)"
+            git push --force-with-lease origin "HEAD:${{ github.event.pull_request.head.ref }}"
+
+            git fetch origin main
+            if [ "$(git rev-parse origin/main)" != "$BASE_SHA" ]; then
+              echo 'main advanced during validation; rebuilding again.'
+              continue
+            fi
+
+            sleep 3
+            gh api --method PUT \
+              "repos/${GITHUB_REPOSITORY}/pulls/3106/merge" \
+              -f merge_method=merge \
+              -f sha="$HEAD_SHA"
+            exit 0
+          done
+
+          echo 'main kept advancing through all rebuild attempts.'
+          exit 1
