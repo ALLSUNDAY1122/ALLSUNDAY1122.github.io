@@ -18,8 +18,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: jichitai-compare/package-lock.json
       - name: Update four current official sources
         shell: bash
         run: |
@@ -60,9 +58,7 @@ jobs:
             const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
             const service = source.services?.[change.service];
             if (!service?.source) throw new Error(`Missing service source: ${change.code} ${change.service}`);
-            if (service.source.url !== change.oldUrl) {
-              throw new Error(`Unexpected old URL for ${change.code}: ${service.source.url}`);
-            }
+            if (service.source.url !== change.oldUrl) throw new Error(`Unexpected old URL for ${change.code}: ${service.source.url}`);
             service.source.url = change.newUrl;
             service.source.checkedAt = '2026-07-25';
             source.updatedAt = '2026-07-25';
@@ -85,14 +81,14 @@ jobs:
       - name: Regenerate and validate
         working-directory: jichitai-compare
         run: |
-          npm ci
           npm run generate
           npm run progress
           npm run validate:generated
-      - name: Remove temporary workflow and commit
+      - name: Remove temporary files and commit
         shell: bash
         run: |
           rm .github/workflows/temp-west-b-cycle07-source-fix.yml
+          rm -f .github/west-b-cycle07-source-fix.trigger
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jichitai-compare/data/municipalities/42/42210.json
@@ -110,5 +106,6 @@ jobs:
           git add jichitai-compare/municipality/44210/index.html
           git add jichitai-compare/operations/progress.json
           git add .github/workflows/temp-west-b-cycle07-source-fix.yml
+          git add .github/west-b-cycle07-source-fix.trigger
           git commit -m "fix: 西日本B第7回の移転済み公式出典4件を更新"
           git push origin HEAD:fix/west-b-cycle07-source-maintenance-20260725
