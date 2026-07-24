@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1477,
+    "municipalityCount": 1478,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -254045,6 +254045,168 @@
           },
           "source": {
             "url": "https://www.town.itoda.lg.jp/residents/living/public_safety/page_01131.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "40608",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "name": "大任町",
+      "officialUrl": "https://www.town.oto.fukuoka.jp/",
+      "status": "verified",
+      "summary": "必須9制度を大任町公式情報で調査。7制度をverified、利用条件未確定のこども誰でも通園制度と2026年度住宅支援をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末まで入院・通院の保険診療自己負担を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "大任町に住所がある18歳到達後最初の3月31日までの子ども",
+            "fee": "入院・通院とも自己負担なし",
+            "application": "国保年金係で医療証を申請し、医療機関で健康保険情報と医療証を提示",
+            "reimbursement": "県外受診や治療用装具は一度支払い後に償還払いを申請"
+          },
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/kiji003553/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後3か月から小学6年生までを田川市の病児・病後児保育室で保育し、町が利用費等を全額補助",
+          "eligibility": {
+            "minAgeMonths": 3,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "田川市立病児病後児保育室ひまわり",
+            "target": "病気で集団生活が困難かつ保護者が昼間家庭保育できない生後3か月から小学6年生まで",
+            "support": "施設利用料と医師連絡票作成料を全額補助",
+            "conditions": "大任町に住所がある児童の保護者で、町税等の滞納がないこと"
+          },
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/kiji003470/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "全年齢の保育料と給食費・副食費を町独自に無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "fee": "2019年4月から全年齢の保育料を無償化",
+            "meal": "給食費・副食費の無償化も継続",
+            "facilities": "町内保育所の利用申込みは福祉課で受け付け",
+            "excluded": "施設独自の行事費・教材費等は別途の場合あり"
+          },
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/kiji003658/3_658_366_up_zn6tgqxv.pdf",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内3校の学校給食費を2023年4月から当分の間無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "大任町立学校3校の児童生徒",
+            "support": "学校給食費の保護者負担なし",
+            "period": "2023年4月から当分の間",
+            "funding": "道の駅おおとう桜街道からの寄附金等を財源として実施"
+          },
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/kiji003560/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "町公式の産後ケア事業でショートステイ・デイサービスを実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "types": "ショートステイ（宿泊型）・デイサービス（通所型）",
+            "target": "産後の体調や育児に不安があり、家族等から十分な支援を受けにくい産婦と乳児",
+            "support": "母体の休養、母乳・授乳相談、育児相談等",
+            "application": "大任町住民課衛生係へ事前相談・申請",
+            "contact": "0947-63-3003",
+            "verificationNote": "町公式の現行カテゴリに産後ケア事業ページが掲載されている。料金・利用日数等は利用前に窓口確認が必要。"
+          },
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/kiji003458/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年度の制度案内掲載は確認したが、比較に必要な利用条件を公式本文で確定できない",
+          "details": {
+            "verificationStatus": "2026年3月16日更新の「こども誰でも通園制度について」の掲載を確認",
+            "unconfirmed": "対象年齢、月間利用上限、料金、実施施設、利用時間、認定・面談・予約方法",
+            "contact": "大任町福祉課へ利用前に確認"
+          },
+          "notes": [
+            "制度不存在とは判断せず、公開情報から比較条件を確定できないためunavailableとして窓口確認事項を記録。"
+          ],
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/kiji003688/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "unavailable",
+          "summary": "2026年度に利用可能な住宅取得・改修補助を町公式情報で確認できない",
+          "details": {
+            "currentInformation": "町公式の住まい・土地一覧では空き家・空き地情報バンクと令和7年度結婚新生活支援補助金を掲載",
+            "expiredProgram": "確認できた結婚新生活支援補助金は令和7年度分で、令和8年度の募集条件は未掲載",
+            "contact": "2026年度の住宅取得・改修・家賃・引越支援の有無を町へ確認"
+          },
+          "notes": [
+            "空き家情報バンクや町営住宅の存在を、子育て世帯向け住宅補助の代替として扱わない。"
+          ],
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/list00134.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "さくら環境センターへ家庭ごみを10kgごと110円で直接搬入可能",
+          "details": {
+            "method": "役場で搬入許可申請後、さくら環境センターへ家庭ごみを直接搬入",
+            "fee": "10kg未満110円、10kg以上は10kgごと110円",
+            "bulkyWaste": "粗大ごみ札を貼った状態で搬入した場合は処理料不要",
+            "guidance": "品目別の分別方法は田川地域家庭ごみ分別ガイドブックで確認する"
+          },
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/kiji003653/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "避難場所・防災ハザードマップ・計画資料を防災サイトで公開",
+          "details": {
+            "coverage": "洪水、土砂災害、ため池等の災害リスクと避難情報",
+            "maps": "防災ハザードマップ、避難場所、計画・資料を専用サイトに集約",
+            "use": "居住地の危険箇所と避難先を事前確認できる"
+          },
+          "source": {
+            "url": "https://www.town.oto.fukuoka.jp/bousai/default.html",
             "checkedAt": "2026-07-24"
           }
         }
