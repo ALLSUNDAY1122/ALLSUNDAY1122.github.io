@@ -4,9 +4,9 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T00:55:00+09:00",
+  "updatedAt": "2026-07-25T01:15:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 3,
+  "completedRoundCount": 4,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -184,7 +184,81 @@
     {
       "round": 4,
       "title": "保育料・学校給食費の令和8年度条件監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、保育料と令和8年度学校給食費の計12項目を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 12,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児クラスと住民税非課税世帯の0～2歳児クラスは無償、その他は市町村民税額等で決定",
+          "schoolMealsClaim": "令和8年度は小学校等0円、中学校等1食377円",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000012934.html",
+            "https://www.city.okayama.jp/kurashi/0000052441.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "childcareFeeClaim": "3歳児以上は無償、3歳未満は市町村民税額と保育時間区分で決定",
+          "schoolMealsClaim": "市立小中学校の学校給食費を無期限で無償化",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/2932.html",
+            "https://www.city.marugame.lg.jp/page/15593.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児等と非課税世帯の0～2歳児を無償化し、その他は認定・年齢・市町村民税額で決定",
+          "schoolMealsClaim": "令和8年度は小学校1日23円、中学校1日300円",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8948",
+            "https://www.city.nankoku.lg.jp/reiki/reiki_honbun/i900RG00001132.html"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児と非課税世帯の0～2歳児、第2子以降の保育料を無償化",
+          "schoolMealsClaim": "令和8年度は市立小学校等を無償化し、中学校月5,400円、特別支援学校中高等部月5,100円",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/28800022.html",
+            "https://www.city.kitakyushu.lg.jp/kyouiku/02600192.html",
+            "https://www.city.kitakyushu.lg.jp/kyouiku/02600207.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "childcareFeeClaim": "0～5歳のすべての子どもの保育料を無償化",
+          "schoolMealsClaim": "令和8年度は幼稚園1,400円、小学校5,200円、中学校等3,000円を市負担",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji00319794/index.html",
+            "https://www.city.yatsushiro.lg.jp/kiji00326132/index.html"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児と住民税非課税世帯の0～2歳児の利用料を無償化",
+          "schoolMealsClaim": "令和8年度は小学校0円、中学1・2年月5,000円、中学3年月4,800円",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/jidou/hoikuen/documents/musyouka.html",
+            "https://www.city-kirishima.jp/hayato-kyushoku/kokubu-nanbu/20230329kyusyoku.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 5,
@@ -220,9 +294,9 @@
   "summary": {
     "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 7,
-    "currentAssessment": "第3回で霧島市の病児・病後児保育の施設数・利用料の誤り1件を検出し、公式情報に基づき修正。ほか5自治体10項目は一致。",
+    "roundsRemaining": 6,
+    "currentAssessment": "第4回は6自治体12項目が公式情報と一致。累計では第3回の霧島市1件を修正済みで、未修正0件。",
     "correctionAppliedCount": 1
   },
-  "nextAction": "第4回として、保育料・学校給食費の令和8年度条件を担当6県の複雑事例で再照合する。"
+  "nextAction": "第5回として、産後ケア・一時預かりの対象月齢、利用回数、料金を担当6県の複雑事例で再照合する。"
 }
