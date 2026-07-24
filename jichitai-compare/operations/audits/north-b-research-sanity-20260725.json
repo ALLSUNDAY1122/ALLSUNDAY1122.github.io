@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 7,
-  "remainingRounds": 3,
+  "completedRounds": 8,
+  "remainingRounds": 2,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 76,
-  "remainingMunicipalityCount": 31,
-  "auditedAt": "2026-07-25T02:22:00+09:00",
+  "auditedMunicipalityCount": 87,
+  "remainingMunicipalityCount": 20,
+  "auditedAt": "2026-07-25T03:05:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -505,6 +505,82 @@
       "05368",
       "05463",
       "06202"
+    ]
+  },
+  "round08": {
+    "codes": [
+      "06203",
+      "06204",
+      "06205",
+      "06206",
+      "06207",
+      "06208",
+      "06209",
+      "06210",
+      "06211",
+      "06212",
+      "06213"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 30,
+    "confirmedErrorCount": 3,
+    "confirmedErrors": [
+      {
+        "code": "06204",
+        "municipality": "酒田市",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "2026年度のこども誰でも通園制度を併記",
+        "reason": "2026年3月更新の市公式利用案内が未反映"
+      },
+      {
+        "code": "06212",
+        "municipality": "尾花沢市",
+        "service": "temporaryChildcare",
+        "before": "一時預かり・特定保育・休日預かりのみ",
+        "after": "2026年度新規のこども誰でも通園制度を併記",
+        "reason": "令和8年度主要事業の乳児等通園支援事業が未反映"
+      },
+      {
+        "code": "06212",
+        "municipality": "尾花沢市",
+        "service": "schoolMeals",
+        "before": "unavailable",
+        "after": "verified（市立小中学校の給食費完全無償化）",
+        "reason": "令和8年度主要事業で自校調理校の全額補助と共同調理場方式校の保護者負担免除を確認"
+      }
+    ],
+    "evidenceLimitations": [
+      {
+        "code": "06213",
+        "municipality": "南陽市",
+        "service": "temporaryChildcare",
+        "note": "令和8年度の利用者向けこども誰でも通園制度案内を取得できず、通常の一時預かり情報を維持"
+      },
+      {
+        "code": "06213",
+        "municipality": "南陽市",
+        "service": "schoolMeals",
+        "note": "令和7年度の第3子以降助成は確認できるが、令和8年度の継続・助成率を直接資料で確認できず変更しなかった"
+      },
+      {
+        "code": "06213",
+        "municipality": "南陽市",
+        "service": "housingSupport",
+        "note": "令和8年度の募集条件を直接資料で確認できず、unavailableを維持"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "06203",
+      "06205",
+      "06206",
+      "06207",
+      "06208",
+      "06209",
+      "06210",
+      "06211",
+      "06213"
     ]
   }
 }
