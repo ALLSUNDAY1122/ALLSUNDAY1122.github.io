@@ -1,0 +1,80 @@
+name: Temporary Urayasu national quality sync
+
+on:
+  push:
+    branches:
+      - coord/sync-audit-12227-20260724-r2
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temp-sync-audit-12227
+  cancel-in-progress: false
+
+jobs:
+  sync-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/sync-audit-12227-20260724-r2
+          fetch-depth: 0
+
+      - name: Import region/east audited source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin region/east:refs/remotes/origin/region/east
+          git show origin/region/east:jichitai-compare/data/municipalities/12/12227.json > jichitai-compare/data/municipalities/12/12227.json
+          git show origin/region/east:jichitai-compare/operations/tasks/12227.json > jichitai-compare/operations/tasks/12227.json
+
+      - name: Regenerate and validate nationwide data
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run check
+          npm run smoke:public
+
+      - name: Verify fixed nationwide totals and Urayasu state
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const generated = JSON.parse(fs.readFileSync('jichitai-compare/data/generated/municipalities.json', 'utf8'));
+          const progress = JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json', 'utf8'));
+          const task = JSON.parse(fs.readFileSync('jichitai-compare/operations/tasks/12227.json', 'utf8'));
+          const municipalities = Array.isArray(generated) ? generated : generated.municipalities;
+          const item = municipalities.find((x) => x.code === '12227');
+          if (!item) throw new Error('12227 is missing from generated data');
+          if (Object.keys(item.services || {}).length !== 9) throw new Error('12227 service count is not 9');
+          for (const [key, service] of Object.entries(item.services || {})) {
+            if (!service.eligibility) throw new Error(`12227 ${key} eligibility is missing`);
+          }
+          if (task.status !== 'merged' || task.pullRequestNumber !== 2690 || task.ciConclusion !== 'success') {
+            throw new Error('12227 task is not the region/east merged source');
+          }
+          if (progress.registeredMunicipalities !== 1741 || progress.remainingMunicipalities !== 0 || progress.completedServices !== 15669) {
+            throw new Error('nationwide fixed totals changed unexpectedly');
+          }
+          NODE
+
+      - name: Commit generated result and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/temp-sync-audit-12227.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add \
+            jichitai-compare/data/municipalities/12/12227.json \
+            jichitai-compare/operations/tasks/12227.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            .github/workflows/temp-sync-audit-12227.yml
+          git diff --cached --check
+          git commit -m '全国品質同期: 浦安市の再監査版を反映'
+          git push origin HEAD:coord/sync-audit-12227-20260724-r2
