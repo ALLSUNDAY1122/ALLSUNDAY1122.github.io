@@ -7,6 +7,13 @@ const SAMPLE_MUNICIPALITIES = [
   { code: '01100', name: '札幌市', region: 'north' },
   { code: '13123', name: '江戸川区', region: 'east' },
   { code: '27100', name: '大阪市', region: 'central' },
+  {
+    code: '30343',
+    name: '九度山町',
+    region: 'central-b',
+    expectedText: '月10時間',
+    expectUnavailable: true
+  },
   { code: '47382', name: '与那国町', region: 'west-b' }
 ];
 
@@ -116,6 +123,18 @@ async function verifyPublishedSite() {
     );
     assert(sample.html.includes('自治体公式情報'), `${label}: 公開自治体ページに公式情報リンクがありません`);
     assert(!sample.html.includes('制度なし・対象外'), `${label}: 公開自治体ページに旧誤表示が残っています`);
+    if (sample.expectedText) {
+      assert(
+        sample.html.includes(sample.expectedText),
+        `${label}: 再監査済みの代表条件を確認できません`
+      );
+    }
+    if (sample.expectUnavailable) {
+      assert(
+        sample.html.includes('公式情報で詳細未確認'),
+        `${label}: unavailableの安全表示を確認できません`
+      );
+    }
     assert(
       sitemap.includes(`<loc>${expectedCanonical}</loc>`),
       `${label}: 公開sitemapに自治体ページがありません`
