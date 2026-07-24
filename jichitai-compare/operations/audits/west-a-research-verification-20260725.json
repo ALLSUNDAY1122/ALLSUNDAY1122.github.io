@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-research-verification-20260725",
+  "sessionId": "west-a",
+  "status": "in_progress",
+  "startedAt": "2026-07-25T00:09:00+09:00",
+  "updatedAt": "2026-07-25T00:33:00+09:00",
+  "plannedRoundCount": 10,
+  "completedRoundCount": 2,
+  "scope": {
+    "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+    "municipalityCount": 226,
+    "requiredServiceCount": 2034,
+    "requiredServicesPerMunicipality": 9
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "title": "全件構造・識別・生成整合性監査",
+      "status": "completed",
+      "method": "通常CIと既存検証スクリプトで担当226自治体を含む全国データを再検証",
+      "checks": [
+        "自治体コードと都道府県コードの形式・所属一致",
+        "自治体コード重複と欠落",
+        "必須9制度の存在",
+        "source JSONと生成JSONの一致",
+        "生成JSONと静的ページ要約の一致",
+        "公式サイト・比較画面・sitemap導線",
+        "西日本A公開要約の内部運用語4種"
+      ],
+      "evidence": {
+        "publicSummaryGuardPullRequestNumber": 2915,
+        "publicSummaryGuardCiRunNumber": 6968,
+        "latestStateSyncCiRunNumber": 6980
+      },
+      "result": "passed",
+      "materialErrorCount": 0
+    },
+    {
+      "round": 2,
+      "title": "年度変動が大きい制度の公式情報スポット監査",
+      "status": "completed",
+      "method": "各担当県の主要自治体と高変動制度を公式ページで再照合",
+      "sampleMunicipalityCount": 7,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "service": "schoolMeals",
+          "registeredClaim": "令和8年度は小学校等0円、中学校等1食377円",
+          "officialUrl": "https://www.city.okayama.jp/kurashi/0000052441.html",
+          "result": "matched"
+        },
+        {
+          "code": "33211",
+          "name": "備前市",
+          "service": "housingSupport",
+          "registeredClaim": "対象経費20％、上限20万円または50万円、令和8年度公募終了",
+          "officialUrl": "https://www.city.bizen.okayama.jp/site/bizen/38033.html",
+          "result": "matched"
+        },
+        {
+          "code": "37201",
+          "name": "高松市",
+          "service": "schoolMeals",
+          "registeredClaim": "令和8年度は小学校無償、中学校1学期0円・2学期以降1食304円",
+          "officialUrl": "https://www.city.takamatsu.kagawa.jp/kurashi/kosodate/shouchugakkou/kyushoku/hotai_up20260512.html",
+          "result": "matched"
+        },
+        {
+          "code": "39201",
+          "name": "高知市",
+          "service": "schoolMeals",
+          "registeredClaim": "令和8年度は小学校月600円、中学校1食370円",
+          "officialUrl": "https://www.city.kochi.kochi.jp/soshiki/75/kyuushokujoukyou.html",
+          "result": "matched"
+        },
+        {
+          "code": "40130",
+          "name": "福岡市",
+          "service": "schoolMeals",
+          "registeredClaim": "令和7年8月から市立小中学校・特別支援学校の給食費を無償化",
+          "officialUrl": "https://www.city.fukuoka.lg.jp/kyoiku-iinkai/kenko_k/child/index_2_3_2.html",
+          "result": "matched"
+        },
+        {
+          "code": "43100",
+          "name": "熊本市",
+          "service": "schoolMeals",
+          "registeredClaim": "令和8年4月から小学校給食費を完全無償化し、中学校は据置",
+          "officialUrl": "https://www.city.kumamoto.jp/sicho/kiji00369308/index.html",
+          "result": "matched"
+        },
+        {
+          "code": "46201",
+          "name": "鹿児島市",
+          "service": "childMedical",
+          "registeredClaim": "中学3年生まで、市民税非課税世帯は18歳年度末まで",
+          "officialUrl": "https://www.city.kagoshima.lg.jp/kosodate/kodomofuku/kosodate/kosodate/teate/sedo/index.html",
+          "result": "matched"
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0,
+      "note": "スポット監査であり、担当226自治体・2,034制度の全内容を公式ページで再読したものではない。"
+    },
+    {
+      "round": 3,
+      "title": "こども医療・病児保育の年齢、自己負担、施設数監査",
+      "status": "planned"
+    },
+    {
+      "round": 4,
+      "title": "保育料・学校給食費の令和8年度条件監査",
+      "status": "planned"
+    },
+    {
+      "round": 5,
+      "title": "産後ケア・一時預かりの月齢、回数、料金監査",
+      "status": "planned"
+    },
+    {
+      "round": 6,
+      "title": "住宅支援の対象、補助率、上限、受付状況監査",
+      "status": "planned"
+    },
+    {
+      "round": 7,
+      "title": "粗大ごみの料金、予約、持込条件監査",
+      "status": "planned"
+    },
+    {
+      "round": 8,
+      "title": "防災マップの災害種別、避難所、公開URL監査",
+      "status": "planned"
+    },
+    {
+      "round": 9,
+      "title": "unavailableへ整理した75自治体・189制度のリスク抽出監査",
+      "status": "planned"
+    },
+    {
+      "round": 10,
+      "title": "発見事項の再検証、修正、最終集計",
+      "status": "planned"
+    }
+  ],
+  "summary": {
+    "materialErrorCount": 0,
+    "correctionRequiredCount": 0,
+    "roundsRemaining": 8,
+    "currentAssessment": "第1回・第2回では重大な誤調査を確認せず。残り8回で制度別・高リスク自治体を追加検証する。"
+  },
+  "nextAction": "第3回として、6県から年齢条件または料金条件が複雑な自治体を抽出し、こども医療・病児保育を公式情報で再照合する。"
+}
