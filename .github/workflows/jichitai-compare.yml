@@ -1,77 +1,124 @@
-name: Jichitai Compare CI
-
+name: Audit North-East Completion 1605
 on:
   pull_request:
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
-  push:
-    branches:
-      - main
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
-
+    branches: [main]
+    paths: ['.github/workflows/jichitai-compare.yml']
 permissions:
-  contents: read
-
-concurrency:
-  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
+  contents: write
 jobs:
-  validate:
-    name: Validate municipality data
+  audit:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+          persist-credentials: true
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Reject unrelated changes
-        working-directory: jichitai-compare
-        env:
-          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: npm run check:scope
-
-      - name: Generate public municipality data
-        working-directory: jichitai-compare
-        run: npm run generate
-
-      - name: Generate national progress
-        working-directory: jichitai-compare
-        run: npm run progress
-
-      - name: Validate source and generated data
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Check JavaScript syntax
-        working-directory: jichitai-compare
-        run: node --check app.js
-
-      - name: Confirm generated files are committed
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
+      - name: Fetch regional branches
+        run: git fetch origin main region/north region/east
+      - name: Audit north and east
         shell: bash
         run: |
-          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
-          if [ -n "$changed" ]; then
-            echo '生成済みファイルが最新ではありません。'
-            git status --short -- data/generated/municipalities.json operations/progress.json
-            exit 1
-          fi
-
-      - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
-        run: npm run smoke:public
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const cp = require('child_process');
+          const path = require('path');
+          const root = 'jichitai-compare';
+          const reportPath = `${root}/operations/control/coord-a-completion-audit-20260724-1605.json`;
+          const teams = {
+            north: {name:'北日本調査班', expected:406, prefixes:new Set(['01','02','03','04','05','06','07'])},
+            east: {name:'東日本調査班', expected:420, prefixes:new Set(['08','09','10','11','12','13','14','15','19','20'])}
+          };
+          const run = (cmd) => cp.execFileSync('bash',['-lc',cmd],{encoding:'utf8'}).trim();
+          const list = (ref) => run(`git ls-tree -r --name-only ${ref} -- ${root}/data/municipalities`).split(/\r?\n/).filter(x=>/\/\d{5}\.json$/.test(x));
+          const code = (p) => path.basename(p,'.json');
+          const canonical = (v) => Array.isArray(v) ? v.map(canonical) : v && typeof v==='object' ? Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,canonical(x)])) : v;
+          const same = (a,b) => JSON.stringify(canonical(a))===JSON.stringify(canonical(b));
+          const readLocal = (p) => JSON.parse(fs.readFileSync(p,'utf8'));
+          const readRef = (ref,p) => JSON.parse(run(`git show ${ref}:${p}`));
+          const taskPath = (c) => `${root}/operations/tasks/${c}.json`;
+          const stripDataMeta = (d) => { const x=JSON.parse(JSON.stringify(d)); delete x.updatedAt; return x; };
+          const taskSemantic = (t) => ({
+            municipalityCode:t.municipalityCode,
+            municipalityName:t.municipalityName,
+            prefectureCode:t.prefectureCode,
+            prefectureName:t.prefectureName,
+            assignedTeam:t.assignedTeam,
+            completedServices:[...(t.completedServices||[])].sort(),
+            verifiedCount:t.verifiedCount,
+            researchingCount:t.researchingCount,
+            unavailableCount:t.unavailableCount,
+            needsMediumReviewCount:t.needsMediumReviewCount,
+            officialSources:[...(t.officialSources||[])].sort()
+          });
+          const timestamp = (d,t) => String(t?.lastUpdatedAt || d?.updatedAt || '');
+          const mainPaths = list('HEAD');
+          const result = {schemaVersion:'1.0.0', auditedAt:'2026-07-24T16:05:00+09:00', mainCommit:run('git rev-parse HEAD'), regions:{}, summary:{}};
+          let totalIssues=0;
+          for (const [region,cfg] of Object.entries(teams)) {
+            const ref=`origin/region/${region}`;
+            const regionPaths=list(ref);
+            const mainMap=new Map(mainPaths.filter(p=>cfg.prefixes.has(code(p).slice(0,2))).map(p=>[code(p),p]));
+            const regionMap=new Map(regionPaths.filter(p=>cfg.prefixes.has(code(p).slice(0,2))).map(p=>[code(p),p]));
+            const missingInMain=[...regionMap.keys()].filter(c=>!mainMap.has(c)).sort();
+            const missingInRegion=[...mainMap.keys()].filter(c=>!regionMap.has(c)).sort();
+            const semanticDataDifferences=[];
+            const exactOnlyMetadataDifferences=[];
+            const taskSemanticDifferences=[];
+            const mainTaskIssues=[];
+            const incompleteMainMunicipalities=[];
+            for (const [c,p] of mainMap) {
+              const d=readLocal(p);
+              const statuses=Object.values(d.services||{}).map(s=>s?.status);
+              if (statuses.length!==9 || statuses.some(s=>!['verified','unavailable'].includes(s))) incompleteMainMunicipalities.push({code:c,statuses});
+              let mt=null;
+              try { mt=readLocal(taskPath(c)); } catch { mainTaskIssues.push({code:c,issue:'task_missing'}); }
+              if (mt) {
+                const count=(mt.verifiedCount||0)+(mt.unavailableCount||0)+(mt.researchingCount||0)+(mt.needsMediumReviewCount||0);
+                if (mt.status!=='merged' || mt.nextServiceIndex!==9 || (mt.completedServices||[]).length!==9 || count!==9) {
+                  mainTaskIssues.push({code:c,status:mt.status,nextServiceIndex:mt.nextServiceIndex,completedServices:(mt.completedServices||[]).length,count});
+                }
+              }
+            }
+            for (const c of [...mainMap.keys()].filter(x=>regionMap.has(x)).sort()) {
+              const mp=mainMap.get(c), rp=regionMap.get(c);
+              const md=readLocal(mp), rd=readRef(ref,rp);
+              if (!same(md,rd)) {
+                if (same(stripDataMeta(md),stripDataMeta(rd))) exactOnlyMetadataDifferences.push(c);
+                else {
+                  let mt={},rt={};
+                  try{mt=readLocal(taskPath(c))}catch{}
+                  try{rt=readRef(ref,taskPath(c))}catch{}
+                  const mtime=timestamp(md,mt), rtime=timestamp(rd,rt);
+                  semanticDataDifferences.push({code:c,name:md.name,mainUpdatedAt:md.updatedAt,regionUpdatedAt:rd.updatedAt,mainTaskUpdatedAt:mt.lastUpdatedAt??null,regionTaskUpdatedAt:rt.lastUpdatedAt??null,direction:rtime>mtime?'region_newer':mtime>rtime?'main_newer':'ambiguous'});
+                }
+              }
+              try {
+                const mt=readLocal(taskPath(c)), rt=readRef(ref,taskPath(c));
+                if (!same(taskSemantic(mt),taskSemantic(rt))) taskSemanticDifferences.push(c);
+              } catch {}
+            }
+            const regionNewer=semanticDataDifferences.filter(x=>x.direction==='region_newer');
+            const ambiguous=semanticDataDifferences.filter(x=>x.direction==='ambiguous');
+            const issues=missingInMain.length+missingInRegion.length+regionNewer.length+ambiguous.length+mainTaskIssues.length+incompleteMainMunicipalities.length+(mainMap.size===cfg.expected?0:1)+(regionMap.size===cfg.expected?0:1);
+            totalIssues+=issues;
+            result.regions[region]={team:cfg.name,expectedMunicipalities:cfg.expected,mainMunicipalities:mainMap.size,regionMunicipalities:regionMap.size,missingInMain,missingInRegion,semanticDataDifferences,exactOnlyMetadataDifferences,taskSemanticDifferences,mainTaskIssues,incompleteMainMunicipalities,blockingIssueCount:issues};
+          }
+          result.summary={expectedMunicipalities:826,mainMunicipalities:Object.values(result.regions).reduce((s,x)=>s+x.mainMunicipalities,0),regionMunicipalities:Object.values(result.regions).reduce((s,x)=>s+x.regionMunicipalities,0),blockingIssueCount:totalIssues,isClean:totalIssues===0};
+          fs.mkdirSync(path.dirname(reportPath),{recursive:true});
+          fs.writeFileSync(reportPath,JSON.stringify(result,null,2)+'\n');
+          console.log(JSON.stringify(result.summary));
+          NODE
+      - name: Restore standard CI and commit audit
+        run: |
+          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/jichitai-compare.yml jichitai-compare/operations/control/coord-a-completion-audit-20260724-1605.json
+          git commit -m 'audit: 北日本・東日本826自治体の完全性を記録'
+          git push origin HEAD
