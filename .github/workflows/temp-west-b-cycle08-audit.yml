@@ -1,0 +1,197 @@
+name: Temporary West B Cycle 08 Audit
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.head_ref == 'audit/west-b-rough-validation-cycle-08-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-rough-validation-cycle-08-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Audit next 25 West B municipalities
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const repo = process.cwd();
+          const root = path.join(repo, 'jichitai-compare');
+          const auditsDir = path.join(root, 'operations', 'audits');
+          const assignedPrefectures = new Set(['31','32','34','35','36','38','41','42','44','45','47']);
+          const auditFiles = Array.from({length: 7}, (_, i) =>
+            path.join(auditsDir, `west-b-rough-validation-cycle-${String(i + 1).padStart(2, '0')}-20260725.json`)
+          );
+          const audited = new Set();
+          for (const file of auditFiles) {
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            for (const code of data.scope?.codes ?? []) audited.add(code);
+          }
+
+          const municipalityFiles = [];
+          const dataRoot = path.join(root, 'data', 'municipalities');
+          for (const pref of [...assignedPrefectures].sort()) {
+            const dir = path.join(dataRoot, pref);
+            for (const name of fs.readdirSync(dir).filter(name => name.endsWith('.json')).sort()) {
+              municipalityFiles.push(path.join(dir, name));
+            }
+          }
+          const municipalities = municipalityFiles
+            .map(file => JSON.parse(fs.readFileSync(file, 'utf8')))
+            .sort((a, b) => a.code.localeCompare(b.code));
+          const selected = municipalities.filter(item => !audited.has(item.code)).slice(0, 25);
+          if (selected.length !== 25) throw new Error(`Expected 25 municipalities, got ${selected.length}`);
+          const counts = selected.reduce((acc, item) => {
+            acc[item.prefectureCode] = (acc[item.prefectureCode] ?? 0) + 1;
+            return acc;
+          }, {});
+          if (counts['44'] !== 8 || counts['45'] !== 17 || Object.keys(counts).length !== 2) {
+            throw new Error(`Unexpected scope: ${JSON.stringify(counts)}`);
+          }
+
+          const definitions = JSON.parse(fs.readFileSync(path.join(root, 'data', 'service-definitions.json'), 'utf8'));
+          const serviceIds = definitions.services.map(item => item.id);
+          const structuralErrors = [];
+          const urlTargets = [];
+          for (const item of selected) {
+            const expectedPath = path.join(root, 'data', 'municipalities', item.prefectureCode, `${item.code}.json`);
+            if (!fs.existsSync(expectedPath)) structuralErrors.push({code: item.code, field: 'file', message: '自治体JSONがありません'});
+            if (!/^\d{5}$/.test(item.code)) structuralErrors.push({code: item.code, field: 'code', message: '自治体コードが5桁ではありません'});
+            if (!assignedPrefectures.has(item.prefectureCode)) structuralErrors.push({code: item.code, field: 'prefectureCode', message: '西日本B担当外です'});
+            if (!item.name || !item.prefecture || !item.officialUrl) structuralErrors.push({code: item.code, field: 'identity', message: '自治体基本情報が不足しています'});
+            urlTargets.push({code: item.code, name: item.name, field: 'officialUrl', service: null, url: item.officialUrl});
+            const actualIds = Object.keys(item.services ?? {});
+            for (const id of serviceIds) {
+              const service = item.services?.[id];
+              if (!service) {
+                structuralErrors.push({code: item.code, field: `services.${id}`, message: '必須制度がありません'});
+                continue;
+              }
+              if (!['verified','unavailable'].includes(service.status)) structuralErrors.push({code: item.code, field: `services.${id}.status`, message: `完了状態ではありません: ${service.status}`});
+              if (!service.summary?.trim()) structuralErrors.push({code: item.code, field: `services.${id}.summary`, message: '要約がありません'});
+              if (!service.source?.url?.startsWith('https://')) structuralErrors.push({code: item.code, field: `services.${id}.source.url`, message: '公式HTTPS出典がありません'});
+              if (!/^\d{4}-\d{2}-\d{2}$/.test(service.source?.checkedAt ?? '')) structuralErrors.push({code: item.code, field: `services.${id}.source.checkedAt`, message: '確認日形式が不正です'});
+              if (service.source?.url) urlTargets.push({code: item.code, name: item.name, field: `services.${id}.source`, service: id, url: service.source.url});
+            }
+            for (const id of actualIds) if (!serviceIds.includes(id)) structuralErrors.push({code: item.code, field: `services.${id}`, message: '未定義制度があります'});
+          }
+
+          async function checkUrl(target) {
+            let last = null;
+            for (let attempt = 1; attempt <= 2; attempt++) {
+              const controller = new AbortController();
+              const timer = setTimeout(() => controller.abort(), 12000);
+              try {
+                const response = await fetch(target.url, {
+                  method: 'GET',
+                  redirect: 'follow',
+                  signal: controller.signal,
+                  headers: {
+                    'user-agent': 'Mozilla/5.0 (compatible; JichitaiCompareAudit/1.0)',
+                    'accept': 'text/html,application/pdf,*/*'
+                  }
+                });
+                clearTimeout(timer);
+                try { await response.body?.cancel(); } catch {}
+                const result = {
+                  ...target,
+                  status: response.status,
+                  ok: response.status >= 200 && response.status < 400,
+                  finalUrl: response.url,
+                  attempt
+                };
+                if (result.ok) return result;
+                last = result;
+              } catch (error) {
+                clearTimeout(timer);
+                last = {...target, status: null, ok: false, finalUrl: null, attempt, error: error?.name === 'AbortError' ? 'timeout' : String(error?.message ?? error)};
+              }
+            }
+            return last;
+          }
+
+          const results = new Array(urlTargets.length);
+          let cursor = 0;
+          async function worker() {
+            while (true) {
+              const index = cursor++;
+              if (index >= urlTargets.length) return;
+              results[index] = await checkUrl(urlTargets[index]);
+            }
+          }
+          await Promise.all(Array.from({length: 16}, worker));
+          const warnings = results.filter(item => !item.ok);
+
+          const manualCodes = ['44211','44322','45201','45341','45403'];
+          const manualSpotCheckCandidates = selected
+            .filter(item => manualCodes.includes(item.code))
+            .map(item => ({
+              code: item.code,
+              name: item.name,
+              prefectureCode: item.prefectureCode,
+              officialUrl: item.officialUrl,
+              services: Object.fromEntries(serviceIds.map(id => [id, {
+                status: item.services[id].status,
+                summary: item.services[id].summary,
+                sourceUrl: item.services[id].source.url,
+                checkedAt: item.services[id].source.checkedAt
+              }]))
+            }));
+          if (manualSpotCheckCandidates.length !== 5) throw new Error(`Expected 5 manual candidates, got ${manualSpotCheckCandidates.length}`);
+
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-b-rough-validation-cycle-08-20260725',
+            sessionId: 'west-b',
+            cycle: 8,
+            plannedCycles: 10,
+            auditedAt: '2026-07-25T03:31:00+09:00',
+            scope: {
+              municipalityCount: selected.length,
+              codes: selected.map(item => item.code),
+              names: selected.map(item => item.name),
+              prefectureCodes: [...new Set(selected.map(item => item.prefectureCode))],
+              prefectureCounts: counts,
+              serviceCount: selected.length * serviceIds.length
+            },
+            methodology: [
+              '既存第1〜7回監査の175自治体を除外し、担当コード順で次の25自治体を選定',
+              '自治体コード・都道府県コード・自治体名・公式URLを確認',
+              '必須9制度、状態、要約、主出典URL、確認日を確認',
+              '公式URL25件と制度主出典225件をHTTP取得',
+              '5自治体を手動抜き取り候補として記録'
+            ],
+            priorAuditedMunicipalityCount: audited.size,
+            remainingBeforeCycleCount: 250 - audited.size,
+            structuralErrorCount: structuralErrors.length,
+            structuralErrors,
+            networkCheckedUrlCount: results.length,
+            networkWarningCount: warnings.length,
+            networkWarnings: warnings,
+            manualSpotCheckCandidates
+          };
+          const out = path.join(auditsDir, 'west-b-rough-validation-cycle-08-20260725.json');
+          fs.writeFileSync(out, JSON.stringify(audit, null, 2) + '\n');
+          NODE
+      - name: Commit audit output
+        shell: bash
+        run: |
+          rm -f .github/west-b-cycle08-audit.trigger
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-08-20260725.json
+          git add .github/west-b-cycle08-audit.trigger
+          git commit -m "audit: 西日本B概略検証 第8回の機械監査を記録"
+          git push origin HEAD:audit/west-b-rough-validation-cycle-08-20260725
