@@ -17,6 +17,7 @@ const INTERNAL_WORKFLOW_PHRASES = [
   '最終検証を実施',
   '次の自治体'
 ];
+// 西日本B担当250自治体は、全国監査の完了を待たず内部運用語を恒久監視する。
 const WEST_B_PREFECTURE_CODES = new Set(['31', '32', '34', '35', '36', '38', '41', '42', '44', '45', '47']);
 const WEST_B_INTERNAL_PHRASES = ['調査班', '初期登録対象', '移行監査', '地域正本'];
 
