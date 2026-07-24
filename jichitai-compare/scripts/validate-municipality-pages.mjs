@@ -124,6 +124,12 @@ for (let start = 0; start < pages.length; start += 100) {
       if (!html.includes(`<link rel="canonical" href="${canonical}">`)) errors.push(`${page.code}: canonicalが不正です`);
       if (!html.includes(`<h1>${municipalityName}</h1>`)) errors.push(`${page.code}: h1が自治体名と一致しません`);
       if (!html.includes(`<p>${escapedPublicSummary}</p>`)) errors.push(`${page.code}: 公開要約が生成JSONと一致しません`);
+      for (const [serviceKey, service] of Object.entries(municipality?.services ?? {})) {
+        const serviceSummary = escapeHtml(service?.summary ?? '');
+        if (serviceSummary && !html.includes(`<strong class="cell-main">${serviceSummary}</strong>`)) {
+          errors.push(`${page.code} ${serviceKey}: 制度summaryが生成JSONと一致しません`);
+        }
+      }
       if (!html.includes('9制度')) errors.push(`${page.code}: 9制度の説明がありません`);
       if (html.includes('制度なし・対象外')) errors.push(`${page.code}: unavailableの旧誤表示が残っています`);
       if (!html.includes('自治体公式情報')) errors.push(`${page.code}: 公式情報への表示がありません`);
@@ -196,7 +202,7 @@ if (errors.length > 0) {
 const westGuardSummary = WEST_PUBLIC_COPY_GUARDS
   .map((guard) => `${guard.label}公開要約${guard.municipalityCount}自治体`)
   .join('・');
-console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公開要約一致・公式サイト/比較導線・内部作業文言なし・${westGuardSummary}・sitemap ${sitemapCount} URL`);
+console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公開要約/制度summary一致・公式サイト/比較導線・内部作業文言なし・${westGuardSummary}・sitemap ${sitemapCount} URL`);
 
 function escapeHtml(value) {
   return String(value)
