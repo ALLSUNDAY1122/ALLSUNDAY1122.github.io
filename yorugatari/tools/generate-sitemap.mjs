@@ -23,6 +23,7 @@ const staticPages = [
   'index.html',
   '5min-horror.html',
   'bedtime-horror.html',
+  'horror-quiz.html',
   'archive.html',
   'about.html',
   'privacy.html',
