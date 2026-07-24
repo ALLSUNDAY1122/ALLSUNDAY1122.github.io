@@ -112,7 +112,7 @@ const corrections = {
 
 function serviceSources(municipality) {
   return Object.values(municipality.services)
-    .flatMap((service) => [service?.source?.url, ...(service?.additionalSources ?? []).map((source) => source?.url)])
+    .map((service) => service?.source?.url)
     .filter(Boolean);
 }
 
