@@ -1,1 +1,195 @@
-{"schemaVersion":"1.0.0","code":"23238","prefectureCode":"23","prefecture":"愛知県","name":"長久手市","officialUrl":"https://www.city.nagakute.lg.jp/","status":"verified","summary":"長久手市の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。","updatedAt":"2026-07-24","services":{"childMedical":{"status":"unavailable","summary":"子ども医療費助成は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない","eligibility":{"minAgeMonths":0,"maxAgeYears":18},"details":{"reviewDisposition":"推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"},"source":{"url":"https://www.city.nagakute.lg.jp/","checkedAt":"2026-07-24"}},"sickChildCare":{"status":"verified","summary":"生後6か月経過後の翌月1日から小学6年生まで病児・病後児保育を利用可能","eligibility":{"minAgeMonths":0,"maxAgeYears":12},"details":{"target":"長久手市在住、生後6か月経過後の翌月1日～小学6年生","procedure":"医師の診察後、施設へ予約"},"source":{"url":"https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/3/2/6870.html","checkedAt":"2026-07-24"}},"childcareFee":{"status":"verified","summary":"保育料は認定区分、保育必要量、世帯課税状況に基づき決定し、無償化制度を適用","eligibility":{"minAgeMonths":0,"maxAgeYears":5},"details":{"calculation":"4～8月は前年度、9～3月は当年度の市町村民税に基づく","freeSupport":"3～5歳児等は幼児教育・保育無償化の対象"},"source":{"url":"https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/3/2/14790.html","checkedAt":"2026-07-24"}},"schoolMeals":{"status":"unavailable","summary":"学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない","eligibility":{"minAgeMonths":72,"maxAgeYears":15},"details":{"reviewDisposition":"推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"},"source":{"url":"https://www.city.nagakute.lg.jp/","checkedAt":"2026-07-24"}},"postpartumCare":{"status":"verified","summary":"産後1年未満の母子へ宿泊・通所・訪問型産後ケアを提供","eligibility":{"minAgeMonths":0,"maxAgeYears":1},"details":{"types":"宿泊型、通所型、訪問型","period":"宿泊は生後4か月未満、通所・訪問は生後1年未満","limits":"宿泊6泊7日、通所7日、訪問2日"},"source":{"url":"https://www.city.nagakute.lg.jp/soshiki/kodomobu/kodomokateika/1/boshihoken/21513.html","checkedAt":"2026-07-24"}},"temporaryChildcare":{"status":"verified","summary":"未就園の生後6か月から満3歳未満が月10時間までこども誰でも通園制度を利用","eligibility":{"minAgeMonths":0,"maxAgeYears":5},"details":{"target":"未就園、生後6か月～満3歳未満","limit":"月10時間","start":"2026年4月1日","fee":"実施施設ごとに設定"},"source":{"url":"https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/sapootomisyuugakunoikuji/25847.html","checkedAt":"2026-07-24"}},"housingSupport":{"status":"unavailable","summary":"子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない","eligibility":{"minAgeMonths":0,"maxAgeYears":120},"details":{"reviewDisposition":"推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"},"source":{"url":"https://www.city.nagakute.lg.jp/","checkedAt":"2026-07-24"}},"bulkyWaste":{"status":"unavailable","summary":"粗大ごみの収集・持込条件は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない","eligibility":{"minAgeMonths":0,"maxAgeYears":120},"details":{"reviewDisposition":"推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"},"source":{"url":"https://www.city.nagakute.lg.jp/","checkedAt":"2026-07-24"}},"disasterPrevention":{"status":"unavailable","summary":"洪水・地震等ハザードマップの現行版は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない","eligibility":{"minAgeMonths":0,"maxAgeYears":120},"details":{"reviewDisposition":"推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"},"source":{"url":"https://www.city.nagakute.lg.jp/","checkedAt":"2026-07-24"}}}}
+{
+  "schemaVersion": "1.0.0",
+  "code": "23238",
+  "prefectureCode": "23",
+  "prefecture": "愛知県",
+  "name": "長久手市",
+  "officialUrl": "https://www.city.nagakute.lg.jp/",
+  "status": "verified",
+  "summary": "長久手市の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。",
+  "updatedAt": "2026-07-25",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで、通院・入院の保険診療自己負担額を助成する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "ageCondition": "18歳到達後最初の3月31日まで",
+        "coverage": "通院・入院の保険診療自己負担額",
+        "payment": "受給者証を医療機関窓口で提示。県外受診等は払い戻し申請",
+        "note": "2024年10月診療分から高校生年代の通院費まで対象を拡大"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/iryo_kenko_fukushi/2/11/6399.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nagakute.lg.jp/",
+          "checkedAt": "2026-07-24",
+          "description": "再監査前の自治体トップページ"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "verified",
+      "summary": "生後6か月経過後の翌月1日から小学6年生まで病児・病後児保育を利用可能",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "target": "長久手市在住、生後6か月経過後の翌月1日～小学6年生",
+        "procedure": "医師の診察後、施設へ予約"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/3/2/6870.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "保育料は認定区分、保育必要量、世帯課税状況に基づき決定し、無償化制度を適用",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "calculation": "4～8月は前年度、9～3月は当年度の市町村民税に基づく",
+        "freeSupport": "3～5歳児等は幼児教育・保育無償化の対象"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/3/2/14790.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "令和8年度は小学校給食費を0円とし、中学校の保護者負担を1食290円とする。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "fiscalYear": "令和8年度",
+        "standardRate": "小学校1食330円、中学校1食380円",
+        "elementaryParentBurden": "0円",
+        "juniorHighParentBurden": "1食290円"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/kosodate_kyoiku/gakkokyushoku_hoikuenkyushoku/1/14523.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nagakute.lg.jp/",
+          "checkedAt": "2026-07-24",
+          "description": "再監査前の自治体トップページ"
+        }
+      ]
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・通所・訪問型産後ケアを提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "types": "宿泊型、通所型、訪問型",
+        "period": "宿泊は生後4か月未満、通所・訪問は生後1年未満",
+        "limits": "宿泊6泊7日、通所7日、訪問2日"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/soshiki/kodomobu/kodomokateika/1/boshihoken/21513.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から満3歳未満が月10時間までこども誰でも通園制度を利用",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "target": "未就園、生後6か月～満3歳未満",
+        "limit": "月10時間",
+        "start": "2026年4月1日",
+        "fee": "実施施設ごとに設定"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/kosodate_kyoiku/ikuji/sapootomisyuugakunoikuji/25847.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "unavailable",
+      "summary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみは電話またはインターネットで予約し、1点800円の処理券を貼って1回5点まで収集を依頼する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "reservation": "粗大ごみ受付センターへの電話またはインターネット予約",
+        "limit": "1回5点まで",
+        "fee": "粗大ごみ処理券1点800円",
+        "collection": "収集日の午前8時30分までに指定場所へ排出"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/kurashi_tetsuzuki/gomi_kankyo/gomi/kateigomi/sodai/12045.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nagakute.lg.jp/",
+          "checkedAt": "2026-07-24",
+          "description": "再監査前の自治体トップページ"
+        }
+      ]
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "地震・液状化・洪水・避難所等を掲載した長久手市防災マップを公開する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 120
+      },
+      "details": {
+        "edition": "2026年3月配布版",
+        "hazards": "地震、液状化、洪水等",
+        "evacuation": "指定避難所・避難場所と防災情報を掲載",
+        "distribution": "市ウェブサイトでPDF版を公開"
+      },
+      "source": {
+        "url": "https://www.city.nagakute.lg.jp/soshiki/kurashibunkabu/anshinanzenka/1/2/bosai_category/bosai_map/1129.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.nagakute.lg.jp/",
+          "checkedAt": "2026-07-24",
+          "description": "再監査前の自治体トップページ"
+        }
+      ]
+    }
+  }
+}

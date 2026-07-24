@@ -7,12 +7,15 @@
   "officialUrl": "https://www.city.handa.lg.jp/",
   "status": "verified",
   "summary": "半田市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から高校生世代の年度末まで、入院・通院の保険診療自己負担額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "満18歳に達する日の属する年度の末日まで。就労者・婚姻者を含む",
         "coverage": "入院・通院の保険診療分自己負担額",
@@ -20,12 +23,18 @@
         "priority": "障がい者医療または母子・父子家庭医療の対象者はそちらを優先",
         "excluded": "保険診療外費用、入院時食事負担金、先発医薬品希望時の特別料金等は対象外"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kosodate/kyufu/1005071/1002006.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/kosodate/kyufu/1005071/1002006.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後6か月から小学3年生までの病気中または回復期の児童を、病児保育施設げんきの芽で預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 9
+      },
       "details": {
         "condition": "半田市民または保護者が半田市内在勤で、保護者の就労等により家庭保育ができず、医師が利用可能と認めた児童",
         "facility": "半田市病児保育施設げんきの芽",
@@ -34,12 +43,18 @@
         "fee": "半田市民は8時間まで2,000円、9時間まで2,200円、10時間まで2,400円、10.5時間まで2,500円。市内在勤者は各1,000円加算",
         "reduction": "半田市生活保護世帯は無料"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kosodate/shien/1002009.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/kosodate/shien/1002009.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3歳児以上の保育料を無償とし、3歳未満も第2子以降を市独自に無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "agesThreeToFive": "3歳児以上の保育料は無償",
         "underThree": "3歳未満は市民税所得割額により決定。ただし第2子以降は無償",
@@ -47,25 +62,43 @@
         "excludedCosts": "延長保育料、主食費、副食費等は別途必要",
         "sideDishExemption": "所得要件を満たす世帯や同時入所児童の第3子は副食費免除"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kosodate/hoikuen-youchien/1005471/1005443.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/kosodate/hoikuen-youchien/1005471/1005443.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "経済的に就学が困難な認定世帯へ、実施された学校給食費の実費を含む就学援助を行う。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "program": "要保護・準要保護児童生徒就学援助制度",
-        "coverage": "学校給食費、学用品費、修学旅行費、野外活動参加費、医療費等",
-        "mealSupport": "準要保護認定世帯へ実施された給食費実費を援助",
-        "condition": "生活保護停止・廃止、市民税非課税・免除、児童扶養手当受給、所得基準等により認定",
-        "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+      "summary": "令和8年度は小学校給食費を無償化し、中学校は1食290円、幼稚園は1食230円を保護者負担とする。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kosodate/kyoiku/1005072/1002158.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "fiscalYear": "令和8年度",
+        "standardRate": "小学校1食330円、中学校1食380円、幼稚園1食290円",
+        "parentBurden": "小学校0円、中学校1食290円、幼稚園1食230円",
+        "publicSupport": "国・県・市の公費負担により小学校を無償化し、中学校・幼稚園の負担を軽減"
+      },
+      "source": {
+        "url": "https://www.city.handa.lg.jp/_res/projects/default_project/_page_/001/011/636/r8shuyoujigyou.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.handa.lg.jp/kosodate/kyoiku/1005072/1002158.html",
+          "checkedAt": "2026-07-22",
+          "description": "経済的に就学困難な世帯への就学援助"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子へ、訪問・日帰り・宿泊型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "半田市に住民票があり、産後の体調や子育てに不安がある産後1年未満の母子",
         "ageCondition": "訪問型は産後4か月未満。4か月以降の日帰り・宿泊型は利用施設・サービスに制限あり",
@@ -74,12 +107,18 @@
         "fee": "訪問型は無料。日帰り・宿泊型は施設料金から市助成額を差し引いた額",
         "support": "母体の休養・乳房ケア、乳児の発育確認、授乳・沐浴等の育児相談"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kosodate/ninshin/1009736/1001992.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/kosodate/ninshin/1009736/1001992.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "乳児等通園支援事業（こども誰でも通園制度）",
         "condition": "半田市民で、幼稚園・保育所・認定こども園・地域型保育・企業主導型保育等に在籍していない児童",
@@ -89,7 +128,10 @@
         "fee": "1回2時間30分につき750円（1時間当たり300円）",
         "capacity": "1日6人"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kosodate/hoikuen-youchien/1005469/1010523.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/kosodate/hoikuen-youchien/1005469/1010523.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -102,7 +144,10 @@
         "condition": "東京23区在住または東京圏から23区への通勤歴等があり、対象就業・テレワーク・関係人口・起業等の要件を満たすこと",
         "residence": "申請時に転入後1年以内で、申請後5年以上継続して居住する意思があること"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kurashi/koseki/1001680.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/kurashi/koseki/1001680.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -115,7 +160,10 @@
         "excluded": "家電リサイクル法対象品、事業系ごみ、ピアノ等の処理困難物は対象外",
         "alternative": "自身で処理施設へ搬入する方法もある"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/machi/gomi/1003067/1003073/1003077.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/machi/gomi/1003067/1003073/1003077.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -127,7 +175,10 @@
         "languages": "英語・中国語・ポルトガル語・ベトナム語等の多言語版を公開",
         "note": "自宅周辺の危険箇所と避難経路を事前に確認する"
       },
-      "source": {"url": "https://www.city.handa.lg.jp/kurashi/bousai/1001529/1001535/1001536.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.handa.lg.jp/kurashi/bousai/1001529/1001535/1001536.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }

@@ -3,7 +3,7 @@
   "auditId": "central-a-scope-verification-20260724",
   "session": "中日本調査班A",
   "purpose": "担当範囲の誤調査・状態不整合を都道府県単位で10回に分けて概略再検証する",
-  "branch": "audit/central-a-scope-verification-round-05-20260725",
+  "branch": "audit/central-a-scope-verification-round-06-20260725",
   "startedAt": "2026-07-24T23:50:00+09:00",
   "status": "in_progress",
   "batchCount": 10,
@@ -211,19 +211,69 @@
       ],
       "nextStep": "第6回として愛知県54自治体を監査する",
       "completedAt": "2026-07-25T01:39:00+09:00"
+    },
+    {
+      "batch": 6,
+      "prefectureCode": "23",
+      "prefectureName": "愛知県",
+      "municipalityCount": 54,
+      "status": "completed_with_corrections_and_review",
+      "checkedMunicipalities": 54,
+      "checkedServices": 486,
+      "initialStructuralFindingCount": 1,
+      "structuralFindingCount": 0,
+      "resolvedStructuralFindingCount": 1,
+      "initialUnavailableCount": 15,
+      "unavailableCount": 7,
+      "initialSubstantiveSuspectCount": 20,
+      "substantiveSuspectCount": 5,
+      "report": "operations/control/central-a-scope-round-06-aichi-20260725.json",
+      "confirmedErrors": 16,
+      "correctedMunicipalityCodes": [
+        "23100",
+        "23205",
+        "23220",
+        "23221",
+        "23237",
+        "23238",
+        "23302",
+        "23342",
+        "23424",
+        "23441"
+      ],
+      "confirmedAccurateSuspectCodes": [
+        "23208",
+        "23209",
+        "23211",
+        "23212",
+        "23217",
+        "23229",
+        "23236",
+        "23563"
+      ],
+      "needsFurtherReviewCodes": [
+        "23235",
+        "23427",
+        "23561",
+        "23562",
+        "23563"
+      ],
+      "nextStep": "第7回として三重県29自治体を監査する",
+      "completedAt": "2026-07-25T02:48:00+09:00"
     }
   ],
   "summary": {
-    "completedBatches": 5,
-    "checkedMunicipalities": 128,
-    "confirmedErrors": 35,
-    "needsFurtherReview": 6,
-    "correctedErrors": 35
+    "completedBatches": 6,
+    "checkedMunicipalities": 182,
+    "confirmedErrors": 51,
+    "needsFurtherReview": 11,
+    "correctedErrors": 51
   },
-  "nextAction": "第6回として愛知県54自治体を監査する",
+  "nextAction": "第7回として三重県29自治体を監査する",
   "rebuiltFrom": "audit/central-a-scope-verification-20260724",
   "rebuiltAt": "2026-07-25T00:11:00+09:00",
   "rebuiltRound3At": "2026-07-25T00:37:00+09:00",
   "rebuiltRound4At": "2026-07-25T01:13:00+09:00",
-  "rebuiltRound5At": "2026-07-25T01:39:00+09:00"
+  "rebuiltRound5At": "2026-07-25T01:39:00+09:00",
+  "rebuiltRound6At": "2026-07-25T02:48:00+09:00"
 }
