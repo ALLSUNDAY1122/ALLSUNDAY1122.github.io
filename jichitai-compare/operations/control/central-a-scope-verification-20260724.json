@@ -3,7 +3,7 @@
   "auditId": "central-a-scope-verification-20260724",
   "session": "中日本調査班A",
   "purpose": "担当範囲の誤調査・状態不整合を都道府県単位で10回に分けて概略再検証する",
-  "branch": "audit/central-a-scope-verification-round-03-r2-20260725",
+  "branch": "audit/central-a-scope-verification-round-04-20260725",
   "startedAt": "2026-07-24T23:50:00+09:00",
   "status": "in_progress",
   "batchCount": 10,
@@ -128,17 +128,69 @@
         "18209"
       ],
       "completedAt": "2026-07-25T00:34:00+09:00"
+    },
+    {
+      "batch": 4,
+      "prefectureCode": "21",
+      "prefectureName": "岐阜県",
+      "municipalityCount": 42,
+      "status": "completed_with_corrections_and_review",
+      "checkedMunicipalities": 42,
+      "checkedServices": 378,
+      "initialStructuralFindingCount": 6,
+      "structuralFindingCount": 0,
+      "resolvedStructuralFindingCount": 6,
+      "unavailableCount": 8,
+      "substantiveSuspectCount": 2,
+      "report": "operations/control/central-a-scope-round-04-gifu-20260725.json",
+      "confirmedErrors": 21,
+      "correctedMunicipalityCodes": [
+        "21201",
+        "21202",
+        "21203",
+        "21204",
+        "21205",
+        "21206",
+        "21208",
+        "21209",
+        "21210",
+        "21211",
+        "21212",
+        "21213",
+        "21215",
+        "21218",
+        "21303",
+        "21341",
+        "21361",
+        "21362",
+        "21381",
+        "21604"
+      ],
+      "confirmedAccurateSuspectCodes": [
+        "21217",
+        "21218"
+      ],
+      "sourceRefreshCodes": [
+        "21206"
+      ],
+      "needsFurtherReviewCodes": [
+        "21207",
+        "21504"
+      ],
+      "nextStep": "第5回として静岡県35自治体を監査する",
+      "completedAt": "2026-07-25T01:13:00+09:00"
     }
   ],
   "summary": {
-    "completedBatches": 3,
-    "checkedMunicipalities": 51,
-    "confirmedErrors": 11,
-    "needsFurtherReview": 0,
-    "correctedErrors": 11
+    "completedBatches": 4,
+    "checkedMunicipalities": 93,
+    "confirmedErrors": 32,
+    "needsFurtherReview": 2,
+    "correctedErrors": 32
   },
-  "nextAction": "第4回として岐阜県42自治体を監査する",
+  "nextAction": "第5回として静岡県35自治体を監査する",
   "rebuiltFrom": "audit/central-a-scope-verification-20260724",
   "rebuiltAt": "2026-07-25T00:11:00+09:00",
-  "rebuiltRound3At": "2026-07-25T00:37:00+09:00"
+  "rebuiltRound3At": "2026-07-25T00:37:00+09:00",
+  "rebuiltRound4At": "2026-07-25T01:13:00+09:00"
 }
