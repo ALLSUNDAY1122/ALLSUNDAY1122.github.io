@@ -1,0 +1,35 @@
+name: Finalize Central A Scope Audit Round 06
+
+on:
+  push:
+    branches: ['audit/central-a-round06-work-20260725']
+    paths: ['.github/workflows/central-a-scope-round-06-finalize.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round06-work-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Apply corrections
+        run: node jichitai-compare/operations/scripts/finalize-round06-aichi.mjs
+      - name: Commit final result
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/central-a-scope-round-06-finalize.yml
+          rm jichitai-compare/operations/scripts/finalize-round06-aichi.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'audit: 愛知県監査の確定誤り16件を修正'
+          git push origin HEAD:audit/central-a-round06-work-20260725
