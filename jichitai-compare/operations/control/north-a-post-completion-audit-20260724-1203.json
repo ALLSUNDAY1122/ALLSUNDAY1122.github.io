@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "sessionId": "north-a",
+  "displayName": "北日本調査班A",
+  "auditedAt": "2026-07-24T12:03:00+09:00",
+  "integrationBranch": "region/north",
+  "assignedPrefectureCodes": ["02", "03", "07"],
+  "assignedMunicipalityCount": 132,
+  "remainingUninvestigatedCount": 0,
+  "openPullRequestsToRegionNorth": 0,
+  "lastAssignedMunicipality": {
+    "code": "07564",
+    "name": "飯舘村",
+    "pullRequestNumber": 1928
+  },
+  "postCompletionCorrections": [
+    {
+      "pullRequestNumber": 2161,
+      "scope": "region/north",
+      "status": "merged",
+      "summary": "誤登録自治体コード04423を削除し、正しい大衡村コード04424を維持"
+    },
+    {
+      "pullRequestNumber": 2169,
+      "scope": "main",
+      "status": "merged",
+      "summary": "全国データから誤コード04423を削除し、生成データ・全国進捗・公開件数を再生成"
+    }
+  ],
+  "auditResult": "success",
+  "evidence": [
+    "operations/control/session-checkpoints/north-a.jsonで担当132自治体・残数0を確認",
+    "region/north向けオープンPRが0件であることを確認",
+    "PR #2161がregion/northへ統合済みであることを確認",
+    "PR #2169がmainへ統合済みであることを確認"
+  ],
+  "nextAction": "北日本Aの担当作業は完了。新たな完全性監査差分または統括からの修正依頼が発生するまで待機。"
+}
