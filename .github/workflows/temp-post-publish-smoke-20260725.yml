@@ -1,0 +1,26 @@
+name: Temporary post-publish smoke 20260725
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-public:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: ops/post-publish-smoke-20260725
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify published GitHub Pages site
+        working-directory: jichitai-compare
+        run: npm run smoke:public
