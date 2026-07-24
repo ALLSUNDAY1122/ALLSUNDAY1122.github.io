@@ -25,9 +25,9 @@ jobs:
           git reset --hard origin/main
           export VERIFIED_AT="$(TZ=Asia/Tokyo date --iso-8601=seconds)"
 
-          node <<'NODE'
-          const fs=require('fs');
-          const path=require('path');
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
           const base='https://allsunday1122.github.io/jichitai-compare';
           const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
           const root='jichitai-compare';
