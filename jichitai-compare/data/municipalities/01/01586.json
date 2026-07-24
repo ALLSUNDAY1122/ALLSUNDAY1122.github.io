@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.mukawa.lg.jp/",
   "status": "verified",
   "summary": "むかわ町の子育て・暮らしに関する9制度のうち6制度を確認済みで、3制度は公式情報で詳細未確認です。",
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "高校修了前までを対象に所得区分等に応じて保険診療の自己負担を助成し、町独自の医療費還元事業も実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "target": "むかわ町に住民登録し健康保険に加入する18歳年度末までの子ども",
         "preschool": "通院・入院の保険診療自己負担を助成し、初診時は医科580円・歯科510円を負担",
@@ -20,7 +23,10 @@
         "schoolAgeTaxable": "課税世帯は入院医療費の一部を助成し、原則1割負担・月額上限あり",
         "additionalSupport": "保険診療自己負担分を町内金券へ交換できるポイントとして還元する町独自事業がある"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/3182.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/3182.htm",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
@@ -30,12 +36,18 @@
         "unconfirmed": "令和8年度に利用できる病児・病後児保育施設、対象、利用料、登録・予約方法",
         "guidance": "福祉・子育て課子育て未来グループへ広域利用を含む現行の利用可否を確認する必要がある"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/4002.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/4002.htm",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "町独自支援により0歳から2歳児を含む全ての認定こども園保育料を無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "zeroToTwo": "令和5年4月から3号認定の0歳から2歳児も保育料無料",
         "threeToFive": "1号・2号認定の3歳から5歳児は国制度で保育料無料",
@@ -43,19 +55,28 @@
         "mealExemption": "年収360万円未満相当世帯および一定の第3子以降は副食費免除",
         "zeroToTwoMeal": "0歳から2歳児は副食費を徴収しない"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/4741.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/4741.htm",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "経済的に困窮する小中学生の保護者へ、学校給食費を含む就学援助を行う。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "target": "生活保護受給世帯または世帯収入が需要額を下回るなど経済的理由で困窮する保護者",
         "support": "学用品費、修学旅行費、学校給食費等を援助",
         "universalFree": "町内全児童生徒の一律無償化ではなく、認定世帯を対象とする就学援助",
         "application": "学校から配付される申請書と世帯収入証明書類を在籍学校へ提出"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/4133.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/4133.htm",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "unavailable",
@@ -65,20 +86,37 @@
         "unconfirmed": "宿泊型・通所型・訪問型産後ケアの実施有無、対象月齢、利用者負担、利用上限、実施施設",
         "guidance": "福祉・子育て課子育て未来グループへ令和8年度の産後ケア利用条件を確認する必要がある"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/4984.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/4984.htm",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "満1歳から就学前までを対象に、町内2認定こども園で一時保育を実施する。",
-      "eligibility": {"minAgeMonths": 12, "maxAgeYears": 5},
-      "details": {
-        "facilities": "むかわひかり認定こども園、むかわ町さくら認定こども園",
-        "target": "原則として町内在住の満1歳から就学前で、自立歩行・離乳食開始済みの子ども",
-        "hours": "平日8時30分から16時30分。定員1日2名",
-        "fee": "1歳から2歳は半日1,000円・1日2,000円、3歳から5歳は半日750円・1日1,500円",
-        "application": "原則利用日の7日前までに申請書・児童票・保育必要性確認書類を園へ提出"
+      "summary": "満1歳から就学前児の一時保育に加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/3638.htm", "checkedAt": "2026-07-24"}
+      "details": {
+        "temporaryCare": "原則町内在住の満1歳から就学前児を、町内2認定こども園で平日8時30分から16時30分まで一時保育する",
+        "temporaryFee": "1～2歳は半日1,000円・1日2,000円、3～5歳は半日750円・1日1,500円",
+        "anyChildTarget": "保育所等に在籍していない生後6か月から満3歳未満の子ども。保護者の就労要件を問わない",
+        "anyChildLimit": "子ども1人につき月10時間まで",
+        "anyChildFee": "1時間300円。生活保護・非課税・低所得世帯等は減免あり",
+        "anyChildFacilities": "むかわひかり認定こども園、むかわ町さくら認定こども園、むかわ町多機能型子育て支援施設",
+        "application": "誰でも通園制度総合支援システム等で認定申請、事前面談、利用予約を行う"
+      },
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/3638.htm",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.mukawa.lg.jp/2382.htm",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -91,7 +129,10 @@
         "rent": "基本月額50,000円から中学生以下の子ども1人につき5,000円減額",
         "term": "18歳未満の扶養家族がいなくなる年度末までの入居期限あり"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/2399.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/2399.htm",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "unavailable",
@@ -101,7 +142,10 @@
         "unconfirmed": "令和8年度の粗大ごみ対象品目、証紙額、予約方法、戸別収集日、処理施設への搬入条件",
         "guidance": "町民生活課または平取町外2町衛生施設組合へ現行条件を確認する必要がある"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/2027.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/2027.htm",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -112,7 +156,10 @@
         "landslide": "土砂災害警戒区域・特別警戒区域の地区別マップを公開",
         "webMap": "浸水区域、避難施設等を選択表示できるWebGIS版を提供"
       },
-      "source": {"url": "https://www.town.mukawa.lg.jp/2729.htm", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.mukawa.lg.jp/2729.htm",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }

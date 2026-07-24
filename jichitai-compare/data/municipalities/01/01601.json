@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.hidaka.hokkaido.jp/",
   "status": "verified",
   "summary": "日高町の子育て・暮らしに関する9制度のうち7制度を確認済みで、2制度は公式情報で詳細未確認です。",
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "高校生世代まで所得制限なく入院・通院の保険診療自己負担を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "target": "日高町在住で健康保険に加入する18歳年度末までの子ども",
         "coverage": "入院・通院の保険診療自己負担なし",
@@ -20,7 +23,10 @@
         "exception": "訪問看護基本利用料の1割分は自己負担となり、月額上限あり",
         "application": "助成を受けるには受給者証の申請が必要"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/welfare/?content=2980", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/welfare/?content=2980",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
@@ -30,12 +36,18 @@
         "unconfirmed": "令和8年度に利用できる病児・病後児保育施設、対象、利用料、登録・予約方法",
         "guidance": "子育て健康課子育て支援グループへ広域利用を含む現行の利用可否を確認する必要がある"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/kosodate/", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/kosodate/",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3歳から5歳児と住民税非課税世帯の0歳から2歳児の保育料を無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "threeToFive": "幼稚園、保育所、認定こども園等の利用料を無償化",
         "zeroToTwo": "住民税非課税世帯の0歳から2歳児は無償化対象",
@@ -43,7 +55,10 @@
         "mealExemption": "年収360万円未満相当世帯と一定の第3子以降は副食費免除",
         "otherServices": "認定を受けた一時預かり等も年齢・課税区分に応じた月額上限まで無償化対象"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=665", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/education/?content=665",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "unavailable",
@@ -53,12 +68,18 @@
         "unconfirmed": "令和8年度の学校給食費援助の有無・金額、一般世帯の一食単価・月額、無償化範囲",
         "guidance": "教育委員会管理課または学校給食担当へ現行の保護者負担条件を確認する必要がある"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=3437", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/education/?content=3437",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子を対象に、助産師が自宅を訪問する産後ケアを無料で最大5回実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "日高町に住所がある産後1年未満の母子で、体調・育児・授乳に不安がある、または家族支援が不十分な方",
         "type": "訪問型",
@@ -66,20 +87,38 @@
         "limit": "最大5回、1回2時間以内",
         "fee": "日高町民は無料。町外里帰り利用は1万5千円を上限に償還払い可能"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=674", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/education/?content=674",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "町内3保育所と認定こども園で、就労・疾病・看護・冠婚葬祭等に対応する一時保育を実施する。",
-      "eligibility": {"minAgeMonths": 24, "maxAgeYears": 5},
-      "details": {
-        "facilities": "日高保育所、門別わかば保育所、厚賀すずらん保育所、認定こども園富川ひばり幼稚園",
-        "hours": "平日・土曜日7時30分から18時",
-        "limit": "非定型的保育は週3回・月12日以内、緊急保育は月12日以内",
-        "fee": "3歳未満児日額2,800円、3歳児1,500円、4歳児以上1,300円",
-        "minimumAge": "3歳未満児は4月1日時点で2歳以上から受入"
+      "summary": "2歳以上児の一時保育に加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/education/?content=448", "checkedAt": "2026-07-24"}
+      "details": {
+        "temporaryCare": "町内3保育所と認定こども園で、就労・疾病・看護・冠婚葬祭等に対応する一時保育を実施",
+        "temporaryAge": "一時保育の3歳未満児は4月1日時点で2歳以上から受入",
+        "temporaryFee": "3歳未満児日額2,800円、3歳児1,500円、4歳児以上1,300円",
+        "anyChildTarget": "保育所等に在籍していない生後6か月から満3歳未満の子ども。保護者の就労要件を問わない",
+        "anyChildFacilities": "門別わかば保育所、厚賀すずらん保育所、日高保育所。施設により受入年齢が異なる",
+        "anyChildLimit": "子ども1人につき月10時間まで",
+        "anyChildFee": "1時間300円。生活保護世帯0円、所得割合算額7万7,101円未満世帯は100円",
+        "application": "町窓口へ認定申請後、希望施設と面談し、利用予定日の3営業日前までに予約"
+      },
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/education/?content=448",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.hidaka.hokkaido.jp/education/?content=3569",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -92,7 +131,10 @@
         "childAddition": "高校生以下の18歳以下の子ども1人につき10万円加算",
         "application": "住宅所在地への異動日から1年以内に申請"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/life/?content=2019", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/life/?content=2019",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -104,7 +146,10 @@
         "directCarry": "平取町外2町衛生施設組合の処理施設へ自己搬入可能",
         "guide": "令和5年3月版ごみ分別大辞典と令和8年度地区別カレンダーを公開"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/life/?content=754", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/life/?content=754",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -116,7 +161,10 @@
         "evacuation": "指定避難所・指定緊急避難場所、避難行動、情報受信方法を掲載",
         "webMap": "Web版防災ガイドマップも提供"
       },
-      "source": {"url": "https://www.town.hidaka.hokkaido.jp/prevention/?content=984", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.town.hidaka.hokkaido.jp/prevention/?content=984",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }

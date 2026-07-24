@@ -23680,21 +23680,22 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保育施設に在籍しない1歳6か月から就学前の子どもを、こども園または子育て支援センターで一時的に預かる。",
+          "summary": "保育施設に在籍していない満1歳以上の就学前児を、通院・就労・リフレッシュ等の理由で一時的に預かる。",
           "eligibility": {
-            "minAgeMonths": 18,
+            "minAgeMonths": 12,
             "maxAgeYears": 5
           },
           "details": {
-            "target": "保育所等に在籍しない1歳6か月から就学前の幼児",
-            "facilities": "町内こども園または子育て支援センター",
-            "reasons": "就労、求職活動、保護者の疾病・出産、私的理由等",
-            "usage": "利用理由に応じて非定期的または緊急・一時的に利用",
-            "application": "利用施設または住民課子育て支援グループへ事前申込み"
+            "target": "こども園に入園していない満1歳以上の就学前児",
+            "facilities": "こども園つみき、宮の森こども園",
+            "reasons": "断続的就労・求職、通院・出産・看護・介護・冠婚葬祭、リフレッシュ・社会参加等",
+            "limit": "非定期利用は平均週3日以内、緊急利用は原則1か月以内、私的理由は週1日",
+            "fee": "3歳未満は基本500円と11時30分以降1時間150円、3歳以上は基本400円と同1時間120円。希望者は給食費105円等",
+            "application": "事前申請が必要"
           },
           "source": {
             "url": "https://www.town.atsuma.lg.jp/page/1304.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -24126,22 +24127,30 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "満1歳から就学前までを対象に、町内2認定こども園で一時保育を実施する。",
+          "summary": "満1歳から就学前児の一時保育に加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
           "eligibility": {
-            "minAgeMonths": 12,
+            "minAgeMonths": 6,
             "maxAgeYears": 5
           },
           "details": {
-            "facilities": "むかわひかり認定こども園、むかわ町さくら認定こども園",
-            "target": "原則として町内在住の満1歳から就学前で、自立歩行・離乳食開始済みの子ども",
-            "hours": "平日8時30分から16時30分。定員1日2名",
-            "fee": "1歳から2歳は半日1,000円・1日2,000円、3歳から5歳は半日750円・1日1,500円",
-            "application": "原則利用日の7日前までに申請書・児童票・保育必要性確認書類を園へ提出"
+            "temporaryCare": "原則町内在住の満1歳から就学前児を、町内2認定こども園で平日8時30分から16時30分まで一時保育する",
+            "temporaryFee": "1～2歳は半日1,000円・1日2,000円、3～5歳は半日750円・1日1,500円",
+            "anyChildTarget": "保育所等に在籍していない生後6か月から満3歳未満の子ども。保護者の就労要件を問わない",
+            "anyChildLimit": "子ども1人につき月10時間まで",
+            "anyChildFee": "1時間300円。生活保護・非課税・低所得世帯等は減免あり",
+            "anyChildFacilities": "むかわひかり認定こども園、むかわ町さくら認定こども園、むかわ町多機能型子育て支援施設",
+            "application": "誰でも通園制度総合支援システム等で認定申請、事前面談、利用予約を行う"
           },
           "source": {
             "url": "https://www.town.mukawa.lg.jp/3638.htm",
-            "checkedAt": "2026-07-24"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.mukawa.lg.jp/2382.htm",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -24282,22 +24291,31 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "町内3保育所と認定こども園で、就労・疾病・看護・冠婚葬祭等に対応する一時保育を実施する。",
+          "summary": "2歳以上児の一時保育に加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
           "eligibility": {
-            "minAgeMonths": 24,
+            "minAgeMonths": 6,
             "maxAgeYears": 5
           },
           "details": {
-            "facilities": "日高保育所、門別わかば保育所、厚賀すずらん保育所、認定こども園富川ひばり幼稚園",
-            "hours": "平日・土曜日7時30分から18時",
-            "limit": "非定型的保育は週3回・月12日以内、緊急保育は月12日以内",
-            "fee": "3歳未満児日額2,800円、3歳児1,500円、4歳児以上1,300円",
-            "minimumAge": "3歳未満児は4月1日時点で2歳以上から受入"
+            "temporaryCare": "町内3保育所と認定こども園で、就労・疾病・看護・冠婚葬祭等に対応する一時保育を実施",
+            "temporaryAge": "一時保育の3歳未満児は4月1日時点で2歳以上から受入",
+            "temporaryFee": "3歳未満児日額2,800円、3歳児1,500円、4歳児以上1,300円",
+            "anyChildTarget": "保育所等に在籍していない生後6か月から満3歳未満の子ども。保護者の就労要件を問わない",
+            "anyChildFacilities": "門別わかば保育所、厚賀すずらん保育所、日高保育所。施設により受入年齢が異なる",
+            "anyChildLimit": "子ども1人につき月10時間まで",
+            "anyChildFee": "1時間300円。生活保護世帯0円、所得割合算額7万7,101円未満世帯は100円",
+            "application": "町窓口へ認定申請後、希望施設と面談し、利用予定日の3営業日前までに予約"
           },
           "source": {
             "url": "https://www.town.hidaka.hokkaido.jp/education/?content=448",
-            "checkedAt": "2026-07-24"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.hidaka.hokkaido.jp/education/?content=3569",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
