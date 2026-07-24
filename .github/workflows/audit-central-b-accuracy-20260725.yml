@@ -5,19 +5,31 @@ on:
     branches: [region/central]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: read
 
 jobs:
   audit-round:
     if: github.head_ref == 'quality/central-b-accuracy-audit-20260725'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Apply Round 2 confirmed corrections
+        working-directory: jichitai-compare
+        run: node scripts/fix-central-b-accuracy-round2.mjs apply
+      - name: Regenerate and validate municipality data
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
       - name: Audit active Central B batch
         working-directory: jichitai-compare
         run: node scripts/audit-central-b-accuracy-round.mjs
@@ -29,3 +41,18 @@ jobs:
           path: jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           if-no-files-found: error
           retention-days: 14
+      - name: Finalize Round 2 audit record
+        working-directory: jichitai-compare
+        run: node scripts/fix-central-b-accuracy-round2.mjs finalize
+      - name: Commit confirmed corrections
+        run: |
+          rm -f jichitai-compare/operations/audits/central-b-accuracy-round-output.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u jichitai-compare
+          if git diff --cached --quiet; then
+            echo 'No correction changes to commit.'
+          else
+            git commit -m 'audit: 中日本B第2回の誤調査を訂正'
+            git push origin HEAD:${{ github.head_ref }}
+          fi
