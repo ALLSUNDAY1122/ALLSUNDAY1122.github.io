@@ -1,1 +1,51 @@
-{"schemaVersion":"1.0.0","region":"west","assignedTeam":"西日本調査班","branch":"region/west","integrationBranch":"region/west","updatedAt":"2026-07-24T20:00:00+09:00","status":"active","stage":"quality_audit","currentMunicipality":null,"completedSinceLastRelease":0,"completedMunicipalities":[],"pendingRegionalPullRequests":[],"blocked":[],"lastAction":"西日本B担当11県250自治体・必須2,250制度の最終監査を完了し、未調査残数0・checkpoint status=completedを確認。全国統合PR #2532で西日本12自治体をmainへ選択公開後、品質監査で自治体コード40210の八女市重複を検出し、PR #2723で正式な大川市9制度データへ訂正してregion/westへ統合した。","nextAction":"統括はmain向け共有地域状態同期PR #2710を確認・統合し、次回の選択公開で大川市（40210）の訂正データをmainへ反映する。west-aは完了後品質監査を継続し、west-bは新規調査を停止して統合・状態同期を支援する。","completedMunicipalitiesSinceLastNationalMerge":0,"lastNationalIntegrationPr":2532,"lastNationalIntegrationAt":"2026-07-24T16:25:55+09:00","lastGeneratedPullRequest":2553,"lastRegionalCorrectionPr":2723,"humanDecisionRequired":false}
+{
+  "schemaVersion": "1.0.0",
+  "region": "west",
+  "assignedTeam": "西日本調査班",
+  "branch": "region/west",
+  "integrationBranch": "region/west",
+  "updatedAt": "2026-07-24T22:20:00+09:00",
+  "status": "completed",
+  "stage": "published_monitoring",
+  "assignedMunicipalityCount": 476,
+  "completedMunicipalityCount": 476,
+  "remainingMunicipalityCount": 0,
+  "currentMunicipality": null,
+  "completedSinceLastRelease": 0,
+  "completedMunicipalities": [],
+  "pendingRegionalPullRequests": [],
+  "blocked": [],
+  "subteams": {
+    "west-a": {
+      "assignedMunicipalityCount": 226,
+      "remainingMunicipalityCount": 0,
+      "status": "completed",
+      "lastPullRequestNumber": 2772,
+      "ciStatus": "success"
+    },
+    "west-b": {
+      "assignedMunicipalityCount": 250,
+      "remainingMunicipalityCount": 0,
+      "status": "completed",
+      "lastPullRequestNumber": 2458,
+      "ciStatus": "success"
+    }
+  },
+  "qualityState": {
+    "needsMediumReviewMunicipalityCount": 0,
+    "blockedMunicipalityCount": 0,
+    "identityValidationPullRequestNumber": 2740,
+    "qualityResolutionPullRequestNumber": 2772,
+    "regionalCorrectionPullRequestNumber": 2723
+  },
+  "lastAction": "西日本476自治体の品質終端化を完了し、PR #2778で西日本75自治体を公開、その後の全国完全公開PR #2791・CI #6692成功によりmainの1,741自治体公開を確定した。",
+  "nextAction": "差し戻し、CI失敗、公式制度更新、自治体コード改定、地域ブランチとmainの公開不一致を監視する。",
+  "lastRegionalCorrectionPr": 2723,
+  "lastWestNationalReleasePr": 2778,
+  "lastNationalIntegrationPr": 2791,
+  "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
+  "lastGeneratedPullRequest": 2791,
+  "publishedMunicipalityCount": 1741,
+  "publishedServiceCount": 15669,
+  "humanDecisionRequired": false
+}
