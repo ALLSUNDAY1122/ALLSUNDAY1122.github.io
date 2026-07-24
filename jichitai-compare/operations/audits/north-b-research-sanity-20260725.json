@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 1,
-  "remainingRounds": 9,
+  "completedRounds": 2,
+  "remainingRounds": 8,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 11,
-  "remainingMunicipalityCount": 96,
-  "auditedAt": "2026-07-25T00:05:00+09:00",
+  "auditedMunicipalityCount": 22,
+  "remainingMunicipalityCount": 85,
+  "auditedAt": "2026-07-25T00:18:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -77,5 +77,77 @@
   "nationwideCountsUnchanged": true,
   "northMunicipalityCount": 406,
   "nationwideMunicipalityCount": 1741,
-  "nationwideServiceCount": 15669
+  "nationwideServiceCount": 15669,
+  "round02": {
+    "codes": [
+      "01581",
+      "01584",
+      "01585",
+      "01586",
+      "01601",
+      "01602",
+      "01604",
+      "01607",
+      "01608",
+      "01609",
+      "04202"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 24,
+    "confirmedErrorCount": 3,
+    "confirmedErrors": [
+      {
+        "code": "01581",
+        "municipality": "厚真町",
+        "service": "temporaryChildcare",
+        "before": "対象年齢1歳6か月以上、minAgeMonths 18",
+        "after": "対象年齢満1歳以上、minAgeMonths 12",
+        "reason": "2026年6月更新の町公式こども園案内が満1歳以上と明記"
+      },
+      {
+        "code": "01586",
+        "municipality": "むかわ町",
+        "service": "temporaryChildcare",
+        "before": "一時保育のみ、minAgeMonths 12",
+        "after": "誰でも通園制度を併記、minAgeMonths 6",
+        "reason": "2026年3月開始の町公式制度は未就園の生後6か月から満3歳未満を対象"
+      },
+      {
+        "code": "01601",
+        "municipality": "日高町",
+        "service": "temporaryChildcare",
+        "before": "一時保育のみ、minAgeMonths 24",
+        "after": "誰でも通園制度を併記、minAgeMonths 6",
+        "reason": "2026年4月更新の町公式制度は未就園の生後6か月から満3歳未満を対象"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "01584",
+      "01585",
+      "01602",
+      "01604",
+      "01607",
+      "01608",
+      "01609",
+      "04202"
+    ],
+    "evidenceLimitations": [
+      {
+        "code": "01584",
+        "municipality": "洞爺湖町",
+        "note": "詳細未確認6制度を再探索したが、個別条件を安全に確定できる現行公式本文を取得できず、推測によるstatus変更は行わなかった"
+      },
+      {
+        "code": "01602",
+        "municipality": "平取町",
+        "note": "2026年6月の一時保育・誰でも通園制度掲載は確認したが、対象・料金等の本文を取得できず、temporaryChildcareはunavailableを維持"
+      },
+      {
+        "code": "01608",
+        "municipality": "様似町",
+        "note": "詳細未確認6制度を再探索したが、現行の具体条件を安全に確定できずstatusを維持"
+      }
+    ]
+  }
 }
