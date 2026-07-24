@@ -63,9 +63,8 @@ async function request(url) {
         redirect: 'follow',
         signal: controller.signal,
         headers: {
-          'user-agent': 'Mozilla/5.0 (compatible; JichitaiCompareLinkAudit/1.0; +https://allsunday1122.github.io/jichitai-compare/)',
+          'user-agent': 'Mozilla/5.0 (compatible; JichitaiCompareLinkAudit/1.1; +https://allsunday1122.github.io/jichitai-compare/)',
           accept: 'text/html,application/pdf,application/json;q=0.9,*/*;q=0.8',
-          range: 'bytes=0-4095',
           'cache-control': 'no-cache'
         }
       });
@@ -79,7 +78,7 @@ async function request(url) {
         durationMs: Date.now() - startedAt,
         attempt
       };
-      if (![429, 500, 502, 503, 504].includes(response.status) || attempt === MAX_ATTEMPTS) return lastResult;
+      if (![403, 404, 410, 429, 500, 502, 503, 504].includes(response.status) || attempt === MAX_ATTEMPTS) return lastResult;
     } catch (error) {
       clearTimeout(timeout);
       lastResult = {
@@ -136,6 +135,7 @@ const report = {
     timeoutMs: TIMEOUT_MS,
     concurrency: CONCURRENCY,
     maxAttempts: MAX_ATTEMPTS,
+    requestMode: 'normal GET without Range header',
     hardFailureStatuses: [404, 410]
   },
   statusCounts,
