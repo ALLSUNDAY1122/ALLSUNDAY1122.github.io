@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-public-summary-cleanup-20260724",
+  "sessionId": "west-b",
+  "auditedAt": "2026-07-24T23:20:00+09:00",
+  "status": "completed",
+  "issue": "公開要約に内部運用文言『西日本調査班の調査対象。』が残存",
+  "scope": {
+    "prefectureCodes": ["31", "32"],
+    "municipalityCount": 27,
+    "codes": [
+      "31201", "31202", "31203", "31204", "31325", "31328", "31329",
+      "31364", "31370", "31371", "31372", "31384", "31386", "31389",
+      "31390", "31401", "31402", "31403", "32201", "32202", "32203",
+      "32204", "32205", "32207", "32209", "32343", "32386"
+    ]
+  },
+  "changes": [
+    "source JSONのsummaryから内部運用接頭辞を除去",
+    "taskへ完了後公開品質監査を記録",
+    "全国生成JSONを再生成",
+    "対象27自治体の静的詳細ページを再生成",
+    "全国進捗JSONを再生成"
+  ],
+  "validation": {
+    "sourceSummaryInternalTermRemainingCount": 0,
+    "generatedPageInternalTermRemainingCount": 0,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "temporaryWorkflowRunNumber": 1,
+    "temporaryWorkflowConclusion": "success"
+  },
+  "pullRequestNumber": 2865
+}
