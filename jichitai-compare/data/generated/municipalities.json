@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1517,
+    "municipalityCount": 1529,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -112642,6 +112642,544 @@
       }
     },
     {
+      "code": "12441",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "大多喜町",
+      "officialUrl": "https://www.town.otaki.chiba.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を大多喜町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "大多喜町に居住する0歳から高校3年生相当までの子ども",
+            "coverage": "通院・入院・調剤・入院時食事療養費のうち保険診療自己負担分を助成",
+            "procedure": "受給券の交付申請を行い、医療機関窓口で健康保険証等と提示",
+            "excluded": "保険外診療、他の公費医療、学校管理下の災害共済給付対象、第三者行為等"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/kosodate_kyoiku/kodomoiryou/2042.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "小学6年生までの病児・病後児を自宅等で預かる緊急サポート事業",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "町内在住で、病気中・回復期または保護者の就労・疾病等により育児が困難な小学6年生までの児童",
+            "support": "病児・病後児の預かり、保育施設等からの送迎と預かり、急な家庭保育支援",
+            "hours": "平日9時から16時を基本とし、その他は要相談",
+            "fee": "2026年度は児童1人1時間500円",
+            "procedure": "委託先のファミリーサポートへ事前会員登録し、病児・病後児利用時は事前受診が必要"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/kosodate_kyoiku/kosodateshien/2330.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児等を無償化し、課税世帯0～2歳児は所得連動",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "coverage": "幼稚園・保育所・認定こども園等の3～5歳児と住民税非課税世帯の0～2歳児を国制度の範囲で無償化",
+            "currentFee": "課税世帯の0～2歳児は保護者所得等に応じた保育料で、一律完全無償化ではない",
+            "multiChild": "保育所等を利用する0～2歳児は第2子半額、第3子以降無料等の多子軽減あり",
+            "excluded": "通園送迎費、食材費、行事費等の実費。一定世帯の副食費は免除"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/soshiki/kyouiku/2/1/3/868.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校等の学校給食費を全額補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "町内在住で町立小中学校または対象となる特別支援学校小学部・中学部に在籍する児童生徒の保護者",
+            "coverage": "2018年度から小学生・中学生の学校給食費を全額補助",
+            "alternative": "食物アレルギー等で弁当を持参する場合も給食費実費相当額を補助",
+            "excluded": "生活保護、就学援助、特別支援教育就学奨励費等で給食費の全額支給を受ける場合は重複補助なし"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/soshiki/kyouiku/1/1/4/901.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "訪問型・デイサービス型の産後ケアを産後1年未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "大多喜町に住民登録があり、医療行為を必要としない産後1年未満の母子",
+            "types": "訪問型、デイサービス型",
+            "age": "訪問型は原則生後4か月未満、デイサービス型は1歳未満",
+            "limit": "2類型を合わせて14回まで",
+            "support": "乳房ケア・授乳支援、乳児の健康観察、母親の心身管理、育児相談・情報提供"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/kosodate_kyoiku/ninshin/2632.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで2保育園で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "保育園・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "月10時間まで、1時間単位。火・木曜日8時30分から11時30分を基本",
+            "facilities": "みつば保育園、つぐみの森保育園",
+            "fee": "一般1時間300円、一定所得未満世帯100円、生活保護世帯無料",
+            "procedure": "利用認定、施設ごとの初回面談、システム上の予約が必要"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/kosodate_kyoiku/hoikusho/2887.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による20万円以上の住宅リフォーム費の10％を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "町内に居住または居住予定で、町内施工業者に工事を発注し、申請者・同居者に町税等の滞納がない人",
+            "condition": "税抜20万円以上で年度内に完了する住宅リフォーム。同一申請者・住宅につき1回限り",
+            "amount": "対象工事費の10％、上限20万円",
+            "period": "2026年4月1日から2031年3月31日まで",
+            "procedure": "工事着手前に申請が必要"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/soshiki/kensetu/1/1/3/893.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "家庭の粗大ごみ等を環境センターへ有料で直接搬入",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "directDelivery": "平日と毎月第2日曜日の9時から16時30分まで環境センターへ持込み可能",
+            "fee": "一般家庭の可燃・不燃ごみは1キログラム20円",
+            "collection": "品目別の集積所排出方法は令和8年度ごみの正しい出し方で確認",
+            "excluded": "家電リサイクル法対象品は町の粗大ごみ収集対象外で、販売店または許可業者へ依頼",
+            "notes": "水銀体温計等は集積所へ出さず環境センターへ持込み"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/soshiki/kankyou_suido/1/1/1/863.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・地震・液状化等の防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "町全域版・資料編・5地区版の防災マップと地震減災マップを公開",
+            "risks": "夷隅川・養老川の洪水、土砂災害、地震の揺れ・建物危険度、液状化等",
+            "facilities": "避難場所、危険区域、防災情報、家庭の備えを掲載",
+            "notes": "新たに指定された一部洪水・土砂災害区域は別掲の県資料も併せて確認が必要"
+          },
+          "source": {
+            "url": "https://www.town.otaki.chiba.jp/soshiki/soumu/1/1/1/3/523.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "12443",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "御宿町",
+      "officialUrl": "https://www.town.onjuku.chiba.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を御宿町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高校3年生相当までの保険診療自己負担額を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "御宿町に住所がある出生から高校3年生相当までの子ども",
+            "coverage": "医療保険が適用される通院・入院・調剤の自己負担額を助成",
+            "copayment": "通院1回・入院1日・調剤とも自己負担無料",
+            "procedure": "出生・転入届後に保健福祉課で受給資格認定と受給券交付を申請"
+          },
+          "source": {
+            "url": "https://town.onjuku.chiba.jp/sub3/1/21.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生の病児・病後児を委託医療機関で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "町内在住で病気療養中または回復期にあり、保護者の勤務等により家庭保育が困難な生後6か月から小学6年生",
+            "facility": "いすみ市の外房こどもクリニック病児保育室",
+            "hours": "月・火・水・金曜日の8時40分から17時、1日定員6人",
+            "fee": "4時間以上2,000円、4時間まで1,000円。生活保護・非課税世帯は無料",
+            "procedure": "事前登録、予約、医師の診察後に利用"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub3/1/16.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、課税世帯0～2歳児は所得連動",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "coverage": "認定こども園等を利用する3～5歳児と、保育の必要性がある住民税非課税世帯0～2歳児の基本利用料を無償化",
+            "currentFee": "課税世帯0～2歳児は市町村民税所得割額等に応じた階層別保育料で、一律完全無償化ではない",
+            "multiChild": "町独自措置を含め、要件に応じて第2子半額・第3子以降無料",
+            "excluded": "延長保育料、給食費等の実費。一定所得未満世帯・第3子以降は副食費免除対象"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub3/1/35.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "第3子以降の学校給食費を年度ごとの申請により補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "3人以上の子を扶養し、年齢順で第3子以降となる児童生徒が町立小中学校等で給食提供を受ける町内保護者",
+            "coverage": "対象となる第3子以降の学校給食費を補助",
+            "procedure": "年度ごとに学校または教育委員会へ申請書と必要書類を提出",
+            "excluded": "生活保護・就学援助による給食費支援を受ける場合や学校納入金の滞納がある場合等",
+            "notes": "全小中学生を対象とする一律完全無償化としては記録しない"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub3/2/45.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊型を含む産後ケア事業を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "program": "産後ケア事業",
+            "types": "宿泊型を含む支援を実施",
+            "support": "産後の母親の休養・心身ケア、授乳や育児に関する相談・支援等",
+            "procedure": "利用対象月齢、回数、料金、実施施設は保健福祉課の最新案内で確認し事前申請",
+            "notes": "町公式の現行支援一覧で産後ケア事業と宿泊型の実施を確認"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub3/1/56.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の6か月以上3歳未満を月10時間まで認定こども園で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援制度（こども誰でも通園制度）",
+            "target": "御宿町在住で、こども園等に在籍していない生後6か月以上満3歳未満の子ども",
+            "facility": "おんじゅく認定こども園",
+            "hours": "1時間単位で月10時間まで",
+            "procedure": "事前に町の利用認定が必要。利用料・予約方法等は町の最新案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub3/1/54.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "木造住宅の耐震改修費の2分の1を最大30万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "御宿町に住民登録して居住し、世帯員に町税等滞納がない人",
+            "housing": "耐震診断済みで判定値1.0未満、2階建て以下等の要件を満たす木造住宅",
+            "coverage": "耐震改修の設計、工事、工事監理に係る費用",
+            "amount": "補助対象経費の2分の1以内、上限30万円、1戸1回",
+            "procedure": "工事前に申請し、年度内に事業を完了"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub4/4/23/taishinkaisyuu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを月1回程度の戸別収集または清掃センターへの自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "一辺40センチメートル以上または指定大袋に入らない家庭ごみが目安",
+            "collection": "収集希望月の15日までに申込み、1回最大5点を戸別収集",
+            "fee": "戸別収集・粗大ごみは1キログラム90円",
+            "directDelivery": "清掃センターへ自己搬入可能",
+            "excluded": "処理困難物、事業系ごみ、リサイクル券のない家電4品目等"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub1/6/sodaigomikobetu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・地震・液状化・土砂災害等のハザード情報を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "津波ハザードマップ、地震ハザードマップ、防災総合ガイドブック等を公開",
+            "risks": "津波浸水、地震の揺れ、建物被害、液状化、土砂災害等",
+            "facilities": "避難所・避難場所・津波避難ビル、避難経路、防災情報の入手方法を掲載",
+            "support": "自宅周辺の危険区域と高台・避難先を事前確認するために利用可能"
+          },
+          "source": {
+            "url": "https://www.town.onjuku.chiba.jp/sub1/1/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "12463",
+      "prefectureCode": "12",
+      "prefecture": "千葉県",
+      "name": "鋸南町",
+      "officialUrl": "https://www.town.kyonan.chiba.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を鋸南町公式情報で確認し、8制度をverified、こども誰でも通園制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "鋸南町に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の通院・入院・調剤に係る自己負担分を助成",
+            "copayment": "課税・非課税世帯を問わず自己負担無料",
+            "procedure": "受給券の交付申請を行い、対応医療機関で保険資格情報と受給券を提示",
+            "notes": "2026年4月から対応機関ではマイナ保険証を受給券として利用できるPMH運用を開始"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/site/kosodate/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "勝山クリニック併設の病児・病後児保育室で一時保育",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "病児・病後児保育『わんわんクラブ』",
+            "target": "病気やけがにより保育園・幼稚園・学校へ行けず、保護者が就労等で家庭保育できない子ども",
+            "facility": "勝山クリニック内わんわんクラブ",
+            "capacity": "1日4人",
+            "limit": "原則連続7日以内で、利用期間中も毎日受診が必要",
+            "excluded": "おたふくかぜ、水ぼうそう、はしか、インフルエンザ等の感染力が強い病気など",
+            "procedure": "保護者と勝山クリニックを受診し、医師が預かり可能と判断した場合に利用"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/soshiki/14/0012061.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児等を無償化し、課税世帯0～2歳児は所得連動",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "coverage": "保育所・幼稚園等の3～5歳児と住民税非課税世帯の0～2歳児を国制度の範囲で無償化",
+            "currentFee": "課税世帯の0～2歳児は保護者の住民税額等を基に保育料を決定し、一律完全無償化ではない",
+            "procedure": "認可外保育施設、新制度未移行幼稚園、預かり保育等は施設等利用給付認定や償還払い請求が必要",
+            "mealSupport": "町内在住で鋸南保育所を利用する3歳以上児の給食費は町負担により無料",
+            "excluded": "延長保育料、通園費、教材費等の実費"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/soshiki/16/ninkagaitou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内在住で町立保育所・幼稚園・小中学校に在籍する児童生徒の給食費を無償化",
+          "eligibility": {
+            "minAgeMonths": 36,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "鋸南町在住で鋸南保育所、鋸南幼稚園、鋸南小学校、鋸南中学校に在籍する児童・生徒",
+            "coverage": "学校・施設給食費を町が負担し、保護者負担額0円",
+            "outsideResident": "町外から町立施設へ通う児童生徒は無償化対象外となる場合があり、施設案内の金額を負担",
+            "procedure": "対象施設に通常在籍する町内居住者は原則として給食費負担なし"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/soshiki/16/kyuusyoku.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・日帰り・訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "鋸南町在住で、家事・育児の十分な支援を得られず、産後の心身不調や育児不安等がある母親と赤ちゃん",
+            "types": "宿泊型、日帰り型、訪問型",
+            "age": "宿泊型は産後5か月未満。日帰り・訪問型は実施施設や支援内容により対象月齢が異なる",
+            "support": "母親の休養・心身ケア、授乳・乳房ケア、育児相談、乳児の健康確認等",
+            "procedure": "事前申請と町の利用承認が必要。利用料金は実施機関へ支払う",
+            "excluded": "医療行為が必要な場合は利用不可"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/soshiki/14/0012003.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "こども誰でも通園制度の現行利用施設・申請案内を町公式サイトで確認できず",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "finding": "国制度の給付化と町計画上の実施方針は確認できるが、2026年度の利用施設、認定申請、料金、予約方法をまとめた現行の町公式利用案内を確認できなかった",
+            "alternative": "利用可否と受付状況は鋸南町教育課または鋸南保育所へ確認",
+            "notes": "一般の一時保育をこども誰でも通園制度として代用せず、現行利用案内が確認できるまでunavailableとして記録"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/site/kosodate/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による20万円以上の住宅リフォーム費の10％を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "鋸南町に定住し、町内の対象住宅を町内業者がリフォームし、申請者・世帯員に町税等滞納がない人",
+            "condition": "税抜20万円以上で、町の他の補助・助成・保険給付と重複せず、交付後も対象住宅へ継続居住する工事",
+            "amount": "対象工事費の10分の1、上限20万円",
+            "procedure": "工事着手前に申請し、予算の範囲内で交付"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/soshiki/13/0011365.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみをクリーンセンターへの直接搬入または予約制戸別収集で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "guide": "2026年度ごみ収集カレンダーとごみの分け方・出し方で品目別区分を案内",
+            "definition": "指定袋に入らない大型の家庭ごみ等を粗大ごみとして扱う",
+            "directDelivery": "対象クリーンセンターへ直接搬入可能",
+            "collection": "電話予約後、粗大ごみ収集券を購入して対象品へ貼り、指定場所へ出す戸別収集を利用可能",
+            "procedure": "品目、料金、受入日時、搬入先は最新ガイドを確認"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/soshiki/13/2865.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・洪水・土砂災害・ため池等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "鋸南町津波ハザードマップ、洪水ハザードマップ、土砂災害ハザードマップ、ため池ハザードマップ等を公開",
+            "risks": "元禄型地震等による津波、佐久間川・保田川・元名川の洪水、土砂災害、ため池決壊等",
+            "facilities": "指定避難場所・避難所、津波避難施設、浸水区域、危険区域等を掲載",
+            "support": "自宅周辺の危険区域、避難先、避難経路を平時から確認するために利用可能"
+          },
+          "source": {
+            "url": "https://www.town.kyonan.chiba.jp/site/bousai/7525.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "13101",
       "prefectureCode": "13",
       "prefecture": "東京都",
@@ -124628,6 +125166,1603 @@
           "source": {
             "url": "https://www.vill.ogasawara.tokyo.jp/soumu/bousai/",
             "checkedAt": "2026-07-23"
+          }
+        }
+      }
+    },
+    {
+      "code": "14100",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "横浜市",
+      "officialUrl": "https://www.city.yokohama.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を横浜市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "2026年6月から18歳年度末までの保険診療自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "横浜市内に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "病気やけがによる保険診療の自己負担額を助成",
+            "copayment": "所得制限・一部負担金なしで自己負担0円",
+            "procedure": "小児医療証の交付申請を行い、医療機関等で保険資格情報と医療証を提示",
+            "excluded": "差額ベッド代、文書料、健康診断、予防接種等の保険外費用"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/kenko-iryo-fukushi/kenko-iryo/iryohijosei/shoni/child.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生の病児・病後児を専用施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "病気中または回復期にあり、保護者の就労・傷病・出産・冠婚葬祭等により家庭保育が困難な子ども",
+            "facilities": "市内の病児保育施設・病後児保育施設。施設により病児は小学3年生までの場合あり",
+            "hours": "施設により異なり、病後児施設の例では平日7時30分から18時30分、土曜15時30分まで",
+            "fee": "一般世帯1日2,000円。生活保護・市民税非課税・対象ひとり親世帯等は0円",
+            "procedure": "事前登録、施設予約、医師の診療・利用連絡書等が必要"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/lang/residents/living-guide/child/kosodate3.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と市民税非課税世帯0～2歳児等を無償化し、課税世帯0～2歳児は所得連動",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "coverage": "保育所・認定こども園等を利用する3～5歳児と、市民税非課税世帯の0～2歳児等の利用料を無償化",
+            "currentFee": "課税世帯の0～2歳児クラスは保護者の市民税所得割額等に基づく階層別利用料で、一律完全無償化ではない",
+            "multiChild": "きょうだい区分や世帯状況に応じた利用料軽減制度あり",
+            "procedure": "施設・サービスに応じて給付認定、保育の必要性認定、償還払い請求等が必要",
+            "excluded": "食材料費、通園送迎費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/lang/residents/ej/child/kd-mushoka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校段階0円、中学校は1食330円",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "市立小学校、義務教育学校前期課程、特別支援学校小学部の給食費は保護者負担0円。申請不要",
+            "juniorHigh": "市立中学校・義務教育学校後期課程のフルセット給食は1食330円",
+            "support": "物価高騰分は市独自補助。小学校で給食を全く食べられない児童への一定額補助を実施予定",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/kosodate-kyoiku/kyoiku/sesaku/kyusyoku/kyushokuhi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "ショートステイ・デイケア・訪問型の産後母子ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "横浜市に住民登録があり、産後の休養・育児支援や助産師等の助言を希望する母親と赤ちゃん",
+            "types": "ショートステイ、デイケア、訪問型母子ケア",
+            "age": "2026年度からデイケアは産後6か月未満へ拡充。類型ごとに対象期間が異なる",
+            "limit": "デイケアは7日、訪問型は3回等。ショートステイを含む利用上限は最新利用規程を確認",
+            "fee": "デイケア1日2,400円、訪問型1回1,500円。生活保護・市民税非課税世帯は対象類型の利用料0円",
+            "procedure": "妊娠28週以降から申請可能。ショートステイは区こども家庭支援課での事前面談が必要"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/kosodate-kyoiku/oyakokenko/ninshin/sangoboshikea.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "横浜市内在住で満3歳未満、保育所等・地域型保育・企業主導型保育を利用していない子ども。利用は生後6か月以降",
+            "hours": "子ども1人につき月10時間まで",
+            "fee": "1時間あたり300円程度。施設により支払方法・キャンセル料・実費が異なる",
+            "procedure": "利用前に乳児等支援給付認定を受け、総合支援システムで実施施設を確認して予約"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/kosodate-kyoiku/kosodateshien/azukari/daredemotsuuenn.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅の無料診断と耐震改修工事費補助を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "2000年5月末以前に建築確認を得て着工した2階建以下の在来軸組木造個人住宅等で、耐震診断評点1.0未満の住宅の居住者・居住予定者",
+            "support": "無料耐震診断、訪問相談、耐震改修、住宅除却、防災ベッド・耐震シェルター等を支援",
+            "amount": "耐震改修工事は一般世帯の補助限度額115万円等。課税区分、工事内容、補助限度単価により算定",
+            "procedure": "工事契約・着手前に申請し、登録事業者等による設計・施工と年度内完了報告が必要"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/taishin/hojokinshienseido/mokutai/mokukaishu/mokukaishu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを事前申込・有料の戸別収集または自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "家庭から出る物のうち、最長辺が金属製品30センチ以上、それ以外は50センチ以上のもの",
+            "collection": "インターネット、チャット、LINE、電話等で事前申込みし、品目別手数料を納付して指定日に排出",
+            "directDelivery": "事前申込み後、指定自己搬入ヤードへ手数料シール等を付けて持込み可能",
+            "fee": "品目ごとに異なる。電子決済または粗大ごみ収集シールで納付",
+            "excluded": "事業系ごみ、市外からの持込み、家電リサイクル法対象品等"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/kurashi/sumai-kurashi/gomi-recycle/gomi/shushu/sodaigomi/dashikata/hajimeni.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・内水・高潮・土砂・津波・地震等の防災地図を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "浸水ハザードマップ、土砂災害ハザードマップ、津波避難施設マップ、地震マップ、わいわい防災マップ等を公開",
+            "risks": "河川洪水、内水、高潮、土砂災害、津波、地震の揺れ・液状化、大規模盛土造成地等",
+            "facilities": "避難所・避難場所、津波避難施設、浸水深、危険区域等を掲載",
+            "support": "住所検索・地図重ね合わせ、音声ハザードマップにより現在地周辺の災害リスクを確認可能"
+          },
+          "source": {
+            "url": "https://www.city.yokohama.lg.jp/bousai-kyukyu-bohan/bousai-saigai/map/map.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14130",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "川崎市",
+      "officialUrl": "https://www.city.kawasaki.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を川崎市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "現行は中学3年生までを助成し、2026年9月から18歳年度末まで拡大・一部負担金を廃止",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "current": "2026年8月までは中学校3年生までが対象で、小学校4年生以上の通院は1回500円の一部負担金あり",
+            "scheduled": "2026年9月から高校生年代（18歳到達後最初の3月31日まで）へ拡大し、一部負担金を廃止",
+            "coverage": "通院・調剤・入院の保険診療自己負担分を助成",
+            "procedure": "医療証の交付申請を行い、医療機関等で保険資格情報と医療証を提示"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/450/page/0000181307.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後5か月程度から小学3年生までの病児・病後児を専用施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 5,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "target": "川崎市または相互利用協定市町村に在住し、保育所等へ通所または小学校へ就学する小学3年生までの児童",
+            "types": "病児保育、病後児保育",
+            "hours": "原則平日8時から18時",
+            "fee": "1日2,900円（食事・おやつ代込み）。非課税・生活保護・児童扶養手当受給世帯は軽減",
+            "procedure": "施設への事前登録・予約、医師の診察・指示等が必要"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/450/page/0000056804.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と市民税非課税世帯の0～2歳児等を無償化し、課税世帯0～2歳児は所得連動",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "coverage": "認可保育所・認定こども園等の3～5歳児と、市民税非課税世帯の0～2歳児等を無償化",
+            "currentFee": "課税世帯の0～2歳児は世帯の市民税所得割額等に基づき算定し、一律完全無償化ではない",
+            "excluded": "副食費、主食費、延長保育料、通園費、行事費等の実費",
+            "procedure": "施設・サービスに応じて給付認定や保育の必要性の認定が必要"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/kodomo/category/267-2-7-0-0-0-0-0-0-0.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校の保護者負担なし、中学校は値上げ分を公費補填し1食320円",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "国の学校給食費負担軽減事業と交付金を活用し、市立小学校・特別支援学校小学部は保護者負担なし",
+            "juniorHigh": "中学校の実際の食材料費単価397円に対し、値上げ分を公費補填して保護者負担を1食320円に据え置き",
+            "support": "生活保護・就学援助認定者は制度から給食費を負担",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/880/cmsfiles/contents/0000121/121366/R8oshirase_syougaku.pdf",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・日帰りロング・日帰りショート・訪問型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "川崎市に住所がある乳児と母親",
+            "types": "宿泊型、日帰りロング型、日帰りショート型、訪問型",
+            "age": "宿泊型は生後4か月未満、日帰り・訪問型は生後1歳未満。施設により受入月齢が異なる",
+            "support": "授乳指導、乳房ケア、育児相談、母体管理、乳児の発育観察・沐浴等",
+            "procedure": "事前申請と利用承認、実施施設の予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/450/page/0000061707.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "川崎市内在住で保育所・幼稚園等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで",
+            "fee": "1時間300円程度。生活保護・市民税非課税・一定所得未満世帯等は減免",
+            "procedure": "e-KAWASAKIで利用申請後、総合支援システムで施設面談・予約"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/450/page/0000175085.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2000年5月以前に建築された対象木造住宅の無料耐震診断と耐震改修費助成を実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "1981年5月以前の旧耐震住宅に加え、2026年度から2000年5月以前の新耐震木造住宅も対象を拡充",
+            "diagnosis": "市が耐震診断士を無料派遣",
+            "retrofit": "耐震改修等の費用の一部を助成",
+            "additional": "耐震シェルター・防災ベッド設置助成制度も実施",
+            "procedure": "診断・工事契約や着手前に市へ申請・相談"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/500/page/0000032250.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを事前申込・有料の戸別収集で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "インターネット、電話、FAXで事前に収集を申込み、指定日の朝8時までに排出",
+            "fee": "品目の長さ等により300円、600円、1,200円の3区分",
+            "payment": "粗大ごみ処理券またはインターネット申込み時のオンライン決済",
+            "excluded": "100kg以上、2m以上の処理困難物、家電リサイクル対象品等は市収集対象外"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/templates/faq/300/0000013341.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・内水・高潮・土砂災害・津波等の防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "川崎市防災マップ、洪水、内水、高潮、土砂災害、津波等の各ハザードマップを公開",
+            "facilities": "避難場所・避難所、浸水深、危険区域、津波避難施設等を掲載",
+            "digital": "ガイドマップかわさき・かわさき防災アプリでも位置情報や住所から確認可能",
+            "support": "自宅周辺の災害リスクと避難先・避難経路の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.kawasaki.jp/bousai/category/292-1-3-0-0-0-0-0-0-0.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14150",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "相模原市",
+      "officialUrl": "https://www.city.sagamihara.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を相模原市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から高校生世代までを助成し、現行の一部負担金・所得制限と2027年4月拡充予定を区別",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "相模原市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "current": "0歳～小学6年生は保険診療自己負担分を全額助成。課税世帯の中学生・高校生世代の通院は1回500円を超える額を助成し、高校生世代には所得制限あり",
+            "coverage": "通院・調剤・入院の保険診療自己負担分を制度条件に応じて助成",
+            "scheduled": "2027年4月から高校生世代の所得制限と中学生以上の通院一部負担金を廃止する予定",
+            "procedure": "医療証の交付申請を行い、医療機関等で保険資格情報と医療証を提示"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kosodate/kenko/1026630/1007567/1007579/1007580.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後おおむね6か月以上の病児・病後児を市内3施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "target": "原則として保育所・幼稚園等を利用する生後おおむね6か月以上の子ども。未利用児も施設が受入可能と判断した場合はおおむね10歳未満まで利用可能",
+            "facilities": "病児保育2施設、病後児保育1施設の計3施設",
+            "fee": "保育料日額2,000円、給食提供時は日額350円。非課税世帯等の負担軽減制度あり",
+            "document": "医療機関の利用連絡票が必要で、発行手数料1,600円のうち市内在住児は利用時に700円助成",
+            "procedure": "オンライン予約システム等で事前登録・施設登録・予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kosodate/1026602/kosodate/1026604/1018656/byougoji/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は所得等に基づく保育料が基本で、一律完全無償化ではない",
+            "upperLimits": "認可外保育施設等は3～5歳月37,000円、非課税世帯0～2歳月42,000円等を上限に給付",
+            "excluded": "食材料費、通園送迎費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kosodate/1026602/kosodate/1026604/1018656/1015157.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校等の給食費が発生せず、中学校等は従来どおり有償",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "2026年4月から2027年3月まで、市内小学校・義務教育学校前期課程の児童は学校給食費が発生しない",
+            "juniorHigh": "中学校・義務教育学校後期課程の生徒は従来どおり学校給食費を支払う",
+            "procedure": "学校給食申込書等の手続きは児童・生徒ごとに必要",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/shisei/1026875/faq/kyouiku/1034869.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・通所・訪問型の産後ケアを1歳の誕生日前日まで提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "相模原市に住民登録があり産後ケアを必要とする母親と1歳の誕生日の前日までの赤ちゃん",
+            "types": "宿泊型、通所型、訪問型",
+            "limit": "3類型を合わせて7日・回まで、多胎児は14日・回まで",
+            "fee": "課税世帯は宿泊型の1～5日目2,500円・6～7日目5,000円、通所型1～5回目1,000円・6～7回目2,000円、訪問型1～5回目1,500円・6～7回目3,000円",
+            "support": "授乳・沐浴相談、乳房ケア、育児支援、母親の体調管理等"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kosodate/1026602/kosodate/1026604/1021109.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "target": "相模原市内在住で保育所・認定こども園・地域型保育・企業主導型保育に在籍しない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで",
+            "fee": "1時間300円程度。生活保護・市民税非課税世帯等の負担軽減制度あり",
+            "procedure": "利用前に乳児等支援給付認定を受け、施設面談・予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kosodate/1026602/kosodate/1026606/jyoho/1034772.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震住宅と対象となる2000年5月以前の新耐震木造住宅の耐震対策を支援",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "制度要件を満たす戸建住宅の所有・居住者。2026年度から1981年6月1日～2000年5月31日建築の木造在来工法住宅で専門家検証が必要と判定されたものも対象",
+            "support": "耐震診断、耐震改修工事、防火構造改修等を一貫して助成",
+            "procedure": "診断・設計・工事契約や着手前に市へ申請・相談し、対象要件と助成額を確認",
+            "notes": "市は電話・訪問による直接勧誘を行っていない"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kurashi/1026529/bousai/1008801/1008815.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "予約不要の直接搬入または事前申込制の戸別収集で粗大ごみを処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "directDelivery": "北部・南部粗大ごみ受入施設または津久井クリーンセンターへ予約なしで直接搬入可能",
+            "hours": "原則月曜日から土曜日の9時から16時",
+            "fee": "直接搬入は10キログラムにつき240円。スプリング付きベッドマットレスは1個2,900円加算",
+            "collection": "自己搬入できない場合は事前申込みによる戸別収集を利用可能",
+            "excluded": "市外で発生したごみは搬入不可"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kurashi/1026489/recycle/1026493/katei/1008325.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・内水・土砂災害・地震等の各種防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "洪水ハザードマップ、浸水（内水）ハザードマップ、土砂災害ハザードマップ、地震防災マップ等を公開",
+            "digital": "さがみはら防災マップで避難所・危険区域等を地図上で確認可能",
+            "risks": "相模川等の洪水、内水浸水、土砂災害、地震の揺れ・建物被害等",
+            "support": "自宅周辺の災害リスク、避難先・避難経路の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.sagamihara.kanagawa.jp/kurashi/1026529/bousai/1008688/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14201",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "横須賀市",
+      "officialUrl": "https://www.city.yokosuka.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を横須賀市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの入院・通院等の保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "横須賀市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院・調剤等の保険診療自己負担分を助成",
+            "procedure": "こども医療証の交付申請を行い、医療機関等で保険資格情報と医療証を提示",
+            "excluded": "保険外診療、入院時食事代、健康保険から支給される高額療養費・付加給付等"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/3915/g_info/l100000592.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後3か月から小学6年生までの病児・病後児を専用施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 3,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "入院不要だが病気・回復期で通園・通学が困難かつ保護者が家庭保育できない生後3か月から小学6年生",
+            "hours": "平日7時30分から18時30分、土曜日7時30分から14時30分",
+            "capacity": "総合医療センター施設は最大5人",
+            "fee": "市内在住者1日2,000円、市外5,000円。昼食は予約時300円。非課税・生活保護世帯の減免あり",
+            "procedure": "事前登録・予約、医療機関発行の市指定医師連絡票が必要"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/2645/sougouiryoucenterbyoujibyougoji.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と市独自基準を満たす0～2歳児等の保育料を無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "3～5歳児クラスの全児童と、父母合算の市民税所得割額115,000円未満（年収500万円未満相当）等の0～2歳児",
+            "coverage": "3～5歳児の保育料を無償化し、0～2歳児は国の非課税世帯基準より広い市独自対象まで無償化",
+            "multiChild": "生計同一の第2子は約半額、第3子以降は無償。施設種別により給付上限あり",
+            "excluded": "給食費、送迎費、行事費、延長保育料等の実費",
+            "procedure": "施設・サービスにより教育・保育給付認定または施設等利用給付認定が必要"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/2645/sisetu/youhomusyouka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費を無償化し、中学校は値上げ分を市が負担して月額5,400円に据え置き",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "市立小学校・特別支援学校小学部は国補助額との差額を市が負担し、2026年度の保護者負担0円",
+            "juniorHigh": "市立中学校1・2年は年180回・11か月、3年は年163回・10か月。完全給食の保護者負担は月額5,400円・1食330円",
+            "subsidy": "中学校は食材料費の値上げ分月額1,100円・1食65円を市が負担し、前年負担額に据え置き",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/8345/kyuushoku/kyuusyoku-hi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "デイケア・ショートステイ・訪問型の産後ケアを産後1年未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "横須賀市在住で医療行為を必要としない産後1年未満の母親と赤ちゃん",
+            "types": "施設型デイケア、施設型ショートステイ、訪問型",
+            "limit": "各メニューを合わせて最大7回、多胎児は14回。ショートステイは1泊を1回として最大6泊、多胎児12泊",
+            "fee": "課税世帯はデイケア3,500円、ショートステイ1泊4,000円、訪問型3,500円。非課税世帯は各1,000円・1,500円・1,000円、生活保護世帯無料",
+            "support": "乳房ケア、授乳・育児相談、沐浴、乳児の発育観察、母親の休養支援等"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/3910/20151001sangocare.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援）",
+            "target": "保育所・幼稚園・認定こども園・地域型保育・企業主導型保育に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで",
+            "fee": "1時間300円程度。生活保護世帯は最大300円、市民税非課税世帯等は最大200円の負担軽減",
+            "procedure": "総合支援システムで利用者登録・認定後、施設面談と利用予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/2645/kodomodaredemotuuenn.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2000年5月末以前着工の対象木造戸建住宅の耐震診断・補強工事等を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "平成12年5月末以前に建築確認を得て着工した木造軸組の戸建住宅等",
+            "support": "耐震診断・改修計画書、耐震補強工事図面、耐震補強工事・工事監理費の一部を助成",
+            "additional": "診断で倒壊の危険があると判断された住宅には耐震シェルター・防災ベッド設置費補助もあり",
+            "period": "2026年度は耐震診断を4月1日、補強工事を5月11日から先着受付し12月28日締切予定",
+            "procedure": "契約・工事前に電話または窓口で申込み"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/4840/sidouka/taisin_syousai.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "事前申込制の戸別収集またはエコミルへの自己搬入で粗大ごみを処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "LINEまたはインターネット等で申し込み、電子決済による前払い後に戸別収集",
+            "collectionFee": "その他の粗大ごみ1個・1組520円、スプリングマットレス1個4,300円",
+            "directDelivery": "横須賀ごみ処理施設エコミルへ平日8時30分から16時に自己搬入可能",
+            "directFee": "2026年9月30日までは10キログラムごと150円、スプリングマットレスは1個2,000円加算。10月1日から料金改定予定",
+            "excluded": "家電リサイクル対象品、パソコン等は別制度"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/4150/g_info/l100000701.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂・洪水・津波・高潮・内水・地震等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "災害リスクマップと土砂災害、洪水、津波、高潮、内水、震度等の個別マップを公開",
+            "facilities": "風水害時避難所、津波避難施設等を地図上に掲載",
+            "risks": "半島地形に伴う土砂災害、洪水、津波、高潮、内水浸水、地震等",
+            "support": "地域ごとの複合災害リスク、避難先・避難経路、備蓄等の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.yokosuka.kanagawa.jp/0525/bousainavi/sonae/hazardmap/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14203",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "平塚市",
+      "officialUrl": "https://www.city.hiratsuka.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を平塚市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの入院・通院に係る保険診療自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "平塚市に住所を有する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院に係る保険診療医療費の自己負担額を助成",
+            "procedure": "小児医療証の交付申請後、対応医療機関で保険資格情報と医療証を提示。県外受診等は償還払い",
+            "excluded": "保険外診療、健康診査、入院時食事代、高額療養費・付加給付等"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/kodomo/page-c_03167.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生までの病児・病後児を専用保育室で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "市内在住または保護者が市内在勤・在学で、病気中・回復期にあり家庭保育が困難な子ども",
+            "facilities": "麦・もんもん病児保育室、ここいこ すまいるるーむ、平塚保育園病後児保育室なでしこ等。施設により上限学年が異なる",
+            "fee": "利用料1日2,000円。給食・おやつ代400円等が別途必要な施設あり。生活保護・非課税世帯は利用料減免",
+            "procedure": "事前登録・予約と医師連絡票等が必要。病状により利用不可の場合あり"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/kodomo/page82_00290.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・保育所・認定こども園等を利用する3～5歳児と住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの基本利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は保護者の市町村民税額等に基づき保育料を算定し、一律無償化ではない",
+            "excluded": "通園送迎費、行事費、食材料費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/kodomo/page82_00122.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校の給食費を負担0円とし、中学校は有償のまま物価高騰分を公費補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "国・市の交付金活用により2026年度の保護者負担なし",
+            "juniorHigh": "完全給食を実施し保護者から給食費を徴収。物価高騰分は国交付金・市財源で補助して負担額を据え置き",
+            "support": "経済的に就学困難な世帯は就学援助で給食費等の援助対象",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/kyoiku/page-c_02560.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "ショートステイ・デイサービス・アウトリーチ型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "平塚市在住で産後の体調不良や育児不安がある母子。2026年4月1日以降出産は産後1年未満",
+            "types": "ショートステイ、デイサービス6時間・3時間、アウトリーチ90分",
+            "limit": "各サービスを組み合わせて利用券7枚分。宿泊は最大6泊7日",
+            "fee": "課税世帯は宿泊1泊2日18,000円、通所4,800円または3,000円、訪問2,700円。非課税・生活保護世帯は軽減"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/kenko/page21_00244.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "平塚市在住で保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで",
+            "fee": "1時間300円を基本とし、生活保護・低所得世帯は減免。給食・おやつ等は別途の場合あり",
+            "procedure": "総合支援システムで利用申請し、施設面談・予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/kodomo/page82_00430.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅の耐震診断・改修設計・改修工事・耐震シェルター設置を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "市内の昭和56年5月31日以前着工、木造在来軸組構法、2階建て以下等の要件を満たす住宅",
+            "diagnosis": "耐震診断は住宅規模・申請区分により62,000円から101,000円を補助",
+            "support": "診断評点1.0未満の住宅は耐震改修設計・工事補助の対象。耐震シェルター補助もあり",
+            "period": "2026年度は原則11月末まで受付予定。予算終了時に締切",
+            "procedure": "契約・診断・工事前に申請"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/machizukuri/page-c_01937.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを予約制戸別収集または処理施設への自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "立方体状で一辺50センチ超、棒・板状で長さ1メートル超、重量25キログラム超等の品物",
+            "collection": "専用ダイヤルで予約し、案内された額の納付券を購入して指定場所へ排出。原則1立方メートル3,500円、納付券1枚500円",
+            "directDelivery": "品目に応じて環境事業センターまたは粗大ごみ破砕処理場へ事前予約の上で自己搬入",
+            "excluded": "家電リサイクル法対象品等は別制度"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/kankyo/page-c_01174.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・津波・洪水・内水・土砂災害・ため池・高潮等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "地震防災、津波、洪水、内水、土砂災害、ため池、高潮の各ハザードマップとGISを公開",
+            "risks": "地震の揺れ・建物被害、津波、河川洪水、内水浸水、土砂災害、ため池・高潮等",
+            "facilities": "避難場所、浸水想定区域、防災情報等を確認可能",
+            "support": "家庭の避難先・避難経路・備蓄等の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.hiratsuka.kanagawa.jp/bosai/page05_00014.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14204",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "鎌倉市",
+      "officialUrl": "https://www.city.kamakura.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を鎌倉市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "鎌倉市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院等の保険診療自己負担分を助成",
+            "procedure": "小児医療証の交付申請後、対応医療機関で保険資格情報と医療証を提示。県外受診等は償還払い",
+            "excluded": "保険外診療、健康診断、予防接種、個室料、高額療養費・付加給付等"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/kosodate/syoni.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生までの病児・病後児を専用施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "市内在住・在園・在学、または保護者が市内在勤で、病気中・回復期にあり家庭看護が困難な子ども",
+            "facilities": "病児・病後児保育室naste大船、かまくらファミリークリニック病児保育室トコトコ等",
+            "hours": "施設により病児8時30分から18時、病後児7時30分から18時等",
+            "fee": "naste大船は1日2,500円。生活保護・市民税非課税世帯等は減免",
+            "procedure": "事前予約、医療機関受診、利用連絡票・申込書等の提出が必要"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/hoiku/byougojihoiku1.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と市民税非課税世帯の0～2歳児等を制度範囲内で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・保育所・認定こども園等を利用する3～5歳児と、市民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの基本利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は市民税所得割額等により月額0円から79,700円の階層で算定され、一律無償化ではない",
+            "excluded": "通園送迎費、施設管理費、食材料費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/kodomokyoku/musho/musyouka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校給食費を無償化し、中学校は有償・値上げ分を公費補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "2026年4月以降、市立小学校在籍児童の給食費を無償化し、保護者負担なし・手続き不要",
+            "juniorHigh": "完全給食を実施し、2025年度は1食430円のうち保護者負担330円。2026年度も小学校のみ無償化で、中学校一律無償化は確認できない",
+            "subsidy": "物価高騰による増額分を国交付金等で市が補助し、保護者負担を抑制",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/kyusyoku/4rinji-kofukin.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・通所・訪問型の産後ケアを産後4か月未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "鎌倉市に住民票がある出産後4か月未満の母親と子ども。母親のみの利用も可",
+            "types": "宿泊型、通所型、訪問型",
+            "limit": "宿泊型7日、通所型と訪問型を合わせて7日。多胎児は追加枠あり",
+            "fee": "2026年4月以降、宿泊型1日2,500円、通所型1,000円、訪問型500円。非課税・生活保護世帯は減額または免除",
+            "support": "母体の心身ケア、授乳・乳房ケア、沐浴・抱っこ等の育児相談"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/boshi/sangocare1.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の0～2歳児を月10時間まで市内施設で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳幼児等通園支援事業）",
+            "target": "鎌倉市に住民登録・居住し、保育所・幼稚園・認定こども園等に在籍していない満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで。未利用時間の翌月繰越不可",
+            "fee": "1時間300円。生活保護・市民税非課税・一定所得未満世帯は減額",
+            "procedure": "つうえんポータルで利用申請・資格認定後、施設面談・予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/hoiku/daretu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2000年5月以前着工の対象木造住宅に耐震診断・改修費を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "2000年5月31日以前着工で、市民が所有する木造2階建て以下の一戸建て・二世帯・店舗兼用住宅等",
+            "diagnosis": "現地耐震診断費10万5千円のうち8万3千円を補助",
+            "retrofit": "診断評点1.0未満を1.0以上へ改修する工事等費用の2分の1、上限115万円。低所得者世帯等は上限135万円",
+            "procedure": "診断・工事の契約前に申請が必要"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/kenchikushidou/taishin-kaisyu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "一辺おおむね50センチ以上の粗大ごみをWEB・電話の事前予約で戸別収集",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "一辺の長さがおおむね50センチ以上。指定8品目で一辺おおむね1メートル以上は大型粗大ごみ",
+            "collection": "WEBまたは電話で事前予約し、案内された処理手数料を支払って指定場所へ排出",
+            "hours": "WEBは24時間、電話は月曜から金曜の8時15分から17時",
+            "procedure": "予約前に品物の縦・横・高さを測定。予約なしでは収集不可"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/gomi/sodai.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・津波・洪水・内水・高潮・土砂災害等の防災情報マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "鎌倉市防災情報マップと地震、津波、洪水、内水、高潮、土砂災害の各ハザードマップを公開",
+            "risks": "揺れ・液状化、津波、河川洪水、内水浸水、高潮、土砂災害等",
+            "facilities": "浸水想定区域、避難所・避難場所等をGISや地域別地図で確認可能",
+            "support": "家庭の避難先、避難経路、タイムライン、備蓄等の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.kamakura.kanagawa.jp/sougoubousai/hazardmap.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14205",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "藤沢市",
+      "officialUrl": "https://www.city.fujisawa.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を藤沢市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの入院・通院に係る保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "藤沢市に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院の保険診療自己負担分を助成",
+            "procedure": "小児医療証の交付申請後、県内対応医療機関等で保険資格情報と医療証を提示。県外受診等は電子申請による払い戻し",
+            "excluded": "健康診断、予防接種、薬容器代、選定療養費、差額ベッド代、食事代、高額療養費・付加給付等"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/kosodate/kenko/kosodate/teate/josesedo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から就学前を基本に、施設により小学6年生までの病児・病後児を一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "市内在住または保護者が市内在勤・在学で、病気中・回復期にあり家庭保育が困難な生後6か月から就学前の児童。病児ほいくしつ湘南は小学6年生まで",
+            "facilities": "病児ほいくしつ湘南、キディ湘南C-X、藤が岡保育園病児保育室、キディ鵠沼・藤沢、保育園小さなほし",
+            "fee": "病児1日2,000円、病後児1日1,500円。食事・おやつ・緊急受診費等は別。生活保護・非課税世帯は市内在住者に限り免除",
+            "limit": "1疾病につき原則7日まで",
+            "procedure": "特別保育予約システムの登録・施設面談、医療機関受診、医師連絡票、予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/hoiku/kenko/kosodate/hoikuen/byogojihoiku.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を制度範囲内で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・認可保育施設等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの基本利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は市民税所得割額、認定区分、きょうだい状況等による階層区分で算定され、一律無償化ではない",
+            "procedure": "施設・サービスに応じて施設等利用給付認定と給付費申請が必要",
+            "excluded": "給食費、通園送迎費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/hoiku/youho_mushouka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校給食費を無償化し、中学校は選択制デリバリー給食を1食330円等で提供",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "市立小学校・特別支援学校小学部は国の財政支援を受け2026年度の給食費を無償化",
+            "juniorHigh": "選択制デリバリー方式で、普通盛は牛乳込み330円・牛乳なし273円、大盛は牛乳込み400円・牛乳なし343円",
+            "specialSchool": "特別支援学校中学部・高等部は月額5,200円で、物価高騰分を公費負担して据え置き",
+            "support": "就学援助認定世帯は中学校デリバリー給食費等の援助対象",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/gakko-k/kyoiku/kyoiku/kyushoku/kohkaikei/documents/kyusyokuhi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "宿泊・通所6時間・通所3時間・訪問型の産後ケアを産後1年未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "藤沢市に住民登録がある出産後1年未満の産婦と子ども",
+            "types": "宿泊型、通所型6時間、通所型3時間、訪問型",
+            "limit": "各サービスを組み合わせて通算7回分まで。1泊2日の宿泊は利用券2枚",
+            "fee": "課税世帯は宿泊1泊2日13,000円、通所6時間4,800円、通所3時間3,000円、訪問3,000円。非課税・生活保護世帯は事前申請により無料",
+            "support": "乳房ケア、授乳・育児相談、乳児の発育確認、産婦の体調管理・休養等"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/oyako/sangocare.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月4時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "保育所・幼稚園・認定こども園・地域型保育・企業主導型保育施設に通っていない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月4時間まで。未利用時間の翌月繰越不可",
+            "fee": "1時間300円。生活保護世帯は300円、市民税所得割合算額77,101円未満・要支援家庭は200円を減額",
+            "procedure": "つうえんポータルで利用申請・認定後、施設ごとの初回面談と予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/kodomo-se/daretsu/daretsu_gaiyou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2000年5月以前に建築された対象木造住宅の耐震診断・改修工事等を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "2000年5月31日以前建築、2階建て以下の在来構法木造専用・併用住宅等で、市内居住の所有者など制度要件を満たす住宅",
+            "diagnosis": "木造住宅耐震診断費の一部を補助し、2026年度は事前相談予約制",
+            "retrofit": "評点1.0未満の住宅について補強設計・改修工事・工事監理費の2分の1、上限115万円",
+            "procedure": "事前相談を行い、診断・工事の契約または着手前に申請"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/jutaku/machizukuri/sumai/taishin/hojo/kaishu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "1辺または長さ50センチ以上2メートル未満等の大型ごみを予約制・有料で戸別収集",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "1辺または長さが50センチ以上2メートル未満の家庭ごみ。指定16品目は特別大型ごみ",
+            "collection": "事前予約後、処理手数料納付券を購入し、受付番号等を記入して指定日時・場所に排出",
+            "fee": "大型ごみは1点・1束・1組500円、特別大型ごみは同1,000円",
+            "excluded": "家電リサイクル法対象品等は市収集対象外"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/kankyo-j/kurashi/gomi/wakekata/h30bunrui.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・洪水・内水・津波・高潮等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "土砂災害・洪水ハザードマップ、内水氾濫ハザードマップ、津波・高潮ハザードマップ等を公開",
+            "risks": "土砂災害、河川洪水、内水浸水、津波、高潮等",
+            "facilities": "浸水深、危険区域、指定緊急避難場所、指定避難所等を掲載",
+            "support": "自宅周辺の災害リスクと避難先・避難経路の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.fujisawa.kanagawa.jp/bosai/bosai/hazardmap/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14206",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "小田原市",
+      "officialUrl": "https://www.city.odawara.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を小田原市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "小田原市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "医療機関で保険診療を受けた際の自己負担額を助成。保護者所得制限なし",
+            "procedure": "医療証の交付申請後、対応医療機関で保険資格情報と医療証を提示。県外受診等は払い戻し申請",
+            "excluded": "保険外費用、高額療養費・付加給付、他制度給付等"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/welfare/iryou/syouni/syoniiryou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気中・回復期で集団保育が困難な就学前児童等を病児・病後児保育室で一時保育",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "市内在住または市内の保育所・幼稚園・小学校等を利用し、家庭保育が困難で医師が病児・病後児保育可能と判断した児童",
+            "service": "看護師と保育士が体調に合わせて病児保育または病後児保育を実施",
+            "fee": "1日2,000円、給食費等は別。生活保護世帯、住民税・所得税非課税世帯は減免あり",
+            "procedure": "事前登録、医療機関受診、施設への予約・利用申込みが必要"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/edu-ch/kosodate/nursery/nursery/sick_child/byougojihoiku.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を制度範囲内で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "幼稚園・保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの基本利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は世帯所得・市民税額等に基づく保育料で、一律無償化ではない",
+            "procedure": "施設・利用形態に応じた給付認定申請が必要",
+            "excluded": "給食費、通園送迎費、行事費、延長保育料等"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/edu-ch/kosodate/nursery/child_education_free/p27360.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校給食費を無償化し、市立中学校は月額3,300円へ減額",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "国の負担軽減策と市の補てんにより、市立小学校の保護者負担月額0円",
+            "juniorHigh": "市独自補てんにより月額5,000円から3,300円へ減額。中学3年生3月分は1,280円",
+            "foodCost": "小学校1食352円・月額換算5,888円、中学校1食434円・月額換算7,062円を公費補てんと保護者負担で賄う",
+            "notes": "小中学校一律の完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/edu-ch/education/sl/fee/gakkoukyusyokuhi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "訪問・通所・宿泊型の産後ケアを生後1年未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "利用時に小田原市に住所がある生後1年未満の赤ちゃんと母親",
+            "types": "アウトリーチ（訪問）型、デイサービス（通所）型、ショートステイ（宿泊）型",
+            "limit": "3類型を合計7回まで。宿泊は1泊2日を2回として計算",
+            "fee": "訪問1回500円、通所1回2,900円、宿泊1泊13,000円・2泊19,500円。非課税・生活保護世帯は申請により免除",
+            "support": "授乳・乳房管理、育児・産後生活相談、母親の休養、乳児の発育発達相談等"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/edu-ch/kosodate/advice/p32555.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "認可保育所・認定こども園・地域型保育・企業主導型保育等に在籍していない生後6か月から3歳誕生日の前々日までの子ども",
+            "hours": "子ども1人につき月10時間まで",
+            "fee": "1時間上限300円。給食費・教材費等の実費は施設により別途",
+            "procedure": "総合支援システムで認定申請後、施設面談・予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/edu-ch/kosodate/nursery/other/p40889.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅の耐震診断・設計・改修工事等を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "1981年5月31日以前に着工した、原則2階建て以下の在来工法木造住宅で、市税滞納がない所有者等",
+            "diagnosis": "居住所有者等は耐震診断費全額・上限9万円、貸家等は費用3分の2・上限6万円",
+            "retrofit": "耐震設計費3分の2・上限10万円、工事監理費3分の2・上限5万円、改修工事費2分の1・上限85万円、要配慮者世帯は上限115万円",
+            "procedure": "事前申請・審査後に契約・着手"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/disaster/disaster/nature/seismi/taisin-hojyo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "45リットル袋に入らない大型ごみを予約制戸別収集または自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "45リットルの指定袋に入らない大型の家庭ごみ等",
+            "collection": "リサイクルセンターへ電話予約して個別収集を依頼",
+            "directDelivery": "環境事業センターへ本人確認書類を持参して自己搬入可能",
+            "fee": "自己搬入は1キログラム25円。戸別収集の品目別料金は予約時に確認",
+            "excluded": "家電リサイクル対象品、パソコン、処理困難物等は別制度"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/envi/refuse/segregate/gs_wd.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・高潮・津波等を地区別にまとめたハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "市内を8区分した洪水・土砂災害・高潮・津波等のハザードマップと地理情報システムNAVI-Oを公開",
+            "risks": "河川洪水、土砂災害、高潮、津波、地震・活断層等",
+            "facilities": "浸水想定、警戒区域、避難場所、防災気象情報、避難情報等を掲載",
+            "support": "居住地区の災害リスクと避難行動の事前確認に利用"
+          },
+          "source": {
+            "url": "https://www.city.odawara.kanagawa.jp/field/disaster/disaster/allhazardmap.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14207",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "茅ヶ崎市",
+      "officialUrl": "https://www.city.chigasaki.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を茅ヶ崎市公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から高校生世代までの保険診療自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "茅ヶ崎市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院、調剤、入院、治療用装具に係る保険診療自己負担額を助成。保護者所得制限なし",
+            "procedure": "小児医療証の交付申請後、県内医療機関等では保険資格情報と医療証を提示。県外受診等は払い戻し申請",
+            "excluded": "保険外費用、高額療養費・付加給付、他制度給付等"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/kokuminkenkohoken/kyufu/josei/1058190.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気の回復期にある満6か月から小学3年生を病後児保育室で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "target": "市内在住で、病気の回復期にあり集団保育が困難かつ保護者の就労等により家庭保育が困難な満6か月から小学3年生等",
+            "facility": "茅ヶ崎市立中海岸保育園の病後児保育室",
+            "hours": "月曜日から金曜日の8時から18時。1回の利用は原則連続7日以内",
+            "fee": "1人1日2,000円。給食・おやつ代450円。生活保護・市民税非課税世帯等は減免あり",
+            "procedure": "事前登録、利用2日前からの電話予約、医師の診療情報提供書等が必要"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/kosodate/1024751/hoikuen/1004789.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と市民税非課税世帯の0～2歳児等を制度範囲内で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "認可保育所・認定こども園等を利用する3～5歳児と、市民税非課税世帯の0～2歳児等",
+            "coverage": "認可施設の対象児童は利用料全額、幼稚園・認可外施設等は制度上限まで無償化",
+            "currentFee": "課税世帯の0～2歳児は所得・市民税額等に応じた保育料で、一律無償化ではない",
+            "procedure": "施設・サービスに応じて子育てのための施設等利用給付認定や保育の必要性の認定が必要",
+            "excluded": "給食費、通園送迎費、教材費、行事費、延長保育料等"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/kosodate/1024751/1059736.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校給食費を実質無償化し、中学校デリバリー給食は1食390円",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "2026年4月から国の負担軽減策を活用し、市立小学校の学校給食費を保護者負担0円で実施",
+            "juniorHigh": "市立中学校のデリバリー給食は希望選択制で1食390円。中学校一律無償化ではない",
+            "procedure": "小学校は給食開始届等の所定手続きが必要。中学校は専用システム等で注文",
+            "support": "経済的に困窮する世帯は就学援助で中学校給食費等の支援対象となる場合がある"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/kyouiku/shogakko/1041709/1005141/1066712.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "訪問・通所・宿泊型の産後ケアを産後1年未満の母子へ提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "茅ヶ崎市に住民登録があり、産後の心身や育児に不安がある産後1年未満の母親と赤ちゃん",
+            "types": "訪問型、通所型、宿泊型。実施施設により利用可能な類型・対象月齢が異なる",
+            "support": "母親の休養・健康管理、授乳・乳房ケア、乳児の発育確認、沐浴等の育児相談・支援",
+            "procedure": "利用前に市へ申請し、利用承認後に実施施設と日程調整。利用回数・自己負担額は類型、施設、世帯区分等により異なる"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/kosodate/1024747/1062445.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "認可保育所・認定こども園・地域型保育・企業主導型保育等に在籍していない生後6か月から3歳の誕生日の前々日までの子ども",
+            "hours": "子ども1人につき月10時間まで。未利用時間の翌月繰越は不可",
+            "fee": "1時間300円を基本とし、施設により設定。世帯区分による負担軽減があり、給食費・教材費等は別途の場合がある",
+            "procedure": "利用認定申請、実施施設との面談・契約、予約が必要"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/kosodate/1024751/1062745.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "旧耐震木造住宅への耐震シェルター・耐震ベッド設置費を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "1981年5月31日以前に建築・着工した市内の一戸建て等の木造住宅で、市補助耐震診断の上部構造評点が1.0未満などの要件を満たす住宅",
+            "support": "市指定の耐震シェルターまたは耐震ベッドの設置費を補助",
+            "amount": "設置費の2分の1以内、上限25万円",
+            "procedure": "設置・契約前に建築指導課と事前打合せし、交付申請が必要"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/machidukuri/shidou/1008195.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "大型ごみを予約制戸別収集または環境事業センターへの自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "大型ごみ等予約センターへ電話またはインターネットで申し込み、品目に応じた大型ごみ証紙を購入して指定日に排出",
+            "directDelivery": "事前予約のうえ環境事業センターへ自己搬入可能",
+            "fee": "品目・大きさにより異なるため、予約時または市の品目別案内で確認",
+            "excluded": "家電リサイクル対象品、パソコン、処理困難物、事業系ごみ等は通常収集対象外"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/kankyo/gomi/1021180/1021572.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・洪水・土砂災害・高潮・液状化等の防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "津波、洪水・土砂災害、高潮、液状化、避難場所等の各種防災・ハザードマップを公開",
+            "risks": "津波、河川洪水、内水・浸水、土砂災害、高潮、液状化、地震等",
+            "facilities": "避難場所・津波一時退避場所等を地図上で確認可能",
+            "support": "居住地の災害リスク、避難経路、避難先を平時に確認するために利用可能"
+          },
+          "source": {
+            "url": "https://www.city.chigasaki.kanagawa.jp/bosai/1001267/index.html",
+            "checkedAt": "2026-07-24"
           }
         }
       }
