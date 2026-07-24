@@ -1,0 +1,54 @@
+name: Sync Central B audit corrections to main
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout synchronization branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/central-b-main-audit-sync-v2-20260725
+          fetch-depth: 0
+
+      - name: Fetch audited regional source
+        run: git fetch origin region/central:refs/remotes/origin/region/central
+
+      - name: Apply 57 audited services
+        run: python3 jichitai-compare/scripts/sync-central-b-audit-to-main.py
+
+      - name: Regenerate data, pages and progress
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+
+      - name: Validate generated result
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Remove temporary runners
+        run: |
+          rm .github/workflows/sync-central-b-audit-main.yml
+          rm jichitai-compare/scripts/sync-central-b-audit-to-main.py
+
+      - name: Commit synchronized result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 1
+          git commit -m "全国品質同期: 中日本B監査訂正57件をmain向けに反映"
+          git push origin HEAD:coord/central-b-main-audit-sync-v2-20260725
