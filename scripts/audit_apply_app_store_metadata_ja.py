@@ -3,6 +3,12 @@
 
 Dry-run is the default. This tool does not create an app record, create a version,
 upload screenshots, select a build, submit for review, or release the app.
+
+Production updates require all of the following:
+- --apply
+- --confirm-bundle-id matching the metadata Bundle ID
+- --confirm-version matching the metadata version
+- --confirm-apply APPLY_METADATA
 """
 
 from __future__ import annotations
@@ -17,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 API_ROOT = "https://api.appstoreconnect.apple.com/v1"
+APPLY_CONFIRMATION = "APPLY_METADATA"
 
 
 def load_jwt_module(script_dir: Path):
@@ -59,11 +66,17 @@ def validate_metadata(data: dict) -> list[str]:
     app = data.get("app", {})
     version = data.get("version", {})
     required = [
-        (app, "bundle_id"), (app, "locale"), (app, "name"),
-        (app, "subtitle"), (app, "privacy_policy_url"),
-        (version, "platform"), (version, "version_string"),
-        (version, "description"), (version, "keywords"),
-        (version, "promotional_text"), (version, "support_url"),
+        (app, "bundle_id"),
+        (app, "locale"),
+        (app, "name"),
+        (app, "subtitle"),
+        (app, "privacy_policy_url"),
+        (version, "platform"),
+        (version, "version_string"),
+        (version, "description"),
+        (version, "keywords"),
+        (version, "promotional_text"),
+        (version, "support_url"),
     ]
     for section, key in required:
         if not str(section.get(key, "")).strip():
@@ -129,6 +142,27 @@ def diff_attributes(current: dict, desired: dict) -> dict:
     }
 
 
+def save_report(path: Path, report: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def verify_apply_confirmation(args: argparse.Namespace, app_meta: dict, version_meta: dict) -> None:
+    errors: list[str] = []
+    if args.confirm_bundle_id != app_meta["bundle_id"]:
+        errors.append(
+            "--confirm-bundle-id must exactly match " + app_meta["bundle_id"]
+        )
+    if args.confirm_version != version_meta["version_string"]:
+        errors.append(
+            "--confirm-version must exactly match " + version_meta["version_string"]
+        )
+    if args.confirm_apply != APPLY_CONFIRMATION:
+        errors.append(f"--confirm-apply must be exactly {APPLY_CONFIRMATION}")
+    if errors:
+        raise SystemExit("\n".join(f"ERROR: {item}" for item in errors))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--api-key", type=Path, required=True)
@@ -137,6 +171,9 @@ def main() -> None:
     parser.add_argument("--metadata", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=Path("app_store_metadata_audit.json"))
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--confirm-bundle-id")
+    parser.add_argument("--confirm-version")
+    parser.add_argument("--confirm-apply")
     args = parser.parse_args()
 
     data = json.loads(args.metadata.read_text(encoding="utf-8"))
@@ -145,6 +182,9 @@ def main() -> None:
         raise SystemExit("\n".join(f"ERROR: {item}" for item in errors))
     app_meta = data["app"]
     version_meta = data["version"]
+
+    if args.apply:
+        verify_apply_confirmation(args, app_meta, version_meta)
 
     jwt_module = load_jwt_module(Path(__file__).resolve().parent)
     token = jwt_module.create_token(args.api_key, args.key_id, args.issuer_id)
@@ -209,6 +249,7 @@ def main() -> None:
 
     report: dict[str, Any] = {
         "mode": "apply" if args.apply else "dry-run",
+        "apply_confirmation_verified": bool(args.apply),
         "app": {
             "id": app_id,
             "bundle_id": app_meta["bundle_id"],
@@ -216,14 +257,22 @@ def main() -> None:
             "sku": app.get("attributes", {}).get("sku"),
             "primary_locale": app.get("attributes", {}).get("primaryLocale"),
         },
-        "app_info_localization": {"id": app_info_loc["id"], "locale": app_meta["locale"], "diff": app_info_diff},
+        "app_info_localization": {
+            "id": app_info_loc["id"],
+            "locale": app_meta["locale"],
+            "diff": app_info_diff,
+        },
         "app_store_version": {
             "id": version_id,
             "version_string": version_meta["version_string"],
             "platform": version_meta["platform"],
             "state": version.get("attributes", {}).get("appStoreState"),
         },
-        "version_localization": {"id": version_loc["id"], "locale": app_meta["locale"], "diff": version_diff},
+        "version_localization": {
+            "id": version_loc["id"],
+            "locale": app_meta["locale"],
+            "diff": version_diff,
+        },
         "public_url_checks": url_checks,
         "urls_ready_for_apply": urls_ready,
         "changes_applied": [],
@@ -231,6 +280,9 @@ def main() -> None:
         "build_selected": False,
         "screenshots_uploaded": False,
     }
+
+    # Persist the complete pre-apply audit before any production PATCH request.
+    save_report(args.output, report)
 
     if args.apply:
         if not urls_ready:
@@ -247,6 +299,7 @@ def main() -> None:
                 }
             })
             report["changes_applied"].append("appInfoLocalization")
+            save_report(args.output, report)
         if version_diff:
             api_request(token, "PATCH", f"/appStoreVersionLocalizations/{version_loc['id']}", {
                 "data": {
@@ -256,9 +309,9 @@ def main() -> None:
                 }
             })
             report["changes_applied"].append("appStoreVersionLocalization")
+            save_report(args.output, report)
 
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(report, ensure_ascii=False, indent=2))
+    save_report(args.output, report)
 
 
 if __name__ == "__main__":
