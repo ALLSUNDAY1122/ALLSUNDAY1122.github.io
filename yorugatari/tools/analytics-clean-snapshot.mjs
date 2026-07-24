@@ -2,12 +2,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const tools = path.join(root, 'yorugatari', 'tools');
+const site = path.join(root, 'yorugatari');
+const tools = path.join(site, 'tools');
 const rawPath = path.join(tools, 'analytics-snapshot-latest.json');
 const baselinePath = path.join(tools, 'analytics-clean-baseline.json');
 const latestPath = path.join(tools, 'analytics-clean-latest.json');
 const historyPath = path.join(tools, 'analytics-clean-history.json');
-const resetId = 'audit-filtered-20260724';
+const resetId = 'audit-filtered-20260724-001';
+const runtimeRelease = '20260724-001';
 const thresholds = {
   rankingStoryViews: 100,
   rankingActiveStories: 20,
@@ -25,6 +27,31 @@ function japanDate(instant = new Date()) {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit'
   }).format(instant);
+}
+
+function requireAuditFilteredRelease() {
+  const requirements = [
+    ['index.html', `assets/analytics.js?v=20260723-003&r=${runtimeRelease}`],
+    ['5min-horror.html', `assets/analytics.js?v=20260724-004&r=${runtimeRelease}`],
+    ['5min-horror.html', `assets/landing-start-20260724-001.js?r=${runtimeRelease}`],
+    ['bedtime-horror.html', `assets/analytics.js?v=20260724-005&r=${runtimeRelease}`],
+    ['bedtime-horror.html', `assets/landing-start-20260724-001.js?r=${runtimeRelease}`],
+    ['stories/spare-key-returned.html', `../assets/engagement.js?v=20260723-003&r=${runtimeRelease}`],
+    ['privacy.html', '自動監査、Lighthouse、ヘッドレスブラウザ']
+  ];
+  const missing = [];
+  for (const [relativePath, token] of requirements) {
+    const text = fs.readFileSync(path.join(site, relativePath), 'utf8');
+    if (!text.includes(token)) missing.push({ path: relativePath, token });
+  }
+  const runtimes = ['analytics.js', 'engagement.js', 'landing-start-20260724-001.js'];
+  for (const filename of runtimes) {
+    const text = fs.readFileSync(path.join(site, 'assets', filename), 'utf8');
+    for (const token of ['isAutomatedRequest', 'HeadlessChrome', 'automatedQuery']) {
+      if (!text.includes(token)) missing.push({ path: `assets/${filename}`, token });
+    }
+  }
+  if (missing.length) throw new Error(`Audit-filtered runtime is not fully normalized: ${JSON.stringify(missing)}`);
 }
 
 function mapViews(rows, key) {
@@ -49,6 +76,7 @@ function difference(current, previous) {
   return Number.isFinite(current) && Number.isFinite(previous) ? current - previous : null;
 }
 
+requireAuditFilteredRelease();
 const raw = readJson(rawPath, null);
 if (!raw || raw.success !== true) throw new Error('Successful raw analytics snapshot is required');
 
@@ -56,6 +84,7 @@ let baseline = readJson(baselinePath, null);
 if (!baseline || baseline.resetId !== resetId) {
   baseline = {
     resetId,
+    runtimeRelease,
     establishedAt: new Date().toISOString(),
     japanDate: japanDate(),
     reason: '自動監査アクセス除外ランタイム公開前の累計値を、運用判断の母数から除外するため',
@@ -115,7 +144,7 @@ const report = {
   generatedAt: new Date().toISOString(),
   japanDate: currentDate,
   success: true,
-  baseline: { resetId: baseline.resetId, establishedAt: baseline.establishedAt, rawGeneratedAt: baseline.rawGeneratedAt },
+  baseline: { resetId: baseline.resetId, runtimeRelease: baseline.runtimeRelease, establishedAt: baseline.establishedAt, rawGeneratedAt: baseline.rawGeneratedAt },
   definitions: {
     views: '自動監査アクセス除外ランタイム公開後の増分',
     cumulativeViews: 'Page Views API上の累計参考値',
