@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-research-sanity-20260725",
+  "sessionId": "north-b",
+  "auditMode": "rough-ten-round-review",
+  "totalRounds": 10,
+  "completedRounds": 1,
+  "remainingRounds": 9,
+  "totalMunicipalityCount": 107,
+  "auditedMunicipalityCount": 11,
+  "remainingMunicipalityCount": 96,
+  "auditedAt": "2026-07-25T00:05:00+09:00",
+  "round01": {
+    "codes": [
+      "01578",
+      "01610",
+      "04100",
+      "04424",
+      "04606",
+      "05201",
+      "05215",
+      "05464",
+      "06201",
+      "06301",
+      "06461"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 22,
+    "confirmedErrorCount": 1,
+    "confirmedErrors": [
+      {
+        "code": "06461",
+        "municipality": "遊佐町",
+        "service": "sickChildCare",
+        "before": "unavailable",
+        "after": "verified",
+        "reason": "遊佐町公式が酒田市・三川町・庄内町の広域利用を明記し、2026年度の受入自治体公式案内でも遊佐町民を利用対象として確認"
+      }
+    ],
+    "sourceCorrectionCount": 2,
+    "sourceCorrections": [
+      {
+        "code": "01610",
+        "municipality": "新ひだか町",
+        "service": "schoolMeals",
+        "change": "中学生給食費無償化の直接案内を一次出典へ変更し、小学校無償化・就学援助ページを補助出典化"
+      },
+      {
+        "code": "06301",
+        "municipality": "山辺町",
+        "service": "childcareFee",
+        "change": "令和8年度副食費無償化の直接案内を一次出典へ変更"
+      }
+    ],
+    "evidenceWeakButNoStatusChange": [
+      {
+        "code": "04606",
+        "municipality": "南三陸町",
+        "service": "schoolMeals",
+        "note": "町立校給食費無償化の根拠は就学援助対象外の記載による間接確認。結論は維持し、後続回または横断監査で直接資料を探索する"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "01578",
+      "01610",
+      "04100",
+      "04424",
+      "04606",
+      "05201",
+      "05215",
+      "05464",
+      "06201",
+      "06301"
+    ]
+  },
+  "nationwideCountsUnchanged": true,
+  "northMunicipalityCount": 406,
+  "nationwideMunicipalityCount": 1741,
+  "nationwideServiceCount": 15669
+}
