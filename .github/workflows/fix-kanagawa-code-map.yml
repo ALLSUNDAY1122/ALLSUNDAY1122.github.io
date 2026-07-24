@@ -1,0 +1,95 @@
+name: Fix Kanagawa Code Map
+
+on:
+  pull_request:
+    branches: [region/east]
+    paths: ['.github/workflows/fix-kanagawa-code-map.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.head_ref == 'fix/14361-14364-code-map-r2' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/14361-14364-code-map-r2
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Rebuild correct municipality code map
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          git fetch origin region/east fix/14361-14363-code-map
+          mkdir -p /tmp/kanagawa jichitai-compare/data/municipalities/14 jichitai-compare/operations/tasks
+          git show origin/region/east:jichitai-compare/data/municipalities/14/14363.json > /tmp/kanagawa/yamakita-data.json
+          git show origin/region/east:jichitai-compare/operations/tasks/14363.json > /tmp/kanagawa/yamakita-task.json
+          for code in 14361 14362 14363; do
+            git show origin/fix/14361-14363-code-map:jichitai-compare/data/municipalities/14/${code}.json > jichitai-compare/data/municipalities/14/${code}.json
+            git show origin/fix/14361-14363-code-map:jichitai-compare/operations/tasks/${code}.json > jichitai-compare/operations/tasks/${code}.json
+          done
+          node <<'NODE'
+          const fs = require('fs');
+          const branch = 'fix/14361-14364-code-map-r2';
+          const pr = Number(process.env.PR_NUMBER);
+          const timestamp = '2026-07-24T14:28:00+09:00';
+          const map = {14361:'中井町',14362:'大井町',14363:'松田町',14364:'山北町'};
+          const write = (p,v) => fs.writeFileSync(p, JSON.stringify(v) + '\n');
+          const yData = JSON.parse(fs.readFileSync('/tmp/kanagawa/yamakita-data.json','utf8'));
+          yData.code = '14364';
+          write('jichitai-compare/data/municipalities/14/14364.json', yData);
+          const yTask = JSON.parse(fs.readFileSync('/tmp/kanagawa/yamakita-task.json','utf8'));
+          yTask.municipalityCode = '14364';
+          yTask.municipalityName = '山北町';
+          yTask.status = 'pr_open';
+          yTask.currentBranch = branch;
+          yTask.pullRequestNumber = pr;
+          yTask.lastUpdatedAt = timestamp;
+          yTask.lastUpdatedBy = '統括Aコード修正';
+          yTask.notes = [...(yTask.notes || []), '山北町を正しい自治体コード14364へ移設。'];
+          delete yTask.mergedInto; delete yTask.mergeCommitSha; delete yTask.ciRunNumber; delete yTask.ciConclusion;
+          write('jichitai-compare/operations/tasks/14364.json', yTask);
+          for (const code of ['14361','14362','14363']) {
+            const tp = `jichitai-compare/operations/tasks/${code}.json`;
+            const task = JSON.parse(fs.readFileSync(tp,'utf8'));
+            task.status = 'pr_open';
+            task.currentBranch = branch;
+            task.pullRequestNumber = pr;
+            task.lastUpdatedAt = timestamp;
+            task.lastUpdatedBy = '統括Aコード修正';
+            task.blockers = [];
+            write(tp, task);
+          }
+          for (const [code,name] of Object.entries(map)) {
+            const dp = `jichitai-compare/data/municipalities/14/${code}.json`;
+            const tp = `jichitai-compare/operations/tasks/${code}.json`;
+            const data = JSON.parse(fs.readFileSync(dp,'utf8'));
+            const task = JSON.parse(fs.readFileSync(tp,'utf8'));
+            if (data.code !== code || data.name !== name || task.municipalityCode !== code || task.municipalityName !== name) throw new Error(`${code}: code/name mismatch`);
+            const services = Object.values(data.services || {});
+            if (services.length !== 9 || services.some(s => !['verified','unavailable'].includes(s.status) || !s.eligibility || !/^https:\/\//.test(s.source?.url || ''))) throw new Error(`${code}: service validation failed`);
+            if (task.completedServices?.length !== 9 || task.verifiedCount + task.unavailableCount !== 9) throw new Error(`${code}: task counts mismatch`);
+          }
+          NODE
+      - name: Validate generated data
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+      - name: Commit source corrections
+        run: |
+          git restore -- jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/14/14361.json jichitai-compare/data/municipalities/14/14362.json jichitai-compare/data/municipalities/14/14363.json jichitai-compare/data/municipalities/14/14364.json jichitai-compare/operations/tasks/14361.json jichitai-compare/operations/tasks/14362.json jichitai-compare/operations/tasks/14363.json jichitai-compare/operations/tasks/14364.json
+          git commit -m 'fix: 神奈川県4町の自治体コード対応を修正'
+          git push origin HEAD:fix/14361-14364-code-map-r2
