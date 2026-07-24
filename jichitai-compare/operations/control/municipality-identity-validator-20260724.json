@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "checkedAt": "2026-07-24T20:28:00+09:00",
+  "pullRequestNumber": 2729,
+  "repairPullRequestNumber": 2735,
+  "validMappings": {
+    "40210": "八女市",
+    "40211": "筑後市",
+    "40212": "大川市",
+    "46404": "長島町"
+  },
+  "removedNonCurrentCodes": ["40208", "40209", "46410"],
+  "validatorChecks": [
+    "code-prefectureCode consistency",
+    "prefecture name consistency",
+    "duplicate municipality name",
+    "duplicate official URL",
+    "duplicate source fingerprint"
+  ],
+  "failureArtifact": "municipality-identity-errors"
+}
