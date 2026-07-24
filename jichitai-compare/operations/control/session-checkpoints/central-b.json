@@ -5,7 +5,7 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-24T22:58:00+09:00",
+  "updatedAt": "2026-07-24T23:13:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "assignedMunicipalityCount": 95,
@@ -26,14 +26,37 @@
     "publicationConfirmationPullRequestNumber": 2786,
     "checkpointCompletionPullRequestNumber": 2798,
     "nationwideCompletionPullRequestNumber": 2791,
-    "publicSmokePullRequestNumber": 2830,
-    "publicSmokeCiRunNumber": 6793,
-    "publicSmokeSampleMunicipalityCode": "30343",
+    "publicSmokePullRequestNumber": 2855,
+    "publicSmokeCiRunNumber": 6856,
+    "publicSmokeSampleMunicipalityCodes": ["26100", "29201", "30343"],
+    "publicSmokePrefectureCoverage": [
+      {
+        "prefectureCode": "26",
+        "prefectureName": "京都府",
+        "municipalityCode": "26100",
+        "municipalityName": "京都市",
+        "expectedCondition": "こども誰でも通園制度を月12時間まで利用できる"
+      },
+      {
+        "prefectureCode": "29",
+        "prefectureName": "奈良県",
+        "municipalityCode": "29201",
+        "municipalityName": "奈良市",
+        "expectedCondition": "こども誰でも通園制度を月10時間まで利用できる"
+      },
+      {
+        "prefectureCode": "30",
+        "prefectureName": "和歌山県",
+        "municipalityCode": "30343",
+        "municipalityName": "九度山町",
+        "expectedCondition": "こども誰でも通園制度を月10時間まで利用でき、unavailableを安全表示する"
+      }
+    ],
     "publicSmokeChecks": [
       "h1",
       "canonical",
       "officialSourceLink",
-      "anyoneUseChildcareMonthly10Hours",
+      "representativeCurrentCondition",
       "unavailableSafeLabel",
       "sitemap"
     ],
@@ -41,5 +64,5 @@
     "publishedServiceCount": 15669,
     "remainingMunicipalityCount": 0
   },
-  "nextAction": "京都府・奈良県・和歌山県の公式情報更新、差し戻し、CI失敗、mainとの公開不一致、または九度山町代表スモーク失敗が発生した場合のみ品質監査を再開する。"
+  "nextAction": "京都府・奈良県・和歌山県の公式情報更新、差し戻し、CI失敗、mainとの公開不一致、または京都市・奈良市・九度山町の代表スモーク失敗が発生した場合のみ品質監査を再開する。"
 }
