@@ -1,0 +1,138 @@
+name: Central A Scope Audit Round 03
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-03-20260725']
+    paths: ['.github/workflows/central-a-scope-round-03.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-03-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Audit Fukui municipality data
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const root = 'jichitai-compare';
+          const codes = ['18201','18202','18204','18205','18206','18207','18208','18209','18210','18322','18382','18404','18423','18442','18481','18483','18501'];
+          const expected = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const highRiskKeys = ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport'];
+          const municipalities = [];
+          const findings = [];
+          const unavailable = [];
+          const suspects = [];
+          const sourceDomains = new Set();
+
+          for (const code of codes) {
+            const dataPath = `${root}/data/municipalities/18/${code}.json`;
+            const taskPath = `${root}/operations/tasks/${code}.json`;
+            if (!fs.existsSync(dataPath)) { findings.push({severity:'high',type:'missing_municipality_file',code}); continue; }
+            if (!fs.existsSync(taskPath)) { findings.push({severity:'high',type:'missing_task_file',code}); continue; }
+            const data = JSON.parse(fs.readFileSync(dataPath,'utf8'));
+            const task = JSON.parse(fs.readFileSync(taskPath,'utf8'));
+            const serviceKeys = Object.keys(data.services || {});
+            const serviceStatuses = {};
+            for (const key of expected) {
+              const svc = data.services?.[key];
+              serviceStatuses[key] = svc?.status || 'missing';
+              if (!svc) findings.push({severity:'high',type:'missing_service',code,service:key});
+              if (svc?.status === 'unavailable') unavailable.push({code,name:data.name,service:key,summary:svc.summary,source:svc.source?.url});
+              for (const url of [svc?.source?.url,...(svc?.additionalSources||[]).map(x=>x.url)].filter(Boolean)) {
+                try { sourceDomains.add(new URL(url).hostname); } catch {}
+              }
+            }
+            const allVerified = expected.every(k => data.services?.[k]?.status === 'verified');
+            if (data.code !== code) findings.push({severity:'high',type:'code_mismatch',code,actual:data.code});
+            if (data.prefectureCode !== '18') findings.push({severity:'high',type:'prefecture_mismatch',code,actual:data.prefectureCode});
+            if (task.municipalityCode !== code) findings.push({severity:'high',type:'task_code_mismatch',code,actual:task.municipalityCode});
+            if (task.municipalityName !== data.name) findings.push({severity:'high',type:'name_mismatch',code,dataName:data.name,taskName:task.municipalityName});
+            if (serviceKeys.length !== 9) findings.push({severity:'high',type:'service_count_mismatch',code,count:serviceKeys.length,keys:serviceKeys});
+            if (allVerified && task.status === 'merged' && data.status !== 'verified') findings.push({severity:'medium',type:'top_level_status_mismatch',code,name:data.name,dataStatus:data.status});
+            if (task.status !== 'merged') findings.push({severity:'medium',type:'task_status_not_merged',code,name:data.name,status:task.status});
+            if (!Array.isArray(task.completedServices) || task.completedServices.length !== 9) findings.push({severity:'medium',type:'completed_services_count',code,count:task.completedServices?.length});
+            const total = Number(task.verifiedCount||0)+Number(task.researchingCount||0)+Number(task.unavailableCount||0)+Number(task.needsMediumReviewCount||0);
+            if (total !== 9) findings.push({severity:'medium',type:'task_status_total',code,total});
+            const primary = expected.map(k => data.services?.[k]?.source?.url).filter(Boolean);
+            const uniquePrimary = [...new Set(primary)];
+            const taskSources = Array.isArray(task.officialSources) ? task.officialSources : [];
+            const missingPrimary = uniquePrimary.filter(url => !taskSources.includes(url));
+            const extraTaskSources = taskSources.filter(url => !uniquePrimary.includes(url));
+            if (missingPrimary.length) findings.push({severity:'medium',type:'task_missing_primary_sources',code,missingPrimary});
+
+            const highRisk = {};
+            for (const key of highRiskKeys) {
+              const svc = data.services?.[key] || {};
+              highRisk[key] = {status:svc.status,summary:svc.summary,source:svc.source?.url,checkedAt:svc.source?.checkedAt,eligibility:svc.eligibility};
+            }
+            const t = highRisk.temporaryChildcare;
+            if (t.status === 'verified' && !/(誰でも通園|月10時間|満3歳未満|乳児等通園)/.test(t.summary || '')) {
+              suspects.push({severity:'review',type:'possible_any_child_access_omission',code,name:data.name,summary:t.summary,source:t.source});
+            }
+            const s = highRisk.schoolMeals;
+            if (s.status === 'verified' && /(令和[3456]年度|当面の間|期間限定|物価高騰|時限)/.test(s.summary || '')) {
+              suspects.push({severity:'review',type:'school_meal_currentness_check',code,name:data.name,summary:s.summary,source:s.source});
+            }
+            const p = highRisk.postpartumCare;
+            if (p.status === 'verified' && /(4か月未満|6か月未満)/.test(p.summary || '')) {
+              suspects.push({severity:'review',type:'postpartum_age_currentness_check',code,name:data.name,summary:p.summary,source:p.source});
+            }
+            municipalities.push({
+              code,name:data.name,status:data.status,updatedAt:data.updatedAt,taskStatus:task.status,
+              taskLastCheckedAt:task.lastCheckedAt,verifiedCount:task.verifiedCount,
+              unavailableCount:task.unavailableCount,needsMediumReviewCount:task.needsMediumReviewCount,
+              primarySourceCount:uniquePrimary.length,taskOfficialSourceCount:taskSources.length,
+              sharedPrimarySourceCount:primary.length-uniquePrimary.length,extraTaskSourceCount:extraTaskSources.length,
+              serviceStatuses,highRisk
+            });
+          }
+
+          const report = {
+            schemaVersion:'1.0.0',auditId:'central-a-scope-round-03-fukui-20260725',
+            prefectureCode:'18',prefectureName:'福井県',expectedMunicipalityCount:17,
+            checkedMunicipalityCount:municipalities.length,checkedServiceCount:municipalities.length*9,
+            generatedAt:'2026-07-25T00:27:00+09:00',structuralFindingCount:findings.length,
+            unavailableCount:unavailable.length,substantiveSuspectCount:suspects.length,
+            findings,unavailable,substantiveSuspects:suspects,sourceDomains:[...sourceDomains].sort(),municipalities
+          };
+          const reportPath = `${root}/operations/control/central-a-scope-round-03-fukui-20260725.json`;
+          fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+
+          const auditPath = `${root}/operations/control/central-a-scope-verification-20260724.json`;
+          const audit = JSON.parse(fs.readFileSync(auditPath,'utf8'));
+          audit.branch = 'audit/central-a-scope-verification-round-03-20260725';
+          audit.batches = audit.batches.filter(x => x.batch !== 3);
+          audit.batches.push({
+            batch:3,prefectureCode:'18',prefectureName:'福井県',municipalityCount:17,
+            status:'structural_checked',checkedMunicipalities:municipalities.length,
+            checkedServices:municipalities.length*9,structuralFindingCount:findings.length,
+            unavailableCount:unavailable.length,substantiveSuspectCount:suspects.length,
+            report:'operations/control/central-a-scope-round-03-fukui-20260725.json',
+            nextStep:'制度内容疑義を公式情報で重点照合する'
+          });
+          audit.summary.checkedMunicipalities = 34 + municipalities.length;
+          audit.nextAction = '福井県の構造監査結果と制度内容疑義を確認し、明確な誤りを修正する';
+          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
+          NODE
+          rm .github/workflows/central-a-scope-round-03.yml
+      - name: Commit Fukui audit report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'audit: 福井県17自治体の構造監査を実施'
+          git push origin HEAD:audit/central-a-scope-verification-round-03-20260725
