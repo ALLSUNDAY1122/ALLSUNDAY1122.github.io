@@ -151,7 +151,7 @@ if (errors.length > 0 || auditViolations.length > 0) {
 }
 
 if (auditViolations.length > 0) {
-  console.warn(`公開文面の監査対象語を${auditViolations.length}件検出しました。`);
+  console.warn(`公開文面の監査対象語を${auditViolations.length}件検出しました。段階的な修正対象です。`);
   auditViolations.slice(0, 100).forEach((item) => {
     console.warn(`- ${item.code} ${item.field}: 「${item.phrase}」 ${item.value}`);
   });
