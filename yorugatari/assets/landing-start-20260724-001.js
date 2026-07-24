@@ -8,11 +8,15 @@
     '/yorugatari/5min-horror.html': 'five-minute',
     '/yorugatari/bedtime-horror.html': 'bedtime'
   };
+  const trackingPaths = {
+    'five-minute': '/yorugatari/__landing-start/five-minute',
+    bedtime: '/yorugatari/__landing-start/bedtime'
+  };
   const pagePath = location.pathname.replace(/\/{2,}/g, '/').replace(/\/$/, '');
   const id = ids[pagePath];
   if (!id) return;
 
-  const trackingPath = '/yorugatari/__landing-start/' + id;
+  const trackingPath = trackingPaths[id];
   const storageKey = 'yorugatari-landing-start:' + id;
   const state = {
     version: VERSION,
