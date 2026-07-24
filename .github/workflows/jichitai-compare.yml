@@ -55,6 +55,19 @@ jobs:
         working-directory: jichitai-compare
         run: npm run validate:generated
 
+      - name: Audit West-A official source links
+        if: github.head_ref == 'audit/west-a-source-link-health-20260725'
+        working-directory: jichitai-compare
+        run: node scripts/audit-west-a-source-links.mjs
+
+      - name: Upload West-A source link audit
+        if: always() && github.head_ref == 'audit/west-a-source-link-health-20260725'
+        uses: actions/upload-artifact@v4
+        with:
+          name: west-a-source-link-health
+          path: jichitai-compare/operations/audits/west-a-source-link-health-20260725.json
+          if-no-files-found: warn
+
       - name: Upload validation failure report
         if: failure()
         uses: actions/upload-artifact@v4
@@ -70,6 +83,7 @@ jobs:
           node --check scripts/generate-municipality-pages.mjs
           node --check scripts/validate-municipality-pages.mjs
           node --check scripts/smoke-public-site.mjs
+          node --check scripts/audit-west-a-source-links.mjs
 
       - name: Confirm generated files are committed
         if: github.event_name == 'push'
