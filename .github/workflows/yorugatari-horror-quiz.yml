@@ -9,6 +9,7 @@ on:
       - yorugatari/horror-quiz.html
       - yorugatari/assets/horror-quiz.js
       - yorugatari/tools/horror-quiz-audit.cjs
+      - yorugatari/tools/horror-quiz-performance.mjs
       - yorugatari/tools/ensure-horror-quiz.mjs
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/generate-discovery-pages.mjs
@@ -49,6 +50,7 @@ jobs:
           node --check yorugatari/tools/ensure-horror-quiz.mjs
           node --check yorugatari/tools/generate-sitemap.mjs
           node --check yorugatari/tools/horror-quiz-audit.cjs
+          node --check yorugatari/tools/horror-quiz-performance.mjs
           node yorugatari/tools/ensure-horror-quiz.mjs
           node yorugatari/tools/generate-sitemap.mjs
           node <<'NODE'
@@ -153,3 +155,67 @@ jobs:
       - name: Enforce horror quiz audit
         if: always()
         run: test "${{ steps.audit.outcome }}" = "success"
+
+  lighthouse:
+    needs: normalize
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Lighthouse tools
+        run: npm install --no-save lighthouse chrome-launcher
+
+      - name: Audit published quiz performance
+        id: performance
+        continue-on-error: true
+        run: node yorugatari/tools/horror-quiz-performance.mjs
+
+      - name: Record quiz performance report
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari-horror-quiz-performance-report.json
+          cp yorugatari-horror-quiz-performance-report.json /tmp/yorugatari-horror-quiz-performance-report.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/yorugatari-horror-quiz-performance-report.json yorugatari/tools/horror-quiz-performance-latest.json
+            git add yorugatari/tools/horror-quiz-performance-latest.json
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari horror quiz performance [skip ci]"
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 3
+          done
+          test "$saved" = true
+
+      - name: Upload quiz performance report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-horror-quiz-performance-report
+          path: yorugatari-horror-quiz-performance-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce quiz performance audit
+        if: always()
+        run: test "${{ steps.performance.outcome }}" = "success"
