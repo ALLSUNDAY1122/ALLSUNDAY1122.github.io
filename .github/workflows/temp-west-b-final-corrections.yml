@@ -1,6 +1,8 @@
 name: Temporary West B Final Corrections
 
 on:
+  schedule:
+    - cron: '*/5 * * * *'
   push:
     branches:
       - fix/west-b-cycles09-10-corrections-20260725
@@ -13,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: fix/west-b-cycles09-10-corrections-20260725
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -23,7 +27,7 @@ jobs:
           import fs from 'node:fs';
           import path from 'node:path';
           const root = path.join(process.cwd(), 'jichitai-compare');
-          const now = '2026-07-25T04:27:00+09:00';
+          const now = '2026-07-25T04:35:00+09:00';
           const date = '2026-07-25';
           const replacements = [
             {code:'45442', pref:'45', service:'sickChildCare', old:'https://www.town.hinokage.lg.jp/docs/2025032100014/file_contents/2025.pdf', url:'https://www.town.hinokage.lg.jp/docs/2016052500038/index.html', note:'概略検証第9回で旧2025年度PDFの失効を確認し、病児・病後児保育利用料2,000円補助を掲載する現行公式ページへ更新。'},
@@ -35,7 +39,8 @@ jobs:
           for (const r of replacements) {
             const sourcePath = path.join(root, 'data', 'municipalities', r.pref, `${r.code}.json`);
             const data = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
-            if (data.services[r.service].source.url !== r.old) throw new Error(`${r.code} ${r.service}: unexpected source`);
+            const current = data.services[r.service].source.url;
+            if (current !== r.old && current !== r.url) throw new Error(`${r.code} ${r.service}: unexpected source ${current}`);
             data.services[r.service].source.url = r.url;
             data.services[r.service].source.checkedAt = date;
             data.updatedAt = date;
@@ -91,6 +96,7 @@ jobs:
       - name: Commit correction
         shell: bash
         run: |
+          rm -f .github/west-b-final-corrections.trigger
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jichitai-compare/data/municipalities/45/45442.json
@@ -110,5 +116,7 @@ jobs:
           git add jichitai-compare/municipality/47328/index.html
           git add jichitai-compare/municipality/47350/index.html
           git add jichitai-compare/operations/progress.json
+          git add .github/west-b-final-corrections.trigger
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m "fix: 西日本B最終監査の内容・出典修正を反映"
           git push origin HEAD:fix/west-b-cycles09-10-corrections-20260725
