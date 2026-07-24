@@ -6,7 +6,7 @@
 
 App Store ConnectのアプリレコードとVersion 0.6.0を作成した後、APIキーを使って既存の日本語ローカライズを監査し、確定済みメタデータとの差分を表示する。
 
-初期動作は必ずドライラン。`--apply`を付けない限りApp Store Connectを変更しない。
+初期動作は必ずドライラン。App Store Connectを変更するには、`--apply`と三つの完全一致確認をすべて指定する必要がある。
 
 ## 監査対象
 
@@ -57,6 +57,8 @@ App Store Version Localization：
 
 ## ドライラン
 
+次のコマンドはApp Store Connectを更新しない。現在値との差分と公開URL状態をJSONへ保存する。
+
 ```bash
 python3 scripts/audit_apply_app_store_metadata_ja.py \
   --api-key "/Users/ユーザー名/Secure/AuthKey_XXXXXXXXXX.p8" \
@@ -66,9 +68,33 @@ python3 scripts/audit_apply_app_store_metadata_ja.py \
   --output "app_store_metadata_audit.json"
 ```
 
+ドライランでは`--confirm-bundle-id`、`--confirm-version`、`--confirm-apply`は不要。
+
+## 反映前確認
+
+`app_store_metadata_audit.json`で次を確認する。
+
+- `mode`が`dry-run`
+- Bundle IDが`jp.allsunday.aihandoverlog`
+- Versionが`0.6.0`
+- 対象Localeが`ja`
+- `public_url_checks`が両方到達可能
+- `urls_ready_for_apply`が`true`
+- `diff`が意図した変更だけ
+- `submission_performed=false`
+- `build_selected=false`
+- `screenshots_uploaded=false`
+
 ## 反映
 
 ドライラン結果と公開URLを確認した後だけ実行する。
+
+本番反映には次の四つがすべて必要。
+
+1. `--apply`
+2. `--confirm-bundle-id jp.allsunday.aihandoverlog`
+3. `--confirm-version 0.6.0`
+4. `--confirm-apply APPLY_METADATA`
 
 ```bash
 python3 scripts/audit_apply_app_store_metadata_ja.py \
@@ -77,8 +103,21 @@ python3 scripts/audit_apply_app_store_metadata_ja.py \
   --issuer-id "00000000-0000-0000-0000-000000000000" \
   --metadata "config/app_store_metadata_ja_v06.json" \
   --output "app_store_metadata_apply_result.json" \
-  --apply
+  --apply \
+  --confirm-bundle-id "jp.allsunday.aihandoverlog" \
+  --confirm-version "0.6.0" \
+  --confirm-apply "APPLY_METADATA"
 ```
+
+いずれか一つでも一致しない場合は、APIへのPATCHを実行せず停止する。
+
+## 部分反映への対応
+
+ツールはAPIへのPATCH前に監査結果を保存する。各PATCH成功後にも同じ結果ファイルを更新する。
+
+二つ目のPATCHなどで失敗した場合でも、`changes_applied`を確認することで、どのローカライズまで反映されたかを追跡できる。
+
+再実行前に必ずドライランへ戻し、現在値との差分を再取得する。
 
 ## 停止条件
 
@@ -91,13 +130,17 @@ python3 scripts/audit_apply_app_store_metadata_ja.py \
 - KeywordsがUTF-8で100バイト超過
 - Privacy URLまたはSupport URLが未公開
 - API権限不足
+- Bundle ID確認値が不一致
+- Version確認値が不一致
+- 固定確認文字列が`APPLY_METADATA`ではない
 
 ## 安全設計
 
 - 既定は読み取り専用
-- 更新には`--apply`が必要
+- 更新には`--apply`と三重確認が必要
 - 公開URLが到達不能なら更新を拒否
 - API秘密鍵とJWTを出力しない
+- PATCH前と各PATCH後に監査結果を保存
 - Build、審査、公開へ進まない
 - PR #1661とPR #870を自動マージしない
 
@@ -109,6 +152,8 @@ python3 scripts/audit_apply_app_store_metadata_ja.py \
 4. メタデータスクリプトをドライラン
 5. PR #1661を明示的指示で公開
 6. Privacy／Support URLをSafariで確認
-7. `--apply`
-8. App Store Connect画面で入力結果を再確認
-9. スクリーンショット、App Privacy、年齢制限、価格、配信地域を手動入力
+7. ドライランを再実行
+8. 差分を確認
+9. 三重確認付き`--apply`
+10. App Store Connect画面で入力結果を再確認
+11. スクリーンショット、App Privacy、年齢制限、価格、配信地域を手動入力
