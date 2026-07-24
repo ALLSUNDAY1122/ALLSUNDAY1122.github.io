@@ -30,6 +30,13 @@ const SERVICE_IDS = [
   'bulkyWaste',
   'disasterPrevention'
 ];
+const MODE = process.env.AUDIT_MODE ?? 'structure';
+const REQUESTED_PREFECTURES = new Set(
+  (process.env.AUDIT_PREFECTURES ?? [...EXPECTED_BY_PREFECTURE.keys()].join(','))
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+);
 
 const errors = [];
 const records = [];
@@ -39,6 +46,8 @@ async function readJson(path) {
 }
 
 for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
+  if (!REQUESTED_PREFECTURES.has(prefectureCode)) continue;
+
   const directory = join(MUNICIPALITY_DIR, prefectureCode);
   const filenames = (await readdir(directory))
     .filter((name) => /^\d{5}\.json$/.test(name))
@@ -60,32 +69,38 @@ for (const [prefectureCode, expectedCount] of EXPECTED_BY_PREFECTURE) {
       errors.push(`${code}: 必須9制度が未充足`);
     }
     if (task.municipalityCode !== code) errors.push(`${code}: task municipalityCodeが不一致`);
-    if (task.currentService !== null || task.nextServiceIndex !== 9) errors.push(`${code}: task完了位置が不正`);
-    if (!Array.isArray(task.completedServices) || task.completedServices.length !== 9) {
-      errors.push(`${code}: completedServicesが9件ではない`);
-    }
-    if ((task.verifiedCount ?? 0) + (task.unavailableCount ?? 0) !== 9) {
-      errors.push(`${code}: verified+unavailableが9件ではない`);
-    }
-    if ((task.researchingCount ?? 0) !== 0 || (task.needsMediumReviewCount ?? 0) !== 0) {
-      errors.push(`${code}: 未完了制度カウントが残存`);
+
+    if (MODE === 'completion') {
+      if (task.status !== 'merged') errors.push(`${code}: task status=${task.status}`);
+      if (task.currentService !== null || task.nextServiceIndex !== 9) errors.push(`${code}: task完了位置が不正`);
+      if (!Array.isArray(task.completedServices) || task.completedServices.length !== 9) {
+        errors.push(`${code}: completedServicesが9件ではない`);
+      }
+      if ((task.verifiedCount ?? 0) + (task.unavailableCount ?? 0) !== 9) {
+        errors.push(`${code}: verified+unavailableが9件ではない`);
+      }
+      if ((task.researchingCount ?? 0) !== 0 || (task.needsMediumReviewCount ?? 0) !== 0) {
+        errors.push(`${code}: 未完了制度カウントが残存`);
+      }
+      if (!Number.isInteger(task.pullRequestNumber)) errors.push(`${code}: pullRequestNumber未確定`);
     }
 
     records.push({ code, prefectureCode, status: task.status });
   }
 }
 
-const expectedTotal = [...EXPECTED_BY_PREFECTURE.values()].reduce((sum, count) => sum + count, 0);
+const expectedTotal = [...EXPECTED_BY_PREFECTURE]
+  .filter(([prefectureCode]) => REQUESTED_PREFECTURES.has(prefectureCode))
+  .reduce((sum, [, count]) => sum + count, 0);
 if (records.length !== expectedTotal) {
-  errors.push(`担当自治体総数 期待=${expectedTotal} 実際=${records.length}`);
+  errors.push(`監査対象自治体総数 期待=${expectedTotal} 実際=${records.length}`);
 }
 
 if (errors.length > 0) {
-  for (const message of errors) console.error(`::error::WEST_B_STRUCTURE ${message}`);
-  console.error(`WEST_B_STRUCTURE_FAILED errors=${errors.length} municipalities=${records.length}/${expectedTotal}`);
+  for (const message of errors) console.error(`::error::WEST_B_AUDIT ${message}`);
+  console.error(`WEST_B_AUDIT_FAILED mode=${MODE} prefectures=${[...REQUESTED_PREFECTURES].join(',')} errors=${errors.length} municipalities=${records.length}/${expectedTotal}`);
   process.exitCode = 1;
 } else {
   const mergedTasks = records.filter((record) => record.status === 'merged').length;
-  const nonMergedTasks = records.length - mergedTasks;
-  console.log(`WEST_B_STRUCTURE_SUCCESS municipalities=${records.length}/${expectedTotal} prefectures=${EXPECTED_BY_PREFECTURE.size} services=${records.length * SERVICE_IDS.length} mergedTasks=${mergedTasks} nonMergedTasks=${nonMergedTasks}`);
+  console.log(`WEST_B_AUDIT_SUCCESS mode=${MODE} prefectures=${[...REQUESTED_PREFECTURES].join(',')} municipalities=${records.length}/${expectedTotal} services=${records.length * SERVICE_IDS.length} mergedTasks=${mergedTasks}`);
 }
