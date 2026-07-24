@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-23T23:56:15.570Z",
-  "success": false,
+  "auditedAt": "2026-07-24T00:04:22.216Z",
+  "success": true,
   "results": [
     {
       "name": "top: published page loaded",
@@ -177,14 +177,195 @@
     },
     {
       "name": "five-minute landing: published page loaded",
-      "ok": false,
+      "ok": true,
       "detail": {
-        "ready": false,
-        "attempt": 8,
+        "ready": true,
+        "attempt": 1,
         "picks": 12,
         "guides": 6,
         "faq": 3
       }
+    },
+    {
+      "name": "five-minute landing: first Tab exposes a visible skip link",
+      "ok": true,
+      "detail": {
+        "tag": "A",
+        "className": "skip-link",
+        "href": "#landing-content",
+        "text": "作品一覧へ移動",
+        "visible": true
+      }
+    },
+    {
+      "name": "five-minute landing: skip link moves focus to main content",
+      "ok": true,
+      "detail": {
+        "activeId": "landing-content",
+        "mainId": "landing-content"
+      }
+    },
+    {
+      "name": "five-minute story pick: keyboard focus indicator is visible",
+      "ok": true,
+      "detail": {
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(242, 198, 109)",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "five-minute landing: no critical or serious axe violations",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "five-minute landing: document language is Japanese",
+      "ok": true,
+      "detail": "ja"
+    },
+    {
+      "name": "five-minute landing: has one non-empty page title",
+      "ok": true,
+      "detail": "5分で読める怖い話｜一話完結の短編ホラー12選｜夜語り"
+    },
+    {
+      "name": "five-minute landing: has exactly one h1",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "five-minute landing: heading levels do not skip",
+      "ok": true,
+      "detail": false
+    },
+    {
+      "name": "five-minute landing: buttons have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "five-minute landing: links have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "five-minute landing: has exactly one main landmark",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "five-minute landing: all 12 editorial picks have unique destinations",
+      "ok": true,
+      "detail": [
+        "stories/last-elevator.html",
+        "stories/spare-key-returned.html",
+        "stories/family-photo.html",
+        "stories/neighbor-wifi.html",
+        "stories/delivery-box.html",
+        "stories/one-person-short.html",
+        "stories/do-not-serve-the-extra-cup-of-rice.html",
+        "stories/assigned-by-deleted-user.html",
+        "stories/hired-with-your-experience.html",
+        "stories/bow-only-once.html",
+        "stories/deceased-answered-that-way.html",
+        "stories/last-vacancy-check.html"
+      ]
+    },
+    {
+      "name": "bedtime landing: published page loaded",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "attempt": 1,
+        "picks": 8,
+        "moods": 4,
+        "faq": 3
+      }
+    },
+    {
+      "name": "bedtime landing: first Tab exposes a visible skip link",
+      "ok": true,
+      "detail": {
+        "tag": "A",
+        "className": "skip-link",
+        "href": "#bedtime-content",
+        "text": "作品一覧へ移動",
+        "visible": true
+      }
+    },
+    {
+      "name": "bedtime landing: skip link moves focus to main content",
+      "ok": true,
+      "detail": {
+        "activeId": "bedtime-content",
+        "mainId": "bedtime-content"
+      }
+    },
+    {
+      "name": "bedtime story pick: keyboard focus indicator is visible",
+      "ok": true,
+      "detail": {
+        "outlineStyle": "solid",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(242, 198, 109)",
+        "boxShadow": "none"
+      }
+    },
+    {
+      "name": "bedtime landing: no critical or serious axe violations",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "bedtime landing: document language is Japanese",
+      "ok": true,
+      "detail": "ja"
+    },
+    {
+      "name": "bedtime landing: has one non-empty page title",
+      "ok": true,
+      "detail": "寝る前に読む怖い話｜静かに怖い短編8選｜夜語り"
+    },
+    {
+      "name": "bedtime landing: has exactly one h1",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "bedtime landing: heading levels do not skip",
+      "ok": true,
+      "detail": false
+    },
+    {
+      "name": "bedtime landing: buttons have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "bedtime landing: links have accessible names",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "bedtime landing: has exactly one main landmark",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "bedtime landing: all eight editorial picks have unique destinations",
+      "ok": true,
+      "detail": [
+        "stories/good-night.html",
+        "stories/voice-memo.html",
+        "stories/read-receipt.html",
+        "stories/window-reflection.html",
+        "stories/return-by-morning.html",
+        "stories/three-knocks.html",
+        "stories/missing-floor.html",
+        "stories/night-bus.html"
+      ]
     },
     {
       "name": "story: published page loaded",
@@ -317,17 +498,5 @@
       "detail": []
     }
   ],
-  "failures": [
-    {
-      "name": "five-minute landing: published page loaded",
-      "ok": false,
-      "detail": {
-        "ready": false,
-        "attempt": 8,
-        "picks": 12,
-        "guides": 6,
-        "faq": 3
-      }
-    }
-  ]
+  "failures": []
 }
