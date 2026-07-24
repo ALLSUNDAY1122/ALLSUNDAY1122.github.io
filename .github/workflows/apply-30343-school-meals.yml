@@ -1,0 +1,131 @@
+name: Apply 30343 school meals audit
+
+on:
+  push:
+    branches:
+      - audit/30343-school-meals-fy2026
+    paths:
+      - jichitai-compare/operations/control/triggers/30343-school-meals.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-30343-school-meals
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: audit/30343-school-meals-fy2026
+          fetch-depth: 0
+
+      - name: Update municipality and task
+        env:
+          PR_NUMBER: '0'
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+
+          municipality_path = Path('jichitai-compare/data/municipalities/30/30343.json')
+          task_path = Path('jichitai-compare/operations/tasks/30343.json')
+          budget_pdf = 'https://www.town.kudoyama.lg.jp/soumu/joho/files/06_r8hp_ippan.pdf'
+          budget_page = 'https://www.town.kudoyama.lg.jp/soumu/joho/yosan.html'
+          pr_number = int(os.environ['PR_NUMBER'])
+          now = datetime.now(ZoneInfo('Asia/Tokyo')).isoformat(timespec='seconds')
+
+          municipality = json.loads(municipality_path.read_text(encoding='utf-8'))
+          municipality['summary'] = (
+              '九度山町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。'
+              '18歳年度末までの医療費助成、令和8年度の学校給食費徴収、産後ケア、'
+              'こども誰でも通園制度、空き家購入・新婚子育て世帯家賃支援などを記録。'
+          )
+          municipality['updatedAt'] = '2026-07-24'
+          school_meals = municipality['services']['schoolMeals']
+          school_meals['status'] = 'verified'
+          school_meals['summary'] = (
+              '令和8年度当初予算に小学校分146万2千円・中学校分188万1千円の学校給食費徴収金が'
+              '計上されており、一般無償化ではなく給食費を徴収する。個人別の月額は町公式案内で確認できない。'
+          )
+          school_meals['details'] = {
+              'pastProgram': '令和2年度から令和4年度、および令和5年7月から令和6年3月までは学校給食費を無償化した',
+              'currentBudget': '令和8年度一般会計の雑入に学校給食費徴収金4,147千円を計上',
+              'elementarySchoolCollection': '小学校分1,462千円',
+              'juniorHighSchoolCollection': '中学校分1,881千円',
+              'otherCollection': '幼稚園分218千円、教育委員会分293千円、給食センター分293千円',
+              'currentAvailability': '令和8年度は学校給食費徴収金が予算計上されており、全員対象の一般無償化ではなく徴収を予定する',
+              'individualRate': '児童生徒1人当たりの月額・年額は町公式ページで確認できない',
+              'targetedSupport': '経済的理由で就学困難な町立小中学校児童生徒の保護者には、就学援助費の支給項目として給食費が含まれる',
+              'guidance': '過去の時限無償化を現行制度として扱わない。個人別の徴収額は九度山町教育委員会へ確認する'
+          }
+          school_meals['source'] = {'url': budget_pdf, 'checkedAt': '2026-07-24'}
+          school_meals['additionalSources'] = [
+              {'url': budget_page, 'checkedAt': '2026-07-24'},
+              {'url': 'https://www.town.kudoyama.lg.jp/kyouiku/gakkou/syuugakusien.html', 'checkedAt': '2026-07-24'},
+              {'url': 'https://www.town.kudoyama.lg.jp/kyouiku/gakkou/enjo-seido.html', 'checkedAt': '2026-07-24'}
+          ]
+          municipality_path.write_text(
+              json.dumps(municipality, ensure_ascii=False, separators=(',', ':')) + '\n',
+              encoding='utf-8'
+          )
+
+          task = json.loads(task_path.read_text(encoding='utf-8'))
+          task['status'] = 'pr_open'
+          task['verifiedCount'] = 8
+          task['researchingCount'] = 0
+          task['unavailableCount'] = 1
+          task['needsMediumReviewCount'] = 0
+          task['currentBranch'] = 'audit/30343-school-meals-fy2026'
+          task['pullRequestNumber'] = pr_number
+          task['lastCheckedAt'] = '2026-07-24'
+          task['lastUpdatedAt'] = now
+          task['lastUpdatedBy'] = '中日本調査班B'
+          if budget_pdf not in task['officialSources']:
+              task['officialSources'].append(budget_pdf)
+          if budget_page not in task['officialSources']:
+              task['officialSources'].append(budget_page)
+          task['notes'] = [
+              note for note in task['notes']
+              if not note.startswith('学校給食の全員対象無償化は')
+              and not note.startswith('全国公開除外原因だった学校給食費')
+          ]
+          task['notes'].extend([
+              '令和8年度一般会計予算に学校給食費徴収金4,147千円を確認。',
+              '内訳は小学校分1,462千円、中学校分1,881千円、幼稚園分218千円、教育委員会分293千円、給食センター分293千円。',
+              '令和8年度は一般無償化ではなく給食費徴収を予定する。児童生徒1人当たりの月額・年額は町公式案内で確認できない。',
+              '学校給食費をunavailableからverifiedへ更新し、verified 8・unavailable 1へ再集計。',
+              f'品質再監査PR #{pr_number}で地域正本への反映を進行。'
+          ])
+          task['blockers'] = []
+          task_path.write_text(
+              json.dumps(task, ensure_ascii=False, separators=(',', ':')) + '\n',
+              encoding='utf-8'
+          )
+          PY
+
+      - name: Validate updated source
+        working-directory: jichitai-compare
+        run: |
+          node scripts/validate-municipality-identity.mjs
+          node scripts/validate-data.mjs
+
+      - name: Remove one-off workflow and trigger
+        run: |
+          rm -f .github/workflows/apply-30343-school-meals.yml
+          rm -f jichitai-compare/operations/control/triggers/30343-school-meals.json
+
+      - name: Commit audit update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'audit: 九度山町の令和8年度学校給食費徴収を反映'
+          git push origin HEAD:audit/30343-school-meals-fy2026
