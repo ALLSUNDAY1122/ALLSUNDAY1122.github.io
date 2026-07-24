@@ -4,11 +4,18 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T00:33:00+09:00",
+  "updatedAt": "2026-07-25T00:55:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 2,
+  "completedRoundCount": 3,
   "scope": {
-    "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
     "municipalityCount": 226,
     "requiredServiceCount": 2034,
     "requiredServicesPerMunicipality": 9
@@ -107,7 +114,72 @@
     {
       "round": 3,
       "title": "こども医療・病児保育の年齢、自己負担、施設数監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から条件が複雑な自治体を各1件抽出し、こども医療と病児・病後児保育の計12項目を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 12,
+      "samples": [
+        {
+          "code": "33202",
+          "name": "倉敷市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "corrected",
+          "finding": "病児・病後児保育を4施設・1日1,000円と登録していたが、公式ページは7施設・1日1,200円・半日600円・生活保護世帯無料",
+          "officialUrl": "https://www.city-kirishima.jp/jidou/kosodate/kosodate/support/byoji.html",
+          "officialUpdatedAt": "2026-03-31"
+        }
+      ],
+      "result": "corrected",
+      "materialErrorCount": 1,
+      "correctionAppliedCount": 1
     },
     {
       "round": 4,
@@ -146,10 +218,11 @@
     }
   ],
   "summary": {
-    "materialErrorCount": 0,
+    "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 8,
-    "currentAssessment": "第1回・第2回では重大な誤調査を確認せず。残り8回で制度別・高リスク自治体を追加検証する。"
+    "roundsRemaining": 7,
+    "currentAssessment": "第3回で霧島市の病児・病後児保育の施設数・利用料の誤り1件を検出し、公式情報に基づき修正。ほか5自治体10項目は一致。",
+    "correctionAppliedCount": 1
   },
-  "nextAction": "第3回として、6県から年齢条件または料金条件が複雑な自治体を抽出し、こども医療・病児保育を公式情報で再照合する。"
+  "nextAction": "第4回として、保育料・学校給食費の令和8年度条件を担当6県の複雑事例で再照合する。"
 }
