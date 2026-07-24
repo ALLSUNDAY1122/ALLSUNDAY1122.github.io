@@ -5,7 +5,7 @@ const ROOT = process.cwd();
 const TOOLS = path.join(ROOT, 'yorugatari', 'tools');
 const OUTPUT_JSON = path.join(TOOLS, 'site-health-latest.json');
 const OUTPUT_MD = path.join(TOOLS, 'site-health-latest.md');
-const REPORT_VERSION = '20260724-005';
+const REPORT_VERSION = '20260724-006';
 
 const reportDefinitions = [
   { id: 'seo', label: 'SEO', file: 'seo-audit-latest.json', timestampKeys: ['auditedAt', 'generatedAt'] },
@@ -55,12 +55,30 @@ function infrastructureOnlyFailure(id, report) {
   });
 }
 
+function currentGeneration(id, report) {
+  if (!report) return { current: false, reason: 'レポート未保存' };
+  if (id === 'accessibility') {
+    const current = Array.isArray(report.results) && report.results.some((row) => row?.name === 'accessibility audit: no page JavaScript exceptions');
+    return { current, reason: current ? null : '外部通信とページ例外を分離した現行監査の保存待ち' };
+  }
+  if (id === 'landingShare') {
+    const current = report.shareVersion === '20260724-002' && report.startVersion === '20260724-001';
+    return { current, reason: current ? null : '共有版002・作品開始版001の現行監査の保存待ち' };
+  }
+  if (id === 'performance') {
+    const current = report.releaseCheck?.landingConversionReady === true && report.releaseCheck?.analyticsFilterReady === true && report.releaseCheck?.engagementFilterReady === true;
+    return { current, reason: current ? null : '監査除外版ランタイムの表示速度確認待ち' };
+  }
+  return { current: true, reason: null };
+}
+
 const now = new Date();
 const quality = reportDefinitions.map((definition) => {
   const loaded = readJson(definition.file);
   const report = loaded.value;
   const observedAt = loaded.exists ? timestamp(report, definition.timestampKeys) : null;
   const infrastructureOnly = loaded.exists && infrastructureOnlyFailure(definition.id, report);
+  const generation = loaded.exists ? currentGeneration(definition.id, report) : { current: false, reason: 'レポート未保存' };
   return {
     id: definition.id,
     label: definition.label,
@@ -68,6 +86,8 @@ const quality = reportDefinitions.map((definition) => {
     exists: loaded.exists,
     success: loaded.exists && report?.success === true,
     infrastructureOnly,
+    currentGeneration: generation.current,
+    verificationReason: generation.reason,
     observedAt,
     observedAtJapan: observedAt ? japanTimestamp(observedAt) : null,
     ageHours: ageHours(observedAt, now),
@@ -117,11 +137,11 @@ const metrics = {
 };
 
 const failedQuality = quality.filter((row) => !row.exists || (!row.success && !row.infrastructureOnly));
-const pendingQuality = quality.filter((row) => row.infrastructureOnly);
+const pendingQuality = quality.filter((row) => row.exists && (row.infrastructureOnly || (row.success && !row.currentGeneration)));
 const staleQuality = quality.filter((row) => Number.isFinite(row.ageHours) && row.ageHours > 48);
 const actions = [];
 if (failedQuality.length) actions.push(`サイト品質の失敗または未保存監査を修正する：${failedQuality.map((row) => row.label).join('、')}`);
-if (pendingQuality.length) actions.push(`外部APIタイムアウトを除外した再監査結果を確認する：${pendingQuality.map((row) => row.label).join('、')}`);
+if (pendingQuality.length) actions.push(`現行版の再監査結果を確認する：${pendingQuality.map((row) => row.label).join('、')}`);
 if (staleQuality.length) actions.push(`48時間以上更新されていない監査を再実行する：${staleQuality.map((row) => row.label).join('、')}`);
 if (metrics.externalLaunch.publishedCount === 0) {
   actions.push(`外部投稿は未実施。追跡URL付きの次候補${metrics.externalLaunch.nextCampaignId ? `「${metrics.externalLaunch.nextCampaignId}」` : ''}を1本だけ公開し、着地を確認する。`);
@@ -148,10 +168,19 @@ const snapshot = {
 };
 
 const qualityLines = quality.map((row) => {
-  const state = !row.exists ? '未保存' : row.success ? '合格' : row.infrastructureOnly ? '再検証待ち（外部APIタイムアウトのみ）' : '失敗';
+  const state = !row.exists
+    ? '未保存'
+    : !row.success && row.infrastructureOnly
+      ? '運用合格・監査基盤の再検証待ち'
+      : row.success && !row.currentGeneration
+        ? '旧版合格・現行版の保存待ち'
+        : row.success
+          ? '合格'
+          : '失敗';
   const observed = row.observedAtJapan || '不明';
   const age = Number.isFinite(row.ageHours) ? `${row.ageHours}時間前` : '経過不明';
-  return `- ${row.label}: ${state}（${observed}、${age}）`;
+  const reason = row.verificationReason ? `、${row.verificationReason}` : '';
+  return `- ${row.label}: ${state}（${observed}、${age}${reason}）`;
 });
 const metricLines = [
   `- 除外後の全ページ閲覧: ${metrics.pageViews ?? '不明'}`,
@@ -170,7 +199,7 @@ const metricLines = [
   `- 特集比較判定: ${metrics.conversionComparisonReady ? '可能' : '保留'}`
 ];
 const actionLines = actions.map((action, index) => `${index + 1}. ${action}`);
-const statusLabel = status === 'healthy' ? '正常' : status === 'stale' ? '監査更新待ち' : status === 'verification_pending' ? '運用正常・監査基盤の再検証待ち' : '要対応';
+const statusLabel = status === 'healthy' ? '正常' : status === 'stale' ? '監査更新待ち' : status === 'verification_pending' ? '運用正常・現行監査の保存待ち' : '要対応';
 const markdown = `# 夜語り サイト運用サマリー\n\n生成：${snapshot.generatedAtJapan}（日本時間）  \n状態：${statusLabel}\n\n自動監査アクセス除外後の値を運用判断に使用します。累計値は診断用です。\n\n## 品質監査\n\n${qualityLines.join('\n')}\n\n## 計測値\n\n${metricLines.join('\n')}\n\n## 次の判断\n\n${actionLines.join('\n')}\n`;
 
 fs.writeFileSync(OUTPUT_JSON, `${JSON.stringify(snapshot, null, 2)}\n`);
