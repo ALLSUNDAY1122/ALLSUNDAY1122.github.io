@@ -9,6 +9,9 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  MERGE_REQUEST: "2026-07-24T23:14:00+09:00"
+
 jobs:
   validate-and-merge:
     runs-on: ubuntu-latest
@@ -30,6 +33,7 @@ jobs:
 
       - name: Preserve audited source files
         run: |
+          echo "Merge request ${MERGE_REQUEST}"
           cp jichitai-compare/data/municipalities/27/27220.json /tmp/27220-municipality.json
           cp jichitai-compare/operations/tasks/27220.json /tmp/27220-task.json
           cp jichitai-compare/data/municipalities/27/27221.json /tmp/27221-municipality.json
