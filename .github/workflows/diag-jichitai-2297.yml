@@ -1,0 +1,31 @@
+name: Diagnose Jichitai PR 2297
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/diag-jichitai-2297.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Run validator only
+        shell: bash
+        run: |
+          cd jichitai-compare
+          node ./scripts/generate-municipalities.mjs >/dev/null 2>&1
+          node ./scripts/update-progress.mjs >/dev/null 2>&1
+          set +e
+          node ./scripts/validate-data.mjs --require-generated > /tmp/validate.log 2>&1
+          code=$?
+          echo '=== VALIDATOR OUTPUT ==='
+          cat /tmp/validate.log
+          exit $code
