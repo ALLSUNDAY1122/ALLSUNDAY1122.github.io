@@ -12,16 +12,18 @@ on:
       - yorugatari/bedtime-horror.html
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
+      - yorugatari/assets/landing-share.js
       - yorugatari/sitemap.xml
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/analytics-snapshot.mjs
+      - yorugatari/tools/landing-conversion-snapshot.mjs
       - .github/workflows/yorugatari-analytics-snapshot.yml
 
 concurrency:
   group: yorugatari-analytics-snapshot
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -46,12 +48,25 @@ jobs:
         shell: bash
         run: |
           node --check yorugatari/tools/analytics-snapshot.mjs
+          node --check yorugatari/tools/landing-conversion-snapshot.mjs
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
+          node --check yorugatari/assets/landing-share.js
           node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
+          node <<'NODE'
+          const fs = require('node:fs');
+          const runtime = fs.readFileSync('yorugatari/assets/landing-share.js', 'utf8');
+          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime']) {
+            if (!runtime.includes(token)) throw new Error(`Missing landing conversion path: ${token}`);
+          }
+          const privacy = fs.readFileSync('yorugatari/privacy.html', 'utf8');
+          if (!privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Landing conversion privacy disclosure is missing');
+          NODE
 
-      - name: Generate analytics snapshot
-        run: node yorugatari/tools/analytics-snapshot.mjs
+      - name: Generate analytics snapshots
+        run: |
+          node yorugatari/tools/analytics-snapshot.mjs
+          node yorugatari/tools/landing-conversion-snapshot.mjs
 
       - name: Commit analytics reports
         shell: bash
@@ -61,6 +76,8 @@ jobs:
           cp yorugatari/tools/analytics-snapshot-latest.json /tmp/analytics-snapshot-latest.json
           cp yorugatari/tools/analytics-history.json /tmp/analytics-history.json
           cp yorugatari/tools/analytics-insights-latest.md /tmp/analytics-insights-latest.md
+          cp yorugatari/tools/landing-conversion-latest.json /tmp/landing-conversion-latest.json
+          cp yorugatari/tools/landing-conversion-history.json /tmp/landing-conversion-history.json
           saved=false
           for attempt in 1 2 3; do
             git fetch origin main
@@ -68,15 +85,19 @@ jobs:
             cp /tmp/analytics-snapshot-latest.json yorugatari/tools/analytics-snapshot-latest.json
             cp /tmp/analytics-history.json yorugatari/tools/analytics-history.json
             cp /tmp/analytics-insights-latest.md yorugatari/tools/analytics-insights-latest.md
+            cp /tmp/landing-conversion-latest.json yorugatari/tools/landing-conversion-latest.json
+            cp /tmp/landing-conversion-history.json yorugatari/tools/landing-conversion-history.json
             git add \
               yorugatari/tools/analytics-snapshot-latest.json \
               yorugatari/tools/analytics-history.json \
-              yorugatari/tools/analytics-insights-latest.md
+              yorugatari/tools/analytics-insights-latest.md \
+              yorugatari/tools/landing-conversion-latest.json \
+              yorugatari/tools/landing-conversion-history.json
             if git diff --cached --quiet; then
               saved=true
               break
             fi
-            git commit -m "Record Yorugatari analytics reports [skip ci]"
+            git commit -m "Record Yorugatari analytics and landing conversion [skip ci]"
             if git push origin HEAD:main; then
               saved=true
               break
@@ -93,5 +114,7 @@ jobs:
             yorugatari/tools/analytics-snapshot-latest.json
             yorugatari/tools/analytics-history.json
             yorugatari/tools/analytics-insights-latest.md
+            yorugatari/tools/landing-conversion-latest.json
+            yorugatari/tools/landing-conversion-history.json
           if-no-files-found: error
           retention-days: 30
