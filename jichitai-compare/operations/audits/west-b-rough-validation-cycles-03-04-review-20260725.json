@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycles-03-04-review-20260725",
+  "sessionId": "west-b",
+  "reviewedAt": "2026-07-25T01:29:00+09:00",
+  "sourceAuditFiles": [
+    "jichitai-compare/operations/audits/west-b-rough-validation-cycle-03-20260725.json",
+    "jichitai-compare/operations/audits/west-b-rough-validation-cycle-04-20260725.json"
+  ],
+  "aggregate": {
+    "cycleCount": 2,
+    "municipalityCount": 50,
+    "serviceCount": 450,
+    "networkCheckedUrlCount": 500,
+    "structuralErrorCount": 0,
+    "detectedResearchContentErrorCount": 0,
+    "detectedSourceMaintenanceIssueCount": 0,
+    "correctedSourceMaintenanceIssueCount": 0,
+    "manualSpotCheckCount": 10,
+    "status": "passed"
+  },
+  "cycles": [
+    {
+      "cycle": 3,
+      "municipalityCount": 25,
+      "serviceCount": 225,
+      "prefectureCodes": ["31", "34", "35"],
+      "structuralErrorCount": 0,
+      "networkWarningCount": 7,
+      "conclusion": "no_research_content_error_detected_no_source_maintenance_issue",
+      "warningReview": [
+        {
+          "code": "34307",
+          "name": "熊野町",
+          "classification": "site_access_or_tls_warning",
+          "affectedServiceCount": 7,
+          "result": "GitHub Actionsから7ページを取得できなかったが、熊野町公式サイト、子育て情報一覧、令和8年度こども誰でも通園制度ページの現行公開を確認。URL削除・移転や登録内容の矛盾は検出しなかった。"
+        }
+      ],
+      "manualSpotChecks": [
+        {
+          "code": "31302",
+          "name": "岩美町",
+          "service": "childcareFee_and_temporaryChildcare",
+          "status": "passed",
+          "result": "第2子半額・第3子以降無料、一時保育の実施施設・料金を公式案内と照合。こども誰でも通園制度への公式導線も確認。"
+        },
+        {
+          "code": "34368",
+          "name": "安芸太田町",
+          "service": "temporaryChildcare",
+          "status": "passed",
+          "result": "令和8年4月開始、生後6か月から3歳未満の未就園児、町内保育所・認定こども園で実施する公式案内と一致。"
+        },
+        {
+          "code": "35202",
+          "name": "宇部市",
+          "service": "schoolMeals",
+          "status": "passed",
+          "result": "令和8年4月から市立小中学校の学校給食費を無償化する公式案内と一致。"
+        },
+        {
+          "code": "35210",
+          "name": "光市",
+          "service": "temporaryChildcare",
+          "status": "passed",
+          "result": "生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致。"
+        },
+        {
+          "code": "35305",
+          "name": "周防大島町",
+          "service": "temporaryChildcare",
+          "status": "passed",
+          "result": "生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致。"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "municipalityCount": 25,
+      "serviceCount": 225,
+      "prefectureCodes": ["35", "36"],
+      "structuralErrorCount": 0,
+      "networkWarningCount": 3,
+      "conclusion": "no_research_content_error_detected_no_source_maintenance_issue",
+      "warningReview": [
+        {
+          "code": "36207",
+          "name": "美馬市",
+          "service": "sickChildCare",
+          "classification": "transient_or_cdn_http_warning",
+          "result": "監査時は404だったが同一公式URLを再取得でき、病児・病後児保育広域利用助成の対象・助成額を確認。出典変更不要。"
+        },
+        {
+          "code": "36321",
+          "name": "佐那河内村",
+          "service": "schoolMeals",
+          "classification": "transient_or_cdn_http_warning",
+          "result": "監査時は404だったが同一公式URLを村の学校教育一覧から再取得でき、学校給食費補助制度の記載を確認。出典変更不要。"
+        },
+        {
+          "code": "36387",
+          "name": "美波町",
+          "service": "postpartumCare",
+          "classification": "transient_or_cdn_http_warning",
+          "result": "監査時は404だったが同一公式例規URLを再取得でき、産後1年未満・訪問を含む産後ケア実施要綱を確認。出典変更不要。"
+        }
+      ],
+      "manualSpotChecks": [
+        {
+          "code": "35321",
+          "name": "和木町",
+          "service": "temporaryChildcare",
+          "status": "passed",
+          "result": "生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致。"
+        },
+        {
+          "code": "36202",
+          "name": "鳴門市",
+          "service": "childcareFee",
+          "status": "passed",
+          "result": "令和6年度から所得制限なく全年齢の保育料を無償化する公式FAQと一致。"
+        },
+        {
+          "code": "36208",
+          "name": "三好市",
+          "service": "childcareFee",
+          "status": "passed",
+          "result": "令和7年9月から全児童の保育料完全無償化、給食費無償の公式案内と一致。"
+        },
+        {
+          "code": "36368",
+          "name": "那賀町",
+          "service": "temporaryChildcare",
+          "status": "passed",
+          "result": "生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致。"
+        },
+        {
+          "code": "36403",
+          "name": "藍住町",
+          "service": "temporaryChildcare",
+          "status": "passed",
+          "result": "生後6か月から3歳未満の未就園児、月3時間、1時間300円の町独自公式条件と一致。"
+        }
+      ]
+    }
+  ],
+  "nextCycle": {
+    "cycle": 5,
+    "plannedMunicipalityCount": 25,
+    "scopePolicy": "徳島県の残り4自治体、愛媛県20自治体、佐賀県1自治体をコード順で検証する。"
+  }
+}
