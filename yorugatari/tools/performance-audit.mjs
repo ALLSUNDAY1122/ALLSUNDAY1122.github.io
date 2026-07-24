@@ -155,11 +155,26 @@ function validate(run) {
   }
 }
 
+async function launchChrome(chromeLauncher) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const launched = await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
+      await sleep(1500);
+      return launched;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await sleep(attempt * 2000);
+    }
+  }
+  throw lastError || new Error('Chrome failed to start');
+}
+
 let chrome;
 try {
   await waitForRelease();
   const [{ default: lighthouse }, chromeLauncher] = await Promise.all([import('lighthouse'), import('chrome-launcher')]);
-  chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] });
+  chrome = await launchChrome(chromeLauncher);
 
   for (const currentCase of cases) {
     const group = [];
