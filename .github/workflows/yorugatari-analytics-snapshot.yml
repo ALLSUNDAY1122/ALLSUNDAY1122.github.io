@@ -13,6 +13,7 @@ on:
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
       - yorugatari/assets/landing-share.js
+      - yorugatari/assets/landing-start-20260724-001.js
       - yorugatari/sitemap.xml
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
@@ -52,12 +53,17 @@ jobs:
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/assets/landing-share.js
+          node --check yorugatari/assets/landing-start-20260724-001.js
           node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
           node <<'NODE'
           const fs = require('node:fs');
-          const runtime = fs.readFileSync('yorugatari/assets/landing-share.js', 'utf8');
-          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime']) {
-            if (!runtime.includes(token)) throw new Error(`Missing landing conversion path: ${token}`);
+          const runtime = fs.readFileSync('yorugatari/assets/landing-start-20260724-001.js', 'utf8');
+          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', 'window.YORUGATARI_LANDING_START']) {
+            if (!runtime.includes(token)) throw new Error(`Missing landing conversion token: ${token}`);
+          }
+          for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
+            const html = fs.readFileSync(`yorugatari/${file}`, 'utf8');
+            if (!html.includes('assets/landing-start-20260724-001.js')) throw new Error(`Landing conversion runtime not loaded: ${file}`);
           }
           const privacy = fs.readFileSync('yorugatari/privacy.html', 'utf8');
           if (!privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Landing conversion privacy disclosure is missing');
