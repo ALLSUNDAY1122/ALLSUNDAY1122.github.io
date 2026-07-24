@@ -1,0 +1,2123 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycle-07-20260725",
+  "sessionId": "west-b",
+  "cycle": 7,
+  "plannedCycles": 10,
+  "auditedAt": "2026-07-25T02:31:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "codes": [
+      "42208",
+      "42209",
+      "42210",
+      "42211",
+      "42212",
+      "42213",
+      "42214",
+      "42307",
+      "42308",
+      "42321",
+      "42322",
+      "42323",
+      "42383",
+      "42391",
+      "42411",
+      "44201",
+      "44202",
+      "44203",
+      "44204",
+      "44205",
+      "44206",
+      "44207",
+      "44208",
+      "44209",
+      "44210"
+    ],
+    "prefectureCodes": [
+      "42",
+      "44"
+    ],
+    "serviceCount": 225
+  },
+  "methodology": [
+    "既存第1〜6回監査の150自治体を除外し、担当コード順で次の25自治体を選定",
+    "自治体コード・都道府県コード・自治体名・公式URLを確認",
+    "必須9制度、状態、要約、主出典URL、確認日を確認",
+    "公式URL25件と制度主出典225件をHTTP取得",
+    "5自治体を手動抜き取り候補として記録"
+  ],
+  "priorAuditedMunicipalityCount": 150,
+  "remainingBeforeCycleCount": 100,
+  "structuralErrorCount": 0,
+  "structuralErrors": [],
+  "networkCheckedUrlCount": 250,
+  "networkWarningCount": 5,
+  "networkWarnings": [
+    {
+      "code": "42210",
+      "name": "壱岐市",
+      "field": "services.bulkyWaste.source",
+      "service": "bulkyWaste",
+      "url": "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/2892.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/2892.html"
+    },
+    {
+      "code": "42212",
+      "name": "西海市",
+      "field": "services.sickChildCare.source",
+      "service": "sickChildCare",
+      "url": "https://www.city.saikai.nagasaki.jp/soshiki/kodomo/1/2/5/1606.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kodomo/1/2/5/1606.html"
+    },
+    {
+      "code": "42308",
+      "name": "時津町",
+      "field": "services.schoolMeals.source",
+      "service": "schoolMeals",
+      "url": "https://www.town.togitsu.nagasaki.jp/material/files/group/21/syuugakuenjozai.pdf",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.togitsu.nagasaki.jp/material/files/group/21/syuugakuenjozai.pdf"
+    },
+    {
+      "code": "42391",
+      "name": "佐々町",
+      "field": "services.schoolMeals.source",
+      "service": "schoolMeals",
+      "url": "https://www.sazacho-nagasaki.jp/kyouiku/kiji0034032/index.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.sazacho-nagasaki.jp/dynamic/_error/error404.aspx"
+    },
+    {
+      "code": "44210",
+      "name": "杵築市",
+      "field": "services.disasterPrevention.source",
+      "service": "disasterPrevention",
+      "url": "https://www.city.kitsuki.lg.jp/1/kikikanri/bousai/saigai/index.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.city.kitsuki.lg.jp/1/kikikanri/bousai/saigai/index.html"
+    }
+  ],
+  "manualSpotCheckCandidates": [
+    {
+      "code": "42208",
+      "name": "松浦市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city-matsuura.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を1医療機関1日800円、月上限1,600円に軽減",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/1/982.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気回復期の保育所等利用児と小学校低学年児等を今福こども園で一時保育",
+          "sourceUrl": "https://www.city-matsuura.jp/top/kosodate_kyoiku/kosodate/hoikujo_yochiento/1677.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "2025年4月から0～2歳児を含む保育料を完全無償化",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/6/8321.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市独自支援を含め小学校・中学校の学校給食費を無償化",
+          "sourceUrl": "https://www.city-matsuura.jp/chikiokoshi/shipponoeiyo/kosodate/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の産婦と乳児へ宿泊・デイサービス・訪問型産後ケアを提供",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/3/5097.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年度のこども誰でも通園制度について、市公式サイトで実施施設・対象月齢・利用時間・料金を確認できない",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/3/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅取得、結婚新生活、東京圏からの移住等に対する住まい支援を実施",
+          "sourceUrl": "https://www.city-matsuura.jp/chikiokoshi/shipponoeiyo/sumai/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを地区別の月1回程度の収集日にステーションまたは予約戸別収集で処理",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/shiminseikatsuka/seikatsukankyokakari/gomisinyou/3458.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・ため池等のハザードマップと避難情報を公開",
+          "sourceUrl": "https://www.city-matsuura.jp/top/kurashi_tetsuzuki/bosaijoho/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42214",
+      "name": "南島原市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city.minamishimabara.lg.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を1日800円・月上限1,600円に軽減",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji003519/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "島原市の病児保育オリーブを広域利用できるが、現行の対象年齢を市公式HTMLで確認できない",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0039904/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、市独自制度で第2子以降の3歳未満児も保育料免除",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0036092/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な市立小中学生世帯へ就学援助で学校給食費等を支援",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kyouiku/kiji0037406/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ訪問・デイケア・宿泊型産後ケアを提供",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji00312471/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間約300円で受け入れ",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji00312452/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2026年度の住宅リフォーム費を10%、上限20万円補助",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0035627/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを可燃部分と不燃部分に分け、指定処理施設へ直接搬入または許可業者へ依頼",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0034401/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "避難施設・洪水・土砂災害・ため池等を確認できる防災マップを公開",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0031626/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42383",
+      "name": "小値賀町",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.town.ojika.lg.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "小学生から18歳年度末までの保険診療自己負担を月800円または1,600円に軽減",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/2/232.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "小値賀こども園では病後児保育を実施しておらず、町内で利用できる現行の病児・病後児保育を公式ページで確認できない",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/6/179.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "町立小値賀こども園等の保育料を全額補助",
+          "sourceUrl": "https://www.town.ojika.lg.jp/kosodate_kyoiku/3/355.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "小中学校給食費は第2子以降を半額補助し、教材費は全児童生徒を全額補助",
+          "sourceUrl": "https://www.town.ojika.lg.jp/faq/kosodate-kyouiku/2/785.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "町の計画で産後ケア事業を位置付けているが、現行の対象月齢・利用形態・料金・申込方法を公式HTMLで確認できない",
+          "sourceUrl": "https://www.town.ojika.lg.jp/kurashi_joho/2/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "小値賀こども園で一時保育ありと掲載されているが、現行の対象年齢・時間・料金が更新中",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/6/179.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク住宅の改修費を2分の1、上限200万円補助",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/kensetu/1/hozyo_kensetsuka/1356.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大不燃物は一般世帯月額100円で処理し、最終処分場への直接搬入も可能",
+          "sourceUrl": "https://www.town.ojika.lg.jp/kurashi_tetsuzuki/4/333.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "WEB版ハザードマップ、地域防災計画、指定避難所一覧を公開",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/soumu/1/12/268.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44204",
+      "name": "日田市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.hita.oita.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を全額助成",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/1882.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "日田中央病院で生後おおむね6か月から小学6年生までを1日2,000円で受け入れ",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2643.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認定こども園・保育園を利用する0～5歳児の保育料を市独自減免を含め無償化",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2083.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市立小中学校の学校給食費を2024年4月から無償化",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/1898.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1歳未満の母子へ宿泊・デイサービス・訪問型を合計7回まで提供",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2633.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の就学前児を月14日まで、8時間1,600円・4時間800円で一時預かり",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2800.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限50万円、多子世帯は最大20万円加算。ただし現在受付一時停止中",
+          "sourceUrl": "https://www.city.hita.oita.jp/soshiki/36/1345.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは市の定期収集対象外で、清掃センターへの直接搬入または許可業者へ有料依頼",
+          "sourceUrl": "https://www.city.hita.oita.jp/soshiki/21/13117.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・内水・ため池等のハザードマップと避難所情報を公開",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/bousai/2926.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44210",
+      "name": "杵築市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.kitsuki.lg.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで入院・通院・歯科・調剤の保険診療自己負担を助成",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/akachanumaretara/akachantetuduki/10917.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内2施設で生後6か月から小学6年生までの病児・病後児を受け入れ",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/nyuuyouzi/azukari/10070.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認可保育施設に通う全年齢の子どもの保育料を所得・出生順位にかかわらず無償化",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/nyuuyouzi/nyugakunyuen/10945.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市内小中学校と幼稚園・こども園の給食費を基本無償化",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/11776.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子へ宿泊・日帰り・訪問型産後ケアを合計7回まで提供",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/akachanumaretara/akachanmamacare/10724.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/nyuuyouzi/azukari/12261.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅新築・購入時に10万～20万円を補助し、18歳未満の子ども1人につき10万円を加算",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/machidukuri/ijuuteijuusokusinn/4265.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない粗大ごみを事前申込みで収集し、収集運搬シールは1点300円",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/siminseikatu/kankyou_eisei/gomi/sodaigomi.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波等を確認できる杵築市防災マップと避難場所一覧を公開",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/1/kikikanri/bousai/saigai/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    }
+  ],
+  "records": [
+    {
+      "code": "42208",
+      "name": "松浦市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city-matsuura.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を1医療機関1日800円、月上限1,600円に軽減",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/1/982.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気回復期の保育所等利用児と小学校低学年児等を今福こども園で一時保育",
+          "sourceUrl": "https://www.city-matsuura.jp/top/kosodate_kyoiku/kosodate/hoikujo_yochiento/1677.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "2025年4月から0～2歳児を含む保育料を完全無償化",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/6/8321.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市独自支援を含め小学校・中学校の学校給食費を無償化",
+          "sourceUrl": "https://www.city-matsuura.jp/chikiokoshi/shipponoeiyo/kosodate/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の産婦と乳児へ宿泊・デイサービス・訪問型産後ケアを提供",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/3/5097.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年度のこども誰でも通園制度について、市公式サイトで実施施設・対象月齢・利用時間・料金を確認できない",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kosodate_kodomoka/kosodateshiengakari/1/3/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅取得、結婚新生活、東京圏からの移住等に対する住まい支援を実施",
+          "sourceUrl": "https://www.city-matsuura.jp/chikiokoshi/shipponoeiyo/sumai/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを地区別の月1回程度の収集日にステーションまたは予約戸別収集で処理",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/shiminseikatsuka/seikatsukankyokakari/gomisinyou/3458.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・ため池等のハザードマップと避難情報を公開",
+          "sourceUrl": "https://www.city-matsuura.jp/top/kurashi_tetsuzuki/bosaijoho/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42209",
+      "name": "対馬市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city.tsushima.nagasaki.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳年度末までの保険診療自己負担を1医療機関月800円または1,600円に軽減",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/kosodateshien/5154.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "自園型の緊急対応制度は条例上確認できるが、通常利用できる病児・病後児保育施設と現行条件を市公式案内で確認できない",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/section/reiki_int/reiki_honbun/r013RG00000751.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化し、へき地保育所は全児童無料",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/hoikusyo/3129.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ学校給食費の実費を援助",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/kyouiku/gakkokyoikuka/enjyo/685.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へショートステイ・デイケアを提供",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/hoken/kenkouzoushin/4557.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を豊玉こども園・雞知保育所で受け入れ",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/notice/6962.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "多子世帯・新たな3世代同居近居世帯の住宅取得・新築・改修費を補助",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/kosodateshien/956.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを市の分別区分に従い収集へ出すか、対馬クリーンセンター等へ直接搬入",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/kurashi/gomi/1991.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地区別の土砂災害・洪水ハザードマップとデジタル地図を公開",
+          "sourceUrl": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/soumu/bousai/4161.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42210",
+      "name": "壱岐市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city.iki.nagasaki.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳年度末までの保険診療自己負担を1医療機関1日800円、月上限1,600円に軽減",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/kenkou/iryo/fukushiiryou/6633.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後4か月から小学3年生までを江田小児科内科医院で病児・病後児保育",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/material/files/group/50/tebiki_reiwa8nendo.pdf",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児、住民税非課税世帯の0～2歳児、第2子以降の保育料を無償化",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/soshiki/kodomo/kosodate_shien/hoikujo/12068.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は市立小学校・中学校の学校給食費を無償化",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/soshiki/somuka/soumuhan/hoshin_hokoku/reiwa8nen/15466.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ県内実施機関で産後ケアを提供",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/kosodate/boshihoken/15750.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間300円で受け入れ",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/soshiki/kodomo/kosodate_shien/hoikujo/15420.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "新規転入者の新築・中古住宅取得や空き家改修等を補助",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/mokuteki/hikkoshi/5910.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ券による収集と壱岐市クリーンセンターへの自己搬入に対応",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/2892.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・津波・高潮・洪水等のハザードマップを公開",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/soshiki/somuka/kiki_kanrika/bosai/saigai_sonae/14040.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42211",
+      "name": "五島市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city.goto.nagasaki.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 7,
+      "unavailableCount": 2,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳年度末までの保険診療自己負担を1医療機関1日800円、月上限1,600円に軽減",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s029/010/020/010/020/020/20190310004133.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後4か月から小学3年生までを聖マリア保育園の病後児保育室で受け入れ",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s029/010/020/010/040/010/20190309231016.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、多子世帯の保育料も軽減",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s029/010/020/020/050/20190827133559.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由により就学困難な小中学生世帯へ学校給食費を援助",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s090/010/010/010/020/20190308195046.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "産後面接・赤ちゃん訪問等は実施しているが、2026年度産後ケア事業の類型・料金・利用上限を現行公式HTMLで確認できない",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s037/010/030/20221107141005.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "乳児等通園支援事業の条例制定は確認できるが、2026年度の実施施設・利用時間・料金を確認できない",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s001/010/110/130/060/20200421120408.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2026年度の新婚世帯へ住宅取得・リフォーム・賃借・引越費用を最大60万円助成",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s029/010/020/050/010/20210331101253.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "地区別の電話予約・処理券による戸別収集と処理施設への自己搬入に対応",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s038/020/010/010/010/100/20190306133924.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・津波・洪水・避難所等を確認できるハザードマップを公開",
+          "sourceUrl": "https://www.city.goto.nagasaki.jp/s003/010/020/030/030/010/20190311121459.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42212",
+      "name": "西海市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city.saikai.nagasaki.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 7,
+      "unavailableCount": 2,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "小学1年生から18歳年度末までの保険診療自己負担を1医療機関1日800円、月上限1,600円に軽減",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/kosodate/kosodate/2750.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "病後児対応型・体調不良児対応型を実施しているが、現行の対象年齢・利用料金を市公式HTMLで確認できない",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kodomo/1/2/5/1606.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、3歳以上児の副食費を月額上限内で無償化",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kenko/2/2_1/5/4226.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的理由により就学困難な小中学生世帯へ就学援助を実施",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/kosodate/kyoiku/4/2429.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊型・デイケアの産後ケアを提供",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kenko/2/1/1/7026.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年4月からのこども誰でも通園制度の給付化は確認できるが、実施施設・利用料金を市公式HTMLで確認できない",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/soshiki/zeimu/1/1/6/13015.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "新築住宅を取得する子育て世帯へ子の人数・転入等に応じ奨励金を交付",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/kurashi/jutaku/tatemonojosei/8353.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない家庭ごみを粗大ごみとして地区別収集または処理施設への自己搬入で処理",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/kurashi/gomi/2/2284.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地域別の土砂災害・津波・洪水ハザードマップを公開",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/soshiki/bosai/1_1/7/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42213",
+      "name": "雲仙市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city.unzen.nagasaki.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "出生から18歳年度末までの保険診療自己負担を助成",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kiji003628/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内施設型・訪問型の病児・病後児保育で小学生以下を受け入れ",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kiji003542/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等の保育料を無償化し、第2子以降は市独自に保育料を免除",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kiji0031196/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費を支援",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kiji0038042/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・デイケア・訪問型産後ケアを提供",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kiji0031496/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間約300円で受け入れ",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kosodate/kiji0038187/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市内の新築・中古住宅取得を定住促進奨励補助金で支援",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kiji003744/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない大型ごみは処理施設への直接搬入または許可業者へ依頼",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/kiji0031507/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・ため池・津波等を掲載する冊子版・Web版防災マップを公開",
+          "sourceUrl": "https://www.city.unzen.nagasaki.jp/bousai/kiji003978/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42214",
+      "name": "南島原市",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.city.minamishimabara.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を1日800円・月上限1,600円に軽減",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji003519/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "島原市の病児保育オリーブを広域利用できるが、現行の対象年齢を市公式HTMLで確認できない",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0039904/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、市独自制度で第2子以降の3歳未満児も保育料免除",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0036092/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な市立小中学生世帯へ就学援助で学校給食費等を支援",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kyouiku/kiji0037406/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ訪問・デイケア・宿泊型産後ケアを提供",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji00312471/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間約300円で受け入れ",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji00312452/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "2026年度の住宅リフォーム費を10%、上限20万円補助",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0035627/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを可燃部分と不燃部分に分け、指定処理施設へ直接搬入または許可業者へ依頼",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0034401/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "避難施設・洪水・土砂災害・ため池等を確認できる防災マップを公開",
+          "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0031626/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42307",
+      "name": "長与町",
+      "prefectureCode": "42",
+      "officialUrl": "https://webtown.nagayo.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を1日800円・月上限1,600円に軽減",
+          "sourceUrl": "https://webtown.nagayo.jp/kiji003209/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "就学前児を病児保育Hinamiccoで受け入れ、利用料は1日2,000円",
+          "sourceUrl": "https://webtown.nagayo.jp/kiji0031638/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、第3子以降の認可保育料も無償",
+          "sourceUrl": "https://webtown.nagayo.jp/kiji0031678/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "学校給食費の標準単価は小学校305円・中学校362円で、就学援助対象世帯には給食費等を支援",
+          "sourceUrl": "https://webtown.nagayo.jp/reiki/reiki_honbun/q316RG00001073.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ宿泊・日帰り・訪問型の産後ケアを提供",
+          "sourceUrl": "https://webtown.nagayo.jp/kiji0031658/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間300円で受け入れ",
+          "sourceUrl": "https://webtown.nagayo.jp/kiji0035825/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "長崎県外から移住・就業等を行う子育て世帯へ35万円を補助",
+          "sourceUrl": "https://webtown.nagayo.jp/ijyu/kiji0033523/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを事前申込制で戸別収集し、処理券は550円または1,100円",
+          "sourceUrl": "https://webtown.nagayo.jp/kiji003439/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・高潮・津波・ため池等の防災ハザードマップを公開",
+          "sourceUrl": "https://webtown.nagayo.jp/kiji003377/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42308",
+      "name": "時津町",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.town.togitsu.nagasaki.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を1日800円・月上限1,600円に軽減",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/soshikikarasagasu/fukushika/jidofukushikakari/kosodate_kyoiku/1/1563.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病児保育Hinamiccoで就学前児を受け入れ、利用料は1日2,000円",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/soshikikarasagasu/fukushika/jidofukushikakari/kosodate_kyoiku/1/6471.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、0～2歳児の第2子同時在園・第3子以降も無償",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/kosodate_kyoiku/hoikujo_yochien_gakudohoiku/3988.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費や学用品費等を支援",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/material/files/group/21/syuugakuenjozai.pdf",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ日帰り・宿泊型産後ケアを提供",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/soshikikarasagasu/fukushika/jidofukushikakari/kosodate_kyoiku/1/7539.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間300円で受け入れ",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/soshikikarasagasu/fukushika/jidofukushikakari/kosodate_kyoiku/1/9679.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の中古住宅リフォーム費を2分の1、上限40万円補助",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/soshikikarasagasu/toshiseibika/juutaku/9068.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "地域ごとに年2回無料収集し、処理施設への直接搬入は100kgごと600円",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/soshikikarasagasu/juminkankyoka/seikatsukankyokakari/kurashi_tetsuzuki/2/1/1515.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地区別防災、洪水、土砂災害、ため池等のハザードマップを公開",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/soshikikarasagasu/somuka/anzen_anshin/bosai/1802.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42321",
+      "name": "東彼杵町",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.town.higashisonogi.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで、保険診療自己負担を医療機関ごと月800円または1,600円に軽減",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/kodomokenkouka/kosodateshien/4/180.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "広域連携市町の病児・病後児保育施設を乳幼児から小学6年生まで利用可能",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/kodomokenkouka/kosodateshien/4/2348.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "0～2歳児を町独自に完全無償化し、3～5歳児も国制度で保育料0円",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/kodomokenkouka/kosodateshien/6/184.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費等を支援",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/section/reiki_int/reiki_honbun/q325RG00000205.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・通所・訪問型産後ケアを無料で提供",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/kodomokenkouka/kosodateshien/5/315.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "令和7年度は未就園の生後6か月から3歳未満を月10時間無料で受け入れていたが、令和8年度の現行利用条件は公式ページに未掲載",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/kodomokenkouka/kosodateshien/3/2774.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅取得へ最大100万円を支給し、高校生以下の同居児童1人につき10万円を加算",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/somuka/3/5/307.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを毎月1回収集し、シール340円または清掃工場持込み10kg当たり120円で処理",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/chominka/1/1/685.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・ため池・避難所等を確認できる防災マップを公開",
+          "sourceUrl": "https://www.town.higashisonogi.lg.jp/soshiki/somuka/2/4/325.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42322",
+      "name": "川棚町",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.kawatana.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を全額助成",
+          "sourceUrl": "https://www.kawatana.jp/cat01/c1-04/post_87/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "みつばこども園で病児・病後児を小学3年生まで受け入れ",
+          "sourceUrl": "https://www.kawatana.jp/cat02/c2-02/04/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "2026年4月から0～2歳児も含め保育料を完全無償化",
+          "sourceUrl": "https://www.kawatana.jp/cat02/c2-04/06/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費等を支援",
+          "sourceUrl": "https://www.kawatana.jp/cat02/c2-04/post_227/",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1年未満の母子へ宿泊・日帰り・訪問型の産後ケアを提供",
+          "sourceUrl": "https://www.kawatana.jp/cat02/c2-01/post_509/",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間300円で受け入れ",
+          "sourceUrl": "https://www.kawatana.jp/cat02/c2-02/post_719/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク登録住宅の改修費を2分の1、上限50万円補助",
+          "sourceUrl": "https://www.kawatana.jp/c5-07/10/",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ証紙340円、清掃工場への直接搬入は10kg当たり120円",
+          "sourceUrl": "https://www.kawatana.jp/hokenfukushi/seisou.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・高潮・津波等を確認できる2026年総合防災ハザードマップを公開",
+          "sourceUrl": "https://www.kawatana.jp/cat01/c1-09/post_454/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42323",
+      "name": "波佐見町",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.town.hasami.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を月800円または1,600円に軽減",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji0031299/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "西九州させぼ広域都市圏内の病児・病後児保育施設を利用可能",
+          "sourceUrl": "https://www.town.hasami.lg.jp/list00548.html",
+          "checkedAt": "2026-07-23"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、0～2歳児の同時在園第2子も保育料無料",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji0031288/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校の学校給食費を無償化し、町外通学者にも実費相当を補助",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji0031312/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・日帰り・訪問型産後ケアを提供",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji0031232/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間、1時間300円で受け入れ",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji0032322/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "初めての住宅取得へ町内業者新築45万円を基本に転入・指定地区・子ども加算を実施",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji0031117/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ証紙340円で月1回収集し、東彼地区清掃工場への直接搬入も可能",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji003918/index.html",
+          "checkedAt": "2026-07-23"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・ため池・避難所等を確認できる各種ハザードマップを公開",
+          "sourceUrl": "https://www.town.hasami.lg.jp/kiji0031011/index.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    },
+    {
+      "code": "42383",
+      "name": "小値賀町",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.town.ojika.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 6,
+      "unavailableCount": 3,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "小学生から18歳年度末までの保険診療自己負担を月800円または1,600円に軽減",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/2/232.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "小値賀こども園では病後児保育を実施しておらず、町内で利用できる現行の病児・病後児保育を公式ページで確認できない",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/6/179.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "町立小値賀こども園等の保育料を全額補助",
+          "sourceUrl": "https://www.town.ojika.lg.jp/kosodate_kyoiku/3/355.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "小中学校給食費は第2子以降を半額補助し、教材費は全児童生徒を全額補助",
+          "sourceUrl": "https://www.town.ojika.lg.jp/faq/kosodate-kyouiku/2/785.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "町の計画で産後ケア事業を位置付けているが、現行の対象月齢・利用形態・料金・申込方法を公式HTMLで確認できない",
+          "sourceUrl": "https://www.town.ojika.lg.jp/kurashi_joho/2/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "小値賀こども園で一時保育ありと掲載されているが、現行の対象年齢・時間・料金が更新中",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/6/179.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク住宅の改修費を2分の1、上限200万円補助",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/kensetu/1/hozyo_kensetsuka/1356.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大不燃物は一般世帯月額100円で処理し、最終処分場への直接搬入も可能",
+          "sourceUrl": "https://www.town.ojika.lg.jp/kurashi_tetsuzuki/4/333.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "WEB版ハザードマップ、地域防災計画、指定避難所一覧を公開",
+          "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/soumu/1/12/268.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "42391",
+      "name": "佐々町",
+      "prefectureCode": "42",
+      "officialUrl": "https://www.sazacho-nagasaki.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで、医療機関ごと月800円または1,600円に自己負担を軽減",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kiji003366/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "町内2施設を含む広域連携施設で病児・病後児を小学6年生まで受入れ",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kiji0035468/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等は無償、0～2歳児は住民税額に応じて算定し多子軽減を実施",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kiji0032340/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内小中学校の子どもの人数に応じ、給食費を20％から100％補助",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kyouiku/kiji0034032/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へデイケア・訪問ケアを合計5回まで無料提供",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kiji0033525/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の町内乳幼児を平日8時から17時、1時間500円で一時預かり",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kiji003375/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "県外から転入する子育て世帯へ1世帯50万円を支給",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kiji0033752/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみステッカー1枚300円で地区別収集日に排出",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kiji003389/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・内水・地震等の総合・地域別ハザードマップを公開",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/bousai/kiji0034142/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "42411",
+      "name": "新上五島町",
+      "prefectureCode": "42",
+      "officialUrl": "https://official.shinkamigoto.net/",
+      "serviceCount": 9,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "中学生以下の保険診療自己負担を全額助成し、高校生世代も月800円または1,600円を超える額を助成",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_faq_full.php?eid=04803&fcid=f00009x0&g6=1&wcid=f00009x0",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町の病後児保育は現在休止中",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=06510&r=1&wcid=i00004x7",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児は月額3万7,000円、非課税世帯の0～2歳児は月額4万2,000円まで認可外保育料を無償化",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=03996&r=1&wcid=i00004x5",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費等を支援",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_business_full.php?eid=06506&wcid=100",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・デイサービス・訪問型産後ケアを提供",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=06505&r=1&wcid=i00004x1",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "町内3保育施設で家庭保育中の子どもの一時保育を実施",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_culture_full.php?eid=06509&wcid=100",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "40歳以下の住宅新築・建替えを10％・上限200万円、購入を上限100万円補助し、子ども1人25万円を加算",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_faq_full.php?eid=03719&fcid=f00021x0&g6=1&wcid=f00021x0",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大可燃・粗大不燃ごみは町指定の粗大ごみ処理券を使用して排出",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_faq_full.php?eid=00446&fcid=f00027x0&g6=1&r=1&wcid=i00005x5",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・洪水の地区別ハザードマップと公開型GISを提供",
+          "sourceUrl": "https://official.shinkamigoto.net/goto_kurashi_full.php?eid=01367&r=1&wcid=i00001x3",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44201",
+      "name": "大分市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.oita.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までを対象に、年齢・課税区分に応じて医療費自己負担を助成",
+          "sourceUrl": "https://www.city.oita.oita.jp/o107/kosodate/ninshin/1206836662174.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内6施設で病児・病後児を小学6年生まで受け入れ",
+          "sourceUrl": "https://www.city.oita.oita.jp/o253/kosodate/hoiku/1327538853997.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児を無償化し、多子世帯の保育料軽減を実施",
+          "sourceUrl": "https://www.city.oita.oita.jp/o253/kosodate/hoiku/2026hoikuryou.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度から市立小中学校の学校給食費を全額無償化",
+          "sourceUrl": "https://www.city.oita.oita.jp/o032/r8tousyo-r7_3hosei.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ宿泊・デイサービス・訪問型産後ケアを提供",
+          "sourceUrl": "https://www.city.oita.oita.jp/o097/sanngokea.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで無料で受け入れ",
+          "sourceUrl": "https://www.city.oita.oita.jp/o253/2026kodomodaredemo.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％、上限50万円、多子世帯は上限70万円補助",
+          "sourceUrl": "https://www.city.oita.oita.jp/o168/kurashi/sumaijoho/1461824914560.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "事前申込の有料戸別収集または処理施設への直接搬入で処理",
+          "sourceUrl": "https://www.city.oita.oita.jp/o150/kurashi/gomi/1263438599187.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・地震・高潮・内水等のハザードマップを公開",
+          "sourceUrl": "https://www.city.oita.oita.jp/kurashi/anshinanzen/kikikanri/kanrenmap/hazardmap/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44202",
+      "name": "別府市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.beppu.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで、年齢・課税区分に応じて医療費自己負担を助成",
+          "sourceUrl": "https://www.city.beppu.oita.jp/kosodate/teatejyosei/detail16.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内2施設で生後6か月から小学6年生までの病児を受け入れ",
+          "sourceUrl": "https://www.city.beppu.oita.jp/kosodate/hoiku/byojihoiku.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3歳以上と非課税世帯0～2歳児を無償化し、第2子以降の3歳未満児も無料",
+          "sourceUrl": "https://www.city.beppu.oita.jp/kosodate/hoiku/r08nyusho02.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費等を支援",
+          "sourceUrl": "https://www.city.beppu.oita.jp/gakusyuu/gakkou/05tetsuduki1.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1歳未満の母子へ宿泊・デイサービス・訪問型産後ケアを合計7回まで提供",
+          "sourceUrl": "https://www.city.beppu.oita.jp/kosodate/ninshin_shussan/sangocare.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の就学前児童を最長8時間、4時間800円または8時間1,600円で一時預かり",
+          "sourceUrl": "https://www.city.beppu.oita.jp/kosodate/kosodatesien/detail14.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限40万円、三世代同居は50％・上限75万円補助",
+          "sourceUrl": "https://www.city.beppu.oita.jp/kosodate/jigyou/3sedai_reform.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "事前申込・有料で毎週水曜日に戸別収集し、1品330円・660円・880円",
+          "sourceUrl": "https://www.city.beppu.oita.jp/seikatu/kankyou_gomi/g_siwake/sodai.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・高潮・火山等の防災マップを公開",
+          "sourceUrl": "https://www.city.beppu.oita.jp/bousai_syoubou/bousaijyouhou/bousai_map/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44203",
+      "name": "中津市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city-nakatsu.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで、未就学児は無料、小中高生世代の通院は1日500円・月4日上限",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2015031300089/",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "恵保園で病気回復期の保育所・幼稚園・小学校在籍児を1日1,000円で受け入れ",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2015031900029/",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認可保育施設を利用する3歳未満の戸籍上第2子以降の保育料を無償化",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2019081900169/",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年4月から2027年3月まで幼稚園・小学校・中学校の給食費を無償化",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2024103100106/",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・デイサービス・訪問型を合計7回まで提供",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2024021300114/",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の就学前児を月12日以内、最大8時間1,800円で一時預かり",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2015031900043/",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限40万円、多子世帯は上限50万円補助",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2024061200108/",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "直接搬入、許可業者委託、市の有料戸別収集から選択し、戸別収集は1回5点まで",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2022102000014/",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "WEB防災マップと土砂災害・津波・ため池・内水等のハザードマップを公開",
+          "sourceUrl": "https://www.city-nakatsu.jp/doc/2022022800091/",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44204",
+      "name": "日田市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.hita.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を全額助成",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/1882.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "日田中央病院で生後おおむね6か月から小学6年生までを1日2,000円で受け入れ",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2643.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認定こども園・保育園を利用する0～5歳児の保育料を市独自減免を含め無償化",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2083.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市立小中学校の学校給食費を2024年4月から無償化",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/1898.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1歳未満の母子へ宿泊・デイサービス・訪問型を合計7回まで提供",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2633.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の就学前児を月14日まで、8時間1,600円・4時間800円で一時預かり",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/kosodate/2800.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限50万円、多子世帯は最大20万円加算。ただし現在受付一時停止中",
+          "sourceUrl": "https://www.city.hita.oita.jp/soshiki/36/1345.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは市の定期収集対象外で、清掃センターへの直接搬入または許可業者へ有料依頼",
+          "sourceUrl": "https://www.city.hita.oita.jp/soshiki/21/13117.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・内水・ため池等のハザードマップと避難所情報を公開",
+          "sourceUrl": "https://www.city.hita.oita.jp/site/bousai/2926.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44205",
+      "name": "佐伯市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.saiki.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担を助成",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kosodate/kiji0039976/",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "にしだキッズクラブで生後6か月から小学6年生までを1日1,500円で受け入れ",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kiji0035633/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "市内に住民登録する0～5歳児の幼稚園・保育所・認定こども園等の利用料を無償化",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kiji0033137/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "経済的に就学困難な小中学生世帯へ就学援助で学校給食費等を支援",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kiji0033622/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後149日までの母子へ宿泊・デイサービス、1歳未満へ訪問型を提供し、各7回・合計14回まで利用可能",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kosodate/kiji0038775/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "満1歳から就学前の未入所児を月5日または14日以内、半日900円・1日1,800円で一時預かり",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kosodate/kiji00310052/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限40万円、多子世帯は上限50万円補助",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kiji0033363/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "事前予約の戸別収集は粗大ごみ1点500円、1回2点まで",
+          "sourceUrl": "https://www.city.saiki.oita.jp/kiji0039178/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・津波・洪水等の地域別ハザードマップを公開",
+          "sourceUrl": "https://www.city.saiki.oita.jp/bousai/kiji0033879/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44206",
+      "name": "臼杵市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.usuki.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの保険診療自己負担額を助成",
+          "sourceUrl": "https://www.city.usuki.oita.jp/docs/2014012800044/",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病児保育室とんぼで0歳から小学6年生まで受け入れ",
+          "sourceUrl": "https://www.city.usuki.oita.jp/docs/2014020500028/",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認可保育所・認定こども園等を利用するすべての子どもの保育料を無償化",
+          "sourceUrl": "https://www.city.usuki.oita.jp/article/2023041000028/",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市立小中学校の学校給食費を2025年4月から無償化",
+          "sourceUrl": "https://www.city.usuki.oita.jp/article/2025052600013/",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後1歳未満の母子へ宿泊・日帰り・訪問型産後ケアを合計7回まで提供",
+          "sourceUrl": "https://www.city.usuki.oita.jp/docs/2024032200014/",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.city.usuki.oita.jp/docs/2024050900019/",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "18歳未満の子どもがいる世帯の住宅改修費を20％・上限60万円補助",
+          "sourceUrl": "https://www.city.usuki.oita.jp/docs/2014030400073/",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは清掃センターへ依頼または直接搬入し、家庭ごみは100kgまで360円",
+          "sourceUrl": "https://www.city.usuki.oita.jp/docs/2014013000016/",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・高潮・地震等を収録した防災マップを公開",
+          "sourceUrl": "https://www.city.usuki.oita.jp/docs/2014020700145/",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44207",
+      "name": "津久見市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.tsukumi.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで入院・外来・入院時食事療養費を助成",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/site/kosodate/76.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病後児保育室ひまわりで生後6か月から小学6年生まで受け入れ",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/site/kosodate/1835.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認定こども園を利用する0～5歳児の保育料を市独自施策を含め無償化",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/site/mayor/29626.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度から市立小中学校の学校給食費を無償化",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/site/shihou/32534.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後12か月未満の母子へ宿泊・日帰り・訪問型産後ケアを合計7回まで無料提供",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/site/kosodate/15508.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/site/kosodate/32216.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限50万円、多子世帯は上限70万円補助",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/soshiki/12/10104.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみはドリームフューエルセンターへ直接搬入または許可業者へ収集・運搬を依頼",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/soshiki/26/29508.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・高潮・地震等をまとめた総合防災マップを公開",
+          "sourceUrl": "https://www.city.tsukumi.oita.jp/soshiki/32/29429.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44208",
+      "name": "竹田市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.taketa.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで入院・通院・歯科・調剤の保険診療自己負担を助成",
+          "sourceUrl": "https://www.city.taketa.oita.jp/life_scene/kenkouiryou/10863.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病児ケアルームかぼすで乳幼児から小学生までの病児・病後児を受け入れ",
+          "sourceUrl": "https://www.city.taketa.oita.jp/kosodate_kyoiku/kosodateshien/4925.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認可保育施設を利用する0～5歳児の保育料を完全無償化",
+          "sourceUrl": "https://www.city.taketa.oita.jp/kosodate_kyoiku/nyugaku_nyuen/1/8208.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度に市立小学校児童603人の学校給食費を無償化",
+          "sourceUrl": "https://www.city.taketa.oita.jp/material/files/group/4/R8_ippan-gaiyou-tousho.pdf",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ宿泊・日帰り・訪問型産後ケアを上限7回提供",
+          "sourceUrl": "https://www.city.taketa.oita.jp/soshiki/shakaifukushika/1/ninnsin/4939.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.city.taketa.oita.jp/soshiki/shakaifukushika/1/12174.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限50万円、多子世帯は上限70万円補助",
+          "sourceUrl": "https://www.city.taketa.oita.jp/soshiki/kensetsuka/juutaku/4571.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみの戸別収集は1点600円、清掃センターへの直接搬入も可能",
+          "sourceUrl": "https://www.city.taketa.oita.jp/kurashi_tetsuzuki/gomi_recycling/trash/trash/3763.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・九重山火山・ため池等の防災マップを公開",
+          "sourceUrl": "https://www.city.taketa.oita.jp/soshiki/somuka/bousaikiki/bosai/bosai/237.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44209",
+      "name": "豊後高田市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.bungotakada.oita.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで医療費と入院時食事療養費を助成",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/site/kosodate-kyoiku/1601.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内2施設で生後6か月から小学6年生までの病児・病後児を受け入れ",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/site/kosodate-kyoiku/2107.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "保育園・認定こども園・市立幼稚園の保育料・授業料・給食費を0～5歳児まで無料化",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/site/kosodate-kyoiku/2467.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "幼稚園・小中学校の給食費を無料化し、高田高校の希望生徒にも無料昼食を提供",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/soshiki/4/2381.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "おおむね生後6か月未満の母子へ宿泊・日帰り・訪問型産後ケアを合計7回提供",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/site/kosodate-kyoiku/42376.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/soshiki/10/34465.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯の住宅改修費を20％・上限60万円、多子世帯は上限70万円補助",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/soshiki/5/2125.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない粗大ごみは広域クリーンセンターへ直接搬入可能",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/site/kankyo/38363.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・高潮・ため池等の総合防災ハザードマップを公開",
+          "sourceUrl": "https://www.city.bungotakada.oita.jp/site/bousai/2113.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "44210",
+      "name": "杵築市",
+      "prefectureCode": "44",
+      "officialUrl": "https://www.city.kitsuki.lg.jp/",
+      "serviceCount": 9,
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "missingPrimarySourceCount": 0,
+      "nonHttpsPrimarySourceCount": 0,
+      "futureCheckedAtCount": 0,
+      "serviceSnapshots": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで入院・通院・歯科・調剤の保険診療自己負担を助成",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/akachanumaretara/akachantetuduki/10917.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内2施設で生後6か月から小学6年生までの病児・病後児を受け入れ",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/nyuuyouzi/azukari/10070.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "認可保育施設に通う全年齢の子どもの保育料を所得・出生順位にかかわらず無償化",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/nyuuyouzi/nyugakunyuen/10945.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市内小中学校と幼稚園・こども園の給食費を基本無償化",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/11776.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子へ宿泊・日帰り・訪問型産後ケアを合計7回まで提供",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/akachanumaretara/akachanmamacare/10724.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間まで利用できるこども誰でも通園制度",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/fukusi/kitsukikosodatesien/nyuuyouzi/azukari/12261.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅新築・購入時に10万～20万円を補助し、18歳未満の子ども1人につき10万円を加算",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/machidukuri/ijuuteijuusokusinn/4265.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない粗大ごみを事前申込みで収集し、収集運搬シールは1点300円",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/siminseikatu/kankyou_eisei/gomi/sodaigomi.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波等を確認できる杵築市防災マップと避難場所一覧を公開",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/1/kikikanri/bousai/saigai/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    }
+  ],
+  "conclusion": "pending_manual_review"
+}

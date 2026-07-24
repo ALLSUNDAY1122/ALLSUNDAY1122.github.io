@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-rough-validation-cycle-07-review-20260725",
+  "auditId": "west-b-rough-validation-cycle-07-20260725",
+  "sessionId": "west-b",
+  "cycle": 7,
+  "plannedCycles": 10,
+  "reviewedAt": "2026-07-25T03:20:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "serviceCount": 225,
+    "checkedUrlCount": 250,
+    "prefectureCodes": [
+      "42",
+      "44"
+    ],
+    "codes": [
+      "42208",
+      "42209",
+      "42210",
+      "42211",
+      "42212",
+      "42213",
+      "42214",
+      "42307",
+      "42308",
+      "42321",
+      "42322",
+      "42323",
+      "42383",
+      "42391",
+      "42411",
+      "44201",
+      "44202",
+      "44203",
+      "44204",
+      "44205",
+      "44206",
+      "44207",
+      "44208",
+      "44209",
+      "44210"
+    ]
+  },
+  "results": {
+    "structuralErrorCount": 0,
+    "detectedResearchContentErrorCount": 1,
+    "correctedResearchContentErrorCount": 1,
+    "detectedSourceMaintenanceIssueCount": 4,
+    "correctedSourceMaintenanceIssueCount": 4,
+    "networkOnlyWarningCount": 0,
+    "manualSpotCheckCount": 5,
+    "manualSpotCheckFailureCount": 0
+  },
+  "researchContentCorrections": [
+    {
+      "code": "42391",
+      "name": "佐々町",
+      "service": "schoolMeals",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "reason": "2023年更新の給食費負担軽減事業ページが失効し、2026年度の補助率・対象・申請条件を現行公式情報で確認できないため",
+      "currentPrimarySource": "https://www.sazacho-nagasaki.jp/kyouiku/list01003.html",
+      "currentAdditionalSource": "https://www.sazacho-nagasaki.jp/kyouiku/kiji0036225/index.html",
+      "correctionPullRequest": 3072,
+      "correctionCiRunNumber": 7504,
+      "correctionMergeCommit": "b1f3ad7c6c108004c6d8d66b83ae69ce6685afc8"
+    }
+  ],
+  "sourceMaintenanceCorrections": [
+    {
+      "code": "42210",
+      "name": "壱岐市",
+      "service": "bulkyWaste",
+      "oldUrl": "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/2892.html",
+      "newUrl": "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/dashikata/2892.html"
+    },
+    {
+      "code": "42212",
+      "name": "西海市",
+      "service": "sickChildCare",
+      "oldUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kodomo/1/2/5/1606.html",
+      "newUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kenko/2/2_1/5/1606.html"
+    },
+    {
+      "code": "42308",
+      "name": "時津町",
+      "service": "schoolMeals",
+      "oldUrl": "https://www.town.togitsu.nagasaki.jp/material/files/group/21/syuugakuenjozai.pdf",
+      "newUrl": "https://www.town.togitsu.nagasaki.jp/kurashi_joho/nyuen_nyugaku/7801.html"
+    },
+    {
+      "code": "44210",
+      "name": "杵築市",
+      "service": "disasterPrevention",
+      "oldUrl": "https://www.city.kitsuki.lg.jp/1/kikikanri/bousai/saigai/index.html",
+      "newUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/kikikanri/hinan/854.html"
+    }
+  ],
+  "sourceMaintenanceCorrectionPullRequest": 3042,
+  "sourceMaintenanceCorrectionCiRunNumber": 7436,
+  "sourceMaintenanceCorrectionMergeCommit": "5569dfd869cb59426b975f3e064f129ab571dca9",
+  "manualSpotChecks": [
+    {
+      "code": "42208",
+      "name": "松浦市",
+      "result": "passed"
+    },
+    {
+      "code": "42214",
+      "name": "南島原市",
+      "result": "passed"
+    },
+    {
+      "code": "42383",
+      "name": "小値賀町",
+      "result": "passed"
+    },
+    {
+      "code": "44204",
+      "name": "日田市",
+      "result": "passed"
+    },
+    {
+      "code": "44210",
+      "name": "杵築市",
+      "result": "passed"
+    }
+  ],
+  "conclusion": "passed_after_corrections"
+}
