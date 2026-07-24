@@ -41,6 +41,7 @@
     url: trackedUrl.href,
     storyStartPath,
     storyStartAttempted: false,
+    storyStartInFlight: false,
     storyStartTracked: false,
     storyStartError: null,
     lastAction: null,
@@ -59,10 +60,10 @@
   function trackStoryStart() {
     let alreadyTracked = false;
     try { alreadyTracked = sessionStorage.getItem(storyStartKey) === '1'; } catch (error) {}
-    if (alreadyTracked) return;
+    if (alreadyTracked || state.storyStartInFlight) return;
 
     state.storyStartAttempted = true;
-    try { sessionStorage.setItem(storyStartKey, '1'); } catch (error) {}
+    state.storyStartInFlight = true;
     fetch(trackingEndpoint(storyStartPath), {
       method: 'GET',
       credentials: 'omit',
@@ -71,10 +72,13 @@
       referrerPolicy: 'no-referrer'
     }).then(function (response) {
       if (!response.ok) throw new Error('HTTP ' + response.status);
+      try { sessionStorage.setItem(storyStartKey, '1'); } catch (error) {}
       state.storyStartTracked = true;
       state.storyStartError = null;
     }).catch(function (error) {
       state.storyStartError = error && error.message ? error.message : String(error);
+    }).finally(function () {
+      state.storyStartInFlight = false;
     });
   }
 
