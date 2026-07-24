@@ -5,15 +5,30 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T20:36:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-24T22:43:00+09:00",
+  "status": "completed",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 95,
+  "assignedMunicipalityCount": 95,
+  "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": null,
-  "ciStatus": "not_started",
-  "completedSinceSplit": [],
+  "pullRequestNumber": 2798,
+  "ciStatus": "success",
+  "ciRunNumber": 6711,
   "blocked": [],
-  "nextAction": "担当範囲の既存task・ブランチ・PRを再検査し、最小の未着手自治体を選定する。"
+  "qualityState": {
+    "needsMediumReviewMunicipalityCount": 0,
+    "blockedMunicipalityCount": 0,
+    "prOpenMunicipalityCount": 0
+  },
+  "publicationEvidence": {
+    "qualityAuditPullRequestNumber": 2783,
+    "publicationConfirmationPullRequestNumber": 2786,
+    "checkpointCompletionPullRequestNumber": 2798,
+    "nationwideCompletionPullRequestNumber": 2791,
+    "publishedMunicipalityCount": 1741,
+    "publishedServiceCount": 15669,
+    "remainingMunicipalityCount": 0
+  },
+  "nextAction": "京都府・奈良県・和歌山県の公式情報更新、差し戻し、CI失敗、mainとの公開不一致が発生した場合のみ品質監査を再開する。"
 }
