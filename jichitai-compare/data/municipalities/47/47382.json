@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "47382",
+  "prefectureCode": "47",
+  "prefecture": "沖縄県",
+  "name": "与那国町",
+  "officialUrl": "https://www.town.yonaguni.okinawa.jp/",
+  "status": "verified",
+  "summary": "必須9制度を与那国町公式情報で調査。6制度をverified、病児・病後児保育、2026年度保育料、2026年度預かり保育の具体条件を確認できないためunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から中学3年生まで保険診療の自己負担を助成し、現物給付に対応",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "与那国町に住所がある0歳から中学3年生までの子ども",
+        "coverage": "健康保険が適用される診療の自己負担分",
+        "payment": "受給資格者証を提示する現物給付。非対応・県外受診・証未提示等は町窓口で償還払い申請",
+        "application": "出生・転入時に健康保険証、保護者口座、印鑑等で認定申請",
+        "exclusion": "健診、予防接種、診断書、薬容器、おむつ、差額ベッド、食事代等は対象外",
+        "schoolAccident": "学校・保育所等でのけがは災害共済給付制度を優先"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/docs/2018042400106/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "町公式サイトで病児・病後児保育の実施施設、島外広域利用、対象年齢、料金、予約方法を確認できない",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "publishedStatus": "出産・子育てカテゴリに病児・病後児保育の現行制度案内がない",
+        "related": "小児科オンライン相談は実施されているが、子どもを預かる病児保育事業ではない",
+        "missing": "実施施設、石垣市等の広域利用可否、対象年齢、利用料、医師連絡票、登録・予約方法",
+        "confirmation": "長寿福祉課または子育て世代包括支援センターへの確認が必要",
+        "avoidInference": "診療所、保育所、オンライン相談を病児保育として扱わない"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/category/mokuteki/kosodate/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yonaguni.okinawa.jp/docs/2025060900013/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "childcareFee": {
+      "status": "unavailable",
+      "summary": "2026年度保育所入所受付と空き状況の案内は確認できるが、保育料・無償化・多子軽減の具体条件を確認できない",
+      "eligibility": {
+        "minAgeMonths": 9,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "facility": "祖納保育所、久部良保育所",
+        "age": "既存施設案内では祖納保育所は生後9か月翌月から3歳児、久部良保育所は1歳6か月から3歳児",
+        "currentAdmission": "令和8年度の入所申込み・定員空き状況案内を公式カテゴリで掲載",
+        "missing": "所得階層別保育料、3歳以上無償化、非課税世帯無償化、多子軽減、給食費、延長保育料",
+        "confirmation": "令和8年度入所案内添付資料または長寿福祉課への確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/category/mokuteki/nyugaku/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yonaguni.okinawa.jp/docs/2022022200013/file_contents/hoikusyo.pdf",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "町立小中学校の給食費と町立幼稚園のミルク費を予算の範囲内で補助",
+      "eligibility": {
+        "minAgeMonths": 48,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "与那国町立小学校・中学校の児童生徒及び町立幼稚園の園児の保護者",
+        "support": "学校給食費・幼稚園ミルク費に対し町が補助金を交付",
+        "exclusion": "生活保護により給食費相当の支給を受ける保護者は補助対象外",
+        "procedure": "学校長が対象者名簿を取りまとめ、月ごとに教育長へ補助金を請求・納付",
+        "amount": "2026年度の保護者負担額・補助割合は教育委員会へ確認",
+        "legalBasis": "与那国町学校給食（幼稚園ミルク）費補助金交付規則"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/reiki_int/reiki_honbun/q954RG00000343.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ宿泊・通所・訪問型産後ケアを合計7回まで提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "与那国町に住所があり、感染症状・医療行為の必要がない産後1年未満の母親と乳児",
+        "types": "宿泊型、通所6時間・3時間、訪問型",
+        "facility": "おおそこ助産院及び里帰り先等の希望施設",
+        "fees": "宿泊1泊2日3,000円、通所6時間1,000円・3時間500円、訪問500円",
+        "limit": "各形態を合わせて7回まで",
+        "exemption": "住民税非課税世帯・生活保護世帯は利用料免除",
+        "application": "子育て世代包括支援センターへ相談・申請"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/docs/2022032500011/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "幼稚園児向け預かり保育の過年度案内はあるが、2026年度の対象、時間、料金、申込条件を確認できない",
+      "eligibility": {
+        "minAgeMonths": 48,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "publishedStatus": "令和7年度はどぅなん児童クラブの幼稚園児向け預かり保育案内を公開",
+        "missing": "令和8年度の実施有無、対象幼稚園、対象年齢、曜日・時間、利用料、長期休業対応、申込方法",
+        "confirmation": "長寿福祉課または教育委員会への確認が必要",
+        "classification": "未就園児向けこども誰でも通園制度の町内実施情報も確認できない",
+        "avoidInference": "令和7年度条件を令和8年度へ転記しない"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/docs/2025021000011/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "中学生以下の子どもがいる世帯等を優先して移住定住促進住宅を提供",
+      "details": {
+        "housing": "与那国999-5の移住定住促進住宅、鉄筋コンクリート平屋3LDK・63.14平方メートル",
+        "rent": "家賃月40,000円、管理費月5,000円",
+        "term": "契約期間2年間",
+        "eligibility": "税滞納がなく、町へ住所登録し生活本拠とし、地域行事等へ積極的に参加する定住希望者",
+        "priority": "保育士・看護師等の有資格者及び中学生以下の子どもがいる世帯を優先",
+        "availability": "2026年6月に家族向け1戸を募集し、7月中旬入居予定",
+        "application": "企画財政課へ所定書類を郵送提出"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/docs/2026052800021/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "町指定袋に入らないごみを粗大ごみとして毎週水曜日に収集",
+      "details": {
+        "definition": "町指定ごみ袋に入らない大きさの家庭ごみ",
+        "collection": "水曜日に、燃やさないごみ・有害危険ごみと合わせて収集",
+        "deadline": "決められた収集日の朝8時までに排出",
+        "limit": "大量の家庭ごみを一度に排出不可。通常収集の目安は45リットル袋6袋程度、枝5束まで",
+        "excluded": "町が収集・直接搬入できない処理困難物は産業廃棄物処理業者等へ依頼",
+        "confirmation": "粗大ごみの品目別手数料、処理券、直接搬入先・受付時間は町民生活課へ確認"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/docs/2018041100014/gomi.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波ハザードマップと2026年更新の土砂災害危険箇所ハザードマップを公開",
+      "details": {
+        "tsunami": "与那国町津波ハザードマップと地震・津波安全のしおりを公開",
+        "landslide": "2026年7月に与那国島土砂災害危険箇所ハザードマップを公開",
+        "coverage": "地震、津波、土砂災害、台風等の危険箇所・避難情報",
+        "alerts": "防災行政無線、町公式LINE、公式サイトで災害・避難情報を配信",
+        "guidance": "居住地・観光地周辺の危険箇所、避難場所、避難経路を平時から確認",
+        "contact": "総務課"
+      },
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/docs/2024081500011/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yonaguni.okinawa.jp/category/bunya/machi/bosai/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    }
+  }
+}
