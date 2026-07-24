@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-b-accuracy-audit-20260725",
+  "sessionId": "central-b",
+  "scope": {
+    "prefectureCodes": ["26", "29", "30"],
+    "municipalityCount": 95,
+    "serviceCountPerMunicipality": 9
+  },
+  "purpose": "中日本B担当データに誤調査がないかを10回に分けて概略検証する",
+  "method": {
+    "rounds": 10,
+    "coverage": "各回7〜10自治体を構造・task整合監査し、年度、対象年齢、料金、利用条件、verified/unavailable判定の高リスク項目を公式情報で重点照合する",
+    "correctionPolicy": "明確な誤りは同一監査サイクルで修正し、地方正本へ統合する。公開差分はmain同期PRで反映する"
+  },
+  "batches": [
+    {"round": 1, "codes": ["26100", "26201", "26202", "26203", "26204", "26205", "26206", "26207", "26208", "26209"], "status": "in_progress"},
+    {"round": 2, "codes": ["26210", "26211", "26212", "26213", "26214", "26303", "26322", "26343", "26344", "26364"], "status": "pending"},
+    {"round": 3, "codes": ["26365", "26366", "26367", "26407", "26463", "26465", "29201", "29202", "29203", "29204"], "status": "pending"},
+    {"round": 4, "codes": ["29205", "29206", "29207", "29208", "29209", "29210", "29211", "29212", "29322", "29342"], "status": "pending"},
+    {"round": 5, "codes": ["29343", "29344", "29345", "29361", "29362", "29363", "29385", "29386", "29401", "29402"], "status": "pending"},
+    {"round": 6, "codes": ["29424", "29425", "29426", "29427", "29441", "29442", "29443", "29444", "29446", "29447"], "status": "pending"},
+    {"round": 7, "codes": ["29449", "29450", "29451", "29452", "29453", "30201", "30202", "30203", "30204", "30205"], "status": "pending"},
+    {"round": 8, "codes": ["30206", "30207", "30208", "30209", "30304", "30341", "30343", "30344", "30361"], "status": "pending"},
+    {"round": 9, "codes": ["30362", "30366", "30381", "30382", "30383", "30390", "30391", "30392", "30401"], "status": "pending"},
+    {"round": 10, "codes": ["30404", "30406", "30421", "30422", "30424", "30427", "30428"], "status": "pending"}
+  ],
+  "progress": {
+    "completedRounds": 0,
+    "structurallyCheckedMunicipalities": 0,
+    "deepCheckedMunicipalities": 0,
+    "confirmedErrors": 1,
+    "correctedErrors": 1
+  },
+  "preflightFindings": [
+    {
+      "code": "30343",
+      "name": "九度山町",
+      "service": "schoolMeals",
+      "result": "corrected",
+      "note": "令和8年度一般会計予算に学校給食費徴収金4,147千円が計上されていることを確認し、現行負担不明のunavailable判定から、徴収予定を示すverified判定へ訂正。PR #2909・CI #6979でregion/centralへ統合済み。"
+    }
+  ],
+  "findings": []
+}
