@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="日本地図から自治体を選び、子育て支援や公共サービスを比較する試作サイトです。">
+  <meta name="description" content="全国1,741自治体の子育て支援、保育、給食、産後ケア、住宅、ごみ、防災の9制度を地図から比較できます。">
   <meta name="theme-color" content="#0f766e">
-  <title>自治体くらべ（試作版）</title>
+  <title>自治体くらべ｜全国1,741自治体の制度比較</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <header class="site-header">
     <div class="shell header-inner">
-      <a class="brand" href="./" aria-label="自治体くらべ トップ">自治体くらべ <span>MVP</span></a>
+      <a class="brand" href="./" aria-label="自治体くらべ トップ">自治体くらべ <span>全国版</span></a>
       <nav aria-label="ページ内ナビゲーション">
         <a href="#map-section">地図</a>
         <a href="#compare-section">比較</a>
@@ -25,12 +25,12 @@
       <div>
         <p class="eyebrow">住む場所を、制度から選ぶ。</p>
         <h1>家族に合う自治体を<br>地図から比較</h1>
-        <p class="lead">自治体公式サイトへの入口と、子育て支援・住居・公共サービスの比較を一つにまとめる試作版です。</p>
+        <p class="lead">全国の自治体公式情報をもとに、子育て支援・住居・公共サービスの9制度を比較できます。</p>
       </div>
       <div class="hero-panel" aria-label="現在の収録状況">
         <strong>現在の比較対象</strong>
         <span>1741自治体・9制度</span>
-        <small>北海道・関東・中日本・西日本の登録済み自治体を比較できます。詳細データは順次追加します。</small>
+        <small>全国1,741自治体を収録しています。制度の正式な適用条件は、各自治体の公式情報をご確認ください。</small>
       </div>
     </section>
 
@@ -78,7 +78,7 @@
           <p class="eyebrow">STEP 1</p>
           <h2 id="map-heading">日本地図から選ぶ</h2>
         </div>
-        <p>都道府県を押すと、登録済みの自治体が表示されます。</p>
+        <p>都道府県を押すと、その地域の自治体が表示されます。</p>
       </div>
       <div class="map-layout">
         <div id="japan-map" class="map-panel" aria-live="polite">
@@ -86,7 +86,7 @@
         </div>
         <aside class="municipality-panel" aria-labelledby="selected-prefecture-heading">
           <h3 id="selected-prefecture-heading">東京都</h3>
-          <p id="prefecture-message">比較データ登録済みの自治体です。</p>
+          <p id="prefecture-message">この都道府県の自治体です。</p>
           <div id="municipality-list" class="municipality-list"></div>
         </aside>
       </div>
@@ -115,21 +115,21 @@
 
     <section id="about-section" class="shell section-block about-grid" aria-labelledby="about-heading">
       <div>
-        <p class="eyebrow">この試作版について</p>
-        <h2 id="about-heading">表示内容は参考判定です</h2>
+        <p class="eyebrow">このサイトについて</p>
+        <h2 id="about-heading">表示内容は参考情報です</h2>
         <p>制度の対象可否は、世帯状況や申請時期によって変わります。各項目には自治体の公式情報へのリンクと確認日を表示します。最終判断は必ず自治体へ確認してください。</p>
       </div>
       <ul>
         <li>比較項目：子育て、保育、給食、産後ケア、住宅、ごみ、防災の9制度</li>
-        <li>登録状況：1660自治体の生成データを公開中</li>
-        <li>今後の追加：全国自治体、家賃・通勤などの比較情報</li>
+        <li>登録状況：全国1,741自治体・15,669制度を公開中</li>
+        <li>今後の改善：制度情報の継続更新、家賃・通勤などの比較情報</li>
       </ul>
     </section>
   </main>
 
   <footer>
     <div class="shell">
-      <p>自治体くらべ 試作版</p>
+      <p>自治体くらべ 全国版</p>
       <p>当サイトは自治体の公式サイトではありません。</p>
     </div>
   </footer>
