@@ -16,7 +16,8 @@ const INTERNAL_WORKFLOW_PHRASES = [
   'mainへ',
   'マージ後',
   '最終検証を実施',
-  '次の自治体'
+  '次の自治体',
+  '調査班'
 ];
 const WEST_INTERNAL_PHRASES = ['調査班', '初期登録対象', '移行監査', '地域正本'];
 const WEST_PUBLIC_COPY_GUARDS = [
