@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  const RUNTIME_VERSION = '20260724-002';
   const API_BASE = 'https://page-views-api.ratneshc.com/api/v1/track';
   const SITE_ID = 'allsunday1122.github.io';
   const path = location.pathname.replace(/\/{2,}/g, '/').replace(/\/$/, '');
@@ -34,6 +35,7 @@
   const storyStartPath = '/yorugatari/__landing-start/' + config.startId;
   const storyStartKey = 'yorugatari-landing-start:' + config.startId;
   const state = {
+    runtimeVersion: RUNTIME_VERSION,
     title: config.title,
     text: config.text,
     url: trackedUrl.href,
