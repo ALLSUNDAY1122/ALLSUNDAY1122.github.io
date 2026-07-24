@@ -190,12 +190,15 @@ function createMunicipalityCard(municipality) {
   selectButton.textContent = selected ? '比較から外す' : '比較に追加';
   selectButton.classList.toggle('remove', selected);
   selectButton.addEventListener('click', () => toggleMunicipality(municipality.code));
+  const detail = document.createElement('a');
+  detail.href = `./municipality/${encodeURIComponent(municipality.code)}/`;
+  detail.textContent = '制度詳細';
   const official = document.createElement('a');
   official.href = municipality.officialUrl;
   official.target = '_blank';
   official.rel = 'noopener noreferrer';
   official.textContent = '公式サイト';
-  actions.append(selectButton, official);
+  actions.append(selectButton, detail, official);
   card.append(title, summary, actions);
   return card;
 }
@@ -250,7 +253,7 @@ function renderComparison() {
       render: (municipality) => renderServiceCell(municipality, definition)
     }))
   ];
-  const head = selected.map((municipality) => `<th scope="col">${escapeHtml(municipality.name)}</th>`).join('');
+  const head = selected.map((municipality) => `<th scope="col"><a href="./municipality/${escapeHtml(municipality.code)}/">${escapeHtml(municipality.name)}</a></th>`).join('');
   const body = rows
     .map((row) => `<tr><th scope="row">${escapeHtml(row.label)}</th>${selected.map((municipality) => `<td>${row.render(municipality)}</td>`).join('')}</tr>`)
     .join('');
