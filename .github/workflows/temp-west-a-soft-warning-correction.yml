@@ -1,7 +1,9 @@
 name: Temporary West-A Soft Warning Correction
 
 on:
-  pull_request:
+  push:
+    branches:
+      - fix/west-a-soft-warning-nishiawakura-20260725
     paths:
       - '.github/workflows/temp-west-a-soft-warning-correction.yml'
       - 'jichitai-compare/scripts/apply-west-a-soft-warning-correction.mjs'
@@ -14,7 +16,7 @@ permissions:
 
 jobs:
   correct:
-    if: github.head_ref == 'fix/west-a-soft-warning-nishiawakura-20260725'
+    if: github.ref_name == 'fix/west-a-soft-warning-nishiawakura-20260725'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -23,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.ref_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -46,7 +48,7 @@ jobs:
             jichitai-compare/operations/tasks/33643.json \
             jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json
           git commit -m 'fix: 西粟倉村の幼稚園保育料を現行無償案内へ訂正'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          git push origin HEAD:${{ github.ref_name }}
 
       - name: Validate corrected regional data
         working-directory: jichitai-compare
