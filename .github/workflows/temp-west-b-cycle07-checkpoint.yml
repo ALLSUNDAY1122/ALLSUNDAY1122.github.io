@@ -1,0 +1,101 @@
+name: Temporary West B Cycle 07 Checkpoint
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.head_ref == 'ops/west-b-cycle07-checkpoint-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/west-b-cycle07-checkpoint-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Update West B checkpoint to cycle 7
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const file = 'jichitai-compare/operations/control/session-checkpoints/west-b.json';
+          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          data.updatedAt = '2026-07-25T03:23:00+09:00';
+          data.nextAction = '概略検証第8回として、大分県の残り8自治体と宮崎県17自治体をコード順で検証する。全10回程度で担当250自治体を網羅する。';
+
+          const rough = data.roughValidation;
+          rough.status = 'in_progress';
+          rough.plannedCycles = 10;
+          rough.completedCycles = 7;
+          rough.auditedMunicipalityCount = 175;
+          rough.auditedServiceCount = 1575;
+          rough.remainingMunicipalityCount = 75;
+          rough.detectedResearchContentErrorCount = 2;
+          rough.correctedResearchContentErrorCount = 2;
+          rough.detectedSourceMaintenanceIssueCount = 8;
+          rough.correctedSourceMaintenanceIssueCount = 8;
+          rough.lastCycle = {
+            cycle: 7,
+            auditPullRequestNumber: 3035,
+            auditCiRunNumber: 7522,
+            auditMergeCommit: '3d234c2ceabce4026b360854572fb0b17b2ed80a',
+            auditFile: 'jichitai-compare/operations/audits/west-b-rough-validation-cycle-07-20260725.json',
+            reviewFile: 'jichitai-compare/operations/audits/west-b-rough-validation-cycle-07-review-20260725.json',
+            municipalityCount: 25,
+            serviceCount: 225,
+            prefectureCodes: ['42', '44'],
+            manualSpotCheckCount: 5,
+            contentErrorCount: 1,
+            correctedContentErrorCount: 1,
+            sourceMaintenanceIssueCount: 4,
+            correctedSourceMaintenanceIssueCount: 4,
+            correctionPullRequestNumbers: [3042, 3072],
+            correctionCiRunNumbers: [7436, 7504],
+            correctionMergeCommits: [
+              '5569dfd869cb59426b975f3e064f129ab571dca9',
+              'b1f3ad7c6c108004c6d8d66b83ae69ce6685afc8'
+            ]
+          };
+          rough.cycleHistory = Array.isArray(rough.cycleHistory) ? rough.cycleHistory.filter(item => item.cycle !== 7) : [];
+          rough.cycleHistory.push({
+            cycle: 7,
+            municipalityCount: 25,
+            serviceCount: 225,
+            contentErrorCount: 1,
+            correctedContentErrorCount: 1,
+            sourceMaintenanceIssueCount: 4,
+            correctedSourceMaintenanceIssueCount: 4,
+            auditPullRequestNumber: 3035,
+            auditCiRunNumber: 7522,
+            correctionPullRequestNumbers: [3042, 3072],
+            correctionCiRunNumbers: [7436, 7504]
+          });
+          rough.cycleHistory.sort((a, b) => a.cycle - b.cycle);
+          rough.nextCycle = {
+            cycle: 8,
+            plannedMunicipalityCount: 25,
+            scopePolicy: '大分県の残り8自治体と宮崎県17自治体をコード順で検証する'
+          };
+          fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n');
+          NODE
+      - name: Validate checkpoint JSON
+        shell: bash
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('jichitai-compare/operations/control/session-checkpoints/west-b.json','utf8')); console.log('checkpoint json ok')"
+      - name: Commit checkpoint
+        shell: bash
+        run: |
+          rm -f .github/west-b-cycle07-checkpoint.trigger
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git add .github/west-b-cycle07-checkpoint.trigger
+          git commit -m "ops: 西日本B概略検証の進捗7/10を記録"
+          git push origin HEAD:ops/west-b-cycle07-checkpoint-20260725
