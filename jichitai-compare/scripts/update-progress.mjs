@@ -135,6 +135,7 @@ function assignmentState(task) {
   const blockers = Array.isArray(task.blockers) ? task.blockers : [];
   if (task.status === 'blocked' || task.status === 'needs_coordinator' || blockers.length > 0) return 'blocked';
   if (task.status === 'pr_open') return 'pr_open';
+  if (task.status === 'merged') return 'assigned';
   if (typeof task.currentBranch === 'string' && task.currentBranch.trim()) return 'assigned';
   return 'unassigned';
 }
