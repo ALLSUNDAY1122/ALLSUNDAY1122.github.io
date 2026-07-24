@@ -25,7 +25,7 @@ jobs:
           set -euo pipefail
           git fetch origin main region/east
           python <<'PY'
-          import json, math, re, subprocess, time, urllib.request
+          import concurrent.futures, json, math, re, subprocess, time, urllib.request
           from pathlib import Path
           from bs4 import BeautifulSoup
 
@@ -39,43 +39,39 @@ jobs:
               '36':'徳島県','37':'香川県','38':'愛媛県','39':'高知県','40':'福岡県','41':'佐賀県','42':'長崎県',
               '43':'熊本県','44':'大分県','45':'宮崎県','46':'鹿児島県','47':'沖縄県'
           }
-          pref_names = set(prefectures.values())
           excluded = {'01695','01696','01697','01698','01699','01700'}
-          official = {}
-          total_pages = None
           headers = {'User-Agent':'Mozilla/5.0 municipality-audit/1.0'}
 
-          for page in range(1, 97):
+          def fetch_page(page):
               url = source_url + f'&page={page}'
-              last_error = None
               for attempt in range(4):
                   try:
                       req = urllib.request.Request(url, headers=headers)
                       with urllib.request.urlopen(req, timeout=30) as response:
-                          html = response.read().decode('utf-8', errors='replace')
-                      break
-                  except Exception as error:
-                      last_error = error
+                          return page, response.read().decode('utf-8', errors='replace')
+                  except Exception:
                       if attempt == 3:
                           raise
                       time.sleep(2 ** attempt)
-              soup = BeautifulSoup(html, 'html.parser')
-              if total_pages is None:
-                  text = soup.get_text(' ', strip=True)
-                  match = re.search(r'全([\d,]+)件', text)
-                  if not match:
-                      raise RuntimeError('e-Stat result count was not found')
-                  total_rows = int(match.group(1).replace(',', ''))
-                  total_pages = math.ceil(total_rows / 20)
-                  if total_pages != 96:
-                      raise RuntimeError(f'unexpected e-Stat page count: {total_pages}')
+
+          with concurrent.futures.ThreadPoolExecutor(max_workers=12) as executor:
+              pages = dict(executor.map(fetch_page, range(1, 97)))
+
+          first_text = BeautifulSoup(pages[1], 'html.parser').get_text(' ', strip=True)
+          match = re.search(r'全([\d,]+)件', first_text)
+          if not match:
+              raise RuntimeError('e-Stat result count was not found')
+          total_rows = int(match.group(1).replace(',', ''))
+          if math.ceil(total_rows / 20) != 96:
+              raise RuntimeError(f'unexpected e-Stat page count: {math.ceil(total_rows / 20)}')
+
+          official = {}
+          for page in range(1, 97):
+              soup = BeautifulSoup(pages[page], 'html.parser')
               for row in soup.find_all('tr'):
                   cells = [' '.join(cell.stripped_strings) for cell in row.find_all(['th','td'])]
                   code = next((cell for cell in cells if re.fullmatch(r'\d{5}', cell)), None)
-                  if not code or code in excluded:
-                      continue
-                  prefecture = next((cell for cell in cells if cell in pref_names), None)
-                  if not prefecture:
+                  if not code or code in excluded or code[:2] not in prefectures:
                       continue
                   names = [cell for cell in cells if re.fullmatch(r'[^\s]+[市区町村]', cell)]
                   if not names:
@@ -85,17 +81,19 @@ jobs:
                       continue
                   if not (name.endswith(('市','町','村')) or ('13101' <= code <= '13123')):
                       continue
-                  official[code] = {'code':code, 'name':name, 'prefectureCode':code[:2], 'prefecture':prefecture}
+                  official[code] = {
+                      'code':code,
+                      'name':name,
+                      'prefectureCode':code[:2],
+                      'prefecture':prefectures[code[:2]]
+                  }
 
           if len(official) != 1741:
-              counts = {}
-              for item in official.values():
-                  counts[item['prefectureCode']] = counts.get(item['prefectureCode'], 0) + 1
+              counts = {code:sum(item['prefectureCode']==code for item in official.values()) for code in prefectures}
               raise RuntimeError(f'official municipality count mismatch: {len(official)}; byPrefecture={counts}')
 
           east_prefectures = {'08','09','10','11','12','13','14','15','19','20'}
           east_a_prefectures = {'10','13','19','20'}
-          east_b_prefectures = east_prefectures - east_a_prefectures
           official_east = {code:item for code,item in official.items() if item['prefectureCode'] in east_prefectures}
           if len(official_east) != 450:
               raise RuntimeError(f'east municipality count mismatch: {len(official_east)}')
@@ -107,9 +105,9 @@ jobs:
           branches_by_code = {}
           for line in remote_heads:
               ref = line.split('\t',1)[1].removeprefix('refs/heads/')
-              match = re.search(r'(\d{5})', ref)
-              if match:
-                  branches_by_code.setdefault(match.group(1), []).append(ref)
+              branch_match = re.search(r'(\d{5})', ref)
+              if branch_match:
+                  branches_by_code.setdefault(branch_match.group(1), []).append(ref)
 
           published = sorted(set(official_east) & main_codes)
           regional_unpublished = sorted((set(official_east) & region_codes) - main_codes)
@@ -160,8 +158,7 @@ jobs:
           if report['summary']['remainingMunicipalities'] + report['summary']['regionalCompleteUnpublishedMunicipalities'] != 54:
               raise RuntimeError(f"east remaining mismatch: {report['summary']}")
 
-          output = Path('jichitai-compare/operations/control/east-remaining-audit-20260724.json')
-          output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
+          Path('jichitai-compare/operations/control/east-remaining-audit-20260724.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
           print(json.dumps(report['summary'], ensure_ascii=False))
           print(json.dumps(report['nextTargets'], ensure_ascii=False))
           PY
