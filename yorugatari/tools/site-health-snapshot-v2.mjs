@@ -6,7 +6,7 @@ const ROOT = process.cwd();
 const TOOLS = path.join(ROOT, 'yorugatari', 'tools');
 const OUTPUT_JSON = path.join(TOOLS, 'site-health-latest.json');
 const OUTPUT_MD = path.join(TOOLS, 'site-health-latest.md');
-const VERSION = '20260724-008';
+const VERSION = '20260724-009';
 
 function readJson(filename, fallback = null) {
   try { return JSON.parse(fs.readFileSync(path.join(TOOLS, filename), 'utf8')); }
@@ -49,12 +49,47 @@ function infrastructureOnlyAccessibility(report) {
   );
 }
 
-function staticAuditMatchesCurrent(report) {
-  if (!report?.success || !Array.isArray(report.files) || !report.files.length) return false;
-  return report.files.every((entry) => {
+function landingRuntimeAuditMatchesCurrent(report) {
+  if (!report?.success || !Array.isArray(report.files)) return false;
+  const runtimePaths = new Set([
+    'yorugatari/assets/landing-share.js',
+    'yorugatari/assets/landing-start-20260724-001.js'
+  ]);
+  const runtimeEntries = report.files.filter((entry) => runtimePaths.has(entry?.path));
+  if (runtimeEntries.length !== runtimePaths.size) return false;
+  return runtimeEntries.every((entry) => {
     try { return gitBlobSha(path.join(ROOT, entry.path)) === entry.blobSha; }
     catch { return false; }
-  });
+  }) && report.checks?.javascriptSyntax === true &&
+    report.checks?.oneStartRequestPerSession === true &&
+    report.checks?.rapidDoubleClickPrevented === true &&
+    report.checks?.retryPossibleAfterFailedRequest === true &&
+    report.checks?.automatedAuditTrafficExcluded === true &&
+    report.checks?.storyIdentifierExcludedFromStartRequest === true &&
+    report.checks?.shareUrlUsesRegisteredUtmValues === true;
+}
+
+function currentLandingPagesReady() {
+  try {
+    const fiveMinute = fs.readFileSync(path.join(ROOT, 'yorugatari', '5min-horror.html'), 'utf8');
+    const bedtime = fs.readFileSync(path.join(ROOT, 'yorugatari', 'bedtime-horror.html'), 'utf8');
+    return Boolean(
+      fiveMinute.includes('assets/landing-share.js?v=20260724-002') &&
+      fiveMinute.includes('assets/landing-start-20260724-001.js') &&
+      fiveMinute.includes('id="landingShareButton"') &&
+      fiveMinute.includes('id="landingCopyButton"') &&
+      fiveMinute.includes('特集単位の合計だけを匿名で集計します') &&
+      (fiveMinute.match(/class="pick"/g) || []).length === 12 &&
+      bedtime.includes('assets/landing-share.js?v=20260724-002') &&
+      bedtime.includes('assets/landing-start-20260724-001.js') &&
+      bedtime.includes('id="landingShareButton"') &&
+      bedtime.includes('id="landingCopyButton"') &&
+      bedtime.includes('特集単位の合計だけを匿名で集計します') &&
+      (bedtime.match(/class="pick"/g) || []).length === 8
+    );
+  } catch {
+    return false;
+  }
 }
 
 function quizPerformanceIsCurrent(report) {
@@ -98,10 +133,11 @@ try {
 } catch {}
 
 const accessibilityComposite = infrastructureOnlyAccessibility(accessibility) && accessibilitySourceCurrent && performanceCurrent;
-const staticCurrent = staticAuditMatchesCurrent(landingStatic);
+const landingRuntimeCurrent = landingRuntimeAuditMatchesCurrent(landingStatic);
+const landingPagesCurrent = currentLandingPagesReady();
 const browserLandingCurrent = landingBrowser.success === true &&
   landingBrowser.shareVersion === '20260724-002' && landingBrowser.startVersion === '20260724-001';
-const landingComposite = staticCurrent && performanceCurrent;
+const landingComposite = landingRuntimeCurrent && landingPagesCurrent && performanceCurrent && seo.success === true;
 const quizBrowserCurrent = quizBrowser.success === true && quizBrowser.version === '20260724-001' &&
   Array.isArray(quizBrowser.failures) && quizBrowser.failures.length === 0;
 const quizPerformanceCurrent = quizPerformanceIsCurrent(quizPerformance);
@@ -123,8 +159,8 @@ const quality = [
     id: 'landingShare', label: '特集共有・作品開始',
     success: browserLandingCurrent || landingComposite,
     mode: browserLandingCurrent ? 'browser' : landingComposite ? 'composite' : 'failed',
-    observedAt: browserLandingCurrent ? landingBrowser.auditedAt : latestTimestamp(landingStatic.testedAt, performance.auditedAt),
-    evidence: landingComposite ? ['現行4ファイルのGitブロブSHA一致', '模擬DOM実行監査合格', '公開Lighthouseで現行共有・開始ランタイムを確認'] : []
+    observedAt: browserLandingCurrent ? landingBrowser.auditedAt : latestTimestamp(landingStatic.testedAt, performance.auditedAt, seo.auditedAt),
+    evidence: landingComposite ? ['共有・作品開始ランタイム2本のGitブロブSHA一致', '模擬DOM実行監査合格', '現行特集HTMLの共有・開始要素を照合', '公開SEO・Lighthouse合格'] : []
   },
   {
     id: 'horrorQuiz', label: '怖さ診断',
