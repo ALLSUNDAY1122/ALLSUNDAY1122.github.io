@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 
 const base = 'https://allsunday1122.github.io/yorugatari';
-const release = '20260724-001';
 const auditQuery = 'lighthouse-audit=1';
 const cases = [
   { target: 'top', profile: 'mobile', url: `${base}/?${auditQuery}`, repeats: 3 },
@@ -33,21 +32,31 @@ function errorDetail(error) {
   return { message: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : null };
 }
 
+async function fetchCurrent(url) {
+  return fetch(url, {
+    cache: 'no-store',
+    headers: {
+      'cache-control': 'no-cache, no-store, max-age=0',
+      pragma: 'no-cache'
+    }
+  });
+}
+
 async function waitForRelease() {
   for (let attempt = 1; attempt <= 36; attempt += 1) {
     try {
       const stamp = Date.now();
       const [topResponse, fiveMinuteResponse, bedtimeResponse, archiveResponse, storyResponse, storyScriptResponse, landingShareResponse, landingStartResponse, analyticsResponse, engagementResponse] = await Promise.all([
-        fetch(`${base}/?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/5min-horror.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/bedtime-horror.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/archive.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/stories/spare-key-returned.html?performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/assets/story.js?v=20260723-007&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/assets/landing-share.js?v=20260724-002&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/assets/landing-start-20260724-001.js?r=${release}&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/assets/analytics.js?v=20260724-005&r=${release}&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
-        fetch(`${base}/assets/engagement.js?v=20260723-003&r=${release}&performance-release=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
+        fetchCurrent(`${base}/?performance-release=${stamp}`),
+        fetchCurrent(`${base}/5min-horror.html?performance-release=${stamp}`),
+        fetchCurrent(`${base}/bedtime-horror.html?performance-release=${stamp}`),
+        fetchCurrent(`${base}/archive.html?performance-release=${stamp}`),
+        fetchCurrent(`${base}/stories/spare-key-returned.html?performance-release=${stamp}`),
+        fetchCurrent(`${base}/assets/story.js?v=20260723-007`),
+        fetchCurrent(`${base}/assets/landing-share.js?v=20260724-002`),
+        fetchCurrent(`${base}/assets/landing-start-20260724-001.js`),
+        fetchCurrent(`${base}/assets/analytics.js?v=20260724-005`),
+        fetchCurrent(`${base}/assets/engagement.js?v=20260723-003`)
       ]);
       const [topHtml, fiveMinuteHtml, bedtimeHtml, archiveHtml, storyHtml, storyScript, landingShareScript, landingStartScript, analyticsScript, engagementScript] = await Promise.all([
         topResponse.text(),
@@ -74,16 +83,17 @@ async function waitForRelease() {
         analyticsStatus: analyticsResponse.status,
         engagementStatus: engagementResponse.status,
         progressiveApp: topHtml.includes('assets/app.js?v=20260723-008'),
-        analytics: topHtml.includes(`assets/analytics.js?v=20260723-003&r=${release}`),
-        fiveMinuteReady: fiveMinuteHtml.includes('href="stories/last-elevator.html"') && (fiveMinuteHtml.match(/class="pick"/g) || []).length === 12 && fiveMinuteHtml.includes('assets/landing-share.js?v=20260724-002') && fiveMinuteHtml.includes(`assets/landing-start-20260724-001.js?r=${release}`) && fiveMinuteHtml.includes('特集単位の合計だけを匿名で集計します') && fiveMinuteHtml.includes(`assets/analytics.js?v=20260724-004&r=${release}`),
-        bedtimeReady: bedtimeHtml.includes('href="stories/good-night.html"') && (bedtimeHtml.match(/class="pick"/g) || []).length === 8 && (bedtimeHtml.match(/class="mood-card"/g) || []).length === 4 && bedtimeHtml.includes('assets/landing-share.js?v=20260724-002') && bedtimeHtml.includes(`assets/landing-start-20260724-001.js?r=${release}`) && bedtimeHtml.includes('特集単位の合計だけを匿名で集計します') && bedtimeHtml.includes(`assets/analytics.js?v=20260724-005&r=${release}`),
+        analytics: topHtml.includes('assets/analytics.js?v=20260723-003'),
+        fiveMinuteReady: fiveMinuteHtml.includes('href="stories/last-elevator.html"') && (fiveMinuteHtml.match(/class="pick"/g) || []).length === 12 && fiveMinuteHtml.includes('assets/landing-share.js?v=20260724-002') && fiveMinuteHtml.includes('assets/landing-start-20260724-001.js') && fiveMinuteHtml.includes('特集単位の合計だけを匿名で集計します') && fiveMinuteHtml.includes('assets/analytics.js?v=20260724-004'),
+        bedtimeReady: bedtimeHtml.includes('href="stories/good-night.html"') && (bedtimeHtml.match(/class="pick"/g) || []).length === 8 && (bedtimeHtml.match(/class="mood-card"/g) || []).length === 4 && bedtimeHtml.includes('assets/landing-share.js?v=20260724-002') && bedtimeHtml.includes('assets/landing-start-20260724-001.js') && bedtimeHtml.includes('特集単位の合計だけを匿名で集計します') && bedtimeHtml.includes('assets/analytics.js?v=20260724-005'),
         landingShareReady: landingShareResponse.ok && landingShareScript.includes('window.YORUGATARI_LANDING_SHARE') && landingShareScript.includes('onsite_share'),
         landingConversionReady: landingStartResponse.ok && landingStartScript.includes("const VERSION = '20260724-001'") && landingStartScript.includes('/yorugatari/__landing-start/five-minute') && landingStartScript.includes('/yorugatari/__landing-start/bedtime') && landingStartScript.includes('window.YORUGATARI_LANDING_START') && landingStartScript.includes('sessionStorage.setItem(storageKey') && landingStartScript.includes('isAutomatedRequest') && landingStartScript.includes('HeadlessChrome'),
         analyticsFilterReady: analyticsResponse.ok && analyticsScript.includes('isAutomatedRequest') && analyticsScript.includes('HeadlessChrome') && analyticsScript.includes('automatedQuery'),
         engagementFilterReady: engagementResponse.ok && engagementScript.includes('isAutomatedRequest') && engagementScript.includes('HeadlessChrome') && engagementScript.includes('automatedQuery'),
+        curatedFallbackReady: engagementResponse.ok && engagementScript.includes('function ensureCuratedLinks()') && engagementScript.includes('../5min-horror.html') && engagementScript.includes('../bedtime-horror.html'),
         archiveReady: archiveHtml.includes('assets/archive.js?v=20260723-004'),
         staticCirculation: storyHtml.includes('class="hero-actions story-pagination"') && storyHtml.includes('class="related"'),
-        storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes(`../assets/engagement.js?v=20260723-003&r=${release}`),
+        storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-003'),
         catalogFree: !storyScript.includes('catalogSources') && !storyScript.includes('loadCatalogScript')
       };
       report.releaseCheck = detail;
