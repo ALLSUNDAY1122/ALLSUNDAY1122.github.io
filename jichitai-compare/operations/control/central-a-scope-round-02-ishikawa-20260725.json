@@ -7,22 +7,9 @@
   "checkedMunicipalityCount": 19,
   "checkedServiceCount": 171,
   "generatedAt": "2026-07-25T00:16:00+09:00",
-  "structuralFindingCount": 2,
+  "structuralFindingCount": 0,
   "unavailableCount": 0,
-  "findings": [
-    {
-      "severity": "medium",
-      "type": "official_sources_count",
-      "code": "17207",
-      "count": 8
-    },
-    {
-      "severity": "medium",
-      "type": "official_sources_count",
-      "code": "17324",
-      "count": 8
-    }
-  ],
+  "findings": [],
   "unavailable": [],
   "sourceDomains": [
     "faq1.city.komatsu.lg.jp",
@@ -981,5 +968,58 @@
         }
       }
     }
-  ]
+  ],
+  "resolvedFindings": [
+    {
+      "severity": "medium",
+      "type": "official_sources_count",
+      "code": "17207",
+      "count": 8,
+      "resolution": "false_positive_shared_primary_source",
+      "sharedSources": [
+        {
+          "url": "https://www.city.hakui.lg.jp/soshiki/shiminfukushibu/kodomo/2/7/17037.html",
+          "services": [
+            "childcareFee",
+            "schoolMeals"
+          ]
+        }
+      ]
+    },
+    {
+      "severity": "medium",
+      "type": "official_sources_count",
+      "code": "17324",
+      "count": 8,
+      "resolution": "false_positive_shared_primary_source",
+      "sharedSources": [
+        {
+          "url": "https://www.town.kawakita.ishikawa.jp/youran/policy/welfare/",
+          "services": [
+            "schoolMeals",
+            "housingSupport"
+          ]
+        }
+      ]
+    }
+  ],
+  "substantiveSuspects": [
+    {
+      "severity": "review",
+      "type": "temporary_school_meal_measure_needs_current_check",
+      "code": "17205",
+      "name": "珠洲市",
+      "summary": "令和6年能登半島地震後の支援措置として、学校給食費を当面の間無償としている。",
+      "source": "https://www.city.suzu.lg.jp/site/bousaisuzu/11672.html"
+    },
+    {
+      "severity": "review",
+      "type": "possible_any_child_access_omission",
+      "code": "17361",
+      "name": "津幡町",
+      "summary": "家庭で保育している子どもを、保護者の病気・冠婚葬祭・研修・リフレッシュ等の際に一時的に預かる。",
+      "source": "https://www.town.tsubata.lg.jp/page/1441.html"
+    }
+  ],
+  "refinedAt": "2026-07-25T00:19:00+09:00"
 }
