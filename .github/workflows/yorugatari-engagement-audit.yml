@@ -19,18 +19,20 @@ on:
       - yorugatari/assets/story.js
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
+      - yorugatari/assets/landing-share.js
       - yorugatari/assets/yorugatari-share.png
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
       - yorugatari/tools/normalize-legacy-story-attributes.mjs
       - yorugatari/tools/normalize-engagement.mjs
+      - yorugatari/tools/ensure-landing-sharing.mjs
       - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/engagement-audit.cjs
       - .github/workflows/yorugatari-engagement-audit.yml
 
 concurrency:
   group: yorugatari-engagement-audit
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -56,10 +58,13 @@ jobs:
         run: |
           node --check yorugatari/tools/normalize-legacy-story-attributes.mjs
           node --check yorugatari/tools/normalize-engagement.mjs
+          node --check yorugatari/tools/ensure-landing-sharing.mjs
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
+          node --check yorugatari/assets/landing-share.js
           node yorugatari/tools/normalize-legacy-story-attributes.mjs
           node yorugatari/tools/normalize-engagement.mjs
+          node yorugatari/tools/ensure-landing-sharing.mjs
           node <<'NODE'
           const fs = require('node:fs');
           const path = require('node:path');
@@ -74,6 +79,15 @@ jobs:
                 : '20260723-003';
             if (!html.includes(`assets/analytics.js?v=${expectedVersion}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
           }
+          for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
+            const html = fs.readFileSync(path.join(site, file), 'utf8');
+            if (!html.includes('assets/landing-share.js?v=20260724-002')) throw new Error(`Landing share runtime mismatch: ${file}`);
+            if (!html.includes('特集単位の合計だけを匿名で集計します')) throw new Error(`Landing privacy copy mismatch: ${file}`);
+          }
+          const landingShare = fs.readFileSync(path.join(site, 'assets', 'landing-share.js'), 'utf8');
+          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', "RUNTIME_VERSION = '20260724-002'"]) {
+            if (!landingShare.includes(token)) throw new Error(`Landing story start token missing: ${token}`);
+          }
           const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
           if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
           for (const file of stories) {
@@ -81,7 +95,7 @@ jobs:
             if (!html.includes('../assets/engagement.js?v=20260723-003') || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
           }
           const privacy = fs.readFileSync(path.join(site, 'privacy.html'), 'utf8');
-          if (!privacy.includes('固定キャンペーンコード') || !privacy.includes('登録済みコードに一致しない値は破棄')) throw new Error('Privacy campaign disclosure is missing');
+          if (!privacy.includes('固定キャンペーンコード') || !privacy.includes('登録済みコードに一致しない値は破棄') || !privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Privacy campaign or landing conversion disclosure is missing');
           const notFound = fs.readFileSync('404.html', 'utf8');
           if (!notFound.includes('/yorugatari/assets/analytics.js?v=20260723-003')) throw new Error('404 runtime mismatch');
           NODE
@@ -90,13 +104,13 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet -- 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
-            echo "Campaign runtime is already normalized."
+            echo "Campaign and landing runtime is already normalized."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
-          git commit -m "Normalize Yorugatari campaign runtime [skip ci]"
+          git commit -m "Normalize Yorugatari campaign and landing runtime [skip ci]"
           for attempt in 1 2 3; do
             if git pull --rebase origin main && git push origin HEAD:main; then
               exit 0
@@ -131,6 +145,7 @@ jobs:
           node --check yorugatari/assets/story.js
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
+          node --check yorugatari/assets/landing-share.js
           node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
 
       - name: Wait for published campaign release
