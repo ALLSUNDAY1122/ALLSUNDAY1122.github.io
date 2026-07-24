@@ -25,37 +25,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Apply Round 3 confirmed corrections
-        working-directory: jichitai-compare
-        run: |
-          if node --input-type=module <<'NODE'
-          import { readFile } from 'node:fs/promises';
-          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
-          const round = audit.batches.find((item) => item.round === 3);
-          process.exit(round?.status === 'completed' ? 1 : 0);
-          NODE
-          then
-            node scripts/fix-central-b-accuracy-round3.mjs apply
-          else
-            echo 'Round 3 corrections already finalized.'
-          fi
-      - name: Patch Round 3 municipality summaries
+      - name: Start Round 4 audit batch
         working-directory: jichitai-compare
         run: |
           node --input-type=module <<'NODE'
           import { readFile, writeFile } from 'node:fs/promises';
-          const summaries = {
-            '26364': '笠置町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。広域病児保育の対象年齢・料金・利用方法を現行化。',
-            '26366': '精華町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。学校給食無償化の継続を確認し、子育て世帯専用住宅支援は未確認として記録。',
-            '26463': '伊根町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。こども誰でも通園制度を現行化し、子育て世帯専用住宅支援は未確認として記録。',
-            '29203': '大和郡山市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。小中学校給食費無償化、産後ケア、誰でも通園、子ども加算付き移住支援を反映。'
-          };
-          for (const [code, summary] of Object.entries(summaries)) {
-            const path = `data/municipalities/${code.slice(0, 2)}/${code}.json`;
-            const municipality = JSON.parse(await readFile(path, 'utf8'));
-            municipality.summary = summary;
-            municipality.updatedAt = '2026-07-25';
-            await writeFile(path, JSON.stringify(municipality) + '\n', 'utf8');
+          const path = 'operations/audits/central-b-accuracy-audit-20260725.json';
+          const audit = JSON.parse(await readFile(path, 'utf8'));
+          const round = audit.batches.find((item) => item.round === 4);
+          if (round?.status === 'pending') {
+            round.status = 'in_progress';
+            await writeFile(path, JSON.stringify(audit, null, 2) + '\n', 'utf8');
+            console.log('Round 4 moved to in_progress.');
+          } else {
+            console.log(`Round 4 already ${round?.status ?? 'missing'}.`);
           }
           NODE
       - name: Regenerate and validate municipality data
@@ -75,40 +58,7 @@ jobs:
           path: jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           if-no-files-found: error
           retention-days: 14
-      - name: Finalize Round 3 audit record
-        working-directory: jichitai-compare
-        run: |
-          if node --input-type=module <<'NODE'
-          import { readFile } from 'node:fs/promises';
-          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
-          const output = JSON.parse(await readFile('operations/audits/central-b-accuracy-round-output.json', 'utf8'));
-          const round = audit.batches.find((item) => item.round === 3);
-          process.exit(output.round === 3 && round?.status !== 'completed' ? 0 : 1);
-          NODE
-          then
-            node scripts/fix-central-b-accuracy-round3.mjs finalize
-          else
-            echo 'Round 3 finalization is not required.'
-          fi
-      - name: Normalize audit source changes
-        working-directory: jichitai-compare
-        run: |
-          node --input-type=module <<'NODE'
-          import { readFile, writeFile } from 'node:fs/promises';
-          const codes = [
-            '26209','26210','26211','26213','26214','26303','26322','26343',
-            '26364','26366','26367','26463','29203'
-          ];
-          for (const code of codes) {
-            const municipalityPath = `data/municipalities/${code.slice(0, 2)}/${code}.json`;
-            const municipality = JSON.parse(await readFile(municipalityPath, 'utf8'));
-            await writeFile(municipalityPath, JSON.stringify(municipality) + '\n', 'utf8');
-            const taskPath = `operations/tasks/${code}.json`;
-            const task = JSON.parse(await readFile(taskPath, 'utf8'));
-            await writeFile(taskPath, JSON.stringify(task) + '\n', 'utf8');
-          }
-          NODE
-      - name: Commit Round 3 audit results
+      - name: Commit Round 4 audit state
         run: |
           git restore --source=origin/region/central -- \
             jichitai-compare/data/generated/municipalities.json \
@@ -116,13 +66,10 @@ jobs:
           rm -f jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            jichitai-compare/data/municipalities \
-            jichitai-compare/operations/tasks \
-            jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json
+          git add jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json
           if git diff --cached --quiet; then
-            echo 'No Round 3 changes to commit.'
+            echo 'No Round 4 state changes to commit.'
           else
-            git commit -m 'audit: 中日本B第3回の公開要約を整合'
+            git commit -m 'audit: 中日本B第4回を監査中へ更新'
             git push origin HEAD:${{ github.head_ref }}
           fi
