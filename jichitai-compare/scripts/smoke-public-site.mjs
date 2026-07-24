@@ -3,8 +3,15 @@ import { readFile } from 'node:fs/promises';
 const BASE_URL = 'https://allsunday1122.github.io/jichitai-compare';
 const MAX_ATTEMPTS = 40;
 const RETRY_DELAY_MS = 15000;
-const SAMPLE_CODE = '13123';
-const SAMPLE_NAME = '江戸川区';
+const SAMPLE_MUNICIPALITIES = [
+  { code: '13123', name: '江戸川区' },
+  {
+    code: '30343',
+    name: '九度山町',
+    expectedText: '月10時間',
+    expectUnavailable: true
+  }
+];
 
 const expectedMunicipalities = JSON.parse(
   await readFile(new URL('../data/generated/municipalities.json', import.meta.url), 'utf8')
@@ -48,25 +55,27 @@ async function fetchResource(path, kind = 'text') {
 }
 
 async function verifyPublishedSite() {
+  const resources = await Promise.all([
+    fetchResource('/'),
+    fetchResource('/app.js'),
+    fetchResource('/data/generated/municipalities.json', 'json'),
+    fetchResource('/data/service-definitions.json', 'json'),
+    fetchResource('/about/'),
+    fetchResource('/privacy/'),
+    fetchResource('/sitemap.xml'),
+    ...SAMPLE_MUNICIPALITIES.map(({ code }) => fetchResource(`/municipality/${code}/`))
+  ]);
+
   const [
     html,
     appJs,
     municipalities,
     definitions,
-    samplePage,
     aboutPage,
     privacyPage,
-    sitemap
-  ] = await Promise.all([
-    fetchResource('/'),
-    fetchResource('/app.js'),
-    fetchResource('/data/generated/municipalities.json', 'json'),
-    fetchResource('/data/service-definitions.json', 'json'),
-    fetchResource(`/municipality/${SAMPLE_CODE}/`),
-    fetchResource('/about/'),
-    fetchResource('/privacy/'),
-    fetchResource('/sitemap.xml')
-  ]);
+    sitemap,
+    ...samplePages
+  ] = resources;
 
   assert(html.includes('app.js'), '公開HTMLから app.js を確認できません');
   assert(html.includes('1741自治体・9制度'), '公開HTMLの全国件数表示が不正です');
@@ -101,14 +110,43 @@ async function verifyPublishedSite() {
     );
   }
 
-  const expectedCanonical = `${BASE_URL}/municipality/${SAMPLE_CODE}/`;
-  assert(samplePage.includes(`<h1>${SAMPLE_NAME}</h1>`), '公開自治体ページのh1が不正です');
-  assert(
-    samplePage.includes(`<link rel="canonical" href="${expectedCanonical}">`),
-    '公開自治体ページのcanonicalが不正です'
-  );
-  assert(samplePage.includes('自治体公式情報'), '公開自治体ページに公式情報リンクがありません');
-  assert(!samplePage.includes('制度なし・対象外'), '公開自治体ページに旧誤表示が残っています');
+  SAMPLE_MUNICIPALITIES.forEach((sample, index) => {
+    const samplePage = samplePages[index];
+    const expectedCanonical = `${BASE_URL}/municipality/${sample.code}/`;
+    assert(
+      samplePage.includes(`<h1>${sample.name}</h1>`),
+      `${sample.code}: 公開自治体ページのh1が不正です`
+    );
+    assert(
+      samplePage.includes(`<link rel="canonical" href="${expectedCanonical}">`),
+      `${sample.code}: 公開自治体ページのcanonicalが不正です`
+    );
+    assert(
+      samplePage.includes('自治体公式情報'),
+      `${sample.code}: 公開自治体ページに公式情報リンクがありません`
+    );
+    assert(
+      !samplePage.includes('制度なし・対象外'),
+      `${sample.code}: 公開自治体ページに旧誤表示が残っています`
+    );
+    if (sample.expectedText) {
+      assert(
+        samplePage.includes(sample.expectedText),
+        `${sample.code}: 再監査済みの代表条件を確認できません`
+      );
+    }
+    if (sample.expectUnavailable) {
+      assert(
+        samplePage.includes('公式情報で詳細未確認'),
+        `${sample.code}: unavailableの安全表示を確認できません`
+      );
+    }
+    assert(
+      sitemap.includes(`<loc>${expectedCanonical}</loc>`),
+      `${sample.code}: 公開sitemapに代表自治体ページがありません`
+    );
+  });
+
   assert(aboutPage.includes('<h1>運営・情報掲載方針</h1>'), '運営方針ページを確認できません');
   assert(privacyPage.includes('<h1>プライバシーポリシー</h1>'), 'プライバシーページを確認できません');
 
@@ -118,16 +156,13 @@ async function verifyPublishedSite() {
     sitemapCount === expectedSitemapCount,
     `公開sitemap件数が不正です: ${sitemapCount}/${expectedSitemapCount}`
   );
-  assert(
-    sitemap.includes(`<loc>${expectedCanonical}</loc>`),
-    '公開sitemapに代表自治体ページがありません'
-  );
 
   return {
     municipalityCount: municipalities.municipalities.length,
     serviceCount,
     staticPageCount: expectedPages.municipalityCount,
-    sitemapCount
+    sitemapCount,
+    sampleCount: SAMPLE_MUNICIPALITIES.length
   };
 }
 
@@ -136,7 +171,7 @@ for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
   try {
     const result = await verifyPublishedSite();
     console.log(
-      `公開確認成功: ${result.municipalityCount}自治体・各${result.serviceCount}制度・個別${result.staticPageCount}ページ・sitemap ${result.sitemapCount} URL`
+      `公開確認成功: ${result.municipalityCount}自治体・各${result.serviceCount}制度・個別${result.staticPageCount}ページ・代表${result.sampleCount}自治体・sitemap ${result.sitemapCount} URL`
     );
     process.exit(0);
   } catch (error) {
