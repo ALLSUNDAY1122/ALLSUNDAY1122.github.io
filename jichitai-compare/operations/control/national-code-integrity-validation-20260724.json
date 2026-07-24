@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "validatedAt": "2026-07-24T21:06:00+09:00",
+  "releasePullRequestNumber": 2742,
+  "releaseWorkflowRunNumber": 6586,
+  "releaseWorkflowConclusion": "success",
+  "generatedCommitSha": "48a8c7b5b1209807f10c79db03166715aca89e12",
+  "publishedMunicipalities": 1735,
+  "remainingMunicipalities": 6,
+  "identityValidation": {
+    "status": "success",
+    "municipalityFileCount": 1735,
+    "westMunicipalityCount": 476
+  },
+  "dataValidation": {
+    "status": "success",
+    "taskStateNormalization": "verified/unavailableのみcompletedServicesへ登録し、researching/needs_medium_reviewの先頭をcurrentServiceへ保持"
+  },
+  "notes": [
+    "4地域ブランチを正式担当都道府県コードで再突合した。",
+    "非現行コード40208・40209・46410を除去し、40210八女市を最新region/westから再同期した。",
+    "阿久根市46206を含む地域統合済み自治体をmain公開候補へ追加した。",
+    "生成、全国進捗、自治体識別、task整合性、JavaScript構文の各検証に成功した。"
+  ]
+}
