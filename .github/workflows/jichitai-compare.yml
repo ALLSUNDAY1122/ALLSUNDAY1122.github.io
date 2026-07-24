@@ -61,6 +61,7 @@ jobs:
           node --check app.js
           node --check scripts/generate-municipality-pages.mjs
           node --check scripts/validate-municipality-pages.mjs
+          node --check scripts/smoke-public-site.mjs
 
       - name: Confirm generated files are committed
         if: github.event_name == 'push'
