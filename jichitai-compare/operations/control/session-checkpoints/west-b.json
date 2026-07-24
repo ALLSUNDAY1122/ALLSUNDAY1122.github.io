@@ -5,7 +5,7 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-24T23:29:00+09:00",
+  "updatedAt": "2026-07-24T23:42:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -38,10 +38,12 @@
     "allMunicipalityOfficialLinkValidationCiRunNumber": 6826,
     "publicSummaryCleanupPullRequestNumber": 2871,
     "publicSummaryCleanupCiRunNumber": 6905,
+    "publicSummaryGuardPullRequestNumber": 2891,
+    "publicSummaryGuardCiRunNumber": 6930,
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-24T23:29:00+09:00",
+    "auditedAt": "2026-07-24T23:42:00+09:00",
     "westBExpectedMunicipalityCount": 250,
     "westBActualMunicipalityCount": 250,
     "westBExpectedServiceCount": 2250,
@@ -65,11 +67,12 @@
       "西日本B担当11県250自治体の新規調査は完了済み。",
       "西日本476自治体・4,284制度は完了状態で、全国公開残数は0。",
       "鳥取県18自治体・島根県9自治体の公開要約から内部調査班文言を除去済み。",
+      "西日本B担当250自治体の公開要約内部運用語を通常CIで恒久監視。",
       "新規調査は再開せず、公式情報更新・差し戻し・識別異常・CI失敗を再開条件とする。"
     ]
   },
   "publicSiteMonitoring": {
-    "auditedAt": "2026-07-24T23:29:00+09:00",
+    "auditedAt": "2026-07-24T23:42:00+09:00",
     "status": "passed",
     "pullRequestNumber": 2826,
     "ciRunNumber": 6781,
@@ -140,6 +143,21 @@
       "nationwideMunicipalityCountMaintained": 1741,
       "nationwideServiceCountMaintained": 15669,
       "auditFile": "jichitai-compare/operations/audits/west-b-public-summary-cleanup-20260724.json"
+    },
+    "publicSummaryGuard": {
+      "status": "enabled",
+      "enabledAt": "2026-07-24T23:41:00+09:00",
+      "pullRequestNumber": 2891,
+      "ciRunNumber": 6930,
+      "municipalityCount": 250,
+      "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
+      "forbiddenPhrases": ["調査班", "初期登録対象", "移行監査", "地域正本"],
+      "checks": [
+        "自治体summary",
+        "9制度summary",
+        "自治体別静的ページ",
+        "違反時JSON監査レポート"
+      ]
     }
   }
 }
