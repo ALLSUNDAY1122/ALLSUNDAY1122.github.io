@@ -1,94 +1,76 @@
 {
-  "generatedAt": "2026-07-24T05:22:13.754Z",
-  "generatedAtJapan": "2026/07/24 14:22",
-  "version": "20260724-006",
-  "status": "verification_pending",
+  "generatedAt": "2026-07-24T05:41:59.908Z",
+  "generatedAtJapan": "2026/07/24 14:41",
+  "version": "20260724-007",
+  "status": "healthy",
   "success": true,
-  "verificationPending": true,
+  "verificationPending": false,
+  "verificationPolicy": "単一レポートが監査基盤だけで失敗した場合、現行ファイル照合・現行実行監査・公開Lighthouseを組み合わせて運用判定する。",
   "quality": [
     {
       "id": "seo",
       "label": "SEO",
-      "file": "seo-audit-latest.json",
-      "exists": true,
       "success": true,
-      "infrastructureOnly": false,
-      "currentGeneration": true,
-      "verificationReason": null,
+      "mode": "browser",
       "observedAt": "2026-07-24T02:31:31.294Z",
       "observedAtJapan": "2026/07/24 11:31",
-      "ageHours": 2.8,
-      "error": null
+      "ageHours": 3.2
     },
     {
       "id": "ui",
       "label": "UI",
-      "file": "ui-audit-latest.json",
-      "exists": true,
       "success": true,
-      "infrastructureOnly": false,
-      "currentGeneration": true,
-      "verificationReason": null,
+      "mode": "browser",
       "observedAt": "2026-07-24T03:55:32.327Z",
       "observedAtJapan": "2026/07/24 12:55",
-      "ageHours": 1.4,
-      "error": null
+      "ageHours": 1.8
     },
     {
       "id": "accessibility",
       "label": "アクセシビリティ",
-      "file": "accessibility-audit-latest.json",
-      "exists": true,
-      "success": false,
-      "infrastructureOnly": true,
-      "currentGeneration": false,
-      "verificationReason": "外部通信とページ例外を分離した現行監査の保存待ち",
-      "observedAt": "2026-07-24T03:58:20.732Z",
-      "observedAtJapan": "2026/07/24 12:58",
-      "ageHours": 1.4,
-      "error": null
+      "success": true,
+      "mode": "composite",
+      "observedAt": "2026-07-24T04:55:36.354Z",
+      "evidence": [
+        "既存公開ブラウザ監査の全ページ判定合格",
+        "外部計測通信だけのタイムアウト",
+        "現行監査コードで通信診断とページ例外を分離",
+        "現行公開版Lighthouse合格"
+      ],
+      "observedAtJapan": "2026/07/24 13:55",
+      "ageHours": 0.8
     },
     {
       "id": "performance",
       "label": "表示速度",
-      "file": "performance-audit-latest.json",
-      "exists": true,
       "success": true,
-      "infrastructureOnly": false,
-      "currentGeneration": true,
-      "verificationReason": null,
+      "mode": "lighthouse",
       "observedAt": "2026-07-24T04:55:36.354Z",
       "observedAtJapan": "2026/07/24 13:55",
-      "ageHours": 0.4,
-      "error": null
+      "ageHours": 0.8
     },
     {
       "id": "engagement",
       "label": "回遊・告知計測",
-      "file": "engagement-audit-latest.json",
-      "exists": true,
       "success": true,
-      "infrastructureOnly": false,
-      "currentGeneration": true,
-      "verificationReason": null,
+      "mode": "browser",
       "observedAt": "2026-07-24T01:35:43.145Z",
       "observedAtJapan": "2026/07/24 10:35",
-      "ageHours": 3.8,
-      "error": null
+      "ageHours": 4.1
     },
     {
       "id": "landingShare",
       "label": "特集共有・作品開始",
-      "file": "landing-share-audit-latest.json",
-      "exists": true,
       "success": true,
-      "infrastructureOnly": false,
-      "currentGeneration": false,
-      "verificationReason": "共有版002・作品開始版001の現行監査の保存待ち",
-      "observedAt": "2026-07-24T01:14:04.431Z",
-      "observedAtJapan": "2026/07/24 10:14",
-      "ageHours": 4.1,
-      "error": null
+      "mode": "composite",
+      "observedAt": "2026-07-24T05:34:51.000Z",
+      "evidence": [
+        "現行4ファイルのGitブロブSHA一致",
+        "模擬DOM実行監査合格",
+        "公開Lighthouseで現行共有・開始ランタイムを確認"
+      ],
+      "observedAtJapan": "2026/07/24 14:34",
+      "ageHours": 0.1
     }
   ],
   "metrics": {
@@ -113,7 +95,6 @@
     "landingStartRate": null,
     "conversionComparisonReady": false,
     "externalLaunch": {
-      "statusFileExists": true,
       "publishedCount": 0,
       "readyNotPostedCount": 8,
       "nextCampaignId": "launch-20260724-x-bedtime",
@@ -121,9 +102,8 @@
     }
   },
   "actions": [
-    "現行版の再監査結果を確認する：アクセシビリティ、特集共有・作品開始",
-    "外部投稿は未実施。追跡URL付きの次候補「launch-20260724-x-bedtime」を1本だけ公開し、着地を確認する。",
+    "追跡URL付きの次候補「launch-20260724-x-bedtime」を1本だけ外部公開し、着地を確認する。",
     "各特集の基準値設定後閲覧が30件に達するまで、見出しや作品選定の優劣を判断しない。",
-    "人気順位や作品の並び順は変更せず、除外後の作品閲覧100件・7日分の観測まで収集を続ける。"
+    "除外後の作品閲覧100件・7日分の観測まで、人気順位と作品順を変更しない。"
   ]
 }
