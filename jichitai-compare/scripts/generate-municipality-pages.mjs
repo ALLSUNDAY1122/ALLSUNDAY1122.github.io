@@ -182,7 +182,7 @@ function renderService(service, definition) {
       return value === null ? null : `${field.label}：${value}${field.suffix ?? ''}`;
     })
     .filter(Boolean);
-  const age = formatAge(service.eligibility);
+  const age = definition.eligibilityRule === 'ageRange' ? formatAge(service.eligibility) : null;
   if (age) details.unshift(`年齢目安：${age}`);
   const detailHtml = details.length ? `<p>${escapeHtml(details.join('／'))}</p>` : '';
   const source = service.source?.url
