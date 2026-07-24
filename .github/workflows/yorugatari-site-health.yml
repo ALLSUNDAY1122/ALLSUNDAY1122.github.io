@@ -18,13 +18,14 @@ on:
     branches:
       - main
     paths:
-      - yorugatari/tools/site-health-snapshot.mjs
+      - yorugatari/tools/site-health-snapshot-v2.mjs
       - yorugatari/tools/seo-audit-latest.json
       - yorugatari/tools/ui-audit-latest.json
       - yorugatari/tools/accessibility-audit-latest.json
       - yorugatari/tools/performance-audit-latest.json
       - yorugatari/tools/engagement-audit-latest.json
       - yorugatari/tools/landing-share-audit-latest.json
+      - yorugatari/tools/landing-runtime-static-audit-latest.json
       - yorugatari/tools/analytics-clean-latest.json
       - yorugatari/tools/analytics-snapshot-latest.json
       - yorugatari/tools/landing-conversion-latest.json
@@ -34,7 +35,7 @@ on:
       - .github/workflows/yorugatari-site-health.yml
 
 concurrency:
-  group: yorugatari-site-health
+  group: yorugatari-site-health-v2
   cancel-in-progress: true
 
 permissions:
@@ -57,12 +58,12 @@ jobs:
           node-version: '24'
 
       - name: Validate summary generator
-        run: node --check yorugatari/tools/site-health-snapshot.mjs
+        run: node --check yorugatari/tools/site-health-snapshot-v2.mjs
 
       - name: Generate site health summary
         id: health
         continue-on-error: true
-        run: node yorugatari/tools/site-health-snapshot.mjs
+        run: node yorugatari/tools/site-health-snapshot-v2.mjs
 
       - name: Preserve site health summary
         if: always()
@@ -85,7 +86,7 @@ jobs:
               saved=true
               break
             fi
-            git commit -m "Record Yorugatari site health [skip ci]"
+            git commit -m "Record Yorugatari evidence-based site health [skip ci]"
             if git push origin HEAD:main; then
               saved=true
               break
@@ -108,3 +109,7 @@ jobs:
             yorugatari/tools/site-health-latest.md
           if-no-files-found: error
           retention-days: 30
+
+      - name: Enforce health result
+        if: always()
+        run: test "${{ steps.health.outcome }}" = "success"
