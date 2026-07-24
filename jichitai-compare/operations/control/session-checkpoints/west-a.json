@@ -12,7 +12,7 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T02:41:00+09:00",
+  "updatedAt": "2026-07-25T04:10:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -41,7 +41,7 @@
     }
   ],
   "blocked": [],
-  "nextAction": "10回の誤調査検証は完了。通常の完了後監査へ戻り、公式情報更新、CI異常、公開文言異常が発生した場合のみ再調査する。",
+  "nextAction": "公式情報更新、出典URL異常、CI異常、公開文言異常が発生した場合のみ再調査する。公式出典監査は未解決0件。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
@@ -84,10 +84,23 @@
     "westAPublicSmokePullRequestNumber": 3036,
     "westAPublicSmokeLiveCiRunNumber": 7391,
     "westAPublicSmokeCleanCiRunNumber": 7400,
-    "westAPublicSmokeSampleCount": 10
+    "westAPublicSmokeSampleCount": 14,
+    "westASourceLinkAuditPullRequestNumber": 3051,
+    "westASourceLinkAuditFirstCiRunNumber": 7451,
+    "westASourceLinkAuditNormalGetCiRunNumber": 7470,
+    "westASourceLinkRemediationPullRequestNumbers": [
+      3074,
+      3089,
+      3100
+    ],
+    "westASourceLinkNationalPullRequestNumber": 3119,
+    "westASourceLinkNationalCiRunNumber": 7606,
+    "westAPublicSmokeExtensionPullRequestNumber": 3123,
+    "westAPublicSmokeExtensionLiveCiRunNumber": 7616,
+    "westAPublicSmokeExtensionCleanCiRunNumber": 7619
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-25T02:41:00+09:00",
+    "auditedAt": "2026-07-25T04:10:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -168,7 +181,11 @@
         "correctedMunicipalityCodes": [
           "46218",
           "40448",
-          "46530"
+          "46530",
+          "33346",
+          "43443",
+          "37324",
+          "46533"
         ],
         "checks": [
           "公開生成JSONとmain生成JSONの一致",
@@ -176,8 +193,11 @@
           "訂正前旧文言の不存在",
           "h1・canonical・公式情報リンク・sitemap"
         ],
-        "permanentSampleCount": 10,
-        "status": "enabled"
+        "permanentSampleCount": 14,
+        "status": "enabled",
+        "extensionPullRequestNumber": 3123,
+        "extensionLiveCiRunNumber": 7616,
+        "extensionCleanCiRunNumber": 7619
       }
     },
     "restoredMunicipalities": [
@@ -207,7 +227,41 @@
       "第8回監査で6自治体の防災マップ掲載範囲・避難導線・公式URLを再照合し、全件一致。",
       "第9回監査で東峰村・徳之島町の子ども医療費をunavailableからverifiedへ修正。芸西村は現行条件を確定できずunavailableを維持。",
       "10回の誤調査検証を完了。重大誤り3件を全件修正し、未修正0件。全2,034制度の構造監査と高リスク64項目の公式再照合を実施。",
-      "霧島市・東峰村・徳之島町を公開スモークの恒久対象へ追加し、修正後文言と旧文言不存在をCIで確認する。"
-    ]
+      "霧島市・東峰村・徳之島町を公開スモークの恒久対象へ追加し、修正後文言と旧文言不存在をCIで確認する。",
+      "西日本A担当6県226自治体の公式出典2,444 URLを横断監査し、404・410候補28 URLを修正9・CMS誤検出19・未解決0へ分類した。",
+      "和気町・益城町・小豆島町・和泊町を公開スモークへ追加し、代表14自治体の修正文言・新出典URL・旧情報不存在を恒久監視する。"
+    ],
+    "sourceLinkAudit": {
+      "scope": "西日本A担当6県226自治体の自治体公式URL・9制度主出典・追加出典",
+      "referenceCount": 2691,
+      "uniqueUrlCount": 2444,
+      "initialHardFailureUrlCount": 28,
+      "correctedUrlCount": 9,
+      "confirmedCmsFalsePositiveUrlCount": 19,
+      "unresolvedUrlCount": 0,
+      "remediationPullRequestNumbers": [
+        3074,
+        3089,
+        3100
+      ],
+      "nationalPullRequestNumber": 3119,
+      "nationalCiRunNumber": 7606,
+      "status": "completed_with_corrections"
+    }
+  },
+  "sourceLinkAudit": {
+    "auditFile": "jichitai-compare/operations/audits/west-a-source-link-remediation-final-20260725.json",
+    "auditedAt": "2026-07-25T03:48:00+09:00",
+    "municipalityCount": 226,
+    "referenceCount": 2691,
+    "uniqueUrlCount": 2444,
+    "initialHardFailureUrlCount": 28,
+    "correctedUrlCount": 9,
+    "confirmedCmsFalsePositiveUrlCount": 19,
+    "unresolvedUrlCount": 0,
+    "materialResearchErrorCount": 3,
+    "sourceMisassignmentCount": 1,
+    "sourceMaintenanceOnlyCount": 5,
+    "status": "completed_with_corrections"
   }
 }
