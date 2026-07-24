@@ -21,3 +21,11 @@ jobs:
       - name: Audit active Central B batch
         working-directory: jichitai-compare
         run: node scripts/audit-central-b-accuracy-round.mjs
+      - name: Upload audit round result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: central-b-accuracy-round-result
+          path: jichitai-compare/operations/audits/central-b-accuracy-round-output.json
+          if-no-files-found: error
+          retention-days: 14
