@@ -25,26 +25,118 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Apply Round 7 corrections for diagnosis
-        working-directory: jichitai-compare
-        run: node scripts/fix-central-b-accuracy-round7.mjs apply
-      - name: Generate data and capture validation log
+      - name: Apply Round 7 confirmed corrections
         working-directory: jichitai-compare
         run: |
-          set +e
-          npm run generate 2>&1 | tee operations/audits/round7-generate.log
-          echo ${PIPESTATUS[0]} > operations/audits/round7-generate-status.txt
-          npm run progress 2>&1 | tee operations/audits/round7-progress.log
-          echo ${PIPESTATUS[0]} > operations/audits/round7-progress-status.txt
-          npm run validate:generated 2>&1 | tee operations/audits/round7-validation.log
-          echo ${PIPESTATUS[0]} > operations/audits/round7-validation-status.txt
-          exit 0
-      - name: Upload Round 7 validation diagnostics
+          if node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
+          const round = audit.batches.find((item) => item.round === 7);
+          process.exit(round?.status === 'completed' ? 1 : 0);
+          NODE
+          then
+            node scripts/fix-central-b-accuracy-round7.mjs apply
+          else
+            echo 'Round 7 corrections already finalized.'
+          fi
+      - name: Normalize Round 7 task source lists
+        working-directory: jichitai-compare
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const entries = [
+            ['29','29449'],
+            ['29','29451'],
+            ['29','29453'],
+            ['30','30202'],
+            ['30','30203']
+          ];
+          for (const [prefectureCode, code] of entries) {
+            const municipality = JSON.parse(await readFile(`data/municipalities/${prefectureCode}/${code}.json`, 'utf8'));
+            const taskPath = `operations/tasks/${code}.json`;
+            const task = JSON.parse(await readFile(taskPath, 'utf8'));
+            task.officialSources = [...new Set(Object.values(municipality.services)
+              .map((service) => service?.source?.url)
+              .filter(Boolean))];
+            await writeFile(taskPath, JSON.stringify(task) + '\n', 'utf8');
+          }
+          NODE
+      - name: Regenerate and validate municipality data
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+      - name: Audit current Central B batch
+        working-directory: jichitai-compare
+        run: node scripts/audit-central-b-accuracy-round.mjs
+      - name: Upload audit round result
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: central-b-round7-validation-diagnostics
-          path: |
-            jichitai-compare/operations/audits/round7-*.log
-            jichitai-compare/operations/audits/round7-*-status.txt
+          name: central-b-accuracy-round-result
+          path: jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           if-no-files-found: error
           retention-days: 14
+      - name: Finalize Round 7 audit record
+        working-directory: jichitai-compare
+        run: |
+          if node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
+          const output = JSON.parse(await readFile('operations/audits/central-b-accuracy-round-output.json', 'utf8'));
+          const round = audit.batches.find((item) => item.round === 7);
+          process.exit(output.round === 7 && output.errorCount === 0 && round?.status !== 'completed' ? 0 : 1);
+          NODE
+          then
+            node scripts/fix-central-b-accuracy-round7.mjs finalize
+          else
+            echo 'Round 7 finalization is not required.'
+          fi
+      - name: Normalize Round 7 source changes
+        working-directory: jichitai-compare
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const entries = [
+            ['29','29449'],
+            ['29','29451'],
+            ['29','29453'],
+            ['30','30202'],
+            ['30','30203']
+          ];
+          for (const [prefectureCode, code] of entries) {
+            const municipalityPath = `data/municipalities/${prefectureCode}/${code}.json`;
+            const municipality = JSON.parse(await readFile(municipalityPath, 'utf8'));
+            await writeFile(municipalityPath, JSON.stringify(municipality) + '\n', 'utf8');
+            const taskPath = `operations/tasks/${code}.json`;
+            const task = JSON.parse(await readFile(taskPath, 'utf8'));
+            await writeFile(taskPath, JSON.stringify(task) + '\n', 'utf8');
+          }
+          NODE
+      - name: Commit Round 7 audit results
+        run: |
+          git restore --source=origin/region/central -- \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json
+          rm -f jichitai-compare/operations/audits/central-b-accuracy-round-output.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/data/municipalities/29/29449.json \
+            jichitai-compare/data/municipalities/29/29451.json \
+            jichitai-compare/data/municipalities/29/29453.json \
+            jichitai-compare/data/municipalities/30/30202.json \
+            jichitai-compare/data/municipalities/30/30203.json \
+            jichitai-compare/operations/tasks/29449.json \
+            jichitai-compare/operations/tasks/29451.json \
+            jichitai-compare/operations/tasks/29453.json \
+            jichitai-compare/operations/tasks/30202.json \
+            jichitai-compare/operations/tasks/30203.json \
+            jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json
+          if git diff --cached --quiet; then
+            echo 'No Round 7 changes to commit.'
+          else
+            git commit -m 'audit: 中日本B第7回の誤調査を訂正'
+            git push origin HEAD:${{ github.head_ref }}
+          fi
