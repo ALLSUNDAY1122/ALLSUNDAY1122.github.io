@@ -1,0 +1,36 @@
+name: Generate Jichitai Static Pages 20260724
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  generate-pages:
+    if: github.head_ref == 'feat/jichitai-static-municipality-pages-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/jichitai-static-municipality-pages-20260724
+          fetch-depth: 0
+      - name: Generate and validate 1741 municipality pages
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check scripts/generate-municipality-pages.mjs
+          node --check scripts/validate-municipality-pages.mjs
+      - name: Commit generated pages and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/generate-jichitai-static-pages-20260724.yml
+          git add jichitai-compare/municipality jichitai-compare/data/generated/municipalities.json jichitai-compare/data/generated/municipality-pages.json jichitai-compare/sitemap.xml jichitai-compare/operations/progress.json
+          git commit -m "generate: 全国1741自治体の静的詳細ページを追加"
+          git push origin HEAD:feat/jichitai-static-municipality-pages-20260724
