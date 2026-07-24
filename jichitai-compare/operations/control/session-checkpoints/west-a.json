@@ -12,7 +12,7 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T01:25:00+09:00",
+  "updatedAt": "2026-07-25T02:19:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -41,18 +41,20 @@
     }
   ],
   "blocked": [],
-  "nextAction": "10回の誤調査検証の第6回として、住宅支援の対象世帯、補助率、上限、申請期間・受付状況を担当6県の複雑事例で再照合する。",
+  "nextAction": "10回の誤調査検証は完了。通常の完了後監査へ戻り、公式情報更新、CI異常、公開文言異常が発生した場合のみ再調査する。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
-    "completedRoundCount": 5,
-    "lastCompletedRound": 5,
-    "nextRound": 6,
-    "status": "in_progress",
-    "materialErrorCount": 1,
+    "completedRoundCount": 10,
+    "lastCompletedRound": 10,
+    "nextRound": null,
+    "status": "completed",
+    "materialErrorCount": 3,
     "correctionRequiredCount": 0,
-    "lastAuditedAt": "2026-07-25T01:25:00+09:00",
-    "correctionAppliedCount": 1
+    "lastAuditedAt": "2026-07-25T02:19:00+09:00",
+    "correctionAppliedCount": 3,
+    "directOfficialRecheckCount": 64,
+    "finalAssessment": "completed_with_corrections"
   },
   "completionEvidence": {
     "lastMunicipalityCode": "46206",
@@ -81,7 +83,7 @@
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-25T01:25:00+09:00",
+    "auditedAt": "2026-07-25T02:19:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -177,7 +179,13 @@
       "公開文言検査失敗時はjichitai-validation-report artifactから自治体コードと発生箇所を確認する。",
       "第3回監査で霧島市の病児・病後児保育の施設数・利用料を公式情報に基づき修正。",
       "第4回監査で6自治体の保育料・令和8年度学校給食費12項目を再照合し、全件一致。",
-      "第5回監査で6自治体の産後ケア・一時預かり等12項目を再照合し、全件一致。"
+      "第5回監査で6自治体の産後ケア・一時預かり等12項目を再照合し、全件一致。",
+      "第6回監査で6自治体の住宅支援を再照合し、全件一致。",
+      "第7回監査で6自治体の粗大ごみ料金・予約・直接搬入条件を再照合し、全件一致。",
+      "第8回監査で6自治体の防災マップ掲載範囲・避難導線・公式URLを再照合し、全件一致。",
+      "第9回監査で東峰村・徳之島町の子ども医療費をunavailableからverifiedへ修正。芸西村は現行条件を確定できずunavailableを維持。",
+      "10回の誤調査検証を完了。重大誤り3件を全件修正し、未修正0件。全2,034制度の構造監査と高リスク64項目の公式再照合を実施。",
+      "10回の誤調査検証を完了。重大誤り3件を全件修正し、未修正0件。全2,034制度の構造監査と高リスク64項目の公式再照合を実施。"
     ]
   }
 }

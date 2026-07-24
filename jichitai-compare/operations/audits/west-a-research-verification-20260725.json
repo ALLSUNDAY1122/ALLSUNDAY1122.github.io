@@ -2,11 +2,11 @@
   "schemaVersion": "1.0.0",
   "auditId": "west-a-research-verification-20260725",
   "sessionId": "west-a",
-  "status": "in_progress",
+  "status": "completed",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T01:25:00+09:00",
+  "updatedAt": "2026-07-25T02:19:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 5,
+  "completedRoundCount": 10,
   "scope": {
     "prefectureCodes": [
       "33",
@@ -343,35 +343,306 @@
     {
       "round": 6,
       "title": "住宅支援の対象、補助率、上限、受付状況監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、住宅支援の対象、補助率、上限、申請期間・受付状況を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 6,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "registeredClaim": "空き家中古住宅の購入・リフォーム費の3分の1、通常上限60万円、子育て世帯上限70万円。令和8年度受付は5月1日～12月18日、予算到達で終了",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000080603.html",
+            "https://www.city.okayama.jp/kurashi/0000006210.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "registeredClaim": "離島の空き家を移住者用住宅へ改修する場合90％・上限200万円、店舗等は50％・上限200万円",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/1668.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "registeredClaim": "耐震性の低い木造住宅除却費の23％等、上限30万円。令和8年度はキャンセル分1棟を7月13日～8月14日に再募集",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=10034"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "registeredClaim": "市外から転入する若者・子育て世帯の住宅取得は1人15万円・最大50万円。新婚・子育て賃貸は家賃2か月相当・最大20万円",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/07400239_00002.html",
+            "https://www.city.kitakyushu.lg.jp/contents/07400243_00004.html",
+            "https://www.city.kitakyushu.lg.jp/contents/07400241_00003.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "registeredClaim": "空き家バンク物件の不要物撤去・改修・引越費用を50％補助し、上限5万円・40万円・5万円、併用最大50万円",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji0036921/index.html"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "registeredClaim": "令和8年4月～令和11年3月の中山間地域移住・転居者に住宅取得・増改築・家賃補助。40歳未満既婚者20万円、子1人10万円・最大30万円加算",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/kyodo/shise/ijuteju/support/hurusatosouseiseido.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 7,
       "title": "粗大ごみの料金、予約、持込条件監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、粗大ごみの料金、予約方法、直接搬入、本人・住所確認条件を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 6,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "registeredClaim": "戸別収集は200円・500円・1,000円・1,500円等、直接持込みは無料。電話・インターネットで予約し、東部・西部リサイクルプラザへ搬入",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000005008.html",
+            "https://www.city.okayama.jp/kurashi/0000005299.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "registeredClaim": "クリントピア丸亀へ平日・特別持込日の13時～16時に搬入。家庭ごみ10kg当たり100円、粗大ごみシール不要、住所確認、代理搬入は委任状",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/2394.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "registeredClaim": "一般廃棄物最終処分場へ事前予約して本人が搬入。10kg未満150円、10～20kg未満300円、以降10kgごと150円。受付カードと免許証を確認",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=3756",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=9607"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "registeredClaim": "指定袋45Lに入らない物等を事前申込制で地区別に収集。1個300円・500円・700円・1,000円、納付券またはオンライン決済、朝8時30分までに排出",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/924_10259.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "registeredClaim": "エコエイトやつしろへ平日・土曜午前、月1回の日曜特別開設日に搬入。10kg当たり150円、品目別追加手数料の場合あり、免許証で住所確認",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji0039012/index.html"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "registeredClaim": "地区別に霧島市クリーンセンターまたは牧園横川クリーンステーション等へ直接搬入。市内発生ごみ確認のため顔写真付き本人確認書類が必要",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/kankyo/kurashi/gomi/shushu/mochikomi.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 8,
       "title": "防災マップの災害種別、避難所、公開URL監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、防災マップの災害種別、避難場所・避難所導線、公式公開URLの有効性を再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 6,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "registeredClaim": "WEB版で洪水・土砂、高潮、地震、津波、避難所開設状況・経路を確認可能。内水等の関連マップも公開",
+          "officialUrls": [
+            "https://www.city.okayama.jp/0000047403.html",
+            "https://www.city.okayama.jp/0000012077.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "registeredClaim": "洪水浸水、土砂災害、ため池氾濫、津波浸水、指定緊急避難場所と災害別対策を掲載。Web地図とPDFを公開",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/site/bousaiinfo/2424.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "registeredClaim": "地震・津波、物部川・国分川洪水、土砂災害、雨水出水内水、ため池の個別ハザードマップを公式URLで公開",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=2170",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=1588",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=1587",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=9934",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8062"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "registeredClaim": "土砂災害、洪水、高潮・台風、地震、津波を扱う防災ガイドブックと区別ハザードマップを公開",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/13801096.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "registeredClaim": "2026年3月更新の校区版で球磨川等の洪水、高潮、津波、土砂災害、地震の揺れやすさ、避難場所を掲載し、Web版も公開",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/bousai/kiji00326174/index.html",
+            "https://www.city.yatsushiro.lg.jp/bousai/hazardmap/agree.html?lay=saigai-01"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "registeredClaim": "洪水・内水・高潮・津波、土砂災害等の浸水想定・警戒区域と避難情報を確認できるハザードマップを公開",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/anshin/hazard_map.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 9,
       "title": "unavailableへ整理した75自治体・189制度のリスク抽出監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "unavailableへ整理した75自治体・189制度を対象に、誤判定リスクが高い子ども医療費3自治体を最優先で公式条例・公式広報・現行支援リンクから再照合",
+      "reviewedMunicipalityCount": 75,
+      "reviewedServiceCount": 189,
+      "prioritySampleCount": 3,
+      "samples": [
+        {
+          "code": "39307",
+          "name": "芸西村",
+          "service": "childMedical",
+          "result": "retained_unavailable",
+          "finding": "令和8年3月掲載の村支援制度一覧で医療費無料制度の実施は再確認できたが、リンク先制度ページの本文取得が不安定で、対象年齢・除外条件を確定できないため保守的判定を維持",
+          "officialUrl": "https://www.vill.geisei.kochi.jp/pages/m001787.php"
+        },
+        {
+          "code": "40448",
+          "name": "東峰村",
+          "service": "childMedical",
+          "result": "corrected",
+          "finding": "現行条例で18歳年度末まで、保険診療自己負担相当額の支給、医療証による現物給付を確認",
+          "officialUrl": "https://www1.g-reiki.net/vill.toho/reiki_honbun/r158RG00000188.html"
+        },
+        {
+          "code": "46530",
+          "name": "徳之島町",
+          "service": "childMedical",
+          "result": "corrected",
+          "finding": "町広報で課税世帯は未就学児、非課税世帯は18歳年度末まで、2025年4月受診分から窓口負担無料を確認",
+          "officialUrl": "https://www.tokunoshima-town.org/kikakuka/chose/koho/kohoshi/2025koho.html"
+        }
+      ],
+      "result": "corrected",
+      "materialErrorCount": 2,
+      "correctionAppliedCount": 2,
+      "retainedUnavailableCount": 1,
+      "note": "初期抽出では3件を誤判定候補としたが、芸西村は制度実施のみ確認でき、現行条件の本文を安定取得できないためunavailableを維持。東峰村・徳之島町の2件のみverifiedへ修正。"
     },
     {
       "round": 10,
       "title": "発見事項の再検証、修正、最終集計",
-      "status": "planned"
+      "status": "completed",
+      "method": "発見3件を公式情報で再検証し、地域CI・全国公開反映・生成JSON・静的ページ・task件数の整合性を確認して最終集計",
+      "findingsReverified": [
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "service": "sickChildCare",
+          "result": "resolved",
+          "evidence": "公式ページで7施設、1日1,200円、半日600円、生活保護世帯無料を再確認",
+          "regionalPullRequestNumber": 2960,
+          "regionalCiRunNumber": 7133,
+          "nationalPullRequestNumber": 2986,
+          "nationalCiRunNumber": 7223
+        },
+        {
+          "code": "40448",
+          "name": "東峰村",
+          "service": "childMedical",
+          "result": "resolved",
+          "evidence": "現行条例で18歳年度末まで、保険診療自己負担相当額の支給、医療証による現物給付を再確認",
+          "regionalPullRequestNumber": 3021,
+          "regionalCiRunNumber": 7346
+        },
+        {
+          "code": "46530",
+          "name": "徳之島町",
+          "service": "childMedical",
+          "result": "resolved",
+          "evidence": "町広報で課税世帯は未就学児、非課税世帯は18歳年度末まで、2025年4月受診分から窓口負担無料を再確認",
+          "regionalPullRequestNumber": 3021,
+          "regionalCiRunNumber": 7346
+        }
+      ],
+      "structuralAuditMunicipalityCount": 226,
+      "structuralAuditServiceCount": 2034,
+      "directOfficialRecheckCount": 64,
+      "unavailableInventoryMunicipalityCount": 75,
+      "unavailableInventoryServiceCount": 189,
+      "materialErrorCount": 3,
+      "correctionAppliedCount": 3,
+      "unresolvedErrorCount": 0,
+      "result": "completed_with_corrections",
+      "limitation": "担当226自治体・2,034制度の構造と生成整合性は全件検証したが、全制度本文を1件ずつ公式ページで再読したものではない。直接公式再照合は高変動・高リスク項目を中心とする64項目。"
     }
   ],
   "summary": {
-    "materialErrorCount": 1,
+    "materialErrorCount": 3,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 5,
-    "currentAssessment": "第5回は6自治体12項目が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
-    "correctionAppliedCount": 1
+    "roundsRemaining": 0,
+    "currentAssessment": "10回監査を完了。重大誤り3件を検出し全件修正済み。未修正0件。構造監査は226自治体・2,034制度、直接公式再照合は64項目。",
+    "correctionAppliedCount": 3
   },
-  "nextAction": "第6回として、住宅支援の対象世帯、補助率、上限、申請期間・受付状況を担当6県の複雑事例で再照合する。"
+  "nextAction": "通常の完了後監査へ戻り、公式情報更新、CI異常、公開文言異常が発生した場合のみ再調査する。"
 }
