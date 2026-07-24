@@ -1,0 +1,179 @@
+name: North B sanity audit round 08
+
+on:
+  push:
+    branches:
+      - 'audit/north-b-sanity-round-08-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[north-b-round08-apply]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply round 08 corrections
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          checked = '2026-07-25'
+          updated = '2026-07-25T03:05:00+09:00'
+          order = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention']
+
+          def load(path):
+              return json.loads(path.read_text(encoding='utf-8'))
+
+          def save(path, data):
+              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          def add_sources(service, urls):
+              existing = service.get('additionalSources', [])
+              rows = []
+              seen = {service['source']['url']}
+              for row in existing + [{'url': u, 'checkedAt': checked} for u in urls]:
+                  url = row.get('url')
+                  if url and url not in seen:
+                      seen.add(url)
+                      rows.append({'url': url, 'checkedAt': row.get('checkedAt', checked)})
+              if rows:
+                  service['additionalSources'] = rows
+              else:
+                  service.pop('additionalSources', None)
+
+          # 酒田市: こども誰でも通園制度を追加
+          p = root / 'data/municipalities/06/06204.json'
+          m = load(p)
+          s = m['services']['temporaryChildcare']
+          old = s['source']['url']
+          s['summary'] = '一時預かりに加え、酒田市在住の生後6か月から3歳未満の未就園児が月10時間まで利用できるこども誰でも通園制度を実施する。'
+          s['eligibility'] = {'minAgeMonths': 3, 'maxAgeYears': 5}
+          s['details'] = {
+              'temporaryCare': '家庭での育児が一時的に困難となる未就園の就学前児童を、市内の保育所・認定こども園等で一時的に預かる。施設により生後3か月または5か月から利用可能',
+              'anyChildTarget': '酒田市に住所があり、保育所・認定こども園・幼稚園等に通っていない生後6か月から満3歳未満の子ども',
+              'anyChildLimit': '子ども1人につき月10時間まで',
+              'anyChildFee': '1時間当たりおおむね300円。生活保護世帯・市民税非課税世帯等は負担軽減の対象となる場合がある',
+              'anyChildFacilities': '市内8施設で順次実施し、施設ごとに利用可能日・時間・受入人数を設定',
+              'anyChildApplication': 'こども誰でも通園制度総合支援システムで認定申請後、実施施設との面談・予約を行う'
+          }
+          s['source'] = {'url': 'https://www.city.sakata.lg.jp/kosodate/kosodate/hoikuen/kosodate0220251224.html', 'checkedAt': checked}
+          add_sources(s, [old])
+          m['updatedAt'] = checked
+          save(p, m)
+
+          # 尾花沢市: 学校給食費完全無償化・こども誰でも通園制度を追加
+          p = root / 'data/municipalities/06/06212.json'
+          m = load(p)
+          budget = 'https://www.city.obanazawa.yamagata.jp/files/original/2026031916571799869132137.pdf'
+          s = m['services']['schoolMeals']
+          old_school = s['source']['url']
+          s['status'] = 'verified'
+          s['summary'] = '令和8年度、市内小中学校の学校給食費を完全無償化する。'
+          s['eligibility'] = {'minAgeMonths': 72, 'maxAgeYears': 15}
+          s['details'] = {
+              'target': '尾花沢市立小中学校に在籍する児童生徒の保護者',
+              'selfCookingSchools': '自校調理方式の小学校3校は、給食費を全額補助して保護者負担を無料化',
+              'centerSchools': '共同調理場方式の中学校1校・小学校2校は、給食費の保護者負担を免除',
+              'scope': '市立小学校5校・中学校1校の全児童生徒を対象とする完全無償化',
+              'fiscalYear': '2026年度（令和8年度）'
+          }
+          s['source'] = {'url': budget, 'checkedAt': checked}
+          add_sources(s, [old_school])
+
+          s = m['services']['temporaryChildcare']
+          old_temp = s['source']['url']
+          s['summary'] = '一時預かり等に加え、2026年度から未就園の生後6か月から満3歳未満児を対象とするこども誰でも通園制度を実施する。'
+          s['eligibility'] = {'minAgeMonths': 2, 'maxAgeYears': 5}
+          s['details'] = {
+              'temporaryCare': '生後2か月頃から就学前までを対象に、一時預かり・特定保育・休日預かりを市内施設で実施',
+              'temporaryLimit': '一時預かりは月12日以内。特定保育は月8日以上で3か月以内',
+              'temporaryFee': '1日3歳以上1,100円、3歳未満2,200円。延長料金あり',
+              'anyChildTarget': '保育所等に通っていない生後6か月から満3歳未満の子ども',
+              'anyChildProgram': '2026年度に乳児等通園支援事業（こども誰でも通園制度）を新規実施し、市内保育施設で受け入れる',
+              'guidance': '実施施設、利用時間、料金、申請方法は市の利用者向け案内で確認する'
+          }
+          s['source'] = {'url': budget, 'checkedAt': checked}
+          add_sources(s, [old_temp])
+          m['summary'] = '尾花沢市の子育て・暮らしに関する9制度を自治体公式情報で確認できます。'
+          m['updatedAt'] = checked
+          save(p, m)
+
+          # task更新
+          notes = {
+              '06204': '北日本B誤調査ざっくり再検証 第8回: 2026年度のこども誰でも通園制度が未反映だったため、対象、月10時間上限、料金、申請方法、実施施設を追加。',
+              '06212': '北日本B誤調査ざっくり再検証 第8回: 令和8年度の学校給食費完全無償化と、こども誰でも通園制度の新規実施を追加。学校給食費はunavailableからverifiedへ訂正。'
+          }
+          for code in ['06204', '06212']:
+              mp = root / f'data/municipalities/06/{code}.json'
+              tp = root / f'operations/tasks/{code}.json'
+              municipality = load(mp)
+              task = load(tp)
+              statuses = [municipality['services'][k]['status'] for k in order]
+              task['verifiedCount'] = statuses.count('verified')
+              task['researchingCount'] = statuses.count('researching')
+              task['unavailableCount'] = statuses.count('unavailable')
+              task['needsMediumReviewCount'] = statuses.count('needs_medium_review')
+              task['lastCheckedAt'] = checked
+              task['lastUpdatedAt'] = updated
+              task['lastUpdatedBy'] = '北日本調査班B'
+              task['officialSources'] = list(dict.fromkeys(municipality['services'][k]['source']['url'] for k in order))
+              if notes[code] not in task['notes']:
+                  task['notes'].append(notes[code])
+              save(tp, task)
+
+          # 監査台帳更新
+          ap = root / 'operations/audits/north-b-research-sanity-20260725.json'
+          audit = load(ap)
+          audit['completedRounds'] = 8
+          audit['remainingRounds'] = 2
+          audit['auditedMunicipalityCount'] = 87
+          audit['remainingMunicipalityCount'] = 20
+          audit['auditedAt'] = updated
+          audit['round08'] = {
+              'codes': ['06203','06204','06205','06206','06207','06208','06209','06210','06211','06212','06213'],
+              'municipalityCount': 11,
+              'serviceCount': 99,
+              'highRiskChecks': 30,
+              'confirmedErrorCount': 3,
+              'confirmedErrors': [
+                  {'code':'06204','municipality':'酒田市','service':'temporaryChildcare','before':'通常の一時預かりのみ','after':'2026年度のこども誰でも通園制度を併記','reason':'2026年3月更新の市公式利用案内が未反映'},
+                  {'code':'06212','municipality':'尾花沢市','service':'temporaryChildcare','before':'一時預かり・特定保育・休日預かりのみ','after':'2026年度新規のこども誰でも通園制度を併記','reason':'令和8年度主要事業の乳児等通園支援事業が未反映'},
+                  {'code':'06212','municipality':'尾花沢市','service':'schoolMeals','before':'unavailable','after':'verified（市立小中学校の給食費完全無償化）','reason':'令和8年度主要事業で自校調理校の全額補助と共同調理場方式校の保護者負担免除を確認'}
+              ],
+              'evidenceLimitations': [
+                  {'code':'06213','municipality':'南陽市','service':'temporaryChildcare','note':'令和8年度の利用者向けこども誰でも通園制度案内を取得できず、通常の一時預かり情報を維持'},
+                  {'code':'06213','municipality':'南陽市','service':'schoolMeals','note':'令和7年度の第3子以降助成は確認できるが、令和8年度の継続・助成率を直接資料で確認できず変更しなかった'},
+                  {'code':'06213','municipality':'南陽市','service':'housingSupport','note':'令和8年度の募集条件を直接資料で確認できず、unavailableを維持'}
+              ],
+              'noConfirmedErrorCodes': ['06203','06205','06206','06207','06208','06209','06210','06211','06213']
+          }
+          save(ap, audit)
+
+          # チェックポイント更新
+          cp = root / 'operations/control/session-checkpoints/north-b.json'
+          checkpoint = load(cp)
+          checkpoint['updatedAt'] = updated
+          checkpoint['workingBranch'] = 'audit/north-b-sanity-round-08-20260725'
+          checkpoint['pullRequestNumber'] = None
+          checkpoint['ciStatus'] = 'pending'
+          checkpoint['nextAction'] = '北日本B誤調査ざっくり再検証第8回は11自治体・99制度、高リスク30項目を確認。酒田市のこども誰でも通園制度、尾花沢市のこども誰でも通園制度と学校給食費完全無償化を訂正。地域PR作成、CI、region/north統合、main同期を行う。監査完了8/10回・87/107自治体・残り20自治体。'
+          save(cp, checkpoint)
+          PY
+      - name: Commit corrections
+        run: |
+          rm .github/workflows/north-b-sanity-round-08.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare .github/workflows/north-b-sanity-round-08.yml
+          git commit -m '[north-b-round08-apply] audit: apply North-B sanity round 08'
+          git push
