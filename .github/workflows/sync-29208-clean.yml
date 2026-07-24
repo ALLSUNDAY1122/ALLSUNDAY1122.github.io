@@ -1,0 +1,44 @@
+name: Sync 29208 Clean
+on:
+  pull_request:
+    branches: [region/central]
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  sync:
+    if: github.head_ref == 'fix/29208-current-fy2026-details-clean'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/29208-current-fy2026-details-clean
+          fetch-depth: 0
+      - name: Import validated Gose files
+        shell: bash
+        run: |
+          git fetch origin fix/29208-current-fy2026-details
+          git show origin/fix/29208-current-fy2026-details:jichitai-compare/data/municipalities/29/29208.json > jichitai-compare/data/municipalities/29/29208.json
+          git show origin/fix/29208-current-fy2026-details:jichitai-compare/operations/tasks/29208.json > jichitai-compare/operations/tasks/29208.json
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'jichitai-compare/operations/tasks/29208.json';
+          const task = JSON.parse(fs.readFileSync(path, 'utf8'));
+          task.status = 'pr_open';
+          task.currentService = null;
+          task.nextServiceIndex = 9;
+          task.currentBranch = 'fix/29208-current-fy2026-details-clean';
+          task.pullRequestNumber = 0;
+          task.lastCheckedAt = '2026-07-24';
+          task.lastUpdatedAt = '2026-07-24T11:15:00+09:00';
+          task.lastUpdatedBy = '統括B';
+          task.blockers = [];
+          task.notes = [...(task.notes || []).filter((note) => !String(note).startsWith('地方統合PR #')), '完全CI診断で生成・進捗・データ検証成功を確認し、最新region/centralからクリーンブランチへ再構成。'];
+          fs.writeFileSync(path, JSON.stringify(task));
+          NODE
+          rm -f .github/workflows/sync-29208-clean.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/29/29208.json jichitai-compare/operations/tasks/29208.json .github/workflows/sync-29208-clean.yml
+          git commit -m 'fix: 御所市の令和8年度制度条件をクリーン反映'
+          git push origin HEAD:fix/29208-current-fy2026-details-clean
