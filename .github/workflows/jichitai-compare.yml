@@ -13,7 +13,7 @@ on:
       - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
@@ -30,17 +30,41 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Apply West-A source corrections batch02
+        if: github.head_ref == 'fix/west-a-source-links-batch02-20260725'
+        working-directory: jichitai-compare
+        run: node scripts/apply-west-a-source-links-batch02.mjs
+
+      - name: Commit applied West-A corrections batch02
+        if: github.head_ref == 'fix/west-a-source-links-batch02-20260725'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/40/40610.json \
+                  jichitai-compare/data/municipalities/40/40646.json \
+                  jichitai-compare/data/municipalities/43/43443.json \
+                  jichitai-compare/operations/tasks/40610.json \
+                  jichitai-compare/operations/tasks/40646.json \
+                  jichitai-compare/operations/tasks/43443.json \
+                  jichitai-compare/operations/audits/west-a-source-link-remediation-batch02-20260725.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: 西日本Aの出典監査第2弾を反映'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
+
       - name: Reject unrelated changes
         working-directory: jichitai-compare
         env:
           SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.sha }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: npm run check:scope
 
       - name: Generate public municipality data
@@ -66,7 +90,9 @@ jobs:
 
       - name: Check JavaScript syntax
         working-directory: jichitai-compare
-        run: node --check app.js
+        run: |
+          node --check app.js
+          node --check scripts/apply-west-a-source-links-batch02.mjs
 
       - name: Confirm generated files are committed
         if: github.event_name == 'push'
