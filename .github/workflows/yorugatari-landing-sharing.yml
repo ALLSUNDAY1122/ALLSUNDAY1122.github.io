@@ -51,7 +51,11 @@ jobs:
             const html = fs.readFileSync(`yorugatari/${file}`, 'utf8');
             if (!html.includes('id="landingShareButton"')) throw new Error(`Share button missing: ${file}`);
             if (!html.includes('id="landingCopyButton"')) throw new Error(`Copy button missing: ${file}`);
-            if (!html.includes('assets/landing-share.js?v=20260724-001')) throw new Error(`Share runtime missing: ${file}`);
+            if (!html.includes('assets/landing-share.js?v=20260724-002')) throw new Error(`Share runtime missing: ${file}`);
+          }
+          const runtime = fs.readFileSync('yorugatari/assets/landing-share.js', 'utf8');
+          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', 'sessionStorage.getItem(storyStartKey)']) {
+            if (!runtime.includes(token)) throw new Error(`Story start token missing: ${token}`);
           }
           NODE
 
