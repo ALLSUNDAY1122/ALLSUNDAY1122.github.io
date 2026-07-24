@@ -1,0 +1,105 @@
+name: Temporary Atomic Main Sync for Nishiawakura
+
+on:
+  push:
+    branches:
+      - sync/main-west-a-nishiawakura-atomic-20260725
+    paths:
+      - '.github/workflows/temp-main-west-a-nishiawakura-atomic.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout synchronization branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Rebuild and fast-forward main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          for attempt in 1 2 3 4 5
+          do
+            echo "Atomic main sync attempt ${attempt}"
+            git fetch origin main region/west
+            BASE_SHA="$(git rev-parse origin/main)"
+            git reset --hard "$BASE_SHA"
+
+            for path in \
+              jichitai-compare/data/municipalities/33/33643.json \
+              jichitai-compare/operations/tasks/33643.json \
+              jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json
+            do
+              mkdir -p "$(dirname "$path")"
+              git show "origin/region/west:$path" > "$path"
+            done
+
+            cd jichitai-compare
+            npm run generate
+            npm run progress
+            cd ..
+
+            git add \
+              jichitai-compare/data/municipalities/33/33643.json \
+              jichitai-compare/operations/tasks/33643.json \
+              jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json \
+              jichitai-compare/data/generated/municipalities.json \
+              jichitai-compare/data/generated/municipality-pages.json \
+              jichitai-compare/operations/progress.json \
+              jichitai-compare/municipality/33643/index.html \
+              jichitai-compare/sitemap.xml
+
+            if git diff --cached --quiet; then
+              echo 'No synchronization changes remain.'
+              exit 0
+            fi
+
+            git commit -m 'fix: 西粟倉村の幼稚園保育料訂正を全国公開へ同期'
+            HEAD_SHA="$(git rev-parse HEAD)"
+
+            cd jichitai-compare
+            SCOPE_BASE_SHA="$BASE_SHA" SCOPE_HEAD_SHA="$HEAD_SHA" npm run check:scope
+            npm run generate
+            npm run progress
+            npm run validate:generated
+            node --check app.js
+            node --check scripts/generate-municipality-pages.mjs
+            node --check scripts/validate-municipality-pages.mjs
+            node --check scripts/smoke-public-site.mjs
+            changed="$(git status --porcelain -- data/generated/municipalities.json data/generated/municipality-pages.json operations/progress.json municipality sitemap.xml)"
+            if [ -n "$changed" ]; then
+              echo 'Generated files changed after commit.'
+              git status --short -- data/generated/municipalities.json data/generated/municipality-pages.json operations/progress.json municipality sitemap.xml
+              exit 1
+            fi
+            cd ..
+
+            git fetch origin main
+            if [ "$(git rev-parse origin/main)" != "$BASE_SHA" ]; then
+              echo 'main advanced during validation; rebuilding.'
+              continue
+            fi
+
+            git push origin HEAD:main
+            echo 'Nishiawakura correction synchronized to main.'
+            exit 0
+          done
+
+          echo 'Unable to obtain a stable main window.'
+          exit 1
