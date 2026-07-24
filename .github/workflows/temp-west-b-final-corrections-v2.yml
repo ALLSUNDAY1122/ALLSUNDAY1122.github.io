@@ -17,7 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/west-b-cycles09-10-corrections-20260725
+          ref: main
+          fetch-depth: 0
+      - name: Reset correction branch to latest main
+        shell: bash
+        run: |
+          git checkout -B fix/west-b-cycles09-10-corrections-20260725 origin/main
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -34,7 +39,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          rm -f .github/west-b-final-corrections.trigger
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jichitai-compare/data/municipalities/45/45442.json
@@ -54,11 +58,11 @@ jobs:
           git add jichitai-compare/municipality/47328/index.html
           git add jichitai-compare/municipality/47350/index.html
           git add jichitai-compare/operations/progress.json
-          git add .github/west-b-final-corrections.trigger
-          if ! git diff --cached --quiet; then
-            git commit -m "fix: 西日本B最終監査の内容・出典修正を反映"
-            git push origin HEAD:fix/west-b-cycles09-10-corrections-20260725
+          if git diff --cached --quiet; then
+            exit 0
           fi
+          git commit -m "fix: 西日本B最終監査の内容・出典修正を反映"
+          git push --force-with-lease origin HEAD:fix/west-b-cycles09-10-corrections-20260725
           if ! gh pr view fix/west-b-cycles09-10-corrections-20260725 --json number >/dev/null 2>&1; then
             gh pr create --base main --head fix/west-b-cycles09-10-corrections-20260725 \
               --title "fix: 西日本B第9・10回の内容・出典修正を反映" \
