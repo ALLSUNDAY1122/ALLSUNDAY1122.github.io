@@ -18,8 +18,21 @@ const INTERNAL_WORKFLOW_PHRASES = [
   '最終検証を実施',
   '次の自治体'
 ];
-const WEST_B_PREFECTURE_CODES = new Set(['31', '32', '34', '35', '36', '38', '41', '42', '44', '45', '47']);
-const WEST_B_INTERNAL_PHRASES = ['調査班', '初期登録対象', '移行監査', '地域正本'];
+const WEST_INTERNAL_PHRASES = ['調査班', '初期登録対象', '移行監査', '地域正本'];
+const WEST_PUBLIC_COPY_GUARDS = [
+  {
+    scope: 'west-a',
+    label: '西日本A',
+    municipalityCount: 226,
+    prefectureCodes: new Set(['33', '37', '39', '40', '43', '46'])
+  },
+  {
+    scope: 'west-b',
+    label: '西日本B',
+    municipalityCount: 250,
+    prefectureCodes: new Set(['31', '32', '34', '35', '36', '38', '41', '42', '44', '45', '47'])
+  }
+];
 
 const generated = JSON.parse(await readFile(GENERATED_FILE, 'utf8'));
 const manifest = JSON.parse(await readFile(MANIFEST_FILE, 'utf8'));
@@ -69,11 +82,12 @@ for (const municipality of municipalities) {
     }
   }
 
-  if (WEST_B_PREFECTURE_CODES.has(municipality.prefectureCode)) {
-    for (const phrase of WEST_B_INTERNAL_PHRASES) {
+  for (const guard of WEST_PUBLIC_COPY_GUARDS) {
+    if (!guard.prefectureCodes.has(municipality.prefectureCode)) continue;
+    for (const phrase of WEST_INTERNAL_PHRASES) {
       for (const summary of publicSummaries) {
         if (!summary.value.includes(phrase)) continue;
-        errors.push(`${municipality.code}: 西日本B公開要約に内部運用語「${phrase}」が含まれています`);
+        errors.push(`${municipality.code}: ${guard.label}公開要約に内部運用語「${phrase}」が含まれています`);
         internalWorkflowViolations.push({
           code: municipality.code,
           prefectureCode: municipality.prefectureCode ?? null,
@@ -82,7 +96,7 @@ for (const municipality of municipalities) {
           source: summary.field,
           phrase,
           text: summary.value,
-          scope: 'west-b'
+          scope: guard.scope
         });
       }
     }
@@ -128,10 +142,11 @@ for (let start = 0; start < pages.length; start += 100) {
           text: null
         });
       }
-      if (WEST_B_PREFECTURE_CODES.has(municipality?.prefectureCode)) {
-        for (const phrase of WEST_B_INTERNAL_PHRASES) {
+      for (const guard of WEST_PUBLIC_COPY_GUARDS) {
+        if (!guard.prefectureCodes.has(municipality?.prefectureCode)) continue;
+        for (const phrase of WEST_INTERNAL_PHRASES) {
           if (!html.includes(phrase)) continue;
-          errors.push(`${page.code}: 西日本B公開ページに内部運用語「${phrase}」が含まれています`);
+          errors.push(`${page.code}: ${guard.label}公開ページに内部運用語「${phrase}」が含まれています`);
           internalWorkflowViolations.push({
             code: page.code,
             prefectureCode: municipality?.prefectureCode ?? null,
@@ -140,7 +155,7 @@ for (let start = 0; start < pages.length; start += 100) {
             source: page.path,
             phrase,
             text: null,
-            scope: 'west-b'
+            scope: guard.scope
           });
         }
       }
@@ -177,7 +192,10 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公開要約一致・公式サイト/比較導線・内部作業文言なし・西日本B公開要約250自治体・sitemap ${sitemapCount} URL`);
+const westGuardSummary = WEST_PUBLIC_COPY_GUARDS
+  .map((guard) => `${guard.label}公開要約${guard.municipalityCount}自治体`)
+  .join('・');
+console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公開要約一致・公式サイト/比較導線・内部作業文言なし・${westGuardSummary}・sitemap ${sitemapCount} URL`);
 
 function escapeHtml(value) {
   return String(value)
