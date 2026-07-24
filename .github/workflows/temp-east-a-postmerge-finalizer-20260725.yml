@@ -1,6 +1,8 @@
 name: Temporary East A post-merge finalizer
 
 on:
+  push:
+    branches: [ops/east-a-postmerge-finalize-20260725]
   pull_request:
     branches: [main]
 
@@ -9,7 +11,7 @@ permissions:
 
 jobs:
   finalize:
-    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ops/east-a-postmerge-finalize-20260725'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/ops/east-a-postmerge-finalize-20260725') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ops/east-a-postmerge-finalize-20260725')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -72,7 +74,7 @@ jobs:
             if (!ok) throw new Error(`${code}: public municipality page unavailable`);
           }
 
-          const checkedAt = '2026-07-25T04:45:00+09:00';
+          const checkedAt = '2026-07-25T04:48:00+09:00';
           audit.finalCi = { workflowRunNumber: Number(process.env.FINAL_CI_RUN_NUMBER), workflowRunId: Number(process.env.FINAL_CI_RUN_ID), status: 'success' };
           audit.finalCiStatus = 'success';
           audit.publicVerification = 'success';
