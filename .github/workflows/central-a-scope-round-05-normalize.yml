@@ -1,0 +1,40 @@
+name: Normalize Central A Scope Audit Round 05
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-05-20260725']
+    paths: ['.github/workflows/central-a-scope-round-05-normalize.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-05-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Normalize report
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const p='jichitai-compare/operations/control/central-a-scope-round-05-shizuoka-20260725.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          r.initialSubstantiveSuspects=r.substantiveSuspects;
+          r.substantiveSuspects=(r.needsFurtherReview||[]).map(x=>({severity:'review',type:'possible_any_child_access_omission',...x}));
+          r.substantiveSuspectCount=r.substantiveSuspects.length;
+          fs.writeFileSync(p,JSON.stringify(r,null,2)+'\n');
+          NODE
+          rm .github/workflows/central-a-scope-round-05-normalize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'audit: 静岡県監査レポートの候補区分を整合化'
+          git push origin HEAD:audit/central-a-scope-verification-round-05-20260725
