@@ -1,1 +1,40 @@
-{"schemaVersion":"1.0.0","region":"central","assignedTeam":"中日本調査班","integrationBranch":"region/central","updatedAt":"2026-07-20T20:40:00+09:00","status":"active","completedSinceLastRelease":0,"completedMunicipalities":[],"regionalQueue":[],"blocked":[],"completenessAudit":{"status":"passed","checkedCodes":["16201","16202","16204","16205","16206","16207","16208","16209","16210","16211","23100"],"checks":["11自治体を確認","PR #150でmainへ統合","統合後カウンターを0へリセット"]},"lastAction":"中日本11自治体をPR #150でmainへ統合","nextAction":"舟橋村（16321）のtaskと作業ブランチを作成する","humanDecisionRequired":false}
+{
+  "schemaVersion": "1.0.0",
+  "region": "central",
+  "assignedTeam": "中日本調査班",
+  "integrationBranch": "region/central",
+  "updatedAt": "2026-07-24T22:20:00+09:00",
+  "status": "completed",
+  "stage": "published_monitoring",
+  "assignedMunicipalityCount": 409,
+  "completedMunicipalityCount": 409,
+  "remainingMunicipalityCount": 0,
+  "completedSinceLastRelease": 0,
+  "completedMunicipalities": [],
+  "regionalQueue": [],
+  "blocked": [],
+  "subteams": {
+    "central-a": {
+      "assignedMunicipalityCount": 314,
+      "remainingMunicipalityCount": 0,
+      "status": "completed",
+      "lastPullRequestNumber": 2787,
+      "ciStatus": "success"
+    },
+    "central-b": {
+      "assignedMunicipalityCount": 95,
+      "remainingMunicipalityCount": 0,
+      "status": "completed",
+      "lastPullRequestNumber": 2789,
+      "ciStatus": "success"
+    }
+  },
+  "lastAction": "中日本の欠落6自治体をPR #2787でregion/centralへ統合し、全国完全公開PR #2791・CI #6692成功後にmainへ公開した。",
+  "nextAction": "差し戻し、CI失敗、公式制度更新、自治体コード改定、地域ブランチとmainの公開不一致を監視する。",
+  "lastNationalIntegrationPr": 2791,
+  "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
+  "lastGeneratedPullRequest": 2791,
+  "publishedMunicipalityCount": 1741,
+  "publishedServiceCount": 15669,
+  "humanDecisionRequired": false
+}
