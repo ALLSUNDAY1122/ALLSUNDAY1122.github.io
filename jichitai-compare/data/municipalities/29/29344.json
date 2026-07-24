@@ -6,8 +6,8 @@
   "name": "斑鳩町",
   "officialUrl": "https://www.town.ikaruga.nara.jp/",
   "status": "verified",
-  "summary": "斑鳩町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、在園第2子の保育料無償化、病児保育、産後ケアなどを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "斑鳩町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、在園第2子の保育料無償化、令和8年度の学校給食支援・こども誰でも通園制度、産後ケアなどを記録。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -20,7 +20,7 @@
         "requiredItems": "子どもの健康保険資格がわかるもの、申請者の振込先口座、個人番号がわかるもの等",
         "excluded": "保険適用外費用、入院時食事代等は対象外"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000036.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000036.html", "checkedAt": "2026-07-24"}
     },
     "sickChildCare": {
       "status": "verified",
@@ -35,7 +35,7 @@
         "period": "1回の利用につき7日まで",
         "procedure": "子育て支援課またはいちごルームで事前登録が必要"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/0000001629.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000001629.html", "checkedAt": "2026-07-24"}
     },
     "childcareFee": {
       "status": "verified",
@@ -48,9 +48,10 @@
         "localRate": "町の0～2歳児保育料は国基準額の80％に軽減し、階層も細分化",
         "excludedCosts": "3～5歳児の給食費等は別途負担"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/0000002850.html", "checkedAt": "2026-07-23"},
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000002850.html", "checkedAt": "2026-07-24"},
       "additionalSources": [
-        {"url": "https://www.town.ikaruga.nara.jp/0000002340.html", "checkedAt": "2026-07-23"}
+        {"url": "https://www.town.ikaruga.nara.jp/0000002340.html", "checkedAt": "2026-07-24"},
+        {"url": "https://www.town.ikaruga.nara.jp/0000001555.html", "checkedAt": "2026-07-24"}
       ]
     },
     "schoolMeals": {
@@ -66,42 +67,71 @@
         "aid": "経済的要件を満たす世帯には学校給食費を含む就学援助あり",
         "futureStatus": "年度施策のため令和9年度以降は再確認が必要"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/cmsfiles/contents/0000000/234/R8-5-1.pdf", "checkedAt": "2026-07-23"},
+      "source": {"url": "https://www.town.ikaruga.nara.jp/cmsfiles/contents/0000000/234/R8-5-1.pdf", "checkedAt": "2026-07-24"},
       "additionalSources": [
-        {"url": "https://www.town.ikaruga.nara.jp/0000002945.html", "checkedAt": "2026-07-23"}
+        {"url": "https://www.town.ikaruga.nara.jp/0000002945.html", "checkedAt": "2026-07-24"}
       ]
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "町内在住の出産後1年未満の母子を対象に、宿泊型・通所型・訪問型の産後ケアを実施する。",
+      "summary": "町内在住の出産後1年未満の母子を対象に、11施設で宿泊型・通所型・訪問型の産後ケアを実施する。",
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
       "details": {
-        "target": "町内に住所を有する出産後1年未満の母親と乳児で産後ケアを必要とする方",
+        "target": "斑鳩町に住民票がある産後1年未満の母親と乳児で、体調管理、乳房ケア、授乳・沐浴、育児相談等のケアを必要とする方",
+        "excluded": "感染症の疑いがある方、医療行為が必要な母子は利用不可",
         "types": "ショートステイ、デイケア、アウトリーチ",
-        "limits": "宿泊型6泊、通所型7日、訪問型2回を上限",
-        "care": "母体管理、乳房ケア、授乳・沐浴、発育発達、育児・生活相談、心理面のケア等",
-        "reduction": "一般世帯は乳児1人につき5回まで1回2,500円を限度に軽減し、非課税・生活保護世帯は1回5,000円を限度に軽減",
-        "procedure": "初回利用前に保健センターへ相談し、利用申請が必要"
+        "limits": "宿泊型6泊7日、通所型7日、訪問型2回を上限",
+        "shortStay": "助産施設は原則10時から翌10時、病院施設は10時30分から翌10時30分。1泊3食",
+        "dayCare": "助産施設は原則10時から18時、病院施設は原則9時30分から16時30分。1日1食または2食",
+        "outreach": "原則10時から17時の間で1時間以上3時間以内",
+        "fees": "宿泊型1泊4,000～6,000円、通所型1日1,500～3,000円、訪問型1回1,030～1,050円。5回目まで減額あり",
+        "exemptFee": "非課税世帯・生活保護世帯は無料",
+        "multipleBirth": "双子の追加料金は1人につき宿泊1,000～4,000円、通所1,000～2,000円、訪問400～1,000円。非課税・生活保護世帯は免除",
+        "facilities": "助産院カンガルーホーム、心友助産院、高井病院、産後ケアハウスぽこあぽこ、なんのレディースクリニック、ソエル助産院、中村助産所、まる助産院、ふゆき助産院、大和郡山病院、のんの助産院",
+        "facilityNote": "なんのレディースクリニックは同院で出産した方のみ。施設ごとに提供類型が異なる",
+        "application": "初回は保健センターへ電話相談し、施設との日程調整後に申請。電子申請可能。利用経験のある施設は2回目以降、本人が予約後に町へ申請",
+        "cancellation": "利用日の2日前（土日祝を除く）17時までに施設へ連絡し、保健センターへ変更・中止届を提出。期限後は減免前利用料相当のキャンセル料が必要"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000078.html", "checkedAt": "2026-07-23"},
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000078.html", "checkedAt": "2026-07-24"},
       "additionalSources": [
-        {"url": "https://www.town.ikaruga.nara.jp/reiki_int/reiki_honbun/k417RG00000836.html", "checkedAt": "2026-07-23"}
+        {"url": "https://www.town.ikaruga.nara.jp/cmsfiles/contents/0000000/78/r8-sangocare.pdf", "checkedAt": "2026-07-24"},
+        {"url": "https://www.town.ikaruga.nara.jp/reiki_int/reiki_honbun/k417RG00000836.html", "checkedAt": "2026-07-24"}
       ]
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "あわ保育園で、保護者の就労形態や疾病等により一時的な保育が必要な児童を預かる。",
+      "summary": "あわ保育園の一時保育に加え、令和8年度から未就園の生後6か月から満3歳未満を月10時間まで預かるこども誰でも通園制度を実施する。",
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
       "details": {
-        "facility": "あわ保育園",
-        "reasons": "保護者の就労形態の多様化に伴う一時的保育、疾病等による緊急保育等",
-        "feeUnderThree": "3歳未満児は1日1,360円",
-        "feeThreePlus": "3歳以上児は1日640円",
-        "meal": "3歳以上児は主食費1日40円",
-        "capacityNote": "入所児童数により利用希望に添えない場合あり",
-        "ageNote": "受入可能月齢は施設へ事前確認が必要"
+        "traditionalTemporaryCare": {
+          "facility": "あわ保育園",
+          "reasons": "保護者の就労形態の多様化に伴う一時的保育、疾病等による緊急保育等",
+          "feeUnderThree": "3歳未満児は1日1,360円",
+          "feeThreePlus": "3歳以上児は1日640円",
+          "meal": "3歳以上児は主食費1日40円",
+          "capacityNote": "入所児童数により利用希望に添えない場合あり",
+          "ageNote": "受入可能月齢は施設へ事前確認が必要"
+        },
+        "anyoneUseChildcare": {
+          "start": "令和8年度開始",
+          "target": "斑鳩町在住で、保育所等に在籍していない生後6か月から満3歳未満の子ども",
+          "employment": "保護者の就労要件なし",
+          "facilities": "たつた保育園、認定こども園法隆寺幼稚園",
+          "limit": "子ども1人につき月10時間まで。未利用時間は翌月以降へ繰越不可",
+          "fee": "1時間300円を利用施設へ直接支払う",
+          "reduction": "生活保護世帯は全額減免、市町村民税所得割課税額77,100円以下の世帯は1時間200円減免、災害等の場合は町長が定める額",
+          "application": "つうえんポータルから認定申請。システムを利用できない場合は子育て支援課窓口で申請可能",
+          "certification": "認定にはおおむね1～2週間。認定証はつうえんポータルまたは郵送で交付",
+          "interview": "利用施設ごとに初回利用前の事前面談が必要",
+          "reservation": "事前面談後、つうえんポータルで月10時間の範囲内で予約",
+          "municipalSchedule": "たつた保育園は0歳児第2木曜、1歳児第3木曜、2歳児第4木曜、各9時から12時。行事・災害等で変更あり",
+          "payment": "利用料等は施設へ直接支払う"
+        }
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/0000001900.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000003115.html", "checkedAt": "2026-07-24"},
+      "additionalSources": [
+        {"url": "https://www.town.ikaruga.nara.jp/0000001900.html", "checkedAt": "2026-07-24"}
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -111,13 +141,14 @@
         "single": "単身60万円",
         "household": "2人以上の世帯100万円",
         "childAddition": "18歳未満の世帯員を帯同して移住する場合、1人につき100万円加算",
+        "moveFrom": "東京23区在住または東京圏から23区へ通勤し、直近1年以上かつ直近10年のうち通算5年以上等の要件",
         "residence": "申請時に転入後1年未満で、斑鳩町に5年以上継続して居住する意思が必要",
         "work": "県マッチングサイト掲載求人への就業、移住元業務のテレワーク、起業支援金の交付決定等の要件あり",
-        "restriction": "東京圏からの移住等、複数の移住元・就業・世帯要件を満たす必要がある"
+        "application": "交付要綱と申請書類を確認し、政策財政課へ申請"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/settle/0000002317.html", "checkedAt": "2026-07-23"},
+      "source": {"url": "https://www.town.ikaruga.nara.jp/settle/0000002317.html", "checkedAt": "2026-07-24"},
       "additionalSources": [
-        {"url": "https://www.town.ikaruga.nara.jp/reiki_int/reiki_honbun/k417RG00000926.html", "checkedAt": "2026-07-23"}
+        {"url": "https://www.town.ikaruga.nara.jp/reiki_int/reiki_honbun/k417RG00000926.html", "checkedAt": "2026-07-24"}
       ]
     },
     "bulkyWaste": {
@@ -131,7 +162,7 @@
         "sorting": "町のごみ・資源物の分け方・出し方に従う",
         "fee": "品目別手数料は対象品の確認が必要なため単一額として登録しない"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000126.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000000126.html", "checkedAt": "2026-07-24"}
     },
     "disasterPrevention": {
       "status": "verified",
@@ -143,7 +174,7 @@
         "evacuation": "指定緊急避難場所、指定避難所、避難情報、マイタイムライン等を掲載",
         "preparedness": "持出品チェックリスト、情報伝達・収集方法、災害別の備えを掲載"
       },
-      "source": {"url": "https://www.town.ikaruga.nara.jp/0000002024.html", "checkedAt": "2026-07-23"}
+      "source": {"url": "https://www.town.ikaruga.nara.jp/0000002024.html", "checkedAt": "2026-07-24"}
     }
   }
 }
