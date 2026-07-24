@@ -39,6 +39,12 @@ jobs:
           const { execFileSync } = require('child_process');
           const base = 'https://allsunday1122.github.io/jichitai-compare';
           const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          const canonical = value => {
+            if (Array.isArray(value)) return value.map(canonical);
+            if (value === null || typeof value !== 'object') return value;
+            return Object.fromEntries(Object.entries(value).sort(([a],[b]) => a.localeCompare(b)).map(([key, child]) => [key, canonical(child)]));
+          };
+          const sameJson = (left, right) => JSON.stringify(canonical(left)) === JSON.stringify(canonical(right));
           const prefs = ['10','13','19','20'];
           const codes = prefs.flatMap(pref => fs.readdirSync(`jichitai-compare/data/municipalities/${pref}`)
             .filter(name => name.endsWith('.json')).map(name => name.replace(/\.json$/, ''))).sort();
@@ -46,11 +52,11 @@ jobs:
           const mainByCode = new Map(mainData.municipalities.map(item => [item.code, item]));
           let publicData = null;
           for (let attempt = 1; attempt <= 24; attempt++) {
-            const res = await fetch(`${base}/data/generated/municipalities.json?v=${Date.now()}`);
+            const res = await fetch(`${base}/data/generated/municipalities.json?v=${Date.now()}`, { headers: { 'cache-control': 'no-cache' } });
             if (res.ok) {
               const candidate = await res.json();
               const publicByCode = new Map(candidate.municipalities.map(item => [item.code, item]));
-              if (codes.every(code => JSON.stringify(publicByCode.get(code)) === JSON.stringify(mainByCode.get(code)))) {
+              if (codes.every(code => sameJson(publicByCode.get(code), mainByCode.get(code)))) {
                 publicData = candidate;
                 break;
               }
@@ -65,14 +71,14 @@ jobs:
           for (const code of pageCodes) {
             let ok = false;
             for (let attempt = 1; attempt <= 4; attempt++) {
-              const res = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`);
+              const res = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`, { headers: { 'cache-control': 'no-cache' } });
               if (res.ok) { await res.arrayBuffer(); ok = true; break; }
               await sleep(5000);
             }
             if (!ok) throw new Error(`${code}: public municipality page unavailable`);
           }
 
-          const checkedAt = '2026-07-25T04:45:00+09:00';
+          const checkedAt = '2026-07-25T05:01:00+09:00';
           audit.finalCi = { workflowRunNumber: Number(process.env.FINAL_CI_RUN_NUMBER), workflowRunId: Number(process.env.FINAL_CI_RUN_ID), status: 'success' };
           audit.finalCiStatus = 'success';
           audit.publicVerification = 'success';
