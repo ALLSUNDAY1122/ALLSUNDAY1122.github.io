@@ -1,0 +1,122 @@
+name: Finalize Central A Scope Audit Round 02
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-02-20260725']
+    paths: ['.github/workflows/central-a-scope-round-02-finalize.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-02-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Correct Tsubata and finalize Ishikawa audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const root = 'jichitai-compare';
+          const code = '17361';
+          const dataPath = `${root}/data/municipalities/17/${code}.json`;
+          const data = JSON.parse(fs.readFileSync(dataPath,'utf8'));
+          const previous = data.services.temporaryChildcare;
+          data.services.temporaryChildcare = {
+            status:'verified',
+            summary:'家庭保育児向けの一時保育に加え、保育園に通っていない子どもを就労要件なしで月10時間まで受け入れるこども誰でも通園制度を実施する。',
+            eligibility:{minAgeMonths:0,maxAgeYears:5},
+            details:{
+              types:'認定こども園等の一時預かり、こども誰でも通園制度',
+              temporaryCare:'保護者の病気・入院・冠婚葬祭・研修・リフレッシュ等の際に家庭保育児を一時的に預かる',
+              temporaryFee:'町立保育園は0歳児3,000円、1・2歳児2,000円、3歳児以上1,500円。私立実施園は1時間400円、食事代別途',
+              anyChildTarget:'保育園等に通っていない子ども。実施園ごとの受入年齢・空き状況は施設へ確認',
+              employment:'保護者の就労の有無を問わない',
+              anyChildLimit:'子ども1人につき月10時間まで',
+              anyChildFacilities:'寺尾保育園、中条東保育園など町内実施園',
+              application:'一時保育は前日までに施設へ予約。こども誰でも通園制度は実施園へ問い合わせ・申込み'
+            },
+            source:{url:'https://www.town.tsubata.lg.jp/page/1049.html',checkedAt:'2026-07-25'},
+            additionalSources:[
+              {url:previous.source.url,checkedAt:'2026-07-25',description:'通常の一時保育の料金・利用方法'},
+              {url:'https://www.town.tsubata.lg.jp/page/1045.html',checkedAt:'2026-07-25',description:'中条東保育園のこども誰でも通園制度実施案内'}
+            ]
+          };
+          data.updatedAt = '2026-07-25';
+          fs.writeFileSync(dataPath, JSON.stringify(data,null,2)+'\n');
+
+          const taskPath = `${root}/operations/tasks/${code}.json`;
+          const task = JSON.parse(fs.readFileSync(taskPath,'utf8'));
+          const oldUrl = 'https://www.town.tsubata.lg.jp/page/1441.html';
+          const newUrl = 'https://www.town.tsubata.lg.jp/page/1049.html';
+          task.officialSources = (task.officialSources || []).map(url => url === oldUrl ? newUrl : url);
+          task.officialSources = [...new Set(task.officialSources)];
+          task.notes = Array.isArray(task.notes) ? task.notes : [];
+          task.notes.push('2026-07-25の担当範囲再監査で、こども誰でも通園制度の記録漏れを修正。通常の一時保育ページは自治体JSONの補助出典として保持。');
+          task.lastCheckedAt = '2026-07-25';
+          task.lastUpdatedAt = '2026-07-25T00:22:00+09:00';
+          task.lastUpdatedBy = '中日本調査班A（担当範囲再監査）';
+          fs.writeFileSync(taskPath, JSON.stringify(task,null,2)+'\n');
+
+          const reportPath = `${root}/operations/control/central-a-scope-round-02-ishikawa-20260725.json`;
+          const report = JSON.parse(fs.readFileSync(reportPath,'utf8'));
+          report.substantiveResolutions = [
+            {
+              code:'17205',name:'珠洲市',service:'schoolMeals',result:'confirmed_current_official_listing',
+              detail:'珠洲市の現行支援制度ページに学校給食費は当面の間無償と掲載されているため、既存記録を維持。',
+              checkedAt:'2026-07-25',source:'https://www.city.suzu.lg.jp/site/bousaisuzu/11672.html'
+            },
+            {
+              code:'17361',name:'津幡町',service:'temporaryChildcare',result:'corrected_current_program_omission',
+              detail:'実施園公式ページで、保育園に通っていない子どもの月10時間利用と就労要件なしを確認し、こども誰でも通園制度を追加。',
+              checkedAt:'2026-07-25',sources:['https://www.town.tsubata.lg.jp/page/1049.html','https://www.town.tsubata.lg.jp/page/1045.html']
+            }
+          ];
+          report.finalResult = {
+            status:'completed_with_correction',
+            structuralErrors:0,
+            substantiveErrors:1,
+            correctedMunicipalityCodes:['17361'],
+            confirmedAccurateSuspectCodes:['17205'],
+            completedAt:'2026-07-25T00:22:00+09:00'
+          };
+          fs.writeFileSync(reportPath, JSON.stringify(report,null,2)+'\n');
+
+          const auditPath = `${root}/operations/control/central-a-scope-verification-20260724.json`;
+          const audit = JSON.parse(fs.readFileSync(auditPath,'utf8'));
+          const batch = audit.batches.find(x => x.batch === 2);
+          batch.status = 'completed_with_correction';
+          batch.structuralFindingCount = 0;
+          batch.resolvedStructuralFindingCount = 2;
+          batch.confirmedErrors = 1;
+          batch.correctedMunicipalityCodes = ['17361'];
+          batch.confirmedAccurateSuspectCodes = ['17205'];
+          batch.completedAt = '2026-07-25T00:22:00+09:00';
+          batch.nextStep = '第3回として福井県17自治体を監査する';
+          audit.summary.completedBatches = 2;
+          audit.summary.checkedMunicipalities = 34;
+          audit.summary.confirmedErrors = 6;
+          audit.summary.correctedErrors = 6;
+          audit.summary.needsFurtherReview = 0;
+          audit.nextAction = '第3回として福井県17自治体を監査する';
+          fs.writeFileSync(auditPath, JSON.stringify(audit,null,2)+'\n');
+          NODE
+          rm .github/workflows/central-a-scope-round-02-finalize.yml
+      - name: Commit completed Ishikawa audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'audit: 津幡町の誰でも通園漏れを修正し石川県監査を完了'
+          git push origin HEAD:audit/central-a-scope-verification-round-02-20260725
