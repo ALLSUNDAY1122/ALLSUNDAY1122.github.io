@@ -6,7 +6,7 @@
   "scripts": {
     "check:scope": "node ./scripts/check-change-scope.mjs",
     "generate": "node ./scripts/generate-municipalities.mjs",
-    "progress": "node ./scripts/update-progress.mjs",
+    "progress": "node ./scripts/update-progress.mjs && node ./scripts/update-index-count.mjs",
     "validate": "node ./scripts/validate-data.mjs",
     "validate:sessions": "node ./scripts/validate-session-split.mjs",
     "validate:generated": "node ./scripts/validate-data.mjs --require-generated",
