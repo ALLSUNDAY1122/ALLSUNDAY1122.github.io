@@ -4,20 +4,25 @@ import path from 'node:path';
 const ROOT = process.cwd();
 const SITE_ROOT = path.join(ROOT, 'yorugatari');
 const STORIES_ROOT = path.join(SITE_ROOT, 'stories');
+const CATEGORIES_ROOT = path.join(SITE_ROOT, 'categories');
 const ANALYTICS_VERSION = '20260723-003';
 const FIVE_MINUTE_ANALYTICS_VERSION = '20260724-004';
 const BEDTIME_ANALYTICS_VERSION = '20260724-005';
 const ENGAGEMENT_VERSION = '20260723-003';
 const RUNTIME_RELEASE = '20260724-001';
-const AUDITED_STORIES = new Set(['last-elevator.html', 'spare-key-returned.html', 'hired-with-your-experience.html']);
 const SHARE_IMAGE = 'https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png';
 const SHARE_WIDTH = '2172';
 const SHARE_HEIGHT = '724';
 const SHARE_ALT = '月明かりと提灯が照らす夜の町並み';
 const STATIC_PAGES = ['index.html', '5min-horror.html', 'bedtime-horror.html', 'archive.html', 'about.html', 'privacy.html', 'terms.html', 'contact.html'];
+const CATEGORY_PAGES = ['shinrei.html', 'hitokowa.html', 'imikowa.html', 'net-kaidan.html', 'urban-legend.html', 'aftertaste.html'];
 
 function escapeAttribute(value) {
   return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function metaContent(html, pattern, label) {
@@ -61,6 +66,18 @@ function setRuntimeScript(html, src, version, release = null) {
   return html.replace('</body>', `  <script src="${src}${query}"></script>\n</body>`);
 }
 
+function ensurePairedCuratedLinks(html, prefix) {
+  const bedtimeHref = `${prefix}bedtime-horror.html`;
+  const fiveMinuteHref = `${prefix}5min-horror.html`;
+  const bedtimePattern = new RegExp(`<a\\b[^>]*href=["']${escapeRegExp(bedtimeHref)}["'][^>]*>[^<]*<\\/a>`, 'gi');
+  const fiveMinutePattern = new RegExp(`<a\\b([^>]*?)href=["']${escapeRegExp(fiveMinuteHref)}["']([^>]*)>([^<]*)<\\/a>`, 'gi');
+  html = html.replace(bedtimePattern, '');
+  return html.replace(fiveMinutePattern, (match, before, after) => {
+    const attributes = `${before}${after}`.replace(/\s+aria-current=["'][^"']+["']/gi, '');
+    return `${match}<a${attributes} href="${bedtimeHref}">寝る前に読む8選</a>`;
+  });
+}
+
 function ensureStoryCuratedLinks(html) {
   const fiveMinuteLink = '<a href="../5min-horror.html">5分で読める12選</a>';
   const bedtimeLink = '<a href="../bedtime-horror.html">寝る前の8選</a>';
@@ -75,6 +92,7 @@ function normalizeStaticPage(filename) {
   const filePath = path.join(SITE_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
   html = ensureSocialMetadata(html);
+  if (filename === 'index.html' || filename === 'archive.html') html = ensurePairedCuratedLinks(html, '');
   const analyticsVersion = filename === '5min-horror.html'
     ? FIVE_MINUTE_ANALYTICS_VERSION
     : filename === 'bedtime-horror.html'
@@ -98,12 +116,21 @@ function normalizeStaticPage(filename) {
   fs.writeFileSync(filePath, html, 'utf8');
 }
 
+function normalizeCategoryPage(filename) {
+  const filePath = path.join(CATEGORIES_ROOT, filename);
+  let html = fs.readFileSync(filePath, 'utf8');
+  html = ensureSocialMetadata(html);
+  html = ensurePairedCuratedLinks(html, '../');
+  html = setRuntimeScript(html, '../assets/analytics.js', ANALYTICS_VERSION, RUNTIME_RELEASE);
+  fs.writeFileSync(filePath, html, 'utf8');
+}
+
 function normalizeStoryPage(filename) {
   const filePath = path.join(STORIES_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
   html = ensureSocialMetadata(html);
   html = ensureStoryCuratedLinks(html);
-  html = setRuntimeScript(html, '../assets/engagement.js', ENGAGEMENT_VERSION, AUDITED_STORIES.has(filename) ? RUNTIME_RELEASE : null);
+  html = setRuntimeScript(html, '../assets/engagement.js', ENGAGEMENT_VERSION, RUNTIME_RELEASE);
   fs.writeFileSync(filePath, html, 'utf8');
 }
 
@@ -122,10 +149,11 @@ function normalize404() {
 }
 
 STATIC_PAGES.forEach(normalizeStaticPage);
+CATEGORY_PAGES.forEach(normalizeCategoryPage);
 fs.readdirSync(STORIES_ROOT)
   .filter((filename) => filename.endsWith('.html'))
   .sort()
   .forEach(normalizeStoryPage);
 normalize404();
 
-console.log(`Normalized audit-filtered analytics for ${STATIC_PAGES.length} static pages, ${AUDITED_STORIES.size} audited stories, shared engagement for the remaining stories, and the 404 page.`);
+console.log(`Normalized audit-filtered analytics for ${STATIC_PAGES.length} static pages, ${CATEGORY_PAGES.length} category pages, 100 stories, and the 404 page.`);
