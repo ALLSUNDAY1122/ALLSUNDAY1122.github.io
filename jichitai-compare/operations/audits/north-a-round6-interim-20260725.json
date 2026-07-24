@@ -1,0 +1,15 @@
+{
+  "round":6,
+  "auditedAt":"2026-07-25T01:19:00+09:00",
+  "codes":["03485","03501","03503","03506","03507","03524","07201","07202","07203","07204","07205","07207","07208"],
+  "structuralAudit":{"result":"passed","checkedMunicipalities":13,"errors":0},
+  "deepChecks":[
+    {"code":"03485","name":"普代村","services":["childcareFee","schoolMeals","postpartumCare","temporaryChildcare"],"result":"no_confirmed_error","note":"はまゆり子ども園の保育料・給食費無料化と村立小中学校給食費無料化は公式案内と一致。産後ケアと誰でも通園制度は現行利用条件を確定できずunavailable維持。"},
+    {"code":"03501","name":"軽米町","services":["schoolMeals","postpartumCare","temporaryChildcare"],"result":"no_confirmed_error","note":"小中学校給食費無償化と産前産後サポート・産後ケア事業の実施を公式ページで確認。誰でも通園制度は令和8年4月1日掲載を確認し、現時点で確定的な矛盾は確認しなかった。"},
+    {"code":"07201","name":"福島市","services":["schoolMeals","postpartumCare"],"result":"no_confirmed_error","note":"令和8年4月7日から市立小中学校等の給食費完全無償化、産後12か月未満、宿泊・日帰り各7日までの産後ケアが公式案内と一致。"},
+    {"code":"07202","name":"会津若松市","services":["childcareFee","schoolMeals"],"result":"corrected_accuracy_error","note":"令和8年9月から第2子以降保育料無償化は一致。学校給食費無償化は小学校・義務教育学校前期課程のみで中学校は日額350円のため、schoolMealsの対象上限を15歳から12歳へ修正。"}
+  ],
+  "confirmedErrors":[
+    {"code":"07202","path":"services.schoolMeals.eligibility.maxAgeYears","before":15,"after":12,"severity":"minor","corrected":true}
+  ]
+}
