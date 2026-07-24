@@ -107717,271 +107717,173 @@
       "name": "浦安市",
       "officialUrl": "https://www.city.urayasu.lg.jp/",
       "status": "verified",
-      "summary": "東京湾岸部。子ども医療費、病児・病後児保育、保育料支援、学校給食費支援、産後ケア、一時預かり・こども誰でも通園制度、子育て世帯向け住宅支援、粗大ごみ、防災情報を確認済み。",
+      "summary": "子育て・生活関連9制度を令和8年度の浦安市公式情報で再監査し、必須eligibilityを含む全9制度をverifiedとして正規化。",
       "services": {
         "childMedical": {
           "status": "verified",
-          "summary": "高校3年生相当年齢まで",
+          "summary": "18歳年度末までの子どもの保険診療自己負担分を助成",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "incomeLimit": "公式ページで確認",
-            "copay": "千葉県内では受給券提示により保険診療分が無料",
-            "application": "受給券の手続きが必要"
+            "target": "浦安市に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "千葉県内の対応医療機関では受給券提示により保険診療自己負担分を助成",
+            "procedure": "受給券の交付申請を行い、医療機関で保険資格確認書類と受給券を提示"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/kodomo/ninshin/soudan/1006645.html",
-            "checkedAt": "2026-07-18"
+            "checkedAt": "2026-07-24"
           }
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "施設により生後57日目または3か月から小学6年生まで",
+          "summary": "施設により生後57日目または3か月から小学6年生までの病児・病後児保育を実施",
           "eligibility": {
             "minAgeMonths": 2,
             "maxAgeYears": 12
           },
           "details": {
-            "facilityCount": 4,
-            "fee": "1日2,500円（土曜日1,250円）"
+            "target": "病気中または回復期で集団保育が困難かつ保護者の事情により家庭保育が難しい子ども",
+            "facilities": "市内4施設",
+            "fee": "1日2,500円、土曜日1,250円を基本とし、診察料等が別途必要な場合あり",
+            "procedure": "施設への事前登録、医療機関受診、予約等が必要"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/hoiku/1000810.html",
-            "checkedAt": "2026-07-18"
+            "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {
           "status": "verified",
-          "summary": "認可保育施設の0歳児から5歳児クラスの基本保育料を無償化",
+          "summary": "認可保育施設の0～5歳児クラスの基本保育料を無償化",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "fee": "2026年4月1日から、認可保育所、幼保連携型認定こども園、小規模保育事業所、家庭的保育事業者を利用する0歳児から2歳児クラスの基本保育料を無償化。3歳児から5歳児クラスも国制度により基本保育料・授業料は無償",
-            "siblingReduction": "基本保育料は第1子から無償。延長保育料は、2人以上の子どもがいる世帯では第2子が半額、第3子以降が無料（市立幼稚園型認定こども園を除く）",
-            "incomeCondition": "認可保育施設の0歳児から2歳児クラスの基本保育料は、課税状況やきょうだい人数を問わず無償",
-            "application": "認可保育施設の基本保育料は通常の入所・支給認定に基づき適用。認可外保育施設や幼稚園の預かり保育などの施設等利用費は、対象に応じて事前の認定申請と支給申請が必要",
-            "exclusions": "給食費、教材費、日用品費、行事費、延長保育料などの実費は基本保育料の無償化対象外。延長保育料には多子世帯等の軽減制度あり",
-            "supplementarySupport": "市内在住の生活保護世帯は、認可保育所等での日用品・文房具・行事費などについて、子ども1人当たり月額2,700円を限度に補足給付の対象"
+            "target": "浦安市民で認可保育所、幼保連携型認定こども園、小規模保育事業所、家庭的保育事業者を利用する子ども",
+            "coverage": "2026年4月1日から0～2歳児クラスを年齢・課税状況・きょうだい人数を問わず無償化。3～5歳児クラスも国制度で無償",
+            "procedure": "認可保育施設の基本保育料無償化に伴う追加手続きは不要",
+            "excluded": "延長保育料、給食費、教材費、日用品費、行事費等の実費。延長保育料等には多子軽減あり"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/kodomo/hoiku/hoikuen/1042934/1048052.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/hoiku/hoikuen/1047820.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/hoiku/1026268/1026269.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/hoiku/1026268/1043606.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "2024年4月から市立小・中学校の学校給食費を無償化",
+          "summary": "市立小・中学校の学校給食費を無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "support": "浦安市立小学校・中学校の児童生徒の学校給食費を無償化し、保護者負担額は0円",
-            "schools": "浦安市立の小学校および中学校",
-            "start": "2024年4月から学校給食費を無償化",
-            "application": "通常の給食利用では入学・進学・進級・転入時に学校給食申出書を各学校へ提出。給食を停止・再開する場合にも届出が必要",
-            "alternativeSupport": "2026年度から、食物アレルギー、宗教上の理由、負傷・疾病などで給食をすべて停止し弁当を持参する児童生徒の保護者へ給食費相当額を給付。原則月額は小学校6,120円、中学校7,140円で、月10食以下は小学校1食360円、中学校1食420円"
+            "target": "浦安市立小学校・中学校の児童生徒",
+            "coverage": "2024年4月から学校給食費を無償化し、通常の給食利用に係る保護者負担は0円",
+            "alternativeSupport": "2026年度から食物アレルギー・宗教・疾病等により給食を全停止し弁当を持参する対象者へ給食費相当額を給付",
+            "amount": "代替給付は原則月額で小学校6,120円、中学校7,140円。月10食以下は小学校1食360円、中学校1食420円",
+            "procedure": "学校給食申出書や停止・再開届を学校へ提出。代替給付は要件を満たす場合に申請"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/kodomo/gakko/kyushoku/1048183.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/gakko/kyushoku/1042224.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/faq/gakko/kyushoku/1004142.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "宿泊型・日帰り型・訪問型を実施し、日帰り・訪問は合計7回、宿泊は6泊7日まで",
+          "summary": "宿泊・日帰り・訪問型の産後ケアを提供",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 0
+            "maxAgeYears": 1
           },
           "details": {
+            "target": "浦安市に住所がある産婦と乳児。対象月齢は類型・施設により異なる",
             "types": "宿泊型、訪問型、日帰り型（ホテル個別・助産院個別・助産院集団）",
-            "targetPeriod": "訪問型と助産院個別型は産後1年未満、ホテル型は赤ちゃんが生後120日未満、助産院集団型は産後180日未満。宿泊型は施設により退院直後、産後35日未満または産後60日未満など条件が異なる",
-            "usageLimit": "2025年10月1日以降に出産した浦安市民は訪問型・日帰り型を合わせて7回、宿泊型は6泊7日まで。里帰り利用は訪問型・ホテル型を合わせて3回、宿泊型は6泊7日まで。ホテル型はいずれかのホテルで原則1回",
-            "services": "母体の健康確認と休養、乳房ケア、授乳・栄養・育児相談、赤ちゃんの体重・発育確認、沐浴や抱き方の助言などを実施",
-            "fee": "宿泊型は課税世帯1泊2日6,000円・追加1日3,000円、非課税世帯は半額、生活保護世帯は無料。ホテル型は1回4,000円、助産院型は1回1,600円、訪問型は1回2,000円で、各非課税世帯は半額、生活保護世帯は無料。多胎加算がある",
-            "application": "日帰り型・訪問型は2025年10月以降の出産者に利用チケットが必要。2026年6月1日以降に浦安市で母子健康手帳を受け取った方は交付時にチケットを受領し申請不要。それ以前の交付者、転入者、里帰り利用者等は原則電子申請し、別途予約する。宿泊型は施設への事前予約後、原則利用予定日の14日前までに市へ利用申請書を提出する",
-            "restrictions": "医療管理・医療行為が必要な母子は対象外。宿泊型の対象時期や初産婦限定の有無、退院後利用の可否は施設ごとに異なる"
+            "limit": "2025年10月1日以降の出産者は訪問型・日帰り型を合わせて7回、宿泊型6泊7日まで",
+            "fee": "課税世帯は宿泊1泊2日6,000円、ホテル型4,000円、助産院型1,600円、訪問型2,000円を基本とし、非課税・生活保護世帯の減免あり",
+            "procedure": "日帰り・訪問は利用チケットまたは電子申請後に予約。宿泊は施設予約後、原則利用予定日の14日前までに市へ申請"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/shien/1009814/1038139.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/shien/1009814/1046171.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/shien/1009814/1015222.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/shien/1009814/1014439.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/shien/1009814/1012995.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "一時預かり3類型と、未就園児が月10時間利用できるこども誰でも通園制度を実施",
+          "summary": "一時預かりと月10時間のこども誰でも通園制度を実施",
           "eligibility": {
             "minAgeMonths": 3,
             "maxAgeYears": 5
           },
           "details": {
-            "types": "理由を問わない短時間・半日・1日利用、理由を必要とする半日・1日利用、こども誰でも通園制度",
-            "oneTimeCare": "一時預かりは施設により浦安市在住の生後3か月または4か月から就学前まで。理由を必要とする利用は、就労・就学・定期通院等の非定型保育が週3回まで、疾病・出産・介護等の緊急保育が月14回まで、リフレッシュ等の私的事由が月4回まで。理由を問わない施設では月8回または12回まで",
-            "universalCare": "2026年度開始。生後6か月から満3歳未満で、保育所・幼稚園・認定こども園・地域型保育・企業主導型保育を定期利用していない子が対象。就労要件を問わず、1回1時間以上・1時間単位で月10時間まで利用可能",
-            "hours": "半日・1日一時預かりは原則平日8時30分または9時から17時まで。こども誰でも通園制度は高洲保育園・堀江認定こども園で平日10時から16時まで",
-            "fee": "半日・1日一時預かりは3歳未満が1日2,200円・半日1,100円、3歳以上が1日1,000円・半日500円。生活保護世帯は申出により無料。こども誰でも通園制度は1時間300円、給食200円、おやつ100円。生活保護世帯は300円、非課税世帯等は200円を上限に利用料を減免",
-            "application": "一時預かりは利用施設ごとに事前面談・登録後、AZUKARIまたは電話で予約。こども誰でも通園制度は国の総合支援システムで利用認定を申請し、アカウント発行後に施設ごとの初回面談を受け、システムで利用予約する"
+            "oneTimeCare": "一時預かりは施設により生後3か月または4か月から就学前まで。利用理由・施設に応じた日数上限あり",
+            "universalCareTarget": "生後6か月から満3歳未満で、保育所・幼稚園・認定こども園・地域型保育・企業主導型保育を定期利用していない子ども",
+            "universalCareHours": "就労要件を問わず1回1時間以上、月10時間まで",
+            "universalCareFee": "1時間300円、給食200円、おやつ100円。世帯区分等による減免あり",
+            "procedure": "誰でも通園は国の総合支援システムで認定申請後、施設面談・予約を行う"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/hoiku/1048100.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/hoiku/1048347/1041328.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/hoiku/1048347/1000818.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/hoiku/1048347/index.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "ひとり親家庭の家賃を月額最大1万5,000円支給し、市営住宅で子育て世帯の収入基準を緩和",
+          "summary": "ひとり親家庭へ月額最大1万5,000円の住宅手当を支給",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 19
           },
           "details": {
-            "primarySupport": "20歳未満の児童を養育する所得制限内のひとり親家庭に、民間賃貸住宅の家賃負担を軽減する住宅手当を支給",
-            "target": "浦安市の住民基本台帳に世帯主として登録され、本人名義で自ら居住する住宅を借り、月額1万円を超える家賃を支払うひとり親家庭。生活保護等の受給者、親族等との一定の賃貸借契約、児童と別居する場合などは原則対象外",
-            "amount": "家賃のうち月額1万円を超えた額を、月額1万5,000円を上限に支給",
-            "incomeCondition": "本人所得の限度額は扶養親族等0人で192万円、1人で230万円、2人で268万円、3人で306万円、4人で344万円",
-            "application": "賃貸借契約書原本、戸籍謄本、保護者名義の預金通帳、本人の個人番号カード等を持参し、請求者本人がこども課窓口で申請。原則申請月から支給対象",
-            "payment": "4月・8月・12月の年3回に前月分までを指定口座へ支給。継続受給には毎年8月の現況届が必要",
-            "municipalHousing": "市営住宅では子育て世帯を裁量階層として扱い、世帯月収入の基準を原則15万8,000円以下から21万4,000円以下へ緩和。母子・父子世帯は特枠世帯として抽選番号を多く割り振る場合や、特枠世帯のみの募集区分を設ける場合がある",
-            "limitations": "一般の子育て世帯全体を対象とする住宅取得補助ではなく、家賃手当はひとり親家庭に限定。市営住宅も入居を保証する優先制度ではない"
+            "target": "20歳未満の児童を養育し、所得・住民登録・賃貸借等の要件を満たすひとり親家庭",
+            "amount": "家賃月額1万円を超えた額を月額1万5,000円まで支給",
+            "procedure": "賃貸借契約書、戸籍、口座情報、本人確認書類等を持参してこども課窓口で申請",
+            "additionalSupport": "市営住宅では子育て世帯の収入基準緩和や母子・父子世帯向け特枠を設ける場合あり",
+            "limitations": "一般の子育て世帯全体を対象とする住宅取得補助ではない"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/kodomo/kosodate/teate/1000824.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.urayasu.lg.jp/todokede/machi/sumai/1024293/1024294.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/faq/sumai/jutaku/1004314.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
-          "summary": "事前申込みによる戸別収集と、予約不要のクリーンセンター持ち込みを実施",
+          "summary": "粗大ごみを事前申込みの戸別収集またはクリーンセンターへの自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
           "details": {
-            "scope": "家庭から出るごみで、1辺の長さが50センチメートル以上200センチメートル以下、または幅・高さ・奥行きの積が2万立方センチメートルを超えるもの。重量はおおむね80キログラムまで",
-            "feeSystem": "戸別収集は品目・大きさ・重量別の手数料制で、粗大ごみ処理券は520円券の1種類。主な料金は520円から2,600円で、申込時に案内された金額分を購入する",
-            "application": "電話またはインターネットで事前申込み。1世帯1回5点までで、次回申込みは原則7日後。処理券に収集日と受付番号を書いて貼り、収集日の午前8時までに指定場所へ出す。電話申込みの収集日は申込日の2日後から13日後、インターネットは内容確認後おおむね1週間から10日",
-            "carryIn": "クリーンセンターへの持ち込みは予約不要で、市内居住を確認できる本人確認書類が必要。月曜日から土曜日（祝日を含む）の午前9時から11時、午後1時から4時。手数料は10キログラムごとに220円（税込）",
-            "excluded": "エアコン、テレビ、冷蔵庫・冷凍庫、洗濯機・衣類乾燥機、パソコン、自動二輪車、消火器・ピアノ・土・タイヤなどの処理困難物、長さ2メートル超または重量80キログラム超のものは原則対象外。物干し竿は2メートル超でも処理可能"
+            "scope": "1辺50センチ以上200センチ以下、または幅・高さ・奥行きの積が2万立方センチメートルを超える家庭ごみで、おおむね80キログラムまで",
+            "collection": "電話またはインターネットで事前申込み。1世帯1回5点まで。案内額分の粗大ごみ処理券を貼り、収集日の8時までに排出",
+            "carryIn": "クリーンセンターへの持込みは予約不要。月曜から土曜の9時から11時、13時から16時、10キログラム220円",
+            "excluded": "家電リサイクル品、パソコン、二輪車、処理困難物、原則長さ2メートル超または重量80キログラム超のもの"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/todokede/gomi/dashikata/sodai/1000381.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.urayasu.lg.jp/todokede/gomi/clean/1000392.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/todokede/gomi/dashikata/sodai/1000386.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "disasterPrevention": {
           "status": "verified",
-          "summary": "洪水・内水・高潮ハザードマップ、地震防災マップ、避難所情報、防災アプリを提供",
+          "summary": "洪水・内水・高潮・地震のハザード情報と避難所情報を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
           "details": {
-            "hazardMaps": "水害ハザードマップに洪水、内水、高潮、避難所情報を収録。2025年度版では内水想定を1時間最大雨量153ミリメートルへ更新。洪水は江戸川放水路と境川・見明川・猫実川・堀江川、高潮は計画規模と想定最大規模を掲載",
-            "earthquake": "防災マップで震災時の防災拠点、指定緊急避難場所、指定避難所、医療拠点などを確認できる",
-            "shelters": "指定緊急避難場所は地震・大規模火災から一時的に逃れる公園や学校グラウンド、指定避難所は自宅で生活できない被災者が一時生活する学校等。風水害時は別途、学校・公民館などを待避所として開設する",
-            "app": "浦安市防災アプリは防災行政無線や避難情報を音声・文字とプッシュ通知で配信し、現在地周辺の避難所・AED、災害時の避難所開設状況・混雑状況を地図表示する",
-            "alerts": "防災行政無線、緊急速報メール、防災アプリ、Eメール・LINEの重要なお知らせ配信、Yahoo!防災速報などを利用可能。放送内容は電話でも確認でき、情報入手が困難な65歳以上や障がいのある市民向けに電話・ファクス配信を実施",
-            "limitations": "市の公表状況では洪水・内水・高潮ハザードマップを作成済み。津波・土砂災害ハザードマップは作成していない"
+            "maps": "水害ハザードマップ、地震防災マップを公開",
+            "risks": "江戸川放水路等の洪水、内水浸水、高潮、地震・大規模火災等",
+            "latest": "令和7年度水害ハザードマップでは内水想定を1時間最大雨量153ミリメートルへ更新",
+            "facilities": "指定緊急避難場所、指定避難所、医療拠点等を掲載",
+            "alerts": "防災行政無線、緊急速報メール、防災アプリ、Eメール・LINE等で情報配信"
           },
           "source": {
             "url": "https://www.city.urayasu.lg.jp/todokede/anzen/bousai/1030669/1002110.html",
-            "checkedAt": "2026-07-19"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.urayasu.lg.jp/todokede/anzen/bousai/1030668/1044661.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/todokede/anzen/bousai/1030666/1040010.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/todokede/anzen/1002080.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/todokede/anzen/bousai/1030668/1002119.html",
-              "checkedAt": "2026-07-19"
-            },
-            {
-              "url": "https://www.city.urayasu.lg.jp/shisei/kocho/iken/bousai/1001952.html",
-              "checkedAt": "2026-07-19"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         }
       }
     },
