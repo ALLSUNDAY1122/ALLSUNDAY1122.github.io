@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "check:scope": "node ./scripts/check-change-scope.mjs",
-    "generate": "node ./scripts/generate-municipalities.mjs",
+    "generate:data": "node ./scripts/generate-municipalities.mjs",
+    "generate:pages": "node ./scripts/generate-municipality-pages.mjs",
+    "generate": "npm run generate:data && npm run generate:pages",
     "progress": "node ./scripts/update-progress.mjs",
     "validate:identity": "node ./scripts/validate-municipality-identity.mjs",
-    "validate": "npm run validate:identity && node ./scripts/validate-data.mjs",
-    "validate:generated": "npm run validate:identity && node ./scripts/validate-data.mjs --require-generated",
+    "validate:pages": "node ./scripts/validate-municipality-pages.mjs",
+    "validate": "npm run validate:identity && node ./scripts/validate-data.mjs && npm run validate:pages",
+    "validate:generated": "npm run validate:identity && node ./scripts/validate-data.mjs --require-generated && npm run validate:pages",
     "smoke:public": "node ./scripts/smoke-public-site.mjs",
     "check": "npm run generate && npm run progress && npm run validate:generated"
   }
