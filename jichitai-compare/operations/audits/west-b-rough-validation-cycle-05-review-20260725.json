@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycle-05-review-20260725",
+  "sessionId": "west-b",
+  "cycle": 5,
+  "reviewedAt": "2026-07-25T02:03:00+09:00",
+  "sourceAuditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-05-20260725.json",
+  "aggregate": {
+    "municipalityCount": 25,
+    "serviceCount": 225,
+    "networkCheckedUrlCount": 250,
+    "structuralErrorCount": 0,
+    "networkWarningCount": 16,
+    "manualSpotCheckCount": 5,
+    "detectedResearchContentErrorCount": 1,
+    "correctedResearchContentErrorCount": 1,
+    "detectedSourceMaintenanceIssueCount": 1,
+    "correctedSourceMaintenanceIssueCount": 1,
+    "status": "passed_after_corrections"
+  },
+  "warningReview": [
+    {
+      "code": "36404",
+      "name": "板野町",
+      "classification": "site_access_or_tls_warning",
+      "affectedUrlCount": 10,
+      "result": "GitHub Actionsから町公式サイトと制度出典を取得できなかったが、こども医療、産後ケア、学校給食費補助、粗大ごみ等の現行公式ページを確認。登録内容との矛盾やURL移転は検出しなかった。"
+    },
+    {
+      "code": "38356",
+      "name": "上島町",
+      "classification": "transient_gateway_timeout",
+      "affectedUrlCount": 4,
+      "result": "保育料、産後ケア、住宅支援、粗大ごみの4ページが監査時504。現行公式ページの公開を確認し、出典変更不要と判定。"
+    },
+    {
+      "code": "38442",
+      "name": "伊方町",
+      "service": "bulkyWaste",
+      "classification": "stale_source_url_corrected",
+      "result": "404の旧ごみ分別PDFを現行公式ごみ分別ガイドブックへ更新。制度内容・判定は変更なし。",
+      "correctionPullRequestNumber": 3011,
+      "correctionCiRunNumber": 7307,
+      "correctionMergeCommit": "5ca3e822317f908c3aa369a9f78fa25a4c837e70"
+    },
+    {
+      "code": "38484",
+      "name": "松野町",
+      "service": "housingSupport",
+      "classification": "research_content_status_corrected",
+      "result": "旧個別ページが404で、2026年度の募集・補助上限・申請条件を現行公式情報から確認できないため、verifiedからunavailableへ訂正。",
+      "correctionPullRequestNumber": 3011,
+      "correctionCiRunNumber": 7307,
+      "correctionMergeCommit": "5ca3e822317f908c3aa369a9f78fa25a4c837e70"
+    }
+  ],
+  "manualSpotChecks": [
+    {
+      "code": "36404",
+      "name": "板野町",
+      "service": "childMedical_postpartumCare_schoolMeals_bulkyWaste",
+      "status": "passed",
+      "result": "対象年齢、産後ケア類型、学校給食費半額補助、粗大ごみ持込条件を公式案内と照合。temporaryChildcareのunavailable判定も保守的で妥当。"
+    },
+    {
+      "code": "38203",
+      "name": "宇和島市",
+      "service": "schoolMeals",
+      "status": "passed",
+      "result": "2026年4月から市立小中学校の学校給食費を無償化する公式方針と一致。"
+    },
+    {
+      "code": "38213",
+      "name": "四国中央市",
+      "service": "temporaryChildcare",
+      "status": "passed",
+      "result": "生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致。"
+    },
+    {
+      "code": "38402",
+      "name": "砥部町",
+      "service": "temporaryChildcare",
+      "status": "passed",
+      "result": "生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致。"
+    },
+    {
+      "code": "41201",
+      "name": "佐賀市",
+      "service": "schoolMeals",
+      "status": "passed",
+      "result": "2026年度の市立小学校給食費完全無償化方針と一致。"
+    }
+  ],
+  "conclusion": "one_research_content_error_and_one_source_maintenance_issue_corrected",
+  "nextCycle": {
+    "cycle": 6,
+    "plannedMunicipalityCount": 25,
+    "scopePolicy": "佐賀県の残り自治体から開始し、長崎県へ進む"
+  }
+}
