@@ -62,7 +62,7 @@ async function waitForRelease() {
         progressiveApp: topHtml.includes('assets/app.js?v=20260723-008'),
         analytics: topHtml.includes('assets/analytics.js?v=20260723-003'),
         fiveMinuteReady: fiveMinuteHtml.includes('href="stories/last-elevator.html"') && (fiveMinuteHtml.match(/class="pick"/g) || []).length === 12 && fiveMinuteHtml.includes('assets/analytics.js?v=20260724-004'),
-        bedtimeReady: bedtimeHtml.includes('href="stories/good-night.html"') && (bedtimeHtml.match(/class="pick"/g) || []).length === 8 && (bedtimeHtml.match(/class="mood-card"/g) || []).length === 4 && bedtimeHtml.includes('assets/analytics.js?v=20260724-004'),
+        bedtimeReady: bedtimeHtml.includes('href="stories/good-night.html"') && (bedtimeHtml.match(/class="pick"/g) || []).length === 8 && (bedtimeHtml.match(/class="mood-card"/g) || []).length === 4 && bedtimeHtml.includes('assets/analytics.js?v=20260724-005'),
         archiveReady: archiveHtml.includes('assets/archive.js?v=20260723-004'),
         staticCirculation: storyHtml.includes('class="hero-actions story-pagination"') && storyHtml.includes('class="related"'),
         storyReady: storyHtml.includes('../assets/story.js?v=20260723-007') && storyHtml.includes('../assets/engagement.js?v=20260723-003'),
