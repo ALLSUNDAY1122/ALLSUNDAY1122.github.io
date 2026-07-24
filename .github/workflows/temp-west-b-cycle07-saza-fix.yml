@@ -3,7 +3,7 @@ name: Temporary West B Cycle 07 Saza Fix
 on:
   push:
     branches:
-      - fix/west-b-cycle07-saza-school-meals-20260725
+      - fix/west-b-cycle07-saza-school-meals-v2-20260725
   pull_request:
     types: [opened, reopened, synchronize]
     branches:
@@ -14,12 +14,12 @@ permissions:
 
 jobs:
   fix:
-    if: github.event_name == 'push' || github.head_ref == 'fix/west-b-cycle07-saza-school-meals-20260725'
+    if: github.event_name == 'push' || github.head_ref == 'fix/west-b-cycle07-saza-school-meals-v2-20260725'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/west-b-cycle07-saza-school-meals-20260725
+          ref: fix/west-b-cycle07-saza-school-meals-v2-20260725
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -60,7 +60,7 @@ jobs:
           task.verifiedCount = 8;
           task.unavailableCount = 1;
           task.lastCheckedAt = '2026-07-25';
-          task.lastUpdatedAt = '2026-07-25T02:52:00+09:00';
+          task.lastUpdatedAt = '2026-07-25T03:15:00+09:00';
           task.lastUpdatedBy = '西日本調査班B';
           task.officialSources = Array.isArray(task.officialSources)
             ? task.officialSources.map(url => url === 'https://www.sazacho-nagasaki.jp/kyouiku/kiji0034032/index.html'
@@ -82,9 +82,7 @@ jobs:
         shell: bash
         run: |
           rm -f .github/workflows/temp-west-b-cycle07-saza-fix.yml
-          rm -f .github/west-b-cycle07-saza-fix.trigger
-          rm -f .github/west-b-cycle07-saza-pr-merge-trigger.txt
-          rm -f .github/west-b-cycle07-saza-registered-trigger.txt
+          rm -f .github/west-b-cycle07-saza-v2.trigger
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jichitai-compare/data/municipalities/42/42391.json
@@ -93,12 +91,6 @@ jobs:
           git add jichitai-compare/municipality/42391/index.html
           git add jichitai-compare/operations/progress.json
           git add .github/workflows/temp-west-b-cycle07-saza-fix.yml
-          git add .github/west-b-cycle07-saza-fix.trigger
-          git add .github/west-b-cycle07-saza-pr-merge-trigger.txt
-          git add .github/west-b-cycle07-saza-registered-trigger.txt
-          if git diff --cached --quiet; then
-            echo "No correction changes remain"
-            exit 0
-          fi
+          git add .github/west-b-cycle07-saza-v2.trigger
           git commit -m "fix: 佐々町の学校給食費支援を現行確認不能へ訂正"
-          git push origin HEAD:fix/west-b-cycle07-saza-school-meals-20260725
+          git push origin HEAD:fix/west-b-cycle07-saza-school-meals-v2-20260725
