@@ -4,6 +4,7 @@ const { chromium } = require('playwright');
 const base = 'https://allsunday1122.github.io/yorugatari';
 const shareVersion = '20260724-002';
 const startVersion = '20260724-001';
+const startRuntime = 'landing-start-20260724-001.js';
 const cases = [
   { name: 'five-minute', path: '/5min-horror.html', canonical: `${base}/5min-horror.html`, content: 'five_minute_12', picks: 12, startPath: '/yorugatari/__landing-start/five-minute' },
   { name: 'bedtime', path: '/bedtime-horror.html', canonical: `${base}/bedtime-horror.html`, content: 'bedtime_8', picks: 8, startPath: '/yorugatari/__landing-start/bedtime' }
@@ -23,10 +24,10 @@ async function openReady(page, currentCase) {
   for (let attempt = 1; attempt <= 24; attempt += 1) {
     try {
       const response = await page.goto(`${base}${currentCase.path}?share-audit=${Date.now()}-${attempt}`, { waitUntil: 'networkidle', timeout: 60000 });
-      detail = await page.evaluate(({ expectedShareVersion, expectedStartVersion, expectedPicks }) => ({
+      detail = await page.evaluate(({ expectedShareVersion, expectedStartRuntime, expectedPicks }) => ({
         status: document.readyState,
         shareScript: Array.from(document.scripts).some((script) => script.src.includes(`assets/landing-share.js?v=${expectedShareVersion}`)),
-        startScript: Boolean(document.querySelector(`script[data-runtime="landing-start-${expectedStartVersion}"]`)),
+        startScript: Array.from(document.scripts).some((script) => script.src.includes(`assets/${expectedStartRuntime}`)),
         shareButton: Boolean(document.querySelector('#landingShareButton')),
         copyButton: Boolean(document.querySelector('#landingCopyButton')),
         statusRegion: document.querySelector('#landingShareStatus')?.getAttribute('aria-live'),
@@ -34,7 +35,7 @@ async function openReady(page, currentCase) {
         startState: Boolean(window.YORUGATARI_LANDING_START),
         picks: document.querySelectorAll('.pick').length,
         overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
-      }), { expectedShareVersion: shareVersion, expectedStartVersion: startVersion, expectedPicks: currentCase.picks });
+      }), { expectedShareVersion: shareVersion, expectedStartRuntime: startRuntime, expectedPicks: currentCase.picks });
       detail.httpStatus = response?.status();
       detail.attempt = attempt;
       if (response?.status() === 200 && detail.shareScript && detail.startScript && detail.shareButton && detail.copyButton && detail.statusRegion === 'polite' && detail.shareState && detail.startState && detail.picks === currentCase.picks && detail.overflow) return detail;
@@ -48,7 +49,7 @@ async function openReady(page, currentCase) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Landing-Share-Audit/1.2' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Landing-Share-Audit/1.3' });
   const trackedPaths = [];
   await context.route('https://page-views-api.ratneshc.com/**', async (route) => {
     try {
@@ -126,7 +127,7 @@ async function openReady(page, currentCase) {
     await browser.close();
   }
 
-  const report = { auditedAt: new Date().toISOString(), success: failures.length === 0, shareVersion, startVersion, results, failures };
+  const report = { auditedAt: new Date().toISOString(), success: failures.length === 0, shareVersion, startVersion, startRuntime, results, failures };
   fs.writeFileSync('yorugatari-landing-share-report.json', `${JSON.stringify(report, null, 2)}\n`);
   console.log(`YORUGATARI_LANDING_SHARE_REPORT=${JSON.stringify(report)}`);
   if (failures.length) process.exit(1);
