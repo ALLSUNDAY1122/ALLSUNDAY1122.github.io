@@ -1,0 +1,84 @@
+name: Central A Round07 Audit Helper
+
+on:
+  push:
+    branches: ['audit/central-a-round07-audit-helper-20260725']
+    paths: ['.github/workflows/central-a-round07-audit-helper.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round07-work-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Audit Mie municipalities
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/audit-round07.mjs <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare',prefectureCode='24',prefectureName='三重県';
+          const expected={
+            '24201':'津市','24202':'四日市市','24203':'伊勢市','24204':'松阪市','24205':'桑名市','24207':'鈴鹿市','24208':'名張市','24209':'尾鷲市','24210':'亀山市','24211':'鳥羽市','24212':'熊野市','24214':'いなべ市','24215':'志摩市','24216':'伊賀市','24303':'木曽岬町','24324':'東員町','24341':'菰野町','24343':'朝日町','24344':'川越町','24441':'多気町','24442':'明和町','24443':'大台町','24461':'玉城町','24470':'度会町','24471':'大紀町','24472':'南伊勢町','24543':'紀北町','24561':'御浜町','24562':'紀宝町'
+          };
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const completedStatus=new Set(['verified','unavailable']);
+          const findings=[],unavailable=[],substantiveSuspects=[],municipalities=[];
+          const eq=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+          const add=(severity,type,code,extra={})=>findings.push({severity,type,code,...extra});
+          for(const [code,name] of Object.entries(expected)){
+            const dp=path.join(root,'data','municipalities','24',code+'.json'),tp=path.join(root,'operations','tasks',code+'.json');
+            if(!fs.existsSync(dp)){add('high','missing_municipality_file',code,{name});continue;}
+            if(!fs.existsSync(tp)){add('high','missing_task_file',code,{name});continue;}
+            let d,t;try{d=JSON.parse(fs.readFileSync(dp,'utf8'));}catch(e){add('high','invalid_municipality_json',code,{error:e.message});continue;}
+            try{t=JSON.parse(fs.readFileSync(tp,'utf8'));}catch(e){add('high','invalid_task_json',code,{error:e.message});continue;}
+            if(d.code!==code||d.name!==name||d.prefectureCode!=='24'||d.prefecture!=='三重県')add('high','municipality_identity_mismatch',code,{expected:{code,name,prefectureCode:'24',prefecture:'三重県'},actual:{code:d.code,name:d.name,prefectureCode:d.prefectureCode,prefecture:d.prefecture}});
+            if(t.municipalityCode!==code||t.municipalityName!==name||t.prefectureCode!=='24'||t.prefectureName!=='三重県')add('high','task_identity_mismatch',code,{actual:{municipalityCode:t.municipalityCode,municipalityName:t.municipalityName,prefectureCode:t.prefectureCode,prefectureName:t.prefectureName}});
+            if(t.assignedTeam!=='中日本調査班')add('high','assigned_team_mismatch',code,{actual:t.assignedTeam});
+            if(!eq(Object.keys(d.services||{}).sort(),[...keys].sort()))add('high','service_key_mismatch',code,{actual:Object.keys(d.services||{})});
+            const counts={verified:0,unavailable:0,needs_medium_review:0,researching:0};
+            for(const k of keys){
+              const s=d.services?.[k];
+              if(!s){add('high','missing_service',code,{service:k});continue;}
+              if(Object.hasOwn(counts,s.status))counts[s.status]++;else add('medium','unknown_service_status',code,{service:k,status:s.status});
+              if(completedStatus.has(s.status)&&!/^https:\/\//.test(s.source?.url||''))add('high','completed_service_missing_https_source',code,{service:k,status:s.status,source:s.source?.url||null});
+              if(s.status==='unavailable')unavailable.push({code,name,service:k,summary:s.summary||'',source:s.source?.url||''});
+            }
+            const completed=keys.filter(k=>completedStatus.has(d.services?.[k]?.status));
+            const official=[...new Set(keys.filter(k=>completedStatus.has(d.services?.[k]?.status)&&/^https:\/\//.test(d.services?.[k]?.source?.url||'')).map(k=>d.services[k].source.url))];
+            if(!eq(t.completedServices,completed))add('medium','completed_services_mismatch',code,{expected:completed,actual:t.completedServices});
+            const expectedNext=completed.length===9?9:keys.findIndex(k=>!completedStatus.has(d.services?.[k]?.status));
+            for(const [field,val] of [['verifiedCount',counts.verified],['unavailableCount',counts.unavailable],['needsMediumReviewCount',counts.needs_medium_review],['researchingCount',counts.researching],['nextServiceIndex',expectedNext]])if(t[field]!==val)add('medium',field+'_mismatch',code,{expected:val,actual:t[field]});
+            const current=completed.length===9?null:keys[expectedNext]||null;if(t.currentService!==current)add('medium','current_service_mismatch',code,{expected:current,actual:t.currentService});
+            if(!eq(t.officialSources,official))add('medium','official_sources_mismatch',code,{expected:official,actual:t.officialSources});
+            if(completed.length===9&&d.status!=='verified')add('medium','top_level_status_mismatch',code,{actual:d.status});
+            if(completed.length===9&&t.status!=='merged')add('medium','task_status_mismatch',code,{actual:t.status});
+            for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){
+              const s=d.services?.[k], text=`${s?.summary||''} ${JSON.stringify(s?.details||{})}`;
+              if(s?.status==='unavailable')substantiveSuspects.push({type:'possible_false_unavailable',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});
+              if(k==='temporaryChildcare'&&s?.status==='verified'&&!/(誰でも通園|乳児等通園|月\s*10\s*時間|就労要件を問わ)/.test(text))substantiveSuspects.push({type:'possible_any_child_access_omission',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});
+              if(k==='schoolMeals'&&s?.status==='verified'&&!/(令和8|2026)/.test(text))substantiveSuspects.push({type:'school_meal_currentness_check',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});
+              if(k==='postpartumCare'&&s?.status==='verified'&&!/(1年|12か月|宿泊|通所|訪問|デイ)/.test(text))substantiveSuspects.push({type:'postpartum_scope_check',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});
+            }
+            const highRisk={};for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){const s=d.services?.[k];highRisk[k]={status:s?.status||null,summary:s?.summary||'',source:s?.source?.url||'',checkedAt:s?.source?.checkedAt||null};}
+            municipalities.push({code,name,status:d.status,updatedAt:d.updatedAt,taskStatus:t.status,taskLastCheckedAt:t.lastCheckedAt,verifiedCount:counts.verified,unavailableCount:counts.unavailable,needsMediumReviewCount:counts.needs_medium_review,officialSourceCount:official.length,taskOfficialSourceCount:(t.officialSources||[]).length,highRisk});
+          }
+          const report={schemaVersion:'1.0.0',auditId:'central-a-scope-round-07-mie-20260725',prefectureCode,prefectureName,expectedMunicipalityCount:Object.keys(expected).length,checkedMunicipalityCount:municipalities.length,checkedServiceCount:municipalities.length*9,generatedAt:'2026-07-25T03:10:00+09:00',structuralFindingCount:findings.length,unavailableCount:unavailable.length,substantiveSuspectCount:substantiveSuspects.length,findings,unavailable,substantiveSuspects,municipalities};
+          fs.writeFileSync(path.join(root,'operations','control','central-a-scope-round-07-mie-20260725.json'),JSON.stringify(report,null,2)+'\n');
+          NODE
+          node /tmp/audit-round07.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/central-a-scope-round-07-mie-20260725.json
+          git commit -m 'audit: 三重県29自治体の構造監査結果を記録'
+          git push origin HEAD:audit/central-a-round07-work-20260725
