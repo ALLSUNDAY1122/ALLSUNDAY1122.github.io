@@ -1,0 +1,46 @@
+name: Finalize North B sanity audit round 04
+
+on:
+  push:
+    branches:
+      - audit/north-b-sanity-round-04-20260725
+    paths:
+      - .github/workflows/north-b-sanity-round-04-finalize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/north-b-sanity-round-04-20260725
+          fetch-depth: 0
+      - shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+          for (const code of ['04323','04401']) {
+            const path = `jichitai-compare/operations/tasks/${code}.json`;
+            const task = read(path);
+            task.pullRequestNumber = 2958;
+            task.lastUpdatedAt = '2026-07-25T01:13:00+09:00';
+            write(path, task);
+          }
+          const path = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const checkpoint = read(path);
+          checkpoint.updatedAt = '2026-07-25T01:13:00+09:00';
+          checkpoint.pullRequestNumber = 2958;
+          checkpoint.ciStatus = 'pending';
+          write(path, checkpoint);
+          fs.unlinkSync('.github/workflows/north-b-sanity-round-04-finalize.yml');
+          NODE
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "ops: 北日本B第4回PR情報を記録"
+          git push origin HEAD:audit/north-b-sanity-round-04-20260725
