@@ -5,15 +5,33 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-22T20:36:00+09:00",
-  "status": "ready",
+  "updatedAt": "2026-07-24T22:20:00+09:00",
+  "status": "completed",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 95,
+  "assignedMunicipalityCount": 95,
+  "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": null,
-  "ciStatus": "not_started",
-  "completedSinceSplit": [],
+  "pullRequestNumber": 2789,
+  "ciStatus": "success",
   "blocked": [],
-  "nextAction": "担当範囲の既存task・ブランチ・PRを再検査し、最小の未着手自治体を選定する。"
+  "qualityState": {
+    "needsMediumReviewMunicipalityCount": 0,
+    "blockedMunicipalityCount": 0,
+    "prOpenMunicipalityCount": 0
+  },
+  "nationalRelease": {
+    "pullRequestNumber": 2791,
+    "ciRunNumber": 6692,
+    "mergeCommitSha": "92aa5e660fc8c52fbb8d67445aeb15a63b58739b",
+    "publishedMunicipalityCount": 1741,
+    "remainingMunicipalityCount": 0
+  },
+  "evidence": {
+    "qualityAuditPullRequestNumber": 2783,
+    "publicationConfirmationPullRequestNumber": 2786,
+    "checkpointCorrectionPullRequestNumber": 2789,
+    "latestPublishedMunicipalityCodes": ["30304", "30341", "30343"]
+  },
+  "nextAction": "新規差し戻し、CI失敗、公式制度更新、自治体コード改定、mainとの公開不一致を監視する。"
 }
