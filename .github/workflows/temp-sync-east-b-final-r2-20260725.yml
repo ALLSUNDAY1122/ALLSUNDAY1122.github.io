@@ -1,0 +1,117 @@
+name: Temporary sync East B final r2
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temp-sync-east-b-final-r2
+  cancel-in-progress: false
+
+jobs:
+  sync-and-validate:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/sync-east-b-final-r2-20260725
+          fetch-depth: 0
+
+      - name: Reset to latest main and fetch region east
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main region/east
+          git reset --hard origin/main
+
+      - name: Import East B final regional sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          for code in 12203 13123 15100 15586; do
+            pref="${code:0:2}"
+            git show "origin/region/east:jichitai-compare/data/municipalities/${pref}/${code}.json" > "jichitai-compare/data/municipalities/${pref}/${code}.json"
+            git show "origin/region/east:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+          git show origin/region/east:jichitai-compare/operations/control/session-checkpoints/east-b.json > jichitai-compare/operations/control/session-checkpoints/east-b.json
+
+      - name: Normalize task completion state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          import json
+          from pathlib import Path
+          for code in ['12203','13123','15100','15586']:
+              path = Path(f'jichitai-compare/operations/tasks/{code}.json')
+              data = json.loads(path.read_text(encoding='utf-8'))
+              data['status'] = 'merged'
+              data['currentBranch'] = None
+              data['lastCheckedAt'] = '2026-07-25'
+              data['lastUpdatedAt'] = '2026-07-25T02:57:00+09:00'
+              data['lastUpdatedBy'] = '統括A'
+              note = '東日本Bの10回誤調査監査最終結果を、最新main基点で全国品質同期。'
+              if note not in data.setdefault('notes', []):
+                  data['notes'].append(note)
+              path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+
+      - name: Regenerate and validate nationwide site
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run check
+
+      - name: Verify East B final corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          for (const code of ['12203','13123','15100','15586']) {
+            const pref = code.slice(0,2);
+            const source = JSON.parse(fs.readFileSync(`jichitai-compare/data/municipalities/${pref}/${code}.json`, 'utf8'));
+            if (!source || Object.keys(source.services || {}).length !== 9) throw new Error(`${code}: municipality data missing`);
+          }
+          const awashima = JSON.parse(fs.readFileSync('jichitai-compare/data/municipalities/15/15586.json', 'utf8'));
+          if (awashima.services?.childcareFee?.status !== 'verified' || awashima.services?.temporaryChildcare?.status !== 'verified') {
+            throw new Error('15586: corrected unavailable decisions missing');
+          }
+          const checkpoint = JSON.parse(fs.readFileSync('jichitai-compare/operations/control/session-checkpoints/east-b.json', 'utf8'));
+          if (checkpoint.verificationCampaign?.completedRounds !== 10) throw new Error('East B ten-round audit not complete');
+          console.log('verified East B final corrections and completed audit');
+          NODE
+
+      - name: Write audit manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > jichitai-compare/operations/control/publish-audit-east-b-final-20260725.json <<'EOF'
+          {
+            "schemaVersion": "1.0.0",
+            "generatedAt": "2026-07-25T02:57:00+09:00",
+            "auditIssueNumber": 2908,
+            "supersededNationalPullRequestNumber": 3040,
+            "municipalityCodes": ["12203", "13123", "15100", "15586"],
+            "standardValidation": "success",
+            "status": "generation_success_final_ci_pending"
+          }
+          EOF
+
+      - name: Commit generated result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare
+          git diff --cached --check
+          git commit -m '全国品質同期: 東日本B最終監査を最新mainへ反映'
+          git push --force-with-lease origin HEAD:coord/sync-east-b-final-r2-20260725
