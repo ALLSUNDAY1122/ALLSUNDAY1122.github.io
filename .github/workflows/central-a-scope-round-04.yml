@@ -1,0 +1,129 @@
+name: Central A Scope Audit Round 04
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-04-20260725']
+    paths: ['.github/workflows/central-a-scope-round-04.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-04-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Audit Gifu municipalities
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/audit-round04.mjs <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare';
+          const prefDir = path.join(root, 'data/municipalities/21');
+          const taskDir = path.join(root, 'operations/tasks');
+          const reportPath = path.join(root, 'operations/control/central-a-scope-round-04-gifu-20260725.json');
+          const masterPath = path.join(root, 'operations/control/central-a-scope-verification-20260724.json');
+          const expectedNames = {
+            '21201':'岐阜市','21202':'大垣市','21203':'高山市','21204':'多治見市','21205':'関市','21206':'中津川市','21207':'美濃市','21208':'瑞浪市','21209':'羽島市','21210':'恵那市','21211':'美濃加茂市','21212':'土岐市','21213':'各務原市','21214':'可児市','21215':'山県市','21216':'瑞穂市','21217':'飛騨市','21218':'本巣市','21219':'郡上市','21220':'下呂市','21221':'海津市','21302':'岐南町','21303':'笠松町','21341':'養老町','21361':'垂井町','21362':'関ケ原町','21381':'神戸町','21382':'輪之内町','21383':'安八町','21401':'揖斐川町','21403':'大野町','21404':'池田町','21421':'北方町','21501':'坂祝町','21502':'富加町','21503':'川辺町','21504':'七宗町','21505':'八百津町','21506':'白川町','21507':'東白川村','21521':'御嵩町','21604':'白川村'
+          };
+          const expectedServices = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const highRiskKeys = ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport'];
+          const readJson = p => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const files = fs.readdirSync(prefDir).filter(f => /^21\d{3}\.json$/.test(f)).sort();
+          const findings = [];
+          const unavailable = [];
+          const suspects = [];
+          const municipalities = [];
+
+          if (files.length !== 42) findings.push({severity:'high',type:'municipality_count_mismatch',expected:42,actual:files.length});
+          for (const [code,name] of Object.entries(expectedNames)) {
+            if (!files.includes(`${code}.json`)) findings.push({severity:'high',type:'missing_municipality_file',code,name});
+          }
+
+          for (const file of files) {
+            const code = file.replace('.json','');
+            const p = path.join(prefDir,file);
+            const data = readJson(p);
+            const taskPath = path.join(taskDir,`${code}.json`);
+            const task = fs.existsSync(taskPath) ? readJson(taskPath) : null;
+            const services = data.services || {};
+            const actualKeys = Object.keys(services).sort();
+            const expectedKeys = [...expectedServices].sort();
+            if (data.code !== code) findings.push({severity:'high',type:'code_mismatch',code,actual:data.code});
+            if (data.prefectureCode !== '21' || data.prefecture !== '岐阜県') findings.push({severity:'high',type:'prefecture_mismatch',code,prefectureCode:data.prefectureCode,prefecture:data.prefecture});
+            if (expectedNames[code] !== data.name) findings.push({severity:'high',type:'name_mismatch',code,expected:expectedNames[code],actual:data.name});
+            if (JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) findings.push({severity:'high',type:'service_keys_mismatch',code,expected:expectedKeys,actual:actualKeys});
+            if (!task) findings.push({severity:'high',type:'missing_task',code});
+            else {
+              if (task.municipalityCode !== code || task.municipalityName !== data.name || task.prefectureCode !== '21') findings.push({severity:'high',type:'task_identity_mismatch',code});
+              if (task.status !== 'merged') findings.push({severity:'medium',type:'task_status_not_merged',code,status:task.status});
+              if (task.verifiedCount !== 9 || task.completedServices?.length !== 9) findings.push({severity:'medium',type:'task_completion_mismatch',code,verifiedCount:task.verifiedCount,completedServices:task.completedServices?.length});
+            }
+            let verifiedCount=0, unavailableCount=0, needsMediumReviewCount=0;
+            const primarySources=[];
+            for (const key of expectedServices) {
+              const svc=services[key];
+              if (!svc) continue;
+              if (svc.status==='verified') verifiedCount++;
+              if (svc.status==='unavailable') { unavailableCount++; unavailable.push({code,name:data.name,service:key,summary:svc.summary||null}); }
+              if (svc.status==='needs_medium_review' || svc.status==='needsMediumReview') needsMediumReviewCount++;
+              if (svc.source?.url) primarySources.push(svc.source.url);
+            }
+            if (verifiedCount===9 && data.status!=='verified') findings.push({severity:'medium',type:'top_level_status_mismatch',code,status:data.status});
+            const uniquePrimary=[...new Set(primarySources)];
+            if (task) {
+              const taskSources=[...new Set(task.officialSources||[])];
+              const a=[...uniquePrimary].sort(), b=[...taskSources].sort();
+              if (JSON.stringify(a)!==JSON.stringify(b)) findings.push({severity:'medium',type:'official_sources_mismatch',code,expected:a,actual:b});
+            }
+            const tempText=JSON.stringify(services.temporaryChildcare||{});
+            if ((services.temporaryChildcare?.status==='verified') && !/(誰でも通園|乳児等通園支援|月10時間|10時間.{0,8}月)/.test(tempText)) {
+              suspects.push({severity:'review',type:'possible_any_child_access_omission',code,name:data.name,summary:services.temporaryChildcare?.summary||null,source:services.temporaryChildcare?.source?.url||null});
+            }
+            const ppText=JSON.stringify(services.postpartumCare||{});
+            if (/(生後|産後)(4|5|6|7|8)か月|4か月まで|5か月まで|6か月まで/.test(ppText)) {
+              suspects.push({severity:'review',type:'postpartum_age_currentness_check',code,name:data.name,summary:services.postpartumCare?.summary||null,source:services.postpartumCare?.source?.url||null});
+            }
+            const mealText=JSON.stringify(services.schoolMeals||{});
+            if (/(令和7年度|2025年度|当面の間|当面|時限|支援措置)/.test(mealText)) {
+              suspects.push({severity:'review',type:'school_meal_currentness_check',code,name:data.name,summary:services.schoolMeals?.summary||null,source:services.schoolMeals?.source?.url||null});
+            }
+            const housingText=JSON.stringify(services.housingSupport||{});
+            if (/(令和7年度|2025年度|受付終了|募集終了|予算上限)/.test(housingText)) {
+              suspects.push({severity:'review',type:'housing_currentness_check',code,name:data.name,summary:services.housingSupport?.summary||null,source:services.housingSupport?.source?.url||null});
+            }
+            const highRisk={};
+            for (const key of highRiskKeys) highRisk[key]={status:services[key]?.status||null,summary:services[key]?.summary||null,source:services[key]?.source?.url||null,checkedAt:services[key]?.source?.checkedAt||null};
+            municipalities.push({code,name:data.name,status:data.status,updatedAt:data.updatedAt,taskStatus:task?.status||null,taskLastCheckedAt:task?.lastCheckedAt||null,verifiedCount,unavailableCount,needsMediumReviewCount,primarySourceCount:uniquePrimary.length,taskOfficialSourceCount:new Set(task?.officialSources||[]).size,sharedPrimarySourceCount:primarySources.length-uniquePrimary.length,highRisk});
+          }
+
+          const report={schemaVersion:'1.0.0',auditId:'central-a-scope-round-04-gifu-20260725',prefectureCode:'21',prefectureName:'岐阜県',expectedMunicipalityCount:42,checkedMunicipalityCount:files.length,checkedServiceCount:files.length*9,generatedAt:'2026-07-25T00:51:00+09:00',structuralFindingCount:findings.length,unavailableCount:unavailable.length,substantiveSuspectCount:suspects.length,findings,unavailable,substantiveSuspects:suspects,municipalities};
+          fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+
+          const master=readJson(masterPath);
+          master.branch='audit/central-a-scope-verification-round-04-20260725';
+          const batch={batch:4,prefectureCode:'21',prefectureName:'岐阜県',municipalityCount:42,status:'structural_checked',checkedMunicipalities:files.length,checkedServices:files.length*9,structuralFindingCount:findings.length,unavailableCount:unavailable.length,substantiveSuspectCount:suspects.length,report:'operations/control/central-a-scope-round-04-gifu-20260725.json',nextStep:'制度内容疑義を公式情報で重点照合する'};
+          const idx=master.batches.findIndex(x=>x.batch===4);
+          if (idx>=0) master.batches[idx]=batch; else master.batches.push(batch);
+          master.summary.completedBatches=3;
+          master.summary.checkedMunicipalities=93;
+          master.nextAction='岐阜県の構造監査結果と制度内容疑義を確認し、明確な誤りを修正する';
+          fs.writeFileSync(masterPath,JSON.stringify(master,null,2)+'\n');
+          NODE
+          node /tmp/audit-round04.mjs
+          rm .github/workflows/central-a-scope-round-04.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/central-a-scope-round-04-gifu-20260725.json jichitai-compare/operations/control/central-a-scope-verification-20260724.json .github/workflows/central-a-scope-round-04.yml
+          git commit -m 'audit: 岐阜県42自治体の構造監査'
+          git push origin HEAD:audit/central-a-scope-verification-round-04-20260725
