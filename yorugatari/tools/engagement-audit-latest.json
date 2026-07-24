@@ -1,12 +1,12 @@
 {
-  "auditedAt": "2026-07-24T00:35:19.472Z",
-  "success": false,
+  "auditedAt": "2026-07-24T00:37:35.563Z",
+  "success": true,
   "results": [
     {
-      "name": "local: seven static pages and 100 stories are covered",
+      "name": "local: eight static pages and 100 stories are covered",
       "ok": true,
       "detail": {
-        "static": 7,
+        "static": 8,
         "stories": 100
       }
     },
@@ -21,8 +21,8 @@
       "detail": null
     },
     {
-      "name": "local: six fixed launch links and onsite sharing are defined",
-      "ok": false,
+      "name": "local: eight fixed launch links and onsite sharing are defined",
+      "ok": true,
       "detail": [
         {
           "id": "launch-20260723-x-top-100",
@@ -107,7 +107,7 @@
       ]
     },
     {
-      "name": "local: five-minute campaign codes exist only in the registered runtime map",
+      "name": "local: curated landing campaign codes exist only in the registered runtime map",
       "ok": true,
       "detail": null
     },
@@ -180,6 +180,40 @@
           "url": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
           "title": "5分で読める怖い話｜一話完結の短編ホラー12選｜夜語り",
           "description": "約5分で読める一話完結の怖い話を、心霊・人怖・意味怖・ネット怪談・都市伝説・後味の悪い話から12作品選定。無料・登録不要で読めます。",
+          "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+          "width": "2172",
+          "height": "724",
+          "alt": "月明かりと提灯が照らす夜の町並み",
+          "card": "summary_large_image",
+          "twitterImage": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
+          "twitterAlt": "月明かりと提灯が照らす夜の町並み"
+        }
+      }
+    },
+    {
+      "name": "published: bedtime launch URL maps to its fixed social campaign",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "status": 200,
+        "attempt": 1,
+        "state": {
+          "analyticsScript": true,
+          "engagementScript": false,
+          "analytics": true,
+          "source": "social",
+          "campaign": "launch-20260724-x-bedtime",
+          "picks": 8,
+          "moods": 4,
+          "faq": 3,
+          "breadcrumb": 1,
+          "overflow": true
+        },
+        "meta": {
+          "type": "website",
+          "url": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
+          "title": "寝る前に読む怖い話｜静かに怖い短編8選｜夜語り",
+          "description": "寝る前に一話だけ読みたい人向けに、音・写真・深夜の乗り物・家の違和感を扱う静かな怖い話を8作品選定。すべて無料・一話完結・約5分です。",
           "image": "https://allsunday1122.github.io/yorugatari/assets/yorugatari-share.png",
           "width": "2172",
           "height": "724",
@@ -342,92 +376,5 @@
       }
     }
   ],
-  "failures": [
-    {
-      "name": "local: six fixed launch links and onsite sharing are defined",
-      "ok": false,
-      "detail": [
-        {
-          "id": "launch-20260723-x-top-100",
-          "label": "X：100話トップ",
-          "source": "x",
-          "medium": "social",
-          "campaign": "launch_20260723",
-          "content": "top_100",
-          "target": "https://allsunday1122.github.io/yorugatari/",
-          "url": "https://allsunday1122.github.io/yorugatari/?utm_source=x&utm_medium=social&utm_campaign=launch_20260723&utm_content=top_100"
-        },
-        {
-          "id": "launch-20260723-x-last-elevator",
-          "label": "X：最後のエレベーター",
-          "source": "x",
-          "medium": "social",
-          "campaign": "launch_20260723",
-          "content": "last_elevator",
-          "target": "https://allsunday1122.github.io/yorugatari/stories/last-elevator.html",
-          "url": "https://allsunday1122.github.io/yorugatari/stories/last-elevator.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260723&utm_content=last_elevator"
-        },
-        {
-          "id": "launch-20260723-threads-spare-key",
-          "label": "Threads：合鍵は返却済み",
-          "source": "threads",
-          "medium": "social",
-          "campaign": "launch_20260723",
-          "content": "spare_key",
-          "target": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
-          "url": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260723&utm_content=spare_key"
-        },
-        {
-          "id": "launch-20260723-line-hired-experience",
-          "label": "LINE：あなたの経験で採用されました",
-          "source": "line",
-          "medium": "social",
-          "campaign": "launch_20260723",
-          "content": "hired_experience",
-          "target": "https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.html",
-          "url": "https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.html?utm_source=line&utm_medium=social&utm_campaign=launch_20260723&utm_content=hired_experience"
-        },
-        {
-          "id": "launch-20260724-x-five-minute",
-          "label": "X：5分で読める12選",
-          "source": "x",
-          "medium": "social",
-          "campaign": "launch_20260724",
-          "content": "five_minute_12",
-          "target": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
-          "url": "https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260724&utm_content=five_minute_12"
-        },
-        {
-          "id": "launch-20260724-threads-five-minute",
-          "label": "Threads：5分で読める12選",
-          "source": "threads",
-          "medium": "social",
-          "campaign": "launch_20260724",
-          "content": "five_minute_12",
-          "target": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
-          "url": "https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260724&utm_content=five_minute_12"
-        },
-        {
-          "id": "launch-20260724-x-bedtime",
-          "label": "X：寝る前の8選",
-          "source": "x",
-          "medium": "social",
-          "campaign": "launch_20260724",
-          "content": "bedtime_8",
-          "target": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
-          "url": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260724&utm_content=bedtime_8"
-        },
-        {
-          "id": "launch-20260724-threads-bedtime",
-          "label": "Threads：寝る前の8選",
-          "source": "threads",
-          "medium": "social",
-          "campaign": "launch_20260724",
-          "content": "bedtime_8",
-          "target": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
-          "url": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260724&utm_content=bedtime_8"
-        }
-      ]
-    }
-  ]
+  "failures": []
 }
