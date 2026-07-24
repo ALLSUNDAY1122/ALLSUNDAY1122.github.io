@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-24T05:57:07.356Z",
-  "generatedAtJapan": "2026/07/24 14:57",
-  "version": "20260724-007",
-  "status": "healthy",
-  "success": true,
+  "generatedAt": "2026-07-24T06:09:08.281Z",
+  "generatedAtJapan": "2026/07/24 15:09",
+  "version": "20260724-008",
+  "status": "degraded",
+  "success": false,
   "verificationPending": false,
   "verificationPolicy": "単一レポートが監査基盤だけで失敗した場合、現行ファイル照合・現行実行監査・公開Lighthouseを組み合わせて運用判定する。",
   "quality": [
@@ -12,9 +12,9 @@
       "label": "SEO",
       "success": true,
       "mode": "browser",
-      "observedAt": "2026-07-24T05:56:35.987Z",
-      "observedAtJapan": "2026/07/24 14:56",
-      "ageHours": 0
+      "observedAt": "2026-07-24T06:02:14.912Z",
+      "observedAtJapan": "2026/07/24 15:02",
+      "ageHours": 0.1
     },
     {
       "id": "ui",
@@ -23,7 +23,7 @@
       "mode": "browser",
       "observedAt": "2026-07-24T03:55:32.327Z",
       "observedAtJapan": "2026/07/24 12:55",
-      "ageHours": 2
+      "ageHours": 2.2
     },
     {
       "id": "accessibility",
@@ -38,7 +38,7 @@
         "現行公開版Lighthouse合格"
       ],
       "observedAtJapan": "2026/07/24 13:55",
-      "ageHours": 1
+      "ageHours": 1.2
     },
     {
       "id": "performance",
@@ -47,7 +47,7 @@
       "mode": "lighthouse",
       "observedAt": "2026-07-24T04:55:36.354Z",
       "observedAtJapan": "2026/07/24 13:55",
-      "ageHours": 1
+      "ageHours": 1.2
     },
     {
       "id": "engagement",
@@ -56,21 +56,32 @@
       "mode": "browser",
       "observedAt": "2026-07-24T01:35:43.145Z",
       "observedAtJapan": "2026/07/24 10:35",
-      "ageHours": 4.4
+      "ageHours": 4.6
     },
     {
       "id": "landingShare",
       "label": "特集共有・作品開始",
-      "success": true,
-      "mode": "composite",
+      "success": false,
+      "mode": "failed",
       "observedAt": "2026-07-24T05:34:51.000Z",
-      "evidence": [
-        "現行4ファイルのGitブロブSHA一致",
-        "模擬DOM実行監査合格",
-        "公開Lighthouseで現行共有・開始ランタイムを確認"
-      ],
+      "evidence": [],
       "observedAtJapan": "2026/07/24 14:34",
-      "ageHours": 0.4
+      "ageHours": 0.6
+    },
+    {
+      "id": "horrorQuiz",
+      "label": "怖さ診断",
+      "success": true,
+      "mode": "browser+lighthouse",
+      "observedAt": "2026-07-24T06:04:55.581Z",
+      "evidence": [
+        "公開ブラウザで4診断結果・12作品リンクを検証",
+        "全12作品がHTTP 200",
+        "重大・深刻なaxe違反なし",
+        "モバイル・PCのLighthouse基準合格"
+      ],
+      "observedAtJapan": "2026/07/24 15:04",
+      "ageHours": 0.1
     }
   ],
   "metrics": {
@@ -94,6 +105,12 @@
     "storyStartsAfterBaseline": 0,
     "landingStartRate": null,
     "conversionComparisonReady": false,
+    "horrorQuiz": {
+      "browserAuditSuccess": true,
+      "performanceAuditSuccess": true,
+      "mobilePerformance": 0.94,
+      "desktopPerformance": 1
+    },
     "externalLaunch": {
       "publishedCount": 0,
       "readyNotPostedCount": 8,
@@ -102,6 +119,7 @@
     }
   },
   "actions": [
+    "品質監査を修正する：特集共有・作品開始",
     "追跡URL付きの次候補「launch-20260724-x-bedtime」を1本だけ外部公開し、着地を確認する。",
     "各特集の基準値設定後閲覧が30件に達するまで、見出しや作品選定の優劣を判断しない。",
     "除外後の作品閲覧100件・7日分の観測まで、人気順位と作品順を変更しない。"
