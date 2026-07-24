@@ -34,7 +34,7 @@ on:
 
 concurrency:
   group: yorugatari-engagement-audit
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -42,7 +42,7 @@ permissions:
 jobs:
   normalize:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - name: Check out main
         uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Normalize campaign runtime
+      - name: Normalize campaign runtime and story circulation
         shell: bash
         run: |
           node --check yorugatari/tools/normalize-legacy-story-attributes.mjs
@@ -97,6 +97,8 @@ jobs:
           for (const file of stories) {
             const html = fs.readFileSync(path.join(site, 'stories', file), 'utf8');
             if (!html.includes('../assets/engagement.js?v=20260723-003') || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
+            if ((html.match(/href=["']\.\.\/5min-horror\.html["']/g) || []).length !== 1) throw new Error(`Five-minute landing link mismatch: ${file}`);
+            if ((html.match(/href=["']\.\.\/bedtime-horror\.html["']/g) || []).length !== 1) throw new Error(`Bedtime landing link mismatch: ${file}`);
           }
           const privacy = fs.readFileSync(path.join(site, 'privacy.html'), 'utf8');
           if (!privacy.includes('固定キャンペーンコード') || !privacy.includes('登録済みコードに一致しない値は破棄') || !privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Privacy campaign or landing conversion disclosure is missing');
@@ -108,27 +110,27 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet -- 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
-            echo "Campaign and landing runtime is already normalized."
+            echo "Campaign, landing, and story circulation are already normalized."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
-          git commit -m "Normalize Yorugatari campaign and landing runtime [skip ci]"
-          for attempt in 1 2 3; do
+          git commit -m "Normalize Yorugatari campaign, landing, and story circulation [skip ci]"
+          for attempt in 1 2 3 4 5; do
             if git pull --rebase origin main && git push origin HEAD:main; then
               exit 0
             fi
             git rebase --abort || true
             git fetch origin main
-            sleep 3
+            sleep 4
           done
           exit 1
 
   engagement-audit:
     needs: normalize
     runs-on: ubuntu-latest
-    timeout-minutes: 22
+    timeout-minutes: 24
     steps:
       - name: Check out latest main
         uses: actions/checkout@v4
@@ -184,7 +186,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           saved=false
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4 5; do
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/yorugatari-engagement-report.json yorugatari/tools/engagement-audit-latest.json
@@ -199,7 +201,7 @@ jobs:
               saved=true
               break
             fi
-            sleep 3
+            sleep 4
           done
           test "$saved" = true
 
