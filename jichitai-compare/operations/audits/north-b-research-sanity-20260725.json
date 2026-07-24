@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 2,
-  "remainingRounds": 8,
+  "completedRounds": 3,
+  "remainingRounds": 7,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 22,
-  "remainingMunicipalityCount": 85,
-  "auditedAt": "2026-07-25T00:18:00+09:00",
+  "auditedMunicipalityCount": 33,
+  "remainingMunicipalityCount": 74,
+  "auditedAt": "2026-07-25T00:41:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -148,6 +148,47 @@
         "municipality": "様似町",
         "note": "詳細未確認6制度を再探索したが、現行の具体条件を安全に確定できずstatusを維持"
       }
+    ]
+  },
+  "round03": {
+    "codes": [
+      "04203",
+      "04205",
+      "04206",
+      "04207",
+      "04208",
+      "04209",
+      "04211",
+      "04212",
+      "04213",
+      "04214",
+      "04215"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 25,
+    "confirmedErrorCount": 1,
+    "confirmedErrors": [
+      {
+        "code": "04205",
+        "municipality": "気仙沼市",
+        "service": "sickChildCare",
+        "before": "verified（現行施設・対象・料金・予約方法は未確認）",
+        "after": "unavailable",
+        "reason": "参照していた2022年ページは無償化対象事業の一般的な類型説明にすぎず、2026年の市公式子育て支援一覧・施設一覧にも利用者向けの現行制度案内を確認できない"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "04203",
+      "04206",
+      "04207",
+      "04208",
+      "04209",
+      "04211",
+      "04212",
+      "04213",
+      "04214",
+      "04215"
     ]
   }
 }
