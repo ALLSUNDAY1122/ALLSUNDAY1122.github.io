@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "47348",
+  "prefectureCode": "47",
+  "prefecture": "沖縄県",
+  "name": "与那原町",
+  "officialUrl": "https://www.town.yonabaru.okinawa.jp/",
+  "status": "verified",
+  "summary": "必須9制度を与那原町公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末まで入院・通院の保険診療自己負担を助成",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "与那原町に住所があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+        "coverage": "入院・通院・調剤等の保険診療自己負担額",
+        "payment": "県内協力医療機関では受給者証提示により現物給付。県外受診等は自動償還または窓口償還",
+        "application": "出生・転入時に子育て支援課で受給資格認定手続きが必要",
+        "exclusion": "保険外診療、入院時食事代、高額療養費・付加給付、学校管理下の災害共済対象等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/11/1535.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "病児保育事業の無償化・請求制度は確認できるが、2026年度の具体的利用条件を町公式案内で確定できない",
+      "details": {
+        "evidence": "町は病児保育事業を施設等利用給付の対象事業として案内し、認定者向けの請求様式を公開",
+        "reason": "2026年度の利用可能施設、対象年齢、通常利用料、開所日時、予約方法をまとめた町公式の現行利用案内を確認できない",
+        "guidance": "現行条件は与那原町子育て支援課へ確認が必要"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/11/128.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "verified",
+      "summary": "3～5歳児等と住民税非課税世帯の0～2歳児等を幼児教育・保育無償化",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "ageThreePlus": "認可保育所・認定こども園等を利用する3～5歳児クラスの保育料は無償",
+        "underThree": "住民税非課税世帯の0～2歳児クラスは無償化対象。課税世帯は所得階層等に応じた保育料",
+        "kindergarten": "幼稚園等は満3歳から月額上限の範囲で無償化",
+        "otherServices": "保育の必要性の認定を受けた認可外保育施設、一時預かり、病児保育等は年齢・世帯区分別の月額上限まで無償化",
+        "additionalCosts": "給食費、送迎費、教材費、行事費等の実費は対象外"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/11/128.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "verified",
+      "summary": "2026年4月から町立小中学校の学校給食費を完全無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "与那原町立小学校・中学校に在籍するすべての児童生徒",
+        "start": "2026年4月1日",
+        "support": "毎月の学校給食費を全額免除",
+        "copay": "保護者負担0円",
+        "procedure": "保護者による特段の申請手続きは不要",
+        "restriction": "2026年3月以前の未納分は従来どおり納付が必要"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/16/9081.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "産後1年未満の母子へ通所・宿泊・訪問型産後ケアを最大5回提供",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "与那原町に住所がある産後1年未満の母親と乳児で産後ケアを必要とする人",
+        "types": "施設通所型、宿泊型、助産師による訪問型",
+        "limit": "施設利用等を最大5回まで",
+        "care": "乳房ケア、授乳・沐浴指導、保健相談、乳児の発育確認、育児相談等",
+        "application": "健康保険課窓口、町ホームページまたは町公式LINEから申請し、承認通知後に希望施設へ直接予約",
+        "fee": "町が利用費用の一部を負担し、利用後に施設窓口で食事代等のプラン料金を支払う"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/12/6941.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "verified",
+      "summary": "未就園の生後6か月から3歳未満児を月10時間・1時間300円で受け入れ",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "主に保育所・認定こども園等へ継続的に通っていない生後6か月から満3歳未満の乳幼児",
+        "facility": "町立阿知利保育所",
+        "employmentCondition": "保護者の就労要件を問わない",
+        "limit": "子ども1人につき月10時間まで。翌月繰越・前借り不可",
+        "fee": "1時間300円。給食・おやつの提供なし",
+        "schedule": "月曜から金曜の9時～12時、13時30分～15時30分を基本に実施",
+        "procedure": "つうえんポータルで利用認定申請後、施設面談・予約"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/11/8812.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "町民の住宅リフォーム費用の一部を補助し、子育て世帯向け事故防止・家事負担軽減改修も対象",
+      "details": {
+        "period": "2026年6月1日から12月25日まで。予算到達時は終了",
+        "target": "与那原町に住民登録し現に居住する人等で、町税滞納がなく他制度との重複補助を受けないなどの要件を満たす人",
+        "eligibleWork": "住宅の修繕・改修、バリアフリー、省エネ、耐久性向上、子育て世帯の子どもの事故防止・家事負担軽減改修等",
+        "support": "補助対象経費の一部を予算の範囲内で交付。補助率・上限・対象工事の詳細は年度チラシで確認",
+        "contractor": "町内施工業者等の要件あり",
+        "application": "交付決定前の着工は対象外。工事前にまちづくり課へ申請"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/13/1505.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "bulkyWaste": {
+      "status": "verified",
+      "summary": "粗大ごみ処理券を貼って地区別収集日に排出し、大900円・小450円",
+      "details": {
+        "classification": "家具・家電等の大型品を粗大ごみとして区分",
+        "fee": "粗大ごみ処理券は大1枚900円、小1枚450円",
+        "limit": "1回の収集につき大は1個まで、小は2個まで",
+        "collection": "指定された地区別収集日の朝8時30分までに、決められた場所へ排出",
+        "ticket": "品目の大きさに応じた処理券を購入して貼付",
+        "directCarry": "東部環境美化センターへ自己搬入する方法もある",
+        "excluded": "家電リサイクル法対象品、事業系ごみ、処理困難物等は町収集対象外"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/8/130.html",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "津波・高潮・地震・液状化等を掲載した日本語・英語版防災マップを公開",
+      "details": {
+        "coverage": "津波、高潮、地震、液状化、災害危険区域、避難所等",
+        "formats": "与那原町防災マップ、災害ハザードマップ、英語版をPDFで公開",
+        "additional": "高潮浸水予測図、震度分布図、液状化危険度分布図も提供",
+        "guidance": "自宅周辺の危険箇所、避難所、避難経路を平時から確認するよう案内"
+      },
+      "source": {
+        "url": "https://www.town.yonabaru.okinawa.jp/soshiki/8/132.html",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}

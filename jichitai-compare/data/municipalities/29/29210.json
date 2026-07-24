@@ -6,13 +6,16 @@
   "name": "香芝市",
   "officialUrl": "https://www.city.kashiba.lg.jp/",
   "status": "verified",
-  "summary": "香芝市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、第2子以降の保育料無償化、病児保育、産後ケアなどを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "香芝市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。令和8年度こども誰でも通園制度、産後ケア、学校給食、移住支援金を現行化。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "市内在住で健康保険に加入する0歳から18歳年度末までの子どもの保険診療自己負担額の一部を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "0歳から18歳に達する日以後の最初の3月31日まで",
         "procedure": "乳幼児医療費受給資格証または子ども医療費受給資格証の事前交付が必要",
@@ -20,12 +23,18 @@
         "copayment": "年齢・入通院区分別の利用方法を確認する必要があり、単一の自己負担額として一般化しない",
         "excluded": "入院時食事代、差額ベッド代、薬の容器代等の保険適用外費用は対象外"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/site/kosodate/2637.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/site/kosodate/2637.html",
+        "checkedAt": "2026-07-23"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "病児保育室ぽっぽ等で、生後6か月から小学6年生までの病気または回復期の児童を一時的に保育する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
       "details": {
         "facilities": "病児保育室ぽっぽ、病児保育園ぞうさんのおうち、病後児ルームキャロット",
         "target": "保護者の就労等により家庭で保育・看護できない病気または回復期の児童",
@@ -34,16 +43,28 @@
         "procedure": "事前登録と施設予約が必要",
         "freeCare": "保育の必要性の認定を受けた3～5歳児等は無償化対象となる場合あり"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/site/kosodate/4462.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/site/kosodate/4462.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://poppo.support/yoyaku/", "checkedAt": "2026-07-23"},
-        {"url": "https://www.town.ando.nara.jp/0000002621.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://poppo.support/yoyaku/",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.ando.nara.jp/0000002621.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、市独自に0～2歳児の第2子以降も所得・きょうだい年齢を問わず無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "nationalFree": "全ての3～5歳児と住民税非課税世帯の0～2歳児は保育料無償",
         "localExpansion": "令和5年4月から市内在住で認可保育施設に入所する0～2歳児の第2子以降を無償化",
@@ -51,56 +72,130 @@
         "firstChild": "課税世帯0～2歳児の第1子は市町村民税所得割額等により算定",
         "excludedCosts": "教材、日用品、行事、給食、送迎、延長保育等は原則対象外"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/soshiki/77/33871.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/soshiki/77/33871.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.city.kashiba.lg.jp/soshiki/77/7155.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/77/7155.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "市立小中学校で学校給食費を徴収し、令和7年4月の改定後も市負担を増額して保護者の実負担額を据え置く方針。要件世帯には就学援助がある。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "summary": "市立小中学校で学校給食費を徴収し、市負担を増額して保護者負担を据え置く。一律無償化は確認できない。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "revision": "食材価格高騰等に対応して令和7年4月から学校給食費を改定",
         "householdRelief": "市負担額を増額して保護者の実際の負担額を当面据え置く方針",
-        "universalFreeStatus": "全児童生徒の一律無償化は確認できないため、無償とは記録しない",
-        "aid": "経済的に就学が困難と認められる世帯には学校費用の一部を援助する就学援助制度あり",
-        "currentFiscalYear": "令和8年度の就学援助を実施"
+        "universalFreeStatus": "令和8年度も全児童生徒の一律無償化は確認できないため、無償とは記録しない",
+        "aid": "経済的に就学が困難と認められる世帯には令和8年度就学援助制度あり",
+        "menus": "令和8年度の小中学校給食献立、給食だより、食材産地・原材料情報を公開"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/soshiki/36/55338.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/soshiki/36/55338.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.city.kashiba.lg.jp/site/kosodate/36322.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kashiba.lg.jp/site/kosodate/36322.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/36/7459.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/36/7333.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "香芝市在住の出産後1年未満の母子を対象に、宿泊型と6時間の通所型による産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
-        "target": "市内在住の出産後1年未満の母親と乳児で、心身の不調、育児不安、家族支援不足等がある方",
+        "target": "市内在住の出産後1年未満の母親と乳児で、心身の不調、育児不安、家族支援不足等のいずれかがある方",
+        "excluded": "感染症疾患に罹患している方、入院または加療を要する状態の方は対象外",
         "types": "ショートステイ（宿泊型）とデイケア（通所型6時間）",
         "care": "母体の身体・心理ケア、授乳支援、育児手技の指導、療養上の世話等",
         "fee": "施設設定額から市負担額を差し引いた額と食事代を利用者が負担",
         "facilityDifference": "自己負担額は施設ごとに異なるため申請後の一覧で確認",
-        "application": "電子申請または児童福祉課窓口で申請"
+        "facilities": "心友助産院、助産院カンガルーホーム、林産婦人科五位堂医院、Mothering House美月、産後ケアハウスぽこあぽこ、のんの助産院、さくらレディースクリニック",
+        "application": "電子申請または児童福祉課窓口で申請",
+        "cancellation": "利用日の2日前17時までに施設へ連絡がない場合、宿泊型上限3,000円、通所型上限1,500円のキャンセル料が発生"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/site/kosodate/53656.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/site/kosodate/53656.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "就労、疾病、看護、冠婚葬祭、育児負担軽減等で家庭保育が困難な場合に、市内複数施設で一時預かりを実施する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
-      "details": {
-        "facilities": "ハルナ保育園、せいか保育園、旭ケ丘せいか保育園、ふたかみの森せいか子ども園、せいか幼稚園",
-        "representativeTarget": "ハルナ保育園は生後6か月から就学前まで",
-        "representativeHours": "ハルナ保育園は8時から18時まで、延長なし",
-        "representativeFee": "ハルナ保育園は1時間500円とおやつ代100円",
-        "procedure": "施設ごとの事前面談・予約等が必要",
-        "facilityDifference": "対象年齢、料金、定員、実施日は施設ごとに確認"
+      "summary": "従来の一時預かりに加え、令和8年度から未就園の生後6か月以上3歳未満を月10時間まで預かるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/site/kosodate/37020.html", "checkedAt": "2026-07-23"},
+      "details": {
+        "traditionalTemporaryCare": {
+          "facilities": "ハルナ保育園、せいか保育園、旭ケ丘せいか保育園、ふたかみの森せいか子ども園、せいか幼稚園",
+          "representativeTarget": "ハルナ保育園は生後6か月から就学前まで",
+          "representativeHours": "ハルナ保育園は8時から18時まで、延長なし",
+          "representativeFee": "ハルナ保育園は1時間500円とおやつ代100円",
+          "procedure": "施設ごとの事前面談・予約等が必要",
+          "facilityDifference": "対象年齢、料金、定員、実施日は施設ごとに確認"
+        },
+        "anyoneUseChildcare": {
+          "start": "令和8年度開始",
+          "target": "香芝市に住民登録があり、保育所・認定こども園・地域型保育・企業主導型保育を利用していない生後6か月から満3歳未満",
+          "employment": "保護者の就労要件なし",
+          "limit": "子ども1人につき月10時間。複数施設合計10時間、未利用時間の翌月繰越不可",
+          "standardFee": "1時間300円を標準とし、施設へ直接支払う。給食・おやつ等は別途実費の場合あり",
+          "reduction": "生活保護世帯、市民税非課税世帯、市民税所得割課税額合計7万7,100円以下世帯は減免対象となる場合あり",
+          "facility": "香芝市立旭ケ丘幼稚園内 あさひぽかぽかルーム",
+          "days": "月曜・火曜・木曜・金曜",
+          "hours": "9時～11時、13時30分～15時30分の2時間枠",
+          "capacity": "6か月～1歳は2人、1～2歳は3人、2～3歳は3人。先着順",
+          "fee": "1時間300円。1枠2時間600円を利用開始時に支払う",
+          "application": "つうえんポータルから乳児等支援給付認定を申請。認定まで約1週間",
+          "interview": "認定後、施設ごとに子ども同伴の初回面談が必要",
+          "reservation": "面談後、総合支援システムから利用日を予約し、施設承認後に確定",
+          "checkInOut": "利用開始・終了時に施設のQRコードを読み取り時刻登録",
+          "parentChild": "初回利用時は親子通園",
+          "cancellation": "前日17時までに施設連絡とシステム取消が必要。それ以降は予約時間分を利用可能時間から差し引く"
+        }
+      },
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/soshiki/77/65021.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.haruna-hoikuen.jp/temporarychildcare/", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/77/63451.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/77/64701.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.kashiba.lg.jp/site/kosodate/37020.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.haruna-hoikuen.jp/temporarychildcare/",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "housingSupport": {
@@ -114,9 +209,13 @@
         "application": "転入後1年以内に申請",
         "residence": "申請日から5年以上継続して香芝市に居住する意思が必要",
         "conditions": "東京23区在住・通勤歴に加え、奈良県内就業、専門人材、テレワーク、関係人口、起業等の要件あり",
-        "deadline": "令和9年1月29日。予算上限到達で受付終了"
+        "deadline": "令和9年1月29日。予算上限到達で受付終了",
+        "repayment": "申請後3年未満の転出等は全額、3年以上5年以内の転出は半額返還対象"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/soshiki/16/53394.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/soshiki/16/53394.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -129,10 +228,19 @@
         "fee": "戸別収集の個別手数料は公式HTML本文で確認できないため推測しない",
         "selfDelivery": "美濃園への直接搬入は100kgまで無料、100kg超は10kgにつき123円"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/soshiki/13/6193.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/soshiki/13/6193.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.city.kashiba.lg.jp/soshiki/13/5043.html", "checkedAt": "2026-07-23"},
-        {"url": "https://www.city.kashiba.lg.jp/soshiki/13/64324.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/13/5043.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/13/64324.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "disasterPrevention": {
@@ -145,10 +253,19 @@
         "pondMap": "ため池ハザードマップも公開し、令和8年に更新",
         "preparedness": "災害リスク確認、避難経路・避難先、備蓄等の事前準備に利用"
       },
-      "source": {"url": "https://www.city.kashiba.lg.jp/soshiki/17/6710.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.city.kashiba.lg.jp/soshiki/17/6710.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.city.kashiba.lg.jp/soshiki/17/7239.html", "checkedAt": "2026-07-23"},
-        {"url": "https://www.city.kashiba.lg.jp/soshiki/76/21369.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/17/7239.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.city.kashiba.lg.jp/soshiki/76/21369.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     }
   }
