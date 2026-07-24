@@ -6,13 +6,16 @@
   "name": "田原本町",
   "officialUrl": "https://www.town.tawaramoto.nara.jp/",
   "status": "verified",
-  "summary": "田原本町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、広域病児保育、第2子以降の保育料無償化、令和8年度の給食費負担軽減、産後ケアなどを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "田原本町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。令和8年度のこども誰でも通園制度、産後ケア実施施設、学校給食費負担軽減、住宅取得支援を現行化。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "出生から18歳年度末まで、保険診療の自己負担額から月単位の一部負担金等を控除した額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達する日以後の最初の3月31日まで",
         "copayment": "通院および14日未満の入院は1医療機関・診療区分ごと月500円、14日以上の入院は月1,000円",
@@ -20,12 +23,18 @@
         "coverage": "健康保険が適用される診療分",
         "excluded": "入院時食事療養費、差額室料、文書料等の保険適用外費用"
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/kenko/hoken/medical_insurance/3258.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/kenko/hoken/medical_insurance/3258.html",
+        "checkedAt": "2026-07-23"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "病児保育は協定先2施設、病後児保育は町内施設で実施し、子育てと就労の両立を支援する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
       "details": {
         "sickFacilities": "大和高田市の病児保育園ぞうさんのおうち、香芝市の病児保育室ぽっぽ",
         "convalescentFacility": "こどもの森阪手保育園",
@@ -35,15 +44,24 @@
         "procedure": "施設ごとの事前登録・予約が必要",
         "fee": "病児保育の利用料等は各施設へ確認"
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/kosodate/kosodate/15669.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/kosodate/kosodate/15669.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.town.tawaramoto.nara.jp/section/05_others/reiki_int/reiki_honbun/e200RG00000922.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/section/05_others/reiki_int/reiki_honbun/e200RG00000922.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と非課税世帯0～2歳児は無償。町独自に国制度で半額となる第2子の保育料を無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "幼稚園・保育所・認定こども園等の3～5歳児は無償",
         "nonTaxable": "住民税非課税世帯の0～2歳児は無償",
@@ -53,78 +71,182 @@
         "mealSupport": "3～5歳児の副食費を月上限5,100円まで助成",
         "excludedCosts": "延長保育料、教材費、行事費等は別途"
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/soshki/jumin/kodomo/16870.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/soshki/jumin/kodomo/16870.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.town.tawaramoto.nara.jp/kosodatenet/scene/yochien_hoikuen/8628.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/kosodatenet/scene/yochien_hoikuen/8628.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "令和8年度は小学校給食費を無償化し、中学校給食費は一部を補助して保護者負担を軽減する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "fiscalYear": "令和8年度",
         "elementary": "国の交付金に町の補助を上乗せし、小学校給食費を無償化",
         "middleSchool": "中学校給食費は一部を補助。町内一律の完全無償化とは記録しない",
         "baseRule": "給食費徴収条例施行規則に月額・1食単価と減免規定あり",
         "assistance": "就学援助認定世帯は学校給食費の実費を援助",
+        "menu": "令和8年度の月別献立表と使用食材の産地情報を公開",
         "verificationPolicy": "令和8年度の負担軽減方針と通常の徴収制度を分離して記録し、未確認の中学校自己負担額は推測しない"
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/soshki/kousitsu/koho/town_mayor/syoshin/20303.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/soshki/kousitsu/koho/town_mayor/syoshin/20303.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.tawaramoto.nara.jp/section/05_others/reiki_int/reiki_honbun/e200RG00000976.html", "checkedAt": "2026-07-23"},
-        {"url": "https://www.town.tawaramoto.nara.jp/soshki/kyouikuiinkai/kyoiku/kosodate/kyouiku/kyouiku/566.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/section/05_others/reiki_int/reiki_honbun/e200RG00000976.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/soshki/kyouikuiinkai/kyoiku/kosodate/kyouiku/kyouiku/566.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/soshki/kyouikuiinkai/kyoiku/kosodate/kyouiku/kyusyoku/20380.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "産後1年未満の母子を対象に、ショートステイと複数時間区分のデイサービスを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "summary": "産後1年未満の母子を対象に、ショートステイと複数時間区分のデイサービスを、町内外5施設で提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "田原本町に住民票があり、育児支援や心身のケアが必要な産後1年未満の母親と乳児",
         "types": "ショートステイ、2時間・4時間・6時間・8時間のデイサービス",
         "limit": "出産後1年間、ショートステイとデイサービスを合わせて7日まで。1泊2日は2日として算定",
         "care": "母親の健康・育児相談、心のケア、乳児の発育確認、授乳・乳房ケア、休息支援",
+        "facilities": "心友助産院、芽愛助産院産後ケアホームmeito、芽愛助産院、高井病院、さくらレディースクリニック",
+        "ageRestrictions": "心友助産院・meitoは1歳未満、芽愛助産院は3か月未満、高井病院はデイ4か月未満・宿泊40日未満、さくらレディースクリニックは4か月未満",
+        "facilityNotes": "meitoはデイサービスのみ。高井病院のデイは火・水・金・土。さくらレディースクリニックは2026年1月から他院出産者も利用可能",
         "taxableFee": "一般世帯は施設によりショートステイ1泊2日3,750～5,750円、デイサービス550～2,250円",
         "reduction": "非課税・生活保護世帯および多胎利用は別料金",
         "application": "こども未来課へ申請・面談後、利用証を受け取り、実施施設へ直接予約"
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/kosodatenet/scene/shien/14550.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/kosodatenet/scene/shien/14550.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.tawaramoto.nara.jp/soshki/jumin/kodomo/kosodate/ninshin/14248.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/soshki/jumin/kodomo/kosodate/ninshin/14248.html",
+          "checkedAt": "2026-07-23"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/gyosei/keikaku_sesaku/r6_result/19053.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "生後6か月から2歳児を中心に複数施設で一時預かりを実施し、一部施設は条件付きで5歳児まで受け入れる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
-      "details": {
-        "facilities": "宮森保育園、宮古保育園、こどもの森阪手こども園、はぴすまひろば、こどもまんなか保育園、すこやかな空くれよん保育園",
-        "target": "原則生後6か月から2歳児。こどもまんなか保育園は条件付きで5歳児まで",
-        "reasons": "不定期就労、保護者の疾病、育児疲れ等。就労・就学・疾病等は定型利用あり",
-        "days": "原則平日。こどもまんなか保育園は土日祝利用にも対応し、土日祝は定型利用不可",
-        "monthlyLimit": "利用日数は月最大14日。施設・利用類型により異なる",
-        "fixedFee": "宮古保育園・宮森保育園の待機児童向け定型利用は週3回月24,000円、週4回32,000円、週5回40,000円",
-        "procedure": "施設登録、慣らし保育、予約が必要。詳細料金は施設へ確認"
+      "summary": "従来の一時預かりに加え、令和8年5月19日から町立専用施設で未就園児を月10時間まで無料で預かるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/kosodate/kosodate/17121.html", "checkedAt": "2026-07-23"},
+      "details": {
+        "traditionalTemporaryCare": {
+          "facilities": "宮森保育園、宮古保育園、こどもの森阪手こども園、はぴすまひろば、こどもまんなか保育園、すこやかな空くれよん保育園",
+          "target": "原則生後6か月から2歳児。こどもまんなか保育園は条件付きで5歳児まで",
+          "reasons": "不定期就労、保護者の疾病、育児疲れ等。就労・就学・疾病等は定型利用あり",
+          "days": "原則平日。こどもまんなか保育園は土日祝利用にも対応し、土日祝は定型利用不可",
+          "monthlyLimit": "利用日数は月最大14日。施設・利用類型により異なる",
+          "fixedFee": "宮古保育園・宮森保育園の待機児童向け定型利用は週3回月24,000円、週4回32,000円、週5回40,000円",
+          "procedure": "施設登録、慣らし保育、予約が必要。詳細料金は施設へ確認"
+        },
+        "anyoneUseChildcare": {
+          "start": "2026年5月19日",
+          "target": "町内在住で保育所・認定こども園等に在籍していない生後6か月から満3歳の誕生日の前々日までの子ども",
+          "employment": "保護者の就労要件なし",
+          "facility": "田原本町立だれでも通園保育所",
+          "location": "田原本町大字鍵161番地（北幼稚園北側保育室）",
+          "days": "火曜日・木曜日",
+          "hours": "9時～11時30分、13時～15時30分",
+          "capacity": "1日6人",
+          "limit": "月10時間まで。未利用時間の翌月繰越不可",
+          "fee": "無料。保険料等の実費負担あり",
+          "meals": "給食・おやつの提供なし",
+          "procedure": "総合支援システムで申請し、町認定・アカウント発行後、初回面談、予約、取消を行う"
+        }
+      },
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/soshki/jumin/kodomo/kosodate/kosodate/20338.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.tawaramoto.nara.jp/kosodate/kosodate/15669.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/kosodate/kosodate/17121.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/kosodate/kosodate/15669.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "新婚世帯の住宅取得・賃借・リフォーム・引越費用を上限30万円補助する。",
+      "summary": "新婚・子育て世帯の住宅ローン利子、中古住宅取得、新婚生活の住宅費等を複数制度で支援する。",
       "details": {
-        "program": "田原本町結婚新生活支援事業補助金",
-        "target": "婚姻日に夫婦双方が39歳以下で、夫婦合算所得500万円未満等の要件を満たす新婚世帯",
-        "amount": "対象経費の合計額、上限30万円",
-        "eligibleCosts": "住宅取得費、住宅賃借費、住宅リフォーム費、引越費用",
-        "residency": "申請日から2年以上継続して町内に居住する意思が必要",
-        "conditions": "町税滞納なし、他の公的住宅補助との重複制限等あり",
-        "verificationPolicy": "一般的な子育て住宅補助ではなく、要件付き新婚世帯支援として記録"
+        "housingMenu": "令和8年度の移住・定住住宅支援一覧で、住宅ローン利子補給、中古住宅取得助成、結婚新生活支援等を案内",
+        "loanInterest": {
+          "program": "新婚・子育て世帯向け住宅取得資金利子補給",
+          "target": "婚姻後3年以内の新婚世帯、または小学6年生までの子どもと同一世帯の子育て世帯が、町内で初めて住宅を取得する場合",
+          "conditions": "住宅ローン期間10年以上、利率年0.1％以上、契約から6か月以内の申請等"
+        },
+        "usedHousing": {
+          "program": "空き家バンク登録中古住宅取得助成",
+          "amount": "上限10万円",
+          "conditions": "空き家バンク登録物件を定住または地域貢献目的で取得し、取得から6か月以内に申請。税滞納・過去受給なし",
+          "retention": "交付後3年以内の譲渡・賃貸・転出等は取消・返還対象となり得る"
+        },
+        "newlywed": {
+          "program": "結婚新生活支援事業補助金",
+          "target": "婚姻日に夫婦双方が39歳以下で、夫婦合算所得500万円未満等の要件を満たす新婚世帯",
+          "amount": "住宅取得・賃借・リフォーム・引越費用の合計、上限30万円",
+          "residency": "申請日から2年以上継続して町内に居住する意思、税滞納なし、他補助との重複制限等"
+        }
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/section/reiki_int/reiki_honbun/e200RG00001053.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/soshki/kousitsu/seisaku/kurashi/iju_teiju/12578.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/kurashi/teijyu/teiju/10488.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/section/05_others/reiki_int/reiki_honbun/e200RG00000979.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/kurashi/teijyu/teiju/10477.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/section/05_others/reiki_int/reiki_honbun/e200RG00000978.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/section/reiki_int/reiki_honbun/e200RG00001053.html",
+          "checkedAt": "2026-07-23"
+        }
+      ]
     },
     "bulkyWaste": {
       "status": "verified",
@@ -138,7 +260,10 @@
         "placement": "指定時刻までに自宅前等の指定場所へ排出",
         "fee": "品目別料金は申込時の案内に従い、未確認の個別金額は推測しない"
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/soshki/sangyo/kankyo/kurashi/seikatsu/gomi/gomi/18301.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/soshki/sangyo/kankyo/kurashi/seikatsu/gomi/gomi/18301.html",
+        "checkedAt": "2026-07-23"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -150,9 +275,15 @@
         "pond": "町内に防災重点ため池はないが、隣接自治体のため池決壊による町内浸水想定を公開",
         "currency": "総合防災マップ本体は令和3年2月時点。避難所は最新ページを併せて確認"
       },
-      "source": {"url": "https://www.town.tawaramoto.nara.jp/soshki/somu/bousai/kurashi/bosai/map/1544.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.tawaramoto.nara.jp/soshki/somu/bousai/kurashi/bosai/map/1544.html",
+        "checkedAt": "2026-07-23"
+      },
       "additionalSources": [
-        {"url": "https://www.town.tawaramoto.nara.jp/kurashi/bosai/19478.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.tawaramoto.nara.jp/kurashi/bosai/19478.html",
+          "checkedAt": "2026-07-23"
+        }
       ]
     }
   }

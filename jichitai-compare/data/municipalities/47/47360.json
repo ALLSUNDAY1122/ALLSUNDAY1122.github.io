@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "1.0.0",
+  "code": "47360",
+  "prefectureCode": "47",
+  "prefecture": "沖縄県",
+  "name": "伊是名村",
+  "officialUrl": "https://www.vill.izena.okinawa.jp/",
+  "status": "verified",
+  "summary": "必須9制度を伊是名村公式情報で調査。こども医療費、産後ケア、定住促進住宅、防災マップの4制度をverified、現行の具体条件を確認できない5制度をunavailableとして登録。",
+  "updatedAt": "2026-07-24",
+  "services": {
+    "childMedical": {
+      "status": "verified",
+      "summary": "0歳から18歳年度末までのこども医療費助成を実施し、中学生以下は原則窓口支払いなし",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
+      "details": {
+        "target": "伊是名村に住所があり医療保険に加入する子ども",
+        "period": "18歳到達後最初の3月31日まで",
+        "payment": "中学生以下は原則として現物給付に対応する医療機関で窓口支払いなし",
+        "reimbursement": "現物給付非対応医療機関では支給申請による償還払い",
+        "application": "保健センターで受給資格認定申請。保険資格・振込口座等の資料が必要",
+        "exclusion": "保険外診療等の対象外費用は保健センターへ確認が必要"
+      },
+      "source": {
+        "url": "https://vill.izena.okinawa.jp/lifeevent/kosodate/1539770748/1547629178/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.izena.okinawa.jp/lifeevent/kosodate/1539770748/1547714721/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "sickChildCare": {
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、島外広域利用、対象年齢、料金、申込方法を確認できない",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
+      "details": {
+        "publishedStatus": "子育てページに病児・病後児保育の現行案内が掲載されていない",
+        "missing": "村内実施施設、沖縄本島施設の広域利用可否、対象年齢、利用料、医師連絡票、事前登録・予約方法",
+        "confirmation": "住民福祉課または保健センターへの確認が必要",
+        "avoidInference": "通常保育所や島外医療機関を病児保育施設として扱わない"
+      },
+      "source": {
+        "url": "https://vill.izena.okinawa.jp/lifeevent/kosodate/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "childcareFee": {
+      "status": "unavailable",
+      "summary": "令和8年度伊是名保育所の入所説明会・申込書類は公開されているが、保育料・無償化・多子軽減等の具体条件を確認できない",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "facility": "伊是名村立伊是名保育所",
+        "target": "4月1日時点で0歳から3歳の保育を必要とする児童",
+        "application": "令和8年度入所説明会と支給認定・施設利用申込書等を公開",
+        "missing": "階層別保育料、住民税非課税世帯の無償化、多子軽減、副食費、延長保育料",
+        "confirmation": "住民福祉課へ令和8年度保育料表・入所案内の確認が必要",
+        "avoidInference": "国制度のみで村独自の実負担を断定しない"
+      },
+      "source": {
+        "url": "https://www.vill.izena.okinawa.jp/lifeevent/kosodate/1539771513/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "schoolMeals": {
+      "status": "unavailable",
+      "summary": "給食センターの所管は確認できるが、2026年度学校給食費、補助、就学援助、一律無償化の有無を公式サイトで確認できない",
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "publishedStatus": "教育委員会が給食センターを管理しているが、令和8年度の給食費額・徴収方法を掲載していない",
+        "missing": "幼稚園・小学校・中学校の月額または1食単価、村独自補助、就学援助、一律無償化の有無",
+        "confirmation": "教育委員会または給食センターへの確認が必要",
+        "avoidInference": "献立表や給食センター所管のみで料金を推定しない"
+      },
+      "source": {
+        "url": "https://vill.izena.okinawa.jp/soshiki/kyouiku/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "postpartumCare": {
+      "status": "verified",
+      "summary": "医療機関・助産院・自宅等で母子ケア、授乳相談、育児支援を受ける産後ケア事業を実施",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "出産後にケアや育児支援を必要とする母親と赤ちゃん",
+        "care": "母子の心身ケア、授乳相談、育児サポート等",
+        "application": "伊是名村保健センターへ産後ケア申請書兼同意書と印鑑を提出",
+        "applicationPeriod": "親子健康手帳発行時から出産後4か月以内に申請可能",
+        "missing": "宿泊・通所・訪問型ごとの対象月齢、利用回数、自己負担、委託施設は案内資料または保健センターへ確認が必要"
+      },
+      "source": {
+        "url": "https://vill.izena.okinawa.jp/lifeevent/ninshin/1539762747/1589941231/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "temporaryChildcare": {
+      "status": "unavailable",
+      "summary": "一時預かり・こども誰でも通園制度の2026年度実施施設、対象月齢、利用時間、料金、申請条件を確認できない",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
+      "details": {
+        "publishedStatus": "子育てページと保育所ページに一時預かり・乳児等通園支援事業の現行案内が掲載されていない",
+        "missing": "実施有無、施設、未就園児の対象月齢、月利用上限、利用料、減免、認定・予約方法",
+        "confirmation": "住民福祉課または教育委員会への確認が必要",
+        "avoidInference": "全国共通制度のみで村内利用可能と断定しない"
+      },
+      "source": {
+        "url": "https://vill.izena.okinawa.jp/lifeevent/kosodate/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "housingSupport": {
+      "status": "verified",
+      "summary": "2026年7月に定住促進住宅2棟の入居者募集を実施",
+      "details": {
+        "housing": "定住促進住宅諸見1号棟及び伊是名1号棟",
+        "published": "2026年7月10日に入居者募集を村公式サイトへ掲載",
+        "purpose": "村内への定住を促進する公的賃貸住宅",
+        "application": "申込資格、家賃、敷金、入居期間、必要書類は各募集要項及び企画政策課へ確認",
+        "status": "募集状況は申込期限・選考結果により変動するため最新情報を要確認"
+      },
+      "source": {
+        "url": "https://www.vill.izena.okinawa.jp/1594019388/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.izena.okinawa.jp/topics/1783661063/",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    "bulkyWaste": {
+      "status": "unavailable",
+      "summary": "家庭ごみ分別ページは公開されているが、粗大ごみの品目区分、収集、申込、料金、搬入条件を本文で確認できない",
+      "details": {
+        "publishedStatus": "村公式サイトで家庭ごみの正しい分け方・出し方を案内",
+        "missing": "粗大ごみの対象品目、戸別収集・直接搬入の別、収集日、申込方法、処理券、料金、排出場所・時間",
+        "confirmation": "建設環境課または分別資料原本への確認が必要",
+        "avoidInference": "画像・添付資料の未確認部分から具体条件を推定しない"
+      },
+      "source": {
+        "url": "https://www.vill.izena.okinawa.jp/guide/kurasi/gomi/",
+        "checkedAt": "2026-07-24"
+      }
+    },
+    "disasterPrevention": {
+      "status": "verified",
+      "summary": "村公式ホームページから防災情報・防災マップ・AED・救急消防情報を公開",
+      "details": {
+        "map": "伊是名村防災マップを公式サイトで公開",
+        "information": "防災情報、AED設置場所、救急・消防情報へ同一防災メニューからアクセス可能",
+        "coverage": "災害リスク、避難場所・経路等の確認に利用",
+        "guidance": "居住地周辺の危険箇所と避難先を平時から確認",
+        "confirmation": "災害種別・マップ版・避難所詳細は防災マップ原本で確認"
+      },
+      "source": {
+        "url": "https://www.vill.izena.okinawa.jp/bousai/bousai_map/",
+        "checkedAt": "2026-07-24"
+      }
+    }
+  }
+}
