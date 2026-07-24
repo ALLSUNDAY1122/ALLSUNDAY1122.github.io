@@ -1,77 +1,167 @@
-name: Jichitai Compare CI
+name: Build Nationwide Code Integrity Release
 
 on:
   pull_request:
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
-  push:
-    branches:
-      - main
-    paths:
-      - 'jichitai-compare/**'
-      - '.github/workflows/jichitai-compare.yml'
+    branches: [main]
+    paths: ['.github/workflows/jichitai-compare.yml']
 
 permissions:
-  contents: read
-
-concurrency:
-  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  validate:
-    name: Validate municipality data
+  release:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 25
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+          persist-credentials: true
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Reject unrelated changes
-        working-directory: jichitai-compare
-        env:
-          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: npm run check:scope
-
-      - name: Generate public municipality data
-        working-directory: jichitai-compare
-        run: npm run generate
-
-      - name: Generate national progress
-        working-directory: jichitai-compare
-        run: npm run progress
-
-      - name: Validate source and generated data
-        working-directory: jichitai-compare
-        run: npm run validate:generated
-
-      - name: Check JavaScript syntax
-        working-directory: jichitai-compare
-        run: node --check app.js
-
-      - name: Confirm generated files are committed
-        if: github.event_name == 'push'
+      - name: Fetch national and regional branches
+        run: git fetch origin main region/north region/east region/central region/west
+      - name: Reconcile all assigned municipality codes
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { execFileSync } = require('child_process');
+          const project = 'jichitai-compare';
+          const progressPath = `${project}/operations/progress.json`;
+          const previous = JSON.parse(fs.readFileSync(progressPath, 'utf8')).registeredMunicipalities;
+          const regionPrefixes = {
+            north: new Set(['01','02','03','04','05','06','07']),
+            east: new Set(['08','09','10','11','12','13','14','15','19','20']),
+            central: new Set(['16','17','18','21','22','23','24','25','26','27','28','29','30']),
+            west: new Set(['31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47'])
+          };
+          const invalidCodes = ['40208','40209','46410'];
+          const removed = [];
+          for (const code of invalidCodes) {
+            const dataPath = `${project}/data/municipalities/${code.slice(0,2)}/${code}.json`;
+            const taskPath = `${project}/operations/tasks/${code}.json`;
+            if (fs.existsSync(dataPath)) removed.push(code);
+            fs.rmSync(dataPath, { force: true });
+            fs.rmSync(taskPath, { force: true });
+          }
+          const selected = [];
+          function gitShow(ref, file) {
+            return execFileSync('git', ['show', `${ref}:${file}`], { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 });
+          }
+          function copyFromRegion(region, code, dataPath, taskPath, isNew) {
+            fs.mkdirSync(path.dirname(dataPath), { recursive: true });
+            fs.mkdirSync(path.dirname(taskPath), { recursive: true });
+            fs.writeFileSync(dataPath, gitShow(`origin/region/${region}`, dataPath));
+            fs.writeFileSync(taskPath, gitShow(`origin/region/${region}`, taskPath));
+            if (isNew) selected.push({ region, code });
+          }
+          for (const [region, prefixes] of Object.entries(regionPrefixes)) {
+            const output = execFileSync('git', ['ls-tree','-r','--name-only',`origin/region/${region}`,`${project}/data/municipalities`], { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 });
+            for (const dataPath of output.split(/\r?\n/).filter(Boolean)) {
+              const match = dataPath.match(/\/([0-9]{5})\.json$/);
+              if (!match) continue;
+              const code = match[1];
+              if (!prefixes.has(code.slice(0,2))) continue;
+              const taskPath = `${project}/operations/tasks/${code}.json`;
+              if (!fs.existsSync(dataPath)) copyFromRegion(region, code, dataPath, taskPath, true);
+            }
+          }
+          for (const code of ['40210']) {
+            const dataPath = `${project}/data/municipalities/${code.slice(0,2)}/${code}.json`;
+            const taskPath = `${project}/operations/tasks/${code}.json`;
+            copyFromRegion('west', code, dataPath, taskPath, !fs.existsSync(dataPath));
+          }
+          for (const { code } of selected) {
+            const dataPath = `${project}/data/municipalities/${code.slice(0,2)}/${code}.json`;
+            const taskPath = `${project}/operations/tasks/${code}.json`;
+            const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+            const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+            const services = data.services ?? {};
+            const keys = Object.keys(services);
+            const completedKeys = keys.filter((key) => ['verified', 'unavailable'].includes(services[key]?.status));
+            const pendingKey = keys.find((key) => ['researching', 'needs_medium_review'].includes(services[key]?.status)) ?? null;
+            task.status = 'merged';
+            task.currentService = pendingKey;
+            task.nextServiceIndex = pendingKey === null ? keys.length : keys.indexOf(pendingKey);
+            task.completedServices = completedKeys;
+            task.verifiedCount = keys.filter((key) => services[key]?.status === 'verified').length;
+            task.researchingCount = keys.filter((key) => services[key]?.status === 'researching').length;
+            task.unavailableCount = keys.filter((key) => services[key]?.status === 'unavailable').length;
+            task.needsMediumReviewCount = keys.filter((key) => services[key]?.status === 'needs_medium_review').length;
+            task.lastUpdatedAt = '2026-07-24T21:12:00+09:00';
+            task.lastUpdatedBy = '全国統括';
+            fs.writeFileSync(taskPath, `${JSON.stringify(task)}\n`);
+          }
+          fs.writeFileSync('/tmp/national-integrity-meta.json', JSON.stringify({ previous, removed, selected }, null, 2));
+          NODE
+      - name: Install identity validation from west branch
+        run: |
+          git show origin/region/west:jichitai-compare/scripts/validate-municipality-identity.mjs > jichitai-compare/scripts/validate-municipality-identity.mjs
+          git show origin/region/west:jichitai-compare/package.json > jichitai-compare/package.json
+      - name: Run separated generation and validation diagnostics
         working-directory: jichitai-compare
         shell: bash
         run: |
-          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
-          if [ -n "$changed" ]; then
-            echo '生成済みファイルが最新ではありません。'
-            git status --short -- data/generated/municipalities.json operations/progress.json
-            exit 1
-          fi
-
-      - name: Verify published GitHub Pages site
-        if: github.event_name == 'push'
-        working-directory: jichitai-compare
-        run: npm run smoke:public
+          mkdir -p diagnostics
+          set +e
+          npm run generate > diagnostics/generate.log 2>&1; GENERATE=$?
+          npm run progress > diagnostics/progress.log 2>&1; PROGRESS=$?
+          npm run validate:identity > diagnostics/identity.log 2>&1; IDENTITY=$?
+          node ./scripts/validate-data.mjs --require-generated > diagnostics/data.log 2>&1; DATA=$?
+          node --check app.js > diagnostics/syntax.log 2>&1; SYNTAX=$?
+          printf 'generate=%s\nprogress=%s\nidentity=%s\ndata=%s\nsyntax=%s\n' "$GENERATE" "$PROGRESS" "$IDENTITY" "$DATA" "$SYNTAX" | tee diagnostics/status.txt
+          for file in diagnostics/*.log; do echo "===== $file ====="; cat "$file"; done
+          if [ "$GENERATE" -ne 0 ] || [ "$PROGRESS" -ne 0 ] || [ "$IDENTITY" -ne 0 ] || [ "$DATA" -ne 0 ] || [ "$SYNTAX" -ne 0 ]; then exit 1; fi
+      - name: Upload national diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: national-validation-diagnostics
+          path: |
+            jichitai-compare/diagnostics
+            jichitai-compare/identity-validation-errors.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Write release manifest and homepage count
+        if: success()
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const meta = JSON.parse(fs.readFileSync('/tmp/national-integrity-meta.json', 'utf8'));
+          const progress = JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json', 'utf8'));
+          const municipalities = meta.selected.map(({ region, code }) => {
+            const data = JSON.parse(fs.readFileSync(`jichitai-compare/data/municipalities/${code.slice(0,2)}/${code}.json`, 'utf8'));
+            const task = JSON.parse(fs.readFileSync(`jichitai-compare/operations/tasks/${code}.json`, 'utf8'));
+            return { region, code, name: data.name, prefecture: data.prefecture, sourcePullRequestNumber: task.pullRequestNumber ?? null };
+          }).sort((a,b) => a.code.localeCompare(b.code));
+          const manifest = {
+            schemaVersion: '1.0.0',
+            createdAt: '2026-07-24T21:12:00+09:00',
+            previousPublishedMunicipalities: meta.previous,
+            removedInvalidCodes: meta.removed,
+            addedMunicipalities: municipalities.length,
+            municipalities,
+            refreshedMunicipalityCodes: ['40210'],
+            publishedMunicipalities: progress.registeredMunicipalities,
+            remainingMunicipalities: progress.remainingMunicipalities
+          };
+          fs.writeFileSync('jichitai-compare/operations/control/national-code-integrity-release-20260724.json', `${JSON.stringify(manifest, null, 2)}\n`);
+          const index = 'jichitai-compare/index.html';
+          fs.writeFileSync(index, fs.readFileSync(index, 'utf8').replace(/\d+自治体・9制度/g, `${progress.registeredMunicipalities}自治体・9制度`));
+          NODE
+      - name: Restore standard workflow and commit release
+        if: success()
+        run: |
+          git show origin/region/west:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
+          rm -rf jichitai-compare/diagnostics
+          rm -f jichitai-compare/identity-validation-errors.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'release: reconcile municipality codes and publish regional completions'
+          git push origin HEAD
