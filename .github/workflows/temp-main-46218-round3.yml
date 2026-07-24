@@ -1,0 +1,46 @@
+name: Temporary main sync for West-A round 3
+
+on:
+  push:
+    branches:
+      - 'audit/main-46218-sick-child-care-correction-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[main-round3-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: jichitai-compare/package-lock.json
+      - name: Copy audited regional source and regenerate public files
+        run: |
+          git fetch origin region/west
+          for path in \
+            jichitai-compare/data/municipalities/46/46218.json \
+            jichitai-compare/operations/tasks/46218.json \
+            jichitai-compare/operations/audits/west-a-research-verification-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/west-a.json
+          do
+            git show origin/region/west:"$path" > "$path"
+          done
+          cd jichitai-compare
+          npm ci
+          npm run generate
+          npm run progress
+      - name: Commit nationwide correction
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare
+          git commit -m '[main-round3-applied] audit: sync Kirishima sick child care correction'
+          git push
