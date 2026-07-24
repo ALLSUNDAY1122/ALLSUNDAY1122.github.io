@@ -6,7 +6,7 @@ const ROOT = process.cwd();
 const TOOLS = path.join(ROOT, 'yorugatari', 'tools');
 const OUTPUT_JSON = path.join(TOOLS, 'site-health-latest.json');
 const OUTPUT_MD = path.join(TOOLS, 'site-health-latest.md');
-const VERSION = '20260724-007';
+const VERSION = '20260724-008';
 
 function readJson(filename, fallback = null) {
   try { return JSON.parse(fs.readFileSync(path.join(TOOLS, filename), 'utf8')); }
@@ -57,6 +57,18 @@ function staticAuditMatchesCurrent(report) {
   });
 }
 
+function quizPerformanceIsCurrent(report) {
+  if (report?.success !== true || report.version !== '20260724-001') return false;
+  if (report.releaseCheck?.pageReady !== true || report.releaseCheck?.runtimeReady !== true) return false;
+  const runs = Array.isArray(report.runs) ? report.runs : [];
+  const mobile = runs.find((run) => run?.profile === 'mobile');
+  const desktop = runs.find((run) => run?.profile === 'desktop');
+  return Boolean(
+    mobile?.scores?.performance >= 0.9 && mobile?.scores?.seo === 1 &&
+    desktop?.scores?.performance >= 0.95 && desktop?.scores?.seo === 1
+  );
+}
+
 const now = new Date();
 const seo = readJson('seo-audit-latest.json', {});
 const ui = readJson('ui-audit-latest.json', {});
@@ -65,6 +77,8 @@ const performance = readJson('performance-audit-latest.json', {});
 const engagement = readJson('engagement-audit-latest.json', {});
 const landingBrowser = readJson('landing-share-audit-latest.json', {});
 const landingStatic = readJson('landing-runtime-static-audit-latest.json', {});
+const quizBrowser = readJson('horror-quiz-audit-latest.json', {});
+const quizPerformance = readJson('horror-quiz-performance-latest.json', {});
 const clean = readJson('analytics-clean-latest.json', {});
 const raw = readJson('analytics-snapshot-latest.json', {});
 const conversion = readJson('landing-conversion-latest.json', {});
@@ -88,6 +102,10 @@ const staticCurrent = staticAuditMatchesCurrent(landingStatic);
 const browserLandingCurrent = landingBrowser.success === true &&
   landingBrowser.shareVersion === '20260724-002' && landingBrowser.startVersion === '20260724-001';
 const landingComposite = staticCurrent && performanceCurrent;
+const quizBrowserCurrent = quizBrowser.success === true && quizBrowser.version === '20260724-001' &&
+  Array.isArray(quizBrowser.failures) && quizBrowser.failures.length === 0;
+const quizPerformanceCurrent = quizPerformanceIsCurrent(quizPerformance);
+const quizCurrent = quizBrowserCurrent && quizPerformanceCurrent;
 
 const quality = [
   { id: 'seo', label: 'SEO', success: seo.success === true, mode: 'browser', observedAt: seo.auditedAt || seo.generatedAt || null },
@@ -107,6 +125,13 @@ const quality = [
     mode: browserLandingCurrent ? 'browser' : landingComposite ? 'composite' : 'failed',
     observedAt: browserLandingCurrent ? landingBrowser.auditedAt : latestTimestamp(landingStatic.testedAt, performance.auditedAt),
     evidence: landingComposite ? ['現行4ファイルのGitブロブSHA一致', '模擬DOM実行監査合格', '公開Lighthouseで現行共有・開始ランタイムを確認'] : []
+  },
+  {
+    id: 'horrorQuiz', label: '怖さ診断',
+    success: quizCurrent,
+    mode: quizCurrent ? 'browser+lighthouse' : 'failed',
+    observedAt: latestTimestamp(quizBrowser.auditedAt, quizPerformance.auditedAt),
+    evidence: quizCurrent ? ['公開ブラウザで4診断結果・12作品リンクを検証', '全12作品がHTTP 200', '重大・深刻なaxe違反なし', 'モバイル・PCのLighthouse基準合格'] : []
   }
 ].map((row) => ({ ...row, observedAtJapan: japanTimestamp(row.observedAt), ageHours: ageHours(row.observedAt, now) }));
 
@@ -134,6 +159,12 @@ const metrics = {
   storyStartsAfterBaseline: conversion.totals?.storyStarts ?? null,
   landingStartRate: conversion.totals?.startRate ?? null,
   conversionComparisonReady: conversion.comparisonReady ?? false,
+  horrorQuiz: {
+    browserAuditSuccess: quizBrowserCurrent,
+    performanceAuditSuccess: quizPerformanceCurrent,
+    mobilePerformance: quizPerformance.runs?.find((run) => run?.profile === 'mobile')?.scores?.performance ?? null,
+    desktopPerformance: quizPerformance.runs?.find((run) => run?.profile === 'desktop')?.scores?.performance ?? null
+  },
   externalLaunch: {
     publishedCount: published.length,
     readyNotPostedCount: ready.length,
@@ -171,6 +202,7 @@ const metricLines = [
   `- 診断用累計（作品）: ${metrics.diagnosticCumulativeStoryViews ?? '不明'}`,
   `- 基準値設定後の特集閲覧: ${metrics.landingViewsAfterBaseline ?? '不明'}`,
   `- 基準値設定後の作品開始: ${metrics.storyStartsAfterBaseline ?? '不明'}`,
+  `- 怖さ診断Lighthouse: モバイル${metrics.horrorQuiz.mobilePerformance ?? '不明'} / PC${metrics.horrorQuiz.desktopPerformance ?? '不明'}`,
   `- 外部投稿証跡: ${metrics.externalLaunch.publishedCount}本（準備済み未投稿${metrics.externalLaunch.readyNotPostedCount}本）`
 ];
 const markdown = `# 夜語り サイト運用サマリー\n\n生成：${snapshot.generatedAtJapan}（日本時間）  \n状態：${status === 'healthy' ? '正常' : status === 'stale' ? '監査更新待ち' : '要対応'}\n\n自動監査アクセス除外後の値を運用判断に使用します。複合判定は根拠をJSONへ保存します。\n\n## 品質監査\n\n${qualityLines.join('\n')}\n\n## 計測値\n\n${metricLines.join('\n')}\n\n## 次の判断\n\n${actions.map((value, index) => `${index + 1}. ${value}`).join('\n')}\n`;
