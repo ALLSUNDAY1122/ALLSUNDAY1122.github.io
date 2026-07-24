@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-24T03:46:19.092Z",
-  "success": true,
+  "auditedAt": "2026-07-24T03:58:20.732Z",
+  "success": false,
   "results": [
     {
       "name": "top: published page loaded",
@@ -372,7 +372,7 @@
       "ok": true,
       "detail": {
         "ready": true,
-        "attempt": 1,
+        "attempt": 8,
         "canonical": "https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html",
         "campaign": "onsite-share"
       }
@@ -494,9 +494,29 @@
     },
     {
       "name": "accessibility audit: no browser JavaScript errors",
-      "ok": true,
-      "detail": []
+      "ok": false,
+      "detail": [
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT"
+      ]
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "name": "accessibility audit: no browser JavaScript errors",
+      "ok": false,
+      "detail": [
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT",
+        "console: Failed to load resource: net::ERR_TIMED_OUT"
+      ]
+    }
+  ]
 }
