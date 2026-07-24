@@ -20,6 +20,15 @@
     ['threads|launch_20260724|bedtime_8', 'launch-20260724-threads-bedtime']
   ]);
 
+  function isAutomatedRequest() {
+    const userAgent = String(navigator.userAgent || '');
+    const automatedUserAgent = /(HeadlessChrome|Chrome-Lighthouse|Lighthouse|Yorugatari[-/ ].*(?:Audit|Check|Test)|Yorugatari-Live-Check)/i.test(userAgent);
+    const automatedQuery = Array.from(query.keys()).some(function (key) {
+      return /(?:^|[-_])(audit|verify|release|performance|lighthouse|accessibility|a11y|ui)(?:$|[-_])/i.test(key);
+    });
+    return Boolean(navigator.webdriver || window.__YORUGATARI_AUTOMATION__ === true || automatedUserAgent || automatedQuery);
+  }
+
   function sourceChannel() {
     const source = (query.get('utm_source') || '').toLowerCase();
     if (source) {
@@ -49,11 +58,13 @@
 
   const source = sourceChannel();
   const campaign = campaignId();
+  const automated = isAutomatedRequest();
   const state = {
     path,
     trackingPath,
     source,
     campaign,
+    automated,
     tracked: false,
     sourceTracked: false,
     campaignTracked: false,
@@ -63,7 +74,7 @@
   };
   window.YORUGATARI_ANALYTICS = state;
 
-  if (!isYorugatari || navigator.webdriver) return;
+  if (!isYorugatari || automated) return;
 
   function endpoint(targetPath) {
     return API_BASE + '?site=' + encodeURIComponent(SITE_ID) + '&path=' + encodeURIComponent(targetPath);
