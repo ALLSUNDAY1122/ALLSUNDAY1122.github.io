@@ -32,3 +32,5 @@ jobs:
       - name: Check JavaScript syntax
         working-directory: jichitai-compare
         run: node --check app.js
+      - name: Confirm validation target
+        run: echo 'validated PR 2972 merge tree'
