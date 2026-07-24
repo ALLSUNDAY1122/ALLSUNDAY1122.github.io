@@ -1,8 +1,8 @@
 {
-  "testedAt": "2026-07-24T03:20:17.000Z",
-  "japanTime": "2026-07-24 12:20:17",
+  "testedAt": "2026-07-24T05:34:51.000Z",
+  "japanTime": "2026-07-24 14:34:51",
   "success": true,
-  "scope": "リポジトリ上の共有ランタイムと作品開始ランタイムを、模擬DOM・sessionStorage・fetch環境で実行した監査",
+  "scope": "現行の共有ランタイムと作品開始ランタイムを、模擬DOM・sessionStorage・fetch環境で実行した監査",
   "files": [
     {
       "path": "yorugatari/assets/landing-share.js",
@@ -10,15 +10,15 @@
     },
     {
       "path": "yorugatari/assets/landing-start-20260724-001.js",
-      "blobSha": "8f5908d48f40d3896ac0a74991d1f99741a852c1"
+      "blobSha": "157391c0ed21c4251de0f74d89af24309336cab9"
     },
     {
       "path": "yorugatari/5min-horror.html",
-      "blobSha": "fea5c28a276d1f618ba7a6c05f872a8f66a3b598"
+      "blobSha": "2d20cd9fba1922daebf1955bb665ca57c533bfe1"
     },
     {
       "path": "yorugatari/bedtime-horror.html",
-      "blobSha": "ed182463a3663266128ed24b024478269dabf001"
+      "blobSha": "67b28fb93d55df6f16cfd92ed47090f9df6576f2"
     }
   ],
   "checks": {
@@ -30,6 +30,7 @@
     "oneStartRequestPerSession": true,
     "rapidDoubleClickPrevented": true,
     "retryPossibleAfterFailedRequest": true,
+    "automatedAuditTrafficExcluded": true,
     "storyIdentifierExcludedFromStartRequest": true,
     "shareUrlUsesCanonicalLanding": true,
     "shareUrlUsesRegisteredUtmValues": true,
@@ -37,5 +38,21 @@
     "sharingAndStartTrackingSeparated": true,
     "explicitAggregatePathDefinitions": true
   },
-  "note": "公開GitHub PagesのLighthouse監査は成功済み。公開Playwright監査レポートはエンゲージメントActions実行時に別ファイルへ保存する。"
+  "execution": {
+    "fiveMinute": {
+      "shareVersion": "20260724-002",
+      "startVersion": "20260724-001",
+      "normalSessionRequests": 1,
+      "failedThenRetriedRequests": 2,
+      "automatedSessionRequests": 0
+    },
+    "bedtime": {
+      "shareVersion": "20260724-002",
+      "startVersion": "20260724-001",
+      "normalSessionRequests": 1,
+      "failedThenRetriedRequests": 2,
+      "automatedSessionRequests": 0
+    }
+  },
+  "note": "公開GitHub PagesのLighthouse監査は現行版で成功済み。公開Playwright監査レポートはエンゲージメントActions完了時に別ファイルへ保存する。"
 }
