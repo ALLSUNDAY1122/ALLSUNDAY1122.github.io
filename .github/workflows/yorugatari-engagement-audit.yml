@@ -15,9 +15,8 @@ on:
       - yorugatari/privacy.html
       - yorugatari/terms.html
       - yorugatari/contact.html
-      - yorugatari/stories/last-elevator.html
-      - yorugatari/stories/spare-key-returned.html
-      - yorugatari/stories/hired-with-your-experience.html
+      - yorugatari/categories/**
+      - yorugatari/stories/**
       - yorugatari/assets/story.js
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
@@ -26,6 +25,7 @@ on:
       - yorugatari/assets/yorugatari-share.png
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
+      - yorugatari/tools/generate-discovery-pages.mjs
       - yorugatari/tools/normalize-legacy-story-attributes.mjs
       - yorugatari/tools/normalize-engagement.mjs
       - yorugatari/tools/ensure-landing-sharing.mjs
@@ -57,7 +57,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Normalize campaign runtime and audited circulation
+      - name: Normalize campaign runtime and full-site circulation
         shell: bash
         run: |
           node --check yorugatari/tools/normalize-legacy-story-attributes.mjs
@@ -76,10 +76,20 @@ jobs:
           const site = 'yorugatari';
           const release = '20260724-001';
           const staticFiles = ['index.html','5min-horror.html','bedtime-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
+          const categoryFiles = ['shinrei.html','hitokowa.html','imikowa.html','net-kaidan.html','urban-legend.html','aftertaste.html'];
           for (const file of staticFiles) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
             const expectedVersion = file === '5min-horror.html' ? '20260724-004' : file === 'bedtime-horror.html' ? '20260724-005' : '20260723-003';
             if (!html.includes(`assets/analytics.js?v=${expectedVersion}&r=${release}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
+          }
+          for (const file of ['index.html', 'archive.html']) {
+            const html = fs.readFileSync(path.join(site, file), 'utf8');
+            if (!html.includes('href="5min-horror.html"') || !html.includes('href="bedtime-horror.html"')) throw new Error(`Curated static links missing: ${file}`);
+          }
+          for (const file of categoryFiles) {
+            const html = fs.readFileSync(path.join(site, 'categories', file), 'utf8');
+            if (!html.includes(`../assets/analytics.js?v=20260723-003&r=${release}`) || html.includes('../assets/engagement.js')) throw new Error(`Category runtime mismatch: ${file}`);
+            if (!html.includes('href="../5min-horror.html"') || !html.includes('href="../bedtime-horror.html"')) throw new Error(`Category curated links missing: ${file}`);
           }
           for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
@@ -98,12 +108,10 @@ jobs:
             if (!landingStart.includes(token)) throw new Error(`Landing story start token missing: ${token}`);
           }
           const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
-          const auditedStories = new Set(['last-elevator.html', 'spare-key-returned.html', 'hired-with-your-experience.html']);
           if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
           for (const file of stories) {
             const html = fs.readFileSync(path.join(site, 'stories', file), 'utf8');
-            if (!html.includes('../assets/engagement.js?v=20260723-003') || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
-            if (auditedStories.has(file) && !html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`)) throw new Error(`Audit story cache release mismatch: ${file}`);
+            if (!html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`) || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
             if ((html.match(/href=["']\.\.\/5min-horror\.html["']/g) || []).length !== 1) throw new Error(`Five-minute landing link mismatch: ${file}`);
             if ((html.match(/href=["']\.\.\/bedtime-horror\.html["']/g) || []).length !== 1) throw new Error(`Bedtime landing link mismatch: ${file}`);
           }
@@ -113,7 +121,7 @@ jobs:
           if (!notFound.includes(`/yorugatari/assets/analytics.js?v=20260723-003&r=${release}`)) throw new Error('404 runtime mismatch');
           NODE
 
-      - name: Commit normalized audited pages
+      - name: Commit normalized pages
         shell: bash
         run: |
           paths=(
@@ -126,12 +134,11 @@ jobs:
             yorugatari/privacy.html
             yorugatari/terms.html
             yorugatari/contact.html
-            yorugatari/stories/last-elevator.html
-            yorugatari/stories/spare-key-returned.html
-            yorugatari/stories/hired-with-your-experience.html
+            yorugatari/categories
+            yorugatari/stories
           )
           if git diff --quiet -- "${paths[@]}"; then
-            echo "Campaign, landing, and audited story runtimes are already normalized."
+            echo "All Yorugatari pages already use audit-filtered runtimes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
