@@ -24,6 +24,19 @@ jobs:
       - name: Apply Round 2 confirmed corrections
         working-directory: jichitai-compare
         run: node scripts/fix-central-b-accuracy-round2.mjs apply
+      - name: Normalize task timestamps
+        working-directory: jichitai-compare
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const codes = ['26210','26211','26213','26214','26303','26322','26343'];
+          for (const code of codes) {
+            const path = `operations/tasks/${code}.json`;
+            const task = JSON.parse(await readFile(path, 'utf8'));
+            task.lastUpdatedAt = task.lastUpdatedAt.replace(/\.\d{3}(?=[+-]\d{2}:\d{2}$)/u, '');
+            await writeFile(path, JSON.stringify(task, null, 2) + '\n', 'utf8');
+          }
+          NODE
       - name: Regenerate and validate municipality data
         working-directory: jichitai-compare
         run: |
