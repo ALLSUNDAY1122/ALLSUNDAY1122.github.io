@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1478,
+    "municipalityCount": 1479,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -261666,6 +261666,177 @@
               "checkedAt": "2026-07-24"
             }
           ]
+        }
+      }
+    },
+    {
+      "code": "43205",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "name": "水俣市",
+      "officialUrl": "https://www.city.minamata.lg.jp/",
+      "status": "verified",
+      "summary": "必須9制度を水俣市公式情報で調査。7制度をverified、料金条件未確定の学校給食費と粗大ごみをunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで保険診療の自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "水俣市に住所があり健康保険に加入する18歳到達後最初の3月31日までの子ども",
+            "support": "保険診療の自己負担額を助成し、県内医療機関では条件を満たす場合に受給者証提示で現物給付",
+            "application": "こども医療費受給資格者証の交付申請を行う",
+            "excluded": "入院時食事代、保険適用外診療、学校管理下の災害共済給付対象等は対象外"
+          },
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji0034553/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後3か月から小学6年生までを病児・病後児保育施設で預かる",
+          "eligibility": {
+            "minAgeMonths": 3,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "病児・病後児保育もくれん",
+            "hours": "月曜日から金曜日の8時から18時",
+            "capacity": "定員3人",
+            "fee": "水俣市民は1日1,500円、住民税非課税世帯1,000円、生活保護世帯無料。市外利用者は1日2,500円",
+            "application": "年度ごとの事前登録後、原則前日までに予約し、医療機関の診療情報等を提出する"
+          },
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji003384/index.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.minamata.lg.jp/kiji0034513/index.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と0～2歳児の住民税非課税世帯の保育料を無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "fee": "3～5歳児クラスの全児童と、0～2歳児クラスの住民税非課税世帯は保育料無料",
+            "calculation": "対象外の0～2歳児は世帯の市民税額、認定区分、保育必要量等により決定",
+            "application": "施設利用前に教育・保育給付認定を受け、入所申込みを行う",
+            "excluded": "給食費、送迎費、行事費、延長保育料等の実費は別途の場合がある"
+          },
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji0031439/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "2026年度の学校給食提供は確認したが、一般世帯の給食費額・無償化・徴収条件を確定できない",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "confirmed": "水俣市学校給食センターが2026年度の給食献立カレンダーを公開",
+            "unconfirmed": "小学校・中学校の一般給食費額、全体無償化や負担軽減の有無、徴収方法",
+            "contact": "水俣市学校給食センターまたは教育委員会へ確認"
+          },
+          "notes": [
+            "給食実施を、給食費無償化または特定金額の根拠として扱わない。"
+          ],
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji003447/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "水俣市に住所がある産後1年以内の母親と乳児で、心身の不調や育児不安等により支援を必要とする方",
+            "care": "母親の心身ケア、授乳・育児相談、乳児の健康状態確認等を実施",
+            "application": "市へ事前に相談・申請し、利用決定後に実施施設等と日程を調整する"
+          },
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji0034256/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が月10時間まで利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "水俣市に住所があり、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "usageLimit": "子ども1人につき月10時間まで。翌月への繰越不可",
+            "fee": "1時間300円。世帯状況による減免があり、給食・おやつ等の実費は別途の場合がある",
+            "application": "総合支援システムで利用認定申請後、実施施設との事前面談・利用予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji0034559/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家改修・家財処分費を4分の1、上限25万円、空き家バンク物件は5万円加算",
+          "details": {
+            "target": "一定期間使用されていない市内空き家を取得・賃借し、5年以上居住する等の要件を満たす方",
+            "support": "改修工事や家財処分等の対象経費の4分の1、上限25万円",
+            "addition": "水俣市空き家バンク登録物件は5万円を加算",
+            "conditions": "対象経費20万円以上、市内事業者の利用、契約・着工前の申請等が必要"
+          },
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji0033276/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "unavailable",
+          "summary": "2026年度の粗大ごみ収集・直接搬入案内は確認したが、料金条件を確定できない",
+          "details": {
+            "collection": "令和8年度家庭ごみ収集日程表に粗大ごみ区分を掲載し、環境クリーンセンターへの直接搬入も案内",
+            "unconfirmed": "戸別収集手数料、処理券・証紙料金、予約期限、品目別の料金条件",
+            "contact": "水俣市環境クリーンセンターへ排出前に確認"
+          },
+          "notes": [
+            "収集方法の存在を、料金無料または特定料金の根拠として扱わない。"
+          ],
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/kiji0033253/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害等のWeb版・冊子版ハザードマップを公開",
+          "details": {
+            "coverage": "洪水浸水想定、土砂災害警戒区域、避難所・避難場所等",
+            "update": "2026年3月発行内容を反映したハザードマップを公開",
+            "formats": "Web版と冊子・PDF版を提供",
+            "use": "住所周辺の災害リスクと避難先を確認可能"
+          },
+          "source": {
+            "url": "https://www.city.minamata.lg.jp/bousai/list00502.html",
+            "checkedAt": "2026-07-24"
+          }
         }
       }
     },
