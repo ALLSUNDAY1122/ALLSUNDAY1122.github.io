@@ -1,0 +1,111 @@
+name: Publish North-East 1433
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/publish-north-east-1433.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.head_ref == 'coord-a/release-north-east-20260724-1433' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord-a/release-north-east-20260724-1433
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Import complete north and east municipalities
+        run: |
+          set -euo pipefail
+          git fetch origin region/north region/east
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const {execFileSync} = require('child_process');
+          const root = process.cwd();
+          const project = path.join(root,'jichitai-compare');
+          const serviceIds = JSON.parse(fs.readFileSync(path.join(project,'data/service-definitions.json'),'utf8')).services.map(x=>x.id);
+          const previous = JSON.parse(fs.readFileSync(path.join(project,'operations/progress.json'),'utf8')).registeredMunicipalities;
+          const git = (args,opts={}) => execFileSync('git',args,{encoding:'utf8',...opts}).trim();
+          const exists = (ref,p) => { try { execFileSync('git',['cat-file','-e',`${ref}:${p}`],{stdio:'ignore'}); return true; } catch { return false; } };
+          const readRef = (ref,p) => JSON.parse(git(['show',`${ref}:${p}`]));
+          const write = (p,v) => { const full=path.join(root,p); fs.mkdirSync(path.dirname(full),{recursive:true}); fs.writeFileSync(full,JSON.stringify(v)+'\n'); };
+          const complete = d => serviceIds.every(id => d.services?.[id] && ['verified','unavailable'].includes(d.services[id].status) && d.services[id].eligibility && /^https:\/\//.test(d.services[id].source?.url || ''));
+          const added=[]; const excluded=[]; const refreshCodes=new Set(['14361','14362','14363','14364']);
+          for (const region of ['north','east']) {
+            const ref=`origin/region/${region}`;
+            const files=git(['ls-tree','-r','--name-only',ref,'--','jichitai-compare/data/municipalities']).split(/\r?\n/).filter(p=>/\/[0-9]{5}\.json$/.test(p));
+            for (const dp of files) {
+              const code=path.basename(dp,'.json');
+              const tp=`jichitai-compare/operations/tasks/${code}.json`;
+              if (exists('HEAD',dp) || !exists(ref,tp)) continue;
+              const data=readRef(ref,dp);
+              if (!complete(data)) { excluded.push({region,code,name:data.name,reason:'incomplete'}); continue; }
+              const task=readRef(ref,tp);
+              write(dp,data); write(tp,task);
+              added.push({region,code,name:data.name,prefecture:data.prefecture,sourcePullRequestNumber:task.pullRequestNumber??null});
+            }
+          }
+          const refreshed=[];
+          for (const code of refreshCodes) {
+            const ref='origin/region/east';
+            const dp=`jichitai-compare/data/municipalities/${code.slice(0,2)}/${code}.json`;
+            const tp=`jichitai-compare/operations/tasks/${code}.json`;
+            if (!exists(ref,dp)||!exists(ref,tp)) throw new Error(`${code}: refresh source missing`);
+            const data=readRef(ref,dp), task=readRef(ref,tp);
+            if (!complete(data)) throw new Error(`${code}: refresh source incomplete`);
+            write(dp,data); write(tp,task);
+            refreshed.push({region:'east',code,name:data.name,prefecture:data.prefecture,sourcePullRequestNumber:task.pullRequestNumber??null});
+          }
+          const targets=[...new Map([...added,...refreshed].map(x=>[x.code,x])).values()];
+          const timestamp='2026-07-24T14:33:00+09:00';
+          for (const item of targets) {
+            const dp=`jichitai-compare/data/municipalities/${item.code.slice(0,2)}/${item.code}.json`;
+            const tp=`jichitai-compare/operations/tasks/${item.code}.json`;
+            const data=JSON.parse(fs.readFileSync(dp,'utf8'));
+            const task=JSON.parse(fs.readFileSync(tp,'utf8'));
+            const services=serviceIds.map(id=>data.services[id]);
+            task.status='merged'; task.currentService=null; task.nextServiceIndex=serviceIds.length; task.completedServices=[...serviceIds];
+            task.verifiedCount=services.filter(s=>s.status==='verified').length; task.researchingCount=0; task.unavailableCount=services.filter(s=>s.status==='unavailable').length; task.needsMediumReviewCount=0;
+            task.pullRequestNumber=null; task.lastCheckedAt='2026-07-24'; task.lastUpdatedAt=timestamp; task.lastUpdatedBy='統括A全国統合'; task.blockers=[];
+            task.officialSources=[...new Set(services.map(s=>s.source?.url).filter(u=>/^https:\/\//.test(u||'')))];
+            delete task.mergedInto; delete task.mergeCommitSha; delete task.ciRunNumber; delete task.ciConclusion;
+            write(tp,task);
+          }
+          added.sort((a,b)=>a.code.localeCompare(b.code)); refreshed.sort((a,b)=>a.code.localeCompare(b.code));
+          write('jichitai-compare/operations/control/coord-a-release-north-east-20260724-1433.json',{schemaVersion:'1.0.0',createdAt:timestamp,previousPublishedMunicipalities:previous,addedMunicipalities:added.length,refreshedMunicipalities:refreshed.length,expectedPublishedMunicipalities:previous+added.length,byRegion:{north:added.filter(x=>x.region==='north').length,east:added.filter(x=>x.region==='east').length},added,refreshed,excludedCount:excluded.length,excluded});
+          NODE
+      - name: Generate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          node <<'NODE'
+          const fs=require('fs');
+          const manifest=JSON.parse(fs.readFileSync('operations/control/coord-a-release-north-east-20260724-1433.json','utf8'));
+          const progress=JSON.parse(fs.readFileSync('operations/progress.json','utf8'));
+          if(progress.registeredMunicipalities!==manifest.expectedPublishedMunicipalities) throw new Error(`municipality count ${progress.registeredMunicipalities}/${manifest.expectedPublishedMunicipalities}`);
+          if(progress.completedServices!==progress.totalServices) throw new Error('service completion mismatch');
+          if(progress.todoServices||progress.researchingServices||progress.needsMediumReviewServices||progress.needsRevisionServices||progress.needsCoordinatorServices||progress.blockedServices||progress.blockedMunicipalities||progress.assignmentSummary?.blocked) throw new Error('unfinished state detected');
+          const f='index.html'; let html=fs.readFileSync(f,'utf8');
+          html=html.replace(/\d+自治体・9制度/g,`${progress.registeredMunicipalities}自治体・9制度`);
+          html=html.replace(/登録状況：\d+自治体の生成データを公開中/g,`登録状況：${progress.registeredMunicipalities}自治体の生成データを公開中`);
+          fs.writeFileSync(f,html);
+          NODE
+          npm run validate:generated
+          node --check app.js
+      - name: Commit release data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A jichitai-compare
+          git commit -m 'release: 北日本・東日本の最新差分を全国反映'
+          git push origin HEAD:coord-a/release-north-east-20260724-1433
