@@ -1,0 +1,88 @@
+name: Yorugatari site health summary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 21 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - yorugatari/tools/site-health-snapshot.mjs
+      - .github/workflows/yorugatari-site-health.yml
+
+concurrency:
+  group: yorugatari-site-health
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Validate summary generator
+        run: node --check yorugatari/tools/site-health-snapshot.mjs
+
+      - name: Generate site health summary
+        id: health
+        continue-on-error: true
+        run: node yorugatari/tools/site-health-snapshot.mjs
+
+      - name: Preserve site health summary
+        if: always()
+        shell: bash
+        run: |
+          test -f yorugatari/tools/site-health-latest.json
+          test -f yorugatari/tools/site-health-latest.md
+          cp yorugatari/tools/site-health-latest.json /tmp/site-health-latest.json
+          cp yorugatari/tools/site-health-latest.md /tmp/site-health-latest.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          saved=false
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/site-health-latest.json yorugatari/tools/site-health-latest.json
+            cp /tmp/site-health-latest.md yorugatari/tools/site-health-latest.md
+            git add yorugatari/tools/site-health-latest.json yorugatari/tools/site-health-latest.md
+            if git diff --cached --quiet; then
+              saved=true
+              break
+            fi
+            git commit -m "Record Yorugatari site health [skip ci]"
+            if git push origin HEAD:main; then
+              saved=true
+              break
+            fi
+            sleep 4
+          done
+          test "$saved" = true
+
+      - name: Add job summary
+        if: always()
+        run: cat yorugatari/tools/site-health-latest.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload site health summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yorugatari-site-health
+          path: |
+            yorugatari/tools/site-health-latest.json
+            yorugatari/tools/site-health-latest.md
+          if-no-files-found: error
+          retention-days: 30
