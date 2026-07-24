@@ -6,13 +6,16 @@
   "name": "三郷町",
   "officialUrl": "https://www.town.sango.nara.jp/",
   "status": "verified",
-  "summary": "三郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、第2子保育料無償化、病児保育、産後ケアなどを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "三郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、病児保育、第2子保育料無償化、令和8年度こども誰でも通園制度、産後ケア、住宅支援などを記録。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末までの子どもの保険診療自己負担相当分を所得制限・定額一部負担金なしで助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "0歳から18歳に達する日以後の最初の3月31日まで",
         "incomeLimit": "なし",
@@ -21,12 +24,18 @@
         "procedure": "子ども医療費受給資格証の交付手続きが必要",
         "excluded": "保険適用外費用、入院時食事代等は対象外"
       },
-      "source": {"url": "https://www.town.sango.nara.jp/soshiki/11/2369.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.sango.nara.jp/soshiki/11/2369.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "西和地域病児保育室いちごルームで、生後6か月から小学6年生までの病気中または回復期の児童を一時保育する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
       "details": {
         "facility": "西和地域病児保育室いちごルーム",
         "target": "三郷町等の西和5町に住所を有する生後6か月から小学6年生までの児童",
@@ -35,15 +44,24 @@
         "staff": "保育士と看護師が対応",
         "procedure": "町こども未来課または施設での事前登録、予約、医師連絡票等が必要"
       },
-      "source": {"url": "https://www.town.sango.nara.jp/site/kosodate/2299.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.sango.nara.jp/site/kosodate/2299.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.ikaruga.nara.jp/0000001629.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.ikaruga.nara.jp/0000001629.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児を無償化し、町独自に保育園・幼稚園等へ2人以上同時在園する場合の第2子以降も無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "nationalFree": "3～5歳児クラスと住民税非課税世帯の0～2歳児クラスは保育料無償",
         "localExpansion": "保育園・幼稚園等に2人以上在園している場合、第2子以降は年齢・世帯収入を問わず保育料無償",
@@ -51,59 +69,115 @@
         "simultaneousAttendance": "町独自無償化は2人以上が在園している場合の条件を確認する必要がある",
         "excludedCosts": "給食費、物品費、その他実費徴収分は保護者負担"
       },
-      "source": {"url": "https://www.town.sango.nara.jp/site/kosodate/13912.html", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.town.sango.nara.jp/site/kosodate/13912.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "学校給食センターが町立小中学校の給食を調理・提供する。全児童生徒の一律無償化は確認できず、要件世帯には就学援助がある。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "summary": "学校給食センターが町立小中学校の給食を調理・提供する。令和8年度の一律無償化は確認できず、要件世帯には就学援助がある。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "provider": "三郷町学校給食センター",
         "schools": "三郷中学校、三郷小学校、三郷北小学校等の給食を調理",
-        "currentService": "令和8年度も学校給食管理システム導入業務を実施し、給食提供を継続",
+        "currentService": "令和8年度も給食管理システムを使用して献立・食数・アレルギー等を管理し、給食提供を継続",
+        "contractPeriod": "令和8年度のシステム利用期間は2027年2月28日まで",
         "universalFreeStatus": "令和8年度の全児童生徒一律無償化は確認できないため無償とは記録しない",
         "aid": "要保護・準要保護世帯には学校給食費を含む就学援助あり。ただし公式案内上、学校給食費の援助は中学生のみ",
         "feeVerification": "現行月額は公式HTML本文で確認できないため推測しない"
       },
-      "source": {"url": "https://www.town.sango.nara.jp/soshiki/26/14054.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.sango.nara.jp/soshiki/26/14054.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.sango.nara.jp/site/kosodate/2333.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.sango.nara.jp/site/kosodate/2333.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "町内在住の産後1年未満の母子を対象に、宿泊型・通所型・訪問型の産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
-      "details": {
-        "target": "町内に住所を有する産後1年未満の母親と乳児で、心身の不調、育児不安、家族支援不足等がある方",
-        "types": "ショートステイ、デイケア、アウトリーチ",
-        "shortStay": "利用開始から24時間以内、最長6泊",
-        "dayCare": "10時から18時、最大7日間",
-        "outreach": "9時から17時の間で1回2時間以内、最大7日間",
-        "taxableFees": "課税世帯は宿泊3,500円、5回目以降6,000円。通所は4回目まで無料、5回目以降2,500円。訪問1,000円",
-        "reduction": "生活保護・町民税非課税世帯は無料または5回目以降の低額負担",
-        "care": "母体の健康・乳房ケア、沐浴・授乳、育児・生活相談等"
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
       },
-      "source": {"url": "https://www.town.sango.nara.jp/soshiki/15/2393.html", "checkedAt": "2026-07-23"}
+      "details": {
+        "target": "町内に住所を有する産後1年未満の母親と乳児で、産後の心身回復・健康管理に不安がある、育児支援を必要とする、または家族等の支援を受けにくい方",
+        "excluded": "感染症がある方、入院や医療行為が必要な方、きょうだい児は対象外",
+        "types": "ショートステイ、デイケア、アウトリーチ",
+        "shortStay": "利用開始から24時間以内を1日とし最長6泊。3食付き",
+        "dayCare": "10時から18時、最大7日。2食付きで食事代は別途自己負担",
+        "outreach": "9時から17時の間で1回2時間以内、最大7日",
+        "taxableFees": "課税世帯は宿泊1～4回目3,500円・5回目以降6,000円、通所1～4回目無料・5回目以降2,500円、訪問1～4回目1,000円・5回目以降1,050円",
+        "nonTaxableFees": "非課税世帯は宿泊・通所・訪問とも1～4回目無料。5回目以降は宿泊1,500円、通所625円、訪問260円",
+        "publicAssistance": "生活保護世帯は全類型無料",
+        "counting": "5回目以降の判定は宿泊・通所・訪問の利用回数を合算",
+        "additionalCosts": "多胎児加算と施設ごとの実費負担が生じる場合あり",
+        "facilities": "心友助産院、助産院カンガルーホーム、Mothering House美月、のんの助産院、なんのレディースクリニック、大和郡山病院、ふゆき助産院、助産所わ",
+        "ageRestrictions": "Mothering House美月は生後9か月未満、なんのレディースクリニックは同院出産かつ生後5か月未満、大和郡山病院は生後5か月未満。訪問型2施設はおおむね車20分圏内",
+        "application": "利用施設へ予約後、原則利用日の10日前までにすこやか健康課へ窓口または電子申請",
+        "cancellation": "変更・取消は利用日の前々日17時までに施設へ連絡し申請。期限後や無断取消はキャンセル料が発生する場合あり"
+      },
+      "source": {
+        "url": "https://www.town.sango.nara.jp/soshiki/15/2393.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "西部保育園等で、生後6か月から就学前までの児童を保護者の就労・疾病等に応じて一時預かりする。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
-      "details": {
-        "facilities": "西部保育園、希望ケ丘保育園、希望ケ丘第二保育園、一時預かりルームちーも",
-        "seibuTarget": "生後6か月以降から就学前まで",
-        "seibuHours": "月曜日から金曜日の8時30分から16時30分まで",
-        "seibuLimit": "週3日以内。緊急時は相談可",
-        "seibuFee": "1日1,800円。給食・おやつ代を含む",
-        "reduction": "生活保護世帯は無料",
-        "procedure": "施設ごとに直接申込。西部保育園は利用申込書を提出"
+      "summary": "従来の一時預かりに加え、令和8年4月から未就園の生後6か月から満3歳未満を月10時間まで預かるこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.town.sango.nara.jp/soshiki/14/9076.html", "checkedAt": "2026-07-23"}
+      "details": {
+        "traditionalTemporaryCare": {
+          "facilities": "西部保育園、希望ケ丘保育園、希望ケ丘第二保育園、一時預かりルームちーも",
+          "target": "生後6か月以降から就学前まで。施設により受入条件が異なる",
+          "hours": "西部保育園は月曜日から金曜日の8時30分から16時30分まで",
+          "limit": "西部保育園は週3日以内。緊急時は相談可",
+          "fee": "西部保育園は1日1,800円で給食・おやつ代を含む",
+          "reduction": "生活保護世帯は無料",
+          "procedure": "施設ごとに直接申込。西部保育園は利用申込書を提出"
+        },
+        "anyoneUseChildcare": {
+          "start": "令和8年4月開始",
+          "target": "三郷町に住民登録があり、保育所・認定こども園等へ通っていない生後6か月から満3歳未満。3歳の誕生日の前々日まで",
+          "employment": "保護者の就労要件なし",
+          "facilities": "西部保育園、レイモンドヴィレッジこども園",
+          "limit": "子ども1人につき月10時間まで",
+          "fee": "1時間300円。生活保護世帯は300円、町民税所得割合算額77,101円未満世帯等は200円を上限に軽減",
+          "actualCosts": "施設により給食・おやつ・教材等の実費負担が生じる場合あり",
+          "application": "こども誰でも通園制度総合支援システムからオンライン申請し、町の利用認定を受ける",
+          "interview": "認定後、利用施設ごとに子ども同伴の初回面談が必要",
+          "reservation": "初回面談後に総合支援システムで先着予約",
+          "payment": "利用料は施設へ直接支払う",
+          "checkInOut": "登降園時に二次元コードを読み取り、利用開始・終了時刻を登録",
+          "lateUse": "遅刻しても予約時間分の利用料が必要で、予定時刻を超えた場合は超過分を請求される場合あり",
+          "cancellation": "総合支援システムで取消し、施設にも連絡。無断欠席は利用料または予約時間消化の対象となる場合あり"
+        }
+      },
+      "source": {
+        "url": "https://www.town.sango.nara.jp/soshiki/12/13160.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sango.nara.jp/soshiki/14/9076.html",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "町内の空き家を取得・改修して5年以上定住する方に、改修費の2分の1・上限50万円を補助し、子ども・転入加算を設ける。",
+      "summary": "空き家改修費を2分の1・上限50万円で支援し、子ども・転入加算を設ける。若年夫婦・子育て世帯の家賃助成は令和8年7月で新規受付を終了する。",
       "details": {
         "program": "三郷町定住化促進空き家活用補助金",
         "target": "町内の対象空き家を購入または取得した20歳以上で、交付後5年以上定住予定の方",
@@ -112,11 +186,18 @@
         "childAddition": "同居する中学生以下の子ども1人につき10万円",
         "moveInAddition": "一定期間内に対象空き家へ転入する場合、一律10万円",
         "application": "取得から6か月以内かつ工事着工・契約前に申請",
-        "otherProgram": "若年夫婦・子育て世帯の家賃助成は月1万円を最長1年。ただし令和8年7月申込で新規受付終了"
+        "rentalAid": "若年夫婦・子育て世帯の家賃助成は月1万円を最長1年。令和8年7月申込を最後に新規受付終了し、既存受給者は期間内継続",
+        "homeAcquisitionBonus": "家賃助成の開始から3年以内に町内で住宅を取得した場合、50万円の住宅取得助成あり"
       },
-      "source": {"url": "https://www.town.sango.nara.jp/soshiki/16/1981.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.sango.nara.jp/soshiki/16/1981.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.sango.nara.jp/soshiki/4/2222.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.sango.nara.jp/soshiki/4/2222.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "bulkyWaste": {
@@ -129,9 +210,15 @@
         "latestRule": "ガイドブックと現行分別が異なる場合があるため、最新のごみカレンダーを優先",
         "fee": "粗大ごみの個別手数料・申込方法・点数上限は公式HTML本文で確認できないため推測しない"
       },
-      "source": {"url": "https://www.town.sango.nara.jp/soshiki/17/2261.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.sango.nara.jp/soshiki/17/2261.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.sango.nara.jp/soshiki/17/2267.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.sango.nara.jp/soshiki/17/2267.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "disasterPrevention": {
@@ -144,9 +231,15 @@
         "preparedness": "避難時の注意事項、自宅からの避難方法・ルート検討に利用",
         "earthquakeMethod": "震源断層の規模・位置と町内の地盤条件から50メートル単位の揺れやすさを表示"
       },
-      "source": {"url": "https://www.town.sango.nara.jp/site/shobo-bousai/2017.html", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.town.sango.nara.jp/site/shobo-bousai/2017.html",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.town.sango.nara.jp/site/shobo-bousai/2292.html", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.town.sango.nara.jp/site/shobo-bousai/2292.html",
+          "checkedAt": "2026-07-24"
+        }
       ]
     }
   }
