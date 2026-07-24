@@ -17,6 +17,7 @@ on:
       - yorugatari/sitemap.xml
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
+      - yorugatari/tools/external-launch-status.json
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/analytics-snapshot.mjs
       - yorugatari/tools/landing-conversion-snapshot.mjs
@@ -56,9 +57,20 @@ jobs:
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/assets/landing-share.js
           node --check yorugatari/assets/landing-start-20260724-001.js
-          node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
           node <<'NODE'
           const fs = require('node:fs');
+          const campaigns = require('./yorugatari/tools/campaigns.json');
+          const launchStatus = require('./yorugatari/tools/external-launch-status.json');
+          if (campaigns.definitions.length !== 8 || !campaigns.onsiteShare) throw new Error('Campaign definitions are incomplete');
+          if (!Array.isArray(launchStatus.campaigns) || launchStatus.campaigns.length !== 8) throw new Error('Launch status must contain eight external campaigns');
+          const campaignIds = new Set(campaigns.definitions.map((row) => row.id));
+          const statusIds = new Set(launchStatus.campaigns.map((row) => row.id));
+          if (campaignIds.size !== statusIds.size || [...campaignIds].some((id) => !statusIds.has(id))) throw new Error('Launch status IDs do not match campaign definitions');
+          if (!campaignIds.has(launchStatus.nextCampaignId)) throw new Error('Next campaign ID is not registered');
+          for (const row of launchStatus.campaigns) {
+            if (row.status === 'published' && (!row.publishedAt || !row.postUrl)) throw new Error(`Published campaign lacks evidence: ${row.id}`);
+            if (row.status === 'ready_not_posted' && (row.publishedAt || row.postUrl)) throw new Error(`Unposted campaign contains publication evidence: ${row.id}`);
+          }
           const runtime = fs.readFileSync('yorugatari/assets/landing-start-20260724-001.js', 'utf8');
           for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', 'window.YORUGATARI_LANDING_START']) {
             if (!runtime.includes(token)) throw new Error(`Missing landing conversion token: ${token}`);
