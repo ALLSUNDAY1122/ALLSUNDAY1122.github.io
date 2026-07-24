@@ -4,7 +4,7 @@
   "assignedTeam": "西日本調査班",
   "branch": "region/west",
   "integrationBranch": "region/west",
-  "updatedAt": "2026-07-25T04:15:00+09:00",
+  "updatedAt": "2026-07-25T05:02:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -22,7 +22,7 @@
     "completedServices": 4284,
     "nationwidePublishedMunicipalities": 1741,
     "nationwideRemainingMunicipalities": 0,
-    "checkedAt": "2026-07-25T04:15:00+09:00"
+    "checkedAt": "2026-07-25T05:02:00+09:00"
   },
   "latestQualityAudit": {
     "municipalityCode": "40130",
@@ -48,10 +48,22 @@
     "materialResearchErrorCount": 3,
     "sourceMisassignmentCount": 1,
     "sourceMaintenanceOnlyCount": 5,
-    "regionalPullRequestNumbers": [3074, 3089, 3100],
+    "regionalPullRequestNumbers": [
+      3074,
+      3089,
+      3100
+    ],
     "nationalPullRequestNumber": 3119,
     "nationalCiRunNumber": 7606,
-    "status": "completed_with_corrections"
+    "status": "completed_with_corrections",
+    "softWarningAuditFile": "jichitai-compare/operations/audits/west-a-source-link-soft-warning-review-20260725.json",
+    "softWarningCount": 159,
+    "remainingSoftWarningCount": 0,
+    "softWarningMaterialCorrectionCount": 1,
+    "totalMaterialResearchErrorCount": 4,
+    "latestCorrectedMunicipalityCode": "33643",
+    "latestCorrectedMunicipalityName": "西粟倉村",
+    "latestCorrectionCommitSha": "275e40b00bee57963ac4dc4cb172e17a85053dbf"
   },
   "publicCopyValidation": {
     "internalWorkflowPhraseGuardPullRequestNumber": 2869,
@@ -62,16 +74,37 @@
     "westAPublicSummaryGuardPullRequestNumber": 2915,
     "westAPublicSummaryGuardCiRunNumber": 6968,
     "westAPublicSummaryGuardMunicipalityCount": 226,
-    "westAPublicSummaryGuardPrefectureCodes": ["33", "37", "39", "40", "43", "46"],
-    "westAForbiddenPhrases": ["調査班", "初期登録対象", "移行監査", "地域正本"],
+    "westAPublicSummaryGuardPrefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
+    "westAForbiddenPhrases": [
+      "調査班",
+      "初期登録対象",
+      "移行監査",
+      "地域正本"
+    ],
     "westAPublicSmokeInitialPullRequestNumber": 3036,
     "westAPublicSmokeInitialLiveCiRunNumber": 7391,
     "westAPublicSmokeInitialCleanCiRunNumber": 7400,
     "westAPublicSmokeExtensionPullRequestNumber": 3123,
     "westAPublicSmokeExtensionLiveCiRunNumber": 7616,
     "westAPublicSmokeExtensionCleanCiRunNumber": 7619,
-    "westAPublicSmokeSampleCount": 14,
-    "westAPublicSmokeCorrectedMunicipalityCodes": ["46218", "40448", "46530", "33346", "43443", "37324", "46533"],
+    "westAPublicSmokeSampleCount": 15,
+    "westAPublicSmokeCorrectedMunicipalityCodes": [
+      "46218",
+      "40448",
+      "46530",
+      "33346",
+      "43443",
+      "37324",
+      "46533",
+      "33643"
+    ],
     "westBPublicSummaryCleanupPullRequestNumber": 2871,
     "westBPublicSummaryCleanupCiRunNumber": 6905,
     "westBPublicSummaryCleanupMunicipalityCount": 27,
@@ -82,12 +115,32 @@
     "westBPublicSummaryGuardPullRequestNumber": 2891,
     "westBPublicSummaryGuardCiRunNumber": 6930,
     "westBPublicSummaryGuardMunicipalityCount": 250,
-    "westBPublicSummaryGuardPrefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-    "westBForbiddenPhrases": ["調査班", "初期登録対象", "移行監査", "地域正本"],
+    "westBPublicSummaryGuardPrefectureCodes": [
+      "31",
+      "32",
+      "34",
+      "35",
+      "36",
+      "38",
+      "41",
+      "42",
+      "44",
+      "45",
+      "47"
+    ],
+    "westBForbiddenPhrases": [
+      "調査班",
+      "初期登録対象",
+      "移行監査",
+      "地域正本"
+    ],
     "failureArtifactName": "jichitai-validation-report",
-    "status": "passed"
+    "status": "passed",
+    "westANishiawakuraCorrectionCommitSha": "275e40b00bee57963ac4dc4cb172e17a85053dbf",
+    "westANishiawakuraPublicSmokeCommitSha": "69222a39a877ead3903155bf05c747e8015a1448",
+    "westANishiawakuraLiveSmokeCommitSha": "8d120e09caf0183a03c65e0f5f773ba71f67c7fb"
   },
-  "lastAction": "西日本A担当6県226自治体の公式出典2,444 URLを横断監査し、修正9 URL、自治体CMS等の誤検出19 URL、未解決0 URLへ分類した。修正8自治体を全国公開へ同期し、代表14自治体の修正文言・新出典URL・旧情報不存在を恒久公開スモークで監視している。",
+  "lastAction": "西日本A担当6県226自治体の公式出典2,444 URLを横断監査し、ハード失敗28 URLとソフト警告159件を未解決0件まで分類した。西粟倉村の旧保育料記載を現行案内へ修正し、代表15自治体を恒久公開スモークで監視している。",
   "nextAction": "新規自治体調査を停止し、自治体公式情報の更新、出典URL異常、差し戻し、識別異常、CI失敗、公開文言異常、生成JSONと静的ページの要約不一致が発生した場合のみ品質監査を再開する。",
   "lastNationalIntegrationPr": 2791,
   "lastNationalIntegrationAt": "2026-07-24T22:08:44+09:00",
@@ -99,5 +152,7 @@
   "lastWestBPublicCopyGuardPr": 2891,
   "lastSummaryConsistencyGuardPr": 2879,
   "lastPublicSmokePr": 3123,
-  "humanDecisionRequired": false
+  "humanDecisionRequired": false,
+  "lastPublicSmokeCommit": "69222a39a877ead3903155bf05c747e8015a1448",
+  "lastPublicSmokeLiveVerificationCommit": "8d120e09caf0183a03c65e0f5f773ba71f67c7fb"
 }
