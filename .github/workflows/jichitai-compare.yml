@@ -1,39 +1,77 @@
-name: Correct North-East Audit 1605
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  correct:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - name: Correct assigned counts
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          node <<'NODE'
-          const fs=require('fs');
-          const p='jichitai-compare/operations/control/coord-a-completion-audit-20260724-1605.json';
-          const r=JSON.parse(fs.readFileSync(p,'utf8'));
-          r.regions.east.expectedMunicipalities=450;
-          r.regions.east.notYetInRegionCount=450-r.regions.east.regionMunicipalities;
-          r.regions.east.unpublishedButInRegionCount=r.regions.east.missingInMain.length;
-          r.summary.expectedMunicipalities=856;
-          r.summary.notYetInRegionCount=r.regions.north.expectedMunicipalities-r.regions.north.regionMunicipalities+r.regions.east.notYetInRegionCount;
-          r.summary.unpublishedButInRegionCount=r.regions.north.missingInMain.length+r.regions.east.missingInMain.length;
-          fs.writeFileSync(p,JSON.stringify(r,null,2)+'\n');
-          NODE
-      - name: Restore CI and commit correction
-        run: |
-          git fetch origin main
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/jichitai-compare.yml jichitai-compare/operations/control/coord-a-completion-audit-20260724-1605.json
-          git commit -m 'audit: 東日本450自治体の正式割当件数へ訂正'
-          git push origin HEAD
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
