@@ -1,0 +1,66 @@
+name: Central A Round10 Audit Helper
+
+on:
+  push:
+    branches: ['audit/central-a-round10-helper-20260725']
+    paths: ['.github/workflows/central-a-round10-audit-helper.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round10-work-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Audit Hyogo municipalities
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/audit-round10.mjs <<'NODE'
+          import fs from 'node:fs'; import path from 'node:path';
+          const root='jichitai-compare';
+          const expected={'28100':'神戸市','28201':'姫路市','28202':'尼崎市','28203':'明石市','28204':'西宮市','28205':'洲本市','28206':'芦屋市','28207':'伊丹市','28208':'相生市','28209':'豊岡市','28210':'加古川市','28212':'赤穂市','28213':'西脇市','28214':'宝塚市','28215':'三木市','28216':'高砂市','28217':'川西市','28218':'小野市','28219':'三田市','28220':'加西市','28221':'丹波篠山市','28222':'養父市','28223':'丹波市','28224':'南あわじ市','28225':'朝来市','28226':'淡路市','28227':'宍粟市','28228':'加東市','28229':'たつの市','28301':'猪名川町','28365':'多可町','28381':'稲美町','28382':'播磨町','28442':'市川町','28443':'福崎町','28446':'神河町','28464':'太子町','28481':'上郡町','28501':'佐用町','28585':'香美町','28586':'新温泉町'};
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const completed=new Set(['verified','unavailable']);
+          const findings=[],unavailable=[],suspects=[],municipalities=[];
+          const eq=(a,b)=>JSON.stringify(a)===JSON.stringify(b); const add=(severity,type,code,extra={})=>findings.push({severity,type,code,...extra});
+          for(const [code,name] of Object.entries(expected)){
+            const dp=path.join(root,'data','municipalities','28',code+'.json'),tp=path.join(root,'operations','tasks',code+'.json');
+            if(!fs.existsSync(dp)){add('high','missing_municipality_file',code,{name});continue;}
+            if(!fs.existsSync(tp)){add('high','missing_task_file',code,{name});continue;}
+            let d,t;try{d=JSON.parse(fs.readFileSync(dp,'utf8'));}catch(e){add('high','invalid_municipality_json',code,{error:e.message});continue;}try{t=JSON.parse(fs.readFileSync(tp,'utf8'));}catch(e){add('high','invalid_task_json',code,{error:e.message});continue;}
+            if(d.code!==code||d.name!==name||d.prefectureCode!=='28'||d.prefecture!=='兵庫県')add('high','municipality_identity_mismatch',code,{expected:{code,name,prefectureCode:'28',prefecture:'兵庫県'},actual:{code:d.code,name:d.name,prefectureCode:d.prefectureCode,prefecture:d.prefecture}});
+            if(t.municipalityCode!==code||t.municipalityName!==name||t.prefectureCode!=='28'||t.prefectureName!=='兵庫県')add('high','task_identity_mismatch',code,{actual:{municipalityCode:t.municipalityCode,municipalityName:t.municipalityName,prefectureCode:t.prefectureCode,prefectureName:t.prefectureName}});
+            if(t.assignedTeam!=='中日本調査班')add('high','assigned_team_mismatch',code,{actual:t.assignedTeam});
+            if(!eq(Object.keys(d.services||{}).sort(),[...keys].sort()))add('high','service_key_mismatch',code,{actual:Object.keys(d.services||{})});
+            const counts={verified:0,unavailable:0,needs_medium_review:0,researching:0};
+            for(const k of keys){const s=d.services?.[k];if(!s){add('high','missing_service',code,{service:k});continue;}counts[s.status]=(counts[s.status]||0)+1;if(completed.has(s.status)&&!/^https:\/\//.test(s.source?.url||''))add('high','completed_service_missing_https_source',code,{service:k,status:s.status,source:s.source?.url||null});if(s.status==='unavailable')unavailable.push({code,name,service:k,summary:s.summary||'',source:s.source?.url||''});}
+            const done=keys.filter(k=>completed.has(d.services?.[k]?.status));const official=[...new Set(done.map(k=>d.services[k].source?.url).filter(u=>/^https:\/\//.test(u||'')))];
+            if(!eq(t.completedServices,done))add('medium','completed_services_mismatch',code,{expected:done,actual:t.completedServices});
+            const next=done.length===9?9:keys.findIndex(k=>!completed.has(d.services?.[k]?.status));
+            for(const [f,v] of [['verifiedCount',counts.verified||0],['unavailableCount',counts.unavailable||0],['needsMediumReviewCount',counts.needs_medium_review||0],['researchingCount',counts.researching||0],['nextServiceIndex',next]])if(t[f]!==v)add('medium',f+'_mismatch',code,{expected:v,actual:t[f]});
+            const current=done.length===9?null:keys[next]||null;if(t.currentService!==current)add('medium','current_service_mismatch',code,{expected:current,actual:t.currentService});
+            if(!eq(t.officialSources,official))add('medium','official_sources_mismatch',code,{expected:official,actual:t.officialSources});
+            if(done.length===9&&d.status!=='verified')add('medium','top_level_status_mismatch',code,{actual:d.status});
+            if(done.length===9&&t.status!=='merged')add('medium','task_status_mismatch',code,{actual:t.status});
+            for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){const s=d.services?.[k],text=`${s?.summary||''} ${JSON.stringify(s?.details||{})}`;if(s?.status==='unavailable')suspects.push({type:'possible_false_unavailable',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});if(k==='temporaryChildcare'&&s?.status==='verified'&&!/(誰でも通園|乳児等通園|月\s*10\s*時間|就労要件を問わ)/.test(text))suspects.push({type:'possible_any_child_access_omission',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});if(k==='schoolMeals'&&s?.status==='verified'&&!/(令和8|2026)/.test(text))suspects.push({type:'school_meal_currentness_check',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});if(k==='postpartumCare'&&s?.status==='verified'&&!/(1年|12か月|宿泊|通所|訪問|デイ)/.test(text))suspects.push({type:'postpartum_scope_check',code,name,service:k,summary:s.summary||'',source:s.source?.url||''});}
+            const highRisk={};for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){const s=d.services?.[k];highRisk[k]={status:s?.status||null,summary:s?.summary||'',source:s?.source?.url||'',checkedAt:s?.source?.checkedAt||null};}
+            municipalities.push({code,name,status:d.status,updatedAt:d.updatedAt,taskStatus:t.status,taskLastCheckedAt:t.lastCheckedAt,verifiedCount:counts.verified||0,unavailableCount:counts.unavailable||0,needsMediumReviewCount:counts.needs_medium_review||0,officialSourceCount:official.length,taskOfficialSourceCount:(t.officialSources||[]).length,highRisk});
+          }
+          const report={schemaVersion:'1.0.0',auditId:'central-a-scope-round-10-hyogo-20260725',prefectureCode:'28',prefectureName:'兵庫県',expectedMunicipalityCount:41,checkedMunicipalityCount:municipalities.length,checkedServiceCount:municipalities.length*9,generatedAt:'2026-07-25T05:20:00+09:00',structuralFindingCount:findings.length,unavailableCount:unavailable.length,substantiveSuspectCount:suspects.length,findings,unavailable,substantiveSuspects:suspects,municipalities};
+          fs.writeFileSync(path.join(root,'operations','control','central-a-scope-round-10-hyogo-20260725.json'),JSON.stringify(report,null,2)+'\n');
+          NODE
+          node /tmp/audit-round10.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/central-a-scope-round-10-hyogo-20260725.json
+          git commit -m 'audit: 兵庫県41自治体の構造監査結果を記録'
+          git push origin HEAD:audit/central-a-round10-work-20260725
