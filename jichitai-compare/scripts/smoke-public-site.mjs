@@ -26,7 +26,28 @@ const SAMPLE_MUNICIPALITIES = [
     expectedText: '月10時間',
     expectUnavailable: true
   },
-  { code: '47382', name: '与那国町', region: 'west-b' }
+  { code: '47382', name: '与那国町', region: 'west-b' },
+  {
+    code: '46218',
+    name: '霧島市',
+    region: 'west-a-kirishima',
+    expectedText: '小学6年生までを病児・病後児保育7施設で受け入れ',
+    forbiddenText: ['病児・病後児保育4施設', '1日1,000円']
+  },
+  {
+    code: '40448',
+    name: '東峰村',
+    region: 'west-a-toho',
+    expectedText: '18歳年度末までの子どもの保険診療自己負担額を助成',
+    forbiddenText: ['子ども医療費助成の現行対象年齢・自己負担条件を確認できない']
+  },
+  {
+    code: '46530',
+    name: '徳之島町',
+    region: 'west-a-tokunoshima',
+    expectedText: '課税世帯は未就学児、非課税世帯は18歳年度末まで保険診療の窓口負担を無料化',
+    forbiddenText: ['子ども医療費給付制度の実施は確認できるが2026年度の対象・給付条件を確定できない']
+  }
 ];
 
 const expectedMunicipalities = JSON.parse(
@@ -139,6 +160,12 @@ async function verifyPublishedSite() {
       assert(
         sample.html.includes(sample.expectedText),
         `${label}: 再監査済みの代表条件を確認できません`
+      );
+    }
+    for (const forbiddenText of sample.forbiddenText ?? []) {
+      assert(
+        !sample.html.includes(forbiddenText),
+        `${label}: 訂正前の旧文言が公開ページに残っています: ${forbiddenText}`
       );
     }
     if (sample.expectUnavailable) {
