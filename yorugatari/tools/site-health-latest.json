@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-24T04:48:30.070Z",
-  "generatedAtJapan": "2026/07/24 13:48",
-  "version": "20260724-003",
-  "status": "degraded",
+  "generatedAt": "2026-07-24T04:53:47.779Z",
+  "generatedAtJapan": "2026/07/24 13:53",
+  "version": "20260724-004",
+  "status": "verification_pending",
   "success": false,
   "quality": [
     {
@@ -11,9 +11,10 @@
       "file": "seo-audit-latest.json",
       "exists": true,
       "success": true,
+      "infrastructureOnly": false,
       "observedAt": "2026-07-24T02:31:31.294Z",
       "observedAtJapan": "2026/07/24 11:31",
-      "ageHours": 2.3,
+      "ageHours": 2.4,
       "error": null
     },
     {
@@ -22,9 +23,10 @@
       "file": "ui-audit-latest.json",
       "exists": true,
       "success": true,
+      "infrastructureOnly": false,
       "observedAt": "2026-07-24T03:55:32.327Z",
       "observedAtJapan": "2026/07/24 12:55",
-      "ageHours": 0.9,
+      "ageHours": 1,
       "error": null
     },
     {
@@ -33,9 +35,10 @@
       "file": "accessibility-audit-latest.json",
       "exists": true,
       "success": false,
+      "infrastructureOnly": true,
       "observedAt": "2026-07-24T03:58:20.732Z",
       "observedAtJapan": "2026/07/24 12:58",
-      "ageHours": 0.8,
+      "ageHours": 0.9,
       "error": null
     },
     {
@@ -44,9 +47,10 @@
       "file": "performance-audit-latest.json",
       "exists": true,
       "success": true,
+      "infrastructureOnly": false,
       "observedAt": "2026-07-24T04:28:16.798Z",
       "observedAtJapan": "2026/07/24 13:28",
-      "ageHours": 0.3,
+      "ageHours": 0.4,
       "error": null
     },
     {
@@ -55,9 +59,10 @@
       "file": "engagement-audit-latest.json",
       "exists": true,
       "success": true,
+      "infrastructureOnly": false,
       "observedAt": "2026-07-24T01:35:43.145Z",
       "observedAtJapan": "2026/07/24 10:35",
-      "ageHours": 3.2,
+      "ageHours": 3.3,
       "error": null
     },
     {
@@ -66,9 +71,10 @@
       "file": "landing-share-audit-latest.json",
       "exists": true,
       "success": true,
+      "infrastructureOnly": false,
       "observedAt": "2026-07-24T01:14:04.431Z",
       "observedAtJapan": "2026/07/24 10:14",
-      "ageHours": 3.6,
+      "ageHours": 3.7,
       "error": null
     }
   ],
@@ -102,7 +108,7 @@
     }
   },
   "actions": [
-    "失敗または未保存の監査を修正する：アクセシビリティ",
+    "外部APIタイムアウトを除外した再監査結果を確認する：アクセシビリティ",
     "外部投稿は未実施。追跡URL付きの次候補「launch-20260724-x-bedtime」を1本だけ公開し、着地を確認する。",
     "各特集の基準値設定後閲覧が30件に達するまで、見出しや作品選定の優劣を判断しない。",
     "人気順位や作品の並び順は変更せず、除外後の作品閲覧100件・7日分の観測まで収集を続ける。"
