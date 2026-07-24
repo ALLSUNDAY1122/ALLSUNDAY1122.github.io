@@ -1,29 +1,29 @@
 {
-  "generatedAt": "2026-07-24T04:14:23.232Z",
+  "generatedAt": "2026-07-24T04:23:33.000Z",
   "japanDate": "2026-07-24",
   "success": true,
   "baseline": {
-    "establishedAt": "2026-07-24T02:19:03.000Z",
+    "establishedAt": "2026-07-24T04:14:21.938Z",
     "japanDate": "2026-07-24"
   },
   "definitions": {
-    "landingView": "基準値設定後の特集ページ閲覧数",
-    "storyStart": "基準値設定後、特集からいずれかの作品を開いたセッションを特集単位で1回だけ集計",
-    "baseline": "作品開始計測前の累計閲覧と累計開始を差し引く固定基準値",
+    "landingView": "監査除外基準値設定後の特集ページ閲覧数",
+    "storyStart": "監査除外基準値設定後、特集からいずれかの作品を開いたセッションを特集単位で1回だけ集計",
+    "baseline": "自動監査アクセス除外ランタイム公開時点の累計閲覧と累計開始を差し引く固定基準値",
     "privacy": "開いた作品名、作品URL、検索語、個人識別子は開始集計へ含めない"
   },
   "threshold": {
     "minimumViewsPerLanding": 30
   },
   "totals": {
-    "landingViews": 18,
+    "landingViews": 0,
     "storyStarts": 0,
-    "startRate": 0
+    "startRate": null
   },
   "comparisonReady": false,
   "actions": [
-    "基準値設定後の作品開始はまだ0件のため、開始率の優劣を判断しない。",
-    "各特集の基準値設定後の閲覧が30件に達するまで、特集同士の比較を保留する。"
+    "監査除外基準値設定後の作品開始はまだ0件のため、開始率の優劣を判断しない。",
+    "各特集の監査除外基準値設定後の閲覧が30件に達するまで、特集同士の比較を保留する。"
   ],
   "landings": [
     {
@@ -31,13 +31,13 @@
       "label": "5分で読める12選",
       "pagePath": "/yorugatari/5min-horror.html",
       "startPath": "/yorugatari/__landing-start/five-minute",
-      "pageViews": 9,
+      "pageViews": 0,
       "storyStarts": 0,
       "cumulativePageViews": 16,
       "cumulativeStoryStarts": 0,
-      "baselinePageViews": 7,
+      "baselinePageViews": 16,
       "baselineStoryStarts": 0,
-      "startRate": 0,
+      "startRate": null,
       "comparisonReady": false
     },
     {
@@ -45,13 +45,13 @@
       "label": "寝る前の8選",
       "pagePath": "/yorugatari/bedtime-horror.html",
       "startPath": "/yorugatari/__landing-start/bedtime",
-      "pageViews": 9,
+      "pageViews": 0,
       "storyStarts": 0,
       "cumulativePageViews": 12,
       "cumulativeStoryStarts": 0,
-      "baselinePageViews": 3,
+      "baselinePageViews": 12,
       "baselineStoryStarts": 0,
-      "startRate": 0,
+      "startRate": null,
       "comparisonReady": false
     }
   ],
