@@ -25,22 +25,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Start Round 4 audit batch
+      - name: Apply Round 4 confirmed corrections
         working-directory: jichitai-compare
         run: |
-          node --input-type=module <<'NODE'
-          import { readFile, writeFile } from 'node:fs/promises';
-          const path = 'operations/audits/central-b-accuracy-audit-20260725.json';
-          const audit = JSON.parse(await readFile(path, 'utf8'));
+          if node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
           const round = audit.batches.find((item) => item.round === 4);
-          if (round?.status === 'pending') {
-            round.status = 'in_progress';
-            await writeFile(path, JSON.stringify(audit, null, 2) + '\n', 'utf8');
-            console.log('Round 4 moved to in_progress.');
-          } else {
-            console.log(`Round 4 already ${round?.status ?? 'missing'}.`);
-          }
+          process.exit(round?.status === 'completed' ? 1 : 0);
           NODE
+          then
+            node scripts/fix-central-b-accuracy-round4.mjs apply
+          else
+            echo 'Round 4 corrections already finalized.'
+          fi
       - name: Regenerate and validate municipality data
         working-directory: jichitai-compare
         run: |
@@ -58,7 +56,37 @@ jobs:
           path: jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           if-no-files-found: error
           retention-days: 14
-      - name: Commit Round 4 audit state
+      - name: Finalize Round 4 audit record
+        working-directory: jichitai-compare
+        run: |
+          if node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const audit = JSON.parse(await readFile('operations/audits/central-b-accuracy-audit-20260725.json', 'utf8'));
+          const output = JSON.parse(await readFile('operations/audits/central-b-accuracy-round-output.json', 'utf8'));
+          const round = audit.batches.find((item) => item.round === 4);
+          process.exit(output.round === 4 && output.errorCount === 0 && round?.status !== 'completed' ? 0 : 1);
+          NODE
+          then
+            node scripts/fix-central-b-accuracy-round4.mjs finalize
+          else
+            echo 'Round 4 finalization is not required.'
+          fi
+      - name: Normalize Round 4 source changes
+        working-directory: jichitai-compare
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          const codes = ['29205','29207','29208','29210'];
+          for (const code of codes) {
+            const municipalityPath = `data/municipalities/29/${code}.json`;
+            const municipality = JSON.parse(await readFile(municipalityPath, 'utf8'));
+            await writeFile(municipalityPath, JSON.stringify(municipality) + '\n', 'utf8');
+            const taskPath = `operations/tasks/${code}.json`;
+            const task = JSON.parse(await readFile(taskPath, 'utf8'));
+            await writeFile(taskPath, JSON.stringify(task) + '\n', 'utf8');
+          }
+          NODE
+      - name: Commit Round 4 audit results
         run: |
           git restore --source=origin/region/central -- \
             jichitai-compare/data/generated/municipalities.json \
@@ -66,10 +94,19 @@ jobs:
           rm -f jichitai-compare/operations/audits/central-b-accuracy-round-output.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json
+          git add \
+            jichitai-compare/data/municipalities/29/29205.json \
+            jichitai-compare/data/municipalities/29/29207.json \
+            jichitai-compare/data/municipalities/29/29208.json \
+            jichitai-compare/data/municipalities/29/29210.json \
+            jichitai-compare/operations/tasks/29205.json \
+            jichitai-compare/operations/tasks/29207.json \
+            jichitai-compare/operations/tasks/29208.json \
+            jichitai-compare/operations/tasks/29210.json \
+            jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json
           if git diff --cached --quiet; then
-            echo 'No Round 4 state changes to commit.'
+            echo 'No Round 4 changes to commit.'
           else
-            git commit -m 'audit: 中日本B第4回を監査中へ更新'
+            git commit -m 'audit: 中日本B第4回の誤調査を訂正'
             git push origin HEAD:${{ github.head_ref }}
           fi
