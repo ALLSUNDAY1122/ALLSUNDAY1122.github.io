@@ -5,13 +5,13 @@
   "parentTeam": "東日本調査班",
   "integrationBranch": "region/east",
   "prefectureCodes": ["10", "13", "19", "20"],
-  "updatedAt": "2026-07-25T02:43:00+09:00",
+  "updatedAt": "2026-07-25T03:15:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3038,
+  "pullRequestNumber": 3065,
   "ciStatus": "success",
   "completedSinceSplit": [
     {"code":"13402","name":"青ヶ島村","pullRequestNumber":2272,"ciRunNumber":5734},
@@ -84,7 +84,13 @@
     {"code":"20305","name":"南牧村（佐久広域病児・病後児保育訂正）","pullRequestNumber":3013,"ciRunNumber":7318},
     {"code":"20306","name":"南相木村（佐久広域病児・病後児保育訂正）","pullRequestNumber":3013,"ciRunNumber":7318},
     {"code":"10424","name":"長野原町（群馬県産後ケア実施判定訂正）","pullRequestNumber":3038,"ciRunNumber":7411},
-    {"code":"10426","name":"草津町（群馬県産後ケア実施判定訂正）","pullRequestNumber":3038,"ciRunNumber":7411}
+    {"code":"10426","name":"草津町（群馬県産後ケア実施判定訂正）","pullRequestNumber":3038,"ciRunNumber":7411},
+    {"code":"13361","name":"大島町（住宅支援年齢上限訂正）","pullRequestNumber":3065,"ciRunNumber":7492},
+    {"code":"13362","name":"利島村（医療費・住宅支援年齢上限訂正）","pullRequestNumber":3065,"ciRunNumber":7492},
+    {"code":"13363","name":"新島村（住宅支援年齢上限訂正）","pullRequestNumber":3065,"ciRunNumber":7492},
+    {"code":"13364","name":"神津島村（住宅支援年齢上限訂正）","pullRequestNumber":3065,"ciRunNumber":7492},
+    {"code":"13381","name":"三宅村（住宅支援年齢上限訂正）","pullRequestNumber":3065,"ciRunNumber":7492},
+    {"code":"19425","name":"山中湖村（産後ケア年齢上限訂正）","pullRequestNumber":3065,"ciRunNumber":7492}
   ],
   "blocked": [
     {
@@ -95,7 +101,7 @@
   ],
   "verificationCampaign": {
     "targetRounds": 10,
-    "completedRounds": 7,
+    "completedRounds": 8,
     "status": "in_progress",
     "rounds": [
       {
@@ -139,10 +145,16 @@
         "topic": "公式出典URL・checkedAt・旧年度PDF・トップページ型出典の横断監査",
         "result": "corrected",
         "details": "担当4都県の高リスク出典を横断確認。群馬県公式一覧は個別ホームページがない市町村も産後ケア事業を実施していると明記しているため、長野原町（10424）と草津町（10426）のpostpartumCareをunavailableからverifiedへ訂正し、主出典を県公式一覧へ変更。PR #3038、CI #7411で検証しregion/eastへ統合。"
+      },
+      {
+        "round": 8,
+        "topic": "対象年齢・料金・利用上限・施設数など数値条件の横断整合",
+        "result": "corrected",
+        "details": "年齢条件を横断比較し、利島村（13362）のchildMedical上限を15歳から18歳年度末へ、山中湖村（19425）の産後4か月までのpostpartumCare検索上限を1歳から0歳へ訂正。大島町、利島村、新島村、神津島村、三宅村の年齢制限のない住宅支援を18歳上限から120歳へ正規化。PR #3065、CI #7492で検証しregion/eastへ統合。制度判定件数は変更なし。"
       }
     ],
-    "nextRound": 8,
-    "nextTopic": "対象年齢・料金・利用上限・施設数など数値条件の横断整合",
-    "nextAction": "担当4都県の制度データから年齢、料金、利用上限、施設数、回数・日数を抽出し、同一広域制度や共通制度の自治体間差異、年齢単位の換算、古い数値を重点照合する。"
+    "nextRound": 9,
+    "nextTopic": "自治体JSON・task間の制度件数、状態、主出典、PR・CI記録の横断整合",
+    "nextAction": "担当4都県の自治体JSONとoperations/tasksを突合し、verified・unavailable・needs_medium_review件数、status、currentBranch、pullRequestNumber、officialSources、更新日、blockerの不一致を抽出して訂正する。"
   }
 }
