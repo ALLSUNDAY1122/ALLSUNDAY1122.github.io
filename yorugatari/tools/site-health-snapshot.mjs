@@ -5,7 +5,7 @@ const ROOT = process.cwd();
 const TOOLS = path.join(ROOT, 'yorugatari', 'tools');
 const OUTPUT_JSON = path.join(TOOLS, 'site-health-latest.json');
 const OUTPUT_MD = path.join(TOOLS, 'site-health-latest.md');
-const REPORT_VERSION = '20260724-003';
+const REPORT_VERSION = '20260724-004';
 
 const reportDefinitions = [
   { id: 'seo', label: 'SEO', file: 'seo-audit-latest.json', timestampKeys: ['auditedAt', 'generatedAt'] },
@@ -47,16 +47,27 @@ function ageHours(value, now) {
   return Math.round(((now.getTime() - instant.getTime()) / 36e5) * 10) / 10;
 }
 
+function infrastructureOnlyFailure(id, report) {
+  if (id !== 'accessibility' || report?.success !== false || !Array.isArray(report.failures) || report.failures.length === 0) return false;
+  return report.failures.every((failure) => {
+    if (failure?.name !== 'accessibility audit: no browser JavaScript errors' || !Array.isArray(failure.detail) || failure.detail.length === 0) return false;
+    return failure.detail.every((message) => /(?:ERR_TIMED_OUT|page-views-api\.ratneshc\.com)/i.test(String(message)));
+  });
+}
+
 const now = new Date();
 const quality = reportDefinitions.map((definition) => {
   const loaded = readJson(definition.file);
-  const observedAt = loaded.exists ? timestamp(loaded.value, definition.timestampKeys) : null;
+  const report = loaded.value;
+  const observedAt = loaded.exists ? timestamp(report, definition.timestampKeys) : null;
+  const infrastructureOnly = loaded.exists && infrastructureOnlyFailure(definition.id, report);
   return {
     id: definition.id,
     label: definition.label,
     file: definition.file,
     exists: loaded.exists,
-    success: loaded.exists && loaded.value?.success === true,
+    success: loaded.exists && report?.success === true,
+    infrastructureOnly,
     observedAt,
     observedAtJapan: observedAt ? japanTimestamp(observedAt) : null,
     ageHours: ageHours(observedAt, now),
@@ -105,10 +116,12 @@ const metrics = {
   }
 };
 
-const failedQuality = quality.filter((row) => !row.exists || !row.success);
+const failedQuality = quality.filter((row) => !row.exists || (!row.success && !row.infrastructureOnly));
+const pendingQuality = quality.filter((row) => row.infrastructureOnly);
 const staleQuality = quality.filter((row) => Number.isFinite(row.ageHours) && row.ageHours > 48);
 const actions = [];
-if (failedQuality.length) actions.push(`失敗または未保存の監査を修正する：${failedQuality.map((row) => row.label).join('、')}`);
+if (failedQuality.length) actions.push(`サイト品質の失敗または未保存監査を修正する：${failedQuality.map((row) => row.label).join('、')}`);
+if (pendingQuality.length) actions.push(`外部APIタイムアウトを除外した再監査結果を確認する：${pendingQuality.map((row) => row.label).join('、')}`);
 if (staleQuality.length) actions.push(`48時間以上更新されていない監査を再実行する：${staleQuality.map((row) => row.label).join('、')}`);
 if (metrics.externalLaunch.publishedCount === 0) {
   actions.push(`外部投稿は未実施。追跡URL付きの次候補${metrics.externalLaunch.nextCampaignId ? `「${metrics.externalLaunch.nextCampaignId}」` : ''}を1本だけ公開し、着地を確認する。`);
@@ -120,20 +133,20 @@ if (!metrics.rankingReady) actions.push('人気順位や作品の並び順は変
 if ((metrics.notFoundViews ?? 0) > 0) actions.push('除外後の404発生パスを確認し、内部リンクまたはサイトマップを修正する。');
 if (!actions.length) actions.push('品質監査と判断基準は正常。日次データ収集を継続する。');
 
-const status = failedQuality.length ? 'degraded' : staleQuality.length ? 'stale' : 'healthy';
+const status = failedQuality.length ? 'degraded' : pendingQuality.length ? 'verification_pending' : staleQuality.length ? 'stale' : 'healthy';
 const snapshot = {
   generatedAt: now.toISOString(),
   generatedAtJapan: japanTimestamp(now),
   version: REPORT_VERSION,
   status,
-  success: failedQuality.length === 0,
+  success: failedQuality.length === 0 && pendingQuality.length === 0,
   quality,
   metrics,
   actions
 };
 
 const qualityLines = quality.map((row) => {
-  const state = !row.exists ? '未保存' : row.success ? '合格' : '失敗';
+  const state = !row.exists ? '未保存' : row.success ? '合格' : row.infrastructureOnly ? '再検証待ち（外部APIタイムアウトのみ）' : '失敗';
   const observed = row.observedAtJapan || '不明';
   const age = Number.isFinite(row.ageHours) ? `${row.ageHours}時間前` : '経過不明';
   return `- ${row.label}: ${state}（${observed}、${age}）`;
@@ -155,9 +168,10 @@ const metricLines = [
   `- 特集比較判定: ${metrics.conversionComparisonReady ? '可能' : '保留'}`
 ];
 const actionLines = actions.map((action, index) => `${index + 1}. ${action}`);
-const markdown = `# 夜語り サイト運用サマリー\n\n生成：${snapshot.generatedAtJapan}（日本時間）  \n状態：${status === 'healthy' ? '正常' : status === 'stale' ? '監査更新待ち' : '要対応'}\n\n自動監査アクセス除外後の値を運用判断に使用します。累計値は診断用です。\n\n## 品質監査\n\n${qualityLines.join('\n')}\n\n## 計測値\n\n${metricLines.join('\n')}\n\n## 次の判断\n\n${actionLines.join('\n')}\n`;
+const statusLabel = status === 'healthy' ? '正常' : status === 'stale' ? '監査更新待ち' : status === 'verification_pending' ? '監査基盤の再検証待ち' : '要対応';
+const markdown = `# 夜語り サイト運用サマリー\n\n生成：${snapshot.generatedAtJapan}（日本時間）  \n状態：${statusLabel}\n\n自動監査アクセス除外後の値を運用判断に使用します。累計値は診断用です。\n\n## 品質監査\n\n${qualityLines.join('\n')}\n\n## 計測値\n\n${metricLines.join('\n')}\n\n## 次の判断\n\n${actionLines.join('\n')}\n`;
 
 fs.writeFileSync(OUTPUT_JSON, `${JSON.stringify(snapshot, null, 2)}\n`);
 fs.writeFileSync(OUTPUT_MD, markdown);
-console.log(`YORUGATARI_SITE_HEALTH=${JSON.stringify({ status, success: snapshot.success, failed: failedQuality.map((row) => row.id), stale: staleQuality.map((row) => row.id), metrics, actions })}`);
+console.log(`YORUGATARI_SITE_HEALTH=${JSON.stringify({ status, success: snapshot.success, failed: failedQuality.map((row) => row.id), pending: pendingQuality.map((row) => row.id), stale: staleQuality.map((row) => row.id), metrics, actions })}`);
 if (!snapshot.success) process.exitCode = 1;
