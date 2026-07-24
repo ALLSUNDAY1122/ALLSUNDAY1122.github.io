@@ -47,6 +47,34 @@ const SAMPLE_MUNICIPALITIES = [
     region: 'west-a-tokunoshima',
     expectedText: '課税世帯は未就学児、非課税世帯は18歳年度末まで保険診療の窓口負担を無料化',
     forbiddenText: ['子ども医療費給付制度の実施は確認できるが2026年度の対象・給付条件を確定できない']
+  },
+  {
+    code: '33346',
+    name: '和気町',
+    region: 'west-a-wake',
+    expectedText: '生後6か月から就学前の子どもを和気にこにこ園で一時預かり',
+    forbiddenText: ['生後6か月から就学前の未就園児を町立認定こども園で一時預かり', '4時間まで800円']
+  },
+  {
+    code: '43443',
+    name: '益城町',
+    region: 'west-a-mashiki',
+    expectedText: '地区指定業者へ事前申込みし、1点500円で戸別収集',
+    forbiddenText: ['粗大ごみは事前申込制で、収集時に品目別料金を支払う', '品目・大きさ等に応じた収集料金']
+  },
+  {
+    code: '37324',
+    name: '小豆島町',
+    region: 'west-a-shodoshima',
+    expectedText: 'https://www.town.shodoshima.lg.jp/kosodachi/kosodate/7/kodomo-kyoiku/kyoikuiinkaikosodachi/kosodatetorikumi/8902.html',
+    forbiddenText: ['https://www.town.shodoshima.lg.jp/material/files/group/27/action-plan-3.pdf']
+  },
+  {
+    code: '46533',
+    name: '和泊町',
+    region: 'west-a-wadomari',
+    expectedText: '粗大ごみは沖永良部クリーンセンターへ直接搬入し、10kg当たり100円',
+    forbiddenText: ['粗大ごみは沖永良部クリーンセンターへ直接搬入</strong>', 'https://www.town.wadomari.lg.jp/documents/2843/1.pdf']
   }
 ];
 
