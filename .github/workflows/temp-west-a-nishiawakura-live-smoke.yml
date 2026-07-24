@@ -1,0 +1,50 @@
+name: Temporary West-A Nishiawakura Live Smoke
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-west-a-nishiawakura-live-smoke.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  smoke-and-clean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify published site
+        working-directory: jichitai-compare
+        run: |
+          node --check scripts/smoke-public-site.mjs
+          npm run smoke:public
+
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git rm .github/workflows/temp-west-a-nishiawakura-live-smoke.yml
+          git commit -m 'ci: 西粟倉村の公開スモーク確認を完了'
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git pull --rebase origin main
+          done
+          exit 1
