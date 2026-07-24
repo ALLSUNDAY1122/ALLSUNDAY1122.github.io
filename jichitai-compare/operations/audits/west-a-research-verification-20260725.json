@@ -4,11 +4,18 @@
   "sessionId": "west-a",
   "status": "in_progress",
   "startedAt": "2026-07-25T00:09:00+09:00",
-  "updatedAt": "2026-07-25T00:33:00+09:00",
+  "updatedAt": "2026-07-25T01:25:00+09:00",
   "plannedRoundCount": 10,
-  "completedRoundCount": 2,
+  "completedRoundCount": 5,
   "scope": {
-    "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
     "municipalityCount": 226,
     "requiredServiceCount": 2034,
     "requiredServicesPerMunicipality": 9
@@ -107,17 +114,231 @@
     {
       "round": 3,
       "title": "こども医療・病児保育の年齢、自己負担、施設数監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から条件が複雑な自治体を各1件抽出し、こども医療と病児・病後児保育の計12項目を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 12,
+      "samples": [
+        {
+          "code": "33202",
+          "name": "倉敷市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "matched"
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "services": [
+            "childMedical",
+            "sickChildCare"
+          ],
+          "result": "corrected",
+          "finding": "病児・病後児保育を4施設・1日1,000円と登録していたが、公式ページは7施設・1日1,200円・半日600円・生活保護世帯無料",
+          "officialUrl": "https://www.city-kirishima.jp/jidou/kosodate/kosodate/support/byoji.html",
+          "officialUpdatedAt": "2026-03-31"
+        }
+      ],
+      "result": "corrected",
+      "materialErrorCount": 1,
+      "correctionAppliedCount": 1
     },
     {
       "round": 4,
       "title": "保育料・学校給食費の令和8年度条件監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、保育料と令和8年度学校給食費の計12項目を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 12,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児クラスと住民税非課税世帯の0～2歳児クラスは無償、その他は市町村民税額等で決定",
+          "schoolMealsClaim": "令和8年度は小学校等0円、中学校等1食377円",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000012934.html",
+            "https://www.city.okayama.jp/kurashi/0000052441.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "childcareFeeClaim": "3歳児以上は無償、3歳未満は市町村民税額と保育時間区分で決定",
+          "schoolMealsClaim": "市立小中学校の学校給食費を無期限で無償化",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/2932.html",
+            "https://www.city.marugame.lg.jp/page/15593.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児等と非課税世帯の0～2歳児を無償化し、その他は認定・年齢・市町村民税額で決定",
+          "schoolMealsClaim": "令和8年度は小学校1日23円、中学校1日300円",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8948",
+            "https://www.city.nankoku.lg.jp/reiki/reiki_honbun/i900RG00001132.html"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児と非課税世帯の0～2歳児、第2子以降の保育料を無償化",
+          "schoolMealsClaim": "令和8年度は市立小学校等を無償化し、中学校月5,400円、特別支援学校中高等部月5,100円",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/28800022.html",
+            "https://www.city.kitakyushu.lg.jp/kyouiku/02600192.html",
+            "https://www.city.kitakyushu.lg.jp/kyouiku/02600207.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "childcareFeeClaim": "0～5歳のすべての子どもの保育料を無償化",
+          "schoolMealsClaim": "令和8年度は幼稚園1,400円、小学校5,200円、中学校等3,000円を市負担",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji00319794/index.html",
+            "https://www.city.yatsushiro.lg.jp/kiji00326132/index.html"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "childcareFeeClaim": "3～5歳児と住民税非課税世帯の0～2歳児の利用料を無償化",
+          "schoolMealsClaim": "令和8年度は小学校0円、中学1・2年月5,000円、中学3年月4,800円",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/jidou/hoikuen/documents/musyouka.html",
+            "https://www.city-kirishima.jp/hayato-kyushoku/kokubu-nanbu/20230329kyusyoku.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0
     },
     {
       "round": 5,
       "title": "産後ケア・一時預かりの月齢、回数、料金監査",
-      "status": "planned"
+      "status": "completed",
+      "method": "担当6県から各1自治体を抽出し、産後ケアと一時預かり・こども誰でも通園の計12項目を自治体公式ページで再照合",
+      "sampleMunicipalityCount": 6,
+      "checkedServiceCount": 12,
+      "samples": [
+        {
+          "code": "33100",
+          "name": "岡山市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。単胎は宿泊・日帰り合計7日、訪問3回、多胎は合計10日、訪問5回。施設料金から市負担額を控除",
+          "temporaryChildcareClaim": "市内在住の就学前児等を施設別条件で一時預かり。公立園は満1歳以上、9時～17時30分",
+          "officialUrls": [
+            "https://www.city.okayama.jp/kurashi/0000020851.html",
+            "https://www.city.okayama.jp/kurashi/0000005017.html",
+            "https://www.city.okayama.jp/kurashi/0000018418.html"
+          ]
+        },
+        {
+          "code": "37202",
+          "name": "丸亀市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年以内。宿泊7日、通所5回、訪問5回。課税世帯は宿泊1日5,000円、通所1,000円、訪問無料",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満の未就園児、月10時間、1時間300円、虎岳保育園で実施",
+          "officialUrls": [
+            "https://www.city.marugame.lg.jp/page/2244.html",
+            "https://www.city.marugame.lg.jp/page/40442.html"
+          ]
+        },
+        {
+          "code": "39204",
+          "name": "南国市",
+          "result": "matched",
+          "postpartumCareClaim": "産後12か月未満。訪問4回、通所7回、宿泊7日。令和8年度料金条件を登録",
+          "temporaryChildcareClaim": "満1歳から就学前、原則週3日以内、1日2,000円・半日1,000円。令和8年8月以降は長岡西部保育所休止、あけぼの保育所上限4名",
+          "officialUrls": [
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=4996",
+            "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8519"
+          ]
+        },
+        {
+          "code": "40100",
+          "name": "北九州市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。4類型通算最大7日、短時間型は産後4か月未満・最大3日。一般世帯500～3,000円",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満、月10時間、1時間300円。生活保護世帯無料、一定所得以下は100円",
+          "officialUrls": [
+            "https://www.city.kitakyushu.lg.jp/contents/11700307.html",
+            "https://www.city.kitakyushu.lg.jp/contents/28800075.html"
+          ]
+        },
+        {
+          "code": "43202",
+          "name": "八代市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。宿泊最大6泊、通所・訪問最大6回、組合せ合計6回。課税世帯700～2,500円等",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満、月10時間、1時間300円程度、生活保護300円・一定所得以下200円を減免、10施設",
+          "officialUrls": [
+            "https://www.city.yatsushiro.lg.jp/kiji00316768/index.html",
+            "https://www.city.yatsushiro.lg.jp/kiji00325882/"
+          ]
+        },
+        {
+          "code": "46218",
+          "name": "霧島市",
+          "result": "matched",
+          "postpartumCareClaim": "産後1年未満。4類型合計7日、最初の5日無料、非課税・生活保護世帯は6日目以降も免除申請可能",
+          "temporaryChildcareClaim": "生後6か月から満3歳未満、月10時間、1時間300円程度、生活保護300円・一定所得以下200円を軽減、8施設",
+          "officialUrls": [
+            "https://www.city-kirishima.jp/kenkou/sanngokeajigyou.html",
+            "https://www.city-kirishima.jp/jidou/20250901.html"
+          ]
+        }
+      ],
+      "result": "passed",
+      "materialErrorCount": 0,
+      "note": "南国市の一時保育は2026年8月以降の施設休止・定員変更を確認したが、登録済みの対象年齢・週上限・料金に影響する誤りはない。"
     },
     {
       "round": 6,
@@ -146,10 +367,11 @@
     }
   ],
   "summary": {
-    "materialErrorCount": 0,
+    "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "roundsRemaining": 8,
-    "currentAssessment": "第1回・第2回では重大な誤調査を確認せず。残り8回で制度別・高リスク自治体を追加検証する。"
+    "roundsRemaining": 5,
+    "currentAssessment": "第5回は6自治体12項目が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。",
+    "correctionAppliedCount": 1
   },
-  "nextAction": "第3回として、6県から年齢条件または料金条件が複雑な自治体を抽出し、こども医療・病児保育を公式情報で再照合する。"
+  "nextAction": "第6回として、住宅支援の対象世帯、補助率、上限、申請期間・受付状況を担当6県の複雑事例で再照合する。"
 }
