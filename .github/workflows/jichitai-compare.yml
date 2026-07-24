@@ -55,15 +55,6 @@ jobs:
         working-directory: jichitai-compare
         run: npm run validate:generated
 
-      - name: Upload municipality identity errors
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: municipality-identity-errors
-          path: jichitai-compare/identity-validation-errors.json
-          if-no-files-found: ignore
-          retention-days: 7
-
       - name: Check JavaScript syntax
         working-directory: jichitai-compare
         run: node --check app.js
