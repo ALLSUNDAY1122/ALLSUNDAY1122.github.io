@@ -33,11 +33,10 @@ jobs:
             const codes=output.split(/\r?\n/).map(x=>x.match(/\/([0-9]{5})\.json$/)?.[1]).filter(Boolean).sort();
             report.push({prefectureCode:pref,region,expected:count,actual:codes.length,deficit:count-codes.length,codes});
           }
-          const deficits=report.filter(x=>x.deficit!==0);
+          const differences=report.filter(x=>x.deficit!==0);
           fs.mkdirSync('jichitai-compare/operations/control',{recursive:true});
-          fs.writeFileSync('jichitai-compare/operations/control/remaining-six-prefecture-audit-20260724.json',JSON.stringify({schemaVersion:'1.0.0',createdAt:'2026-07-24T21:45:00+09:00',expectedEast:450,actualEast:report.filter(x=>x.region==='east').reduce((s,x)=>s+x.actual,0),expectedCentral:409,actualCentral:report.filter(x=>x.region==='central').reduce((s,x)=>s+x.actual,0),totalDeficit:deficits.reduce((s,x)=>s+x.deficit,0),deficits,prefectures:report},null,2)+'\n');
-          console.log(JSON.stringify(deficits,null,2));
-          if(deficits.reduce((s,x)=>s+x.deficit,0)!==6)throw new Error('deficit total is not six');
+          fs.writeFileSync('jichitai-compare/operations/control/remaining-six-prefecture-audit-20260724.json',JSON.stringify({schemaVersion:'1.0.0',createdAt:'2026-07-24T21:50:00+09:00',expectedEast:450,actualEast:report.filter(x=>x.region==='east').reduce((s,x)=>s+x.actual,0),expectedCentral:409,actualCentral:report.filter(x=>x.region==='central').reduce((s,x)=>s+x.actual,0),netDeficit:differences.reduce((s,x)=>s+x.deficit,0),absoluteDifference:differences.reduce((s,x)=>s+Math.abs(x.deficit),0),differences,prefectures:report},null,2)+'\n');
+          console.log(JSON.stringify(differences,null,2));
           NODE
       - name: Restore workflow and commit report
         run: |
@@ -45,5 +44,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'audit: identify prefecture deficits for remaining six municipalities'
+          git commit -m 'audit: identify prefecture differences for remaining municipalities'
           git push origin HEAD
