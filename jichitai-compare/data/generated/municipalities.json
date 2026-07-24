@@ -208501,7 +208501,7 @@
       "name": "高石市",
       "officialUrl": "https://www.city.takaishi.lg.jp/",
       "status": "verified",
-      "summary": "高石市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "高石市の子育て、教育、住宅、生活、防災に関する9制度を2026年度の公式情報で再確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -208512,18 +208512,20 @@
           },
           "details": {
             "target": "高石市に住所があり健康保険に加入する0歳から18歳到達年度末までの子ども",
-            "copayment": "1医療機関につき月2日まで1日500円を上限に自己負担。1人月額2,500円を超えた分は自動償還",
-            "coverage": "通院・入院の保険適用医療費を助成。訪問看護療養費と入院時食事療養費を含む",
-            "application": "こども医療証の交付申請が必要"
+            "copayment": "1医療機関につき月2日まで1日500円を上限に自己負担。医科と歯科、入院と通院は別計算",
+            "monthlyCap": "1人につき月額2,500円を超えた一部自己負担額は、登録口座へ自動償還",
+            "coverage": "通院・入院の保険適用医療費、訪問看護療養費、入院時食事療養費、治療用補装具等を助成",
+            "excluded": "健診、診断書、薬の容器、差額ベッド、病衣等の保険適用外費用は対象外",
+            "application": "こども医療証の交付申請が必要。郵送申請と大阪府外受診等の還付申請に対応"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/dekigoto/kosodate/iryoujyosei/1495603873289.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "満1歳から小学3年生までの市内在住児を市立診療センター内の病児保育室で預かる。",
+          "summary": "満1歳から小学3年生までの市内在住児を、市立診療センター内の病児保育室で預かる。",
           "eligibility": {
             "minAgeMonths": 12,
             "maxAgeYears": 9
@@ -208531,82 +208533,87 @@
           "details": {
             "target": "高石市内に居住する満1歳から小学3年生で、保護者の就労・病気等により家庭保育が困難な病児",
             "facility": "高石市立診療センター2階の病児保育室",
-            "capacity": "3人まで",
-            "hours": "平日9時から17時",
-            "fee": "1日2,000円。生活保護世帯は免除。食事提供時は500円",
-            "limit": "連続7日以内",
-            "application": "事前登録後、かかりつけ医を受診して医師連絡票を取得し電話予約"
+            "capacity": "3人まで。同一疾病での受入れを基本とし、病状により受入れ不可の場合あり",
+            "hours": "平日9時から17時。土日祝日・年末年始等は休室",
+            "fee": "1日2,000円。生活保護世帯は免除。食事提供時は500円で、別途実費が発生する場合あり",
+            "limit": "休室日を含め連続7日以内",
+            "application": "事前登録後、かかりつけ医を受診して医師連絡票を取得し、電話予約。当日予約は9時から10時まで"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/kakuka/kyouiku/kodomokatei_ka/katei/1473666831559.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "childcareFee": {
           "status": "verified",
-          "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化し、0～2歳児の多子軽減を継続する。",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化し、対象外の0～2歳児は市民税額等で決定する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "nationalSupport": "2号認定と住民税非課税世帯の3号認定は利用者負担額が無償",
-            "ageRange": "3～5歳児と住民税非課税世帯の0～2歳児が無償化対象",
-            "multipleChildren": "0～2歳児は第2子半額、第3子以降0円を継続",
-            "excluded": "延長保育料、行事費、主食費等は対象外。3～5歳児は副食費の負担がある場合あり"
+            "free": "認可保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児は無償化対象",
+            "ageZeroToTwo": "無償化対象外の0～2歳児は保護者等の市民税額と世帯状況に応じた利用者負担額を適用",
+            "multipleChildren": "0～2歳児は第2子半額、第3子以降0円の多子軽減を継続",
+            "otherFacilities": "幼稚園、預かり保育、認可外保育施設等は保育の必要性認定や月額上限等の要件あり",
+            "excluded": "延長保育料、行事費、通園送迎費、主食費・副食費等の実費は原則対象外",
+            "application": "2026年度の保育所・認定こども園の途中入所案内、受付期限、空き状況を公開"
           },
           "source": {
-            "url": "https://www.city.takaishi.lg.jp/1645671607114.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.takaishi.lg.jp/kakuka/kyouiku/kosodatesien_ka/yousikyouikuhoikumusyo/musyoukahoikusyo.html",
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.city.takaishi.lg.jp/kakuka/kyouiku/kosodatesien_ka/yousikyouikuhoikumusyo/musyoukahoikusyo.html",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.city.takaishi.lg.jp/1645671607114.html",
+              "checkedAt": "2026-07-25"
             }
           ]
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "令和8年度の市立小中学校の児童生徒に係る学校給食費を徴収しない。",
+          "summary": "2026年度の市立小中学校の児童生徒に係る学校給食費を徴収しない。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
             "target": "高石市立小学校・中学校で学校給食を受ける児童生徒",
-            "support": "令和8年4月1日施行の規則により、当分の間、保護者から学校給食費を徴収しない",
-            "operation": "小学校・中学校で学校給食を実施し、令和8年度の献立を公開"
+            "support": "2026年4月1日施行の規則により、教育扶助対象者を除き、当分の間、保護者から学校給食費を徴収しない",
+            "operation": "小学校・中学校で学校給食を実施し、2026年度の献立表・給食だより等を公開",
+            "effective": "改正規則は2026年度分の学校給食費から適用"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/section/reiki_int/reiki_honbun/k227RG00000831.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.city.takaishi.lg.jp/kakuka/kyouiku/kyouiku_soumu/gakkoukyuushoku/5462.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "生後12か月未満までの母子等を対象に、宿泊・通所・居宅訪問型の産後ケアを提供する。",
+          "summary": "母子等を対象に宿泊・通所・居宅訪問型の産後ケアを提供し、2026年4月から大阪府集合契約施設も利用できる。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "target": "高石市に住所がある母子。宿泊型は生後4か月未満、通所型は生後6か月未満、居宅訪問型は生後12か月未満",
+            "target": "高石市に住所がある母子。宿泊型は生後4か月未満、通所型は生後6か月未満、居宅訪問型は生後12か月未満。流産・死産後1年未満も施設により対象",
             "types": "宿泊（ショートステイ）型、通所（デイサービス）型、居宅訪問（アウトリーチ）型",
-            "support": "母体の体調・乳房ケア、育児相談、休養、沐浴・授乳指導、発育発達相談等",
-            "limit": "各類型7回まで",
-            "fee": "課税世帯の通常料金は宿泊5,190円、通所2,600円、居宅訪問1,000円。非課税・生活保護世帯は軽減",
-            "change2026": "令和8年4月から大阪府の集合契約参加施設でも利用可能"
+            "support": "母体の体調・乳房ケア、育児相談、休養、沐浴・授乳指導、発育発達相談等。訪問型では管理栄養士の支援も選択可能",
+            "limit": "宿泊7泊、通所7回、居宅訪問7回まで",
+            "fee": "課税世帯の通常料金は宿泊5,190円、通所2,600円、居宅訪問1,000円。初回から5回目まで利用できるクーポンと非課税・生活保護世帯の軽減あり",
+            "change2026": "2026年4月から大阪府産後ケア事業委託集合契約の参加施設を利用可能",
+            "cancellation": "キャンセル期限は利用予定日の前々日17時。期限後は類型・課税区分に応じたキャンセル料が発生",
+            "application": "妊娠30週頃から事前申請可能。申請から利用まで通常1週間程度"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/kakuka/kyouiku/kodomokatei_ka/katei/ninshinntyuunokenkou/1500021544228.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "temporaryChildcare": {
@@ -208617,46 +208624,55 @@
             "maxAgeYears": 3
           },
           "details": {
-            "target": "高石市に住民票があり、認定こども園・保育所等を利用していない生後6か月から満3歳未満の子ども",
+            "target": "高石市に住民票があり、認定こども園・保育所・地域型保育・企業主導型保育を利用していない生後6か月から満3歳未満の子ども",
             "employment": "保護者の就労状況は不問",
-            "limit": "子ども1人につき月10時間まで。未利用時間の繰越不可",
-            "fee": "原則1時間300円。施設により実費やキャンセル料あり",
-            "start": "令和8年4月1日開始",
-            "facilities": "綾園保育所子育て支援センター、南海愛児園子育て支援センター、浜寺幼稚園、取石認定こども園"
+            "limit": "子ども1人につき月10時間まで。未利用時間の翌月繰越は不可。複数施設の合計で管理",
+            "fee": "基本1時間300円。施設により保育実費や当日キャンセル料あり",
+            "start": "2026年4月1日開始",
+            "facilities": "綾園保育所子育て支援センター、南海愛児園子育て支援センター、浜寺幼稚園、取石認定こども園の4施設",
+            "application": "つうえんポータルで利用認定を申請。認定後、利用施設ごとの初回面談と予約が必要",
+            "facilityRules": "提供曜日・時間、利用年齢、決済方法、定期利用・スポット利用の可否は施設ごとに異なる"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/kakuka/kyouiku/kosodatesien_ka/daretsu/daredemotsuen.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "市内の対象空き家を購入する子育て世帯・若年者世帯に購入費の2分の1、最大200万円を補助する。",
+          "summary": "市内の対象空き家を購入する子育て・若年世帯に購入費の2分の1、最大200万円を補助する。",
           "details": {
-            "target": "18歳未満の子を扶養・同居する子育て世帯、または所有者・配偶者等のいずれかが39歳以下の若年者世帯",
-            "housing": "購入時点で6か月以上未使用、建築後1年以上、耐震性能・インスペクション等の要件を満たす市内一戸建て空き家",
-            "subsidy": "住宅購入費の2分の1、上限200万円",
-            "application": "購入前に都市計画課へ要件確認し、購入後に必要書類を提出",
-            "budget": "令和8年6月4日時点で予算額2,000万円、交付決定額0円"
+            "target": "18歳未満の子を扶養・同居する子育て世帯、または夫婦のいずれかが39歳以下の若年者世帯",
+            "housing": "購入時点で6か月以上未使用、建築後1年以上、耐震性能・建物状況調査等の要件を満たす市内一戸建て空き家",
+            "subsidy": "住宅の建物・土地購入費の2分の1、上限200万円。消費税等は対象外",
+            "application": "空き家購入前に都市計画課へ要件確認し、購入後に住民票、売買契約書、登記事項証明書、耐震性能・建物状況調査等の書類を提出",
+            "budget": "2026年6月4日時点の予算額2,000万円、交付決定額・審査中額はいずれも0円",
+            "related": "2026年度は空き家除却補助も工事費2分の1・上限100万円へ拡充"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/kakuka/doboku/toshikeikaku_ka/jutaku/akiya/5306.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.takaishi.lg.jp/kakuka/doboku/toshikeikaku_ka/jutaku/akiya/5310.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
           "summary": "電話で事前申込みし、処理券を貼付して指定日に出す有料の粗大ごみ収集を実施する。",
           "details": {
-            "application": "高石環境サービスセンターへ電話申込み。月曜から土曜の9時から13時に受付",
-            "limit": "申込み1回につき6点まで",
-            "fee": "申込時に案内された手数料分の300円券を購入",
-            "collection": "受付番号等を処理券に記入し、収集日当日の午前7時までに排出",
-            "excluded": "家電リサイクル対象品、建築廃材、危険物、事業系機器等は対象外"
+            "application": "高石環境サービスセンターへ電話申込み。月曜から土曜の9時から13時に受付し、祝日も受付",
+            "limit": "申込み1回につき6点まで。収集日の指定は不可",
+            "fee": "申込時に案内された手数料分の300円券を購入。払戻し・再発行は不可",
+            "collection": "受付番号、収集日、品目、氏名を処理券に記入し、収集日当日の午前7時までに排出。立会い不要",
+            "excluded": "テレビ、エアコン、冷蔵庫・冷凍庫、洗濯機・衣類乾燥機、建築廃材、危険物等は市収集対象外"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/kurashi/gomi/gomi/1458786698548.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
@@ -208664,12 +208680,15 @@
           "summary": "洪水・内水・高潮・津波等の浸水想定区域と避難施設を掲載した総合防災マップを公開する。",
           "details": {
             "hazards": "洪水、内水、高潮、津波、地震、台風・大雨",
-            "contents": "浸水想定区域、指定避難所、緊急避難場所、災害情報と備えを掲載",
-            "use": "自宅・職場・学校周辺の危険性、最寄りの避難場所、避難経路の確認に利用可能"
+            "contents": "想定最大規模降雨による洪水・内水、最大規模台風による高潮、津波の浸水想定区域、指定避難所、緊急避難場所を掲載",
+            "distribution": "市役所、公民館、老人福祉センター、鉄道駅、郵便局等で配架",
+            "accessibility": "色覚障害に配慮した配色を採用",
+            "use": "自宅・職場・学校周辺の危険性、最寄りの避難場所、避難経路の確認に利用可能",
+            "current": "宅地建物取引業者向け案内は2026年2月現在の情報を掲載"
           },
           "source": {
             "url": "https://www.city.takaishi.lg.jp/kurashi/bousai/bousai/hazardmap.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         }
       }
