@@ -1,0 +1,50 @@
+name: Add Jichitai Static Page Links 20260724
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  add-links:
+    if: github.head_ref == 'feat/jichitai-static-page-links-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/jichitai-static-page-links-20260724
+          fetch-depth: 0
+      - name: Add municipality detail links
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'jichitai-compare/app.js';
+          let source = fs.readFileSync(path, 'utf8');
+
+          const cardBefore = `  const official = document.createElement('a');\n  official.href = municipality.officialUrl;`;
+          const cardAfter = `  const detail = document.createElement('a');\n  detail.href = \`./municipality/\${encodeURIComponent(municipality.code)}/\`;\n  detail.textContent = '制度詳細';\n  const official = document.createElement('a');\n  official.href = municipality.officialUrl;`;
+          if (!source.includes(cardBefore)) throw new Error('カード導線の追加位置が見つかりません');
+          source = source.replace(cardBefore, cardAfter);
+
+          const appendBefore = `  actions.append(selectButton, official);`;
+          const appendAfter = `  actions.append(selectButton, detail, official);`;
+          if (!source.includes(appendBefore)) throw new Error('カードactionsの修正位置が見つかりません');
+          source = source.replace(appendBefore, appendAfter);
+
+          const headBefore = `  const head = selected.map((municipality) => \`<th scope="col">\${escapeHtml(municipality.name)}</th>\`).join('');`;
+          const headAfter = `  const head = selected.map((municipality) => \`<th scope="col"><a href="./municipality/\${escapeHtml(municipality.code)}/">\${escapeHtml(municipality.name)}</a></th>\`).join('');`;
+          if (!source.includes(headBefore)) throw new Error('比較表見出しの修正位置が見つかりません');
+          source = source.replace(headBefore, headAfter);
+
+          fs.writeFileSync(path, source);
+          NODE
+          node --check jichitai-compare/app.js
+          git rm .github/workflows/add-jichitai-static-page-links-20260724.yml
+          git add jichitai-compare/app.js
+          git commit -m "feat: 比較画面から自治体別詳細ページへ導線を追加"
+          git push origin HEAD:feat/jichitai-static-page-links-20260724
