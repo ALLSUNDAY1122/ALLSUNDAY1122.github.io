@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const site = path.join(root, 'yorugatari');
-const normalizationGeneration = '20260724-004';
+const normalizationGeneration = '20260724-005';
 const shareVersion = '20260724-002';
 const startRuntime = 'landing-start-20260724-001.js';
 const startRelease = '20260724-001';
