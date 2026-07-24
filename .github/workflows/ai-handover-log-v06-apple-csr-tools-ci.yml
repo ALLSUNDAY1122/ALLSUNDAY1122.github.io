@@ -1,0 +1,120 @@
+name: AI Handover Log v0.6 Apple CSR Tools CI
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/ai-handover-log-v06-apple-csr-tools-ci.yml
+      - scripts/generate_apple_distribution_csr_macos.sh
+      - scripts/build_apple_distribution_p12_macos.sh
+  push:
+    branches:
+      - agent/ai-handover-log-v04-binary
+    paths:
+      - .github/workflows/ai-handover-log-v06-apple-csr-tools-ci.yml
+      - scripts/generate_apple_distribution_csr_macos.sh
+      - scripts/build_apple_distribution_p12_macos.sh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  csr-and-p12-tools:
+    runs-on: macos-latest
+    timeout-minutes: 10
+
+    env:
+      CSR_PRIVATE_KEY_PASSWORD: CI-only-private-key-password-2026
+      P12_OUTPUT_PASSWORD: CI-only-p12-password-2026
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate shell syntax
+        run: |
+          set -euo pipefail
+          bash -n scripts/generate_apple_distribution_csr_macos.sh
+          bash -n scripts/build_apple_distribution_p12_macos.sh
+
+      - name: Generate encrypted private key and CSR
+        run: |
+          set -euo pipefail
+          OUTPUT_DIR="$RUNNER_TEMP/csr" \
+            scripts/generate_apple_distribution_csr_macos.sh \
+              --email "ci@example.invalid" \
+              --common-name "AI Handover Log CI" \
+              --output "$RUNNER_TEMP/csr"
+
+          test -s "$RUNNER_TEMP/csr/AppleDistribution.key.pem"
+          test -s "$RUNNER_TEMP/csr/AppleDistribution.certSigningRequest"
+          test -s "$RUNNER_TEMP/csr/AppleDistribution.csr-report.json"
+          openssl req \
+            -in "$RUNNER_TEMP/csr/AppleDistribution.certSigningRequest" \
+            -noout -verify
+
+      - name: Create CI-only certificate matching the CSR
+        run: |
+          set -euo pipefail
+          openssl x509 \
+            -req \
+            -sha256 \
+            -days 30 \
+            -in "$RUNNER_TEMP/csr/AppleDistribution.certSigningRequest" \
+            -signkey "$RUNNER_TEMP/csr/AppleDistribution.key.pem" \
+            -passin env:CSR_PRIVATE_KEY_PASSWORD \
+            -set_serial 1 \
+            -out "$RUNNER_TEMP/AppleDistribution-CI.cer"
+
+      - name: Build and validate CI-only PKCS12
+        run: |
+          set -euo pipefail
+          scripts/build_apple_distribution_p12_macos.sh \
+            --private-key "$RUNNER_TEMP/csr/AppleDistribution.key.pem" \
+            --certificate "$RUNNER_TEMP/AppleDistribution-CI.cer" \
+            --output "$RUNNER_TEMP/AppleDistribution-CI.p12" \
+            --report "$RUNNER_TEMP/AppleDistribution-CI-report.json" \
+            --allow-non-apple-test-certificate
+
+          test -s "$RUNNER_TEMP/AppleDistribution-CI.p12"
+          test -s "$RUNNER_TEMP/AppleDistribution-CI-report.json"
+
+          openssl pkcs12 \
+            -in "$RUNNER_TEMP/AppleDistribution-CI.p12" \
+            -passin env:P12_OUTPUT_PASSWORD \
+            -nocerts -nodes \
+            | grep -q "BEGIN PRIVATE KEY"
+
+      - name: Verify reports contain no passwords or private-key material
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          files = [
+              Path(os.environ["RUNNER_TEMP"]) / "csr/AppleDistribution.csr-report.json",
+              Path(os.environ["RUNNER_TEMP"]) / "AppleDistribution-CI-report.json",
+          ]
+          forbidden = [
+              os.environ["CSR_PRIVATE_KEY_PASSWORD"],
+              os.environ["P12_OUTPUT_PASSWORD"],
+              "BEGIN PRIVATE KEY",
+              "BEGIN ENCRYPTED PRIVATE KEY",
+          ]
+          for path in files:
+              text = path.read_text(encoding="utf-8")
+              json.loads(text)
+              for marker in forbidden:
+                  if marker in text:
+                      raise SystemExit(f"sensitive marker found in {path.name}")
+          print("CSR_P12_REPORTS_SAFE")
+          PY
+
+      - name: Delete CI signing material
+        if: ${{ always() }}
+        run: |
+          rm -rf "$RUNNER_TEMP/csr"
+          rm -f "$RUNNER_TEMP/AppleDistribution-CI.cer"
+          rm -f "$RUNNER_TEMP/AppleDistribution-CI.p12"
+          rm -f "$RUNNER_TEMP/AppleDistribution-CI-report.json"
