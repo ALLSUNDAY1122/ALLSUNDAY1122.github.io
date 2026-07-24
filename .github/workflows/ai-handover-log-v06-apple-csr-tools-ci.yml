@@ -40,7 +40,7 @@ jobs:
         run: |
           set -euo pipefail
           OUTPUT_DIR="$RUNNER_TEMP/csr" \
-            scripts/generate_apple_distribution_csr_macos.sh \
+            bash scripts/generate_apple_distribution_csr_macos.sh \
               --email "ci@example.invalid" \
               --common-name "AI Handover Log CI" \
               --output "$RUNNER_TEMP/csr"
@@ -68,7 +68,7 @@ jobs:
       - name: Build and validate CI-only PKCS12
         run: |
           set -euo pipefail
-          scripts/build_apple_distribution_p12_macos.sh \
+          bash scripts/build_apple_distribution_p12_macos.sh \
             --private-key "$RUNNER_TEMP/csr/AppleDistribution.key.pem" \
             --certificate "$RUNNER_TEMP/AppleDistribution-CI.cer" \
             --output "$RUNNER_TEMP/AppleDistribution-CI.p12" \
