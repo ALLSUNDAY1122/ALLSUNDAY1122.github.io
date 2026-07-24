@@ -1,0 +1,105 @@
+name: Temporary West B Cycle 05 Fix
+
+on:
+  push:
+    branches:
+      - fix/west-b-cycle05-ikata-matsuno-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/west-b-cycle05-ikata-matsuno-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Correct Ikata and Matsuno evidence
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = path.join(process.cwd(), 'jichitai-compare');
+          const read = p => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+
+          const ikataPath = path.join(root, 'data/municipalities/38/38442.json');
+          const ikataTaskPath = path.join(root, 'operations/tasks/38442.json');
+          const ikata = read(ikataPath);
+          const ikataTask = read(ikataTaskPath);
+          const oldIkataUrl = 'https://www.town.ikata.ehime.jp/uploaded/life/21753_115450_misc.pdf';
+          const newIkataUrl = 'https://www.town.ikata.ehime.jp/soshiki/32/11452.html';
+          ikata.services.bulkyWaste.source = {url:newIkataUrl, checkedAt:'2026-07-25'};
+          ikata.services.bulkyWaste.additionalSources = [
+            {url:'https://www.town.ikata.ehime.jp/soshiki/32/26164.html', checkedAt:'2026-07-25'}
+          ];
+          ikata.updatedAt = '2026-07-25';
+          ikataTask.officialSources = ikataTask.officialSources.map(v => v === oldIkataUrl ? newIkataUrl : v);
+          ikataTask.lastCheckedAt = '2026-07-25';
+          ikataTask.lastUpdatedAt = '2026-07-25T02:01:00+09:00';
+          ikataTask.lastUpdatedBy = '西日本調査班B';
+          ikataTask.notes.push('概略検証第5回で粗大ごみの404旧PDFを現行ごみ分別ガイドブックへ更新。制度内容・判定は変更なし。');
+          write(ikataPath, ikata);
+          write(ikataTaskPath, ikataTask);
+
+          const matsunoPath = path.join(root, 'data/municipalities/38/38484.json');
+          const matsunoTaskPath = path.join(root, 'operations/tasks/38484.json');
+          const matsuno = read(matsunoPath);
+          const matsunoTask = read(matsunoTaskPath);
+          const oldMatsunoUrl = 'https://www.town.matsuno.ehime.jp/site/akiya/7009.html';
+          const newMatsunoUrl = 'https://www.town.matsuno.ehime.jp/site/akiya/';
+          matsuno.services.housingSupport = {
+            status:'unavailable',
+            summary:'過去の移住者住宅改修費支援は確認できるが、2026年度の募集・補助上限・申請条件を現行公式ページで確認できない',
+            details:{
+              confirmed:'町公式サイトには2024年の移住者住宅改修費サポート掲載履歴がある',
+              availability:'旧個別ページは404で、現行の移住・空き家ポータルと令和8年度予算から募集状況・補助額・申請条件を確定できないため要問い合わせ'
+            },
+            source:{url:newMatsunoUrl, checkedAt:'2026-07-25'},
+            additionalSources:[
+              {url:'https://www.town.matsuno.ehime.jp/life/1/1/4/', checkedAt:'2026-07-25'},
+              {url:'https://www.town.matsuno.ehime.jp/site/chocho/17080.html', checkedAt:'2026-07-25'}
+            ]
+          };
+          matsuno.summary = '必須9制度を松野町公式情報で再確認し、8制度をverified、2026年度の募集条件を確認できない住宅支援をunavailableとして登録。';
+          matsuno.updatedAt = '2026-07-25';
+          matsunoTask.verifiedCount = 8;
+          matsunoTask.unavailableCount = 1;
+          matsunoTask.officialSources = matsunoTask.officialSources.map(v => v === oldMatsunoUrl ? newMatsunoUrl : v);
+          matsunoTask.lastCheckedAt = '2026-07-25';
+          matsunoTask.lastUpdatedAt = '2026-07-25T02:01:00+09:00';
+          matsunoTask.lastUpdatedBy = '西日本調査班B';
+          matsunoTask.notes = matsunoTask.notes.filter(v => !v.includes('移住者住宅改修支援は子育て世帯最大400万円'));
+          matsunoTask.notes.push('概略検証第5回で住宅支援の旧個別ページ404を確認。2026年度の募集・補助額・申請条件を現行公式情報で確定できないためverifiedからunavailableへ訂正。');
+          write(matsunoPath, matsuno);
+          write(matsunoTaskPath, matsunoTask);
+          NODE
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate
+      - name: Remove workflow and commit synchronized files
+        shell: bash
+        run: |
+          rm .github/workflows/temp-west-b-cycle05-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/data/municipalities/38/38442.json
+          git add jichitai-compare/data/municipalities/38/38484.json
+          git add jichitai-compare/operations/tasks/38442.json
+          git add jichitai-compare/operations/tasks/38484.json
+          git add jichitai-compare/data/generated/municipalities.json
+          git add jichitai-compare/municipality/38442/index.html
+          git add jichitai-compare/municipality/38484/index.html
+          git add jichitai-compare/operations/progress.json
+          git add .github/workflows/temp-west-b-cycle05-fix.yml
+          git commit -m "fix: 伊方町と松野町の第5回監査結果を反映"
+          git push origin HEAD:fix/west-b-cycle05-ikata-matsuno-20260725
