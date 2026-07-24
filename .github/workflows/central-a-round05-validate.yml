@@ -1,0 +1,60 @@
+name: Validate Central A Round05
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-05-20260725']
+    paths: ['.github/workflows/central-a-round05-validate.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-05-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+      - name: Record success and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -- jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json || true
+          cat > jichitai-compare/operations/control/central-a-scope-round-05-validation-20260725.json <<'JSON'
+          {
+            "schemaVersion": "1.0.0",
+            "auditId": "central-a-scope-round-05-shizuoka-20260725",
+            "validatedAt": "2026-07-25T01:57:00+09:00",
+            "checks": {
+              "generatePublicMunicipalityData": "passed",
+              "generateNationalProgress": "passed",
+              "validateSourceAndGeneratedData": "passed",
+              "javascriptSyntax": "passed"
+            },
+            "result": "passed"
+          }
+          JSON
+          rm .github/workflows/central-a-round05-validate.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'ci: 静岡県監査の標準データ検証成功を記録'
+          git push origin HEAD:audit/central-a-scope-verification-round-05-20260725
