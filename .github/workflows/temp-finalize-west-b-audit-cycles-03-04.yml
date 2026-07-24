@@ -1,0 +1,84 @@
+name: Temporary Finalize West B Audit Cycles 03-04
+
+on:
+  push:
+    branches:
+      - audit/west-b-rough-validation-cycles-03-04-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-rough-validation-cycles-03-04-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Finalize audit classifications
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base = 'jichitai-compare/operations/audits';
+          const load = n => JSON.parse(fs.readFileSync(`${base}/west-b-rough-validation-cycle-${String(n).padStart(2,'0')}-20260725.json`, 'utf8'));
+          const save = (n, data) => fs.writeFileSync(`${base}/west-b-rough-validation-cycle-${String(n).padStart(2,'0')}-20260725.json`, JSON.stringify(data, null, 2) + '\n');
+
+          const c3 = load(3);
+          c3.manualSpotChecks = [
+            {code:'31302',name:'岩美町',service:'childcareFee_and_temporaryChildcare',status:'passed',result:'令和8年度公式案内で第2子半額・第3子以降無料、一時保育の実施施設・料金を確認。こども誰でも通園制度への公式導線も確認'},
+            {code:'34368',name:'安芸太田町',service:'temporaryChildcare',status:'passed',result:'令和8年4月開始、生後6か月から3歳未満の未就園児、町内保育所・認定こども園で実施する公式案内と一致'},
+            {code:'35202',name:'宇部市',service:'schoolMeals',status:'passed',result:'令和8年4月から市立小中学校の学校給食費を無償化する公式案内と一致'},
+            {code:'35210',name:'光市',service:'temporaryChildcare',status:'passed',result:'生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致'},
+            {code:'35305',name:'周防大島町',service:'temporaryChildcare',status:'passed',result:'生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致'}
+          ];
+          c3.warningReview = [{
+            code:'34307',
+            name:'熊野町',
+            services:['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','bulkyWaste','disasterPrevention'],
+            classification:'site_access_or_tls_warning',
+            result:'GitHub Actionsから7ページを取得できなかったが、熊野町公式サイト・子育て情報一覧・令和8年度こども誰でも通園制度ページが現行公開中であることを確認。URL削除や調査内容の矛盾は検出せず'
+          }];
+          c3.conclusion = 'no_research_content_error_detected_no_source_maintenance_issue';
+          c3.reviewedAt = '2026-07-25T01:27:00+09:00';
+          c3.detectedResearchContentErrorCount = 0;
+          c3.detectedSourceMaintenanceIssueCount = 0;
+          c3.correctedSourceMaintenanceIssueCount = 0;
+          c3.nextCycle = {cycle:4,status:'completed_in_same_pull_request',auditFile:'jichitai-compare/operations/audits/west-b-rough-validation-cycle-04-20260725.json'};
+          save(3, c3);
+
+          const c4 = load(4);
+          c4.manualSpotChecks = [
+            {code:'35321',name:'和木町',service:'temporaryChildcare',status:'passed',result:'生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致'},
+            {code:'36202',name:'鳴門市',service:'childcareFee',status:'passed',result:'令和6年度から所得制限なく全年齢の保育料を無償化する公式FAQと一致'},
+            {code:'36208',name:'三好市',service:'childcareFee',status:'passed',result:'令和7年9月から全児童の保育料完全無償化、給食費無償の公式案内と一致'},
+            {code:'36368',name:'那賀町',service:'temporaryChildcare',status:'passed',result:'生後6か月から3歳未満の未就園児、月10時間、1時間300円の公式条件と一致'},
+            {code:'36403',name:'藍住町',service:'temporaryChildcare',status:'passed',result:'生後6か月から3歳未満の未就園児、月3時間、1時間300円の町独自公式条件と一致'}
+          ];
+          c4.warningReview = [
+            {code:'36207',name:'美馬市',service:'sickChildCare',classification:'transient_or_cdn_http_warning',result:'監査時は404だったが同一公式URLを再取得でき、広域利用助成の対象・助成額を確認。出典変更不要'},
+            {code:'36321',name:'佐那河内村',service:'schoolMeals',classification:'transient_or_cdn_http_warning',result:'監査時は404だったが同一公式URLを村の学校教育一覧から再取得でき、学校給食費補助制度の記載を確認。出典変更不要'},
+            {code:'36387',name:'美波町',service:'postpartumCare',classification:'transient_or_cdn_http_warning',result:'監査時は404だったが同一公式例規URLを再取得でき、産後1年未満・訪問を含む産後ケア実施要綱を確認。出典変更不要'}
+          ];
+          c4.conclusion = 'no_research_content_error_detected_no_source_maintenance_issue';
+          c4.reviewedAt = '2026-07-25T01:27:00+09:00';
+          c4.detectedResearchContentErrorCount = 0;
+          c4.detectedSourceMaintenanceIssueCount = 0;
+          c4.correctedSourceMaintenanceIssueCount = 0;
+          c4.nextCycle = {cycle:5,plannedMunicipalityCount:25,scopePolicy:'徳島県の残り4自治体、愛媛県20自治体、佐賀県1自治体をコード順で検証'};
+          save(4, c4);
+          NODE
+      - name: Remove workflow and commit reports
+        shell: bash
+        run: |
+          rm .github/workflows/temp-finalize-west-b-audit-cycles-03-04.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-03-20260725.json
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-04-20260725.json
+          git add .github/workflows/temp-finalize-west-b-audit-cycles-03-04.yml
+          git commit -m "audit: 西日本B概略検証第3・4回の判定を確定"
+          git push origin HEAD:audit/west-b-rough-validation-cycles-03-04-20260725
