@@ -11,13 +11,15 @@ on:
       - yorugatari/bedtime-horror.html
       - yorugatari/archive.html
       - yorugatari/privacy.html
+      - yorugatari/stories/spare-key-returned.html
       - yorugatari/assets/app.js
       - yorugatari/assets/archive.js
       - yorugatari/assets/story.js
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
+      - yorugatari/assets/landing-share.js
+      - yorugatari/assets/landing-start-20260724-001.js
       - yorugatari/assets/styles.css
-      - yorugatari/stories/**
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/normalize-engagement.mjs
       - yorugatari/tools/live-release-audit.mjs
@@ -26,7 +28,7 @@ on:
 
 concurrency:
   group: yorugatari-accessibility-audit
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
