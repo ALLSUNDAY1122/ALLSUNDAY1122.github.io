@@ -3,7 +3,8 @@ const { chromium } = require('playwright');
 const AxeBuilder = require('@axe-core/playwright').default;
 
 const base = 'https://allsunday1122.github.io/yorugatari';
-const landingAnalyticsVersion = '20260724-004';
+const fiveMinuteAnalyticsVersion = '20260724-004';
+const bedtimeAnalyticsVersion = '20260724-005';
 const results = [];
 const failures = [];
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -158,7 +159,7 @@ async function auditArchive(page) {
 
 async function auditFiveMinute(page) {
   const loaded = await open(page, '/5min-horror.html', async (target, attempt) => ({
-    ready: await target.locator('.pick').count() === 12 && await target.locator('.guide-card').count() === 6 && await target.locator('.faq article').count() === 3 && await target.locator(`script[src*="analytics.js?v=${landingAnalyticsVersion}"]`).count() === 1,
+    ready: await target.locator('.pick').count() === 12 && await target.locator('.guide-card').count() === 6 && await target.locator('.faq article').count() === 3 && await target.locator(`script[src*="analytics.js?v=${fiveMinuteAnalyticsVersion}"]`).count() === 1,
     attempt,
     picks: await target.locator('.pick').count(),
     guides: await target.locator('.guide-card').count(),
@@ -176,7 +177,7 @@ async function auditFiveMinute(page) {
 
 async function auditBedtime(page) {
   const loaded = await open(page, '/bedtime-horror.html', async (target, attempt) => ({
-    ready: await target.locator('.pick').count() === 8 && await target.locator('.mood-card').count() === 4 && await target.locator('.faq article').count() === 3 && await target.locator(`script[src*="analytics.js?v=${landingAnalyticsVersion}"]`).count() === 1,
+    ready: await target.locator('.pick').count() === 8 && await target.locator('.mood-card').count() === 4 && await target.locator('.faq article').count() === 3 && await target.locator(`script[src*="analytics.js?v=${bedtimeAnalyticsVersion}"]`).count() === 1,
     attempt,
     picks: await target.locator('.pick').count(),
     moods: await target.locator('.mood-card').count(),
@@ -227,7 +228,7 @@ async function auditStory(page) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/1.9' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Accessibility-Audit/2.0' });
   const page = await context.newPage();
   const browserErrors = [];
   page.on('pageerror', (error) => browserErrors.push(`pageerror: ${error.message}`));
