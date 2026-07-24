@@ -1,0 +1,48 @@
+name: Temporary post-audit North East smoke
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-public:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify published GitHub Pages site
+        working-directory: jichitai-compare
+        run: npm run smoke:public
+      - name: Verify updated North and East pages
+        working-directory: jichitai-compare
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const local = JSON.parse(fs.readFileSync('data/generated/municipalities.json','utf8'));
+          const codes = [
+            '02411','03203','03206','03302','07202','07212','07362','07368','07405','07408','07501','07547',
+            '10424','10426','12203','13123','15100','15586','20303','20305','20306'
+          ];
+          const map = new Map(local.municipalities.map(x => [x.code,x]));
+          for (const code of codes) {
+            const item = map.get(code);
+            if (!item) throw new Error(`${code}: local municipality missing`);
+            const res = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`);
+            if (!res.ok) throw new Error(`${code}: HTTP ${res.status}`);
+            const html = await res.text();
+            if (!html.includes(item.name)) throw new Error(`${code}: municipality name missing`);
+            if (!html.includes(`/municipality/${code}/`)) throw new Error(`${code}: canonical or page path missing`);
+            if (!html.includes(item.officialUrl)) throw new Error(`${code}: official URL missing`);
+          }
+          console.log(`verified ${codes.length} updated North/East public pages`);
+          NODE
