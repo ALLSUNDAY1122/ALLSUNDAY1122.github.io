@@ -7,8 +7,11 @@ on:
       - main
     paths:
       - yorugatari/tools/normalize-engagement.mjs
+      - yorugatari/tools/ensure-landing-sharing.mjs
       - yorugatari/tools/generate-discovery-pages.mjs
       - yorugatari/index.html
+      - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
       - yorugatari/archive.html
       - yorugatari/categories/**
       - yorugatari/stories/**
@@ -41,7 +44,9 @@ jobs:
         shell: bash
         run: |
           node --check yorugatari/tools/normalize-engagement.mjs
+          node --check yorugatari/tools/ensure-landing-sharing.mjs
           node yorugatari/tools/normalize-engagement.mjs
+          node yorugatari/tools/ensure-landing-sharing.mjs
           node <<'NODE'
           const fs = require('node:fs');
           const path = require('node:path');
@@ -53,6 +58,10 @@ jobs:
             const html = fs.readFileSync(path.join(site, file), 'utf8');
             const version = file === '5min-horror.html' ? '20260724-004' : file === 'bedtime-horror.html' ? '20260724-005' : '20260723-003';
             if (!html.includes(`assets/analytics.js?v=${version}&r=${release}`)) throw new Error(`Static page not normalized: ${file}`);
+          }
+          for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
+            const html = fs.readFileSync(path.join(site, file), 'utf8');
+            if (!html.includes(`assets/landing-start-20260724-001.js?r=${release}`)) throw new Error(`Landing start runtime not normalized: ${file}`);
           }
           for (const file of categoryFiles) {
             const html = fs.readFileSync(path.join(site, 'categories', file), 'utf8');
