@@ -5,7 +5,7 @@
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
   "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
-  "updatedAt": "2026-07-25T00:01:00+09:00",
+  "updatedAt": "2026-07-25T00:33:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -19,7 +19,18 @@
     {"code": "46206", "name": "阿久根市", "pullRequestNumber": 2740, "ciRunNumber": 6577}
   ],
   "blocked": [],
-  "nextAction": "担当自治体の新規調査は停止。公式情報更新、差し戻し、自治体識別異常、CI失敗、公開文言異常、生成JSONと静的ページの要約不一致が発生した場合のみ品質監査を再開する。",
+  "nextAction": "10回の誤調査検証の第3回として、担当6県から年齢・料金条件が複雑な自治体を抽出し、こども医療・病児保育を公式情報で再照合する。",
+  "researchVerificationAudit": {
+    "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
+    "plannedRoundCount": 10,
+    "completedRoundCount": 2,
+    "lastCompletedRound": 2,
+    "nextRound": 3,
+    "status": "in_progress",
+    "materialErrorCount": 0,
+    "correctionRequiredCount": 0,
+    "lastAuditedAt": "2026-07-25T00:33:00+09:00"
+  },
   "completionEvidence": {
     "lastMunicipalityCode": "46206",
     "lastMunicipalityName": "阿久根市",
@@ -47,7 +58,7 @@
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-25T00:01:00+09:00",
+    "auditedAt": "2026-07-25T00:33:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -115,6 +126,7 @@
       "全国完全公開後は新規調査を停止し、更新・差し戻し・CI異常・公開文言異常・要約不一致時のみ再開する。",
       "福岡市の制度判定・公式出典・verified 9は変更せず、公開要約だけを利用者向けに修正した。",
       "西日本A担当6県226自治体の公開要約内部運用語を通常CIで恒久監視する。",
+      "10回の誤調査検証を開始し、第1回の全件構造監査と第2回の公式情報スポット監査を完了。現時点の重大誤り0件。",
       "公開文言検査失敗時はjichitai-validation-report artifactから自治体コードと発生箇所を確認する。"
     ]
   }
