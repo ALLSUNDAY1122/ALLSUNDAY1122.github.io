@@ -1021,5 +1021,40 @@
       "source": "https://www.town.tsubata.lg.jp/page/1441.html"
     }
   ],
-  "refinedAt": "2026-07-25T00:19:00+09:00"
+  "refinedAt": "2026-07-25T00:19:00+09:00",
+  "substantiveResolutions": [
+    {
+      "code": "17205",
+      "name": "珠洲市",
+      "service": "schoolMeals",
+      "result": "confirmed_current_official_listing",
+      "detail": "珠洲市の現行支援制度ページに学校給食費は当面の間無償と掲載されているため、既存記録を維持。",
+      "checkedAt": "2026-07-25",
+      "source": "https://www.city.suzu.lg.jp/site/bousaisuzu/11672.html"
+    },
+    {
+      "code": "17361",
+      "name": "津幡町",
+      "service": "temporaryChildcare",
+      "result": "corrected_current_program_omission",
+      "detail": "実施園公式ページで、保育園に通っていない子どもの月10時間利用と就労要件なしを確認し、こども誰でも通園制度を追加。",
+      "checkedAt": "2026-07-25",
+      "sources": [
+        "https://www.town.tsubata.lg.jp/page/1049.html",
+        "https://www.town.tsubata.lg.jp/page/1045.html"
+      ]
+    }
+  ],
+  "finalResult": {
+    "status": "completed_with_correction",
+    "structuralErrors": 0,
+    "substantiveErrors": 1,
+    "correctedMunicipalityCodes": [
+      "17361"
+    ],
+    "confirmedAccurateSuspectCodes": [
+      "17205"
+    ],
+    "completedAt": "2026-07-25T00:22:00+09:00"
+  }
 }
