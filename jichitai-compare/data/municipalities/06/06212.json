@@ -6,25 +6,34 @@
   "name": "尾花沢市",
   "officialUrl": "https://www.city.obanazawa.yamagata.jp/",
   "status": "verified",
-  "summary": "尾花沢市の子育て・暮らしに関する9制度のうち8制度を確認済みで、1制度は公式情報で詳細未確認です。",
-  "updatedAt": "2026-07-24",
+  "summary": "尾花沢市の子育て・暮らしに関する9制度を自治体公式情報で確認できます。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から高校3年生修了年度末まで、保険診療の自己負担額を無料とする。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "target": "0歳から18歳到達年度末までの子ども",
         "coverage": "医療機関に支払う自己負担金のうち保険診療分を助成",
         "excluded": "予防接種、薬容器代、入院時の食事・部屋代等の保険外診療分",
         "outsidePrefecture": "県外受診等で医療証を使用できない場合は申請により払い戻し"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/fukushi/iryohi-josei/638", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/fukushi/iryohi-josei/638",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後6か月から小学3年生までを対象に、病児・病後児保育施設なないろで一時保育を行う。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 9
+      },
       "details": {
         "facility": "尾花沢市病児・病後児保育施設なないろ",
         "target": "山形連携中枢都市圏在住または保護者が尾花沢市勤務の生後6か月から小学3年生までの子ども",
@@ -32,34 +41,61 @@
         "fee": "日額2,000円。5時間以内は1,000円。おやつ代込み",
         "application": "事前登録、医療機関受診と医師連絡票、前日17時までの利用申込みが必要"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/ogare/azukeru/1098", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/ogare/azukeru/1098",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "令和6年4月から年齢・所得を問わず全ての子どもの保育料と副食費を無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "target": "尾花沢市の教育・保育施設を利用する全ての子ども",
         "fee": "年齢や保護者所得にかかわらず保育料無料",
         "meals": "副食費も無料",
         "excluded": "延長保育、一時預かり保育は従来どおり利用料が発生"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/ogare/azukeru/hoikuen/1094", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/ogare/azukeru/hoikuen/1094",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
-      "status": "unavailable",
-      "summary": "市公式の現行教育情報で、小中学校全員を対象とする学校給食費無償化・一律補助の制度内容を確認できない。",
+      "status": "verified",
+      "summary": "令和8年度、市内小中学校の学校給食費を完全無償化する。",
       "details": {
-        "confirmed": "教育委員会の会議録、就学・学校関連情報は市公式サイトで公開されている",
-        "unconfirmed": "令和8年度の市立小中学校全員向け給食費、無償化範囲、補助額、申請要否",
-        "guidance": "現行の保護者負担額と支援制度は教育委員会へ確認する必要がある"
+        "target": "尾花沢市立小中学校に在籍する児童生徒の保護者",
+        "selfCookingSchools": "自校調理方式の小学校3校は、給食費を全額補助して保護者負担を無料化",
+        "centerSchools": "共同調理場方式の中学校1校・小学校2校は、給食費の保護者負担を免除",
+        "scope": "市立小学校5校・中学校1校の全児童生徒を対象とする完全無償化",
+        "fiscalYear": "2026年度（令和8年度）"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/kosodate-bunka/kyoiku-iinkai/", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/files/original/2026031916571799869132137.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.obanazawa.yamagata.jp/kosodate-bunka/kyoiku-iinkai/",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子を対象に宿泊・通所・訪問型産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "尾花沢市在住で、心身の不調や育児不安があり支援を必要とする産後1年未満の人",
         "overnight": "おおむね生後5か月未満、最大7泊。1泊1,500円",
@@ -67,20 +103,36 @@
         "homeVisit": "最大2回。1回目1,500円、2回目1,000円。交通費が必要な場合あり",
         "application": "健康増進課へ事前申請"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/fukushi/boshihoken/2876", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/fukushi/boshihoken/2876",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "生後2か月頃から利用できる一時預かり・特定保育・休日預かりを実施する。",
-      "eligibility": {"minAgeMonths": 2, "maxAgeYears": 5},
-      "details": {
-        "temporaryCare": "保護者の傷病、入院、冠婚葬祭、育児負担軽減等で一時的保育が必要な場合に利用可能",
-        "facilities": "おもだか保育園、ひまわり保育園、よつばこども園、尾花沢幼稚園等",
-        "limit": "一時預かりは月12日以内。特定保育は月8日以上で3か月以内",
-        "fee": "1日3歳以上1,100円、3歳未満2,200円。延長料金あり",
-        "application": "各施設、子育て支援センターまたは福祉課へ登録・申請"
+      "summary": "一時預かり等に加え、2026年度から未就園の生後6か月から満3歳未満児を対象とするこども誰でも通園制度を実施する。",
+      "eligibility": {
+        "minAgeMonths": 2,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/ogare/azukeru/1097", "checkedAt": "2026-07-24"}
+      "details": {
+        "temporaryCare": "生後2か月頃から就学前までを対象に、一時預かり・特定保育・休日預かりを市内施設で実施",
+        "temporaryLimit": "一時預かりは月12日以内。特定保育は月8日以上で3か月以内",
+        "temporaryFee": "1日3歳以上1,100円、3歳未満2,200円。延長料金あり",
+        "anyChildTarget": "保育所等に通っていない生後6か月から満3歳未満の子ども",
+        "anyChildProgram": "2026年度に乳児等通園支援事業（こども誰でも通園制度）を新規実施し、市内保育施設で受け入れる",
+        "guidance": "実施施設、利用時間、料金、申請方法は市の利用者向け案内で確認する"
+      },
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/files/original/2026031916571799869132137.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.obanazawa.yamagata.jp/ogare/azukeru/1097",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "housingSupport": {
       "status": "verified",
@@ -93,7 +145,10 @@
         "renewableAddition": "再生可能エネルギーを主熱源とする融雪装置は10％以内、上限20万円を加算",
         "application": "定住応援課へ事前相談・申請"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/kurashi/yuki/524", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/kurashi/yuki/524",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -105,7 +160,10 @@
         "classification": "ごみの分け方・出し方ガイドブックで粗大ごみ区分を確認",
         "restricted": "古タイヤ、農業用資材、家電リサイクル法対象品等は専門業者等へ相談"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/kurashi/kankyo/gomi/373", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/kurashi/kankyo/gomi/373",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -117,7 +175,10 @@
         "pond": "防災重点ため池マップを公開",
         "app": "防災尾花沢アプリで防災情報、火災情報、防災マップ、安否確認等を提供"
       },
-      "source": {"url": "https://www.city.obanazawa.yamagata.jp/kurashi/kikikanri/bosai/", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.city.obanazawa.yamagata.jp/kurashi/kikikanri/bosai/",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }
