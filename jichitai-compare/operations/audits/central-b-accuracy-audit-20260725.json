@@ -1,0 +1,2032 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-b-accuracy-audit-20260725",
+  "sessionId": "central-b",
+  "scope": {
+    "prefectureCodes": [
+      "26",
+      "29",
+      "30"
+    ],
+    "municipalityCount": 95,
+    "serviceCountPerMunicipality": 9
+  },
+  "purpose": "中日本B担当データに誤調査がないかを10回に分けて概略検証する",
+  "method": {
+    "rounds": 10,
+    "coverage": "各回7〜10自治体を構造・task整合監査し、年度、対象年齢、料金、利用条件、verified/unavailable判定の高リスク項目を公式情報で重点照合する",
+    "correctionPolicy": "明確な誤りは同一監査サイクルで修正し、地方正本へ統合する。公開差分はmain同期PRで反映する"
+  },
+  "batches": [
+    {
+      "round": 1,
+      "codes": [
+        "26100",
+        "26201",
+        "26202",
+        "26203",
+        "26204",
+        "26205",
+        "26206",
+        "26207",
+        "26208",
+        "26209"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 2,
+      "codes": [
+        "26210",
+        "26211",
+        "26212",
+        "26213",
+        "26214",
+        "26303",
+        "26322",
+        "26343",
+        "26344",
+        "26364"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 3,
+      "codes": [
+        "26365",
+        "26366",
+        "26367",
+        "26407",
+        "26463",
+        "26465",
+        "29201",
+        "29202",
+        "29203",
+        "29204"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 4,
+      "codes": [
+        "29205",
+        "29206",
+        "29207",
+        "29208",
+        "29209",
+        "29210",
+        "29211",
+        "29212",
+        "29322",
+        "29342"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 5,
+      "codes": [
+        "29343",
+        "29344",
+        "29345",
+        "29361",
+        "29362",
+        "29363",
+        "29385",
+        "29386",
+        "29401",
+        "29402"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 6,
+      "codes": [
+        "29424",
+        "29425",
+        "29426",
+        "29427",
+        "29441",
+        "29442",
+        "29443",
+        "29444",
+        "29446",
+        "29447"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 7,
+      "codes": [
+        "29449",
+        "29450",
+        "29451",
+        "29452",
+        "29453",
+        "30201",
+        "30202",
+        "30203",
+        "30204",
+        "30205"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 8,
+      "codes": [
+        "30206",
+        "30207",
+        "30208",
+        "30209",
+        "30304",
+        "30341",
+        "30343",
+        "30344",
+        "30361"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 9,
+      "codes": [
+        "30362",
+        "30366",
+        "30381",
+        "30382",
+        "30383",
+        "30390",
+        "30391",
+        "30392",
+        "30401"
+      ],
+      "status": "completed"
+    },
+    {
+      "round": 10,
+      "codes": [
+        "30404",
+        "30406",
+        "30421",
+        "30422",
+        "30424",
+        "30427",
+        "30428"
+      ],
+      "status": "completed"
+    }
+  ],
+  "progress": {
+    "completedRounds": 10,
+    "structurallyCheckedMunicipalities": 95,
+    "deepCheckedMunicipalities": 88,
+    "confirmedErrors": 57,
+    "correctedErrors": 57
+  },
+  "preflightFindings": [
+    {
+      "code": "30343",
+      "name": "九度山町",
+      "service": "schoolMeals",
+      "result": "corrected",
+      "note": "令和8年度一般会計予算に学校給食費徴収金4,147千円が計上されていることを確認し、現行負担不明のunavailable判定から、徴収予定を示すverified判定へ訂正。PR #2909・CI #6979でregion/centralへ統合済み。"
+    }
+  ],
+  "findings": [
+    {
+      "round": 1,
+      "auditedAt": "2026-07-25T00:25:00+09:00",
+      "codes": [
+        "26100",
+        "26201",
+        "26202",
+        "26203",
+        "26204",
+        "26205",
+        "26206",
+        "26207",
+        "26208",
+        "26209"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 1,
+        "workflowRunId": 30104643968,
+        "artifactId": 8601057519,
+        "artifactDigest": "sha256:2b64a5419327cc7d49303242f8f9c11361d02d9a23d9ff537bdb093c69010fdd",
+        "postCorrectionWorkflowRunId": 30105311094,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "26100",
+          "name": "京都市",
+          "services": [
+            "childcareFee",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "第2子以降0～2歳児保育料無償、中学校選択制給食1食310円、産後ケア訪問型の令和8年8月開始、誰でも通園月12時間、既存住宅取得・改修支援を公式情報と照合し一致。"
+        },
+        {
+          "code": "26201",
+          "name": "福知山市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度の小学校給食費保護者負担なし・中学校1食350円、日帰り型産後ケア7回・1回1,000円、誰でも通園月10時間・1時間300円を公式情報と照合し一致。"
+        },
+        {
+          "code": "26204",
+          "name": "宇治市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度中学校全員制給食、宿泊・日帰り・訪問型産後ケア、誰でも通園月10時間、令和8年度子育て世帯住宅改修補助の対象・上限を公式情報と照合し一致。"
+        },
+        {
+          "code": "26207",
+          "name": "城陽市",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "三世代近居・同居住宅支援の要綱は存続するが、利用者向け案内は令和6年度受付終了で、令和8年度の募集・予算・受付状況を確認できない。unavailable判定は妥当。"
+        },
+        {
+          "code": "26209",
+          "name": "長岡京市",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "生活困窮者全般を対象とする住居確保給付事業を、子育て世帯向け住宅支援としてverified記録していたカテゴリ誤りを確認。令和8年度の子育て世帯向け住宅取得・改修・家賃支援は確認できず、unavailableへ訂正。verified 9→8、unavailable 0→1。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "26209",
+          "service": "housingSupport",
+          "before": "verified / 生活困窮者向け住居確保給付事業",
+          "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "auditedAt": "2026-07-25T00:45:00+09:00",
+      "codes": [
+        "26210",
+        "26211",
+        "26212",
+        "26213",
+        "26214",
+        "26303",
+        "26322",
+        "26343",
+        "26344",
+        "26364"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 0,
+        "workflowRunId": 30105670612,
+        "artifactId": 8601465139,
+        "artifactDigest": "sha256:2ef43242fcdc6882c132cc63287c30d7e7034a112218c838cc5c2574a65ead61",
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "26210",
+          "name": "八幡市",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "生活困窮者全般向け住居確保給付金を子育て世帯向け住宅支援としていたためunavailableへ訂正。"
+        },
+        {
+          "code": "26211",
+          "name": "京田辺市",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "生活困窮者全般向け住居確保給付金を子育て世帯向け住宅支援としていたためunavailableへ訂正。"
+        },
+        {
+          "code": "26213",
+          "name": "南丹市",
+          "services": [
+            "postpartumCare"
+          ],
+          "result": "corrected",
+          "note": "一般の妊産婦・新生児訪問と交流行事を正式な産後ケア事業としていたためunavailableへ訂正。"
+        },
+        {
+          "code": "26214",
+          "name": "木津川市",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "一般の移住・耐震制度を子育て世帯向け住宅支援としていたためunavailableへ訂正。"
+        },
+        {
+          "code": "26303",
+          "name": "大山崎町",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "一般住宅向け断熱・耐震改修を子育て世帯向け住宅支援としていたためunavailableへ訂正。"
+        },
+        {
+          "code": "26322",
+          "name": "久御山町",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "一般の省エネ・断熱補助から、子育て世帯向け住宅リフォーム補助へ内容と一次出典を訂正。"
+        },
+        {
+          "code": "26343",
+          "name": "井手町",
+          "services": [
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "一般移住支援金から、子育てUターン世帯が申込み可能な公営住宅制度へ内容と一次出典を訂正。"
+        },
+        {
+          "code": "26364",
+          "name": "笠置町",
+          "services": [
+            "sickChildCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "利用条件未公開部分を推測せず区別した記録と、子育て住宅改修・新婚住宅支援の記録は妥当。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "26210",
+          "service": "housingSupport",
+          "before": "verified / 一般の住居確保給付金",
+          "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26211",
+          "service": "housingSupport",
+          "before": "verified / 一般の住居確保給付金",
+          "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26213",
+          "service": "postpartumCare",
+          "before": "verified / 一般訪問・交流行事",
+          "after": "unavailable / 正式な産後ケア利用条件を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26214",
+          "service": "housingSupport",
+          "before": "verified / 一般の移住・耐震制度",
+          "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26303",
+          "service": "housingSupport",
+          "before": "verified / 一般の断熱・耐震制度",
+          "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26322",
+          "service": "housingSupport",
+          "before": "verified / 一般の省エネ・断熱補助",
+          "after": "verified / 子育て応援住宅リフォーム補助",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26343",
+          "service": "housingSupport",
+          "before": "verified / 一般移住支援金",
+          "after": "verified / 子育てUターン世帯向け公営住宅申込",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "auditedAt": "2026-07-24T15:59:42Z",
+      "codes": [
+        "26365",
+        "26366",
+        "26367",
+        "26407",
+        "26463",
+        "26465",
+        "29201",
+        "29202",
+        "29203",
+        "29204"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 2,
+        "workflowRunId": 30107113817,
+        "artifactId": 8602040561,
+        "artifactDigest": "sha256:d5870294f190b00a8607847d690e0d91ec10f61421cc3e9b67b928ff52b6d07a",
+        "postCorrectionWorkflowRunId": 30107561356,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "26365",
+          "name": "和束町",
+          "services": [
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度の産後ケア、誰でも通園関連、子育て住宅リフォーム・新婚住宅支援を確認し、明確な誤りなし。"
+        },
+        {
+          "code": "26366",
+          "name": "精華町",
+          "services": [
+            "schoolMeals",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "学校給食完全無償化の継続を確認。一般住宅向け太陽光等補助を子育て住宅支援としていたためhousingSupportをunavailableへ訂正。"
+        },
+        {
+          "code": "26367",
+          "name": "南山城村",
+          "services": [
+            "sickChildCare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "広域病児保育の対象を生後6か月から小学6年生、所得区分別料金まで公式情報で確定。定住促進奨励金は子育て世帯要件があり妥当。"
+        },
+        {
+          "code": "26407",
+          "name": "京丹波町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度の給食徴収額、産後ケア、誰でも通園、子育て住宅改修支援を照合し、明確な誤りなし。"
+        },
+        {
+          "code": "26463",
+          "name": "伊根町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "誰でも通園月3時間・無料は一致。一般の若年・移住世帯向け定住促進住宅補助を子育て世帯専用としていたためunavailableへ訂正。"
+        },
+        {
+          "code": "26465",
+          "name": "与謝野町",
+          "services": [
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "産後ケア3類型、誰でも通園月10時間、子育て世帯移住定住支援の対象・加算を確認し、明確な誤りなし。"
+        },
+        {
+          "code": "29201",
+          "name": "奈良市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食負担、産後ケア3類型、誰でも通園月10時間、子育て移住定住支援金を確認し一致。"
+        },
+        {
+          "code": "29202",
+          "name": "大和高田市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "小中学校給食費無償化、産後ケア、誰でも通園を確認。子育て世帯専用住宅支援未確認のunavailable判定は妥当。"
+        },
+        {
+          "code": "29203",
+          "name": "大和郡山市",
+          "services": [
+            "schoolMeals",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "小中学校給食費無償化を現行表現へ修正。一般エコ改修を除外し、18歳未満1人につき100万円加算の移住支援へ絞った。"
+        },
+        {
+          "code": "29204",
+          "name": "天理市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食費無償化、産後ケア、誰でも通園、18歳未満1人につき100万円加算の移住支援を確認し一致。"
+        },
+        {
+          "code": "26364",
+          "name": "笠置町",
+          "services": [
+            "sickChildCare"
+          ],
+          "result": "corrected_cross_round",
+          "note": "第2回では条件未確認としていたが、広域連携先の公式情報で生後6か月から小学6年生、料金・利用方法を確認しverifiedへ訂正。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "26366",
+          "service": "housingSupport",
+          "before": "verified / 一般住宅向け太陽光・蓄電設備補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26463",
+          "service": "housingSupport",
+          "before": "verified / 一般の若年・移住世帯向け定住促進住宅補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29203",
+          "service": "housingSupport",
+          "before": "verified / 一般エコ改修と移住支援を混在",
+          "after": "verified / 18歳未満1人につき100万円加算の移住支援に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26364",
+          "service": "sickChildCare",
+          "before": "unavailable / 広域病児保育の条件未確認",
+          "after": "verified / 生後6か月から小学6年生・所得区分別料金を確認",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "26367",
+          "service": "sickChildCare",
+          "before": "verified / 対象年齢を0歳からと推定し料金未確認",
+          "after": "verified / 生後6か月から小学6年生・所得区分別料金を確認",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "auditedAt": "2026-07-24T16:18:52.478Z",
+      "codes": [
+        "29205",
+        "29206",
+        "29207",
+        "29208",
+        "29209",
+        "29210",
+        "29211",
+        "29212",
+        "29322",
+        "29342"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 1,
+        "workflowRunId": 30108243999,
+        "artifactId": 8602506744,
+        "artifactDigest": "sha256:24198f4540cfbc9cb2e5c136cc49e57832fb246b76b20f64ffb3a9edeae3aa14",
+        "postCorrectionWorkflowRunId": 30108538911,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "29205",
+          "name": "橿原市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件・加算のない一般移住支援金を住宅支援から除外。"
+        },
+        {
+          "code": "29206",
+          "name": "桜井市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食支援、産後ケア、誰でも通園、子ども加算付き移住支援・新婚支援を確認し一致。"
+        },
+        {
+          "code": "29207",
+          "name": "五條市",
+          "services": [
+            "childcareFee",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育料・給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない結婚新生活支援を住宅支援から除外。"
+        },
+        {
+          "code": "29208",
+          "name": "御所市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない若年夫婦向け住宅取得補助を除外。"
+        },
+        {
+          "code": "29209",
+          "name": "生駒市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "給食徴収額、産後ケア3類型、誰でも通園月4時間、18歳未満1人100万円加算の移住支援を確認。"
+        },
+        {
+          "code": "29210",
+          "name": "香芝市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費は通常徴収・市負担増額による据置へ表現修正。子ども要件・加算のない一般移住支援金を住宅支援から除外。"
+        },
+        {
+          "code": "29211",
+          "name": "葛城市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "産後ケア、誰でも通園、子ども人数加算付き住宅取得支援・移住支援を確認し一致。"
+        },
+        {
+          "code": "29212",
+          "name": "宇陀市",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度病児保育、給食費無償化、産後ケア、誰でも通園、子ども加算付き定住支援を確認し一致。"
+        },
+        {
+          "code": "29322",
+          "name": "山添村",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "広域病児保育、給食費無償化、産後ケア、誰でも通園基準、子育て加算付き定住支援を確認。"
+        },
+        {
+          "code": "29342",
+          "name": "平群町",
+          "services": [
+            "sickChildCare",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "病児保育、産後ケア、誰でも通園、若年移住・新婚住宅支援を確認し明確な誤りなし。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "29205",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+          "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29207",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+          "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29208",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+          "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29210",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+          "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "auditedAt": "2026-07-24T16:38:01.731Z",
+      "codes": [
+        "29343",
+        "29344",
+        "29345",
+        "29361",
+        "29362",
+        "29363",
+        "29385",
+        "29386",
+        "29401",
+        "29402"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 1,
+        "workflowRunId": 30109417783,
+        "artifactId": 8602877941,
+        "artifactDigest": "sha256:0ab316470c428c472a498bc918d6dd100f71cd26aceede2d81f33d2193f26384",
+        "postCorrectionWorkflowRunId": 30109810744,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "29343",
+          "name": "三郷町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "子ども加算付き空き家改修、子育て世帯家賃助成、産後ケア、誰でも通園を確認し一致。"
+        },
+        {
+          "code": "29344",
+          "name": "斑鳩町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "誰でも通園月10時間と18歳未満1人につき100万円加算の移住支援を確認し一致。"
+        },
+        {
+          "code": "29345",
+          "name": "安堵町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園計画は維持。一般移住・2人以上転入世帯向け制度を住宅支援から除外。"
+        },
+        {
+          "code": "29361",
+          "name": "川西町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "小学校年47,300円徴収・式下中学校無償化継続へ現行化。新婚・一般移住制度を住宅支援から除外。"
+        },
+        {
+          "code": "29362",
+          "name": "三宅町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。一般中古住宅取得支援を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29363",
+          "name": "田原本町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "小学校給食費無償化、中学校負担軽減、産後ケア、誰でも通園、子育て世帯住宅ローン利子補給を確認。"
+        },
+        {
+          "code": "29385",
+          "name": "曽爾村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "専用産後ケア未確認のunavailable判定と、子ども継続加算付き定住促進奨励金を確認。"
+        },
+        {
+          "code": "29386",
+          "name": "御杖村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "専用産後ケア未確認のunavailable判定、誰でも通園、義務教育修了前の子がいる世帯を含む多世代住宅補助を確認。"
+        },
+        {
+          "code": "29401",
+          "name": "高取町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "給食費無償化、訪問型産後ケア、誰でも通園制度基盤、18歳未満を含む世帯への既存住宅購入100万円補助を確認。"
+        },
+        {
+          "code": "29402",
+          "name": "明日香村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "多子給食助成、産後ケア、誰でも通園、18歳未満1人100万円加算の移住支援を確認し一致。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "29345",
+          "service": "housingSupport",
+          "before": "verified / 一般移住支援金・2人以上転入世帯向け家賃補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29361",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない新婚・一般移住制度",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29362",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般中古住宅取得支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "auditedAt": "2026-07-24T17:01:54.451Z",
+      "codes": [
+        "29424",
+        "29425",
+        "29426",
+        "29427",
+        "29441",
+        "29442",
+        "29443",
+        "29444",
+        "29446",
+        "29447"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 2,
+        "workflowRunId": 30110717765,
+        "artifactId": 8603406901,
+        "artifactDigest": "sha256:d624180dfbae24f2f8e468b4aadd614eb5d579e413326b7e4c808ecff3b6c1dc",
+        "postCorrectionWorkflowRunId": 30111369551,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "29424",
+          "name": "上牧町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "誰でも通園・産後ケアを確認。移住支援は令和7年2月期限の過年度案内のみで、令和8年度未確認のunavailable判定は妥当。"
+        },
+        {
+          "code": "29425",
+          "name": "王寺町",
+          "services": [
+            "childcareFee",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "第2子保育料無償化は令和8年度も継続。一般U-40住宅取得支援を、義務教育修了前の子を含む三世代世帯向け住宅取得・リフォーム補助へ訂正。"
+        },
+        {
+          "code": "29426",
+          "name": "広陵町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "誰でも通園の現行条件を確認。一般住宅リフォームは受付終了済みで、子育て住宅支援未確認のunavailable判定は妥当。"
+        },
+        {
+          "code": "29427",
+          "name": "河合町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "誰でも通園は一致。子ども要件のない一般住宅リフォーム助成を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29441",
+          "name": "吉野町",
+          "services": [
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "一時預かりは一致。子ども要件のない一般空き家改修補助を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29442",
+          "name": "大淀町",
+          "services": [
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "令和8年度産後ケアを確認。子ども要件のない結婚新生活支援を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29443",
+          "name": "下市町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "誰でも通園は一致。学校給食は過年度実績と現行未確認を区別しており妥当。一般住宅リフォーム助成を住宅支援カテゴリから除外。"
+        },
+        {
+          "code": "29444",
+          "name": "黒滝村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "給食費全額補助、産後ケア予算、15歳未満の子がいる40歳以下世帯向け住宅支援を確認。"
+        },
+        {
+          "code": "29446",
+          "name": "天川村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "学校給食・産後ケア未確認のunavailable判定、子ども人数による定住促進住宅家賃減免を確認。"
+        },
+        {
+          "code": "29447",
+          "name": "野迫川村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "学校給食費無償、産後ケア・誰でも通園未確認の判定、小学生以下の子を有する転入世帯向け奨励金を確認。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "29425",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般U-40住宅取得支援",
+          "after": "verified / 義務教育修了前の子を含む三世代世帯向け住宅取得・リフォーム補助",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29427",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般住宅リフォーム助成",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29441",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般空き家改修補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29442",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない結婚新生活支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29443",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般住宅リフォーム助成",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "auditedAt": "2026-07-24T17:20:19.362Z",
+      "codes": [
+        "29449",
+        "29450",
+        "29451",
+        "29452",
+        "29453",
+        "30201",
+        "30202",
+        "30203",
+        "30204",
+        "30205"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 10,
+        "errors": 0,
+        "warnings": 3,
+        "workflowRunId": 30112052012,
+        "artifactId": 8603920985,
+        "artifactDigest": "sha256:8ccc274ceeec4e0c51be776825e34621c3535fe3960bb2b1ff2fc2a1e7b06a64",
+        "postCorrectionWorkflowRunId": 30112576181,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "29449",
+          "name": "十津川村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア・誰でも通園の未確認判定は妥当。一般住宅補助を除き、子育て世帯向け地域優良賃貸住宅へ限定。"
+        },
+        {
+          "code": "29450",
+          "name": "下北山村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "給食費無償化、計画上の未実施判定、子ども加算付き住宅取得・改修・新築支援を確認。"
+        },
+        {
+          "code": "29451",
+          "name": "上北山村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育・給食費無償化は一致。子ども要件のない60歳未満定住者向け住宅支援を除外。"
+        },
+        {
+          "code": "29452",
+          "name": "川上村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "無料一時預かりと、令和8年度住宅支援未確認のunavailable判定を確認。"
+        },
+        {
+          "code": "29453",
+          "name": "東吉野村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費半額助成、産後ケア条件未確認の判定は妥当。年齢要件のみの一般空き家改修補助を除外。"
+        },
+        {
+          "code": "30201",
+          "name": "和歌山市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食費無償化、産後ケア、誰でも通園、中学生以下の子を含む三世代住宅助成を確認。"
+        },
+        {
+          "code": "30202",
+          "name": "海南市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。空家改修支援を中学生以下の子を扶養する若者世帯区分へ限定。"
+        },
+        {
+          "code": "30203",
+          "name": "橋本市",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病後児保育休止、給食費無償化、産後ケア、誰でも通園は一致。住宅支援を子育て世帯向け家賃助成へ現行化。"
+        },
+        {
+          "code": "30204",
+          "name": "有田市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "給食費無償化、産後ケア、誰でも通園、若年・子育て世帯加算付き空き家支援と三世代住宅支援を確認。"
+        },
+        {
+          "code": "30205",
+          "name": "御坊市",
+          "services": [
+            "childcareFee",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "保育所給食費・学校給食費無償化、産後ケア、誰でも通園、18歳未満1人100万円加算の移住支援を確認。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "29449",
+          "service": "housingSupport",
+          "before": "verified / 一般の村産材住宅補助等と子育て住宅を混在",
+          "after": "verified / 子育て世帯向け地域優良賃貸住宅に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29451",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない60歳未満定住者向け住宅支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "29453",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない20～40歳移住者向け空き家改修",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30202",
+          "service": "housingSupport",
+          "before": "verified / 一般移住者・新婚世帯を含む空家改修制度を混在",
+          "after": "verified / 中学生以下の子を扶養する若者世帯区分に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30203",
+          "service": "housingSupport",
+          "before": "verified / 一般空き家・年齢要件のみの住宅制度を混在",
+          "after": "verified / 18歳未満の子または妊婦を含む世帯の家賃助成に現行化",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "auditedAt": "2026-07-24T17:36:53.388Z",
+      "codes": [
+        "30206",
+        "30207",
+        "30208",
+        "30209",
+        "30304",
+        "30341",
+        "30343",
+        "30344",
+        "30361"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 9,
+        "errors": 0,
+        "warnings": 3,
+        "workflowRunId": 30113337925,
+        "artifactId": 8604413156,
+        "artifactDigest": "sha256:8f21ffbaeabd608b9a91d08074f102d6e4c99b300a89dfd0da0f3739fa85de4e",
+        "postCorrectionWorkflowRunId": 30113667417,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "30206",
+          "name": "田辺市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。住宅支援を18歳未満1人100万円加算の移住支援金へ限定。"
+        },
+        {
+          "code": "30207",
+          "name": "新宮市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般空き家改修助成を除外。"
+        },
+        {
+          "code": "30208",
+          "name": "紀の川市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。住宅取得奨励金の児童加算10万円を明確化。"
+        },
+        {
+          "code": "30209",
+          "name": "岩出市",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "産後ケア・誰でも通園は一致。給食費は現行負担未確認の警告を維持。一般新婚住宅支援と受付未確認の移住支援を除外。"
+        },
+        {
+          "code": "30304",
+          "name": "紀美野町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育は利用条件未公表のunavailable判定が妥当。給食費無償化、産後ケア、誰でも通園は一致。住宅支援を子育て世帯10万円加算へ限定。"
+        },
+        {
+          "code": "30341",
+          "name": "かつらぎ町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般空き家改修補助を除外。"
+        },
+        {
+          "code": "30343",
+          "name": "九度山町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "no_confirmed_error",
+          "note": "令和8年度給食費徴収、産後ケア、誰でも通園、新婚・子育て世帯向け家賃補助と地域優良賃貸住宅を確認。"
+        },
+        {
+          "code": "30344",
+          "name": "高野町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育料無償化・誰でも通園は一致。産後ケアの令和8年度条件未確認警告は妥当。子ども要件のない一般移住住宅補助を除外。"
+        },
+        {
+          "code": "30361",
+          "name": "湯浅町",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。住宅支援を18歳未満1人100万円加算の移住支援金へ限定。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "30206",
+          "service": "housingSupport",
+          "before": "verified / 子ども加算付き移住支援と一般空き家・新婚制度を混在",
+          "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30207",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない県外移住者向け空き家改修",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30208",
+          "service": "housingSupport",
+          "before": "verified / 一般若年住宅取得支援と児童加算を混在",
+          "after": "verified / 16歳未満児童等の10万円加算を明確化",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30209",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない新婚住宅支援と受付未確認の移住支援",
+          "after": "unavailable / 現行の子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30304",
+          "service": "housingSupport",
+          "before": "verified / 一般・移住・新婚・子育て加算を混在",
+          "after": "verified / 子育て世帯または出産予定世帯の10万円加算に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30341",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般空き家改修・片付け補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30344",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般移住住宅補助",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30361",
+          "service": "housingSupport",
+          "before": "verified / 年齢要件のみの住宅取得支援等を混在",
+          "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "auditedAt": "2026-07-24T17:58:21.324Z",
+      "codes": [
+        "30362",
+        "30366",
+        "30381",
+        "30382",
+        "30383",
+        "30390",
+        "30391",
+        "30392",
+        "30401"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 9,
+        "errors": 0,
+        "warnings": 2,
+        "workflowRunId": 30114670240,
+        "artifactId": 8604926759,
+        "artifactDigest": "sha256:270543418e921c9e75f29ca58f15026fdcd6e5c832d7206713d2ce90451def74",
+        "postCorrectionWorkflowRunId": 30115068206,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "30362",
+          "name": "広川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケアは一致。子ども要件のない一般住宅取得・改修制度を住宅支援から除外。"
+        },
+        {
+          "code": "30366",
+          "name": "有田川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、産後ケア、誰でも通園は一致。一般新築住宅取得給付金を住宅支援から除外。"
+        },
+        {
+          "code": "30381",
+          "name": "美浜町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "御坊広域病児保育を追加。町個別条件未公表の誰でも通園をunavailableへ変更し、一般耐震支援を住宅支援から除外。"
+        },
+        {
+          "code": "30382",
+          "name": "日高町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "御坊広域病児保育を追加。令和7年度給食無償化と令和8年度未確認を区別する既存警告は妥当。"
+        },
+        {
+          "code": "30383",
+          "name": "由良町",
+          "services": [
+            "childMedical",
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "広域病児保育・産後ケアは一致。一般の空き家物件情報制度を住宅費支援から除外。給食は過年度実績と現行未確認を区別。"
+        },
+        {
+          "code": "30390",
+          "name": "印南町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケアは一致。年齢要件のみの若者一般向け家賃・住宅取得助成を除外。"
+        },
+        {
+          "code": "30391",
+          "name": "みなべ町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、産後ケア、誰でも通園は一致。住宅支援を中学生以下の子と同居・扶養する世帯区分へ限定。"
+        },
+        {
+          "code": "30392",
+          "name": "日高川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。住宅支援を中学生以下の子と同居・扶養する世帯区分へ限定。"
+        },
+        {
+          "code": "30401",
+          "name": "白浜町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。移住支援の18歳未満1人100万円加算を明確化。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "30362",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般住宅取得・改修支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30366",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般新築住宅取得給付金",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30381",
+          "service": "sickChildCare",
+          "before": "unavailable / 美浜町民の広域利用を未確認",
+          "after": "verified / 御坊市の病児保育室ひまわりを利用可能",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30381",
+          "service": "temporaryChildcare",
+          "before": "verified / 県の全市町村開始案内のみ",
+          "after": "unavailable / 美浜町の利用者向け個別条件を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30381",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般耐震支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30382",
+          "service": "sickChildCare",
+          "before": "unavailable / 制度記事はあるが条件未確認",
+          "after": "verified / 御坊市の病児保育室ひまわりを利用可能",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30383",
+          "service": "housingSupport",
+          "before": "verified / 一般の空き家バンク情報支援",
+          "after": "unavailable / 子育て世帯専用住宅費支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30390",
+          "service": "housingSupport",
+          "before": "verified / 18～44歳の若者一般向け家賃・住宅取得助成",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30391",
+          "service": "housingSupport",
+          "before": "verified / 年齢要件のみの若者区分と子育て区分を混在",
+          "after": "verified / 中学生以下の子と同居・扶養する世帯区分に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30392",
+          "service": "housingSupport",
+          "before": "verified / 年齢要件のみの若者区分と子育て区分を混在",
+          "after": "verified / 中学生以下の子と同居・扶養する世帯区分に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30401",
+          "service": "housingSupport",
+          "before": "verified / 子ども加算額が不明な一般移住支援表示",
+          "after": "verified / 18歳未満1人100万円加算を明確化",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "auditedAt": "2026-07-24T18:20:05.132Z",
+      "codes": [
+        "30404",
+        "30406",
+        "30421",
+        "30422",
+        "30424",
+        "30427",
+        "30428"
+      ],
+      "structuralAudit": {
+        "result": "passed",
+        "checkedMunicipalities": 7,
+        "errors": 0,
+        "warnings": 0,
+        "workflowRunId": 30116052212,
+        "artifactId": 8605455009,
+        "artifactDigest": "sha256:6a2090559967ef8fde9cb89117363d2950bc22a94f8aab030a2f3285fd186ef3",
+        "postCorrectionWorkflowRunId": 30116481267,
+        "postCorrectionResult": "success",
+        "checks": [
+          "自治体コード・都道府県コード",
+          "必須9制度",
+          "verified/unavailable件数",
+          "task集計・完了位置",
+          "制度主出典とtask公式出典",
+          "公式HTTPS URL・確認日",
+          "verified制度の対象年齢",
+          "過年度・未確認表現"
+        ]
+      },
+      "deepChecks": [
+        {
+          "code": "30404",
+          "name": "上富田町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。住宅支援を18歳未満1人100万円加算の移住支援金へ限定。"
+        },
+        {
+          "code": "30406",
+          "name": "すさみ町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般定住住宅支援を除外。"
+        },
+        {
+          "code": "30421",
+          "name": "那智勝浦町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。子ども要件のない一般空き家改修支援を除外。"
+        },
+        {
+          "code": "30422",
+          "name": "太地町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、誰でも通園は一致。県移住支援事業の18歳未満帯同者加算へ表示を限定。"
+        },
+        {
+          "code": "30424",
+          "name": "古座川町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育料・給食費無償化は維持。子ども要件を確認できない一般移住定住住宅支援を除外。"
+        },
+        {
+          "code": "30427",
+          "name": "北山村",
+          "services": [
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "保育料・給食費無償化は一致。住宅取得・空き家改修の小学生以下1人25万円加算を明確化。"
+        },
+        {
+          "code": "30428",
+          "name": "串本町",
+          "services": [
+            "sickChildCare",
+            "schoolMeals",
+            "postpartumCare",
+            "temporaryChildcare",
+            "housingSupport"
+          ],
+          "result": "corrected",
+          "note": "病児保育、給食費無償化、産後ケア、誰でも通園は一致。子ども要件・加算のない一般住宅・移住支援を除外。"
+        }
+      ],
+      "confirmedErrors": [
+        {
+          "code": "30404",
+          "service": "housingSupport",
+          "before": "verified / 一般紀州材住宅支援と子ども加算未記載の移住支援を混在",
+          "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30406",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般定住住宅支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30421",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない一般空き家改修支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30422",
+          "service": "housingSupport",
+          "before": "verified / 移住支援と空き家バンクを混在し子ども加算不明",
+          "after": "verified / 県移住支援事業の18歳未満帯同者加算に限定",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30424",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件を確認できない一般移住定住住宅支援",
+          "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30427",
+          "service": "housingSupport",
+          "before": "verified / 一般住宅取得・定住住宅の概要のみ",
+          "after": "verified / 小学生以下1人25万円加算の住宅取得・空き家改修支援",
+          "status": "corrected_in_audit_pr_2926"
+        },
+        {
+          "code": "30428",
+          "service": "housingSupport",
+          "before": "verified / 子ども要件のない紀州材住宅支援",
+          "after": "unavailable / 現行要綱に子育て世帯専用住宅支援を確認できない",
+          "status": "corrected_in_audit_pr_2926"
+        }
+      ]
+    }
+  ]
+}
