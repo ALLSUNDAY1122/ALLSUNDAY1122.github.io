@@ -164,11 +164,11 @@ function renderMunicipalities(prefectureCode) {
   elements.prefectureHeading.textContent = prefectureName(prefectureCode);
   elements.prefectureMessage.textContent = list.length
     ? `${list.length}自治体の詳細データを掲載しています。`
-    : '公式リンク・比較データは順次追加します。';
+    : '自治体データの読み込み状態を確認してください。';
   elements.municipalityList.replaceChildren();
   if (!list.length) {
     const empty = document.createElement('p');
-    empty.textContent = '現在、この都道府県の詳細データは未登録です。';
+    empty.textContent = 'この都道府県の自治体データを読み込めませんでした。';
     elements.municipalityList.append(empty);
     return;
   }
@@ -277,7 +277,7 @@ function workStatusCell(status, summary, source = {}) {
   return `<span class="status">${escapeHtml(presentation.label)}</span><span class="cell-main">${escapeHtml(summary || '内容未登録')}</span><span class="cell-detail">${escapeHtml(presentation.detail)}</span>${sourceLink(source)}`;
 }
 function unavailableCell(summary, source = {}) {
-  return `<span class="status no">制度なし・対象外</span><span class="cell-main">${escapeHtml(summary)}</span>${sourceLink(source)}`;
+  return `<span class="status review">公式情報で詳細未確認</span><span class="cell-main">${escapeHtml(summary)}</span><span class="cell-detail">制度がないとは限りません。現行条件は自治体の公式サイトまたは担当窓口で確認してください。</span>${sourceLink(source)}`;
 }
 function sourceLink(source = {}) {
   if (!source.url) return '';
@@ -340,7 +340,7 @@ function runSearch() {
   if (!query) return;
   const results = state.municipalities.filter((municipality) => `${municipality.prefecture}${municipality.name}`.toLowerCase().includes(query));
   if (!results.length) {
-    elements.searchResults.textContent = '詳細データ登録済みの自治体には見つかりませんでした。';
+    elements.searchResults.textContent = '入力内容に一致する自治体が見つかりませんでした。';
     return;
   }
   results.forEach((municipality) => {
