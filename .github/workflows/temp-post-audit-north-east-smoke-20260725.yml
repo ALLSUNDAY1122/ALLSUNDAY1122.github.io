@@ -11,34 +11,46 @@ jobs:
   smoke-public:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout latest main snapshot
-        uses: actions/checkout@v4
-        with:
-          ref: main
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Verify published GitHub Pages site
-        working-directory: jichitai-compare
-        run: npm run smoke:public
-      - name: Verify updated North and East pages
-        working-directory: jichitai-compare
+      - name: Verify audit corrections on published site
         run: |
           node <<'NODE'
-          const fs = require('fs');
           const base = 'https://allsunday1122.github.io/jichitai-compare';
-          const local = JSON.parse(fs.readFileSync('data/generated/municipalities.json','utf8'));
+          const sleep = (ms) => new Promise(r => setTimeout(r, ms));
           const codes = [
             '02411','03203','03206','03302','07202','07212','07362','07368','07405','07408','07501','07547',
             '10424','10426','12203','13123','15100','15586','20303','20305','20306'
           ];
-          const map = new Map(local.municipalities.map(x => [x.code,x]));
+          let publicData;
+          for (let attempt = 1; attempt <= 20; attempt++) {
+            const res = await fetch(`${base}/data/generated/municipalities.json?v=${Date.now()}`);
+            if (res.ok) {
+              const candidate = await res.json();
+              const byCode = new Map(candidate.municipalities.map(x => [x.code, x]));
+              const ready =
+                byCode.get('10424')?.services?.postpartumCare?.status === 'verified' &&
+                byCode.get('10426')?.services?.postpartumCare?.status === 'verified' &&
+                byCode.get('20303')?.services?.sickChildCare?.status === 'verified' &&
+                byCode.get('20305')?.services?.sickChildCare?.status === 'verified' &&
+                byCode.get('20306')?.services?.sickChildCare?.status === 'verified' &&
+                byCode.get('15586')?.services?.childcareFee?.status === 'verified' &&
+                byCode.get('15586')?.services?.temporaryChildcare?.status === 'verified';
+              if (ready) { publicData = candidate; break; }
+            }
+            await sleep(15000);
+          }
+          if (!publicData) throw new Error('published correction states did not become available');
+          const byCode = new Map(publicData.municipalities.map(x => [x.code, x]));
+          const serviceCount = publicData.municipalities.reduce((n, x) => n + Object.keys(x.services || {}).length, 0);
+          if (publicData.municipalities.length !== 1741 || serviceCount !== 15669) throw new Error('published nationwide totals changed');
           for (const code of codes) {
-            if (!map.has(code)) throw new Error(`${code}: local municipality missing`);
+            if (!byCode.has(code)) throw new Error(`${code}: public municipality missing`);
             const res = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`);
             if (!res.ok) throw new Error(`${code}: HTTP ${res.status}`);
             await res.arrayBuffer();
           }
-          console.log(`verified ${codes.length} updated North/East public page responses`);
+          console.log(`verified corrections and ${codes.length} updated public pages`);
           NODE
