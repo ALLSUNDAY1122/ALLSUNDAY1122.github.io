@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-rough-validation-cycle-09-review-20260725",
+  "auditId": "west-b-rough-validation-cycle-09-20260725",
+  "sessionId": "west-b",
+  "cycle": 9,
+  "plannedCycles": 10,
+  "reviewedAt": "2026-07-25T04:44:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "serviceCount": 225,
+    "checkedUrlCount": 250,
+    "prefectureCodes": [
+      "45",
+      "47"
+    ],
+    "prefectureCounts": {
+      "45": 9,
+      "47": 16
+    }
+  },
+  "results": {
+    "structuralErrorCount": 0,
+    "detectedResearchContentErrorCount": 1,
+    "correctedResearchContentErrorCount": 1,
+    "detectedSourceMaintenanceIssueCount": 3,
+    "correctedSourceMaintenanceIssueCount": 3,
+    "networkOnlyWarningCount": 1,
+    "manualSpotCheckCount": 5,
+    "manualSpotCheckFailureCount": 0
+  },
+  "researchContentCorrections": [
+    {
+      "code": "47302",
+      "name": "大宜味村",
+      "service": "childcareFee",
+      "finding": "旧案内失効後の現行規則で、0～5歳児の保育料と村内児童の給食費が無償であることを確認し、一般的な国制度中心の登録内容を村独自の現行条件へ訂正",
+      "correctionRef": "17eab9911619db599b47ff2bb80fcd2809277fc1"
+    }
+  ],
+  "sourceMaintenanceCorrections": [
+    {
+      "code": "45442",
+      "name": "日之影町",
+      "service": "sickChildCare",
+      "oldUrl": "https://www.town.hinokage.lg.jp/docs/2025032100014/file_contents/2025.pdf",
+      "newUrl": "https://www.town.hinokage.lg.jp/docs/2016052500038/index.html",
+      "correctionRef": "17eab9911619db599b47ff2bb80fcd2809277fc1"
+    },
+    {
+      "code": "45442",
+      "name": "日之影町",
+      "service": "childcareFee",
+      "oldUrl": "https://www.town.hinokage.lg.jp/docs/2025032100014/file_contents/2025.pdf",
+      "newUrl": "https://www.town.hinokage.lg.jp/docs/2016022500143/",
+      "correctionRef": "17eab9911619db599b47ff2bb80fcd2809277fc1"
+    },
+    {
+      "code": "45443",
+      "name": "五ヶ瀬町",
+      "service": "sickChildCare",
+      "oldUrl": "https://www.town.gokase.miyazaki.jp/material/files/group/5/gokasekodomokeikaku_soan.pdf",
+      "newUrl": "https://www.town.gokase.miyazaki.jp/material/files/group/5/gokase_kodomokeikaku.pdf",
+      "correctionRef": "17eab9911619db599b47ff2bb80fcd2809277fc1"
+    }
+  ],
+  "networkOnlyWarnings": [
+    {
+      "code": "47211",
+      "name": "沖縄市",
+      "service": "temporaryChildcare",
+      "reason": "監査時404だったが、同一公式URLの令和8年度こども誰でも通園制度案内を再確認できたため一時的応答と判定"
+    }
+  ],
+  "manualSpotChecks": [
+    {
+      "code": "45405",
+      "name": "川南町",
+      "service": "schoolMeals",
+      "result": "passed",
+      "finding": "町立小中学校の学校給食費を無償化し、保護者負担なしであることを公式ページで確認"
+    },
+    {
+      "code": "45431",
+      "name": "美郷町",
+      "service": "housingSupport",
+      "result": "passed",
+      "finding": "空き家バンク物件の改修費を2分の1・上限50万円補助する制度を確認"
+    },
+    {
+      "code": "47205",
+      "name": "宜野湾市",
+      "service": "childMedical",
+      "result": "passed",
+      "finding": "0歳から18歳年度末までの入院・通院保険診療自己負担助成を確認"
+    },
+    {
+      "code": "47211",
+      "name": "沖縄市",
+      "service": "temporaryChildcare",
+      "result": "passed",
+      "finding": "未就園の生後6か月から3歳未満児が公立4園で月10時間まで利用できる令和8年度制度を確認"
+    },
+    {
+      "code": "47301",
+      "name": "国頭村",
+      "service": "bulkyWaste",
+      "result": "passed",
+      "finding": "粗大・不燃ごみをやんばる美化センターへ直接搬入できる現行案内を確認"
+    }
+  ],
+  "conclusion": "passed_after_correction"
+}

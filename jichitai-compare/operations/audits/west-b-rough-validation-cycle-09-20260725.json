@@ -1,0 +1,456 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycle-09-20260725",
+  "sessionId": "west-b",
+  "cycle": 9,
+  "plannedCycles": 10,
+  "auditedAt": "2026-07-25T04:11:00+09:00",
+  "scope": {
+    "municipalityCount": 25,
+    "codes": [
+      "45405",
+      "45406",
+      "45421",
+      "45429",
+      "45430",
+      "45431",
+      "45441",
+      "45442",
+      "45443",
+      "47201",
+      "47205",
+      "47207",
+      "47208",
+      "47209",
+      "47210",
+      "47211",
+      "47212",
+      "47213",
+      "47214",
+      "47215",
+      "47301",
+      "47302",
+      "47303",
+      "47306",
+      "47308"
+    ],
+    "names": [
+      "川南町",
+      "都農町",
+      "門川町",
+      "諸塚村",
+      "椎葉村",
+      "美郷町",
+      "高千穂町",
+      "日之影町",
+      "五ヶ瀬町",
+      "那覇市",
+      "宜野湾市",
+      "石垣市",
+      "浦添市",
+      "名護市",
+      "糸満市",
+      "沖縄市",
+      "豊見城市",
+      "うるま市",
+      "宮古島市",
+      "南城市",
+      "国頭村",
+      "大宜味村",
+      "東村",
+      "今帰仁村",
+      "本部町"
+    ],
+    "prefectureCodes": [
+      "45",
+      "47"
+    ],
+    "prefectureCounts": {
+      "45": 9,
+      "47": 16
+    },
+    "serviceCount": 225
+  },
+  "methodology": [
+    "既存第1〜8回監査の200自治体を除外し、担当コード順で次の25自治体を選定",
+    "自治体コード・都道府県コード・自治体名・公式URLを確認",
+    "必須9制度、状態、要約、主出典URL、確認日を確認",
+    "公式URL25件と制度主出典225件をHTTP取得",
+    "5自治体を手動抜き取り候補として記録"
+  ],
+  "priorAuditedMunicipalityCount": 200,
+  "remainingBeforeCycleCount": 50,
+  "structuralErrorCount": 0,
+  "structuralErrors": [],
+  "networkCheckedUrlCount": 250,
+  "networkWarningCount": 5,
+  "networkWarnings": [
+    {
+      "code": "45442",
+      "name": "日之影町",
+      "field": "services.sickChildCare.source",
+      "service": "sickChildCare",
+      "url": "https://www.town.hinokage.lg.jp/docs/2025032100014/file_contents/2025.pdf",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.hinokage.lg.jp/docs/2025032100014/file_contents/2025.pdf",
+      "attempt": 2
+    },
+    {
+      "code": "45442",
+      "name": "日之影町",
+      "field": "services.childcareFee.source",
+      "service": "childcareFee",
+      "url": "https://www.town.hinokage.lg.jp/docs/2025032100014/file_contents/2025.pdf",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.hinokage.lg.jp/docs/2025032100014/file_contents/2025.pdf",
+      "attempt": 2
+    },
+    {
+      "code": "45443",
+      "name": "五ヶ瀬町",
+      "field": "services.sickChildCare.source",
+      "service": "sickChildCare",
+      "url": "https://www.town.gokase.miyazaki.jp/material/files/group/5/gokasekodomokeikaku_soan.pdf",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.town.gokase.miyazaki.jp/material/files/group/5/gokasekodomokeikaku_soan.pdf",
+      "attempt": 2
+    },
+    {
+      "code": "47211",
+      "name": "沖縄市",
+      "field": "services.temporaryChildcare.source",
+      "service": "temporaryChildcare",
+      "url": "https://www.city.okinawa.okinawa.jp/k026/contents/p00022.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.city.okinawa.okinawa.jp/k026/contents/p00022.html",
+      "attempt": 2
+    },
+    {
+      "code": "47302",
+      "name": "大宜味村",
+      "field": "services.childcareFee.source",
+      "service": "childcareFee",
+      "url": "https://www.vill.ogimi.okinawa.jp/soshiki/jumin_fukushi/gyomu/kosodate/1317.html",
+      "status": 404,
+      "ok": false,
+      "finalUrl": "https://www.vill.ogimi.okinawa.jp/soshiki/jumin_fukushi/gyomu/kosodate/1317.html",
+      "attempt": 2
+    }
+  ],
+  "manualSpotCheckCandidates": [
+    {
+      "code": "45405",
+      "name": "川南町",
+      "prefectureCode": "45",
+      "officialUrl": "https://www.town.kawaminami.miyazaki.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで保険診療の自己負担を助成し窓口負担なし",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/4/1340.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生まで病児・病後児保育を実施",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/4/7655.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "保育料を国基準の5割程度へ軽減し、第3子以降を無償化",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/4/1325.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校の学校給食費を無償化し保護者負担なし",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/12/7967.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "unavailable",
+          "summary": "町民健康課母子保健係が産後ケア事業を所管するが、2026年度の利用条件を公式公開情報で確定できない",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/1.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保護者の病気・出産等で家庭養育が困難な場合に短期・夜間の預かりを提供",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/4/1341.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世代の持家取得に年齢区分に応じて最大100万円を助成",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/2/8962.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ処理券を購入し坂の上不燃物等中継施設へ直接搬入",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/15/1391.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・ため池・高潮等を掲載した防災ハザードマップを公開",
+          "sourceUrl": "https://www.town.kawaminami.miyazaki.jp/soshiki/1/12012.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "45431",
+      "name": "美郷町",
+      "prefectureCode": "45",
+      "officialUrl": "https://www.town.miyazaki-misato.lg.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から中学校卒業まで保険診療の自己負担を助成し窓口負担なし",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/kiji003148/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "宮崎県内の病児・病後児保育利用料を1日2,000円まで補助",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/kiji0031047/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "保育料を軽減し、第2子半額・第3子以降無料",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/kiji003291/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町内幼稚園・小学校・中学校の学校給食費の保護者負担を免除",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/kiji003291/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の産婦へ宿泊・日帰り・訪問型を合計最大4回提供",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/kiji003856/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年度の一時預かり・こども誰でも通園制度の対象・上限・料金・申込み方法を公式公開情報で確定できない",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/list00113.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "空き家バンク物件のリフォーム費を2分の1・上限50万円補助",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/kiji003289/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "おおむね80cm以上の家具等は粗大ごみとして施設へ直接持込み",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/kiji003161/index.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "PDF版・Web版の防災ハザードマップと避難所情報を公開",
+          "sourceUrl": "https://www.town.miyazaki-misato.lg.jp/bousai/kiji003183/index.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "47205",
+      "name": "宜野湾市",
+      "prefectureCode": "47",
+      "officialUrl": "https://www.city.ginowan.lg.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から高校生年代まで入院・通院の保険診療自己負担分を助成",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/soshiki/fukushi/3/1/1/2/9333.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "市内3施設で病児・病後児保育を実施し原則1日2,000円",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/kosodate_kyoiku/kosodate/4/17761.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等と非課税世帯0～2歳児等の保育料・施設利用料を無償化",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/soshiki/kodomo/2/1_3/19863.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費を無償化し、中学校は所得要件を満たす世帯へ実費援助",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/kosodate_kyoiku/12676.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・通所・訪問型の産後ケアを合計7回まで提供",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/kosodate_kyoiku/ninshin_shussan/2/9313.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が月10時間、1時間300円で誰でも通園制度を利用可能",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/soshiki/kodomo/2/kodomodaredemo/20022.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "離職・収入減等で住居喪失のおそれがある世帯へ家賃相当額を原則3か月支給",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/soshiki/fukushi/6/1/3/6280.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは電話又は窓口で事前申込みし、処理券を貼って戸別収集",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/kurashi_tetsuzuki/sumai/1/3596.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波浸水・土砂災害等の危険区域と避難所・避難路を掲載した総合防災マップを公開",
+          "sourceUrl": "https://www.city.ginowan.lg.jp/soshiki/somu/4/2/torikumi/2442.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "47211",
+      "name": "沖縄市",
+      "prefectureCode": "47",
+      "officialUrl": "https://www.city.okinawa.okinawa.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで保険診療の自己負担額を助成",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k028/kosodate/kosodateshien/iryouhijosei/213/18583.html",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "小学3年生までの病児・病後児を2施設で一時保育",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k027-003/kosodate/kosodateshien/shienservice/2733.html",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等と住民税非課税世帯の0～2歳児等の保育料を無償化",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k027/kosodate/kosodateshien/shienservice/2215622157.html",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "中学生の給食費半額支援と2026年度の第3子以降給食費助成を実施",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k067-001/contents/p00001.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ宿泊・通所・訪問型を合計5回まで提供",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k029-001/kosodate/ninshinshussan/ninsanfushien/20290.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児が公立4園で月10時間まで利用可能",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k026/contents/p00022.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "家賃補助と転居費用補助の住居確保給付金を実施",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k021/kenkou/fukushiippan/juutakushien/p00001.html",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "オンラインまたは電話で予約し、処理券を貼って戸別収集",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k017/contents/p00095.html",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "風水害・地震・津波・洪水浸水想定等の防災マップを公開",
+          "sourceUrl": "https://www.city.okinawa.okinawa.jp/k002-001/anshin/bousai/bousai/hinan/506.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "47301",
+      "name": "国頭村",
+      "prefectureCode": "47",
+      "officialUrl": "https://www.vill.kunigami.okinawa.jp/",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から高校卒業年度末まで通院・入院の保険診療自己負担を助成",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/birth/childcare/",
+          "checkedAt": "2026-07-24"
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "やんばる9町村広域ファミリーサポートで病児・病後児の預かりに対応",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/birth/childcare/support2/support2-1/",
+          "checkedAt": "2026-07-24"
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "村内乳幼児のこども園・保育所保育料と延長・預かり保育料を無償化",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/i_kyouiku/%E8%AA%8D%E5%AE%9A%E3%81%93%E3%81%A9%E3%82%82%E5%9C%92%E5%8F%8A%E3%81%B3%E4%BF%9D%E8%82%B2%E6%89%80%E5%88%A9%E7%94%A8%E8%80%85%E8%B2%A0%E6%8B%85%E9%87%91%E7%AD%89%E7%84%A1%E5%84%9F%E5%8C%96%E3%81%AB/",
+          "checkedAt": "2026-07-24"
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "村内小中学校の学校給食費を無料化",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/teijyuusien/",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・通所・訪問型を合計5回まで提供",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/birth/childbirth/",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満児がくにがみこども園で月10時間利用可能",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/i_kyouiku/%E3%81%93%E3%81%A9%E3%82%82%E8%AA%B0%E3%81%A7%E3%82%82%E9%80%9A%E5%9C%92%E5%88%B6%E5%BA%A6%EF%BC%88%E4%B9%B3%E5%85%90%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E6%94%AF%E6%8F%B4%E7%B5%A6%E4%BB%98%EF%BC%89/",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "所得等の要件に基づき村営住宅の入居者を募集",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/category/k_jyumin/",
+          "checkedAt": "2026-07-24"
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみはやんばる美化センターへ分別して直接搬入可能",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/sekaisizenisan/%E5%B9%B4%E6%9C%AB%E3%83%BB%E5%B9%B4%E5%A7%8B%E3%81%AE%E3%82%B4%E3%83%9F%E5%8F%8E%E9%9B%86%E5%8F%8A%E3%81%B3%E5%80%8B%E4%BA%BA%E6%90%AC%E5%85%A5%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6-4/",
+          "checkedAt": "2026-07-24"
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "津波・洪水・土砂災害等の国頭村防災マップと防災計画を公開",
+          "sourceUrl": "https://www.vill.kunigami.okinawa.jp/bousai/",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    }
+  ]
+}
