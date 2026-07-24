@@ -34,7 +34,7 @@ on:
 
 concurrency:
   group: yorugatari-engagement-audit
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -72,6 +72,7 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const site = 'yorugatari';
+          const release = '20260724-001';
           const staticFiles = ['index.html','5min-horror.html','bedtime-horror.html','archive.html','about.html','privacy.html','terms.html','contact.html'];
           for (const file of staticFiles) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
@@ -80,13 +81,20 @@ jobs:
               : file === 'bedtime-horror.html'
                 ? '20260724-005'
                 : '20260723-003';
-            if (!html.includes(`assets/analytics.js?v=${expectedVersion}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
+            if (!html.includes(`assets/analytics.js?v=${expectedVersion}&r=${release}`) || html.includes('assets/engagement.js')) throw new Error(`Static runtime mismatch: ${file}`);
           }
           for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
             if (!html.includes('assets/landing-share.js?v=20260724-002')) throw new Error(`Landing share runtime mismatch: ${file}`);
-            if (!html.includes('assets/landing-start-20260724-001.js')) throw new Error(`Landing start runtime mismatch: ${file}`);
+            if (!html.includes(`assets/landing-start-20260724-001.js?r=${release}`)) throw new Error(`Landing start runtime mismatch: ${file}`);
             if (!html.includes('特集単位の合計だけを匿名で集計します')) throw new Error(`Landing privacy copy mismatch: ${file}`);
+          }
+          const runtimeFiles = ['analytics.js', 'engagement.js', 'landing-start-20260724-001.js'];
+          for (const file of runtimeFiles) {
+            const runtime = fs.readFileSync(path.join(site, 'assets', file), 'utf8');
+            for (const token of ['isAutomatedRequest', 'HeadlessChrome', 'automatedQuery']) {
+              if (!runtime.includes(token)) throw new Error(`Automated traffic filter missing from ${file}: ${token}`);
+            }
           }
           const landingStart = fs.readFileSync(path.join(site, 'assets', 'landing-start-20260724-001.js'), 'utf8');
           for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', "const VERSION = '20260724-001'", 'window.YORUGATARI_LANDING_START', 'sessionStorage.setItem(storageKey']) {
@@ -96,27 +104,27 @@ jobs:
           if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
           for (const file of stories) {
             const html = fs.readFileSync(path.join(site, 'stories', file), 'utf8');
-            if (!html.includes('../assets/engagement.js?v=20260723-003') || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
+            if (!html.includes(`../assets/engagement.js?v=20260723-003&r=${release}`) || html.includes('../assets/analytics.js')) throw new Error(`Story runtime mismatch: ${file}`);
             if ((html.match(/href=["']\.\.\/5min-horror\.html["']/g) || []).length !== 1) throw new Error(`Five-minute landing link mismatch: ${file}`);
             if ((html.match(/href=["']\.\.\/bedtime-horror\.html["']/g) || []).length !== 1) throw new Error(`Bedtime landing link mismatch: ${file}`);
           }
           const privacy = fs.readFileSync(path.join(site, 'privacy.html'), 'utf8');
-          if (!privacy.includes('固定キャンペーンコード') || !privacy.includes('登録済みコードに一致しない値は破棄') || !privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Privacy campaign or landing conversion disclosure is missing');
+          if (!privacy.includes('固定キャンペーンコード') || !privacy.includes('登録済みコードに一致しない値は破棄') || !privacy.includes('開いた作品名や作品URLはこの集計へ含めません') || !privacy.includes('自動監査、Lighthouse、ヘッドレスブラウザ')) throw new Error('Privacy campaign, conversion, or audit-filter disclosure is missing');
           const notFound = fs.readFileSync('404.html', 'utf8');
-          if (!notFound.includes('/yorugatari/assets/analytics.js?v=20260723-003')) throw new Error('404 runtime mismatch');
+          if (!notFound.includes(`/yorugatari/assets/analytics.js?v=20260723-003&r=${release}`)) throw new Error('404 runtime mismatch');
           NODE
 
       - name: Commit normalized pages
         shell: bash
         run: |
           if git diff --quiet -- 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories; then
-            echo "Campaign, landing, and story circulation are already normalized."
+            echo "Campaign, landing, story circulation, and audit filtering are already normalized."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add 404.html yorugatari/index.html yorugatari/5min-horror.html yorugatari/bedtime-horror.html yorugatari/archive.html yorugatari/about.html yorugatari/privacy.html yorugatari/terms.html yorugatari/contact.html yorugatari/stories
-          git commit -m "Normalize Yorugatari campaign, landing, and story circulation [skip ci]"
+          git commit -m "Normalize Yorugatari audit-filtered analytics [skip ci]"
           for attempt in 1 2 3 4 5; do
             if git pull --rebase origin main && git push origin HEAD:main; then
               exit 0
