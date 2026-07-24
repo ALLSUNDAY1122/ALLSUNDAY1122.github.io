@@ -20,6 +20,7 @@ on:
       - yorugatari/tools/external-launch-status.json
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/analytics-snapshot.mjs
+      - yorugatari/tools/analytics-clean-snapshot.mjs
       - yorugatari/tools/landing-conversion-snapshot.mjs
       - yorugatari/tools/build-analytics-insights.mjs
       - .github/workflows/yorugatari-analytics-snapshot.yml
@@ -51,6 +52,7 @@ jobs:
         shell: bash
         run: |
           node --check yorugatari/tools/analytics-snapshot.mjs
+          node --check yorugatari/tools/analytics-clean-snapshot.mjs
           node --check yorugatari/tools/landing-conversion-snapshot.mjs
           node --check yorugatari/tools/build-analytics-insights.mjs
           node --check yorugatari/assets/analytics.js
@@ -72,9 +74,11 @@ jobs:
             if (row.status === 'ready_not_posted' && (row.publishedAt || row.postUrl)) throw new Error(`Unposted campaign contains publication evidence: ${row.id}`);
           }
           const runtime = fs.readFileSync('yorugatari/assets/landing-start-20260724-001.js', 'utf8');
-          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', 'window.YORUGATARI_LANDING_START']) {
+          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', 'window.YORUGATARI_LANDING_START', 'isAutomatedRequest']) {
             if (!runtime.includes(token)) throw new Error(`Missing landing conversion token: ${token}`);
           }
+          const analytics = fs.readFileSync('yorugatari/assets/analytics.js', 'utf8');
+          if (!analytics.includes('isAutomatedRequest') || !analytics.includes('if (!isYorugatari || automated) return')) throw new Error('Automated analytics exclusion is missing');
           for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
             const html = fs.readFileSync(`yorugatari/${file}`, 'utf8');
             if (!html.includes('assets/landing-start-20260724-001.js')) throw new Error(`Landing conversion runtime not loaded: ${file}`);
@@ -83,9 +87,10 @@ jobs:
           if (!privacy.includes('開いた作品名や作品URLはこの集計へ含めません')) throw new Error('Landing conversion privacy disclosure is missing');
           NODE
 
-      - name: Generate analytics snapshots and combined insights
+      - name: Generate raw, audit-filtered, and conversion snapshots
         run: |
           node yorugatari/tools/analytics-snapshot.mjs
+          node yorugatari/tools/analytics-clean-snapshot.mjs
           node yorugatari/tools/landing-conversion-snapshot.mjs
           node yorugatari/tools/build-analytics-insights.mjs
 
@@ -94,34 +99,28 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          cp yorugatari/tools/analytics-snapshot-latest.json /tmp/analytics-snapshot-latest.json
-          cp yorugatari/tools/analytics-history.json /tmp/analytics-history.json
-          cp yorugatari/tools/analytics-insights-latest.md /tmp/analytics-insights-latest.md
-          cp yorugatari/tools/landing-conversion-baseline.json /tmp/landing-conversion-baseline.json
-          cp yorugatari/tools/landing-conversion-latest.json /tmp/landing-conversion-latest.json
-          cp yorugatari/tools/landing-conversion-history.json /tmp/landing-conversion-history.json
+          for file in \
+            analytics-snapshot-latest.json analytics-history.json analytics-insights-latest.md \
+            analytics-clean-baseline.json analytics-clean-latest.json analytics-clean-history.json \
+            landing-conversion-baseline.json landing-conversion-latest.json landing-conversion-history.json; do
+            cp "yorugatari/tools/$file" "/tmp/$file"
+          done
           saved=false
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard origin/main
-            cp /tmp/analytics-snapshot-latest.json yorugatari/tools/analytics-snapshot-latest.json
-            cp /tmp/analytics-history.json yorugatari/tools/analytics-history.json
-            cp /tmp/analytics-insights-latest.md yorugatari/tools/analytics-insights-latest.md
-            cp /tmp/landing-conversion-baseline.json yorugatari/tools/landing-conversion-baseline.json
-            cp /tmp/landing-conversion-latest.json yorugatari/tools/landing-conversion-latest.json
-            cp /tmp/landing-conversion-history.json yorugatari/tools/landing-conversion-history.json
-            git add \
-              yorugatari/tools/analytics-snapshot-latest.json \
-              yorugatari/tools/analytics-history.json \
-              yorugatari/tools/analytics-insights-latest.md \
-              yorugatari/tools/landing-conversion-baseline.json \
-              yorugatari/tools/landing-conversion-latest.json \
-              yorugatari/tools/landing-conversion-history.json
+            for file in \
+              analytics-snapshot-latest.json analytics-history.json analytics-insights-latest.md \
+              analytics-clean-baseline.json analytics-clean-latest.json analytics-clean-history.json \
+              landing-conversion-baseline.json landing-conversion-latest.json landing-conversion-history.json; do
+              cp "/tmp/$file" "yorugatari/tools/$file"
+              git add "yorugatari/tools/$file"
+            done
             if git diff --cached --quiet; then
               saved=true
               break
             fi
-            git commit -m "Record Yorugatari analytics and landing conversion [skip ci]"
+            git commit -m "Record Yorugatari raw and audit-filtered analytics [skip ci]"
             if git push origin HEAD:main; then
               saved=true
               break
@@ -138,6 +137,9 @@ jobs:
             yorugatari/tools/analytics-snapshot-latest.json
             yorugatari/tools/analytics-history.json
             yorugatari/tools/analytics-insights-latest.md
+            yorugatari/tools/analytics-clean-baseline.json
+            yorugatari/tools/analytics-clean-latest.json
+            yorugatari/tools/analytics-clean-history.json
             yorugatari/tools/landing-conversion-baseline.json
             yorugatari/tools/landing-conversion-latest.json
             yorugatari/tools/landing-conversion-history.json
