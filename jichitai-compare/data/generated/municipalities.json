@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1599,
+    "municipalityCount": 1601,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -284492,6 +284492,180 @@
       }
     },
     {
+      "code": "46217",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "name": "曽於市",
+      "officialUrl": "https://www.city.soo.kagoshima.jp/",
+      "status": "verified",
+      "summary": "必須9制度を曽於市公式情報で調査。7制度をverified、2026年度の具体的条件を確定できない学校給食費とこども誰でも通園制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高校卒業年齢まで保険診療の自己負担額を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "曽於市に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "support": "医療・薬局等の保険診療に係る一部負担金を助成",
+            "excluded": "食事療養費、学校管理下の災害共済給付、交通事故等の第三者給付対象分等は除外",
+            "application": "受給資格者証の交付手続き後、県内受診時の現物給付または償還払いの方法で給付"
+          },
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/zidouhukusi/kodomoiryouhi.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生までを2施設で病後児保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "曽於市在住の生後6か月から12歳までで、病気の回復期にあり家庭保育が困難な子ども",
+            "facilities": "きらりの星こども園内トゥインクル、覚照こども園内キッズビハーラ",
+            "hours": "トゥインクルは平日8時から17時、キッズビハーラは平日9時から17時",
+            "fee": "施設ごとに設定。生活保護・住民税非課税世帯は事前に減免証明書を取得すると無料",
+            "application": "実施施設へ予約し、市の案内する利用申込・医師確認等の手続きを行う"
+          },
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/zidouhukusi/2021-0316-1524-26.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "2025年4月から0～5歳児の保育料を全世帯で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "free": "国制度の3～5歳児無償化に加え、市独自に0～2歳児も無償化し全ての年齢の保育料を無料化",
+            "target": "曽於市に住所があり、保育園・認定こども園等を利用する0～5歳児",
+            "actualCosts": "3～5歳児の副食費やその他の実費は施設へ支払う必要がある",
+            "application": "保育所等の利用申込みと教育・保育給付認定手続きを行う"
+          },
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/hoikuenn/hoikuryoumusyouka.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "学校給食費全額補助の実績は確認できるが、2026年度の継続条件を確定できない",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "confirmed": "令和6年度から市内小中学校在籍児童生徒等の学校給食費を全額補助し、令和7年度も保護者負担0円としていた",
+            "unconfirmed": "令和8年度の全額補助継続、対象期間、市外通学者等の対象条件、申請・給付・精算方法",
+            "contact": "曽於市教育委員会教育総務課学校給食係へ確認"
+          },
+          "notes": [
+            "令和7年度までの全額補助を、令和8年度の継続根拠として扱わない。"
+          ],
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/gakkoukyuusyoku/2025-0718-1040-30.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・日帰り・訪問型産後ケアを無料で提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "曽於市に住所があり、産後ケアを必要とする産後1年未満の母親と乳児",
+            "types": "宿泊型、日帰り型、アウトリーチ型（訪問）",
+            "usageLimit": "宿泊・日帰りは産後1年未満で原則7日以内、訪問は原則5回以内",
+            "fee": "利用料無料。おむつ代、ミルク代等の実費が生じる場合あり",
+            "application": "こども家庭センターへ事前申請する"
+          },
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/kodomonokennkou/2020-0317-1645-15.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "2026年4月開始と対象年齢は確認できるが、利用条件の詳細を確定できない",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "confirmed": "保育所・認定こども園に入所していない生後6か月から満3歳未満を対象に、令和8年4月から制度を開始",
+            "unconfirmed": "月間利用上限、利用料金、実施施設、利用可能時間、定員、面談・予約・取消方法",
+            "contact": "曽於市こども未来課へ確認"
+          },
+          "notes": [
+            "制度開始と対象年齢を、未掲載の料金・施設・時間等の根拠として扱わない。"
+          ],
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kosodatekyouiku/hoikuenn/kodomodaredemotuuenseido.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "住宅・空き家リフォーム費10％、上限15～50万円等を補助",
+          "details": {
+            "target": "自己居住住宅または改修後に居住する空き家を、市内登録工事店で20万円以上改修する人",
+            "general": "居住住宅は工事費10％、上限15万円",
+            "vacantHouse": "市内居住者の空き家改修は10％・上限30万円、市外居住者は10％・上限50万円",
+            "householdGoods": "空き家の家財撤去費50％、上限7万円",
+            "conditions": "工事着手1か月前までの事前審査申請が必要で、予算到達時に終了"
+          },
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kurashisumai/zyuutakuhozyo/rifo-mu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "指定袋に入らない粗大ごみを曽於市クリーンセンターへ直接搬入",
+          "details": {
+            "method": "家具・自転車等の粗大ごみは自治会収集所へ出さず、曽於市クリーンセンターへ直接搬入する",
+            "hours": "月曜日から土曜日8時30分から16時30分、第3日曜日9時から16時",
+            "fee": "家庭ごみの搬入量が50kgを超えた場合、超過分1kg当たり5円",
+            "conditions": "燃えるごみ、燃やせないごみ、資源ごみと分別し、施設の受入条件に従う"
+          },
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/gomikannkyoueisei/gomi/gominobunbetu.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・風水害・地震・ため池等の防災ガイドブックとWebマップを公開",
+          "details": {
+            "coverage": "土砂災害警戒区域、風水害・台風、地震、火災、防災重点ため池等",
+            "maps": "2025年3月改訂の防災ガイドブック、地区別PDF地図、Web版防災マップを公開",
+            "shelters": "Webマップで危険区域と避難所を確認可能",
+            "plan": "地域防災計画と資料編で危険箇所、想定地震、避難場所等を公開"
+          },
+          "source": {
+            "url": "https://www.city.soo.kagoshima.jp/kurashi/kyukyubousai/bousai/2025-0418-1327-76.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.soo.kagoshima.jp/bosaimap/",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        }
+      }
+    },
+    {
       "code": "46218",
       "prefectureCode": "46",
       "prefecture": "鹿児島県",
@@ -284652,6 +284826,203 @@
             "url": "https://www.city-kirishima.jp/anshin/hazard_map.html",
             "checkedAt": "2026-07-24"
           }
+        }
+      }
+    },
+    {
+      "code": "46219",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "name": "いちき串木野市",
+      "officialUrl": "https://www.city.ichikikushikino.lg.jp/",
+      "status": "verified",
+      "summary": "必須9制度をいちき串木野市公式情報で調査。8制度をverified、2026年度の給食費適用条件を確定できない学校給食費をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末まで保険診療の窓口負担を無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "いちき串木野市に住所がある18歳到達後最初の3月31日までの子ども",
+            "support": "県内医療機関等で受給資格者証を提示すると保険診療自己負担を現物給付し、窓口負担0円",
+            "outsidePrefecture": "県外受診や資格者証未提示時は領収書等を添えて償還払いを申請",
+            "excluded": "保険外費用、学校管理下の災害共済給付対象分等は除外"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/fukushi2/kenko/kosodate/iryo/kodomoiryo.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ichikikushikino.lg.jp/c-furusato/kifukatuyo.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後おおむね6か月から小学6年生までを病児保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "病児保育所あいあいきっず（いとう耳鼻咽喉科2階）",
+            "hours": "月曜日から金曜日8時30分から17時30分、土曜日8時30分から16時30分。日曜・祝日・年末年始は休所",
+            "fee": "1回1,000円。生活保護世帯は無料。送迎サービス利用時は別途1,000円、食事・診療等は実費",
+            "usageLimit": "1回の利用につき原則7日以内",
+            "application": "年度ごとの事前登録後、施設へ予約し、医師連絡票・利用申込書等を提出する"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/fukushi2/kenko/kosodate/iryo/byoji.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "2023年4月から0～5歳児の保育料を全世帯で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "free": "国制度による3～5歳児等の無償化に加え、市独自に課税世帯を含む0～2歳児も無償化",
+            "target": "市の教育・保育給付認定等を受けて保育所・認定こども園・対象施設を利用する子ども",
+            "actualCosts": "給食費、延長保育料、教材費等の実費は施設・利用内容により別途",
+            "application": "利用施設と区分に応じて保育利用・給付認定手続きを行う"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/fukushi2/kenko/kosodate/kosodate/hoiku.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ichikikushikino.lg.jp/fukushi2/kenko/kosodate/kosodate/shisetsunintei.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "schoolMeals": {
+          "status": "unavailable",
+          "summary": "2026年度の学校給食実施は確認できるが、給食費無償化・徴収条件を確定できない",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "confirmed": "令和8年度4月から7月の市立学校給食献立表を公開している。令和7年度は私立小中学校在籍者へ市立給食費相当額を給付していた",
+            "unconfirmed": "令和8年度の市立小中学校給食費、無償化継続の対象・期間、市外・私立通学者の給付条件、徴収・申請方法",
+            "contact": "いちき串木野市教育委員会または学校給食センターへ確認"
+          },
+          "notes": [
+            "令和8年度の給食提供を、給食費無償化または令和7年度私立学校給付の継続根拠として扱わない。"
+          ],
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/kyushoku1/konndade.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ichikikushikino.lg.jp/kyosomu1/shiritsukyuhu.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・日帰り・訪問型産後ケアを提供し5日まで無料",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "市内に住所がある産後1年未満の母親と乳児で、心身の不調や育児不安等により支援を必要とする方",
+            "types": "宿泊型、日帰り型、訪問型",
+            "usageLimit": "各類型を合わせて原則7日まで",
+            "fee": "2026年度は利用開始から5日まで無料。6日目以降は課税状況・利用形態に応じた自己負担がある",
+            "support": "母体の休養、授乳・乳房ケア、育児相談、赤ちゃんの世話等",
+            "application": "希望施設へ予約後、市へ利用申請する"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/kenko1/sangocare.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が月10時間、1時間300円程度で利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "市内に住所があり、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "usageLimit": "子ども1人当たり月10時間まで",
+            "fee": "1時間300円程度を標準に施設が設定。生活保護世帯・住民税非課税相当世帯等は減免あり。給食等の実費は別途の場合あり",
+            "facility": "2026年4月時点で羽島保育園",
+            "application": "総合支援システムで利用認定申請後、施設との事前面談・利用予約を行う"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/kodomo1/daredemotuuen.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市内業者による住宅リフォーム費10％、上限10万円を補助",
+          "details": {
+            "target": "自己居住住宅等を市内施工業者で改修し、市税滞納がない等の要件を満たす所有者・居住者",
+            "works": "対象工事費20万円以上で、住宅の修繕・改修・増改築等に該当する工事",
+            "support": "対象工事費の10％、上限10万円",
+            "period": "2026年度中に工事を完了し実績報告できること",
+            "conditions": "交付決定前の着工は対象外。予算の範囲内で受付"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/tokei3/kurashi/machizukuri/jutaku.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを串木野環境センターへ直接搬入し通常ごみ100kgごと310円",
+          "details": {
+            "method": "家具等の粗大ごみを事前に分別して串木野環境センターへ直接搬入する",
+            "hours": "月曜日から土曜日、第1・第3日曜日の9時から12時、13時から16時。祝日・振替休日、12月31日から1月3日は休所",
+            "fee": "通常の家庭ごみは100kgごと310円。処理困難物は10kgごと310円または品目別料金",
+            "accepted": "燃えるごみ、燃えないごみ、粗大ごみ、資源物、所定の処理困難物を受け入れる",
+            "application": "分別冊子を確認し、搬入時に施設の指示に従う"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/kankyo2/kanseannai.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・津波・ため池等の防災情報とWebマップを公開",
+          "details": {
+            "coverage": "洪水・浸水、土砂災害、津波、ため池決壊、原子力災害等の危険情報",
+            "maps": "防災ハザードマップ、防災Webマップ、重点ため池ハザードマップを公開",
+            "shelters": "災害種別に応じた避難所、津波対策用の屋外避難適応場所、海抜等を確認可能",
+            "monitoring": "浸水センサーの検知状況を市公式LINE等で確認できる"
+          },
+          "source": {
+            "url": "https://www.city.ichikikushikino.lg.jp/machibou1/bosai/bosai/joho/bosai.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ichikikushikino.lg.jp/nosei2/tameike/jyutentameikemap.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.ichikikushikino.lg.jp/machibou1/bosai/bosai/joho/ichiran.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         }
       }
     },
