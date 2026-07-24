@@ -1,0 +1,105 @@
+name: Fix China 46534 Publication Readiness
+
+on:
+  pull_request:
+    branches: [region/west]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix:
+    if: github.head_ref == 'data/46534-china' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data/46534-china
+          fetch-depth: 0
+      - name: Normalize China municipality
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const municipalityPath = 'jichitai-compare/data/municipalities/46/46534.json';
+          const taskPath = 'jichitai-compare/operations/tasks/46534.json';
+          const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          const ids = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const checkedAt = '2026-07-24';
+
+          const sick = municipality.services.sickChildCare;
+          sick.status = 'verified';
+          sick.summary = '町内在住の小学校3年生までの病児・病後児を本部医院で一時保育';
+          sick.eligibility = { minAgeMonths: 0, maxAgeYears: 9 };
+          sick.details = {
+            ...sick.details,
+            target: '知名町内に住所があり、病気または回復期で集団保育が困難かつ保護者の勤務等により家庭保育が困難な小学校3年生までの児童',
+            facility: '医療法人金連会 本部医院',
+            capacity: '1日2名',
+            hours: '月・火・木・金曜日9時から16時30分、水曜日8時30分から12時30分。土日祝日は休み',
+            fee: '1日500円。昼食・おやつを施設で利用する場合は別途500円、医療費は別途',
+            application: '本部医院へ連絡し、登録申込後に利用申請書を提出',
+            ageModelingNote: '町公式案内は上限を小学校3年生までと明記し、下限年齢を設けていないため、比較データ上のminAgeMonthsは0として記録'
+          };
+          sick.source = { url: 'https://www.town.china.lg.jp/guide/ninshin-shussan-kosodate/2/1660.html', checkedAt };
+
+          const unavailableNote = '知名町公式情報で関連制度・事業方針は確認したが、令和8年度の比較に必要な具体条件を確定できないため、推測せずunavailableへ正規化。';
+          const schoolMeals = municipality.services.schoolMeals;
+          schoolMeals.status = 'unavailable';
+          schoolMeals.summary = '給食費の口座振替・過年度徴収額は確認したが、2026年度の一般世帯負担額・無償化・補助条件を確定できない';
+          schoolMeals.source = { url: 'https://www.town.china.lg.jp/guide/ninshin-shussan-kosodate/3/1658.html', checkedAt };
+          schoolMeals.notes = [...(Array.isArray(schoolMeals.notes) ? schoolMeals.notes : []), unavailableNote];
+
+          const postpartum = municipality.services.postpartumCare;
+          postpartum.status = 'unavailable';
+          postpartum.summary = '子ども・子育て支援事業計画で産後ケア事業を確認したが、2026年度の対象期間・類型・回数・料金・申込条件を確定できない';
+          postpartum.source = { url: 'https://www.town.china.lg.jp/soshiki/1005/2/436.html', checkedAt };
+          postpartum.notes = [...(Array.isArray(postpartum.notes) ? postpartum.notes : []), unavailableNote];
+
+          const temporary = municipality.services.temporaryChildcare;
+          temporary.status = 'unavailable';
+          temporary.summary = '子ども・子育て支援事業計画で2026年度からの実施方針は確認したが、対象・時間・料金・施設・申込条件を確定できない';
+          temporary.source = { url: 'https://www.town.china.lg.jp/soshiki/1005/2/436.html', checkedAt };
+          temporary.notes = [...(Array.isArray(temporary.notes) ? temporary.notes : []), unavailableNote];
+
+          municipality.status = 'verified';
+          municipality.summary = '必須9制度を知名町公式情報で調査。6制度をverified、2026年度の具体条件を確定できない学校給食費、産後ケア、こども誰でも通園制度をunavailableとして登録。';
+          municipality.updatedAt = checkedAt;
+
+          const services = ids.map((id) => municipality.services[id]);
+          task.status = 'pr_open';
+          task.currentService = null;
+          task.nextServiceIndex = ids.length;
+          task.completedServices = [...ids];
+          task.verifiedCount = services.filter((service) => service.status === 'verified').length;
+          task.researchingCount = 0;
+          task.unavailableCount = services.filter((service) => service.status === 'unavailable').length;
+          task.needsMediumReviewCount = 0;
+          task.currentBranch = 'data/46534-china';
+          task.pullRequestNumber = Number(process.env.PR_NUMBER);
+          task.lastCheckedAt = checkedAt;
+          task.lastUpdatedAt = '2026-07-24T17:35:00+09:00';
+          task.lastUpdatedBy = '統括B';
+          task.officialSources = [...new Set(services.map((service) => service.source?.url).filter((url) => /^https:\/\//.test(url || '')))];
+          task.notes = [...(Array.isArray(task.notes) ? task.notes : []), '病児・病後児保育に小学校3年生までの年齢条件を追加。学校給食費・産後ケア・こども誰でも通園制度は町公式関連ページを根拠にunavailableへ正規化。'];
+          task.blockers = [];
+
+          fs.writeFileSync(municipalityPath, JSON.stringify(municipality, null, 2) + '\n');
+          fs.writeFileSync(taskPath, JSON.stringify(task, null, 2) + '\n');
+          NODE
+      - name: Validate and commit
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f --ignore-unmatch .github/workflows/fix-46534-publication-readiness.yml
+          git add jichitai-compare/data/municipalities/46/46534.json jichitai-compare/operations/tasks/46534.json
+          git commit -m "fix: 知名町を公開可能状態へ正規化"
+          git push origin HEAD:data/46534-china
