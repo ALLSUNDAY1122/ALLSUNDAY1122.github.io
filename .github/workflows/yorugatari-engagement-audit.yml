@@ -20,6 +20,7 @@ on:
       - yorugatari/assets/analytics.js
       - yorugatari/assets/engagement.js
       - yorugatari/assets/landing-share.js
+      - yorugatari/assets/landing-start-20260724-001.js
       - yorugatari/assets/yorugatari-share.png
       - yorugatari/tools/campaigns.json
       - yorugatari/tools/external-launch-kit.md
@@ -63,6 +64,7 @@ jobs:
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/assets/landing-share.js
+          node --check yorugatari/assets/landing-start-20260724-001.js
           node yorugatari/tools/normalize-legacy-story-attributes.mjs
           node yorugatari/tools/normalize-engagement.mjs
           node yorugatari/tools/ensure-landing-sharing.mjs
@@ -83,11 +85,12 @@ jobs:
           for (const file of ['5min-horror.html', 'bedtime-horror.html']) {
             const html = fs.readFileSync(path.join(site, file), 'utf8');
             if (!html.includes('assets/landing-share.js?v=20260724-002')) throw new Error(`Landing share runtime mismatch: ${file}`);
+            if (!html.includes('assets/landing-start-20260724-001.js')) throw new Error(`Landing start runtime mismatch: ${file}`);
             if (!html.includes('特集単位の合計だけを匿名で集計します')) throw new Error(`Landing privacy copy mismatch: ${file}`);
           }
-          const landingShare = fs.readFileSync(path.join(site, 'assets', 'landing-share.js'), 'utf8');
-          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', "RUNTIME_VERSION = '20260724-002'"]) {
-            if (!landingShare.includes(token)) throw new Error(`Landing story start token missing: ${token}`);
+          const landingStart = fs.readFileSync(path.join(site, 'assets', 'landing-start-20260724-001.js'), 'utf8');
+          for (const token of ['/yorugatari/__landing-start/five-minute', '/yorugatari/__landing-start/bedtime', "const VERSION = '20260724-001'", 'window.YORUGATARI_LANDING_START', 'sessionStorage.setItem(storageKey']) {
+            if (!landingStart.includes(token)) throw new Error(`Landing story start token missing: ${token}`);
           }
           const stories = fs.readdirSync(path.join(site, 'stories')).filter((file) => file.endsWith('.html'));
           if (stories.length !== 100) throw new Error(`Expected 100 stories, found ${stories.length}`);
@@ -148,6 +151,7 @@ jobs:
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
           node --check yorugatari/assets/landing-share.js
+          node --check yorugatari/assets/landing-start-20260724-001.js
           node -e "const c=require('./yorugatari/tools/campaigns.json'); if(c.definitions.length!==8||!c.onsiteShare)process.exit(1)"
 
       - name: Wait for published campaign release
