@@ -1,0 +1,214 @@
+name: North B sanity audit round 10
+
+on:
+  push:
+    branches:
+      - 'audit/north-b-sanity-round-10-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[north-b-round10-apply]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply round 10 corrections
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          checked = '2026-07-25'
+          updated = '2026-07-25T04:02:00+09:00'
+          branch = 'audit/north-b-sanity-round-10-20260725'
+          order = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention']
+
+          def load(path):
+              return json.loads(path.read_text(encoding='utf-8'))
+
+          def save(path, data):
+              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          changed = {}
+
+          # 戸沢村: 計画・基準だけでは現在利用可能な制度と確定できないため verified から unavailable へ訂正
+          path = root / 'data/municipalities/06/06367.json'
+          m = load(path)
+          s = m['services']['temporaryChildcare']
+          s['status'] = 'unavailable'
+          s['summary'] = '令和8年度からの実施計画と事業基準は確認できるが、現行の実施施設、対象、料金、利用時間、認定・予約方法を示す利用者向け村公式案内を確認できない。'
+          s.pop('eligibility', None)
+          s['details'] = {
+              'planFinding': '第三期子ども・子育て支援事業計画は、令和8年度からの本格実施に合わせて提供体制を整備するとしている',
+              'regulatoryFinding': '令和8年3月に乳児等通園支援事業の設備・運営基準を制定している',
+              'unconfirmed': '2026年度に実際に利用できる施設、受入開始日、対象月齢、利用時間、月上限、料金、認定・面談・予約方法',
+              'verificationPolicy': '計画・基準の存在だけでは利用可能な現行サービスと確定できないため、詳細未確認として扱う'
+          }
+          s['source'] = {'url': 'https://www.vill.tozawa.yamagata.jp/life/kosodate/', 'checkedAt': checked}
+          s['additionalSources'] = [
+              {'url': 'https://www.vill.tozawa.yamagata.jp/files/libs/3542/202511121442542467.pdf', 'checkedAt': checked}
+          ]
+          m['updatedAt'] = checked
+          save(path, m)
+          changed['06367'] = ('戸沢村', '計画資料を根拠にverifiedとしていたこども誰でも通園制度を、利用者向け現行条件未確認のためunavailableへ訂正')
+
+          # 川西町: 町公式保育園だよりで開始を確認。通常の一時保育と併記する
+          path = root / 'data/municipalities/06/06382.json'
+          m = load(path)
+          s = m['services']['temporaryChildcare']
+          old_source = s['source']['url']
+          s['summary'] = '生後6か月から就学前児の一時保育に加え、生後6か月から3歳までと町が案内する未就園児向けのこども誰でも通園制度を実施する。'
+          s['eligibility'] = {'minAgeMonths': 6, 'maxAgeYears': 5}
+          s['details'] = {
+              'temporaryFacility': '川西町立小松保育所',
+              'temporaryTarget': '生後6か月から小学校就学前までの子ども',
+              'temporaryHours': '平日8時30分から17時',
+              'temporaryFee': '1日3歳未満4,000円・3歳以上2,000円、半日3歳未満2,000円・3歳以上1,000円、給食270円',
+              'temporaryLimit': '月8回まで',
+              'anyChildTarget': '町公式保育園だよりが案内する、生後6か月から3歳までの未就園児',
+              'anyChildPurpose': '子どもの育ちを応援し、保護者の育児負担を軽減する',
+              'anyChildApplication': '利用前に事前申請とアカウント登録が必要',
+              'anyChildUnconfirmed': '実施施設、利用時間、月間利用上限、利用料の詳細は同案内では特定できないため、健康子育て課へ確認が必要'
+          }
+          s['source'] = {'url': 'https://www.town.kawanishi.yamagata.jp/kenko/hoikuen/0804tayori.pdf', 'checkedAt': checked}
+          s['additionalSources'] = [{'url': old_source, 'checkedAt': checked}]
+          m['updatedAt'] = checked
+          save(path, m)
+          changed['06382'] = ('川西町', '町公式保育園だよりで開始案内を確認し、こども誰でも通園制度をtemporaryChildcareへ追加')
+
+          # 飯豊町: 2026年度こども誰でも通園制度を追加
+          path = root / 'data/municipalities/06/06403.json'
+          m = load(path)
+          s = m['services']['temporaryChildcare']
+          old_source = s['source']['url']
+          s['summary'] = '概ね1歳以上の未就園児向け一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。'
+          s['eligibility'] = {'minAgeMonths': 6, 'maxAgeYears': 5}
+          s['details'] = {
+              'temporaryTarget': '飯豊町内に住所がある概ね1歳以上の未就園児',
+              'temporaryReasons': '仕事・就職活動・職業訓練、通院・看護・緊急時、保護者のリフレッシュ',
+              'temporaryLimits': '非定型的保育と私的理由は週3日以内、緊急保育は月14日以内',
+              'anyChildTarget': '飯豊町に住所があり、保育所・幼稚園・認定こども園等に通っていない生後6か月から満3歳未満の子ども',
+              'anyChildFacility': '飯豊すくすくこども園（在園児の定員に空きがある範囲で受入）',
+              'anyChildLimit': '子ども1人につき月10時間、1時間単位',
+              'anyChildFee': '1時間300円。食事等の実費が必要な場合があり、世帯状況による負担軽減あり',
+              'anyChildApplication': '初回利用希望日の原則2週間前までに認定申請し、認定後に施設面談と利用予約を行う'
+          }
+          s['source'] = {'url': 'https://www.town.iide.yamagata.jp/002/kodomodaredemo.html', 'checkedAt': checked}
+          s['additionalSources'] = [{'url': old_source, 'checkedAt': checked}]
+          m['updatedAt'] = checked
+          save(path, m)
+          changed['06403'] = ('飯豊町', '2026年度のこども誰でも通園制度を追加し、temporaryChildcareの最小年齢を12か月から6か月へ訂正')
+
+          # 三川町: 2026年度こども誰でも通園制度を追加
+          path = root / 'data/municipalities/06/06426.json'
+          m = load(path)
+          s = m['services']['temporaryChildcare']
+          old_source = s['source']['url']
+          s['summary'] = '生後6か月から小学3年生までの一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。'
+          s['eligibility'] = {'minAgeMonths': 6, 'maxAgeYears': 9}
+          s['details'] = {
+              'temporaryFacility': '三川町子育て支援センター（テオトル内）',
+              'temporaryTarget': '生後6か月から小学3年生。小学生は町内在住かつ町内小学校在籍',
+              'temporaryLimit': '1回4時間以内',
+              'temporaryFee': '未就学児1時間400円、小学生1時間200円',
+              'anyChildTarget': '三川町に住所があり、保育所・認定こども園・幼稚園等に通っていない生後6か月から満3歳未満の子ども',
+              'anyChildFacility': 'みかわ保育園',
+              'anyChildHours': '平日9時から12時、13時から16時',
+              'anyChildLimit': '子ども1人につき月10時間。1回1時間以上、30分単位',
+              'anyChildFee': '1時間300円。世帯状況による負担軽減あり',
+              'anyChildApplication': '総合支援システムで認定申請と利用登録を行い、初回面談後に予約する'
+          }
+          s['source'] = {'url': 'https://www.town.mikawa.yamagata.jp/child/kosodate/daredemotuuenseido.html', 'checkedAt': checked}
+          s['additionalSources'] = [{'url': old_source, 'checkedAt': checked}]
+          m['updatedAt'] = checked
+          save(path, m)
+          changed['06426'] = ('三川町', '2026年4月開始のこども誰でも通園制度をtemporaryChildcareへ追加')
+
+          # Changed municipality tasks
+          for code, (name, note_text) in changed.items():
+              mp = root / f'data/municipalities/06/{code}.json'
+              m = load(mp)
+              tp = root / f'operations/tasks/{code}.json'
+              task = load(tp)
+              statuses = [m['services'][key]['status'] for key in order]
+              task['verifiedCount'] = statuses.count('verified')
+              task['researchingCount'] = statuses.count('researching')
+              task['unavailableCount'] = statuses.count('unavailable')
+              task['needsMediumReviewCount'] = statuses.count('needs_medium_review')
+              task['currentBranch'] = branch
+              task['pullRequestNumber'] = None
+              task['lastCheckedAt'] = checked
+              task['lastUpdatedAt'] = updated
+              task['lastUpdatedBy'] = '北日本調査班B'
+              task['officialSources'] = list(dict.fromkeys(m['services'][key]['source']['url'] for key in order))
+              note = f'北日本B誤調査ざっくり再検証 第10回: {note_text}。'
+              if note not in task['notes']:
+                  task['notes'].append(note)
+              save(tp, task)
+
+          # Audit final round
+          ap = root / 'operations/audits/north-b-research-sanity-20260725.json'
+          audit = load(ap)
+          audit['completedRounds'] = 10
+          audit['remainingRounds'] = 0
+          audit['auditedMunicipalityCount'] = 107
+          audit['remainingMunicipalityCount'] = 0
+          audit['auditedAt'] = updated
+          audit['round10'] = {
+              'codes': ['06365','06366','06367','06381','06382','06401','06402','06403','06426','06428'],
+              'municipalityCount': 10,
+              'serviceCount': 90,
+              'highRiskChecks': 30,
+              'confirmedErrorCount': 4,
+              'confirmedErrors': [
+                  {'code':'06367','municipality':'戸沢村','service':'temporaryChildcare','before':'verified（第三期計画を根拠に令和8年度実施として掲載）','after':'unavailable','reason':'現行の実施施設・対象・料金・利用時間・認定予約方法を示す利用者向け村公式案内を確認できず、計画・基準のみでは利用可能な制度と確定できない'},
+                  {'code':'06382','municipality':'川西町','service':'temporaryChildcare','before':'通常の一時保育のみ','after':'こども誰でも通園制度の開始案内を併記','reason':'町公式保育園だよりの現行案内が未反映'},
+                  {'code':'06403','municipality':'飯豊町','service':'temporaryChildcare','before':'概ね1歳以上の一時預かりのみ、minAgeMonths 12','after':'こども誰でも通園制度を併記、minAgeMonths 6','reason':'町公式の2026年度利用案内が未反映'},
+                  {'code':'06426','municipality':'三川町','service':'temporaryChildcare','before':'子育て支援センターの一時預かりのみ','after':'みかわ保育園のこども誰でも通園制度を併記','reason':'2026年4月更新の町公式利用案内が未反映'}
+              ],
+              'evidenceLimitations': [
+                  {'code':'06365','municipality':'大蔵村','service':'schoolMeals','note':'令和8年度の給食費保護者負担、主食無償提供の継続、補助範囲を直接確認できずunavailableを維持'},
+                  {'code':'06381','municipality':'高畠町','service':'temporaryChildcare','note':'令和8年度予算・例規で乳児等通園支援事業の存在は確認したが、対象・施設・料金・月上限・予約方法を示す利用者向け直接案内を取得できず変更しなかった'},
+                  {'code':'06382','municipality':'川西町','service':'schoolMeals','note':'町公式就学援助ページが令和7年度案内のままで、令和8年度の認定基準・支給内容を確定できずunavailableを維持'},
+                  {'code':'06401','municipality':'小国町','service':'temporaryChildcare','note':'令和8年の乳児等通園支援事業条例は確認したが、実施施設・対象・料金・月上限・利用手順の現行案内を確認できずunavailableを維持'},
+                  {'code':'06401','municipality':'小国町','service':'schoolMeals','note':'令和8年度の就学援助条件・給食費支給内容または一律無償化を直接確認できずunavailableを維持'}
+              ],
+              'noConfirmedErrorCodes': ['06365','06366','06381','06401','06402','06428']
+          }
+          audit['finalSummary'] = {
+              'status': 'completed',
+              'roundsCompleted': 10,
+              'uniqueMunicipalitiesAudited': 107,
+              'servicesStructurallyReviewed': 963,
+              'confirmedErrorsCorrected': 28,
+              'nationwideCountsUnchanged': True
+          }
+          save(ap, audit)
+
+          # Session checkpoint
+          cp = root / 'operations/control/session-checkpoints/north-b.json'
+          checkpoint = load(cp)
+          checkpoint['updatedAt'] = updated
+          checkpoint['workingBranch'] = branch
+          checkpoint['pullRequestNumber'] = None
+          checkpoint['ciStatus'] = 'pending'
+          checkpoint['nextAction'] = '北日本B誤調査ざっくり再検証第10回は残り10自治体・90制度、高リスク30項目を確認。戸沢村、川西町、飯豊町、三川町の4件を訂正。地域PR作成、CI、region/north統合、main同期を行う。10/10回・107/107自治体の監査完了。'
+          save(cp, checkpoint)
+          PY
+      - name: Commit corrections
+        run: |
+          rm .github/workflows/north-b-sanity-round-10.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare .github/workflows/north-b-sanity-round-10.yml
+          git commit -m '[north-b-round10-apply] audit: complete North-B ten-round review'
+          git push
