@@ -55,6 +55,15 @@ jobs:
         working-directory: jichitai-compare
         run: npm run validate:generated
 
+      - name: Upload public copy audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jichitai-public-copy-validation-report
+          path: jichitai-compare/.artifacts/public-copy-validation-report.json
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Check JavaScript syntax
         working-directory: jichitai-compare
         run: |
