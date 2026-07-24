@@ -6,7 +6,7 @@ from pathlib import Path
 
 REPO = Path.cwd()
 AUDIT_REL = "jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json"
-BRANCH = "coord/central-b-main-audit-sync-v2-20260725"
+BRANCH = "test/jichitai-public-central-b-sample-20260724"
 SYNC_DATE = "2026-07-25"
 SYNC_TIME = "2026-07-25T04:50:00+09:00"
 
@@ -64,7 +64,7 @@ def main():
             task["unavailableCount"] = counts.get("unavailable", 0)
             task["needsMediumReviewCount"] = counts.get("needs_medium_review", 0)
             task["currentBranch"] = BRANCH
-            task["pullRequestNumber"] = None
+            task["pullRequestNumber"] = 2827
             task["lastCheckedAt"] = SYNC_DATE
             task["lastUpdatedAt"] = SYNC_TIME
             task["lastUpdatedBy"] = "中日本調査班B・全国同期"
@@ -88,6 +88,7 @@ def main():
     write_json(REPO / "jichitai-compare/operations/audits/central-b-main-sync-20260725.json", {
         "issue": 3131,
         "sourcePullRequest": 2926,
+        "synchronizationPullRequest": 2827,
         "sourceBranch": "region/central",
         "targetBranch": "main",
         "municipalityCount": len(codes),
