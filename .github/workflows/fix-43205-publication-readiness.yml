@@ -1,0 +1,84 @@
+name: Fix 43205 Publication Readiness
+
+on:
+  pull_request:
+    branches: [region/west]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix:
+    if: github.head_ref == 'fix/43205-publication-readiness-20260724' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/43205-publication-readiness-20260724
+          fetch-depth: 0
+      - name: Normalize municipality and task
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node <<'NODE'
+          const fs = require('fs');
+          const municipalityPath = 'jichitai-compare/data/municipalities/43/43205.json';
+          const taskPath = 'jichitai-compare/operations/tasks/43205.json';
+          const workflowPath = '.github/workflows/fix-43205-publication-readiness.yml';
+          const mealsUrl = 'https://www.city.minamata.lg.jp/kiji003447/index.html';
+          const bulkyUrl = 'https://www.city.minamata.lg.jp/kiji0033253/index.html';
+          const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+
+          municipality.services.schoolMeals = {
+            status: 'unavailable',
+            summary: '2026年度の学校給食提供は確認したが、一般世帯の給食費額・無償化・徴収条件を確定できない',
+            eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
+            details: {
+              confirmed: '水俣市学校給食センターが2026年度の給食献立カレンダーを公開',
+              unconfirmed: '小学校・中学校の一般給食費額、全体無償化や負担軽減の有無、徴収方法',
+              contact: '水俣市学校給食センターまたは教育委員会へ確認'
+            },
+            notes: ['給食実施を、給食費無償化または特定金額の根拠として扱わない。'],
+            source: { url: mealsUrl, checkedAt: '2026-07-24' }
+          };
+
+          municipality.services.bulkyWaste = {
+            status: 'unavailable',
+            summary: '2026年度の粗大ごみ収集・直接搬入案内は確認したが、料金条件を確定できない',
+            details: {
+              collection: '令和8年度家庭ごみ収集日程表に粗大ごみ区分を掲載し、環境クリーンセンターへの直接搬入も案内',
+              unconfirmed: '戸別収集手数料、処理券・証紙料金、予約期限、品目別の料金条件',
+              contact: '水俣市環境クリーンセンターへ排出前に確認'
+            },
+            notes: ['収集方法の存在を、料金無料または特定料金の根拠として扱わない。'],
+            source: { url: bulkyUrl, checkedAt: '2026-07-24' }
+          };
+
+          municipality.status = 'verified';
+          municipality.summary = '必須9制度を水俣市公式情報で調査。7制度をverified、料金条件未確定の学校給食費と粗大ごみをunavailableとして登録。';
+          municipality.updatedAt = '2026-07-24';
+          fs.writeFileSync(municipalityPath, JSON.stringify(municipality) + '\n');
+
+          const serviceIds = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          Object.assign(task, {
+            status: 'pr_open', currentService: null, nextServiceIndex: 9,
+            completedServices: serviceIds, verifiedCount: 7, researchingCount: 0,
+            unavailableCount: 2, needsMediumReviewCount: 0,
+            currentBranch: 'fix/43205-publication-readiness-20260724',
+            pullRequestNumber: Number(process.env.PR_NUMBER), lastCheckedAt: '2026-07-24',
+            lastUpdatedAt: '2026-07-24T09:28:00+09:00', lastUpdatedBy: '統括B',
+            officialSources: serviceIds.map((id) => municipality.services[id].source?.url).filter(Boolean),
+            blockers: []
+          });
+          task.notes = (task.notes || []).filter((note) => !note.includes('学校給食費と粗大ごみ料金'));
+          task.notes.push('学校給食費と粗大ごみは2026年度の実施・収集案内を確認したが料金条件を確定できないためunavailableへ正規化。');
+          fs.writeFileSync(taskPath, JSON.stringify(task) + '\n');
+          fs.unlinkSync(workflowPath);
+          NODE
+          git add jichitai-compare/data/municipalities/43/43205.json jichitai-compare/operations/tasks/43205.json .github/workflows/fix-43205-publication-readiness.yml
+          git commit -m "fix: 水俣市の公開除外2制度を正規化"
+          git push origin HEAD:fix/43205-publication-readiness-20260724
