@@ -1,0 +1,84 @@
+name: Temporary sync East A round07 r2
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-validate:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: coord/sync-east-a-round07-20260725
+          fetch-depth: 0
+      - name: Reset to latest main and fetch region east
+        run: |
+          set -euo pipefail
+          git fetch origin main region/east
+          git reset --hard origin/main
+      - name: Import regional corrections and checkpoint
+        run: |
+          set -euo pipefail
+          for code in 10424 10426; do
+            git show "origin/region/east:jichitai-compare/data/municipalities/10/${code}.json" > "jichitai-compare/data/municipalities/10/${code}.json"
+            git show "origin/region/east:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+          git show origin/region/east:jichitai-compare/operations/control/session-checkpoints/east-a.json > jichitai-compare/operations/control/session-checkpoints/east-a.json
+          python <<'PY'
+          import json
+          from pathlib import Path
+          for code in ['10424','10426']:
+              path=Path(f'jichitai-compare/operations/tasks/{code}.json')
+              data=json.loads(path.read_text(encoding='utf-8'))
+              data['status']='merged'
+              data['currentBranch']=None
+              data['lastCheckedAt']='2026-07-25'
+              data['lastUpdatedAt']='2026-07-25T03:09:00+09:00'
+              data['lastUpdatedBy']='統括A'
+              note='東日本A誤調査検証第7回を最新mainへ再同期。'
+              if note not in data.setdefault('notes',[]): data['notes'].append(note)
+              path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+      - name: Generate and validate
+        run: cd jichitai-compare && npm run check
+      - name: Verify corrections
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          for(const code of ['10424','10426']){
+            const data=JSON.parse(fs.readFileSync(`jichitai-compare/data/municipalities/10/${code}.json`,'utf8'));
+            if(data.services?.postpartumCare?.status!=='verified') throw new Error(`${code}: correction missing`);
+          }
+          const cp=JSON.parse(fs.readFileSync('jichitai-compare/operations/control/session-checkpoints/east-a.json','utf8'));
+          if(cp.verificationCampaign?.completedRounds!==7) throw new Error('round07 checkpoint missing');
+          NODE
+      - name: Write audit
+        run: |
+          cat > jichitai-compare/operations/control/publish-audit-east-a-round07-20260725.json <<'EOF'
+          {
+            "schemaVersion":"1.0.0",
+            "generatedAt":"2026-07-25T03:09:00+09:00",
+            "pullRequestNumber":3049,
+            "regionalPullRequests":[3038,3045],
+            "municipalityCodes":["10424","10426"],
+            "standardValidation":"success",
+            "status":"generation_success_final_ci_pending"
+          }
+          EOF
+      - name: Commit generated result and remove workflow
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/temp-sync-east-a-round07-r2-20260725.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m '全国品質同期: 東日本A第7回を最新mainへ再反映'
+          git push --force-with-lease origin HEAD:coord/sync-east-a-round07-20260725
