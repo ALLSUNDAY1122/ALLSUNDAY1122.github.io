@@ -207801,42 +207801,47 @@
       "name": "羽曳野市",
       "officialUrl": "https://www.city.habikino.lg.jp/",
       "status": "verified",
-      "summary": "羽曳野市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "羽曳野市の子育て、教育、住宅、生活、防災に関する9制度を2026年度の公式情報で確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
-          "summary": "出生から18歳年度末までの子どもの保険診療自己負担額の一部を助成する。",
+          "summary": "出生から18歳年度末までの子どもの保険診療自己負担額の一部を所得制限なく助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "target": "羽曳野市在住で健康保険に加入する、18歳到達後最初の3月31日までの子ども",
-            "income": "所得制限なし",
-            "copayment": "1医療機関につき1日最大500円、月2日まで。複数医療機関合計で月2,500円が上限",
-            "coverage": "保険診療、訪問看護、入院時食事代を助成"
+            "target": "羽曳野市に居住し健康保険に加入する、出生から18歳到達後最初の3月31日までの子ども",
+            "incomeLimit": "所得制限なし",
+            "copayment": "入院・通院とも1医療機関ごとに1日最大500円、同一月2日目まで。3日目以降は無料。入院・通院、歯科・歯科以外は別計算",
+            "monthlyCap": "複数医療機関等の一部自己負担額は月額2,500円が上限。初回口座登録後は超過分を自動振込",
+            "fullCoverage": "入院時食事代と処方箋による調剤薬局は自己負担なし",
+            "application": "出生・転入時に子ども医療証の交付申請が必要。電子・郵送申請に対応し、大阪府外受診等は還付申請",
+            "excluded": "生活保護受給中・児童養護施設入所中の子ども、保険適用外費用は対象外"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/kurashi/kosodate/teate/6143.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "病気の回復期で集団保育が困難な0歳児から学童までを一時的に預かる。",
+          "summary": "病気の回復期で集団保育が困難な0歳児から学童までを、あいあい保育園で一時的に預かる。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
           },
           "details": {
-            "target": "保育園・幼稚園等に通い、病気の回復期で集団保育が困難な0歳児から学童",
+            "target": "保育園・幼稚園等に通園し、病気の回復期で集団保育が困難な0歳児から学童まで",
             "facility": "あいあい保育園",
-            "hours": "平日8時から18時。延長利用可",
-            "fee": "1人日額1,000円。生活保護世帯は無料、2人目以降は半額。延長料別途"
+            "reception": "平日9時から17時まで受付",
+            "hours": "8時から18時まで。7時30分から、または19時まで延長利用可能",
+            "closed": "日曜日、祝日、12月29日から1月3日まで",
+            "fee": "1人日額1,000円。生活保護世帯は無料、2人目以降は半額。延長利用料は別途"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/soshiki/kodomoegao/kodomohoiku/1108.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {
@@ -207849,40 +207854,45 @@
           "details": {
             "nationalSupport": "3～5歳の全児童と住民税非課税世帯の0～2歳児が無償化対象",
             "citySupport": "認可保育施設の0～2歳児は、所得やきょうだいの年齢にかかわらず第2子以降の保育料を無料",
-            "revision": "令和8年10月以降、預かり保育や認可外保育施設等の給付上限額を引上げ",
-            "excluded": "給食費、通園送迎費、行事費等の実費は原則対象外"
+            "kindergartenCare": "保育の必要性がある幼稚園預かり保育は2026年9月まで月額11,300円、10月以降は月額12,300円まで無償化",
+            "unlicensed": "認可外保育施設等も認定区分に応じた月額上限まで給付対象",
+            "application": "施設区分により事前の施設等利用給付認定が必要",
+            "excluded": "給食費、通園送迎費、行事費、教材費等の実費は原則対象外"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/soshiki/kodomoegao/kodomohoiku/9558.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
               "url": "https://www.city.habikino.lg.jp/soshiki/kodomoegao/kodomohoiku/14202.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-24"
             }
           ]
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "令和8年度は市立小学校給食を無償化し、中学校は1食380円のうち80円を公費負担する。",
+          "summary": "2026年度は市立小学校給食を無償化し、中学校は1食380円のうち80円を公費負担する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "elementary": "市立小学校・義務教育学校前期課程の給食費は2026年4月から無償",
-            "juniorHigh": "市立中学校・義務教育学校後期課程は1食380円のうち80円を公費負担し、保護者負担は300円",
-            "procedure": "小学校無償化について保護者の手続きは不要"
+            "elementary": "市立小学校・義務教育学校前期課程の給食費を2026年4月から所得にかかわらず無償化",
+            "procedure": "小学校給食費無償化について保護者の手続きは不要",
+            "funding": "国の制度を活用し、追加で必要となる費用を市が公費負担",
+            "quality": "物価高騰を加味した予算を確保し、給食の質・量・栄養価を維持。2026年度からパンを週1回に戻す",
+            "juniorHigh": "市立中学校・義務教育学校後期課程は無償化対象外だが、1食380円のうち80円を公費負担し、保護者負担は300円",
+            "refund": "欠食や牛乳を飲まなかった場合の返金は原則予定なし"
           },
           "source": {
-            "url": "https://www.city.habikino.lg.jp/soshiki/gakkoukyouiku/syokuiku/15195.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.habikino.lg.jp/soshiki/gakkoukyouiku/syokuiku/kyushoku/17530.html",
+            "checkedAt": "2026-07-24"
           },
           "additionalSources": [
             {
-              "url": "https://www.city.habikino.lg.jp/soshiki/gakkoukyouiku/syokuiku/kyushoku/17530.html",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.city.habikino.lg.jp/soshiki/gakkoukyouiku/syokuiku/15195.html",
+              "checkedAt": "2026-07-24"
             }
           ]
         },
@@ -207894,15 +207904,18 @@
             "maxAgeYears": 1
           },
           "details": {
-            "target": "羽曳野市民で生後1歳未満の赤ちゃんと母親。流死産等から1年未満の人は訪問型を利用可能",
+            "target": "羽曳野市民で生後1歳未満の赤ちゃんと母親。流産・死産等から1年未満の人は訪問型のみ利用可能",
             "types": "デイサービス、ショートステイ、アウトリーチ",
-            "fee": "課税世帯は日帰り1,250円、宿泊2,500円。非課税・生活保護世帯は半額",
-            "limit": "日帰り・宿泊を合わせて7日間まで",
-            "support": "授乳指導、乳房ケア、育児相談等"
+            "dayCare": "10時から19時、2食付き。課税世帯1日1,250円、多胎児1人追加ごとに100円。非課税世帯は625円、生活保護世帯は無料",
+            "overnight": "10時から翌10時、1泊3食付き。課税世帯1日2,500円、多胎児1人追加ごとに300円。非課税世帯は1,250円、生活保護世帯は無料",
+            "visit": "10時から17時までのおおむね90分。無料、3日間まで",
+            "limit": "デイサービスとショートステイを合わせて7日間まで",
+            "support": "授乳指導、乳房ケア、育児相談、母子の心身ケア等",
+            "application": "妊娠8か月以降にこども家庭支援課へ申請し、利用決定後に施設を予約"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/soshiki/kodomoegao/kodomokateishien/boshi_kenko/syusan/10387.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "temporaryChildcare": {
@@ -207913,30 +207926,46 @@
             "maxAgeYears": 3
           },
           "details": {
-            "target": "保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "target": "利用開始日時点で生後6か月から満3歳未満で、保育所・幼稚園・認定こども園・地域型保育・企業主導型保育に在籍していない子ども",
             "employment": "保護者の就労要件なし",
-            "limit": "子ども1人につき月10時間まで。繰越不可",
-            "fee": "子育て支援センターむかいのは1時間300円。生活保護世帯等の負担軽減あり",
-            "application": "オンラインで利用認定を申請し、施設面談後に予約"
+            "limit": "子ども1人につき月10時間まで。未利用時間の翌月繰越不可",
+            "facility": "子育て支援センターむかいの。市外の実施施設も利用可能",
+            "fee": "むかいのは1時間300円。給食・おやつ代等の実費が別途必要な場合があり、生活保護世帯等は負担軽減あり",
+            "application": "つうえんポータルから利用認定を申請。認定まで約1週間で、施設面談後に利用開始",
+            "notice": "申請内容に不備がある場合、却下通知まで修正できないため入力内容の確認が必要"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/soshiki/kodomoegao/kodomohoiku/17042.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "住宅等の耐震診断・耐震改修設計・耐震改修・除却費用の一部を補助する。",
+          "summary": "旧耐震基準の木造住宅等を対象に耐震診断・設計・改修・除却費用の一部を補助する。",
           "details": {
-            "target": "一定要件を満たす羽曳野市内の住宅・建築物の所有者",
-            "types": "耐震診断、耐震改修設計、耐震改修、設計改修パッケージ、木造住宅除却",
-            "application": "申請前の事前相談が必要。契約・工事着手後は補助対象外",
-            "budget": "予算の範囲内で交付"
+            "target": "現在居住または居住予定で、耐震診断評点1.0未満、原則1981年5月31日以前に建築された木造住宅等",
+            "applicant": "対象建築物の個人所有者で、直近の課税所得金額507万円未満、市税等の滞納がない人",
+            "types": "耐震診断、耐震改修設計、耐震改修、設計・改修パッケージ、木造住宅除却",
+            "retrofit": "耐震改修は定額50万円、世帯全員の年間所得256万8,000円以下の場合は75万円。工事費が定額未満の場合は実費が上限",
+            "package": "設計・改修パッケージは対象費用の10分の8、上限90万円。低所得世帯は上限115万円",
+            "period": "耐震改修は原則5月上旬から12月末、パッケージは12月上旬まで。予算上限で早期終了",
+            "completion": "年度内3月15日までに完了報告が必要",
+            "application": "契約・工事着手前の事前相談と交付決定が必要"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/soshiki/toshikaihatu/kenjyuka/taishin/15407.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.habikino.lg.jp/soshiki/toshikaihatu/kenjyuka/taishin/kaisyuu.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.habikino.lg.jp/soshiki/toshikaihatu/kenjyuka/taishin/9712.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -207944,26 +207973,40 @@
           "details": {
             "categories": "もえる大きなごみ、もえないごみ",
             "schedule": "もえないごみは偶数月に2か月に1回、もえる大きなごみは奇数月に2か月に1回",
-            "collection": "地域ごとに指定された曜日・収集日に排出"
+            "collection": "地域ごとに指定された曜日・収集日に排出",
+            "calendar": "2026年度ごみ収集表の表面・裏面を市ウェブサイトで公開",
+            "otherCollection": "もえるごみは週2回、資源ごみは月1回"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/kurashi/gomi_recycle/14793.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "disasterPrevention": {
           "status": "verified",
-          "summary": "河川氾濫の浸水想定、土砂災害危険箇所、地震・風水害対策等を掲載した防災ハザードマップを公開する。",
+          "summary": "河川洪水、内水、土砂災害、地震等の危険区域や避難所を掲載した防災ハザードマップを公開する。",
           "details": {
-            "hazards": "東除川、石川、飛鳥川等の洪水浸水想定と土砂災害危険箇所を掲載",
-            "contents": "避難情報、地震・風水害への備え、校区別マップを掲載",
-            "digital": "地図情報システムの防災マップも利用可能",
+            "hazards": "東除川、石川、飛鳥川等の洪水浸水想定、内水、土砂災害、地震等を確認可能",
+            "contents": "避難情報、指定避難所、地震・風水害への備え、校区別マップを掲載",
+            "digital": "市の地図情報システムによる防災マップも利用可能",
+            "plan": "羽曳野市地域防災計画は2026年3月修正版を公開",
+            "warning": "2026年5月29日から新たな防災気象情報の運用を開始し、大和川・石川ではレベル3氾濫警報等の名称を使用",
             "use": "自宅周辺の危険箇所、避難場所、避難経路の確認に活用"
           },
           "source": {
             "url": "https://www.city.habikino.lg.jp/soshiki/kikikanri/kikikanrika/bousai/12106.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.habikino.lg.jp/soshiki/kikikanri/kikikanrika/keikaku/12143.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.habikino.lg.jp/soshiki/kikikanri/kikikanrika/oshirase/17553.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         }
       }
     },
