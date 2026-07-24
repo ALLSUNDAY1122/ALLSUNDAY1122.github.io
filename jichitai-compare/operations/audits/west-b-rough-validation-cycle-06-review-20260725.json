@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-rough-validation-cycle-06-review-20260725",
+  "sessionId": "west-b",
+  "cycle": 6,
+  "reviewedAt": "2026-07-25T02:20:00+09:00",
+  "sourceAuditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-06-20260725.json",
+  "aggregate": {
+    "municipalityCount": 25,
+    "serviceCount": 225,
+    "networkCheckedUrlCount": 250,
+    "structuralErrorCount": 0,
+    "networkWarningCount": 8,
+    "detectedResearchContentErrorCount": 0,
+    "correctedResearchContentErrorCount": 0,
+    "detectedSourceMaintenanceIssueCount": 0,
+    "correctedSourceMaintenanceIssueCount": 0,
+    "manualSpotCheckCount": 5,
+    "status": "passed"
+  },
+  "warningReview": [
+    {
+      "code": "41209",
+      "name": "嬉野市",
+      "service": "schoolMeals",
+      "classification": "transient_or_cdn_http_warning",
+      "result": "監査時は404だったが、同一の令和8年度当初予算主要事業説明書PDFを再取得できた。小学校は国負担予定額と市補助で保護者負担0円、中学校は値上げ相当分を市が負担する登録内容と一致し、出典変更不要。"
+    },
+    {
+      "code": "41425",
+      "name": "白石町",
+      "affectedServiceCount": 6,
+      "services": [
+        "sickChildCare",
+        "childcareFee",
+        "schoolMeals",
+        "housingSupport",
+        "bulkyWaste",
+        "disasterPrevention"
+      ],
+      "classification": "site_server_or_timeout_warning",
+      "result": "監査時に500またはタイムアウトだった6ページを再確認した。病児・病後児保育、令和8年度保育料、令和8年度小中学校給食費無償化、若者・子育て世帯住宅取得最大100万円、令和8年度ごみポスター、ハザードマップの各現行公式ページが同じURLで公開され、登録内容と一致した。"
+    },
+    {
+      "code": "42205",
+      "name": "大村市",
+      "service": "sickChildCare",
+      "classification": "transient_or_cdn_http_warning",
+      "result": "監査時は404だったが、同一の大村市病児保育ページを再取得できた。対象、利用条件、実施施設の現行案内を確認し、出典変更不要。"
+    }
+  ],
+  "manualSpotChecks": [
+    {
+      "code": "41202",
+      "name": "唐津市",
+      "service": "schoolMeals",
+      "status": "passed",
+      "result": "令和7年度2学期から市立小中学校給食費を無償化し、令和8年度以降も市負担を組み合わせて継続する公式案内と一致。"
+    },
+    {
+      "code": "41208",
+      "name": "小城市",
+      "service": "schoolMeals",
+      "status": "passed",
+      "result": "令和8年度は小学校月額5,400円に対し支援額合計5,400円で保護者負担0円、中学校は値上げ後月額6,300円に対し1,300円を支援し保護者負担5,000円とする公式資料と一致。"
+    },
+    {
+      "code": "41346",
+      "name": "みやき町",
+      "service": "temporaryChildcare",
+      "status": "passed",
+      "result": "生後6か月から満3歳未満の未就園児、月10時間、1時間300円、令和8年4月時点の実施施設を示す公式案内と一致。"
+    },
+    {
+      "code": "41441",
+      "name": "太良町",
+      "service": "childcareFee",
+      "status": "passed",
+      "result": "令和8年度から0～2歳児を含む全園児の保育料を無料化する予算資料と、3～5歳児の副食費を月額4,500円上限で助成する公式案内を確認し、登録要約と一致。"
+    },
+    {
+      "code": "42207",
+      "name": "平戸市",
+      "service": "temporaryChildcare",
+      "status": "passed",
+      "result": "生後6か月以上満3歳未満、月10時間、標準1時間300円の利用料を平戸市が当分の間無料化する公式案内と一致。"
+    }
+  ],
+  "conclusion": "no_research_content_error_detected_no_source_maintenance_issue",
+  "nextCycle": {
+    "cycle": 7,
+    "plannedMunicipalityCount": 25,
+    "scopePolicy": "長崎県の残り自治体から開始し、大分県へ進む"
+  }
+}
