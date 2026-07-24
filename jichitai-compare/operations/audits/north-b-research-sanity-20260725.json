@@ -4,12 +4,12 @@
   "sessionId": "north-b",
   "auditMode": "rough-ten-round-review",
   "totalRounds": 10,
-  "completedRounds": 4,
-  "remainingRounds": 6,
+  "completedRounds": 5,
+  "remainingRounds": 5,
   "totalMunicipalityCount": 107,
-  "auditedMunicipalityCount": 44,
-  "remainingMunicipalityCount": 63,
-  "auditedAt": "2026-07-25T01:08:00+09:00",
+  "auditedMunicipalityCount": 55,
+  "remainingMunicipalityCount": 52,
+  "auditedAt": "2026-07-25T01:39:00+09:00",
   "round01": {
     "codes": [
       "01578",
@@ -245,6 +245,75 @@
       "04341",
       "04361",
       "04362"
+    ]
+  },
+  "round05": {
+    "codes": [
+      "04404",
+      "04406",
+      "04421",
+      "04422",
+      "04444",
+      "04445",
+      "04501",
+      "04505",
+      "04581",
+      "05202",
+      "05203"
+    ],
+    "municipalityCount": 11,
+    "serviceCount": 99,
+    "highRiskChecks": 27,
+    "confirmedErrorCount": 5,
+    "confirmedErrors": [
+      {
+        "code": "04406",
+        "municipality": "利府町",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "こども誰でも通園制度を併記",
+        "reason": "2026年4月開始の町公式制度が未反映"
+      },
+      {
+        "code": "04445",
+        "municipality": "加美町",
+        "service": "temporaryChildcare",
+        "before": "通常の一時預かりのみ",
+        "after": "こども誰でも通園制度を併記",
+        "reason": "2026年度開始の町公式制度が未反映"
+      },
+      {
+        "code": "04505",
+        "municipality": "美里町",
+        "service": "temporaryChildcare",
+        "before": "追加出典は存在したが制度本文へ未反映",
+        "after": "こども誰でも通園制度の条件を本文へ反映",
+        "reason": "2026年6月更新の町公式制度が未反映"
+      },
+      {
+        "code": "04581",
+        "municipality": "女川町",
+        "service": "temporaryChildcare",
+        "before": "1歳以上の一時預かりのみ、minAgeMonths 12",
+        "after": "こども誰でも通園制度を併記、minAgeMonths 6",
+        "reason": "2026年度開始の町公式制度が未反映"
+      },
+      {
+        "code": "05203",
+        "municipality": "横手市",
+        "service": "temporaryChildcare",
+        "before": "通常の一時保育のみ",
+        "after": "こども誰でも通園制度を併記",
+        "reason": "2026年6月更新の市公式制度が未反映"
+      }
+    ],
+    "noConfirmedErrorCodes": [
+      "04404",
+      "04421",
+      "04422",
+      "04444",
+      "04501",
+      "05202"
     ]
   }
 }
