@@ -10,6 +10,7 @@ import 'stats_store.dart';
 part 'home_part.dart';
 part 'game_part.dart';
 part 'widgets_part.dart';
+part 'delight_motion_part.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
