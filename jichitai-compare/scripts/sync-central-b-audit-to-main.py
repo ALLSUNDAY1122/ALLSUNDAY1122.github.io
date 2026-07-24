@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Push trigger for Issue #3131 service-level synchronization.
 import json
 import subprocess
 from collections import Counter
@@ -8,7 +9,7 @@ REPO = Path.cwd()
 AUDIT_REL = "jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json"
 BRANCH = "sync/main-central-b-audit-20260725"
 SYNC_DATE = "2026-07-25"
-SYNC_TIME = "2026-07-25T04:35:00+09:00"
+SYNC_TIME = "2026-07-25T04:45:00+09:00"
 
 
 def git_show(ref: str, path: str) -> str:
@@ -65,8 +66,6 @@ def main() -> None:
             current.setdefault("services", {})[service] = audited["services"][service]
             changed_services += 1
 
-        # The one-line municipality summary is derived from the service set and may
-        # otherwise continue to advertise a removed general-purpose programme.
         current["summary"] = audited.get("summary", current.get("summary"))
         current["updatedAt"] = SYNC_DATE
         write_json(municipality_path, current)
