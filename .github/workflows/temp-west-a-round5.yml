@@ -1,0 +1,114 @@
+name: Temporary West-A round 5 audit update
+
+on:
+  push:
+    branches:
+      - 'audit/west-a-research-verification-r5-20260725'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[round5-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Update round 5 audit evidence
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const base = 'jichitai-compare';
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+
+          const auditPath = `${base}/operations/audits/west-a-research-verification-20260725.json`;
+          const audit = read(auditPath);
+          audit.updatedAt = '2026-07-25T01:25:00+09:00';
+          audit.completedRoundCount = 5;
+          const round5 = {
+            round: 5,
+            title: '産後ケア・一時預かりの月齢、回数、料金監査',
+            status: 'completed',
+            method: '担当6県から各1自治体を抽出し、産後ケアと一時預かり・こども誰でも通園の計12項目を自治体公式ページで再照合',
+            sampleMunicipalityCount: 6,
+            checkedServiceCount: 12,
+            samples: [
+              {
+                code:'33100', name:'岡山市', result:'matched',
+                postpartumCareClaim:'産後1年未満。単胎は宿泊・日帰り合計7日、訪問3回、多胎は合計10日、訪問5回。施設料金から市負担額を控除',
+                temporaryChildcareClaim:'市内在住の就学前児等を施設別条件で一時預かり。公立園は満1歳以上、9時～17時30分',
+                officialUrls:['https://www.city.okayama.jp/kurashi/0000020851.html','https://www.city.okayama.jp/kurashi/0000005017.html','https://www.city.okayama.jp/kurashi/0000018418.html']
+              },
+              {
+                code:'37202', name:'丸亀市', result:'matched',
+                postpartumCareClaim:'産後1年以内。宿泊7日、通所5回、訪問5回。課税世帯は宿泊1日5,000円、通所1,000円、訪問無料',
+                temporaryChildcareClaim:'生後6か月から満3歳未満の未就園児、月10時間、1時間300円、虎岳保育園で実施',
+                officialUrls:['https://www.city.marugame.lg.jp/page/2244.html','https://www.city.marugame.lg.jp/page/40442.html']
+              },
+              {
+                code:'39204', name:'南国市', result:'matched',
+                postpartumCareClaim:'産後12か月未満。訪問4回、通所7回、宿泊7日。令和8年度料金条件を登録',
+                temporaryChildcareClaim:'満1歳から就学前、原則週3日以内、1日2,000円・半日1,000円。令和8年8月以降は長岡西部保育所休止、あけぼの保育所上限4名',
+                officialUrls:['https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=4996','https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=8519']
+              },
+              {
+                code:'40100', name:'北九州市', result:'matched',
+                postpartumCareClaim:'産後1年未満。4類型通算最大7日、短時間型は産後4か月未満・最大3日。一般世帯500～3,000円',
+                temporaryChildcareClaim:'生後6か月から満3歳未満、月10時間、1時間300円。生活保護世帯無料、一定所得以下は100円',
+                officialUrls:['https://www.city.kitakyushu.lg.jp/contents/11700307.html','https://www.city.kitakyushu.lg.jp/contents/28800075.html']
+              },
+              {
+                code:'43202', name:'八代市', result:'matched',
+                postpartumCareClaim:'産後1年未満。宿泊最大6泊、通所・訪問最大6回、組合せ合計6回。課税世帯700～2,500円等',
+                temporaryChildcareClaim:'生後6か月から満3歳未満、月10時間、1時間300円程度、生活保護300円・一定所得以下200円を減免、10施設',
+                officialUrls:['https://www.city.yatsushiro.lg.jp/kiji00316768/index.html','https://www.city.yatsushiro.lg.jp/kiji00325882/']
+              },
+              {
+                code:'46218', name:'霧島市', result:'matched',
+                postpartumCareClaim:'産後1年未満。4類型合計7日、最初の5日無料、非課税・生活保護世帯は6日目以降も免除申請可能',
+                temporaryChildcareClaim:'生後6か月から満3歳未満、月10時間、1時間300円程度、生活保護300円・一定所得以下200円を軽減、8施設',
+                officialUrls:['https://www.city-kirishima.jp/kenkou/sanngokeajigyou.html','https://www.city-kirishima.jp/jidou/20250901.html']
+              }
+            ],
+            result:'passed',
+            materialErrorCount:0,
+            note:'南国市の一時保育は2026年8月以降の施設休止・定員変更を確認したが、登録済みの対象年齢・週上限・料金に影響する誤りはない。'
+          };
+          audit.rounds[audit.rounds.findIndex((r) => r.round === 5)] = round5;
+          audit.summary.materialErrorCount = 1;
+          audit.summary.correctionAppliedCount = 1;
+          audit.summary.correctionRequiredCount = 0;
+          audit.summary.roundsRemaining = 5;
+          audit.summary.currentAssessment = '第5回は6自治体12項目が公式情報と一致。累計重大誤り1件は修正済みで、未修正0件。';
+          audit.nextAction = '第6回として、住宅支援の対象世帯、補助率、上限、申請期間・受付状況を担当6県の複雑事例で再照合する。';
+          write(auditPath, audit);
+
+          const checkpointPath = `${base}/operations/control/session-checkpoints/west-a.json`;
+          const checkpoint = read(checkpointPath);
+          checkpoint.updatedAt = '2026-07-25T01:25:00+09:00';
+          checkpoint.nextAction = '10回の誤調査検証の第6回として、住宅支援の対象世帯、補助率、上限、申請期間・受付状況を担当6県の複雑事例で再照合する。';
+          checkpoint.researchVerificationAudit.completedRoundCount = 5;
+          checkpoint.researchVerificationAudit.lastCompletedRound = 5;
+          checkpoint.researchVerificationAudit.nextRound = 6;
+          checkpoint.researchVerificationAudit.materialErrorCount = 1;
+          checkpoint.researchVerificationAudit.correctionAppliedCount = 1;
+          checkpoint.researchVerificationAudit.correctionRequiredCount = 0;
+          checkpoint.researchVerificationAudit.lastAuditedAt = '2026-07-25T01:25:00+09:00';
+          checkpoint.integrityAudit.auditedAt = '2026-07-25T01:25:00+09:00';
+          if (!checkpoint.integrityAudit.notes.some((note) => note.includes('第5回監査'))) checkpoint.integrityAudit.notes.push('第5回監査で6自治体の産後ケア・一時預かり等12項目を再照合し、全件一致。');
+          write(checkpointPath, checkpoint);
+          NODE
+      - name: Commit audit update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-research-verification-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/west-a.json
+          git commit -m '[round5-applied] audit: record West-A verification round 5'
+          git push
