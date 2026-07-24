@@ -1,0 +1,334 @@
+name: Finalize Central A Scope Audit Round 04
+
+on:
+  push:
+    branches: ['audit/central-a-scope-verification-round-04-20260725']
+    paths: ['.github/workflows/central-a-scope-round-04-finalize.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-scope-verification-round-04-20260725
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Apply confirmed corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/finalize-round04.py <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          ROOT = Path('jichitai-compare')
+          DATA_DIR = ROOT / 'data' / 'municipalities' / '21'
+          TASK_DIR = ROOT / 'operations' / 'tasks'
+          REPORT = ROOT / 'operations' / 'control' / 'central-a-scope-round-04-gifu-20260725.json'
+          MASTER = ROOT / 'operations' / 'control' / 'central-a-scope-verification-20260724.json'
+          REF_FILE = ROOT / 'operations' / 'control' / 'central-a-round04-21364-references.txt'
+          CHECKED_AT = '2026-07-25'
+          UPDATED_AT = '2026-07-25T01:13:00+09:00'
+          SERVICE_KEYS = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention']
+          EXPECTED_NAMES = {
+            '21201':'岐阜市','21202':'大垣市','21203':'高山市','21204':'多治見市','21205':'関市','21206':'中津川市','21207':'美濃市','21208':'瑞浪市','21209':'羽島市','21210':'恵那市','21211':'美濃加茂市','21212':'土岐市','21213':'各務原市','21214':'可児市','21215':'山県市','21216':'瑞穂市','21217':'飛騨市','21218':'本巣市','21219':'郡上市','21220':'下呂市','21221':'海津市','21302':'岐南町','21303':'笠松町','21341':'養老町','21361':'垂井町','21362':'関ケ原町','21381':'神戸町','21382':'輪之内町','21383':'安八町','21401':'揖斐川町','21403':'大野町','21404':'池田町','21421':'北方町','21501':'坂祝町','21502':'富加町','21503':'川辺町','21504':'七宗町','21505':'八百津町','21506':'白川町','21507':'東白川村','21521':'御嵩町','21604':'白川村'
+          }
+          ANYONE_SOURCES = {
+            '21201':'https://www.city.gifu.lg.jp/kosodate/hoiku/1032839.html',
+            '21202':'https://www.city.ogaki.lg.jp/0000069025.html',
+            '21203':'https://www.city.takayama.lg.jp/kurashi/1000019/1020166/1023177.html',
+            '21204':'https://www.city.tajimi.lg.jp/kosodate_tajimikko/mokuteki/1006224/1010198.html',
+            '21205':'https://www.city.seki.lg.jp/0000022587.html',
+            '21206':'https://www.city.nakatsugawa.lg.jp/pe/kinder/38045.html',
+            '21208':'https://www.city.mizunami.lg.jp/kosodate/kosodateshien/1004151/1001283/1011632.html',
+            '21209':'https://www.city.hashima.lg.jp/item/6478.html',
+            '21210':'https://www.city.ena.lg.jp/kosodate_kyoiku/kyoiku/kodomoen/20592.html',
+            '21211':'https://www.city.minokamo.lg.jp/soshiki/7/21005.html',
+            '21212':'https://www.city.toki.lg.jp/kosodate/1010076/1010082/1010774.html',
+            '21213':'https://www.city.kakamigahara.lg.jp/kodomo/hoiku/1026114/1026115.html',
+            '21215':'https://www.city.yamagata.gifu.jp/site/yamanavi/51836.html',
+            '21218':'https://www.city.motosu.lg.jp/0000002673.html',
+            '21303':'https://www.town.kasamatsu.gifu.jp/docs/2026022400022/',
+            '21341':'https://www.town.yoro.gifu.jp/yorokko/1002888/1001995/1003492.html',
+            '21361':'https://www.town.tarui.lg.jp/site/sukoyaka/16648.html',
+            '21362':'https://www.town.sekigahara.gifu.jp/6960.htm',
+            '21381':'https://www.town.godo.gifu.jp/life/koso/koso34.html'
+          }
+
+          def read_json(path):
+              return json.loads(Path(path).read_text(encoding='utf-8'))
+
+          def write_json(path, obj):
+              Path(path).write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          def add_additional_source(service, source, description):
+              if not source or not source.get('url'):
+                  return
+              primary = service.get('source', {}).get('url')
+              if source.get('url') == primary:
+                  return
+              items = service.get('additionalSources') or []
+              normalized = []
+              seen = set()
+              for item in items:
+                  if isinstance(item, str):
+                      item = {'url': item, 'checkedAt': CHECKED_AT}
+                  url = item.get('url')
+                  if url and url not in seen and url != primary:
+                      normalized.append(item)
+                      seen.add(url)
+              if source['url'] not in seen:
+                  normalized.append({'url': source['url'], 'checkedAt': source.get('checkedAt', CHECKED_AT), 'description': description})
+              service['additionalSources'] = normalized
+
+          # 神戸町の自治体コードを21364から正規コード21381へ移行
+          old_data_path = DATA_DIR / '21364.json'
+          new_data_path = DATA_DIR / '21381.json'
+          old_task_path = TASK_DIR / '21364.json'
+          new_task_path = TASK_DIR / '21381.json'
+          if old_data_path.exists():
+              data = read_json(old_data_path)
+              data['code'] = '21381'
+              data['updatedAt'] = CHECKED_AT
+              write_json(new_data_path, data)
+              old_data_path.unlink()
+          if old_task_path.exists():
+              task = read_json(old_task_path)
+              task['municipalityCode'] = '21381'
+              task['currentBranch'] = 'data/21381-godo'
+              task['lastCheckedAt'] = CHECKED_AT
+              task['lastUpdatedAt'] = UPDATED_AT
+              task['lastUpdatedBy'] = '中日本調査班A（担当範囲再監査）'
+              notes = task.get('notes') or []
+              note = '2026-07-25の担当範囲再監査で、神戸町の自治体コード誤登録21364を全国地方公共団体コード21381へ修正。'
+              if note not in notes:
+                  notes.append(note)
+              task['notes'] = notes
+              write_json(new_task_path, task)
+              old_task_path.unlink()
+
+          # 現行のこども誰でも通園制度を19自治体へ追加
+          for code, new_url in ANYONE_SOURCES.items():
+              path = DATA_DIR / f'{code}.json'
+              data = read_json(path)
+              service = data['services']['temporaryChildcare']
+              old_source = dict(service.get('source') or {})
+              old_summary = service.get('summary', '')
+              if 'こども誰でも通園制度' not in old_summary and '乳児等通園支援事業' not in old_summary:
+                  service['summary'] = old_summary.rstrip('。') + '。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。'
+              details = service.get('details') or {}
+              details['ordinaryTemporaryCare'] = old_summary
+              details['programs'] = '通常の一時預かり、こども誰でも通園制度（乳児等通園支援事業）'
+              details['anyChildAccessTarget'] = '保育所・認定こども園等に在籍していない生後6か月から満3歳未満の子ども'
+              details['employmentRequirement'] = '保護者の就労要件を問わない'
+              details['anyChildAccessLimit'] = '子ども1人につき月10時間まで'
+              details['anyChildAccessStart'] = '令和8年4月'
+              service['details'] = details
+              service['source'] = {'url': new_url, 'checkedAt': CHECKED_AT}
+              add_additional_source(service, old_source, '通常の一時預かり事業の公式案内')
+              data['updatedAt'] = CHECKED_AT
+              write_json(path, data)
+
+          # 中津川市の住宅支援を現行案内へ更新
+          p = DATA_DIR / '21206.json'
+          data = read_json(p)
+          service = data['services']['housingSupport']
+          old_source = dict(service.get('source') or {})
+          service['source'] = {'url':'https://www.city.nakatsugawa.lg.jp/life/life/4/38702.html','checkedAt':CHECKED_AT}
+          add_additional_source(service, old_source, '従前の空き家に住もう応援事業案内')
+          data['updatedAt'] = CHECKED_AT
+          write_json(p, data)
+
+          # 白川村の住宅支援は公式ページが存在するためunavailableを修正
+          p = DATA_DIR / '21604.json'
+          data = read_json(p)
+          service = data['services']['housingSupport']
+          service['status'] = 'verified'
+          service['summary'] = '定住者・移住者向けに、融雪・落雪住宅整備、空き家再生、民間賃貸住宅の入居費・家賃を支援する。'
+          service['details'] = {
+              'programs':'白川村定住対策親雪補助金、白川村空き家再生活用事業補助金、白川村民間賃貸住宅居住助成金',
+              'snowHousing':'融雪住宅は対象工事費等に応じ上限80万円、落雪住宅は上限60万円',
+              'vacantHome':'村内空き家に定住する転入者または転入後9年以内の人を対象に、予算の範囲内で取得・改修等を支援',
+              'rental':'民間賃貸住宅の礼金相当額や、所得等の条件に応じ家賃の一部を助成',
+              'condition':'村内定住意思、村税等の滞納がないことなど、制度ごとの要件を満たす必要がある',
+              'application':'契約・着工前を含め、各制度の受付期間と必要書類を村観光振興課へ確認して申請'
+          }
+          service['source'] = {'url':'https://www.vill.shirakawa.lg.jp/2767.htm','checkedAt':CHECKED_AT}
+          service['additionalSources'] = [
+              {'url':'https://www.vill.shirakawa.lg.jp/1259.htm','checkedAt':CHECKED_AT,'description':'空き家再生活用事業補助金'},
+              {'url':'https://www.vill.shirakawa.lg.jp/1270.htm','checkedAt':CHECKED_AT,'description':'民間賃貸住宅居住助成金'}
+          ]
+          data['updatedAt'] = CHECKED_AT
+          write_json(p, data)
+
+          # 変更自治体のtaskを自治体JSONから再計算
+          touched_codes = sorted(set(ANYONE_SOURCES) | {'21604'})
+          for code in touched_codes:
+              data = read_json(DATA_DIR / f'{code}.json')
+              task_path = TASK_DIR / f'{code}.json'
+              task = read_json(task_path)
+              statuses = {k:data['services'][k].get('status') for k in SERVICE_KEYS}
+              task['verifiedCount'] = sum(v == 'verified' for v in statuses.values())
+              task['researchingCount'] = sum(v == 'researching' for v in statuses.values())
+              task['unavailableCount'] = sum(v == 'unavailable' for v in statuses.values())
+              task['needsMediumReviewCount'] = sum(v in ('needs_medium_review','needsMediumReview') for v in statuses.values())
+              task['completedServices'] = [k for k in SERVICE_KEYS if statuses[k] in ('verified','unavailable')]
+              sources = []
+              for key in SERVICE_KEYS:
+                  url = data['services'][key].get('source',{}).get('url')
+                  if url and url not in sources:
+                      sources.append(url)
+              task['officialSources'] = sources
+              task['lastCheckedAt'] = CHECKED_AT
+              task['lastUpdatedAt'] = UPDATED_AT
+              task['lastUpdatedBy'] = '中日本調査班A（担当範囲再監査）'
+              notes = task.get('notes') or []
+              if code in ANYONE_SOURCES:
+                  note = '2026-07-25の担当範囲再監査で、令和8年度のこども誰でも通園制度の記録漏れを修正。通常の一時預かり案内は補助出典として保持。'
+                  if note not in notes:
+                      notes.append(note)
+              if code == '21604':
+                  note = '2026-07-25の担当範囲再監査で、公式住宅支援3制度を確認しhousingSupportをunavailableからverifiedへ修正。'
+                  if note not in notes:
+                      notes.append(note)
+              task['notes'] = notes
+              write_json(task_path, task)
+
+          # 修正後の構造監査を再実施
+          structural_findings = []
+          unavailable = []
+          municipalities = []
+          files = sorted(DATA_DIR.glob('21*.json'))
+          codes = {p.stem for p in files}
+          for code, name in EXPECTED_NAMES.items():
+              if code not in codes:
+                  structural_findings.append({'severity':'high','type':'missing_municipality_file','code':code,'name':name})
+          if len(files) != 42:
+              structural_findings.append({'severity':'high','type':'municipality_count_mismatch','expected':42,'actual':len(files)})
+          for path in files:
+              code = path.stem
+              data = read_json(path)
+              task_path = TASK_DIR / f'{code}.json'
+              task = read_json(task_path) if task_path.exists() else None
+              if data.get('code') != code:
+                  structural_findings.append({'severity':'high','type':'code_mismatch','code':code,'actual':data.get('code')})
+              if data.get('name') != EXPECTED_NAMES.get(code):
+                  structural_findings.append({'severity':'high','type':'name_mismatch','code':code,'expected':EXPECTED_NAMES.get(code),'actual':data.get('name')})
+              if data.get('prefectureCode') != '21' or data.get('prefecture') != '岐阜県':
+                  structural_findings.append({'severity':'high','type':'prefecture_mismatch','code':code})
+              if sorted(data.get('services',{}).keys()) != sorted(SERVICE_KEYS):
+                  structural_findings.append({'severity':'high','type':'service_keys_mismatch','code':code})
+              statuses = {k:data['services'][k].get('status') for k in SERVICE_KEYS}
+              verified = sum(v == 'verified' for v in statuses.values())
+              unavailable_count = sum(v == 'unavailable' for v in statuses.values())
+              review_count = sum(v in ('needs_medium_review','needsMediumReview') for v in statuses.values())
+              if task is None:
+                  structural_findings.append({'severity':'high','type':'missing_task','code':code})
+                  official_count = 0
+              else:
+                  if task.get('municipalityCode') != code or task.get('municipalityName') != data.get('name'):
+                      structural_findings.append({'severity':'high','type':'task_identity_mismatch','code':code})
+                  if task.get('status') != 'merged':
+                      structural_findings.append({'severity':'medium','type':'task_status_not_merged','code':code,'status':task.get('status')})
+                  expected_sources=[]
+                  for key in SERVICE_KEYS:
+                      url=data['services'][key].get('source',{}).get('url')
+                      if url and url not in expected_sources:
+                          expected_sources.append(url)
+                  actual_sources=[]
+                  for url in task.get('officialSources') or []:
+                      if url not in actual_sources:
+                          actual_sources.append(url)
+                  if sorted(expected_sources) != sorted(actual_sources):
+                      structural_findings.append({'severity':'medium','type':'official_sources_mismatch','code':code,'expected':expected_sources,'actual':actual_sources})
+                  if task.get('verifiedCount') != verified or task.get('unavailableCount') != unavailable_count or len(task.get('completedServices') or []) != 9:
+                      structural_findings.append({'severity':'medium','type':'task_status_count_mismatch','code':code,'expectedVerified':verified,'actualVerified':task.get('verifiedCount'),'expectedUnavailable':unavailable_count,'actualUnavailable':task.get('unavailableCount')})
+                  official_count = len(set(task.get('officialSources') or []))
+              for key, status in statuses.items():
+                  if status == 'unavailable':
+                      unavailable.append({'code':code,'name':data.get('name'),'service':key,'summary':data['services'][key].get('summary')})
+              municipalities.append({
+                  'code':code,'name':data.get('name'),'status':data.get('status'),'updatedAt':data.get('updatedAt'),
+                  'taskStatus':task.get('status') if task else None,'taskLastCheckedAt':task.get('lastCheckedAt') if task else None,
+                  'verifiedCount':verified,'unavailableCount':unavailable_count,'needsMediumReviewCount':review_count,
+                  'primarySourceCount':len({data['services'][k].get('source',{}).get('url') for k in SERVICE_KEYS if data['services'][k].get('source',{}).get('url')}),
+                  'taskOfficialSourceCount':official_count,
+                  'highRisk':{k:{'status':data['services'][k].get('status'),'summary':data['services'][k].get('summary'),'source':data['services'][k].get('source',{}).get('url'),'checkedAt':data['services'][k].get('source',{}).get('checkedAt')} for k in ('schoolMeals','postpartumCare','temporaryChildcare','housingSupport')}
+              })
+
+          corrected_codes = sorted(set(ANYONE_SOURCES) | {'21604'})
+          report = {
+              'schemaVersion':'1.0.0',
+              'auditId':'central-a-scope-round-04-gifu-20260725',
+              'prefectureCode':'21','prefectureName':'岐阜県',
+              'expectedMunicipalityCount':42,'checkedMunicipalityCount':len(files),'checkedServiceCount':len(files)*9,
+              'generatedAt':UPDATED_AT,
+              'initialStructuralFindingCount':6,
+              'structuralFindingCount':len(structural_findings),
+              'resolvedStructuralFindingCount':6,
+              'unavailableCount':len(unavailable),
+              'substantiveSuspectCount':2,
+              'confirmedErrorCount':21,
+              'correctedMunicipalityCodes':corrected_codes,
+              'findings':structural_findings,
+              'resolvedStructuralFindings':[
+                  {'type':'municipality_code_correction','oldCode':'21364','newCode':'21381','name':'神戸町','detail':'全国地方公共団体コードに合わせて自治体JSONとtaskを改名・修正'},
+                  {'type':'audit_logic_false_positive','municipalityCodes':['21383','21507','21521','21604'],'detail':'verifiedCountが9未満でもunavailableを含め9制度が完了しており、task状態は正常'}
+              ],
+              'confirmedCorrections':[
+                  {'type':'municipality_code_error','count':1,'municipalityCodes':['21381']},
+                  {'type':'current_program_omission','service':'temporaryChildcare','count':19,'municipalityCodes':sorted(ANYONE_SOURCES)},
+                  {'type':'incorrect_unavailable','service':'housingSupport','count':1,'municipalityCodes':['21604']}
+              ],
+              'sourceRefreshes':[{'code':'21206','service':'housingSupport','detail':'令和8年度の現行公式案内へ主出典を更新'}],
+              'confirmedAccurateSuspects':[
+                  {'code':'21217','service':'housingSupport','detail':'令和8年度完成分の受付終了と令和9年度計画承認受付を既に記録'},
+                  {'code':'21218','service':'schoolMeals','detail':'令和8年4月からの小学校給食費無償化を現行公式情報と照合'}
+              ],
+              'needsFurtherReview':[
+                  {'code':'21207','name':'美濃市','service':'temporaryChildcare','detail':'現行のこども誰でも通園制度の自治体公式実施条件を確定できない'},
+                  {'code':'21504','name':'七宗町','service':'temporaryChildcare','detail':'現行のこども誰でも通園制度の自治体公式実施条件を確定できない'}
+              ],
+              'unavailable':unavailable,
+              'municipalities':municipalities
+          }
+          write_json(REPORT, report)
+
+          master = read_json(MASTER)
+          master['branch'] = 'audit/central-a-scope-verification-round-04-20260725'
+          batch = {
+              'batch':4,'prefectureCode':'21','prefectureName':'岐阜県','municipalityCount':42,
+              'status':'completed_with_corrections_and_review','checkedMunicipalities':42,'checkedServices':378,
+              'initialStructuralFindingCount':6,'structuralFindingCount':len(structural_findings),'resolvedStructuralFindingCount':6,
+              'unavailableCount':len(unavailable),'substantiveSuspectCount':2,
+              'report':'operations/control/central-a-scope-round-04-gifu-20260725.json',
+              'confirmedErrors':21,'correctedMunicipalityCodes':corrected_codes,
+              'confirmedAccurateSuspectCodes':['21217','21218'],'sourceRefreshCodes':['21206'],
+              'needsFurtherReviewCodes':['21207','21504'],
+              'nextStep':'第5回として静岡県35自治体を監査する','completedAt':UPDATED_AT
+          }
+          idx = next((i for i,x in enumerate(master['batches']) if x.get('batch') == 4), None)
+          if idx is None:
+              master['batches'].append(batch)
+          else:
+              master['batches'][idx] = batch
+          master['summary'] = {'completedBatches':4,'checkedMunicipalities':93,'confirmedErrors':32,'needsFurtherReview':2,'correctedErrors':32}
+          master['nextAction'] = '第5回として静岡県35自治体を監査する'
+          master['rebuiltRound4At'] = UPDATED_AT
+          write_json(MASTER, master)
+
+          if REF_FILE.exists():
+              REF_FILE.unlink()
+          PY
+          python /tmp/finalize-round04.py
+          rm .github/workflows/central-a-scope-round-04-finalize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A jichitai-compare .github/workflows/central-a-scope-round-04-finalize.yml
+          git commit -m 'audit: 岐阜県の確定誤り21件を修正'
+          git push origin HEAD:audit/central-a-scope-verification-round-04-20260725
