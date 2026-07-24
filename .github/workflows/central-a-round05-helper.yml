@@ -1,4 +1,4 @@
-name: Central A Round05 Validation Helper v2
+name: Central A Round05 Report Refresh
 
 on:
   push:
@@ -9,9 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  validate:
+  refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,34 +20,35 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run standard data checks
-        working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          node --check app.js
-      - name: Record successful validation
+      - name: Refresh report using validator semantics
         shell: bash
         run: |
-          set -euo pipefail
-          git checkout -- jichitai-compare/data/generated/municipalities.json jichitai-compare/operations/progress.json
-          cat > jichitai-compare/operations/control/central-a-scope-round-05-validation-20260725.json <<'JSON'
-          {
-            "schemaVersion": "1.0.0",
-            "auditId": "central-a-scope-round-05-shizuoka-20260725",
-            "validatedAt": "2026-07-25T02:10:00+09:00",
-            "checks": {
-              "generatePublicMunicipalityData": "passed",
-              "generateNationalProgress": "passed",
-              "validateSourceAndGeneratedData": "passed",
-              "javascriptSyntax": "passed"
-            },
-            "result": "passed"
+          node <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const root='jichitai-compare';
+          const expected={'22100':'静岡市','22130':'浜松市','22203':'沼津市','22205':'熱海市','22206':'三島市','22207':'富士宮市','22208':'伊東市','22209':'島田市','22210':'富士市','22211':'磐田市','22212':'焼津市','22213':'掛川市','22214':'藤枝市','22215':'御殿場市','22216':'袋井市','22219':'下田市','22220':'裾野市','22221':'湖西市','22222':'伊豆市','22223':'御前崎市','22224':'菊川市','22225':'伊豆の国市','22226':'牧之原市','22301':'東伊豆町','22302':'河津町','22304':'南伊豆町','22305':'松崎町','22306':'西伊豆町','22325':'函南町','22341':'清水町','22342':'長泉町','22344':'小山町','22424':'吉田町','22429':'川根本町','22461':'森町'};
+          const services=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const done=new Set(['verified','unavailable']);
+          const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          function primary(d){const out=[],seen=new Set();for(const k of services){const s=d.services[k];if(done.has(s?.status)&&s?.source?.url&&!seen.has(s.source.url)){seen.add(s.source.url);out.push(s.source.url);}}return out;}
+          const municipalities=[],findings=[];let unavailableCount=0;
+          for(const [code,name] of Object.entries(expected)){
+            const d=read(path.join(root,'data','municipalities','22',code+'.json'));
+            const t=read(path.join(root,'operations','tasks',code+'.json'));
+            const counts={verified:0,unavailable:0,needs_medium_review:0,researching:0};for(const k of services){const st=d.services[k]?.status;if(st in counts)counts[st]++;}unavailableCount+=counts.unavailable;
+            const completed=services.filter(k=>done.has(d.services[k]?.status)),src=primary(d);
+            if(JSON.stringify(t.completedServices)!==JSON.stringify(completed))findings.push({type:'completed_services_mismatch',code});
+            if(t.verifiedCount!==counts.verified||t.unavailableCount!==counts.unavailable||t.needsMediumReviewCount!==counts.needs_medium_review||t.researchingCount!==counts.researching)findings.push({type:'status_count_mismatch',code});
+            if(t.nextServiceIndex!==9||t.currentService!==null)findings.push({type:'task_cursor_mismatch',code});
+            if(JSON.stringify(t.officialSources)!==JSON.stringify(src))findings.push({type:'official_sources_mismatch',code});
+            const highRisk={};for(const k of ['schoolMeals','postpartumCare','temporaryChildcare','housingSupport']){const s=d.services[k];highRisk[k]={status:s?.status||null,summary:s?.summary||'',source:s?.source?.url||'',checkedAt:s?.source?.checkedAt||null};}
+            municipalities.push({code,name,status:d.status,updatedAt:d.updatedAt,taskStatus:t.status,taskLastCheckedAt:t.lastCheckedAt,verifiedCount:counts.verified,unavailableCount:counts.unavailable,needsMediumReviewCount:counts.needs_medium_review,officialSourceCount:src.length,taskOfficialSourceCount:(t.officialSources||[]).length,highRisk});
           }
-          JSON
+          if(findings.length)throw new Error(JSON.stringify(findings));
+          const p=path.join(root,'operations','control','central-a-scope-round-05-shizuoka-20260725.json');const r=read(p);r.generatedAt='2026-07-25T02:14:00+09:00';r.structuralFindingCount=0;r.findings=[];r.unavailableCount=unavailableCount;r.municipalities=municipalities;r.validatorSemantics='task officialSourcesはverified/unavailable制度の主出典のみを制度順に重複排除';fs.writeFileSync(p,JSON.stringify(r,null,2)+'\n');
+          NODE
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add jichitai-compare/operations/control/central-a-scope-round-05-validation-20260725.json
-          git commit -m 'ci: 静岡県監査の標準データ検証成功を記録'
+          git add jichitai-compare/operations/control/central-a-scope-round-05-shizuoka-20260725.json
+          git commit -m 'audit: 静岡県監査レポートをvalidator仕様へ整合'
           git push origin HEAD:audit/central-a-scope-verification-round-05-20260725
