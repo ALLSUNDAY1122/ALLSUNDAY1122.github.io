@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1595,
+    "municipalityCount": 1597,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -130563,6 +130563,367 @@
           },
           "source": {
             "url": "https://www.town.manazuru.kanagawa.jp/soshiki/soumubosai/bousai/disasterprevention/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14384",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "湯河原町",
+      "officialUrl": "https://www.town.yugawara.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を湯河原町公式情報で確認し、7制度をverified、病児・病後児保育とこども誰でも通園制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの通院・入院の保険診療自己負担分を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "湯河原町に住民登録があり健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院・入院時の保険診療自己負担分を助成",
+            "procedure": "小児医療証の交付申請が必要。県外受診等は払戻し手続き",
+            "excluded": "健康診断、予防接種、選定療養費、薬容器代、差額ベッド代、入院時食事療養費、文書料等"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/1014.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の現行子育て制度一覧で病児・病後児保育の実施案内を確認できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "currentStatus": "健康こどもみらい課・子育て支援の現行制度一覧を確認したが、町営・委託・広域利用の病児または病後児保育施設、対象年齢、料金、申請方法の案内は掲載されていない",
+            "relatedSupport": "保護者の病気・用事等に対応する一時預かり、ファミリーサポートセンターは別制度として実施",
+            "guidance": "利用可能な近隣制度の有無は健康こどもみらい課へ確認が必要"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と住民税非課税世帯の0～2歳児等を国制度の範囲で無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等の3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "対象施設・サービスの利用料を制度上限内で無償化",
+            "currentFee": "課税世帯の0～2歳児は保護者の町民税額等を基に保育料を算定",
+            "procedure": "保育所利用申込み、教育・保育給付認定、必要に応じ課税証明等の提出が必要",
+            "excluded": "給食費、通園送迎費、行事費等の実費"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/26680.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "学校給食費は有償で、食材高騰相当分を町が公費補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "町内小中学校に就学する児童生徒の保護者等",
+            "support": "給食食材等の物価高騰相当分を公費補助し、保護者負担の増加を抑制",
+            "latestPublishedAmount": "最新の個別金額公表ページでは、小学校月額5,500円から2,500円補助し保護者負担3,000円、中学1・2年は月額6,200円から700円補助し5,500円、中学3年は月額5,530円から730円補助し4,800円",
+            "notes": "一律完全無償化ではない。2026年度の最終負担額は学校教育課の年度案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/29/27354.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "通所型・訪問型の産後ケアを予約制で提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "湯河原町に住所があり、産後の心身の不調や育児不安等がある母子",
+            "types": "通所型、訪問型",
+            "implementation": "2025年4月から従来の通所型に加えて訪問型を開始し、2026年度は新たな事業所を追加",
+            "support": "母親の休養・心身ケア、授乳・乳房ケア、育児相談等",
+            "procedure": "予約制。健康こどもみらい課へ相談し利用申請後、実施事業所を予約",
+            "notes": "対象月齢、回数、利用料は2026年度産後ケア事業チラシ・町窓口で確認"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/22/2514.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "こども誰でも通園制度の現行利用案内を町公式サイトで確認できない",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "currentStatus": "町議会資料では制度検討を確認できるが、2026年7月時点で実施施設、月間利用上限、料金、認定・予約方法を示す町民向け現行利用案内を確認できない",
+            "relatedService": "満1歳から就学前児童を対象とする通常の一時預かりは別制度として実施",
+            "notes": "現行利用案内が公表されるまでは、こども誰でも通園制度を利用可能制度として登録しない"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/9/25331.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "平成12年5月以前着工の木造住宅の耐震診断・設計・改修費を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "平成12年5月31日以前に着工した在来工法の2階建て以下の自己用木造住宅等で、町税等滞納がない所有者",
+            "diagnosis": "耐震診断費の2分の1、上限5万円",
+            "design": "耐震補強設計費の2分の1、上限10万円",
+            "retrofit": "耐震改修工事費の2分の1、上限35万円",
+            "procedure": "契約・診断・工事前に申請し、年度内の期限までに実績報告"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/5/1070.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "一辺50cm以上2m未満の粗大ごみを1点500円の予約制戸別収集等で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "一辺が50センチメートル以上2メートル未満の大型家庭ごみ等",
+            "collection": "毎月第2・第4水曜日の前週金曜日までに電話・来庁で申込み、粗大ごみ収集券を購入",
+            "fee": "戸別収集は原則1点500円。自転車、スプリングベッド等の特定品目は美化センター処理手数料を別途加算",
+            "directDelivery": "湯河原美化センターへの直接持込みも可能",
+            "procedure": "受付番号を確認し、収集券を貼って指定場所へ排出"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/7/1235.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "地震・津波・風水害・土砂災害・洪水・高潮の防災マップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "2025年度版ゆがわら防災マップと災害種別ごとのハザードマップを公開",
+            "risks": "地震、津波、土石流、がけ崩れ、藤木川・千歳川・新崎川等の洪水、高潮等",
+            "facilities": "広域避難場所、避難施設、緊急避難場所、津波避難ビルの一覧と位置図を掲載",
+            "support": "自宅・生活圏の災害リスク、避難先、避難経路、災害時の対処法を事前確認可能"
+          },
+          "source": {
+            "url": "https://www.town.yugawara.kanagawa.jp/soshiki/69/1890.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "14401",
+      "prefectureCode": "14",
+      "prefecture": "神奈川県",
+      "name": "愛川町",
+      "officialUrl": "https://www.town.aikawa.kanagawa.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を愛川町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの通院・入院の保険診療自己負担分を所得制限なく助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "愛川町に居住し健康保険に加入する0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院・入院に係る保険診療の自己負担分を助成",
+            "incomeLimit": "養育者の所得制限なし。県補助事業のため所得審査は実施",
+            "procedure": "出生・転入時等に小児医療証の交付申請が必要",
+            "excluded": "学校管理下のけが等で災害共済給付対象となる場合、保険外費用等"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/soshiki/minsei/kosodate_shien/kodomofukushi/info/josei/syouni.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学6年生の病児を町内施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "病児保育事業",
+            "target": "病気中または病気等で集団生活が難しく、保護者の勤務・傷病・冠婚葬祭等により家庭保育が困難な生後6か月から小学6年生",
+            "facility": "＆ケアキッズ（愛川町中津7350番地）",
+            "area": "愛川町・協定市町村の居住児童、または町内保育所・認定こども園・小学校等の在籍児童",
+            "procedure": "事前登録、医師受診・利用連絡票、施設予約等が必要"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/kosodate_kyoiku/11793.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児等を無償化し、課税世帯0～2歳児は所得等で算定",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育所・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児等",
+            "coverage": "幼児教育・保育無償化の対象施設・サービス利用料を制度範囲内で無償化",
+            "currentFee": "課税世帯0～2歳児は父母の町民税額、年齢、保育必要量区分に基づく階層別保育料",
+            "meal": "0～2歳児の給食費は保育料に含まれ、3～5歳児は施設による実費徴収",
+            "procedure": "施設利用申込みと教育・保育給付認定等が必要"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/kosodate_kyoiku/kosodate/nursery_kindergarten/7255.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校給食費を公会計で徴収し、国交付金・町公費負担分を控除",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "system": "町立小中学校の学校給食費を町が徴収・管理する公会計方式",
+            "baseAmount": "令和8年度規則上の額は小学1年4月2,600円、小学校のその他月5,200円、中学校月6,200円（8月等を除く）",
+            "unitPrice": "日割計算時は小学校1食313円、中学校1食392円",
+            "publicSupport": "国の交付金等と町の公費負担額を除いた額を保護者負担とする特例を適用",
+            "support": "就学援助認定世帯は給食費を含む必要経費の一部を援助",
+            "notes": "小中学校一律完全無償化ではない"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/section/reiki_int/reiki_honbun/g233RG00000760.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ予約制の来所型産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "program": "産後ケア『ひなたぼっこ』",
+            "target": "町内在住で産後1年未満の母親と赤ちゃん。父親やきょうだいも参加可能",
+            "facility": "健康プラザ2階",
+            "hours": "指定日の9時30分から11時30分、受付11時まで",
+            "support": "身長・体重測定、育児・栄養・母乳の個別相談、保護者の交流・休息支援",
+            "procedure": "開催前日までに健康推進課へ予約"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/soshiki/minsei/kenko_suishin/boshi/event/1570152653535.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで中津保育園で受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "乳児等通園支援事業（こども誰でも通園制度）",
+            "target": "保育所・認定こども園・小規模保育・企業主導型施設に在籍していない生後6か月から満3歳未満の子ども",
+            "hours": "子ども1人につき月10時間まで。未利用分の繰越不可",
+            "facility": "愛川町立中津保育園",
+            "fee": "1時間300円。町民税所得割世帯合算額77,101円未満は100円、生活保護世帯は無料",
+            "procedure": "つうえんポータルで認定申請後、施設面談・予約"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/kosodate_kyoiku/kosodate/nursery_kindergarten/18065.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "平成12年5月以前建築の木造住宅の耐震診断・設計・改修等を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "制度要件を満たす既存木造住宅の所有者。令和8年度から新耐震グレーゾーン住宅も対象へ拡充",
+            "diagnosis": "耐震診断費の50％、上限7万円",
+            "design": "耐震改修設計費の50％、上限8万円",
+            "retrofit": "耐震改修工事費の50％、上限80万円",
+            "supervision": "耐震改修監理費の50％、上限5万円",
+            "procedure": "契約・診断・工事前に都市施設課へ相談・申請"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/soshiki/kensetsu/toshi/toshi/info/taisin/1425007847294.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "50cm超の粗大ごみを予約制戸別収集または美化プラントへ直接搬入",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "縦・横・高さのいずれか一辺が50cmを超える家庭ごみ。180cm超かつ幅・厚さ10cm超は大型粗大ごみ",
+            "collection": "電話・メールで申し込み、毎週木曜日を基本に戸別訪問収集",
+            "collectionFee": "粗大ごみ1点500円、大型粗大ごみ1点1,000円。1回3点以内",
+            "directDelivery": "美化プラントへ予約不要で直接搬入可能",
+            "deliveryFee": "粗大ごみ1点300円、大型粗大ごみ1点600円"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/kurashi/gomi_kankyou/gomi/sodaigomi/6903.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害の危険区域と避難所を掲載したハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "愛川町洪水・土砂災害ハザードマップ",
+            "risks": "相模川・中津川等の洪水浸水、土石流、急傾斜地崩壊、地すべり等",
+            "facilities": "指定避難所、浸水想定区域、土砂災害警戒・特別警戒区域、災害への備えを掲載",
+            "updates": "県公表の洪水浸水想定区域修正等を案内し、最新区域図へのリンクを提供"
+          },
+          "source": {
+            "url": "https://www.town.aikawa.kanagawa.jp/bousai/bou/sonae/10317.html",
             "checkedAt": "2026-07-24"
           }
         }
