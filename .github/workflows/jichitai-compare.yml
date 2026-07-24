@@ -78,17 +78,33 @@ jobs:
           console.log(`normalized ${changed.length} municipalities / ${convertedServices} services`);
           NODE
       - name: Generate and validate west complete state
+        id: validation
         working-directory: jichitai-compare
+        shell: bash
         run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          node --check app.js
-          node <<'NODE'
+          set +e
+          {
+            npm run generate
+            npm run progress
+            npm run validate:generated
+            node --check app.js
+            node <<'NODE'
           const fs=require('fs'),path=require('path');let review=0,municipalities=0;
           for(const pref of fs.readdirSync('data/municipalities')){if(!/^(3[1-9]|4[0-7])$/.test(pref))continue;for(const file of fs.readdirSync(`data/municipalities/${pref}`)){if(!/^\d{5}\.json$/.test(file))continue;municipalities++;const d=JSON.parse(fs.readFileSync(`data/municipalities/${pref}/${file}`,'utf8'));review+=Object.values(d.services??{}).filter(s=>s.status==='needs_medium_review').length;}}
           if(municipalities!==476||review!==0)throw new Error(`west validation mismatch municipalities=${municipalities} review=${review}`);
           NODE
+          } > west-resolution-validation.log 2>&1
+          status=$?
+          cat west-resolution-validation.log
+          exit $status
+      - name: Upload full validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: west-resolution-validation-log
+          path: jichitai-compare/west-resolution-validation.log
+          if-no-files-found: error
+          retention-days: 7
       - name: Restore standard workflow and commit
         run: |
           git show origin/region/west:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
