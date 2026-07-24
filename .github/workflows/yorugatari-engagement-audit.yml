@@ -28,6 +28,7 @@ on:
       - yorugatari/tools/ensure-landing-sharing.mjs
       - yorugatari/tools/live-release-audit.mjs
       - yorugatari/tools/engagement-audit.cjs
+      - yorugatari/tools/landing-share-audit.cjs
       - .github/workflows/yorugatari-engagement-audit.yml
 
 concurrency:
@@ -124,7 +125,7 @@ jobs:
   engagement-audit:
     needs: normalize
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 22
     steps:
       - name: Check out latest main
         uses: actions/checkout@v4
@@ -142,6 +143,7 @@ jobs:
         run: |
           node --check yorugatari/tools/live-release-audit.mjs
           node --check yorugatari/tools/engagement-audit.cjs
+          node --check yorugatari/tools/landing-share-audit.cjs
           node --check yorugatari/assets/story.js
           node --check yorugatari/assets/analytics.js
           node --check yorugatari/assets/engagement.js
@@ -158,16 +160,23 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Audit published engagement
-        id: audit
+        id: engagement_audit
         continue-on-error: true
         run: node yorugatari/tools/engagement-audit.cjs
 
-      - name: Preserve engagement report
+      - name: Audit published landing sharing and starts
+        id: landing_audit
+        continue-on-error: true
+        run: node yorugatari/tools/landing-share-audit.cjs
+
+      - name: Preserve audit reports
         if: always()
         shell: bash
         run: |
           test -f yorugatari-engagement-report.json
+          test -f yorugatari-landing-share-report.json
           cp yorugatari-engagement-report.json /tmp/yorugatari-engagement-report.json
+          cp yorugatari-landing-share-report.json /tmp/yorugatari-landing-share-report.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           saved=false
@@ -175,12 +184,13 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/yorugatari-engagement-report.json yorugatari/tools/engagement-audit-latest.json
-            git add yorugatari/tools/engagement-audit-latest.json
+            cp /tmp/yorugatari-landing-share-report.json yorugatari/tools/landing-share-audit-latest.json
+            git add yorugatari/tools/engagement-audit-latest.json yorugatari/tools/landing-share-audit-latest.json
             if git diff --cached --quiet; then
               saved=true
               break
             fi
-            git commit -m "Record Yorugatari engagement audit [skip ci]"
+            git commit -m "Record Yorugatari engagement and landing audits [skip ci]"
             if git push origin HEAD:main; then
               saved=true
               break
@@ -194,10 +204,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: yorugatari-engagement-report
-          path: yorugatari-engagement-report.json
+          path: |
+            yorugatari-engagement-report.json
+            yorugatari-landing-share-report.json
           if-no-files-found: error
           retention-days: 14
 
-      - name: Enforce engagement result
+      - name: Enforce audit results
         if: always()
-        run: test "${{ steps.audit.outcome }}" = "success"
+        run: |
+          test "${{ steps.engagement_audit.outcome }}" = "success"
+          test "${{ steps.landing_audit.outcome }}" = "success"
