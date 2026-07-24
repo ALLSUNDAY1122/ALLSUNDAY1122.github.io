@@ -1,151 +1,77 @@
-name: Build East Release and Audit 1248
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  release:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.12'}
-      - uses: actions/setup-node@v4
-        with: {node-version: '20'}
-      - run: python -m pip install --disable-pip-version-check beautifulsoup4
-      - name: Publish regional east delta and audit remaining
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
-          git fetch origin main region/east
-          python <<'PY'
-          import concurrent.futures, json, math, re, subprocess, time, urllib.request
-          from pathlib import Path
-          from bs4 import BeautifulSoup
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
 
-          source_url='https://www.e-stat.go.jp/municipalities/cities/areacode?year=2026&month=1&day=1'
-          prefectures={'01':'北海道','02':'青森県','03':'岩手県','04':'宮城県','05':'秋田県','06':'山形県','07':'福島県','08':'茨城県','09':'栃木県','10':'群馬県','11':'埼玉県','12':'千葉県','13':'東京都','14':'神奈川県','15':'新潟県','16':'富山県','17':'石川県','18':'福井県','19':'山梨県','20':'長野県','21':'岐阜県','22':'静岡県','23':'愛知県','24':'三重県','25':'滋賀県','26':'京都府','27':'大阪府','28':'兵庫県','29':'奈良県','30':'和歌山県','31':'鳥取県','32':'島根県','33':'岡山県','34':'広島県','35':'山口県','36':'徳島県','37':'香川県','38':'愛媛県','39':'高知県','40':'福岡県','41':'佐賀県','42':'長崎県','43':'熊本県','44':'大分県','45':'宮崎県','46':'鹿児島県','47':'沖縄県'}
-          excluded={'01695','01696','01697','01698','01699','01700'}
-          east_prefectures={'08','09','10','11','12','13','14','15','19','20'}
-          east_a_prefectures={'10','13','19','20'}
-          project=Path('jichitai-compare')
-
-          def fetch_page(page):
-              url=source_url+f'&page={page}'
-              for attempt in range(4):
-                  try:
-                      request=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 municipality-audit/1.0'})
-                      with urllib.request.urlopen(request,timeout=30) as response:
-                          return page,response.read().decode('utf-8','replace')
-                  except Exception:
-                      if attempt==3:raise
-                      time.sleep(2**attempt)
-
-          with concurrent.futures.ThreadPoolExecutor(max_workers=12) as executor:
-              pages=dict(executor.map(fetch_page,range(1,97)))
-          text=BeautifulSoup(pages[1],'html.parser').get_text(' ',strip=True)
-          result_match=re.search(r'全([\d,]+)件',text)
-          if not result_match or math.ceil(int(result_match.group(1).replace(',',''))/20)!=96:
-              raise RuntimeError('unexpected e-Stat result pagination')
-
-          official={}
-          for page in range(1,97):
-              soup=BeautifulSoup(pages[page],'html.parser')
-              left=soup.select_one('table.stat-areacode-list-table.__fix')
-              right=next((table for table in soup.select('table.stat-areacode-list-table') if '__fix' not in (table.get('class') or [])),None)
-              if left is None or right is None:raise RuntimeError(f'page {page}: synchronized tables not found')
-              codes=[cell.get_text(strip=True) for cell in left.select('tbody td.htCode')]
-              rows=right.select('tbody > tr')
-              if len(codes)!=len(rows):raise RuntimeError(f'page {page}: row mismatch')
-              for code,row in zip(codes,rows):
-                  if not re.fullmatch(r'\d{5}',code) or code in excluded or code[:2] not in prefectures:continue
-                  parent=row.select_one('td.parentCityNm')
-                  self_cell=row.select_one('td.selfCityNm')
-                  parent_name=parent.get_text(strip=True) if parent else ''
-                  self_name=self_cell.get_text(strip=True) if self_cell else ''
-                  name=self_name or parent_name
-                  if not name:continue
-                  if name.endswith('区') and not ('13101'<=code<='13123'):continue
-                  if not (name.endswith(('市','町','村')) or ('13101'<=code<='13123')):continue
-                  official[code]={'code':code,'name':name,'prefectureCode':code[:2],'prefecture':prefectures[code[:2]]}
-          if len(official)!=1741:raise RuntimeError(f'official count mismatch: {len(official)}')
-          official_east={code:item for code,item in official.items() if item['prefectureCode'] in east_prefectures}
-          if len(official_east)!=450:raise RuntimeError(f'east count mismatch: {len(official_east)}')
-
-          progress=json.loads((project/'operations/progress.json').read_text())
-          previous_total=progress['registeredMunicipalities']
-          main_codes={path.stem for path in (project/'data/municipalities').glob('*/*.json')}
-          region_paths=subprocess.check_output(['git','ls-tree','-r','--name-only','origin/region/east','--','jichitai-compare/data/municipalities'],text=True).splitlines()
-          region_codes={Path(path).stem for path in region_paths if re.search(r'/\d{5}\.json$',path)}
-          selected_codes=sorted((set(official_east)&region_codes)-main_codes)
-          selected=[]
-          for code in selected_codes:
-              data_path=project/'data/municipalities'/code[:2]/f'{code}.json'
-              task_path=project/'operations/tasks'/f'{code}.json'
-              data_path.parent.mkdir(parents=True,exist_ok=True)
-              task_path.parent.mkdir(parents=True,exist_ok=True)
-              data_path.write_text(subprocess.check_output(['git','show',f'origin/region/east:{data_path.as_posix()}'],text=True))
-              task=json.loads(subprocess.check_output(['git','show',f'origin/region/east:{task_path.as_posix()}'],text=True))
-              task['status']='merged';task['currentService']=None;task['nextServiceIndex']=9;task['blockers']=[];task['lastUpdatedAt']='2026-07-24T12:48:00+09:00'
-              actor='統括A'
-              prior=task.get('lastUpdatedBy')
-              if isinstance(prior,list):
-                  if actor not in prior:prior.append(actor)
-              elif prior:
-                  if actor not in str(prior):task['lastUpdatedBy']=f'{prior}, {actor}'
-              else:task['lastUpdatedBy']=actor
-              task_path.write_text(json.dumps(task,ensure_ascii=False,separators=(',',':'))+'\n')
-              data=json.loads(data_path.read_text())
-              selected.append({'code':code,'name':data['name'],'prefectureCode':code[:2],'prefecture':data['prefecture'],'sourcePullRequestNumber':task.get('pullRequestNumber')})
-
-          branch_codes=main_codes|set(selected_codes)
-          remaining_codes=sorted(set(official_east)-branch_codes)
-          heads=subprocess.check_output(['git','ls-remote','--heads','origin','refs/heads/data/*'],text=True).splitlines()
-          branches_by_code={}
-          for line in heads:
-              ref=line.split('\t',1)[1].removeprefix('refs/heads/')
-              branch_match=re.search(r'(\d{5})',ref)
-              if branch_match:branches_by_code.setdefault(branch_match.group(1),[]).append(ref)
-
-          def enrich(code):
-              item=dict(official_east[code])
-              item['sessionId']='east-a' if item['prefectureCode'] in east_a_prefectures else 'east-b'
-              item['existingDataBranches']=sorted(branches_by_code.get(code,[]))
-              item['state']='branch_exists' if item['existingDataBranches'] else 'unstarted'
-              return item
-          remaining=[enrich(code) for code in remaining_codes]
-          east_a=[item for item in remaining if item['sessionId']=='east-a']
-          east_b=[item for item in remaining if item['sessionId']=='east-b']
-          by_prefecture=[]
-          for code in sorted(east_prefectures):
-              assigned=sum(item['prefectureCode']==code for item in official_east.values())
-              published=sum(item['prefectureCode']==code and item['code'] in branch_codes for item in official_east.values())
-              remaining_count=sum(item['prefectureCode']==code for item in remaining)
-              by_prefecture.append({'prefectureCode':code,'prefecture':prefectures[code],'assigned':assigned,'published':published,'remaining':remaining_count})
-          report={'schemaVersion':'1.0.0','createdAt':'2026-07-24T12:48:00+09:00','source':{'authority':'政府統計の総合窓口 e-Stat','asOf':'2026-01-01','url':source_url,'officialMunicipalityCount':1741},'scope':{'team':'東日本調査班','prefectureCodes':sorted(east_prefectures),'assignedMunicipalities':450},'release':{'previousPublishedMunicipalities':previous_total,'selectedMunicipalities':len(selected),'selected':selected},'summary':{'publishedMunicipalities':len(set(official_east)&branch_codes),'regionalCompleteUnpublishedMunicipalities':0,'remainingMunicipalities':len(remaining),'eastARemaining':len(east_a),'eastBRemaining':len(east_b),'unstarted':sum(item['state']=='unstarted' for item in remaining),'branchExists':sum(item['state']=='branch_exists' for item in remaining)},'nextTargets':{'east-a':next((item for item in east_a if item['state']=='unstarted'),east_a[0] if east_a else None),'east-b':next((item for item in east_b if item['state']=='unstarted'),east_b[0] if east_b else None)},'byPrefecture':by_prefecture,'remaining':remaining}
-          if report['summary']['publishedMunicipalities']+report['summary']['remainingMunicipalities']!=450:raise RuntimeError('east audit total mismatch')
-          (project/'operations/control/east-remaining-audit-20260724.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
-          print(json.dumps(report['release'],ensure_ascii=False))
-          print(json.dumps(report['summary'],ensure_ascii=False))
-          print(json.dumps(report['nextTargets'],ensure_ascii=False))
-          PY
-      - name: Generate and validate
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
-        run: npm run generate && npm run progress && npm run validate:generated && node --check app.js
-      - name: Update homepage count
-        run: node -e "const fs=require('fs'),p=require('./jichitai-compare/operations/progress.json'),f='jichitai-compare/index.html';fs.writeFileSync(f,fs.readFileSync(f,'utf8').replace(/\\d+自治体・9制度/g,p.registeredMunicipalities+'自治体・9制度'))"
-      - name: Commit release and audit
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Publish latest east municipalities and record remaining audit'
-          git push origin HEAD
+        run: npm run smoke:public
