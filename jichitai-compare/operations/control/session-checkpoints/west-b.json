@@ -4,8 +4,20 @@
   "displayName": "西日本調査班B",
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
-  "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-  "updatedAt": "2026-07-24T23:42:00+09:00",
+  "prefectureCodes": [
+    "31",
+    "32",
+    "34",
+    "35",
+    "36",
+    "38",
+    "41",
+    "42",
+    "44",
+    "45",
+    "47"
+  ],
+  "updatedAt": "2026-07-25T00:26:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -15,7 +27,7 @@
   "ciStatus": "success",
   "completedSinceSplit": [],
   "blocked": [],
-  "nextAction": "担当自治体の新規調査は停止。全国1,741自治体の完全公開後は、公式情報更新、差し戻し、自治体識別異常、CI失敗が発生した場合のみ品質監査を再開する。",
+  "nextAction": "概略検証第2回として、第1回未対象の島根県自治体から約25自治体を検証する。全10回程度で担当250自治体を網羅する。",
   "completionEvidence": {
     "assignedPrefectureCount": 11,
     "assignedMunicipalityCount": 250,
@@ -78,10 +90,26 @@
     "ciRunNumber": 6781,
     "configuredSampleCount": 4,
     "samples": [
-      {"region": "north", "code": "01100", "name": "札幌市"},
-      {"region": "east", "code": "13123", "name": "江戸川区"},
-      {"region": "central", "code": "27100", "name": "大阪市"},
-      {"region": "west-b", "code": "47382", "name": "与那国町"}
+      {
+        "region": "north",
+        "code": "01100",
+        "name": "札幌市"
+      },
+      {
+        "region": "east",
+        "code": "13123",
+        "name": "江戸川区"
+      },
+      {
+        "region": "central",
+        "code": "27100",
+        "name": "大阪市"
+      },
+      {
+        "region": "west-b",
+        "code": "47382",
+        "name": "与那国町"
+      }
     ],
     "checks": [
       "自治体別ページのHTTP取得",
@@ -111,17 +139,61 @@
       "auditedAt": "2026-07-24T23:02:00+09:00",
       "sampleCount": 11,
       "samples": [
-        {"prefectureCode": "31", "code": "31201", "name": "鳥取市"},
-        {"prefectureCode": "32", "code": "32201", "name": "松江市"},
-        {"prefectureCode": "34", "code": "34100", "name": "広島市"},
-        {"prefectureCode": "35", "code": "35203", "name": "山口市"},
-        {"prefectureCode": "36", "code": "36201", "name": "徳島市"},
-        {"prefectureCode": "38", "code": "38201", "name": "松山市"},
-        {"prefectureCode": "41", "code": "41201", "name": "佐賀市"},
-        {"prefectureCode": "42", "code": "42201", "name": "長崎市"},
-        {"prefectureCode": "44", "code": "44201", "name": "大分市"},
-        {"prefectureCode": "45", "code": "45201", "name": "宮崎市"},
-        {"prefectureCode": "47", "code": "47382", "name": "与那国町"}
+        {
+          "prefectureCode": "31",
+          "code": "31201",
+          "name": "鳥取市"
+        },
+        {
+          "prefectureCode": "32",
+          "code": "32201",
+          "name": "松江市"
+        },
+        {
+          "prefectureCode": "34",
+          "code": "34100",
+          "name": "広島市"
+        },
+        {
+          "prefectureCode": "35",
+          "code": "35203",
+          "name": "山口市"
+        },
+        {
+          "prefectureCode": "36",
+          "code": "36201",
+          "name": "徳島市"
+        },
+        {
+          "prefectureCode": "38",
+          "code": "38201",
+          "name": "松山市"
+        },
+        {
+          "prefectureCode": "41",
+          "code": "41201",
+          "name": "佐賀市"
+        },
+        {
+          "prefectureCode": "42",
+          "code": "42201",
+          "name": "長崎市"
+        },
+        {
+          "prefectureCode": "44",
+          "code": "44201",
+          "name": "大分市"
+        },
+        {
+          "prefectureCode": "45",
+          "code": "45201",
+          "name": "宮崎市"
+        },
+        {
+          "prefectureCode": "47",
+          "code": "47382",
+          "name": "与那国町"
+        }
       ],
       "checks": [
         "生成HTMLの存在",
@@ -136,7 +208,10 @@
       "pullRequestNumber": 2871,
       "ciRunNumber": 6905,
       "municipalityCount": 27,
-      "prefectureCounts": {"31": 18, "32": 9},
+      "prefectureCounts": {
+        "31": 18,
+        "32": 9
+      },
       "removedText": "西日本調査班の調査対象。",
       "sourceSummaryInternalTermRemainingCount": 0,
       "generatedPageInternalTermRemainingCount": 0,
@@ -150,14 +225,64 @@
       "pullRequestNumber": 2891,
       "ciRunNumber": 6930,
       "municipalityCount": 250,
-      "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-      "forbiddenPhrases": ["調査班", "初期登録対象", "移行監査", "地域正本"],
+      "prefectureCodes": [
+        "31",
+        "32",
+        "34",
+        "35",
+        "36",
+        "38",
+        "41",
+        "42",
+        "44",
+        "45",
+        "47"
+      ],
+      "forbiddenPhrases": [
+        "調査班",
+        "初期登録対象",
+        "移行監査",
+        "地域正本"
+      ],
       "checks": [
         "自治体summary",
         "9制度summary",
         "自治体別静的ページ",
         "違反時JSON監査レポート"
       ]
+    }
+  },
+  "roughValidation": {
+    "status": "in_progress",
+    "plannedCycles": 10,
+    "completedCycles": 1,
+    "auditedMunicipalityCount": 25,
+    "auditedServiceCount": 225,
+    "remainingMunicipalityCount": 225,
+    "detectedResearchContentErrorCount": 0,
+    "detectedSourceMaintenanceIssueCount": 1,
+    "correctedSourceMaintenanceIssueCount": 1,
+    "lastCycle": {
+      "cycle": 1,
+      "auditPullRequestNumber": 2921,
+      "auditCiRunNumber": 7014,
+      "auditMergeCommit": "00389db96962e947d7ebc172679448bd160f8605",
+      "auditFile": "jichitai-compare/operations/audits/west-b-rough-validation-cycle-01-20260725.json",
+      "municipalityCount": 25,
+      "serviceCount": 225,
+      "prefectureCodes": [
+        "31",
+        "32"
+      ],
+      "manualSpotCheckCount": 5,
+      "contentErrorCount": 0,
+      "sourceCorrectionPullRequestNumber": 2930,
+      "sourceCorrectionCiRunNumber": 7006
+    },
+    "nextCycle": {
+      "cycle": 2,
+      "plannedMunicipalityCount": 25,
+      "scopePolicy": "第1回未対象の島根県自治体から開始"
     }
   }
 }
