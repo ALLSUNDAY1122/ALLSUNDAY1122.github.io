@@ -1,45 +1,77 @@
-name: Build Assignment Summary Fix 1225
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  fix:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
-        with: {node-version: '20'}
-      - name: Fix assignment classification
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('jichitai-compare/scripts/update-progress.mjs')
-          text = path.read_text()
-          old = "  if (task.status === 'pr_open') return 'pr_open';\n  if (typeof task.currentBranch === 'string' && task.currentBranch.trim()) return 'assigned';"
-          new = "  if (task.status === 'pr_open') return 'pr_open';\n  if (task.status === 'merged') return 'assigned';\n  if (typeof task.currentBranch === 'string' && task.currentBranch.trim()) return 'assigned';"
-          if old not in text:
-              raise SystemExit('target assignmentState block not found')
-          path.write_text(text.replace(old, new, 1))
-          PY
-      - name: Generate and validate
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
-        run: npm run generate && npm run progress && npm run validate:generated && node --check app.js
-      - name: Confirm assignment result
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
         working-directory: jichitai-compare
-        run: node -e "const p=require('./operations/progress.json');if(p.assignmentSummary.unassigned!==0||p.assignmentSummary.assigned!==p.registeredMunicipalities)throw new Error(JSON.stringify(p.assignmentSummary));console.log('assignment summary normalized')"
-      - name: Commit fix and generated progress
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        shell: bash
         run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Count merged municipalities as assigned'
-          git push origin HEAD
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public
