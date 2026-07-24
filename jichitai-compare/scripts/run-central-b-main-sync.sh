@@ -1,12 +1,30 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
 SYNC_BRANCH="coord/central-b-main-sync-final-20260725"
 ROOT="jichitai-compare"
+ISSUE_NUMBER="$(jq -r '.issue.number // 0' "$GITHUB_EVENT_PATH")"
+COMMENT_BODY="$(jq -r '.comment.body // ""' "$GITHUB_EVENT_PATH")"
 
-# Always build from the main branch that contains this temporary runner.
+if [[ "$ISSUE_NUMBER" != "3131" || "$COMMENT_BODY" != *"/run-central-b-main-sync"* ]]; then
+  echo "Issue command does not match Central B synchronization; exiting."
+  exit 0
+fi
+
+report_failure() {
+  local line="$1"
+  local status="$2"
+  gh issue comment 3131 --repo "$GITHUB_REPOSITORY" --body "中日本B全国同期runnerが行${line}で失敗しました（exit ${status}）。Actionsログを確認してください。" || true
+}
+trap 'report_failure "$LINENO" "$?"' ERR
+
+# Always build from the latest main branch containing this temporary runner.
 git fetch origin main region/central
 git checkout -B "$SYNC_BRANCH" origin/main
+# Push an immediate checkpoint so runner start is externally observable.
+git push --force-with-lease origin "HEAD:$SYNC_BRANCH"
+gh issue comment 3131 --repo "$GITHUB_REPOSITORY" --body "中日本B全国同期runnerを開始しました。作業ブランチ: \`$SYNC_BRANCH\`"
+
 python3 "$ROOT/scripts/sync-central-b-audit-to-main.py"
 
 (
@@ -64,3 +82,4 @@ git add "$ROOT/operations/audits/central-b-main-sync-20260725.json" "$ROOT/opera
 git commit -m "ops: 中日本B全国同期PR番号を記録"
 git push origin "HEAD:$SYNC_BRANCH"
 gh issue comment 3131 --repo "$GITHUB_REPOSITORY" --body "中日本B監査訂正57件の同期PRを作成しました: $PR_URL"
+trap - ERR
