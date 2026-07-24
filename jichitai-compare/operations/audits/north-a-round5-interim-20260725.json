@@ -1,0 +1,15 @@
+{
+  "round": 5,
+  "auditedAt": "2026-07-25T00:57:00+09:00",
+  "codes": ["03301","03302","03303","03321","03322","03366","03381","03402","03441","03461","03482","03483","03484"],
+  "structuralAudit": {"result":"passed","checkedMunicipalities":13,"errors":0},
+  "deepChecks": [
+    {"code":"03301","name":"雫石町","services":["childcareFee","schoolMeals","temporaryChildcare"],"result":"no_confirmed_error","note":"3歳未満児保育料・3～5歳児副食費の無償化、令和8年度の学校給食費無償化、誰でも通園制度の対象・月10時間・1時間300円・実施日時が公式情報と一致。"},
+    {"code":"03302","name":"葛巻町","services":["schoolMeals","temporaryChildcare","postpartumCare"],"result":"corrected_accuracy_error","note":"学校給食費は令和5年度開始と過年度実績を確認できるが、令和8年度の対象学年、保護者負担、継続条件を現行案内で確定できないためverifiedからunavailableへ修正。誰でも通園制度と産後ケアも現行の料金・回数等を確定できずunavailableを維持。"},
+    {"code":"03303","name":"岩手町","services":["schoolMeals","temporaryChildcare","postpartumCare"],"result":"no_confirmed_error","note":"学校給食費は令和7年度の精算後補助までは確認できるが令和8年度条件は未確定のためunavailableが妥当。誰でも通園制度も水堀保育所での開始は確認できるが料金・利用時間を確定できずunavailableを維持。産後ケアの対象・類型・無料・合計6回は公式情報と一致。"},
+    {"code":"03321","name":"紫波町","services":["schoolMeals","postpartumCare","temporaryChildcare"],"result":"no_confirmed_error","note":"令和8年度の町立小学校給食費無償化と対象上限12歳、古館保育所の誰でも通園制度の対象・月10時間・基準額300円が一致。産後ケアは現行公式ページで事業実施を確認し、要約は確認範囲内。"}
+  ],
+  "confirmedErrors": [
+    {"code":"03302","path":"services.schoolMeals.status","before":"verified","after":"unavailable","severity":"medium","corrected":true}
+  ]
+}
