@@ -1,0 +1,43 @@
+name: Diagnose Central PR 2775
+
+on:
+  pull_request:
+    branches: [region/central]
+    types: [synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    if: github.head_ref == 'audit/27214-current-fy2026'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/27214-current-fy2026
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Capture complete validation output
+        working-directory: jichitai-compare
+        shell: bash
+        run: |
+          set +e
+          {
+            npm run generate
+            npm run progress
+            npm run validate:generated
+          } > central-2775-validation.log 2>&1
+          status=$?
+          cat central-2775-validation.log
+          exit $status
+      - name: Upload validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: central-2775-validation-log
+          path: jichitai-compare/central-2775-validation.log
+          if-no-files-found: error
+          retention-days: 7
