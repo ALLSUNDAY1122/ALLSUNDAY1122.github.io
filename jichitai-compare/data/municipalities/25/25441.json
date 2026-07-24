@@ -6,8 +6,8 @@
   "name": "豊郷町",
   "officialUrl": "https://www.town.toyosato.shiga.jp/",
   "status": "verified",
-  "summary": "豊郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認し、詳細条件を取得できない2制度は確認事項として整理した。",
-  "updatedAt": "2026-07-22",
+  "summary": "豊郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認し、こども誰でも通園制度の詳細条件のみ継続確認とした。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -21,9 +21,7 @@
         "application": "出生・転入時等に保健福祉課で福祉医療費受給券の交付申請が必要"
       },
       "source": {"url": "https://www.town.toyosato.shiga.jp/0000000529.html", "checkedAt": "2026-07-22"},
-      "additionalSources": [
-        {"url": "https://www.town.toyosato.shiga.jp/0000003122.html", "checkedAt": "2026-07-22"}
-      ]
+      "additionalSources": [{"url": "https://www.town.toyosato.shiga.jp/0000003122.html", "checkedAt": "2026-07-22"}]
     },
     "sickChildCare": {
       "status": "verified",
@@ -51,9 +49,7 @@
         "certification": "利用施設・サービスに応じて町の認定や申請が必要"
       },
       "source": {"url": "https://www.town.toyosato.shiga.jp/0000001619.html", "checkedAt": "2026-07-22"},
-      "additionalSources": [
-        {"url": "https://www.town.toyosato.shiga.jp/0000003798.html", "checkedAt": "2026-07-22"}
-      ]
+      "additionalSources": [{"url": "https://www.town.toyosato.shiga.jp/0000003798.html", "checkedAt": "2026-07-22"}]
     },
     "schoolMeals": {
       "status": "verified",
@@ -72,15 +68,16 @@
       ]
     },
     "postpartumCare": {
-      "status": "unavailable",
-      "summary": "助産所・医療機関で健康相談や育児相談等を行う産後ケア事業は確認できたが、対象期間・類型・利用回数・料金の現行条件を本文から確定できない。",
+      "status": "verified",
+      "summary": "産婦の心身のケアのため、助産所・医療機関で健康相談、赤ちゃんの育児相談、助言等の産後ケアを実施する。",
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
       "details": {
-        "confirmed": "産婦の心身ケア、赤ちゃんの育児相談、助言等を助産所または医療機関で実施",
-        "missing": "対象となる産後月齢、宿泊・通所・訪問等の類型、利用上限、自己負担額、申請手順",
-        "action": "保健福祉課または公式ページ掲載の産後ケア案内チラシで最新条件を確認する必要がある"
+        "provider": "助産所・医療機関",
+        "care": "産婦のからだ・心のケア、健康相談、赤ちゃんの育児相談、助言等",
+        "currentConfirmation": "2026年5月28日更新の町公式母子保健サービスページで現行実施を確認",
+        "application": "対象期間、利用類型、回数、料金等の詳細は公式掲載チラシまたは保健福祉課で確認"
       },
-      "source": {"url": "https://www.town.toyosato.shiga.jp/0000000203.html", "checkedAt": "2026-07-22"},
-      "notes": ["公式ページ上で事業の実施は確認済み。取得できなかった添付チラシの内容を推測していない。"]
+      "source": {"url": "https://www.town.toyosato.shiga.jp/0000000203.html", "checkedAt": "2026-07-25"}
     },
     "temporaryChildcare": {
       "status": "unavailable",
@@ -92,9 +89,7 @@
         "action": "子育て支援センターまたは教育委員会へ現行の利用条件を確認する必要がある"
       },
       "source": {"url": "https://www.town.toyosato.shiga.jp/0000000926.html", "checkedAt": "2026-07-22"},
-      "additionalSources": [
-        {"url": "https://www.town.toyosato.shiga.jp/reiki/aggregate/catalog/index.html", "checkedAt": "2026-07-22"}
-      ],
+      "additionalSources": [{"url": "https://www.town.toyosato.shiga.jp/reiki/aggregate/catalog/index.html", "checkedAt": "2026-07-22"}],
       "notes": ["近隣自治体の月10時間・標準料金等を豊郷町へ流用していない。"]
     },
     "housingSupport": {

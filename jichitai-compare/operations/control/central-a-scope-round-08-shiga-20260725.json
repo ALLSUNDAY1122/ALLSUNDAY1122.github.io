@@ -1,0 +1,868 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-scope-round-08-shiga-20260725",
+  "prefectureCode": "25",
+  "prefectureName": "滋賀県",
+  "expectedMunicipalityCount": 19,
+  "checkedMunicipalityCount": 19,
+  "checkedServiceCount": 171,
+  "generatedAt": "2026-07-25T03:56:00+09:00",
+  "structuralFindingCount": 0,
+  "unavailableCount": 4,
+  "substantiveSuspectCount": 3,
+  "findings": [],
+  "unavailable": [
+    {
+      "code": "25383",
+      "name": "日野町",
+      "service": "sickChildCare",
+      "summary": "令和8年度に病児保育事業所利用者支援を開始する方針は確認できるが、利用対象・施設・料金・申請方法の現行専用案内を確認できない。",
+      "source": "https://www.town.shiga-hino.lg.jp/0000008680.html"
+    },
+    {
+      "code": "25441",
+      "name": "豊郷町",
+      "service": "temporaryChildcare",
+      "summary": "令和8年度に子育て支援センターを中心としてこども誰でも通園制度へ取り組む方針は確認できたが、現行の利用案内を確定できない。",
+      "source": "https://www.town.toyosato.shiga.jp/0000000926.html"
+    },
+    {
+      "code": "25442",
+      "name": "甲良町",
+      "service": "temporaryChildcare",
+      "summary": "令和8年度から乳児等通園支援事業を実施する計画は確認できるが、現行の対象月齢・施設・料金・定員・予約条件を確定できない。",
+      "source": "https://www.kouratown.jp/gyosei/sogokakusyukeikau/2723.html"
+    },
+    {
+      "code": "25443",
+      "name": "多賀町",
+      "service": "sickChildCare",
+      "summary": "病児・病後児保育を含む子育て支援の相談窓口は確認できるが、町民向けの現行実施施設・対象年齢・料金・予約方法を公式公開情報で確定できない。",
+      "source": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/7/408.html"
+    }
+  ],
+  "substantiveSuspects": [
+    {
+      "code": "25425",
+      "name": "愛荘町",
+      "service": "schoolMeals",
+      "detail": "掲載中の給食費月額は確認できるが、令和8年度の保護者負担額として改定の有無を確定できない"
+    },
+    {
+      "code": "25441",
+      "name": "豊郷町",
+      "service": "temporaryChildcare",
+      "detail": "令和8年度の実施方針と条例は確認できるが、対象月齢・時間・料金・予約条件を確定できない"
+    },
+    {
+      "code": "25442",
+      "name": "甲良町",
+      "service": "temporaryChildcare",
+      "detail": "令和8年度からの実施計画は確認できるが、対象月齢・施設・料金・定員・予約条件を確定できない"
+    }
+  ],
+  "municipalities": [
+    {
+      "code": "25201",
+      "name": "大津市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から市立小学校の全児童は給食費自己負担0とし、中学校は1食290円、第3子以降は申請により免除する。",
+          "source": "https://www.city.otsu.lg.jp/kosodate/sc/k/p/61531.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ、居宅訪問・通所・短期入所型の産後ケアを通算7回まで提供する。",
+          "source": "https://www.city.otsu.lg.jp/kosodate/ss/se/67679.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.otsu.lg.jp/soshiki/015/1488/g/ks/72157.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市外から転入する世帯や市外の子・孫世帯と同居する世帯の住宅改修費を補助する。",
+          "source": "https://www.city.otsu.lg.jp/kurashi/j/r/h/7846.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25202",
+      "name": "彦根市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市立小学校給食費の保護者負担を0円とし、中学校給食費は値上がり分を市が負担する。",
+          "source": "https://www.city.hikone.lg.jp/kakuka/kyoiku_iinkai/8/29675.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子等へ、訪問・通所・短期入所型の産後ケアを提供する。",
+          "source": "https://www.city.hikone.lg.jp/kosodate/kosodate_shien/2/2/3/11346.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.hikone.lg.jp/kosodate/kosodate_shien/1/other/30102.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "市外から移住し、多子世帯または三世代同居で住宅を取得する45歳以下の世帯へ、取得費の10分の1・上限50万円を補助する。",
+          "source": "https://www.city.hikone.lg.jp/ijyu/shien/hojyokin/12998.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25203",
+      "name": "長浜市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市立小学校・義務教育学校前期課程の給食費を無償化し、中学校等は月額4,900円とする。",
+          "source": "https://www.city.nagahama.lg.jp/0000008675.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、宿泊・日帰り・訪問型の産後ケアを各7日または7回まで提供する。",
+          "source": "https://www.city.nagahama.lg.jp/0000002238.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.nagahama.lg.jp/0000016546.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世帯・若者夫婦世帯の市内住宅新築または中古住宅等の改修を、最大150万円補助する。",
+          "source": "https://www.city.nagahama.lg.jp/0000016564.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25204",
+      "name": "近江八幡市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度から、市内在住の保護者に養育される市立小中学校の児童生徒の給食費を無償化する。",
+          "source": "https://www.city.omihachiman.lg.jp/mokutekibetu/kosodate/shochu/3/41221.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを各7回まで提供する。",
+          "source": "https://www.city.omihachiman.lg.jp/url/36989.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等に通っていない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月3時間まで利用できる。",
+          "source": "https://www.city.omihachiman.lg.jp/kosodate/mishugaku/1/39430.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯へ、住宅取得・賃借・引越し費用を上限30万円または60万円補助する。",
+          "source": "https://www.city.omihachiman.lg.jp/soshiki/kikaku/konkatsu/40936.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25206",
+      "name": "草津市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月から、草津市立小中学校の学校給食費を無償化する。",
+          "source": "https://www.city.kusatsu.shiga.jp/kosodate/hoikukyoiku/kyushoku/musyouka.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産日から1年以内の母子へ、宿泊・通所・訪問型の産後ケアを提供する。",
+          "source": "https://www.city.kusatsu.shiga.jp/kosodate/ninshinshussan/kusatsusangocare.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等を利用していない生後6か月から3歳未満の児童が、こども誰でも通園制度を利用できる。",
+          "source": "https://www.city.kusatsu.shiga.jp/kosodate/ksodateoen/oshirase/daredemotsuen.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯へ、市内住居費・リフォーム費・引越費用を最大30万円または60万円補助する。",
+          "source": "https://www.city.kusatsu.shiga.jp/kosodate/ninshinshussan/shienteate/kekkonnsinnseikatu.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25207",
+      "name": "守山市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市立小中学校の給食費は月額制で、経済的に就学困難な世帯には給食費を含む就学援助を行う。",
+          "source": "https://www2.city.moriyama.lg.jp/reiki_int/reiki_honbun/i400RG00002497.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、宿泊・通所・訪問型の産後ケアを合計7回まで提供する。",
+          "source": "https://www.city.moriyama.lg.jp/kosodatekyouiku/ninshinshussan/1002252/1002282.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等を利用していない生後6か月から3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodomoshisetsu/1014315.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯へ、市内住宅の取得・賃借・リフォーム・引越費用を最大30万円または60万円補助する。",
+          "source": "https://www.city.moriyama.lg.jp/kurashitetsuzuki/koseki/1001513/1003735.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25208",
+      "name": "栗東市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は市立小学校の給食費を無償化し、中学校の保護者負担額を月4,750円に据え置く。",
+          "source": "https://www.city.ritto.lg.jp/soshiki/kyoiku/gakoukyusyoku/15089.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ、短期入所・通所・居宅訪問型の産後ケアを合計7日まで提供する。",
+          "source": "https://www.city.ritto.lg.jp/soshiki/kodomo_katei/kodomokatei/boshihoken/ninsinsyultusan/6647.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等を利用していない生後6か月から3歳未満の児童が、こども誰でも通園制度を月3時間まで利用できる。",
+          "source": "https://www.city.ritto.lg.jp/soshiki/kodomo_katei/yoji/rittodaretuu/index.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯を対象とする令和8年度結婚新生活支援補助金を案内しているが、詳細条件・金額は公式ページで準備中となっている。",
+          "source": "https://www.city.ritto.lg.jp/QR/13164.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25209",
+      "name": "甲賀市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月から市立小学校に在籍する全児童の学校給食費を無償化する。",
+          "source": "https://edu.city.koka.lg.jp/jimu/",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年未満の保護者と乳児へ、訪問・宿泊・日帰り型の産後ケアを通算7日まで提供する。",
+          "source": "https://www.city.koka.lg.jp/22670.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等を利用していない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.koka.lg.jp/item/43037.htm",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度、市内住宅のリフォーム費を20％・上限10万円補助する。",
+          "source": "https://www.city.koka.lg.jp/11441.htm",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25210",
+      "name": "野洲市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "市立小中学校の学校給食費は、小学校月4,200円、中学校月4,900円を基本額とする。",
+          "source": "https://www.city.yasu.lg.jp/section/reiki_int/reiki_honbun/r042RG00001018.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを通算7日まで提供する。",
+          "source": "https://www.city.yasu.lg.jp/kosodate-kyoiku/ninshin-shussan/support/6928.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等を利用していない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.yasu.lg.jp/soshiki/kodomo/shien/daretsu.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度、39歳以下の新婚世帯へ住宅取得・賃借・リフォーム・引越し費用を最大60万円補助する。",
+          "source": "https://www.city.yasu.lg.jp/kurashi-tetsuzuki/3915.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25211",
+      "name": "湖南市",
+      "status": "verified",
+      "updatedAt": "2026-07-22",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-22",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月から市立小学校の給食費を無償化し、中学校も従来どおり無償とする。",
+          "source": "https://www.city.shiga-konan.lg.jp/material/files/group/27/02000.pdf",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
+          "source": "https://www.city.shiga-konan.lg.jp/soshiki/kodomomirai/kodomokosodate/ninshinshussan/35277.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保育所等を利用していない生後6か月から満3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.shiga-konan.lg.jp/soshiki/kodomomirai/yoji_shisetsu/39402.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度、39歳以下の新婚世帯へ住居・リフォーム・引越費用を最大60万円補助する。",
+          "source": "https://www.city.shiga-konan.lg.jp/topics/37832.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25212",
+      "name": "高島市",
+      "status": "verified",
+      "updatedAt": "2026-07-24",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-24",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和3年4月から市立小中学校の学校給食費を無償化し、対象外の市内児童生徒には補助制度を設ける。",
+          "source": "https://www.city.takashima.lg.jp/soshiki/kyoikushidobu/gakkokyushokuka/1/1/1/5/2373.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年までの母子へ宿泊・通所・訪問型の産後ケアを合計7回まで提供する。",
+          "source": "https://www.city.takashima.lg.jp/lifesceneraifushinkarasagasu/ninshin_shussan/7407.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用でき、市内児童は無料。",
+          "source": "https://www.city.takashima.lg.jp/kosodate_kyoiku/kosodate/5/14309.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度、39歳以下の新婚世帯へ住居・リフォーム・引越費用を最大60万円補助する。",
+          "source": "https://www.city.takashima.lg.jp/soshiki/kodomomiraibu/kosodateshienka/4/8114.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25213",
+      "name": "東近江市",
+      "status": "verified",
+      "updatedAt": "2026-07-24",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-24",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を徴収せず、中学校給食費を月5,000円に軽減する。",
+          "source": "https://www.city.higashiomi.shiga.jp/kosodate_kyouiku/1002656/1010753.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ短期入所・通所・居宅訪問型の産後ケアを提供する。",
+          "source": "https://www.city.higashiomi.shiga.jp/kosodate_kyouiku/ninshin_shussan/1002183/1008699.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から満3歳未満の子どもが、4幼児園でこども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.city.higashiomi.shiga.jp/kosodate_kyouiku/youchien_hoikusho_ninteikodomoen/1011265/1011072.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "令和8年度、39歳以下の新婚世帯へ住宅取得・賃借・引越費用を補助する。",
+          "source": "https://www.city.higashiomi.shiga.jp/ijuu_teijuu/sumaiwosagasu/1006795/1011079.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "25214",
+      "name": "米原市",
+      "status": "verified",
+      "updatedAt": "2026-07-24",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-24",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年4月から市立小学校の給食費を無償化し、中学校は月4,600円とする。",
+          "source": "https://www.city.maibara.lg.jp/soshiki/kyoiku/kyushoku/20499.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後の母子へ短期入所・通所・居宅訪問型の産後ケアを提供し、サービス別に対象月齢と料金を設定する。",
+          "source": "https://www.city.maibara.lg.jp/kosodate_kyoiku/nyuyouji/kosodate/17905.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳到達年度末までの未就園児が、2施設で月10時間まで利用できる。",
+          "source": "https://www.city.maibara.lg.jp/kosodate_kyoiku/youchien/19745.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯へ、住宅購入・賃借・引越費用を最大60万円補助する。",
+          "source": "https://www.city.maibara.lg.jp/soshiki/kodomo/kodomo/kekkon/17562.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25383",
+      "name": "日野町",
+      "status": "verified",
+      "updatedAt": "2026-07-24",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-24",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を無償化し、中学校給食費は月額4,200円として案内されている。",
+          "source": "https://www.town.shiga-hino.lg.jp/0000000130.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ短期入所型と通所型の産後ケアを合計7日以内で提供する。",
+          "source": "https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6476/12-13.pdf",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "日野町在住の生後6か月から3歳到達後最初の3月31日までの未就園児が、月10時間まで利用できる。",
+          "source": "https://www.town.shiga-hino.lg.jp/0000008620.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯へ住宅取得・リフォーム・引越費用を最大60万円補助する。",
+          "source": "https://www.town.shiga-hino.lg.jp/0000007597.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25384",
+      "name": "竜王町",
+      "status": "verified",
+      "updatedAt": "2026-07-24",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-24",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校の給食費を無償化し、対象外児童生徒には令和8年度の町給食費相当額を補助する。",
+          "source": "https://ryu-suku.town.ryuoh.shiga.jp/manabu/school_kyushoku_hojyokin.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の母子へ宿泊・通所・訪問型の産後ケアを通算7回まで提供する。",
+          "source": "https://ryu-suku.town.ryuoh.shiga.jp/hagukumu/sangocare.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://ryu-suku.town.ryuoh.shiga.jp/manabu/kodomo_daredemo_tsuen.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "40歳未満・新婚・子育て世帯等の新築・リフォーム・家賃を若者定住補助で支援し、転入新婚世帯には別の結婚新生活支援も用意する。",
+          "source": "https://www.town.ryuoh.shiga.jp/life/sumai/reform.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "25425",
+      "name": "愛荘町",
+      "status": "verified",
+      "updatedAt": "2026-07-24",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-24",
+      "verifiedCount": 9,
+      "unavailableCount": 0,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町学校給食センターが幼稚園・小中学校へ給食を提供し、掲載月額は幼稚園3,700円、小学校4,000円、中学校4,400円。",
+          "source": "https://www.town.aisho.shiga.jp/kosodate/kyushoku/gaiyou/1668.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年以内の母子へ、短期入所・通所・居宅訪問型の産後ケアを通算7日まで提供する。",
+          "source": "https://www.town.aisho.shiga.jp/section/reiki_honbun/r304RG00001467.html",
+          "checkedAt": "2026-07-24"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.aisho.shiga.jp/soshiki/kodomo/1/2/hoikusho/14785.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯へ、空き家バンク登録住宅の取得・賃借・改修・引越費用を最大60万円補助する。",
+          "source": "https://www.town.aisho.shiga.jp/soshiki/mirai/2/1_1/2/11751.html",
+          "checkedAt": "2026-07-24"
+        }
+      }
+    },
+    {
+      "code": "25441",
+      "name": "豊郷町",
+      "status": "verified",
+      "updatedAt": "2026-07-25",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-25",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 8,
+      "taskOfficialSourceCount": 8,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校の学校給食費を無償化し、義務教育期間の保護者負担を軽減する。",
+          "source": "https://www.town.toyosato.shiga.jp/0000003122.html",
+          "checkedAt": "2026-07-22"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産婦の心身のケアのため、助産所・医療機関で健康相談、赤ちゃんの育児相談、助言等の産後ケアを実施する。",
+          "source": "https://www.town.toyosato.shiga.jp/0000000203.html",
+          "checkedAt": "2026-07-25"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "令和8年度に子育て支援センターを中心としてこども誰でも通園制度へ取り組む方針は確認できたが、現行の利用案内を確定できない。",
+          "source": "https://www.town.toyosato.shiga.jp/0000000926.html",
+          "checkedAt": "2026-07-22"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下・所得500万円未満の新婚世帯へ住宅取得、賃借、リフォーム、引越費用を最大60万円補助する。",
+          "source": "https://town.toyosato.shiga.jp/0000003724.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25442",
+      "name": "甲良町",
+      "status": "verified",
+      "updatedAt": "2026-07-24",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-24",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "町立小中学校の学校給食費は令和10年3月まで徴収しない。",
+          "source": "https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00001075.html",
+          "checkedAt": "2026-07-24"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年未満の母子へ宿泊型と通所型の産後ケアを提供する。",
+          "source": "https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00000927.html",
+          "checkedAt": "2026-07-22"
+        },
+        "temporaryChildcare": {
+          "status": "unavailable",
+          "summary": "令和8年度から乳児等通園支援事業を実施する計画は確認できるが、現行の対象月齢・施設・料金・定員・予約条件を確定できない。",
+          "source": "https://www.kouratown.jp/gyosei/sogokakusyukeikau/2723.html",
+          "checkedAt": "2026-07-24"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下の新婚世帯へ住宅取得・賃借費用の3分の2を最大60万円補助する。",
+          "source": "https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00001041.html",
+          "checkedAt": "2026-07-22"
+        }
+      }
+    },
+    {
+      "code": "25443",
+      "name": "多賀町",
+      "status": "verified",
+      "updatedAt": "2026-07-23",
+      "taskStatus": "merged",
+      "taskLastCheckedAt": "2026-07-23",
+      "verifiedCount": 8,
+      "unavailableCount": 1,
+      "needsMediumReviewCount": 0,
+      "officialSourceCount": 9,
+      "taskOfficialSourceCount": 9,
+      "highRisk": {
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "扶養する子のうち第3子以降の小中学校等給食費を無償化し、経済的に困難な世帯には就学援助で給食費等を支援する。",
+          "source": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/1/2/578.html",
+          "checkedAt": "2026-07-23"
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "出産後1年未満の母子へ宿泊・日帰り・訪問型の産後ケアを提供する。",
+          "source": "https://www.town.taga.lg.jp/soshiki/fukushihoken/1/13/1/221.html",
+          "checkedAt": "2026-07-23"
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "source": "https://www.town.taga.lg.jp/soshiki/kyoikuiinkai-kyoikusomu/1/2/1/2004.html",
+          "checkedAt": "2026-07-23"
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "39歳以下・所得要件等を満たす新婚世帯へ、町内住宅の賃借費用と引越費用を最大30万円補助する。",
+          "source": "https://www.town.taga.lg.jp/soshiki/kikaku/1/15/438.html",
+          "checkedAt": "2026-07-23"
+        }
+      }
+    }
+  ],
+  "initialStructuralFindingCount": 0,
+  "resolvedStructuralFindingCount": 0,
+  "initialUnavailableCount": 5,
+  "initialSubstantiveSuspectCount": 8,
+  "confirmedErrorCount": 1,
+  "correctedMunicipalityCodes": [
+    "25441"
+  ],
+  "confirmedCorrections": [
+    {
+      "type": "false_unavailable",
+      "service": "postpartumCare",
+      "count": 1,
+      "municipalityCodes": [
+        "25441"
+      ],
+      "detail": "2026年5月28日更新の豊郷町公式母子保健サービスページで現行の産後ケア実施を確認"
+    }
+  ],
+  "confirmedAccurateExamples": [
+    {
+      "code": "25207",
+      "service": "schoolMeals",
+      "detail": "守山市の小学校月4,300円・中学校月4,900円と令和8年度就学援助を確認"
+    },
+    {
+      "code": "25210",
+      "service": "schoolMeals",
+      "detail": "野洲市の小学校月4,200円・中学校月4,900円が令和8年4月から適用されることを規則で確認"
+    },
+    {
+      "code": "25212",
+      "service": "schoolMeals",
+      "detail": "高島市の小中学校給食費無償化が令和8年度も継続していることを確認"
+    },
+    {
+      "code": "25443",
+      "service": "schoolMeals",
+      "detail": "多賀町の第3子以降学校給食費等無償化と令和8年度就学援助を確認"
+    }
+  ],
+  "needsFurtherReview": [
+    {
+      "code": "25425",
+      "name": "愛荘町",
+      "service": "schoolMeals",
+      "detail": "掲載中の給食費月額は確認できるが、令和8年度の保護者負担額として改定の有無を確定できない"
+    },
+    {
+      "code": "25441",
+      "name": "豊郷町",
+      "service": "temporaryChildcare",
+      "detail": "令和8年度の実施方針と条例は確認できるが、対象月齢・時間・料金・予約条件を確定できない"
+    },
+    {
+      "code": "25442",
+      "name": "甲良町",
+      "service": "temporaryChildcare",
+      "detail": "令和8年度からの実施計画は確認できるが、対象月齢・施設・料金・定員・予約条件を確定できない"
+    }
+  ]
+}
