@@ -10,6 +10,8 @@ on:
       - 173baadd8bd18212cc1286c5ae612fce.txt
       - yorugatari/index.html
       - yorugatari/5min-horror.html
+      - yorugatari/bedtime-horror.html
+      - yorugatari/horror-quiz.html
       - yorugatari/archive.html
       - yorugatari/about.html
       - yorugatari/privacy.html
@@ -20,12 +22,14 @@ on:
       - yorugatari/sitemap.xml
       - yorugatari/stories/**
       - yorugatari/assets/stories*.js
+      - yorugatari/assets/horror-quiz.js
       - yorugatari/tools/normalize-story-pages.mjs
       - yorugatari/tools/enhance-story-structured-data.mjs
       - yorugatari/tools/story-structured-data-audit.mjs
       - yorugatari/tools/optimize-story-search-metadata.mjs
       - yorugatari/tools/story-search-audit.mjs
       - yorugatari/tools/generate-discovery-pages.mjs
+      - yorugatari/tools/ensure-horror-quiz.mjs
       - yorugatari/tools/discovery-audit.mjs
       - yorugatari/tools/generate-sitemap.mjs
       - yorugatari/tools/seo-audit.mjs
@@ -60,6 +64,8 @@ jobs:
           node --check yorugatari/tools/story-structured-data-audit.mjs
           node --check yorugatari/tools/optimize-story-search-metadata.mjs
           node --check yorugatari/tools/story-search-audit.mjs
+          node --check yorugatari/tools/ensure-horror-quiz.mjs
+          node --check yorugatari/assets/horror-quiz.js
 
       - name: Enhance all story structured data
         run: node yorugatari/tools/enhance-story-structured-data.mjs
@@ -69,6 +75,9 @@ jobs:
 
       - name: Generate category pages and RSS
         run: node yorugatari/tools/generate-discovery-pages.mjs
+
+      - name: Ensure horror quiz discovery links
+        run: node yorugatari/tools/ensure-horror-quiz.mjs
 
       - name: Generate current sitemap
         run: node yorugatari/tools/generate-sitemap.mjs
@@ -90,6 +99,8 @@ jobs:
         run: |
           if git status --short -- \
             yorugatari/index.html \
+            yorugatari/5min-horror.html \
+            yorugatari/bedtime-horror.html \
             yorugatari/archive.html \
             yorugatari/categories \
             yorugatari/feed.xml \
@@ -102,6 +113,8 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add \
               yorugatari/index.html \
+              yorugatari/5min-horror.html \
+              yorugatari/bedtime-horror.html \
               yorugatari/archive.html \
               yorugatari/categories \
               yorugatari/feed.xml \
@@ -114,7 +127,7 @@ jobs:
             git pull --rebase origin main
             git push
           else
-            echo "Story structured data, search metadata, discovery pages and sitemap are already current."
+            echo "Story structured data, search metadata, discovery pages, quiz links and sitemap are already current."
           fi
 
       - name: Audit published SEO
