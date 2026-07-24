@@ -1,0 +1,34 @@
+name: Validate Central A Round04 Merge
+
+on:
+  push:
+    branches: ['audit/central-a-round04-merge-validation-20260725']
+    paths: ['.github/workflows/central-a-round04-merge-validation.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/central-a-round04-merge-validation-20260725
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
