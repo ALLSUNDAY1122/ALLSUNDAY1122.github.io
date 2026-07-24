@@ -207345,7 +207345,7 @@
       "name": "和泉市",
       "officialUrl": "https://www.city.osaka-izumi.lg.jp/",
       "status": "verified",
-      "summary": "和泉市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "和泉市の子育て、教育、住宅、生活、防災に関する9制度を2026年度の公式情報で確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -207357,37 +207357,34 @@
           "details": {
             "target": "和泉市に住所があり健康保険に加入している0歳から18歳までの児童",
             "copayment": "医療機関ごとに1日500円、月2日目まで。3日目以降と調剤薬局は一部自己負担なし",
-            "application": "申請によりこども医療証を交付。大阪府外受診は還付申請に対応"
+            "coverage": "保険診療の通院・入院医療費を助成。入院時食事療養費と保険適用外費用は対象外",
+            "application": "申請によりこども医療証を交付。大阪府外受診は自己負担後の還付申請に対応"
           },
           "source": {
             "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kosodatekenkobu/kosodatesiensitu/faq/1331533294226.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "病気やけがで集団保育が困難な児童を病児保育室で一時的に預かる。",
+          "summary": "生後6か月から小学3年生までの病気やけがで集団保育が困難な児童を病児保育室で預かる。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 9
           },
           "details": {
-            "target": "生後6か月から小学3年生",
+            "target": "生後6か月から小学3年生まで",
             "facility": "なかじまクリニック小児科・循環器科 病児保育室ポッぽ",
-            "fee": "市内児童は1日2,500円。非課税世帯・生活保護世帯は減免あり",
+            "fee": "市内児童は1日2,500円。市外児童は4,000円。非課税世帯・生活保護世帯は減免あり",
             "capacity": "4名",
-            "application": "事前登録、診療情報開示票・利用申込書の提出、事前予約が必要"
+            "hours": "月曜日から金曜日の8時30分から18時まで。8時から入室前診察を開始",
+            "application": "事前登録、診療情報開示票・利用申込書の提出、予約が必要",
+            "reservation": "電話は前日14時から18時、インターネットは前日19時から当日7時まで受付"
           },
           "source": {
             "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kosodatekenkobu/kosodatesiensitu/gyoumu/1465281289922.html",
-            "checkedAt": "2026-07-23"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kosodatekenkobu/kosodatesiensitu/osirase/1533796056317.html",
-              "checkedAt": "2026-07-23"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "childcareFee": {
           "status": "verified",
@@ -207398,54 +207395,65 @@
           },
           "details": {
             "target": "3歳児クラスから5歳児クラスの子ども、市民税非課税世帯の0歳児から2歳児クラスの子ども",
-            "support": "対象施設・認定区分に応じて保育料または施設利用料を無償化",
+            "support": "公立・民間保育所、認定こども園等の対象施設・認定区分に応じて保育料または施設利用料を無償化",
+            "procedure": "保育所・認定こども園の通常保育利用は無償化のための追加手続き不要。預かり保育等は施設等利用給付認定が必要な場合あり",
+            "mealCost": "3～5歳児の副食費は原則実費。年収360万円未満相当世帯と第3子以降は免除対象",
             "excluded": "給食費、通園送迎料、行事費等の実費は原則対象外"
           },
           "source": {
             "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kosodatekenkobu/kodomomirai/gyoumu/1562742828642.html",
-            "checkedAt": "2026-07-23"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kosodatekenkobu/kodomomirai/gyoumu/hoikuyou/kd_hoikuryo.html",
-              "checkedAt": "2026-07-23"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "市立小中学校等で市内統一を基本とした学校給食を実施し、令和8年度献立を公開する。",
+          "summary": "2026年度は小学校給食費を無償化し、中学校給食費は物価高騰による増額分を市が補助する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
             "target": "和泉市立小学校・中学校・義務教育学校の児童生徒",
-            "operation": "和泉市学校給食会が決定する市内統一メニューを基本に実施",
-            "information": "令和8年度の献立表、食育資料、使用物資成分配合表を公開"
+            "elementarySupport": "国・大阪府の支援に市独自の追加支援を加え、小学校・義務教育学校前期課程の給食費を無償化",
+            "middleSupport": "中学校・義務教育学校後期課程は、物価高騰等により必要となる給食費の増額分を市が補助",
+            "budget": "2026年度の小中学校給食費補助事業予算は5億9,800万円",
+            "operation": "市内統一メニューを基本に実施し、2026年度の献立表、食育資料、使用物資成分配合表を公開"
           },
           "source": {
-            "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kyouikubu/gakkoenkanri/gakkoukyuusyoku/gakkoukyuusyokukonndate/izumi_kondate.html",
-            "checkedAt": "2026-07-23"
-          }
+            "url": "https://www.city.osaka-izumi.lg.jp/kakukano/soumubu/zaiseika/gyoumu/yosan.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.osaka-izumi.lg.jp/material/files/group/18/00_08_gaiyou.pdf",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kyouikubu/gakkoenkanri/gakkoukyuusyoku/gakkoukyuusyokukonndate/izumi_kondate.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "母子の体調管理、授乳・育児相談、休息を宿泊型・デイサービス型で支援する。",
+          "summary": "出産後1年以内の母子へ宿泊型・7時間または9時間の通所型産後ケアを提供する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "target": "和泉市民で産後ケアを必要とし、母子ともに入院・治療を必要としない母子。施設により受入月齢が異なる",
-            "types": "宿泊型、デイサービス型（日帰り）",
-            "support": "母子の体調管理、授乳・育児相談、赤ちゃんの沐浴等",
-            "limit": "宿泊型とデイサービス型を合わせて原則7回まで",
-            "fee": "一般世帯はデイサービス型1,000円、宿泊型2,500円。生活保護・非課税世帯は無料"
+            "target": "和泉市民で1歳の誕生日の前日までの乳児と母親。母子ともに入院・治療が不要で産後ケアを必要とする人",
+            "types": "デイサービス型7時間（1食）、デイサービス型9時間（2食）、宿泊型24時間（3食）",
+            "support": "母子の体調管理、授乳・育児相談、沐浴等の育児支援、休息",
+            "limit": "宿泊型とデイサービス型を合わせて7回まで。多胎の場合は子ども1人につき7回",
+            "fee": "課税世帯は通所7時間750円、通所9時間1,000円、宿泊2,500円。生活保護・非課税世帯は無料",
+            "facilities": "2026年4月から大阪府の集合契約に参画し、府内参加施設を利用可能。施設ごとに受入月齢が異なる",
+            "application": "妊娠8か月以降に電子申請し、原則利用希望日の10日前までに手続き。決定後は利用者が施設へ直接予約",
+            "cancellation": "利用日の前々日17時以降の利用者都合による取消・変更はキャンセル料が発生"
           },
           "source": {
-            "url": "https://www.city.osaka-izumi.lg.jp/kosodate/josei_shien/1524031555474.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kosodatekenkobu/kenko_kenkozosin/gyoumu/ninnsin/1524030772928.html",
+            "checkedAt": "2026-07-24"
           }
         },
         "temporaryChildcare": {
@@ -207456,29 +207464,33 @@
             "maxAgeYears": 3
           },
           "details": {
-            "target": "和泉市在住で保育所等に通っていない生後6か月から満3歳未満の子ども",
+            "target": "和泉市に住民票があり、保育所・認定こども園・幼稚園等に通っていない生後6か月から満3歳未満の子ども。利用は3歳の誕生日の前々日まで",
             "employment": "保護者の就労等の保育要件は問わない",
             "limit": "子ども1人につき月10時間。未利用時間の翌月繰越なし",
-            "fee": "基本利用料は1時間300円。生活保護世帯や一定所得未満世帯は申請により減免",
-            "application": "つうえんポータルで認定申請後、施設面談・予約を行う"
+            "fee": "基本利用料は1時間300円。生活保護世帯または市町村民税所得割合算額77,101円未満の世帯は申請により減免",
+            "additionalCosts": "施設により給食費・おやつ代等の実費負担あり",
+            "application": "つうえんポータルで認定申請し、認定後に施設の初回面談を予約して利用予約。認定目安は約2週間",
+            "cancellation": "予約変更・取消はつうえんポータルまたは施設への電話で行い、各施設のキャンセルポリシーに従う"
           },
           "source": {
             "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kosodatekenkobu/kodomomirai/gyoumu/kodomodaredemo/22924.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "令和8年度の新婚世帯へ住宅取得・賃借・リフォーム費用の一部を補助する。",
+          "summary": "2026年度の新婚世帯へ住宅取得・賃借・リフォーム費用の一部を補助する。",
           "details": {
-            "target": "令和8年1月1日から令和9年3月31日までに婚姻し、夫婦とも39歳以下、合算所得500万円未満などの要件を満たす世帯",
-            "support": "住宅取得、賃借、リフォームに係る対象費用",
-            "limit": "夫婦とも29歳以下は最大60万円、それ以外は最大30万円",
-            "period": "令和8年4月1日から令和9年3月31日。40世帯程度、先着順"
+            "target": "2026年1月1日から2027年3月31日までに婚姻し、夫婦とも39歳以下、合算所得500万円未満、夫婦のいずれかの親世帯が市内在住などの要件を満たす世帯",
+            "support": "住宅取得、賃借、リフォームに係る2026年4月1日から2027年3月31日までの対象費用",
+            "limit": "婚姻日時点で夫婦とも29歳以下は最大60万円、それ以外は最大30万円",
+            "period": "2026年4月1日から2027年3月31日まで。40世帯程度、先着順",
+            "course": "申請時点までに夫婦ともライフデザイン、プレコンセプションケア、妊娠・出産相談、共家事・共育て講座等のいずれかを受講する必要あり",
+            "application": "必要書類を市役所窓口へ持参。上限到達時は期間内でも受付終了"
           },
           "source": {
-            "url": "https://www.city.osaka-izumi.lg.jp/kakukano/kousitu/apiruka/osirase/shinkon_kekkonshinseikatsushien.html",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.city.osaka-izumi.lg.jp/kurasitetu/sumai/1463558760253.html",
+            "checkedAt": "2026-07-24"
           }
         },
         "bulkyWaste": {
@@ -207486,34 +207498,30 @@
           "summary": "電話・ファックス・インターネットで申し込み、処理券を貼付して有料収集を利用する。",
           "details": {
             "application": "粗大ごみ受付センターへ電話・ファックス・インターネットで事前申込み",
+            "reception": "電話・ファックス受付は平日9時から15時。インターネット申込みは収集日前日に確認メールを配信",
             "fee": "品物・大きさにより300円、600円、900円、1,200円、1,500円",
             "limit": "1回につき6点まで",
-            "collection": "手数料分の300円処理券を購入し、受付番号と収集日を記入して収集日当日の午前6時までに排出",
+            "payment": "申込時に案内された金額分の300円粗大ごみ処理券を購入。購入後の払戻し・交換・再発行不可",
+            "collection": "受付番号と収集日を処理券に記入して貼付し、収集日当日の午前6時までに排出",
             "excluded": "家電リサイクル対象品、危険物、建築廃材などは市収集対象外"
           },
           "source": {
             "url": "https://www.city.osaka-izumi.lg.jp/kakukano/sangyoubu/seikatukan/gyoumu/sodaigomi/sk_sodai.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-24"
           }
         },
         "disasterPrevention": {
           "status": "verified",
           "summary": "地震、洪水、ため池、内水などの防災ガイドマップ・ハザードマップを公開する。",
           "details": {
-            "maps": "防災ガイドマップ、地震・地域危険度、洪水、ため池、内水の各ハザードマップ",
+            "maps": "防災ガイドマップ、地震ハザードマップ・地域危険度マップ、洪水ハザードマップ、ため池ハザードマップ、内水ハザードマップ",
             "web": "WEB版ハザードマップも公開",
-            "use": "自宅周辺の災害リスク、浸水想定、避難経路等の確認に利用可能"
+            "use": "自宅周辺の災害リスク、浸水想定、避難場所・避難経路等の確認に利用可能"
           },
           "source": {
             "url": "https://www.city.osaka-izumi.lg.jp/kurasitetu/kinkyubousai/bousainfo/map/index.html",
-            "checkedAt": "2026-07-23"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.osaka-izumi.lg.jp/section/hazardmap/index.html",
-              "checkedAt": "2026-07-23"
-            }
-          ]
+            "checkedAt": "2026-07-24"
+          }
         }
       }
     },
