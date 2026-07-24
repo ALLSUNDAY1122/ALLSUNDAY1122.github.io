@@ -33,12 +33,13 @@ async function openReady(page, currentCase) {
         statusRegion: document.querySelector('#landingShareStatus')?.getAttribute('aria-live'),
         shareState: Boolean(window.YORUGATARI_LANDING_SHARE),
         startState: Boolean(window.YORUGATARI_LANDING_START),
+        heroStoryLink: Boolean(document.querySelector('.story-hero .hero-actions a[href^="stories/"]')),
         picks: document.querySelectorAll('.pick').length,
         overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
       }), { expectedShareVersion: shareVersion, expectedStartRuntime: startRuntime, expectedPicks: currentCase.picks });
       detail.httpStatus = response?.status();
       detail.attempt = attempt;
-      if (response?.status() === 200 && detail.shareScript && detail.startScript && detail.shareButton && detail.copyButton && detail.statusRegion === 'polite' && detail.shareState && detail.startState && detail.picks === currentCase.picks && detail.overflow) return detail;
+      if (response?.status() === 200 && detail.shareScript && detail.startScript && detail.shareButton && detail.copyButton && detail.statusRegion === 'polite' && detail.shareState && detail.startState && detail.heroStoryLink && detail.picks === currentCase.picks && detail.overflow) return detail;
     } catch (error) {
       detail = { attempt, error: error.message };
     }
@@ -49,7 +50,7 @@ async function openReady(page, currentCase) {
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Landing-Share-Audit/1.4' });
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Yorugatari-Landing-Share-Audit/1.5' });
   const trackedPaths = [];
   await context.route('https://page-views-api.ratneshc.com/**', async (route) => {
     try {
@@ -85,7 +86,7 @@ async function openReady(page, currentCase) {
   try {
     for (const currentCase of cases) {
       const ready = await openReady(page, currentCase);
-      record(`${currentCase.name}: published sharing and start controls are ready`, Boolean(ready?.shareScript && ready?.startScript && ready?.shareState && ready?.startState && ready?.overflow), ready);
+      record(`${currentCase.name}: published sharing and start controls are ready`, Boolean(ready?.shareScript && ready?.startScript && ready?.shareState && ready?.startState && ready?.heroStoryLink && ready?.overflow), ready);
       if (!ready?.shareScript || !ready?.startScript) continue;
 
       const shareState = await page.evaluate(() => window.YORUGATARI_LANDING_SHARE);
@@ -107,23 +108,31 @@ async function openReady(page, currentCase) {
       record(`${currentCase.name}: copy button copies the same tracked URL`, copied.url === shareState.url && copied.status === '共有用リンクをコピーしました。' && copied.action === 'copy', copied);
 
       const beforeCount = trackedPaths.filter((value) => value === currentCase.startPath).length;
-      await page.locator('.pick').first().evaluate((link) => link.addEventListener('click', (event) => event.preventDefault()));
-      await page.locator('.pick').first().click();
+      const heroLink = page.locator('.story-hero .hero-actions a[href^="stories/"]').first();
+      await heroLink.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault()));
+      await heroLink.click();
       await page.waitForTimeout(250);
-      await page.locator('.pick').nth(1).evaluate((link) => link.addEventListener('click', (event) => event.preventDefault()));
-      await page.locator('.pick').nth(1).click();
+
+      const pickLink = page.locator('.pick').nth(1);
+      await pickLink.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault()));
+      await pickLink.click();
       await page.waitForTimeout(250);
+
       const afterCount = trackedPaths.filter((value) => value === currentCase.startPath).length;
       const startState = await page.evaluate(() => window.YORUGATARI_LANDING_START);
-      record(`${currentCase.name}: story start is sent once per session without a story identifier`,
+      const startPaths = trackedPaths.filter((value) => value.startsWith('/yorugatari/__landing-start/'));
+      const leakedStoryPath = startPaths.some((value) => value.includes('/stories/'));
+      record(`${currentCase.name}: hero and card starts are counted once per session without a story identifier`,
         afterCount - beforeCount === 1 &&
+        startPaths.filter((value) => value === currentCase.startPath).length >= 1 &&
+        !leakedStoryPath &&
         startState?.version === startVersion &&
         startState?.path === currentCase.startPath &&
         startState?.attempted &&
         startState?.tracked &&
         !startState?.inFlight &&
         !startState?.error,
-        { beforeCount, afterCount, startState });
+        { beforeCount, afterCount, startPaths, leakedStoryPath, startState });
     }
     record('landing sharing: no page JavaScript exceptions', browserErrors.length === 0, browserErrors);
     record('landing sharing: network diagnostics are non-blocking', true, networkDiagnostics);
