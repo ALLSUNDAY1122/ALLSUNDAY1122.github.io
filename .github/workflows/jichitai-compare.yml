@@ -1,73 +1,77 @@
-name: Sync Daito Audit 27218
+name: Jichitai Compare CI
 
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  sync:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Fetch latest sources
-        run: git fetch origin main region/central
-      - name: Apply regional audit
+
+      - name: Reject unrelated changes
+        working-directory: jichitai-compare
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          set -euo pipefail
-          git show origin/region/central:jichitai-compare/data/municipalities/27/27218.json > jichitai-compare/data/municipalities/27/27218.json
-          git show origin/region/central:jichitai-compare/operations/tasks/27218.json > jichitai-compare/operations/tasks/27218.json
-          node <<'NODE'
-          const fs = require('fs');
-          const p = 'jichitai-compare/operations/tasks/27218.json';
-          const t = JSON.parse(fs.readFileSync(p, 'utf8'));
-          t.status = 'merged';
-          t.currentService = null;
-          t.nextServiceIndex = 9;
-          t.pullRequestNumber = 2800;
-          t.lastUpdatedAt = '2026-07-24T22:30:00+09:00';
-          const by = '全国統合';
-          if (Array.isArray(t.lastUpdatedBy)) {
-            if (!t.lastUpdatedBy.includes(by)) t.lastUpdatedBy.push(by);
-          } else if (t.lastUpdatedBy) {
-            if (!String(t.lastUpdatedBy).includes(by)) t.lastUpdatedBy += `, ${by}`;
-          } else {
-            t.lastUpdatedBy = by;
-          }
-          fs.writeFileSync(p, JSON.stringify(t) + '\n');
-          NODE
-      - name: Generate and validate
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
+          fi
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
         working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          node --check app.js
-          node - <<'NODE'
-          const fs = require('fs');
-          const p = JSON.parse(fs.readFileSync('operations/progress.json'));
-          if (p.registeredMunicipalities !== 1741 || p.remainingMunicipalities !== 0) throw new Error(JSON.stringify(p));
-          for (const k of ['todoServices','researchingServices','needsMediumReviewServices','needsRevisionServices','needsCoordinatorServices','prOpenServices','blockedServices']) {
-            if (p[k] !== 0) throw new Error(`${k}=${p[k]}`);
-          }
-          NODE
-      - name: Commit synchronized audit
-        run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'quality: sync Daito City FY2026 audit to nationwide data'
-          git push origin HEAD
+        run: npm run smoke:public
