@@ -1,117 +1,77 @@
-name: Build North-East Sync Release 1816
+name: Jichitai Compare CI
+
 on:
   pull_request:
-    branches: [main]
-    paths: ['.github/workflows/jichitai-compare.yml']
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'jichitai-compare/**'
+      - '.github/workflows/jichitai-compare.yml'
+
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: jichitai-compare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  release:
+  validate:
+    name: Validate municipality data
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-node@v4
-        with: {node-version: '20'}
-      - run: git fetch origin main region/north region/east
-      - name: Extract new and refreshed municipalities
-        shell: bash
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('fs');
-          const path = require('path');
-          const cp = require('child_process');
-          const services = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
-          const regions = ['north','east'];
-          const timestamp = '2026-07-24T18:16:00+09:00';
-          const progress = JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json','utf8'));
-          const selected = [];
-          const excluded = [];
-          function show(ref, file) {
-            try { return cp.execFileSync('git',['show',`${ref}:${file}`],{encoding:'utf8',stdio:['ignore','pipe','ignore']}); }
-            catch { return null; }
-          }
-          function canonical(text) {
-            if (text == null) return null;
-            try { return JSON.stringify(JSON.parse(text)); } catch { return text.trim(); }
-          }
-          for (const region of regions) {
-            const ref = `origin/region/${region}`;
-            const files = cp.execFileSync('git',['ls-tree','-r','--name-only',ref,'--','jichitai-compare/data/municipalities'],{encoding:'utf8'})
-              .split(/\r?\n/).filter(f => /\/[0-9]{5}\.json$/.test(f));
-            for (const file of files) {
-              const regionText = show(ref,file);
-              const mainText = show('HEAD',file);
-              if (canonical(regionText) === canonical(mainText)) continue;
-              let data;
-              try { data = JSON.parse(regionText); }
-              catch { excluded.push({region,file,reason:'invalid_json'}); continue; }
-              const statuses = services.map(s => data.services?.[s]?.status);
-              const complete = statuses.length === 9 && statuses.every(s => s === 'verified' || s === 'unavailable');
-              if (!complete) {
-                excluded.push({region,code:data.code ?? path.basename(file,'.json'),name:data.name ?? null,reason:'incomplete_status',statuses});
-                continue;
-              }
-              const code = String(data.code ?? path.basename(file,'.json'));
-              const taskPath = `jichitai-compare/operations/tasks/${code}.json`;
-              const taskText = show(ref,taskPath);
-              if (!taskText) { excluded.push({region,code,name:data.name ?? null,reason:'missing_task'}); continue; }
-              let task;
-              try { task = JSON.parse(taskText); }
-              catch { excluded.push({region,code,name:data.name ?? null,reason:'invalid_task'}); continue; }
-              fs.mkdirSync(path.dirname(file),{recursive:true});
-              fs.writeFileSync(file,JSON.stringify(data)+'\n');
-              task.status = 'merged';
-              task.currentService = null;
-              task.nextServiceIndex = 9;
-              task.completedServices = services;
-              task.verifiedCount = statuses.filter(s => s === 'verified').length;
-              task.researchingCount = 0;
-              task.unavailableCount = statuses.filter(s => s === 'unavailable').length;
-              task.needsMediumReviewCount = 0;
-              task.blockers = [];
-              task.lastUpdatedAt = timestamp;
-              const actor = '統括A';
-              if (Array.isArray(task.lastUpdatedBy)) { if (!task.lastUpdatedBy.includes(actor)) task.lastUpdatedBy.push(actor); }
-              else if (task.lastUpdatedBy) { if (!String(task.lastUpdatedBy).includes(actor)) task.lastUpdatedBy = `${task.lastUpdatedBy}, ${actor}`; }
-              else task.lastUpdatedBy = actor;
-              fs.mkdirSync(path.dirname(taskPath),{recursive:true});
-              fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
-              selected.push({type:mainText?'refresh':'add',region,team:region==='north'?'北日本調査班':'東日本調査班',code,name:data.name,prefecture:data.prefecture,sourcePullRequestNumber:task.pullRequestNumber ?? null});
-            }
-          }
-          selected.sort((a,b)=>a.code.localeCompare(b.code));
-          const manifest = {
-            schemaVersion:'1.0.0',createdAt:timestamp,
-            previousPublishedMunicipalities:progress.registeredMunicipalities,
-            selectedMunicipalities:selected.length,
-            addedMunicipalities:selected.filter(x=>x.type==='add').length,
-            refreshedMunicipalities:selected.filter(x=>x.type==='refresh').length,
-            byRegion:{north:selected.filter(x=>x.region==='north').length,east:selected.filter(x=>x.region==='east').length},
-            municipalities:selected,excludedCount:excluded.length,excluded
-          };
-          fs.writeFileSync('jichitai-compare/operations/control/coord-a-release-north-east-sync-20260724-1816.json',JSON.stringify(manifest,null,2)+'\n');
-          NODE
-      - name: Generate and validate
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Reject unrelated changes
         working-directory: jichitai-compare
-        run: npm run generate && npm run progress && npm run validate:generated && node --check app.js
-      - name: Update homepage count
-        run: node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json')),f='jichitai-compare/index.html';fs.writeFileSync(f,fs.readFileSync(f,'utf8').replace(/\\d+自治体・9制度/g,p.registeredMunicipalities+'自治体・9制度'))"
-      - name: Commit release
+        env:
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run check:scope
+
+      - name: Generate public municipality data
+        working-directory: jichitai-compare
+        run: npm run generate
+
+      - name: Generate national progress
+        working-directory: jichitai-compare
+        run: npm run progress
+
+      - name: Validate source and generated data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+
+      - name: Check JavaScript syntax
+        working-directory: jichitai-compare
+        run: node --check app.js
+
+      - name: Confirm generated files are committed
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
         shell: bash
         run: |
-          git show origin/main:.github/workflows/jichitai-compare.yml > .github/workflows/jichitai-compare.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          if git diff --cached --quiet; then
-            echo 'No publishable north/east differences.'
-            exit 0
+          changed="$(git status --porcelain -- data/generated/municipalities.json operations/progress.json)"
+          if [ -n "$changed" ]; then
+            echo '生成済みファイルが最新ではありません。'
+            git status --short -- data/generated/municipalities.json operations/progress.json
+            exit 1
           fi
-          git commit -m 'Sync latest north and east municipality data'
-          git push origin HEAD
+
+      - name: Verify published GitHub Pages site
+        if: github.event_name == 'push'
+        working-directory: jichitai-compare
+        run: npm run smoke:public

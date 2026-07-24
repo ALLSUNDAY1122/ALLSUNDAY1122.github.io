@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-24",
-    "municipalityCount": 1648,
+    "municipalityCount": 1653,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -135108,6 +135108,911 @@
       }
     },
     {
+      "code": "15361",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "田上町",
+      "officialUrl": "https://www.town.tagami.niigata.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を田上町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "高校卒業年齢までの子どもの入院・通院医療費を助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "田上町に住所があり健康保険に加入する18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の入院・通院医療費の自己負担額から制度上の一部負担金を除いて助成",
+            "copayment": "通院は医療機関ごと1日530円・月4回まで。入院は窓口で1日1,200円を支払った後、申請により全額助成し実質無料",
+            "procedure": "出生・転入時に受給者証を申請。入院負担金の払い戻しは領収書等を添えて保健福祉課へ申請",
+            "excluded": "保険外費用、高額療養費・付加給付、学校管理下のけが等"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/docs/8384.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病児・病後児を加茂・田上施設と新潟地域広域連携施設で保育",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "program": "加茂・田上病児保育園および新潟地域病児保育広域連携",
+            "target": "病気中または回復期で集団保育・登校が困難かつ保護者の事情で家庭保育が困難な子ども",
+            "coverage": "2026年4月から新潟地域の連携市町村施設も相互利用可能",
+            "procedure": "利用施設の事前登録、予約、医師の診療情報提供等が必要",
+            "notes": "対象月齢、利用時間、定員、料金は利用施設ごとの最新案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/docs/8916.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等を無償化し、課税世帯0～2歳児は住民税額等に応じて保育料を算定",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "認定こども園等を利用する3～5歳児と住民税非課税世帯の0～2歳児等",
+            "coverage": "1号・2号認定の3～5歳児等は幼児教育・保育無償化により保育料0円",
+            "currentFee": "課税世帯の3号認定0～2歳児は保護者の市町村民税額等に基づく階層別保育料",
+            "meal": "3～5歳児は給食費等の実費負担あり",
+            "procedure": "入園申込みと支給認定手続きを行い、施設から決定通知を受ける"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/docs/8642.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "多子世帯の学校給食費を助成し、就学援助認定世帯は給食費を全額補助",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "multiChild": "町立学校または対象となる町外学校等に児童生徒を2人以上有する保護者へ学校給食費を助成",
+            "currentOperation": "2025年度は4～8月分を物価高支援で保護者負担なしとし、9月以降の多子助成分を学校給食会計へ直接振込み",
+            "lowIncome": "要保護・準要保護の就学援助認定世帯は学校給食費を全額補助",
+            "procedure": "多子世帯助成は対象者へ通知後に申請。就学援助は児童生徒ごとに申請",
+            "notes": "一般世帯の全年度・全児童生徒を対象とする恒久的一律完全無償化とは区別"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/docs/8363.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年未満の赤ちゃんと保護者へ休息・授乳・育児相談等の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "田上町在住で産後ケアを必要とする産後1年未満の赤ちゃんと保護者",
+            "support": "育児から離れた休息、授乳相談、育児相談、母子の心身ケア等",
+            "procedure": "利用希望者は田上町保健福祉課へ相談し、町の案内に従い申請・利用調整",
+            "relatedSupport": "生後4か月以内は助産師による無料のこんにちは赤ちゃん訪問を2回実施",
+            "notes": "実施類型、回数、料金、実施施設は相談時の最新案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/docs/12468.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "竹の友幼児園で家庭保育が困難な未就園児等の一時預かりを実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "program": "田上町立竹の友幼児園一時預かり事業",
+            "target": "保護者の就労・疾病・冠婚葬祭・育児負担軽減等により一時的な保育が必要な就学前児童",
+            "facility": "田上町立竹の友幼児園",
+            "procedure": "園または教育委員会へ利用可能日・対象年齢・必要書類を確認して申込み",
+            "notes": "一時預かり事業は町の条例・施行規則に基づき実施。利用時間・料金・定員は施設の最新案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/reiki/reiki_taikei/r_taikei_08_01_02.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による20万円以上の住宅リフォーム費の20％を最大15万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "program": "田上町暮らし応援リフォーム補助金",
+            "target": "田上町に住民登録し町税等滞納がなく、町内の自己・親族所有住宅に居住する人",
+            "condition": "町内業者施工、税込20万円以上、交付決定前未契約・未着工、2027年3月31日までに実績報告可能な工事",
+            "amount": "対象工事費の20％、通常上限10万円。世帯員に40歳未満の人がいる世帯または実績報告までに40歳未満の人が転入する世帯は上限15万円",
+            "procedure": "工事契約・着手前に必要書類を添えて申請し、交付決定後に実施"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/docs/8296.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "家具・寝具等の粗大ごみを品目別に清掃センターへ自己搬入",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "definition": "家具、建具、布団、カーペット、ベッド、ベビーカー等の大型家庭ごみ",
+            "directDelivery": "町の品目別検索で粗大ごみに分類された品目は原則清掃センターへ搬入",
+            "alternative": "一部品目は所定の大きさ以下に解体すれば燃えるごみ・鉄類等として排出可能",
+            "procedure": "品目検索で分別区分と出し方を確認し、清掃センターの受付日時・料金に従って搬入",
+            "excluded": "家電リサイクル法対象品、パソコン、処理困難物等"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/gomi/category/category6/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "信濃川・加茂川等の洪水・土砂災害ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "洪水・土砂災害ハザードマップ、河川別・地区別拡大マップ、マイ・タイムラインを公開",
+            "risks": "信濃川、加茂川、五社川、才歩川、山田川、大正川の洪水浸水、家屋倒壊等氾濫、土砂災害、液状化等",
+            "facilities": "避難所・避難方法、防災情報の取得方法、備蓄品等を案内",
+            "support": "自宅周辺の浸水深・危険区域、避難先、避難経路を平時に確認するため利用可能"
+          },
+          "source": {
+            "url": "https://www.town.tagami.niigata.jp/docs/8480.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "15385",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "阿賀町",
+      "officialUrl": "https://www.town.aga.niigata.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を阿賀町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担額を全額助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "阿賀町に住所がある0歳から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院・入院の保険診療自己負担額を全額助成",
+            "procedure": "加入医療保険資格情報が分かる書類と町発行の受給者証を医療機関で提示。県外受診・受給者証未提示・治療用装具等は償還払い申請",
+            "excluded": "保険外費用、高額療養費・付加給付、他制度の給付対象分等"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/kodomo_kenkosuishin/akachan_umaretara/341.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "概ね2歳から小学6年生の病後児を町施設と広域連携施設で保育",
+          "eligibility": {
+            "minAgeMonths": 24,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "target": "病気の回復期で医師が利用可能と認め、保護者の就労・傷病・出産・介護等により家庭保育が困難な概ね2歳から小学6年生",
+            "condition": "阿賀町在住または保護者が町内事業所等へ勤務していること",
+            "coverage": "町の病後児保育室に加え、2026年4月から新潟市・三条市・新発田市・燕市・阿賀野市・胎内市・聖籠町・加茂市・田上町・五泉市・弥彦村の施設を広域利用可能",
+            "procedure": "登録申請、利用申込、医師の診療情報提供書等が必要",
+            "notes": "利用時間・料金・定員は施設ごとの最新案内を確認"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/kodomo_kenkosuishin/kosodate_shien/338.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "2025年4月から年齢・人数・所得を問わず保育施設利用料等を無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "阿賀町に住所があり保育を必要とする世帯の保育施設入園児童",
+            "coverage": "0～5歳児の保育料、早朝・延長保育料を無償化",
+            "meal": "副食費・通園バスも無償。一時保育も2025年4月から無料",
+            "procedure": "通常の入園手続を行えば無償化の追加手続は不要",
+            "facilities": "ひまわり保育園、上条保育園、わかば保育園等"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/kodomo_kenkosuishin/hoikuen_hairu/337.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2023年度から町立小学校・中学校の学校給食費を完全無償化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "阿賀町立小学校・中学校に在籍する児童生徒",
+            "coverage": "学校給食費を完全無償化し、保護者負担を0円とする",
+            "start": "2023年度から実施",
+            "procedure": "町立学校で通常の給食を利用する場合は給食費の支払い手続不要",
+            "notes": "食物アレルギー、長期欠席、町外就学等の取扱いは学校教育課へ確認"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/gakko_kyoiku/kyoiku/332.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後1年以内の母子へ宿泊・訪問型産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "阿賀町に住所があり産後ケアを必要とする産後1年以内の産婦と乳児",
+            "types": "短期入所型、居宅訪問型",
+            "limit": "短期入所型7日以内、居宅訪問型2回まで",
+            "fee": "短期入所型1日2,500円。町民税非課税世帯・生活保護世帯は無料。居宅訪問型は無料",
+            "support": "母体の身体・心理ケア、乳房ケア、沐浴・授乳等の育児指導・相談",
+            "procedure": "利用申請書をこども・健康推進課へ提出。出産前から申請可能"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/kodomo_kenkosuishin/ninshinshitara/1730.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から就学前の子どもを平日8時～16時、無料で一時保育",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "program": "一時保育",
+            "target": "阿賀町に住所があり、保護者の短時間・継続就労、通院、介護、冠婚葬祭等で一時的に家庭保育が困難な生後6か月から就学前の子ども",
+            "facilities": "ひまわり保育園、わかば保育園、上条保育園",
+            "hours": "月曜日から金曜日の8時から16時",
+            "fee": "無料",
+            "procedure": "利用希望保育園へ直接申込み。園行事や定員等により利用できない場合あり"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/kodomo_kenkosuishin/kosodate_shien/333.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "移住・新婚・子育て世帯の新築住宅取得を加算込み最大220万円支援",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "program": "阿賀町移住定住促進奨励金等の住まい支援",
+            "target": "町内で住宅を新築・取得するU・Iターン世帯、新婚世帯、子育て世帯等で制度要件を満たす人",
+            "base": "町内業者契約の場合70万円、町外業者契約の場合30万円等",
+            "additions": "高校生以下の子ども1人につき10万円、親世帯同居20万円等の加算があり、制度紹介では新築最大220万円",
+            "otherSupport": "克雪住宅整備は対象工事費50％・上限50万円、東蒲杉利用住宅は購入費30％以内・上限50万円",
+            "procedure": "契約・着工前にまちづくり観光課へ対象要件と必要書類を確認して申請"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/machizukuri_kanko/hojo_shienseido/211.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを予約してクリーンセンターあがのがわ等へ有料自己搬入",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "収集可能な家庭ごみは地域別カレンダーに従い排出",
+            "directDelivery": "燃やす・燃やさない粗大ごみを自己搬入する場合はクリーンセンターあがのがわへ予約して有料搬入",
+            "relay": "家庭系燃やす粗大ごみは旧阿賀町クリーンセンターの粗大ごみ中継場も案内",
+            "excluded": "ベッド、耐火金庫、ガスボンベ、農機具、畳、スプリングマット、大型家具、家電リサイクル法対象品等は販売店・許可業者へ依頼する品目あり",
+            "procedure": "ごみ辞典で品目を確認し、処理施設または許可業者へ事前連絡"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/chomin_seikatsu/gomi_seikatsukankyo/212.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "阿賀野川水系と中小河川の洪水・土砂災害等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "津川・鹿瀬・上川・三川地域別洪水ハザードマップ、中小河川22河川の洪水マップ、地区別土砂災害・ため池ハザードマップを公開",
+            "risks": "阿賀野川、常浪川、新谷川、姥堂川、中小河川の洪水浸水、土砂災害警戒区域等",
+            "facilities": "避難所、避難経路、防災気象情報、警戒レベル等を案内",
+            "support": "自宅周辺の浸水深・危険区域・避難先を事前確認するため利用可能"
+          },
+          "source": {
+            "url": "https://www.town.aga.niigata.jp/agamachi_soshiki/soumu/shobo_bosai/453.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "15405",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "出雲崎町",
+      "officialUrl": "https://www.town.izumozaki.niigata.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を出雲崎町公式情報で確認し、8制度をverified、町独自病児・病後児保育1制度をunavailableとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担額を全額助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "出雲崎町に住所があり健康保険に加入する出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院・入院の保険診療自己負担額を全額助成",
+            "procedure": "受給者証の交付を受け、県内医療機関では保険資格確認書類と受給者証を提示。県外受診・受給者証未提示時は領収書等を添えて償還払い申請",
+            "excluded": "保険外費用、高額療養費・付加給付、他制度の給付対象分等"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/kurashi/ninshin/kodomo-iryo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "unavailable",
+          "summary": "町公式の現行子育て・保育案内では専用の病児・病後児保育事業を確認できない",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "currentStatus": "町公式の子育て支援事業一覧、保育所等案内、子育てメニューを確認したが、町が実施・委託する専用病児・病後児保育の利用案内は確認できない",
+            "alternative": "子どもの病気時の預かり先や近隣自治体施設の利用可否は、保健福祉課こども未来室または利用中の保育施設へ確認",
+            "notes": "制度不存在を断定せず、公開中の公式利用案内を確認できない状態として記録"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/kurashi/kosodate/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "0歳児から5歳児クラスまでの保育料を町独自に無料化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "町の支給認定を受けて保育所・認定こども園等を利用する0～5歳児",
+            "coverage": "0歳児から5歳児クラスまで全児童の保育料を無料化",
+            "meal": "3～5歳児の主食費・副食費は原則実費。年収360万円未満相当世帯や第3子以降等は副食費免除",
+            "procedure": "通常の入園・支給認定申込みを行う",
+            "facilities": "出雲崎こども園、小木之城保育園等"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/kurashi/kosodate/hoikuryo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "学校給食費助成金で保護者負担を軽減し、経済的に困難な世帯へ就学援助を実施",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "townSupport": "町立小中学校の保護者を対象に、学校給食費から町長が年度ごとに定める保護者負担額を除いた額を助成",
+            "lowIncome": "要保護・準要保護等の認定世帯には就学援助で学校給食費を含む費用の一部を援助",
+            "procedure": "町立校の助成は学校給食会計へ交付。就学援助は年度ごとに教育委員会へ申請",
+            "notes": "令和8年度の具体的保護者負担額を公開ページで確認できないため、全員完全無償化とは断定しない"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/reiki/reiki_honbun/e459RG00000816.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "訪問・デイサービス・宿泊型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "出雲崎町在住で産後の心身ケア・授乳・育児相談等を必要とする母子。訪問・デイサービス型は概ね1歳まで、宿泊型は4か月未満",
+            "types": "訪問型、デイサービス型、宿泊型",
+            "fee": "訪問型・デイサービス型は無料、宿泊型は1日2,500円。生活保護・町民税非課税世帯は宿泊型も無料",
+            "support": "助産師による母親の心身ケア、授乳・育児相談、休養支援",
+            "procedure": "デイサービス型は前日16時までに予約。宿泊型は委託医療機関との調整が必要なため町助産師へ事前相談"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/_files/00079501/2025kosodate.pdf",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保護者の疾病・冠婚葬祭等で家庭保育が困難なとき保育施設で一時保育",
+          "eligibility": {
+            "minAgeMonths": 2,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "program": "一時保育",
+            "target": "保護者のけが・病気・冠婚葬祭・就労等により一時的に家庭で保育できない就学前児童",
+            "facilities": "町内の出雲崎こども園、小木之城保育園等",
+            "age": "町内保育施設は生後2か月から入園可能。一時保育の受入月齢・定員は施設へ確認",
+            "procedure": "利用希望施設へ直接相談・申込み",
+            "notes": "こども誰でも通園制度の設備基準条例はあるが、現行の利用時間・料金を示す公式案内を確認できないため、公開中の一時保育を記録"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/kurashi/kosodate/hoikuen.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "若者・子育て・転入世帯の住宅取得・リフォームを最大120万円補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "program": "新生活スーパー住まい取得・リフォーム支援補助金",
+            "target": "中学生以下を扶養する世帯、40歳以下の若年者世帯、定住希望の転入者等で、5年を超えて居住し税等滞納がない人",
+            "coverage": "住宅取得、50万円以上の住宅リフォーム、取得と同時に行うリフォーム",
+            "amount": "基本額50万円に子育て・若年者3％、同居・近居2％、転入2％、町内業者施工1％等を加算し上限120万円",
+            "procedure": "契約・着工前に建設課へ相談し申請"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/kurashi/sumai/super-reform.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみ処理券を使用し収集に出すか、対象処理施設へ自己搬入",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "guide": "町のごみ・資源物分別ガイドと地区別収集カレンダーで粗大ごみの品目・出し方を案内",
+            "collection": "品目に応じた粗大ごみ処理券を購入し、地区の収集日に指定場所へ排出",
+            "directDelivery": "家庭ごみは公式ガイド記載の処理施設へ持込み可能",
+            "procedure": "大きさ・材質・品目別の区分、処理券枚数、搬入先・受付日時を最新ガイドで確認",
+            "excluded": "家電リサイクル法対象品、パソコン、処理困難物等"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/kurashi/seikatsu/gomi-dashikata.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "土砂災害・洪水・津波等を確認できるWeb版災害ハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "出雲崎町Web版災害ハザードマップ、地区別土砂災害警戒区域マップ、ため池ハザードマップを公開",
+            "risks": "土砂災害、河川洪水、津波、ため池決壊等",
+            "facilities": "指定避難所、津波時の指定緊急避難場所等を案内",
+            "support": "自宅周辺の危険区域、浸水想定、避難先・避難経路の事前確認に利用可能"
+          },
+          "source": {
+            "url": "https://www.town.izumozaki.niigata.jp/hazardmap/",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "15461",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "湯沢町",
+      "officialUrl": "https://www.town.yuzawa.lg.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を湯沢町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの保険診療自己負担額を全額助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "湯沢町に住所があり健康保険に加入する出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "通院・入院等の保険診療自己負担額を全額助成",
+            "procedure": "受給者証の交付を受け、県内医療機関では保険資格確認書類と受給者証を提示。県外受診時は領収書等を添えて診療月末から6か月以内に償還払い申請",
+            "excluded": "保険外費用、高額療養費・付加給付、他制度の給付対象分等"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/kurashinojoho/kosodateoen_sukusukuyuzawa/10/3/3113.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後6か月から小学3年生の病児・病後児を専用保育室で預かり",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "facility": "湯沢町総合福祉センター3階 病児・病後児保育室ぽっかぽか",
+            "target": "湯沢町在住または保護者が町内勤務で、病気中・回復期かつ家庭保育が困難な生後6か月から小学3年生",
+            "hours": "平日8時30分から17時30分",
+            "fee": "1人1回2,000円。前年度住民税非課税世帯は半額、生活保護世帯は無料。町外利用者は一律2,000円",
+            "procedure": "電話予約、医療機関受診と医師連絡票、利用申込書等が必要。事前登録不要"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/kurashinojoho/kosodateoen_sukusukuyuzawa/11/4/1/2333.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児の保育料を無償化し、3歳以上の給食費も無料",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "湯沢認定こども園等を利用する3～5歳児と住民税非課税世帯の0～2歳児等",
+            "coverage": "対象児童の保育料を無償化",
+            "currentFee": "住民税課税世帯の0～2歳児は保護者の住民税額を基に保育料を算定",
+            "meal": "3歳以上児は2023年度から主食費・副食費・補食費を完全無償化。0～2歳児の給食費は保育料に含む",
+            "procedure": "入園・支給認定手続きを行い、課税世帯0～2歳児は年度の保育料月額表により決定"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/kurashinojoho/kosodateoen_sukusukuyuzawa/10/1/3097.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "湯沢学園の小学校・中学校給食費を無料化",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "target": "湯沢町立小学校・中学校に在籍する児童生徒",
+            "coverage": "小学校から中学校までの学校給食費を町が支援し、保護者負担を無料化",
+            "support": "経済的に困難な世帯には就学援助で給食費等を支援する制度も整備",
+            "procedure": "町立校の通常給食について保護者の給食費負担手続は不要。就学援助は年度ごとに申請",
+            "notes": "町公式移住定住ポータルでも中学校までの給食費無料を子育て支援として案内"
+          },
+          "source": {
+            "url": "https://livelife.town.yuzawa.lg.jp/",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "生後概ね12か月までの母子へ宿泊・日帰り・訪問型産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "湯沢町に住民登録があり、体調不良・育児不安・家族支援不足等がある生後概ね12か月までの子どもと母親",
+            "types": "宿泊型、日帰り型、訪問型",
+            "fee": "課税世帯は宿泊1日3,000円、日帰り2,000円、訪問1,500円。非課税世帯は各半額、生活保護世帯は無料",
+            "support": "乳房ケア、授乳・沐浴等の相談指導、母親の体調管理、乳児の発育相談等",
+            "procedure": "町へ申請し、利用承認後に実施施設と調整"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/soshikikarasagasu/kosodatekyoikubu/kosodateshienka/8/7660.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "未就園の生後6か月から3歳未満を月10時間まで受け入れ",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "program": "こども誰でも通園制度",
+            "target": "認定こども園・保育所等に在園していない生後6か月から満3歳未満の子ども",
+            "facility": "湯沢町総合子育て支援センター",
+            "hours": "子ども1人につき月10時間まで",
+            "fee": "1時間300円。給食費が別途かかる場合あり。生活保護世帯は無料",
+            "procedure": "利用申請、認定証受領、事前面談、施設予約の順に手続"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/soshikikarasagasu/kosodatekyoikubu/kosodateshienka/4/1/7974.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "子育て世代等の住宅取得後の固定資産税相当額を年20万円まで5年間補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "program": "住宅取得補助金",
+            "target": "湯沢町での定住意思を持つ夫婦が、制度要件を満たす新築住宅または中古住宅を初めて取得し居住する世帯",
+            "coverage": "対象住宅に係る固定資産税相当額",
+            "amount": "リゾートマンションは家屋・土地分、戸建て住宅は家屋分の固定資産税相当額を各年度上限20万円まで補助",
+            "period": "初めて固定資産税が課税された年度から5年間",
+            "procedure": "各年度5月1日から翌年3月31日までに必要書類を添えて申請"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/kurashinojoho/machinitsuiteshiritai/12/5/6737.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを処理券による予約制戸別収集または施設への自己搬入で処分",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "自己搬入が困難な家庭は事前予約し、粗大ごみ処理券を購入して毎月第2・第4木曜日等の戸別収集を利用",
+            "directDelivery": "処理施設への直接自己搬入も可能",
+            "procedure": "電話等で予約し、品目・料金に応じた処理券を購入して収集日に自宅前へ排出",
+            "excluded": "引越し等で生じる大量の粗大ごみは町の予約収集対象外で、許可業者へ依頼"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/kurashinojoho/kurashi_tetsuzuki/1/1/1/2765.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・地震・大規模盛土造成地等のハザードマップを公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "洪水ハザードマップ、地区別土砂災害ハザードマップ、地震防災マップ、大規模盛土造成地マップを公開",
+            "risks": "河川洪水・浸水、土砂災害警戒区域、地震の揺れ・建物被害、盛土造成地等",
+            "facilities": "指定避難所・避難場所、警戒区域、避難情報等を案内",
+            "notes": "追加指定河川を反映した洪水ハザードマップは2026年度中の完成を予定"
+          },
+          "source": {
+            "url": "https://www.town.yuzawa.lg.jp/soshikikarasagasu/somubu/bousaikanzaika/1/2/1/index.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
+      "code": "15482",
+      "prefectureCode": "15",
+      "prefecture": "新潟県",
+      "name": "津南町",
+      "officialUrl": "https://www.town.tsunan.niigata.jp/",
+      "status": "verified",
+      "summary": "子育て・生活関連9制度を津南町公式情報で確認し、全9制度をverifiedとして登録。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "18歳年度末までの子どもの入院費を無料、外来費を月4回まで1回530円で助成",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "target": "津南町に住所があり健康保険に加入する出生から18歳到達後最初の3月31日までの子ども",
+            "coverage": "保険診療の入院・外来・歯科・調剤を助成",
+            "copayment": "入院は無料。外来は同一医療機関等で1回530円、同一月5回目以降は無料",
+            "procedure": "出生・転入時に受給者証を申請し、県内医療機関では資格確認書類と受給者証を提示。県外受診等は6か月以内に償還払い申請",
+            "excluded": "保険外費用、入院時食事代、高額療養費・付加給付、他制度対象分等"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/soshiki/fukushihoken/kodomoiryo.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "生後3か月から小学6年生の病児・病後児を十日町市内施設で預かり",
+          "eligibility": {
+            "minAgeMonths": 3,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "facility": "子育て・健康支援センター「ちくたく」",
+            "target": "病気の急性期または回復期にあり、保護者の就労等で家庭保育が困難な生後3か月から小学6年生",
+            "hours": "平日8時から18時、定員4人",
+            "fee": "1日2,000円。給食代は別途",
+            "procedure": "施設へ予約し、医療機関受診後に必要書類を提出して利用"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/site/kyoiku/byoujihoiku.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児と非課税世帯0～2歳児等の保育料を無償化し、2026年度から3歳以上の副食費も無償化",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "target": "保育園等を利用する3～5歳児と住民税非課税世帯の0～2歳児等",
+            "coverage": "国制度の対象となる保育料を無償化",
+            "currentFee": "課税世帯の0～2歳児保育料は父母の住民税額等を基に算定",
+            "meal": "2026年度は未満児を除く保育園児の副食費を町が無償化",
+            "procedure": "入所申込みと教育・保育給付認定を行い、必要書類を提出"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/site/kyoiku/hoikuen.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "2026年度は小学校給食費を無償化し、中学校給食費は町が負担軽減",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 15
+          },
+          "details": {
+            "elementary": "2026年度予算で町立小学校の学校給食費を無償化",
+            "juniorHigh": "中学校は給食費の負担軽減を実施するが、一律完全無償化とは確認できない",
+            "referenceRates": "徴収規則上の1食単価は小学校270円または290円、中学校340円",
+            "lowIncome": "経済的に困難な世帯は就学援助により学校給食費の実費支給対象",
+            "notes": "小中学校一律完全無償化と誤って記録しない"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/soshiki/somu/8-gaiyou.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "原則生後3か月未満の母子へ宿泊・日帰り型の産後ケアを提供",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 0
+          },
+          "details": {
+            "target": "津南町に住所登録があり産後ケアを希望する母親と子ども",
+            "facility": "たかき医院。原則生後3か月未満、生後3か月から5か月未満は要相談",
+            "types": "ショートステイ（宿泊型）、デイケア（日帰り型）",
+            "limit": "各利用を合わせて最長7日。宿泊は最長6泊7日、日帰りは最長7日",
+            "fee": "宿泊1日3,000円、日帰り1日1,000円。住民税非課税・生活保護世帯は無料",
+            "support": "母子の健康管理、乳房管理、沐浴・授乳等の育児指導"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/soshiki/fukushihoken/sangocare.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "保護者の用事・就労等に対応する一時保育・一時預かりを実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "program": "一時保育・一時預かり",
+            "target": "家庭で一時的に保育できない就学前児童",
+            "facility": "町の保育園・子育て支援センターが利用案内、申込書、問診票を公開",
+            "procedure": "事前に利用登録・申込みを行い、受入年齢・日時・料金・定員は最新案内で確認",
+            "notes": "乳児等通園支援事業の条例・事業者確認規則も2026年4月施行"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/site/kyoiku/kosodateshien.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内業者による20万円以上の住宅改修費の20％を補助",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "target": "津南町に住民登録し、町税等の滞納がなく、町内業者により自己居住住宅を改修する人",
+            "condition": "税抜工事費20万円以上、交付決定後に着工し年度内の期限までに完了する工事",
+            "amount": "対象経費の20％。子育て世帯上限20万円、高齢者世帯15万円、その他10万円。省エネ改修を含む場合は上限に5万円加算",
+            "procedure": "着工前に申請。2026年度分は予算到達により受付終了",
+            "notes": "過去受給や他の住宅改修補助との重複等に制限あり"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/reiki/reiki_honbun/e474RG00000605.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみを収集カレンダーに従い排出するか、衛生施設組合へ自己搬入",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "collection": "地区別ごみ収集カレンダーと分別表に従い、大型金属ごみ・燃える粗大ごみ等を指定日に排出",
+            "directDelivery": "家庭ごみは津南地域衛生施設組合の処理場へ持込み可能",
+            "fee": "家庭系の燃えるごみ・燃える粗大ごみ・埋立ごみは持込み量10キログラム当たり70円",
+            "procedure": "氏名表示、収集日、分別区分、施設受付日を最新案内で確認",
+            "excluded": "事業系・多量ごみ、処理困難物等は許可業者等へ相談"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/soshiki/zeimuchomin/gomi-calendar2026.html",
+            "checkedAt": "2026-07-24"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水・土砂災害・ため池等のハザードマップと避難情報を公開",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 120
+          },
+          "details": {
+            "maps": "2026年更新の洪水ハザードマップ、地区別土砂災害ハザードマップ、ため池ハザードマップを公開",
+            "risks": "河川洪水・浸水、土石流・地すべり・がけ崩れ、ため池決壊等",
+            "facilities": "避難場所・避難経路、警戒区域等を地区別に確認可能",
+            "support": "平時に自宅周辺の危険箇所と避難方法を確認するために利用"
+          },
+          "source": {
+            "url": "https://www.town.tsunan.niigata.jp/life/1/7/index-2.html",
+            "checkedAt": "2026-07-24"
+          }
+        }
+      }
+    },
+    {
       "code": "16201",
       "prefectureCode": "16",
       "prefecture": "富山県",
@@ -155427,7 +156332,7 @@
       "name": "佐久穂町",
       "officialUrl": "https://www.town.sakuho.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を佐久穂町公式情報で確認し、7制度をverified、2制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を佐久穂町公式・県公式情報で再監査し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -155488,36 +156393,56 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助で給食費を支援する制度は確認できるが、令和8年度の一般世帯負担額を公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "佐久穂小・中学校の学校給食費を全額無償化",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "経済的理由で就学困難な世帯には、就学援助制度で学校給食費を援助",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、公費負担・無償化の有無、欠食時精算はこども課学校教育係または在籍校へ確認"
+            "target": "佐久穂町に住所があり、佐久穂小学校・中学校に在学する児童生徒",
+            "support": "子育て世帯の経済的負担軽減のため、保護者が負担する学校給食費を町が全額補助",
+            "elementary": "小学校は1食305円、年間61,305円相当（給食提供201日）を無償化",
+            "juniorHigh": "中学校は1食345円、年間69,345円相当（給食提供201日）を無償化",
+            "operation": "佐久穂小・中学校共同調理場が給食を提供",
+            "confirmation": "年度途中の転入出、欠食、食物アレルギー対応時の精算は在籍校またはこども課へ確認"
           },
           "source": {
-            "url": "https://www.town.sakuho.nagano.jp/kurashi/kyoiku/kyoiku/kodomoka_1127.html",
+            "url": "https://www.town.sakuho.nagano.jp/2025/09/26/%E5%BA%83%E5%A0%B1%E3%81%95%E3%81%8F%E3%81%BB9%E6%9C%88228%E5%8F%B7.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.sakuho.nagano.jp/kurashi/kyoiku/kyoiku/kodomoka_1127.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "令和8年度の産後ケアの実施形態、対象月齢、利用料、申請方法を町公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "佐久穂町民を対象に宿泊・通所・訪問型の産後ケアを実施",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "confirmed": "町は妊娠・出産・子育て支援情報と産前産後家事支援を案内",
-            "needsConfirmation": "宿泊・通所・訪問型産後ケアの実施有無、対象月齢、利用回数、自己負担、実施施設、申請方法はこども家庭センターまたは健康福祉課へ確認"
+            "target": "佐久穂町に住所があり、出産後に心身の休養、授乳・育児支援等を必要とする母子",
+            "types": "長野県の市町村実施状況一覧で、宿泊型・通所型・訪問型の3類型を実施",
+            "contact": "佐久穂町健康福祉課（0267-86-2525）が担当窓口",
+            "care": "母体の休養・健康管理、授乳・乳房ケア、育児相談、乳児の健康確認等",
+            "procedure": "利用前に健康福祉課またはこども家庭センターへ相談・申請し、利用施設・助産師と日程調整",
+            "needsConfirmation": "令和8年度の対象月齢、利用日数・回数、実施施設、自己負担額、非課税・生活保護世帯等の減免条件は窓口へ確認"
           },
           "source": {
-            "url": "https://www.town.sakuho.nagano.jp/kurashi/ikuji/index.html",
+            "url": "https://www.pref.nagano.lg.jp/shippei-kansen/boshishika/documents/r709.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.sakuho.nagano.jp/kurashi/ikuji/index.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -155788,7 +156713,7 @@
       "name": "御代田町",
       "officialUrl": "https://www.town.miyota.nagano.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を御代田町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を御代田町公式情報で再監査し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -155886,20 +156811,31 @@
           }
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "過去の試行事業は確認できるが、令和8年度のこども誰でも通園制度の実施施設・利用条件を確定できない",
+          "status": "verified",
+          "summary": "概ね離乳を終えた未就園児を雪窓保育園で事前申請により一時保育",
           "eligibility": {
             "minAgeMonths": 6,
-            "maxAgeYears": 2
+            "maxAgeYears": 5
           },
           "details": {
-            "confirmed": "令和6年度は雪窓保育園で、町内在住の満3歳未満の未就園児等を対象とする試行事業を実施",
-            "needsConfirmation": "令和8年度の本格制度の実施有無、対象月齢、月上限時間、利用料、実施施設、面談・予約方法は町民課こども係へ確認"
+            "target": "御代田町民で、通常の保育園等を利用しておらず、集団保育が可能で概ね離乳を終えた子ども",
+            "reasons": "保護者の疾病、就労、介護、冠婚葬祭その他緊急に保育が必要な場合",
+            "facility": "雪窓保育園",
+            "capacity": "1日5人",
+            "fee": "3歳未満は1時間360円、3歳以上は1時間200円",
+            "procedure": "利用前に一時保育の申込みが必要。利用可能日・時間、食事、持ち物、受入年齢の個別判断は町民課こども係または雪窓保育園へ確認",
+            "distinction": "令和8年度のこども誰でも通園制度の詳細ではなく、町が現行サービスとして案内する一時保育事業を登録"
           },
           "source": {
-            "url": "https://www.town.miyota.nagano.jp/category/kyouiku/166470.html",
+            "url": "https://www.town.miyota.nagano.jp/file/183447.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.miyota.nagano.jp/category/hoikuennado/2075.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -156711,7 +157647,7 @@
       "name": "富士見町",
       "officialUrl": "https://www.town.fujimi.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を富士見町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を富士見町公式情報で再監査し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -156772,21 +157708,34 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食の提供と就学援助は確認できるが、令和8年度の一般世帯負担額を公式公開情報で確定できない",
+          "status": "verified",
+          "summary": "令和8年度に国・県交付金と町費で学校給食の量・質を維持し、保護者負担を軽減",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "町立小中学校で学校給食を実施し、経済的に就学困難な世帯には令和8年度就学援助制度を案内",
-            "pastSupport": "過年度には物価高騰に伴う小中学校給食費の値上げ分を町が補助",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、公費負担後の一般世帯負担、欠食精算は子ども課総務学校教育係または在籍校へ確認"
+            "purpose": "国・県の給食費負担軽減交付金を活用し、魅力ある学校給食の量・質を維持しながら保護者負担を軽減",
+            "projectBudget": "学校給食費負担軽減事業の総額は1億2,149万円",
+            "expenses": "給食食材費5,100万円、給食調理業務委託費6,595万円、中学校給食費補助金447万円、その他7万円",
+            "funding": "国・県補助金3,949万円、保護者給食費収入819万円、教職員等負担677万円、町負担6,704万円",
+            "currentOperation": "令和8年度も小中学校の給食提供と厨房設備更新を継続",
+            "confirmation": "小学校・中学校別の1食単価、月額・年額、補助後の各家庭負担、欠食・転入出時の精算は子ども課総務学校教育係または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.town.fujimi.lg.jp/soshiki/a17/index-2.html",
+            "url": "https://www.town.fujimi.lg.jp/uploaded/attachment/36561.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.fujimi.lg.jp/page/za01kotoshinoyosan.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.town.fujimi.lg.jp/soshiki/a17/index-2.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -157273,7 +158222,7 @@
       "name": "箕輪町",
       "officialUrl": "https://www.town.minowa.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を箕輪町公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を箕輪町公式情報で再監査し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -157333,22 +158282,30 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "就学援助で学校給食費を援助する制度は確認できるが、令和8年度の一般世帯負担額を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は国交付金と町費で小学校給食費を減額し、中学校給食費も公費負担を拡大してさらに軽減",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "confirmed": "経済的に就学が困難な世帯には、基準内の定められた額の学校給食費を含む就学援助を実施",
-            "schools": "町内に小学校5校、中学校1校があり、各校で給食を提供",
-            "needsConfirmation": "令和8年度の小学校・中学校別1食単価、月額・年額、公費補助後の一般世帯負担額、欠食時精算は学校教育課または在籍校へ確認",
-            "reason": "給食実施と就学援助は確認できたが、一般世帯向けの現行徴収額を公式公開情報で確定できない"
+            "elementary": "国の交付金を活用して小学校給食費の保護者負担を減額",
+            "juniorHigh": "中学校給食費は公費負担を拡大し、従来よりさらに減額",
+            "budget": "物価高騰対策として中学校給食費保護者負担軽減に2,313.7万円を計上",
+            "quality": "食材費高騰下でも給食の内容を維持し、保護者負担を増やさない方針",
+            "assistance": "経済的に就学が困難な世帯には学校給食費を含む就学援助を実施",
+            "confirmation": "小中学校別の最終1食単価、月額・年額、欠食・転入出時の精算は学校教育課または在籍校へ確認"
           },
           "source": {
-            "url": "https://www.town.minowa.lg.jp/soshiki/gakko_kyouiku/gyomu/5/765.html",
+            "url": "https://www.town.minowa.lg.jp/material/files/group/4/kobetuseisakusiryou.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.minowa.lg.jp/soshiki/gakko_kyouiku/gyomu/5/765.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -158761,7 +159718,7 @@
       "name": "阿智村",
       "officialUrl": "https://www.vill.achi.lg.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を阿智村公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を阿智村公式情報で再監査し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -158783,20 +159740,34 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "現行の病児・病後児保育施設、対象年齢、料金、予約方法を村公式情報で確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学3年生までを飯田市病児保育施設おひさまはるるで預かる",
           "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 12
+            "minAgeMonths": 6,
+            "maxAgeYears": 9
           },
           "details": {
-            "confirmed": "保育園における感染症別の登園届・意見書等の手続きは案内されている",
-            "needsConfirmation": "飯田・伊南地域の広域病児保育の利用可否、施設、対象年齢、事前登録、医師連絡票、利用料、予約方法を教育委員会へ確認"
+            "target": "生後6か月から小学3年生までで、入院するほどではないが病気または回復期のため集団生活が困難で、保護者が家庭で保育できない子ども",
+            "facility": "健和会病院内 飯田市病児保育施設『おひさまはるる』",
+            "hours": "平日8時～18時。土日祝、12月29日～1月3日、8月14日～16日を除く",
+            "fee": "5時間以上2,000円、5時間未満1,000円。世帯状況・所得により減免あり",
+            "procedure": "事前登録が必要。令和7年4月以降は予約アプリに対応し、利用時の診察・診療情報提供書等を施設へ確認",
+            "limitations": "定員、症状、感染症等により利用できない場合あり"
           },
           "source": {
-            "url": "https://www.vill.achi.lg.jp/site/achidoki/20250926hoikuen-byouki.html",
+            "url": "https://www.vill.achi.lg.jp/uploaded/life/18895_56098_misc.pdf",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.iida.lg.jp/soshiki/12/ohisamaharuru.html",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -159289,7 +160260,7 @@
       "name": "下條村",
       "officialUrl": "https://www.vill-shimojo.jp/",
       "status": "verified",
-      "summary": "子育て・生活関連9制度を下條村公式情報で確認し、8制度をverified、1制度をunavailableとして登録。",
+      "summary": "子育て・生活関連9制度を下條村公式情報と南信州定住自立圏の公式資料で確認し、9制度すべてverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -159311,20 +160282,34 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "健和会病院への病児保育委託は確認できるが、令和8年度の対象年齢・料金・予約方法を確定できない",
+          "status": "verified",
+          "summary": "生後6か月から小学6年生まで、飯田市病児保育施設おひさまはるるを利用可能",
           "eligibility": {
-            "minAgeMonths": 0,
+            "minAgeMonths": 6,
             "maxAgeYears": 12
           },
           "details": {
-            "confirmed": "第3期まち・ひと・しごと創生総合戦略で、健和会病院に委託する病児保育事業の実施を明記",
-            "needsConfirmation": "利用施設名、対象年齢、利用時間、定員、事前登録、医師連絡票、利用料、予約方法は福祉課へ確認"
+            "target": "下條村を含む下伊那町村に住所があり、病気または回復期で集団保育・通学が困難、入院不要で、保護者が家庭看護できない生後6か月～小学6年生",
+            "facility": "健和会病院2階 飯田市病児保育施設『おひさまはるる』",
+            "hours": "月～金曜日8時～18時。祝日・お盆・年末年始を除く。定員1日6人",
+            "fee": "一般世帯は5時間未満1,000円・5時間以上2,000円。非課税世帯は500円・1,000円。生活保護世帯等は無料。給食希望は実費400円",
+            "procedure": "事前登録、利用前の医療機関受診と医師連絡票、予約アプリ『ぴったんこはるる』での予約が必要",
+            "period": "連続利用は原則7日以内"
           },
           "source": {
-            "url": "https://www.vill-shimojo.jp/gyousei/gyousei-info/kakuka/soumu_osirase/files/sougousennryaku3.pdf",
+            "url": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html",
             "checkedAt": "2026-07-24"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.iida.lg.jp/reiki_int/reiki_honbun/e706RG00001194.html",
+              "checkedAt": "2026-07-24"
+            },
+            {
+              "url": "https://www.city.iida.lg.jp/uploaded/attachment/70632.pdf",
+              "checkedAt": "2026-07-24"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
