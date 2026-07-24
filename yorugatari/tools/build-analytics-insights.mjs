@@ -48,6 +48,9 @@ const runDelta = analytics.analysis?.deltasFromPreviousRun || {};
 const statusById = new Map((launchStatus.campaigns || []).map((row) => [row.id, row]));
 const publishedCampaigns = (launchStatus.campaigns || []).filter((row) => row.status === 'published');
 const nextCampaign = (analytics.campaigns || []).find((row) => row.id === launchStatus.nextCampaignId) || null;
+const externalSourceViews = Number.isFinite(metrics.externalSourceViews) ? metrics.externalSourceViews : 0;
+const externalThreshold = readiness.thresholds?.acquisitionSourceLandings || 30;
+const externalComparisonReady = externalSourceViews >= externalThreshold;
 
 function campaignStatus(row) {
   if (row.id === 'onsite-share') return row.views >= 10 ? '比較候補' : '常時有効・収集中';
@@ -73,13 +76,22 @@ const topStories = (analytics.topStories || []).slice(0, 10)
   .join('\n');
 
 const reasons = (readiness.reasons || []).map((item) => `- ${item}`);
+const analyticsActions = (analytics.analysis?.actions || []).filter((item) => !(
+  publishedCampaigns.length === 0 && item.includes('external-launch-kit.mdの1日目リンク')
+));
 const actions = [
   ...(publishedCampaigns.length === 0 && nextCampaign
     ? [`外部投稿はまだ0本。最初に「${nextCampaign.label}」をexternal-launch-kit.mdの文面とURLのまま投稿する。`]
     : []),
-  ...(analytics.analysis?.actions || []),
+  ...analyticsActions,
   ...(conversion.actions || [])
 ].filter((item, index, values) => values.indexOf(item) === index).map((item) => `- ${item}`);
+
+const externalDecision = publishedCampaigns.length === 0
+  ? '未投稿'
+  : externalComparisonReady
+    ? '実施判断可能'
+    : '母数収集中';
 
 const output = `# 夜語り アクセス・特集開始分析\n\n` +
   `生成日時：${analytics.generatedAt}  \n集計日（日本時間）：${analytics.analysis?.japanDate || conversion.japanDate || '—'}\n\n` +
@@ -110,7 +122,8 @@ const output = `# 夜語り アクセス・特集開始分析\n\n` +
   `## 上位作品（参考値）\n\n| 順位 | 作品 | 閲覧 |\n|---:|---|---:|\n${topStories || '| — | データなし | — |'}\n\n` +
   `## 判定\n\n` +
   `人気順の変更：${readiness.rankingReady ? '実施判断可能' : '保留'}  \n` +
-  `流入施策の比較：${readiness.acquisitionReady ? '実施判断可能' : '母数収集中'}  \n` +
+  `流入区分の記録量：${readiness.acquisitionReady ? '基準到達' : '母数収集中'}  \n` +
+  `外部流入施策の比較：${externalDecision}  \n` +
   `告知リンクの比較：${readiness.campaignReady ? '実施判断可能' : '母数収集中'}  \n` +
   `特集開始率の比較：${conversion.comparisonReady ? '実施判断可能' : '母数収集中'}\n\n` +
   `${reasons.length ? reasons.join('\n') : '- 通常アクセスの判定上の不足はありません。'}\n` +
@@ -119,4 +132,4 @@ const output = `# 夜語り アクセス・特集開始分析\n\n` +
   `## 次に行うこと\n\n${actions.join('\n')}\n`;
 
 fs.writeFileSync(outputPath, output);
-console.log(`YORUGATARI_COMBINED_INSIGHTS=${JSON.stringify({ output: outputPath, publishedCampaigns: publishedCampaigns.length, nextCampaignId: launchStatus.nextCampaignId, landingViews: conversion.totals?.landingViews, storyStarts: conversion.totals?.storyStarts, comparisonReady: conversion.comparisonReady })}`);
+console.log(`YORUGATARI_COMBINED_INSIGHTS=${JSON.stringify({ output: outputPath, publishedCampaigns: publishedCampaigns.length, externalSourceViews, externalComparisonReady, nextCampaignId: launchStatus.nextCampaignId, landingViews: conversion.totals?.landingViews, storyStarts: conversion.totals?.storyStarts, comparisonReady: conversion.comparisonReady })}`);
