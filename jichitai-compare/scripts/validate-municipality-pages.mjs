@@ -17,6 +17,8 @@ const INTERNAL_WORKFLOW_PHRASES = [
   '最終検証を実施',
   '次の自治体'
 ];
+const WEST_B_PREFECTURE_CODES = new Set(['31', '32', '34', '35', '36', '38', '41', '42', '44', '45', '47']);
+const WEST_B_INTERNAL_PHRASES = ['調査班', '初期登録対象', '移行監査', '地域正本'];
 
 const generated = JSON.parse(await readFile(GENERATED_FILE, 'utf8'));
 const manifest = JSON.parse(await readFile(MANIFEST_FILE, 'utf8'));
@@ -50,6 +52,13 @@ for (const municipality of municipalities) {
       errors.push(`${municipality.code}: 公開要約に内部作業文言「${phrase}」が含まれています`);
     }
   }
+  if (WEST_B_PREFECTURE_CODES.has(municipality.prefectureCode)) {
+    for (const phrase of WEST_B_INTERNAL_PHRASES) {
+      if (publicSummaries.some((summary) => summary.includes(phrase))) {
+        errors.push(`${municipality.code}: 西日本B公開要約に内部運用語「${phrase}」が含まれています`);
+      }
+    }
+  }
 }
 
 for (let start = 0; start < pages.length; start += 100) {
@@ -80,6 +89,13 @@ for (let start = 0; start < pages.length; start += 100) {
           errors.push(`${page.code}: 公開ページに内部作業文言「${phrase}」が含まれています`);
         }
       }
+      if (WEST_B_PREFECTURE_CODES.has(municipality?.prefectureCode)) {
+        for (const phrase of WEST_B_INTERNAL_PHRASES) {
+          if (html.includes(phrase)) {
+            errors.push(`${page.code}: 西日本B公開ページに内部運用語「${phrase}」が含まれています`);
+          }
+        }
+      }
     } catch (cause) {
       errors.push(`${page.code}: ページを読み込めません: ${cause.message}`);
     }
@@ -97,7 +113,7 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公式サイト/比較導線・内部作業文言なし・sitemap ${sitemapCount} URL`);
+console.log(`自治体別ページ検証成功: ${municipalities.length}ページ・公式サイト/比較導線・内部作業文言なし・西日本B公開要約250自治体・sitemap ${sitemapCount} URL`);
 
 function escapeHtml(value) {
   return String(value)
