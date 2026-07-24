@@ -29,6 +29,7 @@ async function updateMunicipality(code, updater) {
   task.lastUpdatedAt = NOW;
   task.lastUpdatedBy = '西日本調査班A';
   task.officialSources = primarySourceUrls(municipality);
+  task.notes = [...new Set(task.notes)];
 
   await writeJson(dataPath, municipality);
   await writeJson(taskPath, task);
