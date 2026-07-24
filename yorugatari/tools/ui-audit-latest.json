@@ -1,6 +1,6 @@
 {
-  "auditedAt": "2026-07-23T23:56:00.242Z",
-  "success": false,
+  "auditedAt": "2026-07-24T00:03:05.831Z",
+  "success": true,
   "results": [
     {
       "name": "top progressively renders 100 unique cards",
@@ -10,13 +10,21 @@
         "unique": 100,
         "busy": "false",
         "version": true,
-        "fiveMinuteLinks": 4
+        "fiveMinuteLinks": 4,
+        "bedtimeLinks": 4
       }
     },
     {
-      "name": "top exposes the five-minute horror landing",
+      "name": "top exposes both curated horror landings",
       "ok": true,
-      "detail": 4
+      "detail": {
+        "cards": 100,
+        "unique": 100,
+        "busy": "false",
+        "version": true,
+        "fiveMinuteLinks": 4,
+        "bedtimeLinks": 4
+      }
     },
     {
       "name": "top mobile has no horizontal overflow",
@@ -67,9 +75,12 @@
       "detail": 100
     },
     {
-      "name": "archive exposes the five-minute horror landing",
+      "name": "archive exposes both curated horror landings",
       "ok": true,
-      "detail": 3
+      "detail": {
+        "fiveMinute": 3,
+        "bedtime": 3
+      }
     },
     {
       "name": "archive mobile has no horizontal overflow",
@@ -95,8 +106,9 @@
         "h1": 1,
         "breadcrumb": 1,
         "canonical": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
-        "analytics": false,
-        "engagement": false
+        "analytics": true,
+        "engagement": false,
+        "bedtimeLinks": 3
       }
     },
     {
@@ -110,13 +122,14 @@
         "h1": 1,
         "breadcrumb": 1,
         "canonical": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
-        "analytics": false,
-        "engagement": false
+        "analytics": true,
+        "engagement": false,
+        "bedtimeLinks": 3
       }
     },
     {
       "name": "five-minute landing has canonical metadata and lightweight analytics",
-      "ok": false,
+      "ok": true,
       "detail": {
         "picks": 12,
         "uniquePicks": 12,
@@ -125,12 +138,79 @@
         "h1": 1,
         "breadcrumb": 1,
         "canonical": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
-        "analytics": false,
-        "engagement": false
+        "analytics": true,
+        "engagement": false,
+        "bedtimeLinks": 3
       }
     },
     {
+      "name": "five-minute landing links to bedtime selection",
+      "ok": true,
+      "detail": 3
+    },
+    {
       "name": "five-minute landing mobile has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390
+      }
+    },
+    {
+      "name": "bedtime landing renders eight unique editorial picks",
+      "ok": true,
+      "detail": {
+        "picks": 8,
+        "uniquePicks": 8,
+        "moods": 4,
+        "faq": 3,
+        "h1": 1,
+        "breadcrumb": 1,
+        "canonical": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
+        "analytics": true,
+        "engagement": false,
+        "fiveMinuteLinks": 3
+      }
+    },
+    {
+      "name": "bedtime landing renders four mood guides and three FAQ items",
+      "ok": true,
+      "detail": {
+        "picks": 8,
+        "uniquePicks": 8,
+        "moods": 4,
+        "faq": 3,
+        "h1": 1,
+        "breadcrumb": 1,
+        "canonical": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
+        "analytics": true,
+        "engagement": false,
+        "fiveMinuteLinks": 3
+      }
+    },
+    {
+      "name": "bedtime landing has canonical metadata and lightweight analytics",
+      "ok": true,
+      "detail": {
+        "picks": 8,
+        "uniquePicks": 8,
+        "moods": 4,
+        "faq": 3,
+        "h1": 1,
+        "breadcrumb": 1,
+        "canonical": "https://allsunday1122.github.io/yorugatari/bedtime-horror.html",
+        "analytics": true,
+        "engagement": false,
+        "fiveMinuteLinks": 3
+      }
+    },
+    {
+      "name": "bedtime landing links to five-minute selection",
+      "ok": true,
+      "detail": 3
+    },
+    {
+      "name": "bedtime landing mobile has no horizontal overflow",
       "ok": true,
       "detail": {
         "scrollWidth": 390,
@@ -193,7 +273,7 @@
       "detail": {
         "slug": "spare-key-returned",
         "progress": 55,
-        "updatedAt": 1784850958910
+        "updatedAt": 1784851384623
       }
     },
     {
@@ -212,20 +292,5 @@
       "detail": []
     }
   ],
-  "failures": [
-    {
-      "name": "five-minute landing has canonical metadata and lightweight analytics",
-      "detail": {
-        "picks": 12,
-        "uniquePicks": 12,
-        "guides": 6,
-        "faq": 3,
-        "h1": 1,
-        "breadcrumb": 1,
-        "canonical": "https://allsunday1122.github.io/yorugatari/5min-horror.html",
-        "analytics": false,
-        "engagement": false
-      }
-    }
-  ]
+  "failures": []
 }
