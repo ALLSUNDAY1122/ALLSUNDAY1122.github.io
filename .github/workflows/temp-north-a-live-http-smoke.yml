@@ -1,0 +1,80 @@
+name: Temporary North A Live HTTP Smoke
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-north-a-live-http-smoke.yml'
+      - 'jichitai-compare/operations/control/publish-audit-north-a-live-http-20260725.json'
+
+permissions:
+  contents: read
+
+jobs:
+  live-http-smoke:
+    if: github.head_ref == 'ops/north-a-live-http-smoke-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verify 12 corrected municipality pages on GitHub Pages
+        env:
+          BASE_URL: https://allsunday1122.github.io/jichitai-compare/municipality
+        run: |
+          python - <<'PY'
+          import os
+          import time
+          import urllib.request
+
+          base = os.environ['BASE_URL'].rstrip('/')
+          checks = [
+              ('02411', '村内4施設'),
+              ('03203', '令和8年度も、0～5歳の第1子・第2子以降を含む保育料を完全無償化'),
+              ('03206', '生後72か月から12歳まで'),
+              ('03302', '令和8年度の対象学年、保護者負担、継続条件を現行公式情報で確定できない'),
+              ('07202', '市立小学校・義務教育学校前期課程の給食費を無償化'),
+              ('07212', '現行公式ページで確認できる利用案内は令和7年度まで'),
+              ('07362', '宿泊ケア、日帰りケア、訪問ケア'),
+              ('07368', '令和8年度の継続条件を現行公式情報で確定できない'),
+              ('07405', '宿泊または日帰り型の産後ケアを無料で実施'),
+              ('07408', '年齢目安：生後0か月から5歳まで'),
+              ('07501', '令和8年度の新規受付条件を公式情報で確認できない'),
+              ('07547', '医療機関は宿泊1泊2日6,000円'),
+          ]
+
+          failures = []
+          for code, marker in checks:
+              url = f'{base}/{code}/'
+              last_error = None
+              for attempt in range(1, 6):
+                  try:
+                      req = urllib.request.Request(
+                          url,
+                          headers={
+                              'User-Agent': 'north-a-live-smoke/20260725',
+                              'Cache-Control': 'no-cache',
+                          },
+                      )
+                      with urllib.request.urlopen(req, timeout=30) as response:
+                          status = response.status
+                          body = response.read().decode('utf-8', errors='replace')
+                      if status != 200:
+                          raise RuntimeError(f'HTTP {status}')
+                      if marker not in body:
+                          raise RuntimeError(f'marker not found: {marker}')
+                      print(f'PASS code={code} status={status} marker={marker}')
+                      last_error = None
+                      break
+                  except Exception as exc:
+                      last_error = str(exc)
+                      print(f'RETRY code={code} attempt={attempt} error={last_error}')
+                      if attempt < 5:
+                          time.sleep(15)
+              if last_error is not None:
+                  failures.append({'code': code, 'url': url, 'error': last_error})
+
+          print(f'SUMMARY checked={len(checks)} passed={len(checks)-len(failures)} failed={len(failures)}')
+          if failures:
+              for failure in failures:
+                  print(f"FAIL code={failure['code']} error={failure['error']}")
+              raise SystemExit(1)
+          PY
