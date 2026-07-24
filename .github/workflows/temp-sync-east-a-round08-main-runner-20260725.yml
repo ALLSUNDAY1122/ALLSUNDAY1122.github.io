@@ -1,0 +1,60 @@
+name: Temporary East A round08 main runner
+
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  sync:
+    if: github.event.pull_request.head.ref == 'coord/sync-east-a-round08-data-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: coord/sync-east-a-round08-data-20260725
+          fetch-depth: 0
+      - name: Reset to latest main and import audited sources
+        run: |
+          set -euo pipefail
+          git fetch origin main region/east
+          git reset --hard origin/main
+          for code in 13361 13362 13363 13364 13381 19425; do
+            pref="${code:0:2}"
+            git show "origin/region/east:jichitai-compare/data/municipalities/${pref}/${code}.json" > "jichitai-compare/data/municipalities/${pref}/${code}.json"
+            git show "origin/region/east:jichitai-compare/operations/tasks/${code}.json" > "jichitai-compare/operations/tasks/${code}.json"
+          done
+          python <<'PY'
+          import json
+          from pathlib import Path
+          for code in ['13361','13362','13363','13364','13381','19425']:
+              p=Path(f'jichitai-compare/operations/tasks/{code}.json')
+              d=json.loads(p.read_text(encoding='utf-8'))
+              d['status']='merged'; d['currentBranch']=None
+              d['lastCheckedAt']='2026-07-25'; d['lastUpdatedAt']='2026-07-25T03:47:00+09:00'; d['lastUpdatedBy']='統括A'
+              n='東日本A誤調査検証第8回を最新mainへ再同期。'
+              if n not in d.setdefault('notes',[]): d['notes'].append(n)
+              p.write_text(json.dumps(d,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+      - name: Generate and validate
+        run: cd jichitai-compare && npm run check
+      - name: Verify corrections
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const read=(code)=>JSON.parse(fs.readFileSync(`jichitai-compare/data/municipalities/${code.slice(0,2)}/${code}.json`,'utf8'));
+          if(read('19425').services?.postpartumCare?.eligibility?.maxAgeYears!==0) throw new Error('19425');
+          if(read('13362').services?.childMedical?.eligibility?.maxAgeYears!==18) throw new Error('13362 medical');
+          for(const code of ['13361','13362','13363','13364','13381']) if(read(code).services?.housingSupport?.eligibility?.maxAgeYears!==120) throw new Error(`${code} housing`);
+          NODE
+      - name: Audit and commit
+        run: |
+          cat > jichitai-compare/operations/control/publish-audit-east-a-round08-data-20260725.json <<'EOF'
+          {"schemaVersion":"1.0.0","generatedAt":"2026-07-25T03:47:00+09:00","pullRequestNumber":3080,"regionalPullRequestNumber":3065,"municipalityCodes":["13361","13362","13363","13364","13381","19425"],"standardValidation":"success","status":"generation_success_final_ci_pending"}
+          EOF
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare
+          git diff --cached --check
+          git commit -m '全国品質同期: 東日本A第8回を最新mainへ再反映'
+          git push --force-with-lease origin HEAD:coord/sync-east-a-round08-data-20260725
