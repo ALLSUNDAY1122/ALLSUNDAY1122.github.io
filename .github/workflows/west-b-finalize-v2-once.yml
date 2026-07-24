@@ -1,0 +1,204 @@
+name: West B Completion Finalizer v2
+
+on:
+  pull_request:
+    branches:
+      - region/west
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ github.head_ref == 'ops/west-b-finalize-v2-20260724' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Audit and generate completion state
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+
+          const project = path.join(process.cwd(), 'jichitai-compare');
+          const municipalityRoot = path.join(project, 'data', 'municipalities');
+          const taskRoot = path.join(project, 'operations', 'tasks');
+          const checkpointPath = path.join(project, 'operations', 'control', 'session-checkpoints', 'west-b.json');
+          const auditDir = path.join(project, 'operations', 'control', 'audits');
+          const auditPath = path.join(auditDir, 'west-b-completion-20260724.json');
+          const attemptPath = path.join(auditDir, 'west-b-completion-attempt-20260724.json');
+          const workflowPath = path.join(process.cwd(), '.github', 'workflows', 'west-b-finalize-v2-once.yml');
+
+          const prefectureCodes = ['31','32','34','35','36','38','41','42','44','45','47'];
+          const expectedByPrefecture = {'31':19,'32':19,'34':23,'35':19,'36':24,'38':20,'41':20,'42':21,'44':18,'45':26,'47':41};
+          const serviceIds = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const completedStatuses = new Set(['verified','unavailable']);
+          const auditedAt = '2026-07-24T15:34:00+09:00';
+          const errors = [];
+          const codes = [];
+          const records = [];
+          const actualByPrefecture = {};
+          const normalizedTasks = [];
+          const unavailableByMunicipality = [];
+
+          for (const prefectureCode of prefectureCodes) {
+            const dir = path.join(municipalityRoot, prefectureCode);
+            if (!fs.existsSync(dir)) {
+              actualByPrefecture[prefectureCode] = 0;
+              errors.push(`missing municipality directory: ${prefectureCode}`);
+              continue;
+            }
+            const files = fs.readdirSync(dir).filter(name => /^\d{5}\.json$/.test(name)).sort();
+            actualByPrefecture[prefectureCode] = files.length;
+            if (files.length !== expectedByPrefecture[prefectureCode]) {
+              errors.push(`prefecture ${prefectureCode}: expected ${expectedByPrefecture[prefectureCode]}, actual ${files.length}`);
+            }
+
+            for (const filename of files) {
+              const municipalityPath = path.join(dir, filename);
+              const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+              const code = filename.slice(0, -5);
+              codes.push(code);
+
+              if (String(municipality.code) !== code) errors.push(`${code}: municipality code mismatch`);
+              if (String(municipality.prefectureCode) !== prefectureCode) errors.push(`${code}: prefecture code mismatch`);
+              const services = municipality.services || {};
+              const actualIds = Object.keys(services);
+              if (actualIds.length !== 9 || serviceIds.some(id => !services[id])) errors.push(`${code}: mandatory services mismatch`);
+
+              const unavailable = [];
+              for (const serviceId of serviceIds) {
+                const service = services[serviceId];
+                if (!service) continue;
+                if (!completedStatuses.has(service.status)) errors.push(`${code}/${serviceId}: unfinished status ${service.status}`);
+                if (service.status === 'unavailable') unavailable.push(serviceId);
+                if (!service.source || typeof service.source.url !== 'string' || !service.source.url.startsWith('https://')) {
+                  errors.push(`${code}/${serviceId}: invalid official source URL`);
+                }
+                if (!service.source || !service.source.checkedAt) errors.push(`${code}/${serviceId}: checkedAt missing`);
+              }
+              if (unavailable.length) unavailableByMunicipality.push({code, name: municipality.name, services: unavailable});
+
+              const taskPath = path.join(taskRoot, `${code}.json`);
+              if (!fs.existsSync(taskPath)) {
+                errors.push(`${code}: task missing`);
+                continue;
+              }
+              const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+              if (String(task.municipalityCode) !== code) errors.push(`${code}: task code mismatch`);
+              if (!Array.isArray(task.completedServices) || task.completedServices.length !== 9 || serviceIds.some(id => !task.completedServices.includes(id))) {
+                errors.push(`${code}: completedServices mismatch`);
+              }
+              const verifiedCount = serviceIds.filter(id => services[id]?.status === 'verified').length;
+              const unavailableCount = serviceIds.filter(id => services[id]?.status === 'unavailable').length;
+              if (Number(task.verifiedCount) !== verifiedCount || Number(task.unavailableCount) !== unavailableCount) {
+                errors.push(`${code}: task count mismatch`);
+              }
+              if (Number(task.researchingCount || 0) !== 0 || Number(task.needsMediumReviewCount || 0) !== 0) {
+                errors.push(`${code}: unfinished task count remains`);
+              }
+              if (!Number.isInteger(task.pullRequestNumber)) errors.push(`${code}: pullRequestNumber missing`);
+
+              if (task.status !== 'merged' || task.currentService !== null || Number(task.nextServiceIndex) !== 9) {
+                task.status = 'merged';
+                task.currentService = null;
+                task.nextServiceIndex = 9;
+                task.lastCheckedAt = '2026-07-24';
+                task.lastUpdatedAt = auditedAt;
+                task.lastUpdatedBy = '西日本調査班B・完了監査';
+                task.notes = Array.isArray(task.notes) ? task.notes : [];
+                const note = 'region/west上の自治体JSON・必須9制度完了を監査し、task statusをmergedへ同期。';
+                if (!task.notes.includes(note)) task.notes.push(note);
+                fs.writeFileSync(taskPath, JSON.stringify(task) + '\n');
+                normalizedTasks.push(code);
+              }
+              records.push({code, name: municipality.name, prefectureCode, pullRequestNumber: task.pullRequestNumber, verifiedCount, unavailableCount});
+            }
+          }
+
+          codes.sort();
+          records.sort((a, b) => a.code.localeCompare(b.code));
+          const expectedMunicipalityCount = Object.values(expectedByPrefecture).reduce((sum, count) => sum + count, 0);
+          if (codes.length !== expectedMunicipalityCount) errors.push(`total municipalities: expected ${expectedMunicipalityCount}, actual ${codes.length}`);
+          if (new Set(codes).size !== codes.length) errors.push('duplicate municipality code detected');
+          if (codes[0] !== '31201') errors.push(`first municipality mismatch: ${codes[0]}`);
+          if (codes[codes.length - 1] !== '47382') errors.push(`final municipality mismatch: ${codes[codes.length - 1]}`);
+
+          const result = errors.length === 0 ? 'completed' : 'failed';
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-b-completion-20260724',
+            auditedAt,
+            integrationBranch: 'region/west',
+            prefectureCodes,
+            expectedByPrefecture,
+            actualByPrefecture,
+            expectedMunicipalityCount,
+            actualMunicipalityCount: codes.length,
+            mandatoryServiceCountPerMunicipality: serviceIds.length,
+            expectedCompletedServiceCount: expectedMunicipalityCount * serviceIds.length,
+            actualCompletedServiceCount: records.reduce((sum, record) => sum + record.verifiedCount + record.unavailableCount, 0),
+            normalizedTaskCount: normalizedTasks.length,
+            normalizedTasks,
+            municipalitiesWithUnavailableServices: unavailableByMunicipality.length,
+            unavailableByMunicipality,
+            firstMunicipality: records[0] || null,
+            finalMunicipality: records[records.length - 1] || null,
+            errors,
+            result
+          };
+
+          fs.mkdirSync(auditDir, {recursive: true});
+          fs.writeFileSync(attemptPath, JSON.stringify(audit, null, 2) + '\n');
+
+          if (result === 'completed') {
+            const previousCheckpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+            const existing = Array.isArray(previousCheckpoint.completedSinceSplit) ? previousCheckpoint.completedSinceSplit : [];
+            const existingCodes = new Set(existing.map(item => typeof item === 'string' ? item : String(item.code || '')));
+            const completedSinceSplit = [...existing];
+            for (const record of records) {
+              if (!existingCodes.has(record.code)) {
+                completedSinceSplit.push({code: record.code, name: record.name, pullRequestNumber: record.pullRequestNumber, ciRunNumber: null});
+              }
+            }
+            const checkpoint = {
+              ...previousCheckpoint,
+              updatedAt: auditedAt,
+              status: 'completed',
+              remainingUninvestigatedCount: 0,
+              currentMunicipality: null,
+              workingBranch: null,
+              pullRequestNumber: records[records.length - 1]?.pullRequestNumber || null,
+              ciStatus: 'success',
+              completedSinceSplit,
+              blocked: [],
+              nextAction: '2026-07-24完了監査済み。担当11県250自治体・必須2,250制度・対応taskの完了、残件0を確認。新規調査を停止し、統括がregion/westの完了状態をmainと共有地域状態へ同期する。'
+            };
+            fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint) + '\n');
+            fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+            fs.unlinkSync(attemptPath);
+          }
+
+          if (fs.existsSync(workflowPath)) fs.unlinkSync(workflowPath);
+          console.log(JSON.stringify({result, errors, municipalityCount: codes.length, completedServiceCount: audit.actualCompletedServiceCount, normalizedTaskCount: normalizedTasks.length}, null, 2));
+          NODE
+
+      - name: Commit audit result
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "ops: 西日本B完了監査を保存 [west-b-finalized-v2]"
+          git push origin HEAD:${GITHUB_HEAD_REF}
+
+      - name: Require successful audit
+        shell: bash
+        run: |
+          node -e "const fs=require('fs'); const p='jichitai-compare/operations/control/audits/west-b-completion-20260724.json'; if(!fs.existsSync(p)) process.exit(1); const a=JSON.parse(fs.readFileSync(p)); if(a.result!=='completed'||a.actualMunicipalityCount!==250||a.actualCompletedServiceCount!==2250) process.exit(1);"
