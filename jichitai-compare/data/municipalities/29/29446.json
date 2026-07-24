@@ -6,13 +6,16 @@
   "name": "天川村",
   "officialUrl": "https://www.vill.tenkawa.nara.jp/office/",
   "status": "verified",
-  "summary": "天川村の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、幼稚園の保育料・給食費無償、ファミリーサポート、移住住宅支援などを記録。",
-  "updatedAt": "2026-07-23",
+  "summary": "天川村の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認。18歳年度末までの医療費助成、保育園・幼稚園の保育料・給食費無償、ファミリーサポート、令和8年度定住促進住宅などを記録。病児保育・小中学校給食支援・産後ケアは利用者向け現行条件未確認として整理。",
+  "updatedAt": "2026-07-24",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末まで、所得制限なしで保険診療の自己負担額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳到達日以後の最初の3月31日まで",
         "incomeLimit": "なし",
@@ -21,97 +24,177 @@
         "outsidePrefecture": "県外受診は領収書等を添えて役場住民課へ請求",
         "excluded": "入院時食事代、文書料等の保険適用外費用は対象外"
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/allowance/subsidization-scheme", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/allowance/subsidization-scheme",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
       "summary": "村公式の子育て・福祉案内で、病児・病後児保育の専用利用制度を確認できなかった。",
       "details": {
-        "verification": "ファミリーサポートセンターは病児の援助を原則行わないと明記",
+        "verification": "2026年7月24日に村公式の保健・福祉、保育園、幼稚園、ファミリーサポート等を再確認したが、対象年齢・施設・料金・登録予約方法を示す専用利用案内を確認できない",
+        "familySupportExclusion": "ファミリーサポートセンターは病児と宿泊を伴う援助を原則行わない",
         "interpretation": "村内制度や広域利用が存在しないとは断定しない",
         "nextCheck": "南奈良地域の広域利用可否を健康福祉課または教育委員会へ確認"
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/family-support", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/family-support",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
-      "summary": "天川幼稚園の入園料・保育料は無料。3～5歳児と住民税非課税世帯0～2歳児は国制度の無償化対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
-      "details": {
-        "facilities": "天川保育園・天川村立天川幼稚園を同一敷地内で幼保一体化",
-        "kindergarten": "天川幼稚園は令和2年4月から入園料・保育料無料",
-        "freeAges": "保育所等の3～5歳児は国制度で保育料無償",
-        "nonTaxable": "住民税非課税世帯の0～2歳児は国制度で無償化対象",
-        "taxableUnderThree": "課税世帯0～2歳児の村独自保育料・多子軽減は公式HTMLで確認できないため教育委員会へ確認",
-        "otherSupport": "保育園で使用する紙おむつ・食事用エプロン等は園内で用意"
+      "summary": "天川保育園は生後6か月から2歳児まで保育料・給食費を無料とし、天川幼稚園も入園料・保育料・給食費を無料とする。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/admission/kinder-tenkawa", "checkedAt": "2026-07-23"},
+      "details": {
+        "integration": "令和4年4月から天川保育園と天川幼稚園を同一敷地内で一体化し、0～5歳の幼児教育・保育を実施",
+        "nursery": "天川保育園は生後6か月～2歳児、定員19人、平日8時～18時",
+        "nurseryFees": "天川保育園の保育料・給食費は無料。給食・1日2回のおやつを提供",
+        "nurserySupplies": "紙おむつ、おしりふき、食事用エプロン、お手ふきタオル、昼寝用布団リースを公費負担し、保護者負担なし",
+        "kindergarten": "天川幼稚園は令和2年4月から入園料・保育料無料、令和5年4月から給食費無料",
+        "kindergartenTemporaryCare": "通常期は平日8時～9時30分・14時～18時、長期休業期は8時～12時・12時～18時に預かり保育を実施"
+      },
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/admission/nursery",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.tenkawa.nara.jp/office/life/admission/nursery", "checkedAt": "2026-07-23"},
-        {"url": "https://www.cfa.go.jp/policies/kokoseido/mushouka/about", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/admission/kinder-tenkawa",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "schoolMeals": {
       "status": "unavailable",
-      "summary": "天川小中学校で給食を実施していることは確認できるが、現行の給食費や全児童生徒への無償化制度を示す専用案内を確認できなかった。",
+      "summary": "天川小中学校で給食を実施していることは確認できるが、令和8年度の給食費や全児童生徒への無償化制度を示す利用者向け案内を確認できない。",
       "details": {
         "school": "天川村立天川小中学校（義務教育学校）",
-        "confirmed": "学校で給食を実施",
+        "confirmed": "村の教育・行政組織案内で学校給食の実施・所管を確認",
         "kindergarten": "天川幼稚園は令和5年4月から給食費無料",
+        "nursery": "天川保育園も給食費無料",
         "assistance": "経済的理由で就学困難な世帯には就学援助制度あり",
-        "interpretation": "小中学校給食費の全員無償化とは記録しない",
-        "nextCheck": "現行月額と村負担の有無を教育委員会または学校へ確認"
+        "verification": "2026年7月24日に教育ページ、学校案内、行政組織、新着情報を確認したが、小中学校の現行月額・年額・全員無償化の専用案内を確認できない",
+        "interpretation": "幼稚園・保育園の給食費無料を小中学校へ拡張して推測しない",
+        "nextCheck": "現行徴収額と村負担の有無を教育委員会または学校へ確認"
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/admission/education-tenkawa", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/admission/education-tenkawa",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.tenkawa.nara.jp/office/life/admission/kinder-tenkawa", "checkedAt": "2026-07-23"},
-        {"url": "https://www.vill.tenkawa.nara.jp/office/life/admission/schoolassistance", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/admission/kinder-tenkawa",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/admission/schoolassistance",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/organization",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "postpartumCare": {
       "status": "unavailable",
-      "summary": "妊婦健診助成、新生児・乳幼児訪問、母子健康相談は確認できるが、宿泊型・通所型等の産後ケア事業専用案内を確認できなかった。",
+      "summary": "妊婦健診助成、新生児・乳幼児訪問、母子健康相談は確認できるが、宿泊型・通所型・訪問型の産後ケア事業専用案内を確認できない。",
       "details": {
         "confirmedSupport": "妊婦健診14回分と15回目以降の助成、新生児・乳幼児訪問指導、乳幼児健康相談",
+        "verification": "2026年7月24日に妊娠・出産、子どもの健康、保健・福祉一覧、新着情報を再確認したが、産後ケアの対象月齢、類型、回数、料金、委託先、申請方法を示す利用者向け案内を確認できない",
+        "distinction": "新生児訪問・乳幼児訪問・母子相談は産後ケア事業の宿泊型・通所型等とは区別する",
         "interpretation": "正式な産後ケア事業が存在しないとは断定しない",
-        "nextCheck": "宿泊型・通所型・訪問型の有無、対象月齢、回数、料金をほほえみポート天川へ確認"
+        "nextCheck": "宿泊型・通所型・訪問型の有無と利用条件をほほえみポート天川へ確認"
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/insurancebusiness/pregnancy", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/insurancebusiness/pregnancy",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/insurancebusiness/child-medical", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/insurancebusiness/child-medical",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/welfare",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "乳幼児から小学6年生までを対象に、地域会員による一時的な預かり・送迎を行うファミリーサポートセンターを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
-      "details": {
-        "program": "天川村ファミリーサポートセンター",
-        "activities": "保育園・幼稚園・小中学校の時間外や休日の預かり、送迎、冠婚葬祭・買い物等の際の預かり",
-        "application": "原則3日前までに申込み",
-        "fee": "1時間750円。兄弟姉妹は2人目から半額",
-        "subsidy": "未就学児利用は全額助成、小学生利用は利用料金の3分の1を村が補助",
-        "excluded": "病児と宿泊を伴う援助は原則対象外"
+      "summary": "乳幼児から小学6年生までを対象とするファミリーサポートと幼稚園預かり保育を実施する。乳児等通園支援事業は天川保育園での実施に向けた基準条例を整備したが、利用者向け条件は未公開。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/family-support", "checkedAt": "2026-07-23"},
+      "details": {
+        "familySupport": {
+          "activities": "保育園・幼稚園・小中学校の時間外や休日の預かり、送迎、冠婚葬祭・買い物等の際の預かり",
+          "application": "原則3日前までに申込み",
+          "fee": "1時間750円を利用会員が協力会員へ直接支払う",
+          "subsidy": "協力会員へ支払った利用料金の3分の1を村が補助",
+          "siblings": "兄弟姉妹は2人目から利用料半額",
+          "insurance": "会員の保証保険料は村負担",
+          "excluded": "病児と宿泊を伴う援助は原則対象外"
+        },
+        "kindergartenTemporaryCare": {
+          "normal": "通常期は平日8時～9時30分・14時～18時",
+          "holidays": "長期休業期は8時～12時・12時～18時"
+        },
+        "anyoneUseBasis": "2026年3月議会で、天川保育園が乳児等通園支援事業を実施するための設備・運営基準条例が可決された",
+        "anyoneUseVerification": "2026年7月24日時点で、対象月齢、月間利用時間、利用料、開始日、認定・面談・予約方法を示す村公式の利用者向け案内は確認できないため、国制度や他自治体の条件から推測しない"
+      },
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/welfare/family-support",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.tenkawa.nara.jp/newlife/support/lifestyle", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/admission/kinder-tenkawa",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/admission/nursery",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/wp-content/uploads/2026/03/1a8e309e20781a1e11d07d4c6a69fd0e.pdf",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "housingSupport": {
       "status": "verified",
-      "summary": "空き家改修補助、移住支援金、定住促進住宅を組み合わせて移住・定住を支援する。",
+      "summary": "空き家改修補助、移住支援金、定住促進住宅で移住・定住を支援し、令和8年完成の中谷住宅は子どもの人数に応じて家賃を減免する。",
       "details": {
         "renovation": "空き家の改修工事や家財道具処分を対象とする空き家改修事業等補助金を実施。着手前申請が必要",
         "migration": "東京圏から移住し就業等の要件を満たす方に奈良県と共同で移住支援金を交付",
-        "housing": "洞川・南日裏・中谷地区に単身・家族世帯向け定住促進住宅を整備",
-        "childDiscount": "定住促進住宅では募集条件により子ども1人扶養につき家賃3,000円減免の例あり",
-        "current": "令和8年に中谷地区の家族用4戸・単身用4戸が完成",
-        "procedure": "補助額・募集状況・入居条件は地域政策課または産業建設課へ確認"
+        "existingHousing": "洞川地区は家族用2戸・単身用4戸、南日裏地区は家族用平屋3戸",
+        "newHousing": "中谷地区は2026年5月完成の木造2階建で、単身用1DK4室・家族用2LDK4室",
+        "rent": "中谷住宅は1DK月3万円、2LDK月3万8,000円。2LDKは扶養する子ども1人につき月3,000円減免",
+        "deposit": "家賃3か月分。駐車場使用料は別途",
+        "eligibility": "将来にわたり村へ定住し地域活動へ積極参加する意思、一定の職・生計能力、村税滞納なし、暴力団員でないこと。単身者は40歳以下",
+        "latestRecruitment": "中谷住宅の初回募集は2026年6月5日～24日、入居は7月1日以降。追加募集・空室は産業建設課へ確認"
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/newlife/useful-info", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/newlife/useful-info",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.tenkawa.nara.jp/office/life/environment/public-housing", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/news/12688",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/environment/public-housing",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "bulkyWaste": {
@@ -124,10 +207,19 @@
         "quantity": "収集車容量の都合から1回3点程度を推奨",
         "excluded": "エアコン、テレビ、冷蔵庫・冷凍庫、洗濯機・乾燥機は家電リサイクル手続きが必要"
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/environment/attention", "checkedAt": "2026-07-23"},
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/environment/attention",
+        "checkedAt": "2026-07-24"
+      },
       "additionalSources": [
-        {"url": "https://www.vill.tenkawa.nara.jp/office/life/environment/pricelist", "checkedAt": "2026-07-23"},
-        {"url": "https://www.vill.tenkawa.nara.jp/office/life/environment/trash-separation", "checkedAt": "2026-07-23"}
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/environment/pricelist",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.vill.tenkawa.nara.jp/office/life/environment/trash-separation",
+          "checkedAt": "2026-07-24"
+        }
       ]
     },
     "disasterPrevention": {
@@ -139,7 +231,10 @@
         "shelters": "天川村立体育館、山村開発センター、天川小学校、ほほえみポート天川、ふるさとセンターつどい等",
         "preparedness": "家庭で災害への備え、避難経路等を事前確認するよう案内"
       },
-      "source": {"url": "https://www.vill.tenkawa.nara.jp/office/life/medical/shelter", "checkedAt": "2026-07-23"}
+      "source": {
+        "url": "https://www.vill.tenkawa.nara.jp/office/life/medical/shelter",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }
