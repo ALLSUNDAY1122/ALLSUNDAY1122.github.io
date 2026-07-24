@@ -1,0 +1,40 @@
+name: Temporary West B Public Summary Guard
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/west-b-public-summary-guard-20260724
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate and validate all municipality pages
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check scripts/validate-municipality-pages.mjs
+
+      - name: Remove temporary workflow
+        run: |
+          rm .github/workflows/temp-west-b-public-summary-guard.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .github/workflows/temp-west-b-public-summary-guard.yml
+          git commit -m 'ci: remove temporary West B summary guard workflow'
+          git push origin HEAD:ops/west-b-public-summary-guard-20260724
