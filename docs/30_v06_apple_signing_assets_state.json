@@ -3,22 +3,28 @@
   "bundle_id": "jp.allsunday.aihandoverlog",
   "version": "0.6.0",
   "build": "6",
-  "recommended_initial_path": "MacinCloud Xcode automatic signing",
-  "github_actions_path": {
-    "status": "template_ready_not_executed",
-    "requires": [
-      "Apple Distribution p12",
-      "App Store Connect mobileprovision",
-      "App Store Connect API p8",
-      "Team ID",
-      "API Key ID",
-      "Issuer ID",
-      "GitHub environment secrets"
-    ]
+  "recommended_first_submission_path": "MacinCloud Xcode Automatic Signing",
+  "manual_github_actions_assets": {
+    "apple_distribution_p12": "not_created",
+    "app_store_connect_mobileprovision": "not_created",
+    "app_store_connect_api_p8": "not_created",
+    "team_id": "not_recorded",
+    "key_id": "not_recorded",
+    "issuer_id": "not_recorded",
+    "verification_report": "not_created"
   },
+  "secrets_must_not_be_stored_in": [
+    "Git repository files",
+    "GitHub issues or pull request comments",
+    "ChatGPT messages",
+    "Notion",
+    "Unprotected email attachments",
+    "Unprotected shared cloud folders"
+  ],
   "actual_credentials_created": false,
   "actual_credentials_validated": false,
   "credentials_in_artifacts": false,
   "merge_performed": false,
-  "testflight_uploaded": false
+  "testflight_uploaded": false,
+  "ready_for_signing": false
 }
