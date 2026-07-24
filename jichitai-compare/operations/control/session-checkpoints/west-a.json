@@ -4,8 +4,15 @@
   "displayName": "西日本調査班A",
   "parentTeam": "西日本調査班",
   "integrationBranch": "region/west",
-  "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
-  "updatedAt": "2026-07-25T00:33:00+09:00",
+  "prefectureCodes": [
+    "33",
+    "37",
+    "39",
+    "40",
+    "43",
+    "46"
+  ],
+  "updatedAt": "2026-07-25T00:55:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -14,22 +21,38 @@
   "pullRequestNumber": 2915,
   "ciStatus": "success",
   "completedSinceSplit": [
-    {"code": "46534", "name": "知名町", "pullRequestNumber": 2621, "ciRunNumber": 6399},
-    {"code": "46535", "name": "与論町", "pullRequestNumber": 2617, "ciRunNumber": null},
-    {"code": "46206", "name": "阿久根市", "pullRequestNumber": 2740, "ciRunNumber": 6577}
+    {
+      "code": "46534",
+      "name": "知名町",
+      "pullRequestNumber": 2621,
+      "ciRunNumber": 6399
+    },
+    {
+      "code": "46535",
+      "name": "与論町",
+      "pullRequestNumber": 2617,
+      "ciRunNumber": null
+    },
+    {
+      "code": "46206",
+      "name": "阿久根市",
+      "pullRequestNumber": 2740,
+      "ciRunNumber": 6577
+    }
   ],
   "blocked": [],
-  "nextAction": "10回の誤調査検証の第3回として、担当6県から年齢・料金条件が複雑な自治体を抽出し、こども医療・病児保育を公式情報で再照合する。",
+  "nextAction": "10回の誤調査検証の第4回として、保育料・学校給食費の令和8年度条件を担当6県の複雑事例で再照合する。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
-    "completedRoundCount": 2,
-    "lastCompletedRound": 2,
-    "nextRound": 3,
+    "completedRoundCount": 3,
+    "lastCompletedRound": 3,
+    "nextRound": 4,
     "status": "in_progress",
-    "materialErrorCount": 0,
+    "materialErrorCount": 1,
     "correctionRequiredCount": 0,
-    "lastAuditedAt": "2026-07-25T00:33:00+09:00"
+    "lastAuditedAt": "2026-07-25T00:55:00+09:00",
+    "correctionAppliedCount": 1
   },
   "completionEvidence": {
     "lastMunicipalityCode": "46206",
@@ -58,7 +81,7 @@
     "detailsSource": "jichitai-compare/operations/tasks"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-25T00:33:00+09:00",
+    "auditedAt": "2026-07-25T00:55:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -103,9 +126,26 @@
         "pullRequestNumber": 2915,
         "ciRunNumber": 6968,
         "municipalityCount": 226,
-        "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
-        "forbiddenPhrases": ["調査班", "初期登録対象", "移行監査", "地域正本"],
-        "checks": ["自治体summary", "9制度summary", "自治体別静的ページ", "違反時JSON監査レポート"],
+        "prefectureCodes": [
+          "33",
+          "37",
+          "39",
+          "40",
+          "43",
+          "46"
+        ],
+        "forbiddenPhrases": [
+          "調査班",
+          "初期登録対象",
+          "移行監査",
+          "地域正本"
+        ],
+        "checks": [
+          "自治体summary",
+          "9制度summary",
+          "自治体別静的ページ",
+          "違反時JSON監査レポート"
+        ],
         "status": "enabled"
       },
       "legacyBroadAudit": {
@@ -117,9 +157,16 @@
       }
     },
     "restoredMunicipalities": [
-      {"code": "46206", "name": "阿久根市"}
+      {
+        "code": "46206",
+        "name": "阿久根市"
+      }
     ],
-    "removedInvalidCodes": ["40208", "40209", "46410"],
+    "removedInvalidCodes": [
+      "40208",
+      "40209",
+      "46410"
+    ],
     "notes": [
       "正式自治体コードの欠番を単純連番で補完しない。",
       "自治体数不一致時は都道府県別コード一覧を診断artifactから確認する。",
@@ -127,7 +174,8 @@
       "福岡市の制度判定・公式出典・verified 9は変更せず、公開要約だけを利用者向けに修正した。",
       "西日本A担当6県226自治体の公開要約内部運用語を通常CIで恒久監視する。",
       "10回の誤調査検証を開始し、第1回の全件構造監査と第2回の公式情報スポット監査を完了。現時点の重大誤り0件。",
-      "公開文言検査失敗時はjichitai-validation-report artifactから自治体コードと発生箇所を確認する。"
+      "公開文言検査失敗時はjichitai-validation-report artifactから自治体コードと発生箇所を確認する。",
+      "第3回監査で霧島市の病児・病後児保育の施設数・利用料を公式情報に基づき修正。"
     ]
   }
 }
