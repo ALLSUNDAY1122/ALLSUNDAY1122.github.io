@@ -1,0 +1,34 @@
+name: Temporary West B Cycles 09-10 Push Runner
+
+on:
+  push:
+    branches:
+      - audit/west-b-rough-validation-cycles-09-10-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Extract and run audit script
+        shell: bash
+        run: |
+          awk '/node --input-type=module <<'"'"'NODE'"'"'/{flag=1;next} /^          NODE$/{flag=0} flag{sub(/^          /,""); print}' .github/workflows/temp-west-b-cycles09-10-audit.yml > /tmp/west-b-final-audit.mjs
+          node /tmp/west-b-final-audit.mjs
+      - name: Commit audit outputs
+        shell: bash
+        run: |
+          rm -f .github/west-b-cycles09-10-audit.trigger
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-09-20260725.json
+          git add jichitai-compare/operations/audits/west-b-rough-validation-cycle-10-20260725.json
+          git add .github/west-b-cycles09-10-audit.trigger
+          git commit -m "audit: 西日本B概略検証 第9・10回の機械監査を記録"
+          git push origin HEAD:audit/west-b-rough-validation-cycles-09-10-20260725
