@@ -4,14 +4,50 @@
 
 ## 運用ルール
 
-- 6本を同時に投稿せず、原則として1日1本ずつ投稿する。
-- まず「5分で読める12選」の2本を投稿し、その後に旧4本を使用する。
+- 8本を同時に投稿せず、原則として1日1本ずつ投稿する。
+- まず「寝る前の8選」の2本、次に「5分で読める12選」の2本を投稿し、その後に旧4本を使用する。
 - 投稿文と計測用URLは組み合わせを変更しない。
 - 投稿後24時間は削除・再投稿を避ける。
 - 最低7日、または固定キャンペーン流入30件までは媒体の優劣を確定しない。
 - URLの `utm_` パラメータは検索順位用ではなく、夜語り内部の登録済み固定コードへ変換するために使用する。
 
-## 優先1日目：X／5分で読める12選
+## 優先1日目：X／寝る前の8選
+
+### 投稿文
+
+寝る前に読むなら、大きな音より、あとから思い出す怖さを。
+
+家の中、夜道、写真、メッセージなど、静かに残る一話完結の怖い話を8本選びました。すべて約5分・無料・登録不要です。
+
+眠る前に、ひとつだけ。
+
+#怖い話 #怪談 #短編ホラー
+
+### 計測用URL
+
+https://allsunday1122.github.io/yorugatari/bedtime-horror.html?utm_source=x&utm_medium=social&utm_campaign=launch_20260724&utm_content=bedtime_8
+
+### 計測コード
+
+`launch-20260724-x-bedtime`
+
+## 優先2日目：Threads／寝る前の8選
+
+### 投稿文
+
+寝る前に一話だけ読みたい人向けに、静かに怖い短編を8本選びました。
+
+急に驚かせる話より、読み終えたあと部屋の音が気になる話が中心です。家、夜道、記憶、写真。すべて一話完結で約5分です。
+
+### 計測用URL
+
+https://allsunday1122.github.io/yorugatari/bedtime-horror.html?utm_source=threads&utm_medium=social&utm_campaign=launch_20260724&utm_content=bedtime_8
+
+### 計測コード
+
+`launch-20260724-threads-bedtime`
+
+## 3日目：X／5分で読める12選
 
 ### 投稿文
 
@@ -31,7 +67,7 @@ https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=x&utm_med
 
 `launch-20260724-x-five-minute`
 
-## 優先2日目：Threads／5分で読める12選
+## 4日目：Threads／5分で読める12選
 
 ### 投稿文
 
@@ -47,7 +83,7 @@ https://allsunday1122.github.io/yorugatari/5min-horror.html?utm_source=threads&u
 
 `launch-20260724-threads-five-minute`
 
-## 3日目：X／サイト全体
+## 5日目：X／サイト全体
 
 ### 投稿文
 
@@ -67,7 +103,7 @@ https://allsunday1122.github.io/yorugatari/?utm_source=x&utm_medium=social&utm_c
 
 `launch-20260723-x-top-100`
 
-## 4日目：X／最後のエレベーター
+## 6日目：X／最後のエレベーター
 
 ### 投稿文
 
@@ -87,7 +123,7 @@ https://allsunday1122.github.io/yorugatari/stories/last-elevator.html?utm_source
 
 `launch-20260723-x-last-elevator`
 
-## 5日目：Threads／合鍵は返却済み
+## 7日目：Threads／合鍵は返却済み
 
 ### 投稿文
 
@@ -105,7 +141,7 @@ https://allsunday1122.github.io/yorugatari/stories/spare-key-returned.html?utm_s
 
 `launch-20260723-threads-spare-key`
 
-## 6日目：LINE／あなたの経験で採用されました
+## 8日目：LINE／あなたの経験で採用されました
 
 ### 送信用文面
 
@@ -133,5 +169,5 @@ https://allsunday1122.github.io/yorugatari/stories/hired-with-your-experience.ht
 
 - 1投稿あたり10流入未満：参考値として継続観測する。
 - 1投稿あたり10流入以上：タイトルと投稿文の組み合わせを再利用候補にする。
-- 6本合計30流入以上：媒体・着地ページ別の比較を開始する。
+- 8本合計30流入以上：媒体・着地ページ別の比較を開始する。
 - 作品閲覧100件・7日分の観測前は、トップページの並び順を変えない。
