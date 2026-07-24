@@ -58,6 +58,16 @@ function setRuntimeScript(html, src, version) {
   return html.replace('</body>', `  <script src="${src}?v=${version}"></script>\n</body>`);
 }
 
+function ensureStoryCuratedLinks(html) {
+  const fiveMinuteLink = '<a href="../5min-horror.html">5分で読める12選</a>';
+  const bedtimeLink = '<a href="../bedtime-horror.html">寝る前の8選</a>';
+  html = html.replace(/<a href=["']\.\.\/5min-horror\.html["']>[^<]*<\/a>/gi, '');
+  html = html.replace(/<a href=["']\.\.\/bedtime-horror\.html["']>[^<]*<\/a>/gi, '');
+  const footerNav = /(<nav class=["']footer-links["'][^>]*>)/i;
+  if (!footerNav.test(html)) throw new Error('Story footer navigation was not found');
+  return html.replace(footerNav, `$1${fiveMinuteLink}${bedtimeLink}`);
+}
+
 function normalizeStaticPage(filename) {
   const filePath = path.join(SITE_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
@@ -89,6 +99,7 @@ function normalizeStoryPage(filename) {
   const filePath = path.join(STORIES_ROOT, filename);
   let html = fs.readFileSync(filePath, 'utf8');
   html = ensureSocialMetadata(html);
+  html = ensureStoryCuratedLinks(html);
   html = setRuntimeScript(html, '../assets/engagement.js', ENGAGEMENT_VERSION);
   fs.writeFileSync(filePath, html, 'utf8');
 }
@@ -114,4 +125,4 @@ fs.readdirSync(STORIES_ROOT)
   .forEach(normalizeStoryPage);
 normalize404();
 
-console.log(`Normalized campaign-aware analytics for ${STATIC_PAGES.length} static pages, 100 stories, and the 404 page.`);
+console.log(`Normalized campaign-aware analytics, curated story links, and social metadata for ${STATIC_PAGES.length} static pages, 100 stories, and the 404 page.`);
