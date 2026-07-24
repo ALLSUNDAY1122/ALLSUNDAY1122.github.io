@@ -4,6 +4,8 @@ on:
   push:
     branches: ['audit/central-a-round04-merge-validation-20260725']
     paths: ['.github/workflows/central-a-round04-merge-validation.yml']
+  pull_request:
+    paths: ['jichitai-compare/**', '.github/workflows/central-a-round04-merge-validation.yml']
 
 permissions:
   contents: read
@@ -14,9 +16,6 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: audit/central-a-round04-merge-validation-20260725
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
