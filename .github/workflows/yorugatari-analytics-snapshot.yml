@@ -76,6 +76,7 @@ jobs:
           cp yorugatari/tools/analytics-snapshot-latest.json /tmp/analytics-snapshot-latest.json
           cp yorugatari/tools/analytics-history.json /tmp/analytics-history.json
           cp yorugatari/tools/analytics-insights-latest.md /tmp/analytics-insights-latest.md
+          cp yorugatari/tools/landing-conversion-baseline.json /tmp/landing-conversion-baseline.json
           cp yorugatari/tools/landing-conversion-latest.json /tmp/landing-conversion-latest.json
           cp yorugatari/tools/landing-conversion-history.json /tmp/landing-conversion-history.json
           saved=false
@@ -85,12 +86,14 @@ jobs:
             cp /tmp/analytics-snapshot-latest.json yorugatari/tools/analytics-snapshot-latest.json
             cp /tmp/analytics-history.json yorugatari/tools/analytics-history.json
             cp /tmp/analytics-insights-latest.md yorugatari/tools/analytics-insights-latest.md
+            cp /tmp/landing-conversion-baseline.json yorugatari/tools/landing-conversion-baseline.json
             cp /tmp/landing-conversion-latest.json yorugatari/tools/landing-conversion-latest.json
             cp /tmp/landing-conversion-history.json yorugatari/tools/landing-conversion-history.json
             git add \
               yorugatari/tools/analytics-snapshot-latest.json \
               yorugatari/tools/analytics-history.json \
               yorugatari/tools/analytics-insights-latest.md \
+              yorugatari/tools/landing-conversion-baseline.json \
               yorugatari/tools/landing-conversion-latest.json \
               yorugatari/tools/landing-conversion-history.json
             if git diff --cached --quiet; then
@@ -114,6 +117,7 @@ jobs:
             yorugatari/tools/analytics-snapshot-latest.json
             yorugatari/tools/analytics-history.json
             yorugatari/tools/analytics-insights-latest.md
+            yorugatari/tools/landing-conversion-baseline.json
             yorugatari/tools/landing-conversion-latest.json
             yorugatari/tools/landing-conversion-history.json
           if-no-files-found: error
