@@ -5,15 +5,15 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-25T11:06:00+09:00",
+  "updatedAt": "2026-07-25T11:36:00+09:00",
   "status": "researching",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 90,
-  "currentMunicipality": {"municipalityCode":"26205","municipalityName":"宮津市","auditRound":1},
+  "remainingUninvestigatedCount": 85,
+  "currentMunicipality": {"municipalityCode":"26210","municipalityName":"八幡市","auditRound":2},
   "workingBranch": "quality/central-b-independent-reaudit-20260725",
   "pullRequestNumber": 3192,
   "ciStatus": "success",
-  "ciRunNumber": 7851,
+  "ciRunNumber": 7898,
   "completedSinceSplit": [
     {"municipalityCode":"30344","municipalityName":"高野町","pullRequestNumber":1180,"ciRunNumber":3247,"completedAt":"2026-07-23T15:49:00+09:00"},
     {"municipalityCode":"30361","municipalityName":"湯浅町","pullRequestNumber":1183,"ciRunNumber":3267,"completedAt":"2026-07-23T16:02:00+09:00"},
@@ -36,7 +36,7 @@
     {"municipalityCode":"26366","municipalityName":"精華町","pullRequestNumber":1245,"ciRunNumber":3470,"completedAt":"2026-07-23T20:08:00+09:00"}
   ],
   "blocked": [],
-  "pendingMunicipalities": ["26205","26206","26207","26208","26209","26210","26211","26212","26213","26214","26303","26322","26343","26344","26364","26365","26366","26367","26407","26463","26465","29201","29202","29203","29204","29205","29206","29207","29208","29209","29210","29211","29212","29322","29342","29343","29344","29345","29361","29362","29363","29385","29386","29401","29402","29424","29425","29426","29427","29441","29442","29443","29444","29446","29447","29449","29450","29451","29452","29453","30201","30202","30203","30204","30205","30206","30207","30208","30209","30304","30341","30343","30344","30361","30362","30366","30381","30382","30383","30390","30391","30392","30401","30404","30406","30421","30422","30424","30427","30428"],
+  "pendingMunicipalities": ["26210","26211","26212","26213","26214","26303","26322","26343","26344","26364","26365","26366","26367","26407","26463","26465","29201","29202","29203","29204","29205","29206","29207","29208","29209","29210","29211","29212","29322","29342","29343","29344","29345","29361","29362","29363","29385","29386","29401","29402","29424","29425","29426","29427","29441","29442","29443","29444","29446","29447","29449","29450","29451","29452","29453","30201","30202","30203","30204","30205","30206","30207","30208","30209","30304","30341","30343","30344","30361","30362","30366","30381","30382","30383","30390","30391","30392","30401","30404","30406","30421","30422","30424","30427","30428"],
   "pendingNationalPublication": [],
   "accuracyAudit": {
     "status": "completed_and_published",
@@ -64,15 +64,17 @@
     "auditFile": "jichitai-compare/operations/audits/central-b-independent-reaudit-20260725.json",
     "assignedMunicipalityCount": 95,
     "assignedServiceCount": 855,
-    "auditedMunicipalityCount": 5,
-    "auditedServiceCount": 45,
-    "confirmedErrorCount": 8,
-    "correctedErrorCount": 8,
-    "currentRound": 1,
-    "currentMunicipalityCode": "26205",
-    "confirmedFinding": "京都市1件、福知山市3件、舞鶴市2件、綾部市2件を訂正。宇治市は確定差異0件。"
+    "auditedMunicipalityCount": 10,
+    "auditedServiceCount": 90,
+    "confirmedErrorCount": 15,
+    "correctedErrorCount": 15,
+    "completedRoundCount": 1,
+    "currentRound": 2,
+    "currentMunicipalityCode": "26210",
+    "lastSuccessfulCiRunNumber": 7898,
+    "confirmedFinding": "第1バッチ10自治体90制度を完了。京都市1、福知山市3、舞鶴市2、綾部市2、宮津市3、亀岡市3、向日市1の計15件を訂正。宇治市、城陽市、長岡京市は確定差異0件。"
   },
   "stateSyncPullRequestNumber": 3161,
   "lastNationalPublicationPullRequestNumber": 3136,
-  "nextAction": "宮津市（26205）から第1バッチ残り5自治体を公式情報起点で独立監査し、確定誤りは自治体JSON・taskへ反映してDraft PR #3192のCIを継続確認する。"
+  "nextAction": "第2バッチを八幡市（26210）から開始し、確定誤りは自治体JSON・task・監査記録へ反映してDraft PR #3192のCIを継続する。"
 }
