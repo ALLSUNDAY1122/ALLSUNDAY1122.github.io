@@ -1,0 +1,33 @@
+name: West A Second Audit Checkpoint Main Sync
+
+on:
+  push:
+    branches:
+      - sync/west-a-second-audit-checkpoint-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  sync-checkpoint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sync branch
+        uses: actions/checkout@v4
+        with:
+          ref: sync/west-a-second-audit-checkpoint-20260725
+          fetch-depth: 0
+
+      - name: Copy checkpoint from region/west
+        run: |
+          git fetch origin region/west
+          git show origin/region/west:jichitai-compare/operations/control/session-checkpoints/west-a.json > jichitai-compare/operations/control/session-checkpoints/west-a.json
+
+      - name: Commit checkpoint and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/session-checkpoints/west-a.json
+          git rm .github/workflows/temp-west-a-second-audit-checkpoint-main-sync.yml
+          git commit -m "chore: sync West A second-audit checkpoint to main"
+          git push origin HEAD:sync/west-a-second-audit-checkpoint-20260725
