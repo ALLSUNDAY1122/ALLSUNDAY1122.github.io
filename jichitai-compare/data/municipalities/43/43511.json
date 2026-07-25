@@ -6,8 +6,8 @@
   "name": "五木村",
   "officialUrl": "https://www.vill.itsuki.lg.jp/",
   "status": "verified",
-  "summary": "五木村の必須9制度を公式情報で調査。6制度をverified、3制度をunavailableとして公開可能状態へ正規化。",
-  "updatedAt": "2026-07-24",
+  "summary": "必須9制度を公式情報で再監査。5制度をverified、4制度をunavailableとして登録。住宅支援は一般制度のみ確認され、子育て世帯固有条件を確認できないためunavailableへ訂正。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -103,18 +103,27 @@
       }
     },
     "housingSupport": {
-      "status": "verified",
-      "summary": "空き家バンク物件の改修・修繕費を5分の4、上限200万円補助",
+      "status": "unavailable",
+      "summary": "一般の住宅・移住支援制度（空き家バンク物件の改修・修繕費を5分の4、上限200万円補助）は確認できるが、子育て世帯固有の住宅支援条件を確認できない",
       "details": {
         "target": "空き家バンク物件へ新たに入居し、5年以上居住する意思がある移住者等",
         "support": "10万円以上の改修・修繕対象経費の5分の4以内、上限200万円",
         "works": "補修、間取り変更、屋根・外壁、台所・浴室・トイレ、電気・給排水設備等",
-        "application": "賃貸借契約日から半年以内に、着工前の見積書・写真・契約書等を添えて申請する"
+        "application": "賃貸借契約日から半年以内に、着工前の見積書・写真・契約書等を添えて申請する",
+        "confirmedGeneralProgramSummary": "空き家バンク物件の改修・修繕費を5分の4、上限200万円補助",
+        "previousStatus": "verified",
+        "classificationReview": "一般移住・一般住宅制度を子育て世帯向け住宅支援として登録していた分類誤りを訂正",
+        "childSpecificConditionConfirmed": false
       },
       "source": {
         "url": "https://www.vill.itsuki.lg.jp/reiki/reiki_honbun/q480RG00000980.html",
-        "checkedAt": "2026-07-24"
-      }
+        "checkedAt": "2026-07-25"
+      },
+      "notes": [
+        "2026年7月25日に公式ページ「五木村空き家バンク改修・修繕補助金交付要項」を再確認した。",
+        "確認できる対象・条件・補助額は一般の移住、空き家、住宅取得、改修、除却または耐震等に関するもので、子どもの有無、対象年齢、子育て世帯限定または子育て加算を要件としていない。",
+        "一般制度の存在は保持するが、子育て世帯向け住宅支援として登録しない。"
+      ]
     },
     "bulkyWaste": {
       "status": "verified",
