@@ -33,6 +33,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git rm .github/workflows/generate-east-b-second-audit-sync-20260725.yml
-          git add jichitai-compare/municipality jichitai-compare/data/generated/municipalities.json jichitai-compare/data/generated/municipality-pages.json jichitai-compare/sitemap.xml jichitai-compare/operations/progress.json jichitai-compare/operations/audits/public-summary-validation-report.json
+          git add jichitai-compare/municipality jichitai-compare/data/generated/municipalities.json jichitai-compare/data/generated/municipality-pages.json jichitai-compare/sitemap.xml jichitai-compare/operations/progress.json
           git commit -m "generate: 東日本B第2監査を全国公開へ同期"
           git push origin HEAD:coord/sync-east-b-second-audit-20260725-v2
