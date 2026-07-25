@@ -1,0 +1,170 @@
+name: Temporary West B Housing Final Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-housing-final-main-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'sync/west-b-housing-final-main-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Reset to latest main and import final regional records
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main region/west
+          git reset --hard origin/main
+          for path in \
+            jichitai-compare/operations/control/session-checkpoints/west-b.json \
+            jichitai-compare/operations/control/regions/west.json \
+            jichitai-compare/operations/audits/west-b-housing-classification-corrections-20260725.json \
+            jichitai-compare/operations/audits/west-b-housing-final-resolution-20260725.json \
+            jichitai-compare/operations/audits/west-b-housing-public-verification-20260725.json
+          do
+            mkdir -p "$(dirname "$path")"
+            git show "origin/region/west:$path" > "$path"
+          done
+
+      - name: Finalize audit status and coordinator resolution
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root = 'jichitai-compare';
+          const completedAt = '2026-07-25T19:59:00+09:00';
+          const officialPath = path.join(root, 'operations/audits/west-b-housing-official-review-20260725.json');
+          const correctionPath = path.join(root, 'operations/audits/west-b-housing-classification-corrections-20260725.json');
+          const publicPath = path.join(root, 'operations/audits/west-b-housing-public-verification-20260725.json');
+          const regionalResolutionPath = path.join(root, 'operations/audits/west-b-housing-final-resolution-20260725.json');
+          const qualityPath = path.join(root, 'operations/quality/west-b-housing-resolution-20260725.json');
+          const publicAudit = JSON.parse(fs.readFileSync(publicPath, 'utf8'));
+          const correction = JSON.parse(fs.readFileSync(correctionPath, 'utf8'));
+          const regionalResolution = JSON.parse(fs.readFileSync(regionalResolutionPath, 'utf8'));
+          if (!publicAudit.success || correction.releaseBlocker !== 'none' || regionalResolution.releaseBlocker !== 'none') {
+            throw new Error('Final West B housing evidence is incomplete.');
+          }
+
+          const official = JSON.parse(fs.readFileSync(officialPath, 'utf8'));
+          official.result.status = 'completed_public_verified_region_integrated';
+          official.result.unresolvedConfirmedErrorCount = 0;
+          official.result.correctionPullRequest = 3662;
+          official.result.nationalSyncPullRequest = 3666;
+          official.result.publicVerificationPullRequest = 3668;
+          official.result.finalRegionPullRequest = 3670;
+          official.result.completedAt = completedAt;
+          fs.writeFileSync(officialPath, JSON.stringify(official, null, 2) + '\n');
+
+          correction.finalMainSyncPullRequestNumber = Number(process.env.PR_NUMBER);
+          correction.finalMainSyncWorkflowRunId = Number(process.env.RUN_ID);
+          correction.finalMainSynchronizedAt = completedAt;
+          correction.status = 'completed_public_verified_region_integrated';
+          correction.releaseBlocker = 'none';
+          fs.writeFileSync(correctionPath, JSON.stringify(correction, null, 2) + '\n');
+
+          const quality = {
+            schemaVersion: '1.0.0',
+            resolutionId: 'west-b-housing-resolution-20260725',
+            coordinatorSession: '統括B②',
+            completedAt,
+            trackingIssues: [3191, 3193],
+            category: 'generalHousingMisclassification',
+            scope: regionalResolution.scope,
+            evidence: {
+              sourceReviewPullRequest: 3641,
+              auditRunnerCleanupPullRequest: 3659,
+              regionalRunnerRegistrationPullRequest: 3661,
+              regionalCorrectionPullRequest: 3662,
+              regionalCorrectionWorkflowRunId: 30154957954,
+              regionalStateRunnerPullRequest: 3663,
+              regionalStatePullRequest: 3664,
+              regionalStateWorkflowRunId: 30155086155,
+              nationalRunnerPullRequest: 3665,
+              nationalSyncPullRequest: 3666,
+              nationalSyncWorkflowRunId: 30155174139,
+              publicRunnerPullRequest: 3667,
+              publicVerificationPullRequest: 3668,
+              publicVerificationWorkflowRunId: 30155274314,
+              finalRegionRunnerPullRequest: 3669,
+              finalRegionPullRequest: 3670,
+              finalRegionWorkflowRunId: 30155386114,
+              finalMainPullRequest: Number(process.env.PR_NUMBER),
+              finalMainWorkflowRunId: Number(process.env.RUN_ID)
+            },
+            corrections: {
+              changedToUnavailableCount: 21,
+              familySpecificReplacementCount: 3,
+              retainedVerifiedCount: 1,
+              correctedMunicipalityCodes: correction.corrections.map((item) => item.code),
+              retainedMunicipalityCode: correction.retained?.[0]?.code ?? '47326'
+            },
+            publicVerification: {
+              attempt: publicAudit.attempt,
+              targetCount: publicAudit.targetCount,
+              allPagesHttp200: publicAudit.pageChecks.every((item) => item.httpStatus === 200),
+              summariesMatch: publicAudit.pageChecks.every((item) => item.summaryMatches),
+              officialSourcesMatch: publicAudit.pageChecks.every((item) => item.sourceMatches),
+              publicMunicipalityCount: publicAudit.publicGeneratedJson.municipalityCount,
+              publicServiceCount: publicAudit.publicGeneratedJson.serviceCount,
+              publicGeneratedJsonMatches: publicAudit.publicGeneratedJson.success
+            },
+            temporaryRunnerCleanup: {
+              mainPaths: [
+                '.github/workflows/temp-west-b-housing-main-sync.yml',
+                '.github/workflows/temp-west-b-housing-public-verify.yml',
+                '.github/workflows/temp-west-b-housing-final-main.yml'
+              ],
+              regionPaths: [
+                '.github/workflows/temp-west-b-housing-corrections.yml',
+                '.github/workflows/temp-west-b-housing-state-sync.yml',
+                '.github/workflows/temp-west-b-housing-finalize.yml'
+              ],
+              regionalCleanupCompletedInPullRequest: 3670,
+              mainCleanupCompletedInPullRequest: Number(process.env.PR_NUMBER),
+              status: 'cleanup_completed'
+            },
+            releaseGuard: { status: 'resolved_no_release_blocker', blockers: [] },
+            status: 'completed_public_verified_region_integrated'
+          };
+          fs.mkdirSync(path.dirname(qualityPath), { recursive: true });
+          fs.writeFileSync(qualityPath, JSON.stringify(quality, null, 2) + '\n');
+          NODE
+
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          node --check app.js
+
+      - name: Remove temporary main workflows and commit final records
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f \
+            jichitai-compare/operations/control/west-b-housing-final-main-trigger-20260725.json \
+            .github/workflows/temp-west-b-housing-main-sync.yml \
+            .github/workflows/temp-west-b-housing-public-verify.yml \
+            .github/workflows/temp-west-b-housing-final-main.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'audit: 西日本B住宅支援横断監査を最終確定'
+          git push --force origin "HEAD:${GITHUB_HEAD_REF}"
