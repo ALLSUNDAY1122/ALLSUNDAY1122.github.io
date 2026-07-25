@@ -1,0 +1,51 @@
+name: Temporary North B Anyone Multiple Gap Public Record Region Sync
+
+on:
+  pull_request:
+    branches:
+      - region/north
+    paths:
+      - '.github/workflows/temp-north-b-anyone-multiple-gap-public-record-region-sync.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-anyone-multiple-gap-public-record-region-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout regional branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Import verification record from main
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- \
+            jichitai-compare/operations/audits/north-b-anyone-multiple-gap-public-verification-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json
+
+      - name: Commit regional record synchronization
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/north-b-anyone-multiple-gap-public-verification-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/north-b.json
+          if git diff --cached --quiet; then
+            echo 'No regional record changes to commit.'
+            exit 1
+          fi
+          git commit -m 'sync: 北日本B公開検証記録をregion/northへ反映 [skip ci]'
+          git pull --rebase origin "${{ github.head_ref }}"
+          git push origin HEAD:"${{ github.head_ref }}"
