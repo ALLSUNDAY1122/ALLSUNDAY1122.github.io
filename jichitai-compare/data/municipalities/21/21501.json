@@ -7,24 +7,33 @@
   "officialUrl": "https://www.town.sakahogi.gifu.jp/",
   "status": "verified",
   "summary": "坂祝町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "出生から18歳年度末まで、保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達した後の最初の3月31日まで",
         "coverage": "保険診療分の自己負担額",
         "payment": "岐阜県内は受給者証による現物給付、県外受診は償還払い",
         "note": "学校管理下のけが等は日本スポーツ振興センター災害共済給付が優先される場合がある"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/life/child/child03.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/life/child/child03.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "病気または回復期で家庭保育が難しい児童を、とまと託児所等で一時的に預かる。",
-      "eligibility": {"minAgeMonths": 18, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 18,
+        "maxAgeYears": 12
+      },
       "details": {
         "facility": "坂祝町病児・病後児保育室 とまと託児所",
         "ageCondition": "町内在住者は1歳6か月から小学6年生、町外在住者は小学3年生まで",
@@ -33,37 +42,63 @@
         "exemption": "多子世帯、ひとり親世帯、在宅障がい者のいる世帯は事前手続きにより無料",
         "application": "事前登録後、施設へ利用予約し、医師連絡票を持参"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/life/child/child11.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/life/child/child11.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は幼児教育・保育無償化の対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "3歳児から5歳児クラスの保育料は無料",
         "underThree": "0～2歳児は市町村民税所得割額等に応じて算定し、住民税非課税世帯は無償化対象",
         "kindergarten": "こども園教育部分と幼稚園使用料も無料",
         "excludedCosts": "延長保育料、行事費、給食費等の実費は別途必要"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/life/child/child07.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/life/child/child07.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "町立小中学校・幼稚園の給食費は、児童生徒等の区分ごとに1食単価と月額徴収額が定められている。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "perMeal": "小学校310円、中学校340円、幼稚園300円",
         "monthlyFee": "小学校6,200円、中学校6,800円、幼稚園6,000円",
         "collection": "8月を除く4月から翌年1月まで毎月徴収し、4月分は5月分と合わせて徴収",
         "adjustment": "年間給食受給日数に基づき年度内に精算",
-        "support": "町外の学校・園等へ通う町内在住児童等には、条件により給食費負担軽減補助制度がある"
+        "support": "町外の学校・園等へ通う町内在住児童等には、条件により給食費負担軽減補助制度がある",
+        "userFacingEvidence": "坂祝幼稚園の利用者向けページで給食費月額6,000円を確認。小学校・中学校の月額は令和8年4月1日施行の給食費規則で確認"
       },
-      "source": {"url": "https://reiki.town.sakahogi.gifu.jp/reiki_honbun/i361RG00000922.html?id=j4_k1_g2", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://reiki.town.sakahogi.gifu.jp/reiki_honbun/i361RG00000922.html?id=j4_k1_g2",
+        "checkedAt": "2026-07-22"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.sakahogi.gifu.jp/life/child/child09.html",
+          "checkedAt": "2026-07-25",
+          "description": "坂祝幼稚園の利用者向け必要経費。給食費月額6,000円を確認"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子へ、訪問・宿泊・通所型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "坂祝町に住民票があり、産後の心身の不調や育児不安等があり産後ケアを必要とする母子",
         "types": "訪問型、宿泊型、通所型",
@@ -72,12 +107,18 @@
         "exemption": "市町村民税非課税世帯と生活保護世帯は利用料金免除",
         "application": "こども家庭センターへ事前申請し、面談・審査後に利用調整"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/life/maternity/maternity12.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/life/maternity/maternity12.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "乳児等通園支援事業（こども誰でも通園制度）",
         "condition": "坂祝町在住で、保育園・幼稚園等に在籍していない児童",
@@ -86,7 +127,10 @@
         "fee": "1時間300円",
         "application": "町へ認定申請後、施設利用の手続きを行う"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/diary/2026/03/14258/", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/diary/2026/03/14258/",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -98,7 +142,10 @@
         "residence": "申請後5年以上継続して坂祝町に居住する意思が必要",
         "application": "転入後1年以内に、就業等の要件を満たして申請。事前に企画課へ相談"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/life/home/iju-teiju01.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/life/home/iju-teiju01.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -110,7 +157,10 @@
         "label": "1品ごとに粗大ごみシールを貼付",
         "bundle": "同一品目を束ねる場合は規定サイズ内・持てる程度（約30キログラム）にまとめる"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/life/category06/cate06_04.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/life/category06/cate06_04.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -122,7 +172,10 @@
         "languages": "日本語版とポルトガル語版を公開",
         "format": "分割版および全体版PDFを公式ページから閲覧可能"
       },
-      "source": {"url": "https://www.town.sakahogi.gifu.jp/life/category10/cate10_10.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.sakahogi.gifu.jp/life/category10/cate10_10.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
