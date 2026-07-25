@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "east-b-quality-improvement-second-20260725",
+  "sessionId": "east-b",
+  "displayName": "東日本調査班B 品質改善第2監査",
+  "status": "in_progress",
+  "startedAt": "2026-07-25T10:31:00+09:00",
+  "updatedAt": "2026-07-25T10:40:00+09:00",
+  "integrationBranch": "region/east",
+  "workingBranch": "agent/east-b-second-audit-wide-area-20260725",
+  "recovery": {
+    "sourceIssueNumber": 2908,
+    "nationwideSyncPullRequestNumber": 3040,
+    "nationwideSyncMergeSha": "fb9672c2b9e53574c5bf30aabd4c47c4a7543f3c",
+    "publicationVerificationPullRequestNumber": 3062,
+    "checkpointPath": "jichitai-compare/operations/control/session-checkpoints/east-b.json",
+    "checkpointSyncPullRequestNumber": 3154,
+    "postCompletionMonitorPullRequestNumber": 3090,
+    "postCompletionMonitorCiRunNumber": 7549,
+    "postCompletionMonitorMergeSha": "52da51cf207e6d9f066ff9ee6a7ff14db6c1f818"
+  },
+  "priorityMunicipalities": [
+    {"code": "12203", "name": "市川市"},
+    {"code": "14100", "name": "横浜市"},
+    {"code": "13123", "name": "江戸川区"},
+    {"code": "15100", "name": "新潟市"},
+    {"code": "15586", "name": "粟島浦村"}
+  ],
+  "sampleAudit": {
+    "targetCount": 20,
+    "checkedCount": 16,
+    "municipalities": [
+      {"code": "12203", "name": "市川市", "result": "passed"},
+      {"code": "14100", "name": "横浜市", "result": "corrected"},
+      {"code": "13123", "name": "江戸川区", "result": "passed"},
+      {"code": "15100", "name": "新潟市", "result": "corrected"},
+      {"code": "15586", "name": "粟島浦村", "result": "passed_with_unconfirmed_local_terms"},
+      {"code": "15204", "name": "三条市", "result": "passed"},
+      {"code": "15206", "name": "新発田市", "result": "passed"},
+      {"code": "15209", "name": "加茂市", "result": "passed"},
+      {"code": "15213", "name": "燕市", "result": "passed"},
+      {"code": "15218", "name": "五泉市", "result": "corrected"},
+      {"code": "15223", "name": "阿賀野市", "result": "corrected"},
+      {"code": "15227", "name": "胎内市", "result": "passed"},
+      {"code": "15307", "name": "聖籠町", "result": "passed"},
+      {"code": "15342", "name": "弥彦村", "result": "passed"},
+      {"code": "15361", "name": "田上町", "result": "passed"},
+      {"code": "15385", "name": "阿賀町", "result": "passed"}
+    ]
+  },
+  "findings": [
+    {
+      "category": "wide_area_sick_child_care",
+      "municipalityCode": "14100",
+      "municipalityName": "横浜市",
+      "result": "corrected",
+      "details": "現行日本語制度ページに記載された川崎市との病児・病後児保育相互利用協定が未反映。多言語総合案内から現行日本語制度ページへ主出典を変更し、相互利用条件を追加。"
+    },
+    {
+      "category": "postpartum_care_fee",
+      "municipalityCode": "14100",
+      "municipalityName": "横浜市",
+      "result": "corrected",
+      "details": "ショートステイの利用上限は記録済みだったが、1泊2日6,000円・追加1日3,000円が欠落していたため現行利用規程から補完。"
+    },
+    {
+      "category": "wide_area_sick_child_care",
+      "municipalityCode": "15100",
+      "municipalityName": "新潟市",
+      "result": "corrected",
+      "details": "2026年4月1日開始の新潟地域12市町村相互利用協定と対象者条件を補完。"
+    },
+    {
+      "category": "wide_area_sick_child_care",
+      "municipalityCode": "15218",
+      "municipalityName": "五泉市",
+      "result": "corrected",
+      "details": "2026年4月1日開始の新潟地域12市町村相互利用協定を補完。"
+    },
+    {
+      "category": "wide_area_sick_child_care",
+      "municipalityCode": "15223",
+      "municipalityName": "阿賀野市",
+      "result": "corrected",
+      "details": "2026年4月1日開始の新潟地域12市町村相互利用協定を補完。産後ケアについて市外里帰り先での訪問型利用は事前相談が必要であることも追記。"
+    },
+    {
+      "category": "source_currency",
+      "municipalityCode": "15100",
+      "municipalityName": "新潟市",
+      "result": "passed",
+      "details": "学校給食費ページのURLパスはR7表記だが、本文は2026年5月15日更新の令和8年度情報であり、旧年度PDFの誤用ではない。"
+    },
+    {
+      "category": "unavailable_to_verified_recheck",
+      "municipalityCode": "15586",
+      "municipalityName": "粟島浦村",
+      "result": "passed",
+      "details": "保育料は2025年度から完全無償化を村計画で再確認。こども誰でも通園制度は村計画の2026年度確保方策と県の全自治体実施案内により制度存在を確認しverifiedを維持。村独自の料金・日時・予約方法は未確認として明記済み。"
+    }
+  ],
+  "remainingActions": [
+    "担当都県から追加4自治体を抽出し、合計20自治体の数値・年度・制度分類を完了する",
+    "PRの標準CIを確認し、確定修正をregion/eastへ統合する",
+    "全国生成JSON・静的ページ・mainへの同期を行う",
+    "修正対象ページの公開HTTP応答と表示内容を検証する"
+  ],
+  "blockers": []
+}
