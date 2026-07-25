@@ -1,0 +1,71 @@
+name: Temporary West A Anyone Care Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-a-anyone-care-main-sync-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/west-a-anyone-care-corrections-main-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sync branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Copy regional truth and regenerate public files
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin region/west
+          paths=(
+            jichitai-compare/data/municipalities/39/39304.json
+            jichitai-compare/data/municipalities/39/39387.json
+            jichitai-compare/data/municipalities/39/39411.json
+            jichitai-compare/data/municipalities/46/46221.json
+            jichitai-compare/data/municipalities/46/46501.json
+            jichitai-compare/operations/tasks/39304.json
+            jichitai-compare/operations/tasks/39387.json
+            jichitai-compare/operations/tasks/39411.json
+            jichitai-compare/operations/tasks/46221.json
+            jichitai-compare/operations/tasks/46501.json
+            jichitai-compare/operations/audits/west-a-anyone-care-clean-ci-trigger-20260725.json
+            jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json
+            jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json
+            jichitai-compare/operations/audits/west-a-anyone-care-official-fetch-20260725.json
+            jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json
+            jichitai-compare/operations/audits/west-a-sakawa-anyone-care-flyer-20260725.json
+          )
+          git checkout origin/region/west -- "${paths[@]}"
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          node ./scripts/generate-municipality-pages.mjs
+          cd ..
+          rm -f jichitai-compare/operations/control/west-a-anyone-care-main-sync-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-anyone-care-main-sync.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${paths[@]}" \
+                  jichitai-compare/data/generated/municipalities.json \
+                  jichitai-compare/data/generated/municipality-pages.json \
+                  jichitai-compare/operations/progress.json \
+                  jichitai-compare/municipality/39304/index.html \
+                  jichitai-compare/municipality/39387/index.html \
+                  jichitai-compare/municipality/39411/index.html \
+                  jichitai-compare/municipality/46221/index.html \
+                  jichitai-compare/municipality/46501/index.html \
+                  jichitai-compare/sitemap.xml \
+                  jichitai-compare/operations/control/west-a-anyone-care-main-sync-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-anyone-care-main-sync.yml
+          git diff --cached --check
+          git commit -m 'sync: 西日本A誰でも通園制度訂正を全国公開へ反映'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
