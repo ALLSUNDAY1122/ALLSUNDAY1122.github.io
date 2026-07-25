@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "ledgerId": "north-east-wave2-results-20260725",
+  "coordinatorSession": "統括A③",
+  "status": "completed_with_nonblocking_follow_up",
+  "completedAt": "2026-07-25T13:55:00+09:00",
+  "baseline": {
+    "historicalCorrectionEntries": 107,
+    "northMunicipalities": 406,
+    "eastMunicipalities": 450,
+    "northEastServices": 7704,
+    "nationwideMunicipalities": 1741,
+    "nationwideServices": 15669,
+    "remainingMunicipalities": 0,
+    "needsMediumReviewServices": 0
+  },
+  "sessions": [
+    {
+      "session": "north-a",
+      "issueNumber": 3196,
+      "status": "completed",
+      "priorCorrectionsRevalidated": 13,
+      "sampledMunicipalities": 15,
+      "findings": ["region/north反映漏れ", "西会津町産後ケア訪問型欠落", "七戸町誰でも通園の現在利用不可条件欠落"],
+      "remainingConfirmedErrors": 0
+    },
+    {
+      "session": "north-b",
+      "issueNumber": 3197,
+      "status": "completed_with_nonblocking_follow_up",
+      "priorCorrectionsRevalidated": 28,
+      "sampledMunicipalities": 20,
+      "horizontalUrlAudit": {"municipalities": 107, "uniqueUrls": 1221, "maintenanceActions": 12, "statusChanges": 0, "contentFactChanges": 0},
+      "fiscalAnyoneAudit": {"fiscalCandidatesReviewed": 40, "anyoneCandidates": 78, "confirmedCorrectionMunicipalities": 8, "statusChanges": 0},
+      "followUpIssue": 3398,
+      "remainingConfirmedErrors": 0
+    },
+    {
+      "session": "east-a",
+      "issueNumber": 3198,
+      "status": "completed_with_nonblocking_follow_up",
+      "sampledMunicipalities": 20,
+      "confirmedFindings": 13,
+      "findingTypes": ["checkpoint不一致", "料金・期間・広域利用条件欠落", "住宅支援分類誤り", "受付状態欠落"],
+      "followUpIssue": 2847,
+      "remainingConfirmedErrors": 0
+    },
+    {
+      "session": "east-b",
+      "issueNumber": 3199,
+      "status": "completed",
+      "sampledMunicipalities": 20,
+      "confirmedFindings": 5,
+      "findingTypes": ["広域病児・病後児保育未反映", "産後ケア料金欠落", "里帰り先訪問型条件欠落"],
+      "remainingConfirmedErrors": 0
+    }
+  ],
+  "qualityGate": {
+    "confirmedUnfixedErrors": 0,
+    "publicationBlocking": false,
+    "regionMainGeneratedPublicConsistency": "passed",
+    "standardCi": "passed",
+    "publicVerification": "passed"
+  },
+  "nonblockingFollowUps": [
+    {"issueNumber": 2847, "municipalityCode": "20602", "municipalityName": "栄村", "reason": "公式サイトHTTP 502。9制度はunavailableで安全表示。"},
+    {"issueNumber": 3398, "candidateCount": 74, "reason": "北日本Bの誰でも通園低優先機械候補。現時点で確定誤りではない。"}
+  ]
+}
