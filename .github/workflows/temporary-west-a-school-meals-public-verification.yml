@@ -30,7 +30,7 @@ jobs:
           const base='https://allsunday1122.github.io/jichitai-compare/';
           const targets=[
             {code:'43511',name:'五木村',summary:'村立学校の学校給食費を無償化',newText:'村外特別支援学校等の対象者は月額給食費の3分の2を補助',newSource:'https://www.vill.itsuki.lg.jp/reiki/reiki_honbun/q480RG00000841.html',oldSource:'https://www.vill.itsuki.lg.jp/kiji0032221/'},
-            {code:'46208',name:'出水市',summary:'2026年度に市立小中学校の学校給食費無償化を実施',newText:'2026年1月に第1子・第2子を含む市立小中学校給食費の完全無償化を開始',newSource:'https://www.city.kagoshima-izumi.lg.jp/gikai/gijiroku/detail_select/533/1',oldSource:'https://www.city.kagoshima-izumi.lg.jp/gikai/gijiroku/detail_select/533'}
+            {code:'46208',name:'出水市',summary:'2026年度に市立小中学校の学校給食費無償化を実施',newText:'令和8年度当初予算の学校給食費助成事業費により、国の交付金等を活用して小中学校の給食費無償化を継続',newSource:'https://www.city.kagoshima-izumi.lg.jp/gikai/gijiroku/detail_select/533/1',oldSource:'https://www.city.kagoshima-izumi.lg.jp/gikai/gijiroku/detail_select/533'}
           ];
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           async function fetchText(url){const r=await fetch(url,{redirect:'follow',headers:{'cache-control':'no-cache','user-agent':'West-A-Public-Audit/2026'}});return {status:r.status,url:r.url,text:await r.text()};}
@@ -41,7 +41,7 @@ jobs:
             const pages=[],data=[];
             for(const t of targets){
               const p=await fetchText(base+'municipality/'+t.code+'/?audit='+Date.now());
-              const pc={http200:p.status===200,summary:p.text.includes(t.summary),newText:p.text.includes(t.newText),newSource:p.text.includes(t.newSource),oldPrimaryAbsent:!p.text.includes('href="'+t.oldSource+'" class="official-link"')};
+              const pc={http200:p.status===200,summary:p.text.includes(t.summary),newText:p.text.includes(t.newText),newSource:p.text.includes(t.newSource),oldPrimaryAbsent:!p.text.includes('href="'+t.oldSource+'" target="_blank" rel="noopener noreferrer">自治体公式情報')};
               pages.push({code:t.code,name:t.name,url:p.url,httpStatus:p.status,checks:pc});
               const m=(generated.municipalities||[]).find(x=>x.code===t.code);const s=m?.services?.schoolMeals;const corpus=JSON.stringify(s||{});
               const dc={found:Boolean(m),verified:s?.status==='verified',summary:s?.summary===t.summary,newText:corpus.includes(t.newText),newPrimary:s?.source?.url===t.newSource,oldNotPrimary:s?.source?.url!==t.oldSource};
@@ -51,7 +51,7 @@ jobs:
             const ok=counts.municipalityCount===1741&&counts.arrayCount===1741&&counts.totalMunicipalities===1741&&counts.totalServices===15669&&pages.every(x=>Object.values(x.checks).every(Boolean))&&data.every(x=>Object.values(x.checks).every(Boolean));
             return {ok,attempt:n,checkedAt:new Date().toISOString(),counts,pageResults:pages,dataResults:data};
           }
-          (async()=>{let result=null;const history=[];for(let i=1;i<=12;i++){try{result=await attempt(i);history.push({attempt:i,ok:result.ok,checkedAt:result.checkedAt});if(result.ok)break;}catch(e){history.push({attempt:i,ok:false,error:String(e),checkedAt:new Date().toISOString()});}if(i<12)await sleep(15000);}if(!result?.ok)throw new Error('公開反映未確認 '+JSON.stringify(history));const report={schemaVersion:'1.0.0',auditId:'west-a-school-meals-public-verification-20260725',team:'西日本調査班A',regionalPullRequestNumber:3584,regionalCiRunNumber:8762,mainPullRequestNumber:3604,mainCiRunNumber:8778,mainMergeSha:'e1f6a240f5f1040c63e6c5f2cca7d88643070ef0',sourceMaintenanceCount:2,history,...result,status:'public_verification_completed',unresolvedCount:0,blocker:null};fs.writeFileSync('jichitai-compare/operations/audits/west-a-school-meals-public-verification-20260725.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({attempt:result.attempt,counts:result.counts}));})().catch(e=>{console.error(e);process.exit(1)});
+          (async()=>{let result=null;const history=[];for(let i=1;i<=12;i++){try{result=await attempt(i);history.push({attempt:i,ok:result.ok,checkedAt:result.checkedAt});if(result.ok)break;}catch(e){history.push({attempt:i,ok:false,error:String(e),checkedAt:new Date().toISOString()});}if(i<12)await sleep(15000);}if(!result?.ok)throw new Error('公開反映未確認 '+JSON.stringify(history));const report={schemaVersion:'1.0.0',auditId:'west-a-school-meals-public-verification-20260725',team:'西日本調査班A',regionalPullRequestNumber:3584,regionalCiRunNumber:8762,mainPullRequestNumber:3604,mainCiRunNumber:8778,mainMergeSha:'e1f6a240f5f1040c63e6c5f2cca7d88643070ef0',sourceMaintenanceCount:2,firstRunFailure:'静的ページ非表示のstart項目を検査していたため修正',history,...result,status:'public_verification_completed',unresolvedCount:0,blocker:null};fs.writeFileSync('jichitai-compare/operations/audits/west-a-school-meals-public-verification-20260725.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({attempt:result.attempt,counts:result.counts}));})().catch(e=>{console.error(e);process.exit(1)});
           NODE
           rm -f jichitai-compare/operations/control/west-a-school-meals-public-verification-trigger-20260725.json
           rm -f .github/workflows/temporary-west-a-school-meals-public-verification.yml
