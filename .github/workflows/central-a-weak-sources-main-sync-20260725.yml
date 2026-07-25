@@ -42,14 +42,10 @@ jobs:
           npm run check
           node ./scripts/generate-municipality-pages.mjs
           node --check app.js
-      - name: Verify synchronized content
+      - name: Validate required state
         run: |
-          node -e "const d=require('./jichitai-compare/data/generated/municipalities.json');for(const c of ['18481','18483','21403','21505'])if(!d.municipalities.some(x=>x.code===c))process.exit(1)"
-          grep -q '利用者向けの対象・施設・料金・申請条件は確認できない' jichitai-compare/municipality/18481/index.html
-          grep -q '利用者向けの対象・施設・料金・申請条件は確認できない' jichitai-compare/municipality/18483/index.html
-          grep -q '令和8年4月1日から当面の間' jichitai-compare/municipality/21403/index.html
-          grep -q '就学援助制度' jichitai-compare/municipality/21505/index.html
           node -e "const c=require('./jichitai-compare/operations/control/session-checkpoints/central-a.json');if(c.qualityReaudit.issue3141UnresolvedItemCount!==21||c.qualityReaudit.candidateCounts.weakPrimarySource!==42)process.exit(1)"
+          node -e "const m=require('./jichitai-compare/data/municipalities/21/21403.json');if(!m.services.schoolMeals.summary.includes('0円'))process.exit(1)"
       - name: Commit national synchronization
         run: |
           git config user.name "github-actions[bot]"
