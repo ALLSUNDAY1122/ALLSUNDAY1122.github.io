@@ -27,7 +27,9 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify public pages and generated JSON
+      - name: Diagnose public pages and generated JSON
+        id: diagnose
+        continue-on-error: true
         shell: bash
         run: |
           node <<'NODE'
@@ -42,20 +44,16 @@ jobs:
             '06211': ['2026年度', '令和8年度'],
             '06301': ['2026年度', '令和8年度']
           };
+          const diagnostic = { checkedAt: new Date().toISOString(), pages: {}, generated: {}, errors: [] };
 
           async function fetchText(url) {
-            let lastStatus = 0;
-            for (let attempt = 1; attempt <= 12; attempt++) {
-              const separator = url.includes('?') ? '&' : '?';
-              const response = await fetch(`${url}${separator}audit=20260725-b5-${Date.now()}-${attempt}`, { cache: 'no-store' });
-              lastStatus = response.status;
-              const text = await response.text();
-              if (response.ok) return text;
-              await new Promise(resolve => setTimeout(resolve, 10000));
-            }
-            throw new Error(`failed to fetch ${url}; last status ${lastStatus}`);
+            const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}audit=${Date.now()}`, { cache: 'no-store' });
+            const text = await response.text();
+            return { status: response.status, ok: response.ok, text };
           }
-
+          function matchedNeedle(text, needles) {
+            return needles.find(needle => text.includes(needle)) || null;
+          }
           function findCode(value, code) {
             if (!value || typeof value !== 'object') return null;
             if (!Array.isArray(value) && Object.prototype.hasOwnProperty.call(value, code)) return value[code];
@@ -68,84 +66,69 @@ jobs:
             return null;
           }
 
-          function matchedNeedle(text, needles) {
-            return needles.find(needle => text.includes(needle)) || null;
-          }
-
-          const results = [];
           for (const [code, needles] of Object.entries(expected)) {
-            const url = `${base}/municipality/${code}/`;
-            let matched = null;
-            for (let attempt = 1; attempt <= 12; attempt++) {
-              const page = await fetchText(url);
-              matched = matchedNeedle(page, needles);
-              console.log(`page ${code} attempt ${attempt}: ${matched || 'not matched'}`);
-              if (matched) break;
-              await new Promise(resolve => setTimeout(resolve, 10000));
+            try {
+              const url = `${base}/municipality/${code}/`;
+              const response = await fetchText(url);
+              const matched = matchedNeedle(response.text, needles);
+              diagnostic.pages[code] = {
+                url,
+                status: response.status,
+                length: response.text.length,
+                matched,
+                hasCode: response.text.includes(code),
+                hasAnyoneKeyword: response.text.includes('こども誰でも通園')
+              };
+              if (!response.ok || !matched) diagnostic.errors.push(`page ${code}: status=${response.status}, matched=${matched}`);
+            } catch (error) {
+              diagnostic.errors.push(`page ${code}: ${error.message}`);
             }
-            if (!matched) throw new Error(`${code} public page missing ${needles.join(' / ')}`);
-            results.push({ code, pageUrl: url, expected: matched, result: 'expected corrected start content found' });
           }
 
-          const generatedUrl = `${base}/data/generated/municipalities.json`;
-          const generatedText = await fetchText(generatedUrl);
-          const generated = JSON.parse(generatedText);
-          for (const [code, needles] of Object.entries(expected)) {
-            const municipality = findCode(generated, code);
-            if (!municipality) {
-              if (!generatedText.includes(code)) throw new Error(`${code} missing from generated JSON`);
-              const rawMatch = matchedNeedle(generatedText, needles);
-              if (!rawMatch) throw new Error(`${code} generated JSON raw content missing ${needles.join(' / ')}`);
-              console.log(`generated ${code}: raw match ${rawMatch}`);
-              continue;
+          try {
+            const generatedUrl = `${base}/data/generated/municipalities.json`;
+            const response = await fetchText(generatedUrl);
+            diagnostic.generated.httpStatus = response.status;
+            diagnostic.generated.length = response.text.length;
+            diagnostic.generated.prefix = response.text.slice(0, 120);
+            if (!response.ok) {
+              diagnostic.errors.push(`generated HTTP ${response.status}`);
+            } else {
+              const generated = JSON.parse(response.text);
+              diagnostic.generated.rootType = Array.isArray(generated) ? 'array' : typeof generated;
+              diagnostic.generated.rootKeys = !Array.isArray(generated) && generated && typeof generated === 'object' ? Object.keys(generated).slice(0, 20) : [];
+              for (const [code, needles] of Object.entries(expected)) {
+                const municipality = findCode(generated, code);
+                const text = municipality ? JSON.stringify(municipality) : '';
+                const matched = matchedNeedle(text, needles);
+                diagnostic.generated[code] = {
+                  foundObject: Boolean(municipality),
+                  matched,
+                  rawHasCode: response.text.includes(code),
+                  rawMatched: matchedNeedle(response.text, needles)
+                };
+                if (!municipality || !matched) diagnostic.errors.push(`generated ${code}: found=${Boolean(municipality)}, matched=${matched}`);
+              }
             }
-            const text = JSON.stringify(municipality);
-            const matched = matchedNeedle(text, needles);
-            console.log(`generated ${code}: ${matched || 'not matched'}`);
-            if (!matched) throw new Error(`${code} generated JSON missing ${needles.join(' / ')}`);
+          } catch (error) {
+            diagnostic.errors.push(`generated: ${error.message}`);
           }
 
-          const audit = {
-            schemaVersion: '1.0.0',
-            auditId: 'north-b-anyone-single-gap-batch5-public-verification-20260725',
-            sessionId: 'north-b',
-            verifiedAt: new Date().toISOString(),
-            status: 'verified',
-            mainPullRequest: 3606,
-            mainMergeCommit: 'd7dde1d363bfb04a77166b45b605b3dce9722599',
-            regionPullRequest: 3612,
-            regionMergeCommit: 'ca9005752989928428b9a8ff746025b1f6316d7d',
-            scope: { municipalityPages: 7, generatedMunicipalitiesJson: true, statusChanges: 0 },
-            municipalities: results,
-            generatedUrl
-          };
-          fs.writeFileSync('jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json', `${JSON.stringify(audit, null, 2)}\n`);
-
-          const checkpointFile = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
-          const checkpoint = JSON.parse(fs.readFileSync(checkpointFile, 'utf8'));
-          checkpoint.updatedAt = '2026-07-25T17:12:00+09:00';
-          checkpoint.workingBranch = 'verify/north-b-anyone-single-gap-batch5-public-1708';
-          checkpoint.pullRequestNumber = null;
-          checkpoint.ciStatus = 'pending';
-          checkpoint.nextAction = '誰でも通園の単一条件欠落残り22件を優先度順に再確認する。';
-          checkpoint.fiscalAnyoneAudit = {
-            ...(checkpoint.fiscalAnyoneAudit || {}),
-            singleGapBatch5PublicVerification: 'success',
-            singleGapBatch5PublicVerificationAuditFile: 'operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json',
-            remainingAnyonePriorityBelow50: 22,
-            status: 'single_gap_batch5_public_verified'
-          };
-          fs.writeFileSync(checkpointFile, `${JSON.stringify(checkpoint, null, 2)}\n`);
+          fs.writeFileSync('jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-diagnostic-20260725.json', `${JSON.stringify(diagnostic, null, 2)}\n`);
+          if (diagnostic.errors.length) process.exit(1);
           NODE
 
-      - name: Remove workflow and commit verification record
+      - name: Commit diagnostic output
+        if: always()
         shell: bash
         run: |
-          rm -f .github/workflows/temp-north-b-anyone-single-gap-batch5-public.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A .github/workflows/temp-north-b-anyone-single-gap-batch5-public.yml \
-            jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json \
-            jichitai-compare/operations/control/session-checkpoints/north-b.json
-          git commit -m 'audit: 北日本B誰でも通園単一条件第5群の公開反映を確認 [skip ci]'
+          git add -f jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-diagnostic-20260725.json
+          git commit -m 'diagnostic: 北日本B第5群の公開照合結果を保存 [skip ci]'
           git push origin HEAD:"${{ github.head_ref }}"
+
+      - name: Fail when diagnostic found errors
+        if: steps.diagnose.outcome == 'failure'
+        shell: bash
+        run: exit 1
