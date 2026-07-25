@@ -45,23 +45,23 @@ jobs:
           ];
           const base='https://allsunday1122.github.io/jichitai-compare';
           let final=null;
-          for(let attempt=1;attempt<=30;attempt++){
+          for(let attempt=1;attempt<=10;attempt++){
             const nonce=`${Date.now()}-${attempt}`;
             const pageChecks=[];
             for(const target of targets){
               try{
                 const url=`${base}/municipality/${target.code}/?audit=${nonce}`;
-                const response=await fetch(url,{headers:{'cache-control':'no-cache','user-agent':'CentralAHousingBatch11Audit/1.0'}});
+                const response=await fetch(url,{headers:{'cache-control':'no-cache','user-agent':'CentralAHousingBatch11Audit/1.1'}});
                 const html=await response.text();
                 const sourceMatches=html.includes(target.source)||html.includes(target.source.replaceAll('&','&amp;'));
                 const summaryMatches=html.includes(target.summary);
-                const statusMatches=target.status==='unavailable'?html.includes('利用可能な制度情報を確認できません'):true;
+                const statusMatches=target.status==='unavailable'?html.includes('公式情報で詳細未確認'):html.includes('確認済み');
                 pageChecks.push({code:target.code,name:target.name,expectedStatus:target.status,url,httpStatus:response.status,sourceMatches,summaryMatches,statusMatches,success:response.status===200&&sourceMatches&&summaryMatches&&statusMatches});
               }catch(error){pageChecks.push({code:target.code,name:target.name,error:String(error),success:false});}
             }
             let jsonCheck={success:false};
             try{
-              const response=await fetch(`${base}/data/generated/municipalities.json?audit=${nonce}`,{headers:{'cache-control':'no-cache','user-agent':'CentralAHousingBatch11Audit/1.0'}});
+              const response=await fetch(`${base}/data/generated/municipalities.json?audit=${nonce}`,{headers:{'cache-control':'no-cache','user-agent':'CentralAHousingBatch11Audit/1.1'}});
               const payload=await response.json();
               const municipalities=Array.isArray(payload)?payload:(payload.municipalities||[]);
               const records=targets.map(target=>{
@@ -76,7 +76,7 @@ jobs:
             if(final.success)break;
             await sleep(10000);
           }
-          const evidence={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch11-public-verification-20260725',generatedAt:new Date().toISOString(),regionalPullRequest:3688,nationalSyncPullRequest:3690,verificationPullRequest:Number(process.env.PR_NUMBER),verificationWorkflowRunId:Number(process.env.RUN_ID),expectedUnavailableCount:2,expectedVerifiedCount:3,...final,releaseBlocker:final.success?'none':'public_verification_failed'};
+          const evidence={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch11-public-verification-20260725',generatedAt:new Date().toISOString(),verificationPolicy:{unavailableStaticLabel:'公式情報で詳細未確認',verifiedStaticLabel:'確認済み',publicJsonExactMatch:true},regionalPullRequest:3688,nationalSyncPullRequest:3690,verificationPullRequest:Number(process.env.PR_NUMBER),verificationWorkflowRunId:Number(process.env.RUN_ID),expectedUnavailableCount:2,expectedVerifiedCount:3,...final,releaseBlocker:final.success?'none':'public_verification_failed'};
           const outPath='jichitai-compare/operations/audits/central-a-housing-classification-batch11-public-verification-20260725.json';
           fs.mkdirSync(path.dirname(outPath),{recursive:true});
           fs.writeFileSync(outPath,JSON.stringify(evidence,null,2)+'\n');
