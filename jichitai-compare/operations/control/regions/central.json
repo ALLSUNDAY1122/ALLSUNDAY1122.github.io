@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T05:20:00+09:00",
+  "updatedAt": "2026-07-25T11:08:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,10 +24,54 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "中日本Aの誤調査再検証第10回（兵庫県41自治体・369制度）をPR #3129・CI #7644成功後にregion/centralへ統合し、10回累計314自治体・76件修正を確定。赤穂市の令和8年度給食費全対象者無償化はmain commit 256f30ca2fd06e4f9132aa121fe739f0a441f21aへ全国反映し、未公開差分0を確認した。継続確認25項目を統括引継ぎIssue #3141へ制度単位で登録した。",
-  "nextAction": "全国公開完了状態を維持し、統括引継ぎIssue #3141の25項目は自治体公式情報更新時または統括判断時に個別再確認する。",
+  "lastAction": "原因別重点再監査の第1次処理をPR #3219・CI #7854成功後にregion/centralへ統合。314自治体・2,826制度、自治体名重複0、task欠落0を確認し、菰野町の誤コード24361重複と南砺市・豊山町の404主出典を訂正した。Issue #3141は23項目を維持した。",
+  "nextAction": "原因別重点再監査を継続し、弱い主出典46候補、子育て固有条件のない住宅支援候補、学校給食費の範囲候補24件を公式利用者向け情報で確定判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
-  "humanDecisionRequired": false
+  "humanDecisionRequired": false,
+  "qualityReaudit": {
+    "mode": "cause_based_focused_reaudit",
+    "status": "in_progress",
+    "startedAt": "2026-07-25T10:30:00+09:00",
+    "latestCompletedAt": "2026-07-25T11:08:00+09:00",
+    "latestRegionalPullRequestNumber": 3219,
+    "latestCiRunNumber": 7854,
+    "scopeMunicipalities": 314,
+    "scopeServices": 2826,
+    "correctedMunicipalitiesRechecked": 54,
+    "primarySourceSlotsRechecked": 486,
+    "confirmedCorrections": [
+      {
+        "type": "municipality_code_duplicate",
+        "wrongCode": "24361",
+        "correctCode": "24341",
+        "name": "菰野町"
+      },
+      {
+        "type": "stale_official_url",
+        "code": "16210",
+        "service": "bulkyWaste"
+      },
+      {
+        "type": "stale_official_url",
+        "code": "23342",
+        "service": "bulkyWaste"
+      }
+    ],
+    "issue3141UnresolvedItemCount": 23,
+    "candidateCounts": {
+      "weakPrimarySource": 46,
+      "numericOrConditionCompleteness": 81,
+      "generalHousingMisclassification": 149,
+      "fiscalYearRisk": 33,
+      "schoolMealScopeAmbiguity": 24,
+      "verifiedUnavailableRisk": 1
+    },
+    "nextPriority": [
+      "弱い主出典46候補",
+      "子育て固有条件のない住宅支援候補",
+      "学校給食費の範囲候補24件"
+    ]
+  }
 }

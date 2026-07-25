@@ -16,15 +16,15 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-25T04:01:00+09:00",
+  "updatedAt": "2026-07-25T11:08:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3122,
+  "pullRequestNumber": 3219,
   "ciStatus": "success",
-  "ciRunNumber": 7613,
+  "ciRunNumber": 7854,
   "completedSinceSplit": [
     {
       "code": "21604",
@@ -171,7 +171,51 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3118,
+  "stateSyncPullRequestNumber": 3143,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "担当409自治体の全国公開を維持しながら、次は28201 神戸市を処理する。"
+  "nextAction": "原因別重点再監査を継続する。Issue #3141の23項目は利用者向け公式情報が揃うまで変更せず、次は条例・計画・予算案のみを主出典とする46候補から公式利用案内の有無を確認する。",
+  "qualityReaudit": {
+    "mode": "cause_based_focused_reaudit",
+    "status": "in_progress",
+    "startedAt": "2026-07-25T10:30:00+09:00",
+    "latestCompletedAt": "2026-07-25T11:08:00+09:00",
+    "latestRegionalPullRequestNumber": 3219,
+    "latestCiRunNumber": 7854,
+    "scopeMunicipalities": 314,
+    "scopeServices": 2826,
+    "correctedMunicipalitiesRechecked": 54,
+    "primarySourceSlotsRechecked": 486,
+    "confirmedCorrections": [
+      {
+        "type": "municipality_code_duplicate",
+        "wrongCode": "24361",
+        "correctCode": "24341",
+        "name": "菰野町"
+      },
+      {
+        "type": "stale_official_url",
+        "code": "16210",
+        "service": "bulkyWaste"
+      },
+      {
+        "type": "stale_official_url",
+        "code": "23342",
+        "service": "bulkyWaste"
+      }
+    ],
+    "issue3141UnresolvedItemCount": 23,
+    "candidateCounts": {
+      "weakPrimarySource": 46,
+      "numericOrConditionCompleteness": 81,
+      "generalHousingMisclassification": 149,
+      "fiscalYearRisk": 33,
+      "schoolMealScopeAmbiguity": 24,
+      "verifiedUnavailableRisk": 1
+    },
+    "nextPriority": [
+      "弱い主出典46候補",
+      "子育て固有条件のない住宅支援候補",
+      "学校給食費の範囲候補24件"
+    ]
+  }
 }

@@ -138594,15 +138594,32 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "満1歳以上の未就学児を対象に一時預かりを実施。",
+          "summary": "満1歳以上の未就学児向け一時預かりに加え、未就園の生後6か月から満3歳未満を月10時間まで受け入れるこども誰でも通園制度を実施。",
           "eligibility": {
-            "minAgeMonths": 12,
+            "minAgeMonths": 6,
             "maxAgeYears": 6
           },
+          "details": {
+            "temporaryCare": "満1歳以上の未就学児を対象に一時預かり保育を実施。利用条件・料金は施設案内を確認",
+            "anyChildTarget": "保育園、認定こども園等に入園していない生後6か月から満3歳未満の子ども",
+            "employment": "保護者の就労等の要件なし",
+            "anyChildLimit": "子ども1人につき月10時間まで",
+            "anyChildHours": "月曜日から金曜日の9時から16時まで",
+            "anyChildFee": "1時間300円。とみいくデジタルポイントを利用可能",
+            "anyChildFacility": "認定こども園井波にじいろ保育園",
+            "meal": "こども誰でも通園制度では給食・おやつの提供なし"
+          },
           "source": {
-            "url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/5066.html",
-            "checkedAt": "2026-07-20"
-          }
+            "url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/7002.html",
+            "checkedAt": "2026-07-24"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nanto.toyama.jp/soshiki/kodomo/1/2/5066.html",
+              "checkedAt": "2026-07-24",
+              "description": "一時預かり保育"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -138616,8 +138633,8 @@
           "status": "verified",
           "summary": "粗大ごみは地域の収集ルールに従うほか、対象地域ではクリーンセンターとなみへ直接搬入できる。",
           "source": {
-            "url": "https://www.city.nanto.toyama.jp/soshiki/seikatsukankyo/1/5/418.html",
-            "checkedAt": "2026-07-20"
+            "url": "https://www.city.nanto.toyama.jp/kurashi-tetsuzuki/gomi-kankyo-pets/5/2825.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
@@ -187676,22 +187693,28 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "経済的理由で就学が困難な児童生徒へ、学校給食費を含む就学援助を行う。",
+          "summary": "令和8年度は小学校給食を1食330円・月額5,700円、中学校給食を1食380円・月額6,560円で実施する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "program": "就学援助制度",
-            "coverage": "学校給食費、学用品費、修学旅行費等",
-            "condition": "経済的な理由によって就学困難と認められる児童・生徒の保護者",
-            "application": "学校教育課へ就学援助費申請書等を提出",
-            "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+            "fiscalYear": "令和8年度",
+            "days": "年間186日予定",
+            "elementary": "1食330円、月額5,700円",
+            "juniorHigh": "1食380円、月額6,560円"
           },
           "source": {
-            "url": "https://www.town.toyoyama.lg.jp/kosodate/kosodatejosei/1000847.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.town.toyoyama.lg.jp/_res/projects/default_project/_page_/001/007/127/r080218_siryou3-1.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.toyoyama.lg.jp/kosodate/kosodatejosei/1000847.html",
+              "checkedAt": "2026-07-22",
+              "description": "経済的に就学困難な児童生徒への就学援助"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -187759,8 +187782,8 @@
             "fee": "有料。処理券の現行額は販売所または最新の町案内で確認"
           },
           "source": {
-            "url": "https://www.town.toyoyama.lg.jp/kurashi/sigen/1000736.html",
-            "checkedAt": "2026-07-22"
+            "url": "https://www.town.toyoyama.lg.jp/kurashi/sigen/1007929/1000738.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
@@ -192956,6 +192979,179 @@
       }
     },
     {
+      "code": "24341",
+      "prefectureCode": "24",
+      "prefecture": "三重県",
+      "name": "菰野町",
+      "officialUrl": "https://www2.town.komono.mie.jp/",
+      "status": "verified",
+      "summary": "菰野町の子育て、教育、住宅、生活、防災に関する9制度を自治体公式情報で確認済み。",
+      "services": {
+        "childMedical": {
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで保険診療の自己負担額を助成し、令和8年9月から県内現物給付を18歳年度末まで拡大する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 18
+          },
+          "details": {
+            "coverage": "健康保険が適用される医療費の自己負担額",
+            "incomeLimit": "令和6年9月から所得制限なし",
+            "payment": "令和8年8月までは未就学児から15歳年度末まで県内現物給付、令和8年9月から18歳年度末まで拡大。対象外受診は償還払い",
+            "excluded": "保険適用外費用等は対象外"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/site/question/2203.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "sickChildCare": {
+          "status": "verified",
+          "summary": "病気回復期の満1歳から小学3年生までを聖マリアこども園で一時的に預かる。",
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 9
+          },
+          "details": {
+            "type": "病後児保育",
+            "facility": "聖マリアこども園",
+            "hours": "平日8時30分から17時30分",
+            "limit": "原則連続7日以内",
+            "fee": "1日1,000円、食事代等は別途",
+            "condition": "病気回復期で集団保育が困難かつ保護者が家庭保育できない児童"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/soshiki/8/2157.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "childcareFee": {
+          "status": "verified",
+          "summary": "3～5歳児等は保育料無償化の対象で、0～2歳児は町民税額等に基づき算定する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 5
+          },
+          "details": {
+            "freeAges": "3～5歳児および住民税非課税世帯の0～2歳児",
+            "underThree": "課税世帯の0～2歳児は町民税額等により算定",
+            "mealCosts": "公立幼稚園の副食費は月4,000円、公立保育園等は月4,900円を基本とし、免除対象あり",
+            "excluded": "給食費、教材費、行事費等の実費は無償化対象外"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/soshiki/8/1445.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "schoolMeals": {
+          "status": "verified",
+          "summary": "令和8年度は町立小学校の学校給食費を国・町の負担軽減により保護者負担0円とする。",
+          "eligibility": {
+            "minAgeMonths": 72,
+            "maxAgeYears": 12
+          },
+          "details": {
+            "fiscalYear": "令和8年度",
+            "target": "菰野町立小学校の児童",
+            "standardFee": "月額5,900円",
+            "nationalSupport": "国の負担軽減により月額700円まで圧縮",
+            "townSupport": "町の物価高騰対応重点支援地方創生臨時交付金で残額700円を負担",
+            "parentFee": "0円",
+            "note": "中学校の令和8年度負担条件はこの記録から推測しない"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/site/kyouiku/9712.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "postpartumCare": {
+          "status": "verified",
+          "summary": "産後12か月未満の母子へ、宿泊型・通所型・訪問型の産後ケアを提供する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
+          "details": {
+            "target": "菰野町に住所がある産後12か月未満の母子で支援を必要とする人",
+            "types": "宿泊型、通所型、訪問型",
+            "limit": "合計15回まで",
+            "fee": "利用形態・回数・世帯区分により0円から3,000円",
+            "care": "母体の心身ケア、授乳支援、育児相談・指導"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/soshiki/8/2268.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "temporaryChildcare": {
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
+          },
+          "details": {
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "start": "令和8年4月",
+            "facility": "菰野東こども園",
+            "condition": "保育所、認定こども園等に通っていない町内在住児童",
+            "limit": "月10時間",
+            "fee": "1時間300円",
+            "hours": "平日8時30分～11時30分、13時30分～16時30分",
+            "meals": "給食・おやつの提供なし"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/soshiki/8/7040.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "housingSupport": {
+          "status": "verified",
+          "summary": "町内空き家の売買・賃貸を空き家バンクで仲介し、移住・定住希望者へ物件情報を提供する。",
+          "details": {
+            "program": "菰野町空き家バンク制度",
+            "target": "町内の空き家所有者と購入・賃借希望者",
+            "support": "登録物件情報の公開と利用希望者との連絡調整",
+            "condition": "交渉・契約は当事者または宅地建物取引業者が実施",
+            "note": "補助金額は確認できた制度のみ記録し、推測しない"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/soshiki/10/1591.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "bulkyWaste": {
+          "status": "verified",
+          "summary": "粗大ごみは清掃センターへ直接搬入でき、一定の高齢者世帯等は有料戸別収集を利用できる。",
+          "details": {
+            "directCarry": "令和8年7月1日から解体せず清掃センターへ直接搬入可能",
+            "pickupTarget": "65歳以上のみの世帯等で自己搬入が困難な場合",
+            "pickupMethod": "玄関先等まで運び出し、事前申込",
+            "fee": "戸別収集は1点1,100円",
+            "limit": "戸別収集は1世帯年5点まで"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/soshiki/9/1738.html",
+            "checkedAt": "2026-07-25"
+          }
+        },
+        "disasterPrevention": {
+          "status": "verified",
+          "summary": "洪水浸水想定区域、土砂災害警戒区域、避難所等を掲載した防災マップを公開する。",
+          "details": {
+            "map": "菰野町防災マップ",
+            "hazards": "洪水、土砂災害、地震等",
+            "contents": "浸水想定区域、土砂災害警戒区域、指定避難所、避難時の注意事項",
+            "use": "自宅周辺の危険箇所と避難経路を平時に確認"
+          },
+          "source": {
+            "url": "https://www2.town.komono.mie.jp/soshiki/2/1216.html",
+            "checkedAt": "2026-07-25"
+          }
+        }
+      }
+    },
+    {
       "code": "24343",
       "prefectureCode": "24",
       "prefecture": "三重県",
@@ -193296,179 +193492,6 @@
           },
           "source": {
             "url": "https://www.town.kawagoe.mie.jp/kurashi/bousai/1001533/1002416/1001534.html",
-            "checkedAt": "2026-07-22"
-          }
-        }
-      }
-    },
-    {
-      "code": "24361",
-      "prefectureCode": "24",
-      "prefecture": "三重県",
-      "name": "菰野町",
-      "officialUrl": "https://www2.town.komono.mie.jp/",
-      "status": "verified",
-      "summary": "菰野町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-      "services": {
-        "childMedical": {
-          "status": "verified",
-          "summary": "子どもの保険診療自己負担分を助成し、令和8年9月受診分から18歳年度末まで対象を拡大する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 18
-          },
-          "details": {
-            "ageCondition": "令和8年8月受診分までは15歳年度末まで、令和8年9月受診分から18歳年度末まで",
-            "coverage": "入院・外来の医療保険適用自己負担分",
-            "incomeLimit": "令和6年9月受診分から所得制限を廃止",
-            "payment": "対象年齢の県内受診は受給資格証による現物給付、条件により償還払い",
-            "excluded": "他の医療給付、高額療養費・付加給付、保険適用外費用等は対象外"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/site/question/2203.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "sickChildCare": {
-          "status": "verified",
-          "summary": "聖マリアこども園で、病気の回復期にある児童を対象とした病後児保育を実施する。",
-          "eligibility": {
-            "minAgeMonths": 11,
-            "maxAgeYears": 5
-          },
-          "details": {
-            "facility": "聖マリアこども園",
-            "service": "病後児保育",
-            "condition": "病気の回復期で通常の集団保育が難しい児童",
-            "ageNote": "公式施設一覧では聖マリアこども園の受入年齢を11か月～5歳児と掲載。病後児保育の個別条件は施設へ確認",
-            "application": "施設へ事前登録・予約",
-            "fee": "利用料は施設へ確認"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/1431.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "childcareFee": {
-          "status": "verified",
-          "summary": "3～5歳児の基本保育料は無料で、0～2歳児は住民税額等に応じて算定する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 5
-          },
-          "details": {
-            "freeAges": "3～5歳児の基本的な利用者負担額は無償",
-            "underThree": "0～2歳児は保護者の市町村民税額等により保育料を算定。非課税世帯は無償化対象",
-            "mealCosts": "給食費・各園徴収の雑費等は無償化対象外",
-            "publicMealFee": "公立幼稚園部の副食費月4,000円、公立保育園部は月4,900円（土曜除く）",
-            "exemption": "市町村民税額やきょうだい区分により副食費免除となる場合がある"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/1445.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "schoolMeals": {
-          "status": "verified",
-          "summary": "令和8年度の町立小学校給食費は、国と町の負担軽減により保護者負担を0円とする。",
-          "eligibility": {
-            "minAgeMonths": 72,
-            "maxAgeYears": 15
-          },
-          "details": {
-            "fiscalYear": "令和8年度",
-            "elementaryOriginalFee": "月額5,900円",
-            "elementarySupport": "国の負担軽減5,200円と町の物価高騰対策700円を適用",
-            "elementaryFinalFee": "保護者負担0円",
-            "juniorHigh": "中学校給食の現行条件は町教育委員会の案内を確認",
-            "note": "令和9年度以降は改めて公表予定"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/site/kyouiku/9712.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "postpartumCare": {
-          "status": "verified",
-          "summary": "生後12か月未満の母子へ、訪問・デイケア・宿泊型の産後ケアを15回まで提供する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 1
-          },
-          "details": {
-            "target": "菰野町に住所がある生後12か月未満の乳児と母親",
-            "types": "訪問型、デイケア型、宿泊型",
-            "limit": "合計15回",
-            "fee": "0円～3,000円。回数・類型・世帯区分により異なる",
-            "application": "訪問・デイケア1～5回目は原則申請不要。宿泊型および6～15回目は申請が必要"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/2268.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "temporaryChildcare": {
-          "status": "verified",
-          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-          "eligibility": {
-            "minAgeMonths": 6,
-            "maxAgeYears": 3
-          },
-          "details": {
-            "program": "こども誰でも通園制度（乳児等通園支援事業）",
-            "facility": "菰野東こども園",
-            "condition": "保育所、幼稚園、認定こども園等に在園していない児童",
-            "limit": "児童1人につき月10時間まで",
-            "fee": "1時間300円",
-            "hours": "平日8時30分～11時30分、13時30分～16時30分。給食・おやつの提供なし"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/7040.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "housingSupport": {
-          "status": "verified",
-          "summary": "移住・定住希望者へ空き家バンク等の住宅・生活支援情報をまとめて案内する。",
-          "details": {
-            "program": "移住・定住に関する支援",
-            "housing": "空き家バンクで町内空き家の売買・賃貸情報を提供",
-            "additionalSupport": "県内居住・就業等を条件とする奨学金返還支援等を案内",
-            "purpose": "移住・定住の促進と地域活性化",
-            "note": "物件の契約条件や仲介手数料は担当宅地建物取引業者へ確認"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/1/10199.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "bulkyWaste": {
-          "status": "verified",
-          "summary": "粗大ごみは不燃物処理場へ直接搬入でき、対象世帯は1点1,100円の戸別収集を利用できる。",
-          "details": {
-            "definition": "一辺の最長が50センチメートルを超え、町で処理可能な廃棄物",
-            "directCarry": "令和8年7月1日から不燃物処理場へ分解せず直接搬入可能",
-            "homeCollection": "65歳以上のみの世帯、一定の要介護者・障害者がいる世帯等が対象",
-            "fee": "戸別収集は1点1,100円、年間5点まで",
-            "method": "申込時に手数料を払い、シールを貼って収集日の8時30分までに軒先へ排出"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/9/1738.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "disasterPrevention": {
-          "status": "verified",
-          "summary": "洪水・土砂災害・活断層等を掲載した地区別防災マップを多言語で公開する。",
-          "details": {
-            "map": "菰野町防災マップ（令和5年3月更新）",
-            "coverage": "洪水浸水区域、土砂災害警戒区域、活断層、避難所等",
-            "districts": "町内地区別に公開",
-            "languages": "日本語、英語、ポルトガル語、ベトナム語、中国語、韓国語",
-            "additionalMap": "ため池決壊時の浸水想定を示すため池ハザードマップも公開"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/2/1216.html",
             "checkedAt": "2026-07-22"
           }
         }
