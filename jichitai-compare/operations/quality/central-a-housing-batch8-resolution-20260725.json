@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "central-a-housing-batch8-resolution-20260725",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-25T16:10:00+09:00",
+  "trackingIssues": [3187, 3141, 3193],
+  "category": "generalHousingMisclassification",
+  "scope": {
+    "reviewedMunicipalities": 5,
+    "confirmedCorrections": 5,
+    "childSpecificReplacements": 3,
+    "statusToUnavailable": 2,
+    "correctedMunicipalitiesRechecked": 94,
+    "primarySourceSlotsRechecked": 526,
+    "remainingGeneralHousingCandidates": 134,
+    "remainingWeakPrimarySourceCandidates": 33,
+    "issue3141RemainingItems": 19
+  },
+  "corrected": [
+    {"code": "17204", "name": "輪島市", "result": "就学前児童世帯向け市営住宅所得基準緩和へ差し替え", "status": "verified"},
+    {"code": "17211", "name": "能美市", "result": "45歳未満一般定住制度を除外", "status": "unavailable"},
+    {"code": "17361", "name": "津幡町", "result": "18歳未満の子がいる三世代同居・近居補助へ差し替え", "status": "verified"},
+    {"code": "21604", "name": "白川村", "result": "一般定住・空き家・賃貸支援を除外", "status": "unavailable"},
+    {"code": "22208", "name": "伊東市", "result": "2026年度結婚新生活支援補助へ差し替え", "status": "verified"}
+  ],
+  "evidence": {
+    "regionalPullRequest": 3539,
+    "regionalCiRun": 8602,
+    "stateSyncPullRequest": 3549,
+    "stateSyncCiRun": 8610,
+    "nationalSyncPullRequest": 3553,
+    "nationalSyncWorkflowRun": 30148549805,
+    "publicVerificationPullRequest": 3555,
+    "publicVerificationWorkflowRun": 30148677293,
+    "publicVerificationFile": "jichitai-compare/operations/audits/central-a-housing-classification-batch8-public-verification-20260725.json"
+  },
+  "publicVerification": {
+    "attempt": 1,
+    "pageCount": 5,
+    "allPagesHttp200": true,
+    "verifiedCount": 3,
+    "unavailableCount": 2,
+    "summariesMatch": true,
+    "officialSourcesMatch": true,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669,
+    "publicGeneratedJsonMatches": true
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "temporaryRunnerCleanup": {
+    "mainPaths": [
+      ".github/workflows/temp-central-a-housing-batch8-main.yml",
+      ".github/workflows/temp-central-a-housing-batch8-public.yml"
+    ],
+    "regionPaths": [
+      ".github/workflows/temp-central-a-housing-batch8.yml",
+      ".github/workflows/temp-central-a-housing-batch8-state.yml"
+    ],
+    "mainCleanupPullRequest": 3558,
+    "regionCleanupPullRequest": 3557,
+    "regionCleanupMerged": true,
+    "status": "completed"
+  },
+  "status": "completed_public_verified_cleanup_completed"
+}
