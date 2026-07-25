@@ -1,137 +1,22 @@
 {
-  "schemaVersion": "1.0.0",
-  "code": "07202",
-  "prefectureCode": "07",
-  "prefecture": "福島県",
-  "name": "会津若松市",
-  "officialUrl": "https://www.city.aizuwakamatsu.fukushima.jp/",
-  "status": "verified",
-  "summary": "北日本調査班Aが対象9制度を会津若松市公式情報で調査し、9制度すべてをverifiedとして整理。",
-  "updatedAt": "2026-07-23",
-  "services": {
-    "childMedical": {
-      "status": "verified",
-      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の一部負担金と入院時食事療養費を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
-      "details": {
-        "program": "子ども医療費助成制度",
-        "target": "市内に住民登録があり健康保険に加入する0歳から18歳年度末までの子ども",
-        "support": "保険診療・調剤の一部負担金と入院時食事療養費の標準負担額",
-        "application": "事前登録が必要",
-        "excluded": "健診、予防接種、個室代など保険適用外は対象外"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080601934/", "checkedAt": "2026-07-23"}
-    },
-    "sickChildCare": {
-      "status": "verified",
-      "summary": "生後6か月から小学3年生までの病中・病後の子どもを、定員4名で一時的に預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 9},
-      "details": {
-        "program": "病児保育",
-        "target": "市内在住の病中または病後の生後6か月から小学3年生まで",
-        "condition": "入院の必要がないと判断される子ども",
-        "capacity": "4名",
-        "hours": "平日8時～18時、土曜日8時～13時",
-        "fee": "1日2,000円。昼食・おやつを含む",
-        "application": "原則として前日17時までに予約"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080602283/", "checkedAt": "2026-07-23"}
-    },
-    "childcareFee": {
-      "status": "verified",
-      "summary": "3～5歳児等の国制度による無償化に加え、令和8年9月から第2子以降の保育料を無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
-      "details": {
-        "nationalFree": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象",
-        "citySupport": "令和8年9月から2号・3号認定の第2子以降の保育料を無償化",
-        "siblingDefinition": "同一世帯内の当該年度4月1日時点で18歳未満の兄姉を基準",
-        "beforeExpansion": "第2子は半額、第3子以降は無償",
-        "excludedCosts": "副食費、送迎費、行事費などは別途負担の場合あり"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080602276/", "checkedAt": "2026-07-23"}
-    },
-    "schoolMeals": {
-      "status": "verified",
-      "summary": "令和8年度から市立小学校・義務教育学校前期課程の給食費を無償化し、中学校等は日額を据え置く。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "elementary": "市立小学校・義務教育学校前期課程は令和8年度から無償",
-        "middleSchool": "令和8年度の中学校生徒負担は日額350円",
-        "kindergarten": "市立幼稚園園児は日額260円",
-        "costIncrease": "食材価格高騰による不足分は市が負担",
-        "alternativeMeal": "小学校段階で給食を受けられず弁当を持参する場合、条件を満たせば日額379円相当を補助"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2022031000017/", "checkedAt": "2026-07-23"}
-    },
-    "postpartumCare": {
-      "status": "verified",
-      "summary": "生後1年未満の母子を対象に、県内の医療機関・助産所等で宿泊型とデイサービス型の産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
-      "details": {
-        "target": "市内に住民票がある生後1年未満の子どもと母親",
-        "types": "宿泊型、デイサービス型",
-        "usageLimit": "宿泊型7日以内、デイサービス型7回以内",
-        "fee": "宿泊型は施設により1泊2日1,560円または3,400円、デイサービス型は1回1,100円",
-        "exemption": "生活保護世帯・非課税世帯は手続きにより利用料金無料",
-        "application": "施設へ仮予約後、利用希望日の5開庁日前までに市へ申請"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2017051600019/", "checkedAt": "2026-07-23"}
-    },
-    "temporaryChildcare": {
-      "status": "verified",
-      "summary": "未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
-      "details": {
-        "program": "こども誰でも通園制度",
-        "target": "市内在住で保育所等を利用していない生後6か月から満3歳未満の子ども",
-        "employmentRequirement": "なし",
-        "usageLimit": "月10時間まで",
-        "fee": "各施設が定める基本利用料で、おおむね1時間300円。給食費等は別途実費の場合あり",
-        "reduction": "生活保護世帯は300円、非課税世帯等は200円を基本利用料から減免",
-        "application": "利用前に乳児等支援給付認定を申請し、施設へ予約"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2025111700029/", "checkedAt": "2026-07-23"}
-    },
-    "housingSupport": {
-      "status": "verified",
-      "summary": "18歳未満の子ども等がいる子育て世帯には、住宅用蓄電池や電気自動車用充給電設備の補助上限を加算する。",
-      "details": {
-        "program": "住宅用太陽光発電システム等設置補助金",
-        "childHousehold": "18歳年度末までの就労していない子ども、または妊娠中の子がいる世帯",
-        "battery": "蓄電池は1kWh当たり12,000円、上限60,000円。一般世帯は上限40,000円",
-        "vehicleToHome": "電気自動車用充給電設備は60,000円。一般世帯は40,000円",
-        "solar": "太陽光発電は1kW当たり10,000円、上限40,000円",
-        "application": "設置前に環境共生課へ申請し、予算到達時に受付終了"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2007121100037/", "checkedAt": "2026-07-23"}
-    },
-    "bulkyWaste": {
-      "status": "verified",
-      "summary": "粗大ごみは事前申込み後、1点1,000円の処理券を貼って戸別収集を受けるか、施設へ直接搬入できる。",
-      "details": {
-        "collection": "環境共生課へ事前申込みし、収集日の朝8時30分までに自宅前へ排出",
-        "fee": "令和8年4月から粗大ごみ1点につき処理券1枚1,000円",
-        "limit": "戸別収集は1回3点まで",
-        "directCarry": "直接搬入は点数制限なし。事前に環境共生課へ連絡",
-        "carryFee": "直接搬入は50kgまで800円、超過10kgごと160円",
-        "reuse": "再利用可能品は市の連携リユース拠点への持込みも案内"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080900488/", "checkedAt": "2026-07-23"},
-      "additionalSources": [{"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2025052100049/", "checkedAt": "2026-07-23"}]
-    },
-    "disasterPrevention": {
-      "status": "verified",
-      "summary": "令和8年版の洪水・土砂ハザードマップと内水ハザードマップを公開し、浸水想定や避難施設を案内する。",
-      "details": {
-        "map": "洪水・土砂ハザードマップ令和8年版",
-        "coverage": "洪水浸水想定区域、土砂災害危険箇所、避難所・避難場所",
-        "revision": "県の中小河川洪水浸水想定区域指定を受けて改訂",
-        "distribution": "令和8年6月に防災ガイドブック・内水ハザードマップとともに全世帯へ配布",
-        "gis": "市公開GISでも重ね合わせ表示が可能",
-        "inlandFlood": "内水ハザードマップは令和8年3月改訂、最大1時間130mmの降雨を想定"
-      },
-      "source": {"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2009031200029/", "checkedAt": "2026-07-23"},
-      "additionalSources": [{"url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2021030500023/", "checkedAt": "2026-07-23"}]
-    }
+  "schemaVersion":"1.0.0",
+  "code":"07202",
+  "prefectureCode":"07",
+  "prefecture":"福島県",
+  "name":"会津若松市",
+  "officialUrl":"https://www.city.aizuwakamatsu.fukushima.jp/",
+  "status":"verified",
+  "summary":"対象9制度を会津若松市公式情報で確認し、9制度すべてを公式情報で確認済み。",
+  "updatedAt":"2026-07-25",
+  "services":{
+    "childMedical":{"status":"verified","summary":"0歳から18歳到達後最初の3月31日まで、保険診療の一部負担金と入院時食事療養費を助成する。","eligibility":{"minAgeMonths":0,"maxAgeYears":18},"details":{"program":"子ども医療費助成制度","target":"市内に住民登録があり健康保険に加入する0歳から18歳年度末までの子ども","support":"保険診療・調剤の一部負担金と入院時食事療養費の標準負担額","application":"事前登録が必要","excluded":"健診、予防接種、個室代など保険適用外は対象外"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080601934/","checkedAt":"2026-07-23"}},
+    "sickChildCare":{"status":"verified","summary":"生後6か月から小学3年生までの病中・病後の子どもを、定員4名で一時的に預かる。","eligibility":{"minAgeMonths":6,"maxAgeYears":9},"details":{"program":"病児保育","target":"市内在住の病中または病後の生後6か月から小学3年生まで","condition":"入院の必要がないと判断される子ども","capacity":"4名","hours":"平日8時～18時、土曜日8時～13時","fee":"1日2,000円。昼食・おやつを含む","application":"原則として前日17時までに予約"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080602283/","checkedAt":"2026-07-23"}},
+    "childcareFee":{"status":"verified","summary":"3～5歳児等の国制度による無償化に加え、令和8年9月から第2子以降の保育料を無償化する。","eligibility":{"minAgeMonths":0,"maxAgeYears":5},"details":{"nationalFree":"3～5歳児と住民税非課税世帯の0～2歳児は無償化対象","citySupport":"令和8年9月から2号・3号認定の第2子以降の保育料を無償化","siblingDefinition":"同一世帯内の当該年度4月1日時点で18歳未満の兄姉を基準","beforeExpansion":"第2子は半額、第3子以降は無償","excludedCosts":"副食費、送迎費、行事費などは別途負担の場合あり"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080602276/","checkedAt":"2026-07-25"}},
+    "schoolMeals":{"status":"verified","summary":"令和8年度から市立小学校・義務教育学校前期課程の給食費を無償化し、中学校等は日額を据え置く。","eligibility":{"minAgeMonths":72,"maxAgeYears":12},"details":{"elementary":"市立小学校・義務教育学校前期課程は令和8年度から無償","middleSchool":"令和8年度の中学校生徒負担は日額350円","kindergarten":"市立幼稚園園児は日額260円","costIncrease":"食材価格高騰による不足分は市が負担","alternativeMeal":"小学校段階で給食を受けられず弁当を持参する場合、条件を満たせば日額379円相当を補助"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2022031000017/","checkedAt":"2026-07-25"}},
+    "postpartumCare":{"status":"verified","summary":"生後1年未満の母子を対象に、県内の医療機関・助産所等で宿泊型とデイサービス型の産後ケアを実施する。","eligibility":{"minAgeMonths":0,"maxAgeYears":1},"details":{"target":"市内に住民票がある生後1年未満の子どもと母親","types":"宿泊型、デイサービス型","usageLimit":"宿泊型7日以内、デイサービス型7回以内","fee":"宿泊型は施設により1泊2日1,560円または3,400円、デイサービス型は1回1,100円","exemption":"生活保護世帯・非課税世帯は手続きにより利用料金無料","application":"施設へ仮予約後、利用希望日の5開庁日前までに市へ申請"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2017051600019/","checkedAt":"2026-07-23"}},
+    "temporaryChildcare":{"status":"verified","summary":"未就園の生後6か月から満3歳未満の子どもが、就労要件を問わず月10時間まで利用できる。","eligibility":{"minAgeMonths":6,"maxAgeYears":3},"details":{"program":"こども誰でも通園制度","target":"市内在住で保育所等を利用していない生後6か月から満3歳未満の子ども","employmentRequirement":"なし","usageLimit":"月10時間まで","fee":"各施設が定める基本利用料で、おおむね1時間300円。給食費等は別途実費の場合あり","reduction":"生活保護世帯は300円、非課税世帯等は200円を基本利用料から減免","application":"利用前に乳児等支援給付認定を申請し、施設へ予約"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2025111700029/","checkedAt":"2026-07-23"}},
+    "housingSupport":{"status":"verified","summary":"18歳未満の子ども等がいる子育て世帯には、住宅用蓄電池や電気自動車用充給電設備の補助上限を加算する。","details":{"program":"住宅用太陽光発電システム等設置補助金","childHousehold":"18歳年度末までの就労していない子ども、または妊娠中の子がいる世帯","battery":"蓄電池は1kWh当たり12,000円、上限60,000円。一般世帯は上限40,000円","vehicleToHome":"電気自動車用充給電設備は60,000円。一般世帯は40,000円","solar":"太陽光発電は1kW当たり10,000円、上限40,000円","application":"設置前に環境共生課へ申請し、予算到達時に受付終了"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2007121100037/","checkedAt":"2026-07-23"}},
+    "bulkyWaste":{"status":"verified","summary":"粗大ごみは事前申込み後、1点1,000円の処理券を貼って戸別収集を受けるか、施設へ直接搬入できる。","details":{"collection":"環境共生課へ事前申込みし、収集日の朝8時30分までに自宅前へ排出","fee":"令和8年4月から粗大ごみ1点につき処理券1枚1,000円","limit":"戸別収集は1回3点まで","directCarry":"直接搬入は点数制限なし。事前に環境共生課へ連絡","carryFee":"直接搬入は50kgまで800円、超過10kgごと160円","reuse":"再利用可能品は市の連携リユース拠点への持込みも案内"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2007080900488/","checkedAt":"2026-07-23"},"additionalSources":[{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2025052100049/","checkedAt":"2026-07-23"}]},
+    "disasterPrevention":{"status":"verified","summary":"令和8年版の洪水・土砂ハザードマップと内水ハザードマップを公開し、浸水想定や避難施設を案内する。","details":{"map":"洪水・土砂ハザードマップ令和8年版","coverage":"洪水浸水想定区域、土砂災害危険箇所、避難所・避難場所","revision":"県の中小河川洪水浸水想定区域指定を受けて改訂","distribution":"令和8年6月に防災ガイドブック・内水ハザードマップとともに全世帯へ配布","gis":"市公開GISでも重ね合わせ表示が可能","inlandFlood":"内水ハザードマップは令和8年3月改訂、最大1時間130mmの降雨を想定"},"source":{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2009031200029/","checkedAt":"2026-07-23"},"additionalSources":[{"url":"https://www.city.aizuwakamatsu.fukushima.jp/docs/2021030500023/","checkedAt":"2026-07-23"}]}
   }
 }
