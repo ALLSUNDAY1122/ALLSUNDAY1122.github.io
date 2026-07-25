@@ -1,0 +1,41 @@
+name: Temporary North B Horizontal Audit V2
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-horizontal-audit-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run horizontal audit
+        run: node jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs
+
+      - name: Commit machine audit report
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/north-b-horizontal-url-year-numeric-20260725.json
+          git commit -m 'audit: 北日本B URL・年度・数値横断検査結果を記録 [skip ci]'
+          git push origin HEAD:${{ github.head_ref }}
