@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "recordId": "central-quality-cross-audit-resolution-20260725",
+  "updatedAt": "2026-07-25T12:32:00+09:00",
+  "coordinatorSession": "統括B②",
+  "trackingIssues": [3187, 3193],
+  "scope": {
+    "prefectureCount": 13,
+    "municipalityCount": 409,
+    "serviceCount": 3681
+  },
+  "initialAudit": {
+    "pullRequest": 3281,
+    "machineAuditWorkflowRun": 30141904713,
+    "structuralErrorCount": 5,
+    "repositoryConsistencyMismatchCount": 0,
+    "detectedMunicipalities": [
+      {"code":"16202","name":"高岡市","regionStatus":"verified","mainStatus":"needs_coordinator"},
+      {"code":"16204","name":"魚津市","regionStatus":"verified","mainStatus":"needs_coordinator"},
+      {"code":"16205","name":"氷見市","regionStatus":"verified","mainStatus":"needs_coordinator"},
+      {"code":"16206","name":"滑川市","regionStatus":"verified","mainStatus":"needs_coordinator"},
+      {"code":"23100","name":"名古屋市","regionStatus":"verified","mainStatus":"needs_coordinator"}
+    ],
+    "cause": "地域監査で訂正した自治体上位statusとsummaryが全国同期対象から漏れ、9制度内容だけがmainへ反映されていた",
+    "blockerClassification": "region_main_canonical_mismatch"
+  },
+  "correction": {
+    "pullRequest": 3288,
+    "mainMergeSha": "2e124ef822ad0a625bc171a8ce7bd759ea8e069a",
+    "initialCiRun": 8026,
+    "synchronizationWorkflowRun": 30142067452,
+    "sourceBranch": "region/central",
+    "targetBranch": "main",
+    "actions": [
+      "5自治体の上位statusをverifiedへ同期",
+      "公開summaryから全国統括による確認待ち等の旧内部文言を除去",
+      "全国生成JSONと対象静的ページを再生成",
+      "validate:generatedを実行"
+    ],
+    "result": "success"
+  },
+  "postCorrectionAudit": {
+    "pullRequest": 3292,
+    "ciRun": 8030,
+    "machineAuditWorkflowRun": 30142181351,
+    "checkedMunicipalityCount": 409,
+    "checkedServiceCount": 3681,
+    "structuralErrorCount": 0,
+    "repositoryConsistencyMismatchCount": 0,
+    "result": "passed"
+  },
+  "publicVerification": {
+    "pullRequest": 3297,
+    "workflowRun": 30142289974,
+    "evidenceFile": "jichitai-compare/operations/audits/central-top-status-public-verification-20260725.json",
+    "targetCount": 5,
+    "attemptCount": 1,
+    "publicGeneratedJsonHttpStatus": 200,
+    "allPublicGeneratedStatuses": "verified",
+    "allMunicipalityPagesHttpStatus": 200,
+    "municipalityNameCheck": "passed",
+    "canonicalCheck": "passed",
+    "forbiddenPhrases": ["全国統括による確認待ち", "needs_coordinator"],
+    "forbiddenPhraseRemainingCount": 0,
+    "result": "passed"
+  },
+  "candidateReview": {
+    "policy": "機械候補は確定誤りではない。現在の公式情報で確認後にのみ修正する。",
+    "counts": {
+      "fy2026AnyoneDaycareOmission": 21,
+      "generalHousingMisclassification": 155,
+      "schoolMealsScopeConfusion": 10,
+      "wideAreaUseOmission": 83,
+      "oldFiscalEvidence": 103
+    },
+    "status": "official_information_review_pending"
+  },
+  "releaseBlocker": {
+    "detectedAt": "2026-07-25T12:17:00+09:00",
+    "resolvedAt": "2026-07-25T12:31:00+09:00",
+    "status": "resolved",
+    "remainingConfirmedCriticalErrorCount": 0
+  },
+  "nonBlockingFollowUps": [
+    {"issue":3141,"itemCount":23,"policy":"推測せず、現行公式情報で確定した項目のみ解消"}
+  ],
+  "nextActions": [
+    "原因別機械候補を公式情報でconfirmed_error・confirmed_accurate・continuing_confirmationへ分類",
+    "中日本13府県39自治体以上の公式情報抜き取り監査",
+    "西日本A・Bの訂正全件再確認と都道府県別抜き取り監査"
+  ]
+}
