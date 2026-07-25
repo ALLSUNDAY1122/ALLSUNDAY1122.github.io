@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "auditId": "north-b-horizontal-url-year-numeric-20260725",
   "sessionId": "north-b",
-  "createdAt": "2026-07-25T02:56:34.998Z",
+  "createdAt": "2026-07-25T03:10:05.205Z",
   "status": "machine_scan_completed",
   "scope": {
     "prefectureCodes": [
@@ -23,11 +23,11 @@
     ]
   },
   "summary": {
-    "successfulUrlCount": 1168,
+    "successfulUrlCount": 1165,
     "brokenUrlCount": 16,
     "serverErrorCount": 0,
     "restrictedUrlCount": 14,
-    "networkErrorCount": 23,
+    "networkErrorCount": 26,
     "redirectCount": 5,
     "fiscalYearCandidateCount": 40,
     "numericSourceMetadataCandidateCount": 0,
@@ -892,13 +892,54 @@
           "checkedAt": "2026-07-24"
         }
       ]
+    },
+    {
+      "url": "https://www.vill.tozawa.yamagata.jp/",
+      "ok": false,
+      "error": "timeout",
+      "owners": [
+        {
+          "code": "06367",
+          "municipality": "戸沢村",
+          "service": "officialUrl",
+          "role": "municipality"
+        }
+      ]
+    },
+    {
+      "url": "https://www.vill.tozawa.yamagata.jp/pages/252/",
+      "ok": false,
+      "error": "timeout",
+      "owners": [
+        {
+          "code": "06367",
+          "municipality": "戸沢村",
+          "service": "childMedical",
+          "role": "primary",
+          "checkedAt": "2026-07-24"
+        }
+      ]
+    },
+    {
+      "url": "https://www.vill.tozawa.yamagata.jp/life/bosai/hazardmap/",
+      "ok": false,
+      "error": "timeout",
+      "owners": [
+        {
+          "code": "06367",
+          "municipality": "戸沢村",
+          "service": "disasterPrevention",
+          "role": "primary",
+          "checkedAt": "2026-07-24"
+        }
+      ]
     }
   ],
   "redirects": [
     {
       "url": "https://www.city.ishinomaki.lg.jp/",
       "ok": true,
-      "status": 206,
+      "status": 200,
       "finalUrl": "https://www.city.ishinomaki.lg.jp/index.html",
       "redirected": true,
       "owners": [
