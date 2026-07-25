@@ -12,13 +12,13 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T17:16:00+09:00",
+  "updatedAt": "2026-07-25T21:57:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3584,
+  "pullRequestNumber": 3684,
   "ciStatus": "success",
   "completedSinceSplit": [
     {
@@ -41,7 +41,7 @@
     }
   ],
   "blocked": [],
-  "nextAction": "住宅支援分類38件、誰でも通園制度5件、学校給食費主出典2件の地域・全国・公開・checkpoint同期まで完了。新しい公式情報または再退行が検出された場合のみ再監査する。",
+  "nextAction": "粗大ごみ226自治体横断監査は出典保守3件・status変更0で完了。津山市・五木村・南種子町・新庄村はIssue #3675で非blocker継続確認し、新しい公式情報が得られた場合のみ再監査する。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
@@ -379,7 +379,8 @@
     "2026-07-25 15:18: 一般移住・一般住宅制度の分類誤りを担当226自治体で横断監査し、38自治体のhousingSupportをverifiedからunavailableへ訂正。地域・全国・公開38ページを確認し未解決0。",
     "2026-07-25 15:31: 最終全国checkpoint同期PR #3519・CI #8543・merge 3d983dec8e34を確認し、住宅支援分類横断監査38件を完全完了。",
     "2026-07-25 16:32: 担当226自治体のこども誰でも通園制度を横断監査し、安田町・仁淀川町・津野町をverifiedへ訂正、志布志市・中種子町の料金を追記。地域PR #3542、全国PR #3565、公開PR #3568、未解決0。",
-    "2026-07-25 17:16: 担当226自治体の学校給食費を横断監査。状態・金額訂正0、五木村・出水市の主出典2件を現行根拠へ更新。地域PR #3584、全国PR #3604、公開PR #3609、未解決0。"
+    "2026-07-25 17:16: 担当226自治体の学校給食費を横断監査。状態・金額訂正0、五木村・出水市の主出典2件を現行根拠へ更新。地域PR #3584、全国PR #3604、公開PR #3609、未解決0。",
+    "2026-07-25 21:57: 粗大ごみ226自治体を横断監査。優先65件を分類し、大月町の誤出典1件を訂正、桂川町・山鹿市の出典2件を補強。status・料金・処理方法の訂正0、公開3ページと全国JSONを確認。4自治体はIssue #3675で非blocker継続確認。"
   ],
   "anyoneCareCrosscheck": {
     "status": "completed_with_corrections",
@@ -431,6 +432,42 @@
     "publicVerificationMergeSha": "65c66a6e5a2264df4e805a820914c2e705595602",
     "publicPageCount": 2,
     "oldPrimarySourceRemainingCount": 0,
+    "blocker": null
+  },
+  "bulkyWasteCrosscheck": {
+    "status": "completed_with_source_maintenance_and_nonblocking_followup",
+    "completedAt": "2026-07-25T21:57:00+09:00",
+    "municipalityCount": 226,
+    "initialPriorityCandidateCount": 65,
+    "contentConditionReviewCount": 28,
+    "fetchErrorManualReviewCount": 2,
+    "likelyFalsePositiveCount": 13,
+    "retainedSpotCheckCount": 11,
+    "sourceMaintenanceReviewCount": 8,
+    "highPriorityStatusReviewCount": 3,
+    "confirmedSourceMaintenanceCount": 3,
+    "sourceMisassignmentCount": 1,
+    "sourceEnrichmentCount": 2,
+    "statusCorrectionCount": 0,
+    "contentErrorCount": 0,
+    "unresolvedConfirmedErrorCount": 0,
+    "continuationIssue": 3675,
+    "continuationMunicipalityCount": 4,
+    "continuationMunicipalityCodes": [
+      "33203",
+      "43511",
+      "46502",
+      "33586"
+    ],
+    "regionalCorrectionPullRequestNumber": 3677,
+    "regionalCorrectionWorkflowRunId": 30158202086,
+    "nationalPullRequestNumber": 3679,
+    "nationalWorkflowRunId": 30158329113,
+    "publicVerificationPullRequestNumber": 3681,
+    "publicVerificationWorkflowRunId": 30158773931,
+    "publicPageCount": 3,
+    "nationwideMunicipalityCount": 1741,
+    "nationwideServiceCount": 15669,
     "blocker": null
   }
 }
