@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.toin.lg.jp/",
   "status": "verified",
   "summary": "東員町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末まで、保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達する日以後の最初の3月31日まで",
         "coverage": "健康保険が適用される医療費の自己負担分",
@@ -20,12 +23,18 @@
         "excluded": "学校等での負傷により日本スポーツ振興センター災害共済給付の対象となる場合等は対象外",
         "application": "保険年金課で受給資格認定手続きが必要"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/soshiki/1007/4/1267.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1007/4/1267.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "病気で幼稚園・保育園・小学校へ通えない0歳から12歳までの児童が、町の委託施設を利用できる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
       "details": {
         "facilities": "ウェルネス医療クリニック病児保育子どもケアハウスぞうさん、はなまる病児保育室",
         "condition": "病気により集団保育が困難で、保護者が勤務等により家庭で保育できない児童",
@@ -33,12 +42,18 @@
         "fee": "利用料・予約方法は各施設へ確認",
         "application": "各施設へ事前登録・予約"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/soshiki/1016/1/679.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1016/1/679.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は、幼児教育・保育無償化の対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "3～5歳児および住民税非課税世帯の0～2歳児",
         "underThree": "その他の0～2歳児は世帯の町民税額等により保育料を算定",
@@ -46,12 +61,18 @@
         "mealCosts": "給食費は原則実費だが、令和8年度は別事業で無償化",
         "exemption": "年収360万円未満相当世帯や第3子以降は副食費免除の対象となる場合がある"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/kosodate_kyoiku/yochien_hoikuen/2368.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/kosodate_kyoiku/yochien_hoikuen/2368.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "令和8年度は、町立保育園・幼稚園・小学校・中学校の給食費を全額無償化する。",
-      "eligibility": {"minAgeMonths": 36, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
       "details": {
         "fiscalYear": "令和8年度",
         "coverage": "町立保育園・幼稚園の3～5歳児、町立小学校・中学校の児童生徒",
@@ -59,25 +80,49 @@
         "allergySupport": "アレルギー等で継続して給食を喫食できない場合は給食支援金の対象",
         "note": "令和8年度の物価高騰対策として実施"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/soshiki/1015/3/4399.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1015/3/4399.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "産後1年未満の産婦へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
-      "details": {
-        "target": "町内に住所がある産後1年未満の産婦で、心身の不調や育児不安等があり、医療行為を必要としない人",
-        "types": "短期入所型、通所型、居宅訪問型",
-        "care": "母体の身体・心理ケア、授乳・乳房ケア、育児手技の指導・相談、生活支援",
-        "fee": "利用区分・世帯区分に応じた自己負担あり",
-        "application": "こども家庭センターへ申請し、利用承認を受ける"
+      "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
       },
-      "source": {"url": "https://www.town.toin.lg.jp/section/reiki/reiki_honbun/i621RG00000736.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "target": "東員町に住所がある産後1年未満の母親と赤ちゃんで、心身の不調、育児不安、母乳ケア、家族援助不足等により助産師の保健指導を希望する人。町保健師の面談・承認が必要",
+        "types": "短期入所型、通所型、居宅訪問型",
+        "care": "母親の心身・生活面のケア、乳房ケア、授乳指導、沐浴・抱き方・発育発達・スキンケア等の育児指導、育児相談",
+        "limit": "3種を組み合わせて7日まで。居宅訪問型は令和6年4月1日生まれ以降、体験チケットで1回追加",
+        "shortStayFee": "1泊2日6,000円。以後1日ごとに3,000円追加",
+        "dayCareFee": "1日2,000円",
+        "homeVisitFee": "1回1,200円",
+        "reduction": "町民税非課税世帯・生活保護世帯は自己負担を減免",
+        "application": "申請書を子ども家庭課へ提出。妊娠32週から申請可能",
+        "facilities": "利用者向けページに令和8年度施設一覧を掲載"
+      },
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1009/3/1/473.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.toin.lg.jp/section/reiki/reiki_honbun/i621RG00000736.html",
+          "checkedAt": "2026-07-25",
+          "description": "産後ケア事業の制度根拠を定める実施要綱"
+        }
+      ]
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月3時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "こども誰でも通園制度（乳児等通園支援事業）",
         "condition": "保育所・認定こども園・地域型保育・企業主導型保育施設等を利用していない児童",
@@ -86,7 +131,10 @@
         "fee": "1時間300円。減免制度あり",
         "hours": "令和8年4～5月は平日9時～12時、6月以降順次拡張予定"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/soshiki/1016/1/4923.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1016/1/4923.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -99,7 +147,10 @@
         "contractor": "三重県内に本店・支店・営業所を有する建設業者による工事",
         "application": "工事着手前に建設課との事前協議が必要"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/soshiki/1011/2/2/1/764.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1011/2/2/1/764.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -112,7 +163,10 @@
         "hours": "指定日の9時～16時。平日は町内全地区、日曜は指定地区",
         "fee": "搬入券方式で、公式ページに個別料金の記載はないため推測しない"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/soshiki/1006/1/1/1/108.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1006/1/1/1/108.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -124,7 +178,10 @@
         "additionalMap": "町内の防災重点ため池について、浸水区域・洪水到達時間・避難場所を示すため池ハザードマップも公開",
         "note": "自宅周辺の危険箇所と避難行動を平時に確認するよう案内"
       },
-      "source": {"url": "https://www.town.toin.lg.jp/soshiki/1001/3/2/1/437.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toin.lg.jp/soshiki/1001/3/2/1/437.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
