@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-fiscal-anyone-public-verification-20260725",
+  "sessionId": "north-b",
+  "verifiedAt": "2026-07-25T13:39:00+09:00",
+  "status": "completed",
+  "sourceAudit": "operations/audits/north-b-fiscal-anyone-finalization-20260725.json",
+  "integration": {
+    "mainPullRequest": 3383,
+    "mainMergeCommit": "8d9456464bdfea3bb5b418e8f4e11cfd49f2c681",
+    "regionPullRequest": 3394,
+    "regionCiRun": 30144086350,
+    "regionMergeCommit": "237ea336bc572316749585a3dc3113ee4a085f4e",
+    "publicVerificationPullRequest": 3397,
+    "publicVerificationRun": 30144375249,
+    "publicVerificationResult": "success"
+  },
+  "verifiedPublicPages": [
+    {"code":"01604","municipality":"新冠町","result":"第5期（令和7年度から令和9年度）の住宅支援表示を確認"},
+    {"code":"04606","municipality":"南三陸町","result":"歌津地区子育て支援センターの誰でも通園条件表示を確認"},
+    {"code":"06428","municipality":"庄内町","result":"余目保育園・認定こども園からふるの施設表示を確認"},
+    {"code":"04401","municipality":"松島町","result":"令和8年4月1日時点の病児・病後児保育施設なし表示を確認"},
+    {"code":"04422","municipality":"大郷町","result":"0歳から2歳を含む所得制限なしの保育料無償化表示を確認"},
+    {"code":"05212","municipality":"大仙市","result":"学校給食費無償化の現行例規URLを確認"},
+    {"code":"05213","municipality":"北秋田市","result":"学校給食費0円の現行例規URLを確認"},
+    {"code":"06382","municipality":"川西町","result":"誰でも通園の施設・料金・利用時間・月上限未確認表示を確認"}
+  ],
+  "generatedDataVerification": {
+    "anyoneConditionsCompleted": ["04606", "06428"],
+    "currentRegulationSources": ["05212", "05213"],
+    "unsupportedStatementRemoved": "01604",
+    "result": "success"
+  },
+  "summary": {
+    "publicPagesVerified": 8,
+    "generatedDataChecksVerified": 5,
+    "failedChecks": 0,
+    "statusChanges": 0
+  },
+  "decision": "旧年度・誰でも通園優先再監査の確定修正は、main、region/north、公開ページ、公開生成JSONへの反映を確認して完了とする。"
+}
