@@ -7,12 +7,44 @@
   "startedAt": "2026-07-25T10:31:00+09:00",
   "completedAt": "2026-07-25T11:38:00+09:00",
   "scope": {
-    "prefectureCodes": ["02", "03", "07"],
-    "priorCorrectedMunicipalities": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
+    "prefectureCodes": [
+      "02",
+      "03",
+      "07"
+    ],
+    "priorCorrectedMunicipalities": [
+      "02411",
+      "03203",
+      "03206",
+      "03302",
+      "07202",
+      "07212",
+      "07362",
+      "07368",
+      "07405",
+      "07408",
+      "07501",
+      "07547"
+    ],
     "priorConfirmedErrors": 13,
-    "samplingPlan": {"02": "5 high-risk municipalities", "03": "5 high-risk municipalities", "07": "5 high-risk municipalities"},
-    "priorityServices": ["temporaryChildcare", "schoolMeals", "postpartumCare", "housingSupport"],
-    "priorityFacts": ["status", "age", "fee", "usageLimit", "fiscalYear"]
+    "samplingPlan": {
+      "02": "5 high-risk municipalities",
+      "03": "5 high-risk municipalities",
+      "07": "5 high-risk municipalities"
+    },
+    "priorityServices": [
+      "temporaryChildcare",
+      "schoolMeals",
+      "postpartumCare",
+      "housingSupport"
+    ],
+    "priorityFacts": [
+      "status",
+      "age",
+      "fee",
+      "usageLimit",
+      "fiscalYear"
+    ]
   },
   "method": [
     "過去訂正の公式情報による再現確認",
@@ -26,9 +58,33 @@
       "type": "branch_reflection_gap",
       "severity": "high",
       "description": "PR #2910でmainへ反映済みの北日本A訂正がregion/northに未反映で、旧データが残存していた。",
-      "example": {"code": "02411", "path": "services.temporaryChildcare.summary", "main": "村内4施設", "regionNorthBefore": "町内4施設"},
-      "affectedMunicipalities": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
-      "affectedTasks": ["03203", "03302", "07212", "07368", "07501"],
+      "example": {
+        "code": "02411",
+        "path": "services.temporaryChildcare.summary",
+        "main": "村内4施設",
+        "regionNorthBefore": "町内4施設"
+      },
+      "affectedMunicipalities": [
+        "02411",
+        "03203",
+        "03206",
+        "03302",
+        "07202",
+        "07212",
+        "07362",
+        "07368",
+        "07405",
+        "07408",
+        "07501",
+        "07547"
+      ],
+      "affectedTasks": [
+        "03203",
+        "03302",
+        "07212",
+        "07368",
+        "07501"
+      ],
       "risk": "今後の地域統合で旧情報がmainへ再流入する可能性",
       "regionPullRequest": 3205,
       "regionCiRun": 30139544500,
@@ -55,13 +111,46 @@
       "mainCiResult": "success",
       "mainMergeCommit": "c08db8f7a4093077743d377c91d146729bf40da0",
       "correctionStatus": "published"
+    },
+    {
+      "type": "availability_condition_omission",
+      "severity": "medium",
+      "code": "02402",
+      "municipality": "七戸町",
+      "service": "temporaryChildcare",
+      "before": "令和8年度こども誰でも通園制度の案内あり。利用不可の記載なし",
+      "after": "3実施予定施設、月10時間、準備中で現在利用不可を明記",
+      "cause": "制度案内ページの存在と対象条件を確認したが、現行の利用可否条件を自治体JSONへ転記していなかった",
+      "officialBasis": "七戸町こども誰でも通園制度公式ページ（2026年4月1日更新）",
+      "officialUrl": "https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/post-562.html",
+      "regionPullRequest": 3329,
+      "correctionStatus": "corrected_in_region_pending_merge"
     }
   ],
   "regionRecovery": {
     "targetMunicipalityCount": 12,
-    "synchronizedMunicipalities": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
+    "synchronizedMunicipalities": [
+      "02411",
+      "03203",
+      "03206",
+      "03302",
+      "07202",
+      "07212",
+      "07362",
+      "07368",
+      "07405",
+      "07408",
+      "07501",
+      "07547"
+    ],
     "remainingMunicipalities": [],
-    "synchronizedTasks": ["03203", "03302", "07212", "07368", "07501"],
+    "synchronizedTasks": [
+      "03203",
+      "03302",
+      "07212",
+      "07368",
+      "07501"
+    ],
     "remainingTasks": [],
     "priorAuditRecordSynchronized": true,
     "integrationCompleted": true
@@ -70,19 +159,71 @@
     "completedCorrections": 13,
     "allPriorCorrectionsMaintained": true,
     "confirmed": [
-      {"code": "02411", "service": "temporaryChildcare", "result": "村内4施設を現行公式案内で再確認"},
-      {"code": "03203", "service": "childcareFee", "result": "令和8年度利用しおりで0～5歳全年齢の保育料無償、副食費上限月4,800円を再確認"},
-      {"code": "03206", "service": "schoolMeals", "result": "令和8年度は小学校給食費のみ無償化を再確認"},
-      {"code": "03302", "service": "schoolMeals", "result": "過年度実績は確認できるが令和8年度利用者向け条件を確定できずunavailable維持"},
-      {"code": "07202", "service": "schoolMeals", "result": "小学校無償、中学校日額350円を再確認"},
-      {"code": "07212", "service": "postpartumCare", "result": "現行ページの添付が令和7年度案内のみであることを再確認"},
-      {"code": "07362", "service": "postpartumCare", "result": "令和8年5月更新ページで宿泊・日帰り・訪問型を再確認"},
-      {"code": "07368", "service": "temporaryChildcare", "result": "利用条件本文が令和7年度案内のままであることを再確認"},
-      {"code": "07405", "service": "postpartumCare", "result": "無料・各類型7日以内を再確認し、訪問型欠落を追加訂正"},
-      {"code": "07408", "service": "childcareFee", "result": "令和8年度入所案内で0歳児を含む施設利用を再確認"},
-      {"code": "07501", "service": "postpartumCare", "result": "公開資料が令和6年度版のため現行条件未確定、unavailable維持"},
-      {"code": "07501", "service": "housingSupport", "result": "住宅取得支援の現行年度条件を確定できずunavailable維持"},
-      {"code": "07547", "service": "postpartumCare", "result": "令和8年6月更新ページで対象1歳未満、宿泊7日、日帰り・訪問各5日、料金を再確認"}
+      {
+        "code": "02411",
+        "service": "temporaryChildcare",
+        "result": "村内4施設を現行公式案内で再確認"
+      },
+      {
+        "code": "03203",
+        "service": "childcareFee",
+        "result": "令和8年度利用しおりで0～5歳全年齢の保育料無償、副食費上限月4,800円を再確認"
+      },
+      {
+        "code": "03206",
+        "service": "schoolMeals",
+        "result": "令和8年度は小学校給食費のみ無償化を再確認"
+      },
+      {
+        "code": "03302",
+        "service": "schoolMeals",
+        "result": "過年度実績は確認できるが令和8年度利用者向け条件を確定できずunavailable維持"
+      },
+      {
+        "code": "07202",
+        "service": "schoolMeals",
+        "result": "小学校無償、中学校日額350円を再確認"
+      },
+      {
+        "code": "07212",
+        "service": "postpartumCare",
+        "result": "現行ページの添付が令和7年度案内のみであることを再確認"
+      },
+      {
+        "code": "07362",
+        "service": "postpartumCare",
+        "result": "令和8年5月更新ページで宿泊・日帰り・訪問型を再確認"
+      },
+      {
+        "code": "07368",
+        "service": "temporaryChildcare",
+        "result": "利用条件本文が令和7年度案内のままであることを再確認"
+      },
+      {
+        "code": "07405",
+        "service": "postpartumCare",
+        "result": "無料・各類型7日以内を再確認し、訪問型欠落を追加訂正"
+      },
+      {
+        "code": "07408",
+        "service": "childcareFee",
+        "result": "令和8年度入所案内で0歳児を含む施設利用を再確認"
+      },
+      {
+        "code": "07501",
+        "service": "postpartumCare",
+        "result": "公開資料が令和6年度版のため現行条件未確定、unavailable維持"
+      },
+      {
+        "code": "07501",
+        "service": "housingSupport",
+        "result": "住宅取得支援の現行年度条件を確定できずunavailable維持"
+      },
+      {
+        "code": "07547",
+        "service": "postpartumCare",
+        "result": "令和8年6月更新ページで対象1歳未満、宿泊7日、日帰り・訪問各5日、料金を再確認"
+      }
     ]
   },
   "crossMunicipalityChecks": {
@@ -94,20 +235,41 @@
       "旧年度資料によるverified判定",
       "年齢・料金・利用回数の数値誤り"
     ],
-    "additionalConfirmedErrors": ["07405 postpartumCare visit type omission"],
+    "additionalConfirmedErrors": [
+      "07405 postpartumCare visit type omission",
+      "02402 temporaryChildcare availability condition omission"
+    ],
     "openErrors": 0
   },
   "samplingAudit": {
     "status": "completed",
     "sampledMunicipalityCount": 15,
     "prefectures": {
-      "02": ["02201", "02202", "02203", "02208", "02402"],
-      "03": ["03201", "03202", "03205", "03208", "03215"],
-      "07": ["07201", "07203", "07204", "07205", "07213"]
+      "02": [
+        "02201",
+        "02202",
+        "02203",
+        "02208",
+        "02402"
+      ],
+      "03": [
+        "03201",
+        "03202",
+        "03205",
+        "03208",
+        "03215"
+      ],
+      "07": [
+        "07201",
+        "07203",
+        "07204",
+        "07205",
+        "07213"
+      ]
     },
     "confirmedErrors": 0,
     "highRiskNotes": [
-      "七戸町のこども誰でも通園制度は公式ページ上で準備中表示が残るため、利用開始状況を継続監視対象とした",
+      "七戸町のこども誰でも通園制度は3施設を予定しているが、公式ページ上で準備中・現在利用不可を再確認し、自治体JSONへ明記した",
       "奥州市の学校給食費無償化は補正予算可決済みだが利用者向け条件未公表のためneeds_medium_reviewを維持"
     ]
   },
@@ -134,11 +296,21 @@
     "priorCorrectionsReverified": 13,
     "causeChecks": 5,
     "sampledMunicipalities": 15,
-    "confirmedNewErrors": 2,
-    "correctedNewErrors": 2,
+    "confirmedNewErrors": 3,
+    "correctedNewErrors": 3,
     "openErrors": 0,
     "unfixedErrors": 0,
     "result": "completed_with_zero_open_errors"
   },
-  "nextAction": "第2監査完了。新たな公式年度情報または制度改定が発生するまで通常調査を停止し、必要時のみ差分監査を行う。"
+  "nextAction": "七戸町の利用可否注記をregion/northへ統合後、main・全国生成JSON・静的ページ・公開ページへ同期して再完了する。",
+  "postCompletionFollowup": {
+    "checkedAt": "2026-07-25T12:48:04+09:00",
+    "code": "02402",
+    "municipality": "七戸町",
+    "service": "temporaryChildcare",
+    "result": "availability_note_corrected_in_region_pending_main",
+    "regionPullRequest": 3329,
+    "officialPageStatus": "準備中のため、まだ利用することができない",
+    "mainPublication": "pending"
+  }
 }
