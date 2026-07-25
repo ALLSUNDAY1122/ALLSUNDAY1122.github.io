@@ -18,10 +18,10 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const targets = [
-            ['18481', ['高浜町', '利用者向け対象月齢、実施施設、利用料、利用時間、予約方法は公式公開を確認できない']],
-            ['18483', ['おおい町', '利用者向け対象月齢、実施施設、利用料、利用時間、予約方法は公式公開を確認できない']],
-            ['21403', ['大野町', '令和8年4月1日から当面の間', '学校給食費を0円']],
-            ['21505', ['八百津町', '要保護・準要保護世帯', '学校給食費を実費支給']]
+            ['18481', ['高浜町', 'こども誰でも通園制度は条例整備を確認したが、利用者向けの対象・施設・料金・申請条件は確認できない。']],
+            ['18483', ['おおい町', 'こども誰でも通園制度は計画記載を確認したが、利用者向けの対象・施設・料金・申請条件は確認できない。']],
+            ['21403', ['大野町', '令和8年4月1日から当面の間、町立小学校児童・中学校生徒の学校給食費を0円とする。']],
+            ['21505', ['八百津町', '要保護・準要保護世帯へ、児童生徒が受けた学校給食の保護者負担額を就学援助として支給する。']]
           ];
           const base = 'https://allsunday1122.github.io/jichitai-compare';
           const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -37,11 +37,12 @@ jobs:
                 const response = await fetch(url, {
                   redirect: 'follow',
                   signal: AbortSignal.timeout(20000),
-                  headers: { 'user-agent': 'CentralAPublicVerification/1.0' }
+                  headers: { 'user-agent': 'CentralAPublicVerification/1.1' }
                 });
                 const text = await response.text();
-                const ok = response.ok && expectedTexts.every((expected) => text.includes(expected));
-                checks.push({ code, url, status: response.status, expectedTexts, ok });
+                const missingTexts = expectedTexts.filter((expected) => !text.includes(expected));
+                const ok = response.ok && missingTexts.length === 0;
+                checks.push({ code, url, status: response.status, expectedTexts, missingTexts, ok });
                 if (!ok) allOk = false;
               } catch (error) {
                 checks.push({ code, url, status: null, expectedTexts, ok: false, error: String(error?.message ?? error) });
@@ -54,18 +55,21 @@ jobs:
               const response = await fetch(url, {
                 redirect: 'follow',
                 signal: AbortSignal.timeout(30000),
-                headers: { 'user-agent': 'CentralAPublicVerification/1.0' }
+                headers: { 'user-agent': 'CentralAPublicVerification/1.1' }
               });
               const text = await response.text();
-              const expected = [
-                '"code": "18481"',
-                '"code": "18483"',
-                '"code": "21403"',
-                '"code": "21505"',
-                '令和8年4月1日から当面の間'
-              ];
-              const ok = response.ok && expected.every((value) => text.includes(value));
-              checks.push({ code: 'generated', url, status: response.status, expectedTexts: expected, ok });
+              const codeChecks = ['18481', '18483', '21403', '21505'].map((code) => ({
+                code,
+                found: text.includes(`\"code\":\"${code}\"`) || text.includes(`\"code\": \"${code}\"`)
+              }));
+              const phraseChecks = [
+                'こども誰でも通園制度は条例整備を確認したが',
+                'こども誰でも通園制度は計画記載を確認したが',
+                '令和8年4月1日から当面の間',
+                '要保護・準要保護世帯へ、児童生徒が受けた学校給食の保護者負担額を就学援助として支給する。'
+              ].map((value) => ({ value, found: text.includes(value) }));
+              const ok = response.ok && codeChecks.every((item) => item.found) && phraseChecks.every((item) => item.found);
+              checks.push({ code: 'generated', url, status: response.status, codeChecks, phraseChecks, ok });
               if (!ok) allOk = false;
             } catch (error) {
               checks.push({ code: 'generated', url: `${base}/data/generated/municipalities.json`, status: null, ok: false, error: String(error?.message ?? error) });
