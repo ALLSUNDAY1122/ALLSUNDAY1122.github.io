@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.1",
+  "ledgerId": "east-a-corrections-20260725",
+  "documentType": "indexLedger",
+  "coordinatorSession": "統括A③",
+  "session": "east-a",
+  "generatedAt": "2026-07-25T10:55:00+09:00",
+  "scope": {
+    "prefectureCodes": ["10", "13", "19", "20"],
+    "auditedMunicipalities": 201,
+    "assignedIssueNumber": 3198
+  },
+  "summary": {
+    "entryCount": 59,
+    "campaignCorrectionCount": 29,
+    "statusResolutionCount": 30,
+    "categoryCounts": {
+      "status_judgement": 43,
+      "numeric_fact": 7,
+      "year_mismatch": 1,
+      "classification_error": 5,
+      "structure_sync": 3,
+      "url_or_description_maintenance": 0
+    },
+    "verifiedStatusResolutions": 23,
+    "unavailableStatusResolutions": 7,
+    "openMajorCorrectionCount": 0
+  },
+  "partitions": [
+    {
+      "path": "jichitai-compare/operations/audits/quality-ledger/east-a-campaign-corrections-20260725.json",
+      "entryCount": 29,
+      "purpose": "10回品質監査で確定した判定・分類・数値・同期訂正"
+    },
+    {
+      "path": "jichitai-compare/operations/audits/quality-ledger/east-a-medium-review-resolution-20260725.json",
+      "entryCount": 30,
+      "purpose": "長野県20自治体30制度のneeds_medium_review解消"
+    }
+  ],
+  "evidence": {
+    "finalNationwidePullRequest": 3130,
+    "finalCiRunNumber": 7654,
+    "statusResolutionPullRequest": 3169,
+    "statusResolutionCiRunNumber": 7747,
+    "publicationVerifiedPages": 69,
+    "currentNeedsMediumReview": 0
+  },
+  "nonblockingFollowUps": [
+    {
+      "issueNumber": 2847,
+      "municipalityCode": "20602",
+      "municipalityName": "栄村",
+      "publicationBlocking": false,
+      "condition": "公式サイト復旧後に9制度を令和8年度公式情報で再確認"
+    }
+  ],
+  "status": "wave2_revalidation_assigned"
+}

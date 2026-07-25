@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "ledgerId": "north-a-corrections-20260725",
+  "coordinatorSession": "統括A③",
+  "session": "north-a",
+  "generatedAt": "2026-07-25T10:55:00+09:00",
+  "taxonomy": {
+    "status_judgement": "制度の有無・verified/unavailable/needs_medium_review判定の訂正",
+    "numeric_fact": "対象年齢・料金・回数・期間・施設数など事実・数値の訂正",
+    "year_mismatch": "2025年度と2026年度の混同、または2026年度制度の見落とし",
+    "classification_error": "別制度を対象制度として登録した分類誤り",
+    "structure_sync": "自治体コード・task・生成物・region/main同期など構造誤り",
+    "url_or_description_maintenance": "URL切れ・正規URL化・説明補足・鮮度注意など軽微修正"
+  },
+  "summary": {
+    "entryCount": 13,
+    "categoryCounts": {
+      "url_or_description_maintenance": 1,
+      "status_judgement": 5,
+      "numeric_fact": 6,
+      "classification_error": 1
+    },
+    "openMajorCorrectionCount": 0,
+    "revalidationIssueNumber": 3196
+  },
+  "entries": [
+    {"id":"north-a-001","session":"north-a","code":"02411","name":"六ヶ所村","service":"temporaryChildcare","category":"url_or_description_maintenance","type":"correction","severity":"minor","before":"町内4施設","after":"村内4施設","cause":"自治体種別表現の誤りを訂正","sourcePointer":"jichitai-compare/data/municipalities/02/02411.json#services.temporaryChildcare.source","sourceDescription":"自治体種別表現の誤りを訂正","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-002","session":"north-a","code":"03203","name":"大船渡市","service":"childcareFee","category":"status_judgement","type":"correction","severity":"medium","before":"unavailable","after":"verified","cause":"現行公式情報で保育料支援を確認","sourcePointer":"jichitai-compare/data/municipalities/03/03203.json#services.childcareFee.source","sourceDescription":"現行公式情報で保育料支援を確認","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-003","session":"north-a","code":"03206","name":"北上市","service":"schoolMeals","category":"numeric_fact","type":"correction","severity":"minor","before":"対象年齢上限15歳","after":"対象年齢上限12歳","cause":"学校給食対象学年の上限誤り","sourcePointer":"jichitai-compare/data/municipalities/03/03206.json#services.schoolMeals.source","sourceDescription":"学校給食対象学年の上限誤り","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-004","session":"north-a","code":"03302","name":"葛巻町","service":"schoolMeals","category":"status_judgement","type":"correction","severity":"medium","before":"verified","after":"unavailable","cause":"現行の一律支援条件を公式情報で確定できなかった","sourcePointer":"jichitai-compare/data/municipalities/03/03302.json#services.schoolMeals.source","sourceDescription":"現行の一律支援条件を公式情報で確定できなかった","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-005","session":"north-a","code":"07202","name":"会津若松市","service":"schoolMeals","category":"numeric_fact","type":"correction","severity":"minor","before":"対象年齢上限15歳","after":"対象年齢上限12歳","cause":"学校給食対象学年の上限誤り","sourcePointer":"jichitai-compare/data/municipalities/07/07202.json#services.schoolMeals.source","sourceDescription":"学校給食対象学年の上限誤り","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-006","session":"north-a","code":"07212","name":"南相馬市","service":"postpartumCare","category":"status_judgement","type":"correction","severity":"medium","before":"verified","after":"unavailable","cause":"正式な産後ケア事業の現行利用条件を確認できなかった","sourcePointer":"jichitai-compare/data/municipalities/07/07212.json#services.postpartumCare.source","sourceDescription":"正式な産後ケア事業の現行利用条件を確認できなかった","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-007","session":"north-a","code":"07362","name":"下郷町","service":"postpartumCare","category":"numeric_fact","type":"correction","severity":"minor","before":"宿泊ケア・日帰りケア","after":"宿泊ケア・日帰りケア・訪問ケア","cause":"訪問型の実施類型が未反映","sourcePointer":"jichitai-compare/data/municipalities/07/07362.json#services.postpartumCare.source","sourceDescription":"訪問型の実施類型が未反映","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-008","session":"north-a","code":"07368","name":"南会津町","service":"temporaryChildcare","category":"status_judgement","type":"correction","severity":"medium","before":"verified","after":"unavailable","cause":"現行の利用者向け一時預かり条件を確認できなかった","sourcePointer":"jichitai-compare/data/municipalities/07/07368.json#services.temporaryChildcare.source","sourceDescription":"現行の利用者向け一時預かり条件を確認できなかった","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-009","session":"north-a","code":"07405","name":"西会津町","service":"postpartumCare","category":"numeric_fact","type":"correction","severity":"minor","before":"施設・類型により異なるため現行案内で確認","after":"無料","cause":"公式案内にある利用料金を具体化","sourcePointer":"jichitai-compare/data/municipalities/07/07405.json#services.postpartumCare.source","sourceDescription":"公式案内にある利用料金を具体化","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-010","session":"north-a","code":"07408","name":"猪苗代町","service":"childcareFee","category":"numeric_fact","type":"correction","severity":"minor","before":"最小対象月齢3か月","after":"最小対象月齢0か月","cause":"保育料支援の対象月齢誤り","sourcePointer":"jichitai-compare/data/municipalities/07/07408.json#services.childcareFee.source","sourceDescription":"保育料支援の対象月齢誤り","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-011","session":"north-a","code":"07501","name":"石川町","service":"postpartumCare","category":"status_judgement","type":"correction","severity":"medium","before":"verified","after":"unavailable","cause":"正式な産後ケア事業の現行条件を確認できなかった","sourcePointer":"jichitai-compare/data/municipalities/07/07501.json#services.postpartumCare.source","sourceDescription":"正式な産後ケア事業の現行条件を確認できなかった","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-012","session":"north-a","code":"07501","name":"石川町","service":"housingSupport","category":"classification_error","type":"correction","severity":"medium","before":"verified","after":"unavailable","cause":"子育て住宅支援として確定できない制度を除外","sourcePointer":"jichitai-compare/data/municipalities/07/07501.json#services.housingSupport.source","sourceDescription":"子育て住宅支援として確定できない制度を除外","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}},
+    {"id":"north-a-013","session":"north-a","code":"07547","name":"浪江町","service":"postpartumCare","category":"numeric_fact","type":"correction","severity":"minor","before":"料金は類型・施設・世帯区分により異なる","after":"令和8年度の施設類型・月齢別料金を具体化","cause":"料金条件の記載不足を現行公式案内で補完","sourcePointer":"jichitai-compare/data/municipalities/07/07547.json#services.postpartumCare.source","sourceDescription":"料金条件の記載不足を現行公式案内で補完","correctionPr":2910,"ci":{"status":"success","workflowRunId":30114152746}}
+  ],
+  "status": "wave2_revalidation_assigned"
+}
