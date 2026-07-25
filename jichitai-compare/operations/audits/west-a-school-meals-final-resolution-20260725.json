@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-school-meals-final-resolution-20260725",
+  "team": "西日本調査班A",
+  "completedAt": "2026-07-25T16:50:00+09:00",
+  "scope": {
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
+    "municipalityCount": 226,
+    "service": "schoolMeals"
+  },
+  "method": {
+    "initialPriorityCandidateCount": 64,
+    "refinedPriorityCandidateCount": 50,
+    "highRiskOfficialFetchCount": 19,
+    "manualReviewCount": 5,
+    "policy": "完全無償、一部助成、就学援助、一般世帯負担、年度、主出典を分離して確認。計画・予算・議事録のみの場合は具体的実施根拠へ差し替える。"
+  },
+  "result": {
+    "statusCorrectionCount": 0,
+    "factValueCorrectionCount": 0,
+    "sourceMaintenanceCount": 2,
+    "factEnrichmentCount": 1,
+    "retainedHighRiskCount": 17,
+    "unavailableImplementationOmissionCount": 0,
+    "unresolvedCount": 0
+  },
+  "sourceMaintenanceCodes": [
+    "43511",
+    "46208"
+  ],
+  "dispositions": [
+    {
+      "code": "43505",
+      "name": "多良木町",
+      "resolution": "retained_verified",
+      "finding": "現行学校給食一覧と無償化ページで、2023年4月開始・小中学校等・保護者負担0円を確認。取得時404は一時的応答差として扱い、内容変更なし。"
+    },
+    {
+      "code": "46203",
+      "name": "鹿屋市",
+      "resolution": "retained_verified",
+      "finding": "現行利用者向けページで2024年4月から市立小中学生の給食費全額支援を確認。"
+    },
+    {
+      "code": "43511",
+      "name": "五木村",
+      "resolution": "source_maintenance_and_fact_enrichment",
+      "finding": "計画ページを主出典とせず、現行補助要綱へ更新。村立学校は全額、村外特別支援学校等は3分の2補助。"
+    },
+    {
+      "code": "46208",
+      "name": "出水市",
+      "resolution": "source_maintenance",
+      "finding": "会議一覧を主出典とせず、2026年度当初予算説明の具体ページへ更新。2026年1月開始・2026年度継続を確認。"
+    },
+    {
+      "code": "46524",
+      "name": "宇検村",
+      "resolution": "retained_verified",
+      "finding": "村公式子育て支援ページの給食費無料記載と施政方針の継続記載が一致。"
+    }
+  ],
+  "evidence": {
+    "initialAudit": "jichitai-compare/operations/audits/west-a-school-meals-crosscheck-20260725.json",
+    "priorityAudit": "jichitai-compare/operations/audits/west-a-school-meals-priority-review-20260725.json",
+    "officialFetchAudit": "jichitai-compare/operations/audits/west-a-school-meals-official-fetch-20260725.json",
+    "decisionSummary": "jichitai-compare/operations/audits/west-a-school-meals-decision-summary-20260725.json",
+    "manualList": "jichitai-compare/operations/audits/west-a-school-meals-manual-list-20260725.json",
+    "regionalPullRequestNumber": 3584
+  },
+  "status": "regional_clean_ci_pending",
+  "blocker": null
+}
