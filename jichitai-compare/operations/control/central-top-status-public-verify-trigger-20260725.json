@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "triggerId": "central-top-status-public-verify-20260725",
+  "createdAt": "2026-07-25T12:28:00+09:00",
+  "sourcePullRequests": [3281, 3288, 3292],
+  "runnerRegistrationPullRequest": 3295,
+  "targetMunicipalityCodes": ["16202", "16204", "16205", "16206", "23100"],
+  "checks": [
+    "public generated JSON status verified",
+    "public generated summary updated",
+    "municipality page HTTP 200",
+    "municipality name and canonical",
+    "old internal workflow wording absent"
+  ],
+  "releaseBlocker": "active_until_verification_passes"
+}
