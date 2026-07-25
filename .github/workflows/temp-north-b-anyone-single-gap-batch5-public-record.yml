@@ -1,0 +1,76 @@
+name: Temporary North B Anyone Single Gap Batch 5 Public Record
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-anyone-single-gap-batch5-public-record.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-anyone-single-gap-batch5-public-record-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  record-public-verification:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current main record branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore verified audit and patch current checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin verify/north-b-anyone-single-gap-batch5-public-20260725
+          audit='jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json'
+          mkdir -p "$(dirname "$audit")"
+          git show 'origin/verify/north-b-anyone-single-gap-batch5-public-20260725:'"$audit" > "$audit"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          const now = '2026-07-25T16:51:00+09:00';
+          checkpoint.updatedAt = now;
+          checkpoint.workingBranch = 'record/north-b-anyone-single-gap-batch5-public-20260725';
+          checkpoint.nextAction = '誰でも通園の単一条件欠落残り22件を優先度順に再確認する。';
+          const fa = checkpoint.fiscalAnyoneAudit || (checkpoint.fiscalAnyoneAudit = {});
+          fa.status = 'single_gap_batch5_public_verified_pending_record_ci';
+          fa.remainingAnyonePriorityBelow50 = 22;
+          fa.singleGapBatch5Reviewed = 10;
+          fa.singleGapBatch5CorrectedMunicipalities = ['06204','06207','06208','06209','06210','06211','06301'];
+          fa.singleGapBatch5NoChangeMunicipalities = ['06205','06206','06212'];
+          fa.singleGapBatch5AuditFile = 'operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json';
+          fa.singleGapBatch5MainPullRequest = 3578;
+          fa.singleGapBatch5MainMergeCommit = 'c9fcc479c2ac0f29e3b59b4a08362bd0aece9cab';
+          fa.singleGapBatch5RegionPullRequest = 3583;
+          fa.singleGapBatch5RegionMergeCommit = '1c57f76f0c74c843e0cd897450258962626be360';
+          fa.singleGapBatch5PublicVerificationFile = 'operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json';
+          fa.singleGapBatch5PublicVerifiedMunicipalities = ['06204','06207','06208','06209','06210','06211','06301'];
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+          NODE
+
+      - name: Commit latest-main public record
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/north-b.json
+          if git diff --cached --quiet; then
+            echo 'No public verification record changes.'
+            exit 1
+          fi
+          git commit -m 'audit: 北日本B誰でも通園単一条件第5群の公開確認を最新mainへ記録 [skip ci]'
+          git pull --rebase origin "${{ github.head_ref }}"
+          git push origin HEAD:"${{ github.head_ref }}"
