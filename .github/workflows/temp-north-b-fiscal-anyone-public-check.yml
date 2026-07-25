@@ -1,0 +1,73 @@
+name: Temporary North B Fiscal Anyone Public Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-fiscal-anyone-public-check.yml'
+      - 'jichitai-compare/operations/audits/north-b-fiscal-anyone-public-verification-20260725.json'
+      - 'jichitai-compare/operations/control/session-checkpoints/north-b.json'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Verify corrected public municipality pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          verify_text() {
+            local url="$1"
+            local expected="$2"
+            local file
+            file="$(mktemp)"
+            for attempt in $(seq 1 24); do
+              if curl --fail --silent --show-error --location --max-time 60 "$url" -o "$file" && grep -Fq "$expected" "$file"; then
+                echo "Verified: $url -> $expected"
+                rm -f "$file"
+                return 0
+              fi
+              sleep 10
+            done
+            echo "Expected public text not found: $expected"
+            rm -f "$file"
+            return 1
+          }
+
+          base='https://allsunday1122.github.io/jichitai-compare/municipality'
+          verify_text "$base/01604/" '第5期（令和7年度から令和9年度）'
+          verify_text "$base/04606/" '歌津地区子育て支援センター'
+          verify_text "$base/06428/" '余目保育園、認定こども園からふる'
+          verify_text "$base/04401/" '令和8年4月1日時点'
+          verify_text "$base/04422/" '令和8年度入園案内'
+          verify_text "$base/05212/" 'https://www.city.daisen.lg.jp/reiki/reiki_honbun/r154RG00000819.html'
+          verify_text "$base/05213/" 'https://www1.g-reiki.net/city.kitaakita/reiki_honbun/r406RG00000646.html'
+          verify_text "$base/06382/" '実施施設、利用料金、利用時間、月間利用上限'
+
+      - name: Verify generated data and removed unsupported statement
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="$(mktemp)"
+          url='https://allsunday1122.github.io/jichitai-compare/data/generated/municipalities.json'
+          for attempt in $(seq 1 24); do
+            if curl --fail --silent --show-error --location --max-time 120 "$url" -o "$file" \
+              && grep -Fq '歌津地区子育て支援センター' "$file" \
+              && grep -Fq '余目保育園、認定こども園からふる' "$file" \
+              && grep -Fq 'r154RG00000819.html' "$file" \
+              && grep -Fq 'r406RG00000646.html' "$file" \
+              && ! grep -Fq 'こども誰でも通園制度も別途実施' "$file"; then
+              echo 'Verified generated data and unsupported statement removal.'
+              rm -f "$file"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'Public generated data has not reflected all confirmed changes.'
+          rm -f "$file"
+          exit 1
