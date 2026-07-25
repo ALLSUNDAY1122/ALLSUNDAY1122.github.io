@@ -1,0 +1,36 @@
+name: Temporary West B Second Audit Count Fix
+on:
+  push:
+    branches: [fix/west-b-second-audit-ogimi-sick-child-20260725]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/west-b-second-audit-ogimi-sick-child-20260725
+      - name: Correct sample count
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const auditPath = 'jichitai-compare/operations/audits/west-b-quality-improvement-second-audit-20260725.json';
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          audit.scope.stratifiedSampleMunicipalityCount = audit.scope.sampledMunicipalities.length;
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/west-b.json';
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          checkpoint.qualityImprovementSecondAudit.stratifiedSampleMunicipalityCount = audit.scope.sampledMunicipalities.length;
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+          NODE
+      - name: Commit corrected records
+        run: |
+          rm -f .github/workflows/temp-west-b-second-audit-count-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-quality-improvement-second-audit-20260725.json
+          git add jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git add .github/workflows/temp-west-b-second-audit-count-fix.yml
+          git commit -m "audit: 西日本B第2監査の抜き取り件数を訂正"
+          git push origin HEAD:fix/west-b-second-audit-ogimi-sick-child-20260725
