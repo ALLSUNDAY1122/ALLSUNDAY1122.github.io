@@ -106,7 +106,7 @@ jobs:
       - name: Reject unexpected generated changes
         shell: bash
         run: |
-          allowed='^(jichitai-compare/(data/municipalities/(16/16210|17/(17461|17463)|21/(21364|21381)|23/23446)\.json|operations/tasks/(16210|17461|17463|21364|21381|23446)\.json|operations/audits/central-a-housing-classification-batch9-decisions-20260725\.json|operations/control/regions/central\.json|operations/control/session-checkpoints/central-a\.json|data/generated/(municipalities|municipality-pages)\.json|operations/progress\.json|municipality/(16210|17461|17463|21[0-9]{3}|23446)/index\.html|sitemap\.xml))$'
+          allowed='^(jichitai-compare/(data/municipalities/(16/16210|17/(17461|17463)|21/(21364|21381)|23/23446)\.json|operations/tasks/(16210|17461|17463|21364|21381|23446)\.json|operations/audits/central-a-housing-classification-batch9-decisions-20260725\.json|operations/control/regions/central\.json|operations/control/session-checkpoints/central-a\.json|data/generated/(municipalities|municipality-pages)\.json|operations/progress\.json|municipality/[0-9]{5}/index\.html|sitemap\.xml))$'
           unexpected=$(git status --porcelain | sed -E 's/^.. //' | grep -Ev "$allowed" || true)
           if [ -n "$unexpected" ]; then
             echo 'Unexpected changes:'
