@@ -1,0 +1,102 @@
+name: Temporary West A Housing High Risk Summary
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-housing-high-risk-summary-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    if: github.head_ref == 'audit/west-a-housing-classification-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build compact high-risk review list
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare';
+          const sourcePath = `${root}/operations/audits/west-a-housing-classification-crosscheck-20260725.json`;
+          const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+          const highRisk = source.officialSourceContentAudit.results.filter((item) => item.disposition === 'page_lacks_child_specific_terms');
+          const fetchProblems = source.officialSourceContentAudit.results.filter((item) => ['http_error', 'fetch_failed'].includes(item.disposition));
+          const items = highRisk.map((item) => {
+            const municipalityPath = `${root}/data/municipalities/${item.prefectureCode}/${item.municipalityCode}.json`;
+            const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+            const service = municipality.services.housingSupport;
+            const combined = JSON.stringify({ summary: service.summary, notes: service.notes, details: service.details });
+            const strictGeneralTitle = /(空き家|移住|定住|リフォーム|耐震|除却|住宅改修|改修費|中古住宅|住宅取得)/.test(item.title ?? '');
+            const hasExplicitChildConditionInRecord = /(子育て|子ども|子供|こども|多子|児童|18歳|高校生|中学生|小学生|未就学|扶養|子\s*[0-9０-９一二三四五六七八九十]+\s*人|子がいる|子のいる|子を有する|子と同居)/.test(combined);
+            const htmlContent = String(item.contentType ?? '').includes('text/html');
+            const sufficientlyReadable = item.textLength >= 500;
+            const strictDisposition = strictGeneralTitle && !hasExplicitChildConditionInRecord && htmlContent && sufficientlyReadable
+              ? 'strong_general_only_candidate'
+              : 'manual_review_required';
+            return {
+              municipalityCode: item.municipalityCode,
+              municipalityName: item.municipalityName,
+              prefectureCode: item.prefectureCode,
+              prefecture: municipality.prefecture,
+              currentStatus: service.status,
+              currentSummary: service.summary ?? null,
+              currentNotes: service.notes ?? [],
+              currentDetails: service.details ?? {},
+              primarySource: service.source ?? null,
+              additionalSources: service.additionalSources ?? [],
+              fetchedTitle: item.title,
+              finalUrl: item.finalUrl,
+              httpStatus: item.httpStatus,
+              contentType: item.contentType,
+              textLength: item.textLength,
+              generalContexts: item.generalContexts,
+              hasExplicitChildConditionInRecord,
+              strictDisposition,
+              requiredAction: strictDisposition === 'strong_general_only_candidate'
+                ? '公式本文・要綱に子ども要件がないことを最終確認し、housingSupportをunavailableへ変更する'
+                : '追加出典・PDF・要綱を確認して子育て世帯固有条件の有無を判定する'
+            };
+          });
+          const grouped = {};
+          for (const item of items) (grouped[item.prefectureCode] ??= []).push(item);
+          const summary = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-a-housing-high-risk-summary-20260725',
+            generatedAt: '2026-07-25T14:55:00+09:00',
+            sourceAudit: sourcePath,
+            scopeMunicipalityCount: source.scope.municipalityCount,
+            verifiedHousingSupportCount: source.housingSupportStatusCounts.verified,
+            initialCandidateCount: source.candidateCount,
+            highRiskPageLacksChildTermsCount: items.length,
+            strongGeneralOnlyCandidateCount: items.filter((item) => item.strictDisposition === 'strong_general_only_candidate').length,
+            manualReviewRequiredCount: items.filter((item) => item.strictDisposition === 'manual_review_required').length,
+            fetchProblemCount: fetchProblems.length,
+            prefectureCounts: Object.fromEntries(Object.entries(grouped).map(([pref, list]) => [pref, list.length])),
+            items,
+            fetchProblems,
+            status: 'review_required',
+            blocker: null
+          };
+          fs.writeFileSync(`${root}/operations/audits/west-a-housing-high-risk-summary-20260725.json`, JSON.stringify(summary, null, 2) + '\n');
+          NODE
+
+          rm -f jichitai-compare/operations/control/west-a-housing-high-risk-summary-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-housing-high-risk-summary.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-housing-high-risk-summary-20260725.json \
+                  jichitai-compare/operations/control/west-a-housing-high-risk-summary-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-housing-high-risk-summary.yml
+          git diff --cached --check
+          git commit -m 'audit: 西日本A住宅支援高リスク33件を精査用に集約'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
