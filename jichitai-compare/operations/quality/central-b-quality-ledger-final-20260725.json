@@ -1,0 +1,2451 @@
+{
+  "schemaVersion": "1.0.0",
+  "ledgerId": "central-b-quality-ledger-final-20260725",
+  "generatedAt": "2026-07-25T05:00:48.657345+00:00",
+  "team": "central-b",
+  "scope": {
+    "prefectureCodes": [
+      "26",
+      "29",
+      "30"
+    ],
+    "auditedMunicipalityCount": 95,
+    "deepCheckedMunicipalityCount": 88,
+    "correctionRecordCount": 57,
+    "correctedMunicipalityCount": 55
+  },
+  "evidence": {
+    "regionalAuditPullRequest": 2926,
+    "regionalAuditCiRun": 7527,
+    "nationalSyncPullRequest": 3136,
+    "nationalSyncCiRun": 7716,
+    "regionalCompletionPullRequest": 3161,
+    "regionalCompletionCiRun": 7722,
+    "finalVerificationFile": "operations/audits/central-b-final-evidence-verification-20260725.json"
+  },
+  "summary": {
+    "recordCount": 57,
+    "uniqueMunicipalityCount": 55,
+    "regionMismatchCount": 0,
+    "taskMismatchCount": 0,
+    "generatedMismatchCount": 0,
+    "staticMismatchCount": 0,
+    "publicFailureCount": 0,
+    "brokenOfficialSourceCount": 0,
+    "officialAccessWarningCount": 6,
+    "sampleCount": 9,
+    "samplePassCount": 9,
+    "incompleteRowCount": 0
+  },
+  "status": "completed",
+  "records": [
+    {
+      "municipalityCode": "30343",
+      "municipalityName": "九度山町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "schoolMeals",
+      "classification": "status_judgement_error",
+      "before": "unavailable / 現行負担不明",
+      "after": "verified / 令和8年度予算で学校給食費徴収金4,147千円を確認",
+      "cause": "現行年度の予算・徴収予定を見落とした",
+      "causeCode": "current_fiscal_evidence_omitted",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.kudoyama.lg.jp/soumu/joho/files/06_r8hp_ippan.pdf",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.kudoyama.lg.jp/soumu/joho/yosan.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.kudoyama.lg.jp/kyouiku/gakkou/syuugakusien.html",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.kudoyama.lg.jp/kyouiku/gakkou/enjo-seido.html",
+          "checkedAt": "2026-07-24"
+        }
+      ],
+      "checkedAt": "2026-07-24",
+      "correctionPullRequest": 2909,
+      "correctionCiRun": 6979,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.kudoyama.lg.jp/soumu/joho/files/06_r8hp_ippan.pdf",
+        "contentType": "application/pdf",
+        "sizeRead": 131072,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26209",
+      "municipalityName": "長岡京市",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 生活困窮者向け住居確保給付事業",
+      "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.nagaokakyo.lg.jp/0000000932.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.nagaokakyo.lg.jp/0000004827.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.nagaokakyo.lg.jp/0000000932.html",
+        "contentType": "text/html",
+        "sizeRead": 32709,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26210",
+      "municipalityName": "八幡市",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の住居確保給付金",
+      "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.yawata.kyoto.jp/soshiki/45-2-0-0-0_3.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.yawata.kyoto.jp/0000006221.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.yawata.kyoto.jp/soshiki/45-2-0-0-0_3.html",
+        "contentType": "text/html",
+        "sizeRead": 26296,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26211",
+      "municipalityName": "京田辺市",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の住居確保給付金",
+      "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.kyotanabe.lg.jp/kosodate/category/13-4-6-0-0-0-0-0-0-0.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.kyotanabe.lg.jp/0000003744.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.kyotanabe.lg.jp/kosodate/category/13-4-6-0-0-0-0-0-0-0.html",
+        "contentType": "text/html",
+        "sizeRead": 16860,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26213",
+      "municipalityName": "南丹市",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "postpartumCare",
+      "classification": "category_error",
+      "before": "verified / 一般訪問・交流行事",
+      "after": "unavailable / 正式な産後ケア利用条件を確認できない",
+      "cause": "一般訪問・交流行事を正式な産後ケア事業として誤分類",
+      "causeCode": "general_maternal_service_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.nantan.kyoto.jp/www/life/111/001/000/index_9836.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.nantan.kyoto.jp/www/life/110/001/000/index_1018437.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.nantan.kyoto.jp/www/life/111/001/000/index_9835.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.nantan.kyoto.jp/www/life/111/001/000/index_9836.html",
+        "contentType": "text/html",
+        "sizeRead": 18943,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26214",
+      "municipalityName": "木津川市",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の移住・耐震制度",
+      "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.kizugawa.lg.jp/kosodate/category/7-19-0-0-0-0-0-0-0-0.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.kizugawa.lg.jp/kosodate/category/7-19-0-0-0-0-0-0-0-0.html",
+        "contentType": "text/html",
+        "sizeRead": 34458,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26303",
+      "municipalityName": "大山崎町",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の断熱・耐震制度",
+      "after": "unavailable / 子育て世帯向け現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.oyamazaki.kyoto.jp/kosodatekyoiku/kosodate/index.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.oyamazaki.kyoto.jp/annai/keizaikankyoka/seisokankyokakari/kankyo_kogai/11406.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.oyamazaki.kyoto.jp/annai/kensetsuka/toshikeikakukakari/taisinsinndann_kaisyuu/11437.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.oyamazaki.kyoto.jp/kosodatekyoiku/kosodate/index.html",
+        "contentType": "text/html",
+        "sizeRead": 53238,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26322",
+      "municipalityName": "久御山町",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の省エネ・断熱補助",
+      "after": "verified / 子育て応援住宅リフォーム補助",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.kumiyama.lg.jp/0000006015.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.kumiyama.lg.jp/0000006015.html",
+        "contentType": "text/html",
+        "sizeRead": 22419,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26343",
+      "municipalityName": "井手町",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般移住支援金",
+      "after": "verified / 子育てUターン世帯向け公営住宅申込",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.ide.kyoto.jp/soshiki/kensatsuka/osirase/3977.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.ide.kyoto.jp/soshiki/kensatsuka/osirase/3977.html",
+        "contentType": "text/html",
+        "sizeRead": 33762,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26366",
+      "municipalityName": "精華町",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般住宅向け太陽光・蓄電設備補助",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.seika.kyoto.jp/kakuka/kankyo/1/1/1/950.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.seika.kyoto.jp/kosodate/kosodate_tanoshimo/index.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://reiki.town.seika.kyoto.jp/reiki_taikei/r_taikei_07.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.seika.kyoto.jp/kakuka/kankyo/1/1/1/950.html",
+        "contentType": "text/html",
+        "sizeRead": 49606,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26463",
+      "municipalityName": "伊根町",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の若年・移住世帯向け定住促進住宅補助",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.ine.kyoto.jp/soshiki/kikakukanko/2/6/339.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.ine.kyoto.jp/section/reiki/H422902500075/H422902500075_j.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.ine.kyoto.jp/soshiki/kikakukanko/2/6/339.html",
+        "contentType": "text/html",
+        "sizeRead": 68069,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29203",
+      "municipalityName": "大和郡山市",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般エコ改修と移住支援を混在",
+      "after": "verified / 18歳未満1人につき100万円加算の移住支援に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.yamatokoriyama.lg.jp/sien-josei/juutaku-hikkoshi/14570.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.yamatokoriyama.lg.jp/life/sumai_hikkoshi/9173.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.yamatokoriyama.lg.jp/sien-josei/juutaku-hikkoshi/14570.html",
+        "contentType": "text/html",
+        "sizeRead": 66760,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26364",
+      "municipalityName": "笠置町",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "sickChildCare",
+      "classification": "status_judgement_error",
+      "before": "unavailable / 広域病児保育の条件未確認",
+      "after": "verified / 生後6か月から小学6年生・所得区分別料金を確認",
+      "cause": "広域連携先を利用できる制度を見落とした",
+      "causeCode": "wide_area_use_omitted",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.iga.lg.jp/igakids/0000008349.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://yumekodomo.com/nursery",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.kasagi.lg.jp/cmsfiles/contents/0000001/1865/dai3kikodomokosodate.pdf",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.iga.lg.jp/igakids/0000008349.html",
+        "contentType": "text/html",
+        "sizeRead": 23196,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "26367",
+      "municipalityName": "南山城村",
+      "prefectureCode": "26",
+      "team": "central-b",
+      "service": "sickChildCare",
+      "classification": "fact_value_error",
+      "before": "verified / 対象年齢を0歳からと推定し料金未確認",
+      "after": "verified / 生後6か月から小学6年生・所得区分別料金を確認",
+      "cause": "対象年齢・料金等を公式根拠なく推定した",
+      "causeCode": "conditions_inferred_without_source",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.vill.minamiyamashiro.lg.jp/0000002322.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.iga.lg.jp/igakids/0000008349.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://yumekodomo.com/nursery",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.vill.minamiyamashiro.lg.jp/0000002322.html",
+        "contentType": "text/html",
+        "sizeRead": 17706,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29205",
+      "municipalityName": "橿原市",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+      "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.kashihara.nara.jp/soshiki/1027/gyomu/3204.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.kashihara.nara.jp/soshiki/1027/gyomu/3204.html",
+        "contentType": "text/html",
+        "sizeRead": 91186,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29207",
+      "municipalityName": "五條市",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+      "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.gojo.lg.jp/kurashi/hojokin/17035.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.gojo.lg.jp/kurashi/hojokin/17035.html",
+        "contentType": "text/html",
+        "sizeRead": 43258,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29208",
+      "municipalityName": "御所市",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+      "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.gose.nara.jp/0000001028.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.gose.nara.jp/0000001028.html",
+        "contentType": "text/html",
+        "sizeRead": 25847,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29210",
+      "municipalityName": "香芝市",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般移住・新婚・若年夫婦向け制度",
+      "after": "unavailable / 子育て世帯専用の現行住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.kashiba.lg.jp/soshiki/16/53394.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.kashiba.lg.jp/soshiki/16/53394.html",
+        "contentType": "text/html",
+        "sizeRead": 37540,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29345",
+      "municipalityName": "安堵町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般移住支援金・2人以上転入世帯向け家賃補助",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.ando.nara.jp/0000000632.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.ando.nara.jp/html/reiki_honbun/k418RG00000464.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.ando.nara.jp/0000000632.html",
+        "contentType": "text/html",
+        "sizeRead": 31519,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29361",
+      "municipalityName": "川西町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない新婚・一般移住制度",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.nara-kawanishi.lg.jp/0000008895.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.nara-kawanishi.lg.jp/0000007051.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.nara-kawanishi.lg.jp/0000008895.html",
+        "contentType": "text/html",
+        "sizeRead": 28501,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29362",
+      "municipalityName": "三宅町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般中古住宅取得支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.miyake.lg.jp/soshiki/3/1036.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.miyake.lg.jp/soshiki/3/1036.html",
+        "contentType": "text/html",
+        "sizeRead": 30697,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29425",
+      "municipalityName": "王寺町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般U-40住宅取得支援",
+      "after": "verified / 義務教育修了前の子を含む三世代世帯向け住宅取得・リフォーム補助",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.oji.nara.jp/kakuka/chiikiseibi/machidukuri/gyomuannai/ijuteiju/1821.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.oji.nara.jp/material/files/group/12/sannsedaiyouko.pdf",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.oji.nara.jp/kakuka/chiikiseibi/machidukuri/gyomuannai/ijuteiju/1821.html",
+        "contentType": "text/html",
+        "sizeRead": 51126,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29427",
+      "municipalityName": "河合町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般住宅リフォーム助成",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.kawai.nara.jp/kakuka/machizukuri/kankoushinkou/871.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.kawai.nara.jp/section/reiki/reiki_honbun/k435RG00000491.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.kawai.nara.jp/kakuka/machizukuri/kankoushinkou/871.html",
+        "contentType": "text/html",
+        "sizeRead": 42026,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29441",
+      "municipalityName": "吉野町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般空き家改修補助",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.yoshino.nara.jp/kurashi/sumai/akiya/768.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.yoshino.nara.jp/promotion/yoshinochonoshien/izyushien/index.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.yoshino.nara.jp/kurashi/sumai/akiya/768.html",
+        "contentType": "text/html",
+        "sizeRead": 66962,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29442",
+      "municipalityName": "大淀町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない結婚新生活支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.oyodo.lg.jp/0000001994.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.oyodo.lg.jp/0000001994.html",
+        "contentType": "text/html",
+        "sizeRead": 27179,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29443",
+      "municipalityName": "下市町",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般住宅リフォーム助成",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.shimoichi.lg.jp/0000000852.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.shimoichi.lg.jp/0000001863.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.shimoichi.lg.jp/0000000852.html",
+        "contentType": "text/html",
+        "sizeRead": 19023,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29449",
+      "municipalityName": "十津川村",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の村産材住宅補助等と子育て住宅を混在",
+      "after": "verified / 子育て世帯向け地域優良賃貸住宅に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.vill.totsukawa.lg.jp/life/environment/zyuutaku/index.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.vill.totsukawa.lg.jp/forestry/wooden_build/",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.vill.totsukawa.lg.jp/life/environment/zyuutaku/index.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 32019,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29451",
+      "municipalityName": "上北山村",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない60歳未満定住者向け住宅支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.vill.kamikitayama.nara.jp/ijuuteijuu/kurashiyasuiseido/754.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.vill.kamikitayama.nara.jp/ijuuteijuu/kurashiyasuiseido/754.html",
+        "contentType": "text/html",
+        "sizeRead": 45694,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "29453",
+      "municipalityName": "東吉野村",
+      "prefectureCode": "29",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない20～40歳移住者向け空き家改修",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.vill.higashiyoshino.nara.jp/moving/subsidy/19",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.vill.higashiyoshino.nara.jp/moving/akiya_bank",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete_with_access_warning",
+      "officialPrimaryAccess": {
+        "status": null,
+        "finalUrl": "https://www.vill.higashiyoshino.nara.jp/moving/subsidy/19",
+        "contentType": "",
+        "sizeRead": 0,
+        "category": "access_warning",
+        "error": "URLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.vill.higashiyoshino.nara.jp'. (_ssl.c:1000)\"))"
+      }
+    },
+    {
+      "municipalityCode": "30202",
+      "municipalityName": "海南市",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般移住者・新婚世帯を含む空家改修制度を混在",
+      "after": "verified / 中学生以下の子を扶養する若者世帯区分に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.kainan.lg.jp/kakubusho/machizukuribu/toshiseibika/akiya_kanren/1604298898087.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.kainan.lg.jp/kakubusho/machizukuribu/toshiseibika/akiya_kanren/1604298898087.html",
+        "contentType": "text/html",
+        "sizeRead": 53141,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30203",
+      "municipalityName": "橋本市",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般空き家・年齢要件のみの住宅制度を混在",
+      "after": "verified / 18歳未満の子または妊婦を含む世帯の家賃助成に現行化",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.hashimoto.lg.jp/life_mokuteki/hikkoshi_sumai/tiikiyuuryou/12830.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.hashimoto.lg.jp/guide/keizaisuisinbu/citysales/teijyu/ijusienkin.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.hashimoto.lg.jp/life_mokuteki/hikkoshi_sumai/tiikiyuuryou/12830.html",
+        "contentType": "text/html",
+        "sizeRead": 39055,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30206",
+      "municipalityName": "田辺市",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども加算付き移住支援と一般空き家・新婚制度を混在",
+      "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.tanabe.lg.jp/soshiki/kikaku/2/4/6_1/197.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.tanabe.lg.jp/soshiki/kikaku/2/4/6_1/197.html",
+        "contentType": "text/html",
+        "sizeRead": 79143,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30207",
+      "municipalityName": "新宮市",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない県外移住者向け空き家改修",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.shingu.lg.jp/Info/2712",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.shingu.lg.jp/Info/2415",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.shingu.lg.jp/Info/2712",
+        "contentType": "text/html; charset=utf-8",
+        "sizeRead": 48858,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30208",
+      "municipalityName": "紀の川市",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "fact_value_error",
+      "before": "verified / 一般若年住宅取得支援と児童加算を混在",
+      "after": "verified / 16歳未満児童等の10万円加算を明確化",
+      "cause": "料金・加算額・対象年齢等の重要条件を欠落または混同した",
+      "causeCode": "amount_or_eligibility_detail_missing",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.kinokawa.lg.jp/006/2020032724.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.kinokawa.lg.jp/006/2020032724.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 37430,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30209",
+      "municipalityName": "岩出市",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない新婚住宅支援と受付未確認の移住支援",
+      "after": "unavailable / 現行の子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.city.iwade.lg.jp/soshiki/2/10237.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.city.iwade.lg.jp/soshiki/16/1996.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.city.iwade.lg.jp/soshiki/2/10237.html",
+        "contentType": "text/html",
+        "sizeRead": 29215,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30304",
+      "municipalityName": "紀美野町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般・移住・新婚・子育て加算を混在",
+      "after": "verified / 子育て世帯または出産予定世帯の10万円加算に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.kimino.wakayama.jp/sagasu/kikakukanzaika/jyuutakuhojo/195.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.kimino.wakayama.jp/sagasu/kikakukanzaika/jyuutakuhojo/195.html",
+        "contentType": "text/html",
+        "sizeRead": 52285,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30341",
+      "municipalityName": "かつらぎ町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般空き家改修・片付け補助",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.katsuragi.wakayama.jp/teijyu/020/010/2023-0920-1532-16.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.katsuragi.wakayama.jp/teijyu/020/010/2023-0920-1532-16.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 27643,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30344",
+      "municipalityName": "高野町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般移住住宅補助",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.koya.wakayama.jp/sangyo/chiikisinnkou/19765.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.koya.wakayama.jp/sangyo/chiikisinnkou/19765.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 18501,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30361",
+      "municipalityName": "湯浅町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 年齢要件のみの住宅取得支援等を混在",
+      "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.yuasa.wakayama.jp/soshiki/4/9634.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.yuasa.wakayama.jp/soshiki/3/8991.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.yuasa.wakayama.jp/soshiki/4/9634.html",
+        "contentType": "text/html",
+        "sizeRead": 29684,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30362",
+      "municipalityName": "広川町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般住宅取得・改修支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.hirogawa.wakayama.jp/soumu/2022-0329-1004-18.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.hirogawa.wakayama.jp/ijyuteijyu/shienseido.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.hirogawa.wakayama.jp/soumu/2022-0329-1004-18.html",
+        "contentType": "text/html",
+        "sizeRead": 14429,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30366",
+      "municipalityName": "有田川町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般新築住宅取得給付金",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.aridagawa.lg.jp/top/kakuka/kibi/8/1/zeikara/6854.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.aridagawa.lg.jp/top/kakuka/kibi/8/1/zeikara/6854.html",
+        "contentType": "text/html",
+        "sizeRead": 40556,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30381",
+      "municipalityName": "美浜町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "sickChildCare",
+      "classification": "status_judgement_error",
+      "before": "unavailable / 美浜町民の広域利用を未確認",
+      "after": "verified / 御坊市の病児保育室ひまわりを利用可能",
+      "cause": "広域連携先を利用できる制度を見落とした",
+      "causeCode": "wide_area_use_omitted",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.wakayama-inami.lg.jp/0000001371.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.wakayama-inami.lg.jp/0000001371.html",
+        "contentType": "text/html",
+        "sizeRead": 20117,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30381",
+      "municipalityName": "美浜町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "temporaryChildcare",
+      "classification": "status_judgement_error",
+      "before": "verified / 県の全市町村開始案内のみ",
+      "after": "unavailable / 美浜町の利用者向け個別条件を確認できない",
+      "cause": "都道府県全体の開始案内だけで自治体固有条件を確定した",
+      "causeCode": "prefecture_notice_overgeneralized",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.mihama.wakayama.jp/docs/2014032700010/",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.pref.wakayama.lg.jp/prefg/040200/kosodateshienjigyo.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete_with_access_warning",
+      "officialPrimaryAccess": {
+        "status": null,
+        "finalUrl": "https://www.town.mihama.wakayama.jp/docs/2014032700010/",
+        "contentType": "",
+        "sizeRead": 0,
+        "category": "access_warning",
+        "error": "URLError(TimeoutError('timed out'))"
+      }
+    },
+    {
+      "municipalityCode": "30381",
+      "municipalityName": "美浜町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般耐震支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.mihama.wakayama.jp/docs/2024042300018/",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete_with_access_warning",
+      "officialPrimaryAccess": {
+        "status": null,
+        "finalUrl": "https://www.town.mihama.wakayama.jp/docs/2024042300018/",
+        "contentType": "",
+        "sizeRead": 0,
+        "category": "access_warning",
+        "error": "URLError(TimeoutError('timed out'))"
+      }
+    },
+    {
+      "municipalityCode": "30382",
+      "municipalityName": "日高町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "sickChildCare",
+      "classification": "status_judgement_error",
+      "before": "unavailable / 制度記事はあるが条件未確認",
+      "after": "verified / 御坊市の病児保育室ひまわりを利用可能",
+      "cause": "広域連携先を利用できる制度を見落とした",
+      "causeCode": "wide_area_use_omitted",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.wakayama-inami.lg.jp/0000001371.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.wakayama-inami.lg.jp/0000001371.html",
+        "contentType": "text/html",
+        "sizeRead": 20117,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30383",
+      "municipalityName": "由良町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般の空き家バンク情報支援",
+      "after": "unavailable / 子育て世帯専用住宅費支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.yura.wakayama.jp/docs/2021081200033/",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete_with_access_warning",
+      "officialPrimaryAccess": {
+        "status": null,
+        "finalUrl": "https://www.town.yura.wakayama.jp/docs/2021081200033/",
+        "contentType": "",
+        "sizeRead": 0,
+        "category": "access_warning",
+        "error": "URLError(TimeoutError('timed out'))"
+      }
+    },
+    {
+      "municipalityCode": "30390",
+      "municipalityName": "印南町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 18～44歳の若者一般向け家賃・住宅取得助成",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.wakayama-inami.lg.jp/0000000318.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.wakayama-inami.lg.jp/reiki/reiki_honbun/n100RG00000441.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.wakayama-inami.lg.jp/0000000318.html",
+        "contentType": "text/html",
+        "sizeRead": 23519,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30391",
+      "municipalityName": "みなべ町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 年齢要件のみの若者区分と子育て区分を混在",
+      "after": "verified / 中学生以下の子と同居・扶養する世帯区分に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.minabe.lg.jp/kurashi/03/01/2022053100016.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.minabe.lg.jp/kurashi/03/01/2022053100016.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 25086,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30392",
+      "municipalityName": "日高川町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 年齢要件のみの若者区分と子育て区分を混在",
+      "after": "verified / 中学生以下の子と同居・扶養する世帯区分に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.hidakagawa.lg.jp/kurashi/iju_teiju/shienseido/shintikushutoku.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.hidakagawa.lg.jp/kurashi/iju_teiju/shienseido/shintikushutoku.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 41786,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30401",
+      "municipalityName": "白浜町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "fact_value_error",
+      "before": "verified / 子ども加算額が不明な一般移住支援表示",
+      "after": "verified / 18歳未満1人100万円加算を明確化",
+      "cause": "料金・加算額・対象年齢等の重要条件を欠落または混同した",
+      "causeCode": "amount_or_eligibility_detail_missing",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.shirahama.wakayama.jp/soshiki/somu/kikaku/gyomu/1620711048086.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.shirahama.wakayama.jp/soshiki/somu/kikaku/gyomu/1620711048086.html",
+        "contentType": "text/html",
+        "sizeRead": 66344,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30404",
+      "municipalityName": "上富田町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 一般紀州材住宅支援と子ども加算未記載の移住支援を混在",
+      "after": "verified / 18歳未満1人100万円加算の移住支援金に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.kamitonda.lg.jp/section/reiki/reiki_honbun/k541RG00000746.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.kamitonda.lg.jp/section/reiki/reiki_honbun/k541RG00000746.html",
+        "contentType": "text/html",
+        "sizeRead": 49325,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30406",
+      "municipalityName": "すさみ町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般定住住宅支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.susami.lg.jp/kurashi/09/2021093000041.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.susami.lg.jp/kurashi/09/2021093000041.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 16935,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30421",
+      "municipalityName": "那智勝浦町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない一般空き家改修支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.nachikatsuura.wakayama.jp/info/1401",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.nachikatsuura.wakayama.jp/info/1401",
+        "contentType": "text/html; charset=utf-8",
+        "sizeRead": 44893,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30422",
+      "municipalityName": "太地町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 移住支援と空き家バンクを混在し子ども加算不明",
+      "after": "verified / 県移住支援事業の18歳未満帯同者加算に限定",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.taiji.wakayama.jp/lifestage/sumai/sumai002.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.pref.wakayama.lg.jp/prefg/022200/d00216634.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.taiji.wakayama.jp/lifestage/sumai/sumai002.html",
+        "contentType": "text/html; charset=UTF-8",
+        "sizeRead": 12462,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30424",
+      "municipalityName": "古座川町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件を確認できない一般移住定住住宅支援",
+      "after": "unavailable / 子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.kozagawa.wakayama.jp/machidukuri/sub003.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete_with_access_warning",
+      "officialPrimaryAccess": {
+        "status": null,
+        "finalUrl": "https://www.town.kozagawa.wakayama.jp/machidukuri/sub003.html",
+        "contentType": "",
+        "sizeRead": 0,
+        "category": "access_warning",
+        "error": "URLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.town.kozagawa.wakayama.jp'. (_ssl.c:1000)\"))"
+      }
+    },
+    {
+      "municipalityCode": "30427",
+      "municipalityName": "北山村",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "fact_value_error",
+      "before": "verified / 一般住宅取得・定住住宅の概要のみ",
+      "after": "verified / 小学生以下1人25万円加算の住宅取得・空き家改修支援",
+      "cause": "料金・加算額・対象年齢等の重要条件を欠落または混同した",
+      "causeCode": "amount_or_eligibility_detail_missing",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.vill.kitayama.wakayama.jp/kurashi/system/",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.vill.kitayama.wakayama.jp/kurashi/system/",
+        "contentType": "text/html",
+        "sizeRead": 8231,
+        "category": "reachable"
+      }
+    },
+    {
+      "municipalityCode": "30428",
+      "municipalityName": "串本町",
+      "prefectureCode": "30",
+      "team": "central-b",
+      "service": "housingSupport",
+      "classification": "category_error",
+      "before": "verified / 子ども要件のない紀州材住宅支援",
+      "after": "unavailable / 現行要綱に子育て世帯専用住宅支援を確認できない",
+      "cause": "一般・移住・新婚・若者・住宅制度等を子育て世帯向け制度として誤分類、または一般区分と子育て区分を混在",
+      "causeCode": "general_program_misclassified",
+      "officialSources": [
+        {
+          "role": "primary",
+          "url": "https://www.town.kushimoto.wakayama.jp/reiki_int/reiki_honbun/r218RG00001026.html",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "role": "additional",
+          "url": "https://www.town.kushimoto.wakayama.jp/sangyo/ringyou/kisyuzai-hojo.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "checkedAt": "2026-07-25",
+      "correctionPullRequest": 2926,
+      "correctionCiRun": 7527,
+      "regionBranch": "region/central",
+      "regionVerification": "semantic_equal",
+      "mainVerification": {
+        "taskConsistent": true,
+        "generatedServiceEqual": true,
+        "staticPageConsistent": true
+      },
+      "publicVerification": "passed",
+      "trackingIssue": 3188,
+      "status": "complete",
+      "officialPrimaryAccess": {
+        "status": 200,
+        "finalUrl": "https://www.town.kushimoto.wakayama.jp/reiki_int/reiki_honbun/r218RG00001026.html",
+        "contentType": "text/html",
+        "sizeRead": 53208,
+        "category": "reachable"
+      }
+    }
+  ],
+  "verificationRuleCorrection": {
+    "rule": "deduplicated_url_set_equality",
+    "reason": "共有主出典を持つ複数制度について、task側はURLを重複排除して保持するため",
+    "appliedAt": "2026-07-25T05:05:39.416456+00:00"
+  }
+}
