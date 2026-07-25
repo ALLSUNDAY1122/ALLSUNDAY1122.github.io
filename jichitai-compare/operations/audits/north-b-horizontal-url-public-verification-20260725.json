@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-horizontal-url-public-verification-20260725",
+  "sessionId": "north-b",
+  "verifiedAt": "2026-07-25T12:42:00+09:00",
+  "status": "completed",
+  "sourceAudit": "operations/audits/north-b-horizontal-url-year-numeric-20260725.json",
+  "integration": {
+    "mainPullRequest": 3232,
+    "mainMergeCommit": "58b6f9dc0cfef2201a17eb1b774a3f9cf2612d6e",
+    "regionPullRequest": 3316,
+    "regionCiRun": 30142625080,
+    "regionMergeCommit": "d6b210a8ac307d9f7aa536185ea4b67fbb60d79b",
+    "publicVerificationPullRequest": 3321,
+    "publicVerificationRun": 30142688067,
+    "publicVerificationResult": "success"
+  },
+  "verifiedPublicPages": [
+    {"code":"04215","municipality":"大崎市","service":"sickChildCare","result":"現行主出典URLを公開ページで確認"},
+    {"code":"04401","municipality":"松島町","service":"postpartumCare","result":"現行主出典URLを公開ページで確認"},
+    {"code":"04421","municipality":"大和町","service":"postpartumCare","result":"現行主出典URLを公開ページで確認"},
+    {"code":"04445","municipality":"加美町","service":"disasterPrevention","result":"現行主出典URLを公開ページで確認"},
+    {"code":"05206","municipality":"男鹿市","service":"postpartumCare","result":"現行主出典URLを公開ページで確認"},
+    {"code":"06202","municipality":"米沢市","service":"postpartumCare","result":"現行主出典URLを公開ページで確認"},
+    {"code":"06301","municipality":"山辺町","service":"housingSupport","result":"現行主出典URLを公開ページで確認"}
+  ],
+  "verifiedGeneratedData": [
+    {"code":"04301","municipality":"蔵王町","service":"disasterPrevention","result":"更新後追加出典URLを公開生成JSONで確認"},
+    {"code":"04424","municipality":"大衡村","service":"childcareFee","result":"更新後追加出典URLを公開生成JSONで確認"},
+    {"code":"04321","municipality":"大河原町","service":"schoolMeals","result":"旧追加出典URLが公開生成JSONから削除済み"}
+  ],
+  "summary": {
+    "primaryLinksVerified": 7,
+    "generatedDataChecksVerified": 3,
+    "failedChecks": 0,
+    "verifiedStatusChanges": 0,
+    "contentFactChanges": 0
+  },
+  "decision": "北日本Bの追加URL横断監査は、main・region/north・公開ページへの反映を確認して完了とする。"
+}
