@@ -1,8 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "triggerId": "central-quality-cross-audit-run-v2-20260725",
-  "createdAt": "2026-07-25T12:14:00+09:00",
+  "triggerId": "central-quality-cross-audit-run-v3-20260725",
+  "createdAt": "2026-07-25T12:24:00+09:00",
+  "purpose": "PR #3288による5自治体main同期後の再監査",
   "runnerFixPullRequest": 3278,
+  "blockerFixPullRequest": 3288,
   "task": "jichitai-compare/operations/control/central-quality-cross-audit-task-20260725.json",
   "scope": {
     "municipalityCount": 409,
@@ -15,5 +17,7 @@
     "jichitai-compare/operations/audits/central-quality-cross-audit-spotchecks-20260725.json",
     "jichitai-compare/operations/audits/central-quality-four-surface-consistency-20260725.json"
   ],
+  "expectedStructuralErrorCount": 0,
+  "expectedConsistencyMismatchCount": 0,
   "policy": "機械検出候補は確定誤りではない。公式情報で確認後にのみ訂正する。"
 }

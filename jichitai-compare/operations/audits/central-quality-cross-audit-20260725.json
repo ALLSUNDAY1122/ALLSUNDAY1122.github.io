@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "auditId": "central-quality-cross-audit-20260725",
-  "generatedAt": "2026-07-25T03:15:10.391130+00:00",
-  "sourceCommit": "2f618fe49d3d00d2a58bc959edb5f5a7bba2ff75",
+  "generatedAt": "2026-07-25T03:24:15.345327+00:00",
+  "sourceCommit": "61c3688b09512ac6f5b144eb00d313afd23cda00",
   "scope": {
     "prefectureCodes": [
       "16",
@@ -25,40 +25,9 @@
     "checkedServiceCount": 3681
   },
   "structural": {
-    "errorCount": 5,
+    "errorCount": 0,
     "warningCount": 0,
-    "errors": [
-      {
-        "type": "top_level_status_mismatch",
-        "code": "16202",
-        "expected": "verified",
-        "actual": "needs_coordinator"
-      },
-      {
-        "type": "top_level_status_mismatch",
-        "code": "16204",
-        "expected": "verified",
-        "actual": "needs_coordinator"
-      },
-      {
-        "type": "top_level_status_mismatch",
-        "code": "16205",
-        "expected": "verified",
-        "actual": "needs_coordinator"
-      },
-      {
-        "type": "top_level_status_mismatch",
-        "code": "16206",
-        "expected": "verified",
-        "actual": "needs_coordinator"
-      },
-      {
-        "type": "top_level_status_mismatch",
-        "code": "23100",
-        "expected": "verified",
-        "actual": "needs_coordinator"
-      }
-    ],
+    "errors": [],
     "warnings": []
   },
   "consistency": {
@@ -72,5 +41,5 @@
     "wideAreaUseOmission": 83,
     "oldFiscalEvidence": 103
   },
-  "conclusion": "machine_mismatches_detected_requires_review"
+  "conclusion": "machine_structural_and_repository_consistency_passed_official_review_candidates_pending"
 }
