@@ -1,0 +1,97 @@
+name: Temporary West B Second Audit Finalize
+on:
+  push:
+    branches: [ops/west-b-second-audit-finalize-20260725]
+permissions:
+  contents: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/west-b-second-audit-finalize-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify published Ogimi correction
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const expected = 'やんばる町村ファミリーサポートで、18歳未満の病児・病後児の預かりと送迎を1時間700円で支援';
+          const oldText = 'やんばる町村ファミリーサポートで病児・病後児保育施設への送迎等を支援';
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          let last = 'not checked';
+          for (let attempt = 1; attempt <= 40; attempt += 1) {
+            try {
+              const stamp = Date.now();
+              const [pageResponse, jsonResponse] = await Promise.all([
+                fetch(`${base}/municipality/47302/?audit=${stamp}`, { headers: { 'cache-control': 'no-cache' } }),
+                fetch(`${base}/data/generated/municipalities.json?audit=${stamp}`, { headers: { 'cache-control': 'no-cache' } })
+              ]);
+              if (!pageResponse.ok || !jsonResponse.ok) {
+                throw new Error(`HTTP page=${pageResponse.status} json=${jsonResponse.status}`);
+              }
+              const page = await pageResponse.text();
+              const data = await jsonResponse.json();
+              const municipality = data.municipalities.find((item) => item.code === '47302');
+              const summary = municipality?.services?.sickChildCare?.summary;
+              if (page.includes(expected) && !page.includes(oldText) && summary === expected) {
+                console.log('公開確認成功: 大宜味村の病児・病後児保育訂正文言がページと生成JSONで一致');
+                process.exit(0);
+              }
+              last = `pageExpected=${page.includes(expected)} pageOld=${page.includes(oldText)} jsonSummary=${summary}`;
+            } catch (error) {
+              last = error.message;
+            }
+            console.warn(`[${attempt}/40] ${last}`);
+            if (attempt < 40) await sleep(15000);
+          }
+          throw new Error(`公開確認失敗: ${last}`);
+          NODE
+      - name: Finalize audit records
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const checkedAt = '2026-07-25T11:05:00+09:00';
+          const auditPath = 'jichitai-compare/operations/audits/west-b-quality-improvement-second-audit-20260725.json';
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          audit.consistency.publicPage = 'verified';
+          audit.consistency.publicPageCheckedAt = checkedAt;
+          audit.branchStatus.main = 'merged_pr_3209_ci_7823';
+          audit.branchStatus.mainMergeCommit = 'f472f8464c73f955c002f93c0628392c64f2440f';
+          audit.branchStatus.regionWest = 'merged_pr_3212_ci_7835';
+          audit.branchStatus.regionWestMergeCommit = 'd5c58f038705097d6d24e67de3736f24d0c39bbf';
+          audit.aggregate.status = 'completed_main_region_public_verified';
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/west-b.json';
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          const q = checkpoint.qualityImprovementSecondAudit ?? {};
+          Object.assign(q, {
+            mainPullRequestNumber: 3209,
+            mainCiRunNumber: 7823,
+            mainMergeCommit: 'f472f8464c73f955c002f93c0628392c64f2440f',
+            regionSyncPullRequestNumber: 3212,
+            regionSyncCiRunNumber: 7835,
+            regionSyncMergeCommit: 'd5c58f038705097d6d24e67de3736f24d0c39bbf',
+            publicPageStatus: 'passed',
+            publicPageCheckedAt: checkedAt,
+            status: 'completed'
+          });
+          checkpoint.qualityImprovementSecondAudit = q;
+          checkpoint.updatedAt = checkedAt;
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+          NODE
+      - name: Commit finalized records
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-west-b-second-audit-finalize.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-quality-improvement-second-audit-20260725.json
+          git add jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git add .github/workflows/temp-west-b-second-audit-finalize.yml
+          git commit -m "audit: 西日本B第2監査を公開確認済みとして確定"
+          git push origin HEAD:ops/west-b-second-audit-finalize-20260725
