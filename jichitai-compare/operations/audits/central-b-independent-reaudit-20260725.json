@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-b-independent-reaudit-20260725",
+  "sessionId": "central-b",
+  "trackingIssueNumber": 3186,
+  "workingBranch": "quality/central-b-independent-reaudit-20260725",
+  "startedAt": "2026-07-25T10:31:00+09:00",
+  "status": "in_progress",
+  "scope": {
+    "prefectureCodes": ["26", "29", "30"],
+    "municipalityCount": 95,
+    "serviceCountPerMunicipality": 9,
+    "totalServiceCount": 855
+  },
+  "method": {
+    "mode": "independent_official_source_first",
+    "rule": "既存JSONの説明を参照する前に、自治体または都道府県の公式情報から制度条件を再構成し、その後に既存JSONと比較する",
+    "checks": [
+      "制度の有無",
+      "対象",
+      "料金",
+      "年齢",
+      "期間",
+      "回数",
+      "施設",
+      "年度",
+      "公式かつ制度に直接対応する現行URL",
+      "一般移住・一般住宅支援の混入",
+      "広域・周辺自治体施設の利用可能性",
+      "2026年度開始制度と旧年度終了制度",
+      "過去57件訂正のregion/central・main反映"
+    ]
+  },
+  "batches": [
+    {"round":1,"codes":["26100","26201","26202","26203","26204","26205","26206","26207","26208","26209"],"status":"in_progress"},
+    {"round":2,"codes":["26210","26211","26212","26213","26214","26303","26322","26343","26344","26364"],"status":"pending"},
+    {"round":3,"codes":["26365","26366","26367","26407","26463","26465","29201","29202","29203","29204"],"status":"pending"},
+    {"round":4,"codes":["29205","29206","29207","29208","29209","29210","29211","29212","29322","29342"],"status":"pending"},
+    {"round":5,"codes":["29343","29344","29345","29361","29362","29363","29385","29386","29401","29402"],"status":"pending"},
+    {"round":6,"codes":["29424","29425","29426","29427","29441","29442","29443","29444","29446","29447"],"status":"pending"},
+    {"round":7,"codes":["29449","29450","29451","29452","29453","30201","30202","30203","30204","30205"],"status":"pending"},
+    {"round":8,"codes":["30206","30207","30208","30209","30304","30341","30343","30344","30361"],"status":"pending"},
+    {"round":9,"codes":["30362","30366","30381","30382","30383","30390","30391","30392","30401"],"status":"pending"},
+    {"round":10,"codes":["30404","30406","30421","30422","30424","30427","30428"],"status":"pending"}
+  ],
+  "progress": {
+    "auditedMunicipalityCount": 1,
+    "auditedServiceCount": 9,
+    "confirmedErrorCount": 1,
+    "correctedErrorCount": 0,
+    "regionCentralMergedCount": 0,
+    "mainReflectedCount": 0
+  },
+  "findings": [
+    {
+      "round": 1,
+      "municipalityCode": "26100",
+      "municipalityName": "京都市",
+      "auditedAt": "2026-07-25T10:31:00+09:00",
+      "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "result": "confirmed_error_pending_correction",
+      "confirmedError": {
+        "service": "childcareFee",
+        "before": "3～5歳児、市民税非課税世帯の0～2歳児、認可保育施設を利用する世帯内第2子以降の保育料無償化のみを記録",
+        "after": "上記に加え、令和8年4月1日開始の京都市内私立幼稚園・幼稚園型認定こども園における未就園の第2子以降2歳児の保育料無償化を記録",
+        "cause": "2026年度開始制度の記録漏れ",
+        "officialSource": "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
+        "currentFiscalYearConfirmed": true,
+        "status": "pending_correction"
+      },
+      "noChangeServices": ["childMedical","sickChildCare","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "officialSources": [
+        "https://www.city.kyoto.lg.jp/hagukumi/page/0000067393.html",
+        "https://www.city.kyoto.lg.jp/hagukumi/page/0000098235.html",
+        "https://www.city.kyoto.lg.jp/hagukumi/page/0000178518.html",
+        "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
+        "https://www.city.kyoto.lg.jp/kyoiku/page/0000106581.html",
+        "https://www.city.kyoto.lg.jp/hagukumi/page/0000168986.html",
+        "https://www.city.kyoto.lg.jp/hagukumi/page/0000349886.html",
+        "https://www.city.kyoto.lg.jp/tokei/page/0000330039.html",
+        "https://www.city.kyoto.lg.jp/kankyo/page/0000001317.html",
+        "https://www.bousaimap.city.kyoto.lg.jp/sp/Top"
+      ]
+    }
+  ],
+  "nextAction": "第1バッチの残り9自治体を公式情報起点で監査し、京都市childcareFeeを含む確定誤りを自治体JSON・taskへ反映してPRとCIを実施する"
+}
