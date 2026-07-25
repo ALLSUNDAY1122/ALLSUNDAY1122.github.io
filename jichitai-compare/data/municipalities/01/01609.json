@@ -7,66 +7,164 @@
   "officialUrl": "https://www.town.erimo.lg.jp/",
   "status": "verified",
   "summary": "えりも町の子育て・暮らしに関する9制度のうち8制度を確認済みで、1制度は公式情報で詳細未確認です。",
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から中学3年生まで、所得制限なく保険診療の医療費を全額助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 15},
-      "details": {"target": "えりも町に住所があり健康保険に加入する15歳年度末までの児童", "coverage": "保険診療の自己負担額を全額助成", "incomeLimit": "所得制限額を超える世帯も全額助成", "application": "乳幼児等医療費受給者証の申請が必要"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/hoken/sg6h94000000cf26.html", "checkedAt": "2026-07-24"}
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "えりも町に住所があり健康保険に加入する15歳年度末までの児童",
+        "coverage": "保険診療の自己負担額を全額助成",
+        "incomeLimit": "所得制限額を超える世帯も全額助成",
+        "application": "乳幼児等医療費受給者証の申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/hoken/sg6h94000000cf26.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
       "summary": "町公式の現行子育て情報で、病児・病後児保育の一般利用施設、対象年齢、料金、予約方法を確認できない。",
-      "details": {"confirmed": "保育所、子育て支援センター、こども誰でも通園制度等の情報は公開", "unconfirmed": "病児保育または病後児保育の施設、対象、利用料、登録・予約方法", "guidance": "町民生活課子育て支援係へ広域利用を含む現行の利用可否を確認する必要がある"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/choumin/index.html", "checkedAt": "2026-07-24"}
+      "details": {
+        "confirmed": "保育所、子育て支援センター、こども誰でも通園制度等の情報は公開",
+        "unconfirmed": "病児保育または病後児保育の施設、対象、利用料、登録・予約方法",
+        "guidance": "町民生活課子育て支援係へ広域利用を含む現行の利用可否を確認する必要がある"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/choumin/index.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3歳から5歳児と住民税非課税世帯の0歳から2歳児は保育料無料で、食材料費も無料。課税世帯の0歳から2歳児は所得階層に応じて算定する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
-      "details": {"facilities": "中央保育所、えりも岬保育所、庶野保育所", "freeCare": "3歳から5歳児と住民税非課税世帯の0歳から2歳児は無料", "feeBasis": "課税世帯の0歳から2歳児は町民税所得割額による階層制", "multipleChildren": "所得階層に応じ第2子無料または半額、第3子以降無料", "mealFee": "食材料費は無料"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/choumin/sg6h94000000dn6h.html", "checkedAt": "2026-07-24"}
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
+      },
+      "details": {
+        "facilities": "中央保育所、えりも岬保育所、庶野保育所",
+        "freeCare": "3歳から5歳児と住民税非課税世帯の0歳から2歳児は無料",
+        "feeBasis": "課税世帯の0歳から2歳児は町民税所得割額による階層制",
+        "multipleChildren": "所得階層に応じ第2子無料または半額、第3子以降無料",
+        "mealFee": "食材料費は無料"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/choumin/sg6h94000000dn6h.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "小学生は給食費全額、中学生は第一子半額・第二子以降全額を補助し、保護者による申請は不要。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {"target": "町立学校に在籍する児童生徒", "elementary": "年間給食費を全額補助", "juniorHighFirstChild": "年間給食費の半額を補助", "juniorHighSecondAndLater": "年間給食費を全額補助", "application": "町から給食会計へ交付するため保護者の手続不要", "excluded": "就学援助で給食費支援を受ける世帯は本補助の対象外"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/kyouiku/sg6h940000004lu9.html?channel=main", "checkedAt": "2026-07-24"}
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "町立学校に在籍する児童生徒",
+        "elementary": "年間給食費を全額補助",
+        "juniorHighFirstChild": "年間給食費の半額を補助",
+        "juniorHighSecondAndLater": "年間給食費を全額補助",
+        "application": "町から給食会計へ交付するため保護者の手続不要",
+        "excluded": "就学援助で給食費支援を受ける世帯は本補助の対象外"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/kyouiku/sg6h940000004lu9.html?channel=main",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後5か月未満の母親を対象に、浦河赤十字病院のおっぱい外来利用費を上限1,600円、1回助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
-      "details": {"target": "産後ケア利用日に出産日から5か月未満の母親", "provider": "浦河赤十字病院婦人科のおっぱい外来", "support": "産後生活、育児、授乳、乳児の健康に関する相談とケア", "subsidy": "上限1,600円、1人1回", "voucher": "妊娠届出時に利用券を配布"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/hoken/sg6h940000005stx.html", "checkedAt": "2026-07-24"}
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
+      "details": {
+        "target": "産後ケア利用日に出産日から5か月未満の母親",
+        "provider": "浦河赤十字病院婦人科のおっぱい外来",
+        "support": "産後生活、育児、授乳、乳児の健康に関する相談とケア",
+        "subsidy": "上限1,600円、1人1回",
+        "voucher": "妊娠届出時に利用券を配布"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/hoken/sg6h940000005stx.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "保育所に在籍していない生後6か月から3歳未満児を、就労要件を問わず月10時間まで預かるこども誰でも通園制度を実施する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 2},
-      "details": {"target": "えりも町に住民登録があり保育所に在籍しない生後6か月から3歳未満児", "facilities": "中央保育所、えりも岬保育所、庶野保育所", "condition": "保護者の就労要件や利用理由を問わない", "limit": "児童1人につき月10時間まで", "application": "利用認定、施設面談、予約システムによる予約が必要", "payment": "利用時に現金で事前払い"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/choumin/sg6h94000000fas8.html", "checkedAt": "2026-07-24"}
+      "summary": "2026年4月1日から、保育所に在籍していない生後6か月から3歳未満児が、町内3保育所で月10時間まで1時間300円を基本に利用できる。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 2
+      },
+      "details": {
+        "target": "えりも町に住民登録があり保育所に在籍しない生後6か月から3歳未満児",
+        "facilities": "中央保育所、えりも岬保育所、庶野保育所",
+        "condition": "保護者の就労要件や利用理由を問わない",
+        "limit": "児童1人につき月10時間まで",
+        "application": "利用認定、施設面談、予約システムによる予約が必要",
+        "payment": "利用時に現金で事前払い",
+        "start": "2026年4月1日",
+        "fee": "1時間300円。世帯区分に応じ150円、60円または無料の負担軽減あり",
+        "reservation": "認定後に施設面談を行い、予約システムから予約"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/choumin/sg6h94000000fas8.html",
+        "checkedAt": "2026-07-25"
+      }
     },
     "housingSupport": {
       "status": "verified",
       "summary": "町内業者による100万円以上の住宅新築・改修工事に工事費の5％を助成し、10万円から50万円の範囲で交付する。",
-      "details": {"program": "えりも町住宅改修工事等助成事業", "target": "町内に住所があり、対象住宅を所有して居住または居住予定で町税滞納がない方", "contractor": "町内建設業者による工事", "minimumCost": "税込100万円以上", "amount": "工事費の5％。最低10万円、上限50万円", "period": "各年度4月1日から3月31日までに着工・竣工"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/kensetsu/u9c3nn0000000971.html", "checkedAt": "2026-07-24"}
+      "details": {
+        "program": "えりも町住宅改修工事等助成事業",
+        "target": "町内に住所があり、対象住宅を所有して居住または居住予定で町税滞納がない方",
+        "contractor": "町内建設業者による工事",
+        "minimumCost": "税込100万円以上",
+        "amount": "工事費の5％。最低10万円、上限50万円",
+        "period": "各年度4月1日から3月31日までに着工・竣工"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/kensetsu/u9c3nn0000000971.html",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
       "summary": "粗大ごみは大きさに応じ500円または1,000円の証紙を貼り、事前連絡して収集を依頼する。直接搬入にも対応する。",
-      "details": {"small": "縦・横・高さの合計150センチメートル以下は500円", "large": "合計151センチメートル以上は1,000円", "collection": "粗大ごみ証紙を購入・貼付し、清掃センターへ事前連絡", "directCarry": "清掃センター等への直接搬入にも対応", "ordinaryWaste": "燃やせる・燃やせないごみの直接搬入は10キログラム90円"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/choumin/u9c3nn0000000lbr.html?channel=main", "checkedAt": "2026-07-24"}
+      "details": {
+        "small": "縦・横・高さの合計150センチメートル以下は500円",
+        "large": "合計151センチメートル以上は1,000円",
+        "collection": "粗大ごみ証紙を購入・貼付し、清掃センターへ事前連絡",
+        "directCarry": "清掃センター等への直接搬入にも対応",
+        "ordinaryWaste": "燃やせる・燃やせないごみの直接搬入は10キログラム90円"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/choumin/u9c3nn0000000lbr.html?channel=main",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
       "summary": "最大クラス津波の浸水区域・浸水深、避難場所等を掲載する全体版・地区別ハザードマップを公開する。",
-      "details": {"tsunami": "日本海溝・千島海溝周辺海溝型地震の最大クラス津波想定を掲載", "maps": "全体版、ページ別版、地区別分割版を公開", "evacuation": "指定緊急避難場所・指定避難所一覧を掲載", "webGIS": "町の行政情報からWEB-GIS版も利用可能"},
-      "source": {"url": "https://www.town.erimo.lg.jp/section/kikaku/u9c3nn00000004rq.html", "checkedAt": "2026-07-24"}
+      "details": {
+        "tsunami": "日本海溝・千島海溝周辺海溝型地震の最大クラス津波想定を掲載",
+        "maps": "全体版、ページ別版、地区別分割版を公開",
+        "evacuation": "指定緊急避難場所・指定避難所一覧を掲載",
+        "webGIS": "町の行政情報からWEB-GIS版も利用可能"
+      },
+      "source": {
+        "url": "https://www.town.erimo.lg.jp/section/kikaku/u9c3nn00000004rq.html",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }
