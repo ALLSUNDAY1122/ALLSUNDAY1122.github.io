@@ -1,0 +1,63 @@
+name: Temporary West A Independent Sample Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-a-independent-sample-main-sync-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/west-a-post-final-independent-sample-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sync branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Copy regional source records and regenerate
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin region/west
+          for path in \
+            jichitai-compare/data/municipalities/37/37203.json \
+            jichitai-compare/data/municipalities/39/39210.json \
+            jichitai-compare/data/municipalities/43/43215.json \
+            jichitai-compare/operations/tasks/37203.json \
+            jichitai-compare/operations/tasks/39210.json \
+            jichitai-compare/operations/tasks/43215.json \
+            jichitai-compare/operations/audits/west-a-post-final-independent-sample-20260725.json; do
+            mkdir -p "$(dirname "$path")"
+            git show "origin/region/west:$path" > "$path"
+          done
+          cd jichitai-compare
+          npm run check
+          cd ..
+          rm -f jichitai-compare/operations/control/west-a-independent-sample-main-sync-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-independent-sample-main-sync.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/37/37203.json \
+                  jichitai-compare/data/municipalities/39/39210.json \
+                  jichitai-compare/data/municipalities/43/43215.json \
+                  jichitai-compare/operations/tasks/37203.json \
+                  jichitai-compare/operations/tasks/39210.json \
+                  jichitai-compare/operations/tasks/43215.json \
+                  jichitai-compare/operations/audits/west-a-post-final-independent-sample-20260725.json \
+                  jichitai-compare/data/generated/municipalities.json \
+                  jichitai-compare/municipality/37203/index.html \
+                  jichitai-compare/municipality/39210/index.html \
+                  jichitai-compare/municipality/43215/index.html \
+                  jichitai-compare/operations/progress.json \
+                  jichitai-compare/operations/control/west-a-independent-sample-main-sync-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-independent-sample-main-sync.yml
+          git diff --cached --check
+          git commit -m 'sync: 西日本A完了後抜き取り4制度を全国反映'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
