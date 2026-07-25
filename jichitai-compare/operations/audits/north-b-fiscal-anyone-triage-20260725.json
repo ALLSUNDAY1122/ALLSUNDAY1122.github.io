@@ -3,7 +3,7 @@
   "auditId": "north-b-fiscal-anyone-triage-20260725",
   "sessionId": "north-b",
   "createdAt": "2026-07-25T04:01:30.462Z",
-  "status": "machine_triage_completed",
+  "status": "manual_review_phase1_completed",
   "sourceAudit": "operations/audits/north-b-horizontal-url-year-numeric-20260725.json",
   "summary": {
     "fiscalCandidateCount": 40,
@@ -1780,5 +1780,108 @@
       "category": "single_condition_gap"
     }
   ],
-  "reviewPolicy": "自動分類だけで制度内容やstatusは変更しない。旧年度候補は令和8年度の継続確認、高リスク制度、主出典の現行性を優先する。誰でも通園候補は対象月齢・料金・施設・利用時間/月上限の複数欠落を優先し、利用者向け公式案内がない場合は推測しない。"
+  "reviewPolicy": "自動分類だけで制度内容やstatusは変更しない。旧年度候補は令和8年度の継続確認、高リスク制度、主出典の現行性を優先する。誰でも通園候補は対象月齢・料金・施設・利用時間/月上限の複数欠落を優先し、利用者向け公式案内がない場合は推測しない。",
+  "reviewedAt": "2026-07-25T12:59:00+09:00",
+  "manualReview": {
+    "fiscalPriority80PlusReviewed": 10,
+    "anyonePriority50PlusReviewed": 4,
+    "confirmedCorrections": [
+      {
+        "code": "01604",
+        "municipality": "新冠町",
+        "service": "temporaryChildcare",
+        "action": "unsupported_anyone_reference_removed"
+      },
+      {
+        "code": "01604",
+        "municipality": "新冠町",
+        "service": "housingSupport",
+        "action": "current_fiscal_period_clarified"
+      },
+      {
+        "code": "04606",
+        "municipality": "南三陸町",
+        "service": "temporaryChildcare",
+        "action": "anyone_conditions_completed"
+      },
+      {
+        "code": "06428",
+        "municipality": "庄内町",
+        "service": "temporaryChildcare",
+        "action": "anyone_conditions_completed"
+      }
+    ],
+    "noChangeConfirmed": [
+      {
+        "code": "06213",
+        "municipality": "南陽市",
+        "services": [
+          "schoolMeals",
+          "housingSupport"
+        ],
+        "decision": "令和8年度条件を確認できずunavailable維持"
+      },
+      {
+        "code": "06302",
+        "municipality": "中山町",
+        "services": [
+          "schoolMeals"
+        ],
+        "decision": "令和7年度要綱は令和8年5月31日失効、令和8年度継続を確認できずunavailable維持"
+      },
+      {
+        "code": "06367",
+        "municipality": "戸沢村",
+        "services": [
+          "temporaryChildcare"
+        ],
+        "decision": "制度開始告知のみで利用者向け条件不足のためunavailable維持"
+      },
+      {
+        "code": "05213",
+        "municipality": "北秋田市",
+        "services": [
+          "childcareFee"
+        ],
+        "decision": "令和7～9年度実施計画に継続事業として掲載、verified維持"
+      },
+      {
+        "code": "05215",
+        "municipality": "仙北市",
+        "services": [
+          "childcareFee"
+        ],
+        "decision": "令和8年度入園案内で現行条件を確認、verified維持"
+      },
+      {
+        "code": "06365",
+        "municipality": "大蔵村",
+        "services": [
+          "postpartumCare",
+          "temporaryChildcare"
+        ],
+        "decision": "公式事業ページで実施を確認。未掲載条件は推測せず現状維持"
+      },
+      {
+        "code": "06461",
+        "municipality": "遊佐町",
+        "services": [
+          "childcareFee"
+        ],
+        "decision": "令和8年度入園案内と負担額表を確認、verified維持"
+      },
+      {
+        "code": "01608",
+        "municipality": "様似町",
+        "services": [
+          "sickChildCare"
+        ],
+        "decision": "現行施設・広域利用条件を確認できずunavailable維持"
+      }
+    ],
+    "remaining": {
+      "fiscalPriority50To79": 14,
+      "anyonePriorityBelow50": 74
+    }
+  }
 }
