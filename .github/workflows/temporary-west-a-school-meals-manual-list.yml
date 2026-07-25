@@ -1,0 +1,45 @@
+name: Temporary West A School Meals Manual List
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-school-meals-manual-list-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    if: github.head_ref == 'audit/west-a-school-meals-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Extract unresolved decisions
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const src=JSON.parse(fs.readFileSync('jichitai-compare/operations/audits/west-a-school-meals-decision-summary-20260725.json','utf8'));
+          const rows=src.rows.filter(x=>x.resolution.startsWith('needs_')).map(x=>({code:x.code,name:x.name,prefecture:x.prefecture,summary:x.summary,sourceUrl:x.sourceUrl,categories:x.categories,httpStatus:x.httpStatus,error:x.error,markers:x.markers,direct2026:x.direct2026,implementation:x.implementation,userCondition:x.userCondition,onlyProposal:x.onlyProposal,resolution:x.resolution,keyExcerpts:x.keyExcerpts}));
+          const report={schemaVersion:'1.0.0',auditId:'west-a-school-meals-manual-list-20260725',team:'西日本調査班A',generatedAt:new Date().toISOString(),count:rows.length,rows,status:'manual_list_extracted'};
+          fs.writeFileSync('jichitai-compare/operations/audits/west-a-school-meals-manual-list-20260725.json',JSON.stringify(report,null,2)+'\n');
+          console.log(JSON.stringify(rows.map(x=>({code:x.code,name:x.name,resolution:x.resolution}))));
+          NODE
+          rm -f jichitai-compare/operations/control/west-a-school-meals-manual-list-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-school-meals-manual-list.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-school-meals-manual-list-20260725.json \
+                  jichitai-compare/operations/control/west-a-school-meals-manual-list-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-school-meals-manual-list.yml
+          git diff --cached --check
+          git commit -m 'audit: 西日本A学校給食費の要確認5件を抽出'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
