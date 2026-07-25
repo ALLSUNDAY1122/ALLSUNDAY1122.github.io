@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-fiscal-anyone-public-verification-20260725",
+  "sessionId": "north-b",
+  "targetMainPullRequest": 3383,
+  "targetMainMergeSha": "8d9456464bdfea3bb5b418e8f4e11cfd49f2c681",
+  "targetMainCiRunNumber": 8243,
+  "targetRegionPullRequest": 3394,
+  "targetRegionMergeSha": "237ea336bc572316749585a3dc3113ee4a085f4e",
+  "targetRegionCiRunNumber": 8251,
+  "verificationPullRequest": 3397,
+  "verificationWorkflowRunId": 30144375249,
+  "verificationWorkflowRunNumber": 3,
+  "status": "success",
+  "verifiedMunicipalityCodes": ["01604","04401","04422","04606","05212","05213","06382","06428"],
+  "checks": {
+    "individualPageHttpAndExpectedSummary": 8,
+    "generatedMunicipalityData": "success",
+    "unsupportedAnyoneStatementRemoved": true,
+    "currentPrimarySourcesPresent": true,
+    "municipalityCount": 1741,
+    "serviceCount": 15669
+  },
+  "diagnosticHistory": {
+    "initialWorkflowRunId": 30144150917,
+    "initialResult": "failed_test_phrase_only",
+    "reason": "南三陸町と庄内町の施設詳細は生成JSONには存在するが、個別ページは制度summaryを表示するため。公開summaryに存在する条件文へ検査語を変更した。",
+    "municipalityDataChangeRequired": false
+  },
+  "checkedAt": "2026-07-25T13:41:00+09:00"
+}
