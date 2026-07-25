@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-bulky-waste-public-verification-20260725",
+  "generatedAt": "2026-07-25T12:55:28.504Z",
+  "verificationPolicy": {
+    "staticPageRequired": [
+      "http_200",
+      "primary_source_link"
+    ],
+    "publicGeneratedJsonRequired": [
+      "verified_status",
+      "primary_source",
+      "additional_source",
+      "1741_municipalities",
+      "15669_services"
+    ],
+    "additionalSourceHtmlRendering": "recorded_but_not_required"
+  },
+  "regionalCorrectionPullRequest": 3677,
+  "nationalSyncPullRequest": 3679,
+  "verificationPullRequest": 3681,
+  "verificationWorkflowRunId": 30158773931,
+  "attempt": 1,
+  "pageChecks": [
+    {
+      "code": "39424",
+      "name": "大月町",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/39424/?audit=1784984127534-1",
+      "httpStatus": 200,
+      "primarySourceMatches": true,
+      "additionalSourceRenderedInHtml": false,
+      "success": true
+    },
+    {
+      "code": "40421",
+      "name": "桂川町",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/40421/?audit=1784984127534-1",
+      "httpStatus": 200,
+      "primarySourceMatches": true,
+      "additionalSourceRenderedInHtml": false,
+      "success": true
+    },
+    {
+      "code": "43208",
+      "name": "山鹿市",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/43208/?audit=1784984127534-1",
+      "httpStatus": 200,
+      "primarySourceMatches": true,
+      "additionalSourceRenderedInHtml": false,
+      "success": true
+    }
+  ],
+  "jsonCheck": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "records": [
+      {
+        "code": "39424",
+        "found": true,
+        "status": "verified",
+        "statusMatches": true,
+        "sourceMatches": true,
+        "additionalMatches": true,
+        "success": true
+      },
+      {
+        "code": "40421",
+        "found": true,
+        "status": "verified",
+        "statusMatches": true,
+        "sourceMatches": true,
+        "additionalMatches": true,
+        "success": true
+      },
+      {
+        "code": "43208",
+        "found": true,
+        "status": "verified",
+        "statusMatches": true,
+        "sourceMatches": true,
+        "additionalMatches": true,
+        "success": true
+      }
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none"
+}
