@@ -175138,22 +175138,45 @@
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "産後1年未満の母子へ、宿泊・日帰り・短時間・訪問型の産後ケアを提供する。",
+          "summary": "産後1年未満の母子へ、宿泊・1日通所・短時間通所・訪問型の産後ケアを提供する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "target": "浜松市内に居住する産後1年未満の母子",
-            "types": "宿泊型、デイサービス1日型、デイサービス1時間・2時間型、訪問型",
+            "target": "浜松市に住民票がある産後1年未満の母子。市外からの里帰り出産者等は住民登録自治体の制度状況により利用条件が異なる",
+            "types": "宿泊型、デイサービス1日型、デイサービス短時間型（1時間以内・1時間超）、訪問型",
             "care": "母体の身体ケア、授乳支援、育児手技の指導、生活相談等",
-            "publicSupport": "課税世帯にも各類型の公費負担があり、非課税世帯は減免、生活保護世帯は無料",
-            "fee": "宿泊・1日型の自己負担は施設により異なり、短時間・訪問型も公費負担後の額を確認"
+            "lodgingAndFullDayLimit": "宿泊型とデイサービス1日型を合わせて7日まで",
+            "shortAndVisitLimit": "デイサービス短時間型と訪問型を合わせて7回まで",
+            "shortFees": "短時間型は1時間以内850円、1時間超1,700円",
+            "visitFee": "訪問型は1回2,500円",
+            "lodgingAndFullDayFee": "宿泊型・デイサービス1日型の自己負担額は実施施設により異なる",
+            "reduction": "市民税非課税者・生活保護受給者は自己負担額の減免制度あり",
+            "application": "利用前にオンライン申請または各健康づくりセンター窓口で申請し、承認後に実施施設へ予約",
+            "facilities": "令和8年度実施施設一覧を公式子育て情報サイトで公開"
           },
           "source": {
-            "url": "https://www.city.hamamatsu.shizuoka.jp/zaisek/budget/budget07/detail/d_072.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.hamamatsu-pippi.net/contents/7915.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.hamamatsu-pippi.net/contents/7916.html",
+              "checkedAt": "2026-07-25",
+              "description": "令和8年度の宿泊型・デイサービス型・訪問型実施施設一覧"
+            },
+            {
+              "url": "https://www.hamamatsu-pippi.net/contents/19032.html",
+              "checkedAt": "2026-07-25",
+              "description": "申請から利用までの利用者向け手順"
+            },
+            {
+              "url": "https://www.city.hamamatsu.shizuoka.jp/zaisek/budget/budget07/detail/d_072.html",
+              "checkedAt": "2026-07-25",
+              "description": "制度拡充の予算・政策根拠。利用者向け現行条件の主出典には使用しない"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
