@@ -1,0 +1,49 @@
+name: Temporary West B Sick Child Corrections V3
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    if: github.head_ref == 'fix/west-b-sick-child-crosscheck-corrections-v3-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/west-b-sick-child-crosscheck-corrections-v3-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Load confirmed correction scripts
+        shell: bash
+        run: |
+          git fetch origin fix/west-b-sick-child-crosscheck-corrections-v2-20260725 --depth=1
+          git show FETCH_HEAD:.github/scripts/west-b-sick-child-corrections.mjs > /tmp/west-b-core.mjs
+          git show FETCH_HEAD:.github/scripts/west-b-sick-child-corrections-postfix.mjs > /tmp/west-b-postfix.mjs
+      - name: Apply, regenerate and validate
+        shell: bash
+        run: |
+          node /tmp/west-b-core.mjs
+          node /tmp/west-b-postfix.mjs
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+      - name: Commit correction set
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-west-b-sick-child-corrections-v3.yml
+          rm -f .github/west-b-sick-child-corrections-v3.trigger
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: 西日本B病児保育6自治体を最新mainへ再適用"
+          git push origin HEAD:fix/west-b-sick-child-crosscheck-corrections-v3-20260725
