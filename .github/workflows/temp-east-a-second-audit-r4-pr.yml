@@ -17,7 +17,8 @@ jobs:
   patch-and-generate:
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.head.ref == 'audit/east-a-second-quality-20260725-r4'
+      (github.event.pull_request.head.ref == 'audit/east-a-second-quality-20260725-r4' ||
+       github.event.pull_request.head.ref == 'audit/east-a-second-quality-20260725-finalize')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -44,7 +45,7 @@ jobs:
         if: steps.detect.outputs.run_patch == 'true'
         with:
           node-version: '24'
-      - name: Apply audited corrections
+      - name: Apply audit patch
         if: steps.detect.outputs.run_patch == 'true'
         run: python jichitai-compare/operations/scripts/patch-east-a-second-audit-r4.py
       - name: Regenerate and validate
@@ -54,7 +55,7 @@ jobs:
           npm run generate
           npm run progress
           npm run validate:generated
-      - name: Commit corrections and remove branch-local patch files
+      - name: Commit audit update and remove branch-local patch files
         if: steps.detect.outputs.run_patch == 'true'
         shell: bash
         run: |
@@ -67,5 +68,5 @@ jobs:
             echo "No changes"
             exit 0
           fi
-          git commit -m "fix: apply East A second audit round 4 corrections"
+          git commit -m "audit: finalize East A second audit round 4"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
