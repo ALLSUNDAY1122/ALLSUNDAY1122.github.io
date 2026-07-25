@@ -1,0 +1,163 @@
+name: Temporary East A Public State Capture
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  capture:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'diagnose/east-a-public-final-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Detect trigger
+        id: detect
+        shell: bash
+        run: |
+          if [[ -f jichitai-compare/operations/triggers/east-a-public-state-capture.txt ]]; then
+            echo "run_capture=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_capture=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.run_capture == 'true'
+        with:
+          node-version: '24'
+      - name: Capture live state
+        if: steps.detect.outputs.run_capture == 'true'
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const expected = new Map([
+            ['10201', '5,000円'],
+            ['13103', '2,000円'],
+            ['19201', '既存住宅取得・リフォームは上限60万円'],
+            ['19202', '市外在住1日1,500円'],
+            ['19205', '日額2,500円'],
+            ['19206', '日額4,000円'],
+            ['20201', '連続7日'],
+            ['20202', '8時間以内2,600円'],
+            ['20203', '1日1,000円'],
+            ['20204', '受付一時中止'],
+            ['20205', '実費400円']
+          ]);
+          const result = {
+            schemaVersion: '1.0.0',
+            auditId: 'east-a-public-final-state-capture-20260725',
+            checkedAt: new Date().toISOString(),
+            base,
+            generated: {},
+            pages: [],
+            allPassed: true
+          };
+          try {
+            const response = await fetch(`${base}/data/generated/municipalities.json?v=${Date.now()}`, {
+              redirect: 'follow', signal: AbortSignal.timeout(30000),
+              headers: { 'user-agent': 'EastAPublicStateCapture/1.0' }
+            });
+            const text = await response.text();
+            let municipalities = null;
+            let parseError = null;
+            try {
+              const raw = JSON.parse(text);
+              municipalities = Array.isArray(raw) ? raw : raw.municipalities;
+            } catch (error) {
+              parseError = String(error?.message ?? error);
+            }
+            const serviceCount = Array.isArray(municipalities)
+              ? municipalities.reduce((sum, item) => sum + Object.keys(item.services || {}).length, 0)
+              : null;
+            const phraseChecks = {};
+            if (Array.isArray(municipalities)) {
+              for (const [code, phrase] of expected) {
+                const item = municipalities.find((entry) => String(entry.code) === code);
+                phraseChecks[code] = {
+                  foundMunicipality: Boolean(item),
+                  phrase,
+                  containsPhrase: Boolean(item && JSON.stringify(item).includes(phrase))
+                };
+              }
+            }
+            const sakae = Array.isArray(municipalities)
+              ? municipalities.find((entry) => String(entry.code) === '20602')
+              : null;
+            const sakaeStatuses = Object.values(sakae?.services || {}).map((service) => service.status);
+            const ok = response.ok && Array.isArray(municipalities) && municipalities.length === 1741 && serviceCount === 15669 &&
+              Object.values(phraseChecks).every((check) => check.foundMunicipality && check.containsPhrase) &&
+              sakaeStatuses.length === 9 && sakaeStatuses.every((status) => status === 'unavailable');
+            result.generated = {
+              status: response.status,
+              contentType: response.headers.get('content-type'),
+              bodyLength: text.length,
+              parseError,
+              municipalityCount: Array.isArray(municipalities) ? municipalities.length : null,
+              serviceCount,
+              phraseChecks,
+              sakaeStatuses,
+              ok
+            };
+            if (!ok) result.allPassed = false;
+          } catch (error) {
+            result.generated = { ok: false, error: String(error?.message ?? error) };
+            result.allPassed = false;
+          }
+          for (const [code, phrase] of expected) {
+            try {
+              const response = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`, {
+                redirect: 'follow', signal: AbortSignal.timeout(20000),
+                headers: { 'user-agent': 'EastAPublicStateCapture/1.0' }
+              });
+              const text = await response.text();
+              const ok = response.ok && text.includes(phrase);
+              result.pages.push({
+                code,
+                phrase,
+                status: response.status,
+                contentType: response.headers.get('content-type'),
+                bodyLength: text.length,
+                containsPhrase: text.includes(phrase),
+                ok
+              });
+              if (!ok) result.allPassed = false;
+            } catch (error) {
+              result.pages.push({ code, phrase, ok: false, error: String(error?.message ?? error) });
+              result.allPassed = false;
+            }
+          }
+          fs.mkdirSync('jichitai-compare/operations/audits', { recursive: true });
+          fs.writeFileSync(
+            'jichitai-compare/operations/audits/east-a-public-final-state-capture-20260725.json',
+            JSON.stringify(result, null, 2) + '\n'
+          );
+          console.log(JSON.stringify(result, null, 2));
+          NODE
+      - name: Commit captured state and remove trigger
+        if: steps.detect.outputs.run_capture == 'true'
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/triggers/east-a-public-state-capture.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/east-a-public-final-state-capture-20260725.json \
+                  jichitai-compare/operations/triggers/east-a-public-state-capture.txt
+          git commit -m "audit: capture East A final public state"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
