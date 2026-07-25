@@ -7,140 +7,18 @@
     "recordCount": 57,
     "uniqueMunicipalityCount": 55,
     "regionMismatchCount": 0,
-    "taskMismatchCount": 11,
+    "taskMismatchCount": 0,
     "generatedMismatchCount": 0,
     "staticMismatchCount": 0,
     "publicFailureCount": 0,
     "brokenOfficialSourceCount": 0,
     "officialAccessWarningCount": 6,
     "sampleCount": 9,
-    "samplePassCount": 8,
-    "incompleteRowCount": 11
+    "samplePassCount": 9,
+    "incompleteRowCount": 0
   },
   "regionMismatches": [],
-  "taskMismatches": [
-    {
-      "code": "29449",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "29451",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30304",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30344",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30381",
-      "service": "sickChildCare",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30381",
-      "service": "temporaryChildcare",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30381",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30383",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30422",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30424",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    },
-    {
-      "code": "30427",
-      "service": "housingSupport",
-      "checks": {
-        "statusMerged": true,
-        "completedServiceCount9": true,
-        "verifiedCount": true,
-        "unavailableCount": true,
-        "officialSources": false
-      }
-    }
-  ],
+  "taskMismatches": [],
   "generatedMismatches": [],
   "staticMismatches": [],
   "publicFailures": [],
@@ -902,7 +780,7 @@
       "prefectureCode": "29",
       "municipalityCode": "29449",
       "recordCount": 1,
-      "allRowsComplete": false,
+      "allRowsComplete": true,
       "primarySources": [
         {
           "role": "primary",
@@ -967,6 +845,671 @@
     },
     "success": true
   },
-  "success": false,
-  "releaseBlocker": "active"
+  "success": true,
+  "releaseBlocker": "none",
+  "taskSourceComparisonRule": "deduplicated_url_set_equality",
+  "taskSourceComparisonReason": "task.officialSources is intentionally deduplicated while multiple services may share the same primary URL.",
+  "taskSourceResults": {
+    "26209": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26210": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26211": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26213": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26214": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26303": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26322": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26343": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26364": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26366": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26367": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "26463": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29203": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29205": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29207": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29208": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29210": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29345": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29361": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29362": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29425": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29427": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29441": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29442": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29443": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29449": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29451": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "29453": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30202": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30203": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30206": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30207": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30208": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30209": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30304": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30341": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30343": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30344": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30361": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30362": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30366": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30381": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30382": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30383": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30390": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30391": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30392": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30401": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30404": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30406": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30421": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30422": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30424": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30427": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    },
+    "30428": {
+      "checks": {
+        "statusMerged": true,
+        "completedServiceCount9": true,
+        "verifiedCount": true,
+        "unavailableCount": true,
+        "officialSourceSetEqual": true
+      },
+      "missingSources": [],
+      "extraSources": [],
+      "success": true
+    }
+  },
+  "correctionAppliedAt": "2026-07-25T05:05:39.416456+00:00"
 }
