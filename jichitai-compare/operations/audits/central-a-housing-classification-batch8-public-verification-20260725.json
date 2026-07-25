@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch8-public-verification-20260725",
+  "generatedAt": "2026-07-25T07:05:31.933Z",
+  "attempt": 1,
+  "regionalPullRequest": 3539,
+  "regionalCiRun": 8602,
+  "stateSyncPullRequest": 3549,
+  "stateSyncCiRun": 8610,
+  "nationalSyncPullRequest": 3553,
+  "nationalSyncWorkflowRunId": 30148549805,
+  "verificationPullRequest": 3555,
+  "verificationWorkflowRunId": 30148677293,
+  "pageChecks": [
+    {
+      "code": "17204",
+      "name": "輪島市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/17204/?audit=1784963130475-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": null,
+      "success": true
+    },
+    {
+      "code": "17211",
+      "name": "能美市",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/17211/?audit=1784963130475-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": true,
+      "success": true
+    },
+    {
+      "code": "17361",
+      "name": "津幡町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/17361/?audit=1784963130475-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": null,
+      "success": true
+    },
+    {
+      "code": "21604",
+      "name": "白川村",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/21604/?audit=1784963130475-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": true,
+      "success": true
+    },
+    {
+      "code": "22208",
+      "name": "伊東市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/22208/?audit=1784963130475-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": null,
+      "success": true
+    }
+  ],
+  "publicGeneratedJson": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "municipalityCount1741": true,
+    "serviceCount15669": true,
+    "checks": [
+      {
+        "code": "17204",
+        "found": true,
+        "expectedStatus": "verified",
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "17211",
+        "found": true,
+        "expectedStatus": "unavailable",
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "17361",
+        "found": true,
+        "expectedStatus": "verified",
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "21604",
+        "found": true,
+        "expectedStatus": "unavailable",
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "22208",
+        "found": true,
+        "expectedStatus": "verified",
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      }
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none"
+}
