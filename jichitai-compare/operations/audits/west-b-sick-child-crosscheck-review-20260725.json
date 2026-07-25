@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-sick-child-crosscheck-review-20260725",
+  "auditId": "west-b-sick-child-crosscheck-20260725",
+  "sessionId": "west-b",
+  "reviewedAt": "2026-07-25T11:55:00+09:00",
+  "scope": {
+    "municipalityCount": 250,
+    "sickChildCareCount": 250,
+    "mechanicalCandidateCount": 38
+  },
+  "results": {
+    "confirmedStatusCorrectionCount": 6,
+    "correctedStatusCount": 6,
+    "retainedWithoutCorrectionCount": 32,
+    "unresolvedConfirmedErrorCount": 0
+  },
+  "corrections": [
+    {
+      "code": "35321",
+      "name": "和木町",
+      "service": "sickChildCare",
+      "beforeStatus": "unavailable",
+      "afterStatus": "verified",
+      "summary": "町内施設はないが、広島広域都市圏・山口県内の協定施設で病児・病後児保育を利用可能",
+      "primarySource": "https://www.town.waki.lg.jp/soshiki/8/2056.html"
+    },
+    {
+      "code": "35502",
+      "name": "阿武町",
+      "service": "sickChildCare",
+      "beforeStatus": "unavailable",
+      "afterStatus": "verified",
+      "summary": "山口県内全市町の相互利用協定により、県内の病児・病後児保育施設を利用可能",
+      "primarySource": "https://www.pref.yamaguchi.lg.jp/soshiki/51/18462.html"
+    },
+    {
+      "code": "36342",
+      "name": "神山町",
+      "service": "sickChildCare",
+      "beforeStatus": "unavailable",
+      "afterStatus": "verified",
+      "summary": "乳児・幼児・小学生が徳島市等の広域病児・病後児保育施設を利用可能",
+      "primarySource": "https://www.pref.tokushima.lg.jp/hagukumi/purpose-search/7300846/"
+    },
+    {
+      "code": "42214",
+      "name": "南島原市",
+      "service": "sickChildCare",
+      "beforeStatus": "unavailable",
+      "afterStatus": "verified",
+      "summary": "島原市の病児保育オリーブを広域利用し、平日・土曜に病児を受け入れ",
+      "primarySource": "https://www.city.minamishimabara.lg.jp/kiji0039904/index.html"
+    },
+    {
+      "code": "45341",
+      "name": "三股町",
+      "service": "sickChildCare",
+      "beforeStatus": "unavailable",
+      "afterStatus": "verified",
+      "summary": "町内3施設で病児・病後児保育を実施し、ファミサポでも軽度病後児を預かり",
+      "primarySource": "https://www.pref.miyazaki.lg.jp/kodomo-seisaku/kyoikukosodate/kodomo/20171215111303.html"
+    },
+    {
+      "code": "45382",
+      "name": "国富町",
+      "service": "sickChildCare",
+      "beforeStatus": "unavailable",
+      "afterStatus": "verified",
+      "summary": "町内2施設で病児・病後児保育を実施",
+      "primarySource": "https://www.pref.miyazaki.lg.jp/kodomo-seisaku/kyoikukosodate/kodomo/20171215111303.html"
+    }
+  ],
+  "retainedPolicy": "一般的な子育て一覧、計画書、ファミリーサポート一般預かりのみで病児・病後児の利用可能性を確認できない候補は保守的判定を維持。",
+  "conclusion": "six_verified_unavailable_misclassifications_corrected"
+}

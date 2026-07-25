@@ -254503,7 +254503,7 @@
       "name": "和木町",
       "officialUrl": "https://www.town.waki.lg.jp/",
       "status": "verified",
-      "summary": "必須9制度を和木町公式情報で調査。8制度をverified、町内施設がなく利用条件が協定先ごとに異なる病児・病後児保育をunavailableとして登録。",
+      "summary": "必須9制度を和木町公式情報で再確認し、全9制度をverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -254524,16 +254524,27 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "町内施設はなく協定市町の病児・病後児保育施設を相互利用できるが、対象年齢・料金は施設ごとに異なる",
+          "status": "verified",
+          "summary": "町内施設はないが、広島広域都市圏・山口県内の協定施設で病児・病後児保育を利用可能",
           "details": {
-            "townFacility": "和木町内に利用施設なし",
-            "reciprocalUse": "広島広域都市圏構成市町と山口県内市町の協定施設を利用可能",
-            "availability": "利用対象、料金、予約方法は各市町・各施設への確認が必要なため町共通条件を確定できない"
+            "townFacility": "和木町内に病児・病後児保育施設はない",
+            "reciprocalUse": "広島広域都市圏構成市町および山口県内全市町の協定により協定先施設を相互利用できる",
+            "conditions": "対象、料金、予約方法、受入可否は利用する市町・施設ごとに確認が必要",
+            "application": "利用施設または担当課へ事前に問い合わせて登録・予約する"
           },
           "source": {
             "url": "https://www.town.waki.lg.jp/soshiki/8/2056.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.pref.yamaguchi.lg.jp/soshiki/51/18462.html",
+              "checkedAt": "2026-07-25"
+            }
+          ],
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
           }
         },
         "childcareFee": {
@@ -255183,7 +255194,7 @@
       "name": "阿武町",
       "officialUrl": "https://www.town.abu.lg.jp/",
       "status": "verified",
-      "summary": "必須9制度を阿武町公式情報で調査。7制度をverified、現行の詳細条件を確認できない病児・病後児保育と産後ケアをunavailableとして登録。",
+      "summary": "必須9制度を阿武町公式情報で再確認し、8制度をverified、現行の詳細条件を確認できない産後ケアをunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -255204,15 +255215,27 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "病児保育広域利用事業の方針は確認できるが、2026年度の利用施設・対象年齢・料金を町公式HTMLで確認できない",
+          "status": "verified",
+          "summary": "山口県内全市町の相互利用協定により、県内の病児・病後児保育施設を利用可能",
           "details": {
-            "confirmed": "町の子ども・子育て施策では病児保育の広域利用を位置付け",
-            "availability": "現行の利用可能施設、対象年齢、利用料金、予約方法は健康福祉課への確認が必要"
+            "reciprocalUse": "山口県内在住者は居住市町にかかわらず県内の病児・病後児対応型施設を利用できる",
+            "exampleFacility": "萩市の病児保育室「いるかのママ」など県内届出施設",
+            "exampleConditions": "いるかのママは保育園等通園児から小学6年生まで。平日8時30分～17時30分、土曜8時30分～14時。1日1,500円、土曜1,000円",
+            "application": "施設ごとに条件が異なるため利用施設または町担当課へ事前確認・登録・予約する"
           },
           "source": {
-            "url": "https://www.town.abu.lg.jp/guide/",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.pref.yamaguchi.lg.jp/soshiki/51/18462.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.hagi.lg.jp/soshiki/35/1439.html",
+              "checkedAt": "2026-07-25"
+            }
+          ],
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
           }
         },
         "childcareFee": {
@@ -257376,7 +257399,7 @@
       "name": "神山町",
       "officialUrl": "https://www.town.kamiyama.lg.jp/",
       "status": "verified",
-      "summary": "必須9制度を神山町公式情報で調査。7制度をverified、2026年度の詳細条件を確認できない病児・病後児保育とこども誰でも通園制度をunavailableとして登録。",
+      "summary": "必須9制度を神山町公式情報で再確認し、8制度をverified、2026年度の詳細条件を確認できないこども誰でも通園制度をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -257397,21 +257420,26 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "近隣市町の病児・病後児保育施設を利用できるが、2026年度の対象年齢・料金を町公式ページで確認できない",
+          "status": "verified",
+          "summary": "乳児・幼児・小学生が徳島市等の広域病児・病後児保育施設を利用可能",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
+          },
           "details": {
-            "confirmed": "町内に病児保育施設はなく、徳島市・石井町等の広域施設を利用可能",
-            "support": "保育の必要性認定を受けた世帯は施設等利用給付の対象となる場合あり",
-            "availability": "現行の対象年齢、利用料金、予約方法は健康福祉課または実施施設への確認が必要"
+            "target": "神山町を含む広域利用対象市町に住む乳児・幼児または小学校就学児童で、病気中・回復期に家庭保育が困難な場合",
+            "broadUse": "徳島市、小松島市、勝浦町、佐那河内村、石井町、神山町、松茂町、北島町、藍住町、板野町、上板町の住民が対象施設を利用可能",
+            "fee": "施設・居住市町により異なる。徳島市施設の例は1日1,800円で世帯区分による減免あり",
+            "application": "予約、料金、必要書類は実施施設へ事前確認する"
           },
           "source": {
-            "url": "https://www.town.kamiyama.lg.jp/support/",
-            "checkedAt": "2026-07-23"
+            "url": "https://www.pref.tokushima.lg.jp/hagukumi/purpose-search/7300846/",
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.town.kamiyama.lg.jp/child-rearing/education/nursery-school.html",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.town.kamiyama.lg.jp/support/",
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -287237,7 +287265,7 @@
       "name": "南島原市",
       "officialUrl": "https://www.city.minamishimabara.lg.jp/",
       "status": "verified",
-      "summary": "必須9制度を南島原市公式情報で調査。8制度をverified、現行の対象年齢を公式HTMLで確認できない病児保育をunavailableとして登録。",
+      "summary": "必須9制度を南島原市公式情報で再確認し、全9制度をverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -287258,18 +287286,24 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "島原市の病児保育オリーブを広域利用できるが、現行の対象年齢を市公式HTMLで確認できない",
+          "status": "verified",
+          "summary": "島原市の病児保育オリーブを広域利用し、平日・土曜に病児を受け入れ",
           "details": {
             "facility": "病児保育オリーブ（うちだキッズクリニック内）",
-            "hours": "月曜から金曜8時30分～17時30分、土曜8時30分～16時30分",
+            "target": "南島原市に住所があり、入院治療を必要とせず症状の急変が認められない病児",
+            "hours": "月曜～金曜8時30分～17時30分、土曜8時30分～16時30分",
             "capacity": "6人",
-            "fee": "課税世帯は1日2,000円、連続利用3日目から1日1,000円。生活保護・非課税世帯は無料",
-            "availability": "現行の利用対象年齢を市公式HTMLで確認できないため要問い合わせ"
+            "fee": "生活保護・市町村民税非課税世帯は無料、その他は1日2,000円、連続利用3日目から1日1,000円",
+            "limit": "1回の申請につき原則7日間まで連続利用可能",
+            "application": "事前登録、医療機関受診、原則利用日前日までの予約、利用当日の申込みが必要"
           },
           "source": {
             "url": "https://www.city.minamishimabara.lg.jp/kiji0039904/index.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
+          },
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 12
           }
         },
         "childcareFee": {
@@ -301302,7 +301336,7 @@
       "name": "三股町",
       "officialUrl": "https://www.town.mimata.lg.jp/",
       "status": "verified",
-      "summary": "必須9制度を三股町公式情報で調査。8制度をverified、町公式サイトで現行の実施施設・対象・料金を確認できない病児・病後児保育をunavailableとして登録。",
+      "summary": "必須9制度を三股町・宮崎県公式情報で再確認し、全9制度をverifiedとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -301325,20 +301359,29 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "町公式サイトで病児・病後児保育の現行実施施設・対象年齢・料金を確認できない",
+          "status": "verified",
+          "summary": "町内3施設で病児・病後児保育を実施し、ファミサポでも軽度病後児を預かり",
+          "details": {
+            "facilities": "稗田保育園 とっこのもり、畠中こども病児院、ソダツバ 保健室",
+            "currentList": "宮崎県の令和8年4月1日現在の実施施設一覧に町内3施設を掲載",
+            "familySupport": "ファミリー・サポート・センターたんぽぽでも軽度の病後児を預かる",
+            "familySupportFee": "軽度病後児は基準額1時間800円、町助成後500円",
+            "familySupportPlace": "まかせて会員宅または三股町子育て支援センター",
+            "application": "対象、料金、予約方法は各施設または町福祉課へ確認する"
+          },
+          "source": {
+            "url": "https://www.pref.miyazaki.lg.jp/kodomo-seisaku/kyoikukosodate/kodomo/20171215111303.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.mimata.lg.jp/contents/37.html",
+              "checkedAt": "2026-07-25"
+            }
+          ],
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
-          },
-          "details": {
-            "publishedStatus": "町公式サイトの「一時的な預かり」一覧には病児・病後児保育の現行案内ページが掲載されていない",
-            "currentStatus": "近隣自治体施設の広域利用可否を含め、実施施設・対象年齢・利用料・申込方法を町福祉課へ確認する必要がある",
-            "avoidInference": "過年度資料や町外施設情報から現行条件を推定しない"
-          },
-          "source": {
-            "url": "https://www.town.mimata.lg.jp/categories/index/itijitekinaazukari",
-            "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {
@@ -301684,7 +301727,7 @@
       "name": "国富町",
       "officialUrl": "https://www.town.kunitomi.miyazaki.jp/",
       "status": "verified",
-      "summary": "必須9制度を国富町公式情報で調査。7制度をverified、現行条件を町公式公開情報で確定できない病児・病後児保育と2026年度学校給食費をunavailableとして登録。",
+      "summary": "必須9制度を国富町・宮崎県公式情報で再確認し、8制度をverified、2026年度学校給食費をunavailableとして登録。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -301706,21 +301749,28 @@
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "町公式サイトで病児・病後児保育の現行施設・対象年齢・料金・広域利用条件を確認できない",
+          "status": "verified",
+          "summary": "町内2施設で病児・病後児保育を実施",
+          "details": {
+            "facilities": "太田原にじ色こども園 天使の家、もりながナーサリー",
+            "currentList": "宮崎県の令和8年4月1日現在の実施施設一覧に町内2施設を掲載",
+            "serviceTypes": "病気中または回復期で集団保育が困難な児童を施設で受け入れる",
+            "feeSupport": "宮崎県は市町村と連携して病児保育利用料無償化事業を実施",
+            "application": "対象、料金、必要書類、予約方法は各施設または国富町福祉課へ事前確認する"
+          },
+          "source": {
+            "url": "https://www.pref.miyazaki.lg.jp/kodomo-seisaku/kyoikukosodate/kodomo/20171215111303.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.kunitomi.miyazaki.jp/main/health/children_welfare/page000354.html",
+              "checkedAt": "2026-07-25"
+            }
+          ],
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 12
-          },
-          "details": {
-            "publishedStatus": "児童福祉の現行一覧に病児・病後児保育の個別案内が掲載されていない",
-            "budgetReference": "予算資料では病児保育利用促進関連事業を確認できるが、利用者向け現行条件は不明",
-            "currentStatus": "実施施設、町外施設の広域利用可否、対象年齢、料金、登録・予約方法を福祉課へ確認する必要がある",
-            "avoidInference": "近隣自治体施設や過年度資料から現行条件を推定しない"
-          },
-          "source": {
-            "url": "https://www.town.kunitomi.miyazaki.jp/main/health/children_welfare/",
-            "checkedAt": "2026-07-24"
           }
         },
         "childcareFee": {

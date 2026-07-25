@@ -6,8 +6,8 @@
   "name": "三股町",
   "officialUrl": "https://www.town.mimata.lg.jp/",
   "status": "verified",
-  "summary": "必須9制度を三股町公式情報で調査。8制度をverified、町公式サイトで現行の実施施設・対象・料金を確認できない病児・病後児保育をunavailableとして登録。",
-  "updatedAt": "2026-07-24",
+  "summary": "必須9制度を三股町・宮崎県公式情報で再確認し、全9制度をverifiedとして登録。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -30,20 +30,29 @@
       }
     },
     "sickChildCare": {
-      "status": "unavailable",
-      "summary": "町公式サイトで病児・病後児保育の現行実施施設・対象年齢・料金を確認できない",
+      "status": "verified",
+      "summary": "町内3施設で病児・病後児保育を実施し、ファミサポでも軽度病後児を預かり",
+      "details": {
+        "facilities": "稗田保育園 とっこのもり、畠中こども病児院、ソダツバ 保健室",
+        "currentList": "宮崎県の令和8年4月1日現在の実施施設一覧に町内3施設を掲載",
+        "familySupport": "ファミリー・サポート・センターたんぽぽでも軽度の病後児を預かる",
+        "familySupportFee": "軽度病後児は基準額1時間800円、町助成後500円",
+        "familySupportPlace": "まかせて会員宅または三股町子育て支援センター",
+        "application": "対象、料金、予約方法は各施設または町福祉課へ確認する"
+      },
+      "source": {
+        "url": "https://www.pref.miyazaki.lg.jp/kodomo-seisaku/kyoikukosodate/kodomo/20171215111303.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.mimata.lg.jp/contents/37.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
       "eligibility": {
         "minAgeMonths": 0,
         "maxAgeYears": 12
-      },
-      "details": {
-        "publishedStatus": "町公式サイトの「一時的な預かり」一覧には病児・病後児保育の現行案内ページが掲載されていない",
-        "currentStatus": "近隣自治体施設の広域利用可否を含め、実施施設・対象年齢・利用料・申込方法を町福祉課へ確認する必要がある",
-        "avoidInference": "過年度資料や町外施設情報から現行条件を推定しない"
-      },
-      "source": {
-        "url": "https://www.town.mimata.lg.jp/categories/index/itijitekinaazukari",
-        "checkedAt": "2026-07-24"
       }
     },
     "childcareFee": {
