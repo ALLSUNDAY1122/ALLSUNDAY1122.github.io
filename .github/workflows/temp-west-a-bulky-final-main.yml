@@ -1,0 +1,100 @@
+name: Temporary West A Bulky Waste Final Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-a-bulky-final-main-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'sync/west-a-bulky-final-main-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reset to latest main and import final regional records
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main region/west
+          git reset --hard origin/main
+          files=(
+            jichitai-compare/operations/control/session-checkpoints/west-a.json
+            jichitai-compare/operations/control/regions/west.json
+            jichitai-compare/operations/audits/west-a-bulky-waste-final-resolution-20260725.json
+          )
+          for file in "${files[@]}"; do
+            mkdir -p "$(dirname "$file")"
+            git show "origin/region/west:$file" > "$file"
+          done
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root='jichitai-compare';
+          const completedAt='2026-07-25T22:03:00+09:00';
+          const finalPath=path.join(root,'operations/audits/west-a-bulky-waste-final-resolution-20260725.json');
+          const finalRecord=JSON.parse(fs.readFileSync(finalPath,'utf8'));
+          finalRecord.evidence.finalMainPullRequest=Number(process.env.PR_NUMBER);
+          finalRecord.evidence.finalMainWorkflowRunId=Number(process.env.RUN_ID);
+          finalRecord.completedAt=completedAt;
+          fs.writeFileSync(finalPath,JSON.stringify(finalRecord,null,2)+'\n');
+
+          const resolution={
+            schemaVersion:'1.0.0',
+            resolutionId:'west-a-bulky-waste-resolution-20260725',
+            coordinatorSession:'統括B②',
+            completedAt,
+            trackingIssues:[3189,3193,3675],
+            scope:{municipalityCount:226,priorityCandidateCount:65,publicPageCount:3},
+            corrections:{sourceMisassignmentCount:1,sourceEnrichmentCount:2,statusCorrectionCount:0,contentErrorCount:0,correctedMunicipalityCodes:['39424','40421','43208']},
+            continuation:{issue:3675,nonBlocking:true,municipalityCodes:['33203','43511','46502','33586']},
+            evidence:{mechanicalAuditPullRequest:3634,reviewPreparationPullRequest:3674,regionalCorrectionPullRequest:3677,regionalCorrectionWorkflowRunId:30158202086,nationalSyncPullRequest:3679,nationalSyncWorkflowRunId:30158329113,publicVerificationPullRequest:3681,publicVerificationWorkflowRunId:30158773931,verificationRuleFixPullRequest:3682,finalRegionPullRequest:3684,finalRegionWorkflowRunId:30158972922,finalMainPullRequest:Number(process.env.PR_NUMBER),finalMainWorkflowRunId:Number(process.env.RUN_ID)},
+            publicVerification:{allPagesHttp200:true,primarySourcesMatch:true,publicGeneratedJsonPrimaryAndAdditionalSourcesMatch:true,publicMunicipalityCount:1741,publicServiceCount:15669},
+            temporaryRunnerCleanup:{regionPaths:['.github/workflows/temp-west-a-bulky-review-prep.yml','.github/workflows/temp-west-a-bulky-source-maintenance.yml','.github/workflows/temp-west-a-bulky-finalize.yml'],mainPaths:['.github/workflows/temp-west-a-bulky-main-sync.yml','.github/workflows/temp-west-a-bulky-public-verify.yml','.github/workflows/temp-west-a-bulky-final-main.yml'],regionCleanupPullRequest:3684,mainCleanupPullRequest:Number(process.env.PR_NUMBER)},
+            releaseGuard:{status:'resolved_no_release_blocker',blockers:[]},
+            status:'completed_public_verified_region_integrated'
+          };
+          const qualityPath=path.join(root,'operations/quality/west-a-bulky-waste-resolution-20260725.json');
+          fs.mkdirSync(path.dirname(qualityPath),{recursive:true});
+          fs.writeFileSync(qualityPath,JSON.stringify(resolution,null,2)+'\n');
+          const trigger=path.join(root,'operations/control/west-a-bulky-final-main-trigger-20260725.json');
+          if(fs.existsSync(trigger)) fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Remove main temporary workflows and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f \
+            .github/workflows/temp-west-a-bulky-main-sync.yml \
+            .github/workflows/temp-west-a-bulky-public-verify.yml \
+            .github/workflows/temp-west-a-bulky-final-main.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 西日本A粗大ごみ横断監査を最終確定'
+          git push --force-with-lease origin HEAD:${{ github.event.pull_request.head.ref }}
