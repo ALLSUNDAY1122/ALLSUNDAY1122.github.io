@@ -255630,16 +255630,35 @@
           }
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "産後サポート・産後ケア事業の実施は確認できるが、現行の対象月齢・利用形態・料金を町公式HTMLで確認できない",
+          "status": "verified",
+          "summary": "おおむね産後1年以内の母子へ宿泊型・デイケア・訪問型の産後ケアを実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
           "details": {
-            "confirmed": "町公式サイトで産後サポート・産後ケア事業と利用申請書を案内",
-            "availability": "2026年度の対象期間、宿泊・通所・訪問等の利用形態、利用料は健康福祉課への確認が必要"
+            "target": "おおむね出産後1年以内の母子",
+            "types": "宿泊型、デイケア、訪問型",
+            "care": "委託医療機関等で産後の体調管理、授乳・沐浴・育児相談等の心身ケアと育児支援を提供",
+            "application": "健康福祉課へ産後ケア事業利用申請書を提出",
+            "reduction": "利用申請書に町民税非課税世帯・生活保護世帯の区分と利用料減額欄あり",
+            "fee": "形態別利用料、利用回数、実施医療機関は健康福祉課へ確認",
+            "fiscalYear": "第三次計画で令和8年度の実施量・確保方策を明記"
           },
           "source": {
             "url": "https://www.town.abu.lg.jp/guide/%E7%94%A3%E5%BE%8C%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%83%BB%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD/",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.abu.lg.jp/wp/wp-content/uploads/2021/10/aba0e55a11c4d7c48b856e61c3b22f5e.pdf",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.town.abu.lg.jp/wp/wp-content/uploads/2020/09/b5e95773b7f377d126ab43b61857e692.pdf",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -257161,16 +257180,32 @@
           }
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "産後ケア事業の継続は確認できるが、2026年度の対象月齢・利用形態・料金を町公式HTMLで確認できない",
+          "status": "verified",
+          "summary": "町内在住の産婦と1歳未満児へ助産師訪問型産後ケアを2回まで無料で実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
           "details": {
-            "confirmed": "子育て世代包括支援センターが産後ケア事業と助産師訪問を案内",
-            "availability": "現行の利用回数、自己負担、申込期限は福祉課への確認が必要"
+            "target": "勝浦町に住民票がある産婦と1歳未満の子ども",
+            "types": "助産師による訪問型",
+            "care": "産後の母体管理、乳房ケア、赤ちゃんの身体計測、授乳・育児相談",
+            "usageLimit": "子どもが1歳になるまでに2回",
+            "fee": "無料（全額公費負担）",
+            "days": "助産師と日程調整。土・日・祝日の訪問にも対応",
+            "application": "勝浦町子育て世代包括支援センターへ電話で申込み",
+            "scopeNote": "宿泊型・通所型は確認できないため訪問型のみを記録"
           },
           "source": {
             "url": "https://www.town.katsuura.lg.jp/docs/2022040200026/",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.katsuura.lg.jp/docs/2022040200026/file_contents/R5.pdf",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "unavailable",
@@ -264326,16 +264361,38 @@
           }
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "市公式サイトで産後ケア事業の実施案内は確認できるが、現行の対象月齢・利用形態・料金を確認できない",
+          "status": "verified",
+          "summary": "出産後1年以内の母子へ宿泊型・日帰り型・訪問型の産後ケアを実施",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
           "details": {
-            "confirmed": "市公式のこども家庭センター・妊娠出産案内に産後ケア事業を掲載",
-            "availability": "2026年度の対象期間、宿泊・通所・訪問等の実施形態、利用料、利用上限は担当課への確認が必要"
+            "target": "西予市に住所があり、出産後1年以内で心身のケアや育児支援を必要とする母子",
+            "types": "宿泊型、日帰り型、訪問型",
+            "care": "母体の心身・乳房ケア、授乳・沐浴等の育児相談、乳児の発育・発達相談",
+            "facilities": "西予市・宇和島市・大洲市の産科医療機関、助産院等。施設ごとに対応形態と対象月齢が異なる",
+            "application": "西予市こども家庭センターまたは各支所地域生活課へ事前相談・申請",
+            "fee": "形態別利用料、利用上限、最新の受入施設は市の現行案内で確認"
           },
           "source": {
             "url": "https://www.city.seiyo.ehime.jp/kurashi/kosodate_kyouiku/kodomogaumaretara/8723.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.seiyo.ehime.jp/kurashi/kosodate_kyouiku/index.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.city.seiyo.ehime.jp/material/files/group/18/R7sangokea.pdf",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.pref.ehime.jp/page/92849.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
