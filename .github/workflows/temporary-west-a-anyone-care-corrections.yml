@@ -1,0 +1,153 @@
+name: Temporary West A Anyone Care Corrections
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-anyone-care-corrections-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/west-a-anyone-care-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Apply confirmed corrections and finalize audit
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const mpath=code=>`jichitai-compare/data/municipalities/${code.slice(0,2)}/${code}.json`;
+          const tpath=code=>`jichitai-compare/operations/tasks/${code}.json`;
+          const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const write=(p,o)=>fs.writeFileSync(p,JSON.stringify(o)+'\n');
+          const now='2026-07-25T16:05:00+09:00';
+          const date='2026-07-25';
+          const pr=3542;
+
+          const changes={
+            '39304':{
+              municipalitySummary:'必須9制度を公式情報で再監査。6制度をverified、3制度をunavailableとして登録。こども誰でも通園制度は2026年度の対象・月10時間・料金・実施施設を確認してverifiedへ訂正。',
+              service:{status:'verified',summary:'未就園の0歳6か月から満3歳未満が安田さくら園を月10時間まで利用可能',eligibility:{minAgeMonths:6,maxAgeYears:2},details:{target:'安田町に住所があり、保育所等に在籍していない0歳6か月から満3歳未満の子ども',facility:'幼保連携型認定こども園安田さくら園',usageLimit:'子ども1人につき月10時間まで',hours:'月曜日から金曜日の8時から18時。土日祝日と12月29日から1月3日は実施しない',fee:'1時間300円（30分150円）。世帯状況により軽減される場合がある',application:'町へ認定申請後、総合支援システムで施設面談と予約を行う',start:'2026年度'},source:{url:'https://www.town.yasuda.kochi.jp/life/dtl.php?hdnKey=1935',checkedAt:date}},
+              note:'2026-07-25: 現行公式ページで0歳6か月～満3歳未満、安田さくら園、月10時間、1時間300円を確認し、temporaryChildcareをunavailableからverifiedへ訂正。'
+            },
+            '39387':{
+              municipalitySummary:'必須9制度を公式情報で再監査。5制度をverified、4制度をunavailableとして登録。こども誰でも通園制度は対象・月10時間・料金・実施施設を確認してverifiedへ訂正。住宅支援は一般制度のみのためunavailableを維持。',
+              service:{status:'verified',summary:'未就園の0歳6か月から満3歳未満がふたば保育所を月10時間まで利用可能',eligibility:{minAgeMonths:6,maxAgeYears:2},details:{target:'仁淀川町の保育所等に通っていない0歳6か月から満3歳未満の子ども',facility:'ふたば保育所（仁淀川町森4279-1）',usageLimit:'月10時間まで',hours:'9時から11時。土日祝日、年末年始、その他休所日を除く',fee:'1時間300円',application:'事前に乳児等支援給付認定を申請し、つうえんポータルから手続する',start:'2026年度'},source:{url:'https://www.town.niyodogawa.lg.jp/life/life_dtl.php?hdnKey=3315',checkedAt:date},additionalSources:[{url:'https://www.town.niyodogawa.lg.jp/reiki/reiki_honbun/r191RG00000962.html',checkedAt:date}]},
+              note:'2026-07-25: 現行公式ページで0歳6か月～満3歳未満、ふたば保育所、月10時間、1時間300円を確認し、temporaryChildcareをunavailableからverifiedへ訂正。'
+            },
+            '39411':{
+              municipalitySummary:'必須9制度を公式情報で再監査。6制度をverified、3制度をunavailableとして登録。こども誰でも通園制度は令和8年度の対象・月10時間・料金・2施設を確認してverifiedへ訂正。住宅支援は一般制度のみのためunavailableを維持。',
+              service:{status:'verified',summary:'1歳児から満3歳未満の未就園児が町立認定こども園2施設を月10時間まで利用可能',details:{target:'津野町に住所があり、保育所等に在籍していない1歳児から満3歳未満の子ども',facilities:'津野町立認定こども園にじいろ園、津野町立認定こども園さくらんぼ園',usageLimit:'子ども1人につき月10時間まで',hours:'月曜日から金曜日の9時から11時30分',fee:'1時間300円',application:'町の案内に従い利用認定と施設予約を行う',start:'2026年度'},source:{url:'https://town.kochi-tsuno.lg.jp/cms/wp-content/uploads/2026/04/cef8f7c858d23f595d4c1688e46e1d44.pdf',checkedAt:date},additionalSources:[{url:'https://town.kochi-tsuno.lg.jp/department/department_kyouiku',checkedAt:date}]},
+              note:'2026-07-25: 令和8年度公式チラシで1歳児～満3歳未満、にじいろ園・さくらんぼ園、月10時間、1時間300円を確認し、temporaryChildcareをunavailableからverifiedへ訂正。'
+            },
+            '46221':{
+              fee:'1時間あたり300円程度。施設により異なるため、予約前に実施施設へ確認する',
+              note:'2026-07-25: 志布志市公式案内の現行料金「1時間あたり300円程度（施設により異なる）」をtemporaryChildcareへ追記。'
+            },
+            '46501':{
+              fee:'1時間あたり300円程度。世帯区分等による軽減があるため、認定時に確認する',
+              additionalSource:'https://town.nakatane.kagoshima.jp/naka-reiki/reiki_honbun/q781RG00000983.html',
+              note:'2026-07-25: 中種子町公式案内・実施要綱の現行料金「1時間300円（世帯区分による軽減あり）」をtemporaryChildcareへ追記。'
+            }
+          };
+
+          for(const [code,c] of Object.entries(changes)){
+            const mp=mpath(code), tp=tpath(code);
+            const m=read(mp); const s=m.services.temporaryChildcare;
+            if(c.service){m.services.temporaryChildcare=c.service;m.summary=c.municipalitySummary;}
+            else {s.details=s.details||{};s.details.fee=c.fee;s.source.checkedAt=date;if(c.additionalSource){s.additionalSources=s.additionalSources||[];if(!s.additionalSources.some(x=>x.url===c.additionalSource))s.additionalSources.push({url:c.additionalSource,checkedAt:date});}}
+            m.updatedAt=date;
+            write(mp,m);
+
+            const t=read(tp);
+            const vals=Object.values(m.services);
+            t.verifiedCount=vals.filter(x=>x.status==='verified').length;
+            t.unavailableCount=vals.filter(x=>x.status==='unavailable').length;
+            t.researchingCount=vals.filter(x=>x.status==='researching').length;
+            t.needsMediumReviewCount=vals.filter(x=>x.status==='needs_medium_review').length;
+            t.status='merged'; t.currentService=null; t.nextServiceIndex=9;
+            t.pullRequestNumber=pr; t.lastCheckedAt=date; t.lastUpdatedAt=now; t.lastUpdatedBy='西日本調査班A';
+            t.officialSources=[...new Set(Object.values(m.services).map(x=>x.source?.url).filter(Boolean))];
+            t.notes=t.notes||[]; if(!t.notes.includes(c.note))t.notes.push(c.note);
+            t.blockers=[];
+            write(tp,t);
+          }
+
+          const dispositions=[
+            ['37201','高松市','retained_verified','2026年度は月3時間であり、月10時間欠落ではない。年齢・料金を現行公式ページで確認。'],
+            ['37403','琴平町','retained_verified','2026年度は月3時間、段階拡大予定。年齢・料金を現行公式ページで確認。'],
+            ['39202','室戸市','retained_verified_conservative','実施・対象年齢は確認。料金・上限は公式本文で確定できないため推測で追加しない。'],
+            ['40130','福岡市','retained_verified','一時預かりと誰でも通園を併記。週1回・施設別料金の市固有運用を維持。'],
+            ['43203','人吉市','retained_verified','月10時間、料金は施設別という現行記録を維持。'],
+            ['46524','宇検村','retained_verified','公式表記0～2歳児、月10時間、300円、田検保育所を維持。'],
+            ['39301','東洋町','retained_unavailable','現行利用条件本文を取得できず、推測しない。'],
+            ['39307','芸西村','retained_unavailable','現行ページは制度名・掲載日・問い合わせ先のみで利用条件を確認できない。'],
+            ['39402','佐川町','retained_unavailable','月10時間・黒岩中央保育所は確認したが対象年齢・料金を確定できない。'],
+            ['40213','行橋市','retained_unavailable','対象・月10時間・料金は確認できるが実施施設が決定次第更新の状態。'],
+            ['40605','川崎町','retained_unavailable','公式ページに町内実施施設なしと明記。'],
+            ['40608','大任町','retained_unavailable','開始案内のみで詳細は決定次第更新。'],
+            ['43432','西原村','retained_unavailable','村公式トップページ以外の現行利用者向け条件を確定できない。'],
+            ['46216','日置市','retained_unavailable','計画変更の審議記録のみで利用者向け条件を確認できない。'],
+            ['46303','三島村','retained_unavailable','一般冊子ページから制度条件を確認できない。'],
+            ['46404','長島町','retained_unavailable','対象・月10時間・料金は確認したが実施事業者を選定中。'],
+            ['39304','安田町','corrected_to_verified','0歳6か月～満3歳未満、安田さくら園、月10時間、300円を確認。'],
+            ['39387','仁淀川町','corrected_to_verified','0歳6か月～満3歳未満、ふたば保育所、月10時間、300円を確認。'],
+            ['39411','津野町','corrected_to_verified','1歳児～満3歳未満、町立認定こども園2施設、月10時間、300円を確認。'],
+            ['46221','志布志市','verified_fee_enriched','1時間300円程度、施設により異なることを追記。'],
+            ['46501','中種子町','verified_fee_enriched','1時間300円程度、世帯区分による軽減を追記。']
+          ].map(([code,name,resolution,finding])=>({code,name,resolution,finding}));
+
+          const final={schemaVersion:'1.0.0',auditId:'west-a-anyone-care-final-resolution-20260725',team:'西日本調査班A',completedAt:now,scope:{prefectureCodes:['33','37','39','40','43','46'],municipalityCount:226,priorityCandidateCount:21},method:{initialMachineCandidateCount:195,priorityRefinementCount:21,officialFetchTargetCount:13,policy:'利用者向け公式情報で制度開始、対象、利用枠、料金、実施施設を確認。施設未決定・条件不足はunavailableを維持し推測しない。'},result:{statusCorrectionCount:3,detailEnrichmentCount:2,retainedCount:16,unresolvedCount:0},statusCorrections:['39304','39387','39411'],detailEnrichments:['46221','46501'],dispositions,evidence:{initialAudit:'jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json',priorityAudit:'jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json',officialFetchAudit:'jichitai-compare/operations/audits/west-a-anyone-care-official-fetch-20260725.json',sakawaFlyerAudit:'jichitai-compare/operations/audits/west-a-sakawa-anyone-care-flyer-20260725.json',regionalPullRequestNumber:pr},status:'regional_ci_pending',blocker:null};
+          fs.writeFileSync('jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json',JSON.stringify(final,null,2)+'\n');
+
+          const initial=read('jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json');
+          delete initial.flagged; delete initial.allMunicipalities;
+          initial.initialFlaggedCount=initial.counts.flagged;
+          initial.falsePositiveCause='unavailable説明文の「確認できない」等にも誰でも通園語が含まれ、初期抽出は過大。訂正確定には使用せず精密化監査へ移行。';
+          initial.supersededBy='jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json';
+          initial.unresolvedCount=0; initial.status='completed_initial_extraction_superseded';
+          fs.writeFileSync('jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json',JSON.stringify(initial,null,2)+'\n');
+
+          const priority=read('jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json');
+          priority.startTimingMissingCodes=(priority.startTimingMissing||[]).map(x=>x.code);
+          delete priority.startTimingMissing;
+          priority.finalResolution='jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json';
+          priority.unresolvedCount=0; priority.status='completed_with_final_resolution';
+          fs.writeFileSync('jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json',JSON.stringify(priority,null,2)+'\n');
+          NODE
+
+          rm -f jichitai-compare/operations/control/west-a-anyone-care-corrections-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-anyone-care-corrections.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/39/39304.json \
+                  jichitai-compare/data/municipalities/39/39387.json \
+                  jichitai-compare/data/municipalities/39/39411.json \
+                  jichitai-compare/data/municipalities/46/46221.json \
+                  jichitai-compare/data/municipalities/46/46501.json \
+                  jichitai-compare/operations/tasks/39304.json \
+                  jichitai-compare/operations/tasks/39387.json \
+                  jichitai-compare/operations/tasks/39411.json \
+                  jichitai-compare/operations/tasks/46221.json \
+                  jichitai-compare/operations/tasks/46501.json \
+                  jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json \
+                  jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json \
+                  jichitai-compare/operations/audits/west-a-anyone-care-official-fetch-20260725.json \
+                  jichitai-compare/operations/audits/west-a-sakawa-anyone-care-flyer-20260725.json \
+                  jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json \
+                  jichitai-compare/operations/control/west-a-anyone-care-corrections-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-anyone-care-corrections.yml
+          git diff --cached --check
+          git commit -m 'fix: 西日本A誰でも通園制度3件と料金2件を訂正'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
