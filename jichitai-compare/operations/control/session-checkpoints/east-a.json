@@ -10,7 +10,7 @@
     "19",
     "20"
   ],
-  "updatedAt": "2026-07-25T11:38:00+09:00",
+  "updatedAt": "2026-07-25T12:14:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -575,7 +575,7 @@
     ],
     "nextRound": null,
     "nextTopic": "10回検証完了",
-    "nextAction": "品質改善第2監査を継続する。次は長野県の訂正対象外5自治体以上を重点監査し完了判定する。栄村は9制度unavailable・Issue #2847維持。"
+    "nextAction": "品質改善第2監査4回を完了。第4回訂正のPR・CI・region/east統合と完了記録を確定する。栄村は9制度unavailable・Issue #2847維持。"
   },
   "postCompletionResolution": {
     "trackingIssueNumber": 3166,
@@ -596,11 +596,11 @@
     "status": "success"
   },
   "qualityImprovementSecondAudit": {
-    "status": "in_progress",
+    "status": "completed_pending_regional_integration",
     "startedAt": "2026-07-25T10:38:00+09:00",
-    "completedRounds": 3,
+    "completedRounds": 4,
     "targetRounds": 4,
-    "currentRound": "yamanashi_sample_completed",
+    "currentRound": "nagano_sample_completed",
     "sampledMunicipalities": [
       "13101",
       "13102",
@@ -616,12 +616,17 @@
       "19202",
       "19204",
       "19205",
-      "19206"
+      "19206",
+      "20201",
+      "20202",
+      "20203",
+      "20204",
+      "20205"
     ],
-    "confirmedDataErrors": 7,
+    "confirmedDataErrors": 12,
     "confirmedStateRecordErrors": 1,
     "sakaeOfficialSiteStatus": "http_502",
-    "nextAction": "長野県の訂正対象外5自治体以上を重点監査し、第2監査を完了する。",
+    "nextAction": "第4回訂正をPR・CIで検証しregion/eastへ統合後、完了記録を確定する。栄村は9制度unavailable・Issue #2847維持。",
     "regionalPullRequestNumber": 3210,
     "regionalCiRunNumber": 7824,
     "regionalCiRunId": 30139529573,
