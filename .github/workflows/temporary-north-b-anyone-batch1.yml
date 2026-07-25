@@ -188,24 +188,64 @@ jobs:
           save(cp, cpraw, checkpoint)
           PY
 
-      - name: Validate changed data
+      - name: Validate changed data and capture output
+        id: validate
         if: steps.detect.outputs.run_batch == 'true'
         working-directory: jichitai-compare
+        shell: bash
         run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
+          set +e
+          diagnostic='operations/audits/north-b-anyone-batch1-validation-diagnostic-20260725.txt'
+          : > "$diagnostic"
+          echo 'North B anyone batch 1 validation diagnostic' >> "$diagnostic"
+          echo 'generatedAt=2026-07-25T14:44:00+09:00' >> "$diagnostic"
+          echo '--- npm run generate ---' >> "$diagnostic"
+          npm run generate >> "$diagnostic" 2>&1
+          generate_status=$?
+          echo "generate_status=$generate_status" >> "$diagnostic"
+          echo '--- npm run progress ---' >> "$diagnostic"
+          npm run progress >> "$diagnostic" 2>&1
+          progress_status=$?
+          echo "progress_status=$progress_status" >> "$diagnostic"
+          echo '--- npm run validate:generated ---' >> "$diagnostic"
+          npm run validate:generated >> "$diagnostic" 2>&1
+          validate_status=$?
+          echo "validate_status=$validate_status" >> "$diagnostic"
+          cat "$diagnostic"
+          if [[ $generate_status -eq 0 && $progress_status -eq 0 && $validate_status -eq 0 ]]; then
+            echo 'validation_ok=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'validation_ok=false' >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
 
-      - name: Commit batch result
-        if: steps.detect.outputs.run_batch == 'true'
+      - name: Save diagnostic only when validation fails
+        if: steps.detect.outputs.run_batch == 'true' && steps.validate.outputs.validation_ok != 'true'
+        shell: bash
+        run: |
+          diagnostic='jichitai-compare/operations/audits/north-b-anyone-batch1-validation-diagnostic-20260725.txt'
+          cp "$diagnostic" /tmp/north-b-anyone-batch1-diagnostic.txt
+          git reset --hard HEAD
+          rm -f jichitai-compare/operations/triggers/north-b-anyone-batch1.txt
+          cp /tmp/north-b-anyone-batch1-diagnostic.txt "$diagnostic"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$diagnostic" jichitai-compare/operations/triggers/north-b-anyone-batch1.txt
+          git commit -m 'diagnostic: capture North B anyone batch1 validation failure'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+      - name: Commit validated batch result
+        if: steps.detect.outputs.run_batch == 'true' && steps.validate.outputs.validation_ok == 'true'
         shell: bash
         run: |
           rm -f jichitai-compare/operations/triggers/north-b-anyone-batch1.txt
+          rm -f jichitai-compare/operations/audits/north-b-anyone-batch1-validation-diagnostic-20260725.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add jichitai-compare/data/municipalities \
             jichitai-compare/operations/tasks \
             jichitai-compare/operations/audits/north-b-anyone-low-priority-batch1-20260725.json \
+            jichitai-compare/operations/audits/north-b-anyone-batch1-validation-diagnostic-20260725.txt \
             jichitai-compare/operations/control/session-checkpoints/north-b.json \
             jichitai-compare/operations/triggers/north-b-anyone-batch1.txt
           if git diff --cached --quiet; then
