@@ -91,11 +91,13 @@ jobs:
           fs.writeFileSync(regionPath, JSON.stringify(region, null, 2) + '\n');
           NODE
 
-      - name: Validate JSON and municipality data
+      - name: Regenerate and validate municipality data
         shell: bash
         run: |
           node -e "JSON.parse(require('fs').readFileSync('jichitai-compare/operations/control/session-checkpoints/central-a.json','utf8')); JSON.parse(require('fs').readFileSync('jichitai-compare/operations/control/regions/central.json','utf8'))"
           cd jichitai-compare
+          npm run generate
+          npm run progress
           npm run validate:generated
 
       - name: Commit synchronized state
