@@ -1,0 +1,194 @@
+name: Temporary West B Postpartum Care Public Verify
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-postpartum-public-verify-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'ops/run-west-b-postpartum-public-verify-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify published pages and generated JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          git switch -C audit/west-b-postpartum-public-verification-20260725
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const cache = Date.now();
+          const generatedUrl = `https://allsunday1122.github.io/jichitai-compare/data/generated/municipalities.json?audit=${cache}`;
+          const targets = [
+            {
+              code: '35502', name: '阿武町',
+              pageUrl: `https://allsunday1122.github.io/jichitai-compare/municipality/35502/?audit=${cache}`,
+              summary: 'おおむね産後1年以内の母子へ宿泊型・デイケア・訪問型の産後ケアを実施',
+              sourceUrl: 'https://www.town.abu.lg.jp/guide/%E7%94%A3%E5%BE%8C%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%83%BB%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD/'
+            },
+            {
+              code: '36301', name: '勝浦町',
+              pageUrl: `https://allsunday1122.github.io/jichitai-compare/municipality/36301/?audit=${cache}`,
+              summary: '町内在住の産婦と1歳未満児へ助産師訪問型産後ケアを2回まで無料で実施',
+              sourceUrl: 'https://www.town.katsuura.lg.jp/docs/2022040200026/'
+            },
+            {
+              code: '38214', name: '西予市',
+              pageUrl: `https://allsunday1122.github.io/jichitai-compare/municipality/38214/?audit=${cache}`,
+              summary: '出産後1年以内の母子へ宿泊型・日帰り型・訪問型の産後ケアを実施',
+              sourceUrl: 'https://www.city.seiyo.ehime.jp/kurashi/kosodate_kyouiku/kodomogaumaretara/8723.html'
+            }
+          ];
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          let result = null;
+          for (let attempt = 1; attempt <= 24; attempt += 1) {
+            const pages = {};
+            let allPages = true;
+            for (const target of targets) {
+              try {
+                const response = await fetch(target.pageUrl, { redirect: 'follow', cache: 'no-store' });
+                const text = await response.text();
+                const success = response.status === 200 && text.includes(target.summary) && text.includes(target.sourceUrl);
+                pages[target.code] = {
+                  code: target.code, name: target.name, url: target.pageUrl, status: response.status,
+                  summaryPresent: text.includes(target.summary), sourceUrlPresent: text.includes(target.sourceUrl), success
+                };
+                allPages &&= success;
+              } catch (error) {
+                pages[target.code] = { code: target.code, name: target.name, url: target.pageUrl, success: false, error: String(error) };
+                allPages = false;
+              }
+            }
+
+            let generated = { url: generatedUrl, success: false };
+            try {
+              const response = await fetch(generatedUrl, { redirect: 'follow', cache: 'no-store' });
+              const data = response.status === 200 ? await response.json() : null;
+              const municipalities = Array.isArray(data) ? data : (data?.municipalities ?? []);
+              const serviceCount = municipalities.reduce((sum, municipality) => sum + Object.keys(municipality.services ?? {}).length, 0);
+              const checks = Object.fromEntries(targets.map((target) => {
+                const municipality = municipalities.find((item) => item.code === target.code);
+                const service = municipality?.services?.postpartumCare;
+                return [target.code, Boolean(service && service.status === 'verified' && service.summary === target.summary && service.source?.url === target.sourceUrl)];
+              }));
+              generated = {
+                url: generatedUrl, status: response.status, municipalityCount: municipalities.length, serviceCount, checks,
+                success: response.status === 200 && municipalities.length === 1741 && serviceCount === 15669 && Object.values(checks).every(Boolean)
+              };
+            } catch (error) {
+              generated = { url: generatedUrl, success: false, error: String(error) };
+            }
+
+            result = {
+              schemaVersion: '1.0.0',
+              auditId: 'west-b-postpartum-public-verification-20260725',
+              verifiedAt: new Date().toISOString(),
+              attempt,
+              relatedMainPullRequest: 3601,
+              relatedMainCiRun: 8763,
+              relatedMainMergeCommit: '682636f9918cf8937ff0d463a3ef1c15759cfd89',
+              relatedRegionPullRequest: 3607,
+              relatedRegionCiRun: 8779,
+              relatedRegionMergeCommit: 'fc313a2c9cf3a42d68b943eb564e994a92f64ce8',
+              pages,
+              generatedJson: generated,
+              success: allPages && generated.success,
+              unresolvedConfirmedErrorCount: 0
+            };
+            if (result.success) break;
+            await sleep(10000);
+          }
+          if (!result?.success) {
+            console.error(JSON.stringify(result, null, 2));
+            process.exit(1);
+          }
+
+          const base = 'jichitai-compare';
+          const publicPath = `${base}/operations/audits/west-b-postpartum-public-verification-20260725.json`;
+          fs.writeFileSync(publicPath, JSON.stringify(result, null, 2) + '\n');
+
+          for (const fileName of [
+            'west-b-postpartum-crosscheck-20260725.json',
+            'west-b-postpartum-priority-review-20260725.json',
+            'west-b-postpartum-status-focus-review-20260725.json',
+            'west-b-postpartum-official-review-20260725.json'
+          ]) {
+            const auditPath = `${base}/operations/audits/${fileName}`;
+            const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+            audit.result = {
+              ...(audit.result ?? {}),
+              status: 'completed_public_verified_region_integrated',
+              confirmedCorrectionCount: 3,
+              correctedCount: 3,
+              confirmedCorrectionCodes: ['35502', '36301', '38214'],
+              unresolvedConfirmedErrorCount: 0,
+              mainPullRequest: 3601,
+              mainCiRun: 8763,
+              mainMergeCommit: '682636f9918cf8937ff0d463a3ef1c15759cfd89',
+              regionPullRequest: 3607,
+              regionCiRun: 8779,
+              regionMergeCommit: 'fc313a2c9cf3a42d68b943eb564e994a92f64ce8',
+              publicVerification: 'passed',
+              publicVerificationId: result.auditId
+            };
+            fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          }
+
+          const checkpointPath = `${base}/operations/control/session-checkpoints/west-b.json`;
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          checkpoint.updatedAt = result.verifiedAt;
+          checkpoint.postpartumCareCrosscheck = {
+            auditId: 'west-b-postpartum-crosscheck-20260725',
+            priorityReviewId: 'west-b-postpartum-priority-review-20260725',
+            statusFocusReviewId: 'west-b-postpartum-status-focus-review-20260725',
+            officialReviewId: 'west-b-postpartum-official-review-20260725',
+            publicVerificationId: result.auditId,
+            auditedMunicipalityCount: 250,
+            mechanicalCandidateCount: 144,
+            priorityCandidateCount: 28,
+            unavailableReviewedCount: 29,
+            suspiciousVerifiedReviewedCount: 5,
+            confirmedCorrectionCount: 3,
+            correctedCount: 3,
+            municipalityCodes: ['35502', '36301', '38214'],
+            status: 'completed_public_verified_region_integrated',
+            mainPullRequest: 3601,
+            mainCiRun: 8763,
+            mainMergeCommit: '682636f9918cf8937ff0d463a3ef1c15759cfd89',
+            regionPullRequest: 3607,
+            regionCiRun: 8779,
+            regionMergeCommit: 'fc313a2c9cf3a42d68b943eb564e994a92f64ce8',
+            publicVerification: 'passed',
+            unresolvedConfirmedErrorCount: 0,
+            judgment: '現行の利用受付・実施案内を確認できた3件のみ訂正し、計画・予算・相談窓口等から利用条件を推測しない'
+          };
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+          console.log(JSON.stringify(result, null, 2));
+          NODE
+      - name: Validate final record
+        working-directory: jichitai-compare
+        run: npm run check
+      - name: Commit and push verification record
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare
+          git commit -m 'audit: 西日本B産後ケア3件の公開反映を確認'
+          git push --force origin HEAD:audit/west-b-postpartum-public-verification-20260725
