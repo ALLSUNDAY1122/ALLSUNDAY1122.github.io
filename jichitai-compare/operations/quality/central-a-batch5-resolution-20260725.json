@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "central-a-batch5-resolution-20260725",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-25T15:01:00+09:00",
+  "trackingIssues": [3187, 3141],
+  "scope": {
+    "reviewedServiceSlots": 5,
+    "sourceCorrectionCount": 1,
+    "retainedNoChangeCount": 4,
+    "correctedMunicipalitiesRechecked": 79,
+    "primarySourceSlotsRechecked": 511,
+    "remainingWeakPrimarySourceCandidates": 33,
+    "issue3141RemainingItems": 19
+  },
+  "corrected": [
+    {
+      "municipalityCode": "22130",
+      "municipalityName": "浜松市",
+      "service": "postpartumCare",
+      "result": "浜松市公式子育て情報サイトの利用者向けページへ主出典を更新し、令和8年度施設、申請手順、宿泊・1日通所7日上限、短時間・訪問7回上限、短時間850円・1,700円、訪問2,500円を確定"
+    }
+  ],
+  "retainedNoChange": [
+    {"municipalityCode": "24471", "municipalityName": "大紀町", "service": "postpartumCare"},
+    {"municipalityCode": "24543", "municipalityName": "紀北町", "service": "postpartumCare"},
+    {"municipalityCode": "25383", "municipalityName": "日野町", "service": "postpartumCare"},
+    {"municipalityCode": "28501", "municipalityName": "佐用町", "service": "postpartumCare"}
+  ],
+  "evidence": {
+    "regionalPullRequest": 3451,
+    "regionalCiRun": 8400,
+    "stateSyncPullRequest": 3464,
+    "nationalSyncPullRequest": 3482,
+    "nationalCiRun": 8450,
+    "publicVerificationRegistrationPullRequest": 3488,
+    "publicVerificationPullRequest": 3489,
+    "publicVerificationWorkflowRun": 30146642113,
+    "auditFile": "jichitai-compare/operations/audits/central-a-weak-primary-source-batch5-decisions-20260725.json"
+  },
+  "publicVerification": {
+    "municipalityCode": "22130",
+    "municipalityPageHttpStatus": 200,
+    "summaryMatches": true,
+    "primarySourceMatches": true,
+    "publicGeneratedJsonMatches": true,
+    "lodgingAndFullDayLimitMatches": true,
+    "shortAndVisitLimitMatches": true,
+    "shortFeesMatch": true,
+    "visitFeeMatches": true,
+    "status": "success"
+  },
+  "parallelFlowRecovery": {
+    "duplicateRegistrationPullRequest": 3483,
+    "duplicateRunnerCleanupPullRequest": 3486,
+    "duplicateDataExecution": false
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "temporaryRunnerCleanup": {
+    "mainPaths": [
+      ".github/workflows/temp-central-a-batch5-main-sync.yml",
+      ".github/workflows/temp-central-a-batch5-public-verify.yml"
+    ],
+    "regionDuplicateRunnerCleanupPullRequest": 3486,
+    "mainCleanupPullRequest": null,
+    "status": "main_cleanup_pending"
+  },
+  "status": "completed"
+}
