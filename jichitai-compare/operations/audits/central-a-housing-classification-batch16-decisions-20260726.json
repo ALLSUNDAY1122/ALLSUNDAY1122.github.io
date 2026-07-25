@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch16-decisions-20260726",
+  "decidedAt": "2026-07-26T02:52:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3753,
+  "runnerWorkflowRunId": 30168619933,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 1,
+  "noChangeCount": 4,
+  "sourceUpgradeCount": 1,
+  "corrected": [
+    {
+      "code": "22214",
+      "name": "藤枝市",
+      "service": "housingSupport",
+      "correctionType": "current_user_facing_primary_source_upgrade",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "summary": "18歳以下の子どもがいる世帯の市内住宅取得・転居・中古住宅改修費を補助する。",
+      "beforeSource": "https://www.city.fujieda.shizuoka.jp/soshiki/toshikensetsu/akiya/gyomu/hojyokin/1450661881654.html",
+      "officialSource": "https://www.city.fujieda.shizuoka.jp/mokuteki/teate_josei/kurashi/iju_teiju/22775.html",
+      "reason": "令和8年度の継続実施、18歳以下の子どもがいる世帯、取得・移転・中古住宅改修の対象額を直接案内する現行利用者向けページへ主出典を更新した。"
+    }
+  ],
+  "unchanged": [
+    {
+      "code": "21503",
+      "name": "川辺町",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "45歳未満の住宅所有者等が町内で住宅を取得して定住する場合、基本10万円と各種加算を交付する。",
+      "officialSource": "https://www.kawabe-gifu.jp/?page_id=47302",
+      "reason": "住宅所有者等45歳未満の基本10万円に加え、18歳年度末までの子との同居で10万円加算する現行制度を確認した。"
+    },
+    {
+      "code": "22224",
+      "name": "菊川市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "40歳未満の若者・子育て世帯の市内住宅取得へ、一般世帯最大25万円、三世代同居・隣接住宅最大40万円を補助する。",
+      "officialSource": "https://www.city.kikugawa.shizuoka.jp/toshikeikaku/jyuutakuhojyo.html",
+      "reason": "令和8年度の若者・子育て世帯住宅取得補助について、40歳未満の親子世帯と三世代同居・隣接住宅の上限額を確認した。"
+    },
+    {
+      "code": "27225",
+      "name": "高石市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "市内の対象空き家を購入する子育て・若年世帯に購入費の2分の1、最大200万円を補助する。",
+      "officialSource": "https://www.city.takaishi.lg.jp/kakuka/doboku/toshikeikaku_ka/jutaku/akiya/5306.html",
+      "reason": "令和8年度の子育て・若年世帯空き家購入補助について、18歳未満の子との同居要件と上限200万円を確認した。"
+    },
+    {
+      "code": "27381",
+      "name": "太子町",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "中学生以下の子どもがいる子世帯の三世代同居・近居に伴う住宅取得・リフォームを支援する。",
+      "officialSource": "https://www.town.taishi.osaka.jp/busyo/seisakusoumubu/hisyoseisakuka/sansedai/1493023013437.html",
+      "reason": "令和8年度の三世代同居・近居支援について、中学生以下の子との同居と住宅取得・リフォーム費10分の1・上限50万円を確認した。"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 99,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 94
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "子ども加算・三世代・子育て世帯要件が現行公式本文で確認できる候補はverified維持として候補から除外する",
+    "制度内容が正しくても旧CMS・組織別URLより現行の利用者向け直接ページを主出典にする"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3755,
+  "nationalSyncWorkflowRunId": 30168733654,
+  "nationalSyncStatus": "validated_pending_merge"
+}
