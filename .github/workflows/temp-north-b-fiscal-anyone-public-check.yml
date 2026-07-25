@@ -1,5 +1,5 @@
 name: Temporary North B Fiscal Anyone Public Check
-# rerun: 2026-07-25T13:36:00+09:00
+# rerun: 2026-07-25T13:40:00+09:00
 
 on:
   pull_request:
@@ -46,8 +46,8 @@ jobs:
 
           base='https://allsunday1122.github.io/jichitai-compare/municipality'
           verify_text "$base/01604/" '第5期（令和7年度から令和9年度）'
-          verify_text "$base/04606/" '歌津地区子育て支援センター'
-          verify_text "$base/06428/" '余目保育園、認定こども園からふる'
+          verify_text "$base/04606/" '月10時間まで基本1時間300円'
+          verify_text "$base/06428/" '町内2施設で平日9時から11時に月10時間まで1時間300円'
           verify_text "$base/04401/" '令和8年4月1日時点'
           verify_text "$base/04422/" '0歳から2歳を含め所得制限なしで無償化'
           verify_text "$base/05212/" 'https://www.city.daisen.lg.jp/reiki/reiki_honbun/r154RG00000819.html'
