@@ -1,0 +1,116 @@
+name: Temporary Central A Housing Batch 15 Finalize
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch15-finalize-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'sync/central-a-housing-batch15-final-region-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import public evidence and finalize regional state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          files=(
+            jichitai-compare/operations/audits/central-a-housing-classification-batch15-public-verification-20260726.json
+            jichitai-compare/operations/audits/central-a-housing-classification-batch15-main-validation-20260726.json
+          )
+          for file in "${files[@]}"; do
+            mkdir -p "$(dirname "$file")"
+            git show "origin/main:$file" > "$file"
+          done
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare';
+          const completedAt='2026-07-26T02:42:00+09:00';
+          const auditPath=path.join(root,'operations/audits/central-a-housing-classification-batch15-decisions-20260726.json');
+          const publicPath=path.join(root,'operations/audits/central-a-housing-classification-batch15-public-verification-20260726.json');
+          const validationPath=path.join(root,'operations/audits/central-a-housing-classification-batch15-main-validation-20260726.json');
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');
+          const regionPath=path.join(root,'operations/control/regions/central.json');
+          const audit=JSON.parse(fs.readFileSync(auditPath,'utf8'));
+          const publicEvidence=JSON.parse(fs.readFileSync(publicPath,'utf8'));
+          const validation=JSON.parse(fs.readFileSync(validationPath,'utf8'));
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));
+          if(!publicEvidence.success||!validation.success)throw new Error('National/public verification is not successful');
+          audit.regionalMergePullRequestNumber=3742;
+          audit.regionalWorkflowRunId=30167487242;
+          audit.nationalSyncPullRequestNumber=3744;
+          audit.nationalSyncWorkflowRunId=30167884050;
+          audit.nationalRunnerFixPullRequestNumber=3745;
+          audit.nationalValidationEvidence='jichitai-compare/operations/audits/central-a-housing-classification-batch15-main-validation-20260726.json';
+          audit.publicVerificationPullRequestNumber=3747;
+          audit.publicVerificationWorkflowRunId=30168093881;
+          audit.publicVerificationStatus='passed';
+          audit.finalRegionPullRequestNumber=Number(process.env.PR_NUMBER);
+          audit.finalRegionWorkflowRunId=Number(process.env.RUN_ID);
+          audit.status='completed_public_verified_region_integrated';
+          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
+
+          checkpoint.updatedAt=completedAt;
+          checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.ciStatus='success';
+          checkpoint.nextAction='一般住宅・移住制度の分類候補残99件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';
+          checkpoint.qualityReaudit.latestCompletedAt=completedAt;
+          checkpoint.qualityReaudit.latestRegionalPullRequestNumber=3742;
+          checkpoint.qualityReaudit.latestCiRunNumber=30167487242;
+          checkpoint.qualityReaudit.latestNationalPullRequestNumber=3744;
+          checkpoint.qualityReaudit.latestPublicVerificationPullRequestNumber=3747;
+          checkpoint.qualityReaudit.latestHousingBatch={batch:15,status:'completed_public_verified_region_integrated',reviewedMunicipalityCount:5,confirmedCorrectionCount:0,noChangeCount:5,remainingCandidates:99,regionalPullRequestNumber:3742,regionalWorkflowRunId:30167487242,nationalPullRequestNumber:3744,nationalWorkflowRunId:30167884050,nationalRunnerFixPullRequestNumber:3745,publicVerificationPullRequestNumber:3747,publicVerificationWorkflowRunId:30168093881,finalRegionPullRequestNumber:Number(process.env.PR_NUMBER),finalRegionWorkflowRunId:Number(process.env.RUN_ID),blocker:null};
+          checkpoint.lastAction='住宅支援分類第15群の5自治体を維持確認した。全国同期時に多治見市の誰でも通園制度未同期を検出して地域正本を同期し、全国・公開5ページ・公開JSONの一致を確認した。';
+          fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+
+          region.updatedAt=completedAt;
+          region.latestCentralAHousingBatch=checkpoint.qualityReaudit.latestHousingBatch;
+          region.lastAction=checkpoint.lastAction;
+          fs.writeFileSync(regionPath,JSON.stringify(region,null,2)+'\n');
+
+          const resolution={schemaVersion:'1.0.0',resolutionId:'central-a-housing-batch15-resolution-20260726',session:'中日本調査班A',coordinatorSession:'統括B②',completedAt,category:'generalHousingMisclassification',scope:{reviewedMunicipalityCount:5,correctedMunicipalityCount:0,noChangeMunicipalityCount:5,remainingHousingCandidates:99,correctedMunicipalitiesRechecked:129,primarySourceSlotsRechecked:561,weakPrimarySourceCandidates:33,issue3141UnresolvedItems:19},corrections:{confirmedCorrectionCount:0,noChangeCount:5,noChangeCodes:['16205','16323','17206','18201','21204']},nationalSyncRecovery:{initialFailedRunId:30167596891,runnerFixPullRequest:3745,successfulRunId:30167884050,rootCause:'多治見市の2026年度こども誰でも通園制度がregion/centralには反映済みだがmainに未同期で、taskだけを同期すると自治体JSONとの公式出典整合性が崩れた',resolution:'対象5自治体JSONを地域正本から明示同期し、generate/check/app.jsを再検証',validationEvidence:'jichitai-compare/operations/audits/central-a-housing-classification-batch15-main-validation-20260726.json'},evidence:{regionalPullRequest:3742,regionalWorkflowRunId:30167487242,nationalSyncPullRequest:3744,nationalSyncWorkflowRunId:30167884050,runnerFixPullRequest:3745,publicVerificationPullRequest:3747,publicVerificationWorkflowRunId:30168093881,finalRegionPullRequest:Number(process.env.PR_NUMBER),finalRegionWorkflowRunId:Number(process.env.RUN_ID)},publicVerification:{pageCount:5,allPagesHttp200:true,statusSummarySourceMatch:true,tajimiAnyoneAccessMatched:true,publicMunicipalityCount:1741,publicServiceCount:15669},releaseGuard:{status:'resolved_no_release_blocker',blockers:[]},status:'completed_public_verified_region_integrated'};
+          const resolutionPath=path.join(root,'operations/quality/central-a-housing-batch15-resolution-20260726.json');
+          fs.mkdirSync(path.dirname(resolutionPath),{recursive:true});
+          fs.writeFileSync(resolutionPath,JSON.stringify(resolution,null,2)+'\n');
+          const trigger=path.join(root,'operations/control/central-a-housing-batch15-finalize-trigger-20260726.json');
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Remove regional runners and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/temp-central-a-housing-batch15.yml .github/workflows/temp-central-a-housing-batch15-finalize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援第15群を地域で最終確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
