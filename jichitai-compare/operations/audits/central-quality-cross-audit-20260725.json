@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-quality-cross-audit-20260725",
+  "generatedAt": "2026-07-25T03:15:10.391130+00:00",
+  "sourceCommit": "2f618fe49d3d00d2a58bc959edb5f5a7bba2ff75",
+  "scope": {
+    "prefectureCodes": [
+      "16",
+      "17",
+      "18",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26",
+      "27",
+      "28",
+      "29",
+      "30"
+    ],
+    "expectedMunicipalityCount": 409,
+    "checkedMunicipalityCount": 409,
+    "expectedServiceCount": 3681,
+    "checkedServiceCount": 3681
+  },
+  "structural": {
+    "errorCount": 5,
+    "warningCount": 0,
+    "errors": [
+      {
+        "type": "top_level_status_mismatch",
+        "code": "16202",
+        "expected": "verified",
+        "actual": "needs_coordinator"
+      },
+      {
+        "type": "top_level_status_mismatch",
+        "code": "16204",
+        "expected": "verified",
+        "actual": "needs_coordinator"
+      },
+      {
+        "type": "top_level_status_mismatch",
+        "code": "16205",
+        "expected": "verified",
+        "actual": "needs_coordinator"
+      },
+      {
+        "type": "top_level_status_mismatch",
+        "code": "16206",
+        "expected": "verified",
+        "actual": "needs_coordinator"
+      },
+      {
+        "type": "top_level_status_mismatch",
+        "code": "23100",
+        "expected": "verified",
+        "actual": "needs_coordinator"
+      }
+    ],
+    "warnings": []
+  },
+  "consistency": {
+    "mismatchCount": 0
+  },
+  "candidateCounts": {
+    "fy2026AnyoneDaycareOmission": 21,
+    "generalHousingMisclassification": 155,
+    "statusWithoutCurrentEvidence": 0,
+    "schoolMealsScopeConfusion": 10,
+    "wideAreaUseOmission": 83,
+    "oldFiscalEvidence": 103
+  },
+  "conclusion": "machine_mismatches_detected_requires_review"
+}
