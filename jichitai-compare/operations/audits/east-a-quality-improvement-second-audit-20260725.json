@@ -20,13 +20,24 @@
     "fullNorthEastPublicationAuditPullRequestNumber": 3175,
     "fullNorthEastPublicationAuditRunId": 30134336210
   },
-  "confirmedCorrection": {
-    "type": "checkpoint_state_mismatch",
-    "path": "jichitai-compare/operations/control/session-checkpoints/east-a.json",
-    "before": "栄村7制度needs_medium_review・2制度unavailable",
-    "after": "栄村9制度unavailable・needs_medium_review 0",
-    "basis": "PR #3169・CI #7747・公開確認run 30129853395"
-  },
+  "confirmedCorrections": [
+    {
+      "type": "checkpoint_state_mismatch",
+      "path": "jichitai-compare/operations/control/session-checkpoints/east-a.json",
+      "before": "栄村7制度needs_medium_review・2制度unavailable",
+      "after": "栄村9制度unavailable・needs_medium_review 0",
+      "basis": "PR #3169・CI #7747・公開確認run 30129853395"
+    },
+    {
+      "type": "fee_detail_omission",
+      "municipalityCode": "13103",
+      "municipalityName": "港区",
+      "service": "sickChildCare",
+      "before": "施設利用料が必要とのみ記載",
+      "after": "港区民1日2,000円・港区外在住者1日3,000円、免除・無償化対象を明記",
+      "officialSource": "https://www.city.minato.tokyo.jp/kodomo/kodomo/kodomo/hoikuen/service/byoji7.html"
+    }
+  ],
   "sakae": {
     "code": "20602",
     "officialTopPage": "https://www.vill.sakae.nagano.jp/",
@@ -68,19 +79,20 @@
         "住宅支援の分類",
         "一時預かりと乳児等通園支援事業の区別"
       ],
-      "officialSourceResult": "passed",
-      "sourceJsonResult": "passed",
+      "officialSourceResult": "passed_after_correction",
+      "sourceJsonResult": "corrected",
       "publicEvidence": {
         "targetedSmokePullRequestNumber": 3173,
         "targetedSmokeRunId": 30129853395,
         "fullAuditPullRequestNumber": 3175,
         "fullAuditRunId": 30134336210
       },
-      "confirmedErrors": 0,
+      "confirmedErrors": 1,
       "notes": [
         "千代田区の令和8年7月住宅助成増額、年齢上限、最長8年を再確認",
         "中央区の病児保育年齢・日額、家賃債務保証助成、一時預かり年齢・時間額を再確認",
-        "港区の病児保育年齢・区内外料金、住宅取得補助、産後ケア回数・負担上限を再確認",
+        "港区の病児・病後児保育料金を港区民1日2,000円・区外1日3,000円へ具体化",
+        "港区の住宅取得補助、産後ケア回数・負担上限を再確認",
         "新宿区の病児預かり年齢・時間額、転居助成、乳児等通園支援の期間・頻度・無償を再確認",
         "文京区の病児保育年齢・日額・連続日数、ひとり親転居助成、産後ケア日数、乳児等通園支援を再確認"
       ]
