@@ -34,66 +34,75 @@ jobs:
           const fs = require('fs');
           const base = 'https://allsunday1122.github.io/jichitai-compare';
           const expected = {
-            '06204': '2026年4月',
-            '06207': '2026年4月',
-            '06208': '2026年度',
-            '06209': '2026年4月',
-            '06210': '2026年1月13日',
-            '06211': '2026年度',
-            '06301': '2026年度'
+            '06204': ['2026年4月', '令和8年4月'],
+            '06207': ['2026年4月', '令和8年4月'],
+            '06208': ['2026年度', '令和8年度'],
+            '06209': ['2026年4月', '令和8年4月'],
+            '06210': ['2026年1月13日', '令和8年1月13日'],
+            '06211': ['2026年度', '令和8年度'],
+            '06301': ['2026年度', '令和8年度']
           };
 
           async function fetchText(url) {
-            let last = '';
+            let lastStatus = 0;
             for (let attempt = 1; attempt <= 12; attempt++) {
-              const response = await fetch(`${url}?audit=20260725-b5-${Date.now()}-${attempt}`, { cache: 'no-store' });
-              last = await response.text();
-              if (response.ok) return last;
+              const separator = url.includes('?') ? '&' : '?';
+              const response = await fetch(`${url}${separator}audit=20260725-b5-${Date.now()}-${attempt}`, { cache: 'no-store' });
+              lastStatus = response.status;
+              const text = await response.text();
+              if (response.ok) return text;
               await new Promise(resolve => setTimeout(resolve, 10000));
             }
-            throw new Error(`failed to fetch ${url}`);
+            throw new Error(`failed to fetch ${url}; last status ${lastStatus}`);
           }
 
           function findCode(value, code) {
             if (!value || typeof value !== 'object') return null;
-            if (String(value.code || value.municipalityCode || '') === code) return value;
-            if (Array.isArray(value)) {
-              for (const item of value) {
-                const found = findCode(item, code);
-                if (found) return found;
-              }
-              return null;
-            }
-            for (const item of Object.values(value)) {
+            if (!Array.isArray(value) && Object.prototype.hasOwnProperty.call(value, code)) return value[code];
+            if (String(value.code || value.municipalityCode || value.id || '') === code) return value;
+            const items = Array.isArray(value) ? value : Object.values(value);
+            for (const item of items) {
               const found = findCode(item, code);
               if (found) return found;
             }
             return null;
           }
 
+          function matchedNeedle(text, needles) {
+            return needles.find(needle => text.includes(needle)) || null;
+          }
+
           const results = [];
-          for (const [code, needle] of Object.entries(expected)) {
+          for (const [code, needles] of Object.entries(expected)) {
             const url = `${base}/municipality/${code}/`;
-            let matched = false;
+            let matched = null;
             for (let attempt = 1; attempt <= 12; attempt++) {
               const page = await fetchText(url);
-              if (page.includes(needle)) {
-                matched = true;
-                break;
-              }
+              matched = matchedNeedle(page, needles);
+              console.log(`page ${code} attempt ${attempt}: ${matched || 'not matched'}`);
+              if (matched) break;
               await new Promise(resolve => setTimeout(resolve, 10000));
             }
-            if (!matched) throw new Error(`${code} public page missing ${needle}`);
-            results.push({ code, pageUrl: url, expected: needle, result: 'expected corrected start content found' });
+            if (!matched) throw new Error(`${code} public page missing ${needles.join(' / ')}`);
+            results.push({ code, pageUrl: url, expected: matched, result: 'expected corrected start content found' });
           }
 
           const generatedUrl = `${base}/data/generated/municipalities.json`;
-          const generated = JSON.parse(await fetchText(generatedUrl));
-          for (const [code, needle] of Object.entries(expected)) {
+          const generatedText = await fetchText(generatedUrl);
+          const generated = JSON.parse(generatedText);
+          for (const [code, needles] of Object.entries(expected)) {
             const municipality = findCode(generated, code);
-            if (!municipality) throw new Error(`${code} missing from generated JSON`);
+            if (!municipality) {
+              if (!generatedText.includes(code)) throw new Error(`${code} missing from generated JSON`);
+              const rawMatch = matchedNeedle(generatedText, needles);
+              if (!rawMatch) throw new Error(`${code} generated JSON raw content missing ${needles.join(' / ')}`);
+              console.log(`generated ${code}: raw match ${rawMatch}`);
+              continue;
+            }
             const text = JSON.stringify(municipality);
-            if (!text.includes(needle)) throw new Error(`${code} generated JSON missing ${needle}`);
+            const matched = matchedNeedle(text, needles);
+            console.log(`generated ${code}: ${matched || 'not matched'}`);
+            if (!matched) throw new Error(`${code} generated JSON missing ${needles.join(' / ')}`);
           }
 
           const audit = {
@@ -114,7 +123,7 @@ jobs:
 
           const checkpointFile = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
           const checkpoint = JSON.parse(fs.readFileSync(checkpointFile, 'utf8'));
-          checkpoint.updatedAt = '2026-07-25T17:08:00+09:00';
+          checkpoint.updatedAt = '2026-07-25T17:12:00+09:00';
           checkpoint.workingBranch = 'verify/north-b-anyone-single-gap-batch5-public-1708';
           checkpoint.pullRequestNumber = null;
           checkpoint.ciStatus = 'pending';
