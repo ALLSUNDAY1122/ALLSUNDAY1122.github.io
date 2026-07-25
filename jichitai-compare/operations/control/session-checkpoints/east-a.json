@@ -10,13 +10,13 @@
     "19",
     "20"
   ],
-  "updatedAt": "2026-07-25T12:14:00+09:00",
+  "updatedAt": "2026-07-25T12:16:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3210,
+  "pullRequestNumber": 3276,
   "ciStatus": "success",
   "completedSinceSplit": [
     {
@@ -575,7 +575,7 @@
     ],
     "nextRound": null,
     "nextTopic": "10回検証完了",
-    "nextAction": "品質改善第2監査4回を完了。第4回訂正のPR・CI・region/east統合と完了記録を確定する。栄村は9制度unavailable・Issue #2847維持。"
+    "nextAction": "品質改善第2監査は4回完了しregion/east統合済み。全国統合・公開処理でmain・公開ページへ同期確認する。栄村Issue #2847は維持。"
   },
   "postCompletionResolution": {
     "trackingIssueNumber": 3166,
@@ -596,11 +596,11 @@
     "status": "success"
   },
   "qualityImprovementSecondAudit": {
-    "status": "completed_pending_regional_integration",
+    "status": "completed_region_integrated",
     "startedAt": "2026-07-25T10:38:00+09:00",
     "completedRounds": 4,
     "targetRounds": 4,
-    "currentRound": "nagano_sample_completed",
+    "currentRound": "completed",
     "sampledMunicipalities": [
       "13101",
       "13102",
@@ -626,11 +626,12 @@
     "confirmedDataErrors": 12,
     "confirmedStateRecordErrors": 1,
     "sakaeOfficialSiteStatus": "http_502",
-    "nextAction": "第4回訂正をPR・CIで検証しregion/eastへ統合後、完了記録を確定する。栄村は9制度unavailable・Issue #2847維持。",
-    "regionalPullRequestNumber": 3210,
-    "regionalCiRunNumber": 7824,
-    "regionalCiRunId": 30139529573,
-    "regionalMergeSha": "665c9721d28c5cd0417252a2fdeffe9885417024",
-    "regionalIntegrationStatus": "success"
+    "nextAction": "全国統合・公開処理セッションでmain・公開ページへ同期確認する。栄村は9制度unavailable・Issue #2847維持。",
+    "regionalPullRequestNumber": 3276,
+    "regionalCiRunNumber": 8013,
+    "regionalCiRunId": 30141845500,
+    "regionalMergeSha": "844a011a5ef7107e069c251117e88d537df2bb63",
+    "regionalIntegrationStatus": "success",
+    "completedAt": "2026-07-25T12:16:00+09:00"
   }
 }
