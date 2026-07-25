@@ -1,0 +1,216 @@
+name: Temporary West A Housing Source Content Audit
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-housing-source-content-audit-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit-sources:
+    if: github.head_ref == 'audit/west-a-housing-classification-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch candidate official pages and classify content
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const root = 'jichitai-compare';
+          const reportPath = `${root}/operations/audits/west-a-housing-classification-crosscheck-20260725.json`;
+          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+          const childPatterns = [
+            /子育て/g, /子ども/g, /子供/g, /こども/g, /多子/g, /児童/g,
+            /18歳/g, /高校生/g, /中学生/g, /小学生/g, /未就学/g, /扶養/g,
+            /子\s*[0-9０-９一二三四五六七八九十]+\s*人/g,
+            /子がいる/g, /子のいる/g, /子を有する/g, /子と同居/g,
+            /子育て世帯/g, /子育て加算/g, /子ども加算/g, /子供加算/g
+          ];
+          const generalPatterns = [/空き家/g, /移住/g, /定住/g, /リフォーム/g, /住宅改修/g, /改修費/g, /住宅取得/g, /新築/g, /中古住宅/g];
+
+          function decodeEntities(value) {
+            return value
+              .replace(/&nbsp;|&#160;/gi, ' ')
+              .replace(/&amp;/gi, '&')
+              .replace(/&quot;/gi, '"')
+              .replace(/&#39;|&apos;/gi, "'")
+              .replace(/&lt;/gi, '<')
+              .replace(/&gt;/gi, '>')
+              .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+              .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)));
+          }
+          function htmlToText(html) {
+            return decodeEntities(html
+              .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+              .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
+              .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, ' ')
+              .replace(/<!--([\s\S]*?)-->/g, ' ')
+              .replace(/<[^>]+>/g, ' '))
+              .replace(/\s+/g, ' ')
+              .trim();
+          }
+          function extractTitle(html) {
+            const match = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+            return match ? htmlToText(match[1]).slice(0, 300) : null;
+          }
+          function uniqueMatches(text, patterns) {
+            const values = [];
+            for (const pattern of patterns) {
+              pattern.lastIndex = 0;
+              for (const match of text.matchAll(pattern)) values.push(match[0]);
+            }
+            return [...new Set(values)];
+          }
+          function contexts(text, terms) {
+            const result = [];
+            for (const term of terms) {
+              let index = text.indexOf(term);
+              if (index < 0) continue;
+              const start = Math.max(0, index - 90);
+              const end = Math.min(text.length, index + term.length + 140);
+              result.push(text.slice(start, end));
+              if (result.length >= 5) break;
+            }
+            return result;
+          }
+          async function fetchWithTimeout(url, timeoutMs = 18000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+              const response = await fetch(url, {
+                redirect: 'follow',
+                signal: controller.signal,
+                headers: { 'user-agent': 'jichitai-compare-west-a-audit/1.0' }
+              });
+              return { response, text: await response.text() };
+            } finally {
+              clearTimeout(timer);
+            }
+          }
+          async function inspect(candidate) {
+            let lastError = null;
+            for (let attempt = 1; attempt <= 2; attempt += 1) {
+              try {
+                const { response, text: html } = await fetchWithTimeout(candidate.sourceUrl);
+                const text = htmlToText(html);
+                const childMatches = uniqueMatches(text, childPatterns);
+                const generalMatches = uniqueMatches(text, generalPatterns);
+                const success = response.status >= 200 && response.status < 400;
+                const disposition = !success
+                  ? 'http_error'
+                  : childMatches.length > 0
+                    ? 'page_contains_child_specific_terms'
+                    : 'page_lacks_child_specific_terms';
+                return {
+                  municipalityCode: candidate.municipalityCode,
+                  municipalityName: candidate.municipalityName,
+                  prefectureCode: candidate.prefectureCode,
+                  sourceUrl: candidate.sourceUrl,
+                  finalUrl: response.url,
+                  httpStatus: response.status,
+                  contentType: response.headers.get('content-type'),
+                  title: extractTitle(html),
+                  textLength: text.length,
+                  childSpecificMatches: childMatches,
+                  childSpecificContexts: contexts(text, childMatches),
+                  generalMatches,
+                  generalContexts: contexts(text, generalMatches),
+                  disposition,
+                  attempt,
+                  error: null
+                };
+              } catch (error) {
+                lastError = String(error);
+              }
+            }
+            return {
+              municipalityCode: candidate.municipalityCode,
+              municipalityName: candidate.municipalityName,
+              prefectureCode: candidate.prefectureCode,
+              sourceUrl: candidate.sourceUrl,
+              finalUrl: null,
+              httpStatus: null,
+              contentType: null,
+              title: null,
+              textLength: 0,
+              childSpecificMatches: [],
+              childSpecificContexts: [],
+              generalMatches: [],
+              generalContexts: [],
+              disposition: 'fetch_failed',
+              attempt: 2,
+              error: lastError
+            };
+          }
+
+          const candidates = report.candidates ?? [];
+          const results = new Array(candidates.length);
+          let cursor = 0;
+          const workerCount = Math.min(10, candidates.length || 1);
+          async function worker() {
+            while (true) {
+              const index = cursor++;
+              if (index >= candidates.length) return;
+              results[index] = await inspect(candidates[index]);
+            }
+          }
+          await Promise.all(Array.from({ length: workerCount }, () => worker()));
+
+          const grouped = {
+            pageContainsChildSpecificTerms: results.filter((item) => item.disposition === 'page_contains_child_specific_terms'),
+            pageLacksChildSpecificTerms: results.filter((item) => item.disposition === 'page_lacks_child_specific_terms'),
+            httpError: results.filter((item) => item.disposition === 'http_error'),
+            fetchFailed: results.filter((item) => item.disposition === 'fetch_failed')
+          };
+          report.officialSourceContentAudit = {
+            executedAt: '2026-07-25T14:51:00+09:00',
+            inspectedCandidateCount: candidates.length,
+            pageContainsChildSpecificTermsCount: grouped.pageContainsChildSpecificTerms.length,
+            pageLacksChildSpecificTermsCount: grouped.pageLacksChildSpecificTerms.length,
+            httpErrorCount: grouped.httpError.length,
+            fetchFailedCount: grouped.fetchFailed.length,
+            note: 'ページ内語句はナビゲーション等を含み得るため、子育て語の存在だけで正当化しない。子育て語なしのページは高リスクとして本文・要綱を独立確認する。',
+            results
+          };
+          report.priorityReview = {
+            highRiskCount: grouped.pageLacksChildSpecificTerms.length,
+            highRiskMunicipalities: grouped.pageLacksChildSpecificTerms.map((item) => ({
+              municipalityCode: item.municipalityCode,
+              municipalityName: item.municipalityName,
+              prefectureCode: item.prefectureCode,
+              title: item.title,
+              sourceUrl: item.sourceUrl,
+              finalUrl: item.finalUrl,
+              generalContexts: item.generalContexts
+            })),
+            fetchProblemCount: grouped.httpError.length + grouped.fetchFailed.length,
+            fetchProblems: [...grouped.httpError, ...grouped.fetchFailed]
+          };
+          report.status = grouped.pageLacksChildSpecificTerms.length > 0 || grouped.httpError.length > 0 || grouped.fetchFailed.length > 0
+            ? 'official_source_review_required'
+            : 'completed_no_high_risk_sources';
+          fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
+          NODE
+
+          rm -f jichitai-compare/operations/control/west-a-housing-source-content-audit-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-housing-source-content-audit.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-housing-classification-crosscheck-20260725.json \
+                  jichitai-compare/operations/control/west-a-housing-source-content-audit-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-housing-source-content-audit.yml
+          git diff --cached --check
+          git commit -m 'audit: 西日本A住宅支援候補の公式ページ本文を検査'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
