@@ -10,14 +10,14 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-25T17:20:00+09:00",
+  "updatedAt": "2026-07-25T08:29:47.430Z",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
-  "workingBranch": "audit/north-b-anyone-single-gap-batch7-final-20260725",
+  "workingBranch": "verify/north-b-anyone-batch7-public-20260725",
   "pullRequestNumber": null,
-  "ciStatus": "pending",
+  "ciStatus": "success",
   "regionPullRequestNumber": 3204,
   "regionCiRun": 30139394200,
   "regionMergeCommit": "0ede1653d5ed91c8088fa2ad7e8b22b9402afd74",
@@ -158,7 +158,7 @@
     "publicVerification": "success"
   },
   "blocked": [],
-  "nextAction": "誰でも通園候補78件の全件再監査完了。自治体JSON・task・生成JSON・公開ページの最終一括整合を確認する。",
+  "nextAction": "誰でも通園候補78件の全件再監査、main・region/north反映、公開ページ・全国生成JSON確認まで完了。",
   "horizontalUrlAudit": {
     "municipalityCount": 107,
     "uniqueUrlCount": 1221,
@@ -239,7 +239,7 @@
     "recordsPersistenceRegionCiResult": "success",
     "recordsPersistenceRegionMergeCommit": "097d0021ad3421744d4a3df4abba69ed4229be67",
     "recordsPersistenceStatus": "completed",
-    "status": "anyone_candidate_audit_completed",
+    "status": "anyone_candidate_audit_public_verified",
     "multipleGapReviewed": 9,
     "multipleGapCorrectedMunicipalities": [
       "01607",
@@ -468,6 +468,14 @@
       "singleGapReviewed": 65,
       "totalReviewed": 78,
       "remainingUnreviewed": 0
-    }
+    },
+    "singleGapBatch7PublicVerification": "success",
+    "singleGapBatch7PublicVerifiedMunicipalities": [
+      "04361",
+      "04404",
+      "06426",
+      "06461"
+    ],
+    "singleGapBatch7PublicVerificationFile": "operations/audits/north-b-anyone-batch7-public-verification-20260725.json"
   }
 }
