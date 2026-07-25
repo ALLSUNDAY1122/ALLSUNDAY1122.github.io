@@ -12,13 +12,13 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T16:32:00+09:00",
+  "updatedAt": "2026-07-25T17:16:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3542,
+  "pullRequestNumber": 3584,
   "ciStatus": "success",
   "completedSinceSplit": [
     {
@@ -41,7 +41,7 @@
     }
   ],
   "blocked": [],
-  "nextAction": "住宅支援分類38件と誰でも通園制度5件の地域・全国・公開・checkpoint同期まで完了。新しい公式情報または再退行が検出された場合のみ再監査する。",
+  "nextAction": "住宅支援分類38件、誰でも通園制度5件、学校給食費主出典2件の地域・全国・公開・checkpoint同期まで完了。新しい公式情報または再退行が検出された場合のみ再監査する。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
@@ -120,7 +120,15 @@
     "anyoneCareNationalCiRunNumber": 8657,
     "anyoneCarePublicVerificationPullRequestNumber": 3568,
     "anyoneCarePublicVerificationCiRunNumber": 8666,
-    "anyoneCarePublicVerificationFile": "jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json"
+    "anyoneCarePublicVerificationFile": "jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json",
+    "schoolMealsCrosscheckFile": "jichitai-compare/operations/audits/west-a-school-meals-final-resolution-20260725.json",
+    "schoolMealsRegionalPullRequestNumber": 3584,
+    "schoolMealsRegionalCiRunNumber": 8762,
+    "schoolMealsNationalPullRequestNumber": 3604,
+    "schoolMealsNationalCiRunNumber": 8778,
+    "schoolMealsPublicVerificationPullRequestNumber": 3609,
+    "schoolMealsPublicVerificationCiRunNumber": 8817,
+    "schoolMealsPublicVerificationFile": "jichitai-compare/operations/audits/west-a-school-meals-public-verification-20260725.json"
   },
   "integrityAudit": {
     "auditedAt": "2026-07-25T12:08:00+09:00",
@@ -370,7 +378,8 @@
   "notes": [
     "2026-07-25 15:18: 一般移住・一般住宅制度の分類誤りを担当226自治体で横断監査し、38自治体のhousingSupportをverifiedからunavailableへ訂正。地域・全国・公開38ページを確認し未解決0。",
     "2026-07-25 15:31: 最終全国checkpoint同期PR #3519・CI #8543・merge 3d983dec8e34を確認し、住宅支援分類横断監査38件を完全完了。",
-    "2026-07-25 16:32: 担当226自治体のこども誰でも通園制度を横断監査し、安田町・仁淀川町・津野町をverifiedへ訂正、志布志市・中種子町の料金を追記。地域PR #3542、全国PR #3565、公開PR #3568、未解決0。"
+    "2026-07-25 16:32: 担当226自治体のこども誰でも通園制度を横断監査し、安田町・仁淀川町・津野町をverifiedへ訂正、志布志市・中種子町の料金を追記。地域PR #3542、全国PR #3565、公開PR #3568、未解決0。",
+    "2026-07-25 17:16: 担当226自治体の学校給食費を横断監査。状態・金額訂正0、五木村・出水市の主出典2件を現行根拠へ更新。地域PR #3584、全国PR #3604、公開PR #3609、未解決0。"
   ],
   "anyoneCareCrosscheck": {
     "status": "completed_with_corrections",
@@ -393,6 +402,35 @@
     "publicVerificationMergeSha": "9fcb377d179dbdba4d71b7e0eba6a33e2b56acf6",
     "publicPageCount": 5,
     "oldPhraseRemainingCount": 0,
+    "blocker": null
+  },
+  "schoolMealsCrosscheck": {
+    "status": "completed_with_source_maintenance",
+    "completedAt": "2026-07-25T17:16:00+09:00",
+    "municipalityCount": 226,
+    "verifiedCount": 155,
+    "unavailableCount": 71,
+    "initialPriorityCandidateCount": 64,
+    "refinedPriorityCandidateCount": 50,
+    "officialFetchTargetCount": 19,
+    "manualReviewCount": 5,
+    "statusCorrectionCount": 0,
+    "factValueCorrectionCount": 0,
+    "sourceMaintenanceCount": 2,
+    "factEnrichmentCount": 1,
+    "unavailableImplementationOmissionCount": 0,
+    "unresolvedCount": 0,
+    "regionalPullRequestNumber": 3584,
+    "regionalCiRunNumber": 8762,
+    "regionalMergeSha": "38b8af8e135db8b049ee9b9f382bf8fec8eb7ac9",
+    "nationalPullRequestNumber": 3604,
+    "nationalCiRunNumber": 8778,
+    "nationalMergeSha": "e1f6a240f5f1040c63e6c5f2cca7d88643070ef0",
+    "publicVerificationPullRequestNumber": 3609,
+    "publicVerificationCiRunNumber": 8817,
+    "publicVerificationMergeSha": "65c66a6e5a2264df4e805a820914c2e705595602",
+    "publicPageCount": 2,
+    "oldPrimarySourceRemainingCount": 0,
     "blocker": null
   }
 }
