@@ -61,7 +61,7 @@ jobs:
               const generatedUrl = `${base}/data/generated/municipalities.json`;
               const response = await fetch(generatedUrl, { redirect: 'follow', signal: AbortSignal.timeout(30000), headers: { 'user-agent': 'WestBPublicVerification/1.0' } });
               const text = await response.text();
-              const generatedOk = response.ok && targets.every(([code, expected]) => text.includes(`\"code\":\"${code}\"`) || text.includes(`\"code\": \"${code}\"`)) && targets.every(([, expected]) => text.includes(expected));
+              const generatedOk = response.ok && targets.every(([code]) => text.includes(`\"code\":\"${code}\"`) || text.includes(`\"code\": \"${code}\"`)) && targets.every(([, expected]) => text.includes(expected));
               checks.push({ code: 'generated', url: generatedUrl, expected: 'six corrected municipality records and summaries', httpStatus: response.status, ok: generatedOk });
               if (!generatedOk) allOk = false;
             } catch (error) {
@@ -114,10 +114,13 @@ jobs:
       - name: Commit verification record
         shell: bash
         run: |
-          rm -f jichitai-compare/operations/control/west-b-public-verify-trigger-20260725.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add jichitai-compare/operations/audits/west-b-sick-child-public-verification-20260725.json jichitai-compare/operations/control/session-checkpoints/west-b.json
-          git add jichitai-compare/operations/control/west-b-public-verify-trigger-20260725.json
+          git add -A jichitai-compare
+          git status --short
+          if git diff --cached --quiet; then
+            echo "No verification changes to commit"
+            exit 0
+          fi
           git commit -m "audit: 西日本B病児保育6自治体の公開反映を確認"
           git push origin HEAD:verify/west-b-public-20260725
