@@ -4,6 +4,7 @@
   "sessionId": "north-b",
   "auditMode": "quality-improvement-second-audit",
   "startedAt": "2026-07-25T10:38:00+09:00",
+  "updatedAt": "2026-07-25T10:39:00+09:00",
   "status": "in_progress",
   "baseBranch": "region/north",
   "workingBranch": "audit/north-b-quality-round2-20260725",
@@ -13,8 +14,8 @@
     "previousAuditRounds": 10,
     "previousConfirmedCorrections": 28,
     "sampleTargetMunicipalityCount": 20,
-    "sampleCompletedMunicipalityCount": 0,
-    "confirmedNewErrorCount": 0
+    "sampleCompletedMunicipalityCount": 4,
+    "confirmedNewErrorCount": 1
   },
   "focus": [
     "こども誰でも通園制度の開始年度",
@@ -50,9 +51,12 @@
     {"code":"05349","municipality":"八峰町","status":"pending","risk":"2026年度制度追加済み"},
     {"code":"06213","municipality":"南陽市","status":"pending","risk":"3制度の現行直接資料未取得"},
     {"code":"06363","municipality":"舟形町","status":"pending","risk":"誰でも通園・病後児保育の直接条件未取得"},
-    {"code":"06367","municipality":"戸沢村","status":"pending","risk":"計画資料によるverified誤判定"},
-    {"code":"06403","municipality":"飯豊町","status":"pending","risk":"2026年度制度・月齢訂正"},
-    {"code":"06426","municipality":"三川町","status":"pending","risk":"2026年4月制度追加済み"}
+    {"code":"06367","municipality":"戸沢村","status":"completed","risk":"計画資料によるverified誤判定","result":"temporaryChildcareのunavailable判定を維持。制度状態は正しいが自治体要約が8/1の旧集計だったため7/2へ訂正"},
+    {"code":"06403","municipality":"飯豊町","status":"completed","risk":"2026年度制度・月齢訂正","result":"開始年度、対象6か月以上3歳未満、飯豊すくすくこども園、月10時間、1時間300円、申請手順が公式情報と一致"},
+    {"code":"06426","municipality":"三川町","status":"completed","risk":"2026年4月制度追加済み","result":"2026年4月開始、対象6か月以上3歳未満、みかわ保育園、平日9-12時・13-16時、月10時間、1時間300円が公式情報と一致"}
+  ],
+  "additionalPriorityReview": [
+    {"code":"06382","municipality":"川西町","status":"completed","result":"町公式保育園だよりで制度開始と対象6か月以上3歳までを確認。施設、料金、利用時間、月上限は未確定とする現行JSONの注記を維持"}
   ],
   "artifactsToMatch": [
     "data/municipalities",
@@ -61,5 +65,20 @@
     "static municipality pages",
     "published GitHub Pages"
   ],
-  "findings": []
+  "findings": [
+    {
+      "findingId": "NORTH-B-Q2-001",
+      "code": "06367",
+      "municipality": "戸沢村",
+      "category": "generated-summary-count-mismatch",
+      "severity": "confirmed",
+      "before": "自治体JSONとmain静的ページの要約が確認済み8制度・未確認1制度",
+      "after": "確認済み7制度・未確認2制度",
+      "cause": "temporaryChildcareをverifiedからunavailableへ訂正した際、サービス本文とtask件数は更新されたが自治体summaryが旧集計のまま残った",
+      "dataStatus": "fixed-on-working-branch",
+      "taskStatus": "already-correct",
+      "generatedStatus": "pending-region-and-main-regeneration",
+      "publicStatus": "pending-main-sync"
+    }
+  ]
 }
