@@ -1,0 +1,93 @@
+name: Temporary Central A Batch 2 Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-a-batch2-public-verify-trigger-20260725.json
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-batch2-public-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify six published pages and generated JSON
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const targets = [
+            ['16205', ['氷見市', '保護者向けの徴収・免除案内は公式公開を確認できない']],
+            ['17407', ['中能登町', '2026年度の利用者向け適用・申請案内は公式公開を確認できない']],
+            ['21501', ['坂祝町', '町立小中学校・幼稚園の給食費は、児童生徒等の区分ごとに1食単価と月額徴収額が定められている。']],
+            ['22214', ['藤枝市', '市立小中学校の学校給食費は現行規則で小学校月4,300円、中学校月5,100円と定める。']],
+            ['22306', ['西伊豆町', '経済的理由で就学が困難な児童生徒の保護者へ、学校給食費を含む就学援助を行う。']],
+            ['22344', ['小山町', '就学援助を利用者向けページで確認し、要綱では学校給食費を援助対象に含む。']]
+          ];
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          let finalChecks = [];
+          let passed = false;
+
+          for (let attempt = 1; attempt <= 24; attempt += 1) {
+            const checks = [];
+            let allOk = true;
+            for (const [code, expectedTexts] of targets) {
+              const url = `${base}/municipality/${code}/`;
+              try {
+                const response = await fetch(url, {
+                  redirect: 'follow',
+                  signal: AbortSignal.timeout(20000),
+                  headers: { 'user-agent': 'CentralABatch2PublicVerification/1.0' }
+                });
+                const text = await response.text();
+                const missingTexts = expectedTexts.filter((expected) => !text.includes(expected));
+                const ok = response.ok && missingTexts.length === 0;
+                checks.push({ code, url, status: response.status, missingTexts, ok });
+                if (!ok) allOk = false;
+              } catch (error) {
+                checks.push({ code, url, status: null, ok: false, error: String(error?.message ?? error) });
+                allOk = false;
+              }
+            }
+
+            try {
+              const url = `${base}/data/generated/municipalities.json`;
+              const response = await fetch(url, {
+                redirect: 'follow',
+                signal: AbortSignal.timeout(30000),
+                headers: { 'user-agent': 'CentralABatch2PublicVerification/1.0' }
+              });
+              const text = await response.text();
+              const codeChecks = targets.map(([code]) => ({
+                code,
+                found: text.includes(`\"code\":\"${code}\"`) || text.includes(`\"code\": \"${code}\"`)
+              }));
+              const phraseChecks = [
+                '保護者向けの徴収・免除案内は公式公開を確認できない',
+                '2026年度の利用者向け適用・申請案内は公式公開を確認できない',
+                '町立小中学校・幼稚園の給食費は、児童生徒等の区分ごとに1食単価と月額徴収額が定められている。',
+                '市立小中学校の学校給食費は現行規則で小学校月4,300円、中学校月5,100円と定める。',
+                '経済的理由で就学が困難な児童生徒の保護者へ、学校給食費を含む就学援助を行う。',
+                '就学援助を利用者向けページで確認し、要綱では学校給食費を援助対象に含む。'
+              ].map((value) => ({ value, found: text.includes(value) }));
+              const ok = response.ok && codeChecks.every((item) => item.found) && phraseChecks.every((item) => item.found);
+              checks.push({ code: 'generated', url, status: response.status, codeChecks, phraseChecks, ok });
+              if (!ok) allOk = false;
+            } catch (error) {
+              checks.push({ code: 'generated', url: `${base}/data/generated/municipalities.json`, status: null, ok: false, error: String(error?.message ?? error) });
+              allOk = false;
+            }
+
+            finalChecks = checks;
+            if (allOk) {
+              passed = true;
+              break;
+            }
+            await sleep(10000);
+          }
+
+          console.log(JSON.stringify({ passed, checkedAt: new Date().toISOString(), checks: finalChecks }, null, 2));
+          if (!passed) process.exit(1);
+          NODE
