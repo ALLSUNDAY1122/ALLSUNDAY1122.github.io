@@ -1,0 +1,99 @@
+name: Temporary Central Top Status Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-top-status-sync-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'fix/central-top-status-main-sync-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fix branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Copy five corrected municipality records from region central
+        shell: bash
+        run: |
+          git fetch origin region/central:refs/remotes/origin/region/central
+          for code in 16202 16204 16205 16206 23100; do
+            pref="${code:0:2}"
+            path="jichitai-compare/data/municipalities/${pref}/${code}.json"
+            git show "origin/region/central:${path}" > "${path}"
+          done
+
+      - name: Record synchronization evidence
+        shell: bash
+        run: |
+          mkdir -p jichitai-compare/operations/audits
+          cat > jichitai-compare/operations/audits/central-top-status-main-sync-20260725.json <<'JSON'
+          {
+            "schemaVersion": "1.0.0",
+            "auditId": "central-top-status-main-sync-20260725",
+            "detectedBy": "central-quality-cross-audit-20260725",
+            "trackingIssues": [3187, 3193],
+            "sourceBranch": "region/central",
+            "targetBranch": "main",
+            "municipalities": [
+              {"code":"16202","name":"高岡市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+              {"code":"16204","name":"魚津市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+              {"code":"16205","name":"氷見市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+              {"code":"16206","name":"滑川市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+              {"code":"23100","name":"名古屋市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":3029,"originalAuditCiRun":7363}
+            ],
+            "cause": "地域監査で訂正した自治体上位statusとsummaryが全国同期対象から漏れ、制度データだけがmainへ反映されていた",
+            "scope": "自治体上位status・summary・updatedAtのみ。9制度内容はregion/centralとmainで既に一致",
+            "releaseBlocker": "active_until_main_ci_and_public_verification_succeed"
+          }
+          JSON
+
+      - name: Regenerate and validate national outputs
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Commit synchronized source and generated outputs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/data/municipalities/16/16202.json \
+            jichitai-compare/data/municipalities/16/16204.json \
+            jichitai-compare/data/municipalities/16/16205.json \
+            jichitai-compare/data/municipalities/16/16206.json \
+            jichitai-compare/data/municipalities/23/23100.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/data/generated/municipality-pages.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/operations/audits/central-top-status-main-sync-20260725.json \
+            jichitai-compare/municipality/16202/index.html \
+            jichitai-compare/municipality/16204/index.html \
+            jichitai-compare/municipality/16205/index.html \
+            jichitai-compare/municipality/16206/index.html \
+            jichitai-compare/municipality/23100/index.html \
+            jichitai-compare/sitemap.xml \
+            jichitai-compare/operations/control/central-top-status-sync-trigger-20260725.json
+          if git diff --cached --quiet; then
+            echo 'No synchronization changes.'
+            exit 0
+          fi
+          git commit -m 'fix: 中日本5自治体の上位statusをmainへ同期'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
