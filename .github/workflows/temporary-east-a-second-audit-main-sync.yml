@@ -1,0 +1,141 @@
+name: Temporary East A Second Audit Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  sync-and-validate:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'sync/east-a-second-audit-main-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Detect completed run
+        id: detect
+        shell: bash
+        run: |
+          if [[ -f jichitai-compare/operations/triggers/east-a-second-audit-main-sync.txt ]]; then
+            echo "run_sync=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_sync=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.run_sync == 'true'
+        with:
+          node-version: '24'
+      - name: Copy audited regional files
+        if: steps.detect.outputs.run_sync == 'true'
+        shell: bash
+        run: |
+          git fetch origin region/east
+          git checkout origin/region/east -- \
+            jichitai-compare/data/municipalities/10/10201.json \
+            jichitai-compare/data/municipalities/13/13103.json \
+            jichitai-compare/data/municipalities/19/19201.json \
+            jichitai-compare/data/municipalities/19/19202.json \
+            jichitai-compare/data/municipalities/19/19205.json \
+            jichitai-compare/data/municipalities/19/19206.json \
+            jichitai-compare/data/municipalities/20/20201.json \
+            jichitai-compare/data/municipalities/20/20202.json \
+            jichitai-compare/data/municipalities/20/20203.json \
+            jichitai-compare/data/municipalities/20/20204.json \
+            jichitai-compare/data/municipalities/20/20205.json \
+            jichitai-compare/operations/tasks/10201.json \
+            jichitai-compare/operations/tasks/13103.json \
+            jichitai-compare/operations/tasks/19201.json \
+            jichitai-compare/operations/tasks/19202.json \
+            jichitai-compare/operations/tasks/19204.json \
+            jichitai-compare/operations/tasks/19205.json \
+            jichitai-compare/operations/tasks/19206.json \
+            jichitai-compare/operations/tasks/20201.json \
+            jichitai-compare/operations/tasks/20202.json \
+            jichitai-compare/operations/tasks/20203.json \
+            jichitai-compare/operations/tasks/20204.json \
+            jichitai-compare/operations/tasks/20205.json \
+            jichitai-compare/operations/audits/east-a-quality-improvement-second-audit-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/east-a.json
+      - name: Record pending main integration
+        if: steps.detect.outputs.run_sync == 'true'
+        shell: bash
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          timestamp = '2026-07-25T12:25:00+09:00'
+          pr_number = int(os.environ['PR_NUMBER'])
+
+          audit_path = root / 'operations/audits/east-a-quality-improvement-second-audit-20260725.json'
+          audit = json.loads(audit_path.read_text(encoding='utf-8'))
+          audit['status'] = 'completed_main_pending_publication'
+          audit['nextAction'] = 'main統合後、公開生成JSONと訂正対象11自治体の公開ページを確認する。栄村Issue #2847は維持。'
+          audit['mainIntegration'] = {
+              'pullRequestNumber': pr_number,
+              'sourceRegionalPullRequests': [3210, 3251, 3276, 3283],
+              'status': 'pending_ci_merge'
+          }
+          audit['updatedAt'] = timestamp
+          audit_path.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          checkpoint_path = root / 'operations/control/session-checkpoints/east-a.json'
+          checkpoint = json.loads(checkpoint_path.read_text(encoding='utf-8'))
+          checkpoint['updatedAt'] = timestamp
+          checkpoint['pullRequestNumber'] = pr_number
+          qa = checkpoint['qualityImprovementSecondAudit']
+          qa['status'] = 'completed_main_pending_publication'
+          qa['nextAction'] = 'main統合後、公開生成JSONと訂正対象11自治体の公開ページを確認する。栄村は9制度unavailable・Issue #2847維持。'
+          qa['nationalPullRequestNumber'] = pr_number
+          qa['nationalIntegrationStatus'] = 'pending_ci_merge'
+          checkpoint_path.write_text(json.dumps(checkpoint, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Regenerate and validate nationwide data
+        if: steps.detect.outputs.run_sync == 'true'
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node - <<'NODE'
+          const fs = require('fs');
+          const raw = JSON.parse(fs.readFileSync('data/generated/municipalities.json', 'utf8'));
+          const municipalities = Array.isArray(raw) ? raw : raw.municipalities;
+          if (!Array.isArray(municipalities)) throw new Error('municipalities array not found');
+          const serviceCount = municipalities.reduce((sum, item) => sum + Object.keys(item.services || {}).length, 0);
+          if (municipalities.length !== 1741) throw new Error(`municipality count=${municipalities.length}`);
+          if (serviceCount !== 15669) throw new Error(`service count=${serviceCount}`);
+          console.log(`nationwide counts verified: ${municipalities.length} municipalities / ${serviceCount} services`);
+          NODE
+      - name: Commit synchronized files
+        if: steps.detect.outputs.run_sync == 'true'
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/triggers/east-a-second-audit-main-sync.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "sync: apply East A second audit to main"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
