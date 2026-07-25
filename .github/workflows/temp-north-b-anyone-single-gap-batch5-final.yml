@@ -1,0 +1,93 @@
+name: Temporary North B Anyone Single Gap Batch 5 Final
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-anyone-single-gap-batch5-final.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-anyone-single-gap-batch5-final-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  apply-audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout final audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore and apply confirmed corrections
+        shell: bash
+        run: |
+          git show f841f66c7938b5f82bbb4d499f6e710fdc8cc8c1:jichitai-compare/scripts/temp-north-b-anyone-single-gap-batch5.mjs > /tmp/north-b-batch5.mjs
+          node /tmp/north-b-batch5.mjs
+          node <<'NODE'
+          const fs = require('fs');
+          const file = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          data.updatedAt = '2026-07-25T16:45:00+09:00';
+          data.workingBranch = 'audit/north-b-anyone-single-gap-batch5-final-20260725';
+          data.pullRequestNumber = null;
+          data.ciStatus = 'pending';
+          fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`);
+          NODE
+
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove temporary workflow and commit final result
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-north-b-anyone-single-gap-batch5-final.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-b-anyone-single-gap-batch5-final.yml \
+            jichitai-compare/data/municipalities/06/06204.json \
+            jichitai-compare/data/municipalities/06/06207.json \
+            jichitai-compare/data/municipalities/06/06208.json \
+            jichitai-compare/data/municipalities/06/06209.json \
+            jichitai-compare/data/municipalities/06/06210.json \
+            jichitai-compare/data/municipalities/06/06211.json \
+            jichitai-compare/data/municipalities/06/06301.json \
+            jichitai-compare/operations/tasks/06204.json \
+            jichitai-compare/operations/tasks/06207.json \
+            jichitai-compare/operations/tasks/06208.json \
+            jichitai-compare/operations/tasks/06209.json \
+            jichitai-compare/operations/tasks/06210.json \
+            jichitai-compare/operations/tasks/06211.json \
+            jichitai-compare/operations/tasks/06301.json \
+            jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/municipality/06204/index.html \
+            jichitai-compare/municipality/06207/index.html \
+            jichitai-compare/municipality/06208/index.html \
+            jichitai-compare/municipality/06209/index.html \
+            jichitai-compare/municipality/06210/index.html \
+            jichitai-compare/municipality/06211/index.html \
+            jichitai-compare/municipality/06301/index.html \
+            jichitai-compare/sitemap.xml
+          git commit -m 'audit: 北日本B誰でも通園単一条件第5群を最終反映 [skip ci]'
+          git push origin HEAD:"${{ github.head_ref }}"
