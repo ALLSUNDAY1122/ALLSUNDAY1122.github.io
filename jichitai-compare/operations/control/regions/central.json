@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T23:29:00+09:00",
+  "updatedAt": "2026-07-25T23:45:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,7 +24,7 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "住宅支援分類第12群で瑞浪市を子育て世帯等住宅取得30万円へ差し替え、御嵩町の一般移住制度をunavailableへ修正。島田市・豊川市・伊豆の国市は現行の子ども加算を再確認してverifiedを維持した。",
+  "lastAction": "住宅支援分類第12群で瑞浪市・御嵩町を修正し、島田市・豊川市・伊豆の国市を現状維持判定。地域・全国・公開5ページと全国JSONの一致を確認した。",
   "nextAction": "一般住宅・移住制度の分類候補残124件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
@@ -400,13 +400,21 @@
   },
   "latestCentralAHousingBatch": {
     "batch": 12,
-    "status": "regional_corrected_pending_national_sync",
+    "status": "completed_public_verified_region_integrated",
     "reviewedMunicipalityCount": 5,
-    "correctedMunicipalityCount": 2,
-    "retainedMunicipalityCount": 3,
+    "confirmedCorrectionCount": 2,
+    "retainedNoChangeCount": 3,
+    "statusToUnavailableCount": 1,
+    "verifiedReplacementCount": 1,
     "remainingCandidates": 114,
     "regionalPullRequestNumber": 3699,
-    "workflowRunId": 30161836565,
+    "regionalWorkflowRunId": 30161836565,
+    "nationalPullRequestNumber": 3701,
+    "nationalWorkflowRunId": 30162004028,
+    "publicVerificationPullRequestNumber": 3703,
+    "publicVerificationWorkflowRunId": 30162185289,
+    "finalRegionPullRequestNumber": 3705,
+    "finalRegionWorkflowRunId": 30162351195,
     "blocker": null
   }
 }
