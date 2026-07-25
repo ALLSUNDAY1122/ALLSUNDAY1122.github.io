@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T11:08:00+09:00",
+  "updatedAt": "2026-07-25T11:18:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,8 +24,8 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "原因別重点再監査の第1次処理をPR #3219・CI #7854成功後にregion/centralへ統合。314自治体・2,826制度、自治体名重複0、task欠落0を確認し、菰野町の誤コード24361重複と南砺市・豊山町の404主出典を訂正した。Issue #3141は23項目を維持した。",
-  "nextAction": "原因別重点再監査を継続し、弱い主出典46候補、子育て固有条件のない住宅支援候補、学校給食費の範囲候補24件を公式利用者向け情報で確定判定する。",
+  "lastAction": "原因別重点再監査の第1次確定訂正をPR #3219・CI #7854でregion/centralへ統合し、checkpoint PR #3224を統合した。並行処理で能勢町・東栄町が解消されたため、Issue #3141の現行状態を21項目・20自治体へ再同期した。",
+  "nextAction": "原因別重点再監査を継続し、弱い主出典46候補、子育て固有条件のない住宅支援候補、学校給食費の範囲候補24件を公式利用者向け情報で確定判定する。Issue #3141は現行21項目を追跡する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
@@ -59,7 +59,7 @@
         "service": "bulkyWaste"
       }
     ],
-    "issue3141UnresolvedItemCount": 23,
+    "issue3141UnresolvedItemCount": 21,
     "candidateCounts": {
       "weakPrimarySource": 46,
       "numericOrConditionCompleteness": 81,
@@ -72,6 +72,110 @@
       "弱い主出典46候補",
       "子育て固有条件のない住宅支援候補",
       "学校給食費の範囲候補24件"
-    ]
+    ],
+    "issue3141UnresolvedMunicipalityCount": 20,
+    "issue3141Items": [
+      {
+        "code": "21207",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "21504",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22219",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22305",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22424",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22429",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "23235",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "23427",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "23561",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "23563",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24205",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "24205",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24212",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24441",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "24461",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24543",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "25441",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "25442",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "27232",
+        "service": "sickChildCare"
+      },
+      {
+        "code": "27321",
+        "service": "sickChildCare"
+      },
+      {
+        "code": "27366",
+        "service": "sickChildCare"
+      }
+    ],
+    "concurrentlyResolvedAfterAuditSnapshot": [
+      {
+        "code": "23562",
+        "name": "東栄町",
+        "service": "schoolMeals",
+        "regionalPr": 3211,
+        "nationalPr": 3216
+      },
+      {
+        "code": "27322",
+        "name": "能勢町",
+        "service": "schoolMeals",
+        "regionalPr": 3190,
+        "nationalPr": 3200
+      }
+    ],
+    "issue3141AuthoritativeStateCheckedAt": "2026-07-25T11:18:00+09:00"
   }
 }
