@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch21-decisions-20260726",
+  "decidedAt": "2026-07-26T07:36:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3805,
+  "runnerWorkflowRunId": 30177953475,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 4,
+  "retainedNoChangeCount": 1,
+  "statusToUnavailableCount": 2,
+  "verifiedReplacementCount": 2,
+  "decisions": [
+    {
+      "code": "24443",
+      "name": "大台町",
+      "service": "housingSupport",
+      "decisionType": "replace_with_child_specific_trial_housing_intake_closed",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "空き家を定住目的で改修する場合、工事費の一部を補助する。原則として町内施工業者と工事着手前の申請が必要。",
+      "afterSummary": "18歳以下の子がいる世帯等を対象に、令和8年度は家具・家電付きのお試し住宅を月額3万円で貸し付ける。募集は終了している。",
+      "officialSource": "https://www.odaitown.jp/soshiki/yakuba/8/4/2_2/2_2_3/3037.html",
+      "review": null
+    },
+    {
+      "code": "24471",
+      "name": "大紀町",
+      "service": "housingSupport",
+      "decisionType": "general_vacant_home_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "空き家バンク物件の家財処分や簡易改修費用を、10万円を上限に助成する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.taiki.mie.jp/soshiki/somukikaku/gyomu/som_hojo-all/1522.html",
+      "review": null
+    },
+    {
+      "code": "24561",
+      "name": "御浜町",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_newlywed_program",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "町内で新築・中古住宅を取得する人へ、取得時期に応じて最大11年間で115万円相当を支援する。",
+      "afterSummary": "39歳以下・合計所得500万円未満の新婚世帯へ、令和8年度の住宅取得・賃借・リフォーム・引越費用を上限30万円または60万円補助する。",
+      "officialSource": "https://www.town.mihama.mie.jp/soshikikarasagasu/kikakuka/kurashinojoho/2/1464.html",
+      "review": null
+    },
+    {
+      "code": "25201",
+      "name": "大津市",
+      "service": "housingSupport",
+      "decisionType": "retained_verified_child_household_reform_addition",
+      "changed": false,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "市外から転入する世帯や市外の子・孫世帯と同居する世帯の住宅改修費を補助する。",
+      "afterSummary": "市外から転入する世帯や市外の子・孫世帯と同居する世帯の住宅改修費を補助する。",
+      "officialSource": "https://www.city.otsu.lg.jp/kurashi/j/r/h/7846.html",
+      "review": "令和8年度定住促進リフォーム補助金は、転入世帯に15歳未満の子または出産予定者がいる場合、補助率20％・上限60万円へ拡充され、申請期間は令和8年4月20日から12月28日までと現行公式ページで確認したためverifiedを維持する。"
+    },
+    {
+      "code": "27204",
+      "name": "池田市",
+      "service": "housingSupport",
+      "decisionType": "general_seismic_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "市内の旧耐震木造住宅の耐震診断・設計・改修費用の一部を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.ikeda.osaka.jp/kurashi_tetsuduki/soudan/kenchikubutu/18057.html",
+      "review": null
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 74,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 69
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般空き家・耐震制度だけを子育て世帯向け住宅支援として登録しない",
+    "新婚世帯向け住宅費支援と子育て世帯向け低廉住宅は、年度・受付状態を明示して記録する",
+    "募集終了制度は利用受付終了を明記し、制度内容と現在の受付状態を混同しない"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3807,
+  "nationalSyncWorkflowRunId": 30178058867,
+  "nationalSyncStatus": "validated_pending_merge"
+}
