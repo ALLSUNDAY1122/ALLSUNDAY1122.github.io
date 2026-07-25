@@ -1,1 +1,57 @@
-{"schemaVersion":"1.0.0","municipalityCode":"13103","municipalityName":"港区","prefectureCode":"13","prefectureName":"東京都","assignedTeam":"東日本調査班","status":"verified","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":9,"researchingCount":0,"unavailableCount":0,"needsMediumReviewCount":0,"currentBranch":"data/13103-minato","pullRequestNumber":936,"lastCheckedAt":"2026-07-23","lastUpdatedAt":"2026-07-23T01:42:00+09:00","lastUpdatedBy":"東日本調査班A","officialSources":["https://www.city.minato.tokyo.jp/kosodatesien/kodomo/kate/kodomoiryo.html","https://www.city.minato.tokyo.jp/kodomo/kodomo/kodomo/hoikuen/service/byoji7.html","https://www.city.minato.tokyo.jp/kodomo/kodomo/kodomo/hoikuen/27hoikuryo.html","https://www.city.minato.tokyo.jp/hokenkyushoku/kodomo/gakko/kyushoku/kyushokuhi.html","https://www.city.minato.tokyo.jp/chiikihoken/kodomo/boshi-nyuboucare.html","https://www.city.minato.tokyo.jp/kosodatesien/kosodate/appi.html","https://www.city.minato.tokyo.jp/jutakushien/zyutakuhozyo.html","https://www.city.minato.tokyo.jp/unei/kurashi/gomi/kate/sodai/","https://www.city.minato.tokyo.jp/bousai/hazard_map/hazard_map.html"],"notes":["中央区（13102）の地方統合後、担当自治体コード昇順で港区（13103）を選定。","region/east上のtask、同名ブランチ、PRを確認し、未着手であることを確認。","最新のregion/eastからdata/13103-minatoブランチを作成。","必須9制度を港区公式情報で一括確認。","18歳年度末までの医療費助成と、生後6か月から就学前までの病児・病後児保育を登録。","第1子を含む基本保育料無償化と区立小中学校給食費不徴収を登録。","デイサービス・乳房ケア型産後ケアと、あっぴぃ一時預かりを登録。","子育て世帯等住宅取得支援、粗大ごみ収集、各種ハザードマップを登録。","自治体JSONは9制度すべてverifiedとし、taskの制度順・件数・officialSourcesを整合。","PR #936をregion/east向けに作成。","CI run #2228の全検証成功を確認。"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "13103",
+  "municipalityName": "港区",
+  "prefectureCode": "13",
+  "prefectureName": "東京都",
+  "assignedTeam": "東日本調査班",
+  "status": "verified",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 9,
+  "researchingCount": 0,
+  "unavailableCount": 0,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/13103-minato",
+  "pullRequestNumber": 936,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T10:55:00+09:00",
+  "lastUpdatedBy": "東日本調査班A（品質改善第2監査）",
+  "officialSources": [
+    "https://www.city.minato.tokyo.jp/kosodatesien/kodomo/kate/kodomoiryo.html",
+    "https://www.city.minato.tokyo.jp/kodomo/kodomo/kodomo/hoikuen/service/byoji7.html",
+    "https://www.city.minato.tokyo.jp/kodomo/kodomo/kodomo/hoikuen/27hoikuryo.html",
+    "https://www.city.minato.tokyo.jp/hokenkyushoku/kodomo/gakko/kyushoku/kyushokuhi.html",
+    "https://www.city.minato.tokyo.jp/chiikihoken/kodomo/boshi-nyuboucare.html",
+    "https://www.city.minato.tokyo.jp/kosodatesien/kosodate/appi.html",
+    "https://www.city.minato.tokyo.jp/jutakushien/zyutakuhozyo.html",
+    "https://www.city.minato.tokyo.jp/unei/kurashi/gomi/kate/sodai/",
+    "https://www.city.minato.tokyo.jp/bousai/hazard_map/hazard_map.html"
+  ],
+  "notes": [
+    "中央区（13102）の地方統合後、担当自治体コード昇順で港区（13103）を選定。",
+    "region/east上のtask、同名ブランチ、PRを確認し、未着手であることを確認。",
+    "最新のregion/eastからdata/13103-minatoブランチを作成。",
+    "必須9制度を港区公式情報で一括確認。",
+    "18歳年度末までの医療費助成と、生後6か月から就学前までの病児・病後児保育を登録。",
+    "第1子を含む基本保育料無償化と区立小中学校給食費不徴収を登録。",
+    "デイサービス・乳房ケア型産後ケアと、あっぴぃ一時預かりを登録。",
+    "子育て世帯等住宅取得支援、粗大ごみ収集、各種ハザードマップを登録。",
+    "自治体JSONは9制度すべてverifiedとし、taskの制度順・件数・officialSourcesを整合。",
+    "PR #936をregion/east向けに作成。",
+    "CI run #2228の全検証成功を確認。",
+    "品質改善第2監査で病児・病後児保育の料金を公式ページと再照合し、曖昧記載から港区民1日2,000円・区外1日3,000円へ具体化。"
+  ],
+  "blockers": []
+}
