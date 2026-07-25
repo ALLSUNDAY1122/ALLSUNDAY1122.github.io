@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-25T22:44:00+09:00",
+  "updatedAt": "2026-07-25T23:29:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3695,
+  "pullRequestNumber": 3699,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3688,
+  "stateSyncPullRequestNumber": 3699,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残119件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残114件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T22:44:00+09:00",
-    "latestRegionalPullRequestNumber": 3688,
+    "latestCompletedAt": "2026-07-25T23:29:00+09:00",
+    "latestRegionalPullRequestNumber": 3699,
     "latestCiRunNumber": 30159696614,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 109,
-    "primarySourceSlotsRechecked": 541,
+    "correctedMunicipalitiesRechecked": 114,
+    "primarySourceSlotsRechecked": 546,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -459,6 +459,18 @@
         "code": "21504",
         "service": "housingSupport",
         "name": "七宗町"
+      },
+      {
+        "type": "child_specific_home_acquisition_replacement",
+        "code": "21208",
+        "service": "housingSupport",
+        "name": "瑞浪市"
+      },
+      {
+        "type": "general_young_household_migration_misclassification",
+        "code": "21521",
+        "service": "housingSupport",
+        "name": "御嵩町"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -545,7 +557,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 119,
+      "generalHousingMisclassification": 114,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -567,7 +579,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残119件",
+      "一般住宅・移住制度の分類候補残114件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
@@ -592,5 +604,5 @@
       "blocker": null
     }
   },
-  "lastAction": "住宅支援分類第11群の北方町・瀬戸市・七宗町・四日市市・熊野市を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第12群で瑞浪市を子育て世帯等住宅取得30万円へ差し替え、御嵩町の一般移住制度をunavailableへ修正。島田市・豊川市・伊豆の国市は現行の子ども加算を再確認してverifiedを維持した。"
 }
