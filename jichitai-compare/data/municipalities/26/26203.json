@@ -7,7 +7,7 @@
   "officialUrl": "https://www.city.ayabe.lg.jp/",
   "status": "verified",
   "summary": "綾部市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -22,7 +22,7 @@
         "outsidePrefecture": "京都府外受診等は申請により200円を控除した額を払い戻し",
         "excluded": "保険適用外費用、入院時食事代、学校災害共済対象等は対象外"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000002480.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000002480.html", "checkedAt": "2026-07-25"}
     },
     "sickChildCare": {
       "status": "verified",
@@ -36,9 +36,9 @@
         "hours": "月曜から金曜の8時30分から18時",
         "fee": "1日2,500円、5時間以内1,500円。昼食・おやつ代300円別途",
         "reduction": "綾部市民の生活保護世帯・市民税非課税世帯は減免対象",
-        "application": "電話予約後、利用当日に綾部市立病院の発熱外来・小児科を受診"
+        "application": "電話予約後、利用当日に綾部市立病院の発熱外来を受診"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000002614.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000002614.html", "checkedAt": "2026-07-25"}
     },
     "childcareFee": {
       "status": "verified",
@@ -52,37 +52,42 @@
         "otherCosts": "送迎費、行事費、延長保育料等は実費負担",
         "unlicensed": "保育の必要性が認められる場合、認可外保育施設等は年齢・世帯条件に応じ月額上限内で無償化"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000002590.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000002590.html", "checkedAt": "2026-07-25"}
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "経済的理由等で就学が困難と認められる世帯へ、就学援助制度により学校給食費の実費を援助する。",
+      "summary": "令和8年度は小学校給食の食材費相当額を市が補助し、中学校は生徒1人1食100円を補助する。低所得世帯等には別途就学援助がある。",
       "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
       "details": {
-        "program": "就学援助制度",
-        "target": "綾部市立小中学校等に在学し、所得基準等により就学費用の負担が困難と認められる児童生徒の保護者",
-        "mealSupport": "学校給食費の実費を援助",
-        "otherSupport": "学用品費、通学用品費、修学旅行費、学校病医療費等も対象",
-        "application": "学校または教育委員会を通じて申請し、認定を受ける",
-        "generalFee": "一般世帯の現行給食費額や一律無償化は公式ページで確認できないため記載しない"
+        "fy2026GeneralSupport": "2026年4月1日施行の綾部市給食費補助金交付要綱改正により一般補助を実施",
+        "elementary": "児童に給食を提供するために要する食材費相当額を補助",
+        "middle": "生徒1人1食当たり100円を補助",
+        "kindergarten": "幼児1人1食当たり100円を補助",
+        "remainingBurden": "中学校等の補助後の保護者負担総額は、学校からの現行案内で確認が必要",
+        "meansTestedProgram": "経済的理由等で就学が困難と認められる世帯には、就学援助制度により学校給食費の実費を援助",
+        "otherSupport": "就学援助では学用品費、通学用品費、修学旅行費、学校病医療費等も対象"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000002926.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/cmsfiles/contents/0000006/6408/R8-4.pdf", "checkedAt": "2026-07-25"},
+      "additionalSources": [
+        {"url": "https://www.city.ayabe.lg.jp/0000006408.html", "checkedAt": "2026-07-25"},
+        {"url": "https://www.city.ayabe.lg.jp/0000002926.html", "checkedAt": "2026-07-25"}
+      ]
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "産後1年未満の母子へ、集団・個別通所、宿泊、訪問の4類型で産後ケアを提供する。",
+      "summary": "産後1年未満の母子へ、集団通所、宿泊、個別通所、訪問の4類型で産後ケアを提供する。",
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
       "details": {
-        "target": "綾部市に住民票がある産後1年未満の母親と乳児",
-        "groupDayCare": "生後1～6か月頃、1回1,000円、4回まで",
-        "shortStay": "生後4か月頃まで、1日9,000円、7日まで",
-        "individualDayCare": "生後4か月頃まで、1回4,500円、7回まで",
-        "outreach": "生後12か月まで、1回1,000円、6回まで",
-        "ticket": "希望者に1回2,500円まで最大5回分の免除チケット",
-        "reduction": "生活保護世帯・非課税世帯は全額免除",
-        "care": "休息、授乳・育児相談、母体と乳児の健康確認等"
+        "target": "綾部市に住民票があり産後ケアを必要とする母親と乳児",
+        "groupDayCare": "産後1年未満、1回1,000円（食費別途）、4回まで。未就園のきょうだい託児あり",
+        "shortStay": "産後3か月頃まで、1日6,500円、7日間まで",
+        "individualDayCare": "産後4か月頃まで（施設により異なる）、1回3,500円、7回まで。1回6時間以内",
+        "outreach": "産後1年未満、1回1,000円、6回まで。1回おおむね2～4時間",
+        "ticket": "希望者に1回2,500円まで最大5回分の利用料補助チケット",
+        "reduction": "生活保護世帯・市民税非課税世帯は利用料全額免除",
+        "care": "休息、産後の体調確認、授乳・育児相談、乳児の発育発達相談等"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000003373.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000003373.html", "checkedAt": "2026-07-25"}
     },
     "temporaryChildcare": {
       "status": "verified",
@@ -98,7 +103,7 @@
         "fee": "1時間300円。給食・おやつ代等は施設により別途",
         "application": "つうえんポータルで認定申請後、施設面談・利用予約"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000006269.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000006269.html", "checkedAt": "2026-07-25"}
     },
     "housingSupport": {
       "status": "verified",
@@ -113,7 +118,7 @@
         "targetWork": "リビング、台所、浴室、子ども部屋の増改築等",
         "application": "原則4月から11月末まで。予算到達時に受付終了し、着工前の申請が必要"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000005382.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000005382.html", "checkedAt": "2026-07-25"}
     },
     "bulkyWaste": {
       "status": "verified",
@@ -123,11 +128,11 @@
         "processingFee": "布団・寝具類は1kgまでごとに63円、その他は20kgまでごとに419円",
         "collectionFee": "戸別収集は処理手数料に加え収集手数料1,048円",
         "collection": "年4回の指定日収集。収集日2日前の正午までに電話予約",
-        "carryIn": "クリーンセンターへ直接搬入可能",
+        "carryIn": "クリーンセンターへ直接搬入可能。月曜から土曜（祝日含む）の9～12時、13～16時",
         "limit": "家具等で1辺100センチメートル以上のものは戸別収集1回5点まで",
         "excluded": "家電リサイクル法対象品や処理困難物等は別処理"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/0000001435.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/0000001435.html", "checkedAt": "2026-07-25"}
     },
     "disasterPrevention": {
       "status": "verified",
@@ -140,7 +145,7 @@
         "districts": "綾部、中筋、吉美、西八田、東八田、山家等の地区別PDFを公開",
         "guidance": "避難行動や日頃の備えに関する啓発面を掲載"
       },
-      "source": {"url": "https://www.city.ayabe.lg.jp/kikikanri/0000000026.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.ayabe.lg.jp/kikikanri/0000000026.html", "checkedAt": "2026-07-25"}
     }
   }
 }
