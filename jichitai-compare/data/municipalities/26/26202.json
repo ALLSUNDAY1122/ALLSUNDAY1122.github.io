@@ -7,53 +7,60 @@
   "officialUrl": "https://www.city.maizuru.kyoto.jp/",
   "status": "verified",
   "summary": "舞鶴市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末までの子どもの保険診療自己負担額を、1医療機関につき月200円を基本として助成する。",
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
       "details": {
-        "target": "舞鶴市に住所があり健康保険に加入する、18歳到達後最初の3月31日までの子ども",
-        "inpatient": "0歳から18歳年度末まで、1医療機関につき月200円",
-        "outpatient": "0歳から18歳年度末まで、1医療機関につき月200円",
-        "pharmacy": "院外調剤は自己負担なし",
-        "incomeLimit": "所得制限なし",
-        "excluded": "保険適用外費用、入院時食事療養費、差額ベッド代等は対象外"
+        "target": "舞鶴市に住所があり健康保険に加入する、18歳到達後最初の3月31日までの子ども。就学・就労は問わない",
+        "inpatient": "0歳から18歳年度末まで、1か月1医療機関につき200円",
+        "outpatient": "0歳から18歳年度末まで、1か月1医療機関につき200円",
+        "pharmacy": "院外処方の調剤は自己負担なし",
+        "calculation": "入院、外来、歯科は別計算",
+        "outsidePrefecture": "京都府外受診等は領収書を添えて後日払戻し申請",
+        "excluded": "保険適用外費用、入院時食事代、高額療養費・付加給付、学校管理下の災害共済対象費用等は対象外"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kenkou/0000013092.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kenkou/0000013092.html", "checkedAt": "2026-07-25"}
     },
     "sickChildCare": {
       "status": "verified",
-      "summary": "病気中または回復期で集団保育が難しい乳幼児・小学生を、医療機関併設の専用保育室で一時的に預かる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "summary": "生後3か月から小学3年生までの舞鶴市在住児を、岸本病院の病児保育室ピノキオで預かる。",
+      "eligibility": {"minAgeMonths": 3, "maxAgeYears": 9},
       "details": {
-        "facility": "岸本病院保育室ピノキオ",
-        "target": "病気中または回復期で、保護者の勤務等により家庭保育が困難な乳幼児・小学生",
-        "care": "医療機関に付設された専用スペースで専門職が保育を行う",
-        "application": "施設への事前申込みと、病状等の確認が必要",
-        "feeSupport": "生活保護世帯や市民税非課税世帯等を対象とする利用料助成制度あり",
-        "confirmation": "対象疾病、利用時間、当日の空き状況、利用料は施設へ事前確認が必要"
+        "facility": "岸本病院病児保育室ピノキオ",
+        "target": "生後3か月から小学3年生までの舞鶴市在住児で、病気のため集団保育等が難しく家庭での保育が困難な児童",
+        "capacity": "定員6人",
+        "hours": "月曜から金曜の8時15分から18時まで。利用当日の受付は7時45分から",
+        "fee": "1日2,500円。5時間以内の半日利用は1,500円",
+        "meal": "昼食代300円。弁当持参の場合は不要。おやつ代・寝具リース代は利用料に含む",
+        "reservation": "利用前に電話で問い合わせ・予約し、医師の診察により利用可否を判断する",
+        "excludedInfections": "インフルエンザ、新型コロナウイルス感染時は利用不可"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000001571.html", "checkedAt": "2026-07-22"},
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000001571.html", "checkedAt": "2026-07-25"},
       "additionalSources": [
-        {"url": "https://www.city.maizuru.kyoto.jp/html/reiki_int/reiki_honbun/k104RG00000908.html", "checkedAt": "2026-07-22"}
+        {"url": "https://www.kisimoto-hp.jp/sick-childcare-support/", "checkedAt": "2026-07-25"}
       ]
     },
     "childcareFee": {
       "status": "verified",
-      "summary": "3～5歳児と市民税非課税世帯の0～2歳児は保育料無償化対象となり、課税世帯の0～2歳児は市民税額等に応じて決定される。",
+      "summary": "3～5歳児と市民税非課税世帯の0～2歳児は保育料無償化対象で、令和8年度は3歳以上児の給食費を月最大1,500円補助する。",
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
       "details": {
         "agesThreeToFive": "4月1日時点で3歳以上の保育料は無償",
         "agesZeroToTwoNonTaxable": "市民税非課税世帯の0～2歳児は無償化対象",
         "agesZeroToTwoTaxable": "課税世帯の0～2歳児は保護者の市民税額、保育時間、世帯状況等に基づき決定",
         "multiChild": "多子世帯の保育料軽減制度あり",
-        "mealCosts": "給食材料費等の実費は別途必要となる場合があり、低所得・多子世帯等には副食費免除制度あり"
+        "mealCosts": "給食材料費等の実費は原則別途必要で、低所得・多子世帯等には副食費免除制度あり",
+        "fy2026MealSubsidy": "令和8年4月分から令和9年3月分まで、市内の認可保育所、認定こども園、幼稚園、認可外保育施設を利用し給食費を負担する3歳以上児について、1人月額最大1,500円を給食費から差し引く",
+        "mealSubsidyProcedure": "保護者の申請は不要。施設が毎月の請求額から補助額を自動的に差し引く",
+        "mealSubsidyArea": "舞鶴市内の対象施設利用者に限る"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000013090.html", "checkedAt": "2026-07-22"},
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000013090.html", "checkedAt": "2026-07-25"},
       "additionalSources": [
-        {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000005409.html", "checkedAt": "2026-07-22"}
+        {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000005409.html", "checkedAt": "2026-07-25"},
+        {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000014885.html", "checkedAt": "2026-07-25"}
       ]
     },
     "schoolMeals": {
@@ -68,7 +75,7 @@
         "purpose": "子育て世帯の経済的負担軽減と、安心して子育てできる環境整備",
         "application": "市立学校在籍者の通常給食について、新たな給食費徴収を行わない"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/shicho/0000015282.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/shicho/0000015282.html", "checkedAt": "2026-07-25"}
     },
     "postpartumCare": {
       "status": "verified",
@@ -83,7 +90,7 @@
         "dayCareFee": "市民税課税世帯3,500円、市民税非課税世帯・生活保護世帯500円。食費等は別途",
         "application": "利用前に市への申請と利用決定が必要"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000012129.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000012129.html", "checkedAt": "2026-07-25"}
     },
     "temporaryChildcare": {
       "status": "verified",
@@ -91,20 +98,26 @@
       "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
       "details": {
         "program": "乳児等通園支援事業（こども誰でも通園制度）",
-        "target": "舞鶴市民で、保育所・幼稚園・認定こども園等に在籍していない生後6か月から満3歳未満の児童",
+        "start": "2026年4月1日本格実施",
+        "target": "保育所・幼稚園・認定こども園・企業主導型保育施設等に在籍していない生後6か月から満3歳未満の児童",
         "employment": "保護者の就労要件なし",
         "limit": "児童1人につき月10時間まで",
-        "fee": "おおむね1時間300円で、施設により設定",
-        "reduction": "世帯状況に応じた利用料減免制度あり",
-        "application": "市の認定後、総合支援システムで施設との面談・予約を行う"
+        "fee": "目安は1時間300円で、施設ごとに設定",
+        "reduction": "生活保護世帯や市町村民税所得割合算額77,101円未満の世帯は施設により減免対象",
+        "facilities": "市内保育所・認定こども園等で実施し、施設ごとに4月から7月の開始時期、受入年齢、日時、給食の有無が異なる",
+        "application": "利用認定後、施設との事前面談・予約を行う",
+        "oldTrial": "令和7年10月8日から令和8年3月31日までの無料試行事業は終了"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000014882.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000014882.html", "checkedAt": "2026-07-25"},
+      "additionalSources": [
+        {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000014299.html", "checkedAt": "2026-07-25"}
+      ]
     },
     "housingSupport": {
       "status": "verified",
       "summary": "未就学児がいる世帯等が市内住宅を子育てしやすく改修する場合、工事費の2分の1を子どもの人数に応じ最大30万円補助する。",
       "details": {
-        "program": "子育て世帯住宅リフォーム支援事業",
+        "program": "令和8年度舞鶴市子育ておうえん住宅支援事業補助金",
         "target": "未就学児がいる世帯等で、父母の合算所得が550万円未満などの要件を満たす世帯",
         "contractor": "舞鶴市内の事業者が施工する工事",
         "minimumCost": "対象工事費20万円以上",
@@ -113,36 +126,37 @@
         "threeGeneration": "新たに三世代同居・近居を開始する場合は5万円加算",
         "deadline": "令和8年度申請期限は2026年11月27日。契約・着工前の申請が必要"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000012249.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kosodate/0000012249.html", "checkedAt": "2026-07-25"}
     },
     "bulkyWaste": {
       "status": "verified",
       "summary": "粗大ごみは事前申込みによる有料戸別収集、またはリサイクルプラザへの直接持込みで処分する。",
       "details": {
-        "definition": "原則として縦・横・高さのいずれかが50センチメートル以上の家庭ごみ",
-        "collection": "専用受付へ事前申込みし、案内された手数料を支払って指定場所へ排出",
-        "collectionDays": "原則として毎月第2・第4木曜日。祝日の場合は前日",
-        "carryIn": "リサイクルプラザへ直接持込み可能",
-        "sorting": "品目により受入施設や処理方法が異なるため、分別ルールの事前確認が必要",
+        "definition": "縦・横・高さのいずれか1辺が50センチメートル以上の家庭ごみ",
+        "collection": "リサイクルプラザへ事前予約して有料で戸別収集を依頼する",
+        "collectionDays": "毎月第2・第4木曜日。祝日の場合は前日",
+        "carryIn": "リサイクルプラザへ直接持込み可能。搬入時間は8時30分から16時までで、受付手数料は1回400円",
+        "weekend": "土・日曜日の直接搬入は事前予約が必要",
+        "sorting": "品目により受入施設や処理方法が異なるため、令和8年度版ごみ分別ルールブックを確認する",
         "excluded": "家電リサイクル法対象品や処理困難物等、市で収集・受入れできない品目あり"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kurashi/0000012921.html", "checkedAt": "2026-07-22"},
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kurashi/0000012921.html", "checkedAt": "2026-07-25"},
       "additionalSources": [
-        {"url": "https://www.city.maizuru.kyoto.jp/kurashi/0000014738.html", "checkedAt": "2026-07-22"}
+        {"url": "https://www.city.maizuru.kyoto.jp/kurashi/0000014738.html", "checkedAt": "2026-07-25"}
       ]
     },
     "disasterPrevention": {
       "status": "verified",
       "summary": "洪水、土砂災害、津波、地震等の危険区域と避難情報を確認できる各種ハザードマップを公開する。",
       "details": {
-        "maps": "洪水・土砂災害ハザードマップ、津波ハザードマップ、地震防災マップ等",
+        "maps": "洪水・土砂災害ハザードマップ、津波ハザードマップ、地震ハザードマップ等",
         "flood": "河川氾濫時の浸水想定区域・浸水深を掲載",
         "sediment": "土砂災害警戒区域・特別警戒区域を掲載",
         "tsunami": "津波浸水想定区域や避難方向等を掲載",
         "earthquake": "震度分布、液状化等の地震リスクを掲載",
         "evacuation": "指定避難所、避難時の注意事項、防災情報の入手方法等を案内"
       },
-      "source": {"url": "https://www.city.maizuru.kyoto.jp/kurashi/category/8-3-2-0-0-0-0-0-0-0.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.maizuru.kyoto.jp/kurashi/category/8-3-2-0-0-0-0-0-0-0.html", "checkedAt": "2026-07-25"}
     }
   }
 }
