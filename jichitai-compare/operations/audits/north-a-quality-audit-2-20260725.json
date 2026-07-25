@@ -3,9 +3,9 @@
   "auditId": "north-a-quality-audit-2-20260725",
   "sessionId": "north-a",
   "title": "北日本A 品質改善第2監査",
-  "status": "in_progress",
+  "status": "completed",
   "startedAt": "2026-07-25T10:31:00+09:00",
-  "updatedAt": "2026-07-25T11:28:00+09:00",
+  "completedAt": "2026-07-25T11:38:00+09:00",
   "scope": {
     "prefectureCodes": ["02", "03", "07"],
     "priorCorrectedMunicipalities": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
@@ -19,23 +19,8 @@
     "自治体JSON・task・全国生成JSON・静的ページ・公開ページの反映確認",
     "原因別横断検索",
     "青森・岩手・福島の高リスク自治体抜き取り監査",
-    "確定誤りの即時修正とregion/north統合"
+    "確定誤りの即時修正とregion/north・main統合"
   ],
-  "recovery": {
-    "priorAuditPr": 2910,
-    "priorAuditMergeCommit": "999517dbf941133ef4dc2e78780a45431ca6bbf1",
-    "priorGenerationCheckPr": 3073,
-    "priorPublicCheckPr": 3093,
-    "priorCheckpointPr": 3134,
-    "mainStatus": "prior corrections present",
-    "regionNorthStatusBefore": "prior corrections not fully reflected",
-    "regionNorthStatusAfter": "restored and integrated",
-    "regionPullRequest": 3205,
-    "regionCiRun": 30139544500,
-    "regionCiResult": "success",
-    "regionMergeCommit": "9b2e2386efd956b7b21a2068e511125869b9683f",
-    "publicStatus": "prior public verification succeeded; second-audit addition pending publication"
-  },
   "confirmedFindings": [
     {
       "type": "branch_reflection_gap",
@@ -45,7 +30,11 @@
       "affectedMunicipalities": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
       "affectedTasks": ["03203", "03302", "07212", "07368", "07501"],
       "risk": "今後の地域統合で旧情報がmainへ再流入する可能性",
-      "correctionStatus": "integrated_to_region"
+      "regionPullRequest": 3205,
+      "regionCiRun": 30139544500,
+      "regionCiResult": "success",
+      "regionMergeCommit": "9b2e2386efd956b7b21a2068e511125869b9683f",
+      "correctionStatus": "fixed"
     },
     {
       "type": "service_type_omission",
@@ -57,11 +46,15 @@
       "after": "宿泊型、日帰り型、訪問型",
       "cause": "利用者向け案内のみを参照し、令和5年改正後の実施要綱に追加された訪問型を見落とした",
       "officialBasis": "西会津町産後ケア事業実施要綱第5条・第7条・第12条",
-      "correctionPullRequest": 3221,
-      "correctionCiRun": 30140072140,
-      "correctionCiResult": "success",
-      "correctionMergeCommit": "276e4e3328710c8b0ef4caea2a83c028705f3fa0",
-      "correctionStatus": "integrated_to_region"
+      "regionPullRequest": 3221,
+      "regionCiRun": 30140072140,
+      "regionCiResult": "success",
+      "regionMergeCommit": "276e4e3328710c8b0ef4caea2a83c028705f3fa0",
+      "mainPullRequest": 3235,
+      "mainCiRun": 30140604566,
+      "mainCiResult": "success",
+      "mainMergeCommit": "c08db8f7a4093077743d377c91d146729bf40da0",
+      "correctionStatus": "published"
     }
   ],
   "regionRecovery": {
@@ -119,20 +112,33 @@
     ]
   },
   "publication": {
-    "mainReflection": "pending",
-    "generatedJson": "pending",
-    "staticPage": "pending",
-    "livePage": "pending"
+    "mainPullRequest": 3235,
+    "mainCiRun": 30140604566,
+    "mainCiResult": "success",
+    "mainMergeCommit": "c08db8f7a4093077743d377c91d146729bf40da0",
+    "sourceMunicipalityJson": "matched",
+    "task": "matched",
+    "generatedJson": "matched",
+    "staticPage": "matched",
+    "livePage": {
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/07405/",
+      "verifiedAt": "2026-07-25T11:35:21+09:00",
+      "httpStatus": 200,
+      "expectedMarker": "宿泊・日帰り・訪問型の産後ケアを無料で実施する。",
+      "markerMatched": true,
+      "verificationCommit": "995000ed95c4f923fd3f50c2f41dbc7cc52918b5",
+      "result": "external_live_page_verified"
+    }
   },
-  "progress": {
-    "recoveryCompleted": true,
-    "priorCorrectionRegionRecoveryCompleted": true,
-    "officialReverificationCompleted": 13,
-    "crossMunicipalityChecksCompleted": 5,
-    "sampledMunicipalitiesCompleted": 15,
+  "finalResult": {
+    "priorCorrectionsReverified": 13,
+    "causeChecks": 5,
+    "sampledMunicipalities": 15,
     "confirmedNewErrors": 2,
     "correctedNewErrors": 2,
-    "openErrors": 0
+    "openErrors": 0,
+    "unfixedErrors": 0,
+    "result": "completed_with_zero_open_errors"
   },
-  "nextAction": "西会津町の追加訂正と第2監査証跡をmainへ反映し、全国生成JSON・自治体別静的ページ・公開ページを一致確認して監査を完了する。"
+  "nextAction": "第2監査完了。新たな公式年度情報または制度改定が発生するまで通常調査を停止し、必要時のみ差分監査を行う。"
 }
