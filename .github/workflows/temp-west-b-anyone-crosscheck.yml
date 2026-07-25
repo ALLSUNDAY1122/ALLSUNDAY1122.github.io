@@ -1,0 +1,172 @@
+name: Temporary West B Anyone Crosscheck
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-anyone-crosscheck-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    if: github.head_ref == 'audit/west-b-anyone-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-anyone-crosscheck-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Scan West B temporary childcare records
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const base = 'jichitai-compare';
+          const municipalityDir = path.join(base, 'data/municipalities');
+          const prefectureCodes = new Set(['31','32','34','35','36','38','41','42','44','45','47']);
+          const flatten = (value) => {
+            if (value == null) return '';
+            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+            if (Array.isArray(value)) return value.map(flatten).join(' ');
+            return Object.values(value).map(flatten).join(' ');
+          };
+          const collect = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+            const full = path.join(dir, entry.name);
+            return entry.isDirectory() ? collect(full) : (entry.isFile() && entry.name.endsWith('.json') ? [full] : []);
+          });
+          const anyProgram = /(こども誰でも通園|誰でも通園|乳児等通園支援|未就園.{0,40}月10時間)/;
+          const ordinaryTemporary = /(一時預かり|一時保育|一時的に預か|一時預り)/;
+          const currentStart = /(2026年|2026年度|令和8年|令和8年度|2026年4月|令和8年4月)/;
+          const target = /(生後6か月|生後６か月|6か月.{0,20}(満?3歳未満|３歳未満)|満?3歳未満.{0,20}未就園|未就園.{0,30}(3歳未満|３歳未満)|保育所等.{0,20}(通っていない|在籍していない))/;
+          const limit = /(月.{0,8}10時間|10時間.{0,8}月|月10時間)/;
+          const fee = /(1時間.{0,10}300円|１時間.{0,10}300円|300円.{0,10}1時間|利用料|利用料金|料金|費用)/;
+          const facility = /(実施施設|利用施設|実施場所|施設名|保育所|保育園|こども園|認定こども園)/;
+          const procedure = /(利用認定|認定申請|申請|面談|予約|総合支援システム|利用登録)/;
+          const staleYear = /(2024年度|令和6年度|2025年度|令和7年度|2024年|2025年)/;
+          const cautiousUnavailable = /(確認できない|未確認|実施を確認できない|公式情報で確認できない|案内を確認できない)/;
+          const genericUrl = (url) => {
+            if (typeof url !== 'string') return true;
+            try {
+              const parsed = new URL(url);
+              const pathname = parsed.pathname.replace(/\/+$/, '');
+              return pathname === '' || pathname === '/index.html' || pathname.split('/').filter(Boolean).length <= 1;
+            } catch {
+              return true;
+            }
+          };
+
+          const records = [];
+          const reasonCounts = {};
+          let assignedCount = 0;
+          for (const file of collect(municipalityDir)) {
+            const municipality = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (!prefectureCodes.has(municipality.prefectureCode)) continue;
+            assignedCount += 1;
+            const service = municipality.services?.temporaryChildcare;
+            if (!service) continue;
+            const text = flatten(service);
+            const summary = service.summary ?? '';
+            const detailsText = flatten(service.details ?? {});
+            const sourceUrl = service.source?.url ?? '';
+            const reasons = [];
+            const hasAnyone = anyProgram.test(text);
+            const hasOrdinary = ordinaryTemporary.test(text);
+
+            if (service.status === 'unavailable' && (hasAnyone || hasOrdinary) && !cautiousUnavailable.test(summary)) {
+              reasons.push('unavailable_but_record_contains_available_program');
+            }
+            if (service.status === 'unavailable' && !genericUrl(sourceUrl)) {
+              reasons.push('unavailable_with_direct_official_source');
+            }
+            if (service.status === 'verified' && !hasAnyone) {
+              reasons.push('verified_without_anyone_program_2026');
+            }
+            if (hasAnyone && !currentStart.test(text)) reasons.push('anyone_program_missing_2026_start');
+            if (hasAnyone && !target.test(text)) reasons.push('anyone_program_missing_target_age_or_unenrolled_condition');
+            if (hasAnyone && !limit.test(text)) reasons.push('anyone_program_missing_monthly_10_hour_limit');
+            if (hasAnyone && !fee.test(text)) reasons.push('anyone_program_missing_fee');
+            if (hasAnyone && !facility.test(text)) reasons.push('anyone_program_missing_facility');
+            if (hasAnyone && !procedure.test(text)) reasons.push('anyone_program_missing_application_or_booking');
+            if (hasAnyone && staleYear.test(text) && !currentStart.test(text)) reasons.push('anyone_program_may_rely_on_2024_or_2025_pilot');
+            if (service.status === 'verified' && genericUrl(sourceUrl)) reasons.push('verified_primary_source_is_generic');
+            if (service.status === 'verified' && typeof service.source?.checkedAt === 'string' && service.source.checkedAt < '2026-07-01') {
+              reasons.push('verified_source_not_rechecked_in_july_2026');
+            }
+            if (hasAnyone && Number.isInteger(service.eligibility?.minAgeMonths) && service.eligibility.minAgeMonths > 6) {
+              reasons.push('eligibility_min_age_exceeds_anyone_program_six_months');
+            }
+            if (hasAnyone && /3歳以上|３歳以上/.test(detailsText) && !/(3歳未満|３歳未満)/.test(detailsText)) {
+              reasons.push('anyone_program_age_upper_bound_may_be_wrong');
+            }
+
+            if (reasons.length) {
+              for (const reason of reasons) reasonCounts[reason] = (reasonCounts[reason] ?? 0) + 1;
+              records.push({
+                code: municipality.code,
+                prefectureCode: municipality.prefectureCode,
+                prefecture: municipality.prefecture,
+                name: municipality.name,
+                status: service.status,
+                summary,
+                eligibility: service.eligibility ?? null,
+                details: service.details ?? null,
+                source: service.source ?? null,
+                additionalSources: service.additionalSources ?? [],
+                hasAnyoneProgramLanguage: hasAnyone,
+                hasOrdinaryTemporaryCareLanguage: hasOrdinary,
+                reasons
+              });
+            }
+          }
+
+          records.sort((a, b) => a.prefectureCode.localeCompare(b.prefectureCode) || a.code.localeCompare(b.code));
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-b-anyone-crosscheck-20260725',
+            generatedAt: new Date().toISOString(),
+            sessionId: 'west-b',
+            serviceId: 'temporaryChildcare',
+            prefectureCodes: [...prefectureCodes],
+            assignedMunicipalityCount: assignedCount,
+            candidateCount: records.length,
+            reasonCounts,
+            scanRules: [
+              'verified without 2026 anyone-program language',
+              'anyone program missing start, target, monthly limit, fee, facility, or procedure',
+              'unavailable record containing available-program language or direct official source',
+              'stale 2024/2025 pilot wording, generic source, or eligibility mismatch'
+            ],
+            candidates: records,
+            result: {
+              status: 'mechanical_candidates_generated_pending_official_review',
+              confirmedCorrectionCount: null,
+              unresolvedConfirmedErrorCount: null
+            }
+          };
+          const auditPath = path.join(base, 'operations/audits/west-b-anyone-crosscheck-20260725.json');
+          fs.mkdirSync(path.dirname(auditPath), { recursive: true });
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          console.log(JSON.stringify({ assignedMunicipalityCount: assignedCount, candidateCount: records.length, reasonCounts, firstCandidates: records.slice(0, 30).map((x) => ({ code: x.code, name: x.name, reasons: x.reasons })) }, null, 2));
+          NODE
+      - name: Commit audit result
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/west-b-anyone-crosscheck-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/audits/west-b-anyone-crosscheck-20260725.json \
+                  jichitai-compare/operations/control/west-b-anyone-crosscheck-trigger-20260725.json
+          git commit -m 'audit: 西日本B誰でも通園制度の横断候補を生成'
+          git push origin HEAD:audit/west-b-anyone-crosscheck-20260725
