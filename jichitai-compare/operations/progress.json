@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-25T17:45:00+09:00",
+  "updatedAt": "2026-07-25T19:39:00+09:00",
   "totalMunicipalities": 1741,
   "totalMunicipalitiesSource": {
     "value": 1741,
@@ -25,17 +25,17 @@
   "blockedMunicipalities": 0,
   "assignmentSummary": {
     "unassigned": 0,
-    "assigned": 1737,
+    "assigned": 1734,
     "pr_open": 0,
-    "blocked": 4
+    "blocked": 7
   },
   "totalServices": 15669,
   "completedServices": 15669,
   "completionRatePercent": 100,
   "todoServices": 0,
   "researchingServices": 0,
-  "verifiedServices": 14418,
-  "unavailableServices": 1251,
+  "verifiedServices": 14397,
+  "unavailableServices": 1272,
   "needsMediumReviewServices": 0,
   "needsRevisionServices": 0,
   "needsCoordinatorServices": 0,
@@ -1351,10 +1351,10 @@
       "registeredMunicipalities": 476,
       "assignedMunicipalities": 476,
       "prOpenMunicipalities": 0,
-      "blockedMunicipalities": 0,
-      "verifiedServices": 3787,
+      "blockedMunicipalities": 3,
+      "verifiedServices": 3766,
       "researchingServices": 0,
-      "unavailableServices": 497,
+      "unavailableServices": 518,
       "needsReviewServices": 0,
       "blockedServices": 0,
       "municipalityCodes": [
@@ -1882,6 +1882,76 @@
       "pullRequestNumber": 2733,
       "blockers": [
         "学校給食費の令和8年度一般世帯負担額は、教育委員会または在籍校への最終確認が必要。"
+      ]
+    },
+    {
+      "code": "45406",
+      "name": "都農町",
+      "assignedTeam": "西日本調査班",
+      "status": "merged",
+      "currentBranch": "data/45406-tsuno-westb",
+      "pullRequestNumber": 1985,
+      "blockers": [
+        {
+          "service": "sickChildCare",
+          "reason": "2026年度の病児・病後児保育について実施施設、対象年齢、料金、予約方法を町公式公開情報で確認できない。"
+        },
+        {
+          "service": "schoolMeals",
+          "reason": "2026年度の学校給食費額、無償化又は補助条件を町公式公開情報で確認できない。"
+        },
+        {
+          "service": "postpartumCare",
+          "reason": "2026年度の産後ケア事業について対象月齢、利用回数、自己負担額、委託施設、申請方法を町公式公開情報で確認できない。"
+        }
+      ]
+    },
+    {
+      "code": "45430",
+      "name": "椎葉村",
+      "assignedTeam": "西日本調査班",
+      "status": "merged",
+      "currentBranch": "data/45430-shiiba-westb",
+      "pullRequestNumber": 2016,
+      "blockers": [
+        {
+          "service": "sickChildCare",
+          "reason": "2026年度の病児・病後児保育について実施施設、対象年齢、料金、予約方法を村公式公開情報で確認できない。"
+        },
+        {
+          "service": "childcareFee",
+          "reason": "2026年度の年齢・所得階層別保育料、無償化範囲、多子軽減、給食費等を村公式公開情報で確認できない。"
+        },
+        {
+          "service": "schoolMeals",
+          "reason": "2026年度の学校給食費額、徴収回数、助成率、無償化条件を村公式公開情報で確認できない。"
+        },
+        {
+          "service": "postpartumCare",
+          "reason": "2026年度の産後ケアについて対象月齢、利用回数、自己負担額、委託施設、申請方法を村公式公開情報で確認できない。"
+        }
+      ]
+    },
+    {
+      "code": "47353",
+      "name": "渡嘉敷村",
+      "assignedTeam": "西日本調査班",
+      "status": "merged",
+      "currentBranch": "data/47353-tokashiki-westb",
+      "pullRequestNumber": 2342,
+      "blockers": [
+        {
+          "service": "sickChildCare",
+          "reason": "村公式サイトで現行の実施施設、広域利用可否、対象年齢、利用料、申込方法を確認できない。民生課への確認が必要。"
+        },
+        {
+          "service": "schoolMeals",
+          "reason": "学校給食共同調理場と給食費納付の存在は確認できるが、2026年度の月額、補助、就学援助、一律無償化の有無を確認できない。教育委員会への確認が必要。"
+        },
+        {
+          "service": "temporaryChildcare",
+          "reason": "一時預かりの過去案内はあるが、2026年度こども誰でも通園制度の実施施設、月10時間枠、料金、認定・予約方法を確認できない。民生課への確認が必要。"
+        }
       ]
     }
   ],
@@ -29007,12 +29077,12 @@
       "currentBranch": "data/35203-yamaguchi-westb",
       "pullRequestNumber": 996,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T04:25:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29047,12 +29117,12 @@
       "currentBranch": "data/35206-hofu-westb",
       "pullRequestNumber": 1007,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T04:59:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29067,12 +29137,12 @@
       "currentBranch": "data/35207-kudamatsu-westb",
       "pullRequestNumber": 1011,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T05:24:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29087,12 +29157,12 @@
       "currentBranch": "data/35208-iwakuni-westb",
       "pullRequestNumber": 1013,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T05:47:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29231,8 +29301,8 @@
       "unavailableCount": 2,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T06:00:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29665,15 +29735,15 @@
       "status": "merged",
       "assignmentState": "assigned",
       "currentBranch": "fix/west-b-tokushima-completeness-20260724",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 2511,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T16:21:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
     {
@@ -29727,12 +29797,12 @@
       "currentBranch": "data/36403-aizumi-westb",
       "pullRequestNumber": 1135,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T11:34:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29747,12 +29817,12 @@
       "currentBranch": "data/36404-itano-westb",
       "pullRequestNumber": 1139,
       "completedServiceCount": 9,
-      "verifiedCount": 8,
-      "unavailableCount": 1,
+      "verifiedCount": 7,
+      "unavailableCount": 2,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T11:48:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29772,7 +29842,7 @@
       "researchingCount": 0,
       "currentService": null,
       "lastCheckedAt": "2026-07-25",
-      "lastUpdatedAt": "2026-07-25T15:45:00+09:00",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -29787,12 +29857,12 @@
       "currentBranch": "data/36468-tsurugi-westb",
       "pullRequestNumber": 1151,
       "completedServiceCount": 9,
-      "verifiedCount": 7,
-      "unavailableCount": 2,
+      "verifiedCount": 6,
+      "unavailableCount": 3,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T12:18:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -30247,12 +30317,12 @@
       "currentBranch": "data/38205-niihama-westb",
       "pullRequestNumber": 1175,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T13:38:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -30407,12 +30477,12 @@
       "currentBranch": "data/38386-kumakogen-westb",
       "pullRequestNumber": 1205,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T15:59:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -32587,12 +32657,12 @@
       "currentBranch": "data/41208-ogi-westb",
       "pullRequestNumber": 1281,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T16:20:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -32611,8 +32681,8 @@
       "unavailableCount": 0,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T16:41:00+09:00",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -32705,15 +32775,15 @@
       "status": "merged",
       "assignmentState": "assigned",
       "currentBranch": "data/41346-miyaki-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 1325,
       "completedServiceCount": 9,
-      "verifiedCount": 8,
-      "unavailableCount": 1,
+      "verifiedCount": 7,
+      "unavailableCount": 2,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-23",
-      "lastUpdatedAt": "2026-07-23T22:30:00+09:00",
-      "lastUpdatedBy": "西日本調査班B・統括⑤・統括⑤全国統合",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
     {
@@ -34747,12 +34817,12 @@
       "currentBranch": "data/45382-kunitomi-westb",
       "pullRequestNumber": null,
       "completedServiceCount": 9,
-      "verifiedCount": 8,
-      "unavailableCount": 1,
+      "verifiedCount": 7,
+      "unavailableCount": 2,
       "researchingCount": 0,
       "currentService": null,
       "lastCheckedAt": "2026-07-25",
-      "lastUpdatedAt": "2026-07-25T11:55:00+09:00",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -34827,12 +34897,12 @@
       "currentBranch": "data/45403-nishimera-westb",
       "pullRequestNumber": null,
       "completedServiceCount": 9,
-      "verifiedCount": 6,
-      "unavailableCount": 3,
+      "verifiedCount": 5,
+      "unavailableCount": 4,
       "researchingCount": 0,
       "currentService": null,
       "lastCheckedAt": "2026-07-25",
-      "lastUpdatedAt": "2026-07-25T15:45:00+09:00",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
       "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
@@ -34883,18 +34953,31 @@
       "prefecture": "宮崎県",
       "assignedTeam": "西日本調査班",
       "status": "merged",
-      "assignmentState": "assigned",
+      "assignmentState": "blocked",
       "currentBranch": "data/45406-tsuno-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 1985,
       "completedServiceCount": 9,
-      "verifiedCount": 6,
-      "unavailableCount": 3,
+      "verifiedCount": 5,
+      "unavailableCount": 4,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T08:16:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
-      "blockers": []
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
+      "blockers": [
+        {
+          "service": "sickChildCare",
+          "reason": "2026年度の病児・病後児保育について実施施設、対象年齢、料金、予約方法を町公式公開情報で確認できない。"
+        },
+        {
+          "service": "schoolMeals",
+          "reason": "2026年度の学校給食費額、無償化又は補助条件を町公式公開情報で確認できない。"
+        },
+        {
+          "service": "postpartumCare",
+          "reason": "2026年度の産後ケア事業について対象月齢、利用回数、自己負担額、委託施設、申請方法を町公式公開情報で確認できない。"
+        }
+      ]
     },
     {
       "code": "45421",
@@ -34943,18 +35026,35 @@
       "prefecture": "宮崎県",
       "assignedTeam": "西日本調査班",
       "status": "merged",
-      "assignmentState": "assigned",
+      "assignmentState": "blocked",
       "currentBranch": "data/45430-shiiba-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 2016,
       "completedServiceCount": 9,
-      "verifiedCount": 5,
-      "unavailableCount": 4,
+      "verifiedCount": 4,
+      "unavailableCount": 5,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T08:16:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
-      "blockers": []
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
+      "blockers": [
+        {
+          "service": "sickChildCare",
+          "reason": "2026年度の病児・病後児保育について実施施設、対象年齢、料金、予約方法を村公式公開情報で確認できない。"
+        },
+        {
+          "service": "childcareFee",
+          "reason": "2026年度の年齢・所得階層別保育料、無償化範囲、多子軽減、給食費等を村公式公開情報で確認できない。"
+        },
+        {
+          "service": "schoolMeals",
+          "reason": "2026年度の学校給食費額、徴収回数、助成率、無償化条件を村公式公開情報で確認できない。"
+        },
+        {
+          "service": "postpartumCare",
+          "reason": "2026年度の産後ケアについて対象月齢、利用回数、自己負担額、委託施設、申請方法を村公式公開情報で確認できない。"
+        }
+      ]
     },
     {
       "code": "45431",
@@ -36463,18 +36563,31 @@
       "prefecture": "沖縄県",
       "assignedTeam": "西日本調査班",
       "status": "merged",
-      "assignmentState": "assigned",
+      "assignmentState": "blocked",
       "currentBranch": "data/47353-tokashiki-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 2342,
       "completedServiceCount": 9,
-      "verifiedCount": 6,
-      "unavailableCount": 3,
+      "verifiedCount": 5,
+      "unavailableCount": 4,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T13:00:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
-      "blockers": []
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
+      "blockers": [
+        {
+          "service": "sickChildCare",
+          "reason": "村公式サイトで現行の実施施設、広域利用可否、対象年齢、利用料、申込方法を確認できない。民生課への確認が必要。"
+        },
+        {
+          "service": "schoolMeals",
+          "reason": "学校給食共同調理場と給食費納付の存在は確認できるが、2026年度の月額、補助、就学援助、一律無償化の有無を確認できない。教育委員会への確認が必要。"
+        },
+        {
+          "service": "temporaryChildcare",
+          "reason": "一時預かりの過去案内はあるが、2026年度こども誰でも通園制度の実施施設、月10時間枠、料金、認定・予約方法を確認できない。民生課への確認が必要。"
+        }
+      ]
     },
     {
       "code": "47354",
@@ -36585,15 +36698,15 @@
       "status": "merged",
       "assignmentState": "assigned",
       "currentBranch": "data/47359-iheya-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 2401,
       "completedServiceCount": 9,
-      "verifiedCount": 3,
-      "unavailableCount": 6,
+      "verifiedCount": 2,
+      "unavailableCount": 7,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T14:25:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
     {
@@ -36605,15 +36718,15 @@
       "status": "merged",
       "assignmentState": "assigned",
       "currentBranch": "data/47360-izena-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 2411,
       "completedServiceCount": 9,
-      "verifiedCount": 4,
-      "unavailableCount": 5,
+      "verifiedCount": 3,
+      "unavailableCount": 6,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T14:25:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
     {
@@ -36645,15 +36758,15 @@
       "status": "merged",
       "assignmentState": "assigned",
       "currentBranch": "data/47362-yaese-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 2429,
       "completedServiceCount": 9,
-      "verifiedCount": 9,
-      "unavailableCount": 0,
+      "verifiedCount": 8,
+      "unavailableCount": 1,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T15:05:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
     {
@@ -36685,15 +36798,15 @@
       "status": "merged",
       "assignmentState": "assigned",
       "currentBranch": "data/47381-taketomi-westb",
-      "pullRequestNumber": null,
+      "pullRequestNumber": 2448,
       "completedServiceCount": 9,
-      "verifiedCount": 7,
-      "unavailableCount": 2,
+      "verifiedCount": 6,
+      "unavailableCount": 3,
       "researchingCount": 0,
       "currentService": null,
-      "lastCheckedAt": "2026-07-24",
-      "lastUpdatedAt": "2026-07-24T15:12:00+09:00",
-      "lastUpdatedBy": "統括B全国統合",
+      "lastCheckedAt": "2026-07-25",
+      "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
+      "lastUpdatedBy": "西日本調査班B",
       "blockers": []
     },
     {
