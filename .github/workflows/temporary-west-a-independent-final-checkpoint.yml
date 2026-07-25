@@ -1,0 +1,160 @@
+name: Temporary West A Independent Final Checkpoint
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-independent-final-checkpoint-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'ops/west-a-independent-final-checkpoint-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout finalization branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Finalize tasks, audits, and checkpoint
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin main
+          mkdir -p jichitai-compare/operations/audits
+          git show origin/main:jichitai-compare/operations/audits/west-a-post-final-independent-public-verification-20260725.json > jichitai-compare/operations/audits/west-a-post-final-independent-public-verification-20260725.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare';
+          const completedAt = '2026-07-25T14:31:00+09:00';
+
+          for (const code of ['37203', '39210', '43215']) {
+            const path = `${root}/operations/tasks/${code}.json`;
+            const raw = fs.readFileSync(path, 'utf8');
+            const task = JSON.parse(raw);
+            task.status = 'merged';
+            task.currentBranch = 'region/west';
+            task.pullRequestNumber = 3433;
+            task.lastUpdatedAt = completedAt;
+            task.lastUpdatedBy = '西日本調査班A・完了後独立抜き取り最終確定';
+            task.blockers = [];
+            task.notes = Array.isArray(task.notes) ? task.notes : [];
+            const note = '2026-07-25 14:31: 地域PR #3433・CI #8351、全国PR #3438・CI #8361、公開検証PR #3443・CI #8374の完了を確認し、taskをmerged・region/westへ最終確定。';
+            if (!task.notes.includes(note)) task.notes.push(note);
+            const pretty = raw.includes('\n  "');
+            fs.writeFileSync(path, JSON.stringify(task, null, pretty ? 2 : 0) + (pretty ? '\n' : ''));
+          }
+
+          {
+            const path = `${root}/operations/audits/west-a-post-final-independent-sample-20260725.json`;
+            const audit = JSON.parse(fs.readFileSync(path, 'utf8'));
+            audit.integration = {
+              ...(audit.integration ?? {}),
+              regionalPullRequestNumber: 3433,
+              regionalCiRunNumber: 8351,
+              regionalMergeSha: '6caac63baa4e12d615ccfdd93801aaa00fcc1d86',
+              nationalPullRequestNumber: 3438,
+              nationalCiRunNumber: 8361,
+              nationalRegenerationRunId: 30145624292,
+              nationalRegenerationResult: 'success',
+              nationalMergeSha: 'e637324b1b7396814dd4ee295a2d67f4671fa833',
+              publicVerificationPullRequestNumber: 3443,
+              publicVerificationWorkflowRunId: 30145762539,
+              publicVerificationCiRunNumber: 8374,
+              publicVerificationMergeSha: '6623da82f94ae80f330596e383cc9d8861790c7c',
+              temporaryWorkflowsRemoved: true,
+              taskStateFinalized: true,
+              status: 'completed'
+            };
+            audit.summary = {
+              ...(audit.summary ?? {}),
+              unresolvedCount: 0,
+              blocker: null,
+              result: 'completed_with_four_corrections_and_public_verification'
+            };
+            fs.writeFileSync(path, JSON.stringify(audit, null, 2) + '\n');
+          }
+
+          {
+            const path = `${root}/operations/audits/west-a-post-final-independent-public-verification-20260725.json`;
+            const audit = JSON.parse(fs.readFileSync(path, 'utf8'));
+            audit.cleanCiRunNumber = 8374;
+            audit.mainMergeSha = '6623da82f94ae80f330596e383cc9d8861790c7c';
+            audit.status = 'completed';
+            fs.writeFileSync(path, JSON.stringify(audit, null, 2) + '\n');
+          }
+
+          const checkpoint = {
+            schemaVersion: '1.0.0',
+            checkpointId: 'west-a-post-final-independent-sample-20260725',
+            sessionId: 'west-a',
+            displayName: '西日本調査班A',
+            recordedAt: completedAt,
+            status: 'completed_with_post_final_corrections',
+            scope: {
+              sampledMunicipalityCount: 6,
+              prefectureCount: 6,
+              correctedMunicipalityCount: 3,
+              correctedServiceCount: 4,
+              categoryErrorCount: 3,
+              statusJudgementErrorCount: 1
+            },
+            corrections: [
+              { municipalityCode: '37203', municipalityName: '坂出市', service: 'housingSupport', before: 'verified', after: 'unavailable', cause: '一般移住・空き家改修制度の分類誤り' },
+              { municipalityCode: '39210', municipalityName: '四万十市', service: 'housingSupport', before: 'verified', after: 'unavailable', cause: '一般移住住宅制度の分類誤り' },
+              { municipalityCode: '43215', municipalityName: '天草市', service: 'schoolMeals', before: 'unavailable', after: 'verified', cause: '現行例規による中学校料金・納付条件の確認漏れ' },
+              { municipalityCode: '43215', municipalityName: '天草市', service: 'housingSupport', before: 'verified', after: 'unavailable', cause: '一般住宅リフォーム制度の分類誤り' }
+            ],
+            evidence: {
+              auditFile: `${root}/operations/audits/west-a-post-final-independent-sample-20260725.json`,
+              publicVerificationFile: `${root}/operations/audits/west-a-post-final-independent-public-verification-20260725.json`,
+              regionalPullRequestNumber: 3433,
+              regionalCiRunNumber: 8351,
+              regionalMergeSha: '6caac63baa4e12d615ccfdd93801aaa00fcc1d86',
+              nationalPullRequestNumber: 3438,
+              nationalCiRunNumber: 8361,
+              nationalMergeSha: 'e637324b1b7396814dd4ee295a2d67f4671fa833',
+              publicVerificationPullRequestNumber: 3443,
+              publicVerificationCiRunNumber: 8374,
+              publicVerificationMergeSha: '6623da82f94ae80f330596e383cc9d8861790c7c'
+            },
+            integrity: {
+              municipalitySourceRegionMainMatched: true,
+              taskRegionMainMatchedBeforeFinalMetadataUpdate: true,
+              taskStatusFinalizedToMerged: true,
+              publicPageHttp200Count: 3,
+              publicPageContentMatchCount: 3,
+              stalePublicValueCount: 0,
+              nationwideMunicipalityCount: 1741,
+              nationwideServiceCount: 15669,
+              completedServiceCount: 15669,
+              completionRatePercent: 100,
+              unresolvedCount: 0,
+              blocker: null
+            },
+            nextAction: '新しい公式情報または再退行が検出された場合のみ再監査する。一般移住・一般住宅制度を子育て世帯向け住宅支援へ登録しない。'
+          };
+          const checkpointPath = `${root}/operations/control/session-checkpoints/west-a-post-final-independent-sample-20260725.json`;
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+          NODE
+
+          rm -f jichitai-compare/operations/control/west-a-independent-final-checkpoint-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-independent-final-checkpoint.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/tasks/37203.json \
+                  jichitai-compare/operations/tasks/39210.json \
+                  jichitai-compare/operations/tasks/43215.json \
+                  jichitai-compare/operations/audits/west-a-post-final-independent-sample-20260725.json \
+                  jichitai-compare/operations/audits/west-a-post-final-independent-public-verification-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/west-a-post-final-independent-sample-20260725.json \
+                  jichitai-compare/operations/control/west-a-independent-final-checkpoint-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-independent-final-checkpoint.yml
+          git diff --cached --check
+          git commit -m 'checkpoint: 西日本A完了後独立抜き取りを最終確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
