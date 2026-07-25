@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-post-completion-regression-20260725-1223",
+  "team": "西日本調査班A",
+  "checkedAt": "2026-07-25T12:23:00+09:00",
+  "purpose": "品質改善第2監査完了後の並行更新による退行、未閉鎖作業、一時workflow残存、region/main不一致を確認する",
+  "baseline": {
+    "qualityImprovementIssueNumber": 3189,
+    "regionalCorrectionPullRequestNumber": 3246,
+    "regionalCorrectionCiRunNumber": 7938,
+    "nationalCorrectionPullRequestNumber": 3257,
+    "nationalCorrectionCiRunNumber": 7957,
+    "publicVerificationPullRequestNumber": 3265,
+    "publicVerificationCiRunNumber": 7978,
+    "regionalCheckpointPullRequestNumber": 3275,
+    "regionalCheckpointCiRunNumber": 8007,
+    "nationalCheckpointPullRequestNumber": 3280,
+    "nationalCheckpointCiRunNumber": 8012
+  },
+  "checks": {
+    "openWestAPullRequestCount": 0,
+    "individualIssue3189State": "completed",
+    "coordinatorIssue3193WestAStatus": "completed",
+    "nationalIntegrationIssue3194WestAGate": "checked",
+    "temporaryWorkflowFiles": {
+      "west-a-quality-improvement-2-sync.yml": "absent",
+      "west-a-quality-improvement-2-live-verify.yml": "absent",
+      "west-a-second-audit-checkpoint-update.yml": "absent",
+      "west-a-second-audit-checkpoint-main-sync.yml": "absent"
+    },
+    "checkpoint": {
+      "mainBlobSha": "e8bceaadf6b46dc6677d5b19390bc14659bcd996",
+      "regionWestBlobSha": "e8bceaadf6b46dc6677d5b19390bc14659bcd996",
+      "matched": true,
+      "status": "completed",
+      "unresolvedUrlCount": 0,
+      "confirmedUnfixedErrorCount": 0,
+      "blocker": null
+    },
+    "tonoshoSourceAndTask": {
+      "municipalityCode": "37322",
+      "municipalitySourceRegionMainMatched": true,
+      "taskRegionMainMatched": true,
+      "auditRegionMainMatched": true,
+      "temporaryChildcareSummary": "生後6か月から満3歳未満の未就園児が土庄保育園で月10時間、1時間300円で利用可能",
+      "officialPrimarySource": "https://www.town.tonosho.kagawa.jp/gyosei/kosodate/kodomoen/3996.html",
+      "officialSearchRecheck": "current_official_index_and_2026_april_bulletin_confirm_monthly_10_hours_fee_300_yen_per_hour_and_tonosho_nursery"
+    },
+    "nationwideProgress": {
+      "totalMunicipalities": 1741,
+      "registeredMunicipalities": 1741,
+      "remainingMunicipalities": 0,
+      "researchingMunicipalities": 0,
+      "needsMediumReviewMunicipalities": 0,
+      "needsRevisionMunicipalities": 0,
+      "needsCoordinatorMunicipalities": 0,
+      "prOpenMunicipalities": 0,
+      "blockedMunicipalities": 0,
+      "totalServices": 15669,
+      "completedServices": 15669,
+      "completionRatePercent": 100,
+      "researchingServices": 0,
+      "needsMediumReviewServices": 0,
+      "needsRevisionServices": 0,
+      "needsCoordinatorServices": 0,
+      "prOpenServices": 0,
+      "blockedServices": 0
+    },
+    "publicVerification": {
+      "latestIndependentLiveReport": "jichitai-compare/operations/audits/west-a-quality-improvement-second-audit-live-verification-20260725.json",
+      "latestIndependentLiveResult": "passed",
+      "currentExternalFetchAttempt": "not_completed_due_execution_environment_dns_restriction",
+      "currentRepositoryAndOfficialSearchConsistency": "matched",
+      "newPublicRegressionDetected": false
+    }
+  },
+  "result": {
+    "status": "passed_no_regression",
+    "newCorrectionCount": 0,
+    "unresolvedCount": 0,
+    "blocker": null,
+    "nextAction": "公式情報更新、CI異常、公開文言異常、region/main差分が発生した場合のみ再開する"
+  }
+}
