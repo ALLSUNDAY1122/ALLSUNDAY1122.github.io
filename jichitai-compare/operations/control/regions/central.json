@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T13:07:00+09:00",
+  "updatedAt": "2026-07-25T13:42:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,8 +24,8 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "原因別重点再監査の弱い主出典第2群6自治体をPR #3355・CI #8180成功後にregion/centralへ統合。氷見市・中能登町の断定範囲を是正し、坂祝町・藤枝市を二重確認、西伊豆町・小山町の主出典を利用者向けページへ更新した。",
-  "nextAction": "弱い主出典の残36候補を、病児保育、産後ケア、住宅支援の順に利用者向け公式情報で確定判定する。",
+  "lastAction": "原因別重点再監査の弱い主出典第3群9制度枠をPR #3403・CI #8266成功後にregion/centralへ統合。東員町産後ケアを2026年6月更新の利用者向けページへ変更し、病児保育3件・産後ケア5件は公式条件未確認として判定を維持した。",
+  "nextAction": "弱い主出典の残35候補を、産後ケア、病児保育、住宅支援の順に利用者向け公式情報で確定判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
@@ -34,13 +34,13 @@
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T13:07:00+09:00",
-    "latestRegionalPullRequestNumber": 3355,
-    "latestCiRunNumber": 8180,
+    "latestCompletedAt": "2026-07-25T13:42:00+09:00",
+    "latestRegionalPullRequestNumber": 3403,
+    "latestCiRunNumber": 8266,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 60,
-    "primarySourceSlotsRechecked": 492,
+    "correctedMunicipalitiesRechecked": 69,
+    "primarySourceSlotsRechecked": 501,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -117,6 +117,12 @@
         "code": "22344",
         "service": "schoolMeals",
         "name": "小山町"
+      },
+      {
+        "type": "primary_source_upgrade",
+        "code": "24324",
+        "service": "postpartumCare",
+        "name": "東員町"
       }
     ],
     "issue3141UnresolvedItemCount": 21,
@@ -209,7 +215,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T11:54:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 36,
+      "weakPrimarySource": 35,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 149,
       "fiscalYearRisk": 33,
@@ -233,10 +239,10 @@
       }
     ],
     "nextPriority": [
-      "弱い主出典残36候補",
-      "病児保育の弱い主出典候補",
-      "産後ケアの弱い主出典候補",
-      "住宅支援の弱い主出典候補"
+      "弱い主出典残35候補",
+      "産後ケアの条例・要綱単独候補",
+      "病児保育の計画・要綱単独候補",
+      "住宅支援の分類候補"
     ]
   }
 }
