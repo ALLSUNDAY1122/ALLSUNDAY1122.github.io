@@ -8,11 +8,11 @@
   "scope": {
     "round": 4,
     "municipalityCodes": ["29205","29206","29207","29208","29209","29210","29211","29212","29322","29342"],
-    "auditedMunicipalityCount": 1,
-    "auditedServiceCount": 9,
-    "confirmedErrorCount": 0,
-    "correctedErrorCount": 0,
-    "pendingMunicipalityCodes": ["29206","29207","29208","29209","29210","29211","29212","29322","29342"]
+    "auditedMunicipalityCount": 2,
+    "auditedServiceCount": 18,
+    "confirmedErrorCount": 3,
+    "correctedErrorCount": 3,
+    "pendingMunicipalityCodes": ["29207","29208","29209","29210","29211","29212","29322","29342"]
   },
   "findings": [
     {
@@ -39,14 +39,50 @@
         "https://www.city.kashihara.nara.jp/kurashi_tetsuzuki/gomi_kankyohozen/2/1/1/6814.html",
         "https://www.city.kashihara.nara.jp/kurashi_tetsuzuki/anshin_anzen/3/2/7531.html"
       ]
+    },
+    {
+      "municipalityCode": "29206",
+      "municipalityName": "桜井市",
+      "servicesChecked": 9,
+      "result": "three_confirmed_errors_corrected",
+      "confirmedErrors": [
+        {
+          "service": "sickChildCare",
+          "before": "利用料・食事代等は公式ページで確認できないとして未記録",
+          "after": "病児保育所さくらんぼの定員3人、1日2,000円、非課税・生活保護世帯無料、給食300円、初回診療費、予約条件を追加",
+          "cause": "公式利用案内の料金・定員・食事条件の確認漏れ",
+          "officialSource": "https://www.city.sakurai.lg.jp/sosiki/kodomokateibu/hoikukyoikuka/hoikushisetsu/ninkagaihoikushisetsu/7629.html",
+          "status": "corrected"
+        },
+        {
+          "service": "temporaryChildcare",
+          "before": "こども誰でも通園制度の施設・曜日・時間・料金を未記録",
+          "after": "三輪学園は平日9時～11時30分・1時間200円、第1保育所は平日9時～16時・1時間300円として2施設の条件を追加",
+          "cause": "令和8年度実施施設一覧の確認漏れ",
+          "officialSource": "https://www.city.sakurai.lg.jp/material/files/group/61/50804jissiitiran_2.pdf",
+          "status": "corrected"
+        },
+        {
+          "service": "housingSupport",
+          "before": "子ども加算のある移住支援金と、子ども要件・加算のない結婚新生活支援を同じ子育て住宅支援として併記",
+          "after": "18歳未満1人100万円加算のある移住支援金のみをverified根拠として記録し、結婚新生活支援は一般新婚制度として除外",
+          "cause": "一般新婚住宅支援と子育て世帯向け住宅支援の分類混同",
+          "officialSource": "https://www.city.sakurai.lg.jp/sosiki/koushitsu/gyouseikeieika/ijuteiju/1566543230999.html",
+          "status": "corrected"
+        }
+      ],
+      "notes": [
+        "令和8年度は市立小中学校とも給食費無償。産後ケアは宿泊・日帰り・訪問合計7回。",
+        "粗大ごみは2か月に1回・1回4点以内、防災情報は現行JSONと一致。"
+      ]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 31,
-    "auditedServiceCount": 279,
-    "confirmedErrorCount": 29,
-    "correctedErrorCount": 29,
+    "auditedMunicipalityCount": 32,
+    "auditedServiceCount": 288,
+    "confirmedErrorCount": 32,
+    "correctedErrorCount": 32,
     "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "桜井市（29206）を公式情報起点で独立監査する。"
+  "nextAction": "五條市（29207）を公式情報起点で独立監査する。"
 }
