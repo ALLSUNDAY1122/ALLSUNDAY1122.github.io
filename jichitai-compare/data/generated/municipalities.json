@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0.0",
     "updatedAt": "2026-07-25",
-    "municipalityCount": 415,
+    "municipalityCount": 414,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
   "municipalities": [
@@ -1246,15 +1246,32 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "令和8年度は小学校に加え中学校給食費も全額支援",
+          "summary": "令和8年度予算では小学校に加え中学校給食費の全額支援を計上し、2026年度の学校給食実施も確認できる。保護者向けの徴収・免除案内は公式公開を確認できないため、全額免除の適用条件は確定しない。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "source": {
-            "url": "https://www.city.himi.toyama.jp/material/files/group/11/r8tosyoyosan-gaiyo.pdf",
-            "checkedAt": "2026-07-19"
-          }
+            "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/kyushoku/3/2026/index.html",
+            "checkedAt": "2026-07-25"
+          },
+          "details": {
+            "policyEvidence": "令和8年度当初予算概要に、小学校に加えて中学校給食費の全額支援を計上",
+            "serviceEvidence": "2026年度の学校給食ページで実施を確認",
+            "userFacingNotice": "保護者向けの徴収額・免除対象・手続案内は公式公開を確認できないため、予算資料だけで全員無料と断定しない"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.himi.toyama.jp/material/files/group/11/r8tosyoyosan-gaiyo.pdf",
+              "checkedAt": "2026-07-25",
+              "description": "令和8年度当初予算概要。中学校給食費全額支援の政策根拠だが、利用者向け適用条件の単独根拠にはしない"
+            },
+            {
+              "url": "https://www.city.himi.toyama.jp/gyosei/soshiki/zaimuka/2_2/R8yosan/14692.html",
+              "checkedAt": "2026-07-25",
+              "description": "令和8年度予算の利用者向け入口ページ"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -2355,18 +2372,28 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "若者世帯の家賃、新築・同居改修、中古住宅・空き家活用を支援。",
+          "summary": "39歳以下の新婚世帯へ、2026年度の住居費・引越費・リフォーム費を上限30万円または60万円補助する。",
+          "details": {
+            "program": "南砺市結婚新生活支援事業",
+            "target": "2026年1月1日から2027年3月31日までに婚姻し、夫婦とも39歳以下、合算所得500万円未満等の要件を満たす新婚世帯",
+            "covered": "新居の家賃・共益費・敷金・礼金・仲介手数料、引越費用、リフォーム費用",
+            "amount": "夫婦とも29歳以下は上限60万円、それ以外の39歳以下夫婦は上限30万円",
+            "expensePeriod": "2026年4月1日から2027年3月31日までに支払った対象経費",
+            "residenceCondition": "夫婦とも29歳以下は2年以上、それ以外は1年以上、市内に居住する見込み",
+            "applicationDeadline": "対象経費の支払い後、2027年3月31日まで",
+            "excludedGeneralPrograms": "一般の新築奨励金・多世代同居改修・空き家活用制度は本比較項目の主制度にしない"
+          },
           "source": {
-            "url": "https://www.city.nanto.toyama.jp/soshiki/seisakusuishin/3_1/5215.html",
-            "checkedAt": "2026-07-20"
+            "url": "https://www.city.nanto.toyama.jp/soshiki/shiminkyodo/4/410.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
           "status": "verified",
           "summary": "粗大ごみは地域の収集ルールに従うほか、対象地域ではクリーンセンターとなみへ直接搬入できる。",
           "source": {
-            "url": "https://www.city.nanto.toyama.jp/soshiki/seikatsukankyo/1/5/418.html",
-            "checkedAt": "2026-07-20"
+            "url": "https://www.city.nanto.toyama.jp/kurashi-tetsuzuki/gomi-kankyo-pets/5/2825.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
@@ -4212,26 +4239,20 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "3世代同居・隣接・近居住宅や、市外から転入して住宅を取得する世帯に定住促進奨励金を交付する。",
+          "summary": "3世代同居・隣接・近居となる住宅の新築・増築・購入へ、同居20万円、隣接・近居10万円を交付する。",
           "details": {
-            "programs": "3世代家族住宅建築奨励金、『ようこそ小松』定住促進奨励金",
-            "threeGenerationSupport": "3世代同居住宅は20万円、隣接・近居住宅は10万円",
-            "transferSupport": "市外に継続3年以上居住し、小松市へ転入後2年未満の対象者等が住宅を新築・増築・購入する場合、基本30万円",
-            "youngHouseholdAddition": "『ようこそ小松』制度は申請者が45歳以下の若者世帯に10万円加算",
-            "conditions": "自己居住用一戸建て、専用面積50平方メートル以上、地域コミュニティ参画、市税滞納なし等の制度別要件を満たすこと",
-            "application": "新築・増築は原則基礎工事着工前に認定申請し、完成・支払い後に交付申請。購入は所定期限内に交付申請"
+            "program": "3世代家族住宅建築奨励金制度",
+            "target": "3世代同居世帯、親世帯の敷地内・隣地の3世代隣接世帯、親世帯から半径150メートル以内の3世代近居世帯",
+            "support": "同居20万円、隣接・近居10万円",
+            "housingCondition": "自己居住用一戸建てで住戸専用面積50平方メートル以上等",
+            "fiscalYear": "2026年度。申請受付は2026年4月1日から2027年3月19日",
+            "application": "新築・増築は基礎工事着工前の認定申請、購入は最終金支払日から3か月以内の交付申請",
+            "excludedGeneralProgram": "一般転入者向け「ようこそ小松」定住促進奨励金を主制度とする登録を解消"
           },
           "source": {
-            "url": "https://www.city.komatsu.lg.jp/kurasi_tetuzuki/iju_sumai/1/2/7840.html",
-            "checkedAt": "2026-07-20"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/2221.html",
-              "checkedAt": "2026-07-20",
-              "description": "市外からの転入者向け『ようこそ小松』定住促進奨励金"
-            }
-          ]
+            "url": "https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/3235.html",
+            "checkedAt": "2026-07-25"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
@@ -4432,30 +4453,19 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "空き家購入・改修、新築、移住促進住宅など、移住・定住と住宅確保を支援する複数制度を案内している。",
+          "summary": "小学校就学前の子どもがいる世帯は、2026年度市営住宅の所得基準を月214,000円以下まで緩和する。",
           "details": {
-            "programs": "空き家購入補助、空き家改修補助、耐震改修補助、マリンタウン住宅用地分譲、地元産材活用補助、居住誘導促進事業補助、移住促進住宅",
-            "support": "空き家購入最大100万円、空き家改修最大100万円、耐震改修最大180万円、マリンタウン住宅分譲支援最大420万円、地元産材活用最大100万円、居住誘導促進最大100万円として案内",
-            "conditions": "対象住宅、区域、移住・定住、工事内容、申請時期等の制度別要件を満たすこと",
-            "application": "契約・購入・工事着手前にまちづくり推進課等へ相談し、最新の受付状況と震災後の制度適用を確認",
-            "notice": "令和6年能登半島地震・奥能登豪雨に伴う住宅再建支援とは別制度を含むため、併用可否を事前確認"
+            "program": "令和8年度市営住宅入居者・入居補欠者募集",
+            "target": "小学校就学前の子どもがいる世帯で、市営住宅の一般的な申込資格を満たす世帯",
+            "support": "一般世帯の所得基準月158,000円以下に対し、就学前児童がいる世帯は月214,000円以下まで緩和",
+            "housing": "公営住宅（標準）等。住宅困窮、親族同居、市税滞納なし等の要件あり",
+            "period": "2026年度。定期募集後は2026年12月31日まで随時募集",
+            "excludedGeneralPrograms": "空き家購入・改修、新築・定住促進住宅等の一般移住制度は子育て世帯向け制度として扱わない"
           },
           "source": {
-            "url": "https://www.city.wajima.ishikawa.jp/docs/2023102400033/",
-            "checkedAt": "2026-07-20"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.wajima.ishikawa.jp/categories/bunya/ijyuu/",
-              "checkedAt": "2026-07-20",
-              "description": "輪島市の移住・定住関連制度一覧"
-            },
-            {
-              "url": "https://www.city.wajima.ishikawa.jp/article/2026013000019/",
-              "checkedAt": "2026-07-20",
-              "description": "令和8年度市営住宅募集と就学前児童世帯の所得基準特例"
-            }
-          ]
+            "url": "https://www.city.wajima.ishikawa.jp/article/2026013000019/",
+            "checkedAt": "2026-07-25"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
@@ -5651,27 +5661,18 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "市内で新たに住宅を取得する45歳未満の定住世帯に、基礎額と世帯・転入等の条件に応じた加算を行う。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "令和8年度定住促進補助金",
-            "support": "市内で住宅を新築・購入または一定の増改築を行う世帯へ、基礎額と各種加算を交付",
-            "ageCondition": "対象住宅へ住民票を移した時点で申請者が45歳未満",
-            "housingCondition": "新築・建売・中古住宅の購入、または床面積75平方メートル以上となる増築・改修等",
-            "conditions": "主たる居住地であること、地域コミュニティへの参画、市税等の滞納がないこと、対象区域では下水道接続等",
-            "application": "住宅取得・登記後、令和8年度の対象期間と申請期限に従い申請。補助額は最新案内・チラシで確認"
+            "reason": "確認できた定住促進補助金は、住宅を取得する45歳未満の申請者を対象とする一般の定住制度であり、子育て世帯を対象要件としない。",
+            "excludedProgram": "令和8年度定住促進補助金",
+            "excludedTarget": "市内で新たに住宅を取得する45歳未満の申請者",
+            "evidence": "2026年7月1日更新の利用者向けページ本文で対象要件を確認。補助額画像・Q&Aだけから子育て固有要件を推測しない。"
           },
           "source": {
-            "url": "https://www.city.nomi.lg.jp/docs/5597.html",
-            "checkedAt": "2026-07-21"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.nomi.lg.jp/docs/3850.html",
-              "checkedAt": "2026-07-21",
-              "description": "定住促進補助金の制度概要・対象要件"
-            }
-          ]
+            "url": "https://www.city.nomi.ishikawa.jp/docs/5597.html",
+            "checkedAt": "2026-07-25"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
@@ -6282,18 +6283,19 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "町内で戸建住宅を新築・購入・増改築する定住者へ、住宅ローン年末残高等に応じた奨励金を交付する。",
+          "summary": "18歳未満の子がいる三世代世帯の同居・近居に伴う住宅取得・改修へ、10万円または15万円を補助する。",
           "details": {
-            "program": "定住促進住宅取得等奨励金",
-            "support": "住宅借入金等の年末残高の4％相当額。基本上限60万円、新規転入者は上限80万円",
-            "conditions": "2026年12月31日までに登記・居住開始、戸建住宅、5年以上居住意思、世帯員全員に町税等の滞納がないこと等",
-            "additions": "新規転入した申請者以外の世帯員1人につき5万円・上限15万円、町内建築業者による新築は10万円加算",
-            "maximum": "新規転入者の基本上限80万円に、世帯員加算最大15万円と町内業者加算10万円を加えられる",
-            "application": "契約日から原則2か月以内に交付申込みを行い、居住開始翌年の2月1日から3月15日までに交付申請"
+            "program": "三世代ファミリー同居等促進事業補助金",
+            "target": "親子と子の祖父母による三世代世帯。子は妊娠中を含み、同居等開始年度の4月1日時点で18歳未満",
+            "housing": "三世代同居・準同居のための住宅新築、購入、増改築、改修。契約費用100万円以上等の要件あり",
+            "amount": "10万円または15万円",
+            "nearResidence": "準同居は親子世帯と祖父母世帯の住宅が直線50メートル以内",
+            "deadline": "2026年中に同居等を開始した場合、2027年1月15日まで",
+            "excludedGeneralProgram": "定住促進住宅取得等奨励金は一般の定住制度のため、本比較項目の主制度にしない"
           },
           "source": {
-            "url": "https://www.town.tsubata.lg.jp/site/welcome/1225.html",
-            "checkedAt": "2026-07-21"
+            "url": "https://www.town.tsubata.lg.jp/site/welcome/1217.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -7000,7 +7002,7 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "中能登町に住所を有する小中学生等の学校給食費を全額助成し、町立学校以外への通学者も対象とする。",
+          "summary": "学校給食費の全額助成を定める要綱・施行規則は令和7年4月1日施行。2026年度の利用者向け適用・申請案内は公式公開を確認できないため、現行年度の対象条件は規則記載を超えて断定しない。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
@@ -7010,7 +7012,8 @@
             "schools": "中能登町立小中学校および町立学校以外の対象校",
             "start": "改正要綱は令和7年4月1日施行",
             "alternativeMeals": "食物アレルギーにより弁当持参または一部献立のみ喫食する場合も教育委員会が定める額を助成",
-            "application": "町立学校以外への通学等、個別に申請が必要な場合は学校教育課の案内に従う"
+            "application": "町立学校以外への通学等、個別に申請が必要な場合は学校教育課の案内に従う",
+            "evidenceQualification": "全額助成制度は現行要綱・施行規則で確認したが、2026年度の利用者向け案内が見つからないため、実際の申請要否・対象校・支給時期は教育委員会確認事項とする"
           },
           "source": {
             "url": "https://www1.g-reiki.net/nakanoto/reiki_honbun/r135RG00000716.html",
@@ -7021,6 +7024,11 @@
               "url": "https://www1.g-reiki.net/nakanoto/reiki_honbun/r135RG00000775.html",
               "checkedAt": "2026-07-21",
               "description": "学校給食費の全部助成を定める施行規則"
+            },
+            {
+              "url": "https://www.town.nakanoto.ishikawa.jp/soshiki/gakkoukyouiku/4/1/2/1071.html",
+              "checkedAt": "2026-07-25",
+              "description": "令和8年度の学校教育課利用者向けページ。学校給食費全額助成の一般案内ではなく、現行窓口・申請運用の補助確認"
             }
           ]
         },
@@ -7281,27 +7289,20 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "定住目的で住宅を取得する転入者等に、新築最大200万円、中古最大50万円等の奨励金を交付する。",
+          "summary": "県外から転入する子育て世帯へ、引越費用20万円と家賃月額最大3万円を補助する。",
           "details": {
-            "program": "定住促進奨励金制度",
-            "support": "転入者の新築住宅は上限200万円、中古住宅は上限50万円、町内在住者の新築住宅は上限150万円",
-            "eligiblePersons": "転入後5年以内に定住目的で住宅を取得する方、または町内在住の50歳以下で現在地と異なる敷地に新築住宅を取得する方",
-            "housingCondition": "自己居住部分50平方メートル以上で、延床面積の2分の1以上が自己居住用",
-            "taxCondition": "町税等の滞納がないこと",
-            "application": "住宅完成または購入後1年以内に必要書類を添えて申請",
-            "additionalProgram": "三世代同居・近居住宅改修等は最大30万円の補助制度あり"
+            "program": "Iターンファミリー移住暮らし応援補助金",
+            "target": "県外出身で県外から穴水町へ転入し、18歳以下の子を扶養・同居する世帯、または夫婦とも50歳以下の世帯",
+            "movingSupport": "子育て世帯は引越補助20万円",
+            "rentSupport": "住宅手当相当額控除後の家賃月額の2分の1、子育て世帯は月額最大3万円",
+            "conditions": "町内の民間借家等または自己所有住宅に定住し、町税滞納なし、公的家賃補助・類似補助との重複なし等",
+            "application": "引越補助は転入日から6か月以内、家賃補助は賃貸契約締結日から6か月以内",
+            "excludedGeneralProgram": "一般の定住促進奨励金を主制度とする登録を解消"
           },
           "source": {
-            "url": "https://www.town.anamizu.lg.jp/site/iju/100275.html",
-            "checkedAt": "2026-07-21"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.town.anamizu.lg.jp/page/100019.html",
-              "checkedAt": "2026-07-21",
-              "description": "町単独助成制度一覧"
-            }
-          ]
+            "url": "https://www.town.anamizu.lg.jp/site/iju/100335.html",
+            "checkedAt": "2026-07-25"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
@@ -7495,27 +7496,20 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "町内で住宅を新築・中古購入する世帯に、対象費用の10％を新築最大300万円、中古最大200万円助成する。",
+          "summary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・引越・リフォーム費を上限30万円または60万円補助する。",
           "details": {
-            "program": "能登町定住住宅助成金",
-            "support": "対象費用の10％。新築住宅最大300万円、中古住宅最大200万円",
-            "payment": "助成額の9割を現金、1割をひまわりポイントで交付",
-            "eligiblePersons": "町内住民または5年以上の定住意思がある移住見込みの18歳以上で、町税滞納がない方",
-            "housingCondition": "新築は居住部分40平方メートル以上、中古は能登町ふるさと空き家情報登録住宅等",
-            "application": "着工前・購入前に事前相談と認定申請が必要",
-            "combination": "能登町創生住まい支援金との重複申請不可"
+            "program": "令和8年度能登町結婚新生活支援補助金",
+            "target": "2026年4月1日から2027年3月31日までに婚姻し、夫婦とも39歳以下、前年度合算所得500万円未満等の要件を満たす世帯",
+            "covered": "住宅取得費、住宅賃借費、引越費、リフォーム費",
+            "amount": "夫婦とも29歳以下は上限60万円、それ以外の39歳以下夫婦は上限30万円",
+            "expensePeriod": "2026年4月1日から2027年3月31日までに支払った対象経費",
+            "applicationDeadline": "2027年3月31日まで",
+            "excludedGeneralPrograms": "一般定住住宅助成金・被災世帯向け創生住まい支援金は本比較項目の主制度にしない"
           },
           "source": {
-            "url": "https://www.town.noto.lg.jp/kakuka/1009/gyomu/3/1285.html",
-            "checkedAt": "2026-07-21"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.town.noto.lg.jp/kakuka/1008/gyomu/2/5168.html",
-              "checkedAt": "2026-07-21",
-              "description": "被災世帯向け能登町創生住まい支援金"
-            }
-          ]
+            "url": "https://www.town.noto.lg.jp/kakuka/1001/gyomu/7/1796.html",
+            "checkedAt": "2026-07-25"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
@@ -10498,28 +10492,30 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "通常の一時預かりに加え、令和8年度から乳児等通園支援事業（こども誰でも通園制度）を実施するための町条例・事業者認可制度を整備している。",
+          "summary": "生後6～7か月から就学前までの未就園児を対象に、町内施設で通常の一時預かりを実施する。こども誰でも通園制度は条例整備を確認したが、利用者向けの対象・施設・料金・申請条件は確認できない。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
           },
           "details": {
-            "types": "一時預かり、乳児等通園支援事業（こども誰でも通園制度）",
-            "temporaryCare": "保護者の疾病・出産・冠婚葬祭・育児疲れ等で家庭保育が困難な未就園児を町内施設で一時預かりする",
-            "localBasis": "令和8年4月施行の設備運営基準条例、特定乳児等通園支援事業条例、事業者認可規則を整備",
-            "nationalTarget": "国制度では保育所等に在籍していない生後6か月から満3歳未満が対象",
-            "employment": "保護者の就労要件なし",
-            "usage": "国の令和8年度利用枠は月10時間。実施施設・利用料・申請方法は町の最新案内または総合支援システムで確認"
+            "types": "一時預かり（一般型）",
+            "target": "7か月から小学校就学前までの未就園児。高浜キッズこども園は生後6か月から",
+            "reasons": "保護者の病気、出産、冠婚葬祭、育児疲れ等で一時的に家庭保育ができない場合",
+            "facilities": "町内の保育所・認定こども園",
+            "hours": "月曜日から金曜日。一部施設は土曜日も実施",
+            "fee": "1日2,000円、半日1,000円、食事代350円",
+            "application": "事前予約が必要",
+            "anyChildStatus": "乳児等通園支援事業の条例・認可制度は整備済みだが、2026年度の利用者向け対象月齢、実施施設、利用料、利用時間、予約方法は公式公開を確認できないため確定しない"
           },
           "source": {
-            "url": "https://www.town.takahama.fukui.jp/reiki/reiki_taikei/r_taikei_08.html",
+            "url": "https://www.town.takahama.fukui.jp/page/sougouseisaku/p007556.html",
             "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.town.takahama.fukui.jp/page/sougouseisaku/p007556.html",
+              "url": "https://www.town.takahama.fukui.jp/reiki/reiki_taikei/r_taikei_08.html",
               "checkedAt": "2026-07-25",
-              "description": "通常の一時預かりの利用条件・料金"
+              "description": "乳児等通園支援事業の条例体系。利用可能な対象・施設・料金の確定根拠には使用しない"
             }
           ]
         },
@@ -10677,29 +10673,30 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "通常の一時預かりに加え、保育所等に在籍していない満3歳未満の子どもを就労要件なしで受け入れる乳児等通園支援事業を令和8年度から実施する。",
+          "summary": "生後6か月から就学前までの児童を対象に、本郷こども園・名田庄こども園で通常の一時預かりを実施する。こども誰でも通園制度は計画記載を確認したが、利用者向けの対象・施設・料金・申請条件は確認できない。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
           },
           "details": {
-            "types": "一時預かり、乳児等通園支援事業（こども誰でも通園制度）",
-            "temporaryCare": "保護者の病気・出産・勤務・育児疲れ等で一時的に保育が必要な就学前児童を受け入れ、町民の利用料を無料とする",
-            "anyChildTarget": "保育所・認定こども園等に在籍していない満3歳未満の子ども",
-            "employment": "保護者の就労要件なし",
-            "start": "町こども計画で令和8年度からの実施・確保を計画",
-            "facilities": "町内の認定こども園等で実施予定",
-            "usage": "国の令和8年度利用枠は月10時間。実施園、料金、申請手続は町の最新案内または総合支援システムで確認"
+            "types": "一時預かり（一般型）",
+            "target": "おおい町在住で保育所等を利用していない生後6か月から就学前までの児童。里帰り出産等による帰省児童も対象",
+            "facilities": "本郷こども園、名田庄こども園",
+            "hours": "平日8時～16時、土曜日8時～正午",
+            "fee": "1日2,000円、半日1,000円。町民は2025年4月1日から第1子を含め無料",
+            "limit": "原則週3日以内（緊急預かりを除く）",
+            "application": "原則前日までに実施施設へ申込書を提出",
+            "anyChildStatus": "町こども計画には乳児等通園支援事業の確保方針があるが、2026年度の利用者向け対象月齢、実施施設、利用料、利用時間、予約方法は公式公開を確認できないため実施中と確定しない"
           },
           "source": {
-            "url": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p10199_d/fil/kodomokeikaku.pdf",
+            "url": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p24008.html",
             "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p24008.html",
+              "url": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p10199_d/fil/kodomokeikaku.pdf",
               "checkedAt": "2026-07-25",
-              "description": "通常の一時預かりの利用条件・料金"
+              "description": "乳児等通園支援事業の計画記載。利用可能な対象・施設・料金の確定根拠には使用しない"
             }
           ]
         },
@@ -14605,17 +14602,19 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "U・I・Jターン移住者の住宅新築・購入・中古住宅改修に対し、費用の一部を補助する。",
+          "summary": "2026年1月1日から2027年3月31日までに婚姻等をした新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を上限60万円補助する。",
           "details": {
-            "program": "下呂市移住促進住宅購入費等助成事業補助金",
-            "newConstruction": "新築または住宅購入費の10分の1、上限100万円",
-            "usedHomePurchase": "中古住宅購入費の5分の1、上限50万円",
-            "renovation": "20万円を超える中古住宅改修費の2分の1、上限30万円",
-            "conditions": "転入前3年間市内居住歴がないU・I・Jターン者等で、5年以上居住する誓約などが必要"
+            "program": "令和8年度下呂市結婚新生活支援補助金",
+            "target": "対象期間に婚姻または岐阜県パートナーシップ宣誓書受領証の交付を受け、夫婦等の合算所得500万円未満、市内住宅に住民登録する世帯",
+            "covered": "新居購入費、賃料・敷金・礼金・共益費・仲介手数料、リフォーム費、引越費",
+            "amount": "1世帯上限60万円",
+            "marriagePeriod": "2026年1月1日から2027年3月31日",
+            "applicationDeadline": "2027年3月10日必着",
+            "excludedGeneralProgram": "一般U・I・Jターン住宅購入・改修補助を主制度とする登録を解消"
           },
           "source": {
-            "url": "https://www.city.gero.lg.jp/site/iju-start/31893.html",
-            "checkedAt": "2026-07-22"
+            "url": "https://www.city.gero.lg.jp/soshiki/49/37216.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -15871,19 +15870,26 @@
           ]
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "町内で住宅を新築・購入して定住する人へ、床面積に応じた定住促進奨励金を交付する。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "deadline": "令和9年3月31日までに住宅を取得し定住",
-            "newHousing": "1平方メートル当たり3,000円、上限45万円",
-            "usedHousing": "5年以上町外在住者による中古住宅購入は1平方メートル当たり1,000円、上限15万円",
-            "application": "住宅取得日または転入日の遅い日から1年以内",
-            "condition": "一戸建て住宅または住居部分が2分の1以上の併用住宅等"
+            "reason": "現行の定住促進奨励金は住宅を新築・購入して定住する人を対象とする一般制度で、子育て世帯固有要件がない。",
+            "excludedProgram": "神戸町定住促進奨励金",
+            "excludedTarget": "2027年3月31日までに新築住宅等を取得して定住する人",
+            "expiredProgram": "三世代同居支援奨励金は子育て支援目的だが、対象となる住宅取得・同居開始期限が2025年3月31日で終了済み",
+            "evidence": "2026年7月時点で新規対象となる子育て世帯向け住宅制度として扱わない"
           },
           "source": {
             "url": "https://www.town.godo.gifu.jp/life/other/other13.html",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.godo.gifu.jp/life/other/other18.html",
+              "checkedAt": "2026-07-25",
+              "description": "対象期限が2025年3月31日までの旧三世代同居支援"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -16489,22 +16495,35 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "令和8年度の町立小中学校給食費は、小学校児童1食250円・基本月額4,500円、中学校生徒1食290円・基本月額5,200円とする。",
+          "summary": "令和8年4月1日から当面の間、町立小学校児童・中学校生徒の学校給食費を0円とする。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "elementary": "児童1食250円。第1期から第10期まで月額4,500円",
-            "juniorHigh": "生徒1食290円。第1期から第10期まで月額5,200円",
-            "otherUsers": "小学生相当給食310円、中学生相当給食350円",
-            "annualAdjustment": "第11期は年額から第1期～第10期の納付額を差し引いた額",
-            "reduction": "天災その他やむを得ない理由がある場合は徴収猶予・減免制度あり"
+            "support": "町立小学校児童・中学校生徒の学校給食費を0円とする特例",
+            "start": "令和8年4月1日",
+            "period": "当面の間",
+            "ordinaryUnitPrice": "特例前の規則上の1食単価は小学校児童250円、中学校生徒290円",
+            "excludedScope": "児童生徒と同様の給食提供を受けるその他利用者は、小学生相当310円・中学生相当350円の規定が残る",
+            "serviceEvidence": "町公式の小中学校・給食センター案内および献立ページで学校給食の実施を確認"
           },
           "source": {
             "url": "https://www.town-ono.jp/reiki_int/reiki_honbun/i333RG00000742.html",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town-ono.jp/0000001092.html",
+              "checkedAt": "2026-07-25",
+              "description": "令和8年度の教育案内"
+            },
+            {
+              "url": "https://www.town-ono.jp/0000000173.html",
+              "checkedAt": "2026-07-25",
+              "description": "学校給食献立の利用者向け案内"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -16890,18 +16909,16 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "東京圏から北方町へ移住し、就業等の要件を満たす人へ、岐阜県と共同で最大100万円の移住支援金を交付する。",
+          "status": "unavailable",
+          "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "origin": "東京圏（埼玉県、千葉県、東京都、神奈川県）からの移住者",
-            "amount": "世帯構成等に応じて最大100万円",
-            "conditions": "移住元、就業・起業・テレワーク等の所定要件を満たすこと",
-            "application": "転入日から1年以内に必要書類を添えて申請",
-            "note": "住宅購入補助ではなく、移住・定住に伴う生活基盤支援"
+            "confirmedGeneralProgram": "東京圏からの移住者に、就業等の要件を満たす場合、世帯最大100万円・単身60万円の移住支援金を交付する。",
+            "classificationReview": "東京圏からの一般移住・就業支援であり、子どもの有無、子育て世帯限定、住宅取得・改修・家賃の子育て加算を公式本文で確認できないため、子育て世帯向け住宅支援として登録しない。",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
             "url": "https://www.town.kitagata.gifu.jp/soshiki/seisakuzaisei/1/4/1/867.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -17014,12 +17031,20 @@
             "monthlyFee": "小学校6,200円、中学校6,800円、幼稚園6,000円",
             "collection": "8月を除く4月から翌年1月まで毎月徴収し、4月分は5月分と合わせて徴収",
             "adjustment": "年間給食受給日数に基づき年度内に精算",
-            "support": "町外の学校・園等へ通う町内在住児童等には、条件により給食費負担軽減補助制度がある"
+            "support": "町外の学校・園等へ通う町内在住児童等には、条件により給食費負担軽減補助制度がある",
+            "userFacingEvidence": "坂祝幼稚園の利用者向けページで給食費月額6,000円を確認。小学校・中学校の月額は令和8年4月1日施行の給食費規則で確認"
           },
           "source": {
             "url": "https://reiki.town.sakahogi.gifu.jp/reiki_honbun/i361RG00000922.html?id=j4_k1_g2",
             "checkedAt": "2026-07-22"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.sakahogi.gifu.jp/life/child/child09.html",
+              "checkedAt": "2026-07-25",
+              "description": "坂祝幼稚園の利用者向け必要経費。給食費月額6,000円を確認"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -17577,18 +17602,25 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "移住・定住世帯の住宅新築、空き家取得・賃借・改修へ奨励金を交付する。",
+          "summary": "移住定住世帯へ年5万円を最長5年交付し、中学生以下の子がいる世帯は世帯主年齢要件を緩和するとともに、初年度は子ども1人につき5万円を加算する。",
           "details": {
-            "newHousing": "町内事業者による新築は100万円、町外事業者による新築は50万円",
-            "vacantHousePurchase": "空き家バンク住宅の取得は購入価格の2分の1。世帯主50歳以下は上限50万円、51歳以上は上限25万円",
-            "vacantHouseRent": "家賃の2分の1、月額上限1万5,000円、最長3年間",
-            "renovation": "空き家改修費の3分の1、上限50万円",
-            "migration": "50歳以下の移住世帯等へ年5万円を最長5年間。初年度は中学生以下の子1人につき5万円加算"
+            "program": "七宗町移住定住奨励金",
+            "migration": "世帯主50歳以下の移住世帯へ年5万円を最長5年間交付",
+            "childCondition": "世帯主が51歳以上でも中学生以下の子どもが属する世帯は年齢要件の例外",
+            "childAddition": "最初の1年目は中学生以下の子ども1人につき5万円を加算",
+            "housingAcquisition": "空き家バンクを利用した住宅取得は購入価格の2分の1。世帯主50歳以下は上限50万円、51歳以上は上限25万円",
+            "newConstruction": "町内事業者による新築100万円、町外事業者による新築50万円"
           },
           "source": {
-            "url": "https://www.hichiso.jp/reiki_int/reiki_honbun/i364RG00000505.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.hichiso.jp/top/kanko/settled/encourage/",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.hichiso.jp/reiki_int/reiki_honbun/i364RG00000505.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -17707,9 +17739,16 @@
             "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
           },
           "source": {
-            "url": "https://www.town.yaotsu.lg.jp/reiki_int/reiki_honbun/i365RG00000630.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.town.yaotsu.lg.jp/1513.htm",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.yaotsu.lg.jp/reiki_int/reiki_honbun/i365RG00000630.html",
+              "checkedAt": "2026-07-25",
+              "description": "就学援助費支給要綱"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -18426,34 +18465,28 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "定住者・移住者向けに、融雪・落雪住宅整備、空き家再生、民間賃貸住宅の入居費・家賃を支援する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "programs": "白川村定住対策親雪補助金、白川村空き家再生活用事業補助金、白川村民間賃貸住宅居住助成金",
-            "snowHousing": "融雪住宅は対象工事費等に応じ上限80万円、落雪住宅は上限60万円",
-            "vacantHome": "村内空き家に定住する転入者または転入後9年以内の人を対象に、予算の範囲内で取得・改修等を支援",
-            "rental": "民間賃貸住宅の礼金相当額や、所得等の条件に応じ家賃の一部を助成",
-            "condition": "村内定住意思、村税等の滞納がないことなど、制度ごとの要件を満たす必要がある",
-            "application": "契約・着工前を含め、各制度の受付期間と必要書類を村観光振興課へ確認して申請"
+            "reason": "確認できた親雪補助金、空き家再生活用補助、民間賃貸住宅居住助成は、定住者・移住者一般を対象とし、子育て世帯を対象要件としない。",
+            "excludedPrograms": "白川村定住対策親雪補助金、白川村空き家再生活用事業補助金、白川村民間賃貸住宅居住助成金",
+            "excludedRentalTarget": "村外から移住後2年以内等の民間賃貸住宅入居者",
+            "evidence": "利用者向け公式ページの対象者・助成額を確認し、一般定住制度として比較対象外に整理"
           },
           "source": {
-            "url": "https://www.vill.shirakawa.lg.jp/2767.htm",
+            "url": "https://www.vill.shirakawa.lg.jp/1270.htm",
             "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.vill.shirakawa.lg.jp/1259.htm",
+              "url": "https://www.vill.shirakawa.lg.jp/2767.htm",
               "checkedAt": "2026-07-25",
-              "description": "空き家再生活用事業補助金"
+              "description": "一般の定住者向け親雪補助金"
             },
             {
-              "url": "https://www.vill.shirakawa.lg.jp/1270.htm",
+              "url": "https://www.vill.shirakawa.lg.jp/1259.htm",
               "checkedAt": "2026-07-25",
-              "description": "民間賃貸住宅居住助成金"
+              "description": "一般の移住者向け空き家再生活用補助金"
             }
           ]
         },
@@ -18760,22 +18793,45 @@
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "産後1年未満の母子へ、宿泊・日帰り・短時間・訪問型の産後ケアを提供する。",
+          "summary": "産後1年未満の母子へ、宿泊・1日通所・短時間通所・訪問型の産後ケアを提供する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "target": "浜松市内に居住する産後1年未満の母子",
-            "types": "宿泊型、デイサービス1日型、デイサービス1時間・2時間型、訪問型",
+            "target": "浜松市に住民票がある産後1年未満の母子。市外からの里帰り出産者等は住民登録自治体の制度状況により利用条件が異なる",
+            "types": "宿泊型、デイサービス1日型、デイサービス短時間型（1時間以内・1時間超）、訪問型",
             "care": "母体の身体ケア、授乳支援、育児手技の指導、生活相談等",
-            "publicSupport": "課税世帯にも各類型の公費負担があり、非課税世帯は減免、生活保護世帯は無料",
-            "fee": "宿泊・1日型の自己負担は施設により異なり、短時間・訪問型も公費負担後の額を確認"
+            "lodgingAndFullDayLimit": "宿泊型とデイサービス1日型を合わせて7日まで",
+            "shortAndVisitLimit": "デイサービス短時間型と訪問型を合わせて7回まで",
+            "shortFees": "短時間型は1時間以内850円、1時間超1,700円",
+            "visitFee": "訪問型は1回2,500円",
+            "lodgingAndFullDayFee": "宿泊型・デイサービス1日型の自己負担額は実施施設により異なる",
+            "reduction": "市民税非課税者・生活保護受給者は自己負担額の減免制度あり",
+            "application": "利用前にオンライン申請または各健康づくりセンター窓口で申請し、承認後に実施施設へ予約",
+            "facilities": "令和8年度実施施設一覧を公式子育て情報サイトで公開"
           },
           "source": {
-            "url": "https://www.city.hamamatsu.shizuoka.jp/zaisek/budget/budget07/detail/d_072.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.hamamatsu-pippi.net/contents/7915.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.hamamatsu-pippi.net/contents/7916.html",
+              "checkedAt": "2026-07-25",
+              "description": "令和8年度の宿泊型・デイサービス型・訪問型実施施設一覧"
+            },
+            {
+              "url": "https://www.hamamatsu-pippi.net/contents/19032.html",
+              "checkedAt": "2026-07-25",
+              "description": "申請から利用までの利用者向け手順"
+            },
+            {
+              "url": "https://www.city.hamamatsu.shizuoka.jp/zaisek/budget/budget07/detail/d_072.html",
+              "checkedAt": "2026-07-25",
+              "description": "制度拡充の予算・政策根拠。利用者向け現行条件の主出典には使用しない"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -18799,19 +18855,28 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "市外からの移住者へ、住宅取得や引越移転にかかる費用を補助する。",
+          "summary": "市外から移住する50歳未満の夫婦等または50歳未満のひとり親世帯へ住宅取得・改修・引越費を最大100万円補助し、まちなかの3世代同居等には上乗せ支援がある。",
           "details": {
             "program": "浜松市ハマライフ住宅取得費等助成事業費補助金",
-            "target": "市外から浜松市へ移住し、住宅取得または対象となる引越移転を行う人",
-            "coverage": "住宅取得費、住宅の改修等、引越移転に係る対象経費",
-            "fiscalYear": "2026年度の申請受付を実施",
-            "deadline": "2027年2月26日",
-            "amount": "世帯・移住元・住宅等の条件により異なるため令和8年度手引きで確認"
+            "target": "市内移住から2年以内で、申請者が配偶者等を有し双方50歳未満、または50歳未満のひとり親世帯などの要件を満たす世帯",
+            "covered": "住宅の新築・取得、増築・改修、住宅賃借、引越移転の対象経費",
+            "amount": "対象経費の2分の1以内、上限100万円",
+            "applicationDeadline": "2027年2月26日",
+            "additionalProgram": "まちなか定住促進・子育て応援環境づくり補助金",
+            "threeGenerationAddition": "小学生以下の子と暮らす子世帯が親世帯と新たに同居または隣接居住する場合、上乗せ補助の対象",
+            "clarification": "単なる全移住者向け制度ではなく、年齢・夫婦等・ひとり親の世帯要件がある"
           },
           "source": {
             "url": "https://www.city.hamamatsu.shizuoka.jp/hamalife/oshirase/hamalifejyutakusyutokuhitouhojyokin.html",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.hamamatsu.shizuoka.jp/jutaku/matinaka_kosodate.html",
+              "checkedAt": "2026-07-25",
+              "description": "小学生以下の子を含む3世代同居等の上乗せ補助"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -19651,18 +19716,19 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "45歳未満の移住者が市内住宅取得のため借り入れた指定住宅ローンの利子を補給する。",
+          "summary": "39歳以下の新婚世帯へ、2026年度の住宅購入・改修・賃借・引越費用を上限30万円または60万円補助する。",
           "details": {
-            "program": "伊東市移住者住宅資金貸付金利子補給金",
-            "target": "令和5年4月1日以降に転入し、市内住宅を購入して移住した、申請時45歳未満かつ移住後3年以内の人",
-            "amount": "対象利子の2分の1以内、1年度最大10万円",
-            "maximum": "5年間・通算50万円まで",
-            "applicationDeadline": "融資実行日から3か月以内",
-            "note": "対象となる移住者向け住宅ローン・金融機関の指定あり"
+            "program": "令和8年度伊東市結婚新生活支援補助金",
+            "target": "2026年1月1日から2027年3月31日までに婚姻し、夫婦とも39歳以下、合算所得500万円未満等の要件を満たす世帯",
+            "covered": "住宅購入費、住宅リフォーム費、住宅賃料・敷金・礼金・共益費・仲介手数料、引越費用",
+            "amount": "夫婦とも29歳以下は上限60万円、夫婦とも39歳以下は上限30万円",
+            "period": "2026年4月1日から2027年3月31日までに要し、支払った対象経費",
+            "additionalCondition": "市指定の結婚・妊娠・出産・子育てに関する講座の受講等が必要",
+            "excludedGeneralProgram": "45歳未満移住者向け住宅ローン利子補給は一般移住制度のため、本比較項目の主制度にしない"
           },
           "source": {
-            "url": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/gyoseikeieika/shiseijoho/1/1/ijyuteijyu/11852.html",
-            "checkedAt": "2026-07-22"
+            "url": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/kosodateshienka/kurashi_tetsuzuki/1/2/10657.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -20631,12 +20697,25 @@
             "juniorHigh": "月額5,100円",
             "basis": "令和6年4月1日施行の藤枝市学校給食費に関する規則",
             "assistance": "経済的に就学困難と認定された世帯は給食実食数分を就学援助として支給",
-            "payment": "学校指定の口座振替または現金で納付"
+            "payment": "学校指定の口座振替または現金で納付",
+            "userFacingEvidence": "学校給食課ページと2026年度献立表で現行の給食実施を確認。月額は現行給食費規則で確認"
           },
           "source": {
             "url": "https://www.city.fujieda.shizuoka.jp/static/reiki_int/reiki_honbun/g315RG00001497.html",
             "checkedAt": "2026-07-22"
-          }
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.fujieda.shizuoka.jp/education/kyushoku/index.html",
+              "checkedAt": "2026-07-25",
+              "description": "学校給食の利用者向け入口ページ"
+            },
+            {
+              "url": "https://www.city.fujieda.shizuoka.jp/soshiki/kyoiku/gakkokyushoku/gyomu/26031.html",
+              "checkedAt": "2026-07-25",
+              "description": "2026年度の小中学校給食献立表"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -23239,9 +23318,16 @@
             "application": "在籍校または教育委員会へ申請"
           },
           "source": {
-            "url": "https://www.town.nishiizu.shizuoka.jp/reiki/reiki_honbun/r153RG00000764.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.town.nishiizu.shizuoka.jp/kakuka/kyouiku/gakko/syukgaku.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.nishiizu.shizuoka.jp/reiki/reiki_honbun/r153RG00000764.html",
+              "checkedAt": "2026-07-25",
+              "description": "就学援助費の対象費目・支給根拠を定める要綱"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -23925,7 +24011,7 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "経済的理由で就学が困難な小中学生の保護者へ、学校給食費を含む就学援助を行う。",
+          "summary": "経済的理由で就学が困難な小中学生の保護者への就学援助を利用者向けページで確認し、要綱では学校給食費を援助対象に含む。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
@@ -23938,9 +24024,16 @@
             "generalFee": "一般世帯の現行給食費は公式確認範囲を超えて推測しない"
           },
           "source": {
-            "url": "https://www.fuji-oyama.jp/oyama/reiki/reiki_honbun/g340RG00000609.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.fuji-oyama.jp/page/3571.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.fuji-oyama.jp/oyama/reiki/reiki_honbun/g340RG00000609.html",
+              "checkedAt": "2026-07-25",
+              "description": "就学援助の対象費目に学校給食費を含むことを定める要綱"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -25547,19 +25640,16 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "東京圏から瀬戸市へ移住し、就業・起業等の要件を満たす人へ移住支援金を交付する。",
+          "status": "unavailable",
+          "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "UIJターン就業・創業支援事業における移住支援金",
-            "single": "単身60万円",
-            "household": "2人以上の世帯100万円",
-            "condition": "東京23区在住または東京圏から23区への通勤歴等があり、対象就業・テレワーク・関係人口・起業等の要件を満たすこと",
-            "residence": "申請時に転入後1年以内で、申請後5年以上継続して居住する意思があること",
-            "deadline": "2026年度は2026年12月28日まで。予定件数到達見込みのため事前相談が必要"
+            "confirmedGeneralProgram": "東京圏から瀬戸市へ移住し、就業・起業等の要件を満たす方へ世帯100万円・単身60万円の移住支援金を交付する。",
+            "classificationReview": "東京一極集中是正と人材確保を目的とする一般移住支援で、子育て世帯固有の住宅条件・子ども加算を現行公式ページで確認できないため、子育て世帯向け住宅支援として登録しない。",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
-            "url": "https://www.city.seto.aichi.jp/docs/2019/05/20/00096/index.html",
-            "checkedAt": "2026-07-22"
+            "url": "https://www.city.seto.aichi.jp/docs/2019/05/20/00096/",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -30682,22 +30772,30 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "経済的理由で就学困難と認められる世帯へ、学校給食費を含む就学援助を行う。",
+          "summary": "就学援助に加え、令和8年度は中学校給食の食材高騰分を市が補助し、保護者負担の増加を防ぐ。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "program": "就学援助制度",
-            "condition": "生活保護世帯またはこれに準ずる程度に困窮し、所得基準等の審査で認定された世帯",
-            "elementary": "学校給食費の援助範囲は年額10,800円、全学年対象",
-            "juniorHigh": "学校給食費の援助範囲は年額66,600円、全学年対象",
-            "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+            "program": "就学援助制度および中学校給食費補助事業",
+            "condition": "就学援助は生活保護世帯またはこれに準ずる程度に困窮し、所得基準等の審査で認定された世帯が対象",
+            "elementary": "就学援助認定世帯の学校給食費援助範囲は年額10,800円、全学年対象",
+            "juniorHigh": "就学援助認定世帯の学校給食費援助範囲は年額66,600円、全学年対象",
+            "generalSupport": "令和8年4月から令和9年3月まで、中学校給食の食材価格高騰分を市が補助し、給食の質を維持しながら保護者負担の増加を防止する",
+            "supportBudget": "6,600,000円",
+            "generalFee": "一般世帯の通常徴収額は公式確認範囲を超えて推測しない"
           },
           "source": {
-            "url": "https://www.city.yatomi.lg.jp/kurashi/1000269/1000290/1000274.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.city.yatomi.lg.jp/_res/projects/default_project/_page_/001/007/139/R8kouka.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.yatomi.lg.jp/kurashi/1000269/1000290/1000274.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -31683,8 +31781,8 @@
             "fee": "有料。処理券の現行額は販売所または最新の町案内で確認"
           },
           "source": {
-            "url": "https://www.town.toyoyama.lg.jp/kurashi/sigen/1000736.html",
-            "checkedAt": "2026-07-22"
+            "url": "https://www.town.toyoyama.lg.jp/kurashi/sigen/1007929/1000738.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
@@ -33049,20 +33147,25 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "空き家バンク物件の賃貸・購入・改修等を支援し、移住・定住を促進する。",
+          "status": "unavailable",
+          "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "南知多町空き家バンク制度補助金",
-            "types": "空き家の登録補助、空き家対策総合支援事業の改修費補助等",
-            "condition": "居住者と物件が空き家バンクに登録され契約が成立し、税の滞納等がないこと",
-            "residence": "総合支援事業補助は物件へ10年以上定住する意思が必要",
-            "contractor": "改修は町内に営業所等を有する事業者が施工すること",
-            "application": "事前相談のうえ防災交通課へ申請。補助額は現行の金額一覧・要綱で確認"
+            "reason": "確認できた空き家バンク制度補助金は、空き家バンク登録・契約・10年以上の定住等を要件とする一般移住・空き家制度で、子育て・新婚世帯固有の対象要件がない。",
+            "excludedProgram": "南知多町空き家バンク制度補助金",
+            "excludedConditions": "居住者・物件の空き家バンク登録、契約成立、税滞納なし、10年以上定住意思等",
+            "evidence": "2026年度の利用者向け公式子育て情報と住宅情報から、子育て・新婚世帯固有の住宅制度を確認できない"
           },
           "source": {
             "url": "https://www.town.minamichita.lg.jp/akiya/1000973.html",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.minamichita.lg.jp/kosodate/shien/1001282.html",
+              "checkedAt": "2026-07-25",
+              "description": "2026年度子育て支援案内の入口"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -33223,19 +33326,26 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "新築・建売住宅の取得に10万円、空き家バンク登録中古住宅の購入に40万円などを補助する。",
+          "summary": "同一世帯に子どもが1人以上いる世帯、または夫婦のいずれかが40歳未満の世帯へ、新築・建売住宅の取得費を10万円補助する。",
           "details": {
-            "newHousing": "新築住宅の建設または建売住宅の購入は10万円",
-            "localBusinessAddition": "町内事業者を利用した新築・購入は5万円を追加",
-            "usedHousing": "空き家バンク登録中古住宅の購入は40万円",
-            "renovation": "空き家バンクを活用して町外から移住し、登録物件を取得・賃借した場合の改修費は上限40万円",
-            "condition": "定住意思、町税滞納なし、住宅・契約・居住等の各要件を満たすこと",
-            "application": "契約・工事前に建設課へ制度適用を確認"
+            "program": "美浜町新築住宅取得費補助金",
+            "target": "同一世帯内に子どもを1人以上有する人、または夫婦のいずれかが40歳未満の人で、町内に5年以上定住する見込み等の要件を満たす世帯",
+            "support": "新築住宅の建設または購入は10万円",
+            "localBusinessAddition": "町内事業者の関与により新築・購入した場合は5万円を加算",
+            "housingCondition": "居住面積50平方メートル以上など、要綱の住宅要件を満たすこと",
+            "excludedGeneralProgram": "空き家バンク登録中古住宅購入・改修等の一般移住制度は、本比較項目の主制度にしない"
           },
           "source": {
             "url": "https://www.town.aichi-mihama.lg.jp/kurashi-tetsuzuki/zumai/hojokin-joseikin/1487.html",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aichi-mihama.lg.jp/section/reiki_int/reiki_honbun/i562RG00000659.html",
+              "checkedAt": "2026-07-25",
+              "description": "子ども1人以上または夫婦いずれか40歳未満という補助対象要件"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -33684,22 +33794,36 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "町立小中学校の学校給食費は、児童1食150円、生徒1食175円を徴収する。",
+          "summary": "令和8年度も町立小中学校の学校給食費として、児童1食150円、生徒1食175円を徴収する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
+            "fiscalYear": "令和8年度",
             "standardUnitPrice": "児童300円、生徒350円",
             "chargedUnitPrice": "児童150円、生徒175円",
             "monthlyAmount": "徴収単価に当月の学校給食予定回数を乗じた額",
             "collection": "4月から翌年3月まで、原則として各月末日に口座振替",
-            "adjustment": "転入・転出、連続5日以上の欠食、食物アレルギー、学級閉鎖、ラーケーション等は規則に基づき調整"
+            "adjustment": "転入・転出、連続5日以上の欠食、食物アレルギー、学級閉鎖、ラーケーション等は規則に基づき調整",
+            "fiscalYearRevenue": "令和8年度当初予算に小学校給食費3,120,000円、中学校給食費1,519,000円を計上",
+            "elementaryBreakdown": "田口小810,000円、清嶺小622,000円、名倉小783,000円、津具小904,000円、過年度分1,000円",
+            "middleBreakdown": "設楽中1,518,000円、過年度分1,000円"
           },
           "source": {
             "url": "https://www.town.shitara.lg.jp/online/reiki/reiki_honbun/r253RG00000698.html",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.shitara.lg.jp/uploaded/attachment/4965.pdf",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.town.shitara.lg.jp/soshiki/6/3521.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -33794,7 +33918,7 @@
       "name": "東栄町",
       "officialUrl": "https://www.town.toei.aichi.jp/",
       "status": "verified",
-      "summary": "東栄町の9制度を公式情報で調査済み。病児・病後児保育のみ具体的条件を確認できずunavailableとした。",
+      "summary": "東栄町の9制度を公式情報で調査済み。令和8年度は小中学校の給食費を全額補助し、病児・病後児保育のみ具体的条件を確認できずunavailableとした。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -33851,21 +33975,35 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "経済的理由で就学が困難な世帯へ学校給食費等の一部を援助する。",
+          "summary": "令和8年度は小学校・中学校の給食費を全額補助し、保護者負担を0円とする。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "program": "就学援助制度",
-            "coverage": "学用品費・学校給食費等の一部",
-            "condition": "町基準による認定が必要",
-            "generalFee": "一般世帯の現行給食費は推測しない"
+            "program": "令和8年度学校給食費負担軽減・中学校給食費減免事業",
+            "fiscalYear": "令和8年度",
+            "elementary": "給食費負担軽減交付金により全額補助",
+            "middle": "町負担による半額補助から、物価高騰対応重点支援地方創生臨時交付金の活用により全額補助へ拡大",
+            "middleUnitPrice": "1食330円",
+            "middleBudget": "3,926,000円（一般財源1,963,000円、交付金1,963,000円）",
+            "parentBurden": "0円",
+            "purpose": "物価高騰の影響を受ける子育て世帯の家計負担を軽減する"
           },
           "source": {
-            "url": "https://www.town.toei.aichi.jp/1877.htm",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.town.toei.aichi.jp/secure/7724/r8yosanmanga.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.toei.aichi.jp/5696.htm",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.town.toei.aichi.jp/1877.htm",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -34413,18 +34551,18 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "東京23区から要件を満たして移住した人へ、単身60万円・世帯100万円の支援金を交付する。",
+          "summary": "東京23区から要件を満たして移住する世帯へ100万円、単身者へ60万円を交付し、18歳未満の世帯員1人につき30万円を加算する。",
           "details": {
-            "single": "60万円",
-            "household": "100万円",
-            "childAddition": "18歳未満の帯同者1人につき30万円加算",
-            "requirements": "東京23区在住・通勤歴と、対象就業・テレワーク・関係人口・起業等の要件",
-            "application": "転入後3か月以上1年以内",
-            "residence": "申請日から5年以上継続居住する意思が必要"
+            "program": "四日市市移住支援事業",
+            "target": "東京23区の在住者または通勤者が四日市市へ移住し、就業・起業等の要件を満たす場合",
+            "amount": "単身60万円、2人以上世帯100万円",
+            "childAddition": "申請年度の4月1日時点で18歳未満の世帯員を帯同する場合、1人につき30万円を加算",
+            "residence": "申請日から5年以上継続して居住する意思等が必要",
+            "fiscalYear": "2026年4月1日改正後の条件"
           },
           "source": {
             "url": "https://www.city.yokkaichi.lg.jp/www/contents/1589692436765/index.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -34816,7 +34954,7 @@
       "name": "桑名市",
       "officialUrl": "https://www.city.kuwana.lg.jp/",
       "status": "verified",
-      "summary": "桑名市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "桑名市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。令和8年度学校給食費は地区・学年別の保護者負担額を確認した。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -34877,22 +35015,48 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "経済的理由で就学が困難と認められる世帯へ、学校給食費を含む就学援助を行う。",
+          "summary": "令和8年度は小学校・義務教育学校前期課程の保護者負担を0円とし、幼稚園・中学校等は地区別の負担額と物価高騰分を補助する。",
           "eligibility": {
-            "minAgeMonths": 72,
+            "minAgeMonths": 36,
             "maxAgeYears": 15
           },
           "details": {
-            "program": "就学援助制度",
-            "target": "桑名市立小中学校・義務教育学校に在籍し、経済的理由で就学が困難と認定された児童生徒の保護者",
-            "coverage": "学校給食費、学用品費、修学旅行費等",
-            "mealSupport": "認定期間中の学校給食費の実費を援助",
-            "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+            "fiscalYear": "令和8年度当初予算案",
+            "program": "学校給食費・食材費等高騰緊急対策事業",
+            "kuwanaDistrict": {
+              "kindergarten": "保護者負担月額5,000円、物価高騰分補助月額600円、給食費総額月額5,600円",
+              "elementaryGrades1to3": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額750円、給食費総額月額5,950円",
+              "elementaryGrades4to6": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額900円、給食費総額月額6,100円",
+              "middleSchoolLunch": "保護者負担1食350円、物価高騰分補助1食45円、給食費総額1食395円"
+            },
+            "tadoDistrict": {
+              "earlyGrades1to3": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額750円、給食費総額月額5,950円",
+              "earlyGrades4to6": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額900円、給食費総額月額6,100円",
+              "laterGrades7to9": "保護者負担月額5,900円、物価高騰分補助月額650円、給食費総額月額6,550円"
+            },
+            "nagashimaDistrict": {
+              "kindergarten": "保護者負担月額5,000円、物価高騰分補助月額400円、給食費総額月額5,400円",
+              "elementaryGrades1to3": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額550円、給食費総額月額5,750円",
+              "elementaryGrades4to6": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額700円、給食費総額月額5,900円",
+              "middleSchool": "保護者負担月額5,900円、物価高騰分補助月額450円、給食費総額月額6,350円"
+            },
+            "assistance": "経済的理由で就学困難と認定された世帯は、認定期間中の学校給食費実費を就学援助対象とする",
+            "note": "令和8年度当初予算参考資料に掲載された学校給食費案。地区・学校区分により負担額が異なる"
           },
           "source": {
-            "url": "https://www.city.kuwana.lg.jp/kyoikusoumu/kosodatekyouiku/school/24-11076-302-713.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.city.kuwana.lg.jp/documents/12594/toushoyosansankousiryoukouhan.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.kuwana.lg.jp/zaisei/r8tousyo.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.city.kuwana.lg.jp/kyoikusoumu/kosodatekyouiku/school/24-11076-302-713.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -35104,18 +35268,18 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "市外から移住して空き家を購入・改修する人へ、対象工事費の3分の1以内、最大50万円を補助する。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "移住促進のための空き家リノベーション等補助制度",
-            "target": "市外に連続1年以上居住し、鈴鹿市へ移住して10年以上定住する意思がある人",
-            "building": "耐震性を有し、概ね1年以上使用されていない市内の一戸建て空き家等",
-            "amount": "対象工事費の3分の1以内、上限50万円",
-            "application": "工事着手前に申請。当該年度10月31日までで予算上限あり"
+            "reason": "公式情報で確認できた制度は一般の移住・定住または空き家対策制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "移住促進のための空き家リノベーション等補助制度",
+            "excludedTarget": "市外に1年以上在住し、空き家を購入・改修して10年以上定住する移住者",
+            "excludedAmount": "対象工事費の3分の1、上限50万円",
+            "evidence": "2026年2月5日更新の利用者向けページで、子育て世帯要件なし。18歳未満加算は別の移住支援金制度"
           },
           "source": {
             "url": "https://www.city.suzuka.lg.jp/kurashi/sumai/1009632/1002597.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -35965,18 +36129,29 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "東京圏から熊野市へ移住し、就業・起業等の要件を満たす人へ、単身60万円・2人以上世帯100万円の移住支援金を交付する。",
+          "summary": "39歳以下の新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
           "details": {
-            "single": "60万円",
-            "household": "2人以上の世帯は100万円",
-            "origin": "東京23区在住者、または東京圏の対象地域から東京23区へ通勤していた人等",
-            "employment": "マッチング支援対象求人への就業、専門人材、テレワーク、関係人口、起業支援金交付等の所定要件",
-            "condition": "転入後の居住継続意思等、要綱の移住・就業要件を満たすこと"
+            "program": "熊野市結婚新生活支援事業",
+            "target": "夫婦双方が39歳以下で、所得等の要件を満たし、対象住宅が熊野市内にある新婚世帯",
+            "covered": "住宅取得費、住宅賃借費、住宅リフォーム費、引越費用",
+            "amount": "1世帯上限30万円。夫婦とも婚姻日に29歳以下の場合は上限60万円",
+            "currentStatus": "2026年度の地域少子化対策重点推進交付金実施計画で継続実施を確認",
+            "application": "対象期間・必要書類は申請年度の市案内を確認し、福祉事務所児童福祉係へ申請する。"
           },
           "source": {
-            "url": "https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00001136.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.city.kumano.lg.jp/administration/?content=2233",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.kumano.lg.jp/life/?category=139",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00001014.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -36791,22 +36966,34 @@
         },
         "postpartumCare": {
           "status": "verified",
-          "summary": "産後1年未満の産婦へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
+          "summary": "産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "target": "町内に住所がある産後1年未満の産婦で、心身の不調や育児不安等があり、医療行為を必要としない人",
+            "target": "東員町に住所がある産後1年未満の母親と赤ちゃんで、心身の不調、育児不安、母乳ケア、家族援助不足等により助産師の保健指導を希望する人。町保健師の面談・承認が必要",
             "types": "短期入所型、通所型、居宅訪問型",
-            "care": "母体の身体・心理ケア、授乳・乳房ケア、育児手技の指導・相談、生活支援",
-            "fee": "利用区分・世帯区分に応じた自己負担あり",
-            "application": "こども家庭センターへ申請し、利用承認を受ける"
+            "care": "母親の心身・生活面のケア、乳房ケア、授乳指導、沐浴・抱き方・発育発達・スキンケア等の育児指導、育児相談",
+            "limit": "3種を組み合わせて7日まで。居宅訪問型は令和6年4月1日生まれ以降、体験チケットで1回追加",
+            "shortStayFee": "1泊2日6,000円。以後1日ごとに3,000円追加",
+            "dayCareFee": "1日2,000円",
+            "homeVisitFee": "1回1,200円",
+            "reduction": "町民税非課税世帯・生活保護世帯は自己負担を減免",
+            "application": "申請書を子ども家庭課へ提出。妊娠32週から申請可能",
+            "facilities": "利用者向けページに令和8年度施設一覧を掲載"
           },
           "source": {
-            "url": "https://www.town.toin.lg.jp/section/reiki/reiki_honbun/i621RG00000736.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.town.toin.lg.jp/soshiki/1009/3/1/473.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.toin.lg.jp/section/reiki/reiki_honbun/i621RG00000736.html",
+              "checkedAt": "2026-07-25",
+              "description": "産後ケア事業の制度根拠を定める実施要綱"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -36829,19 +37016,18 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "町外から移住して空き家を改修する人へ、工事費の3分の2を上限100万円まで補助する。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "東員町空家リフォーム支援事業",
-            "amount": "対象改修工事費の3分の2",
-            "maximum": "上限100万円",
-            "condition": "おおむね1年以上使用されていない空き家を改修し、完了後10年以上居住すること等",
-            "contractor": "三重県内に本店・支店・営業所を有する建設業者による工事",
-            "application": "工事着手前に建設課との事前協議が必要"
+            "reason": "公式情報で確認できた制度は一般の移住・定住または空き家対策制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "東員町空家リフォーム支援事業",
+            "excludedTarget": "6か月以上町外に居住し、町内空家へ転入して10年間居住する移住者等",
+            "excludedAmount": "改修工事費の3分の2、上限100万円",
+            "evidence": "公式利用者向けページで、子育て世帯要件なし"
           },
           "source": {
             "url": "https://www.town.toin.lg.jp/soshiki/1011/2/2/1/764.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -37177,19 +37363,19 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "住宅に困窮する一定の収入基準以下の世帯を対象に、町営住宅の入居募集を行う。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "朝日町営住宅",
-            "example": "埋縄団地3DK等を随時・定期募集",
-            "conditions": "町内に住所または勤務先があり、同居親族がいて、住宅に困窮し、公営住宅法の収入基準を満たすこと等",
-            "selection": "必要書類を提出した人から条例に基づき選考。募集により先着順の場合あり",
-            "application": "管理サポート課で申込書を受け取り提出",
-            "note": "募集住戸・期間・家賃は募集ごとに確認"
+            "reason": "公式情報で確認できた制度は一般の耐震・移住・空き家・公営住宅制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "朝日町営住宅入居募集",
+            "excludedTarget": "町内在住・在勤、同居親族、住宅困窮、収入基準等を満たす世帯",
+            "excludedAmount": "公営住宅法・町条例に基づく町営住宅への入居募集",
+            "evidence": "令和8年募集要件に子育て世帯を対象とする優先条件・固有支援なし",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
             "url": "https://www2.town.asahi.mie.jp/www/contents/1765953791058/index.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -37391,179 +37577,6 @@
           },
           "source": {
             "url": "https://www.town.kawagoe.mie.jp/kurashi/bousai/1001533/1002416/1001534.html",
-            "checkedAt": "2026-07-22"
-          }
-        }
-      }
-    },
-    {
-      "code": "24361",
-      "prefectureCode": "24",
-      "prefecture": "三重県",
-      "name": "菰野町",
-      "officialUrl": "https://www2.town.komono.mie.jp/",
-      "status": "verified",
-      "summary": "菰野町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-      "services": {
-        "childMedical": {
-          "status": "verified",
-          "summary": "子どもの保険診療自己負担分を助成し、令和8年9月受診分から18歳年度末まで対象を拡大する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 18
-          },
-          "details": {
-            "ageCondition": "令和8年8月受診分までは15歳年度末まで、令和8年9月受診分から18歳年度末まで",
-            "coverage": "入院・外来の医療保険適用自己負担分",
-            "incomeLimit": "令和6年9月受診分から所得制限を廃止",
-            "payment": "対象年齢の県内受診は受給資格証による現物給付、条件により償還払い",
-            "excluded": "他の医療給付、高額療養費・付加給付、保険適用外費用等は対象外"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/site/question/2203.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "sickChildCare": {
-          "status": "verified",
-          "summary": "聖マリアこども園で、病気の回復期にある児童を対象とした病後児保育を実施する。",
-          "eligibility": {
-            "minAgeMonths": 11,
-            "maxAgeYears": 5
-          },
-          "details": {
-            "facility": "聖マリアこども園",
-            "service": "病後児保育",
-            "condition": "病気の回復期で通常の集団保育が難しい児童",
-            "ageNote": "公式施設一覧では聖マリアこども園の受入年齢を11か月～5歳児と掲載。病後児保育の個別条件は施設へ確認",
-            "application": "施設へ事前登録・予約",
-            "fee": "利用料は施設へ確認"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/1431.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "childcareFee": {
-          "status": "verified",
-          "summary": "3～5歳児の基本保育料は無料で、0～2歳児は住民税額等に応じて算定する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 5
-          },
-          "details": {
-            "freeAges": "3～5歳児の基本的な利用者負担額は無償",
-            "underThree": "0～2歳児は保護者の市町村民税額等により保育料を算定。非課税世帯は無償化対象",
-            "mealCosts": "給食費・各園徴収の雑費等は無償化対象外",
-            "publicMealFee": "公立幼稚園部の副食費月4,000円、公立保育園部は月4,900円（土曜除く）",
-            "exemption": "市町村民税額やきょうだい区分により副食費免除となる場合がある"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/1445.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "schoolMeals": {
-          "status": "verified",
-          "summary": "令和8年度の町立小学校給食費は、国と町の負担軽減により保護者負担を0円とする。",
-          "eligibility": {
-            "minAgeMonths": 72,
-            "maxAgeYears": 15
-          },
-          "details": {
-            "fiscalYear": "令和8年度",
-            "elementaryOriginalFee": "月額5,900円",
-            "elementarySupport": "国の負担軽減5,200円と町の物価高騰対策700円を適用",
-            "elementaryFinalFee": "保護者負担0円",
-            "juniorHigh": "中学校給食の現行条件は町教育委員会の案内を確認",
-            "note": "令和9年度以降は改めて公表予定"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/site/kyouiku/9712.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "postpartumCare": {
-          "status": "verified",
-          "summary": "生後12か月未満の母子へ、訪問・デイケア・宿泊型の産後ケアを15回まで提供する。",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 1
-          },
-          "details": {
-            "target": "菰野町に住所がある生後12か月未満の乳児と母親",
-            "types": "訪問型、デイケア型、宿泊型",
-            "limit": "合計15回",
-            "fee": "0円～3,000円。回数・類型・世帯区分により異なる",
-            "application": "訪問・デイケア1～5回目は原則申請不要。宿泊型および6～15回目は申請が必要"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/2268.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "temporaryChildcare": {
-          "status": "verified",
-          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-          "eligibility": {
-            "minAgeMonths": 6,
-            "maxAgeYears": 3
-          },
-          "details": {
-            "program": "こども誰でも通園制度（乳児等通園支援事業）",
-            "facility": "菰野東こども園",
-            "condition": "保育所、幼稚園、認定こども園等に在園していない児童",
-            "limit": "児童1人につき月10時間まで",
-            "fee": "1時間300円",
-            "hours": "平日8時30分～11時30分、13時30分～16時30分。給食・おやつの提供なし"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/8/7040.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "housingSupport": {
-          "status": "verified",
-          "summary": "移住・定住希望者へ空き家バンク等の住宅・生活支援情報をまとめて案内する。",
-          "details": {
-            "program": "移住・定住に関する支援",
-            "housing": "空き家バンクで町内空き家の売買・賃貸情報を提供",
-            "additionalSupport": "県内居住・就業等を条件とする奨学金返還支援等を案内",
-            "purpose": "移住・定住の促進と地域活性化",
-            "note": "物件の契約条件や仲介手数料は担当宅地建物取引業者へ確認"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/1/10199.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "bulkyWaste": {
-          "status": "verified",
-          "summary": "粗大ごみは不燃物処理場へ直接搬入でき、対象世帯は1点1,100円の戸別収集を利用できる。",
-          "details": {
-            "definition": "一辺の最長が50センチメートルを超え、町で処理可能な廃棄物",
-            "directCarry": "令和8年7月1日から不燃物処理場へ分解せず直接搬入可能",
-            "homeCollection": "65歳以上のみの世帯、一定の要介護者・障害者がいる世帯等が対象",
-            "fee": "戸別収集は1点1,100円、年間5点まで",
-            "method": "申込時に手数料を払い、シールを貼って収集日の8時30分までに軒先へ排出"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/9/1738.html",
-            "checkedAt": "2026-07-22"
-          }
-        },
-        "disasterPrevention": {
-          "status": "verified",
-          "summary": "洪水・土砂災害・活断層等を掲載した地区別防災マップを多言語で公開する。",
-          "details": {
-            "map": "菰野町防災マップ（令和5年3月更新）",
-            "coverage": "洪水浸水区域、土砂災害警戒区域、活断層、避難所等",
-            "districts": "町内地区別に公開",
-            "languages": "日本語、英語、ポルトガル語、ベトナム語、中国語、韓国語",
-            "additionalMap": "ため池決壊時の浸水想定を示すため池ハザードマップも公開"
-          },
-          "source": {
-            "url": "https://www2.town.komono.mie.jp/soshiki/2/1216.html",
             "checkedAt": "2026-07-22"
           }
         }
@@ -38210,18 +38223,18 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "空き家バンク登録物件を5年以上居住予定で改修する場合、リフォーム費用を上限150万円まで補助する。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "空家リフォーム事業補助金",
-            "target": "空き家バンク登録物件に町内外から入居し、5年以上居住する見込みの人",
-            "amount": "対象経費の10分の10、上限150万円",
-            "relatedSupport": "成約者の仲介・引越費用は2分の1、上限10万円。登録者支援は上限5万円",
-            "application": "工事や支出前にまちづくり推進課へ申請"
+            "reason": "公式情報で確認できた制度は一般の移住・定住または空き家対策制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "玉城町空家リフォーム事業補助金等",
+            "excludedTarget": "空き家バンク登録物件へ町内外から入居し5年以上居住する人等",
+            "excludedAmount": "空家リフォーム上限150万円、成約者の引越等上限10万円",
+            "evidence": "公式利用者向けページで、子育て世帯要件なし。結婚新生活支援は別制度かつ令和7年度期限"
           },
           "source": {
             "url": "https://kizuna.town.tamaki.mie.jp/kurashi/ijyuteijyu/akiyahojo.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -38497,21 +38510,23 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "町立小中学校の児童生徒について、保護者が負担する学校給食費の8割を町が助成する。",
+          "summary": "町立小中学校の児童生徒について、保護者が負担する学校給食費を町が全額助成し、保護者への請求はない。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "program": "小中学校給食費補助制度（エンゼル2）",
+            "program": "児童生徒給食費補助補助金（エンゼル2）",
             "target": "大紀町立小中学校に通学する児童生徒",
-            "subsidy": "保護者負担額の月額1人当たり8割",
-            "method": "町が対象額を各学校の給食会計へ支出し、学校は助成後の額を請求",
-            "purpose": "保護者負担の軽減と子育て環境の改善"
+            "subsidy": "保護者が負担する学校給食費の全額",
+            "parentPayment": "0円。保護者への給食費請求なし",
+            "method": "町が対象金額を各学校の給食会計へ直接支出",
+            "purpose": "保護者負担の軽減、子育て環境の改善、児童生徒の健やかな成長支援",
+            "currentBasis": "大紀町公式ページが2026年4月7日に更新され、全額助成と保護者請求なしを明記"
           },
           "source": {
             "url": "https://www.town.taiki.mie.jp/soshiki/kyoikuiinkai/gyomu/school/409.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-25"
           }
         },
         "postpartumCare": {
@@ -42097,28 +42112,37 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "町学校給食センターが幼稚園・小中学校へ給食を提供し、掲載月額は幼稚園3,700円、小学校4,000円、中学校4,400円。",
+          "summary": "現行例規により、小学校は月額4,000円・年額44,000円、中学校は月額4,400円・年額48,400円。",
           "eligibility": {
             "minAgeMonths": 36,
             "maxAgeYears": 15
           },
           "details": {
-            "kindergarten": "月額3,700円、1食単価210円",
-            "elementary": "月額4,000円、1食単価230円",
-            "middle": "月額4,400円、1食単価260円",
+            "kindergarten": "月額3,700円（主食400円・副食3,300円）、標準1食単価210円",
+            "elementary": "月額4,000円、年額44,000円、標準1食単価230円",
+            "middle": "月額4,400円、年額48,400円、標準1食単価260円",
             "provider": "愛荘町学校給食センター",
             "allergy": "一般食に加えアレルギー対応食を調理",
-            "assistance": "経済的理由で就学困難と認められる世帯は、毎年度申請により学校給食費等の就学援助対象となる場合がある",
-            "note": "町公式ページに掲載された標準額であり、減免・徴収月等は学校または給食センターへ確認が必要"
+            "assistance": "経済的理由で就学困難と認められる世帯は、令和8年度も毎年度申請により学校給食費等の就学援助対象となる場合がある",
+            "remission": "天災その他特別な事由がある場合は、給食費の徴収猶予または一部・全部の減免が可能",
+            "currentBasis": "町公式の現行例規に負担額が掲載され、令和8・9年度の賄材料納入手続と令和8年度の給食実施を確認"
           },
           "source": {
-            "url": "https://www.town.aisho.shiga.jp/kosodate/kyushoku/gaiyou/1668.html",
-            "checkedAt": "2026-07-22"
+            "url": "https://www.town.aisho.shiga.jp/section/reiki_honbun/r304RG00001218.html",
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
+              "url": "https://www.town.aisho.shiga.jp/kosodate/kyushoku/gaiyou/1668.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.town.aisho.shiga.jp/soshiki/kyushoku/sangyujigyusya/nyusatusankasikaku/3933.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
               "url": "https://www.town.aisho.shiga.jp/soshiki/kyoiku/1/1/tetuduki/932.html",
-              "checkedAt": "2026-07-24"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -42233,7 +42257,7 @@
       "name": "豊郷町",
       "officialUrl": "https://www.town.toyosato.shiga.jp/",
       "status": "verified",
-      "summary": "豊郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認し、詳細条件を取得できない2制度は確認事項として整理した。",
+      "summary": "豊郷町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認し、こども誰でも通園制度の詳細条件のみ継続確認とした。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -42334,20 +42358,22 @@
           ]
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "助産所・医療機関で健康相談や育児相談等を行う産後ケア事業は確認できたが、対象期間・類型・利用回数・料金の現行条件を本文から確定できない。",
+          "status": "verified",
+          "summary": "産婦の心身のケアのため、助産所・医療機関で健康相談、赤ちゃんの育児相談、助言等の産後ケアを実施する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
           "details": {
-            "confirmed": "産婦の心身ケア、赤ちゃんの育児相談、助言等を助産所または医療機関で実施",
-            "missing": "対象となる産後月齢、宿泊・通所・訪問等の類型、利用上限、自己負担額、申請手順",
-            "action": "保健福祉課または公式ページ掲載の産後ケア案内チラシで最新条件を確認する必要がある"
+            "provider": "助産所・医療機関",
+            "care": "産婦のからだ・心のケア、健康相談、赤ちゃんの育児相談、助言等",
+            "currentConfirmation": "2026年5月28日更新の町公式母子保健サービスページで現行実施を確認",
+            "application": "対象期間、利用類型、回数、料金等の詳細は公式掲載チラシまたは保健福祉課で確認"
           },
           "source": {
             "url": "https://www.town.toyosato.shiga.jp/0000000203.html",
-            "checkedAt": "2026-07-22"
-          },
-          "notes": [
-            "公式ページ上で事業の実施は確認済み。取得できなかった添付チラシの内容を推測していない。"
-          ]
+            "checkedAt": "2026-07-25"
+          }
         },
         "temporaryChildcare": {
           "status": "unavailable",
@@ -42472,23 +42498,30 @@
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "概ね10歳未満の町内児童が彦根市内の病児保育室を利用できる。",
+          "summary": "甲良町在住の概ね10歳未満の児童が、湖東定住自立圏の彦根市病児保育室こあらを利用できる。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 9
           },
           "details": {
-            "condition": "湖東圏域在住で、病気または回復期にあり家庭保育ができない概ね10歳未満の児童",
-            "facility": "病児保育室こあら",
-            "hours": "平日8時30分～18時",
+            "condition": "彦根市・愛荘町・豊郷町・甲良町・多賀町在住で、病気または回復期にあり、保護者の就労等により家庭保育が困難な概ね10歳未満の児童",
+            "facility": "病児保育室こあら（彦根市戸賀町36番地6、医療法人藤野こどもクリニック内）",
+            "hours": "平日8時30分～18時。土日祝、お盆、年末年始は休室",
             "capacity": "6人",
-            "fee": "4時間以内1,000円、4時間超2,000円。生活保護世帯は全額、住民税非課税世帯は半額助成",
-            "application": "原則前日までに施設へ連絡し、当日の医師診察後に利用可否を決定"
+            "fee": "4時間以内1,000円、4時間超2,000円。生活保護世帯は全額、前年度市町村民税非課税世帯は利用後に半額助成。個別実費・診察費等は別途",
+            "application": "原則前日までに施設へ連絡し、当日の実施機関医師による診察後、利用可能と判断された場合に入室"
           },
           "source": {
-            "url": "https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00000700.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.city.hikone.lg.jp/kosodate/kosodate_shien/2/3/7/11495.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00000700.html",
+              "checkedAt": "2026-07-25",
+              "description": "甲良町民の利用助成と対象範囲を定める町要綱"
+            }
+          ]
         },
         "childcareFee": {
           "status": "verified",
@@ -48953,20 +48986,18 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "市外から転入して市内空家を改修する所有者に、リフォーム費用の一部を補助する。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "2026年度岸和田市空家リフォーム事業補助金",
-            "target": "市外に3か月以上居住し、市内空家へ転入して10年以上定住する意思がある個人所有者",
-            "amount": "対象経費の3分の2、上限100万円",
-            "housing": "1981年6月1日以降建築、または耐震性が確認済み、もしくはリフォームと同時に耐震改修を行う木造・混構造住宅",
-            "capacity": "3戸程度、申込先着順",
-            "applicationPeriod": "2026年5月7日から2026年12月18日まで",
-            "completion": "工事完了後30日以内または2027年3月1日の早い日までに実績報告"
+            "reason": "公式情報で確認できた制度は一般の移住・定住または空き家対策制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "令和8年度岸和田市空家リフォーム事業補助金",
+            "excludedTarget": "市外に3か月以上居住し、市内空家へ転入して10年以上定住する個人所有者",
+            "excludedAmount": "対象経費の3分の2、上限100万円",
+            "evidence": "2026年5月7日更新の利用者向けページで、子育て世帯要件なし"
           },
           "source": {
             "url": "https://www.city.kishiwada.lg.jp/page/122-akiya-reform.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -50353,26 +50384,20 @@
           ]
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "旧耐震木造住宅の耐震診断・設計・改修工事・耐震シェルター設置費を補助する。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "target": "原則として昭和56年5月31日以前に建築された守口市内の木造住宅",
-            "diagnosis": "耐震診断費の11分の10、1戸5万円、床面積1平方メートル当たり1,000円のうち低い額",
-            "design": "耐震改修計画策定費の7割、上限10万円",
-            "renovation": "耐震改修工事費または50万円のうち低い額",
-            "shelter": "設置工事費の10分の9または50万円のうち低い額",
-            "conditions": "所得、税滞納、居住、耐震評点等の要件があり契約前の申請が必要"
+            "reason": "公式情報で確認できた制度は一般の耐震・移住・空き家・公営住宅制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "木造住宅耐震改修補助等",
+            "excludedTarget": "昭和56年5月31日以前に建築された耐震性不足の市内木造住宅の所有者等",
+            "excludedAmount": "耐震診断・計画策定・改修工事・耐震シェルター設置等を補助",
+            "evidence": "2026年度の耐震化施策で、子育て世帯を対象要件とする規定なし",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
-            "url": "https://www.city.moriguchi.osaka.jp/gyoseijoho/seisaku_keikaku/machidukuri/4/3/2/9438.html",
-            "checkedAt": "2026-07-24"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.moriguchi.osaka.jp/kakukanoannai/toshiseibibu/jutakumachidukurika/taishin/1419.html",
-              "checkedAt": "2026-07-24"
-            }
-          ]
+            "url": "https://www.city.moriguchi.osaka.jp/kakukanoannai/toshiseibibu/jutakumachidukurika/taishin/1927.html",
+            "checkedAt": "2026-07-25"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
@@ -54727,7 +54752,7 @@
       "name": "大阪狭山市",
       "officialUrl": "https://www.city.osakasayama.osaka.jp/",
       "status": "verified",
-      "summary": "大阪狭山市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "大阪狭山市の子育て、教育、住宅、生活、防災に関する9制度を2026年度公式情報で再確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -54738,77 +54763,87 @@
           },
           "details": {
             "target": "大阪狭山市に居住し健康保険に加入する、18歳到達後最初の3月31日までの子ども",
-            "application": "子ども医療証の交付申請が必要",
-            "coverage": "保険診療の自己負担額の一部を助成"
+            "copayment": "医療機関・訪問看護ステーションごとに1日500円まで、同じ月の3日目以降は無料。入院と通院、歯科とその他診療科は別計算。1医療機関の月上限は1,000円",
+            "pharmacy": "院外処方の薬局は自己負担なし",
+            "monthlyCap": "個人単位の月額上限は2,500円。同一世帯内の対象児童分を合算し月5,000円を超えた額も助成",
+            "excluded": "2021年11月診療分以降の入院時食事療養費は助成対象外",
+            "reimbursement": "医療証交付前・未提示・府外受診・治療用装具・個人月2,500円超・世帯月5,000円超は申請により還付",
+            "application": "健康保険資格情報が分かる書類等を添えて医療証を申請"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/sosiki/kenkoufukushibu/hokennenkin/iryoukenkou/iryoujosei/1410405577384.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "sickChildCare": {
           "status": "verified",
-          "summary": "病気の回復期にあり安静が必要な就学前児童を、専用の病後児保育室で預かる。",
+          "summary": "病気の回復期にあり安静が必要な就学前児童を専用の病後児保育室で預かる。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
             "target": "保護者の就労等により家庭保育が困難で、病気の回復期にあり安静確保が必要な0歳児から5歳児",
-            "facility": "病後児保育室（東野東1丁目500-1）",
-            "hours": "午前8時から午後6時まで（日曜・祝日・年末年始を除く）",
-            "fee": "0～2歳児3,100円、3～5歳児2,100円。生活保護・市民税非課税世帯は免除",
-            "application": "事前に空き状況を確認し、医師の連絡票と利用申込書を提出"
+            "facility": "病後児保育室（東野東1丁目500-1）。事業委託先は大野台こども園",
+            "hours": "午前8時から午後6時まで。日曜・祝日、12月29日から1月3日を除く",
+            "fee": "年度4月1日時点で0～2歳児3,100円、3～5歳児2,100円。生活保護・市民税非課税世帯は免除",
+            "application": "利用状況を電話確認し、医療機関で連絡票の交付を受け、利用申込書とともに提出"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/sosiki/kodomoseisakubu/kodomoikusei/2/1/ichiji_kyujitsu_byogoji.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "childcareFee": {
           "status": "verified",
-          "summary": "3～5歳児クラス等の保育料を無償化し、0～2歳児は市民税所得割額等に応じて決定する。",
+          "summary": "3～5歳児等と住民税非課税世帯の0～2歳児を無償化し、多子世帯の保育料を軽減する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "ageThreeAndOver": "3歳児クラスから5歳児クラスまでの保育料は無償",
-            "ageZeroToTwo": "市町村民税非課税世帯は無償。その他は保護者の市町村民税所得割額の合計額で決定",
-            "siblings": "第2子は半額、第3子以降は無償。所得要件により兄姉の年齢を問わない場合がある",
-            "excluded": "通園送迎費、食材料費、行事費等は原則保護者負担"
+            "ageThreeAndOver": "3～5歳児クラスの保育料は無償",
+            "ageZeroToTwo": "住民税非課税世帯は無償。その他は保護者の市町村民税所得割額等により決定",
+            "siblings": "第2子は半額、第3子以降は無償。所得要件により兄姉の年齢を問わず多子カウントする場合あり",
+            "mealSupport2026": "2026年度は保育所・認定こども園等の3～5歳児を対象に、給食費のうち主食費相当分を6か月間無償化",
+            "excluded": "副食費、送迎費、行事費等は原則保護者負担。ただし低所得世帯や第3子以降等は副食費免除あり"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/sosiki/kodomoseisakubu/kodomoikusei/2/1/hoikushohoikuryou.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.city.osakasayama.osaka.jp/sosiki/kodomoseisakubu/kodomoikusei/2/1566986480359.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.city.osakasayama.osaka.jp/sosiki/seisakusuishinbu/kikaku_jouhouseisaku/seisaku_keikaku/bunouneihoushin/reiwa7nendo/8443.html",
+              "checkedAt": "2026-07-25"
             }
           ]
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "令和8年度も市立小中学校の学校給食費を完全無償化する。",
+          "summary": "2026年度も市立小中学校の学校給食費を完全無償化する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
             "target": "大阪狭山市立小学校・中学校に在籍する児童生徒",
-            "fee": "令和8年度は給食費0円",
-            "continuation": "令和7年度から年間を通した完全無償化を実施し、令和8年度も継続"
+            "fee": "保護者負担なし",
+            "continuation": "2025年度から年間を通した完全無償化を実施し、2026年度も継続",
+            "support": "国制度となった小学校給食費無償化に加え、市が中学校給食費無償化を継続し、給食内容の充実を図る"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/sosiki/seisakusuishinbu/hisho/shicho_heya/shiseiuneihoushin/shiseisekoureiwa6nendo_3/8944.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.city.osakasayama.osaka.jp/sosiki/kyouikubu/kyouikushidou/1/7/1473378707819.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
@@ -54820,15 +54855,16 @@
             "maxAgeYears": 1
           },
           "details": {
-            "target": "生後1歳未満の赤ちゃんと母親",
-            "types": "ショートステイ、9時間または7時間のデイサービス、訪問",
-            "support": "育児相談、授乳・沐浴指導、乳房ケア、こころのサポート等",
-            "fee": "宿泊3,400円、9時間日帰り1,700円、7時間日帰り1,300円、訪問無料。非課税・生活保護世帯は減免あり",
-            "application": "事前申請後、利用承認通知書を受け取り実施事業者へ予約"
+            "target": "生後1歳未満の赤ちゃんと母親。発熱等の感染症疑いや医療行為が必要な場合を除く",
+            "types": "ショートステイ24時間、デイサービス9時間・7時間、訪問2時間または3時間",
+            "support": "助産師等による育児相談、授乳・沐浴指導、乳房ケア、こころのサポート等",
+            "fee": "ショートステイ1泊3,400円、デイサービス9時間1,700円、7時間1,300円、訪問無料。非課税・生活保護世帯は減免あり",
+            "facilities": "大阪府内の産後ケア実施施設一覧から利用可能施設を確認",
+            "application": "電子申請または保健センターへ申請。約2週間後の利用承認通知書受領後、実施事業者へ直接予約"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/sosiki/kenkoufukushibu/kenkousuishin/ninshin_syussan/sapo-toninshin_syussan/1493611377765.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "temporaryChildcare": {
@@ -54839,69 +54875,76 @@
             "maxAgeYears": 3
           },
           "details": {
-            "target": "大阪狭山市在住で保育所・幼稚園・認定こども園等に通っていない、生後6か月から満3歳未満の子ども",
+            "target": "大阪狭山市在住で保育所、幼稚園、認定こども園、地域型保育、企業主導型保育等に通っていない、生後6か月から満3歳未満の子ども",
             "employment": "保護者の就労要件なし",
-            "limit": "子ども1人につき月10時間まで",
-            "start": "令和8年4月1日から実施",
-            "fee": "市公式ページでは利用料金未定と案内"
+            "limit": "子ども1人につき月10時間まで。3歳の誕生日の2日前まで",
+            "facility": "大阪狭山市立東野幼稚園乳児等通園支援事業所。専用室独立実施、定員9人",
+            "hours": "月曜日から金曜日の午前9時から午後4時。祝日・年末年始を除く",
+            "fee": "1時間300円。住民税非課税世帯等は減免あり",
+            "application": "総合支援システムで利用認定を申請し、アカウント発行後に初回面談・予約。アカウント発行まで1週間程度かかる場合あり"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/sosiki/kodomoseisakubu/kodomoikusei/2/3_1/8770.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "旧耐震基準の民間住宅等に対する耐震診断・木造住宅耐震改修を補助する。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "target": "原則として昭和56年5月31日以前に建築確認を受けた住宅等で市の要件を満たすもの",
-            "support": "耐震診断、耐震改修設計・工事、耐震シェルター設置を補助",
-            "limit": "耐震改修工事は費用の8割、戸建住宅1戸あたり上限95万円。低所得世帯は上限115万円",
-            "period": "申請受付は12月28日まで。予算上限に達し次第終了",
-            "application": "契約・着手前に交付申請が必要"
+            "reason": "公式情報で確認できた制度は一般の耐震・移住・空き家・公営住宅制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "既存民間建築物耐震診断・耐震改修・空家除却補助等",
+            "excludedTarget": "旧耐震基準の市内住宅・建築物の所有者等",
+            "excludedAmount": "耐震診断、耐震改修、耐震シェルター、空家除却等を要件別に補助",
+            "evidence": "2026年6月更新の利用者向けページで、子育て世帯を対象要件とする規定なし",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
-            "url": "https://www.city.osakasayama.osaka.jp/sosiki/machizukurisuishinbu/toshiseisaku/sumai/jutakutaishin/1411353707205.html",
-            "checkedAt": "2026-07-23"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.osakasayama.osaka.jp/sosiki/machizukurisuishinbu/toshiseisaku/sumai/jutakutaishin/1411111913477.html",
-              "checkedAt": "2026-07-23"
-            }
-          ]
+            "url": "https://www.city.osakasayama.osaka.jp/tetsuzuki/sumai/2/5128.html",
+            "checkedAt": "2026-07-25"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
           "summary": "粗大ごみを月1回、専用シールを貼付して地域の収集日に排出する。",
           "details": {
-            "collection": "地域ごとに月1回収集。朝8時40分頃から順次収集",
-            "limit": "1回の収集日に概ね3点まで",
-            "preparation": "大型家具等は1点につき粗大ごみ専用シール1枚。長い物は150cm以内に切断し、一人で持てる程度にまとめる",
+            "collection": "地域ごとに月1回収集。収集日の午前8時40分頃から順次収集",
+            "limit": "1回の収集日におおむね3点まで",
+            "preparation": "大型家具等は1点につき粗大ごみ専用シール1枚。長い物は150センチ以内に切断し、1人で持てる程度にまとめる",
             "smallItems": "比較的小さい粗大ごみは45リットル袋に入れ、専用シール1枚を貼付",
-            "bulk": "大量に出る場合は有料の臨時ごみとして処分"
+            "paperTextile": "地域の有価物回収がない古紙・段ボール・雑がみ・古布等は粗大ごみとして排出可能",
+            "bulk": "引越し・片付け等で大量に出る場合は有料の臨時ごみとして処分",
+            "rulesUpdated": "家庭ごみの分別・排出ルールは2026年4月22日更新"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/sosiki/siminseikatsubu/seikatsukankyogurupu/1/gomi/5/3/1411355157445.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.osakasayama.osaka.jp/sosiki/siminseikatsubu/seikatsukankyogurupu/1/gomi/5/1629867984919.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "disasterPrevention": {
           "status": "verified",
-          "summary": "防災・洪水・内水・ため池・地震の各種ハザードマップを公開する。",
+          "summary": "防災・洪水・内水・ため池・地震の各種ハザードマップと避難場所一覧を公開する。",
           "details": {
             "maps": "大阪狭山市防災マップ、洪水浸水想定区域図、内水ハザードマップ、ため池ハザードマップ、地震ハザードマップを公開",
             "hazards": "洪水、内水、土砂災害、ため池、地震、液状化等を確認可能",
+            "evacuation": "指定緊急避難場所・指定避難所等の一覧を掲載",
+            "information": "防災情報収集ページで気象・河川・避難・ライフライン等の情報源を案内",
             "use": "自宅周辺の災害リスク、避難場所、避難経路の事前確認に利用できる"
           },
           "source": {
             "url": "https://www.city.osakasayama.osaka.jp/kurashi_anshin/anzen_anshin/5/3/index.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://www.city.osakasayama.osaka.jp/sosiki/machizukurisuishinbu/toshiseisaku/sumai/jutakutaishin/1411350962941.html",
-              "checkedAt": "2026-07-23"
+              "url": "https://www.city.osakasayama.osaka.jp/sosiki/kikikanri/4/7/5714.html",
+              "checkedAt": "2026-07-25"
             }
           ]
         }
@@ -54914,70 +54957,67 @@
       "name": "阪南市",
       "officialUrl": "https://www.city.hannan.lg.jp/",
       "status": "verified",
-      "summary": "阪南市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "阪南市の子育て、教育、住宅、生活、防災に関する9制度を2026年度公式情報で再確認済み。",
       "services": {
         "childMedical": {
           "status": "verified",
-          "summary": "0歳から18歳年度末までの子どもの医療費自己負担額の一部を助成する。",
+          "summary": "0歳から18歳年度末までの子どもの保険診療自己負担額の一部を助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "target": "阪南市に住民登録がある0歳から18歳到達後最初の3月31日までの子ども",
-            "support": "入院・通院の医療費自己負担額の一部を助成",
+            "target": "阪南市に住所があり健康保険に加入する、18歳到達後最初の3月31日までの子ども",
+            "coverage": "入院・通院等の保険診療自己負担額の一部を助成",
+            "copayment": "医療機関ごとに入院・通院各1日500円まで、月2日まで。複数医療機関等の一部自己負担額の月額合計が2,500円を超えた分は申請により助成",
+            "reimbursement": "大阪府外受診や月額2,500円超過等は、必要書類を添えて申請",
             "application": "子ども医療証の交付申請が必要"
           },
           "source": {
-            "url": "https://www.city.hannan.lg.jp/kosodatesite/seido/nyuyouji/1457164099549.html",
-            "checkedAt": "2026-07-23"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo/nyuuyouji/nyuuyoujiiryouseido1.html",
-              "checkedAt": "2026-07-23"
-            }
-          ]
+            "url": "https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo/nyuuyouji/nyuuyoujiiryouseido1.html",
+            "checkedAt": "2026-07-25"
+          }
         },
         "sickChildCare": {
           "status": "unavailable",
-          "summary": "市公式情報では、一般利用できる病児・病後児保育の対象・利用方法・料金を確認できなかった。",
+          "summary": "体調不良児対応型の実施施設は確認できるが、一般利用型の病児・病後児保育の対象・料金・予約方法を市公式情報で確認できない。",
           "details": {
-            "confirmed": "保育施設一覧に体調不良児対応型の実施状況は掲載されている",
-            "missing": "一般利用型の病児・病後児保育施設、対象年齢、利用料金、予約方法の公式案内を確認できない"
+            "confirmed": "保育施設一覧では複数施設に病児・病後児保育（体調不良児対応型）の実施表示がある",
+            "assessment": "在園中に体調不良となった児童への対応と、一般利用者が申し込む病児・病後児保育を区別して判定",
+            "missing": "一般利用施設、対象年齢、利用料金、事前登録・予約方法の公式案内を確認できない"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kosodatesite/sisetu/preschool/1457345388903.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "childcareFee": {
           "status": "verified",
-          "summary": "3～5歳児と住民税非課税世帯の0～2歳児の保育料を無償化する。",
+          "summary": "3～5歳児等と住民税非課税世帯の0～2歳児の保育料を無償化し、2026年度は対象児の給食費等も免除する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "nationalSupport": "保育所・幼稚園・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児の保育料が無料",
+            "nationalSupport": "保育所・幼稚園・認定こども園等を利用する3～5歳児と、住民税非課税世帯の0～2歳児の保育料が無償化対象",
             "otherFacilities": "預かり保育や認可外保育施設等も認定要件により月額上限付きで無償化対象",
-            "mealSupport": "令和8年4月から令和9年3月まで、市内施設に在籍する市内在住3～5歳児の給食費または幼稚園ランチ弁当代を免除",
-            "excluded": "行事費、教材費等の実費は別途負担となる場合がある"
+            "mealSupport": "2026年4月から2027年3月まで、市内施設に在籍する市内在住3～5歳児の給食費（主食費・副食費）または幼稚園ランチ弁当代を免除。保護者手続き不要",
+            "excluded": "0～2歳児の給食費支援、行事費、教材費等は対象外または別途負担となる場合がある"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo_seisaku/youjikyouikuhoikunomushoukanituite/7893.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo_seisaku/kyuushokuhisiennjigyou/7201.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "市立小中学校で給食を提供し、令和8年度は物価高騰分を公費で支援して保護者負担を抑える。",
+          "summary": "市立小中学校で給食を提供し、2026年度は物価高騰分を公費支援して保護者負担を抑える。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
@@ -54985,31 +55025,47 @@
           "details": {
             "elementaryFee": "1食当たり低学年329円、中学年335円、高学年341円",
             "juniorHighFee": "1食当たり390円",
-            "supportFY2026": "令和8年4月から令和9年3月まで、小学校は国費との差額、中学校は1食70円の物価高騰分を公費で負担",
-            "operation": "小学校・中学校とも学校給食センターから提供"
+            "supportFY2026": "2026年4月から2027年3月まで、小学校は国費との差額、中学校は1食70円の物価高騰分を公費で負担",
+            "operation": "小学校・中学校とも学校給食センターから提供。給食費そのものは有料で、物価高騰による追加負担を支援"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kakuka/syogai/kyushokusenta/gaiyou/shokai.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.city.hannan.lg.jp/kakuka/mirai/kikaku/oshirase/10157.html",
-              "checkedAt": "2026-07-23"
+              "checkedAt": "2026-07-25"
             }
           ]
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "令和8年度の産後ケア事業は確認できるが、公式HTML上で対象月齢・利用類型・料金・回数を確定できなかった。",
+          "status": "verified",
+          "summary": "出産後1年未満の産婦・乳児等へ宿泊型・日帰り型の産後ケアを提供する。",
+          "eligibility": {
+            "minAgeMonths": 0,
+            "maxAgeYears": 1
+          },
           "details": {
-            "confirmed": "出産後の母親と赤ちゃんの体調、授乳、育児、支援者不在等の相談に対応する産後ケア事業を実施",
-            "missing": "対象となる産後月数、利用類型、利用料金、利用上限は案内チラシ参照であり、確認可能なHTML本文に記載がない"
+            "target": "阪南市の住民基本台帳に記録されている出産後1年未満の産婦・乳児で産後ケアを必要とする人。流産・死産に伴うケアが必要な産婦のみの利用も対象",
+            "types": "ショートステイ（宿泊）とデイサービス（日帰り）",
+            "care": "母体・乳房・心理面・生活面のケアと休養、乳児の発育発達確認・沐浴、授乳・育児相談等",
+            "shortStay": "原則10時から翌10時、3食。課税世帯1泊2日4,000円、多胎児加算600円。生活保護・非課税世帯2,000円、多胎児加算300円",
+            "dayCare": "原則10時から19時、2食。課税世帯1日1,900円、多胎児加算290円。生活保護・非課税世帯950円、多胎児加算150円",
+            "limit": "ショートステイは1泊2日で1回とし、ショートステイとデイサービスを合わせて7回まで",
+            "application": "原則利用希望日の5開庁日前までに阪南市こどもすこやかセンターへ事前申請し、審査を受ける",
+            "facilities": "原則として大阪府産後ケア事業集合契約に参加する医療機関"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo/boshi_hoken/1524124047656.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.hannan.lg.jp/material/files/group/18/sangokeaR8.pdf",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -55023,27 +55079,27 @@
             "employment": "保護者の就労要件なし",
             "limit": "子ども1人につき月10時間まで。未利用時間の翌月繰越不可",
             "facility": "認定こども園 飛鳥ゆめ学舎",
-            "fee": "1時間300円。実費が発生する場合あり",
-            "application": "つうえんポータルで利用認定、事前面談、予約を行う"
+            "fee": "1時間300円。発生した場合は実費を別途徴収",
+            "application": "つうえんポータルで利用認定申請、施設との事前面談、利用予約を行う"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kakuka/kodomomirai/kodomo_seisaku/daredemotuennseidonituite/10329.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "昭和56年5月以前の住宅等を対象に耐震診断・耐震改修・耐震シェルター費用を補助する。",
+          "summary": "旧耐震基準の住宅等を対象に耐震診断・耐震改修・耐震シェルター費用を補助する。",
           "details": {
-            "target": "原則として昭和56年5月31日以前に建築確認を受け、現に居住または居住予定の民間建築物",
-            "diagnosis": "補助率約90%、上限5万円。令和8年度は辞退枠を随時受付",
+            "target": "原則1981年5月31日以前に建築確認を受け、現に居住または居住予定の民間建築物",
+            "diagnosis": "補助率約90%、上限5万円。2026年度は辞退枠を随時受付",
             "retrofit": "耐震改修・耐震シェルターは補助率80%、上限50万円または75万円（所得による）",
-            "availability": "令和8年度の耐震改修補助は定員到達により受付終了",
-            "application": "診断・改修前の申請が必要"
+            "availability": "2026年度の耐震改修補助は定員到達により受付終了。診断は辞退枠を随時受付",
+            "application": "診断・改修・契約前に申請が必要"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kakuka/toshi/toshi/taishinka/1597994486626.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -55054,25 +55110,38 @@
             "bagFee": "不燃ごみ専用袋は20リットル250円、45リットル500円",
             "ticketFee": "指定袋に入らない品は、3辺合計3メートル以下500円、3メートル超1,000円",
             "limit": "1回の申込みは5点まで",
-            "collection": "処理券または指定袋に予約日と氏名を記入し、予約日の朝に排出"
+            "collection": "処理券または指定袋に予約日と氏名を記入し、予約日の朝に排出",
+            "reuse": "処分前に民間リユースサービスの利用も案内"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kakuka/shimin/shigen1/bunbetu/1526609414614.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
           "status": "verified",
-          "summary": "洪水・高潮・土砂災害・地震・津波のリスクと避難場所を掲載する総合防災マップを公開する。",
+          "summary": "洪水・高潮・土砂災害・地震・津波・雨水出水のリスクと避難場所を確認できる防災情報を公開する。",
           "details": {
-            "hazards": "洪水、高潮、土砂災害、地震、津波",
-            "facilities": "指定避難所、指定緊急避難場所、警察・消防等の防災関連施設を掲載",
-            "use": "自宅周辺の災害リスクと最寄りの避難場所の事前確認に利用できる"
+            "hazards": "洪水、高潮、土砂災害、地震、津波、雨水出水",
+            "facilities": "総合防災マップに指定避難所、指定緊急避難場所、警察・消防等の防災関連施設を掲載",
+            "rainwater2026": "2026年4月1日公表の雨水出水浸水想定区域図を基に、町丁目別ハザードマップでも浸水リスクを案内",
+            "weather2026": "2026年5月下旬から河川氾濫・大雨・土砂災害・高潮に関する防災気象情報の名称・体系を見直し",
+            "use": "自宅周辺の災害リスクと最寄りの避難場所・避難経路の事前確認に利用可能"
           },
           "source": {
             "url": "https://www.city.hannan.lg.jp/kakuka/somu/kiki/bousai_jouhou/bousaimap/index.html",
-            "checkedAt": "2026-07-23"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.hannan.lg.jp/kakuka/somu/kiki/bousai_jouhou/bousaimap/tyoutyoumokubetumap/index.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.city.hannan.lg.jp/kakuka/somu/kiki/bousai_jouhou/higoronosonae/10257.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         }
       }
     },
@@ -55083,141 +55152,183 @@
       "name": "島本町",
       "officialUrl": "https://www.town.shimamoto.lg.jp/",
       "status": "verified",
-      "summary": "島本町の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。",
+      "summary": "島本町の子育て、教育、住宅、生活、防災に関する9制度を町公式情報で再確認し、全制度をverifiedへ修正した。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子ども医療費助成は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの子どもの保険診療自己負担等を助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "age": "18歳到達後最初の3月31日まで",
+            "incomeLimit": "なし",
+            "coverage": "保険適用医療費の自己負担分と入院時食事療養費",
+            "selfPayment": "1医療機関1日500円以内、月2日限度。月額合計2,500円超は申請で償還",
+            "excluded": "保険適用外費用等"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.shimamoto.lg.jp/site/kosodate/2735.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "sickChildCare": {
-          "status": "unavailable",
-          "summary": "病児・病後児保育は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "病気または回復期で家庭保育が困難な子どもを、認定こども園ゆいの詩の病児保育室で一時的に預かる。",
           "eligibility": {
             "minAgeMonths": 0,
-            "maxAgeYears": 12
+            "maxAgeYears": 18
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "facility": "認定こども園ゆいの詩 病児保育室",
+            "condition": "病気または回復期で、保護者の勤務等により家庭での保育が困難な場合",
+            "application": "施設へ利用条件・空き状況を確認",
+            "ageNote": "対象年齢・料金等の詳細は施設へ確認"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.shimamoto.lg.jp/site/kosodate/27824.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "childcareFee": {
-          "status": "unavailable",
-          "summary": "保育料は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "3～5歳児等と住民税非課税世帯の0～2歳児は、令和8年度も幼児教育・保育無償化の対象となる。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 5
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "freeAges": "認可保育施設等の3～5歳児",
+            "underThree": "住民税非課税世帯の0～2歳児",
+            "excluded": "給食費、送迎費、行事費等の実費",
+            "application": "施設形態等により施設等利用給付認定が必要"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.shimamoto.lg.jp/site/kosodate/27885.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は中学校給食費を町が無償化し、小学校も国施策による無償化予定として保護者負担を軽減する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "fiscalYear": "令和8年度",
+            "juniorHigh": "物価高騰対応重点支援地方創生臨時交付金を活用して無償化",
+            "elementary": "国の施策として無償化予定",
+            "aid": "就学援助では学校給食費を含む費用を援助"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.shimamoto.lg.jp/soshiki/5/33680.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.shimamoto.lg.jp/soshiki/22/35932.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "産後ケアは自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "産後の母子へ宿泊型・通所型の産後ケアを提供する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "types": "宿泊型、通所型",
+            "dayCareTarget": "生後1歳までの赤ちゃんと母親",
+            "stayTarget": "原則産後4か月未満の母子",
+            "dayCareLimit": "7日まで",
+            "dayCareFee": "1日2,000円。非課税世帯・生活保護世帯は無料",
+            "care": "母体の心身ケア、授乳支援、育児相談・指導"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.shimamoto.lg.jp/site/kosodate/7005.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.shimamoto.lg.jp/site/kosodate/32303.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "一時預かり・こども誰でも通園制度は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
           "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 5
+            "minAgeMonths": 6,
+            "maxAgeYears": 3
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "program": "こども誰でも通園制度（乳児等通園支援事業）",
+            "start": "令和8年4月1日",
+            "condition": "保育所・幼稚園・認定こども園等に通っていない子ども。就労要件なし",
+            "limit": "月10時間",
+            "facilities": "しまもと里山認定こども園、認定こども園ゆいの詩等",
+            "fee": "施設により異なる",
+            "application": "こども誰でも通園制度総合支援システムで町の認定を受け、施設と面談・予約"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.shimamoto.lg.jp/site/kosodate/33348.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
-          "status": "unavailable",
-          "summary": "住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "旧耐震基準の木造住宅等を対象に、令和8年度も耐震診断・設計・改修・除却費を補助する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "program": "建物の耐震改修等補助",
+            "target": "昭和56年5月31日以前に建築された木造住宅等",
+            "diagnosis": "耐震診断費を上限5万円",
+            "design": "耐震設計費を上限10万円",
+            "retrofit": "耐震改修費を上限75万円または97.5万円",
+            "deadline": "令和8年11月20日"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.shimamoto.lg.jp/soshiki/14/2662.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "粗大ごみは自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "1辺1メートル以上または一人で持ち上げられない大型ごみを、事前申込により有料収集する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "fee": "2トン車1台3,000円",
+            "days": "月・火・木・金曜日の午後1時～3時",
+            "application": "電話は希望日の1か月前から前日正午まで。オンラインは30日前から10日前まで",
+            "preparation": "収集車が横付けできる場所まで排出。町は屋内から運び出さない",
+            "directCarry": "清掃工場への持込みは家庭ごみ10kgにつき100円"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.shimamoto.lg.jp/soshiki/17/1534.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.shimamoto.lg.jp/soshiki/17/1458.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "ハザードマップは自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "洪水・土砂災害・地震のハザードマップと避難所情報を公開する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "maps": "淀川・水無瀬川の洪水・土砂災害ハザードマップ、地震ハザードマップ",
+            "revision": "避難所一覧を令和7年4月に修正",
+            "contents": "浸水範囲・浸水深、家屋倒壊等氾濫想定区域、土砂災害区域、避難所",
+            "webMap": "しまもとマップでも防災情報を公開"
           },
           "source": {
-            "url": "https://www.town.shimamoto.lg.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.shimamoto.lg.jp/site/bousai/30122.html",
+            "checkedAt": "2026-07-25"
           }
         }
       }
@@ -55229,21 +55340,24 @@
       "name": "豊能町",
       "officialUrl": "https://www.town.toyono.osaka.jp/",
       "status": "verified",
-      "summary": "豊能町の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。",
+      "summary": "豊能町の9制度を再確認し、子ども医療費、学校給食費支援、住宅支援、粗大ごみ、防災情報をverifiedへ修正。病児・病後児保育は継続確認とした。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子ども医療費助成の対象年齢・自己負担は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの子どもの保険診療自己負担を助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "age": "18歳到達後最初の3月31日まで",
+            "selfPayment": "1医療機関等1日500円、月2日限度。3日目以降は全額助成",
+            "coverage": "保険診療に係る自己負担金の一部",
+            "application": "町窓口で医療証の交付申請"
           },
           "source": {
-            "url": "https://www.town.toyono.osaka.jp/kosodate-kyouiku/hoikujo-youchien-kodomoen/iryouhijosei/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.toyono.osaka.jp/kenkou-iryou-fukushi/iryou/iryouhi-josei/page000113.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "sickChildCare": {
@@ -55279,18 +55393,21 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "令和8年度予算の主要事業として、義務教育学校の給食費支援事業を実施する。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "fiscalYear": "令和8年度",
+            "program": "義務教育学校給食費支援事業",
+            "target": "町立義務教育学校の児童生徒",
+            "note": "具体的な保護者負担額は学校・教育委員会の現行案内を確認"
           },
           "source": {
-            "url": "https://www.town.toyono.osaka.jp/kosodate-kyouiku/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.toyono.osaka.jp/gyousei/gikai/news/page008101.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "postpartumCare": {
@@ -55329,47 +55446,52 @@
         },
         "housingSupport": {
           "status": "unavailable",
-          "summary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "reason": "公式情報で確認できた制度は一般の移住・定住または空き家対策制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "豊能町空き家バンク活用促進事業リフォーム工事補助金等",
+            "excludedTarget": "空き家バンク登録住宅の購入者・所有者および空き家除却対象者",
+            "excludedAmount": "リフォーム費2分の1・上限40万円、除却費30％・上限75万円等",
+            "evidence": "2026年6月18日更新の利用者向け一覧で、子育て世帯要件なし"
           },
           "source": {
-            "url": "https://www.town.toyono.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.toyono.osaka.jp/sumou/toyonono-sumai/page007656.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "粗大ごみの収集・持込条件は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "最大辺40cm以上の家具・電化製品等は、事前電話予約により粗大ごみとして収集する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "definition": "最大辺40cm以上",
+            "application": "環境課へ事前電話予約",
+            "limit": "1回5点まで",
+            "collection": "令和8年4月から水曜日の粗大ごみ収集を民間委託",
+            "setOut": "指定日に案内された場所へ排出"
           },
           "source": {
-            "url": "https://www.town.toyono.osaka.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.toyono.osaka.jp/kurashi/recycle-gomi-kankyou/gomi/page002458.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.toyono.osaka.jp/kurashi/recycle-gomi-kankyou/gomi/page007941.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "洪水・土砂災害等ハザードマップは自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "土砂災害警戒区域、浸水想定、避難施設等を掲載した総合防災マップを公開する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "map": "豊能町総合防災マップ",
+            "hazards": "地震、風水害、土砂災害、内水、ため池",
+            "contents": "警戒区域、浸水想定、避難所、防災情報",
+            "web": "電子ハザードマップも公開"
           },
           "source": {
-            "url": "https://www.town.toyono.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.toyono.osaka.jp/bousai-anzen/bousai/hazard-map/page002164.html",
+            "checkedAt": "2026-07-25"
           }
         }
       }
@@ -55381,21 +55503,24 @@
       "name": "能勢町",
       "officialUrl": "https://www.town.nose.osaka.jp/",
       "status": "verified",
-      "summary": "能勢町の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。",
+      "summary": "能勢町の9制度を公式情報で確認済み。令和8年度は学校給食費の全額を公費負担し、保護者負担を0円とする。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子ども医療費助成は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの子どもの保険診療自己負担を助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "age": "18歳到達後最初の3月31日まで",
+            "selfPayment": "1医療機関等1日500円、月2日限度",
+            "monthlyCap": "月2,500円を超える額を申請で償還",
+            "excluded": "保険適用外費用等"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.nose.osaka.jp/soshiki/jyuuminka/hokeniryo/iryo/684.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "sickChildCare": {
@@ -55433,19 +55558,29 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は学校給食費の全額を公費で負担し、保護者負担を0円とする。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "program": "学校給食無償化事業",
+            "fiscalYear": "令和8年度",
+            "publicFunding": "保護者負担が原則とされている学校給食費の全額を公費により負担する",
+            "parentBurden": "0円",
+            "purpose": "子育て支援の充実、食育の推進、学校給食の安定提供"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.nose.osaka.jp/material/files/group/29/R8_bessatu.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.nose.osaka.jp/soshiki/gakkoukyouikusoumuka/kyoikusoumu/11250.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -55485,48 +55620,53 @@
         },
         "housingSupport": {
           "status": "unavailable",
-          "summary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "reason": "公式情報で確認できた制度は一般の耐震・移住・空き家・公営住宅制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "能勢町移住相談窓口・空き家バンク",
+            "excludedTarget": "能勢町への移住を検討する人、空き家所有者・利用希望者",
+            "excludedAmount": "移住相談、協定不動産事業者を通じた物件紹介、空き家活用相談",
+            "evidence": "2026年度も一般の移住・空き家相談制度で、子育て世帯固有要件・住宅費助成なし",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.nose.osaka.jp/soshiki/soumuka/seisakusuishin/kyodo_machi/shisaku/1278.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "粗大ごみの収集・持込条件は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "粗大ごみは全量有料・事前予約制で、処理券を貼って排出する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "fee": "粗大ごみ処理券1枚400円",
+            "condition": "一辺40cmを超える品目等",
+            "application": "事前予約制",
+            "directCarry": "国崎クリーンセンターへの持込み制度あり"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.nose.osaka.jp/soshiki/midorikankyou/kankyoueisei/faq/2375.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "洪水・土砂災害等ハザードマップは自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "洪水・土砂災害ハザードマップを地区別に公開し、最新の浸水想定区域を案内する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "map": "洪水・土砂災害ハザードマップ",
+            "distribution": "令和7年6月版を全戸配布",
+            "areas": "歌垣、田尻、東郷、久佐々、岐尼、天王地区",
+            "additional": "ため池ハザードマップも公開"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.nose.osaka.jp/soshiki/jyuuminka/jichibosai/kinkyu_bosai/1327.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.nose.osaka.jp/soshiki/midorikankyou/midorisinko/oshirase/9715.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         }
       }
     },
@@ -58796,7 +58936,7 @@
       "name": "赤穂市",
       "officialUrl": "https://www.city.ako.lg.jp/",
       "status": "verified",
-      "summary": "赤穂市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認した。",
+      "summary": "赤穂市の9制度を再確認し、令和8年度の学校給食費全対象者無償化を反映した。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -58858,21 +58998,28 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "18歳以下の子どもを3人以上養育する世帯について、市立小・中学校等に在籍する第3子以降の学校給食費を無償化する。",
+          "summary": "令和8年度は学校給食センターが給食を提供する全ての園児・児童・生徒の学校給食費を無償化する。",
           "eligibility": {
-            "minAgeMonths": 72,
+            "minAgeMonths": 36,
             "maxAgeYears": 15
           },
           "details": {
-            "target": "18歳以下の子どもを3人以上養育し、対象児童生徒と保護者が赤穂市に住所を有する世帯",
-            "support": "年齢の高い子どもから数えて第3子以降となる市立小・中学校等の児童生徒の給食費を無償化",
-            "application": "対象要件に応じて申請が必要",
-            "excluded": "第1子・第2子や要件を満たさない世帯は通常の学校給食費負担"
+            "fiscalYear": "令和8年度",
+            "target": "学校給食センターが給食を提供する市立幼稚園、小学校、中学校、赤穂特別支援学校小学部・中学部の対象者",
+            "support": "国の給食費負担軽減交付金と物価高騰対応重点支援地方創生臨時交付金等を活用し、対象者の学校給食費を無償化",
+            "application": "給食センター提供校の通常給食費は市が負担。個別の申請要否は学校・給食センターの案内を確認",
+            "previousProgram": "従来の第3子以降無償措置から令和8年度は全対象者へ拡大"
           },
           "source": {
-            "url": "https://www.city.ako.lg.jp/reiki/reiki_honbun/k314RG00001245.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.ako.lg.jp/shise/profile/shiseihoushin2026.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ako.lg.jp/reiki/reiki_honbun/k314RG00001245.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -59993,19 +60140,19 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "旧耐震住宅の耐震改修計画・工事費を補助し、改修工事費は対象費用の5分の4、上限115万円とする。",
+          "status": "unavailable",
+          "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "target": "1981年5月31日以前に建築され、耐震基準を満たさない市内住宅",
-            "diagnosis": "木造住宅は自己負担3,150円から簡易耐震診断を利用可能",
-            "planning": "耐震改修計画策定費は対象費用の3分の2、上限20万円",
-            "construction": "耐震改修工事費は対象費用の5分の4、上限115万円",
-            "other": "計画・工事パッケージ、簡易改修、建替え、屋根軽量化、シェルター、防災ベッド等の補助あり",
-            "condition": "交付決定前の契約・着工は対象外"
+            "reason": "公式情報で確認できた制度は一般の耐震・移住・空き家・公営住宅制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。",
+            "excludedProgram": "住宅の耐震化に関する補助事業",
+            "excludedTarget": "昭和56年5月31日以前に建築された耐震性不足の市内住宅の所有者等",
+            "excludedAmount": "簡易耐震診断、計画策定、改修・建替え・屋根軽量化・シェルター等を補助",
+            "evidence": "令和8年度受付ページで、子育て世帯を対象要件とする規定なし",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
             "url": "https://www.city.ono.hyogo.jp/soshikikarasagasu/chiikishinkobu_machizukurika/gyomuannai/taisinnkazigyou/index.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
@@ -62567,17 +62714,19 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "町内に5年以上居住する父母・祖父母等の近くへ住宅取得・一定の増改築等を行う子世帯へ、18万円分の商品券を交付する。",
+          "summary": "子育て・介護など親子間の支え合いを目的に、町内の親元へ近居する子世帯の住宅取得・一定の増改築等へ18万円分の商品券を交付する。",
           "details": {
-            "target": "直系尊属が町内に5年以上居住し、子世帯全員が町内へ居住して親元近居するなどの要件を満たす世帯",
-            "housing": "自己居住用の新築・中古住宅の取得、または300万円以上の要件を満たす増改築・リフォーム",
+            "program": "親元近居住宅取得等支援補助金（親元に住もう補助金）",
+            "target": "直系尊属が町内に5年以上居住し、子世帯全員が町内へ居住・住民登録して親元近居するなどの要件を満たす世帯",
+            "purpose": "子育てや介護など親子間等の支え合いを後押しする制度",
+            "minorChildRequirement": "18歳以下の子どもの同居は必須要件として明記されていない",
+            "housing": "自己居住用の新築・中古住宅取得、または対象部分300万円以上の増改築・リフォーム",
             "amount": "18万円分の稲美町共通商品券を一括交付",
-            "application": "住宅取得等の日または子世帯の転入・転居日のいずれかを基準に1年以内",
-            "excluded": "町の他の指定住宅補助との重複受給不可"
+            "application": "住宅取得等の日または子世帯の転入・転居日から1年以内"
           },
           "source": {
             "url": "https://www.town.hyogo-inami.lg.jp/0000001615.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
