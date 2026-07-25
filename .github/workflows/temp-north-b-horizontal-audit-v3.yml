@@ -36,10 +36,13 @@ jobs:
         shell: bash
         run: |
           set +e
-          sed -i 's/setTimeout(() => controller.abort(), 15000)/setTimeout(() => controller.abort(), 6000)/' jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs
-          sed -i 's/Array.from({ length: 10 }/Array.from({ length: 30 }/' jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs
-          sed -i 's/^  anyoneChildcareCompletenessCandidates,$/  anyoneChildcareCompletenessCandidates: anyoneCompletenessCandidates,/' jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs
-          timeout 17m node jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs > /tmp/north-b-horizontal-audit.log 2>&1
+          script='jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs'
+          sed -i 's/setTimeout(() => controller.abort(), 15000)/setTimeout(() => controller.abort(), 6000)/' "$script"
+          sed -i 's/Array.from({ length: 10 }/Array.from({ length: 30 }/' "$script"
+          sed -i 's/^  anyoneChildcareCompletenessCandidates,$/  anyoneChildcareCompletenessCandidates: anyoneCompletenessCandidates,/' "$script"
+          sed -i "/const focusServices/a const checkpoint = JSON.parse(fs.readFileSync(path.join(projectDir, 'operations', 'control', 'session-checkpoints', 'north-b.json'), 'utf8'));\nconst assignedCodes = new Set(checkpoint.completedSinceSplit || []);" "$script"
+          sed -i 's/\.filter((item) => prefectures\.has(item\.prefectureCode));/.filter((item) => assignedCodes.has(item.code));/' "$script"
+          timeout 17m node "$script" > /tmp/north-b-horizontal-audit.log 2>&1
           status=$?
           tail -200 /tmp/north-b-horizontal-audit.log
           if [ "$status" -ne 0 ]; then
@@ -85,7 +88,7 @@ jobs:
               owner,
               repo,
               path: reportPath,
-              message: 'audit: 北日本B URL・年度・数値横断検査結果を記録 [skip ci]',
+              message: 'audit: 北日本B担当107自治体のURL・年度・数値横断検査結果を記録 [skip ci]',
               content,
               branch,
               ...(sha ? { sha } : {})
