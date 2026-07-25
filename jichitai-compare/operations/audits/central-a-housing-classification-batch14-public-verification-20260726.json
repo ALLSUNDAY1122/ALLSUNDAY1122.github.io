@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch14-public-verification-20260726",
+  "generatedAt": "2026-07-25T17:10:25.333Z",
+  "regionalPullRequest": 3732,
+  "nationalSyncPullRequest": 3734,
+  "verificationPullRequest": 3736,
+  "verificationWorkflowRunId": 30167082115,
+  "expectedUnavailableCount": 2,
+  "expectedVerifiedCount": 3,
+  "attempt": 1,
+  "pageChecks": [
+    {
+      "code": "23237",
+      "name": "あま市",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/23237/?audit=1784999423742-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "23238",
+      "name": "長久手市",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/23238/?audit=1784999423742-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "23342",
+      "name": "豊山町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/23342/?audit=1784999423742-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "23442",
+      "name": "東浦町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/23442/?audit=1784999423742-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28228",
+      "name": "加東市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28228/?audit=1784999423742-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    }
+  ],
+  "jsonCheck": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "records": [
+      {
+        "code": "23237",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "23238",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "23342",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "23442",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28228",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      }
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none"
+}
