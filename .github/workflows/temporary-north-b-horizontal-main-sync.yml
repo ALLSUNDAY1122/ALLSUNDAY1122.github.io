@@ -1,0 +1,143 @@
+name: Temporary North B Horizontal Audit Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  sync-and-validate:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'sync/north-b-horizontal-main-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Detect pending sync
+        id: detect
+        shell: bash
+        run: |
+          if [[ -f jichitai-compare/operations/triggers/north-b-horizontal-main-sync.txt ]]; then
+            echo "run_sync=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_sync=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.run_sync == 'true'
+        with:
+          node-version: '24'
+      - name: Copy confirmed North B maintenance only
+        if: steps.detect.outputs.run_sync == 'true'
+        shell: bash
+        run: |
+          git fetch origin audit/north-b-url-year-numeric-20260725
+          git checkout origin/audit/north-b-url-year-numeric-20260725 -- \
+            jichitai-compare/data/municipalities/04/04215.json \
+            jichitai-compare/data/municipalities/04/04301.json \
+            jichitai-compare/data/municipalities/04/04321.json \
+            jichitai-compare/data/municipalities/04/04401.json \
+            jichitai-compare/data/municipalities/04/04421.json \
+            jichitai-compare/data/municipalities/04/04424.json \
+            jichitai-compare/data/municipalities/04/04445.json \
+            jichitai-compare/data/municipalities/05/05206.json \
+            jichitai-compare/data/municipalities/06/06202.json \
+            jichitai-compare/data/municipalities/06/06301.json \
+            jichitai-compare/operations/tasks/04215.json \
+            jichitai-compare/operations/tasks/04301.json \
+            jichitai-compare/operations/tasks/04321.json \
+            jichitai-compare/operations/tasks/04401.json \
+            jichitai-compare/operations/tasks/04421.json \
+            jichitai-compare/operations/tasks/04424.json \
+            jichitai-compare/operations/tasks/04445.json \
+            jichitai-compare/operations/tasks/05206.json \
+            jichitai-compare/operations/tasks/06202.json \
+            jichitai-compare/operations/tasks/06301.json \
+            jichitai-compare/operations/audits/north-b-horizontal-url-year-numeric-20260725.json
+      - name: Record latest-main synchronization
+        if: steps.detect.outputs.run_sync == 'true'
+        shell: bash
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          timestamp = '2026-07-25T12:50:00+09:00'
+          pr_number = int(os.environ['PR_NUMBER'])
+          task_codes = ['04215','04301','04321','04401','04421','04424','04445','05206','06202','06301']
+
+          audit_path = root / 'operations/audits/north-b-horizontal-url-year-numeric-20260725.json'
+          audit = json.loads(audit_path.read_text(encoding='utf-8'))
+          records = audit.get('confirmedMaintenance') or []
+          audit.setdefault('reviewResult', {})['confirmedMaintenanceRecordCount'] = len(records)
+          audit['reviewResult']['confirmedUrlOperationCount'] = audit['reviewResult'].get('confirmedMaintenanceCount', len(records))
+          audit['integration'] = {
+              'sourcePullRequest': 3232,
+              'mainSyncPullRequest': pr_number,
+              'branch': 'sync/north-b-horizontal-main-20260725',
+              'generatedData': 'regenerated_from_latest_main',
+              'staticPages': 'regenerated_from_latest_main',
+              'validation': 'pending_standard_ci',
+              'status': 'pending_ci_merge'
+          }
+          audit['updatedAt'] = timestamp
+          audit_path.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          for code in task_codes:
+              path = root / 'operations/tasks' / f'{code}.json'
+              task = json.loads(path.read_text(encoding='utf-8'))
+              task['lastCheckedAt'] = '2026-07-25'
+              task['lastUpdatedAt'] = timestamp
+              notes = task.setdefault('notes', [])
+              note = f'品質改善第2監査の追加URL横断監査で公式出典を保守。制度内容・判定変更なし。main同期PR #{pr_number}。'
+              if note not in notes:
+                  notes.append(note)
+              path.write_text(json.dumps(task, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Regenerate and validate nationwide data
+        if: steps.detect.outputs.run_sync == 'true'
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node - <<'NODE'
+          const fs = require('fs');
+          const raw = JSON.parse(fs.readFileSync('data/generated/municipalities.json', 'utf8'));
+          const municipalities = Array.isArray(raw) ? raw : raw.municipalities;
+          if (!Array.isArray(municipalities)) throw new Error('municipalities array not found');
+          const serviceCount = municipalities.reduce((sum, item) => sum + Object.keys(item.services || {}).length, 0);
+          if (municipalities.length !== 1741) throw new Error(`municipality count=${municipalities.length}`);
+          if (serviceCount !== 15669) throw new Error(`service count=${serviceCount}`);
+          console.log(`nationwide counts verified: ${municipalities.length} municipalities / ${serviceCount} services`);
+          NODE
+      - name: Commit synchronized files
+        if: steps.detect.outputs.run_sync == 'true'
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/triggers/north-b-horizontal-main-sync.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "sync: apply North B horizontal URL maintenance to latest main"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

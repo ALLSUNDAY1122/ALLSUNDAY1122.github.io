@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-horizontal-main-sync-runner-registration-20260725",
+  "sessionId": "coordinator-a",
+  "sourcePullRequest": 3232,
+  "sourceBranch": "audit/north-b-url-year-numeric-20260725",
+  "sourceStatus": "ci_success_but_behind_main",
+  "sourceCiRunNumber": 8067,
+  "sourceBehindMainCommits": 105,
+  "risk": "旧main基点の全国生成JSONを直接統合すると、並行してmainへ反映された他地方の更新を上書きする可能性がある。",
+  "resolution": {
+    "strategy": "latest_main_limited_sync",
+    "copyOnly": [
+      "10 municipality source JSON files",
+      "10 task JSON files",
+      "north-b horizontal audit JSON"
+    ],
+    "doNotCopy": [
+      "old generated municipalities.json",
+      "old static municipality pages",
+      "old progress.json"
+    ],
+    "regenerate": [
+      "nationwide generated JSON",
+      "progress JSON",
+      "static municipality pages"
+    ],
+    "validation": [
+      "npm run generate",
+      "npm run progress",
+      "npm run validate:generated",
+      "1741 municipalities",
+      "15669 services"
+    ]
+  },
+  "runnerWorkflow": ".github/workflows/temporary-north-b-horizontal-main-sync.yml",
+  "targetBranch": "sync/north-b-horizontal-main-20260725",
+  "status": "runner_registration_pending_merge",
+  "createdAt": "2026-07-25T12:50:00+09:00"
+}
