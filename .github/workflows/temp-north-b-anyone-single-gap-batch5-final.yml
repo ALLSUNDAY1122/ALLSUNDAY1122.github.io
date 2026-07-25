@@ -56,13 +56,15 @@ jobs:
           npm run progress
           npm run validate:generated
 
-      - name: Remove temporary workflow and commit final result
+      - name: Remove temporary files and commit final result
         shell: bash
         run: |
           rm -f .github/workflows/temp-north-b-anyone-single-gap-batch5-final.yml
+          rm -f jichitai-compare/operations/audits/.north-b-batch5-final-trigger
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A .github/workflows/temp-north-b-anyone-single-gap-batch5-final.yml \
+            jichitai-compare/operations/audits/.north-b-batch5-final-trigger \
             jichitai-compare/data/municipalities/06/06204.json \
             jichitai-compare/data/municipalities/06/06207.json \
             jichitai-compare/data/municipalities/06/06208.json \
