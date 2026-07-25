@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T15:13:00+09:00",
+  "updatedAt": "2026-07-25T15:37:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,8 +24,8 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "原因別重点再監査の住宅支援分類第6群をPR #3500・CI #8495成功後にregion/centralへ統合。岸和田市、豊能町、鈴鹿市、東員町、玉城町の一般移住・空き家制度を子育て世帯向け住宅支援から除外した。",
-  "nextAction": "一般住宅・移住制度の分類候補残144件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
+  "lastAction": "原因別重点再監査の住宅支援分類第7群をPR #3526・CI #8552成功後にregion/centralへ統合。守口市、大阪狭山市、能勢町、朝日町、小野市の一般耐震・移住・空き家・公営住宅制度を子育て世帯向け住宅支援から除外した。",
+  "nextAction": "一般住宅・移住制度の分類候補残139件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
@@ -34,13 +34,13 @@
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T15:13:00+09:00",
-    "latestRegionalPullRequestNumber": 3500,
-    "latestCiRunNumber": 8495,
+    "latestCompletedAt": "2026-07-25T15:37:00+09:00",
+    "latestRegionalPullRequestNumber": 3526,
+    "latestCiRunNumber": 8552,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 84,
-    "primarySourceSlotsRechecked": 516,
+    "correctedMunicipalitiesRechecked": 89,
+    "primarySourceSlotsRechecked": 521,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -165,6 +165,36 @@
         "code": "24461",
         "service": "housingSupport",
         "name": "玉城町"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "27209",
+        "service": "housingSupport",
+        "name": "守口市"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "27231",
+        "service": "housingSupport",
+        "name": "大阪狭山市"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "27322",
+        "service": "housingSupport",
+        "name": "能勢町"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "24343",
+        "service": "housingSupport",
+        "name": "朝日町"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "28218",
+        "service": "housingSupport",
+        "name": "小野市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -251,7 +281,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 144,
+      "generalHousingMisclassification": 139,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -273,7 +303,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残144件",
+      "一般住宅・移住制度の分類候補残139件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ]
