@@ -1,0 +1,88 @@
+name: Temporary West A Housing Correction Plan
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-housing-correction-plan-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  plan:
+    if: github.head_ref == 'audit/west-a-housing-classification-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create compact correction plan
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare';
+          const summaryPath = `${root}/operations/audits/west-a-housing-high-risk-summary-20260725.json`;
+          const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+          const strong = summary.items.filter((item) => item.strictDisposition === 'strong_general_only_candidate');
+          const manual = summary.items.filter((item) => item.strictDisposition === 'manual_review_required');
+          const compact = (item) => ({
+            municipalityCode: item.municipalityCode,
+            municipalityName: item.municipalityName,
+            prefectureCode: item.prefectureCode,
+            prefecture: item.prefecture,
+            currentSummary: item.currentSummary,
+            sourceUrl: item.primarySource?.url ?? null,
+            fetchedTitle: item.fetchedTitle,
+            httpStatus: item.httpStatus,
+            additionalSourceUrls: (item.additionalSources ?? []).map((source) => source.url),
+            requiredAction: item.requiredAction
+          });
+          const plan = {
+            schemaVersion: '1.0.0',
+            planId: 'west-a-housing-classification-correction-plan-20260725',
+            generatedAt: '2026-07-25T14:58:00+09:00',
+            sourceSummary: summaryPath,
+            strongGeneralOnlyCount: strong.length,
+            manualReviewCount: manual.length,
+            fetchProblemCount: summary.fetchProblems.length,
+            correctionsPlanned: strong.map(compact),
+            manualReview: manual.map(compact),
+            fetchProblems: summary.fetchProblems.map((item) => ({
+              municipalityCode: item.municipalityCode,
+              municipalityName: item.municipalityName,
+              prefectureCode: item.prefectureCode,
+              sourceUrl: item.sourceUrl,
+              finalUrl: item.finalUrl,
+              httpStatus: item.httpStatus,
+              disposition: item.disposition,
+              error: item.error
+            })),
+            correctionPolicy: {
+              afterStatus: 'unavailable',
+              preserveGeneralProgramFacts: true,
+              preserveOfficialSource: true,
+              summaryRule: '一般制度は確認できるが子育て世帯固有条件を確認できない',
+              noInference: true
+            },
+            status: strong.length > 0 ? 'correction_ready' : 'no_correction_candidates',
+            blocker: null
+          };
+          fs.writeFileSync(`${root}/operations/audits/west-a-housing-classification-correction-plan-20260725.json`, JSON.stringify(plan, null, 2) + '\n');
+          NODE
+
+          rm -f jichitai-compare/operations/control/west-a-housing-correction-plan-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-housing-correction-plan.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-housing-classification-correction-plan-20260725.json \
+                  jichitai-compare/operations/control/west-a-housing-correction-plan-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-housing-correction-plan.yml
+          git diff --cached --check
+          git commit -m 'audit: 西日本A住宅支援29件の訂正計画を確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
