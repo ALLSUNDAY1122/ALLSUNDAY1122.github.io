@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-post-final-independent-sample-20260725",
+  "team": "西日本調査班A",
+  "checkedAt": "2026-07-25T14:18:00+09:00",
+  "trigger": "西日本訂正26件の最終状態確定後の独立抜き取り監査",
+  "sample": {
+    "municipalityCount": 6,
+    "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+    "municipalities": [
+      {"code":"33202","name":"倉敷市","focus":"schoolMeals","result":"matched"},
+      {"code":"37203","name":"坂出市","focus":"temporaryChildcare,housingSupport","result":"housing_category_corrected"},
+      {"code":"39210","name":"四万十市","focus":"schoolMeals,housingSupport","result":"housing_category_corrected"},
+      {"code":"40202","name":"大牟田市","focus":"childMedical,temporaryChildcare","result":"matched"},
+      {"code":"43215","name":"天草市","focus":"schoolMeals,housingSupport,temporaryChildcare","result":"school_meal_and_housing_corrected"},
+      {"code":"46222","name":"奄美市","focus":"temporaryChildcare,schoolMeals,housingSupport","result":"matched"}
+    ]
+  },
+  "corrections": [
+    {
+      "municipalityCode":"37203","municipalityName":"坂出市","service":"housingSupport","classification":"category_error","before":"verified_general_migration_empty_house_program","after":"unavailable_no_child_specific_housing_program","officialSources":["https://www.city.sakaide.lg.jp/soshiki/seisaku/akiyakaisyuu.html","https://www.city.sakaide.lg.jp/soshiki/seisaku/tokyoujiturn.html"]
+    },
+    {
+      "municipalityCode":"39210","municipalityName":"四万十市","service":"housingSupport","classification":"category_error","before":"verified_general_migration_housing_program","after":"unavailable_no_child_specific_housing_program","officialSources":["https://www.city.shimanto.lg.jp/site/iju-teiju-subsite/3021.html","https://www.city.shimanto.lg.jp/life/1/6/30/index.html"]
+    },
+    {
+      "municipalityCode":"43215","municipalityName":"天草市","service":"schoolMeals","classification":"status_judgement_error","before":"unavailable_middle_school_conditions_unconfirmed","after":"verified_elementary_free_middle_max390_account_transfer","officialSources":["https://www.city.amakusa.kumamoto.jp/kiji00313974/index.html","https://www2.city.amakusa.kumamoto.jp/reiki/reiki_honbun/r351RG00001532.html","https://www.city.amakusa.kumamoto.jp/kiji00313931/index.html"]
+    },
+    {
+      "municipalityCode":"43215","municipalityName":"天草市","service":"housingSupport","classification":"category_error","before":"verified_general_home_renovation_program","after":"unavailable_no_child_specific_housing_program","officialSources":["https://www.city.amakusa.kumamoto.jp/kiji00314159/index.html"]
+    }
+  ],
+  "integration": {
+    "regionalPullRequestNumber": 3433,
+    "correctionRunnerRunNumber": 1,
+    "correctionRunnerResult": "success",
+    "taskSourceNormalizationRunNumber": 1,
+    "taskSourceNormalizationResult": "success",
+    "temporaryWorkflowsRemoved": true,
+    "firstCleanCiRunNumber": 8343,
+    "firstCleanCiResult": "failed_task_official_sources_included_additional_sources",
+    "validatorRule": "task.officialSources must equal the unique primary source.url values for completed services",
+    "finalCiRetriggeredAt": "2026-07-25T14:19:00+09:00",
+    "status": "regional_ci_pending"
+  },
+  "summary": {
+    "sampledMunicipalityCount": 6,
+    "matchedMunicipalityCount": 3,
+    "correctedMunicipalityCount": 3,
+    "correctedServiceCount": 4,
+    "categoryErrorCount": 3,
+    "statusJudgementErrorCount": 1,
+    "unresolvedCount": 0,
+    "blocker": null,
+    "result": "completed_with_four_corrections"
+  }
+}
