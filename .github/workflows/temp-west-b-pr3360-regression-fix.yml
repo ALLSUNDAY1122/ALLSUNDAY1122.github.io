@@ -1,9 +1,13 @@
 name: Temporary West B PR3360 Regression Fix
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - region/west
+    types:
+      - opened
+      - reopened
+      - synchronize
     paths:
       - jichitai-compare/operations/control/west-b-pr3360-regression-fix-trigger.json
 
@@ -12,7 +16,7 @@ permissions:
 
 jobs:
   fix:
-    if: github.head_ref == 'fix/west-four-source-blockers-20260725'
+    if: github.event.pull_request.head.ref == 'fix/west-four-source-blockers-20260725'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -24,6 +28,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Refresh after coordinator runner
+        shell: bash
+        run: |
+          sleep 75
+          git fetch origin fix/west-four-source-blockers-20260725
+          git reset --hard origin/fix/west-four-source-blockers-20260725
       - name: Restore direct child medical source and audit evidence
         shell: bash
         run: |
@@ -42,7 +52,7 @@ jobs:
               target: '新富町に住所がある乳幼児、小中学生、高校生等（18歳到達後最初の3月31日まで）',
               coverage: '保険診療の入院・外来・調剤に係る自己負担額',
               copay: '2023年1月1日以降、自己負担なし',
-              application: '子ども医療費受給資格登録申請と資格証交付が必要',
+              application: '子ども医療費受給資格登録申請と資格証交付申請が必要',
               exclusion: '予防接種、入院時食事代等の保険外費用、高額療養費・附加給付等は対象外'
             },
             source: {
@@ -60,11 +70,12 @@ jobs:
 
           const taskPath = 'jichitai-compare/operations/tasks/45402.json';
           const task = read(taskPath);
+          task.currentBranch = 'fix/west-four-source-blockers-20260725';
           task.officialSources = [...new Set([
             'https://www.town.shintomi.lg.jp/item/1600.htm',
             ...task.officialSources.filter((url) => url !== 'https://www.town.shintomi.lg.jp/item/1600.htm')
           ])];
-          task.lastUpdatedAt = '2026-07-25T13:35:00+09:00';
+          task.lastUpdatedAt = '2026-07-25T13:40:00+09:00';
           task.lastUpdatedBy = '西日本調査班B';
           task.notes = Array.isArray(task.notes) ? task.notes : [];
           const badNote = '2026-07-25: 旧子ども医療費ページ404のため、現行基金ページと現行申請書へ出典更新し、live公式情報で確認できる範囲へ説明を整理。';
@@ -89,7 +100,6 @@ jobs:
           };
           item.note = '利用者向け直接制度ページを主出典として維持。基金ページは制度財源の補足出典。';
           audit.generatedAt = new Date().toISOString();
-          audit.expectedAfterFix.brokenPrimarySourceCount = 0;
           write(auditPath, audit);
 
           const requestPath = 'jichitai-compare/operations/audits/west-four-source-blockers-regional-validation-request-20260725.json';
@@ -106,9 +116,12 @@ jobs:
       - name: Commit regression prevention
         shell: bash
         run: |
-          rm -f jichitai-compare/operations/control/west-b-pr3360-regression-fix-trigger.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jichitai-compare
+          if git diff --cached --quiet; then
+            echo "No changes required"
+            exit 0
+          fi
           git commit -m "fix: PR3360の新富町子ども医療退行を防止"
           git push origin HEAD:fix/west-four-source-blockers-20260725
