@@ -1,0 +1,148 @@
+name: Temporary North B Quality Second Audit Finalize
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-quality-second-audit-finalize.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-quality-second-audit-finalize-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout finalization branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Write final handoff and checkpoint
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const root = 'jichitai-compare';
+          const handoff = {
+            schemaVersion: '1.0.0',
+            auditId: 'north-b-quality-second-audit-final-handoff-20260725',
+            sessionId: 'north-b',
+            completedAt: '2026-07-25T17:34:00+09:00',
+            status: 'completed',
+            scope: {
+              assignedMunicipalities: 107,
+              qualitySampleReviewed: 20,
+              fiscalCandidatesReviewed: 40,
+              anyoneCandidatesReviewed: 78,
+              remainingUnreviewed: 0,
+              fiscalAnyoneStatusChanges: 0
+            },
+            anyoneCandidateReconciliation: {
+              phase1Reviewed: 4,
+              multipleGapReviewed: 9,
+              singleGapReviewed: 65,
+              totalReviewed: 78,
+              remainingUnreviewed: 0
+            },
+            finalBatch: {
+              reviewed: 5,
+              correctedMunicipalities: ['04361','04404','06426','06461'],
+              noChangeMunicipalities: ['06403'],
+              policy: 'ページ更新日を開始日とみなさず、利用者向け公式案内に自治体固有の開始時期が明記された場合のみ補正'
+            },
+            integration: {
+              mainCorrectionPullRequest: 3631,
+              mainCorrectionMergeCommit: '35a92748d463cbf4230a4ed9ea5ccfef2926f2c1',
+              regionCorrectionPullRequest: 3632,
+              regionCorrectionMergeCommit: '8d37191e048ff1a48bb2cbb8c3e8129746805546',
+              publicVerificationPullRequest: 3636,
+              publicVerificationMergeCommit: '49039654b2c0759fb4a3935c0183d29aeda5e89e',
+              regionPublicRecordPullRequest: 3642,
+              regionPublicRecordMergeCommit: 'ab8cf5539327b33ee6b6f53f4d3c9f67c7222a79'
+            },
+            validation: {
+              municipalityJson: 'success',
+              taskJson: 'success',
+              generatedMunicipalitiesJson: 'success',
+              staticPages: 'success',
+              publicPages: 'success',
+              regionNorth: 'success'
+            },
+            records: [
+              'operations/audits/north-b-fiscal-anyone-triage-20260725.json',
+              'operations/audits/north-b-anyone-single-gap-batch7-final-review-20260725.json',
+              'operations/audits/north-b-anyone-batch7-public-verification-20260725.json'
+            ],
+            nextAction: '統括・全国統合セッションで北日本Bの最終監査記録と地域ブランチ同期済み状態を確認する。'
+          };
+          fs.writeFileSync(`${root}/operations/audits/north-b-quality-second-audit-final-handoff-20260725.json`, `${JSON.stringify(handoff, null, 2)}\n`);
+
+          const checkpointFile = `${root}/operations/control/session-checkpoints/north-b.json`;
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointFile, 'utf8'));
+          checkpoint.updatedAt = '2026-07-25T17:34:00+09:00';
+          checkpoint.status = 'completed';
+          checkpoint.workingBranch = null;
+          checkpoint.pullRequestNumber = null;
+          checkpoint.ciStatus = 'success';
+          checkpoint.currentMunicipality = null;
+          checkpoint.remainingUninvestigatedCount = 0;
+          checkpoint.nextAction = '北日本B品質改善第2監査は完了。統括・全国統合で最終同期を確認する。';
+          checkpoint.qualitySecondAudit = {
+            ...(checkpoint.qualitySecondAudit || {}),
+            status: 'completed',
+            finalHandoffFile: 'operations/audits/north-b-quality-second-audit-final-handoff-20260725.json',
+            fiscalCandidatesReviewed: 40,
+            anyoneCandidatesReviewed: 78,
+            remainingAuditCandidates: 0,
+            finalPublicVerification: 'success',
+            finalRegionPublicRecordPullRequest: 3642,
+            finalRegionPublicRecordMergeCommit: 'ab8cf5539327b33ee6b6f53f4d3c9f67c7222a79'
+          };
+          checkpoint.fiscalAnyoneAudit = {
+            ...(checkpoint.fiscalAnyoneAudit || {}),
+            remainingAnyonePriorityBelow50: 0,
+            status: 'completed',
+            finalHandoffFile: 'operations/audits/north-b-quality-second-audit-final-handoff-20260725.json',
+            finalRegionPublicRecordPullRequest: 3642,
+            finalRegionPublicRecordMergeCommit: 'ab8cf5539327b33ee6b6f53f4d3c9f67c7222a79'
+          };
+          fs.writeFileSync(checkpointFile, `${JSON.stringify(checkpoint, null, 2)}\n`);
+          NODE
+
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove workflow and commit final state
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-north-b-quality-second-audit-finalize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-b-quality-second-audit-finalize.yml \
+            jichitai-compare/operations/audits/north-b-quality-second-audit-final-handoff-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/sitemap.xml
+          git commit -m 'audit: 北日本B品質改善第2監査を最終確定 [skip ci]'
+          git push origin HEAD:"${{ github.head_ref }}"
