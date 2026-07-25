@@ -6,7 +6,14 @@
   "recordedAt": "2026-07-25T15:18:00+09:00",
   "status": "completed_with_38_housing_classification_corrections",
   "scope": {
-    "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
     "municipalityCount": 226,
     "housingSupportVerifiedBeforeAudit": 217,
     "housingSupportUnavailableBeforeAudit": 9,
@@ -50,8 +57,11 @@
     "finalMainSyncBotHeadCiRunNumber": 8540,
     "finalMainSyncBotHeadCiDisposition": "action_required_without_jobs_after_github_actions_bot_update",
     "finalMainSyncCleanCiRetriggeredAt": "2026-07-25T15:29:00+09:00",
-    "finalMainSyncStatus": "clean_ci_pending",
-    "finalMainSyncPreparedAt": "2026-07-25T15:27:00+09:00"
+    "finalMainSyncStatus": "completed",
+    "finalMainSyncPreparedAt": "2026-07-25T15:27:00+09:00",
+    "finalMainSyncCiRunNumber": 8543,
+    "finalMainSyncMergeSha": "3d983dec8e34b8cdd8bb52ab2df3fbdd81599cd2",
+    "finalMainSyncCompletedAt": "2026-07-25T15:31:00+09:00"
   },
   "integrity": {
     "publicPageTargetCount": 38,
@@ -63,7 +73,8 @@
     "taskStatusMergedCount": 38,
     "temporaryWorkflowRemainingCount": 0,
     "unresolvedCount": 0,
-    "blocker": null
+    "blocker": null,
+    "mainCheckpointFinalized": true
   },
   "nextAction": "新しい公式情報または子育て世帯固有条件が確認された場合のみ個別再判定する。一般制度だけを根拠にverifiedへ戻さない。"
 }
