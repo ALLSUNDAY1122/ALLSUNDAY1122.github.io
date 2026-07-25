@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-25T09:13:00+09:00",
+  "updatedAt": "2026-07-25T09:32:00+09:00",
   "phase": "published",
   "mainBranch": "main",
   "regionalBranches": {"north":"region/north","east":"region/east","central":"region/central","west":"region/west"},
@@ -8,7 +8,7 @@
   "regionalCompletedSinceLastRelease": {"north":0,"east":0,"central":0,"west":0,"total":0},
   "priority": {
     "type": "release-monitoring",
-    "nextAction": "全国1,741自治体・15,669制度は完了・公開確認済み。中日本Aの継続確認24項目はIssue #3141、栄村公式サイト復旧後の再監査はIssue #2847で非ブロッキング追跡する。公式情報更新、CI異常、公開文言異常が発生した場合に保守を再開する。"
+    "nextAction": "全国1,741自治体・15,669制度は完了・公開確認済み。中日本Aの継続確認23項目はIssue #3141、栄村公式サイト復旧後の再監査はIssue #2847で非ブロッキング追跡する。公式情報更新、CI異常、公開文言異常が発生した場合に保守を再開する。"
   },
   "publication": {
     "status": "published_verified",
@@ -43,11 +43,11 @@
       "checkedAt": "2026-07-25T08:39:00+09:00"
     }
   },
-  "lastNationalIntegrationAt": "2026-07-25T09:12:00+09:00",
-  "lastNationalIntegrationPr": 3181,
+  "lastNationalIntegrationAt": "2026-07-25T09:31:00+09:00",
+  "lastNationalIntegrationPr": 3184,
   "latestGeneratedMunicipalityCount": 1741,
   "latestGeneratedServiceCount": 15669,
-  "latestGeneratedPullRequest": 3181,
+  "latestGeneratedPullRequest": 3184,
   "latestPublicCountPullRequest": 3175,
   "regionalMergedMunicipalities": 1741,
   "remainingMunicipalities": 0,
@@ -67,23 +67,25 @@
     "resolutionCiRunNumber": 7747,
     "resolvedTrackingIssueNumber": 3166,
     "resolvedTrackingIssueStatus": "closed",
-    "latestQualityUpdatePullRequestNumber": 3181,
-    "latestQualityUpdateCiRunNumber": 7781
+    "latestQualityUpdatePullRequestNumber": 3184,
+    "latestQualityUpdateCiRunNumber": 7788
   },
   "nonBlockingFollowUps": [
     {
       "scope": "中日本調査班A",
-      "itemCount": 24,
+      "itemCount": 23,
       "originalItemCount": 25,
-      "resolvedItemCount": 1,
+      "resolvedItemCount": 2,
       "trackingIssueNumber": 3141,
-      "status": "published_one_item_resolved_waiting_for_more_specific_official_information",
-      "latestRecheckPullRequestNumber": 3180,
-      "latestRecheckCiRunNumber": 7778,
-      "latestNationalSyncPullRequestNumber": 3181,
-      "latestNationalSyncCiRunNumber": 7781,
-      "resolvedMunicipalityCode": "25425",
-      "resolvedService": "schoolMeals",
+      "status": "published_two_items_resolved_waiting_for_more_specific_official_information",
+      "latestRecheckPullRequestNumber": 3183,
+      "latestRecheckCiRunNumber": 7785,
+      "latestNationalSyncPullRequestNumber": 3184,
+      "latestNationalSyncCiRunNumber": 7788,
+      "resolvedItems": [
+        {"municipalityCode":"25425","municipalityName":"愛荘町","service":"schoolMeals","nationalPullRequestNumber":3181,"nationalCiRunNumber":7781},
+        {"municipalityCode":"24471","municipalityName":"大紀町","service":"schoolMeals","nationalPullRequestNumber":3184,"nationalCiRunNumber":7788,"correction":"8割助成から全額助成・保護者請求なしへ訂正"}
+      ],
       "partialUpdateMunicipalityCode": "23235",
       "partialUpdateService": "schoolMeals"
     },
