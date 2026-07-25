@@ -12422,29 +12422,25 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "岐阜県外から転入して住宅を新築・購入する、18歳未満の子がいる世帯または夫婦の一方が40歳未満の世帯へ30万円を交付する。",
+          "summary": "岐阜県外から移住して住宅を新築・購入する、18歳未満の子がいる世帯または夫婦の一方が40歳未満の世帯へ30万円を交付する。",
           "details": {
             "program": "瑞浪市子育て世帯等移住促進奨励金",
             "amount": "30万円",
-            "housing": "2026年4月1日から2029年3月31日までに住宅を新築または購入し、所有権保存登記を完了すること",
-            "migration": "2026年4月1日以降に岐阜県外から転入し、転入前3年間は瑞浪市に住所がないこと",
-            "household": "転入時に同一世帯の18歳未満の子がいる、または配偶者のいずれか一方が40歳未満であること等",
-            "exclusion": "瑞浪市東京圏からの移住支援金との併用不可"
+            "housingCondition": "2026年4月1日から2029年3月31日までに市内住宅を新築または購入し、所有権保存登記を完了すること",
+            "migrationCondition": "2026年4月1日以降に岐阜県外から転入し、転入前3年間は瑞浪市に住所がないこと",
+            "householdCondition": "転入時に同一世帯に18歳未満の子がいる、または申請者に配偶者がいて夫婦の一方が40歳未満であること",
+            "residenceCondition": "申請日から5年以上継続して市内に居住する意思、自治会加入、市税等の滞納なし等が必要",
+            "combination": "瑞浪市東京圏からの移住支援金との併用不可"
           },
           "source": {
             "url": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1001522.html",
-            "checkedAt": "2026-07-25"
+            "checkedAt": "2026-07-26"
           },
           "additionalSources": [
             {
-              "url": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1011635.html",
-              "checkedAt": "2026-07-25",
-              "description": "2026年度結婚新生活応援支援金"
-            },
-            {
-              "url": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1001516.html",
-              "checkedAt": "2026-07-25",
-              "description": "東京圏移住支援金。18歳未満世帯員を帯同する世帯へ30万円加算"
+              "url": "https://iju.city.mizunami.lg.jp/living/topics/",
+              "checkedAt": "2026-07-26",
+              "description": "住まいに関する支援制度一覧と対象要件の概要"
             }
           ]
         },
@@ -18330,21 +18326,14 @@
           "status": "unavailable",
           "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "confirmedGeneralProgram": "39歳以下で2人以上の世帯を構成し、岐阜県外から移住する方へ25万円を交付する御嵩町移住支援補助金を実施する。",
-            "classificationReview": "年齢と世帯人数を要件とする一般移住支援で、子どもの有無、新婚世帯、住宅取得・改修・家賃費用を固有要件とする制度ではないため、子育て世帯向け住宅支援として登録しない。",
+            "confirmedGeneralProgram": "令和7年4月1日以降に岐阜県外から転入した39歳以下かつ2人以上世帯へ25万円の移住支援補助金を交付する。",
+            "classificationReview": "年齢と世帯人数を要件とする一般移住支援であり、子どもの有無、新婚、住宅取得・改修・家賃費用を対象とする固有条件を現行公式本文で確認できないため、子育て世帯向け住宅支援として登録しない。",
             "childSpecificConditionConfirmed": false
           },
           "source": {
             "url": "https://www.town.mitake.lg.jp/portal/town/measure/other-various-plan/post0076762/",
-            "checkedAt": "2026-07-25"
-          },
-          "additionalSources": [
-            {
-              "url": "https://www.town.mitake.lg.jp/portal/town/measure/other-various-plan/post0072709/",
-              "checkedAt": "2026-07-25",
-              "description": "御嵩町の現行移住制度一覧"
-            }
-          ]
+            "checkedAt": "2026-07-26"
+          }
         },
         "bulkyWaste": {
           "status": "verified",
@@ -19905,19 +19894,27 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "市内の中古住宅購入者へ、住宅取得・改修・子育て・移住等の要件に応じ最大80万円を交付する。",
+          "summary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
           "details": {
-            "program": "島田市中古住宅購入奨励金",
-            "receptionStatus": "令和8年度は予算額到達により申請受付終了",
-            "purchase": "購入額の2分の1、上限30万円",
-            "renovation": "市内事業者による改修費、上限20万円",
-            "additions": "中学生以下の子との同居、居住誘導区域、市外からの移住について各上限10万円",
-            "maximum": "最大80万円（島田市金券を含む）"
+            "program": "島田市結婚新生活支援補助金",
+            "target": "2026年1月1日以後に婚姻届等が受理され、夫婦等がともに39歳以下、合計所得500万円未満等の要件を満たす世帯",
+            "covered": "市内住宅の取得、リフォーム、賃借、引越費用",
+            "amount": "夫婦等がともに29歳以下は上限60万円、それ以外の39歳以下は上限30万円",
+            "expensePeriod": "2026年4月1日から2027年3月10日までに支払った対象費用",
+            "applicationDeadline": "2027年3月10日まで。予算上限に達した場合は年度途中で終了する場合がある",
+            "replacementReason": "登録していた2026年度中古住宅購入奨励金は予算額到達により受付終了したため、受付中の現行新婚住宅費支援へ差し替えた。"
           },
           "source": {
-            "url": "https://www.city.shimada.shizuoka.jp/kurashi-docs/chyukojutakukounyuusyoureikin.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.city.shimada.shizuoka.jp/kurashi-docs/kekkonsinseikatsusien.html",
+            "checkedAt": "2026-07-26"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.shimada.shizuoka.jp/kurashi-docs/chyukojutakukounyuusyoureikin.html",
+              "checkedAt": "2026-07-26",
+              "description": "旧主制度の2026年度受付終了確認"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",

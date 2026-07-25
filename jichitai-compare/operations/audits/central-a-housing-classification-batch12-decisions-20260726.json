@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch12-decisions-20260726",
+  "decidedAt": "2026-07-26T01:31:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3721,
+  "runnerWorkflowRunId": 30165865176,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 3,
+  "noChangeCount": 2,
+  "statusToUnavailableCount": 1,
+  "verifiedReplacementCount": 2,
+  "corrected": [
+    {
+      "code": "21208",
+      "name": "瑞浪市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_child_household_home_acquisition_program",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "岐阜県外から転入して住宅を新築・購入する、18歳未満の子がいる世帯または夫婦の一方が40歳未満の世帯へ30万円を交付する。",
+      "afterSummary": "岐阜県外から移住して住宅を新築・購入する、18歳未満の子がいる世帯または夫婦の一方が40歳未満の世帯へ30万円を交付する。",
+      "officialSource": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1001522.html"
+    },
+    {
+      "code": "21521",
+      "name": "御嵩町",
+      "service": "housingSupport",
+      "correctionType": "general_migration_misclassification",
+      "beforeStatus": "unavailable",
+      "afterStatus": "unavailable",
+      "beforeSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.mitake.lg.jp/portal/town/measure/other-various-plan/post0076762/"
+    },
+    {
+      "code": "22209",
+      "name": "島田市",
+      "service": "housingSupport",
+      "correctionType": "replace_closed_purchase_program_with_current_newlywed_program",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "市内の中古住宅購入者へ、住宅取得・改修・子育て・移住等の要件に応じ最大80万円を交付する。",
+      "afterSummary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
+      "officialSource": "https://www.city.shimada.shizuoka.jp/kurashi-docs/kekkonsinseikatsusien.html"
+    }
+  ],
+  "unchanged": [
+    {
+      "code": "23207",
+      "name": "豊川市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "都市機能誘導区域内に住宅を取得して転入・転居する世帯へ、固定資産税相当額と子育て奨励金を交付する。",
+      "officialSource": "https://www.city.toyokawa.lg.jp/shisei/seisaku/10/1/16698.html",
+      "reason": "中学生以下の子1人につき10万円の子育て奨励金が現行公式ページと2026年5月広報で確認でき、登録内容と一致する。"
+    },
+    {
+      "code": "22225",
+      "name": "伊豆の国市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "東京圏からの移住者へ、単身60万円、2人以上世帯100万円、18歳未満1人につき100万円を加算する。",
+      "officialSource": "https://www.city.izunokuni.shizuoka.jp/seisaku/ijuu/shiennkinn.html",
+      "reason": "18歳未満の子1人につき100万円加算する2026年度移住・就業支援金が現行公式ページで確認でき、登録内容と一致する。"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 119,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 114
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "受付終了した制度を現行のverified主制度として残さず、現在申請可能な子育て・新婚住宅費支援へ差し替える",
+    "年齢・世帯人数だけの一般移住支援は、子ども・新婚・住宅費の固有条件がなければhousingSupportのverified根拠にしない",
+    "子ども加算が現行公式本文に明記され、登録内容と一致する場合はno-changeとして証跡化する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
