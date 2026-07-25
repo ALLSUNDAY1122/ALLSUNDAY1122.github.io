@@ -1,0 +1,216 @@
+name: Temporary West Corrections Reverification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-corrections-reverify-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'audit/west-corrections-reverify-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout verification branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch region west
+        run: git fetch origin region/west:refs/remotes/origin/region/west
+
+      - name: Verify 26 corrected records
+        shell: bash
+        run: |
+          cat > /tmp/west_corrections_reverify.py <<'PY'
+          import json
+          import subprocess
+          import time
+          import urllib.error
+          import urllib.request
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          BASE = Path('jichitai-compare')
+          PUBLIC_BASE = 'https://allsunday1122.github.io/jichitai-compare'
+          RECORDS = [
+            {'id':'west-a-01','code':'33213','name':'赤磐市','team':'west-a','services':['postpartumCare']},
+            {'id':'west-a-02','code':'33346','name':'和気町','team':'west-a','services':['temporaryChildcare'],'tokens':['和気にこにこ園','1,800']},
+            {'id':'west-a-03','code':'33346','name':'和気町','team':'west-a','services':['bulkyWaste']},
+            {'id':'west-a-04','code':'40224','name':'福津市','team':'west-a','services':['disasterPrevention']},
+            {'id':'west-a-05','code':'43443','name':'益城町','team':'west-a','services':['bulkyWaste'],'tokens':['500','400']},
+            {'id':'west-a-06','code':'40610','name':'福智町','team':'west-a','services':['postpartumCare']},
+            {'id':'west-a-07','code':'40646','name':'上毛町','team':'west-a','services':['bulkyWaste']},
+            {'id':'west-a-08','code':'37324','name':'小豆島町','team':'west-a','services':['temporaryChildcare']},
+            {'id':'west-a-09','code':'46533','name':'和泊町','team':'west-a','services':['bulkyWaste'],'tokens':['100']},
+            {'id':'west-b-01','code':'31384','name':'日吉津村','team':'west-b','services':['disasterPrevention']},
+            {'id':'west-b-02','code':'32528','name':'隠岐の島町','team':'west-b','services':['bulkyWaste']},
+            {'id':'west-b-03','code':'34211','name':'大竹市','team':'west-b','services':['postpartumCare'],'statuses':{'postpartumCare':'unavailable'}},
+            {'id':'west-b-04','code':'38442','name':'伊方町','team':'west-b','services':['bulkyWaste']},
+            {'id':'west-b-05','code':'38484','name':'松野町','team':'west-b','services':['housingSupport'],'statuses':{'housingSupport':'unavailable'}},
+            {'id':'west-b-06','code':'42210','name':'壱岐市','team':'west-b','services':['bulkyWaste']},
+            {'id':'west-b-07','code':'42212','name':'西海市','team':'west-b','services':['sickChildCare']},
+            {'id':'west-b-08','code':'42308','name':'時津町','team':'west-b','services':['schoolMeals']},
+            {'id':'west-b-09','code':'44210','name':'杵築市','team':'west-b','services':['disasterPrevention']},
+            {'id':'west-b-10','code':'42391','name':'佐々町','team':'west-b','services':['schoolMeals'],'statuses':{'schoolMeals':'unavailable'}},
+            {'id':'west-b-11','code':'45402','name':'新富町','team':'west-b','services':['childMedical'],'statuses':{'childMedical':'verified'},'tokens':['18歳']},
+            {'id':'west-b-12','code':'47302','name':'大宜味村','team':'west-b','services':['childcareFee','schoolMeals'],'statuses':{'childcareFee':'verified','schoolMeals':'verified'},'tokens':['無償']},
+            {'id':'west-b-13','code':'45442','name':'日之影町','team':'west-b','services':['sickChildCare']},
+            {'id':'west-b-14','code':'45442','name':'日之影町','team':'west-b','services':['childcareFee']},
+            {'id':'west-b-15','code':'45443','name':'五ヶ瀬町','team':'west-b','services':['childMedical']},
+            {'id':'west-b-16','code':'47328','name':'中城村','team':'west-b','services':['temporaryChildcare'],'statuses':{'temporaryChildcare':'unavailable'}},
+            {'id':'west-b-17','code':'47350','name':'南風原町','team':'west-b','services':['schoolMeals']},
+          ]
+
+          def load(path):
+              return json.loads(Path(path).read_text(encoding='utf-8'))
+
+          def region_json(path):
+              text = subprocess.check_output(['git','show',f'origin/region/west:{path}'], text=True)
+              return json.loads(text)
+
+          def fetch(url, timeout=25):
+              request = urllib.request.Request(url, headers={'User-Agent':'jichitai-quality-audit/1.0','Cache-Control':'no-cache'})
+              try:
+                  with urllib.request.urlopen(request, timeout=timeout) as response:
+                      return {'status':response.status,'finalUrl':response.geturl(),'body':response.read().decode('utf-8','replace'),'category':'reachable'}
+              except urllib.error.HTTPError as error:
+                  category = 'broken' if error.code in (404,410) else 'access_restricted' if error.code in (401,403,429) else 'temporary_http_error' if error.code >= 500 else 'other_http_error'
+                  return {'status':error.code,'finalUrl':error.geturl(),'body':'','category':category,'error':repr(error)}
+              except Exception as error:
+                  return {'status':None,'finalUrl':url,'body':'','category':'network_warning','error':repr(error)}
+
+          generated_doc = load(BASE/'data/generated/municipalities.json')
+          if isinstance(generated_doc,list): generated_list=generated_doc
+          elif isinstance(generated_doc,dict) and isinstance(generated_doc.get('municipalities'),list): generated_list=generated_doc['municipalities']
+          elif isinstance(generated_doc,dict) and isinstance(generated_doc.get('data'),dict) and isinstance(generated_doc['data'].get('municipalities'),list): generated_list=generated_doc['data']['municipalities']
+          else: generated_list=[v for v in generated_doc.values() if isinstance(v,dict)] if isinstance(generated_doc,dict) else []
+          generated_by_code={str(v.get('code') or v.get('municipalityCode')):v for v in generated_list}
+
+          public_generated_response = fetch(f'{PUBLIC_BASE}/data/generated/municipalities.json?audit={int(time.time())}',45)
+          try:
+              pgdoc=json.loads(public_generated_response['body']) if public_generated_response['body'] else []
+              if isinstance(pgdoc,list): pglist=pgdoc
+              elif isinstance(pgdoc,dict) and isinstance(pgdoc.get('municipalities'),list): pglist=pgdoc['municipalities']
+              elif isinstance(pgdoc,dict) and isinstance(pgdoc.get('data'),dict) and isinstance(pgdoc['data'].get('municipalities'),list): pglist=pgdoc['data']['municipalities']
+              else: pglist=[v for v in pgdoc.values() if isinstance(v,dict)] if isinstance(pgdoc,dict) else []
+              public_generated_by_code={str(v.get('code') or v.get('municipalityCode')):v for v in pglist}
+          except Exception:
+              public_generated_by_code={}
+
+          official_url_results={}
+          results=[]
+          region_mismatches=[]
+          repository_mismatches=[]
+          public_failures=[]
+          broken_sources=[]
+          network_warnings=[]
+
+          for record in RECORDS:
+              code=record['code']; pref=code[:2]
+              source_path=f'jichitai-compare/data/municipalities/{pref}/{code}.json'
+              main=load(source_path)
+              try:
+                  region=region_json(source_path)
+              except Exception as error:
+                  region=None
+                  region_mismatches.append({'recordId':record['id'],'code':code,'type':'region_file_missing_or_unreadable','error':repr(error)})
+              task=load(BASE/'operations/tasks'/f'{code}.json')
+              generated=generated_by_code.get(code)
+              public_generated=public_generated_by_code.get(code)
+              static_html=(BASE/'municipality'/code/'index.html').read_text(encoding='utf-8')
+              public_page=fetch(f'{PUBLIC_BASE}/municipality/{code}/?audit={int(time.time())}',35)
+              service_results=[]
+              current_urls=[]
+
+              for service_key in record['services']:
+                  main_service=(main.get('services') or {}).get(service_key)
+                  region_service=(region.get('services') or {}).get(service_key) if region else None
+                  generated_service=((generated or {}).get('services') or {}).get(service_key)
+                  public_generated_service=((public_generated or {}).get('services') or {}).get(service_key)
+                  expected_status=(record.get('statuses') or {}).get(service_key)
+                  url=(((main_service or {}).get('source') or {}).get('url'))
+                  if url: current_urls.append(url)
+                  checks={
+                    'mainServiceExists':main_service is not None,
+                    'regionMatchesMain':region_service == main_service,
+                    'generatedMatchesMain':generated_service == main_service,
+                    'publicGeneratedMatchesMain':public_generated_service == main_service,
+                    'taskContainsSource':bool(url and url in (task.get('officialSources') or [])),
+                    'staticContainsSource':bool(url and (url in static_html or url.replace('&','&amp;') in static_html)),
+                    'publicContainsSource':bool(url and (url in public_page['body'] or url.replace('&','&amp;') in public_page['body'])),
+                    'expectedStatus':expected_status is None or (main_service or {}).get('status') == expected_status,
+                  }
+                  if not checks['regionMatchesMain']: region_mismatches.append({'recordId':record['id'],'code':code,'service':service_key,'type':'region_main_service_mismatch'})
+                  for key in ['generatedMatchesMain','taskContainsSource','staticContainsSource']:
+                      if not checks[key]: repository_mismatches.append({'recordId':record['id'],'code':code,'service':service_key,'type':key})
+                  for key in ['publicGeneratedMatchesMain','publicContainsSource','expectedStatus']:
+                      if not checks[key]: public_failures.append({'recordId':record['id'],'code':code,'service':service_key,'type':key})
+                  if url and url not in official_url_results:
+                      response=fetch(url,30)
+                      official_url_results[url]={k:v for k,v in response.items() if k!='body'}
+                      if response['category']=='broken': broken_sources.append({'recordId':record['id'],'code':code,'service':service_key,'url':url,'status':response['status']})
+                      elif response['category']!='reachable': network_warnings.append({'recordId':record['id'],'code':code,'service':service_key,'url':url,'status':response['status'],'category':response['category']})
+                  service_results.append({'service':service_key,'status':(main_service or {}).get('status'),'sourceUrl':url,'checks':checks})
+
+              tokens=record.get('tokens') or []
+              token_checks={token:{'main':token in json.dumps(main,ensure_ascii=False),'static':token in static_html,'public':token in public_page['body']} for token in tokens}
+              for token,checks in token_checks.items():
+                  if not checks['main'] or not checks['static']: repository_mismatches.append({'recordId':record['id'],'code':code,'type':'expected_token_missing_repository','token':token,'checks':checks})
+                  if not checks['public']: public_failures.append({'recordId':record['id'],'code':code,'type':'expected_token_missing_public','token':token})
+              page_checks={
+                'http200':public_page['status']==200,
+                'name':record['name'] in public_page['body'],
+                'canonical':f'{PUBLIC_BASE}/municipality/{code}/' in public_page['body'],
+              }
+              if not all(page_checks.values()): public_failures.append({'recordId':record['id'],'code':code,'type':'public_page_check','checks':page_checks,'status':public_page['status']})
+              results.append({'recordId':record['id'],'team':record['team'],'code':code,'name':record['name'],'services':service_results,'tokenChecks':token_checks,'publicPage':{'status':public_page['status'],'category':public_page['category'],'checks':page_checks}})
+
+          now=datetime.now(timezone.utc).isoformat()
+          blocker=bool(region_mismatches or repository_mismatches or public_failures or broken_sources)
+          output={
+            'schemaVersion':'1.0.0',
+            'auditId':'west-corrections-reverification-20260725',
+            'generatedAt':now,
+            'scope':{'ledgerRecordCount':26,'uniqueMunicipalityCount':24,'westARecordCount':9,'westBRecordCount':17},
+            'publicGeneratedJson':{k:v for k,v in public_generated_response.items() if k!='body'},
+            'summary':{
+              'regionMainMismatchCount':len(region_mismatches),
+              'repositoryMismatchCount':len(repository_mismatches),
+              'publicFailureCount':len(public_failures),
+              'brokenOfficialSourceCount':len(broken_sources),
+              'officialAccessWarningCount':len(network_warnings),
+              'releaseBlocker':'active' if blocker else 'none_detected',
+            },
+            'regionMainMismatches':region_mismatches,
+            'repositoryMismatches':repository_mismatches,
+            'publicFailures':public_failures,
+            'brokenOfficialSources':broken_sources,
+            'officialAccessWarnings':network_warnings,
+            'officialUrlResults':official_url_results,
+            'records':results,
+            'policy':'403・429・timeout等は通信警告として扱い、404・410またはregion/main/public不一致のみblocker候補とする。制度内容の最終確定は公式ページ本文確認を別途行う。'
+          }
+          path=BASE/'operations/audits/west-corrections-reverification-20260725.json'
+          path.parent.mkdir(parents=True,exist_ok=True)
+          path.write_text(json.dumps(output,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(output['summary'],ensure_ascii=False,indent=2))
+          PY
+          python3 /tmp/west_corrections_reverify.py
+
+      - name: Commit verification evidence
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/operations/audits/west-corrections-reverification-20260725.json \
+            jichitai-compare/operations/control/west-corrections-reverify-trigger-20260725.json
+          git commit -m 'audit: 西日本訂正26件の全件再確認結果を保存'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
