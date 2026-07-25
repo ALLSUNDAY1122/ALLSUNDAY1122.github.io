@@ -1,9 +1,18 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.0.1",
   "assignmentId": "coordinator-a-quality-improvement-wave2-20260725",
   "coordinatorSession": "統括A③",
   "createdAt": "2026-07-25T10:55:00+09:00",
-  "branch": "coord/quality-improvement-a-wave2-20260725",
+  "updatedAt": "2026-07-25T11:02:00+09:00",
+  "publishedControl": {
+    "pullRequestNumber": 3207,
+    "ciRunNumber": 7820,
+    "ciStatus": "success",
+    "mergeSha": "8b6db17c7573783e311a6a689eaf0ebb2dd22d11",
+    "ledgerIndexPath": "jichitai-compare/operations/audits/quality-ledger/north-east-correction-ledger-20260725.json",
+    "schemaPath": "jichitai-compare/operations/control/quality-audit-schema-v1.json",
+    "causeMatrixPath": "jichitai-compare/operations/control/quality-audit-cause-matrix-v1.json"
+  },
   "baseline": {
     "north": {
       "municipalities": 406,
@@ -24,46 +33,55 @@
       "remaining": 0
     }
   },
+  "ledgerSummary": {
+    "entryCount": 107,
+    "sessionCounts": {
+      "north-a": 13,
+      "north-b": 28,
+      "east-a": 59,
+      "east-b": 7
+    },
+    "categoryCounts": {
+      "status_judgement": 54,
+      "numeric_fact": 14,
+      "year_mismatch": 25,
+      "classification_error": 6,
+      "structure_sync": 3,
+      "url_or_description_maintenance": 5
+    }
+  },
   "assignments": [
     {
       "session": "north-a",
       "issueNumber": 3196,
       "correctionEntryCount": 13,
+      "correctionIdRange": "north-a-001..north-a-013",
       "exclusiveScope": "青森・岩手・福島。訂正13件全件、原因別横断検査、各県5〜10自治体抜き取り。",
-      "excludedScope": [
-        "北日本B担当自治体",
-        "東日本全域"
-      ]
+      "excludedScope": ["北日本B担当自治体", "東日本全域"]
     },
     {
       "session": "north-b",
       "issueNumber": 3197,
       "correctionEntryCount": 28,
+      "correctionIdRange": "north-b-001..north-b-028",
       "exclusiveScope": "北海道南部・宮城・秋田・山形の担当107自治体。2026年度こども誰でも通園制度と広域利用を重点検査。",
-      "excludedScope": [
-        "北日本A担当自治体",
-        "東日本全域"
-      ]
+      "excludedScope": ["北日本A担当自治体", "東日本全域"]
     },
     {
       "session": "east-a",
       "issueNumber": 3198,
       "correctionEntryCount": 59,
+      "correctionIdRange": "east-a-001..east-a-059",
       "exclusiveScope": "群馬・東京・山梨・長野。広域利用、制度分類、年齢、task/main同期、長野県30制度、Issue #2847。",
-      "excludedScope": [
-        "東日本B担当6県",
-        "北日本全域"
-      ]
+      "excludedScope": ["東日本B担当6県", "北日本全域"]
     },
     {
       "session": "east-b",
       "issueNumber": 3199,
       "correctionEntryCount": 7,
+      "correctionIdRange": "east-b-001..east-b-007",
       "exclusiveScope": "茨城・栃木・埼玉・千葉・神奈川・新潟。過去修正7件と都県別20自治体程度の抜き取り。",
-      "excludedScope": [
-        "東日本A担当4都県",
-        "北日本全域"
-      ]
+      "excludedScope": ["東日本A担当4都県", "北日本全域"]
     }
   ],
   "crossSessionRules": [
@@ -71,7 +89,7 @@
     "広域制度は利用者居住自治体側の担当班が判定し、施設所在自治体側は公式根拠として参照する。",
     "確定誤りは担当regionへ先に統合し、最新main基点で全国同期する。",
     "公式情報未取得は推測せず追跡Issueへ分離する。",
-    "各班は台帳correctionIdを監査結果へ記録する。"
+    "各班は台帳correctionIdまたはnewFindingIdを監査結果へ記録する。"
   ],
   "blockingPolicy": {
     "currentMajorUnfixedCount": 0,
@@ -83,13 +101,15 @@
       "CI失敗"
     ],
     "nonblockingFollowUp": [
-      {
-        "issueNumber": 2847,
-        "code": "20602",
-        "name": "栄村"
-      }
+      {"issueNumber": 2847, "code": "20602", "name": "栄村"}
     ]
   },
-  "nextCoordinatorAction": "4班のIssue進捗、PR、CI、region統合を監視し、完了分を最新mainへ全国品質同期する。",
-  "status": "assigned"
+  "issueNotification": {
+    "northACommented": true,
+    "northBCommented": true,
+    "eastACommented": true,
+    "eastBCommented": true
+  },
+  "nextCoordinatorAction": "Issues #3196〜#3199のPR・CI・region統合を監視し、原因別マトリクスに沿って不足を差し戻し、完了分を最新mainへ全国品質同期する。",
+  "status": "ledger_published_tasks_assigned"
 }
