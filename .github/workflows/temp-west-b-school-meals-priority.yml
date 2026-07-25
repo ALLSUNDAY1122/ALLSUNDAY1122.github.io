@@ -1,0 +1,91 @@
+name: Temporary West B School Meals Priority
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-school-meals-priority-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  prioritize:
+    if: github.head_ref == 'audit/west-b-school-meals-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-school-meals-crosscheck-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build priority review list
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base = 'jichitai-compare/operations';
+          const auditPath = `${base}/audits/west-b-school-meals-crosscheck-20260725.json`;
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          const flatten = (value) => {
+            if (value == null) return '';
+            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+            if (Array.isArray(value)) return value.map(flatten).join(' ');
+            return Object.values(value).map(flatten).join(' ');
+          };
+          const broad = /(無償|無料|全額助成|全額補助|全額免除)/;
+          const cautious = /(確認できない|未確認|確定できない|明示されていない|不明|窓口.*確認)/;
+          const limited = /(就学援助|要保護|準要保護|特別支援|非課税|生活保護|低所得|一部|第[二2三3]子|多子)/;
+          const prioritized = audit.candidates.map((item) => {
+            const reasons = item.reasons ?? [];
+            const text = flatten(item);
+            let score = 0;
+            const flags = [];
+            if (reasons.includes('general_free_claim_may_rely_on_limited_support')) { score += 4; flags.push('broad_claim_vs_limited_support'); }
+            if (reasons.includes('unavailable_has_direct_school_meal_source')) { score += 5; flags.push('unavailable_with_direct_source'); }
+            if (reasons.includes('verified_source_url_appears_pre_2026')) { score += 2; flags.push('pre_2026_source_path'); }
+            if (reasons.includes('verified_benefit_without_explicit_2026_basis')) { score += 1; flags.push('no_explicit_2026_basis'); }
+            if (reasons.includes('unavailable_record_contains_benefit_language')) { score += 1; flags.push('unavailable_contains_benefit'); }
+            if (reasons.includes('primary_or_additional_source_is_generic')) { score += 1; flags.push('generic_source'); }
+            if (item.status === 'unavailable' && broad.test(item.summary ?? '') && !cautious.test(item.summary ?? '')) { score += 3; flags.push('unavailable_but_summary_claims_broad_benefit'); }
+            if (item.status === 'verified' && cautious.test(item.summary ?? '')) { score += 2; flags.push('verified_but_summary_is_unconfirmed'); }
+            if (cautious.test(item.summary ?? '')) score -= 1;
+            if (limited.test(item.summary ?? '') && !broad.test(item.summary ?? '')) score -= 1;
+            return { ...item, priorityScore: score, priorityFlags: flags };
+          }).filter((item) => item.priorityScore >= 3)
+            .sort((a, b) => b.priorityScore - a.priorityScore || a.prefectureCode.localeCompare(b.prefectureCode) || a.code.localeCompare(b.code));
+
+          const review = {
+            schemaVersion: '1.0.0',
+            reviewId: 'west-b-school-meals-priority-review-20260725',
+            sourceAuditId: audit.auditId,
+            generatedAt: new Date().toISOString(),
+            candidateCount: audit.candidateCount,
+            priorityCandidateCount: prioritized.length,
+            selectionRule: 'priorityScore >= 3; high weight for broad-claim/limited-support conflict, direct source on unavailable, pre-2026 source paths, and unavailable broad-benefit summaries',
+            priorityCandidates: prioritized,
+            result: {
+              status: 'priority_candidates_generated_pending_official_review',
+              confirmedCorrectionCount: null,
+              unresolvedConfirmedErrorCount: null
+            }
+          };
+          fs.writeFileSync(`${base}/audits/west-b-school-meals-priority-review-20260725.json`, JSON.stringify(review, null, 2) + '\n');
+          console.log(JSON.stringify({ candidateCount: audit.candidateCount, priorityCandidateCount: prioritized.length, top: prioritized.slice(0, 20).map((x) => ({ code: x.code, name: x.name, score: x.priorityScore, flags: x.priorityFlags })) }, null, 2));
+          NODE
+      - name: Commit priority review
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/west-b-school-meals-priority-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-b-school-meals-priority-review-20260725.json jichitai-compare/operations/control/west-b-school-meals-priority-trigger-20260725.json
+          git commit -m 'audit: 西日本B学校給食費の優先候補を生成'
+          git push origin HEAD:audit/west-b-school-meals-crosscheck-20260725
