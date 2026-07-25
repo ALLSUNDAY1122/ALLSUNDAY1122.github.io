@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-anyone-official-policy-review-20260725",
+  "sourceAuditId": "west-b-anyone-crosscheck-20260725",
+  "priorityReviewId": "west-b-anyone-priority-review-20260725",
+  "statusFocusReviewId": "west-b-anyone-status-focus-review-20260725",
+  "reviewedAt": "2026-07-25T15:43:00+09:00",
+  "sessionId": "west-b",
+  "serviceId": "temporaryChildcare",
+  "assignedMunicipalityCount": 250,
+  "mechanicalCandidateCount": 232,
+  "priorityCandidateCount": 77,
+  "statusFocusCandidateCount": 43,
+  "nationalPolicy": {
+    "finding": "2026年度から子ども・子育て支援法に基づく新たな給付として全国の自治体で実施されるが、この事実だけでは各自治体の実施施設、受入枠、利用開始、料金を確定できない。",
+    "standardTarget": "保育所、認定こども園、幼稚園等に通っていない生後6か月から満3歳未満",
+    "standardFrame": "月10時間の範囲で時間単位利用を基本とする。地域条件は自治体・施設の現行案内で確認する。",
+    "procedure": "居住市町村へ申請し、認定後に施設検索、事前面談、予約を行う。",
+    "sources": [
+      {
+        "url": "https://www.cfa.go.jp/policies/hoiku/daredemo-tsuen/",
+        "checkedAt": "2026-07-25"
+      },
+      {
+        "url": "https://www.daretsu.cfa.go.jp/",
+        "checkedAt": "2026-07-25"
+      }
+    ]
+  },
+  "judgmentRule": {
+    "verified": "2026年度の自治体公式利用案内、実施開始案内、または現行施設情報で制度・一時預かりの実施を確認できる。",
+    "unavailable": "条例、計画、予算、全国制度説明、過年度案内だけで、2026年度の利用開始または現行施設を確認できない。",
+    "noInference": "地域独自の対象月齢、月間利用枠、料金、実施日、予約方法を全国標準から推測しない。"
+  },
+  "confirmedCorrections": [
+    {
+      "code": "36405",
+      "name": "上板町",
+      "fromStatus": "unavailable",
+      "toStatus": "verified",
+      "finding": "上板町公式サイトが2026年5月15日付で、さくら保育所の『こども誰でも通園制度のご案内』を現行掲載。",
+      "preserveUnknowns": "対象月齢、月利用枠、料金、申込方法は公式案内または施設へ確認。",
+      "source": "https://www.townkamiita.jp/docs/2026043000027/"
+    },
+    {
+      "code": "42383",
+      "name": "小値賀町",
+      "fromStatus": "unavailable",
+      "toStatus": "verified",
+      "finding": "小値賀町公式の小値賀こども園施設情報で、現行サービスとして一時保育ありと掲載。",
+      "preserveUnknowns": "対象年齢、時間、料金は更新中のため施設へ確認。",
+      "source": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/6/179.html"
+    },
+    {
+      "code": "45403",
+      "name": "西米良村",
+      "fromStatus": "unavailable",
+      "toStatus": "verified",
+      "finding": "西米良村公式の現行子育て一覧に『こども誰でも通園制度（乳児等通園支援事業）について』を掲載。",
+      "preserveUnknowns": "対象月齢、月利用枠、料金、施設、予約方法は個別案内または村窓口へ確認。",
+      "source": "https://www.vill.nishimera.lg.jp/village/category/a-00-villagelife/a-05/a-05-03"
+    },
+    {
+      "code": "45441",
+      "name": "高千穂町",
+      "fromStatus": "unavailable",
+      "toStatus": "verified",
+      "finding": "高千穂町公式ページが2026年4月からこども誰でも通園制度を開始したと明記。",
+      "preserveUnknowns": "実施施設、月利用枠、利用料、実施日、認定・予約方法は町窓口へ確認。",
+      "source": "https://www.town-takachiho.jp/top/kosodate_kyoiku/kyoiku/4369.html"
+    }
+  ],
+  "reviewedNoChange": [
+    {
+      "code": "41423",
+      "name": "大町町",
+      "status": "unavailable",
+      "reason": "2026年度の条例・認定事務要綱は確認したが、現行実施施設と利用開始案内を確認できない。"
+    },
+    {
+      "code": "42321",
+      "name": "東彼杵町",
+      "status": "unavailable",
+      "reason": "公式利用案内の掲載期間は2025年4月1日から2026年3月31日までで、2026年度の継続条件を確認できない。"
+    },
+    {
+      "code": "47328",
+      "name": "中城村",
+      "status": "unavailable",
+      "reason": "実施計画と予算上の位置付けのみで、現行利用施設・条件を確認できない。"
+    }
+  ],
+  "result": {
+    "status": "official_review_completed_corrections_pending",
+    "confirmedCorrectionCount": 4,
+    "confirmedCorrectionCodes": ["36405", "42383", "45403", "45441"],
+    "unresolvedConfirmedErrorCount": 0
+  }
+}
