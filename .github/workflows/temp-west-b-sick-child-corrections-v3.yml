@@ -63,7 +63,7 @@ jobs:
             mainMergeCommit: '18ba59a96f0afe7856e2d5df6dea5e33eba22aae',
             regionBranch: 'sync/west-b-sick-child-region-20260725'
           };
-          checkpoint.updatedAt = '2026-07-25T12:15:00+09:00';
+          checkpoint.updatedAt = '2026-07-25T12:19:00+09:00';
           fs.writeFileSync(p, JSON.stringify(checkpoint, null, 2) + '\n');
           NODE
           cd jichitai-compare
@@ -75,6 +75,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add jichitai-compare/data/municipalities jichitai-compare/operations/tasks jichitai-compare/data/generated jichitai-compare/municipality jichitai-compare/operations/progress.json jichitai-compare/operations/audits jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git add -A jichitai-compare
+          git status --short
+          if git diff --cached --quiet; then
+            echo "No regional changes to commit"
+            exit 0
+          fi
           git commit -m "sync: 西日本B病児保育6自治体をregion/westへ同期"
           git push origin HEAD:sync/west-b-sick-child-region-20260725
