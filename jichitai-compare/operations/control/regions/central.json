@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T14:41:00+09:00",
+  "updatedAt": "2026-07-25T15:13:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,8 +24,8 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "原因別重点再監査の弱い主出典第5群をPR #3451・CI #8400成功後にregion/centralへ統合。浜松市産後ケアの主出典を公式子育て情報サイトの利用者向けページへ更新し、令和8年度施設・申請手順・利用上限・料金を確定した。",
-  "nextAction": "弱い主出典の残33候補を、産後ケア、病児保育、住宅支援の順に利用者向け公式情報で確定判定する。",
+  "lastAction": "原因別重点再監査の住宅支援分類第6群をPR #3500・CI #8495成功後にregion/centralへ統合。岸和田市、豊能町、鈴鹿市、東員町、玉城町の一般移住・空き家制度を子育て世帯向け住宅支援から除外した。",
+  "nextAction": "一般住宅・移住制度の分類候補残144件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
@@ -34,13 +34,13 @@
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T14:41:00+09:00",
-    "latestRegionalPullRequestNumber": 3451,
-    "latestCiRunNumber": 8400,
+    "latestCompletedAt": "2026-07-25T15:13:00+09:00",
+    "latestRegionalPullRequestNumber": 3500,
+    "latestCiRunNumber": 8495,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 79,
-    "primarySourceSlotsRechecked": 511,
+    "correctedMunicipalitiesRechecked": 84,
+    "primarySourceSlotsRechecked": 516,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -135,6 +135,36 @@
         "code": "22130",
         "service": "postpartumCare",
         "name": "浜松市"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "27202",
+        "service": "housingSupport",
+        "name": "岸和田市"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "27321",
+        "service": "housingSupport",
+        "name": "豊能町"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "24207",
+        "service": "housingSupport",
+        "name": "鈴鹿市"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "24324",
+        "service": "housingSupport",
+        "name": "東員町"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "24461",
+        "service": "housingSupport",
+        "name": "玉城町"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -221,7 +251,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 149,
+      "generalHousingMisclassification": 144,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -243,10 +273,9 @@
       }
     ],
     "nextPriority": [
+      "一般住宅・移住制度の分類候補残144件",
       "弱い主出典残33候補",
-      "産後ケアの残るPDF・計画単独候補",
-      "病児保育の計画・PDF単独候補",
-      "住宅支援の子育て固有条件分類候補"
+      "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ]
   }
 }
