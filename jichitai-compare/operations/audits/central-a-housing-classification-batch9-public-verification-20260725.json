@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch9-public-verification-20260725",
+  "generatedAt": "2026-07-25T08:23:02.704Z",
+  "attempt": 1,
+  "regionalPullRequest": 3580,
+  "regionalCiRun": 8703,
+  "stateSyncPullRequest": 3587,
+  "stateSyncCiRun": 8725,
+  "nationalSyncPullRequest": 3590,
+  "nationalSyncWorkflowRunId": 30150782971,
+  "nationalCiRun": 8833,
+  "verificationPullRequest": 3630,
+  "verificationWorkflowRunId": 30150997219,
+  "verificationRunnerConclusion": "success",
+  "pageChecks": [
+    {
+      "code": "16210",
+      "name": "南砺市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/16210/?audit=1784967781173-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": null,
+      "success": true
+    },
+    {
+      "code": "17461",
+      "name": "穴水町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/17461/?audit=1784967781173-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": null,
+      "success": true
+    },
+    {
+      "code": "17463",
+      "name": "能登町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/17463/?audit=1784967781173-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": null,
+      "success": true
+    },
+    {
+      "code": "21381",
+      "name": "神戸町",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/21381/?audit=1784967781173-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": true,
+      "success": true
+    },
+    {
+      "code": "23446",
+      "name": "美浜町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/23446/?audit=1784967781173-1",
+      "httpStatus": 200,
+      "summaryMatches": true,
+      "sourceMatches": true,
+      "unavailableLabelMatches": null,
+      "success": true
+    }
+  ],
+  "wrongCodePage": {
+    "code": "21364",
+    "httpStatus": 404,
+    "success": true
+  },
+  "publicGeneratedJson": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "municipalityCount1741": true,
+    "serviceCount15669": true,
+    "wrongCodeAbsent": true,
+    "correctCodePresent": true,
+    "checks": [
+      {"code":"16210","found":true,"expectedStatus":"verified","statusMatches":true,"summaryMatches":true,"sourceMatches":true,"success":true},
+      {"code":"17461","found":true,"expectedStatus":"verified","statusMatches":true,"summaryMatches":true,"sourceMatches":true,"success":true},
+      {"code":"17463","found":true,"expectedStatus":"verified","statusMatches":true,"summaryMatches":true,"sourceMatches":true,"success":true},
+      {"code":"21381","found":true,"expectedStatus":"unavailable","statusMatches":true,"summaryMatches":true,"sourceMatches":true,"success":true},
+      {"code":"23446","found":true,"expectedStatus":"verified","statusMatches":true,"summaryMatches":true,"sourceMatches":true,"success":true}
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none",
+  "recordUpdatedAt": "2026-07-25T17:24:00+09:00"
+}
