@@ -1,0 +1,113 @@
+name: Temporary Central A Batch 5 State Sync
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-batch5-state-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-batch5-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Synchronize checkpoint and region state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const cpPath = 'jichitai-compare/operations/control/session-checkpoints/central-a.json';
+          const regionPath = 'jichitai-compare/operations/control/regions/central.json';
+          const cp = JSON.parse(fs.readFileSync(cpPath, 'utf8'));
+          const region = JSON.parse(fs.readFileSync(regionPath, 'utf8'));
+          const updatedAt = '2026-07-25T14:41:00+09:00';
+          const statePr = Number(process.env.PR_NUMBER);
+          const correction = {
+            type: 'user_facing_source_upgrade',
+            code: '22130',
+            service: 'postpartumCare',
+            name: '浜松市'
+          };
+
+          const addCorrection = (list) => {
+            if (!list.some((item) => item.code === correction.code && item.service === correction.service)) {
+              list.push(correction);
+            }
+          };
+
+          cp.updatedAt = updatedAt;
+          cp.pullRequestNumber = 3451;
+          cp.ciStatus = 'success';
+          cp.ciRunNumber = 8400;
+          cp.stateSyncPullRequestNumber = statePr;
+          cp.nextAction = '原因別重点再監査を継続する。Issue #3141の19項目は推測せず維持し、弱い主出典の残33候補から産後ケア、病児保育、住宅支援を利用者向け公式ページで判定する。';
+          cp.qualityReaudit.latestCompletedAt = updatedAt;
+          cp.qualityReaudit.latestRegionalPullRequestNumber = 3451;
+          cp.qualityReaudit.latestCiRunNumber = 8400;
+          cp.qualityReaudit.correctedMunicipalitiesRechecked = 79;
+          cp.qualityReaudit.primarySourceSlotsRechecked = 511;
+          cp.qualityReaudit.candidateCounts.weakPrimarySource = 33;
+          cp.qualityReaudit.nextPriority = [
+            '弱い主出典残33候補',
+            '産後ケアの残るPDF・計画単独候補',
+            '病児保育の計画・PDF単独候補',
+            '住宅支援の子育て固有条件分類候補'
+          ];
+          addCorrection(cp.qualityReaudit.confirmedCorrections);
+
+          region.updatedAt = updatedAt;
+          region.lastAction = '原因別重点再監査の弱い主出典第5群をPR #3451・CI #8400成功後にregion/centralへ統合。浜松市産後ケアの主出典を公式子育て情報サイトの利用者向けページへ更新し、令和8年度施設・申請手順・利用上限・料金を確定した。';
+          region.nextAction = '弱い主出典の残33候補を、産後ケア、病児保育、住宅支援の順に利用者向け公式情報で確定判定する。';
+          region.qualityReaudit.latestCompletedAt = updatedAt;
+          region.qualityReaudit.latestRegionalPullRequestNumber = 3451;
+          region.qualityReaudit.latestCiRunNumber = 8400;
+          region.qualityReaudit.correctedMunicipalitiesRechecked = 79;
+          region.qualityReaudit.primarySourceSlotsRechecked = 511;
+          region.qualityReaudit.candidateCounts.weakPrimarySource = 33;
+          region.qualityReaudit.nextPriority = [
+            '弱い主出典残33候補',
+            '産後ケアの残るPDF・計画単独候補',
+            '病児保育の計画・PDF単独候補',
+            '住宅支援の子育て固有条件分類候補'
+          ];
+          addCorrection(region.qualityReaudit.confirmedCorrections);
+
+          fs.writeFileSync(cpPath, JSON.stringify(cp, null, 2) + '\n');
+          fs.writeFileSync(regionPath, JSON.stringify(region, null, 2) + '\n');
+          NODE
+
+      - name: Validate JSON and municipality data
+        shell: bash
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('jichitai-compare/operations/control/session-checkpoints/central-a.json','utf8')); JSON.parse(require('fs').readFileSync('jichitai-compare/operations/control/regions/central.json','utf8'))"
+          cd jichitai-compare
+          npm run validate:generated
+
+      - name: Commit synchronized state
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/session-checkpoints/central-a.json \
+                  jichitai-compare/operations/control/regions/central.json
+          if git diff --cached --quiet; then
+            echo 'No state changes to commit.'
+          else
+            git commit -m 'state: 中日本A第5群の監査状態を同期'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
