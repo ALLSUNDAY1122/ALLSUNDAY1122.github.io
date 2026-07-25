@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "triggerId": "west-corrections-reverify-20260725",
+  "createdAt": "2026-07-25T12:39:00+09:00",
+  "trackingIssues": [3189, 3191, 3193],
+  "scope": {
+    "ledgerRecordCount": 26,
+    "uniqueMunicipalityCount": 24,
+    "westARecordCount": 9,
+    "westBRecordCount": 17
+  },
+  "checks": [
+    "region/west and main corrected service equality",
+    "main municipality JSON and task source consistency",
+    "main and generated JSON equality",
+    "static and public page source links and corrected wording",
+    "current official source URL HTTP classification"
+  ],
+  "policy": "404/410 and canonical data/public mismatches are blocker candidates. 403/429/timeouts are recorded as communication warnings."
+}
