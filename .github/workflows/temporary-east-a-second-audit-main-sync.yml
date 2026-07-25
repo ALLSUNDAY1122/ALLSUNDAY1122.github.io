@@ -1,4 +1,4 @@
-name: Temporary East A Second Audit Main Sync
+name: Temporary East A Second Audit Public Verification
 
 on:
   pull_request:
@@ -14,12 +14,12 @@ permissions:
   pull-requests: read
 
 jobs:
-  sync-and-validate:
+  verify-publication:
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.head.ref == 'sync/east-a-second-audit-main-20260725'
+      github.event.pull_request.head.ref == 'verify/east-a-second-audit-public-20260725'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,105 +31,216 @@ jobs:
         id: detect
         shell: bash
         run: |
-          if [[ -f jichitai-compare/operations/triggers/east-a-second-audit-main-sync.txt ]]; then
-            echo "run_sync=true" >> "$GITHUB_OUTPUT"
+          if [[ -f jichitai-compare/operations/triggers/east-a-second-audit-public-verify.txt ]]; then
+            echo "run_verify=true" >> "$GITHUB_OUTPUT"
           else
-            echo "run_sync=false" >> "$GITHUB_OUTPUT"
+            echo "run_verify=false" >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/setup-node@v4
-        if: steps.detect.outputs.run_sync == 'true'
+        if: steps.detect.outputs.run_verify == 'true'
         with:
           node-version: '24'
-      - name: Copy audited regional files
-        if: steps.detect.outputs.run_sync == 'true'
+      - name: Verify live generated JSON and municipality pages
+        if: steps.detect.outputs.run_verify == 'true'
+        id: live
         shell: bash
         run: |
-          git fetch origin region/east
-          git checkout origin/region/east -- \
-            jichitai-compare/data/municipalities/10/10201.json \
-            jichitai-compare/data/municipalities/13/13103.json \
-            jichitai-compare/data/municipalities/19/19201.json \
-            jichitai-compare/data/municipalities/19/19202.json \
-            jichitai-compare/data/municipalities/19/19205.json \
-            jichitai-compare/data/municipalities/19/19206.json \
-            jichitai-compare/data/municipalities/20/20201.json \
-            jichitai-compare/data/municipalities/20/20202.json \
-            jichitai-compare/data/municipalities/20/20203.json \
-            jichitai-compare/data/municipalities/20/20204.json \
-            jichitai-compare/data/municipalities/20/20205.json \
-            jichitai-compare/operations/tasks/10201.json \
-            jichitai-compare/operations/tasks/13103.json \
-            jichitai-compare/operations/tasks/19201.json \
-            jichitai-compare/operations/tasks/19202.json \
-            jichitai-compare/operations/tasks/19204.json \
-            jichitai-compare/operations/tasks/19205.json \
-            jichitai-compare/operations/tasks/19206.json \
-            jichitai-compare/operations/tasks/20201.json \
-            jichitai-compare/operations/tasks/20202.json \
-            jichitai-compare/operations/tasks/20203.json \
-            jichitai-compare/operations/tasks/20204.json \
-            jichitai-compare/operations/tasks/20205.json \
-            jichitai-compare/operations/audits/east-a-quality-improvement-second-audit-20260725.json \
-            jichitai-compare/operations/control/session-checkpoints/east-a.json
-      - name: Record pending main integration
-        if: steps.detect.outputs.run_sync == 'true'
+          set -u
+          BASE='https://allsunday1122.github.io/jichitai-compare'
+          success=0
+          successful_attempt=0
+          for attempt in $(seq 1 24); do
+            token="$(date +%s)-${attempt}"
+            if curl -fsSL --retry 2 --retry-delay 2 "${BASE}/data/generated/municipalities.json?v=${token}" -o /tmp/east-a-municipalities.json; then
+              if node - <<'NODE'
+          const fs = require('fs');
+          const raw = JSON.parse(fs.readFileSync('/tmp/east-a-municipalities.json', 'utf8'));
+          const municipalities = Array.isArray(raw) ? raw : raw.municipalities;
+          if (!Array.isArray(municipalities)) throw new Error('municipalities array not found');
+          const serviceCount = municipalities.reduce((sum, item) => sum + Object.keys(item.services || {}).length, 0);
+          if (municipalities.length !== 1741) throw new Error(`municipality count=${municipalities.length}`);
+          if (serviceCount !== 15669) throw new Error(`service count=${serviceCount}`);
+          const expected = {
+            '10201': '5,000円',
+            '13103': '2,000円',
+            '19201': '子育て世帯住宅取得支援事業',
+            '19202': '市外1,500円',
+            '19205': '県内市外2,500円',
+            '19206': '県外4,000円',
+            '20201': '連続7日',
+            '20202': '8時間2,600円',
+            '20203': '1日1,000円',
+            '20204': '受付一時中止',
+            '20205': '給食400円'
+          };
+          for (const [code, phrase] of Object.entries(expected)) {
+            const item = municipalities.find((entry) => String(entry.code) === code);
+            if (!item) throw new Error(`missing municipality ${code}`);
+            const text = JSON.stringify(item);
+            if (!text.includes(phrase)) throw new Error(`${code} missing phrase: ${phrase}`);
+          }
+          const sakae = municipalities.find((entry) => String(entry.code) === '20602');
+          if (!sakae) throw new Error('missing Sakae 20602');
+          const statuses = Object.values(sakae.services || {}).map((service) => service.status);
+          if (statuses.length !== 9 || statuses.some((status) => status !== 'unavailable')) {
+            throw new Error(`Sakae statuses=${JSON.stringify(statuses)}`);
+          }
+          console.log('published generated JSON verified');
+          NODE
+              then
+                pages_ok=1
+                while IFS='|' read -r code phrase; do
+                  page="/tmp/east-a-${code}.html"
+                  if ! curl -fsSL --retry 2 --retry-delay 2 "${BASE}/municipality/${code}/?v=${token}" -o "$page"; then
+                    pages_ok=0
+                    break
+                  fi
+                  if ! grep -Fq "$phrase" "$page"; then
+                    pages_ok=0
+                    break
+                  fi
+                done <<'PAGES'
+          10201|5,000円
+          13103|2,000円
+          19201|子育て世帯住宅取得支援事業
+          19202|市外1,500円
+          19205|県内市外2,500円
+          19206|県外4,000円
+          20201|連続7日
+          20202|8時間2,600円
+          20203|1日1,000円
+          20204|受付一時中止
+          20205|給食400円
+          PAGES
+                if [[ "$pages_ok" -eq 1 ]]; then
+                  success=1
+                  successful_attempt="$attempt"
+                  break
+                fi
+              fi
+            fi
+            sleep 10
+          done
+          if [[ "$success" -ne 1 ]]; then
+            echo 'Live publication did not reach the expected state.'
+            exit 1
+          fi
+          echo "attempt=${successful_attempt}" >> "$GITHUB_OUTPUT"
+      - name: Record completed public verification
+        if: steps.detect.outputs.run_verify == 'true'
         shell: bash
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          VERIFY_PR_NUMBER: ${{ github.event.pull_request.number }}
+          VERIFY_RUN_ID: ${{ github.run_id }}
+          VERIFY_ATTEMPT: ${{ steps.live.outputs.attempt }}
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
 
           root = Path('jichitai-compare')
-          timestamp = '2026-07-25T12:25:00+09:00'
-          pr_number = int(os.environ['PR_NUMBER'])
+          checked_at = '2026-07-25T12:38:00+09:00'
+          verify_pr = int(os.environ['VERIFY_PR_NUMBER'])
+          verify_run = int(os.environ['VERIFY_RUN_ID'])
+          verify_attempt = int(os.environ['VERIFY_ATTEMPT'])
+          codes = ['10201','13103','19201','19202','19205','19206','20201','20202','20203','20204','20205']
+
+          record = {
+              'schemaVersion': '1.0.0',
+              'auditId': 'east-a-public-verification-20260725',
+              'sessionId': 'east-a',
+              'targetMainPullRequestNumber': 3302,
+              'targetMainMergeSha': '2942166a3e1d06009fcdf6ab31552553fa917bd3',
+              'targetMainCiRunNumber': 8053,
+              'targetMainCiRunId': 30142377954,
+              'verificationPullRequestNumber': verify_pr,
+              'verificationRunId': verify_run,
+              'successfulAttempt': verify_attempt,
+              'publishedBaseUrl': 'https://allsunday1122.github.io/jichitai-compare',
+              'generatedJson': {
+                  'status': 'success',
+                  'municipalityCount': 1741,
+                  'serviceCount': 15669,
+                  'verifiedMunicipalityCodes': codes,
+                  'sakaeUnavailableServices': 9,
+                  'needsMediumReviewServices': 0
+              },
+              'municipalityPages': {
+                  'status': 'success',
+                  'verifiedCount': len(codes),
+                  'expectedCount': len(codes),
+                  'codes': codes
+              },
+              'status': 'success',
+              'checkedAt': checked_at
+          }
+          record_path = root / 'operations/audits/east-a-public-verification-20260725.json'
+          record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
           audit_path = root / 'operations/audits/east-a-quality-improvement-second-audit-20260725.json'
           audit = json.loads(audit_path.read_text(encoding='utf-8'))
-          audit['status'] = 'completed_main_pending_publication'
-          audit['nextAction'] = 'main統合後、公開生成JSONと訂正対象11自治体の公開ページを確認する。栄村Issue #2847は維持。'
-          audit['mainIntegration'] = {
-              'pullRequestNumber': pr_number,
-              'sourceRegionalPullRequests': [3210, 3251, 3276, 3283],
-              'status': 'pending_ci_merge'
+          audit['status'] = 'completed_main_public_verified'
+          audit['nextAction'] = '栄村公式サイト復旧時のみIssue #2847に基づき9制度を再調査する。通常の第2監査作業は完了。'
+          main_integration = audit.setdefault('mainIntegration', {})
+          main_integration.update({
+              'pullRequestNumber': 3302,
+              'ciRunNumber': 8053,
+              'ciRunId': 30142377954,
+              'ciStatus': 'success',
+              'mergeSha': '2942166a3e1d06009fcdf6ab31552553fa917bd3',
+              'status': 'success'
+          })
+          audit['publicVerification'] = {
+              'pullRequestNumber': verify_pr,
+              'runId': verify_run,
+              'status': 'success',
+              'verifiedMunicipalityCount': len(codes),
+              'municipalityCount': 1741,
+              'serviceCount': 15669,
+              'checkedAt': checked_at
           }
-          audit['updatedAt'] = timestamp
+          audit['updatedAt'] = checked_at
+          audit['publicVerifiedAt'] = checked_at
           audit_path.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
           checkpoint_path = root / 'operations/control/session-checkpoints/east-a.json'
           checkpoint = json.loads(checkpoint_path.read_text(encoding='utf-8'))
-          checkpoint['updatedAt'] = timestamp
-          checkpoint['pullRequestNumber'] = pr_number
+          checkpoint['updatedAt'] = checked_at
+          checkpoint['pullRequestNumber'] = verify_pr
+          checkpoint['ciStatus'] = 'success'
           qa = checkpoint['qualityImprovementSecondAudit']
-          qa['status'] = 'completed_main_pending_publication'
-          qa['nextAction'] = 'main統合後、公開生成JSONと訂正対象11自治体の公開ページを確認する。栄村は9制度unavailable・Issue #2847維持。'
-          qa['nationalPullRequestNumber'] = pr_number
-          qa['nationalIntegrationStatus'] = 'pending_ci_merge'
+          qa.update({
+              'status': 'completed_main_public_verified',
+              'currentRound': 'completed',
+              'nextAction': '栄村公式サイト復旧時のみIssue #2847に基づき再調査する。',
+              'nationalPullRequestNumber': 3302,
+              'nationalCiRunNumber': 8053,
+              'nationalCiRunId': 30142377954,
+              'nationalMergeSha': '2942166a3e1d06009fcdf6ab31552553fa917bd3',
+              'nationalIntegrationStatus': 'success',
+              'publicVerificationPullRequestNumber': verify_pr,
+              'publicVerificationRunId': verify_run,
+              'publicVerificationStatus': 'success',
+              'completedAt': checked_at
+          })
           checkpoint_path.write_text(json.dumps(checkpoint, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          runner_path = root / 'operations/audits/east-a-main-sync-runner-20260725.json'
+          runner = json.loads(runner_path.read_text(encoding='utf-8'))
+          runner['mainMergeSha'] = '2942166a3e1d06009fcdf6ab31552553fa917bd3'
+          runner['standardCiRunNumber'] = 8053
+          runner['standardCiRunId'] = 30142377954
+          runner['standardCiStatus'] = 'success'
+          runner['status'] = 'main_merged_public_verified'
+          runner['publicVerificationRunId'] = verify_run
+          runner['checkedAt'] = checked_at
+          runner_path.write_text(json.dumps(runner, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
-      - name: Regenerate and validate nationwide data
-        if: steps.detect.outputs.run_sync == 'true'
-        working-directory: jichitai-compare
-        run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
-          node - <<'NODE'
-          const fs = require('fs');
-          const raw = JSON.parse(fs.readFileSync('data/generated/municipalities.json', 'utf8'));
-          const municipalities = Array.isArray(raw) ? raw : raw.municipalities;
-          if (!Array.isArray(municipalities)) throw new Error('municipalities array not found');
-          const serviceCount = municipalities.reduce((sum, item) => sum + Object.keys(item.services || {}).length, 0);
-          if (municipalities.length !== 1741) throw new Error(`municipality count=${municipalities.length}`);
-          if (serviceCount !== 15669) throw new Error(`service count=${serviceCount}`);
-          console.log(`nationwide counts verified: ${municipalities.length} municipalities / ${serviceCount} services`);
-          NODE
-      - name: Commit synchronized files
-        if: steps.detect.outputs.run_sync == 'true'
+      - name: Commit public verification record
+        if: steps.detect.outputs.run_verify == 'true'
         shell: bash
         run: |
-          rm -f jichitai-compare/operations/triggers/east-a-second-audit-main-sync.txt
+          rm -f jichitai-compare/operations/triggers/east-a-second-audit-public-verify.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jichitai-compare
@@ -137,5 +248,5 @@ jobs:
             echo "No changes"
             exit 0
           fi
-          git commit -m "sync: apply East A second audit to main"
+          git commit -m "audit: verify East A second audit publication"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
