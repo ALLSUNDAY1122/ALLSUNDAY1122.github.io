@@ -3,9 +3,9 @@
   "auditId": "east-b-quality-improvement-second-20260725",
   "sessionId": "east-b",
   "displayName": "東日本調査班B 品質改善第2監査",
-  "status": "in_progress",
+  "status": "ready_for_ci",
   "startedAt": "2026-07-25T10:31:00+09:00",
-  "updatedAt": "2026-07-25T10:40:00+09:00",
+  "updatedAt": "2026-07-25T10:42:00+09:00",
   "integrationBranch": "region/east",
   "workingBranch": "agent/east-b-second-audit-wide-area-20260725",
   "recovery": {
@@ -28,7 +28,7 @@
   ],
   "sampleAudit": {
     "targetCount": 20,
-    "checkedCount": 16,
+    "checkedCount": 20,
     "municipalities": [
       {"code": "12203", "name": "市川市", "result": "passed"},
       {"code": "14100", "name": "横浜市", "result": "corrected"},
@@ -45,7 +45,11 @@
       {"code": "15307", "name": "聖籠町", "result": "passed"},
       {"code": "15342", "name": "弥彦村", "result": "passed"},
       {"code": "15361", "name": "田上町", "result": "passed"},
-      {"code": "15385", "name": "阿賀町", "result": "passed"}
+      {"code": "15385", "name": "阿賀町", "result": "passed"},
+      {"code": "08201", "name": "水戸市", "result": "passed", "focus": "2026年度粗大ごみ料金・分類"},
+      {"code": "09201", "name": "宇都宮市", "result": "passed", "focus": "2026年度学校給食費補助額・制度分類"},
+      {"code": "11100", "name": "さいたま市", "result": "passed", "focus": "2026年9月第2子保育料軽減拡大"},
+      {"code": "12100", "name": "千葉市", "result": "passed", "focus": "2026年度学校給食費・第3子以降無償化"}
     ]
   },
   "findings": [
@@ -97,10 +101,14 @@
       "municipalityName": "粟島浦村",
       "result": "passed",
       "details": "保育料は2025年度から完全無償化を村計画で再確認。こども誰でも通園制度は村計画の2026年度確保方策と県の全自治体実施案内により制度存在を確認しverifiedを維持。村独自の料金・日時・予約方法は未確認として明記済み。"
+    },
+    {
+      "category": "sample_current_year_values",
+      "result": "passed",
+      "details": "水戸市の粗大ごみ1,000円・2,000円と直接搬入10kg170円、宇都宮市の給食費補助上限小学校5,200円・中学校5,900円、さいたま市の2026年9月第2子原則半額、千葉市の小学校0円・中学校320円および中学校第3子以降無償化を現行公式ページで再確認。"
     }
   ],
   "remainingActions": [
-    "担当都県から追加4自治体を抽出し、合計20自治体の数値・年度・制度分類を完了する",
     "PRの標準CIを確認し、確定修正をregion/eastへ統合する",
     "全国生成JSON・静的ページ・mainへの同期を行う",
     "修正対象ページの公開HTTP応答と表示内容を検証する"
