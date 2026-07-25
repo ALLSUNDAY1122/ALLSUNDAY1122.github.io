@@ -1,0 +1,70 @@
+name: Temporary North B Anyone Batch 7 Public Region Sync
+
+on:
+  pull_request:
+    branches:
+      - region/north
+    paths:
+      - '.github/workflows/temp-north-b-anyone-batch7-public-region.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-anyone-batch7-public-region-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout regional branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Import final public verification from main
+        shell: bash
+        run: |
+          git checkout 49039654b2c0759fb4a3935c0183d29aeda5e89e -- \
+            jichitai-compare/operations/audits/north-b-anyone-batch7-public-verification-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json
+          node <<'NODE'
+          const fs = require('fs');
+          const file = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          data.updatedAt = '2026-07-25T17:27:00+09:00';
+          data.workingBranch = 'sync/north-b-anyone-batch7-public-final-20260725';
+          data.pullRequestNumber = null;
+          data.ciStatus = 'pending';
+          fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`);
+          NODE
+
+      - name: Validate regional data
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove workflow and commit synchronization
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-north-b-anyone-batch7-public-region.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-b-anyone-batch7-public-region.yml \
+            jichitai-compare/operations/audits/north-b-anyone-batch7-public-verification-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json
+          git commit -m 'sync: 北日本B最終公開検証記録をregion/northへ反映 [skip ci]'
+          git push origin HEAD:"${{ github.head_ref }}"
