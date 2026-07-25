@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "east-a-public-diagnostic-conclusion-20260725",
+  "sessionId": "east-a",
+  "sourceDiagnostic": "east-a-public-diagnostic-20260725.json",
+  "result": "single_expectation_mismatch",
+  "generatedJsonHttpStatus": 200,
+  "municipalityCount": 1741,
+  "serviceCount": 15669,
+  "municipalityPageHttpSuccessCount": 11,
+  "municipalityPageExpectedTextSuccessCount": 10,
+  "mismatch": {
+    "municipalityCode": "19201",
+    "municipalityName": "甲府市",
+    "checkedPhrase": "子育て世帯住宅取得支援事業",
+    "reason": "現行JSONは制度内容・対象・上限額・公式URLを保持しているが、制度名称そのものを本文へ保存していないため検査語だけが不一致",
+    "replacementPhrase": "既存住宅取得・リフォームは上限60万円"
+  },
+  "dataCorrectionRequired": false,
+  "nextAction": "甲府市は現行JSON本文に存在する訂正内容を検査語として公開確認を再実行する。",
+  "checkedAt": "2026-07-25T12:58:00+09:00"
+}
