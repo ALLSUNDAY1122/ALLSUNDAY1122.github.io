@@ -19,7 +19,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          fetch-depth: 1
+          show-progress: false
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
@@ -76,18 +77,9 @@ jobs:
               'checkedAt': today
           }
           service['additionalSources'] = [
-              {
-                  'url': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/post-562.html',
-                  'checkedAt': today
-              },
-              {
-                  'url': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/index.html',
-                  'checkedAt': today
-              },
-              {
-                  'url': 'https://www.town.shichinohe.lg.jp/kouhou/reiki/reiki_int/reiki_honbun/r111RG00000816.html',
-                  'checkedAt': today
-              }
+              {'url': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/post-562.html', 'checkedAt': today},
+              {'url': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/index.html', 'checkedAt': today},
+              {'url': 'https://www.town.shichinohe.lg.jp/kouhou/reiki/reiki_int/reiki_honbun/r111RG00000816.html', 'checkedAt': today}
           ]
           save(municipality_path, municipality)
 
@@ -96,10 +88,7 @@ jobs:
           task['lastCheckedAt'] = today
           task['lastUpdatedAt'] = now_iso
           task['lastUpdatedBy'] = '北日本調査班A'
-          task['officialSources'] = [
-              municipality['services'][name]['source']['url']
-              for name in task['completedServices']
-          ]
+          task['officialSources'] = [municipality['services'][name]['source']['url'] for name in task['completedServices']]
           note = '品質改善第2監査の完了後再確認で、こども誰でも通園制度は3施設を予定しているが、町公式ページ上は準備中で現在利用不可と確認し、利用可能と誤認されないよう明記。'
           if note not in task.setdefault('notes', []):
               task['notes'].append(note)
@@ -130,12 +119,11 @@ jobs:
               errors.append(error_text)
           audit['crossMunicipalityChecks']['openErrors'] = 0
           notes = audit.setdefault('samplingAudit', {}).setdefault('highRiskNotes', [])
-          notes = [
+          audit['samplingAudit']['highRiskNotes'] = [
               '七戸町のこども誰でも通園制度は3施設を予定しているが、公式ページ上で準備中・現在利用不可を再確認し、自治体JSONへ明記した'
               if n.startswith('七戸町のこども誰でも通園制度') else n
               for n in notes
           ]
-          audit['samplingAudit']['highRiskNotes'] = notes
           final = audit.setdefault('finalResult', {})
           final['confirmedNewErrors'] = 3
           final['correctedNewErrors'] = 3
@@ -175,10 +163,12 @@ jobs:
 
       - name: Regenerate and validate regional outputs
         working-directory: jichitai-compare
+        shell: bash
         run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
+          set -o pipefail
+          npm run generate 2>&1 | tee /tmp/north-a-generate.log
+          npm run progress 2>&1 | tee /tmp/north-a-progress.log
+          npm run validate:generated 2>&1 | tee /tmp/north-a-validate.log
 
       - name: Remove temporary trigger and runner
         shell: bash
