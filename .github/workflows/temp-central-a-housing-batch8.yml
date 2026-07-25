@@ -136,7 +136,7 @@ jobs:
             task.lastCheckedAt = checkedAt;
             task.lastUpdatedAt = updatedAt;
             task.lastUpdatedBy = '中日本調査班A';
-            task.officialSources = serviceKeys.map((key) => municipality.services[key].source.url);
+            task.officialSources = [...new Set(serviceKeys.map((key) => municipality.services[key].source.url))];
             task.notes = Array.isArray(task.notes) ? task.notes : [];
             const note = item.service.status === 'unavailable'
               ? '2026年7月25日の原因別重点再監査で、housingSupportに登録されていた制度は子育て世帯を対象要件としない一般制度と確認し、verifiedからunavailableへ修正した。'
