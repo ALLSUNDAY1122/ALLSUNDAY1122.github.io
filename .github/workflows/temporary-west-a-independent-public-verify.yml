@@ -1,0 +1,155 @@
+name: Temporary West A Independent Public Verify
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-a-independent-public-verify-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify-public:
+    if: github.head_ref == 'audit/west-a-post-final-independent-public-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify GitHub Pages deployment
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const cacheBust = Date.now();
+          const targets = {
+            '37203': {
+              required: ['子育て世帯固有の住宅支援条件を確認できない'],
+              forbidden: ['空き家バンク物件の改修費を2分の1、条件により最大100万～200万円補助']
+            },
+            '39210': {
+              required: ['移住者向け空き家改修制度はあるが、子育て世帯固有の住宅取得・改修支援を確認できない'],
+              forbidden: ['移住者向け空き家の改修を補助率10分の10、リフォーム上限270万円で支援']
+            },
+            '43215': {
+              required: [
+                '2026年度は市立小学校の給食費を無償化し、中学校は一食単価上限390円で原則口座振替',
+                '一般住宅のリフォーム助成はあるが、子育て世帯固有の住宅支援条件を確認できない'
+              ],
+              forbidden: [
+                '2026年度の市立小学校給食費無償化は確認できるが、中学校の一般世帯負担条件を確定できない',
+                '2026年度の住宅リフォーム費を1～2割、上限10～20万円助成'
+              ]
+            }
+          };
+
+          async function fetchText(url) {
+            const response = await fetch(url, { redirect: 'follow', headers: { 'user-agent': 'west-a-public-audit/1.0' } });
+            return { status: response.status, finalUrl: response.url, text: await response.text() };
+          }
+
+          async function retry(check, attempts = 12, delayMs = 15000) {
+            let last;
+            for (let attempt = 1; attempt <= attempts; attempt += 1) {
+              try {
+                last = await check(attempt);
+                if (last.success) return last;
+              } catch (error) {
+                last = { success: false, error: String(error), attempt };
+              }
+              if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, delayMs));
+            }
+            return last;
+          }
+
+          const pages = {};
+          for (const [code, rules] of Object.entries(targets)) {
+            pages[code] = await retry(async (attempt) => {
+              const url = `${base}/municipality/${code}/?audit=${cacheBust}-${attempt}`;
+              const fetched = await fetchText(url);
+              const missingTokens = rules.required.filter((token) => !fetched.text.includes(token));
+              const forbiddenTokensPresent = rules.forbidden.filter((token) => fetched.text.includes(token));
+              return {
+                url,
+                status: fetched.status,
+                finalUrl: fetched.finalUrl,
+                requiredTokensPresent: missingTokens.length === 0,
+                missingTokens,
+                forbiddenTokensPresent,
+                success: fetched.status === 200 && missingTokens.length === 0 && forbiddenTokensPresent.length === 0,
+                attempt
+              };
+            });
+          }
+
+          const generatedJson = await retry(async (attempt) => {
+            const url = `${base}/data/generated/municipalities.json?audit=${cacheBust}-${attempt}`;
+            const fetched = await fetchText(url);
+            let data = null;
+            try { data = JSON.parse(fetched.text); } catch {}
+            const municipalities = Array.isArray(data?.municipalities) ? data.municipalities : [];
+            const byCode = new Map(municipalities.map((item) => [item.code, item]));
+            const serviceCount = municipalities.reduce((sum, item) => sum + Object.keys(item.services ?? {}).length, 0);
+            const checks = {
+              http200: fetched.status === 200,
+              municipalityCount1741: municipalities.length === 1741,
+              serviceCount15669: serviceCount === 15669,
+              sakaideHousingUnavailable: byCode.get('37203')?.services?.housingSupport?.status === 'unavailable',
+              shimantoHousingUnavailable: byCode.get('39210')?.services?.housingSupport?.status === 'unavailable',
+              amakusaSchoolMealsVerified: byCode.get('43215')?.services?.schoolMeals?.status === 'verified',
+              amakusaMiddleFee390: String(byCode.get('43215')?.services?.schoolMeals?.details?.juniorHighSchool ?? '').includes('390円'),
+              amakusaHousingUnavailable: byCode.get('43215')?.services?.housingSupport?.status === 'unavailable'
+            };
+            return {
+              url,
+              status: fetched.status,
+              finalUrl: fetched.finalUrl,
+              municipalityCount: municipalities.length,
+              serviceCount,
+              checks,
+              success: Object.values(checks).every(Boolean),
+              attempt
+            };
+          });
+
+          const success = Object.values(pages).every((item) => item?.success) && generatedJson?.success;
+          const result = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-a-post-final-independent-public-verification-20260725',
+            generatedAt: new Date().toISOString(),
+            relatedRegionalPullRequest: 3433,
+            relatedNationalPullRequest: 3438,
+            pages,
+            generatedJson,
+            success,
+            errors: [
+              ...Object.entries(pages).filter(([, item]) => !item?.success).map(([code, item]) => ({ code, item })),
+              ...(generatedJson?.success ? [] : [{ generatedJson }])
+            ]
+          };
+          const path = 'jichitai-compare/operations/audits/west-a-post-final-independent-public-verification-20260725.json';
+          fs.writeFileSync(path, JSON.stringify(result, null, 2) + '\n');
+          if (!success) process.exitCode = 1;
+          NODE
+      - name: Commit public verification result and remove runner
+        if: always()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          rm -f jichitai-compare/operations/control/west-a-independent-public-verify-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-independent-public-verify.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-post-final-independent-public-verification-20260725.json \
+                  jichitai-compare/operations/control/west-a-independent-public-verify-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-independent-public-verify.yml
+          git diff --cached --check
+          git commit -m 'audit: 西日本A完了後抜き取りの公開反映を確認'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
