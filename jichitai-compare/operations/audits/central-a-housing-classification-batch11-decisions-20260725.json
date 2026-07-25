@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch11-decisions-20260725",
+  "decidedAt": "2026-07-25T22:17:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3688,
+  "runnerWorkflowRunId": 30159696614,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 2,
+  "verifiedClarificationOrReplacementCount": 3,
+  "corrected": [
+    {
+      "code": "21421",
+      "name": "北方町",
+      "service": "housingSupport",
+      "correctionType": "general_migration_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "東京圏から北方町へ移住し、就業等の要件を満たす人へ、岐阜県と共同で最大100万円の移住支援金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.kitagata.gifu.jp/soshiki/seisakuzaisei/1/4/1/867.html"
+    },
+    {
+      "code": "21504",
+      "name": "七宗町",
+      "service": "housingSupport",
+      "correctionType": "child_exception_and_addition_clarification",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "移住・定住世帯の住宅新築、空き家取得・賃借・改修へ奨励金を交付する。",
+      "afterSummary": "移住定住世帯へ年5万円を最長5年交付し、中学生以下の子がいる世帯は世帯主年齢要件を緩和するとともに、初年度は子ども1人につき5万円を加算する。",
+      "officialSource": "https://www.hichiso.jp/top/kanko/settled/encourage/"
+    },
+    {
+      "code": "23204",
+      "name": "瀬戸市",
+      "service": "housingSupport",
+      "correctionType": "general_migration_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "東京圏から瀬戸市へ移住し、就業・起業等の要件を満たす人へ移住支援金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.seto.aichi.jp/docs/2019/05/20/00096/"
+    },
+    {
+      "code": "24202",
+      "name": "四日市市",
+      "service": "housingSupport",
+      "correctionType": "child_addition_clarification",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "東京23区から要件を満たして移住した人へ、単身60万円・世帯100万円の支援金を交付する。",
+      "afterSummary": "東京23区から要件を満たして移住する世帯へ100万円、単身者へ60万円を交付し、18歳未満の世帯員1人につき30万円を加算する。",
+      "officialSource": "https://www.city.yokkaichi.lg.jp/www/contents/1589692436765/index.html"
+    },
+    {
+      "code": "24212",
+      "name": "熊野市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_current_newlywed_program",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "東京圏から熊野市へ移住し、就業・起業等の要件を満たす人へ、単身60万円・2人以上世帯100万円の移住支援金を交付する。",
+      "afterSummary": "39歳以下の新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
+      "officialSource": "https://www.city.kumano.lg.jp/administration/?content=2233"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 124,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 119
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般移住・就業支援だけを子育て世帯向け住宅支援として登録しない",
+    "子ども加算・子どもによる年齢要件緩和・新婚世帯向け住宅費支援は、現行公式本文で確認して明示する",
+    "計画公開だけで利用条件を補完せず、現行制度ページ・要綱と組み合わせて記録する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
