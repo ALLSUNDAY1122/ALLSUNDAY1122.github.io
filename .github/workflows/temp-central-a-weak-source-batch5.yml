@@ -1,0 +1,230 @@
+name: Temporary Central A Weak Source Batch 5
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-batch5-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.head_ref == 'audit/central-a-weak-source-batch5-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply batch 5 decisions
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare';
+          const checkedAt = '2026-07-25';
+          const timestamp = '2026-07-25T14:52:00+09:00';
+          const read = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+          const write = (path, value) => fs.writeFileSync(path, JSON.stringify(value, null, 2) + '\n');
+          const municipalityPath = (code) => `${root}/data/municipalities/${code.slice(0, 2)}/${code}.json`;
+          const taskPath = (code) => `${root}/operations/tasks/${code}.json`;
+          const primarySources = (services) => [...new Set(Object.values(services).map((service) => service?.source?.url).filter(Boolean))];
+          const counts = (services) => ({
+            verifiedCount: Object.values(services).filter((service) => service.status === 'verified').length,
+            unavailableCount: Object.values(services).filter((service) => service.status === 'unavailable').length,
+            researchingCount: Object.values(services).filter((service) => service.status === 'researching').length,
+            needsMediumReviewCount: Object.values(services).filter((service) => service.status === 'needs_medium_review').length,
+          });
+          const updateTask = (code, note) => {
+            const municipality = read(municipalityPath(code));
+            const path = taskPath(code);
+            const task = read(path);
+            Object.assign(task, counts(municipality.services));
+            task.status = 'merged';
+            task.currentService = null;
+            task.nextServiceIndex = 9;
+            task.completedServices = Object.keys(municipality.services);
+            task.officialSources = primarySources(municipality.services);
+            task.lastCheckedAt = checkedAt;
+            task.lastUpdatedAt = timestamp;
+            task.lastUpdatedBy = '中日本調査班A・弱い主出典第5群';
+            task.notes ??= [];
+            if (!task.notes.includes(note)) task.notes.push(note);
+            write(path, task);
+          };
+
+          const decisions = [];
+
+          // 南伊豆町: 病児保育の非自治体出典を、南伊豆町民の料金まで明記する下田市公式ガイドへ置換。
+          {
+            const code = '22304';
+            const path = municipalityPath(code);
+            const municipality = read(path);
+            const service = municipality.services.sickChildCare;
+            const before = structuredClone(service);
+            service.source = {
+              url: 'https://www.city.shimoda.shizuoka.jp/file/%E4%BB%A4%E5%92%8C%EF%BC%97%E5%B9%B4%E5%BA%A6%E7%89%88%E3%80%80%E5%AD%90%E8%82%B2%E3%81%A6%E3%82%AC%E3%82%A4%E3%83%89%E3%83%96%E3%83%83%E3%82%AF.pdf',
+              checkedAt,
+            };
+            service.additionalSources = [{
+              url: 'https://www.town.minamiizu.shizuoka.jp/docs/2025042300022/file_contents/kodomo.pdf',
+              checkedAt,
+              description: '南伊豆町こども計画における病児保育事業の位置付け',
+            }];
+            municipality.updatedAt = checkedAt;
+            write(path, municipality);
+            updateTask(code, '2026-07-25: 病児保育の非自治体PDFを、南伊豆町民の対象・料金等を明記する下田市公式ガイドへ置換。制度内容は維持。');
+            decisions.push({code, name:'南伊豆町', service:'sickChildCare', type:'primary_source_upgrade', before, after:structuredClone(service)});
+          }
+
+          // 南伊豆町: 計画と令和8年度予算説明では継続を確認できるが、利用条件を公開情報で確定できない。
+          {
+            const code = '22304';
+            const path = municipalityPath(code);
+            const municipality = read(path);
+            const before = structuredClone(municipality.services.postpartumCare);
+            municipality.services.postpartumCare = {
+              status: 'unavailable',
+              summary: '令和8年度も産後ケア事業の継続は確認できるが、対象期間・利用形態・回数・料金・委託施設・申請方法を現行公式案内で確定できない。',
+              eligibility: {minAgeMonths: 0, maxAgeYears: 1},
+              details: {
+                confirmed: '南伊豆町こども計画で産後ケア事業を位置付け、令和8年度予算審査資料で委託施設外利用時の償還払いを確認',
+                notConfirmed: '対象月齢、宿泊・通所・訪問の実施状況、利用回数、自己負担額、委託施設、申請期限・予約方法',
+                guidance: '現行条件は健康増進課または子育て世代包括支援センターへ確認する',
+                reviewDisposition: '計画・予算資料だけで利用可能条件を断定せず、制度不存在とも断定しない',
+              },
+              source: {url:'https://www.town.minamiizu.shizuoka.jp/docs/2025042300022/file_contents/kodomo.pdf', checkedAt},
+              additionalSources: [{
+                url:'https://www.town.minamiizu.shizuoka.jp/docs/2021122800031/file_contents/No105-R08-0501.pdf',
+                checkedAt,
+                description:'令和8年度予算審査で産後ケア事業扶助費・償還払いを確認',
+              }],
+            };
+            municipality.updatedAt = checkedAt;
+            municipality.summary = '南伊豆町の9制度を公式情報で再確認し、産後ケアは令和8年度の具体的利用条件を確定できないためunavailableとして登録。';
+            write(path, municipality);
+            updateTask(code, '2026-07-25: 産後ケアは計画・予算で継続を確認したが現行利用条件を確定できず、推測せずunavailableへ変更。');
+            decisions.push({code, name:'南伊豆町', service:'postpartumCare', type:'plan_budget_only_assertion_qualified', before, after:structuredClone(municipality.services.postpartumCare)});
+          }
+
+          // 日野町: 2022年の旧広報数値を2026年度条件として維持しない。
+          {
+            const code = '25383';
+            const path = municipalityPath(code);
+            const municipality = read(path);
+            const before = structuredClone(municipality.services.postpartumCare);
+            municipality.services.postpartumCare = {
+              status: 'unavailable',
+              summary: '産後ケア事業の継続は確認できるが、令和8年度の対象期間・利用形態・回数・料金・委託施設・申請方法を現行利用者向け公式ページで確定できない。',
+              eligibility: {minAgeMonths: 0, maxAgeYears: 1},
+              details: {
+                confirmed: '町の母子保健担当ページと公文書目録で産後ケア事業の継続を確認',
+                oldPublishedTerms: '2022年広報では短期入所型・通所型、合計7日以内等を案内',
+                notConfirmed: '令和8年度の対象月齢、実施形態、利用上限、自己負担額、減免、委託施設、申請方法',
+                guidance: '現行条件は日野町福祉保健課保健担当へ確認する',
+                reviewDisposition: '2022年の旧広報料金を2026年度条件として掲載しない',
+              },
+              source: {url:'https://www.town.shiga-hino.lg.jp/soshiki/6-2-0-0-0_30.html', checkedAt},
+              additionalSources: [
+                {url:'https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000008/8681/06_fukushihokenkaR7.pdf', checkedAt, description:'令和8年度分を含む公文書目録で事業継続を確認'},
+                {url:'https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6476/12-13.pdf', checkedAt, description:'2022年開始時の旧利用条件。現行数値としては使用しない'},
+              ],
+            };
+            municipality.updatedAt = checkedAt;
+            municipality.summary = '日野町の9制度を公式情報で再確認し、病児保育と産後ケアは令和8年度の具体的利用条件を確定できないためunavailableとして登録。';
+            write(path, municipality);
+            updateTask(code, '2026-07-25: 産後ケアの2022年旧広報数値を現行条件として維持せず、令和8年度条件未確定のためunavailableへ変更。');
+            decisions.push({code, name:'日野町', service:'postpartumCare', type:'old_fiscal_year_terms_qualified', before, after:structuredClone(municipality.services.postpartumCare)});
+          }
+
+          // 大紀町: こども計画の事業概要だけで利用可能条件を断定しない。
+          {
+            const code = '24471';
+            const path = municipalityPath(code);
+            const municipality = read(path);
+            const before = structuredClone(municipality.services.postpartumCare);
+            municipality.services.postpartumCare = {
+              status: 'unavailable',
+              summary: 'こども計画で産後ケア事業の実施方針は確認できるが、令和8年度の対象期間・利用形態・回数・料金・実施施設・申請方法を現行公式案内で確定できない。',
+              eligibility: {minAgeMonths: 0, maxAgeYears: 1},
+              details: {
+                confirmed: '第3期大紀町こども計画で、関係機関と連携した母子の心身ケア・育児支援を位置付け',
+                notConfirmed: '対象月齢、宿泊・通所・訪問の実施状況、利用上限、自己負担額、委託施設、申請方法',
+                guidance: '現行条件は健康福祉課へ確認する',
+                reviewDisposition: '計画上の事業概要のみでは利用可能条件を断定しない',
+              },
+              source: {url:'https://www.town.taiki.mie.jp/material/files/group/7/kek_kodomokeikau_dai3ki_R703.pdf', checkedAt},
+            };
+            municipality.updatedAt = checkedAt;
+            municipality.summary = '大紀町の9制度を公式情報で再確認し、産後ケアは令和8年度の具体的利用条件を確定できないためunavailableとして登録。';
+            write(path, municipality);
+            updateTask(code, '2026-07-25: 産後ケアはこども計画の事業概要だけでは現行利用条件を確定できず、推測せずunavailableへ変更。');
+            decisions.push({code, name:'大紀町', service:'postpartumCare', type:'plan_only_assertion_qualified', before, after:structuredClone(municipality.services.postpartumCare)});
+          }
+
+          // 変更なし: 現行公式利用案内・公式ガイドで条件を確認できる。
+          for (const item of [
+            {code:'18404', name:'南越前町', service:'sickChildCare', reason:'町公式PDFで対象・広域施設・申請方法を確認し、施設別料金等は利用前確認として明示済み'},
+            {code:'22219', name:'下田市', service:'sickChildCare', reason:'令和7年度版市公式子育てガイドで施設・対象・定員・時間・料金・申込を確認済み'},
+          ]) {
+            const municipality = read(municipalityPath(item.code));
+            decisions.push({
+              code:item.code,
+              name:item.name,
+              service:item.service,
+              type:'official_user_information_no_change',
+              result:item.reason,
+              after:structuredClone(municipality.services[item.service]),
+            });
+          }
+
+          const audit = {
+            schemaVersion:'1.0.0',
+            auditId:'central-a-weak-primary-source-batch5-decisions-20260725',
+            decidedAt:timestamp,
+            session:'中日本調査班A',
+            category:'weakPrimarySource',
+            trackingIssues:[3187,3141],
+            reviewedCandidateCount:6,
+            confirmedStatusQualificationCount:3,
+            confirmedSourceCorrectionCount:1,
+            noChangeCount:2,
+            decisions,
+            policy:[
+              '自治体以外の補助的資料より、自治体または広域実施主体の公式利用案内を主出典として優先する',
+              '計画・予算・公文書目録だけでは現行の対象・料金・回数・施設・申請条件を断定しない',
+              '旧年度の利用料金を現行年度の条件として維持しない',
+              '制度継続は確認できても比較に必要な現行条件が未公開の場合は、制度不存在を断定せずunavailableへ正規化する',
+            ],
+            remainingWeakPrimarySourceCandidates:30,
+            issue3141RemainingItems:19,
+            nextPriority:['産後ケアの条例・旧PDF単独候補','病児保育の計画・非公式資料候補','住宅支援の一般移住・耐震支援分類候補'],
+          };
+          const auditPath = `${root}/operations/audits/central-a-weak-primary-source-batch5-decisions-20260725.json`;
+          fs.mkdirSync(`${root}/operations/audits`, {recursive:true});
+          write(auditPath, audit);
+          NODE
+
+      - name: Remove trigger and validate
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-weak-source-batch5-trigger-20260725.json
+          cd jichitai-compare
+          npm run check
+          node --check app.js
+
+      - name: Commit batch 5 decisions
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'audit: 中日本A弱い主出典第5群を判定'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
