@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-post-completion-source-maintenance-20260725",
+  "sessionId": "west-b",
+  "checkedAt": "2026-07-25T12:45:00+09:00",
+  "trigger": {
+    "coordinatorPullRequest": 3320,
+    "reason": "correction_reverification_detected_http_404"
+  },
+  "scope": {
+    "detectedBrokenOfficialSourceCount": 2,
+    "correctedBrokenOfficialSourceCount": 2
+  },
+  "corrections": [
+    {
+      "code": "31384",
+      "name": "日吉津村",
+      "service": "disasterPrevention",
+      "beforeUrl": "https://www.hiezu.jp/list/soumu/y121/u509/e970/",
+      "afterUrl": "https://www.hiezu.jp/%E6%97%A5%E5%90%89%E6%B4%A5%E6%9D%91%E6%B4%A5%E6%B3%A2%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+      "statusChanged": false,
+      "contentChanged": false,
+      "evidence": "新CMSの津波・洪水ハザードマップと令和7年度地域防災計画見直しページを確認"
+    },
+    {
+      "code": "45402",
+      "name": "新富町",
+      "service": "childMedical",
+      "beforeUrl": "https://www.town.shintomi.lg.jp/1061.htm",
+      "afterUrl": "https://www.town.shintomi.lg.jp/item/1600.htm",
+      "statusChanged": false,
+      "contentChanged": false,
+      "evidence": "18歳年度末まで入院・外来・調剤の自己負担なしを直接制度ページで再確認"
+    }
+  ],
+  "result": {
+    "status": "corrected_pending_main_pr",
+    "unresolvedConfirmedErrorCount": 0
+  }
+}
