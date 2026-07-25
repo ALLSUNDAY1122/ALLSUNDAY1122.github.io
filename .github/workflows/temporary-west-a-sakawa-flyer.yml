@@ -1,0 +1,61 @@
+name: Temporary West A Sakawa Flyer
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-sakawa-flyer-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.head_ref == 'audit/west-a-anyone-care-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch page and linked flyers
+        shell: bash
+        run: |
+          set -euxo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          node <<'NODE'
+          const fs=require('fs'); const {execFileSync}=require('child_process');
+          const page='https://www.town.sakawa.lg.jp/life/dtl.php?hdnKey=3193';
+          const html=execFileSync('curl',['-LfsS','-A','Mozilla/5.0 West-A-Audit/2026',page],{encoding:'utf8'});
+          const links=[]; const re=/href=["']([^"']+)["']/gi; let m;
+          while((m=re.exec(html))){let u=m[1]; if(u.startsWith('//'))u='https:'+u; else if(u.startsWith('/'))u='https://www.town.sakawa.lg.jp'+u; else if(!/^https?:/i.test(u))u=new URL(u,page).href; if(/\.pdf(?:$|\?)/i.test(u)||/file|download/i.test(u))links.push(u);}
+          const unique=[...new Set(links)]; const results=[];
+          for(let i=0;i<unique.length;i++){
+            const u=unique[i]; const fn=`/tmp/sakawa-${i}`;
+            try{
+              execFileSync('curl',['-LfsS','-A','Mozilla/5.0 West-A-Audit/2026','-o',fn,u]);
+              const b=fs.readFileSync(fn); const pdf=b.slice(0,4).toString()==='%PDF';
+              let text=''; if(pdf){execFileSync('pdftotext',['-layout',fn,fn+'.txt']);text=fs.readFileSync(fn+'.txt','utf8');}
+              else{text=b.toString('utf8').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');}
+              const relevant=/誰でも通園|乳児等通園/.test(text);
+              const snippets=[]; for(const term of ['誰でも通園','乳児等通園','0歳6か月','満3歳未満','月10時間','300円','黒岩中央保育所']){const p=text.indexOf(term);if(p>=0)snippets.push({term,snippet:text.slice(Math.max(0,p-120),p+300).replace(/\s+/g,' ')});}
+              results.push({url:u,byteLength:b.length,pdf,relevant,snippets});
+            }catch(e){results.push({url:u,error:String(e)});}
+          }
+          const report={schemaVersion:'1.0.0',auditId:'west-a-sakawa-anyone-care-flyer-20260725',page,pageFetched:true,linkCount:unique.length,links:unique,results,status:'completed'};
+          fs.writeFileSync('jichitai-compare/operations/audits/west-a-sakawa-anyone-care-flyer-20260725.json',JSON.stringify(report,null,2)+'\n');
+          console.log(JSON.stringify({linkCount:unique.length,relevant:results.filter(r=>r.relevant).length}));
+          NODE
+          rm -f jichitai-compare/operations/control/west-a-sakawa-flyer-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-sakawa-flyer.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-sakawa-anyone-care-flyer-20260725.json \
+                  jichitai-compare/operations/control/west-a-sakawa-flyer-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-sakawa-flyer.yml
+          git diff --cached --check
+          git commit -m 'audit: 佐川町誰でも通園チラシを確認'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
