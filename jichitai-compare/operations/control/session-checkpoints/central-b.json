@@ -5,15 +5,15 @@
   "parentTeam": "中日本調査班",
   "integrationBranch": "region/central",
   "prefectureCodes": ["26", "29", "30"],
-  "updatedAt": "2026-07-25T05:32:00+09:00",
-  "status": "completed",
+  "updatedAt": "2026-07-25T10:31:00+09:00",
+  "status": "researching",
   "invocationIntervalMultiplier": 2,
-  "remainingUninvestigatedCount": 0,
-  "currentMunicipality": null,
-  "workingBranch": null,
-  "pullRequestNumber": 3136,
-  "ciStatus": "success",
-  "ciRunNumber": 7716,
+  "remainingUninvestigatedCount": 94,
+  "currentMunicipality": {"municipalityCode":"26100","municipalityName":"京都市","auditRound":1},
+  "workingBranch": "quality/central-b-independent-reaudit-20260725",
+  "pullRequestNumber": null,
+  "ciStatus": "not_started",
+  "ciRunNumber": null,
   "completedSinceSplit": [
     {"municipalityCode":"30344","municipalityName":"高野町","pullRequestNumber":1180,"ciRunNumber":3247,"completedAt":"2026-07-23T15:49:00+09:00"},
     {"municipalityCode":"30361","municipalityName":"湯浅町","pullRequestNumber":1183,"ciRunNumber":3267,"completedAt":"2026-07-23T16:02:00+09:00"},
@@ -36,7 +36,7 @@
     {"municipalityCode":"26366","municipalityName":"精華町","pullRequestNumber":1245,"ciRunNumber":3470,"completedAt":"2026-07-23T20:08:00+09:00"}
   ],
   "blocked": [],
-  "pendingMunicipalities": [],
+  "pendingMunicipalities": ["26201","26202","26203","26204","26205","26206","26207","26208","26209","26210","26211","26212","26213","26214","26303","26322","26343","26344","26364","26365","26366","26367","26407","26463","26465","29201","29202","29203","29204","29205","29206","29207","29208","29209","29210","29211","29212","29322","29342","29343","29344","29345","29361","29362","29363","29385","29386","29401","29402","29424","29425","29426","29427","29441","29442","29443","29444","29446","29447","29449","29450","29451","29452","29453","30201","30202","30203","30204","30205","30206","30207","30208","30209","30304","30341","30343","30344","30361","30362","30366","30381","30382","30383","30390","30391","30392","30401","30404","30406","30421","30422","30424","30427","30428"],
   "pendingNationalPublication": [],
   "accuracyAudit": {
     "status": "completed_and_published",
@@ -58,7 +58,21 @@
     "auditFile": "jichitai-compare/operations/audits/central-b-accuracy-audit-20260725.json",
     "synchronizationFile": "jichitai-compare/operations/audits/central-b-main-sync-20260725.json"
   },
+  "independentReaudit": {
+    "status": "in_progress",
+    "trackingIssueNumber": 3186,
+    "auditFile": "jichitai-compare/operations/audits/central-b-independent-reaudit-20260725.json",
+    "assignedMunicipalityCount": 95,
+    "assignedServiceCount": 855,
+    "auditedMunicipalityCount": 1,
+    "auditedServiceCount": 9,
+    "confirmedErrorCount": 1,
+    "correctedErrorCount": 0,
+    "currentRound": 1,
+    "currentMunicipalityCode": "26100",
+    "confirmedFinding": "京都市childcareFeeに令和8年度開始の私立幼稚園・第2子以降2歳児保育料無償化の記録漏れ"
+  },
   "stateSyncPullRequestNumber": 3161,
   "lastNationalPublicationPullRequestNumber": 3136,
-  "nextAction": "担当95自治体の10回精度監査と確定誤り57件の全国公開は完了。公式情報更新、差し戻し、CI失敗、mainとの公開不一致、または公開ページ不具合が発生した場合のみ保守対応する。"
+  "nextAction": "第1バッチの残り9自治体を公式情報起点で独立監査し、京都市childcareFeeを含む確定誤りを自治体JSON・taskへ反映してPR・CI・region/central統合を進める。"
 }
