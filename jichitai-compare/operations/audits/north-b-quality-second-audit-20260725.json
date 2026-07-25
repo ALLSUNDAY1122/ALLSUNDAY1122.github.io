@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-quality-second-audit-20260725",
+  "sessionId": "north-b",
+  "auditMode": "quality-improvement-second-audit",
+  "startedAt": "2026-07-25T10:38:00+09:00",
+  "status": "in_progress",
+  "baseBranch": "region/north",
+  "workingBranch": "audit/north-b-quality-round2-20260725",
+  "scope": {
+    "prefectureCodes": ["01", "04", "05", "06"],
+    "assignedMunicipalityCount": 107,
+    "previousAuditRounds": 10,
+    "previousConfirmedCorrections": 28,
+    "sampleTargetMunicipalityCount": 20,
+    "sampleCompletedMunicipalityCount": 0,
+    "confirmedNewErrorCount": 0
+  },
+  "focus": [
+    "こども誰でも通園制度の開始年度",
+    "対象月齢",
+    "料金",
+    "実施施設",
+    "利用時間・月上限",
+    "verified/unavailable判定根拠",
+    "JSON・task・生成データ・公開ページ一致"
+  ],
+  "decisionRule": "利用者向け現行公式情報で制度の実施条件を直接確認できない場合は、計画、条例、予算、事業者募集、一般制度説明だけを根拠にverified化しない。",
+  "previousPriorityCorrections": [
+    {"code":"06367","municipality":"戸沢村","service":"temporaryChildcare","correction":"verifiedからunavailableへ訂正"},
+    {"code":"06382","municipality":"川西町","service":"temporaryChildcare","correction":"こども誰でも通園制度開始案内を追加"},
+    {"code":"06403","municipality":"飯豊町","service":"temporaryChildcare","correction":"制度追加、最小対象月齢を6か月へ訂正"},
+    {"code":"06426","municipality":"三川町","service":"temporaryChildcare","correction":"2026年4月開始制度を追加"}
+  ],
+  "sampleMunicipalities": [
+    {"code":"01584","municipality":"洞爺湖町","status":"pending","risk":"複数制度の直接条件未確認"},
+    {"code":"01602","municipality":"平取町","status":"pending","risk":"2026年度誰でも通園制度の本文未取得"},
+    {"code":"01586","municipality":"むかわ町","status":"pending","risk":"過去の対象月齢訂正"},
+    {"code":"01601","municipality":"日高町","status":"pending","risk":"過去の対象月齢訂正"},
+    {"code":"04205","municipality":"気仙沼市","status":"pending","risk":"verified誤判定の再発確認"},
+    {"code":"04301","municipality":"蔵王町","status":"pending","risk":"制度開始告知のみ確認"},
+    {"code":"04323","municipality":"柴田町","status":"pending","risk":"2026年度制度・月齢訂正"},
+    {"code":"04401","municipality":"松島町","status":"pending","risk":"2026年度制度・月齢訂正"},
+    {"code":"04505","municipality":"美里町","status":"pending","risk":"出典登録のみで本文反映漏れ"},
+    {"code":"04581","municipality":"女川町","status":"pending","risk":"2026年度制度・月齢訂正"},
+    {"code":"05213","municipality":"北秋田市","status":"pending","risk":"利用者向け直接案内未取得"},
+    {"code":"05214","municipality":"にかほ市","status":"pending","risk":"利用者向け直接条件未確認"},
+    {"code":"05215","municipality":"仙北市","status":"pending","risk":"事業者募集・開始予定のみ確認"},
+    {"code":"05366","municipality":"井川町","status":"pending","risk":"運営規程のみ確認"},
+    {"code":"05349","municipality":"八峰町","status":"pending","risk":"2026年度制度追加済み"},
+    {"code":"06213","municipality":"南陽市","status":"pending","risk":"3制度の現行直接資料未取得"},
+    {"code":"06363","municipality":"舟形町","status":"pending","risk":"誰でも通園・病後児保育の直接条件未取得"},
+    {"code":"06367","municipality":"戸沢村","status":"pending","risk":"計画資料によるverified誤判定"},
+    {"code":"06403","municipality":"飯豊町","status":"pending","risk":"2026年度制度・月齢訂正"},
+    {"code":"06426","municipality":"三川町","status":"pending","risk":"2026年4月制度追加済み"}
+  ],
+  "artifactsToMatch": [
+    "data/municipalities",
+    "operations/tasks",
+    "generated/municipalities.json",
+    "static municipality pages",
+    "published GitHub Pages"
+  ],
+  "findings": []
+}
