@@ -14,38 +14,10 @@
     "statusJudgementErrorCount": 1
   },
   "corrections": [
-    {
-      "municipalityCode": "37203",
-      "municipalityName": "坂出市",
-      "service": "housingSupport",
-      "before": "verified",
-      "after": "unavailable",
-      "cause": "一般移住・空き家改修制度の分類誤り"
-    },
-    {
-      "municipalityCode": "39210",
-      "municipalityName": "四万十市",
-      "service": "housingSupport",
-      "before": "verified",
-      "after": "unavailable",
-      "cause": "一般移住住宅制度の分類誤り"
-    },
-    {
-      "municipalityCode": "43215",
-      "municipalityName": "天草市",
-      "service": "schoolMeals",
-      "before": "unavailable",
-      "after": "verified",
-      "cause": "現行例規による中学校料金・納付条件の確認漏れ"
-    },
-    {
-      "municipalityCode": "43215",
-      "municipalityName": "天草市",
-      "service": "housingSupport",
-      "before": "verified",
-      "after": "unavailable",
-      "cause": "一般住宅リフォーム制度の分類誤り"
-    }
+    {"municipalityCode":"37203","municipalityName":"坂出市","service":"housingSupport","before":"verified","after":"unavailable","cause":"一般移住・空き家改修制度の分類誤り"},
+    {"municipalityCode":"39210","municipalityName":"四万十市","service":"housingSupport","before":"verified","after":"unavailable","cause":"一般移住住宅制度の分類誤り"},
+    {"municipalityCode":"43215","municipalityName":"天草市","service":"schoolMeals","before":"unavailable","after":"verified","cause":"現行例規による中学校料金・納付条件の確認漏れ"},
+    {"municipalityCode":"43215","municipalityName":"天草市","service":"housingSupport","before":"verified","after":"unavailable","cause":"一般住宅リフォーム制度の分類誤り"}
   ],
   "evidence": {
     "auditFile": "jichitai-compare/operations/audits/west-a-post-final-independent-sample-20260725.json",
@@ -58,7 +30,11 @@
     "nationalMergeSha": "e637324b1b7396814dd4ee295a2d67f4671fa833",
     "publicVerificationPullRequestNumber": 3443,
     "publicVerificationCiRunNumber": 8374,
-    "publicVerificationMergeSha": "6623da82f94ae80f330596e383cc9d8861790c7c"
+    "publicVerificationMergeSha": "6623da82f94ae80f330596e383cc9d8861790c7c",
+    "checkpointPullRequestNumber": 3449,
+    "checkpointBotHeadCiRunNumber": 8390,
+    "checkpointBotHeadCiDisposition": "action_required_without_jobs_after_github_actions_bot_update",
+    "checkpointCleanCiRetriggeredAt": "2026-07-25T14:34:00+09:00"
   },
   "integrity": {
     "municipalitySourceRegionMainMatched": true,
