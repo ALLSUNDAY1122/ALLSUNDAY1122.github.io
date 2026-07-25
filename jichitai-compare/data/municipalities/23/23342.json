@@ -7,24 +7,33 @@
   "officialUrl": "https://www.town.toyoyama.lg.jp/",
   "status": "verified",
   "summary": "豊山町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "18歳に達する年度末まで、通院・入院の保険診療自己負担額を全額助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達する年度の末日まで",
         "coverage": "医療保険における医療費の自己負担額全額",
         "payment": "受給者証とマイナ保険証または資格確認書を医療機関等の窓口で提示",
         "application": "子ども医療費受給者証交付申請書を役場へ提出"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kosodate/1006454/1000836.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kosodate/1006454/1000836.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "病気またはけがの回復期にある満2歳から年長までの園児を、豊山保育園で保育する。",
-      "eligibility": {"minAgeMonths": 24, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 24,
+        "maxAgeYears": 5
+      },
       "details": {
         "program": "病後児保育",
         "condition": "病気またはけがの回復期で、通常の集団保育が難しい園児",
@@ -32,12 +41,18 @@
         "facility": "豊山保育園",
         "note": "利用条件・申込方法は子ども応援課または保育園へ確認"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kosodate/1000828.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kosodate/1000828.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象で、その他の保育料は住民税額等に応じて決定する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "3～5歳児は幼児教育・保育無償化の対象",
         "underThree": "住民税非課税世帯の0～2歳児は無償化対象",
@@ -45,25 +60,43 @@
         "mealCosts": "給食費・副食費等の実費が別途必要となる場合がある",
         "application": "施設・利用区分により事前の認定申請が必要"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kosodate/1002218.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kosodate/1002218.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "経済的理由で就学が困難な児童生徒へ、学校給食費を含む就学援助を行う。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "program": "就学援助制度",
-        "coverage": "学校給食費、学用品費、修学旅行費等",
-        "condition": "経済的な理由によって就学困難と認められる児童・生徒の保護者",
-        "application": "学校教育課へ就学援助費申請書等を提出",
-        "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+      "summary": "令和8年度は小学校給食を1食330円・月額5,700円、中学校給食を1食380円・月額6,560円で実施する。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kosodate/kosodatejosei/1000847.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "fiscalYear": "令和8年度",
+        "days": "年間186日予定",
+        "elementary": "1食330円、月額5,700円",
+        "juniorHigh": "1食380円、月額6,560円"
+      },
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/_res/projects/default_project/_page_/001/007/127/r080218_siryou3-1.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.toyoyama.lg.jp/kosodate/kosodatejosei/1000847.html",
+          "checkedAt": "2026-07-22",
+          "description": "経済的に就学困難な児童生徒への就学援助"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "生後1歳未満の乳児と母親へ、宿泊・日帰り・訪問型の産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "豊山町に住所を有する生後1歳未満の乳児と、産後ケアを必要とする母親",
         "overnight": "ショートステイ型は10時～翌16時、1日3,000円、7日間まで",
@@ -72,12 +105,18 @@
         "reduction": "生活保護世帯・町民税非課税世帯は無料",
         "application": "利用希望日の7日前までに保健センターへ事前申請"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kosodate/1005565/1005515.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kosodate/1005565/1005515.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、月10時間までこども誰でも通園制度を利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "こども誰でも通園制度（乳児等通園支援事業）",
         "condition": "保育園、認定こども園、幼稚園、地域型保育、企業主導型保育事業所に通っていない子ども",
@@ -86,7 +125,10 @@
         "limit": "1か月最大10時間",
         "fee": "1時間300円"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kosodate/1007483.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kosodate/1007483.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -98,7 +140,10 @@
         "condition": "対象住居が町内にあり、夫婦とも当該住居に住民票があること等",
         "currentStatus": "令和8年度受付は準備が整い次第、公式ページで更新"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kurashi/todokede/1000702/1004030/index.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kurashi/todokede/1000702/1004030/index.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -110,7 +155,10 @@
         "schedule": "収集地区・資源集積所案内で収集日を確認",
         "fee": "有料。処理券の現行額は販売所または最新の町案内で確認"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kurashi/sigen/1000736.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kurashi/sigen/1007929/1000738.html",
+        "checkedAt": "2026-07-25"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -121,7 +169,10 @@
         "alerts": "防災行政無線、サイレン、広報車、安心・安全メール等で避難情報を伝達",
         "updated": "公式防災情報ページは令和8年5月29日更新"
       },
-      "source": {"url": "https://www.town.toyoyama.lg.jp/kurashi/bousai/1000661.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.toyoyama.lg.jp/kurashi/bousai/1000661.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
