@@ -1,0 +1,64 @@
+name: Temporary North B Anyone Single Gap Batch 5 Merge
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-anyone-single-gap-batch5-merge.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-anyone-single-gap-batch5-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  apply-audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout latest audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore and apply confirmed corrections
+        shell: bash
+        run: |
+          git show f841f66c7938b5f82bbb4d499f6e710fdc8cc8c1:jichitai-compare/scripts/temp-north-b-anyone-single-gap-batch5.mjs > /tmp/north-b-batch5.mjs
+          node /tmp/north-b-batch5.mjs
+
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove workflow and commit final files
+        shell: bash
+        run: |
+          rm .github/workflows/temp-north-b-anyone-single-gap-batch5-merge.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-b-anyone-single-gap-batch5-merge.yml \
+                     jichitai-compare/data/municipalities \
+                     jichitai-compare/operations/tasks \
+                     jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json \
+                     jichitai-compare/operations/control/session-checkpoints/north-b.json \
+                     jichitai-compare/data/generated \
+                     jichitai-compare/operations/progress.json \
+                     jichitai-compare/municipality \
+                     jichitai-compare/sitemap.xml
+          git commit -m 'fix: 北日本B誰でも通園単一条件第5群を最新mainへ統合'
+          git push origin HEAD:"${{ github.head_ref }}"
