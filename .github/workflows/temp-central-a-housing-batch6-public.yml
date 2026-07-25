@@ -1,0 +1,49 @@
+name: Temporary Central A Housing Batch 6 Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch6-public-trigger-20260725.json
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-housing-batch6-public-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify five published pages and national JSON
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const codes = ['27202','27321','24207','24324','24461'];
+          const expectedSummary = '子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。';
+          const jsonUrl = `${base}/data/generated/municipalities.json`;
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          let last = null;
+          for (let attempt = 1; attempt <= 24; attempt += 1) {
+            const pageChecks = [];
+            for (const code of codes) {
+              const response = await fetch(`${base}/municipality/${code}/`, { redirect: 'follow', signal: AbortSignal.timeout(20000), headers: { 'user-agent': 'CentralAHousingBatch6PublicVerification/1.0' } });
+              const text = await response.text();
+              pageChecks.push({ code, status: response.status, ok: response.ok && text.includes(expectedSummary) && text.includes('公式情報で詳細未確認') });
+            }
+            const jsonResponse = await fetch(jsonUrl, { redirect: 'follow', signal: AbortSignal.timeout(30000), headers: { 'user-agent': 'CentralAHousingBatch6PublicVerification/1.0' } });
+            const jsonText = await jsonResponse.text();
+            const jsonChecks = codes.map((code) => {
+              const codePresent = jsonText.includes(`"code":"${code}"`) || jsonText.includes(`"code": "${code}"`);
+              return { code, ok: codePresent && jsonText.includes(expectedSummary) };
+            });
+            const ok = pageChecks.every((item) => item.ok) && jsonResponse.ok && jsonChecks.every((item) => item.ok);
+            last = { attempt, pageChecks, jsonStatus: jsonResponse.status, jsonChecks, ok };
+            if (ok) {
+              console.log(JSON.stringify({ passed: true, checkedAt: new Date().toISOString(), result: last }, null, 2));
+              process.exit(0);
+            }
+            await sleep(10000);
+          }
+          console.log(JSON.stringify({ passed: false, checkedAt: new Date().toISOString(), result: last }, null, 2));
+          process.exit(1);
+          NODE
