@@ -6,7 +6,7 @@
   "name": "能勢町",
   "officialUrl": "https://www.town.nose.osaka.jp/",
   "status": "verified",
-  "summary": "能勢町の9制度を再確認し、子ども医療費、移住・空き家支援、粗大ごみ、防災情報をverifiedへ修正。令和8年度学校給食費は継続確認とした。",
+  "summary": "能勢町の9制度を公式情報で確認済み。令和8年度は学校給食費の全額を公費負担し、保護者負担を0円とする。",
   "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
@@ -62,19 +62,29 @@
       }
     },
     "schoolMeals": {
-      "status": "unavailable",
-      "summary": "学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+      "status": "verified",
+      "summary": "令和8年度は学校給食費の全額を公費で負担し、保護者負担を0円とする。",
       "eligibility": {
         "minAgeMonths": 72,
         "maxAgeYears": 15
       },
       "details": {
-        "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+        "program": "学校給食無償化事業",
+        "fiscalYear": "令和8年度",
+        "publicFunding": "保護者負担が原則とされている学校給食費の全額を公費により負担する",
+        "parentBurden": "0円",
+        "purpose": "子育て支援の充実、食育の推進、学校給食の安定提供"
       },
       "source": {
-        "url": "https://www.town.nose.osaka.jp/",
-        "checkedAt": "2026-07-24"
-      }
+        "url": "https://www.town.nose.osaka.jp/material/files/group/29/R8_bessatu.pdf",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.nose.osaka.jp/soshiki/gakkoukyouikusoumuka/kyoikusoumu/11250.html",
+          "checkedAt": "2026-07-25"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
