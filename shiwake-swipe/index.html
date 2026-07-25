@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#171a21">
-  <meta name="description" content="日商簿記3級・2級の借方／貸方をスワイプで反復練習するゲーム型学習アプリ。">
+  <meta name="description" content="日商簿記3級・2級商業簿記・工業簿記の借方／貸方をスワイプで反復練習するゲーム型学習アプリ。">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="仕訳スワイプ">
@@ -35,15 +35,17 @@
             <div><span id="totalAnswers">0</span><small>総回答</small></div>
             <div><span id="accuracyRate">—</span><small>正答率</small></div>
             <div><span id="bestCombo">0</span><small>最高連続</small></div>
+            <div><span id="streakDays">0</span><small>連続学習日</small></div>
           </div>
         </div>
 
         <section class="control-panel" aria-labelledby="gradeTitle">
           <div class="section-heading"><h2 id="gradeTitle">出題範囲</h2><span id="questionCountBadge" class="badge">読込中</span></div>
-          <div class="segmented-control" role="group" aria-label="級を選択">
+          <div class="segmented-control" role="group" aria-label="出題範囲を選択">
             <button class="grade-button is-active" type="button" data-grade="3">3級</button>
-            <button class="grade-button" type="button" data-grade="2">2級</button>
-            <button class="grade-button" type="button" data-grade="all">両方</button>
+            <button class="grade-button" type="button" data-grade="commercial">2級 商業</button>
+            <button class="grade-button" type="button" data-grade="industrial">2級 工業</button>
+            <button class="grade-button" type="button" data-grade="all">全範囲</button>
           </div>
         </section>
 
@@ -52,6 +54,7 @@
           <button class="mode-card" type="button" data-mode="time"><span class="mode-icon" aria-hidden="true">60</span><span class="mode-copy"><strong>タイムアタック</strong><small>60秒で何問正解できるかに挑戦。</small></span><span aria-hidden="true">›</span></button>
           <button class="mode-card" type="button" data-mode="weak"><span class="mode-icon" aria-hidden="true">△</span><span class="mode-copy"><strong>苦手出題</strong><small>誤答率が高い論点を優先して10問。</small></span><span aria-hidden="true">›</span></button>
           <button class="mode-card" type="button" data-mode="daily"><span class="mode-icon" aria-hidden="true">10</span><span class="mode-copy"><strong>デイリー10問</strong><small>毎日同じセット。学習の習慣化に。</small></span><span aria-hidden="true">›</span></button>
+          <button class="mode-card" type="button" data-mode="unseen"><span class="mode-icon" aria-hidden="true">NEW</span><span class="mode-copy"><strong>未出題</strong><small>まだ一度も回答していないカードだけを出題。</small></span><span aria-hidden="true">›</span></button>
         </section>
 
         <section class="weak-panel" aria-labelledby="weakTitle">
@@ -98,12 +101,12 @@
       </section>
     </main>
 
-    <footer><a href="privacy.html">プライバシー</a><a href="support.html">サポート</a><span>試作版 v0.3.0</span></footer>
+    <footer><a href="privacy.html">プライバシー</a><a href="support.html">サポート</a><span>試作版 v0.4.0</span></footer>
   </div>
   <div id="toast" class="toast is-hidden" role="status" aria-live="polite"></div>
-  <script src="question-bank-expand.js?v=7" defer></script>
-  <script src="app.js?v=7" defer></script>
-  <script src="tempo-fix.js?v=7" defer></script>
-  <script src="swipe-fix.js?v=7" defer></script>
+  <script src="question-bank-expand.js?v=8" defer></script>
+  <script src="app.js?v=8" defer></script>
+  <script src="tempo-fix.js?v=8" defer></script>
+  <script src="swipe-fix.js?v=8" defer></script>
 </body>
 </html>
