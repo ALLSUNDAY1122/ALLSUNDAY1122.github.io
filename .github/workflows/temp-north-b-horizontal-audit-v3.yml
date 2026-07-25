@@ -55,13 +55,19 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add jichitai-compare/operations/audits/north-b-horizontal-url-year-numeric-20260725.json \
-                  jichitai-compare/operations/audits/north-b-horizontal-url-year-numeric-20260725.error.log 2>/dev/null || true
-          if git diff --cached --quiet; then
+          paths=()
+          report='jichitai-compare/operations/audits/north-b-horizontal-url-year-numeric-20260725.json'
+          error_log='jichitai-compare/operations/audits/north-b-horizontal-url-year-numeric-20260725.error.log'
+          [ -f "$report" ] && paths+=("$report")
+          [ -f "$error_log" ] && paths+=("$error_log")
+          if [ "${#paths[@]}" -eq 0 ]; then
             echo 'No report or diagnostic log was created.'
           else
-            git commit -m 'audit: 北日本B URL・年度・数値横断検査結果を記録 [skip ci]'
-            git push origin HEAD:${{ github.head_ref }}
+            git add -- "${paths[@]}"
+            if ! git diff --cached --quiet; then
+              git commit -m 'audit: 北日本B URL・年度・数値横断検査結果を記録 [skip ci]'
+              git push origin HEAD:${{ github.head_ref }}
+            fi
           fi
           if [ '${{ steps.scan.outputs.status }}' != '0' ]; then
             exit '${{ steps.scan.outputs.status }}'
