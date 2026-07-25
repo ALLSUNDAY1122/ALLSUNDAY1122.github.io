@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch6-decisions-20260725",
+  "decidedAt": "2026-07-25T15:08:00+09:00",
+  "session": "中日本調査班A",
+  "category": "generalHousingMisclassification",
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "corrected": [
+    {
+      "code": "27202",
+      "name": "岸和田市",
+      "service": "housingSupport",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "excludedProgram": "令和8年度岸和田市空家リフォーム事業補助金",
+      "officialSource": "https://www.city.kishiwada.lg.jp/page/122-akiya-reform.html",
+      "reason": "子育て世帯を対象要件としない一般の移住・定住・空き家対策制度を、子育て世帯向け住宅支援として登録していた"
+    },
+    {
+      "code": "27321",
+      "name": "豊能町",
+      "service": "housingSupport",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "excludedProgram": "豊能町空き家バンク活用促進事業リフォーム工事補助金等",
+      "officialSource": "https://www.town.toyono.osaka.jp/sumou/toyonono-sumai/page007656.html",
+      "reason": "子育て世帯を対象要件としない一般の移住・定住・空き家対策制度を、子育て世帯向け住宅支援として登録していた"
+    },
+    {
+      "code": "24207",
+      "name": "鈴鹿市",
+      "service": "housingSupport",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "excludedProgram": "移住促進のための空き家リノベーション等補助制度",
+      "officialSource": "https://www.city.suzuka.lg.jp/kurashi/sumai/1009632/1002597.html",
+      "reason": "子育て世帯を対象要件としない一般の移住・定住・空き家対策制度を、子育て世帯向け住宅支援として登録していた"
+    },
+    {
+      "code": "24324",
+      "name": "東員町",
+      "service": "housingSupport",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "excludedProgram": "東員町空家リフォーム支援事業",
+      "officialSource": "https://www.town.toin.lg.jp/soshiki/1011/2/2/1/764.html",
+      "reason": "子育て世帯を対象要件としない一般の移住・定住・空き家対策制度を、子育て世帯向け住宅支援として登録していた"
+    },
+    {
+      "code": "24461",
+      "name": "玉城町",
+      "service": "housingSupport",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "excludedProgram": "玉城町空家リフォーム事業補助金等",
+      "officialSource": "https://kizuna.town.tamaki.mie.jp/kurashi/ijyuteijyu/akiyahojo.html",
+      "reason": "子育て世帯を対象要件としない一般の移住・定住・空き家対策制度を、子育て世帯向け住宅支援として登録していた"
+    }
+  ],
+  "machineScan": {
+    "scannedMunicipalities": 314,
+    "extractedCandidates": 121,
+    "reviewedHighRiskCandidates": 5,
+    "remainingMachineCandidates": 116,
+    "broaderCauseScanRemaining": 144
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般の移住支援、空き家改修、耐震、除却、住宅取得制度は、子育て世帯が利用可能であっても子育て世帯を対象要件としない限りhousingSupportのverified根拠にしない",
+    "別制度に子ども加算や新婚支援がある場合でも、登録中の制度自体に子育て固有要件がなければ混同しない"
+  ]
+}
