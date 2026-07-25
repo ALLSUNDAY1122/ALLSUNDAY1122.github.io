@@ -1,0 +1,89 @@
+name: Temporary West B Postpartum Care Status Focus
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-postpartum-status-focus-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  focus:
+    if: github.head_ref == 'audit/west-b-postpartum-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-postpartum-crosscheck-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build unavailable and status-conflict list
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base = 'jichitai-compare/operations';
+          const audit = JSON.parse(fs.readFileSync(`${base}/audits/west-b-postpartum-crosscheck-20260725.json`, 'utf8'));
+          const unavailable = audit.candidates.filter((item) => item.status === 'unavailable').map((item) => ({
+            code: item.code,
+            prefectureCode: item.prefectureCode,
+            prefecture: item.prefecture,
+            name: item.name,
+            summary: item.summary,
+            details: item.details,
+            source: item.source,
+            additionalSources: item.additionalSources,
+            reasons: item.reasons
+          }));
+          const suspiciousVerified = audit.candidates.filter((item) => item.status === 'verified' && (
+            item.reasons.includes('verified_max_age_over_one_year') ||
+            item.reasons.includes('verified_missing_target_period_description') ||
+            (item.reasons.includes('verified_missing_service_type_description') && item.reasons.includes('source_url_appears_pre_2025'))
+          )).map((item) => ({
+            code: item.code,
+            prefectureCode: item.prefectureCode,
+            prefecture: item.prefecture,
+            name: item.name,
+            summary: item.summary,
+            eligibility: item.eligibility,
+            details: item.details,
+            source: item.source,
+            additionalSources: item.additionalSources,
+            reasons: item.reasons
+          }));
+          const review = {
+            schemaVersion: '1.0.0',
+            reviewId: 'west-b-postpartum-status-focus-review-20260725',
+            sourceAuditId: audit.auditId,
+            generatedAt: new Date().toISOString(),
+            unavailableCount: unavailable.length,
+            suspiciousVerifiedCount: suspiciousVerified.length,
+            unavailable,
+            suspiciousVerified,
+            result: {
+              status: 'status_focus_generated_pending_official_review',
+              confirmedCorrectionCount: null,
+              unresolvedConfirmedErrorCount: null
+            }
+          };
+          fs.writeFileSync(`${base}/audits/west-b-postpartum-status-focus-review-20260725.json`, JSON.stringify(review, null, 2) + '\n');
+          console.log(JSON.stringify({ unavailableCount: unavailable.length, unavailable: unavailable.map((x) => `${x.code} ${x.name}`), suspiciousVerifiedCount: suspiciousVerified.length, suspiciousVerified: suspiciousVerified.map((x) => `${x.code} ${x.name}`) }, null, 2));
+          NODE
+      - name: Commit status focus review
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/west-b-postpartum-status-focus-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/audits/west-b-postpartum-status-focus-review-20260725.json jichitai-compare/operations/control/west-b-postpartum-status-focus-trigger-20260725.json
+          git commit -m 'audit: 西日本B産後ケア状態重点候補を生成'
+          git push origin HEAD:audit/west-b-postpartum-crosscheck-20260725
