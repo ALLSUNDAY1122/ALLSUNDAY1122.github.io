@@ -1,1 +1,54 @@
-{"schemaVersion":"1.0.0","municipalityCode":"04301","municipalityName":"蔵王町","prefectureCode":"04","prefectureName":"宮城県","assignedTeam":"北日本調査班","status":"merged","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":7,"researchingCount":0,"unavailableCount":2,"needsMediumReviewCount":0,"currentBranch":"data/04301-zao","pullRequestNumber":1032,"lastCheckedAt":"2026-07-23","lastUpdatedAt":"2026-07-23T05:22:00+09:00","lastUpdatedBy":"北日本調査班B","officialSources":["https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/kenko_hoken/iryouhi.html","https://www.town.zao.miyagi.jp/kurashi_guide/kenkou_fukushi/kosodatesien/kosodatesien.html","https://www.town.zao.miyagi.jp/kurashi_guide/kenkou_fukushi/kosodate/kosodate999.html","https://www.town.zao.miyagi.jp/reiki_int/reiki_honbun/i800RG00001115.html","https://www.town.zao.miyagi.jp/reiki_int/reiki_honbun/i800RG00001124.html","https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/jutaku/taishin.html","https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/eisei/gomi.html","https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/bousai/bousai.html"],"notes":["蔵王町の必須9制度を町公式情報で調査し、7制度をverified、病児・病後児保育と学校給食費をunavailableとして登録。","子ども医療費は18歳年度末まで所得制限なし。保育料無償化、産後1年未満の産後ケアを確認。","ざおう子育てサポート事業は生後3か月から小学6年生まで、1時間500円で地域協力会員が一時預かり。","木造住宅耐震改修は最大100万円、同時リフォーム等は最大110万円。粗大ごみ直接搬入と洪水・土砂災害・火山・ため池ハザードマップを確認。","病児・病後児保育は現行公式案内から専用制度の利用条件を確認できずunavailable。","令和8年学校給食費等補助要綱の制定は確認したが、公式本文を取得できず対象・補助額を確定できないためunavailable。","初回CI run #2631はtask officialSourcesの再計算値不一致で失敗し、重複出典を除外して修正。","最新region/northへ再適用後、CI run #2643（workflow run 29954740431）成功。","PR #1032をregion/northへマージ。","merge SHA: 6c6a2e1a38ffcf52bdfc6a3a25766264349a1264"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "04301",
+  "municipalityName": "蔵王町",
+  "prefectureCode": "04",
+  "prefectureName": "宮城県",
+  "assignedTeam": "北日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 7,
+  "researchingCount": 0,
+  "unavailableCount": 2,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/04301-zao",
+  "pullRequestNumber": 1032,
+  "lastCheckedAt": "2026-07-23",
+  "lastUpdatedAt": "2026-07-23T05:22:00+09:00",
+  "lastUpdatedBy": "北日本調査班B",
+  "officialSources": [
+    "https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/kenko_hoken/iryouhi.html",
+    "https://www.town.zao.miyagi.jp/kurashi_guide/kenkou_fukushi/kosodatesien/kosodatesien.html",
+    "https://www.town.zao.miyagi.jp/kurashi_guide/kenkou_fukushi/kosodate/kosodate999.html",
+    "https://www.town.zao.miyagi.jp/reiki_int/reiki_honbun/i800RG00001115.html",
+    "https://www.town.zao.miyagi.jp/reiki_int/reiki_honbun/i800RG00001124.html",
+    "https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/jutaku/taishin.html",
+    "https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/eisei/gomi.html",
+    "https://www.town.zao.miyagi.jp/kurashi_guide/seikatsu_kankyo/bousai/bousai.html"
+  ],
+  "notes": [
+    "蔵王町の必須9制度を町公式情報で調査し、7制度をverified、病児・病後児保育と学校給食費をunavailableとして登録。",
+    "子ども医療費は18歳年度末まで所得制限なし。保育料無償化、産後1年未満の産後ケアを確認。",
+    "ざおう子育てサポート事業は生後3か月から小学6年生まで、1時間500円で地域協力会員が一時預かり。",
+    "木造住宅耐震改修は最大100万円、同時リフォーム等は最大110万円。粗大ごみ直接搬入と洪水・土砂災害・火山・ため池ハザードマップを確認。",
+    "病児・病後児保育は現行公式案内から専用制度の利用条件を確認できずunavailable。",
+    "令和8年学校給食費等補助要綱の制定は確認したが、公式本文を取得できず対象・補助額を確定できないためunavailable。",
+    "初回CI run #2631はtask officialSourcesの再計算値不一致で失敗し、重複出典を除外して修正。",
+    "最新region/northへ再適用後、CI run #2643（workflow run 29954740431）成功。",
+    "PR #1032をregion/northへマージ。",
+    "merge SHA: 6c6a2e1a38ffcf52bdfc6a3a25766264349a1264"
+  ],
+  "blockers": []
+}
