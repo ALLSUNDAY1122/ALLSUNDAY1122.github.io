@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T01:43:00+09:00",
+  "updatedAt": "2026-07-26T02:04:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3727,
+  "pullRequestNumber": 3732,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3709,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残114件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残104件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T01:43:00+09:00",
-    "latestRegionalPullRequestNumber": 3721,
-    "latestCiRunNumber": 30165865176,
+    "latestCompletedAt": "2026-07-26T02:04:00+09:00",
+    "latestRegionalPullRequestNumber": 3732,
+    "latestCiRunNumber": 30166860327,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 114,
-    "primarySourceSlotsRechecked": 546,
+    "correctedMunicipalitiesRechecked": 124,
+    "primarySourceSlotsRechecked": 556,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -581,7 +581,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 114,
+      "generalHousingMisclassification": 104,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -603,31 +603,46 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残109件",
+      "一般住宅・移住制度の分類候補残104件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3723,
     "latestPublicVerificationPullRequestNumber": 3725,
     "latestHousingBatch": {
-      "batch": 12,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 14,
+      "status": "regional_validated_pending_national_publication",
       "reviewedMunicipalityCount": 5,
-      "confirmedCorrectionCount": 3,
-      "noChangeCount": 2,
-      "statusToUnavailableCount": 1,
-      "verifiedReplacementCount": 2,
-      "remainingCandidates": 114,
-      "regionalPullRequestNumber": 3721,
-      "regionalWorkflowRunId": 30165865176,
-      "nationalPullRequestNumber": 3723,
-      "nationalWorkflowRunId": 30166003547,
-      "publicVerificationPullRequestNumber": 3725,
-      "publicVerificationWorkflowRunId": 30166113711,
-      "finalRegionPullRequestNumber": 3727,
-      "finalRegionWorkflowRunId": 30166222432,
+      "confirmedCorrectionCount": 4,
+      "noChangeCount": 1,
+      "statusToUnavailableCount": 0,
+      "verifiedClarificationOrSourceUpgradeCount": 4,
+      "remainingCandidates": 104,
+      "regionalPullRequestNumber": 3732,
+      "regionalWorkflowRunId": 30166860327,
       "blocker": null
+    },
+    "stateReconciliation": {
+      "detectedAt": "2026-07-26T02:04:00+09:00",
+      "reason": "第13群完了後に並行して最終化された第12群がcheckpoint累計を第12群単独値へ戻していた",
+      "authoritativePriorResolution": "central-a-housing-batch13-resolution-20260726",
+      "authoritativePriorValues": {
+        "correctedMunicipalitiesRechecked": 119,
+        "primarySourceSlotsRechecked": 551,
+        "generalHousingMisclassification": 109
+      },
+      "observedRegressedValues": {
+        "correctedMunicipalitiesRechecked": 114,
+        "primarySourceSlotsRechecked": 546,
+        "generalHousingMisclassification": 114
+      },
+      "resolvedValues": {
+        "correctedMunicipalitiesRechecked": 124,
+        "primarySourceSlotsRechecked": 556,
+        "generalHousingMisclassification": 104
+      },
+      "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第12群の瑞浪市・御嵩町・島田市を訂正し、豊川市・伊豆の国市を維持確認した。地域・全国反映後、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第14群として、あま市・長久手市のunavailable主出典を改善し、豊山町・東浦町の2026年度子育て・新婚住宅条件を更新、加東市を維持確認した。第12群・第13群の並行処理によるcheckpoint累計回帰も解消した。"
 }
