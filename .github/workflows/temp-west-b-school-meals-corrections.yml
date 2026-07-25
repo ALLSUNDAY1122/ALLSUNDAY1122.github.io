@@ -151,7 +151,7 @@ jobs:
             const nextIndex = entries.findIndex(([, s]) => !['verified', 'unavailable'].includes(s?.status));
             task.nextServiceIndex = nextIndex === -1 ? serviceIds.length : nextIndex;
             task.currentService = serviceIds[task.nextServiceIndex] ?? null;
-            task.officialSources = unique(entries.filter(([, s]) => ['verified', 'unavailable'].includes(s?.status)).flatMap(([, s]) => [s?.source?.url, ...(s?.additionalSources ?? []).map((x) => x?.url)]));
+            task.officialSources = unique(entries.filter(([, s]) => ['verified', 'unavailable'].includes(s?.status)).map(([, s]) => s?.source?.url));
             task.lastCheckedAt = checkedAt;
             task.lastUpdatedAt = updatedAt;
             task.lastUpdatedBy = '西日本調査班B';
@@ -222,7 +222,7 @@ jobs:
           set -euo pipefail
           rm -f jichitai-compare/operations/control/west-b-school-meals-corrections-trigger-20260725.json
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add jichitai-compare
           git commit -m 'fix: 西日本B学校給食費3自治体を訂正'
           git push origin HEAD:fix/west-b-school-meals-corrections-20260725
