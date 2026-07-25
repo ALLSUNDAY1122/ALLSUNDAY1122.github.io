@@ -7,175 +7,61 @@
   "status": "in_progress",
   "scope": {
     "round": 3,
-    "municipalityCodes": ["26365", "26366", "26367", "26407", "26463", "26465", "29201", "29202", "29203", "29204"],
-    "auditedMunicipalityCount": 8,
-    "auditedServiceCount": 72,
-    "confirmedErrorCount": 6,
-    "correctedErrorCount": 6,
-    "pendingMunicipalityCodes": ["29203", "29204"]
+    "municipalityCodes": ["26365","26366","26367","26407","26463","26465","29201","29202","29203","29204"],
+    "auditedMunicipalityCount": 9,
+    "auditedServiceCount": 81,
+    "confirmedErrorCount": 7,
+    "correctedErrorCount": 7,
+    "pendingMunicipalityCodes": ["29204"]
   },
   "findings": [
     {
-      "municipalityCode": "26365",
-      "municipalityName": "和束町",
-      "servicesChecked": 9,
-      "result": "two_confirmed_errors_corrected",
-      "confirmedErrors": [
-        {
-          "service": "temporaryChildcare",
-          "before": "こども誰でも通園制度について現行利用案内の詳細を確認できない記録",
-          "after": "令和8年4月開始、わづかこども園、未就園の生後6か月から満3歳未満、月10時間、平日8時30分から16時30分、1時間300円、世帯区分別減免、認定・面談・予約・取消条件を記録",
-          "cause": "2026年度利用案内の確認漏れ",
-          "officialSource": "https://www.town.wazuka.lg.jp/material/files/group/8/nyusyoannai.pdf",
-          "status": "corrected"
-        },
-        {
-          "service": "housingSupport",
-          "before": "結婚新生活支援を子育て世帯向け住宅支援の説明に混在",
-          "after": "子ども要件のある子育て世帯住宅リフォーム補助のみを記録。対象経費の2分の1、最大30万円、三世代加算5万円",
-          "cause": "一般・新婚住宅支援と子育て世帯向け住宅支援の分類混同",
-          "officialSource": "https://www.town.wazuka.lg.jp/kakukanogoannai/chiikichikarasuishinka/shien/2759.html",
-          "status": "corrected"
-        }
+      "municipalityCode":"26365","municipalityName":"和束町","servicesChecked":9,"result":"two_confirmed_errors_corrected",
+      "confirmedErrors":[
+        {"service":"temporaryChildcare","before":"こども誰でも通園制度の現行利用条件を未記録","after":"令和8年4月開始、わづかこども園、生後6か月から満3歳未満、月10時間、平日8時30分から16時30分、1時間300円、減免・認定・面談・予約・取消条件を記録","cause":"2026年度利用案内の確認漏れ","officialSource":"https://www.town.wazuka.lg.jp/material/files/group/8/nyusyoannai.pdf","status":"corrected"},
+        {"service":"housingSupport","before":"結婚新生活支援を子育て住宅支援の説明に混在","after":"子ども要件のある子育て世帯住宅リフォーム補助のみを記録。対象経費の2分の1、最大30万円、三世代加算5万円","cause":"一般・新婚住宅支援との分類混同","officialSource":"https://www.town.wazuka.lg.jp/kakukanogoannai/chiikichikarasuishinka/shien/2759.html","status":"corrected"}
       ]
     },
     {
-      "municipalityCode": "26366",
-      "municipalityName": "精華町",
-      "servicesChecked": 9,
-      "result": "one_confirmed_error_corrected",
-      "confirmedErrors": [
-        {
-          "service": "postpartumCare",
-          "before": "産後ケアの類型のみを記録し、実施施設、申請期限、取消条件を未記録",
-          "after": "産後1年以内、宿泊・日帰り合計7日、悠育助産院・助産院しんかい・京都山城総合医療センター・助産院わ、妊娠8か月以降から原則利用希望日の5日前までの申請、前日15時以降のキャンセル条件を追加",
-          "cause": "施設・申請・取消条件の記録漏れ",
-          "officialSource": "https://www.town.seika.kyoto.jp/kosodate/ninshin/12426.html",
-          "status": "corrected"
-        }
-      ]
+      "municipalityCode":"26366","municipalityName":"精華町","servicesChecked":9,"result":"one_confirmed_error_corrected",
+      "confirmedErrors":[{"service":"postpartumCare","before":"実施施設、申請期限、取消条件を未記録","after":"産後1年以内、宿泊・日帰り合計7日、4施設、妊娠8か月以降から原則利用希望日の5日前までの申請、前日15時以降の取消条件を追加","cause":"施設・申請・取消条件の記録漏れ","officialSource":"https://www.town.seika.kyoto.jp/kosodate/ninshin/12426.html","status":"corrected"}]
     },
     {
-      "municipalityCode": "26367",
-      "municipalityName": "南山城村",
-      "servicesChecked": 9,
-      "result": "one_confirmed_error_corrected",
-      "confirmedErrors": [
-        {
-          "service": "schoolMeals",
-          "before": "南山城小学校のみを学校給食費無償化対象として記録し、対象上限を小学生までとした",
-          "after": "南山城村内の笠置中学校を含む相楽東部広域連合立小中学校の学校給食費・修学旅行費無償化を記録し、対象上限を中学生までへ訂正",
-          "cause": "広域連合運営中学校の利用・所在地の確認漏れ",
-          "officialSource": "https://www.union.sourakutoubu.lg.jp/contents_detail.php?co=new&frmId=750",
-          "status": "corrected"
-        }
-      ]
+      "municipalityCode":"26367","municipalityName":"南山城村","servicesChecked":9,"result":"one_confirmed_error_corrected",
+      "confirmedErrors":[{"service":"schoolMeals","before":"南山城小学校のみを無償化対象として対象上限を小学生までと記録","after":"村内の笠置中学校を含む相楽東部広域連合立小中学校の給食費・修学旅行費無償化を記録し中学生までへ訂正","cause":"広域連合運営中学校の利用・所在地の確認漏れ","officialSource":"https://www.union.sourakutoubu.lg.jp/contents_detail.php?co=new&frmId=750","status":"corrected"}]
     },
     {
-      "municipalityCode": "26407",
-      "municipalityName": "京丹波町",
-      "servicesChecked": 9,
-      "result": "one_confirmed_error_corrected",
-      "confirmedErrors": [
-        {
-          "service": "schoolMeals",
-          "before": "小学生年48,000円、中学生年50,400円の旧条例額を一般世帯負担として記録",
-          "after": "令和8年度は町立小学校・中学校とも給食費無償化、一般世帯負担0円へ訂正",
-          "cause": "2026年度開始制度の見落としと旧料金の継続掲載",
-          "officialSource": "https://www.town.kyotamba.kyoto.jp/material/files/group/18/080325.pdf",
-          "status": "corrected"
-        }
-      ]
+      "municipalityCode":"26407","municipalityName":"京丹波町","servicesChecked":9,"result":"one_confirmed_error_corrected",
+      "confirmedErrors":[{"service":"schoolMeals","before":"小学生年48,000円、中学生年50,400円の旧条例額を一般負担として記録","after":"令和8年度は町立小中学校とも給食費無償、一般負担0円へ訂正","cause":"2026年度開始制度の見落としと旧料金の継続掲載","officialSource":"https://www.town.kyotamba.kyoto.jp/material/files/group/18/080325.pdf","status":"corrected"}]
     },
     {
-      "municipalityCode": "26463",
-      "municipalityName": "伊根町",
-      "servicesChecked": 9,
-      "result": "one_confirmed_error_corrected",
-      "confirmedErrors": [
-        {
-          "service": "sickChildCare",
-          "before": "町内に専用施設がないことからunavailable",
-          "after": "宮津市・伊根町・与謝野町の広域施設である宮津与謝病児保育所りりふるを利用可能としてverified。生後6か月から小学6年生、平日7時30分から18時、定員6人、1回2,500円・5時間以内1,500円",
-          "cause": "周辺自治体・広域連携施設の利用可能性の見落とし",
-          "officialSource": "https://www.city.miyazu.kyoto.jp/site/kosodate/2237.html",
-          "status": "corrected"
-        }
-      ]
+      "municipalityCode":"26463","municipalityName":"伊根町","servicesChecked":9,"result":"one_confirmed_error_corrected",
+      "confirmedErrors":[{"service":"sickChildCare","before":"町内専用施設がないためunavailable","after":"宮津与謝病児保育所りりふるを利用可能としてverified。生後6か月から小学6年生、平日7時30分から18時、定員6人、1回2,500円・5時間以内1,500円","cause":"広域連携施設の利用可能性の見落とし","officialSource":"https://www.city.miyazu.kyoto.jp/site/kosodate/2237.html","status":"corrected"}]
     },
     {
-      "municipalityCode": "26465",
-      "municipalityName": "与謝野町",
-      "servicesChecked": 9,
-      "result": "no_confirmed_error",
-      "confirmedErrors": [],
-      "notes": [
-        "令和8年度就学援助案内は小学校給食費欄が対象額記載なし、中学校給食費は実費支給。町内一律無償化の直接案内を確認できないため全校無償化とは推測しない。",
-        "宮津与謝病児保育所りりふる、産後ケア3類型、令和8年度こども誰でも通園制度、子ども要件のある移住定住住宅支援を現行確認。"
-      ],
-      "principalSources": [
-        "https://www.town.yosano.lg.jp/parenting/pregnancy-childbirth/postpartum/532560/",
-        "https://www.town.yosano.lg.jp/parenting/category_62/school-support/99557/",
-        "https://www.town.yosano.lg.jp/reiki/reiki_honbun/r323RG00001041.html",
-        "https://www.town.yosano.lg.jp/parenting/childcare/8_4/",
-        "https://www.town.yosano.lg.jp/culture/emigration-community/emigration/entry_18/"
-      ]
+      "municipalityCode":"26465","municipalityName":"与謝野町","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],
+      "notes":["令和8年度就学援助案内は小学校給食費欄が対象額記載なし、中学校給食費は実費支給。町内一律無償化とは推測しない。","病児保育、産後ケア、誰でも通園、子ども要件のある住宅支援を現行確認。"]
     },
     {
-      "municipalityCode": "29201",
-      "municipalityName": "奈良市",
-      "servicesChecked": 9,
-      "result": "no_confirmed_error",
-      "confirmedErrors": [],
-      "notes": [
-        "令和8年度の学校給食は小学校1食350円のうち保護者負担56円、中学校1食450円を無償化。",
-        "産後ケアは産後1年未満、宿泊7泊・日帰りと訪問合計7日、宿泊1,000円・日帰り500円。",
-        "こども誰でも通園制度は生後6か月から満3歳未満、月10時間、7施設、市外児も広域利用可能。",
-        "2026年7月7日開始の子育て移住・定住支援金は39歳以下の子育て世帯等に最大40万円。"
-      ],
-      "principalSources": [
-        "https://www.city.nara.lg.jp/site/kosodate/31125.html",
-        "https://www.city.nara.lg.jp/site/kosodate/10642.html",
-        "https://www.city.nara.lg.jp/site/kosodate/5660.html",
-        "https://www.city.nara.lg.jp/site/school-lunch/214214.html",
-        "https://www.city.nara.lg.jp/site/kosodate/9071.html",
-        "https://www.city.nara.lg.jp/site/kosodate/259231.html",
-        "https://www.city.nara.lg.jp/site/nararhythm/259382.html",
-        "https://www.city.nara.lg.jp/site/gomi-syusyu/4464.html",
-        "https://www.city.nara.lg.jp/site/bousai-saigai/89308.html"
-      ]
+      "municipalityCode":"29201","municipalityName":"奈良市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],
+      "notes":["令和8年度は小学校給食の保護者負担1食56円、中学校無償。","産後ケア、7施設の誰でも通園、2026年7月7日開始の子育て移住・定住支援金を現行確認。"]
     },
     {
-      "municipalityCode": "29202",
-      "municipalityName": "大和高田市",
-      "servicesChecked": 9,
-      "result": "no_confirmed_error",
-      "confirmedErrors": [],
-      "notes": [
-        "令和8年度は市立小学校・中学校給食費をともに無償化。通常月額は小学校5,200円・中学校5,300円だが徴収なし。",
-        "こども誰でも通園制度は生後6か月から満3歳未満、月10時間、スクルドエンジェル保育園高田園、1時間300円、市外施設も利用可能。",
-        "子育て・若年・移住世帯専用の住宅取得支援を確認できず、一般の除却・耐震補助を除外してunavailableを維持。",
-        "産後ケアの施設一覧・利用者負担金表は公式PDFで公開されるが取得時にキャッシュ障害が発生したため、個別金額を推測しない。"
-      ],
-      "principalSources": [
-        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/kodomosesaku/2/2183.html",
-        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/hoikuyochienka/ikuji/1/2129.html",
-        "https://www.city.yamatotakada.nara.jp/kosodate/ikuji/hoikusho_kodomoen/3727.html",
-        "https://www.city.yamatotakada.nara.jp/material/files/group/44/gakkoukyusyoku_08.pdf",
-        "https://www.city.yamatotakada.nara.jp/kosodate/ninshin_shussan/7463.html",
-        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/hoikuyochienka/ikuji/9788.html",
-        "https://www.city.yamatotakada.nara.jp/oshirase_top/10249.html",
-        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/cleancenter/gomi_kankyo_pet/5/1404.html",
-        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/kikikanrika/kikikanri/2/10167.html"
-      ]
+      "municipalityCode":"29202","municipalityName":"大和高田市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],
+      "notes":["令和8年度は市立小中学校給食費をともに無償化。","誰でも通園は生後6か月から満3歳未満、月10時間、1時間300円。","一般の除却・耐震補助を子育て住宅支援から除外してunavailableを維持。","産後ケア料金表PDFの取得障害部分は推測しない。"]
+    },
+    {
+      "municipalityCode":"29203","municipalityName":"大和郡山市","servicesChecked":9,"result":"one_task_record_error_corrected",
+      "confirmedErrors":[{"service":"housingSupport","recordLayer":"task","before":"task説明が子ども要件のない住宅エコリフォーム商品券を住宅支援として記録","after":"自治体JSONと同じく、東京圏からの移住・就業等の要件を満たす世帯への移住支援金を記録。2人以上世帯100万円、単身60万円、18歳未満1人につき100万円加算","cause":"自治体JSON修正後にtaskの旧制度説明が残った同期漏れ・制度分類誤り","officialSource":"https://www.city.yamatokoriyama.lg.jp/life/sumai_hikkoshi/9173.html","status":"corrected"}],
+      "notes":["小中学校給食費無償化、病児保育2施設、産後ケア3類型、誰でも通園2施設、粗大ごみ年3回、防災情報は現行JSONと一致。"]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 28,
-    "auditedServiceCount": 252,
-    "confirmedErrorCount": 28,
-    "correctedErrorCount": 28,
+    "auditedMunicipalityCount": 29,
+    "auditedServiceCount": 261,
+    "confirmedErrorCount": 29,
+    "correctedErrorCount": 29,
     "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "第3バッチの奈良県2市を大和郡山市（29203）から公式情報起点で独立監査する。"
+  "nextAction": "第3バッチ最終の天理市（29204）を公式情報起点で独立監査する。"
 }
