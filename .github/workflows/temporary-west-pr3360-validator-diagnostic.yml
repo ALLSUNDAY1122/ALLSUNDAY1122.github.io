@@ -24,11 +24,16 @@ jobs:
         with:
           node-version: 24
 
-      - name: Capture validator output
+      - name: Capture validator output once
         shell: bash
         run: |
           set +e
           cd jichitai-compare
+          OUTPUT="operations/audits/west-pr3360-validator-diagnostic-20260725.txt"
+          if [ -f "$OUTPUT" ]; then
+            echo "Diagnostic evidence already exists; no recapture needed."
+            exit 0
+          fi
           npm run generate > /tmp/west-pr3360-generate.log 2>&1
           GENERATE_STATUS=$?
           npm run progress > /tmp/west-pr3360-progress.log 2>&1
@@ -52,7 +57,7 @@ jobs:
             echo
             echo "===== validate ====="
             cat /tmp/west-pr3360-validate.log
-          } > operations/audits/west-pr3360-validator-diagnostic-20260725.txt
+          } > "$OUTPUT"
           exit 0
 
       - name: Commit diagnostic evidence
@@ -60,7 +65,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add jichitai-compare/operations/audits/west-pr3360-validator-diagnostic-20260725.txt
+          git add jichitai-compare/operations/audits/west-pr3360-validator-diagnostic-20260725.txt 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No diagnostic changes"
           else
