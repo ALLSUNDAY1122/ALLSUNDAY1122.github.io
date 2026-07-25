@@ -1,28 +1,14 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-25T08:52:00+09:00",
+  "updatedAt": "2026-07-25T09:13:00+09:00",
   "phase": "published",
   "mainBranch": "main",
-  "regionalBranches": {
-    "north": "region/north",
-    "east": "region/east",
-    "central": "region/central",
-    "west": "region/west"
-  },
-  "migration": {
-    "status": "completed",
-    "firstAuditStartedAt": "2026-07-19T21:35:00+09:00"
-  },
-  "regionalCompletedSinceLastRelease": {
-    "north": 0,
-    "east": 0,
-    "central": 0,
-    "west": 0,
-    "total": 0
-  },
+  "regionalBranches": {"north":"region/north","east":"region/east","central":"region/central","west":"region/west"},
+  "migration": {"status":"completed","firstAuditStartedAt":"2026-07-19T21:35:00+09:00"},
+  "regionalCompletedSinceLastRelease": {"north":0,"east":0,"central":0,"west":0,"total":0},
   "priority": {
     "type": "release-monitoring",
-    "nextAction": "全国1,741自治体・15,669制度は完了・公開確認済み。公式情報更新、CI異常、公開文言異常が発生した場合に保守を再開する。中日本Aの継続確認25項目はIssue #3141、栄村公式サイト復旧後の再監査はIssue #2847で非ブロッキング追跡する。"
+    "nextAction": "全国1,741自治体・15,669制度は完了・公開確認済み。中日本Aの継続確認24項目はIssue #3141、栄村公式サイト復旧後の再監査はIssue #2847で非ブロッキング追跡する。公式情報更新、CI異常、公開文言異常が発生した場合に保守を再開する。"
   },
   "publication": {
     "status": "published_verified",
@@ -57,21 +43,15 @@
       "checkedAt": "2026-07-25T08:39:00+09:00"
     }
   },
-  "lastNationalIntegrationAt": "2026-07-25T08:51:00+09:00",
-  "lastNationalIntegrationPr": 3178,
+  "lastNationalIntegrationAt": "2026-07-25T09:12:00+09:00",
+  "lastNationalIntegrationPr": 3181,
   "latestGeneratedMunicipalityCount": 1741,
   "latestGeneratedServiceCount": 15669,
-  "latestGeneratedPullRequest": 3178,
+  "latestGeneratedPullRequest": 3181,
   "latestPublicCountPullRequest": 3175,
   "regionalMergedMunicipalities": 1741,
   "remainingMunicipalities": 0,
-  "taskState": {
-    "todoMunicipalities": 0,
-    "researchingMunicipalities": 0,
-    "prOpenMunicipalities": 0,
-    "mergedMunicipalities": 1741,
-    "blockedMunicipalities": 0
-  },
+  "taskState": {"todoMunicipalities":0,"researchingMunicipalities":0,"prOpenMunicipalities":0,"mergedMunicipalities":1741,"blockedMunicipalities":0},
   "serviceQualityState": {
     "totalServices": 15669,
     "completedServices": 15669,
@@ -87,22 +67,25 @@
     "resolutionCiRunNumber": 7747,
     "resolvedTrackingIssueNumber": 3166,
     "resolvedTrackingIssueStatus": "closed",
-    "latestQualityUpdatePullRequestNumber": 3178,
-    "latestQualityUpdateCiRunNumber": 7774
+    "latestQualityUpdatePullRequestNumber": 3181,
+    "latestQualityUpdateCiRunNumber": 7781
   },
   "nonBlockingFollowUps": [
     {
       "scope": "中日本調査班A",
-      "itemCount": 25,
+      "itemCount": 24,
+      "originalItemCount": 25,
+      "resolvedItemCount": 1,
       "trackingIssueNumber": 3141,
-      "status": "published_partial_information_updated_waiting_for_more_specific_official_information",
-      "latestRecheckPullRequestNumber": 3176,
-      "latestRecheckCiRunNumber": 7764,
-      "latestNationalSyncPullRequestNumber": 3178,
-      "latestNationalSyncCiRunNumber": 7774,
-      "updatedMunicipalityCode": "23235",
-      "updatedService": "schoolMeals",
-      "fullyResolvedItemCount": 0
+      "status": "published_one_item_resolved_waiting_for_more_specific_official_information",
+      "latestRecheckPullRequestNumber": 3180,
+      "latestRecheckCiRunNumber": 7778,
+      "latestNationalSyncPullRequestNumber": 3181,
+      "latestNationalSyncCiRunNumber": 7781,
+      "resolvedMunicipalityCode": "25425",
+      "resolvedService": "schoolMeals",
+      "partialUpdateMunicipalityCode": "23235",
+      "partialUpdateService": "schoolMeals"
     },
     {
       "scope": "東日本調査班A・栄村",
