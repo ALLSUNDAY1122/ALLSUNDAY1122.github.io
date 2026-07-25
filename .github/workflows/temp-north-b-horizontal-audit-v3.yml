@@ -38,6 +38,7 @@ jobs:
           set +e
           sed -i 's/setTimeout(() => controller.abort(), 15000)/setTimeout(() => controller.abort(), 6000)/' jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs
           sed -i 's/Array.from({ length: 10 }/Array.from({ length: 30 }/' jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs
+          sed -i 's/^  anyoneChildcareCompletenessCandidates,$/  anyoneChildcareCompletenessCandidates: anyoneCompletenessCandidates,/' jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs
           timeout 17m node jichitai-compare/scripts/temp-north-b-horizontal-audit.mjs > /tmp/north-b-horizontal-audit.log 2>&1
           status=$?
           tail -200 /tmp/north-b-horizontal-audit.log
