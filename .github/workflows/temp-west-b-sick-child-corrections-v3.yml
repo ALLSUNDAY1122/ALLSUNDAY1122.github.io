@@ -25,9 +25,8 @@ jobs:
       - name: Load confirmed correction scripts
         shell: bash
         run: |
-          git fetch origin fix/west-b-sick-child-crosscheck-corrections-v2-20260725 --depth=1
-          git show FETCH_HEAD:.github/scripts/west-b-sick-child-corrections.mjs > /tmp/west-b-core.mjs
-          git show FETCH_HEAD:.github/scripts/west-b-sick-child-corrections-postfix.mjs > /tmp/west-b-postfix.mjs
+          curl -fsSL "https://raw.githubusercontent.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/c7ddd5781af382407c5ec6e6961ce91fc78bbe83/.github/scripts/west-b-sick-child-corrections.mjs" -o /tmp/west-b-core.mjs
+          curl -fsSL "https://raw.githubusercontent.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/f68e3f7660e3ba6f4678652d39bbab5f0b351b5b/.github/scripts/west-b-sick-child-corrections-postfix.mjs" -o /tmp/west-b-postfix.mjs
       - name: Apply, regenerate and validate
         shell: bash
         run: |
