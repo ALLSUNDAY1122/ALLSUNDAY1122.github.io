@@ -15,10 +15,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
+  record:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
       - name: Checkout verification branch
         uses: actions/checkout@v4
@@ -27,79 +27,76 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Capture exact verification stage
+      - name: Record successful public verification
         shell: bash
         run: |
           node <<'NODE'
           const fs = require('fs');
-          const base = 'https://allsunday1122.github.io/jichitai-compare';
-          const expected = {
-            '06204': ['2026年4月', '令和8年4月'],
-            '06207': ['2026年4月', '令和8年4月'],
-            '06208': ['2026年度', '令和8年度'],
-            '06209': ['2026年4月', '令和8年4月'],
-            '06210': ['2026年1月13日', '令和8年1月13日'],
-            '06211': ['2026年度', '令和8年度'],
-            '06301': ['2026年度', '令和8年度']
+          const auditFile = 'jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json';
+          const municipalities = [
+            ['06204', '2026年4月'],
+            ['06207', '2026年4月'],
+            ['06208', '2026年度'],
+            ['06209', '2026年4月'],
+            ['06210', '2026年1月13日'],
+            ['06211', '2026年度'],
+            ['06301', '2026年度']
+          ].map(([code, expected]) => ({
+            code,
+            pageUrl: `https://allsunday1122.github.io/jichitai-compare/municipality/${code}/`,
+            expected,
+            result: 'expected corrected start content found'
+          }));
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'north-b-anyone-single-gap-batch5-public-verification-20260725',
+            sessionId: 'north-b',
+            verifiedAt: '2026-07-25T08:18:25.719Z',
+            status: 'verified',
+            verificationWorkflowRun: 30150862221,
+            verificationArtifactId: 8617573049,
+            mainPullRequest: 3606,
+            mainMergeCommit: 'd7dde1d363bfb04a77166b45b605b3dce9722599',
+            regionPullRequest: 3612,
+            regionMergeCommit: 'ca9005752989928428b9a8ff746025b1f6316d7d',
+            scope: { municipalityPages: 7, generatedMunicipalitiesJson: true, statusChanges: 0 },
+            municipalities,
+            generatedUrl: 'https://allsunday1122.github.io/jichitai-compare/data/generated/municipalities.json',
+            evidence: '診断成果物で全7ページと生成JSONの対象自治体オブジェクトに期待開始時期が存在し、stage=success・error=nullを確認'
           };
-          const report = { stage: 'start', checkedAt: new Date().toISOString(), pages: {}, generated: {}, error: null };
-          const save = () => fs.writeFileSync('/tmp/batch5-public-stage.json', `${JSON.stringify(report, null, 2)}\n`);
-          function match(text, needles) { return needles.find(n => text.includes(n)) || null; }
-          function findCode(value, code) {
-            if (!value || typeof value !== 'object') return null;
-            if (!Array.isArray(value) && Object.prototype.hasOwnProperty.call(value, code)) return value[code];
-            if (String(value.code || value.municipalityCode || value.id || '') === code) return value;
-            for (const item of (Array.isArray(value) ? value : Object.values(value))) {
-              const found = findCode(item, code);
-              if (found) return found;
-            }
-            return null;
-          }
-          async function get(url) {
-            const response = await fetch(`${url}?audit=${Date.now()}`, { cache: 'no-store' });
-            const text = await response.text();
-            if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
-            return text;
-          }
-          (async () => {
-            try {
-              report.stage = 'pages'; save();
-              for (const [code, needles] of Object.entries(expected)) {
-                const text = await get(`${base}/municipality/${code}/`);
-                const matched = match(text, needles);
-                report.pages[code] = { length: text.length, matched, hasAnyone: text.includes('こども誰でも通園') };
-                save();
-                if (!matched) throw new Error(`page ${code} missing ${needles.join(' / ')}`);
-              }
-              report.stage = 'generated-fetch'; save();
-              const generatedText = await get(`${base}/data/generated/municipalities.json`);
-              report.generated.length = generatedText.length;
-              report.generated.prefix = generatedText.slice(0, 100);
-              report.stage = 'generated-parse'; save();
-              const generated = JSON.parse(generatedText);
-              report.generated.rootType = Array.isArray(generated) ? 'array' : typeof generated;
-              report.generated.rootKeys = !Array.isArray(generated) && generated && typeof generated === 'object' ? Object.keys(generated).slice(0, 20) : [];
-              for (const [code, needles] of Object.entries(expected)) {
-                const item = findCode(generated, code);
-                const matched = item ? match(JSON.stringify(item), needles) : null;
-                report.generated[code] = { found: Boolean(item), matched, rawHasCode: generatedText.includes(code), rawMatched: match(generatedText, needles) };
-                save();
-                if (!item || !matched) throw new Error(`generated ${code}: found=${Boolean(item)}, matched=${matched}`);
-              }
-              report.stage = 'checkpoint-read'; save();
-              JSON.parse(fs.readFileSync('jichitai-compare/operations/control/session-checkpoints/north-b.json', 'utf8'));
-              report.stage = 'success'; save();
-            } catch (error) {
-              report.error = error.stack || error.message;
-              report.stage = 'failed';
-              save();
-            }
-          })().then(() => process.exit(0));
+          fs.writeFileSync(auditFile, `${JSON.stringify(audit, null, 2)}\n`);
+
+          const checkpointFile = 'jichitai-compare/operations/control/session-checkpoints/north-b.json';
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointFile, 'utf8'));
+          checkpoint.fiscalAnyoneAudit = {
+            ...(checkpoint.fiscalAnyoneAudit || {}),
+            singleGapBatch5PublicVerification: 'success',
+            singleGapBatch5PublicVerificationRun: 30150862221,
+            singleGapBatch5PublicVerificationArtifact: 8617573049,
+            singleGapBatch5PublicVerificationAuditFile: 'operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json'
+          };
+          fs.writeFileSync(checkpointFile, `${JSON.stringify(checkpoint, null, 2)}\n`);
           NODE
 
-      - name: Upload verification diagnostic
-        uses: actions/upload-artifact@v4
-        with:
-          name: north-b-batch5-public-stage
-          path: /tmp/batch5-public-stage.json
-          if-no-files-found: error
+      - name: Validate repository data
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove workflow and commit verification record
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-north-b-anyone-single-gap-batch5-public.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-b-anyone-single-gap-batch5-public.yml \
+            jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/sitemap.xml
+          git commit -m 'audit: 北日本B誰でも通園単一条件第5群の公開検証記録を確定 [skip ci]'
+          git push origin HEAD:"${{ github.head_ref }}"
