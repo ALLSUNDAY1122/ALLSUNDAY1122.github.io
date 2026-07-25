@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-anyone-care-crosscheck-20260725",
+  "team": "西日本調査班A",
+  "generatedAt": "2026-07-25T06:48:32.890Z",
+  "scope": {
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
+    "municipalityCount": 226
+  },
+  "counts": {
+    "verified": 160,
+    "unavailable": 66,
+    "anyoneTermDetected": 194,
+    "flagged": 195,
+    "unavailableButAnyoneTerms": 64,
+    "missingStart": 104,
+    "missingAge": 1,
+    "missingLimit": 4,
+    "missingFee": 4,
+    "anyoneOnly": 129,
+    "planLikePrimarySource": 1
+  },
+  "policy": {
+    "targetService": "temporaryChildcare",
+    "anyoneCareRequiredFields": [
+      "開始・年度",
+      "対象年齢",
+      "月10時間",
+      "料金"
+    ],
+    "note": "機械抽出結果は訂正確定ではなく、公式利用者向けページの独立確認対象を絞るためのもの。"
+  },
+  "unresolvedCount": 0,
+  "status": "completed_initial_extraction_superseded",
+  "initialFlaggedCount": 195,
+  "falsePositiveCause": "unavailable説明文の「確認できない」等にも誰でも通園語が含まれ、初期抽出は過大。訂正確定には使用せず精密化監査へ移行。",
+  "supersededBy": "jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json"
+}
