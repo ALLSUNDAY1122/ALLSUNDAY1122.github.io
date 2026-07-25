@@ -6,7 +6,7 @@
   "name": "徳之島町",
   "officialUrl": "https://www.tokunoshima-town.org/",
   "status": "verified",
-  "summary": "必須9制度を徳之島町公式情報で調査。5制度をverified、病児・病後児保育、2026年度保育料、産後ケア、こども誰でも通園制度をunavailableとして登録。",
+  "summary": "必須9制度を公式情報で再監査。4制度をverified、5制度をunavailableとして登録。住宅支援は一般制度のみ確認され、子育て世帯固有条件を確認できないためunavailableへ訂正。",
   "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
@@ -119,23 +119,27 @@
       }
     },
     "housingSupport": {
-      "status": "verified",
-      "summary": "2026年度住宅リフォーム費の15％、上限24万円を補助",
+      "status": "unavailable",
+      "summary": "一般制度「令和8年度徳之島町住宅リフォーム助成事業」は確認できるが、子育て世帯固有の住宅支援条件を確認できない",
       "details": {
         "target": "徳之島町に居住・住民登録し、町税等の滞納がなく、自己所有・自己居住住宅またはUJIターン予定者の購入住宅を町内業者で改修する方",
         "support": "対象工事費の15％、上限24万円",
         "conditions": "対象工事費20万円以上、同一住宅・同一人1回限り、交付決定後に着工し、2027年2月28日までに完了する",
-        "applicationPeriod": "2026年5月1日から6月30日まで。予定4件で、審査後に抽選する"
+        "applicationPeriod": "2026年5月1日から6月30日まで。予定4件で、審査後に抽選する",
+        "confirmedGeneralProgramSummary": "2026年度住宅リフォーム費の15％、上限24万円を補助",
+        "previousStatus": "verified",
+        "classificationReview": "一般移住・一般住宅制度を子育て世帯向け住宅支援として登録していた分類誤りを訂正",
+        "childSpecificConditionConfirmed": false,
+        "independentVerificationMethod": "search_recovered_official_html"
       },
       "source": {
         "url": "https://www.tokunoshima-town.org/kensetsuka/kurashi/machi/sumai/jyutakureform.html",
-        "checkedAt": "2026-07-24"
+        "checkedAt": "2026-07-25"
       },
-      "additionalSources": [
-        {
-          "url": "https://www.tokunoshima-town.org/kensetsuka/kurashi/machi/sumai/akiyakatsuyouse-futexijigyo.html",
-          "checkedAt": "2026-07-24"
-        }
+      "notes": [
+        "2026年7月25日に公式情報で「令和8年度徳之島町住宅リフォーム助成事業」を独立確認した。",
+        "町内居住・住民登録等を条件とする一般世帯の住宅リフォーム助成で、補助率15％・上限24万円。子ども要件はない。",
+        "一般制度の事実は保持するが、子育て世帯向け住宅支援として登録しない。"
       ]
     },
     "bulkyWaste": {
