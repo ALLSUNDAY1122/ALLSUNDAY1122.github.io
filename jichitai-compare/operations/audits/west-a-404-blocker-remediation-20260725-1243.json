@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "auditId": "west-a-404-blocker-remediation-20260725-1243",
   "team": "西日本調査班A",
-  "checkedAt": "2026-07-25T12:47:00+09:00",
+  "checkedAt": "2026-07-25T13:18:00+09:00",
   "triggerPullRequest": 3320,
   "scope": {
     "candidateCount": 2,
@@ -26,32 +26,32 @@
     {
       "municipalityCode": "46533",
       "municipalityName": "和泊町",
-      "finding": "自動監査で案内ページを404候補としたが、町公式案内ページと添付PDFは現存し、PDFに粗大ごみ100円/10kgが明記される。",
-      "classification": "automated_fetch_false_positive_and_source_hardening",
+      "finding": "町公式の2023年改定PDFに粗大ごみ100円/10kgと記載されるが、現行の沖永良部衛生管理組合公式ページでは粗大ごみを含む個人ごみが75円/10kgとなっている。",
+      "classification": "stale_official_pdf_superseded_by_current_authority_page",
       "oldStatus": "verified",
       "newStatus": "verified",
-      "oldSource": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
-      "newSource": "https://www.town.wadomari.lg.jp/documents/4268/kaitei.pdf",
-      "additionalSource": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
-      "resolution": "料金を直接記載する町公式添付PDFを主出典へ変更し、案内ページを追加出典として保持。",
+      "oldSource": "https://www.town.wadomari.lg.jp/documents/4268/kaitei.pdf",
+      "newSource": "https://www.okieikumiai.com/cleancenter",
+      "resolution": "2023年PDFの100円を現行料金として扱わず、和泊町・知名町で構成する特別地方公共団体の現行料金表に基づき75円/10kgへ訂正。",
       "status": "corrected"
     }
   ],
   "verification": {
     "mashikiCurrentOfficialGarbageIndexReachable": true,
     "mashikiDeletedPageConfirmed404": true,
-    "wadomariOfficialPageReachable": true,
-    "wadomariOfficialPdfReachable": true,
-    "wadomariPdfConfirmedFee": "粗大ごみ100円/10kg",
-    "pdfScreenshotAttempted": true,
-    "pdfScreenshotResult": "web_tool_cache_miss_twice; parsed official PDF text independently confirmed the fee"
+    "wadomariTownPdfReachable": true,
+    "wadomariTownPdfHistoricalFee": "粗大ごみ100円/10kg",
+    "wadomariCurrentAuthorityPageReachable": true,
+    "wadomariCurrentAuthorityPageFee": "個人ごみ75円/10kg（粗大ごみを含む）",
+    "wadomariAuthorityType": "和泊町・知名町で構成する特別地方公共団体（一部事務組合）",
+    "currentSourceSelected": "https://www.okieikumiai.com/cleancenter"
   },
   "summary": {
-    "confirmedErrorCount": 1,
-    "sourceHardeningCount": 1,
+    "confirmedErrorCount": 2,
+    "sourceHardeningCount": 0,
     "statusChangeCount": 1,
     "unresolvedCount": 0,
     "blocker": null,
-    "result": "completed_with_two_remediations"
+    "result": "completed_with_two_corrections"
   }
 }
