@@ -1,0 +1,93 @@
+name: Temporary Central A Housing Batch 10 Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch10-public-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-housing-batch10-public-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify public pages and generated JSON
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const base='https://allsunday1122.github.io/jichitai-compare';
+          const targets=[
+            {code:'28381',name:'稲美町',status:'verified',summary:'子育て・介護など親子間の支え合いを目的に、町内の親元へ近居する子世帯の住宅取得・一定の増改築等へ18万円分の商品券を交付する。',source:'https://www.town.hyogo-inami.lg.jp/0000001615.html'},
+            {code:'17203',name:'小松市',status:'verified',summary:'3世代同居・隣接・近居となる住宅の新築・増築・購入へ、同居20万円、隣接・近居10万円を交付する。',source:'https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/3235.html'},
+            {code:'21220',name:'下呂市',status:'verified',summary:'2026年1月1日から2027年3月31日までに婚姻等をした新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を上限60万円補助する。',source:'https://www.city.gero.lg.jp/soshiki/49/37216.html'},
+            {code:'22130',name:'浜松市',status:'verified',summary:'市外から移住する50歳未満の夫婦等または50歳未満のひとり親世帯へ住宅取得・改修・引越費を最大100万円補助し、まちなかの3世代同居等には上乗せ支援がある。',source:'https://www.city.hamamatsu.shizuoka.jp/hamalife/oshirase/hamalifejyutakusyutokuhitouhojyokin.html'},
+            {code:'23445',name:'南知多町',status:'unavailable',summary:'子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。',source:'https://www.town.minamichita.lg.jp/akiya/1000973.html'}
+          ];
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          const auditPath='jichitai-compare/operations/audits/central-a-housing-classification-batch10-public-verification-20260725.json';
+          fs.mkdirSync(path.dirname(auditPath),{recursive:true});
+          let finalResult=null;
+          for(let attempt=1;attempt<=30;attempt++){
+            const cache=`${Date.now()}-${attempt}`;
+            const pageChecks=[];
+            for(const target of targets){
+              try{
+                const response=await fetch(`${base}/municipality/${target.code}/?audit=${cache}`,{redirect:'follow',signal:AbortSignal.timeout(25000),headers:{'user-agent':'CentralAHousingBatch10PublicVerification/1.0'}});
+                const text=await response.text();
+                const unavailableMatches=target.status==='unavailable'?text.includes('公式情報で詳細未確認'):null;
+                pageChecks.push({code:target.code,name:target.name,expectedStatus:target.status,url:response.url,httpStatus:response.status,summaryMatches:text.includes(target.summary),sourceMatches:text.includes(target.source),unavailableLabelMatches:unavailableMatches,success:response.ok&&text.includes(target.summary)&&text.includes(target.source)&&(target.status!=='unavailable'||unavailableMatches)});
+              }catch(error){pageChecks.push({code:target.code,name:target.name,expectedStatus:target.status,httpStatus:null,success:false,error:String(error)});}
+            }
+            let generated={success:false};
+            try{
+              const response=await fetch(`${base}/data/generated/municipalities.json?audit=${cache}`,{redirect:'follow',signal:AbortSignal.timeout(40000),headers:{'user-agent':'CentralAHousingBatch10PublicVerification/1.0'}});
+              const payload=JSON.parse(await response.text());
+              const municipalities=Array.isArray(payload)?payload:Array.isArray(payload.municipalities)?payload.municipalities:Array.isArray(payload.items)?payload.items:[];
+              const checks=targets.map(target=>{
+                const municipality=municipalities.find(item=>String(item.code)===target.code);
+                const service=municipality?.services?.housingSupport;
+                return {code:target.code,found:Boolean(municipality),expectedStatus:target.status,statusMatches:service?.status===target.status,summaryMatches:service?.summary===target.summary,sourceMatches:service?.source?.url===target.source,success:Boolean(municipality)&&service?.status===target.status&&service?.summary===target.summary&&service?.source?.url===target.source};
+              });
+              const serviceCount=municipalities.reduce((sum,item)=>sum+Object.keys(item.services??{}).length,0);
+              generated={httpStatus:response.status,municipalityCount:municipalities.length,serviceCount,municipalityCount1741:municipalities.length===1741,serviceCount15669:serviceCount===15669,checks,success:response.ok&&municipalities.length===1741&&serviceCount===15669&&checks.every(item=>item.success)};
+            }catch(error){generated={success:false,error:String(error)};}
+            const success=pageChecks.every(item=>item.success)&&generated.success;
+            finalResult={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch10-public-verification-20260725',generatedAt:new Date().toISOString(),attempt,regionalPullRequest:3649,regionalCiRun:8897,stateSyncPullRequest:3651,nationalSyncPullRequest:3654,nationalSyncWorkflowRunId:30151775347,verificationPullRequest:Number(process.env.PR_NUMBER),verificationWorkflowRunId:Number(process.env.RUN_ID),pageChecks,publicGeneratedJson:generated,success,releaseBlocker:success?'none':'public_mismatch'};
+            fs.writeFileSync(auditPath,JSON.stringify(finalResult,null,2)+'\n');
+            if(success)break;
+            await sleep(10000);
+          }
+          NODE
+
+      - name: Commit verification evidence
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-housing-batch10-public-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/central-a-housing-classification-batch10-public-verification-20260725.json jichitai-compare/operations/control/central-a-housing-batch10-public-trigger-20260725.json
+          git commit -m 'audit: 中日本A住宅支援第10群の公開反映を確認'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
+
+      - name: Enforce verification result
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const result=JSON.parse(fs.readFileSync('jichitai-compare/operations/audits/central-a-housing-classification-batch10-public-verification-20260725.json','utf8'));
+          if(!result.success){console.error(JSON.stringify(result,null,2));process.exit(1);}
+          console.log(JSON.stringify(result,null,2));
+          NODE
