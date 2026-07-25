@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-issue3141-reconciliation-20260725",
+  "reconciledAt": "2026-07-25T11:18:00+09:00",
+  "session": "中日本調査班A",
+  "reason": "原因別監査のURL再取得時点では23項目だったが、並行処理により能勢町・東栄町が解消され、Issue #3141の権威的現行状態が21項目へ更新されたため。",
+  "historicalSnapshot": {
+    "source": "central-a-cause-based-decisions-20260725",
+    "unresolvedItemCount": 23,
+    "status": "superseded_for_current_state_only"
+  },
+  "currentAuthoritativeState": {
+    "issueNumber": 3141,
+    "unresolvedItemCount": 21,
+    "unresolvedMunicipalityCount": 20,
+    "items": [
+      {
+        "code": "21207",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "21504",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22219",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22305",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22424",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "22429",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "23235",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "23427",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "23561",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "23563",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24205",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "24205",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24212",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24441",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "24461",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "24543",
+        "service": "schoolMeals"
+      },
+      {
+        "code": "25441",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "25442",
+        "service": "temporaryChildcare"
+      },
+      {
+        "code": "27232",
+        "service": "sickChildCare"
+      },
+      {
+        "code": "27321",
+        "service": "sickChildCare"
+      },
+      {
+        "code": "27366",
+        "service": "sickChildCare"
+      }
+    ]
+  },
+  "concurrentlyResolved": [
+    {
+      "code": "23562",
+      "name": "東栄町",
+      "service": "schoolMeals",
+      "regionalPr": 3211,
+      "nationalPr": 3216
+    },
+    {
+      "code": "27322",
+      "name": "能勢町",
+      "service": "schoolMeals",
+      "regionalPr": 3190,
+      "nationalPr": 3200
+    }
+  ],
+  "dataDecision": "解消済み2項目は既存の地域・全国PRで反映済み。本再同期では自治体制度データを変更せず、監査状態記録だけを現行Issueへ合わせる。",
+  "nextPriority": [
+    "弱い主出典46候補",
+    "子育て固有条件のない住宅支援候補",
+    "学校給食費の範囲候補24件"
+  ]
+}
