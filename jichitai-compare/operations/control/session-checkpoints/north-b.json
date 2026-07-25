@@ -10,14 +10,14 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-25T17:27:00+09:00",
+  "updatedAt": "2026-07-25T17:34:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
-  "workingBranch": "sync/north-b-anyone-batch7-public-final-20260725",
+  "workingBranch": null,
   "pullRequestNumber": null,
-  "ciStatus": "pending",
+  "ciStatus": "success",
   "regionPullRequestNumber": 3204,
   "regionCiRun": 30139394200,
   "regionMergeCommit": "0ede1653d5ed91c8088fa2ad7e8b22b9402afd74",
@@ -155,10 +155,18 @@
     "generationCiResult": "success",
     "finalizationPullRequest": 3228,
     "finalizationCiResult": "success",
-    "publicVerification": "success"
+    "publicVerification": "success",
+    "status": "completed",
+    "finalHandoffFile": "operations/audits/north-b-quality-second-audit-final-handoff-20260725.json",
+    "fiscalCandidatesReviewed": 40,
+    "anyoneCandidatesReviewed": 78,
+    "remainingAuditCandidates": 0,
+    "finalPublicVerification": "success",
+    "finalRegionPublicRecordPullRequest": 3642,
+    "finalRegionPublicRecordMergeCommit": "ab8cf5539327b33ee6b6f53f4d3c9f67c7222a79"
   },
   "blocked": [],
-  "nextAction": "誰でも通園候補78件の全件再監査、main・region/north反映、公開ページ・全国生成JSON確認まで完了。",
+  "nextAction": "北日本B品質改善第2監査は完了。統括・全国統合で最終同期を確認する。",
   "horizontalUrlAudit": {
     "municipalityCount": 107,
     "uniqueUrlCount": 1221,
@@ -239,7 +247,7 @@
     "recordsPersistenceRegionCiResult": "success",
     "recordsPersistenceRegionMergeCommit": "097d0021ad3421744d4a3df4abba69ed4229be67",
     "recordsPersistenceStatus": "completed",
-    "status": "anyone_candidate_audit_public_verified",
+    "status": "completed",
     "multipleGapReviewed": 9,
     "multipleGapCorrectedMunicipalities": [
       "01607",
@@ -476,6 +484,9 @@
       "06426",
       "06461"
     ],
-    "singleGapBatch7PublicVerificationFile": "operations/audits/north-b-anyone-batch7-public-verification-20260725.json"
+    "singleGapBatch7PublicVerificationFile": "operations/audits/north-b-anyone-batch7-public-verification-20260725.json",
+    "finalHandoffFile": "operations/audits/north-b-quality-second-audit-final-handoff-20260725.json",
+    "finalRegionPublicRecordPullRequest": 3642,
+    "finalRegionPublicRecordMergeCommit": "ab8cf5539327b33ee6b6f53f4d3c9f67c7222a79"
   }
 }
