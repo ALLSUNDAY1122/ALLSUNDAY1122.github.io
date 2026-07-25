@@ -3,10 +3,11 @@
   "checkpointId": "west-a-post-completion-404-remediation-20260725",
   "sessionId": "west-a",
   "displayName": "西日本調査班A",
-  "recordedAt": "2026-07-25T13:08:00+09:00",
-  "status": "completed_with_post_completion_remediation",
+  "recordedAt": "2026-07-25T13:31:00+09:00",
+  "status": "completed_with_post_completion_corrections",
   "trigger": {
     "crossTeamReverificationPullRequestNumber": 3320,
+    "followUpRegionalPullRequestNumber": 3360,
     "westAFlaggedMunicipalityCount": 2,
     "westAFlaggedMunicipalityCodes": ["43443", "46533"]
   },
@@ -27,34 +28,31 @@
       "municipalityCode": "46533",
       "municipalityName": "和泊町",
       "service": "bulkyWaste",
-      "classification": "automated_fetch_false_positive_and_source_hardening",
+      "classification": "stale_official_pdf_superseded_by_current_authority_page",
       "oldStatus": "verified",
       "newStatus": "verified",
-      "oldSource": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
-      "newSource": "https://www.town.wadomari.lg.jp/documents/4268/kaitei.pdf",
-      "reason": "町公式案内ページと添付PDFは現存し、PDFに粗大ごみ100円/10kgが明記されるため、直接PDFを主出典へ変更した。",
-      "result": "source_hardened"
+      "oldSource": "https://www.town.wadomari.lg.jp/documents/4268/kaitei.pdf",
+      "newSource": "https://www.okieikumiai.com/cleancenter",
+      "reason": "町公式の2023年改定PDFでは粗大ごみ100円/10kgだが、和泊町・知名町で構成する特別地方公共団体の現行ページでは、粗大ごみを含む個人ごみが75円/10kgと公開されているため現行料金へ訂正した。",
+      "result": "corrected"
     }
   ],
   "evidence": {
     "auditFile": "jichitai-compare/operations/audits/west-a-404-blocker-remediation-20260725-1243.json",
-    "regionalPullRequestNumber": 3334,
-    "regionalCiRunNumber": 8126,
-    "regionalMergeSha": "f2c39f061807439471964e7c3ebfc6b749193af8",
-    "nationalPullRequestNumber": 3361,
-    "nationalInitialCiRunNumber": 8157,
-    "nationalRegenerationWorkflowRunId": 30143316242,
-    "nationalRegenerationResult": "success",
-    "nationalMergeSha": "7456d7ba5ed2200110997a0660e550ebb289c0c1",
-    "botHeadRunNumber": 8159,
-    "botHeadRunDisposition": "action_required_without_jobs_after_github_actions_bot_self_update; not a validation failure",
-    "temporaryWorkflowRemaining": false
+    "regionalPullRequestNumber": 3385,
+    "regionalCiRunNumber": 8234,
+    "regionalMergeSha": "8e83b6180fa3a0e7ee3ee1e32414e17b6b6b23cb",
+    "nationalPullRequestNumber": 3392,
+    "temporaryWorkflowRemaining": true,
+    "wadomariCurrentFeeSource": "https://www.okieikumiai.com/cleancenter",
+    "wadomariCurrentFee": "75円/10kg",
+    "wadomariSupersededFee": "100円/10kg"
   },
   "integrity": {
     "regionMainMunicipality43443Matched": true,
     "regionMainTask43443Matched": true,
-    "regionMainMunicipality46533Matched": true,
-    "regionMainTask46533Matched": true,
+    "regionMainMunicipality46533Matched": false,
+    "regionMainTask46533Matched": false,
     "nationwideMunicipalityCount": 1741,
     "nationwideServiceCount": 15669,
     "completedServiceCount": 15669,
@@ -66,14 +64,15 @@
     "remainingServiceCount": 0,
     "researchingServiceCount": 0,
     "needsMediumReviewServiceCount": 0,
-    "blockedServiceCount": 0
+    "blockedServiceCount": 0,
+    "pendingNationalResync": true
   },
   "summary": {
-    "confirmedErrorCount": 1,
-    "sourceHardeningCount": 1,
+    "confirmedErrorCount": 2,
+    "sourceHardeningCount": 0,
     "statusChangeCount": 1,
     "unresolvedCount": 0,
     "blocker": null,
-    "nextAction": "公式ページ復旧または新しい現行料金・寸法・申込条件が公開された場合に益城町粗大ごみを再確認する。"
+    "nextAction": "和泊町75円訂正をmainと公開生成物へ同期する。益城町は公式ページ復旧または新料金・寸法・申込条件公開時に再確認する。"
   }
 }
