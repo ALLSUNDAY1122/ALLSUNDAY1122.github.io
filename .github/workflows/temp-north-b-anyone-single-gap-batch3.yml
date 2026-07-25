@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnose-audit:
+  apply-audit:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -32,43 +32,56 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Apply corrections and capture validation output
+      - name: Apply confirmed corrections
+        run: node jichitai-compare/scripts/temp-north-b-anyone-single-gap-batch3.mjs
+
+      - name: Recalculate task official sources
         shell: bash
         run: |
-          set +e
-          mkdir -p jichitai-compare/operations/audits
-          log='jichitai-compare/operations/audits/north-b-anyone-single-gap-batch3-ci-diagnostic-20260725.txt'
-          : > "$log"
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const root = path.resolve('jichitai-compare');
+          const codes = ['04445','04505','04581','05202','05206','05207','05209','05211'];
+          for (const code of codes) {
+            const municipalityPath = path.join(root, 'data', 'municipalities', code.slice(0, 2), `${code}.json`);
+            const taskPath = path.join(root, 'operations', 'tasks', `${code}.json`);
+            const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+            const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+            task.officialSources = [...new Set(Object.values(municipality.services || {})
+              .map((service) => service?.source?.url)
+              .filter(Boolean))];
+            fs.writeFileSync(taskPath, `${JSON.stringify(task, null, 2)}\n`);
+            console.log(`recalculated ${code}`);
+          }
+          NODE
+          rm -f jichitai-compare/operations/audits/north-b-anyone-single-gap-batch3-ci-diagnostic-20260725.txt
 
-          echo '=== apply corrections ===' | tee -a "$log"
-          node jichitai-compare/scripts/temp-north-b-anyone-single-gap-batch3.mjs 2>&1 | tee -a "$log"
-          apply_status=${PIPESTATUS[0]}
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
 
-          echo '=== generate ===' | tee -a "$log"
-          (cd jichitai-compare && npm run generate) 2>&1 | tee -a "$log"
-          generate_status=${PIPESTATUS[0]}
-
-          echo '=== progress ===' | tee -a "$log"
-          (cd jichitai-compare && npm run progress) 2>&1 | tee -a "$log"
-          progress_status=${PIPESTATUS[0]}
-
-          echo '=== validate generated ===' | tee -a "$log"
-          (cd jichitai-compare && npm run validate:generated) 2>&1 | tee -a "$log"
-          validate_status=${PIPESTATUS[0]}
-
-          {
-            echo '=== exit codes ==='
-            echo "apply=${apply_status}"
-            echo "generate=${generate_status}"
-            echo "progress=${progress_status}"
-            echo "validate=${validate_status}"
-          } | tee -a "$log"
-
-      - name: Commit diagnostic output
+      - name: Commit batch result
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f jichitai-compare/operations/audits/north-b-anyone-single-gap-batch3-ci-diagnostic-20260725.txt
-          git commit -m 'diagnostic: 北日本B単一条件第3群の検証出力を保存 [skip ci]'
+          git add -A \
+                  jichitai-compare/data/municipalities \
+                  jichitai-compare/operations/tasks \
+                  jichitai-compare/operations/audits/north-b-anyone-single-gap-batch3-review-20260725.json \
+                  jichitai-compare/operations/audits/north-b-anyone-single-gap-batch3-ci-diagnostic-20260725.txt \
+                  jichitai-compare/operations/control/session-checkpoints/north-b.json \
+                  jichitai-compare/data/generated \
+                  jichitai-compare/operations/progress.json \
+                  jichitai-compare/municipality \
+                  jichitai-compare/sitemap.xml
+          if git diff --cached --quiet; then
+            echo 'No confirmed corrections to commit.'
+            exit 1
+          fi
+          git commit -m 'fix: 北日本B誰でも通園単一条件第3群を補正 [skip ci]'
           git push origin HEAD:"${{ github.head_ref }}"
