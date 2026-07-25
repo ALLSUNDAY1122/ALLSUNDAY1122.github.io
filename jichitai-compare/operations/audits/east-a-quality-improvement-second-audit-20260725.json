@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "auditId": "east-a-quality-improvement-second-audit-20260725",
   "sessionId": "east-a",
-  "status": "completed_main_pending_publication",
+  "status": "completed_main_public_verified",
   "startedAt": "2026-07-25T10:38:00+09:00",
   "restoredBaseline": {
     "verificationCampaignRounds": 10,
@@ -316,7 +316,7 @@
     "fullAuditPullRequestNumber": 3175,
     "fullAuditRunId": 30134336210
   },
-  "nextAction": "main統合後、公開生成JSONと訂正対象11自治体の公開ページを確認する。栄村Issue #2847は維持。",
+  "nextAction": "栄村公式サイト復旧時のみIssue #2847に基づき9制度を再調査する。通常の第2監査作業は完了。",
   "regionalIntegration": {
     "pullRequestNumber": 3276,
     "ciRunNumber": 8013,
@@ -326,7 +326,7 @@
     "mergedTo": "region/east",
     "mergedAt": "2026-07-25T12:14:00+09:00"
   },
-  "updatedAt": "2026-07-25T12:25:00+09:00",
+  "updatedAt": "2026-07-25T13:08:00+09:00",
   "regionalIntegrationHistory": [
     {
       "pullRequestNumber": 3210,
@@ -356,6 +356,20 @@
       3276,
       3283
     ],
-    "status": "pending_ci_merge"
-  }
+    "ciRunNumber": 8053,
+    "ciRunId": 30142377954,
+    "ciStatus": "success",
+    "mergeSha": "2942166a3e1d06009fcdf6ab31552553fa917bd3",
+    "status": "success"
+  },
+  "publicVerification": {
+    "pullRequestNumber": 3362,
+    "runId": 30143545602,
+    "status": "success",
+    "verifiedMunicipalityCount": 11,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "checkedAt": "2026-07-25T13:08:00+09:00"
+  },
+  "publicVerifiedAt": "2026-07-25T13:08:00+09:00"
 }
