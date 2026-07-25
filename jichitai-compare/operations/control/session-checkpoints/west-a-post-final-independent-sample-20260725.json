@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "checkpointId": "west-a-post-final-independent-sample-20260725",
+  "sessionId": "west-a",
+  "displayName": "西日本調査班A",
+  "recordedAt": "2026-07-25T14:31:00+09:00",
+  "status": "completed_with_post_final_corrections",
+  "scope": {
+    "sampledMunicipalityCount": 6,
+    "prefectureCount": 6,
+    "correctedMunicipalityCount": 3,
+    "correctedServiceCount": 4,
+    "categoryErrorCount": 3,
+    "statusJudgementErrorCount": 1
+  },
+  "corrections": [
+    {"municipalityCode":"37203","municipalityName":"坂出市","service":"housingSupport","before":"verified","after":"unavailable","cause":"一般移住・空き家改修制度の分類誤り"},
+    {"municipalityCode":"39210","municipalityName":"四万十市","service":"housingSupport","before":"verified","after":"unavailable","cause":"一般移住住宅制度の分類誤り"},
+    {"municipalityCode":"43215","municipalityName":"天草市","service":"schoolMeals","before":"unavailable","after":"verified","cause":"現行例規による中学校料金・納付条件の確認漏れ"},
+    {"municipalityCode":"43215","municipalityName":"天草市","service":"housingSupport","before":"verified","after":"unavailable","cause":"一般住宅リフォーム制度の分類誤り"}
+  ],
+  "evidence": {
+    "auditFile": "jichitai-compare/operations/audits/west-a-post-final-independent-sample-20260725.json",
+    "publicVerificationFile": "jichitai-compare/operations/audits/west-a-post-final-independent-public-verification-20260725.json",
+    "regionalPullRequestNumber": 3433,
+    "regionalCiRunNumber": 8351,
+    "regionalMergeSha": "6caac63baa4e12d615ccfdd93801aaa00fcc1d86",
+    "nationalPullRequestNumber": 3438,
+    "nationalCiRunNumber": 8361,
+    "nationalMergeSha": "e637324b1b7396814dd4ee295a2d67f4671fa833",
+    "publicVerificationPullRequestNumber": 3443,
+    "publicVerificationCiRunNumber": 8374,
+    "publicVerificationMergeSha": "6623da82f94ae80f330596e383cc9d8861790c7c",
+    "checkpointPullRequestNumber": 3449,
+    "checkpointCiRunNumber": 8394,
+    "checkpointMergeSha": "7a3a9961dcd9e2cbbc96f3a791cdf3bbb45587a7",
+    "supersededMainSyncPullRequestNumber": 3456,
+    "finalMainSyncPullRequestNumber": 3466,
+    "finalMainSyncWorkflowRunId": 30146161253,
+    "finalMainSyncWorkflowResult": "success",
+    "finalMainBotHeadCiRunNumber": 8415,
+    "finalMainBotHeadCiDisposition": "action_required_without_jobs_after_github_actions_bot_update",
+    "finalMainCleanCiRetriggeredAt": "2026-07-25T14:42:00+09:00"
+  },
+  "integrity": {
+    "municipalitySourceRegionMainMatched": true,
+    "taskRegionMainMatchedBeforeFinalMetadataUpdate": true,
+    "taskStatusFinalizedToMerged": true,
+    "publicPageHttp200Count": 3,
+    "publicPageContentMatchCount": 3,
+    "stalePublicValueCount": 0,
+    "nationwideMunicipalityCount": 1741,
+    "nationwideServiceCount": 15669,
+    "completedServiceCount": 15669,
+    "completionRatePercent": 100,
+    "prOpenMunicipalityCountAfterFinalization": 0,
+    "prOpenServiceCountAfterFinalization": 0,
+    "unresolvedCount": 0,
+    "blocker": null
+  },
+  "nextAction": "新しい公式情報または再退行が検出された場合のみ再監査する。一般移住・一般住宅制度を子育て世帯向け住宅支援へ登録しない。"
+}
