@@ -1,0 +1,52 @@
+name: Temporary West A Tsuno Eligibility Fix
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-tsuno-eligibility-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.head_ref == 'audit/west-a-anyone-care-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Add structured eligibility and retrigger CI
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const mp='jichitai-compare/data/municipalities/39/39411.json';
+          const m=JSON.parse(fs.readFileSync(mp,'utf8'));
+          m.services.temporaryChildcare.eligibility={minAgeMonths:12,maxAgeYears:2};
+          fs.writeFileSync(mp,JSON.stringify(m)+'\n');
+          const ap='jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json';
+          const a=JSON.parse(fs.readFileSync(ap,'utf8'));
+          a.evidence.firstCleanCiRunNumber=8627;
+          a.evidence.firstCleanCiFailure='津野町temporaryChildcareのeligibility構造化項目不足';
+          a.evidence.eligibilityFixedAt='2026-07-25T16:08:00+09:00';
+          a.status='regional_clean_ci_retriggered_after_eligibility_fix';
+          fs.writeFileSync(ap,JSON.stringify(a,null,2)+'\n');
+          NODE
+          rm -f jichitai-compare/operations/control/west-a-tsuno-eligibility-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-tsuno-eligibility-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/data/municipalities/39/39411.json \
+                  jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json \
+                  jichitai-compare/operations/control/west-a-tsuno-eligibility-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-tsuno-eligibility-fix.yml
+          git diff --cached --check
+          git commit -m 'fix: 津野町誰でも通園の年齢範囲を構造化'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
