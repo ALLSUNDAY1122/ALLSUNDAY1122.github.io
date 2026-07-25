@@ -1,0 +1,160 @@
+name: Temporary West B Postpartum Care Crosscheck
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-postpartum-crosscheck-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.head_ref == 'audit/west-b-postpartum-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-postpartum-crosscheck-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate postpartum care risk candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare';
+          const prefectureCodes = ['31','32','34','35','36','38','41','42','44','45','47'];
+          const flatten = (value) => {
+            if (value == null) return '';
+            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+            if (Array.isArray(value)) return value.map(flatten).join(' ');
+            return Object.values(value).map(flatten).join(' ');
+          };
+          const files = prefectureCodes.flatMap((prefectureCode) => {
+            const dir = path.join(root, 'data/municipalities', prefectureCode);
+            return fs.readdirSync(dir).filter((name) => name.endsWith('.json')).map((name) => path.join(dir, name));
+          });
+          const candidates = [];
+          const statusCounts = { verified: 0, unavailable: 0, researching: 0, needs_medium_review: 0, other: 0 };
+          const reasonCounts = {};
+          const addReason = (reasons, reason) => {
+            if (!reasons.includes(reason)) reasons.push(reason);
+          };
+          for (const file of files) {
+            const municipality = JSON.parse(fs.readFileSync(file, 'utf8'));
+            const service = municipality.services?.postpartumCare;
+            if (!service) continue;
+            const status = service.status ?? 'other';
+            if (statusCounts[status] == null) statusCounts.other += 1;
+            else statusCounts[status] += 1;
+            const summary = service.summary ?? '';
+            const detailsText = flatten(service.details);
+            const text = `${summary} ${detailsText}`;
+            const sourceUrl = service.source?.url ?? '';
+            const reasons = [];
+
+            if (status === 'unavailable') {
+              addReason(reasons, 'all_unavailable_require_wide_area_review');
+              if (/(産後ケア|ショートステイ|宿泊型|デイケア|通所型|訪問型|助産院|産婦人科)/.test(text) && !/(確認できない|未確認|見当たらない|掲載なし|把握できない)/.test(text)) {
+                addReason(reasons, 'unavailable_record_contains_service_or_facility_language');
+              }
+              if (/(sango|postpartum|sanngo|産後|母子|助産)/i.test(sourceUrl)) {
+                addReason(reasons, 'unavailable_has_direct_looking_source');
+              }
+            }
+
+            if (status === 'verified') {
+              if (!service.eligibility || service.eligibility.minAgeMonths == null || service.eligibility.maxAgeYears == null) {
+                addReason(reasons, 'verified_missing_age_range');
+              }
+              if (service.eligibility?.minAgeMonths != null && service.eligibility.minAgeMonths !== 0) {
+                addReason(reasons, 'verified_min_age_not_birth');
+              }
+              if (service.eligibility?.maxAgeYears != null && service.eligibility.maxAgeYears > 1) {
+                addReason(reasons, 'verified_max_age_over_one_year');
+              }
+              if (!/(産後|出産後|母子|母親|産婦)/.test(text)) {
+                addReason(reasons, 'verified_missing_target_period_description');
+              }
+              if (!/(宿泊|ショートステイ|デイケア|通所|訪問)/.test(text)) {
+                addReason(reasons, 'verified_missing_service_type_description');
+              }
+              if (!/(利用料|料金|自己負担|無料|減免|円)/.test(text)) {
+                addReason(reasons, 'verified_missing_fee_or_reduction_description');
+              }
+              if (!/(回|日以内|泊|利用期間|上限)/.test(text)) {
+                addReason(reasons, 'verified_missing_use_limit_description');
+              }
+              if (!/(申請|相談|予約|面談|窓口)/.test(text)) {
+                addReason(reasons, 'verified_missing_application_description');
+              }
+            }
+
+            if (/\/20(1[0-9]|2[0-4])\//.test(sourceUrl) || /20(1[0-9]|2[0-4])/.test(sourceUrl)) {
+              addReason(reasons, 'source_url_appears_pre_2025');
+            }
+            if (/^https?:\/\/[^/]+\/?$/.test(sourceUrl) || /\/(category|kosodate|子育て)\/?$/i.test(sourceUrl)) {
+              addReason(reasons, 'primary_source_is_generic');
+            }
+            if (reasons.length > 0) {
+              for (const reason of reasons) reasonCounts[reason] = (reasonCounts[reason] ?? 0) + 1;
+              candidates.push({
+                code: municipality.code,
+                prefectureCode: municipality.prefectureCode,
+                prefecture: municipality.prefecture,
+                name: municipality.name,
+                status,
+                summary,
+                eligibility: service.eligibility ?? null,
+                details: service.details ?? null,
+                source: service.source ?? null,
+                additionalSources: service.additionalSources ?? [],
+                reasons
+              });
+            }
+          }
+          candidates.sort((a, b) => a.prefectureCode.localeCompare(b.prefectureCode) || a.code.localeCompare(b.code));
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-b-postpartum-crosscheck-20260725',
+            sessionId: 'west-b',
+            generatedAt: new Date().toISOString(),
+            scope: {
+              prefectureCodes,
+              municipalityCount: files.length,
+              serviceId: 'postpartumCare',
+              statusCounts
+            },
+            candidateCount: candidates.length,
+            reasonCounts,
+            candidates,
+            result: {
+              status: 'mechanical_candidates_generated_pending_official_review',
+              confirmedCorrectionCount: null,
+              unresolvedConfirmedErrorCount: null
+            }
+          };
+          const out = path.join(root, 'operations/audits/west-b-postpartum-crosscheck-20260725.json');
+          fs.writeFileSync(out, JSON.stringify(audit, null, 2) + '\n');
+          console.log(JSON.stringify({ municipalityCount: files.length, statusCounts, candidateCount: candidates.length, reasonCounts }, null, 2));
+          NODE
+      - name: Commit audit candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/west-b-postpartum-crosscheck-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/audits/west-b-postpartum-crosscheck-20260725.json jichitai-compare/operations/control/west-b-postpartum-crosscheck-trigger-20260725.json
+          git commit -m 'audit: 西日本B産後ケア横断候補を生成'
+          git push origin HEAD:audit/west-b-postpartum-crosscheck-20260725
