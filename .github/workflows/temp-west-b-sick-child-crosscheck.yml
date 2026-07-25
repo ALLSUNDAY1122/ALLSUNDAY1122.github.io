@@ -1,0 +1,131 @@
+name: Temporary West B Sick Child Crosscheck
+
+on:
+  push:
+    branches:
+      - audit/west-b-sick-child-crosscheck-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-sick-child-crosscheck-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Scan West B sick child care records
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = path.join(process.cwd(), 'jichitai-compare');
+          const prefectures = ['31','32','34','35','36','38','41','42','44','45','47'];
+          const records = [];
+
+          for (const pref of prefectures) {
+            const dir = path.join(root, 'data', 'municipalities', pref);
+            for (const file of fs.readdirSync(dir).filter((name) => name.endsWith('.json')).sort()) {
+              const full = path.join(dir, file);
+              const municipality = JSON.parse(fs.readFileSync(full, 'utf8'));
+              const service = municipality.services?.sickChildCare;
+              if (!service) continue;
+              const text = JSON.stringify(service);
+              const sourceUrl = service.source?.url ?? null;
+              const familySupport = /ファミリー.?サポート|ファミサポ|相互援助/u.test(text);
+              const transport = /送迎/u.test(text);
+              const careActivity = /預か|保育室|病児保育施設|病後児保育施設|利用料|定員|受入/u.test(text);
+              const weakPrimarySource = /計画|一覧|予算|実施計画|子育て.*トップ|カテゴリ/u.test(text);
+              const broadArea = /広域|市外|町外|県内|契約施設|共同利用/u.test(text);
+              const unavailable = service.status === 'unavailable';
+              const candidate = familySupport || (transport && !careActivity) || weakPrimarySource || (unavailable && broadArea);
+              records.push({
+                code: municipality.code,
+                name: municipality.name,
+                prefectureCode: municipality.prefectureCode,
+                status: service.status,
+                summary: service.summary ?? '',
+                sourceUrl,
+                flags: { familySupport, transport, careActivity, weakPrimarySource, broadArea, unavailable },
+                candidate
+              });
+            }
+          }
+
+          async function checkUrl(url) {
+            if (!url) return { ok: false, status: null, finalUrl: null, error: 'missing_url' };
+            try {
+              const response = await fetch(url, {
+                redirect: 'follow',
+                headers: { 'user-agent': 'Mozilla/5.0 WestBQualityAudit/1.0' },
+                signal: AbortSignal.timeout(15000)
+              });
+              const body = (await response.text()).slice(0, 500000);
+              return {
+                ok: response.ok,
+                status: response.status,
+                finalUrl: response.url,
+                pageSignals: {
+                  sickChildTerms: /病児|病後児/u.test(body),
+                  careTerms: /預か|保育|利用料|定員|対象/u.test(body),
+                  transportTerms: /送迎/u.test(body),
+                  familySupportTerms: /ファミリー.?サポート|ファミサポ|相互援助/u.test(body)
+                }
+              };
+            } catch (error) {
+              return { ok: false, status: null, finalUrl: null, error: String(error?.message ?? error) };
+            }
+          }
+
+          const candidates = records.filter((record) => record.candidate);
+          for (const candidate of candidates) {
+            candidate.sourceCheck = await checkUrl(candidate.sourceUrl);
+          }
+
+          const result = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-b-sick-child-crosscheck-20260725',
+            sessionId: 'west-b',
+            auditedAt: new Date().toISOString(),
+            scope: {
+              prefectureCodes: prefectures,
+              municipalityCount: records.length,
+              service: 'sickChildCare'
+            },
+            aggregate: {
+              verifiedCount: records.filter((record) => record.status === 'verified').length,
+              unavailableCount: records.filter((record) => record.status === 'unavailable').length,
+              candidateCount: candidates.length,
+              familySupportCandidateCount: candidates.filter((record) => record.flags.familySupport).length,
+              transportWithoutCareDetailCount: candidates.filter((record) => record.flags.transport && !record.flags.careActivity).length,
+              weakPrimarySourceCandidateCount: candidates.filter((record) => record.flags.weakPrimarySource).length,
+              unavailableBroadAreaCandidateCount: candidates.filter((record) => record.flags.unavailable && record.flags.broadArea).length,
+              sourceCheckFailureCount: candidates.filter((record) => !record.sourceCheck?.ok).length
+            },
+            candidates,
+            conclusion: 'mechanical_candidates_require_official_source_review'
+          };
+
+          const output = path.join(root, 'operations', 'audits', 'west-b-sick-child-crosscheck-20260725.json');
+          fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n');
+          NODE
+      - name: Validate unchanged municipality data
+        working-directory: jichitai-compare
+        run: npm run validate:generated
+      - name: Commit audit and remove temporary workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-west-b-sick-child-crosscheck.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-sick-child-crosscheck-20260725.json
+          git add .github/workflows/temp-west-b-sick-child-crosscheck.yml
+          git commit -m "audit: 西日本B病児保育の同種誤り候補を抽出"
+          git push origin HEAD:audit/west-b-sick-child-crosscheck-20260725
