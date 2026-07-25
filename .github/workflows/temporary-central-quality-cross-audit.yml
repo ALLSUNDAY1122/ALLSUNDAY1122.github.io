@@ -1,0 +1,63 @@
+name: Temporary Central Quality Cross Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-quality-cross-audit-run-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.head_ref == 'audit/central-quality-cross-audit-run-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fix deterministic three-sample selection
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('jichitai-compare/scripts/run-central-quality-cross-audit.cjs')
+          s = p.read_text(encoding='utf-8')
+          old = "const sampleIndexes = sortedUnique([0, Math.floor((files.length - 1) / 2), files.length - 1].filter((index) => index >= 0));"
+          new = "const sampleIndexes = [...new Set([0, Math.floor((files.length - 1) / 2), files.length - 1].filter((index) => index >= 0))].sort((a, b) => a - b);"
+          if old not in s:
+              raise SystemExit('sample selection line not found')
+          p.write_text(s.replace(old, new), encoding='utf-8')
+          PY
+
+      - name: Run central cross audit
+        run: node jichitai-compare/scripts/run-central-quality-cross-audit.cjs
+
+      - name: Commit audit results
+        shell: bash
+        run: |
+          git checkout -- jichitai-compare/scripts/run-central-quality-cross-audit.cjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/operations/audits/central-quality-cross-audit-20260725.json \
+            jichitai-compare/operations/audits/central-quality-cross-audit-candidates-20260725.json \
+            jichitai-compare/operations/audits/central-quality-cross-audit-spotchecks-20260725.json \
+            jichitai-compare/operations/audits/central-quality-four-surface-consistency-20260725.json
+          if git diff --cached --quiet; then
+            echo 'No audit result changes.'
+            exit 0
+          fi
+          git commit -m 'audit: 中日本409自治体の横断機械監査結果を保存'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
