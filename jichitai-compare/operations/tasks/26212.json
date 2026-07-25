@@ -1,1 +1,46 @@
-{"schemaVersion":"1.0.0","municipalityCode":"26212","municipalityName":"京丹後市","prefectureCode":"26","prefectureName":"京都府","assignedTeam":"中日本調査班","status":"merged","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":9,"researchingCount":0,"unavailableCount":0,"needsMediumReviewCount":0,"currentBranch":"fix/26212-current-fy2026-details","pullRequestNumber":1944,"lastCheckedAt":"2026-07-24","lastUpdatedAt":"2026-07-24T06:59:00+09:00","lastUpdatedBy":"中日本調査班B","officialSources":["https://www.city.kyotango.lg.jp/kosodate/teate/10606.html","https://www.city.kyotango.lg.jp/top/kosodate_kyoiku/ikuji/2/2/4554.html","https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kodomomirai/2/2/21767.html","https://www.city.kyotango.lg.jp/top/kosodate_kyoiku/shokuiku/7204.html","https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kosodatesien/5_1/7681.html","https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kodomomirai/nyujituen/22511.html","https://www.city.kyotango.lg.jp/top/soshiki/mayoroffice/commu/4/iju_hojo/14411.html","https://www.city.kyotango.lg.jp/top/soshiki/shiminkankyo/seikatsukankyo/1/1/3606.html","https://www.city.kyotango.lg.jp/top/soshiki/somu/somu/6/1/hazardmap/7289.html"],"notes":["対象9制度を京丹後市公式情報で確認済み。","子ども医療費は0歳から18歳年度末まで、1か月1医療機関200円。","病後児保育は生後6か月から小学生まで、1日2,000円・4時間以下1,000円。","3～5歳児と住民税非課税世帯の0～2歳児は保育料無償化対象。","令和8年度献立を公開し、全て京丹後市産こしひかりを使用。食育週間は地元農家の特別栽培米を使用。","産後ケアは短期入所7泊・通所7日・訪問3日で利用料は市負担、食事代は自己負担。","産後ケアは弥栄病院が生後4か月未満・寝返り前、北部医療センターは出産入院から継続利用のみ、峰山乳児院は生後1年未満。","こども誰でも通園制度は生後6か月から満3歳未満、月10時間、1時間300円、市内10施設で実施。","誰でも通園制度は紙申請、認定証・システムアカウント発行、子ども同伴面談、予約の順で利用。","誰でも通園制度の当日0時以降の取消・変更や無断キャンセルは、予約時間分を月10時間の枠から減算。","移住促進・空家改修支援は空家バンク物件を契約後・着工前に申請し、交付決定後に工事、2月末までに完成。","若者U・Iターン住宅取得等応援補助金は39歳以下の対象移住者の市内業者によるリフォーム費を2分の1、上限30万円。","粗大ごみは施設持込みで20キログラム以下220円、10キログラム超過ごとに110円加算。","地震・津波・洪水・土砂災害等のハザードマップを公開。","地方統合PR #905・CI run #2069成功。","2026年3～7月更新の誰でも通園、学校給食、住宅支援と現行産後ケア案内を再監査し、施設・申請・支払・キャンセル・施設別月齢・若者向け住宅補助を現行化。","品質修正PR #1944・CI run #5131成功後、region/centralへマージ済み。"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "26212",
+  "municipalityName": "京丹後市",
+  "prefectureCode": "26",
+  "prefectureName": "京都府",
+  "assignedTeam": "中日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+  "verifiedCount": 8,
+  "researchingCount": 0,
+  "unavailableCount": 1,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "quality/central-b-independent-reaudit-20260725",
+  "pullRequestNumber": 3192,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T11:45:00+09:00",
+  "lastUpdatedBy": "中日本調査班B",
+  "officialSources": [
+    "https://www.city.kyotango.lg.jp/kosodate/teate/10606.html",
+    "https://www.city.kyotango.lg.jp/top/kosodate_kyoiku/ikuji/2/2/4554.html",
+    "https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kodomomirai/2/2/22880.html",
+    "https://www.city.kyotango.lg.jp/top/kosodate_kyoiku/shokuiku/7204.html",
+    "https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kosodatesien/5_1/7681.html",
+    "https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kodomomirai/nyujituen/22511.html",
+    "https://www.city.kyotango.lg.jp/top/soshiki/mayoroffice/commu/4/iju_hojo/14411.html",
+    "https://www.city.kyotango.lg.jp/top/soshiki/shiminkankyo/seikatsukankyo/1/1/3606.html",
+    "https://www.city.kyotango.lg.jp/top/soshiki/somu/somu/6/1/hazardmap/7289.html"
+  ],
+  "notes": [
+    "対象9制度を既存JSONの説明に依存せず、京丹後市公式情報から独立再監査した。",
+    "子ども医療費は0歳から18歳年度末まで、1か月1医療機関200円。",
+    "病後児保育は生後6か月から小学生まで、1日2,000円・4時間以下1,000円。",
+    "保育料は国の無償化に加え、令和8年度の認可外保育施設等第3子以降保育料補助を追加。保育料の2分の1、月額18,500円まで、令和9年3月31日申請期限。",
+    "学校給食は令和8年度献立を公開。一般世帯の給食費額は推測せず、就学援助対象世帯は給食費実費を援助。",
+    "産後ケアは短期入所7泊・通所7日・訪問3日で、利用料は市負担、食事代は自己負担。",
+    "こども誰でも通園制度は2026年4月開始。生後6か月から満3歳未満、月10時間、1時間300円、市内10施設。",
+    "移住促進・空家改修支援、39歳以下U・Iターン支援、結婚新生活支援はいずれも子ども要件・子育て世帯限定要件がないため、子育て世帯向け住宅支援から除外。housingSupportをverifiedからunavailableへ訂正。",
+    "粗大ごみは施設持込みで20キログラム以下220円、10キログラム超過ごとに110円加算。",
+    "地震・津波・洪水・土砂災害等のハザードマップを公開。",
+    "独立再監査Issue #3186、Draft PR #3192で追跡中。"
+  ],
+  "blockers": []
+}
