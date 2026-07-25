@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T11:54:00+09:00",
+  "updatedAt": "2026-07-25T13:07:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,8 +24,8 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "原因別重点再監査の弱い主出典第1群をPR #3256・CI #7952成功後にregion/centralへ統合。高浜町・おおい町の誰でも通園実施中断定を撤回し、大野町給食費を令和8年度0円へ訂正、八百津町の主出典を改善。Issue #3141を21項目・21自治体へ同期した。",
-  "nextAction": "弱い主出典の残42候補を、学校給食費、病児保育、産後ケア、住宅支援の順に利用者向け公式情報で確定判定する。",
+  "lastAction": "原因別重点再監査の弱い主出典第2群6自治体をPR #3355・CI #8180成功後にregion/centralへ統合。氷見市・中能登町の断定範囲を是正し、坂祝町・藤枝市を二重確認、西伊豆町・小山町の主出典を利用者向けページへ更新した。",
+  "nextAction": "弱い主出典の残36候補を、病児保育、産後ケア、住宅支援の順に利用者向け公式情報で確定判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
@@ -34,13 +34,13 @@
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T11:54:00+09:00",
-    "latestRegionalPullRequestNumber": 3256,
-    "latestCiRunNumber": 7952,
+    "latestCompletedAt": "2026-07-25T13:07:00+09:00",
+    "latestRegionalPullRequestNumber": 3355,
+    "latestCiRunNumber": 8180,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 54,
-    "primarySourceSlotsRechecked": 486,
+    "correctedMunicipalitiesRechecked": 60,
+    "primarySourceSlotsRechecked": 492,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -81,6 +81,42 @@
         "code": "21505",
         "service": "schoolMeals",
         "name": "八百津町"
+      },
+      {
+        "type": "budget_only_assertion_qualified",
+        "code": "16205",
+        "service": "schoolMeals",
+        "name": "氷見市"
+      },
+      {
+        "type": "regulation_only_assertion_qualified",
+        "code": "17407",
+        "service": "schoolMeals",
+        "name": "中能登町"
+      },
+      {
+        "type": "dual_evidence_no_content_change",
+        "code": "21501",
+        "service": "schoolMeals",
+        "name": "坂祝町"
+      },
+      {
+        "type": "dual_evidence_no_content_change",
+        "code": "22214",
+        "service": "schoolMeals",
+        "name": "藤枝市"
+      },
+      {
+        "type": "primary_source_upgrade",
+        "code": "22306",
+        "service": "schoolMeals",
+        "name": "西伊豆町"
+      },
+      {
+        "type": "primary_source_upgrade",
+        "code": "22344",
+        "service": "schoolMeals",
+        "name": "小山町"
       }
     ],
     "issue3141UnresolvedItemCount": 21,
@@ -173,7 +209,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T11:54:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 42,
+      "weakPrimarySource": 36,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 149,
       "fiscalYearRisk": 33,
@@ -197,9 +233,10 @@
       }
     ],
     "nextPriority": [
-      "弱い主出典残42候補",
-      "子育て固有条件のない住宅支援候補",
-      "学校給食費の範囲候補"
+      "弱い主出典残36候補",
+      "病児保育の弱い主出典候補",
+      "産後ケアの弱い主出典候補",
+      "住宅支援の弱い主出典候補"
     ]
   }
 }
