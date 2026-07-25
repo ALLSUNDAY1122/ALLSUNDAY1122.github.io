@@ -1,0 +1,89 @@
+name: Temporary West A Housing 38 Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-a-housing-38-main-sync-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/west-a-housing-classification-38-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sync branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Copy regional records and regenerate national outputs
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin region/west
+
+          audit_paths=(
+            jichitai-compare/operations/audits/west-a-housing-classification-crosscheck-20260725.json
+            jichitai-compare/operations/audits/west-a-housing-high-risk-summary-20260725.json
+            jichitai-compare/operations/audits/west-a-housing-classification-correction-plan-20260725.json
+            jichitai-compare/operations/audits/west-a-housing-classification-29-corrections-20260725.json
+            jichitai-compare/operations/audits/west-a-housing-classification-9-followup-corrections-20260725.json
+          )
+          for path in "${audit_paths[@]}"; do
+            mkdir -p "$(dirname "$path")"
+            git show "origin/region/west:$path" > "$path"
+          done
+
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare';
+          const plan = JSON.parse(fs.readFileSync(`${root}/operations/audits/west-a-housing-classification-correction-plan-20260725.json`, 'utf8'));
+          const followup = JSON.parse(fs.readFileSync(`${root}/operations/audits/west-a-housing-classification-9-followup-corrections-20260725.json`, 'utf8'));
+          const codes = [...new Set([
+            ...(plan.appliedCorrections ?? []).map((item) => item.municipalityCode),
+            ...(followup.corrections ?? []).map((item) => item.municipalityCode)
+          ])].sort();
+          if (codes.length !== 38) throw new Error(`expected 38 municipality codes, got ${codes.length}`);
+          fs.writeFileSync('/tmp/west-a-housing-codes.txt', `${codes.join('\n')}\n`);
+          NODE
+
+          while IFS= read -r code; do
+            [ -n "$code" ] || continue
+            pref="${code:0:2}"
+            for path in \
+              "jichitai-compare/data/municipalities/${pref}/${code}.json" \
+              "jichitai-compare/operations/tasks/${code}.json"; do
+              mkdir -p "$(dirname "$path")"
+              git show "origin/region/west:$path" > "$path"
+            done
+          done < /tmp/west-a-housing-codes.txt
+
+          cd jichitai-compare
+          npm run check
+          cd ..
+
+          rm -f jichitai-compare/operations/control/west-a-housing-38-main-sync-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-housing-38-main-sync.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git add "${audit_paths[@]}" \
+                  jichitai-compare/data/generated/municipalities.json \
+                  jichitai-compare/operations/progress.json \
+                  jichitai-compare/operations/control/west-a-housing-38-main-sync-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-housing-38-main-sync.yml
+          while IFS= read -r code; do
+            [ -n "$code" ] || continue
+            pref="${code:0:2}"
+            git add "jichitai-compare/data/municipalities/${pref}/${code}.json" \
+                    "jichitai-compare/operations/tasks/${code}.json" \
+                    "jichitai-compare/municipality/${code}/index.html"
+          done < /tmp/west-a-housing-codes.txt
+          git diff --cached --check
+          git commit -m 'sync: 西日本A住宅支援38件を全国反映'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
