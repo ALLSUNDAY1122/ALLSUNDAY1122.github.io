@@ -10,12 +10,12 @@
     "05",
     "06"
   ],
-  "updatedAt": "2026-07-25T14:28:00+09:00",
+  "updatedAt": "2026-07-25T05:37:44.823Z",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
-  "workingBranch": "audit/north-b-anyone-multiple-gap-latest-main-20260725",
+  "workingBranch": "verify/north-b-anyone-multiple-gap-public-20260725",
   "pullRequestNumber": null,
   "ciStatus": "pending",
   "regionPullRequestNumber": 3204,
@@ -158,7 +158,7 @@
     "publicVerification": "success"
   },
   "blocked": [],
-  "nextAction": "誰でも通園の複数条件欠落9件の修正・CI・main・region/north・公開反映を完了後、単一条件欠落65件を再確認する。",
+  "nextAction": "誰でも通園の単一条件欠落65件を優先度順に再確認する。",
   "horizontalUrlAudit": {
     "municipalityCount": 107,
     "uniqueUrlCount": 1221,
@@ -239,7 +239,7 @@
     "recordsPersistenceRegionCiResult": "success",
     "recordsPersistenceRegionMergeCommit": "097d0021ad3421744d4a3df4abba69ed4229be67",
     "recordsPersistenceStatus": "completed",
-    "status": "multiple_gap_corrections_pending_ci",
+    "status": "multiple_gap_public_verified_pending_record_ci",
     "multipleGapReviewed": 9,
     "multipleGapCorrectedMunicipalities": [
       "01607",
@@ -254,6 +254,21 @@
     "multipleGapNoChangeMunicipalities": [
       "06324"
     ],
-    "multipleGapAuditFile": "operations/audits/north-b-anyone-multiple-gap-review-20260725.json"
+    "multipleGapAuditFile": "operations/audits/north-b-anyone-multiple-gap-review-20260725.json",
+    "multipleGapMainPullRequest": 3446,
+    "multipleGapMainMergeCommit": "7ee78479a163665bb3675a581ef88d1864fbeef8",
+    "multipleGapRegionPullRequest": 3452,
+    "multipleGapRegionMergeCommit": "97be45b19b12fec806155d4c731c70e86d78cf17",
+    "multipleGapPublicVerificationFile": "operations/audits/north-b-anyone-multiple-gap-public-verification-20260725.json",
+    "multipleGapPublicVerifiedMunicipalities": [
+      "01607",
+      "01609",
+      "04212",
+      "04444",
+      "05204",
+      "05361",
+      "05434",
+      "06364"
+    ]
   }
 }
