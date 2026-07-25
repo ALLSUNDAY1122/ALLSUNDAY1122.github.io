@@ -44,10 +44,10 @@
     {"round":10,"codes":["30404","30406","30421","30422","30424","30427","30428"],"status":"pending"}
   ],
   "progress": {
-    "auditedMunicipalityCount": 2,
-    "auditedServiceCount": 18,
-    "confirmedErrorCount": 4,
-    "correctedErrorCount": 4,
+    "auditedMunicipalityCount": 4,
+    "auditedServiceCount": 36,
+    "confirmedErrorCount": 8,
+    "correctedErrorCount": 8,
     "regionCentralMergedCount": 0,
     "mainReflectedCount": 0
   },
@@ -66,28 +66,11 @@
           "after": "上記に加え、令和8年4月1日開始の京都市内私立幼稚園・幼稚園型認定こども園における未就園の第2子以降2歳児の保育料無償化を記録",
           "cause": "2026年度開始制度の記録漏れ",
           "officialSource": "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
-          "currentFiscalYearConfirmed": true,
           "status": "corrected"
         }
       ],
       "noChangeServices": ["childMedical","sickChildCare","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
-      "changedFiles": [
-        "jichitai-compare/data/municipalities/26/26100.json",
-        "jichitai-compare/operations/tasks/26100.json"
-      ],
-      "officialSources": [
-        "https://www.city.kyoto.lg.jp/hagukumi/page/0000067393.html",
-        "https://www.city.kyoto.lg.jp/hagukumi/page/0000098235.html",
-        "https://www.city.kyoto.lg.jp/hagukumi/page/0000178518.html",
-        "https://www.city.kyoto.lg.jp/hagukumi/page/0000179571.html",
-        "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
-        "https://www.city.kyoto.lg.jp/kyoiku/page/0000106581.html",
-        "https://www.city.kyoto.lg.jp/hagukumi/page/0000168986.html",
-        "https://www.city.kyoto.lg.jp/hagukumi/page/0000349886.html",
-        "https://www.city.kyoto.lg.jp/tokei/page/0000330039.html",
-        "https://www.city.kyoto.lg.jp/kankyo/page/0000001317.html",
-        "https://www.bousaimap.city.kyoto.lg.jp/sp/Top"
-      ]
+      "changedFiles": ["jichitai-compare/data/municipalities/26/26100.json","jichitai-compare/operations/tasks/26100.json"]
     },
     {
       "round": 1,
@@ -111,10 +94,6 @@
           "after": "訪問型、宿泊型、通所個別型、通所集団型の4類型、各料金・回数、2026年4月開始の市立福知山市民病院を記録",
           "cause": "制度類型・実施施設・2026年度開始情報の見落とし",
           "officialSource": "https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html",
-          "additionalSources": [
-            "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000411.html",
-            "https://www.city.fukuchiyama.lg.jp/site/hosp/83887.html"
-          ],
           "status": "corrected"
         },
         {
@@ -127,24 +106,65 @@
         }
       ],
       "noChangeServices": ["sickChildCare","childcareFee","schoolMeals","temporaryChildcare","bulkyWaste","disasterPrevention"],
-      "changedFiles": [
-        "jichitai-compare/data/municipalities/26/26201.json",
-        "jichitai-compare/operations/tasks/26201.json"
+      "changedFiles": ["jichitai-compare/data/municipalities/26/26201.json","jichitai-compare/operations/tasks/26201.json"]
+    },
+    {
+      "round": 1,
+      "municipalityCode": "26202",
+      "municipalityName": "舞鶴市",
+      "auditedAt": "2026-07-25T10:55:00+09:00",
+      "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "result": "two_confirmed_errors_corrected",
+      "confirmedErrors": [
+        {
+          "service": "sickChildCare",
+          "before": "対象年齢を0歳から小学6年生までと登録し、利用料・時間・定員を未記録",
+          "after": "生後3か月から小学3年生、定員6人、平日8時15分～18時、1日2,500円・5時間以内1,500円へ訂正",
+          "cause": "対象年齢の過大登録と利用条件の記録漏れ",
+          "officialSource": "https://www.city.maizuru.kyoto.jp/kosodate/0000001571.html",
+          "additionalSource": "https://www.kisimoto-hp.jp/sick-childcare-support/",
+          "status": "corrected"
+        },
+        {
+          "service": "childcareFee",
+          "before": "保育料無償化と副食費免除のみを記録",
+          "after": "令和8年度に市内対象施設を利用する3歳以上児へ給食費を月最大1,500円補助する制度を追加",
+          "cause": "2026年度給食費負担軽減制度の記録漏れ",
+          "officialSource": "https://www.city.maizuru.kyoto.jp/kosodate/0000014885.html",
+          "status": "corrected"
+        }
       ],
-      "officialSources": [
-        "https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html",
-        "https://www.city.fukuchiyama.lg.jp/site/kosodate/6898.html",
-        "https://www.city.fukuchiyama.lg.jp/site/kosodate/82522.html",
-        "https://www.city.fukuchiyama.lg.jp/site/kyouiku/84536.html",
-        "https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html",
-        "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000411.html",
-        "https://www.city.fukuchiyama.lg.jp/site/hosp/83887.html",
-        "https://www.city.fukuchiyama.lg.jp/soshiki/76/82874.html",
-        "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html",
-        "https://www.city.fukuchiyama.lg.jp/soshiki/24/16715.html",
-        "https://www.city.fukuchiyama.lg.jp/site/hazardmap/"
-      ]
+      "noChangeServices": ["childMedical","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "changedFiles": ["jichitai-compare/data/municipalities/26/26202.json","jichitai-compare/operations/tasks/26202.json"]
+    },
+    {
+      "round": 1,
+      "municipalityCode": "26203",
+      "municipalityName": "綾部市",
+      "auditedAt": "2026-07-25T11:05:00+09:00",
+      "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "result": "two_confirmed_errors_corrected",
+      "confirmedErrors": [
+        {
+          "service": "schoolMeals",
+          "before": "所得基準等を満たす世帯への就学援助のみを記録し、一般世帯の制度は確認不能としていた",
+          "after": "令和8年度は小学校の食材費相当額と、中学校・幼稚園の1人1食100円を補助する一般制度を追加",
+          "cause": "2026年度給食費補助金交付要綱改正の見落とし",
+          "officialSource": "https://www.city.ayabe.lg.jp/cmsfiles/contents/0000006/6408/R8-4.pdf",
+          "status": "corrected"
+        },
+        {
+          "service": "postpartumCare",
+          "before": "宿泊型1日9,000円、個別通所型1回4,500円と登録",
+          "after": "宿泊型1日6,500円、個別通所型1回3,500円へ訂正し、現行の利用時期・回数も再確認",
+          "cause": "旧料金の継続掲載",
+          "officialSource": "https://www.city.ayabe.lg.jp/0000003373.html",
+          "status": "corrected"
+        }
+      ],
+      "noChangeServices": ["childMedical","sickChildCare","childcareFee","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "changedFiles": ["jichitai-compare/data/municipalities/26/26203.json","jichitai-compare/operations/tasks/26203.json"]
     }
   ],
-  "nextAction": "第1バッチの残り8自治体を公式情報起点で独立監査する。京都市1件・福知山市3件は自治体JSON・taskへ反映済み。"
+  "nextAction": "第1バッチの残り6自治体（宇治市、宮津市、亀岡市、城陽市、向日市、長岡京市）を公式情報起点で独立監査する。4自治体36制度・確定8件は自治体JSONとtaskへ反映済み。"
 }
