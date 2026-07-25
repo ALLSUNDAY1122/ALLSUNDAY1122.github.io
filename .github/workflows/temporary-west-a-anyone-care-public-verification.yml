@@ -1,0 +1,95 @@
+name: Temporary West A Anyone Care Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-a-anyone-care-public-verification-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'audit/west-a-anyone-care-public-verification-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout verification branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Verify deployed pages and generated JSON
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const base='https://allsunday1122.github.io/jichitai-compare/';
+          const targets=[
+            {code:'39304',name:'安田町',status:'verified',summary:'未就園の0歳6か月から満3歳未満が安田さくら園を月10時間まで利用可能',fee:'1時間300円（30分150円）',old:'こども誰でも通園制度を実施しているが利用条件の詳細を取得できない'},
+            {code:'39387',name:'仁淀川町',status:'verified',summary:'未就園の0歳6か月から満3歳未満がふたば保育所を月10時間まで利用可能',fee:'1時間300円',old:'乳児等通園支援事業は開始済みだが利用条件の詳細を確定できない'},
+            {code:'39411',name:'津野町',status:'verified',summary:'1歳児から満3歳未満の未就園児が町立認定こども園2施設を月10時間まで利用可能',fee:'1時間300円',old:'こども誰でも通園制度は開始済みだが詳細条件を確定できない'},
+            {code:'46221',name:'志布志市',status:'verified',summary:'生後6か月から満3歳未満の未就園児が月10時間まで利用可能',fee:'1時間あたり300円程度。施設により異なる',old:'実施施設の設定額と実費負担を利用前に確認する'},
+            {code:'46501',name:'中種子町',status:'verified',summary:'生後6か月から満3歳未満の未就園児が月10時間まで利用可能',fee:'1時間あたり300円程度。世帯区分等による軽減',old:'利用料・実費負担・実施施設は町公式案内を確認して利用する'}
+          ];
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          async function fetchText(url){const r=await fetch(url,{redirect:'follow',headers:{'cache-control':'no-cache','user-agent':'West-A-Public-Audit/2026'}});return {status:r.status,url:r.url,text:await r.text()};}
+          async function attempt(number){
+            const generatedResponse=await fetchText(base+'data/generated/municipalities.json?audit='+Date.now());
+            if(generatedResponse.status!==200) throw new Error('generated HTTP '+generatedResponse.status);
+            const generated=JSON.parse(generatedResponse.text);
+            const progress=JSON.parse(fs.readFileSync('jichitai-compare/operations/progress.json','utf8'));
+            const pageResults=[]; const dataResults=[];
+            for(const target of targets){
+              const page=await fetchText(base+'municipality/'+target.code+'/?audit='+Date.now());
+              const pageChecks={http200:page.status===200,newSummary:page.text.includes(target.summary),fee:page.text.includes(target.fee),oldAbsent:!page.text.includes(target.old)};
+              pageResults.push({code:target.code,name:target.name,url:page.url,httpStatus:page.status,checks:pageChecks});
+              const m=(generated.municipalities||[]).find(x=>x.code===target.code);
+              const s=m?.services?.temporaryChildcare;
+              const corpus=JSON.stringify(s||{});
+              const dataChecks={found:Boolean(m),status:s?.status===target.status,summary:s?.summary===target.summary,fee:corpus.includes(target.fee),oldAbsent:!corpus.includes(target.old)};
+              dataResults.push({code:target.code,name:target.name,checks:dataChecks});
+            }
+            const counts={
+              municipalityCount:generated.meta?.municipalityCount,
+              generatedMunicipalityArrayCount:(generated.municipalities||[]).length,
+              totalMunicipalities:progress.totalMunicipalities,
+              registeredMunicipalities:progress.registeredMunicipalities,
+              totalServices:progress.totalServices,
+              completedServices:progress.completedServices,
+              completionRate:progress.completionRate,
+              remainingMunicipalities:progress.remainingMunicipalities,
+              prOpenMunicipalities:progress.prOpenMunicipalities,
+              blockedMunicipalities:progress.blockedMunicipalities,
+              blockedServices:progress.blockedServices
+            };
+            const ok=counts.municipalityCount===1741 && counts.generatedMunicipalityArrayCount===1741 && counts.totalMunicipalities===1741 && counts.totalServices===15669 &&
+              pageResults.every(x=>Object.values(x.checks).every(Boolean)) && dataResults.every(x=>Object.values(x.checks).every(Boolean));
+            return {ok,attempt:number,checkedAt:new Date().toISOString(),counts,pageResults,dataResults};
+          }
+          (async()=>{
+            let result=null; const history=[];
+            for(let i=1;i<=12;i++){
+              try{result=await attempt(i);history.push({attempt:i,ok:result.ok,checkedAt:result.checkedAt});if(result.ok)break;}
+              catch(e){history.push({attempt:i,ok:false,error:String(e),checkedAt:new Date().toISOString()});}
+              if(i<12)await sleep(15000);
+            }
+            if(!result?.ok){throw new Error('公開反映を確認できません: '+JSON.stringify(history));}
+            const report={schemaVersion:'1.0.0',auditId:'west-a-anyone-care-public-verification-20260725',team:'西日本調査班A',regionalPullRequestNumber:3542,regionalCiRunNumber:8640,mainPullRequestNumber:3565,mainCiRunNumber:8657,mainMergeSha:'1dab9845d7d98c0ec064a9ec5c5a2d4b17a45ba8',statusCorrectionCount:3,detailEnrichmentCount:2,history,...result,status:'public_verification_completed',unresolvedCount:0,blocker:null};
+            fs.writeFileSync('jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json',JSON.stringify(report,null,2)+'\n');
+            console.log(JSON.stringify({attempt:result.attempt,counts:result.counts}));
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          rm -f jichitai-compare/operations/control/west-a-anyone-care-public-verification-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-anyone-care-public-verification.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json \
+                  jichitai-compare/operations/control/west-a-anyone-care-public-verification-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-anyone-care-public-verification.yml
+          git diff --cached --check
+          git commit -m 'audit: 西日本A誰でも通園制度5件の公開反映を確認'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
