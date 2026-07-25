@@ -1,0 +1,83 @@
+name: Temporary Central A Housing Batch 6 Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch6-main-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-housing-batch6-main-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout sync branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Reset to latest main and fetch region
+        shell: bash
+        run: |
+          git fetch origin main region/central
+          git reset --hard origin/main
+
+      - name: Copy audited batch 6 source files
+        shell: bash
+        run: |
+          paths=(
+            jichitai-compare/data/municipalities/27/27202.json
+            jichitai-compare/data/municipalities/27/27321.json
+            jichitai-compare/data/municipalities/24/24207.json
+            jichitai-compare/data/municipalities/24/24324.json
+            jichitai-compare/data/municipalities/24/24461.json
+            jichitai-compare/operations/tasks/27202.json
+            jichitai-compare/operations/tasks/27321.json
+            jichitai-compare/operations/tasks/24207.json
+            jichitai-compare/operations/tasks/24324.json
+            jichitai-compare/operations/tasks/24461.json
+            jichitai-compare/operations/audits/central-a-housing-classification-batch6-decisions-20260725.json
+            jichitai-compare/operations/control/regions/central.json
+            jichitai-compare/operations/control/session-checkpoints/central-a.json
+          )
+          for path in "${paths[@]}"; do
+            mkdir -p "$(dirname "$path")"
+            git show "origin/region/central:${path}" > "$path"
+          done
+
+      - name: Regenerate and validate national outputs
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          node --check app.js
+
+      - name: Reject unexpected generated changes
+        shell: bash
+        run: |
+          allowed='^(jichitai-compare/(data/municipalities/(27/(27202|27321)|24/(24207|24324|24461))\.json|operations/tasks/(27202|27321|24207|24324|24461)\.json|operations/audits/central-a-housing-classification-batch6-decisions-20260725\.json|operations/control/regions/central\.json|operations/control/session-checkpoints/central-a\.json|data/generated/(municipalities|municipality-pages)\.json|operations/progress\.json|municipality/(27202|27321|24207|24324|24461)/index\.html|sitemap\.xml))$'
+          unexpected=$(git status --porcelain | sed -E 's/^.. //' | grep -Ev "$allowed" || true)
+          if [ -n "$unexpected" ]; then
+            echo 'Unexpected changes:'
+            echo "$unexpected"
+            exit 1
+          fi
+
+      - name: Create clean commit on latest main
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No synchronization changes.'
+            exit 0
+          fi
+          git commit -m 'sync: 中日本A住宅支援分類第6群を全国反映'
+          git push --force origin "HEAD:${GITHUB_HEAD_REF}"
