@@ -187580,34 +187580,55 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は市立小中学校の学校給食費を無償化し、保護者負担を0円とする。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "fiscalYear": "令和8年度",
+            "period": "2026年4月から2027年3月",
+            "target": "市内小中学校に在籍する児童生徒の保護者",
+            "procedure": "保護者による申請手続きは不要"
           },
           "source": {
-            "url": "https://www.city.ama.aichi.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.ama.aichi.jp/kurashi/iinkai/1002356/1011105.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ama.aichi.jp/",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前の自治体トップページ"
+            }
+          ]
         },
         "postpartumCare": {
-          "status": "unavailable",
-          "summary": "産後ケアの利用類型・料金は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "産後1年未満の母子へ、宿泊・デイサービス・訪問型の産後ケアを合計7日まで提供する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 1
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "target": "あま市に住所がある産後1年未満の母親と乳児で、心身の不調や育児不安等がある人",
+            "types": "宿泊型、デイサービス型、訪問型",
+            "fee": "宿泊1泊4,500円、デイサービス1日1,000円、訪問2時間500円",
+            "exemption": "生活保護世帯・市町村民税非課税世帯は無料",
+            "limit": "3類型合計7日まで。宿泊型は最大6泊7日"
           },
           "source": {
-            "url": "https://www.city.ama.aichi.jp/kurashi/1002024/index.html",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.ama.aichi.jp/kurashi/1002024/1004953.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ama.aichi.jp/kurashi/1002024/index.html",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前の出産・子育て案内ページ"
+            }
+          ]
         },
         "temporaryChildcare": {
           "status": "verified",
@@ -187629,48 +187650,77 @@
         },
         "housingSupport": {
           "status": "unavailable",
-          "summary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "confirmedGeneralPrograms": "住宅耐震診断・改修、耐震シェルター、空家除却等の一般住宅施策を確認した。",
+            "classificationReview": "現行公式ページで子どもの有無、新婚、三世代同居等を対象要件とする住宅取得・改修・家賃支援を確認できないため、一般住宅施策を子育て世帯向け住宅支援として登録しない。",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
-            "url": "https://www.city.ama.aichi.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.ama.aichi.jp/kurashi/kotsu/sumai/1005979/index.html",
+            "checkedAt": "2026-07-26"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ama.aichi.jp/kurashi/kotsu/sumai/1005979/1002501.html",
+              "checkedAt": "2026-07-26",
+              "description": "令和8年度の一般住宅向け耐震シェルター整備費補助"
+            }
+          ]
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "粗大ごみの戸別収集・持込条件は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "粗大ごみはLINE・インターネット・電話で事前予約し、粗大ごみシールを貼って収集を依頼する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "reservation": "市公式LINE、インターネット受付センター、電話受付のいずれかで予約",
+            "telephone": "052-444-0303",
+            "ticket": "収集時は指定取扱所で購入した粗大ごみシールが必要",
+            "note": "年末等は受付が混雑し、収集が翌月以降になる場合がある"
           },
           "source": {
-            "url": "https://www.city.ama.aichi.jp/kurashi/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.ama.aichi.jp/kurashi/recycle/gomi/1006838.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ama.aichi.jp/kurashi/",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前のごみ案内トップページ"
+            }
+          ]
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "洪水・地震等ハザードマップの現行版は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "避難所、洪水・内水・高潮、地震等を収録した改訂版防災ハザードマップを公開する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "updated": "2026年3月更新",
+            "sections": "避難所マップ、風水害編、地震編、その他の災害編、避難と準備編",
+            "flood": "新川・日光川・五条川・蟹江川・福田川・木曽川・庄内川の洪水マップを公開",
+            "other": "内水、高潮、地震の各ハザードマップを公開"
           },
           "source": {
-            "url": "https://www.city.ama.aichi.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.ama.aichi.jp/kurashi/safety/bousai/1002250.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.ama.aichi.jp/",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前の自治体トップページ"
+            }
+          ]
         }
       }
     },
@@ -187684,19 +187734,29 @@
       "summary": "長久手市の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子ども医療費助成は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "0歳から18歳年度末まで、通院・入院の保険診療自己負担額を助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "ageCondition": "18歳到達後最初の3月31日まで",
+            "coverage": "通院・入院の保険診療自己負担額",
+            "payment": "受給者証を医療機関窓口で提示。県外受診等は払い戻し申請",
+            "note": "2024年10月診療分から高校生年代の通院費まで対象を拡大"
           },
           "source": {
-            "url": "https://www.city.nagakute.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.nagakute.lg.jp/iryo_kenko_fukushi/2/11/6399.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagakute.lg.jp/",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前の自治体トップページ"
+            }
+          ]
         },
         "sickChildCare": {
           "status": "verified",
@@ -187731,19 +187791,29 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は小学校給食費を0円とし、中学校の保護者負担を1食290円とする。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "fiscalYear": "令和8年度",
+            "standardRate": "小学校1食330円、中学校1食380円",
+            "elementaryParentBurden": "0円",
+            "juniorHighParentBurden": "1食290円"
           },
           "source": {
-            "url": "https://www.city.nagakute.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.nagakute.lg.jp/kosodate_kyoiku/gakkokyushoku_hoikuenkyushoku/1/14523.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagakute.lg.jp/",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前の自治体トップページ"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -187782,48 +187852,77 @@
         },
         "housingSupport": {
           "status": "unavailable",
-          "summary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "confirmedGeneralPrograms": "木造住宅耐震診断・改修・除却、住宅用地球温暖化対策設備等の一般住宅補助を確認した。",
+            "classificationReview": "現行公式ページで子どもの有無、新婚、三世代同居等を対象要件とする住宅取得・改修・家賃支援を確認できないため、一般住宅施策を子育て世帯向け住宅支援として登録しない。",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
-            "url": "https://www.city.nagakute.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.nagakute.lg.jp/soshiki/kensetsubu/toshikeikakuka/3/1/tashinn/hojyokinn/index.html",
+            "checkedAt": "2026-07-26"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagakute.lg.jp/soshiki/kensetsubu/toshikeikakuka/3/1/tashinn/hojyokinn/1607.html",
+              "checkedAt": "2026-07-26",
+              "description": "令和8年度の一般住宅向け除却費補助"
+            }
+          ]
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "粗大ごみの収集・持込条件は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "粗大ごみは電話またはインターネットで予約し、1点800円の処理券を貼って1回5点まで収集を依頼する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "reservation": "粗大ごみ受付センターへの電話またはインターネット予約",
+            "limit": "1回5点まで",
+            "fee": "粗大ごみ処理券1点800円",
+            "collection": "収集日の午前8時30分までに指定場所へ排出"
           },
           "source": {
-            "url": "https://www.city.nagakute.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.nagakute.lg.jp/kurashi_tetsuzuki/gomi_kankyo/gomi/kateigomi/sodai/12045.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagakute.lg.jp/",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前の自治体トップページ"
+            }
+          ]
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "洪水・地震等ハザードマップの現行版は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "地震・液状化・洪水・避難所等を掲載した長久手市防災マップを公開する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 120
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "edition": "2026年3月配布版",
+            "hazards": "地震、液状化、洪水等",
+            "evacuation": "指定避難所・避難場所と防災情報を掲載",
+            "distribution": "市ウェブサイトでPDF版を公開"
           },
           "source": {
-            "url": "https://www.city.nagakute.lg.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.city.nagakute.lg.jp/soshiki/kurashibunkabu/anshinanzenka/1/2/bosai_category/bosai_map/1129.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.nagakute.lg.jp/",
+              "checkedAt": "2026-07-24",
+              "description": "再監査前の自治体トップページ"
+            }
+          ]
         }
       }
     },
@@ -188132,17 +188231,20 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "一定の所得・年齢要件を満たす新婚世帯へ、町内住宅の取得・賃借・リフォーム・引越し費用を補助する。",
+          "summary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
           "details": {
             "program": "豊山町結婚新生活支援事業",
-            "coverage": "住宅取得費、賃料、敷金、礼金、共益費、仲介手数料、リフォーム費、引越費用",
-            "maximum": "夫婦とも29歳以下は最大60万円、夫婦とも39歳以下は最大30万円",
-            "condition": "対象住居が町内にあり、夫婦とも当該住居に住民票があること等",
-            "currentStatus": "令和8年度受付は準備が整い次第、公式ページで更新"
+            "marriagePeriod": "2026年1月1日から2027年3月31日までに婚姻届等が受理された世帯",
+            "ageCondition": "夫婦とも婚姻日時点で39歳以下",
+            "incomeCondition": "夫婦の合計所得が500万円未満等",
+            "coveredCosts": "町内住宅の取得費、賃借費、リフォーム費、引越費用",
+            "maximum": "夫婦とも29歳以下は上限60万円、その他の39歳以下世帯は上限30万円",
+            "residenceCondition": "対象住居が町内にあり、夫婦とも当該住居に住民票があること等",
+            "currentStatus": "令和8年度の対象期間・要件を現行公式ページで確認"
           },
           "source": {
             "url": "https://www.town.toyoyama.lg.jp/kurashi/todokede/1000702/1004030/index.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-26"
           }
         },
         "bulkyWaste": {
@@ -189339,9 +189441,9 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "新たに三世代同居または町内近居を始める子育て世帯の住宅新築・購入費を補助する。",
+          "summary": "小学生以下の子と同居し、新たに三世代同居または町内近居を始める49歳以下の夫婦世帯へ、住宅の新築・購入費を補助する。",
           "details": {
-            "program": "三世代近居等定住促進補助金",
+            "program": "東浦町三世代近居等定住促進補助金",
             "target": "契約時に夫婦とも49歳以下で、申請時に小学生以下の子どもと同居する子世帯等",
             "parentCondition": "親世帯が申請日前3年以上継続して町内に居住していること",
             "housing": "市街化区域内の新築または中古の戸建て・マンション等で、耐震性や最低居住面積等の要件を満たすこと",
@@ -189349,9 +189451,16 @@
             "amount": "居住誘導区域、同居・近居、子どもの人数等の条件に応じて町の金額一覧で決定"
           },
           "source": {
-            "url": "https://www.town.aichi-higashiura.lg.jp/soshiki/seisaku/seisaku/gyomu/10852.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.town.aichi-higashiura.lg.jp/life_event/kosodate/11380.html",
+            "checkedAt": "2026-07-26"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.aichi-higashiura.lg.jp/kurashi/sumai/tatemono/11377.html",
+              "checkedAt": "2026-07-26",
+              "description": "令和8年度の結婚新生活支援補助金"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
