@@ -22,7 +22,9 @@ jobs:
         with:
           node-version: 22
       - name: Apply corrections
-        run: node .github/scripts/west-b-sick-child-corrections.mjs
+        run: |
+          node .github/scripts/west-b-sick-child-corrections.mjs
+          node .github/scripts/west-b-sick-child-corrections-postfix.mjs
       - name: Regenerate and validate
         working-directory: jichitai-compare
         run: |
@@ -35,6 +37,7 @@ jobs:
           rm -f .github/workflows/temp-west-b-sick-child-corrections.yml
           rm -f .github/workflows/temp-west-b-sick-child-corrections-pr.yml
           rm -f .github/scripts/west-b-sick-child-corrections.mjs
+          rm -f .github/scripts/west-b-sick-child-corrections-postfix.mjs
           rm -f .github/west-b-sick-child-corrections.trigger
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
