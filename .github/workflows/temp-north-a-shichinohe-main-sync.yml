@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          fetch-depth: 1
           show-progress: false
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -31,7 +31,7 @@ jobs:
       - name: Copy corrected regional records
         shell: bash
         run: |
-          git fetch origin region/north:refs/remotes/origin/region/north
+          git fetch --depth=1 origin region/north:refs/remotes/origin/region/north
           for path in \
             jichitai-compare/data/municipalities/02/02402.json \
             jichitai-compare/operations/tasks/02402.json \
@@ -102,19 +102,57 @@ jobs:
           PY
 
       - name: Regenerate and validate national outputs
+        id: verify
         working-directory: jichitai-compare
+        shell: bash
         run: |
-          npm run generate
-          npm run progress
-          npm run validate:generated
+          set +e
+          npm run generate > /tmp/north-a-main-generate.log 2>&1
+          generate_status=$?
+          npm run progress > /tmp/north-a-main-progress.log 2>&1
+          progress_status=$?
+          npm run validate:generated > /tmp/north-a-main-validate.log 2>&1
+          validate_status=$?
+          {
+            echo "generate_status=${generate_status}"
+            echo "progress_status=${progress_status}"
+            echo "validate_status=${validate_status}"
+          } > /tmp/north-a-main-status.log
+          cat /tmp/north-a-main-status.log
+          cat /tmp/north-a-main-generate.log
+          cat /tmp/north-a-main-progress.log
+          cat /tmp/north-a-main-validate.log
+          if [ "$generate_status" -eq 0 ] && [ "$progress_status" -eq 0 ] && [ "$validate_status" -eq 0 ]; then
+            echo 'validated=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'validated=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload synchronization diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: north-a-shichinohe-main-sync-diagnostics
+          path: |
+            /tmp/north-a-main-status.log
+            /tmp/north-a-main-generate.log
+            /tmp/north-a-main-progress.log
+            /tmp/north-a-main-validate.log
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Remove synchronization trigger
+        if: steps.verify.outputs.validated == 'true'
         run: rm -f jichitai-compare/operations/control/north-a-shichinohe-main-sync-trigger-20260725.json
 
       - name: Commit synchronized source and generated outputs
+        if: steps.verify.outputs.validated == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A jichitai-compare
           git commit -m 'fix: 七戸町誰でも通園の利用不可条件をmainへ同期'
           git push origin "HEAD:${GITHUB_HEAD_REF}"
+
+      - name: Fail when synchronization did not validate
+        if: steps.verify.outputs.validated != 'true'
+        run: exit 1
