@@ -1,0 +1,214 @@
+{
+  "schemaVersion": "1.0.0",
+  "matrixId": "quality-audit-cause-matrix-v1",
+  "coordinatorSession": "統括A③",
+  "createdAt": "2026-07-25T11:02:00+09:00",
+  "purpose": "過去訂正の原因から同種誤りを抽出し、4班が重複せず再検証するための横断監査設計",
+  "baselineLedger": "jichitai-compare/operations/audits/quality-ledger/north-east-correction-ledger-20260725.json",
+  "commonOutput": {
+    "requiredEvidence": [
+      "対象自治体コード・制度キー",
+      "抽出理由",
+      "確認した現行公式ページまたは公式資料",
+      "既存JSONとの比較結果",
+      "判定変更の有無",
+      "correctionIdまたはnewFindingId",
+      "region PR・CI・main同期・公開確認"
+    ],
+    "passRule": "抽出対象を全件確認し、確定誤りを修正し、重大未修正0、標準CI成功、region/main/generated/public一致を確認する。",
+    "uncertainRule": "公式情報だけで現行条件を確定できない場合は推測せず、unavailable維持または追跡Issueへ分離する。"
+  },
+  "causeChecks": [
+    {
+      "causeId": "C01-wide-area-service-missed",
+      "title": "広域利用可能制度の見落とし",
+      "riskCategories": ["status_judgement"],
+      "services": ["sickChildCare", "postpartumCare", "temporaryChildcare"],
+      "detectionSignals": [
+        "statusがunavailable",
+        "近隣中心市・県・定住自立圏・広域連合の施設一覧に居住自治体名がある",
+        "自治体個別ページがないことだけをunavailable根拠としている"
+      ],
+      "primaryEvidenceOrder": [
+        "居住自治体公式案内",
+        "受入自治体公式案内",
+        "都道府県公式一覧",
+        "広域連携・定住自立圏公式文書"
+      ],
+      "assignments": [
+        {"session": "north-b", "prefectureCodes": ["01", "04", "05", "06"], "issueNumber": 3197},
+        {"session": "east-a", "prefectureCodes": ["10", "13", "19", "20"], "issueNumber": 3198},
+        {"session": "east-b", "prefectureCodes": ["08", "09", "11", "12", "14", "15"], "issueNumber": 3199}
+      ],
+      "overlapRule": "利用者の居住自治体を担当する班だけが判定する。施設所在自治体は根拠参照のみ。"
+    },
+    {
+      "causeId": "C02-verified-from-plan-only",
+      "title": "計画・条例・予算・募集資料だけで利用可能制度と断定",
+      "riskCategories": ["status_judgement", "classification_error"],
+      "services": ["temporaryChildcare", "postpartumCare", "sickChildCare", "housingSupport"],
+      "detectionSignals": [
+        "verifiedだが主出典が計画書・条例・予算書・事業者募集だけ",
+        "施設・対象・料金・期間・予約方法の利用者向け条件がない",
+        "実施予定・体制確保・量の見込みを現行利用可能と解釈している"
+      ],
+      "decisionRule": "制度存在と主要利用条件が確認できなければverifiedを維持しない。予算資料だけで個別金額が非公開でも、制度存在と主要支援内容が明確な場合はverified可。",
+      "assignments": [
+        {"session": "north-a", "prefectureCodes": ["02", "03", "07"], "issueNumber": 3196},
+        {"session": "north-b", "prefectureCodes": ["01", "04", "05", "06"], "issueNumber": 3197},
+        {"session": "east-a", "prefectureCodes": ["10", "13", "19", "20"], "issueNumber": 3198},
+        {"session": "east-b", "prefectureCodes": ["08", "09", "11", "12", "14", "15"], "issueNumber": 3199}
+      ]
+    },
+    {
+      "causeId": "C03-2026-anyone-childcare-missed",
+      "title": "2026年度こども誰でも通園制度の未反映・通常一時預かりとの混同",
+      "riskCategories": ["year_mismatch", "status_judgement", "numeric_fact"],
+      "services": ["temporaryChildcare"],
+      "detectionSignals": [
+        "summaryに通常一時預かりのみ記載",
+        "追加出典に乳児等通園支援・こども誰でも通園制度があるが本文未反映",
+        "最小対象月齢が12・18・24か月のまま",
+        "2026年度公式ページ・保育園だより・利用案内が新規公開"
+      ],
+      "requiredChecks": [
+        "対象月齢",
+        "未就園要件",
+        "月利用上限",
+        "料金",
+        "施設",
+        "開始日",
+        "申請・予約方法"
+      ],
+      "assignments": [
+        {"session": "north-b", "prefectureCodes": ["01", "04", "05", "06"], "issueNumber": 3197, "priority": "highest"},
+        {"session": "east-a", "prefectureCodes": ["10", "13", "19", "20"], "issueNumber": 3198},
+        {"session": "east-b", "prefectureCodes": ["08", "09", "11", "12", "14", "15"], "issueNumber": 3199},
+        {"session": "north-a", "prefectureCodes": ["02", "03", "07"], "issueNumber": 3196}
+      ]
+    },
+    {
+      "causeId": "C04-school-meals-scope-year-confusion",
+      "title": "学校給食費の一律無償・部分助成・就学援助・年度の混同",
+      "riskCategories": ["status_judgement", "numeric_fact", "year_mismatch"],
+      "services": ["schoolMeals"],
+      "detectionSignals": [
+        "就学援助のみを全児童生徒向け支援としている",
+        "第3子以降・特定学年・物価高騰分補助を完全無償と表現",
+        "令和7年度要綱・期限切れ事業を令和8年度として掲載",
+        "予算項目はあるが対象範囲・保護者負担・申請要否が不明",
+        "eligibility.maxAgeYearsが15など義務教育範囲と不整合"
+      ],
+      "requiredChecks": [
+        "対象校・対象学年",
+        "全世帯か所得要件ありか",
+        "完全無償か補助か",
+        "保護者請求の有無",
+        "年度・適用期間",
+        "一般世帯負担額"
+      ],
+      "assignments": [
+        {"session": "north-a", "prefectureCodes": ["02", "03", "07"], "issueNumber": 3196},
+        {"session": "north-b", "prefectureCodes": ["01", "04", "05", "06"], "issueNumber": 3197},
+        {"session": "east-a", "prefectureCodes": ["10", "13", "19", "20"], "issueNumber": 3198},
+        {"session": "east-b", "prefectureCodes": ["08", "09", "11", "12", "14", "15"], "issueNumber": 3199}
+      ]
+    },
+    {
+      "causeId": "C05-postpartum-classification-and-limits",
+      "title": "産後ケアの制度分類・類型・対象月齢・利用上限・料金誤り",
+      "riskCategories": ["classification_error", "status_judgement", "numeric_fact"],
+      "services": ["postpartumCare"],
+      "detectionSignals": [
+        "一般相談・家庭訪問・島外出産交通宿泊費助成を産後ケアとしてverified",
+        "宿泊・通所・訪問の一部類型が欠落",
+        "対象が産後4か月までなのに検索上限1歳",
+        "無料または類型別上限が公式案内にあるのに曖昧記載"
+      ],
+      "assignments": [
+        {"session": "north-a", "prefectureCodes": ["02", "03", "07"], "issueNumber": 3196},
+        {"session": "east-a", "prefectureCodes": ["10", "13", "19", "20"], "issueNumber": 3198},
+        {"session": "east-b", "prefectureCodes": ["08", "09", "11", "12", "14", "15"], "issueNumber": 3199}
+      ]
+    },
+    {
+      "causeId": "C06-housing-support-misclassification-age",
+      "title": "一般住宅・移住支援の子育て住宅支援誤分類と年齢上限",
+      "riskCategories": ["classification_error", "numeric_fact", "status_judgement"],
+      "services": ["housingSupport"],
+      "detectionSignals": [
+        "子ども・妊娠・ひとり親等の要件がない一般住宅制度を登録",
+        "年齢制限のない制度に18歳上限を設定",
+        "公営住宅の一般入居情報だけで子育て住宅支援としてverified"
+      ],
+      "decisionRule": "子育て世帯固有の優遇・加算・専用枠・対象条件が確認できない一般制度は対象外。検索用上限値は制度条件と混同しない。",
+      "assignments": [
+        {"session": "north-a", "prefectureCodes": ["02", "03", "07"], "issueNumber": 3196},
+        {"session": "east-a", "prefectureCodes": ["10", "13", "19", "20"], "issueNumber": 3198},
+        {"session": "east-b", "prefectureCodes": ["08", "09", "11", "12", "14", "15"], "issueNumber": 3199}
+      ]
+    },
+    {
+      "causeId": "C07-source-freshness-maintenance",
+      "title": "旧URL・リダイレクト・旧年度PDF・鮮度注意不足",
+      "riskCategories": ["url_or_description_maintenance", "year_mismatch"],
+      "services": ["all"],
+      "detectionSignals": [
+        "主出典がリダイレクトされる旧CMS URL",
+        "削除済み・旧年度PDF",
+        "トップページや計画書だけを主出典",
+        "将来料金改定日・地図作成年・最新版併用注意が欠落"
+      ],
+      "priorityAssignment": {"session": "east-b", "issueNumber": 3199},
+      "regionalAssignmentRule": "各班は自班の訂正対象と抜き取り対象に限って確認し、全国一括URL監査は統括が別taskで実施する。"
+    },
+    {
+      "causeId": "C08-data-task-generated-public-sync",
+      "title": "自治体JSON・task・region・main・生成JSON・公開ページの同期不一致",
+      "riskCategories": ["structure_sync"],
+      "services": ["all"],
+      "detectionSignals": [
+        "region正本とmainの自治体JSON差分",
+        "taskのstatus・PR・CI・merge SHA・officialSources不一致",
+        "生成JSON・静的ページがsource JSONと不一致",
+        "公開ページのHTTP・表示内容・canonical不一致"
+      ],
+      "requiredChecks": [
+        "自治体数・制度数",
+        "completedServicesと状態件数",
+        "公式出典1対1対応",
+        "生成物再生成",
+        "公開HTTPスモーク"
+      ],
+      "assignments": [
+        {"session": "north-a", "issueNumber": 3196},
+        {"session": "north-b", "issueNumber": 3197},
+        {"session": "east-a", "issueNumber": 3198},
+        {"session": "east-b", "issueNumber": 3199}
+      ],
+      "overlapRule": "各班は自班担当自治体だけを検査し、全国生成・main同期は統括が実行する。"
+    }
+  ],
+  "samplingDesign": {
+    "north-a": "青森・岩手・福島から各5〜10自治体。都市規模、島・山間、unavailable有無、更新年度を層化。",
+    "north-b": "北海道南部・宮城・秋田・山形から合計20自治体程度。2026年度制度掲載有無と広域利用を層化。",
+    "east-a": "群馬・東京・山梨・長野から各5自治体以上。島しょ・山村・広域圏・年齢上限を層化。",
+    "east-b": "茨城・栃木・埼玉・千葉・神奈川・新潟から合計20自治体程度。URL鮮度・広域利用・将来改定を層化。"
+  },
+  "coordinatorReview": {
+    "rejectWhen": [
+      "抽出数だけを報告し公式照合がない",
+      "既存JSONの説明を根拠として自己検証している",
+      "公式情報未取得なのに推測でverifiedへ変更",
+      "修正後のregion・main・生成・公開確認がない"
+    ],
+    "acceptWhen": [
+      "訂正対象全件と指定抜き取りを完了",
+      "原因別検索条件と結果を監査JSONに保存",
+      "確定誤りを修正しCI成功",
+      "未確定事項を追跡Issueへ分離",
+      "重大未修正0"
+    ]
+  },
+  "status": "active"
+}
