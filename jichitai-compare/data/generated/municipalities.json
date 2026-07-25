@@ -169025,7 +169025,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後6か月から就学前までの未就園児を、保護者の傷病・出産・育児疲れ・社会参加等の際に一時的に預かる。",
+          "summary": "生後6か月から就学前までの未就園児を、保護者の傷病・出産・育児疲れ・社会参加等の際に一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
@@ -169035,28 +169035,53 @@
             "condition": "瑞浪市内在住で健康かつ集団保育可能、家庭で保育できない乳幼児",
             "capacity": "各園1日3人程度",
             "fee": "0歳児は半日1,500円・1日3,000円、1～2歳児は半日1,250円・1日2,500円、3～5歳児は半日1,000円・1日2,000円を基本とする",
-            "application": "実施園へ事前登録し、原則利用希望日の1か月前から3日前までに申込み"
+            "application": "実施園へ事前登録し、原則利用希望日の1か月前から3日前までに申込み",
+            "ordinaryTemporaryCare": "生後6か月から就学前までの未就園児を、保護者の傷病・出産・育児疲れ・社会参加等の際に一時的に預かる。",
+            "programs": "通常の一時預かり、こども誰でも通園制度（乳児等通園支援事業）",
+            "anyChildAccessTarget": "保育所・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "employmentRequirement": "保護者の就労要件を問わない",
+            "anyChildAccessLimit": "子ども1人につき月10時間まで",
+            "anyChildAccessStart": "令和8年4月"
           },
           "source": {
-            "url": "https://www.city.mizunami.lg.jp/kosodate/kosodateshien/1004151/1001283/1002132.html",
-            "checkedAt": "2026-07-21"
-          }
+            "url": "https://www.city.mizunami.lg.jp/kosodate/kosodateshien/1004151/1001283/1011632.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.mizunami.lg.jp/kosodate/kosodateshien/1004151/1001283/1002132.html",
+              "checkedAt": "2026-07-21",
+              "description": "通常の一時預かり事業の公式案内"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "令和8年度の結婚新生活応援支援金として、住宅取得・賃借・リフォーム・引越費用を最大60万円支援する。",
+          "summary": "岐阜県外から転入して住宅を新築・購入する、18歳未満の子がいる世帯または夫婦の一方が40歳未満の世帯へ30万円を交付する。",
           "details": {
-            "program": "結婚新生活応援支援金",
-            "eligibleHouseholds": "令和8年1月1日から令和9年2月28日までに婚姻し、双方39歳以下、合計所得500万円未満等の要件を満たす世帯",
-            "coveredCosts": "住宅取得費、賃借費、リフォーム費、引越費",
-            "maximum": "夫婦とも29歳以下は最大60万円、その他の39歳以下世帯は最大30万円",
-            "residenceCondition": "市内住宅に居住し、申請から3年以上市内に居住する意思があること",
-            "applicationPeriod": "令和8年4月1日から令和9年2月28日までの対象費用"
+            "program": "瑞浪市子育て世帯等移住促進奨励金",
+            "amount": "30万円",
+            "housing": "2026年4月1日から2029年3月31日までに住宅を新築または購入し、所有権保存登記を完了すること",
+            "migration": "2026年4月1日以降に岐阜県外から転入し、転入前3年間は瑞浪市に住所がないこと",
+            "household": "転入時に同一世帯の18歳未満の子がいる、または配偶者のいずれか一方が40歳未満であること等",
+            "exclusion": "瑞浪市東京圏からの移住支援金との併用不可"
           },
           "source": {
-            "url": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1011635.html",
-            "checkedAt": "2026-07-21"
-          }
+            "url": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1001522.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1011635.html",
+              "checkedAt": "2026-07-25",
+              "description": "2026年度結婚新生活応援支援金"
+            },
+            {
+              "url": "https://www.city.mizunami.lg.jp/kurashi/1008553/shoureikin/1001516.html",
+              "checkedAt": "2026-07-25",
+              "description": "東京圏移住支援金。18歳未満世帯員を帯同する世帯へ30万円加算"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
@@ -174794,20 +174819,24 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "39歳以下で2人以上の世帯を構成し、県外から移住した人へ25万円を交付する。",
+          "status": "unavailable",
+          "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "御嵩町移住支援補助金",
-            "amount": "25万円",
-            "target": "交付申請者が39歳以下で、2人以上の世帯員がいること",
-            "residenceHistory": "転入日前5年間、岐阜県外に居住し、令和7年4月1日以降に町内へ転入",
-            "continuation": "申請日から5年以上町内に居住する意思が必要",
-            "deadline": "町内転入後1年以内に申請"
+            "confirmedGeneralProgram": "39歳以下で2人以上の世帯を構成し、岐阜県外から移住する方へ25万円を交付する御嵩町移住支援補助金を実施する。",
+            "classificationReview": "年齢と世帯人数を要件とする一般移住支援で、子どもの有無、新婚世帯、住宅取得・改修・家賃費用を固有要件とする制度ではないため、子育て世帯向け住宅支援として登録しない。",
+            "childSpecificConditionConfirmed": false
           },
           "source": {
             "url": "https://www.town.mitake.lg.jp/portal/town/measure/other-various-plan/post0076762/",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.mitake.lg.jp/portal/town/measure/other-various-plan/post0072709/",
+              "checkedAt": "2026-07-25",
+              "description": "御嵩町の現行移住制度一覧"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
