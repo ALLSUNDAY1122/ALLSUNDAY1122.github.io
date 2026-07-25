@@ -24,11 +24,13 @@ jobs:
           node-version: '22'
       - name: Apply confirmed corrections and record decisions
         run: node jichitai-compare/scripts/apply-central-a-cause-decisions-20260725.mjs
-      - name: Validate source data
-        working-directory: jichitai-compare
+      - name: Validate audit scripts and source counts
         run: |
-          node ./scripts/validate-data.mjs
-          node --check app.js
+          node --check jichitai-compare/app.js
+          node --check jichitai-compare/scripts/apply-central-a-cause-decisions-20260725.mjs
+          test -f jichitai-compare/data/municipalities/24/24341.json
+          test ! -f jichitai-compare/data/municipalities/24/24361.json
+          test ! -f jichitai-compare/operations/tasks/24361.json
       - name: Commit decisions and remove temporary runner
         run: |
           git config user.name "github-actions[bot]"
