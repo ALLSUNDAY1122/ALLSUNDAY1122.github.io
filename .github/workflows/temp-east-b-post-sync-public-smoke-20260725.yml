@@ -1,0 +1,78 @@
+name: Temporary East B post-sync public smoke 20260725
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-public:
+    if: github.head_ref == 'verify/east-b-post-sync-public-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Verify East B corrections after concurrent main updates
+        run: |
+          node <<'NODE'
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          const expectations = {
+            '14100': {
+              name: '横浜市',
+              pageText: '川崎市と相互利用',
+              sourceUrl: 'https://www.city.yokohama.lg.jp/kosodate-kyoiku/hoiku-yoji/shisetsu/hoikuseido/byogo/byouzi-hoiku.html'
+            },
+            '15100': {
+              name: '新潟市',
+              pageText: '協定11市町村の施設で一時保育',
+              sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/ninshin/life_stage/azuketai/35.html'
+            },
+            '15218': {
+              name: '五泉市',
+              pageText: '新潟地域の協定施設で一時保育',
+              sourceUrl: 'https://www.city.gosen.lg.jp/organization/11/12896.html'
+            },
+            '15223': {
+              name: '阿賀野市',
+              pageText: '新潟地域の協定施設で一時保育',
+              sourceUrl: 'https://www.city.agano.niigata.jp/soshiki/kodomoka/kosodate/bamen/1/1420.html'
+            }
+          };
+
+          let publicData;
+          for (let attempt = 1; attempt <= 16; attempt++) {
+            const res = await fetch(`${base}/data/generated/municipalities.json?v=${Date.now()}`, { cache: 'no-store' });
+            if (res.ok) {
+              const candidate = await res.json();
+              const byCode = new Map(candidate.municipalities.map(item => [item.code, item]));
+              const ready =
+                candidate.municipalities.length === 1741 &&
+                candidate.municipalities.reduce((sum, item) => sum + Object.keys(item.services || {}).length, 0) === 15669 &&
+                byCode.get('14100')?.services?.sickChildCare?.details?.wideArea?.includes('川崎市') &&
+                byCode.get('14100')?.services?.postpartumCare?.details?.fee?.includes('6,000円') &&
+                byCode.get('15100')?.services?.sickChildCare?.details?.wideArea?.includes('2026年4月1日') &&
+                byCode.get('15218')?.services?.sickChildCare?.details?.wideArea?.includes('新潟市') &&
+                byCode.get('15223')?.services?.sickChildCare?.details?.wideArea?.includes('新潟市') &&
+                byCode.get('15223')?.services?.postpartumCare?.details?.wideArea?.includes('里帰り');
+              if (ready) {
+                publicData = candidate;
+                break;
+              }
+            }
+            await sleep(10000);
+          }
+          if (!publicData) throw new Error('East B public generated data did not satisfy current expectations');
+
+          for (const [code, expected] of Object.entries(expectations)) {
+            const res = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`, { cache: 'no-store' });
+            if (!res.ok) throw new Error(`${code}: HTTP ${res.status}`);
+            const html = await res.text();
+            if (!html.includes(expected.name)) throw new Error(`${code}: municipality name missing`);
+            if (!html.includes(expected.pageText)) throw new Error(`${code}: corrected summary missing`);
+            if (!html.includes(expected.sourceUrl)) throw new Error(`${code}: official source link missing`);
+          }
+
+          console.log('verified East B 4 public pages and nationwide generated totals after concurrent main updates');
+          NODE
