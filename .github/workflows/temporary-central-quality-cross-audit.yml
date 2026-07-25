@@ -23,31 +23,124 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@4
         with:
-          node-version: '20'
-
-      - name: Fix deterministic three-sample selection
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('jichitai-compare/scripts/run-central-quality-cross-audit.cjs')
-          s = p.read_text(encoding='utf-8')
-          old = "const sampleIndexes = sortedUnique([0, Math.floor((files.length - 1) / 2), files.length - 1].filter((index) => index >= 0));"
-          new = "const sampleIndexes = [...new Set([0, Math.floor((files.length - 1) / 2), files.length - 1].filter((index) => index >= 0))].sort((a, b) => a - b);"
-          if old not in s:
-              raise SystemExit('sample selection line not found')
-          p.write_text(s.replace(old, new), encoding='utf-8')
-          PY
+          node-version: '24'
 
       - name: Run central cross audit
-        run: node jichitai-compare/scripts/run-central-quality-cross-audit.cjs
+        shell: bash
+        run: |
+          cat > /tmp/central-quality-cross-audit.cjs <<'NODE'
+          'use strict';
+          const fs = require('fs');
+          const path = require('path');
+          const ROOT = process.cwd();
+          const BASE = path.join(ROOT, 'jichitai-compare');
+          const PREFS = ['16','17','18','21','22','23','24','25','26','27','28','29','30'];
+          const SERVICES = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const exists = (p) => fs.existsSync(p);
+          const uniq = (v) => [...new Set((v || []).filter(Boolean))].sort();
+          const sameSet = (a,b) => JSON.stringify(uniq(a)) === JSON.stringify(uniq(b));
+          const stable = (v) => Array.isArray(v) ? v.map(stable) : v && typeof v === 'object' ? Object.fromEntries(Object.keys(v).sort().map(k => [k, stable(v[k])])) : v;
+          const same = (a,b) => JSON.stringify(stable(a)) === JSON.stringify(stable(b));
+          const text = (v) => { try { return JSON.stringify(v); } catch { return String(v); } };
+          const write = (rel,data) => { const p=path.join(BASE,rel); fs.mkdirSync(path.dirname(p),{recursive:true}); fs.writeFileSync(p,JSON.stringify(data,null,2)+'\n'); };
+          const generatedDoc = read(path.join(BASE,'data/generated/municipalities.json'));
+          const generatedList = Array.isArray(generatedDoc) ? generatedDoc : Array.isArray(generatedDoc.municipalities) ? generatedDoc.municipalities : generatedDoc.data && Array.isArray(generatedDoc.data.municipalities) ? generatedDoc.data.municipalities : Object.values(generatedDoc).filter(v => v && typeof v === 'object' && /^\d{5}$/.test(String(v.code || v.municipalityCode || '')));
+          const generated = new Map(generatedList.map(v => [String(v.code || v.municipalityCode),v]));
+          const errors=[];
+          const warnings=[];
+          const mismatches=[];
+          const candidates={fy2026AnyoneDaycareOmission:[],generalHousingMisclassification:[],statusWithoutCurrentEvidence:[],schoolMealsScopeConfusion:[],wideAreaUseOmission:[],oldFiscalEvidence:[]};
+          const spotChecks=[];
+          let municipalities=0;
+          let servicesChecked=0;
+          for (const pref of PREFS) {
+            const dir=path.join(BASE,'data/municipalities',pref);
+            if (!exists(dir)) { errors.push({type:'missing_prefecture_directory',prefectureCode:pref}); continue; }
+            const files=fs.readdirSync(dir).filter(n => /^\d{5}\.json$/.test(n)).sort();
+            const sampleIndexes=[...new Set([0,Math.floor((files.length-1)/2),files.length-1].filter(i => i>=0))].sort((a,b)=>a-b);
+            for (const i of sampleIndexes) if (files[i]) spotChecks.push({prefectureCode:pref,municipalityCode:files[i].replace(/\.json$/,''),status:'pending_official_manual_review'});
+            for (const file of files) {
+              municipalities++;
+              const code=file.replace(/\.json$/,'');
+              const p=path.join(dir,file);
+              const m=read(p);
+              const ss=m.services || {};
+              const keys=Object.keys(ss).sort();
+              servicesChecked += keys.length;
+              if (String(m.code)!==code) errors.push({type:'municipality_code_mismatch',code,storedCode:m.code});
+              if (String(m.prefectureCode)!==pref) errors.push({type:'prefecture_code_mismatch',code,expected:pref,actual:m.prefectureCode});
+              if (!m.name) errors.push({type:'missing_municipality_name',code});
+              if (!sameSet(keys,SERVICES)) errors.push({type:'service_key_mismatch',code,expected:SERVICES,actual:keys});
+              let verified=0, unavailable=0, incomplete=0;
+              const primary=[];
+              for (const serviceKey of SERVICES) {
+                const s=ss[serviceKey];
+                if (!s) continue;
+                if (s.status==='verified') verified++; else if (s.status==='unavailable') unavailable++; else incomplete++;
+                if (s.source && s.source.url) primary.push(s.source.url); else { warnings.push({type:'missing_primary_source',code,service:serviceKey,status:s.status}); if (s.status==='verified') candidates.statusWithoutCurrentEvidence.push({code,name:m.name,prefectureCode:pref,service:serviceKey,reason:'verified_without_primary_source'}); }
+                if (!s.source || !s.source.checkedAt) warnings.push({type:'missing_checked_at',code,service:serviceKey,status:s.status});
+                const t=text(s);
+                if (serviceKey==='temporaryChildcare' && s.status==='verified' && /一時預かり|一時保育/.test(t) && !/こども誰でも通園|誰でも通園|乳児等通園支援/.test(t)) candidates.fy2026AnyoneDaycareOmission.push({code,name:m.name,prefectureCode:pref,service:serviceKey,reason:'ordinary_temporary_childcare_only'});
+                if (serviceKey==='housingSupport' && s.status==='verified') {
+                  const general=/住居確保給付|空き家|耐震|省エネ|太陽光|蓄電|新婚|若者|移住|定住|住宅取得|リフォーム|改修/.test(t);
+                  const child=/子育て世帯|子育て家庭|18歳未満|高校生以下|中学生以下|小学生以下|妊婦|妊娠|児童.*加算|子ども.*加算|こども.*加算|多子|三世代/.test(t);
+                  if (general && !child) candidates.generalHousingMisclassification.push({code,name:m.name,prefectureCode:pref,service:serviceKey,reason:'general_program_without_child_specific_condition'});
+                }
+                if (s.status==='unavailable' && ['sickChildCare','postpartumCare','temporaryChildcare'].includes(serviceKey)) candidates.wideAreaUseOmission.push({code,name:m.name,prefectureCode:pref,service:serviceKey,reason:'unavailable_requires_wide_area_check'});
+                if (serviceKey==='schoolMeals' && /就学援助/.test(t) && !/無償|無料|保護者負担|一般世帯|月額|年額|1食|一食|\d[,\d]*円/.test(t)) candidates.schoolMealsScopeConfusion.push({code,name:m.name,prefectureCode:pref,service:serviceKey,reason:'financial_aid_without_general_household_burden'});
+                if (/2023|2024|令和5年度|令和6年度/.test(t)) candidates.oldFiscalEvidence.push({code,name:m.name,prefectureCode:pref,service:serviceKey,reason:'old_fiscal_year_text_present'});
+                if (s.status==='unavailable' && (!s.details || Object.keys(s.details).length===0)) candidates.statusWithoutCurrentEvidence.push({code,name:m.name,prefectureCode:pref,service:serviceKey,reason:'unavailable_without_explanatory_details'});
+              }
+              if (incomplete===0 && m.status!=='verified') errors.push({type:'top_level_status_mismatch',code,expected:'verified',actual:m.status});
+              const taskPath=path.join(BASE,'operations/tasks',code+'.json');
+              if (!exists(taskPath)) errors.push({type:'missing_task',code}); else {
+                const task=read(taskPath);
+                if (String(task.municipalityCode)!==code) errors.push({type:'task_code_mismatch',code,actual:task.municipalityCode});
+                if (String(task.prefectureCode)!==pref) errors.push({type:'task_prefecture_mismatch',code,actual:task.prefectureCode});
+                if (task.municipalityName!==m.name) errors.push({type:'task_name_mismatch',code,municipalityName:m.name,taskName:task.municipalityName});
+                if (task.status!=='merged') errors.push({type:'task_status_not_merged',code,actual:task.status});
+                if (Number(task.nextServiceIndex)!==9) errors.push({type:'task_next_service_index_mismatch',code,actual:task.nextServiceIndex});
+                if (!sameSet(task.completedServices,SERVICES)) errors.push({type:'task_completed_services_mismatch',code,actual:task.completedServices || []});
+                if (Number(task.verifiedCount)!==verified) errors.push({type:'task_verified_count_mismatch',code,expected:verified,actual:task.verifiedCount});
+                if (Number(task.unavailableCount)!==unavailable) errors.push({type:'task_unavailable_count_mismatch',code,expected:unavailable,actual:task.unavailableCount});
+                if (Number(task.researchingCount || 0)!==0 || Number(task.needsMediumReviewCount || 0)!==0) errors.push({type:'task_unresolved_count_present',code,researchingCount:task.researchingCount,needsMediumReviewCount:task.needsMediumReviewCount});
+                if (!sameSet(task.officialSources,primary)) errors.push({type:'task_official_sources_mismatch',code,expected:uniq(primary),actual:uniq(task.officialSources)});
+              }
+              const g=generated.get(code);
+              if (!g) mismatches.push({surface:'generated_json',type:'missing_municipality',code}); else {
+                for (const field of ['code','prefectureCode','prefecture','name','officialUrl','status','summary']) if (!same(g[field],m[field])) mismatches.push({surface:'generated_json',type:'field_mismatch',code,field});
+                if (!same(g.services,m.services)) mismatches.push({surface:'generated_json',type:'services_mismatch',code});
+              }
+              const htmlPath=path.join(BASE,'municipality',code,'index.html');
+              if (!exists(htmlPath)) mismatches.push({surface:'static_page',type:'missing_page',code}); else {
+                const html=fs.readFileSync(htmlPath,'utf8');
+                const canonical=`https://allsunday1122.github.io/jichitai-compare/municipality/${code}/`;
+                if (!html.includes(m.name)) mismatches.push({surface:'static_page',type:'municipality_name_missing',code,name:m.name});
+                if (!html.includes(canonical)) mismatches.push({surface:'static_page',type:'canonical_missing_or_wrong',code,expected:canonical});
+                if (m.officialUrl && !html.includes(m.officialUrl)) mismatches.push({surface:'static_page',type:'official_url_missing',code,expected:m.officialUrl});
+                for (const serviceKey of SERVICES) { const url=ss[serviceKey] && ss[serviceKey].source && ss[serviceKey].source.url; if (url && !html.includes(url.replace(/&/g,'&amp;')) && !html.includes(url)) mismatches.push({surface:'static_page',type:'service_source_url_missing',code,service:serviceKey,expected:url}); }
+              }
+            }
+          }
+          for (const key of Object.keys(candidates)) candidates[key].sort((a,b)=>(a.prefectureCode+'-'+a.code+'-'+a.service).localeCompare(b.prefectureCode+'-'+b.code+'-'+b.service));
+          const now=new Date().toISOString();
+          const counts=Object.fromEntries(Object.entries(candidates).map(([k,v])=>[k,v.length]));
+          const result={schemaVersion:'1.0.0',auditId:'central-quality-cross-audit-20260725',generatedAt:now,sourceCommit:process.env.GITHUB_SHA || null,scope:{prefectureCodes:PREFS,expectedMunicipalityCount:409,checkedMunicipalityCount:municipalities,expectedServiceCount:3681,checkedServiceCount:servicesChecked},structural:{errorCount:errors.length,warningCount:warnings.length,errors,warnings},consistency:{mismatchCount:mismatches.length},candidateCounts:counts,conclusion:errors.length===0 && mismatches.length===0 ? 'machine_structural_and_repository_consistency_passed_official_review_candidates_pending' : 'machine_mismatches_detected_requires_review'};
+          write('operations/audits/central-quality-cross-audit-20260725.json',result);
+          write('operations/audits/central-quality-cross-audit-candidates-20260725.json',{schemaVersion:'1.0.0',auditId:'central-quality-cross-audit-candidates-20260725',generatedAt:now,policy:'Candidates are not confirmed errors. Confirm against current official information before correction.',candidateCounts:counts,candidates});
+          write('operations/audits/central-quality-cross-audit-spotchecks-20260725.json',{schemaVersion:'1.0.0',auditId:'central-quality-cross-audit-spotchecks-20260725',generatedAt:now,selectionMethod:'first, middle and last municipality code in each of 13 prefectures',minimumRequired:39,selectedCount:spotChecks.length,priorityServices:['temporaryChildcare','schoolMeals','sickChildCare','postpartumCare','housingSupport'],spotChecks});
+          write('operations/audits/central-quality-four-surface-consistency-20260725.json',{schemaVersion:'1.0.0',auditId:'central-quality-four-surface-consistency-20260725',generatedAt:now,checkedMunicipalityCount:municipalities,checkedServiceCount:servicesChecked,mismatchCount:mismatches.length,mismatches,note:'Public HTTP verification is separate; this file checks repository source, task, generated JSON and static pages.'});
+          console.log(JSON.stringify({checkedMunicipalityCount:municipalities,checkedServiceCount:servicesChecked,structuralErrorCount:errors.length,consistencyMismatchCount:mismatches.length,candidateCounts:counts,spotCheckCount:spotChecks.length},null,2));
+          NODE
+          node --check /tmp/central-quality-cross-audit.cjs
+          node /tmp/central-quality-cross-audit.cjs
 
       - name: Commit audit results
         shell: bash
         run: |
-          git checkout -- jichitai-compare/scripts/run-central-quality-cross-audit.cjs
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
