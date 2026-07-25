@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-anyone-single-gap-remaining-20260725",
+  "sessionId": "north-b",
+  "extractedAt": "2026-07-25T08:50:31.028Z",
+  "sourceAudit": "operations/audits/north-b-fiscal-anyone-triage-20260725.json",
+  "checkpointExpectedRemaining": 12,
+  "reviewedAuditFiles": [
+    "operations/audits/north-b-anyone-single-gap-batch1-review-20260725.json",
+    "operations/audits/north-b-anyone-single-gap-batch2-review-20260725.json",
+    "operations/audits/north-b-anyone-single-gap-batch3-review-20260725.json",
+    "operations/audits/north-b-anyone-single-gap-batch4-review-20260725.json",
+    "operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json",
+    "operations/audits/north-b-anyone-single-gap-batch6-review-20260725.json"
+  ],
+  "counts": {
+    "singleConditionCandidates": 65,
+    "reviewedThroughBatch6": 60,
+    "remaining": 5,
+    "checkpointDifference": -7
+  },
+  "remaining": [
+    {
+      "code": "06403",
+      "municipality": "飯豊町",
+      "status": "verified",
+      "missing": [
+        "startYear"
+      ],
+      "summary": "概ね1歳以上の未就園児向け一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
+      "sourceUrls": [
+        "https://www.town.iide.yamagata.jp/002/kodomodaredemo.html",
+        "https://www.town.iide.yamagata.jp/007/ichijihoiku_iide.html"
+      ],
+      "priority": 15,
+      "category": "single_condition_gap"
+    },
+    {
+      "code": "06426",
+      "municipality": "三川町",
+      "status": "verified",
+      "missing": [
+        "startYear"
+      ],
+      "summary": "生後6か月から小学3年生までの一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
+      "sourceUrls": [
+        "https://www.town.mikawa.yamagata.jp/child/kosodate/daredemotuuenseido.html",
+        "https://www.town.mikawa.yamagata.jp/child/kosodate/shien-center.html"
+      ],
+      "priority": 15,
+      "category": "single_condition_gap"
+    },
+    {
+      "code": "06461",
+      "municipality": "遊佐町",
+      "status": "verified",
+      "missing": [
+        "startYear"
+      ],
+      "summary": "保育所等に通っていない生後6か月から満3歳未満の子どもが、月10時間まで1時間300円で町立保育園を利用できる。",
+      "sourceUrls": [
+        "https://www.town.yuza.yamagata.jp/genre/section/kenkofukushi/kosodate",
+        "https://www.town.yuza.yamagata.jp/uploads/contents/archive_0000003941_00/%E3%80%90%E9%81%8A%E4%BD%90%E7%94%BA%E7%89%88%E3%80%91%E5%88%A9%E7%94%A8%E8%80%85%E5%90%91%E3%81%91%E3%83%AA%E3%83%BC%E3%83%95%E3%83%AC%E3%83%83%E3%83%88.pdf"
+      ],
+      "priority": 15,
+      "category": "single_condition_gap"
+    },
+    {
+      "code": "04361",
+      "municipality": "亘理町",
+      "status": "verified",
+      "missing": [
+        "startYear"
+      ],
+      "summary": "町内在住で施設に在籍していない生後6か月から就学前までの児童を、亘理保育所で平日に一時保育する。",
+      "sourceUrls": [
+        "https://www.town.watari.miyagi.jp/education/detail.php?content=1897",
+        "https://www.town.watari.miyagi.jp/education/detail.php?content=2153"
+      ],
+      "priority": 0,
+      "category": "single_condition_gap"
+    },
+    {
+      "code": "04404",
+      "municipality": "七ヶ浜町",
+      "status": "verified",
+      "missing": [
+        "startYear"
+      ],
+      "summary": "保育所等に在籍していない満1歳以上の就学前児童を、私的理由、就労、緊急時等に一時保育する。",
+      "sourceUrls": [
+        "https://www.shichigahama.com/benricho/oshirase/kodomo3-050-12453.html",
+        "https://www.shichigahama.com/benricho/oshirase/kodomo3-050-12494.html"
+      ],
+      "priority": 0,
+      "category": "single_condition_gap"
+    }
+  ]
+}
