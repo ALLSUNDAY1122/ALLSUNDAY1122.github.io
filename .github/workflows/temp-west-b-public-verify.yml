@@ -1,0 +1,123 @@
+name: Temporary West B Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-public-verify-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'ops/run-west-b-public-verify-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: verify/west-b-public-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Verify published pages and generated JSON
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const targets = [
+            ['35321', '広島広域都市圏・山口県内の協定施設'],
+            ['35502', '山口県内全市町の相互利用協定'],
+            ['36342', '乳児・幼児・小学生が徳島市等'],
+            ['42214', '病児保育オリーブ'],
+            ['45341', '町内3施設'],
+            ['45382', '町内2施設']
+          ];
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          let checks = [];
+          let passed = false;
+
+          for (let attempt = 1; attempt <= 18; attempt += 1) {
+            checks = [];
+            let allOk = true;
+            for (const [code, expected] of targets) {
+              const url = `${base}/municipality/${code}/`;
+              try {
+                const response = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20000), headers: { 'user-agent': 'WestBPublicVerification/1.0' } });
+                const text = await response.text();
+                const ok = response.ok && text.includes(expected);
+                checks.push({ code, url, expected, httpStatus: response.status, ok });
+                if (!ok) allOk = false;
+              } catch (error) {
+                checks.push({ code, url, expected, httpStatus: null, ok: false, error: String(error?.message ?? error) });
+                allOk = false;
+              }
+            }
+
+            try {
+              const generatedUrl = `${base}/data/generated/municipalities.json`;
+              const response = await fetch(generatedUrl, { redirect: 'follow', signal: AbortSignal.timeout(30000), headers: { 'user-agent': 'WestBPublicVerification/1.0' } });
+              const text = await response.text();
+              const generatedOk = response.ok && targets.every(([code, expected]) => text.includes(`\"code\":\"${code}\"`) || text.includes(`\"code\": \"${code}\"`)) && targets.every(([, expected]) => text.includes(expected));
+              checks.push({ code: 'generated', url: generatedUrl, expected: 'six corrected municipality records and summaries', httpStatus: response.status, ok: generatedOk });
+              if (!generatedOk) allOk = false;
+            } catch (error) {
+              checks.push({ code: 'generated', url: `${base}/data/generated/municipalities.json`, expected: 'six corrected municipality records and summaries', httpStatus: null, ok: false, error: String(error?.message ?? error) });
+              allOk = false;
+            }
+
+            if (allOk) {
+              passed = true;
+              break;
+            }
+            await sleep(10000);
+          }
+
+          const verifiedAt = new Date().toISOString();
+          const result = {
+            schemaVersion: '1.0.0',
+            verificationId: 'west-b-sick-child-public-verification-20260725',
+            sessionId: 'west-b',
+            verifiedAt,
+            status: passed ? 'passed' : 'failed',
+            checks
+          };
+          const auditPath = 'jichitai-compare/operations/audits/west-b-sick-child-public-verification-20260725.json';
+          fs.writeFileSync(auditPath, JSON.stringify(result, null, 2) + '\n');
+
+          if (!passed) {
+            console.error(JSON.stringify(result, null, 2));
+            process.exit(1);
+          }
+
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/west-b.json';
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          checkpoint.sickChildCareCrosscheck = {
+            ...(checkpoint.sickChildCareCrosscheck ?? {}),
+            status: 'completed_public_verified_region_integrated',
+            mainPullRequest: 3279,
+            mainMergeCommit: '18ba59a96f0afe7856e2d5df6dea5e33eba22aae',
+            mainCiRun: 8011,
+            regionPullRequest: 3287,
+            regionMergeCommit: '2011971268d9350e8f593b22fcaf7b8e8730459e',
+            regionCiRun: 8025,
+            publicVerification: 'passed',
+            publicVerificationId: result.verificationId,
+            unresolvedConfirmedErrorCount: 0
+          };
+          checkpoint.updatedAt = verifiedAt;
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+          NODE
+      - name: Commit verification record
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/west-b-public-verify-trigger-20260725.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-sick-child-public-verification-20260725.json jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git add jichitai-compare/operations/control/west-b-public-verify-trigger-20260725.json
+          git commit -m "audit: 西日本B病児保育6自治体の公開反映を確認"
+          git push origin HEAD:verify/west-b-public-20260725
