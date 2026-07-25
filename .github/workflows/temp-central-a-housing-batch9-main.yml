@@ -54,15 +54,32 @@ jobs:
           done
 
       - name: Regenerate and validate national outputs
+        id: validate
+        continue-on-error: true
         working-directory: jichitai-compare
         shell: bash
         run: |
+          diagnostic='operations/audits/central-a-housing-batch9-main-diagnostic-20260725.log'
+          rm -f "$diagnostic"
           if ! npm run check > /tmp/central-a-batch9-check.log 2>&1; then
-            echo '===== npm run check failure tail ====='
-            tail -n 180 /tmp/central-a-batch9-check.log
+            tail -n 240 /tmp/central-a-batch9-check.log > "$diagnostic"
             exit 1
           fi
           node --check app.js
+
+      - name: Persist validation diagnostic
+        if: steps.validate.outcome == 'failure'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/central-a-housing-batch9-main-diagnostic-20260725.log
+          git commit -m 'diagnostic: 第9群全国同期の検証失敗を記録'
+          git push --force origin "HEAD:${GITHUB_HEAD_REF}"
+
+      - name: Stop after validation failure
+        if: steps.validate.outcome == 'failure'
+        run: exit 1
 
       - name: Reject unexpected generated changes
         shell: bash
