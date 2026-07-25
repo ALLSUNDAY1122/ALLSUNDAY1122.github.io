@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+# Temporary idempotent patcher for the first round of the second quality audit.
 ROOT = Path(__file__).resolve().parents[2]
 CHECKPOINT = ROOT / "operations/control/session-checkpoints/east-a.json"
 AUDIT = ROOT / "operations/audits/east-a-quality-improvement-second-audit-20260725.json"
