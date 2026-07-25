@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch14-decisions-20260726",
+  "decidedAt": "2026-07-26T02:04:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3732,
+  "runnerWorkflowRunId": 30166860327,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 4,
+  "noChangeCount": 1,
+  "statusToUnavailableCount": 0,
+  "verifiedClarificationOrSourceUpgradeCount": 4,
+  "corrected": [
+    {
+      "code": "23237",
+      "name": "あま市",
+      "service": "housingSupport",
+      "correctionType": "unavailable_primary_source_upgrade",
+      "beforeStatus": "unavailable",
+      "afterStatus": "unavailable",
+      "beforeSummary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.ama.aichi.jp/kurashi/kotsu/sumai/1005979/index.html"
+    },
+    {
+      "code": "23238",
+      "name": "長久手市",
+      "service": "housingSupport",
+      "correctionType": "unavailable_primary_source_upgrade",
+      "beforeStatus": "unavailable",
+      "afterStatus": "unavailable",
+      "beforeSummary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.nagakute.lg.jp/soshiki/kensetsubu/toshikeikakuka/3/1/tashinn/hojyokinn/index.html"
+    },
+    {
+      "code": "23342",
+      "name": "豊山町",
+      "service": "housingSupport",
+      "correctionType": "current_fiscal_year_newlywed_conditions_clarified",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "一定の所得・年齢要件を満たす新婚世帯へ、町内住宅の取得・賃借・リフォーム・引越し費用を補助する。",
+      "afterSummary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
+      "officialSource": "https://www.town.toyoyama.lg.jp/kurashi/todokede/1000702/1004030/index.html"
+    },
+    {
+      "code": "23442",
+      "name": "東浦町",
+      "service": "housingSupport",
+      "correctionType": "current_child_specific_source_upgrade",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "新たに三世代同居または町内近居を始める子育て世帯の住宅新築・購入費を補助する。",
+      "afterSummary": "小学生以下の子と同居し、新たに三世代同居または町内近居を始める49歳以下の夫婦世帯へ、住宅の新築・購入費を補助する。",
+      "officialSource": "https://www.town.aichi-higashiura.lg.jp/life_event/kosodate/11380.html"
+    }
+  ],
+  "unchanged": [
+    {
+      "code": "28228",
+      "name": "加東市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "空家バンク登録住宅の改修を支援し、若年・子育て世帯タイプの一戸建て住宅は対象工事費に応じ最大200万円を補助する。",
+      "officialSource": "https://www.city.kato.lg.jp/kakukanogoannai/toshiseibibu/toshiseisakuka/akiya/16588.html",
+      "reason": "令和8年度受付中の住宅型補助金（若年・子育て世帯タイプ）について、18歳年度末までの子ども等の要件と最大200万円の補助が現行公式ページで確認でき、登録内容と一致する。"
+    }
+  ],
+  "stateReconciliation": {
+    "detectedAt": "2026-07-26T02:04:00+09:00",
+    "reason": "第13群完了後に並行して最終化された第12群がcheckpoint累計を第12群単独値へ戻していた",
+    "authoritativePriorResolution": "central-a-housing-batch13-resolution-20260726",
+    "authoritativePriorValues": {
+      "correctedMunicipalitiesRechecked": 119,
+      "primarySourceSlotsRechecked": 551,
+      "generalHousingMisclassification": 109
+    },
+    "observedRegressedValues": {
+      "correctedMunicipalitiesRechecked": 114,
+      "primarySourceSlotsRechecked": 546,
+      "generalHousingMisclassification": 114
+    },
+    "resolvedValues": {
+      "correctedMunicipalitiesRechecked": 124,
+      "primarySourceSlotsRechecked": 556,
+      "generalHousingMisclassification": 104
+    },
+    "status": "resolved"
+  },
+  "causeScan": {
+    "authoritativePreviousRemainingCandidates": 109,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 104
+  },
+  "weakPrimarySource": {
+    "dedicatedCandidateCount": 33,
+    "crossCategorySourceUpgradeCount": 2,
+    "countChanged": false,
+    "reason": "専用の弱い主出典候補台帳との重複を未照合のため候補数は据え置く"
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般住宅制度の現行ページをunavailable判定の主出典とし、自治体トップページだけを根拠にしない",
+    "2026年度の新婚・三世代・子育て固有条件を現行利用者向けページで確認して要約する",
+    "並行処理でcheckpoint累計が回帰した場合は、完了済みresolutionの最大到達値を正本として復元する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
