@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-bulky-waste-official-source-review-20260725",
+  "generatedAt": "2026-07-25T21:31:00+09:00",
+  "sourcePullRequests": [
+    3634,
+    3674
+  ],
+  "correctionPullRequest": 3677,
+  "workflowRunId": 30158202086,
+  "scope": {
+    "municipalityCount": 226,
+    "priorityCandidateCount": 65,
+    "manuallyConfirmedSourceChanges": 3,
+    "statusChanges": 0
+  },
+  "corrections": [
+    {
+      "code": "39424",
+      "name": "大月町",
+      "status": "verified",
+      "beforeSource": "https://www.town.otsuki.kochi.jp/life/dtl.php?hdnKey=1008",
+      "afterSource": "https://www.town.otsuki.kochi.jp/life/dtl.php?hdnKey=1119",
+      "additionalSources": [
+        "https://www.town.otsuki.kochi.jp/life/dtl.php?hdnKey=1875"
+      ],
+      "reason": "防災ページを誤って主出典にしていたため、粗大ごみの分け方・出し方と2026年度収集日程へ置換",
+      "contentChanged": false,
+      "statusChanged": false
+    },
+    {
+      "code": "40421",
+      "name": "桂川町",
+      "status": "verified",
+      "beforeSource": "https://www.town.keisen.fukuoka.jp/kurashi/benri/gomidashi.php",
+      "afterSource": "https://www.town.keisen.fukuoka.jp/kurashi/benri/gomicalender.php",
+      "additionalSources": [
+        "https://www.town.keisen.fukuoka.jp/kurashi/benri/gomidashi.php"
+      ],
+      "reason": "地区別収集日と8月・1月の休止を直接示すごみカレンダーを主出典化",
+      "contentChanged": false,
+      "statusChanged": false
+    },
+    {
+      "code": "43208",
+      "name": "山鹿市",
+      "status": "verified",
+      "beforeSource": "https://www.city.yamaga.kumamoto.jp/kiji003556/index.html",
+      "afterSource": "https://www.city.yamaga.kumamoto.jp/kiji003556/index.html",
+      "additionalSources": [
+        "https://www.city.yamaga.kumamoto.jp/kiji003523/index.html"
+      ],
+      "reason": "粗大ごみ専用ページを維持し、2026年度地域別収集日程を追加出典化",
+      "contentChanged": false,
+      "statusChanged": false
+    }
+  ],
+  "retainedNoChange": [
+    {
+      "code": "40646",
+      "name": "上毛町",
+      "reason": "現行の分別ガイドブックページが2026年6月更新で直接対応"
+    },
+    {
+      "code": "46505",
+      "name": "屋久島町",
+      "reason": "現行のごみの出し方ページが粗大ごみ条件に直接対応"
+    },
+    {
+      "code": "43424",
+      "name": "小国町",
+      "reason": "現行の直接持ち込みページが粗大ごみ、受付日時、2025年10月以降の料金に直接対応"
+    }
+  ],
+  "continuationIssue": 3675,
+  "continuationMunicipalities": [
+    "33203",
+    "43511",
+    "46502",
+    "33586"
+  ],
+  "result": {
+    "contentErrorCount": 0,
+    "sourceMisassignmentCount": 1,
+    "sourceEnrichmentCount": 2,
+    "statusChangeCount": 0,
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
