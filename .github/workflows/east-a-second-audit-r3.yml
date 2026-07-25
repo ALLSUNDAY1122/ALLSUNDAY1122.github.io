@@ -1,0 +1,43 @@
+name: East A second audit round 3
+
+on:
+  push:
+    branches:
+      - audit/east-a-second-quality-20260725-r3
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Patch audited source and task data
+        run: python jichitai-compare/operations/scripts/patch-east-a-second-audit-r3.py
+      - name: Regenerate and validate public data
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+      - name: Commit audit corrections and generated files
+        run: |
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare
+          git commit -m "fix: apply East A second audit round 3 corrections"
+          git push
