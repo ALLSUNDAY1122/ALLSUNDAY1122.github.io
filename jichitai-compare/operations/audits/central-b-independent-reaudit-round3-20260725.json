@@ -8,11 +8,11 @@
   "scope": {
     "round": 3,
     "municipalityCodes": ["26365", "26366", "26367", "26407", "26463", "26465", "29201", "29202", "29203", "29204"],
-    "auditedMunicipalityCount": 7,
-    "auditedServiceCount": 63,
+    "auditedMunicipalityCount": 8,
+    "auditedServiceCount": 72,
     "confirmedErrorCount": 6,
     "correctedErrorCount": 6,
-    "pendingMunicipalityCodes": ["29202", "29203", "29204"]
+    "pendingMunicipalityCodes": ["29203", "29204"]
   },
   "findings": [
     {
@@ -144,14 +144,38 @@
         "https://www.city.nara.lg.jp/site/gomi-syusyu/4464.html",
         "https://www.city.nara.lg.jp/site/bousai-saigai/89308.html"
       ]
+    },
+    {
+      "municipalityCode": "29202",
+      "municipalityName": "大和高田市",
+      "servicesChecked": 9,
+      "result": "no_confirmed_error",
+      "confirmedErrors": [],
+      "notes": [
+        "令和8年度は市立小学校・中学校給食費をともに無償化。通常月額は小学校5,200円・中学校5,300円だが徴収なし。",
+        "こども誰でも通園制度は生後6か月から満3歳未満、月10時間、スクルドエンジェル保育園高田園、1時間300円、市外施設も利用可能。",
+        "子育て・若年・移住世帯専用の住宅取得支援を確認できず、一般の除却・耐震補助を除外してunavailableを維持。",
+        "産後ケアの施設一覧・利用者負担金表は公式PDFで公開されるが取得時にキャッシュ障害が発生したため、個別金額を推測しない。"
+      ],
+      "principalSources": [
+        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/kodomosesaku/2/2183.html",
+        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/hoikuyochienka/ikuji/1/2129.html",
+        "https://www.city.yamatotakada.nara.jp/kosodate/ikuji/hoikusho_kodomoen/3727.html",
+        "https://www.city.yamatotakada.nara.jp/material/files/group/44/gakkoukyusyoku_08.pdf",
+        "https://www.city.yamatotakada.nara.jp/kosodate/ninshin_shussan/7463.html",
+        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/hoikuyochienka/ikuji/9788.html",
+        "https://www.city.yamatotakada.nara.jp/oshirase_top/10249.html",
+        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/cleancenter/gomi_kankyo_pet/5/1404.html",
+        "https://www.city.yamatotakada.nara.jp/soshikikarasagasu/kikikanrika/kikikanri/2/10167.html"
+      ]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 27,
-    "auditedServiceCount": 243,
+    "auditedMunicipalityCount": 28,
+    "auditedServiceCount": 252,
     "confirmedErrorCount": 28,
     "correctedErrorCount": 28,
-    "lastSuccessfulCiRunNumber": 8006
+    "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "第3バッチの奈良県3市を大和高田市（29202）から公式情報起点で独立監査する。"
+  "nextAction": "第3バッチの奈良県2市を大和郡山市（29203）から公式情報起点で独立監査する。"
 }
