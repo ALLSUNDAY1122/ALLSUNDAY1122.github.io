@@ -7,12 +7,15 @@
   "officialUrl": "https://www.vill.ogata.akita.jp/",
   "status": "verified",
   "summary": "大潟村の子育て・暮らしに関する9制度のうち8制度を確認済みで、1制度は公式情報で詳細未確認です。",
-  "updatedAt": "2026-07-24",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "18歳到達後最初の3月31日まで、所得制限なく保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "target": "乳幼児、小中学生および高校生等",
         "coverage": "福祉医療受給者証により保険診療の自己負担分を助成",
@@ -20,7 +23,10 @@
         "copay": "村独自助成により窓口自己負担なし",
         "application": "福祉保健課で福祉医療受給者証の交付手続きを行う"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/archive/contents-199", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/archive/contents-199",
+        "checkedAt": "2026-07-24"
+      }
     },
     "sickChildCare": {
       "status": "unavailable",
@@ -30,12 +36,18 @@
         "unconfirmed": "病児保育または病後児保育の実施施設、対象年齢、時間、料金、申込方法",
         "guidance": "教育委員会または福祉保健課へ現行の利用可否を確認する必要がある"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/genre/education/p20240201133608", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/genre/education/p20240201133608",
+        "checkedAt": "2026-07-24"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "大潟こども園の保育料を全額助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "facility": "大潟村立大潟こども園",
         "target": "0歳から5歳までの入園児",
@@ -43,24 +55,36 @@
         "hours": "1号認定8時30分から13時30分、2・3号認定7時30分から18時30分",
         "application": "大潟こども園または教育委員会へ入園申込書等を提出"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/genre/education/p20260527141105", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/genre/education/p20260527141105",
+        "checkedAt": "2026-07-24"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "こども園および村立小中学校の給食費を全額助成する。",
-      "eligibility": {"minAgeMonths": 36, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
       "details": {
         "target": "大潟こども園の園児および村立小中学校の児童生徒",
         "support": "給食費を村が全額助成",
         "scope": "こども園から中学校までの給食費無償化",
         "guidance": "対象条件や町外通学者の取扱いは教育委員会へ確認"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/genre/education/p20260527141105", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/genre/education/p20260527141105",
+        "checkedAt": "2026-07-24"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子を対象に、医療機関や助産師へ委託して心身のケアと育児支援を提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "大潟村に住所がある産後1年未満の母親と乳児",
         "support": "授乳・育児相談、母体の健康管理と回復支援、乳房ケア、乳児の発育・健康確認、心のケア",
@@ -68,21 +92,31 @@
         "application": "産後ケア事業利用申請書を保健センターへ提出",
         "guidance": "利用形態、回数、料金は利用申請時に保健センターへ確認"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/archive/p20260417174230", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/archive/p20260417174230",
+        "checkedAt": "2026-07-24"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
-      "summary": "一時預かりに加え、生後6か月から満3歳未満の未就園児が月10時間まで利用できるこども誰でも通園制度を実施する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
+      "summary": "2026年4月から、未就園の生後6か月から満3歳未満児が大潟こども園を月10時間まで利用できる。通常の一時預かりも実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 5
+      },
       "details": {
         "facility": "大潟村立大潟こども園",
         "temporaryCare": "保護者の就労や病気等の理由がある場合に一時預かりを実施。利用料は1回600円",
         "anyChildTarget": "認定こども園等に通っていない生後6か月から満3歳未満の子ども",
         "anyChildLimit": "1人月10時間まで、1時間単位",
         "anyChildHours": "平日8時30分から11時30分",
-        "application": "教育委員会へ認定申請後、システムで施設面談と利用予約を行う"
+        "application": "教育委員会へ認定申請後、システムで施設面談と利用予約を行う",
+        "start": "2026年4月"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/news/p20260219171410", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/news/p20260219171410",
+        "checkedAt": "2026-07-25"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -94,7 +128,10 @@
         "support": "条件に応じて補助金と大潟村定住化促進商品券を交付",
         "application": "補助金交付申請書と添付書類を総務企画課へ提出"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/archive/contents-16", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/archive/contents-16",
+        "checkedAt": "2026-07-24"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -107,7 +144,10 @@
         "fee": "区分に応じて手数料がかかる場合がある",
         "application": "区分を確認して各自で処分場へ搬入"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/archive/contents-13", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/archive/contents-13",
+        "checkedAt": "2026-07-24"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -119,7 +159,10 @@
         "access": "村公式防災ページからハザードマップを閲覧可能",
         "related": "地域防災計画、災害情報配信、指定避難所等の情報も公開"
       },
-      "source": {"url": "https://www.vill.ogata.akita.jp/archive/contents-12", "checkedAt": "2026-07-24"}
+      "source": {
+        "url": "https://www.vill.ogata.akita.jp/archive/contents-12",
+        "checkedAt": "2026-07-24"
+      }
     }
   }
 }
