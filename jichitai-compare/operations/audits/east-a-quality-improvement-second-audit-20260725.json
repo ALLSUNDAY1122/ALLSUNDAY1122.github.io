@@ -1,0 +1,361 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "east-a-quality-improvement-second-audit-20260725",
+  "sessionId": "east-a",
+  "status": "completed_main_pending_publication",
+  "startedAt": "2026-07-25T10:38:00+09:00",
+  "restoredBaseline": {
+    "verificationCampaignRounds": 10,
+    "auditedMunicipalities": 201,
+    "nationwidePullRequestNumber": 3130,
+    "finalCiRunNumber": 7654,
+    "verifiedPageCount": 49,
+    "naganoResolutionPullRequestNumber": 3169,
+    "naganoResolutionCiRunNumber": 7747,
+    "naganoResolvedMunicipalities": 20,
+    "naganoResolvedServices": 30,
+    "naganoVerifiedServices": 23,
+    "naganoUnavailableServices": 7,
+    "needsMediumReviewServicesAfter": 0,
+    "fullNorthEastPublicationAuditPullRequestNumber": 3175,
+    "fullNorthEastPublicationAuditRunId": 30134336210
+  },
+  "confirmedCorrections": [
+    {
+      "type": "checkpoint_state_mismatch",
+      "path": "jichitai-compare/operations/control/session-checkpoints/east-a.json",
+      "before": "栄村7制度needs_medium_review・2制度unavailable",
+      "after": "栄村9制度unavailable・needs_medium_review 0",
+      "basis": "PR #3169・CI #7747・公開確認run 30129853395"
+    },
+    {
+      "type": "fee_detail_omission",
+      "municipalityCode": "13103",
+      "municipalityName": "港区",
+      "service": "sickChildCare",
+      "before": "施設利用料が必要とのみ記載",
+      "after": "港区民1日2,000円・港区外在住者1日3,000円、免除・無償化対象を明記",
+      "officialSource": "https://www.city.minato.tokyo.jp/kodomo/kodomo/kodomo/hoikuen/service/byoji7.html"
+    },
+    {
+      "type": "fee_detail_omission",
+      "municipalityCode": "10201",
+      "municipalityName": "前橋市",
+      "service": "postpartumCare",
+      "before": "通所型1日1,600円の例示のみ",
+      "after": "宿泊1泊2日5,000円・通所1日1,600円・訪問無料、3類型合計7日を明記",
+      "officialSource": "https://www.city.maebashi.gunma.jp/kosodate_kyoiku/4/5/1/19801.html"
+    },
+    {
+      "type": "housing_program_misclassification",
+      "municipalityCode": "19201",
+      "municipalityName": "甲府市",
+      "service": "housingSupport",
+      "before": "一般の生活困窮者住居確保給付金を登録",
+      "after": "令和8年度子育て世帯住宅取得支援事業（最大90万円）へ差し替え",
+      "officialSource": "https://www.city.kofu.yamanashi.jp/ijuuteijuu/kosodatesetaizyuutakusyutoku.html"
+    },
+    {
+      "type": "housing_age_classification_error",
+      "municipalityCode": "19202",
+      "municipalityName": "富士吉田市",
+      "service": "housingSupport",
+      "before": "子どもの養育要件がないKAITEKI住宅補助を18歳上限として登録",
+      "after": "一般住宅支援として年齢上限120歳へ正規化",
+      "officialSource": "https://www.city.fujiyoshida.yamanashi.jp/page/11949.html"
+    },
+    {
+      "type": "wide_area_fee_omission",
+      "municipalityCode": "19202",
+      "municipalityName": "富士吉田市",
+      "service": "sickChildCare",
+      "before": "市内料金のみ記載",
+      "after": "市内1,000円・市外1,500円＋給食費300円と県内広域対象を明記",
+      "officialSource": "https://www.city.fujiyoshida.yamanashi.jp/site/kosodate/2732.html"
+    },
+    {
+      "type": "wide_area_fee_omission",
+      "municipalityCode": "19205",
+      "municipalityName": "山梨市",
+      "service": "sickChildCare",
+      "before": "市内料金のみ記載",
+      "after": "市内2,000円・県内市外2,500円・昼食代300円を明記",
+      "officialSource": "https://www.city.yamanashi.yamanashi.jp/site/kosodate/1456.html"
+    },
+    {
+      "type": "wide_area_fee_omission",
+      "municipalityCode": "19206",
+      "municipalityName": "大月市",
+      "service": "sickChildCare",
+      "before": "市内料金のみ記載",
+      "after": "市内1,000円・県内市外1,500円・県外4,000円を明記",
+      "officialSource": "https://www.city.otsuki.yamanashi.jp/kosodate/kosodate/byoujibyougojihoiku.html"
+    },
+    {
+      "type": "usage_period_and_fee_detail_omission",
+      "municipalityCode": "20201",
+      "municipalityName": "長野市",
+      "service": "sickChildCare",
+      "before": "市内施設の料金を2,000～2,200円等とのみ記載し、連続利用上限を未記録",
+      "after": "市内4施設別料金と1回連続7日上限を明記",
+      "officialSource": "https://www.city.nagano.nagano.jp/n117000/kosodate/p001489.html"
+    },
+    {
+      "type": "wide_area_fee_and_period_omission",
+      "municipalityCode": "20202",
+      "municipalityName": "松本市",
+      "service": "sickChildCare",
+      "before": "市内在住者料金のみで、市外在住・市内在勤料金と連続利用上限を未記録",
+      "after": "市外在住・市内在勤の4時間1,300円・8時間2,600円と連続5日上限を明記",
+      "officialSource": "https://www.city.matsumoto.nagano.jp/site/kosodate/198321.html"
+    },
+    {
+      "type": "fee_detail_omission",
+      "municipalityCode": "20203",
+      "municipalityName": "上田市",
+      "service": "sickChildCare",
+      "before": "施設ごとの利用料を支払うとのみ記載",
+      "after": "1人1日1,000円、延長料金・定員・利用時間を明記",
+      "officialSource": "https://www.city.ueda.nagano.jp/soshiki/kosodate-k/2730.html"
+    },
+    {
+      "type": "application_status_omission",
+      "municipalityCode": "20204",
+      "municipalityName": "岡谷市",
+      "service": "housingSupport",
+      "before": "補助率・上限額のみ記載",
+      "after": "申請多数により現在受付一時中止であることを明記",
+      "officialSource": "https://www.city.okaya.lg.jp/soshikikarasagasu/toshikeikakuka/633/1/16377.html"
+    },
+    {
+      "type": "fee_and_period_detail_omission",
+      "municipalityCode": "20205",
+      "municipalityName": "飯田市",
+      "service": "sickChildCare",
+      "before": "料金は住所地・世帯区分により異なるとのみ記載",
+      "after": "世帯区分別0～2,000円、給食400円、連続7日上限を明記",
+      "officialSource": "https://www.city.iida.lg.jp/soshiki/12/iida-ohisamaharuru.html"
+    }
+  ],
+  "sakae": {
+    "code": "20602",
+    "officialTopPage": "https://www.vill.sakae.nagano.jp/",
+    "knownOfficialServicePage": "https://www.vill.sakae.nagano.jp/docs/2263.html",
+    "checkedAt": "2026-07-25T10:38:00+09:00",
+    "result": "both_http_502",
+    "action": "9制度を再調査せず、全件unavailableとIssue #2847を維持"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "scope": "東京都・訂正対象外5区の重点抜き取り",
+      "municipalities": [
+        {
+          "code": "13101",
+          "name": "千代田区"
+        },
+        {
+          "code": "13102",
+          "name": "中央区"
+        },
+        {
+          "code": "13103",
+          "name": "港区"
+        },
+        {
+          "code": "13104",
+          "name": "新宿区"
+        },
+        {
+          "code": "13105",
+          "name": "文京区"
+        }
+      ],
+      "focus": [
+        "年齢上限",
+        "料金",
+        "利用期間・回数",
+        "住宅支援の分類",
+        "一時預かりと乳児等通園支援事業の区別"
+      ],
+      "result": "passed_after_correction",
+      "confirmedErrors": 1,
+      "correction": "港区の病児・病後児保育料金を区民1日2,000円・区外1日3,000円へ具体化"
+    },
+    {
+      "round": 2,
+      "scope": "群馬県・訂正対象外5市の重点抜き取り",
+      "municipalities": [
+        {
+          "code": "10201",
+          "name": "前橋市"
+        },
+        {
+          "code": "10202",
+          "name": "高崎市"
+        },
+        {
+          "code": "10203",
+          "name": "桐生市"
+        },
+        {
+          "code": "10204",
+          "name": "伊勢崎市"
+        },
+        {
+          "code": "10205",
+          "name": "太田市"
+        }
+      ],
+      "focus": [
+        "年齢上限",
+        "料金",
+        "利用期間・回数",
+        "広域・市外利用",
+        "住宅支援の分類"
+      ],
+      "result": "passed_after_correction",
+      "confirmedErrors": 1,
+      "correction": "前橋市の産後ケア3類型の料金と合計利用日数を具体化",
+      "notes": [
+        "高崎市は施設別対象年齢・料金のため、市公式一覧と施設案内の組合せを確認",
+        "桐生市・伊勢崎市・太田市は重点項目の現行公式情報と一致"
+      ]
+    },
+    {
+      "round": 3,
+      "scope": "山梨県・訂正対象外5市の重点抜き取り",
+      "municipalities": [
+        {
+          "code": "19201",
+          "name": "甲府市"
+        },
+        {
+          "code": "19202",
+          "name": "富士吉田市"
+        },
+        {
+          "code": "19204",
+          "name": "都留市"
+        },
+        {
+          "code": "19205",
+          "name": "山梨市"
+        },
+        {
+          "code": "19206",
+          "name": "大月市"
+        }
+      ],
+      "focus": [
+        "年齢上限",
+        "料金",
+        "利用期間・回数",
+        "県内広域利用",
+        "住宅支援の分類"
+      ],
+      "result": "passed_after_corrections",
+      "confirmedErrors": 5,
+      "corrections": [
+        "甲府市のhousingSupportを令和8年度子育て世帯住宅取得支援へ差し替え",
+        "富士吉田市KAITEKI住宅補助の年齢上限を120歳へ正規化",
+        "富士吉田市・山梨市・大月市の病児保育広域料金を具体化"
+      ],
+      "notes": [
+        "都留市は重点項目の現行公式情報と一致",
+        "source・task・生成JSON・進捗データの再生成とvalidate:generatedに成功"
+      ]
+    },
+    {
+      "round": 4,
+      "scope": "長野県・PR #3169再判定対象外5市の重点抜き取り",
+      "municipalities": [
+        {
+          "code": "20201",
+          "name": "長野市"
+        },
+        {
+          "code": "20202",
+          "name": "松本市"
+        },
+        {
+          "code": "20203",
+          "name": "上田市"
+        },
+        {
+          "code": "20204",
+          "name": "岡谷市"
+        },
+        {
+          "code": "20205",
+          "name": "飯田市"
+        }
+      ],
+      "focus": [
+        "年齢上限",
+        "料金",
+        "利用期間・回数",
+        "広域利用",
+        "住宅支援の分類・受付状況"
+      ],
+      "result": "passed_after_corrections",
+      "confirmedErrors": 5,
+      "corrections": [
+        "長野市・松本市・上田市・飯田市の病児保育料金・期間条件を具体化",
+        "岡谷市の空き家改修補助が現在受付一時中止であることを追記"
+      ],
+      "notes": [
+        "長野市・松本市・上田市・岡谷市・飯田市の住宅支援制度の対象区分、補助率、上限額は公式情報と一致",
+        "5市の年齢上限、広域利用対象、こども誰でも通園制度の対象月齢に追加不一致なし"
+      ]
+    }
+  ],
+  "publicEvidence": {
+    "targetedSmokePullRequestNumber": 3173,
+    "targetedSmokeRunId": 30129853395,
+    "fullAuditPullRequestNumber": 3175,
+    "fullAuditRunId": 30134336210
+  },
+  "nextAction": "main統合後、公開生成JSONと訂正対象11自治体の公開ページを確認する。栄村Issue #2847は維持。",
+  "regionalIntegration": {
+    "pullRequestNumber": 3276,
+    "ciRunNumber": 8013,
+    "ciRunId": 30141845500,
+    "ciStatus": "success",
+    "mergeSha": "844a011a5ef7107e069c251117e88d537df2bb63",
+    "mergedTo": "region/east",
+    "mergedAt": "2026-07-25T12:14:00+09:00"
+  },
+  "updatedAt": "2026-07-25T12:25:00+09:00",
+  "regionalIntegrationHistory": [
+    {
+      "pullRequestNumber": 3210,
+      "ciRunNumber": 7824,
+      "ciRunId": 30139529573,
+      "ciStatus": "success",
+      "mergeSha": "665c9721d28c5cd0417252a2fdeffe9885417024",
+      "mergedTo": "region/east",
+      "mergedAt": "2026-07-25T11:01:00+09:00"
+    },
+    {
+      "pullRequestNumber": 3276,
+      "ciRunNumber": 8013,
+      "ciRunId": 30141845500,
+      "ciStatus": "success",
+      "mergeSha": "844a011a5ef7107e069c251117e88d537df2bb63",
+      "mergedTo": "region/east",
+      "mergedAt": "2026-07-25T12:14:00+09:00"
+    }
+  ],
+  "completedAt": "2026-07-25T12:16:00+09:00",
+  "mainIntegration": {
+    "pullRequestNumber": 3302,
+    "sourceRegionalPullRequests": [
+      3210,
+      3251,
+      3276,
+      3283
+    ],
+    "status": "pending_ci_merge"
+  }
+}
