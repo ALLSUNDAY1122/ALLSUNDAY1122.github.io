@@ -1,0 +1,105 @@
+name: Temporary West B Anyone Priority
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-anyone-priority-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  prioritize:
+    if: github.head_ref == 'audit/west-b-anyone-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-anyone-crosscheck-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build priority review list
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base = 'jichitai-compare/operations';
+          const auditPath = `${base}/audits/west-b-anyone-crosscheck-20260725.json`;
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          const weights = {
+            unavailable_but_record_contains_available_program: 10,
+            eligibility_min_age_exceeds_anyone_program_six_months: 7,
+            anyone_program_age_upper_bound_may_be_wrong: 7,
+            verified_without_anyone_program_2026: 6,
+            anyone_program_missing_target_age_or_unenrolled_condition: 5,
+            anyone_program_missing_monthly_10_hour_limit: 5,
+            anyone_program_may_rely_on_2024_or_2025_pilot: 5,
+            unavailable_with_direct_official_source: 3,
+            anyone_program_missing_fee: 3,
+            anyone_program_missing_application_or_booking: 2,
+            anyone_program_missing_facility: 2,
+            verified_primary_source_is_generic: 1,
+            anyone_program_missing_2026_start: 1
+          };
+          const scored = audit.candidates.map((item) => {
+            const priorityScore = (item.reasons ?? []).reduce((sum, reason) => sum + (weights[reason] ?? 0), 0);
+            return { ...item, priorityScore };
+          }).sort((a, b) => b.priorityScore - a.priorityScore || a.prefectureCode.localeCompare(b.prefectureCode) || a.code.localeCompare(b.code));
+
+          const mandatory = scored.filter((item) => (item.reasons ?? []).some((reason) => [
+            'unavailable_but_record_contains_available_program',
+            'eligibility_min_age_exceeds_anyone_program_six_months',
+            'anyone_program_age_upper_bound_may_be_wrong',
+            'verified_without_anyone_program_2026'
+          ].includes(reason)));
+          const selected = [];
+          const seen = new Set();
+          const add = (item) => {
+            if (!item || seen.has(item.code)) return;
+            seen.add(item.code);
+            selected.push(item);
+          };
+          mandatory.forEach(add);
+          for (const prefectureCode of audit.prefectureCodes) {
+            scored.filter((item) => item.prefectureCode === prefectureCode && item.priorityScore >= 6).slice(0, 3).forEach(add);
+          }
+          scored.filter((item) => item.priorityScore >= 8).forEach(add);
+          selected.sort((a, b) => b.priorityScore - a.priorityScore || a.prefectureCode.localeCompare(b.prefectureCode) || a.code.localeCompare(b.code));
+
+          const review = {
+            schemaVersion: '1.0.0',
+            reviewId: 'west-b-anyone-priority-review-20260725',
+            sourceAuditId: audit.auditId,
+            generatedAt: new Date().toISOString(),
+            candidateCount: audit.candidateCount,
+            priorityCandidateCount: selected.length,
+            selectionRule: 'all status contradictions and age mismatches; all verified records without anyone-program language; up to three score>=6 per prefecture; all score>=8',
+            reasonWeights: weights,
+            priorityCandidates: selected,
+            result: {
+              status: 'priority_candidates_generated_pending_official_review',
+              confirmedCorrectionCount: null,
+              unresolvedConfirmedErrorCount: null
+            }
+          };
+          fs.writeFileSync(`${base}/audits/west-b-anyone-priority-review-20260725.json`, JSON.stringify(review, null, 2) + '\n');
+          console.log(JSON.stringify({ candidateCount: audit.candidateCount, priorityCandidateCount: selected.length, top: selected.slice(0, 60).map((x) => ({ code: x.code, name: x.name, score: x.priorityScore, status: x.status, reasons: x.reasons })) }, null, 2));
+          NODE
+      - name: Commit priority result
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/west-b-anyone-priority-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/audits/west-b-anyone-priority-review-20260725.json \
+                  jichitai-compare/operations/control/west-b-anyone-priority-trigger-20260725.json
+          git commit -m 'audit: 西日本B誰でも通園制度の優先候補を生成'
+          git push origin HEAD:audit/west-b-anyone-crosscheck-20260725
