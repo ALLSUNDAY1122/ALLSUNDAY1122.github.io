@@ -1,0 +1,185 @@
+name: Temporary Central A Housing Batch 6
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch6-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-housing-batch6-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout batch branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply confirmed housing classification corrections
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare';
+          const checkedAt = '2026-07-25';
+          const updatedAt = '2026-07-25T15:08:00+09:00';
+          const serviceKeys = ['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const corrections = [
+            {
+              code: '27202', pref: '27', name: '岸和田市',
+              url: 'https://www.city.kishiwada.lg.jp/page/122-akiya-reform.html',
+              program: '令和8年度岸和田市空家リフォーム事業補助金',
+              generalTarget: '市外に3か月以上居住し、市内空家へ転入して10年以上定住する個人所有者',
+              amount: '対象経費の3分の2、上限100万円',
+              evidence: '2026年5月7日更新の利用者向けページで、子育て世帯要件なし'
+            },
+            {
+              code: '27321', pref: '27', name: '豊能町',
+              url: 'https://www.town.toyono.osaka.jp/sumou/toyonono-sumai/page007656.html',
+              program: '豊能町空き家バンク活用促進事業リフォーム工事補助金等',
+              generalTarget: '空き家バンク登録住宅の購入者・所有者および空き家除却対象者',
+              amount: 'リフォーム費2分の1・上限40万円、除却費30％・上限75万円等',
+              evidence: '2026年6月18日更新の利用者向け一覧で、子育て世帯要件なし'
+            },
+            {
+              code: '24207', pref: '24', name: '鈴鹿市',
+              url: 'https://www.city.suzuka.lg.jp/kurashi/sumai/1009632/1002597.html',
+              program: '移住促進のための空き家リノベーション等補助制度',
+              generalTarget: '市外に1年以上在住し、空き家を購入・改修して10年以上定住する移住者',
+              amount: '対象工事費の3分の1、上限50万円',
+              evidence: '2026年2月5日更新の利用者向けページで、子育て世帯要件なし。18歳未満加算は別の移住支援金制度'
+            },
+            {
+              code: '24324', pref: '24', name: '東員町',
+              url: 'https://www.town.toin.lg.jp/soshiki/1011/2/2/1/764.html',
+              program: '東員町空家リフォーム支援事業',
+              generalTarget: '6か月以上町外に居住し、町内空家へ転入して10年間居住する移住者等',
+              amount: '改修工事費の3分の2、上限100万円',
+              evidence: '公式利用者向けページで、子育て世帯要件なし'
+            },
+            {
+              code: '24461', pref: '24', name: '玉城町',
+              url: 'https://kizuna.town.tamaki.mie.jp/kurashi/ijyuteijyu/akiyahojo.html',
+              program: '玉城町空家リフォーム事業補助金等',
+              generalTarget: '空き家バンク登録物件へ町内外から入居し5年以上居住する人等',
+              amount: '空家リフォーム上限150万円、成約者の引越等上限10万円',
+              evidence: '公式利用者向けページで、子育て世帯要件なし。結婚新生活支援は別制度かつ令和7年度期限'
+            }
+          ];
+
+          for (const item of corrections) {
+            const municipalityPath = path.join(root, 'data/municipalities', item.pref, `${item.code}.json`);
+            const taskPath = path.join(root, 'operations/tasks', `${item.code}.json`);
+            const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+            const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+
+            municipality.updatedAt = checkedAt;
+            municipality.services.housingSupport = {
+              status: 'unavailable',
+              summary: '子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。',
+              details: {
+                reason: '公式情報で確認できた制度は一般の移住・定住または空き家対策制度であり、子育て世帯を対象要件としないため、本比較項目の対象外とした。',
+                excludedProgram: item.program,
+                excludedTarget: item.generalTarget,
+                excludedAmount: item.amount,
+                evidence: item.evidence
+              },
+              source: {
+                url: item.url,
+                checkedAt
+              }
+            };
+
+            const statuses = Object.values(municipality.services).map((service) => service.status);
+            task.verifiedCount = statuses.filter((status) => status === 'verified').length;
+            task.researchingCount = statuses.filter((status) => status === 'researching').length;
+            task.unavailableCount = statuses.filter((status) => status === 'unavailable').length;
+            task.needsMediumReviewCount = statuses.filter((status) => status === 'needs_medium_review').length;
+            task.lastCheckedAt = checkedAt;
+            task.lastUpdatedAt = updatedAt;
+            task.lastUpdatedBy = '中日本調査班A';
+            task.officialSources = serviceKeys.map((key) => municipality.services[key].source.url);
+            const note = `2026年7月25日の原因別重点再監査で、housingSupportに登録されていた「${item.program}」は子育て世帯を対象要件としない一般制度と確認し、子育て世帯向け住宅支援としてのverified判定をunavailableへ修正。一般制度の条件は比較対象外の参考情報として保持した。`;
+            task.notes = Array.isArray(task.notes) ? task.notes : [];
+            if (!task.notes.includes(note)) task.notes.push(note);
+
+            fs.writeFileSync(municipalityPath, JSON.stringify(municipality, null, 2) + '\n');
+            fs.writeFileSync(taskPath, JSON.stringify(task, null, 2) + '\n');
+          }
+
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'central-a-housing-classification-batch6-decisions-20260725',
+            decidedAt: updatedAt,
+            session: '中日本調査班A',
+            category: 'generalHousingMisclassification',
+            reviewedMunicipalityCount: corrections.length,
+            confirmedCorrectionCount: corrections.length,
+            corrected: corrections.map((item) => ({
+              code: item.code,
+              name: item.name,
+              service: 'housingSupport',
+              beforeStatus: 'verified',
+              afterStatus: 'unavailable',
+              excludedProgram: item.program,
+              officialSource: item.url,
+              reason: '子育て世帯を対象要件としない一般の移住・定住・空き家対策制度を、子育て世帯向け住宅支援として登録していた'
+            })),
+            machineScan: {
+              scannedMunicipalities: 314,
+              extractedCandidates: 121,
+              reviewedHighRiskCandidates: 5,
+              remainingMachineCandidates: 116,
+              broaderCauseScanRemaining: 144
+            },
+            issue3141: {
+              unresolvedItemCount: 19,
+              unresolvedMunicipalityCount: 19,
+              changed: false
+            },
+            policy: [
+              '一般の移住支援、空き家改修、耐震、除却、住宅取得制度は、子育て世帯が利用可能であっても子育て世帯を対象要件としない限りhousingSupportのverified根拠にしない',
+              '別制度に子ども加算や新婚支援がある場合でも、登録中の制度自体に子育て固有要件がなければ混同しない'
+            ]
+          };
+          const auditPath = path.join(root, 'operations/audits/central-a-housing-classification-batch6-decisions-20260725.json');
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          NODE
+
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+
+      - name: Commit batch 6 source corrections
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/data/municipalities/27/27202.json \
+            jichitai-compare/data/municipalities/27/27321.json \
+            jichitai-compare/data/municipalities/24/24207.json \
+            jichitai-compare/data/municipalities/24/24324.json \
+            jichitai-compare/data/municipalities/24/24461.json \
+            jichitai-compare/operations/tasks/27202.json \
+            jichitai-compare/operations/tasks/27321.json \
+            jichitai-compare/operations/tasks/24207.json \
+            jichitai-compare/operations/tasks/24324.json \
+            jichitai-compare/operations/tasks/24461.json \
+            jichitai-compare/operations/audits/central-a-housing-classification-batch6-decisions-20260725.json
+          git commit -m 'audit: 一般住宅制度5件の分類誤りを修正'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
