@@ -8,11 +8,11 @@
   "scope": {
     "round": 3,
     "municipalityCodes": ["26365", "26366", "26367", "26407", "26463", "26465", "29201", "29202", "29203", "29204"],
-    "auditedMunicipalityCount": 6,
-    "auditedServiceCount": 54,
+    "auditedMunicipalityCount": 7,
+    "auditedServiceCount": 63,
     "confirmedErrorCount": 6,
     "correctedErrorCount": 6,
-    "pendingMunicipalityCodes": ["29201", "29202", "29203", "29204"]
+    "pendingMunicipalityCodes": ["29202", "29203", "29204"]
   },
   "findings": [
     {
@@ -120,14 +120,38 @@
         "https://www.town.yosano.lg.jp/parenting/childcare/8_4/",
         "https://www.town.yosano.lg.jp/culture/emigration-community/emigration/entry_18/"
       ]
+    },
+    {
+      "municipalityCode": "29201",
+      "municipalityName": "奈良市",
+      "servicesChecked": 9,
+      "result": "no_confirmed_error",
+      "confirmedErrors": [],
+      "notes": [
+        "令和8年度の学校給食は小学校1食350円のうち保護者負担56円、中学校1食450円を無償化。",
+        "産後ケアは産後1年未満、宿泊7泊・日帰りと訪問合計7日、宿泊1,000円・日帰り500円。",
+        "こども誰でも通園制度は生後6か月から満3歳未満、月10時間、7施設、市外児も広域利用可能。",
+        "2026年7月7日開始の子育て移住・定住支援金は39歳以下の子育て世帯等に最大40万円。"
+      ],
+      "principalSources": [
+        "https://www.city.nara.lg.jp/site/kosodate/31125.html",
+        "https://www.city.nara.lg.jp/site/kosodate/10642.html",
+        "https://www.city.nara.lg.jp/site/kosodate/5660.html",
+        "https://www.city.nara.lg.jp/site/school-lunch/214214.html",
+        "https://www.city.nara.lg.jp/site/kosodate/9071.html",
+        "https://www.city.nara.lg.jp/site/kosodate/259231.html",
+        "https://www.city.nara.lg.jp/site/nararhythm/259382.html",
+        "https://www.city.nara.lg.jp/site/gomi-syusyu/4464.html",
+        "https://www.city.nara.lg.jp/site/bousai-saigai/89308.html"
+      ]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 26,
-    "auditedServiceCount": 234,
+    "auditedMunicipalityCount": 27,
+    "auditedServiceCount": 243,
     "confirmedErrorCount": 28,
     "correctedErrorCount": 28,
     "lastSuccessfulCiRunNumber": 8006
   },
-  "nextAction": "第3バッチの奈良県4市を奈良市（29201）から公式情報起点で独立監査する。"
+  "nextAction": "第3バッチの奈良県3市を大和高田市（29202）から公式情報起点で独立監査する。"
 }
