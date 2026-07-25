@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch10-decisions-20260725",
+  "decidedAt": "2026-07-25T17:45:00+09:00",
+  "session": "中日本調査班A",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3649,
+  "runnerWorkflowRunId": 30151501087,
+  "runnerConclusion": "success",
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 1,
+  "verifiedClarificationOrReplacementCount": 4,
+  "corrected": [
+    {
+      "code": "28381",
+      "name": "稲美町",
+      "service": "housingSupport",
+      "correctionType": "family_target_clarification",
+      "afterStatus": "verified",
+      "officialSource": "https://www.town.hyogo-inami.lg.jp/0000001615.html",
+      "summary": "子育て・介護など親子間の支え合いを目的に、町内の親元へ近居する子世帯の住宅取得・一定の増改築等へ18万円分の商品券を交付する。"
+    },
+    {
+      "code": "17203",
+      "name": "小松市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_three_generation_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/3235.html",
+      "summary": "3世代同居・隣接・近居となる住宅の新築・増築・購入へ、同居20万円、隣接・近居10万円を交付する。"
+    },
+    {
+      "code": "21220",
+      "name": "下呂市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_newlywed_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.city.gero.lg.jp/soshiki/49/37216.html",
+      "summary": "2026年1月1日から2027年3月31日までに婚姻等をした新婚世帯へ、住宅取得・賃借・リフォーム・引越費用を上限60万円補助する。"
+    },
+    {
+      "code": "22130",
+      "name": "浜松市",
+      "service": "housingSupport",
+      "correctionType": "clarify_family_eligibility_and_child_addition",
+      "afterStatus": "verified",
+      "officialSource": "https://www.city.hamamatsu.shizuoka.jp/hamalife/oshirase/hamalifejyutakusyutokuhitouhojyokin.html",
+      "summary": "市外から移住する50歳未満の夫婦等または50歳未満のひとり親世帯へ住宅取得・改修・引越費を最大100万円補助し、まちなかの3世代同居等には上乗せ支援がある。"
+    },
+    {
+      "code": "23445",
+      "name": "南知多町",
+      "service": "housingSupport",
+      "correctionType": "general_empty_house_only",
+      "afterStatus": "unavailable",
+      "officialSource": "https://www.town.minamichita.lg.jp/akiya/1000973.html",
+      "summary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 129,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 124
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般空き家・移住制度を子育て住宅支援の主制度にしない",
+    "家族・新婚・3世代の対象要件を利用者向け現行公式ページで確認する",
+    "未成年者要件がない親子近居制度はその点を明示する"
+  ],
+  "regionalCiRunNumber": 8897,
+  "regionMergeCommit": "4170c61767c3eb575eef5ae3f88ed07239286de4",
+  "stateSyncPullRequestNumber": 3651,
+  "stateSyncWorkflowRunId": 30151651059,
+  "stateSynchronizedAt": "2026-07-25T17:42:00+09:00"
+}
