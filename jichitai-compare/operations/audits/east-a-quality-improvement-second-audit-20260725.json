@@ -36,6 +36,15 @@
       "before": "施設利用料が必要とのみ記載",
       "after": "港区民1日2,000円・港区外在住者1日3,000円、免除・無償化対象を明記",
       "officialSource": "https://www.city.minato.tokyo.jp/kodomo/kodomo/kodomo/hoikuen/service/byoji7.html"
+    },
+    {
+      "type": "fee_detail_omission",
+      "municipalityCode": "10201",
+      "municipalityName": "前橋市",
+      "service": "postpartumCare",
+      "before": "通所型1日1,600円の例示のみ",
+      "after": "宿泊1泊2日5,000円・通所1日1,600円・訪問無料、3類型合計7日を明記",
+      "officialSource": "https://www.city.maebashi.gunma.jp/kosodate_kyoiku/4/5/1/19801.html"
     }
   ],
   "sakae": {
@@ -79,24 +88,56 @@
         "住宅支援の分類",
         "一時預かりと乳児等通園支援事業の区別"
       ],
-      "officialSourceResult": "passed_after_correction",
-      "sourceJsonResult": "corrected",
-      "publicEvidence": {
-        "targetedSmokePullRequestNumber": 3173,
-        "targetedSmokeRunId": 30129853395,
-        "fullAuditPullRequestNumber": 3175,
-        "fullAuditRunId": 30134336210
-      },
+      "result": "passed_after_correction",
       "confirmedErrors": 1,
+      "correction": "港区の病児・病後児保育料金を区民1日2,000円・区外1日3,000円へ具体化"
+    },
+    {
+      "round": 2,
+      "scope": "群馬県・訂正対象外5市の重点抜き取り",
+      "municipalities": [
+        {
+          "code": "10201",
+          "name": "前橋市"
+        },
+        {
+          "code": "10202",
+          "name": "高崎市"
+        },
+        {
+          "code": "10203",
+          "name": "桐生市"
+        },
+        {
+          "code": "10204",
+          "name": "伊勢崎市"
+        },
+        {
+          "code": "10205",
+          "name": "太田市"
+        }
+      ],
+      "focus": [
+        "年齢上限",
+        "料金",
+        "利用期間・回数",
+        "広域・市外利用",
+        "住宅支援の分類"
+      ],
+      "result": "passed_after_correction",
+      "confirmedErrors": 1,
+      "correction": "前橋市の産後ケア3類型の料金と合計利用日数を具体化",
       "notes": [
-        "千代田区の令和8年7月住宅助成増額、年齢上限、最長8年を再確認",
-        "中央区の病児保育年齢・日額、家賃債務保証助成、一時預かり年齢・時間額を再確認",
-        "港区の病児・病後児保育料金を港区民1日2,000円・区外1日3,000円へ具体化",
-        "港区の住宅取得補助、産後ケア回数・負担上限を再確認",
-        "新宿区の病児預かり年齢・時間額、転居助成、乳児等通園支援の期間・頻度・無償を再確認",
-        "文京区の病児保育年齢・日額・連続日数、ひとり親転居助成、産後ケア日数、乳児等通園支援を再確認"
+        "高崎市は施設別対象年齢・料金のため、市公式一覧と施設案内の組合せを確認",
+        "桐生市・伊勢崎市・太田市は重点項目の現行公式情報と一致"
       ]
     }
   ],
-  "nextAction": "群馬県の訂正対象外5自治体以上を重点監査する。"
+  "publicEvidence": {
+    "targetedSmokePullRequestNumber": 3173,
+    "targetedSmokeRunId": 30129853395,
+    "fullAuditPullRequestNumber": 3175,
+    "fullAuditRunId": 30134336210
+  },
+  "nextAction": "山梨県の訂正対象外5自治体以上を重点監査する。"
 }
