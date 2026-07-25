@@ -47,7 +47,7 @@
     "auditedMunicipalityCount": 2,
     "auditedServiceCount": 18,
     "confirmedErrorCount": 4,
-    "correctedErrorCount": 3,
+    "correctedErrorCount": 4,
     "regionCentralMergedCount": 0,
     "mainReflectedCount": 0
   },
@@ -58,7 +58,7 @@
       "municipalityName": "京都市",
       "auditedAt": "2026-07-25T10:31:00+09:00",
       "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
-      "result": "confirmed_error_pending_correction",
+      "result": "one_confirmed_error_corrected",
       "confirmedErrors": [
         {
           "service": "childcareFee",
@@ -67,14 +67,19 @@
           "cause": "2026年度開始制度の記録漏れ",
           "officialSource": "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
           "currentFiscalYearConfirmed": true,
-          "status": "pending_correction"
+          "status": "corrected"
         }
       ],
       "noChangeServices": ["childMedical","sickChildCare","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "changedFiles": [
+        "jichitai-compare/data/municipalities/26/26100.json",
+        "jichitai-compare/operations/tasks/26100.json"
+      ],
       "officialSources": [
         "https://www.city.kyoto.lg.jp/hagukumi/page/0000067393.html",
         "https://www.city.kyoto.lg.jp/hagukumi/page/0000098235.html",
         "https://www.city.kyoto.lg.jp/hagukumi/page/0000178518.html",
+        "https://www.city.kyoto.lg.jp/hagukumi/page/0000179571.html",
         "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
         "https://www.city.kyoto.lg.jp/kyoiku/page/0000106581.html",
         "https://www.city.kyoto.lg.jp/hagukumi/page/0000168986.html",
@@ -141,5 +146,5 @@
       ]
     }
   ],
-  "nextAction": "第1バッチの残り8自治体を公式情報起点で監査し、京都市childcareFeeの確定誤りを訂正する。福知山市3件は自治体JSON・taskへ反映済み。"
+  "nextAction": "第1バッチの残り8自治体を公式情報起点で独立監査する。京都市1件・福知山市3件は自治体JSON・taskへ反映済み。"
 }
