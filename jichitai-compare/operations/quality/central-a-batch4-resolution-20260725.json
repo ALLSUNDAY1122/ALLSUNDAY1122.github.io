@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "central-a-batch4-resolution-20260725",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-25T14:33:00+09:00",
+  "trackingIssues": [3187, 3141],
+  "scope": {
+    "reviewedServiceSlots": 5,
+    "sourceCorrectionCount": 1,
+    "retainedNoChangeCount": 4,
+    "remainingWeakPrimarySourceCandidates": 34,
+    "issue3141RemainingItems": 19
+  },
+  "corrected": [
+    {
+      "municipalityCode": "25442",
+      "municipalityName": "甲良町",
+      "service": "sickChildCare",
+      "result": "湖東定住自立圏の彦根市利用者向け公式ページへ主出典を変更し、甲良町民の対象・施設・時間・定員・料金・減免・利用手順を確定"
+    }
+  ],
+  "retainedNoChange": [
+    {"municipalityCode": "22221", "municipalityName": "湖西市", "service": "sickChildCare"},
+    {"municipalityCode": "22344", "municipalityName": "小山町", "service": "sickChildCare"},
+    {"municipalityCode": "24212", "municipalityName": "熊野市", "service": "sickChildCare"},
+    {"municipalityCode": "28218", "municipalityName": "小野市", "service": "sickChildCare"}
+  ],
+  "evidence": {
+    "regionalPullRequest": 3435,
+    "regionalCiRun": 8341,
+    "stateSyncPullRequest": 3437,
+    "stateSyncCiRun": 8353,
+    "nationalSyncPullRequest": 3441,
+    "nationalCiRun": 8371,
+    "publicVerificationPullRequest": 3447,
+    "publicVerificationEvidence": "jichitai-compare/operations/audits/central-a-batch4-public-verification-20260725.json"
+  },
+  "publicVerification": {
+    "attempt": 1,
+    "municipalityPageHttpStatus": 200,
+    "officialPageHttpStatus": 200,
+    "missingRequiredTokens": 0,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669,
+    "statusVerified": true,
+    "summaryMatches": true,
+    "sourceMatches": true,
+    "feeMatches": true
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "temporaryRunnerCleanup": {
+    "mainPaths": [
+      ".github/workflows/temp-central-a-batch3-main-sync.yml",
+      ".github/workflows/temp-central-a-batch3-public-verify.yml",
+      ".github/workflows/temp-central-a-batch4-main-sync.yml",
+      ".github/workflows/temp-central-a-batch4-public-verify.yml"
+    ],
+    "regionPaths": [
+      ".github/workflows/temp-central-a-weak-source-batch3.yml",
+      ".github/workflows/temp-central-a-batch3-state-sync.yml",
+      ".github/workflows/temp-central-a-weak-source-batch4.yml",
+      ".github/workflows/temp-central-a-batch4-state-sync.yml"
+    ],
+    "regionCleanupPullRequest": 3457,
+    "mainCleanupPullRequest": 3465,
+    "status": "cleanup_completed"
+  },
+  "status": "completed"
+}
