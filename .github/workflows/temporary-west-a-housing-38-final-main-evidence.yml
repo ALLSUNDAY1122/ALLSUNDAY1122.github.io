@@ -1,0 +1,72 @@
+name: Temporary West A Housing 38 Final Main Evidence
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-a-housing-38-final-main-evidence-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'checkpoint/west-a-housing-38-final-main-evidence-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout evidence branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Record final main evidence
+        shell: bash
+        run: |
+          set -euxo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare';
+          const recordedAt = '2026-07-25T15:31:00+09:00';
+          const checkpointPath = `${root}/operations/control/session-checkpoints/west-a-housing-classification-crosscheck-20260725.json`;
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          checkpoint.evidence.finalMainSyncPullRequestNumber = 3519;
+          checkpoint.evidence.finalMainSyncCiRunNumber = 8543;
+          checkpoint.evidence.finalMainSyncMergeSha = '3d983dec8e34b8cdd8bb52ab2df3fbdd81599cd2';
+          checkpoint.evidence.finalMainSyncStatus = 'completed';
+          checkpoint.evidence.finalMainSyncCompletedAt = recordedAt;
+          checkpoint.integrity.mainCheckpointFinalized = true;
+          checkpoint.integrity.unresolvedCount = 0;
+          checkpoint.integrity.blocker = null;
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+
+          const sessionPath = `${root}/operations/control/session-checkpoints/west-a.json`;
+          const session = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+          session.updatedAt = recordedAt;
+          session.housingClassificationCrosscheck = {
+            ...(session.housingClassificationCrosscheck ?? {}),
+            finalMainSyncPullRequestNumber: 3519,
+            finalMainSyncCiRunNumber: 8543,
+            finalMainSyncMergeSha: '3d983dec8e34b8cdd8bb52ab2df3fbdd81599cd2',
+            finalMainSyncStatus: 'completed',
+            unresolvedCount: 0,
+            blocker: null
+          };
+          session.nextAction = '住宅支援分類横断監査38件は地域・全国・公開・checkpoint同期まで完了。新しい公式情報または再退行が検出された場合のみ再監査する。';
+          const note = '2026-07-25 15:31: 最終全国checkpoint同期PR #3519・CI #8543・merge 3d983dec8e34を確認し、住宅支援分類横断監査38件を完全完了。';
+          session.notes = Array.isArray(session.notes) ? session.notes : [];
+          if (!session.notes.includes(note)) session.notes.push(note);
+          fs.writeFileSync(sessionPath, JSON.stringify(session, null, 2) + '\n');
+          NODE
+
+          rm -f jichitai-compare/operations/control/west-a-housing-38-final-main-evidence-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-housing-38-final-main-evidence.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/session-checkpoints/west-a-housing-classification-crosscheck-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/west-a.json \
+                  jichitai-compare/operations/control/west-a-housing-38-final-main-evidence-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-housing-38-final-main-evidence.yml
+          git diff --cached --check
+          git commit -m 'checkpoint: 西日本A住宅支援38件の最終全国証跡を確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
