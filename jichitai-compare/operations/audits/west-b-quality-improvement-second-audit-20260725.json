@@ -17,10 +17,62 @@
   "scope": {
     "pastCorrectionServiceRecheckCount": 17,
     "stratifiedSampleMunicipalityCount": 30,
-    "prefectureCodes": ["31", "32", "34", "35", "36", "38", "41", "42", "44", "45", "47"],
-    "priorityServices": ["sickChildCare", "schoolMeals", "temporaryChildcare"],
-    "priorityChecks": ["verified_unavailable", "current_fiscal_year", "official_url_validity", "source_task_generated_page_consistency"],
-    "sampledMunicipalities": ["31384", "32528", "34211", "34307", "35202", "36207", "36321", "36387", "36404", "38356", "38442", "38484", "41209", "41425", "42205", "42210", "42212", "42308", "42391", "44210", "44462", "45401", "45402", "45442", "45443", "47211", "47302", "47328", "47350", "47382"]
+    "prefectureCodes": [
+      "31",
+      "32",
+      "34",
+      "35",
+      "36",
+      "38",
+      "41",
+      "42",
+      "44",
+      "45",
+      "47"
+    ],
+    "priorityServices": [
+      "sickChildCare",
+      "schoolMeals",
+      "temporaryChildcare"
+    ],
+    "priorityChecks": [
+      "verified_unavailable",
+      "current_fiscal_year",
+      "official_url_validity",
+      "source_task_generated_page_consistency"
+    ],
+    "sampledMunicipalities": [
+      "31384",
+      "32528",
+      "34211",
+      "34307",
+      "35202",
+      "36207",
+      "36321",
+      "36387",
+      "36404",
+      "38356",
+      "38442",
+      "38484",
+      "41209",
+      "41425",
+      "42205",
+      "42210",
+      "42212",
+      "42308",
+      "42391",
+      "44210",
+      "44462",
+      "45401",
+      "45402",
+      "45442",
+      "45443",
+      "47211",
+      "47302",
+      "47328",
+      "47350",
+      "47382"
+    ]
   },
   "pastCorrectionRecheck": {
     "checkedServiceEntries": 17,
@@ -41,8 +93,24 @@
   },
   "communicationWarningRetry": {
     "municipalityCount": 14,
-    "recoveredOrOfficiallyRediscovered": ["34307", "36207", "36321", "36387", "36404", "38356", "41209", "41425", "42205", "45402", "47211"],
-    "warningReproducedWithoutContradictingEvidence": ["44462", "45401", "47382"],
+    "recoveredOrOfficiallyRediscovered": [
+      "34307",
+      "36207",
+      "36321",
+      "36387",
+      "36404",
+      "38356",
+      "41209",
+      "41425",
+      "42205",
+      "45402",
+      "47211"
+    ],
+    "warningReproducedWithoutContradictingEvidence": [
+      "44462",
+      "45401",
+      "47382"
+    ],
     "conclusion": "一時的な404、500、504、TLSまたはCDN警告を理由に制度判定やURLを変更しない。現行公式情報を取得できたものは既存登録との一致を確認した。"
   },
   "keyFindings": [
@@ -62,12 +130,15 @@
     "municipalityPage": "regenerated_and_matched",
     "progressJson": "regenerated",
     "validation": "npm_run_validate_generated_passed_on_correction_branch",
-    "publicPage": "pending_main_merge_and_pages_deploy"
+    "publicPage": "verified",
+    "publicPageCheckedAt": "2026-07-25T11:05:00+09:00"
   },
   "branchStatus": {
     "correctionBranch": "fix/west-b-second-audit-ogimi-sick-child-v2-20260725",
-    "main": "pending_pull_request",
-    "regionWest": "requires_independent_sync_because_branch_histories_are_diverged"
+    "main": "merged_pr_3209_ci_7823",
+    "regionWest": "merged_pr_3212_ci_7835",
+    "mainMergeCommit": "f472f8464c73f955c002f93c0628392c64f2440f",
+    "regionWestMergeCommit": "d5c58f038705097d6d24e67de3736f24d0c39bbf"
   },
   "aggregate": {
     "detectedResearchContentErrorCount": 1,
@@ -75,6 +146,6 @@
     "detectedSourceMaintenanceIssueCount": 0,
     "correctedSourceMaintenanceIssueCount": 0,
     "unresolvedConfirmedErrorCount": 0,
-    "status": "passed_after_one_content_detail_correction"
+    "status": "completed_main_region_public_verified"
   }
 }
