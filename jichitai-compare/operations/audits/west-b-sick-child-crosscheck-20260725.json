@@ -1,0 +1,1095 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-sick-child-crosscheck-20260725",
+  "sessionId": "west-b",
+  "auditedAt": "2026-07-25T02:27:27.882Z",
+  "scope": {
+    "prefectureCodes": [
+      "31",
+      "32",
+      "34",
+      "35",
+      "36",
+      "38",
+      "41",
+      "42",
+      "44",
+      "45",
+      "47"
+    ],
+    "municipalityCount": 250,
+    "service": "sickChildCare"
+  },
+  "aggregate": {
+    "verifiedCount": 198,
+    "unavailableCount": 52,
+    "candidateCount": 38,
+    "familySupportCandidateCount": 14,
+    "transportWithoutCareDetailCount": 0,
+    "weakPrimarySourceCandidateCount": 9,
+    "unavailableBroadAreaCandidateCount": 28,
+    "sourceCheckFailureCount": 1
+  },
+  "candidates": [
+    {
+      "code": "32205",
+      "name": "大田市",
+      "prefectureCode": "32",
+      "status": "verified",
+      "summary": "ファミリーサポートセンターで軽い病気の子どもと病後児の預かりに対応",
+      "sourceUrl": "https://www.city.oda.lg.jp/ohda_city/city_scene/204/2280",
+      "flags": {
+        "familySupport": true,
+        "transport": true,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": false
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.city.oda.lg.jp/ohda_city/city_scene/204/2280",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": true,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "32441",
+      "name": "川本町",
+      "prefectureCode": "32",
+      "status": "unavailable",
+      "summary": "町公式の現行案内で専用病児・病後児保育を確認できず。ファミリーサポートは保護者の病気・急用時等の一般預かりとして実施。",
+      "sourceUrl": "https://www.town.shimane-kawamoto.lg.jp/gyosei/gyosei_education/childcare/7017",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.shimane-kawamoto.lg.jp/gyosei/gyosei_education/childcare/7017",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": true,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "32527",
+      "name": "知夫村",
+      "prefectureCode": "32",
+      "status": "verified",
+      "summary": "知夫村ファミリーサポートセンターで病後児保育を実施",
+      "sourceUrl": "https://www.pref.shimane.lg.jp/education/syoushika/kosodate/hoikusho/byojihoiku.html",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": false
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.pref.shimane.lg.jp/education/syoushika/kosodate/hoikusho/byojihoiku.html",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "35321",
+      "name": "和木町",
+      "prefectureCode": "35",
+      "status": "unavailable",
+      "summary": "町内施設はなく協定市町の病児・病後児保育施設を相互利用できるが、対象年齢・料金は施設ごとに異なる",
+      "sourceUrl": "https://www.town.waki.lg.jp/soshiki/8/2056.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.waki.lg.jp/soshiki/8/2056.html",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "35502",
+      "name": "阿武町",
+      "prefectureCode": "35",
+      "status": "unavailable",
+      "summary": "病児保育広域利用事業の方針は確認できるが、2026年度の利用施設・対象年齢・料金を町公式HTMLで確認できない",
+      "sourceUrl": "https://www.town.abu.lg.jp/guide/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.abu.lg.jp/guide/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "36342",
+      "name": "神山町",
+      "prefectureCode": "36",
+      "status": "unavailable",
+      "summary": "近隣市町の病児・病後児保育施設を利用できるが、2026年度の対象年齢・料金を町公式ページで確認できない",
+      "sourceUrl": "https://www.town.kamiyama.lg.jp/support/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.kamiyama.lg.jp/support/",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "36388",
+      "name": "海陽町",
+      "prefectureCode": "36",
+      "status": "verified",
+      "summary": "ファミリー・サポート・センターの病児・病後児預かり利用を補助",
+      "sourceUrl": "https://www.town.kaiyo.lg.jp/docs/2025091000027/",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": false
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.kaiyo.lg.jp/docs/2025091000027/",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "42214",
+      "name": "南島原市",
+      "prefectureCode": "42",
+      "status": "unavailable",
+      "summary": "島原市の病児保育オリーブを広域利用できるが、現行の対象年齢を市公式HTMLで確認できない",
+      "sourceUrl": "https://www.city.minamishimabara.lg.jp/kiji0039904/index.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.city.minamishimabara.lg.jp/kiji0039904/index.html",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "42383",
+      "name": "小値賀町",
+      "prefectureCode": "42",
+      "status": "unavailable",
+      "summary": "小値賀こども園では病後児保育を実施しておらず、町内で利用できる現行の病児・病後児保育を公式ページで確認できない",
+      "sourceUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/6/179.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.ojika.lg.jp/soshiki/hukushijumusho/1/6/179.html",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "45341",
+      "name": "三股町",
+      "prefectureCode": "45",
+      "status": "unavailable",
+      "summary": "町公式サイトで病児・病後児保育の現行実施施設・対象年齢・料金を確認できない",
+      "sourceUrl": "https://www.town.mimata.lg.jp/categories/index/itijitekinaazukari",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.mimata.lg.jp/categories/index/itijitekinaazukari",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "45382",
+      "name": "国富町",
+      "prefectureCode": "45",
+      "status": "unavailable",
+      "summary": "町公式サイトで病児・病後児保育の現行施設・対象年齢・料金・広域利用条件を確認できない",
+      "sourceUrl": "https://www.town.kunitomi.miyazaki.jp/main/health/children_welfare/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.kunitomi.miyazaki.jp/main/health/children_welfare/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "45403",
+      "name": "西米良村",
+      "prefectureCode": "45",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の現行施設・対象年齢・料金・広域利用条件を確認できない",
+      "sourceUrl": "https://www.vill.nishimera.lg.jp/village/category/a-00-villagelife/a-05",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.nishimera.lg.jp/village/category/a-00-villagelife/a-05",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "45406",
+      "name": "都農町",
+      "prefectureCode": "45",
+      "status": "unavailable",
+      "summary": "2026年度の病児・病後児保育の実施施設・対象・料金・予約方法を町公式公開情報で確定できない",
+      "sourceUrl": "https://www.town.tsuno.lg.jp/reiki/reiki_taikei/r_taikei_08.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.tsuno.lg.jp/reiki/reiki_taikei/r_taikei_08.html",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "45429",
+      "name": "諸塚村",
+      "prefectureCode": "45",
+      "status": "unavailable",
+      "summary": "2026年度の病児・病後児保育の実施施設・対象年齢・料金・予約方法を公式公開情報で確定できない",
+      "sourceUrl": "https://www.vill.morotsuka.miyazaki.jp/kosodate-kyoiku/index.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.morotsuka.miyazaki.jp/kosodate-kyoiku/index.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": false,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "45430",
+      "name": "椎葉村",
+      "prefectureCode": "45",
+      "status": "unavailable",
+      "summary": "2026年度の病児・病後児保育の実施施設・対象年齢・料金・予約方法を公式公開情報で確定できない",
+      "sourceUrl": "https://www.vill.shiiba.miyazaki.jp/welfare/growth/index.php",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.shiiba.miyazaki.jp/welfare/growth/index.php",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "45443",
+      "name": "五ヶ瀬町",
+      "prefectureCode": "45",
+      "status": "unavailable",
+      "summary": "町の子ども計画では病児・病後児保育事業を実施しておらず、2026年度の広域利用・助成条件も確認できない",
+      "sourceUrl": "https://www.town.gokase.miyazaki.jp/material/files/group/5/gokase_kodomokeikaku.pdf",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.gokase.miyazaki.jp/material/files/group/5/gokase_kodomokeikaku.pdf",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": false,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47207",
+      "name": "石垣市",
+      "prefectureCode": "47",
+      "status": "verified",
+      "summary": "ファミリーサポートセンターで病児・病後児の預かりに対応し1時間700円から",
+      "sourceUrl": "https://www.city.ishigaki.okinawa.jp/soshiki/kosodate_shien/1/2/10128.html",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": false
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.city.ishigaki.okinawa.jp/soshiki/kosodate_shien/1/2/10128.html",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47210",
+      "name": "糸満市",
+      "prefectureCode": "47",
+      "status": "verified",
+      "summary": "令和8年度は市内2施設で病児・病後児保育を実施",
+      "sourceUrl": "https://www.city.itoman.lg.jp/soshiki/17/3098.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": true,
+        "broadArea": false,
+        "unavailable": false
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.city.itoman.lg.jp/soshiki/17/3098.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47301",
+      "name": "国頭村",
+      "prefectureCode": "47",
+      "status": "verified",
+      "summary": "やんばる9町村広域ファミリーサポートで病児・病後児の預かりに対応",
+      "sourceUrl": "https://www.vill.kunigami.okinawa.jp/birth/childcare/support2/support2-1/",
+      "flags": {
+        "familySupport": true,
+        "transport": true,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": false
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.kunigami.okinawa.jp/birth/childcare/support2/support2-1/",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": true,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47302",
+      "name": "大宜味村",
+      "prefectureCode": "47",
+      "status": "verified",
+      "summary": "やんばる町村ファミリーサポートで、18歳未満の病児・病後児の預かりと送迎を1時間700円で支援",
+      "sourceUrl": "https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000476.html",
+      "flags": {
+        "familySupport": true,
+        "transport": true,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": false
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000476.html",
+        "pageSignals": {
+          "sickChildTerms": true,
+          "careTerms": true,
+          "transportTerms": true,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47303",
+      "name": "東村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育の実施施設・料金を村公式サイトで確認できない",
+      "sourceUrl": "https://www.vill.higashi.okinawa.jp/soshikikarasagasu/fukushihokenka/4/2661.html",
+      "flags": {
+        "familySupport": true,
+        "transport": true,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.higashi.okinawa.jp/soshikikarasagasu/fukushihokenka/4/2661.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": true,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47306",
+      "name": "今帰仁村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育の具体的利用条件を村公式サイトで確認できない",
+      "sourceUrl": "https://www.nakijin.jp/pagtop/life_scene/kosodate/index.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.nakijin.jp/pagtop/life_scene/kosodate/index.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47308",
+      "name": "本部町",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育の具体的利用条件を町公式サイトで確認できない",
+      "sourceUrl": "https://www.town.motobu.okinawa.jp/doc/2024093000028/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.motobu.okinawa.jp/doc/2024093000028/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47311",
+      "name": "恩納村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育の具体的利用条件を村公式サイトで確認できない",
+      "sourceUrl": "https://www.vill.onna.okinawa.jp/living/childcare/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": false,
+        "status": null,
+        "finalUrl": null,
+        "error": "The operation was aborted due to timeout"
+      }
+    },
+    {
+      "code": "47313",
+      "name": "宜野座村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育の具体的利用条件を村公式サイトで確認できない",
+      "sourceUrl": "https://www.vill.ginoza.okinawa.jp/soshiki/1013/1/1210.html",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.ginoza.okinawa.jp/soshiki/1013/1/1210.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47315",
+      "name": "伊江村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "令和8年度の病児・病後児保育の具体的利用条件を村公式サイトで確認できない",
+      "sourceUrl": "https://www.iejima.org/document/2021060400034/",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": false,
+        "broadArea": false,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.iejima.org/document/2021060400034/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47353",
+      "name": "渡嘉敷村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の現行実施施設・対象年齢・料金・申込方法を確認できない",
+      "sourceUrl": "https://www.vill.tokashiki.okinawa.jp/iryo_kyoiku_fukushi/kosodate_kyoiku/index.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": false,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.tokashiki.okinawa.jp/iryo_kyoiku_fukushi/kosodate_kyoiku/index.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47354",
+      "name": "座間味村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設・広域利用・料金・申込方法を確認できない",
+      "sourceUrl": "https://www.vill.zamami.okinawa.jp/kurashi/kosodate/kosodateshien/",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.zamami.okinawa.jp/kurashi/kosodate/kosodateshien/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": false,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47355",
+      "name": "粟国村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、広域利用、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://www.vill.aguni.okinawa.jp/kosodate/minseijyouhou/index.html",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.aguni.okinawa.jp/kosodate/minseijyouhou/index.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47356",
+      "name": "渡名喜村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、広域利用、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://www.vill.tonaki.okinawa.jp/sp/detail.jsp?funcid=1&id=57503&menuid=12284",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "http://www.vill.tonaki.okinawa.jp/sp/detail.jsp?funcid=1&id=57503&menuid=12284",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": false,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47357",
+      "name": "南大東村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、広域利用、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://www.vill.minamidaito.okinawa.jp/site/hoken-c/530.html",
+      "flags": {
+        "familySupport": true,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.minamidaito.okinawa.jp/site/hoken-c/530.html",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": true,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47358",
+      "name": "北大東村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、島外広域利用、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://vill.kitadaito.okinawa.jp/life_event/kosodate/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://vill.kitadaito.okinawa.jp/life_event/kosodate/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": false,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47359",
+      "name": "伊平屋村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、島外広域利用、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://www.vill.iheya.okinawa.jp/life/1/4/19/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.iheya.okinawa.jp/life/1/4/19/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47360",
+      "name": "伊是名村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、島外広域利用、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://vill.izena.okinawa.jp/lifeevent/kosodate/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://vill.izena.okinawa.jp/lifeevent/kosodate/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47361",
+      "name": "久米島町",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "無償化対象事業として病児保育の記載はあるが、町内実施施設、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://www.town.kumejima.okinawa.jp/categories/lifestage/kosodate/kosodate/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.kumejima.okinawa.jp/categories/lifestage/kosodate/kosodate/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47375",
+      "name": "多良間村",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "村公式サイトで病児・病後児保育の実施施設、島外広域利用、対象年齢、料金、申込方法を確認できない",
+      "sourceUrl": "https://www.vill.tarama.okinawa.jp/kurashi/kosodate/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.vill.tarama.okinawa.jp/kurashi/kosodate/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": false,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    },
+    {
+      "code": "47381",
+      "name": "竹富町",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "町公式サイトで病児・病後児保育の実施施設、石垣市等の広域利用、対象年齢、料金、予約方法を確認できない",
+      "sourceUrl": "https://www.town.taketomi.lg.jp/guide/kosodate/",
+      "flags": {
+        "familySupport": true,
+        "transport": true,
+        "careActivity": true,
+        "weakPrimarySource": false,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.taketomi.lg.jp/guide/kosodate/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": true
+        }
+      }
+    },
+    {
+      "code": "47382",
+      "name": "与那国町",
+      "prefectureCode": "47",
+      "status": "unavailable",
+      "summary": "町公式サイトで病児・病後児保育の実施施設、島外広域利用、対象年齢、料金、予約方法を確認できない",
+      "sourceUrl": "https://www.town.yonaguni.okinawa.jp/category/mokuteki/kosodate/",
+      "flags": {
+        "familySupport": false,
+        "transport": false,
+        "careActivity": true,
+        "weakPrimarySource": true,
+        "broadArea": true,
+        "unavailable": true
+      },
+      "candidate": true,
+      "sourceCheck": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.town.yonaguni.okinawa.jp/category/mokuteki/kosodate/",
+        "pageSignals": {
+          "sickChildTerms": false,
+          "careTerms": true,
+          "transportTerms": false,
+          "familySupportTerms": false
+        }
+      }
+    }
+  ],
+  "conclusion": "mechanical_candidates_require_official_source_review"
+}
