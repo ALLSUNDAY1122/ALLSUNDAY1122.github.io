@@ -6,8 +6,8 @@
   "name": "津奈木町",
   "officialUrl": "https://www.town.tsunagi.lg.jp/",
   "status": "verified",
-  "summary": "津奈木町の必須9制度を公式情報で調査。6制度をverified、3制度をunavailableとして公開可能状態へ正規化。",
-  "updatedAt": "2026-07-24",
+  "summary": "必須9制度を公式情報で再監査。5制度をverified、4制度をunavailableとして登録。住宅支援は一般制度のみ確認され、子育て世帯固有条件を確認できないためunavailableへ訂正。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -104,19 +104,28 @@
       }
     },
     "housingSupport": {
-      "status": "verified",
-      "summary": "空き家バンク物件の定住改修費を3分の2、上限50万円補助",
+      "status": "unavailable",
+      "summary": "一般の住宅・移住支援制度（空き家バンク物件の定住改修費を3分の2、上限50万円補助）は確認できるが、子育て世帯固有の住宅支援条件を確認できない",
       "details": {
         "target": "空き家バンク登録物件の所有者、または補助後5年以上定住する入居予定者等",
         "support": "町内施工業者による定住目的の改修費の3分の2、上限50万円",
         "businessUse": "宿泊・飲食・小売等の活性化事業は2分の1、上限100万円",
         "conditions": "売買・賃貸借契約済みの登録空き家で、5年間の登録・定住または操業等の要件がある",
-        "application": "工事着手前に政策企画課へ申請し交付決定を受ける"
+        "application": "工事着手前に政策企画課へ申請し交付決定を受ける",
+        "confirmedGeneralProgramSummary": "空き家バンク物件の定住改修費を3分の2、上限50万円補助",
+        "previousStatus": "verified",
+        "classificationReview": "一般移住・一般住宅制度を子育て世帯向け住宅支援として登録していた分類誤りを訂正",
+        "childSpecificConditionConfirmed": false
       },
       "source": {
         "url": "https://www.town.tsunagi.lg.jp/teiju/page2097.html",
-        "checkedAt": "2026-07-24"
-      }
+        "checkedAt": "2026-07-25"
+      },
+      "notes": [
+        "2026年7月25日に公式ページ「空き家リフォーム事業補助金【空き家バンク】 / 津奈木町移住定住サイトTOP / 津奈木町」を再確認した。",
+        "確認できる対象・条件・補助額は一般の移住、空き家、住宅取得、改修、除却または耐震等に関するもので、子どもの有無、対象年齢、子育て世帯限定または子育て加算を要件としていない。",
+        "一般制度の存在は保持するが、子育て世帯向け住宅支援として登録しない。"
+      ]
     },
     "bulkyWaste": {
       "status": "verified",
