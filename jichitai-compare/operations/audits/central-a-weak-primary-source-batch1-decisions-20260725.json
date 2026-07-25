@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-weak-primary-source-batch1-decisions-20260725",
+  "decidedAt": "2026-07-25T11:37:00+09:00",
+  "session": "中日本調査班A",
+  "category": "weakPrimarySource",
+  "sourceCandidateAudit": "central-a-weak-primary-source-candidates-20260725",
+  "reviewedCandidateCount": 4,
+  "confirmedFactCorrectionCount": 3,
+  "confirmedSourceCorrectionCount": 1,
+  "decisions": [
+    {
+      "code": "18481",
+      "name": "高浜町",
+      "service": "temporaryChildcare",
+      "correctionType": "availability_assertion",
+      "before": "令和8年度から乳児等通園支援事業を実施すると、条例体系だけを根拠に記録",
+      "after": "通常の一時預かりをverifiedの主根拠とし、誰でも通園は利用者向け対象・施設・料金・利用時間・予約条件が未公開のため確定しない",
+      "primarySourceBefore": "https://www.town.takahama.fukui.jp/reiki/reiki_taikei/r_taikei_08.html",
+      "primarySourceAfter": "https://www.town.takahama.fukui.jp/page/sougouseisaku/p007556.html",
+      "statusAfter": "verified",
+      "statusReason": "複合制度キー内の通常一時預かりは利用者向け公式案内で確認できるため",
+      "issue3141Addition": true
+    },
+    {
+      "code": "18483",
+      "name": "おおい町",
+      "service": "temporaryChildcare",
+      "correctionType": "availability_assertion",
+      "before": "令和8年度から乳児等通園支援事業を実施すると、こども計画だけを根拠に記録",
+      "after": "通常の一時預かりをverifiedの主根拠とし、誰でも通園は利用者向け対象・施設・料金・利用時間・予約条件が未公開のため確定しない",
+      "primarySourceBefore": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p10199_d/fil/kodomokeikaku.pdf",
+      "primarySourceAfter": "https://www.town.ohi.fukui.jp/1201/lifeevent02/p24008.html",
+      "statusAfter": "verified",
+      "statusReason": "複合制度キー内の通常一時預かりは利用者向け公式案内で確認できるため",
+      "issue3141Addition": true
+    },
+    {
+      "code": "21403",
+      "name": "大野町",
+      "service": "schoolMeals",
+      "correctionType": "fiscal_year_amount",
+      "before": "令和8年度の小学校基本月額4,500円、中学校基本月額5,200円",
+      "after": "令和8年4月1日から当面、町立小学校児童・中学校生徒の給食費0円",
+      "primarySource": "https://www.town-ono.jp/reiki_int/reiki_honbun/i333RG00000742.html",
+      "additionalUserSources": [
+        "https://www.town-ono.jp/0000001092.html",
+        "https://www.town-ono.jp/0000000173.html"
+      ],
+      "statusAfter": "verified",
+      "issue3141Addition": false
+    },
+    {
+      "code": "21505",
+      "name": "八百津町",
+      "service": "schoolMeals",
+      "correctionType": "primary_source_upgrade",
+      "contentChanged": false,
+      "before": "就学援助費支給要綱を主出典としていた",
+      "after": "利用者向け就学援助制度ページを主出典とし、要綱を補助出典へ移動",
+      "primarySourceBefore": "https://www.town.yaotsu.lg.jp/reiki_int/reiki_honbun/i365RG00000630.html",
+      "primarySourceAfter": "https://www.town.yaotsu.lg.jp/1513.htm",
+      "statusAfter": "verified",
+      "issue3141Addition": false
+    }
+  ],
+  "issue3141Additions": [
+    {
+      "code": "18481",
+      "name": "高浜町",
+      "service": "temporaryChildcare",
+      "reason": "条例体系は確認済みだが、2026年度の対象月齢、実施施設、料金、利用時間、予約条件を利用者向け公式案内で確認できない"
+    },
+    {
+      "code": "18483",
+      "name": "おおい町",
+      "service": "temporaryChildcare",
+      "reason": "こども計画は確認済みだが、2026年度の対象月齢、実施施設、料金、利用時間、予約条件を利用者向け公式案内で確認できない"
+    }
+  ],
+  "policy": [
+    "条例、計画、予算案だけでは利用可能制度と断定しない",
+    "temporaryChildcareは複合制度キーのため、通常一時預かりが利用者向け公式情報で確認できる場合はverifiedを維持し、未確定の誰でも通園部分を明示的に分離する",
+    "学校給食費は施行日と特例規定を含む現行条文を確認し、旧単価を2026年度負担額として使用しない",
+    "内容が正しくても利用者向け公式案内が存在する場合は条例・要綱より主出典を優先する"
+  ],
+  "remainingWeakPrimarySourceCandidates": 42,
+  "nextPriority": [
+    "氷見市の令和8年度中学校給食費全額支援を利用者向け公式情報で再確認",
+    "中能登町、坂祝町、藤枝市、西伊豆町、小山町の学校給食費候補を順次確認",
+    "病児保育、産後ケア、住宅支援の弱い主出典候補へ進む"
+  ]
+}
