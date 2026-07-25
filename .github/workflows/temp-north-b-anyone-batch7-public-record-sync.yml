@@ -1,0 +1,44 @@
+name: Temporary North B Anyone Batch 7 Public Record Sync
+
+on:
+  pull_request:
+    branches:
+      - region/north
+    paths:
+      - '.github/workflows/temp-north-b-anyone-batch7-public-record-sync.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout regional branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Import public verification record from main
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- \
+            jichitai-compare/operations/audits/north-b-anyone-batch7-public-verification-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json
+
+      - name: Remove workflow and commit record synchronization
+        shell: bash
+        run: |
+          rm .github/workflows/temp-north-b-anyone-batch7-public-record-sync.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-b-anyone-batch7-public-record-sync.yml \
+                     jichitai-compare/operations/audits/north-b-anyone-batch7-public-verification-20260725.json \
+                     jichitai-compare/operations/control/session-checkpoints/north-b.json
+          git commit -m 'sync: 北日本B誰でも通園最終群の公開検証記録をregion/northへ反映'
+          git push origin HEAD:"${{ github.head_ref }}"
