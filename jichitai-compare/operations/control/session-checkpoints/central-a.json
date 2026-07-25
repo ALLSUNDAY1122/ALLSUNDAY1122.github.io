@@ -16,15 +16,15 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-25T15:37:00+09:00",
+  "updatedAt": "2026-07-25T15:56:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3526,
+  "pullRequestNumber": 3539,
   "ciStatus": "success",
-  "ciRunNumber": 8552,
+  "ciRunNumber": 8602,
   "completedSinceSplit": [
     {
       "code": "21604",
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3533,
+  "stateSyncPullRequestNumber": 3549,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "原因別重点再監査を継続する。一般住宅・移住制度の分類候補残139件を子育て固有要件の有無で判定し、弱い主出典残33件も並行して処理する。Issue #3141の19項目は推測せず維持する。",
+  "nextAction": "原因別重点再監査を継続する。一般住宅・移住制度の分類候補残134件を子育て固有要件の有無で判定し、弱い主出典残33件も並行して処理する。Issue #3141の19項目は推測せず維持する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T15:37:00+09:00",
-    "latestRegionalPullRequestNumber": 3526,
-    "latestCiRunNumber": 8552,
+    "latestCompletedAt": "2026-07-25T15:56:00+09:00",
+    "latestRegionalPullRequestNumber": 3539,
+    "latestCiRunNumber": 8602,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 89,
-    "primarySourceSlotsRechecked": 521,
+    "correctedMunicipalitiesRechecked": 94,
+    "primarySourceSlotsRechecked": 526,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -339,6 +339,36 @@
         "code": "28218",
         "service": "housingSupport",
         "name": "小野市"
+      },
+      {
+        "type": "child_specific_housing_replacement",
+        "code": "17204",
+        "service": "housingSupport",
+        "name": "輪島市"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "17211",
+        "service": "housingSupport",
+        "name": "能美市"
+      },
+      {
+        "type": "child_specific_housing_replacement",
+        "code": "17361",
+        "service": "housingSupport",
+        "name": "津幡町"
+      },
+      {
+        "type": "general_housing_misclassification",
+        "code": "21604",
+        "service": "housingSupport",
+        "name": "白川村"
+      },
+      {
+        "type": "newlywed_housing_replacement",
+        "code": "22208",
+        "service": "housingSupport",
+        "name": "伊東市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -425,7 +455,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 139,
+      "generalHousingMisclassification": 134,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -447,7 +477,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残139件",
+      "一般住宅・移住制度の分類候補残134件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ]
