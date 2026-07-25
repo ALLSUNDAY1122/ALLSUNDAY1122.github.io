@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.1",
+  "ledgerId": "north-east-correction-ledger-20260725",
+  "documentType": "indexLedger",
+  "coordinatorSession": "統括A③",
+  "generatedAt": "2026-07-25T10:55:00+09:00",
+  "scope": {
+    "regions": ["north", "east"],
+    "municipalities": 856,
+    "services": 7704,
+    "sessions": ["north-a", "north-b", "east-a", "east-b"]
+  },
+  "baseline": {
+    "nationwideMunicipalities": 1741,
+    "nationwideServices": 15669,
+    "remainingMunicipalities": 0,
+    "needsMediumReviewServices": 0,
+    "northOpenRegionalPullRequests": 0,
+    "eastOpenRegionalPullRequests": 0,
+    "publicIntegrityFailures": 0,
+    "publicIntegrityWorkflowRunId": 30134336210
+  },
+  "taxonomy": {
+    "status_judgement": "制度の有無・verified/unavailable/needs_medium_review判定",
+    "numeric_fact": "対象年齢・料金・回数・期間・施設数などの事実・数値",
+    "year_mismatch": "2025年度と2026年度の混同、2026年度制度の見落とし",
+    "classification_error": "別制度を対象制度として登録した分類誤り",
+    "structure_sync": "自治体コード・task・生成物・region/main同期の構造誤り",
+    "url_or_description_maintenance": "URL切れ・正規URL化・説明補足・鮮度注意"
+  },
+  "summary": {
+    "entryCount": 107,
+    "sessionCounts": {
+      "north-a": 13,
+      "north-b": 28,
+      "east-a": 59,
+      "east-b": 7
+    },
+    "categoryCounts": {
+      "status_judgement": 54,
+      "numeric_fact": 14,
+      "year_mismatch": 25,
+      "classification_error": 6,
+      "structure_sync": 3,
+      "url_or_description_maintenance": 5
+    },
+    "currentMajorUnfixedCount": 0,
+    "publicationBlocked": false,
+    "assignedRevalidationIssueCount": 4
+  },
+  "partitions": [
+    {
+      "session": "north-a",
+      "path": "jichitai-compare/operations/audits/quality-ledger/north-a-corrections-20260725.json",
+      "entryCount": 13,
+      "issueNumber": 3196
+    },
+    {
+      "session": "north-b",
+      "path": "jichitai-compare/operations/audits/quality-ledger/north-b-corrections-20260725.json",
+      "entryCount": 28,
+      "issueNumber": 3197
+    },
+    {
+      "session": "east-a",
+      "path": "jichitai-compare/operations/audits/quality-ledger/east-a-corrections-20260725.json",
+      "entryCount": 59,
+      "issueNumber": 3198
+    },
+    {
+      "session": "east-b",
+      "path": "jichitai-compare/operations/audits/quality-ledger/east-b-corrections-20260725.json",
+      "entryCount": 7,
+      "issueNumber": 3199
+    }
+  ],
+  "qualityGate": {
+    "blockPublicationWhen": [
+      "誤ったverifiedが確定し未修正",
+      "料金・対象年齢・対象条件の重大誤りが未修正",
+      "自治体JSON・task・生成JSON・公開ページが不一致",
+      "標準CIまたは公開確認が失敗"
+    ],
+    "doNotBlockWhen": [
+      "公式情報が未公開でunavailableとして安全表示",
+      "公式サイト障害を追跡Issueへ分離",
+      "軽微なURL保守のみで制度内容が正しい"
+    ]
+  },
+  "nonblockingFollowUps": [
+    {
+      "issueNumber": 2847,
+      "municipalityCode": "20602",
+      "municipalityName": "栄村",
+      "serviceCount": 9,
+      "publicationBlocking": false
+    }
+  ],
+  "coordinatorBCompatibility": {
+    "schemaPath": "jichitai-compare/operations/control/quality-audit-schema-v1.json",
+    "instruction": "統括Bは同一taxonomy、field aliases、deduplication keyで中日本・西日本のpartitionを作成する。"
+  },
+  "nextAction": "Issues #3196〜#3199の結果を班別partitionへ追記し、region統合後に最新mainへ全国品質同期する。",
+  "status": "wave2_revalidation_assigned"
+}
