@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-b-independent-reaudit-round4-20260725",
+  "parentAuditId": "central-b-independent-reaudit-20260725",
+  "trackingIssueNumber": 3186,
+  "workingBranch": "quality/central-b-independent-reaudit-20260725",
+  "status": "in_progress",
+  "scope": {
+    "round": 4,
+    "municipalityCodes": ["29205","29206","29207","29208","29209","29210","29211","29212","29322","29342"],
+    "auditedMunicipalityCount": 1,
+    "auditedServiceCount": 9,
+    "confirmedErrorCount": 0,
+    "correctedErrorCount": 0,
+    "pendingMunicipalityCodes": ["29206","29207","29208","29209","29210","29211","29212","29322","29342"]
+  },
+  "findings": [
+    {
+      "municipalityCode": "29205",
+      "municipalityName": "橿原市",
+      "servicesChecked": 9,
+      "result": "no_confirmed_error",
+      "confirmedErrors": [],
+      "notes": [
+        "18歳年度末までの医療費窓口負担0円、病児保育の対象・料金・広域利用、第2子以降保育料無償化を現行確認。",
+        "令和8年度小中学校給食費無償化、市外学校通学者・給食停止者への給付、産後ケアの訪問券追加を確認。",
+        "こども誰でも通園制度は新沢認定こども園、月3時間、1回900円・おやつ20円、1日3人。",
+        "移住支援金は子ども要件・加算のない一般制度で、世帯枠は予算上限到達により受付終了。housingSupport unavailableを維持。",
+        "粗大ごみの一般収集と高齢者・障害者向け無料リクエスト収集を混同しない。"
+      ],
+      "principalSources": [
+        "https://www.city.kashihara.nara.jp/kosodate/mokuteki/7/16402.html",
+        "https://www.city.kashihara.nara.jp/soshiki/1036/gyomu/2/4/100.html",
+        "https://www.city.kashihara.nara.jp/kosodate_kyoiku/yochien_hoikujo_kodomoen/1/14678.html",
+        "https://www.city.kashihara.nara.jp/soshiki/1003/gyomu/5/1/1701.html",
+        "https://www.city.kashihara.nara.jp/kosodate/nenrei/2/1/14332.html",
+        "https://www.city.kashihara.nara.jp/soshiki/1036/gyomu/2/2/19678.html",
+        "https://www.city.kashihara.nara.jp/soshiki/1027/gyomu/3204.html",
+        "https://www.city.kashihara.nara.jp/kurashi_tetsuzuki/gomi_kankyohozen/2/1/1/6814.html",
+        "https://www.city.kashihara.nara.jp/kurashi_tetsuzuki/anshin_anzen/3/2/7531.html"
+      ]
+    }
+  ],
+  "cumulativeProgress": {
+    "auditedMunicipalityCount": 31,
+    "auditedServiceCount": 279,
+    "confirmedErrorCount": 29,
+    "correctedErrorCount": 29,
+    "lastSuccessfulCiRunNumber": 8069
+  },
+  "nextAction": "桜井市（29206）を公式情報起点で独立監査する。"
+}
