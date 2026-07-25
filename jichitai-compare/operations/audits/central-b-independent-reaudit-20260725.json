@@ -15,21 +15,7 @@
   "method": {
     "mode": "independent_official_source_first",
     "rule": "既存JSONの説明を参照する前に、自治体または都道府県の公式情報から制度条件を再構成し、その後に既存JSONと比較する",
-    "checks": [
-      "制度の有無",
-      "対象",
-      "料金",
-      "年齢",
-      "期間",
-      "回数",
-      "施設",
-      "年度",
-      "公式かつ制度に直接対応する現行URL",
-      "一般移住・一般住宅支援の混入",
-      "広域・周辺自治体施設の利用可能性",
-      "2026年度開始制度と旧年度終了制度",
-      "過去57件訂正のregion/central・main反映"
-    ]
+    "checks": ["制度の有無","対象","料金","年齢","期間","回数","施設","年度","公式かつ制度に直接対応する現行URL","一般移住・一般住宅支援の混入","広域・周辺自治体施設の利用可能性","2026年度開始制度と旧年度終了制度","過去57件訂正のregion/central・main反映"]
   },
   "batches": [
     {"round":1,"codes":["26100","26201","26202","26203","26204","26205","26206","26207","26208","26209"],"status":"in_progress"},
@@ -44,8 +30,8 @@
     {"round":10,"codes":["30404","30406","30421","30422","30424","30427","30428"],"status":"pending"}
   ],
   "progress": {
-    "auditedMunicipalityCount": 4,
-    "auditedServiceCount": 36,
+    "auditedMunicipalityCount": 5,
+    "auditedServiceCount": 45,
     "confirmedErrorCount": 8,
     "correctedErrorCount": 8,
     "regionCentralMergedCount": 0,
@@ -59,16 +45,7 @@
       "auditedAt": "2026-07-25T10:31:00+09:00",
       "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "result": "one_confirmed_error_corrected",
-      "confirmedErrors": [
-        {
-          "service": "childcareFee",
-          "before": "3～5歳児、市民税非課税世帯の0～2歳児、認可保育施設を利用する世帯内第2子以降の保育料無償化のみを記録",
-          "after": "上記に加え、令和8年4月1日開始の京都市内私立幼稚園・幼稚園型認定こども園における未就園の第2子以降2歳児の保育料無償化を記録",
-          "cause": "2026年度開始制度の記録漏れ",
-          "officialSource": "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
-          "status": "corrected"
-        }
-      ],
+      "confirmedErrors": [{"service":"childcareFee","before":"3～5歳児、市民税非課税世帯の0～2歳児、認可保育施設を利用する世帯内第2子以降の保育料無償化のみを記録","after":"上記に加え、令和8年4月1日開始の京都市内私立幼稚園・幼稚園型認定こども園における未就園の第2子以降2歳児の保育料無償化を記録","cause":"2026年度開始制度の記録漏れ","officialSource":"https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html","status":"corrected"}],
       "noChangeServices": ["childMedical","sickChildCare","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "changedFiles": ["jichitai-compare/data/municipalities/26/26100.json","jichitai-compare/operations/tasks/26100.json"]
     },
@@ -80,30 +57,9 @@
       "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "result": "three_confirmed_errors_corrected",
       "confirmedErrors": [
-        {
-          "service": "childMedical",
-          "before": "中学生の入院外・訪問看護について月合計1,500円超過分の償還払いのみを記録",
-          "after": "1医療機関につき月200円の窓口負担と、月合計1,500円超過分の償還払いを併記",
-          "cause": "利用時の窓口負担条件の記録漏れ",
-          "officialSource": "https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html",
-          "status": "corrected"
-        },
-        {
-          "service": "postpartumCare",
-          "before": "京都大呂ガーデンテラスの通所集団型のみ、1回1,000円・7回までと記録",
-          "after": "訪問型、宿泊型、通所個別型、通所集団型の4類型、各料金・回数、2026年4月開始の市立福知山市民病院を記録",
-          "cause": "制度類型・実施施設・2026年度開始情報の見落とし",
-          "officialSource": "https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html",
-          "status": "corrected"
-        },
-        {
-          "service": "housingSupport",
-          "before": "移住促進特別区域の登録空き家改修支援を子育て世帯向け住宅支援としてverified",
-          "after": "子ども要件・子ども加算のない一般移住・一般空き家支援を除外しunavailable",
-          "cause": "一般移住・一般住宅支援の制度分類誤り",
-          "officialSource": "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html",
-          "status": "corrected"
-        }
+        {"service":"childMedical","before":"中学生の入院外・訪問看護について月合計1,500円超過分の償還払いのみを記録","after":"1医療機関につき月200円の窓口負担と、月合計1,500円超過分の償還払いを併記","cause":"利用時の窓口負担条件の記録漏れ","officialSource":"https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html","status":"corrected"},
+        {"service":"postpartumCare","before":"京都大呂ガーデンテラスの通所集団型のみ、1回1,000円・7回までと記録","after":"訪問型、宿泊型、通所個別型、通所集団型の4類型、各料金・回数、2026年4月開始の市立福知山市民病院を記録","cause":"制度類型・実施施設・2026年度開始情報の見落とし","officialSource":"https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html","status":"corrected"},
+        {"service":"housingSupport","before":"移住促進特別区域の登録空き家改修支援を子育て世帯向け住宅支援としてverified","after":"子ども要件・子ども加算のない一般移住・一般空き家支援を除外しunavailable","cause":"一般移住・一般住宅支援の制度分類誤り","officialSource":"https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html","status":"corrected"}
       ],
       "noChangeServices": ["sickChildCare","childcareFee","schoolMeals","temporaryChildcare","bulkyWaste","disasterPrevention"],
       "changedFiles": ["jichitai-compare/data/municipalities/26/26201.json","jichitai-compare/operations/tasks/26201.json"]
@@ -116,23 +72,8 @@
       "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "result": "two_confirmed_errors_corrected",
       "confirmedErrors": [
-        {
-          "service": "sickChildCare",
-          "before": "対象年齢を0歳から小学6年生までと登録し、利用料・時間・定員を未記録",
-          "after": "生後3か月から小学3年生、定員6人、平日8時15分～18時、1日2,500円・5時間以内1,500円へ訂正",
-          "cause": "対象年齢の過大登録と利用条件の記録漏れ",
-          "officialSource": "https://www.city.maizuru.kyoto.jp/kosodate/0000001571.html",
-          "additionalSource": "https://www.kisimoto-hp.jp/sick-childcare-support/",
-          "status": "corrected"
-        },
-        {
-          "service": "childcareFee",
-          "before": "保育料無償化と副食費免除のみを記録",
-          "after": "令和8年度に市内対象施設を利用する3歳以上児へ給食費を月最大1,500円補助する制度を追加",
-          "cause": "2026年度給食費負担軽減制度の記録漏れ",
-          "officialSource": "https://www.city.maizuru.kyoto.jp/kosodate/0000014885.html",
-          "status": "corrected"
-        }
+        {"service":"sickChildCare","before":"対象年齢を0歳から小学6年生までと登録し、利用料・時間・定員を未記録","after":"生後3か月から小学3年生、定員6人、平日8時15分～18時、1日2,500円・5時間以内1,500円へ訂正","cause":"対象年齢の過大登録と利用条件の記録漏れ","officialSource":"https://www.city.maizuru.kyoto.jp/kosodate/0000001571.html","additionalSource":"https://www.kisimoto-hp.jp/sick-childcare-support/","status":"corrected"},
+        {"service":"childcareFee","before":"保育料無償化と副食費免除のみを記録","after":"令和8年度に市内対象施設を利用する3歳以上児へ給食費を月最大1,500円補助する制度を追加","cause":"2026年度給食費負担軽減制度の記録漏れ","officialSource":"https://www.city.maizuru.kyoto.jp/kosodate/0000014885.html","status":"corrected"}
       ],
       "noChangeServices": ["childMedical","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "changedFiles": ["jichitai-compare/data/municipalities/26/26202.json","jichitai-compare/operations/tasks/26202.json"]
@@ -145,26 +86,34 @@
       "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "result": "two_confirmed_errors_corrected",
       "confirmedErrors": [
-        {
-          "service": "schoolMeals",
-          "before": "所得基準等を満たす世帯への就学援助のみを記録し、一般世帯の制度は確認不能としていた",
-          "after": "令和8年度は小学校の食材費相当額と、中学校・幼稚園の1人1食100円を補助する一般制度を追加",
-          "cause": "2026年度給食費補助金交付要綱改正の見落とし",
-          "officialSource": "https://www.city.ayabe.lg.jp/cmsfiles/contents/0000006/6408/R8-4.pdf",
-          "status": "corrected"
-        },
-        {
-          "service": "postpartumCare",
-          "before": "宿泊型1日9,000円、個別通所型1回4,500円と登録",
-          "after": "宿泊型1日6,500円、個別通所型1回3,500円へ訂正し、現行の利用時期・回数も再確認",
-          "cause": "旧料金の継続掲載",
-          "officialSource": "https://www.city.ayabe.lg.jp/0000003373.html",
-          "status": "corrected"
-        }
+        {"service":"schoolMeals","before":"所得基準等を満たす世帯への就学援助のみを記録し、一般世帯の制度は確認不能としていた","after":"令和8年度は小学校の食材費相当額と、中学校・幼稚園の1人1食100円を補助する一般制度を追加","cause":"2026年度給食費補助金交付要綱改正の見落とし","officialSource":"https://www.city.ayabe.lg.jp/cmsfiles/contents/0000006/6408/R8-4.pdf","status":"corrected"},
+        {"service":"postpartumCare","before":"宿泊型1日9,000円、個別通所型1回4,500円と登録","after":"宿泊型1日6,500円、個別通所型1回3,500円へ訂正し、現行の利用時期・回数も再確認","cause":"旧料金の継続掲載","officialSource":"https://www.city.ayabe.lg.jp/0000003373.html","status":"corrected"}
       ],
       "noChangeServices": ["childMedical","sickChildCare","childcareFee","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "changedFiles": ["jichitai-compare/data/municipalities/26/26203.json","jichitai-compare/operations/tasks/26203.json"]
+    },
+    {
+      "round": 1,
+      "municipalityCode": "26204",
+      "municipalityName": "宇治市",
+      "auditedAt": "2026-07-25T11:06:00+09:00",
+      "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "result": "no_confirmed_error",
+      "confirmedErrors": [],
+      "noChangeServices": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "officialSources": [
+        "https://www.city.uji.kyoto.jp/site/kosodate/5539.html",
+        "https://www.city.uji.kyoto.jp/site/kosodate/26481.html",
+        "https://www.city.uji.kyoto.jp/site/kosodate/7028.html",
+        "https://www.city.uji.kyoto.jp/site/kosodate/93915.html",
+        "https://www.city.uji.kyoto.jp/site/kosodate/7151.html",
+        "https://www.city.uji.kyoto.jp/site/kosodate/77687.html",
+        "https://www.city.uji.kyoto.jp/soshiki/48/87999.html",
+        "https://www.city.uji.kyoto.jp/site/gomi/5249.html",
+        "https://www.city.uji.kyoto.jp/soshiki/25/5123.html"
+      ],
+      "notes": ["病児保育は生後2か月から小学6年生、市内2施設、1日2,000円・食事300円、10時間超は1時間200円を確認","令和8年4月13日に市立中学校等で全員制給食開始を確認","産後ケアは生後1歳未満の未就園母子を対象に宿泊・日帰り・訪問型を確認","令和8年度子育て世帯住宅確保おうえん事業は子ども・胎児要件があり、一般住宅支援の混入ではないことを確認","大型ごみの公式ページは更新日が古いが、現行の市公式ごみ案内から有料臨時収集制度が継続していることを確認"]
     }
   ],
-  "nextAction": "第1バッチの残り6自治体（宇治市、宮津市、亀岡市、城陽市、向日市、長岡京市）を公式情報起点で独立監査する。4自治体36制度・確定8件は自治体JSONとtaskへ反映済み。"
+  "nextAction": "第1バッチの残り5自治体（宮津市、亀岡市、城陽市、向日市、長岡京市）を公式情報起点で独立監査する。5自治体45制度・確定8件、修正8件。"
 }
