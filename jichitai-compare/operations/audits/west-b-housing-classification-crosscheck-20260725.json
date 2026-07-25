@@ -1,0 +1,3402 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-housing-classification-crosscheck-20260725",
+  "sessionId": "west-b",
+  "generatedAt": "2026-07-25T08:31:39.956Z",
+  "scope": {
+    "prefectureCodes": [
+      "31",
+      "32",
+      "34",
+      "35",
+      "36",
+      "38",
+      "41",
+      "42",
+      "44",
+      "45",
+      "47"
+    ],
+    "municipalityCount": 250,
+    "serviceId": "housingSupport",
+    "statusCounts": {
+      "verified": 241,
+      "unavailable": 9
+    }
+  },
+  "classificationRule": "子育て世帯・子ども・若年夫婦・新婚等の明示要件がない一般移住、一般住宅取得、一般リフォーム、一般空き家施策を子育て世帯向け住宅支援として扱わない",
+  "candidateCount": 118,
+  "reasonCounts": {
+    "verified_missing_target_or_condition": 25,
+    "verified_without_explicit_child_or_family_condition": 100,
+    "generic_migration_or_housing_program_may_be_misclassified": 94,
+    "unavailable_contains_child_specific_housing_language": 2,
+    "unavailable_has_direct_looking_housing_source": 3
+  },
+  "candidates": [
+    {
+      "code": "31201",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "鳥取市",
+      "status": "verified",
+      "summary": "子育て世帯は住宅セーフティネット制度の住宅確保要配慮者に含まれる",
+      "details": {
+        "support": "登録住宅検索、あんしん賃貸支援、家賃債務保証制度の案内あり",
+        "cityWideChildSpecificGrant": "一般の子育て世帯向け一律の住宅取得費・家賃補助は公式サイト上で確認できず"
+      },
+      "source": {
+        "url": "https://www.city.tottori.lg.jp/page/5903.html",
+        "additionalUrl": "https://www.city.tottori.lg.jp/life/sub/3/14/83/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31202",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "米子市",
+      "status": "verified",
+      "summary": "子育て世帯を住宅確保要配慮者として、住宅セーフティネット制度とあんしん賃貸支援で住まい探しを支援",
+      "details": {
+        "support": "子育て世帯等が入居を拒まれないセーフティネット登録住宅の検索・相談を利用できる",
+        "consultation": "鳥取県西部担当のあんしん賃貸相談員が、民間賃貸住宅への入居相談や住まい確保を支援",
+        "publicHousing": "市営住宅への入居申込み案内と、米子市空き家バンク登録物件の案内がある",
+        "generalSubsidy": "一般の子育て世帯を対象とする一律の家賃補助・住宅取得費補助は、確認した米子市公式ページでは確認できず",
+        "scope": "制度ごとに所得、世帯、住宅等の個別要件を確認する必要がある"
+      },
+      "source": {
+        "url": "https://www.city.yonago.lg.jp/47031.htm",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.yonago.lg.jp/5543.htm",
+          "checkedAt": "2026-07-20"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31203",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "倉吉市",
+      "status": "verified",
+      "summary": "39歳以下または県外移住者向け住宅取得支援、空き家取得・賃貸支援、新婚世帯の住宅費支援を実施",
+      "details": {
+        "housingPurchase": "39歳以下または県外移住者に住宅取得費の一部を補助",
+        "vacantHouse": "空き家バンク利用者向けの取得・賃貸支援あり",
+        "newlywedSupport": "要件を満たす新婚世帯に住宅購入・改修・賃借・引越し費用を助成"
+      },
+      "source": {
+        "url": "https://www.city.kurayoshi.lg.jp/3586.htm",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31204",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "境港市",
+      "status": "verified",
+      "summary": "結婚・出産・子育てを機に県外から移住する若年世帯へ20万円。空家活用移住世帯にも20万円",
+      "details": {
+        "lifeStageAmount": "1世帯20万円、1回限り",
+        "lifeStageApplication": "転入後2か月以内",
+        "residencyRequirement": "3年以上定住する意思が必要",
+        "vacantHouseAmount": "空家活用移住世帯へ1世帯20万円、1回限り"
+      },
+      "source": {
+        "url": "https://www.city.sakaiminato.lg.jp/index.php?view=112427",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.sakaiminato.lg.jp/index.php?view=111236",
+          "checkedAt": "2026-07-20"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31329",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "八頭町",
+      "status": "verified",
+      "summary": "若者・子育て世帯の住宅新築・購入・リフォームと県外からの子育て移住を支援",
+      "details": {
+        "newPurchase": "住宅取得額の5％を補助。転入かつ若者世帯等は上限30万円、町内在住の若者世帯等は上限20万円",
+        "youngHousehold": "40歳以下の夫婦・パートナー世帯、18歳以下の子を養育する世帯、出産予定世帯等",
+        "renovation": "町内業者による50万円以上の住宅リフォーム費の20％、上限20万円",
+        "migrationIncentive": "県外から転入した39歳以下を含む若者夫婦・妊婦・義務教育終了前の子がいる世帯等へ1世帯30万円",
+        "residency": "制度により3年以上または5年以上の定住意思が必要",
+        "application": "予算上限があり、リフォームは着工前申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.yazu.tottori.jp/site/lifestage/8352.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.yazu.tottori.jp/soshiki/11/1276.html",
+          "checkedAt": "2026-07-20"
+        },
+        {
+          "url": "https://www.town.yazu.tottori.jp/site/lifestage/1271.html",
+          "checkedAt": "2026-07-20"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31371",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "琴浦町",
+      "status": "verified",
+      "summary": "若者・子育て世帯の新築住宅取得に加算し、空き家購入・改修等も支援",
+      "details": {
+        "newHome": "町内で戸建て住宅を新築または新築住宅を購入して居住する者へ奨励金",
+        "youngFamily": "夫婦のどちらかが35歳以下、または中学生以下の子1人以上の世帯は若者・子育て世帯加算の対象",
+        "amount": "県内・町内者は50万円、県外者は100万円を基本に、対象地区や分譲地加算との併用で最大200万円",
+        "vacantHouse": "空き家ナビ物件の購入・賃貸・リフォーム・家財撤去を支援し、空き家購入は補助率2分の1、県外者上限80万円",
+        "application": "詳しい要件は企画政策課へ事前確認"
+      },
+      "source": {
+        "url": "https://www.town.kotoura.tottori.jp/ijuteiju/emigration/support.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31372",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "北栄町",
+      "status": "verified",
+      "summary": "町外からの移住者と45歳以下の町内者の住宅取得を支援し、子育て加算あり",
+      "details": {
+        "outsidePrefecture": "県外転入の新築は基本50万円、若年層加算は住宅取得費の5％で上限200万円",
+        "insidePrefecture": "県内転入の新築は基本25万円、若年層加算は上限100万円",
+        "localResidents": "町内在住で契約時45歳以下の住宅取得者も補助対象",
+        "childAddition": "中学生以下の子ども数に応じ、ほくほくポイントを加算",
+        "deadline": "住宅取得・転入後1年以内に申請"
+      },
+      "source": {
+        "url": "https://www.e-hokuei.net/soshiki/9/1737.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31386",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "大山町",
+      "status": "verified",
+      "summary": "町内新築住宅に50万～100万円、空き家バンク物件の修繕に上限150万円を助成",
+      "details": {
+        "newHomeTarget": "令和5年4月1日以降に町内で新築住宅の請負契約等を行い、取得住宅へ5年以上居住する意思がある者",
+        "newHomeAmount": "認定長期優良住宅・認定低炭素住宅等の認定住宅は100万円、その他は50万円",
+        "vacantHouseTarget": "空き家・空き地バンクを通じて賃貸または購入した空き家を住宅として修繕する者",
+        "vacantHouseAmount": "修繕費の2分の1、上限150万円",
+        "application": "契約書、住民票、登記事項証明書、完成写真、納税確認同意書等を提出"
+      },
+      "source": {
+        "url": "https://www.daisen.jp/10/2/9/a141/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31401",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "日南町",
+      "status": "verified",
+      "summary": "定住者の住宅新築・取得・改修を支援し、町民住宅改修は上限40万円",
+      "details": {
+        "settlement": "いきいき定住促進条例の要件を満たす者が町内事業者による新築・改修または住宅取得を行う場合に住宅補助金を交付",
+        "housingImprovement": "町内居住住宅を町内事業者が税抜20万円以上で改修する場合、令和9年度まで予定で累計上限40万円",
+        "requirements": "町税等の滞納がなく、各制度の定住・施工・申請要件を満たすこと",
+        "application": "契約・着工前を含む所定時期に地域づくり推進課または環境エネルギー課へ確認"
+      },
+      "source": {
+        "url": "https://www.town.nichinan.lg.jp/soshikikarasagasu/kikakuka/koryu_iju/682.html",
+        "checkedAt": "2026-07-21"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.nichinan.lg.jp/soshikikarasagasu/kankyouenergyka/hojo_hojoseido/19394.html",
+          "checkedAt": "2026-07-21"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "31403",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "江府町",
+      "status": "verified",
+      "summary": "移住者・若年子育て世帯の空き家改修費を2分の1、上限100万円補助",
+      "details": {
+        "migration": "空き家バンク物件へ入居する転入後3年以内等の移住者に改修費の2分の1、上限100万円",
+        "disposal": "移住者の空き家家財処分費を全額、上限40万円補助",
+        "youngHousehold": "40歳未満または中学生以下の子を養育する町内在住者の空き家改修費を2分の1、上限100万円補助",
+        "residency": "原則3年間の定住予定等が必要",
+        "application": "工事着手前に住民生活課へ申請"
+      },
+      "source": {
+        "url": "https://www.town-kofu.jp/2/1/4/3/v654/",
+        "checkedAt": "2026-07-21"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "32205",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "大田市",
+      "status": "verified",
+      "summary": "UIターン者等の空き家改修費を2分の1・上限50万円、家財処分を上限15万円補助",
+      "details": {
+        "target": "定住目的で中古住宅を取得・賃借するUIターン者、または対象空き家所有者",
+        "renovation": "25万円以上の空き家改修費の2分の1以内、上限50万円",
+        "disposal": "5万円以上の残存家財処分費の2分の1以内、上限15万円",
+        "conditions": "市内事業者施工、空き家バンク要件、市税滞納なし、改修後5年以上の居住意思等",
+        "application": "事業着手前の申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.oda.lg.jp/ohda_city/city_case/83/9513",
+        "checkedAt": "2026-07-21"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "32206",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "安来市",
+      "status": "verified",
+      "summary": "空き家バンク登録住宅の改修費を2分の1、上限50万～100万円補助",
+      "details": {
+        "property": "安来市空き家バンク登録物件",
+        "target": "3年以上居住する利用者または対象者へ賃貸する所有者",
+        "support": "補助対象経費の2分の1",
+        "limit": "市内在住入居者または賃貸用所有者は上限50万円、UIターン入居者は上限100万円",
+        "condition": "予算範囲内で交付し、着工前申請が必要",
+        "eligibleWork": "居住に必要な改修工事等"
+      },
+      "source": {
+        "url": "https://www.city.yasugi.shimane.jp/kurashi/shushoku/teiju/akiya-kaishu-hojokin.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "32207",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "江津市",
+      "status": "verified",
+      "summary": "UIターン者向け空き家改修費を2分の1、居住部分上限50万円で補助",
+      "details": {
+        "target": "江津市空き家バンク登録物件を購入するUIターン者、またはUIターン者へ貸し出す所有者",
+        "residential": "居住部分の改修費の2分の1、上限50万円",
+        "business": "住居兼店舗等の起業部分も2分の1、上限50万円",
+        "conditions": "市内施工業者、年度内完了、事前相談・申請、補助後5年以内の売却・解体等で返還の場合あり",
+        "additional": "空き家バンク登録物件の家財撤去等は別制度で2分の1・上限10万円"
+      },
+      "source": {
+        "url": "https://www.city.gotsu.lg.jp/site/akiya/1545.html",
+        "checkedAt": "2026-07-21"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.gotsu.lg.jp/soshiki/3/36296.html",
+          "checkedAt": "2026-07-21"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "32386",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "飯南町",
+      "status": "verified",
+      "summary": "45歳以下の定住世帯へ住宅新築・購入・改修費を補助",
+      "details": {
+        "target": "町内に定住する45歳以下の世帯等",
+        "newBuild": "住宅新築・購入費の10分の1、上限100万円",
+        "sitePreparation": "宅地造成費の2分の1、上限50万円",
+        "renovation": "住宅改修費の2分の1、上限50万円",
+        "conditions": "定住、町税滞納なし、着工・契約前申請、町内事業者利用等の要件を制度ごとに確認"
+      },
+      "source": {
+        "url": "https://www.iinan.jp/site/ijyuu/1360.html",
+        "checkedAt": "2026-07-21"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "32448",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "美郷町",
+      "status": "verified",
+      "summary": "定住世帯へ空き家解体、土地購入、新築住宅費を補助",
+      "details": {
+        "target": "申請者または配偶者が40歳以下の世帯等",
+        "demolition": "2分の1・上限200万円",
+        "land": "2分の1・上限50万円",
+        "newBuild": "10分の1・上限100万円と加算"
+      },
+      "source": {
+        "url": "https://gov.town.shimane-misato.lg.jp/reiki_int/reiki_honbun/r071RG00001032.html",
+        "checkedAt": "2026-07-21"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "32525",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "海士町",
+      "status": "verified",
+      "summary": "町営住宅の入居希望を随時受け付け、空きが生じた順に案内",
+      "details": {
+        "support": "町営住宅への入居申込み",
+        "conditions": "住宅不足・申込多数により案内まで相当期間を要する場合がある",
+        "application": "申込書をメール、郵送または役場窓口へ提出"
+      },
+      "source": {
+        "url": "https://www.town.ama.shimane.jp/kurashi-tetsuduki/kurashi/jutaku/uz2oku5fre",
+        "checkedAt": "2026-07-22"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": false
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition"
+      ]
+    },
+    {
+      "code": "32526",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "西ノ島町",
+      "status": "verified",
+      "summary": "月額4万円を超える町営住宅家賃の一部を毎月助成",
+      "details": {
+        "support": "家賃から勤務先等の住宅手当を控除した額のうち、4万円を超える部分を助成",
+        "conditions": "町営住宅入居者で月額4万円を超えて家賃を支払う方",
+        "application": "毎年度末に対象者へ申請書と住宅手当証明書を送付"
+      },
+      "source": {
+        "url": "https://www.town.nishinoshima.shimane.jp/josei/15",
+        "checkedAt": "2026-07-22"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "34203",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "竹原市",
+      "status": "verified",
+      "summary": "35歳未満の移住就業者へ民間賃貸住宅の家賃を月最大1万円、最長24か月補助",
+      "details": {
+        "support": "家賃から住宅手当を控除した額の2分の1、月額上限1万円",
+        "period": "初回申請月から連続24か月まで",
+        "conditions": "2025年3月以降の転入、35歳未満、市内企業等への正規就職、5年以上の定住・勤務意思等",
+        "application": "市内企業等への就業日から1年以内に企画政策課へ申請"
+      },
+      "source": {
+        "url": "https://www.city.takehara.lg.jp/aishihokorashi_takeharagurashi/support/7745.html",
+        "checkedAt": "2026-07-22"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "34208",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "府中市",
+      "status": "unavailable",
+      "summary": "三世代同居・近居支援事業は掲載されているが現在募集停止中",
+      "details": {
+        "plannedSupport": "住宅取得・改修は上限20万～50万円、家賃は月上限5,000円・最長3年",
+        "target": "親世帯と同居・近居する小学生以下の子がいる世帯",
+        "availability": "公式ページで現在募集なし"
+      },
+      "source": {
+        "url": "https://www.city.fuchu.hiroshima.jp/shisei/ippangyosei/8146.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "unavailable_contains_child_specific_housing_language"
+      ]
+    },
+    {
+      "code": "34211",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "大竹市",
+      "status": "verified",
+      "summary": "令和8年度住宅リフォーム補助を2026年6月1日から先着順で受付",
+      "details": {
+        "support": "市内住宅の居住環境向上・定住促進を目的にリフォーム費用の一部を補助",
+        "applicationPeriod": "2026年6月1日9時から、予算到達まで先着順",
+        "conditions": "市の交付決定通知後に工事請負契約を締結すること",
+        "application": "都市計画課建築住宅係へ申請"
+      },
+      "source": {
+        "url": "https://www.city.otake.hiroshima.jp/soshiki/kensetsu/toshikeikaku/kenntikujyuutaku/2/1453510909990.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "34302",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "府中町",
+      "status": "unavailable",
+      "summary": "子育て世帯向け住宅リフォーム補助は令和8年度受付を終了",
+      "details": {
+        "target": "中学3年生までの子どもまたは妊婦がいる世帯",
+        "support": "対象リフォーム費用の23%、上限30万円",
+        "applicationPeriod": "2026年5月25日～29日に事前受付を実施",
+        "availability": "公式ページで令和8年度受付終了を明記"
+      },
+      "source": {
+        "url": "https://www.town.fuchu.hiroshima.jp/site/kosodate/8458.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "unavailable_contains_child_specific_housing_language"
+      ]
+    },
+    {
+      "code": "34304",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "海田町",
+      "status": "verified",
+      "summary": "令和8年度の木造住宅耐震診断・耐震改修等へ費用の一部を補助",
+      "details": {
+        "target": "町内の1981年5月31日以前着工の木造一戸建て住宅・店舗併用住宅等",
+        "applicationPeriod": "2026年4月1日～12月11日、先着順・予算到達で終了",
+        "diagnosis": "耐震診断費の2分の1、上限6万円",
+        "retrofit": "一般改修は補助率80%、居住誘導区域内上限115万円・区域外上限69万円。工事種類により別上限あり"
+      },
+      "source": {
+        "url": "https://www.town.kaita.lg.jp/soshiki/41/135776.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "34369",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "北広島町",
+      "status": "verified",
+      "summary": "空き家情報バンク登録物件の取得後の増改築費を補助",
+      "details": {
+        "target": "北広島町への定住目的で空き家情報バンク登録物件を取得し、取得後1年以内に増改築する者",
+        "support": "対象事業費の3分の1",
+        "amount": "上限100万円",
+        "application": "着工前の申請が必要",
+        "additional": "49歳以下の定住者向け制度や空き家バンク等も案内"
+      },
+      "source": {
+        "url": "https://www.town.kitahiroshima.lg.jp/site/ho-sumai/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "34431",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "大崎上島町",
+      "status": "verified",
+      "summary": "町内業者による住宅新築・改築工事費の10%、最大30万円を助成",
+      "details": {
+        "target": "町内に住民登録がある、または工事完了までに住民登録できる者で町税等の滞納がない者",
+        "support": "税込30万円以上の対象工事費の10分の1",
+        "amount": "上限30万円",
+        "conditions": "町内業者施工、交付決定後着工、他制度との重複対象工事は除外"
+      },
+      "source": {
+        "url": "https://www.town.osakikamijima.hiroshima.jp/soshiki/kensetsu/1/2/3/714.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "34462",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "世羅町",
+      "status": "verified",
+      "summary": "移住者等の住宅新築・空き家購入・空き地購入を補助",
+      "details": {
+        "newHome": "新築費の10分の1、上限60万円。要件に応じ20万円加算、加算上限40万円",
+        "usedHome": "空き家バンク登録物件購入費の5分の1、上限60万円。一定の若年移住世帯は20万円加算",
+        "land": "空き地バンク登録地購入費の10分の1、上限100万円",
+        "conditions": "10年以上の定住意思が必要。工事着手・売買契約前に認定・交付決定を受ける"
+      },
+      "source": {
+        "url": "https://www.town.sera.hiroshima.jp/soshiki/17/75.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35202",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "宇部市",
+      "status": "verified",
+      "summary": "健康・省エネ住宅リフォーム費を5分の1、上限15万円助成",
+      "details": {
+        "target": "市内に住民票があり、市内の自己居住用既存住宅を改修する市税滞納のない者",
+        "support": "対象工事費の5分の1、上限15万円",
+        "vacantHome": "2026年4月以降に居住誘導区域内の空き家を購入し期限内に転居する場合は10分の3、上限30万円",
+        "eligibleWorks": "断熱、バリアフリー、高効率給湯器、節水トイレ等",
+        "application": "2026年5月11日から受付。予算範囲内"
+      },
+      "source": {
+        "url": "https://www.city.ube.yamaguchi.jp/shisei/hojyojyosei/hojyojyosei_kojin/1009208.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35203",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "山口市",
+      "status": "verified",
+      "summary": "市内業者による住宅リフォーム費の10％を商品券で助成",
+      "details": {
+        "target": "新築後1年以上の市内住宅で、市内に本社・本店を置く施工業者と契約する10万円以上のリフォーム工事",
+        "support": "工事費の10％。紙商品券は上限5万円、デジタル商品券は上限10万円",
+        "applicationPeriod": "2026年5月7日から10月30日まで。予算到達時に終了",
+        "conditions": "工事着手前の申請が必要。他の公的助成対象工事との重複不可",
+        "status": "2026年6月22日時点で予算到達率70％超"
+      },
+      "source": {
+        "url": "https://www.city.yamaguchi.lg.jp/soshiki/63/187527.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35206",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "防府市",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の購入者等へ改修費の2分の1、上限50万円を補助",
+      "details": {
+        "target": "全国版空き家・空き地バンク登録物件の購入者または賃貸活用する所有者で所定要件を満たす者",
+        "support": "補助対象経費の2分の1以内",
+        "amount": "上限50万円",
+        "period": "2026年5月8日から12月25日まで。6件程度、予算到達で終了",
+        "conditions": "市内業者施工、10万円以上、契約・着工前の交付決定が必要"
+      },
+      "source": {
+        "url": "https://www.city.hofu.yamaguchi.jp/site/akiya/hojokin-rikatsuyou.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35207",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "下松市",
+      "status": "verified",
+      "summary": "旧耐震基準の木造住宅へ無料耐震診断と耐震改修費80％・上限100万円を支援",
+      "details": {
+        "target": "1981年5月31日以前に着工された市内の3階建て以下の戸建て木造住宅等",
+        "diagnosis": "耐震診断員を無料派遣。2026年度は先着8戸",
+        "renovation": "上部構造評点を1.0以上にする耐震改修費の80％、上限100万円",
+        "period": "2026年5月7日から11月30日まで。改修は2027年2月26日までに完了",
+        "capacity": "耐震改修は先着3戸。同日申請は抽選"
+      },
+      "source": {
+        "url": "https://www.city.kudamatsu.lg.jp/jyuuken/kensetu/doboku/taisinhojyo.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35208",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "岩国市",
+      "status": "verified",
+      "summary": "国の補助を受けた省エネリフォームへ国補助額の2分の1、1世帯上限50万円を追加補助",
+      "details": {
+        "target": "市内戸建住宅を所有・居住し、市内事業者施工の省エネリフォームを実施した岩国市民",
+        "support": "対象となる国補助金額の2分の1",
+        "amount": "市補助は1世帯当たり上限50万円",
+        "period": "2026年5月11日から2027年2月10日まで。予算到達で終了",
+        "conditions": "国補助金の額確定通知を受け、市・県の他補助と重複していないこと"
+      },
+      "source": {
+        "url": "https://www.city.iwakuni.lg.jp/soshiki/22/114549.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35210",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "光市",
+      "status": "verified",
+      "summary": "旧耐震基準の木造住宅へ無料耐震診断と耐震改修費補助を実施",
+      "details": {
+        "target": "1981年5月31日以前着工の市内一戸建て木造住宅等",
+        "diagnosis": "耐震診断員を無料派遣",
+        "renovation": "耐震改修費の80%を補助",
+        "amount": "上限115万円、市内業者施工は上限125万円",
+        "status": "2026年度の耐震改修枠は募集件数到達のためキャンセル待ち",
+        "period": "2026年6月1日から11月6日まで"
+      },
+      "source": {
+        "url": "https://www.city.hikari.lg.jp/soshiki/8/kenchiku/kurashi/1/951.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35211",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "長門市",
+      "status": "verified",
+      "summary": "市内業者による住宅リフォーム費の20%、最大10万円を商品券で助成",
+      "details": {
+        "target": "築5年以上の自己所有住宅に1年以上居住する市民等で、市税滞納がない者",
+        "support": "対象工事費の20%",
+        "amount": "上限10万円を市内利用可能な商品券で交付",
+        "conditions": "税込10万円以上、市内施工業者、交付決定前着工不可、2026年12月までに完了",
+        "availability": "2026年7月16日時点の予算残額は約4%"
+      },
+      "source": {
+        "url": "https://www.city.nagato.yamaguchi.jp/soshiki/62/57332.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35213",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "美祢市",
+      "status": "unavailable",
+      "summary": "令和8年度住宅リフォーム助成は予算上限到達により受付終了",
+      "details": {
+        "availability": "2026年7月8日時点で令和8年度受付終了",
+        "general": "一般型は30万円以上の工事費の10%、上限10万円",
+        "barrierFree": "バリアフリー型は10万円以上の工事費の20%、上限10万円",
+        "conditions": "市内業者施工、交付決定後着工等の要件あり"
+      },
+      "source": {
+        "url": "https://www2.city.mine.lg.jp/soshiki/kankoshokobu/shokorodoka/sumai/5977.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "unavailable_has_direct_looking_housing_source"
+      ]
+    },
+    {
+      "code": "35305",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "周防大島町",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修・家財処分費を2分の1、各上限20万円助成",
+      "details": {
+        "target": "空き家バンク登録物件の所有者、利用者、購入者",
+        "renovation": "町内事業所による機能向上改修費の2分の1、上限20万円",
+        "disposal": "貸主の家財処分費の2分の1、上限20万円",
+        "diy": "借主・購入者のDIY原材料費または改修費の2分の1、上限20万円",
+        "conditions": "助成後は空き家バンクに5年間登録。交付決定前の着手不可"
+      },
+      "source": {
+        "url": "https://www.town.suo-oshima.lg.jp/soshiki/19/1953.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35321",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "和木町",
+      "status": "verified",
+      "summary": "町内住宅のエアコン・断熱サッシ設置等を合計上限30万円補助",
+      "details": {
+        "period": "2026年4月1日から2027年1月29日まで",
+        "target": "申請者等が所有し実際に居住する町内住宅。借家、店舗等は対象外",
+        "support": "エアコンの新設・一定条件の交換、断熱サッシの新設・交換・内窓設置等",
+        "amount": "エアコンは能力により1台上限41,000～63,000円、サッシは面積・工法により1箇所上限10,000～99,000円",
+        "totalCap": "1戸あたりエアコン・サッシ合計上限30万円",
+        "contractor": "山口県内に本店・支店・営業所等がある施工業者による工事"
+      },
+      "source": {
+        "url": "https://www.town.waki.lg.jp/soshiki/3/185.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": false
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition"
+      ]
+    },
+    {
+      "code": "35341",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "上関町",
+      "status": "verified",
+      "summary": "町内の新築戸建住宅取得費等を最大150万円補助",
+      "details": {
+        "target": "町内に新築戸建住宅を建築・購入し所有権と住所を有するなどの要件を満たす者",
+        "support": "登記から1年以内の新築戸建住宅の建築費、購入費、土地代、宅地造成費",
+        "amount": "最大150万円",
+        "additional": "空き家バンク物件の改修費2分の1・上限50万円、家財撤去費2分の1・上限10万円の制度も案内",
+        "conditions": "定住・所有・町税等の要件あり"
+      },
+      "source": {
+        "url": "https://www.town.kaminoseki.lg.jp/mig-set_support.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kaminoseki.lg.jp/%E5%AE%9A%E4%BD%8F%E4%BF%83%E9%80%B2%E6%94%AF%E6%8F%B4%E5%88%B6%E5%BA%A6.html",
+          "checkedAt": "2026-07-23"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "35344",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "平生町",
+      "status": "verified",
+      "summary": "若者世帯の住宅取得と空家バンク物件の改修・不要物撤去を支援",
+      "details": {
+        "youngHousehold": "住宅取得時に夫婦のいずれか、またはひとり親が40歳以下の世帯が対象",
+        "homePurchase": "マイホーム取得20万円",
+        "childAddition": "中学校就学前の子1人目5万円、2人目以降10万円",
+        "otherAddition": "町内親世帯がいるUターン世帯10万円、軽自動車登録1台2万円",
+        "vacantHome": "空家バンク物件のリフォームは2分の1・上限30万円、不要物撤去は上限10万円"
+      },
+      "source": {
+        "url": "https://www.town.hirao.lg.jp/soshiki/chiiki/sosei/teijyu_project/akiya/hirao_akiya_bukken/2930.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "35502",
+      "prefectureCode": "35",
+      "prefecture": "山口県",
+      "name": "阿武町",
+      "status": "verified",
+      "summary": "町内業者による住宅リフォーム費の10分の1、最大10万円を助成",
+      "details": {
+        "target": "町内に居住し所有する住宅の修繕・模様替え等を行う町民",
+        "support": "消費税を除く対象工事費の10分の1",
+        "amount": "上限10万円",
+        "conditions": "10万円以上の工事、町内業者施工、所得合計1,000万円以下、着工前申請等",
+        "period": "申請期間は4月1日から12月20日まで"
+      },
+      "source": {
+        "url": "https://www.town.abu.lg.jp/guide/jyutakureform/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36201",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "徳島市",
+      "status": "unavailable",
+      "summary": "2026年度住宅リフォーム支援事業は実施されたが、事前申込受付は終了",
+      "details": {
+        "confirmed": "市内業者による50万円以上の住宅リフォーム工事を支援",
+        "amount": "一般区分12%・上限12万円、居住促進区域への移住区分20%・上限20万円、中心市街地区分30%・上限30万円",
+        "applicationPeriod": "2026年5月7日から6月3日まで",
+        "availability": "2026年度の事前申込受付は終了"
+      },
+      "source": {
+        "url": "https://www.city.tokushima.tokushima.jp/kurashi/house/house_keikaku/jyutaku_reform.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "unavailable_has_direct_looking_housing_source"
+      ]
+    },
+    {
+      "code": "36202",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "鳴門市",
+      "status": "verified",
+      "summary": "2026年度の住宅安心リフォーム工事費を最大15万円補助",
+      "details": {
+        "target": "市が定める要件を満たす市内住宅のリフォーム工事",
+        "support": "対象工事費の一部を補助",
+        "amount": "最大15万円",
+        "application": "2026年4月15日から66戸予定で先着受付",
+        "conditions": "申請・交付決定前の着工は対象外となるため事前確認が必要"
+      },
+      "source": {
+        "url": "https://www.city.naruto.lg.jp/docs/2025122400031/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36203",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "小松島市",
+      "status": "verified",
+      "summary": "2026年度に木造住宅の耐震診断・耐震改修等を支援",
+      "details": {
+        "target": "原則として2000年5月31日以前に着工された市内木造住宅等",
+        "diagnosis": "耐震診断の自己負担は一戸建て4,000円",
+        "renovation": "耐震改修等のメニューを実施し、組合せにより総額最大210万円を補助",
+        "period": "耐震診断は2027年1月22日まで、改修等は2026年11月30日まで。予定件数超過時は先着順",
+        "conditions": "交付決定前の着工は対象外"
+      },
+      "source": {
+        "url": "https://www.city.komatsushima.lg.jp/docs/5620901.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36205",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "吉野川市",
+      "status": "verified",
+      "summary": "2026年度の木造住宅耐震診断・耐震改修等を支援",
+      "details": {
+        "target": "原則として2000年5月31日以前に着工された3階建て以下の木造住宅等",
+        "diagnosis": "耐震診断費用は無料",
+        "renovation": "耐震改修工事費の5分の4以内、上限200万円。感震ブレーカー設置費上限10万円を加算",
+        "amount": "2026年度まで上限合計210万円の時限措置",
+        "conditions": "耐震診断評点や居住継続、県登録施工者等の要件あり"
+      },
+      "source": {
+        "url": "https://www.city.yoshinogawa.lg.jp/docs/2021041500043/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36341",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "石井町",
+      "status": "verified",
+      "summary": "町内空き家のリフォーム工事費の50%、最大50万円を補助",
+      "details": {
+        "target": "町内で6か月以上使用されていない戸建て住宅・併用住宅を活用する者",
+        "support": "町内施工業者による対象工事費（税抜）の50%",
+        "amount": "上限50万円",
+        "period": "2026年度内、予算上限まで先着順",
+        "conditions": "着工前に建設課へ相談・申請し、2027年1月末までに工事完了"
+      },
+      "source": {
+        "url": "https://www.town.ishii.lg.jp/docs/2023032000020/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36342",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "神山町",
+      "status": "verified",
+      "summary": "神山町認証木材を使う住宅新築・増改築費を最大60万円補助",
+      "details": {
+        "newHome": "認証木材を5立方メートル以上使用する延床33平方メートル以上の新築を対象",
+        "newHomeAmount": "町産材1立方メートル当たり3万円、町内住宅は上限60万円",
+        "extension": "増築は上限50万円、改築は上限30万円",
+        "period": "申請は当該年度11月末まで。着工前に要相談",
+        "area": "徳島県内の自己居住住宅が対象"
+      },
+      "source": {
+        "url": "https://www.town.kamiyama.lg.jp/docs/2025062500013/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "36368",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "那賀町",
+      "status": "verified",
+      "summary": "空き家改修等の移住定住支援を実施",
+      "details": {
+        "target": "那賀町への移住・定住等の要件を満たし、対象空き家を改修する人",
+        "eligibleCost": "10万円以上の対象工事",
+        "application": "着工前に申請し、予算範囲内で交付",
+        "additional": "移住費用や町産材住宅への別制度も案内"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-naka.lg.jp/iju/iinaka-kurashi/sumai/akiya/hojokin/1529537.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36383",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "牟岐町",
+      "status": "verified",
+      "summary": "空き家改修・除却費の2分の1を補助",
+      "details": {
+        "target": "町内の対象空き家を活用または除却する要件該当者",
+        "support": "対象経費の2分の1",
+        "application": "工事着手前の申請と町の交付決定が必要"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-mugi.lg.jp/doc/2024112500010/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36388",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "海陽町",
+      "status": "verified",
+      "summary": "空き家改修費の2分の1以内・上限100万円を補助",
+      "details": {
+        "target": "町内対象空き家へ年度内に入居し5年以上居住する等の要件を満たす人",
+        "support": "補助対象経費の2分の1以内と町産材使用加算の合計",
+        "limit": "上限100万円",
+        "condition": "交付決定前の着工不可、町内事業者施工"
+      },
+      "source": {
+        "url": "https://www.town.kaiyo.lg.jp/docs/2024052300015/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36401",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "松茂町",
+      "status": "verified",
+      "summary": "2026年度の新婚世帯へ住宅・引越費用を最大60万円補助",
+      "details": {
+        "expenses": "住宅賃借、購入、リフォーム、引越費用",
+        "amount": "夫婦とも29歳以下は最大60万円、その他の対象区分は30万円または15万円",
+        "application": "事前相談等が必要"
+      },
+      "source": {
+        "url": "https://www.town.matsushige.tokushima.jp/docs/2024032100024/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "36402",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "北島町",
+      "status": "verified",
+      "summary": "空き家リノベーション費の3分の2、最大320万円を補助",
+      "details": {
+        "target": "町税滞納がなく、町内空き家の所有者または一定の移住・定住者",
+        "support": "補助対象経費の3分の2以内",
+        "amount": "上限320万円",
+        "use": "移住者向け住宅、宿泊施設、店舗・飲食店等の地方創生に資する用途",
+        "period": "2026年6月10日から11月13日まで",
+        "conditions": "県内事業者施工、10年以上の活用、交付決定前着工不可"
+      },
+      "source": {
+        "url": "https://www.town.kitajima.lg.jp/docs/4981767.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36403",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "藍住町",
+      "status": "verified",
+      "summary": "令和8年度に木造住宅の耐震診断・改修等を支援",
+      "details": {
+        "target": "町税等の滞納がない町内木造住宅所有者",
+        "diagnosis": "平成12年5月31日以前着工等の要件を満たす住宅を自己負担4,000円で耐震診断",
+        "renovation": "耐震改修は補助率5分の4、上限200万円に感震ブレーカー10万円を加算",
+        "status": "耐震改修支援は2026年6月22日時点で予算上限に達しキャンセル待ち。診断等は先着・予算範囲内",
+        "period": "2026年5月1日から12月28日まで"
+      },
+      "source": {
+        "url": "https://www.town.aizumi.lg.jp/docs/2024032900037/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36404",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "板野町",
+      "status": "verified",
+      "summary": "令和8年度に木造住宅の耐震診断・耐震改修・住替え等を支援",
+      "details": {
+        "period": "2026年12月24日まで。申請件数により早期終了あり",
+        "diagnosis": "2000年5月31日以前着工の3階建てまでの木造住宅を無料で耐震診断",
+        "renovation": "耐震改修費の5分の4以内、上限210万円",
+        "shelter": "耐震シェルター上限80万円、耐震ベッド上限40万円",
+        "relocation": "一定の旧耐震住宅の除却費を5分の2以内、上限30万円補助"
+      },
+      "source": {
+        "url": "https://www.town.itano.tokushima.jp/docs/2023032400011/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "36405",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "上板町",
+      "status": "verified",
+      "summary": "町内業者による住宅リフォーム費の30%、上限20万円を補助",
+      "details": {
+        "target": "町内で自ら所有または居住する住宅をリフォームする町民",
+        "support": "税抜20万円以上の対象工事費の30%",
+        "amount": "上限20万円",
+        "conditions": "町内業者施工、交付決定前未着工、2027年2月末までに完了",
+        "application": "先着順で予算終了まで"
+      },
+      "source": {
+        "url": "https://www.townkamiita.jp/docs/2024051700038/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36468",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "つるぎ町",
+      "status": "verified",
+      "summary": "定住住宅取得や町内業者による住宅リフォームを補助",
+      "details": {
+        "newHome": "定住目的の新築費の5%。町内業者施工は上限100万円、町外業者は上限50万円",
+        "remodel": "住宅リフォーム費の20%、上限20万円",
+        "conditions": "町内居住、町税滞納なし、町内業者施工等の要件あり",
+        "additional": "空き家バンク登録物件の契約費用を上限20万円補助する制度も案内"
+      },
+      "source": {
+        "url": "https://www.town.tokushima-tsurugi.lg.jp/iju/live/support/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "36489",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "東みよし町",
+      "status": "verified",
+      "summary": "木造住宅の耐震診断・耐震改修・耐震シェルター・住替え等を補助",
+      "details": {
+        "target": "2000年5月31日以前着工の町内木造住宅等、制度ごとの要件を満たす住宅",
+        "diagnosis": "耐震診断自己負担4,000円、補強計画自己負担7,000円",
+        "retrofit": "耐震改修費の5分の4、2026年度まで上限150万円。感震ブレーカー設置は10万円加算",
+        "shelter": "耐震シェルター設置費の5分の4、上限80万円。耐震ベッドは上限40万円",
+        "smartHome": "耐震工事と併せるスマート化工事は3分の2、上限30万円",
+        "relocation": "耐震性のない住宅の除却は5分の2、上限30万円"
+      },
+      "source": {
+        "url": "https://www.town.higashimiyoshi.lg.jp/docs/579.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "38201",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "松山市",
+      "status": "verified",
+      "summary": "市内業者による住宅リフォーム費の10%、基本上限20万円を助成",
+      "details": {
+        "target": "市内に所有し居住する住宅を、市内業者で税抜50万円以上リフォームする者等",
+        "support": "対象工事費の10分の1",
+        "baseAmount": "基本上限20万円",
+        "additions": "空き家バンク購入住宅と省エネ改修は各上限30万円の加算対象",
+        "application": "工事着手前の事前申請と本申請が必要。募集期間・予算上限あり"
+      },
+      "source": {
+        "url": "https://www.city.matsuyama.ehime.jp/bosyu/wagaya.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "38205",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "新居浜市",
+      "status": "verified",
+      "summary": "令和8年度の木造住宅耐震改修費を最大115万円補助",
+      "details": {
+        "target": "市耐震診断で上部構造評点1.0未満と判定された木造住宅の所有者で市税等の滞納がない方",
+        "design": "耐震改修設計費の3分の2以内、上限20万円",
+        "construction": "耐震改修工事費の5分の4以内、上限115万円",
+        "supervision": "工事監理費の2分の1以内、上限3万円",
+        "application": "2026年4月1日から予算範囲内で先着受付"
+      },
+      "source": {
+        "url": "https://www.city.niihama.lg.jp/soshiki/kensido/taishinkaisyuu.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "38386",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "久万高原町",
+      "status": "verified",
+      "summary": "2026年度にゼロ・エネルギー・ハウスの建築・購入費を最大15万円補助",
+      "details": {
+        "target": "自ら居住する町内一戸建てZEHを建築または購入し、県内中小建築業者等が施工する方",
+        "amount": "導入費から他補助金等を控除した額の範囲で上限15万円",
+        "conditions": "住宅版BELSでZEH相当・強化外皮基準の評価を受け、評価どおり施工された住宅",
+        "application": "工事完了日から30日以内に申請"
+      },
+      "source": {
+        "url": "https://www.kumakogen.jp/soshiki/18/21952.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "38401",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "松前町",
+      "status": "verified",
+      "summary": "旧耐震基準の木造住宅の診断・設計・耐震工事費を補助",
+      "details": {
+        "target": "町内で1981年5月31日以前に着工した2階建て以下等の要件を満たす木造住宅",
+        "diagnosis": "町内診断士派遣は無料、自己手配は費用の3分の2・上限2万円",
+        "construction": "耐震工事は10分の8と10万円加算、上限125万円",
+        "design": "耐震設計は費用の3分の2・上限20万円",
+        "period": "2026年5月1日～2027年1月29日、予算内先着"
+      },
+      "source": {
+        "url": "https://www.town.masaki.ehime.jp/soshiki/11/taisin.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": false
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition"
+      ]
+    },
+    {
+      "code": "38402",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "砥部町",
+      "status": "verified",
+      "summary": "旧耐震基準の木造住宅の耐震診断・設計・改修工事費を補助",
+      "details": {
+        "target": "1981年5月31日以前に着工した町内の一戸建て木造住宅等の所有者",
+        "diagnosis": "技術者派遣は申請者負担なし。自己手配の診断は3分の2、上限4万円",
+        "design": "耐震改修設計は3分の2、上限20万円",
+        "construction": "耐震改修工事は5分の4、上限115万円",
+        "supervision": "工事監理は3分の1、上限2万円",
+        "period": "2026年4月6日から12月25日まで、予算内先着"
+      },
+      "source": {
+        "url": "https://www.town.tobe.ehime.jp/kurashi_tetsuzuki/sumai_machizukuri/6/1811.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "38484",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "松野町",
+      "status": "unavailable",
+      "summary": "過去の移住者住宅改修費支援は確認できるが、2026年度の募集・補助上限・申請条件を現行公式ページで確認できない",
+      "details": {
+        "confirmed": "町公式サイトには過去の移住者住宅改修費サポート掲載履歴がある",
+        "availability": "旧個別ページは404で、現行の移住・空き家ポータルと令和8年度予算から募集状況・補助額・申請条件を確定できないため要問い合わせ"
+      },
+      "source": {
+        "url": "https://www.town.matsuno.ehime.jp/site/akiya/",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.matsuno.ehime.jp/life/1/1/4/",
+          "checkedAt": "2026-07-25"
+        },
+        {
+          "url": "https://www.town.matsuno.ehime.jp/site/chocho/17080.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "unavailable_has_direct_looking_housing_source"
+      ]
+    },
+    {
+      "code": "38506",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "愛南町",
+      "status": "verified",
+      "summary": "町内業者による住宅新築・リフォーム工事費の10分の1、最大30万円を補助",
+      "details": {
+        "target": "町内に住所があり、町税等の滞納がなく、自ら居住する住宅を工事する者",
+        "work": "新築または税込50万円以上のリフォーム工事",
+        "contractor": "町内業者による施工",
+        "amount": "対象工事費の10分の1、上限30万円",
+        "application": "工事着手前の申請と交付決定が必要"
+      },
+      "source": {
+        "url": "https://www.town.ainan.ehime.jp/kurashi/tetsuduki/sumai/josei/jutakuhojokin.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41202",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "唐津市",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費を2分の1・上限50万円補助",
+      "details": {
+        "target": "唐津市空き家バンク登録物件の所有者、借受人または購入者で、市外からの転入者が入居する場合",
+        "renovation": "改修経費の2分の1、上限50万円",
+        "disposal": "不要物撤去費の2分の1、上限5万円",
+        "conditions": "事前相談・交付決定前の着工が必要。予算上限に達し次第受付終了"
+      },
+      "source": {
+        "url": "https://www.city.karatsu.lg.jp/page/2381.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41206",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "武雄市",
+      "status": "verified",
+      "summary": "市外から転入して住宅を新築・購入等する定住世帯へ補助",
+      "details": {
+        "target": "市外から転入し、市内で住宅を新築または購入等して定住する者",
+        "programs": "定住支援金・定住特区補助金",
+        "application": "契約・着工時期、居住年数、対象区域等の要件は移住支援サイトで確認が必要",
+        "additional": "住宅耐震化、水に強い住まいづくり等の別制度も実施"
+      },
+      "source": {
+        "url": "https://www.city.takeo.lg.jp/benri/seikatsu/jutaku/003969.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41207",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "鹿島市",
+      "status": "verified",
+      "summary": "登録空き家の購入・改修・家財処分等に対して補助",
+      "details": {
+        "conditions": "鹿島市に登録された空き家で、市税滞納がなく、契約・着手前の事前申請が必要",
+        "purchase": "空き家バンク登録物件の購入費の10分の1、上限30万円",
+        "renovation": "購入した登録空き家の業者施工による改修費の5分の1、上限20万円",
+        "other": "相続登記・家財処分は各上限5万円、除却は上限10万円、危険空き家除却は上限50万円"
+      },
+      "source": {
+        "url": "https://www.city.saga-kashima.lg.jp/main/32988.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41208",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "小城市",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の購入後改修費を2分の1、最大50万円補助",
+      "details": {
+        "target": "空き家バンク登録の一戸建てを購入し、10年以上居住する市内居住者",
+        "support": "県内業者による50万円以上の改修工事費の2分の1",
+        "amount": "上限50万円、1戸1回限り",
+        "conditions": "売買契約後6か月以内かつ工事契約・着手前に申請。税滞納等がないこと",
+        "expandedArea": "芦刈町の登録空き家は別の過疎地域向け拡充制度あり"
+      },
+      "source": {
+        "url": "https://www.city.ogi.lg.jp/main/20133.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41209",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "嬉野市",
+      "status": "verified",
+      "summary": "空き家バンク物件のリフォーム・DIY・家財処分等を補助",
+      "details": {
+        "target": "嬉野市空き家・空き地バンク登録物件の所有者または利用者等",
+        "renovation": "対象工事費の2分の1、上限50万円",
+        "diy": "DIYリフォームの材料費等を上限10万円補助",
+        "other": "賃貸借仲介手数料上限5万円、不用物処分上限8万円、仏壇撤去上限2万円等",
+        "conditions": "リフォーム・DIYは契約・着手前の事前申請が必要。同一物件につき各補助1回"
+      },
+      "source": {
+        "url": "https://www.city.ureshino.lg.jp/kurashi/teiju/akiya/akiyahojokin.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41210",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "神埼市",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費と不要物撤去費を補助",
+      "details": {
+        "target": "空き家・空き地バンク登録物件を購入または賃借し、市内へ定住する利用者等",
+        "renovation": "対象改修費の2分の1、上限50万円",
+        "removal": "不要物撤去費の2分の1、上限10万円",
+        "conditions": "5年以上居住し、市税滞納がなく、親族間取引ではないこと。契約・着手前の申請が必要"
+      },
+      "source": {
+        "url": "https://www.city.kanzaki.saga.jp/main/5077.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kanzaki.saga.jp/main/10071.html",
+          "checkedAt": "2026-07-23"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41346",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "みやき町",
+      "status": "verified",
+      "summary": "2026年度に住宅用太陽光発電設備と蓄電池の導入費を補助",
+      "details": {
+        "target": "町内に住所を有する、または実績報告までに転入し、対象設備を導入する住宅に居住する方",
+        "equipment": "10kW未満の自家消費型太陽光発電設備と蓄電池をセットで導入",
+        "applications": "7件程度、予算範囲内の先着順",
+        "period": "2026年5月11日から10月30日まで",
+        "conditions": "原則として交付決定後に契約・着工し、同種の国補助等との重複不可"
+      },
+      "source": {
+        "url": "https://www.town.miyaki.lg.jp/kurashi/kankyo/_2911/_6676.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41401",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "有田町",
+      "status": "verified",
+      "summary": "空き物件インフォメーション登録住宅の改修費を2分の1、最大50万円補助",
+      "details": {
+        "target": "登録された住居用空き家を売買で取得し、有田町へ移住して入居する購入者",
+        "support": "20万円以上の対象改修費の2分の1",
+        "amount": "上限50万円",
+        "conditions": "対象物件入居後1年以内で、工事内容・契約・支払いを確認できること",
+        "excluded": "別棟、解体のみ、外構、太陽光設備、家具・エアコン購入等は対象外"
+      },
+      "source": {
+        "url": "https://www.town.arita.lg.jp/kiji003693/index.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41424",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "江北町",
+      "status": "verified",
+      "summary": "旧耐震基準の木造住宅の耐震診断・耐震改修費を補助",
+      "details": {
+        "target": "1981年5月31日以前に建築された町内の自己居住用木造戸建住宅等",
+        "diagnosis": "耐震診断の専門家派遣を実施",
+        "renovation": "耐震性不足と判定された住宅の補強設計・耐震改修を支援",
+        "support": "耐震補強設計・改修費の5分の4以内、上限100万円",
+        "conditions": "交付決定前の着手不可。町税等の滞納がないこと"
+      },
+      "source": {
+        "url": "https://www.town.kouhoku.saga.jp/kiji0031578/index.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "41441",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "太良町",
+      "status": "verified",
+      "summary": "旧耐震基準の木造住宅の耐震診断・耐震改修費を補助",
+      "details": {
+        "target": "1981年5月31日以前に着工された町内の自己居住用木造一戸建て住宅等",
+        "diagnosis": "登録建築士による耐震診断費を町が負担し、派遣事務手数料5,000円を負担",
+        "renovation": "耐震基準を満たさない住宅の改修設計・工事を支援",
+        "support": "耐震改修工事費の5分の4以内、案内上限115万円",
+        "conditions": "着手前の事前相談・申請が必要"
+      },
+      "source": {
+        "url": "https://www.town.tara.lg.jp/kurashi/_1649/_4521.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "42208",
+      "prefectureCode": "42",
+      "prefecture": "長崎県",
+      "name": "松浦市",
+      "status": "verified",
+      "summary": "住宅取得、結婚新生活、東京圏からの移住等に対する住まい支援を実施",
+      "details": {
+        "homePurchase": "市内で初めて住宅を取得する人向けの定住奨励金を案内",
+        "marriage": "結婚新生活の家賃・リフォーム・引越費用を、夫婦とも29歳以下は上限60万円、39歳以下は上限30万円補助",
+        "migration": "東京圏からの移住支援金は単身60万円、2人以上世帯100万円、18歳未満1人につき100万円加算",
+        "rental": "定住促進住宅は15歳以下の子どもの人数に応じ家賃減額制度あり"
+      },
+      "source": {
+        "url": "https://www.city-matsuura.jp/chikiokoshi/shipponoeiyo/sumai/index.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "42209",
+      "prefectureCode": "42",
+      "prefecture": "長崎県",
+      "name": "対馬市",
+      "status": "verified",
+      "summary": "多子世帯・新たな3世代同居近居世帯の住宅取得・新築・改修費を補助",
+      "details": {
+        "multiChild": "18歳未満の子が3人以上、または2人で第3子を希望する世帯の中古住宅取得・取得時改修を補助",
+        "threeGeneration": "小学生以下の子育て世帯と祖父母等が新たに同居・近居する住宅取得、新築、改修を補助",
+        "support": "対象経費の5分の1以内、上限50万円",
+        "application": "売買・工事契約または着工前に申請。通常11月末、新築は9月末まで",
+        "budget": "予算到達時は早期終了あり"
+      },
+      "source": {
+        "url": "https://www.city.tsushima.nagasaki.jp/gyousei/soshiki/fukushi/kodomomiraika/kosodateshien/956.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "42210",
+      "prefectureCode": "42",
+      "prefecture": "長崎県",
+      "name": "壱岐市",
+      "status": "verified",
+      "summary": "新規転入者の新築・中古住宅取得や空き家改修等を補助",
+      "details": {
+        "target": "壱岐市へ新規転入し、5年以上定住する意思がある世帯等",
+        "newHome": "新築住宅取得費の10分の1、上限250万円",
+        "usedHome": "中古住宅取得費の5分の1、上限100万円",
+        "renovation": "空き家バンク物件等の改修支援制度あり",
+        "conditions": "契約・着工前の申請や市税滞納がないこと等が必要"
+      },
+      "source": {
+        "url": "https://www.city.iki.nagasaki.jp/mokuteki/hikkoshi/5910.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "42214",
+      "prefectureCode": "42",
+      "prefecture": "長崎県",
+      "name": "南島原市",
+      "status": "verified",
+      "summary": "2026年度の住宅リフォーム費を10%、上限20万円補助",
+      "details": {
+        "target": "市内住宅をリフォームする市内在住者または実績報告までに転入する者で、市税等の滞納がない者",
+        "minimumCost": "市内業者へ発注する30万円以上の工事",
+        "support": "住宅リフォーム工事費の10%",
+        "amount": "上限20万円",
+        "conditions": "交付決定前の着工不可。他制度との重複補助不可。過去に本制度を利用した建物は対象外"
+      },
+      "source": {
+        "url": "https://www.city.minamishimabara.lg.jp/kiji0035627/index.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "42322",
+      "prefectureCode": "42",
+      "prefecture": "長崎県",
+      "name": "川棚町",
+      "status": "verified",
+      "summary": "空き家バンク登録住宅の改修費を2分の1、上限50万円補助",
+      "details": {
+        "target": "空き家バンク登録物件の売買・賃貸借契約を締結して使用する人、または購入して使用予定の人",
+        "support": "日常生活に使用する箇所の改修工事費の2分の1",
+        "amount": "上限50万円",
+        "conditions": "工事費10万円以上、町内事業者による改修、町税滞納なし、所有者の3親等以内の親族ではないこと",
+        "application": "着工前に申請書・事業計画書等を企画観光課へ提出"
+      },
+      "source": {
+        "url": "https://www.kawatana.jp/c5-07/10/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "42383",
+      "prefectureCode": "42",
+      "prefecture": "長崎県",
+      "name": "小値賀町",
+      "status": "verified",
+      "summary": "空き家バンク住宅の改修費を2分の1、上限200万円補助",
+      "details": {
+        "target": "空き家所有者、購入者または借受人で、町内住宅困窮者・移住者の居住や自らの移住定住を目的に改修する人",
+        "support": "対象改修事業費の2分の1",
+        "amount": "上限200万円",
+        "conditions": "空き家バンク登録物件、事業後10年間活用、交付決定前着工不可、年度内完了、他補助との重複不可",
+        "application": "原則11月末までに建設課へ申請"
+      },
+      "source": {
+        "url": "https://www.town.ojika.lg.jp/soshiki/kensetu/1/hozyo_kensetsuka/1356.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "44322",
+      "prefectureCode": "44",
+      "prefecture": "大分県",
+      "name": "姫島村",
+      "status": "verified",
+      "summary": "移住者等の空き家改修費を3分の2・上限100万円、空き家購入費も上限100万円補助",
+      "details": {
+        "target": "村外からの移住予定者または移住後3年以内で、5年以上の定住を誓約し市町村税を完納している人等",
+        "eligibleHousing": "姫島村空き家バンク登録物件または空き家マッチングチームにより成立した物件",
+        "renovation": "居住に必要な空き家改修費の3分の2、1物件上限100万円",
+        "purchase": "空き家購入費を10分の10以内、1物件上限100万円",
+        "householdGoods": "家財処分費を10分の10以内、1物件上限10万円",
+        "combinedLimit": "改修補助と購入補助を併用する場合は合計上限100万円",
+        "conditions": "補助対象事業の着手前に申請し、交付年度内に完了すること"
+      },
+      "source": {
+        "url": "https://www.himeshima.jp/kurashi/akiyahojokin/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.himeshima.jp/wp-content/uploads/akiyahojoyoukou.pdf",
+          "checkedAt": "2026-07-24"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45382",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "国富町",
+      "status": "verified",
+      "summary": "町内業者による10万円以上の住宅リフォーム費の5分の1・上限10万円を補助",
+      "details": {
+        "target": "町民が行う住宅リフォーム",
+        "minimum": "対象工事費10万円以上",
+        "support": "工事費の5分の1",
+        "amount": "下限2万円、上限10万円",
+        "contractor": "国富町商工会員である町内業者",
+        "payment": "国富町共通商品券またはしらたまカードポイントで交付",
+        "conditions": "予算上限があるため工事前に商工会へ相談"
+      },
+      "source": {
+        "url": "https://www.town.kunitomi.miyazaki.jp/main/tourism/commerce/page001869.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45383",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "綾町",
+      "status": "verified",
+      "summary": "旧耐震木造住宅の耐震改修費を80％・上限115万円補助",
+      "details": {
+        "target": "1981年5月31日以前に建築された平屋または2階建て木造住宅等",
+        "diagnosis": "耐震診断・耐震補強設計等に補助制度あり",
+        "retrofit": "耐震改修費が143万8,000円以内の場合は80％を補助",
+        "amount": "耐震改修補助上限115万円",
+        "conditions": "事前相談・申請と交付決定後の着工が必要",
+        "program": "住宅耐震化緊急促進アクションプログラムにより戸別訪問等も実施"
+      },
+      "source": {
+        "url": "https://www.town.aya.miyazaki.jp/soshiki/kensetuka/6918.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.aya.miyazaki.jp/soshiki/kensetuka/9135.html",
+          "checkedAt": "2026-07-24"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45401",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "高鍋町",
+      "status": "verified",
+      "summary": "三大都市圏等から移住する29歳以下へ2026年度若者応援給付金30万円",
+      "details": {
+        "target": "三大都市圏等から高鍋町へ移住する29歳以下で所定要件を満たす人",
+        "amount": "30万円",
+        "residency": "申請日において5年以上高鍋町に居住する意思が必要",
+        "conditions": "転入時期、移住元での居住・就業、移住後の就業・起業等についてチェック表の要件を満たすこと",
+        "application": "住民票除票、本人確認、納税証明、振込口座、該当する就業証明等を提出"
+      },
+      "source": {
+        "url": "https://www.town.takanabe.lg.jp/soshiki/chiikiseisaku/3/4588.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45402",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "新富町",
+      "status": "verified",
+      "summary": "三大都市圏からの要件付き移住世帯へ100万円、単身へ60万円または30万円を交付",
+      "details": {
+        "program": "新富町移住支援金",
+        "household": "世帯で移住した場合100万円",
+        "single": "単身は制度区分により60万円または30万円",
+        "origin": "転入前10年間のうち通算5年以上、かつ直前1年以上三大都市圏に在住・就業等の要件",
+        "afterMove": "移住後の就業・起業・テレワーク等と継続居住の要件あり",
+        "application": "移住前歴や就業条件が複雑なため産業振興課へ事前相談"
+      },
+      "source": {
+        "url": "https://www.town.shintomi.lg.jp/soshiki/sangyoshinko/gyomu/1/3401.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "45403",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "西米良村",
+      "status": "verified",
+      "summary": "要件を満たす新築住宅の固定資産税を2分の1に減額",
+      "details": {
+        "target": "専用住宅または居住部分が2分の1以上の併用住宅で、床面積50平方メートル以上280平方メートル以下等の要件を満たす新築住宅",
+        "reduction": "居住部分の床面積120平方メートルまで固定資産税を2分の1に減額",
+        "period": "一般住宅は新築後3年度分、3階建て以上の中高層耐火住宅等は5年度分",
+        "longLife": "長期優良住宅は5年度分、中高層耐火住宅等は7年度分",
+        "application": "長期優良住宅の適用には申告書提出が必要"
+      },
+      "source": {
+        "url": "https://www.vill.nishimera.lg.jp/village/a-00-villagelife/10000967",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45404",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "木城町",
+      "status": "verified",
+      "summary": "要件を満たす県外からの移住世帯へ100万円、18歳未満1人につき100万円を加算",
+      "details": {
+        "program": "木城町移住支援金制度",
+        "household": "世帯での移住は100万円",
+        "childAdd": "18歳未満の世帯員を帯同した場合、1人につき100万円加算",
+        "single": "単身は60万円または30万円",
+        "origin": "東京圏・名古屋圏・大阪圏・福岡県等からの移住元要件あり",
+        "employment": "対象求人、農林漁業、医療福祉、起業、テレワーク、関係人口等の就業要件あり",
+        "application": "移住前の事前相談が必須で、転入から1年以内に申請"
+      },
+      "source": {
+        "url": "https://www.town.kijo.lg.jp/sosikikarasagasu/tiikiseisakuka/3/1989.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": true,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "45406",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "都農町",
+      "status": "verified",
+      "summary": "住宅取得・リフォーム・家賃・空き家片付け等の定住奨励事業を実施",
+      "details": {
+        "program": "都農町定住促進制度",
+        "housingAcquisition": "町内に自ら居住する住宅を新築・購入した世帯へ定住住宅取得奨励金",
+        "land": "町管理の保留地等を購入して新築する場合は保留地等取得奨励金",
+        "renovation": "自ら居住する住宅のリフォームへ定住住宅リフォーム奨励金",
+        "rental": "町外から転入する就業者への転入奨励金及び民間賃貸住宅家賃助成",
+        "vacantHouse": "賃貸・売買する空き家の家財道具等片付け奨励金",
+        "conditions": "町税等の滞納がないこと、定住・住宅・工事等の個別要件を満たすことが必要"
+      },
+      "source": {
+        "url": "https://www.town.tsuno.lg.jp/reiki/reiki_honbun/q632RG00000442.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45429",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "諸塚村",
+      "status": "verified",
+      "summary": "住宅新築・増改築等に最大200万円、宅地造成に最大90万円相当を補助",
+      "details": {
+        "program": "宅地造成整備事業、住まい環境整備事業、空き家改修・サブリース等",
+        "land": "造成完了後2年以内に新築・定住する場合、100万～300万円を限度とする事業費の30％を補助",
+        "construction": "村産材を利用した住宅の新築・増改築等を支援",
+        "amount": "基準額300万円まで30％、300万～2,500万円部分は5％、補助上限200万円",
+        "vacantHouse": "空き家バンク登録物件の改修補助や、村が10年間借り上げて改修・賃貸するサブリース制度あり",
+        "application": "契約・着工前に移住定住窓口又は村担当課へ相談"
+      },
+      "source": {
+        "url": "https://iju.vill.morotsuka.miyazaki.jp/subsidy/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "45430",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "椎葉村",
+      "status": "verified",
+      "summary": "村産材を使った住宅・店舗等の新築・増改築費を2分の1以内、上限100万円補助",
+      "details": {
+        "program": "木造住宅建築支援事業",
+        "target": "椎葉村に住所があり、引き続き5年以上居住する見込みの人",
+        "eligibleWork": "村内住宅・店舗等の新築、増築、改築。倉庫、牛舎、車庫、門扉、塀、柵は除外",
+        "material": "村産材を使用し、木材経費10万円以上",
+        "support": "対象経費の2分の1以内",
+        "amount": "補助上限100万円",
+        "application": "工事前に建設課へ申請し、交付決定を受ける"
+      },
+      "source": {
+        "url": "https://www.vill.shiiba.miyazaki.jp/construct/facilities/index.php",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45431",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "美郷町",
+      "status": "verified",
+      "summary": "空き家バンク物件のリフォーム費を2分の1・上限50万円補助",
+      "details": {
+        "program": "美郷町空家対策支援事業補助金",
+        "target": "美郷町空家等情報バンクの物件登録者又は利用登録者で、町税等の滞納がない人",
+        "eligibleWork": "空き家バンク登録住宅・併用住宅の居住用リフォーム工事",
+        "support": "対象リフォーム工事費の2分の1",
+        "amount": "補助上限50万円",
+        "conditions": "町内事業者が施工し、売買・賃貸交渉成立年度又は翌年度に実施し、交付年度内に完了すること",
+        "additional": "家財処分は2分の1・上限20万円、老朽危険家屋除却にも別制度あり"
+      },
+      "source": {
+        "url": "https://www.town.miyazaki-misato.lg.jp/kiji003289/index.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "45441",
+      "prefectureCode": "45",
+      "prefecture": "宮崎県",
+      "name": "高千穂町",
+      "status": "verified",
+      "summary": "空き家の地域活動拠点改修を3分の2・最大200万円補助",
+      "details": {
+        "program": "高千穂町空き家等まちづくり活動拠点整備事業補助金",
+        "target": "空き家所有者、購入予定者又は所有者同意を得た賃借人等",
+        "vacancy": "空き家・空き建築物となって1年以上経過している等の条件あり",
+        "eligibleUse": "宿泊施設、文化施設、交流体験施設等の地域活動拠点への改修",
+        "support": "対象経費の3分の2以内",
+        "amount": "上限200万円",
+        "obligation": "補助翌年度から10年間、活動実績報告書を提出",
+        "additional": "老朽危険空家除却は2分の1・上限50万円の別制度あり"
+      },
+      "source": {
+        "url": "https://www.town-takachiho.jp/top/soshiki/kensetsu/3/2/4265.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47201",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "那覇市",
+      "status": "verified",
+      "summary": "離職・収入減等で住居喪失のおそれがある世帯へ家賃相当額を支給",
+      "details": {
+        "program": "住居確保給付金（家賃補助分）",
+        "target": "離職・廃業又は本人の責めによらない就業機会減少により経済的に困窮し、住居を失った又は失うおそれがある人",
+        "support": "収入・資産・求職活動等の要件を満たす場合、家賃相当分を支給",
+        "incomeBasis": "2026年7月改正で支給基準額を引上げ。単身世帯9万円、2人世帯13万2千円等を基準に判定",
+        "employment": "那覇市就職・生活支援パーソナルサポートセンターの就労支援と並行",
+        "application": "那覇市PSへ相談し、必要書類をそろえて申請"
+      },
+      "source": {
+        "url": "https://www.city.naha.okinawa.jp/fukusi/shakaifukushi/1003447/1003473.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47205",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "宜野湾市",
+      "status": "verified",
+      "summary": "離職・収入減等で住居喪失のおそれがある世帯へ家賃相当額を原則3か月支給",
+      "details": {
+        "program": "住居確保給付金（家賃補助）",
+        "target": "離職・廃業又は本人の責めによらない就業機会減少により経済的に困窮し、住居を失った又は失うおそれがある人",
+        "amount": "月額上限は単身32,000円、2人38,000円、3～5人41,000円、6人45,000円、7人以上49,000円",
+        "period": "原則3か月。要件を満たす場合は最長9か月",
+        "payment": "市から賃貸住宅の貸主又は委託業者へ直接支払",
+        "requirements": "収入・資産・求職活動等の要件あり",
+        "application": "宜野湾市生活支援相談窓口で相談し必要書類を提出"
+      },
+      "source": {
+        "url": "https://www.city.ginowan.lg.jp/soshiki/fukushi/6/1/3/6280.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47209",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "名護市",
+      "status": "verified",
+      "summary": "離職・休業等で住居喪失のおそれがある世帯へ一定期間家賃相当額を支給",
+      "details": {
+        "program": "住居確保給付金",
+        "target": "離職、廃業又は休業等による収入減少で経済的に困窮し、住宅を失った又は失うおそれがある人",
+        "support": "就職に向けた活動を条件に一定期間の家賃相当額を市から貸主等へ支給",
+        "requirements": "世帯収入・金融資産・求職活動等の要件あり",
+        "application": "くらしと仕事の応援センターさぽんちゅへ事前連絡して相談・申請",
+        "additional": "専門支援員による就労・生活相談を併用可能"
+      },
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2020042000033/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47210",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "糸満市",
+      "status": "verified",
+      "summary": "離職・収入減等で住居を失うおそれがある世帯へ住居確保給付金を支給",
+      "details": {
+        "target": "離職・廃業後2年以内、または本人都合によらない就業機会減少により住居を失った、もしくは失うおそれがある世帯",
+        "support": "収入・資産・求職活動等の要件を満たす場合、家賃相当額を上限内で家主等へ支給",
+        "period": "原則3か月。要件を満たす場合は延長可能",
+        "application": "糸満市社会福祉課の相談窓口へ申請"
+      },
+      "source": {
+        "url": "https://www.city.itoman.lg.jp/soshiki/13/1725.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47211",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "沖縄市",
+      "status": "verified",
+      "summary": "家賃補助と転居費用補助の住居確保給付金を実施",
+      "details": {
+        "target": "離職・廃業または本人都合によらない就業機会減少等で経済的に困窮し、住居を失ったまたは失うおそれがある人",
+        "support": "一定期間の家賃相当額、または家計改善に必要な転居費用相当額を要件内で支給",
+        "conditions": "収入・資産・求職活動等の要件あり",
+        "application": "沖縄市就職・生活支援パーソナルサポートセンターへ相談・申請"
+      },
+      "source": {
+        "url": "https://www.city.okinawa.okinawa.jp/k021/kenkou/fukushiippan/juutakushien/p00001.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47212",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "豊見城市",
+      "status": "verified",
+      "summary": "離職・収入減等で住居喪失のおそれがある世帯へ家賃相当額を支給",
+      "details": {
+        "target": "離職、廃業または本人都合によらない就業機会減少等により経済的に困窮し、住居を失ったまたは失うおそれがある人",
+        "support": "収入・資産・求職活動等の要件を満たす場合、家賃相当額を上限内で支給",
+        "additional": "世帯収入が著しく減少し家計改善に転居が必要な場合は転居費用補助も利用可能",
+        "application": "豊見城市パーソナルサポートセンターへ事前相談・申請"
+      },
+      "source": {
+        "url": "https://www.city.tomigusuku.lg.jp/soshiki/3/1015/gyomuannai/1/9686.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47213",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "うるま市",
+      "status": "verified",
+      "summary": "離職等で住居喪失のおそれがある人へ家賃相当額を原則3か月支給",
+      "details": {
+        "target": "離職・自営業廃業等により経済的に困窮し、住居を失ったまたは失うおそれがある人",
+        "support": "世帯人数別上限内の家賃相当額を原則3か月支給し、条件により延長可能",
+        "conditions": "収入・資産・求職活動等の要件あり",
+        "application": "うるま市就職・生活支援パーソナルサポートセンターへ事前相談"
+      },
+      "source": {
+        "url": "https://www.city.uruma.lg.jp/1004002000/contents/1926.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47214",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "宮古島市",
+      "status": "verified",
+      "summary": "離職・収入減等で住居喪失のおそれがある世帯へ住居確保給付金を支給",
+      "details": {
+        "target": "離職・廃業または本人都合によらない就業機会減少等により経済的に困窮し、住居を失ったまたは失うおそれがある人",
+        "support": "収入・資産・求職活動等の要件を満たす場合、家賃相当額を上限内で支給",
+        "payment": "原則として市から家主・不動産事業者等へ直接支払い",
+        "application": "宮古島市生活福祉課等の相談窓口へ申請"
+      },
+      "source": {
+        "url": "https://www.city.miyakojima.lg.jp/kurashi/kenkou/hukushi/2023-0406-1142-66.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47215",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "南城市",
+      "status": "verified",
+      "summary": "離職等で住居を失った、または失うおそれがある人へ家賃相当額を支給",
+      "details": {
+        "target": "離職等により住居を失った、または失うおそれが高く、収入・資産等の要件を満たす人",
+        "support": "一定期間、上限内の家賃相当額を支給",
+        "conditions": "収入・資産・求職活動等の要件あり",
+        "application": "南城市就職・生活支援パーソナルサポートセンターへ相談・申請",
+        "additional": "家計改善・就労・居住支援と一体的に支援"
+      },
+      "source": {
+        "url": "https://www.city.nanjo.okinawa.jp/kurashi/kenkou_fukushi/1596520706/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47301",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "国頭村",
+      "status": "verified",
+      "summary": "所得等の要件に基づき村営住宅の入居者を募集",
+      "details": {
+        "support": "村営住宅浜団地・佐手団地等の空室について入居者募集を実施",
+        "currentRecruitment": "2026年7月21日から7月28日まで浜団地1戸・佐手団地2戸を募集",
+        "conditions": "収入証明、入居資格審査等が必要",
+        "application": "住民課へ申込書・収入証明書等を提出",
+        "additional": "定住促進空家活用住宅や空き家バンク等の定住支援も実施"
+      },
+      "source": {
+        "url": "https://www.vill.kunigami.okinawa.jp/category/k_jyumin/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47302",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "大宜味村",
+      "status": "verified",
+      "summary": "移住定住促進住宅や空き家活用等の住まい支援を実施",
+      "details": {
+        "support": "移住定住促進住宅を設置し、定住希望者や地域活性化の担い手へ一定期間の住まいを提供",
+        "conditions": "村への住所登録、生活の本拠、定住意思、入居審査等が必要",
+        "application": "募集期間中に企画観光課へ必要書類を提出",
+        "additional": "住民サービス・定住支援一覧、空き家活用等の情報を公開"
+      },
+      "source": {
+        "url": "https://www.vill.ogimi.okinawa.jp/soshiki/kikaku_kanko/gyomu/sumai/index.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47306",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "今帰仁村",
+      "status": "verified",
+      "summary": "所得等の要件に基づき村営住宅の入居者を募集",
+      "details": {
+        "support": "村営勢理客団地等の空室について入居者を公募",
+        "currentRecruitment": "2026年7月1日から7月31日まで勢理客団地の入居者募集を実施",
+        "conditions": "住宅困窮、収入、税滞納がないこと等の入居資格審査あり",
+        "application": "指定期間内に村営住宅担当へ申込書・証明書類を提出",
+        "selection": "資格審査後に選考・抽選等で入居者を決定"
+      },
+      "source": {
+        "url": "https://www.nakijin.jp/pagtop/topics/5331.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": false
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition"
+      ]
+    },
+    {
+      "code": "47313",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "宜野座村",
+      "status": "verified",
+      "summary": "村営住宅情報と移住生活情報を公開し、入居・住まい探しを支援",
+      "details": {
+        "support": "村営住宅の所在地・平面図・案内図等を公式サイトで公開",
+        "application": "空室募集時は村の指定期間内に申込みと入居資格審査が必要",
+        "conditions": "住宅困窮、収入、税滞納等の村営住宅入居要件に基づき審査",
+        "additional": "宜野座村への移住生活情報も住まいページで案内",
+        "guidance": "現行の空室・募集条件は宜野座村建設課へ確認"
+      },
+      "source": {
+        "url": "https://www.vill.ginoza.okinawa.jp/soshiki/1007/kentiku/74.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47314",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "金武町",
+      "status": "verified",
+      "summary": "高齢者・障害者世帯等の住宅改修費を所得区分に応じて助成",
+      "details": {
+        "target": "身体機能の低下等により住宅改修が必要な高齢者・障害者等で町の要件を満たす世帯",
+        "support": "浴室・便所・玄関等の改修費用の一部を助成",
+        "careInsurance": "介護保険利用者は住宅改修の限度額20万円を超えた部分が対象",
+        "copay": "所得に応じて工事費用の一部を自己負担し、生活保護世帯は自己負担なし",
+        "application": "工事着手前に町へ相談・申請し、審査・決定後に実施"
+      },
+      "source": {
+        "url": "https://www.town.kin.okinawa.jp/iryo_kenko_fukushi/koreishafukushi_kaigo/koureisya-sa-bisu/2242.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47315",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "伊江村",
+      "status": "verified",
+      "summary": "移住定住促進住宅12戸を最長5年間、月2万5千円から提供",
+      "details": {
+        "facility": "伊江村移住定住促進住宅・鉄筋コンクリート造2階建て12戸・2LDK",
+        "target": "地域づくりや地域産業の担い手となるU・Iターン希望者等で条例要件を満たす人",
+        "period": "入居期間5年間",
+        "rent": "1年目月額25,000円、2年目以降月額35,000円",
+        "deposit": "敷金50,000円",
+        "application": "住民票、所得証明書、納税証明書等を添えて企画課へ郵送申込み"
+      },
+      "source": {
+        "url": "https://www.iejima.org/document/2021060400027/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47324",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "読谷村",
+      "status": "verified",
+      "summary": "村内業者による既存住宅リフォーム費を20％・上限20万円補助",
+      "details": {
+        "target": "村内の自己所有住宅等を村内施工業者で改修し、税等の要件を満たす人",
+        "minimum": "税込20万円以上の対象工事",
+        "support": "20万円以上100万円未満は対象工事費の20％、100万円以上は20万円",
+        "limit": "1人1回・1住宅1回",
+        "period": "令和8年6月10日～11月30日、予算到達時は早期終了",
+        "application": "工事着手前に土木建築課へ申請し、交付決定後に着工"
+      },
+      "source": {
+        "url": "https://www.vill.yomitan.okinawa.jp/soshiki/dobokukenchiku/gyomu/sumai/6185.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47326",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "北谷町",
+      "status": "verified",
+      "summary": "所得等の要件を満たす世帯を対象に町営住宅の空家待ち入居者を募集",
+      "details": {
+        "housing": "栄口住宅58戸、砂辺住宅94戸等の町営住宅",
+        "rent": "栄口住宅は月額21,600円から。砂辺住宅は間取り・所得等により決定",
+        "application": "令和8年度は6月3日～16日に都市計画課窓口で空家待ち申込み",
+        "selection": "申込者から抽選で待機順位を決定し、空家発生時に入居案内",
+        "priority": "優遇申込者は募集案内に定める追加書類を提出"
+      },
+      "source": {
+        "url": "https://www.chatan.jp/smph/seikatsuguide/jutaku/choeijutaku/choueijuutakubosyuu.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": false
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "47327",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "北中城村",
+      "status": "verified",
+      "summary": "景観協定地区の琉球瓦屋根改修等を費用2分の1・最大75万円補助",
+      "details": {
+        "area": "荻道・大城地区の景観協定地区内",
+        "eligibleWork": "琉球瓦への屋根葺き替え、新増改築時の琉球瓦葺き、道路沿いの生け垣・石垣等の整備",
+        "support": "対象経費の2分の1を上限額内で助成",
+        "roof": "屋根の改修等は上限75万円",
+        "hedge": "生け垣・石垣等は上限25万円",
+        "application": "着工前に建設課都市計画係へ相談・交付申請"
+      },
+      "source": {
+        "url": "https://www.vill.kitanakagusuku.lg.jp/kakuka/kensetu/toshi/kaihatukensetsu/254.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "47328",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "中城村",
+      "status": "verified",
+      "summary": "10人槽以下の合併処理浄化槽設置費を最大54万8千円補助",
+      "details": {
+        "area": "公共下水道事業認可・計画区域外または整備が当分見込まれない地域",
+        "target": "10人槽以下の合併処理浄化槽を新設、または単独処理浄化槽から転換する住宅等",
+        "fivePerson": "5人槽上限332,000円",
+        "sevenPerson": "6～7人槽上限414,000円",
+        "tenPerson": "8～10人槽上限548,000円",
+        "application": "工事前に住民生活課へ交付申請し、法令上の手続きと完了報告が必要"
+      },
+      "source": {
+        "url": "https://www.vill.nakagusuku.okinawa.jp/kurashi/gomi/seido/jokaso/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": false
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition"
+      ]
+    },
+    {
+      "code": "47350",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "南風原町",
+      "status": "verified",
+      "summary": "町内業者による20万円以上の住宅リフォーム費を20％・上限20万円補助",
+      "details": {
+        "target": "南風原町に住民登録があり、対象住宅を所有・居住し、町税・給食費・保育料等の滞納がない人",
+        "eligibleWork": "バリアフリー、省エネ、住宅耐久性向上、テレワーク推進の改修工事",
+        "minimum": "総工事費20万円以上",
+        "support": "補助対象経費の20％",
+        "amount": "上限20万円",
+        "contractor": "町内施工業者による工事",
+        "period": "令和8年度募集。交付決定前の着工は対象外"
+      },
+      "source": {
+        "url": "https://www.town.haebaru.lg.jp/soshiki/14/17050.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47353",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "渡嘉敷村",
+      "status": "verified",
+      "summary": "病気・失業・災害等で収入が著しく減少した村営住宅入居者の家賃を一定期間減免",
+      "details": {
+        "target": "村営住宅入居者のうち、予測できない病気・失業・災害等で収入が著しく減少した人",
+        "support": "現在の村営住宅家賃を一定期間減額",
+        "exclusion": "家賃未納者、生活保護受給者は対象外",
+        "alternative": "減免を受けられない場合は家賃等徴収猶予へ切り替えて申請可能",
+        "application": "家賃等減免申請書と収入減少を証明する書類を総務課へ提出"
+      },
+      "source": {
+        "url": "https://www.vill.tokashiki.okinawa.jp/soshiki/somu/6/3/1/644.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47355",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "粟国村",
+      "status": "verified",
+      "summary": "移住希望者・村民向けに空家バンクを運用し、売買・賃貸物件の登録と利用者登録を受け付ける",
+      "details": {
+        "service": "空家所有者の物件情報を登録し、移住・入居希望者へ賃貸または売買物件として紹介",
+        "availability": "2026年7月確認時点の掲載空家は1件",
+        "ownerProcedure": "空家情報台帳登録申込書・登録シート等を提出",
+        "userProcedure": "空家等情報制度利用登録申込書と誓約書を提出",
+        "additionalHousing": "村営住宅及び単身者向け定住促進住宅も整備されているが、空室・募集条件は経済課への確認が必要",
+        "contact": "総務課"
+      },
+      "source": {
+        "url": "https://www.vill.aguni.okinawa.jp/kurashi/1042.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "47357",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "南大東村",
+      "status": "verified",
+      "summary": "村内の自己居住用新築住宅について建築資材輸送費の90％、上限300万円を補助",
+      "details": {
+        "target": "村内に自己居住用住宅を新築し、5年以上居住する意思がある人",
+        "support": "沖縄本島等から村までの建築資材輸送費の90％",
+        "limit": "1戸当たり上限300万円",
+        "period": "令和8年度事業",
+        "application": "資材輸送前に申請し、村税等の滞納がないことが必要",
+        "exclusion": "交付決定前に輸送した費用等は対象外"
+      },
+      "source": {
+        "url": "https://www.vill.minamidaito.okinawa.jp/page/1190.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47358",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "北大東村",
+      "status": "verified",
+      "summary": "移住者向け村営住宅を整備し、村公式サイトで入居募集状況と住宅概要を案内",
+      "details": {
+        "housing": "移住・定住ページで村営住宅の概要を公開",
+        "availability": "2026年7月確認時点では入居募集なし",
+        "application": "募集時期、対象世帯、家賃、敷金、入居期間、優先条件は次回募集要項で確認",
+        "contact": "総務課",
+        "classification": "補助金ではなく公的賃貸住宅による居住支援として登録"
+      },
+      "source": {
+        "url": "https://vill.kitadaito.okinawa.jp/ijyuu/living/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "47359",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "伊平屋村",
+      "status": "verified",
+      "summary": "移住・新規就農等を支援する定住促進住宅を整備し、入居申込制度を運用",
+      "details": {
+        "purpose": "移住者及び人材確保が困難な一次産業従事者等の定住を住宅賃貸で支援",
+        "target": "村内へ移住し、新規就農・漁業等を通じて定住を目指す人",
+        "application": "募集要項、入居申込書、申込調査票を村公式サイトで公開",
+        "housing": "住宅位置図・物件写真を公開",
+        "availability": "現時点の空室・募集期間・家賃・敷金は最新募集要項を企画財政課へ確認"
+      },
+      "source": {
+        "url": "https://www.vill.iheya.okinawa.jp/soshiki/3/1010.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47360",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "伊是名村",
+      "status": "verified",
+      "summary": "2026年7月に定住促進住宅2棟の入居者募集を実施",
+      "details": {
+        "housing": "定住促進住宅諸見1号棟及び伊是名1号棟",
+        "published": "2026年7月10日に入居者募集を村公式サイトへ掲載",
+        "purpose": "村内への定住を促進する公的賃貸住宅",
+        "application": "申込資格、家賃、敷金、入居期間、必要書類は各募集要項及び企画政策課へ確認",
+        "status": "募集状況は申込期限・選考結果により変動するため最新情報を要確認"
+      },
+      "source": {
+        "url": "https://www.vill.izena.okinawa.jp/1594019388/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.izena.okinawa.jp/topics/1783661063/",
+          "checkedAt": "2026-07-24"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "47362",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "八重瀬町",
+      "status": "verified",
+      "summary": "2026年度、町内事業者による住宅リフォーム費を20％または40％、上限20万円補助",
+      "details": {
+        "target": "町税等の滞納がなく、八重瀬町に住民登録し対象住宅に居住中または工事後に居住予定の人",
+        "housing": "建築後1年以上の自己所有住宅、1年以上空き家の自己所有住宅、所有者許可のある借家等",
+        "eligibleWork": "20万円以上のバリアフリー、省エネ、空き家、耐久性向上、テレワーク対応等の改修工事",
+        "support": "バリアフリー工事は工事費の40％以内、その他は20％以内",
+        "limit": "補助上限20万円",
+        "period": "2026年7月22日から2027年1月31日まで。予算到達時は終了",
+        "application": "交付決定前の契約・着工は対象外。町内施工業者を利用し土木建設課へ事前申請"
+      },
+      "source": {
+        "url": "https://www.town.yaese.lg.jp/docs/2026070600030/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    },
+    {
+      "code": "47375",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "多良間村",
+      "status": "verified",
+      "summary": "定住奨励金20万円と住宅新築・購入奨励金最大120万円を支給",
+      "details": {
+        "settlement": "定住者1世帯につき定住奨励金20万円",
+        "housing": "定住住宅の新築または購入に対し床面積に応じ50万円・100万円・120万円",
+        "amount": "39平方メートル以上66平方メートル未満50万円、66平方メートル以上99平方メートル未満100万円、99平方メートル以上120万円",
+        "rental": "定住促進空家活用住宅や村営住宅の募集も実施",
+        "application": "定住年数、転入時期、世帯・住宅要件、併給制限は総務財政課・土木建設課へ確認"
+      },
+      "source": {
+        "url": "https://www.vill.tarama.okinawa.jp/gyousei/kurasou/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.vill.tarama.okinawa.jp/news/5721/",
+          "checkedAt": "2026-07-24"
+        }
+      ],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified",
+        "verified_missing_target_or_condition"
+      ]
+    },
+    {
+      "code": "47381",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "竹富町",
+      "status": "verified",
+      "summary": "2026年度、10万円以上の住宅改修費を20％・上限50万円補助",
+      "details": {
+        "target": "町内に居住し、対象住宅を所有または所有者の承諾を得て居住する等、交付要綱の要件を満たす人",
+        "eligibleWork": "バリアフリー、省エネ、空き家、耐久性向上等の住宅リフォーム工事",
+        "minimum": "補助対象工事費10万円以上",
+        "support": "補助対象工事費の20％以内",
+        "limit": "上限50万円",
+        "period": "2026年6月29日から7月31日まで",
+        "selection": "申請総額が予算を超えた場合は公開抽選",
+        "application": "交付要綱を確認し、見積書、写真、登記・固定資産資料、住民票等を提出"
+      },
+      "source": {
+        "url": "https://www.town.taketomi.lg.jp/topics/taketomireform/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [],
+      "classificationSignals": {
+        "hasChildOrFamilyCondition": false,
+        "hasGenericHousingTerms": true
+      },
+      "reasons": [
+        "verified_without_explicit_child_or_family_condition",
+        "generic_migration_or_housing_program_may_be_misclassified"
+      ]
+    }
+  ],
+  "result": {
+    "status": "mechanical_candidates_generated_pending_official_review",
+    "confirmedCorrectionCount": null,
+    "unresolvedConfirmedErrorCount": null
+  }
+}
