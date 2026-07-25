@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch18-decisions-20260726",
+  "decidedAt": "2026-07-26T04:05:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3775,
+  "runnerWorkflowRunId": 30171029042,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 3,
+  "verifiedReplacementCount": 2,
+  "corrected": [
+    {
+      "code": "17365",
+      "name": "内灘町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_current_newlywed_program",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "新規転入者または39歳以下の町内転居者が町内で新築・中古住宅を取得した場合に奨励金を交付する。",
+      "afterSummary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
+      "officialSource": "https://www.town.uchinada.lg.jp/soshiki/kikaku/2058.html"
+    },
+    {
+      "code": "21209",
+      "name": "羽島市",
+      "service": "housingSupport",
+      "correctionType": "general_trial_housing_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "市外在住で羽島市への移住を検討する人に、リノベーション済み空き家の移住体験住宅を提供する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.hashima.lg.jp/1501.html"
+    },
+    {
+      "code": "21502",
+      "name": "富加町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_current_newlywed_program",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "町内で住宅を新築・取得し定住する人へ、定住促進奨励金20万円を交付する。",
+      "afterSummary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・リフォーム・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
+      "officialSource": "https://www.town.tomika.gifu.jp/docs/716963.html"
+    },
+    {
+      "code": "21507",
+      "name": "東白川村",
+      "service": "housingSupport",
+      "correctionType": "current_fiscal_period_unconfirmed",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "定住目的の住宅新築・中古購入・改修へ、水道・浄化槽・I・Uターン加算を含め最大120万円を助成する。",
+      "afterSummary": "結婚新生活支援の案内は確認できるが、2026年度の婚姻・支払・申請対象期間を現行公式情報で確定できない。",
+      "officialSource": "https://www.vill.higashishirakawa.gifu.jp/kurashi/teijuu/shinseikatsushien/"
+    },
+    {
+      "code": "22306",
+      "name": "西伊豆町",
+      "service": "housingSupport",
+      "correctionType": "expired_young_household_program_and_general_vacant_home",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "空き家バンク登録物件の改修費を2分の1・最大50万円、家財処分費を5分の4・最大10万円補助する。",
+      "afterSummary": "若者・ひとり親世帯向け家賃補助は転入対象期間が2023年3月31日までで終了しており、2026年度に利用できる子育て・新婚住宅支援は確認できない。",
+      "officialSource": "https://www.town.nishiizu.shizuoka.jp/kakuka/machizukuri/kikaku/wakamonosetaihojo.html"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 89,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 84
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "現行年度の新婚住宅費支援が確認できる場合は一般住宅制度より直接的な制度を主制度とする",
+    "過年度の婚姻・転入対象期間を現行年度へ流用しない",
+    "一般の移住体験住宅・定住・空き家改修を子育て住宅支援として登録しない"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
