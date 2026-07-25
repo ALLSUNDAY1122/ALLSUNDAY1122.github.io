@@ -1,0 +1,62 @@
+name: Temporary North A Second Audit Live Smoke
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/north-a-live-smoke-20260725.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify live municipality page
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://allsunday1122.github.io/jichitai-compare/municipality/07405/'
+          marker='宿泊・日帰り・訪問型の産後ケアを無料で実施する。'
+          success=0
+          for attempt in $(seq 1 20); do
+            if body="$(curl -fsSL --max-time 30 "$url")" && grep -Fq "$marker" <<<"$body"; then
+              success=1
+              break
+            fi
+            sleep 15
+          done
+          if [ "$success" -ne 1 ]; then
+            echo "Live marker was not found: $marker" >&2
+            exit 1
+          fi
+          verified_at="$(date -Iseconds)"
+          cat > .github/north-a-live-smoke-20260725.json <<JSON
+          {
+            "schemaVersion": "1.0.0",
+            "auditId": "north-a-quality-audit-2-20260725",
+            "verifiedAt": "$verified_at",
+            "url": "$url",
+            "expectedMarker": "$marker",
+            "httpStatus": 200,
+            "markerMatched": true,
+            "mainMergeCommit": "c08db8f7a4093077743d377c91d146729bf40da0",
+            "result": "external_live_page_verified"
+          }
+          JSON
+      - name: Commit verification report
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/north-a-live-smoke-20260725.json
+          git commit -m 'audit: record North A second-audit live page verification'
+          git push origin HEAD:main
