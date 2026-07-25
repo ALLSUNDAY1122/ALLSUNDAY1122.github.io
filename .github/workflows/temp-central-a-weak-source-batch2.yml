@@ -1,0 +1,268 @@
+name: Temporary Central A Weak Source Batch 2
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-batch2-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-weak-source-batch2-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply reviewed source decisions
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare';
+          const checkedAt = '2026-07-25';
+          const updatedAt = '2026-07-25T12:55:00+09:00';
+          const codes = ['16205', '17407', '21501', '22214', '22306', '22344'];
+
+          const municipalityPath = (code) => path.join(root, 'data', 'municipalities', code.slice(0, 2), `${code}.json`);
+          const taskPath = (code) => path.join(root, 'operations', 'tasks', `${code}.json`);
+          const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+          const writeJson = (file, value) => fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
+          const addUnique = (list, value) => {
+            if (!list.includes(value)) list.push(value);
+          };
+          const addNote = (task, note) => {
+            task.notes ??= [];
+            if (!task.notes.includes(note)) task.notes.push(note);
+          };
+          const addAdditional = (service, item) => {
+            service.additionalSources ??= [];
+            if (!service.additionalSources.some((entry) => entry.url === item.url)) service.additionalSources.push(item);
+          };
+
+          const municipalities = Object.fromEntries(codes.map((code) => [code, readJson(municipalityPath(code))]));
+          const tasks = Object.fromEntries(codes.map((code) => [code, readJson(taskPath(code))]));
+
+          {
+            const service = municipalities['16205'].services.schoolMeals;
+            service.summary = '令和8年度予算では小学校に加え中学校給食費の全額支援を計上し、2026年度の学校給食実施も確認できる。保護者向けの徴収・免除案内は公式公開を確認できないため、全額免除の適用条件は確定しない。';
+            service.details = {
+              policyEvidence: '令和8年度当初予算概要に、小学校に加えて中学校給食費の全額支援を計上',
+              serviceEvidence: '2026年度の学校給食ページで実施を確認',
+              userFacingNotice: '保護者向けの徴収額・免除対象・手続案内は公式公開を確認できないため、予算資料だけで全員無料と断定しない'
+            };
+            service.source = {
+              url: 'https://www.city.himi.toyama.jp/gyosei/soshiki/kyushoku/3/2026/index.html',
+              checkedAt
+            };
+            service.additionalSources = [
+              {
+                url: 'https://www.city.himi.toyama.jp/material/files/group/11/r8tosyoyosan-gaiyo.pdf',
+                checkedAt,
+                description: '令和8年度当初予算概要。中学校給食費全額支援の政策根拠だが、利用者向け適用条件の単独根拠にはしない'
+              },
+              {
+                url: 'https://www.city.himi.toyama.jp/gyosei/soshiki/zaimuka/2_2/R8yosan/14692.html',
+                checkedAt,
+                description: '令和8年度予算の利用者向け入口ページ'
+              }
+            ];
+            municipalities['16205'].updatedAt = checkedAt;
+            addUnique(tasks['16205'].officialSources, service.source.url);
+            addUnique(tasks['16205'].officialSources, service.additionalSources[1].url);
+            tasks['16205'].lastCheckedAt = checkedAt;
+            tasks['16205'].lastUpdatedAt = updatedAt;
+            addNote(tasks['16205'], '学校給食は2026年度の実施を確認。中学校給食費全額支援は予算計上を確認したが、保護者向け徴収・免除案内が未公開のため適用条件を断定しない表現へ訂正。');
+          }
+
+          {
+            const service = municipalities['17407'].services.schoolMeals;
+            service.summary = '学校給食費の全額助成を定める要綱・施行規則は令和7年4月1日施行。2026年度の利用者向け適用・申請案内は公式公開を確認できないため、現行年度の対象条件は規則記載を超えて断定しない。';
+            service.details.evidenceQualification = '全額助成制度は現行要綱・施行規則で確認したが、2026年度の利用者向け案内が見つからないため、実際の申請要否・対象校・支給時期は教育委員会確認事項とする';
+            addAdditional(service, {
+              url: 'https://www.town.nakanoto.ishikawa.jp/soshiki/gakkoukyouiku/4/1/2/1071.html',
+              checkedAt,
+              description: '令和8年度の学校教育課利用者向けページ。学校給食費全額助成の一般案内ではなく、現行窓口・申請運用の補助確認'
+            });
+            municipalities['17407'].updatedAt = checkedAt;
+            addUnique(tasks['17407'].officialSources, 'https://www.town.nakanoto.ishikawa.jp/soshiki/gakkoukyouiku/4/1/2/1071.html');
+            tasks['17407'].lastCheckedAt = checkedAt;
+            tasks['17407'].lastUpdatedAt = updatedAt;
+            addNote(tasks['17407'], '学校給食費全額助成は現行要綱・施行規則で確認。2026年度の利用者向け一般案内が未確認のため、規則を超える適用条件は断定しない。');
+          }
+
+          {
+            const service = municipalities['21501'].services.schoolMeals;
+            service.details.userFacingEvidence = '坂祝幼稚園の利用者向けページで給食費月額6,000円を確認。小学校・中学校の月額は令和8年4月1日施行の給食費規則で確認';
+            addAdditional(service, {
+              url: 'https://www.town.sakahogi.gifu.jp/life/child/child09.html',
+              checkedAt,
+              description: '坂祝幼稚園の利用者向け必要経費。給食費月額6,000円を確認'
+            });
+            municipalities['21501'].updatedAt = checkedAt;
+            addUnique(tasks['21501'].officialSources, 'https://www.town.sakahogi.gifu.jp/life/child/child09.html');
+            tasks['21501'].lastCheckedAt = checkedAt;
+            tasks['21501'].lastUpdatedAt = updatedAt;
+            addNote(tasks['21501'], '学校給食費は令和8年4月1日施行規則と、坂祝幼稚園の利用者向け必要経費ページを二重確認。金額変更なし。');
+          }
+
+          {
+            const service = municipalities['22214'].services.schoolMeals;
+            service.details.userFacingEvidence = '学校給食課ページと2026年度献立表で現行の給食実施を確認。月額は現行給食費規則で確認';
+            addAdditional(service, {
+              url: 'https://www.city.fujieda.shizuoka.jp/education/kyushoku/index.html',
+              checkedAt,
+              description: '学校給食の利用者向け入口ページ'
+            });
+            addAdditional(service, {
+              url: 'https://www.city.fujieda.shizuoka.jp/soshiki/kyoiku/gakkokyushoku/gyomu/26031.html',
+              checkedAt,
+              description: '2026年度の小中学校給食献立表'
+            });
+            municipalities['22214'].updatedAt = checkedAt;
+            addUnique(tasks['22214'].officialSources, 'https://www.city.fujieda.shizuoka.jp/education/kyushoku/index.html');
+            addUnique(tasks['22214'].officialSources, 'https://www.city.fujieda.shizuoka.jp/soshiki/kyoiku/gakkokyushoku/gyomu/26031.html');
+            tasks['22214'].lastCheckedAt = checkedAt;
+            tasks['22214'].lastUpdatedAt = updatedAt;
+            addNote(tasks['22214'], '学校給食費月額は現行規則、給食実施は学校給食課ページと2026年度献立表で二重確認。金額変更なし。');
+          }
+
+          {
+            const service = municipalities['22306'].services.schoolMeals;
+            const oldSource = service.source;
+            service.source = {
+              url: 'https://www.town.nishiizu.shizuoka.jp/kakuka/kyouiku/gakko/syukgaku.html',
+              checkedAt
+            };
+            service.additionalSources = [
+              {
+                url: oldSource.url,
+                checkedAt,
+                description: '就学援助費の対象費目・支給根拠を定める要綱'
+              }
+            ];
+            municipalities['22306'].updatedAt = checkedAt;
+            addUnique(tasks['22306'].officialSources, service.source.url);
+            tasks['22306'].lastCheckedAt = checkedAt;
+            tasks['22306'].lastUpdatedAt = updatedAt;
+            addNote(tasks['22306'], '学校給食費を含む就学援助の主出典を、要綱から利用者向け就学援助ページへ更新。内容変更なし。');
+          }
+
+          {
+            const service = municipalities['22344'].services.schoolMeals;
+            const oldSource = service.source;
+            service.summary = '経済的理由で就学が困難な小中学生の保護者への就学援助を利用者向けページで確認し、要綱では学校給食費を援助対象に含む。';
+            service.source = {
+              url: 'https://www.fuji-oyama.jp/page/3571.html',
+              checkedAt
+            };
+            service.additionalSources = [
+              {
+                url: oldSource.url,
+                checkedAt,
+                description: '就学援助の対象費目に学校給食費を含むことを定める要綱'
+              }
+            ];
+            municipalities['22344'].updatedAt = checkedAt;
+            addUnique(tasks['22344'].officialSources, service.source.url);
+            tasks['22344'].lastCheckedAt = checkedAt;
+            tasks['22344'].lastUpdatedAt = updatedAt;
+            addNote(tasks['22344'], '就学援助の主出典を2026年3月更新の利用者向けページへ変更し、学校給食費対象の根拠要綱を補助出典化。');
+          }
+
+          for (const code of codes) {
+            writeJson(municipalityPath(code), municipalities[code]);
+            writeJson(taskPath(code), tasks[code]);
+          }
+
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'central-a-weak-primary-source-batch2-decisions-20260725',
+            decidedAt: updatedAt,
+            session: '中日本調査班A',
+            category: 'weakPrimarySource',
+            regionalPullRequestNumber: Number(process.env.PR_NUMBER),
+            runnerRunId: Number(process.env.RUN_ID),
+            reviewedCandidateCount: 6,
+            confirmedFactQualificationCount: 2,
+            confirmedSourceCorrectionCount: 2,
+            dualEvidenceNoContentChangeCount: 2,
+            decisions: [
+              { code: '16205', name: '氷見市', service: 'schoolMeals', type: 'budget_only_assertion_qualified', result: '2026年度給食実施を確認し、予算だけによる全額免除断定を撤回' },
+              { code: '17407', name: '中能登町', service: 'schoolMeals', type: 'regulation_only_assertion_qualified', result: '現行要綱・規則を確認し、利用者向け2026年度条件を規則以上に断定しない' },
+              { code: '21501', name: '坂祝町', service: 'schoolMeals', type: 'dual_evidence_no_content_change', result: '現行規則と幼稚園利用者向け経費を二重確認' },
+              { code: '22214', name: '藤枝市', service: 'schoolMeals', type: 'dual_evidence_no_content_change', result: '現行規則と2026年度給食ページを二重確認' },
+              { code: '22306', name: '西伊豆町', service: 'schoolMeals', type: 'primary_source_upgrade', result: '利用者向け就学援助ページを主出典へ変更' },
+              { code: '22344', name: '小山町', service: 'schoolMeals', type: 'primary_source_upgrade', result: '2026年3月更新の利用者向け就学援助ページを主出典へ変更' }
+            ],
+            policy: [
+              '予算・要綱・規則だけで2026年度の利用者負担を断定しない',
+              '給食実施の現行利用者向けページと、料金・助成根拠を分離して確認する',
+              '利用者向け就学援助ページがある場合は主出典とし、要綱は補助出典にする'
+            ],
+            remainingWeakPrimarySourceCandidates: 36,
+            nextPriority: ['病児保育', '産後ケア', '住宅支援の弱い主出典候補']
+          };
+          const auditPath = path.join(root, 'operations', 'audits', 'central-a-weak-primary-source-batch2-decisions-20260725.json');
+          writeJson(auditPath, audit);
+
+          const checkpointPath = path.join(root, 'operations', 'control', 'session-checkpoints', 'central-a.json');
+          const checkpoint = readJson(checkpointPath);
+          checkpoint.updatedAt = updatedAt;
+          checkpoint.nextAction = '原因別重点再監査を継続する。Issue #3141の21項目は変更せず、弱い主出典の残36候補から病児保育・産後ケア・住宅支援を利用者向け公式ページで判定する。';
+          checkpoint.qualityReaudit.latestCompletedAt = updatedAt;
+          checkpoint.qualityReaudit.primarySourceSlotsRechecked = Math.max(Number(checkpoint.qualityReaudit.primarySourceSlotsRechecked ?? 0), 492);
+          checkpoint.qualityReaudit.candidateCounts.weakPrimarySource = 36;
+          checkpoint.qualityReaudit.confirmedCorrections ??= [];
+          for (const entry of audit.decisions) {
+            if (!checkpoint.qualityReaudit.confirmedCorrections.some((item) => item.code === entry.code && item.service === entry.service && item.type === entry.type)) {
+              checkpoint.qualityReaudit.confirmedCorrections.push({ type: entry.type, code: entry.code, service: entry.service, name: entry.name });
+            }
+          }
+          writeJson(checkpointPath, checkpoint);
+          NODE
+
+      - name: Validate municipality data
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          node --check app.js
+
+      - name: Commit batch 2 decisions
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-weak-source-batch2-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/data/municipalities/16/16205.json \
+            jichitai-compare/data/municipalities/17/17407.json \
+            jichitai-compare/data/municipalities/21/21501.json \
+            jichitai-compare/data/municipalities/22/22214.json \
+            jichitai-compare/data/municipalities/22/22306.json \
+            jichitai-compare/data/municipalities/22/22344.json \
+            jichitai-compare/operations/tasks/16205.json \
+            jichitai-compare/operations/tasks/17407.json \
+            jichitai-compare/operations/tasks/21501.json \
+            jichitai-compare/operations/tasks/22214.json \
+            jichitai-compare/operations/tasks/22306.json \
+            jichitai-compare/operations/tasks/22344.json \
+            jichitai-compare/operations/audits/central-a-weak-primary-source-batch2-decisions-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/central-a.json \
+            jichitai-compare/operations/control/central-a-weak-source-batch2-trigger-20260725.json
+          git commit -m 'audit: 中日本A弱い主出典第2群を訂正'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
