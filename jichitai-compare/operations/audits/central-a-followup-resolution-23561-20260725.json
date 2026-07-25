@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-25T11:34:00+09:00",
+  "trackingIssueNumber": 3141,
+  "municipalityCode": "23561",
+  "municipalityName": "設楽町",
+  "service": "schoolMeals",
+  "result": "resolved_with_fiscal_year_collection_evidence",
+  "previousReason": "規則上の徴収額は確認できるが、令和8年度の実負担を確定できない。",
+  "confirmed": {
+    "fiscalYear": "令和8年度",
+    "standardUnitPrice": "児童300円、生徒350円",
+    "chargedUnitPrice": "児童150円、生徒175円",
+    "elementaryRevenue": "3,120,000円",
+    "middleRevenue": "1,519,000円",
+    "collectionMethod": "徴収単価に当月の給食予定回数を乗じ、4月から翌年3月まで原則月末に徴収"
+  },
+  "officialSources": [
+    {
+      "url": "https://www.town.shitara.lg.jp/online/reiki/reiki_honbun/r253RG00000698.html",
+      "checkedAt": "2026-07-25",
+      "role": "現行の学校給食費徴収規則"
+    },
+    {
+      "url": "https://www.town.shitara.lg.jp/uploaded/attachment/4965.pdf",
+      "checkedAt": "2026-07-25",
+      "role": "令和8年度一般会計予算説明書・学校別給食費収入"
+    },
+    {
+      "url": "https://www.town.shitara.lg.jp/soshiki/6/3521.html",
+      "checkedAt": "2026-07-25",
+      "role": "令和8年度予算資料掲載ページ"
+    }
+  ],
+  "evidenceNote": "公式PDF本文で田口小810,000円、清嶺小622,000円、名倉小783,000円、津具小904,000円、設楽中1,518,000円および過年度分を確認した。PDF画像取得はキャッシュエラーとなった。",
+  "issueProgress": {
+    "beforeItemCount": 20,
+    "resolvedItemCount": 1,
+    "remainingItemCount": 19
+  },
+  "changedFiles": [
+    "data/municipalities/23/23561.json",
+    "operations/tasks/23561.json"
+  ],
+  "regionalPullRequestNumber": 3242,
+  "regionalCiRunNumber": 7932,
+  "publicationBlocker": false,
+  "status": "regional_ci_success_pending_merge"
+}
