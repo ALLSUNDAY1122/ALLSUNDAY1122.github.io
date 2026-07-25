@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch19-decisions-20260726",
+  "decidedAt": "2026-07-26T05:31:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3785,
+  "runnerWorkflowRunId": 30173839027,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 5,
+  "corrected": [
+    {
+      "code": "23201",
+      "name": "豊橋市",
+      "service": "housingSupport",
+      "correctionType": "general_area_settlement_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "歩いて暮らせるまち区域で住宅を取得して定住する人へ、家屋・土地の固定資産税相当額を最大3年間補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.toyohashi.lg.jp/37006.htm"
+    },
+    {
+      "code": "23216",
+      "name": "常滑市",
+      "service": "housingSupport",
+      "correctionType": "general_vacant_home_renovation_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "空き家バンク登録物件を居宅等として改修する場合、改修費の一部を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.tokoname.aichi.jp/kurashi/sumai/1003159/1007062.html"
+    },
+    {
+      "code": "23228",
+      "name": "岩倉市",
+      "service": "housingSupport",
+      "correctionType": "general_migration_and_expired_child_program",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "東京圏から一定要件で移住・就業等をする人へ、単身60万円、2人以上世帯100万円を支給する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.iwakura.aichi.jp/0000006017.html"
+    },
+    {
+      "code": "23425",
+      "name": "蟹江町",
+      "service": "housingSupport",
+      "correctionType": "general_seismic_assistance_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の木造住宅について、耐震改修・段階的改修・耐震シェルター等の補助制度を設ける。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.kanie.aichi.jp/soshiki/14/taishin-kaishu.html"
+    },
+    {
+      "code": "23427",
+      "name": "飛島村",
+      "service": "housingSupport",
+      "correctionType": "general_new_build_acquisition_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "村内で自己または家族が居住する新築住宅を取得する人へ定額50万円を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.vill.tobishima.aichi.jp/kurashi/seikatsu/1001687/1001688/1003104.html"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 84,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 79
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般の地域定住・空き家改修・東京圏移住・耐震・新築取得制度を子育て住宅支援として登録しない",
+    "終了済みの三世代住宅支援を2026年度の現行制度として扱わない",
+    "子ども・新婚・三世代の現行対象要件または加算を公式本文で確認できる場合のみverifiedとする"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3787,
+  "nationalSyncWorkflowRunId": 30173955803,
+  "nationalSyncStatus": "validated_pending_merge"
+}
