@@ -17,7 +17,7 @@
     "45",
     "47"
   ],
-  "updatedAt": "2026-07-25T19:46:00+09:00",
+  "updatedAt": "2026-07-25T19:56:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -27,7 +27,7 @@
   "ciStatus": "success",
   "completedSinceSplit": [],
   "blocked": [],
-  "nextAction": "region/westの住宅支援訂正24件を最新mainへ同期し、全国生成JSON・24静的ページ・本番公開を確認する。",
+  "nextAction": "住宅支援の残候補は新たな公式更新時のみ再監査し、他の高リスク制度の横断監査を継続する。",
   "completionEvidence": {
     "assignedPrefectureCount": 11,
     "assignedMunicipalityCount": 250,
@@ -585,7 +585,7 @@
     "unresolvedConfirmedErrorCount": 0,
     "judgment": "現行の利用受付・実施案内を確認できた3件のみ訂正し、計画・予算・相談窓口等から利用条件を推測しない"
   },
-  "lastAction": "西日本B担当250自治体の住宅支援を横断監査し、一般制度誤分類21件をunavailableへ修正、3件を2026年度新婚世帯向け制度へ差し替えた。北谷町は子育て世帯優遇を確認してverifiedを維持した。",
+  "lastAction": "西日本B住宅支援横断監査の訂正24件をregion/west・main・公開24ページへ反映し、全国1,741自治体・15,669制度を維持した。",
   "housingSupportCrosscheck": {
     "auditId": "west-b-housing-classification-crosscheck-20260725",
     "priorityReviewId": "west-b-housing-priority-review-20260725",
@@ -633,9 +633,19 @@
     "regionalMergeCommit": "8a40f354166e460c94d27268a1ed4348c5fc6908",
     "stateSyncPullRequest": 3664,
     "stateSyncWorkflowRunId": 30155086155,
-    "status": "regional_corrections_completed_pending_national_publication",
+    "status": "completed_public_verified_region_integrated",
     "unresolvedConfirmedErrorCount": 0,
     "releaseBlocker": "none",
-    "judgment": "子育て・新婚世帯の明示的対象・加算・優遇がない一般住宅施策はhousingSupportのverified根拠としない"
+    "judgment": "子育て・新婚世帯の明示的対象・加算・優遇がない一般住宅施策はhousingSupportのverified根拠としない",
+    "publicVerificationId": "west-b-housing-public-verification-20260725",
+    "nationalSyncPullRequest": 3666,
+    "nationalSyncWorkflowRunId": 30155174139,
+    "nationalMergeCommit": "df9ed477a2c96a3ba9cdbb2835cd9e0ed16ee7bb",
+    "publicVerificationPullRequest": 3668,
+    "publicVerificationWorkflowRunId": 30155274314,
+    "finalRegionSyncPullRequest": 3670,
+    "finalRegionSyncWorkflowRunId": 30155386114,
+    "publicVerification": "passed",
+    "completedAt": "2026-07-25T19:56:00+09:00"
   }
 }
