@@ -1,0 +1,197 @@
+name: Temporary West B School Meals Rebase
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-school-meals-rebase-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  rebase-corrections:
+    if: github.head_ref == 'ops/run-west-b-school-meals-rebase-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply confirmed corrections on latest main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git switch -C fix/west-b-school-meals-corrections-rebased-20260725
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const base = 'jichitai-compare';
+          const checkedAt = '2026-07-25';
+          const updatedAt = '2026-07-25T14:40:00+09:00';
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, value) => fs.writeFileSync(p, JSON.stringify(value, null, 2) + '\n');
+          const unique = (values) => [...new Set(values.filter(Boolean))];
+          const updates = [
+            {
+              code: '31390', prefectureCode: '31', name: '伯耆町',
+              service: {
+                status: 'verified',
+                summary: '令和8年度は小学校・中学校の学校給食費を無償化',
+                eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
+                details: {
+                  fiscalYear: '令和8年度',
+                  elementary: '国の政策による小学校給食無償化を実施',
+                  juniorHigh: '伯耆町が中学校についても学校給食費を無償化',
+                  budget: '学校給食費補助金54,513千円を計上',
+                  purpose: '小中学校の保護者負担を軽減'
+                },
+                source: { url: 'https://www.houki-town.jp/new1/10/3/3/u521/', checkedAt },
+                additionalSources: [
+                  { url: 'https://www.houki-town.jp/user/filer_public/a7/c6/a7c690dc-3749-495a-939d-c6ef650df9be/dang-chu-yu-suan-shuo-ming-zi-liao.pdf', checkedAt },
+                  { url: 'https://www.houki-town.jp/new1/10/19/x140/m366/p929/v166/', checkedAt }
+                ]
+              },
+              note: '2026-07-25: 令和8年度当初予算で小学校に加え中学校給食費も無償化することを確認し、補助内容未確定の記録を訂正。'
+            },
+            {
+              code: '47303', prefectureCode: '47', name: '東村',
+              service: {
+                status: 'verified',
+                summary: '村内在住児童生徒の保護者へ学校給食費の一部を助成',
+                eligibility: { minAgeMonths: 72, maxAgeYears: 15 },
+                details: {
+                  target: '東村内に住所を有する児童生徒の保護者',
+                  conditions: '申請年度の前年度分給食費を申請年5月末までに全額納付した保護者、または小学校1年生・転入児童生徒の保護者',
+                  excluded: '要保護・準要保護、特別支援学級に在籍する児童生徒の保護者は対象外',
+                  applicationPeriod: '毎年7月1日から翌年3月末日まで',
+                  procedure: '各学校長を通じて教育長へ申請',
+                  amount: '現行公式PDFでは助成割合・金額の記載を確認できない'
+                },
+                source: { url: 'https://www.vill.higashi.okinawa.jp/material/files/group/5/gakkoukyuusyokuhijyosei.pdf', checkedAt },
+                additionalSources: [
+                  { url: 'https://www.vill.higashi.okinawa.jp/soshikikarasagasu/fukushihokenka/siensoudan/458.html', checkedAt }
+                ]
+              },
+              note: '2026-07-25: 学校給食費助成の対象条件、除外条件、申請期間、学校経由申請を現行公式PDFから追記。'
+            },
+            {
+              code: '36204', prefectureCode: '36', name: '阿南市',
+              service: {
+                status: 'verified',
+                summary: '令和8年度は幼稚園・小学校・中学3年生の給食費を無償化し、中学1・2年生の物価高騰分を補助',
+                eligibility: { minAgeMonths: 36, maxAgeYears: 15 },
+                details: {
+                  fiscalYear: '令和8年度',
+                  kindergarten: '幼稚園給食費を無償化',
+                  elementary: '補助金等を活用し小学校給食費を無償化',
+                  juniorHighGrade3: '中学校3年生の給食費を無償化',
+                  juniorHighGrades1And2: '中学校1・2年生は給食費の物価高騰分を補助',
+                  scopeNote: '全学年一律無償化ではなく、学年により支援内容が異なる'
+                },
+                source: { url: 'https://www.city.anan.tokushima.jp/docs/2026032300022/file_contents/ANAN202604No813_Part6-9.pdf', checkedAt },
+                additionalSources: [
+                  { url: 'https://www.city.anan.tokushima.jp/docs/2020120900019/', checkedAt }
+                ]
+              },
+              note: '2026-07-25: 令和8年度予算で幼稚園・小学校・中3無償化と中1・2物価高騰分補助を確認し、中3のみとしていた記録を訂正。'
+            }
+          ];
+
+          const serviceIds = read(path.join(base, 'data/service-definitions.json')).services.map((x) => x.id);
+          for (const update of updates) {
+            const municipalityPath = path.join(base, 'data/municipalities', update.prefectureCode, `${update.code}.json`);
+            const municipality = read(municipalityPath);
+            municipality.services.schoolMeals = update.service;
+            municipality.updatedAt = checkedAt;
+            write(municipalityPath, municipality);
+
+            const taskPath = path.join(base, 'operations/tasks', `${update.code}.json`);
+            const task = read(taskPath);
+            const entries = serviceIds.map((id) => [id, municipality.services[id]]);
+            task.completedServices = entries.filter(([, s]) => ['verified', 'unavailable'].includes(s?.status)).map(([id]) => id);
+            task.verifiedCount = entries.filter(([, s]) => s?.status === 'verified').length;
+            task.researchingCount = entries.filter(([, s]) => s?.status === 'researching').length;
+            task.unavailableCount = entries.filter(([, s]) => s?.status === 'unavailable').length;
+            task.needsMediumReviewCount = entries.filter(([, s]) => s?.status === 'needs_medium_review').length;
+            const nextIndex = entries.findIndex(([, s]) => !['verified', 'unavailable'].includes(s?.status));
+            task.nextServiceIndex = nextIndex === -1 ? serviceIds.length : nextIndex;
+            task.currentService = serviceIds[task.nextServiceIndex] ?? null;
+            task.officialSources = unique(entries.filter(([, s]) => ['verified', 'unavailable'].includes(s?.status)).map(([, s]) => s?.source?.url));
+            task.lastCheckedAt = checkedAt;
+            task.lastUpdatedAt = updatedAt;
+            task.lastUpdatedBy = '西日本調査班B';
+            task.notes = Array.isArray(task.notes) ? task.notes : [];
+            if (!task.notes.includes(update.note)) task.notes.push(update.note);
+            write(taskPath, task);
+          }
+
+          const auditPath = path.join(base, 'operations/audits/west-b-school-meals-crosscheck-20260725.json');
+          const audit = read(auditPath);
+          audit.result = {
+            status: 'official_review_completed_corrections_rebased_pending_pr',
+            confirmedCorrectionCount: 3,
+            correctedCount: 3,
+            unresolvedConfirmedErrorCount: 0,
+            correctionMunicipalityCodes: ['31390', '47303', '36204']
+          };
+          write(auditPath, audit);
+
+          const priorityPath = path.join(base, 'operations/audits/west-b-school-meals-priority-review-20260725.json');
+          const priority = read(priorityPath);
+          priority.result = {
+            status: 'official_review_completed_corrections_rebased_pending_pr',
+            confirmedCorrectionCount: 3,
+            correctedCount: 3,
+            unresolvedConfirmedErrorCount: 0
+          };
+          write(priorityPath, priority);
+
+          const officialReviewPath = path.join(base, 'operations/audits/west-b-school-meals-official-review-20260725.json');
+          const officialReview = read(officialReviewPath);
+          officialReview.result = {
+            status: 'corrections_rebased_on_latest_main_pending_pr',
+            confirmedCorrectionCount: 3,
+            correctedCount: 3,
+            unresolvedConfirmedErrorCount: 0,
+            correctionBranch: 'fix/west-b-school-meals-corrections-rebased-20260725'
+          };
+          write(officialReviewPath, officialReview);
+
+          const checkpointPath = path.join(base, 'operations/control/session-checkpoints/west-b.json');
+          const checkpoint = read(checkpointPath);
+          checkpoint.schoolMealsCrosscheck = {
+            auditId: 'west-b-school-meals-crosscheck-20260725',
+            priorityReviewId: 'west-b-school-meals-priority-review-20260725',
+            officialReviewId: 'west-b-school-meals-official-review-20260725',
+            auditedMunicipalityCount: 250,
+            mechanicalCandidateCount: 120,
+            priorityCandidateCount: 26,
+            confirmedCorrectionCount: 3,
+            correctedCount: 3,
+            municipalityCodes: ['31390', '47303', '36204'],
+            status: 'main_correction_rebased_validated_pending_pr',
+            unresolvedConfirmedErrorCount: 0
+          };
+          checkpoint.updatedAt = updatedAt;
+          write(checkpointPath, checkpoint);
+          NODE
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: npm run check
+      - name: Commit and push rebased correction branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare
+          git commit -m 'fix: 西日本B学校給食費3件を最新mainへ再適用'
+          git push --force origin HEAD:fix/west-b-school-meals-corrections-rebased-20260725
