@@ -1,0 +1,105 @@
+name: Temporary Central A Housing Batch 9 State Sync
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch9-state-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-housing-batch9-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Synchronize checkpoint and region state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const checkpointPath = 'jichitai-compare/operations/control/session-checkpoints/central-a.json';
+          const regionPath = 'jichitai-compare/operations/control/regions/central.json';
+          const auditPath = 'jichitai-compare/operations/audits/central-a-housing-classification-batch9-decisions-20260725.json';
+          const updatedAt = '2026-07-25T16:39:00+09:00';
+          const additions = [
+            { type:'child_specific_housing_eligibility_clarified', code:'23446', service:'housingSupport', name:'美浜町' },
+            { type:'newlywed_housing_replacement', code:'16210', service:'housingSupport', name:'南砺市' },
+            { type:'child_specific_housing_replacement', code:'17461', service:'housingSupport', name:'穴水町' },
+            { type:'newlywed_housing_replacement', code:'17463', service:'housingSupport', name:'能登町' },
+            { type:'expired_child_specific_housing_program', code:'21381', service:'housingSupport', name:'神戸町' }
+          ];
+          const addUnique = (array, item) => {
+            if (!array.some((existing) => existing.code === item.code && existing.service === item.service && existing.type === item.type)) array.push(item);
+          };
+          for (const filePath of [checkpointPath, regionPath]) {
+            const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            data.updatedAt = updatedAt;
+            data.lastAction = '原因別重点再監査の住宅支援分類第9群をPR #3580・CI #8703成功後にregion/centralへ統合。美浜町・南砺市・穴水町・能登町は現行の子育て・新婚世帯向け制度へ更新し、神戸町は旧三世代制度の期限終了と一般制度のみを確認してunavailableへ修正した。';
+            data.nextAction = '一般住宅・移住制度の分類候補残129件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。';
+            const quality = data.qualityReaudit;
+            quality.latestCompletedAt = updatedAt;
+            quality.latestRegionalPullRequestNumber = 3580;
+            quality.latestCiRunNumber = 8703;
+            quality.correctedMunicipalitiesRechecked = 99;
+            quality.primarySourceSlotsRechecked = 531;
+            quality.confirmedCorrections = Array.isArray(quality.confirmedCorrections) ? quality.confirmedCorrections : [];
+            additions.forEach((item) => addUnique(quality.confirmedCorrections, item));
+            quality.candidateCounts.generalHousingMisclassification = 129;
+            quality.nextPriority = [
+              '一般住宅・移住制度の分類候補残129件',
+              '弱い主出典残33候補',
+              'Issue #3141の19項目を公式利用条件公開時のみ解消'
+            ];
+            if (filePath === checkpointPath) {
+              data.pullRequestNumber = 3580;
+              data.ciStatus = 'success';
+              data.ciRunNumber = 8703;
+              data.stateSyncPullRequestNumber = Number(process.env.PR_NUMBER);
+              data.nextAction = '原因別重点再監査を継続する。一般住宅・移住制度の分類候補残129件を子育て固有要件の有無で判定し、弱い主出典残33件も並行して処理する。Issue #3141の19項目は推測せず維持する。';
+            }
+            fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n');
+          }
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          audit.regionalCiRunNumber = 8703;
+          audit.regionMergeCommit = 'ec455ee31cadc77e5a9ab275bb4fb29080239bab';
+          audit.stateSyncPullRequestNumber = Number(process.env.PR_NUMBER);
+          audit.stateSyncWorkflowRunId = Number(process.env.RUN_ID);
+          audit.stateSynchronizedAt = updatedAt;
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          NODE
+
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+
+      - name: Commit synchronized state
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-housing-batch9-state-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/operations/control/session-checkpoints/central-a.json \
+            jichitai-compare/operations/control/regions/central.json \
+            jichitai-compare/operations/audits/central-a-housing-classification-batch9-decisions-20260725.json \
+            jichitai-compare/operations/control/central-a-housing-batch9-state-trigger-20260725.json
+          git commit -m 'state: 中日本A住宅支援第9群の地域状態を同期'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
