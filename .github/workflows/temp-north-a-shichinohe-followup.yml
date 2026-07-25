@@ -162,21 +162,52 @@ jobs:
           PY
 
       - name: Regenerate and validate regional outputs
+        id: verify
         working-directory: jichitai-compare
         shell: bash
         run: |
-          set -o pipefail
-          npm run generate 2>&1 | tee /tmp/north-a-generate.log
-          npm run progress 2>&1 | tee /tmp/north-a-progress.log
-          npm run validate:generated 2>&1 | tee /tmp/north-a-validate.log
+          set +e
+          npm run generate > /tmp/north-a-generate.log 2>&1
+          generate_status=$?
+          npm run progress > /tmp/north-a-progress.log 2>&1
+          progress_status=$?
+          npm run validate:generated > /tmp/north-a-validate.log 2>&1
+          validate_status=$?
+          {
+            echo "generate_status=${generate_status}"
+            echo "progress_status=${progress_status}"
+            echo "validate_status=${validate_status}"
+          } | tee /tmp/north-a-status.log
+          cat /tmp/north-a-generate.log
+          cat /tmp/north-a-progress.log
+          cat /tmp/north-a-validate.log
+          if [ "$generate_status" -eq 0 ] && [ "$progress_status" -eq 0 ] && [ "$validate_status" -eq 0 ]; then
+            echo 'success=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'success=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload regeneration diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: north-a-shichinohe-regeneration-diagnostics
+          path: |
+            /tmp/north-a-status.log
+            /tmp/north-a-generate.log
+            /tmp/north-a-progress.log
+            /tmp/north-a-validate.log
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Remove temporary trigger and runner
+        if: steps.verify.outputs.success == 'true'
         shell: bash
         run: |
           rm -f jichitai-compare/operations/control/north-a-shichinohe-followup-trigger-20260725.json
           rm -f .github/workflows/temp-north-a-shichinohe-followup.yml
 
       - name: Commit corrected source and generated outputs
+        if: steps.verify.outputs.success == 'true'
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
@@ -188,3 +219,7 @@ jobs:
           fi
           git commit -m 'fix: 七戸町誰でも通園の準備中・利用不可を明記'
           git push origin "HEAD:${GITHUB_HEAD_REF}"
+
+      - name: Fail when regeneration did not validate
+        if: steps.verify.outputs.success != 'true'
+        run: exit 1
