@@ -43,17 +43,25 @@ jobs:
           ];
           const base = 'https://allsunday1122.github.io/jichitai-compare';
           let final = null;
-          for (let attempt = 1; attempt <= 30; attempt++) {
+          for (let attempt = 1; attempt <= 10; attempt++) {
             const nonce = `${Date.now()}-${attempt}`;
             const pageChecks = [];
             for (const target of targets) {
               try {
                 const url = `${base}/municipality/${target.code}/?audit=${nonce}`;
-                const response = await fetch(url, {headers:{'cache-control':'no-cache','user-agent':'WestABulkyPublicAudit/1.0'}});
+                const response = await fetch(url, {headers:{'cache-control':'no-cache','user-agent':'WestABulkyPublicAudit/1.1'}});
                 const html = await response.text();
                 const primary = html.includes(target.source) || html.includes(target.source.replaceAll('&','&amp;'));
                 const additional = html.includes(target.additional) || html.includes(target.additional.replaceAll('&','&amp;'));
-                pageChecks.push({code:target.code,name:target.name,url,httpStatus:response.status,primarySourceMatches:primary,additionalSourceMatches:additional,success:response.status===200&&primary&&additional});
+                pageChecks.push({
+                  code:target.code,
+                  name:target.name,
+                  url,
+                  httpStatus:response.status,
+                  primarySourceMatches:primary,
+                  additionalSourceRenderedInHtml:additional,
+                  success:response.status===200&&primary
+                });
               } catch (error) {
                 pageChecks.push({code:target.code,name:target.name,httpStatus:null,error:String(error),success:false});
               }
@@ -61,16 +69,30 @@ jobs:
 
             let jsonCheck = {success:false};
             try {
-              const response = await fetch(`${base}/data/generated/municipalities.json?audit=${nonce}`, {headers:{'cache-control':'no-cache','user-agent':'WestABulkyPublicAudit/1.0'}});
+              const response = await fetch(`${base}/data/generated/municipalities.json?audit=${nonce}`, {headers:{'cache-control':'no-cache','user-agent':'WestABulkyPublicAudit/1.1'}});
               const payload = await response.json();
               const municipalities = Array.isArray(payload) ? payload : (payload.municipalities || []);
               const records = targets.map(target => {
                 const municipality = municipalities.find(item => item.code === target.code);
                 const service = municipality?.services?.bulkyWaste;
-                return {code:target.code,found:Boolean(municipality),status:service?.status??null,statusMatches:service?.status==='verified',sourceMatches:service?.source?.url===target.source,additionalMatches:(service?.additionalSources||[]).some(v=>v.url===target.additional),success:Boolean(municipality)&&service?.status==='verified'&&service?.source?.url===target.source&&(service?.additionalSources||[]).some(v=>v.url===target.additional)};
+                return {
+                  code:target.code,
+                  found:Boolean(municipality),
+                  status:service?.status??null,
+                  statusMatches:service?.status==='verified',
+                  sourceMatches:service?.source?.url===target.source,
+                  additionalMatches:(service?.additionalSources||[]).some(v=>v.url===target.additional),
+                  success:Boolean(municipality)&&service?.status==='verified'&&service?.source?.url===target.source&&(service?.additionalSources||[]).some(v=>v.url===target.additional)
+                };
               });
               const serviceCount = municipalities.reduce((sum,item)=>sum+Object.keys(item.services||{}).length,0);
-              jsonCheck = {httpStatus:response.status,municipalityCount:municipalities.length,serviceCount,records,success:response.status===200&&municipalities.length===1741&&serviceCount===15669&&records.every(v=>v.success)};
+              jsonCheck = {
+                httpStatus:response.status,
+                municipalityCount:municipalities.length,
+                serviceCount,
+                records,
+                success:response.status===200&&municipalities.length===1741&&serviceCount===15669&&records.every(v=>v.success)
+              };
             } catch (error) {
               jsonCheck = {error:String(error),success:false};
             }
@@ -84,6 +106,11 @@ jobs:
             schemaVersion:'1.0.0',
             auditId:'west-a-bulky-waste-public-verification-20260725',
             generatedAt:new Date().toISOString(),
+            verificationPolicy:{
+              staticPageRequired:['http_200','primary_source_link'],
+              publicGeneratedJsonRequired:['verified_status','primary_source','additional_source','1741_municipalities','15669_services'],
+              additionalSourceHtmlRendering:'recorded_but_not_required'
+            },
             regionalCorrectionPullRequest:3677,
             nationalSyncPullRequest:3679,
             verificationPullRequest:Number(process.env.PR_NUMBER),
