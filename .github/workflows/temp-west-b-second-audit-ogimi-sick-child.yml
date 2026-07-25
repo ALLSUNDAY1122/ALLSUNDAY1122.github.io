@@ -1,0 +1,88 @@
+name: Temporary West B Second Audit Ogimi Sick Child Fix
+
+on:
+  push:
+    branches:
+      - fix/west-b-second-audit-ogimi-sick-child-20260725
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/west-b-second-audit-ogimi-sick-child-20260725
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Correct Ogimi sick child care details
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root = path.join(process.cwd(), 'jichitai-compare');
+          const sourcePath = path.join(root, 'data', 'municipalities', '47', '47302.json');
+          const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+          source.services.sickChildCare = {
+            status: 'verified',
+            summary: 'やんばる町村ファミリーサポートで、18歳未満の病児・病後児の預かりと送迎を1時間700円で支援',
+            eligibility: {
+              minAgeMonths: 0,
+              maxAgeYears: 18
+            },
+            details: {
+              provider: 'やんばる町村ファミリーサポートセンター',
+              target: '大宜味村を含む対象8町村に居住または勤務し、原則として同居する18歳未満の児童がいる利用会員',
+              support: '病児・病後児の預かり、児童の軽度の病気等での臨時的な終日預かり、保育施設・自宅・病児病後児保育施設等の間の送迎',
+              place: '原則サポート会員宅。児童が病気等の場合は利用会員宅等でも実施可能',
+              fee: '病児・病後児の預かりは1時間700円。交通費、食事、おやつ等の実費は別途負担',
+              application: '利用会員登録後、原則2日前までにセンターへ申込み。緊急時は例外あり',
+              note: '地域の会員相互援助による預かりであり、医療行為を行う施設型病児保育とは異なる'
+            },
+            source: {
+              url: 'https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000476.html',
+              checkedAt: '2026-07-25'
+            }
+          };
+          source.updatedAt = '2026-07-25';
+          fs.writeFileSync(sourcePath, JSON.stringify(source, null, 2) + '\n');
+
+          const taskPath = path.join(root, 'operations', 'tasks', '47302.json');
+          const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+          task.lastCheckedAt = '2026-07-25';
+          task.lastUpdatedAt = '2026-07-25T10:42:00+09:00';
+          task.lastUpdatedBy = '西日本調査班B';
+          task.notes = Array.isArray(task.notes) ? task.notes : [];
+          task.notes = task.notes.filter(note => note !== '病児・病後児対応はやんばる町村ファミリーサポートの送迎・相互援助を登録。');
+          const note = '品質改善第2監査で病児・病後児対応を再確認。送迎だけでなく、病児・病後児の預かりを1時間700円で行う現行要綱の内容へ訂正。';
+          if (!task.notes.includes(note)) task.notes.push(note);
+          fs.writeFileSync(taskPath, JSON.stringify(task, null, 2) + '\n');
+          NODE
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+      - name: Remove temporary workflow and commit
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-west-b-second-audit-ogimi-sick-child.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/data/municipalities/47/47302.json
+          git add jichitai-compare/operations/tasks/47302.json
+          git add jichitai-compare/data/generated/municipalities.json
+          git add jichitai-compare/municipality/47302/index.html
+          git add jichitai-compare/operations/progress.json
+          git add .github/workflows/temp-west-b-second-audit-ogimi-sick-child.yml
+          if git diff --cached --quiet; then
+            echo "No correction changes remain"
+            exit 0
+          fi
+          git commit -m "fix: 大宜味村の病児保育内容を訂正"
+          git push origin HEAD:fix/west-b-second-audit-ogimi-sick-child-20260725
