@@ -1,0 +1,101 @@
+name: Temporary Central A Housing Batch 17 Candidate Scan
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch17-scan-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    if: github.head_ref == 'audit/central-a-housing-batch17-scan-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Rank unaudited housing candidates
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare';
+          const prefs=['16','17','18','21','22','23','24','25','27','28'];
+          const auditDir=path.join(root,'operations/audits');
+          const reviewed=new Set();
+          for(const name of fs.readdirSync(auditDir)){
+            if(!/^central-a-housing-classification-batch\d+-decisions-\d+\.json$/.test(name)) continue;
+            try{
+              const audit=JSON.parse(fs.readFileSync(path.join(auditDir,name),'utf8'));
+              const arrays=[audit.decisions,audit.corrected];
+              for(const arr of arrays){
+                if(!Array.isArray(arr)) continue;
+                for(const item of arr){ if(item?.code) reviewed.add(String(item.code)); }
+              }
+            }catch{}
+          }
+          const childRe=/(子育て|子ども|こども|児童|新婚|結婚|三世代|多子|ひとり親|妊娠|18歳|中学生|高校生|未成年|若年夫婦)/;
+          const generalRe=/(移住|定住|空き家|耐震|改修|住宅取得|住宅購入|家賃|公営住宅|市営住宅|町営住宅|村営住宅|リフォーム|転入|Uターン|Iターン|若者|若年|世帯)/;
+          const ageOnlyRe=/(39歳以下|40歳未満|45歳未満|50歳以下|年齢要件|2人以上の世帯)/;
+          const weakSourceRe=/(\/reiki_|\/reiki\/|\.pdf(?:$|\?)|\/index\.html?$|\/top\/?$|\/kurashi\/?$)/i;
+          const flatten=value=>{
+            if(value==null)return '';
+            if(typeof value==='string'||typeof value==='number'||typeof value==='boolean')return String(value);
+            if(Array.isArray(value))return value.map(flatten).join(' ');
+            if(typeof value==='object')return Object.values(value).map(flatten).join(' ');
+            return '';
+          };
+          const candidates=[];
+          for(const pref of prefs){
+            const dir=path.join(root,'data/municipalities',pref);
+            for(const file of fs.readdirSync(dir).filter(v=>v.endsWith('.json'))){
+              const municipality=JSON.parse(fs.readFileSync(path.join(dir,file),'utf8'));
+              const code=String(municipality.code);
+              if(reviewed.has(code))continue;
+              const service=municipality.services?.housingSupport;
+              if(!service||service.status!=='verified')continue;
+              const text=[service.summary,flatten(service.details),service.source?.url].filter(Boolean).join(' ');
+              const hasChild=childRe.test(text);
+              const hasGeneral=generalRe.test(text);
+              const ageOnly=ageOnlyRe.test(text);
+              const weakSource=weakSourceRe.test(service.source?.url||'');
+              let score=0;const reasons=[];
+              if(hasGeneral){score+=4;reasons.push('general_program_terms');}
+              if(!hasChild){score+=6;reasons.push('no_child_or_newlywed_term');}
+              if(ageOnly&&!hasChild){score+=3;reasons.push('age_or_household_only');}
+              if(weakSource){score+=2;reasons.push('weak_or_indirect_source_shape');}
+              if(/(空き家|耐震|移住支援金|定住促進)/.test(text)&&!hasChild){score+=3;reasons.push('high_risk_general_scheme');}
+              candidates.push({code,name:municipality.name,prefecture:municipality.prefecture,score,reasons,summary:service.summary,source:service.source?.url||null,checkedAt:service.source?.checkedAt||null,hasChildSpecificTerm:hasChild});
+            }
+          }
+          candidates.sort((a,b)=>b.score-a.score||a.code.localeCompare(b.code));
+          const evidence={schemaVersion:'1.0.0',auditId:'central-a-housing-batch17-candidate-ranking-20260726',generatedAt:new Date().toISOString(),session:'中日本調査班A',coordinatorSession:'統括B②',pullRequestNumber:Number(process.env.PR_NUMBER),workflowRunId:Number(process.env.RUN_ID),previouslyReviewedHousingMunicipalityCount:reviewed.size,unauditedVerifiedHousingCount:candidates.length,topCandidates:candidates.slice(0,40),selectionPolicy:['第6～16群の監査JSONに含まれる自治体を除外','子育て・新婚・三世代等の明示がない一般移住・空き家・耐震制度を上位化','ランキングは調査優先順位でありstatus変更根拠には使用しない'],releaseBlocker:'none'};
+          const out=path.join(root,'operations/audits/central-a-housing-batch17-candidate-ranking-20260726.json');
+          fs.writeFileSync(out,JSON.stringify(evidence,null,2)+'\n');
+          const trigger=path.join(root,'operations/control/central-a-housing-batch17-scan-trigger-20260726.json');
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Commit candidate ranking
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援第17群候補を再ランキング'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
