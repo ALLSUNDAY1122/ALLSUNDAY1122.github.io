@@ -6,179 +6,69 @@
   "name": "葛巻町",
   "officialUrl": "https://www.town.kuzumaki.lg.jp/",
   "status": "verified",
-  "summary": "北日本調査班Aが対象9制度を葛巻町公式情報で調査し、6制度をverified、3制度をneeds_medium_reviewとして整理。",
-  "updatedAt": "2026-07-23",
+  "summary": "対象9制度を葛巻町公式情報で確認し、5制度を確認済み。病児・病後児保育、学校給食費、産後ケア、こども誰でも通園制度は令和8年度の利用条件または継続条件を確定できないため公式情報で詳細未確認。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "出生から18歳到達後最初の3月31日まで、保険診療の一部負担金全額を助成する。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 18
-      },
-      "details": {
-        "program": "子ども・生徒の医療費助成",
-        "target": "出生から小学校6年生まで、および中学校1年生から高校3年生相当まで",
-        "copay": "医療機関窓口で支払う保険診療の一部負担金全額",
-        "inPrefecture": "県内医療機関で受給者証を提示すると窓口負担なし",
-        "outsidePrefecture": "県外受診または受給者証未提示時は領収書を添えて申請",
-        "application": "受給者証の交付申請が必要"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2015110900322/",
-        "checkedAt": "2026-07-23"
-      }
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "details": {"program": "子ども・生徒の医療費助成", "target": "出生から小学校6年生まで、および中学校1年生から高校3年生相当まで", "copay": "医療機関窓口で支払う保険診療の一部負担金全額", "inPrefecture": "県内医療機関で受給者証を提示すると窓口負担なし", "outsidePrefecture": "県外受診または受給者証未提示時は領収書を添えて申請", "application": "受給者証の交付申請が必要"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2015110900322/", "checkedAt": "2026-07-23"}
     },
     "sickChildCare": {
-      "status": "needs_medium_review",
-      "summary": "町公式計画で病児・病後児保育への需要は確認できたが、町内の現行実施施設・対象年齢・料金を確認できない。",
-      "details": {
-        "program": "病児・病後児保育",
-        "planFinding": "第3期子ども・子育て支援事業計画の利用意向調査では60.3％が利用希望",
-        "reviewReason": "現行の利用者向け案内、実施施設、対象年齢、料金、申請方法を町公式情報で確定できない"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2026021900011/file_contents/0710_kuzumaki_kosodate_shienkeikaku.pdf",
-        "checkedAt": "2026-07-23"
-      }
+      "status": "unavailable",
+      "summary": "町公式計画で病児・病後児保育への需要は確認できたが、町内の現行実施施設・対象年齢・料金を確認できない。現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "details": {"program": "病児・病後児保育", "planFinding": "第3期子ども・子育て支援事業計画の利用意向調査では60.3％が利用希望", "reviewReason": "現行の利用者向け案内、実施施設、対象年齢、料金、申請方法を町公式情報で確定できない", "availability": "現行の利用者向け公式条件を確定できないため情報未確認", "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2026021900011/file_contents/0710_kuzumaki_kosodate_shienkeikaku.pdf", "checkedAt": "2026-07-23"}
     },
     "childcareFee": {
       "status": "verified",
       "summary": "町内在住の保育園児の通常保育料を無料化し、延長保育料・一時保育料は対象外としている。",
-      "eligibility": {
-        "minAgeMonths": 0,
-        "maxAgeYears": 5
-      },
-      "details": {
-        "program": "保育料の無料化",
-        "target": "町内在住の保育園児",
-        "fee": "通常保育料無料",
-        "excluded": "延長保育料、一時保育料は対象外",
-        "facilities": "町内4保育所型認定こども園"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2015112400073/file_contents/2026-kuzumaki-IJU_shien_ichiran.pdf",
-        "checkedAt": "2026-07-23"
-      }
+      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "details": {"program": "保育料の無料化", "target": "町内在住の保育園児", "fee": "通常保育料無料", "excluded": "延長保育料、一時保育料は対象外", "facilities": "町内4保育所型認定こども園"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2015112400073/file_contents/2026-kuzumaki-IJU_shien_ichiran.pdf", "checkedAt": "2026-07-23"}
     },
     "schoolMeals": {
-      "status": "verified",
-      "summary": "令和5年度から町内の小中学生を対象に学校給食費を完全無償化している。",
-      "eligibility": {
-        "minAgeMonths": 72,
-        "maxAgeYears": 15
-      },
-      "details": {
-        "support": "学校給食費完全無償化",
-        "start": "令和5年度",
-        "target": "町内の小学校・中学校の児童生徒",
-        "method": "町が学校給食費相当額を支給",
-        "continuity": "令和5年度決算説明で小中学校合計の支給実績を確認"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2023041400019/file_contents/all.pdf",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.town.kuzumaki.lg.jp/docs/2024042200011/file_contents/060906-kuzumaki_gikai_teian-setumei.pdf",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+      "status": "unavailable",
+      "summary": "令和5年度から町内小中学生の学校給食費を完全無償化した実績は確認できるが、令和8年度の対象学年、保護者負担、継続条件を現行公式情報で確定できない。",
+      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "details": {"confirmed": "令和5年度に町内小中学生の学校給食費を完全無償化し、過年度の支給実績を確認", "priorMethod": "町が学校給食費相当額を支給", "reviewReason": "令和8年度の対象学年、保護者負担額、申請要否、無償化の継続条件を利用者向け公式案内で確定できない", "availability": "現行の利用者向け公式条件を確定できないため情報未確認", "verificationPolicy": "過年度の実績から現行制度の継続を推測せず、自治体の最新案内確認を要する"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2023041400019/file_contents/all.pdf", "checkedAt": "2026-07-25"},
+      "additionalSources": [{"url": "https://www.town.kuzumaki.lg.jp/docs/2024042200011/file_contents/060906-kuzumaki_gikai_teian-setumei.pdf", "checkedAt": "2026-07-25"}]
     },
     "postpartumCare": {
-      "status": "needs_medium_review",
-      "summary": "保健師・助産師の2名体制による訪問型産後ケアの実施は確認できたが、対象月齢・料金・利用回数の現行条件を確認できない。",
-      "details": {
-        "program": "産後ケア事業",
-        "type": "保健師・助産師による家庭訪問",
-        "services": "母親への心理的支援、新生児・乳児の状況に応じた育児支援",
-        "planPeriod": "令和7年度から令和11年度まで各年度2人の利用を見込む",
-        "reviewReason": "利用者向け現行案内で対象月齢、利用料、利用回数、申請方法を確定できない"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2026021900011/file_contents/0710_kuzumaki_kosodate_shienkeikaku.pdf",
-        "checkedAt": "2026-07-23"
-      }
+      "status": "unavailable",
+      "summary": "保健師・助産師の2名体制による訪問型産後ケアの実施は確認できたが、対象月齢・料金・利用回数の現行条件を確認できない。現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "details": {"program": "産後ケア事業", "type": "保健師・助産師による家庭訪問", "services": "母親への心理的支援、新生児・乳児の状況に応じた育児支援", "planPeriod": "令和7年度から令和11年度まで各年度2人の利用を見込む", "reviewReason": "利用者向け現行案内で対象月齢、利用料、利用回数、申請方法を確定できない", "availability": "現行の利用者向け公式条件を確定できないため情報未確認", "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2026021900011/file_contents/0710_kuzumaki_kosodate_shienkeikaku.pdf", "checkedAt": "2026-07-23"}
     },
     "temporaryChildcare": {
-      "status": "needs_medium_review",
-      "summary": "令和8年度から町内4認定こども園で生後6か月から3歳未満を受け入れる計画と現行案内の公開は確認したが、料金等の本文を取得できない。",
-      "eligibility": {
-        "minAgeMonths": 6,
-        "maxAgeYears": 3
-      },
-      "details": {
-        "program": "乳児等通園支援事業（こども誰でも通園制度）",
-        "target": "保育施設を通常利用していない0歳6か月から3歳未満の子ども",
-        "employmentRequirement": "なし",
-        "facilities": "町内4保育所型認定こども園",
-        "start": "令和8年度",
-        "reviewReason": "現行案内ページの料金、利用時間、申請方法をWeb取得側のCache missにより確認できない"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2026021900035/",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.town.kuzumaki.lg.jp/docs/2026021900011/file_contents/0710_kuzumaki_kosodate_shienkeikaku.pdf",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+      "status": "unavailable",
+      "summary": "令和8年度から町内4認定こども園で生後6か月から3歳未満を受け入れる計画と現行案内の公開は確認したが、料金等の本文を取得できない。現行公式情報で利用条件を確定できないため、情報未確認として整理する。",
+      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "details": {"program": "乳児等通園支援事業（こども誰でも通園制度）", "target": "保育施設を通常利用していない0歳6か月から3歳未満の子ども", "employmentRequirement": "なし", "facilities": "町内4保育所型認定こども園", "start": "令和8年度", "reviewReason": "現行案内ページの料金、利用時間、申請方法を確認できない", "availability": "現行の利用者向け公式条件を確定できないため情報未確認", "verificationPolicy": "対象、料金、回数、実施施設等を推測せず、自治体の最新案内確認を要する"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2026021900035/", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.town.kuzumaki.lg.jp/docs/2026021900011/file_contents/0710_kuzumaki_kosodate_shienkeikaku.pdf", "checkedAt": "2026-07-23"}]
     },
     "housingSupport": {
       "status": "verified",
       "summary": "子どもがいるU・Iターン家族の住宅取得費を、加算込みで最大400万円補助する。",
-      "details": {
-        "program": "子育て世代移住者住宅取得支援事業",
-        "target": "町外から転入した子どもがいる家族等で、所定の年齢・居住要件を満たす世帯",
-        "basicSupport": "住宅取得費の2分の1以内",
-        "newConstruction": "町内事業者施工は上限200万円、町外事業者施工は上限100万円",
-        "usedHousing": "上限80万円",
-        "youngCoupleBonus": "夫婦の年齢合計が60歳未満の場合50万円加算",
-        "childBonus": "18歳未満の子1人につき50万円、上限150万円",
-        "maximum": "最大400万円"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2017041000027/",
-        "checkedAt": "2026-07-23"
-      }
+      "details": {"program": "子育て世代移住者住宅取得支援事業", "target": "町外から転入した子どもがいる家族等で、所定の年齢・居住要件を満たす世帯", "basicSupport": "住宅取得費の2分の1以内", "newConstruction": "町内事業者施工は上限200万円、町外事業者施工は上限100万円", "usedHousing": "上限80万円", "youngCoupleBonus": "夫婦の年齢合計が60歳未満の場合50万円加算", "childBonus": "18歳未満の子1人につき50万円、上限150万円", "maximum": "最大400万円"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2017041000027/", "checkedAt": "2026-07-23"}
     },
     "bulkyWaste": {
       "status": "verified",
       "summary": "町公式のごみ分別手引書に粗大ごみの対象品目と排出方法を掲載し、町内処理施設も案内している。",
-      "details": {
-        "guide": "令和7年4月更新のごみ分別手引書に粗大ごみ専用項目を掲載",
-        "facilities": "ゴミ処理場（上平）、清掃センター（乱吉沢）等を案内",
-        "application": "品目別の排出・搬入方法は手引書を確認し、農林環境エネルギー課へ問い合わせ",
-        "contact": "農林環境エネルギー課"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2015111100080/",
-        "checkedAt": "2026-07-23"
-      },
-      "additionalSources": [
-        {
-          "url": "https://www.town.kuzumaki.lg.jp/docs/2015102300093/",
-          "checkedAt": "2026-07-23"
-        }
-      ]
+      "details": {"guide": "令和7年4月更新のごみ分別手引書に粗大ごみ専用項目を掲載", "facilities": "ゴミ処理場（上平）、清掃センター（乱吉沢）等を案内", "application": "品目別の排出・搬入方法は手引書を確認し、農林環境エネルギー課へ問い合わせ", "contact": "農林環境エネルギー課"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2015111100080/", "checkedAt": "2026-07-23"},
+      "additionalSources": [{"url": "https://www.town.kuzumaki.lg.jp/docs/2015102300093/", "checkedAt": "2026-07-23"}]
     },
     "disasterPrevention": {
       "status": "verified",
       "summary": "町防災マップを公開し、新たに指定された土砂災害のおそれがある箇所も追加案内している。",
-      "details": {
-        "map": "葛巻町防災マップ",
-        "coverage": "災害リスク、避難場所、防災行動等",
-        "update": "令和8年5月29日更新",
-        "additionalInformation": "新たに指定された土砂災害のおそれがある箇所を公開",
-        "access": "町公式ページから防災マップPDFを確認"
-      },
-      "source": {
-        "url": "https://www.town.kuzumaki.lg.jp/docs/2025041400013/",
-        "checkedAt": "2026-07-23"
-      }
+      "details": {"map": "葛巻町防災マップ", "coverage": "災害リスク、避難場所、防災行動等", "update": "令和8年5月29日更新", "additionalInformation": "新たに指定された土砂災害のおそれがある箇所を公開", "access": "町公式ページから防災マップPDFを確認"},
+      "source": {"url": "https://www.town.kuzumaki.lg.jp/docs/2025041400013/", "checkedAt": "2026-07-23"}
     }
   }
 }
