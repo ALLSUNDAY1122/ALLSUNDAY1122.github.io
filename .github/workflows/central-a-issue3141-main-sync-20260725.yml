@@ -1,0 +1,42 @@
+name: Central A Issue 3141 Main Sync 20260725
+
+on:
+  push:
+    branches:
+      - sync/central-a-issue3141-main-20260725-1120
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Copy reconciled audit state from region central
+        run: |
+          git fetch origin region/central
+          git checkout origin/region/central -- \
+            jichitai-compare/operations/audits/central-a-issue3141-reconciliation-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/central-a.json \
+            jichitai-compare/operations/control/regions/central.json
+      - name: Validate authoritative count
+        run: |
+          node -e "const c=require('./jichitai-compare/operations/control/session-checkpoints/central-a.json');if(c.qualityReaudit.issue3141UnresolvedItemCount!==21||c.qualityReaudit.issue3141Items.length!==21)process.exit(1)"
+          node -e "const r=require('./jichitai-compare/operations/control/regions/central.json');if(r.qualityReaudit.issue3141UnresolvedMunicipalityCount!==20)process.exit(1)"
+          node -e "const a=require('./jichitai-compare/operations/audits/central-a-issue3141-reconciliation-20260725.json');if(a.currentAuthoritativeState.unresolvedItemCount!==21)process.exit(1)"
+      - name: Commit main synchronization
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/central-a-issue3141-main-sync-20260725.yml
+          git add -A
+          git commit -m "sync: Issue #3141の現行21項目をmainへ反映"
+          git push origin HEAD:sync/central-a-issue3141-main-20260725-1120
