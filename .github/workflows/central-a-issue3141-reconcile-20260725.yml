@@ -1,0 +1,93 @@
+name: Central A Issue 3141 Reconciliation 20260725
+
+on:
+  push:
+    branches:
+      - ops/central-a-issue3141-reconcile-20260725-1118
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconcile checkpoint with current Issue 3141 state
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const root = 'jichitai-compare/operations';
+          const read = p => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, v) => fs.writeFileSync(p, JSON.stringify(v, null, 2) + '\n');
+          const currentItems = [
+            ['21207','temporaryChildcare'],['21504','temporaryChildcare'],
+            ['22219','temporaryChildcare'],['22305','temporaryChildcare'],['22424','temporaryChildcare'],['22429','temporaryChildcare'],
+            ['23235','schoolMeals'],['23427','schoolMeals'],['23561','schoolMeals'],['23563','temporaryChildcare'],
+            ['24205','schoolMeals'],['24205','temporaryChildcare'],['24212','temporaryChildcare'],['24441','schoolMeals'],['24461','temporaryChildcare'],['24543','schoolMeals'],
+            ['25441','temporaryChildcare'],['25442','temporaryChildcare'],
+            ['27232','sickChildCare'],['27321','sickChildCare'],['27366','sickChildCare']
+          ].map(([code, service]) => ({code, service}));
+          const concurrentlyResolved = [
+            {code:'23562',name:'東栄町',service:'schoolMeals',regionalPr:3211,nationalPr:3216},
+            {code:'27322',name:'能勢町',service:'schoolMeals',regionalPr:3190,nationalPr:3200}
+          ];
+          const checkpointPath = `${root}/control/session-checkpoints/central-a.json`;
+          const regionPath = `${root}/control/regions/central.json`;
+          const checkpoint = read(checkpointPath);
+          const region = read(regionPath);
+          for (const target of [checkpoint, region]) {
+            target.updatedAt = '2026-07-25T11:18:00+09:00';
+            target.qualityReaudit ??= {};
+            target.qualityReaudit.issue3141UnresolvedItemCount = 21;
+            target.qualityReaudit.issue3141UnresolvedMunicipalityCount = 20;
+            target.qualityReaudit.issue3141Items = currentItems;
+            target.qualityReaudit.concurrentlyResolvedAfterAuditSnapshot = concurrentlyResolved;
+            target.qualityReaudit.issue3141AuthoritativeStateCheckedAt = '2026-07-25T11:18:00+09:00';
+          }
+          checkpoint.nextAction = '原因別重点再監査を継続する。Issue #3141の現行21項目は利用者向け公式情報が揃うまで変更せず、次は条例・計画・予算案のみを主出典とする46候補から公式利用案内の有無を確認する。';
+          region.lastAction = '原因別重点再監査の第1次確定訂正をPR #3219・CI #7854でregion/centralへ統合し、checkpoint PR #3224を統合した。並行処理で能勢町・東栄町が解消されたため、Issue #3141の現行状態を21項目・20自治体へ再同期した。';
+          region.nextAction = '原因別重点再監査を継続し、弱い主出典46候補、子育て固有条件のない住宅支援候補、学校給食費の範囲候補24件を公式利用者向け情報で確定判定する。Issue #3141は現行21項目を追跡する。';
+          write(checkpointPath, checkpoint);
+          write(regionPath, region);
+          const reconciliation = {
+            schemaVersion: '1.0.0',
+            auditId: 'central-a-issue3141-reconciliation-20260725',
+            reconciledAt: '2026-07-25T11:18:00+09:00',
+            session: '中日本調査班A',
+            reason: '原因別監査のURL再取得時点では23項目だったが、並行処理により能勢町・東栄町が解消され、Issue #3141の権威的現行状態が21項目へ更新されたため。',
+            historicalSnapshot: {
+              source: 'central-a-cause-based-decisions-20260725',
+              unresolvedItemCount: 23,
+              status: 'superseded_for_current_state_only'
+            },
+            currentAuthoritativeState: {
+              issueNumber: 3141,
+              unresolvedItemCount: 21,
+              unresolvedMunicipalityCount: 20,
+              items: currentItems
+            },
+            concurrentlyResolved,
+            dataDecision: '解消済み2項目は既存の地域・全国PRで反映済み。本再同期では自治体制度データを変更せず、監査状態記録だけを現行Issueへ合わせる。',
+            nextPriority: ['弱い主出典46候補','子育て固有条件のない住宅支援候補','学校給食費の範囲候補24件']
+          };
+          write(`${root}/audits/central-a-issue3141-reconciliation-20260725.json`, reconciliation);
+          NODE
+      - name: Validate reconciliation
+        run: |
+          node -e "const c=require('./jichitai-compare/operations/control/session-checkpoints/central-a.json');if(c.qualityReaudit.issue3141UnresolvedItemCount!==21)process.exit(1)"
+          node -e "const r=require('./jichitai-compare/operations/control/regions/central.json');if(r.qualityReaudit.issue3141Items.length!==21)process.exit(1)"
+          node -e "const a=require('./jichitai-compare/operations/audits/central-a-issue3141-reconciliation-20260725.json');if(a.currentAuthoritativeState.unresolvedMunicipalityCount!==20)process.exit(1)"
+      - name: Commit reconciliation and remove temporary runner
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/central-a-issue3141-reconcile-20260725.yml
+          git add -A
+          git commit -m "checkpoint: Issue #3141の現行21項目へ再同期"
+          git push origin HEAD:ops/central-a-issue3141-reconcile-20260725-1118
