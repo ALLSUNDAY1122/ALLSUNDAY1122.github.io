@@ -1,0 +1,105 @@
+name: Temporary West A Anyone Care Checkpoint
+
+on:
+  pull_request:
+    branches:
+      - region/west
+    paths:
+      - jichitai-compare/operations/control/west-a-anyone-care-checkpoint-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  checkpoint:
+    if: github.head_ref == 'checkpoint/west-a-anyone-care-final-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout checkpoint branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Import public evidence and update checkpoints
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git fetch origin main
+          public_paths=(
+            jichitai-compare/operations/audits/west-a-anyone-care-main-clean-ci-trigger-20260725.json
+            jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json
+            jichitai-compare/operations/audits/west-a-anyone-care-public-clean-ci-trigger-20260725.json
+          )
+          git checkout origin/main -- "${public_paths[@]}"
+          node <<'NODE'
+          const fs=require('fs');
+          const completedAt='2026-07-25T16:32:00+09:00';
+          const checkpoint={
+            schemaVersion:'1.0.0',
+            checkpointId:'west-a-anyone-care-crosscheck-20260725',
+            sessionId:'west-a',
+            displayName:'西日本調査班A',
+            completedAt,
+            status:'completed_with_corrections',
+            scope:{prefectureCodes:['33','37','39','40','43','46'],municipalityCount:226,service:'temporaryChildcare'},
+            audit:{initialMachineCandidateCount:195,priorityCandidateCount:21,officialFetchTargetCount:13,statusCorrectionCount:3,detailEnrichmentCount:2,retainedCount:16,unresolvedCount:0},
+            corrections:[
+              {code:'39304',name:'安田町',change:'unavailable_to_verified',condition:'0歳6か月～満3歳未満、安田さくら園、月10時間、1時間300円'},
+              {code:'39387',name:'仁淀川町',change:'unavailable_to_verified',condition:'0歳6か月～満3歳未満、ふたば保育所、月10時間、1時間300円'},
+              {code:'39411',name:'津野町',change:'unavailable_to_verified',condition:'1歳児～満3歳未満、町立認定こども園2施設、月10時間、1時間300円'},
+              {code:'46221',name:'志布志市',change:'fee_enriched',condition:'1時間300円程度、施設により異なる'},
+              {code:'46501',name:'中種子町',change:'fee_enriched',condition:'1時間300円程度、世帯区分等による軽減'}
+            ],
+            evidence:{
+              initialAuditFile:'jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json',
+              priorityAuditFile:'jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json',
+              officialFetchAuditFile:'jichitai-compare/operations/audits/west-a-anyone-care-official-fetch-20260725.json',
+              finalResolutionFile:'jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json',
+              regionalPullRequestNumber:3542,regionalCiRunNumber:8640,regionalMergeSha:'3ec5dbe8c5853d7f19e01c28f575445d335b4bd6',
+              nationalPullRequestNumber:3565,nationalCiRunNumber:8657,nationalMergeSha:'1dab9845d7d98c0ec064a9ec5c5a2d4b17a45ba8',
+              publicVerificationPullRequestNumber:3568,publicVerificationCiRunNumber:8666,publicVerificationMergeSha:'9fcb377d179dbdba4d71b7e0eba6a33e2b56acf6',
+              publicVerificationFile:'jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json'
+            },
+            integrity:{publicPageTargetCount:5,publicPageHttp200Count:5,oldPhraseRemainingCount:0,nationwideMunicipalityCount:1741,nationwideServiceCount:15669,remainingMunicipalityCount:0,prOpenMunicipalityCount:0,blockedMunicipalityCount:0,blockedServiceCount:0,temporaryWorkflowRemainingCount:0,blocker:null},
+            nextAction:'新しい自治体公式情報、実施施設決定、または利用条件更新が確認された場合のみ個別再判定する。施設未決定・条件不足の自治体を推測でverifiedへ変更しない。'
+          };
+          const cp='jichitai-compare/operations/control/session-checkpoints/west-a-anyone-care-crosscheck-20260725.json';
+          fs.writeFileSync(cp,JSON.stringify(checkpoint,null,2)+'\n');
+
+          const p='jichitai-compare/operations/control/session-checkpoints/west-a.json';
+          const w=JSON.parse(fs.readFileSync(p,'utf8'));
+          w.updatedAt=completedAt;
+          w.status='completed';
+          w.pullRequestNumber=3542;
+          w.ciStatus='success';
+          w.nextAction='住宅支援分類38件と誰でも通園制度5件の地域・全国・公開・checkpoint同期まで完了。新しい公式情報または再退行が検出された場合のみ再監査する。';
+          w.completionEvidence=w.completionEvidence||{};
+          Object.assign(w.completionEvidence,{
+            anyoneCareCrosscheckFile:'jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json',
+            anyoneCareRegionalPullRequestNumber:3542,
+            anyoneCareRegionalCiRunNumber:8640,
+            anyoneCareNationalPullRequestNumber:3565,
+            anyoneCareNationalCiRunNumber:8657,
+            anyoneCarePublicVerificationPullRequestNumber:3568,
+            anyoneCarePublicVerificationCiRunNumber:8666,
+            anyoneCarePublicVerificationFile:'jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json'
+          });
+          w.anyoneCareCrosscheck={status:'completed_with_corrections',completedAt,municipalityCount:226,initialMachineCandidateCount:195,priorityCandidateCount:21,statusCorrectionCount:3,detailEnrichmentCount:2,retainedCount:16,unresolvedCount:0,regionalPullRequestNumber:3542,regionalCiRunNumber:8640,regionalMergeSha:'3ec5dbe8c5853d7f19e01c28f575445d335b4bd6',nationalPullRequestNumber:3565,nationalCiRunNumber:8657,nationalMergeSha:'1dab9845d7d98c0ec064a9ec5c5a2d4b17a45ba8',publicVerificationPullRequestNumber:3568,publicVerificationCiRunNumber:8666,publicVerificationMergeSha:'9fcb377d179dbdba4d71b7e0eba6a33e2b56acf6',publicPageCount:5,oldPhraseRemainingCount:0,blocker:null};
+          w.notes=w.notes||[];
+          const note='2026-07-25 16:32: 担当226自治体のこども誰でも通園制度を横断監査し、安田町・仁淀川町・津野町をverifiedへ訂正、志布志市・中種子町の料金を追記。地域PR #3542、全国PR #3565、公開PR #3568、未解決0。';
+          if(!w.notes.includes(note))w.notes.push(note);
+          fs.writeFileSync(p,JSON.stringify(w,null,2)+'\n');
+          NODE
+          rm -f jichitai-compare/operations/control/west-a-anyone-care-checkpoint-trigger-20260725.json
+          rm -f .github/workflows/temporary-west-a-anyone-care-checkpoint.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${public_paths[@]}" \
+                  jichitai-compare/operations/control/session-checkpoints/west-a-anyone-care-crosscheck-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/west-a.json \
+                  jichitai-compare/operations/control/west-a-anyone-care-checkpoint-trigger-20260725.json \
+                  .github/workflows/temporary-west-a-anyone-care-checkpoint.yml
+          git diff --cached --check
+          git commit -m 'checkpoint: 西日本A誰でも通園制度横断監査を確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
