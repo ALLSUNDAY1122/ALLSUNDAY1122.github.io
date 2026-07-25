@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T15:56:00+09:00",
+  "updatedAt": "2026-07-25T16:39:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,8 +24,8 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "原因別重点再監査の住宅支援分類第8群をPR #3539・CI #8602成功後にregion/centralへ統合。輪島市・津幡町・伊東市は子育て・三世代・新婚世帯向け現行制度へ差し替え、能美市・白川村は一般制度のみのためunavailableへ修正した。",
-  "nextAction": "一般住宅・移住制度の分類候補残134件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
+  "lastAction": "原因別重点再監査の住宅支援分類第9群をPR #3580・CI #8703成功後にregion/centralへ統合。美浜町・南砺市・穴水町・能登町は現行の子育て・新婚世帯向け制度へ更新し、神戸町は旧三世代制度の期限終了と一般制度のみを確認してunavailableへ修正した。",
+  "nextAction": "一般住宅・移住制度の分類候補残129件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
@@ -34,13 +34,13 @@
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T15:56:00+09:00",
-    "latestRegionalPullRequestNumber": 3539,
-    "latestCiRunNumber": 8602,
+    "latestCompletedAt": "2026-07-25T16:39:00+09:00",
+    "latestRegionalPullRequestNumber": 3580,
+    "latestCiRunNumber": 8703,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 94,
-    "primarySourceSlotsRechecked": 526,
+    "correctedMunicipalitiesRechecked": 99,
+    "primarySourceSlotsRechecked": 531,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -225,6 +225,36 @@
         "code": "22208",
         "service": "housingSupport",
         "name": "伊東市"
+      },
+      {
+        "type": "child_specific_housing_eligibility_clarified",
+        "code": "23446",
+        "service": "housingSupport",
+        "name": "美浜町"
+      },
+      {
+        "type": "newlywed_housing_replacement",
+        "code": "16210",
+        "service": "housingSupport",
+        "name": "南砺市"
+      },
+      {
+        "type": "child_specific_housing_replacement",
+        "code": "17461",
+        "service": "housingSupport",
+        "name": "穴水町"
+      },
+      {
+        "type": "newlywed_housing_replacement",
+        "code": "17463",
+        "service": "housingSupport",
+        "name": "能登町"
+      },
+      {
+        "type": "expired_child_specific_housing_program",
+        "code": "21381",
+        "service": "housingSupport",
+        "name": "神戸町"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -311,7 +341,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 134,
+      "generalHousingMisclassification": 129,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -333,7 +363,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残134件",
+      "一般住宅・移住制度の分類候補残129件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ]

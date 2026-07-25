@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch9-decisions-20260725",
+  "decidedAt": "2026-07-25T16:15:00+09:00",
+  "session": "中日本調査班A",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3580,
+  "runnerWorkflowRunId": 30149574809,
+  "runnerConclusion": "success",
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 1,
+  "childSpecificReplacementCount": 4,
+  "corrected": [
+    {
+      "code": "23446",
+      "name": "美浜町",
+      "service": "housingSupport",
+      "correctionType": "clarify_child_specific_eligibility",
+      "afterStatus": "verified",
+      "officialSource": "https://www.town.aichi-mihama.lg.jp/kurashi-tetsuzuki/zumai/hojokin-joseikin/1487.html",
+      "summary": "同一世帯に子どもが1人以上いる世帯、または夫婦のいずれかが40歳未満の世帯へ、新築・建売住宅の取得費を10万円補助する。"
+    },
+    {
+      "code": "16210",
+      "name": "南砺市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_newlywed_specific_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.city.nanto.toyama.jp/soshiki/shiminkyodo/4/410.html",
+      "summary": "39歳以下の新婚世帯へ、2026年度の住居費・引越費・リフォーム費を上限30万円または60万円補助する。"
+    },
+    {
+      "code": "17461",
+      "name": "穴水町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_child_specific_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.town.anamizu.lg.jp/site/iju/100335.html",
+      "summary": "県外から転入する子育て世帯へ、引越費用20万円と家賃月額最大3万円を補助する。"
+    },
+    {
+      "code": "17463",
+      "name": "能登町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_newlywed_specific_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.town.noto.lg.jp/kakuka/1001/gyomu/7/1796.html",
+      "summary": "39歳以下の新婚世帯へ、2026年度の住宅取得・賃借・引越・リフォーム費を上限30万円または60万円補助する。"
+    },
+    {
+      "code": "21381",
+      "name": "神戸町",
+      "service": "housingSupport",
+      "correctionType": "expired_child_specific_program_general_only",
+      "afterStatus": "unavailable",
+      "officialSource": "https://www.town.godo.gifu.jp/life/other/other13.html",
+      "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 134,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 129
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般住宅制度ではなく、現行の子育て・新婚・三世代向け対象要件がある制度を主制度として登録する",
+    "対象期限が終了した旧子育て住宅制度は、2026年度のverified根拠に使用しない",
+    "利用者向け公式ページと現行要綱から対象、金額、期間を確認する"
+  ],
+  "regionalCiRunNumber": 8703,
+  "regionMergeCommit": "ec455ee31cadc77e5a9ab275bb4fb29080239bab",
+  "stateSyncPullRequestNumber": 3587,
+  "stateSyncWorkflowRunId": 30149766261,
+  "stateSyncRunnerConclusion": "success",
+  "stateSynchronizedAt": "2026-07-25T16:39:00+09:00",
+  "nationalDuplicateCorrection": {
+    "name": "神戸町",
+    "wrongCode": "21364",
+    "correctCode": "21381",
+    "officialSixDigitCode": "213811",
+    "officialCodeSource": "https://www.j-lis.go.jp/spd/code-address/jititai-code.html",
+    "correction": "mainに重複登録されていた誤コード側の自治体JSON・task・生成ページを削除し、region/centralの正しい21381を正本とした",
+    "detectedBy": "全国同期時の自治体識別検証",
+    "correctedAt": "2026-07-25T16:58:00+09:00"
+  },
+  "nationalSyncPullRequestNumber": 3590,
+  "nationalSyncWorkflowRunId": 30150782971,
+  "nationalSyncRunnerConclusion": "success",
+  "nationalMunicipalityCount": 1741,
+  "nationalServiceCount": 15669,
+  "nationalSyncRecordedAt": "2026-07-25T17:17:00+09:00"
+}
