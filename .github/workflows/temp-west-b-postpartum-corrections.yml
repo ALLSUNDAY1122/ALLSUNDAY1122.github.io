@@ -1,0 +1,226 @@
+name: Temporary West B Postpartum Care Corrections
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-postpartum-corrections-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    if: github.head_ref == 'ops/run-west-b-postpartum-corrections-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply three confirmed postpartum care corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          git switch -C fix/west-b-postpartum-corrections-20260725
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const base = 'jichitai-compare';
+          const checkedAt = '2026-07-25';
+          const updatedAt = '2026-07-25T17:32:00+09:00';
+          const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const write = (p, value) => fs.writeFileSync(p, JSON.stringify(value, null, 2) + '\n');
+          const unique = (values) => [...new Set(values.filter(Boolean))];
+
+          const updates = [
+            {
+              code: '35502',
+              prefectureCode: '35',
+              note: '2026-07-25: 現行公式ページ、利用申請書、第三次子ども・子育て支援事業計画で産後ケアの利用受付と令和8年度実施を確認し、unavailableからverifiedへ訂正。',
+              service: {
+                status: 'verified',
+                summary: 'おおむね産後1年以内の母子へ宿泊型・デイケア・訪問型の産後ケアを実施',
+                eligibility: { minAgeMonths: 0, maxAgeYears: 1 },
+                details: {
+                  target: 'おおむね出産後1年以内の母子',
+                  types: '宿泊型、デイケア、訪問型',
+                  care: '委託医療機関等で産後の体調管理、授乳・沐浴・育児相談等の心身ケアと育児支援を提供',
+                  application: '健康福祉課へ産後ケア事業利用申請書を提出',
+                  reduction: '利用申請書に町民税非課税世帯・生活保護世帯の区分と利用料減額欄あり',
+                  fee: '形態別利用料、利用回数、実施医療機関は健康福祉課へ確認',
+                  fiscalYear: '第三次計画で令和8年度の実施量・確保方策を明記'
+                },
+                source: {
+                  url: 'https://www.town.abu.lg.jp/guide/%E7%94%A3%E5%BE%8C%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%83%BB%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD/',
+                  checkedAt
+                },
+                additionalSources: [
+                  {
+                    url: 'https://www.town.abu.lg.jp/wp/wp-content/uploads/2021/10/aba0e55a11c4d7c48b856e61c3b22f5e.pdf',
+                    checkedAt
+                  },
+                  {
+                    url: 'https://www.town.abu.lg.jp/wp/wp-content/uploads/2020/09/b5e95773b7f377d126ab43b61857e692.pdf',
+                    checkedAt
+                  }
+                ]
+              }
+            },
+            {
+              code: '36301',
+              prefectureCode: '36',
+              note: '2026-07-25: 町公式ページと添付案内で1歳未満の母子への訪問型産後ケアを2回まで無料で実施すると確認し、unavailableからverifiedへ訂正。',
+              service: {
+                status: 'verified',
+                summary: '町内在住の産婦と1歳未満児へ助産師訪問型産後ケアを2回まで無料で実施',
+                eligibility: { minAgeMonths: 0, maxAgeYears: 1 },
+                details: {
+                  target: '勝浦町に住民票がある産婦と1歳未満の子ども',
+                  types: '助産師による訪問型',
+                  care: '産後の母体管理、乳房ケア、赤ちゃんの身体計測、授乳・育児相談',
+                  usageLimit: '子どもが1歳になるまでに2回',
+                  fee: '無料（全額公費負担）',
+                  days: '助産師と日程調整。土・日・祝日の訪問にも対応',
+                  application: '勝浦町子育て世代包括支援センターへ電話で申込み',
+                  scopeNote: '宿泊型・通所型は確認できないため訪問型のみを記録'
+                },
+                source: {
+                  url: 'https://www.town.katsuura.lg.jp/docs/2022040200026/',
+                  checkedAt
+                },
+                additionalSources: [
+                  {
+                    url: 'https://www.town.katsuura.lg.jp/docs/2022040200026/file_contents/R5.pdf',
+                    checkedAt
+                  }
+                ]
+              }
+            },
+            {
+              code: '38214',
+              prefectureCode: '38',
+              note: '2026-07-25: 2026年更新の市公式子育て一覧、こども家庭センター一覧、県公式市町一覧、実施施設資料で現行産後ケアを確認し、unavailableからverifiedへ訂正。',
+              service: {
+                status: 'verified',
+                summary: '出産後1年以内の母子へ宿泊型・日帰り型・訪問型の産後ケアを実施',
+                eligibility: { minAgeMonths: 0, maxAgeYears: 1 },
+                details: {
+                  target: '西予市に住所があり、出産後1年以内で心身のケアや育児支援を必要とする母子',
+                  types: '宿泊型、日帰り型、訪問型',
+                  care: '母体の心身・乳房ケア、授乳・沐浴等の育児相談、乳児の発育・発達相談',
+                  facilities: '西予市・宇和島市・大洲市の産科医療機関、助産院等。施設ごとに対応形態と対象月齢が異なる',
+                  application: '西予市こども家庭センターまたは各支所地域生活課へ事前相談・申請',
+                  fee: '形態別利用料、利用上限、最新の受入施設は市の現行案内で確認'
+                },
+                source: {
+                  url: 'https://www.city.seiyo.ehime.jp/kurashi/kosodate_kyouiku/kodomogaumaretara/8723.html',
+                  checkedAt
+                },
+                additionalSources: [
+                  {
+                    url: 'https://www.city.seiyo.ehime.jp/kurashi/kosodate_kyouiku/index.html',
+                    checkedAt
+                  },
+                  {
+                    url: 'https://www.city.seiyo.ehime.jp/material/files/group/18/R7sangokea.pdf',
+                    checkedAt
+                  },
+                  {
+                    url: 'https://www.pref.ehime.jp/page/92849.html',
+                    checkedAt
+                  }
+                ]
+              }
+            }
+          ];
+
+          const serviceIds = read(path.join(base, 'data/service-definitions.json')).services.map((x) => x.id);
+          for (const update of updates) {
+            const municipalityPath = path.join(base, 'data/municipalities', update.prefectureCode, `${update.code}.json`);
+            const municipality = read(municipalityPath);
+            municipality.services.postpartumCare = update.service;
+            municipality.updatedAt = checkedAt;
+            write(municipalityPath, municipality);
+
+            const taskPath = path.join(base, 'operations/tasks', `${update.code}.json`);
+            const task = read(taskPath);
+            const entries = serviceIds.map((id) => [id, municipality.services[id]]);
+            task.completedServices = entries.filter(([, service]) => ['verified', 'unavailable'].includes(service?.status)).map(([id]) => id);
+            task.verifiedCount = entries.filter(([, service]) => service?.status === 'verified').length;
+            task.researchingCount = entries.filter(([, service]) => service?.status === 'researching').length;
+            task.unavailableCount = entries.filter(([, service]) => service?.status === 'unavailable').length;
+            task.needsMediumReviewCount = entries.filter(([, service]) => service?.status === 'needs_medium_review').length;
+            const nextIndex = entries.findIndex(([, service]) => !['verified', 'unavailable'].includes(service?.status));
+            task.nextServiceIndex = nextIndex === -1 ? serviceIds.length : nextIndex;
+            task.currentService = serviceIds[task.nextServiceIndex] ?? null;
+            task.officialSources = unique(entries.filter(([, service]) => ['verified', 'unavailable'].includes(service?.status)).map(([, service]) => service?.source?.url));
+            task.lastCheckedAt = checkedAt;
+            task.lastUpdatedAt = updatedAt;
+            task.lastUpdatedBy = '西日本調査班B';
+            task.notes = Array.isArray(task.notes) ? task.notes : [];
+            if (!task.notes.includes(update.note)) task.notes.push(update.note);
+            write(taskPath, task);
+          }
+
+          for (const fileName of [
+            'west-b-postpartum-crosscheck-20260725.json',
+            'west-b-postpartum-priority-review-20260725.json',
+            'west-b-postpartum-status-focus-review-20260725.json',
+            'west-b-postpartum-official-review-20260725.json'
+          ]) {
+            const auditPath = path.join(base, 'operations/audits', fileName);
+            const audit = read(auditPath);
+            audit.result = {
+              ...(audit.result ?? {}),
+              status: 'official_review_completed_corrections_applied_pending_pr',
+              confirmedCorrectionCount: 3,
+              correctedCount: 3,
+              confirmedCorrectionCodes: ['35502', '36301', '38214'],
+              unresolvedConfirmedErrorCount: 0,
+              correctionBranch: 'fix/west-b-postpartum-corrections-20260725'
+            };
+            write(auditPath, audit);
+          }
+
+          const checkpointPath = path.join(base, 'operations/control/session-checkpoints/west-b.json');
+          const checkpoint = read(checkpointPath);
+          checkpoint.postpartumCareCrosscheck = {
+            auditId: 'west-b-postpartum-crosscheck-20260725',
+            priorityReviewId: 'west-b-postpartum-priority-review-20260725',
+            statusFocusReviewId: 'west-b-postpartum-status-focus-review-20260725',
+            officialReviewId: 'west-b-postpartum-official-review-20260725',
+            auditedMunicipalityCount: 250,
+            mechanicalCandidateCount: 144,
+            priorityCandidateCount: 28,
+            unavailableReviewedCount: 29,
+            suspiciousVerifiedReviewedCount: 5,
+            confirmedCorrectionCount: 3,
+            correctedCount: 3,
+            municipalityCodes: ['35502', '36301', '38214'],
+            status: 'main_correction_validated_pending_pr',
+            unresolvedConfirmedErrorCount: 0,
+            judgment: '現行の利用受付・実施案内を確認できた3件のみ訂正し、計画・予算・相談窓口等から利用条件を推測しない'
+          };
+          checkpoint.updatedAt = updatedAt;
+          write(checkpointPath, checkpoint);
+          NODE
+      - name: Regenerate and validate national outputs
+        working-directory: jichitai-compare
+        run: npm run check
+      - name: Commit and push correction branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare
+          git commit -m 'fix: 西日本B産後ケア3自治体を訂正'
+          git push --force origin HEAD:fix/west-b-postpartum-corrections-20260725
