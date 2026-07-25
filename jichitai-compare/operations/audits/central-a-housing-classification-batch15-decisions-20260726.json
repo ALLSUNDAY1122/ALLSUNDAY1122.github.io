@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch15-decisions-20260726",
+  "decidedAt": "2026-07-26T02:20:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3742,
+  "runnerWorkflowRunId": 30167487242,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 0,
+  "noChangeCount": 5,
+  "unchanged": [
+    {
+      "code": "16205",
+      "name": "氷見市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "子育て世帯の住宅取得を転入者100万円・市内居住者50万円支援し、改修・家賃も補助",
+      "officialSource": "https://www.city.himi.toyama.jp/gyosei/soshiki/miraisenryaku/3/1/1653.html",
+      "reason": "令和8年度の定住マイホーム取得支援で、子育て・新婚世帯、三世代同居等の対象・加算と現行申請様式を確認した。"
+    },
+    {
+      "code": "16323",
+      "name": "立山町",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "町営住宅等へ入居する18歳以下の子どもがいる世帯等に、家賃軽減や行政ポイントを付与する。",
+      "officialSource": "https://www.town.tateyama.toyama.jp/soshikikarasagasu/kikakuseisakuka/chiikishinkogakari/2/1/1089.html",
+      "reason": "令和8年度の町営住宅等子育て世帯移住定住支援で、高校生以下の子育て世帯の家賃支援・行政ポイントと申請期限を確認した。"
+    },
+    {
+      "code": "17206",
+      "name": "加賀市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "市内で住宅を新築・購入する45歳未満の方へ基本補助と子ども・移住・市内業者・空き家等の加算を行う。",
+      "officialSource": "https://www.city.kaga.ishikawa.jp/soshiki/somu/seisaku_suishin/jinkogensho_taisaku/6/15107.html",
+      "reason": "令和8年度住宅取得助成で、45歳未満の取得者に対する18歳以下の子1人10万円・最大30万円加算を確認した。"
+    },
+    {
+      "code": "18201",
+      "name": "福井市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "令和8年度に新婚・子育て・U・Iターン世帯等の中古住宅取得、改修、家賃、同居・近居を支援する複数の住宅補助を実施する。",
+      "officialSource": "https://www.city.fukui.lg.jp/sisei/hojyo/kurasi/jutaku_seisaku31.html",
+      "reason": "令和8年度の住まい支援一覧で、子育て応援加算、多世帯近居、子育て世帯等の空き家家賃支援を確認した。"
+    },
+    {
+      "code": "21204",
+      "name": "多治見市",
+      "service": "housingSupport",
+      "status": "verified",
+      "summary": "令和8年度の結婚新生活支援として、婚姻に伴う住宅取得・賃借・リフォーム・引越費用を最大60万円補助する。",
+      "officialSource": "https://www.city.tajimi.lg.jp/shisei/shisaku_keikaku/1007314/1007315.html",
+      "reason": "令和8年度結婚新生活支援金で、39歳以下の新婚世帯の住宅取得・賃借・リフォーム・引越費用支援を確認した。"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 104,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 99
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "子育て・新婚・子ども加算が現行公式本文に明記され、登録内容と一致する候補は誤検出としてno-change証跡化する",
+    "no-changeでも公式年度・対象・申請条件を独立再確認し、候補母数から除外する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3744,
+  "nationalSyncWorkflowRunId": 30167884050,
+  "nationalSyncStatus": "validated_pending_merge",
+  "nationalValidationEvidence": "jichitai-compare/operations/audits/central-a-housing-classification-batch15-main-validation-20260726.json"
+}
