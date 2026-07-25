@@ -1,0 +1,19 @@
+{
+  "schemaVersion":"1.0.0",
+  "ledgerId":"east-b-corrections-20260725",
+  "coordinatorSession":"統括A③",
+  "session":"east-b",
+  "generatedAt":"2026-07-25T10:55:00+09:00",
+  "summary":{"entryCount":7,"categoryCounts":{"url_or_description_maintenance":4,"year_mismatch":1,"status_judgement":2},"openMajorCorrectionCount":0,"revalidationIssueNumber":3199},
+  "entries":[
+    {"id":"east-b-001","code":"12203","name":"市川市","service":"sickChildCare","category":"url_or_description_maintenance","before":"旧URL","after":"正規URL","cause":"旧CMS URLから現行正規URLへ更新","sourcePointer":"jichitai-compare/data/municipalities/12/12203.json#services.sickChildCare.source","correctionPr":2928,"ciRun":6999},
+    {"id":"east-b-002","code":"14100","name":"横浜市","service":"postpartumCare","category":"url_or_description_maintenance","before":"類型別利用上限の記載不足","after":"類型別利用上限を補完","cause":"現行公式案内の上限条件を補足","sourcePointer":"jichitai-compare/data/municipalities/14/14100.json#services.postpartumCare.source","correctionPr":2962,"ciRun":7155},
+    {"id":"east-b-003","code":"13123","name":"江戸川区","service":"postpartumCare","category":"url_or_description_maintenance","before":"類型別利用上限の記載不足","after":"類型別利用上限を補完","cause":"現行公式案内の上限条件を補足","sourcePointer":"jichitai-compare/data/municipalities/13/13123.json#services.postpartumCare.source","correctionPr":2962,"ciRun":7155},
+    {"id":"east-b-004","code":"13123","name":"江戸川区","service":"bulkyWaste","category":"year_mismatch","before":"現行料金のみ","after":"2026年10月1日受付分からの持込最低料金改定を追記","cause":"将来適用される公式料金改定が未記載","sourcePointer":"jichitai-compare/data/municipalities/13/13123.json#services.bulkyWaste.source","correctionPr":2994,"ciRun":7248},
+    {"id":"east-b-005","code":"15100","name":"新潟市","service":"disasterPrevention","category":"url_or_description_maintenance","before":"総合ハザードマップのみ","after":"作成年と河川別最新版の併用注意を追記","cause":"総合版に新しい浸水想定が未反映の河川がある","sourcePointer":"jichitai-compare/data/municipalities/15/15100.json#services.disasterPrevention.source","correctionPr":3009,"ciRun":7299},
+    {"id":"east-b-006","code":"15586","name":"粟島浦村","service":"childcareFee","category":"status_judgement","before":"unavailable","after":"verified","cause":"2025年度から保育負担金を主食費・教材費等を含め完全無償化","sourcePointer":"jichitai-compare/data/municipalities/15/15586.json#services.childcareFee.source","correctionPr":3024,"ciRun":7351},
+    {"id":"east-b-007","code":"15586","name":"粟島浦村","service":"temporaryChildcare","category":"status_judgement","before":"unavailable","after":"verified","cause":"2026年度こども誰でも通園制度の受入体制・量の見込みを確認","sourcePointer":"jichitai-compare/data/municipalities/15/15586.json#services.temporaryChildcare.source","correctionPr":3024,"ciRun":7351}
+  ],
+  "evidence":{"mainPr":3040,"mainCi":7439,"publicSmokePr":3062,"publicWorkflowRunId":30115786850,"verifiedPages":21,"status":"success"},
+  "status":"wave2_revalidation_assigned"
+}
