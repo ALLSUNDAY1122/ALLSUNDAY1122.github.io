@@ -4,15 +4,15 @@
   "parentAuditId": "central-b-independent-reaudit-20260725",
   "trackingIssueNumber": 3186,
   "workingBranch": "quality/central-b-independent-reaudit-20260725",
-  "status": "in_progress",
+  "status": "completed",
   "scope": {
     "round": 3,
     "municipalityCodes": ["26365","26366","26367","26407","26463","26465","29201","29202","29203","29204"],
-    "auditedMunicipalityCount": 9,
-    "auditedServiceCount": 81,
+    "auditedMunicipalityCount": 10,
+    "auditedServiceCount": 90,
     "confirmedErrorCount": 7,
     "correctedErrorCount": 7,
-    "pendingMunicipalityCodes": ["29204"]
+    "pendingMunicipalityCodes": []
   },
   "findings": [
     {
@@ -52,16 +52,20 @@
     },
     {
       "municipalityCode":"29203","municipalityName":"大和郡山市","servicesChecked":9,"result":"one_task_record_error_corrected",
-      "confirmedErrors":[{"service":"housingSupport","recordLayer":"task","before":"task説明が子ども要件のない住宅エコリフォーム商品券を住宅支援として記録","after":"自治体JSONと同じく、東京圏からの移住・就業等の要件を満たす世帯への移住支援金を記録。2人以上世帯100万円、単身60万円、18歳未満1人につき100万円加算","cause":"自治体JSON修正後にtaskの旧制度説明が残った同期漏れ・制度分類誤り","officialSource":"https://www.city.yamatokoriyama.lg.jp/life/sumai_hikkoshi/9173.html","status":"corrected"}],
+      "confirmedErrors":[{"service":"housingSupport","recordLayer":"task","before":"task説明が子ども要件のない住宅エコリフォーム商品券を住宅支援として記録","after":"自治体JSONと同じく東京圏からの移住・就業等の要件を満たす世帯への移住支援金を記録。2人以上世帯100万円、単身60万円、18歳未満1人につき100万円加算","cause":"自治体JSON修正後にtaskの旧制度説明が残った同期漏れ・制度分類誤り","officialSource":"https://www.city.yamatokoriyama.lg.jp/life/sumai_hikkoshi/9173.html","status":"corrected"}],
       "notes":["小中学校給食費無償化、病児保育2施設、産後ケア3類型、誰でも通園2施設、粗大ごみ年3回、防災情報は現行JSONと一致。"]
+    },
+    {
+      "municipalityCode":"29204","municipalityName":"天理市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],
+      "notes":["令和8年度は市立小中学校給食費を完全無償化。","産後ケアは生後12か月未満、宿泊5泊・日帰り5日、7施設、ままね助産院は2026年7月1日追加。","誰でも通園は3施設、月10時間、学園2施設は1回500円、はぐ～るは1時間300円。","移住支援金は18歳未満1人につき100万円加算。","粗大ごみは電話申込のリクエスト収集で、未確認手数料を推測しない。"]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 29,
-    "auditedServiceCount": 261,
+    "auditedMunicipalityCount": 30,
+    "auditedServiceCount": 270,
     "confirmedErrorCount": 29,
     "correctedErrorCount": 29,
     "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "第3バッチ最終の天理市（29204）を公式情報起点で独立監査する。"
+  "nextAction": "第4バッチを橿原市（29205）から公式情報起点で独立監査する。"
 }
