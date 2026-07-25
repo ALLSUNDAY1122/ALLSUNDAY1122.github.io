@@ -1,0 +1,35 @@
+name: East A second audit state fix
+
+on:
+  push:
+    branches:
+      - audit/east-a-second-quality-20260725-r1
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch checkpoint and audit record
+        run: python jichitai-compare/operations/scripts/patch-east-a-second-audit-r1.py
+      - name: Commit generated correction
+        run: |
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/control/session-checkpoints/east-a.json
+          git add jichitai-compare/operations/audits/east-a-quality-improvement-second-audit-20260725.json
+          git commit -m "fix: align East A checkpoint with PR 3169"
+          git push
