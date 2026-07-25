@@ -12,7 +12,7 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T15:18:00+09:00",
+  "updatedAt": "2026-07-25T15:31:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -41,7 +41,7 @@
     }
   ],
   "blocked": [],
-  "nextAction": "住宅支援分類横断監査38件・全国同期・公開検証は完了。新しい公式情報または再退行が検出された場合のみ再監査する。",
+  "nextAction": "住宅支援分類横断監査38件は地域・全国・公開・checkpoint同期まで完了。新しい公式情報または再退行が検出された場合のみ再監査する。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
@@ -352,9 +352,15 @@
     "publicVerificationCiRunNumber": 8509,
     "checkpointPullRequestNumber": 3510,
     "checkpointFile": "jichitai-compare/operations/control/session-checkpoints/west-a-housing-classification-crosscheck-20260725.json",
-    "blocker": null
+    "blocker": null,
+    "supersededMainSyncPullRequestNumber": 3515,
+    "finalMainSyncPullRequestNumber": 3519,
+    "finalMainSyncStatus": "completed",
+    "finalMainSyncCiRunNumber": 8543,
+    "finalMainSyncMergeSha": "3d983dec8e34b8cdd8bb52ab2df3fbdd81599cd2"
   },
   "notes": [
-    "2026-07-25 15:18: 一般移住・一般住宅制度の分類誤りを担当226自治体で横断監査し、38自治体のhousingSupportをverifiedからunavailableへ訂正。地域・全国・公開38ページを確認し未解決0。"
+    "2026-07-25 15:18: 一般移住・一般住宅制度の分類誤りを担当226自治体で横断監査し、38自治体のhousingSupportをverifiedからunavailableへ訂正。地域・全国・公開38ページを確認し未解決0。",
+    "2026-07-25 15:31: 最終全国checkpoint同期PR #3519・CI #8543・merge 3d983dec8e34を確認し、住宅支援分類横断監査38件を完全完了。"
   ]
 }
