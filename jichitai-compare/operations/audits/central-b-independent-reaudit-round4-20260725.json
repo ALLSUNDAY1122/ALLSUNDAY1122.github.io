@@ -8,11 +8,11 @@
   "scope": {
     "round": 4,
     "municipalityCodes": ["29205","29206","29207","29208","29209","29210","29211","29212","29322","29342"],
-    "auditedMunicipalityCount": 4,
-    "auditedServiceCount": 36,
+    "auditedMunicipalityCount": 5,
+    "auditedServiceCount": 45,
     "confirmedErrorCount": 5,
     "correctedErrorCount": 5,
-    "pendingMunicipalityCodes": ["29209","29210","29211","29212","29322","29342"]
+    "pendingMunicipalityCodes": ["29210","29211","29212","29322","29342"]
   },
   "findings": [
     {
@@ -91,17 +91,27 @@
           "status": "corrected"
         }
       ],
+      "notes": ["医療費、病児保育、保育料、産後ケア、誰でも通園、住宅分類、粗大ごみ、防災は現行公式情報と一致。"]
+    },
+    {
+      "municipalityCode": "29209",
+      "municipalityName": "生駒市",
+      "servicesChecked": 9,
+      "result": "no_confirmed_error",
+      "confirmedErrors": [],
       "notes": [
-        "医療費、病児保育、保育料、産後ケア、誰でも通園、住宅分類、粗大ごみ、防災は現行公式情報と一致。"
+        "令和8年度のこども誰でも通園制度は待機児童の状況を踏まえ月4時間、7施設、1時間300円・30分150円。",
+        "学校給食は小学校月4,400円・中学校月4,800円で、全員一律無償化は確認できない。",
+        "産後ケア、病児保育2施設、第2子以降保育料無償、18歳未満加算付き移住支援金、粗大ごみ月1回10点、防災情報を現行確認。"
       ]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 34,
-    "auditedServiceCount": 306,
+    "auditedMunicipalityCount": 35,
+    "auditedServiceCount": 315,
     "confirmedErrorCount": 34,
     "correctedErrorCount": 34,
     "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "生駒市（29209）を公式情報起点で独立監査する。"
+  "nextAction": "香芝市（29210）を公式情報起点で独立監査する。"
 }
