@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "west-a-bulky-waste-resolution-20260725",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-25T22:03:00+09:00",
+  "trackingIssues": [
+    3189,
+    3193,
+    3675
+  ],
+  "scope": {
+    "municipalityCount": 226,
+    "priorityCandidateCount": 65,
+    "publicPageCount": 3
+  },
+  "corrections": {
+    "sourceMisassignmentCount": 1,
+    "sourceEnrichmentCount": 2,
+    "statusCorrectionCount": 0,
+    "contentErrorCount": 0,
+    "correctedMunicipalityCodes": [
+      "39424",
+      "40421",
+      "43208"
+    ]
+  },
+  "continuation": {
+    "issue": 3675,
+    "nonBlocking": true,
+    "municipalityCodes": [
+      "33203",
+      "43511",
+      "46502",
+      "33586"
+    ]
+  },
+  "evidence": {
+    "mechanicalAuditPullRequest": 3634,
+    "reviewPreparationPullRequest": 3674,
+    "regionalCorrectionPullRequest": 3677,
+    "regionalCorrectionWorkflowRunId": 30158202086,
+    "nationalSyncPullRequest": 3679,
+    "nationalSyncWorkflowRunId": 30158329113,
+    "publicVerificationPullRequest": 3681,
+    "publicVerificationWorkflowRunId": 30158773931,
+    "verificationRuleFixPullRequest": 3682,
+    "finalRegionPullRequest": 3684,
+    "finalRegionWorkflowRunId": 30158972922,
+    "finalMainPullRequest": 3686,
+    "finalMainWorkflowRunId": 30159125294
+  },
+  "publicVerification": {
+    "allPagesHttp200": true,
+    "primarySourcesMatch": true,
+    "publicGeneratedJsonPrimaryAndAdditionalSourcesMatch": true,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669
+  },
+  "temporaryRunnerCleanup": {
+    "regionPaths": [
+      ".github/workflows/temp-west-a-bulky-review-prep.yml",
+      ".github/workflows/temp-west-a-bulky-source-maintenance.yml",
+      ".github/workflows/temp-west-a-bulky-finalize.yml"
+    ],
+    "mainPaths": [
+      ".github/workflows/temp-west-a-bulky-main-sync.yml",
+      ".github/workflows/temp-west-a-bulky-public-verify.yml",
+      ".github/workflows/temp-west-a-bulky-final-main.yml"
+    ],
+    "regionCleanupPullRequest": 3684,
+    "mainCleanupPullRequest": 3686
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "status": "completed_public_verified_region_integrated"
+}
