@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "west-b-housing-resolution-20260725",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-25T19:59:00+09:00",
+  "trackingIssues": [
+    3191,
+    3193
+  ],
+  "category": "generalHousingMisclassification",
+  "scope": {
+    "auditedMunicipalityCount": 250,
+    "mechanicalCandidateCount": 118,
+    "strictCandidateCount": 100,
+    "officialSourceFetchedCount": 99,
+    "priorityCandidateCount": 25,
+    "confirmedCorrectionCount": 24,
+    "changedToUnavailableCount": 21,
+    "familySpecificReplacementCount": 3,
+    "retainedVerifiedCount": 1,
+    "publicPageCount": 24
+  },
+  "evidence": {
+    "sourceReviewPullRequest": 3641,
+    "auditRunnerCleanupPullRequest": 3659,
+    "regionalRunnerRegistrationPullRequest": 3661,
+    "regionalCorrectionPullRequest": 3662,
+    "regionalCorrectionWorkflowRunId": 30154957954,
+    "regionalStateRunnerPullRequest": 3663,
+    "regionalStatePullRequest": 3664,
+    "regionalStateWorkflowRunId": 30155086155,
+    "nationalRunnerPullRequest": 3665,
+    "nationalSyncPullRequest": 3666,
+    "nationalSyncWorkflowRunId": 30155174139,
+    "publicRunnerPullRequest": 3667,
+    "publicVerificationPullRequest": 3668,
+    "publicVerificationWorkflowRunId": 30155274314,
+    "finalRegionRunnerPullRequest": 3669,
+    "finalRegionPullRequest": 3670,
+    "finalRegionWorkflowRunId": 30155386114,
+    "finalMainPullRequest": 3672,
+    "finalMainWorkflowRunId": 30155537625
+  },
+  "corrections": {
+    "changedToUnavailableCount": 21,
+    "familySpecificReplacementCount": 3,
+    "retainedVerifiedCount": 1,
+    "correctedMunicipalityCodes": [
+      "35203",
+      "35206",
+      "35207",
+      "35208",
+      "36388",
+      "36403",
+      "36404",
+      "36468",
+      "38205",
+      "38386",
+      "41208",
+      "41346",
+      "45382",
+      "45403",
+      "45406",
+      "45430",
+      "47353",
+      "47359",
+      "47360",
+      "47362",
+      "47381",
+      "35305",
+      "36405",
+      "41209"
+    ],
+    "retainedMunicipalityCode": "47326"
+  },
+  "publicVerification": {
+    "attempt": 1,
+    "targetCount": 24,
+    "allPagesHttp200": true,
+    "summariesMatch": true,
+    "officialSourcesMatch": true,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669,
+    "publicGeneratedJsonMatches": true
+  },
+  "temporaryRunnerCleanup": {
+    "mainPaths": [
+      ".github/workflows/temp-west-b-housing-main-sync.yml",
+      ".github/workflows/temp-west-b-housing-public-verify.yml",
+      ".github/workflows/temp-west-b-housing-final-main.yml"
+    ],
+    "regionPaths": [
+      ".github/workflows/temp-west-b-housing-corrections.yml",
+      ".github/workflows/temp-west-b-housing-state-sync.yml",
+      ".github/workflows/temp-west-b-housing-finalize.yml"
+    ],
+    "regionalCleanupCompletedInPullRequest": 3670,
+    "mainCleanupCompletedInPullRequest": 3672,
+    "status": "cleanup_completed"
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "status": "completed_public_verified_region_integrated"
+}
