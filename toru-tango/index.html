@@ -1,49 +1,65 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="撮る単語帳の公式サポートページです。">
-  <title>撮る単語帳｜公式サポート</title>
-  <style>
-    :root{color-scheme:light dark;--bg:#f6f7fb;--card:#fff;--text:#151821;--sub:#5e6472;--accent:#4f46e5;--line:#e7e9f0}
-    @media(prefers-color-scheme:dark){:root{--bg:#101218;--card:#191c24;--text:#f5f7fb;--sub:#aeb4c0;--line:#2c303b}}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif;line-height:1.7}
-    main{max-width:760px;margin:auto;padding:48px 20px 72px}.hero{padding:34px 28px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:24px;box-shadow:0 16px 40px rgba(79,70,229,.2)}
-    h1{margin:0 0 8px;font-size:2rem}.lead{margin:0;opacity:.92}.card{margin-top:22px;padding:24px;background:var(--card);border:1px solid var(--line);border-radius:18px}h2{margin-top:0;font-size:1.2rem}ul{padding-left:1.2rem}a{color:var(--accent)}.note{color:var(--sub);font-size:.94rem}footer{margin-top:30px;color:var(--sub);font-size:.85rem;text-align:center}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<title>撮る単語帳</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--text:#151821;--sub:#667085;--accent:#4f46e5;--accent2:#7c3aed;--line:#e5e7eb;--ok:#16803c;--ng:#c62828}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1117;--card:#191c24;--text:#f5f7fb;--sub:#aab1bd;--line:#303441}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:760px;margin:auto;padding:18px 14px 90px}.hero{padding:22px;border-radius:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.hero h1{margin:0;font-size:1.8rem}.hero p{margin:6px 0 0;opacity:.9}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:12px 6px;border-radius:14px;font-weight:700}.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:12px}.card h2{font-size:1.1rem;margin:0 0 12px}.label{display:block;font-size:.88rem;color:var(--sub);margin:10px 0 5px}.input,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg);color:var(--text)}textarea{min-height:120px;resize:vertical}.row{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:700;background:var(--accent);color:#fff}.btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--line)}.btn.danger{background:var(--ng)}.btn.ok{background:var(--ok)}.muted{color:var(--sub);font-size:.88rem}.count{font-weight:700}.item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.qa{min-width:0}.qa b,.qa span{display:block;overflow-wrap:anywhere}.qa span{color:var(--sub);margin-top:4px}.study{min-height:310px;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:28px 20px}.study .side{font-size:.8rem;color:var(--sub);letter-spacing:.08em}.study .text{font-size:1.55rem;font-weight:800;line-height:1.5;margin:18px 0}.study .hint{color:var(--sub)}.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:12px 0}.bar{height:100%;background:var(--accent);width:0}.hidden{display:none!important}.empty{text-align:center;color:var(--sub);padding:30px 8px}#preview{max-width:100%;max-height:280px;border-radius:12px;margin-top:10px}.status{padding:10px 12px;border-radius:12px;background:var(--bg);font-size:.9rem;margin-top:10px}.footer{text-align:center;color:var(--sub);font-size:.8rem;margin-top:24px}.small{font-size:.82rem}
+</style>
 </head>
 <body>
-<main>
-  <section class="hero">
-    <h1>撮る単語帳</h1>
-    <p class="lead">教材を撮影して、自分専用の一問一答へ。</p>
-  </section>
+<div class="wrap">
+<section class="hero"><h1>撮る単語帳</h1><p>教材から、自分専用の一問一答を作る。</p></section>
+<nav class="tabs"><button class="tab active" data-tab="create">作る</button><button class="tab" data-tab="list">単語帳</button><button class="tab" data-tab="study">学習</button></nav>
 
-  <section class="card">
-    <h2>主な機能</h2>
-    <ul>
-      <li>教材写真から文字を読み取る</li>
-      <li>一問一答・穴埋め形式の問題を作成する</li>
-      <li>スワイプ操作で学習結果を記録する</li>
-      <li>読み上げと復習予定を利用する</li>
-      <li>試験日までの日数と毎日の学習目標を管理する</li>
-    </ul>
-  </section>
+<section id="create" class="panel active">
+<div class="card"><h2>直接入力</h2>
+<label class="label">問題</label><input id="q" class="input" placeholder="例：日本の首都は？">
+<label class="label">答え</label><input id="a" class="input" placeholder="例：東京">
+<div class="row" style="margin-top:12px"><button id="add" class="btn">カードを追加</button><button id="sample" class="btn secondary">例を入れる</button></div></div>
 
-  <section class="card">
-    <h2>お問い合わせ</h2>
-    <p>不具合やご意見は、次のメールアドレスへお送りください。</p>
-    <p><a href="mailto:kmorita3615@gmail.com">kmorita3615@gmail.com</a></p>
-    <p class="note">お問い合わせ時は、端末名、iOSのバージョン、発生した操作を記載してください。パスワードや認証コードは送信しないでください。</p>
-  </section>
+<div class="card"><h2>まとめて作成</h2><p class="muted">1行に「問題｜答え」の形式で入力してください。</p>
+<textarea id="bulk" placeholder="日本の首都は？｜東京&#10;日本で一番高い山は？｜富士山"></textarea>
+<button id="bulkAdd" class="btn" style="margin-top:10px">まとめて追加</button></div>
 
-  <section class="card">
-    <h2>プライバシー</h2>
-    <p><a href="privacy-policy.html">プライバシーポリシーを確認する</a></p>
-  </section>
+<div class="card"><h2>教材写真</h2><p class="muted">写真を選ぶと端末内で文字認識します。初回は認識機能の読み込みに時間がかかります。</p>
+<input id="photo" type="file" accept="image/*" capture="environment" class="input"><img id="preview" class="hidden" alt="選択画像">
+<div id="ocrStatus" class="status hidden"></div><textarea id="ocrText" class="hidden" placeholder="認識した文字"></textarea>
+<div class="row" style="margin-top:10px"><button id="ocr" class="btn secondary">写真から文字を読む</button><button id="toBulk" class="btn secondary hidden">認識結果をまとめ入力へ</button></div>
+<p class="muted small">文字認識後は内容を確認し、「問題｜答え」の形に修正してから追加してください。</p></div>
+</section>
 
-  <footer>© 2026 撮る単語帳</footer>
-</main>
+<section id="list" class="panel"><div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">保存済み <span id="count" class="count">0</span>枚</h2><button id="clear" class="btn danger">全削除</button></div><div id="items"></div></div></section>
+
+<section id="study" class="panel"><div class="card"><div class="progress"><div id="bar" class="bar"></div></div><div id="studyBox" class="study"><div class="empty">カードを追加すると学習できます。</div></div><div id="studyActions" class="row hidden" style="justify-content:center"><button id="speak" class="btn secondary">読み上げ</button><button id="flip" class="btn">答えを見る</button></div><div id="gradeActions" class="row hidden" style="justify-content:center"><button id="again" class="btn danger">もう一度</button><button id="known" class="btn ok">覚えた</button></div></div></section>
+
+<div class="footer"><a href="privacy-policy.html">プライバシーポリシー</a></div>
+</div>
+<script>
+const KEY='toru-tango-cards-v1';let cards=JSON.parse(localStorage.getItem(KEY)||'[]');let order=[],pos=0,showAnswer=false;const $=s=>document.querySelector(s);
+function save(){localStorage.setItem(KEY,JSON.stringify(cards));renderList();renderStudy()}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function switchTab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));if(id==='study')startStudy()}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+function addCard(q,a){q=q.trim();a=a.trim();if(!q||!a)return false;cards.push({id:Date.now()+Math.random(),q,a,correct:0,wrong:0});save();return true}
+$('#add').onclick=()=>{if(addCard($('#q').value,$('#a').value)){ $('#q').value='';$('#a').value='';alert('追加しました')}};
+$('#sample').onclick=()=>{$('#q').value='日本の首都は？';$('#a').value='東京'};
+$('#bulkAdd').onclick=()=>{let n=0;$('#bulk').value.split(/\n/).forEach(line=>{const p=line.split(/[｜|\t]/);if(p.length>=2&&addCard(p.shift(),p.join('｜')))n++});if(n){$('#bulk').value='';alert(n+'枚追加しました')}else alert('「問題｜答え」の形式で入力してください')};
+function renderList(){$('#count').textContent=cards.length;$('#items').innerHTML=cards.length?cards.map((c,i)=>`<div class="item"><div class="qa"><b>${esc(c.q)}</b><span>${esc(c.a)}</span></div><button class="btn secondary" onclick="del(${i})">削除</button></div>`).join(''):'<div class="empty">まだカードがありません。</div>'}
+window.del=i=>{cards.splice(i,1);save()};$('#clear').onclick=()=>{if(cards.length&&confirm('すべて削除しますか？')){cards=[];save()}};
+function startStudy(){order=cards.map((_,i)=>i).sort(()=>Math.random()-.5);pos=0;showAnswer=false;renderStudy()}
+function renderStudy(){if(!cards.length){$('#studyBox').innerHTML='<div class="empty">カードを追加すると学習できます。</div>';$('#studyActions').classList.add('hidden');$('#gradeActions').classList.add('hidden');$('#bar').style.width='0';return}if(!order.length||order.some(i=>i>=cards.length))order=cards.map((_,i)=>i);if(pos>=order.length){$('#studyBox').innerHTML='<div class="text">学習完了</div><div class="hint">もう一度学習タブを開くと再開できます。</div>';$('#studyActions').classList.add('hidden');$('#gradeActions').classList.add('hidden');$('#bar').style.width='100%';return}const c=cards[order[pos]];$('#studyBox').innerHTML=`<div class="side">${showAnswer?'ANSWER':'QUESTION'}</div><div class="text">${esc(showAnswer?c.a:c.q)}</div><div class="hint">${pos+1} / ${order.length}</div>`;$('#bar').style.width=((pos/order.length)*100)+'%';$('#studyActions').classList.toggle('hidden',showAnswer);$('#gradeActions').classList.toggle('hidden',!showAnswer)}
+$('#flip').onclick=()=>{showAnswer=true;renderStudy()};$('#speak').onclick=()=>{const c=cards[order[pos]];speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(showAnswer?c.a:c.q))};
+function grade(ok){const i=order[pos];if(ok)cards[i].correct++;else{cards[i].wrong++;order.push(i)}localStorage.setItem(KEY,JSON.stringify(cards));pos++;showAnswer=false;renderStudy()}
+$('#known').onclick=()=>grade(true);$('#again').onclick=()=>grade(false);
+let selectedFile=null;$('#photo').onchange=e=>{selectedFile=e.target.files[0]||null;if(selectedFile){$('#preview').src=URL.createObjectURL(selectedFile);$('#preview').classList.remove('hidden')}};
+$('#ocr').onclick=async()=>{if(!selectedFile){alert('写真を選んでください');return}const st=$('#ocrStatus');st.classList.remove('hidden');st.textContent='文字認識機能を読み込み中…';try{if(!window.Tesseract){await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s)})}st.textContent='文字を認識中…';const r=await Tesseract.recognize(selectedFile,'jpn+eng',{logger:m=>{if(m.progress)st.textContent='文字を認識中… '+Math.round(m.progress*100)+'%'}});$('#ocrText').value=r.data.text.trim();$('#ocrText').classList.remove('hidden');$('#toBulk').classList.remove('hidden');st.textContent='認識が完了しました。内容を確認してください。'}catch(e){st.textContent='文字認識に失敗しました。通信状態を確認するか、直接入力を使用してください。'}};
+$('#toBulk').onclick=()=>{$('#bulk').value=$('#ocrText').value;window.scrollTo({top:$('#bulk').getBoundingClientRect().top+scrollY-30,behavior:'smooth'})};
+renderList();renderStudy();
+</script>
 </body>
 </html>
