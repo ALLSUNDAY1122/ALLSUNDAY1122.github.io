@@ -1,0 +1,212 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-source-discovery-20260725",
+  "generatedAt": "2026-07-25T03:52:36.521180+00:00",
+  "targetCount": 4,
+  "resolvedCount": 1,
+  "unresolvedCount": 3,
+  "targets": [
+    {
+      "code": "43443",
+      "name": "益城町",
+      "service": "bulkyWaste",
+      "expectedTokens": [
+        "500円",
+        "400cm"
+      ],
+      "candidates": [
+        {
+          "url": "https://www.town.mashiki.lg.jp/kiji0032329/index.html",
+          "status": 404,
+          "finalUrl": "https://www.town.mashiki.lg.jp/dynamic/_error/error404.aspx",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.mashiki.lg.jp/kiji0032329/",
+          "status": 404,
+          "finalUrl": "https://www.town.mashiki.lg.jp/dynamic/_error/error404.aspx",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.mashiki.lg.jp/list00679.html",
+          "status": 200,
+          "finalUrl": "https://www.town.mashiki.lg.jp/list00679.html",
+          "contentType": "text/html",
+          "size": 141581,
+          "error": null,
+          "contentMatch": false
+        }
+      ],
+      "bestUrl": null,
+      "status": "unresolved"
+    },
+    {
+      "code": "46533",
+      "name": "和泊町",
+      "service": "bulkyWaste",
+      "expected": "official fee table PDF, coarse waste 100 yen/10kg",
+      "candidates": [
+        {
+          "url": "https://www.town.wadomari.lg.jp/documents/4268/kaitei.pdf",
+          "status": 404,
+          "finalUrl": "https://www.town.wadomari.lg.jp/documents/4268/kaitei.pdf",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
+          "status": 404,
+          "finalUrl": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        }
+      ],
+      "bestUrl": null,
+      "status": "unresolved"
+    },
+    {
+      "code": "31384",
+      "name": "日吉津村",
+      "service": "disasterPrevention",
+      "expectedTokens": [
+        "ハザードマップ"
+      ],
+      "candidates": [
+        {
+          "url": "https://www.hiezu.jp/%E6%97%A5%E5%90%89%E6%B4%A5%E6%9D%91%E6%B4%AA%E6%B0%B4%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+          "status": 200,
+          "finalUrl": "https://www.hiezu.jp/%E6%97%A5%E5%90%89%E6%B4%A5%E6%9D%91%E6%B4%AA%E6%B0%B4%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+          "contentType": "text/html; charset=UTF-8",
+          "size": 101457,
+          "error": null,
+          "contentMatch": true
+        },
+        {
+          "url": "https://www.hiezu.jp/%E6%97%A5%E5%90%89%E6%B4%A5%E6%9D%91%E6%B4%A5%E6%B3%A2%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+          "status": 200,
+          "finalUrl": "https://www.hiezu.jp/%E6%97%A5%E5%90%89%E6%B4%A5%E6%9D%91%E6%B4%A5%E6%B3%A2%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+          "contentType": "text/html; charset=UTF-8",
+          "size": 99209,
+          "error": null,
+          "contentMatch": true
+        }
+      ],
+      "bestUrl": "https://www.hiezu.jp/%E6%97%A5%E5%90%89%E6%B4%A5%E6%9D%91%E6%B4%AA%E6%B0%B4%E3%83%8F%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/",
+      "status": "resolved"
+    },
+    {
+      "code": "45402",
+      "name": "新富町",
+      "service": "childMedical",
+      "expectedTokens": [
+        "18歳",
+        "自己負担なし",
+        "医療費助成"
+      ],
+      "category": {
+        "url": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html",
+        "status": 200,
+        "finalUrl": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html",
+        "contentType": "text/html",
+        "size": 60312,
+        "error": null
+      },
+      "candidates": [
+        {
+          "url": "https://www.town.shintomi.lg.jp/1061.htm",
+          "status": 404,
+          "finalUrl": "https://www.town.shintomi.lg.jp/1061.htm",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/1061.html",
+          "status": 404,
+          "finalUrl": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/1061.html",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/1702.html",
+          "status": 200,
+          "finalUrl": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/1702.html",
+          "contentType": "text/html",
+          "size": 67547,
+          "error": null,
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/2765.html",
+          "status": 200,
+          "finalUrl": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/2765.html",
+          "contentType": "text/html",
+          "size": 64597,
+          "error": null,
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html",
+          "status": 200,
+          "finalUrl": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html",
+          "contentType": "text/html",
+          "size": 60312,
+          "error": null,
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html#container",
+          "status": 200,
+          "finalUrl": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html#container",
+          "contentType": "text/html",
+          "size": 60312,
+          "error": null,
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html#wrapper",
+          "status": 200,
+          "finalUrl": "https://www.town.shintomi.lg.jp/iryo_kenko_fukushi/iryohijosei/index.html#wrapper",
+          "contentType": "text/html",
+          "size": 60312,
+          "error": null,
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/item/1600.htm",
+          "status": 404,
+          "finalUrl": "https://www.town.shintomi.lg.jp/item/1600.htm",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        },
+        {
+          "url": "https://www.town.shintomi.lg.jp/soshiki/fukushi/gyomu/3/1061.html",
+          "status": 404,
+          "finalUrl": "https://www.town.shintomi.lg.jp/soshiki/fukushi/gyomu/3/1061.html",
+          "contentType": "",
+          "size": 0,
+          "error": "<HTTPError 404: 'Not Found'>",
+          "contentMatch": false
+        }
+      ],
+      "bestUrl": null,
+      "status": "unresolved"
+    }
+  ],
+  "policy": "Only URLs with HTTP 200 and expected official content are selected. No URL is inferred from path shape alone."
+}
