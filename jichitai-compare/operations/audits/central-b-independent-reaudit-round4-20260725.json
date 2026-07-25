@@ -8,11 +8,11 @@
   "scope": {
     "round": 4,
     "municipalityCodes": ["29205","29206","29207","29208","29209","29210","29211","29212","29322","29342"],
-    "auditedMunicipalityCount": 3,
-    "auditedServiceCount": 27,
-    "confirmedErrorCount": 4,
-    "correctedErrorCount": 4,
-    "pendingMunicipalityCodes": ["29208","29209","29210","29211","29212","29322","29342"]
+    "auditedMunicipalityCount": 4,
+    "auditedServiceCount": 36,
+    "confirmedErrorCount": 5,
+    "correctedErrorCount": 5,
+    "pendingMunicipalityCodes": ["29209","29210","29211","29212","29322","29342"]
   },
   "findings": [
     {
@@ -74,20 +74,34 @@
           "officialSource": "https://www.city.gojo.lg.jp/soshiki/kikaku/ijuteiju/14150.html",
           "status": "corrected"
         }
+      ]
+    },
+    {
+      "municipalityCode": "29208",
+      "municipalityName": "御所市",
+      "servicesChecked": 9,
+      "result": "one_confirmed_error_corrected",
+      "confirmedErrors": [
+        {
+          "service": "schoolMeals",
+          "before": "令和8年度の無償化は記録したが、通常基準月額を小学校3,900円・中学校4,300円と記録",
+          "after": "令和8年4月施行規則に基づき通常基準月額を小学校5,800円・中学校6,200円へ訂正。令和8年度は特例で保護者負担0円",
+          "cause": "令和8年度料金改定後も旧基準額を継続掲載",
+          "officialSource": "https://www.city.gose.nara.jp/html/reiki_int/reiki_honbun/k409RG00000968.html",
+          "status": "corrected"
+        }
       ],
       "notes": [
-        "令和8年8月診療分から18歳年度末まで医療費窓口負担0円。",
-        "令和8年4月から0～2歳児を含む保育料無償化、学校給食費無償化、誰でも通園月10時間を確認。",
-        "産後ケア、病後児保育、粗大ごみ1点500円、防災情報は現行公式情報と一致。"
+        "医療費、病児保育、保育料、産後ケア、誰でも通園、住宅分類、粗大ごみ、防災は現行公式情報と一致。"
       ]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 33,
-    "auditedServiceCount": 297,
-    "confirmedErrorCount": 33,
-    "correctedErrorCount": 33,
+    "auditedMunicipalityCount": 34,
+    "auditedServiceCount": 306,
+    "confirmedErrorCount": 34,
+    "correctedErrorCount": 34,
     "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "御所市（29208）を公式情報起点で独立監査する。"
+  "nextAction": "生駒市（29209）を公式情報起点で独立監査する。"
 }
