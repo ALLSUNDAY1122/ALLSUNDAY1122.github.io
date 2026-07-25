@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T03:06:00+09:00",
+  "updatedAt": "2026-07-26T03:41:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3759,
+  "pullRequestNumber": 3765,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3709,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残94件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残89件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T03:06:00+09:00",
-    "latestRegionalPullRequestNumber": 3753,
-    "latestCiRunNumber": 30168619933,
+    "latestCompletedAt": "2026-07-26T03:41:00+09:00",
+    "latestRegionalPullRequestNumber": 3765,
+    "latestCiRunNumber": 30170240234,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 134,
-    "primarySourceSlotsRechecked": 566,
+    "correctedMunicipalitiesRechecked": 139,
+    "primarySourceSlotsRechecked": 571,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -581,7 +581,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 94,
+      "generalHousingMisclassification": 89,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -603,28 +603,22 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残94件",
+      "一般住宅・移住制度の分類候補残89件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3755,
     "latestPublicVerificationPullRequestNumber": 3757,
     "latestHousingBatch": {
-      "batch": 16,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 17,
+      "status": "regional_validated_pending_national_publication",
       "reviewedMunicipalityCount": 5,
-      "confirmedCorrectionCount": 1,
-      "noChangeCount": 4,
-      "sourceUpgradeCount": 1,
-      "remainingCandidates": 94,
-      "regionalPullRequestNumber": 3753,
-      "regionalWorkflowRunId": 30168619933,
-      "nationalPullRequestNumber": 3755,
-      "nationalWorkflowRunId": 30168733654,
-      "publicVerificationPullRequestNumber": 3757,
-      "publicVerificationWorkflowRunId": 30168877918,
-      "finalRegionPullRequestNumber": 3759,
-      "finalRegionWorkflowRunId": 30169669045,
+      "confirmedCorrectionCount": 5,
+      "statusToUnavailableCount": 4,
+      "verifiedReplacementCount": 1,
+      "remainingCandidates": 89,
+      "regionalPullRequestNumber": 3765,
+      "regionalWorkflowRunId": 30170240234,
       "blocker": null
     },
     "stateReconciliation": {
@@ -649,5 +643,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第16群で藤枝市の住宅支援主出典を現行利用者向けページへ更新し、川辺町・菊川市・高石市・太子町を維持確認した。地域・全国・公開5ページの一致を確認した。"
+  "lastAction": "住宅支援分類第17群として尾張旭市・北名古屋市・幸田町・舟橋村の一般移住・定住制度をunavailableへ修正し、養父市を2026年度結婚新生活支援へ差し替えた。"
 }

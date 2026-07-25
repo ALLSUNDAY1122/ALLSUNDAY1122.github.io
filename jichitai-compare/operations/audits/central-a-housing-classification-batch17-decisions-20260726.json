@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch17-decisions-20260726",
+  "decidedAt": "2026-07-26T03:41:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3765,
+  "runnerWorkflowRunId": 30170240234,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 4,
+  "verifiedReplacementCount": 1,
+  "corrected": [
+    {
+      "code": "16321",
+      "name": "舟橋村",
+      "service": "housingSupport",
+      "correctionType": "general_settlement_housing_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "ファミリー向け村営住宅等に一定期間居住後、村内で住宅を取得した世帯へ定住支援助成金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.vill.funahashi.toyama.jp/wp/topics/%E3%80%90%E5%8B%9F%E9%9B%86%E3%80%91%E3%83%95%E3%82%A1%E3%83%9F%E3%83%AA%E3%83%BC%E5%90%91%E3%81%91%E6%9D%91%E5%96%B6%E4%BD%8F%E5%AE%85%E3%80%8C%E3%83%AA%E3%83%A9%E3%83%95%E3%82%A9%E3%83%BC%E3%83%88-2/"
+    },
+    {
+      "code": "23226",
+      "name": "尾張旭市",
+      "service": "housingSupport",
+      "correctionType": "general_migration_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "東京23区から尾張旭市へ移住し対象要件を満たす人へ、移住支援金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.owariasahi.lg.jp/page/3512.html"
+    },
+    {
+      "code": "23234",
+      "name": "北名古屋市",
+      "service": "housingSupport",
+      "correctionType": "general_migration_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "東京圏から北名古屋市へ移住し、就業・起業等の要件を満たす人へ移住支援金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.kitanagoya.lg.jp/sangyo/koyo/1004190.html"
+    },
+    {
+      "code": "23501",
+      "name": "幸田町",
+      "service": "housingSupport",
+      "correctionType": "general_migration_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "東京圏から幸田町へ移住し、就業・起業等の要件を満たす人へ移住支援金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.kota.lg.jp/soshiki/13/25626.html"
+    },
+    {
+      "code": "28222",
+      "name": "養父市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_current_newlywed_program",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "新築・空き家購入・増改築・民間賃貸入居等を支援し、新築は上限40万円、空き家購入は上限30万円などを交付する。",
+      "afterSummary": "39歳以下の新婚世帯へ、2026年度の住宅賃借初期費用・引越費用を上限30万円、夫婦とも29歳以下の場合は上限60万円補助する。",
+      "officialSource": "https://www.city.yabu.hyogo.jp/kurashi_tetsuzuki/machizukuri/teijusokushin/8119.html"
+    }
+  ],
+  "candidateRankingAudit": "central-a-housing-batch17-candidate-ranking-20260726",
+  "causeScan": {
+    "previousRemainingCandidates": 94,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 89
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般移住・就業支援は、子どもが選択要件の一部でも住宅取得・改修・家賃への固有支援でなければhousingSupportへ登録しない",
+    "ファミリー向けという名称だけで子育て世帯限定と推定せず、交付要綱の対象要件を確認する",
+    "同一自治体に現行の新婚住宅費支援がある場合は、一般住宅支援より直接的な制度を主制度とする"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3767,
+  "nationalSyncWorkflowRunId": 30170365462,
+  "nationalSyncStatus": "validated_pending_merge"
+}
