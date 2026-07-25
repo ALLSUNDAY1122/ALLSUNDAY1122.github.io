@@ -1,1 +1,56 @@
-{"schemaVersion":"1.0.0","municipalityCode":"04206","municipalityName":"白石市","prefectureCode":"04","prefectureName":"宮城県","assignedTeam":"北日本調査班","status":"merged","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":8,"researchingCount":0,"unavailableCount":1,"needsMediumReviewCount":0,"currentBranch":"data/04206-shiroishi","pullRequestNumber":900,"lastCheckedAt":"2026-07-23","lastUpdatedAt":"2026-07-23T00:17:00+09:00","lastUpdatedBy":"北日本調査班B","officialSources":["https://www.city.shiroishi.miyagi.jp/site/kosodate/843.html","https://www.city.shiroishi.miyagi.jp/life/1/2/10/index.html","https://www.city.shiroishi.miyagi.jp/site/kosodate/14754.html","https://www.city.shiroishi.miyagi.jp/soshiki/49/38811.html","https://www.city.shiroishi.miyagi.jp/soshiki/11/12644.html","https://www.city.shiroishi.miyagi.jp/site/kosodate/38750.html","https://www.city.shiroishi.miyagi.jp/site/smashiro/shigai.html","https://www.city.shiroishi.miyagi.jp/soshiki/18/13536.html","https://www.city.shiroishi.miyagi.jp/site/bousai/1083.html"],"notes":["白石市の必須9制度を市公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして登録。","子ども医療費は18歳年度末まで所得制限なし。令和8年4月から0～5歳児の保育料・副食費を第1子から完全無償化。","令和8年度から市立小学校給食費を完全無償化。","産後12か月までの宿泊・通所・訪問型産後ケア、月10時間のこども誰でも通園制度を確認。","住宅取得補助は転入者最大50万円、市内在住者10万円。粗大ごみは処理施設への有料搬入または許可業者依頼。","病児・病後児保育は現行の市公式案内で実施施設・対象年齢・料金を確認できず、市への確認が必要。近隣自治体や過年度条件は推定していない。","PR #900をregion/north向けに作成。","初回CI run #2046は自治体全体status、再CI run #2064は制度statusと件数の整合で失敗。既存成功例に合わせて修正。","CI run #2076（workflow run 29932529055）成功後、PR #900をregion/northへマージ。","merge SHA: 72939bbea8bddf4980f169b7d3c0791b896f8363"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "04206",
+  "municipalityName": "白石市",
+  "prefectureCode": "04",
+  "prefectureName": "宮城県",
+  "assignedTeam": "北日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 8,
+  "researchingCount": 0,
+  "unavailableCount": 1,
+  "needsMediumReviewCount": 0,
+  "currentBranch": "data/04206-shiroishi",
+  "pullRequestNumber": 900,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T14:48:00+09:00",
+  "lastUpdatedBy": "北日本調査班B・品質改善第2監査",
+  "officialSources": [
+    "https://www.city.shiroishi.miyagi.jp/site/kosodate/843.html",
+    "https://www.city.shiroishi.miyagi.jp/life/1/2/10/index.html",
+    "https://www.city.shiroishi.miyagi.jp/site/kosodate/14754.html",
+    "https://www.city.shiroishi.miyagi.jp/soshiki/49/38811.html",
+    "https://www.city.shiroishi.miyagi.jp/soshiki/11/12644.html",
+    "https://www.city.shiroishi.miyagi.jp/site/kosodate/38750.html",
+    "https://www.city.shiroishi.miyagi.jp/site/smashiro/shigai.html",
+    "https://www.city.shiroishi.miyagi.jp/soshiki/18/13536.html",
+    "https://www.city.shiroishi.miyagi.jp/site/bousai/1083.html"
+  ],
+  "notes": [
+    "白石市の必須9制度を市公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして登録。",
+    "子ども医療費は18歳年度末まで所得制限なし。令和8年4月から0～5歳児の保育料・副食費を第1子から完全無償化。",
+    "令和8年度から市立小学校給食費を完全無償化。",
+    "産後12か月までの宿泊・通所・訪問型産後ケア、月10時間のこども誰でも通園制度を確認。",
+    "住宅取得補助は転入者最大50万円、市内在住者10万円。粗大ごみは処理施設への有料搬入または許可業者依頼。",
+    "病児・病後児保育は現行の市公式案内で実施施設・対象年齢・料金を確認できず、市への確認が必要。近隣自治体や過年度条件は推定していない。",
+    "PR #900をregion/north向けに作成。",
+    "初回CI run #2046は自治体全体status、再CI run #2064は制度statusと件数の整合で失敗。既存成功例に合わせて修正。",
+    "CI run #2076（workflow run 29932529055）成功後、PR #900をregion/northへマージ。",
+    "merge SHA: 72939bbea8bddf4980f169b7d3c0791b896f8363",
+    "2026-07-25誰でも通園単一条件監査：白石市公式ページで令和8年4月から実施と確認。"
+  ],
+  "blockers": []
+}
