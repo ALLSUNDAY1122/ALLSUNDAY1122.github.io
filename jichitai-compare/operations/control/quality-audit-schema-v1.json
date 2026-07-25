@@ -1,21 +1,27 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.0.1",
   "schemaId": "national-quality-correction-ledger-v1",
   "purpose": "統括A・統括Bが北日本・東日本・中日本・西日本の訂正を同一形式で統合するための共通台帳仕様",
+  "documentTypes": {
+    "fullLedger": "entriesを直接保持する台帳",
+    "partitionLedger": "班別・用途別にentriesを分割保持する台帳",
+    "indexLedger": "複数partitionのパスと集計値を保持する索引"
+  },
   "requiredTopLevelFields": [
     "schemaVersion",
     "ledgerId",
     "coordinatorSession",
-    "scope",
     "generatedAt",
-    "baseline",
-    "taxonomy",
-    "sourceEvidencePolicy",
     "summary",
-    "entries",
     "status"
   ],
-  "entryRequiredFields": [
+  "fullOrPartitionLedgerFields": [
+    "entries"
+  ],
+  "indexLedgerFields": [
+    "partitions"
+  ],
+  "canonicalEntryFields": [
     "correctionId",
     "session",
     "municipalityCode",
@@ -31,6 +37,24 @@
     "correctionEvidence",
     "revalidationStatus"
   ],
+  "partitionFieldAliases": {
+    "id": "correctionId",
+    "code": "municipalityCode",
+    "name": "municipalityName",
+    "type": "entryType",
+    "sourcePointer": "officialSource.pointer",
+    "sourceDescription": "officialSource.description",
+    "correctionPr": "correctionEvidence.correctionPullRequest",
+    "ciRun": "correctionEvidence.ci.runNumber",
+    "ci": "correctionEvidence.ci"
+  },
+  "aliasPolicy": "既存監査JSONから機械的に移行するpartitionLedgerはpartitionFieldAliasesの短縮名を使用できる。全国統合時はcanonicalEntryFieldsへ正規化する。",
+  "defaults": {
+    "entryType": "correction",
+    "severity": "medium",
+    "revalidationStatus": "assigned",
+    "officialSource.officiality": "municipality_or_prefecture_official"
+  },
   "categoryEnum": [
     "status_judgement",
     "numeric_fact",
@@ -82,7 +106,7 @@
       "after",
       "correctionPullRequest"
     ],
-    "coordinatorBCompatibility": "統括Bは同じcategoryEnum・entryRequiredFieldsで中日本・西日本台帳を作成する。",
+    "coordinatorBCompatibility": "統括Bは同じcategoryEnum、canonicalEntryFields、partitionFieldAliasesで中日本・西日本台帳を作成する。",
     "mergeCondition": "重大未修正0、CI成功、region/main一致、公開確認済み、未確定事項は追跡Issueへ分離。"
   }
 }
