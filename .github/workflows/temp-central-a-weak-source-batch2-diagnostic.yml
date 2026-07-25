@@ -1,0 +1,86 @@
+name: Temporary Central A Weak Source Batch 2 Diagnostic
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-batch2-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply-diagnostic:
+    if: github.head_ref == 'audit/central-a-weak-source-batch2-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout audit branch shallowly
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract and run batch 2 update script
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const workflow = fs.readFileSync('.github/workflows/temp-central-a-weak-source-batch2.yml', 'utf8');
+          const marker = "          node --input-type=module <<'NODE'\n";
+          const start = workflow.indexOf(marker);
+          if (start < 0) throw new Error('batch2 script start marker not found');
+          const bodyStart = start + marker.length;
+          const end = workflow.indexOf('\n          NODE', bodyStart);
+          if (end < 0) throw new Error('batch2 script end marker not found');
+          const script = workflow
+            .slice(bodyStart, end)
+            .split('\n')
+            .map((line) => line.startsWith('          ') ? line.slice(10) : line)
+            .join('\n');
+          fs.writeFileSync('/tmp/central-a-batch2.mjs', script);
+          NODE
+          node /tmp/central-a-batch2.mjs
+
+      - name: Validate with compact log
+        shell: bash
+        run: |
+          set +e
+          (
+            cd jichitai-compare
+            npm run check
+            node --check app.js
+          ) > /tmp/central-a-batch2-validation.log 2>&1
+          status=$?
+          tail -n 180 /tmp/central-a-batch2-validation.log
+          exit $status
+
+      - name: Commit batch 2 decisions
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-weak-source-batch2-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/data/municipalities/16/16205.json \
+            jichitai-compare/data/municipalities/17/17407.json \
+            jichitai-compare/data/municipalities/21/21501.json \
+            jichitai-compare/data/municipalities/22/22214.json \
+            jichitai-compare/data/municipalities/22/22306.json \
+            jichitai-compare/data/municipalities/22/22344.json \
+            jichitai-compare/operations/tasks/16205.json \
+            jichitai-compare/operations/tasks/17407.json \
+            jichitai-compare/operations/tasks/21501.json \
+            jichitai-compare/operations/tasks/22214.json \
+            jichitai-compare/operations/tasks/22306.json \
+            jichitai-compare/operations/tasks/22344.json \
+            jichitai-compare/operations/audits/central-a-weak-primary-source-batch2-decisions-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/central-a.json \
+            jichitai-compare/operations/control/central-a-weak-source-batch2-trigger-20260725.json
+          git commit -m 'audit: 中日本A弱い主出典第2群を訂正'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
