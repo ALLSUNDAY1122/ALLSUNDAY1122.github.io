@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "ledgerId": "north-east-wave2-results-20260725",
+  "coordinatorSession": "統括A③",
+  "status": "completed_with_nonblocking_follow_up",
+  "completedAt": "2026-07-25T13:43:00+09:00",
+  "baseline": {
+    "historicalCorrectionEntries": 107,
+    "northMunicipalities": 406,
+    "eastMunicipalities": 450,
+    "northEastServices": 7704,
+    "nationwideMunicipalities": 1741,
+    "nationwideServices": 15669,
+    "remainingMunicipalities": 0,
+    "needsMediumReviewServices": 0
+  },
+  "sessions": [
+    {
+      "session":"north-a","issueNumber":3196,"status":"completed","priorCorrectionsRevalidated":13,"sampledMunicipalities":15,
+      "confirmedFindings":[
+        {"category":"structure_sync","scope":"12 municipalities and 5 tasks","result":"過去訂正のregion/north反映漏れを復旧"},
+        {"category":"classification_or_detail_omission","municipalityCode":"07405","service":"postpartumCare","result":"訪問型欠落を補完"},
+        {"category":"availability_condition_omission","municipalityCode":"02402","service":"temporaryChildcare","result":"誰でも通園は準備中・現在利用不可を明記。一般一時預かりが利用可能なためverified維持"}
+      ],
+      "mainPullRequests":[3235,3372,3380],"regionPullRequests":[3205,3221,3329,3357,3389],"publicVerification":"success","remainingConfirmedErrors":0
+    },
+    {
+      "session":"north-b","issueNumber":3197,"status":"completed_with_nonblocking_follow_up","priorCorrectionsRevalidated":28,"sampledMunicipalities":20,
+      "baseSecondAudit":{"confirmedNewErrors":2,"mainFinalizationPullRequest":3228,"publicVerificationRunId":30140176949},
+      "horizontalUrlAudit":{"municipalities":107,"uniqueUrls":1221,"maintenanceActions":12,"statusChanges":0,"contentFactChanges":0,"mainPullRequest":3232,"publicVerificationPullRequest":3321},
+      "fiscalAnyoneAudit":{"fiscalCandidates":40,"anyoneCandidates":78,"confirmedCorrectionMunicipalities":8,"statusChanges":0,"mainPullRequest":3383,"regionPullRequest":3394,"publicVerificationPullRequest":3397,"publicVerificationRunId":30144375249},
+      "followUpIssue":3398,"remainingConfirmedErrors":0
+    },
+    {
+      "session":"east-a","issueNumber":3198,"status":"completed_with_nonblocking_follow_up","priorCorrectionAndResolutionEntries":59,"sampledMunicipalities":20,
+      "confirmedFindings":13,
+      "findingTypes":["checkpoint_state_mismatch","病児保育・産後ケアの料金・期間・広域利用条件欠落","一般住宅支援と子育て住宅支援の分類誤り","申請受付状態の欠落"],
+      "mainPullRequest":3302,"publicVerificationPullRequest":3374,"publicVerificationRunId":30143580547,"regionFinalPullRequest":3382,"followUpIssue":2847,"remainingConfirmedErrors":0
+    },
+    {
+      "session":"east-b","issueNumber":3199,"status":"completed","priorCorrectionEntries":7,"sampledMunicipalities":20,"confirmedFindings":5,
+      "findingTypes":["広域病児・病後児保育の未反映","産後ケア料金欠落","里帰り先訪問型の事前相談条件欠落"],
+      "regionPullRequest":3208,"mainPullRequest":3227,"publicVerificationPullRequest":3233,"regionFinalPullRequest":3307,"remainingConfirmedErrors":0
+    }
+  ],
+  "qualityGate": {"confirmedUnfixedErrors":0,"publicationBlocking":false,"regionMainGeneratedPublicConsistency":"passed","standardCi":"passed","publicVerification":"passed"},
+  "nonblockingFollowUps": [
+    {"issueNumber":2847,"municipalityCode":"20602","municipalityName":"栄村","reason":"公式サイトHTTP 502。9制度はunavailableで安全表示。"},
+    {"issueNumber":3398,"reason":"北日本Bの低優先機械候補16件＋74件。現時点で確定誤りではない。"}
+  ]
+}
