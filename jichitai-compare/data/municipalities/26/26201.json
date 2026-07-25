@@ -7,7 +7,7 @@
   "officialUrl": "https://www.city.fukuchiyama.lg.jp/",
   "status": "verified",
   "summary": "福知山市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -17,12 +17,13 @@
         "target": "福知山市に住所があり健康保険に加入する子ども",
         "outpatient": "0歳から中学3年生までを助成対象とする",
         "inpatient": "0歳から18歳到達後最初の3月31日までを助成対象とする",
-        "underElementary": "京都子育て支援医療により、通院・入院とも1医療機関につき月200円を基本とする",
-        "middleSchool": "ふくふく医療により、中学生の通院等は月合計1,500円を超える自己負担分を申請により支給する",
+        "underElementary": "0歳から小学6年生までの入院外・訪問看護と、0歳から中学3年生までの入院は、1医療機関につき月200円を基本とする",
+        "middleSchoolWindow": "中学生の入院外・訪問看護も、受給者証の提示により1医療機関につき月200円の自己負担で受診できる",
+        "middleSchoolReimbursement": "中学生の入院外・訪問看護の窓口自己負担額を月単位で合算し1,500円を超えた場合は、申請により超過分を支給する",
         "highSchool": "高校生世代の入院は償還払いにより1医療機関につき月200円を超える自己負担分を支給する",
         "excluded": "保険適用外費用、入院時食事療養費、高額療養費等は対象外または調整対象"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html", "checkedAt": "2026-07-25"}
     },
     "sickChildCare": {
       "status": "verified",
@@ -38,7 +39,7 @@
         "reduction": "福知山市民の市民税非課税世帯・生活保護世帯には利用助成あり",
         "closed": "土曜、日曜、祝日、年末年始"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/6898.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/6898.html", "checkedAt": "2026-07-25"}
     },
     "childcareFee": {
       "status": "verified",
@@ -51,9 +52,9 @@
         "application": "施設等利用給付を受ける場合は利用前に認定申請が必要",
         "excludedCosts": "給食費、教材費、行事費等の実費は保護者負担となる場合がある"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/82522.html", "checkedAt": "2026-07-22"},
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/82522.html", "checkedAt": "2026-07-25"},
       "additionalSources": [
-        {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/1755.html", "checkedAt": "2026-07-22"}
+        {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/1755.html", "checkedAt": "2026-07-25"}
       ]
     },
     "schoolMeals": {
@@ -67,27 +68,33 @@
         "support": "就学援助対象世帯は制度に基づき学校給食費の援助対象となる",
         "period": "令和8年度の取扱い"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kyouiku/84536.html", "checkedAt": "2026-07-22"},
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kyouiku/84536.html", "checkedAt": "2026-07-25"},
       "additionalSources": [
-        {"url": "https://www.city.fukuchiyama.lg.jp/site/kyouiku/74679.html", "checkedAt": "2026-07-22"},
-        {"url": "https://www.city.fukuchiyama.lg.jp/site/kyouiku/84480.html", "checkedAt": "2026-07-22"}
+        {"url": "https://www.city.fukuchiyama.lg.jp/site/kyouiku/74679.html", "checkedAt": "2026-07-25"},
+        {"url": "https://www.city.fukuchiyama.lg.jp/site/kyouiku/84480.html", "checkedAt": "2026-07-25"}
       ]
     },
     "postpartumCare": {
       "status": "verified",
-      "summary": "産後1年未満の母子を対象に、日帰り型の産後ケアを1回の出産につき7回まで提供する。",
+      "summary": "産後1年未満の母子を対象に、訪問型、宿泊型、通所個別型、通所集団型の4種類の産後ケアを提供する。",
       "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
       "details": {
-        "type": "通所型・日帰りデイサービス",
-        "target": "福知山市に住民票がある産後1年未満の母親と乳児",
-        "facility": "京都大呂ガーデンテラス",
-        "hours": "午前10時から午後3時",
-        "care": "休息、授乳相談、育児相談、母子の心身ケア等",
-        "limit": "1回の出産につき7回まで",
-        "fee": "1回1,000円。食費は含まれない",
-        "application": "事前申込みと利用決定が必要"
+        "target": "福知山市に住所がある出産後1年未満の産婦と乳児で、産後の心身回復や育児支援を必要とする人",
+        "types": "アウトリーチ（訪問）型、宿泊型、デイサービス（通所）個別型、デイサービス（通所）集団型",
+        "outreach": "概ね6回まで。利用者負担は1回500円",
+        "shortStay": "7日以内。利用者負担は1泊5,000円",
+        "individualDayCare": "概ね7回まで。利用者負担は1回1,000円",
+        "groupDayCare": "概ね7回まで。利用者負担は1回1,000円",
+        "exemption": "生活保護世帯と市民税非課税世帯は利用者負担金を無料とする",
+        "fy2026Update": "市立福知山市民病院は2026年4月1日から産後ケア事業を開始",
+        "application": "保健師による状況確認を含む事前申請と利用承認が必要"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/63435.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html", "checkedAt": "2026-07-25"},
+      "additionalSources": [
+        {"url": "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000411.html", "checkedAt": "2026-07-25"},
+        {"url": "https://www.city.fukuchiyama.lg.jp/site/hosp/83887.html", "checkedAt": "2026-07-25"},
+        {"url": "https://www.city.fukuchiyama.lg.jp/site/kosodate/63435.html", "checkedAt": "2026-07-25"}
+      ]
     },
     "temporaryChildcare": {
       "status": "verified",
@@ -103,24 +110,21 @@
         "additionalCosts": "食事・おやつ等は施設により別途必要",
         "application": "市の認定後、施設との事前面談・利用予約が必要"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/soshiki/76/82874.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/soshiki/76/82874.html", "checkedAt": "2026-07-25"}
     },
     "housingSupport": {
-      "status": "verified",
-      "summary": "移住促進特別区域内の登録空き家を取得・賃借して移住する人に、居住に必要な改修費用を支援する。",
+      "status": "unavailable",
+      "summary": "令和8年度に利用できる子育て世帯向けの住宅取得・改修・家賃支援は、市公式情報で確認できない。一般の移住・空き家改修支援は対象制度として扱わない。",
       "details": {
-        "program": "福知山市移住促進事業補助金・移住促進住宅整備事業",
-        "targetArea": "京都府条例に基づく移住促進特別区域",
-        "property": "空き家情報バンクの登録空き家",
-        "beneficiary": "登録空き家を取得または賃借し、自ら居住する移住者または移住希望者",
-        "targetCosts": "居住部分の生活に必要な改修工事費等",
-        "timing": "取得・賃借時期、移住時期、住所登録等の要件あり",
-        "limit": "補助額・対象可否は物件、区域、予算及び申請時点の要件により決定されるため事前確認が必要",
-        "application": "着工前にまちづくり推進課へ相談・申請が必要"
+        "confirmedGeneralPrograms": "移住促進特別区域の登録空き家改修、東京圏等からの移住支援金、耐震・省エネ等の一般住宅制度は確認できる",
+        "outOfScopeProgram": "移住促進住宅整備事業は登録空き家を取得・賃借する移住者一般を対象とし、子どもの同居・年齢・加算等を要件とする子育て世帯向け制度ではない",
+        "missing": "子育て世帯を対象とした住宅取得、改修、家賃支援の令和8年度利用者向け公式案内",
+        "policy": "一般移住・一般住宅支援を子育て世帯向け住宅支援として登録しない",
+        "guidance": "個別に利用できる住宅制度は福知山市まちづくり推進課等へ確認する"
       },
-      "source": {"url": "https://www.welcomeiju.city.fukuchiyama.lg.jp/house/%E7%A9%BA%E3%81%8D%E5%AE%B6%E6%83%85%E5%A0%B1%E3%83%90%E3%83%B3%E3%82%AF%E3%82%92%E3%81%94%E5%88%A9%E7%94%A8%E3%81%AE%E9%9A%9B%E3%81%AF%E5%BF%85%E3%81%9A%E3%81%93%E3%81%A1%E3%82%89%E3%82%92%E3%81%94/", "checkedAt": "2026-07-22"},
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html", "checkedAt": "2026-07-25"},
       "additionalSources": [
-        {"url": "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html", "checkedAt": "2026-07-22"}
+        {"url": "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000155.html", "checkedAt": "2026-07-25"}
       ]
     },
     "bulkyWaste": {
@@ -134,9 +138,10 @@
         "hours": "環境パークは平日8時30分～16時30分、正午～13時を除く。第1・第3日曜午前も開場",
         "excluded": "家電リサイクル法対象品等、市で受入れできない品目あり"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/soshiki/24/16715.html", "checkedAt": "2026-07-22"},
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/soshiki/24/16715.html", "checkedAt": "2026-07-25"},
       "additionalSources": [
-        {"url": "https://www.city.fukuchiyama.lg.jp/soshiki/24/2005.html", "checkedAt": "2026-07-22"}
+        {"url": "https://www.city.fukuchiyama.lg.jp/soshiki/24/2005.html", "checkedAt": "2026-07-25"},
+        {"url": "https://www.city.fukuchiyama.lg.jp/uploaded/attachment/52974.pdf", "checkedAt": "2026-07-25"}
       ]
     },
     "disasterPrevention": {
@@ -150,7 +155,7 @@
         "earthquake": "地震の種類、想定、備えを掲載",
         "evacuation": "避難所、避難経路、避難行動判定フロー、マイ・タイムライン等を案内"
       },
-      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/hazardmap/", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.city.fukuchiyama.lg.jp/site/hazardmap/", "checkedAt": "2026-07-25"}
     }
   }
 }
