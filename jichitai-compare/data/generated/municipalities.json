@@ -24782,7 +24782,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保育所等を利用していない生後6か月から満3歳未満児を、就労要件を問わず月10時間まで預かるこども誰でも通園制度を実施する。",
+          "summary": "保育所等を利用していない生後6か月から満3歳未満児が、就労要件を問わず月10時間まで、世帯区分に応じ1時間0円から300円でこども誰でも通園制度を利用できる。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 2
@@ -24791,11 +24791,16 @@
             "target": "保育の3号認定を受けていない生後6か月から満3歳未満児",
             "limit": "児童1人につき月10時間まで",
             "condition": "保護者の就労要件を問わない",
-            "application": "町公式LINEのオンライン申請または子育て医療課窓口で利用認定申請"
+            "application": "町公式LINEのオンライン申請または子育て医療課窓口で利用認定申請",
+            "facilities": "町内の保育施設および地域子育て支援センター",
+            "fee": "世帯区分に応じ1時間0円、60円、90円、150円または300円",
+            "mealFee": "給食を利用する場合は400円",
+            "payment": "利用施設へ支払い",
+            "startYear": "利用者向け現行ページでは制度開始年度を明記していないため未確認"
           },
           "source": {
             "url": "https://www.town.urakawa.hokkaido.jp/gyosei/news/detail.html?content=843",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -25081,7 +25086,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保育所に在籍していない生後6か月から3歳未満児を、就労要件を問わず月10時間まで預かるこども誰でも通園制度を実施する。",
+          "summary": "2026年4月1日から、保育所に在籍していない生後6か月から3歳未満児が、町内3保育所で月10時間まで1時間300円を基本に利用できる。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 2
@@ -25092,11 +25097,14 @@
             "condition": "保護者の就労要件や利用理由を問わない",
             "limit": "児童1人につき月10時間まで",
             "application": "利用認定、施設面談、予約システムによる予約が必要",
-            "payment": "利用時に現金で事前払い"
+            "payment": "利用時に現金で事前払い",
+            "start": "2026年4月1日",
+            "fee": "1時間300円。世帯区分に応じ150円、60円または無料の負担軽減あり",
+            "reservation": "認定後に施設面談を行い、予約システムから予約"
           },
           "source": {
             "url": "https://www.town.erimo.lg.jp/section/choumin/sg6h94000000fas8.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -45318,7 +45326,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保育施設を利用していない生後6か月から3歳未満の乳幼児が、就労要件を問わず月10時間まで利用できる。",
+          "summary": "2026年度から、保育施設を利用していない生後6か月から満3歳未満児が、就労要件を問わず月10時間まで利用できる。料金は施設ごとに設定する。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 3
@@ -45330,11 +45338,13 @@
             "limit": "乳幼児1人当たり月10時間まで",
             "fee": "施設ごとの設定額を施設へ直接支払い",
             "facilities": "豊里こども園、石越にじいろこども園、みどりご園、きらり保育園さぬま、きらり保育園かがの等",
-            "application": "市の給付認定後、つうえんポータルで施設面談・予約"
+            "application": "市の給付認定後、つうえんポータルで施設面談・予約",
+            "start": "2026年度",
+            "facilitiesAsOf": "2026年4月1日時点の実施施設を市公式ページに掲載"
           },
           "source": {
             "url": "https://www.city.tome.miyagi.jp/kosodateshien/daretu/daretu.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
@@ -49162,7 +49172,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保育施設等に在籍していない生後6か月から3歳未満の子どもを、月10時間まで定期的に預かる。",
+          "summary": "2026年4月1日から、保育施設等に在籍していない生後6か月から3歳未満の子どもが、月10時間まで1時間おおむね300円で利用できる。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 3
@@ -49172,11 +49182,15 @@
             "target": "色麻町在住で保育所、認定こども園等に在籍していない生後6か月から3歳未満の子ども",
             "employmentRequirement": "保護者の就労要件なし",
             "limit": "子ども1人につき月10時間まで",
-            "procedure": "事前登録と利用施設への申込みが必要"
+            "procedure": "事前登録と利用施設への申込みが必要",
+            "start": "2026年4月1日",
+            "fee": "1時間おおむね300円。最初の1時間後は30分当たり150円を目安に施設が設定",
+            "reduction": "生活保護世帯・住民税非課税世帯等は負担軽減の対象",
+            "facilityGuidance": "実施施設は総合支援システムで確認。令和8年度、わくわくゆめの樹こども園は実施しない"
           },
           "source": {
             "url": "https://www.town.shikama.miyagi.jp/kurashi/3238.html",
-            "checkedAt": "2026-07-23"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -50869,7 +50883,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "保育園等に入園していない就学前児童の一時預かりに加え、未就園の生後6か月から満3歳未満児が月10時間まで利用できるこども誰でも通園制度を実施する。",
+          "summary": "2026年4月から、未就園の生後6か月から満3歳未満児が市内5施設で月10時間までこども誰でも通園制度を利用できる。利用料は現行公式ページで確認できない。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 6
@@ -50881,7 +50895,9 @@
             "anyoneTarget": "保育所等に通っていない生後6か月から満3歳未満の子ども",
             "anyoneLimit": "子ども1人につき月10時間まで",
             "anyoneFacilities": "大館乳児保育園、釈迦内保育園、十二所保育園、東館保育園、西館保育園",
-            "application": "市へ利用認定申請を行い、認定後に施設利用手続きを行う"
+            "application": "市へ利用認定申請を行い、認定後に施設利用手続きを行う",
+            "anyoneStart": "2026年4月",
+            "anyoneFee": "利用者向け現行公式ページでは確認できないため、市または利用施設へ確認が必要"
           },
           "source": {
             "url": "https://www.city.odate.lg.jp/kosodate/guide/birth/ikuji/p12801",
@@ -53485,7 +53501,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "もりやまこども園の一時預かりに加え、未就園児が月10時間まで利用できるこども誰でも通園制度を令和8年度から実施する。",
+          "summary": "もりやまこども園の一時預かりに加え、2026年4月1日から未就園児向けこども誰でも通園制度を月10時間まで実施する。対象月齢と料金は現行公式情報で確認できない。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
@@ -53496,11 +53512,12 @@
             "facility": "もりやまこども園",
             "limit": "こども誰でも通園制度は月10時間まで",
             "start": "2026年4月1日",
-            "shortStay": "保護者の疾病等で家庭養育が困難な場合は、委託施設で子育て短期支援（ショートステイ）も利用可能"
+            "shortStay": "保護者の疾病等で家庭養育が困難な場合は、委託施設で子育て短期支援（ショートステイ）も利用可能",
+            "anyChildUnconfirmed": "対象月齢、利用料金、利用可能時間は町公式の現行案内で確認できないため推測しない"
           },
           "source": {
             "url": "https://www.town.gojome.akita.jp/town/sosikiannai/machi/koho/3080",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -54150,7 +54167,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "認定こども園の一時保育と、生後6か月から満3歳未満の未就園児向けこども誰でも通園制度を実施する。",
+          "summary": "2026年度から、美郷町在住の未就園の生後6か月から満3歳未満児が、町内3園で平日・土曜9時から11時30分に月10時間まで1時間300円で利用できる。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
@@ -54159,12 +54176,16 @@
             "temporaryCare": "保護者の急な仕事や疾病等により家庭保育が困難な場合、町立認定こども園で一時保育を実施",
             "facilities": "千畑なかよし園、六郷わくわく園、仙南すこやか園",
             "anyChildProgram": "美郷町に居住し、保育所等に通っていない生後6か月から満3歳未満の児童を余裕活用型で受け入れ",
-            "limit": "こども誰でも通園制度は月10時間まで",
-            "application": "こども子育て課へ認定申請後、ポータルで面談・予約を行う"
+            "limit": "子ども1人につき月10時間まで",
+            "application": "こども子育て課へ認定申請後、ポータルで面談・予約を行う",
+            "start": "2026年度",
+            "hours": "月曜日から土曜日の9時から11時30分。施設の開園日・受入状況による",
+            "fee": "1時間300円。最初の1時間後は30分当たり150円",
+            "reduction": "生活保護世帯、住民税非課税世帯等は負担軽減の対象"
           },
           "source": {
             "url": "https://www.town.misato.akita.jp/archive/p20260218092122",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -58529,7 +58550,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "未就園の生後6か月から満3歳未満児が、就労要件を問わず月10時間まで利用できるこども誰でも通園制度を実施する。",
+          "summary": "2026年度から、未就園の生後6か月から満3歳未満児が、就労要件を問わず月10時間まで利用できる。利用料は現行公式情報で確認できない。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 2
@@ -58539,11 +58560,13 @@
             "limit": "月10時間以内",
             "conditions": "保護者の就労状況を問わない",
             "service": "保育士による保育と子育て相談・助言",
-            "application": "町の利用認定と施設予約が必要"
+            "application": "町の利用認定と施設予約が必要",
+            "start": "2026年度",
+            "fee": "町公式の現行案内で確認できないため、利用認定時に町・施設へ確認が必要"
           },
           "source": {
             "url": "https://www.town.mamurogawa.yamagata.jp/kosodate_kyoiku/shussan_kosodate/5343.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
