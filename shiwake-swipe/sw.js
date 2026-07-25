@@ -1,11 +1,13 @@
-const CACHE_NAME = 'shiwake-swipe-v2';
+const CACHE_NAME = 'shiwake-swipe-v3';
 const ASSETS = [
   './',
   './index.html',
   './styles.css',
   './delight.css',
+  './tempo-fix.css',
   './app.js',
   './delight.js',
+  './tempo-fix.js',
   './manifest.webmanifest',
   './data/questions.json',
   './privacy.html',
