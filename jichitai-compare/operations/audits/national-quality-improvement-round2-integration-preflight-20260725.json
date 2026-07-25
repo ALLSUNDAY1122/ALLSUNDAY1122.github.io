@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditType": "national_quality_improvement_round2_integration_preflight",
+  "session": "統合・公開処理",
+  "checkedAt": "2026-07-25T10:39:00+09:00",
+  "trackingIssueNumber": 3194,
+  "baseline": {
+    "mainCommit": "2d1d076364dc90114c855129f132af6e838ee94d",
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "completedServiceCount": 15669,
+    "completionRatePercent": 100,
+    "remainingMunicipalities": 0,
+    "taskState": {
+      "todoMunicipalities": 0,
+      "researchingMunicipalities": 0,
+      "prOpenMunicipalities": 0,
+      "mergedMunicipalities": 1741,
+      "blockedMunicipalities": 0
+    },
+    "serviceQualityState": {
+      "todoServices": 0,
+      "researchingServices": 0,
+      "needsMediumReviewServices": 0,
+      "needsRevisionServices": 0,
+      "needsCoordinatorServices": 0,
+      "prOpenServices": 0,
+      "blockedServices": 0
+    },
+    "latestNationalQualityPullRequestNumber": 3184,
+    "latestNationalQualityCiRunNumber": 7788,
+    "jichitaiOpenPullRequestCount": 0
+  },
+  "integrationPolicy": {
+    "municipalityDataPreIntegrationProhibited": true,
+    "requiredRegionalEvidence": [
+      "round2 audit result or correction ledger saved",
+      "regional pull request merged",
+      "regional CI success",
+      "high severity unresolved error count is zero or returned to the responsible region"
+    ],
+    "nationalSynchronizationBase": "latest main at execution time",
+    "synchronizeOneRegionAtATime": true,
+    "discardStaleGeneratedArtifactsWhenMainAdvances": true
+  },
+  "regionalGates": [
+    {
+      "sessionId": "north-a",
+      "regionBranch": "region/north",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 3093,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    },
+    {
+      "sessionId": "north-b",
+      "regionBranch": "region/north",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 3133,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    },
+    {
+      "sessionId": "east-a",
+      "regionBranch": "region/east",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 3130,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    },
+    {
+      "sessionId": "east-b",
+      "regionBranch": "region/east",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 3096,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    },
+    {
+      "sessionId": "central-a",
+      "regionBranch": "region/central",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 3129,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    },
+    {
+      "sessionId": "central-b",
+      "regionBranch": "region/central",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 3136,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    },
+    {
+      "sessionId": "west-a",
+      "regionBranch": "region/west",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 2915,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    },
+    {
+      "sessionId": "west-b",
+      "regionBranch": "region/west",
+      "previousCheckpointStatus": "completed",
+      "previousCheckpointPullRequestNumber": 3149,
+      "previousCheckpointCiStatus": "success",
+      "round2Status": "awaiting_new_audit_evidence",
+      "nationalIntegrationAllowed": false
+    }
+  ],
+  "nonBlockingFollowUps": [
+    {
+      "issueNumber": 3141,
+      "scope": "中日本A",
+      "itemCount": 23,
+      "reason": "specific current official usage conditions are not yet publicly available",
+      "publicationBlocking": false,
+      "speculativeConfirmationProhibited": true
+    },
+    {
+      "issueNumber": 2847,
+      "scope": "栄村",
+      "itemCount": 9,
+      "reason": "official municipal website recovery pending",
+      "publicationBlocking": false,
+      "currentSafeState": "unavailable",
+      "speculativeConfirmationProhibited": true
+    }
+  ],
+  "preflightResult": {
+    "status": "waiting_for_all_round2_regional_evidence",
+    "municipalityDataChanged": false,
+    "generatedDataChanged": false,
+    "staticPagesChanged": false,
+    "nationalIntegrationStarted": false,
+    "highSeverityUnresolvedErrorCountConfirmedByRound2": null
+  },
+  "nextAction": "Recheck the eight regional quality-improvement round2 pull requests, CI results, regional merges and updated checkpoints. Integrate only regions that satisfy all gates."
+}
