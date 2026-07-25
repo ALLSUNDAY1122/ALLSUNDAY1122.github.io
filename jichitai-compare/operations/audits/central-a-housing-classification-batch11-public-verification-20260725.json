@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch11-public-verification-20260725",
+  "generatedAt": "2026-07-25T13:43:19.468Z",
+  "verificationPolicy": {
+    "unavailableStaticLabel": "公式情報で詳細未確認",
+    "verifiedStaticLabel": "確認済み",
+    "publicJsonExactMatch": true
+  },
+  "regionalPullRequest": 3688,
+  "nationalSyncPullRequest": 3690,
+  "verificationPullRequest": 3692,
+  "verificationWorkflowRunId": 30160262352,
+  "expectedUnavailableCount": 2,
+  "expectedVerifiedCount": 3,
+  "attempt": 1,
+  "pageChecks": [
+    {
+      "code": "21421",
+      "name": "北方町",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/21421/?audit=1784986998653-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "21504",
+      "name": "七宗町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/21504/?audit=1784986998653-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "23204",
+      "name": "瀬戸市",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/23204/?audit=1784986998653-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "24202",
+      "name": "四日市市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/24202/?audit=1784986998653-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "24212",
+      "name": "熊野市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/24212/?audit=1784986998653-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    }
+  ],
+  "jsonCheck": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "records": [
+      {
+        "code": "21421",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "21504",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "23204",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "24202",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "24212",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      }
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none"
+}
