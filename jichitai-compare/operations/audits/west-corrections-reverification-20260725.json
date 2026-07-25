@@ -1,0 +1,1134 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-corrections-reverification-20260725",
+  "generatedAt": "2026-07-25T03:40:32.722454+00:00",
+  "scope": {
+    "ledgerRecordCount": 26,
+    "uniqueMunicipalityCount": 24,
+    "westARecordCount": 9,
+    "westBRecordCount": 17
+  },
+  "publicGeneratedJson": {
+    "status": 200,
+    "finalUrl": "https://allsunday1122.github.io/jichitai-compare/data/generated/municipalities.json?audit=1784950791",
+    "category": "reachable"
+  },
+  "summary": {
+    "regionMainMismatchCount": 0,
+    "repositoryMismatchCount": 1,
+    "publicFailureCount": 1,
+    "brokenOfficialSourceCount": 4,
+    "officialAccessWarningCount": 0,
+    "releaseBlocker": "active"
+  },
+  "regionMainMismatches": [],
+  "repositoryMismatches": [
+    {
+      "recordId": "west-a-05",
+      "code": "43443",
+      "type": "expected_token_missing_repository",
+      "token": "400",
+      "checks": {
+        "main": true,
+        "static": false,
+        "public": false
+      }
+    }
+  ],
+  "publicFailures": [
+    {
+      "recordId": "west-a-05",
+      "code": "43443",
+      "type": "expected_token_missing_public",
+      "token": "400"
+    }
+  ],
+  "brokenOfficialSources": [
+    {
+      "recordId": "west-a-05",
+      "code": "43443",
+      "service": "bulkyWaste",
+      "url": "https://www.town.mashiki.lg.jp/kiji0032329/",
+      "status": 404
+    },
+    {
+      "recordId": "west-a-09",
+      "code": "46533",
+      "service": "bulkyWaste",
+      "url": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
+      "status": 404
+    },
+    {
+      "recordId": "west-b-01",
+      "code": "31384",
+      "service": "disasterPrevention",
+      "url": "https://www.hiezu.jp/list/soumu/y121/u509/e970/",
+      "status": 404
+    },
+    {
+      "recordId": "west-b-11",
+      "code": "45402",
+      "service": "childMedical",
+      "url": "https://www.town.shintomi.lg.jp/1061.htm",
+      "status": 404
+    }
+  ],
+  "officialAccessWarnings": [],
+  "officialUrlResults": {
+    "https://www.city.akaiwa.lg.jp/kosodate/ninshinshussan/2907.html": {
+      "status": 200,
+      "finalUrl": "https://www.city.akaiwa.lg.jp/kosodate/ninshinshussan/2907.html",
+      "category": "reachable"
+    },
+    "https://www.town.wake.lg.jp/soshiki/kodomo/gyomu/14/1/189.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.wake.lg.jp/soshiki/kodomo/gyomu/14/1/189.html",
+      "category": "reachable"
+    },
+    "https://www.town.wake.lg.jp/section/reiki/reiki_honbun/r332RG00000639.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.wake.lg.jp/section/reiki/reiki_honbun/r332RG00000639.html",
+      "category": "reachable"
+    },
+    "https://www.city.fukutsu.lg.jp/soshiki/kiki/anshin/1/1/1200.html": {
+      "status": 200,
+      "finalUrl": "https://www.city.fukutsu.lg.jp/soshiki/kiki/anshin/1/1/1200.html",
+      "category": "reachable"
+    },
+    "https://www.town.mashiki.lg.jp/kiji0032329/": {
+      "status": 404,
+      "finalUrl": "https://www.town.mashiki.lg.jp/dynamic/_error/error404.aspx",
+      "category": "broken",
+      "error": "<HTTPError 404: 'Not Found'>"
+    },
+    "https://www.town.fukuchi.lg.jp/soshiki/hoken/kodomosukoyaka/1955.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.fukuchi.lg.jp/soshiki/hoken/kodomosukoyaka/1955.html",
+      "category": "reachable"
+    },
+    "https://www.town.koge.lg.jp/soshiki/chocho/6/gomi/3257.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.koge.lg.jp/soshiki/chocho/6/gomi/3257.html",
+      "category": "reachable"
+    },
+    "https://www.town.shodoshima.lg.jp/kosodachi/kosodate/7/kodomo-kyoiku/kyoikuiinkaikosodachi/kosodatetorikumi/8902.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.shodoshima.lg.jp/kosodachi/kosodate/7/kodomo-kyoiku/kyoikuiinkaikosodachi/kosodatetorikumi/8902.html",
+      "category": "reachable"
+    },
+    "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html": {
+      "status": 404,
+      "finalUrl": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
+      "category": "broken",
+      "error": "<HTTPError 404: 'Not Found'>"
+    },
+    "https://www.hiezu.jp/list/soumu/y121/u509/e970/": {
+      "status": 404,
+      "finalUrl": "https://www.hiezu.jp/list/soumu/y121/u509/e970/",
+      "category": "broken",
+      "error": "<HTTPError 404: 'Not Found'>"
+    },
+    "https://www.town.okinoshima.shimane.jp/kurashi/gomi-kankyo/katei_gomi/2/5013.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.okinoshima.shimane.jp/kurashi/gomi-kankyo/katei_gomi/2/5013.html",
+      "category": "reachable"
+    },
+    "https://www.city.otake.hiroshima.jp/material/files/group/3/R8jissikeikaku260316.pdf": {
+      "status": 200,
+      "finalUrl": "https://www.city.otake.hiroshima.jp/material/files/group/3/R8jissikeikaku260316.pdf",
+      "category": "reachable"
+    },
+    "https://www.town.ikata.ehime.jp/soshiki/32/11452.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.ikata.ehime.jp/soshiki/32/11452.html",
+      "category": "reachable"
+    },
+    "https://www.town.matsuno.ehime.jp/site/akiya/": {
+      "status": 200,
+      "finalUrl": "https://www.town.matsuno.ehime.jp/site/akiya/",
+      "category": "reachable"
+    },
+    "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/dashikata/2892.html": {
+      "status": 200,
+      "finalUrl": "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/dashikata/2892.html",
+      "category": "reachable"
+    },
+    "https://www.city.saikai.nagasaki.jp/soshiki/kenko/2/2_1/5/1606.html": {
+      "status": 200,
+      "finalUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kenko/2/2_1/5/1606.html",
+      "category": "reachable"
+    },
+    "https://www.town.togitsu.nagasaki.jp/kurashi_joho/nyuen_nyugaku/7801.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.togitsu.nagasaki.jp/kurashi_joho/nyuen_nyugaku/7801.html",
+      "category": "reachable"
+    },
+    "https://www.city.kitsuki.lg.jp/soshiki/1/kikikanri/hinan/854.html": {
+      "status": 200,
+      "finalUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/kikikanri/hinan/854.html",
+      "category": "reachable"
+    },
+    "https://www.sazacho-nagasaki.jp/kyouiku/list01003.html": {
+      "status": 200,
+      "finalUrl": "https://www.sazacho-nagasaki.jp/kyouiku/list01003.html",
+      "category": "reachable"
+    },
+    "https://www.town.shintomi.lg.jp/1061.htm": {
+      "status": 404,
+      "finalUrl": "https://www.town.shintomi.lg.jp/1061.htm",
+      "category": "broken",
+      "error": "<HTTPError 404: 'Not Found'>"
+    },
+    "https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000549.html": {
+      "status": 200,
+      "finalUrl": "https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000549.html",
+      "category": "reachable"
+    },
+    "https://www.vill.ogimi.okinawa.jp/soshiki/kikaku_kanko/gyomu/sumai/ijyuuteijyuu/838.html": {
+      "status": 200,
+      "finalUrl": "https://www.vill.ogimi.okinawa.jp/soshiki/kikaku_kanko/gyomu/sumai/ijyuuteijyuu/838.html",
+      "category": "reachable"
+    },
+    "https://www.town.hinokage.lg.jp/docs/2016052500038/index.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.hinokage.lg.jp/docs/2016052500038/index.html",
+      "category": "reachable"
+    },
+    "https://www.town.hinokage.lg.jp/docs/2016022500143/": {
+      "status": 200,
+      "finalUrl": "https://www.town.hinokage.lg.jp/docs/2016022500143/",
+      "category": "reachable"
+    },
+    "https://www.town.gokase.miyazaki.jp/kurashi/kosodate/2210.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.gokase.miyazaki.jp/kurashi/kosodate/2210.html",
+      "category": "reachable"
+    },
+    "https://www.vill.nakagusuku.okinawa.jp/userfiles/files/sonsei/transformation/daigoji/jisshikeikaku/pfm4dmuehxbj.pdf": {
+      "status": 200,
+      "finalUrl": "https://www.vill.nakagusuku.okinawa.jp/userfiles/files/sonsei/transformation/daigoji/jisshikeikaku/pfm4dmuehxbj.pdf",
+      "category": "reachable"
+    },
+    "https://www.town.haebaru.lg.jp/soshiki/18/16025.html": {
+      "status": 200,
+      "finalUrl": "https://www.town.haebaru.lg.jp/soshiki/18/16025.html",
+      "category": "reachable"
+    }
+  },
+  "records": [
+    {
+      "recordId": "west-a-01",
+      "team": "west-a",
+      "code": "33213",
+      "name": "赤磐市",
+      "services": [
+        {
+          "service": "postpartumCare",
+          "status": "verified",
+          "sourceUrl": "https://www.city.akaiwa.lg.jp/kosodate/ninshinshussan/2907.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-02",
+      "team": "west-a",
+      "code": "33346",
+      "name": "和気町",
+      "services": [
+        {
+          "service": "temporaryChildcare",
+          "status": "verified",
+          "sourceUrl": "https://www.town.wake.lg.jp/soshiki/kodomo/gyomu/14/1/189.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {
+        "和気にこにこ園": {
+          "main": true,
+          "static": true,
+          "public": true
+        },
+        "1,800": {
+          "main": true,
+          "static": true,
+          "public": true
+        }
+      },
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-03",
+      "team": "west-a",
+      "code": "33346",
+      "name": "和気町",
+      "services": [
+        {
+          "service": "bulkyWaste",
+          "status": "verified",
+          "sourceUrl": "https://www.town.wake.lg.jp/section/reiki/reiki_honbun/r332RG00000639.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-04",
+      "team": "west-a",
+      "code": "40224",
+      "name": "福津市",
+      "services": [
+        {
+          "service": "disasterPrevention",
+          "status": "verified",
+          "sourceUrl": "https://www.city.fukutsu.lg.jp/soshiki/kiki/anshin/1/1/1200.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-05",
+      "team": "west-a",
+      "code": "43443",
+      "name": "益城町",
+      "services": [
+        {
+          "service": "bulkyWaste",
+          "status": "verified",
+          "sourceUrl": "https://www.town.mashiki.lg.jp/kiji0032329/",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {
+        "500": {
+          "main": true,
+          "static": true,
+          "public": true
+        },
+        "400": {
+          "main": true,
+          "static": false,
+          "public": false
+        }
+      },
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-06",
+      "team": "west-a",
+      "code": "40610",
+      "name": "福智町",
+      "services": [
+        {
+          "service": "postpartumCare",
+          "status": "verified",
+          "sourceUrl": "https://www.town.fukuchi.lg.jp/soshiki/hoken/kodomosukoyaka/1955.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-07",
+      "team": "west-a",
+      "code": "40646",
+      "name": "上毛町",
+      "services": [
+        {
+          "service": "bulkyWaste",
+          "status": "verified",
+          "sourceUrl": "https://www.town.koge.lg.jp/soshiki/chocho/6/gomi/3257.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-08",
+      "team": "west-a",
+      "code": "37324",
+      "name": "小豆島町",
+      "services": [
+        {
+          "service": "temporaryChildcare",
+          "status": "unavailable",
+          "sourceUrl": "https://www.town.shodoshima.lg.jp/kosodachi/kosodate/7/kodomo-kyoiku/kyoikuiinkaikosodachi/kosodatetorikumi/8902.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-a-09",
+      "team": "west-a",
+      "code": "46533",
+      "name": "和泊町",
+      "services": [
+        {
+          "service": "bulkyWaste",
+          "status": "verified",
+          "sourceUrl": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {
+        "100": {
+          "main": true,
+          "static": true,
+          "public": true
+        }
+      },
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-01",
+      "team": "west-b",
+      "code": "31384",
+      "name": "日吉津村",
+      "services": [
+        {
+          "service": "disasterPrevention",
+          "status": "verified",
+          "sourceUrl": "https://www.hiezu.jp/list/soumu/y121/u509/e970/",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-02",
+      "team": "west-b",
+      "code": "32528",
+      "name": "隠岐の島町",
+      "services": [
+        {
+          "service": "bulkyWaste",
+          "status": "verified",
+          "sourceUrl": "https://www.town.okinoshima.shimane.jp/kurashi/gomi-kankyo/katei_gomi/2/5013.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-03",
+      "team": "west-b",
+      "code": "34211",
+      "name": "大竹市",
+      "services": [
+        {
+          "service": "postpartumCare",
+          "status": "unavailable",
+          "sourceUrl": "https://www.city.otake.hiroshima.jp/material/files/group/3/R8jissikeikaku260316.pdf",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-04",
+      "team": "west-b",
+      "code": "38442",
+      "name": "伊方町",
+      "services": [
+        {
+          "service": "bulkyWaste",
+          "status": "verified",
+          "sourceUrl": "https://www.town.ikata.ehime.jp/soshiki/32/11452.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-05",
+      "team": "west-b",
+      "code": "38484",
+      "name": "松野町",
+      "services": [
+        {
+          "service": "housingSupport",
+          "status": "unavailable",
+          "sourceUrl": "https://www.town.matsuno.ehime.jp/site/akiya/",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-06",
+      "team": "west-b",
+      "code": "42210",
+      "name": "壱岐市",
+      "services": [
+        {
+          "service": "bulkyWaste",
+          "status": "verified",
+          "sourceUrl": "https://www.city.iki.nagasaki.jp/kurashi/seikatsu/gomi/dashikata/2892.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-07",
+      "team": "west-b",
+      "code": "42212",
+      "name": "西海市",
+      "services": [
+        {
+          "service": "sickChildCare",
+          "status": "unavailable",
+          "sourceUrl": "https://www.city.saikai.nagasaki.jp/soshiki/kenko/2/2_1/5/1606.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-08",
+      "team": "west-b",
+      "code": "42308",
+      "name": "時津町",
+      "services": [
+        {
+          "service": "schoolMeals",
+          "status": "verified",
+          "sourceUrl": "https://www.town.togitsu.nagasaki.jp/kurashi_joho/nyuen_nyugaku/7801.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-09",
+      "team": "west-b",
+      "code": "44210",
+      "name": "杵築市",
+      "services": [
+        {
+          "service": "disasterPrevention",
+          "status": "verified",
+          "sourceUrl": "https://www.city.kitsuki.lg.jp/soshiki/1/kikikanri/hinan/854.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-10",
+      "team": "west-b",
+      "code": "42391",
+      "name": "佐々町",
+      "services": [
+        {
+          "service": "schoolMeals",
+          "status": "unavailable",
+          "sourceUrl": "https://www.sazacho-nagasaki.jp/kyouiku/list01003.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-11",
+      "team": "west-b",
+      "code": "45402",
+      "name": "新富町",
+      "services": [
+        {
+          "service": "childMedical",
+          "status": "verified",
+          "sourceUrl": "https://www.town.shintomi.lg.jp/1061.htm",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {
+        "18歳": {
+          "main": true,
+          "static": true,
+          "public": true
+        }
+      },
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-12",
+      "team": "west-b",
+      "code": "47302",
+      "name": "大宜味村",
+      "services": [
+        {
+          "service": "childcareFee",
+          "status": "verified",
+          "sourceUrl": "https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000549.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        },
+        {
+          "service": "schoolMeals",
+          "status": "verified",
+          "sourceUrl": "https://www.vill.ogimi.okinawa.jp/soshiki/kikaku_kanko/gyomu/sumai/ijyuuteijyuu/838.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {
+        "無償": {
+          "main": true,
+          "static": true,
+          "public": true
+        }
+      },
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-13",
+      "team": "west-b",
+      "code": "45442",
+      "name": "日之影町",
+      "services": [
+        {
+          "service": "sickChildCare",
+          "status": "verified",
+          "sourceUrl": "https://www.town.hinokage.lg.jp/docs/2016052500038/index.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-14",
+      "team": "west-b",
+      "code": "45442",
+      "name": "日之影町",
+      "services": [
+        {
+          "service": "childcareFee",
+          "status": "verified",
+          "sourceUrl": "https://www.town.hinokage.lg.jp/docs/2016022500143/",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-15",
+      "team": "west-b",
+      "code": "45443",
+      "name": "五ヶ瀬町",
+      "services": [
+        {
+          "service": "childMedical",
+          "status": "verified",
+          "sourceUrl": "https://www.town.gokase.miyazaki.jp/kurashi/kosodate/2210.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-16",
+      "team": "west-b",
+      "code": "47328",
+      "name": "中城村",
+      "services": [
+        {
+          "service": "temporaryChildcare",
+          "status": "unavailable",
+          "sourceUrl": "https://www.vill.nakagusuku.okinawa.jp/userfiles/files/sonsei/transformation/daigoji/jisshikeikaku/pfm4dmuehxbj.pdf",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    },
+    {
+      "recordId": "west-b-17",
+      "team": "west-b",
+      "code": "47350",
+      "name": "南風原町",
+      "services": [
+        {
+          "service": "schoolMeals",
+          "status": "verified",
+          "sourceUrl": "https://www.town.haebaru.lg.jp/soshiki/18/16025.html",
+          "checks": {
+            "mainServiceExists": true,
+            "regionMatchesMain": true,
+            "generatedMatchesMain": true,
+            "publicGeneratedMatchesMain": true,
+            "taskContainsSource": true,
+            "staticContainsSource": true,
+            "publicContainsSource": true,
+            "expectedStatus": true
+          }
+        }
+      ],
+      "tokenChecks": {},
+      "publicPage": {
+        "status": 200,
+        "category": "reachable",
+        "checks": {
+          "http200": true,
+          "name": true,
+          "canonical": true
+        }
+      }
+    }
+  ],
+  "policy": "403・429・timeout等は通信警告として扱い、404・410またはregion/main/public不一致のみblocker候補とする。制度内容の最終確定は公式ページ本文確認を別途行う。"
+}
