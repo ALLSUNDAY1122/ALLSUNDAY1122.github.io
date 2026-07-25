@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "west-corrections-final-resolution-20260725",
+  "coordinatorSession": "統括B②",
+  "resolvedAt": "2026-07-25T13:50:00+09:00",
+  "scope": {
+    "correctionRecordCount": 26,
+    "uniqueMunicipalityCount": 24,
+    "finalBlockerMunicipalities": ["31384", "43443", "45402", "46533"]
+  },
+  "sourceAudits": {
+    "fullReverificationPullRequest": 3320,
+    "officialSourceDiscoveryPullRequest": 3338,
+    "finalPublicVerificationPullRequest": 3409,
+    "finalPublicVerificationEvidence": "jichitai-compare/operations/audits/west-four-final-public-verification-20260725.json"
+  },
+  "finalCorrections": [
+    {
+      "municipalityCode": "43443",
+      "municipalityName": "益城町",
+      "service": "bulkyWaste",
+      "result": "現行の戸別収集料金・寸法上限を公式公開情報で確定できないためunavailableを維持",
+      "forbiddenStaleValues": ["1品目500円", "3辺合計400cm未満"],
+      "continuingConfirmationIssue": 3350,
+      "releaseBlocking": false
+    },
+    {
+      "municipalityCode": "46533",
+      "municipalityName": "和泊町",
+      "service": "bulkyWaste",
+      "result": "現行の沖永良部衛生管理組合料金75円/10kgへ訂正",
+      "regionalPullRequest": 3385,
+      "regionalCiRun": 8234,
+      "nationalPullRequest": 3399,
+      "nationalCiRun": 8262
+    },
+    {
+      "municipalityCode": "31384",
+      "municipalityName": "日吉津村",
+      "service": "disasterPrevention",
+      "result": "現行の津波・洪水ハザードマップと地域防災計画へ出典更新"
+    },
+    {
+      "municipalityCode": "45402",
+      "municipalityName": "新富町",
+      "service": "childMedical",
+      "result": "18歳年度末まで入院・外来・調剤自己負担なしを直接制度ページで確認し維持"
+    }
+  ],
+  "publicVerification": {
+    "pullRequest": 3409,
+    "status": "success",
+    "attempt": 1,
+    "pageHttp200Count": 4,
+    "pageContentMatchCount": 4,
+    "staleValueCount": 0,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "generatedJsonChecksPassed": 8
+  },
+  "supersededPullRequests": [3360],
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": [],
+    "nonBlockingFollowUps": [3350]
+  },
+  "temporaryRunnerCleanup": {
+    "main": [
+      ".github/workflows/temporary-west-source-discovery.yml",
+      ".github/workflows/temporary-west-four-final-public-verify.yml"
+    ],
+    "regionWest": [
+      ".github/workflows/temporary-west-pr3360-validator-diagnostic.yml"
+    ],
+    "status": "cleanup_in_progress"
+  }
+}
