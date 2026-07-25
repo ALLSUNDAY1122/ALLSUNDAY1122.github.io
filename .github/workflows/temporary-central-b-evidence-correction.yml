@@ -1,0 +1,168 @@
+name: Temporary Central B Evidence Correction
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    if: github.event.pull_request.head.ref == 'audit/central-b-final-evidence-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout evidence branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Correct task source comparison and finalize evidence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          evidence_path = root / 'operations/audits/central-b-final-evidence-verification-20260725.json'
+          ledger_path = root / 'operations/quality/central-b-quality-ledger-final-20260725.json'
+          evidence = json.loads(evidence_path.read_text(encoding='utf-8'))
+          ledger = json.loads(ledger_path.read_text(encoding='utf-8'))
+
+          if evidence.get('taskSourceComparisonRule') == 'deduplicated_url_set_equality':
+              print('Correction already applied.')
+              raise SystemExit(0)
+
+          def municipality_path(code):
+              return root / 'data/municipalities' / code[:2] / f'{code}.json'
+
+          def task_path(code):
+              return root / 'operations/tasks' / f'{code}.json'
+
+          def expected_source_set(services):
+              return {
+                  service['source']['url']
+                  for service in services.values()
+                  if isinstance(service, dict)
+                  and isinstance(service.get('source'), dict)
+                  and service['source'].get('url')
+              }
+
+          task_results = {}
+          actual_mismatches = []
+          for code in sorted({row['municipalityCode'] for row in ledger['records']}):
+              municipality = json.loads(municipality_path(code).read_text(encoding='utf-8'))
+              task = json.loads(task_path(code).read_text(encoding='utf-8'))
+              expected = expected_source_set(municipality['services'])
+              actual = set(task.get('officialSources', []))
+              checks = {
+                  'statusMerged': task.get('status') == 'merged',
+                  'completedServiceCount9': len(task.get('completedServices', [])) == 9,
+                  'verifiedCount': task.get('verifiedCount') == sum(1 for value in municipality['services'].values() if value.get('status') == 'verified'),
+                  'unavailableCount': task.get('unavailableCount') == sum(1 for value in municipality['services'].values() if value.get('status') == 'unavailable'),
+                  'officialSourceSetEqual': actual == expected,
+              }
+              result = {
+                  'checks': checks,
+                  'missingSources': sorted(expected - actual),
+                  'extraSources': sorted(actual - expected),
+                  'success': all(checks.values()),
+              }
+              task_results[code] = result
+              if not result['success']:
+                  actual_mismatches.append({'code': code, **result})
+
+          for row in ledger['records']:
+              code = row['municipalityCode']
+              task_ok = task_results[code]['success']
+              row['mainVerification']['taskConsistent'] = task_ok
+              official = row.get('officialPrimaryAccess', {})
+              official_not_broken = bool(row.get('officialSources')) and official.get('category') != 'broken'
+              complete = (
+                  row.get('regionVerification') == 'semantic_equal'
+                  and all(row.get('mainVerification', {}).values())
+                  and row.get('publicVerification') == 'passed'
+                  and official_not_broken
+              )
+              if complete:
+                  row['status'] = 'complete_with_access_warning' if official.get('category') == 'access_warning' else 'complete'
+              else:
+                  row['status'] = 'incomplete'
+
+          sample_results = evidence.get('sampleResults', [])
+          for sample in sample_results:
+              sample_rows = [row for row in ledger['records'] if row['municipalityCode'] == sample['municipalityCode']]
+              sample['allRowsComplete'] = bool(sample_rows) and all(row['status'] in ('complete', 'complete_with_access_warning') for row in sample_rows)
+
+          summary = evidence['summary']
+          summary['taskMismatchCount'] = len(actual_mismatches)
+          summary['samplePassCount'] = sum(1 for item in sample_results if item.get('allRowsComplete'))
+          summary['incompleteRowCount'] = sum(1 for row in ledger['records'] if row['status'] == 'incomplete')
+
+          public_generated_ok = evidence.get('publicGeneratedJson', {}).get('success') is True
+          success = (
+              summary.get('recordCount') == 57
+              and summary.get('uniqueMunicipalityCount') == 55
+              and summary.get('regionMismatchCount') == 0
+              and summary.get('taskMismatchCount') == 0
+              and summary.get('generatedMismatchCount') == 0
+              and summary.get('staticMismatchCount') == 0
+              and summary.get('publicFailureCount') == 0
+              and summary.get('brokenOfficialSourceCount') == 0
+              and summary.get('sampleCount') == 9
+              and summary.get('samplePassCount') == 9
+              and summary.get('incompleteRowCount') == 0
+              and public_generated_ok
+          )
+
+          evidence['taskMismatches'] = actual_mismatches
+          evidence['taskSourceComparisonRule'] = 'deduplicated_url_set_equality'
+          evidence['taskSourceComparisonReason'] = 'task.officialSources is intentionally deduplicated while multiple services may share the same primary URL.'
+          evidence['taskSourceResults'] = task_results
+          evidence['correctionAppliedAt'] = datetime.now(timezone.utc).isoformat()
+          evidence['success'] = success
+          evidence['releaseBlocker'] = 'none' if success else 'active'
+
+          ledger['summary'] = summary
+          ledger['status'] = 'completed' if success else 'verification_failed'
+          ledger['verificationRuleCorrection'] = {
+              'rule': 'deduplicated_url_set_equality',
+              'reason': '共有主出典を持つ複数制度について、task側はURLを重複排除して保持するため',
+              'appliedAt': evidence['correctionAppliedAt'],
+          }
+
+          evidence_path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          ledger_path.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps({'success': success, 'summary': summary}, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Commit corrected evidence
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            jichitai-compare/operations/audits/central-b-final-evidence-verification-20260725.json \
+            jichitai-compare/operations/quality/central-b-quality-ledger-final-20260725.json
+          if git diff --cached --quiet; then
+            echo "No correction changes"
+          else
+            git commit -m "audit: correct central B task source comparison"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
+
+      - name: Enforce corrected result
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('jichitai-compare/operations/audits/central-b-final-evidence-verification-20260725.json').read_text(encoding='utf-8'))
+          if not result.get('success'):
+              raise SystemExit('Corrected Central B verification still failed: ' + json.dumps(result.get('summary', {}), ensure_ascii=False))
+          print('Corrected Central B verification succeeded.')
+          PY
