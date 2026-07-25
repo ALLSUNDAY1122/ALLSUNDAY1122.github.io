@@ -4,37 +4,26 @@
   "sessionId": "coordinator-a",
   "sourcePullRequest": 3232,
   "sourceBranch": "audit/north-b-url-year-numeric-20260725",
-  "sourceStatus": "ci_success_but_behind_main",
   "sourceCiRunNumber": 8067,
-  "sourceBehindMainCommits": 105,
-  "risk": "旧main基点の全国生成JSONを直接統合すると、並行してmainへ反映された他地方の更新を上書きする可能性がある。",
+  "sourceMergeSha": "58b6f9dc0cfef2201a17eb1b774a3f9cf2612d6e",
+  "sourceStatus": "merged_to_main",
+  "publicationVerificationPullRequest": 3321,
+  "regionRecordPullRequest": 3326,
+  "initialObservation": "確認時点では旧main基点の開放PRに見えたため、全国生成物の退行を避ける最新main限定同期runnerを準備した。",
   "resolution": {
-    "strategy": "latest_main_limited_sync",
-    "copyOnly": [
-      "10 municipality source JSON files",
-      "10 task JSON files",
-      "north-b horizontal audit JSON"
-    ],
-    "doNotCopy": [
-      "old generated municipalities.json",
-      "old static municipality pages",
-      "old progress.json"
-    ],
-    "regenerate": [
-      "nationwide generated JSON",
-      "progress JSON",
-      "static municipality pages"
-    ],
-    "validation": [
-      "npm run generate",
-      "npm run progress",
-      "npm run validate:generated",
-      "1741 municipalities",
-      "15669 services"
-    ]
+    "strategy": "source_already_merged_no_reapply",
+    "runnerRegistrationPullRequest": 3319,
+    "redundantSyncPullRequest": 3323,
+    "redundantSyncMerged": false,
+    "reasonNotMerged": "PR #3232が先にmainへ統合済みで、公開確認PR #3321と地域記録PR #3326も完了していたため。",
+    "dataChangeFromRedundantSync": false,
+    "nationwideMunicipalityCount": 1741,
+    "nationwideServiceCount": 15669
   },
   "runnerWorkflow": ".github/workflows/temporary-north-b-horizontal-main-sync.yml",
-  "targetBranch": "sync/north-b-horizontal-main-20260725",
-  "status": "runner_registration_pending_merge",
-  "createdAt": "2026-07-25T12:50:00+09:00"
+  "runnerCleanup": "completed_in_followup_pr",
+  "status": "superseded_source_already_merged",
+  "createdAt": "2026-07-25T12:50:00+09:00",
+  "closedAt": "2026-07-25T13:29:00+09:00",
+  "nextAction": "北日本B旧年度・こども誰でも通園候補の確定差分と残候補追跡を処理する。"
 }
