@@ -51,7 +51,7 @@ jobs:
           const expected = new Map([
             ['10201', '5,000円'],
             ['13103', '2,000円'],
-            ['19201', '既存住宅取得・リフォームは上限60万円'],
+            ['19201', '最大90万円補助'],
             ['19202', '市外在住1日1,500円'],
             ['19205', '日額2,500円'],
             ['19206', '日額4,000円'],
@@ -70,7 +70,7 @@ jobs:
             try {
               const response = await fetch(`${base}/data/generated/municipalities.json?v=${token}`, {
                 redirect: 'follow', signal: AbortSignal.timeout(30000),
-                headers: { 'user-agent': 'EastAPublicFinal/1.0' }
+                headers: { 'user-agent': 'EastAPublicFinal/1.1' }
               });
               const raw = await response.json();
               const municipalities = Array.isArray(raw) ? raw : raw.municipalities;
@@ -93,7 +93,7 @@ jobs:
               try {
                 const response = await fetch(`${base}/municipality/${code}/?v=${token}`, {
                   redirect: 'follow', signal: AbortSignal.timeout(20000),
-                  headers: { 'user-agent': 'EastAPublicFinal/1.0' }
+                  headers: { 'user-agent': 'EastAPublicFinal/1.1' }
                 });
                 const text = await response.text();
                 const ok = response.ok && text.includes(phrase);
@@ -125,7 +125,7 @@ jobs:
           import json, os
           from pathlib import Path
           root = Path('jichitai-compare')
-          checked_at = '2026-07-25T13:02:00+09:00'
+          checked_at = '2026-07-25T13:08:00+09:00'
           verify_pr = int(os.environ['VERIFY_PR_NUMBER'])
           verify_run = int(os.environ['VERIFY_RUN_ID'])
           verify_attempt = int(os.environ['VERIFY_ATTEMPT'])
@@ -156,7 +156,8 @@ jobs:
               'firstVerificationPullRequestNumber': 3322,
               'secondVerificationPullRequestNumber': 3331,
               'diagnosticPullRequestNumber': 3348,
-              'conclusion': '甲府市の検査語だけがJSON本文に存在しない制度名だったため、保存済みの上限額文言へ変更。自治体データ修正なし。'
+              'firstFinalVerificationPullRequestNumber': 3362,
+              'conclusion': '甲府市の個別ページはsummaryのみを表示するため、JSONと公開ページの双方に存在する最大90万円補助を検査語とした。自治体データ修正なし。'
             },
             'status': 'success', 'checkedAt': checked_at
           }
