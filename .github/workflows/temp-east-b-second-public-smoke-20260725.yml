@@ -1,0 +1,84 @@
+name: Temporary East B second audit public smoke 20260725
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-public:
+    if: github.head_ref == 'audit/east-b-second-public-smoke-20260725-v2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify East B second-audit corrections on published site
+        run: |
+          node <<'NODE'
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+          const expectations = {
+            '14100': {
+              name: '横浜市',
+              pageText: '川崎市と相互利用',
+              sourceUrl: 'https://www.city.yokohama.lg.jp/kosodate-kyoiku/hoiku-yoji/shisetsu/hoikuseido/byogo/byouzi-hoiku.html'
+            },
+            '15100': {
+              name: '新潟市',
+              pageText: '協定11市町村の施設で一時保育',
+              sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/ninshin/life_stage/azuketai/35.html'
+            },
+            '15218': {
+              name: '五泉市',
+              pageText: '新潟地域の協定施設で一時保育',
+              sourceUrl: 'https://www.city.gosen.lg.jp/organization/11/12896.html'
+            },
+            '15223': {
+              name: '阿賀野市',
+              pageText: '新潟地域の協定施設で一時保育',
+              sourceUrl: 'https://www.city.agano.niigata.jp/soshiki/kodomoka/kosodate/bamen/1/1420.html'
+            }
+          };
+
+          let publicData;
+          for (let attempt = 1; attempt <= 32; attempt++) {
+            const res = await fetch(`${base}/data/generated/municipalities.json?v=${Date.now()}`, { cache: 'no-store' });
+            if (res.ok) {
+              const candidate = await res.json();
+              const byCode = new Map(candidate.municipalities.map(item => [item.code, item]));
+              const ready =
+                byCode.get('14100')?.services?.sickChildCare?.details?.wideArea?.includes('川崎市') &&
+                byCode.get('14100')?.services?.postpartumCare?.details?.fee?.includes('6,000円') &&
+                byCode.get('15100')?.services?.sickChildCare?.details?.wideArea?.includes('2026年4月1日') &&
+                byCode.get('15218')?.services?.sickChildCare?.details?.wideArea?.includes('新潟市') &&
+                byCode.get('15223')?.services?.sickChildCare?.details?.wideArea?.includes('新潟市') &&
+                byCode.get('15223')?.services?.postpartumCare?.details?.wideArea?.includes('里帰り');
+              if (ready) {
+                publicData = candidate;
+                break;
+              }
+            }
+            await sleep(15000);
+          }
+
+          if (!publicData) throw new Error('published second-audit corrections did not become available');
+          const byCode = new Map(publicData.municipalities.map(item => [item.code, item]));
+          const serviceCount = publicData.municipalities.reduce((sum, item) => sum + Object.keys(item.services || {}).length, 0);
+          if (publicData.municipalities.length !== 1741 || serviceCount !== 15669) {
+            throw new Error(`published nationwide totals changed: ${publicData.municipalities.length}/${serviceCount}`);
+          }
+
+          for (const [code, expected] of Object.entries(expectations)) {
+            const item = byCode.get(code);
+            if (!item || item.name !== expected.name) throw new Error(`${code}: public municipality data missing or name mismatch`);
+            const res = await fetch(`${base}/municipality/${code}/?v=${Date.now()}`, { cache: 'no-store' });
+            if (!res.ok) throw new Error(`${code}: HTTP ${res.status}`);
+            const html = await res.text();
+            if (!html.includes(expected.name)) throw new Error(`${code}: municipality name missing from page`);
+            if (!html.includes(expected.pageText)) throw new Error(`${code}: corrected summary missing from page`);
+            if (!html.includes(expected.sourceUrl)) throw new Error(`${code}: current official source link missing from page`);
+          }
+
+          console.log('verified 4 East B corrected pages, generated data, official links, and nationwide totals');
+          NODE
