@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "checkpointId": "west-a-housing-classification-crosscheck-20260725",
+  "sessionId": "west-a",
+  "displayName": "西日本調査班A",
+  "recordedAt": "2026-07-25T15:18:00+09:00",
+  "status": "completed_with_38_housing_classification_corrections",
+  "scope": {
+    "prefectureCodes": ["33", "37", "39", "40", "43", "46"],
+    "municipalityCount": 226,
+    "housingSupportVerifiedBeforeAudit": 217,
+    "housingSupportUnavailableBeforeAudit": 9,
+    "initialCandidateCount": 143,
+    "officialPageChildTermsAbsentCount": 33,
+    "strongGeneralOnlyCandidateCount": 29,
+    "manualOrFetchFollowupCount": 9,
+    "correctedMunicipalityCount": 38,
+    "correctedServiceCount": 38,
+    "unresolvedCount": 0
+  },
+  "classification": {
+    "before": "一般移住・空き家・住宅取得・リフォーム・耐震・除却等を子育て世帯向け住宅支援としてverified登録",
+    "after": "一般制度の事実と公式出典を保持し、子育て世帯固有条件が確認できない場合はhousingSupportをunavailable登録",
+    "policy": "子どもの有無、対象年齢、子育て世帯限定または子ども加算が公式情報で確認できる場合のみverified"
+  },
+  "evidence": {
+    "crosscheckAudit": "jichitai-compare/operations/audits/west-a-housing-classification-crosscheck-20260725.json",
+    "highRiskSummary": "jichitai-compare/operations/audits/west-a-housing-high-risk-summary-20260725.json",
+    "correctionPlan": "jichitai-compare/operations/audits/west-a-housing-classification-correction-plan-20260725.json",
+    "correction29Audit": "jichitai-compare/operations/audits/west-a-housing-classification-29-corrections-20260725.json",
+    "followup9Audit": "jichitai-compare/operations/audits/west-a-housing-classification-9-followup-corrections-20260725.json",
+    "publicVerificationAudit": "jichitai-compare/operations/audits/west-a-housing-classification-38-public-verification-20260725.json",
+    "publicVerificationSummary": "jichitai-compare/operations/audits/west-a-housing-classification-38-public-summary-20260725.json",
+    "regionalPullRequestNumber": 3476,
+    "regionalCiRunNumber": 8480,
+    "regionalMergeSha": "740441982462d0cd0c17a0b536ccfc409a5d0ba1",
+    "nationalPullRequestNumber": 3498,
+    "nationalCiRunNumber": 8494,
+    "nationalMergeSha": "c3c7b9f474cede030828538f9b40702a5e3e82aa",
+    "publicVerificationPullRequestNumber": 3505,
+    "publicVerificationCiRunNumber": 8509,
+    "publicVerificationMergeSha": "d43d1f21e6be9d21bdaaec65e6a9db0031dc2876",
+    "checkpointPullRequestNumber": 3510,
+    "checkpointBotHeadCiRunNumber": 8516,
+    "checkpointBotHeadCiDisposition": "action_required_without_jobs_after_github_actions_bot_update",
+    "checkpointCleanCiRetriggeredAt": "2026-07-25T15:20:00+09:00"
+  },
+  "integrity": {
+    "publicPageTargetCount": 38,
+    "publicPageHttp200Count": 38,
+    "publicPageContentMatchCount": 38,
+    "publicGeneratedJsonMunicipalityCount": 1741,
+    "publicGeneratedJsonServiceCount": 15669,
+    "publicGeneratedJsonCorrectedStatusCount": 38,
+    "taskStatusMergedCount": 38,
+    "temporaryWorkflowRemainingCount": 0,
+    "unresolvedCount": 0,
+    "blocker": null
+  },
+  "nextAction": "新しい公式情報または子育て世帯固有条件が確認された場合のみ個別再判定する。一般制度だけを根拠にverifiedへ戻さない。"
+}
