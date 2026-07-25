@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: north-b-horizontal-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   audit:
     if: github.actor != 'github-actions[bot]'
