@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-postpartum-official-review-20260725",
+  "sourceAuditId": "west-b-postpartum-crosscheck-20260725",
+  "priorityReviewId": "west-b-postpartum-priority-review-20260725",
+  "statusFocusReviewId": "west-b-postpartum-status-focus-review-20260725",
+  "reviewedAt": "2026-07-25T17:25:00+09:00",
+  "sessionId": "west-b",
+  "serviceId": "postpartumCare",
+  "assignedMunicipalityCount": 250,
+  "mechanicalCandidateCount": 144,
+  "priorityCandidateCount": 28,
+  "unavailableReviewedCount": 29,
+  "suspiciousVerifiedReviewedCount": 5,
+  "judgmentRule": {
+    "verified": "自治体または都道府県の現行公式ページ、現行申請書、現行子育て一覧等で産後ケア事業の利用受付または実施を確認できる。詳細が未掲載の場合は不明項目を推測せず要確認とする。",
+    "unavailable": "計画・予算・条例・相談窓口・産婦健診・乳児訪問のみ、または過年度案内だけで、現行の産後ケア利用受付・実施を確認できない。",
+    "wideArea": "自治体内施設がなくても、委託先・県内施設・広域施設を利用できる現行案内があればverifiedとする。"
+  },
+  "confirmedCorrections": [
+    {
+      "code": "35502",
+      "name": "阿武町",
+      "fromStatus": "unavailable",
+      "toStatus": "verified",
+      "finding": "町公式の現行『産後サポート・産後ケア事業』ページと利用申請書で、宿泊型・デイケア・訪問型の申請受付、利用料減額欄、町民税非課税・生活保護世帯区分を確認。",
+      "unknowns": "対象月齢、利用回数、形態別料金、実施医療機関等は町窓口へ確認。",
+      "source": "https://www.town.abu.lg.jp/guide/%E7%94%A3%E5%BE%8C%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%83%BB%E7%94%A3%E5%BE%8C%E3%82%B1%E3%82%A2%E4%BA%8B%E6%A5%AD/",
+      "additionalSource": "https://www.town.abu.lg.jp/wp/wp-content/uploads/2021/10/aba0e55a11c4d7c48b856e61c3b22f5e.pdf"
+    },
+    {
+      "code": "36301",
+      "name": "勝浦町",
+      "fromStatus": "unavailable",
+      "toStatus": "verified",
+      "finding": "町公式ページと添付案内で、町内在住の産婦と1歳未満児を対象とする助産師訪問型産後ケアを、子が1歳になるまで2回、無料で実施すると確認。",
+      "unknowns": "宿泊型・通所型の実施は確認できないため訪問型のみを記録。",
+      "source": "https://www.town.katsuura.lg.jp/docs/2022040200026/",
+      "additionalSource": "https://www.town.katsuura.lg.jp/docs/2022040200026/file_contents/R5.pdf"
+    },
+    {
+      "code": "38214",
+      "name": "西予市",
+      "fromStatus": "unavailable",
+      "toStatus": "verified",
+      "finding": "2026年更新の市公式子育て・教育一覧とこども家庭センター一覧に現行の『産後ケアで不安をサポートします』を掲載し、県公式の現行市町一覧でも西予市産後ケア窓口を確認。",
+      "unknowns": "形態別料金・利用上限は市の現行案内で確認。",
+      "source": "https://www.city.seiyo.ehime.jp/kurashi/kosodate_kyouiku/kodomogaumaretara/8723.html",
+      "additionalSources": [
+        "https://www.city.seiyo.ehime.jp/kurashi/kosodate_kyouiku/index.html",
+        "https://www.city.seiyo.ehime.jp/material/files/group/18/R7sangokea.pdf",
+        "https://www.pref.ehime.jp/page/92849.html"
+      ]
+    }
+  ],
+  "reviewedNoChange": {
+    "unavailableRetainedCount": 26,
+    "unavailableReason": "現行の利用受付・実施条件を確認できず、計画・予算・相談窓口・母子保健サービス等から推測しない。",
+    "examples": [
+      { "code": "32525", "name": "海士町", "reason": "島根県の現行調査で未実施" },
+      { "code": "32526", "name": "西ノ島町", "reason": "島根県の現行調査で未実施" },
+      { "code": "32527", "name": "知夫村", "reason": "島根県の現行調査で未実施" },
+      { "code": "47328", "name": "中城村", "reason": "令和8年度予算は確認したが現行利用案内未確認" },
+      { "code": "42211", "name": "五島市", "reason": "産後面接・乳児訪問と産後ケア事業を区別し、現行利用案内未確認" },
+      { "code": "45383", "name": "綾町", "reason": "事業位置付けは確認したが現行対象・類型・料金未確認" },
+      { "code": "45405", "name": "川南町", "reason": "所管業務への掲載のみで現行利用条件未確認" }
+    ],
+    "verifiedRetainedCount": 5,
+    "verifiedReason": "対象期間・類型・旧URLを再確認し、制度内容または別助成として現行記録を維持。",
+    "verifiedExamples": [
+      { "code": "45401", "name": "高鍋町", "reason": "産後2年以内の助産師ケア利用券として公式に明示された別助成" },
+      { "code": "31203", "name": "倉吉市", "reason": "形態別対象期間を明示済み" },
+      { "code": "31204", "name": "境港市", "reason": "形態別対象期間・無料・7日上限を明示済み" },
+      { "code": "32202", "name": "浜田市", "reason": "現行申請・料金・令和8年度拡充を確認済み" },
+      { "code": "47315", "name": "伊江村", "reason": "令和8年度の現行センター案内を確認済み" }
+    ]
+  },
+  "result": {
+    "status": "official_review_completed_corrections_pending",
+    "confirmedCorrectionCount": 3,
+    "confirmedCorrectionCodes": ["35502", "36301", "38214"],
+    "unresolvedConfirmedErrorCount": 3
+  }
+}
