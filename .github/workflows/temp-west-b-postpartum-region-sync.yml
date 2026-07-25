@@ -1,18 +1,18 @@
-name: Temporary West B Postpartum Care Region Sync
+name: Temporary West B Postpartum Care Final Region Sync
 
 on:
   pull_request:
     branches:
       - main
     paths:
-      - jichitai-compare/operations/control/west-b-postpartum-region-sync-trigger-20260725.json
+      - jichitai-compare/operations/control/west-b-postpartum-final-region-sync-trigger-20260725.json
 
 permissions:
   contents: write
 
 jobs:
   sync:
-    if: github.head_ref == 'ops/run-west-b-postpartum-region-sync-20260725'
+    if: github.head_ref == 'ops/run-west-b-postpartum-final-region-sync-20260725'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -24,12 +24,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Sync postpartum care corrections from main
+      - name: Sync final postpartum care records from main
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main region/west
-          git switch -C sync/west-b-postpartum-corrections-20260725 origin/region/west
+          git switch -C sync/west-b-postpartum-final-record-20260725 origin/region/west
           paths=(
             jichitai-compare/data/municipalities/35/35502.json
             jichitai-compare/data/municipalities/36/36301.json
@@ -41,6 +41,7 @@ jobs:
             jichitai-compare/operations/audits/west-b-postpartum-priority-review-20260725.json
             jichitai-compare/operations/audits/west-b-postpartum-status-focus-review-20260725.json
             jichitai-compare/operations/audits/west-b-postpartum-official-review-20260725.json
+            jichitai-compare/operations/audits/west-b-postpartum-public-verification-20260725.json
           )
           for path in "${paths[@]}"; do
             mkdir -p "$(dirname "$path")"
@@ -59,12 +60,12 @@ jobs:
       - name: Regenerate and validate region
         working-directory: jichitai-compare
         run: npm run check
-      - name: Commit and push regional sync branch
+      - name: Commit and push final regional sync branch
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add jichitai-compare
-          git commit -m 'sync: 西日本B産後ケア3件をregion/westへ反映'
-          git push --force origin HEAD:sync/west-b-postpartum-corrections-20260725
+          git commit -m 'sync: 西日本B産後ケアの最終記録をregion/westへ反映'
+          git push --force origin HEAD:sync/west-b-postpartum-final-record-20260725
