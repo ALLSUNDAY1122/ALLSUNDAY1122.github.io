@@ -1,0 +1,150 @@
+name: Temporary Central A Weak Source Batch 3
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-batch3-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-weak-source-batch3-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply batch 3 decisions
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare';
+          const checkedAt = '2026-07-25';
+          const updatedAt = '2026-07-25T13:36:00+09:00';
+          const municipalityPath = path.join(root, 'data', 'municipalities', '24', '24324.json');
+          const taskPath = path.join(root, 'operations', 'tasks', '24324.json');
+          const auditPath = path.join(root, 'operations', 'audits', 'central-a-weak-primary-source-batch3-decisions-20260725.json');
+          const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+          const writeJson = (file, value) => fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
+
+          const municipality = readJson(municipalityPath);
+          const task = readJson(taskPath);
+          const service = municipality.services.postpartumCare;
+          const oldSource = service.source;
+
+          service.summary = '産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。';
+          service.details = {
+            target: '東員町に住所がある産後1年未満の母親と赤ちゃんで、心身の不調、育児不安、母乳ケア、家族援助不足等により助産師の保健指導を希望する人。町保健師の面談・承認が必要',
+            types: '短期入所型、通所型、居宅訪問型',
+            care: '母親の心身・生活面のケア、乳房ケア、授乳指導、沐浴・抱き方・発育発達・スキンケア等の育児指導、育児相談',
+            limit: '3種を組み合わせて7日まで。居宅訪問型は令和6年4月1日生まれ以降、体験チケットで1回追加',
+            shortStayFee: '1泊2日6,000円。以後1日ごとに3,000円追加',
+            dayCareFee: '1日2,000円',
+            homeVisitFee: '1回1,200円',
+            reduction: '町民税非課税世帯・生活保護世帯は自己負担を減免',
+            application: '申請書を子ども家庭課へ提出。妊娠32週から申請可能',
+            facilities: '利用者向けページに令和8年度施設一覧を掲載'
+          };
+          service.source = {
+            url: 'https://www.town.toin.lg.jp/soshiki/1009/3/1/473.html',
+            checkedAt
+          };
+          service.additionalSources = [
+            {
+              url: oldSource.url,
+              checkedAt,
+              description: '産後ケア事業の制度根拠を定める実施要綱'
+            }
+          ];
+          municipality.updatedAt = checkedAt;
+          writeJson(municipalityPath, municipality);
+
+          task.lastCheckedAt = checkedAt;
+          task.lastUpdatedAt = updatedAt;
+          task.officialSources = Object.values(municipality.services)
+            .filter((item) => ['verified', 'unavailable'].includes(item?.status) && item?.source?.url)
+            .map((item) => item.source.url);
+          task.notes ??= [];
+          const note = '産後ケアの主出典を2026年6月24日更新の利用者向けページへ変更し、対象、3類型、7日上限、料金、減免、申請方法、令和8年度施設一覧を確認。実施要綱は補助出典化。';
+          if (!task.notes.includes(note)) task.notes.push(note);
+          writeJson(taskPath, task);
+
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'central-a-weak-primary-source-batch3-decisions-20260725',
+            decidedAt: updatedAt,
+            session: '中日本調査班A',
+            category: 'weakPrimarySource',
+            regionalPullRequestNumber: Number(process.env.PR_NUMBER),
+            runnerRunId: Number(process.env.RUN_ID),
+            reviewedSlotCount: 9,
+            sourceCorrectionCount: 1,
+            retainedNoChangeCount: 8,
+            corrected: [
+              {
+                code: '24324',
+                name: '東員町',
+                service: 'postpartumCare',
+                type: 'primary_source_upgrade',
+                result: '2026年6月24日更新の利用者向けページへ主出典を変更し、対象・料金・上限・申請・令和8年度施設一覧を確定'
+              }
+            ],
+            retainedNoChange: [
+              { code: '27232', name: '阪南市', service: 'sickChildCare', reason: '体調不良児対応型は確認できるが、一般利用型の施設・対象・料金・予約条件は未公開' },
+              { code: '27321', name: '豊能町', service: 'sickChildCare', reason: '2026年度の利用者向け対象・施設・料金・予約条件を確認できない' },
+              { code: '27366', name: '岬町', service: 'sickChildCare', reason: '町議会で整備要望は確認できるが、利用者向け実施条件は未公開' },
+              { code: '17324', name: '川北町', service: 'postpartumCare', reason: '利用者向け現行条件を確認できず、実施要綱を超える断定を行わない' },
+              { code: '17384', name: '志賀町', service: 'postpartumCare', reason: '利用者向け現行条件を確認できず、実施要綱を超える断定を行わない' },
+              { code: '23561', name: '設楽町', service: 'postpartumCare', reason: '2026年の利用者向け案内は確認できず、令和7年12月施行要綱の範囲で維持' },
+              { code: '23563', name: '豊根村', service: 'postpartumCare', reason: '利用者向け現行条件を確認できず、実施要綱を超える断定を行わない' },
+              { code: '25425', name: '愛荘町', service: 'postpartumCare', reason: '令和7年全面改正要綱は確認できるが、利用者向け現行ページを確認できない' }
+            ],
+            issue3141: {
+              unresolvedItemCount: 21,
+              unresolvedMunicipalityCount: 21,
+              unchangedCodes: ['27232', '27321', '27366']
+            },
+            remainingWeakPrimarySourceCandidates: 35,
+            evidencePolicy: [
+              '利用者向けページで対象・料金・施設・利用上限・申請条件を確認できた場合のみ主出典を更新する',
+              '条例・要綱、計画、議会資料または公式サイト内検索の不在だけで制度不存在や現行利用条件を断定しない'
+            ],
+            nextPriority: ['産後ケアの残る条例単独候補', '病児保育の計画・要綱単独候補', '住宅支援の分類候補']
+          };
+          writeJson(auditPath, audit);
+          NODE
+
+      - name: Validate municipality data
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          node --check app.js
+
+      - name: Commit batch 3 decisions
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-weak-source-batch3-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/data/municipalities/24/24324.json \
+            jichitai-compare/operations/tasks/24324.json \
+            jichitai-compare/operations/audits/central-a-weak-primary-source-batch3-decisions-20260725.json \
+            jichitai-compare/operations/control/central-a-weak-source-batch3-trigger-20260725.json
+          git commit -m 'audit: 中日本A弱い主出典第3群を判定'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
