@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch22-decisions-20260726",
+  "decidedAt": "2026-07-26T07:58:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3815,
+  "runnerWorkflowRunId": 30178628512,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 1,
+  "verifiedReplacementCount": 4,
+  "decisions": [
+    {
+      "code": "27205",
+      "name": "吹田市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_child_newlywed_municipal_housing",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の木造住宅の耐震設計・改修・除却費用の一部を補助する。",
+      "afterSummary": "令和8年度の市営住宅募集で、新婚・子育て・ひとり親世帯向けの専用枠2戸を設ける。第1回募集は終了している。",
+      "officialSource": "https://www.city.suita.osaka.jp/shisei/1018880/1018881/1041420/1044195/1044204.html"
+    },
+    {
+      "code": "27206",
+      "name": "泉大津市",
+      "service": "housingSupport",
+      "decisionType": "general_seismic_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の市内木造住宅について、耐震診断・設計・改修費用の一部を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.izumiotsu.lg.jp/hojyokin/shiminmukehozyo/11882.html"
+    },
+    {
+      "code": "27208",
+      "name": "貝塚市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_newlywed_program",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の住宅について耐震診断・改修・除却費を補助する。",
+      "afterSummary": "39歳以下・合計所得500万円未満の新婚世帯へ、令和8年度の住宅取得・賃借・リフォーム・引越費用を上限30万円または60万円補助し、居住誘導区域内は10万円を加算する。",
+      "officialSource": "https://www.city.kaizuka.lg.jp/kakuka/kodomo/kosodate/topics/kaizukashikekkonsinseikatusienhojyokin.html"
+    },
+    {
+      "code": "27210",
+      "name": "枚方市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_newlywed_program",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震木造住宅の耐震改修設計・工事、耐震シェルター、屋根軽量化に補助する。",
+      "afterSummary": "合計所得500万円未満の新婚夫婦等へ、令和8年度の住宅取得・賃借・所有住宅のリフォーム・引越費用を上限30万円補助する。",
+      "officialSource": "https://www.city.hirakata.osaka.jp/0000011510.html"
+    },
+    {
+      "code": "27211",
+      "name": "茨木市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_multigenerational_program",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "木造住宅の耐震設計・改修・除却費と民間建築物の耐震診断費を補助する。",
+      "afterSummary": "中学生以下の子がいる子育て世帯または40歳未満の若年世帯等が、市内の親族と近居・同居する住宅取得・リフォーム費用を上限30万円補助する。",
+      "officialSource": "https://www.city.ibaraki.osaka.jp/hojokin_joseikin/kurashi/sumai_koen/56544.html"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 69,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 64
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般耐震制度だけを子育て世帯向け住宅支援として登録しない",
+    "新婚・子育て・多世代世帯の住宅取得・家賃・市営住宅募集を現行年度と受付状態付きで記録する",
+    "募集終了時は制度内容と受付状態を分けて明示する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
