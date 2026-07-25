@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "central-quality-cross-audit-20260725",
+  "createdAt": "2026-07-25T11:55:00+09:00",
+  "coordinator": "統括B②",
+  "trackingIssues": [3187, 3188, 3193],
+  "status": "ready",
+  "scope": {
+    "regionBranch": "region/central",
+    "prefectureCodes": ["16", "17", "18", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
+    "municipalityCount": 409,
+    "serviceCount": 3681,
+    "sourceOfTruth": [
+      "jichitai-compare/data/municipalities",
+      "jichitai-compare/operations/tasks",
+      "jichitai-compare/data/generated/municipalities.json",
+      "jichitai-compare/municipality"
+    ]
+  },
+  "purpose": "中日本A・Bの監査訂正原因を検査式へ変換し、同じ誤りが中日本409自治体に残っていないか横断確認する。既存説明を正解とせず、疑義候補は自治体公式情報で確定する。",
+  "phases": [
+    {
+      "phase": 1,
+      "name": "full_structural_scan",
+      "coverage": "409 municipalities / 3,681 services",
+      "checks": [
+        "自治体コードとファイルパス・prefectureCode・nameの一致",
+        "各自治体に必須9制度が重複なく存在",
+        "自治体上位statusが9制度statusとtask状態から再計算した結果に一致",
+        "task status・completedServices・officialSources件数が自治体JSONと一致",
+        "generated JSONと自治体JSONのstatus・summary・details・eligibility・fee・frequency・periodが一致",
+        "静的ページの自治体コード・自治体名・canonical・9制度表示が正しい"
+      ],
+      "blockerWhen": [
+        "自治体コード違いまたは別自治体への誤反映",
+        "9制度欠落・重複",
+        "修正済み制度がmainまたは生成物に未反映"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "cause_pattern_scan",
+      "coverage": "all 409 municipalities",
+      "patterns": [
+        {
+          "id": "FY2026_ANYONE_DAYCARE_OMISSION",
+          "service": "temporaryChildcare",
+          "trigger": "summary/details/additionalSourcesに通常一時預かりのみ、または2026年度計画・条例・案内への参照があるが、乳児等通園支援事業・こども誰でも通園制度の対象、時間、料金、施設が記録されていない",
+          "origin": "中日本A 36件の年度制度見落とし",
+          "action": "公式利用者向けページ、条例、実施計画を検索し、現行条件が確定した場合のみ訂正する"
+        },
+        {
+          "id": "GENERAL_HOUSING_MISCLASSIFIED",
+          "service": "housingSupport",
+          "trigger": "verifiedの根拠が住居確保給付金、一般空き家改修、一般耐震・省エネ、新婚・若者・移住者のみで、子ども・妊婦・子育て世帯の明示要件または加算がない",
+          "origin": "中日本B category_error 48件",
+          "action": "子育て世帯専用条件または子ども加算が確認できなければunavailableまたは該当部分を除外する"
+        },
+        {
+          "id": "STATUS_WITHOUT_CURRENT_EVIDENCE",
+          "services": ["childMedical", "sickChildCare", "childcareFee", "schoolMeals", "postpartumCare", "temporaryChildcare", "housingSupport", "bulkyWaste", "disasterPrevention"],
+          "trigger": "verifiedの主出典が旧年度・計画素案・自治体トップ・無関係ページ、またはunavailableなのに現行専用ページ・広域利用ページが存在する可能性",
+          "origin": "中日本A status_judgement_error 30件、中日本B status_judgement_error 5件",
+          "action": "現行年度の制度専用公式情報で再判定する。都道府県全体案内だけで自治体条件を断定しない"
+        },
+        {
+          "id": "SCHOOL_MEALS_SCOPE_CONFUSION",
+          "service": "schoolMeals",
+          "trigger": "就学援助・第3子以降・物価高騰補助・全額無償化・一般世帯徴収額の区別がsummary/detailsで不明確、または旧対象範囲が残る",
+          "origin": "赤穂市ほか学校給食費訂正・Issue #3141",
+          "action": "一般世帯の負担、対象学年、期間、対象校、申請要否を別項目として確定する"
+        },
+        {
+          "id": "WIDE_AREA_USE_OMISSION",
+          "services": ["sickChildCare", "postpartumCare", "temporaryChildcare"],
+          "trigger": "自治体内施設なしを理由にunavailableだが、近隣自治体・広域連携・委託施設の住民利用可否を確認していない",
+          "origin": "中日本Bの美浜町・日高町等",
+          "action": "自治体・広域連合・委託施設の公式対象市町村一覧を確認する"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "official_information_review",
+      "selectionRule": "phase 2の全候補に加え、候補0件の都道府県も最低3自治体をコード帯・人口規模・verified/unavailable構成が偏らないよう抽出する",
+      "minimumSpotChecksPerPrefecture": 3,
+      "minimumSpotCheckMunicipalityCount": 39,
+      "priorityServices": ["temporaryChildcare", "schoolMeals", "sickChildCare", "postpartumCare", "housingSupport"],
+      "evidenceRules": [
+        "自治体または公式広域団体の現行ページを主出典とする",
+        "条例・計画・予算だけの場合は利用可能条件を断定しない",
+        "料金・年齢・回数・期間は原文で確認し推測しない",
+        "404・403・タイムアウトは通常GET、公式サイト内検索、現行URL検索を再試行し、通信警告と恒久切れを分離する"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "four_surface_consistency",
+      "checks": [
+        "region/central自治体JSONとmain自治体JSON",
+        "main自治体JSONとtask",
+        "main自治体JSONと全国生成JSON",
+        "main自治体JSONと静的ページ・公開ページ"
+      ],
+      "fields": ["status", "summary", "details", "eligibility", "fee", "frequency", "period", "primarySource", "additionalSources", "checkedAt"],
+      "publicChecks": ["HTTP 200", "h1", "canonical", "公式出典リンク", "旧誤表示不存在", "sitemap収録"]
+    }
+  ],
+  "outputs": {
+    "auditResult": "jichitai-compare/operations/audits/central-quality-cross-audit-20260725.json",
+    "candidateList": "jichitai-compare/operations/audits/central-quality-cross-audit-candidates-20260725.json",
+    "spotCheckResult": "jichitai-compare/operations/audits/central-quality-cross-audit-spotchecks-20260725.json",
+    "consistencyResult": "jichitai-compare/operations/audits/central-quality-four-surface-consistency-20260725.json"
+  },
+  "correctionWorkflow": [
+    "確定誤りを自治体JSONとtaskへ修正",
+    "地域PRを作成して通常CI成功を確認",
+    "region/centralへ統合",
+    "最新main基点で対象制度のみ全国同期",
+    "生成JSON・静的ページを再生成",
+    "通常CIと公開ページを確認",
+    "品質台帳とIssue #3193へ証跡を追記"
+  ],
+  "releaseBlockerPolicy": {
+    "initialStatus": "none_detected",
+    "setBlockedWhen": [
+      "公式情報と反する制度有無・料金・対象・期間・回数がmainまたは公開に残存",
+      "region/centralとmainの対象制度不一致",
+      "自治体コード・9制度構造・task・生成物の重大不整合",
+      "修正CIまたは公開検証の未解消失敗"
+    ],
+    "nonBlocking": [
+      "公式情報だけでは確定できず、推測せず継続確認Issueへ分離した項目",
+      "一時的通信障害で既存内容を否定する根拠がない項目"
+    ]
+  },
+  "completionCriteria": [
+    "409自治体の構造検査完了",
+    "全原因パターンの横断検索完了",
+    "13府県で各3自治体以上の公式情報抜き取り完了",
+    "候補全件をconfirmed_error・confirmed_accurate・continuing_confirmationへ分類",
+    "確定誤りのregion/central・main・公開同期完了",
+    "重大未修正0、release blocker 0"
+  ]
+}
