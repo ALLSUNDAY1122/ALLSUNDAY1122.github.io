@@ -1,0 +1,73 @@
+name: Temporary West B Anyone Corrections V2
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-anyone-corrections-v2-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'ops/run-west-b-anyone-corrections-v2-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply corrected eligibility ranges
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main audit/west-b-anyone-crosscheck-20260725
+          git switch -C fix/west-b-anyone-confirmed-20260725 origin/main
+          audit_paths=(
+            jichitai-compare/operations/audits/west-b-anyone-crosscheck-20260725.json
+            jichitai-compare/operations/audits/west-b-anyone-priority-review-20260725.json
+            jichitai-compare/operations/audits/west-b-anyone-status-focus-review-20260725.json
+            jichitai-compare/operations/audits/west-b-anyone-official-policy-review-20260725.json
+          )
+          for audit_path in "${audit_paths[@]}"; do
+            mkdir -p "$(dirname "$audit_path")"
+            git show "origin/audit/west-b-anyone-crosscheck-20260725:$audit_path" > "$audit_path"
+          done
+          awk '
+            /          import fs from/ {capture=1}
+            capture && /          NODE$/ {capture=0; exit}
+            capture {sub(/^          /, ""); print}
+          ' .github/workflows/temp-west-b-anyone-corrections.yml > /tmp/apply-west-b-anyone.mjs
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('/tmp/apply-west-b-anyone.mjs')
+          text = path.read_text()
+          replacements = [
+              "eligibility: { minAgeMonths: 6, maxAgeYears: 2 },",
+              "eligibility: { minAgeMonths: 6, maxAgeYears: 5 },",
+              "eligibility: { minAgeMonths: 6, maxAgeYears: 2 },",
+          ]
+          for replacement in replacements:
+              text = text.replace('eligibility: null,', replacement, 1)
+          path.write_text(text)
+          PY
+          node /tmp/apply-west-b-anyone.mjs
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: npm run check
+      - name: Commit and push correction branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare
+          git commit -m 'fix: 西日本B誰でも通園制度4件を訂正'
+          git push --force origin HEAD:fix/west-b-anyone-confirmed-20260725
