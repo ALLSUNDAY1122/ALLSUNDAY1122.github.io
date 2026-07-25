@@ -1,0 +1,2701 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-housing-classification-crosscheck-20260725",
+  "team": "西日本調査班A",
+  "generatedAt": "2026-07-25T14:47:00+09:00",
+  "purpose": "一般移住・一般住宅制度を子育て世帯向け住宅支援として登録していないか、担当6県226自治体を横断抽出する",
+  "scope": {
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
+    "municipalityCount": 226,
+    "expectedMunicipalityCount": 226,
+    "municipalityCountMatched": true
+  },
+  "housingSupportStatusCounts": {
+    "verified": 217,
+    "unavailable": 9,
+    "other": 0
+  },
+  "detectionRule": {
+    "generalTerms": [
+      "空き家",
+      "移住",
+      "定住",
+      "リフォーム",
+      "住宅改修",
+      "改修費",
+      "住宅取得",
+      "新築",
+      "中古住宅",
+      "住まい"
+    ],
+    "childSpecificTerms": [
+      "子育て",
+      "子ども",
+      "子供",
+      "こども",
+      "多子",
+      "18歳未満",
+      "高校生以下",
+      "児童",
+      "扶養する子",
+      "子育て世帯"
+    ],
+    "sourceUrlHints": [
+      "akiya",
+      "akiy",
+      "iju",
+      "teiju",
+      "reform",
+      "renovation",
+      "sumai"
+    ],
+    "note": "候補抽出は確定誤り判定ではない。候補ごとに自治体公式情報を独立確認する。"
+  },
+  "candidateCount": 143,
+  "candidates": [
+    {
+      "municipalityCode": "33203",
+      "municipalityName": "津山市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "条件を満たす移住者の空き家購入費と改修費を補助",
+      "sourceUrl": "https://life-tsuyama.jp/support-system/immigration/",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33204",
+      "municipalityName": "玉野市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家バンク登録住宅の改修費を補助し、一定条件では上限100万円",
+      "sourceUrl": "https://www.city.tamano.lg.jp/soshiki/20/1688.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33205",
+      "municipalityName": "笠岡市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "令和8年度は市内業者による住宅リフォーム費の2分の1を助成",
+      "sourceUrl": "https://www.city.kasaoka.okayama.jp/soshiki/28/44807.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33208",
+      "municipalityName": "総社市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "1年以上空き家の住宅を取得・改修して定住する場合、改修費の2分の1を助成",
+      "sourceUrl": "https://www.city.soja.okayama.jp/soshiki/3/1609.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "リフォーム",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33210",
+      "municipalityName": "新見市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家改修費の2分の1を上限150万円まで助成し、子1人につき50万円を加算",
+      "sourceUrl": "https://www.city.niimi.okayama.jp/gyosei/gyosei_detail/index/35.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33211",
+      "municipalityName": "備前市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "住宅リフォーム費の20％を電子地域ポイントで助成（令和8年度は受付終了）",
+      "sourceUrl": "https://www.city.bizen.okayama.jp/site/bizen/38033.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33212",
+      "municipalityName": "瀬戸内市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "移住者の空き家改修等費用を3分の1、上限50万円まで補助",
+      "sourceUrl": "https://www.city.setouchi.lg.jp/site/portal/142343.html",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33213",
+      "municipalityName": "赤磐市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家バンク物件等を利用する移住者の改修費を最大60万円補助",
+      "sourceUrl": "https://www.city.akaiwa.lg.jp/annai/sougouseisaku/machihitoshigotososei/kurashi/iju/kakushushien/516.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33216",
+      "municipalityName": "浅口市",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家改修費の2分の1を移住型最大80万円、定住型最大50万円まで補助",
+      "sourceUrl": "https://www.city.asakuchi.lg.jp/page/1034.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33423",
+      "municipalityName": "早島町",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費を3分の1、上限30万円まで助成",
+      "sourceUrl": "https://www.town.hayashima.lg.jp/soshiki/machizukuri_kikaku/gyomu/iju_teiju/1175.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33445",
+      "municipalityName": "里庄町",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "町外からの移住・定住者による空き家改修費を最大120万円補助",
+      "sourceUrl": "https://www.town.satosho.okayama.jp/soshiki/15/8644.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33461",
+      "municipalityName": "矢掛町",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "住宅新築を最大200万円、空き家改修を最大100万円補助",
+      "sourceUrl": "https://www.town.yakage.okayama.jp/life/teijyu/teijuujosei.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "改修費",
+        "新築"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33586",
+      "municipalityName": "新庄村",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家バンクと空き家改修補助制度を実施",
+      "sourceUrl": "https://www.pref.okayama.jp/page/489784.html",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33606",
+      "municipalityName": "鏡野町",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家改修費を条件により最大100万円補助",
+      "sourceUrl": "https://www.town.kagamino.lg.jp/soshiki/22/1122.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33622",
+      "municipalityName": "勝央町",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家改修を最大70万円、購入を最大100万円、新築住宅を条件により10～20万円補助",
+      "sourceUrl": "https://www.town.shoo.lg.jp/uploaded/attachment/3177.pdf",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33623",
+      "municipalityName": "奈義町",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "新築・リフォーム・空家購入等を補助し、空家購入は家族加算込み最大150万円",
+      "sourceUrl": "https://www.town.nagi.okayama.jp/gyousei/kurashi/sumai/hojo_shien/akiya_katsuyoujigyou.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム",
+        "住宅改修",
+        "新築"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33643",
+      "municipalityName": "西粟倉村",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "移住・定住世帯向け応援住宅と令和8年度住宅設備補助を実施",
+      "sourceUrl": "https://www.vill.nishiawakura.okayama.jp/wp/%E8%A5%BF%E7%B2%9F%E5%80%89%E6%9D%91%E3%81%97%E3%81%94%E3%81%A8%E3%83%BB%E3%81%8F%E3%82%89%E3%81%97%E5%BF%9C%E6%8F%B4%E4%BD%8F%E5%AE%85%EF%BC%88%E5%8B%9F%E9%9B%86%E4%B8%AD%EF%BC%89/",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "33663",
+      "municipalityName": "久米南町",
+      "prefectureCode": "33",
+      "prefecture": "岡山県",
+      "status": "verified",
+      "summary": "空き家購入・改修・片付けを補助し、若者の改修費は最大100万円",
+      "sourceUrl": "https://www.town.kumenan.lg.jp/living/house/hojo/akiya-reform.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "reform"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37201",
+      "municipalityName": "高松市",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費を2分の1、上限50万円等で補助",
+      "sourceUrl": "https://www.city.takamatsu.kagawa.jp/kurashi/kurashi/sumai/akiya/kaishu_hojyo.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37202",
+      "municipalityName": "丸亀市",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "離島の空き家リフォームに移住者用住宅最大200万円等を補助",
+      "sourceUrl": "https://www.city.marugame.lg.jp/page/1668.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37204",
+      "municipalityName": "善通寺市",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空家バンク登録住宅の改修費を2分の1、上限100万円補助",
+      "sourceUrl": "https://www.city.zentsuji.kagawa.jp/site/akiyataisaku/akiyabank-kaisyu.html",
+      "generalMatches": [
+        "改修費",
+        "住まい"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37205",
+      "municipalityName": "観音寺市",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク住宅の改修・家財処分を補助するが、2026年度の改修分は受付停止中",
+      "sourceUrl": "https://www.city.kanonji.kagawa.jp/soshiki/48/14825.html",
+      "generalMatches": [
+        "空き家",
+        "住宅改修"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37207",
+      "municipalityName": "東かがわ市",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク登録住宅の改修費を2分の1、上限90万～100万円補助",
+      "sourceUrl": "https://www.higashikagawa.jp/soshikikarasagasu/toshiseibika/gyomuannai/3/1/1027.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37208",
+      "municipalityName": "三豊市",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク購入住宅のリフォーム費用50％、上限100万円を補助",
+      "sourceUrl": "https://www.city.mitoyo.lg.jp/mitoyo_kurashitecho/shien/7701.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37322",
+      "municipalityName": "土庄町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク登録住宅の改修費を最大100万円補助",
+      "sourceUrl": "https://www.town.tonosho.kagawa.jp/gyosei/iju/akiyabanku2/1511.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37324",
+      "municipalityName": "小豆島町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "2026年度の住宅リフォーム費用を20％、上限20万円分の商品券で助成",
+      "sourceUrl": "https://www.town.shodoshima.lg.jp/gyousei/kurashi/sumai/sumaihojokin2/7901.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37341",
+      "municipalityName": "三木町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家の住宅改修を2分の1・上限100万円、家財処分を上限10万円補助",
+      "sourceUrl": "https://www.town.miki.lg.jp/life/dtl.php?hdnKey=8661",
+      "generalMatches": [
+        "空き家",
+        "住宅改修"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37364",
+      "municipalityName": "直島町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費等を2分の1、改修最大100万～150万円補助",
+      "sourceUrl": "https://www.town.naoshima.lg.jp/reiki_int/reiki_honbun/o124RG00000492.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37386",
+      "municipalityName": "宇多津町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク住宅の改修を2分の1・上限100万円、家財処分を上限10万円補助",
+      "sourceUrl": "https://www.town.utazu.lg.jp/page/1192.html",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37403",
+      "municipalityName": "琴平町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク物件のリフォーム・家財処分費を2分の1補助",
+      "sourceUrl": "https://www.town.kotohira.kagawa.jp/site/ijyuu/3813.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37404",
+      "municipalityName": "多度津町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を2分の1、上限100万円補助",
+      "sourceUrl": "https://www.town.tadotsu.kagawa.jp/kurashi_tetsuzuki/iju_teiju/2754.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "37406",
+      "municipalityName": "まんのう町",
+      "prefectureCode": "37",
+      "prefecture": "香川県",
+      "status": "verified",
+      "summary": "空き家バンク物件のリフォーム費を50％、上限100万円補助",
+      "sourceUrl": "https://www.town.manno.lg.jp/site/miryoku-hasshin/1326.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39201",
+      "municipalityName": "高知市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "居住サポート住宅等の修繕・改修費を2分の1、1戸25万円以内で補助",
+      "sourceUrl": "https://www.city.kochi.kochi.jp/soshiki/60/kyozyusapoto.html",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39202",
+      "municipalityName": "室戸市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク登録住宅の改修を10分の10、上限270万円補助",
+      "sourceUrl": "https://www.city.muroto.kochi.jp/reiki_int/reiki_honbun/o303RG00001174.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39203",
+      "municipalityName": "安芸市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修・家財処分費を合計上限270万円まで補助",
+      "sourceUrl": "https://www.city.aki.kochi.jp/iju/info/shien.php",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39204",
+      "municipalityName": "南国市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "耐震性の低い木造住宅の除却に費用の一部を補助",
+      "sourceUrl": "https://www.city.nankoku.lg.jp/life/life_dtl.php?hdnKey=10034",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39205",
+      "municipalityName": "土佐市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク住宅の改修を10分の10、上限270万円補助",
+      "sourceUrl": "https://www.city.tosa.lg.jp/life/detail.php?hdnKey=5156",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39208",
+      "municipalityName": "宿毛市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "移住者等の空き家改修費を5分の4以内、上限185万7千円補助",
+      "sourceUrl": "https://www.city.sukumo.kochi.jp/docs-05/41776.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39209",
+      "municipalityName": "土佐清水市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "移住者向け賃貸住宅として登録する空き家の改修等を10分の10、上限300万円補助",
+      "sourceUrl": "https://www.city.tosashimizu.kochi.jp/kurashi/section/kikaku/iju_01.html",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39211",
+      "municipalityName": "香南市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク物件の耐震化・リフォーム等を上限185万7千円補助",
+      "sourceUrl": "https://www.city.kochi-konan.lg.jp/soshikikarasagasu/jutakuseisakuka/sumai/1/7036.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39212",
+      "municipalityName": "香美市",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修等を3分の2、上限180万円補助",
+      "sourceUrl": "https://www.city.kami.lg.jp/soshiki/9/akiyahojo.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "住宅改修"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39301",
+      "municipalityName": "東洋町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修等を上限270万円補助",
+      "sourceUrl": "https://www.town.toyo.kochi.jp/contents/info0559.php",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "住宅改修"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39302",
+      "municipalityName": "奈半利町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家の荷物整理・運搬・処分費を2分の1、上限25万円補助",
+      "sourceUrl": "https://www.town.nahari.kochi.jp/life/dtl.php?hdnKey=1327",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39303",
+      "municipalityName": "田野町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費を3分の2、上限180万円補助",
+      "sourceUrl": "https://tanocho.jp/life/detail.php?hdnKey=584",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39304",
+      "municipalityName": "安田町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "移住者向け空き家改修を補助率10分の10、上限270万円で支援",
+      "sourceUrl": "https://www.town.yasuda.kochi.jp/life/dtl.php?hdnKey=1023",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39305",
+      "municipalityName": "北川村",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修を補助率10分の10、上限270万円で支援",
+      "sourceUrl": "https://www.kitagawamura.jp/life/dtl.php?hdnKey=1422",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39306",
+      "municipalityName": "馬路村",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "村営・空き家活用住宅の貸出しと住宅新築費を最大約300万円支援",
+      "sourceUrl": "https://vill.umaji.lg.jp/emigration/1252/",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39363",
+      "municipalityName": "土佐町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "移住者等の住宅の軽微な修繕と空き家の荷物整理等を支援",
+      "sourceUrl": "https://www.town.tosa.kochi.jp/iju/info/detail.php?hdnKey=220",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39364",
+      "municipalityName": "大川村",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "村営住宅の斡旋と木造住宅の耐震設計・改修費を支援",
+      "sourceUrl": "https://www.vill.okawa.kochi.jp/life/dtl.php?hdnKey=1404",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39387",
+      "municipalityName": "仁淀川町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "移住者の住宅改修・荷物処分等に合計最大130万円を補助",
+      "sourceUrl": "https://www.town.niyodogawa.lg.jp/reiki/reiki_honbun/r191RG00000116.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "住宅改修"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39405",
+      "municipalityName": "梼原町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "若者定住住宅の新築・改修と町産材利用住宅を支援",
+      "sourceUrl": "https://www.town.yusuhara.lg.jp/life/detail.php?hdnKey=356",
+      "generalMatches": [
+        "定住",
+        "住宅改修",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39411",
+      "municipalityName": "津野町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "45歳以下の住宅取得に新築100万円、同居増築30万円または100万円、中古住宅最大50万円を交付",
+      "sourceUrl": "https://town.kochi-tsuno.lg.jp/section/post_1674",
+      "generalMatches": [
+        "定住",
+        "住宅取得",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39427",
+      "municipalityName": "三原村",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "移住希望者等の空き家改修に定額上限50万円を補助",
+      "sourceUrl": "https://www.vill.mihara.kochi.jp/reiki/reiki_honbun/o354RG00000650.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "39428",
+      "municipalityName": "黒潮町",
+      "prefectureCode": "39",
+      "prefecture": "高知県",
+      "status": "verified",
+      "summary": "空き家の改修・荷物処分等に対する補助制度を実施",
+      "sourceUrl": "https://www.town.kuroshio.lg.jp/pb/cont/kikaku-ijuu/49981",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40204",
+      "municipalityName": "直方市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "空き家改修費の2分の1、上限15万円・市内業者施工は20万円を補助",
+      "sourceUrl": "https://www.city.nogata.fukuoka.jp/kurashi/_1203/_12178.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40206",
+      "municipalityName": "田川市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "市内住宅のリフォーム工事を区分別に補助",
+      "sourceUrl": "https://www.joho.tagawa.fukuoka.jp/kiji0032215/index.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40207",
+      "municipalityName": "柳川市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "45歳以下の市内住宅取得者へ5万円分のやなPayポイントを交付",
+      "sourceUrl": "https://www.city.yanagawa.fukuoka.jp/kurashi/ijuteiju/shien/ijuteiju_U45.html",
+      "generalMatches": [
+        "定住",
+        "住宅取得"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40210",
+      "municipalityName": "八女市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を2分の1・上限50万円、家財撤去を全額・上限10万円補助",
+      "sourceUrl": "https://www.city.yame.fukuoka.jp/kurashi/hojyokin/hojyosumai/1505373018919.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40211",
+      "municipalityName": "筑後市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "転入して住宅を取得した世帯へ固定資産税相当額を3年間補助",
+      "sourceUrl": "https://www.city.chikugo.lg.jp/iju_teiju/_11823/_11830.html?media=pc",
+      "generalMatches": [
+        "定住",
+        "住宅取得"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40212",
+      "municipalityName": "大川市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "39歳以下の夫婦等による住宅用地・住宅取得に30万円を支給",
+      "sourceUrl": "https://www.city.okawa.lg.jp/s006/010/040/010/20260421170614.html",
+      "generalMatches": [
+        "リフォーム",
+        "住宅取得",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40213",
+      "municipalityName": "行橋市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "旧耐震基準の木造戸建ての耐震・省エネ改修等を補助",
+      "sourceUrl": "https://www.city.yukuhashi.fukuoka.jp/soshiki/24/1530.html",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40214",
+      "municipalityName": "豊前市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "住宅取得者へ固定資産税相当額を定住促進奨励金として交付",
+      "sourceUrl": "https://www.city.buzen.lg.jp/teijuusokushin-syoureikin.html",
+      "generalMatches": [
+        "定住",
+        "住宅取得",
+        "新築"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40217",
+      "municipalityName": "筑紫野市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "市内業者による住宅改修費の10％、上限10万円を補助",
+      "sourceUrl": "https://www.city.chikushino.fukuoka.jp/soshiki/31/34651.html",
+      "generalMatches": [
+        "住宅改修",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40219",
+      "municipalityName": "大野城市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "ZEH水準の戸建て住宅の新築・購入・改修に20万円を補助",
+      "sourceUrl": "https://www.city.onojo.fukuoka.jp/kiji0036267/index.html",
+      "generalMatches": [
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40221",
+      "municipalityName": "太宰府市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "旧耐震木造住宅の性能向上改修を最大75万円、除却を最大30万円補助",
+      "sourceUrl": "https://www.city.dazaifu.lg.jp/soshiki/20/3512.html",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40223",
+      "municipalityName": "古賀市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "旧耐震木造住宅の性能向上改修・除却費を上限30万円補助",
+      "sourceUrl": "https://www.city.koga.fukuoka.jp/cityhall/work/toshikeikaku/031.php",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40226",
+      "municipalityName": "宮若市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "住宅取得に新築最大300万円・中古最大175万円を補助",
+      "sourceUrl": "https://www.city.miyawaka.lg.jp/teiju/kiji003448757/index.html",
+      "generalMatches": [
+        "定住",
+        "住宅取得",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40231",
+      "municipalityName": "那珂川市",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "市内業者による住宅改修費の10分の1、上限10万円を補助",
+      "sourceUrl": "https://www.city.nakagawa.lg.jp/soshiki/16/jutakukaisyukoujihojo.html",
+      "generalMatches": [
+        "住宅改修",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40342",
+      "municipalityName": "篠栗町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "旧耐震木造住宅の耐震・省エネ改修を合計上限45万円で補助",
+      "sourceUrl": "https://www.town.sasaguri.fukuoka.jp/soshiki/toshi_seibi/2/4578.html",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40343",
+      "municipalityName": "志免町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "老朽危険空き家の解体費を2分の1補助",
+      "sourceUrl": "https://www.town.shime.lg.jp/web-koho/kouhou/72735.html",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40345",
+      "municipalityName": "新宮町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "旧耐震木造住宅の耐震・省エネ改修を合計上限45万円で補助",
+      "sourceUrl": "https://www.town.shingu.fukuoka.jp/kurashi/anzen_anshin/5/2/5790.html",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40348",
+      "municipalityName": "久山町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "空き家バンク物件のリフォームを上限20万円、家財処分を上限5万円補助",
+      "sourceUrl": "https://www.town.hisayama.fukuoka.jp/soshiki/keiei_design/gyomu/sumai/3/997.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40382",
+      "municipalityName": "水巻町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "町内住宅を購入し5年以上定住する世帯へ最大30万円を交付",
+      "sourceUrl": "https://www.town.mizumaki.lg.jp/iju/040/20201217140450.html",
+      "generalMatches": [
+        "定住",
+        "住宅取得",
+        "新築"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40384",
+      "municipalityName": "遠賀町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "対象中古住宅等の固定資産税相当額を年15万円上限で3～4年間交付",
+      "sourceUrl": "https://www.town.onga.lg.jp/soshiki/6/1362.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "住宅取得",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40401",
+      "municipalityName": "小竹町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "新婚世帯の住宅取得・賃借・リフォーム・引越費用を最大60万円補助",
+      "sourceUrl": "https://town.kotake.lg.jp/hpkiji/pub/detail.aspx?c_id=3&class_id=887&class_set_id=2&id=4062",
+      "generalMatches": [
+        "リフォーム",
+        "住宅取得"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40421",
+      "municipalityName": "桂川町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "新婚世帯の住宅取得・賃借・リフォーム・引越費用を最大60万円補助",
+      "sourceUrl": "https://www.town.keisen.fukuoka.jp/kurashi/tetsuzuki/kekkonseikatsu.php",
+      "generalMatches": [
+        "リフォーム",
+        "住宅取得",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40503",
+      "municipalityName": "大刀洗町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "町内業者による住宅改修費を1割、条件により3割・上限30万円補助",
+      "sourceUrl": "https://www.town.tachiarai.fukuoka.jp/kiji003323/index.html",
+      "generalMatches": [
+        "空き家",
+        "住宅改修",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40544",
+      "municipalityName": "広川町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "上広川校区で若年世代の住宅取得時に住宅ローン利子を最大60万円補給",
+      "sourceUrl": "https://www.town.hirokawa.fukuoka.jp/soshiki/kikaku/1/4/1/607.html",
+      "generalMatches": [
+        "住宅取得",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40604",
+      "municipalityName": "糸田町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "町外からの移住者へ住宅取得・建築・改修費の2分の1、最大60万円を補助",
+      "sourceUrl": "https://www.town.itoda.lg.jp/administration/project/page_00373_00676_01306.html",
+      "generalMatches": [
+        "移住",
+        "リフォーム",
+        "改修費",
+        "住宅取得"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40605",
+      "municipalityName": "川崎町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "新婚世帯の住宅取得・改修・賃借・引越費用を最大60万円補助",
+      "sourceUrl": "https://www.town-kawasaki.com/kurashi/323555",
+      "generalMatches": [
+        "リフォーム",
+        "住宅取得"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40609",
+      "municipalityName": "赤村",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修を3分の2・上限100万円、家財処分を上限10万円補助",
+      "sourceUrl": "https://www.akamura.net/reiki/reiki_honbun/q089RG00000665.html",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40621",
+      "municipalityName": "苅田町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "東京圏等からの移住者による空き家改修を2分の1、上限100万円補助",
+      "sourceUrl": "https://www.town.kanda.lg.jp/page/16857.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40625",
+      "municipalityName": "みやこ町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "旧耐震木造住宅の性能向上改修を最大45万円補助",
+      "sourceUrl": "https://www.town.miyako.lg.jp/soumu3/kiki/jouhou/taishin.html",
+      "generalMatches": [
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40642",
+      "municipalityName": "吉富町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修・家財処分を合計最大60万円補助",
+      "sourceUrl": "https://www.town.yoshitomi.lg.jp/iju/sumu/c121/g171/",
+      "generalMatches": [
+        "空き家",
+        "定住"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40646",
+      "municipalityName": "上毛町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修を2分の1、上限50万円補助",
+      "sourceUrl": "https://www.town.koge.lg.jp/ijyu_teiju/akiyaakitibank/553.html",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "40647",
+      "municipalityName": "築上町",
+      "prefectureCode": "40",
+      "prefecture": "福岡県",
+      "status": "verified",
+      "summary": "空き家バンク成約物件の改修等を2分の1、最大100万円補助",
+      "sourceUrl": "https://www.town.chikujo.fukuoka.jp/s007/010/050/030/120/20170424115322.html",
+      "generalMatches": [
+        "空き家",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43202",
+      "municipalityName": "八代市",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の撤去・改修・引越費用を2分の1、合計最大50万円補助",
+      "sourceUrl": "https://www.city.yatsushiro.lg.jp/kiji0036921/index.html",
+      "generalMatches": [
+        "空き家",
+        "定住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43203",
+      "municipalityName": "人吉市",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の不要物撤去を上限10万円、改修を上限80万円補助",
+      "sourceUrl": "https://www.city.hitoyoshi.lg.jp/kurashi/sumai/sumai_oshirase/2482460",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43204",
+      "municipalityName": "荒尾市",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空家・空地バンク物件の家財処分・樹木伐採等を2分の1、上限20万円補助",
+      "sourceUrl": "https://www.city.arao.lg.jp/kurashi/sumai/akiya/akiya-seido/6883.html",
+      "generalMatches": [],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43205",
+      "municipalityName": "水俣市",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家改修・家財処分費を4分の1、上限25万円、空き家バンク物件は5万円加算",
+      "sourceUrl": "https://www.city.minamata.lg.jp/kiji0033276/index.html",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43206",
+      "municipalityName": "玉名市",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の取得費を10％、上限100万円補助",
+      "sourceUrl": "https://www.city.tamana.lg.jp/q/aview/592/28799.html",
+      "generalMatches": [
+        "空き家"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43213",
+      "municipalityName": "宇城市",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費を最大100万円補助",
+      "sourceUrl": "https://www.city.uki.kumamoto.jp/toppage/ijuteiju/akiya/iju_akiya/oshirase_bank/2302102",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43214",
+      "municipalityName": "阿蘇市",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "県外移住者の空き家リフォームを2分の1、上限100万円補助",
+      "sourceUrl": "https://www.city.aso.kumamoto.jp/citizens/town_planning/akiya_rifo-mu/",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43348",
+      "municipalityName": "美里町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を4分の3、上限100万円補助",
+      "sourceUrl": "https://www.town.kumamoto-misato.lg.jp/soshiki/utsukushisatosose/1/4/644.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43364",
+      "municipalityName": "玉東町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "転入世帯の住宅取得・リフォームを2分の1、上限15～25万円等で支援",
+      "sourceUrl": "https://www.town.gyokuto.kumamoto.jp/kiji003162/index.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム",
+        "住宅取得",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43367",
+      "municipalityName": "南関町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "住宅新築・購入・リフォームを最大75万円等で支援",
+      "sourceUrl": "https://www.town.nankan.lg.jp/kurashi/kurashisodan/page2764.html",
+      "generalMatches": [
+        "定住",
+        "リフォーム",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43369",
+      "municipalityName": "和水町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を3分の2、上限100万円補助",
+      "sourceUrl": "https://www.town.nagomi.lg.jp/iju/hojyokin/akiyahojyokin/kiji00377",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43403",
+      "municipalityName": "大津町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修・家財処分費を最大100万円補助",
+      "sourceUrl": "https://www.town.ozu.kumamoto.jp/page/13873.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "住宅改修"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43423",
+      "municipalityName": "南小国町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "町内業者による住宅リフォーム費の10％、上限10万円を補助",
+      "sourceUrl": "https://www.town.minamioguni.lg.jp/gyousei/shou-kougyou/juutaku-reforem.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43424",
+      "municipalityName": "小国町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "町内業者による住宅リフォーム費の10％、上限10万円を補助",
+      "sourceUrl": "https://www.town.kumamoto-oguni.lg.jp/toppage/toppage_oshirase/22289",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43425",
+      "municipalityName": "産山村",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "住宅リフォーム費の50％、上限100万円を補助",
+      "sourceUrl": "https://www.ubuyama-v.jp/iju/1043.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43433",
+      "municipalityName": "南阿蘇村",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "新築100万円・中古住宅50万円に中学生以下1人20万円を加算",
+      "sourceUrl": "https://www.vill.minamiaso.lg.jp/kiji0034613/index.html",
+      "generalMatches": [
+        "空き家",
+        "改修費",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43444",
+      "municipalityName": "甲佐町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を5分の4、上限100万円補助",
+      "sourceUrl": "https://www.town.kosa.lg.jp/q/aview/225/3030.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43447",
+      "municipalityName": "山都町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を5分の4、上限100万円補助",
+      "sourceUrl": "https://www.town.kumamoto-yamato.lg.jp/ijyuu/kiji0033166/index.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43468",
+      "municipalityName": "氷川町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を2分の1、上限100万円補助",
+      "sourceUrl": "https://www.town.hikawa.kumamoto.jp/ijuu/kiji0034080/index.html",
+      "generalMatches": [
+        "空き家",
+        "改修費",
+        "新築"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43482",
+      "municipalityName": "芦北町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を2分の1、上限30万円補助",
+      "sourceUrl": "https://www.town.ashikita.lg.jp/assets/reiki/reiki_honbun/r172RG00001018.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43484",
+      "municipalityName": "津奈木町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の定住改修費を3分の2、上限50万円補助",
+      "sourceUrl": "https://www.town.tsunagi.lg.jp/teiju/page2097.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43501",
+      "municipalityName": "錦町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "町内業者による住宅リフォーム費の2割、上限30万円を補助",
+      "sourceUrl": "https://www.town.kumamoto-nishiki.lg.jp/kiji003818/index.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43505",
+      "municipalityName": "多良木町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "住宅リフォーム工事費の20％、上限20万円を補助",
+      "sourceUrl": "https://www.town.taragi.lg.jp/gyousei/soshiki/kensetsu/download/1673.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43507",
+      "municipalityName": "水上村",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "新婚世帯の住宅取得・賃借・引越し・リフォーム費を最大30万円または60万円補助",
+      "sourceUrl": "https://www.vill.mizukami.lg.jp/kiji0031091/index.html",
+      "generalMatches": [
+        "リフォーム",
+        "住宅取得"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43510",
+      "municipalityName": "相良村",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "移住者の住宅取得を最大100万円、空き家改修を2分の1・上限100万円で支援",
+      "sourceUrl": "https://www.vill.sagara.lg.jp/q/aview/201/1709.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "リフォーム",
+        "住宅取得",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43511",
+      "municipalityName": "五木村",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修・修繕費を5分の4、上限200万円補助",
+      "sourceUrl": "https://www.vill.itsuki.lg.jp/reiki/reiki_honbun/q480RG00000980.html",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43512",
+      "municipalityName": "山江村",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "村内業者による住宅リフォーム費の2割、上限20万円を助成",
+      "sourceUrl": "https://www.vill.yamae.lg.jp/ijuu/kiji003318/index.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "iju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43513",
+      "municipalityName": "球磨村",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "住宅リフォーム費の20％、上限50万円を助成",
+      "sourceUrl": "https://www.kumamura.com/kiji0031371/index.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43514",
+      "municipalityName": "あさぎり町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "町内業者による住宅新増築・リフォーム費の10％、上限50万円を助成",
+      "sourceUrl": "https://www.town.asagiri.lg.jp/kiji0033879/index.html",
+      "generalMatches": [
+        "リフォーム",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "43531",
+      "municipalityName": "苓北町",
+      "prefectureCode": "43",
+      "prefecture": "熊本県",
+      "status": "verified",
+      "summary": "2026年度の住宅リフォーム費を10分の1、上限10万円補助",
+      "sourceUrl": "https://reihoku-kumamoto.jp/kiji0032777/index.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46204",
+      "municipalityName": "枕崎市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "U・Iターン移住者の住宅取得・改修費等を補助",
+      "sourceUrl": "https://www.city.makurazaki.lg.jp/site/ijyu/11314.html",
+      "generalMatches": [
+        "移住",
+        "定住",
+        "リフォーム",
+        "改修費",
+        "住宅取得",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46208",
+      "municipalityName": "出水市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費20％・上限30万円を補助",
+      "sourceUrl": "https://www.city.kagoshima-izumi.lg.jp/page/page_00815.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46210",
+      "municipalityName": "指宿市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費2分の1、上限50万円等を補助",
+      "sourceUrl": "https://www.city.ibusuki.lg.jp/ijyu/akiya.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46213",
+      "municipalityName": "西之表市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク物件のリフォーム費3分の2、上限150万円を補助",
+      "sourceUrl": "https://www.city.nishinoomote.lg.jp/admin/soshiki/tiikishien/kyoudousuishin/ijuuteijuu/5926.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46214",
+      "municipalityName": "垂水市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費3分の2、上限75万円を補助",
+      "sourceUrl": "https://www.city.tarumizu.lg.jp/chiiki/kurashi/sangyo/akiya/akiya_rifomu.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46216",
+      "municipalityName": "日置市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "築20年以上の空き家改修費3分の1、上限10～30万円を補助",
+      "sourceUrl": "https://www.city.hioki.kagoshima.jp/teiju/ijuteju/shien/akiya.html",
+      "generalMatches": [
+        "空き家",
+        "定住",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46217",
+      "municipalityName": "曽於市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "住宅・空き家リフォーム費10％、上限15～50万円等を補助",
+      "sourceUrl": "https://www.city.soo.kagoshima.jp/kurashi/kurashisumai/zyuutakuhozyo/rifo-mu.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46219",
+      "municipalityName": "いちき串木野市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "市内業者による住宅リフォーム費10％、上限10万円を補助",
+      "sourceUrl": "https://www.city.ichikikushikino.lg.jp/tokei3/kurashi/machizukuri/jutaku.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46220",
+      "municipalityName": "南さつま市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "住宅取得・リフォーム・耐震診断・耐震改修への補助制度を実施",
+      "sourceUrl": "https://www.city.minamisatsuma.lg.jp/living/sumai-tochi/jutaku-hojokin/e016407.html",
+      "generalMatches": [
+        "リフォーム",
+        "住宅取得"
+      ],
+      "sourceHintMatches": [
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46221",
+      "municipalityName": "志布志市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "住宅リフォーム費の15％、上限15万円を助成",
+      "sourceUrl": "https://www.city.shibushi.lg.jp/soshiki/12/29634.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46225",
+      "municipalityName": "姶良市",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "対象中山間地域への移住・転居に住宅取得最大100万円、増改築最大150万円等を補助",
+      "sourceUrl": "https://www.city.aira.lg.jp/seisaku/gyosei/seisaku/sokushin/hurusatoijyuuteijyu.html",
+      "generalMatches": [
+        "移住",
+        "住宅取得",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46303",
+      "municipalityName": "三島村",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "農林水産業等を目的とする移住世帯へ最長3年間の定住助成金を支給",
+      "sourceUrl": "https://mishimamura.com/teijuiju/josei/",
+      "generalMatches": [
+        "移住",
+        "定住"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46304",
+      "municipalityName": "十島村",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "村内住宅のリフォーム費を2分の1、上限20万円補助",
+      "sourceUrl": "https://www.tokara.jp/reiki_int/reiki_honbun/q719RG00000695.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46404",
+      "municipalityName": "長島町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修・家財処分費を3分の2、上限333万円補助",
+      "sourceUrl": "https://www.town.nagashima.lg.jp/info_chisei/%E7%A9%BA%E3%81%8D%E5%AE%B6%E6%94%B9%E4%BF%AE%E8%B2%BB%E8%A3%9C%E5%8A%A9%E9%87%91%E5%88%B6%E5%BA%A6%EF%BC%88%E4%BB%A4%E5%92%8C8%E5%B9%B4%E5%BA%A6%E7%89%88%EF%BC%89/",
+      "generalMatches": [
+        "空き家",
+        "定住"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46452",
+      "municipalityName": "湧水町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家改修費の50％、上限100万円を補助",
+      "sourceUrl": "https://www.town.yusui.kagoshima.jp/soshiki/34/768.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46482",
+      "municipalityName": "東串良町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク物件の改修費を2分の1、上限50万円補助",
+      "sourceUrl": "https://www.higashikushira.com/docs/2022071100029/",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46490",
+      "municipalityName": "錦江町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家リフォーム費の20％、上限20万円を補助",
+      "sourceUrl": "https://www.town.kinko.lg.jp/seisaku-h/kurashi/tochi/shisaku/akiyanitsuite.html",
+      "generalMatches": [
+        "空き家",
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46501",
+      "municipalityName": "中種子町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家改修費を3分の2、空き家バンク登録物件は上限100万円補助",
+      "sourceUrl": "https://town.nakatane.kagoshima.jp/tiiki/kurashi/tizyuusokusonnhozyokinn.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46505",
+      "municipalityName": "屋久島町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "移住者の住宅取得を10分の1・最大250万円、空き家改修を2分の1・最大100万円支援",
+      "sourceUrl": "https://www.town.yakushima.kagoshima.jp/soshiki/kanko_machizukuri/chikishinko/ijuteijuguide_shien/30.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住",
+        "改修費",
+        "住宅取得",
+        "新築",
+        "中古住宅"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "teiju"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46524",
+      "municipalityName": "宇検村",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "所有者から空き家を一定期間無償借受けし、村が改修して移住希望者へ貸し出す",
+      "sourceUrl": "https://www.uken.net/kouhoutoukei/kurashi/sumai/akiyakaisyuu.html",
+      "generalMatches": [
+        "空き家",
+        "移住",
+        "定住"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy",
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46525",
+      "municipalityName": "瀬戸内町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "50万円以上の住宅リフォーム工事1件につき10万円を助成",
+      "sourceUrl": "https://www.town.setouchi.lg.jp/jyuutaku/reformjosei.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "reform"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46527",
+      "municipalityName": "龍郷町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "住宅リフォーム費の20％、上限10万円を補助",
+      "sourceUrl": "https://www.town.tatsugo.lg.jp/kensetsu/jutakureform.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "reform"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46529",
+      "municipalityName": "喜界町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家改修・家財搬出費の3分の2、上限100万円を補助",
+      "sourceUrl": "https://www.town.kikai.lg.jp/kankou/kanko-iju/subsidy_for_renovation_projects.html",
+      "generalMatches": [
+        "空き家",
+        "移住"
+      ],
+      "sourceHintMatches": [
+        "iju",
+        "renovation"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46530",
+      "municipalityName": "徳之島町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "2026年度住宅リフォーム費の15％、上限24万円を補助",
+      "sourceUrl": "https://www.tokunoshima-town.org/kensetsuka/kurashi/machi/sumai/jyutakureform.html",
+      "generalMatches": [
+        "リフォーム"
+      ],
+      "sourceHintMatches": [
+        "reform",
+        "sumai"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46531",
+      "municipalityName": "天城町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費を2分の1、上限100万円補助",
+      "sourceUrl": "https://www.town.amagi.lg.jp/docs/4088.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46533",
+      "municipalityName": "和泊町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "空き家バンク登録物件の改修費を3分の2、上限200万円補助",
+      "sourceUrl": "https://www.town.wadomari.lg.jp/doboku/kurashi/jutaku/akiya/akiyakatuyou0801.html",
+      "generalMatches": [
+        "空き家",
+        "改修費"
+      ],
+      "sourceHintMatches": [
+        "akiya",
+        "akiy"
+      ],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    },
+    {
+      "municipalityCode": "46535",
+      "municipalityName": "与論町",
+      "prefectureCode": "46",
+      "prefecture": "鹿児島県",
+      "status": "verified",
+      "summary": "賃貸住宅の新築・改修費を3分の2、上限100万円補助",
+      "sourceUrl": "https://www.yoron.jp/kiji0039035/index.html",
+      "generalMatches": [
+        "空き家",
+        "改修費",
+        "新築"
+      ],
+      "sourceHintMatches": [],
+      "childSpecificMatches": [],
+      "candidateReason": "一般移住・空き家・住宅改修系の記述またはURLを含む一方、子育て世帯固有の明示語を含まない",
+      "requiredDisposition": "公式ページで子ども要件・対象年齢・子育て世帯限定または加算の有無を独立確認する"
+    }
+  ],
+  "knownCorrectedRecords": [
+    {
+      "municipalityCode": "37203",
+      "municipalityName": "坂出市",
+      "disposition": "housingSupport unavailableへ訂正済み"
+    },
+    {
+      "municipalityCode": "39210",
+      "municipalityName": "四万十市",
+      "disposition": "housingSupport unavailableへ訂正済み"
+    },
+    {
+      "municipalityCode": "43215",
+      "municipalityName": "天草市",
+      "disposition": "housingSupport unavailableへ訂正済み"
+    }
+  ],
+  "status": "candidate_review_required",
+  "blocker": null
+}
