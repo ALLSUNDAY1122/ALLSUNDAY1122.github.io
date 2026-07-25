@@ -1,0 +1,60 @@
+name: Temporary East A Round 3 Scope Diagnostic
+
+on:
+  pull_request:
+    branches:
+      - region/east
+    types:
+      - reopened
+      - synchronize
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  diagnose:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'audit/east-a-second-quality-20260725-r3'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Capture scope calculation
+        shell: bash
+        env:
+          EVENT_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_MERGE_SHA: ${{ github.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          LOG=jichitai-compare/operations/audits/east-a-second-audit-r3-scope.log
+          if [[ -f "$LOG" ]]; then
+            echo "Scope diagnostic already exists"
+            exit 0
+          fi
+          git fetch origin "pull/${PR_NUMBER}/merge:refs/remotes/origin/east-a-r3-merge"
+          MERGE_SHA="$(git rev-parse refs/remotes/origin/east-a-r3-merge)"
+          MERGE_BASE="$(git merge-base "$EVENT_BASE_SHA" "$MERGE_SHA")"
+          {
+            echo "event_base_sha=$EVENT_BASE_SHA"
+            echo "event_github_sha=$EVENT_MERGE_SHA"
+            echo "fetched_merge_sha=$MERGE_SHA"
+            echo "merge_base=$MERGE_BASE"
+            echo "changed_files:"
+            git diff --name-only "$MERGE_BASE" "$MERGE_SHA"
+            echo "check_scope_output:"
+            cd jichitai-compare
+            SCOPE_BASE_SHA="$EVENT_BASE_SHA" SCOPE_HEAD_SHA="$MERGE_SHA" npm run check:scope
+            echo "check_scope_status=$?"
+          } > "$LOG" 2>&1
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$LOG"
+          git commit -m "audit: capture East A round 3 scope calculation"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
