@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-fiscal-low-priority-review-20260725",
+  "sessionId": "north-b",
+  "reviewedAt": "2026-07-25T13:39:00+09:00",
+  "status": "completed",
+  "sourceAudit": "operations/audits/north-b-fiscal-anyone-triage-20260725.json",
+  "scope": {
+    "candidateCount": 16,
+    "confirmedCorrections": 0,
+    "statusChanges": 0,
+    "noChangeConfirmed": 16
+  },
+  "results": [
+    {"code":"06301","municipality":"山辺町","service":"childMedical","category":"old_year_url_only","decision":"現行公式ページで高校卒業相当年度末までの医療費助成を確認。URLの日付文字列のみ旧年で、内容は現行。","officialUrl":"https://www.town.yamanobe.yamagata.jp/soshiki/7/202412maruko.html"},
+    {"code":"04323","municipality":"柴田町","service":"schoolMeals","category":"current_year_context_present","decision":"令和8年度は小学校0円、中学校年額59,500円を現行公式ページで確認。","officialUrl":"https://www02.town.shibata.miyagi.jp/news/index.cfm/detail.73.68850.html"},
+    {"code":"04444","municipality":"色麻町","service":"schoolMeals","category":"current_year_context_present","decision":"令和8年度の前期課程完全無償化と後期課程の前年度水準据置を現行公式ページで確認。","officialUrl":"https://www.town.shikama.miyagi.jp/soshiki/kyushoku/501.html"},
+    {"code":"06302","municipality":"中山町","service":"childcareFee","category":"current_year_context_present","decision":"令和8年度利用案内と令和7・8年度町民税による算定を確認。旧年度記載は算定基準の説明。","officialUrl":"https://www.town.nakayama.yamagata.jp/soshiki/kenkou_fukushi/kosodateshien/HoikuenYouchien/2826.html"},
+    {"code":"06361","municipality":"金山町","service":"schoolMeals","category":"current_year_context_present","decision":"令和8年度予算説明資料で学校給食費完全無償化の継続を確認。","officialUrl":"https://www.town.kaneyama.yamagata.jp/material/files/group/3/R8setumeiyoushi.pdf"},
+    {"code":"04321","municipality":"大河原町","service":"schoolMeals","category":"historical_start_year","decision":"令和7年度開始の町立小中学校給食費無償化が現行ページ・令和8年例規で継続していることを確認。","officialUrl":"https://www.town.ogawara.miyagi.jp/7841.htm"},
+    {"code":"04362","municipality":"山元町","service":"schoolMeals","category":"historical_start_year","decision":"令和6年度開始の町立小中学校給食費完全無償化を現行子育て支援ページで確認。","officialUrl":"https://www.town.yamamoto.miyagi.jp/site/ijuteiju/27311.html"},
+    {"code":"05207","municipality":"湯沢市","service":"schoolMeals","category":"historical_start_year","decision":"2026年4月更新ページで令和6年度開始の給食費無償化継続を確認。","officialUrl":"https://www.city-yuzawa.jp/site/kosodate-navi/5534.html"},
+    {"code":"05348","municipality":"三種町","service":"childcareFee","category":"historical_start_year","decision":"2026年6月更新の入園案内で令和7年度開始の全児童保育料完全無料化を確認。","officialUrl":"https://www.town.mitane.akita.jp/kosodate_kyoiku/hoikuen_yochien/1959.html"},
+    {"code":"05349","municipality":"八峰町","service":"childcareFee","category":"historical_start_year","decision":"現行子育て支援ページで令和7年度開始の保育料完全無償化を確認。","officialUrl":"https://www.town.happo.lg.jp/archive/p20230215123721"},
+    {"code":"06361","municipality":"金山町","service":"childcareFee","category":"historical_start_year","decision":"現行公式ページと令和8年度入園案内で年齢・所得・多子要件を問わない保育料・給食費無償化を確認。","officialUrl":"https://www.town.kaneyama.yamagata.jp/machinososhiki/kenkofukushika/kosodateshienshitu/3/2128.html"},
+    {"code":"06364","municipality":"真室川町","service":"childcareFee","category":"historical_start_year","decision":"令和8年度入所案内で令和6年度開始の全階層保育料無償化、主食費・副食費の町負担を確認。","officialUrl":"https://www.town.mamurogawa.yamagata.jp/kosodate_kyoiku/nyuen_nyugaku/4889.html"},
+    {"code":"04100","municipality":"仙台市","service":"disasterPrevention","category":"static_disaster_material","decision":"2026年更新の総合ハザードマップ案内で洪水、土砂、津波、地震、ため池、内水を確認。","officialUrl":"https://www.city.sendai.jp/kikikanri/kurashi/anzen/saigaitaisaku/hazardmap/map.html"},
+    {"code":"04202","municipality":"石巻市","service":"disasterPrevention","category":"static_disaster_material","decision":"洪水・土砂、津波、内水の現行ハザードマップと2026年更新の避難情報を確認。","officialUrl":"https://www.city.ishinomaki.lg.jp/bousai/020/n010/010/20250312170404.html"},
+    {"code":"04401","municipality":"松島町","service":"disasterPrevention","category":"static_disaster_material","decision":"2026年1月更新の総合防災マップ、津波、ため池、WEB版ハザードマップを確認。令和6年度は改定年度。","officialUrl":"https://www.town.miyagi-matsushima.lg.jp/page/1407.html"},
+    {"code":"06213","municipality":"南陽市","service":"disasterPrevention","category":"static_disaster_material","decision":"現行防災ページで洪水・土砂、ため池、地震の各ハザード情報を確認。令和6年度は洪水・土砂マップの改定年度。","officialUrl":"https://www.city.nanyo.yamagata.jp/bousai/"}
+  ],
+  "decision": "旧年度低優先16件は、現行年度記載、制度開始年度の履歴、または現行利用中の防災資料であることを確認した。自治体JSON・task・statusの追加修正は行わない。"
+}
