@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "west-a-bulky-waste-final-resolution-20260725",
+  "session": "西日本調査班A",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-25T22:03:00+09:00",
+  "scope": {
+    "municipalityCount": 226,
+    "priorityCandidateCount": 65
+  },
+  "result": {
+    "sourceMisassignmentCount": 1,
+    "sourceEnrichmentCount": 2,
+    "statusCorrectionCount": 0,
+    "contentErrorCount": 0,
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "correctedMunicipalities": [
+    {
+      "code": "39424",
+      "name": "大月町",
+      "classification": "source_misassignment"
+    },
+    {
+      "code": "40421",
+      "name": "桂川町",
+      "classification": "source_enrichment"
+    },
+    {
+      "code": "43208",
+      "name": "山鹿市",
+      "classification": "source_enrichment"
+    }
+  ],
+  "retainedNoChange": [
+    "40646",
+    "46505",
+    "43424"
+  ],
+  "continuation": {
+    "issue": 3675,
+    "nonBlocking": true,
+    "codes": [
+      "33203",
+      "43511",
+      "46502",
+      "33586"
+    ]
+  },
+  "evidence": {
+    "mechanicalAuditPullRequest": 3634,
+    "reviewPreparationPullRequest": 3674,
+    "regionalCorrectionPullRequest": 3677,
+    "regionalCorrectionWorkflowRunId": 30158202086,
+    "nationalSyncPullRequest": 3679,
+    "nationalSyncWorkflowRunId": 30158329113,
+    "publicVerificationPullRequest": 3681,
+    "publicVerificationWorkflowRunId": 30158773931,
+    "finalRegionPullRequest": 3684,
+    "finalRegionWorkflowRunId": 30158972922,
+    "finalMainPullRequest": 3686,
+    "finalMainWorkflowRunId": 30159125294
+  },
+  "publicVerification": {
+    "pageCount": 3,
+    "allPagesHttp200": true,
+    "primarySourcesMatch": true,
+    "publicGeneratedJsonMatches": true,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669
+  },
+  "status": "completed_public_verified_region_integrated"
+}
