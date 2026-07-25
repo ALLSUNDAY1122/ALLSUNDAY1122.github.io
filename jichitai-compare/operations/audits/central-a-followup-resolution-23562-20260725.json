@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-25T10:57:00+09:00",
+  "trackingIssueNumber": 3141,
+  "municipalityCode": "23562",
+  "municipalityName": "東栄町",
+  "service": "schoolMeals",
+  "result": "resolved_with_data_enrichment",
+  "previousPublishedValue": "就学援助制度のみを掲載し、一般世帯の現行給食費は推測しない",
+  "confirmed": {
+    "fiscalYear": "令和8年度",
+    "elementary": "給食費負担軽減交付金により全額補助",
+    "middle": "町負担による半額補助から交付金活用による全額補助へ拡大",
+    "middleUnitPrice": "1食330円",
+    "middleBudget": "3,926,000円",
+    "parentBurden": "0円"
+  },
+  "officialSources": [
+    {
+      "url": "https://www.town.toei.aichi.jp/secure/7724/r8yosanmanga.pdf",
+      "checkedAt": "2026-07-25",
+      "role": "令和8年度当初予算主要事業・中学校給食費減免事業"
+    },
+    {
+      "url": "https://www.town.toei.aichi.jp/5696.htm",
+      "checkedAt": "2026-07-25",
+      "role": "令和8年度予算資料掲載ページ"
+    }
+  ],
+  "evidenceNote": "公式PDFの画面取得はキャッシュエラーとなったが、PDF本文解析で金額・補助範囲・財源内訳を確認した。",
+  "issueProgress": {
+    "beforeItemCount": 22,
+    "resolvedItemCount": 1,
+    "remainingItemCount": 21
+  },
+  "changedFiles": [
+    "data/municipalities/23/23562.json",
+    "operations/tasks/23562.json"
+  ],
+  "regionalPullRequestNumber": 3211,
+  "regionalCiRunNumber": 7831,
+  "publicationBlocker": false,
+  "status": "national_generation_success_pending_standard_ci",
+  "nationalSync": {
+    "generation": "success",
+    "validation": "success",
+    "registeredMunicipalities": 1741,
+    "totalServices": 15669,
+    "completedServices": 15669,
+    "needsMediumReviewServices": 0
+  }
+}
