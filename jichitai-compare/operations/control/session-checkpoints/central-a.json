@@ -16,15 +16,15 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-25T11:54:00+09:00",
+  "updatedAt": "2026-07-25T13:07:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3256,
+  "pullRequestNumber": 3355,
   "ciStatus": "success",
-  "ciRunNumber": 7952,
+  "ciRunNumber": 8180,
   "completedSinceSplit": [
     {
       "code": "21604",
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3143,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "原因別重点再監査を継続する。Issue #3141の現行21項目は利用者向け公式情報が揃うまで変更せず、次は弱い主出典の残42候補を公式利用者向けページで判定する。",
+  "nextAction": "原因別重点再監査を継続する。Issue #3141の21項目は変更せず、弱い主出典の残36候補から病児保育・産後ケア・住宅支援を利用者向け公式ページで判定する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T11:54:00+09:00",
-    "latestRegionalPullRequestNumber": 3256,
-    "latestCiRunNumber": 7952,
+    "latestCompletedAt": "2026-07-25T13:07:00+09:00",
+    "latestRegionalPullRequestNumber": 3355,
+    "latestCiRunNumber": 8180,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 54,
-    "primarySourceSlotsRechecked": 486,
+    "correctedMunicipalitiesRechecked": 60,
+    "primarySourceSlotsRechecked": 492,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -225,6 +225,42 @@
         "code": "21505",
         "service": "schoolMeals",
         "name": "八百津町"
+      },
+      {
+        "type": "budget_only_assertion_qualified",
+        "code": "16205",
+        "service": "schoolMeals",
+        "name": "氷見市"
+      },
+      {
+        "type": "regulation_only_assertion_qualified",
+        "code": "17407",
+        "service": "schoolMeals",
+        "name": "中能登町"
+      },
+      {
+        "type": "dual_evidence_no_content_change",
+        "code": "21501",
+        "service": "schoolMeals",
+        "name": "坂祝町"
+      },
+      {
+        "type": "dual_evidence_no_content_change",
+        "code": "22214",
+        "service": "schoolMeals",
+        "name": "藤枝市"
+      },
+      {
+        "type": "primary_source_upgrade",
+        "code": "22306",
+        "service": "schoolMeals",
+        "name": "西伊豆町"
+      },
+      {
+        "type": "primary_source_upgrade",
+        "code": "22344",
+        "service": "schoolMeals",
+        "name": "小山町"
       }
     ],
     "issue3141UnresolvedItemCount": 21,
@@ -317,7 +353,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T11:54:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 42,
+      "weakPrimarySource": 36,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 149,
       "fiscalYearRisk": 33,
