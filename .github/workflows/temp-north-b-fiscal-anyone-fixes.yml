@@ -45,9 +45,11 @@ jobs:
             const taskPath = path.join(root, 'operations', 'tasks', `${code}.json`);
             const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
             const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
-            task.officialSources = Object.values(municipality.services || {})
-              .map((service) => service?.source?.url)
-              .filter(Boolean);
+            task.officialSources = [...new Set(
+              Object.values(municipality.services || {})
+                .map((service) => service?.source?.url)
+                .filter(Boolean)
+            )];
             fs.writeFileSync(taskPath, `${JSON.stringify(task, null, 2)}\n`);
             console.log(`normalized primary sources: ${code}`);
           }
