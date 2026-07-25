@@ -1,137 +1,72 @@
 {
-  "schemaVersion": "1.0.0",
-  "code": "07362",
-  "prefectureCode": "07",
-  "prefecture": "福島県",
-  "name": "下郷町",
-  "officialUrl": "https://www.town.shimogo.fukushima.jp/",
-  "status": "verified",
-  "summary": "北日本調査班Aが対象9制度を下郷町公式情報で調査し、6制度をverified、病児・病後児保育、保育料、一時保育をunavailableとして整理。",
-  "updatedAt": "2026-07-24",
-  "services": {
-    "childMedical": {
-      "status": "verified",
-      "summary": "0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
-      "details": {
-        "program": "子ども医療費助成制度",
-        "target": "下郷町に住所がある0歳から18歳年度末までの子ども",
-        "support": "各種医療保険適用による自己負担分。付加給付等を除く",
-        "payment": "受給者証等の提示による現物給付。対象外医療機関等では申請による償還払い",
-        "mealCost": "国民健康保険加入者の入院時食事療養費は窓口支払い後に申請可能",
-        "application": "社会保険等加入者は事前に受給資格登録が必要"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/choumin/1/2/176.html", "checkedAt": "2026-07-24"}
+  "schemaVersion":"1.0.0",
+  "code":"07362",
+  "prefectureCode":"07",
+  "prefecture":"福島県",
+  "name":"下郷町",
+  "officialUrl":"https://www.town.shimogo.fukushima.jp/",
+  "status":"verified",
+  "summary":"対象9制度を下郷町公式情報で再監査し、6制度を公式情報で確認済み。病児・病後児保育、保育料、一時保育は公式情報で詳細未確認。",
+  "updatedAt":"2026-07-25",
+  "services":{
+    "childMedical":{
+      "status":"verified",
+      "summary":"0歳から18歳到達後最初の3月31日まで、保険診療の自己負担分を助成する。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":18},
+      "details":{"program":"子ども医療費助成制度","target":"下郷町に住所がある0歳から18歳年度末までの子ども","support":"各種医療保険適用による自己負担分。付加給付等を除く","payment":"受給者証等の提示による現物給付。対象外医療機関等では申請による償還払い","mealCost":"国民健康保険加入者の入院時食事療養費は窓口支払い後に申請可能","application":"社会保険等加入者は事前に受給資格登録が必要"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/choumin/1/2/176.html","checkedAt":"2026-07-24"}
     },
-    "sickChildCare": {
-      "status": "unavailable",
-      "summary": "町公式の現行子育て・保育所案内で、病児・病後児保育の利用施設、対象年齢、料金、予約方法を確認できない。",
-      "details": {
-        "researchResult": "町公式の子育て・保育所メニュー、保育所案内、児童福祉案内を確認したが、現行の病児・病後児保育利用案内を確認できなかった",
-        "availableAlternatives": "町立保育所の一時保育と地域子育て支援センターは案内されている",
-        "caution": "広域利用を含む利用可否は健康福祉課福祉係へ確認が必要"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/childcare/kosodate/index.html", "checkedAt": "2026-07-24"}
+    "sickChildCare":{
+      "status":"unavailable",
+      "summary":"町公式の現行子育て・保育所案内で、病児・病後児保育の利用施設、対象年齢、料金、予約方法を確認できない。",
+      "details":{"researchResult":"町公式の子育て・保育所メニュー、保育所案内、児童福祉案内を確認したが、現行の病児・病後児保育利用案内を確認できなかった","availableAlternatives":"町立保育所の一時保育と地域子育て支援センターは案内されている","caution":"広域利用を含む利用可否は健康福祉課福祉係へ確認が必要"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/childcare/kosodate/index.html","checkedAt":"2026-07-24"}
     },
-    "childcareFee": {
-      "status": "unavailable",
-      "summary": "令和8年度の保育所入所案内と町立2保育所の運営は確認できるが、年齢・所得階層別の現行保育料と町独自軽減内容を公式HTMLで確定できない。",
-      "details": {
-        "facilities": "しもごう保育所、湯野上保育所",
-        "admission": "令和8年度入所案内を公開し、保育認定を受けた児童の申込みを受付",
-        "researchResult": "令和8年度の0～2歳児保育料表、3～5歳児無償化の適用範囲、給食費・実費負担を公式HTMLで一括確認できなかった",
-        "caution": "世帯ごとの現行負担額は健康福祉課福祉係へ確認が必要"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/4/1/156.html", "checkedAt": "2026-07-24"},
-      "additionalSources": [{"url": "https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/4/1/151.html", "checkedAt": "2026-07-24"}]
+    "childcareFee":{
+      "status":"unavailable",
+      "summary":"令和8年度の保育所入所案内と町立2保育所の運営は確認できるが、年齢・所得階層別の現行保育料と町独自軽減内容を公式HTMLで確定できない。",
+      "details":{"facilities":"しもごう保育所、湯野上保育所","admission":"令和8年度入所案内を公開し、保育認定を受けた児童の申込みを受付","researchResult":"令和8年度の0～2歳児保育料表、3～5歳児無償化の適用範囲、給食費・実費負担を公式HTMLで一括確認できなかった","caution":"世帯ごとの現行負担額は健康福祉課福祉係へ確認が必要"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/4/1/156.html","checkedAt":"2026-07-24"},
+      "additionalSources":[{"url":"https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/4/1/151.html","checkedAt":"2026-07-24"}]
     },
-    "schoolMeals": {
-      "status": "verified",
-      "summary": "町内に住所があり町立小中学校に在籍する児童生徒の学校給食費を全額補助する。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "program": "学校給食費補助",
-        "target": "下郷町内に住所があり、町立小学校または中学校に在籍する児童生徒の保護者",
-        "support": "保護者負担額の全額",
-        "excluded": "児童生徒が町内に住所を有しない場合は対象外",
-        "purpose": "保護者の経済的負担軽減と安定した学校給食の供給"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/kyouiku/2/852.html", "checkedAt": "2026-07-24"}
+    "schoolMeals":{
+      "status":"verified",
+      "summary":"町内に住所があり町立小中学校に在籍する児童生徒の学校給食費を全額補助する。",
+      "eligibility":{"minAgeMonths":72,"maxAgeYears":15},
+      "details":{"program":"学校給食費補助","target":"下郷町内に住所があり、町立小学校または中学校に在籍する児童生徒の保護者","support":"保護者負担額の全額","excluded":"児童生徒が町内に住所を有しない場合は対象外","purpose":"保護者の経済的負担軽減と安定した学校給食の供給"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/kyouiku/2/852.html","checkedAt":"2026-07-25"}
     },
-    "postpartumCare": {
-      "status": "verified",
-      "summary": "町内在住の産後1年未満の母子を対象に、県内助産所で宿泊・日帰り型の産後ケアを実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
-      "details": {
-        "program": "産後ケア事業",
-        "target": "下郷町内に住所を有する産後1年未満の母子",
-        "types": "宿泊ケア、日帰りケア",
-        "services": "母乳相談、沐浴指導、母親と乳児の体調管理等",
-        "providers": "県内の委託助産所",
-        "application": "利用前に町での手続きが必要",
-        "fee": "利用期間・施設・類型により異なるため現行利用案内で確認"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/3/189.html", "checkedAt": "2026-07-24"}
+    "postpartumCare":{
+      "status":"verified",
+      "summary":"町内在住の産後1年未満の母子を対象に、宿泊・日帰り・訪問型の産後ケアを実施する。",
+      "eligibility":{"minAgeMonths":0,"maxAgeYears":1},
+      "details":{"program":"産後ケア事業","target":"下郷町内に住所を有する産後1年未満の母子","types":"宿泊ケア、日帰りケア、訪問ケア","services":"母乳相談、沐浴指導、母親と乳児の体調管理等","providers":"宿泊・日帰りは県内の委託助産所、訪問は助産師が対応","application":"利用前に町での手続きが必要","fee":"利用期間・施設・類型により異なるため現行利用案内で確認"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/3/189.html","checkedAt":"2026-07-25"}
     },
-    "temporaryChildcare": {
-      "status": "unavailable",
-      "summary": "町立保育所で一時保育を実施し料金も公開しているが、現行案内本文では対象年齢の上限、利用理由、利用日数等を十分に確定できない。",
-      "details": {
-        "program": "一時保育",
-        "facility": "しもごう保育所、湯野上保育所",
-        "purpose": "一時的に育児が困難となった場合の預かり",
-        "fee": "3歳未満は日額2,000円、3歳以上は日額1,800円。半日利用は各日額の半額",
-        "application": "事前登録後、利用申込書を提出",
-        "researchResult": "対象年齢の上限、利用可能日数、定員、就労要件等を公式HTMLで確定できなかった",
-        "caution": "利用条件は健康福祉課または各保育所へ確認が必要"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/4/1/137.html", "checkedAt": "2026-07-24"}
+    "temporaryChildcare":{
+      "status":"unavailable",
+      "summary":"町立保育所で一時保育を実施し料金も公開しているが、現行案内本文では対象年齢の上限、利用理由、利用日数等を十分に確定できない。",
+      "details":{"program":"一時保育","facility":"しもごう保育所、湯野上保育所","purpose":"一時的に育児が困難となった場合の預かり","fee":"3歳未満は日額2,000円、3歳以上は日額1,800円。半日利用は各日額の半額","application":"事前登録後、利用申込書を提出","researchResult":"対象年齢の上限、利用可能日数、定員、就労要件等を公式HTMLで確定できなかった","caution":"利用条件は健康福祉課または各保育所へ確認が必要"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/kenkoufukushi/4/1/137.html","checkedAt":"2026-07-24"}
     },
-    "housingSupport": {
-      "status": "verified",
-      "summary": "町外から転入して新築住宅または登録空き家を取得する移住者に、基本50万円と年齢・世帯・子育て等の加算を交付する。",
-      "details": {
-        "program": "令和8年度 下郷町住宅取得支援事業補助金",
-        "target": "町外から転入し、新築住宅または下郷町空き家バンク登録物件を取得して3年以上定住する等の要件を満たす方",
-        "eligibleCost": "住宅取得費。土地取得費、外構工事費等は対象外",
-        "base": "50万円",
-        "ageAddition": "申請者または配偶者が40歳未満の場合10万円",
-        "householdAddition": "子ども以外の同一世帯員がいる場合10万円",
-        "childAddition": "子ども1人につき20万円、上限60万円",
-        "localBuilderAddition": "町内建設事業者による施工の場合10万円",
-        "prefectureAddition": "県外転入者等で県要件を満たし予算が確保される場合、県上乗せ加算あり",
-        "application": "住宅契約日から1年以内に窓口へ申請。予定件数1件程度で予算到達時終了"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/sougouseisaku/kikakuseisaku/5/1317.html", "checkedAt": "2026-07-24"}
+    "housingSupport":{
+      "status":"verified",
+      "summary":"町外から転入して新築住宅または登録空き家を取得する移住者に、基本50万円と年齢・世帯・子育て等の加算を交付する。",
+      "details":{"program":"令和8年度 下郷町住宅取得支援事業補助金","target":"町外から転入し、新築住宅または下郷町空き家バンク登録物件を取得して3年以上定住する等の要件を満たす方","eligibleCost":"住宅取得費。土地取得費、外構工事費等は対象外","base":"50万円","ageAddition":"申請者または配偶者が40歳未満の場合10万円","householdAddition":"子ども以外の同一世帯員がいる場合10万円","childAddition":"子ども1人につき20万円、上限60万円","localBuilderAddition":"町内建設事業者による施工の場合10万円","prefectureAddition":"県外転入者等で県要件を満たし予算が確保される場合、県上乗せ加算あり","application":"住宅契約日から1年以内に窓口へ申請。予定件数1件程度で予算到達時終了"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/sougouseisaku/kikakuseisaku/5/1317.html","checkedAt":"2026-07-25"}
     },
-    "bulkyWaste": {
-      "status": "verified",
-      "summary": "令和8年度も地区ごとに粗大ごみ収集を実施し、指定袋に入らない家具・家電等を地区別案内に従って排出する。",
-      "details": {
-        "program": "地区別粗大ごみ収集",
-        "definition": "指定袋に入らない大型の家具・家電・寝具等。品目はごみ分別辞典で確認",
-        "schedule": "令和8年度の地区別回覧とごみ収集カレンダーで収集日・排出場所を案内",
-        "preparation": "地区別案内に従い氏名表示や指定場所への搬出等を行う",
-        "excluded": "家電リサイクル対象品、フロン使用機器、スプリング入り家具、農業用品、車用品等は収集対象外となる場合がある",
-        "contact": "町民課生活安全係または東部クリーンセンターへ確認"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/soumu/4/2/2044.html", "checkedAt": "2026-07-24"},
-      "additionalSources": [
-        {"url": "https://www.town.shimogo.fukushima.jp/organization/choumin/3/1/129.html", "checkedAt": "2026-07-24"},
-        {"url": "https://www.town.shimogo.fukushima.jp/material/files/group/4/bunbetu.pdf", "checkedAt": "2026-07-24"}
-      ]
+    "bulkyWaste":{
+      "status":"verified",
+      "summary":"令和8年度も地区ごとに粗大ごみ収集を実施し、指定袋に入らない家具・家電等を地区別案内に従って排出する。",
+      "details":{"program":"地区別粗大ごみ収集","definition":"指定袋に入らない大型の家具・家電・寝具等。品目はごみ分別辞典で確認","schedule":"令和8年度の地区別回覧とごみ収集カレンダーで収集日・排出場所を案内","preparation":"地区別案内に従い氏名表示や指定場所への搬出等を行う","excluded":"家電リサイクル対象品、フロン使用機器、スプリング入り家具、農業用品、車用品等は収集対象外となる場合がある","contact":"町民課生活安全係または東部クリーンセンターへ確認"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/soumu/4/2/2044.html","checkedAt":"2026-07-24"},
+      "additionalSources":[{"url":"https://www.town.shimogo.fukushima.jp/organization/choumin/3/1/129.html","checkedAt":"2026-07-24"},{"url":"https://www.town.shimogo.fukushima.jp/material/files/group/4/bunbetu.pdf","checkedAt":"2026-07-24"}]
     },
-    "disasterPrevention": {
-      "status": "verified",
-      "summary": "土砂災害の危険区域、避難所、避難行動等を掲載した下郷町防災マップを公開する。",
-      "details": {
-        "map": "下郷町防災マップ",
-        "coverage": "がけ崩れ、土石流等の土砂災害危険区域、避難所、避難行動ガイド、防災情報",
-        "districtMaps": "地区ごとに危険区域・避難場所を確認可能",
-        "revision": "大内地区の土砂災害警戒区域の一部を令和6年9月に修正",
-        "guidance": "家庭で常備し、危険箇所と避難経路を平時に確認"
-      },
-      "source": {"url": "https://www.town.shimogo.fukushima.jp/organization/choumin/3/3/518.html", "checkedAt": "2026-07-24"}
+    "disasterPrevention":{
+      "status":"verified",
+      "summary":"土砂災害の危険区域、避難所、避難行動等を掲載した下郷町防災マップを公開する。",
+      "details":{"map":"下郷町防災マップ","coverage":"がけ崩れ、土石流等の土砂災害危険区域、避難所、避難行動ガイド、防災情報","districtMaps":"地区ごとに危険区域・避難場所を確認可能","revision":"大内地区の土砂災害警戒区域の一部を令和6年9月に修正","guidance":"家庭で常備し、危険箇所と避難経路を平時に確認"},
+      "source":{"url":"https://www.town.shimogo.fukushima.jp/organization/choumin/3/3/518.html","checkedAt":"2026-07-24"}
     }
   }
 }
