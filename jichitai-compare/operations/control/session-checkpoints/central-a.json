@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-25T17:42:00+09:00",
+  "updatedAt": "2026-07-25T22:17:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3649,
+  "pullRequestNumber": 3688,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3651,
+  "stateSyncPullRequestNumber": 3688,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残124件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
+  "nextAction": "一般住宅・移住制度の分類候補残119件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T17:42:00+09:00",
-    "latestRegionalPullRequestNumber": 3649,
+    "latestCompletedAt": "2026-07-25T22:17:00+09:00",
+    "latestRegionalPullRequestNumber": 3688,
     "latestCiRunNumber": 8897,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 104,
-    "primarySourceSlotsRechecked": 536,
+    "correctedMunicipalitiesRechecked": 109,
+    "primarySourceSlotsRechecked": 541,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -429,6 +429,36 @@
         "code": "23445",
         "service": "housingSupport",
         "name": "南知多町"
+      },
+      {
+        "type": "general_migration_misclassification",
+        "code": "21421",
+        "service": "housingSupport",
+        "name": "北方町"
+      },
+      {
+        "type": "general_migration_misclassification",
+        "code": "23204",
+        "service": "housingSupport",
+        "name": "瀬戸市"
+      },
+      {
+        "type": "child_addition_clarification",
+        "code": "24202",
+        "service": "housingSupport",
+        "name": "四日市市"
+      },
+      {
+        "type": "newlywed_housing_replacement",
+        "code": "24212",
+        "service": "housingSupport",
+        "name": "熊野市"
+      },
+      {
+        "type": "child_exception_and_addition_clarification",
+        "code": "21504",
+        "service": "housingSupport",
+        "name": "七宗町"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -515,7 +545,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 124,
+      "generalHousingMisclassification": 119,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -537,10 +567,10 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残124件",
+      "一般住宅・移住制度の分類候補残119件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ]
   },
-  "lastAction": "原因別重点再監査の住宅支援分類第10群をPR #3649・CI #8897成功後にregion/centralへ統合。稲美町・小松市・下呂市・浜松市の家族対象条件を明確化し、南知多町は一般空き家制度のみのためunavailableへ修正した。"
+  "lastAction": "原因別重点再監査の住宅支援分類第11群として、北方町・瀬戸市の一般移住制度をunavailableへ修正し、四日市市・熊野市・七宗町の子ども加算・新婚・子ども要件を現行公式情報で明確化した。"
 }
