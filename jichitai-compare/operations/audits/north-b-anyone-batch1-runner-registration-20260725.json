@@ -1,21 +1,35 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.0.1",
   "auditId": "north-b-anyone-batch1-runner-registration-20260725",
   "sessionId": "coordinator-a",
   "issueNumber": 3398,
   "targetBranch": "audit/north-b-anyone-low-priority-batch1-20260725",
   "workflow": ".github/workflows/temporary-north-b-anyone-batch1.yml",
-  "scope": {
-    "reviewedCandidates": 9,
-    "confirmedCorrectionMunicipalities": ["01607", "01609", "04444", "05204", "05434"],
-    "noChangeMunicipalities": ["04212", "05361", "06324", "06364"]
+  "status": "superseded_by_completed_parallel_flow",
+  "reason": "同じ複数条件欠落9候補が先行処理され、8自治体の確定補正と1自治体の現状維持がmain・region/north・公開ページまで完了していたため、重複runnerを使用しない。",
+  "completedFlow": {
+    "mainPullRequest": 3446,
+    "mainMergeCommit": "7ee78479a163665bb3675a581ef88d1864fbeef8",
+    "regionPullRequest": 3452,
+    "regionMergeCommit": "97be45b19b12fec806155d4c731c70e86d78cf17",
+    "publicVerificationPullRequest": 3459,
+    "publicVerificationMergeCommit": "1aa7abeccb0ac436c25563cfcbeeaa234094a12d",
+    "regionRecordPullRequest": 3467,
+    "regionRecordMergeCommit": "87a2df36c3cebc44d933825d340f56229aa162de"
+  },
+  "duplicateFlow": {
+    "runnerRegistrationPullRequest": 3462,
+    "diagnosticUpdatePullRequest": 3474,
+    "targetPullRequest": 3468,
+    "targetPullRequestMerged": false,
+    "sourceChangesCommitted": false
   },
   "safety": {
     "statusChanges": 0,
-    "generatedFilesCommitted": false,
-    "sourceAndTaskOnly": true,
-    "removeRunnerAfterMerge": true
+    "duplicateDataMerged": false,
+    "workflowRemoved": true,
+    "publicationBlocking": false
   },
   "createdAt": "2026-07-25T14:40:00+09:00",
-  "status": "runner_registration"
+  "resolvedAt": "2026-07-25T14:49:00+09:00"
 }
