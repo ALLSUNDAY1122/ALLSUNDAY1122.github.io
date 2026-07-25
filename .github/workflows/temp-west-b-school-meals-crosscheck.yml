@@ -1,0 +1,144 @@
+name: Temporary West B School Meals Crosscheck
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-school-meals-crosscheck-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    if: github.head_ref == 'audit/west-b-school-meals-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-school-meals-crosscheck-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Scan West B school meal records
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const base = 'jichitai-compare';
+          const prefectures = ['31','32','34','35','36','38','41','42','44','45','47'];
+          const records = [];
+          const candidates = [];
+          const flatten = (value) => {
+            if (value == null) return '';
+            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+            if (Array.isArray(value)) return value.map(flatten).join(' ');
+            return Object.values(value).map(flatten).join(' ');
+          };
+          const urls = (service) => [service?.source?.url, ...(service?.additionalSources ?? []).map((x) => x?.url)].filter(Boolean);
+          const officialHost = (url) => /(?:\.lg\.jp|\.go\.jp|pref\.|city\.|town\.|vill\.|village\.|city\-|town\-|village\-|municipality|k12|edu\.)/i.test(url);
+          const oldYearUrl = (url) => /(?:202[0-5]|r0?[1-7]|reiwa[-_]?0?[1-7]|令和[1-7])/i.test(decodeURIComponent(url));
+          const genericPath = (url) => {
+            try {
+              const u = new URL(url);
+              return /^\/?(?:index(?:\.html?)?|category|list|search|kurashi|kosodate|kyoiku|education)?\/?$/i.test(u.pathname);
+            } catch { return true; }
+          };
+
+          for (const pref of prefectures) {
+            const dir = path.join(base, 'data/municipalities', pref);
+            for (const filename of fs.readdirSync(dir).filter((x) => x.endsWith('.json')).sort()) {
+              const municipality = JSON.parse(fs.readFileSync(path.join(dir, filename), 'utf8'));
+              const service = municipality.services?.schoolMeals;
+              if (!service) continue;
+              const text = flatten(service);
+              const summary = service.summary ?? '';
+              const serviceUrls = urls(service);
+              const reasons = [];
+              const limitedTerms = /(就学援助|要保護|準要保護|特別支援|非課税|低所得|第[二2三3]子|多子世帯|生活保護)/;
+              const broadTerms = /(全児童|全員|一律|全世帯|所得制限なし|完全無償|給食費無償化|給食費を無償|無償で提供)/;
+              const benefitTerms = /(無償|無料|全額助成|全額補助|給食費.*(?:助成|補助|免除))/;
+              const currentYearTerms = /(2026年度|2026年|令和8年度|令和8年|R8年度|R8年)/i;
+
+              if (service.status === 'verified' && benefitTerms.test(summary) && limitedTerms.test(text) && !broadTerms.test(text)) {
+                reasons.push('general_free_claim_may_rely_on_limited_support');
+              }
+              if (service.status === 'verified' && !currentYearTerms.test(text) && benefitTerms.test(text)) {
+                reasons.push('verified_benefit_without_explicit_2026_basis');
+              }
+              if (service.status === 'verified' && serviceUrls.some(oldYearUrl)) {
+                reasons.push('verified_source_url_appears_pre_2026');
+              }
+              if (service.status === 'unavailable' && benefitTerms.test(text)) {
+                reasons.push('unavailable_record_contains_benefit_language');
+              }
+              if (service.status === 'unavailable' && serviceUrls.some((url) => /(給食|school.?meal|kyushoku)/i.test(decodeURIComponent(url)))) {
+                reasons.push('unavailable_has_direct_school_meal_source');
+              }
+              if (serviceUrls.length === 0) reasons.push('missing_source_url');
+              if (serviceUrls.some((url) => !officialHost(url))) reasons.push('source_host_requires_officiality_review');
+              if (serviceUrls.some(genericPath)) reasons.push('primary_or_additional_source_is_generic');
+
+              const record = {
+                code: municipality.code,
+                prefectureCode: municipality.prefectureCode,
+                prefecture: municipality.prefecture,
+                name: municipality.name,
+                status: service.status,
+                summary,
+                eligibility: service.eligibility ?? null,
+                details: service.details ?? null,
+                notes: service.notes ?? null,
+                source: service.source ?? null,
+                additionalSources: service.additionalSources ?? null,
+                reasons
+              };
+              records.push(record);
+              if (reasons.length) candidates.push(record);
+            }
+          }
+
+          const statusCounts = records.reduce((acc, x) => ((acc[x.status] = (acc[x.status] ?? 0) + 1), acc), {});
+          const reasonCounts = candidates.flatMap((x) => x.reasons).reduce((acc, x) => ((acc[x] = (acc[x] ?? 0) + 1), acc), {});
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'west-b-school-meals-crosscheck-20260725',
+            sessionId: 'west-b',
+            generatedAt: new Date().toISOString(),
+            scope: {
+              prefectureCodes: prefectures,
+              municipalityCount: records.length,
+              serviceId: 'schoolMeals',
+              statusCounts
+            },
+            candidateCount: candidates.length,
+            reasonCounts,
+            candidates,
+            result: {
+              status: 'mechanical_scan_completed_pending_manual_official_review',
+              confirmedCorrectionCount: null,
+              unresolvedConfirmedErrorCount: null
+            }
+          };
+          const out = path.join(base, 'operations/audits/west-b-school-meals-crosscheck-20260725.json');
+          fs.mkdirSync(path.dirname(out), { recursive: true });
+          fs.writeFileSync(out, JSON.stringify(audit, null, 2) + '\n');
+          console.log(JSON.stringify({ municipalityCount: records.length, candidateCount: candidates.length, statusCounts, reasonCounts }, null, 2));
+          NODE
+      - name: Commit audit candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/west-b-school-meals-crosscheck-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/west-b-school-meals-crosscheck-20260725.json jichitai-compare/operations/control/west-b-school-meals-crosscheck-trigger-20260725.json
+          git commit -m 'audit: 西日本B学校給食費の横断候補を抽出'
+          git push origin HEAD:audit/west-b-school-meals-crosscheck-20260725
