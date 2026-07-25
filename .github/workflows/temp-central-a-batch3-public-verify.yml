@@ -1,0 +1,52 @@
+name: Temporary Central A Batch 3 Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-a-batch3-public-verify-trigger-20260725.json
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-batch3-public-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify Toin published page and generated JSON
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const pageUrl = `${base}/municipality/24324/`;
+          const jsonUrl = `${base}/data/generated/municipalities.json`;
+          const expectedPage = [
+            '東員町',
+            '産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。'
+          ];
+          const expectedJson = [
+            '"code":"24324"',
+            '産後1年未満の母子へ、短期入所・通所・居宅訪問型の産後ケアを提供する。',
+            '1泊2日6,000円',
+            '3種を組み合わせて7日まで'
+          ];
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          let last = null;
+          for (let attempt = 1; attempt <= 24; attempt += 1) {
+            const pageResponse = await fetch(pageUrl, { redirect: 'follow', signal: AbortSignal.timeout(20000), headers: { 'user-agent': 'CentralABatch3PublicVerification/1.0' } });
+            const pageText = await pageResponse.text();
+            const jsonResponse = await fetch(jsonUrl, { redirect: 'follow', signal: AbortSignal.timeout(30000), headers: { 'user-agent': 'CentralABatch3PublicVerification/1.0' } });
+            const jsonText = await jsonResponse.text();
+            const pageMissing = expectedPage.filter((value) => !pageText.includes(value));
+            const normalizedExpectedJson = expectedJson.map((value) => value === '"code":"24324"' ? (jsonText.includes('"code":"24324"') || jsonText.includes('"code": "24324"')) : jsonText.includes(value));
+            const ok = pageResponse.ok && jsonResponse.ok && pageMissing.length === 0 && normalizedExpectedJson.every(Boolean);
+            last = { attempt, pageStatus: pageResponse.status, jsonStatus: jsonResponse.status, pageMissing, jsonChecks: normalizedExpectedJson, ok };
+            if (ok) {
+              console.log(JSON.stringify({ passed: true, checkedAt: new Date().toISOString(), result: last }, null, 2));
+              process.exit(0);
+            }
+            await sleep(10000);
+          }
+          console.log(JSON.stringify({ passed: false, checkedAt: new Date().toISOString(), result: last }, null, 2));
+          process.exit(1);
+          NODE
