@@ -1,1 +1,54 @@
-{"schemaVersion":"1.0.0","municipalityCode":"01604","municipalityName":"新冠町","prefectureCode":"01","prefectureName":"北海道","assignedTeam":"北日本調査班","status":"merged","currentService":null,"nextServiceIndex":9,"completedServices":["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],"verifiedCount":8,"researchingCount":0,"unavailableCount":1,"needsMediumReviewCount":0,"currentBranch":null,"pullRequestNumber":2092,"lastCheckedAt":"2026-07-24","lastUpdatedAt":"2026-07-24T08:49:00+09:00","lastUpdatedBy":"北日本調査班B, 統括A","officialSources":["https://www.niikappu.jp/kurashi/kenko/kodomoiryo.html","https://www.niikappu.jp/life/kosodate.html","https://www.niikappu.jp/kurashi/kosodate/ninteikodomoen/hoikusho.html","https://www.niikappu.jp/kurashi/kyoiku/kyoiku/gakko/kyusyokuhi_muryouka.html","https://www.niikappu.jp/kurashi/kosodate/sangokea.html","https://www.niikappu.jp/kurashi/sekatsu/sumai/teijyu/lifestyle/seido.html","https://www.niikappu.jp/kurashi/sekatsu/gomi/gomifukuro.html","https://www.niikappu.jp/kurashi/bosai/index.html"],"notes":["新冠町の正式自治体コード01604を確認し、region/north上に既存task・オープンPRがないことを確認して着手。","必須9制度を町公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして登録。","令和8年4月から18歳年度末までの医療費全額助成、0歳から5歳児の保育料完全無償化を確認。","町立小中学校給食費の無料化、産後1年未満の産後ケア、一時預かりを確認。","住宅取得最大200万円と子育て世帯固定資産税支援、粗大ごみ処理券、防災ハザードマップを確認。","病児・病後児保育は令和8年度の実施施設、対象、料金、予約方法を公式情報で確認できず窓口確認事項として整理。","region/north進行のため最新基点へ再適用。","PR #2092をregion/north向けに作成。","CI全工程成功後、PR #2092をregion/northへ統合。"],"blockers":[]}
+{
+  "schemaVersion": "1.0.0",
+  "municipalityCode": "01604",
+  "municipalityName": "新冠町",
+  "prefectureCode": "01",
+  "prefectureName": "北海道",
+  "assignedTeam": "北日本調査班",
+  "status": "merged",
+  "currentService": null,
+  "nextServiceIndex": 9,
+  "completedServices": [
+    "childMedical",
+    "sickChildCare",
+    "childcareFee",
+    "schoolMeals",
+    "postpartumCare",
+    "temporaryChildcare",
+    "housingSupport",
+    "bulkyWaste",
+    "disasterPrevention"
+  ],
+  "verifiedCount": 8,
+  "researchingCount": 0,
+  "unavailableCount": 1,
+  "needsMediumReviewCount": 0,
+  "currentBranch": null,
+  "pullRequestNumber": 2092,
+  "lastCheckedAt": "2026-07-25",
+  "lastUpdatedAt": "2026-07-25T12:59:00+09:00",
+  "lastUpdatedBy": "北日本調査班B・品質改善第2監査",
+  "officialSources": [
+    "https://www.niikappu.jp/kurashi/kenko/kodomoiryo.html",
+    "https://www.niikappu.jp/life/kosodate.html",
+    "https://www.niikappu.jp/kurashi/kosodate/ninteikodomoen/hoikusho.html",
+    "https://www.niikappu.jp/kurashi/kyoiku/kyoiku/gakko/kyusyokuhi_muryouka.html",
+    "https://www.niikappu.jp/kurashi/kosodate/sangokea.html",
+    "https://www.niikappu.jp/kurashi/sekatsu/sumai/teijyu/lifestyle/seido.html",
+    "https://www.niikappu.jp/kurashi/sekatsu/gomi/gomifukuro.html",
+    "https://www.niikappu.jp/kurashi/bosai/index.html"
+  ],
+  "notes": [
+    "新冠町の正式自治体コード01604を確認し、region/north上に既存task・オープンPRがないことを確認して着手。",
+    "必須9制度を町公式情報で調査し、8制度をverified、病児・病後児保育をunavailableとして登録。",
+    "令和8年4月から18歳年度末までの医療費全額助成、0歳から5歳児の保育料完全無償化を確認。",
+    "町立小中学校給食費の無料化、産後1年未満の産後ケア、一時預かりを確認。",
+    "住宅取得最大200万円と子育て世帯固定資産税支援、粗大ごみ処理券、防災ハザードマップを確認。",
+    "病児・病後児保育は令和8年度の実施施設、対象、料金、予約方法を公式情報で確認できず窓口確認事項として整理。",
+    "region/north進行のため最新基点へ再適用。",
+    "PR #2092をregion/north向けに作成。",
+    "CI全工程成功後、PR #2092をregion/northへ統合。",
+    "2026-07-25追加監査：現行公式ページに誰でも通園の具体条件がないため、未確認の「別途実施」記載を削除。住宅支援は第5期（令和7～9年度）で令和8年度も有効と再確認。"
+  ],
+  "blockers": []
+}
