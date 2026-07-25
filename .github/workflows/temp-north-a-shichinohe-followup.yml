@@ -1,0 +1,200 @@
+name: Temporary North A Shichinohe Follow-up
+
+on:
+  pull_request:
+    branches:
+      - region/north
+    paths:
+      - jichitai-compare/operations/control/north-a-shichinohe-followup-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    if: github.head_ref == 'audit/north-a-shichinohe-followup-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Correct Shichinohe availability note and audit state
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          now = datetime.now(timezone(timedelta(hours=9))).replace(microsecond=0)
+          now_iso = now.isoformat()
+          today = now.date().isoformat()
+          with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as f:
+              event = json.load(f)
+          pr_number = event['pull_request']['number']
+
+          def load(path):
+              with open(path, encoding='utf-8') as f:
+                  return json.load(f)
+
+          def save(path, data):
+              path = Path(path)
+              path.parent.mkdir(parents=True, exist_ok=True)
+              with open(path, 'w', encoding='utf-8', newline='\n') as f:
+                  json.dump(data, f, ensure_ascii=False, indent=2)
+                  f.write('\n')
+
+          municipality_path = root / 'data/municipalities/02/02402.json'
+          municipality = load(municipality_path)
+          municipality['updatedAt'] = today
+          service = municipality['services']['temporaryChildcare']
+          service['summary'] = '町内6施設の一時預かりを実施。こども誰でも通園制度は3施設を予定しているが、町公式案内では準備中で現在は利用できない。'
+          service['details'] = {
+              'temporaryFacilities': '明照保育園、城南こども園、城北こども園、道ノ上こども園、榎林こども園、チビッコるーむ',
+              'temporaryApplication': '利用日、対象年齢、料金、予約方法は各施設へ直接確認',
+              'anyChildcare': '令和8年4月開始制度として案内しているが、2026年7月25日確認時点では準備中のため利用不可',
+              'anyTarget': '認定こども園や保育所等に在籍していない生後6か月から満3歳未満（3歳の誕生日の2日前まで）の乳幼児。保護者の就労要件なし',
+              'anyHours': '全施設合計で月10時間まで。未利用分の翌月繰越不可',
+              'anyFacilities': '城南こども園、城北こども園、道ノ上こども園',
+              'anyFee': '施設が設定した利用料。給食・おやつ等の実費負担が生じる場合あり',
+              'anyAvailability': '準備中のため、まだ利用することができない',
+              'anyApplication': '利用開始後は総合支援システムで利用認定申請、事前面談、利用予約を行う'
+          }
+          service['source'] = {
+              'url': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/post-246.html',
+              'checkedAt': today
+          }
+          service['additionalSources'] = [
+              {
+                  'url': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/post-562.html',
+                  'checkedAt': today
+              },
+              {
+                  'url': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/index.html',
+                  'checkedAt': today
+              },
+              {
+                  'url': 'https://www.town.shichinohe.lg.jp/kouhou/reiki/reiki_int/reiki_honbun/r111RG00000816.html',
+                  'checkedAt': today
+              }
+          ]
+          save(municipality_path, municipality)
+
+          task_path = root / 'operations/tasks/02402.json'
+          task = load(task_path)
+          task['lastCheckedAt'] = today
+          task['lastUpdatedAt'] = now_iso
+          task['lastUpdatedBy'] = '北日本調査班A'
+          task['officialSources'] = [
+              municipality['services'][name]['source']['url']
+              for name in task['completedServices']
+          ]
+          note = '品質改善第2監査の完了後再確認で、こども誰でも通園制度は3施設を予定しているが、町公式ページ上は準備中で現在利用不可と確認し、利用可能と誤認されないよう明記。'
+          if note not in task.setdefault('notes', []):
+              task['notes'].append(note)
+          save(task_path, task)
+
+          audit_path = root / 'operations/audits/north-a-quality-audit-2-20260725.json'
+          audit = load(audit_path)
+          finding = {
+              'type': 'availability_condition_omission',
+              'severity': 'medium',
+              'code': '02402',
+              'municipality': '七戸町',
+              'service': 'temporaryChildcare',
+              'before': '令和8年度こども誰でも通園制度の案内あり。利用不可の記載なし',
+              'after': '3実施予定施設、月10時間、準備中で現在利用不可を明記',
+              'cause': '制度案内ページの存在と対象条件を確認したが、「準備中のためまだ利用できない」という現行の利用可否条件を自治体JSONへ転記していなかった',
+              'officialBasis': '七戸町こども誰でも通園制度公式ページ（2026年4月1日更新）',
+              'officialUrl': 'https://www.town.shichinohe.lg.jp/kurashi/dekigoto/nyuuen/post-562.html',
+              'regionPullRequest': pr_number,
+              'correctionStatus': 'corrected_in_region_pending_merge'
+          }
+          findings = audit.setdefault('confirmedFindings', [])
+          if not any(x.get('type') == finding['type'] and x.get('code') == '02402' for x in findings):
+              findings.append(finding)
+          errors = audit.setdefault('crossMunicipalityChecks', {}).setdefault('additionalConfirmedErrors', [])
+          error_text = '02402 temporaryChildcare availability condition omission'
+          if error_text not in errors:
+              errors.append(error_text)
+          audit['crossMunicipalityChecks']['openErrors'] = 0
+          notes = audit.setdefault('samplingAudit', {}).setdefault('highRiskNotes', [])
+          notes = [
+              '七戸町のこども誰でも通園制度は3施設を予定しているが、公式ページ上で準備中・現在利用不可を再確認し、自治体JSONへ明記した'
+              if n.startswith('七戸町のこども誰でも通園制度') else n
+              for n in notes
+          ]
+          audit['samplingAudit']['highRiskNotes'] = notes
+          final = audit.setdefault('finalResult', {})
+          final['confirmedNewErrors'] = 3
+          final['correctedNewErrors'] = 3
+          final['openErrors'] = 0
+          final['unfixedErrors'] = 0
+          audit['postCompletionFollowup'] = {
+              'checkedAt': now_iso,
+              'code': '02402',
+              'municipality': '七戸町',
+              'service': 'temporaryChildcare',
+              'result': 'availability_note_corrected_in_region_pending_main',
+              'regionPullRequest': pr_number,
+              'officialPageStatus': '準備中のため、まだ利用することができない',
+              'mainPublication': 'pending'
+          }
+          audit['nextAction'] = '七戸町の利用可否注記をregion/northへ統合後、main・全国生成JSON・静的ページ・公開ページへ同期して再完了する。'
+          save(audit_path, audit)
+
+          checkpoint_path = root / 'operations/control/session-checkpoints/north-a.json'
+          checkpoint = load(checkpoint_path)
+          checkpoint['updatedAt'] = now_iso
+          checkpoint['status'] = 'in_progress'
+          checkpoint['workingBranch'] = event['pull_request']['head']['ref']
+          checkpoint['pullRequestNumber'] = pr_number
+          checkpoint['ciStatus'] = 'pending'
+          q = checkpoint.setdefault('qualitySecondAudit', {})
+          q['status'] = 'followup_in_progress'
+          q['confirmedNewErrors'] = 3
+          q['fixedNewErrors'] = 3
+          q['openErrors'] = 0
+          q['unfixedErrors'] = 0
+          q['publicationStatus'] = 'region_correction_pending_merge'
+          q['followupMunicipality'] = '02402'
+          checkpoint['nextAction'] = '七戸町のこども誰でも通園制度について、準備中・現在利用不可の注記をregion/northへ統合し、その後mainと公開ページへ同期する。'
+          save(checkpoint_path, checkpoint)
+          PY
+
+      - name: Regenerate and validate regional outputs
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove temporary trigger and runner
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/north-a-shichinohe-followup-trigger-20260725.json
+          rm -f .github/workflows/temp-north-a-shichinohe-followup.yml
+
+      - name: Commit corrected source and generated outputs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-a-shichinohe-followup.yml jichitai-compare
+          if git diff --cached --quiet; then
+            echo 'No correction changes.'
+            exit 0
+          fi
+          git commit -m 'fix: 七戸町誰でも通園の準備中・利用不可を明記'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
