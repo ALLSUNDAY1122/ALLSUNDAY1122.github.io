@@ -12,7 +12,7 @@
     "14",
     "15"
   ],
-  "updatedAt": "2026-07-25T03:49:00+09:00",
+  "updatedAt": "2026-07-25T11:27:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
@@ -281,5 +281,76 @@
     "syncPullRequestNumber": 3153,
     "syncedAt": "2026-07-25T05:12:00+09:00",
     "status": "success"
+  },
+  "secondQualityAudit": {
+    "status": "completed",
+    "issueNumber": 2908,
+    "startedAt": "2026-07-25T10:31:00+09:00",
+    "completedAt": "2026-07-25T11:27:00+09:00",
+    "auditPath": "jichitai-compare/operations/control/quality-audit-east-b-second-20260725.json",
+    "priorityMunicipalityCodes": [
+      "12203",
+      "14100",
+      "13123",
+      "15100",
+      "15586"
+    ],
+    "sampledMunicipalityCount": 20,
+    "correctedMunicipalityCount": 4,
+    "correctedFindingCount": 5,
+    "correctedMunicipalityCodes": [
+      "14100",
+      "15100",
+      "15218",
+      "15223"
+    ],
+    "regionalIntegration": {
+      "status": "merged",
+      "branch": "region/east",
+      "pullRequestNumber": 3208,
+      "ciRunNumber": 7850,
+      "mergeCommitSha": "e0debe4ef4f4a9f7638394128e0fd32541e3070f"
+    },
+    "nationalSync": {
+      "status": "merged",
+      "branch": "coord/sync-east-b-second-audit-20260725-v2",
+      "pullRequestNumber": 3227,
+      "ciRunNumber": 7880,
+      "mergeCommitSha": "6db1b6da1ac44f430a8243b232ed7c09f613c9af",
+      "generatedMunicipalityCount": 1741,
+      "generatedServiceCount": 15669,
+      "changedMunicipalityCodes": [
+        "14100",
+        "15100",
+        "15218",
+        "15223"
+      ]
+    },
+    "publicVerification": {
+      "status": "passed",
+      "checkedAt": "2026-07-25T11:27:00+09:00",
+      "pullRequestNumber": 3233,
+      "workflowRunId": 30140415633,
+      "workflowRunNumber": 1,
+      "verifiedMunicipalityCodes": [
+        "14100",
+        "15100",
+        "15218",
+        "15223"
+      ],
+      "verifiedPageCount": 4,
+      "checks": [
+        "公開生成JSONの全国1741自治体・15669制度維持",
+        "4自治体ページのHTTP 200",
+        "自治体名の表示",
+        "修正後の病児・病後児保育要約の表示",
+        "現行公式出典リンクの表示",
+        "横浜市産後ケアのショートステイ料金",
+        "阿賀野市の里帰り先訪問型産後ケア事前相談"
+      ]
+    },
+    "remainingUninvestigatedCount": 0,
+    "unresolvedConfirmedErrorCount": 0,
+    "nextAction": "新規の公式制度改定、リンク切れ、公開差分、または明示的な再割当が発生した場合のみ再開する。"
   }
 }

@@ -3,9 +3,9 @@
   "auditId": "east-b-quality-improvement-second-20260725",
   "sessionId": "east-b",
   "displayName": "東日本調査班B 品質改善第2監査",
-  "status": "ready_for_ci",
+  "status": "completed",
   "startedAt": "2026-07-25T10:31:00+09:00",
-  "updatedAt": "2026-07-25T10:42:00+09:00",
+  "updatedAt": "2026-07-25T11:27:00+09:00",
   "integrationBranch": "region/east",
   "workingBranch": "agent/east-b-second-audit-wide-area-20260725",
   "recovery": {
@@ -20,36 +20,135 @@
     "postCompletionMonitorMergeSha": "52da51cf207e6d9f066ff9ee6a7ff14db6c1f818"
   },
   "priorityMunicipalities": [
-    {"code": "12203", "name": "市川市"},
-    {"code": "14100", "name": "横浜市"},
-    {"code": "13123", "name": "江戸川区"},
-    {"code": "15100", "name": "新潟市"},
-    {"code": "15586", "name": "粟島浦村"}
+    {
+      "code": "12203",
+      "name": "市川市"
+    },
+    {
+      "code": "14100",
+      "name": "横浜市"
+    },
+    {
+      "code": "13123",
+      "name": "江戸川区"
+    },
+    {
+      "code": "15100",
+      "name": "新潟市"
+    },
+    {
+      "code": "15586",
+      "name": "粟島浦村"
+    }
   ],
   "sampleAudit": {
     "targetCount": 20,
     "checkedCount": 20,
     "municipalities": [
-      {"code": "12203", "name": "市川市", "result": "passed"},
-      {"code": "14100", "name": "横浜市", "result": "corrected"},
-      {"code": "13123", "name": "江戸川区", "result": "passed"},
-      {"code": "15100", "name": "新潟市", "result": "corrected"},
-      {"code": "15586", "name": "粟島浦村", "result": "passed_with_unconfirmed_local_terms"},
-      {"code": "15204", "name": "三条市", "result": "passed"},
-      {"code": "15206", "name": "新発田市", "result": "passed"},
-      {"code": "15209", "name": "加茂市", "result": "passed"},
-      {"code": "15213", "name": "燕市", "result": "passed"},
-      {"code": "15218", "name": "五泉市", "result": "corrected"},
-      {"code": "15223", "name": "阿賀野市", "result": "corrected"},
-      {"code": "15227", "name": "胎内市", "result": "passed"},
-      {"code": "15307", "name": "聖籠町", "result": "passed"},
-      {"code": "15342", "name": "弥彦村", "result": "passed"},
-      {"code": "15361", "name": "田上町", "result": "passed"},
-      {"code": "15385", "name": "阿賀町", "result": "passed"},
-      {"code": "08201", "name": "水戸市", "result": "passed", "focus": "2026年度粗大ごみ料金・分類"},
-      {"code": "09201", "name": "宇都宮市", "result": "passed", "focus": "2026年度学校給食費補助額・制度分類"},
-      {"code": "11100", "name": "さいたま市", "result": "passed", "focus": "2026年9月第2子保育料軽減拡大"},
-      {"code": "12100", "name": "千葉市", "result": "passed", "focus": "2026年度学校給食費・第3子以降無償化"}
+      {
+        "code": "12203",
+        "name": "市川市",
+        "result": "passed"
+      },
+      {
+        "code": "14100",
+        "name": "横浜市",
+        "result": "corrected"
+      },
+      {
+        "code": "13123",
+        "name": "江戸川区",
+        "result": "passed"
+      },
+      {
+        "code": "15100",
+        "name": "新潟市",
+        "result": "corrected"
+      },
+      {
+        "code": "15586",
+        "name": "粟島浦村",
+        "result": "passed_with_unconfirmed_local_terms"
+      },
+      {
+        "code": "15204",
+        "name": "三条市",
+        "result": "passed"
+      },
+      {
+        "code": "15206",
+        "name": "新発田市",
+        "result": "passed"
+      },
+      {
+        "code": "15209",
+        "name": "加茂市",
+        "result": "passed"
+      },
+      {
+        "code": "15213",
+        "name": "燕市",
+        "result": "passed"
+      },
+      {
+        "code": "15218",
+        "name": "五泉市",
+        "result": "corrected"
+      },
+      {
+        "code": "15223",
+        "name": "阿賀野市",
+        "result": "corrected"
+      },
+      {
+        "code": "15227",
+        "name": "胎内市",
+        "result": "passed"
+      },
+      {
+        "code": "15307",
+        "name": "聖籠町",
+        "result": "passed"
+      },
+      {
+        "code": "15342",
+        "name": "弥彦村",
+        "result": "passed"
+      },
+      {
+        "code": "15361",
+        "name": "田上町",
+        "result": "passed"
+      },
+      {
+        "code": "15385",
+        "name": "阿賀町",
+        "result": "passed"
+      },
+      {
+        "code": "08201",
+        "name": "水戸市",
+        "result": "passed",
+        "focus": "2026年度粗大ごみ料金・分類"
+      },
+      {
+        "code": "09201",
+        "name": "宇都宮市",
+        "result": "passed",
+        "focus": "2026年度学校給食費補助額・制度分類"
+      },
+      {
+        "code": "11100",
+        "name": "さいたま市",
+        "result": "passed",
+        "focus": "2026年9月第2子保育料軽減拡大"
+      },
+      {
+        "code": "12100",
+        "name": "千葉市",
+        "result": "passed",
+        "focus": "2026年度学校給食費・第3子以降無償化"
+      }
     ]
   },
   "findings": [
@@ -108,10 +207,59 @@
       "details": "水戸市の粗大ごみ1,000円・2,000円と直接搬入10kg170円、宇都宮市の給食費補助上限小学校5,200円・中学校5,900円、さいたま市の2026年9月第2子原則半額、千葉市の小学校0円・中学校320円および中学校第3子以降無償化を現行公式ページで再確認。"
     }
   ],
-  "remainingActions": [
-    "PRの標準CIを確認し、確定修正をregion/eastへ統合する",
-    "全国生成JSON・静的ページ・mainへの同期を行う",
-    "修正対象ページの公開HTTP応答と表示内容を検証する"
-  ],
-  "blockers": []
+  "remainingActions": [],
+  "blockers": [],
+  "completedAt": "2026-07-25T11:27:00+09:00",
+  "regionIntegration": {
+    "status": "merged",
+    "branch": "region/east",
+    "pullRequestNumber": 3208,
+    "ciRunNumber": 7850,
+    "mergeCommitSha": "e0debe4ef4f4a9f7638394128e0fd32541e3070f"
+  },
+  "nationalSync": {
+    "status": "merged",
+    "branch": "coord/sync-east-b-second-audit-20260725-v2",
+    "pullRequestNumber": 3227,
+    "ciRunNumber": 7880,
+    "mergeCommitSha": "6db1b6da1ac44f430a8243b232ed7c09f613c9af",
+    "generatedMunicipalityCount": 1741,
+    "generatedServiceCount": 15669,
+    "changedMunicipalityCodes": [
+      "14100",
+      "15100",
+      "15218",
+      "15223"
+    ]
+  },
+  "publicVerification": {
+    "status": "passed",
+    "checkedAt": "2026-07-25T11:27:00+09:00",
+    "pullRequestNumber": 3233,
+    "workflowRunId": 30140415633,
+    "workflowRunNumber": 1,
+    "verifiedMunicipalityCodes": [
+      "14100",
+      "15100",
+      "15218",
+      "15223"
+    ],
+    "verifiedPageCount": 4,
+    "checks": [
+      "公開生成JSONの全国1741自治体・15669制度維持",
+      "4自治体ページのHTTP 200",
+      "自治体名の表示",
+      "修正後の病児・病後児保育要約の表示",
+      "現行公式出典リンクの表示",
+      "横浜市産後ケアのショートステイ料金",
+      "阿賀野市の里帰り先訪問型産後ケア事前相談"
+    ]
+  },
+  "aggregate": {
+    "sampledMunicipalityCount": 20,
+    "correctedMunicipalityCount": 4,
+    "correctedFindingCount": 5,
+    "unresolvedConfirmedErrorCount": 0,
+    "status": "completed_main_region_public_verified"
+  }
 }
