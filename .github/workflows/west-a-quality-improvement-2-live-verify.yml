@@ -1,0 +1,84 @@
+name: West A Quality Improvement 2 Live Verify
+
+on:
+  push:
+    branches:
+      - verify/west-a-quality-improvement-2-live-20260725
+    paths:
+      - '.github/workflows/west-a-quality-improvement-2-live-verify.yml'
+      - 'jichitai-compare/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: west-a-quality-improvement-2-live-verify
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: verify/west-a-quality-improvement-2-live-20260725
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate committed main-equivalent data
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          git diff --exit-code -- data/generated/municipalities.json data/generated/municipality-pages.json operations/progress.json municipality sitemap.xml
+      - name: Verify published site globally
+        working-directory: jichitai-compare
+        run: npm run smoke:public
+      - name: Verify published Tonosho correction
+        working-directory: jichitai-compare
+        run: |
+          node --input-type=module <<'NODE'
+          const url = 'https://allsunday1122.github.io/jichitai-compare/municipality/37322/';
+          const expected = [
+            '生後6か月から満3歳未満の未就園児が土庄保育園で月10時間、1時間300円で利用可能',
+            'https://www.town.tonosho.kagawa.jp/gyosei/kosodate/kodomoen/3996.html'
+          ];
+          const forbidden = [
+            '利用料金、月間利用上限、申請・予約方法は町の最新案内または健康福祉課へ確認',
+            'https://www.town.tonosho.kagawa.jp/material/files/group/2/R8siseihousin.pdf</a>'
+          ];
+          let last = '';
+          for (let attempt = 1; attempt <= 40; attempt += 1) {
+            try {
+              const response = await fetch(url, { headers: { 'cache-control': 'no-cache' } });
+              if (!response.ok) throw new Error(`HTTP ${response.status}`);
+              const html = await response.text();
+              last = `attempt=${attempt}`;
+              if (expected.every((text) => html.includes(text)) && forbidden.every((text) => !html.includes(text))) {
+                console.log(`Published Tonosho correction verified on attempt ${attempt}`);
+                process.exit(0);
+              }
+            } catch (error) {
+              last = String(error);
+            }
+            await new Promise((resolve) => setTimeout(resolve, 15000));
+          }
+          throw new Error(`Published Tonosho correction was not observed: ${last}`);
+          NODE
+      - name: Record verification and remove temporary workflow
+        shell: bash
+        env:
+          VERIFIED_COMMIT: b153f9eea6fcfa060218e20dfb13fffe3be94fe2
+        run: |
+          verified_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          cat > jichitai-compare/operations/audits/west-a-quality-improvement-second-audit-live-verification-20260725.json <<JSON
+          {"schemaVersion":"1.0.0","auditId":"west-a-quality-improvement-second-audit-live-verification-20260725","verifiedAt":"${verified_at}","mainCommit":"${VERIFIED_COMMIT}","regionalPullRequestNumber":3246,"regionalCiRunNumber":7938,"nationalPullRequestNumber":3257,"nationalPrCiRunNumber":7957,"municipalityCode":"37322","municipalityName":"土庄町","checks":{"committedGeneratedFiles":"passed","sourceTaskGeneratedPageConsistency":"passed","nationwidePublicSmoke":"passed","tonoshoPublishedPage":"passed","expectedText":"生後6か月から満3歳未満の未就園児が土庄保育園で月10時間、1時間300円で利用可能","officialSource":"https://www.town.tonosho.kagawa.jp/gyosei/kosodate/kodomoen/3996.html","oldUnconfirmedTextAbsent":true},"nationwideBaseline":{"municipalityCount":1741,"serviceCount":15669,"unfinishedStateIncrease":0},"result":"passed"}
+          JSON
+          rm .github/workflows/west-a-quality-improvement-2-live-verify.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 西日本A第2監査の公開確認を記録'
+          git push origin HEAD:verify/west-a-quality-improvement-2-live-20260725
