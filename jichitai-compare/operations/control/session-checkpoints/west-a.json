@@ -12,13 +12,13 @@
     "43",
     "46"
   ],
-  "updatedAt": "2026-07-25T05:02:00+09:00",
+  "updatedAt": "2026-07-25T12:08:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 2915,
+  "pullRequestNumber": 3246,
   "ciStatus": "success",
   "completedSinceSplit": [
     {
@@ -41,7 +41,7 @@
     }
   ],
   "blocked": [],
-  "nextAction": "公式情報更新、出典URL異常、CI異常、公開文言異常が発生した場合のみ再調査する。公式出典のハード失敗・ソフト警告とも未解決0件。",
+  "nextAction": "品質改善第2監査完了。公式情報更新、出典URL異常、CI異常、公開文言異常が発生した場合のみ再調査する。未解決URL・確定未修正誤りとも0件。",
   "researchVerificationAudit": {
     "auditFile": "jichitai-compare/operations/audits/west-a-research-verification-20260725.json",
     "plannedRoundCount": 10,
@@ -103,10 +103,19 @@
     "westASourceLinkSoftWarningMaterialCorrectionCount": 1,
     "westANishiawakuraCorrectionCommitSha": "275e40b00bee57963ac4dc4cb172e17a85053dbf",
     "westANishiawakuraPublicSmokeCommitSha": "69222a39a877ead3903155bf05c747e8015a1448",
-    "westANishiawakuraLiveSmokeCommitSha": "8d120e09caf0183a03c65e0f5f773ba71f67c7fb"
+    "westANishiawakuraLiveSmokeCommitSha": "8d120e09caf0183a03c65e0f5f773ba71f67c7fb",
+    "qualityImprovementSecondAuditIssueNumber": 3189,
+    "qualityImprovementSecondAuditFile": "jichitai-compare/operations/audits/west-a-quality-improvement-second-audit-20260725.json",
+    "qualityImprovementSecondAuditRegionalPullRequestNumber": 3246,
+    "qualityImprovementSecondAuditRegionalCiRunNumber": 7938,
+    "qualityImprovementSecondAuditNationalPullRequestNumber": 3257,
+    "qualityImprovementSecondAuditNationalCiRunNumber": 7957,
+    "qualityImprovementSecondAuditPublicVerificationPullRequestNumber": 3265,
+    "qualityImprovementSecondAuditPublicVerificationCiRunNumber": 7978,
+    "qualityImprovementSecondAuditLiveVerificationFile": "jichitai-compare/operations/audits/west-a-quality-improvement-second-audit-live-verification-20260725.json"
   },
   "integrityAudit": {
-    "auditedAt": "2026-07-25T05:02:00+09:00",
+    "auditedAt": "2026-07-25T12:08:00+09:00",
     "expectedWestMunicipalityCount": 476,
     "actualWestMunicipalityCount": 476,
     "expectedWestServiceCount": 4284,
@@ -241,7 +250,8 @@
       "西日本A担当6県226自治体の公式出典2,444 URLを横断監査し、404・410候補28 URLを修正9・CMS誤検出19・未解決0へ分類した。",
       "和気町・益城町・小豆島町・和泊町を公開スモークへ追加し、代表14自治体の修正文言・新出典URL・旧情報不存在を恒久監視する。",
       "公式出典URL監査の403・429・タイムアウト・接続失敗159件を分類し、リンク切れ0件・未分類0件を確認。西粟倉村の旧保育料記載1件を現行公式案内へ修正した。",
-      "西粟倉村を公開スモークへ追加し、代表15自治体について修正後文言と訂正前文言不存在をGitHub Pages実環境で確認する。"
+      "西粟倉村を公開スモークへ追加し、代表15自治体について修正後文言と訂正前文言不存在をGitHub Pages実環境で確認する。",
+      "品質改善第2監査で過去訂正9件と6県25自治体を再確認し、土庄町こども誰でも通園制度の月10時間・1時間300円・現行主出典を追加訂正。region/west・main・公開を同期し、未解決0件。"
     ],
     "sourceLinkAudit": {
       "scope": "西日本A担当6県226自治体の自治体公式URL・9制度主出典・追加出典",
@@ -300,5 +310,31 @@
     "latestCorrectedMunicipalityCode": "33643",
     "latestCorrectedMunicipalityName": "西粟倉村",
     "latestCorrectionCommitSha": "275e40b00bee57963ac4dc4cb172e17a85053dbf"
+  },
+  "qualityImprovementSecondAudit": {
+    "status": "completed_with_additional_correction",
+    "completedAt": "2026-07-25T12:00:00+09:00",
+    "assignedMunicipalityCount": 226,
+    "correctionRecheckCount": 9,
+    "sampleMunicipalityCount": 25,
+    "newCorrectionCount": 1,
+    "newCorrectionMunicipalityCode": "37322",
+    "newCorrectionMunicipalityName": "土庄町",
+    "newCorrectionService": "temporaryChildcare",
+    "regionalPullRequestNumber": 3246,
+    "regionalCiRunNumber": 7938,
+    "nationalPullRequestNumber": 3257,
+    "nationalCiRunNumber": 7957,
+    "publicVerificationPullRequestNumber": 3265,
+    "publicVerificationCiRunNumber": 7978,
+    "unresolvedUrlCount": 0,
+    "confirmedUnfixedErrorCount": 0,
+    "nationwideMunicipalityCount": 1741,
+    "nationwideServiceCount": 15669,
+    "unfinishedStateIncrease": 0,
+    "regionMainSourceShaMatched": true,
+    "regionMainTaskShaMatched": true,
+    "regionMainAuditShaMatched": true,
+    "blocker": null
   }
 }
