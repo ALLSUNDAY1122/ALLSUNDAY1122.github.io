@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-b-independent-reaudit-round1-20260725",
+  "parentAuditId": "central-b-independent-reaudit-20260725",
+  "trackingIssueNumber": 3186,
+  "workingBranch": "quality/central-b-independent-reaudit-20260725",
+  "status": "completed",
+  "scope": {
+    "round": 1,
+    "municipalityCodes": ["26100","26201","26202","26203","26204","26205","26206","26207","26208","26209"],
+    "auditedMunicipalityCount": 10,
+    "auditedServiceCount": 90,
+    "confirmedErrorCount": 15,
+    "correctedErrorCount": 15
+  },
+  "findings": [
+    {
+      "municipalityCode":"26100","municipalityName":"京都市","servicesChecked":9,"result":"one_confirmed_error_corrected",
+      "confirmedErrors":[{"service":"childcareFee","before":"3～5歳児、市民税非課税世帯0～2歳児、認可保育施設の世帯内第2子以降のみを記録","after":"令和8年4月開始の私立幼稚園・幼稚園型認定こども園における未就園の第2子以降2歳児保育料無償化を追加","cause":"2026年度開始制度の記録漏れ","officialSource":"https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html","status":"corrected"}]
+    },
+    {
+      "municipalityCode":"26201","municipalityName":"福知山市","servicesChecked":9,"result":"three_confirmed_errors_corrected",
+      "confirmedErrors":[
+        {"service":"childMedical","before":"中学生の入院外・訪問看護について月合計1,500円超過分の償還払いのみを記録","after":"1医療機関月200円の窓口負担と、月合計1,500円超過分の償還払いを併記","cause":"窓口負担条件の記録漏れ","officialSource":"https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html","status":"corrected"},
+        {"service":"postpartumCare","before":"通所集団型1施設のみを記録","after":"訪問、宿泊、通所個別、通所集団の4類型、料金、回数、2026年4月開始の市立福知山市民病院を追加","cause":"制度類型・実施施設・2026年度開始情報の見落とし","officialSource":"https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html","status":"corrected"},
+        {"service":"housingSupport","before":"一般の移住促進特別区域・登録空き家改修を子育て世帯向けとしてverified","after":"子ども要件・子ども加算がないためunavailable","cause":"一般移住・一般住宅支援の分類誤り","officialSource":"https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html","status":"corrected"}
+      ]
+    },
+    {
+      "municipalityCode":"26202","municipalityName":"舞鶴市","servicesChecked":9,"result":"two_confirmed_errors_corrected",
+      "confirmedErrors":[
+        {"service":"sickChildCare","before":"0歳から小学6年生までと登録","after":"生後3か月から小学3年生、定員6人、平日8時15分～18時、1日2,500円・5時間以内1,500円へ訂正","cause":"対象年齢の過大登録と利用条件の記録漏れ","officialSource":"https://www.city.maizuru.kyoto.jp/kosodate/0000001571.html","status":"corrected"},
+        {"service":"childcareFee","before":"保育料無償化と副食費免除のみを記録","after":"令和8年度の3歳以上児給食費月最大1,500円補助を追加","cause":"2026年度給食費負担軽減制度の記録漏れ","officialSource":"https://www.city.maizuru.kyoto.jp/kosodate/0000014885.html","status":"corrected"}
+      ]
+    },
+    {
+      "municipalityCode":"26203","municipalityName":"綾部市","servicesChecked":9,"result":"two_confirmed_errors_corrected",
+      "confirmedErrors":[
+        {"service":"schoolMeals","before":"就学援助のみを記録","after":"令和8年度は小学校の食材費相当額、中学校・幼稚園は1人1食100円を一般補助する制度を追加","cause":"2026年度給食費補助金交付要綱改正の見落とし","officialSource":"https://www.city.ayabe.lg.jp/cmsfiles/contents/0000006/6408/R8-4.pdf","status":"corrected"},
+        {"service":"postpartumCare","before":"宿泊型9,000円、個別通所型4,500円","after":"宿泊型6,500円、個別通所型3,500円","cause":"旧料金の継続掲載","officialSource":"https://www.city.ayabe.lg.jp/0000003373.html","status":"corrected"}
+      ]
+    },
+    {
+      "municipalityCode":"26204","municipalityName":"宇治市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],
+      "principalSources":["https://www.city.uji.kyoto.jp/site/kosodate/5539.html","https://www.city.uji.kyoto.jp/site/kosodate/26481.html","https://www.city.uji.kyoto.jp/site/kosodate/93915.html","https://www.city.uji.kyoto.jp/site/kosodate/7151.html","https://www.city.uji.kyoto.jp/site/kosodate/77687.html","https://www.city.uji.kyoto.jp/soshiki/48/87999.html"]
+    },
+    {
+      "municipalityCode":"26205","municipalityName":"宮津市","servicesChecked":9,"result":"three_confirmed_errors_corrected",
+      "confirmedErrors":[
+        {"service":"postpartumCare","before":"短期入所型等、料金は市へ確認とのみ記録","after":"短期入所、通所、居宅訪問の3類型、各7泊・7日・7回、所得区分別料金を記録","cause":"制度類型・料金・回数の記録漏れ","officialSource":"https://www.city.miyazu.kyoto.jp/reiki/reiki_int/reiki_honbun/k107RG00001016.html","status":"corrected"},
+        {"service":"housingSupport","before":"令和7年度期限表記の案内ページを主出典として令和8年度利用可能と登録","after":"令和8年度当初予算で継続を確認し、主出典を現行年度予算資料へ変更","cause":"旧年度URLを主出典とした年度確認不足","officialSource":"https://www.city.miyazu.kyoto.jp/uploaded/attachment/14253.pdf","status":"corrected"},
+        {"service":"bulkyWaste","before":"収集申込みまたは直接搬入のみを記録","after":"50cm以上、処理手数料券、2か月に1回の個別収集、直接搬入条件を追加","cause":"定義・頻度・料金手続の記録漏れ","officialSource":"https://www.city.miyazu.kyoto.jp/site/gomi-sinyo/2116.html","status":"corrected"}
+      ]
+    },
+    {
+      "municipalityCode":"26206","municipalityName":"亀岡市","servicesChecked":9,"result":"three_confirmed_errors_corrected",
+      "confirmedErrors":[
+        {"service":"childcareFee","before":"国の3～5歳児等の無償化のみを記録","after":"第2子以降を所得・きょうだい年齢制限なしで無料化し、延長・休日・預かり・幼稚園2歳児保育も対象に追加","cause":"市独自の第2子以降保育料無料化の記録漏れ","officialSource":"https://www.city.kameoka.kyoto.jp/soshiki/28/47716.html","status":"corrected"},
+        {"service":"schoolMeals","before":"小学校給食の実施のみで一般世帯の令和8年度負担を未記録","after":"公立小学校・義務教育学校前期課程の令和8年度給食費無償化を追加","cause":"2026年度開始制度の記録漏れ","officialSource":"https://www.city.kameoka.kyoto.jp/site/gikai/86530.html","status":"corrected"},
+        {"service":"housingSupport","before":"令和8年度制度を受付終了後もverified","after":"2026年7月21日受付終了のためunavailable","cause":"募集終了後の利用可能判定誤り","officialSource":"https://www.city.kameoka.kyoto.jp/soshiki/36/1834.html","status":"corrected"}
+      ]
+    },
+    {
+      "municipalityCode":"26207","municipalityName":"城陽市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],
+      "notes":["こども誰でも通園制度は利用者向け現行案内を確認できないためunavailableを維持","三世代近居・同居住宅支援は令和8年度募集を確認できないためunavailableを維持"]
+    },
+    {
+      "municipalityCode":"26208","municipalityName":"向日市","servicesChecked":9,"result":"one_confirmed_error_corrected",
+      "confirmedErrors":[{"service":"housingSupport","before":"生活困窮者向け住居確保給付金を子育て世帯向け住宅支援としてverified","after":"子ども要件・子育て世帯加算がない一般制度のためunavailable","cause":"一般生活困窮者支援の分類誤り","officialSource":"https://www.city.muko.kyoto.jp/soshiki/16/2757.html","status":"corrected"}]
+    },
+    {
+      "municipalityCode":"26209","municipalityName":"長岡京市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],
+      "notes":["こども誰でも通園制度は生後6か月から満3歳未満、月10時間、海印寺こども園・今里こども園で実施を再確認","一般生活困窮者向け制度を除外したhousingSupport unavailable判定を維持"]
+    }
+  ],
+  "cumulativeProgress": {
+    "auditedMunicipalityCount": 10,
+    "auditedServiceCount": 90,
+    "confirmedErrorCount": 15,
+    "correctedErrorCount": 15,
+    "lastSuccessfulCiRunNumber": 7898
+  },
+  "nextAction": "第2バッチを八幡市（26210）から開始する。"
+}
