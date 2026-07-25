@@ -1,0 +1,126 @@
+name: Temporary Central A Batch 4 State Sync
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-batch4-state-sync-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-batch4-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Synchronize checkpoint and region state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare/operations';
+          const checkpointPath = `${root}/control/session-checkpoints/central-a.json`;
+          const regionPath = `${root}/control/regions/central.json`;
+          const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+          const write = (file, value) => fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
+          const timestamp = '2026-07-25T14:17:00+09:00';
+          const regionalPr = 3435;
+          const regionalCi = 8341;
+          const statePr = Number(process.env.PR_NUMBER);
+          const correction = {
+            type: 'regional_user_facing_source_upgrade',
+            code: '25442',
+            service: 'sickChildCare',
+            name: '甲良町'
+          };
+          const removeResolvedFollowups = (items = []) => items.filter((item) => !(
+            (item.code === '18481' || item.code === '18483') && item.service === 'temporaryChildcare'
+          ));
+
+          const checkpoint = read(checkpointPath);
+          checkpoint.updatedAt = timestamp;
+          checkpoint.pullRequestNumber = regionalPr;
+          checkpoint.ciStatus = 'success';
+          checkpoint.ciRunNumber = regionalCi;
+          checkpoint.stateSyncPullRequestNumber = statePr;
+          checkpoint.nextAction = '原因別重点再監査を継続する。Issue #3141の19項目は推測せず維持し、弱い主出典の残34候補から病児保育、産後ケア、住宅支援を利用者向け公式ページで判定する。';
+          checkpoint.qualityReaudit.latestCompletedAt = timestamp;
+          checkpoint.qualityReaudit.latestRegionalPullRequestNumber = regionalPr;
+          checkpoint.qualityReaudit.latestCiRunNumber = regionalCi;
+          checkpoint.qualityReaudit.correctedMunicipalitiesRechecked = 74;
+          checkpoint.qualityReaudit.primarySourceSlotsRechecked = 506;
+          checkpoint.qualityReaudit.candidateCounts.weakPrimarySource = 34;
+          checkpoint.qualityReaudit.issue3141UnresolvedItemCount = 19;
+          checkpoint.qualityReaudit.issue3141UnresolvedMunicipalityCount = 19;
+          checkpoint.qualityReaudit.issue3141Items = removeResolvedFollowups(checkpoint.qualityReaudit.issue3141Items);
+          checkpoint.qualityReaudit.issue3141AuthoritativeStateCheckedAt = timestamp;
+          checkpoint.qualityReaudit.confirmedCorrections ??= [];
+          if (!checkpoint.qualityReaudit.confirmedCorrections.some((item) => item.type === correction.type && item.code === correction.code && item.service === correction.service)) {
+            checkpoint.qualityReaudit.confirmedCorrections.push(correction);
+          }
+          checkpoint.qualityReaudit.nextPriority = [
+            '弱い主出典残34候補',
+            '病児保育の条例・要綱単独候補',
+            '産後ケアのPDF・計画単独候補',
+            '住宅支援の分類候補'
+          ];
+
+          const region = read(regionPath);
+          region.updatedAt = timestamp;
+          region.lastAction = '原因別重点再監査の弱い主出典第4群5制度枠をPR #3435・CI #8341成功後にregion/centralへ統合。甲良町病児保育を湖東定住自立圏の利用者向け公式ページへ更新し、湖西市・小山町・熊野市・小野市は要綱を超える断定を行わず現状維持とした。';
+          region.nextAction = '弱い主出典の残34候補を、病児保育、産後ケア、住宅支援の順に利用者向け公式情報で確定判定する。';
+          region.qualityReaudit.latestCompletedAt = timestamp;
+          region.qualityReaudit.latestRegionalPullRequestNumber = regionalPr;
+          region.qualityReaudit.latestCiRunNumber = regionalCi;
+          region.qualityReaudit.correctedMunicipalitiesRechecked = 74;
+          region.qualityReaudit.primarySourceSlotsRechecked = 506;
+          region.qualityReaudit.candidateCounts.weakPrimarySource = 34;
+          region.qualityReaudit.issue3141UnresolvedItemCount = 19;
+          region.qualityReaudit.issue3141UnresolvedMunicipalityCount = 19;
+          region.qualityReaudit.issue3141Items = removeResolvedFollowups(region.qualityReaudit.issue3141Items);
+          region.qualityReaudit.issue3141AuthoritativeStateCheckedAt = timestamp;
+          region.qualityReaudit.nextPriority = [
+            '弱い主出典残34候補',
+            '病児保育の条例・要綱単独候補',
+            '産後ケアのPDF・計画単独候補',
+            '住宅支援の分類候補'
+          ];
+          region.qualityReaudit.confirmedCorrections ??= [];
+          if (!region.qualityReaudit.confirmedCorrections.some((item) => item.type === correction.type && item.code === correction.code && item.service === correction.service)) {
+            region.qualityReaudit.confirmedCorrections.push(correction);
+          }
+
+          write(checkpointPath, checkpoint);
+          write(regionPath, region);
+          NODE
+
+      - name: Validate data
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          node --check app.js
+
+      - name: Commit synchronized state
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-batch4-state-sync-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/operations/control/session-checkpoints/central-a.json \
+            jichitai-compare/operations/control/regions/central.json \
+            jichitai-compare/operations/control/central-a-batch4-state-sync-trigger-20260725.json
+          git commit -m 'state: 中日本A第4群の監査状態を同期'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
