@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-a-quality-audit-2-20260725",
+  "sessionId": "north-a",
+  "title": "北日本A 品質改善第2監査",
+  "status": "in_progress",
+  "startedAt": "2026-07-25T10:31:00+09:00",
+  "scope": {
+    "prefectureCodes": ["02", "03", "07"],
+    "priorCorrectedMunicipalities": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
+    "priorConfirmedErrors": 13,
+    "samplingPlan": {
+      "02": "5-10 high-risk municipalities",
+      "03": "5-10 high-risk municipalities",
+      "07": "5-10 high-risk municipalities"
+    },
+    "priorityServices": ["temporaryChildcare", "schoolMeals", "postpartumCare", "housingSupport"],
+    "priorityFacts": ["status", "age", "fee", "usageLimit", "fiscalYear"]
+  },
+  "method": [
+    "過去訂正の公式情報による再現確認",
+    "自治体JSON・task・全国生成JSON・静的ページ・公開ページの反映確認",
+    "原因別横断検索",
+    "青森・岩手・福島の高リスク自治体抜き取り監査",
+    "確定誤りの即時修正とregion/north統合"
+  ],
+  "recovery": {
+    "priorAuditPr": 2910,
+    "priorAuditMergeCommit": "999517dbf941133ef4dc2e78780a45431ca6bbf1",
+    "priorGenerationCheckPr": 3073,
+    "priorPublicCheckPr": 3093,
+    "priorCheckpointPr": 3134,
+    "mainStatus": "prior corrections present",
+    "regionNorthStatus": "prior corrections not fully reflected",
+    "publicStatus": "prior public verification previously succeeded"
+  },
+  "confirmedFindings": [
+    {
+      "type": "branch_reflection_gap",
+      "severity": "high",
+      "description": "PR #2910でmainへ反映済みの北日本A訂正がregion/northに未反映で、旧データが残存している。",
+      "example": {
+        "code": "02411",
+        "path": "services.temporaryChildcare.summary",
+        "main": "村内4施設",
+        "regionNorthBefore": "町内4施設"
+      },
+      "risk": "今後の地域統合で旧情報がmainへ再流入する可能性"
+    }
+  ],
+  "regionRecovery": {
+    "targetMunicipalityCount": 12,
+    "synchronizedMunicipalities": ["02411", "03203", "03206", "03302", "07202"],
+    "remainingMunicipalities": ["07212", "07362", "07368", "07405", "07408", "07501", "07547"],
+    "synchronizedTaskCount": 0,
+    "remainingTasks": ["03203", "03302", "07212", "07368", "07501"]
+  },
+  "progress": {
+    "recoveryCompleted": true,
+    "priorCorrectionReflectionCheckStarted": true,
+    "officialReverificationCompleted": 0,
+    "crossMunicipalityChecksCompleted": 0,
+    "sampledMunicipalitiesCompleted": 0,
+    "confirmedNewErrors": 1,
+    "correctedNewErrors": 0
+  },
+  "nextAction": "残る7自治体と5 taskをmain正本へ同期し、region/north向けPR・CIを完了後、過去13訂正の公式再確認、原因別横断検索、3県抜き取り監査へ進む。"
+}
