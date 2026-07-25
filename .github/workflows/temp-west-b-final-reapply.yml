@@ -1,0 +1,49 @@
+name: Temporary West B Final Reapply
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-final-reapply-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  reapply:
+    if: github.head_ref == 'ops/run-west-b-final-reapply-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/west-b-post-completion-final-latest-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Reapply final audit and merge checkpoint block
+        shell: bash
+        run: |
+          git fetch origin verify/west-b-post-completion-public-20260725 --depth=1
+          git show FETCH_HEAD:jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json > /tmp/west-b-public.json
+          git show FETCH_HEAD:jichitai-compare/operations/control/session-checkpoints/west-b.json > /tmp/west-b-verify-checkpoint.json
+          cp /tmp/west-b-public.json jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const currentPath = 'jichitai-compare/operations/control/session-checkpoints/west-b.json';
+          const current = JSON.parse(fs.readFileSync(currentPath, 'utf8'));
+          const verified = JSON.parse(fs.readFileSync('/tmp/west-b-verify-checkpoint.json', 'utf8'));
+          current.postCompletionSourceMaintenance = verified.postCompletionSourceMaintenance;
+          current.updatedAt = verified.updatedAt;
+          fs.writeFileSync(currentPath, JSON.stringify(current, null, 2) + '\n');
+          NODE
+          cd jichitai-compare
+          npm run validate:generated
+      - name: Commit latest-main final records
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git commit -m "audit: 西日本Bの公開確認記録を最新mainへ再適用"
+          git push origin HEAD:fix/west-b-post-completion-final-latest-20260725
