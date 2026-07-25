@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch13-decisions-20260726",
+  "decidedAt": "2026-07-26T00:03:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3709,
+  "runnerWorkflowRunId": 30162984077,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 4,
+  "retainedNoChangeCount": 1,
+  "statusToUnavailableCount": 1,
+  "verifiedClarificationOrSourceUpgradeCount": 3,
+  "decisions": [
+    {
+      "code": "16202",
+      "name": "高岡市",
+      "service": "housingSupport",
+      "decisionType": "current_child_addition_clarification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "対象区域の住宅取得、戸建てリフォーム、空き家バンク物件取得等を補助",
+      "afterSummary": "令和8年度、対象区域の住宅取得・リフォーム等を補助し、若年子育て世帯・新婚世帯・三世代同居等には加算がある。",
+      "officialSource": "https://www.city.takaoka.toyama.jp/soshiki/kenchikuseisakuka/2/3/4/2521.html",
+      "review": null
+    },
+    {
+      "code": "17201",
+      "name": "金沢市",
+      "service": "housingSupport",
+      "decisionType": "child_specific_municipal_housing_scope_clarification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "市営住宅で子育て世帯等の専用募集枠を設ける場合があり、住宅取得・中古住宅リフォーム等の奨励制度も提供する。",
+      "afterSummary": "18歳年度末までの子がいる子育て世帯等だけが応募できる市営住宅募集枠を設ける場合があり、令和8年度の定期・随時募集を実施する。",
+      "officialSource": "https://www4.city.kanazawa.lg.jp/soshikikarasagasu/jutakuseisakuka/yokuarushitsumon_1/3116.html",
+      "review": null
+    },
+    {
+      "code": "23100",
+      "name": "名古屋市",
+      "service": "housingSupport",
+      "decisionType": "current_child_housing_package_source_upgrade",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "子育て世帯向けに定住促進住宅・公社賃貸住宅の家賃20％減額、補助付きセーフティネット住宅、市営住宅の専用募集などを実施",
+      "afterSummary": "18歳以下の子がいる世帯等へ、定住促進住宅・公社賃貸住宅の家賃20％減額を最大10年間行い、家賃補助付き子育て世帯専用住戸等も提供する。",
+      "officialSource": "https://www.city.nagoya.jp/kurashi/juutaku/1014573/1014580.html",
+      "review": null
+    },
+    {
+      "code": "24216",
+      "name": "伊賀市",
+      "service": "housingSupport",
+      "decisionType": "retained_verified_direct_child_program",
+      "changed": false,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "市外から移住する若者・子育て世帯の中古住宅取得費を補助する。",
+      "afterSummary": "市外から移住する若者・子育て世帯の中古住宅取得費を補助する。",
+      "officialSource": "https://iga-style.com/?page_id=861",
+      "review": "市外から転入する中学生以下の子がいる世帯は中古住宅取得費の2分の1・上限50万円、空き家バンク物件は10万円加算という直接的な子育て要件を現行公式移住ポータルで確認したためverifiedを維持する。"
+    },
+    {
+      "code": "25442",
+      "name": "甲良町",
+      "service": "housingSupport",
+      "decisionType": "current_fiscal_period_unconfirmed",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "39歳以下の新婚世帯へ住宅取得・賃借費用の3分の2を最大60万円補助する。",
+      "afterSummary": "結婚新生活支援の現行要綱は確認できるが、2026年度の婚姻・支払・申請対象期間を利用者向け公式情報で確定できない。",
+      "officialSource": "https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00001041.html",
+      "review": null
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 114,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 109
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "制度一覧だけでなく、子育て・新婚の対象条件が直接分かる現行利用者向けページを優先する",
+    "年度ごとの対象期間を要綱が別途指定に委ねる場合、当該年度の受付条件を確認できなければ利用可能と断定しない",
+    "子育て要件が明確な制度は金額・年齢・加算を要約へ反映する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
