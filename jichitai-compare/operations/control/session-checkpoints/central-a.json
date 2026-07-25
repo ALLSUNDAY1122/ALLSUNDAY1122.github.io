@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T06:02:00+09:00",
+  "updatedAt": "2026-07-26T07:36:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3801,
+  "pullRequestNumber": 3805,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3709,
+  "stateSyncPullRequestNumber": 3805,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残74件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残69件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T06:02:00+09:00",
-    "latestRegionalPullRequestNumber": 3795,
+    "latestCompletedAt": "2026-07-26T07:36:00+09:00",
+    "latestRegionalPullRequestNumber": 3805,
     "latestCiRunNumber": 30174496683,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 154,
-    "primarySourceSlotsRechecked": 586,
+    "correctedMunicipalitiesRechecked": 159,
+    "primarySourceSlotsRechecked": 591,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -495,6 +495,30 @@
         "code": "25442",
         "service": "housingSupport",
         "name": "甲良町"
+      },
+      {
+        "type": "child_trial_housing_replacement",
+        "code": "24443",
+        "service": "housingSupport",
+        "name": "大台町"
+      },
+      {
+        "type": "general_vacant_home_misclassification",
+        "code": "24471",
+        "service": "housingSupport",
+        "name": "大紀町"
+      },
+      {
+        "type": "newlywed_housing_replacement",
+        "code": "24561",
+        "service": "housingSupport",
+        "name": "御浜町"
+      },
+      {
+        "type": "general_seismic_misclassification",
+        "code": "27204",
+        "service": "housingSupport",
+        "name": "池田市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -581,7 +605,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 74,
+      "generalHousingMisclassification": 69,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -603,7 +627,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残74件",
+      "一般住宅・移住制度の分類候補残69件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
@@ -649,5 +673,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第20群の東栄町・桑名市・木曽岬町・菰野町・明和町を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第21群として、大台町・大紀町・御浜町・大津市・池田市を独立確認し、4件を修正、1件を維持判定した。"
 }
