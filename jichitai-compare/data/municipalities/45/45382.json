@@ -6,8 +6,8 @@
   "name": "国富町",
   "officialUrl": "https://www.town.kunitomi.miyazaki.jp/",
   "status": "verified",
-  "summary": "必須9制度を国富町公式情報で調査。7制度をverified、現行条件を町公式公開情報で確定できない病児・病後児保育と2026年度学校給食費をunavailableとして登録。",
-  "updatedAt": "2026-07-24",
+  "summary": "必須9制度を国富町・宮崎県公式情報で再確認し、8制度をverified、2026年度学校給食費をunavailableとして登録。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -29,21 +29,28 @@
       }
     },
     "sickChildCare": {
-      "status": "unavailable",
-      "summary": "町公式サイトで病児・病後児保育の現行施設・対象年齢・料金・広域利用条件を確認できない",
+      "status": "verified",
+      "summary": "町内2施設で病児・病後児保育を実施",
+      "details": {
+        "facilities": "太田原にじ色こども園 天使の家、もりながナーサリー",
+        "currentList": "宮崎県の令和8年4月1日現在の実施施設一覧に町内2施設を掲載",
+        "serviceTypes": "病気中または回復期で集団保育が困難な児童を施設で受け入れる",
+        "feeSupport": "宮崎県は市町村と連携して病児保育利用料無償化事業を実施",
+        "application": "対象、料金、必要書類、予約方法は各施設または国富町福祉課へ事前確認する"
+      },
+      "source": {
+        "url": "https://www.pref.miyazaki.lg.jp/kodomo-seisaku/kyoikukosodate/kodomo/20171215111303.html",
+        "checkedAt": "2026-07-25"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.kunitomi.miyazaki.jp/main/health/children_welfare/page000354.html",
+          "checkedAt": "2026-07-25"
+        }
+      ],
       "eligibility": {
         "minAgeMonths": 0,
         "maxAgeYears": 12
-      },
-      "details": {
-        "publishedStatus": "児童福祉の現行一覧に病児・病後児保育の個別案内が掲載されていない",
-        "budgetReference": "予算資料では病児保育利用促進関連事業を確認できるが、利用者向け現行条件は不明",
-        "currentStatus": "実施施設、町外施設の広域利用可否、対象年齢、料金、登録・予約方法を福祉課へ確認する必要がある",
-        "avoidInference": "近隣自治体施設や過年度資料から現行条件を推定しない"
-      },
-      "source": {
-        "url": "https://www.town.kunitomi.miyazaki.jp/main/health/children_welfare/",
-        "checkedAt": "2026-07-24"
       }
     },
     "childcareFee": {
