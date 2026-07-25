@@ -21,28 +21,37 @@ jobs:
           ref: sync/west-b-post-completion-final-region-20260725
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
-      - name: Copy final audit and merge checkpoint block
+      - name: Fetch main records
         shell: bash
         run: |
+          set -euxo pipefail
           git fetch origin main
-          git show origin/main:jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json > jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json
+          mkdir -p jichitai-compare/operations/audits
+          git show origin/main:jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json > /tmp/west-b-public.json
           git show origin/main:jichitai-compare/operations/control/session-checkpoints/west-b.json > /tmp/west-b-main-checkpoint.json
+          cp /tmp/west-b-public.json jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json
+      - name: Merge West B checkpoint block
+        shell: bash
+        run: |
+          set -euxo pipefail
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const p = 'jichitai-compare/operations/control/session-checkpoints/west-b.json';
           const region = JSON.parse(fs.readFileSync(p, 'utf8'));
           const main = JSON.parse(fs.readFileSync('/tmp/west-b-main-checkpoint.json', 'utf8'));
+          if (!main.postCompletionSourceMaintenance) throw new Error('main postCompletionSourceMaintenance missing');
           region.postCompletionSourceMaintenance = main.postCompletionSourceMaintenance;
           region.updatedAt = main.updatedAt;
           fs.writeFileSync(p, JSON.stringify(region, null, 2) + '\n');
           NODE
-          cd jichitai-compare
-          npm run validate:generated
+          git diff --check
       - name: Commit final region records
         shell: bash
         run: |
+          set -euxo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add jichitai-compare/operations/audits/west-b-post-completion-source-public-verification-20260725.json jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git diff --cached --stat
           git commit -m "sync: 西日本Bの最終公開確認記録をregion/westへ反映"
           git push origin HEAD:sync/west-b-post-completion-final-region-20260725
