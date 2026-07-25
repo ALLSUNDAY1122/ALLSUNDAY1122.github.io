@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "checkpointId": "west-a-anyone-care-crosscheck-20260725",
+  "sessionId": "west-a",
+  "displayName": "西日本調査班A",
+  "completedAt": "2026-07-25T16:32:00+09:00",
+  "status": "completed_with_corrections",
+  "scope": {
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
+    "municipalityCount": 226,
+    "service": "temporaryChildcare"
+  },
+  "audit": {
+    "initialMachineCandidateCount": 195,
+    "priorityCandidateCount": 21,
+    "officialFetchTargetCount": 13,
+    "statusCorrectionCount": 3,
+    "detailEnrichmentCount": 2,
+    "retainedCount": 16,
+    "unresolvedCount": 0
+  },
+  "corrections": [
+    {
+      "code": "39304",
+      "name": "安田町",
+      "change": "unavailable_to_verified",
+      "condition": "0歳6か月～満3歳未満、安田さくら園、月10時間、1時間300円"
+    },
+    {
+      "code": "39387",
+      "name": "仁淀川町",
+      "change": "unavailable_to_verified",
+      "condition": "0歳6か月～満3歳未満、ふたば保育所、月10時間、1時間300円"
+    },
+    {
+      "code": "39411",
+      "name": "津野町",
+      "change": "unavailable_to_verified",
+      "condition": "1歳児～満3歳未満、町立認定こども園2施設、月10時間、1時間300円"
+    },
+    {
+      "code": "46221",
+      "name": "志布志市",
+      "change": "fee_enriched",
+      "condition": "1時間300円程度、施設により異なる"
+    },
+    {
+      "code": "46501",
+      "name": "中種子町",
+      "change": "fee_enriched",
+      "condition": "1時間300円程度、世帯区分等による軽減"
+    }
+  ],
+  "evidence": {
+    "initialAuditFile": "jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json",
+    "priorityAuditFile": "jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json",
+    "officialFetchAuditFile": "jichitai-compare/operations/audits/west-a-anyone-care-official-fetch-20260725.json",
+    "finalResolutionFile": "jichitai-compare/operations/audits/west-a-anyone-care-final-resolution-20260725.json",
+    "regionalPullRequestNumber": 3542,
+    "regionalCiRunNumber": 8640,
+    "regionalMergeSha": "3ec5dbe8c5853d7f19e01c28f575445d335b4bd6",
+    "nationalPullRequestNumber": 3565,
+    "nationalCiRunNumber": 8657,
+    "nationalMergeSha": "1dab9845d7d98c0ec064a9ec5c5a2d4b17a45ba8",
+    "publicVerificationPullRequestNumber": 3568,
+    "publicVerificationCiRunNumber": 8666,
+    "publicVerificationMergeSha": "9fcb377d179dbdba4d71b7e0eba6a33e2b56acf6",
+    "publicVerificationFile": "jichitai-compare/operations/audits/west-a-anyone-care-public-verification-20260725.json"
+  },
+  "integrity": {
+    "publicPageTargetCount": 5,
+    "publicPageHttp200Count": 5,
+    "oldPhraseRemainingCount": 0,
+    "nationwideMunicipalityCount": 1741,
+    "nationwideServiceCount": 15669,
+    "remainingMunicipalityCount": 0,
+    "prOpenMunicipalityCount": 0,
+    "blockedMunicipalityCount": 0,
+    "blockedServiceCount": 0,
+    "temporaryWorkflowRemainingCount": 0,
+    "blocker": null
+  },
+  "nextAction": "新しい自治体公式情報、実施施設決定、または利用条件更新が確認された場合のみ個別再判定する。施設未決定・条件不足の自治体を推測でverifiedへ変更しない。"
+}
