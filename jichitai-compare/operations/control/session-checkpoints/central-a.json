@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T02:42:00+09:00",
+  "updatedAt": "2026-07-26T02:52:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3749,
+  "pullRequestNumber": 3753,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3709,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残99件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残94件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T02:42:00+09:00",
-    "latestRegionalPullRequestNumber": 3742,
-    "latestCiRunNumber": 30167487242,
+    "latestCompletedAt": "2026-07-26T02:52:00+09:00",
+    "latestRegionalPullRequestNumber": 3753,
+    "latestCiRunNumber": 30168619933,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 129,
-    "primarySourceSlotsRechecked": 561,
+    "correctedMunicipalitiesRechecked": 134,
+    "primarySourceSlotsRechecked": 566,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -581,7 +581,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 99,
+      "generalHousingMisclassification": 94,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -603,28 +603,22 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残99件",
+      "一般住宅・移住制度の分類候補残94件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3744,
     "latestPublicVerificationPullRequestNumber": 3747,
     "latestHousingBatch": {
-      "batch": 15,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 16,
+      "status": "regional_validated_pending_national_publication",
       "reviewedMunicipalityCount": 5,
-      "confirmedCorrectionCount": 0,
-      "noChangeCount": 5,
-      "remainingCandidates": 99,
-      "regionalPullRequestNumber": 3742,
-      "regionalWorkflowRunId": 30167487242,
-      "nationalPullRequestNumber": 3744,
-      "nationalWorkflowRunId": 30167884050,
-      "nationalRunnerFixPullRequestNumber": 3745,
-      "publicVerificationPullRequestNumber": 3747,
-      "publicVerificationWorkflowRunId": 30168093881,
-      "finalRegionPullRequestNumber": 3749,
-      "finalRegionWorkflowRunId": 30168217896,
+      "confirmedCorrectionCount": 1,
+      "noChangeCount": 4,
+      "sourceUpgradeCount": 1,
+      "remainingCandidates": 94,
+      "regionalPullRequestNumber": 3753,
+      "regionalWorkflowRunId": 30168619933,
       "blocker": null
     },
     "stateReconciliation": {
@@ -649,5 +643,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第15群の5自治体を維持確認した。全国同期時に多治見市の誰でも通園制度未同期を検出して地域正本を同期し、全国・公開5ページ・公開JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第16群として藤枝市の主出典を現行利用者向けページへ更新し、川辺町・菊川市・高石市・太子町の子育て固有条件を再確認して維持した。"
 }
