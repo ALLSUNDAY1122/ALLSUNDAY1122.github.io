@@ -16,15 +16,15 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-25T14:17:00+09:00",
+  "updatedAt": "2026-07-25T14:41:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3435,
+  "pullRequestNumber": 3451,
   "ciStatus": "success",
-  "ciRunNumber": 8341,
+  "ciRunNumber": 8400,
   "completedSinceSplit": [
     {
       "code": "21604",
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3437,
+  "stateSyncPullRequestNumber": 3464,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "原因別重点再監査を継続する。Issue #3141の19項目は推測せず維持し、弱い主出典の残34候補から病児保育、産後ケア、住宅支援を利用者向け公式ページで判定する。",
+  "nextAction": "原因別重点再監査を継続する。Issue #3141の19項目は推測せず維持し、弱い主出典の残33候補から産後ケア、病児保育、住宅支援を利用者向け公式ページで判定する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T14:17:00+09:00",
-    "latestRegionalPullRequestNumber": 3435,
-    "latestCiRunNumber": 8341,
+    "latestCompletedAt": "2026-07-25T14:41:00+09:00",
+    "latestRegionalPullRequestNumber": 3451,
+    "latestCiRunNumber": 8400,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 74,
-    "primarySourceSlotsRechecked": 506,
+    "correctedMunicipalitiesRechecked": 79,
+    "primarySourceSlotsRechecked": 511,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -273,6 +273,12 @@
         "code": "25442",
         "service": "sickChildCare",
         "name": "甲良町"
+      },
+      {
+        "type": "user_facing_source_upgrade",
+        "code": "22130",
+        "service": "postpartumCare",
+        "name": "浜松市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -357,7 +363,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 34,
+      "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 149,
       "fiscalYearRisk": 33,
@@ -381,10 +387,10 @@
       }
     ],
     "nextPriority": [
-      "弱い主出典残34候補",
-      "病児保育の条例・要綱単独候補",
-      "産後ケアのPDF・計画単独候補",
-      "住宅支援の分類候補"
+      "弱い主出典残33候補",
+      "産後ケアの残るPDF・計画単独候補",
+      "病児保育の計画・PDF単独候補",
+      "住宅支援の子育て固有条件分類候補"
     ]
   }
 }
