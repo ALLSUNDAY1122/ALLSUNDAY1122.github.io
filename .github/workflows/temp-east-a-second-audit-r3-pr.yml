@@ -53,6 +53,16 @@ jobs:
           set +e
           python jichitai-compare/operations/scripts/patch-east-a-second-audit-r3.py
           PATCH_STATUS=$?
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('jichitai-compare/operations/tasks/19202.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          supplemental = 'https://www.city.fujiyoshida.yamanashi.jp/site/kosodate/2732.html'
+          data['officialSources'] = [url for url in data.get('officialSources', []) if url != supplemental]
+          path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          NORMALIZE_STATUS=$?
           LOG="$GITHUB_WORKSPACE/jichitai-compare/operations/audits/east-a-second-audit-r3-validation.log"
           : > "$LOG"
           cd jichitai-compare
@@ -63,11 +73,11 @@ jobs:
           npm run validate:generated >> "$LOG" 2>&1
           VALIDATE_STATUS=$?
           cd "$GITHUB_WORKSPACE"
-          printf '\npatch=%s generate=%s progress=%s validate=%s\n' "$PATCH_STATUS" "$GENERATE_STATUS" "$PROGRESS_STATUS" "$VALIDATE_STATUS" >> "$LOG"
+          printf '\npatch=%s normalize=%s generate=%s progress=%s validate=%s\n' "$PATCH_STATUS" "$NORMALIZE_STATUS" "$GENERATE_STATUS" "$PROGRESS_STATUS" "$VALIDATE_STATUS" >> "$LOG"
           cat "$LOG"
 
           STATUS=0
-          for CODE in "$PATCH_STATUS" "$GENERATE_STATUS" "$PROGRESS_STATUS" "$VALIDATE_STATUS"; do
+          for CODE in "$PATCH_STATUS" "$NORMALIZE_STATUS" "$GENERATE_STATUS" "$PROGRESS_STATUS" "$VALIDATE_STATUS"; do
             if [[ "$CODE" -ne 0 ]]; then STATUS=1; fi
           done
 
