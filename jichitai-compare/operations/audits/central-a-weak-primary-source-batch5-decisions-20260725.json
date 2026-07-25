@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-weak-primary-source-batch5-decisions-20260725",
+  "decidedAt": "2026-07-25T14:29:00+09:00",
+  "session": "中日本調査班A",
+  "category": "weakPrimarySource",
+  "regionalPullRequestNumber": 3451,
+  "regionalCiRunNumber": 8396,
+  "reviewedSlotCount": 5,
+  "sourceCorrectionCount": 1,
+  "retainedNoChangeCount": 4,
+  "corrected": [
+    {
+      "code": "22130",
+      "name": "浜松市",
+      "service": "postpartumCare",
+      "type": "user_facing_source_upgrade",
+      "result": "公式子育て情報サイトの利用者向けページへ主出典を変更し、令和8年度施設、申請手順、宿泊・1日通所7日上限、短時間・訪問7回上限、短時間850円・1,700円、訪問2,500円を確定"
+    }
+  ],
+  "retainedNoChange": [
+    {
+      "code": "24471",
+      "name": "大紀町",
+      "service": "postpartumCare",
+      "reason": "第3期こども計画と令和8年度予算は確認できるが、対象・類型・料金・上限・施設を示す現行利用者向け案内を確認できない"
+    },
+    {
+      "code": "24543",
+      "name": "紀北町",
+      "service": "postpartumCare",
+      "reason": "既存PDF以外に2026年度の利用者向け対象・料金・施設・申請条件を確認できない"
+    },
+    {
+      "code": "25383",
+      "name": "日野町",
+      "service": "postpartumCare",
+      "reason": "2022年開始時の広報PDFは確認できるが、2026年度の現行利用条件を示す利用者向けページを確認できない"
+    },
+    {
+      "code": "28501",
+      "name": "佐用町",
+      "service": "postpartumCare",
+      "reason": "令和8年3月31日制定の実施要綱は確認できるが、利用者向けの料金・上限・施設・予約方法を確認できない"
+    }
+  ],
+  "remainingWeakPrimarySourceCandidates": 33,
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "evidencePolicy": [
+    "自治体が運営する公式子育て情報サイトは、自治体公式ページから案内され、現行利用条件を直接示す場合に利用者向け主出典として採用する",
+    "計画、予算、旧広報PDF、実施要綱だけで2026年度の料金・上限・実施施設・予約条件を補完しない"
+  ],
+  "nextPriority": [
+    "産後ケアの残るPDF・計画単独候補",
+    "病児保育の計画・PDF単独候補",
+    "住宅支援の子育て固有条件分類候補"
+  ],
+  "ciRetriggeredAt": "2026-07-25T14:36:00+09:00",
+  "ciRetriggerReason": "CI #8396成功を監査JSONへ確定"
+}
