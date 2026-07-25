@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-25T23:45:00+09:00",
+  "updatedAt": "2026-07-26T00:03:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3705,
+  "pullRequestNumber": 3709,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3699,
+  "stateSyncPullRequestNumber": 3709,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残114件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残109件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T23:45:00+09:00",
-    "latestRegionalPullRequestNumber": 3699,
+    "latestCompletedAt": "2026-07-26T00:03:00+09:00",
+    "latestRegionalPullRequestNumber": 3709,
     "latestCiRunNumber": 30161836565,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 114,
-    "primarySourceSlotsRechecked": 546,
+    "correctedMunicipalitiesRechecked": 119,
+    "primarySourceSlotsRechecked": 551,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -471,6 +471,30 @@
         "code": "21521",
         "service": "housingSupport",
         "name": "御嵩町"
+      },
+      {
+        "type": "current_child_addition_clarification",
+        "code": "16202",
+        "service": "housingSupport",
+        "name": "高岡市"
+      },
+      {
+        "type": "child_specific_municipal_housing_scope_clarification",
+        "code": "17201",
+        "service": "housingSupport",
+        "name": "金沢市"
+      },
+      {
+        "type": "current_child_housing_package_source_upgrade",
+        "code": "23100",
+        "service": "housingSupport",
+        "name": "名古屋市"
+      },
+      {
+        "type": "current_fiscal_period_unconfirmed",
+        "code": "25442",
+        "service": "housingSupport",
+        "name": "甲良町"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -557,7 +581,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 114,
+      "generalHousingMisclassification": 109,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -579,7 +603,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残114件",
+      "一般住宅・移住制度の分類候補残109件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
@@ -605,5 +629,5 @@
       "blocker": null
     }
   },
-  "lastAction": "住宅支援分類第12群で瑞浪市・御嵩町を修正し、島田市・豊川市・伊豆の国市を現状維持判定。地域・全国・公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第13群で高岡市・金沢市・名古屋市の子育て条件と主出典を明確化し、甲良町は2026年度対象期間未確認のためunavailableへ修正。伊賀市は直接的な子育て制度を確認してverifiedを維持した。"
 }

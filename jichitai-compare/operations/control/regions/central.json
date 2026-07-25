@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T23:45:00+09:00",
+  "updatedAt": "2026-07-26T00:03:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,7 +24,7 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "住宅支援分類第12群で瑞浪市・御嵩町を修正し、島田市・豊川市・伊豆の国市を現状維持判定。地域・全国・公開5ページと全国JSONの一致を確認した。",
+  "lastAction": "住宅支援分類第13群で高岡市・金沢市・名古屋市の子育て条件と主出典を明確化し、甲良町は2026年度対象期間未確認のためunavailableへ修正。伊賀市は直接的な子育て制度を確認してverifiedを維持した。",
   "nextAction": "一般住宅・移住制度の分類候補残124件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
@@ -399,22 +399,14 @@
     ]
   },
   "latestCentralAHousingBatch": {
-    "batch": 12,
-    "status": "completed_public_verified_region_integrated",
+    "batch": 13,
+    "status": "regional_corrected_pending_national_sync",
     "reviewedMunicipalityCount": 5,
-    "confirmedCorrectionCount": 2,
-    "retainedNoChangeCount": 3,
-    "statusToUnavailableCount": 1,
-    "verifiedReplacementCount": 1,
-    "remainingCandidates": 114,
-    "regionalPullRequestNumber": 3699,
-    "regionalWorkflowRunId": 30161836565,
-    "nationalPullRequestNumber": 3701,
-    "nationalWorkflowRunId": 30162004028,
-    "publicVerificationPullRequestNumber": 3703,
-    "publicVerificationWorkflowRunId": 30162185289,
-    "finalRegionPullRequestNumber": 3705,
-    "finalRegionWorkflowRunId": 30162351195,
+    "correctedMunicipalityCount": 4,
+    "retainedMunicipalityCount": 1,
+    "remainingCandidates": 109,
+    "regionalPullRequestNumber": 3709,
+    "workflowRunId": 30162984077,
     "blocker": null
   }
 }
