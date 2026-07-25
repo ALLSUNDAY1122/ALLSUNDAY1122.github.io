@@ -1,4 +1,5 @@
 name: Temporary North B Fiscal Anyone Public Check
+# rerun: 2026-07-25T13:36:00+09:00
 
 on:
   pull_request:
@@ -11,6 +12,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: north-b-fiscal-anyone-public-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   verify-public:
@@ -44,10 +49,10 @@ jobs:
           verify_text "$base/04606/" '歌津地区子育て支援センター'
           verify_text "$base/06428/" '余目保育園、認定こども園からふる'
           verify_text "$base/04401/" '令和8年4月1日時点'
-          verify_text "$base/04422/" '令和8年度入園案内'
+          verify_text "$base/04422/" '0歳から2歳を含め所得制限なしで無償化'
           verify_text "$base/05212/" 'https://www.city.daisen.lg.jp/reiki/reiki_honbun/r154RG00000819.html'
           verify_text "$base/05213/" 'https://www1.g-reiki.net/city.kitaakita/reiki_honbun/r406RG00000646.html'
-          verify_text "$base/06382/" '実施施設、利用料金、利用時間、月間利用上限'
+          verify_text "$base/06382/" '施設・料金・利用時間・月上限は確認できない'
 
       - name: Verify generated data and removed unsupported statement
         shell: bash
