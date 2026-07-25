@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "central-b-final-resolution-20260725",
+  "coordinatorSession": "統括B②",
+  "finalizedAt": "2026-07-25T14:08:00+09:00",
+  "trackingIssue": 3188,
+  "scope": {
+    "assignedMunicipalityCount": 95,
+    "deepCheckedMunicipalityCount": 88,
+    "correctedMunicipalityCount": 55,
+    "correctionRecordCount": 57,
+    "prefectureCodes": ["26", "29", "30"]
+  },
+  "ledger": "jichitai-compare/operations/quality/central-b-quality-ledger-final-20260725.json",
+  "verificationEvidence": "jichitai-compare/operations/audits/central-b-final-evidence-verification-20260725.json",
+  "evidence": {
+    "regionalAuditPullRequest": 2926,
+    "regionalAuditCiRun": 7527,
+    "nationalSynchronizationPullRequest": 3136,
+    "nationalSynchronizationCiRun": 7716,
+    "regionalCompletionPullRequest": 3161,
+    "regionalCompletionCiRun": 7722,
+    "finalEvidencePullRequest": 3426,
+    "finalEvidenceCiRun": 8328
+  },
+  "verificationSummary": {
+    "recordCount": 57,
+    "uniqueMunicipalityCount": 55,
+    "regionMismatchCount": 0,
+    "taskMismatchCount": 0,
+    "generatedMismatchCount": 0,
+    "staticMismatchCount": 0,
+    "publicFailureCount": 0,
+    "brokenOfficialSourceCount": 0,
+    "officialAccessWarningCount": 6,
+    "sampleCount": 9,
+    "samplePassCount": 9,
+    "incompleteRowCount": 0,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669
+  },
+  "accessWarnings": {
+    "releaseBlocking": false,
+    "classification": "ssl_hostname_mismatch_or_timeout",
+    "count": 6,
+    "policy": "恒久404/410ではなく、region/main/生成物/公開ページ一致を確認済みのため通信警告として記録する"
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "temporaryRunnerCleanup": {
+    "paths": [
+      ".github/workflows/temporary-central-b-final-evidence.yml",
+      ".github/workflows/temporary-central-b-evidence-correction.yml"
+    ],
+    "cleanupPullRequest": 3431,
+    "status": "cleanup_completed"
+  },
+  "status": "completed"
+}
