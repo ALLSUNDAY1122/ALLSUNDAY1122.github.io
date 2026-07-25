@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-b-quality-improvement-second-audit-20260725",
+  "sessionId": "west-b",
+  "auditedAt": "2026-07-25T10:48:00+09:00",
+  "strategy": "past_corrections_recheck_plus_prefecture_stratified_sampling",
+  "restoredState": {
+    "completedAuditCycles": 10,
+    "municipalityCount": 250,
+    "serviceCount": 2250,
+    "pastResearchContentCorrections": 3,
+    "pastSourceMaintenanceCorrections": 14,
+    "unresolvedBeforeAudit": 0,
+    "sourceBranch": "main",
+    "integrationBranch": "region/west"
+  },
+  "scope": {
+    "pastCorrectionServiceRecheckCount": 17,
+    "stratifiedSampleMunicipalityCount": 30,
+    "prefectureCodes": [
+      "31",
+      "32",
+      "34",
+      "35",
+      "36",
+      "38",
+      "41",
+      "42",
+      "44",
+      "45",
+      "47"
+    ],
+    "priorityServices": [
+      "sickChildCare",
+      "schoolMeals",
+      "temporaryChildcare"
+    ],
+    "priorityChecks": [
+      "verified_unavailable",
+      "current_fiscal_year",
+      "official_url_validity",
+      "source_task_generated_page_consistency"
+    ],
+    "sampledMunicipalities": [
+      "31384",
+      "32528",
+      "34211",
+      "34307",
+      "35202",
+      "36207",
+      "36321",
+      "36387",
+      "36404",
+      "38356",
+      "38442",
+      "38484",
+      "41209",
+      "41425",
+      "42205",
+      "42210",
+      "42212",
+      "42308",
+      "42391",
+      "44210",
+      "44462",
+      "45401",
+      "45402",
+      "45442",
+      "45443",
+      "47211",
+      "47302",
+      "47328",
+      "47350",
+      "47382"
+    ]
+  },
+  "pastCorrectionRecheck": {
+    "checkedServiceEntries": 17,
+    "confirmedStillCorrect": 16,
+    "contentDetailCorrectionRequired": 1,
+    "confirmedNewSourceMaintenanceIssue": 0,
+    "transientAccessWarningWithoutConfirmedUrlBreak": 3,
+    "correctedEntry": {
+      "code": "47302",
+      "name": "大宜味村",
+      "service": "sickChildCare",
+      "statusBefore": "verified",
+      "statusAfter": "verified",
+      "problem": "現行JSONは病児・病後児保育施設への送迎のみを記載していたが、公式要綱は病児・病後児の預かり、軽度疾病時の終日預かり、病児保育施設等への送迎を規定し、病児・病後児の報酬額を1時間700円としている。",
+      "correction": "預かり、実施場所、料金、申込期限、施設型病児保育との相違を追記。",
+      "officialSource": "https://www.vill.ogimi.okinawa.jp/section/reiki_int/reiki_honbun/q913RG00000476.html"
+    }
+  },
+  "communicationWarningRetry": {
+    "municipalityCount": 14,
+    "recoveredOrOfficiallyRediscovered": [
+      "34307",
+      "36207",
+      "36321",
+      "36387",
+      "36404",
+      "38356",
+      "41209",
+      "41425",
+      "42205",
+      "45402",
+      "47211"
+    ],
+    "warningReproducedWithoutContradictingEvidence": [
+      "44462",
+      "45401",
+      "47382"
+    ],
+    "conclusion": "一時的な404、500、504、TLSまたはCDN警告を理由に制度判定やURLを変更しない。現行公式情報を取得できたものは既存登録との一致を確認した。"
+  },
+  "keyFindings": [
+    "熊野町の令和8年度こども誰でも通園制度は生後6か月から満3歳未満、月10時間、1時間300円の現行案内を再確認。",
+    "美馬市の病児・病後児保育広域利用助成は市外施設利用を対象とする現行要綱を再確認。",
+    "美波町の産後ケアは産後1年未満を対象とする現行要綱を再確認。",
+    "上島町の産後ケアは宿泊・日帰り・訪問型、最大7回、現行料金を再確認。",
+    "大村市の病児保育は0歳から小学6年生までの現行案内を再確認。",
+    "新富町の病児・病後児保育利用料助成とこども誰でも通園制度の現行案内を再確認。",
+    "南風原町の学校給食関連URLは現行組織配下で有効。",
+    "中城村の現行子育て分類に病児保育は掲載される一方、令和8年度こども誰でも通園制度の利用条件ページは確認できず、temporaryChildcareの保守的判定を維持。"
+  ],
+  "consistency": {
+    "municipalityJson": "updated_and_matched",
+    "task": "updated_and_matched",
+    "generatedMunicipalitiesJson": "regenerated_and_matched",
+    "municipalityPage": "regenerated_and_matched",
+    "progressJson": "regenerated",
+    "validation": "npm_run_validate_generated_passed_on_correction_branch",
+    "publicPage": "pending_pages_deploy_verification"
+  },
+  "branchStatus": {
+    "correctionBranch": "fix/west-b-second-audit-ogimi-sick-child-v2-20260725",
+    "main": "merged_pr_3209_ci_7823",
+    "regionWest": "sync_branch_validated_pending_pr"
+  },
+  "aggregate": {
+    "detectedResearchContentErrorCount": 1,
+    "correctedResearchContentErrorCount": 1,
+    "detectedSourceMaintenanceIssueCount": 0,
+    "correctedSourceMaintenanceIssueCount": 0,
+    "unresolvedConfirmedErrorCount": 0,
+    "status": "passed_after_one_content_detail_correction"
+  }
+}
