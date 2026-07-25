@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T07:48:00+09:00",
+  "updatedAt": "2026-07-26T07:58:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3811,
+  "pullRequestNumber": 3815,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3805,
+  "stateSyncPullRequestNumber": 3815,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残69件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残64件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T07:48:00+09:00",
-    "latestRegionalPullRequestNumber": 3805,
+    "latestCompletedAt": "2026-07-26T07:58:00+09:00",
+    "latestRegionalPullRequestNumber": 3815,
     "latestCiRunNumber": 30177953475,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 159,
-    "primarySourceSlotsRechecked": 591,
+    "correctedMunicipalitiesRechecked": 164,
+    "primarySourceSlotsRechecked": 596,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -519,6 +519,36 @@
         "code": "27204",
         "service": "housingSupport",
         "name": "池田市"
+      },
+      {
+        "type": "replace_with_current_child_newlywed_municipal_housing",
+        "code": "27205",
+        "service": "housingSupport",
+        "name": "吹田市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27206",
+        "service": "housingSupport",
+        "name": "泉大津市"
+      },
+      {
+        "type": "replace_with_current_newlywed_program",
+        "code": "27208",
+        "service": "housingSupport",
+        "name": "貝塚市"
+      },
+      {
+        "type": "replace_with_current_newlywed_program",
+        "code": "27210",
+        "service": "housingSupport",
+        "name": "枚方市"
+      },
+      {
+        "type": "replace_with_current_multigenerational_program",
+        "code": "27211",
+        "service": "housingSupport",
+        "name": "茨木市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -605,7 +635,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 69,
+      "generalHousingMisclassification": 64,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -627,7 +657,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残69件",
+      "一般住宅・移住制度の分類候補残64件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
@@ -674,5 +704,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第21群の大台町・大紀町・御浜町・大津市・池田市を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第22群として、吹田市・泉大津市・貝塚市・枚方市・茨木市のhousingSupportを現行公式情報で再分類した。"
 }
