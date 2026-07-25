@@ -34,7 +34,7 @@ jobs:
               && [[ "$generated_status" == '200' ]] \
               && grep -Fq "$expected" "$page_file" \
               && grep -Fq "$source" "$page_file" \
-              && grep -Fq '"code":"46533"' "$generated_file" \
+              && grep -Eq '"code"[[:space:]]*:[[:space:]]*"46533"' "$generated_file" \
               && grep -Fq "$expected" "$generated_file" \
               && grep -Fq "$source" "$generated_file"; then
               echo "public verification passed on attempt $attempt"
