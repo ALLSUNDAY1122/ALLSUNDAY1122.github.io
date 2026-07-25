@@ -33,7 +33,25 @@ jobs:
           node-version: '20'
 
       - name: Apply confirmed corrections
-        run: node jichitai-compare/scripts/temp-north-b-fiscal-anyone-fixes.mjs
+        shell: bash
+        run: |
+          node jichitai-compare/scripts/temp-north-b-fiscal-anyone-fixes.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root = path.resolve('jichitai-compare');
+          for (const code of ['01604', '04606', '06428']) {
+            const municipalityPath = path.join(root, 'data', 'municipalities', code.slice(0, 2), `${code}.json`);
+            const taskPath = path.join(root, 'operations', 'tasks', `${code}.json`);
+            const municipality = JSON.parse(fs.readFileSync(municipalityPath, 'utf8'));
+            const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+            task.officialSources = Object.values(municipality.services || {})
+              .map((service) => service?.source?.url)
+              .filter(Boolean);
+            fs.writeFileSync(taskPath, `${JSON.stringify(task, null, 2)}\n`);
+            console.log(`normalized primary sources: ${code}`);
+          }
+          NODE
 
       - name: Regenerate and validate public data
         id: validation
