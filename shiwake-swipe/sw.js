@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shiwake-swipe-v3';
+const CACHE_NAME = 'shiwake-swipe-v4';
 const ASSETS = [
   './',
   './index.html',
