@@ -104,15 +104,32 @@ jobs:
         run: exit 1
 
       - name: Reject unexpected generated changes
+        id: scope
+        continue-on-error: true
         shell: bash
         run: |
           allowed='^(jichitai-compare/(data/municipalities/(16/16210|17/(17461|17463)|21/(21364|21381)|23/23446)\.json|operations/tasks/(16210|17461|17463|21364|21381|23446)\.json|operations/audits/central-a-housing-classification-batch9-decisions-20260725\.json|operations/control/regions/central\.json|operations/control/session-checkpoints/central-a\.json|data/generated/(municipalities|municipality-pages)\.json|operations/progress\.json|municipality/[0-9]{5}/index\.html|sitemap\.xml))$'
           unexpected=$(git status --porcelain | sed -E 's/^.. //' | grep -Ev "$allowed" || true)
+          diagnostic='jichitai-compare/operations/audits/central-a-housing-batch9-main-unexpected-20260725.log'
+          rm -f "$diagnostic"
           if [ -n "$unexpected" ]; then
-            echo 'Unexpected changes:'
-            echo "$unexpected"
+            printf '%s\n' "$unexpected" > "$diagnostic"
             exit 1
           fi
+
+      - name: Persist scope diagnostic
+        if: steps.scope.outcome == 'failure'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/central-a-housing-batch9-main-unexpected-20260725.log
+          git commit -m 'diagnostic: 第9群全国同期の想定外差分を記録'
+          git push --force origin "HEAD:${GITHUB_HEAD_REF}"
+
+      - name: Stop after scope failure
+        if: steps.scope.outcome == 'failure'
+        run: exit 1
 
       - name: Create clean commit on latest main
         shell: bash
