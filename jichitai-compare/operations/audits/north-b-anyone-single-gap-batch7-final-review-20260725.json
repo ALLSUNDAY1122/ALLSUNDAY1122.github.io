@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-anyone-single-gap-batch7-final-review-20260725",
+  "sessionId": "north-b",
+  "reviewedAt": "2026-07-25T17:20:00+09:00",
+  "status": "anyone_candidate_audit_completed",
+  "sourceAudit": "operations/audits/north-b-fiscal-anyone-triage-20260725.json",
+  "scope": {
+    "candidatesReviewed": 5,
+    "municipalitiesCorrected": 4,
+    "noChangeMunicipalities": 1,
+    "statusChanges": 0,
+    "remainingUnreviewedCandidates": 0
+  },
+  "corrected": [
+    {
+      "code": "06426",
+      "municipality": "三川町",
+      "result": "令和8年4月1日開始を追記"
+    },
+    {
+      "code": "06461",
+      "municipality": "遊佐町",
+      "result": "令和8年度開始と実施2施設を追記し、制度直接ページを主出典化"
+    },
+    {
+      "code": "04361",
+      "municipality": "亘理町",
+      "result": "令和7年12月先行開始、令和8年4月本格実施、対象・時間・料金・上限を追記"
+    },
+    {
+      "code": "04404",
+      "municipality": "七ヶ浜町",
+      "result": "令和8年4月開始と対象月齢・月上限を追記し、制度直接ページを主出典化"
+    }
+  ],
+  "noChange": [
+    {
+      "code": "06403",
+      "municipality": "飯豊町",
+      "result": "現行条件は確認できるが町固有の開始時期の明記がないため現状維持"
+    }
+  ],
+  "candidateReconciliation": {
+    "anyoneCandidateCount": 78,
+    "phase1AnyoneReviewed": 4,
+    "multipleGapReviewed": 9,
+    "singleGapReviewed": 65,
+    "totalReviewed": 78,
+    "previousCheckpointRemaining": 12,
+    "correctedRemainingUnreviewed": 0,
+    "explanation": "従来の残件数は確認済み・変更なし候補を重複計上していた。監査台帳の78候補を、先行4件・複数条件13件・単一条件65件で再集計し、未着手0件を確認した。"
+  },
+  "policy": "ページ更新日を制度開始日とみなさない。開始時期が公式に明記された自治体のみ補正し、未公表自治体は確認済み・変更なしとして監査完了に含める。"
+}
