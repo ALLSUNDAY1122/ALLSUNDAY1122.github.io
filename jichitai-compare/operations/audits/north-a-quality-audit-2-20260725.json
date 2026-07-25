@@ -5,7 +5,7 @@
   "title": "北日本A 品質改善第2監査",
   "status": "in_progress",
   "startedAt": "2026-07-25T10:31:00+09:00",
-  "updatedAt": "2026-07-25T11:13:00+09:00",
+  "updatedAt": "2026-07-25T11:09:00+09:00",
   "scope": {
     "prefectureCodes": ["02", "03", "07"],
     "priorCorrectedMunicipalities": ["02411", "03203", "03206", "03302", "07202", "07212", "07362", "07368", "07405", "07408", "07501", "07547"],
@@ -46,6 +46,18 @@
       "affectedTasks": ["03203", "03302", "07212", "07368", "07501"],
       "risk": "今後の地域統合で旧情報がmainへ再流入する可能性",
       "correctionStatus": "integrated_to_region"
+    },
+    {
+      "type": "service_type_omission",
+      "severity": "medium",
+      "code": "07405",
+      "municipality": "西会津町",
+      "service": "postpartumCare",
+      "before": "宿泊型、日帰り型",
+      "after": "宿泊型、日帰り型、訪問型",
+      "cause": "利用者向け案内のみを参照し、令和5年改正後の実施要綱に追加された訪問型を見落とした",
+      "officialBasis": "西会津町産後ケア事業実施要綱第5条・第7条・第12条",
+      "correctionStatus": "working_branch_fixed"
     }
   ],
   "regionRecovery": {
@@ -58,24 +70,40 @@
     "integrationCompleted": true
   },
   "officialReverification": {
-    "completedCorrections": 5,
+    "completedCorrections": 13,
+    "allPriorCorrectionsMaintained": true,
     "confirmed": [
       {"code": "02411", "service": "temporaryChildcare", "result": "村内4施設を現行公式案内で再確認"},
+      {"code": "03203", "service": "childcareFee", "result": "令和8年度利用しおりで0～5歳全年齢の保育料無償、副食費上限月4,800円を再確認"},
       {"code": "03206", "service": "schoolMeals", "result": "令和8年度は小学校給食費のみ無償化を再確認"},
+      {"code": "03302", "service": "schoolMeals", "result": "過年度実績は確認できるが令和8年度利用者向け条件を確定できずunavailable維持"},
       {"code": "07202", "service": "schoolMeals", "result": "小学校無償、中学校日額350円を再確認"},
       {"code": "07212", "service": "postpartumCare", "result": "現行ページの添付が令和7年度案内のみであることを再確認"},
-      {"code": "07368", "service": "temporaryChildcare", "result": "利用条件本文が令和7年度案内のままであることを再確認"}
+      {"code": "07362", "service": "postpartumCare", "result": "令和8年5月更新ページで宿泊・日帰り・訪問型を再確認"},
+      {"code": "07368", "service": "temporaryChildcare", "result": "利用条件本文が令和7年度案内のままであることを再確認"},
+      {"code": "07405", "service": "postpartumCare", "result": "無料・各類型7日以内を再確認。訪問型欠落を追加訂正"},
+      {"code": "07408", "service": "childcareFee", "result": "令和8年度入所案内で0歳児を含む施設利用を再確認"},
+      {"code": "07501", "service": "postpartumCare", "result": "公開資料が令和6年度版のため現行条件未確定、unavailable維持"},
+      {"code": "07501", "service": "housingSupport", "result": "住宅取得支援の現行年度条件を確定できずunavailable維持"},
+      {"code": "07547", "service": "postpartumCare", "result": "令和8年6月更新ページで対象1歳未満、宿泊7日、日帰り・訪問各5日、料金を再確認"}
     ]
+  },
+  "activeCorrection": {
+    "workingBranch": "agent/north-a-quality-audit-2-fixes-20260725",
+    "correctedMunicipalities": ["07405"],
+    "correctedTasks": ["07405"],
+    "pullRequestNumber": null,
+    "ciStatus": "not_started"
   },
   "progress": {
     "recoveryCompleted": true,
     "priorCorrectionReflectionCheckStarted": true,
     "priorCorrectionRegionRecoveryCompleted": true,
-    "officialReverificationCompleted": 5,
+    "officialReverificationCompleted": 13,
     "crossMunicipalityChecksCompleted": 0,
     "sampledMunicipalitiesCompleted": 0,
-    "confirmedNewErrors": 1,
-    "correctedNewErrors": 1
+    "confirmedNewErrors": 2,
+    "correctedNewErrors": 2
   },
-  "nextAction": "残る過去訂正8件を現行公式情報で再確認し、原因別横断検索、青森・岩手・福島の高リスク自治体抜き取り監査へ進む。"
+  "nextAction": "西会津町の訪問型追加修正をregion/north向けPR・CI・統合へ進め、産後ケア類型、旧年度誰でも通園、学校給食対象年齢等の原因別横断検索を実施する。"
 }
