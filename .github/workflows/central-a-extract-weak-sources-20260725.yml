@@ -1,0 +1,75 @@
+name: Central A Extract Weak Sources 20260725
+
+on:
+  push:
+    branches:
+      - audit/central-a-weak-sources-20260725-1123
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Extract and prioritize weak primary source candidates
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const root = 'jichitai-compare';
+          const report = JSON.parse(fs.readFileSync(path.join(root,'operations','audits','central-a-cause-based-rescan-summary-20260725.json'),'utf8'));
+          const raw = report.causeCandidates.categories.weakPrimarySource ?? [];
+          const classify = item => {
+            const url = item.sourceUrl ?? '';
+            const reasons = item.reasons ?? [];
+            let sourceType = 'other';
+            if (reasons.some(x => x.includes('トップページ'))) sourceType = 'municipality_root';
+            else if (/yosan|予算/i.test(url) || reasons.some(x => x.includes('予算'))) sourceType = 'budget';
+            else if (/gian|議案/i.test(url) || reasons.some(x => x.includes('議案'))) sourceType = 'bill';
+            else if (/keikaku|plan|計画/i.test(url) || reasons.some(x => x.includes('計画'))) sourceType = 'plan';
+            else if (/reiki|jourei|条例/i.test(url) || reasons.some(x => x.includes('条例'))) sourceType = 'ordinance';
+            const servicePriority = {temporaryChildcare:1,schoolMeals:2,sickChildCare:3,postpartumCare:4,housingSupport:5};
+            const typePriority = {municipality_root:1,budget:2,bill:3,plan:4,ordinance:5,other:9};
+            return {...item, sourceType, priority:(servicePriority[item.service]??9)*10+(typePriority[sourceType]??9)};
+          };
+          const items = raw.map(classify).sort((a,b)=>a.priority-b.priority||a.code.localeCompare(b.code)||a.service.localeCompare(b.service));
+          const byType = {};
+          const byService = {};
+          for (const item of items) {
+            byType[item.sourceType] = (byType[item.sourceType]??0)+1;
+            byService[item.service] = (byService[item.service]??0)+1;
+          }
+          const uniqueMunicipalities = [...new Set(items.map(x=>x.code))];
+          const firstBatch = items.slice(0,15);
+          const output = {
+            schemaVersion:'1.0.0',
+            auditId:'central-a-weak-primary-source-candidates-20260725',
+            generatedAt:'2026-07-25T11:23:00+09:00',
+            sourceAudit:report.sourceAudit,
+            candidateCount:items.length,
+            municipalityCount:uniqueMunicipalities.length,
+            byType,
+            byService,
+            prioritization:'こども誰でも通園、学校給食、病児保育、産後ケア、住宅支援の順。自治体トップ、予算、議案、計画、条例の順に利用者向け案内の探索優先度を付与。',
+            firstBatch,
+            items
+          };
+          const outPath = path.join(root,'operations','audits','central-a-weak-primary-source-candidates-20260725.json');
+          fs.writeFileSync(outPath,JSON.stringify(output,null,2)+'\n');
+          console.log(JSON.stringify({candidateCount:items.length,municipalityCount:uniqueMunicipalities.length,byType,byService,firstBatch:firstBatch.map(x=>`${x.code}:${x.service}:${x.sourceType}`)},null,2));
+          NODE
+      - name: Commit extraction and remove runner
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/central-a-extract-weak-sources-20260725.yml
+          git add jichitai-compare/operations/audits/central-a-weak-primary-source-candidates-20260725.json
+          git commit -m "audit: 弱い主出典46候補を優先度順に抽出"
+          git push origin HEAD:audit/central-a-weak-sources-20260725-1123
