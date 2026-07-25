@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch8-decisions-20260725",
+  "decidedAt": "2026-07-25T15:42:00+09:00",
+  "session": "中日本調査班A",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3539,
+  "runnerWorkflowRunId": 30148173261,
+  "runnerConclusion": "success",
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 2,
+  "childSpecificReplacementCount": 3,
+  "corrected": [
+    {
+      "code": "17204",
+      "name": "輪島市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_child_specific_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.city.wajima.ishikawa.jp/article/2026013000019/",
+      "summary": "小学校就学前の子どもがいる世帯は、2026年度市営住宅の所得基準を月214,000円以下まで緩和する。"
+    },
+    {
+      "code": "17211",
+      "name": "能美市",
+      "service": "housingSupport",
+      "correctionType": "general_housing_misclassification",
+      "afterStatus": "unavailable",
+      "officialSource": "https://www.city.nomi.ishikawa.jp/docs/5597.html",
+      "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。"
+    },
+    {
+      "code": "17361",
+      "name": "津幡町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_child_specific_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.town.tsubata.lg.jp/site/welcome/1217.html",
+      "summary": "18歳未満の子がいる三世代世帯の同居・近居に伴う住宅取得・改修へ、10万円または15万円を補助する。"
+    },
+    {
+      "code": "21604",
+      "name": "白川村",
+      "service": "housingSupport",
+      "correctionType": "general_housing_misclassification",
+      "afterStatus": "unavailable",
+      "officialSource": "https://www.vill.shirakawa.lg.jp/1270.htm",
+      "summary": "子育て世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。"
+    },
+    {
+      "code": "22208",
+      "name": "伊東市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_newlywed_specific_program",
+      "afterStatus": "verified",
+      "officialSource": "https://www.city.ito.shizuoka.jp/gyosei/soshikikarasagasu/kosodateshienka/kurashi_tetsuzuki/1/2/10657.html",
+      "summary": "39歳以下の新婚世帯へ、2026年度の住宅購入・改修・賃借・引越費用を上限30万円または60万円補助する。"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 139,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 134
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般制度が登録されていても、現行の子育て・三世代・新婚世帯向け住宅制度が別に存在する場合は、一般制度を除外して対象制度へ差し替える",
+    "年齢要件のみの若年・定住制度は、子育て世帯を対象要件としない限り子育て世帯向け住宅支援として登録しない"
+  ],
+  "regionalCiRunNumber": 8602,
+  "stateSyncPullRequestNumber": 3549,
+  "stateSynchronizedAt": "2026-07-25T15:56:00+09:00"
+}
