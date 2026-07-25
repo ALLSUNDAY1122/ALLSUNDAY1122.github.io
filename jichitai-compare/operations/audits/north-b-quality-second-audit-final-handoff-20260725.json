@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-quality-second-audit-final-handoff-20260725",
+  "sessionId": "north-b",
+  "completedAt": "2026-07-25T17:34:00+09:00",
+  "status": "completed",
+  "scope": {
+    "assignedMunicipalities": 107,
+    "qualitySampleReviewed": 20,
+    "fiscalCandidatesReviewed": 40,
+    "anyoneCandidatesReviewed": 78,
+    "remainingUnreviewed": 0,
+    "fiscalAnyoneStatusChanges": 0
+  },
+  "anyoneCandidateReconciliation": {
+    "phase1Reviewed": 4,
+    "multipleGapReviewed": 9,
+    "singleGapReviewed": 65,
+    "totalReviewed": 78,
+    "remainingUnreviewed": 0
+  },
+  "finalBatch": {
+    "reviewed": 5,
+    "correctedMunicipalities": [
+      "04361",
+      "04404",
+      "06426",
+      "06461"
+    ],
+    "noChangeMunicipalities": [
+      "06403"
+    ],
+    "policy": "ページ更新日を開始日とみなさず、利用者向け公式案内に自治体固有の開始時期が明記された場合のみ補正"
+  },
+  "integration": {
+    "mainCorrectionPullRequest": 3631,
+    "mainCorrectionMergeCommit": "35a92748d463cbf4230a4ed9ea5ccfef2926f2c1",
+    "regionCorrectionPullRequest": 3632,
+    "regionCorrectionMergeCommit": "8d37191e048ff1a48bb2cbb8c3e8129746805546",
+    "publicVerificationPullRequest": 3636,
+    "publicVerificationMergeCommit": "49039654b2c0759fb4a3935c0183d29aeda5e89e",
+    "regionPublicRecordPullRequest": 3642,
+    "regionPublicRecordMergeCommit": "ab8cf5539327b33ee6b6f53f4d3c9f67c7222a79"
+  },
+  "validation": {
+    "municipalityJson": "success",
+    "taskJson": "success",
+    "generatedMunicipalitiesJson": "success",
+    "staticPages": "success",
+    "publicPages": "success",
+    "regionNorth": "success"
+  },
+  "records": [
+    "operations/audits/north-b-fiscal-anyone-triage-20260725.json",
+    "operations/audits/north-b-anyone-single-gap-batch7-final-review-20260725.json",
+    "operations/audits/north-b-anyone-batch7-public-verification-20260725.json"
+  ],
+  "nextAction": "統括・全国統合セッションで北日本Bの最終監査記録と地域ブランチ同期済み状態を確認する。"
+}
