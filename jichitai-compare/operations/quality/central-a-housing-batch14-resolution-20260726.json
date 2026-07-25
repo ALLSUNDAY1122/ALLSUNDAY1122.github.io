@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "central-a-housing-batch14-resolution-20260726",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-26T02:15:00+09:00",
+  "category": "generalHousingMisclassification",
+  "scope": {
+    "reviewedMunicipalityCount": 5,
+    "correctedMunicipalityCount": 4,
+    "noChangeMunicipalityCount": 1,
+    "remainingHousingCandidates": 104,
+    "correctedMunicipalitiesRechecked": 124,
+    "primarySourceSlotsRechecked": 556,
+    "weakPrimarySourceCandidates": 33,
+    "issue3141UnresolvedItems": 19
+  },
+  "corrections": {
+    "statusChangeCount": 0,
+    "unavailableSourceUpgradeCount": 2,
+    "verifiedClarificationOrSourceUpgradeCount": 2,
+    "noChangeCount": 1,
+    "codes": [
+      "23237",
+      "23238",
+      "23342",
+      "23442"
+    ],
+    "noChangeCodes": [
+      "28228"
+    ]
+  },
+  "stateReconciliation": {
+    "detectedAt": "2026-07-26T02:04:00+09:00",
+    "reason": "第13群完了後に並行して最終化された第12群がcheckpoint累計を第12群単独値へ戻していた",
+    "authoritativePriorResolution": "central-a-housing-batch13-resolution-20260726",
+    "authoritativePriorValues": {
+      "correctedMunicipalitiesRechecked": 119,
+      "primarySourceSlotsRechecked": 551,
+      "generalHousingMisclassification": 109
+    },
+    "observedRegressedValues": {
+      "correctedMunicipalitiesRechecked": 114,
+      "primarySourceSlotsRechecked": 546,
+      "generalHousingMisclassification": 114
+    },
+    "resolvedValues": {
+      "correctedMunicipalitiesRechecked": 124,
+      "primarySourceSlotsRechecked": 556,
+      "generalHousingMisclassification": 104
+    },
+    "status": "resolved"
+  },
+  "evidence": {
+    "regionalPullRequest": 3732,
+    "regionalWorkflowRunId": 30166860327,
+    "nationalSyncPullRequest": 3734,
+    "nationalSyncWorkflowRunId": 30166972646,
+    "publicVerificationPullRequest": 3736,
+    "publicVerificationWorkflowRunId": 30167082115,
+    "finalRegionPullRequest": 3738,
+    "finalRegionWorkflowRunId": 30167190692,
+    "finalMainPullRequest": 3740,
+    "finalMainWorkflowRunId": 30167293563
+  },
+  "publicVerification": {
+    "pageCount": 5,
+    "allPagesHttp200": true,
+    "statusSummarySourceMatch": true,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "status": "completed_public_verified_region_integrated",
+  "temporaryRunnerCleanup": {
+    "regionPaths": [
+      ".github/workflows/temp-central-a-housing-batch14.yml",
+      ".github/workflows/temp-central-a-housing-batch14-finalize.yml"
+    ],
+    "mainPaths": [
+      ".github/workflows/temp-central-a-housing-batch14-main.yml",
+      ".github/workflows/temp-central-a-housing-batch14-public.yml",
+      ".github/workflows/temp-central-a-housing-batch14-final-main.yml"
+    ],
+    "regionCleanupPullRequest": 3738,
+    "mainCleanupPullRequest": 3740,
+    "status": "cleanup_completed"
+  }
+}
