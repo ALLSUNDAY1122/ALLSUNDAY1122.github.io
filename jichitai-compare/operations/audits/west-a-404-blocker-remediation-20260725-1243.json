@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-404-blocker-remediation-20260725-1243",
+  "team": "西日本調査班A",
+  "checkedAt": "2026-07-25T12:47:00+09:00",
+  "triggerPullRequest": 3320,
+  "scope": {
+    "candidateCount": 2,
+    "municipalityCodes": ["43443", "46533"],
+    "service": "bulkyWaste"
+  },
+  "findings": [
+    {
+      "municipalityCode": "43443",
+      "municipalityName": "益城町",
+      "finding": "旧主出典が404となり、1品目500円・3辺合計400cm未満等を現行公式公開情報で再確認できない。",
+      "classification": "deleted_source_and_unconfirmed_current_conditions",
+      "oldStatus": "verified",
+      "newStatus": "unavailable",
+      "oldSource": "https://www.town.mashiki.lg.jp/kiji0032329/",
+      "newSource": "https://www.town.mashiki.lg.jp/dynamic/word_l/pub/default.aspx?c_id=20",
+      "additionalSource": "https://www.town.mashiki.lg.jp/list00679.html",
+      "resolution": "現行ごみ出し早見表で粗大ごみ区分と品目別自己搬入可否だけを確認。削除済みページの料金・寸法・指定業者条件は維持せず、自治体窓口確認が必要なunavailableへ変更。",
+      "status": "corrected"
+    },
+    {
+      "municipalityCode": "46533",
+      "municipalityName": "和泊町",
+      "finding": "自動監査で案内ページを404候補としたが、町公式案内ページと添付PDFは現存し、PDFに粗大ごみ100円/10kgが明記される。",
+      "classification": "automated_fetch_false_positive_and_source_hardening",
+      "oldStatus": "verified",
+      "newStatus": "verified",
+      "oldSource": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
+      "newSource": "https://www.town.wadomari.lg.jp/documents/4268/kaitei.pdf",
+      "additionalSource": "https://www.town.wadomari.lg.jp/tyoumin/gomisyori.html",
+      "resolution": "料金を直接記載する町公式添付PDFを主出典へ変更し、案内ページを追加出典として保持。",
+      "status": "corrected"
+    }
+  ],
+  "verification": {
+    "mashikiCurrentOfficialGarbageIndexReachable": true,
+    "mashikiDeletedPageConfirmed404": true,
+    "wadomariOfficialPageReachable": true,
+    "wadomariOfficialPdfReachable": true,
+    "wadomariPdfConfirmedFee": "粗大ごみ100円/10kg",
+    "pdfScreenshotAttempted": true,
+    "pdfScreenshotResult": "web_tool_cache_miss_twice; parsed official PDF text independently confirmed the fee"
+  },
+  "summary": {
+    "confirmedErrorCount": 1,
+    "sourceHardeningCount": 1,
+    "statusChangeCount": 1,
+    "unresolvedCount": 0,
+    "blocker": null,
+    "result": "completed_with_two_remediations"
+  }
+}
