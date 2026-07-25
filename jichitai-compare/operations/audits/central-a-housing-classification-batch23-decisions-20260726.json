@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch23-decisions-20260726",
+  "decidedAt": "2026-07-26T08:33:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3829,
+  "runnerWorkflowRunId": 30179659490,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 2,
+  "verifiedReplacementCount": 3,
+  "decisions": [
+    {
+      "code": "27214",
+      "name": "富田林市",
+      "service": "housingSupport",
+      "decisionType": "general_seismic_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の住宅等について、耐震診断・改修・除却費の一部を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.tondabayashi.lg.jp/soshiki/32/44454.html"
+    },
+    {
+      "code": "27215",
+      "name": "寝屋川市",
+      "service": "housingSupport",
+      "decisionType": "ended_newlywed_program_general_seismic_only",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準等の住宅について耐震診断・改修・除却費の一部を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.neyagawa.osaka.jp/organization_list/kodomo/kosodatesienka/bosi_kenkou/18759.html"
+    },
+    {
+      "code": "27216",
+      "name": "河内長野市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_child_nearby_home_acquisition",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の木造住宅の耐震診断・改修設計・改修工事・除却等に補助する。",
+      "afterSummary": "就学前の子がいる世帯または夫婦とも40歳未満の子のいない世帯が、市内親族と近居・同居する住宅取得へ最大30万円の補助を受けられる。制度は2026年9月30日で終了する。",
+      "officialSource": "https://www.city.kawachinagano.lg.jp/soshiki/2/4120.html"
+    },
+    {
+      "code": "27217",
+      "name": "松原市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_newlywed_program",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の住宅等を対象に耐震診断・耐震改修設計・改修工事を補助する。",
+      "afterSummary": "39歳以下の新婚・パートナーシップ世帯へ、令和8年度の住宅取得・賃借・リフォーム・引越費用を上限30万円または60万円補助し、住宅購入時は上限50万円または100万円とする。",
+      "officialSource": "https://www.city.matsubara.lg.jp/docs/2554071.html"
+    },
+    {
+      "code": "27218",
+      "name": "大東市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_child_newlywed_municipal_housing",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の既存木造住宅を対象に耐震設計・耐震改修・耐震シェルター設置を補助する。",
+      "afterSummary": "大東市営もりねき住宅で、新婚・子育て世帯向け区分を設けて募集する。令和8年6月随時募集では1戸を募集し、抽選結果を公表した。",
+      "officialSource": "https://www.city.daito.lg.jp/soshiki/73/47693.html"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 64,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 59
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般耐震制度だけを子育て世帯向け住宅支援として登録しない",
+    "終了済み新婚支援を現行制度として扱わない",
+    "子育て・新婚世帯向け住宅取得・家賃・市営住宅募集は年度と受付状態を明記する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3831,
+  "nationalSyncWorkflowRunId": 30179787093,
+  "nationalSyncStatus": "validated_pending_merge"
+}
