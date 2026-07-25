@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch21-public-verification-20260726",
+  "generatedAt": "2026-07-25T22:45:38.700Z",
+  "regionalPullRequest": 3805,
+  "nationalSyncPullRequest": 3807,
+  "verificationPullRequest": 3809,
+  "verificationWorkflowRunId": 30178168054,
+  "expectedUnavailableCount": 2,
+  "expectedVerifiedCount": 3,
+  "attempt": 1,
+  "pageChecks": [
+    {
+      "code": "24443",
+      "name": "大台町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/24443/?audit=1785019537428-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "success": true
+    },
+    {
+      "code": "24471",
+      "name": "大紀町",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/24471/?audit=1785019537428-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "success": true
+    },
+    {
+      "code": "24561",
+      "name": "御浜町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/24561/?audit=1785019537428-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "success": true
+    },
+    {
+      "code": "25201",
+      "name": "大津市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/25201/?audit=1785019537428-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "success": true
+    },
+    {
+      "code": "27204",
+      "name": "池田市",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/27204/?audit=1785019537428-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "success": true
+    }
+  ],
+  "jsonCheck": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "records": [
+      {
+        "code": "24443",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "24471",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "24561",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "25201",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "27204",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      }
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none"
+}
