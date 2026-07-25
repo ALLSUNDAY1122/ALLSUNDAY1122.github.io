@@ -1,20 +1,20 @@
-name: Temporary West B School Meals Region Sync
+name: Temporary West B School Meals Final Region Sync
 
 on:
   pull_request:
     branches:
       - main
     paths:
-      - jichitai-compare/operations/control/west-b-school-meals-region-sync-trigger-20260725.json
+      - jichitai-compare/operations/control/west-b-school-meals-final-region-sync-trigger-20260725.json
 
 permissions:
   contents: write
 
 jobs:
   sync:
-    if: github.head_ref == 'ops/run-west-b-school-meals-region-sync-20260725'
+    if: github.head_ref == 'ops/run-west-b-school-meals-final-region-sync-20260725'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,22 +24,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Copy main source records and merge checkpoint block
+      - name: Copy final main audit records and merge checkpoint block
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main region/west
-          git switch -C sync/west-b-school-meals-corrections-20260725 origin/region/west
+          git switch -C sync/west-b-school-meals-final-record-20260725 origin/region/west
           paths=(
-            jichitai-compare/data/municipalities/31/31390.json
-            jichitai-compare/data/municipalities/36/36204.json
-            jichitai-compare/data/municipalities/47/47303.json
-            jichitai-compare/operations/tasks/31390.json
-            jichitai-compare/operations/tasks/36204.json
-            jichitai-compare/operations/tasks/47303.json
             jichitai-compare/operations/audits/west-b-school-meals-crosscheck-20260725.json
             jichitai-compare/operations/audits/west-b-school-meals-priority-review-20260725.json
             jichitai-compare/operations/audits/west-b-school-meals-official-review-20260725.json
+            jichitai-compare/operations/audits/west-b-school-meals-public-verification-20260725.json
           )
           for path in "${paths[@]}"; do
             mkdir -p "$(dirname "$path")"
@@ -55,15 +50,19 @@ jobs:
           region.updatedAt = main.updatedAt;
           fs.writeFileSync(regionPath, JSON.stringify(region, null, 2) + '\n');
           NODE
-      - name: Regenerate and validate region
+      - name: Validate region records
         working-directory: jichitai-compare
         run: npm run check
-      - name: Commit and push regional sync branch
+      - name: Commit and push final regional record branch
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add jichitai-compare
-          git commit -m 'sync: 西日本B学校給食費3件をregion/westへ反映'
-          git push --force origin HEAD:sync/west-b-school-meals-corrections-20260725
+          git add jichitai-compare/operations/audits/west-b-school-meals-crosscheck-20260725.json \
+                  jichitai-compare/operations/audits/west-b-school-meals-priority-review-20260725.json \
+                  jichitai-compare/operations/audits/west-b-school-meals-official-review-20260725.json \
+                  jichitai-compare/operations/audits/west-b-school-meals-public-verification-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/west-b.json
+          git commit -m 'sync: 西日本B学校給食費の最終記録をregion/westへ反映'
+          git push --force origin HEAD:sync/west-b-school-meals-final-record-20260725
