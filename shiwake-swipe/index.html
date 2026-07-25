@@ -8,12 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="仕訳スワイプ">
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-180.svg">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="delight.css">
-  <link rel="stylesheet" href="tempo-fix.css">
+  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="tempo-fix.css?v=4">
   <title>仕訳スワイプ｜簿記3級・2級</title>
 </head>
 <body>
@@ -23,87 +22,21 @@
       <div><p class="eyebrow">日商簿記 3級・2級</p><h1>仕訳スワイプ</h1></div>
       <button id="soundButton" class="icon-button" type="button" aria-label="効果音のオン・オフ" aria-pressed="true">♪</button>
     </header>
-
     <main>
       <section id="homeScreen" class="screen" aria-labelledby="homeTitle">
-        <div class="hero-panel">
-          <div>
-            <p class="hero-kicker">借方は左、貸方は右。</p>
-            <h2 id="homeTitle">考える前に、手が動く。</h2>
-            <p>取引と勘定科目を見て、置く側へスワイプ。短時間の反復で判断速度を鍛えます。</p>
-          </div>
-          <div class="hero-stats" aria-label="学習状況">
-            <div><span id="totalAnswers">0</span><small>総回答</small></div>
-            <div><span id="accuracyRate">—</span><small>正答率</small></div>
-            <div><span id="bestCombo">0</span><small>最高連続</small></div>
-          </div>
-        </div>
-
-        <section class="control-panel" aria-labelledby="gradeTitle">
-          <div class="section-heading"><h2 id="gradeTitle">出題範囲</h2><span id="questionCountBadge" class="badge">読込中</span></div>
-          <div class="segmented-control" role="group" aria-label="級を選択">
-            <button class="grade-button is-active" type="button" data-grade="3">3級</button>
-            <button class="grade-button" type="button" data-grade="2">2級</button>
-            <button class="grade-button" type="button" data-grade="all">両方</button>
-          </div>
-        </section>
-
-        <section class="mode-grid" aria-label="ゲームモード">
-          <button class="mode-card" type="button" data-mode="score"><span class="mode-icon" aria-hidden="true">∞</span><span class="mode-copy"><strong>スコアアタック</strong><small>3回ミスするまで。連続正解で倍率アップ。</small></span><span aria-hidden="true">›</span></button>
-          <button class="mode-card" type="button" data-mode="time"><span class="mode-icon" aria-hidden="true">60</span><span class="mode-copy"><strong>タイムアタック</strong><small>60秒で何問正解できるかに挑戦。</small></span><span aria-hidden="true">›</span></button>
-          <button class="mode-card" type="button" data-mode="weak"><span class="mode-icon" aria-hidden="true">△</span><span class="mode-copy"><strong>苦手出題</strong><small>誤答率が高い論点を優先して10問。</small></span><span aria-hidden="true">›</span></button>
-          <button class="mode-card" type="button" data-mode="daily"><span class="mode-icon" aria-hidden="true">10</span><span class="mode-copy"><strong>デイリー10問</strong><small>毎日同じセット。学習の習慣化に。</small></span><span aria-hidden="true">›</span></button>
-        </section>
-
-        <section class="weak-panel" aria-labelledby="weakTitle">
-          <div class="section-heading"><h2 id="weakTitle">苦手論点</h2><button id="resetStatsButton" class="text-button" type="button">記録をリセット</button></div>
-          <div id="weakCategoryList" class="weak-list"><p class="empty-message">回答すると論点別の正答率が表示されます。</p></div>
-        </section>
+        <div class="hero-panel"><div><p class="hero-kicker">借方は左、貸方は右。</p><h2 id="homeTitle">考える前に、手が動く。</h2><p>取引と勘定科目を見て、置く側へスワイプ。短時間の反復で判断速度を鍛えます。</p></div><div class="hero-stats" aria-label="学習状況"><div><span id="totalAnswers">0</span><small>総回答</small></div><div><span id="accuracyRate">—</span><small>正答率</small></div><div><span id="bestCombo">0</span><small>最高連続</small></div></div></div>
+        <section class="control-panel" aria-labelledby="gradeTitle"><div class="section-heading"><h2 id="gradeTitle">出題範囲</h2><span id="questionCountBadge" class="badge">読込中</span></div><div class="segmented-control" role="group" aria-label="級を選択"><button class="grade-button is-active" type="button" data-grade="3">3級</button><button class="grade-button" type="button" data-grade="2">2級</button><button class="grade-button" type="button" data-grade="all">両方</button></div></section>
+        <section class="mode-grid" aria-label="ゲームモード"><button class="mode-card" type="button" data-mode="score"><span class="mode-icon" aria-hidden="true">∞</span><span class="mode-copy"><strong>スコアアタック</strong><small>3回ミスするまで。連続正解で倍率アップ。</small></span><span aria-hidden="true">›</span></button><button class="mode-card" type="button" data-mode="time"><span class="mode-icon" aria-hidden="true">60</span><span class="mode-copy"><strong>タイムアタック</strong><small>60秒で何問正解できるかに挑戦。</small></span><span aria-hidden="true">›</span></button><button class="mode-card" type="button" data-mode="weak"><span class="mode-icon" aria-hidden="true">△</span><span class="mode-copy"><strong>苦手出題</strong><small>誤答率が高い論点を優先して10問。</small></span><span aria-hidden="true">›</span></button><button class="mode-card" type="button" data-mode="daily"><span class="mode-icon" aria-hidden="true">10</span><span class="mode-copy"><strong>デイリー10問</strong><small>毎日同じセット。学習の習慣化に。</small></span><span aria-hidden="true">›</span></button></section>
+        <section class="weak-panel" aria-labelledby="weakTitle"><div class="section-heading"><h2 id="weakTitle">苦手論点</h2><button id="resetStatsButton" class="text-button" type="button">記録をリセット</button></div><div id="weakCategoryList" class="weak-list"><p class="empty-message">回答すると論点別の正答率が表示されます。</p></div></section>
       </section>
-
-      <section id="gameScreen" class="screen is-hidden" aria-labelledby="gameModeTitle">
-        <div class="game-status">
-          <div><small id="gameModeTitle">スコアアタック</small><strong id="scoreValue">0</strong><span>点</span></div>
-          <div><small>コンボ</small><strong id="comboValue">0</strong><span>連続</span></div>
-          <div><small id="limitLabel">ライフ</small><strong id="limitValue">♥♥♥</strong><span id="limitUnit"></span></div>
-        </div>
-        <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
-        <div class="transaction-panel">
-          <div class="transaction-meta"><span id="gradeBadge" class="badge">3級</span><span id="categoryBadge" class="badge badge-muted">現金預金</span></div>
-          <p id="transactionText">問題を準備しています。</p>
-        </div>
-        <div id="swipeStage" class="swipe-stage">
-          <article id="questionCard" class="question-card" aria-live="polite">
-            <p>この勘定科目を置く側は？</p><strong id="accountText">現金</strong>
-            <div class="card-hints"><span>← 借方</span><span>貸方 →</span></div>
-          </article>
-        </div>
-        <div class="answer-buttons">
-          <button id="debitButton" class="answer-button debit" type="button"><span>←</span><strong>借方</strong><small>左スワイプ</small></button>
-          <button id="creditButton" class="answer-button credit" type="button"><strong>貸方</strong><span>→</span><small>右スワイプ</small></button>
-        </div>
-        <div id="feedbackPanel" class="feedback-panel is-hidden" aria-live="assertive">
-          <div><strong id="feedbackTitle">正解</strong><span id="feedbackPoints">+100</span></div>
-          <p id="feedbackText"></p><p id="journalEntry" class="journal-entry"></p>
-          <button id="nextButton" type="button">次の問題</button>
-        </div>
-      </section>
-
-      <section id="resultScreen" class="screen is-hidden" aria-labelledby="resultTitle">
-        <div class="result-panel">
-          <p id="resultLabel" class="eyebrow">RESULT</p><h2 id="resultTitle">トレーニング終了</h2><strong id="finalScore">0</strong><span>点</span>
-          <div class="result-stats"><div><strong id="correctCount">0</strong><small>正解</small></div><div><strong id="resultAccuracy">0%</strong><small>正答率</small></div><div><strong id="resultBestCombo">0</strong><small>最大連続</small></div></div>
-          <p id="resultMessage"></p>
-        </div>
-        <div class="result-actions"><button id="retryButton" class="primary-button" type="button">同じモードでもう一度</button><button id="homeButton" class="secondary-button" type="button">ホームへ戻る</button></div>
-      </section>
+      <section id="gameScreen" class="screen is-hidden" aria-labelledby="gameModeTitle"><div class="game-status"><div><small id="gameModeTitle">スコアアタック</small><strong id="scoreValue">0</strong><span>点</span></div><div><small>コンボ</small><strong id="comboValue">0</strong><span>連続</span></div><div><small id="limitLabel">ライフ</small><strong id="limitValue">♥♥♥</strong><span id="limitUnit"></span></div></div><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div><div class="transaction-panel"><div class="transaction-meta"><span id="gradeBadge" class="badge">3級</span><span id="categoryBadge" class="badge badge-muted">現金預金</span></div><p id="transactionText">問題を準備しています。</p></div><div id="swipeStage" class="swipe-stage"><article id="questionCard" class="question-card" aria-live="polite"><p>この勘定科目を置く側は？</p><strong id="accountText">現金</strong><div class="card-hints"><span>← 借方</span><span>貸方 →</span></div></article></div><div class="answer-buttons"><button id="debitButton" class="answer-button debit" type="button"><span>←</span><strong>借方</strong><small>左スワイプ</small></button><button id="creditButton" class="answer-button credit" type="button"><strong>貸方</strong><span>→</span><small>右スワイプ</small></button></div><div id="feedbackPanel" class="feedback-panel is-hidden" aria-live="assertive"><div><strong id="feedbackTitle">正解</strong><span id="feedbackPoints">+100</span></div><p id="feedbackText"></p><p id="journalEntry" class="journal-entry"></p><button id="nextButton" type="button">次の問題</button></div></section>
+      <section id="resultScreen" class="screen is-hidden" aria-labelledby="resultTitle"><div class="result-panel"><p id="resultLabel" class="eyebrow">RESULT</p><h2 id="resultTitle">トレーニング終了</h2><strong id="finalScore">0</strong><span>点</span><div class="result-stats"><div><strong id="correctCount">0</strong><small>正解</small></div><div><strong id="resultAccuracy">0%</strong><small>正答率</small></div><div><strong id="resultBestCombo">0</strong><small>最大連続</small></div></div><p id="resultMessage"></p></div><div class="result-actions"><button id="retryButton" class="primary-button" type="button">同じモードでもう一度</button><button id="homeButton" class="secondary-button" type="button">ホームへ戻る</button></div></section>
     </main>
-
-    <footer><a href="privacy.html">プライバシー</a><a href="support.html">サポート</a><span>試作版 v0.2.1</span></footer>
+    <footer><a href="privacy.html">プライバシー</a><a href="support.html">サポート</a><span>試作版 v0.2.2</span></footer>
   </div>
   <div id="toast" class="toast is-hidden" role="status" aria-live="polite"></div>
-  <script src="app.js" defer></script>
-  <script src="delight.js" defer></script>
-  <script src="tempo-fix.js" defer></script>
+  <script>if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));caches?.keys?.().then(keys=>keys.filter(k=>k.startsWith('shiwake-swipe-')).forEach(k=>caches.delete(k)));}</script>
+  <script src="app.js?v=4" defer></script>
+  <script src="tempo-fix.js?v=4" defer></script>
 </body>
 </html>
