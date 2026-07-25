@@ -211281,21 +211281,24 @@
       "name": "能勢町",
       "officialUrl": "https://www.town.nose.osaka.jp/",
       "status": "verified",
-      "summary": "能勢町の必須9制度を自治体公式情報で確認。確認できない現行条件は推測せずunavailableとして登録。",
+      "summary": "能勢町の9制度を公式情報で確認済み。令和8年度は学校給食費の全額を公費負担し、保護者負担を0円とする。",
       "services": {
         "childMedical": {
-          "status": "unavailable",
-          "summary": "子ども医療費助成は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "0歳から18歳年度末までの子どもの保険診療自己負担を助成する。",
           "eligibility": {
             "minAgeMonths": 0,
             "maxAgeYears": 18
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "age": "18歳到達後最初の3月31日まで",
+            "selfPayment": "1医療機関等1日500円、月2日限度",
+            "monthlyCap": "月2,500円を超える額を申請で償還",
+            "excluded": "保険適用外費用等"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.nose.osaka.jp/soshiki/jyuuminka/hokeniryo/iryo/684.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "sickChildCare": {
@@ -211333,19 +211336,29 @@
           }
         },
         "schoolMeals": {
-          "status": "unavailable",
-          "summary": "学校給食費は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
+          "status": "verified",
+          "summary": "令和8年度は学校給食費の全額を公費で負担し、保護者負担を0円とする。",
           "eligibility": {
             "minAgeMonths": 72,
             "maxAgeYears": 15
           },
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "program": "学校給食無償化事業",
+            "fiscalYear": "令和8年度",
+            "publicFunding": "保護者負担が原則とされている学校給食費の全額を公費により負担する",
+            "parentBurden": "0円",
+            "purpose": "子育て支援の充実、食育の推進、学校給食の安定提供"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.nose.osaka.jp/material/files/group/29/R8_bessatu.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.nose.osaka.jp/soshiki/gakkoukyouikusoumuka/kyoikusoumu/11250.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
@@ -211384,49 +211397,52 @@
           }
         },
         "housingSupport": {
-          "status": "unavailable",
-          "summary": "子育て世帯向け住宅支援は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "移住相談窓口と空き家バンクを設け、空き家物件の紹介や利活用相談を行う。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "program": "能勢町移住相談窓口・空き家バンク",
+            "support": "移住相談、協定不動産事業者を通じた物件紹介、空き家活用個別相談会",
+            "online": "予約によりオンライン相談にも対応",
+            "purpose": "空き家活用と移住促進"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.nose.osaka.jp/soshiki/soumuka/seisakusuishin/kyodo_machi/shisaku/1278.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "bulkyWaste": {
-          "status": "unavailable",
-          "summary": "粗大ごみの収集・持込条件は自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "粗大ごみは全量有料・事前予約制で、処理券を貼って排出する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "fee": "粗大ごみ処理券1枚400円",
+            "condition": "一辺40cmを超える品目等",
+            "application": "事前予約制",
+            "directCarry": "国崎クリーンセンターへの持込み制度あり"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
+            "url": "https://www.town.nose.osaka.jp/soshiki/midorikankyou/kankyoueisei/faq/2375.html",
+            "checkedAt": "2026-07-25"
           }
         },
         "disasterPrevention": {
-          "status": "unavailable",
-          "summary": "洪水・土砂災害等ハザードマップは自治体公式の公開情報だけでは2026年度の対象・料金・実施条件を確定できない",
-          "eligibility": {
-            "minAgeMonths": 0,
-            "maxAgeYears": 120
-          },
+          "status": "verified",
+          "summary": "洪水・土砂災害ハザードマップを地区別に公開し、最新の浸水想定区域を案内する。",
           "details": {
-            "reviewDisposition": "推測せずunavailableとして登録。制度不存在を断定せず、最新条件は自治体窓口で確認する。"
+            "map": "洪水・土砂災害ハザードマップ",
+            "distribution": "令和7年6月版を全戸配布",
+            "areas": "歌垣、田尻、東郷、久佐々、岐尼、天王地区",
+            "additional": "ため池ハザードマップも公開"
           },
           "source": {
-            "url": "https://www.town.nose.osaka.jp/",
-            "checkedAt": "2026-07-24"
-          }
+            "url": "https://www.town.nose.osaka.jp/soshiki/jyuuminka/jichibosai/kinkyu_bosai/1327.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.town.nose.osaka.jp/soshiki/midorikankyou/midorisinko/oshirase/9715.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         }
       }
     },
