@@ -4,162 +4,110 @@
   "parentAuditId": "central-b-independent-reaudit-20260725",
   "trackingIssueNumber": 3186,
   "workingBranch": "quality/central-b-independent-reaudit-20260725",
-  "status": "in_progress",
+  "status": "completed",
   "scope": {
     "round": 2,
-    "plannedMunicipalityCodes": ["26210","26211","26212","26213","26214","26303","26322","26343","26344","26364"],
-    "auditedMunicipalityCount": 6,
-    "auditedServiceCount": 54,
-    "confirmedErrorCount": 5,
-    "correctedErrorCount": 5
+    "municipalityCodes": ["26210","26211","26212","26213","26214","26303","26322","26343","26344","26364"],
+    "auditedMunicipalityCount": 10,
+    "auditedServiceCount": 90,
+    "confirmedErrorCount": 7,
+    "correctedErrorCount": 7
   },
   "findings": [
     {
       "municipalityCode": "26210",
       "municipalityName": "八幡市",
-      "auditedAt": "2026-07-25T11:46:00+09:00",
       "servicesChecked": 9,
       "result": "two_confirmed_errors_corrected",
       "confirmedErrors": [
-        {
-          "service": "schoolMeals",
-          "before": "学校給食の実施、献立、就学援助のみを記録",
-          "after": "令和8年度の市立小学校給食費完全無償化と中学校給食費負担軽減助成を追加",
-          "cause": "2026年度開始・拡充制度の記録漏れ",
-          "officialSource": "https://www.city.yawata.kyoto.jp/cmsfiles/contents/0000010/10826/r8yosannannogaiyou.pdf",
-          "status": "corrected"
-        },
-        {
-          "service": "postpartumCare",
-          "before": "3類型を記録していたが、料金・回数・対象月齢を未記録",
-          "after": "短期入所・通所・居宅訪問型を各6回まで、通所3,000円、短期入所5,000円（一部12,500円）、訪問無料等を追加",
-          "cause": "料金・回数・2026年4月現行条件の記録漏れ",
-          "officialSource": "https://www.city.yawata.kyoto.jp/cmsfiles/contents/0000005/5540/10.pdf",
-          "status": "corrected"
-        }
-      ],
-      "changedFiles": [
-        "jichitai-compare/data/municipalities/26/26210.json",
-        "jichitai-compare/operations/tasks/26210.json"
+        {"service":"schoolMeals","before":"給食実施・献立・就学援助のみを記録","after":"令和8年度の市立小学校給食費完全無償化と中学校給食費負担軽減助成を追加","cause":"2026年度開始・拡充制度の記録漏れ","officialSource":"https://www.city.yawata.kyoto.jp/cmsfiles/contents/0000010/10826/r8yosannannogaiyou.pdf","status":"corrected"},
+        {"service":"postpartumCare","before":"3類型を記録したが料金・回数・対象月齢を未記録","after":"短期入所・通所・居宅訪問型を各6回まで、通所3,000円、短期入所5,000円（一部12,500円）、訪問無料等を追加","cause":"料金・回数・2026年4月現行条件の記録漏れ","officialSource":"https://www.city.yawata.kyoto.jp/cmsfiles/contents/0000005/5540/10.pdf","status":"corrected"}
       ]
     },
     {
       "municipalityCode": "26211",
       "municipalityName": "京田辺市",
-      "auditedAt": "2026-07-25T12:02:00+09:00",
       "servicesChecked": 9,
       "result": "one_confirmed_error_corrected",
       "confirmedErrors": [
-        {
-          "service": "schoolMeals",
-          "before": "令和8年度献立と就学援助のみを記録",
-          "after": "国制度による小学校給食費の抜本的負担軽減と、市立中学校給食費への市補助を追加",
-          "cause": "2026年度給食費負担軽減制度の記録漏れ",
-          "officialSource": "https://www.city.kyotanabe.lg.jp/0000023406.html",
-          "status": "corrected"
-        }
-      ],
-      "changedFiles": [
-        "jichitai-compare/data/municipalities/26/26211.json",
-        "jichitai-compare/operations/tasks/26211.json"
+        {"service":"schoolMeals","before":"令和8年度献立と就学援助のみを記録","after":"国制度による小学校給食費の抜本的負担軽減と、市立中学校給食費への市補助を追加","cause":"2026年度給食費負担軽減制度の記録漏れ","officialSource":"https://www.city.kyotanabe.lg.jp/0000023406.html","status":"corrected"}
       ]
     },
     {
       "municipalityCode": "26212",
       "municipalityName": "京丹後市",
-      "auditedAt": "2026-07-25T11:45:00+09:00",
       "servicesChecked": 9,
       "result": "two_confirmed_errors_corrected",
       "confirmedErrors": [
-        {
-          "service": "childcareFee",
-          "before": "第3子以降の保育料・副食費軽減を抽象的に記録",
-          "after": "令和8年度認可外保育施設等第3子以降保育料補助を追加。保育料の2分の1、月額18,500円まで、令和9年3月31日申請期限",
-          "cause": "2026年度制度の具体条件・申請期限の記録漏れ",
-          "officialSource": "https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kodomomirai/2/2/22880.html",
-          "status": "corrected"
-        },
-        {
-          "service": "housingSupport",
-          "before": "一般移住者向け空家改修と39歳以下U・Iターン住宅支援を子育て世帯向けとしてverified",
-          "after": "子ども要件・子育て加算がない一般移住・若者・新婚支援を除外してunavailable",
-          "cause": "一般移住・一般住宅支援の制度分類誤り",
-          "officialSource": "https://www.city.kyotango.lg.jp/top/soshiki/mayoroffice/commu/4/iju_hojo/14411.html",
-          "additionalSources": [
-            "https://www.city.kyotango.lg.jp/ijushien/hojo/kyoju/17618.html",
-            "https://www.city.kyotango.lg.jp/ijushien/hojo/kyoju/17601.html"
-          ],
-          "status": "corrected"
-        }
-      ],
-      "changedFiles": [
-        "jichitai-compare/data/municipalities/26/26212.json",
-        "jichitai-compare/operations/tasks/26212.json"
+        {"service":"childcareFee","before":"第3子以降の保育料・副食費軽減を抽象的に記録","after":"令和8年度認可外保育施設等第3子以降保育料補助を追加。保育料の2分の1、月額18,500円まで、令和9年3月31日申請期限","cause":"2026年度制度の具体条件・期限の記録漏れ","officialSource":"https://www.city.kyotango.lg.jp/top/soshiki/kodomo/kodomomirai/2/2/22880.html","status":"corrected"},
+        {"service":"housingSupport","before":"一般移住者向け空家改修と39歳以下U・Iターン住宅支援を子育て世帯向けとしてverified","after":"子ども要件・子育て加算がない一般移住・若者・新婚支援を除外してunavailable","cause":"一般移住・一般住宅支援の制度分類誤り","officialSource":"https://www.city.kyotango.lg.jp/top/soshiki/mayoroffice/commu/4/iju_hojo/14411.html","status":"corrected"}
       ]
     },
     {
       "municipalityCode": "26213",
       "municipalityName": "南丹市",
-      "auditedAt": "2026-07-25T11:47:00+09:00",
       "servicesChecked": 9,
       "result": "no_confirmed_error",
       "confirmedErrors": [],
-      "notes": [
-        "産後ケアは一般訪問・相談・交流事業のみで、宿泊・通所・居宅訪問型の利用者向け条件を確認できないためunavailableを維持",
-        "こども誰でも通園制度は南丹市独自の月3時間、1時間300円、ひよしこども園で実施",
-        "子育ておうえん住宅支援とUターン子育て世帯住宅支援はいずれも明確な子ども要件がありverifiedを維持"
-      ],
-      "principalSources": [
-        "https://www.city.nantan.kyoto.jp/www/life/110/002/000/index_1017526.html",
-        "https://www.city.nantan.kyoto.jp/www/emig/119/000/000/index_41465.html",
-        "https://www.city.nantan.kyoto.jp/www/emig/119/000/000/index_74436.html",
-        "https://www.city.nantan.kyoto.jp/www/life/111/001/000/index_9835.html"
-      ]
+      "notes": ["産後ケアは利用者向け現行条件を確認できずunavailableを維持","こども誰でも通園制度は月3時間・1時間300円","子ども要件のある住宅支援を確認"]
     },
     {
       "municipalityCode": "26214",
       "municipalityName": "木津川市",
-      "auditedAt": "2026-07-25T11:49:00+09:00",
       "servicesChecked": 9,
       "result": "no_confirmed_error",
       "confirmedErrors": [],
-      "notes": [
-        "令和8年度保育料減免の多子条件と第3子以降副食費免除を再確認",
-        "産後ケアは2026年7月追加施設を含む宿泊・日帰り・訪問型を再確認",
-        "空家移住・耐震改修等の一般制度を子育て住宅支援から除外したunavailable判定を維持"
-      ],
-      "principalSources": [
-        "https://www.city.kizugawa.lg.jp/kosodate/0000002718.html",
-        "https://www.city.kizugawa.lg.jp/kosodate/0000001203.html",
-        "https://www.city.kizugawa.lg.jp/kosodate/0000002885.html"
-      ]
+      "notes": ["保育料多子軽減、産後ケア追加施設、誰でも通園制度を現行確認","一般移住・耐震改修を除外したhousingSupport判定を維持"]
     },
     {
       "municipalityCode": "26303",
       "municipalityName": "大山崎町",
-      "auditedAt": "2026-07-25T11:51:00+09:00",
       "servicesChecked": 9,
       "result": "no_confirmed_error",
       "confirmedErrors": [],
-      "notes": [
-        "令和8年度中学校給食費1年分の減免を再確認",
-        "産後ケアは宿泊7日・日帰り7日・訪問3日、所得区分別負担を再確認",
-        "こども誰でも通園制度は月10時間、1時間300円、大山崎町保育所で実施",
-        "窓断熱・耐震改修等の一般住宅制度を除外したhousingSupport unavailable判定を維持"
-      ],
-      "principalSources": [
-        "https://www.town.oyamazaki.kyoto.jp/topics/11263.html",
-        "https://www.town.oyamazaki.kyoto.jp/annai/kenkoka/kenkokakenkozoshinkakari/kenkozukuri/9708.html",
-        "https://www.town.oyamazaki.kyoto.jp/annai/fukushika/jidofukushikakari/kosdatesiennjigyou/11248.html"
+      "notes": ["令和8年度中学校給食費1年分減免、産後ケア3類型、誰でも通園制度を確認","一般住宅改修を除外したhousingSupport判定を維持"]
+    },
+    {
+      "municipalityCode": "26322",
+      "municipalityName": "久御山町",
+      "servicesChecked": 9,
+      "result": "no_confirmed_error",
+      "confirmedErrors": [],
+      "notes": ["町立こども園0～2歳児保育料・一時保育料無償化、こども園・小中学校給食費無償化を確認","子ども要件のある住宅リフォーム支援を確認","誰でも通園制度の未掲載料金は推測しない"]
+    },
+    {
+      "municipalityCode": "26343",
+      "municipalityName": "井手町",
+      "servicesChecked": 9,
+      "result": "one_confirmed_error_corrected",
+      "confirmedErrors": [
+        {"service":"housingSupport","before":"令和8年度の子育てUターン世帯向け公営住宅募集を受付中の制度としてverified","after":"申込期間は2026年3月3日に終了し、追加・随時募集を確認できないためunavailable","cause":"募集終了後の利用可能判定誤り","officialSource":"https://www.town.ide.kyoto.jp/soshiki/kensatsuka/osirase/3977.html","status":"corrected"}
+      ]
+    },
+    {
+      "municipalityCode": "26344",
+      "municipalityName": "宇治田原町",
+      "servicesChecked": 9,
+      "result": "no_confirmed_error",
+      "confirmedErrors": [],
+      "notes": ["令和8年度学校給食費負担軽減、産後ケア3類型、誰でも通園制度を確認","子ども要件のある住宅リフォーム支援を確認"]
+    },
+    {
+      "municipalityCode": "26364",
+      "municipalityName": "笠置町",
+      "servicesChecked": 9,
+      "result": "one_confirmed_error_corrected",
+      "confirmedErrors": [
+        {"service":"postpartumCare","before":"第3期子ども・子育て支援事業計画の量の見込みだけでverified","after":"利用類型・施設・料金・上限・申請方法を示す現行利用者向け案内がないためunavailable","cause":"計画・見込みだけで利用可能制度と断定した判定誤り","officialSource":"https://www.town.kasagi.lg.jp/cmsfiles/contents/0000001/1865/dai3kikodomokosodate.pdf","status":"corrected"}
       ]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 16,
-    "auditedServiceCount": 144,
-    "confirmedErrorCount": 20,
-    "correctedErrorCount": 20,
+    "auditedMunicipalityCount": 20,
+    "auditedServiceCount": 180,
+    "confirmedErrorCount": 22,
+    "correctedErrorCount": 22,
     "lastSuccessfulCiRunNumber": 7945
   },
-  "nextAction": "第2バッチの残り4自治体を久御山町（26322）から公式情報起点で監査する。"
+  "nextAction": "第3バッチを和束町（26365）から開始する。"
 }
