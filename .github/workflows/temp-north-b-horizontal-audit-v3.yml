@@ -43,6 +43,7 @@ jobs:
           sed -i "/const focusServices/a const checkpoint = JSON.parse(fs.readFileSync(path.join(projectDir, 'operations', 'control', 'session-checkpoints', 'north-b.json'), 'utf8'));\nconst assignedCodes = new Set(checkpoint.completedSinceSplit || []);" "$script"
           sed -i 's/\.filter((item) => prefectures\.has(item\.prefectureCode));/.filter((item) => assignedCodes.has(item.code));/' "$script"
           sed -i 's/if (!result.ok || \[400, 403, 405, 406, 429, 500, 501, 502, 503, 504\]\.includes(result.status))/if (!result.ok || result.status >= 400)/' "$script"
+          sed -i "/range: 'bytes=0-2047'/d" "$script"
           timeout 17m node "$script" > /tmp/north-b-horizontal-audit.log 2>&1
           status=$?
           tail -200 /tmp/north-b-horizontal-audit.log
