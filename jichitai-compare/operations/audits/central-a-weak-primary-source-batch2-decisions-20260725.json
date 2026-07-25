@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-weak-primary-source-batch2-decisions-20260725",
+  "decidedAt": "2026-07-25T12:55:00+09:00",
+  "session": "中日本調査班A",
+  "category": "weakPrimarySource",
+  "regionalPullRequestNumber": 3355,
+  "runnerRunId": 30143248454,
+  "reviewedCandidateCount": 6,
+  "confirmedFactQualificationCount": 2,
+  "confirmedSourceCorrectionCount": 2,
+  "dualEvidenceNoContentChangeCount": 2,
+  "decisions": [
+    {
+      "code": "16205",
+      "name": "氷見市",
+      "service": "schoolMeals",
+      "type": "budget_only_assertion_qualified",
+      "result": "2026年度給食実施を確認し、予算だけによる全額免除断定を撤回"
+    },
+    {
+      "code": "17407",
+      "name": "中能登町",
+      "service": "schoolMeals",
+      "type": "regulation_only_assertion_qualified",
+      "result": "現行要綱・規則を確認し、利用者向け2026年度条件を規則以上に断定しない"
+    },
+    {
+      "code": "21501",
+      "name": "坂祝町",
+      "service": "schoolMeals",
+      "type": "dual_evidence_no_content_change",
+      "result": "現行規則と幼稚園利用者向け経費を二重確認"
+    },
+    {
+      "code": "22214",
+      "name": "藤枝市",
+      "service": "schoolMeals",
+      "type": "dual_evidence_no_content_change",
+      "result": "現行規則と2026年度給食ページを二重確認"
+    },
+    {
+      "code": "22306",
+      "name": "西伊豆町",
+      "service": "schoolMeals",
+      "type": "primary_source_upgrade",
+      "result": "利用者向け就学援助ページを主出典へ変更"
+    },
+    {
+      "code": "22344",
+      "name": "小山町",
+      "service": "schoolMeals",
+      "type": "primary_source_upgrade",
+      "result": "2026年3月更新の利用者向け就学援助ページを主出典へ変更"
+    }
+  ],
+  "policy": [
+    "予算・要綱・規則だけで2026年度の利用者負担を断定しない",
+    "給食実施の現行利用者向けページと、料金・助成根拠を分離して確認する",
+    "利用者向け就学援助ページがある場合は主出典とし、要綱は補助出典にする"
+  ],
+  "remainingWeakPrimarySourceCandidates": 36,
+  "nextPriority": [
+    "病児保育",
+    "産後ケア",
+    "住宅支援の弱い主出典候補"
+  ],
+  "ciRetriggeredAt": "2026-07-25T13:12:00+09:00",
+  "ciRetriggerReason": "第2群状態同期PR #3373でbotコミット後の通常CIを再起動",
+  "stateSync": {
+    "pullRequestNumber": 3373,
+    "runnerRunId": 30143576089,
+    "runnerConclusion": "success",
+    "regionalPullRequestNumber": 3355,
+    "regionalCiRunNumber": 8180
+  }
+}
