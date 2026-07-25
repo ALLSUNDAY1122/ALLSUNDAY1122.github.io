@@ -1,0 +1,99 @@
+name: Temporary final sync Shitara school meal fees
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'sync/23561-shitara-school-meal-fees-main-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TARGET_BRANCH: sync/23561-shitara-school-meal-fees-main-20260725
+      NATIONAL_PR_NUMBER: '3252'
+      REGIONAL_PR_NUMBER: '3242'
+      REGIONAL_CI_RUN_NUMBER: '7937'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: sync/23561-shitara-school-meal-fees-main-20260725
+          fetch-depth: 0
+
+      - name: Reapply region canonical files to latest main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main region/central
+          git reset --hard origin/main
+          cp jichitai-compare/operations/progress.json /tmp/progress-before.json
+          git show origin/region/central:jichitai-compare/data/municipalities/23/23561.json > jichitai-compare/data/municipalities/23/23561.json
+          git show origin/region/central:jichitai-compare/operations/tasks/23561.json > jichitai-compare/operations/tasks/23561.json
+          git show origin/region/central:jichitai-compare/operations/audits/central-a-followup-resolution-23561-20260725.json > jichitai-compare/operations/audits/central-a-followup-resolution-23561-20260725.json
+
+      - name: Generate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:identity
+          node ./scripts/validate-data.mjs --require-generated
+          npm run validate:pages
+          node --check app.js
+
+      - name: Confirm non-regression and finalize audit evidence
+        shell: bash
+        env:
+          FINAL_RUN_ID: ${{ github.run_id }}
+        run: |
+          cd jichitai-compare
+          python <<'PY'
+          import json, os
+          from pathlib import Path
+          before = json.loads(Path('/tmp/progress-before.json').read_text(encoding='utf-8'))
+          after = json.loads(Path('operations/progress.json').read_text(encoding='utf-8'))
+          for key in ('registeredMunicipalities', 'remainingMunicipalities', 'totalServices'):
+              assert after[key] == before[key], (key, before[key], after[key])
+          assert after['completedServices'] >= before['completedServices']
+          for key in ('todoServices', 'researchingServices', 'needsMediumReviewServices', 'needsRevisionServices', 'needsCoordinatorServices', 'prOpenServices', 'blockedServices'):
+              assert after[key] == 0, (key, after[key])
+          source = json.loads(Path('data/municipalities/23/23561.json').read_text(encoding='utf-8'))
+          meals = source['services']['schoolMeals']
+          assert meals['status'] == 'verified'
+          assert meals['details']['chargedUnitPrice'] == '児童150円、生徒175円'
+          assert meals['details']['fiscalYearRevenue'] == '令和8年度当初予算に小学校給食費3,120,000円、中学校給食費1,519,000円を計上'
+          assert Path('municipality/23561/index.html').is_file()
+          audit_path = Path('operations/audits/central-a-followup-resolution-23561-20260725.json')
+          audit = json.loads(audit_path.read_text(encoding='utf-8'))
+          audit['regionalPullRequestNumber'] = int(os.environ['REGIONAL_PR_NUMBER'])
+          audit['regionalCiRunNumber'] = int(os.environ['REGIONAL_CI_RUN_NUMBER'])
+          audit['nationalPullRequestNumber'] = int(os.environ['NATIONAL_PR_NUMBER'])
+          audit['nationalFinalWorkflowRunId'] = int(os.environ['FINAL_RUN_ID'])
+          audit['nationalSync'] = {
+              'generation': 'success',
+              'validation': 'success',
+              'registeredMunicipalities': after['registeredMunicipalities'],
+              'totalServices': after['totalServices'],
+              'completedServices': after['completedServices'],
+              'needsMediumReviewServices': after['needsMediumReviewServices']
+          }
+          audit['status'] = 'national_custom_ci_success_pending_merge'
+          audit_path.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit final national sync
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/temp-sync-23561-shitara-final-20260725.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m 'sync: 設楽町学校給食費を最新mainへ最終反映'
+          git push --force-with-lease origin HEAD:${TARGET_BRANCH}
