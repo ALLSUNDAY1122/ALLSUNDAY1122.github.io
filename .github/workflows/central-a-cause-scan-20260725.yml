@@ -1,0 +1,40 @@
+name: Central A Cause Based Rescan 20260725
+
+on:
+  push:
+    branches:
+      - audit/central-a-cause-scan-20260725-1031
+
+permissions:
+  contents: write
+
+concurrency:
+  group: central-a-cause-scan-20260725-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run cause-based cross audit
+        run: node jichitai-compare/scripts/audit-central-a-cause-scan-20260725.mjs
+
+      - name: Commit audit evidence and remove temporary runner
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/operations/audits/central-a-cause-based-rescan-20260725.json
+          git rm .github/workflows/central-a-cause-scan-20260725.yml
+          git rm jichitai-compare/scripts/audit-central-a-cause-scan-20260725.mjs
+          git commit -m "audit: 中日本A原因別横断監査結果を記録"
+          git push origin HEAD:audit/central-a-cause-scan-20260725-1031
