@@ -6,8 +6,8 @@
   "name": "相良村",
   "officialUrl": "https://www.vill.sagara.lg.jp/",
   "status": "verified",
-  "summary": "相良村の必須9制度を公式情報で調査。6制度をverified、3制度をunavailableとして公開可能状態へ正規化。",
-  "updatedAt": "2026-07-24",
+  "summary": "必須9制度を公式情報で再監査。5制度をverified、4制度をunavailableとして登録。住宅支援は一般制度のみ確認され、子育て世帯固有条件を確認できないためunavailableへ訂正。",
+  "updatedAt": "2026-07-25",
   "services": {
     "childMedical": {
       "status": "verified",
@@ -103,23 +103,33 @@
       }
     },
     "housingSupport": {
-      "status": "verified",
-      "summary": "移住者の住宅取得を最大100万円、空き家改修を2分の1・上限100万円で支援",
+      "status": "unavailable",
+      "summary": "一般制度「相良村移住定住促進事業補助金」は確認できるが、子育て世帯固有の住宅支援条件を確認できない",
       "details": {
         "target": "2024年4月1日以降に住宅取得・リフォームを予定し、補助住宅に5年間居住する等の要件を満たす移住者・定住者",
         "housingPurchase": "移住者の住宅取得は上限100万円、定住者は上限50万円。40歳未満や中学生以下の扶養者には加算あり",
         "renovation": "空き家の購入・賃借に伴うリフォームは費用の2分の1、上限100万円",
-        "other": "空き家解体後の新築は上限300万円、家財処分は上限10万円"
+        "other": "空き家解体後の新築は上限300万円、家財処分は上限10万円",
+        "confirmedGeneralProgramSummary": "移住者の住宅取得を最大100万円、空き家改修を2分の1・上限100万円で支援",
+        "previousStatus": "verified",
+        "classificationReview": "一般移住・一般住宅制度を子育て世帯向け住宅支援として登録していた分類誤りを訂正",
+        "childSpecificConditionConfirmed": false,
+        "independentVerificationMethod": "manual_official_html_and_reiki"
       },
       "source": {
-        "url": "https://www.vill.sagara.lg.jp/q/aview/201/1709.html",
-        "checkedAt": "2026-07-24"
+        "url": "https://www.vill.sagara.lg.jp/q/aview/3/1709.html",
+        "checkedAt": "2026-07-25"
       },
       "additionalSources": [
         {
           "url": "https://www.vill.sagara.lg.jp/reiki/reiki_honbun/q479RG00000769.html",
-          "checkedAt": "2026-07-24"
+          "checkedAt": "2026-07-25"
         }
+      ],
+      "notes": [
+        "2026年7月25日に公式情報で「相良村移住定住促進事業補助金」を独立確認した。",
+        "村内で住宅を新築・購入する移住者・定住者を対象とする一般の移住定住支援。子ども要件はない。",
+        "一般制度の事実は保持するが、子育て世帯向け住宅支援として登録しない。"
       ]
     },
     "bulkyWaste": {
