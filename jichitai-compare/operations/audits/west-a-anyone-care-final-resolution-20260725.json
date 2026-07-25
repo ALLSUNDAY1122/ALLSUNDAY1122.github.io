@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "west-a-anyone-care-final-resolution-20260725",
+  "team": "西日本調査班A",
+  "completedAt": "2026-07-25T16:05:00+09:00",
+  "scope": {
+    "prefectureCodes": [
+      "33",
+      "37",
+      "39",
+      "40",
+      "43",
+      "46"
+    ],
+    "municipalityCount": 226,
+    "priorityCandidateCount": 21
+  },
+  "method": {
+    "initialMachineCandidateCount": 195,
+    "priorityRefinementCount": 21,
+    "officialFetchTargetCount": 13,
+    "policy": "利用者向け公式情報で制度開始、対象、利用枠、料金、実施施設を確認。施設未決定・条件不足はunavailableを維持し推測しない。"
+  },
+  "result": {
+    "statusCorrectionCount": 3,
+    "detailEnrichmentCount": 2,
+    "retainedCount": 16,
+    "unresolvedCount": 0
+  },
+  "statusCorrections": [
+    "39304",
+    "39387",
+    "39411"
+  ],
+  "detailEnrichments": [
+    "46221",
+    "46501"
+  ],
+  "dispositions": [
+    {
+      "code": "37201",
+      "name": "高松市",
+      "resolution": "retained_verified",
+      "finding": "2026年度は月3時間であり、月10時間欠落ではない。年齢・料金を現行公式ページで確認。"
+    },
+    {
+      "code": "37403",
+      "name": "琴平町",
+      "resolution": "retained_verified",
+      "finding": "2026年度は月3時間、段階拡大予定。年齢・料金を現行公式ページで確認。"
+    },
+    {
+      "code": "39202",
+      "name": "室戸市",
+      "resolution": "retained_verified_conservative",
+      "finding": "実施・対象年齢は確認。料金・上限は公式本文で確定できないため推測で追加しない。"
+    },
+    {
+      "code": "40130",
+      "name": "福岡市",
+      "resolution": "retained_verified",
+      "finding": "一時預かりと誰でも通園を併記。週1回・施設別料金の市固有運用を維持。"
+    },
+    {
+      "code": "43203",
+      "name": "人吉市",
+      "resolution": "retained_verified",
+      "finding": "月10時間、料金は施設別という現行記録を維持。"
+    },
+    {
+      "code": "46524",
+      "name": "宇検村",
+      "resolution": "retained_verified",
+      "finding": "公式表記0～2歳児、月10時間、300円、田検保育所を維持。"
+    },
+    {
+      "code": "39301",
+      "name": "東洋町",
+      "resolution": "retained_unavailable",
+      "finding": "現行利用条件本文を取得できず、推測しない。"
+    },
+    {
+      "code": "39307",
+      "name": "芸西村",
+      "resolution": "retained_unavailable",
+      "finding": "現行ページは制度名・掲載日・問い合わせ先のみで利用条件を確認できない。"
+    },
+    {
+      "code": "39402",
+      "name": "佐川町",
+      "resolution": "retained_unavailable",
+      "finding": "月10時間・黒岩中央保育所は確認したが対象年齢・料金を確定できない。"
+    },
+    {
+      "code": "40213",
+      "name": "行橋市",
+      "resolution": "retained_unavailable",
+      "finding": "対象・月10時間・料金は確認できるが実施施設が決定次第更新の状態。"
+    },
+    {
+      "code": "40605",
+      "name": "川崎町",
+      "resolution": "retained_unavailable",
+      "finding": "公式ページに町内実施施設なしと明記。"
+    },
+    {
+      "code": "40608",
+      "name": "大任町",
+      "resolution": "retained_unavailable",
+      "finding": "開始案内のみで詳細は決定次第更新。"
+    },
+    {
+      "code": "43432",
+      "name": "西原村",
+      "resolution": "retained_unavailable",
+      "finding": "村公式トップページ以外の現行利用者向け条件を確定できない。"
+    },
+    {
+      "code": "46216",
+      "name": "日置市",
+      "resolution": "retained_unavailable",
+      "finding": "計画変更の審議記録のみで利用者向け条件を確認できない。"
+    },
+    {
+      "code": "46303",
+      "name": "三島村",
+      "resolution": "retained_unavailable",
+      "finding": "一般冊子ページから制度条件を確認できない。"
+    },
+    {
+      "code": "46404",
+      "name": "長島町",
+      "resolution": "retained_unavailable",
+      "finding": "対象・月10時間・料金は確認したが実施事業者を選定中。"
+    },
+    {
+      "code": "39304",
+      "name": "安田町",
+      "resolution": "corrected_to_verified",
+      "finding": "0歳6か月～満3歳未満、安田さくら園、月10時間、300円を確認。"
+    },
+    {
+      "code": "39387",
+      "name": "仁淀川町",
+      "resolution": "corrected_to_verified",
+      "finding": "0歳6か月～満3歳未満、ふたば保育所、月10時間、300円を確認。"
+    },
+    {
+      "code": "39411",
+      "name": "津野町",
+      "resolution": "corrected_to_verified",
+      "finding": "1歳児～満3歳未満、町立認定こども園2施設、月10時間、300円を確認。"
+    },
+    {
+      "code": "46221",
+      "name": "志布志市",
+      "resolution": "verified_fee_enriched",
+      "finding": "1時間300円程度、施設により異なることを追記。"
+    },
+    {
+      "code": "46501",
+      "name": "中種子町",
+      "resolution": "verified_fee_enriched",
+      "finding": "1時間300円程度、世帯区分による軽減を追記。"
+    }
+  ],
+  "evidence": {
+    "initialAudit": "jichitai-compare/operations/audits/west-a-anyone-care-crosscheck-20260725.json",
+    "priorityAudit": "jichitai-compare/operations/audits/west-a-anyone-care-priority-review-20260725.json",
+    "officialFetchAudit": "jichitai-compare/operations/audits/west-a-anyone-care-official-fetch-20260725.json",
+    "sakawaFlyerAudit": "jichitai-compare/operations/audits/west-a-sakawa-anyone-care-flyer-20260725.json",
+    "regionalPullRequestNumber": 3542
+  },
+  "status": "regional_ci_pending",
+  "blocker": null
+}
