@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-25T11:15:00+09:00",
+  "trackingIssueNumber": 3141,
+  "municipalityCode": "24205",
+  "municipalityName": "桑名市",
+  "service": "schoolMeals",
+  "result": "resolved_with_district_specific_fees",
+  "previousPublishedValue": "就学援助制度のみを掲載し、一般世帯の給食費は推測しない",
+  "confirmed": {
+    "fiscalYear": "令和8年度当初予算案",
+    "kuwanaDistrict": {
+      "kindergartenParentBurden": "月額5,000円",
+      "elementaryParentBurden": "0円",
+      "middleSchoolLunchParentBurden": "1食350円"
+    },
+    "tadoDistrict": {
+      "earlyCourseParentBurden": "0円",
+      "laterCourseParentBurden": "月額5,900円"
+    },
+    "nagashimaDistrict": {
+      "kindergartenParentBurden": "月額5,000円",
+      "elementaryParentBurden": "0円",
+      "middleSchoolParentBurden": "月額5,900円"
+    },
+    "inflationSupport": "市が地区・学年別に月額400円から900円または中学校スクールランチ1食45円を負担",
+    "elementaryPrefectureSupport": "小学校・義務教育学校前期課程は県補助月額5,200円により保護者負担0円"
+  },
+  "officialSources": [
+    {
+      "url": "https://www.city.kuwana.lg.jp/documents/12594/toushoyosansankousiryoukouhan.pdf",
+      "checkedAt": "2026-07-25",
+      "role": "令和8年度当初予算参考資料（事業概要書）後半・学校給食費案"
+    },
+    {
+      "url": "https://www.city.kuwana.lg.jp/zaisei/r8tousyo.html",
+      "checkedAt": "2026-07-25",
+      "role": "令和8年度当初予算資料掲載ページ"
+    }
+  ],
+  "evidenceNote": "公式PDFの表は本文解析で確認した。画像取得はキャッシュエラーとなったが、地区・学年別の保護者負担額、県補助額、物価高騰分補助額、給食費総額を抽出できた。",
+  "issueProgress": {
+    "beforeItemCount": 21,
+    "resolvedItemCount": 1,
+    "remainingItemCount": 20,
+    "remainingKuwanaItem": "temporaryChildcare"
+  },
+  "changedFiles": [
+    "data/municipalities/24/24205.json",
+    "operations/tasks/24205.json"
+  ],
+  "regionalPullRequestNumber": 3226,
+  "regionalCiRunNumber": 7867,
+  "publicationBlocker": false,
+  "status": "national_refresh_success_pending_standard_ci",
+  "nationalSync": {
+    "generation": "success",
+    "validation": "success",
+    "registeredMunicipalities": 1741,
+    "totalServices": 15669,
+    "completedServices": 15669,
+    "needsMediumReviewServices": 0
+  }
+}

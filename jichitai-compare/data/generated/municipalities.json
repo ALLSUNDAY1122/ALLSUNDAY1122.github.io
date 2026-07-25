@@ -190945,7 +190945,7 @@
       "name": "桑名市",
       "officialUrl": "https://www.city.kuwana.lg.jp/",
       "status": "verified",
-      "summary": "桑名市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
+      "summary": "桑名市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。令和8年度学校給食費は地区・学年別の保護者負担額を確認した。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -191006,22 +191006,48 @@
         },
         "schoolMeals": {
           "status": "verified",
-          "summary": "経済的理由で就学が困難と認められる世帯へ、学校給食費を含む就学援助を行う。",
+          "summary": "令和8年度は小学校・義務教育学校前期課程の保護者負担を0円とし、幼稚園・中学校等は地区別の負担額と物価高騰分を補助する。",
           "eligibility": {
-            "minAgeMonths": 72,
+            "minAgeMonths": 36,
             "maxAgeYears": 15
           },
           "details": {
-            "program": "就学援助制度",
-            "target": "桑名市立小中学校・義務教育学校に在籍し、経済的理由で就学が困難と認定された児童生徒の保護者",
-            "coverage": "学校給食費、学用品費、修学旅行費等",
-            "mealSupport": "認定期間中の学校給食費の実費を援助",
-            "generalFee": "一般世帯の学校給食費は公式確認範囲を超えて推測しない"
+            "fiscalYear": "令和8年度当初予算案",
+            "program": "学校給食費・食材費等高騰緊急対策事業",
+            "kuwanaDistrict": {
+              "kindergarten": "保護者負担月額5,000円、物価高騰分補助月額600円、給食費総額月額5,600円",
+              "elementaryGrades1to3": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額750円、給食費総額月額5,950円",
+              "elementaryGrades4to6": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額900円、給食費総額月額6,100円",
+              "middleSchoolLunch": "保護者負担1食350円、物価高騰分補助1食45円、給食費総額1食395円"
+            },
+            "tadoDistrict": {
+              "earlyGrades1to3": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額750円、給食費総額月額5,950円",
+              "earlyGrades4to6": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額900円、給食費総額月額6,100円",
+              "laterGrades7to9": "保護者負担月額5,900円、物価高騰分補助月額650円、給食費総額月額6,550円"
+            },
+            "nagashimaDistrict": {
+              "kindergarten": "保護者負担月額5,000円、物価高騰分補助月額400円、給食費総額月額5,400円",
+              "elementaryGrades1to3": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額550円、給食費総額月額5,750円",
+              "elementaryGrades4to6": "保護者負担0円、県補助月額5,200円、物価高騰分補助月額700円、給食費総額月額5,900円",
+              "middleSchool": "保護者負担月額5,900円、物価高騰分補助月額450円、給食費総額月額6,350円"
+            },
+            "assistance": "経済的理由で就学困難と認定された世帯は、認定期間中の学校給食費実費を就学援助対象とする",
+            "note": "令和8年度当初予算参考資料に掲載された学校給食費案。地区・学校区分により負担額が異なる"
           },
           "source": {
-            "url": "https://www.city.kuwana.lg.jp/kyoikusoumu/kosodatekyouiku/school/24-11076-302-713.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.city.kuwana.lg.jp/documents/12594/toushoyosansankousiryoukouhan.pdf",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.kuwana.lg.jp/zaisei/r8tousyo.html",
+              "checkedAt": "2026-07-25"
+            },
+            {
+              "url": "https://www.city.kuwana.lg.jp/kyoikusoumu/kosodatekyouiku/school/24-11076-302-713.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "postpartumCare": {
           "status": "verified",
