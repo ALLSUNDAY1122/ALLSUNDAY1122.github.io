@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "schemaId": "national-quality-correction-ledger-v1",
+  "purpose": "統括A・統括Bが北日本・東日本・中日本・西日本の訂正を同一形式で統合するための共通台帳仕様",
+  "requiredTopLevelFields": [
+    "schemaVersion",
+    "ledgerId",
+    "coordinatorSession",
+    "scope",
+    "generatedAt",
+    "baseline",
+    "taxonomy",
+    "sourceEvidencePolicy",
+    "summary",
+    "entries",
+    "status"
+  ],
+  "entryRequiredFields": [
+    "correctionId",
+    "session",
+    "municipalityCode",
+    "municipalityName",
+    "service",
+    "category",
+    "entryType",
+    "severity",
+    "before",
+    "after",
+    "cause",
+    "officialSource",
+    "correctionEvidence",
+    "revalidationStatus"
+  ],
+  "categoryEnum": [
+    "status_judgement",
+    "numeric_fact",
+    "year_mismatch",
+    "classification_error",
+    "structure_sync",
+    "url_or_description_maintenance"
+  ],
+  "entryTypeEnum": [
+    "correction",
+    "status_resolution",
+    "batch_sync"
+  ],
+  "severityEnum": [
+    "minor",
+    "medium",
+    "major",
+    "critical"
+  ],
+  "officialSource": {
+    "description": "監査時に確認した公式根拠の要約",
+    "pointer": "自治体JSONのservices.<service>.source、task、または監査証跡への正確なパス",
+    "url": "任意。URLを複製する場合のみ。正本はpointer先とする。",
+    "officialityEnum": [
+      "municipality_or_prefecture_official",
+      "official_regulation",
+      "official_budget_or_council_document"
+    ],
+    "checkedAt": "ISO日付"
+  },
+  "correctionEvidence": {
+    "correctionPullRequest": "訂正を行ったPR番号",
+    "ci": "CI状態・run番号・workflow run ID",
+    "mainPullRequest": "main反映PR番号",
+    "mainStatus": "merged/pending/not_required",
+    "publicationVerification": "公開HTTP・生成物確認の状態"
+  },
+  "statusRules": {
+    "verified": "制度の存在と主要な対象・支援内容を現行公式情報で確認できる。",
+    "unavailable": "現行の利用条件を公式情報で確定できず、推測せず安全表示する。",
+    "needs_medium_review": "公開前の一時状態に限る。完成時はverifiedまたはunavailableへ解消する。",
+    "publicationBlocker": "重大な事実誤り、誤ったverified、個人の安全・費用判断に直接影響する誤り、またはsource/task/generated/publicの不一致。"
+  },
+  "integrationRules": {
+    "deduplicationKey": [
+      "municipalityCode",
+      "service",
+      "before",
+      "after",
+      "correctionPullRequest"
+    ],
+    "coordinatorBCompatibility": "統括Bは同じcategoryEnum・entryRequiredFieldsで中日本・西日本台帳を作成する。",
+    "mergeCondition": "重大未修正0、CI成功、region/main一致、公開確認済み、未確定事項は追跡Issueへ分離。"
+  }
+}
