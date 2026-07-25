@@ -8,110 +8,34 @@
   "scope": {
     "round": 4,
     "municipalityCodes": ["29205","29206","29207","29208","29209","29210","29211","29212","29322","29342"],
-    "auditedMunicipalityCount": 5,
-    "auditedServiceCount": 45,
+    "auditedMunicipalityCount": 6,
+    "auditedServiceCount": 54,
     "confirmedErrorCount": 5,
     "correctedErrorCount": 5,
-    "pendingMunicipalityCodes": ["29210","29211","29212","29322","29342"]
+    "pendingMunicipalityCodes": ["29211","29212","29322","29342"]
   },
   "findings": [
-    {
-      "municipalityCode": "29205",
-      "municipalityName": "橿原市",
-      "servicesChecked": 9,
-      "result": "no_confirmed_error",
-      "confirmedErrors": [],
-      "notes": [
-        "18歳年度末までの医療費窓口負担0円、病児保育の対象・料金・広域利用、第2子以降保育料無償化を現行確認。",
-        "令和8年度小中学校給食費無償化、市外学校通学者・給食停止者への給付、産後ケアの訪問券追加を確認。",
-        "こども誰でも通園制度は新沢認定こども園、月3時間、1回900円・おやつ20円、1日3人。",
-        "移住支援金は子ども要件・加算のない一般制度で、世帯枠は予算上限到達により受付終了。housingSupport unavailableを維持。"
-      ]
-    },
-    {
-      "municipalityCode": "29206",
-      "municipalityName": "桜井市",
-      "servicesChecked": 9,
-      "result": "three_confirmed_errors_corrected",
-      "confirmedErrors": [
-        {
-          "service": "sickChildCare",
-          "before": "利用料・食事代等は公式ページで確認できないとして未記録",
-          "after": "定員3人、1日2,000円、非課税・生活保護世帯無料、給食300円、初回診療費、予約条件を追加",
-          "cause": "公式利用案内の料金・定員・食事条件の確認漏れ",
-          "officialSource": "https://www.city.sakurai.lg.jp/sosiki/kodomokateibu/hoikukyoikuka/hoikushisetsu/ninkagaihoikushisetsu/7629.html",
-          "status": "corrected"
-        },
-        {
-          "service": "temporaryChildcare",
-          "before": "こども誰でも通園制度の施設・曜日・時間・料金を未記録",
-          "after": "三輪学園は平日9時～11時30分・1時間200円、第1保育所は平日9時～16時・1時間300円として追加",
-          "cause": "令和8年度実施施設一覧の確認漏れ",
-          "officialSource": "https://www.city.sakurai.lg.jp/material/files/group/61/50804jissiitiran_2.pdf",
-          "status": "corrected"
-        },
-        {
-          "service": "housingSupport",
-          "before": "子ども加算のある移住支援金と子ども要件のない結婚新生活支援を同じ子育て住宅支援として併記",
-          "after": "18歳未満1人100万円加算のある移住支援金のみをverified根拠とし、結婚新生活支援を除外",
-          "cause": "一般新婚住宅支援との分類混同",
-          "officialSource": "https://www.city.sakurai.lg.jp/sosiki/koushitsu/gyouseikeieika/ijuteiju/1566543230999.html",
-          "status": "corrected"
-        }
-      ]
-    },
-    {
-      "municipalityCode": "29207",
-      "municipalityName": "五條市",
-      "servicesChecked": 9,
-      "result": "one_confirmed_error_corrected",
-      "confirmedErrors": [
-        {
-          "service": "housingSupport",
-          "before": "子ども要件のない結婚新生活支援のみを確認し、子育て世帯専用住宅支援を確認できないとしてunavailable",
-          "after": "五條市移住支援金をverifiedとして記録。単身60万円、2人以上世帯100万円、条件を満たす世帯は18歳未満1人につき100万円加算",
-          "cause": "子ども加算付き移住支援金の見落としと一般新婚制度への調査偏り",
-          "officialSource": "https://www.city.gojo.lg.jp/soshiki/kikaku/ijuteiju/14150.html",
-          "status": "corrected"
-        }
-      ]
-    },
-    {
-      "municipalityCode": "29208",
-      "municipalityName": "御所市",
-      "servicesChecked": 9,
-      "result": "one_confirmed_error_corrected",
-      "confirmedErrors": [
-        {
-          "service": "schoolMeals",
-          "before": "令和8年度の無償化は記録したが、通常基準月額を小学校3,900円・中学校4,300円と記録",
-          "after": "令和8年4月施行規則に基づき通常基準月額を小学校5,800円・中学校6,200円へ訂正。令和8年度は特例で保護者負担0円",
-          "cause": "令和8年度料金改定後も旧基準額を継続掲載",
-          "officialSource": "https://www.city.gose.nara.jp/html/reiki_int/reiki_honbun/k409RG00000968.html",
-          "status": "corrected"
-        }
-      ],
-      "notes": ["医療費、病児保育、保育料、産後ケア、誰でも通園、住宅分類、粗大ごみ、防災は現行公式情報と一致。"]
-    },
-    {
-      "municipalityCode": "29209",
-      "municipalityName": "生駒市",
-      "servicesChecked": 9,
-      "result": "no_confirmed_error",
-      "confirmedErrors": [],
-      "notes": [
-        "令和8年度のこども誰でも通園制度は待機児童の状況を踏まえ月4時間、7施設、1時間300円・30分150円。",
-        "学校給食は小学校月4,400円・中学校月4,800円で、全員一律無償化は確認できない。",
-        "産後ケア、病児保育2施設、第2子以降保育料無償、18歳未満加算付き移住支援金、粗大ごみ月1回10点、防災情報を現行確認。"
-      ]
-    }
+    {"municipalityCode":"29205","municipalityName":"橿原市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],"notes":["医療費窓口0円、病児保育、第2子以降保育料無償化、令和8年度小中給食無償、産後ケア訪問券、誰でも通園月3時間を確認。","子ども要件・加算のない一般移住制度を除外しhousingSupport unavailableを維持。"]},
+    {"municipalityCode":"29206","municipalityName":"桜井市","servicesChecked":9,"result":"three_confirmed_errors_corrected","confirmedErrors":[
+      {"service":"sickChildCare","before":"利用料・食事代等を未記録","after":"定員3人、1日2,000円、非課税・生活保護世帯無料、給食300円、初回診療費、予約条件を追加","cause":"公式利用案内の確認漏れ","officialSource":"https://www.city.sakurai.lg.jp/sosiki/kodomokateibu/hoikukyoikuka/hoikushisetsu/ninkagaihoikushisetsu/7629.html","status":"corrected"},
+      {"service":"temporaryChildcare","before":"誰でも通園の施設・時間・料金を未記録","after":"三輪学園は平日9時～11時30分・1時間200円、第1保育所は平日9時～16時・1時間300円","cause":"令和8年度実施施設一覧の確認漏れ","officialSource":"https://www.city.sakurai.lg.jp/material/files/group/61/50804jissiitiran_2.pdf","status":"corrected"},
+      {"service":"housingSupport","before":"子ども加算付き移住支援と一般結婚新生活支援を混在","after":"18歳未満1人100万円加算の移住支援金のみをverified根拠とし一般新婚制度を除外","cause":"一般新婚住宅支援との分類混同","officialSource":"https://www.city.sakurai.lg.jp/sosiki/koushitsu/gyouseikeieika/ijuteiju/1566543230999.html","status":"corrected"}
+    ]},
+    {"municipalityCode":"29207","municipalityName":"五條市","servicesChecked":9,"result":"one_confirmed_error_corrected","confirmedErrors":[
+      {"service":"housingSupport","before":"一般結婚新生活支援のみを確認しunavailable","after":"移住支援金をverified。単身60万円、世帯100万円、18歳未満1人100万円加算","cause":"子ども加算付き移住支援金の見落とし","officialSource":"https://www.city.gojo.lg.jp/soshiki/kikaku/ijuteiju/14150.html","status":"corrected"}
+    ]},
+    {"municipalityCode":"29208","municipalityName":"御所市","servicesChecked":9,"result":"one_confirmed_error_corrected","confirmedErrors":[
+      {"service":"schoolMeals","before":"通常基準月額を小学校3,900円・中学校4,300円と記録","after":"令和8年4月施行規則に基づき小学校5,800円・中学校6,200円へ訂正。令和8年度は特例で0円","cause":"料金改定後も旧基準額を掲載","officialSource":"https://www.city.gose.nara.jp/html/reiki_int/reiki_honbun/k409RG00000968.html","status":"corrected"}
+    ]},
+    {"municipalityCode":"29209","municipalityName":"生駒市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],"notes":["誰でも通園は令和8年度月4時間・7施設・1時間300円。","学校給食は小学校月4,400円・中学校月4,800円で一律無償化なし。","産後ケア、病児保育、第2子以降保育料無償、18歳未満加算付き移住支援、粗大ごみ、防災を現行確認。"]},
+    {"municipalityCode":"29210","municipalityName":"香芝市","servicesChecked":9,"result":"no_confirmed_error","confirmedErrors":[],"notes":["誰でも通園は生後6か月から満3歳未満、月10時間、旭ケ丘幼稚園内あさひぽかぽかルーム、1時間300円。","学校給食の一律無償化は確認できず、産後ケア、病児保育、第2子以降保育料無償化を現行確認。","移住支援金は単身60万円・世帯100万円のみで子ども加算なし。housingSupport unavailableを維持。"]}
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 35,
-    "auditedServiceCount": 315,
+    "auditedMunicipalityCount": 36,
+    "auditedServiceCount": 324,
     "confirmedErrorCount": 34,
     "correctedErrorCount": 34,
     "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "香芝市（29210）を公式情報起点で独立監査する。"
+  "nextAction": "葛城市（29211）を公式情報起点で独立監査する。"
 }
