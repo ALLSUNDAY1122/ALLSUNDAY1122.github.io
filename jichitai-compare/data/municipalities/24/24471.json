@@ -7,122 +7,30 @@
   "officialUrl": "https://www.town.taiki.mie.jp/",
   "status": "verified",
   "summary": "大紀町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-25",
   "services": {
-    "childMedical": {
-      "status": "verified",
-      "summary": "出生から18歳年度末までの子どもの保険診療自己負担額を全額助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
-      "details": {
-        "program": "子ども・児童医療費助成（ベアーズ助成金）",
-        "ageCondition": "0歳から18歳到達年度末まで",
-        "coverage": "医療保険の規定による入院・通院の自己負担額を全額助成",
-        "residency": "大紀町に住所を有する児童",
-        "payment": "受給資格証対応機関では資格証を提示。県外受診等は申請による償還払い"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/iryo_kenko_fukushi/iryo_kenko/iryohi/975.html", "checkedAt": "2026-07-22"}
-    },
-    "sickChildCare": {
-      "status": "verified",
-      "summary": "小学6年生までの軽い病児・病後児等を、ファミリー・サポート・センターで一時的に預かる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
-      "details": {
-        "program": "ファミリー・サポート・センター事業",
-        "ageCondition": "小学6年生まで",
-        "care": "軽い病児・病後児、緊急時、送迎や一時預かり等",
-        "fee": "通常は平日等の日中1時間700円、時間外等800円。緊急預かりは日中1,000円、時間外等1,200円",
-        "registration": "依頼会員と提供会員の登録が必要"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/soshiki/kenko_fukushi/gyomu/kosodateshien/274.html", "checkedAt": "2026-07-22"}
-    },
-    "childcareFee": {
-      "status": "verified",
-      "summary": "大紀町民の保育園利用料を、世帯所得にかかわらず0円とする。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 5},
-      "details": {
-        "townProgram": "平成30年4月から町民の保育園利用料を無償化",
-        "fee": "0円",
-        "incomeCondition": "世帯所得に関係なく無償",
-        "facilities": "ななほ保育園、大宮保育園、錦あおぞら保育園、大紀保育園",
-        "ageCondition": "各園は生後6か月から5歳まで"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/soshiki/kenko_fukushi/gyomu/hoiku/275.html", "checkedAt": "2026-07-22"}
-    },
+    "childMedical": {"status":"verified","summary":"出生から18歳年度末までの子どもの保険診療自己負担額を全額助成する。","eligibility":{"minAgeMonths":0,"maxAgeYears":18},"details":{"program":"子ども・児童医療費助成（ベアーズ助成金）","ageCondition":"0歳から18歳到達年度末まで","coverage":"医療保険の規定による入院・通院の自己負担額を全額助成","residency":"大紀町に住所を有する児童","payment":"受給資格証対応機関では資格証を提示。県外受診等は申請による償還払い"},"source":{"url":"https://www.town.taiki.mie.jp/iryo_kenko_fukushi/iryo_kenko/iryohi/975.html","checkedAt":"2026-07-22"}},
+    "sickChildCare": {"status":"verified","summary":"小学6年生までの軽い病児・病後児等を、ファミリー・サポート・センターで一時的に預かる。","eligibility":{"minAgeMonths":0,"maxAgeYears":12},"details":{"program":"ファミリー・サポート・センター事業","ageCondition":"小学6年生まで","care":"軽い病児・病後児、緊急時、送迎や一時預かり等","fee":"通常は平日等の日中1時間700円、時間外等800円。緊急預かりは日中1,000円、時間外等1,200円","registration":"依頼会員と提供会員の登録が必要"},"source":{"url":"https://www.town.taiki.mie.jp/soshiki/kenko_fukushi/gyomu/kosodateshien/274.html","checkedAt":"2026-07-22"}},
+    "childcareFee": {"status":"verified","summary":"大紀町民の保育園利用料を、世帯所得にかかわらず0円とする。","eligibility":{"minAgeMonths":6,"maxAgeYears":5},"details":{"townProgram":"平成30年4月から町民の保育園利用料を無償化","fee":"0円","incomeCondition":"世帯所得に関係なく無償","facilities":"ななほ保育園、大宮保育園、錦あおぞら保育園、大紀保育園","ageCondition":"各園は生後6か月から5歳まで"},"source":{"url":"https://www.town.taiki.mie.jp/soshiki/kenko_fukushi/gyomu/hoiku/275.html","checkedAt":"2026-07-22"}},
     "schoolMeals": {
       "status": "verified",
-      "summary": "町立小中学校の児童生徒について、保護者が負担する学校給食費の8割を町が助成する。",
+      "summary": "町立小中学校の児童生徒について、保護者が負担する学校給食費を町が全額助成し、保護者への請求はない。",
       "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
       "details": {
-        "program": "小中学校給食費補助制度（エンゼル2）",
+        "program": "児童生徒給食費補助補助金（エンゼル2）",
         "target": "大紀町立小中学校に通学する児童生徒",
-        "subsidy": "保護者負担額の月額1人当たり8割",
-        "method": "町が対象額を各学校の給食会計へ支出し、学校は助成後の額を請求",
-        "purpose": "保護者負担の軽減と子育て環境の改善"
+        "subsidy": "保護者が負担する学校給食費の全額",
+        "parentPayment": "0円。保護者への給食費請求なし",
+        "method": "町が対象金額を各学校の給食会計へ直接支出",
+        "purpose": "保護者負担の軽減、子育て環境の改善、児童生徒の健やかな成長支援",
+        "currentBasis": "大紀町公式ページが2026年4月7日に更新され、全額助成と保護者請求なしを明記"
       },
-      "source": {"url": "https://www.town.taiki.mie.jp/soshiki/kyoikuiinkai/gyomu/school/409.html", "checkedAt": "2026-07-22"}
+      "source": {"url": "https://www.town.taiki.mie.jp/soshiki/kyoikuiinkai/gyomu/school/409.html", "checkedAt": "2026-07-25"}
     },
-    "postpartumCare": {
-      "status": "verified",
-      "summary": "出産後の母子に対し、関係機関と連携して心身のケアと育児支援を行う産後ケア事業を実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
-      "details": {
-        "program": "産後ケア事業",
-        "target": "出産後の母子",
-        "care": "母子の心身のケアと育児のサポート",
-        "coordination": "関係機関と連携して実施",
-        "note": "具体的な利用条件、実施形態、費用は健康福祉課へ事前確認が必要"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/material/files/group/7/kek_kodomokeikau_dai3ki_R703.pdf", "checkedAt": "2026-07-22"}
-    },
-    "temporaryChildcare": {
-      "status": "verified",
-      "summary": "生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
-      "details": {
-        "program": "こども誰でも通園制度",
-        "condition": "保育所・認定こども園・小規模保育等を利用していない児童。保護者の就労要件なし",
-        "facilities": "町内4保育園",
-        "hours": "月曜日から金曜日の8時30分から16時30分",
-        "limit": "児童1人につき月10時間まで",
-        "fee": "1時間300円。世帯状況による減免制度あり"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/soshiki/kenko_fukushi/gyomu/hoiku/1491.html", "checkedAt": "2026-07-22"}
-    },
-    "housingSupport": {
-      "status": "verified",
-      "summary": "空き家バンク物件の家財処分や簡易改修費用を、10万円を上限に助成する。",
-      "details": {
-        "program": "空き家等有効活用推進事業支援補助金",
-        "target": "空き家バンク制度により売買または賃貸借契約に至った空き家の所有者または利用希望者",
-        "coverage": "空き家内の不要物処理や簡易な改修に要する経費",
-        "maximum": "10万円",
-        "condition": "空き家バンク制度要綱等の要件を満たすこと"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/soshiki/somukikaku/gyomu/som_hojo-all/1522.html", "checkedAt": "2026-07-22"}
-    },
-    "bulkyWaste": {
-      "status": "verified",
-      "summary": "45リットル袋に入らない粗大ごみは資源化プラザへ直接搬入し、10キログラム150円を支払う。",
-      "details": {
-        "definition": "45リットルまでのごみ袋に入らない大きなもの",
-        "collection": "ごみステーションでは収集しない",
-        "directCarry": "香肌奥伊勢資源化プラザへ直接搬入",
-        "fee": "令和8年4月から10キログラムにつき150円",
-        "examples": "家具、大型プラスチック・金属、自転車、大型家電、布団、畳等"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/kurashi_tetsuzuki/gomi_recycle/kateigomi/1029.html", "checkedAt": "2026-07-22"}
-    },
-    "disasterPrevention": {
-      "status": "verified",
-      "summary": "洪水、土砂災害、津波、ため池等の防災マップと避難情報を公開する。",
-      "details": {
-        "maps": "地域別の防災マップ、洪水・土砂災害・津波・ため池等のハザード情報",
-        "evacuation": "指定緊急避難場所・指定避難所等を案内",
-        "guidance": "自宅周辺の災害リスクと避難経路の事前確認に利用",
-        "authority": "大紀町防災安全課",
-        "note": "災害種別ごとの最新マップを公式ページで確認する"
-      },
-      "source": {"url": "https://www.town.taiki.mie.jp/soshiki/bosai_anzen/gyomu/anzen_anshin/bosai/map/432.html", "checkedAt": "2026-07-22"}
-    }
+    "postpartumCare": {"status":"verified","summary":"出産後の母子に対し、関係機関と連携して心身のケアと育児支援を行う産後ケア事業を実施する。","eligibility":{"minAgeMonths":0,"maxAgeYears":1},"details":{"program":"産後ケア事業","target":"出産後の母子","care":"母子の心身のケアと育児のサポート","coordination":"関係機関と連携して実施","note":"具体的な利用条件、実施形態、費用は健康福祉課へ事前確認が必要"},"source":{"url":"https://www.town.taiki.mie.jp/material/files/group/7/kek_kodomokeikau_dai3ki_R703.pdf","checkedAt":"2026-07-22"}},
+    "temporaryChildcare": {"status":"verified","summary":"生後6か月から満3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。","eligibility":{"minAgeMonths":6,"maxAgeYears":3},"details":{"program":"こども誰でも通園制度","condition":"保育所・認定こども園・小規模保育等を利用していない児童。保護者の就労要件なし","facilities":"町内4保育園","hours":"月曜日から金曜日の8時30分から16時30分","limit":"児童1人につき月10時間まで","fee":"1時間300円。世帯状況による減免制度あり"},"source":{"url":"https://www.town.taiki.mie.jp/soshiki/kenko_fukushi/gyomu/hoiku/1491.html","checkedAt":"2026-07-22"}},
+    "housingSupport": {"status":"verified","summary":"空き家バンク物件の家財処分や簡易改修費用を、10万円を上限に助成する。","details":{"program":"空き家等有効活用推進事業支援補助金","target":"空き家バンク制度により売買または賃貸借契約に至った空き家の所有者または利用希望者","coverage":"空き家内の不要物処理や簡易な改修に要する経費","maximum":"10万円","condition":"空き家バンク制度要綱等の要件を満たすこと"},"source":{"url":"https://www.town.taiki.mie.jp/soshiki/somukikaku/gyomu/som_hojo-all/1522.html","checkedAt":"2026-07-22"}},
+    "bulkyWaste": {"status":"verified","summary":"45リットル袋に入らない粗大ごみは資源化プラザへ直接搬入し、10キログラム150円を支払う。","details":{"definition":"45リットルまでのごみ袋に入らない大きなもの","collection":"ごみステーションでは収集しない","directCarry":"香肌奥伊勢資源化プラザへ直接搬入","fee":"令和8年4月から10キログラムにつき150円","examples":"家具、大型プラスチック・金属、自転車、大型家電、布団、畳等"},"source":{"url":"https://www.town.taiki.mie.jp/kurashi_tetsuzuki/gomi_recycle/kateigomi/1029.html","checkedAt":"2026-07-22"}},
+    "disasterPrevention": {"status":"verified","summary":"洪水、土砂災害、津波、ため池等の防災マップと避難情報を公開する。","details":{"maps":"地域別の防災マップ、洪水・土砂災害・津波・ため池等のハザード情報","evacuation":"指定緊急避難場所・指定避難所等を案内","guidance":"自宅周辺の災害リスクと避難経路の事前確認に利用","authority":"大紀町防災安全課","note":"災害種別ごとの最新マップを公式ページで確認する"},"source":{"url":"https://www.town.taiki.mie.jp/soshiki/bosai_anzen/gyomu/anzen_anshin/bosai/map/432.html","checkedAt":"2026-07-22"}}
   }
 }
