@@ -1,0 +1,82 @@
+name: Temporary Central A Weak Source Reapply
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-reapply-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  reapply:
+    if: github.head_ref == 'sync/central-a-weak-sources-reapply-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout trigger branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Reset to latest main and fetch region
+        shell: bash
+        run: |
+          git fetch origin main region/central
+          git reset --hard origin/main
+
+      - name: Reapply audited central source files
+        shell: bash
+        run: |
+          paths=(
+            jichitai-compare/data/municipalities/18/18481.json
+            jichitai-compare/data/municipalities/18/18483.json
+            jichitai-compare/data/municipalities/21/21403.json
+            jichitai-compare/data/municipalities/21/21505.json
+            jichitai-compare/operations/tasks/18481.json
+            jichitai-compare/operations/tasks/18483.json
+            jichitai-compare/operations/tasks/21403.json
+            jichitai-compare/operations/tasks/21505.json
+            jichitai-compare/operations/audits/central-a-weak-primary-source-batch1-decisions-20260725.json
+            jichitai-compare/operations/audits/central-a-weak-source-state-sync-20260725.json
+            jichitai-compare/operations/control/regions/central.json
+            jichitai-compare/operations/control/session-checkpoints/central-a.json
+          )
+          for path in "${paths[@]}"; do
+            mkdir -p "$(dirname "$path")"
+            git show "origin/region/central:${path}" > "$path"
+          done
+
+      - name: Regenerate and validate national outputs
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          node --check app.js
+
+      - name: Reject unexpected generated changes
+        shell: bash
+        run: |
+          allowed='^(jichitai-compare/(data/municipalities/(18/(18481|18483)|21/(21403|21505))\.json|operations/tasks/(18481|18483|21403|21505)\.json|operations/audits/central-a-(weak-primary-source-batch1-decisions|weak-source-state-sync)-20260725\.json|operations/control/regions/central\.json|operations/control/session-checkpoints/central-a\.json|data/generated/(municipalities|municipality-pages)\.json|operations/progress\.json|municipality/(18481|18483|21403|21505)/index\.html|sitemap\.xml))$'
+          unexpected=$(git status --porcelain | sed -E 's/^.. //' | grep -Ev "$allowed" || true)
+          if [ -n "$unexpected" ]; then
+            echo 'Unexpected changes:'
+            echo "$unexpected"
+            exit 1
+          fi
+
+      - name: Create one clean commit on latest main
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No synchronization changes.'
+            exit 0
+          fi
+          git commit -m 'sync: 中日本A弱い主出典第1群を最新mainへ再適用'
+          git push --force origin "HEAD:${GITHUB_HEAD_REF}"
