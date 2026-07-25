@@ -33074,7 +33074,7 @@
       "name": "安田町",
       "officialUrl": "https://www.town.yasuda.kochi.jp/",
       "status": "verified",
-      "summary": "必須9制度を安田町公式情報で調査。5制度をverified、一般利用型の病児・病後児保育、2026年度学校給食費支援、産後ケア事業、こども誰でも通園制度をneeds_medium_reviewとして登録。 公式公開情報で現行条件を確定できない制度は、推測せずunavailableとして整理。",
+      "summary": "必須9制度を公式情報で再監査。6制度をverified、3制度をunavailableとして登録。こども誰でも通園制度は2026年度の対象・月10時間・料金・実施施設を確認してverifiedへ訂正。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -33169,19 +33169,24 @@
           }
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "こども誰でも通園制度を実施しているが利用条件の詳細を取得できない",
-          "notes": [
-            "町公式サイトで2026年3月31日付の乳児等通園支援事業（こども誰でも通園制度）の案内掲載を確認した。",
-            "対象年齢、月間利用上限、料金、実施施設、利用時間、認定・予約方法の本文を取得できないため推測で補完しない。"
-          ],
-          "source": {
-            "url": "https://www.town.yasuda.kochi.jp/life/dtl.php?hdnKey=1935",
-            "checkedAt": "2026-07-24"
+          "status": "verified",
+          "summary": "未就園の0歳6か月から満3歳未満が安田さくら園を月10時間まで利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
           },
           "details": {
-            "reviewDisposition": "自治体公式の公開情報だけでは2026年度の対象・料金・実施施設・申請条件等を確定できないため、推測せずunavailableとして公開。制度不存在を断定せず、詳細は自治体窓口で確認する。",
-            "previousStatus": "needs_medium_review"
+            "target": "安田町に住所があり、保育所等に在籍していない0歳6か月から満3歳未満の子ども",
+            "facility": "幼保連携型認定こども園安田さくら園",
+            "usageLimit": "子ども1人につき月10時間まで",
+            "hours": "月曜日から金曜日の8時から18時。土日祝日と12月29日から1月3日は実施しない",
+            "fee": "1時間300円（30分150円）。世帯状況により軽減される場合がある",
+            "application": "町へ認定申請後、総合支援システムで施設面談と予約を行う",
+            "start": "2026年度"
+          },
+          "source": {
+            "url": "https://www.town.yasuda.kochi.jp/life/dtl.php?hdnKey=1935",
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -34633,7 +34638,7 @@
       "name": "仁淀川町",
       "officialUrl": "https://www.town.niyodogawa.lg.jp/",
       "status": "verified",
-      "summary": "必須9制度を公式情報で再監査。4制度をverified、5制度をunavailableとして登録。住宅支援は一般制度のみ確認され、子育て世帯固有条件を確認できないためunavailableへ訂正。",
+      "summary": "必須9制度を公式情報で再監査。5制度をverified、4制度をunavailableとして登録。こども誰でも通園制度は対象・月10時間・料金・実施施設を確認してverifiedへ訂正。住宅支援は一般制度のみのためunavailableを維持。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -34731,26 +34736,31 @@
           ]
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "乳児等通園支援事業は開始済みだが利用条件の詳細を確定できない",
-          "notes": [
-            "2026年5月7日付の町公式案内と、令和8年3月制定の認定申請規則を確認した。",
-            "対象月齢、月10時間等の利用上限、料金、実施施設、利用時間、予約方法を町公式本文から確定できないため要確認とした。"
-          ],
+          "status": "verified",
+          "summary": "未就園の0歳6か月から満3歳未満がふたば保育所を月10時間まで利用可能",
+          "eligibility": {
+            "minAgeMonths": 6,
+            "maxAgeYears": 2
+          },
+          "details": {
+            "target": "仁淀川町の保育所等に通っていない0歳6か月から満3歳未満の子ども",
+            "facility": "ふたば保育所（仁淀川町森4279-1）",
+            "usageLimit": "月10時間まで",
+            "hours": "9時から11時。土日祝日、年末年始、その他休所日を除く",
+            "fee": "1時間300円",
+            "application": "事前に乳児等支援給付認定を申請し、つうえんポータルから手続する",
+            "start": "2026年度"
+          },
           "source": {
             "url": "https://www.town.niyodogawa.lg.jp/life/life_dtl.php?hdnKey=3315",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
               "url": "https://www.town.niyodogawa.lg.jp/reiki/reiki_honbun/r191RG00000962.html",
-              "checkedAt": "2026-07-24"
+              "checkedAt": "2026-07-25"
             }
-          ],
-          "details": {
-            "reviewDisposition": "自治体公式の公開情報だけでは2026年度の対象・料金・実施施設・申請条件等を確定できないため、推測せずunavailableとして公開。制度不存在を断定せず、詳細は自治体窓口で確認する。",
-            "previousStatus": "needs_medium_review"
-          }
+          ]
         },
         "housingSupport": {
           "status": "unavailable",
@@ -35660,7 +35670,7 @@
       "name": "津野町",
       "officialUrl": "https://town.kochi-tsuno.lg.jp/",
       "status": "verified",
-      "summary": "必須9制度を公式情報で再監査。5制度をverified、4制度をunavailableとして登録。住宅支援は一般制度のみ確認され、子育て世帯固有条件を確認できないためunavailableへ訂正。",
+      "summary": "必須9制度を公式情報で再監査。6制度をverified、3制度をunavailableとして登録。こども誰でも通園制度は令和8年度の対象・月10時間・料金・2施設を確認してverifiedへ訂正。住宅支援は一般制度のみのためunavailableを維持。",
       "services": {
         "childMedical": {
           "status": "verified",
@@ -35761,25 +35771,30 @@
           ]
         },
         "temporaryChildcare": {
-          "status": "unavailable",
-          "summary": "こども誰でも通園制度は開始済みだが詳細条件を確定できない",
-          "notes": [
-            "教育委員会の現行お知らせで『こども誰でも通園制度がはじまりました』との案内を確認した。",
-            "対象月齢、月間利用上限、料金、実施施設、利用時間、認定・予約方法をPDF本文から確定できないため要確認とした。"
-          ],
+          "status": "verified",
+          "summary": "1歳児から満3歳未満の未就園児が町立認定こども園2施設を月10時間まで利用可能",
+          "details": {
+            "target": "津野町に住所があり、保育所等に在籍していない1歳児から満3歳未満の子ども",
+            "facilities": "津野町立認定こども園にじいろ園、津野町立認定こども園さくらんぼ園",
+            "usageLimit": "子ども1人につき月10時間まで",
+            "hours": "月曜日から金曜日の9時から11時30分",
+            "fee": "1時間300円",
+            "application": "町の案内に従い利用認定と施設予約を行う",
+            "start": "2026年度"
+          },
           "source": {
-            "url": "https://town.kochi-tsuno.lg.jp/department/department_kyouiku",
-            "checkedAt": "2026-07-24"
+            "url": "https://town.kochi-tsuno.lg.jp/cms/wp-content/uploads/2026/04/cef8f7c858d23f595d4c1688e46e1d44.pdf",
+            "checkedAt": "2026-07-25"
           },
           "additionalSources": [
             {
-              "url": "https://town.kochi-tsuno.lg.jp/cms/wp-content/uploads/2026/04/cef8f7c858d23f595d4c1688e46e1d44.pdf",
-              "checkedAt": "2026-07-24"
+              "url": "https://town.kochi-tsuno.lg.jp/department/department_kyouiku",
+              "checkedAt": "2026-07-25"
             }
           ],
-          "details": {
-            "reviewDisposition": "自治体公式の公開情報だけでは2026年度の対象・料金・実施施設・申請条件等を確定できないため、推測せずunavailableとして公開。制度不存在を断定せず、詳細は自治体窓口で確認する。",
-            "previousStatus": "needs_medium_review"
+          "eligibility": {
+            "minAgeMonths": 12,
+            "maxAgeYears": 2
           }
         },
         "housingSupport": {
@@ -72022,11 +72037,11 @@
             "usageLimit": "月10時間まで",
             "start": "2026年4月1日から実施",
             "application": "利用認定申請後、総合支援システムで施設との面談・予約を行う",
-            "fee": "実施施設の設定額と実費負担を利用前に確認する"
+            "fee": "1時間あたり300円程度。施設により異なるため、予約前に実施施設へ確認する"
           },
           "source": {
             "url": "https://www.city.shibushi.lg.jp/soshiki/8/32850.html",
-            "checkedAt": "2026-07-24"
+            "checkedAt": "2026-07-25"
           }
         },
         "housingSupport": {
@@ -74585,12 +74600,18 @@
             "target": "利用日時点で生後6か月から満3歳未満で、保育所等に通っていない子ども",
             "usageLimit": "子ども1人につき月10時間まで。翌月への繰越不可",
             "application": "町の利用認定を受け、実施施設との面談・利用予約を行う",
-            "fee": "利用料・実費負担・実施施設は町公式案内を確認して利用する"
+            "fee": "1時間あたり300円程度。世帯区分等による軽減があるため、認定時に確認する"
           },
           "source": {
             "url": "https://town.nakatane.kagoshima.jp/kodomo/daretu/daretu.html",
-            "checkedAt": "2026-07-24"
-          }
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://town.nakatane.kagoshima.jp/naka-reiki/reiki_honbun/q781RG00000983.html",
+              "checkedAt": "2026-07-25"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
