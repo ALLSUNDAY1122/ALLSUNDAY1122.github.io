@@ -1,0 +1,111 @@
+name: Temporary Central A Housing Batch 6 State Sync
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch6-state-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-housing-batch6-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Synchronize checkpoint and region state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const cpPath = 'jichitai-compare/operations/control/session-checkpoints/central-a.json';
+          const regionPath = 'jichitai-compare/operations/control/regions/central.json';
+          const cp = JSON.parse(fs.readFileSync(cpPath, 'utf8'));
+          const region = JSON.parse(fs.readFileSync(regionPath, 'utf8'));
+          const updatedAt = '2026-07-25T15:13:00+09:00';
+          const statePr = Number(process.env.PR_NUMBER);
+          const corrections = [
+            { type: 'general_housing_misclassification', code: '27202', service: 'housingSupport', name: '岸和田市' },
+            { type: 'general_housing_misclassification', code: '27321', service: 'housingSupport', name: '豊能町' },
+            { type: 'general_housing_misclassification', code: '24207', service: 'housingSupport', name: '鈴鹿市' },
+            { type: 'general_housing_misclassification', code: '24324', service: 'housingSupport', name: '東員町' },
+            { type: 'general_housing_misclassification', code: '24461', service: 'housingSupport', name: '玉城町' }
+          ];
+          const addCorrections = (list) => {
+            for (const correction of corrections) {
+              if (!list.some((item) => item.code === correction.code && item.service === correction.service && item.type === correction.type)) {
+                list.push(correction);
+              }
+            }
+          };
+
+          cp.updatedAt = updatedAt;
+          cp.pullRequestNumber = 3500;
+          cp.ciStatus = 'success';
+          cp.ciRunNumber = 8495;
+          cp.stateSyncPullRequestNumber = statePr;
+          cp.nextAction = '原因別重点再監査を継続する。一般住宅・移住制度の分類候補残144件を子育て固有要件の有無で判定し、弱い主出典残33件も並行して処理する。Issue #3141の19項目は推測せず維持する。';
+          cp.qualityReaudit.latestCompletedAt = updatedAt;
+          cp.qualityReaudit.latestRegionalPullRequestNumber = 3500;
+          cp.qualityReaudit.latestCiRunNumber = 8495;
+          cp.qualityReaudit.correctedMunicipalitiesRechecked = 84;
+          cp.qualityReaudit.primarySourceSlotsRechecked = 516;
+          cp.qualityReaudit.candidateCounts.generalHousingMisclassification = 144;
+          cp.qualityReaudit.nextPriority = [
+            '一般住宅・移住制度の分類候補残144件',
+            '弱い主出典残33候補',
+            'Issue #3141の19項目を公式利用条件公開時のみ解消'
+          ];
+          addCorrections(cp.qualityReaudit.confirmedCorrections);
+
+          region.updatedAt = updatedAt;
+          region.lastAction = '原因別重点再監査の住宅支援分類第6群をPR #3500・CI #8495成功後にregion/centralへ統合。岸和田市、豊能町、鈴鹿市、東員町、玉城町の一般移住・空き家制度を子育て世帯向け住宅支援から除外した。';
+          region.nextAction = '一般住宅・移住制度の分類候補残144件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。';
+          region.qualityReaudit.latestCompletedAt = updatedAt;
+          region.qualityReaudit.latestRegionalPullRequestNumber = 3500;
+          region.qualityReaudit.latestCiRunNumber = 8495;
+          region.qualityReaudit.correctedMunicipalitiesRechecked = 84;
+          region.qualityReaudit.primarySourceSlotsRechecked = 516;
+          region.qualityReaudit.candidateCounts.generalHousingMisclassification = 144;
+          region.qualityReaudit.nextPriority = [
+            '一般住宅・移住制度の分類候補残144件',
+            '弱い主出典残33候補',
+            'Issue #3141の19項目を公式利用条件公開時のみ解消'
+          ];
+          addCorrections(region.qualityReaudit.confirmedCorrections);
+
+          fs.writeFileSync(cpPath, JSON.stringify(cp, null, 2) + '\n');
+          fs.writeFileSync(regionPath, JSON.stringify(region, null, 2) + '\n');
+          NODE
+
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+
+      - name: Commit synchronized state
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/session-checkpoints/central-a.json \
+                  jichitai-compare/operations/control/regions/central.json
+          git commit -m 'state: 中日本A住宅支援第6群の監査状態を同期'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
