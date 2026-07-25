@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-25T13:42:00+09:00",
+  "updatedAt": "2026-07-25T14:17:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,8 +24,8 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "原因別重点再監査の弱い主出典第3群9制度枠をPR #3403・CI #8266成功後にregion/centralへ統合。東員町産後ケアを2026年6月更新の利用者向けページへ変更し、病児保育3件・産後ケア5件は公式条件未確認として判定を維持した。",
-  "nextAction": "弱い主出典の残35候補を、産後ケア、病児保育、住宅支援の順に利用者向け公式情報で確定判定する。",
+  "lastAction": "原因別重点再監査の弱い主出典第4群5制度枠をPR #3435・CI #8341成功後にregion/centralへ統合。甲良町病児保育を湖東定住自立圏の利用者向け公式ページへ更新し、湖西市・小山町・熊野市・小野市は要綱を超える断定を行わず現状維持とした。",
+  "nextAction": "弱い主出典の残34候補を、病児保育、産後ケア、住宅支援の順に利用者向け公式情報で確定判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
   "lastGeneratedPullRequest": 3122,
@@ -34,13 +34,13 @@
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-25T13:42:00+09:00",
-    "latestRegionalPullRequestNumber": 3403,
-    "latestCiRunNumber": 8266,
+    "latestCompletedAt": "2026-07-25T14:17:00+09:00",
+    "latestRegionalPullRequestNumber": 3435,
+    "latestCiRunNumber": 8341,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 69,
-    "primarySourceSlotsRechecked": 501,
+    "correctedMunicipalitiesRechecked": 74,
+    "primarySourceSlotsRechecked": 506,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -123,19 +123,17 @@
         "code": "24324",
         "service": "postpartumCare",
         "name": "東員町"
+      },
+      {
+        "type": "regional_user_facing_source_upgrade",
+        "code": "25442",
+        "service": "sickChildCare",
+        "name": "甲良町"
       }
     ],
-    "issue3141UnresolvedItemCount": 21,
-    "issue3141UnresolvedMunicipalityCount": 21,
+    "issue3141UnresolvedItemCount": 19,
+    "issue3141UnresolvedMunicipalityCount": 19,
     "issue3141Items": [
-      {
-        "code": "18481",
-        "service": "temporaryChildcare"
-      },
-      {
-        "code": "18483",
-        "service": "temporaryChildcare"
-      },
       {
         "code": "21207",
         "service": "temporaryChildcare"
@@ -213,9 +211,9 @@
         "service": "sickChildCare"
       }
     ],
-    "issue3141AuthoritativeStateCheckedAt": "2026-07-25T11:54:00+09:00",
+    "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 35,
+      "weakPrimarySource": 34,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 149,
       "fiscalYearRisk": 33,
@@ -239,9 +237,9 @@
       }
     ],
     "nextPriority": [
-      "弱い主出典残35候補",
-      "産後ケアの条例・要綱単独候補",
-      "病児保育の計画・要綱単独候補",
+      "弱い主出典残34候補",
+      "病児保育の条例・要綱単独候補",
+      "産後ケアのPDF・計画単独候補",
       "住宅支援の分類候補"
     ]
   }
