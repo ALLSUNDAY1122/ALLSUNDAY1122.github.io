@@ -8,11 +8,11 @@
   "scope": {
     "round": 4,
     "municipalityCodes": ["29205","29206","29207","29208","29209","29210","29211","29212","29322","29342"],
-    "auditedMunicipalityCount": 2,
-    "auditedServiceCount": 18,
-    "confirmedErrorCount": 3,
-    "correctedErrorCount": 3,
-    "pendingMunicipalityCodes": ["29207","29208","29209","29210","29211","29212","29322","29342"]
+    "auditedMunicipalityCount": 3,
+    "auditedServiceCount": 27,
+    "confirmedErrorCount": 4,
+    "correctedErrorCount": 4,
+    "pendingMunicipalityCodes": ["29208","29209","29210","29211","29212","29322","29342"]
   },
   "findings": [
     {
@@ -25,19 +25,7 @@
         "18歳年度末までの医療費窓口負担0円、病児保育の対象・料金・広域利用、第2子以降保育料無償化を現行確認。",
         "令和8年度小中学校給食費無償化、市外学校通学者・給食停止者への給付、産後ケアの訪問券追加を確認。",
         "こども誰でも通園制度は新沢認定こども園、月3時間、1回900円・おやつ20円、1日3人。",
-        "移住支援金は子ども要件・加算のない一般制度で、世帯枠は予算上限到達により受付終了。housingSupport unavailableを維持。",
-        "粗大ごみの一般収集と高齢者・障害者向け無料リクエスト収集を混同しない。"
-      ],
-      "principalSources": [
-        "https://www.city.kashihara.nara.jp/kosodate/mokuteki/7/16402.html",
-        "https://www.city.kashihara.nara.jp/soshiki/1036/gyomu/2/4/100.html",
-        "https://www.city.kashihara.nara.jp/kosodate_kyoiku/yochien_hoikujo_kodomoen/1/14678.html",
-        "https://www.city.kashihara.nara.jp/soshiki/1003/gyomu/5/1/1701.html",
-        "https://www.city.kashihara.nara.jp/kosodate/nenrei/2/1/14332.html",
-        "https://www.city.kashihara.nara.jp/soshiki/1036/gyomu/2/2/19678.html",
-        "https://www.city.kashihara.nara.jp/soshiki/1027/gyomu/3204.html",
-        "https://www.city.kashihara.nara.jp/kurashi_tetsuzuki/gomi_kankyohozen/2/1/1/6814.html",
-        "https://www.city.kashihara.nara.jp/kurashi_tetsuzuki/anshin_anzen/3/2/7531.html"
+        "移住支援金は子ども要件・加算のない一般制度で、世帯枠は予算上限到達により受付終了。housingSupport unavailableを維持。"
       ]
     },
     {
@@ -49,7 +37,7 @@
         {
           "service": "sickChildCare",
           "before": "利用料・食事代等は公式ページで確認できないとして未記録",
-          "after": "病児保育所さくらんぼの定員3人、1日2,000円、非課税・生活保護世帯無料、給食300円、初回診療費、予約条件を追加",
+          "after": "定員3人、1日2,000円、非課税・生活保護世帯無料、給食300円、初回診療費、予約条件を追加",
           "cause": "公式利用案内の料金・定員・食事条件の確認漏れ",
           "officialSource": "https://www.city.sakurai.lg.jp/sosiki/kodomokateibu/hoikukyoikuka/hoikushisetsu/ninkagaihoikushisetsu/7629.html",
           "status": "corrected"
@@ -57,32 +45,49 @@
         {
           "service": "temporaryChildcare",
           "before": "こども誰でも通園制度の施設・曜日・時間・料金を未記録",
-          "after": "三輪学園は平日9時～11時30分・1時間200円、第1保育所は平日9時～16時・1時間300円として2施設の条件を追加",
+          "after": "三輪学園は平日9時～11時30分・1時間200円、第1保育所は平日9時～16時・1時間300円として追加",
           "cause": "令和8年度実施施設一覧の確認漏れ",
           "officialSource": "https://www.city.sakurai.lg.jp/material/files/group/61/50804jissiitiran_2.pdf",
           "status": "corrected"
         },
         {
           "service": "housingSupport",
-          "before": "子ども加算のある移住支援金と、子ども要件・加算のない結婚新生活支援を同じ子育て住宅支援として併記",
-          "after": "18歳未満1人100万円加算のある移住支援金のみをverified根拠として記録し、結婚新生活支援は一般新婚制度として除外",
-          "cause": "一般新婚住宅支援と子育て世帯向け住宅支援の分類混同",
+          "before": "子ども加算のある移住支援金と子ども要件のない結婚新生活支援を同じ子育て住宅支援として併記",
+          "after": "18歳未満1人100万円加算のある移住支援金のみをverified根拠とし、結婚新生活支援を除外",
+          "cause": "一般新婚住宅支援との分類混同",
           "officialSource": "https://www.city.sakurai.lg.jp/sosiki/koushitsu/gyouseikeieika/ijuteiju/1566543230999.html",
+          "status": "corrected"
+        }
+      ]
+    },
+    {
+      "municipalityCode": "29207",
+      "municipalityName": "五條市",
+      "servicesChecked": 9,
+      "result": "one_confirmed_error_corrected",
+      "confirmedErrors": [
+        {
+          "service": "housingSupport",
+          "before": "子ども要件のない結婚新生活支援のみを確認し、子育て世帯専用住宅支援を確認できないとしてunavailable",
+          "after": "五條市移住支援金をverifiedとして記録。単身60万円、2人以上世帯100万円、条件を満たす世帯は18歳未満1人につき100万円加算",
+          "cause": "子ども加算付き移住支援金の見落としと一般新婚制度への調査偏り",
+          "officialSource": "https://www.city.gojo.lg.jp/soshiki/kikaku/ijuteiju/14150.html",
           "status": "corrected"
         }
       ],
       "notes": [
-        "令和8年度は市立小中学校とも給食費無償。産後ケアは宿泊・日帰り・訪問合計7回。",
-        "粗大ごみは2か月に1回・1回4点以内、防災情報は現行JSONと一致。"
+        "令和8年8月診療分から18歳年度末まで医療費窓口負担0円。",
+        "令和8年4月から0～2歳児を含む保育料無償化、学校給食費無償化、誰でも通園月10時間を確認。",
+        "産後ケア、病後児保育、粗大ごみ1点500円、防災情報は現行公式情報と一致。"
       ]
     }
   ],
   "cumulativeProgress": {
-    "auditedMunicipalityCount": 32,
-    "auditedServiceCount": 288,
-    "confirmedErrorCount": 32,
-    "correctedErrorCount": 32,
+    "auditedMunicipalityCount": 33,
+    "auditedServiceCount": 297,
+    "confirmedErrorCount": 33,
+    "correctedErrorCount": 33,
     "lastSuccessfulCiRunNumber": 8069
   },
-  "nextAction": "五條市（29207）を公式情報起点で独立監査する。"
+  "nextAction": "御所市（29208）を公式情報起点で独立監査する。"
 }
