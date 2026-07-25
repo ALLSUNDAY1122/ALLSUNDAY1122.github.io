@@ -1,0 +1,106 @@
+name: Temporary North B Anyone Single Gap Batch 5 Records
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-anyone-single-gap-batch5-records.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-anyone-single-gap-batch5-records-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  finalize-records:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout records branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Finalize audit records
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const root = 'jichitai-compare';
+          const codes = ['06204','06207','06208','06209','06210','06211','06301'];
+          for (const code of codes) {
+            const file = `${root}/operations/tasks/${code}.json`;
+            const task = JSON.parse(fs.readFileSync(file, 'utf8'));
+            task.notes = [...new Set(task.notes || [])];
+            fs.writeFileSync(file, `${JSON.stringify(task, null, 2)}\n`);
+          }
+
+          const auditFile = `${root}/operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json`;
+          const audit = JSON.parse(fs.readFileSync(auditFile, 'utf8'));
+          audit.validation = {
+            generatedDataValidation: 'success',
+            finalRecordsValidationAt: '2026-07-25T17:02:00+09:00',
+            validationWorkflow: 'Temporary North B Anyone Single Gap Batch 5 Records',
+            reason: '自治体JSON・生成JSON・公開ページがmainで一致済みのため、監査記録・checkpoint・task重複メモのみ最終整理'
+          };
+          fs.writeFileSync(auditFile, `${JSON.stringify(audit, null, 2)}\n`);
+
+          const checkpointFile = `${root}/operations/control/session-checkpoints/north-b.json`;
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointFile, 'utf8'));
+          checkpoint.updatedAt = '2026-07-25T17:02:00+09:00';
+          checkpoint.workingBranch = 'audit/north-b-anyone-single-gap-batch5-records-20260725';
+          checkpoint.pullRequestNumber = null;
+          checkpoint.ciStatus = 'pending';
+          checkpoint.nextAction = '誰でも通園の単一条件欠落残り22件を優先度順に再確認する。';
+          checkpoint.fiscalAnyoneAudit = {
+            ...(checkpoint.fiscalAnyoneAudit || {}),
+            singleGapBatch5Reviewed: 10,
+            singleGapBatch5CorrectedMunicipalities: ['06204','06207','06208','06209','06210','06211','06301'],
+            singleGapBatch5NoChangeMunicipalities: ['06205','06206','06212'],
+            remainingAnyonePriorityBelow50: 22,
+            singleGapBatch5AuditFile: 'operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json',
+            status: 'single_gap_batch5_records_validated'
+          };
+          fs.writeFileSync(checkpointFile, `${JSON.stringify(checkpoint, null, 2)}\n`);
+          NODE
+
+      - name: Run full validation
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove workflow and commit records
+        shell: bash
+        run: |
+          rm -f .github/workflows/temp-north-b-anyone-single-gap-batch5-records.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/temp-north-b-anyone-single-gap-batch5-records.yml \
+            jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-b.json \
+            jichitai-compare/operations/tasks/06204.json \
+            jichitai-compare/operations/tasks/06207.json \
+            jichitai-compare/operations/tasks/06208.json \
+            jichitai-compare/operations/tasks/06209.json \
+            jichitai-compare/operations/tasks/06210.json \
+            jichitai-compare/operations/tasks/06211.json \
+            jichitai-compare/operations/tasks/06301.json \
+            jichitai-compare/data/generated/municipalities.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/sitemap.xml
+          git commit -m 'audit: 北日本B誰でも通園単一条件第5群の記録を確定 [skip ci]'
+          git push origin HEAD:"${{ github.head_ref }}"
