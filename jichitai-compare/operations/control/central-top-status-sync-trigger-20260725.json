@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "triggerId": "central-top-status-main-sync-20260725",
+  "createdAt": "2026-07-25T12:20:00+09:00",
+  "detectedByPullRequest": 3281,
+  "runnerRegistrationPullRequest": 3286,
+  "sourceBranch": "region/central",
+  "targetBranch": "main",
+  "municipalityCodes": ["16202", "16204", "16205", "16206", "23100"],
+  "expectedChange": "自治体上位statusをneeds_coordinatorからverifiedへ同期し、公開summaryから統括確認待ち文言を除去する",
+  "releaseBlocker": "active_until_main_ci_and_public_verification_succeed"
+}

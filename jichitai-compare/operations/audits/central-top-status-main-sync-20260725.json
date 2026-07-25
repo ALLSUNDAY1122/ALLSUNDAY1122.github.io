@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-top-status-main-sync-20260725",
+  "detectedBy": "central-quality-cross-audit-20260725",
+  "trackingIssues": [3187, 3193],
+  "sourceBranch": "region/central",
+  "targetBranch": "main",
+  "municipalities": [
+    {"code":"16202","name":"高岡市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+    {"code":"16204","name":"魚津市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+    {"code":"16205","name":"氷見市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+    {"code":"16206","name":"滑川市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":2920,"originalAuditCiRun":6988},
+    {"code":"23100","name":"名古屋市","before":"needs_coordinator","after":"verified","originalAuditPullRequest":3029,"originalAuditCiRun":7363}
+  ],
+  "cause": "地域監査で訂正した自治体上位statusとsummaryが全国同期対象から漏れ、制度データだけがmainへ反映されていた",
+  "scope": "自治体上位status・summary・updatedAtのみ。9制度内容はregion/centralとmainで既に一致",
+  "releaseBlocker": "active_until_main_ci_and_public_verification_succeed"
+}
