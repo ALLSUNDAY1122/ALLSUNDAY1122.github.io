@@ -1,0 +1,89 @@
+name: Temporary Central A Housing Batch 10 State Sync
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch10-state-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-housing-batch10-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Synchronize state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const checkpointPath='jichitai-compare/operations/control/session-checkpoints/central-a.json';
+          const regionPath='jichitai-compare/operations/control/regions/central.json';
+          const auditPath='jichitai-compare/operations/audits/central-a-housing-classification-batch10-decisions-20260725.json';
+          const updatedAt='2026-07-25T17:42:00+09:00';
+          const additions=[
+            {type:'family_target_clarification',code:'28381',service:'housingSupport',name:'稲美町'},
+            {type:'three_generation_housing_replacement',code:'17203',service:'housingSupport',name:'小松市'},
+            {type:'newlywed_housing_replacement',code:'21220',service:'housingSupport',name:'下呂市'},
+            {type:'family_eligibility_and_child_addition_clarified',code:'22130',service:'housingSupport',name:'浜松市'},
+            {type:'general_housing_misclassification',code:'23445',service:'housingSupport',name:'南知多町'}
+          ];
+          const addUnique=(arr,item)=>{if(!arr.some(x=>x.code===item.code&&x.service===item.service&&x.type===item.type))arr.push(item);};
+          for(const filePath of [checkpointPath,regionPath]){
+            const data=JSON.parse(fs.readFileSync(filePath,'utf8'));
+            data.updatedAt=updatedAt;
+            data.lastAction='原因別重点再監査の住宅支援分類第10群をPR #3649・CI #8897成功後にregion/centralへ統合。稲美町・小松市・下呂市・浜松市の家族対象条件を明確化し、南知多町は一般空き家制度のみのためunavailableへ修正した。';
+            data.nextAction='一般住宅・移住制度の分類候補残124件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。';
+            const q=data.qualityReaudit;
+            q.latestCompletedAt=updatedAt;
+            q.latestRegionalPullRequestNumber=3649;
+            q.latestCiRunNumber=8897;
+            q.correctedMunicipalitiesRechecked=104;
+            q.primarySourceSlotsRechecked=536;
+            q.confirmedCorrections=Array.isArray(q.confirmedCorrections)?q.confirmedCorrections:[];
+            additions.forEach(i=>addUnique(q.confirmedCorrections,i));
+            q.candidateCounts.generalHousingMisclassification=124;
+            q.nextPriority=['一般住宅・移住制度の分類候補残124件','弱い主出典残33候補','Issue #3141の19項目を公式利用条件公開時のみ解消'];
+            if(filePath===checkpointPath){
+              data.pullRequestNumber=3649;
+              data.ciStatus='success';
+              data.ciRunNumber=8897;
+              data.stateSyncPullRequestNumber=Number(process.env.PR_NUMBER);
+            }
+            fs.writeFileSync(filePath,JSON.stringify(data,null,2)+'\n');
+          }
+          const audit=JSON.parse(fs.readFileSync(auditPath,'utf8'));
+          audit.regionalCiRunNumber=8897;
+          audit.regionMergeCommit='4170c61767c3eb575eef5ae3f88ed07239286de4';
+          audit.stateSyncPullRequestNumber=Number(process.env.PR_NUMBER);
+          audit.stateSyncWorkflowRunId=Number(process.env.RUN_ID);
+          audit.stateSynchronizedAt=updatedAt;
+          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
+          NODE
+      - name: Regenerate and validate
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+      - name: Commit synchronized state
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-housing-batch10-state-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/session-checkpoints/central-a.json jichitai-compare/operations/control/regions/central.json jichitai-compare/operations/audits/central-a-housing-classification-batch10-decisions-20260725.json jichitai-compare/operations/control/central-a-housing-batch10-state-trigger-20260725.json
+          git commit -m 'state: 中日本A住宅支援第10群の地域状態を同期'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
