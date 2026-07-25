@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-26T00:03:00+09:00",
+  "updatedAt": "2026-07-26T00:30:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,7 +24,7 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "住宅支援分類第13群で高岡市・金沢市・名古屋市の子育て条件と主出典を明確化し、甲良町は2026年度対象期間未確認のためunavailableへ修正。伊賀市は直接的な子育て制度を確認してverifiedを維持した。",
+  "lastAction": "住宅支援分類第13群で高岡市・金沢市・名古屋市の子育て条件と主出典を明確化し、甲良町を年度条件未確認としてunavailableへ修正。伊賀市はverifiedを維持し、公開5ページと全国JSONの一致を確認した。",
   "nextAction": "一般住宅・移住制度の分類候補残124件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
@@ -400,13 +400,21 @@
   },
   "latestCentralAHousingBatch": {
     "batch": 13,
-    "status": "regional_corrected_pending_national_sync",
+    "status": "completed_public_verified_region_integrated",
     "reviewedMunicipalityCount": 5,
-    "correctedMunicipalityCount": 4,
-    "retainedMunicipalityCount": 1,
+    "confirmedCorrectionCount": 4,
+    "retainedNoChangeCount": 1,
+    "statusToUnavailableCount": 1,
+    "verifiedClarificationOrSourceUpgradeCount": 3,
     "remainingCandidates": 109,
     "regionalPullRequestNumber": 3709,
-    "workflowRunId": 30162984077,
+    "regionalWorkflowRunId": 30162984077,
+    "nationalPullRequestNumber": 3711,
+    "nationalWorkflowRunId": 30163482438,
+    "publicVerificationPullRequestNumber": 3715,
+    "publicVerificationWorkflowRunId": 30163659916,
+    "finalRegionPullRequestNumber": 3717,
+    "finalRegionWorkflowRunId": 30163825246,
     "blocker": null
   }
 }
