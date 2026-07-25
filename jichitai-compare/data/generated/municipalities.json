@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.0.0",
-    "updatedAt": "2026-07-25",
+    "updatedAt": "2026-07-26",
     "municipalityCount": 414,
     "disclaimer": "制度の正式な対象可否は各自治体へ確認してください。"
   },
@@ -909,17 +909,18 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "対象区域の住宅取得、戸建てリフォーム、空き家バンク物件取得等を補助",
+          "summary": "令和8年度、対象区域の住宅取得・リフォーム等を補助し、若年子育て世帯・新婚世帯・三世代同居等には加算がある。",
           "details": {
-            "homePurchase": "住宅ローン費の5％。まちなか区域上限50万円、居住誘導区域上限20万円",
-            "renovation": "対象工事費の3分の1、最大20万円。三世代同居リフォームも対象",
-            "vacantHouse": "空き家バンク登録物件取得費の5％、最大20万円",
-            "addition": "若年子育て世帯・三世代同居等の加算あり。HTML本文で加算額未確認",
-            "applicationTiming": "事業により着工前、所有権移転前、移転後3か月以内等"
+            "programs": "たかおか暮らし支援事業、空き家バンク住宅取得支援事業等",
+            "homePurchase": "まちなか区域は住宅ローン費の5％・上限50万円、居住誘導区域は上限20万円",
+            "renovation": "対象リフォーム工事費の3分の1・上限20万円",
+            "vacantHouse": "空き家バンク登録物件取得費の5％・上限20万円",
+            "childCondition": "新築・購入・中古住宅取得・一戸建てリフォーム・空き家バンク住宅取得等で、若年子育て世帯、新婚世帯、三世代同居等の加算を実施",
+            "applicationTiming": "工事着工前または所有権移転前など、事業別の時期までに申請"
           },
           "source": {
             "url": "https://www.city.takaoka.toyama.jp/soshiki/kenchikuseisakuka/2/3/4/2521.html",
-            "checkedAt": "2026-07-19"
+            "checkedAt": "2026-07-26"
           }
         },
         "bulkyWaste": {
@@ -3821,23 +3822,23 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "市営住宅で子育て世帯等の専用募集枠を設ける場合があり、住宅取得・中古住宅リフォーム等の奨励制度も提供する。",
+          "summary": "18歳年度末までの子がいる子育て世帯等だけが応募できる市営住宅募集枠を設ける場合があり、令和8年度の定期・随時募集を実施する。",
           "details": {
-            "support": "子育て世帯、ひとり親家庭、多人数世帯、若年夫婦世帯等のみが応募できる市営住宅募集枠を設ける場合がある",
-            "childDefinition": "子育て世帯は満18歳到達後最初の3月31日までの子がいる世帯",
-            "additionalPrograms": "対象区域・住宅条件等を満たす新築住宅取得奨励金、中古住宅取得・リフォーム奨励金等を案内",
-            "conditions": "市営住宅は住宅困窮、所得、住所・勤務、市税滞納なし等の入居要件を満たすこと。奨励金は対象区域・住宅性能等の個別要件あり",
-            "application": "市営住宅募集または住宅支援制度の申請前に住宅政策課へ確認"
+            "program": "金沢市営住宅の子育て世帯等優遇募集",
+            "childDefinition": "18歳に達する日以後の最初の3月31日までにある子がいる世帯",
+            "priority": "子育て世帯、ひとり親家庭、多人数世帯、若年夫婦世帯等だけが応募できる募集枠を設ける場合がある",
+            "currentRecruitment": "令和8年度は定期募集を年3回予定し、随時募集物件は毎月更新する",
+            "conditions": "住宅困窮、所得、住所または勤務、市税滞納なし等の市営住宅入居要件を満たす必要がある"
           },
           "source": {
             "url": "https://www4.city.kanazawa.lg.jp/soshikikarasagasu/jutakuseisakuka/yokuarushitsumon_1/3116.html",
-            "checkedAt": "2026-07-20"
+            "checkedAt": "2026-07-26"
           },
           "additionalSources": [
             {
-              "url": "https://www4.city.kanazawa.lg.jp/kurashi_tetsuzuki/sumai/27660.html",
-              "checkedAt": "2026-07-20",
-              "description": "住宅取得・中古住宅取得リフォーム等の支援制度一覧"
+              "url": "https://www4.city.kanazawa.lg.jp/kurashi_tetsuzuki/sumai/shieijutaku/14057.html",
+              "checkedAt": "2026-07-26",
+              "description": "令和8年度市営住宅の定期募集予定と随時募集"
             }
           ]
         },
@@ -24882,49 +24883,38 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "子育て世帯向けに定住促進住宅・公社賃貸住宅の家賃20％減額、補助付きセーフティネット住宅、市営住宅の専用募集などを実施",
+          "summary": "18歳以下の子がいる世帯等へ、定住促進住宅・公社賃貸住宅の家賃20％減額を最大10年間行い、家賃補助付き子育て世帯専用住戸等も提供する。",
           "eligibility": {
             "residency": "制度・物件ごとの入居要件を満たすこと",
-            "householdCondition": "主な対象は18歳到達後最初の3月31日までの子ども、または妊娠している方がいる世帯",
-            "incomeCondition": "補助付きセーフティネット住宅は所得月額214,000円以下。子どもが3人以上いる場合は259,000円以下"
+            "householdCondition": "18歳に達する日以後最初の3月31日までの子ども、または妊娠している方がいる世帯等",
+            "incomeCondition": "家賃補助付き子育て世帯専用住戸は所得月額214,000円以下。子ども3人以上は259,000円以下"
           },
           "details": {
-            "conditions": "定住促進住宅は令和6年4月1日以降の入居世帯で18歳年度末までの子どもまたは妊娠している方がいる世帯が主対象。公社賃貸住宅は床面積40平方メートル以上の対象住宅へ新規入居する子育て世帯が対象。制度ごとに追加要件あり",
-            "rentReduction": "定住促進住宅は家賃を20％減額し、減額後家賃は6万円を下回らない。令和6年4月1日以降入居世帯は最大通算120か月。公社賃貸住宅も家賃20％減額を最大10年間",
-            "safetyNetHousing": "子育て世帯または新婚世帯専用のセーフティネット住宅に、名古屋市と国による家賃減額補助あり。子育て世帯は6年以内かつ管理期間内。生活保護の住宅扶助や住居確保給付金受給中は併用不可",
-            "municipalHousing": "市営住宅の一般募集には、18歳年度末までの子または妊娠している方がいる世帯向けの『子育て・若年世帯』区分がある。多家族・多子世帯向け区分や、申込者本人45歳未満を対象とする期限付きの定期入居募集も実施",
-            "application": "定住促進住宅・公社賃貸住宅・補助付きセーフティネット住宅は対象物件の管理会社または名古屋市住宅供給公社等へ確認・申請。市営住宅は募集ごとに郵送または電子申請等で申し込む",
-            "otherSupport": "子育て世帯等が市内の良質な中古住宅を取得する際の融資利子補給や、補助錠・チャイルドゲート・転落防止手すり等の購入・設置費の2分の1、最大20万円を補助する制度もある"
+            "project": "なごや子ども住まいるプロジェクト",
+            "rentReduction": "定住促進住宅と公社賃貸住宅は家賃20％減額。令和6年4月1日以降の新規入居世帯は最大10年間",
+            "safetyNetHousing": "入居者を子育て世帯または新婚世帯に限定した家賃減額補助付きセーフティネット住宅を実施",
+            "currentAvailability": "令和8年度選定住戸・空室戸数・補助後家賃を公式ページで更新",
+            "otherSupport": "市営住宅の子育て・若年世帯募集、中古住宅取得の融資利子補給、子どもあんしん住まいる補助金等も実施"
           },
           "source": {
-            "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014635/index.html",
-            "checkedAt": "2026-07-19"
+            "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014573/1014580.html",
+            "checkedAt": "2026-07-26"
           },
           "additionalSources": [
             {
-              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014585/1014622/1034009.html",
-              "checkedAt": "2026-07-19",
-              "description": "定住促進住宅の子育て世帯家賃20％減額"
-            },
-            {
               "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014635/1014638.html",
-              "checkedAt": "2026-07-19",
-              "description": "住宅供給公社賃貸住宅の家賃20％減額を最大10年間"
+              "checkedAt": "2026-07-26",
+              "description": "公社賃貸住宅の家賃20％減額を最大10年間"
             },
             {
               "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014635/1040294.html",
-              "checkedAt": "2026-07-19",
-              "description": "家賃補助付き子育て世帯専用セーフティネット住宅の所得要件と補助期間"
+              "checkedAt": "2026-07-26",
+              "description": "令和8年度の家賃補助付き子育て世帯専用住戸・空室・所得要件"
             },
             {
-              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014585/1014586/1014587/1014589/1034006.html",
-              "checkedAt": "2026-07-19",
-              "description": "市営住宅の子育て・若年世帯、多家族・多子世帯向け募集区分"
-            },
-            {
-              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014710/1014581.html",
-              "checkedAt": "2026-07-19",
-              "description": "子どもあんしん住まいる補助金"
+              "url": "https://www.city.nagoya.jp/kurashi/juutaku/1014583/1014585/1014622/1034009.html",
+              "checkedAt": "2026-07-26",
+              "description": "定住促進住宅の子育て世帯家賃20％減額"
             }
           ]
         },
@@ -42617,20 +42607,25 @@
           ]
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "39歳以下の新婚世帯へ住宅取得・賃借費用の3分の2を最大60万円補助する。",
+          "status": "unavailable",
+          "summary": "結婚新生活支援の現行要綱は確認できるが、2026年度の婚姻・支払・申請対象期間を利用者向け公式情報で確定できない。",
           "details": {
-            "program": "甲良町結婚新生活支援補助金",
-            "condition": "夫婦とも39歳以下、合算所得500万円未満、対象住宅が町内、町税滞納なし等",
-            "targetCosts": "住宅取得費・住宅賃借費",
-            "rate": "対象費用の3分の2",
-            "amount": "夫婦とも29歳以下は上限60万円、39歳以下は上限40万円",
-            "application": "住民票、婚姻届受理証明、所得証明、契約書・領収書等を添えて申請"
+            "confirmedRule": "現行要綱では、夫婦とも39歳以下・合算所得500万円未満等の新婚世帯を対象に、町内住宅の取得費・賃借費の3分の2を補助する",
+            "ruleMaximum": "夫婦とも29歳以下は上限60万円、39歳以下は上限40万円",
+            "missingCurrentConditions": "要綱が町長の別途指定に委ねる2026年度の婚姻日、支払対象期間、申請期限を公開情報で確認できない",
+            "handling": "年度の対象期間と受付状況を企画監理課等へ確認するまで、2026年度に利用可能とは断定しない"
           },
           "source": {
             "url": "https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00001041.html",
-            "checkedAt": "2026-07-22"
-          }
+            "checkedAt": "2026-07-26"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.kouratown.jp/cyonososhiki/somuka/zaiseikakari/zaisei/1385622361935.html",
+              "checkedAt": "2026-07-26",
+              "description": "令和8年度当初予算概要の入口。利用者向け申請条件の単独根拠にはしない"
+            }
+          ]
         },
         "bulkyWaste": {
           "status": "verified",
