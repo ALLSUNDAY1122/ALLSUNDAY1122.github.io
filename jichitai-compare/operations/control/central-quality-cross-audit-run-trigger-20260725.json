@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "triggerId": "central-quality-cross-audit-run-v2-20260725",
+  "createdAt": "2026-07-25T12:14:00+09:00",
+  "runnerFixPullRequest": 3278,
+  "task": "jichitai-compare/operations/control/central-quality-cross-audit-task-20260725.json",
+  "scope": {
+    "municipalityCount": 409,
+    "serviceCount": 3681,
+    "prefectureCodes": ["16", "17", "18", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
+  },
+  "expectedOutputs": [
+    "jichitai-compare/operations/audits/central-quality-cross-audit-20260725.json",
+    "jichitai-compare/operations/audits/central-quality-cross-audit-candidates-20260725.json",
+    "jichitai-compare/operations/audits/central-quality-cross-audit-spotchecks-20260725.json",
+    "jichitai-compare/operations/audits/central-quality-four-surface-consistency-20260725.json"
+  ],
+  "policy": "機械検出候補は確定誤りではない。公式情報で確認後にのみ訂正する。"
+}
