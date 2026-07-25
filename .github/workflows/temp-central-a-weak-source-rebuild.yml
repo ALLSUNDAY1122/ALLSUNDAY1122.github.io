@@ -1,0 +1,127 @@
+name: Temporary Central A Weak Source Rebuild
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-rebuild-trigger-20260725.json
+
+jobs:
+  rebuild:
+    if: github.head_ref == 'audit/central-a-weak-source-rebuild-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout region branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Rebuild weak primary source candidates
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare/data/municipalities';
+          const aPrefectures = new Set(['16','17','18','21','22','23','24','25','27','28']);
+          const reviewed = new Set([
+            '18481:temporaryChildcare',
+            '18483:temporaryChildcare',
+            '21403:schoolMeals',
+            '21505:schoolMeals',
+            '16205:schoolMeals',
+            '17407:schoolMeals',
+            '21501:schoolMeals',
+            '22214:schoolMeals',
+            '22306:schoolMeals',
+            '22344:schoolMeals'
+          ]);
+
+          const files = [];
+          const walk = (dir) => {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (entry.isFile() && entry.name.endsWith('.json')) files.push(full);
+            }
+          };
+          walk(root);
+
+          const classify = (urlText, officialUrl) => {
+            const url = String(urlText ?? '');
+            const lower = url.toLowerCase();
+            const reasons = [];
+            let pathname = '';
+            try { pathname = new URL(url).pathname.toLowerCase(); } catch {}
+            let officialPath = '';
+            try { officialPath = new URL(officialUrl).pathname.replace(/\/+$/u, '') || '/'; } catch {}
+
+            if (/reiki|g-reiki|reiki_honbun|static\/reiki|jorei|jourei/u.test(lower)) reasons.push('ordinance_or_regulation');
+            if (/keikaku|plan|yosan|budget|seisaku|vision|senryaku/u.test(lower)) reasons.push('plan_or_budget');
+            if (/\.pdf(?:$|[?#])/u.test(lower)) reasons.push('pdf_primary');
+            if (pathname === '/' || pathname === officialPath || /\/(index\.(?:html?|php)|index\.html?)$/u.test(pathname)) reasons.push('top_or_index_page');
+            if (/gikai|議会/u.test(lower)) reasons.push('council_material');
+            return [...new Set(reasons)];
+          };
+
+          const all = [];
+          for (const file of files) {
+            const municipality = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (!aPrefectures.has(municipality.prefectureCode)) continue;
+            for (const [service, data] of Object.entries(municipality.services ?? {})) {
+              const key = `${municipality.code}:${service}`;
+              const reasons = classify(data?.source?.url, municipality.officialUrl);
+              if (reasons.length === 0) continue;
+              all.push({
+                code: municipality.code,
+                name: municipality.name,
+                prefectureCode: municipality.prefectureCode,
+                prefecture: municipality.prefecture,
+                service,
+                status: data?.status,
+                sourceUrl: data?.source?.url,
+                reasons,
+                reviewed: reviewed.has(key),
+                summary: data?.summary
+              });
+            }
+          }
+
+          const remaining = all.filter((item) => !item.reviewed);
+          const high = remaining.filter((item) => item.reasons.some((reason) => ['ordinance_or_regulation','plan_or_budget','top_or_index_page','council_material'].includes(reason)));
+          const pdfOnly = remaining.filter((item) => item.reasons.length === 1 && item.reasons[0] === 'pdf_primary');
+          const result = {
+            schemaVersion: '1.0.0',
+            auditId: 'central-a-weak-primary-source-candidates-rebuilt-20260725',
+            generatedAt: new Date().toISOString(),
+            scope: {
+              prefectureCodes: [...aPrefectures],
+              municipalityCount: new Set(all.map((item) => item.code)).size,
+              excludedReviewedSlots: reviewed.size
+            },
+            counts: {
+              detectedIncludingReviewed: all.length,
+              reviewedDetected: all.filter((item) => item.reviewed).length,
+              remainingDetected: remaining.length,
+              highRiskRemaining: high.length,
+              pdfOnlyRemaining: pdfOnly.length
+            },
+            highRiskCandidates: high,
+            pdfOnlyCandidates: pdfOnly,
+            allRemainingCandidates: remaining
+          };
+          fs.mkdirSync('/tmp/central-a-weak-source-rebuild', { recursive: true });
+          fs.writeFileSync('/tmp/central-a-weak-source-rebuild/candidates.json', JSON.stringify(result, null, 2) + '\n');
+          console.log(JSON.stringify({ counts: result.counts, highRiskCandidates: high.map(({code,name,service,reasons,sourceUrl}) => ({code,name,service,reasons,sourceUrl})) }, null, 2));
+          NODE
+
+      - name: Upload rebuilt candidate set
+        uses: actions/upload-artifact@v4
+        with:
+          name: central-a-weak-source-candidates-rebuilt-20260725
+          path: /tmp/central-a-weak-source-rebuild/candidates.json
+          if-no-files-found: error
+          retention-days: 30
