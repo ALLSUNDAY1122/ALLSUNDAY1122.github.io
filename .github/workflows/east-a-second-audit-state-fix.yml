@@ -19,9 +19,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Patch checkpoint and audit record
+      - name: Patch second-audit records and confirmed corrections
         run: python jichitai-compare/operations/scripts/patch-east-a-second-audit-r1.py
-      - name: Commit generated correction
+      - name: Commit generated corrections
         run: |
           if git diff --quiet; then
             echo "No changes"
@@ -29,7 +29,11 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jichitai-compare/data/municipalities/13/13103.json
+          git add jichitai-compare/operations/tasks/13103.json
+          git add jichitai-compare/data/municipalities/10/10201.json
+          git add jichitai-compare/operations/tasks/10201.json
           git add jichitai-compare/operations/control/session-checkpoints/east-a.json
           git add jichitai-compare/operations/audits/east-a-quality-improvement-second-audit-20260725.json
-          git commit -m "fix: align East A checkpoint with PR 3169"
+          git commit -m "fix: apply East A second-audit corrections"
           git push
