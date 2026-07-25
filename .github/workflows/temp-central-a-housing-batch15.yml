@@ -1,0 +1,135 @@
+name: Temporary Central A Housing Batch 15
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch15-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-housing-batch15-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Record verified no-change decisions
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare';
+          const checkedAt='2026-07-26';
+          const updatedAt='2026-07-26T02:20:00+09:00';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const targets=[
+            {code:'16205',name:'氷見市',source:'https://www.city.himi.toyama.jp/gyosei/soshiki/miraisenryaku/3/1/1653.html',reason:'令和8年度の定住マイホーム取得支援で、子育て・新婚世帯、三世代同居等の対象・加算と現行申請様式を確認した。'},
+            {code:'16323',name:'立山町',source:'https://www.town.tateyama.toyama.jp/soshikikarasagasu/kikakuseisakuka/chiikishinkogakari/2/1/1089.html',reason:'令和8年度の町営住宅等子育て世帯移住定住支援で、高校生以下の子育て世帯の家賃支援・行政ポイントと申請期限を確認した。'},
+            {code:'17206',name:'加賀市',source:'https://www.city.kaga.ishikawa.jp/soshiki/somu/seisaku_suishin/jinkogensho_taisaku/6/15107.html',reason:'令和8年度住宅取得助成で、45歳未満の取得者に対する18歳以下の子1人10万円・最大30万円加算を確認した。'},
+            {code:'18201',name:'福井市',source:'https://www.city.fukui.lg.jp/sisei/hojyo/kurasi/jutaku_seisaku31.html',reason:'令和8年度の住まい支援一覧で、子育て応援加算、多世帯近居、子育て世帯等の空き家家賃支援を確認した。'},
+            {code:'21204',name:'多治見市',source:'https://www.city.tajimi.lg.jp/shisei/shisaku_keikaku/1007314/1007315.html',reason:'令和8年度結婚新生活支援金で、39歳以下の新婚世帯の住宅取得・賃借・リフォーム・引越費用支援を確認した。'}
+          ];
+          const unchanged=[];
+          for(const target of targets){
+            const municipalityPath=path.join(root,'data/municipalities',target.code.slice(0,2),`${target.code}.json`);
+            const municipality=JSON.parse(fs.readFileSync(municipalityPath,'utf8'));
+            const service=municipality.services.housingSupport;
+            if(service.status!=='verified')throw new Error(`${target.code}: expected verified`);
+            if(service.source?.url!==target.source)throw new Error(`${target.code}: source mismatch ${service.source?.url}`);
+            unchanged.push({code:target.code,name:target.name,service:'housingSupport',status:service.status,summary:service.summary,officialSource:service.source.url,reason:target.reason});
+            const taskPath=path.join(root,'operations/tasks',`${target.code}.json`);
+            const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
+            const statuses=Object.values(municipality.services).map(v=>v.status);
+            task.status='merged';
+            task.currentService=null;
+            task.nextServiceIndex=9;
+            task.completedServices=keys;
+            task.verifiedCount=statuses.filter(v=>v==='verified').length;
+            task.researchingCount=statuses.filter(v=>v==='researching').length;
+            task.unavailableCount=statuses.filter(v=>v==='unavailable').length;
+            task.needsMediumReviewCount=statuses.filter(v=>v==='needs_medium_review').length;
+            task.currentBranch='region/central';
+            task.pullRequestNumber=Number(process.env.PR_NUMBER);
+            task.lastCheckedAt=checkedAt;
+            task.lastUpdatedAt=updatedAt;
+            task.lastUpdatedBy='統括B②';
+            task.officialSources=[...new Set(keys.map(key=>municipality.services[key]?.source?.url).filter(Boolean))];
+            task.notes=[...(task.notes||[]),'2026-07-26: 住宅支援分類第15群で現行公式情報を独立再確認し、子育て・新婚固有条件が登録内容と一致するためverifiedを維持。'];
+            task.blockers=task.blockers||[];
+            fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
+          }
+
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');
+          const regionPath=path.join(root,'operations/control/regions/central.json');
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));
+          if(checkpoint.qualityReaudit.correctedMunicipalitiesRechecked!==124||checkpoint.qualityReaudit.primarySourceSlotsRechecked!==556||checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification!==104){
+            throw new Error(`Unexpected batch14 baseline: ${checkpoint.qualityReaudit.correctedMunicipalitiesRechecked}/${checkpoint.qualityReaudit.primarySourceSlotsRechecked}/${checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification}`);
+          }
+          checkpoint.updatedAt=updatedAt;
+          checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.ciStatus='success';
+          checkpoint.nextAction='一般住宅・移住制度の分類候補残99件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';
+          checkpoint.qualityReaudit.latestCompletedAt=updatedAt;
+          checkpoint.qualityReaudit.latestRegionalPullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.qualityReaudit.latestCiRunNumber=Number(process.env.RUN_ID);
+          checkpoint.qualityReaudit.correctedMunicipalitiesRechecked=129;
+          checkpoint.qualityReaudit.primarySourceSlotsRechecked=561;
+          checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification=99;
+          checkpoint.qualityReaudit.nextPriority=['一般住宅・移住制度の分類候補残99件','弱い主出典残33候補','Issue #3141の19項目を公式利用条件公開時のみ解消'];
+          checkpoint.qualityReaudit.latestHousingBatch={batch:15,status:'regional_validated_pending_national_publication',reviewedMunicipalityCount:5,confirmedCorrectionCount:0,noChangeCount:5,remainingCandidates:99,regionalPullRequestNumber:Number(process.env.PR_NUMBER),regionalWorkflowRunId:Number(process.env.RUN_ID),blocker:null};
+          checkpoint.lastAction='住宅支援分類第15群として氷見市・立山町・加賀市・福井市・多治見市の現行子育て・新婚住宅条件を再確認し、5件すべてverifiedを維持した。';
+          fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+          region.updatedAt=updatedAt;
+          region.latestCentralAHousingBatch=checkpoint.qualityReaudit.latestHousingBatch;
+          region.lastAction=checkpoint.lastAction;
+          fs.writeFileSync(regionPath,JSON.stringify(region,null,2)+'\n');
+
+          const audit={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch15-decisions-20260726',decidedAt:updatedAt,session:'中日本調査班A',coordinatorSession:'統括B②',category:'generalHousingMisclassification',regionalPullRequestNumber:Number(process.env.PR_NUMBER),runnerWorkflowRunId:Number(process.env.RUN_ID),reviewedMunicipalityCount:5,confirmedCorrectionCount:0,noChangeCount:5,unchanged,causeScan:{previousRemainingCandidates:104,reviewedHighRiskCandidates:5,remainingCandidates:99},issue3141:{unresolvedItemCount:19,unresolvedMunicipalityCount:19,changed:false},policy:['子育て・新婚・子ども加算が現行公式本文に明記され、登録内容と一致する候補は誤検出としてno-change証跡化する','no-changeでも公式年度・対象・申請条件を独立再確認し、候補母数から除外する'],result:{unresolvedConfirmedErrorCount:0,releaseBlocker:'none'}};
+          const auditPath=path.join(root,'operations/audits/central-a-housing-classification-batch15-decisions-20260726.json');
+          fs.mkdirSync(path.dirname(auditPath),{recursive:true});
+          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
+          const trigger=path.join(root,'operations/control/central-a-housing-batch15-trigger-20260726.json');
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Reject unexpected changes and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only origin/region/central)
+          for file in "${changed[@]}"; do
+            case "$file" in
+              jichitai-compare/operations/tasks/16205.json|jichitai-compare/operations/tasks/16323.json|jichitai-compare/operations/tasks/17206.json|jichitai-compare/operations/tasks/18201.json|jichitai-compare/operations/tasks/21204.json|jichitai-compare/operations/audits/central-a-housing-classification-batch15-decisions-20260726.json|jichitai-compare/operations/control/session-checkpoints/central-a.json|jichitai-compare/operations/control/regions/central.json|jichitai-compare/operations/progress.json|jichitai-compare/data/generated/municipalities.json) ;;
+              *) echo "Unexpected change: $file"; exit 1 ;;
+            esac
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援分類第15群を維持判定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
