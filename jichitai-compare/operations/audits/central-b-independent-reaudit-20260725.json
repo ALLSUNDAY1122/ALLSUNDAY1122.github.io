@@ -44,10 +44,10 @@
     {"round":10,"codes":["30404","30406","30421","30422","30424","30427","30428"],"status":"pending"}
   ],
   "progress": {
-    "auditedMunicipalityCount": 1,
-    "auditedServiceCount": 9,
-    "confirmedErrorCount": 1,
-    "correctedErrorCount": 0,
+    "auditedMunicipalityCount": 2,
+    "auditedServiceCount": 18,
+    "confirmedErrorCount": 4,
+    "correctedErrorCount": 3,
     "regionCentralMergedCount": 0,
     "mainReflectedCount": 0
   },
@@ -59,15 +59,17 @@
       "auditedAt": "2026-07-25T10:31:00+09:00",
       "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "result": "confirmed_error_pending_correction",
-      "confirmedError": {
-        "service": "childcareFee",
-        "before": "3～5歳児、市民税非課税世帯の0～2歳児、認可保育施設を利用する世帯内第2子以降の保育料無償化のみを記録",
-        "after": "上記に加え、令和8年4月1日開始の京都市内私立幼稚園・幼稚園型認定こども園における未就園の第2子以降2歳児の保育料無償化を記録",
-        "cause": "2026年度開始制度の記録漏れ",
-        "officialSource": "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
-        "currentFiscalYearConfirmed": true,
-        "status": "pending_correction"
-      },
+      "confirmedErrors": [
+        {
+          "service": "childcareFee",
+          "before": "3～5歳児、市民税非課税世帯の0～2歳児、認可保育施設を利用する世帯内第2子以降の保育料無償化のみを記録",
+          "after": "上記に加え、令和8年4月1日開始の京都市内私立幼稚園・幼稚園型認定こども園における未就園の第2子以降2歳児の保育料無償化を記録",
+          "cause": "2026年度開始制度の記録漏れ",
+          "officialSource": "https://www.city.kyoto.lg.jp/hagukumi/page/0000350477.html",
+          "currentFiscalYearConfirmed": true,
+          "status": "pending_correction"
+        }
+      ],
       "noChangeServices": ["childMedical","sickChildCare","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
       "officialSources": [
         "https://www.city.kyoto.lg.jp/hagukumi/page/0000067393.html",
@@ -81,7 +83,63 @@
         "https://www.city.kyoto.lg.jp/kankyo/page/0000001317.html",
         "https://www.bousaimap.city.kyoto.lg.jp/sp/Top"
       ]
+    },
+    {
+      "round": 1,
+      "municipalityCode": "26201",
+      "municipalityName": "福知山市",
+      "auditedAt": "2026-07-25T10:42:00+09:00",
+      "servicesChecked": ["childMedical","sickChildCare","childcareFee","schoolMeals","postpartumCare","temporaryChildcare","housingSupport","bulkyWaste","disasterPrevention"],
+      "result": "three_confirmed_errors_corrected",
+      "confirmedErrors": [
+        {
+          "service": "childMedical",
+          "before": "中学生の入院外・訪問看護について月合計1,500円超過分の償還払いのみを記録",
+          "after": "1医療機関につき月200円の窓口負担と、月合計1,500円超過分の償還払いを併記",
+          "cause": "利用時の窓口負担条件の記録漏れ",
+          "officialSource": "https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html",
+          "status": "corrected"
+        },
+        {
+          "service": "postpartumCare",
+          "before": "京都大呂ガーデンテラスの通所集団型のみ、1回1,000円・7回までと記録",
+          "after": "訪問型、宿泊型、通所個別型、通所集団型の4類型、各料金・回数、2026年4月開始の市立福知山市民病院を記録",
+          "cause": "制度類型・実施施設・2026年度開始情報の見落とし",
+          "officialSource": "https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html",
+          "additionalSources": [
+            "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000411.html",
+            "https://www.city.fukuchiyama.lg.jp/site/hosp/83887.html"
+          ],
+          "status": "corrected"
+        },
+        {
+          "service": "housingSupport",
+          "before": "移住促進特別区域の登録空き家改修支援を子育て世帯向け住宅支援としてverified",
+          "after": "子ども要件・子ども加算のない一般移住・一般空き家支援を除外しunavailable",
+          "cause": "一般移住・一般住宅支援の制度分類誤り",
+          "officialSource": "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html",
+          "status": "corrected"
+        }
+      ],
+      "noChangeServices": ["sickChildCare","childcareFee","schoolMeals","temporaryChildcare","bulkyWaste","disasterPrevention"],
+      "changedFiles": [
+        "jichitai-compare/data/municipalities/26/26201.json",
+        "jichitai-compare/operations/tasks/26201.json"
+      ],
+      "officialSources": [
+        "https://www.city.fukuchiyama.lg.jp/site/kosodate/1535.html",
+        "https://www.city.fukuchiyama.lg.jp/site/kosodate/6898.html",
+        "https://www.city.fukuchiyama.lg.jp/site/kosodate/82522.html",
+        "https://www.city.fukuchiyama.lg.jp/site/kyouiku/84536.html",
+        "https://www.city.fukuchiyama.lg.jp/site/kosodate/57418.html",
+        "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000411.html",
+        "https://www.city.fukuchiyama.lg.jp/site/hosp/83887.html",
+        "https://www.city.fukuchiyama.lg.jp/soshiki/76/82874.html",
+        "https://www.city.fukuchiyama.lg.jp/reiki/reiki_honbun/k103RG00000758.html",
+        "https://www.city.fukuchiyama.lg.jp/soshiki/24/16715.html",
+        "https://www.city.fukuchiyama.lg.jp/site/hazardmap/"
+      ]
     }
   ],
-  "nextAction": "第1バッチの残り9自治体を公式情報起点で監査し、京都市childcareFeeを含む確定誤りを自治体JSON・taskへ反映してPRとCIを実施する"
+  "nextAction": "第1バッチの残り8自治体を公式情報起点で監査し、京都市childcareFeeの確定誤りを訂正する。福知山市3件は自治体JSON・taskへ反映済み。"
 }
