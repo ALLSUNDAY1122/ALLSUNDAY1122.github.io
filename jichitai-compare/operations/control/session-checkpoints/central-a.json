@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T08:19:00+09:00",
+  "updatedAt": "2026-07-26T08:33:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3823,
+  "pullRequestNumber": 3829,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3815,
+  "stateSyncPullRequestNumber": 3829,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残64件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残59件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T08:19:00+09:00",
-    "latestRegionalPullRequestNumber": 3815,
+    "latestCompletedAt": "2026-07-26T08:33:00+09:00",
+    "latestRegionalPullRequestNumber": 3829,
     "latestCiRunNumber": 30178628512,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 164,
-    "primarySourceSlotsRechecked": 596,
+    "correctedMunicipalitiesRechecked": 169,
+    "primarySourceSlotsRechecked": 601,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -549,6 +549,36 @@
         "code": "27211",
         "service": "housingSupport",
         "name": "茨木市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27214",
+        "service": "housingSupport",
+        "name": "富田林市"
+      },
+      {
+        "type": "ended_newlywed_program_general_seismic_only",
+        "code": "27215",
+        "service": "housingSupport",
+        "name": "寝屋川市"
+      },
+      {
+        "type": "replace_with_current_child_nearby_home_acquisition",
+        "code": "27216",
+        "service": "housingSupport",
+        "name": "河内長野市"
+      },
+      {
+        "type": "replace_with_current_newlywed_program",
+        "code": "27217",
+        "service": "housingSupport",
+        "name": "松原市"
+      },
+      {
+        "type": "replace_with_current_child_newlywed_municipal_housing",
+        "code": "27218",
+        "service": "housingSupport",
+        "name": "大東市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -635,7 +665,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 64,
+      "generalHousingMisclassification": 59,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -657,7 +687,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残64件",
+      "一般住宅・移住制度の分類候補残59件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
@@ -704,5 +734,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第22群の吹田市・泉大津市・貝塚市・枚方市・茨木市を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第23群として、富田林市・寝屋川市・河内長野市・松原市・大東市のhousingSupportを現行公式情報で再分類した。"
 }
