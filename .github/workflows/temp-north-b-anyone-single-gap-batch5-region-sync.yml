@@ -53,7 +53,7 @@ jobs:
       - name: Validate imported regional data
         working-directory: jichitai-compare
         run: |
-          npm run generate:data
+          npm run generate
           npm run progress
           npm run validate:generated
 
