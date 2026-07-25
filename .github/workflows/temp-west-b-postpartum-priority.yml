@@ -1,0 +1,81 @@
+name: Temporary West B Postpartum Care Priority
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/west-b-postpartum-priority-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  prioritize:
+    if: github.head_ref == 'audit/west-b-postpartum-crosscheck-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/west-b-postpartum-crosscheck-20260725
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build priority review list
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base = 'jichitai-compare/operations';
+          const audit = JSON.parse(fs.readFileSync(`${base}/audits/west-b-postpartum-crosscheck-20260725.json`, 'utf8'));
+          const prioritized = audit.candidates.map((item) => {
+            const reasons = item.reasons ?? [];
+            let score = 0;
+            const flags = [];
+            const add = (condition, points, flag) => { if (condition) { score += points; flags.push(flag); } };
+            add(reasons.includes('unavailable_has_direct_looking_source'), 7, 'unavailable_direct_source');
+            add(reasons.includes('unavailable_record_contains_service_or_facility_language'), 6, 'unavailable_service_language');
+            add(reasons.includes('all_unavailable_require_wide_area_review'), 3, 'unavailable_wide_area_review');
+            add(reasons.includes('verified_max_age_over_one_year'), 7, 'age_over_one_year');
+            add(reasons.includes('verified_missing_target_period_description'), 4, 'missing_target_period');
+            add(reasons.includes('verified_missing_service_type_description'), 3, 'missing_service_types');
+            add(reasons.includes('source_url_appears_pre_2025'), 3, 'pre_2025_source');
+            add(reasons.includes('primary_source_is_generic'), 3, 'generic_source');
+            add(reasons.includes('verified_missing_fee_or_reduction_description'), 2, 'missing_fee');
+            add(reasons.includes('verified_missing_application_description'), 2, 'missing_application');
+            add(reasons.includes('verified_missing_use_limit_description'), 1, 'missing_use_limit');
+            return { ...item, priorityScore: score, priorityFlags: flags };
+          }).filter((item) => item.priorityScore >= 4)
+            .sort((a, b) => b.priorityScore - a.priorityScore || a.prefectureCode.localeCompare(b.prefectureCode) || a.code.localeCompare(b.code));
+          const review = {
+            schemaVersion: '1.0.0',
+            reviewId: 'west-b-postpartum-priority-review-20260725',
+            sourceAuditId: audit.auditId,
+            generatedAt: new Date().toISOString(),
+            candidateCount: audit.candidateCount,
+            priorityCandidateCount: prioritized.length,
+            selectionRule: 'priorityScore >= 4; unavailable direct/service-language/wide-area, age over one year, missing target/types, old or generic sources weighted highest',
+            priorityCandidates: prioritized,
+            result: {
+              status: 'priority_candidates_generated_pending_official_review',
+              confirmedCorrectionCount: null,
+              unresolvedConfirmedErrorCount: null
+            }
+          };
+          fs.writeFileSync(`${base}/audits/west-b-postpartum-priority-review-20260725.json`, JSON.stringify(review, null, 2) + '\n');
+          console.log(JSON.stringify({ priorityCandidateCount: prioritized.length, top: prioritized.slice(0, 40).map((x) => ({ code: x.code, name: x.name, status: x.status, score: x.priorityScore, flags: x.priorityFlags })) }, null, 2));
+          NODE
+      - name: Commit priority review
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/west-b-postpartum-priority-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add jichitai-compare/operations/audits/west-b-postpartum-priority-review-20260725.json jichitai-compare/operations/control/west-b-postpartum-priority-trigger-20260725.json
+          git commit -m 'audit: 西日本B産後ケア優先候補を生成'
+          git push origin HEAD:audit/west-b-postpartum-crosscheck-20260725
