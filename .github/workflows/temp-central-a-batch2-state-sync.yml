@@ -1,0 +1,103 @@
+name: Temporary Central A Batch 2 State Sync
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-batch2-state-sync-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-batch2-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Synchronize checkpoint and region state
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare/operations';
+          const checkpointPath = `${root}/control/session-checkpoints/central-a.json`;
+          const regionPath = `${root}/control/regions/central.json`;
+          const auditPath = `${root}/audits/central-a-weak-primary-source-batch2-decisions-20260725.json`;
+          const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+          const write = (file, value) => fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
+          const timestamp = '2026-07-25T13:07:00+09:00';
+          const audit = read(auditPath);
+          const checkpoint = read(checkpointPath);
+          const region = read(regionPath);
+
+          checkpoint.updatedAt = timestamp;
+          checkpoint.pullRequestNumber = 3355;
+          checkpoint.ciStatus = 'success';
+          checkpoint.ciRunNumber = 8180;
+          checkpoint.nextAction = '原因別重点再監査を継続する。Issue #3141の21項目は変更せず、弱い主出典の残36候補から病児保育・産後ケア・住宅支援を利用者向け公式ページで判定する。';
+          checkpoint.qualityReaudit.latestCompletedAt = timestamp;
+          checkpoint.qualityReaudit.latestRegionalPullRequestNumber = 3355;
+          checkpoint.qualityReaudit.latestCiRunNumber = 8180;
+          checkpoint.qualityReaudit.correctedMunicipalitiesRechecked = 60;
+          checkpoint.qualityReaudit.primarySourceSlotsRechecked = 492;
+          checkpoint.qualityReaudit.candidateCounts.weakPrimarySource = 36;
+
+          region.updatedAt = timestamp;
+          region.lastAction = '原因別重点再監査の弱い主出典第2群6自治体をPR #3355・CI #8180成功後にregion/centralへ統合。氷見市・中能登町の断定範囲を是正し、坂祝町・藤枝市を二重確認、西伊豆町・小山町の主出典を利用者向けページへ更新した。';
+          region.nextAction = '弱い主出典の残36候補を、病児保育、産後ケア、住宅支援の順に利用者向け公式情報で確定判定する。';
+          region.qualityReaudit.latestCompletedAt = timestamp;
+          region.qualityReaudit.latestRegionalPullRequestNumber = 3355;
+          region.qualityReaudit.latestCiRunNumber = 8180;
+          region.qualityReaudit.correctedMunicipalitiesRechecked = 60;
+          region.qualityReaudit.primarySourceSlotsRechecked = 492;
+          region.qualityReaudit.candidateCounts.weakPrimarySource = 36;
+          region.qualityReaudit.nextPriority = [
+            '弱い主出典残36候補',
+            '病児保育の弱い主出典候補',
+            '産後ケアの弱い主出典候補',
+            '住宅支援の弱い主出典候補'
+          ];
+          region.qualityReaudit.confirmedCorrections ??= [];
+          for (const decision of audit.decisions) {
+            const normalized = {
+              type: decision.type,
+              code: decision.code,
+              service: decision.service,
+              name: decision.name
+            };
+            if (!region.qualityReaudit.confirmedCorrections.some((item) => item.type === normalized.type && item.code === normalized.code && item.service === normalized.service)) {
+              region.qualityReaudit.confirmedCorrections.push(normalized);
+            }
+          }
+
+          write(checkpointPath, checkpoint);
+          write(regionPath, region);
+          NODE
+
+      - name: Validate data
+        working-directory: jichitai-compare
+        run: |
+          npm run check
+          node --check app.js
+
+      - name: Commit synchronized state
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-batch2-state-sync-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/operations/control/session-checkpoints/central-a.json \
+            jichitai-compare/operations/control/regions/central.json \
+            jichitai-compare/operations/control/central-a-batch2-state-sync-trigger-20260725.json
+          git commit -m 'state: 中日本A第2群の監査状態を同期'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
