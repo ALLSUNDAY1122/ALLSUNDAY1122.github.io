@@ -1,0 +1,169 @@
+name: Temporary North B Anyone Single Gap Batch 5 Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/temp-north-b-anyone-single-gap-batch5-public-verify.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: north-b-anyone-single-gap-batch5-public-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify-public:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout verification branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify seven public pages and generated JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://allsunday1122.github.io/jichitai-compare'
+          codes=(06204 06207 06208 06209 06210 06211 06301)
+          declare -A expected
+          expected[06204]='令和8年4月'
+          expected[06207]='令和8年4月'
+          expected[06208]='令和8年度'
+          expected[06209]='令和8年4月'
+          expected[06210]='2026年1月13日'
+          expected[06211]='令和8年度'
+          expected[06301]='令和8年度'
+
+          verified=false
+          for attempt in $(seq 1 12); do
+            ok=true
+            for code in "${codes[@]}"; do
+              if ! curl -fsSL --retry 3 --retry-delay 2 "$base/municipality/$code/" -o "/tmp/$code.html"; then
+                ok=false
+                break
+              fi
+              if ! grep -Fq "${expected[$code]}" "/tmp/$code.html"; then
+                ok=false
+                break
+              fi
+            done
+            if [[ "$ok" == true ]] && curl -fsSL --retry 3 --retry-delay 2 "$base/data/generated/municipalities.json" -o /tmp/municipalities.json; then
+              if node <<'NODE'
+          const fs = require('fs');
+          const raw = JSON.parse(fs.readFileSync('/tmp/municipalities.json', 'utf8'));
+          const records = Array.isArray(raw) ? raw : (raw.municipalities || raw.items || Object.values(raw));
+          const expected = {
+            '06204': '令和8年4月',
+            '06207': '令和8年4月',
+            '06208': '令和8年度',
+            '06209': '令和8年4月',
+            '06210': '2026年1月13日',
+            '06211': '令和8年度',
+            '06301': '令和8年度'
+          };
+          for (const [code, token] of Object.entries(expected)) {
+            const record = records.find((item) => String(item.code || item.municipalityCode) === code);
+            if (!record) throw new Error(`generated record missing: ${code}`);
+            const service = record.services?.temporaryChildcare || record.temporaryChildcare || record;
+            if (!JSON.stringify(service).includes(token)) {
+              throw new Error(`generated token missing: ${code} ${token}`);
+            }
+          }
+          NODE
+              then
+                verified=true
+                break
+              fi
+            fi
+            sleep 10
+          done
+
+          if [[ "$verified" != true ]]; then
+            echo 'Public deployment did not contain all expected batch 5 values.' >&2
+            exit 1
+          fi
+
+      - name: Record public verification
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const root = 'jichitai-compare';
+          const now = '2026-07-25T16:42:00+09:00';
+          const codes = ['06204','06207','06208','06209','06210','06211','06301'];
+          const municipalities = {
+            '06204': '酒田市',
+            '06207': '上山市',
+            '06208': '村山市',
+            '06209': '長井市',
+            '06210': '天童市',
+            '06211': '東根市',
+            '06301': '山辺町'
+          };
+          const audit = {
+            schemaVersion: '1.0.0',
+            auditId: 'north-b-anyone-single-gap-batch5-public-verification-20260725',
+            sessionId: 'north-b',
+            verifiedAt: now,
+            status: 'verified',
+            mainPullRequest: 3578,
+            mainMergeCommit: 'c9fcc479c2ac0f29e3b59b4a08362bd0aece9cab',
+            regionPullRequest: 3583,
+            regionMergeCommit: '1c57f76f0c74c843e0cd897450258962626be360',
+            scope: {
+              municipalityPages: 7,
+              generatedMunicipalitiesJson: true,
+              statusChanges: 0,
+              remainingSingleConditionCandidates: 22
+            },
+            municipalities: codes.map((code) => ({
+              code,
+              municipality: municipalities[code],
+              pageUrl: `https://allsunday1122.github.io/jichitai-compare/municipality/${code}/`,
+              result: 'expected corrected start content found'
+            })),
+            generatedUrl: 'https://allsunday1122.github.io/jichitai-compare/data/generated/municipalities.json'
+          };
+          const auditPath = path.join(root, 'operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json');
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+
+          const checkpointPath = path.join(root, 'operations/control/session-checkpoints/north-b.json');
+          const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+          checkpoint.updatedAt = now;
+          checkpoint.workingBranch = 'verify/north-b-anyone-single-gap-batch5-public-20260725';
+          checkpoint.nextAction = '誰でも通園の単一条件欠落残り22件を優先度順に再確認する。';
+          const fa = checkpoint.fiscalAnyoneAudit || (checkpoint.fiscalAnyoneAudit = {});
+          fa.status = 'single_gap_batch5_public_verified_pending_record_ci';
+          fa.remainingAnyonePriorityBelow50 = 22;
+          fa.singleGapBatch5Reviewed = 10;
+          fa.singleGapBatch5CorrectedMunicipalities = ['06204','06207','06208','06209','06210','06211','06301'];
+          fa.singleGapBatch5NoChangeMunicipalities = ['06205','06206','06212'];
+          fa.singleGapBatch5AuditFile = 'operations/audits/north-b-anyone-single-gap-batch5-review-20260725.json';
+          fa.singleGapBatch5MainPullRequest = 3578;
+          fa.singleGapBatch5MainMergeCommit = 'c9fcc479c2ac0f29e3b59b4a08362bd0aece9cab';
+          fa.singleGapBatch5RegionPullRequest = 3583;
+          fa.singleGapBatch5RegionMergeCommit = '1c57f76f0c74c843e0cd897450258962626be360';
+          fa.singleGapBatch5PublicVerificationFile = 'operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json';
+          fa.singleGapBatch5PublicVerifiedMunicipalities = ['06204','06207','06208','06209','06210','06211','06301'];
+          fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2) + '\n');
+          NODE
+
+      - name: Commit public verification record
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/north-b-anyone-single-gap-batch5-public-verification-20260725.json \
+                  jichitai-compare/operations/control/session-checkpoints/north-b.json
+          git commit -m 'audit: 北日本B誰でも通園単一条件第5群の公開反映を記録 [skip ci]'
+          git pull --rebase origin "${{ github.head_ref }}"
+          git push origin HEAD:"${{ github.head_ref }}"
