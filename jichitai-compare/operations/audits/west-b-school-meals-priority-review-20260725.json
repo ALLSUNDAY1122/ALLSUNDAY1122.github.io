@@ -1,0 +1,898 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-school-meals-priority-review-20260725",
+  "sourceAuditId": "west-b-school-meals-crosscheck-20260725",
+  "generatedAt": "2026-07-25T05:13:42.438Z",
+  "candidateCount": 120,
+  "priorityCandidateCount": 26,
+  "selectionRule": "priorityScore >= 3; high weight for broad-claim/limited-support conflict, direct source on unavailable, pre-2026 source paths, and unavailable broad-benefit summaries",
+  "priorityCandidates": [
+    {
+      "code": "47314",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "金武町",
+      "status": "unavailable",
+      "summary": "令和8年度の一般世帯向け学校給食費月額・無償化有無を公式ページで特定できない",
+      "eligibility": null,
+      "details": {
+        "reason": "令和8年度の献立提供と給食費徴収業務、就学援助制度は確認できるが、一般世帯の月額または一律無償化を明示する現行ページが見つからない",
+        "availableSupport": "生活保護・住民税非課税等の要件を満たす世帯には令和8年度就学援助を実施",
+        "guidance": "令和8年度の一般負担額は金武町学校給食センターまたは教育委員会へ確認が必要"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.kin.okinawa.jp/soshiki/gakkokyushokucenter/kondatehyou/2363.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "unavailable_record_contains_benefit_language",
+        "unavailable_has_direct_school_meal_source"
+      ],
+      "priorityScore": 9,
+      "priorityFlags": [
+        "unavailable_with_direct_source",
+        "unavailable_contains_benefit",
+        "unavailable_but_summary_claims_broad_benefit"
+      ]
+    },
+    {
+      "code": "34202",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "呉市",
+      "status": "verified",
+      "summary": "令和8年度は小学校給食を実質無償化し、中学校は物価高騰分を市が補填",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "小学校給食を実質無償化。中学校給食は食材高騰分を補填して保護者負担を据え置き",
+        "schools": "呉市立小学校・中学校・義務教育学校",
+        "meansTestedSupport": "就学援助認定世帯は学校給食費を全額援助",
+        "fiscalYear": "令和8年度"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.kure.lg.jp/soshiki/11/02-aisatsu3001.html",
+        "checkedAt": "2026-07-22"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.kure.lg.jp/soshiki/64/r5-syugakuenjo1.html",
+          "checkedAt": "2026-07-22"
+        }
+      ],
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_source_url_appears_pre_2026"
+      ],
+      "priorityScore": 6,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "pre_2026_source_path"
+      ]
+    },
+    {
+      "code": "31325",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "若桜町",
+      "status": "verified",
+      "summary": "若桜学園小学校・中学校の保護者負担となる学校給食費を全額補助",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "若桜町立若桜学園小学校または若桜学園中学校に在学する児童・生徒の保護者",
+        "amount": "保護者が負担する学校給食費の全額",
+        "excluded": "町外へ転出した場合、教育扶助または就学援助で学校給食費の支給を受ける場合は対象外",
+        "procedure": "補助金交付手続は学校給食センター所長へ委任できる"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.wakasa.tottori.jp/section/reiki_int/reiki_honbun/m013RG00000791.html",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "31390",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "伯耆町",
+      "status": "verified",
+      "summary": "学校給食センターが町立小中学校へ給食を提供し、給食費補助と就学援助を実施",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "implementation": "伯耆町立学校給食センターが町立小中学校の学校給食を実施",
+        "subsidy": "直近の町公式施政方針で小中学校の学校給食費補助の継続を確認",
+        "currentAmount": "確認した町公式公開ページでは令和8年度の具体的な保護者負担額は明示されていない",
+        "assistance": "経済的に困窮する世帯には就学援助で給食費等を扶助",
+        "allergy": "食物アレルギーは町の対応マニュアルに基づき可能な範囲で対応"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.houki-town.jp/p/new1/10/19/4/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.houki-town.jp/new1/10/19/x140/m366/p929/v166/",
+          "checkedAt": "2026-07-20"
+        },
+        {
+          "url": "https://www.houki-town.jp/new1/10/2/r266/r875/",
+          "checkedAt": "2026-07-20"
+        }
+      ],
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_source_url_appears_pre_2026"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "pre_2026_source_path"
+      ]
+    },
+    {
+      "code": "41345",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "上峰町",
+      "status": "verified",
+      "summary": "町内児童生徒の学校給食費を全額補助",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "町内に住所を有し、町立小中学校、町外小中学校または特別支援学校に通学する児童生徒の保護者",
+        "support": "学校給食費全額を補助",
+        "application": "町立小中学校在籍者は学校長が一括申請。町外学校通学者は保護者が申請",
+        "adjustment": "国・県・他自治体から給食費援助を受ける場合は、その額を除いた額"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.kamimine.lg.jp/kiji00376/index.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "41346",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "みやき町",
+      "status": "verified",
+      "summary": "町内の小中学生の学校給食費を全額補助",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "児童生徒と保護者が町内に住所を有し、小中学校で給食を受けている世帯",
+        "support": "第1子・第2子は基本2分の1とふるさと寄付金上乗せ2分の1、第3子以降は全額補助となり、結果として全額補助",
+        "annualAmount": "小1は50,600円、小2～6は51,600円、中学生は62,000円を基準",
+        "excluded": "生活保護・就学援助等で給食費相当額の給付を受ける場合は対象外"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.miyaki.lg.jp/kosodate/gakkokyoiku/_1102/_2324/_2327.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "41423",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "大町町",
+      "status": "verified",
+      "summary": "町内在住の義務教育年齢児童生徒の学校給食費を全額補助し、実質無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "町内に住所を有し、小学校・中学校・義務教育学校・特別支援学校小学部中学部等に通う児童生徒の保護者",
+        "support": "保護者が負担する給食費の全額を補助",
+        "adjustment": "国・町・他自治体等から給食費補助を受ける場合は、その額を控除",
+        "application": "所定の申請が必要。大町ひじり学園と町外等の学校では手続きが異なる"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.omachi.lg.jp/kiji003762/index.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "41424",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "江北町",
+      "status": "verified",
+      "summary": "町内在住の対象児童生徒の学校給食費を全額助成",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "江北町に住所を有し、江北小学校・江北中学校・特別支援学校に通う児童生徒",
+        "support": "学校給食費を全額助成",
+        "adjustment": "国等から別の助成がある場合は、その額を控除",
+        "application": "町立小中学校は学校経由、特別支援学校は町へ申請"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.kouhoku.saga.jp/list00252.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "44213",
+      "prefectureCode": "44",
+      "prefecture": "大分県",
+      "name": "由布市",
+      "status": "unavailable",
+      "summary": "公式サイトの最新明示額が2024年度で、2026年度の給食費・無償化状況を確認できない",
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "publishedInformation": "公式の給食費納入案内がリンクする明示額は2024年度分",
+        "historicalReference": "2024年度は小学校月4,500円、中学校月4,900円等と掲載されているが現行年度へ転記しない",
+        "currentStatus": "2026年度の給食費額または一律無償化の有無は学校教育課・給食センターへの確認が必要",
+        "menu": "公式サイトでは2026年度の給食献立表を公開"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.yufu.oita.jp/kurashi/kyoikugakko/kyoikugakko_cate2/kyuusyokuhinounyuu",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.yufu.oita.jp/newly/article_82115",
+          "checkedAt": "2026-07-24"
+        },
+        {
+          "url": "https://www.city.yufu.oita.jp/kurashi/kyoikugakko/kyoikugakko_cate2/kyushokukondate",
+          "checkedAt": "2026-07-24"
+        }
+      ],
+      "reasons": [
+        "unavailable_record_contains_benefit_language",
+        "unavailable_has_direct_school_meal_source"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "unavailable_with_direct_source",
+        "unavailable_contains_benefit"
+      ]
+    },
+    {
+      "code": "47209",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "名護市",
+      "status": "verified",
+      "summary": "市立幼稚園・小学校・中学校の学校給食食材費を無償化",
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "名護市立幼稚園園児、小学校児童、中学校生徒",
+        "support": "名護市学校給食事業等により食材費の保護者負担を無償化",
+        "referenceFee": "幼稚園・小学生月5,200円、中学生月5,800円を市が負担",
+        "copay": "対象園児・児童生徒の学校給食費自己負担なし",
+        "staff": "教諭・その他職員は月5,800円の負担あり",
+        "lowIncome": "生活保護・就学援助・特別支援対象者も既存制度で無償"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.nago.okinawa.jp/kurashi/2018071300217/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "47303",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "東村",
+      "status": "verified",
+      "summary": "学校給食費助成制度を経済的支援として実施",
+      "eligibility": {
+        "minAgeMonths": 60,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "東村公式の経済的支援ページで学校給食費助成を案内",
+        "target": "村内の対象児童生徒・保護者",
+        "amount": "助成対象、金額、申請時期の現行詳細は教育委員会または福祉保健課へ確認が必要",
+        "additional": "就学援助制度も併せて案内"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.vill.higashi.okinawa.jp/soshikikarasagasu/fukushihokenka/siensoudan/458.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "47326",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "北谷町",
+      "status": "verified",
+      "summary": "町立小中学校の学校給食費を全額公費負担し、保護者負担を無料化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "北谷町立小学校・中学校の児童生徒",
+        "elementary": "月額5,200円、年額57,200円を公費負担",
+        "juniorHigh": "月額6,000円、年額66,000円を公費負担",
+        "copay": "令和5年4月以降、保護者負担なし",
+        "additionalSupport": "就学援助対象者は学用品費等も支援"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.chatan.jp/kosodate/kyouiku/kyoiku/kyushoku/kyushokuhi.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support",
+        "verified_benefit_without_explicit_2026_basis",
+        "source_host_requires_officiality_review"
+      ],
+      "priorityScore": 5,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "32526",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "西ノ島町",
+      "status": "verified",
+      "summary": "令和8年度は小学生・中学生の給食費負担金を全額免除",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "学校給食費負担金の全額免除",
+        "schools": "町内の小学校・中学校",
+        "fiscalYear": "令和8年度当初予算案に明記",
+        "additionalSupport": "経済的に就学困難な世帯には学用品費・給食費等の就学援助制度もある"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.nishinoshima.shimane.jp/houdou/1909",
+        "checkedAt": "2026-07-22"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.nishinoshima.shimane.jp/guide/g_nyugaku/34",
+          "checkedAt": "2026-07-22"
+        }
+      ],
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 4,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "38422",
+      "prefectureCode": "38",
+      "prefecture": "愛媛県",
+      "name": "内子町",
+      "status": "verified",
+      "summary": "2026年度も小中学校の学校給食費補助を継続",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "町長の2026年度予算説明で給食費補助の継続を確認",
+        "scope": "小学生・中学生の学校給食費負担を軽減",
+        "amount": "具体的な補助額・保護者負担額は町公式HTMLで確認できない",
+        "additionalSupport": "就学援助認定世帯には給食費等の学校生活費を援助"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.uchiko.ehime.jp/site/tyoutyoushitsuheyokoso/cyoucyouaisatsu202604.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.town.uchiko.ehime.jp/site/kosodate/134994.html",
+          "checkedAt": "2026-07-23"
+        }
+      ],
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 4,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "41210",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "神埼市",
+      "status": "verified",
+      "summary": "2026年度は小学校と中学3年生を無償化し、中学1・2年生へ年間11,000円助成",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "小学校1～6年生は年額57,200円を無償化し、保護者負担0円",
+        "juniorHigh": "中学3年生は無償化。中学1・2年生は年額63,800円のうち11,000円を助成し、保護者負担52,800円",
+        "period": "令和8年度",
+        "scope": "小学生は市内小学校在籍または市外小学校通学者、中学生は市内住所を有し市内中学校または特別支援学校に通学する生徒等"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.kanzaki.saga.jp/main/16408.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 4,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "41327",
+      "prefectureCode": "41",
+      "prefecture": "佐賀県",
+      "name": "吉野ヶ里町",
+      "status": "verified",
+      "summary": "2026年度は小学校給食費を全額補助し、中学校は値上げ分を町が支援",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "年額56,650円を全額補助し、保護者負担0円",
+        "juniorHigh": "1・2年生は年額67,650円のうち11,550円を支援し保護者負担56,100円。3年生は年額63,600円のうち10,900円を支援し保護者負担52,700円",
+        "period": "令和8年度",
+        "additional": "多子世帯への第2子以降給食費補助も案内"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.yoshinogari.lg.jp/lifeinfo/soshiki/gakko/1/2/5421.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 4,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "47207",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "石垣市",
+      "status": "verified",
+      "summary": "2026年度は小中学校給食費を月額500円に軽減し、第3子以降等は全額助成",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "start": "2026年4月から改定",
+        "elementary": "給食費月額5,900円のうち保護者負担500円",
+        "juniorHigh": "給食費月額6,500円のうち保護者負担500円",
+        "thirdChild": "市立小中学校に在学する同一世帯の第3子以降は申請により給食費全額助成",
+        "lowIncome": "令和8年度就学援助認定世帯は学校給食費実費を援助",
+        "payment": "納入通知書又は口座振替。第3子助成は毎年度申請が必要"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.ishigaki.okinawa.jp/soshiki/kyouiku_somu/kyusyokuhi/10874.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 4,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "47208",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "浦添市",
+      "status": "verified",
+      "summary": "2026年度は浦添市立小学校・中学校の給食費を全額無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "period": "2026年4月から2027年3月まで",
+        "target": "浦添市立小中学校で給食提供を受ける児童生徒",
+        "elementary": "月額5,700円を全額補助",
+        "juniorHigh": "月額6,500円を全額補助",
+        "application": "学校からの喫食者情報で処理するため保護者申請不要",
+        "exclusion": "生活保護法の教育扶助による支援対象者は重複対象外"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.urasoe.lg.jp/doc/2026032600054/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 4,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "47382",
+      "prefectureCode": "47",
+      "prefecture": "沖縄県",
+      "name": "与那国町",
+      "status": "verified",
+      "summary": "町立小中学校の給食費と町立幼稚園のミルク費を予算の範囲内で補助",
+      "eligibility": {
+        "minAgeMonths": 48,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "与那国町立小学校・中学校の児童生徒及び町立幼稚園の園児の保護者",
+        "support": "学校給食費・幼稚園ミルク費に対し町が補助金を交付",
+        "exclusion": "生活保護により給食費相当の支給を受ける保護者は補助対象外",
+        "procedure": "学校長が対象者名簿を取りまとめ、月ごとに教育長へ補助金を請求・納付",
+        "amount": "2026年度の保護者負担額・補助割合は教育委員会へ確認",
+        "legalBasis": "与那国町学校給食（幼稚園ミルク）費補助金交付規則"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.yonaguni.okinawa.jp/reiki_int/reiki_honbun/q954RG00000343.html",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 4,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "31389",
+      "prefectureCode": "31",
+      "prefecture": "鳥取県",
+      "name": "南部町",
+      "status": "verified",
+      "summary": "令和8年度は小学校給食費を全額町負担、中学校給食費を一部助成",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "elementary": "小学校は1食365円を町が全額助成し、保護者負担0円",
+        "juniorHigh": "中学校は1食430円のうち町が128円を助成し、保護者負担302円",
+        "juniorHighMonthly": "中学校は4月から2月まで月額5,000円を納付し、3月に精算",
+        "assistance": "就学援助対象世帯には学校給食費等の援助制度あり"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.town.nanbu.tottori.jp/admin/kyouikuiinkai/5/3/",
+        "checkedAt": "2026-07-20"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "general_free_claim_may_rely_on_limited_support"
+      ],
+      "priorityScore": 3,
+      "priorityFlags": [
+        "broad_claim_vs_limited_support"
+      ]
+    },
+    {
+      "code": "32448",
+      "prefectureCode": "32",
+      "prefecture": "島根県",
+      "name": "美郷町",
+      "status": "verified",
+      "summary": "学校給食食材費の概ね3割を町が補助",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "食材費の概ね3割",
+        "feeNote": "一般負担額や一律無償化は断定しない"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://gov.town.shimane-misato.lg.jp/reiki_int/reiki_honbun/r071RG00000932.html",
+        "checkedAt": "2026-07-21"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "verified_benefit_without_explicit_2026_basis",
+        "verified_source_url_appears_pre_2026"
+      ],
+      "priorityScore": 3,
+      "priorityFlags": [
+        "pre_2026_source_path",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "34214",
+      "prefectureCode": "34",
+      "prefecture": "広島県",
+      "name": "安芸高田市",
+      "status": "verified",
+      "summary": "市立小中学校等の学校給食費を無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "support": "安芸高田市立学校の学校給食費を徴収しない",
+        "basis": "安芸高田市学校給食費徴収条例で給食費を無償と規定",
+        "target": "市立小学校・中学校等の児童生徒"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.akitakata.jp/reiki/reiki_honbun/r382RG00001878.html?id=j6",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "verified_benefit_without_explicit_2026_basis",
+        "verified_source_url_appears_pre_2026",
+        "source_host_requires_officiality_review"
+      ],
+      "priorityScore": 3,
+      "priorityFlags": [
+        "pre_2026_source_path",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "36202",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "鳴門市",
+      "status": "verified",
+      "summary": "中学3年生の学校給食費を無償化し、市外通学者等へ最大5万円を支給",
+      "eligibility": {
+        "minAgeMonths": 168,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "市内中学校に通う中学3年生、および市内在住で市外中学校に通うなど給食無償化を受けられない中学3年生",
+        "school": "市内中学校の中学3年生は年間給食費を免除",
+        "cashSupport": "市外通学者や給食提供を受けない対象者へ年間給食費相当額最大5万円を支給",
+        "otherGrades": "全学年一律の給食費無償化ではない"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.naruto.lg.jp/docs/2025072900025/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "verified_benefit_without_explicit_2026_basis",
+        "verified_source_url_appears_pre_2026"
+      ],
+      "priorityScore": 3,
+      "priorityFlags": [
+        "pre_2026_source_path",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "36204",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "阿南市",
+      "status": "verified",
+      "summary": "中学3年生の学校給食費を無償化",
+      "eligibility": {
+        "minAgeMonths": 168,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "阿南市立中学校等に在籍する中学3年生",
+        "support": "対象学年の学校給食費を無償化",
+        "start": "2025年9月から実施",
+        "otherGrades": "全学年一律の給食費無償化ではない"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.anan.tokushima.jp/docs/2020120900019/",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "verified_benefit_without_explicit_2026_basis",
+        "verified_source_url_appears_pre_2026"
+      ],
+      "priorityScore": 3,
+      "priorityFlags": [
+        "pre_2026_source_path",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "36208",
+      "prefectureCode": "36",
+      "prefecture": "徳島県",
+      "name": "三好市",
+      "status": "verified",
+      "summary": "三好市在住の幼稚園児・小中学生の学校給食費を無償化",
+      "eligibility": {
+        "minAgeMonths": 36,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "三好市の住民基本台帳に記録され、保護者と生計を一にする園児・児童・生徒",
+        "support": "対象者の学校給食費を徴収しない",
+        "facilities": "市内給食センター・共同調理場から幼稚園・小中学校へ給食を提供"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.miyoshi.i-tokushima.jp/reiki/reiki_int/reiki_honbun/r257RG00001240.html",
+        "checkedAt": "2026-07-23"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "verified_benefit_without_explicit_2026_basis",
+        "verified_source_url_appears_pre_2026",
+        "source_host_requires_officiality_review"
+      ],
+      "priorityScore": 3,
+      "priorityFlags": [
+        "pre_2026_source_path",
+        "no_explicit_2026_basis"
+      ]
+    },
+    {
+      "code": "44206",
+      "prefectureCode": "44",
+      "prefecture": "大分県",
+      "name": "臼杵市",
+      "status": "verified",
+      "summary": "市立小中学校の学校給食費を2025年4月から無償化",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
+      "details": {
+        "target": "臼杵市立小学校・中学校の児童生徒",
+        "support": "学校給食費を全額無償化",
+        "start": "2025年4月",
+        "purpose": "児童生徒の健康・栄養確保と子育て世帯の負担軽減"
+      },
+      "notes": null,
+      "source": {
+        "url": "https://www.city.usuki.oita.jp/article/2025052600013/",
+        "checkedAt": "2026-07-24"
+      },
+      "additionalSources": null,
+      "reasons": [
+        "verified_benefit_without_explicit_2026_basis",
+        "verified_source_url_appears_pre_2026"
+      ],
+      "priorityScore": 3,
+      "priorityFlags": [
+        "pre_2026_source_path",
+        "no_explicit_2026_basis"
+      ]
+    }
+  ],
+  "result": {
+    "status": "official_review_completed_corrections_rebased_pending_pr",
+    "confirmedCorrectionCount": 3,
+    "correctedCount": 3,
+    "unresolvedConfirmedErrorCount": 0
+  }
+}

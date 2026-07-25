@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewId": "west-b-school-meals-official-review-20260725",
+  "sourceAuditId": "west-b-school-meals-crosscheck-20260725",
+  "priorityReviewId": "west-b-school-meals-priority-review-20260725",
+  "reviewedAt": "2026-07-25T14:29:00+09:00",
+  "reviewedMunicipalityCount": 26,
+  "confirmedCorrectionCount": 3,
+  "retainedCount": 23,
+  "corrections": [
+    {
+      "code": "31390",
+      "name": "伯耆町",
+      "service": "schoolMeals",
+      "decision": "correct",
+      "beforeIssue": "令和8年度の補助内容・保護者負担額を未確定としていた",
+      "afterFinding": "令和8年度は国の小学校給食無償化に加え、町が中学校給食も無償化する",
+      "statusChanged": false,
+      "evidence": [
+        "https://www.houki-town.jp/new1/10/3/3/u521/",
+        "https://www.houki-town.jp/user/filer_public/a7/c6/a7c690dc-3749-495a-939d-c6ef650df9be/dang-chu-yu-suan-shuo-ming-zi-liao.pdf"
+      ]
+    },
+    {
+      "code": "47303",
+      "name": "東村",
+      "service": "schoolMeals",
+      "decision": "correct",
+      "beforeIssue": "学校給食費助成の対象条件・除外・申請期間が記録されていなかった",
+      "afterFinding": "村内在住児童生徒の保護者へ一部助成。前年度分完納または小1・転入が対象で、要保護・準要保護・特別支援学級は除外。申請は毎年7月1日から翌年3月末まで",
+      "statusChanged": false,
+      "evidence": [
+        "https://www.vill.higashi.okinawa.jp/material/files/group/5/gakkoukyuusyokuhijyosei.pdf",
+        "https://www.vill.higashi.okinawa.jp/soshikikarasagasu/fukushihokenka/siensoudan/458.html"
+      ]
+    },
+    {
+      "code": "36204",
+      "name": "阿南市",
+      "service": "schoolMeals",
+      "decision": "correct",
+      "beforeIssue": "中学3年生のみ無償化としていた",
+      "afterFinding": "令和8年度は幼稚園・中学3年生の無償化に加え、小学校給食を無償化し、中学1・2年生の物価高騰分を補助する",
+      "statusChanged": false,
+      "evidence": [
+        "https://www.city.anan.tokushima.jp/docs/2026032300022/file_contents/ANAN202604No813_Part6-9.pdf",
+        "https://www.city.anan.tokushima.jp/docs/2020120900019/"
+      ]
+    }
+  ],
+  "retained": {
+    "conservativeUnavailable": [
+      "47314",
+      "44213"
+    ],
+    "current2026Explicit": [
+      "34202",
+      "32526",
+      "38422",
+      "41210",
+      "41327",
+      "47207",
+      "47208",
+      "31389"
+    ],
+    "evergreenOrCurrentProgram": [
+      "31325",
+      "41345",
+      "41346",
+      "41423",
+      "41424",
+      "47209",
+      "47326",
+      "34214",
+      "36208",
+      "47382",
+      "32448",
+      "36202",
+      "44206"
+    ],
+    "otherReviewedAndRetained": []
+  },
+  "result": {
+    "status": "corrections_rebased_on_latest_main_pending_pr",
+    "confirmedCorrectionCount": 3,
+    "correctedCount": 3,
+    "unresolvedConfirmedErrorCount": 0,
+    "correctionBranch": "fix/west-b-school-meals-corrections-rebased-20260725"
+  }
+}
