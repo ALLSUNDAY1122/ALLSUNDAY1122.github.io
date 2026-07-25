@@ -1,0 +1,111 @@
+name: Temporary Central A Housing Batch 8 State Sync
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch8-state-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-housing-batch8-state-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Synchronize checkpoint and region state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const cpPath = 'jichitai-compare/operations/control/session-checkpoints/central-a.json';
+          const regionPath = 'jichitai-compare/operations/control/regions/central.json';
+          const auditPath = 'jichitai-compare/operations/audits/central-a-housing-classification-batch8-decisions-20260725.json';
+          const cp = JSON.parse(fs.readFileSync(cpPath, 'utf8'));
+          const region = JSON.parse(fs.readFileSync(regionPath, 'utf8'));
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          const updatedAt = '2026-07-25T15:56:00+09:00';
+          const statePr = Number(process.env.PR_NUMBER);
+          const corrections = [
+            { type: 'child_specific_housing_replacement', code: '17204', service: 'housingSupport', name: '輪島市' },
+            { type: 'general_housing_misclassification', code: '17211', service: 'housingSupport', name: '能美市' },
+            { type: 'child_specific_housing_replacement', code: '17361', service: 'housingSupport', name: '津幡町' },
+            { type: 'general_housing_misclassification', code: '21604', service: 'housingSupport', name: '白川村' },
+            { type: 'newlywed_housing_replacement', code: '22208', service: 'housingSupport', name: '伊東市' }
+          ];
+          const addCorrections = (list) => {
+            for (const correction of corrections) {
+              if (!list.some((item) => item.code === correction.code && item.service === correction.service && item.type === correction.type)) list.push(correction);
+            }
+          };
+
+          audit.regionalCiRunNumber = 8602;
+          audit.stateSyncPullRequestNumber = statePr;
+          audit.stateSynchronizedAt = updatedAt;
+
+          cp.updatedAt = updatedAt;
+          cp.pullRequestNumber = 3539;
+          cp.ciStatus = 'success';
+          cp.ciRunNumber = 8602;
+          cp.stateSyncPullRequestNumber = statePr;
+          cp.nextAction = '原因別重点再監査を継続する。一般住宅・移住制度の分類候補残134件を子育て固有要件の有無で判定し、弱い主出典残33件も並行して処理する。Issue #3141の19項目は推測せず維持する。';
+          cp.qualityReaudit.latestCompletedAt = updatedAt;
+          cp.qualityReaudit.latestRegionalPullRequestNumber = 3539;
+          cp.qualityReaudit.latestCiRunNumber = 8602;
+          cp.qualityReaudit.correctedMunicipalitiesRechecked = 94;
+          cp.qualityReaudit.primarySourceSlotsRechecked = 526;
+          cp.qualityReaudit.candidateCounts.generalHousingMisclassification = 134;
+          cp.qualityReaudit.nextPriority = ['一般住宅・移住制度の分類候補残134件','弱い主出典残33候補','Issue #3141の19項目を公式利用条件公開時のみ解消'];
+          addCorrections(cp.qualityReaudit.confirmedCorrections);
+
+          region.updatedAt = updatedAt;
+          region.lastAction = '原因別重点再監査の住宅支援分類第8群をPR #3539・CI #8602成功後にregion/centralへ統合。輪島市・津幡町・伊東市は子育て・三世代・新婚世帯向け現行制度へ差し替え、能美市・白川村は一般制度のみのためunavailableへ修正した。';
+          region.nextAction = '一般住宅・移住制度の分類候補残134件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。';
+          region.qualityReaudit.latestCompletedAt = updatedAt;
+          region.qualityReaudit.latestRegionalPullRequestNumber = 3539;
+          region.qualityReaudit.latestCiRunNumber = 8602;
+          region.qualityReaudit.correctedMunicipalitiesRechecked = 94;
+          region.qualityReaudit.primarySourceSlotsRechecked = 526;
+          region.qualityReaudit.candidateCounts.generalHousingMisclassification = 134;
+          region.qualityReaudit.nextPriority = ['一般住宅・移住制度の分類候補残134件','弱い主出典残33候補','Issue #3141の19項目を公式利用条件公開時のみ解消'];
+          addCorrections(region.qualityReaudit.confirmedCorrections);
+
+          fs.writeFileSync(cpPath, JSON.stringify(cp, null, 2) + '\n');
+          fs.writeFileSync(regionPath, JSON.stringify(region, null, 2) + '\n');
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          NODE
+
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+
+      - name: Commit synchronized state
+        shell: bash
+        run: |
+          rm -f jichitai-compare/operations/control/central-a-housing-batch8-state-trigger-20260725.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/control/session-checkpoints/central-a.json \
+                  jichitai-compare/operations/control/regions/central.json \
+                  jichitai-compare/operations/audits/central-a-housing-classification-batch8-decisions-20260725.json \
+                  jichitai-compare/operations/control/central-a-housing-batch8-state-trigger-20260725.json
+          git commit -m 'state: 中日本A住宅支援第8群の監査状態を同期'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
