@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "north-b-fiscal-anyone-finalization-20260725",
+  "sessionId": "north-b",
+  "recordedAt": "2026-07-25T13:27:00+09:00",
+  "status": "ready_to_merge",
+  "sourceAudit": "operations/audits/north-b-fiscal-anyone-triage-20260725.json",
+  "scope": {
+    "assignedMunicipalities": 107,
+    "fiscalYearCandidates": 40,
+    "anyoneChildcareConditionCandidates": 78,
+    "phase1FiscalReviewed": 10,
+    "phase1AnyoneReviewed": 4,
+    "phase2FiscalReviewed": 14,
+    "remainingFiscalLowPriority": 16,
+    "remainingAnyoneLowPriority": 74
+  },
+  "confirmedCorrections": [
+    {
+      "code": "01604",
+      "municipality": "新冠町",
+      "changes": [
+        "利用条件を確認できないこども誰でも通園制度の記載を削除",
+        "住宅支援が第5期（令和7年度から令和9年度）で令和8年度も対象期間内と明記"
+      ]
+    },
+    {
+      "code": "04606",
+      "municipality": "南三陸町",
+      "changes": [
+        "こども誰でも通園制度の開始、対象、施設、時間、料金、月10時間、定員、申請手順を追記"
+      ]
+    },
+    {
+      "code": "06428",
+      "municipality": "庄内町",
+      "changes": [
+        "こども誰でも通園制度の対象、2施設、平日9時から11時、1時間300円、月10時間、面談・予約手順を追記"
+      ]
+    },
+    {
+      "code": "04401",
+      "municipality": "松島町",
+      "changes": [
+        "令和8年4月1日時点の病児・病後児保育実施施設なしを現行ページで確認",
+        "現行ページを主出典、第三期計画を方針確認の追加出典へ整理"
+      ]
+    },
+    {
+      "code": "04422",
+      "municipality": "大郷町",
+      "changes": [
+        "0歳から2歳を含む保育料無償化を令和8年度案内で再確認",
+        "冗長な旧年度追加出典を削除"
+      ]
+    },
+    {
+      "code": "05212",
+      "municipality": "大仙市",
+      "changes": [
+        "学校給食費無償化の主出典を現行例規へ更新",
+        "弁当持参者・市外校通学者の相当額補助案内を追加出典として維持"
+      ]
+    },
+    {
+      "code": "05213",
+      "municipality": "北秋田市",
+      "changes": [
+        "学校給食費0円の主出典を現行例規へ更新し、令和8年度継続根拠を確定"
+      ]
+    },
+    {
+      "code": "06382",
+      "municipality": "川西町",
+      "changes": [
+        "通常の一時預かり・一時保育ページを主出典へ変更",
+        "誰でも通園は実施のみ確認し、施設・料金・時間・月上限は未確認と明示"
+      ]
+    }
+  ],
+  "decisions": {
+    "verifiedStatusChanges": 0,
+    "unavailableStatusChanges": 0,
+    "unsupportedAnyoneReferenceRemoved": 1,
+    "anyoneConditionsCompleted": 2,
+    "primarySourceMaintenanceMunicipalities": 5,
+    "policy": "利用者向け公式情報で確定できない条件は推測せず、statusを変更しない。URLの日付文字列だけでは旧年度資料と断定しない。"
+  },
+  "validation": {
+    "pullRequest": 3383,
+    "branch": "audit/north-b-fiscal-anyone-final-20260725",
+    "ciRun": 30143910708,
+    "ciResult": "success",
+    "sourceGeneratedConsistency": "success",
+    "nationalProgressGeneration": "success",
+    "javascriptSyntax": "success",
+    "generatedMunicipalityPages": 8
+  },
+  "nextAction": "checkpoint更新後の最終CIを確認し、PR #3383をmainへ統合する。その後、8自治体・task・監査記録・checkpointをregion/northへ限定同期し、公開ページを確認する。"
+}
