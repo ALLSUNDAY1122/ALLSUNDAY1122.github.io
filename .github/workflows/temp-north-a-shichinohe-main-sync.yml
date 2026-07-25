@@ -1,0 +1,120 @@
+name: Temporary North A Shichinohe Main Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/north-a-shichinohe-main-sync-trigger-20260725.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/north-a-shichinohe-main-20260725'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout synchronization branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          show-progress: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Copy corrected regional records
+        shell: bash
+        run: |
+          git fetch origin region/north:refs/remotes/origin/region/north
+          for path in \
+            jichitai-compare/data/municipalities/02/02402.json \
+            jichitai-compare/operations/tasks/02402.json \
+            jichitai-compare/operations/audits/north-a-quality-audit-2-20260725.json \
+            jichitai-compare/operations/control/session-checkpoints/north-a.json; do
+            git show "origin/region/north:${path}" > "${path}"
+          done
+
+      - name: Record main synchronization state
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          root = Path('jichitai-compare')
+          event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text(encoding='utf-8'))
+          pr = event['pull_request']['number']
+          head = event['pull_request']['head']['ref']
+          stamp = datetime.now(timezone(timedelta(hours=9))).replace(microsecond=0).isoformat()
+
+          def load(path):
+              return json.loads(Path(path).read_text(encoding='utf-8'))
+
+          def save(path, value):
+              Path(path).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          audit_path = root / 'operations/audits/north-a-quality-audit-2-20260725.json'
+          audit = load(audit_path)
+          followup = audit.setdefault('postCompletionFollowup', {})
+          followup.update({
+              'mainSyncCheckedAt': stamp,
+              'mainPullRequest': pr,
+              'result': 'corrected_in_region_main_sync_pending_merge',
+              'mainPublication': 'pending'
+          })
+          for finding in audit.get('confirmedFindings', []):
+              if finding.get('type') == 'availability_condition_omission' and finding.get('code') == '02402':
+                  finding['mainPullRequest'] = pr
+                  finding['correctionStatus'] = 'corrected_in_region_main_sync_pending_merge'
+          audit['nextAction'] = '七戸町の訂正をmainへ統合し、公開個別ページで準備中・現在利用不可の文言を確認後、監査を再完了する。'
+          save(audit_path, audit)
+
+          checkpoint_path = root / 'operations/control/session-checkpoints/north-a.json'
+          checkpoint = load(checkpoint_path)
+          checkpoint.update({
+              'updatedAt': stamp,
+              'status': 'in_progress',
+              'workingBranch': head,
+              'pullRequestNumber': pr,
+              'ciStatus': 'pending'
+          })
+          quality = checkpoint.setdefault('qualitySecondAudit', {})
+          quality.update({
+              'status': 'followup_in_progress',
+              'confirmedNewErrors': 3,
+              'fixedNewErrors': 3,
+              'openErrors': 0,
+              'unfixedErrors': 0,
+              'mainPullRequest': pr,
+              'mainCiResult': 'pending',
+              'publicationStatus': 'main_sync_pending_merge',
+              'followupMunicipality': '02402'
+          })
+          checkpoint['nextAction'] = '七戸町の訂正PRをmainへ統合し、公開ページ確認後にcompletedへ戻す。'
+          save(checkpoint_path, checkpoint)
+          PY
+
+      - name: Regenerate and validate national outputs
+        working-directory: jichitai-compare
+        run: |
+          npm run generate
+          npm run progress
+          npm run validate:generated
+
+      - name: Remove synchronization trigger
+        run: rm -f jichitai-compare/operations/control/north-a-shichinohe-main-sync-trigger-20260725.json
+
+      - name: Commit synchronized source and generated outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A jichitai-compare
+          git commit -m 'fix: 七戸町誰でも通園の利用不可条件をmainへ同期'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
