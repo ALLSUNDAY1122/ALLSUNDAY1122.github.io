@@ -1,0 +1,85 @@
+name: Temporary Central A Public Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/central-a-public-verify-trigger-20260725.json
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-public-20260725'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify four published pages and generated JSON
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const targets = [
+            ['18481', ['高浜町', '利用者向け対象月齢、実施施設、利用料、利用時間、予約方法は公式公開を確認できない']],
+            ['18483', ['おおい町', '利用者向け対象月齢、実施施設、利用料、利用時間、予約方法は公式公開を確認できない']],
+            ['21403', ['大野町', '令和8年4月1日から当面の間', '学校給食費を0円']],
+            ['21505', ['八百津町', '要保護・準要保護世帯', '学校給食費を実費支給']]
+          ];
+          const base = 'https://allsunday1122.github.io/jichitai-compare';
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          let finalChecks = [];
+          let passed = false;
+
+          for (let attempt = 1; attempt <= 18; attempt += 1) {
+            const checks = [];
+            let allOk = true;
+            for (const [code, expectedTexts] of targets) {
+              const url = `${base}/municipality/${code}/`;
+              try {
+                const response = await fetch(url, {
+                  redirect: 'follow',
+                  signal: AbortSignal.timeout(20000),
+                  headers: { 'user-agent': 'CentralAPublicVerification/1.0' }
+                });
+                const text = await response.text();
+                const ok = response.ok && expectedTexts.every((expected) => text.includes(expected));
+                checks.push({ code, url, status: response.status, expectedTexts, ok });
+                if (!ok) allOk = false;
+              } catch (error) {
+                checks.push({ code, url, status: null, expectedTexts, ok: false, error: String(error?.message ?? error) });
+                allOk = false;
+              }
+            }
+
+            try {
+              const url = `${base}/data/generated/municipalities.json`;
+              const response = await fetch(url, {
+                redirect: 'follow',
+                signal: AbortSignal.timeout(30000),
+                headers: { 'user-agent': 'CentralAPublicVerification/1.0' }
+              });
+              const text = await response.text();
+              const expected = [
+                '"code": "18481"',
+                '"code": "18483"',
+                '"code": "21403"',
+                '"code": "21505"',
+                '令和8年4月1日から当面の間'
+              ];
+              const ok = response.ok && expected.every((value) => text.includes(value));
+              checks.push({ code: 'generated', url, status: response.status, expectedTexts: expected, ok });
+              if (!ok) allOk = false;
+            } catch (error) {
+              checks.push({ code: 'generated', url: `${base}/data/generated/municipalities.json`, status: null, ok: false, error: String(error?.message ?? error) });
+              allOk = false;
+            }
+
+            finalChecks = checks;
+            if (allOk) {
+              passed = true;
+              break;
+            }
+            await sleep(10000);
+          }
+
+          console.log(JSON.stringify({ passed, checkedAt: new Date().toISOString(), checks: finalChecks }, null, 2));
+          if (!passed) process.exit(1);
+          NODE
