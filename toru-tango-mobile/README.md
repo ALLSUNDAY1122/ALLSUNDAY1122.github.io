@@ -1,6 +1,6 @@
 # 撮る単語帳 Mobile
 
-Expo / React Native / TypeScriptで作成したiOSアプリ版です。
+Expo / React Native / TypeScriptで作成したiPhoneアプリ版です。
 
 ## 現在の実装
 
@@ -18,7 +18,7 @@ Expo / React Native / TypeScriptで作成したiOSアプリ版です。
 - JSONバックアップと復元
 - カメラ撮影・写真選択と権限拒否処理
 
-OCRは未接続です。初回TestFlightまでに接続するか、写真選択後の手入力導線を明確にします。
+写真OCRは未接続です。初回TestFlightの必須範囲から除外する場合は、Claude QAとユーザー承認で確定します。
 
 ## 必要環境
 
@@ -27,10 +27,16 @@ Expo SDK 57はNode.js 22.13系以上を使用します。
 ```bash
 cd toru-tango-mobile
 npm install
+npm run check
+npm start
+```
+
+個別に実行する場合:
+
+```bash
 npm run typecheck
 npm run lint
 npm run doctor
-npm start
 ```
 
 ## AI API
@@ -38,8 +44,10 @@ npm start
 Cloudflare Worker公開後に `.env` を作成します。
 
 ```env
-EXPO_PUBLIC_AI_API_URL=https://YOUR-WORKER.workers.dev/generate
+EXPO_PUBLIC_AI_API_URL=https://YOUR-WORKER.workers.dev
 ```
+
+`/generate` まで含めたURLも利用できます。
 
 OpenAI APIキーをアプリ、GitHub、`.env`へ保存してはいけません。APIキーはCloudflare WorkerのSecretだけに登録します。
 
@@ -52,21 +60,43 @@ npx eas-cli@latest login
 npx eas-cli@latest build --platform ios --profile preview
 ```
 
+## 標準の担当順
+
+1. ChatGPT: 仕様、実装、検査、開発文書
+2. Claude: 動作確認、UI/UX改善、P0・P1解消
+3. ユーザー: リリース候補承認
+4. Codex: EAS Build、EAS Submit、TestFlight、申請
+
+Codexへ渡した後は、原則として機能追加や大幅なUI変更を行いません。
+
 ## TestFlight
 
 ```bash
 npx eas-cli@latest build --platform ios --profile production
-npx eas-cli@latest submit --platform ios --profile production
+npx eas-cli@latest submit --platform ios --profile production --latest
 ```
 
 実行前に以下を確定します。
 
 - Bundle ID: `com.allsunday1122.torutango`
+- Version: `1.0.0`
+- Build: `1`
 - Apple Developer認証
 - App Store Connectのアプリ登録
+- EAS projectId
 - アイコンと起動画面
 - Cloudflare Worker URL
 - プライバシー設問と輸出規制回答
+- Claude QAのP0・P1が0件
+- ユーザーの明示的な承認
+
+## リリース文書
+
+- `RELEASE_STATUS.md`
+- `RELEASE_CHECKLIST.md`
+- `CLAUDE_QA_HANDOFF.md`
+- `APP_STORE_METADATA_JA.md`
+- `PRIVACY_DATA.md`
 
 ## 参照
 
