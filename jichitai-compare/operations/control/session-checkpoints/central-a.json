@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T22:31:00+09:00",
+  "updatedAt": "2026-07-26T22:41:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 4020,
+  "pullRequestNumber": 4024,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "弱い主出典残13件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "弱い主出典残8件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T22:31:00+09:00",
-    "latestRegionalPullRequestNumber": 4014,
-    "latestCiRunNumber": 30203862450,
+    "latestCompletedAt": "2026-07-26T22:41:00+09:00",
+    "latestRegionalPullRequestNumber": 4024,
+    "latestCiRunNumber": 30204500277,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 248,
-    "primarySourceSlotsRechecked": 683,
+    "correctedMunicipalitiesRechecked": 252,
+    "primarySourceSlotsRechecked": 688,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -792,6 +792,41 @@
         "service": "schoolMeals",
         "name": "甲良町",
         "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25442",
+        "service": "postpartumCare",
+        "name": "甲良町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27219",
+        "service": "schoolMeals",
+        "name": "和泉市",
+        "outcome": "primary_source_replaced_with_direct_budget_document"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27225",
+        "service": "schoolMeals",
+        "name": "高石市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27225",
+        "service": "housingSupport",
+        "name": "高石市",
+        "outcome": "direct_user_page_maintained"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27226",
+        "service": "schoolMeals",
+        "name": "藤井寺市",
+        "outcome": "direct_user_page_maintained"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -876,7 +911,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 13,
+      "weakPrimarySource": 8,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 0,
       "fiscalYearRisk": 33,
@@ -947,25 +982,19 @@
       "status": "resolved"
     },
     "latestWeakSourceBatch": {
-      "batch": 4,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 5,
+      "status": "regional_changes_validated",
       "reviewedMunicipalityCount": 4,
       "reviewedServiceCount": 5,
-      "confirmedSourceUpgradeCount": 2,
-      "authoritativeSourceRetainedWithNavigationCount": 3,
-      "directUserPageMaintainedCount": 0,
-      "contentCorrectionCount": 2,
-      "remainingCandidates": 13,
-      "regionalPullRequestNumber": 4014,
-      "regionalWorkflowRunId": 30203862450,
-      "nationalPullRequestNumber": 4016,
-      "nationalWorkflowRunId": 30203958907,
-      "publicVerificationPullRequestNumber": 4018,
-      "publicVerificationWorkflowRunId": 30204063137,
-      "finalRegionPullRequestNumber": 4020,
-      "finalRegionWorkflowRunId": 30204170488,
+      "confirmedSourceUpgradeCount": 1,
+      "authoritativeSourceRetainedWithNavigationCount": 2,
+      "directUserPageMaintainedCount": 2,
+      "contentCorrectionCount": 0,
+      "remainingCandidates": 8,
+      "regionalPullRequestNumber": 4024,
+      "regionalWorkflowRunId": 30204500277,
       "blocker": null
     }
   },
-  "lastAction": "弱い主出典第4群5制度を地域・全国・公開で一致確認し、守山市と愛荘町の学校給食を令和8年度条件へ訂正した。"
+  "lastAction": "弱い主出典第5群5制度を公式情報で再確認し、和泉市学校給食を令和8年度予算概要へ主出典更新し、残る4制度の現行根拠を補強した。"
 }
