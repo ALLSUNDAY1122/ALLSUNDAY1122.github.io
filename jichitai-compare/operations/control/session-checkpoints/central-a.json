@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-27T06:39:00+09:00",
-  "status": "completed",
+  "updatedAt": "2026-07-27T06:49:00+09:00",
+  "status": "in_progress",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 4043,
+  "pullRequestNumber": 4047,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "弱い主出典残3件を公式情報で確認し、利用者向け直接ページまたは要綱と利用導線の組合せへ改善する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "弱い主出典候補0件。Issue #3141の19項目は、自治体が公式利用条件を公開した場合のみ再確認・解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-27T06:39:00+09:00",
-    "latestRegionalPullRequestNumber": 4037,
-    "latestCiRunNumber": 30221013836,
+    "latestCompletedAt": "2026-07-27T06:49:00+09:00",
+    "latestRegionalPullRequestNumber": 4047,
+    "latestCiRunNumber": 30221651505,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 257,
-    "primarySourceSlotsRechecked": 693,
+    "correctedMunicipalitiesRechecked": 260,
+    "primarySourceSlotsRechecked": 696,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -911,7 +911,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 3,
+      "weakPrimarySource": 0,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 0,
       "fiscalYearRisk": 33,
@@ -982,26 +982,19 @@
       "status": "resolved"
     },
     "latestWeakSourceBatch": {
-      "batch": 6,
-      "status": "completed_public_verified_region_integrated",
-      "reviewedMunicipalityCount": 5,
-      "reviewedServiceCount": 5,
-      "confirmedSourceUpgradeCount": 0,
-      "authoritativeSourceRetainedWithNavigationCount": 3,
+      "batch": 7,
+      "status": "regional_data_updated_ci_success",
+      "reviewedMunicipalityCount": 3,
+      "reviewedServiceCount": 3,
+      "confirmedSourceUpgradeCount": 2,
+      "authoritativeSourceRetainedWithNavigationCount": 1,
       "directUserPageMaintainedCount": 0,
-      "unavailableConfirmedCount": 2,
       "contentCorrectionCount": 0,
-      "remainingCandidates": 3,
-      "regionalPullRequestNumber": 4037,
-      "regionalWorkflowRunId": 30221013836,
-      "nationalPullRequestNumber": 4039,
-      "nationalWorkflowRunId": 30221115967,
-      "publicVerificationPullRequestNumber": 4041,
-      "publicVerificationWorkflowRunId": 30221234717,
-      "finalRegionPullRequestNumber": 4043,
-      "finalRegionWorkflowRunId": 30221333323,
+      "remainingCandidates": 0,
+      "regionalPullRequestNumber": 4047,
+      "regionalWorkflowRunId": 30221651505,
       "blocker": null
     }
   },
-  "lastAction": "弱い主出典第6群5制度を地域・全国・公開で一致確認し、3制度の利用導線を補強、2自治体のunavailable判定を再確認した。"
+  "lastAction": "弱い主出典第7群3制度を公式情報で再確認し、弱い主出典候補を0件にした。"
 }
