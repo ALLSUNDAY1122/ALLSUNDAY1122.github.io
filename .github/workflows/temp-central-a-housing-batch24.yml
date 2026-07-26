@@ -1,0 +1,113 @@
+name: Temporary Central A Housing Batch 24
+
+on:
+  pull_request:
+    branches:
+      - region/central
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch24-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-housing-batch24-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply housing classification batch 24
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare';
+          const checkedAt='2026-07-26';
+          const updatedAt='2026-07-26T09:32:00+09:00';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const unavailable='子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。';
+          const decisions={
+            '27220':{type:'general_seismic_support_misclassification',service:{status:'unavailable',summary:unavailable,details:{confirmedGeneralProgram:'令和8年度の旧耐震基準木造住宅を対象とする耐震診断・設計・改修工事補助を確認した。',classificationReview:'一般的な耐震化制度および一般市営住宅募集であり、子育て・新婚・三世代世帯固有の住宅取得・改修・家賃支援を現行公式情報で確認できないため、子育て世帯向け住宅支援として登録しない。',childSpecificConditionConfirmed:false},source:{url:'https://www.city.minoh.lg.jp/sidou/taisin/taisinkaisyuukoujihihojo.html',checkedAt}}},
+            '27222':{type:'general_seismic_support_misclassification',service:{status:'unavailable',summary:unavailable,details:{confirmedGeneralProgram:'旧耐震基準の木造住宅等を対象とする耐震診断・設計・改修・除却補助を確認した。',classificationReview:'一般的な耐震化制度であり、子育て・新婚・三世代世帯固有の対象要件や住宅費加算を現行公式情報で確認できないため、子育て世帯向け住宅支援として登録しない。',childSpecificConditionConfirmed:false},source:{url:'https://www.city.habikino.lg.jp/soshiki/toshikaihatsu/kenchikujutaku/taishin/15407.html',checkedAt}}},
+            '27223':{type:'general_seismic_support_misclassification',service:{status:'unavailable',summary:unavailable,details:{confirmedGeneralProgram:'令和8年度の耐震診断・耐震改修・耐震シェルター・木造住宅除却補助を確認した。',classificationReview:'一般的な耐震化・除却制度であり、子育て・新婚・三世代世帯固有の住宅支援条件を現行公式情報で確認できないため、子育て世帯向け住宅支援として登録しない。',childSpecificConditionConfirmed:false},source:{url:'https://www.city.kadoma.osaka.jp/machizukuri_rodo/kenchiku/7/hozyoseido/33834.html',checkedAt}}},
+            '27224':{type:'replace_with_current_multigenerational_child_program',service:{status:'verified',summary:'市外から転入する中学生以下の子がいる世帯等が、市内の親世帯と同居・近居するため住宅を取得した場合、3年間で最大45万円を補助する。',details:{program:'摂津市多世代定住促進事業',target:'市外から転入した、中学生以下の子どもがいる世帯または出産予定の子世帯',relationship:'摂津市内に居住する親世帯と新たに同居または近居を開始すること',housing:'摂津市内で住宅を取得し、1年目は所有権保存登記または移転登記完了後1年以内かつ年度の3月15日までに申請',amount:'住宅取得費の10分の1以内。1年度上限15万円、3年間合計上限45万円',continuation:'2・3年目は多世代の同居・近居と親子関係を継続し、毎年10月31日までに申請'},source:{url:'https://www.city.settsu.osaka.jp/soshiki/kensetsubu/kenchikuka/tasedai_doukyo/10298.html',checkedAt},additionalSources:[{url:'https://www.city.settsu.osaka.jp/soshiki/kensetsubu/kenchikuka/tasedai_doukyo/29699.html',checkedAt,description:'補助対象者・補助額・申請期限'}]}},
+            '27226':{type:'general_seismic_support_misclassification',service:{status:'unavailable',summary:unavailable,details:{confirmedGeneralProgram:'令和8年度の住宅等の耐震診断・耐震改修・除却補助を確認した。',classificationReview:'一般的な耐震化・除却制度であり、居住支援協議会の設立準備は直接の住宅取得・改修・家賃補助ではない。子育て・新婚世帯固有の現行住宅支援を確認できないため登録しない。',childSpecificConditionConfirmed:false},source:{url:'https://www.city.fujiidera.lg.jp/kurashi/jutakukenchiku/jutaku/1390265709101.html',checkedAt}}}
+          };
+          const records=[];
+          for(const [code,entry] of Object.entries(decisions)){
+            const dataPath=path.join(root,'data/municipalities','27',`${code}.json`);
+            const taskPath=path.join(root,'operations/tasks',`${code}.json`);
+            const municipality=JSON.parse(fs.readFileSync(dataPath,'utf8'));
+            const before=structuredClone(municipality.services.housingSupport);
+            municipality.services.housingSupport=entry.service;
+            municipality.updatedAt=checkedAt;
+            fs.writeFileSync(dataPath,JSON.stringify(municipality)+'\n');
+            const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
+            const statuses=Object.values(municipality.services).map(value=>value.status);
+            task.status='merged';task.currentService=null;task.nextServiceIndex=9;task.completedServices=keys;
+            task.verifiedCount=statuses.filter(value=>value==='verified').length;
+            task.researchingCount=statuses.filter(value=>value==='researching').length;
+            task.unavailableCount=statuses.filter(value=>value==='unavailable').length;
+            task.needsMediumReviewCount=statuses.filter(value=>value==='needs_medium_review').length;
+            task.currentBranch='region/central';task.pullRequestNumber=Number(process.env.PR_NUMBER);task.lastCheckedAt=checkedAt;task.lastUpdatedAt=updatedAt;task.lastUpdatedBy='統括B②';
+            task.officialSources=[...new Set(keys.map(key=>municipality.services[key]?.source?.url).filter(Boolean))];
+            task.notes=[...(task.notes||[]),`2026-07-26: 住宅支援分類第24群で公式情報を独立確認し、${entry.type}としてhousingSupportを更新。`];
+            task.blockers=task.blockers||[];
+            fs.writeFileSync(taskPath,JSON.stringify(task)+'\n');
+            records.push({code,name:municipality.name,service:'housingSupport',decisionType:entry.type,changed:true,beforeStatus:before.status,afterStatus:entry.service.status,beforeSummary:before.summary,afterSummary:entry.service.summary,officialSource:entry.service.source.url});
+          }
+          const audit={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch24-decisions-20260726',decidedAt:updatedAt,session:'中日本調査班A',coordinatorSession:'統括B②',category:'generalHousingMisclassification',regionalPullRequestNumber:Number(process.env.PR_NUMBER),runnerWorkflowRunId:Number(process.env.RUN_ID),reviewedMunicipalityCount:5,confirmedCorrectionCount:5,statusToUnavailableCount:4,verifiedReplacementCount:1,decisions:records,causeScan:{previousRemainingCandidates:59,reviewedHighRiskCandidates:5,remainingCandidates:54},issue3141:{unresolvedItemCount:19,unresolvedMunicipalityCount:19,changed:false},policy:['一般耐震・除却制度だけを子育て世帯向け住宅支援として登録しない','子育て世帯の多世代同居・近居住宅取得支援は対象年齢・金額・申請期限を現行公式ページから記録する','居住支援体制の整備方針を直接給付制度と混同しない'],result:{unresolvedConfirmedErrorCount:0,releaseBlocker:'none'}};
+          fs.writeFileSync(path.join(root,'operations/audits/central-a-housing-classification-batch24-decisions-20260726.json'),JSON.stringify(audit,null,2)+'\n');
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          checkpoint.updatedAt=updatedAt;checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);checkpoint.ciStatus='success';checkpoint.stateSyncPullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.nextAction='一般住宅・移住制度の分類候補残54件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';
+          checkpoint.qualityReaudit.latestCompletedAt=updatedAt;checkpoint.qualityReaudit.latestRegionalPullRequestNumber=Number(process.env.PR_NUMBER);checkpoint.qualityReaudit.correctedMunicipalitiesRechecked=174;checkpoint.qualityReaudit.primarySourceSlotsRechecked=606;checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification=54;
+          checkpoint.qualityReaudit.confirmedCorrections.push({type:'general_seismic_support_misclassification',code:'27220',service:'housingSupport',name:'箕面市'},{type:'general_seismic_support_misclassification',code:'27222',service:'housingSupport',name:'羽曳野市'},{type:'general_seismic_support_misclassification',code:'27223',service:'housingSupport',name:'門真市'},{type:'replace_with_current_multigenerational_child_program',code:'27224',service:'housingSupport',name:'摂津市'},{type:'general_seismic_support_misclassification',code:'27226',service:'housingSupport',name:'藤井寺市'});
+          checkpoint.qualityReaudit.nextPriority=['一般住宅・移住制度の分類候補残54件','弱い主出典残33候補','Issue #3141の19項目を公式利用条件公開時のみ解消'];
+          checkpoint.lastAction='住宅支援分類第24群として、箕面市・羽曳野市・門真市・藤井寺市の一般耐震制度をunavailableへ修正し、摂津市を現行の多世代定住促進事業へ差し替えた。';
+          fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+          const regionPath=path.join(root,'operations/control/regions/central.json');
+          const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));
+          region.updatedAt=updatedAt;region.latestCentralAHousingBatch={batch:24,status:'regional_corrected_pending_national_sync',reviewedMunicipalityCount:5,correctedMunicipalityCount:5,statusToUnavailableCount:4,verifiedReplacementCount:1,remainingCandidates:54,regionalPullRequestNumber:Number(process.env.PR_NUMBER),workflowRunId:Number(process.env.RUN_ID),blocker:null};region.lastAction=checkpoint.lastAction;
+          fs.writeFileSync(regionPath,JSON.stringify(region,null,2)+'\n');
+          const trigger=path.join(root,'operations/control/central-a-housing-batch24-trigger-20260726.json');if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Reject unexpected changes and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git status --short | awk '{print $2}')
+          for file in "${changed[@]}"; do
+            case "$file" in
+              jichitai-compare/data/municipalities/27/27220.json|jichitai-compare/data/municipalities/27/27222.json|jichitai-compare/data/municipalities/27/27223.json|jichitai-compare/data/municipalities/27/27224.json|jichitai-compare/data/municipalities/27/27226.json|jichitai-compare/operations/tasks/27220.json|jichitai-compare/operations/tasks/27222.json|jichitai-compare/operations/tasks/27223.json|jichitai-compare/operations/tasks/27224.json|jichitai-compare/operations/tasks/27226.json|jichitai-compare/operations/audits/central-a-housing-classification-batch24-decisions-20260726.json|jichitai-compare/operations/control/session-checkpoints/central-a.json|jichitai-compare/operations/control/regions/central.json|jichitai-compare/data/generated/municipalities.json|jichitai-compare/data/generated/municipality-pages.json|jichitai-compare/operations/progress.json|jichitai-compare/sitemap.xml|jichitai-compare/municipality/27220/index.html|jichitai-compare/municipality/27222/index.html|jichitai-compare/municipality/27223/index.html|jichitai-compare/municipality/27224/index.html|jichitai-compare/municipality/27226/index.html|jichitai-compare/operations/control/central-a-housing-batch24-trigger-20260726.json) ;;
+              *) echo "Unexpected change: $file"; exit 1 ;;
+            esac
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'fix: 中日本A住宅支援分類第24群を修正'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
