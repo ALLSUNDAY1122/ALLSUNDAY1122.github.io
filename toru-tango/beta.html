@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#4f46e5">
+  <title>撮る単語帳 ベータ版</title>
+  <style>
+    :root{--bg:#f4f6fb;--surface:#fff;--text:#151821;--muted:#667085;--primary:#4f46e5;--line:#dfe3ec;--danger:#c62828;--success:#16803c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif}.wrap{max-width:780px;margin:auto;padding:16px 12px 90px}.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:22px;color:#fff;padding:20px}.hero h1{margin:0;font-size:1.7rem}.hero p{margin:6px 0 0;opacity:.9}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0}.tab,.btn{border:0;border-radius:12px;font:inherit;font-weight:800;min-height:44px;padding:10px 12px}.tab{background:var(--surface);border:1px solid var(--line);color:var(--text)}.tab.active,.btn{background:var(--primary);color:#fff}.btn.secondary{background:var(--surface);border:1px solid var(--line);color:var(--text)}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.panel{display:none}.panel.active{display:block}.section{background:var(--surface);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;padding:15px}.section h2{font-size:1.08rem;margin:0 0 10px}.muted{color:var(--muted);font-size:.88rem;line-height:1.55}.label{color:var(--muted);display:block;font-size:.82rem;font-weight:700;margin:10px 0 5px}textarea,input,select{background:#f8f9fc;border:1px solid var(--line);border-radius:12px;color:var(--text);font:inherit;padding:11px;width:100%}textarea{min-height:130px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.status{background:#eef0ff;border-radius:12px;color:#3730a3;font-size:.88rem;line-height:1.55;margin-top:10px;padding:10px}.status.error{background:#fff0f0;color:#9b1c1c}.cardItem{border-top:1px solid var(--line);padding:14px 0}.face{background:#f8f9fc;border:1px solid var(--line);border-radius:14px;margin-top:8px;padding:12px}.faceLabel{color:var(--primary);font-size:.72rem;font-weight:900;letter-spacing:1.5px}.faceText{font-size:1rem;font-weight:700;line-height:1.55;margin-top:5px;overflow-wrap:anywhere}.flashcard{align-items:center;background:var(--surface);border:2px solid var(--primary);border-radius:24px;display:flex;flex-direction:column;justify-content:center;min-height:330px;padding:28px 20px;text-align:center;user-select:none}.flashcard:active{opacity:.8}.flashSide{color:var(--primary);font-size:.8rem;font-weight:900;letter-spacing:2px}.flashText{font-size:1.5rem;font-weight:850;line-height:1.55;margin:28px 0}.flipHint{color:var(--muted);font-size:.78rem}.empty{color:var(--muted);padding:28px 8px;text-align:center}.progress{background:var(--line);border-radius:99px;height:8px;margin-bottom:12px;overflow:hidden}.bar{background:var(--primary);height:100%;width:0}.counter{color:var(--muted);font-size:.85rem;text-align:center;margin-top:10px}.quality{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.fileButton{display:inline-flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.fileButton input{position:absolute;inset:0;opacity:0;cursor:pointer}.preview{display:block;width:100%;max-height:320px;object-fit:contain;border-radius:14px;margin-top:12px;background:#f8f9fc}.rotationStatus{align-self:center;color:var(--muted);font-size:.82rem}.hidden{display:none!important}@media(max-width:560px){.grid{grid-template-columns:1fr}.tabs{font-size:.86rem}.btn{flex:1}.flashText{font-size:1.28rem}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero"><h1>撮る単語帳</h1><p>表で考え、裏で確認する。両面を読み上げられます。</p></header>
+  <nav class="tabs">
+    <button class="tab active" data-tab="create">作る</button>
+    <button class="tab" data-tab="cards">単語帳</button>
+    <button class="tab" data-tab="study">学習</button>
+    <button class="tab" data-tab="settings">設定</button>
+  </nav>
+
+  <section id="create" class="panel active">
+    <div class="section">
+      <h2>教材を撮る</h2>
+      <p class="muted">iPhoneではカメラを起動できます。OCR前に向きを自動判定し、白黒化・コントラスト補正・拡大を行います。</p>
+      <label class="btn fileButton">写真を撮る・選ぶ<input id="photo" type="file" accept="image/*" capture="environment"></label>
+      <img id="photoPreview" class="preview hidden" alt="選択した教材写真">
+      <div class="row">
+        <button id="rotateLeft" class="btn secondary">左へ90°</button>
+        <button id="rotateRight" class="btn secondary">右へ90°</button>
+        <button id="autoRotation" class="btn secondary">向きを自動判定</button>
+        <div id="rotationStatus" class="rotationStatus"></div>
+      </div>
+      <div id="ocrStatus" class="status hidden"></div>
+      <textarea id="ocrText" class="hidden" placeholder="認識した文字はここで修正できます"></textarea>
+      <div class="row">
+        <button id="runOcr" class="btn secondary">写真から文字を読む</button>
+        <button id="useOcrText" class="btn secondary hidden">認識結果を教材本文へ</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>教材から作問</h2>
+      <p class="muted">初期試験ではGPT-5 nanoを使用します。AI作問と端末内簡易作問は別機能で、失敗時に勝手に切り替えません。</p>
+      <textarea id="source" placeholder="教材本文を貼り付けてください"></textarea>
+      <div class="grid">
+        <div><label class="label">形式</label><select id="type"><option value="mix">一問一答＋穴埋め</option><option value="qa">一問一答</option><option value="cloze">穴埋め</option></select></div>
+        <div><label class="label">難易度</label><select id="difficulty"><option value="easy">やさしい</option><option value="normal" selected>標準</option><option value="hard">難しい</option></select></div>
+        <div><label class="label">最大枚数</label><select id="count"><option>5</option><option selected>10</option><option>15</option><option>20</option></select></div>
+      </div>
+      <div class="row">
+        <button id="aiGenerate" class="btn">AIで作問（nano）</button>
+        <button id="localGenerate" class="btn secondary">端末内で簡易作問</button>
+      </div>
+      <div id="status" class="status">AI接続状態を確認中です。</div>
+      <textarea id="generated" class="hidden" placeholder="表｜裏"></textarea>
+      <button id="saveGenerated" class="btn hidden" style="margin-top:10px">生成カードを保存</button>
+      <div id="qualityRow" class="quality hidden">
+        <p class="muted">nanoの生成品質を記録してください。評価はこの端末内だけに保存されます。</p>
+        <div class="row">
+          <button class="btn success" data-quality="good">そのまま使える</button>
+          <button class="btn secondary" data-quality="edit">要修正</button>
+          <button class="btn danger" data-quality="bad">使えない</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>1枚ずつ作る</h2>
+      <label class="label">表</label><input id="front" placeholder="問題・単語">
+      <label class="label">裏</label><input id="back" placeholder="答え・意味">
+      <button id="saveOne" class="btn" style="margin-top:10px">カードを保存</button>
+    </div>
+  </section>
+
+  <section id="cards" class="panel">
+    <div class="section">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-top:0"><h2>保存済み <span id="cardCount">0</span>枚</h2><button id="clearAll" class="btn danger">全削除</button></div>
+      <div id="cardList"></div>
+    </div>
+  </section>
+
+  <section id="study" class="panel">
+    <div class="section">
+      <div class="row" style="margin-top:0"><button id="startStudy" class="btn">学習を開始</button><button id="shuffleStudy" class="btn secondary">並べ直す</button></div>
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <div id="studyEmpty" class="empty">カードを保存してから学習を開始してください。</div>
+      <div id="studyArea" class="hidden">
+        <div id="flashcard" class="flashcard" role="button" tabindex="0">
+          <div id="flashSide" class="flashSide">表</div>
+          <div id="flashText" class="flashText"></div>
+          <div id="flipHint" class="flipHint">タップして裏へ</div>
+        </div>
+        <div id="counter" class="counter"></div>
+        <div class="row">
+          <button id="speakFront" class="btn secondary">表を読む</button>
+          <button id="speakBack" class="btn secondary">裏を読む</button>
+        </div>
+        <div id="gradeRow" class="row hidden">
+          <button id="again" class="btn danger">もう一度</button>
+          <button id="known" class="btn success">覚えた</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="settings" class="panel">
+    <div class="section">
+      <h2>AI API設定</h2>
+      <p class="muted">APIキーはHTMLへ入力しません。Cloudflare Workerの公開URLだけを設定します。</p>
+      <label class="label">Worker URL</label>
+      <input id="apiUrl" placeholder="https://...workers.dev">
+      <button id="saveApiUrl" class="btn" style="margin-top:10px">URLを保存</button>
+      <div id="apiStatus" class="status"></div>
+    </div>
+    <div class="section">
+      <h2>nano試験</h2>
+      <p class="muted">標準モデルはGPT-5 nano、reasoning effortはmediumです。品質不足が確認された場合だけminiと比較します。</p>
+      <div id="evaluationStatus" class="status"></div>
+      <button id="exportEvaluations" class="btn secondary" style="margin-top:10px">評価記録を保存</button>
+    </div>
+    <div class="section">
+      <h2>現在の試用版について</h2>
+      <p class="muted">このベータ版は既存HTML版とは別の保存領域を使います。以前作成された重複カードは表示されません。</p>
+    </div>
+  </section>
+</main>
+<script src="config.js?v=20260726-4"></script>
+<script src="generator-v2.js?v=20260726-4"></script>
+<script src="beta.js?v=20260726-3"></script>
+</body>
+</html>

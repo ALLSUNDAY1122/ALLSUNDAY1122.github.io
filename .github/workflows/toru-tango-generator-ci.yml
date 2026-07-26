@@ -1,0 +1,33 @@
+name: Toru Tango Generator CI
+
+on:
+  push:
+    paths:
+      - 'toru-tango/generator-v2.js'
+      - 'toru-tango/generator-v2.test.cjs'
+      - 'toru-tango/generator-test.html'
+      - 'toru-tango/sw.js'
+      - '.github/workflows/toru-tango-generator-ci.yml'
+  pull_request:
+    paths:
+      - 'toru-tango/generator-v2.js'
+      - 'toru-tango/generator-v2.test.cjs'
+      - 'toru-tango/generator-test.html'
+      - 'toru-tango/sw.js'
+      - '.github/workflows/toru-tango-generator-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+      - name: JavaScript syntax
+        run: node --check toru-tango/generator-v2.js && node --check toru-tango/sw.js
+      - name: Regression test
+        run: node toru-tango/generator-v2.test.cjs

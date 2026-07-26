@@ -16,14 +16,14 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T19:33:00+09:00",
+  "updatedAt": "2026-07-26T22:41:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3950,
-  "ciStatus": "pending",
+  "pullRequestNumber": 4024,
+  "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
     {
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残4件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "弱い主出典残8件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T19:33:00+09:00",
-    "latestRegionalPullRequestNumber": 3950,
-    "latestCiRunNumber": 30198488052,
+    "latestCompletedAt": "2026-07-26T22:41:00+09:00",
+    "latestRegionalPullRequestNumber": 4024,
+    "latestCiRunNumber": 30204500277,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 224,
-    "primarySourceSlotsRechecked": 656,
+    "correctedMunicipalitiesRechecked": 252,
+    "primarySourceSlotsRechecked": 688,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -669,6 +669,164 @@
         "code": "27382",
         "service": "housingSupport",
         "name": "河南町"
+      },
+      {
+        "type": "primary_source_replaced",
+        "code": "17324",
+        "service": "postpartumCare",
+        "name": "川北町"
+      },
+      {
+        "type": "authoritative_source_retained_navigation_added",
+        "code": "17384",
+        "service": "postpartumCare",
+        "name": "志賀町"
+      },
+      {
+        "type": "authoritative_source_retained_navigation_added",
+        "code": "22221",
+        "service": "sickChildCare",
+        "name": "湖西市"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "22224",
+        "service": "housingSupport",
+        "name": "菊川市",
+        "outcome": "direct_user_page_maintained"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "22325",
+        "service": "sickChildCare",
+        "name": "函南町",
+        "outcome": "primary_source_replaced_with_provider_page"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "22344",
+        "service": "sickChildCare",
+        "name": "小山町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "23220",
+        "service": "schoolMeals",
+        "name": "稲沢市",
+        "outcome": "content_and_primary_source_corrected"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "23561",
+        "service": "postpartumCare",
+        "name": "設楽町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "23563",
+        "service": "postpartumCare",
+        "name": "豊根村",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "24212",
+        "service": "sickChildCare",
+        "name": "熊野市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "24212",
+        "service": "schoolMeals",
+        "name": "熊野市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "24212",
+        "service": "postpartumCare",
+        "name": "熊野市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "24214",
+        "service": "schoolMeals",
+        "name": "いなべ市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25207",
+        "service": "schoolMeals",
+        "name": "守山市",
+        "outcome": "content_and_primary_source_corrected"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25210",
+        "service": "schoolMeals",
+        "name": "野洲市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25425",
+        "service": "schoolMeals",
+        "name": "愛荘町",
+        "outcome": "content_and_primary_source_corrected"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25425",
+        "service": "postpartumCare",
+        "name": "愛荘町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25442",
+        "service": "schoolMeals",
+        "name": "甲良町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25442",
+        "service": "postpartumCare",
+        "name": "甲良町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27219",
+        "service": "schoolMeals",
+        "name": "和泉市",
+        "outcome": "primary_source_replaced_with_direct_budget_document"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27225",
+        "service": "schoolMeals",
+        "name": "高石市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27225",
+        "service": "housingSupport",
+        "name": "高石市",
+        "outcome": "direct_user_page_maintained"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "27226",
+        "service": "schoolMeals",
+        "name": "藤井寺市",
+        "outcome": "direct_user_page_maintained"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -753,9 +911,9 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 33,
+      "weakPrimarySource": 8,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 4,
+      "generalHousingMisclassification": 0,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -781,19 +939,25 @@
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
-    "latestNationalPullRequestNumber": 3941,
-    "latestPublicVerificationPullRequestNumber": 3943,
+    "latestNationalPullRequestNumber": 4016,
+    "latestPublicVerificationPullRequestNumber": 4018,
     "latestHousingBatch": {
-      "batch": 34,
-      "status": "validated_pending_region_merge",
-      "reviewedMunicipalityCount": 5,
-      "confirmedCorrectionCount": 5,
-      "statusToUnavailableCount": 0,
-      "verifiedReplacementOrClarificationCount": 5,
+      "batch": 35,
+      "status": "completed_public_verified_region_integrated",
+      "reviewedMunicipalityCount": 7,
+      "confirmedCorrectionCount": 7,
+      "statusToUnavailableCount": 4,
+      "verifiedReplacementOrClarificationCount": 3,
       "verifiedMaintainedCount": 0,
-      "remainingCandidates": 4,
-      "regionalPullRequestNumber": 3950,
-      "regionalWorkflowRunId": 30198488052,
+      "remainingCandidates": 0,
+      "regionalPullRequestNumber": 3967,
+      "regionalWorkflowRunId": 30199982431,
+      "nationalPullRequestNumber": 3969,
+      "nationalWorkflowRunId": 30200067283,
+      "publicVerificationPullRequestNumber": 3971,
+      "publicVerificationWorkflowRunId": 30200159859,
+      "finalRegionPullRequestNumber": 3973,
+      "finalRegionWorkflowRunId": 30200265382,
       "blocker": null
     },
     "stateReconciliation": {
@@ -816,7 +980,21 @@
         "generalHousingMisclassification": 104
       },
       "status": "resolved"
+    },
+    "latestWeakSourceBatch": {
+      "batch": 5,
+      "status": "regional_changes_validated",
+      "reviewedMunicipalityCount": 4,
+      "reviewedServiceCount": 5,
+      "confirmedSourceUpgradeCount": 1,
+      "authoritativeSourceRetainedWithNavigationCount": 2,
+      "directUserPageMaintainedCount": 2,
+      "contentCorrectionCount": 0,
+      "remainingCandidates": 8,
+      "regionalPullRequestNumber": 4024,
+      "regionalWorkflowRunId": 30204500277,
+      "blocker": null
     }
   },
-  "lastAction": "住宅支援分類第34群の川西市・大垣市・輪之内町・南伊豆町・松崎町を、現行の若年・子育て・新婚世帯向け住宅支援へ差し替えた。"
+  "lastAction": "弱い主出典第5群5制度を公式情報で再確認し、和泉市学校給食を令和8年度予算概要へ主出典更新し、残る4制度の現行根拠を補強した。"
 }

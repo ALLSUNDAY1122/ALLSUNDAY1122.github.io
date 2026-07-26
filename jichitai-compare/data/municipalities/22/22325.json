@@ -7,12 +7,15 @@
   "officialUrl": "https://www.town.kannami.shizuoka.jp/",
   "status": "verified",
   "summary": "函南町の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-26",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から高校3年生相当年齢の年度末まで、保険診療の自己負担分を補助する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達した日以後の最初の3月31日まで",
         "residence": "函南町に住所があり、公的医療保険に加入しているこども",
@@ -20,26 +23,52 @@
         "application": "こども医療費受給者証の交付申請が必要",
         "excluded": "保険適用外費用や第三者行為による治療等は対象外"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/soshiki/1010/3/976.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/soshiki/1010/3/976.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
-      "summary": "病児・病後児を専用スペースで一時保育する事業を、町内2施設で実施する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 11},
-      "details": {
-        "program": "病児保育事業（病児・病後児保育事業）",
-        "facilities": "函南さくら保育園、函南平出クリニック",
-        "care": "病院・保育所等に付設された専用スペースで看護師等が一時保育",
-        "planningAge": "町計画では0歳から11歳の推計児童数を基に利用見込みを算出",
-        "capacity": "令和8年度の利用見込み1,448人に対し確保方策2,775人",
-        "application": "利用施設への事前登録・予約等が必要"
+      "summary": "生後6か月から10歳程度までの病児を函南平出クリニックの専用保育室で預かり、函南さくら保育園では病後児保育を実施する。",
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 10
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/material/files/group/11/3kikodomokosodatekeikaku.pdf", "checkedAt": "2026-07-22"}
+      "details": {
+        "program": "病児・病後児保育事業",
+        "sickFacility": "函南ペンギン病児保育室（函南平出クリニック）",
+        "recoveryFacility": "函南さくら保育園（健康支援一時預り・病後児保育）",
+        "target": "函南平出クリニックは生後6か月から10歳程度までの急性期の病児",
+        "hours": "函南平出クリニックは月曜日から金曜日の8時30分から17時30分",
+        "capacity": "函南平出クリニックは定員15人",
+        "fee": "函南町民は函南平出クリニックの病児保育利用料無料。食事・送迎等は別途負担の場合あり",
+        "application": "事前登録後、施設へ予約。年齢相当の予防接種等の利用条件を確認"
+      },
+      "source": {
+        "url": "https://website2.infomity.net/8120000051/kidscare.html",
+        "checkedAt": "2026-07-26"
+      },
+      "additionalSources": [
+        {
+          "url": "https://kannamisakura-h.com/info/",
+          "checkedAt": "2026-07-26",
+          "description": "函南さくら保育園が健康支援一時預り（病後児保育）を実施することを確認"
+        },
+        {
+          "url": "https://www.town.kannami.shizuoka.jp/material/files/group/11/3kikodomokosodatekeikaku.pdf",
+          "checkedAt": "2026-07-26",
+          "description": "町計画における病児・病後児保育の実施施設と確保方策"
+        }
+      ]
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は、幼児教育・保育の無償化対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "保育所・認定こども園等の3～5歳児は利用料無料",
         "underThree": "0～2歳児は住民税非課税世帯が無償化対象",
@@ -47,12 +76,18 @@
         "temporaryServices": "保育の必要性認定がある場合、認可外保育施設等は3～5歳月額37,000円、非課税世帯0～2歳月額42,000円まで",
         "excludedCosts": "給食費、行事費等の実費は別途必要な場合がある"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/soshiki/1010/5/661.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/soshiki/1010/5/661.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "令和8年度は小学校給食費を無償化し、中学校は1食355円・通常月額5,900円とする。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "accounting": "令和8年4月から町が集金・管理する公会計へ移行",
         "elementary": "1食295円、年間183回だが国の施策により保護者負担なし",
@@ -60,12 +95,18 @@
         "kindergarten": "1食253円、年間157回、通常月額3,600円",
         "application": "小学校も学校給食の申込みは必要"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/kosodate_kyoiku/kyoikuiinkai/gakkoukyuusyoku/6172.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/kosodate_kyoiku/kyoikuiinkai/gakkoukyuusyoku/6172.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子等へ、訪問・宿泊・日帰り・短時間型などの産後ケアを提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "函南町に住民登録がある妊婦、出産後の母と原則1歳未満の乳児",
         "visit": "育児支援訪問は短時間型デイケアと合わせ6回以内、無料",
@@ -74,12 +115,18 @@
         "shortDayCare": "1歳未満、育児支援訪問と合わせ6回以内、無料",
         "reduction": "生活保護世帯・住民税非課税世帯は無料"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/soshiki/1008/5/1090.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/soshiki/1008/5/1090.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "令和8年4月から、保育所等を定期利用していない乳幼児を対象にこども誰でも通園制度を実施する。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "こども誰でも通園制度（乳児等通園支援事業）",
         "start": "令和8年4月開始",
@@ -88,7 +135,10 @@
         "limit": "月10時間を上限とする制度",
         "application": "町の制度案内に従い利用登録・施設予約を行う"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/soshiki/1010/5/6246.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/soshiki/1010/5/6246.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -101,7 +151,10 @@
         "residence": "函南町に5年以上継続して居住する意思があること",
         "deadline": "原則転入日から1年以内。令和8年度申請期限は令和9年1月29日"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/kurashi_tetsuzuki/iju_teiju/2362.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/kurashi_tetsuzuki/iju_teiju/2362.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -113,7 +166,10 @@
         "fee": "家庭ごみは1日300キログラムまで無料。超過分は10キログラムごと40円",
         "condition": "ごみ置場では収集しないため、分別して各自で直接搬入"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/soshiki/1007/1/1/381.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/soshiki/1007/1/1/381.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -125,7 +181,10 @@
         "reservoir": "ため池ハザードマップを掲載",
         "evacuation": "避難所、避難経路、マイ・タイムライン、非常持出品等を案内"
       },
-      "source": {"url": "https://www.town.kannami.shizuoka.jp/kurashi_tetsuzuki/bosai_shobo_kotsuanzen/1/3/2462.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.town.kannami.shizuoka.jp/kurashi_tetsuzuki/bosai_shobo_kotsuanzen/1/3/2462.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
