@@ -63,6 +63,13 @@ export function AppButton({
   variant?: ButtonVariant;
   disabled?: boolean;
 }) {
+  const variantStyle = {
+    primary: styles.buttonPrimary,
+    secondary: styles.buttonSecondary,
+    danger: styles.buttonDanger,
+    success: styles.buttonSuccess
+  }[variant];
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -70,7 +77,7 @@ export function AppButton({
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
-        styles[`button_${variant}`],
+        variantStyle,
         pressed && !disabled && styles.pressed,
         disabled && styles.disabled
       ]}
@@ -87,7 +94,11 @@ export function AppButton({
   );
 }
 
-export function Field({ label, multiline, ...props }: TextInputProps & { label: string }) {
+export function Field({
+  label,
+  multiline,
+  ...props
+}: TextInputProps & { label: string }) {
   return (
     <View style={styles.fieldWrap}>
       <Text style={styles.label}>{label}</Text>
@@ -187,14 +198,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10
   },
-  button_primary: { backgroundColor: colors.primary },
-  button_secondary: {
+  buttonPrimary: { backgroundColor: colors.primary },
+  buttonSecondary: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
     borderWidth: 1
   },
-  button_danger: { backgroundColor: colors.danger },
-  button_success: { backgroundColor: colors.success },
+  buttonDanger: { backgroundColor: colors.danger },
+  buttonSuccess: { backgroundColor: colors.success },
   buttonText: { color: '#ffffff', fontWeight: '800' },
   secondaryButtonText: { color: colors.text },
   pressed: { opacity: 0.72 },
