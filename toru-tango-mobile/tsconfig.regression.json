@@ -1,15 +1,21 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
+    "strict": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "ignoreDeprecations": "6.0",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "noEmit": false,
     "outDir": ".tmp-regression",
     "rootDir": ".",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "target": "ES2022",
     "declaration": false,
     "sourceMap": false,
-    "incremental": false
+    "incremental": false,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "src/types/index.ts",
