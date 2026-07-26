@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#4f46e5">
+  <title>撮る単語帳 ベータ版</title>
+  <style>
+    :root{--bg:#f4f6fb;--surface:#fff;--text:#151821;--muted:#667085;--primary:#4f46e5;--line:#dfe3ec;--danger:#c62828;--success:#16803c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif}.wrap{max-width:780px;margin:auto;padding:16px 12px 90px}.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:22px;color:#fff;padding:20px}.hero h1{margin:0;font-size:1.7rem}.hero p{margin:6px 0 0;opacity:.9}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0}.tab,.btn{border:0;border-radius:12px;font:inherit;font-weight:800;min-height:44px;padding:10px 12px}.tab{background:var(--surface);border:1px solid var(--line);color:var(--text)}.tab.active,.btn{background:var(--primary);color:#fff}.btn.secondary{background:var(--surface);border:1px solid var(--line);color:var(--text)}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.panel{display:none}.panel.active{display:block}.section{background:var(--surface);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;padding:15px}.section h2{font-size:1.08rem;margin:0 0 10px}.muted{color:var(--muted);font-size:.88rem;line-height:1.55}.label{color:var(--muted);display:block;font-size:.82rem;font-weight:700;margin:10px 0 5px}textarea,input,select{background:#f8f9fc;border:1px solid var(--line);border-radius:12px;color:var(--text);font:inherit;padding:11px;width:100%}textarea{min-height:130px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.status{background:#eef0ff;border-radius:12px;color:#3730a3;font-size:.88rem;margin-top:10px;padding:10px}.status.error{background:#fff0f0;color:#9b1c1c}.badge{background:#eef0ff;border-radius:999px;color:#3730a3;display:inline-block;font-size:.75rem;font-weight:800;padding:4px 8px}.cardItem{border-top:1px solid var(--line);padding:14px 0}.face{background:#f8f9fc;border:1px solid var(--line);border-radius:14px;margin-top:8px;padding:12px}.faceLabel{color:var(--primary);font-size:.72rem;font-weight:900;letter-spacing:1.5px}.faceText{font-size:1rem;font-weight:700;line-height:1.55;margin-top:5px;overflow-wrap:anywhere}.flashcard{align-items:center;background:var(--surface);border:2px solid var(--primary);border-radius:24px;display:flex;flex-direction:column;justify-content:center;min-height:330px;padding:28px 20px;text-align:center;user-select:none}.flashcard:active{opacity:.8}.flashSide{color:var(--primary);font-size:.8rem;font-weight:900;letter-spacing:2px}.flashText{font-size:1.5rem;font-weight:850;line-height:1.55;margin:28px 0}.flipHint{color:var(--muted);font-size:.78rem}.empty{color:var(--muted);padding:28px 8px;text-align:center}.progress{background:var(--line);border-radius:99px;height:8px;margin-bottom:12px;overflow:hidden}.bar{background:var(--primary);height:100%;width:0}.counter{color:var(--muted);font-size:.85rem;text-align:center;margin-top:10px}.hidden{display:none!important}@media(max-width:560px){.grid{grid-template-columns:1fr}.tabs{font-size:.86rem}.btn{flex:1}.flashText{font-size:1.28rem}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero"><h1>撮る単語帳</h1><p>表で考え、裏で確認する。両面を読み上げられます。</p></header>
+  <nav class="tabs">
+    <button class="tab active" data-tab="create">作る</button>
+    <button class="tab" data-tab="cards">単語帳</button>
+    <button class="tab" data-tab="study">学習</button>
+    <button class="tab" data-tab="settings">設定</button>
+  </nav>
+
+  <section id="create" class="panel active">
+    <div class="section">
+      <h2>教材から作問</h2>
+      <p class="muted">AI作問と端末内簡易作問は別機能です。AIが未接続の場合、勝手に簡易作問へ切り替えません。</p>
+      <textarea id="source" placeholder="教材本文を貼り付けてください"></textarea>
+      <div class="grid">
+        <div><label class="label">形式</label><select id="type"><option value="mix">一問一答＋穴埋め</option><option value="qa">一問一答</option><option value="cloze">穴埋め</option></select></div>
+        <div><label class="label">難易度</label><select id="difficulty"><option value="easy">やさしい</option><option value="normal" selected>標準</option><option value="hard">難しい</option></select></div>
+        <div><label class="label">最大枚数</label><select id="count"><option>5</option><option selected>10</option><option>15</option><option>20</option></select></div>
+      </div>
+      <div class="row">
+        <button id="aiGenerate" class="btn">AIで作問</button>
+        <button id="localGenerate" class="btn secondary">端末内で簡易作問</button>
+      </div>
+      <div id="status" class="status">AI接続状態を確認中です。</div>
+      <textarea id="generated" class="hidden" placeholder="表｜裏"></textarea>
+      <button id="saveGenerated" class="btn hidden" style="margin-top:10px">生成カードを保存</button>
+    </div>
+
+    <div class="section">
+      <h2>1枚ずつ作る</h2>
+      <label class="label">表</label><input id="front" placeholder="問題・単語">
+      <label class="label">裏</label><input id="back" placeholder="答え・意味">
+      <button id="saveOne" class="btn" style="margin-top:10px">カードを保存</button>
+    </div>
+  </section>
+
+  <section id="cards" class="panel">
+    <div class="section">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-top:0"><h2>保存済み <span id="cardCount">0</span>枚</h2><button id="clearAll" class="btn danger">全削除</button></div>
+      <div id="cardList"></div>
+    </div>
+  </section>
+
+  <section id="study" class="panel">
+    <div class="section">
+      <div class="row" style="margin-top:0"><button id="startStudy" class="btn">学習を開始</button><button id="shuffleStudy" class="btn secondary">並べ直す</button></div>
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <div id="studyEmpty" class="empty">カードを保存してから学習を開始してください。</div>
+      <div id="studyArea" class="hidden">
+        <div id="flashcard" class="flashcard" role="button" tabindex="0">
+          <div id="flashSide" class="flashSide">表</div>
+          <div id="flashText" class="flashText"></div>
+          <div id="flipHint" class="flipHint">タップして裏へ</div>
+        </div>
+        <div id="counter" class="counter"></div>
+        <div class="row">
+          <button id="speakFront" class="btn secondary">表を読む</button>
+          <button id="speakBack" class="btn secondary">裏を読む</button>
+        </div>
+        <div id="gradeRow" class="row hidden">
+          <button id="again" class="btn danger">もう一度</button>
+          <button id="known" class="btn success">覚えた</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="settings" class="panel">
+    <div class="section">
+      <h2>AI API設定</h2>
+      <p class="muted">APIキーはHTMLへ入力しません。Cloudflare Workerの公開URLだけを設定します。</p>
+      <label class="label">Worker URL</label>
+      <input id="apiUrl" placeholder="https://...workers.dev">
+      <button id="saveApiUrl" class="btn" style="margin-top:10px">URLを保存</button>
+      <div id="apiStatus" class="status"></div>
+    </div>
+    <div class="section">
+      <h2>現在の試用版について</h2>
+      <p class="muted">このベータ版は既存HTML版とは別の保存領域を使います。以前作成された重複カードは表示されません。</p>
+    </div>
+  </section>
+</main>
+<script src="config.js?v=20260726"></script>
+<script src="generator-v2.js?v=20260726"></script>
+<script>
+(() => {
+  'use strict';
+  const CARD_KEY='toru-tango-beta-cards-v1';
+  const URL_KEY='toru-tango-ai-url-v1';
+  const $=(s)=>document.querySelector(s);
+  const norm=(s)=>String(s??'').trim().replace(/\s+/g,' ').toLocaleLowerCase('ja-JP');
+  let cards=[];
+  let queue=[];
+  let position=0;
+  let backVisible=false;
+
+  try{const parsed=JSON.parse(localStorage.getItem(CARD_KEY)||'[]');cards=Array.isArray(parsed)?parsed:[]}catch{cards=[]}
+
+  const configuredUrl=()=>localStorage.getItem(URL_KEY)||window.TORU_TANGO_CONFIG?.aiApiUrl||'';
+  const endpoint=()=>{const base=configuredUrl().trim();if(!base)return'';return base.endsWith('/generate')?base:base.replace(/\/$/,'')+'/generate'};
+  const persist=()=>{localStorage.setItem(CARD_KEY,JSON.stringify(cards));renderCards()};
+  const speak=(text)=>{if(!('speechSynthesis'in window))return alert('このブラウザは読み上げに対応していません。');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ja-JP';u.rate=.95;speechSynthesis.speak(u)};
+  const addCard=(front,back)=>{front=String(front??'').trim();back=String(back??'').trim();if(!front||!back)return false;if(cards.some(c=>norm(c.front)===norm(front)&&norm(c.back)===norm(back)))return false;cards.push({id:Date.now()+Math.random(),front,back,correct:0,wrong:0});return true};
+  const parseLines=(text)=>String(text).split(/\n/).map(line=>{const parts=line.split(/[｜|\t]/);return parts.length>=2?{front:parts.shift().trim(),back:parts.join('｜').trim()}:null}).filter(Boolean);
+
+  document.querySelectorAll('.tab').forEach(button=>button.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===button));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===button.dataset.tab));});
+
+  function renderCards(){
+    $('#cardCount').textContent=cards.length;
+    $('#cardList').innerHTML=cards.length?cards.map((card,index)=>`<article class="cardItem"><div class="face"><div class="faceLabel">表</div><div class="faceText">${escapeHtml(card.front)}</div></div><div class="face"><div class="faceLabel">裏</div><div class="faceText">${escapeHtml(card.back)}</div></div><div class="row"><button class="btn secondary" data-read-front="${index}">表を読む</button><button class="btn secondary" data-read-back="${index}">裏を読む</button><button class="btn danger" data-delete="${index}">削除</button></div></article>`).join(''):'<div class="empty">カードはまだありません。</div>';
+    document.querySelectorAll('[data-read-front]').forEach(b=>b.onclick=()=>speak(cards[Number(b.dataset.readFront)].front));
+    document.querySelectorAll('[data-read-back]').forEach(b=>b.onclick=()=>speak(cards[Number(b.dataset.readBack)].back));
+    document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.delete);if(confirm('このカードを削除しますか？')){cards.splice(i,1);persist()}});
+  }
+
+  function escapeHtml(value){return String(value).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function setGenerated(lines,message){$('#generated').value=lines.join('\n');$('#generated').classList.toggle('hidden',!lines.length);$('#saveGenerated').classList.toggle('hidden',!lines.length);$('#status').className='status';$('#status').textContent=message}
+
+  $('#localGenerate').onclick=()=>{
+    const text=$('#source').value.trim();
+    if(text.length<30)return setGenerated([],'教材本文を30文字以上入力してください。');
+    const lines=window.ToruTangoGeneratorV2.generateQuestionsV2(text,Number($('#count').value),$('#type').value,$('#difficulty').value);
+    setGenerated(lines,lines.length?`端末内の簡易作問で${lines.length}枚作成しました。AIは使用していません。`:'意味のあるカードを作れませんでした。');
+  };
+
+  $('#aiGenerate').onclick=async()=>{
+    const text=$('#source').value.trim();
+    if(text.length<20)return setGenerated([],'教材本文を20文字以上入力してください。');
+    const url=endpoint();
+    if(!url){$('#status').className='status error';$('#status').textContent='AI APIは未接続です。設定タブでCloudflare Worker URLを登録してください。';return}
+    $('#status').className='status';$('#status').textContent='AIで作問中です。';
+    try{
+      const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),45000);
+      const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,count:Number($('#count').value),type:$('#type').value,difficulty:$('#difficulty').value}),signal:controller.signal});
+      clearTimeout(timer);
+      const payload=await response.json();
+      if(!response.ok)throw new Error(payload.error||`HTTP ${response.status}`);
+      const seen=new Set();const lines=(Array.isArray(payload.questions)?payload.questions:[]).map(q=>({front:String(q.question||'').trim(),back:String(q.answer||'').trim()})).filter(q=>{const key=norm(q.front)+'|'+norm(q.back);if(!q.front||!q.back||seen.has(key))return false;seen.add(key);return true}).map(q=>`${q.front}｜${q.back}`);
+      setGenerated(lines,`AI（${payload.model||'接続モデル'}）で${lines.length}枚作成しました。`);
+    }catch(error){$('#status').className='status error';$('#status').textContent=`AI作問に失敗しました: ${error.name==='AbortError'?'時間切れ':error.message}。端末内簡易作問へは自動切替していません。`}
+  };
+
+  $('#saveGenerated').onclick=()=>{let added=0;for(const item of parseLines($('#generated').value)){if(addCard(item.front,item.back))added++}persist();alert(`${added}枚保存しました。`)};
+  $('#saveOne').onclick=()=>{if(!addCard($('#front').value,$('#back').value))return alert('未入力または同じカードが保存済みです。');$('#front').value='';$('#back').value='';persist()};
+  $('#clearAll').onclick=()=>{if(confirm('すべてのカードを削除しますか？')&&confirm('取り消せません。実行しますか？')){cards=[];queue=[];persist();renderStudy()}};
+
+  function startStudy(){queue=[...cards].sort(()=>Math.random()-.5).map(c=>c.id);position=0;backVisible=false;renderStudy()}
+  function currentCard(){return cards.find(c=>c.id===queue[position])||null}
+  function renderStudy(){
+    const card=currentCard();const active=Boolean(card);
+    $('#studyEmpty').classList.toggle('hidden',active);
+    $('#studyArea').classList.toggle('hidden',!active);
+    if(!active){$('#studyEmpty').textContent=queue.length&&position>=queue.length?'学習完了です。':'カードを保存してから学習を開始してください。';$('#bar').style.width=queue.length?'100%':'0%';return}
+    $('#flashSide').textContent=backVisible?'裏':'表';
+    $('#flashText').textContent=backVisible?card.back:card.front;
+    $('#flipHint').textContent=`タップして${backVisible?'表':'裏'}へ`;
+    $('#counter').textContent=`${position+1} / ${queue.length}`;
+    $('#bar').style.width=`${position/queue.length*100}%`;
+    $('#gradeRow').classList.toggle('hidden',!backVisible);
+  }
+  function flip(){if(!currentCard())return;backVisible=!backVisible;renderStudy()}
+  function grade(ok){const card=currentCard();if(!card)return;ok?card.correct++:card.wrong++;if(!ok)queue.push(card.id);position++;backVisible=false;persist();renderStudy()}
+  $('#startStudy').onclick=startStudy;$('#shuffleStudy').onclick=startStudy;$('#flashcard').onclick=flip;$('#flashcard').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};$('#speakFront').onclick=()=>{const c=currentCard();if(c)speak(c.front)};$('#speakBack').onclick=()=>{const c=currentCard();if(c)speak(c.back)};$('#again').onclick=()=>grade(false);$('#known').onclick=()=>grade(true);
+
+  $('#apiUrl').value=configuredUrl();
+  function renderApi(){const url=configuredUrl();$('#apiStatus').textContent=url?`設定済み: ${url}`:'未設定です。AI作問は利用できません。';$('#status').textContent=url?'AI API URLが設定されています。':'AI APIは未接続です。端末内簡易作問は別ボタンで利用できます。'}
+  $('#saveApiUrl').onclick=()=>{const value=$('#apiUrl').value.trim();if(value&&!/^https:\/\//.test(value))return alert('https://から始まるURLを入力してください。');value?localStorage.setItem(URL_KEY,value):localStorage.removeItem(URL_KEY);renderApi()};
+
+  renderCards();renderStudy();renderApi();
+})();
+</script>
+</body>
+</html>
