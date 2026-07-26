@@ -1,0 +1,125 @@
+name: Temporary Central A Housing Batch 32
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch32-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-housing-batch32-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply housing classification batch 32
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root='jichitai-compare';
+          const checkedAt='2026-07-26';
+          const updatedAt='2026-07-26T18:43:00+09:00';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const decisions=[
+            {code:'24562',name:'紀宝町',type:'current_newlywed_housing_replacement',status:'verified',summary:'令和8年1月1日から令和9年3月31日までに婚姻した39歳以下の夫婦へ、住居・引越・リフォーム費を最大60万円補助する。',source:'https://www.town.kiho.lg.jp/news/45052/',basis:'令和8年度の結婚新生活支援について、婚姻期間・夫婦年齢・所得・町内住宅・対象経費・最大60万円を確認'},
+            {code:'28100',name:'神戸市',type:'child_household_parent_nearby_housing_replacement',status:'verified',summary:'2026年4月1日以降、若年夫婦または子育て世帯が親世帯と同居・近居する住みかえに10万円、市外転入の場合は20万円を補助する。',source:'https://www.city.kobe.lg.jp/a01110/kurashi/sumai/jutaku/information/shinkonportal/oyako/r3_oyako.html',basis:'令和8年度の住みかえーるで、若年夫婦・未就学児等の子育て世帯、親子同居または2km未満の近居、10万円・市外転入20万円を確認'},
+            {code:'28203',name:'明石市',type:'general_home_remodel_misclassification',status:'unavailable',summary:'子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。',source:'https://www.city.akashi.lg.jp/sangyou/sangyou_ka/jyutakurifomu.html',basis:'令和8年度住宅リフォーム助成は市内在住・所有・居住住宅を対象とする一般制度で、子育て等を対象要件としない'},
+            {code:'28204',name:'西宮市',type:'general_home_remodel_misclassification',status:'unavailable',summary:'子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。',source:'https://www.nishi.or.jp/kurashi/sumai/josei/R8-2Reform.html',basis:'令和8年度住宅リフォーム助成は市内業者による自宅改修を対象とする一般制度で、子育て等を対象要件としない'},
+            {code:'28205',name:'洲本市',type:'current_newlywed_housing_replacement',status:'verified',summary:'令和8年1月1日から令和9年3月31日までに婚姻等をした39歳以下の夫婦等へ、住宅購入・賃借・引越・リフォーム費を最大60万円補助する。',source:'https://www.city.sumoto.lg.jp/soshiki/7/31520.html',basis:'令和8年度結婚新生活支援について、婚姻等期間・年齢・所得・対象住宅費・最大60万円を確認'}
+          ];
+
+          function writePreservingStyle(file,obj){
+            const raw=fs.readFileSync(file,'utf8');
+            const pretty=raw.startsWith('{\n');
+            fs.writeFileSync(file,JSON.stringify(obj,null,pretty?2:0)+'\n');
+          }
+
+          const reviewed=[];
+          for(const decision of decisions){
+            const pref=decision.code.slice(0,2);
+            const dataPath=path.join(root,'data/municipalities',pref,`${decision.code}.json`);
+            const taskPath=path.join(root,'operations/tasks',`${decision.code}.json`);
+            const municipality=JSON.parse(fs.readFileSync(dataPath,'utf8'));
+            const svc=municipality.services?.housingSupport;
+            if(!svc)throw new Error(`${decision.code}: missing housingSupport`);
+            const before={status:svc.status,summary:svc.summary,source:svc.source?.url};
+            svc.status=decision.status;
+            svc.summary=decision.summary;
+            svc.source={url:decision.source,checkedAt};
+            if(decision.code==='24562')svc.details={program:'紀宝町結婚新生活支援補助金',eligibleMarriage:'令和8年1月1日から令和9年3月31日までに婚姻した夫婦',ageCondition:'婚姻日の年齢が夫婦とも39歳以下',incomeCondition:'夫婦の合計所得500万円未満等',coveredCosts:'住宅購入・賃借費、引越費、リフォーム費',maximum:'夫婦とも29歳以下は最大60万円、その他は最大30万円',applicationDeadline:'令和9年3月31日'};
+            if(decision.code==='28100')svc.details={program:'住みかえーる（親・子世帯の近居・同居）',moveDate:'世帯全員が2026年4月1日以降に住みかえ',familyTarget:'年齢合計90歳以下の若年夫婦世帯、令和8年度に未就学児がいる子育て世帯、出産予定世帯等',residenceType:'親・子世帯が同居または同一小学校区内・直線距離2km未満で近居',amount:'子世帯が市外から転入する場合20万円、その他10万円',applicationPeriod:'2026年6月1日から最長2027年3月31日まで'};
+            if(decision.code==='28203')svc.details={reviewedProgram:'2026年度明石市住宅リフォーム助成事業',generalSupport:'市内事業者による自己居住住宅の工事費20万円以上に対し10％・上限10万円を助成',classificationReason:'子育て世帯・新婚世帯・三世代世帯を対象要件としない一般リフォーム制度のため対象外'};
+            if(decision.code==='28204')svc.details={reviewedProgram:'令和8年度西宮市住宅リフォーム助成事業',generalSupport:'市内施工業者による自宅の改修・補修費の一部を助成',classificationReason:'子育て世帯・新婚世帯・三世代世帯を対象要件としない一般リフォーム制度のため対象外'};
+            if(decision.code==='28205')svc.details={program:'令和8年度洲本市結婚新生活支援事業',eligibleMarriage:'令和8年1月1日から令和9年3月31日までに婚姻またはパートナーシップ宣誓',ageCondition:'婚姻日等に夫婦等がいずれも39歳以下',incomeCondition:'令和7年分の所得合計500万円未満等',coveredCosts:'住宅購入費、家賃等、引越費、リフォーム費',maximum:'夫婦等とも29歳以下は最大60万円、その他は最大30万円',applicationPeriod:'令和8年6月1日から令和9年3月31日まで'};
+            municipality.updatedAt=checkedAt;
+            writePreservingStyle(dataPath,municipality);
+
+            const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
+            const statuses=Object.values(municipality.services).map(v=>v.status);
+            task.status='merged';task.currentService=null;task.nextServiceIndex=9;task.completedServices=keys;
+            task.verifiedCount=statuses.filter(v=>v==='verified').length;task.researchingCount=statuses.filter(v=>v==='researching').length;task.unavailableCount=statuses.filter(v=>v==='unavailable').length;task.needsMediumReviewCount=statuses.filter(v=>v==='needs_medium_review').length;
+            task.currentBranch='region/central';task.pullRequestNumber=Number(process.env.PR_NUMBER);task.lastCheckedAt=checkedAt;task.lastUpdatedAt=updatedAt;task.lastUpdatedBy='中日本調査班A';
+            task.officialSources=[...new Set(keys.map(key=>municipality.services[key]?.source?.url).filter(Boolean))];
+            task.notes=[...(task.notes||[]),`2026-07-26: 住宅支援分類第32群で公式利用者向けページを独立確認し、${decision.type}として判定。`];task.blockers=task.blockers||[];
+            writePreservingStyle(taskPath,task);
+            reviewed.push({code:decision.code,name:decision.name,service:'housingSupport',correctionType:decision.type,beforeStatus:before.status,afterStatus:decision.status,beforeSummary:before.summary,afterSummary:decision.summary,officialSource:decision.source,officialBasis:decision.basis,contentChanged:before.status!==decision.status||before.summary!==decision.summary||before.source!==decision.source});
+          }
+
+          const audit={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch32-decisions-20260726',decidedAt:updatedAt,session:'中日本調査班A',coordinatorSession:'統括B',category:'generalHousingMisclassification',regionalPullRequestNumber:Number(process.env.PR_NUMBER),runnerWorkflowRunId:Number(process.env.RUN_ID),reviewedMunicipalityCount:5,confirmedCorrectionCount:5,statusToUnavailableCount:2,verifiedReplacementOrClarificationCount:3,verifiedMaintainedCount:0,reviewed,causeScan:{previousRemainingCandidates:19,reviewedHighRiskCandidates:5,remainingCandidates:14},issue3141:{unresolvedItemCount:19,unresolvedMunicipalityCount:19,changed:false},policy:['一般リフォーム・耐震・移住給付のみの制度は子育て住宅支援へ分類しない','新婚世帯の住居費補助はverified対象に含める','若年夫婦・子育て世帯の親子同居・近居支援はverified対象に含める'],result:{unresolvedConfirmedErrorCount:0,releaseBlocker:'none'}};
+          fs.writeFileSync(path.join(root,'operations/audits/central-a-housing-classification-batch32-decisions-20260726.json'),JSON.stringify(audit,null,2)+'\n');
+
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          checkpoint.updatedAt=updatedAt;checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);checkpoint.ciStatus='success';checkpoint.stateSyncPullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.nextAction='一般住宅・移住制度の分類候補残14件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';
+          checkpoint.qualityReaudit.latestCompletedAt=updatedAt;checkpoint.qualityReaudit.latestRegionalPullRequestNumber=Number(process.env.PR_NUMBER);checkpoint.qualityReaudit.correctedMunicipalitiesRechecked=214;checkpoint.qualityReaudit.primarySourceSlotsRechecked=646;checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification=14;
+          checkpoint.qualityReaudit.nextPriority=['一般住宅・移住制度の分類候補残14件','弱い主出典残33候補','Issue #3141の19項目を公式利用条件公開時のみ解消'];
+          checkpoint.qualityReaudit.latestHousingBatch={batch:32,status:'regional_corrected_pending_national_sync',reviewedMunicipalityCount:5,confirmedCorrectionCount:5,statusToUnavailableCount:2,verifiedReplacementOrClarificationCount:3,verifiedMaintainedCount:0,remainingCandidates:14,regionalPullRequestNumber:Number(process.env.PR_NUMBER),regionalWorkflowRunId:Number(process.env.RUN_ID),blocker:null};
+          checkpoint.lastAction='住宅支援分類第32群として、明石市・西宮市をunavailableへ修正し、紀宝町・神戸市・洲本市を現行の新婚・子育て住宅支援へ差し替えた。';
+          writePreservingStyle(checkpointPath,checkpoint);
+          const regionPath=path.join(root,'operations/control/regions/central.json');const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));region.updatedAt=updatedAt;region.latestCentralAHousingBatch=checkpoint.qualityReaudit.latestHousingBatch;region.lastAction=checkpoint.lastAction;writePreservingStyle(regionPath,region);
+          const trigger=path.join(root,'operations/control/central-a-housing-batch32-trigger-20260726.json');if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Reject unexpected changes and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git status --short | awk '{print $2}')
+          for file in "${changed[@]}"; do
+            case "$file" in
+              jichitai-compare/data/municipalities/24/24562.json|jichitai-compare/data/municipalities/28/28100.json|jichitai-compare/data/municipalities/28/28203.json|jichitai-compare/data/municipalities/28/28204.json|jichitai-compare/data/municipalities/28/28205.json|jichitai-compare/operations/tasks/24562.json|jichitai-compare/operations/tasks/28100.json|jichitai-compare/operations/tasks/28203.json|jichitai-compare/operations/tasks/28204.json|jichitai-compare/operations/tasks/28205.json|jichitai-compare/operations/audits/central-a-housing-classification-batch32-decisions-20260726.json|jichitai-compare/operations/control/session-checkpoints/central-a.json|jichitai-compare/operations/control/regions/central.json|jichitai-compare/data/generated/municipalities.json|jichitai-compare/data/generated/municipality-pages.json|jichitai-compare/operations/progress.json|jichitai-compare/municipality/24562/index.html|jichitai-compare/municipality/28100/index.html|jichitai-compare/municipality/28203/index.html|jichitai-compare/municipality/28204/index.html|jichitai-compare/municipality/28205/index.html|jichitai-compare/sitemap.xml|jichitai-compare/operations/control/central-a-housing-batch32-trigger-20260726.json) ;;
+              *) echo "Unexpected change: $file"; exit 1 ;;
+            esac
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'fix: 中日本A住宅支援分類第32群を修正'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
