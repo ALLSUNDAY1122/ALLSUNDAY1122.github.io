@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#4f46e5">
   <title>撮る単語帳 ベータ版</title>
   <style>
-    :root{--bg:#f4f6fb;--surface:#fff;--text:#151821;--muted:#667085;--primary:#4f46e5;--line:#dfe3ec;--danger:#c62828;--success:#16803c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif}.wrap{max-width:780px;margin:auto;padding:16px 12px 90px}.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:22px;color:#fff;padding:20px}.hero h1{margin:0;font-size:1.7rem}.hero p{margin:6px 0 0;opacity:.9}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0}.tab,.btn{border:0;border-radius:12px;font:inherit;font-weight:800;min-height:44px;padding:10px 12px}.tab{background:var(--surface);border:1px solid var(--line);color:var(--text)}.tab.active,.btn{background:var(--primary);color:#fff}.btn.secondary{background:var(--surface);border:1px solid var(--line);color:var(--text)}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.panel{display:none}.panel.active{display:block}.section{background:var(--surface);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;padding:15px}.section h2{font-size:1.08rem;margin:0 0 10px}.muted{color:var(--muted);font-size:.88rem;line-height:1.55}.label{color:var(--muted);display:block;font-size:.82rem;font-weight:700;margin:10px 0 5px}textarea,input,select{background:#f8f9fc;border:1px solid var(--line);border-radius:12px;color:var(--text);font:inherit;padding:11px;width:100%}textarea{min-height:130px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.status{background:#eef0ff;border-radius:12px;color:#3730a3;font-size:.88rem;margin-top:10px;padding:10px}.status.error{background:#fff0f0;color:#9b1c1c}.badge{background:#eef0ff;border-radius:999px;color:#3730a3;display:inline-block;font-size:.75rem;font-weight:800;padding:4px 8px}.cardItem{border-top:1px solid var(--line);padding:14px 0}.face{background:#f8f9fc;border:1px solid var(--line);border-radius:14px;margin-top:8px;padding:12px}.faceLabel{color:var(--primary);font-size:.72rem;font-weight:900;letter-spacing:1.5px}.faceText{font-size:1rem;font-weight:700;line-height:1.55;margin-top:5px;overflow-wrap:anywhere}.flashcard{align-items:center;background:var(--surface);border:2px solid var(--primary);border-radius:24px;display:flex;flex-direction:column;justify-content:center;min-height:330px;padding:28px 20px;text-align:center;user-select:none}.flashcard:active{opacity:.8}.flashSide{color:var(--primary);font-size:.8rem;font-weight:900;letter-spacing:2px}.flashText{font-size:1.5rem;font-weight:850;line-height:1.55;margin:28px 0}.flipHint{color:var(--muted);font-size:.78rem}.empty{color:var(--muted);padding:28px 8px;text-align:center}.progress{background:var(--line);border-radius:99px;height:8px;margin-bottom:12px;overflow:hidden}.bar{background:var(--primary);height:100%;width:0}.counter{color:var(--muted);font-size:.85rem;text-align:center;margin-top:10px}.hidden{display:none!important}@media(max-width:560px){.grid{grid-template-columns:1fr}.tabs{font-size:.86rem}.btn{flex:1}.flashText{font-size:1.28rem}}
+    :root{--bg:#f4f6fb;--surface:#fff;--text:#151821;--muted:#667085;--primary:#4f46e5;--line:#dfe3ec;--danger:#c62828;--success:#16803c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",sans-serif}.wrap{max-width:780px;margin:auto;padding:16px 12px 90px}.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:22px;color:#fff;padding:20px}.hero h1{margin:0;font-size:1.7rem}.hero p{margin:6px 0 0;opacity:.9}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0}.tab,.btn{border:0;border-radius:12px;font:inherit;font-weight:800;min-height:44px;padding:10px 12px}.tab{background:var(--surface);border:1px solid var(--line);color:var(--text)}.tab.active,.btn{background:var(--primary);color:#fff}.btn.secondary{background:var(--surface);border:1px solid var(--line);color:var(--text)}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.panel{display:none}.panel.active{display:block}.section{background:var(--surface);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;padding:15px}.section h2{font-size:1.08rem;margin:0 0 10px}.muted{color:var(--muted);font-size:.88rem;line-height:1.55}.label{color:var(--muted);display:block;font-size:.82rem;font-weight:700;margin:10px 0 5px}textarea,input,select{background:#f8f9fc;border:1px solid var(--line);border-radius:12px;color:var(--text);font:inherit;padding:11px;width:100%}textarea{min-height:130px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.status{background:#eef0ff;border-radius:12px;color:#3730a3;font-size:.88rem;line-height:1.55;margin-top:10px;padding:10px}.status.error{background:#fff0f0;color:#9b1c1c}.badge{background:#eef0ff;border-radius:999px;color:#3730a3;display:inline-block;font-size:.75rem;font-weight:800;padding:4px 8px}.cardItem{border-top:1px solid var(--line);padding:14px 0}.face{background:#f8f9fc;border:1px solid var(--line);border-radius:14px;margin-top:8px;padding:12px}.faceLabel{color:var(--primary);font-size:.72rem;font-weight:900;letter-spacing:1.5px}.faceText{font-size:1rem;font-weight:700;line-height:1.55;margin-top:5px;overflow-wrap:anywhere}.flashcard{align-items:center;background:var(--surface);border:2px solid var(--primary);border-radius:24px;display:flex;flex-direction:column;justify-content:center;min-height:330px;padding:28px 20px;text-align:center;user-select:none}.flashcard:active{opacity:.8}.flashSide{color:var(--primary);font-size:.8rem;font-weight:900;letter-spacing:2px}.flashText{font-size:1.5rem;font-weight:850;line-height:1.55;margin:28px 0}.flipHint{color:var(--muted);font-size:.78rem}.empty{color:var(--muted);padding:28px 8px;text-align:center}.progress{background:var(--line);border-radius:99px;height:8px;margin-bottom:12px;overflow:hidden}.bar{background:var(--primary);height:100%;width:0}.counter{color:var(--muted);font-size:.85rem;text-align:center;margin-top:10px}.quality{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.hidden{display:none!important}@media(max-width:560px){.grid{grid-template-columns:1fr}.tabs{font-size:.86rem}.btn{flex:1}.flashText{font-size:1.28rem}}
   </style>
 </head>
 <body>
@@ -22,7 +22,7 @@
   <section id="create" class="panel active">
     <div class="section">
       <h2>教材から作問</h2>
-      <p class="muted">AI作問と端末内簡易作問は別機能です。AIが未接続の場合、勝手に簡易作問へ切り替えません。</p>
+      <p class="muted">初期試験ではGPT-5 nanoを使用します。AI作問と端末内簡易作問は別機能で、失敗時に勝手に切り替えません。</p>
       <textarea id="source" placeholder="教材本文を貼り付けてください"></textarea>
       <div class="grid">
         <div><label class="label">形式</label><select id="type"><option value="mix">一問一答＋穴埋め</option><option value="qa">一問一答</option><option value="cloze">穴埋め</option></select></div>
@@ -30,12 +30,20 @@
         <div><label class="label">最大枚数</label><select id="count"><option>5</option><option selected>10</option><option>15</option><option>20</option></select></div>
       </div>
       <div class="row">
-        <button id="aiGenerate" class="btn">AIで作問</button>
+        <button id="aiGenerate" class="btn">AIで作問（nano）</button>
         <button id="localGenerate" class="btn secondary">端末内で簡易作問</button>
       </div>
       <div id="status" class="status">AI接続状態を確認中です。</div>
       <textarea id="generated" class="hidden" placeholder="表｜裏"></textarea>
       <button id="saveGenerated" class="btn hidden" style="margin-top:10px">生成カードを保存</button>
+      <div id="qualityRow" class="quality hidden">
+        <p class="muted">nanoの生成品質を記録してください。評価はこの端末内だけに保存されます。</p>
+        <div class="row">
+          <button class="btn success" data-quality="good">そのまま使える</button>
+          <button class="btn secondary" data-quality="edit">要修正</button>
+          <button class="btn danger" data-quality="bad">使えない</button>
+        </div>
+      </div>
     </div>
 
     <div class="section">
@@ -87,6 +95,12 @@
       <div id="apiStatus" class="status"></div>
     </div>
     <div class="section">
+      <h2>nano試験</h2>
+      <p class="muted">標準モデルはGPT-5 nano、reasoning effortはmediumです。品質不足が確認された場合だけminiと比較します。</p>
+      <div id="evaluationStatus" class="status"></div>
+      <button id="exportEvaluations" class="btn secondary" style="margin-top:10px">評価記録を保存</button>
+    </div>
+    <div class="section">
       <h2>現在の試用版について</h2>
       <p class="muted">このベータ版は既存HTML版とは別の保存領域を使います。以前作成された重複カードは表示されません。</p>
     </div>
@@ -99,18 +113,23 @@
   'use strict';
   const CARD_KEY='toru-tango-beta-cards-v1';
   const URL_KEY='toru-tango-ai-url-v1';
+  const EVAL_KEY='toru-tango-ai-evaluations-v1';
   const $=(s)=>document.querySelector(s);
   const norm=(s)=>String(s??'').trim().replace(/\s+/g,' ').toLocaleLowerCase('ja-JP');
   let cards=[];
+  let evaluations=[];
+  let lastAiResult=null;
   let queue=[];
   let position=0;
   let backVisible=false;
 
   try{const parsed=JSON.parse(localStorage.getItem(CARD_KEY)||'[]');cards=Array.isArray(parsed)?parsed:[]}catch{cards=[]}
+  try{const parsed=JSON.parse(localStorage.getItem(EVAL_KEY)||'[]');evaluations=Array.isArray(parsed)?parsed:[]}catch{evaluations=[]}
 
   const configuredUrl=()=>localStorage.getItem(URL_KEY)||window.TORU_TANGO_CONFIG?.aiApiUrl||'';
   const endpoint=()=>{const base=configuredUrl().trim();if(!base)return'';return base.endsWith('/generate')?base:base.replace(/\/$/,'')+'/generate'};
   const persist=()=>{localStorage.setItem(CARD_KEY,JSON.stringify(cards));renderCards()};
+  const persistEvaluations=()=>{localStorage.setItem(EVAL_KEY,JSON.stringify(evaluations));renderEvaluationStatus()};
   const speak=(text)=>{if(!('speechSynthesis'in window))return alert('このブラウザは読み上げに対応していません。');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ja-JP';u.rate=.95;speechSynthesis.speak(u)};
   const addCard=(front,back)=>{front=String(front??'').trim();back=String(back??'').trim();if(!front||!back)return false;if(cards.some(c=>norm(c.front)===norm(front)&&norm(c.back)===norm(back)))return false;cards.push({id:Date.now()+Math.random(),front,back,correct:0,wrong:0});return true};
   const parseLines=(text)=>String(text).split(/\n/).map(line=>{const parts=line.split(/[｜|\t]/);return parts.length>=2?{front:parts.shift().trim(),back:parts.join('｜').trim()}:null}).filter(Boolean);
@@ -126,9 +145,10 @@
   }
 
   function escapeHtml(value){return String(value).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-  function setGenerated(lines,message){$('#generated').value=lines.join('\n');$('#generated').classList.toggle('hidden',!lines.length);$('#saveGenerated').classList.toggle('hidden',!lines.length);$('#status').className='status';$('#status').textContent=message}
+  function setGenerated(lines,message,isAi=false){$('#generated').value=lines.join('\n');$('#generated').classList.toggle('hidden',!lines.length);$('#saveGenerated').classList.toggle('hidden',!lines.length);$('#qualityRow').classList.toggle('hidden',!isAi||!lines.length);$('#status').className='status';$('#status').textContent=message}
 
   $('#localGenerate').onclick=()=>{
+    lastAiResult=null;
     const text=$('#source').value.trim();
     if(text.length<30)return setGenerated([],'教材本文を30文字以上入力してください。');
     const lines=window.ToruTangoGeneratorV2.generateQuestionsV2(text,Number($('#count').value),$('#type').value,$('#difficulty').value);
@@ -136,11 +156,12 @@
   };
 
   $('#aiGenerate').onclick=async()=>{
+    lastAiResult=null;
     const text=$('#source').value.trim();
     if(text.length<20)return setGenerated([],'教材本文を20文字以上入力してください。');
     const url=endpoint();
     if(!url){$('#status').className='status error';$('#status').textContent='AI APIは未接続です。設定タブでCloudflare Worker URLを登録してください。';return}
-    $('#status').className='status';$('#status').textContent='AIで作問中です。';
+    $('#status').className='status';$('#status').textContent='GPT-5 nanoで作問中です。';
     try{
       const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),45000);
       const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,count:Number($('#count').value),type:$('#type').value,difficulty:$('#difficulty').value}),signal:controller.signal});
@@ -148,9 +169,21 @@
       const payload=await response.json();
       if(!response.ok)throw new Error(payload.error||`HTTP ${response.status}`);
       const seen=new Set();const lines=(Array.isArray(payload.questions)?payload.questions:[]).map(q=>({front:String(q.question||'').trim(),back:String(q.answer||'').trim()})).filter(q=>{const key=norm(q.front)+'|'+norm(q.back);if(!q.front||!q.back||seen.has(key))return false;seen.add(key);return true}).map(q=>`${q.front}｜${q.back}`);
-      setGenerated(lines,`AI（${payload.model||'接続モデル'}）で${lines.length}枚作成しました。`);
-    }catch(error){$('#status').className='status error';$('#status').textContent=`AI作問に失敗しました: ${error.name==='AbortError'?'時間切れ':error.message}。端末内簡易作問へは自動切替していません。`}
+      const usage=payload.usage||{};const quality=payload.quality||{};
+      lastAiResult={createdAt:new Date().toISOString(),model:payload.model||'unknown',reasoningEffort:payload.reasoningEffort||'unknown',sourceLength:text.length,type:$('#type').value,difficulty:$('#difficulty').value,requestedCount:Number($('#count').value),generatedCount:lines.length,usage,quality,elapsedMs:Number(payload.elapsedMs)||0};
+      const metrics=`生出力${Number(quality.rawCount)||lines.length}件、採用${lines.length}件、重複除外${Number(quality.duplicateCount)||0}件、不適切除外${Number(quality.rejectedCount)||0}件、入力${Number(usage.inputTokens)||0}／出力${Number(usage.outputTokens)||0}トークン、${lastAiResult.elapsedMs?`${(lastAiResult.elapsedMs/1000).toFixed(1)}秒`:'時間未取得'}`;
+      setGenerated(lines,`AI（${lastAiResult.model}・推論${lastAiResult.reasoningEffort}）で作成しました。${metrics}`,true);
+    }catch(error){$('#qualityRow').classList.add('hidden');$('#status').className='status error';$('#status').textContent=`AI作問に失敗しました: ${error.name==='AbortError'?'時間切れ':error.message}。端末内簡易作問へは自動切替していません。`}
   };
+
+  document.querySelectorAll('[data-quality]').forEach(button=>button.onclick=()=>{
+    if(!lastAiResult)return;
+    evaluations.push({...lastAiResult,rating:button.dataset.quality,cards:parseLines($('#generated').value)});
+    if(evaluations.length>100)evaluations=evaluations.slice(-100);
+    persistEvaluations();
+    $('#qualityRow').classList.add('hidden');
+    $('#status').textContent+=' 評価を端末内へ記録しました。';
+  });
 
   $('#saveGenerated').onclick=()=>{let added=0;for(const item of parseLines($('#generated').value)){if(addCard(item.front,item.back))added++}persist();alert(`${added}枚保存しました。`)};
   $('#saveOne').onclick=()=>{if(!addCard($('#front').value,$('#back').value))return alert('未入力または同じカードが保存済みです。');$('#front').value='';$('#back').value='';persist()};
@@ -175,10 +208,12 @@
   $('#startStudy').onclick=startStudy;$('#shuffleStudy').onclick=startStudy;$('#flashcard').onclick=flip;$('#flashcard').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};$('#speakFront').onclick=()=>{const c=currentCard();if(c)speak(c.front)};$('#speakBack').onclick=()=>{const c=currentCard();if(c)speak(c.back)};$('#again').onclick=()=>grade(false);$('#known').onclick=()=>grade(true);
 
   $('#apiUrl').value=configuredUrl();
-  function renderApi(){const url=configuredUrl();$('#apiStatus').textContent=url?`設定済み: ${url}`:'未設定です。AI作問は利用できません。';$('#status').textContent=url?'AI API URLが設定されています。':'AI APIは未接続です。端末内簡易作問は別ボタンで利用できます。'}
+  function renderApi(){const url=configuredUrl();$('#apiStatus').textContent=url?`設定済み: ${url}`:'未設定です。AI作問は利用できません。';$('#status').textContent=url?'AI API URLが設定されています。標準モデルはWorker側のGPT-5 nanoです。':'AI APIは未接続です。端末内簡易作問は別ボタンで利用できます。'}
   $('#saveApiUrl').onclick=()=>{const value=$('#apiUrl').value.trim();if(value&&!/^https:\/\//.test(value))return alert('https://から始まるURLを入力してください。');value?localStorage.setItem(URL_KEY,value):localStorage.removeItem(URL_KEY);renderApi()};
+  function renderEvaluationStatus(){const good=evaluations.filter(x=>x.rating==='good').length;const edit=evaluations.filter(x=>x.rating==='edit').length;const bad=evaluations.filter(x=>x.rating==='bad').length;$('#evaluationStatus').textContent=`評価${evaluations.length}件：そのまま使える${good}件・要修正${edit}件・使えない${bad}件。`}
+  $('#exportEvaluations').onclick=()=>{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),evaluations},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`toru-tango-nano-evaluations-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href)};
 
-  renderCards();renderStudy();renderApi();
+  renderCards();renderStudy();renderApi();renderEvaluationStatus();
 })();
 </script>
 </body>
