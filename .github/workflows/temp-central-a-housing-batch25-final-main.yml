@@ -1,0 +1,61 @@
+name: Temporary Central A Housing Batch 25 Final Main Sync
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch25-final-main-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'sync/central-a-housing-batch25-final-main-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reset and import final regional records
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main region/central
+          git reset --hard origin/main
+          files=(
+            jichitai-compare/operations/audits/central-a-housing-classification-batch25-decisions-20260726.json
+            jichitai-compare/operations/audits/central-a-housing-classification-batch25-public-verification-20260726.json
+            jichitai-compare/operations/control/session-checkpoints/central-a.json
+            jichitai-compare/operations/control/regions/central.json
+            jichitai-compare/operations/quality/central-a-housing-batch25-resolution-20260726.json
+          )
+          for file in "${files[@]}"; do
+            mkdir -p "$(dirname "$file")"
+            git show "origin/region/central:$file" > "$file"
+          done
+      - name: Finalize main state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        run: node jichitai-compare/scripts/temp-central-a-housing-batch25-final-main.mjs
+      - name: Regenerate and validate
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+      - name: Remove main runners and commit
+        run: |
+          rm -f .github/workflows/temp-central-a-housing-batch25-main.yml .github/workflows/temp-central-a-housing-batch25-public.yml .github/workflows/temp-central-a-housing-batch25-final-main.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援第25群を最終確定'
+          git push --force-with-lease origin HEAD:${{ github.event.pull_request.head.ref }}
