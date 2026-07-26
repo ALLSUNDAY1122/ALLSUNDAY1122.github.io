@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const completedAt='2026-07-26T11:53:00+09:00';
+const resolutionPath='jichitai-compare/operations/quality/central-a-housing-batch25-resolution-20260726.json';
+const resolution=JSON.parse(fs.readFileSync(resolutionPath,'utf8'));
+resolution.completedAt=completedAt;
+resolution.evidence.finalMainPullRequest=Number(process.env.PR_NUMBER);
+resolution.evidence.finalMainWorkflowRunId=Number(process.env.RUN_ID);
+resolution.temporaryRunnerCleanup={regionPaths:['.github/workflows/temp-central-a-housing-batch25.yml','.github/workflows/temp-central-a-housing-batch25-finalize.yml'],mainPaths:['.github/workflows/temp-central-a-housing-batch25-main.yml','.github/workflows/temp-central-a-housing-batch25-public.yml','.github/workflows/temp-central-a-housing-batch25-final-main.yml'],regionCleanupPullRequest:3855,mainCleanupPullRequest:Number(process.env.PR_NUMBER),status:'cleanup_completed'};
+fs.writeFileSync(resolutionPath,JSON.stringify(resolution,null,2)+'\n');
+for(const p of ['jichitai-compare/operations/control/central-a-housing-batch25-final-main-trigger-20260726.json','jichitai-compare/scripts/temp-central-a-housing-batch25-final-main.mjs']) if(fs.existsSync(p)) fs.rmSync(p);
