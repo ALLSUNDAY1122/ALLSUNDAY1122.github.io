@@ -1,20 +1,26 @@
 {
   "cli": {
-    "appVersionSource": "remote"
+    "appVersionSource": "local"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "credentialsSource": "remote"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "credentialsSource": "remote"
     },
     "production": {
+      "distribution": "store",
+      "credentialsSource": "remote",
       "autoIncrement": true
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {}
+    }
   }
 }
