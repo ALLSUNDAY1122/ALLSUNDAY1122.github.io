@@ -7,6 +7,10 @@ on:
     paths:
       - 'fp3-speed-app/**'
       - '.github/workflows/fp3-speed-ios-ci.yml'
+  pull_request:
+    paths:
+      - 'fp3-speed-app/**'
+      - '.github/workflows/fp3-speed-ios-ci.yml'
   workflow_dispatch:
 
 permissions:
@@ -101,6 +105,7 @@ jobs:
           retention-days: 7
 
       - name: Commit generated iOS project files
+        if: github.event_name == 'push'
         run: |
           set -euo pipefail
           cd ..
