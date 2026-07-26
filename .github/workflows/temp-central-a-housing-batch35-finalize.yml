@@ -1,0 +1,101 @@
+name: Temporary Central A Housing Batch 35 Finalize
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch35-finalize-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'sync/central-a-housing-batch35-final-region-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import public evidence and finalize regional state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          public_path=jichitai-compare/operations/audits/central-a-housing-classification-batch35-public-verification-20260726.json
+          git show "origin/main:$public_path" > "$public_path"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare';
+          const completedAt='2026-07-26T20:31:00+09:00';
+          const auditPath=path.join(root,'operations/audits/central-a-housing-classification-batch35-decisions-20260726.json');
+          const publicPath=path.join(root,'operations/audits/central-a-housing-classification-batch35-public-verification-20260726.json');
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');
+          const regionPath=path.join(root,'operations/control/regions/central.json');
+          const audit=JSON.parse(fs.readFileSync(auditPath,'utf8'));
+          const publicEvidence=JSON.parse(fs.readFileSync(publicPath,'utf8'));
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));
+          if(!publicEvidence.success)throw new Error('Public verification is not successful');
+          audit.regionalMergePullRequestNumber=3967;
+          audit.regionalWorkflowRunId=30199982431;
+          audit.nationalSyncPullRequestNumber=3969;
+          audit.nationalSyncWorkflowRunId=30200067283;
+          audit.publicVerificationPullRequestNumber=3971;
+          audit.publicVerificationWorkflowRunId=30200159859;
+          audit.publicVerificationStatus='passed';
+          audit.finalRegionPullRequestNumber=Number(process.env.PR_NUMBER);
+          audit.finalRegionWorkflowRunId=Number(process.env.RUN_ID);
+          audit.status='completed_public_verified_region_integrated';
+          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
+
+          checkpoint.updatedAt=completedAt;
+          checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.ciStatus='success';
+          checkpoint.nextAction='弱い主出典残33件を、制度に直接対応する利用者向け公式ページへ更新する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';
+          checkpoint.qualityReaudit.latestCompletedAt=completedAt;
+          checkpoint.qualityReaudit.latestRegionalPullRequestNumber=3967;
+          checkpoint.qualityReaudit.latestCiRunNumber=30199982431;
+          checkpoint.qualityReaudit.latestNationalPullRequestNumber=3969;
+          checkpoint.qualityReaudit.latestPublicVerificationPullRequestNumber=3971;
+          checkpoint.qualityReaudit.correctedMunicipalitiesRechecked=231;
+          checkpoint.qualityReaudit.primarySourceSlotsRechecked=663;
+          checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification=0;
+          checkpoint.qualityReaudit.latestHousingBatch={batch:35,status:'completed_public_verified_region_integrated',reviewedMunicipalityCount:7,confirmedCorrectionCount:7,statusToUnavailableCount:4,verifiedReplacementOrClarificationCount:3,verifiedMaintainedCount:0,remainingCandidates:0,regionalPullRequestNumber:3967,regionalWorkflowRunId:30199982431,nationalPullRequestNumber:3969,nationalWorkflowRunId:30200067283,publicVerificationPullRequestNumber:3971,publicVerificationWorkflowRunId:30200159859,finalRegionPullRequestNumber:Number(process.env.PR_NUMBER),finalRegionWorkflowRunId:Number(process.env.RUN_ID),blocker:null};
+          checkpoint.lastAction='住宅支援分類第35群の安城市・甲賀市・朝来市を対象制度へ差し替え、みよし市・東郷町・日進市・大治町をunavailableへ修正し、住宅支援分類候補ゼロと地域・全国・公開一致を確認した。';
+          fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+          region.updatedAt=completedAt;region.latestCentralAHousingBatch=checkpoint.qualityReaudit.latestHousingBatch;region.lastAction=checkpoint.lastAction;fs.writeFileSync(regionPath,JSON.stringify(region,null,2)+'\n');
+
+          const resolution={schemaVersion:'1.0.0',resolutionId:'central-a-housing-batch35-resolution-20260726',session:'中日本調査班A',coordinatorSession:'統括B',completedAt,category:'generalHousingMisclassification',scope:{reviewedMunicipalityCount:7,correctedMunicipalityCount:7,statusToUnavailableCount:4,verifiedReplacementOrClarificationCount:3,verifiedMaintainedCount:0,remainingHousingCandidates:0,correctedMunicipalitiesRechecked:231,primarySourceSlotsRechecked:663,weakPrimarySourceCandidates:33,issue3141UnresolvedItems:19},decisions:{statusToUnavailableCodes:['23236','23302','23230','23424'],replacementOrClarificationCodes:['23212','25209','28225'],verifiedMaintainedCodes:[]},evidence:{regionalPullRequest:3967,regionalWorkflowRunId:30199982431,nationalSyncPullRequest:3969,nationalSyncWorkflowRunId:30200067283,publicVerificationPullRequest:3971,publicVerificationWorkflowRunId:30200159859,finalRegionPullRequest:Number(process.env.PR_NUMBER),finalRegionWorkflowRunId:Number(process.env.RUN_ID)},publicVerification:{pageCount:7,allPagesHttp200:true,statusSummarySourceMatch:true,publicMunicipalityCount:1741,publicServiceCount:15669},releaseGuard:{status:'resolved_no_release_blocker',blockers:[]},status:'completed_public_verified_region_integrated'};
+          const resolutionPath=path.join(root,'operations/quality/central-a-housing-batch35-resolution-20260726.json');fs.mkdirSync(path.dirname(resolutionPath),{recursive:true});fs.writeFileSync(resolutionPath,JSON.stringify(resolution,null,2)+'\n');
+          const trigger=path.join(root,'operations/control/central-a-housing-batch35-finalize-trigger-20260726.json');if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Remove regional runners and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/temp-central-a-housing-batch35-rescan.yml .github/workflows/temp-central-a-housing-batch35-refine.yml .github/workflows/temp-central-a-housing-batch35.yml .github/workflows/temp-central-a-housing-batch35-finalize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援第35群を地域で最終確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
