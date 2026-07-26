@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch26-decisions-20260726",
+  "decidedAt": "2026-07-26T13:38:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3860,
+  "runnerWorkflowRunId": 30187980391,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 1,
+  "verifiedReplacementOrClarificationCount": 4,
+  "corrected": [
+    {
+      "code": "27341",
+      "name": "忠岡町",
+      "service": "housingSupport",
+      "correctionType": "general_seismic_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の木造住宅を対象に耐震診断・耐震改修費を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.tadaoka.osaka.jp/soshiki/machi/2/6/7/5550.html"
+    },
+    {
+      "code": "27361",
+      "name": "熊取町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_three_generation_home_acquisition",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の木造住宅を対象に耐震改修設計・改修工事等を補助する。",
+      "afterSummary": "中学生以下の子がいる子世帯または夫婦双方40歳以下の子世帯が、親世帯と町内で近居・同居する住宅を取得する場合、10万円を補助する。",
+      "officialSource": "https://www.town.kumatori.lg.jp/soshiki/kikaku_keiei/seisakukikaku/gyomu/hohoemi/1336.html"
+    },
+    {
+      "code": "27362",
+      "name": "田尻町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_three_generation_new_life_support",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準等の木造住宅を対象に耐震診断・耐震改修設計・改修工事を補助する。",
+      "afterSummary": "義務教育修了前の子がいる世帯または夫婦双方40歳未満の世帯が、親世帯との同居・近居のため転入する場合、住宅取得30万円、賃借20万円、同居等10万円を助成する。",
+      "officialSource": "https://www.town.tajiri.osaka.jp/kakukanojoho/somubu/kikakujinkenka/8/639.html"
+    },
+    {
+      "code": "27366",
+      "name": "岬町",
+      "service": "housingSupport",
+      "correctionType": "current_young_child_home_acquisition_clarification",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "45歳未満の若年・子育て世帯等による町内新築住宅取得に10万円、条件により5万円を加算する。",
+      "afterSummary": "45歳未満または義務教育終了前の子を扶養する世帯が町内で新築・中古住宅を取得する場合、基本補助に子ども・転入加算を受けられる。",
+      "officialSource": "https://www.town.misaki.osaka.jp/soshiki/matidukuri/kikaku/teiju/357.html"
+    },
+    {
+      "code": "27382",
+      "name": "河南町",
+      "service": "housingSupport",
+      "correctionType": "replace_with_three_generation_acquisition_and_renovation",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "町内の自己所有住宅に住宅用太陽光発電システムを設置する住民へ費用の一部を補助する。",
+      "afterSummary": "中学生以下の子がいる世帯等が親世帯と町内で同居・近居するため住宅を取得・リフォームする場合、取得最大100万円、改修最大50万円を補助する。",
+      "officialSource": "https://www.town.kanan.osaka.jp/kurashi_tetsuzuki/sumai/iyuteijyu/4305.html"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 49,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 44
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般耐震・省エネ制度だけを子育て世帯向け住宅支援として登録しない",
+    "三世代同居・近居、子ども加算、若年・子育て世帯の住宅取得要件を現行利用者向け公式ページで確認する",
+    "同じ自治体に直接的な子育て住宅制度がある場合は一般制度から主制度を差し替える"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3862,
+  "nationalSyncWorkflowRunId": 30188055238,
+  "nationalSyncStatus": "validated_pending_merge"
+}
