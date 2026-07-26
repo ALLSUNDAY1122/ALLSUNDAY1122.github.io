@@ -1,0 +1,94 @@
+name: Temporary Central A Housing Batch 28 Public Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch28-public-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-housing-batch28-public-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify public pages and generated JSON
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {setTimeout as sleep} from 'node:timers/promises';
+
+          const targets=[
+            {code:'24204',name:'松阪市',status:'verified',summary:'市外から転入して中学3年生までの孫を含む三世代同居・近居を始める世帯へ、住宅取得・改修費の2分の1を、同居30万円・近居20万円まで補助する。',source:'https://www.city.matsusaka.mie.jp/site/kosodate-zyouhou/sansedaidokyokinkyosien.html'},
+            {code:'17203',name:'小松市',status:'verified',summary:'3世代同居・隣接・近居となる住宅の新築・増築・購入へ、同居20万円、隣接・近居10万円を交付する。',source:'https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/3235.html'},
+            {code:'17386',name:'宝達志水町',status:'unavailable',summary:'子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。',source:'https://www.hodatsushimizu.jp/soshiki/johosuishinka/2/3_1/584.html'},
+            {code:'21205',name:'関市',status:'verified',summary:'令和8年度の結婚等新生活支援として、住宅取得・賃借・リフォーム・引越費用を最大60万円助成する。',source:'https://www.city.seki.lg.jp/0000016736.html'},
+            {code:'21215',name:'山県市',status:'verified',summary:'三世代以上で同居・近居するため市内住宅を新築・取得する世帯へ、住宅等取得祝金20万円を交付する。',source:'https://www.city.yamagata.gifu.jp/soshiki/kensetsu/35324.html'}
+          ];
+          const base='https://allsunday1122.github.io/jichitai-compare';
+          let final=null;
+          for(let attempt=1;attempt<=30;attempt++){
+            const nonce=`${Date.now()}-${attempt}`;
+            const pageChecks=[];
+            for(const target of targets){
+              try{
+                const url=`${base}/municipality/${target.code}/?audit=${nonce}`;
+                const response=await fetch(url,{headers:{'cache-control':'no-cache','user-agent':'CentralAHousingBatch28Audit/1.0'}});
+                const html=await response.text();
+                const sourceMatches=html.includes(target.source)||html.includes(target.source.replaceAll('&','&amp;'));
+                const summaryMatches=html.includes(target.summary);
+                const statusMatches=html.includes(target.status==='unavailable'?'公式情報で詳細未確認':'確認済み');
+                pageChecks.push({code:target.code,name:target.name,expectedStatus:target.status,url,httpStatus:response.status,sourceMatches,summaryMatches,statusMatches,success:response.status===200&&sourceMatches&&summaryMatches&&statusMatches});
+              }catch(error){pageChecks.push({code:target.code,name:target.name,error:String(error),success:false});}
+            }
+            let jsonCheck={success:false};
+            try{
+              const response=await fetch(`${base}/data/generated/municipalities.json?audit=${nonce}`,{headers:{'cache-control':'no-cache','user-agent':'CentralAHousingBatch28Audit/1.0'}});
+              const payload=await response.json();
+              const municipalities=Array.isArray(payload)?payload:(payload.municipalities||[]);
+              const records=targets.map(target=>{
+                const municipality=municipalities.find(item=>item.code===target.code);
+                const service=municipality?.services?.housingSupport;
+                return {code:target.code,found:Boolean(municipality),statusMatches:service?.status===target.status,summaryMatches:service?.summary===target.summary,sourceMatches:service?.source?.url===target.source,success:Boolean(municipality)&&service?.status===target.status&&service?.summary===target.summary&&service?.source?.url===target.source};
+              });
+              const serviceCount=municipalities.reduce((sum,item)=>sum+Object.keys(item.services||{}).length,0);
+              jsonCheck={httpStatus:response.status,municipalityCount:municipalities.length,serviceCount,records,success:response.status===200&&municipalities.length===1741&&serviceCount===15669&&records.every(v=>v.success)};
+            }catch(error){jsonCheck={error:String(error),success:false};}
+            final={attempt,pageChecks,jsonCheck,success:pageChecks.every(v=>v.success)&&jsonCheck.success};
+            if(final.success)break;
+            await sleep(10000);
+          }
+          const evidence={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch28-public-verification-20260726',generatedAt:new Date().toISOString(),regionalPullRequest:3889,nationalSyncPullRequest:3891,verificationPullRequest:Number(process.env.PR_NUMBER),verificationWorkflowRunId:Number(process.env.RUN_ID),expectedUnavailableCount:1,expectedVerifiedCount:4,...final,releaseBlocker:final.success?'none':'public_verification_failed'};
+          const out='jichitai-compare/operations/audits/central-a-housing-classification-batch28-public-verification-20260726.json';
+          fs.mkdirSync(path.dirname(out),{recursive:true});
+          fs.writeFileSync(out,JSON.stringify(evidence,null,2)+'\n');
+          const trigger='jichitai-compare/operations/control/central-a-housing-batch28-public-trigger-20260726.json';
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          if(!final.success)throw new Error('Public verification failed after retries');
+          NODE
+      - name: Commit public evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'verify: 中日本A住宅支援第28群の公開反映を確認'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
