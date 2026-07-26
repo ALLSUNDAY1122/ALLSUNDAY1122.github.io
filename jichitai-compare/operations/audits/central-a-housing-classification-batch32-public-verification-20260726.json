@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch32-public-verification-20260726",
+  "generatedAt": "2026-07-26T09:49:26.405Z",
+  "regionalPullRequest": 3929,
+  "nationalSyncPullRequest": 3931,
+  "verificationPullRequest": 3933,
+  "verificationWorkflowRunId": 30197142050,
+  "expectedUnavailableCount": 2,
+  "expectedVerifiedCount": 3,
+  "attempt": 1,
+  "pageChecks": [
+    {
+      "code": "24562",
+      "name": "紀宝町",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/24562/?audit=1785059365639-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28100",
+      "name": "神戸市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28100/?audit=1785059365639-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28203",
+      "name": "明石市",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28203/?audit=1785059365639-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28204",
+      "name": "西宮市",
+      "expectedStatus": "unavailable",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28204/?audit=1785059365639-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28205",
+      "name": "洲本市",
+      "expectedStatus": "verified",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28205/?audit=1785059365639-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    }
+  ],
+  "jsonCheck": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "records": [
+      {
+        "code": "24562",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28100",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28203",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28204",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28205",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      }
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none"
+}
