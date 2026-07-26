@@ -18,7 +18,7 @@ public final class ToruTangoOcrModule: Module {
 
       let candidates = requestedRotation >= 0
         ? [Self.normalizedRotation(requestedRotation)]
-        : [0, 90, 270]
+        : [0, 90, 180, 270]
 
       var bestText = ""
       var bestLines: [String] = []
