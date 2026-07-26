@@ -34,16 +34,54 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: TypeScript
-        run: npm run typecheck
+        id: typecheck
+        continue-on-error: true
+        run: |
+          mkdir -p ci-logs
+          npm run typecheck 2>&1 | tee ci-logs/typecheck.log
 
       - name: ESLint
-        run: npm run lint
+        id: lint
+        continue-on-error: true
+        run: |
+          mkdir -p ci-logs
+          npm run lint 2>&1 | tee ci-logs/lint.log
 
       - name: Expo Doctor
-        run: npm run doctor
+        id: doctor
+        continue-on-error: true
+        run: |
+          mkdir -p ci-logs
+          npm run doctor 2>&1 | tee ci-logs/doctor.log
 
       - name: Expo config
-        run: npx expo config --type public > /tmp/toru-tango-expo-config.json
+        id: expo_config
+        continue-on-error: true
+        run: |
+          mkdir -p ci-logs
+          npx expo config --type public 2>&1 | tee ci-logs/expo-config.log
 
       - name: Worker syntax
-        run: node --check ../toru-tango/backend/src/index.js
+        id: worker
+        continue-on-error: true
+        run: |
+          mkdir -p ci-logs
+          node --check ../toru-tango/backend/src/index.js 2>&1 | tee ci-logs/worker.log
+
+      - name: Upload validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: toru-tango-validation-logs
+          path: toru-tango-mobile/ci-logs
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Validation gate
+        if: always()
+        run: |
+          test "${{ steps.typecheck.outcome }}" = "success"
+          test "${{ steps.lint.outcome }}" = "success"
+          test "${{ steps.doctor.outcome }}" = "success"
+          test "${{ steps.expo_config.outcome }}" = "success"
+          test "${{ steps.worker.outcome }}" = "success"
