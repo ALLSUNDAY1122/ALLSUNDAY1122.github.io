@@ -1,0 +1,62 @@
+name: Temporary Central A Housing Batch 35 Refine
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch35-refine-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    if: github.head_ref == 'audit/central-a-housing-batch35-refine-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Subtract all previously reviewed housing decisions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const audits='jichitai-compare/operations/audits';
+          const currentPath=path.join(audits,'central-a-housing-classification-candidates-after-batch34-20260726.json');
+          const current=JSON.parse(fs.readFileSync(currentPath,'utf8'));
+          const decisionFiles=fs.readdirSync(audits).filter(name=>/^central-a-housing-classification-batch\d+-decisions-20260726\.json$/.test(name));
+          const reviewed=new Map();
+          for(const filename of decisionFiles){
+            const match=filename.match(/batch(\d+)-/);
+            const batch=Number(match?.[1]);
+            const audit=JSON.parse(fs.readFileSync(path.join(audits,filename),'utf8'));
+            for(const d of audit.decisions??[]){
+              const code=String(d.code);
+              if(!reviewed.has(code))reviewed.set(code,[]);
+              reviewed.get(code).push(batch);
+            }
+          }
+          const candidates=current.candidates??[];
+          const unreviewed=candidates.filter(c=>!reviewed.has(String(c.code)));
+          const falsePositiveReviewed=candidates.filter(c=>reviewed.has(String(c.code))).map(c=>({...c,reviewedBatches:reviewed.get(String(c.code))}));
+          const result={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-unreviewed-after-batch34-20260726',generatedAt:new Date().toISOString(),session:'中日本調査班A',sourceCandidateCount:candidates.length,decisionFileCount:decisionFiles.length,reviewedCandidateCount:falsePositiveReviewed.length,unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed,falsePositiveReviewed};
+          const out=path.join(audits,'central-a-housing-classification-unreviewed-after-batch34-20260726.json');
+          fs.writeFileSync(out,JSON.stringify(result,null,2)+'\n');
+          console.log(JSON.stringify({unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed},null,2));
+          NODE
+      - name: Commit refined queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/central-a-housing-batch35-refine-trigger-20260726.json
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援第35群の未処理候補を確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
