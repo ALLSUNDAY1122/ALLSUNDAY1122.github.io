@@ -13,7 +13,10 @@ import {
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
 import { generateAiQuestions } from '@/src/services/ai';
-import { generateLocalQuestions } from '@/src/services/localQuestionGenerator';
+import {
+  generateOcrAwareQuestions,
+  repairOcrText
+} from '@/src/services/ocrAwareQuestionGenerator';
 import type {
   Difficulty,
   QuestionCandidate,
@@ -70,7 +73,9 @@ export default function CreateScreen() {
       Alert.alert('教材本文が短すぎます', '20文字以上入力してください。');
       return null;
     }
-    return text;
+    const repaired = repairOcrText(text);
+    setSourceText(repaired);
+    return repaired;
   };
 
   const generateWithAi = async () => {
@@ -78,7 +83,7 @@ export default function CreateScreen() {
     if (!text) return;
 
     setGenerating(true);
-    setGenerateStatus('GPT-5 nanoで作問中…');
+    setGenerateStatus('OCR空白と罫線ノイズを整形し、GPT-5 nanoで作問中…');
     try {
       const result = await generateAiQuestions({
         text,
@@ -98,7 +103,7 @@ export default function CreateScreen() {
       const elapsed = formatSeconds(result.elapsedMs);
 
       setGenerateStatus(
-        `AI（${result.model}／推論${result.reasoningEffort}）で${result.questions.length}枚作成。${cleanup}。${usage}${elapsed ? `・${elapsed}` : ''}。保存前に内容を確認してください。`
+        `OCR文字を整形後、AI（${result.model}／推論${result.reasoningEffort}）で${result.questions.length}枚作成。${cleanup}。${usage}${elapsed ? `・${elapsed}` : ''}。保存前に内容を確認してください。`
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : '原因不明のエラー';
@@ -115,7 +120,7 @@ export default function CreateScreen() {
     const text = validateSource();
     if (!text) return;
 
-    const candidates = generateLocalQuestions(
+    const candidates = generateOcrAwareQuestions(
       text,
       Number(count),
       type,
@@ -124,8 +129,8 @@ export default function CreateScreen() {
     setGeneratedText(formatLines(candidates));
     setGenerateStatus(
       candidates.length
-        ? `AIを使用せず、端末内の簡易作問で${candidates.length}枚作成しました。`
-        : '意味のあるカードを作成できませんでした。主語・年代・場所・出来事が分かる文章を追加してください。'
+        ? `OCR空白と罫線ノイズを整形し、端末内で${candidates.length}枚作成しました。AIは使用していません。`
+        : 'OCR文字を整形しましたが、確認できる事実を抽出できませんでした。AI作問を使うか、認識結果を修正してください。'
     );
   };
 
@@ -195,7 +200,7 @@ export default function CreateScreen() {
 
       <Section title="教材から自動作問">
         <MutedText>
-          初期試験ではGPT-5 nanoを使用します。AI作問に失敗しても端末内作問へ勝手に切り替えません。
+          初期試験ではGPT-5 nanoを使用します。OCR由来の文字間空白と罫線ノイズは作問前に自動整形します。
         </MutedText>
         <Field
           label="教材本文"
@@ -292,7 +297,7 @@ export default function CreateScreen() {
         </View>
         {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
         <MutedText>
-          写真の撮影・選択まで実装済みです。OCR接続は次の工程で追加します。
+          写真の撮影・選択まで実装済みです。正式iOS版のOCRはApple Visionを使う工程へ差し戻しています。
         </MutedText>
       </Section>
     </Page>
