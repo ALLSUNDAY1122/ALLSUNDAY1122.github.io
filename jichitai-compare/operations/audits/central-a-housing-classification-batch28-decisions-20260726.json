@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch28-decisions-20260726",
+  "decidedAt": "2026-07-26T16:03:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3889,
+  "runnerWorkflowRunId": 30191492317,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 3,
+  "statusToUnavailableCount": 1,
+  "verifiedSummaryClarificationCount": 2,
+  "verifiedMaintainedCount": 2,
+  "reviewed": [
+    {
+      "code": "24204",
+      "name": "松阪市",
+      "service": "housingSupport",
+      "correctionType": "current_three_generation_child_household_verified_maintained",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "市外から転入して三世代同居・近居を始める世帯へ、住宅取得・改修費の2分の1を補助する。",
+      "afterSummary": "市外から転入して中学3年生までの孫を含む三世代同居・近居を始める世帯へ、住宅取得・改修費の2分の1を、同居30万円・近居20万円まで補助する。",
+      "officialSource": "https://www.city.matsusaka.mie.jp/site/kosodate-zyouhou/sansedaidokyokinkyosien.html",
+      "officialBasis": "中学3年生までの孫を含む三世代世帯を対象とする現行制度を確認",
+      "contentChanged": true
+    },
+    {
+      "code": "17203",
+      "name": "小松市",
+      "service": "housingSupport",
+      "correctionType": "current_three_generation_housing_verified_maintained",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "3世代同居・隣接・近居となる住宅の新築・増築・購入へ、同居20万円、隣接・近居10万円を交付する。",
+      "afterSummary": "3世代同居・隣接・近居となる住宅の新築・増築・購入へ、同居20万円、隣接・近居10万円を交付する。",
+      "officialSource": "https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/3235.html",
+      "officialBasis": "令和8年度の3世代家族住宅建築奨励金を確認",
+      "contentChanged": false
+    },
+    {
+      "code": "17386",
+      "name": "宝達志水町",
+      "service": "housingSupport",
+      "correctionType": "general_home_acquisition_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "町内で住宅を新築・購入して定住する世帯へ、基本150万円と町内業者・転入者加算を合わせ最大300万円を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.hodatsushimizu.jp/soshiki/johosuishinka/2/3_1/584.html",
+      "officialBasis": "現行のマイホーム取得奨励金は定住者・45歳以下の転入者を対象とする一般住宅取得制度で、子育て等を対象要件としない",
+      "contentChanged": true
+    },
+    {
+      "code": "21205",
+      "name": "関市",
+      "service": "housingSupport",
+      "correctionType": "current_newlywed_housing_verified_maintained",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "令和8年度の結婚等新生活支援として、住宅取得・賃借・リフォーム・引越費用を最大60万円助成する。",
+      "afterSummary": "令和8年度の結婚等新生活支援として、住宅取得・賃借・リフォーム・引越費用を最大60万円助成する。",
+      "officialSource": "https://www.city.seki.lg.jp/0000016736.html",
+      "officialBasis": "令和8年1月1日から令和9年2月末までの婚姻・パートナーシップ世帯向け制度を確認",
+      "contentChanged": false
+    },
+    {
+      "code": "21215",
+      "name": "山県市",
+      "service": "housingSupport",
+      "correctionType": "three_generation_housing_eligibility_clarified",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "市内で住宅を新築・取得する転入者等に、住宅等取得祝金を交付する。",
+      "afterSummary": "三世代以上で同居・近居するため市内住宅を新築・取得する世帯へ、住宅等取得祝金20万円を交付する。",
+      "officialSource": "https://www.city.yamagata.gifu.jp/soshiki/kensetsu/35324.html",
+      "officialBasis": "一般取得額とは別に、三世代以上の同居・近居の場合20万円となる現行条件を確認",
+      "contentChanged": true
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 39,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 34
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般定住・住宅取得制度は年齢条件だけで子育て住宅支援へ分類しない",
+    "三世代同居・近居制度は家族世帯向け住宅支援としてverified対象に含める",
+    "結婚新生活支援は新婚世帯向け住宅支援としてverified対象に含める"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  }
+}
