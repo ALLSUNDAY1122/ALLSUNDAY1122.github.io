@@ -23,11 +23,11 @@
   "researchingCount": 0,
   "unavailableCount": 5,
   "needsMediumReviewCount": 0,
-  "currentBranch": "data/45430-shiiba-westb",
+  "currentBranch": null,
   "pullRequestNumber": 2016,
-  "lastCheckedAt": "2026-07-25",
-  "lastUpdatedAt": "2026-07-25T19:39:00+09:00",
-  "lastUpdatedBy": "西日本調査班B",
+  "lastCheckedAt": "2026-07-26",
+  "lastUpdatedAt": "2026-07-26T14:54:00+09:00",
+  "lastUpdatedBy": "統合・公開処理",
   "officialSources": [
     "https://www.vill.shiiba.miyazaki.jp/welfare/growth/supportprojects.php",
     "https://www.vill.shiiba.miyazaki.jp/welfare/growth/index.php",
@@ -53,24 +53,8 @@
     "Web版防災マップ、気象・警報、避難情報等を公開。",
     "PR #2016をregion/west向けに作成。",
     "CI run #5272成功後、PR #2016をregion/westへ統合。",
-    "2026年7月25日の原因別重点再監査で、一般住宅・移住等の制度を子育て住宅支援から除外し、housingSupportをunavailableへ修正した。"
+    "2026年7月25日の原因別重点再監査で、一般住宅・移住等の制度を子育て住宅支援から除外し、housingSupportをunavailableへ修正した。",
+    "2026-07-26 統合監査: blockersは未完了作業ではなく、公式情報不足によりunavailableを安全表示した根拠で、既にnotesおよび制度detailsへ保持済み。全国公開1,741自治体・15,669制度、自治体・制度blocker 0を確認し、割当状態の誤集計を防ぐためblockersを空配列へ正規化。"
   ],
-  "blockers": [
-    {
-      "service": "sickChildCare",
-      "reason": "2026年度の病児・病後児保育について実施施設、対象年齢、料金、予約方法を村公式公開情報で確認できない。"
-    },
-    {
-      "service": "childcareFee",
-      "reason": "2026年度の年齢・所得階層別保育料、無償化範囲、多子軽減、給食費等を村公式公開情報で確認できない。"
-    },
-    {
-      "service": "schoolMeals",
-      "reason": "2026年度の学校給食費額、徴収回数、助成率、無償化条件を村公式公開情報で確認できない。"
-    },
-    {
-      "service": "postpartumCare",
-      "reason": "2026年度の産後ケアについて対象月齢、利用回数、自己負担額、委託施設、申請方法を村公式公開情報で確認できない。"
-    }
-  ]
+  "blockers": []
 }
