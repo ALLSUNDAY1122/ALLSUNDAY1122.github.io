@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T17:44:00+09:00",
+  "updatedAt": "2026-07-26T17:43:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3905,
+  "pullRequestNumber": 3909,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3899,
+  "stateSyncPullRequestNumber": 3909,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残29件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残24件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T17:44:00+09:00",
-    "latestRegionalPullRequestNumber": 3899,
+    "latestCompletedAt": "2026-07-26T17:43:00+09:00",
+    "latestRegionalPullRequestNumber": 3909,
     "latestCiRunNumber": 30194507315,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 199,
-    "primarySourceSlotsRechecked": 631,
+    "correctedMunicipalitiesRechecked": 204,
+    "primarySourceSlotsRechecked": 636,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -755,7 +755,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 29,
+      "generalHousingMisclassification": 24,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -777,29 +777,23 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残29件",
+      "一般住宅・移住制度の分類候補残24件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3901,
     "latestPublicVerificationPullRequestNumber": 3903,
     "latestHousingBatch": {
-      "batch": 29,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 30,
+      "status": "regional_corrected_pending_national_sync",
       "reviewedMunicipalityCount": 5,
-      "confirmedCorrectionCount": 4,
-      "statusToUnavailableCount": 2,
+      "confirmedCorrectionCount": 5,
+      "statusToUnavailableCount": 3,
       "verifiedReplacementOrClarificationCount": 2,
-      "verifiedMaintainedCount": 1,
-      "remainingCandidates": 29,
-      "regionalPullRequestNumber": 3899,
-      "regionalWorkflowRunId": 30194507315,
-      "nationalPullRequestNumber": 3901,
-      "nationalWorkflowRunId": 30194591852,
-      "publicVerificationPullRequestNumber": 3903,
-      "publicVerificationWorkflowRunId": 30194729561,
-      "finalRegionPullRequestNumber": 3905,
-      "finalRegionWorkflowRunId": 30194885937,
+      "verifiedMaintainedCount": 0,
+      "remainingCandidates": 24,
+      "regionalPullRequestNumber": 3909,
+      "regionalWorkflowRunId": 30195214262,
       "blocker": null
     },
     "stateReconciliation": {
@@ -824,5 +818,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第29群の大野町・高浜市をunavailableへ修正し、御前崎市を結婚新生活支援へ差し替え、西尾市の三世代住宅条件を明確化、阿久比町をverified維持として地域・全国・公開一致を確認した。"
+  "lastAction": "住宅支援分類第30群として、島本町・伊丹市・飛騨市をunavailableへ修正し、高砂市を結婚新生活支援へ差し替え、南伊勢町の子育て世帯年齢例外を明確化した。"
 }
