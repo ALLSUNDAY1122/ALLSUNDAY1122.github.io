@@ -16,14 +16,14 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T19:22:00+09:00",
+  "updatedAt": "2026-07-26T19:33:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3946,
-  "ciStatus": "success",
+  "pullRequestNumber": 3950,
+  "ciStatus": "pending",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
     {
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残9件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残4件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T19:22:00+09:00",
-    "latestRegionalPullRequestNumber": 3939,
-    "latestCiRunNumber": 30197488095,
+    "latestCompletedAt": "2026-07-26T19:33:00+09:00",
+    "latestRegionalPullRequestNumber": 3950,
+    "latestCiRunNumber": 30198488052,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 219,
-    "primarySourceSlotsRechecked": 651,
+    "correctedMunicipalitiesRechecked": 224,
+    "primarySourceSlotsRechecked": 656,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -755,7 +755,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 9,
+      "generalHousingMisclassification": 4,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -784,23 +784,16 @@
     "latestNationalPullRequestNumber": 3941,
     "latestPublicVerificationPullRequestNumber": 3943,
     "latestHousingBatch": {
-      "batch": 33,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 34,
+      "status": "validated_pending_region_merge",
       "reviewedMunicipalityCount": 5,
       "confirmedCorrectionCount": 5,
-      "statusToUnavailableCount": 1,
-      "verifiedReplacementOrClarificationCount": 4,
+      "statusToUnavailableCount": 0,
+      "verifiedReplacementOrClarificationCount": 5,
       "verifiedMaintainedCount": 0,
-      "remainingCandidates": 9,
-      "regionalPullRequestNumber": 3939,
-      "regionalWorkflowRunId": 30197488095,
-      "nationalPullRequestNumber": 3941,
-      "nationalWorkflowRunId": 30197579421,
-      "publicVerificationPullRequestNumber": 3943,
-      "publicVerificationWorkflowRunId": 30198051518,
-      "publicVerificationFixPullRequestNumber": 3944,
-      "finalRegionPullRequestNumber": 3946,
-      "finalRegionWorkflowRunId": 30198140096,
+      "remainingCandidates": 4,
+      "regionalPullRequestNumber": 3950,
+      "regionalWorkflowRunId": 30198488052,
       "blocker": null
     },
     "stateReconciliation": {
@@ -825,5 +818,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第33群の宝塚市をunavailableへ修正し、加古川市・赤穂市・西脇市・三木市を現行の新婚・子育て住宅支援へ差し替えて地域・全国・公開一致を確認した。"
+  "lastAction": "住宅支援分類第34群の川西市・大垣市・輪之内町・南伊豆町・松崎町を、現行の若年・子育て・新婚世帯向け住宅支援へ差し替えた。"
 }
