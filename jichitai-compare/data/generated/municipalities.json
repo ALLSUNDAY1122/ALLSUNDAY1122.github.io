@@ -140706,7 +140706,7 @@
           },
           "source": {
             "url": "https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/3235.html",
-            "checkedAt": "2026-07-25"
+            "checkedAt": "2026-07-26"
           }
         },
         "bulkyWaste": {
@@ -143324,20 +143324,16 @@
           }
         },
         "housingSupport": {
-          "status": "verified",
-          "summary": "町内で住宅を新築・購入して定住する世帯へ、基本150万円と町内業者・転入者加算を合わせ最大300万円を交付する。",
+          "status": "unavailable",
+          "summary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
           "details": {
-            "program": "マイホーム取得奨励金",
-            "support": "基本額150万円",
-            "builderAddition": "町内建築業者を活用して新築・購入した場合50万円を加算",
-            "transferAddition": "45歳以下の町外転入者1人につき20万円、最大100万円を加算",
-            "maximum": "最大300万円。ただし住宅購入額が総支給額を下回る場合は購入額が上限",
-            "conditions": "住宅登記持分2分の1以上、町税等滞納なし、下水道整備区域では下水道接続等",
-            "application": "所有権登記完了後12か月以内に申請"
+            "reviewedProgram": "マイホーム取得奨励金",
+            "generalSupport": "町内で住宅を新築・購入して定住する世帯へ基本150万円、町内業者・45歳以下転入者加算を含め最大300万円",
+            "classificationReason": "子育て世帯・新婚世帯・三世代世帯を対象要件としない一般定住・住宅取得制度のため、子育て住宅支援としては対象外"
           },
           "source": {
             "url": "https://www.hodatsushimizu.jp/soshiki/johosuishinka/2/3_1/584.html",
-            "checkedAt": "2026-07-21"
+            "checkedAt": "2026-07-26"
           }
         },
         "bulkyWaste": {
@@ -168543,7 +168539,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後6か月から就学前までの未就園児を、就労・傷病・出産・育児疲れ等の理由で月12日以内預かる。",
+          "summary": "生後6か月から就学前までの未就園児を、就労・傷病・出産・育児疲れ等の理由で月12日以内預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
           "eligibility": {
             "minAgeMonths": 6,
             "maxAgeYears": 5
@@ -168554,12 +168550,25 @@
             "underThreeFee": "4時間未満750円、4時間以上1,500円",
             "threeAndOverFee": "4時間未満600円、4時間以上1,200円",
             "siblingDiscount": "きょうだい利用時は年齢が上の2人目以降を半額",
-            "exemption": "生活保護世帯、所定の非課税母子世帯等は免除対象"
+            "exemption": "生活保護世帯、所定の非課税母子世帯等は免除対象",
+            "ordinaryTemporaryCare": "生後6か月から就学前までの未就園児を、就労・傷病・出産・育児疲れ等の理由で月12日以内預かる。",
+            "programs": "通常の一時預かり、こども誰でも通園制度（乳児等通園支援事業）",
+            "anyChildAccessTarget": "保育所・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "employmentRequirement": "保護者の就労要件を問わない",
+            "anyChildAccessLimit": "子ども1人につき月10時間まで",
+            "anyChildAccessStart": "令和8年4月"
           },
           "source": {
-            "url": "https://www.city.seki.lg.jp/0000003989.html",
-            "checkedAt": "2026-07-21"
-          }
+            "url": "https://www.city.seki.lg.jp/0000022587.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.seki.lg.jp/0000003989.html",
+              "checkedAt": "2026-07-21",
+              "description": "通常の一時預かり事業の公式案内"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
@@ -168574,7 +168583,7 @@
           },
           "source": {
             "url": "https://www.city.seki.lg.jp/0000016736.html",
-            "checkedAt": "2026-07-21"
+            "checkedAt": "2026-07-26"
           }
         },
         "bulkyWaste": {
@@ -170307,7 +170316,7 @@
         },
         "temporaryChildcare": {
           "status": "verified",
-          "summary": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。",
+          "summary": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。また、令和8年4月から、保育所等に在籍していない生後6か月から満3歳未満の子どもを、保護者の就労要件を問わず月10時間まで受け入れるこども誰でも通園制度を実施する。",
           "eligibility": {
             "minAgeMonths": 12,
             "maxAgeYears": 5
@@ -170318,27 +170327,43 @@
             "hours": "8時30分～16時30分",
             "feeUnder3": "1時間350円",
             "feeOver3": "1時間250円",
-            "meal": "給食・おやつ346円、給食のみ296円、おやつのみ50円"
+            "meal": "給食・おやつ346円、給食のみ296円、おやつのみ50円",
+            "ordinaryTemporaryCare": "生後12か月以上の未就園児を、就労・疾病・育児疲れ等の理由で月14日以内一時的に預かる。",
+            "programs": "通常の一時預かり、こども誰でも通園制度（乳児等通園支援事業）",
+            "anyChildAccessTarget": "保育所・認定こども園等に在籍していない生後6か月から満3歳未満の子ども",
+            "employmentRequirement": "保護者の就労要件を問わない",
+            "anyChildAccessLimit": "子ども1人につき月10時間まで",
+            "anyChildAccessStart": "令和8年4月"
           },
           "source": {
-            "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html",
-            "checkedAt": "2026-07-22"
-          }
+            "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/51836.html",
+            "checkedAt": "2026-07-25"
+          },
+          "additionalSources": [
+            {
+              "url": "https://www.city.yamagata.gifu.jp/site/yamanavi/32843.html",
+              "checkedAt": "2026-07-22",
+              "description": "通常の一時預かり事業の公式案内"
+            }
+          ]
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "市内で住宅を新築・取得する転入者等に、住宅等取得祝金を交付する。",
+          "summary": "三世代以上で同居・近居するため市内住宅を新築・取得する世帯へ、住宅等取得祝金20万円を交付する。",
           "details": {
             "program": "住宅等取得祝金事業",
             "residentAmount": "市内居住者が市内業者施工で新築・増築した場合10万円",
             "newResidentAmount": "市外から転入し市内住宅を新築・取得した場合15万円",
             "multiGeneration": "3世代以上の同居または近居となる場合20万円",
             "floorArea": "課税床面積50平方メートル以上",
-            "residency": "定住に関する誓約書等の提出が必要"
+            "residency": "定住に関する誓約書等の提出が必要",
+            "threeGenerationTarget": "三世代以上で同居または近居するため市内住宅を新築・取得する世帯",
+            "threeGenerationAmount": "20万円",
+            "generalComparison": "市内居住者の市内業者施工は10万円、市外転入者は15万円"
           },
           "source": {
             "url": "https://www.city.yamagata.gifu.jp/soshiki/kensetsu/35324.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-26"
           }
         },
         "bulkyWaste": {
@@ -191463,7 +191488,7 @@
         },
         "housingSupport": {
           "status": "verified",
-          "summary": "市外から転入して三世代同居・近居を始める世帯へ、住宅取得・改修費の2分の1を補助する。",
+          "summary": "市外から転入して中学3年生までの孫を含む三世代同居・近居を始める世帯へ、住宅取得・改修費の2分の1を、同居30万円・近居20万円まで補助する。",
           "details": {
             "program": "松阪市三世代同居・近居支援補助事業",
             "target": "親世帯・子世帯の一方または両方が市外から転入し、中学3年生までの孫を含む三世代世帯",
@@ -191475,7 +191500,7 @@
           },
           "source": {
             "url": "https://www.city.matsusaka.mie.jp/site/kosodate-zyouhou/sansedaidokyokinkyosien.html",
-            "checkedAt": "2026-07-22"
+            "checkedAt": "2026-07-26"
           }
         },
         "bulkyWaste": {
