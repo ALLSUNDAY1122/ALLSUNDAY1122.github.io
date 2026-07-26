@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch25-decisions-20260726",
+  "decidedAt": "2026-07-26T11:34:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3849,
+  "runnerWorkflowRunId": 30184922474,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 3,
+  "verifiedReplacementCount": 2,
+  "corrected": [
+    {
+      "code": "27227",
+      "name": "東大阪市",
+      "service": "housingSupport",
+      "correctionType": "general_seismic_support_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の木造住宅を対象に、耐震改修工事等の費用を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.higashiosaka.lg.jp/0000005748.html"
+    },
+    {
+      "code": "27228",
+      "name": "泉南市",
+      "service": "housingSupport",
+      "correctionType": "general_seismic_support_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の木造住宅を対象に耐震改修設計・工事や耐震シェルター設置を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.sennan.lg.jp/kakuka/toshiseibi/jutakushidou/jutakukenchiku/taishin/1577079347548.html"
+    },
+    {
+      "code": "27229",
+      "name": "四條畷市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_current_child_young_household_renovation",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の木造住宅を対象に、耐震改修計画・工事、耐震シェルター、除却工事を補助する。",
+      "afterSummary": "40歳未満の夫婦または20歳未満の子と同居する世帯が市内中古住宅を取得・改修する場合、工事費の2分の1、最大100万円を補助する。",
+      "officialSource": "https://www.city.shijonawate.lg.jp/page/19-62432.html"
+    },
+    {
+      "code": "27230",
+      "name": "交野市",
+      "service": "housingSupport",
+      "correctionType": "replace_with_current_child_home_acquisition_addition",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震基準の木造住宅について耐震診断、耐震改修、耐震シェルター設置等を補助する。",
+      "afterSummary": "中古住宅を取得して市外から転入し、中学生以下の子がいる世帯へ、基本補助に子ども1人につき5万円を加算する。",
+      "officialSource": "https://www.city.katano.osaka.jp/docs/2022030300026/"
+    },
+    {
+      "code": "27232",
+      "name": "阪南市",
+      "service": "housingSupport",
+      "correctionType": "general_seismic_support_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の住宅等を対象に耐震診断・耐震改修・耐震シェルター費用を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.hannan.lg.jp/kakuka/toshi/toshi/taishinka/1597994486626.html"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 54,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 49
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般耐震制度だけを子育て世帯向け住宅支援として登録しない",
+    "子ども・若者世帯の明示要件または子ども加算を現行公式本文で確認できる制度へ差し替える",
+    "制度目的だけでなく交付要件・金額・申請期間を利用者向け公式ページで確認する"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "regionalMergePullRequestNumber": 3849,
+  "nationalSyncPullRequestNumber": 3851,
+  "nationalSyncWorkflowRunId": 30185013869,
+  "nationalSyncStatus": "validated_pending_merge"
+}

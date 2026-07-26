@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T09:46:00+09:00",
+  "updatedAt": "2026-07-26T11:34:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3845,
+  "pullRequestNumber": 3849,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3839,
+  "stateSyncPullRequestNumber": 3849,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残54件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残49件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T09:46:00+09:00",
-    "latestRegionalPullRequestNumber": 3839,
-    "latestCiRunNumber": 30181429934,
+    "latestCompletedAt": "2026-07-26T11:34:00+09:00",
+    "latestRegionalPullRequestNumber": 3849,
+    "latestCiRunNumber": 30184922474,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 174,
-    "primarySourceSlotsRechecked": 606,
+    "correctedMunicipalitiesRechecked": 179,
+    "primarySourceSlotsRechecked": 611,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -609,6 +609,36 @@
         "code": "27226",
         "service": "housingSupport",
         "name": "藤井寺市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27227",
+        "service": "housingSupport",
+        "name": "東大阪市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27228",
+        "service": "housingSupport",
+        "name": "泉南市"
+      },
+      {
+        "type": "replace_with_current_child_young_household_renovation",
+        "code": "27229",
+        "service": "housingSupport",
+        "name": "四條畷市"
+      },
+      {
+        "type": "replace_with_current_child_home_acquisition_addition",
+        "code": "27230",
+        "service": "housingSupport",
+        "name": "交野市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27232",
+        "service": "housingSupport",
+        "name": "阪南市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -695,7 +725,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 54,
+      "generalHousingMisclassification": 49,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -717,28 +747,22 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残54件",
+      "一般住宅・移住制度の分類候補残49件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3841,
     "latestPublicVerificationPullRequestNumber": 3843,
     "latestHousingBatch": {
-      "batch": 24,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 25,
+      "status": "regional_corrected_pending_national_sync",
       "reviewedMunicipalityCount": 5,
       "confirmedCorrectionCount": 5,
-      "statusToUnavailableCount": 4,
-      "verifiedReplacementCount": 1,
-      "remainingCandidates": 54,
-      "regionalPullRequestNumber": 3839,
-      "regionalWorkflowRunId": 30181429934,
-      "nationalPullRequestNumber": 3841,
-      "nationalWorkflowRunId": 30181539480,
-      "publicVerificationPullRequestNumber": 3843,
-      "publicVerificationWorkflowRunId": 30181659695,
-      "finalRegionPullRequestNumber": 3845,
-      "finalRegionWorkflowRunId": 30181803196,
+      "statusToUnavailableCount": 3,
+      "verifiedReplacementCount": 2,
+      "remainingCandidates": 49,
+      "regionalPullRequestNumber": 3849,
+      "regionalWorkflowRunId": 30184922474,
       "blocker": null
     },
     "stateReconciliation": {
@@ -763,5 +787,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第24群の箕面市・羽曳野市・門真市・摂津市・藤井寺市を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第25群として、東大阪市・泉南市・阪南市の一般耐震制度をunavailableへ修正し、四條畷市・交野市を現行の子育て世帯向け住宅支援へ差し替えた。"
 }
