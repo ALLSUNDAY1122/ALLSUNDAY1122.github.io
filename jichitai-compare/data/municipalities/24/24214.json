@@ -7,12 +7,15 @@
   "officialUrl": "https://www.city.inabe.mie.jp/",
   "status": "verified",
   "summary": "いなべ市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-26",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "0歳から18歳年度末まで、保険診療の自己負担額を助成し、令和7年9月から県内医療機関で窓口無償化する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳になる年度末まで",
         "incomeLimit": "令和5年9月から所得制限を撤廃",
@@ -20,12 +23,18 @@
         "payment": "三重県内は受給資格証提示により窓口支払い不要。県外受診等は償還払い",
         "excluded": "保険適用外費用、入院時食事代、日本スポーツ振興センター給付対象等は対象外"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kenko/kenko/iryo/1007497.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kenko/kenko/iryo/1007497.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "急な病気で保育所・幼稚園・小学校へ通えない児童を、桑名市内の医療機関2施設で預かる広域事業を利用できる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 12
+      },
       "details": {
         "program": "病児保育事業（桑名市広域事業）",
         "facilities": "ウエルネス医療クリニック病児保育子どもケアハウスぞうさん、はなまる保育所",
@@ -33,12 +42,18 @@
         "application": "利用施設へ直接申込み",
         "fee": "利用料金、延長時間、休日、対象年齢の詳細は各施設へ確認"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kosoate/kosodate/1005448.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kosoate/kosodate/1005448.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は無償化対象で、その他の0～2歳児は市民税額等に基づき保育料を算定する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "3～5歳児および住民税非課税世帯の0～2歳児は幼児教育・保育無償化対象",
         "underThree": "その他の0～2歳児は世帯の市民税額等に基づき算定",
@@ -46,25 +61,45 @@
         "mealSupport": "市立認定こども園等では3歳以上児の給食費を市が負担",
         "application": "保育課へ認定・利用申込み"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kosoate/kosodate/hoikuen/1011054.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kosoate/kosodate/hoikuen/1011054.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
       "summary": "令和7年4月から、市立小中学校の児童生徒の保護者から学校給食費を徴収しない。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
+      },
       "details": {
         "coverage": "いなべ市立小学校・中学校に在籍する児童生徒",
         "fee": "保護者負担なし",
         "effective": "令和7年4月1日",
         "basis": "いなべ市学校給食条例第5条",
-        "note": "教職員等の学校給食費は教育委員会規則に基づき納付"
+        "note": "教職員等の学校給食費は教育委員会規則に基づき納付",
+        "currentOperation": "市内小中学校の現行献立表が継続公開されていることを確認。"
       },
-      "source": {"url": "https://www2.city.inabe.mie.jp/reiki/reiki_honbun/r031RG00001258.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www2.city.inabe.mie.jp/reiki/reiki_honbun/r031RG00001258.html",
+        "checkedAt": "2026-07-26"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.inabe.mie.jp/kyoiku/kyoiku/school/1006855.html",
+          "checkedAt": "2026-07-26",
+          "description": "市内小中学校の現行学校給食献立表"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後12か月未満の母子へ、訪問・通所・宿泊型の産後ケアを合計7日以内で提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "いなべ市に住民票がある産後12か月未満の母子で産後ケアを必要とする人",
         "visit": "1回1,200円",
@@ -73,12 +108,18 @@
         "limit": "1人7日以内",
         "coupon": "訪問型または通所型に使える無料クーポン1回分を出生届時に配布"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kosoate/ninshin/1012737.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kosoate/ninshin/1012737.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "生後6か月から3歳未満の未就園児が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "こども誰でも通園制度",
         "condition": "保育所、幼稚園、認定こども園、地域型保育、企業主導型保育を利用していない児童",
@@ -87,7 +128,10 @@
         "limit": "児童1人につき月10時間まで、1時間単位",
         "fee": "1時間300円。生活保護・非課税・一定所得以下世帯は減免あり"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kosoate/kosodate/1015331.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kosoate/kosodate/1015331.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -100,7 +144,10 @@
         "expenses": "住宅取得費、賃料・礼金・敷金・共益費・仲介手数料、リフォーム費、引越業者費用",
         "deadline": "令和9年3月31日必着。予算到達時は早期終了"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kurashi/sodan/1005197/1000852.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kurashi/sodan/1005197/1000852.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -113,7 +160,10 @@
         "notAccepted": "家電リサイクル対象品、パソコン、適正処理困難物、危険物、事業系廃棄物等",
         "fee": "公式案内に個別処理手数料の記載なし。搬入前に各施設へ確認"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kurashi/recycle/1010495/1000748.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kurashi/recycle/1010495/1000748.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -125,7 +175,10 @@
         "ponds": "防災重点ため池について個別ハザードマップも公開",
         "alerts": "防災アプリ『知らせぇーる』で災害情報を配信"
       },
-      "source": {"url": "https://www.city.inabe.mie.jp/kurashi/bohan/bosai/1009373/1000892.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.inabe.mie.jp/kurashi/bohan/bosai/1009373/1000892.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
