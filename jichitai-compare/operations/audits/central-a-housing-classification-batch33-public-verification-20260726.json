@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch33-public-verification-20260726",
+  "generatedAt": "2026-07-26T10:19:30.595Z",
+  "regionalPullRequest": 3939,
+  "nationalSyncPullRequest": 3941,
+  "verificationPullRequest": 3943,
+  "verificationWorkflowRunId": 30198051518,
+  "expectedUnavailableCount": 1,
+  "expectedVerifiedCount": 4,
+  "attempt": 1,
+  "pageChecks": [
+    {
+      "code": "28210",
+      "name": "加古川市",
+      "expectedStatus": "verified",
+      "expectedLabel": "確認済み",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28210/?audit=1785061169600-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28212",
+      "name": "赤穂市",
+      "expectedStatus": "verified",
+      "expectedLabel": "確認済み",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28212/?audit=1785061169600-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28213",
+      "name": "西脇市",
+      "expectedStatus": "verified",
+      "expectedLabel": "確認済み",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28213/?audit=1785061169600-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28214",
+      "name": "宝塚市",
+      "expectedStatus": "unavailable",
+      "expectedLabel": "公式情報で詳細未確認",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28214/?audit=1785061169600-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    },
+    {
+      "code": "28215",
+      "name": "三木市",
+      "expectedStatus": "verified",
+      "expectedLabel": "確認済み",
+      "url": "https://allsunday1122.github.io/jichitai-compare/municipality/28215/?audit=1785061169600-1",
+      "httpStatus": 200,
+      "sourceMatches": true,
+      "summaryMatches": true,
+      "statusMatches": true,
+      "success": true
+    }
+  ],
+  "jsonCheck": {
+    "httpStatus": 200,
+    "municipalityCount": 1741,
+    "serviceCount": 15669,
+    "records": [
+      {
+        "code": "28210",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28212",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28213",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28214",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      },
+      {
+        "code": "28215",
+        "found": true,
+        "statusMatches": true,
+        "summaryMatches": true,
+        "sourceMatches": true,
+        "success": true
+      }
+    ],
+    "success": true
+  },
+  "success": true,
+  "releaseBlocker": "none"
+}
