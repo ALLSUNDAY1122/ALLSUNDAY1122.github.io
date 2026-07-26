@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "central-a-housing-batch30-resolution-20260726",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B",
+  "completedAt": "2026-07-26T18:20:00+09:00",
+  "category": "generalHousingMisclassification",
+  "scope": {
+    "reviewedMunicipalityCount": 5,
+    "correctedMunicipalityCount": 5,
+    "statusToUnavailableCount": 3,
+    "verifiedReplacementOrClarificationCount": 2,
+    "verifiedMaintainedCount": 0,
+    "remainingHousingCandidates": 24,
+    "correctedMunicipalitiesRechecked": 204,
+    "primarySourceSlotsRechecked": 636,
+    "weakPrimarySourceCandidates": 33,
+    "issue3141UnresolvedItems": 19
+  },
+  "decisions": {
+    "statusToUnavailableCodes": [
+      "27301",
+      "28207",
+      "21217"
+    ],
+    "replacementOrClarificationCodes": [
+      "24472",
+      "28216"
+    ],
+    "verifiedMaintainedCodes": []
+  },
+  "evidence": {
+    "regionalPullRequest": 3909,
+    "regionalWorkflowRunId": 30195214262,
+    "nationalSyncPullRequest": 3911,
+    "nationalSyncWorkflowRunId": 30195307251,
+    "publicVerificationPullRequest": 3913,
+    "publicVerificationWorkflowRunId": 30195403928,
+    "finalRegionPullRequest": 3915,
+    "finalRegionWorkflowRunId": 30196191865,
+    "finalMainPullRequest": 3917,
+    "finalMainWorkflowRunId": 30196270727
+  },
+  "publicVerification": {
+    "pageCount": 5,
+    "allPagesHttp200": true,
+    "statusSummarySourceMatch": true,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "status": "completed_public_verified_main_integrated",
+  "temporaryRunnerCleanup": {
+    "regionPaths": [
+      ".github/workflows/temp-central-a-housing-batch30.yml",
+      ".github/workflows/temp-central-a-housing-batch30-finalize.yml"
+    ],
+    "mainPaths": [
+      ".github/workflows/temp-central-a-housing-batch30-main.yml",
+      ".github/workflows/temp-central-a-housing-batch30-public.yml",
+      ".github/workflows/temp-central-a-housing-batch30-final-main.yml"
+    ],
+    "regionCleanupPullRequest": 3915,
+    "mainCleanupPullRequest": 3917,
+    "status": "cleanup_completed"
+  }
+}
