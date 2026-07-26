@@ -1,0 +1,49 @@
+name: Temporary Central A Housing Batch 25 Finalize
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch25-finalize-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'sync/central-a-housing-batch25-final-region-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import public evidence
+        run: |
+          git fetch origin main
+          p=jichitai-compare/operations/audits/central-a-housing-classification-batch25-public-verification-20260726.json
+          git show "origin/main:$p" > "$p"
+      - name: Finalize regional state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        run: node jichitai-compare/scripts/temp-central-a-housing-batch25-finalize.mjs
+      - name: Regenerate and validate
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+      - name: Remove regional runners and commit
+        run: |
+          rm -f .github/workflows/temp-central-a-housing-batch25.yml .github/workflows/temp-central-a-housing-batch25-finalize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援第25群を地域で最終確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
