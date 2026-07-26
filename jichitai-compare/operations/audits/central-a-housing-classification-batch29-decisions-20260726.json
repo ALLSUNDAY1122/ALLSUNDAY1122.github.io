@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch29-decisions-20260726",
+  "decidedAt": "2026-07-26T17:30:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3899,
+  "runnerWorkflowRunId": 30194507315,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 4,
+  "statusToUnavailableCount": 2,
+  "verifiedReplacementOrClarificationCount": 2,
+  "verifiedMaintainedCount": 1,
+  "reviewed": [
+    {
+      "code": "21403",
+      "name": "大野町",
+      "service": "housingSupport",
+      "correctionType": "general_home_acquisition_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "令和7年1月2日以降に町内で新築住宅を取得した世帯へ、基本30万円と町外転入加算10万円を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town-ono.jp/0000001884.html",
+      "officialBasis": "現行の新築住宅移住定住補助金は町内で新築住宅を取得する一般世帯を対象とし、子育て・新婚・三世代を対象要件としない",
+      "contentChanged": true
+    },
+    {
+      "code": "22223",
+      "name": "御前崎市",
+      "service": "housingSupport",
+      "correctionType": "current_newlywed_housing_replacement",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "市内の空家を取得・賃借して10年以上居住する方のリフォーム費を50％、最大40万円補助する。",
+      "afterSummary": "令和8年度の結婚新生活支援として、婚姻に伴う住宅取得・賃借・リフォーム・引越費用を、夫婦の年齢に応じ最大60万円補助する。",
+      "officialSource": "https://www.city.omaezaki.shizuoka.jp/soshiki/kikakuseisaku/ijyuteijyu/5915.html",
+      "officialBasis": "夫婦双方39歳以下等を対象とする令和8年度の現行結婚新生活支援を確認",
+      "contentChanged": true
+    },
+    {
+      "code": "23213",
+      "name": "西尾市",
+      "service": "housingSupport",
+      "correctionType": "three_generation_housing_conditions_clarified",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "別居する親世帯と子世帯が三世代で同居・隣居する住宅の新築・改修費を補助する。",
+      "afterSummary": "別居する親世帯と孫を含む子世帯が新たに三世代同居・隣居するための住宅新築・増改築・リフォーム費の2分の1を、上限30万円補助する。",
+      "officialSource": "https://www.city.nishio.aichi.jp/kurashi/sumai/1001389/1002315.html",
+      "officialBasis": "孫を含む子世帯と親世帯の三世代同居・隣居、新築・増改築・リフォーム、上限30万円の現行条件を確認",
+      "contentChanged": true
+    },
+    {
+      "code": "23227",
+      "name": "高浜市",
+      "service": "housingSupport",
+      "correctionType": "general_migration_employment_support_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "東京圏から高浜市へ移住し対象要件を満たす人へ、移住定住就業支援補助金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.takahama.lg.jp/soshiki/keizai/12790.html",
+      "officialBasis": "現行の移住定住就業支援は東京圏からの移住・就業等を要件とする一般移住支援で、住宅費や子育て世帯を対象要件とする制度ではない",
+      "contentChanged": true
+    },
+    {
+      "code": "23441",
+      "name": "阿久比町",
+      "service": "housingSupport",
+      "correctionType": "current_three_generation_housing_verified_maintained",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "三世代同居または近居のために住宅を新築・購入する世帯へ、最大30万円を交付する。",
+      "afterSummary": "三世代同居または近居のために住宅を新築・購入する世帯へ、最大30万円を交付する。",
+      "officialSource": "https://www.town.agui.lg.jp/0000007799.html",
+      "officialBasis": "親・子・孫の三世代同居・近居を対象とする現行制度と上限30万円を確認",
+      "contentChanged": false
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 34,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 29
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般定住・住宅取得制度は子育て等の対象要件がなければ子育て住宅支援に分類しない",
+    "一般移住・就業支援は住宅費または子育て世帯固有の支援でなければ住宅支援に分類しない",
+    "三世代同居・近居制度は家族世帯向け住宅支援としてverified対象に含める",
+    "結婚新生活支援は新婚世帯向け住宅支援としてverified対象に含める"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3901,
+  "nationalSyncWorkflowRunId": 30194591852,
+  "nationalSyncStatus": "validated_pending_merge"
+}
