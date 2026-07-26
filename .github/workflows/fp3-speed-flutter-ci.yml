@@ -51,9 +51,17 @@ jobs:
           flutter --version
           dart --version
 
-      - name: Generate Web platform files
+      - name: Generate Web platform files and CI fixtures
         working-directory: fp3-speed-app
-        run: flutter create --platforms=web --org jp.allsunday --project-name fp3_speed_quiz .
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create --platforms=web --org jp.allsunday --project-name fp3_speed_quiz .
+          rm -f test/widget_test.dart
+          mkdir -p assets
+          if [ ! -f assets/questions.json ]; then
+            printf '[]\n' > assets/questions.json
+          fi
 
       - name: Resolve dependencies
         working-directory: fp3-speed-app
