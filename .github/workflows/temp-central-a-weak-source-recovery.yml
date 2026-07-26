@@ -56,7 +56,7 @@ jobs:
 
           const resolved=new Set();
           for(const correction of checkpoint.qualityReaudit?.confirmedCorrections ?? []){
-            if(/source_upgrade|user_facing_source|primary_source/i.test(String(correction.type??'')) && correction.code && correction.service){
+            if(correction.code && correction.service){
               resolved.add(`${correction.code}:${correction.service}`);
             }
           }
@@ -135,6 +135,7 @@ jobs:
 
           const queue=[]; const queueSeen=new Set();
           for(const item of uniqueRecovered){
+            if(queue.length>=authoritativeCount) break;
             const key=`${item.code}:${item.service}`;
             if(queueSeen.has(key)) continue;
             queueSeen.add(key); queue.push({...item,selectionBasis:'recovered-operational-record'});
@@ -152,7 +153,7 @@ jobs:
             generatedAt:new Date().toISOString(),
             session:'中日本調査班A',
             authoritativeCandidateCount:authoritativeCount,
-            resolvedSourceUpgradeCount:resolved.size,
+            resolvedCorrectionPairCount:resolved.size,
             recoveredOperationalRecordCount:uniqueRecovered.length,
             mechanicalCandidateCount:scanCandidates.length,
             queueCount:queue.length,
