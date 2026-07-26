@@ -1,5 +1,7 @@
 const ALLOWED_ORIGIN = 'https://allsunday1122.github.io';
 const MAX_BODY_BYTES = 100_000;
+const DEFAULT_MODEL = 'gpt-5-nano';
+const DEFAULT_REASONING_EFFORT = 'medium';
 
 function cors(origin) {
   return {
@@ -44,33 +46,62 @@ function extractOutputText(payload) {
   return '';
 }
 
-function deduplicateQuestions(questions, count) {
+function deduplicateQuestions(items, count) {
+  const sourceItems = Array.isArray(items) ? items : [];
   const factKeys = new Set();
   const questionKeys = new Set();
   const pairs = new Set();
-  const output = [];
+  const questions = [];
+  let duplicateCount = 0;
+  let rejectedCount = 0;
 
-  for (const item of questions) {
-    const question = cleanText(item.question, 180);
-    const answer = cleanText(item.answer, 120);
-    const type = item.type === 'cloze' ? 'cloze' : 'qa';
-    const factKey = normalizeKey(item.factKey || `${answer}-${item.evidence || question}`);
+  for (const item of sourceItems) {
+    const question = cleanText(item?.question, 180);
+    const answer = cleanText(item?.answer, 120);
+    const type = item?.type === 'cloze' ? 'cloze' : 'qa';
+    const evidence = cleanText(item?.evidence, 240);
+    const factKey = normalizeKey(item?.factKey || `${answer}-${evidence || question}`);
     const questionKey = normalizeKey(question);
-    const pairKey = `${questionKey}|${normalizeKey(answer)}`;
+    const answerKey = normalizeKey(answer);
+    const pairKey = `${questionKey}|${answerKey}`;
 
-    if (!question || !answer || !factKey || !questionKey) continue;
-    if (question.length < 5 || answer.length < 1) continue;
-    if (normalizeKey(question).includes(normalizeKey(answer)) && type === 'qa') continue;
-    if (factKeys.has(factKey) || questionKeys.has(questionKey) || pairs.has(pairKey)) continue;
+    if (!question || !answer || !factKey || !questionKey || !answerKey) {
+      rejectedCount += 1;
+      continue;
+    }
+    if (question.length < 5 || answer.length < 1) {
+      rejectedCount += 1;
+      continue;
+    }
+    if (questionKey.includes(answerKey) && type === 'qa') {
+      rejectedCount += 1;
+      continue;
+    }
+    if (factKeys.has(factKey) || questionKeys.has(questionKey) || pairs.has(pairKey)) {
+      duplicateCount += 1;
+      continue;
+    }
 
     factKeys.add(factKey);
     questionKeys.add(questionKey);
     pairs.add(pairKey);
-    output.push({ question, answer, type });
-    if (output.length >= count) break;
+    questions.push({ question, answer, type });
+    if (questions.length >= count) break;
   }
 
-  return output;
+  return {
+    questions,
+    rawCount: sourceItems.length,
+    duplicateCount,
+    rejectedCount
+  };
+}
+
+function normalizeUsage(rawUsage) {
+  const inputTokens = Number(rawUsage?.input_tokens) || 0;
+  const outputTokens = Number(rawUsage?.output_tokens) || 0;
+  const totalTokens = Number(rawUsage?.total_tokens) || inputTokens + outputTokens;
+  return { inputTokens, outputTokens, totalTokens };
 }
 
 export default {
@@ -114,6 +145,12 @@ export default {
       ? body.difficulty
       : 'normal';
     const count = Math.max(1, Math.min(Number(body.count) || 10, 20));
+    const model = cleanText(env.OPENAI_MODEL || DEFAULT_MODEL, 80) || DEFAULT_MODEL;
+    const reasoningEffort = ['none', 'low', 'medium', 'high'].includes(
+      env.OPENAI_REASONING_EFFORT
+    )
+      ? env.OPENAI_REASONING_EFFORT
+      : DEFAULT_REASONING_EFFORT;
 
     if (source.length < 20) {
       return json({ error: '教材本文を20文字以上入力してください。' }, 400, origin);
@@ -123,15 +160,17 @@ export default {
       'あなたは日本語教材から、表と裏で学習する単語カードを作る編集者です。',
       `教材本文だけを根拠に、最大${count}枚のカードを作成してください。推測で事実を追加しないでください。`,
       `希望形式は${type}、難易度は${difficulty}です。1枚は15秒以内で答えられる短さにしてください。`,
+      '各カードを作る前に、本文中の「一つの確認可能な事実」を特定してください。事実を特定できない文からは作問しないでください。',
       '最重要ルール: 同じ事実を一問一答と穴埋めの両方にしないでください。同じ年代、名称、場所、定義、因果関係は1回だけ出題してください。',
       '見出し、文の途中、不完全な語句、英語表記だけ、答えが問題文に残る問題、答えが複数ある問題は禁止です。',
       '問題数を満たすために低品質な問題を追加しないでください。意味のある事実が少なければ出力件数を減らしてください。',
-      'factKeyには、問題文の形式に依存しない事実の識別子を日本語で短く入れてください。例: lucy-discovery-date、human-origin-place。',
+      'factKeyには、問題文の形式に依存しない事実の識別子を日本語または短い英数字で入れてください。',
       'evidenceには、答えの根拠となる教材本文の該当部分を短くそのまま入れてください。'
     ].join('\n');
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 45_000);
+    const startedAt = Date.now();
 
     try {
       const response = await fetch('https://api.openai.com/v1/responses', {
@@ -142,7 +181,8 @@ export default {
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: env.OPENAI_MODEL || 'gpt-5-mini',
+          model,
+          reasoning: { effort: reasoningEffort },
           instructions,
           input: source,
           store: false,
@@ -196,19 +236,34 @@ export default {
       }
 
       const parsed = JSON.parse(outputText);
-      const questions = deduplicateQuestions(
-        Array.isArray(parsed.questions) ? parsed.questions : [],
-        count
-      );
+      const result = deduplicateQuestions(parsed.questions, count);
 
-      if (!questions.length) {
+      if (!result.questions.length) {
         return json(
           { error: '問題を生成できませんでした。教材文を見直してください。' },
           422,
           origin
         );
       }
-      return json({ questions, model: env.OPENAI_MODEL || 'gpt-5-mini' }, 200, origin);
+
+      return json(
+        {
+          questions: result.questions,
+          model: cleanText(raw?.model || model, 80),
+          reasoningEffort,
+          usage: normalizeUsage(raw?.usage),
+          quality: {
+            requestedCount: count,
+            rawCount: result.rawCount,
+            acceptedCount: result.questions.length,
+            duplicateCount: result.duplicateCount,
+            rejectedCount: result.rejectedCount
+          },
+          elapsedMs: Date.now() - startedAt
+        },
+        200,
+        origin
+      );
     } catch (error) {
       console.error(error);
       const message =
