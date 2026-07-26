@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch24-decisions-20260726",
+  "decidedAt": "2026-07-26T09:32:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3839,
+  "runnerWorkflowRunId": 30181429934,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 4,
+  "verifiedReplacementCount": 1,
+  "decisions": [
+    {
+      "code": "27220",
+      "name": "箕面市",
+      "service": "housingSupport",
+      "decisionType": "general_seismic_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の木造住宅を対象に耐震診断・設計・改修工事費を補助し、2026年度に上限額と手続きを改正した。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.minoh.lg.jp/sidou/taisin/taisinkaisyuukoujihihojo.html"
+    },
+    {
+      "code": "27222",
+      "name": "羽曳野市",
+      "service": "housingSupport",
+      "decisionType": "general_seismic_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の木造住宅等を対象に耐震診断・設計・改修・除却費用の一部を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.habikino.lg.jp/soshiki/toshikaihatsu/kenchikujutaku/taishin/15407.html"
+    },
+    {
+      "code": "27223",
+      "name": "門真市",
+      "service": "housingSupport",
+      "decisionType": "general_seismic_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "2026年度は旧耐震基準の住宅を対象に耐震診断・設計改修・シェルター・除却を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.kadoma.osaka.jp/machizukuri_rodo/kenchiku/7/hozyoseido/33834.html"
+    },
+    {
+      "code": "27224",
+      "name": "摂津市",
+      "service": "housingSupport",
+      "decisionType": "replace_with_current_multigenerational_child_program",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "2026年度は旧耐震基準の住宅を対象に耐震診断・計画・改修・耐震シェルター・除却費用を補助する。",
+      "afterSummary": "市外から転入する中学生以下の子がいる世帯等が、市内の親世帯と同居・近居するため住宅を取得した場合、3年間で最大45万円を補助する。",
+      "officialSource": "https://www.city.settsu.osaka.jp/soshiki/kensetsubu/kenchikuka/tasedai_doukyo/10298.html"
+    },
+    {
+      "code": "27226",
+      "name": "藤井寺市",
+      "service": "housingSupport",
+      "decisionType": "general_seismic_support_misclassification",
+      "changed": true,
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の住宅等を対象に耐震診断、木造住宅の耐震改修、除却費用を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.fujiidera.lg.jp/kurashi/jutakukenchiku/jutaku/1390265709101.html"
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 59,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 54
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般耐震・除却制度だけを子育て世帯向け住宅支援として登録しない",
+    "子育て世帯の多世代同居・近居住宅取得支援は対象年齢・金額・申請期限を現行公式ページから記録する",
+    "居住支援体制の整備方針を直接給付制度と混同しない"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "regionalMergePullRequestNumber": 3839,
+  "nationalSyncPullRequestNumber": 3841,
+  "nationalSyncWorkflowRunId": 30181539480,
+  "nationalSyncStatus": "validated_pending_merge"
+}

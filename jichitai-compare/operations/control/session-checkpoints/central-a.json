@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T08:45:00+09:00",
+  "updatedAt": "2026-07-26T09:32:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3835,
+  "pullRequestNumber": 3839,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3829,
+  "stateSyncPullRequestNumber": 3839,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残59件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残54件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T08:45:00+09:00",
-    "latestRegionalPullRequestNumber": 3829,
+    "latestCompletedAt": "2026-07-26T09:32:00+09:00",
+    "latestRegionalPullRequestNumber": 3839,
     "latestCiRunNumber": 30179659490,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 169,
-    "primarySourceSlotsRechecked": 601,
+    "correctedMunicipalitiesRechecked": 174,
+    "primarySourceSlotsRechecked": 606,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -579,6 +579,36 @@
         "code": "27218",
         "service": "housingSupport",
         "name": "大東市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27220",
+        "service": "housingSupport",
+        "name": "箕面市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27222",
+        "service": "housingSupport",
+        "name": "羽曳野市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27223",
+        "service": "housingSupport",
+        "name": "門真市"
+      },
+      {
+        "type": "replace_with_current_multigenerational_child_program",
+        "code": "27224",
+        "service": "housingSupport",
+        "name": "摂津市"
+      },
+      {
+        "type": "general_seismic_support_misclassification",
+        "code": "27226",
+        "service": "housingSupport",
+        "name": "藤井寺市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -665,7 +695,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 59,
+      "generalHousingMisclassification": 54,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -687,7 +717,7 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残59件",
+      "一般住宅・移住制度の分類候補残54件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
@@ -733,5 +763,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第23群の富田林市・寝屋川市・河内長野市・松原市・大東市を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第24群として、箕面市・羽曳野市・門真市・藤井寺市の一般耐震制度をunavailableへ修正し、摂津市を現行の多世代定住促進事業へ差し替えた。"
 }
