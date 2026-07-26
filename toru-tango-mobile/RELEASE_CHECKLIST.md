@@ -14,11 +14,20 @@
 - [x] Bundle ID、Version、Buildを記載
 - [x] EAS Build設定を作成
 - [x] GitHub Actions定義を作成
-- [ ] `npm run typecheck` 成功確認
-- [ ] `npm run lint` 成功確認
-- [ ] `npm run doctor` 成功確認
-- [ ] Workerの構文検査成功確認
-- [ ] Cloudflare Worker実通信確認
+- [x] `npm run typecheck` 成功確認
+- [x] `npm run lint` 成功確認
+- [x] `npm run doctor` 成功確認
+- [x] `npx expo config --type public` 成功確認
+- [x] Workerの構文検査成功確認
+- [x] アプリアイコンを設定
+- [x] 起動画面を設定
+- [ ] Cloudflare Worker実通信確認（ユーザー側の公開・Secret登録後）
+
+自動検査証跡:
+
+- PR: `#3959`
+- Run ID: `30199401934`
+- 結果: success
 
 ## 2. 手動機能テスト
 
@@ -28,6 +37,8 @@
 - [ ] 作る画面が最初に表示される
 - [ ] 4タブを移動できる
 - [ ] Safe Areaに文字やボタンが重ならない
+- [ ] アイコンがホーム画面で正しく表示される
+- [ ] previewまたはproduction buildで起動画面を確認する
 
 ### カード作成
 
@@ -55,6 +66,7 @@
 - [ ] 写真ライブラリから選択できる
 - [ ] 写真権限を拒否してもクラッシュしない
 - [ ] 写真プレビューが表示される
+- [ ] OCR未実装の案内が誤解を招かないか確認する
 
 ### 単語帳
 
@@ -91,9 +103,12 @@
 
 ## 3. Claude QA入口
 
-- [ ] ChatGPT実装完了条件を満たす
-- [ ] 対象コミットを記録する
-- [ ] `CLAUDE_QA_HANDOFF.md` をClaudeへ渡す
+- [x] ChatGPTのコード実装を完了
+- [x] 自動検査をすべて成功
+- [x] QA用PR `#3959` を作成
+- [x] `CLAUDE_QA_HANDOFF.md` を作成
+- [x] `CLAUDE_START_PROMPT.md` を作成
+- [ ] ClaudeがQA対象head SHAを報告書へ記録
 
 ## 4. Claude QA完了条件
 
