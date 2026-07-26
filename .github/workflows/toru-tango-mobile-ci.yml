@@ -82,7 +82,7 @@ jobs:
           node --test tests/mobile-generator.test.cjs 2>&1 | tee ci-logs/mobile-generator-tests.log
           rm -rf .tmp-regression
 
-      - name: Native OCR module structure
+      - name: Native OCR module and Expo autolinking
         id: native_ocr
         continue-on-error: true
         run: |
@@ -93,7 +93,9 @@ jobs:
           grep -q 'ToruTangoOcrModule' modules/toru-tango-ocr/expo-module.config.json
           grep -q 'Name("ToruTangoOcr")' modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift
           grep -q 'VNRecognizeTextRequest' modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift
-          echo 'Apple Vision OCR module structure: OK' | tee ci-logs/native-ocr.log
+          npx expo-modules-autolinking resolve --platform apple 2>&1 | tee ci-logs/autolinking-apple.log
+          grep -q 'ToruTangoOcrModule' ci-logs/autolinking-apple.log
+          echo 'Apple Vision OCR module structure and autolinking: OK' | tee ci-logs/native-ocr.log
 
       - name: Worker syntax
         id: worker
