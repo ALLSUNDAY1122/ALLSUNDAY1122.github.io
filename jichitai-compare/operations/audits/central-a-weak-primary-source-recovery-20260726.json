@@ -7,110 +7,45 @@
   "resolvedCorrectionPairCount": 80,
   "recoveredOperationalRecordCount": 32,
   "mechanicalCandidateCount": 373,
-  "queueCount": 8,
+  "queueCount": 3,
   "nextBatch": [
     {
-      "code": "27381",
-      "service": "schoolMeals",
-      "name": "太子町",
-      "currentUrl": "https://www.town.taishi.osaka.jp/busyo/seisakusoumubu/soumuzaiseika/yosankesanjokyohoukokusho/toushoyosannitsuite/6669.html",
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-cause-based-rescan-20260725.json",
-      "context": "root.causeCandidates.categories.weakPrimarySource[43]",
-      "selectionBasis": "recovered-operational-record"
-    },
-    {
-      "code": "28214",
-      "service": "schoolMeals",
-      "name": "宝塚市",
-      "currentUrl": "https://www.city.takarazuka.hyogo.jp/_res/projects/default_project/_page_/001/012/635/r8_takarazukanoyosan.pdf",
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-cause-based-rescan-20260725.json",
-      "context": "root.causeCandidates.categories.weakPrimarySource[44]",
-      "selectionBasis": "recovered-operational-record"
-    },
-    {
-      "code": "28218",
-      "service": "sickChildCare",
-      "name": "小野市",
-      "currentUrl": "https://www.city.ono.hyogo.jp/section/~somu/reiki/reiki_honbun/v400RG00000870.html",
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-cause-based-rescan-20260725.json",
-      "context": "root.causeCandidates.categories.weakPrimarySource[45]",
-      "selectionBasis": "recovered-operational-record"
-    },
-    {
-      "code": "23237",
+      "code": "22214",
       "service": "housingSupport",
-      "name": "あま市",
+      "name": "藤枝市",
       "currentUrl": null,
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-housing-classification-batch14-decisions-20260726.json",
+      "reason": "令和8年度の継続実施、18歳以下の子どもがいる世帯、取得・移転・中古住宅改修の対象額を直接案内する現行利用者向けページへ主出典を更新した。",
+      "sourceRecord": "operations/audits/central-a-housing-classification-batch16-decisions-20260726.json",
       "context": "root.corrected[0]",
       "selectionBasis": "recovered-operational-record"
     },
     {
-      "code": "23238",
+      "code": "21206",
       "service": "housingSupport",
-      "name": "長久手市",
+      "name": null,
       "currentUrl": null,
       "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-housing-classification-batch14-decisions-20260726.json",
-      "context": "root.corrected[1]",
+      "sourceRecord": "operations/control/central-a-scope-round-04-gifu-20260725.json",
+      "context": "root.sourceRefreshes[0]",
       "selectionBasis": "recovered-operational-record"
+    },
+    {
+      "code": "23302",
+      "name": "東郷町",
+      "prefecture": "愛知県",
+      "service": "schoolMeals",
+      "currentUrl": "https://www.town.aichi-togo.lg.jp/material/files/group/27/gikaidayori159sokuhou.pdf",
+      "summary": "令和8年4月から町立小学校の学校給食費を無償化する。中学校の給食費は別途保護者負担とする。",
+      "score": 21,
+      "reasons": [
+        "pdf",
+        "attachment-path",
+        "planning-regulation-budget"
+      ],
+      "selectionBasis": "mechanical-weak-source-scan"
     }
   ],
   "queue": [
-    {
-      "code": "27381",
-      "service": "schoolMeals",
-      "name": "太子町",
-      "currentUrl": "https://www.town.taishi.osaka.jp/busyo/seisakusoumubu/soumuzaiseika/yosankesanjokyohoukokusho/toushoyosannitsuite/6669.html",
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-cause-based-rescan-20260725.json",
-      "context": "root.causeCandidates.categories.weakPrimarySource[43]",
-      "selectionBasis": "recovered-operational-record"
-    },
-    {
-      "code": "28214",
-      "service": "schoolMeals",
-      "name": "宝塚市",
-      "currentUrl": "https://www.city.takarazuka.hyogo.jp/_res/projects/default_project/_page_/001/012/635/r8_takarazukanoyosan.pdf",
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-cause-based-rescan-20260725.json",
-      "context": "root.causeCandidates.categories.weakPrimarySource[44]",
-      "selectionBasis": "recovered-operational-record"
-    },
-    {
-      "code": "28218",
-      "service": "sickChildCare",
-      "name": "小野市",
-      "currentUrl": "https://www.city.ono.hyogo.jp/section/~somu/reiki/reiki_honbun/v400RG00000870.html",
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-cause-based-rescan-20260725.json",
-      "context": "root.causeCandidates.categories.weakPrimarySource[45]",
-      "selectionBasis": "recovered-operational-record"
-    },
-    {
-      "code": "23237",
-      "service": "housingSupport",
-      "name": "あま市",
-      "currentUrl": null,
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-housing-classification-batch14-decisions-20260726.json",
-      "context": "root.corrected[0]",
-      "selectionBasis": "recovered-operational-record"
-    },
-    {
-      "code": "23238",
-      "service": "housingSupport",
-      "name": "長久手市",
-      "currentUrl": null,
-      "reason": "operational record",
-      "sourceRecord": "operations/audits/central-a-housing-classification-batch14-decisions-20260726.json",
-      "context": "root.corrected[1]",
-      "selectionBasis": "recovered-operational-record"
-    },
     {
       "code": "22214",
       "service": "housingSupport",
@@ -1436,9 +1371,9 @@
       "workflowRunId": 30201083773
     }
   ],
-  "status": "active_queue_batch5_completed_public_verified",
+  "status": "active_queue_batch6_applied",
   "lastCompletedBatch": 5,
   "lastCompletedAt": "2026-07-27T06:13:00+09:00",
-  "lastAppliedBatch": 5,
-  "lastAppliedAt": "2026-07-26T22:41:00+09:00"
+  "lastAppliedBatch": 6,
+  "lastAppliedAt": "2026-07-27T06:27:00+09:00"
 }
