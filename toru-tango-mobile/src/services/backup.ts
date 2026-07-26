@@ -11,8 +11,11 @@ function isCard(value: unknown): value is Card {
     typeof card.id === 'string' &&
     typeof card.question === 'string' &&
     typeof card.answer === 'string' &&
-    typeof card.correct === 'number' &&
-    typeof card.wrong === 'number'
+    Number.isFinite(card.correct) &&
+    Number.isFinite(card.wrong) &&
+    (card.lastStudiedAt === null || typeof card.lastStudiedAt === 'string') &&
+    typeof card.createdAt === 'string' &&
+    typeof card.updatedAt === 'string'
   );
 }
 
@@ -31,11 +34,17 @@ function isHistory(value: unknown): value is StudyHistory {
 export function validateBackup(value: unknown): BackupData {
   if (!value || typeof value !== 'object') throw new Error('INVALID_BACKUP');
   const data = value as Partial<BackupData>;
+  if (data.version !== 1) throw new Error('UNSUPPORTED_BACKUP_VERSION');
   if (!Array.isArray(data.cards) || !data.cards.every(isCard)) {
     throw new Error('INVALID_CARDS');
   }
   if (!Array.isArray(data.history) || !data.history.every(isHistory)) {
     throw new Error('INVALID_HISTORY');
+  }
+
+  const cardIds = new Set(data.cards.map((card) => card.id));
+  if (data.history.some((entry) => !cardIds.has(entry.cardId))) {
+    throw new Error('ORPHAN_HISTORY');
   }
 
   return {
@@ -70,7 +79,10 @@ export async function pickBackup(): Promise<BackupData | null> {
   });
 
   if (result.canceled) return null;
-  const text = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+  const asset = result.assets[0];
+  if (!asset) throw new Error('BACKUP_NOT_SELECTED');
+
+  const text = await FileSystem.readAsStringAsync(asset.uri, {
     encoding: FileSystem.EncodingType.UTF8
   });
   return validateBackup(JSON.parse(text));
