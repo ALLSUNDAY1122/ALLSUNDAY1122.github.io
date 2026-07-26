@@ -1,0 +1,114 @@
+name: Temporary Central A Weak Source Batch 3
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-batch3-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-weak-source-batch3-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply weak primary source batch 3
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare';
+          const checkedAt='2026-07-26';
+          const updatedAt='2026-07-26T22:03:00+09:00';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const readJson=p=>{const raw=fs.readFileSync(p,'utf8');return{raw,obj:JSON.parse(raw)}};
+          const writeJson=(p,raw,obj)=>fs.writeFileSync(p,(raw.startsWith('{\n')?JSON.stringify(obj,null,2):JSON.stringify(obj))+'\n');
+          const addSource=(svc,entry)=>{const list=Array.isArray(svc.additionalSources)?svc.additionalSources:[];const i=list.findIndex(x=>x.url===entry.url);if(i>=0)list[i]={...list[i],...entry};else list.push(entry);svc.additionalSources=list;};
+          const decisions=[
+            {code:'23563',pref:'23',name:'豊根村',service:'postpartumCare',outcome:'authoritative_source_retained_navigation_added',previousUrl:'https://www.vill.toyone.aichi.jp/section/reiki_int/reiki_honbun/i577RG00000795.html',newUrl:'https://www.vill.toyone.aichi.jp/section/reiki_int/reiki_honbun/i577RG00000795.html',basis:'産後1年未満、宿泊・日帰り型、利用日数、自己負担を現行要綱で確認し、村の母子保健・子育て情報導線を追加'},
+            {code:'24212',pref:'24',name:'熊野市',service:'sickChildCare',outcome:'authoritative_source_retained_navigation_added',previousUrl:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00000826.html',newUrl:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00000826.html',basis:'病児・病後児預かりを含むファミリーサポート事業要綱を維持し、子育てハンドブックと利用費補助根拠を追加'},
+            {code:'24212',pref:'24',name:'熊野市',service:'schoolMeals',outcome:'authoritative_source_retained_navigation_added',previousUrl:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00001184.html',newUrl:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00001184.html',basis:'市内児童生徒の給食費全額補助要綱を維持し、完全無料化の基金条例と現行学校教育導線を追加'},
+            {code:'24212',pref:'24',name:'熊野市',service:'postpartumCare',outcome:'authoritative_source_retained_navigation_added',previousUrl:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00000978.html',newUrl:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00000978.html',basis:'利用対象、7日以内、ケア内容、自己負担を現行要綱で確認し、子育てハンドブックと包括相談支援ページを追加'},
+            {code:'24214',pref:'24',name:'いなべ市',service:'schoolMeals',outcome:'authoritative_source_retained_navigation_added',previousUrl:'https://www2.city.inabe.mie.jp/reiki/reiki_honbun/r031RG00001258.html',newUrl:'https://www2.city.inabe.mie.jp/reiki/reiki_honbun/r031RG00001258.html',basis:'保護者から学校給食費を徴収しない条例を維持し、現行の学校給食献立ページで継続実施を確認'}
+          ];
+          const grouped=new Map();
+          for(const d of decisions){if(!grouped.has(d.code))grouped.set(d.code,[]);grouped.get(d.code).push(d);}
+          for(const [code,items] of grouped){
+            const pref=items[0].pref;
+            const municipalityPath=path.join(root,'data/municipalities',pref,`${code}.json`);
+            const {raw,obj:m}=readJson(municipalityPath);
+            for(const d of items){
+              const svc=m.services[d.service];
+              if(!svc)throw new Error(`${d.code}:${d.service} missing`);
+              svc.source.checkedAt=checkedAt;
+              if(d.code==='23563'){
+                svc.details.userFacingNote='産後ケア専用の利用者向けページは現時点で確認できないため、申請・委託施設は豊根村保健福祉センターへ確認する。';
+                addSource(svc,{url:'https://www.vill.toyone.aichi.jp/soshiki/jumin/hoken/740.html',checkedAt,description:'母子手帳アプリと村の子育て支援情報を案内する現行利用者向けページ'});
+              }else if(d.code==='24212'&&d.service==='sickChildCare'){
+                svc.details.userFacingNote='病児・病後児預かりの提供会員調整、報酬、利用可否はファミリーサポートセンターへ確認する。';
+                addSource(svc,{url:'https://www.city.kumano.lg.jp/childcare/?content=795',checkedAt,description:'妊娠・出産・育児の支援をまとめる熊野市公式子育てハンドブック入口'});
+                addSource(svc,{url:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00000754.html',checkedAt,description:'ファミリーサポート提供会員の利用費を一部補助する公式要綱'});
+              }else if(d.code==='24212'&&d.service==='schoolMeals'){
+                svc.details.userFacingNote='市立学校等は実施管理者が手続きし、市外・特別支援学校等は保護者申請が必要な場合がある。';
+                addSource(svc,{url:'https://www.city.kumano.lg.jp/reiki_int/reiki_honbun/r314RG00001000.html',checkedAt,description:'小・中学校給食費完全無料化事業を基金の使途に定める条例'});
+                addSource(svc,{url:'https://www.city.kumano.lg.jp/childcare/?category=36',checkedAt,description:'熊野市公式の現行学校教育カテゴリーと担当課への導線'});
+              }else if(d.code==='24212'&&d.service==='postpartumCare'){
+                svc.details.fee='利用費用の1割を自己負担。生活保護世帯・市民税非課税世帯は免除。';
+                addSource(svc,{url:'https://www.city.kumano.lg.jp/childcare/?content=795',checkedAt,description:'妊娠・出産・育児の支援をまとめる熊野市公式子育てハンドブック入口'});
+                addSource(svc,{url:'https://www.city.kumano.lg.jp/welfare/?content=2122',checkedAt,description:'妊娠届から産後訪問までの包括相談支援を案内する現行公式ページ'});
+              }else if(d.code==='24214'){
+                svc.details.currentOperation='市内小中学校の現行献立表が継続公開されていることを確認。';
+                addSource(svc,{url:'https://www.city.inabe.mie.jp/kyoiku/kyoiku/school/1006855.html',checkedAt,description:'市内小中学校の現行学校給食献立表'});
+              }
+            }
+            m.updatedAt=checkedAt;
+            writeJson(municipalityPath,raw,m);
+            const taskPath=path.join(root,'operations/tasks',`${code}.json`);
+            const {raw:taskRaw,obj:task}=readJson(taskPath);
+            task.lastCheckedAt=checkedAt;task.lastUpdatedAt=updatedAt;task.lastUpdatedBy='中日本調査班A';task.status='merged';task.completedServices=keys;
+            task.verifiedCount=keys.filter(k=>m.services[k]?.status==='verified').length;task.researchingCount=keys.filter(k=>m.services[k]?.status==='researching').length;task.unavailableCount=keys.filter(k=>m.services[k]?.status==='unavailable').length;task.needsMediumReviewCount=keys.filter(k=>m.services[k]?.status==='needs_medium_review').length;
+            task.officialSources=[...new Set(keys.map(k=>m.services[k]?.source?.url).filter(Boolean))];
+            task.notes=Array.isArray(task.notes)?task.notes:[];
+            for(const d of items){const note=`2026-07-26 弱い主出典第3群: ${d.service}を${d.outcome}として再確認。${d.basis}`;if(!task.notes.includes(note))task.notes.push(note);}
+            task.mergedViaPR=Number(process.env.PR_NUMBER);task.lastWorkflowRunId=Number(process.env.RUN_ID);writeJson(taskPath,taskRaw,task);
+          }
+          const recoveryPath=path.join(root,'operations/audits/central-a-weak-primary-source-recovery-20260726.json');const recovery=JSON.parse(fs.readFileSync(recoveryPath,'utf8'));const done=new Set(decisions.map(d=>`${d.code}:${d.service}`));recovery.queue=(recovery.queue??[]).filter(x=>!done.has(`${x.code}:${x.service}`));recovery.queueCount=recovery.queue.length;recovery.nextBatch=recovery.queue.slice(0,5);recovery.status='active_queue_batch3_applied';recovery.lastAppliedBatch=3;recovery.lastAppliedAt=updatedAt;fs.writeFileSync(recoveryPath,JSON.stringify(recovery,null,2)+'\n');
+          const decision={schemaVersion:'1.0.0',auditId:'central-a-weak-primary-source-batch3-decisions-20260726',session:'中日本調査班A',coordinatorSession:'統括B',checkedAt,updatedAt,category:'weakPrimarySource',reviewedMunicipalityCount:3,reviewedServiceCount:5,confirmedSourceUpgradeCount:0,authoritativeSourceRetainedWithNavigationCount:5,directUserPageMaintainedCount:0,contentCorrectionCount:0,remainingCandidates:18,decisions,regionalPullRequestNumber:Number(process.env.PR_NUMBER),regionalWorkflowRunId:Number(process.env.RUN_ID),status:'regional_changes_validated',blocker:null};fs.writeFileSync(path.join(root,'operations/audits/central-a-weak-primary-source-batch3-decisions-20260726.json'),JSON.stringify(decision,null,2)+'\n');
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));checkpoint.updatedAt=updatedAt;checkpoint.status='completed';checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);checkpoint.ciStatus='success';checkpoint.nextAction='弱い主出典残18件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';const q=checkpoint.qualityReaudit;q.latestCompletedAt=updatedAt;q.latestRegionalPullRequestNumber=Number(process.env.PR_NUMBER);q.latestCiRunNumber=Number(process.env.RUN_ID);q.correctedMunicipalitiesRechecked=Math.max(Number(q.correctedMunicipalitiesRechecked??241),244);q.primarySourceSlotsRechecked=Math.max(Number(q.primarySourceSlotsRechecked??673),678);q.candidateCounts.weakPrimarySource=18;q.latestWeakSourceBatch={batch:3,status:'regional_changes_validated',reviewedMunicipalityCount:3,reviewedServiceCount:5,confirmedSourceUpgradeCount:0,authoritativeSourceRetainedWithNavigationCount:5,directUserPageMaintainedCount:0,contentCorrectionCount:0,remainingCandidates:18,regionalPullRequestNumber:Number(process.env.PR_NUMBER),regionalWorkflowRunId:Number(process.env.RUN_ID),blocker:null};q.confirmedCorrections=Array.isArray(q.confirmedCorrections)?q.confirmedCorrections:[];for(const d of decisions)if(!q.confirmedCorrections.some(x=>x.type==='weak_primary_source_resolved'&&String(x.code)===d.code&&x.service===d.service))q.confirmedCorrections.push({type:'weak_primary_source_resolved',code:d.code,service:d.service,name:d.name,outcome:d.outcome});checkpoint.lastAction='弱い主出典第3群5制度を公式情報で再確認し、要綱・条例を維持しながら現行の利用者向け導線を補強した。';fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+          const regionPath=path.join(root,'operations/control/regions/central.json');const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));region.updatedAt=updatedAt;region.latestCentralAWeakSourceBatch=q.latestWeakSourceBatch;region.lastAction=checkpoint.lastAction;fs.writeFileSync(regionPath,JSON.stringify(region,null,2)+'\n');
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/central-a-weak-source-batch3-trigger-20260726.json
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Commit changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A弱い主出典第3群を改善'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
