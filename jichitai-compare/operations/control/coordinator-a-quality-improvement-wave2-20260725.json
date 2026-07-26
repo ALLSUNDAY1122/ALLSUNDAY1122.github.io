@@ -3,7 +3,7 @@
   "assignmentId": "coordinator-a-quality-improvement-wave2-20260725",
   "coordinatorSession": "統括A③",
   "createdAt": "2026-07-25T10:55:00+09:00",
-  "updatedAt": "2026-07-25T14:10:00+09:00",
+  "updatedAt": "2026-07-26T15:03:00+09:00",
   "status": "completed_with_nonblocking_follow_up",
   "publishedControl": {
     "pullRequestNumber": 3207,
@@ -39,16 +39,18 @@
     {
       "session": "north-b",
       "issueNumber": 3197,
-      "status": "completed_with_nonblocking_follow_up",
+      "status": "completed",
       "priorCorrectionsRevalidated": 28,
       "sampledMunicipalities": 20,
       "horizontalUrlAuditMunicipalities": 107,
       "fiscalCandidatesReviewed": 40,
-      "confirmedFiscalAnyoneCorrectionMunicipalities": 8,
-      "finalMainPullRequests": [3228, 3232, 3383, 3414, 3420],
-      "finalRegionPullRequests": [3326, 3394, 3418],
-      "publicVerificationPullRequests": [3321, 3397],
+      "anyoneCandidatesReviewed": 78,
+      "anyoneCandidatesRemaining": 0,
+      "finalMainPullRequests": [3228, 3232, 3383, 3414, 3420, 3631],
+      "finalRegionPullRequests": [3326, 3394, 3418, 3632, 3642],
+      "publicVerificationPullRequests": [3321, 3397, 3636],
       "followUpIssue": 3398,
+      "followUpIssueStatus": "completed",
       "remainingConfirmedErrors": 0
     },
     {
@@ -80,14 +82,13 @@
     }
   ],
   "completionGate": {
-    "issuesCompleted": [3196, 3197, 3198, 3199],
+    "issuesCompleted": [3196, 3197, 3198, 3199, 3398],
     "regionMainGeneratedPublicConsistency": "passed",
     "confirmedUnfixedErrors": 0,
     "publicationBlocking": false
   },
   "nonblockingFollowUps": [
-    {"issueNumber": 2847, "municipalityCode": "20602", "municipalityName": "栄村", "reason": "公式サイトHTTP 502。9制度はunavailableで安全表示。"},
-    {"issueNumber": 3398, "scope": "north-b-low-priority-anyone-childcare-candidates", "candidateCount": 74, "reason": "機械抽出候補で確定誤りではない。公式情報更新時に再確認。"}
+    {"issueNumber": 2847, "municipalityCode": "20602", "municipalityName": "栄村", "reason": "公式サイトHTTP 502。9制度はunavailableで安全表示。"}
   ],
-  "nextCoordinatorAction": "Issue #2847と#3398を非ブロッキング追跡し、公式情報更新、公開差分、CI失敗、または明示的修正依頼が発生した場合のみ再開する。"
+  "nextCoordinatorAction": "Issue #2847を非ブロッキング追跡し、公式情報更新、公開差分、CI失敗、または明示的修正依頼が発生した場合のみ再開する。"
 }
