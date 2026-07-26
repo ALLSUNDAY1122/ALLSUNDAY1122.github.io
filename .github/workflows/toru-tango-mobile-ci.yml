@@ -38,55 +38,48 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: TypeScript
-        id: typecheck
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           npm run typecheck 2>&1 | tee ci-logs/typecheck.log
 
       - name: ESLint
-        id: lint
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           npm run lint 2>&1 | tee ci-logs/lint.log
 
       - name: Expo Doctor
-        id: doctor
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           npm run doctor 2>&1 | tee ci-logs/doctor.log
 
       - name: Expo config
-        id: expo_config
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           npx expo config --type public 2>&1 | tee ci-logs/expo-config.log
 
       - name: Web semantic generator regressions
-        id: generator_tests
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           node --test ../toru-tango/tests/generator-v2.test.cjs 2>&1 | tee ci-logs/generator-tests.log
 
       - name: Mobile OCR-aware generator regressions
-        id: mobile_generator_tests
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           rm -rf .tmp-regression
           npx tsc -p tsconfig.regression.json 2>&1 | tee ci-logs/mobile-generator-compile.log
           node --test tests/mobile-generator.test.cjs 2>&1 | tee ci-logs/mobile-generator-tests.log
           rm -rf .tmp-regression
 
       - name: Native OCR module and Expo autolinking
-        id: native_ocr
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           test -f modules/toru-tango-ocr/expo-module.config.json
           test -f modules/toru-tango-ocr/index.ts
           test -f modules/toru-tango-ocr/ios/ToruTangoOcrModule.swift
@@ -98,10 +91,9 @@ jobs:
           echo 'Apple Vision OCR module structure and autolinking: OK' | tee ci-logs/native-ocr.log
 
       - name: Worker syntax
-        id: worker
-        continue-on-error: true
         run: |
           mkdir -p ci-logs
+          set -o pipefail
           node --check ../toru-tango/backend/src/index.js 2>&1 | tee ci-logs/worker.log
 
       - name: Upload validation logs
@@ -112,15 +104,3 @@ jobs:
           path: toru-tango-mobile/ci-logs
           if-no-files-found: error
           retention-days: 7
-
-      - name: Validation gate
-        if: always()
-        run: |
-          test "${{ steps.typecheck.outcome }}" = "success"
-          test "${{ steps.lint.outcome }}" = "success"
-          test "${{ steps.doctor.outcome }}" = "success"
-          test "${{ steps.expo_config.outcome }}" = "success"
-          test "${{ steps.generator_tests.outcome }}" = "success"
-          test "${{ steps.mobile_generator_tests.outcome }}" = "success"
-          test "${{ steps.native_ocr.outcome }}" = "success"
-          test "${{ steps.worker.outcome }}" = "success"
