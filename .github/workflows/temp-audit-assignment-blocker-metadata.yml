@@ -1,0 +1,108 @@
+name: Temporary Audit Assignment Blocker Metadata
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - jichitai-compare/operations/control/assignment-blocker-audit-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.head_ref == 'audit/assignment-blocker-metadata-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract assignment blocker metadata
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare';
+          const progressPath = path.join(root, 'operations/progress.json');
+          const taskDir = path.join(root, 'operations/tasks');
+          const outputPath = path.join(root, 'operations/audits/national-assignment-blocker-metadata-audit-20260726.json');
+          const progress = JSON.parse(fs.readFileSync(progressPath, 'utf8'));
+          const stalled = Array.isArray(progress.stalledMunicipalities) ? progress.stalledMunicipalities : [];
+
+          const records = stalled.map((entry) => {
+            const taskPath = path.join(taskDir, `${entry.code}.json`);
+            const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+            const blockers = Array.isArray(task.blockers) ? task.blockers : [];
+            const completedServices = Array.isArray(task.completedServices) ? task.completedServices.length : 0;
+            const staleCandidate = task.status === 'merged' && completedServices === 9 && blockers.length > 0;
+            return {
+              code: entry.code,
+              name: entry.name,
+              assignedTeam: task.assignedTeam,
+              status: task.status,
+              currentBranch: task.currentBranch ?? null,
+              pullRequestNumber: task.pullRequestNumber ?? null,
+              completedServiceCount: completedServices,
+              verifiedCount: task.verifiedCount ?? null,
+              unavailableCount: task.unavailableCount ?? null,
+              blockers,
+              staleCandidate,
+              taskPath: `jichitai-compare/operations/tasks/${entry.code}.json`
+            };
+          });
+
+          const expectedBlocked = progress.assignmentSummary?.blocked ?? null;
+          if (expectedBlocked !== records.length) {
+            throw new Error(`assignmentSummary.blocked=${expectedBlocked} but stalledMunicipalities=${records.length}`);
+          }
+
+          const result = {
+            schemaVersion: '1.0.0',
+            auditId: 'national-assignment-blocker-metadata-audit-20260726',
+            generatedAt: new Date().toISOString(),
+            sourceProgressUpdatedAt: progress.updatedAt,
+            nationwide: {
+              registeredMunicipalities: progress.registeredMunicipalities,
+              totalServices: progress.totalServices,
+              completedServices: progress.completedServices,
+              completionRatePercent: progress.completionRatePercent,
+              blockedMunicipalities: progress.blockedMunicipalities,
+              blockedServices: progress.blockedServices
+            },
+            counts: {
+              assignmentBlocked: expectedBlocked,
+              staleCandidates: records.filter((item) => item.staleCandidate).length,
+              activeCandidates: records.filter((item) => !item.staleCandidate).length
+            },
+            records,
+            judgment: records.every((item) => item.staleCandidate)
+              ? 'all_assignment_blockers_are_stale_metadata_candidates'
+              : 'contains_active_or_incomplete_assignment_blockers',
+            nextAction: '各recordのblockersを公式追跡Issueへ残すべきものと、完了済みtaskから除去すべき履歴メタデータへ分類する。'
+          };
+
+          fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+          fs.writeFileSync(outputPath, JSON.stringify(result, null, 2) + '\n');
+          console.log(JSON.stringify(result, null, 2));
+          NODE
+
+      - name: Commit audit result
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add jichitai-compare/operations/audits/national-assignment-blocker-metadata-audit-20260726.json
+          if git diff --cached --quiet; then
+            echo 'No audit changes'
+          else
+            git commit -m 'audit: 全国割当blockerメタデータ7件を抽出'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
