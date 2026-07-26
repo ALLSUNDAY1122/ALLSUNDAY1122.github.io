@@ -1,12 +1,12 @@
 # 撮る単語帳 リリース状況
 
-更新日: 2026-07-26
+更新日: 2026-07-27
 
 ## 現在の段階
 
 ChatGPT実装工程の最終確認中。Apple Visionを使うiOSネイティブOCR、OCR文字修復、表形式教材向け作問、表裏カード、両面読み上げまでコードへ実装した。
 
-自動検査は成功しているが、独自ネイティブモジュールを含むEAS開発ビルドとiPhone実機確認、Cloudflare Workerの公開、GPT-5 nanoの実通信は未完了。このため、Claude QA用PR `#3959` は下書きのまま維持する。
+独自ネイティブモジュールを含むEAS開発ビルドとiPhone実機確認、Cloudflare Workerの公開、GPT-5 nanoの実通信は未完了。このため、Claude QA用PR `#3959` は下書きのまま維持する。
 
 ## QA対象
 
@@ -15,9 +15,9 @@ ChatGPT実装工程の最終確認中。Apple Visionを使うiOSネイティブO
 - Pull Request: `#3959`
 - 対象ディレクトリ: `toru-tango-mobile/`
 - Web試用版: `https://allsunday1122.github.io/toru-tango/beta.html`
-- 最新自動検査成功Run ID: `30220648043`
+- 自動検査証跡: PR `#3959` の最新成功 `Toru Tango Mobile CI` Run
 
-最新Runで確認済み:
+自動検査項目:
 
 - TypeScript
 - ESLint
@@ -26,6 +26,8 @@ ChatGPT実装工程の最終確認中。Apple Visionを使うiOSネイティブO
 - Web作問回帰テスト
 - モバイルOCR対応作問回帰テスト
 - Apple Vision OCRモジュール構成
+- Expo Modules Autolinking
+- Expo iOS prebuild
 - Cloudflare Worker構文
 
 ## リリース識別情報
@@ -56,7 +58,7 @@ ChatGPT実装工程の最終確認中。Apple Visionを使うiOSネイティブO
 
 - カメラ撮影と写真選択
 - Apple Vision `VNRecognizeTextRequest`を使うiOSローカルネイティブモジュール
-- 自動時は0度・90度・270度を比較し、日本語認識スコアが最も高い向きを採用
+- 自動時は0度・90度・180度・270度を比較し、日本語認識スコアが最も高い向きを採用
 - 手動の左90度・右90度指定
 - 日本語と英語の認識指定
 - 認識結果の編集
@@ -96,7 +98,7 @@ Apple Vision OCRはExpo Goでは利用できない。`expo-dev-client`を含むE
 5. Workerへ`OPENAI_API_KEY`をSecret登録
 6. `EXPO_PUBLIC_AI_API_URL`を設定
 7. GPT-5 nanoで3～5教材の基本実通信を確認
-8. 最新headでGitHub Actionsを再度成功させる
+8. 最新headでGitHub Actionsを成功させる
 9. PRをReady for reviewへ変更
 
 固定20教材によるnanoの最終品質判定はClaude QAで実施してよい。Worker公開前の場合はClaudeへ渡さず、外部設定待ちとして維持する。
