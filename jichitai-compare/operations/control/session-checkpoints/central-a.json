@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T18:34:00+09:00",
+  "updatedAt": "2026-07-26T18:43:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3925,
+  "pullRequestNumber": 3929,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3919,
+  "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残19件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残14件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T18:34:00+09:00",
-    "latestRegionalPullRequestNumber": 3919,
+    "latestCompletedAt": "2026-07-26T18:43:00+09:00",
+    "latestRegionalPullRequestNumber": 3929,
     "latestCiRunNumber": 30196485647,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 209,
-    "primarySourceSlotsRechecked": 641,
+    "correctedMunicipalitiesRechecked": 214,
+    "primarySourceSlotsRechecked": 646,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -755,7 +755,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 19,
+      "generalHousingMisclassification": 14,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -777,29 +777,23 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残19件",
+      "一般住宅・移住制度の分類候補残14件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3921,
     "latestPublicVerificationPullRequestNumber": 3923,
     "latestHousingBatch": {
-      "batch": 31,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 32,
+      "status": "regional_corrected_pending_national_sync",
       "reviewedMunicipalityCount": 5,
       "confirmedCorrectionCount": 5,
-      "statusToUnavailableCount": 3,
-      "verifiedReplacementOrClarificationCount": 2,
+      "statusToUnavailableCount": 2,
+      "verifiedReplacementOrClarificationCount": 3,
       "verifiedMaintainedCount": 0,
-      "remainingCandidates": 19,
-      "regionalPullRequestNumber": 3919,
-      "regionalWorkflowRunId": 30196485647,
-      "nationalPullRequestNumber": 3921,
-      "nationalWorkflowRunId": 30196560364,
-      "publicVerificationPullRequestNumber": 3923,
-      "publicVerificationWorkflowRunId": 30196662376,
-      "finalRegionPullRequestNumber": 3925,
-      "finalRegionWorkflowRunId": 30196749497,
+      "remainingCandidates": 14,
+      "regionalPullRequestNumber": 3929,
+      "regionalWorkflowRunId": 30196985454,
       "blocker": null
     },
     "stateReconciliation": {
@@ -824,5 +818,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第31群の郡上市・豊根村・川越町をunavailableへ修正し、養老町の三世代住宅条件を明確化、池田町を令和8年度結婚新生活支援へ差し替えて地域・全国・公開一致を確認した。"
+  "lastAction": "住宅支援分類第32群として、明石市・西宮市をunavailableへ修正し、紀宝町・神戸市・洲本市を現行の新婚・子育て住宅支援へ差し替えた。"
 }
