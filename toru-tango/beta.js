@@ -5,11 +5,14 @@
   const EVAL_KEY='toru-tango-ai-evaluations-v1';
   const $=(selector)=>document.querySelector(selector);
   const norm=(value)=>String(value??'').trim().replace(/\s+/g,' ').toLocaleLowerCase('ja-JP');
+  const normalizeRotation=(value)=>((value%360)+360)%360;
   let cards=[];
   let evaluations=[];
   let lastAiResult=null;
   let selectedPhoto=null;
-  let photoObjectUrl='';
+  let photoImage=null;
+  let photoRotation=0;
+  let manualRotation=false;
   let queue=[];
   let position=0;
   let backVisible=false;
@@ -38,37 +41,162 @@
 
   function setGenerated(lines,message,isAi=false){$('#generated').value=lines.join('\n');$('#generated').classList.toggle('hidden',!lines.length);$('#saveGenerated').classList.toggle('hidden',!lines.length);$('#qualityRow').classList.toggle('hidden',!isAi||!lines.length);$('#status').className='status';$('#status').textContent=message}
 
-  $('#photo').onchange=(event)=>{
+  function loadPhoto(file){
+    return new Promise((resolve,reject)=>{
+      const objectUrl=URL.createObjectURL(file);
+      const image=new Image();
+      image.onload=()=>{URL.revokeObjectURL(objectUrl);resolve(image)};
+      image.onerror=()=>{URL.revokeObjectURL(objectUrl);reject(new Error('画像を読み込めませんでした'))};
+      image.src=objectUrl;
+    });
+  }
+
+  function createPhotoCanvas(rotation,maxSide=1600,enhance=false){
+    if(!photoImage)throw new Error('画像がありません');
+    const normalized=normalizeRotation(rotation);
+    const swap=normalized===90||normalized===270;
+    const sourceWidth=photoImage.naturalWidth||photoImage.width;
+    const sourceHeight=photoImage.naturalHeight||photoImage.height;
+    const rotatedWidth=swap?sourceHeight:sourceWidth;
+    const rotatedHeight=swap?sourceWidth:sourceHeight;
+    const scale=Math.min(2,Math.max(0.35,maxSide/Math.max(rotatedWidth,rotatedHeight)));
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(rotatedWidth*scale));
+    canvas.height=Math.max(1,Math.round(rotatedHeight*scale));
+    const context=canvas.getContext('2d',{willReadFrequently:enhance});
+    context.fillStyle='#fff';
+    context.fillRect(0,0,canvas.width,canvas.height);
+    context.save();
+    context.translate(canvas.width/2,canvas.height/2);
+    context.rotate(normalized*Math.PI/180);
+    context.drawImage(photoImage,-sourceWidth*scale/2,-sourceHeight*scale/2,sourceWidth*scale,sourceHeight*scale);
+    context.restore();
+
+    if(enhance){
+      const imageData=context.getImageData(0,0,canvas.width,canvas.height);
+      const data=imageData.data;
+      const histogram=new Uint32Array(256);
+      for(let index=0;index<data.length;index+=4){
+        const luminance=Math.round(data[index]*0.299+data[index+1]*0.587+data[index+2]*0.114);
+        histogram[luminance]++;
+      }
+      const pixels=canvas.width*canvas.height;
+      const percentile=(ratio)=>{let total=0;for(let value=0;value<256;value++){total+=histogram[value];if(total>=pixels*ratio)return value}return 255};
+      const low=percentile(.02);
+      const high=Math.max(low+20,percentile(.985));
+      for(let index=0;index<data.length;index+=4){
+        const luminance=data[index]*0.299+data[index+1]*0.587+data[index+2]*0.114;
+        let adjusted=(luminance-low)*255/(high-low);
+        adjusted=(adjusted-128)*1.18+128;
+        const value=Math.max(0,Math.min(255,Math.round(adjusted)));
+        data[index]=value;data[index+1]=value;data[index+2]=value;data[index+3]=255;
+      }
+      context.putImageData(imageData,0,0);
+    }
+    return canvas;
+  }
+
+  function renderPhotoPreview(){
+    if(!photoImage)return;
+    const canvas=createPhotoCanvas(photoRotation,1400,false);
+    $('#photoPreview').src=canvas.toDataURL('image/jpeg',.9);
+    $('#photoPreview').classList.remove('hidden');
+    $('#rotationStatus').textContent=`現在の向き：${normalizeRotation(photoRotation)}度${manualRotation?'（手動固定）':'（OCR時に自動判定）'}`;
+  }
+
+  function projectionSuggestsSideways(rotation){
+    const canvas=createPhotoCanvas(rotation,360,true);
+    const context=canvas.getContext('2d',{willReadFrequently:true});
+    const {data}=context.getImageData(0,0,canvas.width,canvas.height);
+    const rows=new Float64Array(canvas.height);
+    const columns=new Float64Array(canvas.width);
+    for(let y=0;y<canvas.height;y++){
+      for(let x=0;x<canvas.width;x++){
+        const value=data[(y*canvas.width+x)*4];
+        if(value<175){rows[y]++;columns[x]++}
+      }
+    }
+    const variation=(values)=>{let mean=0;for(const value of values)mean+=value;mean/=values.length||1;let variance=0;for(const value of values)variance+=(value-mean)**2;variance/=values.length||1;return Math.sqrt(variance)/(mean+.001)};
+    return variation(columns)>variation(rows)*1.18;
+  }
+
+  function ocrTextScore(value){
+    const text=String(value||'');
+    const japanese=(text.match(/[\u3040-\u30ff\u3400-\u9fff]/g)||[]).length;
+    const digits=(text.match(/[0-9]/g)||[]).length;
+    const latin=(text.match(/[A-Za-z]/g)||[]).length;
+    const noise=(text.match(/[|_=<>\\]{1}/g)||[]).length;
+    const meaningfulLines=text.split(/\n/).filter(line=>(line.match(/[\u3040-\u30ff\u3400-\u9fff0-9]/g)||[]).length>=4).length;
+    return japanese*5+digits+meaningfulLines*20-latin*.35-noise*1.5;
+  }
+
+  function cleanOcrText(value){
+    return String(value||'')
+      .replace(/\r/g,'')
+      .split(/\n/)
+      .map(line=>line.replace(/[ \t]{2,}/g,' ').trim())
+      .filter(line=>{
+        if(!line)return false;
+        const meaningful=(line.match(/[\u3040-\u30ff\u3400-\u9fff0-9A-Za-z]/g)||[]).length;
+        return meaningful>=2;
+      })
+      .join('\n')
+      .replace(/\n{3,}/g,'\n\n')
+      .trim();
+  }
+
+  async function recognizeCanvas(canvas,status,label,progressPrefix){
+    const result=await window.Tesseract.recognize(canvas,'jpn+eng',{logger:(message)=>{if(typeof message.progress==='number')status.textContent=`${progressPrefix}${label} ${Math.round(message.progress*100)}%`;}});
+    return cleanOcrText(result?.data?.text||'');
+  }
+
+  async function chooseRotation(status){
+    if(manualRotation)return photoRotation;
+    if(!projectionSuggestsSideways(photoRotation))return photoRotation;
+    const candidates=[normalizeRotation(photoRotation+90),normalizeRotation(photoRotation+270)];
+    let best={rotation:candidates[0],score:-Infinity};
+    for(let index=0;index<candidates.length;index++){
+      const rotation=candidates[index];
+      const canvas=createPhotoCanvas(rotation,850,true);
+      const text=await recognizeCanvas(canvas,status,`${index+1}/${candidates.length}`,'向きを確認中 ');
+      const score=ocrTextScore(text);
+      if(score>best.score)best={rotation,score};
+    }
+    return best.rotation;
+  }
+
+  $('#photo').onchange=async(event)=>{
     selectedPhoto=event.target.files?.[0]||null;
+    photoImage=null;photoRotation=0;manualRotation=false;
     $('#ocrText').classList.add('hidden');
     $('#useOcrText').classList.add('hidden');
-    if(photoObjectUrl)URL.revokeObjectURL(photoObjectUrl);
     if(!selectedPhoto){$('#photoPreview').classList.add('hidden');return}
-    photoObjectUrl=URL.createObjectURL(selectedPhoto);
-    $('#photoPreview').src=photoObjectUrl;
-    $('#photoPreview').classList.remove('hidden');
-    $('#ocrStatus').className='status';
-    $('#ocrStatus').classList.remove('hidden');
-    $('#ocrStatus').textContent='写真を選択しました。「写真から文字を読む」を押してください。';
+    const status=$('#ocrStatus');
+    status.className='status';status.classList.remove('hidden');status.textContent='写真を読み込んでいます。';
+    try{photoImage=await loadPhoto(selectedPhoto);renderPhotoPreview();status.textContent='写真を選択しました。OCR時に向きを自動判定します。必要なら回転ボタンで調整してください。';}
+    catch(error){status.className='status error';status.textContent=error instanceof Error?error.message:'画像を読み込めませんでした';}
   };
 
+  $('#rotateLeft').onclick=()=>{if(!photoImage)return alert('先に写真を選択してください。');photoRotation=normalizeRotation(photoRotation-90);manualRotation=true;renderPhotoPreview()};
+  $('#rotateRight').onclick=()=>{if(!photoImage)return alert('先に写真を選択してください。');photoRotation=normalizeRotation(photoRotation+90);manualRotation=true;renderPhotoPreview()};
+  $('#autoRotation').onclick=()=>{if(!photoImage)return alert('先に写真を選択してください。');photoRotation=0;manualRotation=false;renderPhotoPreview();$('#ocrStatus').className='status';$('#ocrStatus').textContent='OCR時に向きを自動判定します。'};
+
   $('#runOcr').onclick=async()=>{
-    if(!selectedPhoto)return alert('先に写真を撮るか選択してください。');
+    if(!selectedPhoto||!photoImage)return alert('先に写真を撮るか選択してください。');
     const status=$('#ocrStatus');
-    status.className='status';
-    status.classList.remove('hidden');
-    status.textContent='文字認識機能を読み込み中です。';
+    status.className='status';status.classList.remove('hidden');status.textContent='文字認識機能を読み込み中です。';
     try{
-      if(!window.Tesseract){
-        await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=resolve;script.onerror=reject;document.head.appendChild(script)});
-      }
-      const result=await window.Tesseract.recognize(selectedPhoto,'jpn+eng',{logger:(message)=>{if(typeof message.progress==='number')status.textContent=`文字認識中 ${Math.round(message.progress*100)}%`;}});
-      const text=String(result?.data?.text||'').trim();
-      if(!text)throw new Error('文字を認識できませんでした');
+      if(!window.Tesseract){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=resolve;script.onerror=reject;document.head.appendChild(script)})}
+      const selectedRotation=await chooseRotation(status);
+      photoRotation=selectedRotation;
+      renderPhotoPreview();
+      const canvas=createPhotoCanvas(selectedRotation,2500,true);
+      const text=await recognizeCanvas(canvas,status,'','文字認識中 ');
+      if(!text||ocrTextScore(text)<80)throw new Error('文字を十分に認識できませんでした。写真を正面から撮り、回転を調整してください');
       $('#ocrText').value=text;
       $('#ocrText').classList.remove('hidden');
       $('#useOcrText').classList.remove('hidden');
-      status.textContent='文字認識が完了しました。内容を確認して教材本文へ送ってください。';
+      status.textContent=`文字認識が完了しました。${manualRotation?'手動指定':'自動判定'}の向きは${selectedRotation}度です。内容を確認して教材本文へ送ってください。`;
     }catch(error){status.className='status error';status.textContent=`文字認識に失敗しました：${error instanceof Error?error.message:'原因不明のエラー'}`;}
   };
 
