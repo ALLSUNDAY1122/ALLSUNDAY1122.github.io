@@ -1,0 +1,84 @@
+name: Temporary Central A Housing Batch 33 Public Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch33-public-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-housing-batch33-public-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify public pages and generated JSON
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {setTimeout as sleep} from 'node:timers/promises';
+          const targets=[
+            {code:'28210',name:'加古川市',status:'verified',summary:'令和8年度に新婚生活を始める39歳以下の夫婦へ、住宅取得・賃借・リフォーム・引越費用を最大60万円補助する。',source:'https://www.city.kakogawa.lg.jp/soshikikarasagasu/kodomo/kodomoseisaku/kekkonshinseikatsu/31177.html'},
+            {code:'28212',name:'赤穂市',status:'verified',summary:'市営住宅では、中学校卒業までの子がいる子育て世帯と、合計年齢80歳未満・婚姻後2年以内の新婚世帯について、入居収入基準を月額25万9,000円以下に緩和する。',source:'https://www.city.ako.lg.jp/shimin/juutaku/income.html'},
+            {code:'28213',name:'西脇市',status:'verified',summary:'令和8年1月1日から令和9年3月31日までに婚姻した39歳以下の夫婦へ、住宅取得・賃借・リフォーム・引越費用を最大60万円補助する。',source:'https://www.city.nishiwaki.lg.jp/lifescenemokutekibetsudesagasu/kakusyutetsuzukijyosei/jutakuteate_josei/26478.html'},
+            {code:'28214',name:'宝塚市',status:'unavailable',summary:'子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。',source:'https://www.city.takarazuka.hyogo.jp/1060678/1060691/1061537/1010169/1000400.html'},
+            {code:'28215',name:'三木市',status:'verified',summary:'39歳以下の新婚世帯・移住世帯へ、住宅取得・賃借・リフォーム・引越費用を原則最大30万円、条件により最大100万円支援する。',source:'https://www.city.miki.lg.jp/soshiki/6/1072.html'}
+          ];
+          const base='https://allsunday1122.github.io/jichitai-compare';
+          let evidence=null;
+          for(let attempt=1;attempt<=30;attempt++){
+            const stamp=`${Date.now()}-${attempt}`;
+            const pageChecks=[];
+            for(const t of targets){
+              const url=`${base}/municipality/${t.code}/?audit=${stamp}`;
+              const r=await fetch(url,{cache:'no-store'});
+              const html=await r.text();
+              pageChecks.push({code:t.code,name:t.name,expectedStatus:t.status,url,httpStatus:r.status,sourceMatches:html.includes(t.source),summaryMatches:html.includes(t.summary),statusMatches:html.includes(t.status),success:r.status===200&&html.includes(t.source)&&html.includes(t.summary)&&html.includes(t.status)});
+            }
+            const jr=await fetch(`${base}/data/generated/municipalities.json?audit=${stamp}`,{cache:'no-store'});
+            const json=await jr.json();
+            const list=Array.isArray(json)?json:(json.municipalities??json.items??[]);
+            const records=targets.map(t=>{
+              const m=list.find(x=>String(x.code??x.municipalityCode)===t.code);
+              const h=m?.services?.housingSupport;
+              return {code:t.code,found:!!m,statusMatches:h?.status===t.status,summaryMatches:h?.summary===t.summary,sourceMatches:h?.source?.url===t.source,success:!!m&&h?.status===t.status&&h?.summary===t.summary&&h?.source?.url===t.source};
+            });
+            const serviceCount=list.reduce((n,m)=>n+Object.keys(m.services??{}).length,0);
+            const success=pageChecks.every(x=>x.success)&&jr.status===200&&list.length===1741&&serviceCount===15669&&records.every(x=>x.success);
+            evidence={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-batch33-public-verification-20260726',generatedAt:new Date().toISOString(),regionalPullRequest:3939,nationalSyncPullRequest:3941,verificationPullRequest:Number(process.env.PR_NUMBER),verificationWorkflowRunId:Number(process.env.RUN_ID),expectedUnavailableCount:1,expectedVerifiedCount:4,attempt,pageChecks,jsonCheck:{httpStatus:jr.status,municipalityCount:list.length,serviceCount,records,success:jr.status===200&&list.length===1741&&serviceCount===15669&&records.every(x=>x.success)},success,releaseBlocker:success?'none':'public_mismatch'};
+            if(success)break;
+            await sleep(15000);
+          }
+          if(!evidence?.success)throw new Error('Public verification failed after retries');
+          const out='jichitai-compare/operations/audits/central-a-housing-classification-batch33-public-verification-20260726.json';
+          fs.mkdirSync(path.dirname(out),{recursive:true});
+          fs.writeFileSync(out,JSON.stringify(evidence,null,2)+'\n');
+          const trigger='jichitai-compare/operations/control/central-a-housing-batch33-public-trigger-20260726.json';
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Commit public evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'verify: 中日本A住宅支援第33群の公開反映を確認'
+          git push --force-with-lease origin HEAD:${{ github.event.pull_request.head.ref }}
