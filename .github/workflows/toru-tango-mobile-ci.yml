@@ -33,8 +33,17 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Mobile checks
-        run: npm run check
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Expo Doctor
+        run: npm run doctor
+
+      - name: Expo config
+        run: npx expo config --type public > /tmp/toru-tango-expo-config.json
 
       - name: Worker syntax
         run: node --check ../toru-tango/backend/src/index.js
