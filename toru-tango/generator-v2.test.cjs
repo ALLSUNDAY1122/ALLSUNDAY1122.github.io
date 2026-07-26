@@ -11,6 +11,8 @@ const source = `人類史のはじまり
 const questions = globalThis.ToruTangoGeneratorV2.generateQuestionsV2(source, 10, 'mix', 'normal');
 const joined = questions.join('\n');
 
+console.log(JSON.stringify({ count: questions.length, questions }, null, 2));
+
 assert.ok(questions.length >= 6, `expected at least 6 meaningful questions, got ${questions.length}`);
 assert.match(joined, /人類は.*どこで誕生.*｜アフリカ大陸|人類は、数百万年前に（　　）で誕生.*｜アフリカ大陸/);
 assert.match(joined, /アウストラロピテクスが登場したのは.*｜約540万年前/);
