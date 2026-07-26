@@ -1,0 +1,98 @@
+name: Temporary Central A Weak Source Batch 7
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-batch7-trigger-20260727.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-weak-source-batch7-20260727'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply weak primary source batch 7
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='jichitai-compare';
+          const checkedAt='2026-07-27';
+          const updatedAt='2026-07-27T06:49:00+09:00';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const readJson=p=>{const raw=fs.readFileSync(p,'utf8');return{raw,obj:JSON.parse(raw)}};
+          const writeJson=(p,raw,obj)=>fs.writeFileSync(p,(raw.startsWith('{\n')?JSON.stringify(obj,null,2):JSON.stringify(obj))+'\n');
+          const addSource=(svc,entry)=>{const list=Array.isArray(svc.additionalSources)?svc.additionalSources:[];const i=list.findIndex(x=>x.url===entry.url);if(i>=0)list[i]={...list[i],...entry};else list.push(entry);svc.additionalSources=list;};
+          const decisions=[
+            {code:'22214',pref:'22',name:'藤枝市',service:'housingSupport',outcome:'primary_source_replaced_with_current_direct_page',previousUrl:'https://www.city.fujieda.shizuoka.jp/mokuteki/teate_josei/kurashi/iju_teiju/22775.html',newUrl:'https://www.city.fujieda.shizuoka.jp/mokuteki/sumai_hikkoshi/shien/1484116616343.html',basis:'令和8年度の継続実施、18歳以下の子どもがいる世帯、住宅取得・転居・中古住宅改修の支援条件を現行直接ページで確認'},
+            {code:'21206',pref:'21',name:'中津川市',service:'housingSupport',outcome:'primary_source_replaced_with_current_direct_page',previousUrl:'https://www.city.nakatsugawa.lg.jp/soshikikarasagasu/tiikidukurikyodoka/4/2/38700.html',newUrl:'https://www.city.nakatsugawa.lg.jp/life/life/4/38702.html',basis:'新婚・子育て・移住世帯等の空き家取得30万円、改修費2分の1・上限50万円等を令和8年度の現行制度ページで確認'},
+            {code:'23302',pref:'23',name:'東郷町',service:'schoolMeals',outcome:'authoritative_source_retained_navigation_added',previousUrl:'https://www.town.aichi-togo.lg.jp/material/files/group/27/gikaidayori159sokuhou.pdf',newUrl:'https://www.town.aichi-togo.lg.jp/material/files/group/27/gikaidayori159sokuhou.pdf',basis:'令和8年4月からの小学校給食費無償化根拠を維持し、令和8年度献立表と給食センター概要の現行導線を追加'}
+          ];
+          for(const d of decisions){
+            const municipalityPath=path.join(root,'data/municipalities',d.pref,`${d.code}.json`);
+            const {raw,obj:m}=readJson(municipalityPath);const svc=m.services[d.service];if(!svc)throw new Error(`${d.code}:${d.service} missing`);
+            if(d.code==='22214'){
+              svc.source={url:d.newUrl,checkedAt};
+              svc.additionalSources=(svc.additionalSources??[]).filter(x=>x.url!==d.newUrl);
+              addSource(svc,{url:d.previousUrl,checkedAt,description:'令和8年度申請書類・対象経費等を掲載する公式案内'});
+            }else if(d.code==='21206'){
+              svc.source={url:d.newUrl,checkedAt};
+              svc.additionalSources=(svc.additionalSources??[]).filter(x=>x.url!==d.newUrl);
+              addSource(svc,{url:d.previousUrl,checkedAt,description:'制度改編前からの担当課公式案内'});
+              addSource(svc,{url:'https://www.city.nakatsugawa.lg.jp/life/life/1/index.html',checkedAt,description:'中津川市の移住・定住支援制度一覧'});
+            }else{
+              svc.source.checkedAt=checkedAt;
+              svc.details.currentOperation='令和8年度の小中学校献立表が継続公開され、給食センターから小学校6校・中学校3校等へ給食を提供していることを確認。';
+              addSource(svc,{url:'https://www.town.aichi-togo.lg.jp/kosodate_ouen/nenrei/shochugakusei/kyushoku/8963.html',checkedAt,description:'令和8年度の小中学校・保育園給食献立表'});
+              addSource(svc,{url:'https://www.town.aichi-togo.lg.jp/kosodate_kyoiku/ikuji_shochugakusei/shochugakko/1/5744.html',checkedAt,description:'給食センターの提供校・調理体制を案内する現行ページ'});
+            }
+            m.updatedAt=checkedAt;writeJson(municipalityPath,raw,m);
+            const taskPath=path.join(root,'operations/tasks',`${d.code}.json`);const {raw:taskRaw,obj:task}=readJson(taskPath);
+            task.lastCheckedAt=checkedAt;task.lastUpdatedAt=updatedAt;task.lastUpdatedBy='中日本調査班A';task.status='merged';task.completedServices=keys;
+            task.verifiedCount=keys.filter(k=>m.services[k]?.status==='verified').length;task.researchingCount=keys.filter(k=>m.services[k]?.status==='researching').length;task.unavailableCount=keys.filter(k=>m.services[k]?.status==='unavailable').length;task.needsMediumReviewCount=keys.filter(k=>m.services[k]?.status==='needs_medium_review').length;
+            task.officialSources=[...new Set(keys.map(k=>m.services[k]?.source?.url).filter(Boolean))];task.notes=Array.isArray(task.notes)?task.notes:[];
+            const note=`2026-07-27 弱い主出典第7群: ${d.service}を${d.outcome}として再確認。${d.basis}`;if(!task.notes.includes(note))task.notes.push(note);
+            task.mergedViaPR=Number(process.env.PR_NUMBER);task.lastWorkflowRunId=Number(process.env.RUN_ID);writeJson(taskPath,taskRaw,task);
+          }
+          const recoveryPath=path.join(root,'operations/audits/central-a-weak-primary-source-recovery-20260726.json');const recovery=JSON.parse(fs.readFileSync(recoveryPath,'utf8'));const done=new Set(decisions.map(d=>`${d.code}:${d.service}`));recovery.queue=(recovery.queue??[]).filter(x=>!done.has(`${x.code}:${x.service}`));recovery.queueCount=recovery.queue.length;recovery.nextBatch=[];recovery.status='queue_exhausted_batch7_applied';recovery.lastAppliedBatch=7;recovery.lastAppliedAt=updatedAt;fs.writeFileSync(recoveryPath,JSON.stringify(recovery,null,2)+'\n');
+          const decision={schemaVersion:'1.0.0',auditId:'central-a-weak-primary-source-batch7-decisions-20260727',session:'中日本調査班A',coordinatorSession:'統括B',checkedAt,updatedAt,category:'weakPrimarySource',reviewedMunicipalityCount:3,reviewedServiceCount:3,confirmedSourceUpgradeCount:2,authoritativeSourceRetainedWithNavigationCount:1,directUserPageMaintainedCount:0,contentCorrectionCount:0,remainingCandidates:0,decisions,regionalPullRequestNumber:Number(process.env.PR_NUMBER),regionalWorkflowRunId:Number(process.env.RUN_ID),status:'regional_changes_validated',blocker:null};fs.writeFileSync(path.join(root,'operations/audits/central-a-weak-primary-source-batch7-decisions-20260727.json'),JSON.stringify(decision,null,2)+'\n');
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));checkpoint.updatedAt=updatedAt;checkpoint.status='in_progress';checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);checkpoint.ciStatus='success';checkpoint.nextAction='弱い主出典候補0件。Issue #3141の19項目は、自治体が公式利用条件を公開した場合のみ再確認・解消する。';const q=checkpoint.qualityReaudit;q.latestCompletedAt=updatedAt;q.latestRegionalPullRequestNumber=Number(process.env.PR_NUMBER);q.latestCiRunNumber=Number(process.env.RUN_ID);q.correctedMunicipalitiesRechecked=Math.max(Number(q.correctedMunicipalitiesRechecked??0),260);q.primarySourceSlotsRechecked=Math.max(Number(q.primarySourceSlotsRechecked??0),696);q.candidateCounts.weakPrimarySource=0;q.latestWeakSourceBatch={batch:7,status:'regional_data_updated_ci_success',reviewedMunicipalityCount:3,reviewedServiceCount:3,confirmedSourceUpgradeCount:2,authoritativeSourceRetainedWithNavigationCount:1,directUserPageMaintainedCount:0,contentCorrectionCount:0,remainingCandidates:0,regionalPullRequestNumber:Number(process.env.PR_NUMBER),regionalWorkflowRunId:Number(process.env.RUN_ID),blocker:null};checkpoint.lastAction='弱い主出典第7群3制度を公式情報で再確認し、弱い主出典候補を0件にした。';fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+          const regionPath=path.join(root,'operations/control/regions/central.json');const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));region.updatedAt=updatedAt;region.latestCentralAWeakSourceBatch=q.latestWeakSourceBatch;region.lastAction=checkpoint.lastAction;fs.writeFileSync(regionPath,JSON.stringify(region,null,2)+'\n');
+          const progressPath=path.join(root,'operations/progress.json');const progress=JSON.parse(fs.readFileSync(progressPath,'utf8'));progress.updatedAt=updatedAt;if(progress.qualityReaudit){progress.qualityReaudit.correctedMunicipalitiesRechecked=Math.max(Number(progress.qualityReaudit.correctedMunicipalitiesRechecked??0),260);progress.qualityReaudit.primarySourceSlotsRechecked=Math.max(Number(progress.qualityReaudit.primarySourceSlotsRechecked??0),696);progress.qualityReaudit.weakPrimarySourceCandidates=0;}fs.writeFileSync(progressPath,JSON.stringify(progress,null,2)+'\n');
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f jichitai-compare/operations/control/central-a-weak-source-batch7-trigger-20260727.json
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Commit changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A弱い主出典第7群を改善'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
