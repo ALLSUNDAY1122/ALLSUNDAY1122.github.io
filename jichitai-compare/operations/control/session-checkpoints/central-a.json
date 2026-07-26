@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T22:07:00+09:00",
+  "updatedAt": "2026-07-26T22:19:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 4010,
+  "pullRequestNumber": 4014,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "弱い主出典残18件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "弱い主出典残13件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T22:07:00+09:00",
-    "latestRegionalPullRequestNumber": 4004,
-    "latestCiRunNumber": 30203076321,
+    "latestCompletedAt": "2026-07-26T22:19:00+09:00",
+    "latestRegionalPullRequestNumber": 4014,
+    "latestCiRunNumber": 30203862450,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 244,
-    "primarySourceSlotsRechecked": 678,
+    "correctedMunicipalitiesRechecked": 248,
+    "primarySourceSlotsRechecked": 683,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -757,6 +757,41 @@
         "service": "schoolMeals",
         "name": "いなべ市",
         "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25207",
+        "service": "schoolMeals",
+        "name": "守山市",
+        "outcome": "content_and_primary_source_corrected"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25210",
+        "service": "schoolMeals",
+        "name": "野洲市",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25425",
+        "service": "schoolMeals",
+        "name": "愛荘町",
+        "outcome": "content_and_primary_source_corrected"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25425",
+        "service": "postpartumCare",
+        "name": "愛荘町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "25442",
+        "service": "schoolMeals",
+        "name": "甲良町",
+        "outcome": "authoritative_source_retained_navigation_added"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -841,7 +876,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 18,
+      "weakPrimarySource": 13,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 0,
       "fiscalYearRisk": 33,
@@ -912,25 +947,19 @@
       "status": "resolved"
     },
     "latestWeakSourceBatch": {
-      "batch": 3,
-      "status": "completed_public_verified_region_integrated",
-      "reviewedMunicipalityCount": 3,
+      "batch": 4,
+      "status": "regional_changes_validated",
+      "reviewedMunicipalityCount": 4,
       "reviewedServiceCount": 5,
-      "confirmedSourceUpgradeCount": 0,
-      "authoritativeSourceRetainedWithNavigationCount": 5,
+      "confirmedSourceUpgradeCount": 2,
+      "authoritativeSourceRetainedWithNavigationCount": 3,
       "directUserPageMaintainedCount": 0,
-      "contentCorrectionCount": 0,
-      "remainingCandidates": 18,
-      "regionalPullRequestNumber": 4004,
-      "regionalWorkflowRunId": 30203076321,
-      "nationalPullRequestNumber": 4006,
-      "nationalWorkflowRunId": 30203221806,
-      "publicVerificationPullRequestNumber": 4008,
-      "publicVerificationWorkflowRunId": 30203335843,
-      "finalRegionPullRequestNumber": 4010,
-      "finalRegionWorkflowRunId": 30203457545,
+      "contentCorrectionCount": 2,
+      "remainingCandidates": 13,
+      "regionalPullRequestNumber": 4014,
+      "regionalWorkflowRunId": 30203862450,
       "blocker": null
     }
   },
-  "lastAction": "弱い主出典第3群5制度を地域・全国・公開で一致確認し、要綱・条例を維持しながら現行利用者向け導線を補強した。"
+  "lastAction": "弱い主出典第4群5制度を公式情報で再確認し、守山市・愛荘町の学校給食を令和8年度条件へ訂正し、残る3制度の利用者向け導線を補強した。"
 }

@@ -7,12 +7,15 @@
   "officialUrl": "https://www.city.moriyama.lg.jp/",
   "status": "verified",
   "summary": "守山市の子育て、教育、住宅、生活、防災に関する9制度を公式情報で確認済み。",
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-26",
   "services": {
     "childMedical": {
       "status": "verified",
       "summary": "乳幼児から18歳年度末まで、保険診療の自己負担額を助成する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 18},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 18
+      },
       "details": {
         "ageCondition": "18歳に達する日以後の最初の3月31日まで",
         "preschool": "就学前児童は通院・入院とも自己負担なし",
@@ -21,12 +24,18 @@
         "coverage": "健康保険が適用される医療費の自己負担分",
         "excluded": "保険適用外費用、入院時食事代、高額療養費・付加給付相当分等は対象外"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodsodate/1002253/1002294.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodsodate/1002253/1002294.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "sickChildCare": {
       "status": "verified",
       "summary": "生後6か月から小学6年生までの病児・病後児を専用施設で一時的に預かる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 12},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 12
+      },
       "details": {
         "target": "守山市在住で生後6か月から小学6年生までの病児・病後児",
         "facility": "病児・病後児保育ハーティ",
@@ -35,12 +44,18 @@
         "extension": "時間延長は500円",
         "application": "事前登録のうえ、施設へ予約して医師連絡票等を提出"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodsodate/1002254/1002306.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodsodate/1002254/1002306.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "childcareFee": {
       "status": "verified",
       "summary": "3～5歳児と住民税非課税世帯の0～2歳児は、幼児教育・保育の無償化対象となる。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 5},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 5
+      },
       "details": {
         "freeAges": "保育所、認定こども園等を利用する3～5歳児の保育料は無料",
         "underThree": "住民税非課税世帯の0～2歳児は保育料無料",
@@ -48,25 +63,55 @@
         "privateFacilities": "保育の必要性認定を受けた認可外保育施設等も上限額まで無償化対象",
         "excludedCosts": "給食費、通園送迎費、行事費等の実費は別途必要な場合がある"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodomoshisetsu/1002263/1002373.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodomoshisetsu/1002263/1002373.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "schoolMeals": {
       "status": "verified",
-      "summary": "市立小中学校の給食費は月額制で、経済的に就学困難な世帯には給食費を含む就学援助を行う。",
-      "eligibility": {"minAgeMonths": 72, "maxAgeYears": 15},
-      "details": {
-        "elementary": "小学校は月額4,600円、1食273円",
-        "middle": "中学校は月額5,200円、1食339円",
-        "adjustment": "長期欠席、転出入、食物アレルギー対応等は規則に基づき日割り等で調整",
-        "assistance": "要保護・準要保護児童生徒就学援助制度では学校給食費等を支給",
-        "application": "給食費は学校を通じて徴収し、就学援助は学校または教育委員会へ申請"
+      "summary": "令和8年度は市立小学校の学校給食費を実質無償化し、市立中学校は月額4,900円を据え置く。",
+      "eligibility": {
+        "minAgeMonths": 72,
+        "maxAgeYears": 15
       },
-      "source": {"url": "https://www2.city.moriyama.lg.jp/reiki_int/reiki_honbun/i400RG00002497.html", "checkedAt": "2026-07-22"}
+      "details": {
+        "fiscalYear": "令和8年度",
+        "elementary": "市立小学校は国の給食費負担軽減策に市独自支援を加え、保護者負担を実質0円とする",
+        "middle": "市立中学校は月額4,900円を据え置く",
+        "previousFee": "現行の基準額は小学校月額4,300円、中学校月額4,900円",
+        "assistance": "要保護・準要保護児童生徒は学校給食費を含む就学援助の対象",
+        "application": "通常給食の支援は学校運用に従い、就学援助は学校または教育委員会へ申請"
+      },
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/shichoushitsu/shiseihoushin/1014271/1014395.html",
+        "checkedAt": "2026-07-26"
+      },
+      "additionalSources": [
+        {
+          "url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/gakkoukyouiku/1002268/1002397.html",
+          "checkedAt": "2026-07-26",
+          "description": "現行の小中学校給食費と徴収方法を案内する利用者向けページ"
+        },
+        {
+          "url": "https://www2.city.moriyama.lg.jp/reiki_int/reiki_honbun/i400RG00002497.html",
+          "checkedAt": "2026-07-26",
+          "description": "学校給食費の基準額と日割り調整等を定める現行規則"
+        },
+        {
+          "url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/gakkoukyouiku/1002268/1002399.html",
+          "checkedAt": "2026-07-26",
+          "description": "経済的に就学困難な世帯への学校給食費を含む就学援助"
+        }
+      ]
     },
     "postpartumCare": {
       "status": "verified",
       "summary": "産後1年未満の母子へ、宿泊・通所・訪問型の産後ケアを合計7回まで提供する。",
-      "eligibility": {"minAgeMonths": 0, "maxAgeYears": 1},
+      "eligibility": {
+        "minAgeMonths": 0,
+        "maxAgeYears": 1
+      },
       "details": {
         "target": "守山市に住民登録があり、産後1年未満で心身の不調や育児不安等がある母子",
         "types": "宿泊型、通所型、訪問型",
@@ -75,12 +120,18 @@
         "exemption": "市民税非課税世帯・生活保護世帯は自己負担免除",
         "care": "母体の健康管理、授乳・乳房ケア、乳児の発育確認、育児相談等"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/ninshinshussan/1002252/1002282.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/ninshinshussan/1002252/1002282.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "temporaryChildcare": {
       "status": "verified",
       "summary": "保育所等を利用していない生後6か月から3歳未満の児童が、こども誰でも通園制度を月10時間まで利用できる。",
-      "eligibility": {"minAgeMonths": 6, "maxAgeYears": 3},
+      "eligibility": {
+        "minAgeMonths": 6,
+        "maxAgeYears": 3
+      },
       "details": {
         "program": "乳児等通園支援事業（こども誰でも通園制度）",
         "condition": "守山市在住で、保育所、認定こども園、地域型保育、企業主導型保育等に在籍していない児童",
@@ -90,7 +141,10 @@
         "facility": "こども誰でも通園制度実施施設mamocco",
         "application": "利用認定後、施設との事前面談と予約が必要"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodomoshisetsu/1014315.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/kosodatekyouiku/kodomoshisetsu/1014315.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "housingSupport": {
       "status": "verified",
@@ -105,7 +159,10 @@
         "residence": "市内に継続居住する意思が必要",
         "application": "申請期間内に必要書類を市へ提出。予算到達時に受付終了"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/kurashitetsuzuki/koseki/1001513/1003735.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/kurashitetsuzuki/koseki/1001513/1003735.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "bulkyWaste": {
       "status": "verified",
@@ -118,7 +175,10 @@
         "collection": "収集日の朝8時までに予約時に指定された場所へ出す",
         "directCarry": "自ら運搬できる場合は環境センターへの直接搬入も可能"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/kurashitetsuzuki/gomi/1001605/1001613/1001639.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/kurashitetsuzuki/gomi/1001605/1001613/1001639.html",
+        "checkedAt": "2026-07-22"
+      }
     },
     "disasterPrevention": {
       "status": "verified",
@@ -130,7 +190,10 @@
         "evacuation": "指定避難所、避難時の行動、防災情報の入手方法を掲載",
         "digital": "地点検索機能のあるデジタル防災マップも案内"
       },
-      "source": {"url": "https://www.city.moriyama.lg.jp/machikankyobousai/anzenanshin/1001506/1012736.html", "checkedAt": "2026-07-22"}
+      "source": {
+        "url": "https://www.city.moriyama.lg.jp/machikankyobousai/anzenanshin/1001506/1012736.html",
+        "checkedAt": "2026-07-22"
+      }
     }
   }
 }
