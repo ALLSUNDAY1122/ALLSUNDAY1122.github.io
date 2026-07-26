@@ -12,27 +12,45 @@ Claudeは、ChatGPTが実装したリリース候補について、主要操作�
 - P1: カード作成、学習、保存など主要機能が正常に完了しない
 - P2: 見た目、分かりやすさ、操作感、追加改善
 
-P0・P1の中核ロジック修正はChatGPTへ戻す。UI修正はClaudeが反映してよい。TestFlight・署名・申請作業は行わない。
+P0・P1の中核ロジック修正はChatGPTへ戻す。UI修正はClaudeがPRブランチへ反映してよい。TestFlight・署名・申請作業は行わない。
 
 ## 対象
 
 - リポジトリ: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
+- QAブランチ: `qa/toru-tango-mobile-20260726`
+- Pull Request: `#3959`
 - アプリ: `toru-tango-mobile/`
 - Web参考版: `toru-tango/`
 - 仕様: `toru-tango/IOS_MIGRATION_SPEC.md`
 - リリース状況: `toru-tango-mobile/RELEASE_STATUS.md`
 - チェックリスト: `toru-tango-mobile/RELEASE_CHECKLIST.md`
 
+QA開始時にPRの最新head SHAを取得し、`CLAUDE_QA_REPORT.md`へ記録する。mainではなくQAブランチを対象にする。
+
+## 自動検査の証跡
+
+- GitHub Actions workflow: `Toru Tango Mobile CI`
+- 成功Run ID: `30199401934`
+- 確認済み:
+  - TypeScript
+  - ESLint
+  - Expo Doctor
+  - Expo public config
+  - Cloudflare Worker構文
+- 検査ログArtifact: `toru-tango-validation-logs`
+
+QA中にコードを変更した場合、PRで同workflowが再度成功することを確認する。
+
 ## 起動手順
 
 ```bash
 cd toru-tango-mobile
-npm install
+npm install --no-audit --no-fund
 npm run check
 npx expo start
 ```
 
-iPhoneでExpo Goまたは開発ビルドを使用して確認する。SDK 57がExpo Goで利用できない場合はEASのpreview buildを使用する。
+iPhoneのExpo GoがSDK 57に対応しない場合はEASのpreview buildを使用する。起動画面はExpo Goではなくpreviewまたはproduction buildで確認する。
 
 ## 重点確認
 
@@ -42,6 +60,8 @@ iPhoneでExpo Goまたは開発ビルドを使用して確認する。SDK 57がE
 - 最初に「作る」が表示されるか
 - 4タブの移動
 - iPhoneのノッチ、Dynamic Island、ホームインジケータとの重なり
+- ホーム画面アイコンの見え方
+- 起動画面から最初の画面への切り替わり
 
 ### 2. 作る
 
@@ -83,11 +103,23 @@ iPhoneでExpo Goまたは開発ビルドを使用して確認する。SDK 57がE
 - クラウド同期なし
 - AI API未設定でも端末内作問で利用可能
 - 写真の撮影・選択は実装済み
-- 写真OCRは初回TestFlightの必須機能から除外候補。アプリ名と期待値の不一致がP1相当かを評価する
+- 写真OCRは初回TestFlightの必須機能から除外候補
+
+## 特に判定が必要な論点
+
+アプリ名は「撮る単語帳」だが、現状は写真の撮影・選択とプレビューまでで、写真からのOCRは未実装である。
+
+Claudeは次を明示的に判定する。
+
+1. 現在の案内だけでP1を回避できるか
+2. 初回版のアプリ名・説明・画面表示と実機能に重大な不一致がないか
+3. OCR実装が必須か、名称・説明の変更で初回版を成立させられるか
+
+この論点は推測で完了扱いにせず、`CLAUDE_QA_REPORT.md`へ結論と理由を記録する。
 
 ## Claudeの成果物
 
-1. `CLAUDE_QA_REPORT.md`
+1. `toru-tango-mobile/CLAUDE_QA_REPORT.md`
 2. P0、P1、P2の一覧
 3. 各問題の再現手順
 4. 修正したファイルとコミット
@@ -100,4 +132,5 @@ iPhoneでExpo Goまたは開発ビルドを使用して確認する。SDK 57がE
 - P1未解決が0件
 - P2が記録されている
 - 主要操作を最初から最後まで再テスト済み
+- 修正後のGitHub Actionsが成功
 - ユーザーへリリース候補の承認を求められる状態
