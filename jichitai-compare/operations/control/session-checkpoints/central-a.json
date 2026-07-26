@@ -16,14 +16,14 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T19:46:00+09:00",
+  "updatedAt": "2026-07-26T20:20:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3956,
-  "ciStatus": "success",
+  "pullRequestNumber": 3967,
+  "ciStatus": "pending",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
     {
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残4件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "弱い主出典残33件を、制度に直接対応する利用者向け公式ページへ更新する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T19:46:00+09:00",
-    "latestRegionalPullRequestNumber": 3950,
-    "latestCiRunNumber": 30198488052,
+    "latestCompletedAt": "2026-07-26T20:20:00+09:00",
+    "latestRegionalPullRequestNumber": 3967,
+    "latestCiRunNumber": 30199982431,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 224,
-    "primarySourceSlotsRechecked": 656,
+    "correctedMunicipalitiesRechecked": 231,
+    "primarySourceSlotsRechecked": 663,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -755,7 +755,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 4,
+      "generalHousingMisclassification": 0,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -784,22 +784,16 @@
     "latestNationalPullRequestNumber": 3952,
     "latestPublicVerificationPullRequestNumber": 3954,
     "latestHousingBatch": {
-      "batch": 34,
-      "status": "completed_public_verified_region_integrated",
-      "reviewedMunicipalityCount": 5,
-      "confirmedCorrectionCount": 5,
-      "statusToUnavailableCount": 0,
-      "verifiedReplacementOrClarificationCount": 5,
+      "batch": 35,
+      "status": "validated_pending_region_merge",
+      "reviewedMunicipalityCount": 7,
+      "confirmedCorrectionCount": 7,
+      "statusToUnavailableCount": 4,
+      "verifiedReplacementOrClarificationCount": 3,
       "verifiedMaintainedCount": 0,
-      "remainingCandidates": 4,
-      "regionalPullRequestNumber": 3950,
-      "regionalWorkflowRunId": 30198488052,
-      "nationalPullRequestNumber": 3952,
-      "nationalWorkflowRunId": 30198641412,
-      "publicVerificationPullRequestNumber": 3954,
-      "publicVerificationWorkflowRunId": 30198790278,
-      "finalRegionPullRequestNumber": 3956,
-      "finalRegionWorkflowRunId": 30198933505,
+      "remainingCandidates": 0,
+      "regionalPullRequestNumber": 3967,
+      "regionalWorkflowRunId": 30199982431,
       "blocker": null
     },
     "stateReconciliation": {
@@ -824,5 +818,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第34群の川西市・大垣市・輪之内町・南伊豆町・松崎町を現行の若年・子育て・新婚世帯向け住宅支援へ差し替え、地域・全国・公開一致を確認した。"
+  "lastAction": "住宅支援分類第35群の安城市・甲賀市・朝来市を対象制度へ差し替え、みよし市・東郷町・日進市・大治町をunavailableへ修正して住宅支援分類候補をゼロにした。"
 }
