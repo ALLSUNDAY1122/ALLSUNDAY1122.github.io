@@ -1,0 +1,93 @@
+name: Temporary Central A Housing Batch 30 Main Sync
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch30-main-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'sync/central-a-housing-batch30-main-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reset to latest main and import regional records
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main region/central
+          git reset --hard origin/main
+          files=(
+            jichitai-compare/data/municipalities/24/24472.json
+            jichitai-compare/data/municipalities/27/27301.json
+            jichitai-compare/data/municipalities/28/28207.json
+            jichitai-compare/data/municipalities/28/28216.json
+            jichitai-compare/data/municipalities/21/21217.json
+            jichitai-compare/operations/tasks/24472.json
+            jichitai-compare/operations/tasks/27301.json
+            jichitai-compare/operations/tasks/28207.json
+            jichitai-compare/operations/tasks/28216.json
+            jichitai-compare/operations/tasks/21217.json
+            jichitai-compare/operations/audits/central-a-housing-classification-batch30-decisions-20260726.json
+            jichitai-compare/operations/control/session-checkpoints/central-a.json
+            jichitai-compare/operations/control/regions/central.json
+          )
+          for file in "${files[@]}"; do
+            mkdir -p "$(dirname "$file")"
+            git show "origin/region/central:$file" > "$file"
+          done
+      - name: Regenerate and validate national outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Reject unexpected changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only origin/main)
+          for file in "${changed[@]}"; do
+            case "$file" in
+              jichitai-compare/data/municipalities/24/24472.json|jichitai-compare/data/municipalities/27/27301.json|jichitai-compare/data/municipalities/28/28207.json|jichitai-compare/data/municipalities/28/28216.json|jichitai-compare/data/municipalities/21/21217.json|jichitai-compare/operations/tasks/24472.json|jichitai-compare/operations/tasks/27301.json|jichitai-compare/operations/tasks/28207.json|jichitai-compare/operations/tasks/28216.json|jichitai-compare/operations/tasks/21217.json|jichitai-compare/operations/audits/central-a-housing-classification-batch30-decisions-20260726.json|jichitai-compare/operations/control/session-checkpoints/central-a.json|jichitai-compare/operations/control/regions/central.json|jichitai-compare/data/generated/municipalities.json|jichitai-compare/data/generated/municipality-pages.json|jichitai-compare/operations/progress.json|jichitai-compare/municipality/24472/index.html|jichitai-compare/municipality/27301/index.html|jichitai-compare/municipality/28207/index.html|jichitai-compare/municipality/28216/index.html|jichitai-compare/municipality/21217/index.html|jichitai-compare/sitemap.xml) ;;
+              *) echo "Unexpected change: $file"; exit 1 ;;
+            esac
+          done
+      - name: Record national sync and commit
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='jichitai-compare/operations/audits/central-a-housing-classification-batch30-decisions-20260726.json';
+          const audit=JSON.parse(fs.readFileSync(p,'utf8'));
+          audit.nationalSyncPullRequestNumber=Number(process.env.PR_NUMBER);
+          audit.nationalSyncWorkflowRunId=Number(process.env.RUN_ID);
+          audit.nationalSyncStatus='validated_pending_merge';
+          fs.writeFileSync(p,JSON.stringify(audit,null,2)+'\n');
+          const trigger='jichitai-compare/operations/control/central-a-housing-batch30-main-trigger-20260726.json';
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'sync: 中日本A住宅支援第30群を全国反映'
+          git push --force-with-lease origin HEAD:${{ github.event.pull_request.head.ref }}
