@@ -9,7 +9,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   scheme: 'torutango',
   icon: './assets/icon.png',
   userInterfaceStyle: 'light',
-  newArchEnabled: true,
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
