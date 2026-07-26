@@ -90,6 +90,16 @@ jobs:
           grep -q 'ToruTangoOcrModule' ci-logs/autolinking-apple.log
           echo 'Apple Vision OCR module structure and autolinking: OK' | tee ci-logs/native-ocr.log
 
+      - name: Expo iOS prebuild
+        run: |
+          mkdir -p ci-logs
+          set -o pipefail
+          rm -rf ios
+          CI=1 npx expo prebuild --platform ios --no-install --clean 2>&1 | tee ci-logs/ios-prebuild.log
+          test -f ios/Podfile
+          find ios -name '*.xcodeproj' -print -quit | grep -q .
+          rm -rf ios
+
       - name: Worker syntax
         run: |
           mkdir -p ci-logs
