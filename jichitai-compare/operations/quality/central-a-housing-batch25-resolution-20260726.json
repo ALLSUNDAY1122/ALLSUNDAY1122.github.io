@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "resolutionId": "central-a-housing-batch25-resolution-20260726",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B②",
+  "completedAt": "2026-07-26T11:53:00+09:00",
+  "category": "generalHousingMisclassification",
+  "scope": {
+    "reviewedMunicipalityCount": 5,
+    "correctedMunicipalityCount": 5,
+    "remainingHousingCandidates": 49,
+    "correctedMunicipalitiesRechecked": 179,
+    "primarySourceSlotsRechecked": 611,
+    "weakPrimarySourceCandidates": 33,
+    "issue3141UnresolvedItems": 19
+  },
+  "corrections": {
+    "statusToUnavailableCount": 3,
+    "verifiedReplacementCount": 2,
+    "codes": [
+      "27227",
+      "27228",
+      "27229",
+      "27230",
+      "27232"
+    ]
+  },
+  "evidence": {
+    "regionalPullRequest": 3849,
+    "regionalWorkflowRunId": 30184922474,
+    "nationalSyncPullRequest": 3851,
+    "nationalSyncWorkflowRunId": 30185013869,
+    "publicVerificationPullRequest": 3853,
+    "publicVerificationWorkflowRunId": 30185118012,
+    "finalRegionPullRequest": 3855,
+    "finalRegionWorkflowRunId": 30185213943,
+    "finalMainPullRequest": 3857,
+    "finalMainWorkflowRunId": 30185307786
+  },
+  "publicVerification": {
+    "pageCount": 5,
+    "allPagesHttp200": true,
+    "statusSummarySourceMatch": true,
+    "publicMunicipalityCount": 1741,
+    "publicServiceCount": 15669
+  },
+  "releaseGuard": {
+    "status": "resolved_no_release_blocker",
+    "blockers": []
+  },
+  "status": "completed_public_verified_region_integrated",
+  "temporaryRunnerCleanup": {
+    "regionPaths": [
+      ".github/workflows/temp-central-a-housing-batch25.yml",
+      ".github/workflows/temp-central-a-housing-batch25-finalize.yml"
+    ],
+    "mainPaths": [
+      ".github/workflows/temp-central-a-housing-batch25-main.yml",
+      ".github/workflows/temp-central-a-housing-batch25-public.yml",
+      ".github/workflows/temp-central-a-housing-batch25-final-main.yml"
+    ],
+    "regionCleanupPullRequest": 3855,
+    "mainCleanupPullRequest": 3857,
+    "status": "cleanup_completed"
+  }
+}

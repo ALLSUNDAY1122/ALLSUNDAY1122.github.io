@@ -4,7 +4,7 @@
   "assignedTeam": "中日本調査班",
   "branch": "region/central",
   "integrationBranch": "region/central",
-  "updatedAt": "2026-07-26T11:34:00+09:00",
+  "updatedAt": "2026-07-26T11:49:00+09:00",
   "status": "completed",
   "stage": "nationwide_complete",
   "currentMunicipality": null,
@@ -24,7 +24,7 @@
     "nationwideRemainingMunicipalities": 0,
     "checkedAt": "2026-07-25T04:46:00+09:00"
   },
-  "lastAction": "住宅支援分類第25群として、東大阪市・泉南市・阪南市の一般耐震制度をunavailableへ修正し、四條畷市・交野市を現行の子育て世帯向け住宅支援へ差し替えた。",
+  "lastAction": "住宅支援分類第25群の東大阪市・泉南市・四條畷市・交野市・阪南市を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。",
   "nextAction": "一般住宅・移住制度の分類候補残124件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。",
   "lastNationalIntegrationPr": 3122,
   "lastNationalIntegrationAt": "2026-07-25T04:40:00+09:00",
@@ -400,7 +400,7 @@
   },
   "latestCentralAHousingBatch": {
     "batch": 25,
-    "status": "regional_corrected_pending_national_sync",
+    "status": "completed_public_verified_region_integrated",
     "reviewedMunicipalityCount": 5,
     "confirmedCorrectionCount": 5,
     "statusToUnavailableCount": 3,
@@ -408,6 +408,12 @@
     "remainingCandidates": 49,
     "regionalPullRequestNumber": 3849,
     "regionalWorkflowRunId": 30184922474,
+    "nationalPullRequestNumber": 3851,
+    "nationalWorkflowRunId": 30185013869,
+    "publicVerificationPullRequestNumber": 3853,
+    "publicVerificationWorkflowRunId": 30185118012,
+    "finalRegionPullRequestNumber": 3855,
+    "finalRegionWorkflowRunId": 30185213943,
     "blocker": null
   },
   "centralAHousingStateReconciliation": {
