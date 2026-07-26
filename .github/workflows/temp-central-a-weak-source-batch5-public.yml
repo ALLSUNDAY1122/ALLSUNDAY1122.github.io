@@ -1,0 +1,97 @@
+name: Temporary Central A Weak Source Batch 5 Public Verify
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - jichitai-compare/operations/control/central-a-weak-source-batch5-public-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.head_ref == 'verify/central-a-weak-source-batch5-public-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify production pages and JSON
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base='https://allsunday1122.github.io/jichitai-compare';
+          const pages=[
+            {code:'25442',name:'甲良町'},
+            {code:'27219',name:'和泉市'},
+            {code:'27225',name:'高石市'},
+            {code:'27226',name:'藤井寺市'}
+          ];
+          const expected=[
+            {code:'25442',name:'甲良町',service:'postpartumCare',source:'https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00000927.html',additional:['https://www.kouratown.jp/section/reiki_int/reiki_honbun/k032RG00001160.html','https://www.kouratown.jp/gyosei/sogokakusyukeikau/2723.html'],summary:'出産後1年未満の母子へ宿泊型と通所型の産後ケアを提供する。'},
+            {code:'27219',name:'和泉市',service:'schoolMeals',source:'https://www.city.osaka-izumi.lg.jp/material/files/group/18/00_08_gaiyou.pdf',additional:['https://www.city.osaka-izumi.lg.jp/kakukano/kyouikubu/gakkoenkanri/gakkoukyuusyoku/gakkoukyuusyokukonndate/izumi_kondate.html','https://www.city.osaka-izumi.lg.jp/kakukano/soumubu/zaiseika/gyoumu/yosan.html','https://www.city.osaka-izumi.lg.jp/material/files/group/74/20260416-2.pdf'],summary:'2026年度は小学校給食費を無償化し、中学校給食費は物価高騰による増額分を市が補助する。'},
+            {code:'27225',name:'高石市',service:'schoolMeals',source:'https://www.city.takaishi.lg.jp/section/reiki_int/reiki_honbun/k227RG00000831.html',additional:['https://www.city.takaishi.lg.jp/kakuka/kyouiku/kyouiku_soumu/gakkoukyuushoku/5462.html'],summary:'2026年度の市立小中学校の児童生徒に係る学校給食費を徴収しない。'},
+            {code:'27225',name:'高石市',service:'housingSupport',source:'https://www.city.takaishi.lg.jp/kakuka/doboku/toshikeikaku_ka/jutaku/akiya/5306.html',additional:['https://www.city.takaishi.lg.jp/kakuka/doboku/toshikeikaku_ka/jutaku/akiya/5310.html'],summary:'市内の対象空き家を購入する子育て・若年世帯に購入費の2分の1、最大200万円を補助する。'},
+            {code:'27226',name:'藤井寺市',service:'schoolMeals',source:'https://www.city.fujiidera.lg.jp/soshiki/seisakukikaku/seisakusuishin/shisakukeikaku/kakusyukeikaku/20576.html',additional:['https://www.city.fujiidera.lg.jp/soshiki/seisakukikaku/seisakusuishin/yokosofujiiderashihe/shinohoushin/10210.html','https://www.city.fujiidera.lg.jp/soshiki/kyoikuiinkai/kyoikusomu/kyoikubunkasupotsu/20556.html'],summary:'2026年度は市立小学校給食費を全額無償化し、市立中学校では値上げ分を助成する。'}
+          ];
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          let lastError;
+          for(let attempt=1;attempt<=30;attempt++){
+            try{
+              const stamp=`?v=${Date.now()}`;
+              const pageChecks=[];
+              for(const item of pages){
+                const response=await fetch(`${base}/municipality/${item.code}/${stamp}`,{redirect:'follow'});
+                if(!response.ok)throw new Error(`${item.code} page HTTP ${response.status}`);
+                const html=await response.text();
+                if(!html.includes(item.name))throw new Error(`${item.code} page name mismatch`);
+                for(const service of expected.filter(x=>x.code===item.code))if(!html.includes(service.summary))throw new Error(`${item.code}:${service.service} page summary mismatch`);
+                pageChecks.push({code:item.code,httpStatus:response.status,nameMatched:true,serviceSummariesMatched:expected.filter(x=>x.code===item.code).length});
+              }
+              const response=await fetch(`${base}/data/generated/municipalities.json${stamp}`,{redirect:'follow'});
+              if(!response.ok)throw new Error(`published JSON HTTP ${response.status}`);
+              const payload=await response.json();
+              const municipalities=Array.isArray(payload)?payload:(payload.municipalities??payload.items??[]);
+              if(!Array.isArray(municipalities)||municipalities.length!==1741)throw new Error(`published municipality count ${municipalities.length}`);
+              let serviceCount=0;for(const municipality of municipalities)serviceCount+=Object.keys(municipality.services??{}).length;
+              if(serviceCount!==15669)throw new Error(`published service count ${serviceCount}`);
+              const serviceChecks=[];
+              for(const item of expected){
+                const municipality=municipalities.find(x=>String(x.code)===item.code);
+                if(!municipality)throw new Error(`${item.code} missing`);
+                const service=municipality.services?.[item.service];
+                if(service?.status!=='verified')throw new Error(`${item.code}:${item.service} status ${service?.status}`);
+                if(service.summary!==item.summary)throw new Error(`${item.code}:${item.service} summary mismatch`);
+                if(service.source?.url!==item.source)throw new Error(`${item.code}:${item.service} source mismatch`);
+                const additionalUrls=(service.additionalSources??[]).map(x=>x.url);
+                for(const url of item.additional)if(!additionalUrls.includes(url))throw new Error(`${item.code}:${item.service} additional source missing ${url}`);
+                serviceChecks.push({code:item.code,name:item.name,service:item.service,status:service.status,summaryMatched:true,sourceMatched:true,additionalSourcesMatched:item.additional.length});
+              }
+              const audit={schemaVersion:'1.0.0',auditId:'central-a-weak-primary-source-batch5-public-verification-20260726',verifiedAt:new Date().toISOString(),baseUrl:base,reviewedMunicipalityCount:4,reviewedServiceCount:5,pageChecks,serviceChecks,publishedMunicipalityCount:municipalities.length,publishedServiceCount:serviceCount,pullRequestNumber:Number(process.env.PR_NUMBER),workflowRunId:Number(process.env.RUN_ID),status:'passed',attempt,blocker:null};
+              fs.writeFileSync('jichitai-compare/operations/audits/central-a-weak-primary-source-batch5-public-verification-20260726.json',JSON.stringify(audit,null,2)+'\n');
+              process.exit(0);
+            }catch(error){lastError=error;if(attempt<30)await sleep(20000);}
+          }
+          throw lastError;
+          NODE
+          rm -f jichitai-compare/operations/control/central-a-weak-source-batch5-public-trigger-20260726.json
+      - name: Commit public verification evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'verify: 中日本A弱い主出典第5群の公開反映を確認'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
