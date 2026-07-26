@@ -1,0 +1,183 @@
+name: Temporary Central A Housing Batch 28
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch28-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-housing-batch28-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply housing classification batch 28
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root='jichitai-compare';
+          const checkedAt='2026-07-26';
+          const updatedAt='2026-07-26T16:03:00+09:00';
+          const keys=['childMedical','sickChildCare','childcareFee','schoolMeals','postpartumCare','temporaryChildcare','housingSupport','bulkyWaste','disasterPrevention'];
+          const decisions=[
+            {code:'24204',name:'松阪市',type:'current_three_generation_child_household_verified_maintained',status:'verified',summary:'市外から転入して中学3年生までの孫を含む三世代同居・近居を始める世帯へ、住宅取得・改修費の2分の1を、同居30万円・近居20万円まで補助する。',source:'https://www.city.matsusaka.mie.jp/site/kosodate-zyouhou/sansedaidokyokinkyosien.html',basis:'中学3年生までの孫を含む三世代世帯を対象とする現行制度を確認'},
+            {code:'17203',name:'小松市',type:'current_three_generation_housing_verified_maintained',status:'verified',summary:'3世代同居・隣接・近居となる住宅の新築・増築・購入へ、同居20万円、隣接・近居10万円を交付する。',source:'https://www.city.komatsu.lg.jp/soshiki/1027/teijuusokushinshienseido/3235.html',basis:'令和8年度の3世代家族住宅建築奨励金を確認'},
+            {code:'17386',name:'宝達志水町',type:'general_home_acquisition_misclassification',status:'unavailable',summary:'子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。',source:'https://www.hodatsushimizu.jp/soshiki/johosuishinka/2/3_1/584.html',basis:'現行のマイホーム取得奨励金は定住者・45歳以下の転入者を対象とする一般住宅取得制度で、子育て等を対象要件としない'},
+            {code:'21205',name:'関市',type:'current_newlywed_housing_verified_maintained',status:'verified',summary:'令和8年度の結婚等新生活支援として、住宅取得・賃借・リフォーム・引越費用を最大60万円助成する。',source:'https://www.city.seki.lg.jp/0000016736.html',basis:'令和8年1月1日から令和9年2月末までの婚姻・パートナーシップ世帯向け制度を確認'},
+            {code:'21215',name:'山県市',type:'three_generation_housing_eligibility_clarified',status:'verified',summary:'三世代以上で同居・近居するため市内住宅を新築・取得する世帯へ、住宅等取得祝金20万円を交付する。',source:'https://www.city.yamagata.gifu.jp/soshiki/kensetsu/35324.html',basis:'一般取得額とは別に、三世代以上の同居・近居の場合20万円となる現行条件を確認'}
+          ];
+
+          function writePreservingStyle(file,obj){
+            const raw=fs.readFileSync(file,'utf8');
+            const pretty=raw.startsWith('{\n');
+            fs.writeFileSync(file,JSON.stringify(obj,null,pretty?2:0)+'\n');
+          }
+
+          const reviewed=[];
+          for(const decision of decisions){
+            const pref=decision.code.slice(0,2);
+            const dataPath=path.join(root,'data/municipalities',pref,`${decision.code}.json`);
+            const taskPath=path.join(root,'operations/tasks',`${decision.code}.json`);
+            const municipality=JSON.parse(fs.readFileSync(dataPath,'utf8'));
+            const svc=municipality.services?.housingSupport;
+            if(!svc)throw new Error(`${decision.code}: missing housingSupport`);
+            const before={status:svc.status,summary:svc.summary,source:svc.source?.url};
+            svc.status=decision.status;
+            svc.summary=decision.summary;
+            svc.source={url:decision.source,checkedAt};
+            if(decision.code==='17386'){
+              svc.details={
+                reviewedProgram:'マイホーム取得奨励金',
+                generalSupport:'町内で住宅を新築・購入して定住する世帯へ基本150万円、町内業者・45歳以下転入者加算を含め最大300万円',
+                classificationReason:'子育て世帯・新婚世帯・三世代世帯を対象要件としない一般定住・住宅取得制度のため、子育て住宅支援としては対象外'
+              };
+            }
+            if(decision.code==='21215'){
+              svc.details.program='住宅等取得祝金事業';
+              svc.details.threeGenerationTarget='三世代以上で同居または近居するため市内住宅を新築・取得する世帯';
+              svc.details.threeGenerationAmount='20万円';
+              svc.details.generalComparison='市内居住者の市内業者施工は10万円、市外転入者は15万円';
+            }
+            municipality.updatedAt=checkedAt;
+            writePreservingStyle(dataPath,municipality);
+
+            const task=JSON.parse(fs.readFileSync(taskPath,'utf8'));
+            const statuses=Object.values(municipality.services).map(v=>v.status);
+            task.status='merged';
+            task.currentService=null;
+            task.nextServiceIndex=9;
+            task.completedServices=keys;
+            task.verifiedCount=statuses.filter(v=>v==='verified').length;
+            task.researchingCount=statuses.filter(v=>v==='researching').length;
+            task.unavailableCount=statuses.filter(v=>v==='unavailable').length;
+            task.needsMediumReviewCount=statuses.filter(v=>v==='needs_medium_review').length;
+            task.currentBranch='region/central';
+            task.pullRequestNumber=Number(process.env.PR_NUMBER);
+            task.lastCheckedAt=checkedAt;
+            task.lastUpdatedAt=updatedAt;
+            task.lastUpdatedBy='中日本調査班A';
+            task.officialSources=[...new Set(keys.map(key=>municipality.services[key]?.source?.url).filter(Boolean))];
+            task.notes=[...(task.notes||[]),`2026-07-26: 住宅支援分類第28群で公式利用者向けページを独立確認し、${decision.type}として判定。`];
+            task.blockers=task.blockers||[];
+            writePreservingStyle(taskPath,task);
+
+            reviewed.push({code:decision.code,name:decision.name,service:'housingSupport',correctionType:decision.type,beforeStatus:before.status,afterStatus:decision.status,beforeSummary:before.summary,afterSummary:decision.summary,officialSource:decision.source,officialBasis:decision.basis,contentChanged:before.status!==decision.status||before.summary!==decision.summary||before.source!==decision.source});
+          }
+
+          const audit={
+            schemaVersion:'1.0.0',
+            auditId:'central-a-housing-classification-batch28-decisions-20260726',
+            decidedAt:updatedAt,
+            session:'中日本調査班A',
+            coordinatorSession:'統括B',
+            category:'generalHousingMisclassification',
+            regionalPullRequestNumber:Number(process.env.PR_NUMBER),
+            runnerWorkflowRunId:Number(process.env.RUN_ID),
+            reviewedMunicipalityCount:5,
+            confirmedCorrectionCount:3,
+            statusToUnavailableCount:1,
+            verifiedSummaryClarificationCount:2,
+            verifiedMaintainedCount:2,
+            reviewed,
+            causeScan:{previousRemainingCandidates:39,reviewedHighRiskCandidates:5,remainingCandidates:34},
+            issue3141:{unresolvedItemCount:19,unresolvedMunicipalityCount:19,changed:false},
+            policy:[
+              '一般定住・住宅取得制度は年齢条件だけで子育て住宅支援へ分類しない',
+              '三世代同居・近居制度は家族世帯向け住宅支援としてverified対象に含める',
+              '結婚新生活支援は新婚世帯向け住宅支援としてverified対象に含める'
+            ],
+            result:{unresolvedConfirmedErrorCount:0,releaseBlocker:'none'}
+          };
+          fs.writeFileSync(path.join(root,'operations/audits/central-a-housing-classification-batch28-decisions-20260726.json'),JSON.stringify(audit,null,2)+'\n');
+
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          checkpoint.updatedAt=updatedAt;
+          checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.ciStatus='success';
+          checkpoint.stateSyncPullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.nextAction='一般住宅・移住制度の分類候補残34件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';
+          checkpoint.qualityReaudit.latestCompletedAt=updatedAt;
+          checkpoint.qualityReaudit.latestRegionalPullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.qualityReaudit.correctedMunicipalitiesRechecked=194;
+          checkpoint.qualityReaudit.primarySourceSlotsRechecked=626;
+          checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification=34;
+          checkpoint.qualityReaudit.nextPriority=['一般住宅・移住制度の分類候補残34件','弱い主出典残33候補','Issue #3141の19項目を公式利用条件公開時のみ解消'];
+          checkpoint.qualityReaudit.latestHousingBatch={batch:28,status:'regional_corrected_pending_national_sync',reviewedMunicipalityCount:5,confirmedCorrectionCount:3,statusToUnavailableCount:1,verifiedSummaryClarificationCount:2,verifiedMaintainedCount:2,remainingCandidates:34,regionalPullRequestNumber:Number(process.env.PR_NUMBER),regionalWorkflowRunId:Number(process.env.RUN_ID),blocker:null};
+          checkpoint.lastAction='住宅支援分類第28群として、宝達志水町の一般住宅取得制度をunavailableへ修正し、松阪市と山県市の三世代住宅条件を明確化、小松市と関市はverifiedを維持した。';
+          writePreservingStyle(checkpointPath,checkpoint);
+
+          const regionPath=path.join(root,'operations/control/regions/central.json');
+          const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));
+          region.updatedAt=updatedAt;
+          region.latestCentralAHousingBatch=checkpoint.qualityReaudit.latestHousingBatch;
+          region.lastAction=checkpoint.lastAction;
+          writePreservingStyle(regionPath,region);
+
+          const trigger=path.join(root,'operations/control/central-a-housing-batch28-trigger-20260726.json');
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Reject unexpected changes and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git status --short | awk '{print $2}')
+          for file in "${changed[@]}"; do
+            case "$file" in
+              jichitai-compare/data/municipalities/24/24204.json|jichitai-compare/data/municipalities/17/17203.json|jichitai-compare/data/municipalities/17/17386.json|jichitai-compare/data/municipalities/21/21205.json|jichitai-compare/data/municipalities/21/21215.json|jichitai-compare/operations/tasks/24204.json|jichitai-compare/operations/tasks/17203.json|jichitai-compare/operations/tasks/17386.json|jichitai-compare/operations/tasks/21205.json|jichitai-compare/operations/tasks/21215.json|jichitai-compare/operations/audits/central-a-housing-classification-batch28-decisions-20260726.json|jichitai-compare/operations/control/session-checkpoints/central-a.json|jichitai-compare/operations/control/regions/central.json|jichitai-compare/data/generated/municipalities.json|jichitai-compare/data/generated/municipality-pages.json|jichitai-compare/operations/progress.json|jichitai-compare/municipality/24204/index.html|jichitai-compare/municipality/17203/index.html|jichitai-compare/municipality/17386/index.html|jichitai-compare/municipality/21205/index.html|jichitai-compare/municipality/21215/index.html|jichitai-compare/sitemap.xml|jichitai-compare/operations/control/central-a-housing-batch28-trigger-20260726.json) ;;
+              *) echo "Unexpected change: $file"; exit 1 ;;
+            esac
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'fix: 中日本A住宅支援分類第28群を修正'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
