@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "coordinator-a-final-closure-20260726",
+  "coordinatorSession": "統括A③",
+  "finalizedAt": "2026-07-26T15:06:00+09:00",
+  "status": "completed_with_nonblocking_external_follow_up",
+  "mainHeadBeforeRecord": "409db687e6ba37fbc1747642bb7729cb65161e62",
+  "scope": {
+    "regions": [
+      "north",
+      "east"
+    ],
+    "municipalities": 856,
+    "services": 7704,
+    "sessions": [
+      "north-a",
+      "north-b",
+      "east-a",
+      "east-b"
+    ]
+  },
+  "nationwideInventory": {
+    "progressUpdatedAt": "2026-07-26T14:54:00+09:00",
+    "registeredMunicipalities": 1741,
+    "remainingMunicipalities": 0,
+    "assignedMunicipalities": 1741,
+    "assignmentBlocked": 0,
+    "totalServices": 15669,
+    "completedServices": 15669,
+    "verifiedServices": 14372,
+    "unavailableServices": 1297,
+    "needsMediumReviewServices": 0,
+    "needsRevisionServices": 0,
+    "needsCoordinatorServices": 0,
+    "blockedMunicipalities": 0,
+    "blockedServices": 0,
+    "completionRatePercent": 100,
+    "progressBlobSha": "f92679e2392963f3e9ae279c17f86ab860be6112"
+  },
+  "qualitySecondAudit": {
+    "northA": "completed",
+    "northB": {
+      "status": "completed",
+      "assignedMunicipalities": 107,
+      "fiscalCandidatesReviewed": 40,
+      "anyoneCandidatesReviewed": 78,
+      "remainingAuditCandidates": 0,
+      "finalHandoffFile": "operations/audits/north-b-quality-second-audit-final-handoff-20260725.json",
+      "finalRegionPublicRecordPullRequest": 3642
+    },
+    "eastA": "completed",
+    "eastB": "completed",
+    "confirmedMajorUnfixedErrors": 0,
+    "publicationBlocking": false
+  },
+  "issueReconciliation": {
+    "northBAnyoneCandidates": {
+      "issueNumber": 3398,
+      "state": "closed",
+      "stateReason": "completed",
+      "reviewed": 78,
+      "remaining": 0
+    },
+    "sakaeVillageOfficialSiteRecovery": {
+      "issueNumber": 2847,
+      "municipalityCode": "20602",
+      "state": "open",
+      "status": "external_official_site_recovery_wait",
+      "checkedAt": "2026-07-26T15:05:00+09:00",
+      "officialTopResult": "502 Bad Gateway",
+      "knownServicePageResult": "502 Bad Gateway",
+      "publishedServiceStatus": "unavailable",
+      "publicationBlocking": false,
+      "issueCommentId": 5082297480
+    }
+  },
+  "repositoryState": {
+    "openNorthPullRequests": 0,
+    "openEastPullRequests": 0,
+    "latestMainCleanupPullRequest": 3873,
+    "latestMainHead": "409db687e6ba37fbc1747642bb7729cb65161e62",
+    "temporaryWorkflowCleanup": "completed"
+  },
+  "completionDecision": {
+    "coordinatorAWorkRequiredNow": false,
+    "additionalNextInputsRequired": 0,
+    "reopenConditions": [
+      "Issue #2847で栄村公式サイトの安定復旧を確認した場合",
+      "北日本または東日本の公式制度更新を検知した場合",
+      "公開差分、CI失敗、または明示的な訂正依頼が発生した場合"
+    ]
+  },
+  "nextAction": "通常作業は終了。Issue #2847は公式サイト復旧という外部条件が成立するまで非ブロッキング追跡を維持する。"
+}
