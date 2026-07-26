@@ -1,0 +1,56 @@
+name: Expand FP3 SPEED source
+
+on:
+  push:
+    branches:
+      - app/fp3-speed-v041
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  expand-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: app/fp3-speed-v041
+          fetch-depth: 0
+
+      - name: Expand verified source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f fp3-speed-app/pubspec.yaml ]; then
+            echo "Expanded source already exists."
+            exit 0
+          fi
+
+          cat fp3-speed-ci/core4k.part*.b64 > /tmp/fp3-speed-core.b64
+          echo '22977873bd7309e11773508ec3f0119a3550ab84e7c358c1111dccf79cdcf728  /tmp/fp3-speed-core.b64' | sha256sum -c -
+          base64 --decode /tmp/fp3-speed-core.b64 > /tmp/fp3-speed-core.tar.xz
+          echo '9488de011eb62b396678414a410c251956dc3f8a57b06b7904fa8285c6cb9907  /tmp/fp3-speed-core.tar.xz' | sha256sum -c -
+
+          mkdir -p /tmp/fp3-speed-source fp3-speed-app
+          tar -xJf /tmp/fp3-speed-core.tar.xz -C /tmp/fp3-speed-source
+          test -f /tmp/fp3-speed-source/pubspec.yaml
+          test -f /tmp/fp3-speed-source/lib/main.dart
+          test -f /tmp/fp3-speed-source/test/question_bank_test.dart
+          cp -a /tmp/fp3-speed-source/. fp3-speed-app/
+
+      - name: Commit expanded Flutter source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add fp3-speed-app
+          if git diff --cached --quiet; then
+            echo "No source changes to commit."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build: expand verified FP3 SPEED v0.4.1 source'
+          git push origin HEAD:app/fp3-speed-v041
