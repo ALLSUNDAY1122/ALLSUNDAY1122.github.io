@@ -23,6 +23,12 @@ function cleanText(value, max) {
     .slice(0, max);
 }
 
+function normalizeKey(value) {
+  return cleanText(value, 240)
+    .toLocaleLowerCase('ja-JP')
+    .replace(/[\s「」『』（）()、，。・：:！？!?＿＿＿_]/g, '');
+}
+
 function extractOutputText(payload) {
   if (typeof payload?.output_text === 'string') return payload.output_text;
   if (!Array.isArray(payload?.output)) return '';
@@ -36,6 +42,35 @@ function extractOutputText(payload) {
     }
   }
   return '';
+}
+
+function deduplicateQuestions(questions, count) {
+  const factKeys = new Set();
+  const questionKeys = new Set();
+  const pairs = new Set();
+  const output = [];
+
+  for (const item of questions) {
+    const question = cleanText(item.question, 180);
+    const answer = cleanText(item.answer, 120);
+    const type = item.type === 'cloze' ? 'cloze' : 'qa';
+    const factKey = normalizeKey(item.factKey || `${answer}-${item.evidence || question}`);
+    const questionKey = normalizeKey(question);
+    const pairKey = `${questionKey}|${normalizeKey(answer)}`;
+
+    if (!question || !answer || !factKey || !questionKey) continue;
+    if (question.length < 5 || answer.length < 1) continue;
+    if (normalizeKey(question).includes(normalizeKey(answer)) && type === 'qa') continue;
+    if (factKeys.has(factKey) || questionKeys.has(questionKey) || pairs.has(pairKey)) continue;
+
+    factKeys.add(factKey);
+    questionKeys.add(questionKey);
+    pairs.add(pairKey);
+    output.push({ question, answer, type });
+    if (output.length >= count) break;
+  }
+
+  return output;
 }
 
 export default {
@@ -84,11 +119,16 @@ export default {
       return json({ error: '教材本文を20文字以上入力してください。' }, 400, origin);
     }
 
-    const instructions =
-      'あなたは日本語教材から短時間学習用の問題を作る専門家です。\n' +
-      `教材本文だけを根拠に、最大${count}問作成してください。推測で事実を追加しないでください。\n` +
-      `形式: ${type}。難易度: ${difficulty}。1問は15秒以内で答えられる短さにしてください。\n` +
-      '重複、曖昧な問題、答えが複数ある問題、長文問題は禁止です。';
+    const instructions = [
+      'あなたは日本語教材から、表と裏で学習する単語カードを作る編集者です。',
+      `教材本文だけを根拠に、最大${count}枚のカードを作成してください。推測で事実を追加しないでください。`,
+      `希望形式は${type}、難易度は${difficulty}です。1枚は15秒以内で答えられる短さにしてください。`,
+      '最重要ルール: 同じ事実を一問一答と穴埋めの両方にしないでください。同じ年代、名称、場所、定義、因果関係は1回だけ出題してください。',
+      '見出し、文の途中、不完全な語句、英語表記だけ、答えが問題文に残る問題、答えが複数ある問題は禁止です。',
+      '問題数を満たすために低品質な問題を追加しないでください。意味のある事実が少なければ出力件数を減らしてください。',
+      'factKeyには、問題文の形式に依存しない事実の識別子を日本語で短く入れてください。例: lucy-discovery-date、human-origin-place。',
+      'evidenceには、答えの根拠となる教材本文の該当部分を短くそのまま入れてください。'
+    ].join('\n');
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 45_000);
@@ -116,14 +156,17 @@ export default {
                 properties: {
                   questions: {
                     type: 'array',
+                    maxItems: count,
                     items: {
                       type: 'object',
                       properties: {
                         question: { type: 'string' },
                         answer: { type: 'string' },
-                        type: { type: 'string', enum: ['qa', 'cloze'] }
+                        type: { type: 'string', enum: ['qa', 'cloze'] },
+                        factKey: { type: 'string' },
+                        evidence: { type: 'string' }
                       },
-                      required: ['question', 'answer', 'type'],
+                      required: ['question', 'answer', 'type', 'factKey', 'evidence'],
                       additionalProperties: false
                     }
                   }
@@ -133,7 +176,7 @@ export default {
               }
             }
           },
-          max_output_tokens: 2500
+          max_output_tokens: 3000
         })
       });
 
@@ -153,16 +196,10 @@ export default {
       }
 
       const parsed = JSON.parse(outputText);
-      const questions = Array.isArray(parsed.questions)
-        ? parsed.questions
-            .map((question) => ({
-              question: cleanText(question.question, 180),
-              answer: cleanText(question.answer, 120),
-              type: question.type === 'cloze' ? 'cloze' : 'qa'
-            }))
-            .filter((question) => question.question && question.answer)
-            .slice(0, count)
-        : [];
+      const questions = deduplicateQuestions(
+        Array.isArray(parsed.questions) ? parsed.questions : [],
+        count
+      );
 
       if (!questions.length) {
         return json(
@@ -171,10 +208,13 @@ export default {
           origin
         );
       }
-      return json({ questions }, 200, origin);
+      return json({ questions, model: env.OPENAI_MODEL || 'gpt-5-mini' }, 200, origin);
     } catch (error) {
       console.error(error);
-      const message = error?.name === 'AbortError' ? 'AIの応答が時間切れになりました。' : 'サーバー内部でエラーが発生しました。';
+      const message =
+        error?.name === 'AbortError'
+          ? 'AIの応答が時間切れになりました。'
+          : 'サーバー内部でエラーが発生しました。';
       return json({ error: message }, 500, origin);
     } finally {
       clearTimeout(timeout);
