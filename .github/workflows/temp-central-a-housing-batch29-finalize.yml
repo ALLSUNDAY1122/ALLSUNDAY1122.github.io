@@ -1,0 +1,125 @@
+name: Temporary Central A Housing Batch 29 Finalize
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch29-finalize-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.head_ref == 'sync/central-a-housing-batch29-final-region-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import public evidence and finalize regional state
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          public_path=jichitai-compare/operations/audits/central-a-housing-classification-batch29-public-verification-20260726.json
+          git show "origin/main:$public_path" > "$public_path"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root='jichitai-compare';
+          const completedAt='2026-07-26T17:44:00+09:00';
+          const auditPath=path.join(root,'operations/audits/central-a-housing-classification-batch29-decisions-20260726.json');
+          const publicPath=path.join(root,'operations/audits/central-a-housing-classification-batch29-public-verification-20260726.json');
+          const checkpointPath=path.join(root,'operations/control/session-checkpoints/central-a.json');
+          const regionPath=path.join(root,'operations/control/regions/central.json');
+          const audit=JSON.parse(fs.readFileSync(auditPath,'utf8'));
+          const publicEvidence=JSON.parse(fs.readFileSync(publicPath,'utf8'));
+          const checkpoint=JSON.parse(fs.readFileSync(checkpointPath,'utf8'));
+          const region=JSON.parse(fs.readFileSync(regionPath,'utf8'));
+          if(!publicEvidence.success)throw new Error('Public verification is not successful');
+
+          audit.regionalMergePullRequestNumber=3899;
+          audit.regionalWorkflowRunId=30194507315;
+          audit.nationalSyncPullRequestNumber=3901;
+          audit.nationalSyncWorkflowRunId=30194591852;
+          audit.publicVerificationPullRequestNumber=3903;
+          audit.publicVerificationWorkflowRunId=30194729561;
+          audit.publicVerificationStatus='passed';
+          audit.finalRegionPullRequestNumber=Number(process.env.PR_NUMBER);
+          audit.finalRegionWorkflowRunId=Number(process.env.RUN_ID);
+          audit.status='completed_public_verified_region_integrated';
+          fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+'\n');
+
+          checkpoint.updatedAt=completedAt;
+          checkpoint.pullRequestNumber=Number(process.env.PR_NUMBER);
+          checkpoint.ciStatus='success';
+          checkpoint.nextAction='一般住宅・移住制度の分類候補残29件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。';
+          checkpoint.qualityReaudit.latestCompletedAt=completedAt;
+          checkpoint.qualityReaudit.latestRegionalPullRequestNumber=3899;
+          checkpoint.qualityReaudit.latestCiRunNumber=30194507315;
+          checkpoint.qualityReaudit.latestNationalPullRequestNumber=3901;
+          checkpoint.qualityReaudit.latestPublicVerificationPullRequestNumber=3903;
+          checkpoint.qualityReaudit.correctedMunicipalitiesRechecked=199;
+          checkpoint.qualityReaudit.primarySourceSlotsRechecked=631;
+          checkpoint.qualityReaudit.candidateCounts.generalHousingMisclassification=29;
+          checkpoint.qualityReaudit.latestHousingBatch={batch:29,status:'completed_public_verified_region_integrated',reviewedMunicipalityCount:5,confirmedCorrectionCount:4,statusToUnavailableCount:2,verifiedReplacementOrClarificationCount:2,verifiedMaintainedCount:1,remainingCandidates:29,regionalPullRequestNumber:3899,regionalWorkflowRunId:30194507315,nationalPullRequestNumber:3901,nationalWorkflowRunId:30194591852,publicVerificationPullRequestNumber:3903,publicVerificationWorkflowRunId:30194729561,finalRegionPullRequestNumber:Number(process.env.PR_NUMBER),finalRegionWorkflowRunId:Number(process.env.RUN_ID),blocker:null};
+          checkpoint.lastAction='住宅支援分類第29群の大野町・高浜市をunavailableへ修正し、御前崎市を結婚新生活支援へ差し替え、西尾市の三世代住宅条件を明確化、阿久比町をverified維持として地域・全国・公開一致を確認した。';
+          fs.writeFileSync(checkpointPath,JSON.stringify(checkpoint,null,2)+'\n');
+
+          region.updatedAt=completedAt;
+          region.latestCentralAHousingBatch=checkpoint.qualityReaudit.latestHousingBatch;
+          region.lastAction=checkpoint.lastAction;
+          fs.writeFileSync(regionPath,JSON.stringify(region,null,2)+'\n');
+
+          const resolution={
+            schemaVersion:'1.0.0',
+            resolutionId:'central-a-housing-batch29-resolution-20260726',
+            session:'中日本調査班A',
+            coordinatorSession:'統括B',
+            completedAt,
+            category:'generalHousingMisclassification',
+            scope:{reviewedMunicipalityCount:5,correctedMunicipalityCount:4,statusToUnavailableCount:2,verifiedReplacementOrClarificationCount:2,verifiedMaintainedCount:1,remainingHousingCandidates:29,correctedMunicipalitiesRechecked:199,primarySourceSlotsRechecked:631,weakPrimarySourceCandidates:33,issue3141UnresolvedItems:19},
+            decisions:{statusToUnavailableCodes:['21403','23227'],replacementOrClarificationCodes:['22223','23213'],verifiedMaintainedCodes:['23441']},
+            evidence:{regionalPullRequest:3899,regionalWorkflowRunId:30194507315,nationalSyncPullRequest:3901,nationalSyncWorkflowRunId:30194591852,publicVerificationPullRequest:3903,publicVerificationWorkflowRunId:30194729561,finalRegionPullRequest:Number(process.env.PR_NUMBER),finalRegionWorkflowRunId:Number(process.env.RUN_ID)},
+            publicVerification:{pageCount:5,allPagesHttp200:true,statusSummarySourceMatch:true,publicMunicipalityCount:1741,publicServiceCount:15669},
+            releaseGuard:{status:'resolved_no_release_blocker',blockers:[]},
+            status:'completed_public_verified_region_integrated'
+          };
+          const resolutionPath=path.join(root,'operations/quality/central-a-housing-batch29-resolution-20260726.json');
+          fs.mkdirSync(path.dirname(resolutionPath),{recursive:true});
+          fs.writeFileSync(resolutionPath,JSON.stringify(resolution,null,2)+'\n');
+          const trigger=path.join(root,'operations/control/central-a-housing-batch29-finalize-trigger-20260726.json');
+          if(fs.existsSync(trigger))fs.rmSync(trigger);
+          NODE
+      - name: Regenerate and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+          cd ..
+      - name: Remove regional runners and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f \
+            .github/workflows/temp-central-a-housing-batch29.yml \
+            .github/workflows/temp-central-a-housing-batch29-finalize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'audit: 中日本A住宅支援第29群を地域で最終確定'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
