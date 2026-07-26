@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - jichitai-compare/operations/control/assignment-blocker-audit-trigger-20260726.json
+      - jichitai-compare/operations/control/assignment-blocker-normalize-trigger-20260726.json
 
 permissions:
   contents: write
@@ -106,3 +107,143 @@ jobs:
             git commit -m 'audit: 全国割当blockerメタデータ7件を抽出'
             git push origin HEAD:${{ github.event.pull_request.head.ref }}
           fi
+
+  normalize:
+    if: github.head_ref == 'fix/assignment-blocker-metadata-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout normalization branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Normalize completed task blocker metadata
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const root = 'jichitai-compare';
+          const taskDir = path.join(root, 'operations/tasks');
+          const auditPath = path.join(root, 'operations/audits/national-assignment-blocker-metadata-audit-20260726.json');
+          const targetCodes = ['19442', '20412', '20543', '20588', '45406', '45430', '47353'];
+          const updatedAt = '2026-07-26T14:54:00+09:00';
+          const normalizationNote = '2026-07-26 統合監査: blockersは未完了作業ではなく、公式情報不足によりunavailableを安全表示した根拠で、既にnotesおよび制度detailsへ保持済み。全国公開1,741自治体・15,669制度、自治体・制度blocker 0を確認し、割当状態の誤集計を防ぐためblockersを空配列へ正規化。';
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          const priorByCode = new Map((audit.records ?? []).map((record) => [record.code, record]));
+          const normalized = [];
+
+          for (const code of targetCodes) {
+            const taskPath = path.join(taskDir, `${code}.json`);
+            const task = JSON.parse(fs.readFileSync(taskPath, 'utf8'));
+            const blockers = Array.isArray(task.blockers) ? task.blockers : [];
+            const completedServices = Array.isArray(task.completedServices) ? task.completedServices.length : 0;
+            const auditRecord = priorByCode.get(code);
+
+            if (!auditRecord) throw new Error(`${code}: audit record not found`);
+            if (task.status !== 'merged') throw new Error(`${code}: status is not merged: ${task.status}`);
+            if (completedServices !== 9) throw new Error(`${code}: completedServices is not 9: ${completedServices}`);
+            if (blockers.length === 0) throw new Error(`${code}: blockers already empty; expected stale metadata`);
+
+            task.notes = Array.isArray(task.notes) ? task.notes : [];
+            if (!task.notes.includes(normalizationNote)) task.notes.push(normalizationNote);
+            task.blockers = [];
+            task.currentBranch = null;
+            task.lastCheckedAt = '2026-07-26';
+            task.lastUpdatedAt = updatedAt;
+            task.lastUpdatedBy = '統合・公開処理';
+            fs.writeFileSync(taskPath, JSON.stringify(task, null, 2) + '\n');
+
+            normalized.push({
+              code,
+              name: task.municipalityName,
+              previousBlockers: blockers,
+              previousCurrentBranch: auditRecord.currentBranch ?? null,
+              result: 'normalized_completed_task_metadata'
+            });
+          }
+
+          audit.resolution = {
+            resolvedAt: updatedAt,
+            policy: '公式情報不足の判断根拠はnotes・制度details・本監査JSONに保存し、完了済みtaskのblockersからは除去する。',
+            normalizedTaskCount: normalized.length,
+            normalized,
+            before: {
+              assignmentBlocked: audit.counts?.assignmentBlocked ?? null,
+              blockedMunicipalities: audit.nationwide?.blockedMunicipalities ?? null,
+              blockedServices: audit.nationwide?.blockedServices ?? null
+            },
+            status: 'tasks_normalized_pending_progress_regeneration'
+          };
+          audit.nextAction = '進捗を再生成し、assignmentSummary.blocked=0、assigned=1741、自治体・制度blocker=0を確認する。';
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          NODE
+
+      - name: Regenerate progress and validate
+        shell: bash
+        run: |
+          cd jichitai-compare
+          npm run progress
+          npm run validate:generated
+          node --check app.js
+
+      - name: Finalize resolution evidence
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'jichitai-compare';
+          const progressPath = `${root}/operations/progress.json`;
+          const auditPath = `${root}/operations/audits/national-assignment-blocker-metadata-audit-20260726.json`;
+          const progress = JSON.parse(fs.readFileSync(progressPath, 'utf8'));
+          const audit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+          const checks = {
+            registeredMunicipalities1741: progress.registeredMunicipalities === 1741,
+            totalServices15669: progress.totalServices === 15669,
+            completedServices15669: progress.completedServices === 15669,
+            remainingMunicipalities0: progress.remainingMunicipalities === 0,
+            assignmentBlocked0: progress.assignmentSummary?.blocked === 0,
+            assignmentAssigned1741: progress.assignmentSummary?.assigned === 1741,
+            blockedMunicipalities0: progress.blockedMunicipalities === 0,
+            blockedServices0: progress.blockedServices === 0,
+            stalledMunicipalities0: Array.isArray(progress.stalledMunicipalities) && progress.stalledMunicipalities.length === 0
+          };
+          if (!Object.values(checks).every(Boolean)) {
+            throw new Error(`Normalization validation failed: ${JSON.stringify({ checks, assignmentSummary: progress.assignmentSummary })}`);
+          }
+          audit.resolution.after = {
+            progressUpdatedAt: progress.updatedAt,
+            assignmentSummary: progress.assignmentSummary,
+            blockedMunicipalities: progress.blockedMunicipalities,
+            blockedServices: progress.blockedServices,
+            stalledMunicipalityCount: progress.stalledMunicipalities.length
+          };
+          audit.resolution.checks = checks;
+          audit.resolution.status = 'completed';
+          audit.judgment = 'stale_assignment_blocker_metadata_normalized';
+          audit.nextAction = '全国品質改善第2監査の最終完了ゲートで、割当blocker 0を使用する。';
+          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + '\n');
+          console.log(JSON.stringify({ checks, assignmentSummary: progress.assignmentSummary }, null, 2));
+          NODE
+
+      - name: Commit normalization result
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            jichitai-compare/operations/tasks/19442.json \
+            jichitai-compare/operations/tasks/20412.json \
+            jichitai-compare/operations/tasks/20543.json \
+            jichitai-compare/operations/tasks/20588.json \
+            jichitai-compare/operations/tasks/45406.json \
+            jichitai-compare/operations/tasks/45430.json \
+            jichitai-compare/operations/tasks/47353.json \
+            jichitai-compare/operations/progress.json \
+            jichitai-compare/operations/audits/national-assignment-blocker-metadata-audit-20260726.json
+          git commit -m 'fix: 完了taskの割当blockerメタデータ7件を正規化'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
