@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch27-decisions-20260726",
+  "decidedAt": "2026-07-26T15:30:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3879,
+  "runnerWorkflowRunId": 30190909672,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 0,
+  "verifiedMaintainedCount": 5,
+  "reviewed": [
+    {
+      "code": "23214",
+      "name": "蒲郡市",
+      "service": "housingSupport",
+      "decisionType": "current_newlywed_housing_verified_maintained",
+      "statusBefore": "verified",
+      "statusAfter": "verified",
+      "summary": "令和8年中に結婚等をした39歳以下の夫婦等へ、住宅取得・改修・賃借・引越費用を補助する。",
+      "officialSource": "https://www.city.gamagori.lg.jp/site/iijangamagori/kekkonshien.html",
+      "officialBasis": "令和8年中に婚姻等をした39歳以下の夫婦等を対象とし、住宅取得・リフォーム・賃借・引越費を補助する現行制度を確認",
+      "contentChanged": false
+    },
+    {
+      "code": "21203",
+      "name": "高山市",
+      "service": "housingSupport",
+      "decisionType": "current_newlywed_housing_verified_maintained",
+      "statusBefore": "verified",
+      "statusAfter": "verified",
+      "summary": "令和8年度の結婚新生活支援として、婚姻等に伴う住宅取得・賃借・引越・リフォーム費を最大60万円補助する。",
+      "officialSource": "https://www.city.takayama.lg.jp/kurashi/1006064/1006088/1010738.html",
+      "officialBasis": "令和8年1月1日から令和9年3月31日までに婚姻等をした39歳以下の世帯を対象とする現行制度を確認",
+      "contentChanged": false
+    },
+    {
+      "code": "21204",
+      "name": "多治見市",
+      "service": "housingSupport",
+      "decisionType": "current_newlywed_housing_verified_maintained",
+      "statusBefore": "verified",
+      "statusAfter": "verified",
+      "summary": "令和8年度の結婚新生活支援として、婚姻に伴う住宅取得・賃借・リフォーム・引越費用を最大60万円補助する。",
+      "officialSource": "https://www.city.tajimi.lg.jp/shisei/shisaku_keikaku/1007314/1007315.html",
+      "officialBasis": "2026年1月1日から2027年3月31日までに入籍した39歳以下の夫婦を対象とする現行制度を確認",
+      "contentChanged": false
+    },
+    {
+      "code": "21361",
+      "name": "垂井町",
+      "service": "housingSupport",
+      "decisionType": "current_child_addition_verified_maintained",
+      "statusBefore": "verified",
+      "statusAfter": "verified",
+      "summary": "町内で住宅を新築・購入する世帯へ20万円を交付し、18歳以下の世帯員1人につき3万円を加算する。",
+      "officialSource": "https://www.town.tarui.lg.jp/site/townpromotion/6526.html",
+      "officialBasis": "住宅取得20万円に加え、18歳以下の世帯員1人につき3万円を加算する子育て条件を確認",
+      "contentChanged": false
+    },
+    {
+      "code": "23209",
+      "name": "碧南市",
+      "service": "housingSupport",
+      "decisionType": "current_three_generation_child_household_verified_maintained",
+      "statusBefore": "verified",
+      "statusAfter": "verified",
+      "summary": "三世代で同居・移住同居・近居するための住宅新築、購入、リフォーム等へ10万～60万円を補助する。",
+      "officialSource": "https://www.city.hekinan.lg.jp/soshiki/kensetsu/kenchiku/kakuhojyo/18546.html",
+      "officialBasis": "18歳以下の子どもと同居する子世帯を含む三世代同居・移住同居・近居制度を確認",
+      "contentChanged": false
+    }
+  ],
+  "mechanicalRescan": {
+    "pullRequestNumber": 3877,
+    "workflowRunId": 30190775077,
+    "candidateCount": 48,
+    "note": "機械抽出は結婚新生活、18歳以下、三世代等を子育て・新婚条件として十分に除外できないため、authoritative queue countはcheckpointの44件を継承"
+  },
+  "causeScan": {
+    "previousRemainingCandidates": 44,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 39
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "結婚新生活支援は新婚世帯向け住宅支援としてverified対象に含める",
+    "一般住宅制度でも18歳以下の子ども加算が明示される場合は子育て住宅支援としてverified対象に含める",
+    "三世代制度は子世帯に18歳以下の子ども要件がある場合にverified対象に含める"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3881,
+  "nationalSyncWorkflowRunId": 30191005653,
+  "nationalSyncStatus": "validated_pending_merge"
+}

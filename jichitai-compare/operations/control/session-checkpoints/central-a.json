@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T13:41:00+09:00",
+  "updatedAt": "2026-07-26T15:30:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3866,
+  "pullRequestNumber": 3879,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3860,
+  "stateSyncPullRequestNumber": 3879,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残44件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残39件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T13:41:00+09:00",
-    "latestRegionalPullRequestNumber": 3860,
+    "latestCompletedAt": "2026-07-26T15:30:00+09:00",
+    "latestRegionalPullRequestNumber": 3879,
     "latestCiRunNumber": 30187980391,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 184,
-    "primarySourceSlotsRechecked": 616,
+    "correctedMunicipalitiesRechecked": 189,
+    "primarySourceSlotsRechecked": 621,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -755,7 +755,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 44,
+      "generalHousingMisclassification": 39,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -777,28 +777,21 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残44件",
+      "一般住宅・移住制度の分類候補残39件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3862,
     "latestPublicVerificationPullRequestNumber": 3864,
     "latestHousingBatch": {
-      "batch": 26,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 27,
+      "status": "regional_reviewed_pending_national_sync",
       "reviewedMunicipalityCount": 5,
-      "confirmedCorrectionCount": 5,
-      "statusToUnavailableCount": 1,
-      "verifiedReplacementOrClarificationCount": 4,
-      "remainingCandidates": 44,
-      "regionalPullRequestNumber": 3860,
-      "regionalWorkflowRunId": 30187980391,
-      "nationalPullRequestNumber": 3862,
-      "nationalWorkflowRunId": 30188055238,
-      "publicVerificationPullRequestNumber": 3864,
-      "publicVerificationWorkflowRunId": 30188137764,
-      "finalRegionPullRequestNumber": 3866,
-      "finalRegionWorkflowRunId": 30188249378,
+      "confirmedCorrectionCount": 0,
+      "verifiedMaintainedCount": 5,
+      "remainingCandidates": 39,
+      "regionalPullRequestNumber": 3879,
+      "regionalWorkflowRunId": 30190909672,
       "blocker": null
     },
     "stateReconciliation": {
@@ -823,5 +816,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第26群の忠岡町・熊取町・田尻町・岬町・河南町を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第27群として、蒲郡市・高山市・多治見市の新婚住宅支援、垂井町の18歳以下加算、碧南市の三世代子世帯要件を公式情報で再確認し、5件ともverifiedを維持した。"
 }
