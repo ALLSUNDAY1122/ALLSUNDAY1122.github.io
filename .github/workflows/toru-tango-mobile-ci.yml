@@ -65,12 +65,22 @@ jobs:
           mkdir -p ci-logs
           npx expo config --type public 2>&1 | tee ci-logs/expo-config.log
 
-      - name: Semantic generator regressions
+      - name: Web semantic generator regressions
         id: generator_tests
         continue-on-error: true
         run: |
           mkdir -p ci-logs
           node --test ../toru-tango/tests/generator-v2.test.cjs 2>&1 | tee ci-logs/generator-tests.log
+
+      - name: Mobile OCR-aware generator regressions
+        id: mobile_generator_tests
+        continue-on-error: true
+        run: |
+          mkdir -p ci-logs
+          rm -rf .tmp-regression
+          npx tsc -p tsconfig.regression.json 2>&1 | tee ci-logs/mobile-generator-compile.log
+          node --test tests/mobile-generator.test.cjs 2>&1 | tee ci-logs/mobile-generator-tests.log
+          rm -rf .tmp-regression
 
       - name: Native OCR module structure
         id: native_ocr
@@ -109,5 +119,6 @@ jobs:
           test "${{ steps.doctor.outcome }}" = "success"
           test "${{ steps.expo_config.outcome }}" = "success"
           test "${{ steps.generator_tests.outcome }}" = "success"
+          test "${{ steps.mobile_generator_tests.outcome }}" = "success"
           test "${{ steps.native_ocr.outcome }}" = "success"
           test "${{ steps.worker.outcome }}" = "success"
