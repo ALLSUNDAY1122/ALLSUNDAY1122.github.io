@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T11:49:00+09:00",
+  "updatedAt": "2026-07-26T13:38:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3855,
+  "pullRequestNumber": 3860,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -171,20 +171,20 @@
   "blocked": [],
   "pendingMunicipalities": [],
   "pendingNationalPublication": [],
-  "stateSyncPullRequestNumber": 3849,
+  "stateSyncPullRequestNumber": 3860,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "一般住宅・移住制度の分類候補残49件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "一般住宅・移住制度の分類候補残44件と弱い主出典残33件を、利用者向け公式情報で原因別に継続判定する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T11:49:00+09:00",
-    "latestRegionalPullRequestNumber": 3849,
+    "latestCompletedAt": "2026-07-26T13:38:00+09:00",
+    "latestRegionalPullRequestNumber": 3860,
     "latestCiRunNumber": 30184922474,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 179,
-    "primarySourceSlotsRechecked": 611,
+    "correctedMunicipalitiesRechecked": 184,
+    "primarySourceSlotsRechecked": 616,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -639,6 +639,36 @@
         "code": "27232",
         "service": "housingSupport",
         "name": "阪南市"
+      },
+      {
+        "type": "general_seismic_misclassification",
+        "code": "27341",
+        "service": "housingSupport",
+        "name": "忠岡町"
+      },
+      {
+        "type": "three_generation_home_acquisition_replacement",
+        "code": "27361",
+        "service": "housingSupport",
+        "name": "熊取町"
+      },
+      {
+        "type": "three_generation_new_life_replacement",
+        "code": "27362",
+        "service": "housingSupport",
+        "name": "田尻町"
+      },
+      {
+        "type": "young_child_home_acquisition_clarification",
+        "code": "27366",
+        "service": "housingSupport",
+        "name": "岬町"
+      },
+      {
+        "type": "three_generation_acquisition_renovation_replacement",
+        "code": "27382",
+        "service": "housingSupport",
+        "name": "河南町"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -725,7 +755,7 @@
     "candidateCounts": {
       "weakPrimarySource": 33,
       "numericOrConditionCompleteness": 81,
-      "generalHousingMisclassification": 49,
+      "generalHousingMisclassification": 44,
       "fiscalYearRisk": 33,
       "schoolMealScopeAmbiguity": 24,
       "verifiedUnavailableRisk": 1
@@ -747,28 +777,22 @@
       }
     ],
     "nextPriority": [
-      "一般住宅・移住制度の分類候補残49件",
+      "一般住宅・移住制度の分類候補残44件",
       "弱い主出典残33候補",
       "Issue #3141の19項目を公式利用条件公開時のみ解消"
     ],
     "latestNationalPullRequestNumber": 3851,
     "latestPublicVerificationPullRequestNumber": 3853,
     "latestHousingBatch": {
-      "batch": 25,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 26,
+      "status": "regional_corrected_pending_national_sync",
       "reviewedMunicipalityCount": 5,
       "confirmedCorrectionCount": 5,
-      "statusToUnavailableCount": 3,
-      "verifiedReplacementCount": 2,
-      "remainingCandidates": 49,
-      "regionalPullRequestNumber": 3849,
-      "regionalWorkflowRunId": 30184922474,
-      "nationalPullRequestNumber": 3851,
-      "nationalWorkflowRunId": 30185013869,
-      "publicVerificationPullRequestNumber": 3853,
-      "publicVerificationWorkflowRunId": 30185118012,
-      "finalRegionPullRequestNumber": 3855,
-      "finalRegionWorkflowRunId": 30185213943,
+      "statusToUnavailableCount": 1,
+      "verifiedReplacementOrClarificationCount": 4,
+      "remainingCandidates": 44,
+      "regionalPullRequestNumber": 3860,
+      "regionalWorkflowRunId": 30187980391,
       "blocker": null
     },
     "stateReconciliation": {
@@ -793,5 +817,5 @@
       "status": "resolved"
     }
   },
-  "lastAction": "住宅支援分類第25群の東大阪市・泉南市・四條畷市・交野市・阪南市を地域・全国へ反映し、公開5ページと全国JSONの一致を確認した。"
+  "lastAction": "住宅支援分類第26群として、忠岡町の一般耐震制度をunavailableへ修正し、熊取町・田尻町・河南町を三世代住宅支援へ差し替え、岬町の新築・中古住宅取得条件を明確化した。"
 }
