@@ -40,6 +40,11 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
         setCards(stored.cards);
         setHistory(stored.history);
       })
+      .catch(() => {
+        if (!active) return;
+        setCards([]);
+        setHistory([]);
+      })
       .finally(() => {
         if (active) setHydrated(true);
       });
@@ -50,7 +55,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (!hydrated) return;
-    void saveStoredState({ cards, history });
+    void saveStoredState({ cards, history }).catch(() => undefined);
   }, [cards, history, hydrated]);
 
   const addCard = useCallback(
