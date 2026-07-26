@@ -27,28 +27,50 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
-          const audits='jichitai-compare/operations/audits';
+          const root='jichitai-compare/operations';
+          const audits=path.join(root,'audits');
+          const quality=path.join(root,'quality');
           const currentPath=path.join(audits,'central-a-housing-classification-candidates-after-batch34-20260726.json');
           const current=JSON.parse(fs.readFileSync(currentPath,'utf8'));
-          const decisionFiles=fs.readdirSync(audits).filter(name=>/^central-a-housing-classification-batch\d+-decisions-\d{8}\.json$/.test(name));
           const reviewed=new Map();
+          const add=(code,source,batch)=>{
+            const value=String(code??'');
+            if(!/^\d{5}$/.test(value))return;
+            if(!reviewed.has(value))reviewed.set(value,[]);
+            reviewed.get(value).push({batch,source});
+          };
+          const collectCodes=(value,source,batch)=>{
+            if(Array.isArray(value)){for(const item of value)collectCodes(item,source,batch);return;}
+            if(value&&typeof value==='object'){
+              for(const [key,item] of Object.entries(value)){
+                if(/code$/i.test(key)||/codes$/i.test(key))collectCodes(item,source,batch);
+                else if(key==='decisions')collectCodes(item,source,batch);
+              }
+              return;
+            }
+            add(value,source,batch);
+          };
+          const decisionFiles=fs.readdirSync(audits).filter(name=>/^central-a-housing-classification-batch\d+-decisions-\d{8}\.json$/.test(name));
           for(const filename of decisionFiles){
-            const match=filename.match(/batch(\d+)-/);
-            const batch=Number(match?.[1]);
+            const batch=Number(filename.match(/batch(\d+)-/)?.[1]);
             const audit=JSON.parse(fs.readFileSync(path.join(audits,filename),'utf8'));
             for(const d of audit.decisions??[]){
-              const code=String(d.code);
-              if(!reviewed.has(code))reviewed.set(code,[]);
-              reviewed.get(code).push({batch,file:filename});
+              add(d.code??d.municipalityCode,filename,batch);
             }
+          }
+          const resolutionFiles=fs.existsSync(quality)?fs.readdirSync(quality).filter(name=>/^central-a-housing-batch\d+-resolution-\d{8}\.json$/.test(name)):[];
+          for(const filename of resolutionFiles){
+            const batch=Number(filename.match(/batch(\d+)-/)?.[1]);
+            const resolution=JSON.parse(fs.readFileSync(path.join(quality,filename),'utf8'));
+            collectCodes(resolution.decisions,filename,batch);
           }
           const candidates=current.candidates??[];
           const unreviewed=candidates.filter(c=>!reviewed.has(String(c.code)));
           const falsePositiveReviewed=candidates.filter(c=>reviewed.has(String(c.code))).map(c=>({...c,reviewedBy:reviewed.get(String(c.code))}));
-          const result={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-unreviewed-after-batch34-20260726',generatedAt:new Date().toISOString(),session:'中日本調査班A',sourceCandidateCount:candidates.length,decisionFileCount:decisionFiles.length,reviewedCandidateCount:falsePositiveReviewed.length,unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed,falsePositiveReviewed};
+          const result={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-unreviewed-after-batch34-20260726',generatedAt:new Date().toISOString(),session:'中日本調査班A',sourceCandidateCount:candidates.length,decisionFileCount:decisionFiles.length,resolutionFileCount:resolutionFiles.length,reviewedCandidateCount:falsePositiveReviewed.length,unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed,falsePositiveReviewed};
           const out=path.join(audits,'central-a-housing-classification-unreviewed-after-batch34-20260726.json');
           fs.writeFileSync(out,JSON.stringify(result,null,2)+'\n');
-          console.log(JSON.stringify({decisionFileCount:decisionFiles.length,unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed},null,2));
+          console.log(JSON.stringify({decisionFileCount:decisionFiles.length,resolutionFileCount:resolutionFiles.length,unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed},null,2));
           NODE
       - name: Commit refined queue
         shell: bash
