@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch30-decisions-20260726",
+  "decidedAt": "2026-07-26T17:43:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3909,
+  "runnerWorkflowRunId": 30195214262,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 3,
+  "verifiedReplacementOrClarificationCount": 2,
+  "verifiedMaintainedCount": 0,
+  "reviewed": [
+    {
+      "code": "24472",
+      "name": "南伊勢町",
+      "service": "housingSupport",
+      "correctionType": "child_household_age_exception_clarified",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "町内で定住用住宅を取得する人へ、新築200万円・中古50万円を交付する。",
+      "afterSummary": "45歳以下、または18歳以下の子を監護する2親等以内の親族が町内で定住用住宅を取得する場合、新築200万円・中古50万円を交付する。",
+      "officialSource": "https://www.town.minamiise.lg.jp/admin/shoshiki/machizukuri/ijuuteijuu/1472.html",
+      "officialBasis": "46歳以上でも18歳以下の子を監護する2親等以内の親族は年齢要件の例外となる現行条件を確認",
+      "contentChanged": true
+    },
+    {
+      "code": "27301",
+      "name": "島本町",
+      "service": "housingSupport",
+      "correctionType": "general_seismic_support_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震基準の木造住宅等を対象に、令和8年度も耐震診断・設計・改修・除却費を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.shimamoto.lg.jp/soshiki/14/2662.html",
+      "officialBasis": "令和8年度の現行制度は旧耐震住宅等の耐震診断・設計・改修・除却を対象とする一般耐震支援で、子育て等を対象要件としない",
+      "contentChanged": true
+    },
+    {
+      "code": "28207",
+      "name": "伊丹市",
+      "service": "housingSupport",
+      "correctionType": "general_seismic_support_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "旧耐震住宅の建替え・除却・耐震改修等に対し、工事種類に応じて補助する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.itami.lg.jp/SOSIKI/TOSHIKATSURYOKU/KENTIKUSIDO/JUTAKU_TAISINKA/1569552891805.html",
+      "officialBasis": "令和8年度の現行制度は旧耐震住宅の建替え・除却・耐震改修等を対象とする一般耐震支援で、子育て等を対象要件としない",
+      "contentChanged": true
+    },
+    {
+      "code": "28216",
+      "name": "高砂市",
+      "service": "housingSupport",
+      "correctionType": "current_newlywed_housing_replacement",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "旧耐震住宅の耐震改修計画・工事費等を補助し、戸建住宅の耐震改修工事は上限130万円とする。",
+      "afterSummary": "令和8年1月1日から令和9年3月31日までに婚姻した39歳以下の夫婦へ、住宅取得・賃借・リフォーム・引越費用を最大60万円補助する。",
+      "officialSource": "https://www.city.takasago.lg.jp/gyoseisite/raifushin/hikkoshi_sumai/8835.html",
+      "officialBasis": "令和8年度の結婚新生活支援補助金について、対象婚姻期間・夫婦年齢・対象費用・最大60万円を確認",
+      "contentChanged": true
+    },
+    {
+      "code": "21217",
+      "name": "飛騨市",
+      "service": "housingSupport",
+      "correctionType": "general_home_acquisition_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "市内で定住用住宅を新築・購入する人に助成し、ZEH水準住宅等への加算も設ける。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.hida.gifu.jp/soshiki/23/80985.html",
+      "officialBasis": "令和8年度住宅新築・購入支援は定住住宅取得・転入・ZEH等を対象とする一般制度で、子育て等を対象要件とせず、令和8年度完成分は受付終了",
+      "contentChanged": true
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 29,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 24
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般耐震・定住住宅取得制度は子育て等の対象要件がなければ子育て住宅支援に分類しない",
+    "18歳以下の子を監護する世帯に適用される年齢要件例外は子育て世帯向け住宅支援として明記する",
+    "結婚新生活支援は新婚世帯向け住宅支援としてverified対象に含める"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3911,
+  "nationalSyncWorkflowRunId": 30195307251,
+  "nationalSyncStatus": "validated_pending_merge"
+}
