@@ -40,6 +40,11 @@ function formatLines(candidates: QuestionCandidate[]): string {
     .join('\n');
 }
 
+function formatSeconds(milliseconds: number): string {
+  if (!milliseconds) return '';
+  return `${(milliseconds / 1000).toFixed(1)}秒`;
+}
+
 export default function CreateScreen() {
   const { cards, addCard, addCards } = useAppStore();
   const [sourceText, setSourceText] = useState('');
@@ -59,41 +64,69 @@ export default function CreateScreen() {
     [generatedText]
   );
 
-  const generate = async () => {
+  const validateSource = (): string | null => {
     const text = sourceText.trim();
     if (text.length < 20) {
       Alert.alert('教材本文が短すぎます', '20文字以上入力してください。');
-      return;
+      return null;
     }
+    return text;
+  };
+
+  const generateWithAi = async () => {
+    const text = validateSource();
+    if (!text) return;
 
     setGenerating(true);
-    setGenerateStatus('作問中…');
+    setGenerateStatus('GPT-5 nanoで作問中…');
     try {
-      const candidates = await generateAiQuestions({
+      const result = await generateAiQuestions({
         text,
         count: Number(count),
         type,
         difficulty
       });
-      if (!candidates.length) throw new Error('AI_EMPTY');
-      setGeneratedText(formatLines(candidates));
-      setGenerateStatus(`AIで${candidates.length}問を作成しました。追加前に確認してください。`);
-    } catch {
-      const fallback = generateLocalQuestions(
-        text,
-        Number(count),
-        type,
-        difficulty
-      );
-      setGeneratedText(formatLines(fallback));
+      setGeneratedText(formatLines(result.questions));
+
+      const usage = result.usage.totalTokens
+        ? `入力${result.usage.inputTokens}・出力${result.usage.outputTokens}トークン`
+        : 'トークン数未取得';
+      const cleanup =
+        result.quality.duplicateCount || result.quality.rejectedCount
+          ? `重複${result.quality.duplicateCount}件・不適切${result.quality.rejectedCount}件を除外`
+          : 'サーバー除外0件';
+      const elapsed = formatSeconds(result.elapsedMs);
+
       setGenerateStatus(
-        fallback.length
-          ? `AIへ接続できなかったため、端末内で${fallback.length}問を作成しました。`
-          : '問題を作成できませんでした。文章を増やし、句点を入れてください。'
+        `AI（${result.model}／推論${result.reasoningEffort}）で${result.questions.length}枚作成。${cleanup}。${usage}${elapsed ? `・${elapsed}` : ''}。保存前に内容を確認してください。`
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '原因不明のエラー';
+      setGeneratedText('');
+      setGenerateStatus(
+        `AI作問に失敗しました：${message}。端末内簡易作問へは自動切替していません。`
       );
     } finally {
       setGenerating(false);
     }
+  };
+
+  const generateLocally = () => {
+    const text = validateSource();
+    if (!text) return;
+
+    const candidates = generateLocalQuestions(
+      text,
+      Number(count),
+      type,
+      difficulty
+    );
+    setGeneratedText(formatLines(candidates));
+    setGenerateStatus(
+      candidates.length
+        ? `AIを使用せず、端末内の簡易作問で${candidates.length}枚作成しました。`
+        : '意味のあるカードを作成できませんでした。主語・年代・場所・出来事が分かる文章を追加してください。'
+    );
   };
 
   const removeDuplicates = () => {
@@ -104,7 +137,7 @@ export default function CreateScreen() {
       accepted.push(candidate);
     }
     setGeneratedText(formatLines(accepted));
-    setGenerateStatus(`${accepted.length}問に整理しました。`);
+    setGenerateStatus(`${accepted.length}枚に整理しました。`);
   };
 
   const saveGenerated = () => {
@@ -157,12 +190,12 @@ export default function CreateScreen() {
     <Page>
       <Text style={commonStyles.title}>撮る単語帳</Text>
       <Text style={commonStyles.subtitle}>
-        教材から、15秒で答えられる一問一答を作ります。
+        教材から表裏の単語カードを作り、両面を読み上げて学習します。
       </Text>
 
       <Section title="教材から自動作問">
         <MutedText>
-          AI APIが未設定・通信失敗の場合は、端末内の簡易作問へ自動で切り替わります。
+          初期試験ではGPT-5 nanoを使用します。AI作問に失敗しても端末内作問へ勝手に切り替えません。
         </MutedText>
         <Field
           label="教材本文"
@@ -191,45 +224,53 @@ export default function CreateScreen() {
             { value: 'hard', label: '難しい' }
           ]}
         />
-        <Text style={styles.optionLabel}>作問数</Text>
+        <Text style={styles.optionLabel}>最大作成枚数</Text>
         <ChoiceRow
           value={count}
           onChange={setCount}
           options={['5', '10', '15', '20'].map((value) => ({
             value: value as '5' | '10' | '15' | '20',
-            label: `${value}問`
+            label: `${value}枚`
           }))}
         />
-        <AppButton
-          label={generating ? '作問中…' : '問題を作る'}
-          onPress={() => void generate()}
-          disabled={generating}
-        />
+        <View style={commonStyles.row}>
+          <AppButton
+            label={generating ? 'nanoで作問中…' : 'AIで作問（nano）'}
+            onPress={() => void generateWithAi()}
+            disabled={generating}
+          />
+          <AppButton
+            label="端末内で簡易作問"
+            variant="secondary"
+            onPress={generateLocally}
+            disabled={generating}
+          />
+        </View>
         {generateStatus ? <Text style={styles.status}>{generateStatus}</Text> : null}
         {generatedText ? (
           <>
             <Field
-              label={`生成結果（${candidateCount}問・編集可能）`}
+              label={`生成結果（${candidateCount}枚・表｜裏・編集可能）`}
               multiline
               value={generatedText}
               onChangeText={setGeneratedText}
             />
             <View style={commonStyles.row}>
               <AppButton label="重複を除く" variant="secondary" onPress={removeDuplicates} />
-              <AppButton label="カードへ追加" onPress={saveGenerated} />
+              <AppButton label="単語帳へ追加" onPress={saveGenerated} />
             </View>
           </>
         ) : null}
       </Section>
 
-      <Section title="直接入力">
-        <Field label="問題" value={question} onChangeText={setQuestion} />
-        <Field label="答え" value={answer} onChangeText={setAnswer} />
-        <AppButton label="カードを追加" onPress={saveDirect} />
+      <Section title="1枚ずつ作る">
+        <Field label="表" value={question} onChangeText={setQuestion} />
+        <Field label="裏" value={answer} onChangeText={setAnswer} />
+        <AppButton label="単語帳へ追加" onPress={saveDirect} />
       </Section>
 
       <Section title="まとめて作成">
-        <MutedText>1行に「問題｜答え」の形式で入力してください。</MutedText>
+        <MutedText>1行に「表｜裏」の形式で入力してください。</MutedText>
         <Field
           label="カードデータ"
           multiline
