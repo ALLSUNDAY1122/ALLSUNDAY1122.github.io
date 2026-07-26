@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T21:07:00+09:00",
+  "updatedAt": "2026-07-26T21:24:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3986,
+  "pullRequestNumber": 3990,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "弱い主出典残28件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "弱い主出典残23件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T21:07:00+09:00",
-    "latestRegionalPullRequestNumber": 3980,
-    "latestCiRunNumber": 30201083773,
+    "latestCompletedAt": "2026-07-26T21:24:00+09:00",
+    "latestRegionalPullRequestNumber": 3990,
+    "latestCiRunNumber": 30202437596,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 236,
-    "primarySourceSlotsRechecked": 668,
+    "correctedMunicipalitiesRechecked": 241,
+    "primarySourceSlotsRechecked": 673,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -687,6 +687,41 @@
         "code": "22221",
         "service": "sickChildCare",
         "name": "湖西市"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "22224",
+        "service": "housingSupport",
+        "name": "菊川市",
+        "outcome": "direct_user_page_maintained"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "22325",
+        "service": "sickChildCare",
+        "name": "函南町",
+        "outcome": "primary_source_replaced_with_provider_page"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "22344",
+        "service": "sickChildCare",
+        "name": "小山町",
+        "outcome": "authoritative_source_retained_navigation_added"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "23220",
+        "service": "schoolMeals",
+        "name": "稲沢市",
+        "outcome": "content_and_primary_source_corrected"
+      },
+      {
+        "type": "weak_primary_source_resolved",
+        "code": "23561",
+        "service": "postpartumCare",
+        "name": "設楽町",
+        "outcome": "authoritative_source_retained_navigation_added"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -771,7 +806,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 28,
+      "weakPrimarySource": 23,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 0,
       "fiscalYearRisk": 33,
@@ -842,24 +877,19 @@
       "status": "resolved"
     },
     "latestWeakSourceBatch": {
-      "batch": 1,
-      "status": "completed_public_verified_region_integrated",
+      "batch": 2,
+      "status": "regional_changes_validated",
       "reviewedMunicipalityCount": 5,
       "reviewedServiceCount": 5,
-      "confirmedSourceUpgradeCount": 1,
+      "confirmedSourceUpgradeCount": 2,
       "authoritativeSourceRetainedWithNavigationCount": 2,
-      "directUserPageMaintainedCount": 2,
-      "remainingCandidates": 28,
-      "regionalPullRequestNumber": 3980,
-      "regionalWorkflowRunId": 30201083773,
-      "nationalPullRequestNumber": 3982,
-      "nationalWorkflowRunId": 30201224375,
-      "publicVerificationPullRequestNumber": 3984,
-      "publicVerificationWorkflowRunId": 30201373481,
-      "finalRegionPullRequestNumber": 3986,
-      "finalRegionWorkflowRunId": 30201482346,
+      "directUserPageMaintainedCount": 1,
+      "contentCorrectionCount": 1,
+      "remainingCandidates": 23,
+      "regionalPullRequestNumber": 3990,
+      "regionalWorkflowRunId": 30202437596,
       "blocker": null
     }
   },
-  "lastAction": "弱い主出典第1群5制度を地域・全国・公開で一致確認し、候補を33件から28件へ減らした。"
+  "lastAction": "弱い主出典第2群5制度を公式情報で再確認し、稲沢市学校給食を令和8年度完全無償化へ訂正、函南町病児保育の主出典を直接案内へ更新した。"
 }
