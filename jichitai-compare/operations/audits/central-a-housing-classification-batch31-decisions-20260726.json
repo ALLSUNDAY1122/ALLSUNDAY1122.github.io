@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditId": "central-a-housing-classification-batch31-decisions-20260726",
+  "decidedAt": "2026-07-26T18:27:00+09:00",
+  "session": "中日本調査班A",
+  "coordinatorSession": "統括B",
+  "category": "generalHousingMisclassification",
+  "regionalPullRequestNumber": 3919,
+  "runnerWorkflowRunId": 30196485647,
+  "reviewedMunicipalityCount": 5,
+  "confirmedCorrectionCount": 5,
+  "statusToUnavailableCount": 3,
+  "verifiedReplacementOrClarificationCount": 2,
+  "verifiedMaintainedCount": 0,
+  "reviewed": [
+    {
+      "code": "21219",
+      "name": "郡上市",
+      "service": "housingSupport",
+      "correctionType": "general_migration_support_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "市外から郡上市へ移住した49歳以下の人に、世帯構成等に応じた移住支援補助金を交付する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.city.gujo.gifu.jp/life/detail/content-2.html",
+      "officialBasis": "現行の移住支援補助金は49歳以下の転入者へ世帯人数等に応じて交付する一般移住支援で、住宅費や子育て世帯を対象要件としない",
+      "contentChanged": true
+    },
+    {
+      "code": "21341",
+      "name": "養老町",
+      "service": "housingSupport",
+      "correctionType": "three_generation_child_housing_conditions_clarified",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "40歳未満のI・JターンまたはUターン世帯が町内に住宅を取得した場合、取得費を補助する。",
+      "afterSummary": "祖父母・父母・中学生以下の子どもを含む三世代が町内で同居または2キロメートル以内の近居を始め、住宅を取得する場合、35万円または40万円を補助する。",
+      "officialSource": "https://www.town.yoro.gifu.jp/life/living/1001777/1002586.html",
+      "officialBasis": "祖父母・父母・中学生以下の子を含む三世代、同居または2キロメートル以内の近居、住宅取得、35万円または40万円の現行条件を確認",
+      "contentChanged": true
+    },
+    {
+      "code": "21404",
+      "name": "池田町",
+      "service": "housingSupport",
+      "correctionType": "current_newlywed_housing_replacement",
+      "beforeStatus": "verified",
+      "afterStatus": "verified",
+      "beforeSummary": "40歳以下の世帯が町内で住宅を新築・購入等する場合、基本30万円と各種加算を交付する。",
+      "afterSummary": "令和8年1月1日から令和9年3月31日までに婚姻した39歳以下の夫婦へ、住宅取得・賃借・リフォーム・引越費用を最大60万円助成する。",
+      "officialSource": "https://www.town.gifu-ikeda.lg.jp/0000002652.html",
+      "officialBasis": "令和8年度の結婚・妊娠・共育ての相談機会提供・支援プログラムで、婚姻期間・年齢・所得・対象住宅費・最大60万円を確認",
+      "contentChanged": true
+    },
+    {
+      "code": "23563",
+      "name": "豊根村",
+      "service": "housingSupport",
+      "correctionType": "general_home_construction_remodel_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "住宅新築は100万円、リフォームは工事費の3分の1を補助する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.vill.toyone.aichi.jp/iju/sumai/993.html",
+      "officialBasis": "現行の新築リフォーム補助金は村内居住者・居住予定者の住宅新築・改修を対象とする一般住宅制度で、子育て等を対象要件としない",
+      "contentChanged": true
+    },
+    {
+      "code": "24344",
+      "name": "川越町",
+      "service": "housingSupport",
+      "correctionType": "empty_house_information_service_misclassification",
+      "beforeStatus": "verified",
+      "afterStatus": "unavailable",
+      "beforeSummary": "町内空家の売却・賃貸情報を空家バンクで提供し、住み替えや定住を支援する。",
+      "afterSummary": "子育て世帯・新婚世帯・三世代世帯を対象要件とする現行の住宅取得・改修・家賃支援制度は、公式情報で確認できない。",
+      "officialSource": "https://www.town.kawagoe.mie.jp/kurashi/sumaiseikatsu/1002417/1001635/1001636.html",
+      "officialBasis": "空家バンクは売買・賃貸物件情報を提供する一般情報サービスで、住宅費補助でも子育て世帯向け制度でもない",
+      "contentChanged": true
+    }
+  ],
+  "causeScan": {
+    "previousRemainingCandidates": 24,
+    "reviewedHighRiskCandidates": 5,
+    "remainingCandidates": 19
+  },
+  "issue3141": {
+    "unresolvedItemCount": 19,
+    "unresolvedMunicipalityCount": 19,
+    "changed": false
+  },
+  "policy": [
+    "一般移住給付・一般住宅新築改修・空家情報サービスは子育て住宅支援へ分類しない",
+    "中学生以下の子を含む三世代同居・近居住宅取得制度はverified対象に含める",
+    "結婚新生活支援は新婚世帯向け住宅支援としてverified対象に含める"
+  ],
+  "result": {
+    "unresolvedConfirmedErrorCount": 0,
+    "releaseBlocker": "none"
+  },
+  "nationalSyncPullRequestNumber": 3921,
+  "nationalSyncWorkflowRunId": 30196560364,
+  "nationalSyncStatus": "validated_pending_merge"
+}
