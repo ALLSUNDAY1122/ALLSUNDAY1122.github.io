@@ -24,7 +24,7 @@ function selectCards(cards: Card[], mode: StudyMode): Card[] {
   }
   if (mode === 'weak') {
     const weak = shuffle(cards.filter(isWeakCard));
-    const others = shuffle(cards.filter((card) => !isWeakCard(card));
+    const others = shuffle(cards.filter((card) => !isWeakCard(card)));
     return [...weak, ...others];
   }
   return shuffle(cards);
