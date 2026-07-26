@@ -30,7 +30,7 @@ jobs:
           const audits='jichitai-compare/operations/audits';
           const currentPath=path.join(audits,'central-a-housing-classification-candidates-after-batch34-20260726.json');
           const current=JSON.parse(fs.readFileSync(currentPath,'utf8'));
-          const decisionFiles=fs.readdirSync(audits).filter(name=>/^central-a-housing-classification-batch\d+-decisions-20260726\.json$/.test(name));
+          const decisionFiles=fs.readdirSync(audits).filter(name=>/^central-a-housing-classification-batch\d+-decisions-\d{8}\.json$/.test(name));
           const reviewed=new Map();
           for(const filename of decisionFiles){
             const match=filename.match(/batch(\d+)-/);
@@ -39,16 +39,16 @@ jobs:
             for(const d of audit.decisions??[]){
               const code=String(d.code);
               if(!reviewed.has(code))reviewed.set(code,[]);
-              reviewed.get(code).push(batch);
+              reviewed.get(code).push({batch,file:filename});
             }
           }
           const candidates=current.candidates??[];
           const unreviewed=candidates.filter(c=>!reviewed.has(String(c.code)));
-          const falsePositiveReviewed=candidates.filter(c=>reviewed.has(String(c.code))).map(c=>({...c,reviewedBatches:reviewed.get(String(c.code))}));
+          const falsePositiveReviewed=candidates.filter(c=>reviewed.has(String(c.code))).map(c=>({...c,reviewedBy:reviewed.get(String(c.code))}));
           const result={schemaVersion:'1.0.0',auditId:'central-a-housing-classification-unreviewed-after-batch34-20260726',generatedAt:new Date().toISOString(),session:'中日本調査班A',sourceCandidateCount:candidates.length,decisionFileCount:decisionFiles.length,reviewedCandidateCount:falsePositiveReviewed.length,unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed,falsePositiveReviewed};
           const out=path.join(audits,'central-a-housing-classification-unreviewed-after-batch34-20260726.json');
           fs.writeFileSync(out,JSON.stringify(result,null,2)+'\n');
-          console.log(JSON.stringify({unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed},null,2));
+          console.log(JSON.stringify({decisionFileCount:decisionFiles.length,unreviewedCandidateCount:unreviewed.length,unreviewedCandidates:unreviewed},null,2));
           NODE
       - name: Commit refined queue
         shell: bash
