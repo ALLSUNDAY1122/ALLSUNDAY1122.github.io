@@ -1,0 +1,87 @@
+name: FP3 SPEED Flutter CI
+
+on:
+  push:
+    branches:
+      - ci/fp3-speed-v040
+    paths:
+      - 'fp3-speed-ci/**'
+      - '.github/workflows/fp3-speed-flutter-ci.yml'
+  pull_request:
+    paths:
+      - 'fp3-speed-ci/**'
+      - '.github/workflows/fp3-speed-flutter-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reconstruct CI source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat fp3-speed-ci/core4k.part*.b64 > fp3-speed-ci/core.b64
+          echo '22977873bd7309e11773508ec3f0119a3550ab84e7c358c1111dccf79cdcf728  fp3-speed-ci/core.b64' | sha256sum -c -
+          base64 --decode fp3-speed-ci/core.b64 > fp3-speed-ci/core.tar.xz
+          echo '9488de011eb62b396678414a410c251956dc3f8a57b06b7904fa8285c6cb9907  fp3-speed-ci/core.tar.xz' | sha256sum -c -
+          mkdir -p fp3-speed-app
+          tar -xJf fp3-speed-ci/core.tar.xz -C fp3-speed-app
+          test -f fp3-speed-app/pubspec.yaml
+          test -f fp3-speed-app/lib/main.dart
+          test -f fp3-speed-app/test/question_bank_test.dart
+
+      - name: Set up Flutter 3.44.8
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.8'
+          channel: stable
+          cache: true
+
+      - name: Show toolchain versions
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Generate Web platform files
+        working-directory: fp3-speed-app
+        run: flutter create --platforms=web --org jp.allsunday --project-name fp3_speed_quiz .
+
+      - name: Resolve dependencies
+        working-directory: fp3-speed-app
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: fp3-speed-app
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        working-directory: fp3-speed-app
+        run: flutter test --reporter expanded
+
+      - name: Build Web release
+        working-directory: fp3-speed-app
+        run: flutter build web --release
+
+      - name: Verify Web build
+        working-directory: fp3-speed-app
+        run: |
+          test -f build/web/index.html
+          test -f build/web/main.dart.js
+          du -sh build/web
+
+      - name: Upload Web build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fp3-speed-web-v0.4.0
+          path: fp3-speed-app/build/web
+          if-no-files-found: error
+          retention-days: 14
