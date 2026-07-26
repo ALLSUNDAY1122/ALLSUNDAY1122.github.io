@@ -10,7 +10,11 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "doctor": "npx expo-doctor"
+    "doctor": "npx expo-doctor",
+    "check": "npm run typecheck && npm run lint && npm run doctor"
+  },
+  "engines": {
+    "node": ">=22.13.0"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
