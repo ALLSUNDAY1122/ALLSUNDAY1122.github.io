@@ -2,6 +2,10 @@ import { useMemo, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {
+  isNativeOcrAvailable,
+  recognizeText
+} from '@/modules/toru-tango-ocr';
+import {
   AppButton,
   ChoiceRow,
   commonStyles,
@@ -23,6 +27,8 @@ import type {
   QuestionType
 } from '@/src/types';
 import { isSameCard } from '@/src/utils/data';
+
+type OcrRotation = 'auto' | 'left' | 'right';
 
 function parseLines(text: string): QuestionCandidate[] {
   return text
@@ -48,6 +54,12 @@ function formatSeconds(milliseconds: number): string {
   return `${(milliseconds / 1000).toFixed(1)}秒`;
 }
 
+function rotationValue(rotation: OcrRotation): number {
+  if (rotation === 'left') return 270;
+  if (rotation === 'right') return 90;
+  return -1;
+}
+
 export default function CreateScreen() {
   const { cards, addCard, addCards } = useAppStore();
   const [sourceText, setSourceText] = useState('');
@@ -61,11 +73,16 @@ export default function CreateScreen() {
   const [answer, setAnswer] = useState('');
   const [bulkText, setBulkText] = useState('');
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [ocrText, setOcrText] = useState('');
+  const [ocrStatus, setOcrStatus] = useState('');
+  const [ocrRunning, setOcrRunning] = useState(false);
+  const [ocrRotation, setOcrRotation] = useState<OcrRotation>('auto');
 
   const candidateCount = useMemo(
     () => parseLines(generatedText).length,
     [generatedText]
   );
+  const nativeOcrAvailable = isNativeOcrAvailable();
 
   const validateSource = (): string | null => {
     const text = sourceText.trim();
@@ -181,14 +198,62 @@ export default function CreateScreen() {
     const result = camera
       ? await ImagePicker.launchCameraAsync({
           mediaTypes: ['images'],
-          quality: 0.8
+          quality: 1
         })
       : await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
-          quality: 0.8
+          quality: 1
         });
 
-    if (!result.canceled) setImageUri(result.assets[0].uri);
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      setOcrText('');
+      setOcrStatus('写真を選択しました。向きを確認して文字認識を実行してください。');
+    }
+  };
+
+  const runOcr = async () => {
+    if (!imageUri) {
+      Alert.alert('写真がありません', '先に教材を撮影するか写真を選んでください。');
+      return;
+    }
+    if (!nativeOcrAvailable) {
+      Alert.alert(
+        '開発ビルドが必要です',
+        'Apple Vision OCRはExpo Goでは動作しません。EAS開発ビルドまたは本番ビルドで確認してください。'
+      );
+      return;
+    }
+
+    setOcrRunning(true);
+    setOcrStatus('Apple Visionで日本語を認識しています…');
+    try {
+      const result = await recognizeText(imageUri, rotationValue(ocrRotation));
+      const repaired = repairOcrText(result.text);
+      if (repaired.length < 5) throw new Error('有効な文字を認識できませんでした。');
+      setOcrText(repaired);
+      setOcrStatus(
+        `認識完了。採用した向きは${result.rotation}度です。結果を修正して教材本文へ送ってください。`
+      );
+    } catch (error) {
+      setOcrText('');
+      setOcrStatus(
+        `文字認識に失敗しました：${error instanceof Error ? error.message : '原因不明のエラー'}`
+      );
+    } finally {
+      setOcrRunning(false);
+    }
+  };
+
+  const useOcrResult = () => {
+    const repaired = repairOcrText(ocrText);
+    if (repaired.length < 5) {
+      Alert.alert('認識結果がありません', '文字認識を実行するか、認識結果を修正してください。');
+      return;
+    }
+    setOcrText(repaired);
+    setSourceText(repaired);
+    setGenerateStatus('OCR結果を教材本文へ入れました。作問方法を選んでください。');
   };
 
   return (
@@ -197,6 +262,48 @@ export default function CreateScreen() {
       <Text style={commonStyles.subtitle}>
         教材から表裏の単語カードを作り、両面を読み上げて学習します。
       </Text>
+
+      <Section title="教材を撮る・文字を読む">
+        <View style={commonStyles.row}>
+          <AppButton label="撮影する" onPress={() => void selectPhoto(true)} />
+          <AppButton
+            label="写真を選ぶ"
+            variant="secondary"
+            onPress={() => void selectPhoto(false)}
+          />
+        </View>
+        {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
+        <Text style={styles.optionLabel}>文字の向き</Text>
+        <ChoiceRow
+          value={ocrRotation}
+          onChange={setOcrRotation}
+          options={[
+            { value: 'auto', label: '自動' },
+            { value: 'left', label: '左へ90°' },
+            { value: 'right', label: '右へ90°' }
+          ]}
+        />
+        <AppButton
+          label={ocrRunning ? '文字認識中…' : '写真から文字を読む'}
+          onPress={() => void runOcr()}
+          disabled={ocrRunning || !imageUri}
+        />
+        <MutedText>
+          正式iOS版はApple Visionを使用します。Expo Goではなく、EAS開発ビルドまたは本番ビルドで動作します。
+        </MutedText>
+        {ocrStatus ? <Text style={styles.status}>{ocrStatus}</Text> : null}
+        {ocrText ? (
+          <>
+            <Field
+              label="認識結果（編集可能）"
+              multiline
+              value={ocrText}
+              onChangeText={setOcrText}
+            />
+            <AppButton label="認識結果を教材本文へ" onPress={useOcrResult} />
+          </>
+        ) : null}
+      </Section>
 
       <Section title="教材から自動作問">
         <MutedText>
@@ -285,21 +392,6 @@ export default function CreateScreen() {
         />
         <AppButton label="まとめて追加" onPress={saveBulk} />
       </Section>
-
-      <Section title="教材写真">
-        <View style={commonStyles.row}>
-          <AppButton label="撮影する" onPress={() => void selectPhoto(true)} />
-          <AppButton
-            label="写真を選ぶ"
-            variant="secondary"
-            onPress={() => void selectPhoto(false)}
-          />
-        </View>
-        {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
-        <MutedText>
-          写真の撮影・選択まで実装済みです。正式iOS版のOCRはApple Visionを使う工程へ差し戻しています。
-        </MutedText>
-      </Section>
     </Page>
   );
 }
@@ -313,5 +405,5 @@ const styles = StyleSheet.create({
     padding: 10,
     lineHeight: 20
   },
-  preview: { width: '100%', height: 240, borderRadius: 12, resizeMode: 'contain' }
+  preview: { width: '100%', height: 260, borderRadius: 12, resizeMode: 'contain' }
 });
