@@ -33,7 +33,7 @@ jobs:
           echo '22977873bd7309e11773508ec3f0119a3550ab84e7c358c1111dccf79cdcf728  fp3-speed-ci/core.b64' | sha256sum -c -
           base64 --decode fp3-speed-ci/core.b64 > fp3-speed-ci/core.tar.xz
           echo '9488de011eb62b396678414a410c251956dc3f8a57b06b7904fa8285c6cb9907  fp3-speed-ci/core.tar.xz' | sha256sum -c -
-          mkdir -p fp3-speed-app
+          mkdir -p fp3-speed-app ci-logs
           tar -xJf fp3-speed-ci/core.tar.xz -C fp3-speed-app
           test -f fp3-speed-app/pubspec.yaml
           test -f fp3-speed-app/lib/main.dart
@@ -59,29 +59,78 @@ jobs:
         working-directory: fp3-speed-app
         run: flutter pub get
 
-      - name: Analyze
+      - name: Analyze and capture log
         working-directory: fp3-speed-app
-        run: flutter analyze --no-fatal-infos
+        shell: bash
+        run: |
+          set +e
+          flutter analyze --no-fatal-infos 2>&1 | tee ../ci-logs/analyze.log
+          status=${PIPESTATUS[0]}
+          echo "$status" > ../ci-logs/analyze.exit
+          exit 0
 
-      - name: Run tests
+      - name: Run tests and capture log
         working-directory: fp3-speed-app
-        run: flutter test --reporter expanded
+        shell: bash
+        run: |
+          set +e
+          flutter test --reporter expanded 2>&1 | tee ../ci-logs/tests.log
+          status=${PIPESTATUS[0]}
+          echo "$status" > ../ci-logs/tests.exit
+          exit 0
 
-      - name: Build Web release
+      - name: Build Web release and capture log
         working-directory: fp3-speed-app
-        run: flutter build web --release
+        shell: bash
+        run: |
+          set +e
+          flutter build web --release 2>&1 | tee ../ci-logs/build.log
+          status=${PIPESTATUS[0]}
+          echo "$status" > ../ci-logs/build.exit
+          exit 0
 
       - name: Verify Web build
+        if: always()
         working-directory: fp3-speed-app
+        shell: bash
         run: |
-          test -f build/web/index.html
-          test -f build/web/main.dart.js
-          du -sh build/web
+          if [ "$(cat ../ci-logs/build.exit)" = "0" ]; then
+            test -f build/web/index.html
+            test -f build/web/main.dart.js
+            du -sh build/web
+          else
+            echo 'Web build failed; verification deferred to final gate.'
+          fi
+
+      - name: Upload CI diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fp3-speed-ci-logs-v0.4.0
+          path: ci-logs
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload Web build artifact
+        if: ${{ always() && hashFiles('fp3-speed-app/build/web/index.html') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: fp3-speed-web-v0.4.0
           path: fp3-speed-app/build/web
           if-no-files-found: error
           retention-days: 14
+
+      - name: Final validation gate
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=0
+          for stage in analyze tests build; do
+            status="$(cat "ci-logs/${stage}.exit" 2>/dev/null || echo 99)"
+            echo "${stage}: exit ${status}"
+            if [ "$status" != "0" ]; then
+              failed=1
+            fi
+          done
+          exit "$failed"
