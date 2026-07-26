@@ -1,0 +1,115 @@
+name: FP3 SPEED iOS CI
+
+on:
+  push:
+    branches:
+      - app/fp3-speed-v041
+    paths:
+      - 'fp3-speed-app/**'
+      - '.github/workflows/fp3-speed-ios-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fp3-speed-ios-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ios-release-no-codesign:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: fp3-speed-app
+
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: app/fp3-speed-v041
+          fetch-depth: 0
+
+      - name: Set up Flutter 3.44.8
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.8'
+          channel: stable
+          cache: true
+
+      - name: Show toolchain versions
+        run: |
+          flutter --version
+          dart --version
+          xcodebuild -version
+          sw_vers
+
+      - name: Generate iOS platform files
+        run: |
+          set -euo pipefail
+          flutter create --platforms=ios --org jp.allsunday --project-name fp3_speed_quiz .
+          rm -f test/widget_test.dart
+
+      - name: Apply iOS identity
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('ios/Runner.xcodeproj/project.pbxproj')
+          lines = []
+          for line in path.read_text().splitlines():
+              if 'PRODUCT_BUNDLE_IDENTIFIER =' in line:
+                  indent = line[:len(line) - len(line.lstrip())]
+                  value = 'jp.allsunday.fp3speed.RunnerTests' if 'RunnerTests' in line else 'jp.allsunday.fp3speed'
+                  line = f'{indent}PRODUCT_BUNDLE_IDENTIFIER = {value};'
+              lines.append(line)
+          path.write_text('\n'.join(lines) + '\n')
+          PY
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName FP3 SPEED" ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleName FP3 SPEED" ios/Runner/Info.plist
+          grep -n "PRODUCT_BUNDLE_IDENTIFIER" ios/Runner.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Print :CFBundleDisplayName" ios/Runner/Info.plist
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        run: flutter test --reporter expanded
+
+      - name: Build iOS release without signing
+        run: flutter build ios --release --no-codesign
+
+      - name: Verify release application
+        run: |
+          set -euo pipefail
+          test -d build/ios/iphoneos/Runner.app
+          test -f build/ios/iphoneos/Runner.app/Info.plist
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" build/ios/iphoneos/Runner.app/Info.plist
+          /usr/libexec/PlistBuddy -c "Print :CFBundleDisplayName" build/ios/iphoneos/Runner.app/Info.plist
+          du -sh build/ios/iphoneos/Runner.app
+
+      - name: Upload unsigned iOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: fp3-speed-ios-unsigned-v0.4.1-build14
+          path: fp3-speed-app/build/ios/iphoneos/Runner.app
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Commit generated iOS project files
+        run: |
+          set -euo pipefail
+          cd ..
+          git add fp3-speed-app/.gitignore fp3-speed-app/.metadata fp3-speed-app/pubspec.lock fp3-speed-app/ios
+          if git diff --cached --quiet; then
+            echo 'Generated iOS project files are already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build: add generated iOS project for FP3 SPEED v0.4.1'
+          git push origin HEAD:app/fp3-speed-v041
