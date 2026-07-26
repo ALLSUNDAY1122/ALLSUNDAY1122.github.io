@@ -16,13 +16,13 @@
     "27",
     "28"
   ],
-  "updatedAt": "2026-07-26T20:31:00+09:00",
+  "updatedAt": "2026-07-26T20:53:00+09:00",
   "status": "completed",
   "invocationIntervalMultiplier": 2,
   "remainingUninvestigatedCount": 0,
   "currentMunicipality": null,
   "workingBranch": null,
-  "pullRequestNumber": 3973,
+  "pullRequestNumber": 3980,
   "ciStatus": "success",
   "ciRunNumber": 8897,
   "completedSinceSplit": [
@@ -173,18 +173,18 @@
   "pendingNationalPublication": [],
   "stateSyncPullRequestNumber": 3929,
   "lastNationalPublicationPullRequestNumber": 3122,
-  "nextAction": "弱い主出典残33件を、制度に直接対応する利用者向け公式ページへ更新する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
+  "nextAction": "弱い主出典残28件を、制度に直接対応する利用者向け公式ページへ更新する。専用ページがない場合は要綱と利用者向け導線を併記する。Issue #3141の19項目は公式利用条件公開時のみ解消する。",
   "qualityReaudit": {
     "mode": "cause_based_focused_reaudit",
     "status": "in_progress",
     "startedAt": "2026-07-25T10:30:00+09:00",
-    "latestCompletedAt": "2026-07-26T20:31:00+09:00",
+    "latestCompletedAt": "2026-07-26T20:53:00+09:00",
     "latestRegionalPullRequestNumber": 3967,
     "latestCiRunNumber": 30199982431,
     "scopeMunicipalities": 314,
     "scopeServices": 2826,
-    "correctedMunicipalitiesRechecked": 231,
-    "primarySourceSlotsRechecked": 663,
+    "correctedMunicipalitiesRechecked": 236,
+    "primarySourceSlotsRechecked": 668,
     "confirmedCorrections": [
       {
         "type": "municipality_code_duplicate",
@@ -669,6 +669,24 @@
         "code": "27382",
         "service": "housingSupport",
         "name": "河南町"
+      },
+      {
+        "type": "primary_source_replaced",
+        "code": "17324",
+        "service": "postpartumCare",
+        "name": "川北町"
+      },
+      {
+        "type": "authoritative_source_retained_navigation_added",
+        "code": "17384",
+        "service": "postpartumCare",
+        "name": "志賀町"
+      },
+      {
+        "type": "authoritative_source_retained_navigation_added",
+        "code": "22221",
+        "service": "sickChildCare",
+        "name": "湖西市"
       }
     ],
     "issue3141UnresolvedItemCount": 19,
@@ -753,7 +771,7 @@
     ],
     "issue3141AuthoritativeStateCheckedAt": "2026-07-25T14:17:00+09:00",
     "candidateCounts": {
-      "weakPrimarySource": 33,
+      "weakPrimarySource": 28,
       "numericOrConditionCompleteness": 81,
       "generalHousingMisclassification": 0,
       "fiscalYearRisk": 33,
@@ -822,7 +840,20 @@
         "generalHousingMisclassification": 104
       },
       "status": "resolved"
+    },
+    "latestWeakSourceBatch": {
+      "batch": 1,
+      "status": "regional_validated_pending_merge",
+      "reviewedMunicipalityCount": 5,
+      "reviewedServiceCount": 5,
+      "confirmedSourceUpgradeCount": 1,
+      "authoritativeSourceRetainedWithNavigationCount": 2,
+      "directUserPageMaintainedCount": 2,
+      "remainingCandidates": 28,
+      "regionalPullRequestNumber": 3980,
+      "regionalWorkflowRunId": 30201083773,
+      "blocker": null
     }
   },
-  "lastAction": "住宅支援分類第35群の安城市・甲賀市・朝来市を対象制度へ差し替え、みよし市・東郷町・日進市・大治町をunavailableへ修正し、住宅支援分類候補ゼロと地域・全国・公開一致を確認した。"
+  "lastAction": "弱い主出典第1群5制度を再確認し、川北町産後ケアを利用者向けガイドへ更新、志賀町・湖西市は要綱と利用者向け導線を併記、多治見市・島田市は直接案内を維持した。"
 }
