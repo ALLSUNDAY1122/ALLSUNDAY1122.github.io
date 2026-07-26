@@ -7,12 +7,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '1.0.0',
   orientation: 'portrait',
   scheme: 'torutango',
+  icon: './assets/icon.png',
   userInterfaceStyle: 'light',
   newArchEnabled: true,
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
     buildNumber: '1',
+    icon: './assets/icon.png',
     infoPlist: {
       NSCameraUsageDescription: '教材を撮影して単語カード作成に利用します。',
       NSPhotoLibraryUsageDescription: '教材写真を選択して単語カード作成に利用します。',
@@ -24,6 +26,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     'expo-router',
+    [
+      'expo-splash-screen',
+      {
+        backgroundColor: '#4f46e5',
+        image: './assets/icon.png',
+        imageWidth: 200,
+        resizeMode: 'contain'
+      }
+    ],
     [
       'expo-image-picker',
       {
