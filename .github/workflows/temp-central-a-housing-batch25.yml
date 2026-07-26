@@ -1,0 +1,53 @@
+name: Temporary Central A Housing Batch 25
+
+on:
+  pull_request:
+    branches: [region/central]
+    paths:
+      - jichitai-compare/operations/control/central-a-housing-batch25-trigger-20260726.json
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'audit/central-a-housing-batch25-20260726'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply batch 25
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        run: node jichitai-compare/scripts/temp-central-a-housing-batch25.mjs
+      - name: Regenerate and validate
+        run: |
+          cd jichitai-compare
+          npm run generate
+          npm run check
+          node --check app.js
+      - name: Validate scope and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git status --short | awk '{print $2}')
+          for file in "${changed[@]}"; do
+            case "$file" in
+              jichitai-compare/data/municipalities/27/27227.json|jichitai-compare/data/municipalities/27/27228.json|jichitai-compare/data/municipalities/27/27229.json|jichitai-compare/data/municipalities/27/27230.json|jichitai-compare/data/municipalities/27/27232.json|jichitai-compare/operations/tasks/27227.json|jichitai-compare/operations/tasks/27228.json|jichitai-compare/operations/tasks/27229.json|jichitai-compare/operations/tasks/27230.json|jichitai-compare/operations/tasks/27232.json|jichitai-compare/operations/audits/central-a-housing-classification-batch25-decisions-20260726.json|jichitai-compare/operations/control/session-checkpoints/central-a.json|jichitai-compare/operations/control/regions/central.json|jichitai-compare/data/generated/municipalities.json|jichitai-compare/data/generated/municipality-pages.json|jichitai-compare/operations/progress.json|jichitai-compare/municipality/27227/index.html|jichitai-compare/municipality/27228/index.html|jichitai-compare/municipality/27229/index.html|jichitai-compare/municipality/27230/index.html|jichitai-compare/municipality/27232/index.html|jichitai-compare/sitemap.xml|jichitai-compare/operations/control/central-a-housing-batch25-trigger-20260726.json|jichitai-compare/scripts/temp-central-a-housing-batch25.mjs) ;;
+              *) echo "Unexpected change: $file"; exit 1 ;;
+            esac
+          done
+          rm -f jichitai-compare/scripts/temp-central-a-housing-batch25.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'fix: 中日本A住宅支援分類第25群を修正'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
