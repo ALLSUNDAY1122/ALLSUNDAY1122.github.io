@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>時間くらべ</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;background:#f4f1ea;color:#222}.app{max-width:520px;margin:0 auto;padding:20px 16px 100px}h1{font-size:26px;margin:0}.sub{font-size:13px;color:#666;margin:4px 0 18px}.card{background:#fff;border:1px solid #ddd8cf;border-radius:22px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.07)}.diagnostic{padding:14px;margin-bottom:14px;border-radius:14px;background:#ffe5e5;color:#7a1d1d;font-weight:700}.ok{background:#e3f2ec;color:#175c4d}.timer{width:250px;height:250px;border-radius:50%;margin:12px auto 20px;border:14px solid #d9e9e4;display:flex;flex-direction:column;align-items:center;justify-content:center}.label{font-size:14px;color:#666;font-weight:700}.time{font-size:52px;font-weight:800;font-variant-numeric:tabular-nums;margin:8px 0}.small{font-size:13px;color:#666}.presets,.actions,.adjust{display:grid;gap:10px}.presets{grid-template-columns:repeat(4,1fr)}.adjust{grid-template-columns:54px 1fr 54px;margin-top:10px}.actions{grid-template-columns:1fr 1fr;margin-top:14px}.btn{border:1px solid #d6d1c8;background:#fff;color:#222;border-radius:14px;min-height:50px;font-size:16px;font-weight:700}.btn.primary{background:#2f7569;color:#fff;border-color:#2f7569}.btn.soft{background:#e3f2ec;color:#215f55;border-color:#e3f2ec}.planned{text-align:center;border:1px solid #d6d1c8;border-radius:14px;padding:12px;font-size:22px;font-weight:800}.hidden{display:none}.result-row{display:flex;justify-content:space-between;border-bottom:1px solid #eee7dc;padding:12px 0}.history-item{border:1px solid #ddd8cf;border-radius:14px;padding:12px;margin-top:10px}.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#f4f1ea;padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;gap:10px}.note{font-size:12px;color:#666;line-height:1.5;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>時間くらべ</h1><div class="sub">予定と実際を比べるタイマー</div>
+<div id="diagnostic" class="diagnostic">JavaScriptの起動を確認しています。</div>
+<section id="timerScreen" class="card">
+<div class="timer"><div id="timerLabel" class="label">予定時間</div><div id="timerDisplay" class="time">25:00</div><div id="timerStatus" class="small">開始前</div></div>
+<div id="setupArea">
+<div class="presets">
+<button class="btn soft" onclick="setMinutes(15)">15分</button><button class="btn soft" onclick="setMinutes(25)">25分</button><button class="btn soft" onclick="setMinutes(45)">45分</button><button class="btn soft" onclick="setMinutes(60)">60分</button>
+</div>
+<div class="adjust"><button class="btn" onclick="changeMinutes(-1)">−</button><div id="planned" class="planned">25分</div><button class="btn" onclick="changeMinutes(1)">＋</button></div>
+</div>
+<div class="actions"><button id="mainButton" class="btn primary" onclick="mainAction()">開始</button><button id="subButton" class="btn" onclick="subAction()">リセット</button></div>
+<div class="note">Safari上で動作する価値検証版です。データはこの端末のブラウザ内だけに保存されます。</div>
+</section>
+<section id="resultScreen" class="card hidden"><h2>今回の結果</h2><div class="result-row"><span>予定</span><strong id="rPlanned">--</strong></div><div class="result-row"><span>実際</span><strong id="rActual">--</strong></div><div class="result-row"><span>差</span><strong id="rDiff">--</strong></div><div class="result-row"><span>判定</span><strong id="rJudge">--</strong></div><div class="actions"><button class="btn primary" onclick="again()">同じ時間でもう一度</button><button class="btn" onclick="showTimer()">戻る</button></div></section>
+<section id="historyScreen" class="card hidden"><h2>履歴</h2><div id="history"></div><button class="btn" style="width:100%;margin-top:12px" onclick="clearHistory()">履歴を全削除</button></section>
+</div>
+<div class="nav"><button class="btn" onclick="showTimer()">タイマー</button><button class="btn" onclick="showHistory()">履歴</button></div>
+<script>
+var STORAGE_KEY='jikan-kurabe-safari-v2';
+var state={minutes:25,status:'idle',startedAt:0,pausedAt:0,pausedTotal:0,history:[],last:null};
+var timerId=null;
+function el(id){return document.getElementById(id)}
+function pad(n){return n<10?'0'+n:''+n}
+function fmt(sec){sec=Math.max(0,Math.floor(sec));var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;return h>0?h+':'+pad(m)+':'+pad(s):pad(m)+':'+pad(s)}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}}
+function load(){try{var x=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(x&&typeof x==='object'){state.minutes=Math.max(1,Math.min(999,parseInt(x.minutes,10)||25));state.status=x.status||'idle';state.startedAt=x.startedAt||0;state.pausedAt=x.pausedAt||0;state.pausedTotal=x.pausedTotal||0;state.history=x.history||[];state.last=x.last||null}}catch(e){}}
+function elapsed(){if(state.status==='idle'||!state.startedAt)return 0;var end=state.status==='paused'?state.pausedAt:Date.now();return Math.max(0,Math.floor((end-state.startedAt-state.pausedTotal)/1000))}
+function render(){var plan=state.minutes*60,used=elapsed(),left=plan-used;el('planned').innerHTML=state.minutes+'分';if(state.status==='idle'){el('timerLabel').innerHTML='予定時間';el('timerDisplay').innerHTML=fmt(plan);el('timerStatus').innerHTML='開始前';el('mainButton').innerHTML='開始';el('subButton').innerHTML='リセット';el('setupArea').className=''}else{el('setupArea').className='hidden';el('timerLabel').innerHTML=left>=0?'残り時間':'超過時間';el('timerDisplay').innerHTML=left>=0?fmt(left):'+'+fmt(-left);el('timerStatus').innerHTML=state.status==='paused'?'一時停止中':'計測中';el('mainButton').innerHTML=state.status==='running'?'一時停止':'再開';el('subButton').innerHTML='終了'}}
+function setMinutes(n){if(state.status!=='idle')return;state.minutes=n;save();render()}
+function changeMinutes(d){if(state.status!=='idle')return;state.minutes=Math.max(1,Math.min(999,state.minutes+d));save();render()}
+function mainAction(){if(state.status==='idle'){state.status='running';state.startedAt=Date.now();state.pausedAt=0;state.pausedTotal=0;startTick()}else if(state.status==='running'){state.status='paused';state.pausedAt=Date.now();stopTick()}else{state.pausedTotal+=Date.now()-state.pausedAt;state.pausedAt=0;state.status='running';startTick()}save();render()}
+function subAction(){if(state.status==='idle'){state.startedAt=0;state.pausedAt=0;state.pausedTotal=0;save();render();return}finish()}
+function finish(){var actual=Math.max(1,elapsed()),planned=state.minutes*60,diff=actual-planned;var r={id:Date.now(),planned:planned,actual:actual,diff:diff,date:new Date().toISOString()};state.last=r;state.history.unshift(r);state.history=state.history.slice(0,10);state.status='idle';state.startedAt=0;state.pausedAt=0;state.pausedTotal=0;save();stopTick();showResult(r)}
+function showResult(r){el('timerScreen').className='card hidden';el('historyScreen').className='card hidden';el('resultScreen').className='card';el('rPlanned').innerHTML=fmt(r.planned);el('rActual').innerHTML=fmt(r.actual);el('rDiff').innerHTML=(r.diff>0?'+':r.diff<0?'−':'')+fmt(Math.abs(r.diff));el('rJudge').innerHTML=Math.abs(r.diff)<=r.planned*.1?'ほぼ予定どおり':r.diff<0?'予定より短かった':'予定より長かった'}
+function showTimer(){el('timerScreen').className='card';el('resultScreen').className='card hidden';el('historyScreen').className='card hidden';render()}
+function showHistory(){el('timerScreen').className='card hidden';el('resultScreen').className='card hidden';el('historyScreen').className='card';var html='';if(!state.history.length)html='<p>まだ履歴はありません。</p>';for(var i=0;i<state.history.length;i++){var r=state.history[i];html+='<div class="history-item"><strong>'+new Date(r.date).toLocaleString()+'</strong><br>予定 '+fmt(r.planned)+' ／ 実際 '+fmt(r.actual)+'<br>差 '+(r.diff>0?'+':r.diff<0?'−':'')+fmt(Math.abs(r.diff))+'</div>'}el('history').innerHTML=html}
+function clearHistory(){state.history=[];save();showHistory()}
+function again(){if(state.last)state.minutes=Math.max(1,Math.round(state.last.planned/60));showTimer();mainAction()}
+function startTick(){stopTick();timerId=setInterval(render,250)}
+function stopTick(){if(timerId){clearInterval(timerId);timerId=null}}
+load();el('diagnostic').className='diagnostic ok';el('diagnostic').innerHTML='JavaScript動作中：ボタンを使用できます。';render();if(state.status==='running')startTick();
+</script>
+</body>
+</html>
