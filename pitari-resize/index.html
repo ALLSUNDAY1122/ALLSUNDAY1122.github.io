@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ぴたりサイズ｜画像リサイズ試作</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--text:#17191d;--muted:#6b7280;--line:#dde1e7;--accent:#2367e8;--danger:#bf2c2c}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:480px;margin:auto;min-height:100vh;padding:calc(14px + env(safe-area-inset-top)) 14px calc(26px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+h1{font-size:22px;margin:0}.sub{font-size:12px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+.step{font-size:13px;font-weight:700;margin-bottom:10px}.drop{border:2px dashed #b7bfcc;border-radius:15px;min-height:178px;display:grid;place-items:center;overflow:hidden;background:#fafbfc}
+.drop img{max-width:100%;max-height:280px;display:none}.empty{text-align:center;color:var(--muted);padding:18px}.empty b{display:block;color:var(--text);margin-bottom:5px}
+.row{display:flex;gap:8px;margin-top:10px}.btn{border:0;border-radius:12px;padding:12px 13px;font-weight:700;font-size:14px;cursor:pointer;min-height:44px}
+.btn:active{transform:scale(.985)}.primary{background:var(--accent);color:#fff;flex:1}.secondary{background:#edf1f7;color:var(--text)}.danger{background:#fff0f0;color:var(--danger)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.preset{border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px;text-align:left;min-height:66px;cursor:pointer}
+.preset strong{display:block;font-size:14px}.preset span{font-size:11px;color:var(--muted)}.preset.active{border:2px solid var(--accent);padding:11px;background:#f3f7ff}
+.tabs{display:flex;background:#edf0f4;border-radius:12px;padding:3px;margin-bottom:10px}.tab{flex:1;border:0;background:transparent;padding:9px;border-radius:9px;font-weight:700}.tab.active{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.field{display:flex;align-items:center;gap:8px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;font-size:16px;background:#fff}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.metric{background:#f6f7f9;border-radius:11px;padding:10px}.metric small{display:block;color:var(--muted)}.metric b{font-size:14px}
+.notice{font-size:12px;color:var(--muted);line-height:1.5}.status{font-size:13px;margin-top:9px;min-height:20px}.ok{color:#147d3f}.err{color:var(--danger)}
+.hidden{display:none!important} footer{text-align:center;color:var(--muted);font-size:11px;padding-top:4px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><h1>ぴたりサイズ</h1><div class="sub">用途を選ぶだけの画像リサイズ</div></div><button id="resetBtn" class="btn danger">リセット</button></header>
+
+<section class="card">
+<div class="step">1．写真を選ぶ</div>
+<div class="drop" id="dropZone">
+  <div class="empty" id="emptyState"><b>写真をここに読み込みます</b>端末内だけで処理し、外部送信しません。</div>
+  <img id="preview" alt="選択画像のプレビュー">
+</div>
+<input id="fileInput" type="file" accept="image/*" class="hidden">
+<div class="row">
+  <button id="chooseBtn" class="btn primary">写真を選ぶ</button>
+  <button id="sampleBtn" class="btn secondary">サンプルで試す</button>
+</div>
+<div class="meta">
+ <div class="metric"><small>元サイズ</small><b id="originalDims">未選択</b></div>
+ <div class="metric"><small>元容量</small><b id="originalBytes">—</b></div>
+</div>
+</section>
+
+<section class="card">
+<div class="step">2．仕上がりを選ぶ</div>
+<div class="tabs"><button class="tab active" data-tab="use">用途</button><button class="tab" data-tab="capacity">容量</button><button class="tab" data-tab="custom">自由指定</button></div>
+
+<div id="usePanel">
+<div class="grid" id="presetGrid">
+<button class="preset active" data-w="1200" data-h="1200" data-fit="contain" data-name="フリマ正方形"><strong>フリマ</strong><span>1200 × 1200</span></button>
+<button class="preset" data-w="1080" data-h="1350" data-fit="contain" data-name="Instagram縦"><strong>Instagram</strong><span>1080 × 1350</span></button>
+<button class="preset" data-w="1600" data-h="900" data-fit="contain" data-name="X横長"><strong>X</strong><span>1600 × 900</span></button>
+<button class="preset" data-w="1280" data-h="1280" data-fit="contain" data-name="メール添付"><strong>メール</strong><span>長辺 1280px</span></button>
+</div>
+</div>
+
+<div id="capacityPanel" class="hidden">
+<div class="field"><select id="targetKB"><option value="500">500KB以下</option><option value="1000">1MB以下</option><option value="2000">2MB以下</option><option value="5000">5MB以下</option></select></div>
+<p class="notice">JPEG品質と画像寸法を段階的に調整します。写真の内容により、目標値を大きく下回る場合があります。</p>
+</div>
+
+<div id="customPanel" class="hidden">
+<div class="field"><input id="customW" type="number" min="32" max="8000" value="1200" aria-label="幅"><span>×</span><input id="customH" type="number" min="32" max="8000" value="1200" aria-label="高さ"></div>
+<label class="notice"><input id="keepRatio" type="checkbox" checked> 縦横比を保つ（指定枠内に収める）</label>
+</div>
+</section>
+
+<section class="card">
+<div class="step">3．変換して保存</div>
+<div class="field"><select id="format"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div>
+<div class="row">
+<button id="convertBtn" class="btn primary">変換する</button>
+<button id="downloadBtn" class="btn secondary" disabled>保存</button>
+</div>
+<div id="status" class="status">写真を選択してください。</div>
+<div class="meta">
+ <div class="metric"><small>出力サイズ</small><b id="outputDims">—</b></div>
+ <div class="metric"><small>出力容量</small><b id="outputBytes">—</b></div>
+</div>
+</section>
+<footer>試作版：ログイン・広告・外部送信なし</footer>
+</div>
+<canvas id="canvas" class="hidden"></canvas>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const state={image:null,fileName:"image",mode:"use",preset:{w:1200,h:1200,fit:"contain",name:"フリマ正方形"},blob:null,url:null,originalBytes:0};
+function fmtBytes(n){if(!n)return "—"; if(n<1024)return n+" B"; if(n<1048576)return (n/1024).toFixed(1)+" KB"; return (n/1048576).toFixed(2)+" MB"}
+function setStatus(t,type=""){const e=$("status");e.textContent=t;e.className="status "+type}
+function clearOutput(){state.blob=null;if(state.url){URL.revokeObjectURL(state.url);state.url=null}$("downloadBtn").disabled=true;$("outputDims").textContent="—";$("outputBytes").textContent="—"}
+function loadDataURL(src,name="image",bytes=0){
+ const img=new Image();
+ img.onload=()=>{state.image=img;state.fileName=name.replace(/\.[^.]+$/,"" )||"image";state.originalBytes=bytes;$("preview").src=src;$("preview").style.display="block";$("emptyState").classList.add("hidden");$("originalDims").textContent=`${img.naturalWidth} × ${img.naturalHeight}`;$("originalBytes").textContent=bytes?fmtBytes(bytes):"サンプル";clearOutput();setStatus("仕上がりを選び、「変換する」を押してください。","ok")};
+ img.onerror=()=>setStatus("画像を読み込めませんでした。別の画像を選択してください。","err"); img.src=src;
+}
+$("chooseBtn").onclick=()=>$("fileInput").click();
+$("dropZone").onclick=()=>$("fileInput").click();
+$("fileInput").onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(!f.type.startsWith("image/")){setStatus("画像ファイルを選択してください。","err");return}const r=new FileReader();r.onload=()=>loadDataURL(r.result,f.name,f.size);r.onerror=()=>setStatus("ファイルの読み込みに失敗しました。","err");r.readAsDataURL(f)};
+$("sampleBtn").onclick=()=>{const c=document.createElement("canvas");c.width=1800;c.height=1200;const x=c.getContext("2d");const g=x.createLinearGradient(0,0,1800,1200);g.addColorStop(0,"#d8e8ff");g.addColorStop(1,"#ffe0d2");x.fillStyle=g;x.fillRect(0,0,c.width,c.height);x.fillStyle="#172033";x.font="bold 96px sans-serif";x.fillText("ぴたりサイズ",150,430);x.font="48px sans-serif";x.fillText("サンプル画像 1800 × 1200",150,540);loadDataURL(c.toDataURL("image/jpeg",.92),"sample.jpg",0)};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));state.mode=b.dataset.tab;$("usePanel").classList.toggle("hidden",state.mode!=="use");$("capacityPanel").classList.toggle("hidden",state.mode!=="capacity");$("customPanel").classList.toggle("hidden",state.mode!=="custom");clearOutput()});
+document.querySelectorAll(".preset").forEach(b=>b.onclick=()=>{document.querySelectorAll(".preset").forEach(x=>x.classList.toggle("active",x===b));state.preset={w:+b.dataset.w,h:+b.dataset.h,fit:b.dataset.fit,name:b.dataset.name};clearOutput()});
+function dimsFor(img,w,h,contain=true){const iw=img.naturalWidth,ih=img.naturalHeight;if(!contain)return {w,h};const s=Math.min(w/iw,h/ih,1);return {w:Math.max(1,Math.round(iw*s)),h:Math.max(1,Math.round(ih*s))}}
+function canvasBlob(canvas,type,q){return new Promise((res,rej)=>canvas.toBlob(b=>b?res(b):rej(new Error("変換失敗")),type,q))}
+async function capacityConvert(img,targetBytes,type){
+ let max=2560,q=.9,b=null,d=null;
+ for(let round=0;round<12;round++){
+   d=dimsFor(img,max,max,true);const c=$("canvas");c.width=d.w;c.height=d.h;c.getContext("2d").drawImage(img,0,0,d.w,d.h);
+   b=await canvasBlob(c,type,q);
+   if(b.size<=targetBytes)return {blob:b,dims:d};
+   if(q>.42)q-=.08;else max=Math.max(320,Math.round(max*.82));
+ }
+ return {blob:b,dims:d};
+}
+$("convertBtn").onclick=async()=>{
+ if(!state.image){setStatus("先に写真を選択してください。","err");return}
+ clearOutput();setStatus("変換中…");
+ try{
+  const type=$("format").value;let result;
+  if(state.mode==="capacity"&&type!=="image/png"){
+    result=await capacityConvert(state.image,+$("targetKB").value*1024,type);
+  }else{
+    let w,h,contain=true;
+    if(state.mode==="use"){w=state.preset.w;h=state.preset.h}
+    else if(state.mode==="custom"){w=+$("customW").value;h=+$("customH").value;contain=$("keepRatio").checked}
+    else {w=1600;h=1600}
+    if(!Number.isFinite(w)||!Number.isFinite(h)||w<32||h<32||w>8000||h>8000)throw new Error("幅と高さは32〜8000で指定してください。");
+    const d=dimsFor(state.image,w,h,contain),c=$("canvas");c.width=d.w;c.height=d.h;const ctx=c.getContext("2d");ctx.clearRect(0,0,d.w,d.h);ctx.drawImage(state.image,0,0,d.w,d.h);
+    result={blob:await canvasBlob(c,type,type==="image/jpeg"?0.88:0.92),dims:d};
+  }
+  state.blob=result.blob;state.url=URL.createObjectURL(result.blob);$("downloadBtn").disabled=false;$("outputDims").textContent=`${result.dims.w} × ${result.dims.h}`;$("outputBytes").textContent=fmtBytes(result.blob.size);setStatus("変換が完了しました。保存できます。","ok");
+ }catch(e){setStatus(e.message||"変換に失敗しました。","err")}
+};
+$("downloadBtn").onclick=()=>{if(!state.url||!state.blob){setStatus("先に変換してください。","err");return}const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[state.blob.type]||"jpg";const a=document.createElement("a");a.href=state.url;a.download=`${state.fileName}_resized.${ext}`;document.body.appendChild(a);a.click();a.remove();setStatus("保存処理を開始しました。iPhoneでは共有・ダウンロード画面を確認してください。","ok")};
+$("resetBtn").onclick=()=>{clearOutput();state.image=null;$("fileInput").value="";$("preview").removeAttribute("src");$("preview").style.display="none";$("emptyState").classList.remove("hidden");$("originalDims").textContent="未選択";$("originalBytes").textContent="—";setStatus("写真を選択してください。")};
+["customW","customH","targetKB","format","keepRatio"].forEach(id=>$(id).onchange=clearOutput);
+window.addEventListener("beforeunload",()=>{if(state.url)URL.revokeObjectURL(state.url)});
+</script>
+</body>
+</html>
