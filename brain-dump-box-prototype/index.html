@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>頭の中整理メモ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <noscript><div class="noscript">JavaScriptが無効です。このHTMLはSafariまたはChromeで開いてください。</div></noscript>
+  <main class="app" id="app">
+    <p class="status" id="runtimeStatus" role="status">機能を読み込んでいます…</p>
+    <header class="topbar">
+      <div>
+        <h1>頭の中整理メモ</h1>
+        <p class="lead">考えずに書く。保存すると自動整理。</p>
+      </div>
+      <button class="icon-button" type="button" id="infoButton" aria-label="アプリ情報とバックアップ">⋯</button>
+    </header>
+
+    <section class="capture" aria-label="新しいメモ">
+      <textarea id="captureInput" maxlength="500" placeholder="例：今日、保育園に提出する書類を確認する" aria-label="メモ本文"></textarea>
+      <div class="capture-meta">
+        <div class="prediction memo" id="prediction"><span class="dot"></span><span id="predictionText">入力すると分類を予測します</span></div>
+      </div>
+      <div class="capture-actions">
+        <span class="count"><span id="charCount">0</span>/500</span>
+        <button class="primary" type="button" id="saveButton" disabled>保存する</button>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="表示の切り替え">
+      <div class="tabs" role="tablist" aria-label="分類">
+        <button class="tab" type="button" role="tab" data-tab="today" aria-selected="true">今日<span class="tab-count" id="countToday">0件</span></button>
+        <button class="tab" type="button" role="tab" data-tab="later" aria-selected="false">後で<span class="tab-count" id="countLater">0件</span></button>
+        <button class="tab" type="button" role="tab" data-tab="memo" aria-selected="false">メモ<span class="tab-count" id="countMemo">0件</span></button>
+        <button class="tab" type="button" role="tab" data-tab="all" aria-selected="false">すべて<span class="tab-count" id="countAll">0件</span></button>
+      </div>
+      <div class="filters">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="search" placeholder="メモを検索" aria-label="メモを検索">
+        </div>
+        <label class="toggle-label"><input id="showCompleted" type="checkbox">完了済み</label>
+      </div>
+    </section>
+
+    <div class="summary"><span id="viewTitle">今日やること</span><span id="visibleCount">0件</span></div>
+    <section class="list" id="memoList" aria-live="polite"></section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-message" id="toastMessage"></span>
+    <button type="button" id="toastAction" hidden>取り消す</button>
+  </div>
+
+  <div class="modal-backdrop" id="editModal" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <div class="modal-head">
+        <h2 id="editTitle">メモを編集</h2>
+        <button type="button" class="icon-button" data-close-modal="editModal" aria-label="閉じる">×</button>
+      </div>
+      <textarea id="editInput" maxlength="500" aria-label="編集するメモ本文"></textarea>
+      <div class="modal-actions">
+        <button type="button" class="secondary" data-close-modal="editModal">キャンセル</button>
+        <button type="button" class="primary" id="saveEditButton">変更を保存</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModal" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+      <div class="modal-head">
+        <h2 id="infoTitle">アプリ情報</h2>
+        <button type="button" class="icon-button" data-close-modal="infoModal" aria-label="閉じる">×</button>
+      </div>
+      <p>入力した内容はこのブラウザの端末内にだけ保存します。通信、ログイン、外部AIは使用しません。</p>
+      <ul>
+        <li>「今日」「今から」「すぐ」などを含むと「今日」</li>
+        <li>「明日」「来週」「予約」「買う」などを含むと「後で」</li>
+        <li>どちらにも当てはまらない内容は「メモ」</li>
+      </ul>
+      <div class="modal-actions">
+        <button type="button" class="secondary" id="exportButton">バックアップを書き出す</button>
+        <button type="button" class="secondary" id="importButton">バックアップを読み込む</button>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+      <div class="danger-zone">
+        <button type="button" class="danger-button" id="clearAllButton">すべてのメモを削除</button>
+      </div>
+    </section>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
