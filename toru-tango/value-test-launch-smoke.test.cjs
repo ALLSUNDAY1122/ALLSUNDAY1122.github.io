@@ -17,6 +17,7 @@ assert.doesNotThrow(() => new Function(scripts[0]), 'launcher JavaScript must co
 assert.doesNotThrow(() => new Function(ocrEnhance), 'enhanced OCR JavaScript must compile');
 assert.match(ocrEnhance, /createWorker\(['"]jpn\+eng['"]/, 'enhanced OCR must use Japanese and English recognition');
 assert.match(ocrEnhance, /otsuThreshold/, 'enhanced OCR must include automatic thresholding');
+assert.match(ocrEnhance, /stretchedThreshold/, 'binary OCR threshold must be aligned with contrast stretching');
 assert.match(ocrEnhance, /passPlan/, 'enhanced OCR must compare multiple recognition passes');
 assert.match(ocrEnhance, /confidence/, 'enhanced OCR must expose a recognition confidence indicator');
 assert.match(ocrEnhance, /cloneNode\(true\)/, 'enhanced OCR must replace the original OCR action instead of running twice');
