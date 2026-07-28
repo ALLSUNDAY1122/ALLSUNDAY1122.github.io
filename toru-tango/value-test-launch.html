@@ -19,8 +19,10 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const source = await response.text();
         const oldGenerator = 'https://cdn.jsdelivr.net/gh/ALLSUNDAY1122/ALLSUNDAY1122.github.io@fa6d712ed693dae45b08a85f26326b8c9d734033/toru-tango/generator-v2.js';
-        const prepared = source.replace(oldGenerator, 'generator-v2.js');
-        if (prepared === source) throw new Error('作問機能の参照を更新できませんでした。');
+        const generatorUpdated = source.replace(oldGenerator, 'generator-v2.js');
+        if (generatorUpdated === source) throw new Error('作問機能の参照を更新できませんでした。');
+        const prepared = generatorUpdated.replace('</body>', '<script src="ocr-enhance-v2.js"><\/script></body>');
+        if (prepared === generatorUpdated) throw new Error('OCR改善機能を追加できませんでした。');
         document.open();
         document.write(prepared);
         document.close();
