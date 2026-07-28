@@ -156,11 +156,12 @@
     const low = percentile(histogram, total, variant === 'faint' ? 0.04 : 0.015);
     const high = Math.max(low + 25, percentile(histogram, total, variant === 'faint' ? 0.97 : 0.992));
     const threshold = otsuThreshold(histogram, total);
+    const stretchedThreshold = Math.max(0, Math.min(255, (threshold - low) * 255 / (high - low)));
 
     for (let index = 0, pixel = 0; index < data.length; index += 4, pixel += 1) {
       let value = (grays[pixel] - low) * 255 / (high - low);
       value = Math.max(0, Math.min(255, value));
-      if (variant === 'binary') value = value < threshold ? 0 : 255;
+      if (variant === 'binary') value = value < stretchedThreshold ? 0 : 255;
       if (variant === 'faint') value = Math.max(0, Math.min(255, (value - 145) * 1.55 + 145));
       data[index] = value;
       data[index + 1] = value;
