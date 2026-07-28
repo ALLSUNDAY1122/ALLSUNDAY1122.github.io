@@ -55,6 +55,8 @@ h1{font-size:22px;margin:0}.sub{font-size:12px;color:var(--muted)}
 <button class="preset" data-w="1080" data-h="1350" data-fit="contain" data-name="Instagram縦"><strong>Instagram</strong><span>1080 × 1350</span></button>
 <button class="preset" data-w="1600" data-h="900" data-fit="contain" data-name="X横長"><strong>X</strong><span>1600 × 900</span></button>
 <button class="preset" data-w="1280" data-h="1280" data-fit="contain" data-name="メール添付"><strong>メール</strong><span>長辺 1280px</span></button>
+<button class="preset" data-w="1600" data-h="1600" data-fit="contain" data-name="Gmail添付"><strong>Gmail</strong><span>長辺 1600px</span></button>
+<button class="preset" data-w="1280" data-h="1280" data-fit="contain" data-name="LINE送信"><strong>LINE</strong><span>長辺 1280px</span></button>
 </div>
 </div>
 
@@ -74,7 +76,7 @@ h1{font-size:22px;margin:0}.sub{font-size:12px;color:var(--muted)}
 <div class="field"><select id="format"><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div>
 <div class="row">
 <button id="convertBtn" class="btn primary">変換する</button>
-<button id="downloadBtn" class="btn secondary" disabled>保存</button>
+<button id="downloadBtn" class="btn secondary" disabled>共有・保存</button>
 </div>
 <div id="status" class="status">写真を選択してください。</div>
 <div class="meta">
@@ -94,7 +96,8 @@ function setStatus(t,type=""){const e=$("status");e.textContent=t;e.className="s
 function clearOutput(){state.blob=null;if(state.url){URL.revokeObjectURL(state.url);state.url=null}$("downloadBtn").disabled=true;$("outputDims").textContent="—";$("outputBytes").textContent="—"}
 function loadDataURL(src,name="image",bytes=0){
  const img=new Image();
- img.onload=()=>{state.image=img;state.fileName=name.replace(/\.[^.]+$/,"" )||"image";state.originalBytes=bytes;$("preview").src=src;$("preview").style.display="block";$("emptyState").classList.add("hidden");$("originalDims").textContent=`${img.naturalWidth} × ${img.naturalHeight}`;$("originalBytes").textContent=bytes?fmtBytes(bytes):"サンプル";clearOutput();setStatus("仕上がりを選び、「変換する」を押してください。","ok")};
+ img.onload=()=>{state.image=img;state.fileName=name.replace(/\.[^.]+$/,
+"")||"image";state.originalBytes=bytes;$("preview").src=src;$("preview").style.display="block";$("emptyState").classList.add("hidden");$("originalDims").textContent=`${img.naturalWidth} × ${img.naturalHeight}`;$("originalBytes").textContent=bytes?fmtBytes(bytes):"サンプル";clearOutput();setStatus("仕上がりを選び、「変換する」を押してください。","ok")};
  img.onerror=()=>setStatus("画像を読み込めませんでした。別の画像を選択してください。","err"); img.src=src;
 }
 $("chooseBtn").onclick=()=>$("fileInput").click();
@@ -131,11 +134,27 @@ $("convertBtn").onclick=async()=>{
     const d=dimsFor(state.image,w,h,contain),c=$("canvas");c.width=d.w;c.height=d.h;const ctx=c.getContext("2d");ctx.clearRect(0,0,d.w,d.h);ctx.drawImage(state.image,0,0,d.w,d.h);
     result={blob:await canvasBlob(c,type,type==="image/jpeg"?0.88:0.92),dims:d};
   }
-  state.blob=result.blob;state.url=URL.createObjectURL(result.blob);$("downloadBtn").disabled=false;$("outputDims").textContent=`${result.dims.w} × ${result.dims.h}`;$("outputBytes").textContent=fmtBytes(result.blob.size);setStatus("変換が完了しました。保存できます。","ok");
+  state.blob=result.blob;state.url=URL.createObjectURL(result.blob);$("downloadBtn").disabled=false;$("outputDims").textContent=`${result.dims.w} × ${result.dims.h}`;$("outputBytes").textContent=fmtBytes(result.blob.size);setStatus("変換が完了しました。「共有・保存」を押してください。","ok");
  }catch(e){setStatus(e.message||"変換に失敗しました。","err")}
 };
-$("downloadBtn").onclick=()=>{if(!state.url||!state.blob){setStatus("先に変換してください。","err");return}const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[state.blob.type]||"jpg";const a=document.createElement("a");a.href=state.url;a.download=`${state.fileName}_resized.${ext}`;document.body.appendChild(a);a.click();a.remove();setStatus("保存処理を開始しました。iPhoneでは共有・ダウンロード画面を確認してください。","ok")};
-$("resetBtn").onclick=()=>{clearOutput();state.image=null;$("fileInput").value="";$("preview").removeAttribute("src");$("preview").style.display="none";$("emptyState").classList.remove("hidden");$("originalDims").textContent="未選択";$("originalBytes").textContent="—";setStatus("写真を選択してください。")};
+$("downloadBtn").onclick=async()=>{
+ if(!state.url||!state.blob){setStatus("先に変換してください。","err");return}
+ const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[state.blob.type]||"jpg";
+ const fileName=`${state.fileName}_resized.${ext}`;
+ const file=new File([state.blob],fileName,{type:state.blob.type,lastModified:Date.now()});
+ try{
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+   await navigator.share({files:[file],title:"ぴたりサイズで変換した画像"});
+   setStatus("共有シートを開きました。「画像を保存」または「ファイルに保存」を選べます。","ok");
+   return;
+  }
+ }catch(e){
+  if(e&&e.name==="AbortError"){setStatus("共有をキャンセルしました。");return}
+ }
+ const a=document.createElement("a");a.href=state.url;a.download=fileName;a.target="_blank";a.rel="noopener";document.body.appendChild(a);a.click();a.remove();
+ setStatus("画像を開きました。長押しして「写真に保存」、または共有ボタンから保存してください。","ok");
+};
+$("resetBtn").onclick=()=>{clearOutput();state.image=null;$("fileInput").value="";$("preview").removeAttribute("src");$("preview").style.display="none";$("emptyState").classList.remove("hidden");$("originalDims").textContent="未選択";$("originalBytes").textContent="—";setStatus("写真を選択してください。")} ;
 ["customW","customH","targetKB","format","keepRatio"].forEach(id=>$(id).onchange=clearOutput);
 window.addEventListener("beforeunload",()=>{if(state.url)URL.revokeObjectURL(state.url)});
 </script>
