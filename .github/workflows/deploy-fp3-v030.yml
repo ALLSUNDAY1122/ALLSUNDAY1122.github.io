@@ -1,0 +1,65 @@
+name: Deploy FP3 v0.3.0 Web
+
+on:
+  push:
+    branches:
+      - deploy/fp3-v030
+    paths:
+      - 'fp3-v030-deploy/**'
+      - '.github/workflows/deploy-fp3-v030.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-fp3-v030
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout deployment payload
+        uses: actions/checkout@v4
+        with:
+          ref: deploy/fp3-v030
+          path: source
+
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: site
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify and extract payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat source/fp3-v030-deploy/payload.part*.b64 > payload.b64
+          echo 'eee36534a4f34583756c735be7a1a7cd10b5b0853f0464d60e000b15d6a1fa2b  payload.b64' | sha256sum -c -
+          base64 --decode payload.b64 > payload.tar.xz
+          echo '65464e86c28b17313b92e6e96672ebe3e5d2461d8b71932ca002b126f13c6df9  payload.tar.xz' | sha256sum -c -
+          rm -rf site/fp3-12mon-knock
+          tar -xJf payload.tar.xz -C site
+          test -f site/fp3-12mon-knock/index.html
+          test -f site/fp3-12mon-knock/style.css
+          test -f site/fp3-12mon-knock/app.js
+          test -f site/fp3-12mon-knock/loader.js
+          grep -q '60問チャレンジ' site/fp3-12mon-knock/index.html
+          grep -q 'pickChallenge' site/fp3-12mon-knock/app.js
+
+      - name: Commit Web version to main
+        working-directory: site
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add fp3-12mon-knock
+          if git diff --cached --quiet; then
+            echo 'No Web changes to deploy.'
+            exit 0
+          fi
+          git commit -m 'feat: add FP3 swipe screen and 60-question challenge'
+          git push origin HEAD:main
