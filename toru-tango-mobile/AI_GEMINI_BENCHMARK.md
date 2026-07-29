@@ -4,12 +4,12 @@
 
 ## 目的
 
-Gemini API無料枠の`gemini-2.5-flash-lite`が、撮る単語帳の初期AI作問モデルとして使用できるか判定する。無料であることだけでは採用せず、教材本文を根拠に保存可能な表裏カードを安定して生成できることを確認する。
+Gemini API無料枠の`gemini-3.5-flash-lite`が、撮る単語帳の初期AI作問モデルとして使用できるか判定する。無料であることだけでは採用せず、教材本文を根拠に保存可能な表裏カードを安定して生成できることを確認する。
 
 ## 固定条件
 
 - Provider: Google Gemini Developer API
-- Model: `gemini-2.5-flash-lite`
+- Model: `gemini-3.5-flash-lite`
 - Endpoint: `generateContent`
 - 出力: JSON Schemaによる構造化出力
 - 温度: `0.2`

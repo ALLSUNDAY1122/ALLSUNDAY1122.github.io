@@ -307,7 +307,7 @@ export default function CreateScreen() {
 
       <Section title="教材から自動作問">
         <MutedText>
-          当面はGemini 2.5 Flash-Liteを使用します。無料枠には利用上限があり、教材本文は作問のためGoogleのAPIへ送信されます。OCR由来の文字間空白と罫線ノイズは作問前に自動整形します。
+          当面はGemini 3.5 Flash-Liteを使用します。無料枠には利用上限があり、教材本文は作問のためGoogleのAPIへ送信されます。OCR由来の文字間空白と罫線ノイズは作問前に自動整形します。
         </MutedText>
         <Field
           label="教材本文"

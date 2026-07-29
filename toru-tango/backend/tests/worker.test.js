@@ -22,7 +22,7 @@ function request(body = validInput, init = {}) {
 function geminiResponse(questions) {
   return {
     candidates: [{ content: { parts: [{ text: JSON.stringify({ questions }) }] } }],
-    modelVersion: 'gemini-2.5-flash-lite',
+    modelVersion: 'gemini-3.5-flash-lite',
     usageMetadata: {
       promptTokenCount: 42,
       candidatesTokenCount: 21,
@@ -57,10 +57,10 @@ test('returns generated questions and Gemini metadata', async (t) => {
 
   assert.equal(response.status, 200);
   assert.equal(body.provider, 'Google Gemini');
-  assert.equal(body.model, 'gemini-2.5-flash-lite');
+  assert.equal(body.model, 'gemini-3.5-flash-lite');
   assert.equal(body.questions.length, 1);
   assert.deepEqual(body.usage, { inputTokens: 42, outputTokens: 21, totalTokens: 63 });
-  assert.match(upstream.url, /gemini-2\.5-flash-lite:generateContent$/);
+  assert.match(upstream.url, /gemini-3\.5-flash-lite:generateContent$/);
   assert.equal(upstream.init.headers['x-goog-api-key'], 'test-key');
   const sent = JSON.parse(upstream.init.body);
   assert.equal(sent.generationConfig.responseMimeType, 'application/json');

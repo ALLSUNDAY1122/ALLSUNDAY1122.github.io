@@ -12,7 +12,7 @@ Cloudflare Workers上で動作し、Gemini APIキーをアプリやGitHubへ公�
 ## AIモデル
 
 - Provider: Google Gemini Developer API
-- Model: `gemini-2.5-flash-lite`
+- Model: `gemini-3.5-flash-lite`
 - 出力: JSON Schemaによる構造化出力
 
 Gemini APIの無料枠を当面使用します。無料枠にはレート制限があり、利用条件は変更される可能性があります。また、Googleの料金表では無料枠の入力・出力が製品改善に使われる旨が示されています。公開前にプライバシーポリシーとApp Store回答を再確認してください。
@@ -61,7 +61,7 @@ GitHub Actionsから公開する場合は、Repository secretsへ次を設定し
     }
   ],
   "provider": "Google Gemini",
-  "model": "gemini-2.5-flash-lite"
+  "model": "gemini-3.5-flash-lite"
 }
 ```
 

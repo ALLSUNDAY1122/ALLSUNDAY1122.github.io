@@ -10,13 +10,13 @@
 - 完了候補head SHA: 未固定（外部設定待ち）
 - Claudeへ引渡可能: いいえ
 
-ユーザー指示により、未実装だったAI APIはOpenAI / GPT-5 nanoではなく、当面Gemini API無料枠の`gemini-2.5-flash-lite`を使用する方針へ変更した。
+ユーザー指示により、未実装だったAI APIはOpenAI / GPT-5 nanoではなく、当面Gemini API無料枠の`gemini-3.5-flash-lite`を使用する方針へ変更した。
 
 ## 実装内容
 
 - Cloudflare Workerの上流をGemini `generateContent` APIへ変更
 - `GEMINI_API_KEY`を`x-goog-api-key`ヘッダーでのみ上流へ送信
-- 既定モデルを`gemini-2.5-flash-lite`へ変更
+- 既定モデルを`gemini-3.5-flash-lite`へ変更
 - JSON Schema構造化出力、入力制限、タイムアウト、重複・低品質除外を維持
 - Geminiの`usageMetadata`を既存のトークン表示形式へ正規化
 - 上流エラー、安全ブロック、不正JSON、空出力を明示処理
@@ -63,7 +63,7 @@
 - Worker URL: 未設定
 - デプロイ日時: 未実施
 - Provider: Google Gemini Developer API
-- GEMINI_MODEL: `gemini-2.5-flash-lite`
+- GEMINI_MODEL: `gemini-3.5-flash-lite`
 - Secret管理: コードとworkflowは`GEMINI_API_KEY`へ変更済み
 - 疎通結果: 未実施
 

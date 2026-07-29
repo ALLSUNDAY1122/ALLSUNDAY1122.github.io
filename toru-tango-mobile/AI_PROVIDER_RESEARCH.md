@@ -1,6 +1,6 @@
 # 撮る単語帳 AI API選定
 
-> **2026-07-29 方針変更**：ユーザー指示により、当面はGemini API無料枠の`gemini-2.5-flash-lite`を採用する。現行判断と評価条件は`AI_GEMINI_BENCHMARK.md`を正本とし、以降のOpenAI比較は旧調査記録として保持する。
+> **2026-07-29 方針変更**：ユーザー指示により、当面はGemini API無料枠の`gemini-3.5-flash-lite`を採用する。現行判断と評価条件は`AI_GEMINI_BENCHMARK.md`を正本とし、以降のOpenAI比較は旧調査記録として保持する。
 
 更新日: 2026-07-26
 

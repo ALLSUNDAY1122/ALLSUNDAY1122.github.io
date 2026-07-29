@@ -1,6 +1,6 @@
 const ALLOWED_ORIGIN = 'https://allsunday1122.github.io';
 const MAX_BODY_BYTES = 100_000;
-const DEFAULT_MODEL = 'gemini-2.5-flash-lite';
+const DEFAULT_MODEL = 'gemini-3.5-flash-lite';
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 function cors(origin) {

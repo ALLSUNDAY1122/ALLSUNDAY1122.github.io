@@ -49,7 +49,7 @@ EXPO_PUBLIC_AI_API_URL=https://YOUR-WORKER.workers.dev
 
 `/generate` まで含めたURLも利用できます。
 
-Gemini APIキーをアプリ、GitHub、`.env`へ保存してはいけません。APIキーはCloudflare Workerの`GEMINI_API_KEY` Secretだけに登録します。既定モデルは無料枠対象の`gemini-2.5-flash-lite`です。無料枠には利用上限があり、無料枠のデータ取扱いを公開前に再確認します。
+Gemini APIキーをアプリ、GitHub、`.env`へ保存してはいけません。APIキーはCloudflare Workerの`GEMINI_API_KEY` Secretだけに登録します。既定モデルは無料枠対象の`gemini-3.5-flash-lite`です。無料枠には利用上限があり、無料枠のデータ取扱いを公開前に再確認します。
 
 ## iPhoneでの確認
 

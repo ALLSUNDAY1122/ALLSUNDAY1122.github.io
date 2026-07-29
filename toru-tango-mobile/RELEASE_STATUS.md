@@ -69,7 +69,7 @@ Apple Vision OCRはExpo Goでは利用できない。`expo-dev-client`を含むE
 
 - AI作問と端末内簡易作問を別操作として実装
 - AI失敗時の別モデル・端末内作問への自動切替なし
-- Google Gemini Developer API、`gemini-2.5-flash-lite`
+- Google Gemini Developer API、`gemini-3.5-flash-lite`
 - JSON Schemaによる構造化出力
 - 事実単位の重複除外
 - 使用モデル、トークン数、応答時間、除外件数の表示
@@ -113,7 +113,7 @@ CodexはAPI正常系・異常系のテストを追加し、最新headでGitHub A
 3. Cloudflare Worker公開
 4. Gemini APIキーをWorker Secretとして登録
 5. `EXPO_PUBLIC_AI_API_URL`設定
-6. Gemini 2.5 Flash-Liteで3～5教材の実通信
+6. Gemini 3.5 Flash-Liteで3～5教材の実通信
 7. EAS projectの初期化・リンク確認
 8. EAS development build
 9. Apple Vision ModuleのSwiftコンパイル確認
@@ -135,7 +135,7 @@ CodexはSecret値を要求・表示しない。未設定の場合は、必要な
 
 - Worker公開
 - アプリからWorkerへ接続
-- Gemini 2.5 Flash-Lite 3～5教材の実通信成功
+- Gemini 3.5 Flash-Lite 3～5教材の実通信成功
 - API異常系テスト成功
 - GitHub Actions成功
 - EAS development build成功

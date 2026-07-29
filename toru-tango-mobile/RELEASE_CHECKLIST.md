@@ -18,7 +18,7 @@
 - [x] OCR結果を編集して教材本文へ送る
 - [x] OCR文字間空白、罫線、明確な誤認の修復
 - [x] 表形式教材向けの事実抽出
-- [x] Gemini 2.5 Flash-Liteを当面の無料枠モデルとして設定
+- [x] Gemini 3.5 Flash-Liteを当面の無料枠モデルとして設定
 - [x] AIレスポンスへモデル・トークン数・応答時間・除外件数を追加
 - [x] EAS development／preview／production設定
 - [x] `expo-dev-client`を追加
@@ -79,7 +79,7 @@
 - [ ] Cloudflare Workerを公開
 - [ ] `GEMINI_API_KEY`をWorker Secretへ登録
 - [ ] アプリへ`EXPO_PUBLIC_AI_API_URL`を設定
-- [ ] 使用モデルが`gemini-2.5-flash-lite`と表示される
+- [ ] 使用モデルが`gemini-3.5-flash-lite`と表示される
 - [ ] JSON Schema形式でカードが返る
 - [ ] トークン数、応答時間、除外件数が表示される
 - [ ] AI失敗時に簡易作問へ自動切替しない

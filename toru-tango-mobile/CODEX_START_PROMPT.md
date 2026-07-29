@@ -1,6 +1,6 @@
 # Codex開始プロンプト｜撮る単語帳 API実装
 
-> **2026-07-29 方針変更**：ユーザー指示によりOpenAI / GPT-5 nanoではなく、当面はGemini API無料枠の`gemini-2.5-flash-lite`を使用する。Secretは`GEMINI_API_KEY`、GitHub Actions Secretは`TORU_TANGO_GEMINI_API_KEY`とする。以降のOpenAI / nano記述は旧引継ぎ時点の参考情報であり、この方針変更を優先する。
+> **2026-07-29 方針変更**：ユーザー指示によりOpenAI / GPT-5 nanoではなく、当面はGemini API無料枠の`gemini-3.5-flash-lite`を使用する。Secretは`GEMINI_API_KEY`、GitHub Actions Secretは`TORU_TANGO_GEMINI_API_KEY`とする。以降のOpenAI / nano記述は旧引継ぎ時点の参考情報であり、この方針変更を優先する。
 
 以下をCodexへそのまま渡してください。
 
