@@ -100,11 +100,12 @@ jobs:
           find ios -name '*.xcodeproj' -print -quit | grep -q .
           rm -rf ios
 
-      - name: Worker syntax
+      - name: Worker syntax and API tests
         run: |
           mkdir -p ci-logs
           set -o pipefail
           node --check ../toru-tango/backend/src/index.js 2>&1 | tee ci-logs/worker.log
+          node --test ../toru-tango/backend/tests/worker.test.js 2>&1 | tee ci-logs/worker-tests.log
 
       - name: Upload validation logs
         if: always()

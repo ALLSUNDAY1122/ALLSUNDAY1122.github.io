@@ -1,5 +1,7 @@
 # Codex API実装引継ぎ書｜撮る単語帳 iOS
 
+> **2026-07-29 方針変更**：ユーザー指示によりOpenAI / GPT-5 nanoではなく、当面はGemini API無料枠の`gemini-2.5-flash-lite`を使用する。Secretは`GEMINI_API_KEY`、GitHub Actions Secretは`TORU_TANGO_GEMINI_API_KEY`とする。以降のOpenAI / nano記述は旧仕様の参考情報であり、この方針変更を優先する。
+
 更新日: 2026-07-29
 
 ## 1. 決定した開発順

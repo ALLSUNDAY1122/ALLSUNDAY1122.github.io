@@ -1,7 +1,7 @@
 const ALLOWED_ORIGIN = 'https://allsunday1122.github.io';
 const MAX_BODY_BYTES = 100_000;
-const DEFAULT_MODEL = 'gpt-5-nano';
-const DEFAULT_REASONING_EFFORT = 'medium';
+const DEFAULT_MODEL = 'gemini-2.5-flash-lite';
+const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 function cors(origin) {
   return {
@@ -32,18 +32,12 @@ function normalizeKey(value) {
 }
 
 function extractOutputText(payload) {
-  if (typeof payload?.output_text === 'string') return payload.output_text;
-  if (!Array.isArray(payload?.output)) return '';
-
-  for (const item of payload.output) {
-    if (!Array.isArray(item?.content)) continue;
-    for (const content of item.content) {
-      if (content?.type === 'output_text' && typeof content.text === 'string') {
-        return content.text;
-      }
-    }
-  }
-  return '';
+  const parts = payload?.candidates?.[0]?.content?.parts;
+  if (!Array.isArray(parts)) return '';
+  return parts
+    .map((part) => (typeof part?.text === 'string' ? part.text : ''))
+    .join('')
+    .trim();
 }
 
 function deduplicateQuestions(items, count) {
@@ -69,11 +63,7 @@ function deduplicateQuestions(items, count) {
       rejectedCount += 1;
       continue;
     }
-    if (question.length < 5 || answer.length < 1) {
-      rejectedCount += 1;
-      continue;
-    }
-    if (questionKey.includes(answerKey) && type === 'qa') {
+    if (question.length < 5 || (questionKey.includes(answerKey) && type === 'qa')) {
       rejectedCount += 1;
       continue;
     }
@@ -98,10 +88,34 @@ function deduplicateQuestions(items, count) {
 }
 
 function normalizeUsage(rawUsage) {
-  const inputTokens = Number(rawUsage?.input_tokens) || 0;
-  const outputTokens = Number(rawUsage?.output_tokens) || 0;
-  const totalTokens = Number(rawUsage?.total_tokens) || inputTokens + outputTokens;
+  const inputTokens = Number(rawUsage?.promptTokenCount) || 0;
+  const outputTokens = Number(rawUsage?.candidatesTokenCount) || 0;
+  const totalTokens = Number(rawUsage?.totalTokenCount) || inputTokens + outputTokens;
   return { inputTokens, outputTokens, totalTokens };
+}
+
+function questionSchema(count) {
+  return {
+    type: 'object',
+    properties: {
+      questions: {
+        type: 'array',
+        maxItems: count,
+        items: {
+          type: 'object',
+          properties: {
+            question: { type: 'string' },
+            answer: { type: 'string' },
+            type: { type: 'string', enum: ['qa', 'cloze'] },
+            factKey: { type: 'string' },
+            evidence: { type: 'string' }
+          },
+          required: ['question', 'answer', 'type', 'factKey', 'evidence']
+        }
+      }
+    },
+    required: ['questions']
+  };
 }
 
 export default {
@@ -123,7 +137,7 @@ export default {
     if (url.pathname !== '/generate') {
       return json({ error: 'Not found' }, 404, origin);
     }
-    if (!env.OPENAI_API_KEY) {
+    if (!env.GEMINI_API_KEY) {
       return json({ error: 'サーバー設定が完了していません。' }, 503, origin);
     }
 
@@ -145,12 +159,7 @@ export default {
       ? body.difficulty
       : 'normal';
     const count = Math.max(1, Math.min(Number(body.count) || 10, 20));
-    const model = cleanText(env.OPENAI_MODEL || DEFAULT_MODEL, 80) || DEFAULT_MODEL;
-    const reasoningEffort = ['none', 'low', 'medium', 'high'].includes(
-      env.OPENAI_REASONING_EFFORT
-    )
-      ? env.OPENAI_REASONING_EFFORT
-      : DEFAULT_REASONING_EFFORT;
+    const model = cleanText(env.GEMINI_MODEL || DEFAULT_MODEL, 80) || DEFAULT_MODEL;
 
     if (source.length < 20) {
       return json({ error: '教材本文を20文字以上入力してください。' }, 400, origin);
@@ -173,56 +182,31 @@ export default {
     const startedAt = Date.now();
 
     try {
-      const response = await fetch('https://api.openai.com/v1/responses', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        signal: controller.signal,
-        body: JSON.stringify({
-          model,
-          reasoning: { effort: reasoningEffort },
-          instructions,
-          input: source,
-          store: false,
-          text: {
-            format: {
-              type: 'json_schema',
-              name: 'quiz_questions',
-              strict: true,
-              schema: {
-                type: 'object',
-                properties: {
-                  questions: {
-                    type: 'array',
-                    maxItems: count,
-                    items: {
-                      type: 'object',
-                      properties: {
-                        question: { type: 'string' },
-                        answer: { type: 'string' },
-                        type: { type: 'string', enum: ['qa', 'cloze'] },
-                        factKey: { type: 'string' },
-                        evidence: { type: 'string' }
-                      },
-                      required: ['question', 'answer', 'type', 'factKey', 'evidence'],
-                      additionalProperties: false
-                    }
-                  }
-                },
-                required: ['questions'],
-                additionalProperties: false
-              }
-            }
+      const response = await fetch(
+        `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
+        {
+          method: 'POST',
+          headers: {
+            'x-goog-api-key': env.GEMINI_API_KEY,
+            'Content-Type': 'application/json'
           },
-          max_output_tokens: 3000
-        })
-      });
+          signal: controller.signal,
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: instructions }] },
+            contents: [{ role: 'user', parts: [{ text: source }] }],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              responseSchema: questionSchema(count),
+              maxOutputTokens: 3000,
+              temperature: 0.2
+            }
+          })
+        }
+      );
 
       const raw = await response.json();
       if (!response.ok) {
-        console.error('OpenAI error', raw);
+        console.error('Gemini request failed', response.status);
         return json(
           { error: 'AI作問に失敗しました。しばらくしてから再試行してください。' },
           502,
@@ -232,10 +216,24 @@ export default {
 
       const outputText = extractOutputText(raw);
       if (!outputText) {
-        return json({ error: 'AIから有効な結果を取得できませんでした。' }, 502, origin);
+        const blocked = raw?.promptFeedback?.blockReason || raw?.candidates?.[0]?.finishReason;
+        return json(
+          {
+            error: blocked
+              ? '安全設定によりAIの結果を取得できませんでした。'
+              : 'AIから有効な結果を取得できませんでした。'
+          },
+          502,
+          origin
+        );
       }
 
-      const parsed = JSON.parse(outputText);
+      let parsed;
+      try {
+        parsed = JSON.parse(outputText);
+      } catch {
+        return json({ error: 'AIから有効なJSONを取得できませんでした。' }, 502, origin);
+      }
       const result = deduplicateQuestions(parsed.questions, count);
 
       if (!result.questions.length) {
@@ -249,9 +247,10 @@ export default {
       return json(
         {
           questions: result.questions,
-          model: cleanText(raw?.model || model, 80),
-          reasoningEffort,
-          usage: normalizeUsage(raw?.usage),
+          provider: 'Google Gemini',
+          model: cleanText(raw?.modelVersion || model, 80),
+          generationMode: 'structured-output',
+          usage: normalizeUsage(raw?.usageMetadata),
           quality: {
             requestedCount: count,
             rawCount: result.rawCount,
@@ -265,7 +264,7 @@ export default {
         origin
       );
     } catch (error) {
-      console.error(error);
+      console.error(error?.name === 'AbortError' ? 'Gemini request timed out' : 'Gemini request failed');
       const message =
         error?.name === 'AbortError'
           ? 'AIの応答が時間切れになりました。'

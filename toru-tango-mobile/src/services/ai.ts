@@ -16,8 +16,9 @@ type AiQuality = {
 
 export type AiGenerationResult = {
   questions: QuestionCandidate[];
+  provider: string;
   model: string;
-  reasoningEffort: string;
+  generationMode: string;
   usage: AiUsage;
   quality: AiQuality;
   elapsedMs: number;
@@ -87,9 +88,10 @@ export async function generateAiQuestions(input: {
 
     return {
       questions,
+      provider: typeof payload.provider === 'string' ? payload.provider : 'AI',
       model: typeof payload.model === 'string' ? payload.model : 'unknown',
-      reasoningEffort:
-        typeof payload.reasoningEffort === 'string' ? payload.reasoningEffort : 'unknown',
+      generationMode:
+        typeof payload.generationMode === 'string' ? payload.generationMode : 'unknown',
       usage: {
         inputTokens: numberValue(usage.inputTokens),
         outputTokens: numberValue(usage.outputTokens),

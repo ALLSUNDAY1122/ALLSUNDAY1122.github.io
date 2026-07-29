@@ -100,7 +100,7 @@ export default function CreateScreen() {
     if (!text) return;
 
     setGenerating(true);
-    setGenerateStatus('OCR空白と罫線ノイズを整形し、GPT-5 nanoで作問中…');
+    setGenerateStatus('OCR空白と罫線ノイズを整形し、Geminiで作問中…');
     try {
       const result = await generateAiQuestions({
         text,
@@ -120,7 +120,7 @@ export default function CreateScreen() {
       const elapsed = formatSeconds(result.elapsedMs);
 
       setGenerateStatus(
-        `OCR文字を整形後、AI（${result.model}／推論${result.reasoningEffort}）で${result.questions.length}枚作成。${cleanup}。${usage}${elapsed ? `・${elapsed}` : ''}。保存前に内容を確認してください。`
+        `OCR文字を整形後、${result.provider}（${result.model}）で${result.questions.length}枚作成。${cleanup}。${usage}${elapsed ? `・${elapsed}` : ''}。保存前に内容を確認してください。`
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : '原因不明のエラー';
@@ -307,7 +307,7 @@ export default function CreateScreen() {
 
       <Section title="教材から自動作問">
         <MutedText>
-          初期試験ではGPT-5 nanoを使用します。OCR由来の文字間空白と罫線ノイズは作問前に自動整形します。
+          当面はGemini 2.5 Flash-Liteを使用します。無料枠には利用上限があり、教材本文は作問のためGoogleのAPIへ送信されます。OCR由来の文字間空白と罫線ノイズは作問前に自動整形します。
         </MutedText>
         <Field
           label="教材本文"
@@ -347,7 +347,7 @@ export default function CreateScreen() {
         />
         <View style={commonStyles.row}>
           <AppButton
-            label={generating ? 'nanoで作問中…' : 'AIで作問（nano）'}
+            label={generating ? 'Geminiで作問中…' : 'AIで作問（Gemini）'}
             onPress={() => void generateWithAi()}
             disabled={generating}
           />

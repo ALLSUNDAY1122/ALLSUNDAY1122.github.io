@@ -18,7 +18,7 @@
 - [x] OCR結果を編集して教材本文へ送る
 - [x] OCR文字間空白、罫線、明確な誤認の修復
 - [x] 表形式教材向けの事実抽出
-- [x] GPT-5 nanoを初期試験モデルとして設定
+- [x] Gemini 2.5 Flash-Liteを当面の無料枠モデルとして設定
 - [x] AIレスポンスへモデル・トークン数・応答時間・除外件数を追加
 - [x] EAS development／preview／production設定
 - [x] `expo-dev-client`を追加
@@ -74,13 +74,12 @@
 - [ ] 表と裏を個別に読み上げる
 - [ ] 再起動後もカードと履歴が残る
 
-### GPT-5 nano実通信
+### Gemini実通信
 
 - [ ] Cloudflare Workerを公開
-- [ ] `OPENAI_API_KEY`をWorker Secretへ登録
+- [ ] `GEMINI_API_KEY`をWorker Secretへ登録
 - [ ] アプリへ`EXPO_PUBLIC_AI_API_URL`を設定
-- [ ] 使用モデルが`gpt-5-nano`と表示される
-- [ ] reasoning effortが`medium`と表示される
+- [ ] 使用モデルが`gemini-2.5-flash-lite`と表示される
 - [ ] JSON Schema形式でカードが返る
 - [ ] トークン数、応答時間、除外件数が表示される
 - [ ] AI失敗時に簡易作問へ自動切替しない
@@ -94,7 +93,7 @@
 - [x] `AI_NANO_BENCHMARK.md` を作成
 - [x] QAブランチを最新mainへ同期
 - [ ] ネイティブビルドと実機OCR確認を完了
-- [ ] nano基本実通信を完了
+- [ ] Gemini基本実通信を完了
 - [ ] 最新headで自動検査成功
 - [ ] PRをReady for reviewへ変更
 - [ ] ClaudeがQA対象head SHAを報告書へ記録
@@ -105,8 +104,8 @@
 - [ ] P1未解決 0件
 - [ ] P2を一覧化
 - [ ] UI修正後の再テスト完了
-- [ ] 固定20教材でnano品質を評価
-- [ ] nano採用またはmini比較を決定
+- [ ] 固定20教材でGemini品質を評価
+- [ ] Gemini継続採用または別モデル比較を決定
 - [ ] Claudeが申請工程へ進行可能と判定
 - [ ] ユーザーがリリース候補を承認
 

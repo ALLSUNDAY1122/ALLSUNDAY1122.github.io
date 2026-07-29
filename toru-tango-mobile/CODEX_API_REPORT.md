@@ -4,95 +4,133 @@
 
 ## 状態
 
-- 判定: 作業開始前
-- 開始head SHA: 未記入
-- 完了候補head SHA: 未記入
+- 判定: Gemini実装と認証不要検査を完了、外部設定待ち
+- 開始head SHA: `c577bbd3468a743daf35d157283ed27a491f5cc3`
+- 完了候補head SHA: 未固定（ローカル変更未公開）
 - Claudeへ引渡可能: いいえ
 
-## 変更ファイル
+ユーザー指示により、未実装だったAI APIはOpenAI / GPT-5 nanoではなく、当面Gemini API無料枠の`gemini-2.5-flash-lite`を使用する方針へ変更した。
 
-- 未記入
+## 実装内容
 
-## 実行コマンド
+- Cloudflare Workerの上流をGemini `generateContent` APIへ変更
+- `GEMINI_API_KEY`を`x-goog-api-key`ヘッダーでのみ上流へ送信
+- 既定モデルを`gemini-2.5-flash-lite`へ変更
+- JSON Schema構造化出力、入力制限、タイムアウト、重複・低品質除外を維持
+- Geminiの`usageMetadata`を既存のトークン表示形式へ正規化
+- 上流エラー、安全ブロック、不正JSON、空出力を明示処理
+- APIキーや教材本文をログへ出さない
+- モバイル画面のOpenAI / nano表記をGeminiへ変更
+- AI失敗時に別モデル・端末内簡易作問へ自動切替しない
+- GitHub ActionsのSecret名とWorker登録手順をGeminiへ変更
+- Worker正常系・異常系テスト5件をCIへ追加
+- 無料枠の上限とデータ取扱い注意をUI・プライバシー文書へ反映
 
-```bash
-# Codexが記録する
-```
+## 主要変更ファイル
+
+- `toru-tango/backend/src/index.js`
+- `toru-tango/backend/tests/worker.test.js`
+- `toru-tango/backend/wrangler.jsonc`
+- `toru-tango/backend/README.md`
+- `.github/workflows/deploy-toru-tango-ai.yml`
+- `.github/workflows/toru-tango-mobile-ci.yml`
+- `toru-tango-mobile/src/services/ai.ts`
+- `toru-tango-mobile/app/(tabs)/create.tsx`
+- `toru-tango-mobile/AI_GEMINI_BENCHMARK.md`
+- `toru-tango-mobile/PRIVACY_DATA.md`
+- `toru-tango-mobile/RELEASE_STATUS.md`
+- `toru-tango-mobile/RELEASE_CHECKLIST.md`
 
 ## 自動テスト
 
 | 検査 | 結果 | 証跡 |
 |---|---|---|
-| TypeScript | 未実施 | |
-| ESLint | 未実施 | |
-| Expo Doctor | 未実施 | |
-| Expo public config | 未実施 | |
-| Worker正常系 | 未実施 | |
-| Worker異常系 | 未実施 | |
-| モバイルAPIクライアント | 未実施 | |
-| Apple Vision Module構成 | 未実施 | |
-| Expo iOS prebuild | 未実施 | |
-| GitHub Actions | 未実施 | |
+| TypeScript | 成功 | `pnpm --dir toru-tango-mobile run typecheck` |
+| ESLint | 成功 | `pnpm --dir toru-tango-mobile run lint` |
+| Expo Doctor | 環境制約 | ローカル実行環境に`npm`がなく、15/20成功・5項目は`spawn npm ENOENT`。GitHub Actionsで再確認する |
+| Expo public config | 成功 | Bundle ID、Version、Build、権限文言を確認 |
+| Worker構文 | 成功 | `node --check toru-tango/backend/src/index.js` |
+| Worker正常系・異常系 | 成功 | Node test 5/5 |
+| モバイルOCR対応作問 | 成功 | Node test 3/3 |
+| モバイルAPIクライアント | TypeScript成功 | Geminiレスポンス契約へ変更 |
+| GitHub Actions | 未実施 | ローカル変更未公開 |
+| Expo iOS prebuild | 今回未実施 | 既存headのCIでは成功済み |
 
 ## Cloudflare Worker
 
-- Workflow Run ID: 未記入
-- Worker URL: 未記入
-- デプロイ日時: 未記入
-- OPENAI_MODEL: 未記入
-- OPENAI_REASONING_EFFORT: 未記入
-- Secret管理: 未確認
+- Workflow Run ID: 未実施
+- Worker URL: 未設定
+- デプロイ日時: 未実施
+- Provider: Google Gemini Developer API
+- GEMINI_MODEL: `gemini-2.5-flash-lite`
+- Secret管理: コードとworkflowは`GEMINI_API_KEY`へ変更済み
 - 疎通結果: 未実施
 
-Secret値は記録しない。
+GitHub Repository secretsを確認した時点で必要なSecret名は未登録だった。値は確認・記録していない。
 
-## GPT-5 nano実通信
+必要なRepository secrets:
 
-| 教材 | 結果 | model | reasoning | accepted/requested | tokens | elapsedMs | 品質所見 |
-|---|---|---|---|---:|---:|---:|---|
-| 通常説明文 | 未実施 | | | | | | |
-| 歴史文 | 未実施 | | | | | | |
-| 表形式OCR文 | 未実施 | | | | | | |
-| OCRノイズ文 | 未実施 | | | | | | |
-| 事実が少ない短文 | 未実施 | | | | | | |
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+- `TORU_TANGO_GEMINI_API_KEY`
+
+## Gemini基本実通信
+
+| 教材 | 結果 | model | accepted/requested | tokens | elapsedMs | 品質所見 |
+|---|---|---|---:|---:|---:|---|
+| 通常説明文 | 外部設定待ち | | | | | |
+| 歴史文 | 外部設定待ち | | | | | |
+| 表形式OCR文 | 外部設定待ち | | | | | |
+| OCRノイズ文 | 外部設定待ち | | | | | |
+| 事実が少ない短文 | 外部設定待ち | | | | | |
 
 ## EAS development build
 
-- Expo project ID: 未記入
-- Build ID: 未記入
-- Build URL: 未記入
-- 対象commit SHA: 未記入
+- Expo project ID: `app.config.ts`に未設定
+- Build ID: 未実施
+- Build URL: 未実施
+- 対象commit SHA: 未固定
 - Apple Vision Swift compile: 未確認
 - iPhoneインストール: 未確認
+
+ローカル環境に`EXPO_TOKEN`等の認証設定はなかった。Secret値は要求・記録しない。
 
 ## P0 / P1 / P2
 
 ### P0
 
-- 未確認
+- 認証不要範囲では未検出
 
 ### P1
 
-- 未確認
+- Worker未公開
+- Gemini実通信未確認
+- EAS development build未実施
+- Apple Vision ModuleのSwiftコンパイル未確認
 
 ### P2
 
-- 未確認
+- Gemini無料枠のレート上限、規約、データ取扱いは公開直前に再確認が必要
+- Expo DoctorはGitHub Actionsのnpm環境で再実行が必要
 
 ## 人間操作待ち
 
-- 未確認
+1. Google AI StudioでGemini APIキーを作成する。
+2. GitHubリポジトリのSettings → Secrets and variables → Actionsで、上記3つのRepository secretsを登録する。
+3. Expo認証を安全な環境で行うか、`EXPO_TOKEN`を安全に設定する。
+4. Apple Developer認証が要求された場合は本人操作を行う。
 
-値ではなく、必要なSecret名、設定画面、再開手順だけを記録する。
+Secret値はNotion、GitHub文書、PRコメント、チャット、ログへ記録しない。
 
-## 未完了項目
+## 再開手順
 
-- Worker公開
-- アプリ接続
-- nano実通信
-- EAS development build
-- Apple Vision Moduleコンパイル
+1. `Deploy Toru Tango AI Worker`を`workflow_dispatch`で実行する。
+2. Worker URLを安全なEAS環境変数`EXPO_PUBLIC_AI_API_URL`へ設定する。
+3. `AI_GEMINI_BENCHMARK.md`の3～5教材で実通信する。
+4. `eas build --platform ios --profile development`を実行する。
+5. Worker URL、Workflow Run ID、EAS Build ID、品質結果だけを本報告へ記録する。
+6. 最新GitHub Actions成功後に完了候補headを固定する。
 
 ## 最終判定
 
-**Codex作業開始前。Claudeへはまだ渡さない。**
+**Gemini APIのコード実装と認証不要検査は完了。Worker公開、Gemini実通信、EAS development build、Apple Vision Swiftコンパイルが未完了のため、Claudeへはまだ渡さない。PR #3959はDraftを維持する。**

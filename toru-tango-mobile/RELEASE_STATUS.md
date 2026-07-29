@@ -6,7 +6,7 @@
 
 ユーザー判断により、Safari価値検証後の次担当をClaudeからCodexへ変更した。
 
-現在は**CodexによるAPI実装・Worker公開・モバイル接続・GPT-5 nano実通信・EAS development build工程**である。Claudeはこの工程が完了した後に、UI・UX・OCR・作問品質・主要導線のQAを担当する。
+現在は**CodexによるGemini API実装・Worker公開・モバイル接続・実通信・EAS development build工程**である。Claudeはこの工程が完了した後に、UI・UX・OCR・作問品質・主要導線のQAを担当する。
 
 開発順:
 
@@ -69,7 +69,7 @@ Apple Vision OCRはExpo Goでは利用できない。`expo-dev-client`を含むE
 
 - AI作問と端末内簡易作問を別操作として実装
 - AI失敗時の別モデル・端末内作問への自動切替なし
-- GPT-5 nano、reasoning effort `medium`
+- Google Gemini Developer API、`gemini-2.5-flash-lite`
 - JSON Schemaによる構造化出力
 - 事実単位の重複除外
 - 使用モデル、トークン数、応答時間、除外件数の表示
@@ -79,9 +79,9 @@ Apple Vision OCRはExpo Goでは利用できない。`expo-dev-client`を含むE
 ### API / Worker
 
 - `POST /generate`
-- OpenAI Responses API
-- Worker Secret `OPENAI_API_KEY`
-- `OPENAI_MODEL`、`OPENAI_REASONING_EFFORT`
+- Gemini `generateContent` API
+- Worker Secret `GEMINI_API_KEY`
+- `GEMINI_MODEL`
 - 入力長・件数・形式・難易度検証
 - 45秒タイムアウト
 - 重複・不完全カード除外
@@ -111,9 +111,9 @@ CodexはAPI正常系・異常系のテストを追加し、最新headでGitHub A
 1. Worker・モバイルクライアント・デプロイworkflowの整合性監査
 2. API正常系・異常系テスト追加
 3. Cloudflare Worker公開
-4. OpenAI APIキーをWorker Secretとして登録
+4. Gemini APIキーをWorker Secretとして登録
 5. `EXPO_PUBLIC_AI_API_URL`設定
-6. GPT-5 nanoで3～5教材の実通信
+6. Gemini 2.5 Flash-Liteで3～5教材の実通信
 7. EAS projectの初期化・リンク確認
 8. EAS development build
 9. Apple Vision ModuleのSwiftコンパイル確認
@@ -127,7 +127,7 @@ Secretはコード、Markdown、PRコメント、ログへ保存しない。
 - Apple Developer認証
 - Cloudflare API Token
 - Cloudflare Account ID
-- OpenAI APIキー
+- Gemini APIキー
 
 CodexはSecret値を要求・表示しない。未設定の場合は、必要なSecret名、設定場所、人間操作後の再開手順を報告する。
 
@@ -135,7 +135,7 @@ CodexはSecret値を要求・表示しない。未設定の場合は、必要な
 
 - Worker公開
 - アプリからWorkerへ接続
-- GPT-5 nano 3～5教材の実通信成功
+- Gemini 2.5 Flash-Lite 3～5教材の実通信成功
 - API異常系テスト成功
 - GitHub Actions成功
 - EAS development build成功
@@ -154,7 +154,7 @@ ClaudeはAPI実装完了後に開始する。
 - `CODEX_API_REPORT.md`が「Claudeへ引渡可能」
 - Worker公開済み
 - アプリ接続済み
-- nano実通信済み
+- Gemini実通信済み
 - EAS development build成功
 - GitHub Actions成功
 - PR `#3959`がReady for review

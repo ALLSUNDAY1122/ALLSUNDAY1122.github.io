@@ -1,5 +1,7 @@
 # Claude開始プロンプト｜撮る単語帳 iOS QA
 
+> **2026-07-29 方針変更**：AI作問はGemini API無料枠の`gemini-2.5-flash-lite`へ変更された。`AI_GEMINI_BENCHMARK.md`を正本とし、以降のGPT-5 nano表記は旧仕様として読み替える。
+
 更新日: 2026-07-29
 
 > **現在は使用しない。** ユーザー判断により、CodexがAPI実装、Worker公開、GPT-5 nano実通信、EAS development buildを先に完了する。`toru-tango-mobile/CODEX_API_REPORT.md`に「Claudeへ引渡可能」と記録され、PR `#3959`がReady for reviewになった後にのみ本プロンプトを使用する。
