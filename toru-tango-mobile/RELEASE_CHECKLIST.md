@@ -1,6 +1,6 @@
 # 撮る単語帳 リリースチェックリスト
 
-更新日: 2026-07-26
+更新日: 2026-07-29
 
 ## 1. ChatGPTコード実装
 
@@ -78,7 +78,7 @@
 
 - [x] Cloudflare Workerを公開
 - [x] `GEMINI_API_KEY`をWorker Secretへ登録
-- [ ] アプリへ`EXPO_PUBLIC_AI_API_URL`を設定
+- [x] アプリへ`EXPO_PUBLIC_AI_API_URL`を設定
 - [x] 使用モデルが`gemini-3.5-flash-lite`と表示される
 - [x] JSON Schema形式でカードが返る
 - [x] トークン数、応答時間、除外件数が表示される
@@ -94,7 +94,7 @@
 - [x] QAブランチを最新mainへ同期
 - [ ] ネイティブビルドと実機OCR確認を完了
 - [ ] Gemini基本実通信を完了
-- [ ] 最新headで自動検査成功
+- [x] 最新headで自動検査成功
 - [ ] PRをReady for reviewへ変更
 - [ ] ClaudeがQA対象head SHAを報告書へ記録
 
@@ -111,10 +111,10 @@
 
 ## 5. Codex申請工程
 
-- [ ] 対象コミットを固定
-- [ ] EAS projectIdを設定
-- [ ] Apple Developer資格情報を確認
-- [ ] App Store Connectにアプリを作成
+- [x] 対象コミットを固定（`3385359f64a4f79df02c884d2ef118eef50fe84a`）
+- [x] EAS projectIdを設定
+- [ ] Apple Developer資格情報を確認（Apple IDログイン・2段階認証待ち）
+- [x] App Store Connectにアプリを作成（App ID `6795968222`）
 - [ ] `eas build --platform ios --profile production`
 - [ ] Build ID、Version、Build、成功日時を記録
 - [ ] `eas submit --platform ios --profile production --latest`

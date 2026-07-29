@@ -4,11 +4,11 @@
 
 ## 状態
 
-- 判定: Gemini Worker公開・基本実通信完了、EAS/Apple外部設定待ち
+- 判定: Gemini Worker・モバイル接続・EAS／Apple登録完了、production buildのApple認証待ち
 - 開始head SHA: `c577bbd3468a743daf35d157283ed27a491f5cc3`
 - Gemini実装commit SHA: `8d81497c07e623e5ab994b91c48df803187e187c`
 - Worker公開head SHA: `fdc1b068`
-- 完了候補head SHA: 未固定（EAS/Apple検証待ち）
+- TestFlight準備head SHA: `3385359f64a4f79df02c884d2ef118eef50fe84a`
 - Claudeへ引渡可能: いいえ
 
 ユーザー指示により、未実装だったAI APIはOpenAI / GPT-5 nanoではなく、当面Gemini API無料枠の`gemini-3.5-flash-lite`を使用する方針へ変更した。
@@ -55,13 +55,14 @@
 | Worker正常系・異常系 | 成功 | Node test 5/5 |
 | モバイルOCR対応作問 | 成功 | Node test 3/3 |
 | モバイルAPIクライアント | TypeScript成功 | Geminiレスポンス契約へ変更 |
-| GitHub Actions | 成功 | Mobile `30451982036` / `30451983871`、Generator `30451983446` |
-| Expo iOS prebuild | 成功 | Mobile CI `30451982036` / `30451983871` |
+| GitHub Actions | 成功 | Mobile `30459441189` / `30459442105`、Generator `30459442008` |
+| Expo iOS prebuild | 成功 | Mobile CI `30459441189` / `30459442105` |
 
 ## Cloudflare Worker
 
 - Workflow Run ID: なし（workflowが既定ブランチに未配置のためdispatch APIは404。今回は同一Wrangler手順をローカル実行）
 - Worker URL: `https://toru-tango-ai.kohei3615.workers.dev`
+- Worker version: `95067016-86d6-4246-8b92-24e776f7f15a`
 - デプロイ日時: 2026-07-29
 - Provider: Google Gemini Developer API
 - GEMINI_MODEL: `gemini-3.5-flash-lite`
@@ -80,22 +81,25 @@ GitHub Repository secretsは次の3件を登録済み。値は文書・チャッ
 
 | 教材 | 結果 | model | accepted/requested | tokens | elapsedMs | 品質所見 |
 |---|---|---|---:|---:|---:|---|
-| 通常説明文 | 未実施 | | | | | |
-| 歴史文 | 成功（HTTP 200） | gemini-3.5-flash-lite | 1/3 | 取得確認 | 取得確認 | structured output、重複0、除外0 |
-| 表形式OCR文 | 外部設定待ち | | | | | |
-| OCRノイズ文 | 外部設定待ち | | | | | |
-| 事実が少ない短文 | 外部設定待ち | | | | | |
+| 通常説明文 | 成功（HTTP 200） | gemini-3.5-flash-lite | 3/3 | 取得確認 | 約17,600 | 植物・光合成の3問、重複0、除外0 |
+| 歴史文 | バースト試験で45秒タイムアウト | | | | 45,000超 | 間隔付き再試験が必要 |
+| 表形式OCR文 | バースト試験で45秒タイムアウト | | | | 45,000超 | 間隔付き再試験が必要 |
+| OCRノイズ文 | バースト試験で45秒タイムアウト | | | | 45,000超 | 間隔付き再試験が必要 |
+| 事実が少ない短文 | バースト試験で45秒タイムアウト | | | | 45,000超 | 間隔付き再試験が必要 |
 
-## EAS development build
+## EAS / TestFlight
 
-- Expo project ID: `app.config.ts`に未設定
-- Build ID: 未実施
-- Build URL: 未実施
-- 対象commit SHA: 未固定
+- EAS project: `@allsunday1122/toru-tango`
+- Expo project ID: `96443b56-fef4-4a25-b5e9-831eaa4ec854`
+- Bundle ID: `com.allsunday1122.torutango`
+- App Store Connect App ID: `6795968222`
+- Build ID: 未作成
+- Build URL: 未作成
+- 対象commit SHA: `3385359f64a4f79df02c884d2ef118eef50fe84a`
 - Apple Vision Swift compile: 未確認
 - iPhoneインストール: 未確認
 
-ローカル環境に`EXPO_TOKEN`等の認証設定はなかった。Secret値は要求・記録しない。
+EAS project作成、Apple Developer Bundle ID登録、App Store Connectアプリ作成は完了した。`eas build --platform ios --profile production`はApple IDログイン・2段階認証待ちで、EAS上のiOSビルドは0件。Secret値は要求・記録しない。
 
 ## P0 / P1 / P2
 
@@ -106,7 +110,7 @@ GitHub Repository secretsは次の3件を登録済み。値は文書・チャッ
 ### P1
 
 - 3～5教材でのGemini品質評価未完了（基本疎通1教材は成功）
-- EAS development build未実施
+- EAS production build未作成（Apple認証待ち）
 - Apple Vision ModuleのSwiftコンパイル未確認
 
 ### P2
@@ -123,13 +127,13 @@ Secret値はNotion、GitHub文書、PRコメント、チャット、ログへ記
 
 ## 再開手順
 
-1. Worker URLを安全なEAS環境変数`EXPO_PUBLIC_AI_API_URL`へ設定する。
-2. `AI_GEMINI_BENCHMARK.md`の残り教材を含む3～5教材で実通信する。
-3. `eas build --platform ios --profile development`を実行する。
+1. `AI_GEMINI_BENCHMARK.md`の残り教材を、無料枠を考慮して間隔を空けて実通信する。
+2. 表示中のEAS CLIでApple IDログイン・2段階認証を完了する。
+3. `eas build --platform ios --profile production`を成功させる。
 4. EAS Build IDと品質結果だけを本報告へ記録する。
 5. workflowファイルが既定ブランチへ入った後、`Deploy Toru Tango AI Worker`のdispatchを確認する。
 6. 最新GitHub Actions成功後に完了候補headを固定する。
 
 ## 最終判定
 
-**Gemini API実装、Worker公開、基本実通信は完了。モバイル公開URL設定、3～5教材評価、EAS development build、Apple Vision Swiftコンパイルが未完了のため、Claudeへはまだ渡さない。PR #3959はDraftを維持する。**
+**Gemini API実装、Worker公開、モバイル公開URL、EAS project、Apple Bundle ID、App Store Connectアプリ作成、最新CI成功まで完了。3～5教材評価、EAS production build、TestFlightアップロード、Apple Vision Swiftコンパイルが未完了のため、TestFlight申請完了とは扱わない。PR #3959はDraftを維持する。**

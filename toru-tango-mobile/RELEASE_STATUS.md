@@ -6,7 +6,7 @@
 
 ユーザー判断により、Safari価値検証後の次担当をClaudeからCodexへ変更した。
 
-現在は**CodexによるGemini API実装・Worker公開・モバイル接続・実通信・EAS development build工程**である。Claudeはこの工程が完了した後に、UI・UX・OCR・作問品質・主要導線のQAを担当する。
+現在は**Gemini API実装・Worker公開・モバイル接続・EAS／Apple登録を完了し、TestFlight用production buildのApple認証待ち**である。ユーザー指示によりTestFlight準備を先行しているが、EAS上のiOSビルドはまだ0件であり、TestFlight完了とは扱わない。PR `#3959`はDraftを維持する。
 
 開発順:
 
@@ -35,6 +35,9 @@ PR `#4059`はSafari OCR比較の参照資産として残す。API実装先、EAS
 - Bundle ID: `com.allsunday1122.torutango`
 - Version: `1.0.0`
 - Build: `1`
+- EAS project: `@allsunday1122/toru-tango`
+- EAS project ID: `96443b56-fef4-4a25-b5e9-831eaa4ec854`
+- App Store Connect App ID: `6795968222`
 - 対応: iPhone
 - 初期版の外観: ライトモード固定
 - プライバシーポリシー: `https://allsunday1122.github.io/toru-tango/privacy-policy.html`
@@ -108,16 +111,18 @@ CodexはAPI正常系・異常系のテストを追加し、最新headでGitHub A
 
 ## Codexの現在作業
 
-2026-07-29時点でCloudflare Worker公開、GitHub Repository secrets 3件登録、Worker Secret登録、Gemini 3.5 Flash-Liteの基本実通信（HTTP 200）まで完了した。公開URLは`https://toru-tango-ai.kohei3615.workers.dev`。残りはモバイル公開URL設定、3～5教材評価、EAS development build、Apple Vision Swiftコンパイルである。
+2026-07-29時点でCloudflare Worker公開、GitHub Repository secrets 3件登録、Worker Secret登録、モバイル公開URL設定、EAS project作成、Apple Bundle ID登録、App Store Connectアプリ作成まで完了した。公開URLは`https://toru-tango-ai.kohei3615.workers.dev`。Worker versionは`95067016-86d6-4246-8b92-24e776f7f15a`。
+
+単発のGemini実通信はHTTP 200、3問生成に成功した。直後の5教材連続試験は全件45秒タイムアウトしたため、無料枠を考慮して間隔を空けた再評価が必要である。最新head `3385359f64a4f79df02c884d2ef118eef50fe84a`ではGenerator CIとMobile CI 2件がすべて成功した。
 
 1. Worker・モバイルクライアント・デプロイworkflowの整合性監査
 2. API正常系・異常系テスト追加
 3. Cloudflare Worker公開
 4. Gemini APIキーをWorker Secretとして登録
-5. `EXPO_PUBLIC_AI_API_URL`設定
+5. `EXPO_PUBLIC_AI_API_URL`設定（完了）
 6. Gemini 3.5 Flash-Liteで3～5教材の実通信
-7. EAS projectの初期化・リンク確認
-8. EAS development build
+7. EAS projectの初期化・リンク確認（完了）
+8. TestFlight用EAS production build（Apple認証待ち）
 9. Apple Vision ModuleのSwiftコンパイル確認
 10. `CODEX_API_REPORT.md`作成
 
@@ -125,8 +130,7 @@ Secretはコード、Markdown、PRコメント、ログへ保存しない。
 
 ## 外部操作に必要な情報
 
-- Expoアカウントまたは`EXPO_TOKEN`
-- Apple Developer認証
+- Apple Developer認証（Apple IDログインと2段階認証）
 - Cloudflare API Token
 - Cloudflare Account ID
 - Gemini APIキー
@@ -140,7 +144,7 @@ CodexはSecret値を要求・表示しない。未設定の場合は、必要な
 - Gemini 3.5 Flash-Lite 3～5教材の実通信成功
 - API異常系テスト成功
 - GitHub Actions成功
-- EAS development build成功
+- EAS iOS build成功
 - Apple Vision Moduleコンパイル成功
 - `CODEX_API_REPORT.md`完成
 - 完了候補head SHA固定
@@ -176,4 +180,4 @@ Codexが担当する。
 - 掲載情報・スクリーンショット・審査資料
 - App Review提出と差し戻し対応
 
-現時点ではTestFlight提出、EAS Submit、App Review提出は開始しない。
+ユーザー指示によりTestFlight準備を開始した。Apple DeveloperへのBundle ID登録とApp Store Connectアプリ作成は完了した。`eas build --platform ios --profile production`はApple認証待ちで、ビルド作成・EAS Submit・TestFlight処理は未完了。App Review提出は行わない。
