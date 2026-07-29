@@ -1,34 +1,33 @@
 # 撮る単語帳 リリース状況
 
-更新日: 2026-07-27
+更新日: 2026-07-29
 
 ## 現在の段階
 
-ChatGPT実装工程の最終確認中。Apple Visionを使うiOSネイティブOCR、OCR文字修復、表形式教材向け作問、表裏カード、両面読み上げまでコードへ実装した。
+ユーザー判断により、Safari価値検証後の次担当をClaudeからCodexへ変更した。
 
-独自ネイティブモジュールを含むEAS開発ビルドとiPhone実機確認、Cloudflare Workerの公開、GPT-5 nanoの実通信は未完了。このため、Claude QA用PR `#3959` は下書きのまま維持する。
+現在は**CodexによるAPI実装・Worker公開・モバイル接続・GPT-5 nano実通信・EAS development build工程**である。Claudeはこの工程が完了した後に、UI・UX・OCR・作問品質・主要導線のQAを担当する。
 
-## QA対象
+開発順:
+
+1. ChatGPT: Safari価値検証、仕様整理、既存実装監査
+2. Codex: API実装、Worker公開、アプリ接続、実通信、開発ビルド
+3. Claude: API実装後のQAとUI改善
+4. Codex: ClaudeのP0・P1解消後、TestFlight・App Store申請
+
+## 作業対象
 
 - リポジトリ: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - ブランチ: `qa/toru-tango-mobile-20260726`
 - Pull Request: `#3959`
-- 対象ディレクトリ: `toru-tango-mobile/`
-- Web試用版: `https://allsunday1122.github.io/toru-tango/beta.html`
-- 自動検査証跡: PR `#3959` の最新成功 `Toru Tango Mobile CI` Run
+- iOSアプリ: `toru-tango-mobile/`
+- API Worker: `toru-tango/backend/`
+- Safari価値検証参照: PR `#4059`
+- Codex指示: `toru-tango-mobile/CODEX_API_HANDOFF.md`
+- Codex開始文: `toru-tango-mobile/CODEX_START_PROMPT.md`
+- Codex成果物: `toru-tango-mobile/CODEX_API_REPORT.md`
 
-自動検査項目:
-
-- TypeScript
-- ESLint
-- Expo Doctor
-- Expo public config
-- Web作問回帰テスト
-- モバイルOCR対応作問回帰テスト
-- Apple Vision OCRモジュール構成
-- Expo Modules Autolinking
-- Expo iOS prebuild
-- Cloudflare Worker構文
+PR `#4059`はSafari OCR比較の参照資産として残す。API実装先、EAS実装先、Claude QA対象はPR `#3959`である。
 
 ## リリース識別情報
 
@@ -43,7 +42,7 @@ ChatGPT実装工程の最終確認中。Apple Visionを使うiOSネイティブO
 
 ## 実装済み
 
-### 単語帳
+### 単語帳・学習
 
 - カードの直接追加、一括追加、編集、削除
 - 保存カードを表・裏として明示
@@ -57,66 +56,122 @@ ChatGPT実装工程の最終確認中。Apple Visionを使うiOSネイティブO
 ### 写真・OCR
 
 - カメラ撮影と写真選択
-- Apple Vision `VNRecognizeTextRequest`を使うiOSローカルネイティブモジュール
-- 自動時は0度・90度・180度・270度を比較し、日本語認識スコアが最も高い向きを採用
-- 手動の左90度・右90度指定
-- 日本語と英語の認識指定
-- 認識結果の編集
-- 単語内部の空白、罫線、明確なOCR誤認の修復
-- OCR結果から教材本文への転送
+- Apple Vision `VNRecognizeTextRequest`を使うiOSローカルExpo Module
+- 0度・90度・180度・270度を比較する自動向き判定
+- 左90度・右90度の手動指定
+- 日本語・英語認識
+- OCR結果の編集と教材本文への転送
+- OCR空白、罫線、明確な誤認の修復
 
-Apple Vision OCRはExpo Goでは利用できない。`expo-dev-client`を含むEAS開発ビルドまたは本番ビルドで動作確認する。
+Apple Vision OCRはExpo Goでは利用できない。`expo-dev-client`を含むEAS development buildまたは本番ビルドで確認する。
 
-### 作問
+### AI作問
 
 - AI作問と端末内簡易作問を別操作として実装
-- AI失敗時に別モデルや簡易作問へ自動切替しない
+- AI失敗時の別モデル・端末内作問への自動切替なし
 - GPT-5 nano、reasoning effort `medium`
 - JSON Schemaによる構造化出力
 - 事実単位の重複除外
 - 使用モデル、トークン数、応答時間、除外件数の表示
 - 歴史文章、保険表OCR、重複文、情報不足文の回帰テスト
-- 指定件数を満たすための低品質問題を生成しない
+- 低品質問題で指定件数を埋めない
 
-## AIモデル方針
+### API / Worker
 
-最初の実通信試験は`gpt-5-nano`を使用する。nanoの品質が基準を満たさない場合だけ、同じ教材・プロンプト・JSON Schema・reasoning effortで`gpt-5-mini`と比較する。
+- `POST /generate`
+- OpenAI Responses API
+- Worker Secret `OPENAI_API_KEY`
+- `OPENAI_MODEL`、`OPENAI_REASONING_EFFORT`
+- 入力長・件数・形式・難易度検証
+- 45秒タイムアウト
+- 重複・不完全カード除外
+- 使用量、品質指標、応答時間返却
+- モバイル側の`EXPO_PUBLIC_AI_API_URL`
+- GitHub ActionsによるCloudflare Workerデプロイworkflow
 
-自動切替は行わない。モデル変更はWorkerの`OPENAI_MODEL`で明示的に行う。
+## 自動検査
 
-品質評価の正本:
+既存のPR `#3959`では次を検査している。
 
-- `AI_PROVIDER_RESEARCH.md`
-- `AI_NANO_BENCHMARK.md`
+- TypeScript
+- ESLint
+- Expo Doctor
+- Expo public config
+- Web作問回帰
+- モバイルOCR対応作問回帰
+- Apple Vision Module構成
+- Expo Modules Autolinking
+- Expo iOS prebuild
+- Worker構文
 
-## Claude引き渡し前の未完了項目
+CodexはAPI正常系・異常系のテストを追加し、最新headでGitHub Actionsを成功させる。
 
-1. EAS development buildを作成し、Apple Visionモジュールがネイティブコンパイルできることを確認
-2. iPhoneで「撮影→向き判定→OCR→修正→作問→保存→反転→読み上げ」を通しで確認
-3. 今回の横向き保険表で日本語OCRと作問を確認
-4. Cloudflare Workerを公開
-5. Workerへ`OPENAI_API_KEY`をSecret登録
-6. `EXPO_PUBLIC_AI_API_URL`を設定
-7. GPT-5 nanoで3～5教材の基本実通信を確認
-8. 最新headでGitHub Actionsを成功させる
-9. PRをReady for reviewへ変更
+## Codexの現在作業
 
-固定20教材によるnanoの最終品質判定はClaude QAで実施してよい。Worker公開前の場合はClaudeへ渡さず、外部設定待ちとして維持する。
+1. Worker・モバイルクライアント・デプロイworkflowの整合性監査
+2. API正常系・異常系テスト追加
+3. Cloudflare Worker公開
+4. OpenAI APIキーをWorker Secretとして登録
+5. `EXPO_PUBLIC_AI_API_URL`設定
+6. GPT-5 nanoで3～5教材の実通信
+7. EAS projectの初期化・リンク確認
+8. EAS development build
+9. Apple Vision ModuleのSwiftコンパイル確認
+10. `CODEX_API_REPORT.md`作成
+
+Secretはコード、Markdown、PRコメント、ログへ保存しない。
 
 ## 外部操作に必要な情報
 
-- Expoアカウント／`EXPO_TOKEN`
+- Expoアカウントまたは`EXPO_TOKEN`
 - Apple Developer認証
-- Cloudflare API TokenとAccount ID
+- Cloudflare API Token
+- Cloudflare Account ID
 - OpenAI APIキー
 
-これらのSecretはコードやHTMLへ保存しない。
+CodexはSecret値を要求・表示しない。未設定の場合は、必要なSecret名、設定場所、人間操作後の再開手順を報告する。
 
-## Codexへ進む条件
+## Codex完了条件
 
-- ClaudeのP0・P1が0件
-- iPhone実機の主要導線が成功
-- nano採用またはmini比較の判断が完了
-- ユーザーがリリース候補を承認
+- Worker公開
+- アプリからWorkerへ接続
+- GPT-5 nano 3～5教材の実通信成功
+- API異常系テスト成功
+- GitHub Actions成功
+- EAS development build成功
+- Apple Vision Moduleコンパイル成功
+- `CODEX_API_REPORT.md`完成
+- 完了候補head SHA固定
 
-現時点ではCodex、TestFlight提出、App Store審査工程へ進まない。
+上記完了後にPR `#3959`をReady for reviewへ変更し、Claudeへ渡す。
+
+## Claude QA
+
+ClaudeはAPI実装完了後に開始する。
+
+開始条件:
+
+- `CODEX_API_REPORT.md`が「Claudeへ引渡可能」
+- Worker公開済み
+- アプリ接続済み
+- nano実通信済み
+- EAS development build成功
+- GitHub Actions成功
+- PR `#3959`がReady for review
+
+Claudeの成果物は`toru-tango-mobile/CLAUDE_QA_REPORT.md`である。P0・P1を0件にし、固定20教材、主要導線、UI、エラー、空状態、保存・復元を確認する。
+
+## 申請工程
+
+ClaudeのP0・P1が0件となり、ユーザーがリリース候補を承認した後、Codexへ戻す。
+
+Codexが担当する。
+
+- production build
+- EAS Submitまたは採用したクラウド経路
+- App Store Connectアップロード
+- TestFlight
+- 掲載情報・スクリーンショット・審査資料
+- App Review提出と差し戻し対応
+
+現時点ではTestFlight提出、EAS Submit、App Review提出は開始しない。
