@@ -6,7 +6,8 @@
 
 - 判定: Gemini実装と認証不要検査を完了、外部設定待ち
 - 開始head SHA: `c577bbd3468a743daf35d157283ed27a491f5cc3`
-- 完了候補head SHA: 未固定（ローカル変更未公開）
+- Gemini実装commit SHA: `8d81497c07e623e5ab994b91c48df803187e187c`
+- 完了候補head SHA: 未固定（外部設定待ち）
 - Claudeへ引渡可能: いいえ
 
 ユーザー指示により、未実装だったAI APIはOpenAI / GPT-5 nanoではなく、当面Gemini API無料枠の`gemini-2.5-flash-lite`を使用する方針へ変更した。
@@ -46,15 +47,15 @@
 | 検査 | 結果 | 証跡 |
 |---|---|---|
 | TypeScript | 成功 | `pnpm --dir toru-tango-mobile run typecheck` |
-| ESLint | 成功 | `pnpm --dir toru-tango-mobile run lint` |
-| Expo Doctor | 環境制約 | ローカル実行環境に`npm`がなく、15/20成功・5項目は`spawn npm ENOENT`。GitHub Actionsで再確認する |
+| ESLint | 成功 | GitHub Actions |
+| Expo Doctor | 成功 | GitHub Actions。ローカルは`npm`不在のため一部検査不能だった |
 | Expo public config | 成功 | Bundle ID、Version、Build、権限文言を確認 |
 | Worker構文 | 成功 | `node --check toru-tango/backend/src/index.js` |
 | Worker正常系・異常系 | 成功 | Node test 5/5 |
 | モバイルOCR対応作問 | 成功 | Node test 3/3 |
 | モバイルAPIクライアント | TypeScript成功 | Geminiレスポンス契約へ変更 |
-| GitHub Actions | 未実施 | ローカル変更未公開 |
-| Expo iOS prebuild | 今回未実施 | 既存headのCIでは成功済み |
+| GitHub Actions | 成功 | Mobile `30451982036` / `30451983871`、Generator `30451983446` |
+| Expo iOS prebuild | 成功 | Mobile CI `30451982036` / `30451983871` |
 
 ## Cloudflare Worker
 
