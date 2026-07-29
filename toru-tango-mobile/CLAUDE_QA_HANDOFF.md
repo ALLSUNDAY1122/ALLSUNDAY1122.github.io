@@ -1,69 +1,70 @@
-# Claude QA引き継ぎ書: 撮る単語帳 iOS
+# Claude QA引継ぎ書｜撮る単語帳 iOS
 
-更新日: 2026-07-27
+更新日: 2026-07-29
 
-## 役割
+> **待機中**：Claudeはまだ開始しない。Codexが`CODEX_API_HANDOFF.md`に従い、Worker公開、アプリ接続、GPT-5 nano実通信、EAS development buildを完了し、`CODEX_API_REPORT.md`へ「Claudeへ引渡可能」と記録した後に開始する。
 
-Claudeは、ChatGPTが実装したリリース候補について、主要操作、UI、文字、余白、Safe Area、エラー表示、空状態、OCRと作問品質を確認する。
+## 1. 開発順と役割
 
-問題分類:
+1. Codex: API実装、Worker公開、モバイル接続、実通信、自動テスト、EAS development build
+2. Claude: API実装後のUI・UX、OCR、作問品質、主要導線のQA
+3. Codex: ClaudeのP0・P1解消後、TestFlight・App Store申請
 
-- P0: 起動不能、クラッシュ、データ損失、復元不能、主要情報漏えい
-- P1: 撮影、OCR、作問、カード保存、学習、読み上げなど主要機能が完了しない
-- P2: 見た目、分かりやすさ、操作感、将来改善
+Claudeの担当:
 
-P0・P1の中核ロジック修正はChatGPTへ戻す。UI修正はClaudeがQAブランチへ反映してよい。TestFlight提出、署名、EAS Submit、App Store申請は行わない。
+- 主要操作の実機確認
+- UI、文字、余白、Safe Area、キーボード
+- 空状態、権限拒否、エラー表示
+- OCRと作問品質
+- P0、P1、P2の分類
+- UI範囲の修正と再テスト
 
-## 対象
+ClaudeはAPI設計、Secret設定、Workerデプロイ、EAS Submit、TestFlight提出、App Review提出を担当しない。
+
+## 2. 対象
 
 - リポジトリ: `ALLSUNDAY1122/ALLSUNDAY1122.github.io`
 - QAブランチ: `qa/toru-tango-mobile-20260726`
 - Pull Request: `#3959`
 - アプリ: `toru-tango-mobile/`
-- Web試用版: `https://allsunday1122.github.io/toru-tango/beta.html`
-- 仕様: `toru-tango/IOS_MIGRATION_SPEC.md`
+- API: `toru-tango/backend/`
+- Codex実装指示: `toru-tango-mobile/CODEX_API_HANDOFF.md`
+- Codex結果: `toru-tango-mobile/CODEX_API_REPORT.md`
 - リリース状況: `toru-tango-mobile/RELEASE_STATUS.md`
 - チェックリスト: `toru-tango-mobile/RELEASE_CHECKLIST.md`
 - OCR実機計画: `toru-tango-mobile/NATIVE_OCR_TEST_PLAN.md`
 - nano評価基準: `toru-tango-mobile/AI_NANO_BENCHMARK.md`
 
-QA開始時にPRの最新head SHAを取得し、`CLAUDE_QA_REPORT.md`へ記録する。mainではなくQAブランチを対象にする。
+QA開始時にPRの最新head SHAを取得し、`CLAUDE_QA_REPORT.md`へ記録する。mainではなく指定ブランチを対象にする。
 
-## QA開始の前提
+## 3. QA開始の前提
 
-Claude開始前に次が完了していることを確認する。
+次がすべて完了していることを確認する。
 
-1. EAS development buildが成功
-2. Apple Vision OCRモジュールがSwiftコンパイル済み
-3. iPhoneへ開発ビルドをインストール済み
-4. Cloudflare Workerが公開済み
+1. `CODEX_API_REPORT.md`が存在する
+2. Codexの最終判定が「Claudeへ引渡可能」である
+3. Cloudflare Workerが公開済み
+4. アプリが公開Workerへ接続済み
 5. GPT-5 nanoで3～5教材の基本実通信済み
-6. PRがReady for reviewになっている
+6. API正常系・異常系テスト成功
+7. GitHub Actions成功
+8. EAS development build成功
+9. Apple Vision OCR ModuleがSwiftコンパイル済み
+10. PR `#3959`がReady for review
 
-未完了の場合はQAを開始せず、外部設定待ちまたはChatGPT工程へ差し戻す。
+未完了の場合はQAを開始せず、`CLAUDE_QA_REPORT.md`またはPRコメントへ不足項目を記録し、Codex工程へ差し戻す。
 
-## 自動検査の証跡
+## 4. 問題分類
 
-PR `#3959` の最新成功 `Toru Tango Mobile CI` Runを正本とする。
+- P0: 起動不能、クラッシュ、データ損失、復元不能、Secret・教材本文等の主要情報漏えい
+- P1: 撮影、OCR、AI作問、カード保存、学習、読み上げ等の主要機能が完了しない
+- P2: 見た目、分かりやすさ、操作感、将来改善
 
-確認項目:
+UI修正はClaudeがQAブランチへ反映してよい。API、中核ロジック、OCR、nano作問品質のP0・P1は、仕様やモデルを勝手に変更せずCodexまたはChatGPTへ差し戻す。
 
-- TypeScript
-- ESLint
-- Expo Doctor
-- Expo public config
-- Web作問回帰テスト
-- モバイルOCR対応作問回帰テスト
-- Apple Vision OCRモジュール構成
-- Expo Modules Autolinking
-- Expo iOS prebuild
-- Cloudflare Worker構文
+## 5. 起動
 
-QA中にコードを変更した場合、同workflowが再度成功することを確認する。
-
-## 起動
-
-Apple Vision OCRはExpo Goでは動作しない。EAS development buildを使用する。
+Apple Vision OCRはExpo Goでは動作しない。Codexが作成したEAS development buildを使用する。
 
 ```bash
 cd toru-tango-mobile
@@ -72,67 +73,58 @@ npm run check
 npx expo start --dev-client
 ```
 
-## 重点確認
+## 6. 重点確認
 
-### 1. 初回起動
+### 初回起動・画面
 
-- 起動時の白画面、無限読み込み、例外
-- 最初に「作る」が表示される
-- 4タブの移動
-- ノッチ、Dynamic Island、ホームインジケータとの重なり
-- アイコンと起動画面
+- 白画面、無限読み込み、例外がない
+- 主要4画面を移動できる
+- ノッチ、Dynamic Island、ホームインジケータと重ならない
+- キーボードで重要ボタンが隠れない
+- 空状態とエラーが理解できる
 
-### 2. 写真・Apple Vision OCR
+### 写真・Apple Vision OCR
 
 - カメラと写真ライブラリ
-- 権限拒否時にクラッシュしない
+- 権限許可・拒否
 - 写真プレビュー
-- 自動向きで0度・90度・180度・270度を比較できる
-- 左90度・右90度を手動指定できる
-- 横向き保険表で日本語を認識できる
-- 認識結果を編集できる
-- 教材本文へ転送できる
-- 文字のない画像で理解できるエラーを表示する
+- 0度・90度・180度・270度の自動比較
+- 左90度・右90度の手動指定
+- 通常文章、横向き表、薄い文字で日本語認識
+- OCR結果の編集と教材本文への転送
+- 文字のない画像や認識不足時のエラー
 
-### 3. 作問
+### API・AI作問
 
+- Codex報告のWorker URLへ接続している
+- `gpt-5-nano`、reasoning effort `medium`
 - AI作問と端末内簡易作問が別操作
-- AI失敗時に簡易作問へ自動切替しない
-- OCR文字間空白と罫線ノイズを整形する
-- 保険表から支払事由、限度、金額、契約年齢等を抽出する
-- 歴史文章から年代、場所、名称を抽出する
-- 同じ事実の一問一答と穴埋めを重複生成しない
-- 不完全な語句や英語表記だけを答えにしない
-- 指定件数を満たすための低品質カードを追加しない
-- 生成結果を表｜裏として編集できる
-
-### 4. GPT-5 nano
-
-- 使用モデルが`gpt-5-nano`
-- reasoning effortが`medium`
-- JSON Schema形式を維持
+- AI失敗時に端末内作問や別モデルへ自動切替しない
+- 未設定URL、通信不能、タイムアウト、HTTPエラー、不正JSON、空出力を確認
+- APIエラー後もOCR本文が失われない
 - モデル、トークン数、応答時間、除外件数を表示
-- 固定20教材を`AI_NANO_BENCHMARK.md`に従って評価
-- nano品質不足時はminiへ勝手に変更せずChatGPTへ差し戻す
+- 同じ事実の一問一答と穴埋めが重複しない
+- 不完全な答え、英語表記だけ、事実誤りを除外する
+- 指定件数を満たすために低品質カードを追加しない
 
-### 5. 単語帳・学習
+### 固定20教材
 
-- 保存カードが表と裏に分かれている
-- 表と裏を個別に読み上げる
-- タップで表裏を往復する
-- 裏を表示するまで評価ボタンが出ない
-- 「もう一度」が末尾へ戻る
-- 0件、1件、大量カード時の表示
-- 編集、削除、全削除
+`AI_NANO_BENCHMARK.md`に従い評価する。nano品質不足時はminiへ変更せず、同一教材の結果と不足理由を記録して差し戻す。
 
-### 6. 記録・保存
+### 単語帳・学習
 
-- 学習履歴と統計
-- 再起動後の永続化
-- バックアップ保存と復元
-- 不正ファイル、キャンセル、共有不可時の表示
+- 表裏カードの表示
+- タップ反転
+- 表と裏の個別読み上げ
+- 裏表示前に評価ボタンが出ない
+- 「もう一度」と「覚えた」
+- 0件、1件、大量カード
+- 追加、編集、削除、全削除
+- 学習履歴、統計、苦手カード
+- 再起動後の保存
+- JSONバックアップと復元
 
-## 初期版の確定事項
+## 7. 初期版の確定事項
 
 - iPhone専用
 - ライトモード固定
@@ -140,33 +132,38 @@ npx expo start --dev-client
 - 課金なし
 - 広告なし
 - クラウド同期なし
-- AI初期試験モデルはGPT-5 nano
+- AI初期モデルはGPT-5 nano
 - AI失敗時の自動フォールバックなし
-- 写真OCRはApple Visionで実装
-- OCR結果は作問前に利用者が編集可能
+- OCRはApple Vision
+- OCR結果は作問前に編集可能
 
-## 成果物
+## 8. 成果物
 
 `toru-tango-mobile/CLAUDE_QA_REPORT.md`へ次を記録する。
 
 - 対象head SHA
-- EAS Build IDと実行環境
-- iPhone機種とiOSバージョン
+- Codex完了候補head SHA
+- Worker URL、デプロイRun ID
+- EAS Build ID
+- iPhone機種、iOSバージョン
 - 実行した検査と結果
-- P0、P1、P2一覧
+- OCRの採用角度と認識結果
+- API正常系・異常系結果
+- 固定20教材の評価
+- P0、P1、P2
 - 再現手順
 - 修正ファイルとコミット
 - 再テスト結果
-- nano実通信結果と使用モデル
 - 未確認項目
-- 「申請工程へ進行可能」または「ChatGPTへ差し戻し」の判定
+- 「申請工程へ進行可能」または「Codexへ差し戻し」の判定
 
-## 完了条件
+## 9. 完了条件
 
 - P0未解決が0件
 - P1未解決が0件
 - P2が記録されている
-- 撮影から読み上げまでの主要導線を再テスト済み
+- 撮影から読み上げまでの主要導線を実機再テスト済み
+- API異常系を確認済み
 - 固定20教材のnano評価を完了
 - 修正後のGitHub Actionsが成功
-- ユーザーへリリース候補の承認を求められる状態
+- CodexへTestFlight・App Store申請工程を戻せる状態
