@@ -76,13 +76,13 @@
 
 ### Gemini実通信
 
-- [ ] Cloudflare Workerを公開
-- [ ] `GEMINI_API_KEY`をWorker Secretへ登録
+- [x] Cloudflare Workerを公開
+- [x] `GEMINI_API_KEY`をWorker Secretへ登録
 - [ ] アプリへ`EXPO_PUBLIC_AI_API_URL`を設定
-- [ ] 使用モデルが`gemini-3.5-flash-lite`と表示される
-- [ ] JSON Schema形式でカードが返る
-- [ ] トークン数、応答時間、除外件数が表示される
-- [ ] AI失敗時に簡易作問へ自動切替しない
+- [x] 使用モデルが`gemini-3.5-flash-lite`と表示される
+- [x] JSON Schema形式でカードが返る
+- [x] トークン数、応答時間、除外件数が表示される
+- [x] AI失敗時に簡易作問へ自動切替しない
 - [ ] 3～5教材で重大な事実誤りがない
 
 ## 3. Claude QA入口

@@ -108,6 +108,8 @@ CodexはAPI正常系・異常系のテストを追加し、最新headでGitHub A
 
 ## Codexの現在作業
 
+2026-07-29時点でCloudflare Worker公開、GitHub Repository secrets 3件登録、Worker Secret登録、Gemini 3.5 Flash-Liteの基本実通信（HTTP 200）まで完了した。公開URLは`https://toru-tango-ai.kohei3615.workers.dev`。残りはモバイル公開URL設定、3～5教材評価、EAS development build、Apple Vision Swiftコンパイルである。
+
 1. Worker・モバイルクライアント・デプロイworkflowの整合性監査
 2. API正常系・異常系テスト追加
 3. Cloudflare Worker公開
