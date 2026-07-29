@@ -65,6 +65,10 @@ test('returns generated questions and Gemini metadata', async (t) => {
   const sent = JSON.parse(upstream.init.body);
   assert.equal(sent.generationConfig.responseMimeType, 'application/json');
   assert.equal(sent.generationConfig.responseSchema.properties.questions.maxItems, 5);
+  const systemInstructions = sent.systemInstruction.parts[0].text;
+  assert.match(systemInstructions, /answerの文字列をquestionへ含めない/);
+  assert.match(systemInstructions, /見出し・列名・行名を教材どおりに扱い/);
+  assert.match(systemInstructions, /短い教材でも確認可能な事実が一つ以上あれば/);
 });
 
 test('rejects missing Gemini secret without calling upstream', async () => {

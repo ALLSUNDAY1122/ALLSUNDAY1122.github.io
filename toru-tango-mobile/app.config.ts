@@ -4,16 +4,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: '撮る単語帳',
   slug: 'toru-tango',
+  owner: 'allsunday1122',
   version: '1.0.0',
   orientation: 'portrait',
   scheme: 'torutango',
-  icon: './assets/icon.png',
+  icon: './assets/icon-appstore.png',
   userInterfaceStyle: 'light',
   ios: {
     supportsTablet: false,
     bundleIdentifier: 'com.allsunday1122.torutango',
     buildNumber: '1',
-    icon: './assets/icon.png',
+    icon: './assets/icon-appstore.png',
     infoPlist: {
       NSCameraUsageDescription: '教材を撮影して単語カード作成に利用します。',
       NSPhotoLibraryUsageDescription: '教材写真を選択して単語カード作成に利用します。',
@@ -29,7 +30,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-splash-screen',
       {
         backgroundColor: '#4f46e5',
-        image: './assets/icon.png',
+        image: './assets/icon-appstore.png',
         imageWidth: 200,
         resizeMode: 'contain'
       }
@@ -48,6 +49,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   extra: {
     privacyPolicyUrl: 'https://allsunday1122.github.io/toru-tango/privacy-policy.html',
-    supportUrl: 'https://allsunday1122.github.io/toru-tango/'
+    supportUrl: 'https://allsunday1122.github.io/toru-tango/',
+    eas: {
+      projectId: '96443b56-fef4-4a25-b5e9-831eaa4ec854'
+    }
   }
 });
