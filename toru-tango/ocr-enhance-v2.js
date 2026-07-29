@@ -29,12 +29,112 @@
       <option value="table">表・箇条書き・資料</option>
       <option value="faint">薄い文字・影がある写真</option>
     </select>
-    <p class="muted small">2種類の画像補正を比較し、文字量・日本語率・認識信頼度が高い結果を自動採用します。</p>`;
+    <p class="muted small">同じ写真の「補正なし」と「教材向け補正」を比較し、文字量・日本語率・認識信頼度が高い結果を自動採用します。認識後に結果を見比べて選び直せます。</p>`;
   originalRunButton.insertAdjacentElement('beforebegin', controls);
 
   const runButton = originalRunButton.cloneNode(true);
   runButton.textContent = '高精度で文字を読む';
   originalRunButton.replaceWith(runButton);
+
+  const comparisonStyle = document.createElement('style');
+  comparisonStyle.textContent = `
+    #ocrComparison{margin-top:12px}
+    #ocrComparison h3{font-size:16px;margin:0 0 4px}
+    #ocrComparison>.muted{margin:0 0 10px}
+    .ocrCompareGrid{display:grid;gap:10px}
+    .ocrCompareCard{background:#f8f9fc;border:1px solid #dce2ec;border-radius:15px;padding:12px}
+    .ocrCompareCard.isSelected{background:#f1f5ff;border-color:#3456d1;box-shadow:0 0 0 1px #3456d1}
+    .ocrCompareHeader{align-items:flex-start;display:flex;gap:8px;justify-content:space-between}
+    .ocrCompareHeader strong{font-size:14px;line-height:1.4}
+    .ocrCompareBadge{background:#3456d1;border-radius:999px;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;white-space:nowrap}
+    .ocrCompareBadge:empty{display:none}
+    .ocrCompareMeta{color:#667085;font-size:12px;line-height:1.5;margin:4px 0 8px}
+    .ocrCompareText{background:#fff;border:1px solid #dce2ec;border-radius:10px;color:#172033;font-size:13px;line-height:1.55;margin:0 0 10px;max-height:210px;min-height:96px;overflow:auto;padding:10px;white-space:pre-wrap}
+    .ocrCompareCard button{width:100%}
+  `;
+  document.head.appendChild(comparisonStyle);
+
+  const comparison = document.createElement('section');
+  comparison.id = 'ocrComparison';
+  comparison.className = 'hidden';
+  comparison.setAttribute('aria-live', 'polite');
+  status.insertAdjacentElement('afterend', comparison);
+
+  function clearComparison() {
+    comparison.replaceChildren();
+    comparison.classList.add('hidden');
+  }
+
+  function confidenceLabel(confidence) {
+    if (confidence >= 75) return '良好';
+    if (confidence >= 55) return '要確認';
+    return '低め';
+  }
+
+  function useCandidate(candidate, cards) {
+    if (!candidate.text) return;
+    sourceText.value = candidate.text;
+    cards.forEach((card) => {
+      const isSelected = card.dataset.candidateLabel === candidate.label;
+      card.classList.toggle('isSelected', isSelected);
+      const badge = card.querySelector('.ocrCompareBadge');
+      if (badge) badge.textContent = isSelected ? '本文に使用中' : '';
+      const button = card.querySelector('button');
+      if (button) button.textContent = isSelected ? 'この結果を使用中' : 'この結果を本文に使う';
+    });
+    setStatus(`「${candidate.label}」を本文に使います。内容を確認し、誤りがあれば修正してください。`, 'success');
+    sourceText.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function renderComparison(candidates, selected) {
+    clearComparison();
+
+    const heading = document.createElement('h3');
+    heading.textContent = 'OCR結果を比較';
+    const description = document.createElement('p');
+    description.className = 'muted small';
+    description.textContent = '同じ写真の結果です。全文を見比べ、読み取りが正確な方を本文に使ってください。';
+    const grid = document.createElement('div');
+    grid.className = 'ocrCompareGrid';
+
+    const cards = candidates.map((candidate) => {
+      const card = document.createElement('article');
+      card.className = `ocrCompareCard${candidate === selected ? ' isSelected' : ''}`;
+      card.dataset.candidateLabel = candidate.label;
+
+      const header = document.createElement('div');
+      header.className = 'ocrCompareHeader';
+      const title = document.createElement('strong');
+      title.textContent = candidate.label;
+      const badge = document.createElement('span');
+      badge.className = 'ocrCompareBadge';
+      badge.textContent = candidate === selected ? '自動採用' : '';
+      header.append(title, badge);
+
+      const meta = document.createElement('p');
+      meta.className = 'ocrCompareMeta';
+      const lineCount = candidate.text ? candidate.text.split(/\n/).filter(Boolean).length : 0;
+      meta.textContent = `認識信頼度 ${Math.round(candidate.confidence)}（${confidenceLabel(candidate.confidence)}）・${candidate.text.length}文字・${lineCount}行`;
+
+      const text = document.createElement('pre');
+      text.className = 'ocrCompareText';
+      text.textContent = candidate.text || '文字を認識できませんでした。';
+
+      const button = document.createElement('button');
+      button.className = 'btn';
+      button.type = 'button';
+      button.disabled = !candidate.text;
+      button.textContent = candidate === selected ? 'この結果を使用中' : 'この結果を本文に使う';
+      button.addEventListener('click', () => useCandidate(candidate, cards));
+
+      card.append(header, meta, text, button);
+      grid.appendChild(card);
+      return card;
+    });
+
+    comparison.append(heading, description, grid);
+    comparison.classList.remove('hidden');
+  }
 
   function loadImage(file) {
     return new Promise((resolve, reject) => {
@@ -56,6 +156,7 @@
     const file = event.target.files?.[0] || null;
     sourceImage = null;
     sourceRotation = 0;
+    clearComparison();
     controls.classList.toggle('hidden', !file);
     if (!file) return;
     try {
@@ -67,9 +168,11 @@
 
   rotateLeft.addEventListener('click', () => {
     sourceRotation = normalizeRotation(sourceRotation - 90);
+    clearComparison();
   });
   rotateRight.addEventListener('click', () => {
     sourceRotation = normalizeRotation(sourceRotation + 90);
+    clearComparison();
   });
 
   async function loadTesseract() {
@@ -183,29 +286,37 @@
     const japanese = (text.match(/[\u3040-\u30ff\u3400-\u9fff々]/g) || []).length;
     const digits = (text.match(/[0-9]/g) || []).length;
     const latin = (text.match(/[A-Za-z]/g) || []).length;
-    const noise = (text.match(/[|_=<>\\^]{1}/g) || []).length;
-    const meaningfulLines = text.split(/\n/).filter((line) =>
-      (line.match(/[\u3040-\u30ff\u3400-\u9fff0-9A-Za-z]/g) || []).length >= 4
-    ).length;
-    return japanese * 3 + digits * 1.2 + latin * 0.45 + meaningfulLines * 18 + Number(confidence || 0) * 2 - noise * 4;
+    const noise = (text.match(/[|_=<>\\^\uFFFD]/g) || []).length;
+    const lineLengths = text.split(/\n/)
+      .map((line) => (line.match(/[\u3040-\u30ff\u3400-\u9fff0-9A-Za-z]/g) || []).length)
+      .filter((length) => length > 0);
+    const meaningfulLines = lineLengths.filter((length) => length >= 6).length;
+    const shortFragments = lineLengths.filter((length) => length <= 4).length;
+    return japanese * 3
+      + digits * 1.2
+      + latin * 0.45
+      + meaningfulLines * 18
+      + Number(confidence || 0) * 2.5
+      - noise * 6
+      - shortFragments * 10;
   }
 
   function passPlan(type) {
     if (type === 'table') {
       return [
-        { label: '表向け白黒補正', variant: 'binary', psm: '6' },
-        { label: 'まばらな文字向け', variant: 'balanced', psm: '11' }
+        { label: '補正なし（比較基準）', variant: 'original', psm: '3' },
+        { label: '表向け白黒補正', variant: 'binary', psm: '6' }
       ];
     }
     if (type === 'faint') {
       return [
-        { label: '薄文字強調', variant: 'faint', psm: '6' },
-        { label: '白黒補正', variant: 'binary', psm: '11' }
+        { label: '補正なし（比較基準）', variant: 'original', psm: '3' },
+        { label: '薄文字強調', variant: 'faint', psm: '6' }
       ];
     }
     return [
-      { label: '本文向け補正', variant: 'balanced', psm: '6' },
-      { label: '原画像', variant: 'original', psm: '3' }
+      { label: '補正なし（比較基準）', variant: 'original', psm: '3' },
+      { label: '本文向け補正', variant: 'balanced', psm: '6' }
     ];
   }
 
@@ -216,6 +327,7 @@
     }
 
     runButton.disabled = true;
+    clearComparison();
     const type = document.querySelector('#ocrDocumentType')?.value || 'text';
     let worker = null;
     try {
@@ -246,15 +358,14 @@
         candidates.push({ text, confidence, score: scoreText(text, confidence), label: pass.label });
       }
 
-      candidates.sort((left, right) => right.score - left.score);
-      const best = candidates[0];
+      const best = [...candidates].sort((left, right) => right.score - left.score)[0];
       if (!best || best.text.length < 10) {
         throw new Error('文字を十分に認識できませんでした。教材を平らに置き、影を避け、文字が画面いっぱいになる距離で撮り直してください。');
       }
       sourceText.value = best.text;
-      const confidenceLabel = best.confidence >= 75 ? '良好' : best.confidence >= 55 ? '要確認' : '低め';
-      setStatus(`文字認識が完了しました。「${best.label}」を採用しました。認識信頼度は${Math.round(best.confidence)}（${confidenceLabel}）です。本文を必ず確認してください。`, best.confidence >= 55 ? 'success' : 'error');
-      sourceText.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      renderComparison(candidates, best);
+      setStatus(`文字認識が完了しました。「${best.label}」を自動採用しました。2つの結果を比較してから本文を確認してください。`, best.confidence >= 55 ? 'success' : 'error');
+      comparison.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) {
       setStatus(error instanceof Error ? error.message : '文字認識に失敗しました。', 'error');
     } finally {
