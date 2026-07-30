@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f3ea">
+<title>まとめ買いレシピ</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+:root{--bg:#f7f3ea;--card:#fffdf8;--ink:#25231f;--muted:#777268;--line:#e7e0d4;--accent:#d95f35;--green:#2f765d;--shadow:0 10px 30px rgba(67,52,34,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+button,input,select,textarea{font:inherit}.app{max-width:760px;margin:auto;min-height:100vh;padding:calc(14px + env(safe-area-inset-top)) 14px calc(92px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:center;margin:4px 4px 18px}h1{font-size:24px;margin:0}.sub{font-size:12px;color:var(--muted);margin:3px 0 0}
+.icon{border:0;background:var(--card);width:44px;height:44px;border-radius:14px;box-shadow:var(--shadow);font-size:22px}
+.view{display:none}.view.active{display:block}.hero,.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.hero{background:linear-gradient(135deg,#fffaf0,#f5e4d7);margin-bottom:14px}.hero strong{font-size:22px}.hero p{color:var(--muted);line-height:1.6}
+.primary,.secondary,.danger{border:0;border-radius:14px;padding:13px 16px;font-weight:700}.primary{background:var(--accent);color:#fff}.secondary{background:#ece7de}.danger{background:#f8e3df;color:#a33d29}.full{width:100%}
+.section{display:flex;justify-content:space-between;align-items:center;margin:20px 4px 10px}.section h2{font-size:17px;margin:0}.link{border:0;background:transparent;color:var(--accent);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.recipe{min-height:145px;display:flex;flex-direction:column;justify-content:space-between}.recipe h3{margin:0 0 5px;font-size:16px}.meta{font-size:12px;color:var(--muted)}.actions{display:flex;gap:7px;margin-top:12px}.actions button{flex:1;border:0;border-radius:10px;padding:9px;background:#f1ece4}
+.menu-item,.shop-item{display:flex;gap:11px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:9px}.menu-item>div{flex:1}.menu-item input[type=checkbox],.shop-item input{width:23px;height:23px}.menu-item input[type=number]{width:64px;padding:9px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff}label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin:12px 0 6px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(760px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,253,248,.96);border-top:1px solid var(--line);padding:7px 5px calc(7px + env(safe-area-inset-bottom));backdrop-filter:blur(16px);z-index:20}
+.nav{border:0;background:transparent;color:var(--muted);font-size:10px;padding:5px 1px}.nav span{display:block;font-size:20px}.nav.active{color:var(--accent);font-weight:700}
+.modal{position:fixed;inset:0;background:rgba(20,18,15,.45);display:none;align-items:flex-end;z-index:30}.modal.show{display:flex}.sheet{width:min(760px,100%);margin:auto;background:var(--bg);border-radius:25px 25px 0 0;padding:18px 14px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.sheet-head{display:flex;justify-content:space-between;align-items:center}.sheet-head h2{margin:0}.close{border:0;background:#e9e3d9;width:38px;height:38px;border-radius:12px}
+.ing-row{display:grid;grid-template-columns:1.5fr .8fr .8fr 40px;gap:6px;margin-bottom:7px}.remove{border:0;border-radius:10px;background:#f8e3df;color:#a33d29}
+.drop{display:block;border:2px dashed #ddc9b8;border-radius:20px;padding:18px;text-align:center;background:#fffaf4}.drop input{display:none}.drop strong{display:block;margin-bottom:5px}.preview{max-width:100%;max-height:360px;border-radius:14px;margin-top:12px;display:none}.progress{height:9px;background:#ebe5dc;border-radius:99px;overflow:hidden;margin-top:12px}.bar{height:100%;width:0;background:var(--accent);transition:.2s}.status{font-size:12px;color:var(--muted);margin-top:8px}.ocr-row{display:grid;grid-template-columns:1.5fr .8fr .8fr 40px;gap:6px;margin-bottom:7px}.category h3{font-size:14px;color:var(--green)}.checked{opacity:.48}.checked .name{text-decoration:line-through}.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#2e2b26;color:white;padding:11px 16px;border-radius:999px;opacity:0;transition:.2s;z-index:50}.toast.show{opacity:1}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><h1>まとめ買いレシピ</h1><p class="sub">スクショから材料を取り込み、買い物メモへ。</p></div><button class="icon" onclick="openRecipe()">＋</button></header>
+
+<section id="home" class="view active">
+<div class="hero"><strong>レシピ画面を<br>スクリーンショット</strong><p>画像から材料名と分量を端末内で読み取り、修正して保存できます。画像はサーバーへ送信しません。</p><button class="primary full" data-nav="scan">スクリーンショットを読み取る</button></div>
+<div class="section"><h2>保存レシピ</h2><button class="link" onclick="openRecipe()">＋手入力</button></div><div id="recipes" class="grid"></div>
+</section>
+
+<section id="scan" class="view">
+<div class="section"><h2>画像から登録</h2></div>
+<div class="card">
+<label class="drop"><input id="imageInput" type="file" accept="image/*"><strong>写真またはスクリーンショットを選択</strong><span class="meta">文字が大きく、材料欄が正面を向いた画像を推奨</span></label>
+<img id="preview" class="preview" alt="選択画像">
+<div class="progress"><div id="bar" class="bar"></div></div><div id="status" class="status">画像を選択してください</div>
+<button id="ocrBtn" class="primary full" style="margin-top:12px" disabled>材料を読み取る</button>
+</div>
+<div id="ocrResult" style="display:none">
+<div class="section"><h2>抽出結果を確認</h2><button class="link" id="addOcrRow">＋材料</button></div>
+<div class="card">
+<label>料理名</label><input id="ocrName" placeholder="料理名を入力">
+<label>基準人数</label><input id="ocrServings" type="number" min="1" value="2">
+<div class="section" style="margin-top:14px"><h2>材料</h2></div><div id="ocrRows"></div>
+<button id="saveOcr" class="primary full">この内容で保存</button>
+<details style="margin-top:14px"><summary class="meta">認識した原文を確認</summary><textarea id="rawText" rows="9" style="margin-top:8px"></textarea></details>
+</div></div>
+</section>
+
+<section id="menu" class="view"><div class="section"><h2>今回作る料理</h2><span id="selCount" class="meta"></span></div><div id="menuList"></div><button id="generate" class="primary full">買い物リストを作る</button></section>
+<section id="shopping" class="view"><div class="section"><h2>買い物リスト</h2><button id="clearDone" class="link">購入済みを消す</button></div><div id="summary" class="card" style="margin-bottom:12px"></div><div id="shoppingList"></div><button id="clearAll" class="danger full">リストを削除</button></section>
+<section id="settings" class="view"><div class="section"><h2>常備品</h2></div><div class="card"><div style="display:flex;gap:8px"><input id="pantryInput" placeholder="例：しょうゆ"><button id="addPantry" class="primary">追加</button></div><div id="pantry" style="margin-top:10px"></div></div></section>
+</div>
+
+<nav class="bottom">
+<button class="nav active" data-nav="home"><span>⌂</span>ホーム</button><button class="nav" data-nav="scan"><span>▣</span>画像取込</button><button class="nav" data-nav="menu"><span>☰</span>献立</button><button class="nav" data-nav="shopping"><span>✓</span>買い物</button><button class="nav" data-nav="settings"><span>⚙</span>設定</button>
+</nav>
+
+<div id="recipeModal" class="modal"><div class="sheet"><div class="sheet-head"><h2>レシピ入力</h2><button class="close" onclick="closeRecipe()">×</button></div><div class="card" style="margin-top:12px">
+<input type="hidden" id="editId"><label>料理名</label><input id="rName"><label>基準人数</label><input id="rServings" type="number" min="1" value="2"><div class="section"><h2>材料</h2><button class="link" onclick="addManualRow()">＋材料</button></div><div id="manualRows"></div><button id="saveManual" class="primary full">保存</button>
+</div></div></div><div id="toast" class="toast"></div>
+
+<script>
+const KEY='recipe-shopping-ocr-v1';
+const aliases={'玉葱':'玉ねぎ','タマネギ':'玉ねぎ','醤油':'しょうゆ','正油':'しょうゆ','ジャガイモ':'じゃがいも','馬鈴薯':'じゃがいも','豚こま切れ肉':'豚こま','豚小間切れ肉':'豚こま','鶏もも肉':'鶏もも'};
+const cats={'玉ねぎ':'野菜','じゃがいも':'野菜','にんじん':'野菜','きゅうり':'野菜','キャベツ':'野菜','大根':'野菜','豚こま':'肉・魚','鶏もも':'肉・魚','牛肉':'肉・魚','鮭':'肉・魚','卵':'卵・乳製品','牛乳':'卵・乳製品','しょうゆ':'調味料','砂糖':'調味料','塩':'調味料','みそ':'調味料','ケチャップ':'調味料','ウスターソース':'調味料','サラダ油':'調味料','カレールウ':'その他','米':'その他','ごはん':'その他'};
+let state=load(), selectedImage=null;
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{recipes:[],pantry:['しょうゆ','砂糖','塩','水','サラダ油'],selected:[],shopping:[]}}catch{return{recipes:[],pantry:[],selected:[],shopping:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function norm(s){let t=String(s||'').trim().replace(/[　\s]+/g,'');return aliases[t]||t}
+function toast(s){let e=document.getElementById('toast');e.textContent=s;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
+function nav(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.nav===id));if(id==='shopping')renderShopping()}
+document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>nav(b.dataset.nav));
+
+function renderRecipes(){let e=document.getElementById('recipes');e.innerHTML=state.recipes.length?state.recipes.map(r=>`<div class="card recipe"><div><h3>${esc(r.name)}</h3><div class="meta">${r.servings}人分・材料${r.ingredients.length}品</div></div><div class="actions"><button onclick="openRecipe('${r.id}')">編集</button><button onclick="delRecipe('${r.id}')">削除</button></div></div>`).join(''):'<div class="card meta" style="grid-column:1/-1;text-align:center;padding:28px">画像から最初のレシピを登録してください</div>';renderMenu()}
+function renderMenu(){let e=document.getElementById('menuList');e.innerHTML=state.recipes.map(r=>`<label class="menu-item"><input type="checkbox" ${state.selected.includes(r.id)?'checked':''} onchange="toggleSel('${r.id}',this.checked)"><div><strong>${esc(r.name)}</strong><div class="meta">${r.servings}人分</div></div><input type="number" min="1" value="${r.target||r.servings}" onchange="setTarget('${r.id}',this.value)"></label>`).join('')||'<div class="card meta">保存レシピがありません</div>';document.getElementById('selCount').textContent=state.selected.length+'件選択'}
+window.toggleSel=(id,on)=>{state.selected=on?[...new Set([...state.selected,id])]:state.selected.filter(x=>x!==id);save();renderMenu()}
+window.setTarget=(id,v)=>{let r=state.recipes.find(x=>x.id===id);if(r)r.target=Math.max(1,+v||r.servings);save()}
+document.getElementById('generate').onclick=()=>{if(!state.selected.length)return toast('料理を選択してください');let m=new Map(),pan=state.pantry.map(norm);for(let id of state.selected){let r=state.recipes.find(x=>x.id===id);if(!r)continue;let ratio=(r.target||r.servings)/r.servings;for(let i of r.ingredients){let n=norm(i.name);if(pan.includes(n))continue;let k=n+'|'+i.unit,q=(+i.qty||0)*ratio;if(m.has(k))m.get(k).qty+=q;else m.set(k,{id:crypto.randomUUID(),name:n,qty:q,unit:i.unit,category:cats[n]||'その他',checked:false})}}state.shopping=[...m.values()];save();renderShopping();nav('shopping')};
+function renderShopping(){let done=state.shopping.filter(x=>x.checked).length;document.getElementById('summary').innerHTML=`<strong>${done} / ${state.shopping.length} 品を購入済み</strong>`;let order=['野菜','肉・魚','卵・乳製品','調味料','その他'];document.getElementById('shoppingList').innerHTML=state.shopping.length?order.map(c=>{let a=state.shopping.filter(x=>x.category===c);return a.length?`<div class="category"><h3>${c}</h3>${a.map(i=>`<label class="shop-item ${i.checked?'checked':''}"><input type="checkbox" ${i.checked?'checked':''} onchange="checkShop('${i.id}',this.checked)"><div><div class="name"><strong>${esc(i.name)}</strong></div><div class="meta">${fmt(i.qty)} ${esc(i.unit)}</div></div></label>`).join('')}</div>`:''}).join(''):'<div class="card meta">買い物リストは空です</div>'}
+function fmt(n){return Number.isInteger(n)?n:Math.round(n*100)/100}window.checkShop=(id,on)=>{let i=state.shopping.find(x=>x.id===id);if(i)i.checked=on;save();renderShopping()}
+document.getElementById('clearDone').onclick=()=>{state.shopping=state.shopping.filter(x=>!x.checked);save();renderShopping()};document.getElementById('clearAll').onclick=()=>{state.shopping=[];state.selected=[];save();renderShopping();renderMenu()}
+
+function renderPantry(){document.getElementById('pantry').innerHTML=state.pantry.map((p,i)=>`<button class="secondary" style="margin:4px" onclick="removePantry(${i})">${esc(p)} ×</button>`).join('')}
+document.getElementById('addPantry').onclick=()=>{let i=document.getElementById('pantryInput'),v=norm(i.value);if(v&&!state.pantry.map(norm).includes(v))state.pantry.push(v);i.value='';save();renderPantry()};window.removePantry=i=>{state.pantry.splice(i,1);save();renderPantry()}
+
+function rowHtml(v={name:'',qty:'',unit:'個'},kind='manual'){return `<input class="${kind}-name" placeholder="材料名" value="${esc(v.name)}"><input class="${kind}-qty" type="number" min="0" step="0.1" placeholder="数量" value="${v.qty??''}"><select class="${kind}-unit">${['g','kg','ml','cc','個','本','枚','袋','パック','箱','かけ','大さじ','小さじ','少々','適量'].map(u=>`<option ${u===v.unit?'selected':''}>${u}</option>`).join('')}</select><button class="remove" onclick="this.parentElement.remove()">×</button>`}
+window.addManualRow=v=>{let d=document.createElement('div');d.className='ing-row';d.innerHTML=rowHtml(v,'manual');document.getElementById('manualRows').appendChild(d)}
+window.openRecipe=id=>{let r=state.recipes.find(x=>x.id===id);document.getElementById('editId').value=r?.id||'';document.getElementById('rName').value=r?.name||'';document.getElementById('rServings').value=r?.servings||2;document.getElementById('manualRows').innerHTML='';(r?.ingredients||[{},{},{}]).forEach(addManualRow);document.getElementById('recipeModal').classList.add('show')}
+window.closeRecipe=()=>document.getElementById('recipeModal').classList.remove('show')
+document.getElementById('saveManual').onclick=()=>{let name=document.getElementById('rName').value.trim(),servings=Math.max(1,+document.getElementById('rServings').value||1),ings=collectRows('manual');if(!name||!ings.length)return toast('料理名と材料を入力してください');let id=document.getElementById('editId').value,obj={id:id||crypto.randomUUID(),name,servings,ingredients:ings};if(id)state.recipes[state.recipes.findIndex(x=>x.id===id)]={...state.recipes.find(x=>x.id===id),...obj};else state.recipes.unshift(obj);save();closeRecipe();renderRecipes();toast('保存しました')}
+function collectRows(k){return [...document.querySelectorAll('.'+k+'-name')].map((n,i)=>({name:n.value.trim(),qty:+document.querySelectorAll('.'+k+'-qty')[i].value||0,unit:document.querySelectorAll('.'+k+'-unit')[i].value})).filter(x=>x.name)}
+window.delRecipe=id=>{if(confirm('削除しますか？')){state.recipes=state.recipes.filter(x=>x.id!==id);state.selected=state.selected.filter(x=>x!==id);save();renderRecipes()}}
+
+document.getElementById('imageInput').onchange=e=>{let f=e.target.files[0];if(!f)return;selectedImage=f;let p=document.getElementById('preview');p.src=URL.createObjectURL(f);p.style.display='block';document.getElementById('ocrBtn').disabled=false;document.getElementById('status').textContent='画像を選択しました'}
+document.getElementById('ocrBtn').onclick=async()=>{if(!selectedImage)return;let btn=document.getElementById('ocrBtn');btn.disabled=true;try{let result=await Tesseract.recognize(selectedImage,'jpn',{logger:m=>{if(m.progress!=null)document.getElementById('bar').style.width=Math.round(m.progress*100)+'%';document.getElementById('status').textContent=statusJa(m.status,m.progress)}});let text=result.data.text||'';document.getElementById('rawText').value=text;let parsed=parseOCR(text);document.getElementById('ocrName').value=parsed.name;document.getElementById('ocrServings').value=parsed.servings;document.getElementById('ocrRows').innerHTML='';parsed.ingredients.forEach(addOcrRow);if(!parsed.ingredients.length)[{},{},{}].forEach(addOcrRow);document.getElementById('ocrResult').style.display='block';document.getElementById('status').textContent=`読み取り完了：材料候補 ${parsed.ingredients.length}件`;toast('抽出結果を確認してください')}catch(e){console.error(e);document.getElementById('status').textContent='読み取りに失敗しました。別の画像で再試行してください';toast('OCRに失敗しました')}finally{btn.disabled=false}}
+function statusJa(s,p){let d={'loading tesseract core':'OCRを準備中','initializing tesseract':'OCRを初期化中','loading language traineddata':'日本語データを読込中','initializing api':'認識処理を準備中','recognizing text':'文字を認識中'};return (d[s]||s)+(p!=null?' '+Math.round(p*100)+'%':'')}
+function addOcrRow(v={name:'',qty:'',unit:'個'}){let d=document.createElement('div');d.className='ocr-row';d.innerHTML=rowHtml(v,'ocr');document.getElementById('ocrRows').appendChild(d)}document.getElementById('addOcrRow').onclick=()=>addOcrRow()
+function parseOCR(text){
+ let lines=text.split(/\n/).map(x=>x.replace(/[|｜]/g,'').replace(/\s{2,}/g,' ').trim()).filter(Boolean);
+ let servings=2,name='スクリーンショットのレシピ';
+ let sm=text.match(/材料\s*[【\[\(]?\s*(\d+)\s*人分/);if(sm)servings=+sm[1];
+ let start=lines.findIndex(x=>/材料/.test(x));if(start>=0)lines=lines.slice(start+1);
+ let stop=lines.findIndex(x=>/作り方|手順|調理時間|栄養/.test(x));if(stop>=0)lines=lines.slice(0,stop);
+ let out=[];for(let line of lines){
+  if(/^(☆|★|調味料|A$|B$|無料アプリ|アプリだけ|デリッシュ)/.test(line))continue;
+  let m=line.match(/^(.+?)\s+((?:約)?(?:\d+(?:\.\d+)?|\d+\/\d+)(?:〜\d+(?:\.\d+)?)?)\s*(g|kg|ml|cc|個|本|枚|袋|パック|箱|かけ|大さじ|小さじ|杯)?(?:\([^)]*\))?$/i);
+  if(!m)m=line.match(/^(.+?)\s+(.+?)$/);
+  if(!m)continue;
+  let ing=m[1].trim(), qpart=m[2].trim(), unit=m[3]||'';
+  if(ing.length<1||ing.length>24||/^[0-9]+$/.test(ing))continue;
+  let frac=qpart.match(/^(\d+)\/(\d+)/),num=frac?(+frac[1]/+frac[2]):parseFloat(qpart.replace(/[^\d.]/g,''));
+  if(!unit){let um=qpart.match(/(大さじ|小さじ|kg|g|ml|cc|個|本|枚|袋|パック|箱|かけ|杯)/);unit=um?um[1]:'個'}
+  if(!Number.isFinite(num)){if(/少々/.test(qpart)){num=0;unit='少々'}else if(/適量/.test(qpart)){num=0;unit='適量'}else continue}
+  out.push({name:norm(ing.replace(/^[-・●]\s*/,'')),qty:num,unit});
+ }
+ let uniq=[];for(let i of out){if(!uniq.some(x=>x.name===i.name&&x.unit===i.unit))uniq.push(i)}
+ return{name,servings,ingredients:uniq};
+}
+document.getElementById('saveOcr').onclick=()=>{let name=document.getElementById('ocrName').value.trim(),servings=Math.max(1,+document.getElementById('ocrServings').value||1),ings=collectRows('ocr');if(!name||!ings.length)return toast('料理名と材料を確認してください');state.recipes.unshift({id:crypto.randomUUID(),name,servings,ingredients:ings});save();renderRecipes();nav('home');toast('レシピを保存しました')}
+renderRecipes();renderPantry();renderShopping();
+</script>
+</body></html>
