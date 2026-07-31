@@ -6,6 +6,12 @@ import {
   recognizeText
 } from '@/modules/toru-tango-ocr';
 import {
+  generateOnDeviceCards,
+  getOnDeviceAIAvailability,
+  isOnDeviceCardGenerationAvailable,
+  type OnDeviceStudyCard
+} from '@/modules/toru-tango-ondevice-ai';
+import {
   AppButton,
   ChoiceRow,
   commonStyles,
@@ -29,6 +35,7 @@ import type {
 import { isSameCard } from '@/src/utils/data';
 
 type OcrRotation = 'auto' | 'left' | 'right';
+type EditableOnDeviceCard = OnDeviceStudyCard & { selected: boolean };
 
 function parseLines(text: string): QuestionCandidate[] {
   return text
@@ -60,6 +67,17 @@ function rotationValue(rotation: OcrRotation): number {
   return -1;
 }
 
+function availabilityLabel(status: ReturnType<typeof getOnDeviceAIAvailability>): string {
+  return {
+    available: '端末内AIを利用可能',
+    unsupportedOS: 'iOS 26未満（簡易作問を使用）',
+    deviceNotEligible: '非対応端末（簡易作問を使用）',
+    appleIntelligenceDisabled: 'Apple Intelligenceが無効（簡易作問を使用）',
+    modelNotReady: 'モデル準備中（簡易作問を使用）',
+    unavailable: '端末内AIを利用不可（簡易作問を使用）'
+  }[status];
+}
+
 export default function CreateScreen() {
   const { cards, addCard, addCards } = useAppStore();
   const [sourceText, setSourceText] = useState('');
@@ -77,12 +95,21 @@ export default function CreateScreen() {
   const [ocrStatus, setOcrStatus] = useState('');
   const [ocrRunning, setOcrRunning] = useState(false);
   const [ocrRotation, setOcrRotation] = useState<OcrRotation>('auto');
+  const [onDeviceCards, setOnDeviceCards] = useState<EditableOnDeviceCard[]>([]);
+  const [onDeviceGenerating, setOnDeviceGenerating] = useState(false);
+  const [onDeviceStatus, setOnDeviceStatus] = useState('');
+  const [onDeviceEngine, setOnDeviceEngine] = useState<
+    'appleOnDeviceModel' | 'deterministicFallback' | null
+  >(null);
 
   const candidateCount = useMemo(
     () => parseLines(generatedText).length,
     [generatedText]
   );
   const nativeOcrAvailable = isNativeOcrAvailable();
+  const nativeOnDeviceAIAvailable = isOnDeviceCardGenerationAvailable();
+  const onDeviceAvailability = getOnDeviceAIAvailability();
+  const busy = generating || onDeviceGenerating;
 
   const validateSource = (): string | null => {
     const text = sourceText.trim();
@@ -100,6 +127,8 @@ export default function CreateScreen() {
     if (!text) return;
 
     setGenerating(true);
+    setOnDeviceCards([]);
+    setOnDeviceStatus('');
     setGenerateStatus('OCR空白と罫線ノイズを整形し、Geminiで作問中…');
     try {
       const result = await generateAiQuestions({
@@ -143,12 +172,118 @@ export default function CreateScreen() {
       type,
       difficulty
     );
+    setOnDeviceCards([]);
+    setOnDeviceStatus('');
     setGeneratedText(formatLines(candidates));
     setGenerateStatus(
       candidates.length
         ? `OCR空白と罫線ノイズを整形し、端末内で${candidates.length}枚作成しました。AIは使用していません。`
         : 'OCR文字を整形しましたが、確認できる事実を抽出できませんでした。AI作問を使うか、認識結果を修正してください。'
     );
+  };
+
+  const generateWithOnDeviceAI = async () => {
+    if (onDeviceGenerating) return;
+    const initialText = sourceText.trim() || ocrText.trim();
+    if (initialText.length < 20) {
+      Alert.alert(
+        'OCR結果が短すぎます',
+        '認識結果または教材本文を20文字以上に修正してください。'
+      );
+      return;
+    }
+    if (!nativeOnDeviceAIAvailable) {
+      Alert.alert(
+        '開発ビルドが必要です',
+        '端末内AI作問はExpo Goでは動作しません。EAS開発ビルドまたは本番ビルドで確認してください。'
+      );
+      return;
+    }
+
+    const text = repairOcrText(initialText);
+    setSourceText(text);
+    setGeneratedText('');
+    setGenerateStatus('');
+    setOnDeviceGenerating(true);
+    setOnDeviceStatus('iPhone内で作問しています…');
+    try {
+      const result = await generateOnDeviceCards({
+        recognizedText: text,
+        maximumCardCount: Number(count),
+        difficulty,
+        prohibitedQuestions: cards.map((card) => card.question)
+      });
+      setOnDeviceCards(result.cards.map((card) => ({ ...card, selected: true })));
+      setOnDeviceEngine(result.engine);
+      const method =
+        result.engine === 'appleOnDeviceModel' ? '端末内AI' : '簡易作問';
+      const notice = result.notices.length ? ` ${result.notices.join(' ')}` : '';
+      setOnDeviceStatus(
+        `${method}で${result.cards.length}枚作成しました。問題・答え・解説を確認して保存してください。${notice}`
+      );
+    } catch (error) {
+      setOnDeviceCards([]);
+      setOnDeviceEngine(null);
+      setOnDeviceStatus(
+        `端末内作問に失敗しました：${error instanceof Error ? error.message : '原因不明のエラー'}`
+      );
+    } finally {
+      setOnDeviceGenerating(false);
+    }
+  };
+
+  const updateOnDeviceCard = (
+    id: string,
+    field: 'question' | 'answer' | 'explanation',
+    value: string
+  ) => {
+    setOnDeviceCards((current) =>
+      current.map((card) => (card.id === id ? { ...card, [field]: value } : card))
+    );
+  };
+
+  const toggleOnDeviceCard = (id: string) => {
+    setOnDeviceCards((current) =>
+      current.map((card) =>
+        card.id === id ? { ...card, selected: !card.selected } : card
+      )
+    );
+  };
+
+  const removeOnDeviceCard = (id: string) => {
+    setOnDeviceCards((current) => current.filter((card) => card.id !== id));
+  };
+
+  const saveOnDeviceCards = (saveAll = false) => {
+    const targets = saveAll
+      ? onDeviceCards
+      : onDeviceCards.filter((card) => card.selected);
+    if (!targets.length) {
+      Alert.alert('保存対象がありません', '保存するカードを1枚以上選択してください。');
+      return;
+    }
+    const added = addCards(
+      targets.map((card) => ({ question: card.question, answer: card.answer }))
+    );
+    Alert.alert('追加結果', `${added}枚のカードを追加しました。`);
+    if (added > 0) {
+      const savedIds = new Set(targets.map((card) => card.id));
+      setOnDeviceCards((current) =>
+        current.filter((card) => !savedIds.has(card.id))
+      );
+    }
+  };
+
+  const clearOcrResult = () => {
+    setOcrText('');
+    setOcrStatus('認識結果を消去しました。');
+  };
+
+  const retakePhoto = () => {
+    setImageUri(null);
+    setOcrText('');
+    setOcrStatus('');
+    void selectPhoto(true);
   };
 
   const removeDuplicates = () => {
@@ -208,6 +343,7 @@ export default function CreateScreen() {
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
       setOcrText('');
+      setOnDeviceCards([]);
       setOcrStatus('写真を選択しました。向きを確認して文字認識を実行してください。');
     }
   };
@@ -273,6 +409,9 @@ export default function CreateScreen() {
           />
         </View>
         {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
+        {imageUri ? (
+          <AppButton label="撮り直す" variant="secondary" onPress={retakePhoto} />
+        ) : null}
         <Text style={styles.optionLabel}>文字の向き</Text>
         <ChoiceRow
           value={ocrRotation}
@@ -301,6 +440,11 @@ export default function CreateScreen() {
               onChangeText={setOcrText}
             />
             <AppButton label="認識結果を教材本文へ" onPress={useOcrResult} />
+            <AppButton
+              label="認識結果を消去"
+              variant="secondary"
+              onPress={clearOcrResult}
+            />
           </>
         ) : null}
       </Section>
@@ -347,17 +491,107 @@ export default function CreateScreen() {
         />
         <View style={commonStyles.row}>
           <AppButton
+            label={
+              onDeviceGenerating
+                ? 'iPhone内で作問しています…'
+                : 'iPhone内で問題を作る'
+            }
+            variant="success"
+            onPress={() => void generateWithOnDeviceAI()}
+            disabled={busy || !nativeOnDeviceAIAvailable}
+          />
+          <AppButton
             label={generating ? 'Geminiで作問中…' : 'AIで作問（Gemini）'}
             onPress={() => void generateWithAi()}
-            disabled={generating}
+            disabled={busy}
           />
           <AppButton
             label="端末内で簡易作問"
             variant="secondary"
             onPress={generateLocally}
-            disabled={generating}
+            disabled={busy}
           />
         </View>
+        <MutedText>
+          「iPhone内で問題を作る」はOCR文字を外部送信しません。iOS 26以降・Apple
+          Intelligence対応時はFoundation Modelsを使い、利用できない場合は端末内の簡易作問へ自動で切り替えます。現在の状態：
+          {availabilityLabel(onDeviceAvailability)}
+        </MutedText>
+        {onDeviceStatus ? <Text style={styles.status}>{onDeviceStatus}</Text> : null}
+        {onDeviceCards.length ? (
+          <View style={styles.generatedCards}>
+            <Text style={styles.resultHeading}>
+              端末内作問結果（{onDeviceCards.length}枚・
+              {onDeviceEngine === 'appleOnDeviceModel' ? '端末内AI' : '簡易作問'}）
+            </Text>
+            {onDeviceCards.map((card, index) => (
+              <View key={card.id} style={styles.generatedCard}>
+                <Text style={styles.cardHeading}>カード {index + 1}</Text>
+                <AppButton
+                  label={card.selected ? '保存対象 ✓' : '保存対象にする'}
+                  variant={card.selected ? 'success' : 'secondary'}
+                  onPress={() => toggleOnDeviceCard(card.id)}
+                />
+                <Field
+                  label="問題（編集可能）"
+                  multiline
+                  value={card.question}
+                  onChangeText={(value) =>
+                    updateOnDeviceCard(card.id, 'question', value)
+                  }
+                />
+                <Field
+                  label="答え（編集可能）"
+                  multiline
+                  value={card.answer}
+                  onChangeText={(value) =>
+                    updateOnDeviceCard(card.id, 'answer', value)
+                  }
+                />
+                <Field
+                  label="解説（編集可能・保存前確認用）"
+                  multiline
+                  value={card.explanation}
+                  onChangeText={(value) =>
+                    updateOnDeviceCard(card.id, 'explanation', value)
+                  }
+                />
+                <Text style={styles.metadata}>
+                  確信度 {Math.round(card.confidence * 100)}% ・タグ：
+                  {card.tags.join('、') || 'なし'}
+                </Text>
+                <Text style={styles.evidence}>根拠：{card.sourceText}</Text>
+                <AppButton
+                  label="この候補を削除"
+                  variant="danger"
+                  onPress={() => removeOnDeviceCard(card.id)}
+                />
+              </View>
+            ))}
+            <View style={commonStyles.row}>
+              <AppButton
+                label="全カードを保存"
+                onPress={() => saveOnDeviceCards(true)}
+              />
+              <AppButton
+                label="選択したカードを保存"
+                variant="success"
+                onPress={() => saveOnDeviceCards(false)}
+              />
+              <AppButton
+                label="同じOCR結果から作り直す"
+                variant="secondary"
+                onPress={() => void generateWithOnDeviceAI()}
+                disabled={busy}
+              />
+              <AppButton
+                label="OCR結果へ戻る"
+                variant="secondary"
+                onPress={() => setOnDeviceCards([])}
+              />
+            </View>
+          </View>
+        ) : null}
         {generateStatus ? <Text style={styles.status}>{generateStatus}</Text> : null}
         {generatedText ? (
           <>
@@ -405,5 +639,18 @@ const styles = StyleSheet.create({
     padding: 10,
     lineHeight: 20
   },
-  preview: { width: '100%', height: 260, borderRadius: 12, resizeMode: 'contain' }
+  preview: { width: '100%', height: 260, borderRadius: 12, resizeMode: 'contain' },
+  generatedCards: { gap: 10 },
+  resultHeading: { color: colors.text, fontSize: 16, fontWeight: '800' },
+  generatedCard: {
+    backgroundColor: colors.background,
+    borderColor: colors.border,
+    borderRadius: 14,
+    borderWidth: 1,
+    gap: 9,
+    padding: 12
+  },
+  cardHeading: { color: colors.text, fontSize: 15, fontWeight: '800' },
+  metadata: { color: colors.muted, fontSize: 12, lineHeight: 18 },
+  evidence: { color: colors.text, fontSize: 12, lineHeight: 18 }
 });
