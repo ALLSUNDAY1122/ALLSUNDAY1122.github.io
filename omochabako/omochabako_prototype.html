@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>おもちゃばこ（試作）</title>
+<style>
+  :root{
+    --bg:#FFFBF3;
+    --card:#FFFFFF;
+    --ivory:#FFF7EA;
+    --green:#E1F0D9;
+    --green-deep:#9FCB8E;
+    --sky:#DFF1F8;
+    --sky-deep:#8FC3DA;
+    --coral:#F7D9CE;
+    --coral-deep:#E8927C;
+    --text:#4A4038;
+    --sub:#8E8276;
+    --line:#EFE6D8;
+    --radius:22px;
+    --radius-sm:14px;
+    --shadow:0 6px 20px rgba(180,150,110,0.12);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    min-height:100vh;
+    overscroll-behavior:none;
+  }
+  #app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--bg);
+    position:relative;
+    padding-bottom:24px;
+  }
+  .screen{display:none;padding:20px 20px 40px;animation:fadeIn .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 4px 10px;
+  }
+  .topbar h1{font-size:20px;margin:0;font-weight:700;}
+  .icon-btn{
+    width:40px;height:40px;border-radius:50%;
+    background:var(--ivory);border:none;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;color:var(--text);cursor:pointer;
+  }
+  .back-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .back-row .icon-btn{background:transparent;}
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:18px;
+    box-shadow:var(--shadow);
+    margin-bottom:16px;
+  }
+  .soft{
+    background:var(--ivory);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin-bottom:14px;
+  }
+  h2{font-size:19px;margin:4px 0 12px;}
+  h3{font-size:16px;margin:0 0 8px;}
+  p{margin:0 0 10px;color:var(--sub);font-size:14.5px;}
+  .lead{color:var(--text);font-size:15.5px;}
+
+  .btn{
+    display:block;width:100%;
+    padding:15px 18px;
+    border-radius:18px;
+    border:none;
+    font-size:16px;font-weight:700;
+    text-align:center;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--coral-deep);color:#fff;box-shadow:0 8px 18px rgba(232,146,124,0.35);}
+  .btn-secondary{background:var(--sky);color:var(--text);}
+  .btn-ghost{background:transparent;color:var(--sub);font-weight:500;}
+  .btn-outline{background:#fff;color:var(--text);border:1.5px solid var(--line);}
+  .btn[disabled]{opacity:.4;pointer-events:none;}
+  .btn-row{display:flex;gap:10px;}
+  .btn-row .btn{flex:1;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .cat-card{
+    background:var(--ivory);border-radius:18px;padding:16px 12px;text-align:center;
+    border:2px solid transparent;cursor:pointer;
+  }
+  .cat-card.selected{border-color:var(--coral-deep);background:#fff;}
+  .cat-emoji{font-size:30px;display:block;margin-bottom:6px;}
+  .cat-name{font-size:14px;font-weight:600;}
+
+  .album-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;}
+  .album-item{
+    background:var(--card);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);
+    cursor:pointer;
+  }
+  .album-thumb{
+    width:100%;aspect-ratio:1/1;background:linear-gradient(135deg,var(--sky),var(--green));
+    display:flex;align-items:center;justify-content:center;font-size:34px;overflow:hidden;
+    position:relative;
+  }
+  .album-thumb img{width:100%;height:100%;object-fit:cover;}
+  .album-meta{padding:10px 12px 12px;}
+  .album-meta .t{font-size:14px;font-weight:700;margin-bottom:2px;}
+  .album-meta .d{font-size:12px;color:var(--sub);}
+
+  .empty-state{text-align:center;padding:50px 10px;color:var(--sub);}
+  .empty-state .big{font-size:44px;margin-bottom:10px;}
+
+  .checklist{display:flex;flex-direction:column;gap:10px;}
+  .check-row{
+    display:flex;align-items:center;gap:12px;
+    background:var(--ivory);border-radius:16px;padding:14px 14px;
+    cursor:pointer;
+  }
+  .check-box{
+    width:24px;height:24px;border-radius:8px;border:2px solid var(--sky-deep);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    background:#fff;font-size:14px;
+  }
+  .check-row.checked .check-box{background:var(--green-deep);border-color:var(--green-deep);color:#fff;}
+  .check-row.checked{background:var(--green);}
+
+  .camera-wrap{
+    position:relative;width:100%;aspect-ratio:3/4;border-radius:22px;overflow:hidden;
+    background:#2b2620;margin-bottom:14px;
+  }
+  .camera-wrap video{width:100%;height:100%;object-fit:cover;}
+  .guide-ring{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
+  }
+  .guide-ring .ring{
+    width:62%;aspect-ratio:1/1;border-radius:50%;border:3px dashed rgba(255,255,255,0.75);
+  }
+  .cam-overlay-top{
+    position:absolute;top:0;left:0;right:0;padding:12px;
+    display:flex;justify-content:center;
+  }
+  .cam-tag{background:rgba(0,0,0,0.45);color:#fff;font-size:13px;padding:6px 14px;border-radius:20px;}
+  .cam-overlay-bottom{
+    position:absolute;bottom:0;left:0;right:0;padding:16px;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+  }
+  .shutter{
+    width:68px;height:68px;border-radius:50%;background:#fff;border:5px solid rgba(255,255,255,0.5);
+    cursor:pointer;
+  }
+  .progress-orbits{display:flex;gap:8px;justify-content:center;}
+  .orbit-dot{
+    padding:5px 12px;border-radius:14px;background:rgba(255,255,255,0.25);color:#fff;font-size:12px;font-weight:600;
+  }
+  .orbit-dot.done{background:var(--green-deep);}
+  .orbit-dot.current{background:var(--coral-deep);}
+
+  .thumb-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;}
+  .thumb-strip img{width:56px;height:56px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--sky);}
+
+  .helper-msg{
+    background:var(--sky);border-radius:16px;padding:12px 16px;font-size:14px;margin-bottom:14px;
+  }
+  .helper-msg.warn{background:var(--coral);}
+
+  .stub-banner{
+    background:repeating-linear-gradient(135deg,var(--ivory),var(--ivory) 10px,#fff 10px,#fff 20px);
+    border:1.5px dashed var(--sky-deep);
+    border-radius:16px;padding:14px 16px;font-size:13px;color:var(--sub);margin-bottom:14px;
+  }
+
+  .thumb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+  .thumb-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;}
+
+  progress.gen{width:100%;height:14px;border-radius:8px;overflow:hidden;appearance:none;border:none;margin-bottom:10px;}
+  progress.gen::-webkit-progress-bar{background:var(--ivory);border-radius:8px;}
+  progress.gen::-webkit-progress-value{background:var(--coral-deep);border-radius:8px;}
+
+  .stage-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+  .stage-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--sub);}
+  .stage-item.active{color:var(--text);font-weight:700;}
+  .stage-item .dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
+  .stage-item.active .dot{background:var(--coral-deep);}
+  .stage-item.done .dot{background:var(--green-deep);}
+
+  .viewer3d-wrap{
+    width:100%;aspect-ratio:1/1;border-radius:22px;overflow:hidden;margin-bottom:14px;
+    background:linear-gradient(160deg,var(--sky),var(--green));
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  #three-canvas{width:100%;height:100%;display:block;}
+  .viewer-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:12px;color:#5b5449;background:rgba(255,255,255,0.6);margin:0 auto;width:fit-content;padding:5px 14px;border-radius:14px;}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;color:var(--sub);margin-bottom:6px;font-weight:600;}
+  .field input, .field textarea, .field select{
+    width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);
+    font-size:15px;background:#fff;color:var(--text);font-family:inherit;
+  }
+  .field textarea{resize:vertical;min-height:70px;}
+
+  .capacity-box{
+    display:flex;justify-content:space-between;background:var(--ivory);border-radius:14px;padding:12px 16px;margin-bottom:8px;font-size:14px;
+  }
+  .capacity-box b{font-size:15px;}
+
+  .raw-choice{display:flex;gap:10px;margin-bottom:14px;}
+  .raw-opt{
+    flex:1;border-radius:16px;padding:16px 12px;text-align:center;background:var(--ivory);
+    border:2px solid transparent;cursor:pointer;
+  }
+  .raw-opt.selected{border-color:var(--coral-deep);background:#fff;}
+  .raw-opt .emoji{font-size:26px;display:block;margin-bottom:6px;}
+
+  .settings-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 4px;border-bottom:1px solid var(--line);font-size:14.5px;
+  }
+  .settings-row:last-child{border-bottom:none;}
+  .toast{
+    position:fixed;left:50%;bottom:30px;transform:translateX(-50%);
+    background:rgba(60,52,42,0.92);color:#fff;padding:10px 18px;border-radius:20px;
+    font-size:13.5px;z-index:999;opacity:0;pointer-events:none;transition:opacity .25s ease;
+    max-width:90%;text-align:center;
+  }
+  .toast.show{opacity:1;}
+  .badge{display:inline-block;font-size:11px;background:var(--green-deep);color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px;}
+  ::-webkit-scrollbar{display:none;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 1. 初回説明 -->
+  <section class="screen active" id="scr-onboard">
+    <div class="topbar"><h1>🧸 おもちゃばこ</h1></div>
+    <div class="soft" style="text-align:center;padding:34px 20px;">
+      <div style="font-size:52px;margin-bottom:10px;">🌿🧸💐</div>
+      <h2>思い出の形を、そっと残す。</h2>
+      <p class="lead">花束や子どもの工作を、案内どおりに撮るだけ。クラウドは使わず、iPhoneの中だけで立体的に残せます。</p>
+    </div>
+    <div class="card">
+      <h3>対応端末について</h3>
+      <p>iOS 18以降、iPhone 15以降を想定した試作です。今回の試作では3D生成そのものは仮の表示になっています（技術検証は別途進めます）。</p>
+    </div>
+    <button class="btn btn-primary" onclick="go('scr-home')">はじめる</button>
+  </section>
+
+  <!-- 2. ホーム / アルバム一覧 -->
+  <section class="screen" id="scr-home">
+    <div class="topbar">
+      <h1>🧸 おもちゃばこ</h1>
+      <button class="icon-btn" onclick="go('scr-settings')">⚙️</button>
+    </div>
+    <div class="btn-row" style="margin-bottom:14px;">
+      <button class="btn btn-outline" id="sort-btn" onclick="toggleSort()">並び替え：新しい順</button>
+    </div>
+    <div id="album-list"></div>
+    <div style="height:70px;"></div>
+    <div style="position:fixed;left:0;right:0;bottom:18px;display:flex;justify-content:center;pointer-events:none;">
+      <div style="max-width:480px;width:100%;padding:0 20px;pointer-events:auto;">
+        <button class="btn btn-primary" onclick="startNewCapture()">＋ 新しく3Dで残す</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. カテゴリ選択 -->
+  <section class="screen" id="scr-category">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-home')">←</button><h2 style="margin:0;">何を残しますか？</h2></div>
+    <p>対象に合わせて、撮影の案内を変えます。</p>
+    <div class="grid2" id="cat-grid"></div>
+    <div style="height:16px;"></div>
+    <button class="btn btn-primary" id="cat-next" disabled onclick="go('scr-prep')">次へ</button>
+  </section>
+
+  <!-- 4. 撮影準備チェック -->
+  <section class="screen" id="scr-prep">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-category')">←</button><h2 style="margin:0;">撮影前の準備</h2></div>
+    <p>次の4つを確認してください。すべて整うと、次に進めます。</p>
+    <div class="checklist" id="prep-list"></div>
+    <div style="height:16px;"></div>
+    <button class="btn btn-primary" id="prep-next" disabled onclick="go('scr-detect')">準備できた</button>
+  </section>
+
+  <!-- 5. 対象物検出 -->
+  <section class="screen" id="scr-detect">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-prep')">←</button><h2 style="margin:0;">対象物を中央に</h2></div>
+    <div class="camera-wrap" id="detect-cam-wrap">
+      <video id="detect-video" autoplay playsinline muted></video>
+      <div class="guide-ring"><div class="ring"></div></div>
+      <div class="cam-overlay-top"><span class="cam-tag" id="detect-tag">対象物を丸の中央に置いてください</span></div>
+    </div>
+    <p id="detect-status" style="text-align:center;">カメラを準備しています…</p>
+    <button class="btn btn-primary" onclick="confirmDetect()">検出できた・撮影へ進む</button>
+    <button class="btn btn-ghost" onclick="skipCameraToMock('scr-capture')">カメラを使わずに進める（試作確認用）</button>
+  </section>
+
+  <!-- 6. ガイド付き撮影 -->
+  <section class="screen" id="scr-capture">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-detect')">←</button><h2 style="margin:0;">周りをゆっくり回って撮影</h2></div>
+    <div class="camera-wrap" id="capture-cam-wrap">
+      <video id="capture-video" autoplay playsinline muted></video>
+      <div class="cam-overlay-top"><span class="cam-tag" id="capture-hint">低い位置からゆっくり回ってください</span></div>
+      <div class="cam-overlay-bottom">
+        <div class="progress-orbits">
+          <span class="orbit-dot" id="orbit-low">低い位置</span>
+          <span class="orbit-dot" id="orbit-mid">中間</span>
+          <span class="orbit-dot" id="orbit-high">高い位置</span>
+        </div>
+        <div class="shutter" onclick="capturePhoto()"></div>
+      </div>
+    </div>
+    <div class="thumb-strip" id="thumb-strip"></div>
+    <p style="text-align:center;" id="capture-count">撮影枚数：0枚</p>
+    <button class="btn btn-primary" id="capture-next" onclick="go('scr-review')">撮影範囲を確認する</button>
+  </section>
+
+  <!-- 7. 撮影範囲・品質確認（品質診断エンジンは未実装・スタブ） -->
+  <section class="screen" id="scr-review">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-capture')">←</button><h2 style="margin:0;">撮影の確認</h2></div>
+    <div class="stub-banner">
+      🛠 撮影品質の自動診断（ぼけ・露出・方向網羅の検出）は、次の工程でOpus／Fableが実装予定のコア機能です。今回の試作では、枚数の目安のみ簡易表示します。
+    </div>
+    <div class="thumb-grid" id="review-grid"></div>
+    <div class="helper-msg" id="review-msg">撮影ありがとうございます。上側の画像が少ない場合、一部が欠ける可能性があります。</div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="go('scr-capture')">追加撮影する</button>
+      <button class="btn btn-primary" onclick="go('scr-generate')">このまま生成する</button>
+    </div>
+  </section>
+
+  <!-- 8. 3D生成進捗（生成エンジンは未実装・スタブ） -->
+  <section class="screen" id="scr-generate">
+    <div class="topbar"><h1>生成しています</h1></div>
+    <div class="stub-banner">
+      🛠 実際の3D再構築エンジン（RealityKit／Gaussian Splatting等の端末内処理）は未実装です。ここでは進行の見せ方のみ確認できます。
+    </div>
+    <div class="card" style="text-align:center;padding:30px 18px;">
+      <div style="font-size:40px;margin-bottom:10px;" id="gen-emoji">🌀</div>
+      <progress class="gen" id="gen-progress" value="0" max="100"></progress>
+      <p id="gen-percent" class="lead" style="text-align:center;">0%</p>
+    </div>
+    <div class="stage-list" id="stage-list"></div>
+  </section>
+
+  <!-- 9. 完成確認・簡易編集（3Dプレビューはプレースホルダー） -->
+  <section class="screen" id="scr-result">
+    <div class="topbar"><h1>できあがりました</h1></div>
+    <div class="stub-banner">
+      🛠 下の立体表示は、実際の3D生成結果ではなく操作感を確かめるためのプレースホルダーです（撮影写真を貼り付けた仮モデル）。
+    </div>
+    <div class="viewer3d-wrap">
+      <canvas id="three-canvas"></canvas>
+      <div class="viewer-hint">ドラッグで回転できます（仮表示）</div>
+    </div>
+    <div class="btn-row" style="margin-bottom:16px;">
+      <button class="btn btn-outline" onclick="go('scr-capture')">撮り直す</button>
+      <button class="btn btn-primary" onclick="go('scr-meta')">保存する</button>
+    </div>
+  </section>
+
+  <!-- 10. 思い出情報入力 -->
+  <section class="screen" id="scr-meta">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-result')">←</button><h2 style="margin:0;">思い出の情報</h2></div>
+    <div class="field">
+      <label>題名</label>
+      <input type="text" id="meta-title" placeholder="例：はじめての花束">
+    </div>
+    <div class="field">
+      <label>撮影日</label>
+      <input type="date" id="meta-date">
+    </div>
+    <div class="field">
+      <label>カテゴリ</label>
+      <input type="text" id="meta-category" readonly>
+    </div>
+    <div class="field">
+      <label>年齢・出来事（任意）</label>
+      <input type="text" id="meta-event" placeholder="例：3歳の誕生日">
+    </div>
+    <div class="field">
+      <label>メモ（任意）</label>
+      <textarea id="meta-memo" placeholder="そのときのことを少しだけ"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="go('scr-save')">次へ</button>
+  </section>
+
+  <!-- 11. 保存（撮影元データ選択・容量表示） -->
+  <section class="screen" id="scr-save">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-meta')">←</button><h2 style="margin:0;">撮影元データの扱い</h2></div>
+    <p>完成後に、撮影に使った元の写真データを残すか選べます。</p>
+    <div class="raw-choice">
+      <div class="raw-opt" id="raw-keep" onclick="selectRaw(true)">
+        <span class="emoji">🗂️</span><b>残す</b>
+        <p style="margin-top:4px;">高品質な再生成に使えます</p>
+      </div>
+      <div class="raw-opt" id="raw-delete" onclick="selectRaw(false)">
+        <span class="emoji">🗑️</span><b>削除する</b>
+        <p style="margin-top:4px;">保存容量を抑えます</p>
+      </div>
+    </div>
+    <div class="capacity-box"><span>撮影元データ容量（目安）</span><b id="cap-raw">–</b></div>
+    <div class="capacity-box"><span>3Dデータ容量（仮表示）</span><b id="cap-3d">–</b></div>
+    <div class="capacity-box"><span>保存後の合計容量</span><b id="cap-total">–</b></div>
+    <button class="btn btn-primary" id="save-final" disabled onclick="finishSave()">この内容で保存する</button>
+  </section>
+
+  <!-- 12. 作品詳細閲覧 -->
+  <section class="screen" id="scr-detail">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-home')">←</button><h2 style="margin:0;" id="detail-title">思い出</h2></div>
+    <div class="viewer3d-wrap" id="detail-viewer-wrap">
+      <canvas id="detail-canvas"></canvas>
+      <div class="viewer-hint">ドラッグで回転（仮表示）</div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--sub);font-size:13px;">日付</span><span id="detail-date"></span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--sub);font-size:13px;">カテゴリ</span><span id="detail-cat"></span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--sub);font-size:13px;">出来事</span><span id="detail-event"></span></div>
+      <p id="detail-memo" class="lead" style="margin-top:8px;"></p>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="deleteItem()">この思い出を削除</button>
+      <button class="btn btn-secondary" onclick="go('scr-home')">アルバムに戻る</button>
+    </div>
+  </section>
+
+  <!-- 設定 -->
+  <section class="screen" id="scr-settings">
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-home')">←</button><h2 style="margin:0;">設定</h2></div>
+    <div class="card">
+      <div class="settings-row"><span>保存容量（このアプリ内・概算）</span><b id="settings-total-cap">0 MB</b></div>
+      <div class="settings-row"><span>保存作品数</span><b id="settings-count">0</b></div>
+    </div>
+    <div class="card">
+      <h3>プライバシーについて</h3>
+      <p>撮影・生成はすべて端末内で行う設計です（本試作はブラウザのlocalStorageで代用）。AI学習・広告・公開マップへの転用は行いません。初期状態では外部公開されません。</p>
+    </div>
+    <button class="btn btn-outline" onclick="resetAll()">すべてのデータを削除</button>
+  </section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* =========================================================
+   おもちゃばこ 価値検証用HTML試作
+   注意：3D生成エンジン本体／撮影品質自動診断は未実装（スタブ）。
+   Opus / Fable によるコア実装を待つ範囲として明示。
+   それ以外の画面遷移・保存・入力・カメラ撮影導線はここで実装。
+   ========================================================= */
+
+const CATEGORIES = [
+  {id:'flower', emoji:'💐', name:'花束'},
+  {id:'craft', emoji:'🎨', name:'工作'},
+  {id:'plush', emoji:'🧸', name:'ぬいぐるみ'},
+  {id:'shoes', emoji:'👟', name:'ファーストシューズ'},
+  {id:'keepsake', emoji:'🎁', name:'記念品'},
+  {id:'other', emoji:'📦', name:'その他'},
+];
+
+const PREP_ITEMS = [
+  '明るい場所で撮影できる',
+  '背景がシンプルである',
+  '透明な包装は外した',
+  '対象物がぐらつかず安定している',
+];
+
+const STORAGE_KEY = 'omochabako_items_v1';
+
+let state = {
+  category: null,
+  photos: [],       // dataURLs captured this session
+  raw: null,         // true/false
+  sortDesc: true,
+  editingItemId: null,
+};
+
+let mediaStream = null;
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id === 'scr-home') renderAlbumList();
+  if(id === 'scr-settings') renderSettings();
+  if(id === 'scr-detect') startCamera('detect-video');
+  if(id === 'scr-capture') startCamera('capture-video');
+  if(id !== 'scr-detect' && id !== 'scr-capture') stopCamera();
+}
+
+/* ---------- ストレージ ---------- */
+function loadItems(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function saveItems(items){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+/* ---------- ホーム / アルバム ---------- */
+function renderAlbumList(){
+  const items = loadItems();
+  items.sort((a,b)=> state.sortDesc ? b.createdAt-a.createdAt : a.createdAt-b.createdAt);
+  const wrap = document.getElementById('album-list');
+  if(items.length===0){
+    wrap.innerHTML = `<div class="empty-state"><div class="big">🧸</div><p>まだ思い出がありません。<br>「新しく3Dで残す」から始めてみましょう。</p></div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="album-grid">${items.map(it=>`
+    <div class="album-item" onclick="openDetail('${it.id}')">
+      <div class="album-thumb">${it.photos[0] ? `<img src="${it.photos[0]}">` : '🧸'}</div>
+      <div class="album-meta">
+        <div class="t">${escapeHtml(it.title || '無題の思い出')}</div>
+        <div class="d">${it.date || ''} ・ ${catName(it.category)}</div>
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+function toggleSort(){
+  state.sortDesc = !state.sortDesc;
+  document.getElementById('sort-btn').textContent = '並び替え：' + (state.sortDesc ? '新しい順' : '古い順');
+  renderAlbumList();
+}
+function catName(id){ const c = CATEGORIES.find(c=>c.id===id); return c ? c.name : ''; }
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function startNewCapture(){
+  state = {category:null, photos:[], raw:null, sortDesc:state.sortDesc, editingItemId:null};
+  renderCategoryGrid();
+  go('scr-category');
+}
+
+/* ---------- カテゴリ選択 ---------- */
+function renderCategoryGrid(){
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = CATEGORIES.map(c=>`
+    <div class="cat-card" id="cat-${c.id}" onclick="selectCategory('${c.id}')">
+      <span class="cat-emoji">${c.emoji}</span>
+      <span class="cat-name">${c.name}</span>
+    </div>
+  `).join('');
+}
+function selectCategory(id){
+  state.category = id;
+  document.querySelectorAll('.cat-card').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('cat-'+id).classList.add('selected');
+  document.getElementById('cat-next').disabled = false;
+}
+
+/* ---------- 撮影準備チェック ---------- */
+function renderPrepList(){
+  const list = document.getElementById('prep-list');
+  list.innerHTML = PREP_ITEMS.map((label,i)=>`
+    <div class="check-row" id="prep-${i}" onclick="togglePrep(${i})">
+      <div class="check-box">✓</div>
+      <div>${label}</div>
+    </div>
+  `).join('');
+  updatePrepNext();
+}
+function togglePrep(i){
+  document.getElementById('prep-'+i).classList.toggle('checked');
+  updatePrepNext();
+}
+function updatePrepNext(){
+  const all = PREP_ITEMS.every((_,i)=>document.getElementById('prep-'+i).classList.contains('checked'));
+  document.getElementById('prep-next').disabled = !all;
+}
+
+/* ---------- カメラ ---------- */
+async function startCamera(videoId){
+  stopCamera();
+  const video = document.getElementById(videoId);
+  const statusEl = document.getElementById('detect-status');
+  try{
+    mediaStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:false});
+    video.srcObject = mediaStream;
+    if(statusEl) statusEl.textContent = 'カメラの準備ができました。丸の中央に対象物を置いてください。';
+  }catch(err){
+    if(statusEl) statusEl.textContent = 'カメラを使用できませんでした（' + (err.message||'権限が必要です') + '）。下のボタンから試作確認を続けられます。';
+    toast('カメラが使えない場合は「カメラを使わずに進める」をお使いください');
+  }
+}
+function stopCamera(){
+  if(mediaStream){
+    mediaStream.getTracks().forEach(t=>t.stop());
+    mediaStream = null;
+  }
+}
+function confirmDetect(){
+  go('scr-capture');
+}
+function skipCameraToMock(targetScreen){
+  go(targetScreen);
+}
+
+/* ---------- ガイド付き撮影 ---------- */
+const ORBIT_ORDER = ['low','mid','high'];
+const ORBIT_LABELS = {low:'低い位置からゆっくり回ってください', mid:'中間の高さで回ってください', high:'高い位置から仕上げに回ってください'};
+let orbitIndex = 0;
+let shotsPerOrbit = 0;
+
+function resetCaptureUI(){
+  orbitIndex = 0;
+  shotsPerOrbit = 0;
+  state.photos = [];
+  document.querySelectorAll('.orbit-dot').forEach(d=>d.classList.remove('done','current'));
+  document.getElementById('orbit-low').classList.add('current');
+  document.getElementById('capture-hint').textContent = ORBIT_LABELS.low;
+  document.getElementById('thumb-strip').innerHTML = '';
+  document.getElementById('capture-count').textContent = '撮影枚数：0枚';
+}
+
+function capturePhoto(){
+  const video = document.getElementById('capture-video');
+  const canvas = document.createElement('canvas');
+  let dataUrl;
+  if(video.videoWidth){
+    canvas.width = 240; canvas.height = 320;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+    dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+  }else{
+    // カメラ未取得時のフォールバック（試作確認用のダミー画像）
+    dataUrl = mockThumb(state.photos.length);
+  }
+  state.photos.push(dataUrl);
+  shotsPerOrbit++;
+  const strip = document.getElementById('thumb-strip');
+  const img = document.createElement('img');
+  img.src = dataUrl;
+  strip.appendChild(img);
+  document.getElementById('capture-count').textContent = '撮影枚数：' + state.photos.length + '枚';
+
+  if(shotsPerOrbit >= 4 && orbitIndex < ORBIT_ORDER.length-1){
+    document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.remove('current');
+    document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.add('done');
+    orbitIndex++;
+    shotsPerOrbit = 0;
+    document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.add('current');
+    document.getElementById('capture-hint').textContent = ORBIT_LABELS[ORBIT_ORDER[orbitIndex]];
+    toast('次は' + ({mid:'中間の高さ',high:'高い位置'}[ORBIT_ORDER[orbitIndex]]||'') + 'です');
+  }else if(shotsPerOrbit >= 4 && orbitIndex === ORBIT_ORDER.length-1){
+    document.getElementById('orbit-high').classList.remove('current');
+    document.getElementById('orbit-high').classList.add('done');
+    toast('ひととおり撮影できました。範囲を確認しましょう。');
+  }
+}
+
+function mockThumb(seed){
+  const colors = ['#F6D6CB','#DFF1F8','#E1F0D9','#FFF3D6'];
+  const c = colors[seed % colors.length];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320"><rect width="100%" height="100%" fill="${c}"/><text x="50%" y="50%" font-size="18" text-anchor="middle" fill="#8E8276">写真${seed+1}</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+}
+
+/* ---------- 撮影範囲・品質確認（スタブ） ---------- */
+function renderReview(){
+  const grid = document.getElementById('review-grid');
+  grid.innerHTML = state.photos.map(p=>`<img src="${p}">`).join('');
+  const msg = document.getElementById('review-msg');
+  if(state.photos.length < 6){
+    msg.className = 'helper-msg warn';
+    msg.textContent = '撮影枚数が少なめです。上側や裏側の画像が少ないと、一部が欠ける可能性があります。';
+  }else{
+    msg.className = 'helper-msg';
+    msg.textContent = 'ひととおり撮影できています。このまま生成に進めます。';
+  }
+}
+
+/* ---------- 3D生成進捗（スタブ） ---------- */
+const STAGES = ['撮影データを整理しています','特徴点を検出しています（仮表示）','立体形状を推定しています（仮表示）','質感を仕上げています（仮表示）','保存準備をしています'];
+function renderStageList(activeIdx){
+  const wrap = document.getElementById('stage-list');
+  wrap.innerHTML = STAGES.map((s,i)=>`
+    <div class="stage-item ${i<activeIdx?'done':''} ${i===activeIdx?'active':''}">
+      <span class="dot"></span><span>${s}</span>
+    </div>
+  `).join('');
+}
+function runGenerateStub(){
+  let pct = 0;
+  const bar = document.getElementById('gen-progress');
+  const label = document.getElementById('gen-percent');
+  renderStageList(0);
+  const timer = setInterval(()=>{
+    pct += 4 + Math.random()*6;
+    if(pct >= 100){
+      pct = 100;
+      clearInterval(timer);
+      setTimeout(()=>{ go('scr-result'); renderResultViewer(); }, 400);
+    }
+    bar.value = pct;
+    label.textContent = Math.floor(pct) + '%';
+    const stageIdx = Math.min(STAGES.length-1, Math.floor(pct / (100/STAGES.length)));
+    renderStageList(stageIdx);
+  }, 220);
+}
+
+/* ---------- 3Dプレースホルダー表示（Three.js） ---------- */
+let threeCtx = null;
+function initThreeViewer(canvasId, photos){
+  const canvas = document.getElementById(canvasId);
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  const size = canvas.parentElement.clientWidth;
+  renderer.setSize(size, size);
+  renderer.setPixelRatio(window.devicePixelRatio || 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0,0,4.2);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.6);
+  dir.position.set(2,3,4);
+  scene.add(dir);
+
+  const loader = new THREE.TextureLoader();
+  const texUrls = (photos && photos.length ? photos : [mockThumb(0),mockThumb(1),mockThumb(2),mockThumb(3),mockThumb(4),mockThumb(5)]);
+  const materials = [0,1,2,3,4,5].map(i=>{
+    const tex = loader.load(texUrls[i % texUrls.length]);
+    return new THREE.MeshStandardMaterial({map:tex});
+  });
+  const geo = new THREE.BoxGeometry(2,2,2);
+  const cube = new THREE.Mesh(geo, materials);
+  scene.add(cube);
+
+  let dragging = false, lastX=0, lastY=0, rotY=0.6, rotX=-0.4;
+  canvas.addEventListener('pointerdown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
+  window.addEventListener('pointerup', ()=>dragging=false);
+  window.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    rotY += (e.clientX-lastX)*0.01;
+    rotX += (e.clientY-lastY)*0.01;
+    lastX=e.clientX; lastY=e.clientY;
+  });
+
+  let autoSpin = true;
+  canvas.addEventListener('pointerdown', ()=>autoSpin=false);
+
+  function animate(){
+    if(autoSpin) rotY += 0.006;
+    cube.rotation.y = rotY;
+    cube.rotation.x = rotX*0.4;
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+  return {renderer, scene, camera};
+}
+function renderResultViewer(){
+  initThreeViewer('three-canvas', state.photos);
+}
+
+/* ---------- 思い出情報入力 → 保存 ---------- */
+function prepMetaScreen(){
+  document.getElementById('meta-category').value = catName(state.category);
+  document.getElementById('meta-date').valueAsDate = new Date();
+}
+
+function estimateSize(){
+  const rawBytes = state.photos.reduce((sum,p)=> sum + Math.floor(p.length*0.75), 0);
+  const threeDBytes = Math.floor(rawBytes * 0.35 + 400000); // 仮の3D容量推定
+  return {rawBytes, threeDBytes};
+}
+function fmtBytes(b){
+  if(b < 1024*1024) return Math.max(1,Math.round(b/1024)) + ' KB';
+  return (b/1024/1024).toFixed(1) + ' MB';
+}
+function prepSaveScreen(){
+  state.raw = null;
+  document.getElementById('raw-keep').classList.remove('selected');
+  document.getElementById('raw-delete').classList.remove('selected');
+  document.getElementById('save-final').disabled = true;
+  const {rawBytes, threeDBytes} = estimateSize();
+  document.getElementById('cap-raw').textContent = fmtBytes(rawBytes);
+  document.getElementById('cap-3d').textContent = fmtBytes(threeDBytes) + '（仮）';
+  window._sizeCache = {rawBytes, threeDBytes};
+  updateTotalCap();
+}
+function selectRaw(keep){
+  state.raw = keep;
+  document.getElementById('raw-keep').classList.toggle('selected', keep===true);
+  document.getElementById('raw-delete').classList.toggle('selected', keep===false);
+  document.getElementById('save-final').disabled = false;
+  updateTotalCap();
+}
+function updateTotalCap(){
+  const {rawBytes, threeDBytes} = window._sizeCache || estimateSize();
+  const total = threeDBytes + (state.raw ? rawBytes : 0);
+  document.getElementById('cap-total').textContent = fmtBytes(total);
+}
+
+function finishSave(){
+  const items = loadItems();
+  const id = 'item_' + Date.now();
+  const item = {
+    id,
+    title: document.getElementById('meta-title').value.trim() || '無題の思い出',
+    date: document.getElementById('meta-date').value,
+    category: state.category,
+    event: document.getElementById('meta-event').value.trim(),
+    memo: document.getElementById('meta-memo').value.trim(),
+    photos: state.raw ? state.photos : state.photos.slice(0,1), // 削除選択時はサムネイル1枚のみ模擬保持
+    rawKept: !!state.raw,
+    createdAt: Date.now(),
+  };
+  items.push(item);
+  saveItems(items);
+  toast('保存しました');
+  go('scr-home');
+}
+
+/* ---------- 作品詳細 ---------- */
+function openDetail(id){
+  const items = loadItems();
+  const item = items.find(i=>i.id===id);
+  if(!item) return;
+  state.editingItemId = id;
+  document.getElementById('detail-title').textContent = item.title;
+  document.getElementById('detail-date').textContent = item.date || '—';
+  document.getElementById('detail-cat').textContent = catName(item.category) || '—';
+  document.getElementById('detail-event').textContent = item.event || '—';
+  document.getElementById('detail-memo').textContent = item.memo || '';
+  go('scr-detail');
+  setTimeout(()=>initThreeViewer('detail-canvas', item.photos), 30);
+}
+function deleteItem(){
+  if(!confirm('この思い出を削除しますか？元に戻せません。')) return;
+  let items = loadItems();
+  items = items.filter(i=>i.id!==state.editingItemId);
+  saveItems(items);
+  toast('削除しました');
+  go('scr-home');
+}
+
+/* ---------- 設定 ---------- */
+function renderSettings(){
+  const items = loadItems();
+  document.getElementById('settings-count').textContent = items.length;
+  const totalBytes = items.reduce((sum,it)=> sum + it.photos.reduce((s,p)=>s+Math.floor(p.length*0.75),0), 0);
+  document.getElementById('settings-total-cap').textContent = fmtBytes(totalBytes);
+}
+function resetAll(){
+  if(!confirm('すべての思い出データを削除します。よろしいですか？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  toast('すべて削除しました');
+  renderSettings();
+  go('scr-home');
+}
+
+/* ---------- 画面遷移フック ---------- */
+const _origGo = go;
+go = function(id){
+  _origGo(id);
+  if(id==='scr-prep') renderPrepList();
+  if(id==='scr-capture') resetCaptureUI();
+  if(id==='scr-review') renderReview();
+  if(id==='scr-generate') runGenerateStub();
+  if(id==='scr-meta') prepMetaScreen();
+  if(id==='scr-save') prepSaveScreen();
+};
+
+/* 初期表示 */
+renderAlbumList();
+</script>
+</body>
+</html>
