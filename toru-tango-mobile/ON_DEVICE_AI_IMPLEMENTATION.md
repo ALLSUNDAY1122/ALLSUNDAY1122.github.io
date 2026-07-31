@@ -61,6 +61,7 @@ Apple Foundation Modelsを使い、Apple Vision OCRの編集済み文字列か�
   - Build ID: `0f05bb63-79c6-4160-8cfb-99d4bdcce31a`
   - App version/build: `1.0.0 (1)`
   - Distribution: App Store
-- Expo Doctor: 15/20。失敗のうち3件はローカル実行環境に`npm`がないため、残りは作業前から存在するExpo SDK 57のパッチバージョン差分10件
+- Expo Doctor: 初回15/20。CIでもExpo SDK 57のパッチバージョン差分により失敗したため、推奨パッチ版10件へ限定更新し、最終20/20成功
+- `npm ci --ignore-scripts`: 成功（package-lock整合性確認）
 - Swift Package単体テスト: WindowsではSwift/Xcodeを実行できないため未実行。テストコードを同梱し、EAS buildでSwift本体のコンパイルを確認
 - 実機でのApple Intelligence作問: 未確認。対応iPhone、iOS 26、Apple Intelligence有効状態で確認が必要
