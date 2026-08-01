@@ -161,12 +161,22 @@
     width:68px;height:68px;border-radius:50%;background:#fff;border:5px solid rgba(255,255,255,0.5);
     cursor:pointer;
   }
-  .progress-orbits{display:flex;gap:8px;justify-content:center;}
+  .progress-orbits{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
   .orbit-dot{
     padding:5px 12px;border-radius:14px;background:rgba(255,255,255,0.25);color:#fff;font-size:12px;font-weight:600;
   }
   .orbit-dot.done{background:var(--green-deep);}
   .orbit-dot.current{background:var(--coral-deep);}
+  .auto-indicator{
+    display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.4);color:#fff;
+    font-size:13px;padding:8px 16px;border-radius:20px;font-weight:600;
+  }
+  .auto-indicator .auto-dot{
+    width:9px;height:9px;border-radius:50%;background:#ff6b5e;
+    animation:autoBlink 1s infinite ease-in-out;
+  }
+  .auto-indicator.paused .auto-dot{animation:none;background:#bbb;}
+  @keyframes autoBlink{0%,100%{opacity:1;}50%{opacity:0.25;}}
 
   .thumb-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;}
   .thumb-strip img{width:56px;height:56px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--sky);}
@@ -308,23 +318,26 @@
     <button class="btn btn-ghost" onclick="skipCameraToMock('scr-capture')">カメラを使わずに進める（試作確認用）</button>
   </section>
 
-  <!-- 6. ガイド付き撮影 -->
+  <!-- 6. ガイド付き撮影（連続自動撮影） -->
   <section class="screen" id="scr-capture">
-    <div class="back-row"><button class="icon-btn" onclick="go('scr-detect')">←</button><h2 style="margin:0;">周りをゆっくり回って撮影</h2></div>
+    <div class="back-row"><button class="icon-btn" onclick="go('scr-detect')">←</button><h2 style="margin:0;">周りをゆっくり回るだけでOK</h2></div>
+    <p>シャッターを押す必要はありません。対象物の周りをゆっくり一周する間、自動的に撮影が続きます。</p>
     <div class="camera-wrap" id="capture-cam-wrap">
       <video id="capture-video" autoplay playsinline muted></video>
       <div class="cam-overlay-top"><span class="cam-tag" id="capture-hint">低い位置からゆっくり回ってください</span></div>
       <div class="cam-overlay-bottom">
         <div class="progress-orbits">
-          <span class="orbit-dot" id="orbit-low">低い位置</span>
-          <span class="orbit-dot" id="orbit-mid">中間</span>
-          <span class="orbit-dot" id="orbit-high">高い位置</span>
+          <span class="orbit-dot" id="orbit-low">低い位置 0/16</span>
+          <span class="orbit-dot" id="orbit-mid">中間 0/16</span>
+          <span class="orbit-dot" id="orbit-high">高い位置 0/16</span>
         </div>
-        <div class="shutter" onclick="capturePhoto()"></div>
+        <div class="auto-indicator" id="auto-indicator"><span class="auto-dot"></span>自動撮影中</div>
       </div>
     </div>
+    <progress class="gen" id="capture-progress" value="0" max="48"></progress>
     <div class="thumb-strip" id="thumb-strip"></div>
-    <p style="text-align:center;" id="capture-count">撮影枚数：0枚</p>
+    <p style="text-align:center;" id="capture-count">撮影枚数：0 / 48枚（目安）</p>
+    <button class="btn btn-outline" id="capture-pause" onclick="toggleCapturePause()" style="margin-bottom:10px;">一時停止する</button>
     <button class="btn btn-primary" id="capture-next" onclick="go('scr-review')">撮影範囲を確認する</button>
   </section>
 
@@ -509,6 +522,7 @@ function go(id){
   if(id === 'scr-detect') startCamera('detect-video');
   if(id === 'scr-capture') startCamera('capture-video');
   if(id !== 'scr-detect' && id !== 'scr-capture') stopCamera();
+  if(id !== 'scr-capture') stopCaptureLoop();
 }
 
 /* ---------- ストレージ ---------- */
@@ -617,28 +631,70 @@ function skipCameraToMock(targetScreen){
   go(targetScreen);
 }
 
-/* ---------- ガイド付き撮影 ---------- */
+/* ---------- ガイド付き撮影（連続自動撮影） ----------
+   実際の製品では、ARKitの姿勢トラッキングを使って「ぶれていない・角度が
+   分散した」フレームだけを自動選別する（=撮影品質自動診断、Opus/Fable待ち
+   のコア機能）。この試作では選別ロジックの代わりに、一定間隔で自動的に
+   コマ撮りするタイマーのみを実装し、現実的な撮影枚数（1周あたり16枚 ×
+   3周＝48枚目安）を体感できるようにしている。 */
 const ORBIT_ORDER = ['low','mid','high'];
+const ORBIT_NAMES = {low:'低い位置', mid:'中間', high:'高い位置'};
 const ORBIT_LABELS = {low:'低い位置からゆっくり回ってください', mid:'中間の高さで回ってください', high:'高い位置から仕上げに回ってください'};
+const SHOTS_PER_ORBIT = 16;
+const TOTAL_TARGET = SHOTS_PER_ORBIT * ORBIT_ORDER.length;
 let orbitIndex = 0;
 let shotsPerOrbit = 0;
+let captureTimer = null;
+let capturePaused = false;
 
 function resetCaptureUI(){
   orbitIndex = 0;
   shotsPerOrbit = 0;
+  capturePaused = false;
   state.photos = [];
   document.querySelectorAll('.orbit-dot').forEach(d=>d.classList.remove('done','current'));
+  updateOrbitLabel('low');
   document.getElementById('orbit-low').classList.add('current');
   document.getElementById('capture-hint').textContent = ORBIT_LABELS.low;
   document.getElementById('thumb-strip').innerHTML = '';
-  document.getElementById('capture-count').textContent = '撮影枚数：0枚';
+  document.getElementById('capture-count').textContent = '撮影枚数：0 / ' + TOTAL_TARGET + '枚（目安）';
+  document.getElementById('capture-progress').value = 0;
+  document.getElementById('capture-progress').max = TOTAL_TARGET;
+  document.getElementById('capture-pause').textContent = '一時停止する';
+  document.getElementById('auto-indicator').classList.remove('paused');
+  startCaptureLoop();
 }
 
-function capturePhoto(){
+function updateOrbitLabel(key){
+  const el = document.getElementById('orbit-'+key);
+  if(el) el.textContent = ORBIT_NAMES[key] + ' ' + (key===ORBIT_ORDER[orbitIndex] ? shotsPerOrbit : (ORBIT_ORDER.indexOf(key)<orbitIndex?SHOTS_PER_ORBIT:0)) + '/' + SHOTS_PER_ORBIT;
+}
+
+function startCaptureLoop(){
+  stopCaptureLoop();
+  // 実カメラ映像があれば撮影ペースらしく350ms間隔、フォールバック時はテスト確認しやすいよう120ms間隔にする
+  const video = document.getElementById('capture-video');
+  const interval = (video && video.videoWidth) ? 350 : 120;
+  captureTimer = setInterval(autoCaptureFrame, interval);
+}
+function stopCaptureLoop(){
+  if(captureTimer){ clearInterval(captureTimer); captureTimer = null; }
+}
+function toggleCapturePause(){
+  capturePaused = !capturePaused;
+  document.getElementById('capture-pause').textContent = capturePaused ? '再開する' : '一時停止する';
+  document.getElementById('auto-indicator').classList.toggle('paused', capturePaused);
+  if(capturePaused){ stopCaptureLoop(); } else { startCaptureLoop(); }
+}
+
+function autoCaptureFrame(){
+  if(capturePaused) return;
+  if(state.photos.length >= TOTAL_TARGET){ stopCaptureLoop(); return; }
+
   const video = document.getElementById('capture-video');
   const canvas = document.createElement('canvas');
   let dataUrl;
-  if(video.videoWidth){
+  if(video && video.videoWidth){
     canvas.width = 240; canvas.height = 320;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0,0, canvas.width, canvas.height);
@@ -649,23 +705,29 @@ function capturePhoto(){
   }
   state.photos.push(dataUrl);
   shotsPerOrbit++;
+
   const strip = document.getElementById('thumb-strip');
   const img = document.createElement('img');
   img.src = dataUrl;
   strip.appendChild(img);
-  document.getElementById('capture-count').textContent = '撮影枚数：' + state.photos.length + '枚';
+  strip.scrollLeft = strip.scrollWidth;
 
-  if(shotsPerOrbit >= 4 && orbitIndex < ORBIT_ORDER.length-1){
+  document.getElementById('capture-count').textContent = '撮影枚数：' + state.photos.length + ' / ' + TOTAL_TARGET + '枚（目安）';
+  document.getElementById('capture-progress').value = state.photos.length;
+  updateOrbitLabel(ORBIT_ORDER[orbitIndex]);
+
+  if(shotsPerOrbit >= SHOTS_PER_ORBIT && orbitIndex < ORBIT_ORDER.length-1){
     document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.remove('current');
     document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.add('done');
     orbitIndex++;
     shotsPerOrbit = 0;
     document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.add('current');
     document.getElementById('capture-hint').textContent = ORBIT_LABELS[ORBIT_ORDER[orbitIndex]];
-    toast('次は' + ({mid:'中間の高さ',high:'高い位置'}[ORBIT_ORDER[orbitIndex]]||'') + 'です');
-  }else if(shotsPerOrbit >= 4 && orbitIndex === ORBIT_ORDER.length-1){
+    toast('次は' + ORBIT_NAMES[ORBIT_ORDER[orbitIndex]] + 'です');
+  }else if(shotsPerOrbit >= SHOTS_PER_ORBIT && orbitIndex === ORBIT_ORDER.length-1){
     document.getElementById('orbit-high').classList.remove('current');
     document.getElementById('orbit-high').classList.add('done');
+    stopCaptureLoop();
     toast('ひととおり撮影できました。範囲を確認しましょう。');
   }
 }
@@ -680,14 +742,19 @@ function mockThumb(seed){
 /* ---------- 撮影範囲・品質確認（スタブ） ---------- */
 function renderReview(){
   const grid = document.getElementById('review-grid');
-  grid.innerHTML = state.photos.map(p=>`<img src="${p}">`).join('');
+  // サムネイルが大量になるため確認用に最大24枚まで表示（保存データ自体は全枚数を保持）
+  grid.innerHTML = state.photos.slice(0, 24).map(p=>`<img src="${p}">`).join('');
   const msg = document.getElementById('review-msg');
-  if(state.photos.length < 6){
+  const n = state.photos.length;
+  if(n < TOTAL_TARGET * 0.6){
     msg.className = 'helper-msg warn';
-    msg.textContent = '撮影枚数が少なめです。上側や裏側の画像が少ないと、一部が欠ける可能性があります。';
+    msg.textContent = `撮影枚数が少なめです（${n}枚）。上側や裏側の画像が少ないと、一部が欠ける可能性があります。目安は${TOTAL_TARGET}枚です。`;
+  }else if(n < TOTAL_TARGET){
+    msg.className = 'helper-msg';
+    msg.textContent = `${n}枚撮影できています。もう少し回すとさらに安定します。このまま生成することもできます。`;
   }else{
     msg.className = 'helper-msg';
-    msg.textContent = 'ひととおり撮影できています。このまま生成に進めます。';
+    msg.textContent = `${n}枚、ひととおり撮影できています。このまま生成に進めます。`;
   }
 }
 
