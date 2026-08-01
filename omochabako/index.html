@@ -666,7 +666,7 @@ function resetCaptureUI(){
   state.photos = [];
   state.orbitCounts = {low:0, mid:0, high:0};
   document.querySelectorAll('.orbit-dot').forEach(d=>d.classList.remove('done','current'));
-  updateOrbitLabel('low');
+  ORBIT_ORDER.forEach(updateOrbitLabel);
   document.getElementById('orbit-low').classList.add('current');
   document.getElementById('capture-hint').textContent = ORBIT_LABELS.low;
   document.getElementById('thumb-strip').innerHTML = '';
@@ -754,6 +754,7 @@ function autoCaptureFrame(){
     capturePaused = true;
     awaitingOrbitStart = true;
     stopCaptureLoop();
+    document.getElementById('auto-indicator').classList.add('paused');
     setPauseButton();
     toast('次は' + ORBIT_NAMES[nextOrbit] + 'です。姿勢を整えたら再開してください');
   }else if(shotsPerOrbit >= SHOTS_PER_ORBIT && orbitIndex === ORBIT_ORDER.length-1){
