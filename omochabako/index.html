@@ -321,7 +321,7 @@
   <!-- 6. ガイド付き撮影（連続自動撮影） -->
   <section class="screen" id="scr-capture">
     <div class="back-row"><button class="icon-btn" onclick="go('scr-detect')">←</button><h2 style="margin:0;">周りをゆっくり回るだけでOK</h2></div>
-    <p>シャッターを押す必要はありません。対象物の周りをゆっくり一周する間、自動的に撮影が続きます。</p>
+    <p>シャッターを押す必要はありません。約2秒に1枚のペースで自動的に撮影します。高さを変えるタイミングでは一度止まりますので、姿勢を整えてから「撮影を再開する」を押してください。</p>
     <div class="camera-wrap" id="capture-cam-wrap">
       <video id="capture-video" autoplay playsinline muted></video>
       <div class="cam-overlay-top"><span class="cam-tag" id="capture-hint">低い位置からゆっくり回ってください</span></div>
@@ -373,11 +373,11 @@
   <section class="screen" id="scr-result">
     <div class="topbar"><h1>できあがりました</h1></div>
     <div class="stub-banner">
-      🛠 下の立体表示は、実際の3D生成結果ではなく操作感を確かめるためのプレースホルダーです（撮影写真を貼り付けた仮モデル）。
+      🛠 下の立体表示は、実際の3D生成結果ではなく操作感を確かめるためのプレースホルダーです（撮影写真を貼り付けた仮の球体モデル、自由な角度から閲覧できます）。白い斜線部分は、その高さ・向きでまだ撮影枚数が不足していることを示す簡易表示です（枚数集計のみで、実際のぼけ・露出・角度網羅の自動診断はOpus／Fable実装待ちです）。
     </div>
     <div class="viewer3d-wrap">
       <canvas id="three-canvas"></canvas>
-      <div class="viewer-hint">ドラッグで回転できます（仮表示）</div>
+      <div class="viewer-hint">ドラッグで自由に回転・ホイール／ピンチで拡大縮小（仮表示）</div>
     </div>
     <div class="btn-row" style="margin-bottom:16px;">
       <button class="btn btn-outline" onclick="go('scr-capture')">撮り直す</button>
@@ -397,8 +397,8 @@
       <input type="date" id="meta-date">
     </div>
     <div class="field">
-      <label>カテゴリ</label>
-      <input type="text" id="meta-category" readonly>
+      <label>カテゴリ（自由入力・空欄でも保存できます）</label>
+      <input type="text" id="meta-category" placeholder="例：花束（自由に書き換え・削除できます）">
     </div>
     <div class="field">
       <label>年齢・出来事（任意）</label>
@@ -436,7 +436,7 @@
     <div class="back-row"><button class="icon-btn" onclick="go('scr-home')">←</button><h2 style="margin:0;" id="detail-title">思い出</h2></div>
     <div class="viewer3d-wrap" id="detail-viewer-wrap">
       <canvas id="detail-canvas"></canvas>
-      <div class="viewer-hint">ドラッグで回転（仮表示）</div>
+      <div class="viewer-hint">ドラッグで自由に回転・ホイール／ピンチで拡大縮小（仮表示）</div>
     </div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--sub);font-size:13px;">日付</span><span id="detail-date"></span></div>
@@ -497,7 +497,8 @@ const STORAGE_KEY = 'omochabako_items_v1';
 
 let state = {
   category: null,
-  photos: [],       // dataURLs captured this session
+  photos: [],        // {url, orbit} captured this session
+  orbitCounts: {low:0, mid:0, high:0},
   raw: null,         // true/false
   sortDesc: true,
   editingItemId: null,
@@ -543,15 +544,19 @@ function renderAlbumList(){
     wrap.innerHTML = `<div class="empty-state"><div class="big">🧸</div><p>まだ思い出がありません。<br>「新しく3Dで残す」から始めてみましょう。</p></div>`;
     return;
   }
-  wrap.innerHTML = `<div class="album-grid">${items.map(it=>`
+  wrap.innerHTML = `<div class="album-grid">${items.map(it=>{
+    const thumbArr = it.previewPhotos || it.photos || [];
+    const thumbUrl = thumbArr[0] && thumbArr[0].url;
+    const catLabel = it.category ? ` ・ ${escapeHtml(it.category)}` : '';
+    return `
     <div class="album-item" onclick="openDetail('${it.id}')">
-      <div class="album-thumb">${it.photos[0] ? `<img src="${it.photos[0]}">` : '🧸'}</div>
+      <div class="album-thumb">${thumbUrl ? `<img src="${thumbUrl}">` : '🧸'}</div>
       <div class="album-meta">
         <div class="t">${escapeHtml(it.title || '無題の思い出')}</div>
-        <div class="d">${it.date || ''} ・ ${catName(it.category)}</div>
+        <div class="d">${it.date || ''}${catLabel}</div>
       </div>
     </div>
-  `).join('')}</div>`;
+  `;}).join('')}</div>`;
 }
 function toggleSort(){
   state.sortDesc = !state.sortDesc;
@@ -562,7 +567,7 @@ function catName(id){ const c = CATEGORIES.find(c=>c.id===id); return c ? c.name
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function startNewCapture(){
-  state = {category:null, photos:[], raw:null, sortDesc:state.sortDesc, editingItemId:null};
+  state = {category:null, photos:[], orbitCounts:{low:0,mid:0,high:0}, raw:null, sortDesc:state.sortDesc, editingItemId:null};
   renderCategoryGrid();
   go('scr-category');
 }
@@ -634,24 +639,32 @@ function skipCameraToMock(targetScreen){
 /* ---------- ガイド付き撮影（連続自動撮影） ----------
    実際の製品では、ARKitの姿勢トラッキングを使って「ぶれていない・角度が
    分散した」フレームだけを自動選別する（=撮影品質自動診断、Opus/Fable待ち
-   のコア機能）。この試作では選別ロジックの代わりに、一定間隔で自動的に
-   コマ撮りするタイマーのみを実装し、現実的な撮影枚数（1周あたり16枚 ×
-   3周＝48枚目安）を体感できるようにしている。 */
+   のコア機能）。この試作では選別ロジックの代わりに、実際の撮影を意識した
+   ペース（約2秒に1枚）で自動的にコマ撮りするタイマーを実装し、高さを切り
+   替えるタイミングでは自動撮影を一度止めて、利用者が姿勢を整えてから自分
+   で「撮影を再開する」を押す設計にしている（要望反映：シャッターが速すぎ
+   る／高さ変更時に間を作ってほしい、への対応）。
+   1周あたり24枚 × 3周＝72枚を目安とし、Appleの推奨枚数（20〜200枚）の
+   中間〜やや上寄りに設定。要件定義の目標（画像取得3分以内）も踏まえた枚数。 */
 const ORBIT_ORDER = ['low','mid','high'];
 const ORBIT_NAMES = {low:'低い位置', mid:'中間', high:'高い位置'};
 const ORBIT_LABELS = {low:'低い位置からゆっくり回ってください', mid:'中間の高さで回ってください', high:'高い位置から仕上げに回ってください'};
-const SHOTS_PER_ORBIT = 16;
+const SHOTS_PER_ORBIT = 24;
 const TOTAL_TARGET = SHOTS_PER_ORBIT * ORBIT_ORDER.length;
+const CAPTURE_INTERVAL_MS = 2000; // 約2秒に1枚（実際に回りながら撮る速度感）
 let orbitIndex = 0;
 let shotsPerOrbit = 0;
 let captureTimer = null;
 let capturePaused = false;
+let awaitingOrbitStart = false; // 高さの切り替え待ち（利用者の「再開」操作待ち）
 
 function resetCaptureUI(){
   orbitIndex = 0;
   shotsPerOrbit = 0;
   capturePaused = false;
+  awaitingOrbitStart = false;
   state.photos = [];
+  state.orbitCounts = {low:0, mid:0, high:0};
   document.querySelectorAll('.orbit-dot').forEach(d=>d.classList.remove('done','current'));
   updateOrbitLabel('low');
   document.getElementById('orbit-low').classList.add('current');
@@ -660,31 +673,42 @@ function resetCaptureUI(){
   document.getElementById('capture-count').textContent = '撮影枚数：0 / ' + TOTAL_TARGET + '枚（目安）';
   document.getElementById('capture-progress').value = 0;
   document.getElementById('capture-progress').max = TOTAL_TARGET;
-  document.getElementById('capture-pause').textContent = '一時停止する';
+  setPauseButton();
   document.getElementById('auto-indicator').classList.remove('paused');
   startCaptureLoop();
 }
 
 function updateOrbitLabel(key){
   const el = document.getElementById('orbit-'+key);
-  if(el) el.textContent = ORBIT_NAMES[key] + ' ' + (key===ORBIT_ORDER[orbitIndex] ? shotsPerOrbit : (ORBIT_ORDER.indexOf(key)<orbitIndex?SHOTS_PER_ORBIT:0)) + '/' + SHOTS_PER_ORBIT;
+  const count = (state.orbitCounts && state.orbitCounts[key]) || 0;
+  if(el) el.textContent = ORBIT_NAMES[key] + ' ' + count + '/' + SHOTS_PER_ORBIT;
+}
+
+function setPauseButton(){
+  const btn = document.getElementById('capture-pause');
+  const emphasize = capturePaused && awaitingOrbitStart;
+  btn.textContent = capturePaused ? (awaitingOrbitStart ? '準備できたら撮影を再開する' : '再開する') : '一時停止する';
+  btn.classList.toggle('btn-primary', emphasize);
+  btn.classList.toggle('btn-outline', !emphasize);
 }
 
 function startCaptureLoop(){
   stopCaptureLoop();
-  // 実カメラ映像があれば撮影ペースらしく350ms間隔、フォールバック時はテスト確認しやすいよう120ms間隔にする
-  const video = document.getElementById('capture-video');
-  const interval = (video && video.videoWidth) ? 350 : 120;
-  captureTimer = setInterval(autoCaptureFrame, interval);
+  captureTimer = setInterval(autoCaptureFrame, CAPTURE_INTERVAL_MS);
 }
 function stopCaptureLoop(){
   if(captureTimer){ clearInterval(captureTimer); captureTimer = null; }
 }
 function toggleCapturePause(){
   capturePaused = !capturePaused;
-  document.getElementById('capture-pause').textContent = capturePaused ? '再開する' : '一時停止する';
   document.getElementById('auto-indicator').classList.toggle('paused', capturePaused);
-  if(capturePaused){ stopCaptureLoop(); } else { startCaptureLoop(); }
+  if(capturePaused){
+    stopCaptureLoop();
+  }else{
+    awaitingOrbitStart = false;
+    startCaptureLoop();
+  }
+  setPauseButton();
 }
 
 function autoCaptureFrame(){
@@ -703,8 +727,10 @@ function autoCaptureFrame(){
     // カメラ未取得時のフォールバック（試作確認用のダミー画像）
     dataUrl = mockThumb(state.photos.length);
   }
-  state.photos.push(dataUrl);
+  const currentOrbit = ORBIT_ORDER[orbitIndex];
+  state.photos.push({url:dataUrl, orbit:currentOrbit});
   shotsPerOrbit++;
+  state.orbitCounts[currentOrbit] = shotsPerOrbit;
 
   const strip = document.getElementById('thumb-strip');
   const img = document.createElement('img');
@@ -714,16 +740,22 @@ function autoCaptureFrame(){
 
   document.getElementById('capture-count').textContent = '撮影枚数：' + state.photos.length + ' / ' + TOTAL_TARGET + '枚（目安）';
   document.getElementById('capture-progress').value = state.photos.length;
-  updateOrbitLabel(ORBIT_ORDER[orbitIndex]);
+  updateOrbitLabel(currentOrbit);
 
   if(shotsPerOrbit >= SHOTS_PER_ORBIT && orbitIndex < ORBIT_ORDER.length-1){
-    document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.remove('current');
-    document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.add('done');
+    document.getElementById('orbit-'+currentOrbit).classList.remove('current');
+    document.getElementById('orbit-'+currentOrbit).classList.add('done');
     orbitIndex++;
     shotsPerOrbit = 0;
-    document.getElementById('orbit-'+ORBIT_ORDER[orbitIndex]).classList.add('current');
-    document.getElementById('capture-hint').textContent = ORBIT_LABELS[ORBIT_ORDER[orbitIndex]];
-    toast('次は' + ORBIT_NAMES[ORBIT_ORDER[orbitIndex]] + 'です');
+    const nextOrbit = ORBIT_ORDER[orbitIndex];
+    document.getElementById('orbit-'+nextOrbit).classList.add('current');
+    document.getElementById('capture-hint').textContent = ORBIT_LABELS[nextOrbit] + '（準備ができたら下のボタンを押してください）';
+    // 高さ切り替え地点で自動撮影を止め、利用者の操作を待つ
+    capturePaused = true;
+    awaitingOrbitStart = true;
+    stopCaptureLoop();
+    setPauseButton();
+    toast('次は' + ORBIT_NAMES[nextOrbit] + 'です。姿勢を整えたら再開してください');
   }else if(shotsPerOrbit >= SHOTS_PER_ORBIT && orbitIndex === ORBIT_ORDER.length-1){
     document.getElementById('orbit-high').classList.remove('current');
     document.getElementById('orbit-high').classList.add('done');
@@ -743,7 +775,7 @@ function mockThumb(seed){
 function renderReview(){
   const grid = document.getElementById('review-grid');
   // サムネイルが大量になるため確認用に最大24枚まで表示（保存データ自体は全枚数を保持）
-  grid.innerHTML = state.photos.slice(0, 24).map(p=>`<img src="${p}">`).join('');
+  grid.innerHTML = state.photos.slice(0, 24).map(p=>`<img src="${p.url}">`).join('');
   const msg = document.getElementById('review-msg');
   const n = state.photos.length;
   if(n < TOTAL_TARGET * 0.6){
@@ -787,9 +819,87 @@ function runGenerateStub(){
   }, 220);
 }
 
-/* ---------- 3Dプレースホルダー表示（Three.js） ---------- */
-let threeCtx = null;
-function initThreeViewer(canvasId, photos){
+/* ---------- 3Dプレースホルダー表示（Three.js） ----------
+   実際の3D再構築（RealityKit／Gaussian Splatting等）はOpus/Fable待ちの
+   コア機能。ここでは「自由な角度から眺められる」操作感と、「まだ撮影が
+   足りない向き」を白斜線で可視化する簡易表示のみを実装する。斜線の判定は
+   高さごとの撮影枚数（state.orbitCounts）を使った単純な集計であり、実際
+   のぼけ・露出・角度網羅の自動診断（品質診断エンジン）とは別物。 */
+function loadImageAsync(url){
+  return new Promise(resolve=>{
+    const im = new Image();
+    im.onload = ()=>resolve(im);
+    im.onerror = ()=>resolve(null);
+    im.src = url;
+  });
+}
+
+async function buildOrbitTexture(photos, orbitCounts){
+  const W = 768, H = 384;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const bands = [
+    {key:'high', row:0},
+    {key:'mid',  row:1},
+    {key:'low',  row:2},
+  ];
+  const cols = 8, rows = 3; // 1バンドあたり8×3=24セル＝SHOTS_PER_ORBITと一致
+  const target = (typeof SHOTS_PER_ORBIT !== 'undefined') ? SHOTS_PER_ORBIT : 24;
+
+  // バンドごとの撮影済み写真を集める
+  const byOrbit = {low:[], mid:[], high:[]};
+  (photos||[]).forEach(p=>{ if(p && p.orbit && byOrbit[p.orbit]) byOrbit[p.orbit].push(p.url); });
+
+  // data URLでもImageの読み込みは非同期のため、描画前に全て読み込んでおく
+  const urlToImg = {};
+  const allUrls = [].concat(byOrbit.low, byOrbit.mid, byOrbit.high);
+  await Promise.all(allUrls.map(async u=>{ urlToImg[u] = await loadImageAsync(u); }));
+
+  // バンドを縦に3分割し、各バンド内は8×3グリッド（=24セル＝SHOTS_PER_ORBIT）でセルを塗る
+  const bandH = H/3;
+  bands.forEach(band=>{
+    const count = Math.min(target, (orbitCounts && orbitCounts[band.key]!=null) ? orbitCounts[band.key] : byOrbit[band.key].length);
+    const photosInBand = byOrbit[band.key];
+    const y0 = band.row * bandH;
+    for(let idx=0; idx<target; idx++){
+      const c = idx % cols;
+      const r = Math.floor(idx / cols);
+      const cw = W/cols, ch = bandH/rows;
+      const x = c*cw, y = y0 + r*ch;
+      const im = idx < count ? urlToImg[photosInBand[idx]] : null;
+      if(im){
+        try{ ctx.drawImage(im, x, y, cw, ch); }
+        catch(e){ ctx.fillStyle = '#e8dfd0'; ctx.fillRect(x,y,cw,ch); }
+      }else{
+        // 未撮影セル：白い斜線ハッチングで「不足」を可視化
+        ctx.fillStyle = 'rgba(120,110,95,0.25)';
+        ctx.fillRect(x,y,cw,ch);
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x,y,cw,ch);
+        ctx.clip();
+        ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+        ctx.lineWidth = 2;
+        for(let d=-ch; d<cw+ch; d+=8){
+          ctx.beginPath();
+          ctx.moveTo(x+d, y);
+          ctx.lineTo(x+d+ch, y+ch);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.strokeRect(x,y,cw,ch);
+    }
+  });
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  return {texture};
+}
+
+function initThreeViewer(canvasId, photos, orbitCounts){
   const canvas = document.getElementById(canvasId);
   const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
   const size = canvas.parentElement.clientWidth;
@@ -798,40 +908,94 @@ function initThreeViewer(canvasId, photos){
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.set(0,0,4.2);
+  camera.position.set(0,0,4.4);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-  const dir = new THREE.DirectionalLight(0xffffff, 0.6);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.95));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.55);
   dir.position.set(2,3,4);
   scene.add(dir);
+  const dir2 = new THREE.DirectionalLight(0xffffff, 0.25);
+  dir2.position.set(-3,-1,2);
+  scene.add(dir2);
 
-  const loader = new THREE.TextureLoader();
-  const texUrls = (photos && photos.length ? photos : [mockThumb(0),mockThumb(1),mockThumb(2),mockThumb(3),mockThumb(4),mockThumb(5)]);
-  const materials = [0,1,2,3,4,5].map(i=>{
-    const tex = loader.load(texUrls[i % texUrls.length]);
-    return new THREE.MeshStandardMaterial({map:tex});
-  });
-  const geo = new THREE.BoxGeometry(2,2,2);
-  const cube = new THREE.Mesh(geo, materials);
-  scene.add(cube);
-
-  let dragging = false, lastX=0, lastY=0, rotY=0.6, rotX=-0.4;
-  canvas.addEventListener('pointerdown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
-  window.addEventListener('pointerup', ()=>dragging=false);
-  window.addEventListener('pointermove', e=>{
-    if(!dragging) return;
-    rotY += (e.clientX-lastX)*0.01;
-    rotX += (e.clientY-lastY)*0.01;
-    lastX=e.clientX; lastY=e.clientY;
+  const geo = new THREE.SphereGeometry(1.3, 48, 32);
+  const mat = new THREE.MeshStandardMaterial({color:0xf3ead9, roughness:0.85, metalness:0.05});
+  const sphere = new THREE.Mesh(geo, mat);
+  scene.add(sphere);
+  buildOrbitTexture(photos, orbitCounts).then(({texture})=>{
+    mat.map = texture;
+    mat.color.set(0xffffff);
+    mat.needsUpdate = true;
   });
 
+  // 台座の影（雰囲気づくりのみ）
+  const shadowGeo = new THREE.CircleGeometry(1.15, 32);
+  const shadowMat = new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.12});
+  const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+  shadowMesh.rotation.x = -Math.PI/2;
+  shadowMesh.position.y = -1.35;
+  scene.add(shadowMesh);
+
+  // ---- 自由回転（ドラッグ：X/Y軸）＋ホイール／ピンチでズーム ----
+  let rotY = 0.6, rotX = -0.25;
+  let velY = 0, velX = 0;
+  let dragging = false, lastX=0, lastY=0;
   let autoSpin = true;
-  canvas.addEventListener('pointerdown', ()=>autoSpin=false);
+  let zoom = 4.4;
+  const MIN_ZOOM = 2.4, MAX_ZOOM = 7;
+
+  function onDragStart(x,y){ dragging = true; autoSpin = false; lastX = x; lastY = y; }
+  function onDragMove(x,y){
+    if(!dragging) return;
+    const dx = x-lastX, dy = y-lastY;
+    velY = dx*0.006; velX = dy*0.006;
+    rotY += velY; rotX += velX;
+    rotX = Math.max(-1.3, Math.min(1.3, rotX));
+    lastX = x; lastY = y;
+  }
+  function onDragEnd(){ dragging = false; }
+
+  canvas.addEventListener('pointerdown', e=>onDragStart(e.clientX, e.clientY));
+  window.addEventListener('pointermove', e=>onDragMove(e.clientX, e.clientY));
+  window.addEventListener('pointerup', onDragEnd);
+
+  canvas.addEventListener('wheel', e=>{
+    e.preventDefault();
+    zoom += e.deltaY * 0.003;
+    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+  }, {passive:false});
+
+  // 簡易ピンチズーム（2本指）
+  let pinchStartDist = null, pinchStartZoom = zoom;
+  canvas.addEventListener('touchstart', e=>{
+    if(e.touches.length===2){
+      autoSpin = false;
+      const dx = e.touches[0].clientX-e.touches[1].clientX;
+      const dy = e.touches[0].clientY-e.touches[1].clientY;
+      pinchStartDist = Math.hypot(dx,dy);
+      pinchStartZoom = zoom;
+    }
+  }, {passive:true});
+  canvas.addEventListener('touchmove', e=>{
+    if(e.touches.length===2 && pinchStartDist){
+      const dx = e.touches[0].clientX-e.touches[1].clientX;
+      const dy = e.touches[0].clientY-e.touches[1].clientY;
+      const dist = Math.hypot(dx,dy);
+      zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, pinchStartZoom * (pinchStartDist/dist)));
+    }
+  }, {passive:true});
+  canvas.addEventListener('touchend', e=>{ if(e.touches.length<2) pinchStartDist = null; });
 
   function animate(){
-    if(autoSpin) rotY += 0.006;
-    cube.rotation.y = rotY;
-    cube.rotation.x = rotX*0.4;
+    if(autoSpin){ rotY += 0.005; }
+    else if(!dragging){
+      // 慣性で少し減衰させながら回転を続ける
+      rotY += velY; rotX += velX;
+      velY *= 0.92; velX *= 0.92;
+    }
+    sphere.rotation.y = rotY;
+    sphere.rotation.x = rotX;
+    camera.position.z += (zoom - camera.position.z) * 0.15;
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
@@ -839,17 +1003,20 @@ function initThreeViewer(canvasId, photos){
   return {renderer, scene, camera};
 }
 function renderResultViewer(){
-  initThreeViewer('three-canvas', state.photos);
+  initThreeViewer('three-canvas', state.photos, state.orbitCounts);
 }
 
 /* ---------- 思い出情報入力 → 保存 ---------- */
 function prepMetaScreen(){
+  // カテゴリは事前選択した名前を初期値として提案するだけ。自由に書き換え・空欄にできる
   document.getElementById('meta-category').value = catName(state.category);
   document.getElementById('meta-date').valueAsDate = new Date();
 }
 
+function photoBytes(p){ return (p && p.url) ? Math.floor(p.url.length*0.75) : 0; }
+
 function estimateSize(){
-  const rawBytes = state.photos.reduce((sum,p)=> sum + Math.floor(p.length*0.75), 0);
+  const rawBytes = state.photos.reduce((sum,p)=> sum + photoBytes(p), 0);
   const threeDBytes = Math.floor(rawBytes * 0.35 + 400000); // 仮の3D容量推定
   return {rawBytes, threeDBytes};
 }
@@ -884,14 +1051,19 @@ function updateTotalCap(){
 function finishSave(){
   const items = loadItems();
   const id = 'item_' + Date.now();
+  // previewPhotos（3D閲覧・サムネイル用、最大24枚）は撮影元データの残す/削除の
+  // 選択に関わらず常に保持する。rawPhotosは「残す」を選んだ場合のみ全枚数を保持。
+  const previewPhotos = state.photos.slice(0, 24);
   const item = {
     id,
     title: document.getElementById('meta-title').value.trim() || '無題の思い出',
     date: document.getElementById('meta-date').value,
-    category: state.category,
+    category: document.getElementById('meta-category').value.trim(), // 自由入力・空欄可
     event: document.getElementById('meta-event').value.trim(),
     memo: document.getElementById('meta-memo').value.trim(),
-    photos: state.raw ? state.photos : state.photos.slice(0,1), // 削除選択時はサムネイル1枚のみ模擬保持
+    previewPhotos,
+    orbitCounts: {...state.orbitCounts},
+    rawPhotos: state.raw ? state.photos : [],
     rawKept: !!state.raw,
     createdAt: Date.now(),
   };
@@ -909,11 +1081,13 @@ function openDetail(id){
   state.editingItemId = id;
   document.getElementById('detail-title').textContent = item.title;
   document.getElementById('detail-date').textContent = item.date || '—';
-  document.getElementById('detail-cat').textContent = catName(item.category) || '—';
+  document.getElementById('detail-cat').textContent = item.category || '—';
   document.getElementById('detail-event').textContent = item.event || '—';
   document.getElementById('detail-memo').textContent = item.memo || '';
   go('scr-detail');
-  setTimeout(()=>initThreeViewer('detail-canvas', item.photos), 30);
+  const photosForView = item.previewPhotos || item.photos || [];
+  const counts = item.orbitCounts || null;
+  setTimeout(()=>initThreeViewer('detail-canvas', photosForView, counts), 30);
 }
 function deleteItem(){
   if(!confirm('この思い出を削除しますか？元に戻せません。')) return;
@@ -928,7 +1102,11 @@ function deleteItem(){
 function renderSettings(){
   const items = loadItems();
   document.getElementById('settings-count').textContent = items.length;
-  const totalBytes = items.reduce((sum,it)=> sum + it.photos.reduce((s,p)=>s+Math.floor(p.length*0.75),0), 0);
+  const totalBytes = items.reduce((sum,it)=>{
+    const preview = (it.previewPhotos || it.photos || []).reduce((s,p)=>s+photoBytes(p),0);
+    const raw = (it.rawPhotos || []).reduce((s,p)=>s+photoBytes(p),0);
+    return sum + preview + raw;
+  }, 0);
   document.getElementById('settings-total-cap').textContent = fmtBytes(totalBytes);
 }
 function resetAll(){
