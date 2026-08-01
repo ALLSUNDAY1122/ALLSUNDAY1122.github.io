@@ -874,7 +874,7 @@ async function buildOrbitTexture(photos, orbitCounts){
         catch(e){ ctx.fillStyle = '#e8dfd0'; ctx.fillRect(x,y,cw,ch); }
       }else{
         // 未撮影セル：白い斜線ハッチングで「不足」を可視化
-        ctx.fillStyle = 'rgba(120,110,95,0.25)';
+        ctx.fillStyle = 'rgba(90,80,68,0.45)';
         ctx.fillRect(x,y,cw,ch);
         ctx.save();
         ctx.beginPath();
@@ -911,11 +911,11 @@ function initThreeViewer(canvasId, photos, orbitCounts){
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.set(0,0,4.4);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.95));
-  const dir = new THREE.DirectionalLight(0xffffff, 0.55);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.62));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.42);
   dir.position.set(2,3,4);
   scene.add(dir);
-  const dir2 = new THREE.DirectionalLight(0xffffff, 0.25);
+  const dir2 = new THREE.DirectionalLight(0xffffff, 0.14);
   dir2.position.set(-3,-1,2);
   scene.add(dir2);
 
