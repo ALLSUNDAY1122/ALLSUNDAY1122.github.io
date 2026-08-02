@@ -1,6 +1,7 @@
 (()=>{
 const music=document.getElementById('musicTrack');
 const $=id=>document.getElementById(id);
+document.title='Sprint Study v0.6.5';const versionBadge=document.querySelector('.badge');if(versionBadge)versionBadge.textContent='v0.6.5';
 const PARTS=['./audio/deep-focus-0.m4a.part','./audio/deep-focus-1.m4a.part'];
 const nativeAudio=window.Audio;
 const srcDescriptor=Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype,'src');
