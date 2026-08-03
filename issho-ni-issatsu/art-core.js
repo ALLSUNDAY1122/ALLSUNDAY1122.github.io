@@ -82,6 +82,15 @@ var ARTCORE = (function () {
     return ell(x, y, r, r * 0.66, color || "#F4A0A0", ' opacity="0.55"');
   }
 
+  /* キャラクターの足元が画面下(300)で切れないよう位置を補正する。
+     bottom = キャラ原点から足先までの距離（拡大前）。 */
+  function fitY(o, bottom) {
+    var s = o.s == null ? 1 : o.s;
+    var limit = 294 - bottom * s;
+    if (o.y > limit) o.y = limit;
+    return o;
+  }
+
   /* ---------- 空・地面・天候 ---------- */
 
   function skyBox(topColor, bottomColor, id) {
@@ -175,7 +184,7 @@ var ARTCORE = (function () {
 
   /* ---------- きつね ---------- */
   function fox(o) {
-    o = o || {};
+    o = fitY(o || {}, 34);
     var expr = o.expr || "normal", mo = o.mouth || "smile";
     var pose = o.pose || "stand";
     var big = o.kind === "mother";
@@ -246,7 +255,7 @@ var ARTCORE = (function () {
 
   /* ---------- かえる ---------- */
   function frog(o) {
-    o = o || {};
+    o = fitY(o || {}, 28);
     var expr = o.expr || "normal", mo = o.mouth || "smile", pose = o.pose || "stand";
     var C = o.color === "yellow"
       ? { body: "#E8C24A", light: "#F7E7A8", dark: "#C79E2E" }
@@ -291,7 +300,7 @@ var ARTCORE = (function () {
 
   /* ---------- ねずみ ---------- */
   function mouse(o) {
-    o = o || {};
+    o = fitY(o || {}, 26);
     var expr = o.expr || "normal", mo = o.mouth || "smile";
     var k = o.kind || "father";
     var C = { body: "#A9A19B", light: "#E4DFDA", dark: "#8A827C" };
