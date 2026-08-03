@@ -2,558 +2,309 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>いっしょに一冊 — Web試作版（30冊）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFF8EF">
+<title>いっしょに一冊</title>
 <style>
   :root{
-    --cream:#FFF8EF;
-    --peach:#FFE8D6;
-    --coral:#FF8A65;
-    --coral-dark:#E8703F;
-    --ink:#5B4636;
-    --ink-soft:#8A7565;
-    --white:#FFFFFF;
-    --shadow: 0 10px 28px rgba(180,120,70,0.16);
-    --shadow-soft: 0 4px 14px rgba(180,120,70,0.12);
-    --radius-lg: 28px;
-    --radius-md: 20px;
-    --radius-sm: 14px;
+    --cream:#FFF8EF; --coral:#FF8A65; --coral-dark:#D9613A;
+    --ink:#4E3C2E; --ink-soft:#8A7565; --white:#FFFFFF;
+    --shadow:0 12px 32px rgba(150,105,60,.16);
+    --shadow-soft:0 4px 14px rgba(150,105,60,.11);
   }
-
-  *{ box-sizing:border-box; }
-
+  *{box-sizing:border-box}
   html,body{
-    margin:0; padding:0;
-    background: linear-gradient(160deg,#FFF8EF 0%, #FFEFDD 40%, #FDE9E4 100%);
-    min-height:100vh;
-    font-family: "Hiragino Maru Gothic ProN","Yuru Gothic","Rounded Mplus 1c","Hiragino Sans","Yu Gothic",sans-serif;
-    color: var(--ink);
-    -webkit-font-smoothing:antialiased;
+    margin:0;padding:0;min-height:100%;
+    background:linear-gradient(165deg,#FFF9F1 0%,#FFF1E0 45%,#FCEAE3 100%);
+    font-family:"Hiragino Maru Gothic ProN","Yu Gothic",-apple-system,"Hiragino Sans",sans-serif;
+    color:var(--ink);-webkit-font-smoothing:antialiased;
   }
-
-  /* ---------- decorative floating blobs ---------- */
-  .blob{
-    position:fixed; border-radius:50%; filter:blur(2px);
-    opacity:0.5; z-index:0; pointer-events:none;
-    animation: float 9s ease-in-out infinite;
-  }
-  .blob.b1{ width:220px; height:220px; background:#FFD9A0; top:-60px; left:-60px; animation-delay:0s;}
-  .blob.b2{ width:160px; height:160px; background:#FFC1B3; top:60%; right:-50px; animation-delay:2s;}
-  .blob.b3{ width:120px; height:120px; background:#C9E8CF; bottom:-40px; left:20%; animation-delay:4s;}
-  @keyframes float{
-    0%,100%{ transform: translateY(0) scale(1); }
-    50%{ transform: translateY(-18px) scale(1.05); }
-  }
-
-  .wrap{ position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:28px 20px 80px; }
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 18px 70px}
 
   /* ---------- header ---------- */
-  header{ text-align:center; padding: 10px 0 26px; }
-  header h1{
-    font-size: clamp(28px, 5vw, 40px);
-    margin:0 0 6px;
-    color: var(--coral-dark);
-    letter-spacing:.02em;
-  }
-  header h1 .heart{ display:inline-block; animation: pulse 2.4s ease-in-out infinite; }
-  @keyframes pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
-  header p{ margin:0; color:var(--ink-soft); font-size:16px; }
-  .badge-count{
-    display:inline-block; margin-top:14px; padding:8px 20px;
-    background: var(--white); border-radius:999px; box-shadow: var(--shadow-soft);
-    font-size:14px; color:var(--coral-dark); font-weight:700;
-  }
+  header{text-align:center;padding:6px 0 20px}
+  header h1{font-size:clamp(26px,5vw,38px);margin:0 0 6px;color:var(--coral-dark)}
+  header p{margin:0;color:var(--ink-soft);font-size:15px;line-height:1.7}
 
-  /* ---------- controls ---------- */
-  .controls{
-    display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center;
-    margin: 22px 0 26px;
-  }
-  .search-box{
-    flex: 1 1 260px; max-width:360px; position:relative;
-  }
-  .search-box input{
-    width:100%; padding: 13px 18px 13px 42px; border-radius:999px; border:2px solid #FFDCC2;
-    background:var(--white); font-size:15px; color:var(--ink); outline:none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  .search-box input:focus{ border-color: var(--coral); box-shadow: 0 0 0 4px rgba(255,138,101,0.15); }
-  .search-box::before{
-    content:"🔍"; position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:15px; opacity:.6;
-  }
-  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-  .chip{
-    padding:9px 16px; border-radius:999px; background:var(--white); border:2px solid transparent;
-    font-size:13.5px; color:var(--ink-soft); cursor:pointer; box-shadow: var(--shadow-soft);
-    transition: transform .15s, border-color .15s, color .15s;
-    user-select:none;
-  }
-  .chip:hover{ transform: translateY(-2px); }
-  .chip.active{ border-color: var(--coral); color: var(--coral-dark); font-weight:700; background:#FFF1E8; }
+  /* ---------- age filter ---------- */
+  .bands{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:20px 0 24px}
+  .band{padding:9px 18px;border-radius:999px;background:var(--white);border:2px solid transparent;
+        font-size:14px;color:var(--ink-soft);cursor:pointer;box-shadow:var(--shadow-soft);
+        transition:transform .15s,border-color .15s,color .15s}
+  .band:hover{transform:translateY(-2px)}
+  .band.active{border-color:var(--coral);color:var(--coral-dark);font-weight:700;background:#FFF2EA}
 
-  /* ---------- grid ---------- */
-  .grid{
-    display:grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap:18px;
-  }
-  .card{
-    background: var(--white); border-radius: var(--radius-lg); overflow:hidden;
-    box-shadow: var(--shadow-soft); cursor:pointer; border:none;
-    transition: transform .18s ease, box-shadow .18s ease;
-    display:flex; flex-direction:column; text-align:left; padding:0;
-  }
-  .card:hover{ transform: translateY(-6px) scale(1.015); box-shadow: var(--shadow); }
-  .card:active{ transform: translateY(-2px) scale(.99); }
-  .card-art{
-    height:132px; position:relative; display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
-  }
-  .card-art .deco{ position:absolute; border-radius:50%; background:rgba(255,255,255,.4); }
-  .card-art .deco.d1{ width:70px; height:70px; top:-20px; right:-14px; }
-  .card-art .deco.d2{ width:50px; height:50px; bottom:-18px; left:-10px; background:rgba(255,255,255,.25); }
-  .card-art .emoji{ font-size:56px; filter: drop-shadow(0 3px 4px rgba(0,0,0,.12)); }
-  .card-body{ padding:14px 16px 16px; display:flex; flex-direction:column; gap:6px; flex:1; }
-  .card-title{ font-size:16.5px; font-weight:700; color:var(--ink); line-height:1.3; }
-  .card-reading{ font-size:11.5px; color:var(--ink-soft); }
-  .card-tags{ display:flex; gap:6px; flex-wrap:wrap; margin-top:auto; padding-top:6px; }
-  .tag{ font-size:11px; padding:3px 9px; border-radius:999px; background:#FFF2E8; color:var(--coral-dark); }
-  .tag.theme{ background:#EEF6EA; color:#5C8A55; }
+  /* ---------- shelf ---------- */
+  .shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+  .card{background:var(--white);border:none;border-radius:26px;overflow:hidden;padding:0;
+        cursor:pointer;box-shadow:var(--shadow-soft);text-align:left;
+        transition:transform .18s,box-shadow .18s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+  .card:active{transform:translateY(-1px) scale(.99)}
+  .card-cover{width:100%;aspect-ratio:4/3;overflow:hidden;background:#F6EDE2;display:block}
+  .card-cover svg{width:100%;height:100%;display:block}
+  .card-body{padding:15px 17px 17px;display:flex;flex-direction:column;gap:5px;flex:1}
+  .card-title{font-size:18px;font-weight:700;line-height:1.3}
+  .card-meta{font-size:12px;color:var(--ink-soft)}
+  .card-sum{font-size:12.5px;color:var(--ink-soft);line-height:1.65;margin-top:2px}
+  .card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:9px}
+  .tag{font-size:11.5px;padding:4px 10px;border-radius:999px;background:#FFF1E6;color:var(--coral-dark);font-weight:700}
+  .tag.alt{background:#EDF5E8;color:#5A8A50}
 
-  .empty-state{ text-align:center; padding: 60px 20px; color:var(--ink-soft); }
-  .empty-state .emoji{ font-size:48px; display:block; margin-bottom:10px; }
+  footer{text-align:center;margin-top:44px;color:var(--ink-soft);font-size:12px;line-height:1.9}
+  footer .pill{display:inline-block;margin-bottom:9px;padding:7px 15px;border-radius:999px;
+               background:#FFF2E8;color:var(--coral-dark);font-weight:700;font-size:11.5px}
 
-  footer{ text-align:center; margin-top:50px; color:var(--ink-soft); font-size:12.5px; line-height:1.8; }
-  footer .pill{
-    display:inline-block; margin-bottom:10px; padding:8px 16px; border-radius:999px;
-    background:#FFF3E9; color:var(--coral-dark); font-weight:700; font-size:12px;
-  }
+  /* ---------- reader ---------- */
+  .reader{position:fixed;inset:0;z-index:60;display:none;background:var(--reader-bg,#FFF3E8)}
+  .reader.open{display:flex;flex-direction:column}
 
-  /* ---------- reader overlay ---------- */
-  .reader{
-    position:fixed; inset:0; z-index:50; display:none;
-    background: linear-gradient(165deg, var(--reader-bg,#FFEFE4) 0%, #fff 75%);
-  }
-  .reader.open{ display:flex; flex-direction:column; }
+  .rtop{display:flex;align-items:center;justify-content:space-between;gap:10px;
+        padding:calc(10px + env(safe-area-inset-top)) 16px 8px;flex-shrink:0}
+  .icon-btn{width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.9);
+            box-shadow:var(--shadow-soft);font-size:17px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s}
+  .icon-btn:hover{transform:scale(1.08)}
+  .rlabel{font-size:12.5px;color:var(--ink-soft);font-weight:700;text-align:center;flex:1;min-width:0}
+  .rlabel .act{display:inline-block;background:rgba(255,255,255,.85);border-radius:999px;
+               padding:2px 9px;margin-right:6px;color:var(--coral-dark)}
+  .fsize{display:flex;gap:5px;flex-shrink:0}
+  .fsize button{border:none;background:rgba(255,255,255,.9);box-shadow:var(--shadow-soft);
+                border-radius:999px;padding:6px 11px;font-size:12px;cursor:pointer;color:var(--ink-soft)}
+  .fsize button.active{background:var(--coral);color:#fff;font-weight:700}
 
-  .reader-top{
-    display:flex; align-items:center; justify-content:space-between; padding: 14px 18px;
-    gap:10px;
-  }
-  .reader-top .book-label{ font-size:13px; color:var(--ink-soft); font-weight:700; }
-  .icon-btn{
-    width:42px; height:42px; border-radius:50%; border:none; background:var(--white);
-    box-shadow: var(--shadow-soft); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-    transition: transform .15s;
-  }
-  .icon-btn:hover{ transform:scale(1.08); }
-  .icon-btn:active{ transform:scale(.94); }
+  /* 絵本レイアウト：絵が主役 */
+  .stage{flex:1;display:flex;flex-direction:column;min-height:0;padding:0 14px 6px}
+  .picture{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
+  .picture svg{width:100%;height:100%;max-height:100%;object-fit:contain;
+               border-radius:22px;box-shadow:0 10px 28px rgba(120,80,45,.18);background:#fff}
+  .textbox{flex:0 0 auto;background:rgba(255,255,255,.92);border-radius:22px;
+           margin:12px auto 0;padding:16px 22px;max-width:620px;width:100%;
+           box-shadow:var(--shadow-soft);text-align:center}
+  .stitle{font-size:13px;font-weight:700;color:var(--coral-dark);margin-bottom:7px}
+  .stext{font-size:19px;line-height:1.85;white-space:pre-line}
+  .stext.fs-small{font-size:16.5px;line-height:1.8}
+  .stext.fs-large{font-size:22px;line-height:1.9}
+  .qbtn{margin-top:12px;border:2px dashed var(--coral);background:#FFF6EF;color:var(--coral-dark);
+        padding:8px 18px;border-radius:999px;font-size:13.5px;cursor:pointer;font-weight:700}
+  .qbtn:hover{background:#FFEADC}
+  .qbox{margin-top:10px;background:#FFF4EA;border-radius:16px;padding:12px 16px;
+        font-size:15px;line-height:1.7;display:none}
+  .qbox.show{display:block;animation:pop .22s ease}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+  .qbox::before{content:"💬 ";}
 
-  .font-controls{ display:flex; gap:6px; align-items:center; }
-  .font-controls button{
-    border:none; background:var(--white); box-shadow:var(--shadow-soft); border-radius:999px;
-    padding:6px 12px; font-size:12.5px; cursor:pointer; color:var(--ink-soft);
-  }
-  .font-controls button.active{ background: var(--coral); color:white; font-weight:700; }
+  .rnav{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:18px;
+        padding:10px 16px calc(16px + env(safe-area-inset-bottom))}
+  .nav-btn{width:52px;height:52px;border-radius:50%;border:none;font-size:21px;cursor:pointer;
+           background:var(--coral);color:#fff;box-shadow:0 7px 16px rgba(255,138,101,.42);
+           transition:transform .15s,opacity .15s}
+  .nav-btn:disabled{opacity:.3;box-shadow:none;cursor:default}
+  .nav-btn:not(:disabled):hover{transform:scale(1.08)}
+  .dots{display:flex;gap:5px;flex-wrap:wrap;max-width:260px;justify-content:center}
+  .dot{width:6px;height:6px;border-radius:50%;background:#EDD3BE;transition:all .2s}
+  .dot.active{width:18px;border-radius:4px;background:var(--coral)}
 
-  .reader-stage{
-    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding: 10px 24px 20px; text-align:center; position:relative; overflow:hidden;
-  }
-  .scene-art{
-    width:150px; height:150px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    margin-bottom:22px; position:relative; flex-shrink:0;
-    box-shadow: 0 14px 30px rgba(0,0,0,0.08);
-  }
-  .scene-art .emoji{ font-size:78px; filter: drop-shadow(0 4px 5px rgba(0,0,0,.14)); }
-  .scene-title{ font-weight:700; color:var(--coral-dark); margin-bottom:10px; font-size:18px; }
-  .scene-text{
-    max-width:560px; line-height:1.9; white-space:pre-line; color:var(--ink);
-    font-size:19px; margin-bottom: 18px;
-  }
-  .scene-text.fs-small{ font-size:16px; }
-  .scene-text.fs-large{ font-size:23px; }
+  .end{text-align:center;max-width:520px;margin:auto;padding:20px}
+  .end h3{color:var(--coral-dark);font-size:21px;margin:0 0 12px}
+  .end p{font-size:16.5px;line-height:1.85;margin:0}
+  .end .acts{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+  .pill-btn{border:none;border-radius:999px;padding:12px 24px;font-size:14px;font-weight:700;
+            cursor:pointer;box-shadow:var(--shadow-soft)}
+  .pill-btn.primary{background:var(--coral);color:#fff}
+  .pill-btn.secondary{background:#fff;color:var(--coral-dark)}
 
-  .question-toggle{
-    border:2px dashed var(--coral); background:#FFF6EF; color:var(--coral-dark);
-    padding:10px 20px; border-radius:999px; font-size:14px; cursor:pointer; font-weight:700;
-    transition: background .2s;
+  @media (max-width:620px){
+    .stext{font-size:17px}
+    .textbox{padding:13px 16px;margin-top:9px}
+    .rnav{gap:13px}
+    .nav-btn{width:48px;height:48px}
   }
-  .question-toggle:hover{ background:#FFEADA; }
-  .question-bubble{
-    max-width:520px; margin-top:14px; background:var(--white); border-radius:20px;
-    padding:16px 22px; box-shadow: var(--shadow-soft); font-size:16px; color:var(--ink);
-    display:none; position:relative;
-  }
-  .question-bubble.show{ display:block; animation: pop .25s ease; }
-  @keyframes pop{ from{ transform:scale(.9); opacity:0;} to{ transform:scale(1); opacity:1;} }
-  .question-bubble::before{ content:"💬"; margin-right:6px; }
-
-  .reader-nav{
-    display:flex; align-items:center; justify-content:center; gap:22px; padding: 18px 20px 30px;
-  }
-  .nav-btn{
-    width:54px; height:54px; border-radius:50%; border:none; font-size:22px; cursor:pointer;
-    background: var(--coral); color:white; box-shadow: 0 8px 18px rgba(255,138,101,0.4);
-    transition: transform .15s, opacity .15s;
-  }
-  .nav-btn:disabled{ opacity:.35; cursor:default; box-shadow:none; }
-  .nav-btn:not(:disabled):hover{ transform: scale(1.08); }
-  .nav-btn:not(:disabled):active{ transform: scale(.94); }
-
-  .dots{ display:flex; gap:6px; align-items:center; }
-  .dot{ width:7px; height:7px; border-radius:50%; background:#F0D4C0; transition: all .2s; }
-  .dot.active{ width:20px; border-radius:5px; background: var(--coral); }
-
-  /* end screen */
-  .end-screen{ max-width:480px; }
-  .end-screen .emoji-row{ font-size:40px; margin-bottom:12px; }
-  .end-screen h3{ color:var(--coral-dark); font-size:20px; margin:0 0 12px; }
-  .end-screen p{ font-size:17px; line-height:1.8; }
-  .end-actions{ display:flex; gap:10px; justify-content:center; margin-top:22px; flex-wrap:wrap; }
-  .pill-btn{
-    border:none; border-radius:999px; padding:12px 24px; font-size:14.5px; font-weight:700; cursor:pointer;
-    box-shadow: var(--shadow-soft); transition: transform .15s;
-  }
-  .pill-btn:hover{ transform: translateY(-2px); }
-  .pill-btn.primary{ background: var(--coral); color:white; }
-  .pill-btn.secondary{ background:var(--white); color:var(--coral-dark); }
-
-  @media (max-width:560px){
-    .scene-art{ width:120px; height:120px; }
-    .scene-art .emoji{ font-size:60px; }
-    .scene-text{ font-size:17px; }
-    .reader-nav{ gap:16px; }
+  /* 横向き：絵を左、文を右 */
+  @media (orientation:landscape) and (max-height:520px){
+    .stage{flex-direction:row;gap:14px;align-items:stretch}
+    .picture{flex:1 1 55%}
+    .textbox{flex:1 1 45%;margin:0;display:flex;flex-direction:column;justify-content:center;max-width:none}
   }
 </style>
 </head>
 <body>
 
-<div class="blob b1"></div>
-<div class="blob b2"></div>
-<div class="blob b3"></div>
-
-<div class="wrap">
+<div class="wrap" id="home">
   <header>
-    <h1><span class="heart">📖</span> いっしょに一冊</h1>
-    <p>3〜5分で読める、親子のための30冊。スマホを、会話のきっかけに。</p>
-    <div class="badge-count" id="countBadge">30さつ、いつでもよめるよ</div>
+    <h1>いっしょに一冊</h1>
+    <p>1ページごとに絵があります。親子で同じ絵を見ながら、<br>ゆっくり読んであげてください。</p>
   </header>
-
-  <div class="controls">
-    <div class="search-box">
-      <input id="searchInput" type="text" placeholder="タイトルやテーマでさがす（例：友だち、月、勇気）">
-    </div>
-  </div>
-  <div class="chip-row" id="ageChips"></div>
-  <div class="chip-row" id="themeChips" style="margin-top:8px;"></div>
-
-  <div class="grid" id="grid"></div>
-  <div class="empty-state" id="emptyState" style="display:none;">
-    <span class="emoji">🔎</span>
-    ぴったりの絵本が見つかりませんでした。<br>検索やしぼりこみを変えてみてね。
-  </div>
-
+  <div class="bands" id="bands"></div>
+  <div class="shelf" id="shelf"></div>
   <footer>
-    <div class="pill">Web試作版（価値検証用）</div><br>
-    外部通信・広告・ログイン・追跡なし。すべてこの端末の中だけで完結します。<br>
-    製品版はSwiftUI + VisionKitのネイティブiOSアプリでご利用いただけます。
+    <div class="pill">Web試作版</div><br>
+    外部通信・広告・ログイン・追跡なし。すべてこの端末の中だけで動きます。<br>
+    挿絵はすべてこのアプリのために描き起こしたものです。
   </footer>
 </div>
 
-<!-- ================= READER ================= -->
 <div class="reader" id="reader">
-  <div class="reader-top">
+  <div class="rtop">
     <button class="icon-btn" id="closeBtn" aria-label="とじる">✕</button>
-    <div class="book-label" id="bookLabel"></div>
-    <div class="font-controls">
+    <div class="rlabel" id="rlabel"></div>
+    <div class="fsize">
       <button data-size="small">小</button>
       <button data-size="medium" class="active">中</button>
       <button data-size="large">大</button>
     </div>
   </div>
-
-  <div class="reader-stage" id="readerStage"></div>
-
-  <div class="reader-nav" id="readerNav">
-    <button class="nav-btn" id="prevBtn" aria-label="まえへ">‹</button>
+  <div class="stage" id="stage"></div>
+  <div class="rnav" id="rnav">
+    <button class="nav-btn" id="prevBtn" aria-label="まえのページ">‹</button>
     <div class="dots" id="dots"></div>
-    <button class="nav-btn" id="nextBtn" aria-label="つぎへ">›</button>
+    <button class="nav-btn" id="nextBtn" aria-label="つぎのページ">›</button>
   </div>
 </div>
 
+<script src="art-core.js"></script>
+<script src="art-scenes.js"></script>
 <script src="books-data.js"></script>
 <script>
 (function(){
   "use strict";
+  var books = (window.BOOKS_DATA||[]).slice().sort(function(a,b){return a.ageOrder-b.ageOrder;});
+  var state = {band:"all", fs:"medium"};
+  var cur = {book:null, i:0, showQ:false, ended:false};
 
-  var EMOJI = {
-    crab:"🦀", frog:"🐸", deer:"🦌", butterfly:"🦋", spirit:"👣",
-    horse:"🐴", mouse:"🐭", cat:"🐱", bear:"🐻", kitchen:"🍲",
-    fox:"🦊", bird:"🐦", dog:"🐶", cow:"🐄", goose:"🪿",
-    bamboo:"🎋", duck:"🦆", rabbit:"🐰", elephant:"🐘", moon:"🌕",
-    scarecrow:"🧑‍🌾", sheep:"🐑", samurai:"🗡️", jellyfish:"🪼"
-  };
-  function emojiFor(family){ return EMOJI[family] || "📖"; }
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+    return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c];});}
 
-  var books = (window.BOOKS_DATA || []).slice();
-  var state = { query:"", age:"all", theme:"all", fontSize:"medium" };
-  var current = { book:null, sceneIndex:0, showQuestion:false, ended:false };
-
-  var grid = document.getElementById("grid");
-  var emptyState = document.getElementById("emptyState");
-  var countBadge = document.getElementById("countBadge");
-
-  // ---------- filters ----------
-  function ageBuckets(){
-    var set = {};
-    books.forEach(function(b){ set[b.age] = true; });
-    return Object.keys(set);
-  }
-  function themeBuckets(){
-    var set = {};
-    books.forEach(function(b){ set[b.theme] = true; });
-    return Object.keys(set);
-  }
-
-  function renderChips(){
-    var ageWrap = document.getElementById("ageChips");
-    var themeWrap = document.getElementById("themeChips");
-
-    var ageHtml = '<div class="chip active" data-kind="age" data-value="all">すべての年齢</div>';
-    ageBuckets().forEach(function(a){
-      ageHtml += '<div class="chip" data-kind="age" data-value="'+esc(a)+'">'+esc(a)+'</div>';
-    });
-    ageWrap.innerHTML = ageHtml;
-
-    var themeHtml = '<div class="chip active" data-kind="theme" data-value="all">すべてのテーマ</div>';
-    themeBuckets().forEach(function(t){
-      themeHtml += '<div class="chip" data-kind="theme" data-value="'+esc(t)+'">'+esc(t)+'</div>';
-    });
-    themeWrap.innerHTML = themeHtml;
-
-    document.querySelectorAll(".chip").forEach(function(chip){
-      chip.addEventListener("click", function(){
-        var kind = chip.getAttribute("data-kind");
-        var value = chip.getAttribute("data-value");
-        var wrap = kind === "age" ? ageWrap : themeWrap;
-        wrap.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("active"); });
-        chip.classList.add("active");
-        state[kind] = value;
-        renderGrid();
+  /* ---------- 本だな ---------- */
+  function renderBands(){
+    var seen={}, out='<div class="band active" data-v="all">ぜんぶ</div>';
+    books.forEach(function(b){ if(!seen[b.ageBand]){seen[b.ageBand]=1;
+      out+='<div class="band" data-v="'+esc(b.ageBand)+'">'+esc(b.ageBand)+'</div>';}});
+    var w=document.getElementById("bands"); w.innerHTML=out;
+    w.querySelectorAll(".band").forEach(function(el){
+      el.addEventListener("click",function(){
+        w.querySelectorAll(".band").forEach(function(x){x.classList.remove("active");});
+        el.classList.add("active"); state.band=el.getAttribute("data-v"); renderShelf();
       });
     });
   }
 
-  function esc(s){
-    return String(s).replace(/[&<>"']/g, function(c){
-      return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c];
-    });
-  }
-
-  function matches(book){
-    if(state.age !== "all" && book.age !== state.age) return false;
-    if(state.theme !== "all" && book.theme !== state.theme) return false;
-    if(state.query){
-      var q = state.query.toLowerCase();
-      var hay = (book.title+" "+book.reading+" "+book.theme+" "+book.summary).toLowerCase();
-      if(hay.indexOf(q) === -1) return false;
-    }
-    return true;
-  }
-
-  function renderGrid(){
-    var filtered = books.filter(matches);
-    countBadge.textContent = filtered.length === books.length
-      ? (books.length + "さつ、いつでもよめるよ")
-      : (filtered.length + " / " + books.length + "さつ");
-
-    if(filtered.length === 0){
-      grid.innerHTML = "";
-      emptyState.style.display = "block";
-      return;
-    }
-    emptyState.style.display = "none";
-
-    grid.innerHTML = filtered.map(function(book, idx){
-      return (
-        '<button class="card" data-id="'+esc(book.id)+'">' +
-          '<div class="card-art" style="background: linear-gradient(135deg,'+book.bg+' 0%, '+book.accent+'55 100%);">' +
-            '<div class="deco d1"></div><div class="deco d2"></div>' +
-            '<span class="emoji">'+emojiFor(book.artFamily)+'</span>' +
-          '</div>' +
-          '<div class="card-body">' +
-            '<div class="card-title">'+esc(book.title)+'</div>' +
-            '<div class="card-reading">'+esc(book.reading)+' ／ '+esc(book.author)+'</div>' +
-            '<div class="card-tags">' +
-              '<span class="tag">'+esc(book.age)+'</span>' +
-              '<span class="tag">'+esc(book.duration)+'</span>' +
-              '<span class="tag theme">'+esc(book.theme)+'</span>' +
-            '</div>' +
-          '</div>' +
-        '</button>'
-      );
+  function renderShelf(){
+    var list = books.filter(function(b){return state.band==="all"||b.ageBand===state.band;});
+    document.getElementById("shelf").innerHTML = list.map(function(b){
+      return '<button class="card" data-id="'+esc(b.id)+'">'+
+        '<div class="card-cover">'+ART.render(b.id,0)+'</div>'+
+        '<div class="card-body">'+
+          '<div class="card-title">'+esc(b.title)+'</div>'+
+          '<div class="card-meta">'+esc(b.reading)+' ／ '+esc(b.author)+' 原作</div>'+
+          '<div class="card-sum">'+esc(b.summary)+'</div>'+
+          '<div class="card-tags">'+
+            '<span class="tag">'+esc(b.ageBand)+'</span>'+
+            '<span class="tag">'+esc(b.duration)+'</span>'+
+            '<span class="tag alt">全'+b.sceneCount+'ページ</span>'+
+          '</div>'+
+        '</div></button>';
     }).join("");
-
-    grid.querySelectorAll(".card").forEach(function(card){
-      card.addEventListener("click", function(){
-        var id = card.getAttribute("data-id");
-        var book = books.filter(function(b){ return b.id === id; })[0];
-        if(book) openReader(book);
+    document.querySelectorAll(".card").forEach(function(c){
+      c.addEventListener("click",function(){
+        var id=c.getAttribute("data-id");
+        var b=books.filter(function(x){return x.id===id;})[0];
+        if(b) open(b);
       });
     });
   }
 
-  document.getElementById("searchInput").addEventListener("input", function(e){
-    state.query = e.target.value.trim();
-    renderGrid();
-  });
+  /* ---------- リーダー ---------- */
+  var reader=document.getElementById("reader"), stage=document.getElementById("stage"),
+      rlabel=document.getElementById("rlabel"), dots=document.getElementById("dots"),
+      prevBtn=document.getElementById("prevBtn"), nextBtn=document.getElementById("nextBtn"),
+      rnav=document.getElementById("rnav");
 
-  // ---------- reader ----------
-  var reader = document.getElementById("reader");
-  var readerStage = document.getElementById("readerStage");
-  var bookLabel = document.getElementById("bookLabel");
-  var dotsWrap = document.getElementById("dots");
-  var prevBtn = document.getElementById("prevBtn");
-  var nextBtn = document.getElementById("nextBtn");
-  var readerNav = document.getElementById("readerNav");
-
-  function openReader(book){
-    current.book = book;
-    current.sceneIndex = 0;
-    current.showQuestion = false;
-    current.ended = false;
-    bookLabel.textContent = book.title;
-    reader.style.setProperty("--reader-bg", book.bg);
+  function open(b){
+    cur={book:b,i:0,showQ:false,ended:false};
+    reader.style.setProperty("--reader-bg",b.bg);
     reader.classList.add("open");
-    document.body.style.overflow = "hidden";
-    renderScene();
+    document.body.style.overflow="hidden";
+    draw();
   }
+  function close(){reader.classList.remove("open");document.body.style.overflow="";}
+  document.getElementById("closeBtn").addEventListener("click",close);
 
-  function closeReader(){
-    reader.classList.remove("open");
-    document.body.style.overflow = "";
-  }
-  document.getElementById("closeBtn").addEventListener("click", closeReader);
-
-  document.querySelectorAll(".font-controls button").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      document.querySelectorAll(".font-controls button").forEach(function(b){ b.classList.remove("active"); });
-      btn.classList.add("active");
-      state.fontSize = btn.getAttribute("data-size");
-      try{ localStorage.setItem("issho-font-size", state.fontSize); }catch(e){}
-      renderScene();
+  document.querySelectorAll(".fsize button").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      document.querySelectorAll(".fsize button").forEach(function(x){x.classList.remove("active");});
+      btn.classList.add("active"); state.fs=btn.getAttribute("data-size");
+      try{localStorage.setItem("issho-fs",state.fs);}catch(e){}
+      draw();
     });
   });
-  try{
-    var savedSize = localStorage.getItem("issho-font-size");
-    if(savedSize){
-      state.fontSize = savedSize;
-      document.querySelectorAll(".font-controls button").forEach(function(b){
-        b.classList.toggle("active", b.getAttribute("data-size") === savedSize);
-      });
-    }
-  }catch(e){}
+  try{var sv=localStorage.getItem("issho-fs"); if(sv){state.fs=sv;
+    document.querySelectorAll(".fsize button").forEach(function(x){
+      x.classList.toggle("active",x.getAttribute("data-size")===sv);});}}catch(e){}
 
-  function renderDots(total, index){
-    var html = "";
-    for(var i=0;i<total;i++){
-      html += '<span class="dot'+(i===index?' active':'')+'"></span>';
-    }
-    dotsWrap.innerHTML = html;
-  }
+  function draw(){
+    var b=cur.book; if(!b) return;
+    var n=b.scenes.length;
 
-  function renderScene(){
-    var book = current.book;
-    if(!book) return;
-    var total = book.scenes.length;
-
-    if(current.ended){
-      readerNav.style.visibility = "hidden";
-      readerStage.innerHTML =
-        '<div class="end-screen">' +
-          '<div class="emoji-row">'+emojiFor(book.artFamily)+' 🎉</div>' +
-          '<h3>おしまい</h3>' +
-          '<p class="scene-text fs-'+state.fontSize+'">'+esc(book.endMessage)+'</p>' +
-          '<div class="end-actions">' +
-            '<button class="pill-btn secondary" id="rereadBtn">もういちど よむ</button>' +
-            '<button class="pill-btn primary" id="backToLibraryBtn">絵本だなへ もどる</button>' +
-          '</div>' +
-        '</div>';
-      document.getElementById("rereadBtn").addEventListener("click", function(){
-        current.sceneIndex = 0; current.ended = false; current.showQuestion = false; renderScene();
-      });
-      document.getElementById("backToLibraryBtn").addEventListener("click", closeReader);
-      bookLabel.textContent = book.title + " ・ よみおわり";
+    if(cur.ended){
+      rnav.style.visibility="hidden";
+      rlabel.textContent=b.title+" ・ おしまい";
+      stage.innerHTML='<div class="end"><h3>おしまい</h3>'+
+        '<p>'+esc(b.endMessage)+'</p>'+
+        '<div class="acts">'+
+          '<button class="pill-btn secondary" id="again">もういちど よむ</button>'+
+          '<button class="pill-btn primary" id="back">本だなへ もどる</button>'+
+        '</div></div>';
+      document.getElementById("again").onclick=function(){cur.i=0;cur.ended=false;cur.showQ=false;draw();};
+      document.getElementById("back").onclick=close;
       return;
     }
 
-    readerNav.style.visibility = "visible";
-    var scene = book.scenes[current.sceneIndex];
-    bookLabel.textContent = book.title + "（" + (current.sceneIndex+1) + "／" + total + "）";
+    rnav.style.visibility="visible";
+    var sc=b.scenes[cur.i];
+    rlabel.innerHTML='<span class="act">'+esc(sc.act)+'</span>'+esc(b.title)+
+                     '（'+(cur.i+1)+'／'+n+'）';
 
-    readerStage.innerHTML =
-      '<div class="scene-art" style="background: radial-gradient(circle at 35% 30%, '+book.bg+', '+book.accent+'66);">' +
-        '<span class="emoji">'+emojiFor(book.artFamily)+'</span>' +
-      '</div>' +
-      '<div class="scene-title">'+esc(scene.title)+'</div>' +
-      '<div class="scene-text fs-'+state.fontSize+'">'+esc(scene.text)+'</div>' +
-      '<button class="question-toggle" id="questionToggle">'+
-        (current.showQuestion ? 'といかけを かくす' : '💭 といかけを みる') +
-      '</button>' +
-      '<div class="question-bubble'+(current.showQuestion?' show':'')+'">'+esc(scene.question)+'</div>';
+    stage.innerHTML=
+      '<div class="picture">'+ART.render(b.id,cur.i)+'</div>'+
+      '<div class="textbox">'+
+        '<div class="stitle">'+esc(sc.title)+'</div>'+
+        '<div class="stext fs-'+state.fs+'">'+esc(sc.text)+'</div>'+
+        '<button class="qbtn" id="qbtn">'+(cur.showQ?'といかけを かくす':'💭 といかけを みる')+'</button>'+
+        '<div class="qbox'+(cur.showQ?' show':'')+'">'+esc(sc.question)+'</div>'+
+      '</div>';
+    document.getElementById("qbtn").onclick=function(){cur.showQ=!cur.showQ;draw();};
 
-    document.getElementById("questionToggle").addEventListener("click", function(){
-      current.showQuestion = !current.showQuestion;
-      renderScene();
-    });
-
-    renderDots(total, current.sceneIndex);
-    prevBtn.disabled = current.sceneIndex === 0;
-    nextBtn.disabled = false;
+    var d=""; for(var i=0;i<n;i++) d+='<span class="dot'+(i===cur.i?' active':'')+'"></span>';
+    dots.innerHTML=d;
+    prevBtn.disabled=cur.i===0;
   }
 
-  function goPrev(){
-    if(!current.book) return;
-    if(current.ended){ current.ended = false; current.sceneIndex = current.book.scenes.length - 1; current.showQuestion=false; renderScene(); return; }
-    if(current.sceneIndex > 0){
-      current.sceneIndex -= 1; current.showQuestion = false; renderScene();
-    }
+  function prev(){
+    if(!cur.book) return;
+    if(cur.ended){cur.ended=false;cur.i=cur.book.scenes.length-1;cur.showQ=false;draw();return;}
+    if(cur.i>0){cur.i--;cur.showQ=false;draw();}
   }
-  function goNext(){
-    if(!current.book) return;
-    if(current.ended) return;
-    if(current.sceneIndex < current.book.scenes.length - 1){
-      current.sceneIndex += 1; current.showQuestion = false; renderScene();
-    } else {
-      current.ended = true; renderScene();
-    }
+  function next(){
+    if(!cur.book||cur.ended) return;
+    if(cur.i<cur.book.scenes.length-1){cur.i++;cur.showQ=false;draw();}
+    else{cur.ended=true;draw();}
   }
-  prevBtn.addEventListener("click", goPrev);
-  nextBtn.addEventListener("click", goNext);
-
-  document.addEventListener("keydown", function(e){
+  prevBtn.addEventListener("click",prev);
+  nextBtn.addEventListener("click",next);
+  document.addEventListener("keydown",function(e){
     if(!reader.classList.contains("open")) return;
-    if(e.key === "ArrowLeft") goPrev();
-    if(e.key === "ArrowRight") goNext();
-    if(e.key === "Escape") closeReader();
+    if(e.key==="ArrowLeft")prev(); if(e.key==="ArrowRight")next(); if(e.key==="Escape")close();
   });
 
-  // swipe support
-  var touchStartX = null;
-  readerStage.addEventListener("touchstart", function(e){
-    touchStartX = e.changedTouches[0].clientX;
-  }, {passive:true});
-  readerStage.addEventListener("touchend", function(e){
-    if(touchStartX === null) return;
-    var dx = e.changedTouches[0].clientX - touchStartX;
-    if(Math.abs(dx) > 40){
-      if(dx < 0) goNext(); else goPrev();
-    }
-    touchStartX = null;
-  }, {passive:true});
+  var tx=null;
+  stage.addEventListener("touchstart",function(e){tx=e.changedTouches[0].clientX;},{passive:true});
+  stage.addEventListener("touchend",function(e){
+    if(tx===null)return; var dx=e.changedTouches[0].clientX-tx;
+    if(Math.abs(dx)>44){ if(dx<0)next(); else prev(); } tx=null;
+  },{passive:true});
 
-  // ---------- init ----------
-  renderChips();
-  renderGrid();
+  renderBands(); renderShelf();
 })();
 </script>
 </body>
