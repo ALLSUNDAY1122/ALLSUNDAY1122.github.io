@@ -1,0 +1,18 @@
+dataset.sec),count:Number(btn.dataset.count),unit:btn.dataset.unit,startNumber:1};applyForm(s);startSession(s)});
+  ['subject','unit','startNumber','seconds','count','autoAdvance','countdown','soundStyle'].forEach(id=>$(id).addEventListener('input',updateFormLabels));
+  $('bgmVolume').oninput=()=>{updateFormLabels();if(audio.gain&&audio.ctx)audio.gain.gain.setTargetAtTime(readForm().bgmVolume,audio.ctx.currentTime,.03)};$('fxVolume').oninput=updateFormLabels;
+  $('bgmQuickBtn').onclick=()=>{const next=$('bgmQuickBtn').getAttribute('aria-pressed')!=='true';setBgmEnabled(next);state.settings.bgmEnabled=next;saveSettings(readForm());toast(next?'BGMをオンにしました':'BGMをオフにしました')};
+  $('previewBgmBtn').onclick=async()=>{if(audio.mode==='preview'){stopBgm(true);toast('試聴を停止しました');return}await playBgm('preview');if(audio.mode==='preview')toast('12秒間試聴します')};
+  $('testSoundBtn').onclick=async()=>{if(await unlockAudio()){playCue('finish');toast('効果音を再生しました')}else toast('音声を開始できませんでした')};$('stopAudioBtn').onclick=()=>{stopBgm(false);try{audio.ctx?.suspend()}catch{}setAudioStatus('停止中');toast('すべての音を停止しました')};
+  $('audioState').onclick=async()=>{if(audio.status==='error'||audio.status==='loading'){audio.loadPromise=null;await loadBgm().then(()=>toast('BGMを読み込みました')).catch(()=>toast('BGMの再読込に失敗しました'))}};
+  $('resumeDraftBtn').onclick=restoreDraft;$('discardDraftBtn').onclick=discardDraft;$('copyReviewBtn').onclick=copyReviewList;$('clearHistoryBtn').onclick=requestClearHistory;
+  document.querySelectorAll('.nav-btn').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.view));
+  $('repeatBtn').onclick=()=>{$('resultDialog').close();switchView('timer');startSession(lastFinishedSettings||savedSettings())};$('openHistoryBtn').onclick=()=>{$('resultDialog').close();switchView('history')};
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){saveDraft()}else if(state.status==='running'){tick();if(state.settings.bgmEnabled)playBgm('timer')}});
+  window.addEventListener('beforeunload',saveDraft);window.addEventListener('pagehide',saveDraft);document.addEventListener('freeze',saveDraft);
+}
+function init(){
+  migrate();const s=savedSettings();applyForm(s);state=idleState(s);bind();renderTimer();renderHistory();checkRecovery();setTimeout(()=>{if(s.bgmEnabled)loadBgm().catch(()=>{})},500);document.documentElement.dataset.version=VERSION;
+}
+init();
+})();
