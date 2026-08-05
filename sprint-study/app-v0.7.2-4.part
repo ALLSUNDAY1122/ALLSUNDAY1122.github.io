@@ -1,0 +1,36 @@
+toast('要復習リストをコピーしました')
+}
+function requestClearHistory(){const btn=$('clearHistoryBtn'),now=Date.now();if(now<clearArmedUntil){saveHistory([]);renderHistory();toast('履歴をすべて削除しました');clearArmedUntil=0;btn.textContent='履歴を全削除';btn.classList.remove('danger-armed')}else{clearArmedUntil=now+3500;btn.textContent='もう一度押して削除';btn.classList.add('danger-armed');toast('もう一度押すと履歴をすべて削除します');setTimeout(()=>{if(Date.now()>=clearArmedUntil){btn.textContent='履歴を全削除';btn.classList.remove('danger-armed')}},3600)}}
+
+function setAudioStatus(text,type=''){audio.status=type||text;$('audioState').textContent=text;$('audioState').classList.toggle('ready',type==='ready');$('audioState').classList.toggle('error',type==='error')}
+function ensureAudioContext(){
+  if(audio.ctx)return audio.ctx;const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx){setAudioStatus('非対応','error');return null}audio.ctx=new Ctx();audio.gain=audio.ctx.createGain();audio.gain.gain.value=readForm().bgmVolume;audio.gain.connect(audio.ctx.destination);return audio.ctx
+}
+async function unlockAudio(){const ctx=ensureAudioContext();if(!ctx)return false;try{if(ctx.state!=='running')await ctx.resume();return ctx.state==='running'}catch{return false}}
+async function loadBgm(){
+  if(audio.loadPromise)return audio.loadPromise;const ctx=ensureAudioContext();if(!ctx)return Promise.reject(new Error('AudioContext unavailable'));
+  setAudioStatus('読込中');audio.loadPromise=(async()=>{const arrays=[];for(const path of AUDIO_PARTS){const response=await fetch(path,{cache:'force-cache'});if(!response.ok)throw new Error(`BGM ${response.status}`);arrays.push(new Uint8Array(await response.arrayBuffer()))}const size=arrays.reduce((n,a)=>n+a.length,0),joined=new Uint8Array(size);let offset=0;for(const arr of arrays){joined.set(arr,offset);offset+=arr.length}audio.buffer=await ctx.decodeAudioData(joined.buffer.slice(0));setAudioStatus('準備済み','ready');if(audio.pendingTimerPlay&&state.status==='running'&&state.settings.bgmEnabled)startBuffer('timer');return audio.buffer})().catch(error=>{console.error(error);setAudioStatus('読込失敗','error');audio.loadPromise=null;throw error});return audio.loadPromise
+}
+function stopSource(preserve=true){clearTimeout(audio.previewTimer);audio.previewTimer=null;if(audio.source){if(preserve&&audio.mode==='timer'&&audio.buffer){audio.offset=(audio.offset+(audio.ctx.currentTime-audio.startedAt))%audio.buffer.duration}try{audio.source.stop()}catch{}audio.source=null}audio.mode='none'}
+function startBuffer(mode='timer'){
+  if(!audio.ctx||audio.ctx.state!=='running'||!audio.buffer)return false;stopSource(mode==='timer');if(mode==='preview')audio.offset=0;const source=audio.ctx.createBufferSource();source.buffer=audio.buffer;source.loop=true;source.connect(audio.gain);audio.gain.gain.cancelScheduledValues(audio.ctx.currentTime);audio.gain.gain.setTargetAtTime(readForm().bgmVolume,audio.ctx.currentTime,.03);source.start(0,audio.offset%audio.buffer.duration);audio.source=source;audio.mode=mode;audio.startedAt=audio.ctx.currentTime;setAudioStatus(mode==='preview'?'試聴中':'再生中','ready');return true
+}
+async function playBgm(mode='timer'){
+  if(mode==='timer'&&!state.settings.bgmEnabled)return false;audio.pendingTimerPlay=mode==='timer';if(!await unlockAudio())return false;try{await loadBgm();const ok=startBuffer(mode);if(mode==='preview'&&ok)audio.previewTimer=setTimeout(()=>{stopBgm(true);toast('試聴を終了しました')},12000);return ok}catch{if(mode==='timer')toast('BGMを読み込めませんでした。タイマーは続行します');return false}
+}
+function pauseBgm(){if(audio.mode==='timer'){stopSource(true);setAudioStatus(audio.buffer?'一時停止':'読込中',audio.buffer?'ready':'')}}
+function stopBgm(reset=false){audio.pendingTimerPlay=false;stopSource(!reset);if(reset)audio.offset=0;setAudioStatus(audio.buffer?'準備済み':'読込中',audio.buffer?'ready':'')}
+function duckBgm(){if(!audio.gain||!audio.ctx||!audio.source)return;const now=audio.ctx.currentTime,target=readForm().bgmVolume;audio.gain.gain.cancelScheduledValues(now);audio.gain.gain.setTargetAtTime(Math.max(.015,target*.28),now,.015);audio.gain.gain.setTargetAtTime(target,now+.36,.12)}
+function tone(freq,duration=.08,level=.14,type='sine',delay=0){const ctx=ensureAudioContext();if(!ctx||ctx.state!=='running')return;const now=ctx.currentTime+delay,osc=ctx.createOscillator(),gain=ctx.createGain(),volume=Math.max(.0001,readForm().fxVolume*level);osc.type=type;osc.frequency.setValueAtTime(freq,now);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(volume,now+.008);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);osc.connect(gain).connect(ctx.destination);osc.start(now);osc.stop(now+duration+.02)}
+function woodClick(){const ctx=ensureAudioContext();if(!ctx||ctx.state!=='running')return;const length=Math.floor(ctx.sampleRate*.045),buffer=ctx.createBuffer(1,length,ctx.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(1-i/length);const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;filter.type='bandpass';filter.frequency.value=950;gain.gain.value=readForm().fxVolume*.12;source.connect(filter).connect(gain).connect(ctx.destination);source.start()}
+function playCue(kind){
+  if(!audio.ctx||audio.ctx.state!=='running')return;duckBgm();const style=readForm().soundStyle;if(style==='wood'){woodClick();if(['finish','review','interval'].includes(kind))setTimeout(woodClick,90);return}
+  const clear=style==='clear',type=clear?'triangle':'sine';if(kind==='count')tone(clear?1080:760,.07,.12,clear?'square':type);else if(kind==='review'){tone(520,.09,.13,type);tone(410,.11,.11,type,.1)}else if(kind==='finish'){tone(760,.09,.15,type);tone(980,.1,.15,type,.1);tone(1240,.13,.13,type,.21)}else if(kind==='extend'){tone(620,.07,.11,type);tone(760,.09,.10,type,.08)}else{tone(clear?900:680,.08,.12,type);tone(clear?1120:880,.1,.10,type,.09)}
+}
+
+function switchView(view){document.querySelectorAll('.nav-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.view===view));$('timerView').classList.toggle('hidden',view!=='timer');$('historyView').classList.toggle('hidden',view!=='history');if(view==='history')renderHistory();window.scrollTo({top:0,behavior:'smooth'})}
+function bind(){
+  $('mainBtn').onclick=()=>state.status==='idle'?startSession(readForm()):state.status==='running'?pauseSession():state.status==='paused'?resumeSession():null;
+  $('resetBtn').onclick=requestReset;$('goodBtn').onclick=()=>commitOutcome('understood');$('reviewBtn').onclick=()=>commitOutcome('review');$('skipBtn').onclick=()=>commitOutcome('unjudged');$('extendBtn').onclick=()=>extendCurrent(15);$('undoBtn').onclick=undoLast;
+  $('lastStartBtn').onclick=()=>startSession(savedSettings());$('customStartBtn').onclick=()=>startSession(readForm());$('saveDefaultBtn').onclick=()=>saveSettings(readForm(),true);
+  document.querySelectorAll('.preset-card').forEach(btn=>btn.onclick=()=>{const s={...readForm(),subject:btn.dataset.name,seconds:Number(btn.
