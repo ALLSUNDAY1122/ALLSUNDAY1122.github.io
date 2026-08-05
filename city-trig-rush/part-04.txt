@@ -1,0 +1,36 @@
+n>2辺と1角から、残り1辺を撃ち抜く。</span></div><div class="intro-card"><div class="tag">SIN</div><b>地図の角度戦</b><span>正弦定理で、見えない距離を読み切る。</span></div><div class="intro-card"><div class="tag">TAN</div><b>高さハント</b><span>見上げ角度から、塔や建物のスケールを暴く。</span></div></div><div class="button-stack"><button class="primary pulse" id="startBtn" type="button">チャレンジ開始</button></div></section>
+    <section class="card panel-dark"><div class="history-head"><h3>プレイログ</h3><button class="tiny-btn" id="clearHistoryBtn" type="button">履歴を削除</button></div><div class="history-list" id="historyIntro"></div></section>
+  </main>
+
+  <main id="game" class="screen">
+    <div class="stats arcade"><div class="stat neon"><span>ROUND</span><b id="roundStat">1 / 3</b></div><div class="stat neon score"><span>SCORE</span><b id="scoreStat">0</b></div><div class="stat neon"><span>BEST</span><b id="bestStat">—</b></div><div class="stat neon combo"><span>COMBO</span><b id="comboStat">×0</b></div></div><div class="progress combo-progress"><i id="progressBar"></i></div>
+    <section class="visual-wrap"><div id="visual"></div><div class="map-attribution" id="mapAttribution">&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a></div><div class="visual-overlay"><span class="visual-pill" id="areaPill">東京実地図</span><span class="visual-pill" id="visualTypePill">MAP</span></div><div class="tile-warning" id="tileWarning">地図タイルを取得できません。インターネット接続を確認してください。地点と計算条件は利用できます。</div></section>
+    <section class="condition"><div class="condition-head"><div><span class="phase" id="phaseLabel">概算フェーズ</span><span class="type-badge" id="typeBadge">COS</span></div><div class="round-title" id="routeTitle">未知の距離</div></div><div class="question" id="questionText">条件から答えを概算してください。</div><div class="known-grid" id="knownGrid"></div><div class="route-key" id="routeKey"></div></section>
+    <section class="answer-card" id="answerCard"><div class="instruction" id="instruction"></div><div class="formula" id="formula"><strong id="formulaTitle">計算ヒント</strong><code id="formulaText"></code><div class="trig-hint" id="trigHint"></div></div><div class="answer-row"><input id="answerRange" type="range" min="0.1" max="30" step="0.1" value="10" aria-label="答えスライダー"><input id="answerInput" type="number" min="0.1" step="0.1" inputmode="decimal" value="10" aria-label="答え入力"><span class="unit" id="answerUnit">km</span></div><div class="helper"><span id="rangeHint">0.1〜30km</span><span id="timerText">0秒</span></div><div class="button-stack"><button class="primary" id="submitBtn" type="button">概算を決定</button></div></section>
+    <section class="card result-panel" id="resultPanel"><div class="result-head"><div><div style="font-size:10px;color:var(--muted)">ROUND SCORE</div><div class="score-big"><span id="roundScore">0</span><small> / 5,000</small></div></div><div class="result-msg" id="resultMsg"></div></div><div class="bars" id="bars"></div><div class="breakdown"><div class="mini"><span>概算</span><b id="estimateScore">0</b></div><div class="mini"><span>計算</span><b id="calcScore">0</b></div><div class="mini"><span>速度</span><b id="speedScore">0</b></div></div><div class="lesson" id="lesson"></div><div class="button-stack"><button class="primary" id="nextBtn" type="button">次の問題へ</button></div></section>
+  </main>
+
+  <main id="summary" class="screen"><section class="card summary arcade-summary"><span class="phase result">RUN COMPLETE</span><h2>シティラッシュ結果</h2><div class="total"><span id="totalScore">0</span><small> / 15,000</small></div><div class="grade" id="grade">—</div><div class="summary-badges"><span class="summary-chip">🔥 3 ROUND CLEAR</span><span class="summary-chip">📐 TRIG MIX</span><span class="summary-chip">🗺️ CITY MAP</span></div><div class="round-list" id="roundList"></div><div class="button-stack"><button class="primary pulse" id="replayBtn" type="button">もう一度プレイ</button><button class="secondary" id="summaryHomeBtn" type="button">ホームへ戻る</button></div></section><section class="card panel-dark"><div class="history-head"><h3>最近のプレイログ</h3></div><div class="history-list" id="historySummary"></div></section></main>
+  <pre id="selftest" class="selftest"></pre>
+</div>
+<script>
+(() => {
+  'use strict';
+  const PLACES={
+    meguro:{name:'目黒駅',lat:35.633998,lon:139.715828},ogikubo:{name:'荻窪駅',lat:35.704632,lon:139.620222},tokyo:{name:'東京駅',lat:35.681236,lon:139.767125},shinjuku:{name:'新宿駅',lat:35.690921,lon:139.700258},shibuya:{name:'渋谷駅',lat:35.658034,lon:139.701636},tower:{name:'東京タワー',lat:35.658581,lon:139.745433},skytree:{name:'東京スカイツリー',lat:35.710063,lon:139.810700},asakusa:{name:'浅草寺',lat:35.714765,lon:139.796655},ueno:{name:'上野駅',lat:35.713768,lon:139.777254},ikebukuro:{name:'池袋駅',lat:35.729503,lon:139.710900},kichijoji:{name:'吉祥寺駅',lat:35.703268,lon:139.579627},odaiba:{name:'お台場',lat:35.627196,lon:139.776570},haneda:{name:'羽田空港',lat:35.549393,lon:139.779839},maihama:{name:'舞浜駅',lat:35.636115,lon:139.883426},toyosu:{name:'豊洲駅',lat:35.655043,lon:139.796783},roppongi:{name:'六本木駅',lat:35.662836,lon:139.731443},nakano:{name:'中野駅',lat:35.705765,lon:139.665835},musashikosugi:{name:'武蔵小杉駅',lat:35.575830,lon:139.659570},yokohama:{name:'横浜駅',lat:35.465790,lon:139.622313}
+  };
+  const COS_SET=[['meguro','ogikubo','tokyo'],['maihama','meguro','haneda'],['shinjuku','skytree','roppongi'],['odaiba','asakusa','kichijoji'],['meguro','ueno','kichijoji'],['shinjuku','shibuya','asakusa'],['tower','asakusa','nakano'],['musashikosugi','haneda','yokohama']];
+  const SIN_SET=[['shinjuku','shibuya','nakano'],['shinjuku','asakusa','nakano'],['shibuya','skytree','haneda'],['asakusa','ikebukuro','odaiba'],['tower','tokyo','shibuya'],['toyosu','odaiba','tokyo']];
+  const TAN_SET=[
+    {kind:'height',name:'東京タワー',height:333,distance:620},
+    {kind:'height',name:'東京スカイツリー',height:634,distance:920},
+    {kind:'distance',name:'東京タワー',height:333,distance:780},
+    {kind:'distance',name:'東京スカイツリー',height:634,distance:1150}
+  ];
+  const $=id=>document.getElementById(id);
+  const ids=['intro','game','summary','startBtn','homeBtn','summaryHomeBtn','replayBtn','clearHistoryBtn','historyIntro','historySummary','roundStat','scoreStat','bestStat','comboStat','progressBar','visual','mapAttribution','areaPill','visualTypePill','phaseLabel','typeBadge','routeTitle','questionText','knownGrid','routeKey','instruction','answerCard','formula','formulaTitle','formulaText','trigHint','answerRange','answerInput','answerUnit','rangeHint','timerText','submitBtn','resultPanel','roundScore','resultMsg','bars','estimateScore','calcScore','speedScore','lesson','nextBtn','totalScore','grade','roundList','tileWarning','selftest'];
+  const els=ids.reduce((o,id)=>(o[id]=$(id),o),{});
+  const state={round:0,total:0,phase:'intro',problem:null,estimate:null,calc:null,results:[],startedAt:0,timer:null,rounds:[],combo:0,bestCombo:0};
+  let mapRenderToken=0;
+  function rad(d){return d*Math.PI/180}function deg(r){return r*180/Math.PI}
+  function distance(a,b){const R=6371,dp=rad(b.
