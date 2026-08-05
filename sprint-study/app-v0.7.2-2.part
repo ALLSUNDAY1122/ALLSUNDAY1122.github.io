@@ -1,0 +1,59 @@
+e.status==='running'){playBgm('timer')}}
+
+function currentNumber(){return state.settings.startNumber+state.index}
+function deriveCounts(results=state.results){return {understood:results.filter(r=>r.outcome==='understood').length,review:results.filter(r=>r.outcome==='review').length,unjudged:results.filter(r=>r.outcome==='unjudged').length}}
+function canJudge(){return ['running','awaiting'].includes(state.status)}
+function updateControls(){
+  const active=['running','paused','awaiting'].includes(state.status),judge=canJudge();
+  $('goodBtn').disabled=!judge;$('reviewBtn').disabled=!judge;$('extendBtn').disabled=!judge;$('skipBtn').disabled=!judge;
+  $('undoBtn').classList.toggle('hidden',state.results.length===0);
+  $('mainBtn').disabled=state.status==='awaiting';
+  $('mainBtn').textContent=state.status==='running'?'一時停止':state.status==='paused'?'再開':'開始';
+  if(!active)$('mainBtn').textContent='開始';
+}
+function renderTimer(){
+  const s=state.settings,index=Math.min(state.index,Math.max(0,s.count-1));
+  $('currentSubject').textContent=s.subject;$('timer').textContent=fmt(state.remaining);$('positionLabel').textContent=`${s.unit} ${s.startNumber+index}`;$('counter').textContent=`${Math.min(index+1,s.count)} / ${s.count}`;
+  const ratio=state.currentTotal?clamp(state.remaining/state.currentTotal,0,1):0;$('bar').style.width=`${ratio*100}%`;
+  const card=$('timerCard');card.classList.toggle('running',state.status==='running');card.classList.toggle('awaiting',state.status==='awaiting');
+  const phase={idle:'準備完了',running:'学習中',paused:'一時停止',awaiting:'判定待ち'}[state.status]||'準備完了';$('phaseLabel').textContent=phase;
+  const counts=deriveCounts();$('liveDone').textContent=state.results.length;$('liveUnderstood').textContent=counts.understood;$('liveReview').textContent=counts.review;
+  const progressNote=state.results.length?` 現在、${state.results.length}/${s.count}${s.unit}を完了。`:'';
+  const message=state.status==='idle'?'開始すると、区切りごとに理解を記録できます。':state.status==='running'?`理解できた時点で、時間を待たずに次へ進めます。${progressNote}`:state.status==='paused'?`再開すると、残り時間から続きます。${progressNote}`:'時間になりました。理解を判定するか、15秒延長してください。';
+  $('judgmentMessage').textContent=message;updateControls();
+}
+function setFocusMode(active){document.body.classList.toggle('session-active',active);if(active)switchView('timer')}
+function startTicker(){clearInterval(ticker);ticker=setInterval(tick,100)}
+function stopTicker(){clearInterval(ticker);ticker=null}
+function tick(){
+  if(state.status!=='running')return;state.remaining=Math.max(0,(state.endAt-Date.now())/1000);renderTimer();
+  const sec=Math.ceil(state.remaining),cd=state.settings.countdown;
+  if(cd>0&&sec>0&&sec<=cd&&!state.beeped.includes(sec)){state.beeped.push(sec);playCue('count')}
+  if(state.remaining<=0){if(state.settings.autoAdvance){commitOutcome('unjudged')}else{state.status='awaiting';stopTicker();playCue('interval');saveDraft();renderTimer();announce(`${state.settings.unit}${currentNumber()}の時間です。理解を判定してください`)}}
+  else saveDraft();
+}
+async function startSession(settings,opts={}){
+  const s=normalizeSettings(settings);if(['running','paused','awaiting'].includes(state.status))hardReset(false);
+  saveSettings(s);applyForm(s);state={status:'running',settings:s,index:0,remaining:s.seconds,currentTotal:s.seconds,endAt:Date.now()+s.seconds*1000,results:[],sessionStartedAt:Date.now(),beeped:[],updatedAt:Date.now()};
+  setFocusMode(true);await unlockAudio();if(s.bgmEnabled)playBgm('timer');playCue('start');renderTimer();startTicker();saveDraft();
+  setTimeout(()=>$('timerCard').scrollIntoView({behavior:'smooth',block:'start'}),40);announce(`${s.subject}を開始しました。${s.seconds}秒、${s.count}${s.unit}です`);
+}
+function pauseSession(){if(state.status!=='running')return;state.remaining=Math.max(0,(state.endAt-Date.now())/1000);state.status='paused';stopTicker();pauseBgm();saveDraft();renderTimer();announce('一時停止しました')}
+async function resumeSession(){if(state.status!=='paused')return;state.status='running';state.endAt=Date.now()+state.remaining*1000;state.beeped=[];await unlockAudio();if(state.settings.bgmEnabled)playBgm('timer');startTicker();saveDraft();renderTimer();announce('再開しました')}
+function requestReset(){
+  if(state.status==='idle'){hardReset(true);return}const now=Date.now();if(now<resetArmedUntil){hardReset(true);toast('スプリントを終了しました')}else{resetArmedUntil=now+3200;$('resetBtn').textContent='もう一度押して破棄';$('resetBtn').classList.add('danger-armed');toast('もう一度押すと、今回の途中記録を破棄します');setTimeout(()=>{if(Date.now()>=resetArmedUntil){$('resetBtn').textContent='終了・リセット';$('resetBtn').classList.remove('danger-armed')}},3300)}
+}
+function hardReset(update=true){setFocusMode(false);$('resetBtn').textContent='終了・リセット';$('resetBtn').classList.remove('danger-armed');resetArmedUntil=0;stopTicker();stopBgm(true);localStorage.removeItem(KEYS.draft);const s=update?readForm():state.settings;state=idleState(s);if(update)renderTimer();checkRecovery()}
+function extendCurrent(seconds=15){if(!canJudge())return;state.currentTotal+=seconds;state.remaining=Math.max(0,state.remaining)+seconds;state.status='running';state.endAt=Date.now()+state.remaining*1000;state.beeped=[];playCue('extend');if(state.settings.bgmEnabled)playBgm('timer');startTicker();saveDraft();renderTimer();toast(`${seconds}秒延長しました`);announce(`${seconds}秒延長しました`)}
+function commitOutcome(outcome){
+  if(!canJudge())return;const record={index:state.index,number:currentNumber(),outcome,elapsed:Math.max(0,Math.round(state.currentTotal-state.remaining)),extended:Math.max(0,state.currentTotal-state.settings.seconds),remaining:state.remaining,currentTotal:state.currentTotal};
+  state.results.push(record);playCue(outcome==='review'?'review':'next');vibrate(outcome==='review'?[30,30,30]:18);
+  if(state.index>=state.settings.count-1){finishSession();return}
+  state.index++;state.currentTotal=state.settings.seconds;state.remaining=state.settings.seconds;state.endAt=Date.now()+state.settings.seconds*1000;state.status='running';state.beeped=[];if(state.settings.bgmEnabled)playBgm('timer');startTicker();saveDraft();renderTimer();
+  announce(`${outcome==='understood'?'理解済み':outcome==='review'?'要復習':'未判定'}として記録。${state.settings.unit}${currentNumber()}へ進みます`)
+}
+function undoLast(){
+  if(!state.results.length)return;const record=state.results.pop();stopTicker();pauseBgm();state.index=record.index;state.currentTotal=record.currentTotal||state.settings.seconds;state.remaining=Math.max(1,record.remaining||1);state.status='paused';state.beeped=[];saveDraft();renderTimer();toast('直前の判定を取り消しました');announce('直前の判定を取り消しました。再開してください')
+}
+function finishSession(){
+  stopTicker();stopBgm(true);const s=state.settings,counts=deriveCounts(),elapsed=Math.max(1,state.results.reduce((n,r)=>n+r.elapsed,0));const item={id:Date.now(),date:new Date().toISOString(),subject:s.subject,unit:s.unit,startNumber:s.startNumber,count:s.count,baseSeconds:s.seconds,elapsed,avg:Math.round(elapsed/s.count),...counts,coverage:Math.round((counts.understood+counts.review)/s.count*100),results:[..
