@@ -1,0 +1,49 @@
+.state.results]};
+  saveHistory([item,...history()]);localStorage.removeItem(KEYS.draft);lastFinishedSettings={...s};setFocusMode(false);state=idleState(s);renderTimer();renderHistory();showResult(item);playCue('finish');vibrate([40,35,60]);announce('スプリントが完了しました')
+}
+
+function saveDraft(){
+  if(!['running','paused','awaiting'].includes(state.status))return;state.updatedAt=Date.now();localStorage.setItem(KEYS.draft,JSON.stringify({...state,savedAt:Date.now()}));
+}
+function validDraft(){const d=safeParse(localStorage.getItem(KEYS.draft));if(!d||!d.settings||!['running','paused','awaiting'].includes(d.status))return null;if(Date.now()-(d.savedAt||0)>86400000){localStorage.removeItem(KEYS.draft);return null}return d}
+function checkRecovery(){const d=validDraft();$('recoveryBanner').classList.toggle('hidden',!d);if(d){const s=normalizeSettings(d.settings);$('recoveryText').textContent=`${s.subject}・${Math.min((d.index||0)+1,s.count)}/${s.count}${s.unit}・残り${fmt(d.remaining||0)}`}}
+function restoreDraft(){
+  const d=validDraft();if(!d)return;const s=normalizeSettings(d.settings);let remaining=clamp(d.remaining,0,3600),status=d.status;
+  if(status==='running'){remaining=Math.max(0,remaining-(Date.now()-(d.savedAt||Date.now()))/1000);status=remaining<=0?'awaiting':'paused'}
+  state={status,settings:s,index:clamp(d.index,0,s.count-1),remaining,currentTotal:clamp(d.currentTotal||s.seconds,1,3600),endAt:0,results:Array.isArray(d.results)?d.results:[],sessionStartedAt:d.sessionStartedAt||Date.now(),beeped:[],updatedAt:Date.now()};
+  applyForm(s);setFocusMode(true);$('recoveryBanner').classList.add('hidden');renderTimer();$('timerCard').scrollIntoView({behavior:'smooth',block:'start'});toast('中断地点を復元しました')
+}
+function discardDraft(){localStorage.removeItem(KEYS.draft);checkRecovery();toast('中断記録を破棄しました')}
+
+function showResult(item){
+  $('resultLead').textContent=`${item.subject}を${item.count}${item.unit}進めました。平均${item.avg}秒、判定率${item.coverage}%です。`;
+  $('resultUnderstood').textContent=item.understood;$('resultReview').textContent=item.review;$('resultUnjudged').textContent=item.unjudged;$('resultCoverage').textContent=`${item.coverage}%`;
+  const reviews=item.results.filter(r=>r.outcome==='review').map(r=>`${r.number}${item.unit}`);$('resultReviewList').classList.toggle('hidden',!reviews.length);$('resultReviewList').textContent=reviews.length?`要復習：${reviews.join('、')}`:'';
+  const dialog=$('resultDialog');if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','')
+}
+function renderHistory(){
+  const items=history(),totalUnits=items.reduce((n,x)=>n+x.count,0),totalTime=items.reduce((n,x)=>n+x.elapsed,0),judged=items.reduce((n,x)=>n+x.understood+x.review,0),understood=items.reduce((n,x)=>n+x.understood,0),openReviews=items.reduce((n,x)=>n+x.results.filter(r=>r.outcome==='review'&&!r.reviewedAt).length,0);
+  $('sumSessions').textContent=items.length;$('sumUnits').textContent=totalUnits;$('sumCoverage').textContent=totalUnits?`${Math.round(judged/totalUnits*100)}%`:'-';$('sumUnderstanding').textContent=judged?`${Math.round(understood/judged*100)}%`:'-';$('sumOpenReviews').textContent=openReviews;$('sumTime').textContent=`${Math.round(totalTime/60)}分`;
+  $('historyInsight').textContent=buildInsight(items);
+  if(!items.length){$('historyList').innerHTML='<p class="empty-state">まだ学習記録はありません。</p>';return}
+  $('historyList').innerHTML=items.map(item=>{
+    const reviews=item.results.filter(r=>r.outcome==='review');const understanding=(item.understood+item.review)?Math.round(item.understood/(item.understood+item.review)*100):null;
+    const chips=reviews.map(r=>`<button type="button" class="review-chip ${r.reviewedAt?'done':''}" data-review-session="${item.id}" data-review-index="${r.index}">${esc(String(r.number)+item.unit)}<small>${r.reviewedAt?'復習済み':'タップで復習済み'}</small></button>`).join('');
+    return `<article class="history-item"><div class="history-item-head"><div><h3>${esc(item.subject)}</h3><time>${esc(localDate(item.date))}</time></div><span class="status-chip ${item.coverage>=80?'ready':''}">判定率 ${item.coverage}%</span></div>
+      <div class="history-kpis"><div><strong>${item.count}${esc(item.unit)}</strong><span>進捗</span></div><div><strong>${item.avg}秒</strong><span>平均</span></div><div><strong>${understanding===null?'-':understanding+'%'}</strong><span>理解率*</span></div><div><strong>${reviews.filter(r=>!r.reviewedAt).length}</strong><span>復習待ち</span></div></div>
+      ${reviews.length?`<div class="review-line"><strong>要復習の場所</strong><div class="review-chips">${chips}</div></div>`:'<div class="review-line" style="background:var(--green-soft);color:var(--green)">要復習として残した箇所はありません。</div>'}
+      <div class="item-actions"><button type="button" data-delete-id="${item.id}">この記録を削除</button></div></article>`}).join('');
+  document.querySelectorAll('[data-delete-id]').forEach(btn=>btn.onclick=()=>deleteHistoryItem(btn.dataset.deleteId));document.querySelectorAll('[data-review-session]').forEach(btn=>btn.onclick=()=>toggleReviewResolved(btn.dataset.reviewSession,Number(btn.dataset.reviewIndex)));
+}
+function buildInsight(items){
+  if(!items.length)return '最初のセッションを完了すると、前回との比較を表示します。';const latest=items[0],previous=items.slice(1).find(x=>x.subject===latest.subject);const days=[...new Set(items.map(x=>dayKey(x.date)))].sort().reverse();let streak=0,cursor=new Date();
+  for(let i=0;i<30;i++){const key=dayKey(cursor);if(days.includes(key)){streak++}else if(i>0)break;cursor.setDate(cursor.getDate()-1)}
+  const open=items.reduce((n,x)=>n+x.results.filter(r=>r.outcome==='review'&&!r.reviewedAt).length,0);let text=`直近は「${latest.subject}」を${latest.count}${latest.unit}、判定率${latest.coverage}%で完了。 復習待ちは${open}件です。`;
+  if(previous){const diff=latest.avg-previous.avg;text+=` 同教材の前回より平均${Math.abs(diff)}秒${diff<=0?'速い':'遅い'}ペースです。`}
+  if(streak>0)text+=` 学習は${streak}日連続です。`;return text
+}
+function toggleReviewResolved(sessionId,index){const items=history(),session=items.find(x=>String(x.id)===String(sessionId));if(!session)return;const result=session.results.find(r=>r.index===index&&r.outcome==='review');if(!result)return;result.reviewedAt=result.reviewedAt?null:new Date().toISOString();session.review=session.results.filter(r=>r.outcome==='review').length;saveHistory(items);renderHistory();toast(result.reviewedAt?'復習済みにしました':'復習待ちに戻しました')}
+function deleteHistoryItem(id){saveHistory(history().filter(x=>String(x.id)!==String(id)));renderHistory();toast('記録を削除しました')}
+async function copyReviewList(){
+  const lines=[];history().forEach(item=>{const nums=item.results.filter(r=>r.outcome==='review'&&!r.reviewedAt).map(r=>`${r.number}${item.unit}`);if(nums.length)lines.push(`${item.subject}: ${nums.join('、')}`)});if(!lines.length){toast('要復習の記録はありません');return}
+  const text=lines.join('\n');try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}
