@@ -1,0 +1,82 @@
+(()=>{
+'use strict';
+
+const $=id=>document.getElementById(id);
+const VERSION='0.7.2';
+const KEYS={history:'sprintStudyV072History',settings:'sprintStudyV072Settings',draft:'sprintStudyV072Draft'};
+const LEGACY_HISTORY=['sprintStudyV080History','sprintStudyV061History'];
+const LEGACY_SETTINGS=['sprintStudyV080Settings','sprintStudyV063Setting','sprintStudyV061Setting'];
+const AUDIO_PARTS=['./audio/deep-focus-0.m4a.part','./audio/deep-focus-1.m4a.part'];
+const DEFAULTS={subject:'今日の学習',unit:'ページ',startNumber:1,seconds:45,count:10,autoAdvance:false,bgmEnabled:true,bgmVolume:.30,fxVolume:.55,countdown:3,soundStyle:'soft'};
+
+let ticker=null;
+let resetArmedUntil=0;
+let clearArmedUntil=0;
+let lastFinishedSettings=null;
+let state=idleState(DEFAULTS);
+
+const audio={
+  ctx:null,buffer:null,loadPromise:null,source:null,gain:null,mode:'none',offset:0,startedAt:0,
+  previewTimer:null,pendingTimerPlay:false,status:'loading'
+};
+
+function idleState(settings){return {status:'idle',settings:{...settings},index:0,remaining:settings.seconds,currentTotal:settings.seconds,endAt:0,results:[],sessionStartedAt:0,beeped:[],updatedAt:Date.now()}}
+function clamp(n,min,max){return Math.min(max,Math.max(min,Number(n)||0))}
+function safeParse(text,fallback=null){try{return JSON.parse(text)}catch{return fallback}}
+function esc(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function fmt(seconds){const s=Math.max(0,Math.ceil(seconds));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2100)}
+function announce(message){$('liveRegion').textContent='';requestAnimationFrame(()=>$('liveRegion').textContent=message)}
+function vibrate(pattern=20){try{navigator.vibrate?.(pattern)}catch{}}
+function localDate(value){return new Date(value).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+function dayKey(value){const d=new Date(value);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+
+function migrate(){
+  if(!localStorage.getItem(KEYS.history)){
+    for(const key of LEGACY_HISTORY){const raw=localStorage.getItem(key);const parsed=safeParse(raw);if(Array.isArray(parsed)){localStorage.setItem(KEYS.history,JSON.stringify(parsed.map(normalizeHistory)));break}}
+  }
+  if(!localStorage.getItem(KEYS.settings)){
+    for(const key of LEGACY_SETTINGS){const raw=localStorage.getItem(key);const parsed=safeParse(raw);if(parsed&&typeof parsed==='object'){localStorage.setItem(KEYS.settings,JSON.stringify(normalizeSettings(parsed)));break}}
+  }
+}
+function normalizeSettings(raw={}){
+  return {
+    subject:String(raw.subject||DEFAULTS.subject).slice(0,40),unit:['ページ','問','枚','回'].includes(raw.unit)?raw.unit:DEFAULTS.unit,
+    startNumber:clamp(raw.startNumber??1,0,99999),seconds:clamp(raw.seconds||45,5,600),count:clamp(raw.count||10,1,999),
+    autoAdvance:Boolean(raw.autoAdvance),bgmEnabled:raw.bgmEnabled!==false&&raw.bgm!=='none',bgmVolume:clamp(raw.bgmVolume??.30,0,1),
+    fxVolume:clamp(raw.fxVolume??raw.volume??.55,0,1),countdown:[0,3,5].includes(Number(raw.countdown))?Number(raw.countdown):3,
+    soundStyle:['soft','clear','wood'].includes(raw.soundStyle)?raw.soundStyle:'soft'
+  };
+}
+function normalizeHistory(raw={}){
+  const count=clamp(raw.count||raw.results?.length||1,1,999),unit=raw.unit||'ページ',startNumber=clamp(raw.startNumber??1,0,99999);
+  const results=Array.isArray(raw.results)?raw.results.map((r,i)=>({
+    index:Number.isFinite(r.index)?r.index:i,number:Number.isFinite(r.number)?r.number:startNumber+(Number.isFinite(r.index)?r.index:i),
+    outcome:['understood','review','unjudged'].includes(r.outcome)?r.outcome:'unjudged',elapsed:clamp(r.elapsed??raw.avg??0,0,3600),
+    extended:clamp(r.extended??0,0,3600),remaining:clamp(r.remaining??0,0,600),currentTotal:clamp(r.currentTotal??raw.baseSeconds??raw.seconds??45,1,3600),reviewedAt:r.reviewedAt||null
+  })):[];
+  const understood=results.filter(r=>r.outcome==='understood').length||(raw.under||0);
+  const review=results.filter(r=>r.outcome==='review').length||(raw.review||0);
+  const unjudged=Math.max(0,count-understood-review);
+  const elapsed=clamp(raw.elapsed??raw.seconds??results.reduce((n,r)=>n+r.elapsed,0),0,86400);
+  return {id:raw.id||Date.now()+Math.random(),date:raw.date||new Date().toISOString(),subject:raw.subject||'今日の学習',unit,startNumber,count,
+    baseSeconds:clamp(raw.baseSeconds??raw.avg??45,5,600),elapsed,avg:clamp(raw.avg??(elapsed/count),0,3600),understood,review,unjudged,
+    coverage:count?Math.round((understood+review)/count*100):0,results};
+}
+function history(){const parsed=safeParse(localStorage.getItem(KEYS.history),[]);return Array.isArray(parsed)?parsed.map(normalizeHistory):[]}
+function saveHistory(items){localStorage.setItem(KEYS.history,JSON.stringify(items.slice(0,250)))}
+function savedSettings(){return normalizeSettings(safeParse(localStorage.getItem(KEYS.settings),DEFAULTS)||DEFAULTS)}
+function saveSettings(settings,notify=false){localStorage.setItem(KEYS.settings,JSON.stringify(normalizeSettings(settings)));if(notify)toast('前回設定として保存しました')}
+
+function readForm(){return normalizeSettings({
+  subject:$('subject').value.trim()||DEFAULTS.subject,unit:$('unit').value,startNumber:$('startNumber').value,seconds:$('seconds').value,count:$('count').value,
+  autoAdvance:$('autoAdvance').checked,bgmEnabled:$('bgmQuickBtn').getAttribute('aria-pressed')==='true',bgmVolume:$('bgmVolume').value,
+  fxVolume:$('fxVolume').value,countdown:$('countdown').value,soundStyle:$('soundStyle').value
+})}
+function applyForm(settings){const s=normalizeSettings(settings);$('subject').value=s.subject;$('unit').value=s.unit;$('startNumber').value=s.startNumber;$('seconds').value=s.seconds;$('count').value=s.count;$('autoAdvance').checked=s.autoAdvance;
+  $('bgmVolume').value=s.bgmVolume;$('fxVolume').value=s.fxVolume;$('countdown').value=String(s.countdown);$('soundStyle').value=s.soundStyle;setBgmEnabled(s.bgmEnabled,false);updateFormLabels()}
+function updateFormLabels(){const s=readForm();$('settingsSummary').textContent=`${s.subject}・${s.seconds}秒・${s.count}${s.unit}`;$('lastStartSummary').textContent=`${s.seconds}秒 × ${s.count}${s.unit}`;
+  $('bgmVolumeValue').textContent=`${Math.round(s.bgmVolume*100)}%`;$('fxVolumeValue').textContent=`${Math.round(s.fxVolume*100)}%`;$('audioSummary').textContent=`Deep Focus Desk Work・${Math.round(s.bgmVolume*100)}%`;
+  if(audio.gain)audio.gain.gain.value=s.bgmVolume}
+function setBgmEnabled(enabled,handlePlayback=true){$('bgmQuickBtn').setAttribute('aria-pressed',enabled?'true':'false');$('bgmQuickBtn').textContent=enabled?'BGM ON':'BGM OFF';$('bgmQuickBtn').classList.toggle('off',!enabled);
+  if(!handlePlayback)return;if(!enabled){pauseBgm()}else if(stat
