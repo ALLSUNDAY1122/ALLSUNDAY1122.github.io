@@ -1,4 +1,5 @@
 import { File } from 'expo-file-system';
+import { getAnonymousId } from './anonymousId';
 
 export type SelectedStudyImage = {
   uri: string;
@@ -27,9 +28,10 @@ export async function recognizeWithGemini(images: SelectedStudyImage[]): Promise
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 60_000);
   try {
+    const anonymousId = await getAnonymousId();
     const response = await fetch(getOcrEndpoint(), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Toru-Tango-Anonymous-Id': anonymousId },
       body: JSON.stringify({ images: encodedImages }),
       signal: controller.signal
     });

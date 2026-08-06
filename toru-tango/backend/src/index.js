@@ -4,13 +4,14 @@ const OCR_MAX_BODY_BYTES = 12_000_000;
 const MAX_OCR_IMAGES = 10;
 const MAX_OCR_IMAGE_BYTES = 5_000_000;
 const DEFAULT_MODEL = 'gemini-3.5-flash-lite';
+const FREE_MONTHLY_AI_LIMIT = 5;
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 function cors(origin) {
   return {
     'Access-Control-Allow-Origin': origin || ALLOWED_ORIGIN,
     'Access-Control-Allow-Methods': 'POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Toru-Tango-Anonymous-Id',
     Vary: 'Origin',
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store'
@@ -96,6 +97,29 @@ function normalizeUsage(rawUsage) {
   return { inputTokens, outputTokens, totalTokens };
 }
 
+function anonymousIdFrom(request) {
+  const value = request.headers.get('X-Toru-Tango-Anonymous-Id') || '';
+  return /^[a-zA-Z0-9._:-]{8,128}$/.test(value) ? value : '';
+}
+
+function usageKey(anonymousId) {
+  const month = new Date().toISOString().slice(0, 7);
+  return `ai-usage:${month}:${anonymousId}`;
+}
+
+async function reserveMonthlyUsage(env, anonymousId) {
+  // KV未設定の開発環境や既存アプリは、課金基盤を有効化するまで従来どおり動かす。
+  if (!anonymousId || !env.USAGE_KV) return { allowed: true, tracked: false };
+  const key = usageKey(anonymousId);
+  const used = Number(await env.USAGE_KV.get(key)) || 0;
+  if (used >= FREE_MONTHLY_AI_LIMIT) {
+    return { allowed: false, tracked: true, used, limit: FREE_MONTHLY_AI_LIMIT };
+  }
+  const next = used + 1;
+  await env.USAGE_KV.put(key, String(next), { expirationTtl: 60 * 60 * 24 * 45 });
+  return { allowed: true, tracked: true, used: next, limit: FREE_MONTHLY_AI_LIMIT };
+}
+
 function imageParts(images) {
   if (!Array.isArray(images) || !images.length || images.length > MAX_OCR_IMAGES) {
     return null;
@@ -179,6 +203,10 @@ export default {
       if (!parts) {
         return json({ error: '画像はJPEG・PNG・WebP・HEICを10枚まで、1枚5MB以下で送信してください。' }, 400, origin);
       }
+      const usage = await reserveMonthlyUsage(env, anonymousIdFrom(request));
+      if (!usage.allowed) {
+        return json({ error: '今月のAI利用枠を使い切りました。追加利用はProプランをご利用ください。', code: 'AI_MONTHLY_LIMIT', usage }, 429, origin);
+      }
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 60_000);
       try {
@@ -211,7 +239,8 @@ export default {
           {
             text: cleanText(text, 50_000),
             provider: 'Google Gemini',
-            model: cleanText(raw?.modelVersion || model, 80)
+            model: cleanText(raw?.modelVersion || model, 80),
+            usage
           },
           200,
           origin
@@ -237,6 +266,11 @@ export default {
 
     if (source.length < 20) {
       return json({ error: '教材本文を20文字以上入力してください。' }, 400, origin);
+    }
+
+    const usage = await reserveMonthlyUsage(env, anonymousIdFrom(request));
+    if (!usage.allowed) {
+      return json({ error: '今月のAI利用枠を使い切りました。追加利用はProプランをご利用ください。', code: 'AI_MONTHLY_LIMIT', usage }, 429, origin);
     }
 
     const instructions = [
@@ -348,7 +382,8 @@ export default {
             duplicateCount: result.duplicateCount,
             rejectedCount: result.rejectedCount
           },
-          elapsedMs: Date.now() - startedAt
+          elapsedMs: Date.now() - startedAt,
+          usageLimit: usage
         },
         200,
         origin

@@ -122,6 +122,34 @@ test('rejects missing Gemini secret without calling upstream', async () => {
   assert.equal(response.status, 503);
 });
 
+test('enforces the monthly anonymous AI limit with KV', async (t) => {
+  const originalFetch = globalThis.fetch;
+  const values = new Map();
+  globalThis.fetch = async () => Response.json(geminiResponse([
+    { question: '日本国憲法が施行された日はいつですか？', answer: '1947年5月3日', type: 'qa', factKey: '施行日' }
+  ]));
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+  const kv = {
+    get: async (key) => values.get(key) || null,
+    put: async (key, value) => values.set(key, value)
+  };
+  const init = { GEMINI_API_KEY: 'test-key', USAGE_KV: kv };
+  const headers = { 'X-Toru-Tango-Anonymous-Id': 'anon-test-user' };
+
+  for (let index = 0; index < 5; index += 1) {
+    const response = await worker.fetch(request(validInput, { headers }), init);
+    assert.equal(response.status, 200);
+  }
+  const limited = await worker.fetch(request(validInput, { headers }), init);
+  const body = await limited.json();
+  assert.equal(limited.status, 429);
+  assert.equal(body.code, 'AI_MONTHLY_LIMIT');
+  assert.equal(body.usage.used, 5);
+  assert.equal(body.usage.limit, 5);
+});
+
 test('rejects short text and disallowed browser origins', async () => {
   const short = await worker.fetch(request({ ...validInput, text: '短い文章' }), {
     GEMINI_API_KEY: 'test-key'
