@@ -13,7 +13,7 @@ import {
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
 import type { StudyMode } from '@/src/types';
-import { isWeakCard } from '@/src/utils/data';
+import { getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
 export default function CardsScreen() {
   const { cards, updateCard, deleteCard, clearAll } = useAppStore();
@@ -25,7 +25,9 @@ export default function CardsScreen() {
   const filtered = useMemo(
     () =>
       cards.filter((card) => {
-        if (filter === 'weak') return isWeakCard(card);
+        if (filter === 'weak') return getCardReviewStage(card) === 'weak';
+        if (filter === 'review') return getCardReviewStage(card) === 'review';
+        if (filter === 'mastered') return getCardReviewStage(card) === 'mastered';
         if (filter === 'unseen') return card.correct + card.wrong === 0;
         return true;
       }),
@@ -96,7 +98,9 @@ export default function CardsScreen() {
           onChange={setFilter}
           options={[
             { value: 'all', label: 'すべて' },
-            { value: 'weak', label: '苦手' },
+            { value: 'weak', label: '弱点' },
+            { value: 'review', label: '定期確認' },
+            { value: 'mastered', label: '確認不要' },
             { value: 'unseen', label: '未学習' }
           ]}
         />
@@ -130,7 +134,14 @@ export default function CardsScreen() {
                     <Text style={styles.answer}>{card.answer}</Text>
                   </View>
                   <Text style={styles.stats}>
-                    正解 {card.correct}回・もう一度 {card.wrong}回
+                    {getCardReviewStage(card) === 'weak'
+                      ? '弱点に登録中'
+                      : getCardReviewStage(card) === 'review'
+                        ? isReviewDue(card)
+                          ? '定期確認：今日'
+                          : `定期確認：${new Date(card.nextReviewAt ?? '').toLocaleDateString('ja-JP')}`
+                        : '確認不要'}
+                    {' ・ '}正解 {card.correct}回・弱点 {card.wrong}回
                   </Text>
                   <View style={commonStyles.row}>
                     <AppButton

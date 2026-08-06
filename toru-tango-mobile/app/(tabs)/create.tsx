@@ -23,6 +23,7 @@ import {
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
 import { generateAiQuestions } from '@/src/services/ai';
+import { recognizeWithGemini, type SelectedStudyImage } from '@/src/services/geminiOcr';
 import {
   generateOcrAwareQuestions,
   repairOcrText
@@ -35,6 +36,7 @@ import type {
 import { isSameCard } from '@/src/utils/data';
 
 type OcrRotation = 'auto' | 'left' | 'right';
+type OcrProvider = 'appleVision' | 'gemini';
 type EditableOnDeviceCard = OnDeviceStudyCard & { selected: boolean };
 
 function parseLines(text: string): QuestionCandidate[] {
@@ -90,11 +92,12 @@ export default function CreateScreen() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [bulkText, setBulkText] = useState('');
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [images, setImages] = useState<SelectedStudyImage[]>([]);
   const [ocrText, setOcrText] = useState('');
   const [ocrStatus, setOcrStatus] = useState('');
   const [ocrRunning, setOcrRunning] = useState(false);
   const [ocrRotation, setOcrRotation] = useState<OcrRotation>('auto');
+  const [ocrProvider, setOcrProvider] = useState<OcrProvider>('appleVision');
   const [onDeviceCards, setOnDeviceCards] = useState<EditableOnDeviceCard[]>([]);
   const [onDeviceGenerating, setOnDeviceGenerating] = useState(false);
   const [onDeviceStatus, setOnDeviceStatus] = useState('');
@@ -280,7 +283,7 @@ export default function CreateScreen() {
   };
 
   const retakePhoto = () => {
-    setImageUri(null);
+    setImages([]);
     setOcrText('');
     setOcrStatus('');
     void selectPhoto(true);
@@ -333,23 +336,37 @@ export default function CreateScreen() {
     const result = camera
       ? await ImagePicker.launchCameraAsync({
           mediaTypes: ['images'],
-          quality: 1
+          quality: 0.8
         })
       : await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
-          quality: 1
+          quality: 0.8,
+          allowsMultipleSelection: true,
+          selectionLimit: 10,
+          orderedSelection: true
         });
 
     if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
+      const selected = result.assets.map((asset) => ({
+        uri: asset.uri,
+        mimeType: asset.mimeType
+      }));
+      setImages((current) => {
+        const merged = [...current, ...selected];
+        return merged.filter((image, index) => merged.findIndex((item) => item.uri === image.uri) === index).slice(0, 10);
+      });
       setOcrText('');
       setOnDeviceCards([]);
-      setOcrStatus('写真を選択しました。向きを確認して文字認識を実行してください。');
+      setOcrStatus(`${selected.length}枚の写真を追加しました。文字認識の方法を選んで実行してください。`);
     }
   };
 
-  const runOcr = async () => {
-    if (!imageUri) {
+  const removeImage = (uri: string) => {
+    setImages((current) => current.filter((image) => image.uri !== uri));
+  };
+
+  const runAppleVisionOcr = async () => {
+    if (!images.length) {
       Alert.alert('写真がありません', '先に教材を撮影するか写真を選んでください。');
       return;
     }
@@ -362,14 +379,24 @@ export default function CreateScreen() {
     }
 
     setOcrRunning(true);
-    setOcrStatus('Apple Visionで日本語を認識しています…');
+    setOcrStatus(`端末内OCRで${images.length}枚の日本語を認識しています…`);
     try {
-      const result = await recognizeText(imageUri, rotationValue(ocrRotation));
-      const repaired = repairOcrText(result.text);
+      const recognized: string[] = [];
+      let failed = 0;
+      for (const image of images) {
+        try {
+          const result = await recognizeText(image.uri, rotationValue(ocrRotation));
+          if (result.text.trim()) recognized.push(result.text);
+          else failed += 1;
+        } catch {
+          failed += 1;
+        }
+      }
+      const repaired = repairOcrText(recognized.join('\n\n'));
       if (repaired.length < 5) throw new Error('有効な文字を認識できませんでした。');
       setOcrText(repaired);
       setOcrStatus(
-        `認識完了。採用した向きは${result.rotation}度です。結果を修正して教材本文へ送ってください。`
+        `端末内OCRが${recognized.length}枚を認識しました${failed ? `（${failed}枚は読み取れませんでした）` : ''}。結果を修正して教材本文へ送ってください。`
       );
     } catch (error) {
       setOcrText('');
@@ -379,6 +406,43 @@ export default function CreateScreen() {
     } finally {
       setOcrRunning(false);
     }
+  };
+
+  const runGeminiOcr = async () => {
+    setOcrRunning(true);
+    setOcrStatus(`Geminiで${images.length}枚の文字を認識しています…`);
+    try {
+      const repaired = repairOcrText(await recognizeWithGemini(images));
+      if (repaired.length < 5) throw new Error('有効な文字を認識できませんでした。');
+      setOcrText(repaired);
+      setOcrStatus(`Gemini OCRが${images.length}枚を認識しました。結果を必ず確認・修正してください。`);
+    } catch (error) {
+      setOcrText('');
+      setOcrStatus(
+        `Gemini OCRに失敗しました：${error instanceof Error ? error.message : '原因不明のエラー'}`
+      );
+    } finally {
+      setOcrRunning(false);
+    }
+  };
+
+  const runOcr = () => {
+    if (!images.length) {
+      Alert.alert('写真がありません', '先に教材を撮影するか写真を選んでください。');
+      return;
+    }
+    if (ocrProvider === 'appleVision') {
+      void runAppleVisionOcr();
+      return;
+    }
+    Alert.alert(
+      'Geminiへ写真を送信します',
+      '選択した写真は文字認識のためCloudflare Workerを経由してGoogle Gemini APIへ送信されます。教材写真に個人情報がないことを確認してください。',
+      [
+        { text: 'キャンセル', style: 'cancel' },
+        { text: '同意して認識', onPress: () => void runGeminiOcr() }
+      ]
+    );
   };
 
   const useOcrResult = () => {
@@ -403,15 +467,41 @@ export default function CreateScreen() {
         <View style={commonStyles.row}>
           <AppButton label="撮影する" onPress={() => void selectPhoto(true)} />
           <AppButton
-            label="写真を選ぶ"
+            label="写真を選ぶ（複数可）"
             variant="secondary"
             onPress={() => void selectPhoto(false)}
           />
         </View>
-        {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
-        {imageUri ? (
+        {images.length ? (
+          <View style={styles.imageList}>
+            <Text style={styles.imageCount}>選択中：{images.length} / 10枚</Text>
+            <View style={styles.thumbnailRow}>
+              {images.map((image, index) => (
+                <View key={image.uri} style={styles.thumbnailItem}>
+                  <Image source={{ uri: image.uri }} style={styles.thumbnail} />
+                  <Text style={styles.thumbnailLabel}>{index + 1}枚目</Text>
+                  <AppButton
+                    label="外す"
+                    variant="secondary"
+                    onPress={() => removeImage(image.uri)}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
+        {images.length ? (
           <AppButton label="撮り直す" variant="secondary" onPress={retakePhoto} />
         ) : null}
+        <Text style={styles.optionLabel}>文字認識の方法</Text>
+        <ChoiceRow
+          value={ocrProvider}
+          onChange={setOcrProvider}
+          options={[
+            { value: 'appleVision', label: '端末内OCR' },
+            { value: 'gemini', label: 'Gemini OCR' }
+          ]}
+        />
         <Text style={styles.optionLabel}>文字の向き</Text>
         <ChoiceRow
           value={ocrRotation}
@@ -423,12 +513,12 @@ export default function CreateScreen() {
           ]}
         />
         <AppButton
-          label={ocrRunning ? '文字認識中…' : '写真から文字を読む'}
-          onPress={() => void runOcr()}
-          disabled={ocrRunning || !imageUri}
+          label={ocrRunning ? '文字認識中…' : `${ocrProvider === 'gemini' ? 'Gemini' : '端末内'}で文字を読む`}
+          onPress={runOcr}
+          disabled={ocrRunning || !images.length}
         />
         <MutedText>
-          正式iOS版はApple Visionを使用します。Expo Goではなく、EAS開発ビルドまたは本番ビルドで動作します。
+          端末内OCRは写真を外部送信しません。Gemini OCRは写真をGoogle Gemini APIへ送信し、認識前に確認を求めます。
         </MutedText>
         {ocrStatus ? <Text style={styles.status}>{ocrStatus}</Text> : null}
         {ocrText ? (
@@ -639,7 +729,12 @@ const styles = StyleSheet.create({
     padding: 10,
     lineHeight: 20
   },
-  preview: { width: '100%', height: 260, borderRadius: 12, resizeMode: 'contain' },
+  imageList: { gap: 8 },
+  imageCount: { color: colors.text, fontWeight: '800' },
+  thumbnailRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  thumbnailItem: { width: 104, gap: 5 },
+  thumbnail: { width: 104, height: 104, borderRadius: 10, resizeMode: 'cover' },
+  thumbnailLabel: { color: colors.muted, fontSize: 12, textAlign: 'center' },
   generatedCards: { gap: 10 },
   resultHeading: { color: colors.text, fontSize: 16, fontWeight: '800' },
   generatedCard: {

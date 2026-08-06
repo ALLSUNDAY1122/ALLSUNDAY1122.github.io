@@ -1,5 +1,8 @@
 const ALLOWED_ORIGIN = 'https://allsunday1122.github.io';
 const MAX_BODY_BYTES = 100_000;
+const OCR_MAX_BODY_BYTES = 12_000_000;
+const MAX_OCR_IMAGES = 10;
+const MAX_OCR_IMAGE_BYTES = 5_000_000;
 const DEFAULT_MODEL = 'gemini-3.5-flash-lite';
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
@@ -94,6 +97,23 @@ function normalizeUsage(rawUsage) {
   return { inputTokens, outputTokens, totalTokens };
 }
 
+function imageParts(images) {
+  if (!Array.isArray(images) || !images.length || images.length > MAX_OCR_IMAGES) {
+    return null;
+  }
+  const parts = [];
+  for (const image of images) {
+    const data = cleanText(image?.data, MAX_OCR_IMAGE_BYTES * 2);
+    const mimeType = cleanText(image?.mimeType, 80);
+    if (!/^image\/(jpeg|png|webp|heic)$/i.test(mimeType) || !/^[a-z0-9+/]+={0,2}$/i.test(data)) {
+      return null;
+    }
+    if (Math.floor((data.length * 3) / 4) > MAX_OCR_IMAGE_BYTES) return null;
+    parts.push({ inlineData: { mimeType, data } });
+  }
+  return parts;
+}
+
 function questionSchema(count) {
   return {
     type: 'object',
@@ -134,7 +154,7 @@ export default {
     }
 
     const url = new URL(request.url);
-    if (url.pathname !== '/generate') {
+    if (url.pathname !== '/generate' && url.pathname !== '/ocr') {
       return json({ error: 'Not found' }, 404, origin);
     }
     if (!env.GEMINI_API_KEY) {
@@ -142,7 +162,8 @@ export default {
     }
 
     const contentLength = Number(request.headers.get('Content-Length') || 0);
-    if (contentLength > MAX_BODY_BYTES) {
+    const maxBodyBytes = url.pathname === '/ocr' ? OCR_MAX_BODY_BYTES : MAX_BODY_BYTES;
+    if (contentLength > maxBodyBytes) {
       return json({ error: '送信内容が大きすぎます。' }, 413, origin);
     }
 
@@ -153,13 +174,68 @@ export default {
       return json({ error: 'JSON形式が正しくありません。' }, 400, origin);
     }
 
+    const model = cleanText(env.GEMINI_MODEL || DEFAULT_MODEL, 80) || DEFAULT_MODEL;
+
+    if (url.pathname === '/ocr') {
+      const parts = imageParts(body.images);
+      if (!parts) {
+        return json({ error: '画像はJPEG・PNG・WebP・HEICを10枚まで、1枚5MB以下で送信してください。' }, 400, origin);
+      }
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 60_000);
+      try {
+        const response = await fetch(
+          `${GEMINI_API_BASE}/${encodeURIComponent(model)}:generateContent`,
+          {
+            method: 'POST',
+            headers: {
+              'x-goog-api-key': env.GEMINI_API_KEY,
+              'Content-Type': 'application/json'
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: '画像内の日本語教材を、ページ順にそのまま文字起こししてください。推測で補わず、読めない箇所は［判読不能］としてください。見出し・表・箇条書きの改行は可能な限り保ってください。' }]
+              },
+              contents: [{ role: 'user', parts: [{ text: 'この教材写真を文字起こししてください。' }, ...parts] }],
+              generationConfig: { temperature: 0, maxOutputTokens: 12000 }
+            })
+          }
+        );
+        const raw = await response.json();
+        if (!response.ok) {
+          console.error('Gemini OCR request failed', response.status);
+          return json({ error: 'Gemini OCRに失敗しました。少し時間を置いて再試行してください。' }, 502, origin);
+        }
+        const text = extractOutputText(raw);
+        if (!text) return json({ error: '画像から文字を認識できませんでした。' }, 422, origin);
+        return json(
+          {
+            text: cleanText(text, 50_000),
+            provider: 'Google Gemini',
+            model: cleanText(raw?.modelVersion || model, 80)
+          },
+          200,
+          origin
+        );
+      } catch (error) {
+        console.error(error?.name === 'AbortError' ? 'Gemini OCR timed out' : 'Gemini OCR request failed');
+        return json(
+          { error: error?.name === 'AbortError' ? 'Gemini OCRの応答が時間切れになりました。' : 'Gemini OCRへ接続できませんでした。' },
+          500,
+          origin
+        );
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
     const source = cleanText(body.text ?? body.source, 12_000);
     const type = ['qa', 'cloze', 'mix'].includes(body.type) ? body.type : 'mix';
     const difficulty = ['easy', 'normal', 'hard'].includes(body.difficulty)
       ? body.difficulty
       : 'normal';
     const count = Math.max(1, Math.min(Number(body.count) || 10, 20));
-    const model = cleanText(env.GEMINI_MODEL || DEFAULT_MODEL, 80) || DEFAULT_MODEL;
 
     if (source.length < 20) {
       return json({ error: '教材本文を20文字以上入力してください。' }, 400, origin);

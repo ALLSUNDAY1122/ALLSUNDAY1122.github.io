@@ -11,8 +11,8 @@ import {
   colors
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
-import type { Card, StudyMode } from '@/src/types';
-import { isWeakCard } from '@/src/utils/data';
+import type { Card, CardReviewStage, StudyMode } from '@/src/types';
+import { getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
 function shuffle<T>(items: T[]): T[] {
   return [...items].sort(() => Math.random() - 0.5);
@@ -23,9 +23,13 @@ function selectCards(cards: Card[], mode: StudyMode): Card[] {
     return shuffle(cards.filter((card) => card.correct + card.wrong === 0));
   }
   if (mode === 'weak') {
-    const weak = shuffle(cards.filter(isWeakCard));
-    const others = shuffle(cards.filter((card) => !isWeakCard(card)));
-    return [...weak, ...others];
+    return shuffle(cards.filter((card) => getCardReviewStage(card) === 'weak'));
+  }
+  if (mode === 'review') {
+    return shuffle(cards.filter((card) => isReviewDue(card)));
+  }
+  if (mode === 'mastered') {
+    return shuffle(cards.filter((card) => getCardReviewStage(card) === 'mastered'));
   }
   return shuffle(cards);
 }
@@ -51,10 +55,9 @@ export default function StudyScreen() {
     setRevealed(false);
   };
 
-  const grade = (correct: boolean) => {
+  const grade = (stage: CardReviewStage) => {
     if (!currentCard) return;
-    gradeCard(currentCard.id, correct);
-    if (!correct) setQueue((current) => [...current, currentCard.id]);
+    gradeCard(currentCard.id, stage);
     setPosition((current) => current + 1);
     setRevealed(false);
   };
@@ -72,7 +75,7 @@ export default function StudyScreen() {
     <Page>
       <Text style={commonStyles.title}>学習</Text>
       <Text style={commonStyles.subtitle}>
-        カードをタップして表と裏を切り替えます。「もう一度」は末尾へ戻ります。
+        カードをタップして表と裏を切り替えます。答えの後に、次回の扱いを選びます。
       </Text>
 
       <Section title="学習条件">
@@ -81,7 +84,9 @@ export default function StudyScreen() {
           onChange={setMode}
           options={[
             { value: 'all', label: 'すべて' },
-            { value: 'weak', label: '苦手を優先' },
+            { value: 'weak', label: '弱点を復習' },
+            { value: 'review', label: '定期確認' },
+            { value: 'mastered', label: '確認不要' },
             { value: 'unseen', label: '未学習のみ' }
           ]}
         />
@@ -139,17 +144,27 @@ export default function StudyScreen() {
             {!revealed ? (
               <AppButton label="裏を見る" onPress={() => setRevealed(true)} />
             ) : (
-              <View style={commonStyles.row}>
-                <AppButton
-                  label="もう一度"
-                  variant="danger"
-                  onPress={() => grade(false)}
-                />
-                <AppButton
-                  label="覚えた"
-                  variant="success"
-                  onPress={() => grade(true)}
-                />
+              <View style={styles.gradeActions}>
+                <View style={styles.gradeRow}>
+                  <AppButton
+                    label="弱点に登録"
+                    variant="danger"
+                    onPress={() => grade('weak')}
+                  />
+                  <AppButton
+                    label="覚えた"
+                    variant="success"
+                    onPress={() => grade('review')}
+                  />
+                  <AppButton
+                    label="次へ"
+                    variant="secondary"
+                    onPress={() => grade('mastered')}
+                  />
+                </View>
+                <Text style={styles.gradeHint}>
+                  弱点＝優先して復習／覚えた＝3日後に確認／次へ＝確認不要
+                </Text>
               </View>
             )}
           </View>
@@ -199,5 +214,8 @@ const styles = StyleSheet.create({
   },
   flipHint: { color: colors.muted, fontSize: 12 },
   counter: { color: colors.muted },
-  completed: { color: colors.text, fontSize: 26, fontWeight: '800' }
+  completed: { color: colors.text, fontSize: 26, fontWeight: '800' },
+  gradeActions: { gap: 8 },
+  gradeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' },
+  gradeHint: { color: colors.muted, fontSize: 12, lineHeight: 18, textAlign: 'center' }
 });

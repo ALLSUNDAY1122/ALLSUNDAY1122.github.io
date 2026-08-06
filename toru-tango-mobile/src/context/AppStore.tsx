@@ -7,7 +7,13 @@ import {
   useMemo,
   useState
 } from 'react';
-import type { BackupData, Card, QuestionCandidate, StudyHistory } from '@/src/types';
+import type {
+  BackupData,
+  Card,
+  CardReviewStage,
+  QuestionCandidate,
+  StudyHistory
+} from '@/src/types';
 import { loadStoredState, saveStoredState } from '@/src/repositories/storage';
 import { createId, isSameCard, toDateKey } from '@/src/utils/data';
 
@@ -20,7 +26,7 @@ export type AppStoreValue = {
   updateCard: (id: string, question: string, answer: string) => boolean;
   deleteCard: (id: string) => void;
   clearAll: () => void;
-  gradeCard: (cardId: string, correct: boolean) => void;
+  gradeCard: (cardId: string, stage: CardReviewStage) => void;
   createBackup: () => BackupData;
   restoreBackup: (backup: BackupData) => void;
 };
@@ -73,6 +79,8 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           answer: candidate.answer,
           correct: 0,
           wrong: 0,
+          reviewStage: 'review' as const,
+          nextReviewAt: null,
           lastStudiedAt: null,
           createdAt: now,
           updatedAt: now
@@ -107,6 +115,8 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           answer: candidate.answer,
           correct: 0,
           wrong: 0,
+          reviewStage: 'review' as const,
+          nextReviewAt: null,
           lastStudiedAt: null,
           createdAt: now,
           updatedAt: now
@@ -152,8 +162,15 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
     setHistory([]);
   }, []);
 
-  const gradeCard = useCallback((cardId: string, correct: boolean) => {
+  const gradeCard = useCallback((cardId: string, stage: CardReviewStage) => {
     const answeredAt = new Date();
+    const correct = stage !== 'weak';
+    const nextReviewAt =
+      stage === 'review'
+        ? new Date(answeredAt.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString()
+        : stage === 'weak'
+          ? answeredAt.toISOString()
+          : null;
     setCards((current) =>
       current.map((card) =>
         card.id === cardId
@@ -161,6 +178,8 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
               ...card,
               correct: card.correct + (correct ? 1 : 0),
               wrong: card.wrong + (correct ? 0 : 1),
+              reviewStage: stage,
+              nextReviewAt,
               lastStudiedAt: answeredAt.toISOString(),
               updatedAt: answeredAt.toISOString()
             }

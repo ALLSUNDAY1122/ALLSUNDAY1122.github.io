@@ -1,4 +1,4 @@
-import type { Card, QuestionCandidate } from '@/src/types';
+import type { Card, CardReviewStage, QuestionCandidate } from '@/src/types';
 
 export const createId = (): string =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -14,7 +14,18 @@ export const isSameCard = (
   normalizeText(left.answer) === normalizeText(right.answer);
 
 export const isWeakCard = (card: Card): boolean =>
-  card.wrong > card.correct || card.wrong >= 2;
+  getCardReviewStage(card) === 'weak';
+
+export const getCardReviewStage = (card: Card): CardReviewStage => {
+  if (card.reviewStage) return card.reviewStage;
+  return card.wrong > card.correct || card.wrong >= 2 ? 'weak' : 'review';
+};
+
+export const isReviewDue = (card: Card, now = new Date()): boolean => {
+  if (getCardReviewStage(card) !== 'review') return false;
+  if (!card.nextReviewAt) return true;
+  return new Date(card.nextReviewAt).getTime() <= now.getTime();
+};
 
 export const toDateKey = (date = new Date()): string => {
   const year = date.getFullYear();

@@ -11,7 +11,7 @@ import {
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
 import { pickBackup, shareBackup } from '@/src/services/backup';
-import { calculateStreak, isWeakCard } from '@/src/utils/data';
+import { calculateStreak, getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
 export default function RecordsScreen() {
   const { cards, history, createBackup, restoreBackup } = useAppStore();
@@ -32,7 +32,9 @@ export default function RecordsScreen() {
       total,
       accuracy: total ? Math.round((correct / total) * 100) : 0,
       streak: calculateStreak(history.map((entry) => entry.dateKey)),
-      weak: cards.filter(isWeakCard).length,
+      weak: cards.filter((card) => getCardReviewStage(card) === 'weak').length,
+      due: cards.filter((card) => isReviewDue(card)).length,
+      mastered: cards.filter((card) => getCardReviewStage(card) === 'mastered').length,
       daily: [...daily.entries()]
         .sort(([left], [right]) => right.localeCompare(left))
         .slice(0, 14)
@@ -81,7 +83,9 @@ export default function RecordsScreen() {
           <Stat label="総回答数" value={`${summary.total}`} />
           <Stat label="正答率" value={`${summary.accuracy}%`} />
           <Stat label="連続学習" value={`${summary.streak}日`} />
-          <Stat label="苦手カード" value={`${summary.weak}`} />
+          <Stat label="弱点カード" value={`${summary.weak}`} />
+          <Stat label="今日の定期確認" value={`${summary.due}`} />
+          <Stat label="確認不要" value={`${summary.mastered}`} />
         </View>
 
         {!summary.daily.length ? (

@@ -7,7 +7,11 @@ export type Card = {
   lastStudiedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  reviewStage?: CardReviewStage;
+  nextReviewAt?: string | null;
 };
+
+export type CardReviewStage = 'weak' | 'review' | 'mastered';
 
 export type StudyHistory = {
   id: string;
@@ -19,7 +23,7 @@ export type StudyHistory = {
 
 export type QuestionType = 'mix' | 'qa' | 'cloze';
 export type Difficulty = 'easy' | 'normal' | 'hard';
-export type StudyMode = 'all' | 'weak' | 'unseen';
+export type StudyMode = 'all' | 'weak' | 'review' | 'mastered' | 'unseen';
 
 export type QuestionCandidate = {
   question: string;

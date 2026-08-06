@@ -89,6 +89,47 @@ test('rejects short text and disallowed browser origins', async () => {
   assert.equal(forbidden.status, 403);
 });
 
+test('extracts text from Gemini OCR image input', async (t) => {
+  const originalFetch = globalThis.fetch;
+  let upstream;
+  globalThis.fetch = async (url, init) => {
+    upstream = { url, init };
+    return Response.json({
+      candidates: [{ content: { parts: [{ text: '日本国憲法\n1947年5月3日施行' }] } }],
+      modelVersion: 'gemini-3.5-flash-lite'
+    });
+  };
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  const response = await worker.fetch(
+    new Request('https://worker.example/ocr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ images: [{ mimeType: 'image/jpeg', data: 'aGVsbG8=' }] })
+    }),
+    { GEMINI_API_KEY: 'test-key' }
+  );
+  const body = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(body.text, /日本国憲法/);
+  const sent = JSON.parse(upstream.init.body);
+  assert.equal(sent.contents[0].parts[1].inlineData.mimeType, 'image/jpeg');
+});
+
+test('rejects unsafe Gemini OCR image input', async () => {
+  const response = await worker.fetch(
+    new Request('https://worker.example/ocr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ images: [{ mimeType: 'text/plain', data: 'not-image' }] })
+    }),
+    { GEMINI_API_KEY: 'test-key' }
+  );
+  assert.equal(response.status, 400);
+});
+
 test('handles Gemini errors and invalid structured output', async (t) => {
   const originalFetch = globalThis.fetch;
   t.after(() => {
