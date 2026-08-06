@@ -65,10 +65,38 @@ test('returns generated questions and Gemini metadata', async (t) => {
   const sent = JSON.parse(upstream.init.body);
   assert.equal(sent.generationConfig.responseMimeType, 'application/json');
   assert.equal(sent.generationConfig.responseSchema.properties.questions.maxItems, 5);
+  assert.equal(sent.generationConfig.maxOutputTokens, 2048);
   const systemInstructions = sent.systemInstruction.parts[0].text;
   assert.match(systemInstructions, /answerの文字列をquestionへ含めない/);
   assert.match(systemInstructions, /見出し・列名・行名を教材どおりに扱い/);
   assert.match(systemInstructions, /短い教材でも確認可能な事実が一つ以上あれば/);
+  assert.match(systemInstructions, /必ず5枚を返してください/);
+  assert.equal(
+    Object.hasOwn(sent.generationConfig.responseSchema.properties.questions.items.properties, 'evidence'),
+    false
+  );
+});
+
+test('allocates a larger output budget for a 20-card request', async (t) => {
+  const originalFetch = globalThis.fetch;
+  let upstream;
+  globalThis.fetch = async (url, init) => {
+    upstream = { url, init };
+    return Response.json(
+      geminiResponse([
+        { question: '日本国憲法の施行日はいつですか？', answer: '1947年5月3日', type: 'qa', factKey: '憲法施行日' }
+      ])
+    );
+  };
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  await worker.fetch(request({ ...validInput, count: 20 }), { GEMINI_API_KEY: 'test-key' });
+  const sent = JSON.parse(upstream.init.body);
+  assert.equal(sent.generationConfig.responseSchema.properties.questions.maxItems, 20);
+  assert.equal(sent.generationConfig.maxOutputTokens, 7200);
+  assert.match(sent.systemInstruction.parts[0].text, /必ず20枚を返してください/);
 });
 
 test('rejects missing Gemini secret without calling upstream', async () => {

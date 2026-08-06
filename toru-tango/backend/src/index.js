@@ -56,8 +56,7 @@ function deduplicateQuestions(items, count) {
     const question = cleanText(item?.question, 180);
     const answer = cleanText(item?.answer, 120);
     const type = item?.type === 'cloze' ? 'cloze' : 'qa';
-    const evidence = cleanText(item?.evidence, 240);
-    const factKey = normalizeKey(item?.factKey || `${answer}-${evidence || question}`);
+    const factKey = normalizeKey(item?.factKey || `${answer}-${question}`);
     const questionKey = normalizeKey(question);
     const answerKey = normalizeKey(answer);
     const pairKey = `${questionKey}|${answerKey}`;
@@ -127,10 +126,9 @@ function questionSchema(count) {
             question: { type: 'string' },
             answer: { type: 'string' },
             type: { type: 'string', enum: ['qa', 'cloze'] },
-            factKey: { type: 'string' },
-            evidence: { type: 'string' }
+            factKey: { type: 'string' }
           },
-          required: ['question', 'answer', 'type', 'factKey', 'evidence']
+          required: ['question', 'answer', 'type', 'factKey']
         }
       }
     },
@@ -244,19 +242,20 @@ export default {
     const instructions = [
       'あなたは日本語教材から、表と裏で学習する単語カードを作る編集者です。',
       `教材本文だけを根拠に、最大${count}枚のカードを作成してください。推測で事実を追加しないでください。`,
+      `本文に${count}個以上の独立した確認可能な事実がある場合は、必ず${count}枚を返してください。作問数を任意に4枚などへ減らさず、本文全体から事実を拾って指定枚数を優先してください。`,
       `希望形式は${type}、難易度は${difficulty}です。1枚は15秒以内で答えられる短さにしてください。`,
       '各カードを作る前に、本文中の「一つの確認可能な事実」を特定してください。事実を特定できない文からは作問しないでください。',
       '最重要ルール: 同じ事実を一問一答と穴埋めの両方にしないでください。同じ年代、名称、場所、定義、因果関係は1回だけ出題してください。',
       '一問一答では、answerの文字列をquestionへ含めないでください。答えが主語の文は、他の条件や説明から答えを尋ねる形へ言い換えてください。',
       '穴埋めでは、答えの箇所を必ず「____」へ置き換え、元の答えをquestionへ残さないでください。',
       '表やOCR文では見出し・列名・行名を教材どおりに扱い、別の概念へ言い換えたり、欠けている見出しを推測したりしないでください。',
-      'questionとanswerの両方をevidenceと照合し、教材にない用語・分類・関係を一語でも追加しないでください。',
+      'questionとanswerを教材本文と照合し、教材にない用語・分類・関係を一語でも追加しないでください。',
       '見出しだけ、文の途中、不完全な語句、英語表記だけ、答えが問題文に残る問題、答えが複数ある問題は禁止です。',
-      '問題数を満たすために低品質な問題を追加しないでください。意味のある事実が少なければ出力件数を減らしてください。',
+      `意味のある事実が${count}個に満たない場合だけ、出力件数を減らしてください。問題数を満たすための重複や、低品質な問題の追加は禁止です。`,
       '短い教材でも確認可能な事実が一つ以上あれば、その事実だけを使って少数の有効なカードを作成してください。',
       '例: 「水は標準気圧で0℃で凍る」なら、questionは「標準気圧で0℃に凍る物質は何ですか？」、answerは「水」です。',
-      'factKeyには、問題文の形式に依存しない事実の識別子を日本語または短い英数字で入れてください。',
-      'evidenceには、答えの根拠となる教材本文の該当部分を短くそのまま入れてください。'
+      'questionとanswerは短く、各120文字以内を目安にしてください。',
+      'factKeyには、問題文の形式に依存しない事実の識別子を日本語または短い英数字で入れてください。'
     ].join('\n');
 
     const controller = new AbortController();
@@ -279,7 +278,8 @@ export default {
             generationConfig: {
               responseMimeType: 'application/json',
               responseSchema: questionSchema(count),
-              maxOutputTokens: 3000,
+              // 20枚でも途中で打ち切られないよう、カード枚数に応じて出力枠を確保する。
+              maxOutputTokens: Math.min(8192, Math.max(2048, count * 360)),
               temperature: 0.2
             }
           })
