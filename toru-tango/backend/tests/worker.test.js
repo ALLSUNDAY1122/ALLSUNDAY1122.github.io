@@ -99,6 +99,24 @@ test('allocates a larger output budget for a 20-card request', async (t) => {
   assert.match(sent.systemInstruction.parts[0].text, /必ず20枚を返してください/);
 });
 
+test('includes generation diagnostics when every generated card is rejected', async (t) => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => Response.json(geminiResponse([]));
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  const response = await worker.fetch(request(), { GEMINI_API_KEY: 'test-key' });
+  const body = await response.json();
+  assert.equal(response.status, 422);
+  assert.deepEqual(body.quality, {
+    requestedCount: 5,
+    rawCount: 0,
+    duplicateCount: 0,
+    rejectedCount: 0
+  });
+});
+
 test('rejects missing Gemini secret without calling upstream', async () => {
   const response = await worker.fetch(request(), {});
   assert.equal(response.status, 503);

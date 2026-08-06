@@ -320,7 +320,15 @@ export default {
 
       if (!result.questions.length) {
         return json(
-          { error: '問題を生成できませんでした。教材文を見直してください。' },
+          {
+            error: '問題を生成できませんでした。教材文を見直してください。',
+            quality: {
+              requestedCount: count,
+              rawCount: result.rawCount,
+              duplicateCount: result.duplicateCount,
+              rejectedCount: result.rejectedCount
+            }
+          },
           422,
           origin
         );
