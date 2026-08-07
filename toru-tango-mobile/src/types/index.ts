@@ -2,6 +2,9 @@ export type Card = {
   id: string;
   question: string;
   answer: string;
+  deckName?: string;
+  note?: string;
+  source?: string;
   correct: number;
   wrong: number;
   lastStudiedAt: string | null;

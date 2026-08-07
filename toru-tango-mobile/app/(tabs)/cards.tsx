@@ -15,23 +15,46 @@ import { useAppStore } from '@/src/context/AppStore';
 import type { StudyMode } from '@/src/types';
 import { getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
+type CardSort = 'updated' | 'newest' | 'weakest' | 'alphabetical';
+
 export default function CardsScreen() {
   const { cards, updateCard, deleteCard, clearAll } = useAppStore();
   const [filter, setFilter] = useState<StudyMode>('all');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [note, setNote] = useState('');
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<CardSort>('updated');
+  const [deckFilter, setDeckFilter] = useState('all');
+
+  const decks = useMemo(
+    () => ['all', ...new Set(cards.map((card) => card.deckName || 'メイン'))],
+    [cards]
+  );
 
   const filtered = useMemo(
-    () =>
-      cards.filter((card) => {
+    () => {
+      const query = search.trim().toLocaleLowerCase('ja-JP');
+      const result = cards.filter((card) => {
+        if (deckFilter !== 'all' && (card.deckName || 'メイン') !== deckFilter) return false;
+        if (query && !`${card.question} ${card.answer} ${card.note ?? ''}`.toLocaleLowerCase('ja-JP').includes(query)) {
+          return false;
+        }
         if (filter === 'weak') return getCardReviewStage(card) === 'weak';
         if (filter === 'review') return getCardReviewStage(card) === 'review';
         if (filter === 'mastered') return getCardReviewStage(card) === 'mastered';
         if (filter === 'unseen') return card.correct + card.wrong === 0;
         return true;
-      }),
-    [cards, filter]
+      });
+      return result.sort((left, right) => {
+        if (sort === 'newest') return right.createdAt.localeCompare(left.createdAt);
+        if (sort === 'weakest') return right.wrong - left.wrong;
+        if (sort === 'alphabetical') return left.question.localeCompare(right.question, 'ja');
+        return right.updatedAt.localeCompare(left.updatedAt);
+      });
+    },
+    [cards, deckFilter, filter, search, sort]
   );
 
   const beginEdit = (id: string) => {
@@ -40,11 +63,12 @@ export default function CardsScreen() {
     setEditingId(id);
     setQuestion(card.question);
     setAnswer(card.answer);
+    setNote(card.note ?? '');
   };
 
   const saveEdit = () => {
     if (!editingId) return;
-    if (!updateCard(editingId, question, answer)) {
+    if (!updateCard(editingId, question, answer, note)) {
       Alert.alert('保存できません', '未入力または同じカードが保存済みです。');
       return;
     }
@@ -93,6 +117,18 @@ export default function CardsScreen() {
           ) : null
         }
       >
+        <Field
+          label="カードを検索"
+          value={search}
+          onChangeText={setSearch}
+          placeholder="問題・答え・メモを検索"
+          autoCorrect={false}
+        />
+        <ChoiceRow
+          value={deckFilter}
+          onChange={setDeckFilter}
+          options={decks.map((deck) => ({ value: deck, label: deck === 'all' ? '全単語帳' : deck }))}
+        />
         <ChoiceRow
           value={filter}
           onChange={setFilter}
@@ -102,6 +138,16 @@ export default function CardsScreen() {
             { value: 'review', label: '定期確認' },
             { value: 'mastered', label: '確認不要' },
             { value: 'unseen', label: '未学習' }
+          ]}
+        />
+        <ChoiceRow
+          value={sort}
+          onChange={setSort}
+          options={[
+            { value: 'updated', label: '更新順' },
+            { value: 'newest', label: '新しい順' },
+            { value: 'weakest', label: '弱点順' },
+            { value: 'alphabetical', label: '問題順' }
           ]}
         />
 
@@ -114,6 +160,13 @@ export default function CardsScreen() {
                 <>
                   <Field label="表" value={question} onChangeText={setQuestion} />
                   <Field label="裏" value={answer} onChangeText={setAnswer} />
+                  <Field
+                    label="メモ（任意）"
+                    value={note}
+                    onChangeText={setNote}
+                    multiline
+                    placeholder="覚え方・補足・出典など"
+                  />
                   <View style={commonStyles.row}>
                     <AppButton label="保存" variant="success" onPress={saveEdit} />
                     <AppButton
@@ -125,6 +178,7 @@ export default function CardsScreen() {
                 </>
               ) : (
                 <>
+                  <Text style={styles.deck}>{card.deckName || 'メイン'}</Text>
                   <View style={styles.face}>
                     <Text style={styles.faceLabel}>表</Text>
                     <Text style={styles.question}>{card.question}</Text>
@@ -143,6 +197,7 @@ export default function CardsScreen() {
                         : '確認不要'}
                     {' ・ '}正解 {card.correct}回・弱点 {card.wrong}回
                   </Text>
+                  {card.note ? <Text style={styles.note}>メモ：{card.note}</Text> : null}
                   <View style={commonStyles.row}>
                     <AppButton
                       label="表を読む"
@@ -198,5 +253,14 @@ const styles = StyleSheet.create({
   },
   question: { color: colors.text, fontSize: 16, fontWeight: '800', lineHeight: 23 },
   answer: { color: colors.text, fontSize: 15, lineHeight: 22 },
-  stats: { color: colors.muted, fontSize: 12 }
+  stats: { color: colors.muted, fontSize: 12 },
+  note: {
+    backgroundColor: '#fff8e1',
+    borderRadius: 10,
+    color: colors.text,
+    fontSize: 13,
+    lineHeight: 19,
+    padding: 10
+  },
+  deck: { color: colors.primary, fontSize: 12, fontWeight: '900' }
 });

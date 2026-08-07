@@ -10,11 +10,11 @@ import {
   colors
 } from '@/src/components/ui';
 import { useAppStore } from '@/src/context/AppStore';
-import { pickBackup, shareBackup } from '@/src/services/backup';
+import { pickBackup, pickCardsCsv, shareBackup, shareCardsCsv } from '@/src/services/backup';
 import { calculateStreak, getCardReviewStage, isReviewDue } from '@/src/utils/data';
 
 export default function RecordsScreen() {
-  const { cards, history, createBackup, restoreBackup } = useAppStore();
+  const { cards, history, addCards, createBackup, restoreBackup } = useAppStore();
 
   const summary = useMemo(() => {
     const total = history.length;
@@ -73,6 +73,25 @@ export default function RecordsScreen() {
     }
   };
 
+  const exportCsv = async () => {
+    try {
+      await shareCardsCsv(cards);
+    } catch {
+      Alert.alert('CSVを保存できません', 'カードCSVを共有できませんでした。');
+    }
+  };
+
+  const importCsv = async () => {
+    try {
+      const candidates = await pickCardsCsv();
+      if (!candidates) return;
+      const added = addCards(candidates);
+      Alert.alert('CSVを読み込みました', `${added}枚を追加しました。重複カードは除外されています。`);
+    } catch {
+      Alert.alert('CSVを読み込めません', '1行目を「表,裏,メモ」としたCSVを選択してください。');
+    }
+  };
+
   return (
     <Page>
       <Text style={commonStyles.title}>記録</Text>
@@ -114,6 +133,14 @@ export default function RecordsScreen() {
             variant="secondary"
             onPress={() => void importData()}
           />
+        </View>
+      </Section>
+
+      <Section title="カードの入出力">
+        <MutedText>表・裏・メモのCSVをExcelやPCで編集して、カードとして追加できます。</MutedText>
+        <View style={commonStyles.row}>
+          <AppButton label="CSVを書き出す" onPress={() => void exportCsv()} />
+          <AppButton label="CSVを読み込む" variant="secondary" onPress={() => void importCsv()} />
         </View>
       </Section>
     </Page>

@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import {
   AppButton,
@@ -40,6 +40,8 @@ export default function StudyScreen() {
   const [queue, setQueue] = useState<string[]>([]);
   const [position, setPosition] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [direction, setDirection] = useState<'front' | 'back'>('front');
+  const [autoPlay, setAutoPlay] = useState(false);
 
   const currentCard = useMemo(
     () => cards.find((card) => card.id === queue[position]) ?? null,
@@ -47,6 +49,25 @@ export default function StudyScreen() {
   );
   const completed = queue.length > 0 && position >= queue.length;
   const progress = queue.length ? Math.min(position / queue.length, 1) : 0;
+  const frontText = currentCard
+    ? direction === 'front'
+      ? currentCard.question
+      : currentCard.answer
+    : '';
+  const backText = currentCard
+    ? direction === 'front'
+      ? currentCard.answer
+      : currentCard.question
+    : '';
+
+  useEffect(() => {
+    if (!autoPlay || !currentCard) return;
+    Speech.stop();
+    Speech.speak(revealed ? backText : frontText, { language: 'ja-JP', rate: 0.95 });
+    return () => {
+      void Speech.stop();
+    };
+  }, [autoPlay, backText, currentCard, frontText, revealed]);
 
   const start = () => {
     const selected = selectCards(cards, mode);
@@ -60,15 +81,6 @@ export default function StudyScreen() {
     gradeCard(currentCard.id, stage);
     setPosition((current) => current + 1);
     setRevealed(false);
-  };
-
-  const speakSide = (side: 'front' | 'back') => {
-    if (!currentCard) return;
-    Speech.stop();
-    Speech.speak(side === 'front' ? currentCard.question : currentCard.answer, {
-      language: 'ja-JP',
-      rate: 0.95
-    });
   };
 
   return (
@@ -90,6 +102,21 @@ export default function StudyScreen() {
             { value: 'unseen', label: '未学習のみ' }
           ]}
         />
+        <ChoiceRow
+          value={direction}
+          onChange={setDirection}
+          options={[
+            { value: 'front', label: '表→裏' },
+            { value: 'back', label: '裏→表' }
+          ]}
+        />
+        <View style={styles.settingRow}>
+          <View>
+            <Text style={styles.settingLabel}>自動読み上げ</Text>
+            <Text style={styles.settingHint}>カードを表示したときに読み上げます</Text>
+          </View>
+          <Switch value={autoPlay} onValueChange={setAutoPlay} trackColor={{ true: colors.primary }} />
+        </View>
         <AppButton label="この条件で開始" onPress={start} disabled={!cards.length} />
       </Section>
 
@@ -119,7 +146,7 @@ export default function StudyScreen() {
             >
               <Text style={styles.side}>{revealed ? '裏' : '表'}</Text>
               <Text style={styles.studyText}>
-                {revealed ? currentCard.answer : currentCard.question}
+                {revealed ? backText : frontText}
               </Text>
               <Text style={styles.flipHint}>タップして{revealed ? '表' : '裏'}へ</Text>
             </Pressable>
@@ -130,14 +157,20 @@ export default function StudyScreen() {
 
             <View style={commonStyles.row}>
               <AppButton
-                label="表を読む"
+                label={`${direction === 'front' ? '表' : '裏'}を読む`}
                 variant="secondary"
-                onPress={() => speakSide('front')}
+                onPress={() => {
+                  Speech.stop();
+                  Speech.speak(frontText, { language: 'ja-JP', rate: 0.95 });
+                }}
               />
               <AppButton
-                label="裏を読む"
+                label={`${direction === 'front' ? '裏' : '表'}を読む`}
                 variant="secondary"
-                onPress={() => speakSide('back')}
+                onPress={() => {
+                  Speech.stop();
+                  Speech.speak(backText, { language: 'ja-JP', rate: 0.95 });
+                }}
               />
             </View>
 
@@ -217,5 +250,12 @@ const styles = StyleSheet.create({
   completed: { color: colors.text, fontSize: 26, fontWeight: '800' },
   gradeActions: { gap: 8 },
   gradeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' },
-  gradeHint: { color: colors.muted, fontSize: 12, lineHeight: 18, textAlign: 'center' }
+  gradeHint: { color: colors.muted, fontSize: 12, lineHeight: 18, textAlign: 'center' },
+  settingRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  settingLabel: { color: colors.text, fontWeight: '800' },
+  settingHint: { color: colors.muted, fontSize: 12, marginTop: 3 }
 });

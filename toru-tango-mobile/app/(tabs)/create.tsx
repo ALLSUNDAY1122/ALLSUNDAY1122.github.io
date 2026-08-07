@@ -83,6 +83,7 @@ function availabilityLabel(status: ReturnType<typeof getOnDeviceAIAvailability>)
 export default function CreateScreen() {
   const { cards, addCard, addCards } = useAppStore();
   const [sourceText, setSourceText] = useState('');
+  const [deckName, setDeckName] = useState('メイン');
   const [type, setType] = useState<QuestionType>('mix');
   const [difficulty, setDifficulty] = useState<Difficulty>('normal');
   const [count, setCount] = useState<'5' | '10' | '15' | '20'>('10');
@@ -266,7 +267,8 @@ export default function CreateScreen() {
       return;
     }
     const added = addCards(
-      targets.map((card) => ({ question: card.question, answer: card.answer }))
+      targets.map((card) => ({ question: card.question, answer: card.answer })),
+      deckName
     );
     Alert.alert('追加結果', `${added}枚のカードを追加しました。`);
     if (added > 0) {
@@ -301,13 +303,13 @@ export default function CreateScreen() {
   };
 
   const saveGenerated = () => {
-    const added = addCards(parseLines(generatedText));
+    const added = addCards(parseLines(generatedText), deckName);
     Alert.alert('追加結果', `${added}枚のカードを追加しました。`);
     if (added > 0) setGeneratedText('');
   };
 
   const saveDirect = () => {
-    if (!addCard(question, answer)) {
+    if (!addCard(question, answer, deckName)) {
       Alert.alert('追加できません', '未入力または同じカードが保存済みです。');
       return;
     }
@@ -316,7 +318,7 @@ export default function CreateScreen() {
   };
 
   const saveBulk = () => {
-    const added = addCards(parseLines(bulkText));
+    const added = addCards(parseLines(bulkText), deckName);
     Alert.alert('追加結果', `${added}枚のカードを追加しました。`);
     if (added > 0) setBulkText('');
   };
@@ -543,6 +545,12 @@ export default function CreateScreen() {
         <MutedText>
           当面はGemini 3.5 Flash-Liteを使用します。無料枠には利用上限があり、教材本文は作問のためGoogleのAPIへ送信されます。OCR由来の文字間空白と罫線ノイズは作問前に自動整形します。
         </MutedText>
+        <Field
+          label="単語帳名"
+          value={deckName}
+          onChangeText={setDeckName}
+          placeholder="例：日本史・定期テスト"
+        />
         <Field
           label="教材本文"
           multiline

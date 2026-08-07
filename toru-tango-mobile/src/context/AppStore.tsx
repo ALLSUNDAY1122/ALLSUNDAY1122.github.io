@@ -21,9 +21,9 @@ export type AppStoreValue = {
   cards: Card[];
   history: StudyHistory[];
   hydrated: boolean;
-  addCard: (question: string, answer: string) => boolean;
-  addCards: (candidates: QuestionCandidate[]) => number;
-  updateCard: (id: string, question: string, answer: string) => boolean;
+  addCard: (question: string, answer: string, deckName?: string) => boolean;
+  addCards: (candidates: QuestionCandidate[], deckName?: string) => number;
+  updateCard: (id: string, question: string, answer: string, note?: string) => boolean;
   deleteCard: (id: string) => void;
   clearAll: () => void;
   gradeCard: (cardId: string, stage: CardReviewStage) => void;
@@ -65,7 +65,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
   }, [cards, history, hydrated]);
 
   const addCard = useCallback(
-    (question: string, answer: string): boolean => {
+    (question: string, answer: string, deckName = 'メイン'): boolean => {
       const candidate = { question: question.trim(), answer: answer.trim() };
       if (!candidate.question || !candidate.answer) return false;
       if (cards.some((card) => isSameCard(card, candidate))) return false;
@@ -77,6 +77,8 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           id: createId(),
           question: candidate.question,
           answer: candidate.answer,
+          deckName: deckName.trim() || 'メイン',
+          note: '',
           correct: 0,
           wrong: 0,
           reviewStage: 'review' as const,
@@ -92,7 +94,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
   );
 
   const addCards = useCallback(
-    (candidates: QuestionCandidate[]): number => {
+    (candidates: QuestionCandidate[], deckName = 'メイン'): number => {
       const accepted: QuestionCandidate[] = [];
       for (const raw of candidates) {
         const candidate = {
@@ -113,6 +115,8 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
           id: createId(),
           question: candidate.question,
           answer: candidate.answer,
+          deckName: deckName.trim() || 'メイン',
+          note: '',
           correct: 0,
           wrong: 0,
           reviewStage: 'review' as const,
@@ -128,7 +132,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
   );
 
   const updateCard = useCallback(
-    (id: string, question: string, answer: string): boolean => {
+    (id: string, question: string, answer: string, note = ''): boolean => {
       const candidate = { question: question.trim(), answer: answer.trim() };
       if (!candidate.question || !candidate.answer) return false;
       if (cards.some((card) => card.id !== id && isSameCard(card, candidate))) {
@@ -142,6 +146,7 @@ export function AppStoreProvider({ children }: PropsWithChildren) {
                 ...card,
                 question: candidate.question,
                 answer: candidate.answer,
+                note: note.trim(),
                 updatedAt: new Date().toISOString()
               }
             : card
