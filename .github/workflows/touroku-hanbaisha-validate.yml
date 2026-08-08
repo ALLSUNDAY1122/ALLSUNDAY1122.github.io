@@ -1,0 +1,59 @@
+name: Validate Touhan Sprint
+
+on:
+  push:
+    paths:
+      - 'touroku-hanbaisha-sprint/**'
+      - '.github/workflows/touroku-hanbaisha-validate.yml'
+  pull_request:
+    paths:
+      - 'touroku-hanbaisha-sprint/**'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check touroku-hanbaisha-sprint/app-v05.js
+          node --check touroku-hanbaisha-sprint/question-order-v05.js
+          node --check touroku-hanbaisha-sprint/mock-mode-v05.js
+          node --check touroku-hanbaisha-sprint/questions.js
+          node --check touroku-hanbaisha-sprint/questions-extra.js
+          node --check touroku-hanbaisha-sprint/questions-v05-ch1.js
+          node --check touroku-hanbaisha-sprint/questions-v05-ch2.js
+          node --check touroku-hanbaisha-sprint/questions-v05-ch3a.js
+          node --check touroku-hanbaisha-sprint/questions-v05-ch3b.js
+          node --check touroku-hanbaisha-sprint/questions-v05-ch4.js
+          node --check touroku-hanbaisha-sprint/questions-v05-ch5.js
+      - name: Validate 120-question structure
+        run: |
+          cat touroku-hanbaisha-sprint/questions.js \
+              touroku-hanbaisha-sprint/questions-extra.js \
+              touroku-hanbaisha-sprint/questions-v05-ch1.js \
+              touroku-hanbaisha-sprint/questions-v05-ch2.js \
+              touroku-hanbaisha-sprint/questions-v05-ch3a.js \
+              touroku-hanbaisha-sprint/questions-v05-ch3b.js \
+              touroku-hanbaisha-sprint/questions-v05-ch4.js \
+              touroku-hanbaisha-sprint/questions-v05-ch5.js > /tmp/questions-bundle.js
+          cat >> /tmp/questions-bundle.js <<'NODE'
+          const expected={'第1章':20,'第2章':20,'第3章':40,'第4章':20,'第5章':20};
+          if(QUESTIONS.length!==120) throw new Error(`Expected 120 questions, got ${QUESTIONS.length}`);
+          const ids=new Set(); const counts={};
+          for(const q of QUESTIONS){
+            if(!q.id||ids.has(q.id)) throw new Error(`Duplicate/missing ID: ${q.id}`);
+            ids.add(q.id);
+            counts[q.chapter]=(counts[q.chapter]||0)+1;
+            if(!Array.isArray(q.choices)||q.choices.length!==5) throw new Error(`${q.id}: choices must be 5`);
+            if(!Number.isInteger(q.answer)||q.answer<0||q.answer>4) throw new Error(`${q.id}: invalid answer`);
+            for(const key of ['question','point','detail','topic','chapter']) if(typeof q[key]!=='string'||!q[key].trim()) throw new Error(`${q.id}: missing ${key}`);
+          }
+          for(const [chapter,n] of Object.entries(expected)) if(counts[chapter]!==n) throw new Error(`${chapter}: expected ${n}, got ${counts[chapter]||0}`);
+          console.log('PASS', {total:QUESTIONS.length,counts});
+          NODE
+          node /tmp/questions-bundle.js
