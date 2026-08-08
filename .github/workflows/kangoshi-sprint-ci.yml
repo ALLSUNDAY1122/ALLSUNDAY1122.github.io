@@ -21,8 +21,7 @@ jobs:
         run: |
           node --check kangoshi-sprint/questions.js
           node --check kangoshi-sprint/questions-numeric.js
-          node --check kangoshi-sprint/app-v02.js
-          node --check kangoshi-sprint/subject-hierarchy.js
+          node --check kangoshi-sprint/app-v03.js
       - name: Question data audit
         run: node kangoshi-sprint/audit-v02.mjs
       - name: Basic HTML contract
@@ -30,6 +29,5 @@ jobs:
           grep -q 'id="app"' kangoshi-sprint/index.html
           grep -q 'questions.js' kangoshi-sprint/index.html
           grep -q 'questions-numeric.js' kangoshi-sprint/index.html
-          grep -q 'app-v02.js' kangoshi-sprint/index.html
-          grep -q 'subject-hierarchy.js' kangoshi-sprint/index.html
+          grep -q 'app-v03.js' kangoshi-sprint/index.html
           grep -q 'style-subject-hierarchy.css' kangoshi-sprint/index.html
