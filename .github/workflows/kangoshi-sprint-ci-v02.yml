@@ -1,0 +1,31 @@
+name: Kangoshi Sprint CI v0.2
+
+on:
+  push:
+    paths:
+      - 'kangoshi-sprint/**'
+      - '.github/workflows/kangoshi-sprint-ci-v02.yml'
+  pull_request:
+    paths:
+      - 'kangoshi-sprint/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: |
+          node --check kangoshi-sprint/questions.js
+          node --check kangoshi-sprint/questions-numeric.js
+          node --check kangoshi-sprint/app-v02.js
+      - name: Question data audit v0.2
+        run: node kangoshi-sprint/audit-v02.mjs
+      - name: MVP contract
+        run: |
+          grep -q 'questions-numeric.js' kangoshi-sprint/index.html
+          grep -q 'app-v02.js' kangoshi-sprint/index.html
+          grep -q 'style-numeric.css' kangoshi-sprint/index.html
