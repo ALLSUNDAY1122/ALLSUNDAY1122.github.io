@@ -2,23 +2,89 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=/yorugatari/">
-  <title>夜語りへ移動します</title>
-  <meta name="description" content="オリジナル怖い話サイト『夜語り』へ移動します。">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fdf6ef">
+  <meta name="description" content="ALLSUNDAY1122のアプリ開発・Web試作ポータル">
   <meta name="robots" content="noindex,follow">
   <link rel="canonical" href="https://allsunday1122.github.io/">
+  <title>ALLSUNDAY1122｜開発ポータル</title>
   <style>
-    :root{color-scheme:dark;background:#090b10;color:#f4efe4;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    body{min-height:100dvh;margin:0;display:grid;place-items:center;padding:24px}
-    main{max-width:560px;text-align:center}
-    a{color:#d65a4a;font-weight:700}
+    :root{
+      --bg:#fdf6ef;--card:#fff;--ink:#231f1a;--sub:#726b60;
+      --accent:#ee7d3f;--accent-dark:#a8481c;--accent-soft:#fdeee2;
+      --border:#f0e4d6;--radius:18px;--shadow:0 1px 3px rgba(60,45,20,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .page{max-width:720px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top)) 16px calc(36px + env(safe-area-inset-bottom))}
+    header{padding:12px 2px 22px}
+    .kicker{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--accent-dark)}
+    h1{font-size:30px;line-height:1.2;margin:8px 0 8px;letter-spacing:-.02em}
+    .lead{margin:0;color:var(--sub);font-size:14px;line-height:1.7}
+    h2{font-size:15px;margin:24px 2px 10px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .card{display:block;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:17px;min-height:132px;transition:.12s ease}
+    .card:active{transform:scale(.985)}
+    .tag{display:inline-block;background:var(--accent-soft);color:var(--accent-dark);font-size:11px;font-weight:800;padding:5px 9px;border-radius:999px}
+    .name{display:block;font-size:18px;font-weight:850;margin-top:12px}
+    .meta{display:block;color:var(--sub);font-size:12px;line-height:1.55;margin-top:5px}
+    .wide{grid-column:1/-1;min-height:auto}
+    .links{display:grid;gap:9px}
+    .link{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 14px;font-weight:750;font-size:14px}
+    .link small{color:var(--sub);font-weight:600}
+    .notice{margin-top:22px;padding:14px 16px;border-radius:14px;background:var(--accent-soft);color:#6e3a20;font-size:12px;line-height:1.7}
+    footer{margin-top:28px;color:var(--sub);font-size:11px;text-align:center}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}h1{font-size:26px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
 </head>
 <body>
-  <main>
-    <h1>夜語りへ移動します</h1>
-    <p>自動で移動しない場合は、<a href="/yorugatari/">夜語りトップページ</a>を開いてください。</p>
+  <main class="page">
+    <header>
+      <div class="kicker">DEVELOPMENT PORTAL</div>
+      <h1>アプリ・Web開発ポータル</h1>
+      <p class="lead">GitHub Pages上の試作・検証版へ直接アクセスするための入口です。ルートから特定作品へ自動転送しません。</p>
+    </header>
+
+    <section>
+      <h2>学びスプリント</h2>
+      <div class="grid">
+        <a class="card" href="/touroku-hanbaisha-sprint/">
+          <span class="tag">FP2 v1.3 UI準拠</span>
+          <span class="name">登録販売者｜学びスプリント</span>
+          <span class="meta">FP2級 v1.3の画面構成・回答操作・復習導線を移植した現行検証版。</span>
+        </a>
+        <a class="card" href="https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/46a78bbd8944f6b381fe561ca7aec1c51bdfa350">
+          <span class="tag">UI REFERENCE</span>
+          <span class="name">FP2級 v1.3 UI基準</span>
+          <span class="meta">学びスプリント共通UIを照合する基準コミット。</span>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>その他の公開コンテンツ</h2>
+      <div class="grid">
+        <a class="card wide" href="/yorugatari/">
+          <span class="tag">CONTENT</span>
+          <span class="name">夜語り</span>
+          <span class="meta">怖い話サイトは従来どおり /yorugatari/ で公開を継続します。</span>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>GitHub</h2>
+      <div class="links">
+        <a class="link" href="https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io"><span>リポジトリを開く</span><small>GitHub</small></a>
+        <a class="link" href="https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/commit/8eaecef595daa7696a38bf78c5acbc990697b26f"><span>FP2 即時採点・苦手復習ロジック</span><small>基準コミット</small></a>
+      </div>
+    </section>
+
+    <div class="notice">FP2級本体のGitHub Pages配置は、現在のリポジトリ内で確実な公開パスを確認できていません。推測URLは作らず、確認済みのFP2 v1.3移植実装と基準コミットをUI正本として表示しています。</div>
+
+    <footer>ALLSUNDAY1122 Development Portal</footer>
   </main>
 </body>
 </html>
