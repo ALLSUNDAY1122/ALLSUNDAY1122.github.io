@@ -51,11 +51,10 @@ for(const q of QUESTIONS){
   if(/最も適切なものは最も適切なものを選べ|正しいものは最も適切なものを選べ/.test(q.question))addPadding(q.id,'malformed generated wording');
 
   if(q.sourceTitle.includes('総務省消防庁')&&q.subject==='性質・消火'&&['分類','安全取扱い'].includes(q.topic))sourceTrace.push(`${q.id}: broad FDMA page is not granular evidence for this substance-specific fact`);
-  if(q.sourceTitle.startsWith('基礎物理・化学')&&q.subject==='性質・消火'&&['水溶性','消火'].includes(q.topic)&&/^S0[0-5]\d$/.test(q.id))sourceTrace.push(`${q.id}: generic chemistry source is not granular evidence for this substance-specific fact`);
+  if(q.sourceTitle.startsWith('基礎物理・化学')&&q.subject==='性質・消火'&&['水溶性','消火'].includes(q.topic)&&/^S(?:0[0-5]\d|060)$/.test(q.id))sourceTrace.push(`${q.id}: generic chemistry source is not granular evidence for this substance-specific fact`);
   if(q.sourceTitle.startsWith('消防試験研究センター')&&q.subject==='法令')sourceTrace.push(`${q.id}: exam subject page is not direct authority for license rights`);
 }
 
-// 同じ指定数量の暗記事実を4つの言い換えで水増ししない。
 const designatedGroups=new Map();
 for(const q of QUESTIONS.filter(q=>q.subject==='法令'&&q.topic==='指定数量')){
   const key=q.point;
@@ -64,7 +63,6 @@ for(const q of QUESTIONS.filter(q=>q.subject==='法令'&&q.topic==='指定数量
 }
 for(const group of designatedGroups.values())for(const id of group.slice(1))addPadding(id,'same designated-quantity fact rephrased');
 
-// 物質名だけを差し替えたテンプレート問題は独立問題として数えない。
 const templateDedupe=(items,label)=>{
   const seen=new Map();
   for(const q of items){
@@ -73,7 +71,7 @@ const templateDedupe=(items,label)=>{
   }
 };
 templateDedupe(QUESTIONS.filter(q=>q.subject==='性質・消火'&&q.topic==='安全取扱い'),'substance-name-only safety template');
-templateDedupe(QUESTIONS.filter(q=>q.subject==='性質・消火'&&q.topic==='消火'&&/^S0[0-5]\d$/.test(q.id)),'substance-name-only extinguishing template');
+templateDedupe(QUESTIONS.filter(q=>q.subject==='性質・消火'&&q.topic==='消火'&&/^S(?:0[0-5]\d|060)$/.test(q.id)),'substance-name-only extinguishing template');
 
 if(QUESTIONS.length!==expected.total)errors.push(`total ${QUESTIONS.length} != ${expected.total}`);
 for(const [s,n] of Object.entries(expected.subjects))if(counts[s]!==n)errors.push(`${s}: ${counts[s]} != ${n}`);
@@ -84,17 +82,7 @@ if(padding.size)errors.push(`anti-padding gate: ${padding.size} clearly non-inde
 if(sourceTrace.length)errors.push(`source-traceability gate: ${sourceTrace.length} entries need more granular authority`);
 if(conceptExplanationExcess)warnings.push(`${conceptExplanationExcess} entries reuse an existing subject+memoryPoint+detail combination`);
 
-const report={
-  ok:errors.length===0,
-  contentVersion:CONTENT_VERSION,
-  lawAuditDate:LAW_BASELINE,
-  currentEffectiveDates:{fireServiceAct:'2025-06-01',hazardousMaterialsCabinetOrder:'2026-04-04'},
-  counts,total:QUESTIONS.length,errors,warnings,
-  padding:{count:padding.size,items:[...padding.entries()].map(([id,reasons])=>({id,reasons}))},
-  sourceTraceability:{count:sourceTrace.length,items:sourceTrace},
-  conceptExplanationExcess,
-  meta:QUESTION_BANK_META
-};
+const report={ok:errors.length===0,contentVersion:CONTENT_VERSION,lawAuditDate:LAW_BASELINE,currentEffectiveDates:{fireServiceAct:'2025-06-01',hazardousMaterialsCabinetOrder:'2026-04-04'},counts,total:QUESTIONS.length,errors,warnings,padding:{count:padding.size,items:[...padding.entries()].map(([id,reasons])=>({id,reasons}))},sourceTraceability:{count:sourceTrace.length,items:sourceTrace},conceptExplanationExcess,meta:QUESTION_BANK_META};
 console.log(JSON.stringify(report,null,2));
 if(errors.length)process.exit(1);
 if(!process.argv.includes('--check')){
