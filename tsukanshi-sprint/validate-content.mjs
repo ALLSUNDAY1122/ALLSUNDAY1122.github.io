@@ -12,7 +12,9 @@ const files = [
   'questions-v02-jm1.js',
   'questions-v02-jm2.js',
   'questions-v02-jm3.js',
-  'questions-v02-jm4.js'
+  'questions-v02-jm4.js',
+  'sources-v03.js',
+  'questions-v03-tb.js'
 ];
 const context = vm.createContext({});
 for (const file of files) {
@@ -52,11 +54,11 @@ for (const q of questions || []) {
   if (q.auditStatus !== 'approved') warn(id, 'not approved; must not be exposed in production UI');
   if (q.lawBaseline !== baseline) warn(id, `law baseline ${q.lawBaseline} differs from active ${baseline}`);
 
-  const newBatch = /^(TB2|KS2|JM2)-/.test(id);
-  if (newBatch) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(q.auditDate || '')) fail(id, 'auditDate is required for v02 content');
-    if (q.sourceType !== 'original') fail(id, 'v02 content must be original');
-    if (!Array.isArray(q.sourceRefs) || q.sourceRefs.length === 0) fail(id, 'sourceRefs is required for v02 content');
+  const auditedBatch = /^(TB2|KS2|JM2|V03|JM3)/.test(id);
+  if (auditedBatch) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(q.auditDate || '')) fail(id, 'auditDate is required for audited content');
+    if (q.sourceType !== 'original') fail(id, 'audited content must be original');
+    if (!Array.isArray(q.sourceRefs) || q.sourceRefs.length === 0) fail(id, 'sourceRefs is required for audited content');
     for (const ref of q.sourceRefs || []) if (!sources[ref]) fail(id, `unknown sourceRef ${ref}`);
   }
 
@@ -70,6 +72,7 @@ for (const q of questions || []) {
     case 'singleChoice':
       if (!Array.isArray(q.choices) || q.choices.length < 2) fail(id, 'singleChoice requires choices');
       if (!Number.isInteger(q.answer) || q.answer < 0 || q.answer >= (q.choices?.length || 0)) fail(id, 'answer index is invalid');
+      if (new Set(q.choices || []).size !== (q.choices || []).length) fail(id, 'singleChoice choices contain duplicates');
       break;
     case 'multiChoice':
       if (!Array.isArray(q.choices) || q.choices.length < 2) fail(id, 'multiChoice requires choices');
@@ -103,9 +106,16 @@ for (const q of questions || []) {
   }
 }
 
+const declarationCount = byType.declaration || 0;
+const studyCount = (questions?.length || 0) - declarationCount;
+if (studyCount !== 480) fail(null, `study question target mismatch: expected 480, got ${studyCount}`);
+if (declarationCount !== 12) fail(null, `declaration target mismatch: expected 12, got ${declarationCount}`);
+
 console.log(`Content version: ${version}`);
 console.log(`Law baseline: ${baseline}`);
-console.log(`Questions: ${questions?.length || 0}`);
+console.log(`Questions total: ${questions?.length || 0}`);
+console.log(`Study questions: ${studyCount}`);
+console.log(`Declaration sets: ${declarationCount}`);
 console.log('By subject:', JSON.stringify(bySubject));
 console.log('By answer type:', JSON.stringify(byType));
 if (warnings.length) {
