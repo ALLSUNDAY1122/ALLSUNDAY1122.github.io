@@ -1,0 +1,27 @@
+name: Otsu4 Content Audit
+
+on:
+  pull_request:
+    paths:
+      - 'kikenbutsu-otsu4-sprint/**'
+      - 'tools/otsu4-build-content.mjs'
+      - '.github/workflows/otsu4-content-audit.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'kikenbutsu-otsu4-sprint/**'
+      - 'tools/otsu4-build-content.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate 360-question bank
+        run: node tools/otsu4-build-content.mjs --check
