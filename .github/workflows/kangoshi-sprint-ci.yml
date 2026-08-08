@@ -1,0 +1,30 @@
+name: Kangoshi Sprint CI
+
+on:
+  push:
+    paths:
+      - 'kangoshi-sprint/**'
+      - '.github/workflows/kangoshi-sprint-ci.yml'
+  pull_request:
+    paths:
+      - 'kangoshi-sprint/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: |
+          node --check kangoshi-sprint/questions.js
+          node --check kangoshi-sprint/app.js
+      - name: Question data audit
+        run: node kangoshi-sprint/audit.mjs
+      - name: Basic HTML contract
+        run: |
+          grep -q 'id="app"' kangoshi-sprint/index.html
+          grep -q 'questions.js' kangoshi-sprint/index.html
+          grep -q 'app.js' kangoshi-sprint/index.html
