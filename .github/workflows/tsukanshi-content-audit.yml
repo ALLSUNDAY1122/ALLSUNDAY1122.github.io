@@ -1,0 +1,27 @@
+name: Tsukanshi content audit
+
+on:
+  push:
+    paths:
+      - 'tsukanshi-sprint/questions.js'
+      - 'tsukanshi-sprint/validate-content.mjs'
+      - '.github/workflows/tsukanshi-content-audit.yml'
+  pull_request:
+    paths:
+      - 'tsukanshi-sprint/questions.js'
+      - 'tsukanshi-sprint/validate-content.mjs'
+      - '.github/workflows/tsukanshi-content-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate customs broker content
+        run: node tsukanshi-sprint/validate-content.mjs
