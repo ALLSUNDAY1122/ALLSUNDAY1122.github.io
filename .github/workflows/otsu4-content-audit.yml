@@ -25,3 +25,12 @@ jobs:
           node-version: '22'
       - name: Validate 360-question bank
         run: node tools/otsu4-build-content.mjs --check
+      - name: Generate native question JSON
+        run: node tools/otsu4-build-content.mjs
+      - name: Upload native question JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: otsu4-questions-product-v1
+          path: kikenbutsu-otsu4-sprint/questions.generated.json
+          if-no-files-found: error
+          retention-days: 30
