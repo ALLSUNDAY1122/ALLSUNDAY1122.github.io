@@ -22,11 +22,21 @@ function migrateLegacy(){
   }catch(e){}
   return s;
 }
+function isPlainObject(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
 function loadState(){
   let s=null;
   try{s=JSON.parse(localStorage.getItem(LS_KEY)||'null')}catch(e){}
-  if(!s||typeof s!=='object')s=migrateLegacy();
-  s.weak=s.weak||{};s.sessionCompletions=s.sessionCompletions||{};s.stats=s.stats||{totalAnswered:0,totalCorrect:0,history:[]};s.stats.history=Array.isArray(s.stats.history)?s.stats.history:[];s.settings=s.settings||{fontSize:'normal'};s.seenIds=s.seenIds||{};
+  if(!isPlainObject(s))s=migrateLegacy();
+  if(!isPlainObject(s.weak))s.weak={};
+  if(!isPlainObject(s.sessionCompletions))s.sessionCompletions={};
+  if(!isPlainObject(s.stats))s.stats={totalAnswered:0,totalCorrect:0,history:[]};
+  s.stats.totalAnswered=Number.isFinite(s.stats.totalAnswered)?Math.max(0,s.stats.totalAnswered):0;
+  s.stats.totalCorrect=Number.isFinite(s.stats.totalCorrect)?Math.max(0,Math.min(s.stats.totalCorrect,s.stats.totalAnswered)):0;
+  s.stats.history=Array.isArray(s.stats.history)?s.stats.history.filter(x=>isPlainObject(x)&&typeof x.title==='string'&&typeof x.date==='string'&&Number.isFinite(x.correct)&&Number.isFinite(x.total)).slice(0,30):[];
+  if(!isPlainObject(s.settings))s.settings={fontSize:'normal'};
+  if(!['normal','large','xlarge'].includes(s.settings.fontSize))s.settings.fontSize='normal';
+  if(!isPlainObject(s.seenIds))s.seenIds={};
+  if(!isPlainObject(s.inProgress)||!Array.isArray(s.inProgress.ids)||!s.inProgress.ids.length||!Number.isInteger(s.inProgress.idx)||s.inProgress.idx<0||s.inProgress.idx>=s.inProgress.ids.length||s.inProgress.ids.some(id=>!byId[id]))s.inProgress=null;
   return s;
 }
 function saveState(){try{localStorage.setItem(LS_KEY,JSON.stringify(STATE))}catch(e){}}
