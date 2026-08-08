@@ -1,40 +1,106 @@
 'use strict';
-const STORAGE_KEY = 'manabiSprint.tourokuHanbaisha.v02';
-const ACTIVE_KEY = 'manabiSprint.tourokuHanbaisha.active.v02';
-const state = { mode:'all', sessionQuestions:[], index:0, answers:[], startedAt:0, timerId:null, answered:false, selectedIndex:null };
-const $ = id => document.getElementById(id);
-const screens={home:$('homeScreen'),quiz:$('quizScreen'),result:$('resultScreen'),history:$('historyScreen'),settings:$('settingsScreen')};
+(function(){
+const LS_KEY='manabiSprint.tourokuHanbaisha.v03';
+const LEGACY_KEY='manabiSprint.tourokuHanbaisha.v02';
+const SESSION_TODAY='today12';
+const SESSION_CH1='chapter:第1章';
+const SESSION_WEAK='weakreview';
+const app=document.getElementById('app');
+const byId=Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
+let SESSION=null;
+let VIEW='home';
 
-function defaultProgress(){return{rounds:0,lastScore:null,wrongIds:[],lastDuration:0,updatedAt:null}}
-function loadProgress(){try{const p=JSON.parse(localStorage.getItem(STORAGE_KEY));if(!p||typeof p!=='object')return defaultProgress();return{rounds:Number.isFinite(p.rounds)?p.rounds:0,lastScore:Number.isFinite(p.lastScore)?p.lastScore:null,wrongIds:Array.isArray(p.wrongIds)?p.wrongIds.filter(id=>QUESTIONS.some(q=>q.id===id)):[],lastDuration:Number.isFinite(p.lastDuration)?p.lastDuration:0,updatedAt:typeof p.updatedAt==='string'?p.updatedAt:null}}catch(_){localStorage.removeItem(STORAGE_KEY);return defaultProgress()}}
-function saveProgress(p){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}catch(_){}}
-function saveActive(){if(!state.sessionQuestions.length)return;try{localStorage.setItem(ACTIVE_KEY,JSON.stringify({mode:state.mode,ids:state.sessionQuestions.map(q=>q.id),index:state.index,answers:state.answers,startedAt:state.startedAt,answered:state.answered,selectedIndex:state.selectedIndex}))}catch(_){}}
-function clearActive(){try{localStorage.removeItem(ACTIVE_KEY)}catch(_){}}
-function loadActive(){try{const a=JSON.parse(localStorage.getItem(ACTIVE_KEY));if(!a||!Array.isArray(a.ids)||!a.ids.length)return null;const qs=a.ids.map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean);if(!qs.length||!Number.isInteger(a.index)||a.index<0||a.index>=qs.length)return null;return{mode:a.mode==='wrong'?'wrong':'all',questions:qs,index:a.index,answers:Array.isArray(a.answers)?a.answers:[],startedAt:Number.isFinite(a.startedAt)?a.startedAt:Date.now(),answered:!!a.answered,selectedIndex:Number.isInteger(a.selectedIndex)?a.selectedIndex:null}}catch(_){clearActive();return null}}
-function formatTime(sec){const s=Math.max(0,Math.floor(sec));return`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
-function setNav(name){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.nav===name))}
-function showScreen(name){Object.entries(screens).forEach(([k,el])=>el.classList.toggle('hidden',k!==name));$('bottomNav').classList.toggle('hidden',name==='quiz'||name==='result');$('mainTopbar').classList.toggle('hidden',name==='quiz');if(name==='home')setNav('home');if(name==='history')setNav('history');if(name==='settings')setNav('settings');window.scrollTo({top:0,behavior:'smooth'})}
-function refreshHome(){const p=loadProgress();$('roundCount').textContent=p.rounds;$('lastScore').textContent=p.lastScore===null?'—':`${p.lastScore}%`;$('wrongCount').textContent=p.wrongIds.length;$('reviewButton').disabled=p.wrongIds.length===0;const a=loadActive();$('continueButton').classList.toggle('hidden',!a);if(a)$('continueMeta').textContent=`${a.index+1}/${a.questions.length}問目から再開`}
-function refreshHistory(){const p=loadProgress();$('historyRounds').textContent=`${p.rounds}回`;$('historyScore').textContent=p.lastScore===null?'—':`${p.lastScore}%`;$('historyDuration').textContent=p.lastDuration?formatTime(p.lastDuration):'—';$('historyWrong').textContent=`${p.wrongIds.length}問`}
+function freshState(){return{version:3,weak:{},sessionCompletions:{},stats:{totalAnswered:0,totalCorrect:0,history:[]},settings:{fontSize:'normal'},seenIds:{},inProgress:null}}
+function migrateLegacy(){
+  let s=freshState();
+  try{
+    const old=JSON.parse(localStorage.getItem(LEGACY_KEY)||'null');
+    if(old&&typeof old==='object'){
+      s.sessionCompletions[SESSION_TODAY]=Number.isFinite(old.rounds)?old.rounds:0;
+      if(Array.isArray(old.wrongIds)) old.wrongIds.forEach(id=>{if(byId[id])s.weak[id]={streak:0}});
+    }
+  }catch(e){}
+  return s;
+}
+function loadState(){
+  let s=null;
+  try{s=JSON.parse(localStorage.getItem(LS_KEY)||'null')}catch(e){}
+  if(!s||typeof s!=='object')s=migrateLegacy();
+  s.weak=s.weak||{};s.sessionCompletions=s.sessionCompletions||{};s.stats=s.stats||{totalAnswered:0,totalCorrect:0,history:[]};s.stats.history=Array.isArray(s.stats.history)?s.stats.history:[];s.settings=s.settings||{fontSize:'normal'};s.seenIds=s.seenIds||{};
+  return s;
+}
+function saveState(){try{localStorage.setItem(LS_KEY,JSON.stringify(STATE))}catch(e){}}
+let STATE=loadState();
 
-function startSession(mode){const p=loadProgress();const selected=mode==='wrong'?p.wrongIds.map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean):QUESTIONS.slice();if(!selected.length)return;state.mode=mode;state.sessionQuestions=selected;state.index=0;state.answers=[];state.startedAt=Date.now();state.answered=false;state.selectedIndex=null;clearInterval(state.timerId);state.timerId=setInterval(updateTimer,500);saveActive();showScreen('quiz');renderQuestion()}
-function resumeSession(){const a=loadActive();if(!a)return;state.mode=a.mode;state.sessionQuestions=a.questions;state.index=a.index;state.answers=a.answers;state.startedAt=a.startedAt;state.answered=a.answered;state.selectedIndex=a.selectedIndex;clearInterval(state.timerId);state.timerId=setInterval(updateTimer,500);showScreen('quiz');renderQuestion(true)}
-function updateTimer(){if(state.startedAt)$('timer').textContent=formatTime((Date.now()-state.startedAt)/1000)}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function shuffle(arr){let a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function completionCount(key){return STATE.sessionCompletions[key]||0}
+function weakList(){return QUESTIONS.filter(q=>STATE.weak[q.id]&&STATE.weak[q.id].streak<3)}
+function applyFont(){document.documentElement.classList.remove('fs-large','fs-xlarge');if(STATE.settings.fontSize==='large')document.documentElement.classList.add('fs-large');if(STATE.settings.fontSize==='xlarge')document.documentElement.classList.add('fs-xlarge')}
+function formatDate(iso){const d=new Date(iso);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+function ring(count,accent='var(--ch1)'){const pct=Math.min(5,count)/5*100;return `<div class="ring" data-filled="${count>0?1:0}" style="--pct:${pct}%;--ch-accent:${accent}"><span>${count}</span></div>`}
 
-function renderQuestion(fromResume=false){const q=state.sessionQuestions[state.index];$('progressLabel').textContent=`${state.index+1} / ${state.sessionQuestions.length}`;$('progressBar').style.width=`${((state.index+1)/state.sessionQuestions.length)*100}%`;$('questionTag').textContent=`${q.chapter} ・ ${q.topic}`;$('questionText').textContent=q.question;$('feedback').className='feedback';$('detailPanel').open=false;const choices=$('choices');choices.replaceChildren();q.choices.forEach((text,i)=>{const b=document.createElement('button');b.type='button';b.className='choice';b.dataset.index=i;b.innerHTML=`<span class="choice-letter">${String.fromCharCode(65+i)}</span><span></span>`;b.lastElementChild.textContent=text;b.addEventListener('click',()=>selectChoice(i));choices.appendChild(b)});
-  if(!fromResume){state.answered=false;state.selectedIndex=null}else if(state.answered){paintAnswered(q)}else if(state.selectedIndex!==null){paintSelected()}
-  $('answerButton').disabled=!state.answered&&state.selectedIndex===null;$('answerButton').textContent=state.answered?(state.index===state.sessionQuestions.length-1?'結果を見る':'次の問題へ'):'回答する';updateTimer();saveActive()}
-function paintSelected(){[...$('choices').children].forEach((b,i)=>b.classList.toggle('selected',i===state.selectedIndex))}
-function selectChoice(i){if(state.answered)return;state.selectedIndex=i;paintSelected();$('answerButton').disabled=false;saveActive()}
-function confirmAnswer(){if(state.answered){nextQuestion();return}if(state.selectedIndex===null)return;const q=state.sessionQuestions[state.index];const isCorrect=state.selectedIndex===q.answer;state.answers.push({id:q.id,selectedIndex:state.selectedIndex,isCorrect});state.answered=true;paintAnswered(q);$('feedbackTitle').textContent=isCorrect?'正解です':`不正解です。正解は ${String.fromCharCode(65+q.answer)}。`;$('feedbackPoint').textContent=q.point;$('detailText').textContent=q.detail;$('feedback').className=`feedback show ${isCorrect?'ok':'ng'}`;$('answerButton').textContent=state.index===state.sessionQuestions.length-1?'結果を見る':'次の問題へ';saveActive()}
-function paintAnswered(q){[...$('choices').children].forEach((b,i)=>{b.disabled=true;b.classList.remove('selected');if(i===q.answer)b.classList.add('correct');else if(i===state.selectedIndex)b.classList.add('incorrect');else b.classList.add('dimmed')});const a=state.answers.findLast?state.answers.findLast(x=>x.id===q.id):[...state.answers].reverse().find(x=>x.id===q.id);const ok=a?a.isCorrect:state.selectedIndex===q.answer;$('feedbackTitle').textContent=ok?'正解です':`不正解です。正解は ${String.fromCharCode(65+q.answer)}。`;$('feedbackPoint').textContent=q.point;$('detailText').textContent=q.detail;$('feedback').className=`feedback show ${ok?'ok':'ng'}`}
-function nextQuestion(){if(!state.answered)return;if(state.index<state.sessionQuestions.length-1){state.index++;state.answered=false;state.selectedIndex=null;renderQuestion()}else finishSession()}
-function finishSession(){clearInterval(state.timerId);const duration=Math.round((Date.now()-state.startedAt)/1000);const correct=state.answers.filter(a=>a.isCorrect).length;const total=state.sessionQuestions.length;const score=Math.round(correct/total*100);const wrongIds=state.answers.filter(a=>!a.isCorrect).map(a=>a.id);const p=loadProgress();const next={rounds:p.rounds+1,lastScore:score,wrongIds:state.mode==='all'?wrongIds:Array.from(new Set([...p.wrongIds.filter(id=>!state.answers.some(a=>a.id===id)),...wrongIds])),lastDuration:duration,updatedAt:new Date().toISOString()};saveProgress(next);clearActive();renderResult({correct,total,score,duration,wrongIds});showScreen('result')}
-function renderResult(r){$('resultScore').textContent=`${r.score}%`;$('resultFraction').textContent=`${r.correct} / ${r.total}`;$('resultCorrect').textContent=r.correct;$('resultTime').textContent=formatTime(r.duration);$('resultWrong').textContent=r.wrongIds.length;$('resultTitle').textContent=state.mode==='wrong'?'復習を完了しました':'12問、完了しました';$('resultMessage').textContent=r.score===100?'全問正解です。この章の基礎を一周できました。':r.score>=75?'あと少しです。間違えた論点だけを短く復習できます。':'今回の誤答が、次に覚える範囲です。ここからもう一周できます。';const list=$('wrongList');list.replaceChildren();r.wrongIds.forEach(id=>{const q=QUESTIONS.find(x=>x.id===id);if(!q)return;const div=document.createElement('div');div.className='wrong-item';div.innerHTML='<div class="wrong-id"></div><div class="wrong-topic"></div>';div.children[0].textContent=q.id;div.children[1].textContent=q.topic;list.appendChild(div)});$('wrongSection').classList.toggle('hidden',!r.wrongIds.length);$('retryWrongButton').disabled=!r.wrongIds.length}
-function leaveQuiz(){clearInterval(state.timerId);saveActive();showScreen('home');refreshHome()}
-function resetProgress(){if(!confirm('学習履歴と途中データをすべて削除しますか？'))return;localStorage.removeItem(STORAGE_KEY);clearActive();refreshHome();refreshHistory()}
+function tabbar(active){return `<nav class="tabbar" aria-label="メインナビゲーション">
+  <button data-tab="home" class="${active==='home'?'active':''}"><span class="ic">⌂</span>ホーム</button>
+  <button data-tab="record" class="${active==='record'?'active':''}"><span class="ic">▥</span>学習記録</button>
+  <button data-tab="settings" class="${active==='settings'?'active':''}"><span class="ic">⚙</span>設定</button>
+</nav>`}
+function bindTabs(){app.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>go(b.dataset.tab))}
+function go(screen){VIEW=screen;render();window.scrollTo(0,0)}
 
-$('startButton').addEventListener('click',()=>startSession('all'));$('continueButton').addEventListener('click',resumeSession);$('reviewButton').addEventListener('click',()=>startSession('wrong'));$('historyShortcut').addEventListener('click',()=>{refreshHistory();showScreen('history')});$('quitButton').addEventListener('click',leaveQuiz);$('answerButton').addEventListener('click',confirmAnswer);$('retryWrongButton').addEventListener('click',()=>startSession('wrong'));$('retryAllButton').addEventListener('click',()=>startSession('all'));$('homeButton').addEventListener('click',()=>{showScreen('home');refreshHome()});$('resetButton').addEventListener('click',resetProgress);
-document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{const n=btn.dataset.nav;if(n==='home'){showScreen('home');refreshHome()}else if(n==='study'){const a=loadActive();a?resumeSession():startSession('all')}else if(n==='history'){refreshHistory();showScreen('history')}else if(n==='settings'){showScreen('settings')}}));
-window.addEventListener('error',()=>{clearInterval(state.timerId);showScreen('home');refreshHome()});
-refreshHome();refreshHistory();
+function render(){if(VIEW==='home')return renderHome();if(VIEW==='quiz')return renderQuiz();if(VIEW==='result')return renderResult();if(VIEW==='record')return renderRecord();if(VIEW==='settings')return renderSettings()}
+
+function renderHome(){
+  const weak=weakList().length;const ip=STATE.inProgress;
+  let h=`<div class="home-top"><div class="brand-tag">登録販売者試験対策</div><div class="brand-title">登録販売者｜学びスプリント</div><p class="brand-sub">令和8年4月手引き準拠・第1章12問の価値検証版</p></div><div class="hero"><p class="hero-title">今日も1問、力に変える。</p></div>`;
+  if(ip)h+=`<button class="resume-card" data-action="resume"><span class="resume-ic">▶</span><span class="resume-body"><span class="resume-label">前回の続きから始める</span><span class="resume-name">${esc(ip.title)}</span><span class="resume-meta">${Math.min(ip.idx+1,ip.ids.length)} / ${ip.ids.length}問目</span></span></button>`;
+  h+=`<section class="section"><h2>クイック学習</h2>
+    <button class="full-btn" data-action="today"><span class="emoji">⚡</span><span><span class="name">今日の12問</span><span class="meta">第1章12問をテンポよく一周・完走 ${completionCount(SESSION_TODAY)} 回</span></span></button>
+    <button class="full-btn" data-action="weak"><span class="emoji">🔥</span><span><span class="name">苦手復習</span><span class="meta">${weak?`${weak}問を復習・3連続正解で弱点から解除`:'誤答・「わからない」が自動でここに集まります'}</span></span>${weak?`<span class="count-badge">${weak}問</span>`:''}</button>
+  </section>`;
+  h+=`<section class="section"><h2>章別で学ぶ</h2><div class="chapter-grid">
+    <button class="chapter-card active" data-action="chapter1" style="--ch-accent:var(--ch1);--ch-soft:var(--ch1-soft)">${ring(completionCount(SESSION_CH1))}<span class="chapter-info"><span class="chapter-name">第1章<br>医薬品の基本</span><span class="chapter-meta">12問</span></span></button>
+    <div class="chapter-card unavailable" style="--ch-accent:var(--ch2);--ch-soft:var(--ch2-soft)"><span class="chapter-info"><span class="chapter-name">第2章<br>人体と医薬品</span><span class="chapter-meta">本開発で追加</span></span></div>
+    <div class="chapter-card unavailable" style="--ch-accent:var(--ch3);--ch-soft:var(--ch3-soft)"><span class="chapter-info"><span class="chapter-name">第3章<br>主な医薬品</span><span class="chapter-meta">本開発で追加</span></span></div>
+    <div class="chapter-card unavailable" style="--ch-accent:var(--ch4);--ch-soft:var(--ch4-soft)"><span class="chapter-info"><span class="chapter-name">第4章<br>法規と制度</span><span class="chapter-meta">本開発で追加</span></span></div>
+    <div class="chapter-card unavailable" style="--ch-accent:var(--ch5);--ch-soft:var(--ch5-soft)"><span class="chapter-info"><span class="chapter-name">第5章<br>適正使用と安全</span><span class="chapter-meta">本開発で追加</span></span></div>
+  </div><p class="section-note">第2〜5章は未監査問題を表示せず、本開発工程で監査完了後に解放します。</p></section>`;
+  h+=`<section class="section"><div class="settings-row"><div class="label">この版について</div><div class="settings-note">一般用医薬品の使用判断・診断を行うアプリではありません。学習用の独自問題を、厚生労働省「試験問題の作成に関する手引き」を基準に管理しています。</div></div></section>`;
+  h+=tabbar('home');app.innerHTML=h;
+  app.querySelector('[data-action="today"]').onclick=()=>startSession(SESSION_TODAY,shuffle(QUESTIONS),'今日の12問');
+  app.querySelector('[data-action="chapter1"]').onclick=()=>startSession(SESSION_CH1,QUESTIONS.slice(),'第1章｜医薬品の基本');
+  app.querySelector('[data-action="weak"]').onclick=()=>{const qs=weakList();if(!qs.length){alert('現在、弱点登録されている問題はありません。');return}startSession(SESSION_WEAK,shuffle(qs),'苦手復習')};
+  const rb=app.querySelector('[data-action="resume"]');if(rb)rb.onclick=resumeSession;bindTabs();
+}
+
+function startSession(key,questions,title){if(!questions.length)return;SESSION={key,title,questions,index:0,correct:0,answeredCount:0,answered:false,selected:null,startedAt:Date.now()};saveProgress();go('quiz')}
+function saveProgress(){if(!SESSION)return;STATE.inProgress={key:SESSION.key,title:SESSION.title,ids:SESSION.questions.map(q=>q.id),idx:SESSION.index,correct:SESSION.correct,answeredCount:SESSION.answeredCount,answered:SESSION.answered,selected:SESSION.selected,startedAt:SESSION.startedAt};saveState()}
+function clearProgress(){STATE.inProgress=null;saveState()}
+function resumeSession(){const ip=STATE.inProgress;if(!ip)return;const qs=ip.ids.map(id=>byId[id]);if(qs.some(q=>!q)||ip.idx<0||ip.idx>=qs.length){clearProgress();go('home');alert('前回の学習データを復元できませんでした。');return}SESSION={key:ip.key,title:ip.title,questions:qs,index:ip.idx,correct:ip.correct||0,answeredCount:ip.answeredCount||0,answered:!!ip.answered,selected:Number.isInteger(ip.selected)?ip.selected:null,startedAt:ip.startedAt||Date.now()};go('quiz')}
+
+function renderQuiz(){
+  const q=SESSION.questions[SESSION.index],total=SESSION.questions.length;
+  let h=`<div class="header"><button class="quit" id="quitBtn">‹ 中断</button><h1>${esc(SESSION.title)}</h1><span class="quiz-counter">${SESSION.index+1} / ${total}</span></div><div class="quiz-wrap"><span class="quiz-tag">${esc(q.chapter)} ・ ${esc(q.topic)}</span><div class="qbar"><div style="width:${Math.round((SESSION.index/total)*100)}%"></div></div><div class="qtext">${esc(q.question)}</div>`;
+  q.choices.forEach((c,i)=>{let cls='choice';if(SESSION.answered){if(i===q.answer)cls+=' correct';else if(i===SESSION.selected)cls+=' wrong'}h+=`<button class="${cls}" data-choice="${i}" ${SESSION.answered?'disabled':''}><span class="num">${i+1}</span><span>${esc(c)}</span></button>`});
+  if(!SESSION.answered){h+=`<button class="dontknow-btn" id="dontknowBtn">わからない</button>`}else{
+    const correct=SESSION.selected===q.answer,dk=SESSION.selected===-1;h+=`<div class="feedback ${correct?'ok':'ng'}"><div class="feedback-title ${correct?'ok':'ng'}">${dk?`正解は ${q.answer+1} でした`:correct?'正解！':`不正解。正解は ${q.answer+1} です`}</div><span class="learn-label">この問題で覚える一文</span><p class="feedback-point">${esc(q.point)}</p><details><summary>詳しい解説を見る</summary><p class="detail-text">${esc(q.detail)}</p></details></div><button class="next-btn" id="nextBtn">${SESSION.index+1<total?'次の問題へ':'結果を見る'}</button>`}
+  h+='</div>';app.innerHTML=h;
+  document.getElementById('quitBtn').onclick=()=>{saveProgress();go('home')};
+  if(!SESSION.answered){app.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>answerQuestion(Number(b.dataset.choice)));document.getElementById('dontknowBtn').onclick=()=>answerQuestion(-1)}else document.getElementById('nextBtn').onclick=nextQuestion;
+}
+function answerQuestion(choice){if(SESSION.answered)return;const q=SESSION.questions[SESSION.index],correct=choice===q.answer;SESSION.selected=choice;SESSION.answered=true;SESSION.answeredCount++;STATE.seenIds[q.id]=true;STATE.stats.totalAnswered++;if(correct){SESSION.correct++;STATE.stats.totalCorrect++;const w=STATE.weak[q.id];if(w){const streak=(w.streak||0)+1;if(streak>=3)delete STATE.weak[q.id];else STATE.weak[q.id]={streak}}}else STATE.weak[q.id]={streak:0};saveProgress();renderQuiz()}
+function nextQuestion(){if(!SESSION.answered)return;if(SESSION.index+1<SESSION.questions.length){SESSION.index++;SESSION.answered=false;SESSION.selected=null;saveProgress();renderQuiz();window.scrollTo(0,0)}else finishSession()}
+function finishSession(){const total=SESSION.questions.length,duration=Math.max(1,Math.round((Date.now()-SESSION.startedAt)/1000));clearProgress();STATE.sessionCompletions[SESSION.key]=(STATE.sessionCompletions[SESSION.key]||0)+1;STATE.stats.history.unshift({title:SESSION.title,date:new Date().toISOString(),correct:SESSION.correct,total,duration});STATE.stats.history=STATE.stats.history.slice(0,30);saveState();go('result')}
+
+function renderResult(){const total=SESSION.questions.length,rate=Math.round(SESSION.correct/total*100);let h=`<div class="header"><h1>結果</h1></div><div class="result-card"><div class="result-big">${SESSION.correct} / ${total}</div><div class="result-label">${esc(SESSION.title)} 完走！</div><div class="result-detail"><div><div class="n">${rate}%</div><div class="l">正答率</div></div><div><div class="n">${weakList().length}</div><div class="l">現在の弱点数</div></div><div><div class="n">${completionCount(SESSION.key)}</div><div class="l">完走回数</div></div></div></div><div class="result-actions"><button class="next-btn" id="homeBtn">ホームに戻る</button>${weakList().length?'<button class="secondary-btn" id="weakBtn">苦手だけ復習</button>':''}</div>`;h+=tabbar('');app.innerHTML=h;document.getElementById('homeBtn').onclick=()=>go('home');const wb=document.getElementById('weakBtn');if(wb)wb.onclick=()=>startSession(SESSION_WEAK,shuffle(weakList()),'苦手復習');bindTabs()}
+
+function renderRecord(){const rate=STATE.stats.totalAnswered?Math.round(STATE.stats.totalCorrect/STATE.stats.totalAnswered*100):0;let h=`<div class="header"><h1>学習記録</h1></div><section class="section"><div class="stat-row"><div class="stat-box"><div class="num">${STATE.stats.totalAnswered}</div><div class="lbl">総回答数</div></div><div class="stat-box"><div class="num">${STATE.stats.totalCorrect}</div><div class="lbl">総正解数</div></div><div class="stat-box"><div class="num">${rate}%</div><div class="lbl">正答率</div></div></div></section><section class="section"><h2>苦手問題（現在${weakList().length}問）</h2>`;
+  if(weakList().length)h+=`<button class="full-btn" data-action="record-weak"><span class="emoji">🔥</span><span><span class="name">苦手復習を開始</span><span class="meta">3連続正解で弱点から解除</span></span><span class="count-badge">${weakList().length}問</span></button>`;else h+=`<div class="empty-note">現在、弱点登録されている問題はありません。</div>`;
+  h+=`</section><section class="section"><h2>直近の学習履歴</h2>`;
+  if(!STATE.stats.history.length)h+=`<div class="empty-note">まだ学習履歴がありません。</div>`;else STATE.stats.history.forEach(x=>{h+=`<div class="history-item"><span>${esc(x.title)}</span><span class="meta">${formatDate(x.date)} ・ ${x.correct}/${x.total}</span></div>`});
+  h+=`</section>${tabbar('record')}`;app.innerHTML=h;const b=app.querySelector('[data-action="record-weak"]');if(b)b.onclick=()=>startSession(SESSION_WEAK,shuffle(weakList()),'苦手復習');bindTabs()}
+
+function renderSettings(){let h=`<div class="header"><h1>設定</h1></div><section class="section"><div class="settings-row"><div class="label">文字サイズ</div><div class="seg">${[['normal','標準'],['large','大'],['xlarge','特大']].map(([k,l])=>`<button data-fs="${k}" class="${STATE.settings.fontSize===k?'active':''}">${l}</button>`).join('')}</div></div><div class="settings-row"><div class="label">教材基準</div><div class="settings-note">厚生労働省「試験問題の作成に関する手引き」令和8年4月一部改訂版を基準に管理しています。現在のSafari価値検証版は監査済み第1章12問のみを収録しています。</div></div><div class="settings-row"><div class="label">データについて</div><div class="settings-note">学習記録・弱点情報はこの端末内にのみ保存します。ログイン、広告、氏名・メールアドレス等の個人情報保存はありません。</div></div><div class="settings-row"><div class="label">学習記録のリセット</div><button class="danger-btn" id="resetBtn">すべての学習記録をリセット</button></div></section>${tabbar('settings')}`;app.innerHTML=h;app.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{STATE.settings.fontSize=b.dataset.fs;saveState();applyFont();renderSettings()});document.getElementById('resetBtn').onclick=()=>{if(confirm('本当にすべての学習記録をリセットしますか？')){try{localStorage.removeItem(LS_KEY);localStorage.removeItem(LEGACY_KEY)}catch(e){}STATE=freshState();applyFont();go('home')}};bindTabs()}
+
+applyFont();render();
+})();
