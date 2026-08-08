@@ -1,0 +1,34 @@
+name: TsukanshiSprint
+options:
+  bundleIdPrefix: jp.allsunday1122
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  TsukanshiSprint:
+    type: application
+    platform: iOS
+    sources:
+      - path: App.swift
+    resources:
+      - path: ../index.html
+      - path: ../style.css
+      - path: ../questions.js
+      - path: ../app.js
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tsukanshi
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_VERSION: 5.0
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: 通関士 学びスプリント
+        CFBundleShortVersionString: 0.1.0
+        CFBundleVersion: 1
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIRequiresFullScreen: false
