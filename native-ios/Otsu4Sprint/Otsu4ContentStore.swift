@@ -33,6 +33,7 @@ enum Otsu4ContentError: Error {
 
 struct Otsu4ContentStore {
     static let freeQuestionCount = 72
+    static let freeSubjectCounts = ["法令": 29, "物理・化学": 19, "性質・消火": 24]
 
     let bank: Otsu4QuestionBank
 
@@ -51,7 +52,10 @@ struct Otsu4ContentStore {
     }
 
     var freeQuestions: [Otsu4Question] {
-        Array(bank.questions.prefix(Self.freeQuestionCount))
+        let law = bank.questions.filter { $0.subject == "法令" }.prefix(Self.freeSubjectCounts["法令"] ?? 0)
+        let physics = bank.questions.filter { $0.subject == "物理・化学" }.prefix(Self.freeSubjectCounts["物理・化学"] ?? 0)
+        let properties = bank.questions.filter { $0.subject == "性質・消火" }.prefix(Self.freeSubjectCounts["性質・消火"] ?? 0)
+        return Array(law) + Array(physics) + Array(properties)
     }
 
     func availableQuestions(isPremium: Bool) -> [Otsu4Question] {
@@ -71,12 +75,12 @@ struct Otsu4ContentStore {
         let physics = bank.questions.filter { $0.subject == "物理・化学" }.prefix(10)
         let properties = bank.questions.filter { $0.subject == "性質・消火" }.prefix(10)
         guard law.count == 15, physics.count == 10, properties.count == 10 else { return nil }
-        return Array(law + physics + properties)
+        return Array(law) + Array(physics) + Array(properties)
     }
 
     private static func validate(_ bank: Otsu4QuestionBank) throws {
         guard bank.questions.count == 360 else { throw Otsu4ContentError.invalidCounts }
-        let counts = Dictionary(grouping: bank.questions, by: \ .subject).mapValues(\.count)
+        let counts = Dictionary(grouping: bank.questions, by: \.subject).mapValues(\.count)
         guard counts["法令"] == 144,
               counts["物理・化学"] == 96,
               counts["性質・消火"] == 120 else {
