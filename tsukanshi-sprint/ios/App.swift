@@ -1,0 +1,171 @@
+import SwiftUI
+import WebKit
+import StoreKit
+
+@main
+struct TsukanshiSprintApp: App {
+    @StateObject private var store = StoreKitManager()
+
+    var body: some Scene {
+        WindowGroup {
+            WebAppView(store: store)
+                .ignoresSafeArea(.keyboard)
+        }
+    }
+}
+
+@MainActor
+final class StoreKitManager: ObservableObject {
+    static let productID = "jp.allsunday1122.tsukanshi.premium"
+
+    @Published private(set) var isPremium = false
+    @Published private(set) var displayPrice = ""
+    @Published private(set) var status = "unknown"
+
+    private var product: Product?
+
+    func refresh() async {
+        do {
+            if product == nil {
+                product = try await Product.products(for: [Self.productID]).first
+                displayPrice = product?.displayPrice ?? ""
+            }
+            var entitled = false
+            for await result in Transaction.currentEntitlements {
+                guard case .verified(let transaction) = result else { continue }
+                if transaction.productID == Self.productID,
+                   transaction.revocationDate == nil {
+                    entitled = true
+                }
+            }
+            isPremium = entitled
+            status = "known"
+        } catch {
+            status = "error"
+        }
+    }
+
+    func purchase() async {
+        if product == nil { await refresh() }
+        guard let product else { return }
+        do {
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                if case .verified(let transaction) = verification {
+                    await transaction.finish()
+                    await refresh()
+                }
+            case .pending:
+                status = "pending"
+            case .userCancelled:
+                status = "cancelled"
+            @unknown default:
+                status = "unknown"
+            }
+        } catch {
+            status = "error"
+        }
+    }
+
+    func restore() async {
+        do {
+            try await AppStore.sync()
+            await refresh()
+        } catch {
+            status = "error"
+        }
+    }
+
+    func payload() -> [String: Any] {
+        [
+            "premium": isPremium,
+            "displayPrice": displayPrice,
+            "status": status
+        ]
+    }
+}
+
+struct WebAppView: UIViewRepresentable {
+    @ObservedObject var store: StoreKitManager
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(store: store)
+    }
+
+    func makeUIView(context: Context) -> WKWebView {
+        let controller = WKUserContentController()
+        controller.add(context.coordinator, name: "storeKit")
+        controller.add(context.coordinator, name: "state")
+
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = controller
+        configuration.websiteDataStore = .default()
+
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.navigationDelegate = context.coordinator
+        webView.isOpaque = false
+        webView.backgroundColor = UIColor(red: 253/255, green: 246/255, blue: 239/255, alpha: 1)
+        webView.scrollView.backgroundColor = webView.backgroundColor
+        context.coordinator.webView = webView
+
+        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
+            webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        }
+        return webView
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        context.coordinator.store = store
+    }
+
+    final class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
+        var store: StoreKitManager
+        weak var webView: WKWebView?
+
+        init(store: StoreKitManager) {
+            self.store = store
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            Task { @MainActor in
+                await store.refresh()
+                pushStoreKitState()
+            }
+        }
+
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "state" {
+                persistState(message.body)
+                return
+            }
+            guard message.name == "storeKit",
+                  let body = message.body as? [String: Any],
+                  let action = body["action"] as? String else { return }
+
+            Task { @MainActor in
+                switch action {
+                case "purchase": await store.purchase()
+                case "restore": await store.restore()
+                default: await store.refresh()
+                }
+                pushStoreKitState()
+            }
+        }
+
+        private func persistState(_ body: Any) {
+            guard JSONSerialization.isValidJSONObject(body),
+                  let data = try? JSONSerialization.data(withJSONObject: body) else { return }
+            UserDefaults.standard.set(data, forKey: "tsukanshiSprint.webStateBackup")
+        }
+
+        @MainActor
+        private func pushStoreKitState() {
+            guard let webView,
+                  JSONSerialization.isValidJSONObject(store.payload()),
+                  let data = try? JSONSerialization.data(withJSONObject: store.payload()),
+                  let json = String(data: data, encoding: .utf8) else { return }
+            webView.evaluateJavaScript("window.__nativeStoreKitUpdate(\(json));")
+        }
+    }
+}
