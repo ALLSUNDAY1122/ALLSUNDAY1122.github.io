@@ -3,13 +3,17 @@ name: Tsukanshi content audit
 on:
   push:
     paths:
-      - 'tsukanshi-sprint/questions.js'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-content.mjs'
+      - 'tsukanshi-sprint/index.html'
       - '.github/workflows/tsukanshi-content-audit.yml'
   pull_request:
     paths:
-      - 'tsukanshi-sprint/questions.js'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-content.mjs'
+      - 'tsukanshi-sprint/index.html'
       - '.github/workflows/tsukanshi-content-audit.yml'
 
 permissions:
