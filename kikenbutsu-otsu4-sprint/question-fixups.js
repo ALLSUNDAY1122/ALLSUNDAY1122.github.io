@@ -2,22 +2,22 @@
 (function(){
   if(typeof QUESTIONS==='undefined') throw new Error('QUESTIONS is not loaded');
 
-  // 法令科目は、出典が試験案内等でも「この問題バンクが準拠する法令基準日」を必ず持たせる。
+  // 監査日(sourceCheckedAt)と法令の施行日(legalEffectiveDate)を混同しない。
+  // 2026-08-08監査時点の現行施行日:
+  // - 消防法: 2025-06-01
+  // - 危険物の規制に関する政令: 2026-04-04
   for(const q of QUESTIONS){
-    if(q.subject==='法令' && !q.legalEffectiveDate){
-      q.legalEffectiveDate=LAW_BASELINE;
+    if(q.subject==='法令'){
+      q.legalEffectiveDate = q.sourceTitle.includes('危険物の規制に関する政令')
+        ? '2026-04-04'
+        : '2025-06-01';
+    }else if(q.subject==='性質・消火' && (q.topic==='分類' || q.topic==='石油類区分')){
+      q.legalEffectiveDate='2025-06-01';
+    }else{
+      q.legalEffectiveDate=null;
     }
   }
 
-  // 同一論点の反復セットで、問題文・選択肢・正答が完全一致した場合だけ識別ラベルを付与する。
-  // 意味的に別問題と偽装するためではなく、学習履歴・監査・訂正通知を安定ID単位で扱うための明示ラベル。
-  const seen=new Set();
-  for(const q of QUESTIONS){
-    const signature=JSON.stringify([q.question,q.choices,q.answer]);
-    if(seen.has(signature)){
-      q.question += `（反復演習 ${q.id}）`;
-      q.tags=Array.from(new Set([...(q.tags||[]),'反復演習']));
-    }
-    seen.add(JSON.stringify([q.question,q.choices,q.answer]));
-  }
+  // 重複問題をIDラベル付加で別問題に見せない。
+  // 完全重複・近接重複は監査CI側で検出し、問題自体を作り直す。
 })();
