@@ -9,6 +9,10 @@ on:
       - 'kangoshi-sprint/product-content/official-sources.json'
       - '.github/workflows/kangoshi-official-import.yml'
 
+concurrency:
+  group: kangoshi-official-import
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
