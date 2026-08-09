@@ -9,9 +9,11 @@ OUT.mkdir(exist_ok=True)
 
 PAGE_CODE = re.compile(r'^\s*[A-Z0-9-]+(?:前|後)[A-Z0-9-]*-?\d*\s*$')
 Q_LINE = re.compile(r'^\s*(\d{1,3})\s+(.+?)\s*$')
+Q_BARE = re.compile(r'^\s*(\d{1,3})\s*$')
 OPT_LINE = re.compile(r'^\s*([1-5])\s*[．.]\s*(.*)$')
 NUMERIC_PROMPT = re.compile(r'解答\s*[：:]')
-MEDIA_WORDS = ('図を示す', '写真を示す', '別冊', '画像を示す', 'グラフを示す', '表を示す')
+JAPANESE = re.compile(r'[ぁ-んァ-ン一-龥]')
+MEDIA_WORDS = ('図を示す', '図に示す', '写真を示す', '別冊', '画像を示す', 'グラフを示す', '表を示す')
 
 
 def fetch_pdf(url: str, path: Path):
@@ -31,19 +33,45 @@ def clean_line(line: str) -> str:
     return re.sub(r'\s+', ' ', line).strip()
 
 
+def plausible_first_question(tail: str) -> bool:
+    if len(tail) < 6:
+        return False
+    if not JAPANESE.search(tail):
+        return False
+    banned = ('試験問題の数', '解答方法', '答案用紙', '正解は', '注意事項')
+    return not any(x in tail for x in banned)
+
+
+def question_number(line: str):
+    m = Q_LINE.match(line)
+    if m:
+        return int(m.group(1)), m.group(2)
+    m = Q_BARE.match(line)
+    if m:
+        return int(m.group(1)), ''
+    return None, None
+
+
 def find_question_starts(lines):
-    starts = {}
-    expected = 1
+    # The booklet front matter contains answer-sheet examples with standalone
+    # numbers. First anchor on the real Q1, which has an actual Japanese stem,
+    # then follow sequential question numbers through Q120.
+    first = None
     for i, raw in enumerate(lines):
         line = clean_line(raw)
-        m = Q_LINE.match(line)
-        if not m:
-            continue
-        n = int(m.group(1))
-        if n == expected and n <= 120:
-            tail = m.group(2)
-            if expected == 1 and ('試験問題の数' in tail or '解答方法' in tail):
-                continue
+        n, tail = question_number(line)
+        if n == 1 and tail and plausible_first_question(tail):
+            first = i
+            break
+    if first is None:
+        raise RuntimeError('question split failed: real question 1 not found')
+
+    starts = {1:first}
+    expected = 2
+    for i in range(first + 1, len(lines)):
+        line = clean_line(lines[i])
+        n, _ = question_number(line)
+        if n == expected:
             starts[n] = i
             expected += 1
             if expected == 121:
@@ -62,11 +90,18 @@ def parse_question_block(block, n):
             continue
         if re.match(r'^\d+\s+[A-Z0-9-]+(?:前|後)', line):
             continue
+        if '.indd' in line and re.search(r'\d{4}/\d{1,2}/\d{1,2}', line):
+            continue
         cleaned.append(line)
     if not cleaned:
         return {'stem':'', 'choices':[], 'numericPrompt':False}
 
-    cleaned[0] = re.sub(r'^\s*'+str(n)+r'\s+', '', cleaned[0], count=1)
+    cleaned[0] = re.sub(r'^\s*'+str(n)+r'(?:\s+|$)', '', cleaned[0], count=1).strip()
+    if cleaned and not cleaned[0]:
+        cleaned = cleaned[1:]
+    if not cleaned:
+        return {'stem':'', 'choices':[], 'numericPrompt':False}
+
     numeric_prompt = any(NUMERIC_PROMPT.search(line) for line in cleaned)
     if numeric_prompt:
         cut = next((i for i,line in enumerate(cleaned) if NUMERIC_PROMPT.search(line)), len(cleaned))
@@ -173,7 +208,7 @@ def build_set(src, am_q, pm_q, answers):
             ans, answer_type, accepted = decode_answer(tokens, choices, q.get('numericPrompt', False))
             exception = scoring_exception(src, session, n)
             scoring_status = exception.get('mode') if exception else ('excluded' if not tokens else 'normal')
-            requires_media = any(word in stem for word in MEDIA_WORDS) or (not q.get('numericPrompt') and not choices)
+            requires_media = any(word in stem for word in MEDIA_WORDS)
             refs=[src['landingUrl'], pdf_url, src['answerPdf']]
             if src.get('resultUrl'): refs.append(src['resultUrl'])
             if exception and exception.get('noticeUrl'): refs.append(exception['noticeUrl'])
@@ -221,7 +256,7 @@ def main():
             ans=parse_answers(files['ans'],src['answerPrefixMorning'],src['answerPrefixAfternoon'])
             items=build_set(src,am,pm,ans)
             out={
-                'schemaVersion':2,
+                'schemaVersion':3,
                 'setId':src['id'],
                 'sourceExam':src['exam'],
                 'questionCount':len(items),
