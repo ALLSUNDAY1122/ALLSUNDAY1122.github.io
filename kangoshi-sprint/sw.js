@@ -1,5 +1,5 @@
-const CACHE='kangoshi-sprint-v21-20260809-audit2';
-const ASSETS=['./','./index.html','./style.css','./questions.js','./questions-numeric.js','./questions-audit-v1.js','./question-taxonomy-v1.js','./app-v03.js','./manifest.json'];
+const CACHE='kangoshi-sprint-v21-20260809-audit3';
+const ASSETS=['./','./index.html','./style.css','./questions.js','./questions-numeric.js','./questions-audit-v1.js','./question-taxonomy-v1.js','./exam-config.js','./app-v03.js','./manifest.json'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{
