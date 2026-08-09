@@ -200,8 +200,8 @@
       "session": "AM",
       "questionNo": 5,
       "category": "必修",
-      "majorSubject": "精神看護学",
-      "subject": "こころの健康",
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "介護保険制度",
       "answerType": "singleChoice",
       "question": "居宅サービス計画〈ケアプラン〉の作成を業務とするのはどれか。",
       "choices": [
@@ -233,12 +233,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "精神保健"
+        "stem-rule:居宅サービス計画|ケアプラン"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM006",
@@ -342,7 +342,7 @@
       "questionNo": 8,
       "category": "必修",
       "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "乳幼児期の手先の運動で最も早くできるようになるのはどれか。",
       "choices": [
@@ -375,11 +375,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 20,
       "classificationSignals": [
-        "幼児"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM009",
@@ -388,7 +388,7 @@
       "questionNo": 9,
       "category": "必修",
       "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "乳児期と比べて学童期にみられる身体生理機能の変化はどれか。",
       "choices": [
@@ -421,12 +421,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "乳児",
-        "学童"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM010",
@@ -618,8 +617,8 @@
       "session": "AM",
       "questionNo": 14,
       "category": "必修",
-      "majorSubject": "基礎看護学",
-      "subject": "検査・処置の援助",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "循環器の病態",
       "answerType": "singleChoice",
       "question": "深部静脈血栓症〈DVT〉の危険因子はどれか。 deep vein thrombosis",
       "choices": [
@@ -651,12 +650,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 5,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "静脈血"
+        "stem-rule:深部静脈血栓症.*危険因子"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM015",
@@ -1023,8 +1022,8 @@
       "session": "AM",
       "questionNo": 23,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "安全・安楽",
       "answerType": "singleChoice",
       "question": "包帯法で前腕部を固定した場合の観察項目で適切なのはどれか。",
       "choices": [
@@ -1056,10 +1055,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:包帯法|包帯.*固定"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM024",
@@ -1429,13 +1430,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "児童福祉法",
-        "母子保健法"
+        "stem-rule:法律とその内容|最も新しく制定された法律"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM032",
@@ -1941,11 +1941,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM043",
@@ -1987,11 +1987,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM044",
@@ -2033,11 +2033,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM045",
@@ -2079,11 +2079,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM046",
@@ -2496,12 +2496,13 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
+      "classificationStatus": "high",
       "classificationScore": 4,
       "classificationSignals": [
-        "腓骨神経麻痺"
+        "腓骨神経麻痺",
+        "unique-score>=4"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3-promoted"
     },
     {
       "id": "K115-AM055",
@@ -2555,8 +2556,8 @@
       "session": "AM",
       "questionNo": 56,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "老年看護学",
+      "subject": "高齢者と家族",
       "answerType": "singleChoice",
       "question": "高齢の親の介護が必要となった家族の発達課題で正しいのはどれか。",
       "choices": [
@@ -2588,10 +2589,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:高齢の親の介護.*家族の発達課題"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM057",
@@ -2740,7 +2743,7 @@
       "questionNo": 60,
       "category": "一般",
       "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "正期産で出生した健康な乳児で正しいのはどれか。",
       "choices": [
@@ -2773,13 +2776,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 7,
+      "classificationScore": 20,
       "classificationSignals": [
-        "乳児",
-        "学童",
-        "生後"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM061",
@@ -2788,7 +2789,7 @@
       "questionNo": 61,
       "category": "一般",
       "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "標準的な幼児の基本的生活習慣についての組合せで正しいのはどれか。",
       "choices": [
@@ -2821,11 +2822,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 20,
       "classificationSignals": [
-        "幼児"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM062",
@@ -2880,7 +2881,7 @@
       "questionNo": 63,
       "category": "一般",
       "majorSubject": "小児看護学",
-      "subject": "成長発達・小児看護",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "生後 6 か月の男児。保護者が児の尿の色が濃いことを心配して来院し、尿検査の ため採尿することになった。採尿に使用する用具（別冊No. 1）を別に示す。 この男児の採尿に使用する用具として適切なのはどれか。",
       "choices": [
@@ -2913,11 +2914,11 @@
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:生後\\s*\\d+.*児|\\d+か月の.*児|\\d+歳の.*児|小児の入院患者"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM064",
@@ -2974,7 +2975,7 @@
       "questionNo": 65,
       "category": "一般",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さん（25 歳、初産婦）は妊娠経過が順調であり、自然分娩を希望している。妊 娠 40 週 2 日、陣痛発来し入院した。未破水、陣痛の間欠 6 分、発作 20 秒で産痛を 訴えている。入院してから 4 時間経過しており、現在、子宮口 4 cm 開大してい る。 A さんへの援助で適切なのはどれか。",
       "choices": [
@@ -3007,11 +3008,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:うっ滞性乳腺炎|産褥|褥婦|分娩第|陣痛|胎児心拍|妊娠\\s*\\d+週"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM066",
@@ -3204,7 +3205,7 @@
       "questionNo": 70,
       "category": "一般",
       "majorSubject": "小児看護学",
-      "subject": "成長発達・小児看護",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "4 人の小児の入院患者を受け持っている日勤の看護師が、患者に付き添っている 母親から立て続けにナースコールを受けた。 訪室の優先順位が高いのはどれか。",
       "choices": [
@@ -3237,11 +3238,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:生後\\s*\\d+.*児|\\d+か月の.*児|\\d+歳の.*児|小児の入院患者"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM071",
@@ -3249,8 +3250,8 @@
       "session": "AM",
       "questionNo": 71,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "看護の統合と実践",
+      "subject": "看護管理",
       "answerType": "singleChoice",
       "question": "看護職員の交代勤務で正しいのはどれか。",
       "choices": [
@@ -3282,10 +3283,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:看護職員の交代勤務|看護職員.*勤務"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM072",
@@ -3339,8 +3342,8 @@
       "session": "AM",
       "questionNo": 73,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "看護の統合と実践",
+      "subject": "倫理・国際看護",
       "answerType": "singleChoice",
       "question": "4 人部屋に入院中の A さん（外国籍）は 3 日後に手術予定である。A さんは 1 日 3 回、決まった時間に毎日病室でお祈りをしている。看護師が訪室したところ、同 室の B さんから「お祈りの声が気になってゆっくり休めない」と相談された。 看護師の対応で適切なのはどれか。",
       "choices": [
@@ -3372,10 +3375,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:外国籍.*お祈り|外国籍.*宗教|宗教的"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM074",
@@ -3430,8 +3435,8 @@
       "session": "AM",
       "questionNo": 75,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "体液・恒常性",
       "answerType": "singleChoice",
       "question": "体液について正しいのはどれか。",
       "choices": [
@@ -3464,10 +3469,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:^体液について|体液の分布|細胞外液|細胞内液"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM076",
@@ -3509,12 +3516,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "糸球体"
+        "stem-rule:バソプレシン"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM077",
@@ -3522,8 +3529,8 @@
       "session": "AM",
       "questionNo": 77,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "運動器の病態",
       "answerType": "singleChoice",
       "question": "腰部脊柱管狭窄症による間欠性跛行が改善する腰部の動きはどれか。 lumbar spinal canal stenosis",
       "choices": [
@@ -3556,10 +3563,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:腰部脊柱管狭窄症|間欠性跛行"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM078",
@@ -3567,8 +3576,8 @@
       "session": "AM",
       "questionNo": 78,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "腫瘍・病理",
       "answerType": "singleChoice",
       "question": "子宮頸癌で異常に増殖するのはどれか。 cancer of the uterine cervix",
       "choices": [
@@ -3601,10 +3610,12 @@
         "5"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:子宮頸癌.*異常に増殖|癌で異常に増殖"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM079",
@@ -3716,8 +3727,8 @@
       "session": "AM",
       "questionNo": 81,
       "category": "一般",
-      "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "感染・免疫",
+      "majorSubject": "小児看護学",
+      "subject": "小児の健康障害",
       "answerType": "singleChoice",
       "question": "A ちゃん（ 6 歳、女児）は 食物アレルギーがある食品を誤食し、 5 分後に全身の food allergy 蕁麻疹と嘔気が出現した。その後 2 回嘔吐し、喘鳴を伴う咳嗽が出現した。 urticaria 最初に行う処置で適切なのはどれか。",
       "choices": [
@@ -3750,12 +3761,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "medium",
-      "classificationScore": 5,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "アレルギー"
+        "stem-rule:食物アレルギー.*[男女]児|A\\s*ちゃん.*アレルギー"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM082",
@@ -3810,8 +3821,8 @@
       "session": "AM",
       "questionNo": 83,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "代謝の機能",
       "answerType": "multiChoice",
       "question": "エネルギー代謝を示す反応はどれか。 2 つ選べ。",
       "choices": [
@@ -3850,10 +3861,12 @@
         "14"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:エネルギー代謝|異化|同化"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM084",
@@ -3861,8 +3874,8 @@
       "session": "AM",
       "questionNo": 84,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "アレルギー・感染",
       "answerType": "multiChoice",
       "question": "発症にダニが関与するのはどれか。 2 つ選べ。",
       "choices": [
@@ -3901,10 +3914,12 @@
         "14"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:発症にダニ|ダニが関与"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM085",
@@ -3912,8 +3927,8 @@
       "session": "AM",
       "questionNo": 85,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "薬理",
       "answerType": "multiChoice",
       "question": "薬剤の形状として貼付剤があるのはどれか。 2 つ選べ。",
       "choices": [
@@ -3952,10 +3967,12 @@
         "34"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:貼付剤|薬剤の形状|剤形"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM086",
@@ -4070,8 +4087,8 @@
       "session": "AM",
       "questionNo": 88,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "感覚器",
       "answerType": "multiChoice",
       "question": "老視の原因はどれか。 2 つ選べ。",
       "choices": [
@@ -4110,10 +4127,12 @@
         "25"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 20,
+      "classificationSignals": [
+        "stem-rule:老視|老眼"
+      ],
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM089",
@@ -4221,7 +4240,7 @@
       "questionNo": 91,
       "category": "状況設定",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "回復期リハビリテーション病院の看護師が A さんに行う地域連携クリニカルパ スの説明で適切なのはどれか。",
       "choices": [
@@ -4257,13 +4276,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "介護支援専門員",
-        "訪問看護"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM092",
@@ -4309,11 +4327,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM093",
@@ -4359,11 +4377,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM094",
@@ -4408,12 +4426,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "食道癌"
+        "scenario-adult:食道癌|胃癌|大腸癌|肝硬変|膵癌|胆道癌|潰瘍性大腸炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM095",
@@ -4458,12 +4476,12 @@
       "scenarioIndex": 1,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "食道癌"
+        "scenario-adult:食道癌|胃癌|大腸癌|肝硬変|膵癌|胆道癌|潰瘍性大腸炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM096",
@@ -4508,12 +4526,12 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "食道癌"
+        "scenario-adult:食道癌|胃癌|大腸癌|肝硬変|膵癌|胆道癌|潰瘍性大腸炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM097",
@@ -4558,12 +4576,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "糖尿病"
+        "scenario-adult:糖尿病|低血糖|高血糖"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM098",
@@ -4572,7 +4590,7 @@
       "questionNo": 98,
       "category": "状況設定",
       "majorSubject": "成人看護学",
-      "subject": "腎・泌尿器",
+      "subject": "内分泌・代謝",
       "answerType": "singleChoice",
       "question": "医師は A さんに透析導入の可能性について説明した。A さんは「週に 3 回も病院 に来るのは無理です。他の患者さんから家でできる腹膜透析もあるって聞いたけ ど、どういうものかしら」と看護師に尋ねた。 A さんへの腹膜透析に関する説明内容で適切なのはどれか。",
       "choices": [
@@ -4609,12 +4627,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 20,
       "classificationSignals": [
-        "糖尿病",
-        "腹膜透析"
+        "scenario-adult:糖尿病|低血糖|高血糖"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM099",
@@ -4622,8 +4639,8 @@
       "session": "AM",
       "questionNo": 99,
       "category": "状況設定",
-      "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "検査・診断",
+      "majorSubject": "成人看護学",
+      "subject": "内分泌・代謝",
       "answerType": "singleChoice",
       "question": "その後、A さんには連続携行式腹膜透析法〈CAPD〉が開始された。同時に腹膜透 析の方法と必要な自己管理についての指導が開始となった。現在の血液検査データ は、Hb 9.0 g/dL、アルブミン 2.9 g/dL、クレアチニン 2.5 mg/dL、K 3.8 mEq/L であった。また腹膜透析開始後の除水量は平均 450 mL/日、尿量は平均 900 mL/日 であった。 現在の A さんに対する食事指導の内容で適切なのはどれか。",
       "choices": [
@@ -4659,13 +4676,12 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 8,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "浮腫",
-        "血液検査"
+        "scenario-adult:糖尿病|低血糖|高血糖"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM100",
@@ -4718,12 +4734,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 9,
+      "classificationScore": 20,
       "classificationSignals": [
-        "Lewy",
-        "認知症"
+        "scenario-specialty:認知症|レビー小体|Alzheimer|アルツハイマー"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM101",
@@ -4731,8 +4746,8 @@
       "session": "AM",
       "questionNo": 101,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "日常生活援助",
+      "majorSubject": "老年看護学",
+      "subject": "認知症看護",
       "answerType": "singleChoice",
       "question": "診断から 1 か月後の外来受診時に、A さんの妻から看護師に「夫は夜 8 時くらい に入浴しますが、最近、入浴時にふらつくことがあるそうです。ふらついた時は壁 や浴槽の端に手をついてバランスをとっていると聞きました。夫が安全に入浴する にはどうすればよいか教えてほしいです」と相談があった。 看護師の A さんの妻への助言で適切なのはどれか。",
       "choices": [
@@ -4769,11 +4784,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 17,
+      "classificationScore": 20,
       "classificationSignals": [
-        "入浴"
+        "scenario-specialty:認知症|レビー小体|Alzheimer|アルツハイマー"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM102",
@@ -4819,12 +4834,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 9,
+      "classificationScore": 20,
       "classificationSignals": [
-        "Lewy",
-        "認知症"
+        "scenario-specialty:認知症|レビー小体|Alzheimer|アルツハイマー"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM103",
@@ -4832,8 +4846,8 @@
       "session": "AM",
       "questionNo": 103,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・フィジカルアセスメント",
+      "majorSubject": "小児看護学",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "本日 A ちゃんは、学校から帰ってきた後から咳嗽がみられ、元気がなかった。 夜「苦しくて眠れない」と訴え、母親とともに救急外来を受診した。口元での喘鳴が 著明であり、問診すると途切れ途切れに話した。救急外来受診時のバイタルサイン は、体温 36.6 ℃、呼吸数 36/分、心拍数 120/分、経皮的動脈血酸素飽和度〈SpO2〉 93 % であった。 A ちゃんの気管支喘息の発作強度はどれか。 bronchial asthma",
       "choices": [
@@ -4870,13 +4884,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 15,
+      "classificationScore": 20,
       "classificationSignals": [
-        "SpO2",
-        "バイタルサイン",
-        "呼吸数"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM104",
@@ -4884,8 +4896,8 @@
       "session": "AM",
       "questionNo": 104,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・フィジカルアセスメント",
+      "majorSubject": "小児看護学",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "救急外来で気管支拡張薬の吸入が行われたが、吸入後も呼吸数 32/分、経皮的動 脈血酸素飽和度〈SpO2〉94 %（room air）だったため、入院することになった。入院 後、鼻カニューレによる酸素投与と点滴静脈内注射が開始され、 1 日 3 回のステロ イド薬の静脈内注射と 1 日 4 回の気管支拡張薬の吸入が開始された。 翌日のバイタルサインは体温 36.8 ℃、呼吸数 22/分、心拍数 94/分、経皮的動脈 血酸素飽和度〈SpO2〉97 %（room air）で、酸素投与が中止された。聴診で喘鳴が聴 取された。A ちゃんは「楽になった。お腹がすいた」などと勢いよく話し、笑顔が 見られるようになった。 このときの A ちゃんへの看護で適切なのはどれか。",
       "choices": [
@@ -4922,16 +4934,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 45,
+      "classificationScore": 20,
       "classificationSignals": [
-        "SpO2",
-        "バイタルサイン",
-        "呼吸数",
-        "注射",
-        "点滴",
-        "聴診"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM105",
@@ -4939,8 +4946,8 @@
       "session": "AM",
       "questionNo": 105,
       "category": "状況設定",
-      "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "薬理",
+      "majorSubject": "小児看護学",
+      "subject": "小児の健康障害",
       "answerType": "singleChoice",
       "question": "A ちゃんの咳嗽は軽快し、全身状態も良好で退院が決定した。A ちゃんに学校 での生活状況を確認すると「最近、喘息発作はなかったけど、体育の時は咳が出た り苦しくなったりすることが時々あった」と話した。そのため、A ちゃんと母親 に、退院後も抗アレルギー薬の内服と副腎皮質ステロイド薬の吸入を続けるよう医 師が説明した。 看護師の A ちゃんに対する退院後の生活についての指導で適切なのはどれか。",
       "choices": [
@@ -4977,12 +4984,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "アレルギー",
-        "ステロイド薬"
+        "stem-rule:食物アレルギー.*[男女]児|A\\s*ちゃん.*アレルギー"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM106",
@@ -4990,8 +4996,8 @@
       "session": "AM",
       "questionNo": 106,
       "category": "状況設定",
-      "majorSubject": "人体の構造と機能",
-      "subject": "運動器の構造と機能",
+      "majorSubject": "小児看護学",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "A ちゃんへの支援で優先度が高いのはどれか。",
       "choices": [
@@ -5028,12 +5034,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 7,
+      "classificationScore": 20,
       "classificationSignals": [
-        "睡眠",
-        "関節"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM107",
@@ -5079,11 +5084,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM108",
@@ -5129,11 +5134,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM109",
@@ -5142,7 +5147,7 @@
       "questionNo": 109,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・胎児",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "このときの A さんの状態で正常から逸脱しているのはどれか。",
       "choices": [
@@ -5179,12 +5184,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 20,
       "classificationSignals": [
-        "妊娠",
-        "妊婦"
+        "scenario-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM110",
@@ -5193,7 +5197,7 @@
       "questionNo": 110,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・胎児",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "妊娠 22 週 2 日。妊婦健康診査で母児ともに経過は順調であった。A さんは夫の 立ち合い分娩を希望しており「産後は夫も育児休業を取得する予定です。最近この 地域に引っ越してきたばかりで、今のうちに妊娠週数が同じくらいのお母さんと仲 良くなって色々と情報交換したいです」と話す。 このときの A さんへの支援で最も適切なのはどれか。",
       "choices": [
@@ -5230,14 +5234,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 38,
+      "classificationScore": 20,
       "classificationSignals": [
-        "分娩",
-        "妊娠",
-        "妊娠週",
-        "妊婦"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM111",
@@ -5246,7 +5247,7 @@
       "questionNo": 111,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんは妊娠 39 週 5 日、男児を経腟分娩で出産した。産褥 1 日、体温 37.1 ℃、 脈拍 85/分、血圧 110/75 mmHg である。子宮底の位置は臍下 1 横指、中等量の血 性悪露を認めるが、量は減少してきている。乳頭は乳管が左右共に 2 本開口してお り、にじむ程度の乳汁分泌を認める。A さんは「生理痛のような下腹部の痛みがあ りましたが、徐々に改善しています。お産のあとは尿意がなくて尿も出ている実感 がなかったのですが、今は尿意があり排尿もしっかりあります」と話す。 A さんに対するアセスメントで正しいのはどれか。",
       "choices": [
@@ -5283,11 +5284,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:うっ滞性乳腺炎|産褥|褥婦|分娩第|陣痛|胎児心拍|妊娠\\s*\\d+週"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM112",
@@ -5296,7 +5297,7 @@
       "questionNo": 112,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・胎児",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんへの食事指導で適切なのはどれか。",
       "choices": [
@@ -5333,12 +5334,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 9,
+      "classificationScore": 20,
       "classificationSignals": [
-        "妊娠",
-        "妊婦"
+        "scenario-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM113",
@@ -5347,7 +5347,7 @@
       "questionNo": 113,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・胎児",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんは「妊娠することは考えていなかったので、自分の体にどんなことが起こ るのか想像もつきません」と話した。看護師は、次の妊婦健康診査までに生じやす い変化について説明することにした。 A さんに説明する内容で適切なのはどれか。",
       "choices": [
@@ -5384,12 +5384,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 19,
+      "classificationScore": 20,
       "classificationSignals": [
-        "妊娠",
-        "妊婦"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM114",
@@ -5398,7 +5397,7 @@
       "questionNo": 114,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんの妊娠経過は順調で、妊娠 38 週 3 日に正常分娩で出産した。産褥経過と 乳汁分泌は順調である。産褥 4 日の退院指導の際に「産後の性生活について教えて ほしい」と話す。 A さんへの説明で適切なのはどれか。",
       "choices": [
@@ -5435,11 +5434,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:うっ滞性乳腺炎|産褥|褥婦|分娩第|陣痛|胎児心拍|妊娠\\s*\\d+週"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-AM115",
@@ -5984,7 +5983,7 @@
       "questionNo": 6,
       "category": "必修",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・胎児",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "胎児の卵円孔の位置で正しいのはどれか。",
       "choices": [
@@ -6017,11 +6016,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 20,
       "classificationSignals": [
-        "胎児"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM007",
@@ -6030,7 +6029,7 @@
       "questionNo": 7,
       "category": "必修",
       "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "日本版デンバー式発達スクリーニング検査で 90 % の乳児の首がすわる月齢基準 はどれか。",
       "choices": [
@@ -6063,11 +6062,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 20,
       "classificationSignals": [
-        "乳児"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM008",
@@ -7613,7 +7612,7 @@
       "questionNo": 42,
       "category": "一般",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "在宅療養における医療的ケア児の支援について正しいのはどれか。",
       "choices": [
@@ -7646,13 +7645,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 7,
+      "classificationScore": 20,
       "classificationSignals": [
-        "介護支援専門員",
-        "在宅療養",
-        "地域包括"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM043",
@@ -7661,7 +7658,7 @@
       "questionNo": 43,
       "category": "一般",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "在宅療養者の服薬の自己管理として適切なのはどれか。",
       "choices": [
@@ -7694,12 +7691,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 6,
+      "classificationScore": 20,
       "classificationSignals": [
-        "在宅療養",
-        "訪問看護"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM044",
@@ -7741,11 +7737,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM045",
@@ -7754,7 +7750,7 @@
       "questionNo": 45,
       "category": "一般",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "がん性疼痛があり医療用麻薬を使用中の在宅療養者の家族への説明で正しいのは どれか。",
       "choices": [
@@ -7787,11 +7783,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 20,
       "classificationSignals": [
-        "在宅療養"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM046",
@@ -7889,8 +7885,8 @@
       "session": "PM",
       "questionNo": 48,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "循環器",
+      "majorSubject": "母性看護学",
+      "subject": "妊娠・分娩・産褥",
       "answerType": "singleChoice",
       "question": "不安定狭心症の成人患者に対する退院指導で、胸痛発作時に用いる硝酸薬の説明 unstable angina で正しいのはどれか。",
       "choices": [
@@ -7922,12 +7918,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "狭心症"
+        "stem-rule:プレコンセプションケア|ノンストレステスト|NST|子宮復古不全"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM049",
@@ -8377,12 +8373,13 @@
         "1"
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
-      "classificationStatus": "low",
+      "classificationStatus": "high",
       "classificationScore": 4,
       "classificationSignals": [
-        "高血圧"
+        "高血圧",
+        "unique-score>=4"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3-promoted"
     },
     {
       "id": "K115-PM059",
@@ -8390,8 +8387,8 @@
       "session": "PM",
       "questionNo": 59,
       "category": "一般",
-      "majorSubject": "基礎看護学",
-      "subject": "日常生活援助",
+      "majorSubject": "老年看護学",
+      "subject": "認知症看護",
       "answerType": "singleChoice",
       "question": "A さん（77 歳、男性）は妻（80 歳）と 2 人で暮らしている。 5 年前に 認知症と診断 dementia された。最近、A さんが妻の介助を拒否し、怒鳴ることが多くなったため、通所 介護を利用するようになった。通所施設の看護師が入浴を勧めると「今日はやめて おく」 「今は忙しくて時間がない」と答えた。 A さんへの看護師の対応で適切なのはどれか。",
       "choices": [
@@ -8423,13 +8420,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "medium",
-      "classificationScore": 8,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "入浴",
-        "清拭"
+        "stem-specialty:認知症|レビー小体|BPSD"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM060",
@@ -8438,7 +8434,7 @@
       "questionNo": 60,
       "category": "一般",
       "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "乳児の呼吸器の解剖学的な特徴で正しいのはどれか。",
       "choices": [
@@ -8471,11 +8467,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 20,
       "classificationSignals": [
-        "乳児"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM061",
@@ -8528,7 +8524,7 @@
       "questionNo": 62,
       "category": "一般",
       "majorSubject": "基礎看護学",
-      "subject": "感染予防",
+      "subject": "検査・処置の援助",
       "answerType": "singleChoice",
       "question": "A ちゃん（ 4 歳、女児）は 1 か月前から発熱が続いており、大学病院に紹介され 入院した。静脈麻酔で鎮静して骨髄穿刺を行うこととなった。 検査に際して適切なのはどれか。",
       "choices": [
@@ -8560,12 +8556,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "消毒"
+        "stem-rule:骨髄検査|骨髄穿刺"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM063",
@@ -8708,7 +8704,7 @@
       "questionNo": 66,
       "category": "一般",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "うっ滞性乳腺炎について正しいのはどれか。 stagnation mastitis",
       "choices": [
@@ -8741,11 +8737,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:うっ滞性乳腺炎|産褥|褥婦|分娩第|陣痛|胎児心拍|妊娠\\s*\\d+週"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM067",
@@ -8754,7 +8750,7 @@
       "questionNo": 67,
       "category": "一般",
       "majorSubject": "母性看護学",
-      "subject": "妊娠・分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんは産褥 2 日である。現在、子宮底の位置は臍高で、大きく柔らかい。下 腹部痛はないが悪露の排出は多い。 A さんへの看護ケアで適切なのはどれか。",
       "choices": [
@@ -8787,11 +8783,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:うっ滞性乳腺炎|産褥|褥婦|分娩第|陣痛|胎児心拍|妊娠\\s*\\d+週"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM068",
@@ -8879,11 +8875,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM070",
@@ -9016,12 +9012,13 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
+      "classificationStatus": "high",
       "classificationScore": 7,
       "classificationSignals": [
-        "与薬"
+        "与薬",
+        "unique-score>=4"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3-promoted"
     },
     {
       "id": "K115-PM073",
@@ -9075,8 +9072,8 @@
       "session": "PM",
       "questionNo": 74,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "社会保障・保険",
+      "majorSubject": "母性看護学",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さん（34 歳、女性）と夫はともに外国籍である。10 年前に来日し、在留資格を 有し、国民健康保険に加入している。A さんは妊娠 9 週と診断され、日本で出産 する予定である。 A さんに対する説明で正しいのはどれか。",
       "choices": [
@@ -9109,13 +9106,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 11,
+      "classificationScore": 20,
       "classificationSignals": [
-        "健康保険",
-        "健康診査",
-        "国民健康保険"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM075",
@@ -9773,7 +9768,7 @@
       "questionNo": 88,
       "category": "一般",
       "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "subject": "小児看護",
       "answerType": "multiChoice",
       "question": "幼児期の形態的・生理的特徴について正しいのはどれか。 2 つ選べ。",
       "choices": [
@@ -9813,13 +9808,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 20,
       "classificationSignals": [
-        "乳児",
-        "乳歯",
-        "幼児"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM089",
@@ -9867,13 +9860,14 @@
         "45"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
+      "classificationStatus": "high",
       "classificationScore": 6,
       "classificationSignals": [
         "うつ病",
-        "精神保健"
+        "精神保健",
+        "unique-score>=4"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3-promoted"
     },
     {
       "id": "K115-PM090",
@@ -9882,7 +9876,7 @@
       "questionNo": 90,
       "category": "一般",
       "majorSubject": "精神看護学",
-      "subject": "精神看護・心理療法",
+      "subject": "精神看護",
       "answerType": "multiChoice",
       "question": "リエゾン精神看護を専門とする看護師の役割で適切なのはどれか。 2 つ選べ。",
       "choices": [
@@ -9922,11 +9916,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:リエゾン精神看護|集団精神療法|ヤーロム|Yalom|ラザルス|Lazarus|ストレスコーピング|パニック発作"
+        "stem-specialty:統合失調|うつ病|双極|パニック|精神科|幻聴|妄想|リエゾン精神"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM091",
@@ -9972,11 +9966,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM092",
@@ -10022,11 +10016,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM093",
@@ -10072,11 +10066,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
+        "stem-specialty:訪問看護|在宅療養|地域連携|退院支援|退院調整"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM094",
@@ -10337,8 +10331,8 @@
       "session": "PM",
       "questionNo": 99,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "内分泌・代謝",
+      "majorSubject": "母性看護学",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "2 週後の外来受診で A さんは「Basedow〈バセドウ〉病を知るほど怖くなってき Basedow disease た。眼が出ることもあるって。最近、足がつることが多くてテニスもできていな い。就職が決まったけど働くことができるのかしら。将来、結婚したり妊娠したり できるのかも心配」と思いを訴えた。 看護師の返答で適切なのはどれか。",
       "choices": [
@@ -10374,13 +10368,12 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "medium",
-      "classificationScore": 8,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "Basedow",
-        "バセドウ"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM100",
@@ -10476,12 +10469,13 @@
       "scenarioIndex": 1,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "medium",
+      "classificationStatus": "high",
       "classificationScore": 6,
       "classificationSignals": [
-        "関節"
+        "関節",
+        "unique-score>=4"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3-promoted"
     },
     {
       "id": "K115-PM102",
@@ -10533,12 +10527,13 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
+      "classificationStatus": "high",
       "classificationScore": 6,
       "classificationSignals": [
-        "関節"
+        "関節",
+        "unique-score>=4"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3-promoted"
     },
     {
       "id": "K115-PM103",
@@ -10546,8 +10541,8 @@
       "session": "PM",
       "questionNo": 103,
       "category": "状況設定",
-      "majorSubject": "看護の統合と実践",
-      "subject": "倫理・意思決定",
+      "majorSubject": "成人看護学",
+      "subject": "運動器",
       "answerType": "singleChoice",
       "question": "A さんは「私らしく死にたいの」と何度も看護師に話すようになった。 看護師の声かけで最も適切なのはどれか。",
       "choices": [
@@ -10583,12 +10578,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 5,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "私らしく死にたい"
+        "scenario-adult:骨折|人工関節|脊柱管狭窄|関節リウマチ"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM104",
@@ -10633,12 +10628,12 @@
       "scenarioIndex": 1,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "骨折"
+        "scenario-adult:骨折|人工関節|脊柱管狭窄|関節リウマチ"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM105",
@@ -10683,12 +10678,12 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "骨折"
+        "scenario-adult:骨折|人工関節|脊柱管狭窄|関節リウマチ"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM106",
@@ -10696,8 +10691,8 @@
       "session": "PM",
       "questionNo": 106,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "運動器",
+      "majorSubject": "小児看護学",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "術後に注意すべき A ちゃんの状態はどれか。",
       "choices": [
@@ -10734,12 +10729,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 6,
+      "classificationScore": 20,
       "classificationSignals": [
-        "ギプス",
-        "骨折"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM107",
@@ -10747,8 +10741,8 @@
       "session": "PM",
       "questionNo": 107,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "運動器",
+      "majorSubject": "小児看護学",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "術後 1 日。A ちゃんは看護師に「昨日の夜は、お母さんに食べさせてもらった。 私には弟がいて、お世話が大変なの。私はお母さんに迷惑をかけたくない」と話し た。 A ちゃんへの看護師の声かけで最も適切なのはどれか。",
       "choices": [
@@ -10785,12 +10779,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 6,
+      "classificationScore": 20,
       "classificationSignals": [
-        "ギプス",
-        "骨折"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM108",
@@ -10798,8 +10791,8 @@
       "session": "PM",
       "questionNo": 108,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "運動器",
+      "majorSubject": "小児看護学",
+      "subject": "小児看護",
       "answerType": "singleChoice",
       "question": "手術から 2 か月、A ちゃんは母親と共に抜釘術のため再入院した。母親は「私 は、前回の手術は急なことだったのでよく覚えていないです。A もよく覚えてい ないみたいで『手術が怖い』と言っています」と話した。 母親への看護師の返答で最も適切なのはどれか。",
       "choices": [
@@ -10835,13 +10828,12 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 6,
+      "classificationStatus": "high",
+      "classificationScore": 20,
       "classificationSignals": [
-        "ギプス",
-        "骨折"
+        "stem-specialty:乳児|幼児|学童|A\\s*ちゃん|[男女]児|小児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM109",
@@ -10850,7 +10842,7 @@
       "questionNo": 109,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんの入院時のアセスメントとして正しいのはどれか。",
       "choices": [
@@ -10887,15 +10879,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 17,
+      "classificationScore": 20,
       "classificationSignals": [
-        "分娩",
-        "妊娠",
-        "産婦",
-        "破水",
-        "陣痛"
+        "scenario-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM110",
@@ -10904,7 +10892,7 @@
       "questionNo": 110,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんは同日（妊娠 40 週 5 日）、20 時 30 分に女児を正常分娩で出産した。出生 時体重は 2,850 g、Apgar 〈アプガー〉スコアは 1 分後 8 点、 5 分後 9 点であった。 日齢 2 の体重は 2,680 g、体温 37.3 ℃、呼吸数 38/分、心拍数 138/分。おむつ交 換時、外陰部に粘稠性のある血性分泌が認められた。 児の状態のアセスメントで正しいのはどれか。",
       "choices": [
@@ -10941,18 +10929,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 36,
+      "classificationScore": 20,
       "classificationSignals": [
-        "Apgar",
-        "アプガー",
-        "分娩",
-        "妊娠",
-        "新生児",
-        "産婦",
-        "破水",
-        "陣痛"
+        "stem-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児|授乳|乳腺炎"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM111",
@@ -10961,7 +10942,7 @@
       "questionNo": 111,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "分娩・産褥",
+      "subject": "母性看護",
       "answerType": "singleChoice",
       "question": "A さんの児は日齢 4 。児のバイタルサインに異常はない。経皮ビリルビン検査 で生理的範囲を超え、医師の診察の結果、高ビリルビン血症と診断された。保育器 hyperbilirubinemia に収容してスタンド型光線療法器で治療を開始することになった。 A さんへの説明で適切なのはどれか。",
       "choices": [
@@ -10998,15 +10979,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 16,
+      "classificationScore": 20,
       "classificationSignals": [
-        "妊娠",
-        "母乳",
-        "産婦",
-        "破水",
-        "陣痛"
+        "scenario-specialty:妊婦|妊娠|分娩|産褥|褥婦|胎児|新生児"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM112",
@@ -11063,7 +11040,7 @@
       "questionNo": 113,
       "category": "状況設定",
       "majorSubject": "精神看護学",
-      "subject": "精神疾患と看護",
+      "subject": "精神看護",
       "answerType": "multiChoice",
       "question": "A さんは興奮が続いたため、精神科医の診察を受け、入院となった。入院後は 担当の B 看護師に何度も声をかけていた。入院 3 日の深夜、B 看護師に「パート ナーが電話に出ないので、私の代わりに電話してほしい」と依頼があった。B 看護 師がすぐに対応できないことを伝えると「B さんを私の担当から外してほしい」と複 数の看護師に訴えた。B 看護師は「私が忙しかったから、A さんを怒らせてしまっ た」と話している。 看護チームの対応として適切なのはどれか。 2 つ選べ。",
       "choices": [
@@ -11107,11 +11084,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 20,
       "classificationSignals": [
-        "精神科"
+        "stem-specialty:統合失調|うつ病|双極|パニック|精神科|幻聴|妄想|リエゾン精神"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM114",
@@ -11171,7 +11148,7 @@
       "questionNo": 115,
       "category": "状況設定",
       "majorSubject": "精神看護学",
-      "subject": "精神疾患と看護",
+      "subject": "精神看護",
       "answerType": "singleChoice",
       "question": "A さんの状況に対するクリニックの看護師のアセスメントで適切なのはどれか。",
       "choices": [
@@ -11208,12 +11185,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 15,
+      "classificationScore": 20,
       "classificationSignals": [
-        "パニック",
-        "精神科"
+        "scenario-specialty:統合失調|うつ病|双極|パニック障害|精神科|幻聴|妄想|アルコール依存"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM116",
@@ -11222,7 +11198,7 @@
       "questionNo": 116,
       "category": "状況設定",
       "majorSubject": "精神看護学",
-      "subject": "精神看護・心理療法",
+      "subject": "精神看護",
       "answerType": "singleChoice",
       "question": "1 か月後、A さんは通勤途中の電車の中で再びパニック発作を起こし、受診し た。看護師が話を聞くと「そのときは、息が止まってしまうように感じました。ま た同じようになるかと思うと怖くて電車に乗れません。仕事にも支障が出ていま す。電車での通勤は続けたいです」と話した。 相談を受けた看護師の A さんへの対応で最も適切なのはどれか。",
       "choices": [
@@ -11259,11 +11235,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:リエゾン精神看護|集団精神療法|ヤーロム|Yalom|ラザルス|Lazarus|ストレスコーピング|パニック発作"
+        "stem-specialty:統合失調|うつ病|双極|パニック|精神科|幻聴|妄想|リエゾン精神"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM117",
@@ -11272,7 +11248,7 @@
       "questionNo": 117,
       "category": "状況設定",
       "majorSubject": "精神看護学",
-      "subject": "精神看護・心理療法",
+      "subject": "精神看護",
       "answerType": "singleChoice",
       "question": "A さんのパニック発作は消失し、不眠も改善したため、睡眠薬の服用は終了と なった。A さんは「もともと手足が冷えて寝つきが悪かったから、睡眠薬がなくな ることが心配です。自分で工夫できることはあるでしょうか」と看護師に尋ねた。 看護師が以前の睡眠状況を尋ねると、睡眠時間は 23 時から 6 時までの 7 時間で あった。 A さんの睡眠へのセルフケアに対する看護師の指導で適切なのはどれか。",
       "choices": [
@@ -11309,11 +11285,11 @@
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 20,
       "classificationSignals": [
-        "direct:リエゾン精神看護|集団精神療法|ヤーロム|Yalom|ラザルス|Lazarus|ストレスコーピング|パニック発作"
+        "stem-specialty:統合失調|うつ病|双極|パニック|精神科|幻聴|妄想|リエゾン精神"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3"
     },
     {
       "id": "K115-PM118",
@@ -11358,12 +11334,13 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
+      "classificationStatus": "high",
       "classificationScore": 7,
       "classificationSignals": [
-        "輸液"
+        "輸液",
+        "unique-score>=4"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "semantic-refinement-v3-promoted"
     },
     {
       "id": "K115-PM119",
