@@ -1,0 +1,57 @@
+name: Network Specialist Validate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'network-specialist-sprint/**'
+      - '.github/workflows/network-specialist-validate.yml'
+  pull_request:
+    paths:
+      - 'network-specialist-sprint/**'
+      - '.github/workflows/network-specialist-validate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release static validation
+        run: python3 network-specialist-sprint/scripts/validate_release.py
+      - name: JavaScript syntax validation
+        run: |
+          node --check network-specialist-sprint/app-v21.js
+          node --check network-specialist-sprint/questions-meta.js
+          node --check network-specialist-sprint/questions-2025-a.js
+          node --check network-specialist-sprint/questions-2025-b.js
+          node --check network-specialist-sprint/questions-2024-a.js
+          node --check network-specialist-sprint/questions-2024-b.js
+          node --check network-specialist-sprint/questions-2023-a.js
+          node --check network-specialist-sprint/questions-2023-b.js
+          node --check network-specialist-sprint/questions-ui-fixes.js
+          node --check network-specialist-sprint/sw.js
+      - name: Verify question counts
+        run: |
+          node <<'NODE'
+          global.window = {};
+          const fs = require('fs');
+          const vm = require('vm');
+          for (const f of [
+            'questions-meta.js','questions-2025-a.js','questions-2025-b.js',
+            'questions-2024-a.js','questions-2024-b.js','questions-2023-a.js','questions-2023-b.js',
+            'questions-ui-fixes.js'
+          ]) vm.runInThisContext(fs.readFileSync('network-specialist-sprint/' + f, 'utf8'), {filename:f});
+          const occ = window.NW_EXAM_OCCURRENCES || [];
+          const uniq = window.NW_UNIQUE_IDS || [];
+          const perYear = [2025,2024,2023].map(y => occ.filter(q => q.examYear === y).length);
+          if (occ.length !== 75) throw new Error(`exam occurrences=${occ.length}, expected 75`);
+          if (uniq.length !== 68) throw new Error(`unique ids=${uniq.length}, expected 68`);
+          if (perYear.some(n => n !== 25)) throw new Error(`per-year counts=${perYear.join(',')}, expected 25 each`);
+          const ids = new Set(occ.map(q => q.id));
+          for (const id of uniq) if (!ids.has(id)) throw new Error(`unique id missing from occurrences: ${id}`);
+          console.log('PASS', {occurrences:occ.length, unique:uniq.length, perYear});
+          NODE
