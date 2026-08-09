@@ -14,7 +14,10 @@ const files = [
   'questions-v02-jm3.js',
   'questions-v02-jm4.js',
   'sources-v03.js',
-  'questions-v03-tb.js'
+  'questions-v03-tb.js',
+  'questions-v03-audit1.js',
+  'questions-v03-audit1-order.js',
+  'questions-v03-audit1-polish.js'
 ];
 const context = vm.createContext({});
 for (const file of files) {
@@ -111,11 +114,36 @@ const studyCount = (questions?.length || 0) - declarationCount;
 if (studyCount !== 480) fail(null, `study question target mismatch: expected 480, got ${studyCount}`);
 if (declarationCount !== 12) fail(null, `declaration target mismatch: expected 12, got ${declarationCount}`);
 
+const editorialIds = Array.from({length:60}, (_,i)=>`V03-S-${String(i+1).padStart(3,'0')}`);
+const editorialQuestions = editorialIds.map(id => questions.find(q=>q.id===id));
+const answerPositions = [0,0,0,0];
+for (let i=0;i<editorialIds.length;i++) {
+  const id = editorialIds[i];
+  const q = editorialQuestions[i];
+  if (!q) { fail(id, 'editorial audit target is missing'); continue; }
+  if (q.editorialStatus !== 'final') fail(id, 'editorialStatus must be final for audit batch 1');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(q.editorialAuditDate || '')) fail(id, 'editorialAuditDate is required');
+  if (q.answerType !== 'singleChoice' || q.choices?.length !== 4) fail(id, 'audit batch 1 must remain four-choice singleChoice');
+  if (Number.isInteger(q.answer) && q.answer >= 0 && q.answer < 4) answerPositions[q.answer]++;
+  if (String(q.point || '').length < 18) fail(id, 'editorial point is too short');
+  if (String(q.detail || '').length < 38) fail(id, 'editorial detail is too short');
+  const legacyDistractors = [
+    '税関手続とは無関係で、法令上の条件を受けない',
+    '輸入者が自由に内容を決め、税関への確認は不要',
+    '輸入許可後にしか扱えず、許可前の手続とは関係しない',
+    '貨物の所有権を税関へ移すためだけの制度'
+  ];
+  for (const phrase of legacyDistractors) if ((q.choices || []).some(c=>String(c).includes(phrase))) fail(id, 'legacy generic distractor remains');
+}
+if (Math.max(...answerPositions) - Math.min(...answerPositions) > 1) fail(null, `audit batch 1 answer positions are imbalanced: ${answerPositions.join(',')}`);
+
 console.log(`Content version: ${version}`);
 console.log(`Law baseline: ${baseline}`);
 console.log(`Questions total: ${questions?.length || 0}`);
 console.log(`Study questions: ${studyCount}`);
 console.log(`Declaration sets: ${declarationCount}`);
+console.log(`Editorial final: ${editorialQuestions.filter(q=>q?.editorialStatus==='final').length}/60`);
+console.log(`Editorial answer positions: ${answerPositions.join('/')}`);
 console.log('By subject:', JSON.stringify(bySubject));
 console.log('By answer type:', JSON.stringify(byType));
 if (warnings.length) {
