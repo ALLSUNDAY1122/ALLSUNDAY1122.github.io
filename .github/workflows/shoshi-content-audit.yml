@@ -1,0 +1,63 @@
+name: Shoshi official 210 content audit
+
+on:
+  push:
+    branches:
+      - feature/shoshi-content-loop
+    paths:
+      - 'learning-sprint/shoshi/content-loop/**'
+      - '.github/workflows/shoshi-content-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/shoshi-content-loop
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+      - name: Import and audit 210 questions
+        id: import
+        shell: bash
+        run: |
+          set +e
+          python learning-sprint/shoshi/content-loop/import_and_audit.py
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Run common learning-sprint validator
+        id: common
+        shell: bash
+        run: |
+          set +e
+          python automation/learning-sprint-question-pipeline/validate_questions.py learning-sprint/shoshi/content-loop/learning-sprint-audit.json | tee learning-sprint/shoshi/content-loop/common-validator.log
+          code=${PIPESTATUS[0]}
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Persist audit artifacts
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add learning-sprint/shoshi/content-loop/questions.generated.json \
+                  learning-sprint/shoshi/content-loop/content-audit-report.json \
+                  learning-sprint/shoshi/content-loop/learning-sprint-audit.json \
+                  learning-sprint/shoshi/content-loop/common-validator.log || true
+          if ! git diff --cached --quiet; then
+            git commit -m "司法書士210問の取込監査結果を更新"
+            git push origin HEAD:feature/shoshi-content-loop
+          fi
+      - name: Enforce PASS
+        shell: bash
+        run: |
+          test "${{ steps.import.outputs.exit_code }}" = "0"
+          test "${{ steps.common.outputs.exit_code }}" = "0"
