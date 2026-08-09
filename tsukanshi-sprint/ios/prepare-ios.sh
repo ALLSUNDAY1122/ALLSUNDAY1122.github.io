@@ -31,6 +31,7 @@ files=(
   questions-editorial-audit2-7.js
   questions-editorial-final-polish.js
   official-past-exam-links.js
+  release-links.js
   bootstrap-v21.js
   app-v21.js
   manifest.json
