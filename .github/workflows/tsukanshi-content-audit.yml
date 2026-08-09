@@ -7,6 +7,7 @@ on:
       - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-*.mjs'
       - 'tsukanshi-sprint/official-past-exam-links.js'
+      - 'tsukanshi-sprint/release-links.js'
       - 'tsukanshi-sprint/index.html'
       - 'tsukanshi-sprint/bootstrap-v21.js'
       - 'tsukanshi-sprint/app-v21.js'
@@ -22,6 +23,7 @@ on:
       - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-*.mjs'
       - 'tsukanshi-sprint/official-past-exam-links.js'
+      - 'tsukanshi-sprint/release-links.js'
       - 'tsukanshi-sprint/index.html'
       - 'tsukanshi-sprint/bootstrap-v21.js'
       - 'tsukanshi-sprint/app-v21.js'
@@ -53,6 +55,7 @@ jobs:
           node --check tsukanshi-sprint/app-v21.js
           node --check tsukanshi-sprint/sw.js
           node --check tsukanshi-sprint/official-past-exam-links.js
+          node --check tsukanshi-sprint/release-links.js
           node --check tsukanshi-sprint/questions-v03-audit1.js
           node --check tsukanshi-sprint/questions-v03-audit1-order.js
           node --check tsukanshi-sprint/questions-v03-audit1-polish.js
@@ -83,7 +86,11 @@ jobs:
           grep -q "第57回':'https://www.customs.go.jp/tsukanshi/57_shiken/57shikenkaito.html" tsukanshi-sprint/official-past-exam-links.js
           grep -q 'messageHandlers.openExternal' tsukanshi-sprint/official-past-exam-links.js
           grep -q 'name: "openExternal"' tsukanshi-sprint/ios/App.swift
-          grep -q 'host == "www.customs.go.jp" || host == "customs.go.jp"' tsukanshi-sprint/ios/App.swift
+          grep -q '"www.customs.go.jp"' tsukanshi-sprint/ios/App.swift
+          grep -q '"customs.go.jp"' tsukanshi-sprint/ios/App.swift
+          grep -q '"allsunday1122.github.io"' tsukanshi-sprint/ios/App.swift
+          grep -q 'https://allsunday1122.github.io/tsukanshi-sprint/support.html' tsukanshi-sprint/release-links.js
+          grep -q 'https://allsunday1122.github.io/tsukanshi-sprint/privacy.html' tsukanshi-sprint/release-links.js
       - name: Validate PWA manifest JSON
         run: node -e "JSON.parse(require('fs').readFileSync('tsukanshi-sprint/manifest.json','utf8')); console.log('manifest ok')"
       - name: Validate v2.1 UI references
@@ -97,6 +104,7 @@ jobs:
           grep -q 'bootstrap-v21.js?v=20260809-1034' tsukanshi-sprint/index.html
           grep -q 'app-v21.js?v=20260809-1034' tsukanshi-sprint/index.html
           grep -q 'official-past-exam-links.js?v=20260809-1202' tsukanshi-sprint/index.html
+          grep -q 'release-links.js?v=20260809-1433' tsukanshi-sprint/index.html
           grep -q 'manifest.json' tsukanshi-sprint/index.html
           grep -q 'grid-template-columns:repeat(4,1fr)' tsukanshi-sprint/style-v21.css
           grep -q 'dailyGoal:8' tsukanshi-sprint/app-v21.js
