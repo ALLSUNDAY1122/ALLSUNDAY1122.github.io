@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 import json
+from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +21,7 @@ text_rows=[]
 media_rows=[]
 exceptions=[]
 all_rows=[]
+by_exam=defaultdict(lambda:{"text":[],"media":[],"all":[]})
 
 for exam in (111,110,109):
     data=json.loads((RAW/f"exam-{exam}-raw.json").read_text(encoding="utf-8"))
@@ -39,22 +41,30 @@ for exam in (111,110,109):
             "source_url":q.get("source_url"),"answer_source_url":q.get("answer_source_url"),
             "effective_date":q.get("effective_date"),"rights_basis":q.get("rights_basis")
         }
-        all_rows.append(row)
+        all_rows.append(row); by_exam[exam]["all"].append(row)
         if q.get("requires_media") or q.get("choiceParseStatus") != "parsed":
-            media_rows.append(row)
+            media_rows.append(row); by_exam[exam]["media"].append(row)
         else:
-            text_rows.append(row)
+            text_rows.append(row); by_exam[exam]["text"].append(row)
         if q.get("scoring_status") != "normal" or q.get("correctionStatus") != ["none"]:
             exceptions.append({k:q.get(k) for k in ["id","sourceExam","questionNo","scoring_status","answer","accepted_answers","correctionStatus","source_url","answer_source_url"]})
 
-for name,rows in [("all-queue.tsv",all_rows),("text-queue.tsv",text_rows),("media-queue.tsv",media_rows)]:
-    with (OUT/name).open("w",encoding="utf-8",newline="") as f:
+
+def write_tsv(path,rows):
+    with path.open("w",encoding="utf-8",newline="") as f:
         w=csv.DictWriter(f,fieldnames=cols,delimiter="\t",lineterminator="\n")
         w.writeheader(); w.writerows(rows)
 
+for name,rows in [("all-queue.tsv",all_rows),("text-queue.tsv",text_rows),("media-queue.tsv",media_rows)]:
+    write_tsv(OUT/name,rows)
+for exam in (111,110,109):
+    for kind in ("all","text","media"):
+        write_tsv(OUT/f"{kind}-{exam}.tsv",by_exam[exam][kind])
+
 (OUT/"exceptions.json").write_text(json.dumps(exceptions,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 summary={
-    "schemaVersion":1,"total":len(all_rows),"textQueue":len(text_rows),"mediaQueue":len(media_rows),
+    "schemaVersion":2,"total":len(all_rows),"textQueue":len(text_rows),"mediaQueue":len(media_rows),
+    "byExam":{str(exam):{"all":len(by_exam[exam]["all"]),"text":len(by_exam[exam]["text"]),"media":len(by_exam[exam]["media"])} for exam in (111,110,109)},
     "exceptions":len(exceptions),"explanationReviewed":0,"mediaRebuilt":0,"releaseAllowed":False,
     "nextGate":"Complete explanation overlay for every non-excluded question; rebuild/restate media queue; then run final semantic/duplicate/high-similarity/rights audits."
 }
