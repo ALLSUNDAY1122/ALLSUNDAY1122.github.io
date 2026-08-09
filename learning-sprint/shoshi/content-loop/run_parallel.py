@@ -6,7 +6,25 @@ import sys
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+import requests
 import import_and_audit as m
+
+
+def fast_fetch(url: str) -> str:
+    last = None
+    for _ in range(2):
+        try:
+            r = requests.get(url, headers=m.HEADERS, timeout=8)
+            if r.status_code == 200 and r.text:
+                return r.text
+            last = RuntimeError(f"HTTP {r.status_code}")
+        except Exception as exc:
+            last = exc
+    raise RuntimeError(f"fetch failed {url}: {last}")
+
+
+# A blocked/slow source is an audit failure, not a reason to wait indefinitely.
+m.fetch = fast_fetch
 
 
 def make_job(era, meta, session, qno):
@@ -70,7 +88,7 @@ def main():
             for session in ("AM", "PM")
             for qno in range(1, 36)]
     questions = []
-    with ThreadPoolExecutor(max_workers=16) as ex:
+    with ThreadPoolExecutor(max_workers=32) as ex:
         futs = {ex.submit(build, job): job for job in jobs}
         for fut in as_completed(futs):
             job = futs[fut]
@@ -127,7 +145,7 @@ def main():
     }
     m.CONFIG_OUT.write_text(json.dumps(config, ensure_ascii=False, indent=2), encoding="utf-8")
     report = {
-        "cycle": 2,
+        "cycle": 3,
         "status": "PASS" if not errors else "FAIL",
         "generated": len(questions),
         "media_dependent": [q["id"] for q in questions if q["requires_media"]],
@@ -138,12 +156,13 @@ def main():
             "question_text": "public transcription crosscheck; third-party explanation prose not stored",
             "explanation": "independent fixed summary; no online AI generation",
             "law_status": "historical",
-            "media": "must be reconstructed from official source before PASS"
+            "media": "must be reconstructed from official source before PASS",
+            "network": "8s x2 hard fail per source"
         }
     }
     m.REPORT_OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps({"cycle":2,"status":report["status"],"generated":len(questions),"media":len(report["media_dependent"]),"errors":len(errors),"warnings":len(warnings)}, ensure_ascii=False))
-    for e in errors[:100]:
+    print(json.dumps({"cycle":3,"status":report["status"],"generated":len(questions),"media":len(report["media_dependent"]),"errors":len(errors),"warnings":len(warnings)}, ensure_ascii=False))
+    for e in errors[:120]:
         print("FAIL:", e)
     return 0 if not errors else 1
 
