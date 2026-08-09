@@ -18,11 +18,28 @@
       "year": 2026,
       "label": "第115回",
       "landingUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html",
+      "resultUrl": "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html",
       "morningPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05a_01.pdf",
       "afternoonPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05c_01.pdf",
       "answerPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf",
       "answerPrefixMorning": "A",
-      "answerPrefixAfternoon": "B"
+      "answerPrefixAfternoon": "B",
+      "scoringExceptions": [
+        {
+          "session": "AM",
+          "questionNo": 32,
+          "mode": "excluded",
+          "reason": "設問文が不明瞭であるため採点対象から除外",
+          "noticeUrl": "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am32.pdf"
+        },
+        {
+          "session": "AM",
+          "questionNo": 80,
+          "mode": "multiple_accepted",
+          "reason": "複数の正解があるため複数の選択肢を正解として採点",
+          "noticeUrl": "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am80.pdf"
+        }
+      ]
     },
     {
       "id": "set2",
@@ -30,11 +47,13 @@
       "year": 2025,
       "label": "第114回",
       "landingUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp250428-03_04_05.html",
+      "resultUrl": "https://www.mhlw.go.jp/general/sikaku/successlist/2025/siken03_04_05/about.html",
       "morningPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05a_01.pdf",
       "afternoonPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05c_01.pdf",
       "answerPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp250428-05seitou.pdf",
       "answerPrefixMorning": "AM",
-      "answerPrefixAfternoon": "PM"
+      "answerPrefixAfternoon": "PM",
+      "scoringExceptions": []
     },
     {
       "id": "set3",
@@ -42,11 +61,20 @@
       "year": 2024,
       "label": "第113回",
       "landingUrl": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp240424-03_04_05.html",
+      "resultUrl": "https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/about.html",
       "morningPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
       "afternoonPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
       "answerPdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf",
       "answerPrefixMorning": "AM",
-      "answerPrefixAfternoon": "PM"
+      "answerPrefixAfternoon": "PM",
+      "scoringExceptions": [
+        {"session":"AM","questionNo":5,"mode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","noticeUrl":"https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/dl/kangoshi_am5.pdf"},
+        {"session":"AM","questionNo":23,"mode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","noticeUrl":"https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/dl/kangoshi_am23.pdf"},
+        {"session":"AM","questionNo":25,"mode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","noticeUrl":"https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/dl/kangoshi_am25.pdf"},
+        {"session":"PM","questionNo":2,"mode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","noticeUrl":"https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/dl/kangoshi_pm2.pdf"},
+        {"session":"PM","questionNo":11,"mode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","noticeUrl":"https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/dl/kangoshi_pm11.pdf"},
+        {"session":"PM","questionNo":21,"mode":"excluded","reason":"設問が不十分で正解が得られないため採点対象から除外","noticeUrl":"https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/dl/kangoshi_pm21.pdf"}
+      ]
     }
   ]
 }
