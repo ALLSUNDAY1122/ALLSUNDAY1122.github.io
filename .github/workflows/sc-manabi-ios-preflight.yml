@@ -50,19 +50,22 @@ jobs:
       - name: Validate privacy manifest
         run: plutil -lint PrivacyInfo.xcprivacy
 
-      - name: Generate iOS project
-        run: npx cap add ios
+      - name: Generate and configure iOS project
+        run: npm run ios:add
 
-      - name: Add app privacy manifest to generated target folder
-        run: cp PrivacyInfo.xcprivacy ios/App/App/PrivacyInfo.xcprivacy
+      - name: Sync bundled assets and re-apply target config
+        run: npm run ios:sync
 
-      - name: Sync bundled assets
-        run: npx cap sync ios
-
-      - name: Verify generated project
+      - name: Verify generated project configuration
         run: |
           test -d ios/App/App.xcodeproj
           test -f ios/App/App.xcodeproj/project.pbxproj
+          test -f ios/App/App/PrivacyInfo.xcprivacy
+          plutil -lint ios/App/App/PrivacyInfo.xcprivacy
+          test "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' ios/App/App/Info.plist)" = "false"
+          grep -q 'TARGETED_DEVICE_FAMILY = 1;' ios/App/App.xcodeproj/project.pbxproj
+          grep -q 'MARKETING_VERSION = 1.0.0;' ios/App/App.xcodeproj/project.pbxproj
+          grep -q 'CURRENT_PROJECT_VERSION = 1;' ios/App/App.xcodeproj/project.pbxproj
           find ios/App -maxdepth 4 -name Package.swift -print || true
 
       - name: Unsigned iOS simulator build
@@ -85,6 +88,7 @@ jobs:
           find "$APP" -name PrivacyInfo.xcprivacy -print -quit | grep -q .
           find "$APP" -name q0.txt -print -quit | grep -q .
           find "$APP" -name patch-2140.js -print -quit | grep -q .
+          test "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP/Info.plist")" = "false"
 
       - name: Unsigned physical-device build
         run: |
@@ -97,6 +101,14 @@ jobs:
             -derivedDataPath build/device \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Inspect device bundle
+        run: |
+          APP=$(find build/device/Build/Products -type d -name '*.app' -print -quit)
+          test -n "$APP"
+          find "$APP" -name PrivacyInfo.xcprivacy -print -quit | grep -q .
+          find "$APP" -name q5.txt -print -quit | grep -q .
+          test "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP/Info.plist")" = "false"
 
       - name: Record preflight result
         if: always()
