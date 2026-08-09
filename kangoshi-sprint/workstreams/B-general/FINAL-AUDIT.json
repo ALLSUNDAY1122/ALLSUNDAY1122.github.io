@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "workstream": "B-general",
+  "scope": "第115・114・113回 一般問題",
+  "targetCount": 390,
+  "checkedAt": "2026-08-10",
+  "status": "PASS_WITH_QUARANTINE_AND_COORDINATOR_HANDOFF",
+  "counts": {
+    "total": 390,
+    "normalExplanationEvidenceCovered": 352,
+    "quarantinedWithAuditEvidence": 38,
+    "unclassified": 0,
+    "byExam": {
+      "115": {"total":130,"normal":122,"quarantined":8},
+      "114": {"total":130,"normal":116,"quarantined":14},
+      "113": {"total":130,"normal":114,"quarantined":16}
+    },
+    "quarantineByType": {
+      "contentConcern": 9,
+      "scoringException": 2,
+      "mediaDependent": 22,
+      "sourceDataDefect": 5
+    }
+  },
+  "quarantineIds": {
+    "contentConcern": ["K115-AM029","K115-AM066","K114-AM042","K114-AM043","K114-AM056","K114-PM089","K113-AM084","K113-AM085","K113-AM087"],
+    "scoringException": ["K115-AM032","K115-AM080"],
+    "mediaDependent": ["K115-AM034","K115-AM063","K115-PM058","K115-PM077","K114-AM030","K114-AM039","K114-AM041","K114-AM051","K114-AM054","K114-PM027","K114-PM045","K114-PM055","K114-PM071","K114-PM080","K113-AM027","K113-AM034","K113-AM035","K113-AM046","K113-PM037","K113-PM054","K113-PM066","K113-PM077"],
+    "sourceDataDefect": ["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"]
+  },
+  "qualityGates": {
+    "count390": "pass",
+    "eachExam130": "pass",
+    "questionQueueOverlap": 0,
+    "officialAnswerChanged": 0,
+    "unclassified": 0,
+    "normalMissingPoint": 0,
+    "normalMissingDetail": 0,
+    "normalMissingEvidenceRefs": 0,
+    "normalMissingEvidenceCheckedDate": 0,
+    "quarantineMissingAuditReason": 0,
+    "quarantineMissingEvidenceOrOfficialSource": 0,
+    "batchIdDuplicatesDetectedInBWorkstream": 0,
+    "questionIdDuplicatesDetectedInBWorkstream": 0,
+    "rawExactDuplicateStemGate": "pass_inherited_from_common_raw_audit_before_new_semantic-defect_discovery",
+    "rawNearDuplicateStemGate": "pass_inherited_at_threshold_0.90_before_new_semantic-defect_discovery",
+    "highSimilarityWaterFillingDetected": 0,
+    "note": "The 390 questions are official questions from three distinct exam rounds, not AI-generated paraphrase filler. Existing common raw audit had similarity_threshold 0.90 and commonAuditExit=0. Newly found numeric import defects invalidate semantic-completeness confidence for affected raw records, so coordinator must repair and rerun common raw audit before release."
+  },
+  "examAuditFiles": {
+    "115": "kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json",
+    "114": "kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json",
+    "113": "kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json"
+  },
+  "newSourceDefectsThatInvalidateAffectedRawPass": {
+    "count": 5,
+    "ids": ["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"],
+    "requiredCoordinatorLoop": [
+      "restore exact official text/numerals from MHLW PDFs",
+      "rerun raw structural validation",
+      "rerun common duplicate/high-similarity audit",
+      "rerun L2/L3 queues for affected questions",
+      "do not release affected questions before all reruns pass"
+    ]
+  },
+  "releaseBlockingHandoff": {
+    "coordinatorOwned": true,
+    "commonIntegrationNeeded": true,
+    "expertReviewNeeded": 9,
+    "mediaRightsAndVisualAuditNeeded": 22,
+    "scoringOverlayNeeded": 2,
+    "rawFixNeeded": 5,
+    "productReleaseAllowedByBWorkstream": false
+  },
+  "conclusion": "B-general workstream has classified and evidence-audited all 390 general questions with no silent answer changes and no filler. Workstream PASS is conditional on quarantine. Product integration/release remains blocked until coordinator resolves quarantine and reruns invalidated common audits."
+}
