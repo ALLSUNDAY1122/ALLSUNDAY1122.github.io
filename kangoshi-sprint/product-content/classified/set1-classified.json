@@ -186,13 +186,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 30,
       "classificationSignals": [
-        "破傷風菌",
-        "結核菌"
+        "v4:土壌中に分布.*感染|破傷風菌"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-AM005",
@@ -5446,8 +5445,8 @@
       "session": "AM",
       "questionNo": 115,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "精神看護学",
+      "subject": "精神疾患と看護",
       "answerType": "singleChoice",
       "question": "A さんの来院時の所見から考えられるのはどれか。",
       "choices": [
@@ -5483,10 +5482,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4-scenario:神経性過食症|bulimia nervosa|神経性やせ症|摂食障害"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-AM116",
@@ -5494,8 +5495,8 @@
       "session": "AM",
       "questionNo": 116,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "精神看護学",
+      "subject": "精神疾患と看護",
       "answerType": "singleChoice",
       "question": "2 回目の外来受診日に、A さんから外来看護師に「過食がやめられません。私は どうすればいいのでしょうか」と神経性過食症との付き合い方について相談があっ bulimia nervosa た。 外来看護師の声かけとして適切なのはどれか。",
       "choices": [
@@ -5531,10 +5532,12 @@
       "scenarioIndex": 1,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4-scenario:神経性過食症|bulimia nervosa|神経性やせ症|摂食障害"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-AM117",
@@ -5542,8 +5545,8 @@
       "session": "AM",
       "questionNo": 117,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "精神看護学",
+      "subject": "精神疾患と看護",
       "answerType": "multiChoice",
       "question": "A さんは受診時に母親と一緒に来院した。母親から「父親は、普段は A とあまり 話すことはありませんが、過食を見つけると我慢が足りないからだと A を叱りま す。私は食費が高くて困っています。どうしたらいいのでしょう」と外来看護師に 相談があった。 看護師が母親に行う支援として、適切なのはどれか。 2 つ選べ。",
       "choices": [
@@ -5586,10 +5589,12 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4-scenario:神経性過食症|bulimia nervosa|神経性やせ症|摂食障害"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-AM118",
@@ -5597,8 +5602,8 @@
       "session": "AM",
       "questionNo": 118,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "検査・処置の援助",
+      "majorSubject": "看護の統合と実践",
+      "subject": "災害看護",
       "answerType": "singleChoice",
       "question": "リーダー看護師が指揮する内容で適切なのはどれか。",
       "choices": [
@@ -5634,13 +5639,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 30,
       "classificationSignals": [
-        "採血",
-        "輸液"
+        "v4:発災直後|避難者|自家用車に泊まり|大地震|リーダー看護師が指揮"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-AM119",
@@ -5923,12 +5927,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 30,
       "classificationSignals": [
-        "インフォームド"
+        "v4:自己決定する権利|十分な説明.*自己決定|望ましい治療.*納得|共同意思決定|shared decision"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM005",
@@ -5936,8 +5940,8 @@
       "session": "PM",
       "questionNo": 5,
       "category": "必修",
-      "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "保健医療福祉制度・法規",
       "answerType": "singleChoice",
       "question": "看護師等の人材確保の促進に関する法律に規定されている都道府県ナースセン ターの業務はどれか。",
       "choices": [
@@ -5969,12 +5973,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 30,
       "classificationSignals": [
-        "訪問看護"
+        "v4:児童虐待.*通告|児童虐待防止法|自殺対策基本法|看護師等の人材確保|都道府県ナースセンター|介護医療院"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM006",
@@ -6120,8 +6124,8 @@
       "session": "PM",
       "questionNo": 9,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "老年看護学",
+      "subject": "老年期の心理・認知",
       "answerType": "singleChoice",
       "question": "結晶性知能はどれか。",
       "choices": [
@@ -6153,10 +6157,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:結晶性知能|流動性知能"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM010",
@@ -6211,7 +6217,7 @@
       "questionNo": 11,
       "category": "必修",
       "majorSubject": "人体の構造と機能",
-      "subject": "腎・内分泌の機能",
+      "subject": "神経・感覚器",
       "answerType": "singleChoice",
       "question": "摂食中枢が存在する部位はどれか。",
       "choices": [
@@ -6243,12 +6249,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 30,
       "classificationSignals": [
-        "下垂体"
+        "v4:摂食中枢|満腹中枢|脊髄神経|頸神経|感覚性言語中枢|運動性言語中枢|Corti|コルチ|味覚|味蕾|神経線維.*髄|小脳の機能|声帯.*神経|反回神経"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM012",
@@ -6256,8 +6262,8 @@
       "session": "PM",
       "questionNo": 12,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "神経・感覚器",
       "answerType": "singleChoice",
       "question": "脊髄神経で頸神経の対の数はどれか。",
       "choices": [
@@ -6289,10 +6295,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:摂食中枢|満腹中枢|脊髄神経|頸神経|感覚性言語中枢|運動性言語中枢|Corti|コルチ|味覚|味蕾|神経線維.*髄|小脳の機能|声帯.*神経|反回神経"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM013",
@@ -6300,8 +6308,8 @@
       "session": "PM",
       "questionNo": 13,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "神経・感覚器",
       "answerType": "singleChoice",
       "question": "感覚性言語中枢はどれか。",
       "choices": [
@@ -6333,10 +6341,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:摂食中枢|満腹中枢|脊髄神経|頸神経|感覚性言語中枢|運動性言語中枢|Corti|コルチ|味覚|味蕾|神経線維.*髄|小脳の機能|声帯.*神経|反回神経"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM014",
@@ -6390,8 +6400,8 @@
       "session": "PM",
       "questionNo": 15,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "腎・体液調節",
       "answerType": "singleChoice",
       "question": "成人の乏尿の説明で正しいのはどれか。",
       "choices": [
@@ -6423,10 +6433,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:乏尿の説明|尿量.*乏尿"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM016",
@@ -6527,8 +6539,8 @@
       "session": "PM",
       "questionNo": 18,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "コミュニケーション",
       "answerType": "singleChoice",
       "question": "患者との面接技法で閉じた質問〈closed question〉はどれか。",
       "choices": [
@@ -6560,10 +6572,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:面接技法.*閉じた質問|closed question|開いた質問"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM019",
@@ -6617,8 +6631,8 @@
       "session": "PM",
       "questionNo": 20,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "観察・バイタルサイン",
       "answerType": "singleChoice",
       "question": "呼吸のパターンを図に示す。 Cheyne‑Stokes〈チェーン‑ストークス〉呼吸はどれか。",
       "choices": [
@@ -6650,10 +6664,12 @@
         "3"
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:Cheyne.?Stokes|チェーン.?ストークス|呼吸のパターン"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM021",
@@ -6709,7 +6725,7 @@
       "questionNo": 22,
       "category": "必修",
       "majorSubject": "基礎看護学",
-      "subject": "感染予防",
+      "subject": "呼吸を整える援助",
       "answerType": "singleChoice",
       "question": "成人の口腔内吸引で正しいのはどれか。",
       "choices": [
@@ -6741,12 +6757,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 30,
       "classificationSignals": [
-        "無菌操作"
+        "v4:口腔内吸引|気管内吸引|吸引で正しい"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM023",
@@ -6754,8 +6770,8 @@
       "session": "PM",
       "questionNo": 23,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "安全・救急時援助",
       "answerType": "singleChoice",
       "question": "舌根の沈下を防止する体位はどれか。",
       "choices": [
@@ -6787,10 +6803,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:舌根の沈下|気道確保.*体位"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM024",
@@ -6798,8 +6816,8 @@
       "session": "PM",
       "questionNo": 24,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "徒手筋力テスト〈MMT〉において筋力が一番強い段階はどれか。",
       "choices": [
@@ -6832,10 +6850,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:徒手筋力テスト|MMT"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM025",
@@ -6843,8 +6863,8 @@
       "session": "PM",
       "questionNo": 25,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "安全・救急時援助",
       "answerType": "singleChoice",
       "question": "全身性けいれん発作を起こしている患者に優先して行うのはどれか。",
       "choices": [
@@ -6877,10 +6897,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:全身性けいれん発作|けいれん発作.*優先"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM026",
@@ -6888,8 +6910,8 @@
       "session": "PM",
       "questionNo": 26,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "神経・感覚器",
       "answerType": "singleChoice",
       "question": "蝸牛管頂部近くの Corti〈コルチ〉器で感知されるのはどれか。",
       "choices": [
@@ -6921,10 +6943,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:摂食中枢|満腹中枢|脊髄神経|頸神経|感覚性言語中枢|運動性言語中枢|Corti|コルチ|味覚|味蕾|神経線維.*髄|小脳の機能|声帯.*神経|反回神経"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM027",
@@ -6932,8 +6956,8 @@
       "session": "PM",
       "questionNo": 27,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "神経・感覚器",
       "answerType": "singleChoice",
       "question": "水素イオンが刺激となって感じる味覚はどれか。",
       "choices": [
@@ -6965,10 +6989,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 30,
+      "classificationSignals": [
+        "v4:摂食中枢|満腹中枢|脊髄神経|頸神経|感覚性言語中枢|運動性言語中枢|Corti|コルチ|味覚|味蕾|神経線維.*髄|小脳の機能|声帯.*神経|反回神経"
+      ],
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM028",
@@ -10115,13 +10141,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 30,
       "classificationSignals": [
-        "MRI",
-        "内視鏡"
+        "v4:multiple-signals"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v4"
     },
     {
       "id": "K115-PM095",
