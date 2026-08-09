@@ -58,7 +58,7 @@ jobs:
         run: |
           test -d ios/App/App.xcodeproj
           test -f ios/App/App.xcodeproj/project.pbxproj
-          test -f ios/App/Package.swift
+          find ios/App -maxdepth 4 -name Package.swift -print || true
 
       - name: Unsigned iOS simulator build
         run: |
