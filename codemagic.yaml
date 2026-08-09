@@ -1,4 +1,57 @@
 workflows:
+  sprint-study-ios:
+    name: Sprint Study - iOS TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.sprintstudy
+      vars:
+        BUNDLE_ID: jp.allsunday1122.sprintstudy
+        XCODE_PROJECT: ios/sprint-study/SprintStudy.xcodeproj
+        XCODE_SCHEME: SprintStudy
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare bundled web assets
+        script: bash "$CM_BUILD_DIR/ios/sprint-study/prepare-ios.sh"
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/ios/sprint-study"
+          xcodegen generate
+      - name: Set build number
+        script: |
+          cd "$CM_BUILD_DIR/ios/sprint-study"
+          agvtool new-version -all "$CM_BUILD_NUMBER"
+      - name: Verify release inputs
+        script: |
+          test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/Web/index.html"
+          test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/Assets.xcassets/AppIcon.appiconset/AppIcon.svg"
+      - name: Apply App Store signing profiles
+        script: |
+          cd "$CM_BUILD_DIR/ios/sprint-study"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+
   health-manager-2-ios:
     name: Health Manager 2 - iOS TestFlight
     max_build_duration: 60

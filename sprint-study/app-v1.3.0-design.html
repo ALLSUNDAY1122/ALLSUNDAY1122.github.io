@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>学びスプリント v1.3.0（デザイン改善版）</title>
+<style>
+:root{
+--bg:#f6f4ef;--bg-elev:#fdfcf9;--card:#ffffff;--ink:#1a2027;--ink-soft:#414850;--sub:#878e94;--line:#e6e3da;--line-soft:#eeece3;
+--accent:#1f3f5c;--accent-ink:#16304a;--accent-soft:#e8eef3;--accent-soft-line:#d7e2ea;
+--work:#25506f;--switch:#a5652a;--rest:#33735a;--prep:#8a7250;
+--danger:#a8433f;--danger-soft:#faf0ef;
+--shadow-sm:0 1px 2px rgba(24,32,42,.04),0 1px 1px rgba(24,32,42,.03);
+--shadow-md:0 8px 22px rgba(24,32,42,.07),0 2px 6px rgba(24,32,42,.05);
+--shadow-lg:0 24px 60px rgba(20,26,34,.16);
+--radius-lg:22px;--radius-md:16px;--radius-sm:12px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI",sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+a{color:var(--accent)}
+a:hover{color:var(--accent-ink)}
+
+.app{width:min(560px,100%);min-height:100dvh;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 18px calc(104px + env(safe-area-inset-bottom))}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding:2px 2px 0}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-mark{width:30px;height:30px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+.brand-mark svg{width:16px;height:16px}
+.brand h1{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.version{font-size:10px;color:var(--sub);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ---------- hero ---------- */
+.hero{padding:6px 2px 22px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;padding:6px 10px 6px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-size:10px;font-weight:800;letter-spacing:.06em}
+.hero-badge svg{width:11px;height:11px}
+.hero h2{margin:0;font-size:30px;line-height:1.22;letter-spacing:-.03em;font-weight:800;color:var(--ink)}
+.hero p{margin:12px 0 0;color:var(--ink-soft);font-size:13.5px;line-height:1.7;max-width:34ch}
+
+.section-title{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 11px}
+.section-title h2{margin:0;font-size:14px;font-weight:800;color:var(--ink-soft);letter-spacing:.01em}
+.section-title span{color:var(--sub);font-size:11px;font-weight:600}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);margin-bottom:12px}
+
+/* ---------- resume / last / presets ---------- */
+.resume-card{position:relative;background:#fbf3e4;border:1px solid #e6d3ac;border-radius:var(--radius-md);padding:15px 16px;margin-bottom:14px;overflow:hidden}
+.resume-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#b8863e}
+.resume-card strong,.resume-card span{display:block}
+.resume-card strong{font-size:14px;font-weight:800;color:#4f3a1c}
+.resume-card span{margin-top:4px;color:#7c5f34;font-size:11.5px;font-weight:600}
+.resume-actions{display:grid;grid-template-columns:1.5fr 1fr;gap:8px;margin-top:12px}
+.resume-actions button{height:44px;border:0;border-radius:12px;font-weight:800;font-size:13px}
+.resume-primary{background:#8a6332;color:#fff}
+.resume-secondary{background:transparent;color:#8a6332;border:1px solid #e6d3ac!important}
+
+.last-card{display:flex;align-items:center;gap:14px}
+.last-icon{flex:none;width:42px;height:42px;border-radius:12px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center}
+.last-icon svg{width:19px;height:19px}
+.last-text{flex:1;min-width:0}
+.last-card strong,.last-card small{display:block}
+.last-card strong{font-size:14.5px;font-weight:800}
+.last-card small{margin-top:4px;color:var(--sub);font-size:11.5px;font-weight:600}
+.last-start{flex:none;height:42px;border:0;border-radius:12px;background:var(--accent);color:#fff;padding:0 17px;font-weight:800;font-size:13px}
+
+.preset-list{display:grid;gap:9px}
+.preset{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 8px 13px 16px;box-shadow:var(--shadow-sm)}
+.preset-main{border:0;background:transparent;text-align:left;padding:0;color:var(--ink)}
+.preset-main strong{display:block;font-size:14.5px;font-weight:800}
+.preset-main small{display:block;margin-top:4px;color:var(--sub);font-size:11.5px;font-weight:600;line-height:1.5}
+.preset-edit{border:0;background:transparent;color:var(--sub);width:38px;height:38px;border-radius:10px;font-weight:900;font-size:16px;line-height:1}
+.preset-edit:active{background:var(--line-soft)}
+.empty{color:var(--sub);font-size:12.5px;line-height:1.7;margin:4px 2px}
+
+/* ---------- form ---------- */
+.field{margin-bottom:14px}
+.field label{display:block;margin-bottom:7px;color:var(--ink-soft);font-size:11.5px;font-weight:700}
+.field input,.field select{width:100%;height:50px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--bg-elev);color:var(--ink);padding:0 14px;font-size:16px;font-weight:600}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.time-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:11px}
+.time-chip{height:46px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--bg-elev);color:var(--ink);font-weight:800;font-size:13.5px;font-variant-numeric:tabular-nums}
+.time-chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#eeece5;padding:5px;border-radius:18px;margin-bottom:16px}
+.mode-switch button{display:flex;flex-direction:column;align-items:center;gap:5px;height:60px;border:0;border-radius:14px;background:transparent;color:var(--sub);font-size:11.5px;font-weight:800;padding:9px 4px 8px}
+.mode-switch button svg{width:16px;height:16px}
+.mode-switch button.active{background:#fff;color:var(--accent-ink);box-shadow:var(--shadow-sm)}
+.mode-hint{margin:-9px 2px 15px;color:var(--sub);font-size:11px;font-weight:600;line-height:1.6}
+
+.pace-box{position:relative;background:var(--accent);color:#fff;border-radius:var(--radius-md);padding:16px 17px;margin-bottom:14px;overflow:hidden}
+.pace-box span,.pace-box strong,.pace-box small{display:block}
+.pace-box span{color:#bfd2e0;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.pace-box strong{margin-top:5px;font-size:28px;letter-spacing:-.03em;font-weight:800;font-variant-numeric:tabular-nums}
+.pace-box small{margin-top:6px;color:#c7d7e3;font-size:11px;line-height:1.55;font-weight:500}
+.pace-box.error{background:var(--danger-soft);color:var(--danger)}
+.pace-box.error span{color:#c1615c}
+.pace-box.error strong{color:var(--danger);font-size:16px}
+.pace-box.error small{color:#b6685f}
+
+.primary{width:100%;height:56px;border:0;border-radius:17px;background:var(--accent);color:#fff;font-weight:800;font-size:16px;box-shadow:var(--shadow-md)}
+.primary:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.secondary{width:100%;height:48px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--bg-elev);color:var(--ink);font-weight:700;font-size:13.5px}
+.danger-btn{width:100%;height:46px;border:1px solid #e9cfcd;border-radius:var(--radius-sm);background:var(--danger-soft);color:var(--danger);font-weight:800;margin-top:9px;font-size:13px}
+
+.advanced{margin:6px 0 15px;border-top:1px solid var(--line-soft);padding-top:14px}
+.advanced summary{cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--accent-ink);font-size:12.5px;font-weight:800;list-style:none}
+.advanced summary::-webkit-details-marker{display:none}
+.advanced summary::after{content:"›";margin-left:auto;font-size:18px;color:var(--sub);transform:rotate(90deg);transition:transform .15s}
+.advanced[open] summary::after{transform:rotate(270deg)}
+.advanced-body{padding-top:14px}
+.toggle{display:flex;align-items:center;justify-content:space-between;background:var(--bg-elev);border:1px solid var(--line-soft);border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:8px}
+.toggle span{font-size:12.5px;font-weight:700}
+.toggle input{width:24px;height:24px;accent-color:var(--accent)}
+.form-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+
+/* ---------- recent / history ---------- */
+.mini-history{display:grid;gap:2px}
+.mini-item{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line-soft);padding:11px 1px}
+.mini-item:last-child{border-bottom:0}
+.mini-item strong{font-size:12.5px;font-weight:700}
+.mini-item span{color:var(--accent-ink);font-size:11.5px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.summary-grid div{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:16px;text-align:center;box-shadow:var(--shadow-sm)}
+.summary-grid strong{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.summary-grid span{display:block;margin-top:4px;color:var(--sub);font-size:10.5px;font-weight:600}
+.history-list{display:grid;gap:9px}
+.history-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:15px 16px;box-shadow:var(--shadow-sm)}
+.history-item strong{display:block;font-size:13.5px;font-weight:800}
+.history-item span{display:block;margin-top:5px;color:var(--sub);font-size:11px;font-weight:600;line-height:1.6}
+.history-item em{display:inline-block;margin-top:9px;padding:5px 9px;border-radius:9px;background:var(--accent-soft);color:var(--accent-ink);font-style:normal;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.danger-link{display:block;margin:6px auto 0;border:0;background:transparent;color:var(--danger);font-size:12px;font-weight:700;padding:12px 0;text-align:center}
+
+/* ---------- bottom nav ---------- */
+.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);height:calc(76px + env(safe-area-inset-bottom));padding:9px 20px env(safe-area-inset-bottom);display:grid;grid-template-columns:1fr 1fr;gap:8px;background:rgba(246,244,239,.92);backdrop-filter:blur(20px) saturate(1.1);border-top:1px solid var(--line);z-index:20}
+.nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;border-radius:14px;background:transparent;color:var(--sub)}
+.nav button svg{width:22px;height:22px}
+.nav button span{font-size:10.5px;font-weight:700}
+.nav button.active{color:var(--accent-ink)}
+
+/* ---------- run screen ---------- */
+.run{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto}
+.run-inner{width:min(560px,100%);min-height:100dvh;margin:auto;padding:calc(16px + env(safe-area-inset-top)) 20px calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.run-head{display:flex;align-items:center;justify-content:space-between}
+.run-head button{border:0;background:transparent;color:var(--danger);font-size:13.5px;font-weight:800;padding:10px 4px}
+.run-head span{color:var(--sub);font-size:11.5px;font-weight:700}
+.run-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:480px}
+.phase-label{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;border-radius:999px;background:var(--accent-soft);font-size:12.5px;font-weight:800;letter-spacing:.03em;margin-bottom:26px}
+.phase-label::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ring{--p:100;--ring:var(--work);position:relative;width:min(70vw,320px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;box-shadow:0 26px 60px rgba(24,32,42,.10)}
+.ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:#e3e0d6;stroke-width:6}
+.ring-progress{fill:none;stroke:var(--ring);stroke-width:6;stroke-linecap:round;stroke-dasharray:282.743;stroke-dashoffset:calc(282.743 - (282.743 * var(--p)) / 100);transition:stroke-dashoffset .2s linear,stroke .2s}
+.ring-content{position:relative;text-align:center}
+.remaining{font-variant-numeric:tabular-nums;font-size:clamp(66px,19vw,98px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.unit-now{margin-top:14px;font-size:16px;font-weight:800;color:var(--ink)}
+.unit-now small{display:block;margin-top:5px;color:var(--sub);font-size:11.5px;font-weight:600}
+.run-metrics{display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:340px;margin-top:32px}
+.run-metrics div{text-align:center;padding:6px 8px}
+.run-metrics div+div{border-left:1px solid var(--line)}
+.run-metrics strong{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.run-metrics span{display:block;margin-top:4px;color:var(--sub);font-size:10.5px;font-weight:600}
+.run-actions{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:10px}
+.run-actions button{height:56px;border:0;border-radius:18px;font-weight:800;font-size:14px}
+.run-actions .move{background:var(--bg-elev);color:var(--ink);border:1px solid var(--line)}
+.run-actions .pause{background:var(--accent);color:#fff;box-shadow:var(--shadow-md)}
+.run-hint{text-align:center;color:var(--sub);font-size:10.5px;margin:12px 0 0;font-weight:600}
+
+/* ---------- result sheet ---------- */
+.result{position:fixed;inset:0;background:rgba(20,26,34,.46);z-index:80;display:grid;place-items:end center;padding:16px}
+.result-card{width:min(520px,100%);background:#fff;border-radius:28px;padding:10px 22px 22px;margin-bottom:env(safe-area-inset-bottom);box-shadow:var(--shadow-lg)}
+.result-grabber{width:36px;height:5px;border-radius:3px;background:var(--line);margin:8px auto 16px}
+.result-card h2{margin:0;font-size:23px;font-weight:800;letter-spacing:-.02em}
+.result-name{margin:6px 0 0;color:var(--ink-soft)!important;font-weight:700;font-size:13px}
+.result-card p{color:var(--sub);font-size:12.5px;line-height:1.65;font-weight:500}
+.result-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+.result-summary div{background:var(--bg-elev);border:1px solid var(--line-soft);border-radius:var(--radius-sm);padding:13px 4px;text-align:center}
+.result-summary strong{display:block;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.result-summary span{display:block;margin-top:4px;color:var(--sub);font-size:9.5px;font-weight:700}
+.result-actions{display:grid;gap:9px}
+.toast{position:fixed;left:50%;bottom:calc(94px + env(safe-area-inset-bottom));transform:translate(-50%,12px);background:var(--ink);color:#fff;border-radius:12px;padding:11px 15px;font-size:12px;font-weight:600;opacity:0;transition:.2s;pointer-events:none;z-index:100}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:420px){
+.app{padding-left:15px;padding-right:15px}
+.hero h2{font-size:27px}
+.run-inner{padding-left:17px;padding-right:17px}
+.ring{width:min(76vw,300px)}
+.run-actions{gap:8px}
+.run-actions button{height:52px;font-size:13px}
+.result-summary strong{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<div class="brand">
+<div class="brand-mark"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#fff" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h1>学びスプリント</h1>
+</div>
+<span class="version">v1.3.0</span>
+</header>
+
+<main id="homeView">
+<section class="hero">
+<span class="hero-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 3 6-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>STUDY PACE MAKER</span>
+<h2>時間を測るより、<br>ペースをつくる。</h2>
+<p>1ページ・1問の秒数を決める。あるいは「ここまでを何分で終える」から、必要なペースを逆算します。</p>
+</section>
+
+<section id="resumeCard" class="resume-card hidden">
+<strong>中断したスプリントがあります</strong>
+<span id="resumeSummary"></span>
+<div class="resume-actions">
+<button id="resumeBtn" class="resume-primary" type="button">続きから再開</button>
+<button id="discardBtn" class="resume-secondary" type="button">破棄</button>
+</div>
+</section>
+
+<section id="lastSection" class="hidden">
+<div class="section-title"><h2>前回のスプリント</h2><span>すぐ開始</span></div>
+<div class="card last-card">
+<div class="last-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7z" fill="#1f3f5c"/></svg></div>
+<div class="last-text"><strong id="lastName"></strong><small id="lastSummary"></small></div>
+<button id="lastStartBtn" class="last-start" type="button">開始</button>
+</div>
+</section>
+
+<section id="savedSection" class="hidden">
+<div class="section-title"><h2>保存したタイマー</h2><span>タップですぐ開始</span></div>
+<div id="presetList" class="preset-list"></div>
+</section>
+
+<div class="section-title"><h2 id="formTitle">新しいスプリント</h2><span>2つの決め方</span></div>
+<section class="card">
+<div class="mode-switch" role="tablist" aria-label="ペースの決め方">
+<button type="button" class="active" data-mode="direct"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>秒数を決める</button>
+<button type="button" data-mode="goal"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>ゴールから逆算</button>
+</div>
+<p class="mode-hint" id="modeHint">1ページ・1問あたりの時間をそのまま指定します。</p>
+
+<div id="directFields">
+<div class="field"><label>1ページ・1問の時間</label>
+<div class="time-row">
+<button class="time-chip" data-sec="15">15秒</button>
+<button class="time-chip" data-sec="30">30秒</button>
+<button class="time-chip active" data-sec="45">45秒</button>
+<button class="time-chip" data-sec="60">60秒</button>
+</div>
+<input id="workSec" type="number" min="5" max="3600" value="45" inputmode="numeric" aria-label="学習時間（秒）">
+</div>
+</div>
+
+<div class="grid2">
+<div class="field"><label for="count">進める量</label><input id="count" type="number" min="1" max="999" value="10" inputmode="numeric"></div>
+<div class="field"><label for="unit">単位</label><select id="unit"><option>ページ</option><option>問</option><option>語</option><option>枚</option><option>回</option></select></div>
+</div>
+
+<div id="goalFields" class="hidden">
+<div class="field"><label for="targetMin">この範囲を何分で終える？</label><input id="targetMin" type="number" min="1" max="600" step="1" value="10" inputmode="decimal"></div>
+<div id="paceBox" class="pace-box">
+<span>必要ペース</span>
+<strong id="paceValue">57秒 / ページ</strong>
+<small id="paceNote">切替時間込み。準備・セット間休憩は含みません。</small>
+</div>
+</div>
+
+<details id="advanced" class="advanced"><summary>詳細設定</summary>
+<div class="advanced-body">
+<div class="field"><label for="name">学習名</label><input id="name" maxlength="32" value="今日の学習" autocomplete="off"></div>
+<div class="grid2">
+<div class="field"><label for="startNo">開始番号</label><input id="startNo" type="number" min="0" max="99999" value="1" inputmode="numeric"></div>
+<div class="field"><label for="switchSec">切替時間（秒）</label><input id="switchSec" type="number" min="0" max="300" value="3" inputmode="numeric"></div>
+</div>
+<div class="grid2">
+<div class="field"><label for="sets">セット数</label><input id="sets" type="number" min="1" max="99" value="1" inputmode="numeric"></div>
+<div class="field"><label for="restSec">セット間休憩（秒）</label><input id="restSec" type="number" min="0" max="3600" value="30" inputmode="numeric"></div>
+</div>
+<label class="toggle"><span>セットごとにペースを上げる</span><input id="accelerate" type="checkbox"></label>
+<div id="accelField" class="field hidden"><label for="accelStep">1セットごとに短くする秒数</label><input id="accelStep" type="number" min="1" max="60" value="5" inputmode="numeric"></div>
+<div class="field"><label for="prepSec">開始前カウント（秒）</label><input id="prepSec" type="number" min="0" max="60" value="3" inputmode="numeric"></div>
+<label class="toggle"><span>終了前3秒のカウント音</span><input id="countdownSound" type="checkbox"></label>
+<label class="toggle"><span>切替音</span><input id="transitionSound" type="checkbox" checked></label>
+<label class="toggle"><span>完了音</span><input id="completeSound" type="checkbox" checked></label>
+<label class="toggle"><span>振動</span><input id="vibration" type="checkbox" checked></label>
+</div></details>
+
+<button id="startBtn" class="primary" type="button">開始する</button>
+<div class="form-actions"><button id="saveBtn" class="secondary" type="button">この設定を保存</button><button id="resetFormBtn" class="secondary" type="button">設定をリセット</button></div>
+<button id="deletePresetBtn" class="danger-btn hidden" type="button">この保存タイマーを削除</button>
+<input id="editingId" type="hidden" value=""><input id="mode" type="hidden" value="direct">
+</section>
+
+<section id="recentSection" class="hidden">
+<div class="section-title"><h2>最近の学習</h2><span>速度を残す</span></div>
+<div class="card"><div id="recentList" class="mini-history"></div></div>
+</section>
+</main>
+
+<main id="historyView" class="hidden">
+<section class="hero">
+<span class="hero-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M4 18l5-6 4 3 6-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>PACE LOG</span>
+<h2>学習速度の記録</h2>
+<p>「何分やったか」だけでなく、「1単位を何秒で進めたか」を残します。</p>
+</section>
+<div class="summary-grid">
+<div><strong id="todayTime">0分</strong><span>今日の学習</span></div>
+<div><strong id="todayUnits">0</strong><span>今日の完了単位</span></div>
+<div><strong id="totalTime">0分</strong><span>累計学習</span></div>
+<div><strong id="totalUnits">0</strong><span>累計完了単位</span></div>
+</div>
+<div id="historyList" class="history-list"></div>
+<button id="clearHistoryBtn" class="danger-link" type="button">履歴をすべて削除</button>
+</main>
+</div>
+
+<nav id="nav" class="nav">
+<button class="active" data-view="home"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>タイマー</span></button>
+<button data-view="history"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>履歴</span></button>
+</nav>
+
+<section id="runView" class="run hidden">
+<div class="run-inner">
+<div class="run-head"><button id="endBtn" type="button">終了</button><span id="runName">今日の学習</span><span style="width:52px"></span></div>
+<div class="run-stage">
+<div id="phaseLabel" class="phase-label" aria-live="polite">学習</div>
+<div id="ring" class="ring"><svg viewBox="0 0 100 100"><circle class="ring-track" cx="50" cy="50" r="45"/><circle class="ring-progress" cx="50" cy="50" r="45"/></svg><div class="ring-content"><div id="remaining" class="remaining" role="timer" aria-label="残り時間">00:45</div><div id="unitNow" class="unit-now">1ページ<small>この範囲を進める</small></div></div></div>
+<div class="run-metrics"><div><strong id="itemMetric">1 / 10</strong><span>進み</span></div><div><strong id="setMetric">1 / 1</strong><span>セット</span></div></div>
+</div>
+<div class="run-actions"><button id="prevBtn" class="move" type="button">前へ</button><button id="pauseBtn" class="pause" type="button">一時停止</button><button id="nextBtn" class="move" type="button">次へ</button></div>
+<p class="run-hint">時間が来ると自動で次へ進みます</p>
+</div>
+</section>
+
+<section id="result" class="result hidden">
+<div class="result-card">
+<div class="result-grabber"></div>
+<h2 id="resultTitle">完了</h2>
+<p id="resultName" class="result-name"></p>
+<p id="resultText"></p>
+<div class="result-summary">
+<div><strong id="resultUnits">0</strong><span>完了単位</span></div>
+<div><strong id="resultStudyTime">0分</strong><span>実学習時間</span></div>
+<div><strong id="resultPace">-</strong><span>平均ペース</span></div>
+<div><strong id="resultSets">1</strong><span>セット</span></div>
+</div>
+<div class="result-actions"><button id="repeatBtn" class="primary" type="button">同じ設定でもう一度</button><button id="resultClose" class="secondary" type="button">ホームへ戻る</button></div>
+</div>
+</section>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(()=>{'use strict';
+const KEY='manabi_timer_v110';
+const $=id=>document.getElementById(id),$$=q=>[...document.querySelectorAll(q)];
+const defaults={mode:'direct',name:'今日の学習',workSec:45,targetMin:10,count:10,unit:'ページ',startNo:1,switchSec:3,sets:1,restSec:30,prepSec:3,accelerate:false,accelStep:5,countdownSound:false,transitionSound:true,completeSound:true,vibration:true};
+let db={presets:[],history:[],last:null,active:null};let session=null,interval=null,audioCtx=null,wakeLock=null,lastFinishedSettings=null,countdownPlayed=new Set();
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&typeof x==='object')db={presets:Array.isArray(x.presets)?x.presets:[],history:Array.isArray(x.history)?x.history:[],last:x.last||null,active:x.active||null}}catch{}if(db.last)writeForm(db.last);else writeForm(defaults);renderAll()}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1600)}
+function num(id,min,max){const v=Number($(id).value);return Math.max(min,Math.min(max,Number.isFinite(v)?v:min))}
+function rawForm(){return{mode:$('mode').value,name:$('name').value.trim()||'今日の学習',workSec:num('workSec',5,3600),targetMin:num('targetMin',1,600),count:num('count',1,999),unit:$('unit').value,startNo:num('startNo',0,99999),switchSec:num('switchSec',0,300),sets:num('sets',1,99),restSec:num('restSec',0,3600),prepSec:num('prepSec',0,60),accelerate:$('accelerate').checked,accelStep:num('accelStep',1,60),countdownSound:$('countdownSound').checked,transitionSound:$('transitionSound').checked,completeSound:$('completeSound').checked,vibration:$('vibration').checked}}
+function goalCalc(s){const targetSec=Math.round(Number(s.targetMin)*60),overhead=Math.max(0,s.count-1)*s.switchSec,minTotal=s.count*5+overhead;if(targetSec<minTotal)return{valid:false,workSec:5,minTotal};return{valid:true,workSec:Math.max(5,Math.floor((targetSec-overhead)/s.count)),minTotal}}
+function normalizeSettings(input){const s={...defaults,...input};if(s.mode==='goal'){const g=goalCalc(s);if(!g.valid)return null;s.workSec=g.workSec}return s}
+function readForm(){return normalizeSettings(rawForm())}
+function setMode(mode){$('mode').value=mode;$$('.mode-switch button').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));$('directFields').classList.toggle('hidden',mode!=='direct');$('goalFields').classList.toggle('hidden',mode!=='goal');updatePacePreview()}
+function writeForm(input){const x={...defaults,...input};for(const k of ['name','workSec','targetMin','count','unit','startNo','switchSec','sets','restSec','prepSec','accelStep'])$(k).value=x[k];for(const k of ['accelerate','countdownSound','transitionSound','completeSound','vibration'])$(k).checked=!!x[k];setMode(x.mode||'direct');$('accelField').classList.toggle('hidden',!x.accelerate);syncTimeChips();updatePacePreview()}
+function resetForm(){writeForm(db.last||defaults);$('editingId').value='';$('formTitle').textContent='新しいスプリント';$('saveBtn').textContent='この設定を保存';$('deletePresetBtn').classList.add('hidden');$('advanced').open=false}
+function paceForSettings(input){const s=normalizeSettings(input)||{...defaults,...input};return Number(s.workSec)||45}
+function summary(input){const s={...defaults,...input};if(s.mode==='goal')return`${s.count}${s.unit}を${s.targetMin}分 → ${paceForSettings(s)}秒/${s.unit}`;let t=`${s.workSec}秒 × ${s.count}${s.unit}`;if(s.sets>1)t+=` × ${s.sets}セット`;return t}
+function syncTimeChips(){$$('.time-chip').forEach(b=>b.classList.toggle('active',Number(b.dataset.sec)===Number($('workSec').value)))}
+function updatePacePreview(){const s=rawForm();if(s.mode!=='goal'){$('startBtn').disabled=false;return}const g=goalCalc(s),box=$('paceBox');box.classList.toggle('error',!g.valid);if(g.valid){$('paceValue').textContent=`${g.workSec}秒 / ${s.unit}`;$('paceNote').textContent=`${s.count}${s.unit}を${s.targetMin}分。切替${s.switchSec}秒込み。準備・セット間休憩は除外。`;$('startBtn').disabled=false}else{const m=Math.ceil(g.minTotal/60);$('paceValue').textContent='設定時間が短すぎます';$('paceNote').textContent=`最低でも約${m}分必要です（1${s.unit}5秒＋切替時間で計算）。`;$('startBtn').disabled=true}}
+function renderAll(){renderLast();renderResume();renderPresets();renderHistory();renderRecent()}
+function renderLast(){$('lastSection').classList.toggle('hidden',!db.last);if(db.last){$('lastName').textContent=db.last.name;$('lastSummary').textContent=summary(db.last)}}
+function renderResume(){$('resumeCard').classList.toggle('hidden',!db.active);if(db.active)$('resumeSummary').textContent=`${db.active.settings.name} ・ ${db.active.item+1}/${db.active.settings.count}${db.active.settings.unit} ・ セット${db.active.set+1}/${db.active.settings.sets}`}
+function renderPresets(){const list=$('presetList');list.innerHTML='';$('savedSection').classList.toggle('hidden',db.presets.length===0);db.presets.forEach(p=>{const row=document.createElement('div');row.className='preset';row.innerHTML='<button class="preset-main" type="button"><strong></strong><small></small></button><button class="preset-edit" type="button" aria-label="編集">•••</button>';row.querySelector('strong').textContent=p.name;row.querySelector('small').textContent=summary(p);row.querySelector('.preset-main').onclick=()=>startSession(p);row.querySelector('.preset-edit').onclick=()=>editPreset(p.id);list.appendChild(row)})}
+function editPreset(id){const p=db.presets.find(x=>x.id===id);if(!p)return;writeForm(p);$('editingId').value=id;$('formTitle').textContent='タイマーを編集';$('saveBtn').textContent='変更を保存';$('deletePresetBtn').classList.remove('hidden');$('advanced').open=true;document.querySelector('.card').scrollIntoView({behavior:'smooth',block:'start'})}
+function savePreset(){const s=readForm();if(!s){toast('目標時間を長くしてください');return}const id=$('editingId').value;if(id){const i=db.presets.findIndex(x=>x.id===id);if(i>=0)db.presets[i]={...s,id}}else db.presets.unshift({...s,id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()))});save();renderPresets();resetForm();toast(id?'変更を保存しました':'タイマーを保存しました')}
+function deletePreset(){const id=$('editingId').value;if(!id)return;if(!confirm('この保存タイマーを削除しますか？'))return;db.presets=db.presets.filter(x=>x.id!==id);save();renderPresets();resetForm();toast('削除しました')}
+function paceLabel(h){if(!h.units)return'-';const sec=Math.round((Number(h.studySec)||0)/h.units);return`${sec}秒/${h.unit}`}
+function recordLabel(h){const date=new Date(h.finishedAt).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});return`${date} ・ ${h.units}${h.unit} ・ ${formatDuration(h.studySec)} ・ ${h.completed?'完了':'途中終了'}`}
+function renderRecent(){const arr=db.history.slice(0,3);$('recentSection').classList.toggle('hidden',arr.length===0);const list=$('recentList');list.innerHTML='';arr.forEach(h=>{const d=document.createElement('div');d.className='mini-item';d.innerHTML='<strong></strong><span></span>';d.querySelector('strong').textContent=h.name;d.querySelector('span').textContent=`${h.units}${h.unit} ・ ${paceLabel(h)}`;list.appendChild(d)})}
+function renderHistory(){const list=$('historyList');list.innerHTML='';if(!db.history.length)list.innerHTML='<p class="empty">まだ履歴はありません。タイマーを使うとここに速度が記録されます。</p>';else db.history.slice(0,100).forEach(h=>{const d=document.createElement('div');d.className='history-item';d.innerHTML='<strong></strong><span></span><em></em>';d.querySelector('strong').textContent=h.name;d.querySelector('span').textContent=recordLabel(h);d.querySelector('em').textContent=`平均 ${paceLabel(h)}`;list.appendChild(d)});const today=new Date().toDateString(),todayRows=db.history.filter(h=>new Date(h.finishedAt).toDateString()===today);const sum=(a,k)=>a.reduce((n,x)=>n+(Number(x[k])||0),0);$('todayTime').textContent=formatDuration(sum(todayRows,'studySec'));$('todayUnits').textContent=sum(todayRows,'units');$('totalTime').textContent=formatDuration(sum(db.history,'studySec'));$('totalUnits').textContent=sum(db.history,'units')}
+function formatDuration(sec){sec=Math.max(0,Math.round(sec||0));if(sec<60)return`${sec}秒`;const m=Math.floor(sec/60),s=sec%60;return s?`${m}分${s}秒`:`${m}分`}
+function switchView(v){$('homeView').classList.toggle('hidden',v!=='home');$('historyView').classList.toggle('hidden',v!=='history');$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));if(v==='history')renderHistory()}
+async function unlockAudio(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')await audioCtx.resume()}catch{}}
+function beep(freq=880,dur=.08,vol=.085,wave='square'){if(!audioCtx||audioCtx.state!=='running')return;const t=audioCtx.currentTime;const f=audioCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=Math.min(7000,freq*3.4);f.Q.value=.5;const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+dur);const o=audioCtx.createOscillator();o.type=wave;o.frequency.value=freq;const o2=audioCtx.createOscillator();o2.type='sine';o2.frequency.value=freq*2;const g2=audioCtx.createGain();g2.gain.value=.18;o.connect(f);o2.connect(g2);g2.connect(f);f.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur+.02);o2.start(t);o2.stop(t+dur+.02)}
+function pattern(notes){notes.forEach(([delay,freq,dur,vol,wave])=>setTimeout(()=>beep(freq,dur,vol,wave),delay))}
+function vibrate(patternValue){if(session?.settings.vibration&&navigator.vibrate)try{navigator.vibrate(patternValue)}catch{}}
+function cue(type){if(!session)return;const s=session.settings;if(type==='work'){if(s.transitionSound)pattern([[0,900,.1,.11,'triangle']]);vibrate(28)}if(type==='switch'){if(s.transitionSound)pattern([[0,1180,.1,.13,'square'],[170,1180,.1,.13,'square']]);vibrate([65,55,65])}if(type==='rest'){if(s.transitionSound)pattern([[0,760,.11,.12,'square'],[180,520,.13,.12,'square']]);vibrate([70,55,110])}if(type==='countdown'&&s.countdownSound)beep(720,.06,.09,'square');if(type==='finish'){if(s.completeSound)pattern([[0,880,.1,.13,'square'],[160,1175,.1,.13,'square'],[320,1568,.14,.15,'square']]);vibrate([70,55,70,55,140])}}
+async function requestWakeLock(){try{if('wakeLock'in navigator&&document.visibilityState==='visible')wakeLock=await navigator.wakeLock.request('screen')}catch{wakeLock=null}}
+async function releaseWakeLock(){try{await wakeLock?.release()}catch{}wakeLock=null}
+function currentWorkSec(){const s=session.settings;return Math.max(5,s.workSec-(s.accelerate?s.accelStep*session.set:0))}
+function phaseDuration(p){const s=session.settings;return p==='prep'?s.prepSec:p==='work'?currentWorkSec():p==='switch'?s.switchSec:p==='rest'?s.restSec:0}
+function persistActive(){if(!session)return;db.active={settings:session.settings,phase:session.phase,item:session.item,set:session.set,startedAt:session.startedAt,phaseStartedAt:session.phaseStartedAt,phaseEndAt:session.phaseEndAt,paused:session.paused,pauseRemaining:session.pauseRemaining,pausedTotalMs:session.pausedTotalMs,pauseStartedAt:session.pauseStartedAt,workElapsedMs:session.workElapsedMs,completedKeys:[...session.completedKeys]};save();renderResume()}
+function setPhase(p,base=Date.now()){session.phase=p;session.phaseStartedAt=base;session.phaseEndAt=base+phaseDuration(p)*1000;session.paused=false;session.pauseRemaining=0;countdownPlayed=new Set();cue(p);persistActive();renderRun()}
+function accrueWork(exitTime){if(session.phase!=='work')return;const elapsed=Math.max(0,Math.min(currentWorkSec()*1000,exitTime-session.phaseStartedAt));session.workElapsedMs+=elapsed}
+function markDone(){session.completedKeys.add(`${session.set}:${session.item}`)}
+function nextPhase(base=Date.now()){const s=session.settings;if(session.phase==='prep'){setPhase('work',base);return true}if(session.phase==='work'){accrueWork(base);markDone();if(session.item<s.count-1){if(s.switchSec>0)setPhase('switch',base);else{session.item++;setPhase('work',base)}return true}if(session.set<s.sets-1){if(s.restSec>0)setPhase('rest',base);else{session.set++;session.item=0;setPhase('work',base)}return true}finishSession(true,false);return false}if(session.phase==='switch'){session.item++;setPhase('work',base);return true}if(session.phase==='rest'){session.set++;session.item=0;setPhase('work',base);return true}return false}
+function catchUp(){if(!session||session.paused)return;let guard=0,now=Date.now();while(session&&now>=session.phaseEndAt&&guard++<10000){const base=session.phaseEndAt;if(!nextPhase(base))return}renderRun()}
+function tick(){if(!session||session.paused)return;catchUp();if(!session)return;const remain=Math.max(0,session.phaseEndAt-Date.now());if(session.settings.countdownSound&&session.phase==='work'){const n=Math.ceil(remain/1000);if(n>0&&n<=3&&!countdownPlayed.has(n)){countdownPlayed.add(n);cue('countdown')}}renderRun(remain)}
+function newSession(settings){const s=normalizeSettings(settings);if(!s)return null;return{settings:s,phase:'',item:0,set:0,startedAt:Date.now(),phaseStartedAt:0,phaseEndAt:0,paused:false,pauseRemaining:0,pausedTotalMs:0,pauseStartedAt:0,workElapsedMs:0,completedKeys:new Set()}}
+function showRun(){unlockAudio();requestWakeLock();$('runView').classList.remove('hidden');$('nav').classList.add('hidden');$('runName').textContent=session.settings.name;clearInterval(interval);interval=setInterval(tick,100)}
+function startSession(settings){const next=newSession(settings);if(!next){toast('目標時間を長くしてください');return}db.active=null;session=next;db.last={...session.settings};save();renderLast();showRun();if(session.settings.prepSec>0)setPhase('prep');else setPhase('work');tick()}
+function restoreSession(){if(!db.active)return;const a=db.active;session={...a,completedKeys:new Set(a.completedKeys||[]),settings:{...defaults,...a.settings}};showRun();if(session.paused)renderRun(session.pauseRemaining);else catchUp();persistActive()}
+function formatClock(ms){const total=Math.ceil(Math.max(0,ms)/1000),m=Math.floor(total/60),s=total%60;return`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
+function renderRun(remainingMs){if(!session)return;const s=session.settings,phase=session.phase,dur=phaseDuration(phase)*1000,remain=session.paused?session.pauseRemaining:(remainingMs??Math.max(0,session.phaseEndAt-Date.now())),p=dur?Math.max(0,Math.min(100,remain/dur*100)):0;const labels={prep:'準備',work:'学習',switch:'切替',rest:'休憩'},colors={prep:'#8a7b62',work:'#315f7f',switch:'#bb7435',rest:'#39765d'};$('phaseLabel').textContent=session.paused?'一時停止':labels[phase];$('phaseLabel').style.color=session.paused?'#737b84':colors[phase];$('ring').style.setProperty('--p',p);$('ring').style.setProperty('--ring',session.paused?'#8b9096':colors[phase]);$('remaining').textContent=formatClock(remain);$('remaining').setAttribute('aria-label',`残り${formatClock(remain)}`);const no=s.startNo+session.item;if(phase==='work')$('unitNow').innerHTML=`${no}${s.unit}<small>${session.paused?'停止中':`${currentWorkSec()}秒ペース`}</small>`;else if(phase==='switch')$('unitNow').innerHTML=`次は ${Math.min(no+1,s.startNo+s.count-1)}${s.unit}<small>教材を切り替える</small>`;else if(phase==='rest')$('unitNow').innerHTML=`セット休憩<small>${s.accelerate?`次は${Math.max(5,s.workSec-s.accelStep*(session.set+1))}秒ペース`:`次はセット ${session.set+2}`}</small>`;else $('unitNow').innerHTML=`まもなく開始<small>${s.name}</small>`;$('itemMetric').textContent=`${session.item+1} / ${s.count}`;$('setMetric').textContent=`${session.set+1} / ${s.sets}`;$('pauseBtn').textContent=session.paused?'再開':'一時停止'}
+function togglePause(){if(!session)return;const now=Date.now();if(!session.paused){session.pauseRemaining=Math.max(0,session.phaseEndAt-now);session.paused=true;session.pauseStartedAt=now;releaseWakeLock()}else{const pausedFor=now-session.pauseStartedAt;session.pausedTotalMs+=pausedFor;session.phaseStartedAt+=pausedFor;session.phaseEndAt=now+session.pauseRemaining;session.pauseStartedAt=0;session.paused=false;requestWakeLock()}persistActive();renderRun()}
+function manualNext(){if(!session)return;if(session.paused){const pausedFor=Date.now()-session.pauseStartedAt;session.pausedTotalMs+=pausedFor;session.phaseStartedAt+=pausedFor;session.pauseStartedAt=0;session.paused=false}nextPhase(Date.now())}
+function manualPrev(){if(!session)return;const now=Date.now();if(session.paused){const pausedFor=now-session.pauseStartedAt;session.pausedTotalMs+=pausedFor;session.phaseStartedAt+=pausedFor;session.pauseStartedAt=0;session.paused=false}if(session.phase==='switch'||session.phase==='rest'){setPhase('work',now);return}if(session.phase==='work'){accrueWork(now);if(session.item>0)session.item--;else if(session.set>0){session.set--;session.item=session.settings.count-1}else{toast('最初です');setPhase('work',now);return}setPhase('work',now);return}toast('最初です')}
+function finishSession(completed,includePartial=true){if(!session)return;const now=Date.now();if(includePartial&&session.phase==='work')accrueWork(session.paused?session.phaseStartedAt+(currentWorkSec()*1000-session.pauseRemaining):now);clearInterval(interval);interval=null;releaseWakeLock();const s=session.settings,units=completed?s.count*s.sets:session.completedKeys.size,studySec=Math.round(session.workElapsedMs/1000);db.history.unshift({name:s.name,unit:s.unit,units,studySec,sets:s.sets,mode:s.mode,completed,finishedAt:new Date().toISOString()});db.history=db.history.slice(0,100);db.active=null;save();lastFinishedSettings={...s};renderAll();cue('finish');$('runView').classList.add('hidden');$('nav').classList.remove('hidden');$('resultTitle').textContent=completed?'スプリント完了':'ここで終了';$('resultName').textContent=s.name;$('resultText').textContent=completed?'設定した範囲を最後まで進めました。':'途中までの学習を履歴に保存しました。';$('resultUnits').textContent=`${units}${s.unit}`;$('resultStudyTime').textContent=formatDuration(studySec);$('resultPace').textContent=units?`${Math.round(studySec/units)}秒/${s.unit}`:'-';$('resultSets').textContent=s.sets;$('result').classList.remove('hidden');session=null}
+$$('.mode-switch button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));$$('.time-chip').forEach(b=>b.onclick=()=>{$('workSec').value=b.dataset.sec;syncTimeChips()});$('workSec').oninput=syncTimeChips;for(const id of ['count','unit','targetMin','switchSec'])$(id).addEventListener('input',updatePacePreview);$('accelerate').onchange=()=>{$('accelField').classList.toggle('hidden',!$('accelerate').checked)};$('startBtn').onclick=()=>{const s=readForm();if(s)startSession(s)};$('lastStartBtn').onclick=()=>db.last&&startSession(db.last);$('saveBtn').onclick=savePreset;$('deletePresetBtn').onclick=deletePreset;$('resetFormBtn').onclick=resetForm;$('pauseBtn').onclick=togglePause;$('prevBtn').onclick=manualPrev;$('nextBtn').onclick=manualNext;$('endBtn').onclick=()=>{if(confirm('このスプリントを終了しますか？'))finishSession(false,true)};$('resumeBtn').onclick=restoreSession;$('discardBtn').onclick=()=>{if(confirm('中断データを破棄しますか？')){db.active=null;save();renderResume()}};$('repeatBtn').onclick=()=>{const s=lastFinishedSettings;$('result').classList.add('hidden');if(s)startSession(s)};$('resultClose').onclick=()=>{$('result').classList.add('hidden');switchView('home')};$$('.nav button').forEach(b=>b.onclick=()=>switchView(b.dataset.view));$('clearHistoryBtn').onclick=()=>{if(confirm('履歴をすべて削除しますか？')){db.history=[];save();renderAll();toast('履歴を削除しました')}};document.addEventListener('visibilitychange',()=>{if(session){persistActive();if(document.visibilityState==='visible'){requestWakeLock();if(!session.paused)catchUp()}}});window.addEventListener('pagehide',()=>session&&persistActive());load();
+})();
+const __modeHints={direct:'1ページ・1問あたりの時間をそのまま指定します。',goal:'終える時間から逆算し、必要なペースを自動で計算します。'};
+document.querySelectorAll('.mode-switch button').forEach(b=>{
+b.addEventListener('click',()=>{const h=document.getElementById('modeHint');if(h)h.textContent=__modeHints[b.dataset.mode]||''});
+});
+</script>
+</body>
+</html>
