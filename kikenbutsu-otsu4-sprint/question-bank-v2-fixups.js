@@ -41,12 +41,17 @@
 
   for(const q of QUESTIONS.filter(q=>q.subject==='法令'&&q.topic==='指定数量判定')){
     const m=q.question.match(/倍数合計([0-9.]+)/);
-    if(m){const x=Number(m[1]);q.point=`この組合せの倍数合計は${x}で、${x>=1?'指定数量以上':'指定数量未満'}として判定する。`;q.detail=`問題文の各危険物について実数量÷指定数量を求めた合計が${x}。1以上なら指定数量以上、1未満なら指定数量未満である。`}
+    if(m){
+      const x=Number(m[1]);
+      const premise=q.question.split('。')[0];
+      q.point=`${premise}では倍数合計${x}なので、${x>=1?'指定数量以上':'指定数量未満'}として判定する。`;
+      q.detail=`${premise}。各危険物について実数量÷指定数量を求めて合算すると${x}。1以上なら指定数量以上、1未満なら指定数量未満である。`;
+    }
   }
 
   for(const q of QUESTIONS.filter(q=>q.subject==='物理・化学'&&['密度計算','熱量計算','定積気体計算','蒸気比重計算','燃焼範囲判定','定圧気体計算'].includes(q.topic))){
     const correct=q.choices[q.answer];
-    q.point=`この条件では答えは「${correct}」。`;
+    q.point=`${q.question.split('。')[0]}では答えは「${correct}」。`;
     q.detail=`${q.question} ${q.topic}の定義・公式に数値を代入すると「${correct}」となる。単位と絶対温度、上下限の扱いを問題条件に合わせて確認する。`;
   }
 
