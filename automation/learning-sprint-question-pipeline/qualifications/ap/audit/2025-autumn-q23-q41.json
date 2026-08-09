@@ -1,0 +1,40 @@
+{
+  "qualification": "応用情報技術者試験 科目A",
+  "exam": "令和7年度秋期 午前",
+  "batch": "Q23-Q41",
+  "audited_at": "2026-08-09T15:37:00+09:00",
+  "batch_status": "PASS",
+  "overall_gate4_status": "FAIL",
+  "official_source": {
+    "questions": "https://www.ipa.go.jp/shiken/mondai-kaiotu/nl10bi0000009lh8-att/2025r07a_ap_am_qs.pdf",
+    "answers": "https://www.ipa.go.jp/shiken/mondai-kaiotu/nl10bi0000009lh8-att/2025r07a_ap_am_ans.pdf"
+  },
+  "checks": {
+    "question_count": "19/19",
+    "official_answer_match": "19/19",
+    "required_field_missing": 0,
+    "choice_count_errors": 0,
+    "exact_duplicate_in_batch": 0,
+    "high_similarity_ge_0_90_in_batch": 0,
+    "asset_required": 0,
+    "asset_pending": 0,
+    "modified_questions": [41]
+  },
+  "modification_review": {
+    "question_41": "PASS。公式PDFの表形式選択肢を意味を変えずにテキスト化し、modified=trueと改変内容を記録。"
+  },
+  "progress": {
+    "previous_structured": 22,
+    "newly_structured": 19,
+    "structured_total": 41,
+    "expected_total": 240,
+    "autumn_structured": 41,
+    "autumn_expected": 80
+  },
+  "remaining_fail_reasons": [
+    "全体は41/240問で未完成",
+    "問1・10・11・15・19・20・22の図表アセット7件が未登録",
+    "Q23-Q41はステージングバッチであり、令和7年度秋期80問完成時にcanonical questions.jsonへ統合して全体監査する"
+  ],
+  "next_gate": "令和7年度秋期 問42〜60を構造化し、公式解答照合と部分監査を行う。"
+}
