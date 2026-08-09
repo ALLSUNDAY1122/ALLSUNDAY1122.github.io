@@ -1,0 +1,5 @@
+const CACHE='tsukanshi-sprint-v21';
+const ASSETS=['./','./index.html','./style-v21.css','./app-v21.js','./manifest.json','./icon.svg','./questions.js','./sources-v02.js','./questions-v02-tb.js','./questions-v02-ks1.js','./questions-v02-ks2.js','./questions-v02-ks3.js','./questions-v02-ks4.js','./questions-v02-jm1.js','./questions-v02-jm2.js','./questions-v02-jm3.js','./questions-v02-jm4.js','./sources-v03.js','./questions-v03-tb.js'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(res=>{const copy=res.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return res}).catch(()=>caches.match('./index.html'))))});

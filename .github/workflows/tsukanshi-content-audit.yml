@@ -7,6 +7,11 @@ on:
       - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-content.mjs'
       - 'tsukanshi-sprint/index.html'
+      - 'tsukanshi-sprint/app-v21.js'
+      - 'tsukanshi-sprint/style-v21.css'
+      - 'tsukanshi-sprint/manifest.json'
+      - 'tsukanshi-sprint/sw.js'
+      - 'tsukanshi-sprint/icon.svg'
       - '.github/workflows/tsukanshi-content-audit.yml'
   pull_request:
     paths:
@@ -14,6 +19,11 @@ on:
       - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-content.mjs'
       - 'tsukanshi-sprint/index.html'
+      - 'tsukanshi-sprint/app-v21.js'
+      - 'tsukanshi-sprint/style-v21.css'
+      - 'tsukanshi-sprint/manifest.json'
+      - 'tsukanshi-sprint/sw.js'
+      - 'tsukanshi-sprint/icon.svg'
       - '.github/workflows/tsukanshi-content-audit.yml'
 
 permissions:
@@ -29,3 +39,14 @@ jobs:
           node-version: '22'
       - name: Validate customs broker content
         run: node tsukanshi-sprint/validate-content.mjs
+      - name: Validate Golden Master UI JavaScript syntax
+        run: node --check tsukanshi-sprint/app-v21.js
+      - name: Validate PWA manifest JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('tsukanshi-sprint/manifest.json','utf8')); console.log('manifest ok')"
+      - name: Validate v2.1 UI references
+        run: |
+          grep -q 'style-v21.css' tsukanshi-sprint/index.html
+          grep -q 'app-v21.js' tsukanshi-sprint/index.html
+          grep -q 'manifest.json' tsukanshi-sprint/index.html
+          grep -q 'grid-template-columns:repeat(4,1fr)' tsukanshi-sprint/style-v21.css
+          grep -q 'dailyGoal:8' tsukanshi-sprint/app-v21.js
