@@ -32,7 +32,7 @@ jobs:
           xcrun swiftc --version
       - name: Generate audited 360-question JSON
         run: node tools/otsu4-build-content-v2.mjs
-      - name: Runtime-decode generated JSON with native content store
+      - name: Runtime-decode v2.1 learning selections
         run: |
           cat > /tmp/Otsu4ContentDecodeCheck.swift <<'SWIFT'
           import Foundation
@@ -43,9 +43,21 @@ jobs:
                   let url = URL(fileURLWithPath: "kikenbutsu-otsu4-sprint/questions.generated.json")
                   let store = try Otsu4ContentStore(url: url)
                   guard store.allQuestions.count == 360 else { fatalError("question count mismatch") }
-                  guard store.today12(isPremium: true).count == 12 else { fatalError("today12 mismatch") }
-                  guard store.mockExamQuestions()?.count == 35 else { fatalError("mock35 mismatch") }
-                  print("decoded=\(store.allQuestions.count) free=\(store.freeQuestions.count) today12=12 mock35=35")
+                  guard store.freeQuestions.count == 72 else { fatalError("free count mismatch") }
+                  guard store.sprint(goal: 4, isPremium: true).count == 4 else { fatalError("sprint4 mismatch") }
+                  guard store.sprint(goal: 8, isPremium: true).count == 8 else { fatalError("sprint8 mismatch") }
+                  guard store.sprint(goal: 16, isPremium: true).count == 16 else { fatalError("sprint16 mismatch") }
+                  for set in 1...3 {
+                      guard let mock = store.mockExamQuestions(set: set), mock.count == 35 else {
+                          fatalError("mock set \(set) mismatch")
+                      }
+                      let counts = Dictionary(grouping: mock, by: \.subject).mapValues(\.count)
+                      guard counts["法令"] == 15, counts["物理・化学"] == 10, counts["性質・消火"] == 10 else {
+                          fatalError("mock subject counts mismatch set \(set)")
+                      }
+                  }
+                  guard Otsu4ContentStore.mockSetsAreDisjoint(in: store) else { fatalError("mock sets overlap") }
+                  print("decoded=360 free=72 sprint=4/8/16 mockSets=3x35 disjoint=true")
               }
           }
           SWIFT
@@ -54,7 +66,7 @@ jobs:
             /tmp/Otsu4ContentDecodeCheck.swift \
             -o /tmp/otsu4-content-check
           /tmp/otsu4-content-check
-      - name: Typecheck complete iOS learning and StoreKit flow
+      - name: Typecheck Learning Sprint v2.1 native flow and StoreKit
         run: |
           xcrun --sdk iphonesimulator swiftc \
             -target arm64-apple-ios17.0-simulator \
@@ -62,5 +74,7 @@ jobs:
             native-ios/Otsu4Sprint/Otsu4ContentStore.swift \
             native-ios/Otsu4Sprint/Otsu4PurchaseStore.swift \
             native-ios/Otsu4Sprint/Otsu4PaywallView.swift \
+            native-ios/Otsu4Sprint/Otsu4DesignSystem.swift \
+            native-ios/Otsu4Sprint/Otsu4LearningStore.swift \
             native-ios/Otsu4Sprint/Otsu4StudySession.swift \
             native-ios/Otsu4Sprint/Otsu4LearningView.swift
