@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import json
 import pathlib
-import re
 import subprocess
 import sys
 import time
@@ -95,7 +94,7 @@ def browser_audit() -> dict:
 
         driver.find_element(By.ID, 'startDaily').click()
         wait.until(EC.visibility_of_element_located((By.ID, 'questionText')))
-        if not driver.find_element(By.ID, 'bottomNav').get_attribute('class').count('hidden'):
+        if 'hidden' not in driver.find_element(By.ID, 'bottomNav').get_attribute('class'):
             fail('browser: bottom nav visible during quiz')
         if len(driver.find_elements(By.CSS_SELECTOR, '.answer-choice')) != 5:
             fail('browser: answer buttons != 5')
@@ -124,9 +123,11 @@ def browser_audit() -> dict:
         if min_bottom_h < 44:
             fail(f'browser: bottom nav touch target {min_bottom_h}px < 44px')
 
-        logs = [x for x in driver.get_log('browser') if x.get('level') == 'SEVERE']
-        if logs:
-            fail('browser console errors: ' + '; '.join(x.get('message','') for x in logs[:3]))
+        severe = [x for x in driver.get_log('browser') if x.get('level') == 'SEVERE']
+        ignored_noise = [x for x in severe if '/favicon.ico' in x.get('message','') and '404' in x.get('message','')]
+        app_errors = [x for x in severe if x not in ignored_noise]
+        if app_errors:
+            fail('browser application console errors: ' + '; '.join(x.get('message','') for x in app_errors[:3]))
 
         (MVP / 'audit').mkdir(exist_ok=True)
         driver.set_window_size(390, 844)
@@ -140,7 +141,8 @@ def browser_audit() -> dict:
             'subject_cards': 11,
             'mock_cards': 6,
             'heatmap_cells': 35,
-            'console_errors': 0,
+            'application_console_errors': len(app_errors),
+            'ignored_browser_noise': len(ignored_noise),
             'horizontal_overflow': False,
             'min_bottom_touch_target': min_bottom_h,
         }
