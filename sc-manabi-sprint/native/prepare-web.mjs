@@ -16,6 +16,7 @@ const fullFiles = [
   'style.css',
   'app.js',
   'patch-2140.js',
+  'iap-v1.js',
   'sw.js',
   'manifest.json'
 ];
