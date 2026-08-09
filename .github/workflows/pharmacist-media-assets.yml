@@ -1,0 +1,53 @@
+name: Pharmacist Official Question Media Assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pharmacist-manabi-sprint/tools/build_media_assets.py'
+      - 'pharmacist-manabi-sprint/tools/media-trigger.txt'
+      - '.github/workflows/pharmacist-media-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install media dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf==1.26.3 pillow==11.3.0
+      - name: Build cropped media assets
+        id: build
+        shell: bash
+        run: |
+          mkdir -p pharmacist-manabi-sprint/content/media
+          set +e
+          python pharmacist-manabi-sprint/tools/build_media_assets.py > pharmacist-manabi-sprint/content/media/media-build.log 2>&1
+          code=$?
+          set -e
+          cat pharmacist-manabi-sprint/content/media/media-build.log
+          echo "$code" > pharmacist-manabi-sprint/content/media/media-build.exit
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - name: Commit assets and diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pharmacist-manabi-sprint/assets/official-questions/ pharmacist-manabi-sprint/content/media/
+          if git diff --cached --quiet; then
+            echo 'No media changes.'
+          else
+            git commit -m 'pharmacist: build official question media assets [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Enforce media build gate
+        run: test "${{ steps.build.outputs.exit_code }}" = '0'
