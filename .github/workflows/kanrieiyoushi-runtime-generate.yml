@@ -1,0 +1,47 @@
+name: 管理栄養士 Generate Audited 600 Runtime
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'kanrieiyoushi-sprint/audit/runtime-generate-trigger.txt'
+      - 'kanrieiyoushi-sprint/audit/build_runtime_600.py'
+      - 'kanrieiyoushi-sprint/audit/build_round1_2_3_canonical.py'
+      - 'kanrieiyoushi-sprint/audit/build_round2_canonical.py'
+      - 'kanrieiyoushi-sprint/audit/build_round3_canonical.py'
+      - 'kanrieiyoushi-sprint/audit/round3/**'
+      - 'kanrieiyoushi-sprint/audit/round2-*.json'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate audited 600 runtime
+        run: python kanrieiyoushi-sprint/audit/build_runtime_600.py
+      - name: Revalidate 600 bank
+        run: |
+          python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2-3.json
+          python kanrieiyoushi-sprint/audit/audit_content_rights.py
+          node --check kanrieiyoushi-sprint/questions600.js
+      - name: Commit runtime asset
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add kanrieiyoushi-sprint/questions600.js
+          if git diff --cached --quiet; then
+            echo "questions600.js is already current"
+          else
+            git commit -m "管理栄養士 監査済み600問ランタイムを更新 [skip ci]"
+            git push origin HEAD:main
+          fi
