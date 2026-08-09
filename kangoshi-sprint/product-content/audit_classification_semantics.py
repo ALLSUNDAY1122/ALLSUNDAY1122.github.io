@@ -7,8 +7,8 @@ ROOT=Path(__file__).resolve().parent
 OUT=ROOT/'classified'
 
 # Independent high-precision expectations. These intentionally do not reuse the
-# classifier rule tables. A match is treated as a contradiction only when the
-# stem/scenario itself clearly names a specialty or content domain.
+# classifier rule tables. A contradiction is raised only when the question has
+# a single clear semantic domain and the assigned major falls outside it.
 STEM_EXPECT=[
  (r'妊娠|妊婦|分娩|産褥|褥婦|胎児|不妊治療|子宮復古|経産道感染', {'母性看護学'}, 'maternal-explicit'),
  (r'永久歯|乳児|幼児|学童|小児|二分脊椎|ディストラクション|アタッチメント', {'小児看護学'}, 'pediatric-explicit'),
@@ -37,20 +37,33 @@ for sid in ('set1','set2','set3'):
     set_counts=Counter()
     for q in qs:
         total+=1; qid=q.get('id','?'); major=q.get('majorSubject'); stem=str(q.get('question') or ''); scen=str(q.get('scenario') or '')
+        category=q.get('category')
         majors[major]+=1; set_counts[major]+=1
+
+        stem_matches=[]
         for pattern,allowed,label in STEM_EXPECT:
-            if re.search(pattern,stem,re.I) and major not in allowed:
-                errors.append(f'{qid}: {label} expects {sorted(allowed)}, got {major}')
-        if q.get('category')=='状況設定' and scen:
+            # In situation questions, generic procedures are often embedded in an
+            # adult/pediatric specialty case. They are not sufficient by themselves
+            # to force the major to 基礎看護学.
+            if category=='状況設定' and label=='basic-skill-explicit':
+                continue
+            if re.search(pattern,stem,re.I):
+                stem_matches.append((allowed,label))
+        if stem_matches:
+            union=set().union(*(x[0] for x in stem_matches))
+            labels=[x[1] for x in stem_matches]
+            if major not in union:
+                errors.append(f'{qid}: stem semantic domains {labels} allow {sorted(union)}, got {major}')
+            if len(union)>1:
+                warnings.append(f'{qid}: multi-domain stem {labels}; assigned {major} requires contextual review')
+
+        if category=='状況設定' and scen:
             for pattern,allowed,label in SCEN_EXPECT:
                 if re.search(pattern,scen,re.I) and major not in allowed:
-                    # Question-stem explicit domain may legitimately override scenario,
-                    # e.g. a home-care service question within a clinical case.
-                    explicit_override=False
-                    for sp,sa,_ in STEM_EXPECT:
-                        if re.search(sp,stem,re.I) and major in sa:
-                            explicit_override=True; break
-                    if not explicit_override:
+                    # A clearly named question-stem domain can legitimately override
+                    # the case context, such as a home-care or disaster-system question.
+                    stem_union=set().union(*(x[0] for x in stem_matches)) if stem_matches else set()
+                    if major not in stem_union:
                         errors.append(f'{qid}: {label} expects {sorted(allowed)}, got {major}')
             if q.get('scenarioId'):
                 scenario_groups[q['scenarioId']].append((qid,major,q.get('subject')))
@@ -63,17 +76,19 @@ for scenario_id,rows in sorted(scenario_groups.items()):
     group_majors=Counter(r[1] for r in rows)
     if len(group_majors)>1:
         split_groups.append({'scenarioId':scenario_id,'majors':dict(group_majors),'questions':rows})
-        # More than two majors inside one 3-question case is almost certainly a bad classification.
+        # Three different majors inside a single three-question case is a hard
+        # contradiction. Two majors is retained as a warning because a later item
+        # may legitimately ask about discharge/community/system support.
         if len(group_majors)>=3:
             errors.append(f'{scenario_id}: situation group split across 3 majors {dict(group_majors)}')
         else:
-            warnings.append(f'{scenario_id}: situation group split {dict(group_majors)}; manual semantic check required')
+            warnings.append(f'{scenario_id}: situation group split {dict(group_majors)}; contextual review required')
 
 report={
  'total':total,'majorCounts':dict(majors),'perSetMajorCounts':per_set,
  'strongSemanticErrors':errors,'splitScenarioGroups':split_groups,'warnings':warnings,
  'pass':not errors,
- 'note':'独立ルールによる分類整合監査。PASSは分類矛盾がないことを示し、医学・看護学的専門家監査の代替ではない。'
+ 'note':'独立ルールによる分類整合監査。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。PASSは医学・看護学的専門家監査の代替ではない。'
 }
 (OUT/'semantic-consistency-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'total':total,'errorCount':len(errors),'splitScenarioGroups':len(split_groups),'warningCount':len(warnings),'pass':not errors},ensure_ascii=False))
