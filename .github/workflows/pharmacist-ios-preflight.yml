@@ -1,0 +1,75 @@
+name: Pharmacist iOS Preflight
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pharmacist-manabi-sprint/ios/**'
+      - 'pharmacist-manabi-sprint/metadata/**'
+      - 'pharmacist-manabi-sprint/support.html'
+      - 'pharmacist-manabi-sprint/privacy.html'
+      - 'pharmacist-manabi-sprint/terms.html'
+      - 'pharmacist-manabi-sprint/scripts/validate_release.py'
+      - 'pharmacist-manabi-sprint/content/product/questions.json'
+      - 'pharmacist-manabi-sprint/content/product/final-audit-v2.json'
+      - 'codemagic.yaml'
+permissions:
+  contents: write
+concurrency:
+  group: pharmacist-ios-preflight
+  cancel-in-progress: true
+jobs:
+  preflight:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static release audit
+        run: python3 pharmacist-manabi-sprint/scripts/validate_release.py
+      - name: Shell and Python syntax
+        run: |
+          bash -n pharmacist-manabi-sprint/ios/prepare-ios.sh
+          python3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py pharmacist-manabi-sprint/scripts/validate_release.py
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare offline app bundle for simulator
+        env:
+          PREFLIGHT_PLACEHOLDER_ICON: '1'
+        run: bash pharmacist-manabi-sprint/ios/prepare-ios.sh
+      - name: Generate project and enable IAP capability
+        run: |
+          cd pharmacist-manabi-sprint/ios
+          xcodegen generate
+          python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' PharmacistSprint.xcodeproj/project.pbxproj
+      - name: Simulator compile gate
+        id: build
+        shell: bash
+        run: |
+          set +e
+          xcodebuild -project pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj -scheme PharmacistSprint -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build > /tmp/pharmacist-xcodebuild.log 2>&1
+          code=$?
+          set -e
+          tail -n 120 /tmp/pharmacist-xcodebuild.log
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - name: Write durable preflight report
+        if: always()
+        env:
+          BUILD_EXIT: ${{ steps.build.outputs.exit_code }}
+        run: |
+          python3 - <<'PY'
+          import json,os
+          code=int(os.environ.get('BUILD_EXIT') or 999)
+          r={'pass':code==0,'simulatorBuildExit':code,'bundleId':'jp.allsunday1122.yakuzaishi','version':'1.0.0','questionBank':1035,'activeQuestions':1031,'freeQuestions':90,'note':'Simulator uses a generated placeholder icon only. Signed/TestFlight build requires the canonical Drive PNG SHA-256 gate.'}
+          open('pharmacist-manabi-sprint/content/product/ios-preflight-report.json','w',encoding='utf-8').write(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pharmacist-manabi-sprint/content/product/ios-preflight-report.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'pharmacist: iOS preflight result [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Enforce compile gate
+        run: test "${{ steps.build.outputs.exit_code }}" = '0'
