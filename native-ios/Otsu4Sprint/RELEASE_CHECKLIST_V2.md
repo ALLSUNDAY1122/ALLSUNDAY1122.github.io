@@ -14,9 +14,9 @@
 - [x] StoreKit 2: 購入、currentEntitlements、Transaction.updates、復元導線
 - [x] 未検証取引でPremiumを解放しない
 
-## B. UI正本 v2.1
-- [x] 標準8問、4/8/16問設定
-- [x] ホーム / 模試 / 記録 / 設定
+## B. UI正本 v2.1 Golden Master
+- [x] 旧12問仕様を廃止し、標準8問・4/8/16問設定へ移行
+- [x] ホーム / 模試 / 記録 / 設定の4タブ
 - [x] 生成り紙面、藍、朱、緑、金のデザイントークン
 - [x] 問題・結果の明朝系主見出し
 - [x] 28pxグリッド背景
@@ -36,16 +36,24 @@
 - [x] 辛口レビュー1: 模試120分タイマー欠落を発見→修正
 - [x] 辛口レビュー2: 試験日までの必要ペース算出に必要なユニーク既出数が未保持→seenIDsを追加
 - [x] 辛口レビュー3: Xcode build成功でもJSON/Privacy Manifestがapp bundleに入らないことを検出→Xcode resource phaseへ移行
+- [x] 360問JSONのSwift runtime decode監査
+- [x] Native Typecheck
 - [ ] 最終CIで Content Audit / Native Typecheck / Xcode Release Simulator Build の3本すべてPASS
 
-## D. 申請ファイル
-- [x] Info.plist
-- [x] PrivacyInfo.xcprivacy
+## D. iOS方式・申請ファイル
+- [x] iOS方式: SwiftUI native + XcodeGen / Codemagic
+- [x] Bundle ID固定: `jp.allsunday1122.otsu4`
+- [x] Version `1.0.0` / Build `1`
+- [x] `project.yml`（XcodeGen）
+- [x] `prepare-ios.sh`（監査済360問JSON＋1024px App Icon生成）
+- [x] `Info.plist`
+- [x] `PrivacyInfo.xcprivacy`
 - [x] App Store日本語メタデータ案
 - [x] Review Notes案
 - [x] Support pageソース
 - [x] Privacy Policyソース
-- [ ] 1024x1024 App Store icon最終版
+- [x] 1024x1024 App Store icon再現可能ソース＋Asset Catalog定義
+- [ ] Xcode Release Simulator BuildでAppIcon / JSON / Privacy Manifest同梱を最終確認
 - [ ] App Store screenshot最終版（TestFlight実機から取得を優先）
 - [ ] 公開Support/Privacy URL HTTP 200確認（main反映後）
 
@@ -60,16 +68,19 @@
 - [ ] 年齢区分回答
 
 ## F. Codemagic / TestFlight
-- [ ] codemagic.yamlを現行公式仕様に合わせて固定
+- [x] `codemagic.yaml` 作成
+- [x] `submit_to_testflight: true`
+- [x] `submit_to_app_store: false`
+- [ ] Codemagic公式仕様との最終照合
 - [ ] App Store Connect API key / signing資格情報をCodemagicへ設定（秘密情報はGitHubへ置かない）
 - [ ] 無料ビルド枠残量を確認
 - [ ] 署名付きArchive / IPA
 - [ ] Validate
-- [ ] `submit_to_testflight: true`
-- [ ] `submit_to_app_store: false`
 - [ ] TestFlight内部テストへ反映
 
 ## G. 人間チェックポイント
+- [x] 企画採否
+- [x] 初期試作品確認
 - [ ] iPhone実機でTestFlightを確認
 - [ ] 購入成功
 - [ ] 購入キャンセル
