@@ -13,6 +13,9 @@
 - [ ] TestFlight/App Store自動提出OFF
 - [ ] 辛口レビュー3回 PASS
 
+### AppIcon搬送の扱い
+Google Drive正本は `10_司法書士試験_択一式.png`、SHA-256 `c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506` を唯一の合格値とする。匿名Drive downloadが中間レスポンスを返すため、正本バイト未取得をRelease PASSとして扱わない。Simulatorのコンパイル確認だけは `SHOSHI_ICON_MODE=simulator-placeholder` を許可するが、これはTestFlight/Archiveへ使用禁止。
+
 ## Apple側の外部ゲート
 - [ ] App Store Connect新規App `司法書士 学びスプリント`
 - [ ] Bundle ID `jp.allsunday1122.shoshi`
@@ -37,4 +40,4 @@
 - [ ] R7午後33全員正答
 - [ ] 長文問題のUI/ホーム導線
 
-**上記実機項目がPASSするまでApp Store提出へ進まない。**
+**正本AppIcon未PASSおよび上記実機項目未PASSの状態でApp Store提出へ進まない。**
