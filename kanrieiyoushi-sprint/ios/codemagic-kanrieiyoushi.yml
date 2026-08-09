@@ -18,9 +18,10 @@ workflows:
       - name: Audit release inputs
         script: |
           cd "$CM_BUILD_DIR"
-          python3 kanrieiyoushi-sprint/audit/build_all600.py
-          python3 automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-all600.json
-          python3 kanrieiyoushi-sprint/audit/content_rights_audit.py
+          python3 kanrieiyoushi-sprint/audit/build_round1_2_3_canonical.py
+          python3 automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2-3.json
+          python3 kanrieiyoushi-sprint/audit/audit_content_rights.py
+          node --check kanrieiyoushi-sprint/ios/native-storekit.js
           node kanrieiyoushi-sprint/validate-apple-preflight.mjs
           python3 kanrieiyoushi-sprint/ios/ios_productization_audit.py
       - name: Install XcodeGen
