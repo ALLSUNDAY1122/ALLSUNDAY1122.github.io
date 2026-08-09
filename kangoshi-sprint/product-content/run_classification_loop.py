@@ -13,6 +13,7 @@ STAGES=[
  ('refine-v8','refine_classification_v8.py'),
  ('validate','validate_classification.py'),
  ('semantic-audit','audit_classification_semantics.py'),
+ ('situation-summary','summarize_situation_groups.py'),
 ]
 results=[]
 for name,file in STAGES:
