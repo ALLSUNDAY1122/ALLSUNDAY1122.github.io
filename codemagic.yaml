@@ -25,6 +25,13 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-2"
           xcodegen generate
+      - name: Verify bundled release inputs
+        script: |
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/index.html"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/audit-fixes.js"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/question-order-v1.js"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
       - name: Apply App Store signing profiles
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-2"
@@ -42,5 +49,5 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
+        submit_to_testflight: true
         submit_to_app_store: false
