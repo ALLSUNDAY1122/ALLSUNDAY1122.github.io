@@ -10,6 +10,8 @@ OUT.mkdir(exist_ok=True)
 PAGE_CODE = re.compile(r'^\s*[A-Z0-9-]+(?:前|後)[A-Z0-9-]*-?\d*\s*$')
 Q_LINE = re.compile(r'^\s*(\d{1,3})\s+(.+?)\s*$')
 OPT_LINE = re.compile(r'^\s*([1-5])\s*[．.]\s*(.*)$')
+NUMERIC_PROMPT = re.compile(r'解答\s*[：:]')
+MEDIA_WORDS = ('図を示す', '写真を示す', '別冊', '画像を示す', 'グラフを示す', '表を示す')
 
 
 def fetch_pdf(url: str, path: Path):
@@ -39,7 +41,6 @@ def find_question_starts(lines):
             continue
         n = int(m.group(1))
         if n == expected and n <= 120:
-            # Exclude instruction-list numbering such as "1 試験問題の数は...".
             tail = m.group(2)
             if expected == 1 and ('試験問題の数' in tail or '解答方法' in tail):
                 continue
@@ -63,9 +64,16 @@ def parse_question_block(block, n):
             continue
         cleaned.append(line)
     if not cleaned:
-        return {'stem':'', 'choices':[]}
-    # Remove leading question number from first line.
+        return {'stem':'', 'choices':[], 'numericPrompt':False}
+
     cleaned[0] = re.sub(r'^\s*'+str(n)+r'\s+', '', cleaned[0], count=1)
+    numeric_prompt = any(NUMERIC_PROMPT.search(line) for line in cleaned)
+    if numeric_prompt:
+        cut = next((i for i,line in enumerate(cleaned) if NUMERIC_PROMPT.search(line)), len(cleaned))
+        stem = ' '.join(cleaned[:cut]).strip()
+        stem = re.sub(r'\s+[A-Z]{2,}-\d{2}[^ ]*$', '', stem).strip()
+        return {'stem':stem, 'choices':[], 'numericPrompt':True}
+
     stem_parts, choices, current = [], [], None
     for line in cleaned:
         m = OPT_LINE.match(line)
@@ -80,9 +88,8 @@ def parse_question_block(block, n):
     if current is not None:
         choices.append(current.strip())
     stem = ' '.join(stem_parts).strip()
-    # Remove common printer/page debris.
     stem = re.sub(r'\s+[A-Z]{2,}-\d{2}[^ ]*$', '', stem).strip()
-    return {'stem': stem, 'choices': choices}
+    return {'stem':stem, 'choices':choices, 'numericPrompt':False}
 
 
 def split_questions(text: str):
@@ -97,34 +104,49 @@ def split_questions(text: str):
 
 
 def parse_answers(text: str, prefix_morning: str, prefix_afternoon: str):
-    compact = text.replace('\u3000',' ')
     answers = {'AM':{}, 'PM':{}}
-    # Match all cells such as A001 2 / B031 1 / AM1 3 / PM80 2.
-    prefixes = [(prefix_morning,'AM'), (prefix_afternoon,'PM')]
-    for prefix, session in prefixes:
-        pattern = re.compile(r'(?<![A-Z])'+re.escape(prefix)+r'\s*0*(\d{1,3})\s+([0-9]{1,5})(?!\d)')
-        for m in pattern.finditer(compact):
-            n = int(m.group(1))
-            if 1 <= n <= 120:
-                answers[session][n] = m.group(2)
+    prefix_to_session = {prefix_morning:'AM', prefix_afternoon:'PM'}
+    prefixes = sorted(prefix_to_session, key=len, reverse=True)
+    code_re = re.compile(r'(?<![A-Z])(' + '|'.join(re.escape(x) for x in prefixes) + r')\s*0*(\d{1,3})(?!\d)')
+
+    for raw in text.splitlines():
+        line = clean_line(raw)
+        matches = list(code_re.finditer(line))
+        for i, m in enumerate(matches):
+            prefix, n = m.group(1), int(m.group(2))
+            if not (1 <= n <= 120):
+                continue
+            end = matches[i+1].start() if i+1 < len(matches) else len(line)
+            segment = line[m.end():end]
+            tokens = re.findall(r'(?<!\d)(\d{1,5})(?!\d)', segment)[:3]
+            answers[prefix_to_session[prefix]][n] = tokens
+
     for session in ('AM','PM'):
         if len(answers[session]) != 120:
-            missing=[n for n in range(1,121) if n not in answers[session]]
-            raise RuntimeError(f'answer parse failed {session}: {len(answers[session])}, missing={missing[:20]}')
+            missing = [n for n in range(1,121) if n not in answers[session]]
+            raise RuntimeError(f'answer row parse failed {session}: {len(answers[session])}, missing={missing[:20]}')
     return answers
 
 
-def answer_value(token: str, stem: str):
-    if '2つ選べ' in stem or '二つ選べ' in stem:
+def decode_choice_token(token: str):
+    if len(token) == 1 and token in '12345':
+        return int(token) - 1
+    if token and all(c in '12345' for c in token):
         return [int(c)-1 for c in token]
-    if '解答：' in stem or '解答:' in stem:
-        return int(token)
-    if len(token) == 1:
-        return int(token)-1
-    # Some table cells concatenate two correct choice numbers.
-    if all(c in '12345' for c in token):
-        return [int(c)-1 for c in token]
-    return token
+    raise RuntimeError(f'unexpected choice answer token: {token}')
+
+
+def decode_answer(tokens, choices, numeric_prompt):
+    if not tokens:
+        return None, ('numeric' if numeric_prompt else 'singleChoice'), []
+    if numeric_prompt:
+        values = [int(t) for t in tokens]
+        return values[0], 'numeric', values
+
+    accepted = [decode_choice_token(t) for t in tokens]
+    primary = accepted[0]
+    answer_type = 'multiChoice' if isinstance(primary, list) else 'singleChoice'
+    return primary, answer_type, accepted
 
 
 def category(n: int):
@@ -133,17 +155,28 @@ def category(n: int):
     return '状況設定'
 
 
+def scoring_exception(src, session, n):
+    for row in src.get('scoringExceptions', []):
+        if row.get('session') == session and int(row.get('questionNo', -1)) == n:
+            return row
+    return None
+
+
 def build_set(src, am_q, pm_q, answers):
     items=[]
     for session, qmap, pdf_url in [('AM',am_q,src['morningPdf']),('PM',pm_q,src['afternoonPdf'])]:
         for n in range(1,121):
             q=qmap[n]
-            token=answers[session][n]
+            tokens=answers[session][n]
             stem=q['stem']
             choices=q['choices']
-            ans=answer_value(token,stem)
-            requires_media=(len(choices)<4 or '図を示す' in stem or '写真を示す' in stem or '別冊' in stem)
-            answer_type='multiChoice' if isinstance(ans,list) else ('numeric' if isinstance(ans,int) and not choices else 'singleChoice')
+            ans, answer_type, accepted = decode_answer(tokens, choices, q.get('numericPrompt', False))
+            exception = scoring_exception(src, session, n)
+            scoring_status = exception.get('mode') if exception else ('excluded' if not tokens else 'normal')
+            requires_media = any(word in stem for word in MEDIA_WORDS) or (not q.get('numericPrompt') and not choices)
+            refs=[src['landingUrl'], pdf_url, src['answerPdf']]
+            if src.get('resultUrl'): refs.append(src['resultUrl'])
+            if exception and exception.get('noticeUrl'): refs.append(exception['noticeUrl'])
             item={
                 'id':f"K{src['exam']}-{session}{n:03d}",
                 'sourceExam':src['exam'],
@@ -156,15 +189,18 @@ def build_set(src, am_q, pm_q, answers):
                 'question':stem,
                 'choices':choices,
                 'answer':ans,
+                'officialAcceptedAnswers':accepted,
+                'officialScoringStatus':scoring_status,
+                'scoringException':exception,
                 'point':None,
                 'detail':None,
                 'requiresMedia':requires_media,
                 'mediaAuditStatus':'pending' if requires_media else 'not_required',
                 'rightsStatus':'mhlw-pdl1.0-text; media-pending' if requires_media else 'mhlw-pdl1.0-text',
                 'reviewStatus':'official_import_pending_explanation_and_classification',
-                'sourceRefs':[src['landingUrl'],pdf_url,src['answerPdf']],
+                'sourceRefs':refs,
                 'sourceAttribution':f"出典：厚生労働省『第{src['exam']}回看護師国家試験』を学習用データとして加工",
-                'sourceAnswerToken':token
+                'sourceAnswerTokens':tokens
             }
             items.append(item)
     return items
@@ -185,16 +221,24 @@ def main():
             ans=parse_answers(files['ans'],src['answerPrefixMorning'],src['answerPrefixAfternoon'])
             items=build_set(src,am,pm,ans)
             out={
-                'schemaVersion':1,
+                'schemaVersion':2,
                 'setId':src['id'],
                 'sourceExam':src['exam'],
                 'questionCount':len(items),
                 'releaseStatus':'raw_import_only',
-                'note':'公式本文・正答の機械取込。解説、11科目分類、図版権利監査、専門監査が完了するまで本番解放禁止。',
+                'note':'公式本文・正答の機械取込。解説、11科目分類、図版権利監査、専門監査が完了するまで本番解放禁止。採点除外・複数正答等はofficialScoringStatusに保持する。',
                 'questions':items
             }
             (OUT/f"{src['id']}-raw.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
-            summary.append({'set':src['id'],'exam':src['exam'],'count':len(items),'mediaPending':sum(1 for x in items if x['requiresMedia'])})
+            summary.append({
+                'set':src['id'],
+                'exam':src['exam'],
+                'count':len(items),
+                'mediaPending':sum(1 for x in items if x['requiresMedia']),
+                'numeric':sum(1 for x in items if x['answerType']=='numeric'),
+                'multiChoice':sum(1 for x in items if x['answerType']=='multiChoice'),
+                'scoringExceptions':sum(1 for x in items if x['officialScoringStatus']!='normal')
+            })
     (OUT/'import-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(summary,ensure_ascii=False))
 
