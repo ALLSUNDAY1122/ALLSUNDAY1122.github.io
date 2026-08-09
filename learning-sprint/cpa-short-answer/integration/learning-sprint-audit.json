@@ -4,5 +4,10 @@
   "rounds":3,
   "subjects":{"企業法":20,"管理会計論":18,"監査論":20,"財務会計論":35},
   "similarity_threshold":0.90,
+  "official_repeat_policy":{
+    "allow_exact_official_repeats":true,
+    "allow_high_similarity_official":true,
+    "normal_learning_canonicalize_exact":true
+  },
   "required_fields":["id","round","subject","topic","question","choices","correct_index","explanation","primary_basis","source_url","basis_date","origin_type","rights_basis"]
 }
