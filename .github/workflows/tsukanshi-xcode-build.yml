@@ -41,22 +41,22 @@ jobs:
 
       - name: Generate Xcode project
         working-directory: tsukanshi-sprint/ios
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          python3 apply-xcode-capabilities.py TsukanshiSprint.xcodeproj/project.pbxproj
 
       - name: Verify In-App Purchase capability in generated project
         run: |
           PBX=tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj/project.pbxproj
-          echo '--- generated TargetAttributes/SystemCapabilities ---'
-          grep -n -A12 -B4 -E 'TargetAttributes|SystemCapabilities|InAppPurchase' "$PBX" || true
           python3 - "$PBX" <<'PY'
           import re,sys
           text=open(sys.argv[1],encoding='utf-8').read()
           assert 'SystemCapabilities' in text, 'SystemCapabilities missing from generated project'
-          assert 'com.apple.InAppPurchase' in text, 'In-App Purchase capability missing from generated project'
           m=re.search(r'com\.apple\.InAppPurchase\s*=\s*\{(.*?)\};', text, re.S)
           assert m, 'In-App Purchase capability block missing'
-          assert re.search(r'enabled\s*=\s*(?:1|true)\s*;',m.group(1),re.I), 'In-App Purchase capability is not enabled'
-          print('PASS: generated Xcode project has enabled In-App Purchase capability')
+          assert re.search(r'enabled\s*=\s*1\s*;',m.group(1)), 'In-App Purchase capability is not enabled'
+          assert 'SystemCapabilities = "' not in text, 'malformed quoted SystemCapabilities remains'
+          print('PASS: generated Xcode project has normalized In-App Purchase capability')
           PY
 
       - name: Build Release for iPhone Simulator
