@@ -21,7 +21,8 @@
     "requireExplanationEvidenceForAllThree": true,
     "requireEvidenceCheckedDateForAllThree": true,
     "separateMediaScoringConcernExpertQueues": true,
-    "rawDataIsNotTrustedWithoutScenarioAudit": true
+    "rawDataIsNotTrustedWithoutScenarioAudit": true,
+    "scenarioAuditMayRecombineSplitBatchStorage": true
   },
   "protectedAreas": [
     "必修問題",
@@ -31,44 +32,65 @@
     "StoreKit"
   ],
   "baseline": {
-    "checkedAt": "2026-08-09T22:26:00+09:00",
+    "checkedAt": "2026-08-10T04:43:00+09:00",
     "rawAndL2StructurePassScenarios": 60,
     "l3AppliedSituationQuestions": 27,
-    "l3ContentCompleteScenarios": 9,
-    "strictThreeQuestionBatchPassScenarios": 8,
+    "l3AuthoredSituationQuestions": 30,
+    "l3AppliedSituationScenarios": 9,
+    "scenarioContentAuditPassScenarios": 10,
     "expertReviewedScenarios": 0,
     "finalPassScenarios": 0,
-    "contentPendingScenarios": 51,
-    "globalL3ExplainedQuestions": 102,
+    "contentPendingScenarios": 50,
+    "expertReviewQueueItems": 2,
+    "globalL3ExplainedQuestionsLastObserved": 102,
     "globalL3TotalQuestions": 720,
-    "globalL3Status": "fail"
+    "globalL3StatusLastObserved": "fail"
   },
-  "strictGroupPassScenarioIds": [
+  "scenarioContentAuditPassScenarioIds": [
     "K115-AM-SC01",
     "K115-AM-SC02",
     "K115-AM-SC03",
     "K115-AM-SC04",
+    "K115-AM-SC05",
+    "K115-AM-SC06",
+    "K115-AM-SC07",
+    "K115-AM-SC08",
+    "K115-AM-SC09",
+    "K115-AM-SC10"
+  ],
+  "strictSingleBatchScenarioIds": [
+    "K115-AM-SC01",
+    "K115-AM-SC02",
+    "K115-AM-SC03",
+    "K115-AM-SC04",
+    "K115-AM-SC05",
     "K115-AM-SC06",
     "K115-AM-SC07",
     "K115-AM-SC09",
     "K115-AM-SC10"
   ],
-  "needsRegroup": [
+  "splitBatchScenarioIds": [
     {
       "scenarioId": "K115-AM-SC08",
       "questionIds": ["K115-AM112", "K115-AM113", "K115-AM114"],
-      "reason": "All three questions have L3 content, but the current explanation batches are split 2+1 despite scenario-group reviewType. Re-audit as one three-question scenario before PASS."
+      "blocking": false,
+      "reason": "保存バッチは2+1だが、現行draftの同一scenarioId 3問を同時に再統合監査し、症例本文・患者・時間経過・正答・解説・根拠の整合を確認済み。"
     }
   ],
   "cursor": {
     "scenarioId": "K115-AM-SC05",
     "questionIds": ["K115-AM103", "K115-AM104", "K115-AM105"],
-    "state": "l3_content_pending",
-    "note": "Continue from this scenario unless a newer main snapshot invalidates the cursor."
+    "state": "expert_review_required",
+    "blockingQuestionId": "K115-AM103",
+    "blockingReason": "公式正答は中発作で維持するが、SpO2 93%と『途切れ途切れに話す』所見を併記した解説表現について小児喘息専門監査を要する。",
+    "nextContentScenarioAfterClearance": {
+      "scenarioId": "K115-PM-SC01",
+      "questionIds": ["K115-PM091", "K115-PM092", "K115-PM093"]
+    }
   },
   "knownHistoricalFailureModes": [
     "next scenario stem leaking into previous question choices during PDF extraction",
     "family member wording such as 男児 being misread as the patient identity during classification"
   ],
-  "status": "in_progress"
+  "status": "current_scenario_content_pass_waiting_expert_review"
 }
