@@ -14,6 +14,7 @@ STAGES=[
  ('validate','validate_classification.py'),
  ('semantic-audit','audit_classification_semantics.py'),
  ('situation-summary','summarize_situation_groups.py'),
+ ('situation-semantic-audit','audit_situation_group_semantics.py'),
 ]
 results=[]
 for name,file in STAGES:
