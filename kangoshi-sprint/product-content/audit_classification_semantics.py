@@ -20,9 +20,6 @@ STEM_EXPECT=[
 ]
 SCEN_EXPECT=[
  (r'妊娠|妊婦|分娩|産褥|胎児|新生児', {'母性看護学'}, 'maternal-scenario'),
- # Family histories in adult/maternal cases frequently contain 男児/女児.
- # They must not be used to infer that the patient is pediatric. Restrict this
- # expectation to child naming/development terms that describe the case patient.
  (r'A\s*ちゃん|A\s*君|A\s*くん|乳児|幼児|学童|小児|二分脊椎', {'小児看護学'}, 'pediatric-scenario'),
  (r'統合失調|神経性過食|境界性パーソナリティ|うつ病|双極|精神科', {'精神看護学'}, 'mental-scenario'),
  (r'震度\s*[5-7]|大地震|発災直後', {'看護の統合と実践'}, 'disaster-scenario'),
@@ -39,12 +36,25 @@ for sid in ('set1','set2','set3'):
         total+=1; qid=q.get('id','?'); major=q.get('majorSubject'); stem=str(q.get('question') or ''); scen=str(q.get('scenario') or '')
         category=q.get('category')
         majors[major]+=1; set_counts[major]+=1
+
+        scenario_allowed=set(); scenario_labels=[]
+        if category=='状況設定' and scen:
+            for pattern,allowed,label in SCEN_EXPECT:
+                if re.search(pattern,scen,re.I):
+                    scenario_allowed |= allowed; scenario_labels.append(label)
+
         stem_matches=[]
         for pattern,allowed,label in STEM_EXPECT:
-            if category=='状況設定' and label=='basic-skill-explicit':
+            if category=='状況設定' and label in {'basic-skill-explicit','community-explicit'}:
+                # In a case question these words frequently describe the setting or
+                # one nursing technique, while the primary study domain remains the
+                # patient's pediatric/maternal/mental/adult specialty.
+                if re.search(pattern,stem,re.I):
+                    warnings.append(f'{qid}: contextual stem domain {label}; assigned {major}')
                 continue
             if re.search(pattern,stem,re.I):
                 stem_matches.append((allowed,label))
+
         if stem_matches:
             union=set().union(*(x[0] for x in stem_matches))
             labels=[x[1] for x in stem_matches]
@@ -52,6 +62,7 @@ for sid in ('set1','set2','set3'):
                 errors.append(f'{qid}: stem semantic domains {labels} allow {sorted(union)}, got {major}')
             if len(union)>1:
                 warnings.append(f'{qid}: multi-domain stem {labels}; assigned {major} requires contextual review')
+
         if category=='状況設定' and scen:
             for pattern,allowed,label in SCEN_EXPECT:
                 if re.search(pattern,scen,re.I) and major not in allowed:
@@ -60,6 +71,7 @@ for sid in ('set1','set2','set3'):
                         errors.append(f'{qid}: {label} expects {sorted(allowed)}, got {major}')
             if q.get('scenarioId'):
                 scenario_groups[q['scenarioId']].append((qid,major,q.get('subject')))
+
     per_set[sid]=dict(set_counts)
     missing=[m for m in ['人体の構造と機能','疾病の成り立ちと回復の促進','健康支援と社会保障制度','基礎看護学','地域・在宅看護論','成人看護学','老年看護学','小児看護学','母性看護学','精神看護学','看護の統合と実践'] if set_counts[m]==0]
     if missing: warnings.append(f'{sid}: no questions classified to {missing}')
@@ -78,7 +90,7 @@ report={
  'total':total,'majorCounts':dict(majors),'perSetMajorCounts':per_set,
  'strongSemanticErrors':errors,'splitScenarioGroups':split_groups,'warnings':warnings,
  'pass':not errors,
- 'note':'独立ルールによる分類整合監査。小児判定では家族欄の男児・女児を患者本人と誤認しない。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。'
+ 'note':'独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、患者ライフステージ・主病態を優先する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。'
 }
 (OUT/'semantic-consistency-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'total':total,'errorCount':len(errors),'splitScenarioGroups':len(split_groups),'warningCount':len(warnings),'pass':not errors},ensure_ascii=False))
