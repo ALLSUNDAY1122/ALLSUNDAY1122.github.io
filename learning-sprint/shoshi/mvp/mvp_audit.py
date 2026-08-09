@@ -46,6 +46,8 @@ def static_audit() -> dict:
         fail('daily goal or weak-release logic missing')
     if 'official_answer_no' not in js or "scoring_status === 'all_correct'" not in js:
         fail('official answer/all-correct handling missing')
+    if 'exportData' not in js or 'importData' not in js:
+        fail('JSON import/export implementation missing')
 
     return {
         'questions': 210,
@@ -53,7 +55,26 @@ def static_audit() -> dict:
         'r7pm33': 'all_correct',
         'nav_tabs': 4,
         'pwa': True,
+        'json_import_export': True,
     }
+
+
+def wait_sw_ready(driver, timeout=15) -> bool:
+    driver.set_script_timeout(timeout)
+    return bool(driver.execute_async_script("""
+        const done = arguments[arguments.length - 1];
+        if (!('serviceWorker' in navigator)) { done(false); return; }
+        navigator.serviceWorker.ready.then(async () => {
+          const keys = await caches.keys();
+          const hits = [];
+          for (const key of keys) {
+            const cache = await caches.open(key);
+            const requests = await cache.keys();
+            hits.push(...requests.map(r => r.url));
+          }
+          done(hits.some(u => u.endsWith('/questions.generated.json')) && hits.some(u => u.includes('/shoshi/mvp/')));
+        }).catch(() => done(false));
+    """))
 
 
 def browser_audit() -> dict:
@@ -70,6 +91,7 @@ def browser_audit() -> dict:
         stderr=subprocess.DEVNULL,
     )
     driver = None
+    network_offline = False
     try:
         time.sleep(1)
         opts = Options()
@@ -92,6 +114,10 @@ def browser_audit() -> dict:
         if shell_width > 520.5:
             fail(f'browser: shell width {shell_width} > 520')
 
+        audit_dir = MVP / 'audit'
+        audit_dir.mkdir(exist_ok=True)
+        driver.save_screenshot(str(audit_dir / 'home-mobile.png'))
+
         driver.find_element(By.ID, 'startDaily').click()
         wait.until(EC.visibility_of_element_located((By.ID, 'questionText')))
         if 'hidden' not in driver.find_element(By.ID, 'bottomNav').get_attribute('class'):
@@ -105,6 +131,7 @@ def browser_audit() -> dict:
         wait.until(EC.visibility_of_element_located((By.ID, 'feedbackCard')))
         if driver.find_element(By.ID, 'gradingMark').text not in ('○', '×'):
             fail('browser: grading mark missing')
+        driver.save_screenshot(str(audit_dir / 'quiz-feedback-mobile.png'))
         driver.find_element(By.ID, 'headerHome').click()
         wait.until(EC.visibility_of_element_located((By.ID, 'homeView')))
 
@@ -112,29 +139,65 @@ def browser_audit() -> dict:
         wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, '.mock-card')) == 6)
         driver.find_element(By.CSS_SELECTOR, '[data-nav="record"]').click()
         wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, '.heat-cell')) == 35)
+        driver.save_screenshot(str(audit_dir / 'record-mobile.png'))
         driver.find_element(By.CSS_SELECTOR, '[data-nav="settings"]').click()
         wait.until(EC.visibility_of_element_located((By.ID, 'settingsView')))
         if len(driver.find_elements(By.CSS_SELECTOR, '[data-font]')) != 3:
             fail('browser: font controls != 3')
         if len(driver.find_elements(By.CSS_SELECTOR, '[data-goal]')) != 3:
             fail('browser: goal controls != 3')
+        driver.save_screenshot(str(audit_dir / 'settings-mobile.png'))
 
         min_bottom_h = min(driver.execute_script('return arguments[0].getBoundingClientRect().height', b) for b in driver.find_elements(By.CSS_SELECTOR, '#bottomNav button'))
         if min_bottom_h < 44:
             fail(f'browser: bottom nav touch target {min_bottom_h}px < 44px')
 
+        # JSON import: use the real file-input event path and verify the state was applied.
+        import_file = pathlib.Path('/tmp/shoshi-import-audit.json')
+        import_file.write_text(json.dumps({'state': {
+            'version': 1, 'attempts': {}, 'studyDays': {}, 'dailyGoal': 4,
+            'fontSize': 'large', 'examDate': '', 'activeYear': 2025
+        }}, ensure_ascii=False), encoding='utf-8')
+        driver.find_element(By.ID, 'importData').send_keys(str(import_file))
+        wait.until(lambda d: 'active' in d.find_element(By.CSS_SELECTOR, '[data-goal="4"]').get_attribute('class'))
+        if driver.execute_script("return getComputedStyle(document.documentElement).getPropertyValue('--font-scale').trim()") != '1.12':
+            fail('browser: imported fontSize was not applied')
+
+        # Restore clean state before offline reload.
+        driver.execute_script("localStorage.clear()")
+        driver.get(url)
+        wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, '.subject-card')) == 11)
+
+        sw_cached = wait_sw_ready(driver)
+        if not sw_cached:
+            fail('browser: service worker cache not ready')
+
+        # Functional offline test: disable network at CDP level, reload, and require
+        # the full 11-subject home UI to be rebuilt from Service Worker cache.
+        driver.execute_cdp_cmd('Network.enable', {})
+        driver.execute_cdp_cmd('Network.emulateNetworkConditions', {
+            'offline': True, 'latency': 0, 'downloadThroughput': 0, 'uploadThroughput': 0,
+            'connectionType': 'none'
+        })
+        network_offline = True
+        driver.refresh()
+        wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, '.subject-card')) == 11)
+        offline_status = driver.find_element(By.ID, 'offlineStatus').text
+        if 'オフライン' not in offline_status:
+            fail('browser: offline state not shown after forced offline reload')
+        offline_load = True
+
+        driver.execute_cdp_cmd('Network.emulateNetworkConditions', {
+            'offline': False, 'latency': 0, 'downloadThroughput': -1, 'uploadThroughput': -1,
+            'connectionType': 'wifi'
+        })
+        network_offline = False
+
         severe = [x for x in driver.get_log('browser') if x.get('level') == 'SEVERE']
-        ignored_noise = [x for x in severe if '/favicon.ico' in x.get('message','') and '404' in x.get('message','')]
-        app_errors = [x for x in severe if x not in ignored_noise]
+        # Chrome can emit net::ERR_INTERNET_DISCONNECTED during the intentional offline phase.
+        app_errors = [x for x in severe if 'ERR_INTERNET_DISCONNECTED' not in x.get('message','')]
         if app_errors:
             fail('browser application console errors: ' + '; '.join(x.get('message','') for x in app_errors[:3]))
-
-        (MVP / 'audit').mkdir(exist_ok=True)
-        driver.set_window_size(390, 844)
-        driver.save_screenshot(str(MVP / 'audit' / 'settings-mobile.png'))
-        driver.find_element(By.CSS_SELECTOR, '[data-nav="home"]').click()
-        wait.until(EC.visibility_of_element_located((By.ID, 'homeView')))
-        driver.save_screenshot(str(MVP / 'audit' / 'home-mobile.png'))
 
         return {
             'viewport': '390x844',
@@ -142,12 +205,20 @@ def browser_audit() -> dict:
             'mock_cards': 6,
             'heatmap_cells': 35,
             'application_console_errors': len(app_errors),
-            'ignored_browser_noise': len(ignored_noise),
             'horizontal_overflow': False,
             'min_bottom_touch_target': min_bottom_h,
+            'json_import': True,
+            'service_worker_cache_ready': sw_cached,
+            'offline_reload': offline_load,
         }
     finally:
         if driver:
+            if network_offline:
+                with suppress(Exception):
+                    driver.execute_cdp_cmd('Network.emulateNetworkConditions', {
+                        'offline': False, 'latency': 0, 'downloadThroughput': -1, 'uploadThroughput': -1,
+                        'connectionType': 'wifi'
+                    })
             with suppress(Exception):
                 driver.quit()
         server.terminate()
