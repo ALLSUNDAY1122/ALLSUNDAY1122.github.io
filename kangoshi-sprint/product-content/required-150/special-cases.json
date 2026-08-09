@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "scope": "K115/K114/K113 必修 150問専用",
+  "checkedDate": "2026-08-09",
+  "releasePolicy": "未解決のmedia/expert-review/scoring-specialは製品版解放対象から分離する。公式正答・公式採点取扱いは改変しない。",
+  "totals": {
+    "requiredQuestions": 150,
+    "mediaDependent": 8,
+    "scoringSpecial": 6,
+    "expertReview": 2
+  },
+  "mediaDependent": [
+    {"id":"K115-AM013","reason":"腹部図が正答判定に必要","status":"quarantined_media"},
+    {"id":"K115-AM016","reason":"腰椎穿刺体位の図が正答判定に必要","status":"quarantined_media"},
+    {"id":"K115-AM022","reason":"酸素投与器具の図が正答判定に必要","status":"quarantined_media"},
+    {"id":"K115-PM020","reason":"呼吸パターン図が正答判定に必要","status":"quarantined_media"},
+    {"id":"K114-AM013","reason":"心電図波形の別冊図が正答判定に必要","status":"quarantined_media"},
+    {"id":"K114-PM019","reason":"ポジショニング図のA位置が正答判定に必要","status":"quarantined_media"},
+    {"id":"K113-AM023","reason":"トリアージタッグの別冊図が正答判定に必要","status":"quarantined_media_scoring_special"},
+    {"id":"K113-PM021","reason":"ストレッチャーの角の曲がり方の図が必要。公式に採点除外。","status":"quarantined_media_scoring_excluded"}
+  ],
+  "scoringSpecial": [
+    {"id":"K113-AM005","officialMode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","status":"preserve_official_scoring"},
+    {"id":"K113-AM023","officialMode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","status":"preserve_official_scoring"},
+    {"id":"K113-AM025","officialMode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","status":"preserve_official_scoring"},
+    {"id":"K113-PM002","officialMode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","status":"preserve_official_scoring_historical_reference"},
+    {"id":"K113-PM011","officialMode":"include_if_correct_exclude_if_wrong","reason":"問題として適切だが必修問題として妥当でない","status":"preserve_official_scoring"},
+    {"id":"K113-PM021","officialMode":"excluded","reason":"設問が不十分で正解が得られないため採点対象から除外","status":"preserve_official_scoring_excluded"}
+  ],
+  "expertReview": [
+    {
+      "id":"K115-PM025",
+      "issue":"official-priority-answer-vs-current-seizure-first-aid-sequence",
+      "officialAnswerPreserved":true,
+      "status":"expert_review_required",
+      "note":"既存content-concerns.jsonの専門監査を継承。"
+    },
+    {
+      "id":"K113-PM025",
+      "issue":"glaucoma-wording-vs-current-atropine-label",
+      "officialAnswerPreserved":true,
+      "status":"expert_review_required",
+      "note":"公式正答はアトロピン。現行PMDA添付文書では閉塞隅角緑内障が禁忌、開放隅角緑内障は注意対象であり、設問の『緑内障』一般化は現行知識注記が必要。",
+      "evidenceRefs":[
+        "https://www.pmda.go.jp/PmdaSearch/iyakuDetail/670156_1242405A1070_1_06",
+        "https://www.mhlw.go.jp/general/sikaku/successlist/2024/siken03_04_05/about.html"
+      ]
+    }
+  ],
+  "historicalCurrentVersionNotes": [
+    {
+      "id":"K113-PM002",
+      "historicalBasis":"日本人の食事摂取基準（2020年版）",
+      "currentBasis":"日本人の食事摂取基準（2025年版、令和7年度〜令和11年度）",
+      "status":"historical_question_keep_official_answer_add_current-version-note",
+      "evidenceRefs":[
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/syokuji_kijyun.html",
+        "https://www.mhlw.go.jp/web/t_doc?dataId=78ab4652&dataType=0"
+      ]
+    }
+  ]
+}
