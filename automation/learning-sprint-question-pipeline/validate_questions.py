@@ -37,13 +37,30 @@ def validate_answer_v2(q, label, errors):
     if accepted is None:
         accepted = q.get("officialAcceptedAnswers")
 
-    allowed_status = {"normal", "excluded", "include_if_correct_exclude_if_wrong", "multiple_accepted"}
+    allowed_status = {
+        "normal",
+        "excluded",
+        "all_correct",
+        "include_if_correct_exclude_if_wrong",
+        "multiple_accepted",
+    }
     if scoring_status not in allowed_status:
         fail(errors, f"{label}: scoring_status不正 {scoring_status}")
 
     if scoring_status == "excluded":
         if answer is not None:
             fail(errors, f"{label}: excluded問題にanswerが設定されている")
+        return
+
+    # 公式採点で全員正解となった問題は、正解肢を捏造せず answer=None のまま保持する。
+    # 問題自体は表示できるよう、選択式の問題形式と選択肢の存在だけを検証する。
+    if scoring_status == "all_correct":
+        if answer is not None:
+            fail(errors, f"{label}: all_correct問題にanswerが設定されている")
+        if answer_type not in {"singleChoice", "multiChoice"}:
+            fail(errors, f"{label}: all_correct answer_type不正 {answer_type}")
+        if not isinstance(choices, list) or len(choices) < 2:
+            fail(errors, f"{label}: all_correct choices不正")
         return
 
     if answer_type == "numeric":
