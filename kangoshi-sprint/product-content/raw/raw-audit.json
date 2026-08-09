@@ -1,5 +1,7 @@
 {
-  "structuralErrors": [],
+  "structuralErrors": [
+    "K114-AM041: non-media singleChoice has too few choices (0)"
+  ],
   "sets": [
     {
       "set": "set1",
@@ -11,6 +13,9 @@
       },
       "mediaPending": 7,
       "emptyStem": 0,
+      "shortStem": 0,
+      "malformedStem": 0,
+      "choiceShapeErrors": 0,
       "missingAnswersAllowedExcluded": 1,
       "numeric": 1,
       "multipleAccepted": 1,
@@ -26,6 +31,9 @@
       },
       "mediaPending": 10,
       "emptyStem": 0,
+      "shortStem": 0,
+      "malformedStem": 0,
+      "choiceShapeErrors": 1,
       "missingAnswersAllowedExcluded": 0,
       "numeric": 1,
       "multipleAccepted": 0,
@@ -41,6 +49,9 @@
       },
       "mediaPending": 11,
       "emptyStem": 0,
+      "shortStem": 0,
+      "malformedStem": 0,
+      "choiceShapeErrors": 0,
       "missingAnswersAllowedExcluded": 1,
       "numeric": 2,
       "multipleAccepted": 0,
@@ -49,5 +60,5 @@
   ],
   "exactDuplicateStemsAcrossSets": [],
   "releaseAllowed": false,
-  "note": "raw取込監査。採点除外・複数正解は公式例外として保持する。重複は最終720問化の前に出題実績と水増しを区別して判断する。"
+  "note": "raw取込監査。数字だけ・短すぎる設問、前付け混入、選択肢構造不良もFAILにする。採点除外・複数正解は公式例外として保持する。"
 }
