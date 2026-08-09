@@ -13,6 +13,7 @@ SECTION_MARKER_RE = re.compile(
 )
 PDF_TAIL_RE = re.compile(r"(?:受験地|受験番号|十の位|一の位)")
 DANGLING_PREAMBLE_RE = re.compile(r"(?:また[、,]|なお[、,]|及び|又は)\s*$")
+BOOKLET_INSTRUCTION_RE = re.compile(r"(?:答案用紙|試験時間|試験問題のホチキス|注\s*意)")
 
 
 def split_trailing_preamble(text: str) -> tuple[str, str]:
@@ -35,14 +36,28 @@ def split_trailing_preamble(text: str) -> tuple[str, str]:
     return text.strip(), ""
 
 
-def promote_false_heading_prefix(q: dict) -> dict | None:
-    """Repair PDF text where '第N問から第M問…' was mistaken for QN heading.
+def strip_booklet_instructions(q: dict) -> dict | None:
+    if q.get("session") != "PM" or q.get("source_question_no") != 1:
+        return None
+    text = q.get("question", "")
+    own = re.compile(r"第\s*1\s*問")
+    matches = list(own.finditer(text))
+    if not matches:
+        return None
+    # Use the last early Q1 heading; any preceding exam administration text is not a question.
+    candidates = [m for m in matches if m.start() < 5000]
+    if not candidates:
+        return None
+    m = candidates[-1]
+    prefix = text[:m.start()].strip()
+    body = text[m.end():].strip()
+    if not prefix or not BOOKLET_INSTRUCTION_RE.search(prefix) or len(body) < 40:
+        return None
+    q["question"] = body
+    return {"id": q["id"], "discarded_chars": len(prefix), "marker": "booklet_instructions"}
 
-    The base splitter can choose the first occurrence of '第N問'. In section-level
-    instructions that occurrence can be part of '第N問から第M問まで…', while the
-    real question heading appears later. Move the instruction prefix into
-    section_preamble and keep only the real problem body as question text.
-    """
+
+def promote_false_heading_prefix(q: dict) -> dict | None:
     qn = int(q.get("source_question_no") or 0)
     text = q.get("question", "")
     own = re.compile(fr"第\s*{qn}\s*問")
@@ -50,8 +65,6 @@ def promote_false_heading_prefix(q: dict) -> dict | None:
     if not matches:
         return None
 
-    # A genuine second own heading near the beginning is the reliable signal.
-    # The prefix must also look like section instructions rather than problem prose.
     m = matches[0]
     if m.start() == 0 and len(matches) > 1:
         m = matches[1]
@@ -102,6 +115,12 @@ def main() -> int:
         else:
             orphan.append({"from": q["id"], "tail": tail[:120]})
 
+    discarded_booklet_instructions = []
+    for q in questions:
+        fixed = strip_booklet_instructions(q)
+        if fixed:
+            discarded_booklet_instructions.append(fixed)
+
     promoted_prefixes = []
     for q in questions:
         fixed = promote_false_heading_prefix(q)
@@ -111,6 +130,7 @@ def main() -> int:
     cross_contamination = []
     suspicious_leading_continuation = []
     dangling_preambles = []
+    booklet_instruction_residue = []
     for q in questions:
         lines = q.get("question", "").splitlines()
         for i, line in enumerate(lines):
@@ -119,18 +139,22 @@ def main() -> int:
                 break
         if re.match(r"^\s*から\s*第?\s*\d+\s*問", q.get("question", "")):
             suspicious_leading_continuation.append(q["id"])
+        if q.get("source_question_no") == 1 and BOOKLET_INSTRUCTION_RE.search(q.get("question", "")[:1200]):
+            booklet_instruction_residue.append(q["id"])
         pre = (q.get("section_preamble") or "").strip()
         if pre and DANGLING_PREAMBLE_RE.search(pre):
             dangling_preambles.append(q["id"])
 
-    report["cycle"] = 11
+    report["cycle"] = 12
     report["cross_question_boundary_audit"] = {
         "moved_section_preambles": moved,
         "promoted_false_heading_prefixes": promoted_prefixes,
         "discarded_pdf_tail_artifacts": discarded_pdf_tail,
+        "discarded_booklet_instructions": discarded_booklet_instructions,
         "orphan_preambles": orphan,
         "remaining_cross_contamination": cross_contamination,
         "suspicious_leading_continuation": suspicious_leading_continuation,
+        "booklet_instruction_residue": booklet_instruction_residue,
         "dangling_preambles": dangling_preambles,
         "question_count": len(questions),
     }
@@ -144,6 +168,8 @@ def main() -> int:
         errors.append(f"cross-question contamination remains: {len(cross_contamination)}")
     if suspicious_leading_continuation:
         errors.append(f"leading continuation remains: {len(suspicious_leading_continuation)}")
+    if booklet_instruction_residue:
+        errors.append(f"booklet instructions remain: {len(booklet_instruction_residue)}")
     if dangling_preambles:
         errors.append(f"dangling section preambles: {len(dangling_preambles)}")
 
@@ -165,13 +191,15 @@ def main() -> int:
     v5.v4.v3.REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(json.dumps({
-        "cycle": 11,
+        "cycle": 12,
         "status": report["status"],
         "moved_preambles": len(moved),
         "promoted_prefixes": len(promoted_prefixes),
         "discarded_pdf_tail_artifacts": len(discarded_pdf_tail),
+        "discarded_booklet_instructions": len(discarded_booklet_instructions),
         "orphan_preambles": len(orphan),
         "remaining_cross_contamination": len(cross_contamination),
+        "booklet_instruction_residue": len(booklet_instruction_residue),
         "dangling_preambles": len(dangling_preambles),
     }, ensure_ascii=False))
     return 0 if report["status"] == "PASS" else 1
