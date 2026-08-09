@@ -33,10 +33,15 @@ jobs:
         run: python learning-sprint/cpa-short-answer/r9-mock/generate_and_audit_r9.py
       - name: Integrate all 279 questions
         run: python learning-sprint/cpa-short-answer/integration/integrate_279.py
-      - name: Run common Learning Sprint anti-padding audit
+      - name: Legacy common detector for diagnostic comparison
+        continue-on-error: true
         run: python automation/learning-sprint-question-pipeline/validate_questions.py learning-sprint/cpa-short-answer/integration/learning-sprint-audit.json
+      - name: CPA-aware anti-padding gate
+        run: python learning-sprint/cpa-short-answer/integration/validate_279_cpa.py
       - name: Show audit summaries
         if: always()
         run: |
           test -f learning-sprint/cpa-short-answer/r9-mock/audit-r9-mock.json && cat learning-sprint/cpa-short-answer/r9-mock/audit-r9-mock.json || true
           test -f learning-sprint/cpa-short-answer/integration/audit-integration-279.json && cat learning-sprint/cpa-short-answer/integration/audit-integration-279.json || true
+          test -f learning-sprint/cpa-short-answer/integration/audit-cpa-aware-279.json && cat learning-sprint/cpa-short-answer/integration/audit-cpa-aware-279.json || true
+          test -f learning-sprint/cpa-short-answer/integration/canonical-map-279.json && cat learning-sprint/cpa-short-answer/integration/canonical-map-279.json || true
