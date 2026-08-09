@@ -1,6 +1,6 @@
 {
-  "cycle": 7,
-  "status": "FAIL",
+  "cycle": 8,
+  "status": "PASS",
   "generated": 210,
   "pdf_sets": 6,
   "media_questions": [],
@@ -204,18 +204,7 @@
     "SHOSHI-R7-PM-34: exact statute token not printed; subject-level primary law URL only",
     "SHOSHI-R7-PM-35: exact statute token not printed; subject-level primary law URL only"
   ],
-  "errors": [
-    "SHOSHI-R5-AM-03: PDF footer remains",
-    "SHOSHI-R5-PM-01: PDF footer remains",
-    "SHOSHI-R6-AM-03: PDF footer remains",
-    "SHOSHI-R6-PM-01: PDF footer remains",
-    "SHOSHI-R6-PM-34: PDF footer remains",
-    "SHOSHI-R7-AM-02: PDF footer remains",
-    "SHOSHI-R7-AM-03: PDF footer remains",
-    "SHOSHI-R7-AM-35: PDF footer remains",
-    "SHOSHI-R7-PM-02: PDF footer remains",
-    "SHOSHI-R7-PM-03: PDF footer remains"
-  ],
+  "errors": [],
   "rules": {
     "question": "MOJ official PDF full question segment, including printed choice mapping",
     "ui_choices": "numeric 1..5 only",
@@ -225,8 +214,12 @@
     "rights": "PDL + PDF marker audit"
   },
   "post_cleanup_audit": {
-    "footer_artifacts": 10,
+    "footer_artifacts": 0,
     "page_span_over_4": 0,
     "question_count": 210
+  },
+  "inline_footer_audit": {
+    "remaining": 0,
+    "ids": []
   }
 }
