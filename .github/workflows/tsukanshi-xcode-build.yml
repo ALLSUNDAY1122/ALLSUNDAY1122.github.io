@@ -3,11 +3,21 @@ name: Tsukanshi Xcode Release Build
 on:
   push:
     paths:
-      - 'tsukanshi-sprint/**'
+      - 'tsukanshi-sprint/*.js'
+      - 'tsukanshi-sprint/*.html'
+      - 'tsukanshi-sprint/*.css'
+      - 'tsukanshi-sprint/manifest.json'
+      - 'tsukanshi-sprint/icon.svg'
+      - 'tsukanshi-sprint/ios/**'
       - '.github/workflows/tsukanshi-xcode-build.yml'
   pull_request:
     paths:
-      - 'tsukanshi-sprint/**'
+      - 'tsukanshi-sprint/*.js'
+      - 'tsukanshi-sprint/*.html'
+      - 'tsukanshi-sprint/*.css'
+      - 'tsukanshi-sprint/manifest.json'
+      - 'tsukanshi-sprint/icon.svg'
+      - 'tsukanshi-sprint/ios/**'
       - '.github/workflows/tsukanshi-xcode-build.yml'
 
 permissions:
