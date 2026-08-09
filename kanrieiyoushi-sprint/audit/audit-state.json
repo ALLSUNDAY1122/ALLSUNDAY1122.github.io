@@ -1,37 +1,13 @@
 {
   "qualification":"管理栄養士国家試験",
-  "updatedAt":"2026-08-09T15:30:00+09:00",
-  "loop":"学びスプリント｜問題生成・監査ループ v1.0",
+  "updatedAt":"2026-08-09T16:55:00+09:00",
   "target":{"rounds":3,"questionsPerRound":200,"total":600},
-  "public":{"version":"v0.5.1","count":200,"status":"PUBLIC_UI_INTEGRATION_PENDING","note":"問題バンク600問は内部監査PASS。Safari公開版はUI/データ統合が完了するまで第1回200問のv0.5.1を維持する。"},
-  "questionBank":{
-    "count":600,
-    "rounds":3,
-    "distributionPerRound":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
-    "structureAudit":"PASS",
-    "contentRightsPolicyAudit":"PASS",
-    "answerPositionBalance":"PASS_40_EACH_POSITION_PER_ROUND",
-    "exactDuplicateQuestionText":0,
-    "highSimilarityAtOrAbove0_90":0,
-    "primarySourcePolicy":"PASS",
-    "keyCalculationAudit":"PASS",
-    "evidence":"audit/round1-2-3-ci-report.json",
-    "workflowRunId":31298950869,
-    "mergedCommit":"24ce822bdbfaa330bdc3e6e289d42e28f9da05e5",
-    "releaseDecision":"APPROVED_FOR_APP_INTEGRATION"
-  },
-  "formalRound1":{"count":200,"status":"PASS_INTERNAL_LOOP"},
-  "formalRound2":{"count":200,"status":"PASS_INTERNAL_LOOP","composition":{"legacyCandidateReaudited":120,"selectedNew":48,"rebalanceNew":32,"reservedNew":32}},
-  "formalRound3":{"count":200,"status":"PASS_INTERNAL_LOOP","topicMap":"audit/round3-topic-map.json","authoringPolicy":"症例・計算・適用判断・複数条件比較を増やし、単純言い換えを避ける"},
-  "failFixHistory":[
-    "第2回配分前提誤りを修正",
-    "第1＋第2回400問の完全一致・高類似を修正",
-    "600問初回の高類似4組を修正",
-    "日本腎臓学会公式CDNの一次資料ホスト判定を修正",
-    "正答位置偏りを各回40/40/40/40/40へ均等化"
-  ],
-  "limitations":["内部品質・権利ポリシー監査であり法律意見ではない","医療専門家によるガイドライン全文査読ではない","制度・ガイドライン・利用条件変更時は再監査する"],
-  "progress":{"authoredAndAudited":600,"publicQuestions":200,"remainingAuthoring":0,"productTarget":600},
-  "loopStatus":"COMPLETE",
-  "nextLoop":"600問問題バンクをSafari/製品UIへ統合し、3回×10分類・完答回数・模試200問・状態移行を実装監査。その後StoreKit 2、iOS化、TestFlightへ進む。"
+  "public":{"version":"v0.6.1","count":600,"status":"UI_INTEGRATION_AUDIT_PASS","note":"600問を第1〜第3回×10分類および200問模試×3回としてSafari/PWAへ統合済み。"},
+  "questionBank":{"count":600,"rounds":3,"distributionPerRound":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},"structureAudit":"PASS","contentRightsPolicyAudit":"PASS","exactDuplicateQuestionText":0,"highSimilarityAtOrAbove0_90":0,"answerPositionBalance":"PASS_40_EACH_POSITION_PER_ROUND","evidence":"audit/round1-2-3-ci-report.json"},
+  "uiIntegration":{"version":"v0.6.1","status":"PASS","workflowRunId":31302221692,"mergedCommit":"5780c4d303271ccdc10248da4d7240b40f508a2e","evidence":"audit/ui600-ci-report.json","features":["第1〜第3回切替","30分野カード自動構成","問題数・解答済・完答回数","200問模試×3回","模試中の正答非表示","苦手3連続正解卒業","履歴・5週間ヒートマップ","旧状態移行","600問データ整合性ロック","PWA全素材キャッシュ","ARIA・44pxタップ領域"]},
+  "harshReview":{"rounds":3,"majorIssuesRemaining":0,"status":"PASS"},
+  "limitations":["Safari/PWA内部監査でありTestFlight実機確認を代替しない","内部権利ポリシー監査であり法律意見ではない","医療専門家による600問全文査読ではない","制度・ガイドライン・利用条件変更時は問題監査を再発火する"],
+  "progress":{"authoredAndAudited":600,"publicQuestions":600,"remainingAuthoring":0,"productTarget":600},
+  "loopStatus":"UI_IMPLEMENTATION_COMPLETE",
+  "nextLoop":"StoreKit 2課金統合＋iOS製品化ループ。購入・復元・失敗時挙動を課金監査し、クラウドビルド後にTestFlight実機確認へ進む。"
 }
