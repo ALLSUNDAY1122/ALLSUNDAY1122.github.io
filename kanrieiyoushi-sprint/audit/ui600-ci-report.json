@@ -1,0 +1,36 @@
+{
+  "qualification":"管理栄養士国家試験",
+  "version":"v0.6.1",
+  "checkedAt":"2026-08-09T16:54:15+09:00",
+  "loop":"実装検証ループ＋UI品質ループ＋辛口レビュー改善ループ",
+  "status":"PASS",
+  "pullRequest":4110,
+  "mergedCommit":"5780c4d303271ccdc10248da4d7240b40f508a2e",
+  "workflowRunId":31302221692,
+  "implementation":{
+    "questionBank":600,
+    "rounds":3,
+    "questionsPerRound":200,
+    "roundSubjectCards":30,
+    "mockExams":3,
+    "stateMigration":"v0.5.x/v0.6.0 -> v0.6.1",
+    "weakClear":"3 consecutive correct",
+    "offline":"service worker precaches all runtime question sources",
+    "uiMaster":"v2.1"
+  },
+  "ci":{
+    "questionStructure600":"PASS",
+    "contentRightsPolicy":"PASS",
+    "liveJavaScriptSyntax":"PASS",
+    "uiIntegrationAcceptance":"PASS",
+    "answerPositionPerRound":[40,40,40,40,40]
+  },
+  "harshReviews":[
+    {"round":1,"fixed":["模試中の苦手卒業トーストによる正答漏洩を防止","試験回切替を44px以上へ修正","合格圏の断定を120点目安へ変更","旧途中状態のmode移行を修正"]},
+    {"round":2,"fixed":["ARIA live/alertを追加","Actions生成ファイルへの実行時依存を除去","監査済み素材から600問を再構成するbootstrapへ変更","PWAへ全問題素材をprecache"]},
+    {"round":3,"fixed":["公開切替をindex.html/sw.jsの最小差分PRへ分離","データ整合性FAIL時に演習をロック","模試途中復帰と3回別完答回数を維持","実稼働app/bootstrap/swをCI構文監査対象へ固定"]}
+  ],
+  "majorIssuesRemaining":0,
+  "limitations":["Safari/PWAの内部実装・静的UI監査でありTestFlight実機確認を代替しない","法的保証または医療専門家による600問全文査読を意味しない"],
+  "nextLoop":"StoreKit 2課金統合とiOS製品化。購入・復元・失敗時挙動を課金監査し、クラウドビルド→TestFlight実機確認へ進む。"
+}
