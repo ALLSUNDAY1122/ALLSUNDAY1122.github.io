@@ -5,6 +5,8 @@ This script is intentionally source-only: it does not generate answers or explan
 It downloads the official PDFs, extracts their text layer with PyMuPDF, splits only
 within the expected question-number range for each PDF, and writes one JSON record
 per official question. The generated files are audit inputs, not release-ready data.
+
+Loop trigger: v1.0.1 (2026-08-09) — explicit push trigger for the source-extraction CI.
 """
 from __future__ import annotations
 
@@ -74,22 +76,18 @@ def normalize_source_text(text: str) -> str:
 
 
 def question_markers(text: str, start: int, end: int):
-    # Official PDF text generally places 問NN at the beginning of a line. Keep the
-    # boundary strict to avoid references to another question inside body text.
     pat = re.compile(r"(?m)^\s*問\s*([0-9]{1,3})\s*(?:\n|$)")
     markers = []
     for m in pat.finditer(text):
         n = int(m.group(1))
         if start <= n <= end:
             markers.append((n, m.start(), m.end()))
-    # Some PDFs extract `問 123  ...` on one line rather than line-breaking.
     if len({n for n, _, _ in markers}) < (end - start + 1):
         pat2 = re.compile(r"(?m)^\s*問\s*([0-9]{1,3})\s+")
         for m in pat2.finditer(text):
             n = int(m.group(1))
             if start <= n <= end:
                 markers.append((n, m.start(), m.end()))
-    # De-duplicate identical question/start pairs, then keep the earliest marker per q.
     earliest = {}
     for n, a, b in sorted(markers, key=lambda x: x[1]):
         earliest.setdefault(n, (a, b))
@@ -103,7 +101,6 @@ def split_questions(text: str, start: int, end: int):
     for i, (n, a, b) in enumerate(by_pos):
         next_a = by_pos[i + 1][1] if i + 1 < len(by_pos) else len(text)
         block = text[b:next_a].strip()
-        # Remove page sentinel lines while preserving a list of source pages.
         pages = sorted({int(x) for x in re.findall(r"\[\[PAGE:(\d+)\]\]", block)})
         block = re.sub(r"\n?\[\[PAGE:\d+\]\]\n?", "\n", block).strip()
         records[n] = {"questionNo": n, "sourcePages": pages, "rawText": block}
