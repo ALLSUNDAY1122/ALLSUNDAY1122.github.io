@@ -1,80 +1,34 @@
 {
   "schemaVersion": 1,
   "workstream": "B-general",
-  "scope": {
-    "category": "一般",
-    "sourceExams": [115, 114, 113],
-    "targetCount": 390,
-    "countPerExam": 130
-  },
+  "scope": {"category":"一般","sourceExams":[115,114,113],"targetCount":390,"countPerExam":130},
   "sourceOfTruth": "GitHub main",
-  "checkedAt": "2026-08-10T04:49:00+09:00",
+  "checkedAt": "2026-08-10T05:18:00+09:00",
   "canonicalL3Snapshot": {
     "globalExplained": 102,
     "globalTotal": 720,
     "globalPass": false,
     "generalAppliedAndAudited": 53,
-    "generalAppliedScope": "Latest materialized common audit still predates current B workstream batches; workstream coverage must not be presented as integrated product coverage until coordinator materializes common apply/queue/validate.",
-    "auditBlobSha": "5f6e922bc7172bcb2cfb98fee7af51472447dcd6"
+    "generalAppliedScope": "Common materialized audit predates B-workstream batches. Workstream coverage is not integrated product coverage until coordinator reruns common apply/queue/validate."
   },
   "workstreamCoverage": {
-    "generalContentAndEvidenceCovered": 130,
-    "generalRemaining": 260,
-    "normalTextCovered": 122,
-    "quarantinedSpecialCovered": 8,
+    "generalContentAndEvidenceCovered": 260,
+    "generalRemaining": 130,
     "completedExams": {
-      "115": {
-        "status": "PASS_WITH_QUARANTINE",
-        "target": 130,
-        "normalText": 122,
-        "quarantined": 8,
-        "contentConcerns": 2,
-        "scoringExceptions": 2,
-        "mediaDependent": 4,
-        "expertReviewRequired": 2,
-        "specialAuditFile": "kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json",
-        "specialAuditCommit": "37acac58c1748ac74b04512c65033123d752daef"
-      }
+      "115": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":122,"quarantined":8,"contentConcerns":2,"scoringExceptions":2,"mediaDependent":4,"expertReviewRequired":2,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json"},
+      "114": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":116,"quarantined":14,"contentConcerns":4,"scoringExceptions":0,"mediaDependent":10,"expertReviewRequired":4,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json","specialAuditCommit":"5b6060517b8d34d6420f3225c00288d59d77374a"}
     }
   },
-  "latestNormalBatches": [
-    {
-      "file": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM067-PM078-text.json",
-      "count": 11,
-      "commit": "3bc12c1f0f57585694d08871c7fdb980d000c857"
-    },
-    {
-      "file": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM079-PM090-text.json",
-      "count": 12,
-      "commit": "b272717effe7966fee175b50d226502b7267f0a0"
-    },
-    {
-      "file": "kangoshi-sprint/product-content/explanation-batches/B-general-115-AM-gaps-text.json",
-      "count": 6,
-      "commit": "a8d22d26b72c2f117c6a6dd27f48111ab99576fd"
-    }
-  ],
-  "K115SpecialQueues": {
-    "contentConcerns": ["K115-AM029", "K115-AM066"],
-    "scoringExceptions": ["K115-AM032", "K115-AM080"],
-    "mediaDependent": ["K115-AM034", "K115-AM063", "K115-PM058", "K115-PM077"],
+  "K114SpecialQueues": {
+    "contentConcerns": ["K114-AM042","K114-AM043","K114-AM056","K114-PM089"],
+    "scoringExceptions": [],
+    "mediaDependent": ["K114-AM030","K114-AM039","K114-AM041","K114-AM051","K114-AM054","K114-PM027","K114-PM045","K114-PM055","K114-PM071","K114-PM080"],
     "officialAnswerChanged": 0,
     "questionIdOverlap": 0
   },
   "editBoundary": {
-    "allowed": [
-      "kangoshi-sprint/product-content/explanation-batches/B-general-*.json",
-      "kangoshi-sprint/workstreams/B-general/**"
-    ],
-    "forbidden": [
-      "kangoshi-sprint/product-content/enriched-draft/**",
-      "kangoshi-sprint/product-content/manifest.json",
-      "kangoshi-sprint/product-content/enrichment-trigger.json",
-      "kangoshi-sprint/product-content/content-concerns.json",
-      "common UI",
-      "mock exam engine",
-      "StoreKit"
-    ]
+    "allowed":["kangoshi-sprint/product-content/explanation-batches/B-general-*.json","kangoshi-sprint/workstreams/B-general/**"],
+    "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","kangoshi-sprint/product-content/enrichment-trigger.json","kangoshi-sprint/product-content/content-concerns.json","common UI","mock exam engine","StoreKit"]
   },
-  "nextLoop": "Process K114 general 130 questions in small evidence-checked batches, separating media/scoring/content concerns, then K113. Common integration remains coordinator-owned."
+  "nextLoop": "Process K113 general 130 questions in small evidence-checked batches. Separate media/scoring/content concerns. Then run B-workstream 390-question overlap/completeness audit and hand common integration to coordinator."
 }
