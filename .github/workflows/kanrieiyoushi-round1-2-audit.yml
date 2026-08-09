@@ -1,0 +1,29 @@
+name: 管理栄養士 Round1-2 400 Question Audit
+
+on:
+  pull_request:
+    paths:
+      - 'kanrieiyoushi-sprint/questions-121-150.js'
+      - 'kanrieiyoushi-sprint/questions-151-180.js'
+      - 'kanrieiyoushi-sprint/questions-181-210.js'
+      - 'kanrieiyoushi-sprint/questions-211-240.js'
+      - 'kanrieiyoushi-sprint/audit/round2-extra-*.json'
+      - 'kanrieiyoushi-sprint/audit/build_round2_canonical.py'
+      - 'kanrieiyoushi-sprint/audit/build_round1_2_canonical.py'
+      - 'kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2.json'
+      - 'automation/learning-sprint-question-pipeline/validate_questions.py'
+      - '.github/workflows/kanrieiyoushi-round1-2-audit.yml'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build round1 and round2 canonical data
+        run: python kanrieiyoushi-sprint/audit/build_round1_2_canonical.py
+      - name: Validate 400 questions across rounds
+        run: python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2.json
