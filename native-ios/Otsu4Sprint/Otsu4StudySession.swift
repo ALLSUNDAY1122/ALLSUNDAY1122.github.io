@@ -54,6 +54,8 @@ struct Otsu4SubjectResult: Equatable {
 
 @MainActor
 final class Otsu4StudySession: ObservableObject, Identifiable {
+    static let mockDurationSeconds = 120 * 60
+
     let id = UUID()
     let kind: Otsu4StudyKind
     let questions: [Otsu4Question]
@@ -73,24 +75,26 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
         } ?? [:]
     }
 
-    var currentQuestion: Otsu4Question {
-        questions[index]
+    var currentQuestion: Otsu4Question { questions[index] }
+    var currentAnswer: Otsu4AnswerState? { answers[currentQuestion.id] }
+    var progressText: String { "\(index + 1) / \(questions.count)" }
+    var canGoBack: Bool { kind.isMock && index > 0 }
+    var isLast: Bool { index == questions.count - 1 }
+
+    func remainingSeconds(at date: Date = Date()) -> Int {
+        guard kind.isMock else { return 0 }
+        let elapsed = max(0, Int(date.timeIntervalSince(startedAt)))
+        return max(0, Self.mockDurationSeconds - elapsed)
     }
 
-    var currentAnswer: Otsu4AnswerState? {
-        answers[currentQuestion.id]
+    func timerText(at date: Date = Date()) -> String {
+        let remaining = remainingSeconds(at: date)
+        return String(format: "%02d:%02d", remaining / 60, remaining % 60)
     }
 
-    var progressText: String {
-        "\(index + 1) / \(questions.count)"
-    }
-
-    var canGoBack: Bool {
-        kind.isMock && index > 0
-    }
-
-    var isLast: Bool {
-        index == questions.count - 1
+    func finishIfTimeExpired(at date: Date = Date()) {
+        guard kind.isMock, !isFinished, remainingSeconds(at: date) <= 0 else { return }
+        finish()
     }
 
     var snapshot: Otsu4SessionSnapshot {
@@ -138,11 +142,7 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
 
     func next() {
         guard !isFinished else { return }
-        if isLast {
-            finish()
-        } else {
-            index += 1
-        }
+        if isLast { finish() } else { index += 1 }
     }
 
     func previous() {
