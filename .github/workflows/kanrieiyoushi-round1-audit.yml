@@ -8,6 +8,13 @@ on:
       - 'kanrieiyoushi-sprint/audit/**'
       - 'automation/learning-sprint-question-pipeline/validate_questions.py'
       - '.github/workflows/kanrieiyoushi-round1-audit.yml'
+  pull_request:
+    paths:
+      - 'kanrieiyoushi-sprint/questions.js'
+      - 'kanrieiyoushi-sprint/data/round1-extra-*.js'
+      - 'kanrieiyoushi-sprint/audit/**'
+      - 'automation/learning-sprint-question-pipeline/validate_questions.py'
+      - '.github/workflows/kanrieiyoushi-round1-audit.yml'
   workflow_dispatch:
 
 permissions:
@@ -48,6 +55,7 @@ jobs:
           PY
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
       - name: Commit audit evidence
+        if: github.event_name == 'push'
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
