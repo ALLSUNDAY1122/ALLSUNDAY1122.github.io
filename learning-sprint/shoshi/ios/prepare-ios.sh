@@ -8,6 +8,8 @@ QUESTIONS_SRC="$SHOSHI_ROOT/content-loop/questions.generated.json"
 WEB_DST="$SCRIPT_DIR/Web"
 ASSET_DIR="$SCRIPT_DIR/Assets.xcassets/AppIcon.appiconset"
 ICON_SRC="$SCRIPT_DIR/AppIcon.png"
+ICON_DRIVE_ID="1lALyLGEVFvdWvMZVsQqdRnEJmJzUOFu7"
+ICON_SHA256="c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
 
 rm -rf "$WEB_DST" "$SCRIPT_DIR/Assets.xcassets"
 mkdir -p "$WEB_DST" "$ASSET_DIR"
@@ -46,9 +48,20 @@ js=js.replace(old_call, new_call, 1)
 app.write_text(js, encoding='utf-8')
 PY
 
-# The adopted series icon is a canonical individual PNG from Google Drive.
-# It must be checked into AppIcon.png without regeneration or list-image cropping.
-test -f "$ICON_SRC"
+# The series icon must be the canonical individual PNG saved in Google Drive.
+# Never redraw it or crop it from the overview image. A local copy is allowed
+# only when its SHA-256 exactly matches the canonical file fetched on 2026-08-09.
+if [ ! -f "$ICON_SRC" ]; then
+  curl --fail --location --silent --show-error \
+    "https://drive.usercontent.google.com/download?id=${ICON_DRIVE_ID}&export=download&confirm=t" \
+    --output "$ICON_SRC"
+fi
+actual_icon_sha="$(shasum -a 256 "$ICON_SRC" | awk '{print $1}')"
+if [ "$actual_icon_sha" != "$ICON_SHA256" ]; then
+  echo "ERROR: canonical AppIcon SHA-256 mismatch: $actual_icon_sha" >&2
+  rm -f "$ICON_SRC"
+  exit 1
+fi
 cp "$ICON_SRC" "$ASSET_DIR/AppIcon.png"
 
 cat > "$ASSET_DIR/Contents.json" <<'JSON'
@@ -80,4 +93,5 @@ print('PASS: bundled 210-question dataset, unique IDs, and R7-PM-33 all_correct'
 print('SHA256:', hashlib.sha256(open(p,'rb').read()).hexdigest())
 PY
 
+echo "PASS: canonical AppIcon SHA256=$actual_icon_sha"
 echo "Prepared ShoshiSprint local audited web bundle and canonical AppIcon."
