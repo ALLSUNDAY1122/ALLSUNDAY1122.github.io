@@ -3,32 +3,46 @@
   "workstream": "B-general",
   "scope": {"category":"一般","sourceExams":[115,114,113],"targetCount":390,"countPerExam":130},
   "sourceOfTruth": "GitHub main",
-  "checkedAt": "2026-08-10T05:18:00+09:00",
-  "canonicalL3Snapshot": {
-    "globalExplained": 102,
+  "checkedAt": "2026-08-10T05:38:00+09:00",
+  "status": "PASS_WITH_QUARANTINE_AND_COORDINATOR_HANDOFF",
+  "canonicalIntegrationSnapshot": {
+    "globalExplainedMaterialized": 102,
     "globalTotal": 720,
     "globalPass": false,
-    "generalAppliedAndAudited": 53,
-    "generalAppliedScope": "Common materialized audit predates B-workstream batches. Workstream coverage is not integrated product coverage until coordinator reruns common apply/queue/validate."
+    "note": "Common enriched-draft/manifest is coordinator-owned and stale relative to B-workstream batches. Do not report 390 as product-integrated until coordinator reruns apply/queue/validate."
   },
   "workstreamCoverage": {
-    "generalContentAndEvidenceCovered": 260,
-    "generalRemaining": 130,
+    "generalContentAndEvidenceCovered": 390,
+    "generalRemaining": 0,
+    "normalExplanationEvidenceCovered": 352,
+    "quarantinedWithAuditEvidence": 38,
     "completedExams": {
-      "115": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":122,"quarantined":8,"contentConcerns":2,"scoringExceptions":2,"mediaDependent":4,"expertReviewRequired":2,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json"},
-      "114": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":116,"quarantined":14,"contentConcerns":4,"scoringExceptions":0,"mediaDependent":10,"expertReviewRequired":4,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json","specialAuditCommit":"5b6060517b8d34d6420f3225c00288d59d77374a"}
+      "115": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":122,"quarantined":8,"contentConcerns":2,"scoringExceptions":2,"mediaDependent":4,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json"},
+      "114": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":116,"quarantined":14,"contentConcerns":4,"scoringExceptions":0,"mediaDependent":10,"sourceDataDefects":0,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K114-SPECIAL-AUDIT.json"},
+      "113": {"status":"PASS_WITH_QUARANTINE","target":130,"normalText":114,"quarantined":16,"contentConcerns":3,"scoringExceptions":0,"mediaDependent":8,"sourceDataDefects":5,"specialAuditFile":"kangoshi-sprint/workstreams/B-general/K113-SPECIAL-AUDIT.json","specialAuditCommit":"8628f5709aa43c1f5e4f131cedb446f83ffe5f15"}
     }
   },
-  "K114SpecialQueues": {
-    "contentConcerns": ["K114-AM042","K114-AM043","K114-AM056","K114-PM089"],
-    "scoringExceptions": [],
-    "mediaDependent": ["K114-AM030","K114-AM039","K114-AM041","K114-AM051","K114-AM054","K114-PM027","K114-PM045","K114-PM055","K114-PM071","K114-PM080"],
-    "officialAnswerChanged": 0,
-    "questionIdOverlap": 0
+  "quarantineTotals": {"contentConcerns":9,"scoringExceptions":2,"mediaDependent":22,"sourceDataDefects":5},
+  "quality": {
+    "officialAnswerChanged":0,
+    "unclassified":0,
+    "queueOverlap":0,
+    "normalMissingPoint":0,
+    "normalMissingDetail":0,
+    "normalMissingEvidenceRefs":0,
+    "normalMissingEvidenceCheckedDate":0,
+    "highSimilarityWaterFillingDetected":0,
+    "finalAudit":"kangoshi-sprint/workstreams/B-general/FINAL-AUDIT.json",
+    "finalAuditCommit":"242662c58dce6d0af9538bc709b7e2785e7a8a1a"
+  },
+  "invalidatedCommonGate": {
+    "reason":"K113 raw numeric/text import defects newly discovered after the prior common raw audit PASS",
+    "ids":["K113-AM061","K113-PM053","K113-PM057","K113-PM078","K113-PM090"],
+    "requiredAction":"Coordinator restores official text and reruns raw validation + duplicate/high-similarity + affected L2/L3 queues before product release."
   },
   "editBoundary": {
     "allowed":["kangoshi-sprint/product-content/explanation-batches/B-general-*.json","kangoshi-sprint/workstreams/B-general/**"],
     "forbidden":["kangoshi-sprint/product-content/enriched-draft/**","kangoshi-sprint/product-content/manifest.json","kangoshi-sprint/product-content/enrichment-trigger.json","kangoshi-sprint/product-content/content-concerns.json","common UI","mock exam engine","StoreKit"]
   },
-  "nextLoop": "Process K113 general 130 questions in small evidence-checked batches. Separate media/scoring/content concerns. Then run B-workstream 390-question overlap/completeness audit and hand common integration to coordinator."
+  "nextLoop":"B-general content loop complete. Await coordinator integration and specialist/media/raw-fix loops; if coordinator changes affected data, rerun only impacted B quality loop."
 }
