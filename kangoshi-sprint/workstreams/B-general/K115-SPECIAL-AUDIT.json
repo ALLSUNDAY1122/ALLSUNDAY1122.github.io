@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "workstream": "B-general",
+  "sourceExam": 115,
+  "category": "一般",
+  "targetCount": 130,
+  "normalTextCovered": 122,
+  "quarantinedCount": 8,
+  "contentAndEvidenceCovered": 130,
+  "releaseStatus": "PASS_WITH_QUARANTINE",
+  "officialAnswerPolicy": "Official answers and official scoring exceptions are immutable. Current-practice conflicts are isolated as content concerns and never silently corrected.",
+  "quarantine": {
+    "contentConcerns": [
+      {
+        "id": "K115-AM029",
+        "type": "content_concern",
+        "officialAcceptedAnswers": [0],
+        "officialAnswerLabel": "Dダイマー",
+        "officialScoringStatus": "normal",
+        "point": "公式正答はDダイマーだが、現行の肺血栓塞栓症診断ではDダイマー単独を確定診断検査とは扱わない。",
+        "detail": "第115回の公式正答はDダイマーであり、試験史実としてそのまま保持する。一方、JCS/JPCPHS 2025ガイドラインが現行版として公開されており、急性肺血栓塞栓症は事前確率とDダイマーを用いて画像検査の必要性を判断し、確定・除外にはCT肺動脈造影などの画像診断を用いる。2026 AHA/ACC等ガイドラインも、Dダイマー高値時には画像検査を行い、陽性CTPA等を診断に用いるとする。したがって『確定診断にDダイマー』という設問表現を現在の診療へ一般化しない。専門監査で、学習画面に公式正答と現行診療上の注記を併記するか判断する。",
+        "evidenceRefs": [
+          "https://www.j-circ.or.jp/guideline/guideline-series/",
+          "https://doi.org/10.1253/circj.CJ-25-1144",
+          "https://www.jacc.org/doi/10.1016/j.jacc.2025.11.005"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "expertReviewRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K115-AM066",
+        "type": "content_concern",
+        "officialAcceptedAnswers": [2],
+        "officialAnswerLabel": "お母さんは納豆を多く摂取しましょう",
+        "officialScoringStatus": "normal",
+        "point": "公式正答は保持するが、授乳婦へ納豆を特別に『多く』摂るよう求める現行栄養基準は確認できない。",
+        "detail": "厚生労働省『日本人の食事摂取基準（2025年版）』では、ビタミンKの目安量は成人女性150µg/日で、授乳婦も150µg/日である。授乳婦だから追加量が設定されているわけではない。このため、他の選択肢が明確に不適切である設問上の公式正答と、現在の一般的な授乳期栄養指導を区別する必要がある。公式正答は変更せず、専門監査で『納豆を多量摂取すべき』との誤学習を防ぐ注記を確定する。",
+        "evidenceRefs": [
+          "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/syokuji_kijyun.html",
+          "https://www.mhlw.go.jp/web/t_doc?dataId=78ab4652&dataType=0"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "expertReviewRequired": true,
+        "releaseStatus": "quarantined"
+      }
+    ],
+    "scoringExceptions": [
+      {
+        "id": "K115-AM032",
+        "type": "scoring_exception",
+        "officialScoringStatus": "excluded",
+        "officialAcceptedAnswers": [],
+        "point": "厚生労働省が設問文不明瞭を理由に採点対象から除外した問題。正答を新たに付与しない。",
+        "detail": "公式通知に従い、模試・通常学習の採点では正誤判定対象から除外する。学習用に廃棄物処理制度を解説する場合でも、その解説を新たな『公式正答』として扱わない。",
+        "evidenceRefs": [
+          "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am32.pdf"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "releaseStatus": "quarantined_until_scoring_overlay"
+      },
+      {
+        "id": "K115-AM080",
+        "type": "scoring_exception",
+        "officialScoringStatus": "multiple_accepted",
+        "officialAcceptedAnswers": [3, 4],
+        "point": "厚生労働省が『テレビを観て過ごす』『ADLは自立』の双方を正解として採点した問題。",
+        "detail": "ICFの活動は課題または行為の遂行を指し、テレビ視聴もADLの遂行も活動として捉え得る。公式採点では選択肢4・5の双方が正解とされたため、アプリでも一方だけへ正規化せず、公式の複数正答を保持する。",
+        "evidenceRefs": [
+          "https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/dl/kangoshi_am80.pdf",
+          "https://www.who.int/standards/classifications/international-classification-of-functioning-disability-and-health",
+          "https://apps.who.int/classifications/icfbrowser/Browse.aspx?code=d"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "releaseStatus": "quarantined_until_scoring_overlay"
+      }
+    ],
+    "mediaDependent": [
+      {
+        "id": "K115-AM034",
+        "type": "media_dependency",
+        "officialAcceptedAnswers": [2],
+        "officialAnswerLabel": "内旋",
+        "point": "股関節90度屈曲位では内旋・外旋を評価できるが、設問の矢印方向を確認するには図A/Bが不可欠。",
+        "detail": "股関節を90度屈曲した姿勢で内旋・外旋の可動域を評価すること自体は標準的だが、この設問は図AからBへの下腿の移動方向によって運動名を判断する。rawではrequiresMedia=falseとなっているが本文が明示的に図を参照するため、B班では図版依存として上書き検出し、図の権利・表示・矢印方向を確認するまで製品解放しない。公式正答『内旋』は保持する。",
+        "evidenceRefs": [
+          "https://pubmed.ncbi.nlm.nih.gov/9742472/",
+          "https://pubmed.ncbi.nlm.nih.gov/36368014/"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "mediaRightsAuditRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K115-AM063",
+        "type": "media_dependency",
+        "officialAcceptedAnswers": [3],
+        "officialAnswerLabel": "④",
+        "point": "6か月児の採尿用具を画像から選ぶ問題であり、番号④と用具の対応確認には別冊図版が不可欠。",
+        "detail": "乳幼児の尿採取では目的に応じて非侵襲的採尿、カテーテル、膀胱穿刺等を使い分ける。NICEは可能ならclean catchを優先し、困難時には他の非侵襲的方法を用いるとしている。尿バッグはスクリーニング等に使われることがある一方、培養では汚染に注意が必要である。本問は別冊No.1の画像④を特定する形式なので、画像そのものを確認せずに用具名を断定して製品化しない。",
+        "evidenceRefs": [
+          "https://www.nice.org.uk/guidance/ng224/chapter/Recommendations",
+          "https://publications.aap.org/pediatrics/article-abstract/128/3/595/30724"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "mediaRightsAuditRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K115-PM058",
+        "type": "media_dependency",
+        "officialAcceptedAnswers": [0],
+        "officialAnswerLabel": "午前中に散歩を取り入れる",
+        "point": "睡眠・覚醒の1日図を読み取る問題であり、生活時間帯を評価するには図が必要。",
+        "detail": "高齢者では過度な床上時間や長い昼寝を避け、日中の身体活動を確保することが睡眠改善に重要である。厚生労働省の睡眠ガイド2023と身体活動・運動ガイド2023は、適切な睡眠習慣と日中の身体活動を推奨している。ただし本問は『1日の過ごし方を図に示す』ことが判断条件なので、図を表示できない状態では通常問題として解放しない。公式正答は保持する。",
+        "evidenceRefs": [
+          "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/suimin/index.html",
+          "https://kennet.mhlw.go.jp/information/information/exercise/s-00-004.html"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "mediaRightsAuditRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K115-PM077",
+        "type": "media_dependency",
+        "officialAcceptedAnswers": [3],
+        "officialAnswerLabel": "④",
+        "point": "精子形成では減数分裂によって染色体セットが2nからnになるが、設問の④がどの段階を示すかは図の確認が必要。",
+        "detail": "精子形成では精祖細胞から一次精母細胞を経て減数分裂が起こり、最終的に半数体の精子細胞が生じる。したがって2nからnへの還元は減数分裂過程で生じる。しかし本問は図中の①〜⑤のどこが該当するかを問うため、図版を確認せず番号だけで製品化しない。公式正答④は保持する。",
+        "evidenceRefs": [
+          "https://pubmed.ncbi.nlm.nih.gov/28950090/",
+          "https://pubmed.ncbi.nlm.nih.gov/31566717/"
+        ],
+        "evidenceCheckedDate": "2026-08-10",
+        "mediaRightsAuditRequired": true,
+        "releaseStatus": "quarantined"
+      }
+    ]
+  },
+  "audit": {
+    "normalTextPlusQuarantineEqualsTarget": true,
+    "questionIdOverlapBetweenQueues": 0,
+    "officialAnswerChanged": 0,
+    "contentConcernCount": 2,
+    "scoringExceptionCount": 2,
+    "mediaDependentCount": 4,
+    "expertReviewRequiredCount": 2,
+    "status": "PASS_WITH_QUARANTINE"
+  }
+}
