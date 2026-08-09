@@ -1,10 +1,8 @@
 {
   "warningCount": 32,
-  "resolvedCount": 31,
-  "unresolvedCount": 1,
-  "errors": [
-    "warning resolution match count 0: K115-PM069: multi-domain stem ['mental-explicit', 'community-explicit']; assigned 精神看護学 requires contextual review"
-  ],
+  "resolvedCount": 32,
+  "unresolvedCount": 0,
+  "errors": [],
   "resolvedWarnings": [
     {
       "warning": "K115-AM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
@@ -35,6 +33,12 @@
       "ruleId": "community-context-known",
       "decision": "accepted",
       "reason": "状況設定では在宅・訪問看護という場面語だけで主分類を地域看護へ固定せず、患者のライフステージ・主病態・設問目的を優先する。対象IDは症例単位で確認済み。"
+    },
+    {
+      "warning": "K115-PM069: multi-domain stem ['mental-explicit', 'community-explicit']; assigned 精神看護学 requires contextual review",
+      "ruleId": "mental-community-K115-PM069",
+      "decision": "accepted",
+      "reason": "統合失調症当事者のセルフヘルプグループの機能を問う設問で、地域活動という側面はあるが主題は精神障害者の回復・ピア支援であるため精神看護学を主分類とする。"
     },
     {
       "warning": "K115-PM091: contextual stem domain community-explicit; assigned 地域・在宅看護論",
@@ -193,6 +197,6 @@
       "reason": "75歳レビー小体型認知症患者の症状・生活支援を扱う症例で、在宅という場面より認知症・老年看護が3問の中心である。"
     }
   ],
-  "pass": false,
+  "pass": true,
   "note": "各警告は対象IDを制限した正規表現ルール1件だけに一致する必要がある。未知の警告・未知IDは自動FAIL。"
 }
