@@ -14,6 +14,8 @@ OPT_LINE = re.compile(r'^\s*([1-5])\s*[．.]\s*(.*)$')
 NUMERIC_PROMPT = re.compile(r'解答\s*[：:]')
 JAPANESE = re.compile(r'[ぁ-んァ-ン一-龥]')
 MEDIA_WORDS = ('図を示す', '図に示す', '写真を示す', '別冊', '画像を示す', 'グラフを示す', '表を示す')
+SCENARIO_STARTS = tuple(range(91, 121, 3))
+SCENARIO_MARKER = re.compile(r'次の文を読み\s*(\d{2,3})\s*[～〜－—―\-]\s*(\d{2,3})\s*の問いに答えよ')
 
 
 def fetch_pdf(url: str, path: Path):
@@ -31,6 +33,18 @@ def pdftotext(pdf: Path) -> str:
 def clean_line(line: str) -> str:
     line = line.replace('\u3000', ' ').replace('\ufeff', '')
     return re.sub(r'\s+', ' ', line).strip()
+
+
+def skip_print_line(line: str) -> bool:
+    if not line or PAGE_CODE.match(line):
+        return True
+    if re.match(r'^\d+\s+[A-Z0-9-]+(?:前|後)', line):
+        return True
+    if ('.indd' in line or '.smd' in line) and re.search(r'\d{2,4}/\d{1,2}/\d{1,2}', line):
+        return True
+    if re.match(r'^Page\s+\d+', line, re.I):
+        return True
+    return False
 
 
 def plausible_first_question(tail: str) -> bool:
@@ -53,9 +67,6 @@ def question_number(line: str):
 
 
 def find_question_starts(lines):
-    # The booklet front matter contains answer-sheet examples with standalone
-    # numbers. First anchor on the real Q1, which has an actual Japanese stem,
-    # then follow sequential question numbers through Q120.
     first = None
     for i, raw in enumerate(lines):
         line = clean_line(raw)
@@ -86,11 +97,7 @@ def parse_question_block(block, n):
     cleaned = []
     for raw in block:
         line = clean_line(raw)
-        if not line or PAGE_CODE.match(line):
-            continue
-        if re.match(r'^\d+\s+[A-Z0-9-]+(?:前|後)', line):
-            continue
-        if '.indd' in line and re.search(r'\d{4}/\d{1,2}/\d{1,2}', line):
+        if skip_print_line(line):
             continue
         cleaned.append(line)
     if not cleaned:
@@ -127,14 +134,66 @@ def parse_question_block(block, n):
     return {'stem':stem, 'choices':choices, 'numericPrompt':False}
 
 
+def extract_scenarios(lines, starts):
+    markers = {}
+    for i, raw in enumerate(lines):
+        line = clean_line(raw)
+        m = SCENARIO_MARKER.search(line)
+        if not m:
+            continue
+        a, b = int(m.group(1)), int(m.group(2))
+        if a in SCENARIO_STARTS and b == a + 2 and i < starts[a]:
+            markers[a] = i
+
+    scenarios = {}
+    for start in SCENARIO_STARTS:
+        marker = markers.get(start)
+        if marker is None:
+            # Some PDFs split the marker with extra spaces/line wraps. Search backward
+            # inside the preceding question block for the group-start number and phrase.
+            lower = starts[start-1] if start > 91 else starts[90]
+            for i in range(starts[start]-1, lower, -1):
+                line = clean_line(lines[i])
+                squashed = re.sub(r'\s+', '', line)
+                if '次の文を読み' in squashed and str(start) in squashed and str(start+2) in squashed and '問いに答えよ' in squashed:
+                    marker = i
+                    break
+        if marker is None:
+            raise RuntimeError(f'scenario marker not found for {start}-{start+2}')
+
+        parts=[]
+        for raw in lines[marker+1:starts[start]]:
+            line=clean_line(raw)
+            if skip_print_line(line):
+                continue
+            if SCENARIO_MARKER.search(line):
+                continue
+            if line:
+                parts.append(line)
+        scenario=' '.join(parts).strip()
+        scenario=re.sub(r'\s+[A-Z]{2,}-\d{2}[^ ]*$', '', scenario).strip()
+        if len(scenario) < 20 or not JAPANESE.search(scenario):
+            raise RuntimeError(f'scenario text invalid for {start}-{start+2}: {scenario!r}')
+        scenarios[start]=scenario
+    return scenarios
+
+
 def split_questions(text: str):
     lines = text.splitlines()
     starts = find_question_starts(lines)
+    scenarios = extract_scenarios(lines, starts)
     out = {}
     for n in range(1,121):
         s = starts[n]
         e = starts[n+1] if n < 120 else len(lines)
-        out[n] = parse_question_block(lines[s:e], n)
+        q=parse_question_block(lines[s:e], n)
+        if n >= 91:
+            group_start=91 + ((n-91)//3)*3
+            q['scenarioGroupStart']=group_start
+            q['scenario']=scenarios[group_start]
+            q['scenarioIndex']=n-group_start
+            q['scenarioTotal']=3
+        out[n] = q
     return out
 
 
@@ -177,7 +236,6 @@ def decode_answer(tokens, choices, numeric_prompt):
     if numeric_prompt:
         values = [int(t) for t in tokens]
         return values[0], 'numeric', values
-
     accepted = [decode_choice_token(t) for t in tokens]
     primary = accepted[0]
     answer_type = 'multiChoice' if isinstance(primary, list) else 'singleChoice'
@@ -237,6 +295,14 @@ def build_set(src, am_q, pm_q, answers):
                 'sourceAttribution':f"出典：厚生労働省『第{src['exam']}回看護師国家試験』を学習用データとして加工",
                 'sourceAnswerTokens':tokens
             }
+            if n >= 91:
+                g=q['scenarioGroupStart']
+                item.update({
+                    'scenarioId':f"K{src['exam']}-{session}-SC{((g-91)//3)+1:02d}",
+                    'scenario':q['scenario'],
+                    'scenarioIndex':q['scenarioIndex'],
+                    'scenarioTotal':q['scenarioTotal']
+                })
             items.append(item)
     return items
 
@@ -256,12 +322,12 @@ def main():
             ans=parse_answers(files['ans'],src['answerPrefixMorning'],src['answerPrefixAfternoon'])
             items=build_set(src,am,pm,ans)
             out={
-                'schemaVersion':3,
+                'schemaVersion':4,
                 'setId':src['id'],
                 'sourceExam':src['exam'],
                 'questionCount':len(items),
                 'releaseStatus':'raw_import_only',
-                'note':'公式本文・正答の機械取込。解説、11科目分類、図版権利監査、専門監査が完了するまで本番解放禁止。採点除外・複数正答等はofficialScoringStatusに保持する。',
+                'note':'公式本文・正答・状況設定症例の機械取込。解説、11科目分類、図版権利監査、専門監査が完了するまで本番解放禁止。採点除外・複数正答等はofficialScoringStatusに保持する。',
                 'questions':items
             }
             (OUT/f"{src['id']}-raw.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
@@ -269,6 +335,8 @@ def main():
                 'set':src['id'],
                 'exam':src['exam'],
                 'count':len(items),
+                'scenarioQuestions':sum(1 for x in items if x.get('scenarioId')),
+                'scenarioGroups':len({x.get('scenarioId') for x in items if x.get('scenarioId')}),
                 'mediaPending':sum(1 for x in items if x['requiresMedia']),
                 'numeric':sum(1 for x in items if x['answerType']=='numeric'),
                 'multiChoice':sum(1 for x in items if x['answerType']=='multiChoice'),
