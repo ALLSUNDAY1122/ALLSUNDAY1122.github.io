@@ -6,6 +6,7 @@ const includes = (text, value, label=value) => must(text.includes(value), `missi
 
 const root = 'tsukanshi-sprint';
 const project = read(`${root}/ios/project.yml`);
+const capabilityPatch = read(`${root}/ios/apply-xcode-capabilities.py`);
 const swift = read(`${root}/ios/App.swift`);
 const storekitGuard = read(`${root}/storekit-ui-guard.js`);
 const index = read(`${root}/index.html`);
@@ -25,8 +26,8 @@ const PRIVACY = 'https://allsunday1122.github.io/tsukanshi-sprint/privacy.html';
 
 includes(project, `PRODUCT_BUNDLE_IDENTIFIER: ${BUNDLE}`, 'Xcode bundle id');
 includes(project, `MARKETING_VERSION: ${VERSION}`, 'Xcode marketing version');
-includes(project, 'com.apple.InAppPurchase:', 'Xcode In-App Purchase capability');
-includes(project, 'enabled: 1', 'enabled Xcode capability');
+includes(capabilityPatch, 'com.apple.InAppPurchase', 'generated-project In-App Purchase capability patch');
+includes(capabilityPatch, 'enabled = 1;', 'enabled generated-project capability');
 includes(swift, `static let productID = "${PRODUCT}"`, 'StoreKit product id');
 includes(swift, 'Transaction.currentEntitlements', 'current entitlements');
 includes(swift, 'Transaction.updates', 'transaction updates observer');
@@ -46,6 +47,7 @@ includes(block, 'distribution_type: app_store', 'App Store distribution');
 includes(block, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle id');
 includes(block, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
 includes(block, 'testFlightInternalTestingOnly', 'internal TestFlight only export');
+includes(block, 'apply-xcode-capabilities.py', 'Codemagic generated-project capability normalization');
 includes(block, 'submit_to_testflight: false', 'no automatic beta-review submission');
 includes(block, 'submit_to_app_store: false', 'no automatic App Store review submission');
 includes(block, 'CM_BUILD_NUMBER', 'CI build number');
