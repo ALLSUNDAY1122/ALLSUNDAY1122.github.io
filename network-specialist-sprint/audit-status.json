@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T15:03:00+09:00",
+  "generatedAt": "2026-08-09T15:15:00+09:00",
   "questionAudit": {
     "status": "PASS",
     "examOccurrences": 75,
@@ -19,7 +19,14 @@
     ],
     "retests": ["JavaScript syntax PASS","75出題・68ユニーク PASS","各年度25問 PASS","OSPF分類3件 PASS","4/8/16 session PASS","weak 3-consecutive-right release PASS","resume PASS","4-tab navigation PASS"]
   },
-  "ui30StateAudit": {"status":"PASS","screenshots":30,"horizontalOverflowStates":0,"statesWithButtonsUnder40px":0,"visualMajorIssues":0,"note":"後続変更はローダー分割・分類補正・申請設定であり、Golden Masterの寸法・色・画面構造は変更していない。"},
+  "ui30StateAudit": {
+    "status":"PASS",
+    "screenshots":30,
+    "horizontalOverflowStates":0,
+    "statesWithButtonsUnder40px":0,
+    "visualMajorIssues":0,
+    "note":"後続変更はローダー分割・分類補正・申請設定であり、Golden Masterの寸法・色・画面構造は変更していない。"
+  },
   "releasePreparation": {
     "status":"PASS_WITH_EXTERNAL_BLOCKERS",
     "cycles":[
@@ -31,16 +38,30 @@
     "monetization":"Initial release has no IAP. Adding IAP invalidates Privacy/App Store metadata PASS and restarts release audit."
   },
   "releaseAudit": {
-    "status":"BLOCKED",
+    "status":"BLOCKED_EXTERNAL_ONLY",
     "blockers":[
-      "Canonical AppIcon PNG is present locally but not materialized as binary in GitHub checkout; repo-based Archive intentionally fails until exact Drive file is added.",
-      "Support/Privacy URLs are not public until main merge and HTTP 200 verification.",
-      "Bundle ID jp.allsunday1122.networkspecialist is a candidate and has not been verified as an Explicit App ID.",
-      "App Store Connect app record, Codemagic integration, signing, archive, TestFlight upload require Apple/Codemagic authenticated operations.",
+      "Canonical AppIcon PNG is present in Google Drive/local package but not materialized as binary in the GitHub checkout; repo-based Archive intentionally fails until the exact Drive file is added.",
+      "Support/Privacy files are merged to main, but public GitHub Pages HTTP 200 has not been independently verified in this session.",
+      "Bundle ID jp.allsunday1122.networkspecialist has not yet been verified/registered as an Explicit App ID in Apple Developer.",
+      "App Store Connect app record, Codemagic integration, signing, archive and TestFlight upload require authenticated Apple/Codemagic operations.",
       "TestFlight physical-device verification is not yet complete."
     ]
   },
-  "github":{"repo":"ALLSUNDAY1122/ALLSUNDAY1122.github.io","branch":"feature/network-specialist-sprint-v1","draftPr":"pending"},
-  "appIcon":{"title":"07_ネットワークスペシャリスト試験.png","driveFileId":"1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8","size":"1024x1024","mode":"RGB","regenerationForbidden":true},
-  "currentStage":"Draft PR / TestFlight preparation. Apple authentication, exact icon binary materialization in repo, public URL verification and device testing remain."
+  "github": {
+    "repo":"ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+    "path":"network-specialist-sprint/",
+    "releaseBranch":"release/network-specialist-sprint-v1-20260809",
+    "pullRequest":4092,
+    "merged":true,
+    "mergeCommit":"19e8e4cd825e07828eedd40be995f0951740272f",
+    "discardedPullRequests":[4090,4091]
+  },
+  "appIcon": {
+    "title":"07_ネットワークスペシャリスト試験.png",
+    "driveFileId":"1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8",
+    "size":"1024x1024",
+    "mode":"RGB",
+    "regenerationForbidden":true
+  },
+  "currentStage":"Development loop complete. Ready to enter authenticated TestFlight execution gate."
 }
