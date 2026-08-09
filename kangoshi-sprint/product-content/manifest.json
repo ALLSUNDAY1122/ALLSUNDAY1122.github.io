@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "qualification": "看護師国家試験",
   "targetQuestions": 720,
   "setCount": 3,
@@ -10,9 +10,45 @@
     "状況設定": 60
   },
   "sets": [
-    {"id":"set1","label":"第1回","status":"not_started","file":"set1.js","questionCount":0},
-    {"id":"set2","label":"第2回","status":"not_started","file":"set2.js","questionCount":0},
-    {"id":"set3","label":"第3回","status":"not_started","file":"set3.js","questionCount":0}
+    {
+      "id":"set1",
+      "label":"第115回",
+      "sourceExam":115,
+      "sourceYear":2026,
+      "status":"source_locked",
+      "rawFile":"raw/set1-raw.json",
+      "productFile":"set1.js",
+      "sourceQuestionCount":240,
+      "importedCount":0,
+      "questionCount":0,
+      "expertReviewedCount":0
+    },
+    {
+      "id":"set2",
+      "label":"第114回",
+      "sourceExam":114,
+      "sourceYear":2025,
+      "status":"source_locked",
+      "rawFile":"raw/set2-raw.json",
+      "productFile":"set2.js",
+      "sourceQuestionCount":240,
+      "importedCount":0,
+      "questionCount":0,
+      "expertReviewedCount":0
+    },
+    {
+      "id":"set3",
+      "label":"第113回",
+      "sourceExam":113,
+      "sourceYear":2024,
+      "status":"source_locked",
+      "rawFile":"raw/set3-raw.json",
+      "productFile":"set3.js",
+      "sourceQuestionCount":240,
+      "importedCount":0,
+      "questionCount":0,
+      "expertReviewedCount":0
+    }
   ],
   "releaseGate": {
     "noDuplicateIds": true,
@@ -25,8 +61,15 @@
     "sourceRefsRequired": true,
     "expertReviewRequired": true,
     "scenarioGroupingRequired": true,
-    "noPlaceholderDistractors": true
+    "noPlaceholderDistractors": true,
+    "mediaRightsAuditRequired": true,
+    "noRawImportRelease": true
   },
-  "reviewStatusOrder": ["draft","ai_audited","expert_reviewed"],
-  "note": "720問は3セット×240問を独立問題として作成する。同一論点の表現差し替えだけで問題数を水増ししない。"
+  "reviewStatusOrder": [
+    "official_import_pending_explanation_and_classification",
+    "ai_audited",
+    "expert_reviewed"
+  ],
+  "sourcePolicy": "直近3回（第115・114・113回）の厚生労働省公開問題を基礎データとし、出典・加工表示を付す。図・写真・別冊は項目単位で権利監査する。",
+  "note": "720問は実在する3試験回×240問を基礎にする。同一論点の言い換えで水増ししない。raw取込だけでは模試を解放しない。"
 }
