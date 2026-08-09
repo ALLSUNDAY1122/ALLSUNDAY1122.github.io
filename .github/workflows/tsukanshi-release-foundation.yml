@@ -35,6 +35,7 @@ jobs:
         run: |
           node --check tsukanshi-sprint/bootstrap-v21.js
           node --check tsukanshi-sprint/app-v21.js
+          node --check tsukanshi-sprint/storekit-ui-guard.js
           node --check tsukanshi-sprint/official-past-exam-links.js
           node --check tsukanshi-sprint/release-links.js
           node --check tsukanshi-sprint/validate-apple-preflight.mjs
@@ -57,6 +58,8 @@ jobs:
         run: |
           grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tsukanshi' tsukanshi-sprint/ios/project.yml
           grep -q 'MARKETING_VERSION: 1.0.0' tsukanshi-sprint/ios/project.yml
+          grep -q 'com.apple.InAppPurchase:' tsukanshi-sprint/ios/project.yml
+          grep -q 'enabled: 1' tsukanshi-sprint/ios/project.yml
           grep -q -- '- path: Web' tsukanshi-sprint/ios/project.yml
           grep -q 'type: folder' tsukanshi-sprint/ios/project.yml
           test "$(grep -c 'buildPhase: resources' tsukanshi-sprint/ios/project.yml)" -ge 3
@@ -76,11 +79,14 @@ jobs:
             questions-v02-jm1.js questions-v02-jm2.js questions-v02-jm3.js questions-v02-jm4.js \
             sources-v03.js questions-v03-tb.js questions-v03-audit1.js questions-v03-audit1-order.js \
             questions-v03-audit1-polish.js questions-editorial-audit2-7.js questions-editorial-final-polish.js \
-            official-past-exam-links.js release-links.js bootstrap-v21.js app-v21.js manifest.json icon.svg; do
+            official-past-exam-links.js release-links.js storekit-ui-guard.js bootstrap-v21.js app-v21.js manifest.json icon.svg; do
             test -f "tsukanshi-sprint/$file"
             grep -q "$file" tsukanshi-sprint/ios/prepare-ios.sh
           done
+          grep -q 'storekit-ui-guard.js?v=20260809-1620' tsukanshi-sprint/index.html
           grep -q 'release-links.js?v=20260809-1433' tsukanshi-sprint/index.html
+          ! grep -q "displayPrice:'¥980'" tsukanshi-sprint/storekit-ui-guard.js
+          grep -q 'App Store版で価格を表示' tsukanshi-sprint/storekit-ui-guard.js
 
       - name: Validate public submission pages and metadata
         run: |
@@ -108,7 +114,8 @@ jobs:
           from pathlib import Path
           text=Path('codemagic.yaml').read_text(encoding='utf-8')
           block=text.split('\n  tsukanshi-ios:',1)[1]
+          assert 'testFlightInternalTestingOnly' in block
           assert 'submit_to_testflight: false' in block
           assert 'submit_to_app_store: false' in block
-          print('PASS: Codemagic cannot auto-submit during release foundation stage')
+          print('PASS: Codemagic uploads to App Store Connect without beta-review or App Store auto-submit')
           PY
