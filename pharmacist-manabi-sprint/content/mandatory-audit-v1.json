@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-09",
+  "scope": "mandatory_questions_primary_source_pass",
+  "auditDefinition": {
+    "completedChecks": [
+      "question_number_range",
+      "official_answer",
+      "correction_scope",
+      "scoring_exclusion_scope",
+      "subject_mapping",
+      "asset_risk_first_pass"
+    ],
+    "notYetCompleted": [
+      "question_text_finalization",
+      "choice_text_finalization",
+      "explanation_primary_evidence",
+      "effective_date_per_question",
+      "high_similarity_scan",
+      "final_copyright_audit"
+    ],
+    "statusMeaning": "PASS here is only the mandatory primary-source metadata/asset-risk pass; it is not the final problem-bank audit."
+  },
+  "subjectRanges": [
+    {"from":1,"to":5,"subject":"物理"},
+    {"from":6,"to":10,"subject":"化学"},
+    {"from":11,"to":15,"subject":"生物"},
+    {"from":16,"to":25,"subject":"衛生"},
+    {"from":26,"to":40,"subject":"薬理"},
+    {"from":41,"to":55,"subject":"薬剤"},
+    {"from":56,"to":70,"subject":"病態・薬物治療"},
+    {"from":71,"to":80,"subject":"法規・制度・倫理"},
+    {"from":81,"to":90,"subject":"実務"}
+  ],
+  "policy": {
+    "textOnly": "cleared_text_adapt = adapt with MHLW attribution and modification disclosure; do not present as verbatim official question.",
+    "visualOrLayout": "rewrite = do not copy original figure/table/structure/layout; redraw from verified facts/data or restate as an independent text question.",
+    "thirdPartyAsset": "separate source-rights review is required; default to rebuild/restate."
+  },
+  "exams": [
+    {
+      "exam": 111,
+      "questionRange": [1,90],
+      "questionCount": 90,
+      "allScored": true,
+      "correctionQuestionsInMandatory": [],
+      "excludedQuestionsInMandatory": [],
+      "officialAnswers": [5,5,1,2,4,2,1,3,3,3,4,2,3,4,4,3,1,2,3,2,5,5,4,4,2,1,1,4,4,2,5,4,3,4,3,3,3,4,1,2,4,5,4,5,3,3,4,5,5,3,1,3,5,1,4,5,4,1,5,1,4,5,1,4,2,3,3,2,2,5,1,4,3,1,4,5,5,3,3,2,2,2,4,2,5,2,3,1,3,2],
+      "rewriteQuestionNos": [3,5,6,7,8,9,10,11,18,41,48,53,54,78,79,86],
+      "clearedTextAdaptCount": 74,
+      "rewriteCount": 16,
+      "specialAssetNotes": [],
+      "sourceRef": "mhlw-111"
+    },
+    {
+      "exam": 110,
+      "questionRange": [1,90],
+      "questionCount": 90,
+      "allScored": true,
+      "correctionQuestionsInMandatory": [],
+      "excludedQuestionsInMandatory": [],
+      "officialAnswers": [3,4,5,5,1,4,3,5,4,3,3,5,3,5,2,4,1,3,3,3,1,4,4,2,2,4,1,5,1,3,4,4,5,1,5,3,2,3,3,2,5,4,5,2,3,4,4,4,5,1,2,2,1,3,1,2,2,4,1,5,1,3,1,2,1,1,4,3,4,1,2,3,2,3,5,2,1,3,2,2,5,4,2,1,5,5,4,4,3,2],
+      "rewriteQuestionNos": [1,6,7,8,9,10,12,16,19,23,26,41,45,51,53,75],
+      "clearedTextAdaptCount": 74,
+      "rewriteCount": 16,
+      "specialAssetNotes": [],
+      "sourceRef": "mhlw-110"
+    },
+    {
+      "exam": 109,
+      "questionRange": [1,90],
+      "questionCount": 90,
+      "allScored": true,
+      "correctionQuestionsInMandatory": [],
+      "excludedQuestionsInMandatory": [],
+      "officialAnswers": [4,5,2,1,2,2,2,4,3,4,3,2,4,4,1,5,4,1,2,3,1,3,2,4,4,4,2,5,3,1,4,3,4,4,5,3,1,3,1,3,3,1,5,5,2,3,4,3,4,2,2,3,5,4,2,2,4,5,1,1,5,5,3,4,2,2,3,4,4,3,1,2,4,3,1,2,4,1,5,3,1,5,2,1,3,4,2,3,5,3],
+      "rewriteQuestionNos": [8,9,19,21,25,39,41,42,43,50,52,55,69,81,82],
+      "clearedTextAdaptCount": 75,
+      "rewriteCount": 15,
+      "specialAssetNotes": [
+        {
+          "questionNo": 25,
+          "assetStatus": "third_party_government_graph",
+          "action": "rebuild_from_primary_data_or_restate",
+          "note": "The original graph is based on a MIC/Environmental Dispute Coordination Commission report; do not directly copy the graph."
+        }
+      ],
+      "sourceRef": "mhlw-109"
+    }
+  ]
+}
