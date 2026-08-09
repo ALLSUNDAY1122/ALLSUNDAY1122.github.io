@@ -1,4 +1,4 @@
-name: Otsu4 Sync Latest Main
+name: Otsu4 Sync Main and Release Gate
 
 on:
   push:
@@ -10,19 +10,128 @@ permissions:
   contents: write
 
 jobs:
-  sync-main:
-    runs-on: ubuntu-latest
+  release-gate:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feat/otsu4-360-productization
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Merge latest main and preserve main on conflict hunks
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Sync latest main without dropping unrelated work
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           git merge --no-edit -X theirs origin/main -m "chore: sync latest main into Otsu4 release branch"
+
+      - name: Strict 360-question content audit
+        run: node tools/otsu4-build-content-v2.mjs --check
+
+      - name: Prepare audited iOS resources
+        run: bash native-ios/Otsu4Sprint/prepare-ios.sh
+
+      - name: Runtime-decode 360 questions and v2.1 selections
+        run: |
+          cat > /tmp/Otsu4ContentDecodeCheck.swift <<'SWIFT'
+          import Foundation
+          @main
+          struct Check {
+              static func main() throws {
+                  let url = URL(fileURLWithPath: "native-ios/Otsu4Sprint/Generated/questions.generated.json")
+                  let store = try Otsu4ContentStore(url: url)
+                  guard store.allQuestions.count == 360 else { fatalError("360 count mismatch") }
+                  guard store.freeQuestions.count == 72 else { fatalError("free 72 mismatch") }
+                  guard store.sprint(goal: 4, isPremium: true).count == 4 else { fatalError("sprint4") }
+                  guard store.sprint(goal: 8, isPremium: true).count == 8 else { fatalError("sprint8") }
+                  guard store.sprint(goal: 16, isPremium: true).count == 16 else { fatalError("sprint16") }
+                  for set in 1...3 {
+                      guard let mock = store.mockExamQuestions(set: set), mock.count == 35 else { fatalError("mock set") }
+                      let counts = Dictionary(grouping: mock, by: \.subject).mapValues(\.count)
+                      guard counts["法令"] == 15, counts["物理・化学"] == 10, counts["性質・消火"] == 10 else { fatalError("mock ratio") }
+                  }
+                  guard Otsu4ContentStore.mockSetsAreDisjoint(in: store) else { fatalError("mock overlap") }
+                  print("runtime content PASS")
+              }
+          }
+          SWIFT
+          xcrun swiftc native-ios/Otsu4Sprint/Otsu4ContentStore.swift /tmp/Otsu4ContentDecodeCheck.swift -o /tmp/otsu4-content-check
+          /tmp/otsu4-content-check
+
+      - name: Typecheck complete native learning and StoreKit flow
+        run: |
+          xcrun --sdk iphonesimulator swiftc \
+            -target arm64-apple-ios17.0-simulator \
+            -typecheck \
+            native-ios/Otsu4Sprint/Otsu4ContentStore.swift \
+            native-ios/Otsu4Sprint/Otsu4PurchaseStore.swift \
+            native-ios/Otsu4Sprint/Otsu4PaywallView.swift \
+            native-ios/Otsu4Sprint/Otsu4DesignSystem.swift \
+            native-ios/Otsu4Sprint/Otsu4LearningStore.swift \
+            native-ios/Otsu4Sprint/Otsu4StudySession.swift \
+            native-ios/Otsu4Sprint/Otsu4LearningView.swift
+
+      - name: Generate Xcode project and Release Simulator build
+        run: |
+          set -euo pipefail
+          brew install xcodegen
+          plutil -lint native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy
+          cd native-ios/Otsu4Sprint
+          xcodegen generate
+          set -o pipefail
+          xcodebuild \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty
+
+      - name: Verify app bundle release resources
+        run: |
+          set -euo pipefail
+          APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
+          test -n "$APP"
+          test -f "$APP/questions.generated.json"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          test -f "$APP/Assets.car"
+          python3 - "$APP/questions.generated.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert data['contentVersion']=='otsu4-2026-08-product-v2'
+          assert len(data['questions'])==360
+          print('release bundle PASS: questions=360 privacy=present assets=present')
+          PY
+
+      - name: Fix release-gate result in repository
+        run: |
+          set -euo pipefail
+          mkdir -p native-ios/Otsu4Sprint
+          cat > native-ios/Otsu4Sprint/RELEASE_CI_STATUS.md <<EOF
+          # 危険物乙4 Release Gate
+
+          - Result: **PASS**
+          - Verified at: $(date -u '+%Y-%m-%dT%H:%M:%SZ')
+          - Content audit: PASS / 360 questions
+          - Native runtime decode: PASS
+          - Sprint goals: 4 / 8 / 16 PASS
+          - Mock exams: 3 sets × 35 questions / 15-10-10 / ID overlap 0 PASS
+          - SwiftUI + StoreKit typecheck: PASS
+          - Xcode Release Simulator build: PASS
+          - App bundle questions.generated.json: present / 360
+          - App bundle PrivacyInfo.xcprivacy: present
+          - App bundle Assets.car / AppIcon: present
+          - Production App Store submit: **NOT EXECUTED**
+          EOF
+          git add native-ios/Otsu4Sprint/RELEASE_CI_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m "test: record Otsu4 release gate PASS"
+          fi
           git push origin HEAD:feat/otsu4-360-productization
