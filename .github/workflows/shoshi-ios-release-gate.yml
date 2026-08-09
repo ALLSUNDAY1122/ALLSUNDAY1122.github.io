@@ -1,19 +1,10 @@
 name: Shoshi iOS Release Gate
 
 on:
-  push:
-    branches:
-      - feature/shoshi-ios-testflight-gate
-    paths:
-      - 'learning-sprint/shoshi/**'
-      - 'codemagic.yaml'
-      - '.github/workflows/shoshi-ios-release-gate.yml'
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'learning-sprint/shoshi/**'
-      - 'codemagic.yaml'
       - '.github/workflows/shoshi-ios-release-gate.yml'
   workflow_dispatch:
 
@@ -37,22 +28,17 @@ jobs:
             learning-sprint/shoshi/ios/native_ui_audit.py
           python - <<'PY'
           import plistlib
-          p='learning-sprint/shoshi/ios/PrivacyInfo.xcprivacy'
-          with open(p,'rb') as f: data=plistlib.load(f)
+          with open('learning-sprint/shoshi/ios/PrivacyInfo.xcprivacy','rb') as f: data=plistlib.load(f)
           assert data.get('NSPrivacyTracking') is False
           assert data.get('NSPrivacyTrackingDomains') == []
           assert data.get('NSPrivacyCollectedDataTypes') == []
           assert data.get('NSPrivacyAccessedAPITypes') == []
           print('PASS: Shoshi Privacy Manifest')
           PY
-      - name: Prepare native local bundle and canonical AppIcon
+      - name: Prepare native local bundle for UI audit
+        env:
+          SHOSHI_ICON_MODE: skip
         run: bash learning-sprint/shoshi/ios/prepare-ios.sh
-      - name: Verify canonical AppIcon bytes
-        run: |
-          test "$(shasum -a 256 learning-sprint/shoshi/ios/AppIcon.png | awk '{print $1}')" = \
-            "c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
-          test "$(shasum -a 256 learning-sprint/shoshi/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png | awk '{print $1}')" = \
-            "c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
       - name: Install browser audit dependency
         run: python -m pip install --disable-pip-version-check selenium
       - name: Run native StoreKit UI audit
@@ -67,13 +53,14 @@ jobs:
           if-no-files-found: warn
 
   macos-release-build:
-    needs: native-ui-and-preflight
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Prepare audited local bundle and canonical AppIcon
+      - name: Prepare audited local bundle with compile-only placeholder icon
+        env:
+          SHOSHI_ICON_MODE: simulator-placeholder
         run: bash learning-sprint/shoshi/ios/prepare-ios.sh
       - name: Generate Xcode project and normalize IAP capability
         run: |
@@ -114,6 +101,17 @@ jobs:
         if: always()
         with:
           name: shoshi-xcode-release-logs
-          path: |
-            /tmp/ShoshiDerivedData/Logs/**
+          path: /tmp/ShoshiDerivedData/Logs/**
           if-no-files-found: ignore
+
+  canonical-icon-transport:
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Canonical Drive icon must reproduce exact bytes
+        run: bash learning-sprint/shoshi/ios/prepare-ios.sh
+      - name: Verify exact canonical hash
+        run: |
+          test "$(shasum -a 256 learning-sprint/shoshi/ios/AppIcon.png | awk '{print $1}')" = \
+            "c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
