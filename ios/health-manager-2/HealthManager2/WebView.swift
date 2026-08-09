@@ -8,23 +8,32 @@ struct LocalWebView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let controller = WKUserContentController()
         controller.add(context.coordinator, name: "exportJSON")
+        controller.add(context.coordinator, name: "nativeHaptic")
+        controller.addUserScript(WKUserScript(
+            source: Self.hapticBridge,
+            injectionTime: .atDocumentEnd,
+            forMainFrameOnly: true
+        ))
 
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
         configuration.userContentController = controller
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = false
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.scrollView.bounces = false
+        webView.allowsBackForwardNavigationGestures = false
         webView.isOpaque = false
         webView.backgroundColor = UIColor(red: 247/255, green: 243/255, blue: 234/255, alpha: 1)
+        webView.scrollView.backgroundColor = webView.backgroundColor
 
         context.coordinator.webView = webView
 
         guard let webRoot = Bundle.main.resourceURL?.appendingPathComponent("Web", isDirectory: true),
               let indexURL = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else {
-            assertionFailure("Bundled Web/index.html was not found")
+            webView.loadHTMLString(Self.missingBundleHTML, baseURL: nil)
             return webView
         }
 
@@ -35,7 +44,9 @@ struct LocalWebView: UIViewRepresentable {
     func updateUIView(_ webView: WKWebView, context: Context) {}
 
     static func dismantleUIView(_ webView: WKWebView, coordinator: Coordinator) {
-        webView.configuration.userContentController.removeScriptMessageHandler(forName: "exportJSON")
+        let controller = webView.configuration.userContentController
+        controller.removeScriptMessageHandler(forName: "exportJSON")
+        controller.removeScriptMessageHandler(forName: "nativeHaptic")
     }
 
     final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
@@ -83,13 +94,44 @@ struct LocalWebView: UIViewRepresentable {
                 return
             }
 
-            decisionHandler(.allow)
+            decisionHandler(.cancel)
         }
 
         func userContentController(_ userContentController: WKUserContentController,
                                    didReceive message: WKScriptMessage) {
-            guard message.name == "exportJSON", let text = message.body as? String else { return }
-            export(text)
+            switch message.name {
+            case "exportJSON":
+                guard let text = message.body as? String else { return }
+                export(text)
+            case "nativeHaptic":
+                guard let kind = message.body as? String else { return }
+                haptic(kind)
+            default:
+                return
+            }
+        }
+
+        private func haptic(_ kind: String) {
+            DispatchQueue.main.async {
+                switch kind {
+                case "success":
+                    let generator = UINotificationFeedbackGenerator()
+                    generator.prepare()
+                    generator.notificationOccurred(.success)
+                case "error":
+                    let generator = UINotificationFeedbackGenerator()
+                    generator.prepare()
+                    generator.notificationOccurred(.error)
+                case "selection":
+                    let generator = UISelectionFeedbackGenerator()
+                    generator.prepare()
+                    generator.selectionChanged()
+                default:
+                    let generator = UIImpactFeedbackGenerator(style: .light)
+                    generator.prepare()
+                    generator.impactOccurred()
+                }
+            }
         }
 
         private func export(_ text: String) {
@@ -98,8 +140,9 @@ struct LocalWebView: UIViewRepresentable {
             let name = "第二種衛生管理者_学びスプリント_\(formatter.string(from: Date())).json"
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
 
+            guard let data = text.data(using: .utf8) else { return }
             do {
-                try text.data(using: .utf8)?.write(to: url, options: .atomic)
+                try data.write(to: url, options: .atomic)
             } catch {
                 return
             }
@@ -133,4 +176,33 @@ struct LocalWebView: UIViewRepresentable {
             return root
         }
     }
+
+    private static let hapticBridge = #"""
+    (() => {
+      if (window.__sm2NativeHapticInstalled) return;
+      window.__sm2NativeHapticInstalled = true;
+      const send = (kind) => {
+        try { window.webkit.messageHandlers.nativeHaptic.postMessage(kind); } catch (_) {}
+      };
+      document.addEventListener('click', (event) => {
+        const answer = event.target.closest('.choice,.unknown');
+        if (answer) {
+          requestAnimationFrame(() => {
+            const feedback = document.querySelector('.fbhead');
+            if (feedback?.classList.contains('ok')) send('success');
+            else if (feedback?.classList.contains('ng')) send('error');
+            else send('selection');
+          });
+          return;
+        }
+        if (event.target.closest('button')) send('light');
+      }, true);
+    })();
+    """#
+
+    private static let missingBundleHTML = """
+    <!doctype html><meta name=viewport content='width=device-width,initial-scale=1'>
+    <body style='font-family:-apple-system;padding:32px;background:#f7f3ea;color:#1c2331'>
+    <h2>教材データを読み込めませんでした</h2><p>アプリを再インストールしてください。</p></body>
+    """
 }
