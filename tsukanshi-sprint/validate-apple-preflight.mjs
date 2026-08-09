@@ -27,6 +27,7 @@ includes(swift, 'Transaction.currentEntitlements', 'current entitlements');
 includes(swift, 'Transaction.updates', 'transaction updates observer');
 includes(swift, 'AppStore.sync()', 'restore purchases');
 includes(swift, 'transaction.revocationDate == nil', 'revocation handling');
+includes(swift, 'context.coordinator.pushStoreKitState()', 'native StoreKit state bridge');
 
 const marker = '\n  tsukanshi-ios:';
 must(codemagic.includes(marker), 'missing tsukanshi-ios workflow');
@@ -51,7 +52,7 @@ includes(packet, 'Type: Non-Consumable', 'IAP type');
 includes(packet, '`submit_to_app_store`: false', 'manual App Review gate');
 includes(storekitPlan, PRODUCT, 'StoreKit test product id');
 includes(storekitPlan, 'Sandbox購入成功', 'Sandbox purchase gate');
-includes(storekitPlan, 'Sandbox復元', 'Sandbox restore gate');
+includes(storekitPlan, '復元で解放', 'Sandbox restore gate');
 includes(review, '税関・財務省の公式アプリではありません', 'review disclaimer');
 includes(rights, 'WCO', 'third-party rights audit');
 
