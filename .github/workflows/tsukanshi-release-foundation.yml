@@ -57,12 +57,14 @@ jobs:
           grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tsukanshi' tsukanshi-sprint/ios/project.yml
           grep -q 'MARKETING_VERSION: 1.0.0' tsukanshi-sprint/ios/project.yml
           grep -q -- '- path: Web' tsukanshi-sprint/ios/project.yml
+          grep -q 'type: folder' tsukanshi-sprint/ios/project.yml
+          test "$(grep -c 'buildPhase: resources' tsukanshi-sprint/ios/project.yml)" -ge 3
           grep -q -- '- path: Assets.xcassets' tsukanshi-sprint/ios/project.yml
           grep -q -- '- path: PrivacyInfo.xcprivacy' tsukanshi-sprint/ios/project.yml
+          ! grep -q '^    resources:' tsukanshi-sprint/ios/project.yml
           ! grep -q -- '- path: ../style.css' tsukanshi-sprint/ios/project.yml
           ! grep -q -- '- path: ../app.js' tsukanshi-sprint/ios/project.yml
-          grep -q 'Bundle.main.url(forResource: "index", withExtension: "html")' tsukanshi-sprint/ios/App.swift
-          ! grep -q 'subdirectory: "Web"' tsukanshi-sprint/ios/App.swift
+          grep -q 'subdirectory: "Web"' tsukanshi-sprint/ios/App.swift
           grep -q 'allsunday1122.github.io' tsukanshi-sprint/ios/App.swift
 
       - name: Validate bundled web asset manifest
