@@ -103,22 +103,34 @@ struct WebAppView: UIViewRepresentable {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = controller
         configuration.websiteDataStore = .default()
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = false
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.isOpaque = false
-        webView.backgroundColor = UIColor(red: 253/255, green: 246/255, blue: 239/255, alpha: 1)
+        webView.backgroundColor = UIColor(red: 247/255, green: 243/255, blue: 234/255, alpha: 1)
         webView.scrollView.backgroundColor = webView.backgroundColor
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         context.coordinator.webView = webView
 
-        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
-            webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        guard let webRoot = Bundle.main.resourceURL?.appendingPathComponent("Web", isDirectory: true),
+              let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else {
+            webView.loadHTMLString(Self.missingBundleHTML, baseURL: nil)
+            return webView
         }
+        webView.loadFileURL(url, allowingReadAccessTo: webRoot)
         return webView
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
         context.coordinator.store = store
+    }
+
+    static func dismantleUIView(_ webView: WKWebView, coordinator: Coordinator) {
+        let controller = webView.configuration.userContentController
+        controller.removeScriptMessageHandler(forName: "storeKit")
+        controller.removeScriptMessageHandler(forName: "state")
+        controller.removeScriptMessageHandler(forName: "openExternal")
     }
 
     final class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
@@ -165,7 +177,7 @@ struct WebAppView: UIViewRepresentable {
                   let url = URL(string: urlString),
                   url.scheme == "https",
                   let host = url.host?.lowercased(),
-                  host == "www.customs.go.jp" || host == "customs.go.jp" else { return }
+                  ["www.customs.go.jp", "customs.go.jp", "allsunday1122.github.io"].contains(host) else { return }
             Task { @MainActor in
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
@@ -186,4 +198,10 @@ struct WebAppView: UIViewRepresentable {
             webView.evaluateJavaScript("window.__nativeStoreKitUpdate(\(json));")
         }
     }
+
+    private static let missingBundleHTML = """
+    <!doctype html><meta name=viewport content='width=device-width,initial-scale=1'>
+    <body style='font-family:-apple-system;padding:32px;background:#f7f3ea;color:#1c2331'>
+    <h2>教材データを読み込めませんでした</h2><p>アプリを再インストールしてください。</p></body>
+    """
 }
