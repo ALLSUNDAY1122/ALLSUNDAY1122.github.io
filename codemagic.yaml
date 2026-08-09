@@ -126,3 +126,79 @@ workflows:
         auth: integration
         submit_to_testflight: false
         submit_to_app_store: false
+
+  tsukanshi-ios:
+    name: 通関士 - iOS Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.tsukanshi
+      vars:
+        BUNDLE_ID: jp.allsunday1122.tsukanshi
+        XCODE_PROJECT: tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj
+        XCODE_SCHEME: TsukanshiSprint
+      xcode: latest
+    scripts:
+      - name: Audit Tsukanshi release inputs
+        script: |
+          cd "$CM_BUILD_DIR"
+          node tsukanshi-sprint/validate-content.mjs
+          node tsukanshi-sprint/validate-editorial-final.mjs
+          bash -n tsukanshi-sprint/ios/prepare-ios.sh
+          python3 - <<'PY'
+          import plistlib
+          with open('tsukanshi-sprint/ios/PrivacyInfo.xcprivacy','rb') as f:
+              data=plistlib.load(f)
+          assert data.get('NSPrivacyTracking') is False
+          assert data.get('NSPrivacyCollectedDataTypes') == []
+          entries=data.get('NSPrivacyAccessedAPITypes',[])
+          assert any(x.get('NSPrivacyAccessedAPIType')=='NSPrivacyAccessedAPICategoryUserDefaults' and 'CA92.1' in x.get('NSPrivacyAccessedAPITypeReasons',[]) for x in entries)
+          print('PASS: Tsukanshi Privacy Manifest')
+          PY
+      - name: Install XcodeGen and ImageMagick
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
+      - name: Prepare audited web bundle and icon
+        script: bash "$CM_BUILD_DIR/tsukanshi-sprint/ios/prepare-ios.sh"
+      - name: Set CI build number and generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/tsukanshi-sprint/ios"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path('project.yml')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)
+          p.write_text(text,encoding='utf-8')
+          PY
+          xcodegen generate
+      - name: Verify Tsukanshi release inputs
+        script: |
+          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/index.html"
+          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/questions-editorial-final-polish.js"
+          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/official-past-exam-links.js"
+          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/release-links.js"
+          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
+      - name: Apply App Store signing profiles for internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/tsukanshi-sprint/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
