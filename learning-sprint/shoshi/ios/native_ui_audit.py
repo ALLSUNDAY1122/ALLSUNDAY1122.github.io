@@ -3,9 +3,6 @@ from __future__ import annotations
 
 import json
 import pathlib
-import subprocess
-import sys
-import time
 from contextlib import suppress
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -29,23 +26,18 @@ def main() -> int:
     from selenium.webdriver.common.by import By
     from selenium.webdriver.support.ui import WebDriverWait
 
-    if not (WEB / 'index.html').exists():
+    index = WEB / 'index.html'
+    if not index.exists():
         fail('prepare-ios.sh must run before native_ui_audit.py')
 
     AUDIT.mkdir(parents=True, exist_ok=True)
-    server = subprocess.Popen(
-        [sys.executable, '-m', 'http.server', '8766', '--bind', '127.0.0.1'],
-        cwd=ROOT,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
     driver = None
     try:
-        time.sleep(1)
         opts = Options()
         opts.add_argument('--headless=new')
         opts.add_argument('--no-sandbox')
         opts.add_argument('--disable-dev-shm-usage')
+        opts.add_argument('--allow-file-access-from-files')
         opts.add_argument('--window-size=390,844')
         opts.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
         driver = webdriver.Chrome(options=opts)
@@ -57,10 +49,11 @@ def main() -> int:
           }};
         """})
         wait = WebDriverWait(driver, 20)
-        url = 'http://127.0.0.1:8766/learning-sprint/shoshi/ios/Web/'
-        driver.get(url)
+        driver.get(index.resolve().as_uri())
 
         wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, '.subject-card')) == 11)
+        if driver.execute_script('return location.protocol') != 'file:':
+            fail('native browser: expected file:// bundle load')
         if len(driver.find_elements(By.CSS_SELECTOR, '#bottomNav button')) != 4:
             fail('native browser: bottom nav != 4')
         if driver.execute_script('return document.documentElement.scrollWidth > window.innerWidth + 1'):
@@ -76,7 +69,7 @@ def main() -> int:
             fail('native browser: purchase enabled before StoreKit displayPrice')
         driver.save_screenshot(str(AUDIT / 'paywall-unavailable-mobile.png'))
 
-        # StoreKit product price enables the purchase UI using a localized runtime price.
+        # Runtime localized price enables the purchase UI; no fixed product price is used here.
         driver.execute_script("window.__nativeStoreKitUpdate({native:true,premium:false,displayPrice:'TEST_PRICE',status:'known'});")
         wait.until(lambda d: d.find_element(By.CSS_SELECTOR, '[data-native-purchase]').is_enabled())
         if 'TEST_PRICE' not in driver.find_element(By.CSS_SELECTOR, '[data-native-price]').text:
@@ -127,6 +120,7 @@ def main() -> int:
 
         report = {
             'status': 'PASS',
+            'bundle_protocol': 'file:',
             'viewport': '390x844',
             'subject_cards': 11,
             'nav_tabs': 4,
@@ -145,9 +139,6 @@ def main() -> int:
         if driver:
             with suppress(Exception):
                 driver.quit()
-        server.terminate()
-        with suppress(Exception):
-            server.wait(timeout=5)
 
 
 if __name__ == '__main__':
