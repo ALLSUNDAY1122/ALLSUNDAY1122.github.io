@@ -3,9 +3,9 @@
 更新日: 2026-08-09
 
 ## 現在地
-**申請前リリース基盤整備中**
+**申請前リリース基盤完了｜Apple側登録・署名工程待ち**
 
-教材・UI・権利監査は完了。App Store申請手順に従い、iOS ReleaseビルドとTestFlightへ進むための申請資産・CIを整備する。
+教材・UI・権利監査に加え、App Store申請資産、Privacy Manifest、XcodeGen、iPhone Simulator向けRelease build、実ビルドbundle内の教材資産確認まで完了した。
 
 ## 固定値
 - App: 通関士｜学びスプリント
@@ -32,18 +32,18 @@
 - [x] Privacy Manifest作成（UserDefaults / CA92.1）
 - [x] 公開Support / Privacyページ作成
 - [x] App Store Metadata初稿
+- [x] App Review Notes初稿
 - [x] iOS Web資産を現行監査済みセットへ切替
-- [x] AppIcon 1024px生成工程を準備
+- [x] AppIcon 1024px生成工程
+- [x] Release foundation lint
+- [x] Privacy Manifest parse
+- [x] XcodeGen生成
+- [x] iPhone Simulator Release build
+- [x] 実`.app`内 `Web/index.html` / 全監査パッチ / Privacy Manifest / AppIcon確認
+- [x] 既存教材CI 480＋12維持
+- [x] macOS CIを実装変更時だけに限定して無料枠消費を抑制
 
-## このPRでCI確認する項目
-- [ ] Release foundation lint
-- [ ] Privacy Manifest parse
-- [ ] XcodeGen生成
-- [ ] iPhone Simulator Release build
-- [ ] アプリbundle内 `Web/index.html` / 全監査パッチ / Privacy Manifest / AppIcon確認
-- [ ] 既存教材CI 480＋12を維持
-
-## CI成功後に残るApple側工程
+## 次のApple側工程
 1. App Store Connectで新規Appレコード作成
 2. Explicit App ID / Bundle ID一致確認
 3. IAP `jp.allsunday1122.tsukanshi.premium` をNon-Consumableで作成
@@ -67,5 +67,6 @@
 - 本審査提出ボタンの最終承認
 
 ## リリースゲート
-**TestFlight-ready判定は、macOS CIのRelease build成功とCodemagic署名設定確認後。**
+**コード側の申請前ゲートは合格。**
+**TestFlight-ready判定は、App Store Connect登録とCodemagic署名付きIPA生成・アップロードが完了した時点。**
 **App Store-ready判定は、Sandbox購入・復元を含むiPhone実機確認完了後。**
