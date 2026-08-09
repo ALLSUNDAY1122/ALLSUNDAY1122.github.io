@@ -39,12 +39,13 @@ final class StoreKitManager: ObservableObject {
     }
 
     func refresh() async {
+        var productLoadFailed = false
         if product == nil {
             do {
                 product = try await Product.products(for: [Self.productID]).first
                 displayPrice = product?.displayPrice ?? ""
             } catch {
-                status = "error"
+                productLoadFailed = true
             }
         }
 
@@ -58,7 +59,9 @@ final class StoreKitManager: ObservableObject {
         }
         isPremium = entitled
 
-        if status != "error" {
+        if productLoadFailed {
+            status = "error"
+        } else {
             status = product == nil ? "product_unavailable" : "known"
         }
     }
@@ -144,6 +147,7 @@ struct WebAppView: UIViewRepresentable {
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
         context.coordinator.store = store
+        context.coordinator.pushStoreKitState()
     }
 
     static func dismantleUIView(_ webView: WKWebView, coordinator: Coordinator) {
@@ -210,7 +214,7 @@ struct WebAppView: UIViewRepresentable {
         }
 
         @MainActor
-        private func pushStoreKitState() {
+        func pushStoreKitState() {
             guard let webView,
                   JSONSerialization.isValidJSONObject(store.payload()),
                   let data = try? JSONSerialization.data(withJSONObject: store.payload()),
