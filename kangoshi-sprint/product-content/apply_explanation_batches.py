@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parent
 DRAFT=ROOT/'enriched-draft'
 BATCH=ROOT/'explanation-batches'
 REQUIRED=ROOT/'required-150'
+SITUATION_AUDIT=ROOT/'situation-audit'
 BATCH.mkdir(exist_ok=True)
 
 sets={}
@@ -22,6 +23,7 @@ for sid in ('set1','set2','set3'):
 errors=[]
 text_corrections_applied=[]
 special_quarantine_ids=set()
+situation_expert_ids=set()
 
 def valid_row(row, source_name):
     qid=row.get('id')
@@ -138,7 +140,7 @@ if special_explanation_path.exists():
             applied.append(qid)
             special_applied.append(qid)
 
-# Propagate specialist quarantine metadata without changing official scoring data.
+# Propagate required-question specialist quarantine metadata without changing official scoring data.
 special_case_path=REQUIRED/'special-cases.json'
 if special_case_path.exists():
     doc=json.loads(special_case_path.read_text(encoding='utf-8'))
@@ -163,6 +165,44 @@ if special_case_path.exists():
         q['specialistQuarantineReasons']=reasons
         special_quarantine_ids.add(qid)
 
+# Situation specialist queue is coordinator-owned release metadata. It must not
+# alter the official answer or scoring fields; it only holds the question until
+# expert review is complete.
+situation_expert_path=SITUATION_AUDIT/'expert-review-queue.json'
+if situation_expert_path.exists():
+    doc=json.loads(situation_expert_path.read_text(encoding='utf-8'))
+    items=doc.get('items') or []
+    if not isinstance(items,list):
+        errors.append(f'{situation_expert_path.name}: items invalid')
+    else:
+        seen_situation=set()
+        for row in items:
+            qid=row.get('questionId') or row.get('id')
+            if qid in seen_situation:
+                errors.append(f'{situation_expert_path.name}: duplicate question id {qid}')
+                continue
+            seen_situation.add(qid)
+            q=index.get(qid)
+            if not q:
+                errors.append(f'{situation_expert_path.name}: unknown id {qid}')
+                continue
+            if q.get('category')!='状況設定':
+                errors.append(f'{situation_expert_path.name}: out-of-scope id {qid}')
+                continue
+            q['expertReviewStatus']='required'
+            q['specialistQuarantineStatus']='quarantined'
+            reasons=list(q.get('specialistQuarantineReasons') or [])
+            reasons.append({
+                'kind':'situationExpertReview',
+                'status':row.get('status','expert_review_required'),
+                'reason':row.get('issue'),
+                'scenarioId':row.get('scenarioId'),
+                'priority':row.get('priority')
+            })
+            q['specialistQuarantineReasons']=reasons
+            special_quarantine_ids.add(qid)
+            situation_expert_ids.add(qid)
+
 if errors:
     print('\n'.join(errors))
     raise SystemExit(1)
@@ -177,6 +217,7 @@ report={
     'specialExplanationItems':len(special_applied),
     'textCorrectionsApplied':len(text_corrections_applied),
     'specialistQuarantineCount':len(special_quarantine_ids),
+    'situationExpertReviewCount':len(situation_expert_ids),
     'appliedCount':len(applied),
     'uniqueAppliedCount':len(set(applied)),
     'duplicateQuestionIds':0,
@@ -188,6 +229,8 @@ print(json.dumps({
     'batchFiles':report['batchFiles'],
     'specialExplanationItems':report['specialExplanationItems'],
     'textCorrectionsApplied':report['textCorrectionsApplied'],
+    'specialistQuarantineCount':report['specialistQuarantineCount'],
+    'situationExpertReviewCount':report['situationExpertReviewCount'],
     'appliedCount':report['appliedCount'],
     'uniqueAppliedCount':report['uniqueAppliedCount']
 },ensure_ascii=False))
