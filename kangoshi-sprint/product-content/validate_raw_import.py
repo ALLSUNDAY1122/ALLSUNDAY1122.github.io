@@ -20,7 +20,7 @@ for set_id in ('set1','set2','set3'):
     src=source_by_id[set_id]
     expected_exceptions={(x['session'],int(x['questionNo'])):x for x in src.get('scoringExceptions',[])}
     if len(qs)!=240: errors.append(f'{set_id}: expected 240 questions, got {len(qs)}')
-    ids=set(); cats={k:0 for k in expected}; media=0; empty_stem=0; short_stem=0; malformed_stem=0; missing_answers=0; multiple_accepted=0; numeric=0; choice_shape_errors=0
+    ids=set(); cats={k:0 for k in expected}; media=0; empty_stem=0; short_stem=0; malformed_stem=0; missing_answers=0; multiple_accepted=0; numeric=0; choice_shape_errors=0; scenario_contamination=0
     seen_exceptions=set(); scenario_groups=defaultdict(list)
     for q in qs:
         qid=q.get('id')
@@ -39,6 +39,8 @@ for set_id in ('set1','set2','set3'):
             short_stem+=1; errors.append(f'{qid}: question too short: {stem!r}')
         if any(word in stem for word in FRONT_MATTER_WORDS):
             malformed_stem+=1; errors.append(f'{qid}: front-matter contamination detected')
+        if '次の文を読み' in stem:
+            scenario_contamination+=1; errors.append(f'{qid}: next-scenario preamble leaked into question stem')
 
         key=stem.casefold()
         if key:
@@ -83,6 +85,8 @@ for set_id in ('set1','set2','set3'):
 
         answer_type=q.get('answerType')
         choices=q.get('choices') or []
+        if any('次の文を読み' in str(choice) for choice in choices):
+            scenario_contamination+=1; errors.append(f'{qid}: next-scenario preamble leaked into choices')
         requires_media=bool(q.get('requiresMedia'))
         if requires_media: media+=1
         if answer_type=='numeric':
@@ -139,6 +143,7 @@ for set_id in ('set1','set2','set3'):
         'set':set_id,'count':len(qs),'categories':cats,'scenarioGroups':len(scenario_groups),
         'scenarioQuestions':sum(len(v) for v in scenario_groups.values()),'mediaPending':media,'emptyStem':empty_stem,
         'shortStem':short_stem,'malformedStem':malformed_stem,'choiceShapeErrors':choice_shape_errors,
+        'scenarioContamination':scenario_contamination,
         'missingAnswersAllowedExcluded':missing_answers,'numeric':numeric,'multipleAccepted':multiple_accepted,
         'scoringExceptions':len(seen_exceptions)
     })
@@ -148,7 +153,7 @@ report={
     'sets':summaries,
     'exactDuplicateStemsAcrossSets':duplicates,
     'releaseAllowed':False,
-    'note':'raw取込監査。各試験回20症例×3問の状況設定紐付けも必須。数字だけ・前付け混入・選択肢構造不良・採点例外不整合をFAILにする。'
+    'note':'raw取込監査。各試験回20症例×3問の状況設定紐付け、次症例文の前問への混入0も必須。数字だけ・前付け混入・選択肢構造不良・採点例外不整合をFAILにする。'
 }
 (RAW/'raw-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 if errors:
