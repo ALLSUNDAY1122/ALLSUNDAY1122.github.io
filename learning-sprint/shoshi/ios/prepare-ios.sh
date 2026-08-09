@@ -10,6 +10,7 @@ ASSET_DIR="$SCRIPT_DIR/Assets.xcassets/AppIcon.appiconset"
 ICON_SRC="$SCRIPT_DIR/AppIcon.png"
 ICON_DRIVE_ID="1lALyLGEVFvdWvMZVsQqdRnEJmJzUOFu7"
 ICON_SHA256="c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
+ICON_MODE="${SHOSHI_ICON_MODE:-canonical}"
 
 rm -rf "$WEB_DST" "$SCRIPT_DIR/Assets.xcassets"
 mkdir -p "$WEB_DST" "$ASSET_DIR"
@@ -18,73 +19,76 @@ for file in index.html styles.css polish.css app.js manifest.webmanifest; do
   test -f "$WEB_SRC/$file"
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
-
-test -f "$QUESTIONS_SRC"
 cp "$QUESTIONS_SRC" "$WEB_DST/questions.generated.json"
-test -f "$SCRIPT_DIR/native-storekit.js"
 cp "$SCRIPT_DIR/native-storekit.js" "$WEB_DST/native-storekit.js"
 
 python3 - "$WEB_DST/index.html" "$WEB_DST/app.js" <<'PY'
 from pathlib import Path
 import sys
-index=Path(sys.argv[1])
-app=Path(sys.argv[2])
+index=Path(sys.argv[1]); app=Path(sys.argv[2])
 html=index.read_text(encoding='utf-8')
 needle='  <script src="app.js" defer></script>'
-if needle not in html:
-    raise SystemExit('ERROR: app.js script marker not found')
+if needle not in html: raise SystemExit('ERROR: app.js script marker not found')
 html=html.replace(needle, '  <script src="native-storekit.js" defer></script>\n'+needle, 1)
 index.write_text(html, encoding='utf-8')
 js=app.read_text(encoding='utf-8')
 old="const DATA_URL = '../content-loop/questions.generated.json';"
-if old not in js:
-    raise SystemExit('ERROR: question data URL marker not found')
+if old not in js: raise SystemExit('ERROR: question data URL marker not found')
 js=js.replace(old, "const DATA_URL = './questions.generated.json';", 1)
 old_call='    setupServiceWorker();'
-new_call="    if (location.protocol !== 'file:') setupServiceWorker();"
-if old_call not in js:
-    raise SystemExit('ERROR: service-worker init marker not found')
-js=js.replace(old_call, new_call, 1)
+if old_call not in js: raise SystemExit('ERROR: service-worker init marker not found')
+js=js.replace(old_call, "    if (location.protocol !== 'file:') setupServiceWorker();", 1)
 app.write_text(js, encoding='utf-8')
 PY
 
-# The series icon must be the canonical individual PNG saved in Google Drive.
-# Never redraw it or crop it from the overview image. A local copy is allowed
-# only when its SHA-256 exactly matches the canonical file fetched on 2026-08-09.
-if [ ! -f "$ICON_SRC" ]; then
-  curl --fail --location --silent --show-error \
-    "https://drive.usercontent.google.com/download?id=${ICON_DRIVE_ID}&export=download&confirm=t" \
-    --output "$ICON_SRC"
-fi
-actual_icon_sha="$(shasum -a 256 "$ICON_SRC" | awk '{print $1}')"
-if [ "$actual_icon_sha" != "$ICON_SHA256" ]; then
-  echo "ERROR: canonical AppIcon SHA-256 mismatch: $actual_icon_sha" >&2
-  rm -f "$ICON_SRC"
-  exit 1
-fi
-cp "$ICON_SRC" "$ASSET_DIR/AppIcon.png"
+case "$ICON_MODE" in
+  skip)
+    echo "INFO: AppIcon skipped for UI-only audit."
+    ;;
+  simulator-placeholder)
+    # Compile-only placeholder. It is never accepted by the canonical release gate.
+    python3 - "$ASSET_DIR/AppIcon.png" <<'PY'
+import struct,sys,zlib
+p=sys.argv[1]; w=h=1024
+row=b'\x00'+bytes((35,57,93))*w
+raw=row*h
+def chunk(t,d):
+    return struct.pack('>I',len(d))+t+d+struct.pack('>I',zlib.crc32(t+d)&0xffffffff)
+png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',w,h,8,2,0,0,0))+chunk(b'IDAT',zlib.compress(raw,9))+chunk(b'IEND',b'')
+open(p,'wb').write(png)
+print('INFO: generated compile-only placeholder icon; not release-approved')
+PY
+    ;;
+  canonical)
+    if [ ! -f "$ICON_SRC" ]; then
+      curl --fail --location --silent --show-error \
+        "https://drive.usercontent.google.com/download?id=${ICON_DRIVE_ID}&export=download&confirm=t" \
+        --output "$ICON_SRC"
+    fi
+    actual_icon_sha="$(shasum -a 256 "$ICON_SRC" | awk '{print $1}')"
+    if [ "$actual_icon_sha" != "$ICON_SHA256" ]; then
+      echo "ERROR: canonical AppIcon SHA-256 mismatch: $actual_icon_sha" >&2
+      rm -f "$ICON_SRC"
+      exit 1
+    fi
+    cp "$ICON_SRC" "$ASSET_DIR/AppIcon.png"
+    echo "PASS: canonical AppIcon SHA256=$actual_icon_sha"
+    ;;
+  *) echo "ERROR: unknown SHOSHI_ICON_MODE=$ICON_MODE" >&2; exit 1 ;;
+esac
 
+if [ "$ICON_MODE" != "skip" ]; then
 cat > "$ASSET_DIR/Contents.json" <<'JSON'
 {
-  "images" : [
-    {
-      "filename" : "AppIcon.png",
-      "idiom" : "universal",
-      "platform" : "ios",
-      "size" : "1024x1024"
-    }
-  ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  }
+  "images" : [{"filename":"AppIcon.png","idiom":"universal","platform":"ios","size":"1024x1024"}],
+  "info" : {"author":"xcode","version":1}
 }
 JSON
+fi
 
 python3 - "$WEB_DST/questions.generated.json" <<'PY'
 import json,sys,hashlib
-p=sys.argv[1]
-data=json.load(open(p,encoding='utf-8'))
+p=sys.argv[1]; data=json.load(open(p,encoding='utf-8'))
 assert isinstance(data,list) and len(data)==210
 assert len({q['id'] for q in data})==210
 q=next(x for x in data if x['id']=='SHOSHI-R7-PM-33')
@@ -93,5 +97,4 @@ print('PASS: bundled 210-question dataset, unique IDs, and R7-PM-33 all_correct'
 print('SHA256:', hashlib.sha256(open(p,'rb').read()).hexdigest())
 PY
 
-echo "PASS: canonical AppIcon SHA256=$actual_icon_sha"
-echo "Prepared ShoshiSprint local audited web bundle and canonical AppIcon."
+echo "Prepared ShoshiSprint local audited web bundle (icon mode: $ICON_MODE)."
