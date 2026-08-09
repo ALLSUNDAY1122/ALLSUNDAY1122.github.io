@@ -10,6 +10,7 @@ on:
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v4.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v5.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v6.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v7.py'
       - '.github/workflows/shoshi-content-audit.yml'
   pull_request:
     branches:
@@ -19,6 +20,7 @@ on:
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v4.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v5.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v6.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v7.py'
       - '.github/workflows/shoshi-content-audit.yml'
   workflow_dispatch:
 
@@ -45,7 +47,7 @@ jobs:
         run: |
           set +e
           cd learning-sprint/shoshi/content-loop
-          python official_pdf_loop_v6.py
+          python official_pdf_loop_v7.py
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
