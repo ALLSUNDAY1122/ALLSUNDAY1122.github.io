@@ -54,11 +54,14 @@ for(const id of ids){
     await page.locator('[data-resume]').click();
     await page.locator('.question-card').waitFor({state:'visible'});
     const qtext=await page.locator('.qtext').innerText();
-    if(q.question.includes('\n\nア．')){
-      const labels=['ア．','イ．','ウ．','エ．'].filter(x=>q.question.includes(`\n\n${x}`));
-      for(const label of labels){
-        if(!qtext.includes(`\n${label}`))throw new Error(`${id}: rendered statement line break missing ${label}`);
+    if(q.question.includes('\n\nア) ')){
+      if(!qtext.includes('\n\nア) '))throw new Error(`${id}: question/statement blank line missing`);
+      for(const label of ['イ','ウ','エ']){
+        if(q.question.includes(`\n${label}) `)&&!qtext.includes(`\n${label}) `)){
+          throw new Error(`${id}: rendered statement line break missing ${label})`);
+        }
       }
+      if(/[アイウエ][．。]/.test(qtext))throw new Error(`${id}: old Japanese-dot item label remains`);
     }
 
     const clickIndex=exact[id]?.wrongClick??q.correct_index;
@@ -84,7 +87,7 @@ for(const id of ids){
   }
 }
 await browser.close();
-const summary={audit:'CPA 11-question display/data-corruption browser regression',status:failed?'FAIL':'PASS',count:results.length,results};
+const summary={audit:'CPA 11-question display/data-corruption + statement-layout browser regression',status:failed?'FAIL':'PASS',count:results.length,layout_rule:'stem\\n\\nア) ...\\nイ) ...',results};
 fs.writeFileSync(path.join(appRoot,'audit','user-report-audit-result.json'),JSON.stringify(summary,null,2));
 if(failed)process.exit(1);
-console.log(JSON.stringify({status:'PASS',questions:results.length},null,2));
+console.log(JSON.stringify({status:'PASS',questions:results.length,layout:'stem blank-line then one item per line'},null,2));
