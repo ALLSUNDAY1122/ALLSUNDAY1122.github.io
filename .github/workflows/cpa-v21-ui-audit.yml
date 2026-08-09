@@ -1,0 +1,62 @@
+name: CPA v2.1 UI 30-state audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cpa-short-answer-sprint/**'
+      - 'learning-sprint/cpa-short-answer/**'
+      - '.github/workflows/cpa-v21-ui-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Re-run 279-question content gates
+        run: |
+          python learning-sprint/cpa-short-answer/r9-mock/generate_and_audit_r9.py
+          python learning-sprint/cpa-short-answer/integration/integrate_279.py
+          python automation/learning-sprint-question-pipeline/validate_questions.py learning-sprint/cpa-short-answer/integration/learning-sprint-audit.json
+          python learning-sprint/cpa-short-answer/integration/validate_279_cpa.py
+      - name: Static Golden Master and data audit
+        run: |
+          python cpa-short-answer-sprint/scripts/validate_ui.py
+          node --check cpa-short-answer-sprint/app-v21.js
+          python -m json.tool cpa-short-answer-sprint/manifest.json >/dev/null
+          python -m json.tool cpa-short-answer-sprint/audit/ui-30-state-manifest.json >/dev/null
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.54.2
+          npx playwright install --with-deps chromium
+      - name: Start local Pages server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/cpa-http.log 2>&1 &
+          echo $! > /tmp/cpa-http.pid
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/cpa-short-answer-sprint/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/cpa-http.log
+          exit 1
+      - name: Golden Master 30-state screenshot audit
+        env:
+          BASE_URL: http://127.0.0.1:4173/cpa-short-answer-sprint/
+        run: node cpa-short-answer-sprint/scripts/capture_30_states.mjs
+      - name: Upload 30-state screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpa-v21-ui-30-state-audit
+          path: |
+            cpa-short-answer-sprint/audit/screenshots/
+            cpa-short-answer-sprint/audit/screenshot-audit-result.json
+          if-no-files-found: warn
