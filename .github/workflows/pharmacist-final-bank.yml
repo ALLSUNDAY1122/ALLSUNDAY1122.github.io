@@ -1,0 +1,56 @@
+name: Pharmacist Final Product Bank
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pharmacist-manabi-sprint/content/reviewed/**'
+      - 'pharmacist-manabi-sprint/content/media/**'
+      - 'pharmacist-manabi-sprint/tools/assemble_product_bank.py'
+      - 'pharmacist-manabi-sprint/tools/final_product_audit.py'
+      - 'pharmacist-manabi-sprint/tools/final-bank-trigger.txt'
+      - '.github/workflows/pharmacist-final-bank.yml'
+
+concurrency:
+  group: pharmacist-final-product-bank
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  assemble-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble product bank
+        run: python3 pharmacist-manabi-sprint/tools/assemble_product_bank.py
+      - name: Run final audit but retain FAIL report
+        id: audit
+        shell: bash
+        run: |
+          set +e
+          python3 pharmacist-manabi-sprint/tools/final_product_audit.py > pharmacist-manabi-sprint/content/product/final-audit.log 2>&1
+          code=$?
+          set -e
+          cat pharmacist-manabi-sprint/content/product/final-audit.log
+          echo "$code" > pharmacist-manabi-sprint/content/product/final-audit.exit
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - name: Commit assembled bank and audit report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pharmacist-manabi-sprint/content/product/
+          if git diff --cached --quiet; then
+            echo 'No final bank changes.'
+          else
+            git commit -m 'pharmacist: final product bank audit result [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Enforce final bank gate
+        run: test "${{ steps.audit.outputs.exit_code }}" = '0'
