@@ -3,6 +3,7 @@
 更新日: 2026-08-09
 
 ## A. 完成版受け入れ
+- [x] `CODEX_HANDOFF.md` 作成
 - [x] 起動用Web資産の現行版を特定
 - [x] 通常学習480問＋申告書12セット固定
 - [x] 問題データCI
@@ -71,9 +72,11 @@
 - [ ] Sandbox復元成功
 - [ ] 再起動後も権利維持
 
-## F. App Store Connect
+## F. Apple Developer / App Store Connect
 - [x] App Store Connect入力票作成
 - [x] SKU固定: `tsukanshi-sprint-ios`
+- [ ] Apple Developer Explicit App ID `jp.allsunday1122.tsukanshi` 登録
+- [ ] App Store ConnectのBundle ID選択肢に表示されることを確認
 - [ ] 新規Appレコード作成
 - [ ] App Store Connect App ID記録
 - [ ] Version 1.0.0作成
