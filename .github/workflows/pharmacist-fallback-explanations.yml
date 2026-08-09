@@ -1,4 +1,4 @@
-# loop-trigger: 2026-08-09-v1
+# loop-trigger: 2026-08-09-v2
 name: Pharmacist Official-Answer Explanation Fallback
 
 on:
@@ -7,6 +7,7 @@ on:
     branches: [main]
     paths:
       - 'pharmacist-manabi-sprint/tools/fallback_official_answer_explanations.py'
+      - 'pharmacist-manabi-sprint/tools/fallback-trigger.txt'
       - '.github/workflows/pharmacist-fallback-explanations.yml'
 
 permissions:
