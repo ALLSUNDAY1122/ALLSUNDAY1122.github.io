@@ -1,59 +1,37 @@
 {
-  "qualification": "管理栄養士国家試験",
-  "updatedAt": "2026-08-09T15:00:00+09:00",
-  "loop": "学びスプリント｜問題生成・監査ループ v1.0",
-  "target": {"rounds":3,"questionsPerRound":200,"total":600},
-  "public": {
-    "version":"v0.5.1",
-    "count":200,
-    "status":"ROUND1_STRUCTURE_AUDIT_PASS_CONTENT_AUDIT_ACTIVE",
-    "round2Public":false,
-    "note":"公開版は第1回200問のみ。第2回は構造候補PASSだが、一次資料・正答・制度・権利監査完了まで公開しない。"
-  },
-  "formalRound1": {
-    "count":200,
-    "distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
+  "qualification":"管理栄養士国家試験",
+  "updatedAt":"2026-08-09T15:30:00+09:00",
+  "loop":"学びスプリント｜問題生成・監査ループ v1.0",
+  "target":{"rounds":3,"questionsPerRound":200,"total":600},
+  "public":{"version":"v0.5.1","count":200,"status":"PUBLIC_UI_INTEGRATION_PENDING","note":"問題バンク600問は内部監査PASS。Safari公開版はUI/データ統合が完了するまで第1回200問のv0.5.1を維持する。"},
+  "questionBank":{
+    "count":600,
+    "rounds":3,
+    "distributionPerRound":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
     "structureAudit":"PASS",
-    "evidence":"audit/round1-ci-report.json",
-    "contentAudit":"ACTIVE",
-    "legalRightsAudit":"ACTIVE"
-  },
-  "formalRound2": {
-    "count":200,
-    "distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
-    "composition":{"legacyCandidateReaudited":120,"selectedNew":48,"rebalanceNew":32,"reservedNew":32},
-    "auditHistory":[
-      {"status":"FAIL","cause":"旧v0.4候補120問を各12問と誤認。実配分7/19/18/5/7/4/19/7/10/24のため、初期追加80問を足すと科目配分不一致。"},
-      {"status":"FAIL","result":"200/200・全科目配分一致。完全一致3組、0.90以上高類似3組を検出。"},
-      {"status":"PASS","result":"第1回＋第2回400/400、両回の全科目規定数一致、問題本文完全一致0、0.90以上高類似0、必須項目PASS。"}
-    ],
-    "structureAudit":"PASS",
-    "structureAuditRunId":31297802979,
-    "evidence":"audit/round1-2-ci-report.json",
-    "contentAudit":"PENDING_PRIMARY_SOURCE_AND_ANSWER_REVIEW",
-    "legalRightsAudit":"PENDING",
-    "public":false
-  },
-  "combinedRound1Round2": {
-    "count":400,
-    "structureAudit":"PASS",
+    "contentRightsPolicyAudit":"PASS",
+    "answerPositionBalance":"PASS_40_EACH_POSITION_PER_ROUND",
     "exactDuplicateQuestionText":0,
     "highSimilarityAtOrAbove0_90":0,
-    "evidence":"audit/round1-2-ci-report.json"
+    "primarySourcePolicy":"PASS",
+    "keyCalculationAudit":"PASS",
+    "evidence":"audit/round1-2-3-ci-report.json",
+    "workflowRunId":31298950869,
+    "mergedCommit":"24ce822bdbfaa330bdc3e6e289d42e28f9da05e5",
+    "releaseDecision":"APPROVED_FOR_APP_INTEGRATION"
   },
-  "round3": {
-    "planned":200,
-    "created":0,
-    "topicMap":"audit/round3-topic-map.json",
-    "topicMapStatus":"FIXED",
-    "policy":"第1・第2回と同一問題の言い換えを避け、症例・計算・適用判断・複数条件比較を増やす。"
-  },
-  "progress": {
-    "structureComposed":400,
-    "publicQuestions":200,
-    "remainingAuthoring":200,
-    "productTarget":600
-  },
-  "loopStatus":"ACTIVE",
-  "nextLoop":"第2回200問の一次資料・正答・制度・権利監査を行いFAILを修正する。同時に固定済み第3回200枠を独自作問し、完成後に第1〜第3回600問横断validatorを実行する。"
+  "formalRound1":{"count":200,"status":"PASS_INTERNAL_LOOP"},
+  "formalRound2":{"count":200,"status":"PASS_INTERNAL_LOOP","composition":{"legacyCandidateReaudited":120,"selectedNew":48,"rebalanceNew":32,"reservedNew":32}},
+  "formalRound3":{"count":200,"status":"PASS_INTERNAL_LOOP","topicMap":"audit/round3-topic-map.json","authoringPolicy":"症例・計算・適用判断・複数条件比較を増やし、単純言い換えを避ける"},
+  "failFixHistory":[
+    "第2回配分前提誤りを修正",
+    "第1＋第2回400問の完全一致・高類似を修正",
+    "600問初回の高類似4組を修正",
+    "日本腎臓学会公式CDNの一次資料ホスト判定を修正",
+    "正答位置偏りを各回40/40/40/40/40へ均等化"
+  ],
+  "limitations":["内部品質・権利ポリシー監査であり法律意見ではない","医療専門家によるガイドライン全文査読ではない","制度・ガイドライン・利用条件変更時は再監査する"],
+  "progress":{"authoredAndAudited":600,"publicQuestions":200,"remainingAuthoring":0,"productTarget":600},
+  "loopStatus":"COMPLETE",
+  "nextLoop":"600問問題バンクをSafari/製品UIへ統合し、3回×10分類・完答回数・模試200問・状態移行を実装監査。その後StoreKit 2、iOS化、TestFlightへ進む。"
 }
