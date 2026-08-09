@@ -1,0 +1,70 @@
+{
+  "qualification": "公認会計士試験・短答式",
+  "audit_date": "2026-08-09",
+  "stage": "official-source-intake",
+  "status": "PASS",
+  "source_policy": {
+    "license": "公共データ利用規約（第1.0版）",
+    "source_attribution_required": true,
+    "edited_content_notice_required": true,
+    "third_party_rights_check_required": true,
+    "app_policy": "公式問題は出典・加工表示・権利メタデータを保持し、独自解説は公式解説と区別する"
+  },
+  "rounds": [
+    {
+      "round": "令和8年第I回",
+      "exam_date": "2025-12-14",
+      "source_page": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/tantou_mondai_r08a.html",
+      "answer_key": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/tantougoukaku_r08-1/06.pdf",
+      "subjects": {
+        "企業法": {"questions": 20, "points": 100, "minutes": 50, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/tantou_mondai_r08a/01.pdf"},
+        "管理会計論": {"questions": 18, "points": 100, "minutes": 75, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/tantou_mondai_r08a/02.pdf", "scoring": "Q1-Q8=5点,Q9-Q18=6点"},
+        "監査論": {"questions": 20, "points": 100, "minutes": 50, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/tantou_mondai_r08a/03.pdf"},
+        "財務会計論": {"questions": 35, "points": 200, "minutes": 150, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/tantou_mondai_r08a/04.pdf", "scoring": "Q1-Q23,Q25,Q28=6点; Q24,Q26,Q27,Q29-Q35=5点"}
+      },
+      "question_total": 93,
+      "point_total": 500,
+      "minute_total": 325
+    },
+    {
+      "round": "令和8年第II回",
+      "exam_date": "2026-05-24",
+      "source_page": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/tantou_mondai_r08b.html",
+      "answer_key": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/tantougoukaku_r08-2/06.pdf",
+      "subjects": {
+        "企業法": {"questions": 20, "points": 100, "minutes": 50, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/01.pdf"},
+        "管理会計論": {"questions": 18, "points": 100, "minutes": 75, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/02.pdf", "scoring": "Q1-Q8=5点,Q9-Q18=6点"},
+        "監査論": {"questions": 20, "points": 100, "minutes": 50, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/03.pdf"},
+        "財務会計論": {"questions": 35, "points": 200, "minutes": 150, "source_pdf": "https://www.fsa.go.jp/cpaaob/kouninkaikeishi-shiken/r8shiken/04.pdf", "scoring": "Q1-Q23,Q25,Q27=6点; Q24,Q26,Q28-Q35=5点"}
+      },
+      "question_total": 93,
+      "point_total": 500,
+      "minute_total": 325
+    }
+  ],
+  "audit_results": {
+    "round_count": 2,
+    "official_question_total": 186,
+    "subject_structure_match": true,
+    "answer_keys_published": true,
+    "source_urls_present": true,
+    "explicit_third_party_source_notices_found_in_pdf_text": false,
+    "third_party_rights_state": "問題単位の本文取り込み時に再確認",
+    "known_difference_between_rounds": "財務会計論の6点問題番号が第I回と第II回で異なるため、配点を科目固定値ではなく問題単位で保持する"
+  },
+  "fail_fix_pass": [
+    {
+      "initial": "FAIL",
+      "finding": "財務会計論を35問すべて同一配点として扱う設計では実際の採点方式を再現できない",
+      "fix": "各問題にpointsフィールドを持たせ、回別の公式配点表を正本とする",
+      "reaudit": "PASS"
+    },
+    {
+      "initial": "FAIL",
+      "finding": "サイト利用ルールだけで全問題の第三者権利まで一括PASSにすると監査粒度が不足する",
+      "fix": "公式PDFは利用可能ソースとして採用しつつ、本文取り込み時に問題単位rights_reviewを必須化",
+      "reaudit": "PASS（取り込みゲート）"
+    }
+  ],
+  "next_gate": "186問の本文・選択肢・正解を問題単位JSONへ変換し、rights_review・source_url・pointsを付与して完全一致監査する"
+}
