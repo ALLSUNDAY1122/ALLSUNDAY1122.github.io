@@ -26,31 +26,49 @@
     return text.replace(re,'\n\n$1．').replace(/^\s*\n\n/,'').trim();
   }
 
+  function sameArray(a,b){
+    return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((v,i)=>v===b[i]);
+  }
+
+  function syncOfficialExplanation(out){
+    if(out.origin_type!=='licensed_official'||typeof out.explanation!=='string')return;
+    const idx=Number(out.correct_index);
+    if(!Number.isInteger(idx)||idx<0||idx>=out.choices.length)return;
+    const mapping=`公式正解・配点表では選択肢${idx+1}「${out.choices[idx]}」が正解。`;
+    const re=/公式正解・配点表では選択肢\d+「[^」]*」が正解。/;
+    out.explanation=re.test(out.explanation)?out.explanation.replace(re,mapping):`${mapping}${out.explanation}`;
+  }
+
   function applyCorrection(q,correction){
     const out={...q,choices:Array.isArray(q.choices)?q.choices.slice():[]};
+    if(correction?.choices_to){
+      const from=correction.choices_from||[];
+      if(!sameArray(out.choices,from)&&!sameArray(out.choices,correction.choices_to)){
+        throw new Error(`${q.id}: table-choice correction source mismatch`);
+      }
+      if(sameArray(out.choices,from))out.choices=correction.choices_to.slice();
+    }
     for(const rep of correction?.choice_replacements||[]){
       const actual=out.choices[rep.index];
       if(actual!==rep.from&&actual!==rep.to){
         throw new Error(`${q.id}: choice ${rep.index+1} correction source mismatch: ${actual}`);
       }
-      if(actual===rep.from){
-        out.choices[rep.index]=rep.to;
-        if(typeof out.explanation==='string')out.explanation=out.explanation.split(rep.from).join(rep.to);
-      }
+      if(actual===rep.from)out.choices[rep.index]=rep.to;
     }
+    syncOfficialExplanation(out);
     return out;
   }
 
   function normalizeAll(raw,corrections){
     const table=corrections?.questions||{};
     return raw.map(item=>{
-      let q=applyCorrection(item,table[item.id]);
+      const q=applyCorrection(item,table[item.id]);
       q.question=formatQuestionText(q.question);
       return q;
     });
   }
 
-  window.__CPA_DISPLAY_NORMALIZER__={version:1,formatQuestionText,normalizeAll};
+  window.__CPA_DISPLAY_NORMALIZER__={version:2,formatQuestionText,normalizeAll};
 
   window.fetch=async function(input,init){
     const response=await nativeFetch(input,init);
