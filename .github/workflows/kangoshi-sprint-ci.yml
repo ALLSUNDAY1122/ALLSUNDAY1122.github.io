@@ -21,15 +21,35 @@ jobs:
         run: |
           node --check kangoshi-sprint/questions.js
           node --check kangoshi-sprint/questions-numeric.js
-          node --check kangoshi-sprint/app-v02.js
-          node --check kangoshi-sprint/subject-hierarchy.js
-      - name: Question data audit
+          node --check kangoshi-sprint/questions-audit-v1.js
+          node --check kangoshi-sprint/question-taxonomy-v1.js
+          node --check kangoshi-sprint/exam-config.js
+          node --check kangoshi-sprint/app-v03.js
+          node --check kangoshi-sprint/product-availability.js
+          node --check kangoshi-sprint/sw.js
+          node --check kangoshi-sprint/audit-product-content.mjs
+      - name: MVP question data audit
         run: node kangoshi-sprint/audit-v02.mjs
-      - name: Basic HTML contract
+      - name: Product 720-question release gate
+        run: node kangoshi-sprint/audit-product-content.mjs
+      - name: Golden Master UI contract
         run: |
           grep -q 'id="app"' kangoshi-sprint/index.html
+          grep -q 'manifest.json' kangoshi-sprint/index.html
+          grep -q 'style.css' kangoshi-sprint/index.html
           grep -q 'questions.js' kangoshi-sprint/index.html
           grep -q 'questions-numeric.js' kangoshi-sprint/index.html
-          grep -q 'app-v02.js' kangoshi-sprint/index.html
-          grep -q 'subject-hierarchy.js' kangoshi-sprint/index.html
-          grep -q 'style-subject-hierarchy.css' kangoshi-sprint/index.html
+          grep -q 'questions-audit-v1.js' kangoshi-sprint/index.html
+          grep -q 'question-taxonomy-v1.js' kangoshi-sprint/index.html
+          grep -q 'exam-config.js' kangoshi-sprint/index.html
+          grep -q 'app-v03.js' kangoshi-sprint/index.html
+          grep -q 'product-availability.js' kangoshi-sprint/index.html
+          grep -q -- '--paper:#f7f3ea' kangoshi-sprint/style.css
+          grep -q -- '--ai:#2f4a6d' kangoshi-sprint/style.css
+          grep -q -- '--shu:#d8452c' kangoshi-sprint/style.css
+          grep -q 'grid-template-columns:repeat(4,1fr)' kangoshi-sprint/style.css
+          grep -q '今日のスプリント' kangoshi-sprint/app-v03.js
+          grep -q 'ここだけ覚える' kangoshi-sprint/app-v03.js
+          grep -q '5週間の学習' kangoshi-sprint/app-v03.js
+          grep -q 'data-goal="8"' kangoshi-sprint/app-v03.js
+          grep -q '水増し表示しません' kangoshi-sprint/product-availability.js

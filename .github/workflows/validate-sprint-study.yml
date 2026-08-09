@@ -1,0 +1,52 @@
+name: Validate Sprint Study
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sprint-study/**'
+      - '.github/workflows/validate-sprint-study.yml'
+  pull_request:
+    paths:
+      - 'sprint-study/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract and check JavaScript
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          path=Path('sprint-study/app-v1.2.0.html')
+          text=path.read_text(encoding='utf-8')
+          scripts=re.findall(r'<script>([\s\S]*?)</script>', text)
+          if not scripts:
+              raise SystemExit('inline script not found')
+          Path('/tmp/sprint-study.js').write_text('\n'.join(scripts), encoding='utf-8')
+          required=['goalFields','paceValue','accelerate','resultPace','runView','startBtn']
+          missing=[x for x in required if f'id="{x}"' not in text]
+          if missing:
+              raise SystemExit('missing ids: '+','.join(missing))
+          if 'function goalCalc' not in text or 'function currentWorkSec' not in text:
+              raise SystemExit('pace maker logic missing')
+          if 'BGM' in text or '<audio' in text:
+              raise SystemExit('legacy BGM/audio element found')
+          index=Path('sprint-study/index.html').read_text(encoding='utf-8')
+          if 'app-v1.2.0.html?v=120' not in index:
+              raise SystemExit('index does not target v1.2.0')
+          PY
+          node --check /tmp/sprint-study.js
+      - name: Check reverse pace formula
+        shell: node {0}
+        run: |
+          const calc=(targetMin,count,switchSec)=>Math.floor((targetMin*60-(count-1)*switchSec)/count);
+          if(calc(25,30,3)!==47) throw new Error('25min/30 pages should be 47 sec');
+          if(calc(10,10,3)!==57) throw new Error('10min/10 pages should be 57 sec');
+          console.log('pace formula PASS');

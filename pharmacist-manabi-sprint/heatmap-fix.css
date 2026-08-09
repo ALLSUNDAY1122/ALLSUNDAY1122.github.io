@@ -1,0 +1,53 @@
+.heatCard{overflow:hidden}
+.heatDays{
+  display:grid;
+  grid-template-columns:repeat(7,10px);
+  column-gap:2px;
+  width:82px;
+  margin:2px auto 7px;
+  text-align:center;
+  font-size:.58rem;
+  color:var(--ink-3);
+  line-height:10px;
+}
+.heatmap{
+  display:grid;
+  grid-template-columns:repeat(7,10px);
+  grid-auto-rows:10px;
+  gap:2px;
+  width:82px;
+  margin:0 auto;
+}
+.heatCell{
+  display:block;
+  width:10px;
+  height:10px;
+  min-width:10px;
+  min-height:10px;
+  margin:0;
+  padding:0;
+  border:0;
+  box-shadow:none;
+  border-radius:2.5px;
+  aspect-ratio:auto;
+}
+/* ホームの .today カードと当日セルの today クラスが衝突するため完全にリセット */
+.heatmap .heatCell.today{
+  display:block;
+  width:10px;
+  height:10px;
+  min-width:10px;
+  min-height:10px;
+  margin:0;
+  padding:0;
+  border:0;
+  box-shadow:none;
+  border-radius:2.5px;
+  grid-template-columns:none;
+  gap:0;
+  outline:1.5px solid var(--ai);
+  outline-offset:1px;
+}
+@media(max-width:360px){
+  .heatDays,.heatmap{width:82px}
+}

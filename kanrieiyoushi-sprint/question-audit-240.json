@@ -1,0 +1,81 @@
+{
+  "version": "kanrieiyoushi-240-v2",
+  "generatedAt": "2026-08-09",
+  "baseQuestions": 120,
+  "addedQuestions": 120,
+  "total": 240,
+  "byCategory": {
+    "社会・環境": 19,
+    "人体・疾病": 31,
+    "食べ物": 30,
+    "基礎栄養": 17,
+    "応用栄養": 19,
+    "栄養教育": 16,
+    "臨床栄養": 31,
+    "公衆栄養": 19,
+    "給食経営": 22,
+    "応用力": 36
+  },
+  "newQuestionCounts": {
+    "社会・環境": 7,
+    "人体・疾病": 19,
+    "食べ物": 18,
+    "基礎栄養": 5,
+    "応用栄養": 7,
+    "栄養教育": 4,
+    "臨床栄養": 19,
+    "公衆栄養": 7,
+    "給食経営": 10,
+    "応用力": 24
+  },
+  "checks": {
+    "newIdsUnique": true,
+    "newQuestionTextsUnique": true,
+    "fiveChoicesAll": true,
+    "validCorrectIndexAll": true,
+    "officialOrPrimarySourceUrlAll": true,
+    "rightsOriginalAll": true,
+    "approvedAll": true,
+    "crossBankNearDuplicateReview": true,
+    "correctPositionBalanced": {
+      "1": 24,
+      "2": 24,
+      "3": 24,
+      "4": 24,
+      "5": 24
+    }
+  },
+  "similarityReview": {
+    "withinNew120": {
+      "method": "char 3-gram TF-IDF within new 120, threshold >=0.62",
+      "flaggedPairs": [
+        {
+          "ids": ["KN133", "KN139"],
+          "similarity": 0.649,
+          "disposition": "副甲状腺ホルモンと甲状腺ホルモンの対比であり別論点として維持"
+        }
+      ]
+    },
+    "crossBank120Plus120": {
+      "scope": "KN001-KN120 vs KN121-KN240",
+      "replacedNearDuplicates": [
+        "KN148","KN152","KN164","KN173","KN175","KN176","KN177","KN178","KN184","KN186","KN187","KN189","KN206","KN210","KN213","KN215","KN219","KN223","KN234"
+      ],
+      "replacementCount": 19,
+      "policy": "既存120問と同じ事実を単純に言い換えた問題は別論点へ差し替える。症例・計算・制度運用など追加の判断を要求する応用問題のみ、基礎知識の再利用を許容する。"
+    }
+  },
+  "sourceBaseline": [
+    "厚生労働省 管理栄養士国家試験出題基準",
+    "日本人の食事摂取基準（2025年版）",
+    "健康日本21（第三次）",
+    "健康づくりのための身体活動・運動ガイド2023",
+    "厚生労働省 e-ヘルスネット",
+    "消費者庁 食品表示・食物アレルギー",
+    "農林水産省 食事バランスガイド",
+    "文部科学省 日本食品標準成分表",
+    "厚生労働省 大量調理施設衛生管理マニュアル",
+    "厚生労働省 授乳・離乳の支援ガイド"
+  ],
+  "rightsPolicy": "過去問本文の転載・軽微改変は行わず、出題基準の論点と公的資料を基に独自問題・選択肢・解説を作成。"
+}

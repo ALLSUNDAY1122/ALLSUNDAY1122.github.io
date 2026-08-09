@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-09",
+  "license": {
+    "provider": "厚生労働省",
+    "rule": "公共データ利用規約（第1.0版）",
+    "attributionRequired": true,
+    "modificationDisclosureRequired": true,
+    "excludedByDefault": ["シンボルマーク・ロゴ・キャラクターデザイン", "別利用ルールが明示されたコンテンツ"],
+    "assetPolicy": "図・写真・構造式・グラフ・表など、権利又は再現性の個別確認が必要な素材を含む問題は pending のまま公開データへ入れない。初期投入はテキストだけで完結する問題に限定する。"
+  },
+  "exams": [
+    {
+      "exam": 111,
+      "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198929.html",
+      "questionCount": 345,
+      "sections": {"mandatory":90,"theory":105,"practical":150},
+      "officialMaxPoints": 686,
+      "excludedFromScoring": [199,287],
+      "corrections": [
+        {"questions":[92],"type":"wording"},
+        {"questions":[199],"type":"unit"},
+        {"questions":[220,221],"type":"prescription"}
+      ],
+      "initialClearedTextOnly": [1,4,12,13,14,15,16,17]
+    },
+    {
+      "exam": 110,
+      "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198928.html",
+      "questionCount": 345,
+      "sections": {"mandatory":90,"theory":105,"practical":150},
+      "officialMaxPoints": 690,
+      "excludedFromScoring": [],
+      "corrections": [],
+      "initialClearedTextOnly": [2,4,5,11,13,14,15,17]
+    },
+    {
+      "exam": 109,
+      "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198926.html",
+      "questionCount": 345,
+      "sections": {"mandatory":90,"theory":105,"practical":150},
+      "officialMaxPoints": 688,
+      "excludedFromScoring": [111],
+      "corrections": [
+        {"questions":[330],"type":"graph-axis-unit"}
+      ],
+      "initialClearedTextOnly": [1,2,3,5,10,11,12,13]
+    }
+  ]
+}

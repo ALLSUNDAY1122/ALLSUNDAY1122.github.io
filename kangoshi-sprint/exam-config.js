@@ -1,0 +1,49 @@
+(()=>{
+'use strict';
+window.KANGOSHI_EXAM_CONFIG={
+  schemaVersion:1,
+  qualification:'看護師国家試験',
+  currentReference:{
+    examNo:115,
+    examDate:'2026-02-15',
+    officialSubjects:[
+      '人体の構造と機能','疾病の成り立ちと回復の促進','健康支援と社会保障制度','基礎看護学','地域・在宅看護論','成人看護学','老年看護学','小児看護学','母性看護学','精神看護学','看護の統合と実践'
+    ],
+    sessions:[
+      {id:'am',label:'午前',questionCount:120,durationMinutes:160,start:'09:50',end:'12:30'},
+      {id:'pm',label:'午後',questionCount:120,durationMinutes:160,start:'14:20',end:'17:00'}
+    ],
+    totalQuestions:240,
+    targetComposition:{required:50,general:130,scenario:60},
+    scoring:{required:1,general:1,scenario:2},
+    latestActualPassCriteria:{
+      required:{minimum:40,denominator:50},
+      generalPlusScenario:{minimum:166,denominator:249},
+      note:'第115回は採点除外等により一般＋状況設定の分母が249点。合格線は年度別データで更新し、UIへ固定しない。'
+    },
+    sources:{
+      implementation:'https://www.mhlw.go.jp/kouseiroudoushou/shikaku_shiken/kangoshi/',
+      questions:'https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/tp260424-03_04_05.html',
+      result:'https://www.mhlw.go.jp/general/sikaku/successlist/2026/siken03_04_05/about.html',
+      blueprint:'https://www.mhlw.go.jp/stf/shingi2/0000159020_00001.html'
+    },
+    checkedAt:'2026-08-09'
+  },
+  productPlan:{
+    setCount:3,
+    questionsPerSet:240,
+    totalQuestions:720,
+    setComposition:{required:50,general:130,scenario:60},
+    rightsPolicy:'原則独自問題。公式資料を利用する場合は問題単位で権利・出典を監査し、第三者画像・図表は別途確認する。',
+    releaseGate:{
+      uniqueQuestionIds:720,
+      noDuplicateStems:true,
+      explicitMajorSubject:true,
+      explanationRequired:true,
+      rightsStatusRequired:true,
+      sourceRefsRequired:true,
+      expertReviewRequired:true
+    }
+  }
+};
+})();

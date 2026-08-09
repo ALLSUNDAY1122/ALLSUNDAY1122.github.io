@@ -1,67 +1,67 @@
 workflows:
-  otsu4-testflight:
-    name: 危険物乙4 TestFlight
+  health-manager-2-ios:
+    name: Health Manager 2 - iOS TestFlight
     max_build_duration: 60
     instance_type: mac_mini_m2
-
+    integrations:
+      app_store_connect: codemagic
     environment:
-      groups:
-        - appstore_credentials
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.healthmanager2
       vars:
-        BUNDLE_ID: jp.allsunday1122.otsu4
-        XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
-        XCODE_SCHEME: Otsu4Sprint
-      xcode: 26.5
-
+        BUNDLE_ID: jp.allsunday1122.healthmanager2
+        XCODE_PROJECT: ios/health-manager-2/HealthManager2.xcodeproj
+        XCODE_SCHEME: HealthManager2
+      xcode: latest
     scripts:
-      - name: Install XcodeGen
-        script: brew install xcodegen
-
-      - name: Prepare audited 360-question resources
-        script: bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
-
+      - name: Audit learning content before macOS build
+        script: |
+          node "$CM_BUILD_DIR/ios/health-manager-2/export-audit-data.cjs"
+          python3 "$CM_BUILD_DIR/automation/learning-sprint-question-pipeline/validate_questions.py" \
+            "$CM_BUILD_DIR/ios/health-manager-2/learning-sprint-audit.json"
+          bash -n "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
+          python3 - <<'PY'
+          import plistlib
+          with open('ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy','rb') as f:
+              data=plistlib.load(f)
+          assert data.get('NSPrivacyTracking') is False
+          assert data.get('NSPrivacyCollectedDataTypes') == []
+          print('PASS: Privacy Manifest parses and matches no-data-collection implementation.')
+          PY
+      - name: Install project tools
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
+      - name: Prepare bundled web assets
+        script: |
+          bash "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
       - name: Generate Xcode project
         script: |
-          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          cd "$CM_BUILD_DIR/ios/health-manager-2"
           xcodegen generate
-
-      - name: Set build number
+      - name: Verify bundled release inputs
         script: |
-          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
-          agvtool new-version -all "$CM_BUILD_NUMBER"
-
-      - name: Initialize signing keychain
-        script: keychain initialize
-
-      - name: Fetch App Store signing files
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/index.html"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/audit-fixes.js"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Web/question-order-v1.js"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/ios/health-manager-2/HealthManager2/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
+      - name: Apply App Store signing profiles
         script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
-
-      - name: Add signing certificates
-        script: keychain add-certificates
-
-      - name: Apply provisioning profiles
-        script: |
-          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
-          xcode-project use-profiles
-
+          cd "$CM_BUILD_DIR/ios/health-manager-2"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
         script: |
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
-
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        auth: integration
         submit_to_testflight: true
         submit_to_app_store: false

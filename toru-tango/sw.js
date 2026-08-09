@@ -1,7 +1,8 @@
-const CACHE='toru-tango-v3';
+const CACHE='toru-tango-v4';
 const ASSETS=[
   './',
   './index.html',
+  './folders-addon.js',
   './privacy-policy.html',
   './manifest.webmanifest',
   './generator-v2.js',
