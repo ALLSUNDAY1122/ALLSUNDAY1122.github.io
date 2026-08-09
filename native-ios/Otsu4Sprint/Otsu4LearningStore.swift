@@ -40,6 +40,7 @@ struct Otsu4PersistedLearningState: Codable, Equatable {
     var history: [Otsu4AttemptRecord] = []
     var resume: Otsu4SessionSnapshot?
     var fontScale: Int = 1
+    var seenIDs: Set<String>?
 }
 
 @MainActor
@@ -66,6 +67,7 @@ final class Otsu4LearningStore: ObservableObject {
     var weakCount: Int { state.weakIDs.count }
     var history: [Otsu4AttemptRecord] { state.history }
     var resumeSnapshot: Otsu4SessionSnapshot? { state.resume }
+    var seenCount: Int { state.seenIDs?.count ?? 0 }
 
     var todayAnswered: Int {
         state.dailyAnswered[Self.dayKey(Date())] ?? 0
@@ -81,6 +83,14 @@ final class Otsu4LearningStore: ObservableObject {
         let start = Calendar.current.startOfDay(for: Date())
         let end = Calendar.current.startOfDay(for: examDate)
         return max(0, Calendar.current.dateComponents([.day], from: start, to: end).day ?? 0)
+    }
+
+    func requiredDailyPace(totalAvailable: Int) -> Int? {
+        guard let days = examDaysRemaining else { return nil }
+        let remaining = max(0, totalAvailable - seenCount)
+        if remaining == 0 { return 0 }
+        guard days > 0 else { return remaining }
+        return Int(ceil(Double(remaining) / Double(days)))
     }
 
     func setGoal(_ goal: Int) {
@@ -148,6 +158,10 @@ final class Otsu4LearningStore: ObservableObject {
         )
         state.history.insert(record, at: 0)
         state.history = Array(state.history.prefix(200))
+
+        var seen = state.seenIDs ?? []
+        seen.formUnion(session.questions.map(\.id))
+        state.seenIDs = seen
 
         if !session.kind.isMock {
             let answered = session.questions.count
