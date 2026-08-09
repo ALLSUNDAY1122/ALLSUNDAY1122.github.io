@@ -67,14 +67,14 @@
 - [x] iOS同梱ファイル存在検査
 - [x] App Store distribution signing設定
 - [x] TestFlight Internal Testing Only export option
-- [x] `submit_to_testflight: true`
+- [x] `submit_to_testflight: false`（Internal Testing OnlyのためBeta App Reviewへ自動提出しない）
 - [x] `submit_to_app_store: false`
 - [ ] Apple Developer Explicit App ID登録
 - [ ] App Store Connectアプリ作成
 - [ ] Codemagic App Store Connect integration確認
 - [ ] Distribution signing取得
 - [ ] Build 1成功
-- [ ] TestFlight処理完了
+- [ ] App Store Connect/TestFlightへBuild 1アップロード・処理完了
 
 ## 7. 次の人間品質ゲート
 Build 1がTestFlightに到達後、iPhone 16で以下を確認する。
