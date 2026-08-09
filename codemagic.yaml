@@ -15,6 +15,20 @@ workflows:
         XCODE_SCHEME: HealthManager2
       xcode: latest
     scripts:
+      - name: Audit learning content before macOS build
+        script: |
+          node "$CM_BUILD_DIR/ios/health-manager-2/export-audit-data.cjs"
+          python3 "$CM_BUILD_DIR/automation/learning-sprint-question-pipeline/validate_questions.py" \
+            "$CM_BUILD_DIR/ios/health-manager-2/learning-sprint-audit.json"
+          bash -n "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
+          python3 - <<'PY'
+          import plistlib
+          with open('ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy','rb') as f:
+              data=plistlib.load(f)
+          assert data.get('NSPrivacyTracking') is False
+          assert data.get('NSPrivacyCollectedDataTypes') == []
+          print('PASS: Privacy Manifest parses and matches no-data-collection implementation.')
+          PY
       - name: Install project tools
         script: |
           HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
