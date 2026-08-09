@@ -47,6 +47,8 @@ struct Otsu4ContentStore {
     static let expectedContentVersion = "otsu4-2026-08-product-v2"
     static let freeQuestionCount = 72
     static let freeSubjectCounts = ["法令": 29, "物理・化学": 19, "性質・消火": 24]
+    static let supportedSprintGoals = [4, 8, 16]
+    static let mockSetCount = 3
 
     let bank: Otsu4QuestionBank
 
@@ -88,20 +90,48 @@ struct Otsu4ContentStore {
         availableQuestions(isPremium: isPremium).filter { $0.tags.contains(tag) }
     }
 
-    func today12(isPremium: Bool) -> [Otsu4Question] {
+    func sprint(goal: Int = 8, isPremium: Bool) -> [Otsu4Question] {
+        let normalizedGoal = Self.supportedSprintGoals.contains(goal) ? goal : 8
+        let allocation = Self.sprintAllocation(for: normalizedGoal)
         let pool = availableQuestions(isPremium: isPremium)
-        let law = pool.filter { $0.subject == "法令" }.shuffled().prefix(5)
-        let physics = pool.filter { $0.subject == "物理・化学" }.shuffled().prefix(3)
-        let properties = pool.filter { $0.subject == "性質・消火" }.shuffled().prefix(4)
+        let law = pool.filter { $0.subject == "法令" }.shuffled().prefix(allocation.law)
+        let physics = pool.filter { $0.subject == "物理・化学" }.shuffled().prefix(allocation.physics)
+        let properties = pool.filter { $0.subject == "性質・消火" }.shuffled().prefix(allocation.properties)
         return (Array(law) + Array(physics) + Array(properties)).shuffled()
     }
 
-    func mockExamQuestions() -> [Otsu4Question]? {
-        let law = bank.questions.filter { $0.subject == "法令" }.shuffled().prefix(15)
-        let physics = bank.questions.filter { $0.subject == "物理・化学" }.shuffled().prefix(10)
-        let properties = bank.questions.filter { $0.subject == "性質・消火" }.shuffled().prefix(10)
-        guard law.count == 15, physics.count == 10, properties.count == 10 else { return nil }
-        return Array(law) + Array(physics) + Array(properties)
+    func mockExamQuestions(set: Int) -> [Otsu4Question]? {
+        guard (1...Self.mockSetCount).contains(set) else { return nil }
+        let lawPool = bank.questions.filter { $0.subject == "法令" }
+        let physicsPool = bank.questions.filter { $0.subject == "物理・化学" }
+        let propertiesPool = bank.questions.filter { $0.subject == "性質・消火" }
+
+        let lawStart = (set - 1) * 15
+        let physicsStart = (set - 1) * 10
+        let propertiesStart = (set - 1) * 10
+        guard lawPool.count >= lawStart + 15,
+              physicsPool.count >= physicsStart + 10,
+              propertiesPool.count >= propertiesStart + 10 else { return nil }
+
+        let law = Array(lawPool[lawStart..<(lawStart + 15)])
+        let physics = Array(physicsPool[physicsStart..<(physicsStart + 10)])
+        let properties = Array(propertiesPool[propertiesStart..<(propertiesStart + 10)])
+        return law + physics + properties
+    }
+
+    static func mockSetsAreDisjoint(in store: Otsu4ContentStore) -> Bool {
+        let sets = (1...mockSetCount).compactMap { store.mockExamQuestions(set: $0) }
+        guard sets.count == mockSetCount else { return false }
+        let ids = sets.flatMap { $0.map(\.id) }
+        return ids.count == Set(ids).count
+    }
+
+    private static func sprintAllocation(for goal: Int) -> (law: Int, physics: Int, properties: Int) {
+        switch goal {
+        case 4: return (2, 1, 1)
+        case 16: return (7, 4, 5)
+        default: return (3, 2, 3)
+        }
     }
 
     private static func validate(_ bank: Otsu4QuestionBank) throws {
