@@ -17,6 +17,7 @@ function mapQuestion(q){
     canonicalId:q.dailySprintCanonicalId||q.id,corrections:q.correctionStatus||[],origin:q.origin_type||'licensed_official'
   };
 }
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(e){console.warn('SW',e)})})}
 fetch('./content/product/questions.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(data){
   if(!data||!Array.isArray(data.questions)||data.questions.length!==1035)throw new Error('問題数が1035問ではありません');
   var mapped=data.questions.map(mapQuestion),ids={},err=[];
