@@ -28,13 +28,17 @@
 - [x] `.app`内Web教材・Privacy Manifest・AppIcon確認
 - [x] StoreKit `Transaction.updates` 監視
 - [x] StoreKit状態変化をWKWebViewへ即時反映
+- [x] In-App Purchase Capabilityを生成Xcode projectへ正規化
+- [x] XcodeGen 2.46.0のTargetAttributes文字列化を検出・補正
 - [x] Apple署名前プリフライトCI成功
+- [x] ASC/TestFlight前コードゲート成功
 - [ ] Codemagic signed IPA成功
 
 ## C. 公開ページ
 - [x] Supportページ作成
 - [x] Privacy Policy作成
 - [x] 公開Web試用URL表示・操作確認
+- [x] Web試用版で未確定の固定課金価格を表示しない
 - [ ] Support / Privacyのmain反映後 HTTP 200確認
 - [ ] iPhone SafariでSupport / Privacy表示確認
 - [ ] 未ログインでSupport / Privacy表示確認
@@ -59,6 +63,7 @@
 - [x] 復元処理実装
 - [x] 保留・別経路取引の自動更新監視
 - [x] StoreKit 2テスト計画作成
+- [x] ネイティブ版はStoreKit正式`displayPrice`取得後のみ購入操作を有効化
 - [ ] App Store Connect商品作成
 - [ ] 正式価格設定
 - [ ] IAP審査用スクリーンショット
@@ -87,7 +92,8 @@
 - [x] `testFlightInternalTestingOnly` 設定
 - [x] 本審査自動提出OFF
 - [x] Apple署名前Codemagic安全ゲート成功
-- [ ] App Store Connect API integration確認
+- [x] Codemagic生成projectにもIAP Capability正規化工程を固定
+- [ ] App Store Connect integration確認
 - [ ] Build番号を上げてsigned IPA生成
 - [ ] App Store Connectへアップロード
 - [ ] Apple側Build処理成功

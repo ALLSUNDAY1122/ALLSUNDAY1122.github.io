@@ -1,0 +1,34 @@
+name: 管理栄養士 600 UI Integration Audit
+
+on:
+  pull_request:
+    paths:
+      - 'kanrieiyoushi-sprint/**'
+      - 'automation/learning-sprint-question-pipeline/**'
+      - '.github/workflows/kanrieiyoushi-ui600-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Re-run 600 question structure audit
+        run: |
+          python kanrieiyoushi-sprint/audit/build_round1_2_3_canonical.py
+          python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2-3.json
+      - name: Re-run content and rights policy audit
+        run: python kanrieiyoushi-sprint/audit/audit_content_rights.py
+      - name: Check live JavaScript syntax
+        run: |
+          node --check kanrieiyoushi-sprint/data-bootstrap-v061.js
+          node --check kanrieiyoushi-sprint/app-v061.js
+          node --check kanrieiyoushi-sprint/sw.js
+      - name: Run UI integration acceptance audit
+        run: python kanrieiyoushi-sprint/audit/ui600_acceptance.py

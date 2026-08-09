@@ -41,7 +41,23 @@ jobs:
 
       - name: Generate Xcode project
         working-directory: tsukanshi-sprint/ios
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          python3 apply-xcode-capabilities.py TsukanshiSprint.xcodeproj/project.pbxproj
+
+      - name: Verify In-App Purchase capability in generated project
+        run: |
+          PBX=tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj/project.pbxproj
+          python3 - "$PBX" <<'PY'
+          import re,sys
+          text=open(sys.argv[1],encoding='utf-8').read()
+          assert 'SystemCapabilities' in text, 'SystemCapabilities missing from generated project'
+          m=re.search(r'com\.apple\.InAppPurchase\s*=\s*\{(.*?)\};', text, re.S)
+          assert m, 'In-App Purchase capability block missing'
+          assert re.search(r'enabled\s*=\s*1\s*;',m.group(1)), 'In-App Purchase capability is not enabled'
+          assert 'SystemCapabilities = "' not in text, 'malformed quoted SystemCapabilities remains'
+          print('PASS: generated Xcode project has normalized In-App Purchase capability')
+          PY
 
       - name: Build Release for iPhone Simulator
         run: |
@@ -65,10 +81,11 @@ jobs:
           test -f "$APP_PATH/Web/questions-editorial-final-polish.js"
           test -f "$APP_PATH/Web/official-past-exam-links.js"
           test -f "$APP_PATH/Web/release-links.js"
+          test -f "$APP_PATH/Web/storekit-ui-guard.js"
           test -f "$APP_PATH/PrivacyInfo.xcprivacy"
           test -f "$APP_PATH/AppIcon60x60@2x.png" || test -f "$APP_PATH/Assets.car"
           ! find "$APP_PATH" -type f -name 'sw.js' | grep -q .
-          echo 'PASS: Release app contains audited Web folder, privacy manifest, and app icon assets.'
+          echo 'PASS: Release app contains audited Web folder, StoreKit price guard, privacy manifest, and app icon assets.'
 
       - name: Upload build log
         if: always()

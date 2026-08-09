@@ -6,7 +6,10 @@ ROOT=Path(__file__).resolve().parent
 RAW=ROOT/'raw'
 CONTROL=re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
 PRINTER=re.compile(r'\s*DKIX[^\n]*(?:\.smd|\.indd)[^\n]*$',re.IGNORECASE)
-MEDIA_WORDS=('図を示す','図に示す','写真を示す','別冊','画像を示す','グラフを示す','表を示す')
+# Be conservative: false-positive media deferral is safer than explaining a question
+# without seeing a required figure. This catches wording variants such as
+# "図をAに示す", "心電図を示す", "別冊写真" and similar PDF extraction spacing.
+MEDIA_RE=re.compile(r'(?:図|写真|画像|グラフ|心電図|波形|別冊)|(?:表\s*(?:を|に|の))',re.IGNORECASE)
 NEXT_SCENARIO=re.compile(r'\s*次の文を読み\s*\d{2,3}\s*[～〜－—―\-]\s*\d{2,3}\s*の問いに答えよ[。．]?\s*.*$',re.DOTALL)
 
 
@@ -15,9 +18,6 @@ def clean_text(value):
     text=CONTROL.sub('',text)
     text=PRINTER.sub('',text)
     text=re.sub(r'\s+',' ',text).strip()
-    # In the PDF, the next 3-question scenario preamble is physically printed
-    # between the previous question's choices and the next question number.
-    # pdftotext therefore appends it to the previous final choice unless cut here.
     text=NEXT_SCENARIO.sub('',text).strip()
     return text
 
@@ -45,11 +45,11 @@ for set_id in ('set1','set2','set3'):
             choices.append(cleaned)
         q['choices']=choices
 
-        explicit=any(word in new for word in MEDIA_WORDS)
+        explicit=bool(MEDIA_RE.search(new))
         image_choice=(q.get('answerType') in {'singleChoice','multiChoice'} and len(choices)==0)
         if explicit:
             q['requiresMedia']=True
-            q['mediaDetectionReason']='explicit_reference_in_stem'
+            q['mediaDetectionReason']='media_reference_in_stem_conservative'
             explicit_media+=1
         elif image_choice:
             q['requiresMedia']=True
@@ -57,7 +57,9 @@ for set_id in ('set1','set2','set3'):
             q['mediaEvidenceStatus']='visual_verification_required'
             inferred_media+=1
         else:
+            q['requiresMedia']=False
             q['mediaDetectionReason']='not_detected'
+            q.pop('mediaEvidenceStatus',None)
 
         if q.get('requiresMedia'):
             q['mediaAuditStatus']='pending'
