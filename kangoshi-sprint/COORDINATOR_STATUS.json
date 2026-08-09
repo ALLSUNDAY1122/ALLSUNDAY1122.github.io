@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-10T04:42:00+09:00",
+  "updatedAt": "2026-08-10T04:44:00+09:00",
   "sourceOfTruth": "GitHub main",
   "target": {
     "totalQuestions": 720,
@@ -34,30 +34,33 @@
     "B_general": {
       "status": "IN_PROGRESS",
       "target": 390,
-      "authoredL3": 104,
-      "remaining": 286,
-      "latestNewBatchCount": 11,
-      "mediaSeparated": ["K115-PM077"],
-      "statusCommit": "6c2f021c41d0b52875af5ec63b719d55e1931fc8",
-      "latestBatchCommit": "3bc12c1f0f57585694d08871c7fdb980d000c857"
+      "authoredL3": 116,
+      "remaining": 274,
+      "K115PMTextAuthoredTotal": 63,
+      "latestNewBatchCount": 12,
+      "mediaSeparated": ["K115-PM058", "K115-PM077"],
+      "statusCommit": "a048948dd94efc98ac8ba4b2c8bb2f71f07525af",
+      "latestBatchCommit": "b272717effe7966fee175b50d226502b7267f0a0"
     },
     "C_situation": {
-      "status": "IN_PROGRESS",
+      "status": "IN_PROGRESS_EXPERT_PENDING",
       "targetQuestions": 180,
       "targetScenarios": 60,
       "authoredL3QuestionFloor": 30,
-      "contentCompleteScenarioFloor": 10,
+      "scenarioContentAuditPassScenarios": 10,
+      "contentPendingScenarios": 50,
+      "expertReviewedScenarios": 0,
+      "finalPassScenarios": 0,
       "expertReviewQueueCount": 2,
-      "latestScenario": "K115-AM-SC05",
-      "latestScenarioStatus": "content_pass_expert_pending",
-      "latestScenarioCommit": "538f49fab5d65616488fd9dcf0d8e88762460c48",
+      "currentBlockingQuestion": "K115-AM103",
+      "latestManifestCommit": "eaf9fdec6d29ed3f3f95df7a9bd435d215dff60f",
       "expertQueueCommit": "81af1f58a8f73a2c10f4a239436861c6f8c9724b"
     }
   },
   "crossWorkstreamAuthoredCoverageFloor": {
-    "count": 284,
+    "count": 296,
     "total": 720,
-    "formula": "A150 + B104 + C30",
+    "formula": "A150 + B116 + C30",
     "meaning": "Minimum number of category-disjoint questions with authored/specialist-processed L3 content visible on main. This is not the common integrated L3 count and must not be presented as product-release coverage."
   },
   "integration": {
@@ -68,12 +71,12 @@
     "situationExpertQueueIntegratedIntoReleaseGate": true,
     "situationExpertQueueCount": 2,
     "expertEscalationSeparatedFromUntriagedDynamicEvidence": true,
-    "applyPipelineCommit": "6b82e7965fe255b83a307ea08fff29c450aa0eb3",
+    "applyPipelineCommit": "7010479b3f4b9f34913f604dab088f9e0e8bc53c",
     "queuePipelineCommit": "093a000bfe8854d904bde0f838dd59e31e8c0a15",
     "validatorPipelineCommit": "788eab01407a3c02e951a1523558728381b79c18",
-    "latestCheckpoint": "2026-08-10-L3-coordinator-Apass-B104-C30-Cexpert-3",
-    "latestCheckpointCommit": "75b1f1f8ef1c69e145ca3cc0ee7a3e5626f83353",
-    "expectedBatchFloor": 36,
+    "latestCheckpoint": "2026-08-10-L3-coordinator-Apass-B116-C30-5",
+    "latestCheckpointCommit": "b4ae89e49ee32b4db5adddc5501fec7fe01de8ae",
+    "expectedBatchFloor": 37,
     "materializedAfterCheckpoint": false,
     "materializationNote": "No newer github-actions[bot] L3 result commit was observed when this status was written. Do not infer PASS or newer integrated counts until enriched-draft/enrichment-audit.json changes."
   },
