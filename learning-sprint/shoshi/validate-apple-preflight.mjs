@@ -10,6 +10,7 @@ const capabilityPatch = read(`${root}/ios/apply-xcode-capabilities.py`);
 const swift = read(`${root}/ios/App.swift`);
 const nativeStore = read(`${root}/ios/native-storekit.js`);
 const prepareIos = read(`${root}/ios/prepare-ios.sh`);
+const codemagicBlock = read(`${root}/ios/codemagic-shoshi.yml`);
 const metadata = read(`${root}/app-store/APP_STORE_METADATA_JA.md`);
 const packet = read(`${root}/app-store/APPLE_CONNECT_PACKET.md`);
 const storekitPlan = read(`${root}/app-store/STOREKIT_TEST_PLAN.md`);
@@ -18,7 +19,6 @@ const privacyHtml = read(`${root}/privacy/index.html`);
 const supportHtml = read(`${root}/support/index.html`);
 const privacyManifest = read(`${root}/ios/PrivacyInfo.xcprivacy`);
 const questions = JSON.parse(read(`${root}/content-loop/questions.generated.json`));
-const codemagic = read('codemagic.yaml');
 
 const BUNDLE = 'jp.allsunday1122.shoshi';
 const PRODUCT = 'jp.allsunday1122.shoshi.premium';
@@ -90,19 +90,17 @@ includes(privacyManifest, '<key>NSPrivacyTracking</key>', 'Privacy Manifest trac
 includes(privacyManifest, '<false/>', 'Privacy Manifest tracking false');
 includes(privacyManifest, '<key>NSPrivacyCollectedDataTypes</key>', 'Privacy Manifest collected data key');
 
-const marker = '\n  shoshi-ios:';
-must(codemagic.includes(marker), 'missing shoshi-ios workflow');
-const block = codemagic.split(marker, 2)[1];
-includes(block, 'app_store_connect: codemagic', 'Codemagic ASC integration');
-includes(block, 'distribution_type: app_store', 'App Store distribution');
-includes(block, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle id');
-includes(block, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
-includes(block, 'testFlightInternalTestingOnly', 'internal TestFlight only export');
-includes(block, 'apply-xcode-capabilities.py', 'generated-project capability normalization');
-includes(block, 'submit_to_testflight: false', 'no automatic TestFlight submission');
-includes(block, 'submit_to_app_store: false', 'no automatic App Store review submission');
-includes(block, 'CM_BUILD_NUMBER', 'CI build number');
-must(!/submit_to_app_store:\s*true/.test(block), 'App Store auto-submit must stay disabled');
+includes(codemagicBlock, 'shoshi-ios:', 'Codemagic Shoshi workflow name');
+includes(codemagicBlock, 'app_store_connect: codemagic', 'Codemagic ASC integration');
+includes(codemagicBlock, 'distribution_type: app_store', 'App Store distribution');
+includes(codemagicBlock, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle id');
+includes(codemagicBlock, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
+includes(codemagicBlock, 'testFlightInternalTestingOnly', 'internal TestFlight only export');
+includes(codemagicBlock, 'apply-xcode-capabilities.py', 'generated-project capability normalization');
+includes(codemagicBlock, 'submit_to_testflight: false', 'no automatic TestFlight submission');
+includes(codemagicBlock, 'submit_to_app_store: false', 'no automatic App Store review submission');
+includes(codemagicBlock, 'CM_BUILD_NUMBER', 'CI build number');
+must(!/submit_to_app_store:\s*true/.test(codemagicBlock), 'App Store auto-submit must stay disabled');
 
 console.log('PASS: Shoshi Apple signing/TestFlight preflight contract is internally consistent.');
 console.log(`Bundle=${BUNDLE}`);
