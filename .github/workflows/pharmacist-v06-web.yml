@@ -1,0 +1,60 @@
+name: Pharmacist v0.6 Web Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pharmacist-manabi-sprint/index.html'
+      - 'pharmacist-manabi-sprint/product-loader-v06.js'
+      - 'pharmacist-manabi-sprint/app-v06.js'
+      - 'pharmacist-manabi-sprint/product-v06.css'
+      - 'pharmacist-manabi-sprint/sw.js'
+      - 'pharmacist-manabi-sprint/tools/validate_v06_web.py'
+      - 'pharmacist-manabi-sprint/tools/smoke_v06.mjs'
+      - 'pharmacist-manabi-sprint/tools/v06-web-trigger.txt'
+      - '.github/workflows/pharmacist-v06-web.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JS syntax checks
+        run: |
+          node --check pharmacist-manabi-sprint/product-loader-v06.js
+          node --check pharmacist-manabi-sprint/app-v06.js
+          node --check pharmacist-manabi-sprint/sw.js
+      - name: Static product/web audit
+        run: python3 pharmacist-manabi-sprint/tools/validate_v06_web.py
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Browser smoke
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --directory . >/tmp/pharmacist-http.log 2>&1 &
+          server=$!
+          trap 'kill $server || true' EXIT
+          sleep 2
+          node pharmacist-manabi-sprint/tools/smoke_v06.mjs | tee pharmacist-manabi-sprint/content/product/web-smoke.log
+      - name: Save validation reports
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pharmacist-manabi-sprint/content/product/web-static-audit.json pharmacist-manabi-sprint/content/product/web-smoke.log 2>/dev/null || true
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'pharmacist: v0.6 web validation result [skip ci]'
+          git pull --rebase origin main
+          git push
