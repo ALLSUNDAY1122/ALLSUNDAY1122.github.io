@@ -2,21 +2,37 @@ import Foundation
 import Combine
 
 enum Otsu4StudyKind: Equatable {
-    case today12
+    case sprint(Int)
+    case weak
     case subject(String)
-    case mock35
+    case mock(Int)
 
     var title: String {
         switch self {
-        case .today12: return "今日の12問"
+        case .sprint(let goal): return "今日のスプリント・\(goal)問"
+        case .weak: return "苦手をつぶす"
         case .subject(let name): return name
-        case .mock35: return "本番35問"
+        case .mock(let set): return "模擬試験 第\(set)回"
         }
     }
 
     var isMock: Bool {
-        if case .mock35 = self { return true }
+        if case .mock = self { return true }
         return false
+    }
+
+    init?(snapshot: Otsu4SessionSnapshot) {
+        switch snapshot.kindCode {
+        case "sprint": self = .sprint(snapshot.goal ?? 8)
+        case "weak": self = .weak
+        case "subject":
+            guard let subject = snapshot.subject else { return nil }
+            self = .subject(subject)
+        case "mock":
+            guard let set = snapshot.mockSet else { return nil }
+            self = .mock(set)
+        default: return nil
+        }
     }
 }
 
@@ -41,15 +57,20 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
     let id = UUID()
     let kind: Otsu4StudyKind
     let questions: [Otsu4Question]
-    let startedAt = Date()
+    let startedAt: Date
 
-    @Published private(set) var index = 0
-    @Published private(set) var answers: [String: Otsu4AnswerState] = [:]
+    @Published private(set) var index: Int
+    @Published private(set) var answers: [String: Otsu4AnswerState]
     @Published private(set) var isFinished = false
 
-    init(kind: Otsu4StudyKind, questions: [Otsu4Question]) {
+    init(kind: Otsu4StudyKind, questions: [Otsu4Question], snapshot: Otsu4SessionSnapshot? = nil) {
         self.kind = kind
         self.questions = questions
+        self.startedAt = snapshot?.startedAt ?? Date()
+        self.index = min(max(0, snapshot?.index ?? 0), max(0, questions.count - 1))
+        self.answers = snapshot?.answers.mapValues {
+            Otsu4AnswerState(selectedIndex: $0.selectedIndex, correct: $0.correct, unknown: $0.unknown)
+        } ?? [:]
     }
 
     var currentQuestion: Otsu4Question {
@@ -70,6 +91,38 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
 
     var isLast: Bool {
         index == questions.count - 1
+    }
+
+    var snapshot: Otsu4SessionSnapshot {
+        let kindCode: String
+        var subject: String?
+        var mockSet: Int?
+        var goal: Int?
+        switch kind {
+        case .sprint(let value):
+            kindCode = "sprint"
+            goal = value
+        case .weak:
+            kindCode = "weak"
+        case .subject(let value):
+            kindCode = "subject"
+            subject = value
+        case .mock(let value):
+            kindCode = "mock"
+            mockSet = value
+        }
+        return Otsu4SessionSnapshot(
+            kindCode: kindCode,
+            subject: subject,
+            mockSet: mockSet,
+            goal: goal,
+            questionIDs: questions.map(\.id),
+            index: index,
+            answers: answers.mapValues {
+                Otsu4StoredAnswer(selectedIndex: $0.selectedIndex, correct: $0.correct, unknown: $0.unknown)
+            },
+            startedAt: startedAt
+        )
     }
 
     func choose(_ choice: Int?) {
@@ -131,6 +184,6 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
 
     var mockPassEstimate: Bool {
         guard kind.isMock else { return false }
-        return subjectResults.values.allSatisfy { $0.rate >= 60 }
+        return subjectResults.count == 3 && subjectResults.values.allSatisfy { $0.rate >= 60 }
     }
 }
