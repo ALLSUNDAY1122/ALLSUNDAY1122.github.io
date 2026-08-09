@@ -46,8 +46,8 @@
     if(out.origin_type!=='licensed_official'||typeof out.explanation!=='string')return;
     const idx=Number(out.correct_index);
     if(!Number.isInteger(idx)||idx<0||idx>=out.choices.length)return;
-    const mapping=`公式正解は選択肢${idx+1}「${out.choices[idx]}」。`;
-    const re=/公式正解は選択肢\d+「[^」]*」。/;
+    const mapping=`公式正解・配点表では選択肢${idx+1}「${out.choices[idx]}」が正解。`;
+    const re=/公式正解・配点表では選択肢\d+「[^」]*」が正解。/;
     out.explanation=re.test(out.explanation)?out.explanation.replace(re,mapping):`${mapping}${out.explanation}`;
   }
 
