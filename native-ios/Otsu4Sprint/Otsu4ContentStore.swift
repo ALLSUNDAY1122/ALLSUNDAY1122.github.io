@@ -2,8 +2,15 @@ import Foundation
 
 struct Otsu4QuestionBank: Decodable {
     let contentVersion: String
-    let lawBaselineDate: String
+    let lawAuditDate: String
+    let currentEffectiveDates: [String: String]
     let questions: [Otsu4Question]
+}
+
+struct Otsu4SourceRef: Decodable, Hashable {
+    let title: String
+    let url: String
+    let locator: String
 }
 
 struct Otsu4Question: Identifiable, Decodable, Hashable {
@@ -23,15 +30,21 @@ struct Otsu4Question: Identifiable, Decodable, Hashable {
     let contentVersion: String
     let difficulty: Int
     let premium: Bool
+    let sourceLocator: String
+    let sourceRefs: [Otsu4SourceRef]
+    let learningObjective: String
+    let conceptKey: String
 }
 
 enum Otsu4ContentError: Error {
     case resourceMissing
     case invalidCounts
+    case invalidVersion
     case invalidQuestion(String)
 }
 
 struct Otsu4ContentStore {
+    static let expectedContentVersion = "otsu4-2026-08-product-v2"
     static let freeQuestionCount = 72
     static let freeSubjectCounts = ["法令": 29, "物理・化学": 19, "性質・消火": 24]
 
@@ -41,15 +54,20 @@ struct Otsu4ContentStore {
         guard let url = bundle.url(forResource: "questions.generated", withExtension: "json") else {
             throw Otsu4ContentError.resourceMissing
         }
-        let data = try Data(contentsOf: url)
+        try self.init(url: url)
+    }
+
+    init(url: URL) throws {
+        try self.init(data: Data(contentsOf: url))
+    }
+
+    init(data: Data) throws {
         let decoded = try JSONDecoder().decode(Otsu4QuestionBank.self, from: data)
         try Self.validate(decoded)
         bank = decoded
     }
 
-    var allQuestions: [Otsu4Question] {
-        bank.questions
-    }
+    var allQuestions: [Otsu4Question] { bank.questions }
 
     var freeQuestions: [Otsu4Question] {
         let law = bank.questions.filter { $0.subject == "法令" }.prefix(Self.freeSubjectCounts["法令"] ?? 0)
@@ -70,15 +88,24 @@ struct Otsu4ContentStore {
         availableQuestions(isPremium: isPremium).filter { $0.tags.contains(tag) }
     }
 
+    func today12(isPremium: Bool) -> [Otsu4Question] {
+        let pool = availableQuestions(isPremium: isPremium)
+        let law = pool.filter { $0.subject == "法令" }.shuffled().prefix(5)
+        let physics = pool.filter { $0.subject == "物理・化学" }.shuffled().prefix(3)
+        let properties = pool.filter { $0.subject == "性質・消火" }.shuffled().prefix(4)
+        return (Array(law) + Array(physics) + Array(properties)).shuffled()
+    }
+
     func mockExamQuestions() -> [Otsu4Question]? {
-        let law = bank.questions.filter { $0.subject == "法令" }.prefix(15)
-        let physics = bank.questions.filter { $0.subject == "物理・化学" }.prefix(10)
-        let properties = bank.questions.filter { $0.subject == "性質・消火" }.prefix(10)
+        let law = bank.questions.filter { $0.subject == "法令" }.shuffled().prefix(15)
+        let physics = bank.questions.filter { $0.subject == "物理・化学" }.shuffled().prefix(10)
+        let properties = bank.questions.filter { $0.subject == "性質・消火" }.shuffled().prefix(10)
         guard law.count == 15, physics.count == 10, properties.count == 10 else { return nil }
         return Array(law) + Array(physics) + Array(properties)
     }
 
     private static func validate(_ bank: Otsu4QuestionBank) throws {
+        guard bank.contentVersion == expectedContentVersion else { throw Otsu4ContentError.invalidVersion }
         guard bank.questions.count == 360 else { throw Otsu4ContentError.invalidCounts }
         let counts = Dictionary(grouping: bank.questions, by: \.subject).mapValues(\.count)
         guard counts["法令"] == 144,
@@ -90,13 +117,18 @@ struct Otsu4ContentStore {
         var ids = Set<String>()
         for q in bank.questions {
             guard ids.insert(q.id).inserted else { throw Otsu4ContentError.invalidQuestion(q.id) }
-            guard q.choices.count == 5,
+            guard q.contentVersion == expectedContentVersion,
+                  q.choices.count == 5,
                   Set(q.choices).count == 5,
                   (0..<5).contains(q.answer),
+                  !q.question.isEmpty,
                   !q.point.isEmpty,
                   !q.detail.isEmpty,
+                  !q.learningObjective.isEmpty,
                   !q.sourceTitle.isEmpty,
-                  !q.sourceURL.isEmpty else {
+                  !q.sourceURL.isEmpty,
+                  !q.sourceLocator.isEmpty,
+                  !q.sourceRefs.isEmpty else {
                 throw Otsu4ContentError.invalidQuestion(q.id)
             }
         }
