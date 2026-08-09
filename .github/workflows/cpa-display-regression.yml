@@ -1,0 +1,68 @@
+name: CPA display/data regression audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cpa-short-answer-sprint/**'
+      - 'learning-sprint/cpa-short-answer/**'
+      - '.github/workflows/cpa-display-regression.yml'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Audit all 279 questions for display/data corruption
+        run: python cpa-short-answer-sprint/scripts/audit_display_content.py
+
+      - name: Static JS and Golden Master audit
+        run: |
+          node --check cpa-short-answer-sprint/data-display-normalizer-v1.js
+          node --check cpa-short-answer-sprint/app-v21.js
+          python cpa-short-answer-sprint/scripts/validate_ui.py
+
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Start local Pages server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/cpa-http.log 2>&1 &
+          echo $! > /tmp/cpa-http.pid
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/cpa-short-answer-sprint/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/cpa-http.log
+          exit 1
+
+      - name: Reproduce and verify reported Q20 issues
+        env:
+          BASE_URL: http://127.0.0.1:4173/cpa-short-answer-sprint/
+        run: node cpa-short-answer-sprint/scripts/audit_user_report.mjs
+
+      - name: Re-run Golden Master 30-state browser audit
+        env:
+          BASE_URL: http://127.0.0.1:4173/cpa-short-answer-sprint/
+        run: node cpa-short-answer-sprint/scripts/capture_30_states.mjs
+
+      - name: Upload regression evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpa-display-regression-evidence
+          path: |
+            cpa-short-answer-sprint/audit/display-content-audit-result.json
+            cpa-short-answer-sprint/audit/user-report-audit-result.json
+            cpa-short-answer-sprint/audit/user-report/
+            cpa-short-answer-sprint/audit/screenshot-audit-result.json
+            cpa-short-answer-sprint/audit/screenshots/
+          if-no-files-found: warn
