@@ -8,10 +8,13 @@ on:
       - 'pharmacist-manabi-sprint/index.html'
       - 'pharmacist-manabi-sprint/product-loader-v06.js'
       - 'pharmacist-manabi-sprint/app-v06.js'
+      - 'pharmacist-manabi-sprint/record-fix-v061.js'
       - 'pharmacist-manabi-sprint/product-v06.css'
+      - 'pharmacist-manabi-sprint/heatmap-fix.css'
       - 'pharmacist-manabi-sprint/sw.js'
       - 'pharmacist-manabi-sprint/tools/validate_v06_web.py'
       - 'pharmacist-manabi-sprint/tools/smoke_v06.mjs'
+      - 'pharmacist-manabi-sprint/tools/smoke_record_v061.mjs'
       - 'pharmacist-manabi-sprint/tools/v06-web-trigger.txt'
       - '.github/workflows/pharmacist-v06-web.yml'
 
@@ -31,6 +34,7 @@ jobs:
         run: |
           node --check pharmacist-manabi-sprint/product-loader-v06.js
           node --check pharmacist-manabi-sprint/app-v06.js
+          node --check pharmacist-manabi-sprint/record-fix-v061.js
           node --check pharmacist-manabi-sprint/sw.js
       - name: Static product/web audit
         run: python3 pharmacist-manabi-sprint/tools/validate_v06_web.py
@@ -52,6 +56,20 @@ jobs:
           set -e
           echo "$code" > pharmacist-manabi-sprint/content/product/web-smoke.exit
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - name: Record screen regression smoke
+        id: record_smoke
+        shell: bash
+        run: |
+          python3 -m http.server 4174 --directory . >/tmp/pharmacist-record-http.log 2>&1 &
+          server=$!
+          trap 'kill $server || true' EXIT
+          sleep 2
+          set +e
+          SMOKE_URL='http://127.0.0.1:4174/pharmacist-manabi-sprint/' node pharmacist-manabi-sprint/tools/smoke_record_v061.mjs 2>&1 | tee pharmacist-manabi-sprint/content/product/record-smoke.log
+          code=${PIPESTATUS[0]}
+          set -e
+          echo "$code" > pharmacist-manabi-sprint/content/product/record-smoke.exit
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
       - name: Save validation reports
         if: always()
         shell: bash
@@ -59,10 +77,12 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add pharmacist-manabi-sprint/content/product/web-static-audit.json pharmacist-manabi-sprint/content/product/web-smoke.log pharmacist-manabi-sprint/content/product/web-smoke.exit 2>/dev/null || true
+          git add pharmacist-manabi-sprint/content/product/web-static-audit.json pharmacist-manabi-sprint/content/product/web-smoke.log pharmacist-manabi-sprint/content/product/web-smoke.exit pharmacist-manabi-sprint/content/product/record-smoke.log pharmacist-manabi-sprint/content/product/record-smoke.exit 2>/dev/null || true
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'pharmacist: v0.6 web validation result [skip ci]'
+          git commit -m 'pharmacist: v0.6.1 record validation result [skip ci]'
           git pull --rebase origin main
           git push
       - name: Enforce browser smoke gate
         run: test "${{ steps.smoke.outputs.exit_code }}" = '0'
+      - name: Enforce record regression gate
+        run: test "${{ steps.record_smoke.outputs.exit_code }}" = '0'
