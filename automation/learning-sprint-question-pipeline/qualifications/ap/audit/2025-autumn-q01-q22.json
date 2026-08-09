@@ -1,0 +1,31 @@
+{
+  "qualification": "応用情報技術者試験 科目A",
+  "exam": "令和7年度秋期 午前",
+  "audited_at": "2026-08-09T15:06:00+09:00",
+  "status": "FAIL",
+  "reason": "全240問未完成かつ図表アセット未登録のため。部分データ自体の構造・正解照合はPASS。",
+  "progress": {
+    "structured_this_exam": 22,
+    "expected_this_exam": 80,
+    "structured_all_rounds": 22,
+    "expected_all_rounds": 240
+  },
+  "partial_checks": {
+    "required_field_missing": 0,
+    "official_answer_mismatch": 0,
+    "exact_duplicate": 0,
+    "high_similarity_ge_0_90": 0,
+    "official_answers_matched": "22/22"
+  },
+  "assets": {
+    "required": 7,
+    "ready": 0,
+    "pending_question_numbers": [1, 10, 11, 15, 19, 20, 22]
+  },
+  "source_review": {
+    "official_pdf_questions_verified_through": 41,
+    "structured_through": 22,
+    "next_batch": "Q23-Q41"
+  },
+  "next_gate": "Q23-Q41を構造化し、図表問題のアセットを正本化した後に再監査する。240問PASS前にUI本実装へ進まない。"
+}
