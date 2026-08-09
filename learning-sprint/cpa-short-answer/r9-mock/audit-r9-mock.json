@@ -1,0 +1,68 @@
+{
+  "audit": "CPA R9-I scope independent mock 93-question audit",
+  "status": "PASS",
+  "audit_date": "2026-08-09",
+  "basis_date": "2026-04-01",
+  "official_scope": "令和9年第I回公認会計士試験の出題範囲",
+  "mock_notice": "第3回は令和9年の公式試験問題ではない。令和9年第I回の公式出題範囲と英語出題方針を反映して一次資料から独自作問した模試である。93問構成は直近の令和8年短答式構成を暫定継承する。",
+  "counts": {
+    "企業法": 20,
+    "管理会計論": 18,
+    "監査論": 20,
+    "財務会計論": 35
+  },
+  "total": 93,
+  "points": 500,
+  "english": {
+    "subjects": ["管理会計論", "監査論", "財務会計論"],
+    "question_count": 5,
+    "points": 28,
+    "ratio": 0.056,
+    "official_target_range": "total points 5-6%"
+  },
+  "machine_checks": {
+    "required_fields_missing": 0,
+    "id_duplicates": 0,
+    "exact_question_duplicates": 0,
+    "high_similarity_at_or_above_0_90": 0,
+    "invalid_correct_index": 0,
+    "non_primary_source_domains": 0,
+    "wrong_basis_date": 0,
+    "missing_explanations": 0,
+    "missing_rights_basis": 0
+  },
+  "calculation_rechecks": {
+    "management_process_costing_q5": "1000 yen per equivalent unit PASS",
+    "management_material_price_variance_q7": "22000 yen unfavorable PASS",
+    "management_cvp_q9": "2000 units PASS",
+    "management_target_profit_q10": "1000 units PASS",
+    "management_special_order_q12": "1000 yen incremental profit PASS",
+    "management_make_or_buy_q13": "make is 100 yen favorable PASS",
+    "management_constraint_q14": "A=1500 yen/hour > B=1000 yen/hour PASS",
+    "management_npv_q15": "approximately +476190 yen PASS",
+    "management_roi_q16": "15% PASS",
+    "management_current_ratio_q17": "150% PASS",
+    "financial_depreciation_q6": "2,000,000 yen PASS",
+    "financial_unrealized_profit_q23": "200,000 yen PASS",
+    "financial_eps_q30": "20 yen PASS"
+  },
+  "source_policy": {
+    "allowed_primary_domains": ["www.fsa.go.jp", "laws.e-gov.go.jp", "www.asb-j.jp"],
+    "origin_type": "original_from_primary_source",
+    "copyright_policy": "一次資料の事実・規定・計算原理を参照して独自に作問し、公式問題文・第三者解説は転載しない。"
+  },
+  "source_files": [
+    "questions-company-law.json",
+    "specs-management.json",
+    "specs-audit.json",
+    "specs-financial.json"
+  ],
+  "generator": "generate_and_audit_r9.py",
+  "errors": [],
+  "warnings": [],
+  "invalidates_when": [
+    "令和9年第I回の公式出題範囲・英語出題方針が改定された場合",
+    "問題・選択肢・正解・解説・根拠・基準日を変更した場合",
+    "令和9年第I回公式試験の公表後、実際の問題数・配点構成が現行93問構成と異なることが判明した場合"
+  ]
+}
