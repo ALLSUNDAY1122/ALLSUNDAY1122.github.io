@@ -1,0 +1,54 @@
+workflows:
+  network-specialist-ios:
+    name: Network Specialist iOS
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      vars:
+        XCODE_PROJECT: "network-specialist-sprint/ios/NetworkSpecialist.xcodeproj"
+        XCODE_SCHEME: "NetworkSpecialist"
+        BUNDLE_ID: "jp.allsunday1122.networkspecialist"
+    scripts:
+      - name: Prepare bundled web and icon
+        script: |
+          cd network-specialist-sprint
+          mkdir -p ios/NetworkSpecialist/WebApp
+          cp index.html style-v21.css app-v21.js questions-meta.js questions-2025-a.js questions-2025-b.js questions-2024-a.js questions-2024-b.js questions-2023-a.js questions-2023-b.js questions-ui-fixes.js manifest.json sw.js icon.svg ios/NetworkSpecialist/WebApp/
+          python3 - <<'PY'
+          from pathlib import Path
+          d=Path('ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset')
+          png=d/'AppIcon-1024.png'
+          if not png.exists():
+              raise SystemExit('Canonical AppIcon missing. Materialize Drive file 1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8 before Archive.')
+          PY
+      - name: Validate web assets
+        script: |
+          cd network-specialist-sprint
+          python3 scripts/validate_release.py
+      - name: Install XcodeGen
+        script: |
+          brew install xcodegen
+      - name: Generate Xcode project
+        script: |
+          cd network-specialist-sprint/ios
+          xcodegen generate
+      - name: Resolve signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Build archive
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
