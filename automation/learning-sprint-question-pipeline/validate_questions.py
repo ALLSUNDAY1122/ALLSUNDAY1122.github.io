@@ -109,6 +109,14 @@ def validate(config_path: Path) -> int:
     threshold = float(config.get("similarity_threshold", 0.90))
     required_fields = config.get("required_fields", [])
 
+    # Default remains strict for backward compatibility. Qualifications that contain
+    # historically repeated official questions can opt in explicitly. This exception
+    # never applies to authored/original questions.
+    repeat_policy = config.get("official_repeat_policy") or {}
+    allow_exact_official_repeats = bool(repeat_policy.get("allow_exact_official_repeats", False))
+    allow_high_similarity_official = bool(repeat_policy.get("allow_high_similarity_official", False))
+    canonicalize_exact_for_normal_learning = bool(repeat_policy.get("normal_learning_canonicalize_exact", False))
+
     errors = []
     warnings = []
 
@@ -123,9 +131,11 @@ def validate(config_path: Path) -> int:
 
     counts = defaultdict(int)
     normalized_map = defaultdict(list)
+    q_by_id = {}
 
     for idx, q in enumerate(questions, 1):
         label = q.get("id") or f"index:{idx}"
+        q_by_id[label] = q
         for field in required_fields:
             value = q.get(field)
             if value is None or value == "" or value == []:
@@ -166,22 +176,35 @@ def validate(config_path: Path) -> int:
                 fail(errors, f"第{round_no}回/{subject}: {actual}/{expected}")
 
     exact_dups = {k: v for k, v in normalized_map.items() if k and len(v) > 1}
+    official_exact_groups = []
     for labels in exact_dups.values():
-        fail(errors, f"問題本文完全一致: {labels}")
+        all_official = all(q_by_id.get(label, {}).get("origin_type") == "licensed_official" for label in labels)
+        if allow_exact_official_repeats and all_official:
+            official_exact_groups.append(labels)
+            suffix = "（通常学習ではcanonical化）" if canonicalize_exact_for_normal_learning else ""
+            warnings.append(f"公式試験の完全再出題を史実として保持: {labels}{suffix}")
+        else:
+            fail(errors, f"問題本文完全一致: {labels}")
 
     normalized_questions = []
     for q in questions:
         text = normalize(q.get("question", ""))
         if text:
-            normalized_questions.append((q.get("id", "?"), q.get("topic", ""), text))
+            normalized_questions.append((q.get("id", "?"), q.get("topic", ""), q.get("origin_type"), text))
 
+    official_similarity_pairs = []
     for i in range(len(normalized_questions)):
-        id_a, topic_a, text_a = normalized_questions[i]
+        id_a, topic_a, origin_a, text_a = normalized_questions[i]
         for j in range(i + 1, len(normalized_questions)):
-            id_b, topic_b, text_b = normalized_questions[j]
+            id_b, topic_b, origin_b, text_b = normalized_questions[j]
             ratio = SequenceMatcher(None, text_a, text_b).ratio()
             if ratio >= threshold:
-                fail(errors, f"高類似問題 {ratio:.2f}: {id_a} <-> {id_b}")
+                both_official = origin_a == "licensed_official" and origin_b == "licensed_official"
+                if allow_high_similarity_official and both_official:
+                    official_similarity_pairs.append((id_a, id_b, ratio))
+                    warnings.append(f"公式試験同士の高類似を史実として保持 {ratio:.2f}: {id_a} <-> {id_b}")
+                else:
+                    fail(errors, f"高類似問題 {ratio:.2f}: {id_a} <-> {id_b}")
             elif topic_a and topic_a == topic_b and ratio >= max(0.72, threshold - 0.15):
                 warnings.append(f"同一論点の類似を要確認 {ratio:.2f}: {id_a} <-> {id_b}")
 
@@ -193,6 +216,14 @@ def validate(config_path: Path) -> int:
             for subject, expected in subjects.items()
         )
         print(f"第{round_no}回: {details}")
+
+    if repeat_policy:
+        print(
+            "公式再出題ポリシー: "
+            f"exact_groups={len(official_exact_groups)}, "
+            f"high_similarity_pairs={len(official_similarity_pairs)}, "
+            f"canonicalize_normal_learning={canonicalize_exact_for_normal_learning}"
+        )
 
     if warnings:
         print("\nWARNINGS")
