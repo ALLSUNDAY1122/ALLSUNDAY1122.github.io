@@ -8,7 +8,7 @@ on:
       - 'pharmacist-manabi-sprint/content/reviewed/**'
       - 'pharmacist-manabi-sprint/content/media/**'
       - 'pharmacist-manabi-sprint/tools/assemble_product_bank.py'
-      - 'pharmacist-manabi-sprint/tools/final_product_audit.py'
+      - 'pharmacist-manabi-sprint/tools/final_product_audit_v2.py'
       - 'pharmacist-manabi-sprint/tools/final-bank-trigger.txt'
       - '.github/workflows/pharmacist-final-bank.yml'
 
@@ -27,16 +27,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Assemble product bank
         run: python3 pharmacist-manabi-sprint/tools/assemble_product_bank.py
-      - name: Run final audit but retain FAIL report
+      - name: Run final audit v2 but retain FAIL report
         id: audit
         shell: bash
         run: |
           set +e
-          python3 pharmacist-manabi-sprint/tools/final_product_audit.py > pharmacist-manabi-sprint/content/product/final-audit.log 2>&1
+          python3 pharmacist-manabi-sprint/tools/final_product_audit_v2.py > pharmacist-manabi-sprint/content/product/final-audit-v2.log 2>&1
           code=$?
           set -e
-          cat pharmacist-manabi-sprint/content/product/final-audit.log
-          echo "$code" > pharmacist-manabi-sprint/content/product/final-audit.exit
+          cat pharmacist-manabi-sprint/content/product/final-audit-v2.log
+          echo "$code" > pharmacist-manabi-sprint/content/product/final-audit-v2.exit
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
       - name: Commit assembled bank and audit report
         shell: bash
@@ -48,7 +48,7 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No final bank changes.'
           else
-            git commit -m 'pharmacist: final product bank audit result [skip ci]'
+            git commit -m 'pharmacist: final product bank audit result v2 [skip ci]'
             git pull --rebase origin main
             git push
           fi
