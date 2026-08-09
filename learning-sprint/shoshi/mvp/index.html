@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f3ea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="司法書士スプリント">
+  <title>司法書士試験・択一式｜学びスプリント</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="appShell" class="app-shell">
+    <header id="topHeader" class="top-header">
+      <div>
+        <p class="eyebrow">司法書士試験・択一式</p>
+        <h1>学びスプリント</h1>
+      </div>
+      <button id="headerHome" class="icon-button hidden" type="button" aria-label="ホームへ戻る">ホーム</button>
+    </header>
+
+    <main id="main" tabindex="-1" aria-live="polite">
+      <section id="homeView" class="view active" data-view="home">
+        <article class="signature-card paper-card">
+          <div id="progressRing" class="progress-ring" role="img" aria-label="今日の進捗 0パーセント"><span id="progressRingText">0%</span></div>
+          <div class="signature-copy">
+            <p class="kicker">今日の一歩</p>
+            <h2 id="dailyHeadline">8問だけ、積み上げる。</h2>
+            <p id="dailyMeta" class="muted">210問を出題当時の基準で正確に周回します。</p>
+          </div>
+        </article>
+
+        <button id="startDaily" class="primary-cta" type="button">
+          <span>今日のスプリント</span><strong id="dailyGoalLabel">8問</strong>
+        </button>
+
+        <article id="examPaceCard" class="paper-card compact-card hidden">
+          <div><p class="kicker">試験日まで</p><strong id="daysLeft">—</strong></div>
+          <p id="paceText" class="muted"></p>
+        </article>
+
+        <div class="section-heading">
+          <div><p class="kicker">過去3年</p><h2>試験回 × 科目</h2></div>
+          <div id="yearTabs" class="segmented" role="tablist" aria-label="試験年度"></div>
+        </div>
+        <div id="subjectGrid" class="subject-grid"></div>
+
+        <article class="source-note">
+          <strong>非公式の学習支援アプリです。</strong>
+          <p>法務省公開問題をアプリ向けに整形して表示しています。正答は出題年度の公式正答を保持し、現行法としての適否とは分けて扱います。</p>
+        </article>
+      </section>
+
+      <section id="mockView" class="view" data-view="mock">
+        <div class="page-title"><p class="kicker">35問で確認</p><h2>模試</h2><p class="muted">午前・午後を年度ごとに、そのまま解きます。</p></div>
+        <div id="mockGrid" class="mock-grid"></div>
+      </section>
+
+      <section id="recordView" class="view" data-view="record">
+        <div class="page-title"><p class="kicker">積み上げを可視化</p><h2>記録</h2></div>
+        <article class="paper-card record-summary">
+          <div id="accuracyDonut" class="accuracy-donut"><span id="accuracyText">—</span></div>
+          <div><p class="kicker">累計</p><strong id="attemptCount">0問</strong><p id="correctCount" class="muted">正解 0問</p></div>
+        </article>
+        <h3 class="subheading">科目別正答率</h3>
+        <div id="subjectBars" class="subject-bars"></div>
+        <h3 class="subheading">5週間</h3>
+        <div id="heatmap" class="heatmap" aria-label="5週間の学習ヒートマップ"></div>
+        <h3 class="subheading">苦手</h3>
+        <div id="weakList" class="weak-list"></div>
+      </section>
+
+      <section id="settingsView" class="view" data-view="settings">
+        <div class="page-title"><p class="kicker">自分に合わせる</p><h2>設定</h2></div>
+        <article class="paper-card settings-card">
+          <label>文字サイズ</label>
+          <div id="fontSizeControl" class="choice-row" role="radiogroup" aria-label="文字サイズ">
+            <button type="button" data-font="small">小</button><button type="button" data-font="medium">標準</button><button type="button" data-font="large">大</button>
+          </div>
+        </article>
+        <article class="paper-card settings-card">
+          <label>1日の目標</label>
+          <div id="goalControl" class="choice-row" role="radiogroup" aria-label="1日の目標問題数">
+            <button type="button" data-goal="4">4問</button><button type="button" data-goal="8">8問</button><button type="button" data-goal="16">16問</button>
+          </div>
+        </article>
+        <article class="paper-card settings-card">
+          <label for="examDate">試験日</label>
+          <input id="examDate" type="date">
+          <p class="muted">残り日数と210問の必要ペースをホームに表示します。</p>
+        </article>
+        <article class="paper-card settings-card">
+          <label>データ</label>
+          <div class="stack-actions">
+            <button id="exportData" class="secondary-button" type="button">学習データを書き出す</button>
+            <label class="secondary-button file-button">学習データを読み込む<input id="importData" type="file" accept="application/json"></label>
+            <button id="clearData" class="danger-button" type="button">学習履歴を初期化</button>
+          </div>
+        </article>
+        <article class="source-note">
+          <strong>オフライン対応</strong><p id="offlineStatus">初回読込後、問題データと画面を端末にキャッシュします。</p>
+        </article>
+      </section>
+
+      <section id="quizView" class="view quiz-view" data-view="quiz">
+        <div class="quiz-meta-row"><span id="quizCounter" class="pill">1 / 8</span><span id="quizSource" class="pill subtle"></span></div>
+        <div id="sectionPreamble" class="section-preamble hidden"></div>
+        <article class="question-card">
+          <p id="questionTopic" class="kicker"></p>
+          <div id="questionText" class="question-text"></div>
+          <div id="answerChoices" class="answer-choices" role="group" aria-label="解答選択肢"></div>
+        </article>
+        <div id="gradingMark" class="grading-mark hidden" aria-hidden="true"></div>
+        <article id="feedbackCard" class="feedback-card hidden">
+          <div id="feedbackTitle" class="feedback-title"></div>
+          <p id="feedbackExplanation"></p>
+          <div class="memory-box"><span>ここだけ覚える</span><strong id="memoryLine"></strong></div>
+          <details class="source-details"><summary>出典・基準</summary><p id="sourceDetailsText"></p></details>
+          <button id="nextQuestion" class="primary-cta" type="button">次の問題</button>
+        </article>
+      </section>
+
+      <section id="resultView" class="view result-view" data-view="result">
+        <p class="kicker">SPRINT COMPLETE</p>
+        <h2 id="resultTitle">8問、完了。</h2>
+        <div id="resultScore" class="result-score">0 / 8</div>
+        <p id="resultMessage" class="muted"></p>
+        <button id="backHome" class="primary-cta" type="button">ホームへ戻る</button>
+      </section>
+
+      <section id="errorView" class="view" data-view="error">
+        <article class="paper-card"><h2>問題データを読み込めませんでした</h2><p id="errorMessage" class="muted"></p><button id="retryLoad" class="primary-cta" type="button">再読み込み</button></article>
+      </section>
+    </main>
+
+    <nav id="bottomNav" class="bottom-nav" aria-label="メインナビゲーション">
+      <button type="button" data-nav="home" class="active"><span aria-hidden="true">⌂</span><small>ホーム</small></button>
+      <button type="button" data-nav="mock"><span aria-hidden="true">▤</span><small>模試</small></button>
+      <button type="button" data-nav="record"><span aria-hidden="true">◔</span><small>記録</small></button>
+      <button type="button" data-nav="settings"><span aria-hidden="true">⚙</span><small>設定</small></button>
+    </nav>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
