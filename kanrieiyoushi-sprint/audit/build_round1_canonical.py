@@ -37,6 +37,11 @@ def read_array(path: Path):
     arr, _ = json.JSONDecoder().raw_decode(text[start:])
     return arr
 
+def formal_id(raw_id: str) -> str:
+    if raw_id.startswith("KN") and raw_id[2:].isdigit() and int(raw_id[2:]) >= 121:
+        return f"KNR1-{int(raw_id[2:]):03d}"
+    return raw_id
+
 def main():
     src = []
     for path in SOURCES:
@@ -45,7 +50,7 @@ def main():
     for q in src:
         o = OVERRIDES.get(q["id"], {})
         out.append({
-            "id": q["id"],
+            "id": formal_id(q["id"]),
             "round": 1,
             "subject": q["c"],
             "topic": q["t"],
