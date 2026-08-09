@@ -11,6 +11,7 @@ COMBO_END_RE = re.compile(r"^\s*1\s+.+?\s+2\s+.+?\s+3\s+.+?\s+4\s+.+?\s+5\s+.+\s
 SECTION_MARKER_RE = re.compile(
     r"^\s*(?:以下の試験問題について|なお[、,]|また[、,]|次の試験問題について|第\s*\d+\s*問以降について)",
 )
+PDF_TAIL_RE = re.compile(r"(?:受験地|受験番号|十の位|一の位)")
 
 
 def split_trailing_preamble(text: str) -> tuple[str, str]:
@@ -40,6 +41,7 @@ def main() -> int:
 
     moved = []
     orphan = []
+    discarded_pdf_tail = []
     for i, q in enumerate(questions):
         clean, tail = split_trailing_preamble(q.get("question", ""))
         if not tail:
@@ -55,8 +57,12 @@ def main() -> int:
             if same_set:
                 nxt["section_preamble"] = tail
                 moved.append({"from": q["id"], "to": nxt["id"], "chars": len(tail)})
-            else:
-                orphan.append({"from": q["id"], "tail": tail[:120]})
+                continue
+
+        # AM booklets append OCR text from the answer sheet after Q35. It is not
+        # question content and has no following question to receive it.
+        if q.get("source_question_no") == 35 and q.get("session") == "AM" and PDF_TAIL_RE.search(tail):
+            discarded_pdf_tail.append({"from": q["id"], "chars": len(tail), "marker": "answer_sheet"})
         else:
             orphan.append({"from": q["id"], "tail": tail[:120]})
 
@@ -68,9 +74,10 @@ def main() -> int:
                 cross_contamination.append(q["id"])
                 break
 
-    report["cycle"] = 9
+    report["cycle"] = 10
     report["cross_question_boundary_audit"] = {
         "moved_section_preambles": moved,
+        "discarded_pdf_tail_artifacts": discarded_pdf_tail,
         "orphan_preambles": orphan,
         "remaining_cross_contamination": cross_contamination,
         "question_count": len(questions),
@@ -102,9 +109,10 @@ def main() -> int:
     v5.v4.v3.REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(json.dumps({
-        "cycle": 9,
+        "cycle": 10,
         "status": report["status"],
         "moved_preambles": len(moved),
+        "discarded_pdf_tail_artifacts": len(discarded_pdf_tail),
         "orphan_preambles": len(orphan),
         "remaining_cross_contamination": len(cross_contamination),
     }, ensure_ascii=False))
