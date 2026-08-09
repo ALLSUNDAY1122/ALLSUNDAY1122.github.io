@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "updatedAt": "2026-08-09",
   "license": {
     "provider": "厚生労働省",
@@ -12,9 +12,17 @@
   "audit": {
     "totalQuestions": 1035,
     "mandatoryPrimarySourcePass": 270,
-    "remainingPrimarySourcePass": 765,
+    "theoryPrimarySourcePass": 315,
+    "primarySourcePassTotal": 585,
+    "remainingPrimarySourcePass": 450,
     "mandatoryDetailFile": "mandatory-audit-v1.json",
+    "theoryDetailFile": "theory-audit-v1.json",
     "fullProblemAuditComplete": false
+  },
+  "statusSemantics": {
+    "noOfficialAnswer": "The official answer table says 解なし. This field does not by itself infer the final scoring treatment.",
+    "ordinaryQuestionBankOmit": "Do not deliver this item as an ordinary scored past-question item; omit it or create a corrected independent problem with separate provenance.",
+    "correction": "Official correction information exists and must be reflected before any adapted/rebuilt problem is released."
   },
   "exams": [
     {
@@ -22,45 +30,56 @@
       "exam": 111,
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198929.html",
       "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001677927.pdf",
+      "theoryQuestionUrls": ["https://www.mhlw.go.jp/content/001677928.pdf","https://www.mhlw.go.jp/content/001677929.pdf"],
       "answerUrl": "https://www.mhlw.go.jp/content/001677933.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 686,
-      "excludedFromScoring": [199,287],
+      "noOfficialAnswerQuestions": [92,199],
+      "ordinaryQuestionBankOmit": [92,199],
       "corrections": [
         {"questions":[92],"type":"wording"},
         {"questions":[199],"type":"unit"},
         {"questions":[220,221],"type":"prescription"}
       ],
-      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"excluded":0}
+      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"noOfficialAnswer":0},
+      "theoryAudit": {"status":"primary_source_pass","questionCount":105,"noOfficialAnswer":[92],"corrections":[92],"detailFile":"theory-audit-v1.json"},
+      "auditCorrectionLog": "Previous manifest incorrectly treated Q287 as excluded. Official answer review corrected the no-official-answer list to Q92 and Q199; Q287 is not recorded as 解なし."
     },
     {
       "sourceRef": "mhlw-110",
       "exam": 110,
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198928.html",
       "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001455149.pdf",
+      "theoryQuestionUrls": ["https://www.mhlw.go.jp/content/001455152.pdf","https://www.mhlw.go.jp/content/001455159.pdf"],
       "answerUrl": "https://www.mhlw.go.jp/content/001458551.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 690,
-      "excludedFromScoring": [],
+      "noOfficialAnswerQuestions": [],
+      "ordinaryQuestionBankOmit": [],
       "corrections": [],
-      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"excluded":0}
+      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"noOfficialAnswer":0},
+      "theoryAudit": {"status":"primary_source_pass","questionCount":105,"noOfficialAnswer":[],"corrections":[],"detailFile":"theory-audit-v1.json"}
     },
     {
       "sourceRef": "mhlw-109",
       "exam": 109,
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198926.html",
       "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001226759.pdf",
+      "theoryQuestionUrls": ["https://www.mhlw.go.jp/content/001226760.pdf","https://www.mhlw.go.jp/content/001226761.pdf"],
       "answerUrl": "https://www.mhlw.go.jp/content/001228441.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 688,
-      "excludedFromScoring": [111],
+      "noOfficialAnswerQuestions": [111,330],
+      "ordinaryQuestionBankOmit": [111,330],
       "corrections": [
         {"questions":[330],"type":"graph-axis-unit"}
       ],
-      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":75,"rewrite":15,"corrections":0,"excluded":0,"specialAssetNote":"Q25 graph is based on a MIC/Environmental Dispute Coordination Commission report; rebuild or restate, do not directly copy."}
+      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":75,"rewrite":15,"corrections":0,"noOfficialAnswer":0,"specialAssetNote":"Q25 graph is based on a MIC/Environmental Dispute Coordination Commission report; rebuild or restate, do not directly copy."},
+      "theoryAudit": {"status":"primary_source_pass","questionCount":105,"noOfficialAnswer":[111],"corrections":[],"detailFile":"theory-audit-v1.json"},
+      "practicalCarryover": "Q330 is a practical-section no-official-answer/correction item and will be handled in the practical audit."
     }
   ]
 }
