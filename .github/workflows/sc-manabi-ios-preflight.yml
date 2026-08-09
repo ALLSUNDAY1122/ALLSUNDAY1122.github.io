@@ -1,0 +1,69 @@
+name: SC Manabi Sprint iOS Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sc-manabi-sprint/native/**'
+      - 'sc-manabi-sprint/full/**'
+      - 'sc-manabi-sprint/q*.txt'
+      - '.github/workflows/sc-manabi-ios-preflight.yml'
+  workflow_dispatch:
+
+jobs:
+  ios-preflight:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: sc-manabi-sprint/native
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: sc-manabi-sprint/native/package.json
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Prepare bundled offline web assets
+        run: npm run prepare:web
+
+      - name: Validate bundled content
+        run: |
+          test -f www/index.html
+          test -f www/full/index.html
+          test -f www/full/app.js
+          test -f www/full/patch-2140.js
+          test -f www/full/style.css
+          for i in 0 1 2 3 4 5; do test -s "www/q${i}.txt"; done
+          grep -q '325' www/full/app.js
+          grep -q '13問' www/full/patch-2140.js
+          grep -q '12問' www/full/patch-2140.js
+
+      - name: Validate privacy manifest
+        run: plutil -lint PrivacyInfo.xcprivacy
+
+      - name: Generate iOS project
+        run: npx cap add ios
+
+      - name: Sync bundled assets
+        run: npx cap sync ios
+
+      - name: Verify generated project
+        run: |
+          test -d ios/App/App.xcworkspace
+          test -f ios/App/App.xcodeproj/project.pbxproj
+
+      - name: Unsigned iOS simulator build
+        run: |
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
