@@ -5,17 +5,23 @@
 ## App名
 情報処理安全確保支援士｜学びスプリント
 
+- 19文字（上限30文字以内）
+
 ## サブタイトル
 科目A-2を毎日8問で反復
+
+- 13文字（上限30文字以内）
 
 ## カテゴリ
 Education
 
 ## 年齢区分想定
-4+
+App Store Connectの質問票で不適切コンテンツ・無制限Webアクセス等がない前提なら4+想定。最終値はApp Store Connectの質問票による自動算定結果を採用する。
 
 ## プロモーションテキスト案
 毎日8問の短い学習で、情報処理安全確保支援士の科目A-2を反復。IPA公開過去問とシラバス準拠の独自問題、苦手復習、学習記録を1つにまとめました。
+
+- 73文字（上限170文字以内）
 
 ## 説明文案
 情報処理安全確保支援士試験の科目A-2対策を、短時間で継続するための学習アプリです。
@@ -31,7 +37,7 @@ Education
 - 出典・改変表示・一次根拠への導線
 - 学習済み問題数、正答率、分野別記録、5週間ヒートマップ
 - 試験日までの残日数と1日あたり学習目安
-- 学習データのJSON書き出し・読み込み
+- 学習データのJSON書き出し・読み込み・初期化
 - オフライン学習
 
 2026年度からの科目A-2名称に対応しています。
@@ -41,7 +47,10 @@ Education
 本アプリはIPA（独立行政法人情報処理推進機構）の公式アプリではありません。
 
 ## キーワード候補
-情報処理安全確保支援士,SC,科目A-2,午前II,セキュリティ,IPA,過去問,資格,試験,勉強
+SC,科目A-2,午前II,過去問,資格,暗号,認証,脆弱性,ネットワーク,情報処理
+
+- UTF-8 94 bytes（App Store Connect上限100 bytes以内）
+- App名そのものの重複と他社・他アプリ名は避ける。
 
 ## Support URL
 https://allsunday1122.github.io/sc-manabi-sprint/support.html
@@ -50,7 +59,7 @@ https://allsunday1122.github.io/sc-manabi-sprint/support.html
 https://allsunday1122.github.io/sc-manabi-sprint/privacy.html
 
 ## App Privacy 初版想定
-Data Not Collected
+No, we do not collect data from this app / Data Not Collected
 
 前提：広告SDK、解析SDK、ログイン、クラウド同期、独自サーバー送信を追加しないこと。追加した場合はこの判定を失効し再監査する。
 
