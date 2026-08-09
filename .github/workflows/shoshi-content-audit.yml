@@ -7,6 +7,7 @@ on:
     paths:
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v3.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v4.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v5.py'
       - '.github/workflows/shoshi-content-audit.yml'
   pull_request:
     branches:
@@ -14,6 +15,7 @@ on:
     paths:
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v3.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v4.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v5.py'
       - '.github/workflows/shoshi-content-audit.yml'
   workflow_dispatch:
 
@@ -40,7 +42,7 @@ jobs:
         run: |
           set +e
           cd learning-sprint/shoshi/content-loop
-          python official_pdf_loop_v4.py
+          python official_pdf_loop_v5.py
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
@@ -68,7 +70,7 @@ jobs:
             if [ -e "$p" ]; then git add "$p"; fi
           done
           if ! git diff --cached --quiet; then
-            git commit -m "司法書士210問の本文クリーニング監査結果を更新"
+            git commit -m "司法書士210問の本文内フッター監査結果を更新"
             git pull --rebase origin feature/shoshi-content-loop || true
             git push origin HEAD:feature/shoshi-content-loop || true
           fi
