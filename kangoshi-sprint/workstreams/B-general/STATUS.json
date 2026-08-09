@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "workstream": "B-general",
+  "scope": {
+    "category": "一般",
+    "sourceExams": [115, 114, 113],
+    "targetCount": 390,
+    "countPerExam": 130
+  },
+  "sourceOfTruth": "GitHub main",
+  "checkedAt": "2026-08-09T22:32:00+09:00",
+  "canonicalL3Snapshot": {
+    "globalExplained": 102,
+    "globalTotal": 720,
+    "globalPass": false,
+    "generalAppliedAndAudited": 53,
+    "generalAppliedScope": "K115-AM general questions currently present in batch-apply-report",
+    "manifestBlobSha": "8513bbd7947b14efae4fdf6fb3340b9ea3571b8b",
+    "batchApplyReportBlobSha": "94573eb87e6b5b3f68a25bf0adee96e826597e0a"
+  },
+  "authoredL3": {
+    "generalAuthoredCount": 104,
+    "generalRemainingNotYetAuthoredOrSpecialistProcessed": 286,
+    "breakdown": {
+      "K115_AM_applied_general": 53,
+      "K115_PM_existing_preBoundary_text": 40,
+      "K115_PM_new_B_general_text": 11
+    }
+  },
+  "thisSession": {
+    "createdBatch": "B-GENERAL-115-PM067-PM078-TEXT",
+    "createdFile": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM067-PM078-text.json",
+    "createdQuestionIds": [
+      "K115-PM067",
+      "K115-PM068",
+      "K115-PM069",
+      "K115-PM070",
+      "K115-PM071",
+      "K115-PM072",
+      "K115-PM073",
+      "K115-PM074",
+      "K115-PM075",
+      "K115-PM076",
+      "K115-PM078"
+    ],
+    "mediaSeparated": ["K115-PM077"],
+    "batchQuestionIdDuplicates": 0,
+    "batchIdDuplicateDetected": false,
+    "missingPoint": 0,
+    "missingDetail": 0,
+    "missingEvidenceRefs": 0,
+    "missingEvidenceCheckedDate": 0,
+    "officialAnswerChanged": 0,
+    "newContentConcerns": 0,
+    "ciStatusForBatchCommit": "no_status_checks_reported"
+  },
+  "knownGeneralSpecialQueues": {
+    "contentConcerns": ["K115-AM029", "K115-AM066"],
+    "knownScoringException": ["K115-AM032"],
+    "note": "Other media/scoring/text queue membership is read from the canonical pending-queues during each loop; this workstream does not edit canonical queue files."
+  },
+  "editBoundary": {
+    "allowed": [
+      "kangoshi-sprint/product-content/explanation-batches/B-general-*.json",
+      "kangoshi-sprint/workstreams/B-general/**"
+    ],
+    "forbidden": [
+      "kangoshi-sprint/product-content/enriched-draft/**",
+      "kangoshi-sprint/product-content/manifest.json",
+      "kangoshi-sprint/product-content/enrichment-trigger.json",
+      "kangoshi-sprint/product-content/content-concerns.json",
+      "common UI",
+      "mock exam engine",
+      "StoreKit"
+    ]
+  },
+  "nextLoop": "Continue K115 general from PM079 onward in small verified batches, separating media/scoring/content concerns; then K114 and K113. Integration/apply/queue rebuild is handed to the coordinator."
+}
