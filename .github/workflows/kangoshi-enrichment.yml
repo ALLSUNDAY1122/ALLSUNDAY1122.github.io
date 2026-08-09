@@ -9,6 +9,7 @@ on:
     paths:
       - 'kangoshi-sprint/product-content/build_enrichment_drafts.py'
       - 'kangoshi-sprint/product-content/apply_explanation_batches.py'
+      - 'kangoshi-sprint/product-content/build_enrichment_queues.py'
       - 'kangoshi-sprint/product-content/validate_enrichment.py'
       - 'kangoshi-sprint/product-content/explanation-batches/**'
       - '.github/workflows/kangoshi-enrichment.yml'
@@ -30,6 +31,8 @@ jobs:
         run: python3 kangoshi-sprint/product-content/build_enrichment_drafts.py
       - name: Apply explanation batches
         run: python3 kangoshi-sprint/product-content/apply_explanation_batches.py
+      - name: Build compact pending queues
+        run: python3 kangoshi-sprint/product-content/build_enrichment_queues.py
       - name: Validate enrichment
         shell: bash
         run: |
@@ -49,8 +52,10 @@ jobs:
           d=json.loads(manifest.read_text(encoding='utf-8'))
           ap=root/'enriched-draft/enrichment-audit.json'
           audit=json.loads(ap.read_text(encoding='utf-8')) if ap.exists() else {'counts':{}}
+          qp=root/'enriched-draft/pending-queues.json'
+          queues=json.loads(qp.read_text(encoding='utf-8')).get('summary',{}) if qp.exists() else {}
           code=int((root/'enriched-draft/enrichment.exit').read_text().strip())
-          d['explanationEvidenceLoop']={**audit.get('counts',{}),'auditExit':code,'status':'pass' if code==0 else 'fail'}
+          d['explanationEvidenceLoop']={**audit.get('counts',{}),'queues':queues,'auditExit':code,'status':'pass' if code==0 else 'fail'}
           manifest.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Commit L3 result and diagnostics
