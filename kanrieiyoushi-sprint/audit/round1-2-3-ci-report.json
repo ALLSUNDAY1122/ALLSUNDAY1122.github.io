@@ -1,0 +1,45 @@
+{
+  "qualification":"管理栄養士国家試験",
+  "checkedAt":"2026-08-09T15:28:48+09:00",
+  "loop":"学びスプリント｜問題生成・監査ループ v1.0",
+  "status":"PASS",
+  "scope":"第1回200問＋第2回200問＋第3回200問の600問横断監査",
+  "pullRequest":4096,
+  "workflowRunId":31298950869,
+  "mergedCommit":"24ce822bdbfaa330bdc3e6e289d42e28f9da05e5",
+  "rounds":[
+    {"round":1,"count":200,"distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30}},
+    {"round":2,"count":200,"distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30}},
+    {"round":3,"count":200,"distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30}}
+  ],
+  "finalChecks":{
+    "totalCount":"PASS 600/600",
+    "roundSubjectDistribution":"PASS",
+    "duplicateIds":"PASS 0",
+    "exactDuplicateQuestionText":"PASS 0",
+    "highSimilarityAtOrAbove0_90":"PASS 0",
+    "requiredFields":"PASS",
+    "choiceCount":"PASS 5 choices per question",
+    "correctIndex":"PASS",
+    "answerPositionBalance":"PASS each round 40/40/40/40/40",
+    "explanations":"PASS",
+    "primarySourceHostPolicy":"PASS",
+    "referenceDates":"PASS",
+    "originAndRightsBasis":"PASS",
+    "reproductionDependencyPhrases":"PASS 0",
+    "keyCalculations":"PASS"
+  },
+  "failFixHistory":[
+    "600問初回：第3回を含む高類似4組を検出し、症例・適用・病態推論問題へ再設計",
+    "内容監査：日本腎臓学会公式cdn.jsn.or.jpを許可ホストへ追加（公式配信元を確認）",
+    "品質警告：正答位置偏りを検出し、各回40/40/40/40/40へ均等化"
+  ],
+  "rightsPolicy":"一次資料の論点・事実を基礎に独自作問し、既存過去問本文・選択肢・解説の転載・軽微改変を採用しない。",
+  "limitations":[
+    "本監査は開発上の内部品質・権利ポリシー監査であり、弁護士による法律意見ではない",
+    "医療・栄養ガイドライン全文を専門家が査読したことを意味しない",
+    "制度・ガイドライン改定時はregulation/content change triggerで再監査する"
+  ],
+  "releaseDecision":"QUESTION_BANK_APPROVED_FOR_APP_INTEGRATION",
+  "publicSafariVersion":"v0.5.1 remains 200 questions until UI/data integration is completed"
+}
