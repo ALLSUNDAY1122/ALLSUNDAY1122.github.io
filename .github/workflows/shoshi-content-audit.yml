@@ -5,13 +5,15 @@ on:
     branches:
       - feature/shoshi-content-loop
     paths:
-      - 'learning-sprint/shoshi/content-loop/**'
+      - 'learning-sprint/shoshi/content-loop/import_and_audit.py'
+      - 'learning-sprint/shoshi/content-loop/run_parallel.py'
       - '.github/workflows/shoshi-content-audit.yml'
   pull_request:
     branches:
       - main
     paths:
-      - 'learning-sprint/shoshi/content-loop/**'
+      - 'learning-sprint/shoshi/content-loop/import_and_audit.py'
+      - 'learning-sprint/shoshi/content-loop/run_parallel.py'
       - '.github/workflows/shoshi-content-audit.yml'
   workflow_dispatch:
 
@@ -20,6 +22,7 @@ permissions:
 
 jobs:
   audit:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
