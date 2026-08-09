@@ -43,6 +43,11 @@ jobs:
         working-directory: tsukanshi-sprint/ios
         run: xcodegen generate
 
+      - name: Verify In-App Purchase capability in generated project
+        run: |
+          grep -q 'com.apple.InAppPurchase' tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj/project.pbxproj
+          grep -A3 'com.apple.InAppPurchase' tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj/project.pbxproj | grep -q 'enabled = 1'
+
       - name: Build Release for iPhone Simulator
         run: |
           set -o pipefail
@@ -65,10 +70,11 @@ jobs:
           test -f "$APP_PATH/Web/questions-editorial-final-polish.js"
           test -f "$APP_PATH/Web/official-past-exam-links.js"
           test -f "$APP_PATH/Web/release-links.js"
+          test -f "$APP_PATH/Web/storekit-ui-guard.js"
           test -f "$APP_PATH/PrivacyInfo.xcprivacy"
           test -f "$APP_PATH/AppIcon60x60@2x.png" || test -f "$APP_PATH/Assets.car"
           ! find "$APP_PATH" -type f -name 'sw.js' | grep -q .
-          echo 'PASS: Release app contains audited Web folder, privacy manifest, and app icon assets.'
+          echo 'PASS: Release app contains audited Web folder, StoreKit price guard, privacy manifest, and app icon assets.'
 
       - name: Upload build log
         if: always()
