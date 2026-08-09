@@ -1,0 +1,24 @@
+name: 管理栄養士 600 Question Audit
+
+on:
+  pull_request:
+    paths:
+      - 'kanrieiyoushi-sprint/audit/**'
+      - 'kanrieiyoushi-sprint/questions-*.js'
+      - '.github/workflows/kanrieiyoushi-600-question-audit.yml'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build 600 canonical questions
+        run: python kanrieiyoushi-sprint/audit/build_round1_2_3_canonical.py
+      - name: Validate 600 structure and similarity
+        run: python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2-3.json
+      - name: Audit content and rights policy
+        run: python kanrieiyoushi-sprint/audit/audit_content_rights.py
