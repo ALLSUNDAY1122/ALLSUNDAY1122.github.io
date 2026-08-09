@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "scope": "K115/K114/K113 required 150 only",
+  "checkedDate": "2026-08-09",
+  "loop": "problem change -> required audit -> FAIL fix -> re-audit -> PASS",
+  "status": "PASS",
+  "passMeaning": "必修150問の本文・公式正答・解説・根拠・例外分離まで専門監査完了。隔離対象は監査済みだが製品解放不可であり、統括側の解除条件を満たすまでrelease gateを閉じる。",
+  "auditBasis": {
+    "baseline": "720問raw取込・構造監査PASSの既存正本を基線とし、必修150問のみ再抽出。",
+    "changedSet": "公式PDF照合でPDF取込欠損18件を必修専用overlayへ修正し、変更点を再監査。",
+    "similarity": "既存全体監査PASS基線に対し、補正18件の変更セットを再比較。補正18件相互の高類似候補0。設問内容は統計、制度、処置、解剖、生理等で別問題として維持。再現用の全150問専用validatorも同時追加。",
+    "reproducibleGate": "required-150/validate_required_150.py"
+  },
+  "counts": {
+    "requiredTotal": 150,
+    "byExam": {"115": 50, "114": 50, "113": 50},
+    "standardExplanationCovered": 140,
+    "specialExplanationCovered": 10,
+    "explanationTotalCovered": 150,
+    "textCorrections": 18,
+    "answerMismatches": 0,
+    "explanationMissing": 0,
+    "evidenceMissing": 0,
+    "evidenceCheckedDateMissing": 0,
+    "duplicateQuestionIds": 0,
+    "exactDuplicateContent": 0,
+    "newHighSimilarityCandidatesFromChangedSet": 0,
+    "mediaDependent": 8,
+    "scoringSpecial": 6,
+    "expertReview": 2,
+    "quarantinedUnique": 14,
+    "releaseEligible": 136
+  },
+  "quarantine": {
+    "media": [
+      "K115-AM013", "K115-AM016", "K115-AM022", "K115-PM020",
+      "K114-AM013", "K114-PM019", "K113-AM023", "K113-PM021"
+    ],
+    "scoringSpecial": [
+      "K113-AM005", "K113-AM023", "K113-AM025", "K113-PM002", "K113-PM011", "K113-PM021"
+    ],
+    "expertReview": ["K115-PM025", "K113-PM025"]
+  },
+  "releaseGate": {
+    "eligibleCount": 136,
+    "quarantinedCount": 14,
+    "policy": "図版・採点特例・専門監査対象を通常問題として製品版へ解放しない。PM21は公式除外のため独自正答を設定しない。",
+    "integrationRerunRequired": true,
+    "integrationRerunCommand": "python3 kangoshi-sprint/product-content/required-150/validate_required_150.py"
+  },
+  "scopeGuard": {
+    "general390Edited": false,
+    "situation180Edited": false,
+    "sharedUIEdited": false,
+    "appEdited": false,
+    "storeKitEdited": false,
+    "mockExamEngineEdited": false,
+    "commonValidatorEdited": false
+  },
+  "artifacts": [
+    "required-150/text-corrections.json",
+    "required-150/special-cases.json",
+    "required-150/special-case-explanations.json",
+    "required-150/validate_required_150.py",
+    "required-150/HANDOFF.md",
+    "explanation-batches/REQ-K114-AM-required-20260809.json",
+    "explanation-batches/REQ-K114-PM-required-20260809.json",
+    "explanation-batches/REQ-K113-AM-required-20260809.json",
+    "explanation-batches/REQ-K113-PM-required-20260809.json"
+  ]
+}
