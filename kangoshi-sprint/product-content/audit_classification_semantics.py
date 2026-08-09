@@ -20,7 +20,10 @@ STEM_EXPECT=[
 ]
 SCEN_EXPECT=[
  (r'妊娠|妊婦|分娩|産褥|胎児|新生児', {'母性看護学'}, 'maternal-scenario'),
- (r'A\s*(?:さん|ちゃん|君|くん)[^。]{0,60}(?:男児|女児)|A\s*ちゃん|A\s*君|A\s*くん|乳児|幼児|学童|小児|二分脊椎', {'小児看護学'}, 'pediatric-scenario'),
+ # Family histories in adult/maternal cases frequently contain 男児/女児.
+ # They must not be used to infer that the patient is pediatric. Restrict this
+ # expectation to child naming/development terms that describe the case patient.
+ (r'A\s*ちゃん|A\s*君|A\s*くん|乳児|幼児|学童|小児|二分脊椎', {'小児看護学'}, 'pediatric-scenario'),
  (r'統合失調|神経性過食|境界性パーソナリティ|うつ病|双極|精神科', {'精神看護学'}, 'mental-scenario'),
  (r'震度\s*[5-7]|大地震|発災直後', {'看護の統合と実践'}, 'disaster-scenario'),
 ]
@@ -75,7 +78,7 @@ report={
  'total':total,'majorCounts':dict(majors),'perSetMajorCounts':per_set,
  'strongSemanticErrors':errors,'splitScenarioGroups':split_groups,'warnings':warnings,
  'pass':not errors,
- 'note':'独立ルールによる分類整合監査。小児は患者本人が小児である症例を優先し、一般的なトリアージ語は災害分類を強制しない。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。'
+ 'note':'独立ルールによる分類整合監査。小児判定では家族欄の男児・女児を患者本人と誤認しない。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。'
 }
 (OUT/'semantic-consistency-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'total':total,'errorCount':len(errors),'splitScenarioGroups':len(split_groups),'warningCount':len(warnings),'pass':not errors},ensure_ascii=False))
