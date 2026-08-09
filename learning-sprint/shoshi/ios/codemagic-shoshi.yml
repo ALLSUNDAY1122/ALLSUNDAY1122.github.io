@@ -1,0 +1,86 @@
+  shoshi-ios:
+    name: 司法書士 - iOS Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.shoshi
+      vars:
+        BUNDLE_ID: jp.allsunday1122.shoshi
+        XCODE_PROJECT: learning-sprint/shoshi/ios/ShoshiSprint.xcodeproj
+        XCODE_SCHEME: ShoshiSprint
+      xcode: latest
+    scripts:
+      - name: Audit Shoshi release inputs
+        script: |
+          cd "$CM_BUILD_DIR"
+          python3 automation/learning-sprint-question-pipeline/validate_questions.py \
+            learning-sprint/shoshi/content-loop/learning-sprint-audit.json
+          node learning-sprint/shoshi/validate-apple-preflight.mjs
+          bash -n learning-sprint/shoshi/ios/prepare-ios.sh
+          python3 -m py_compile learning-sprint/shoshi/ios/apply-xcode-capabilities.py
+          python3 - <<'PY'
+          import plistlib
+          with open('learning-sprint/shoshi/ios/PrivacyInfo.xcprivacy','rb') as f:
+              data=plistlib.load(f)
+          assert data.get('NSPrivacyTracking') is False
+          assert data.get('NSPrivacyCollectedDataTypes') == []
+          assert data.get('NSPrivacyAccessedAPITypes') == []
+          print('PASS: Shoshi Privacy Manifest matches current native implementation.')
+          PY
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare audited local bundle and canonical icon
+        script: bash "$CM_BUILD_DIR/learning-sprint/shoshi/ios/prepare-ios.sh"
+      - name: Set CI build number and generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/learning-sprint/shoshi/ios"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path('project.yml')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)
+          p.write_text(text,encoding='utf-8')
+          PY
+          xcodegen generate
+          python3 apply-xcode-capabilities.py ShoshiSprint.xcodeproj/project.pbxproj
+      - name: Verify Shoshi release inputs
+        script: |
+          test -f "$CM_BUILD_DIR/learning-sprint/shoshi/ios/Web/index.html"
+          test -f "$CM_BUILD_DIR/learning-sprint/shoshi/ios/Web/questions.generated.json"
+          test -f "$CM_BUILD_DIR/learning-sprint/shoshi/ios/Web/native-storekit.js"
+          test -f "$CM_BUILD_DIR/learning-sprint/shoshi/ios/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/learning-sprint/shoshi/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
+          grep -q 'com.apple.InAppPurchase' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+          ! grep -q 'SystemCapabilities = "' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+          python3 - "$CM_BUILD_DIR/learning-sprint/shoshi/ios/Web/questions.generated.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert len(data)==210 and len({q['id'] for q in data})==210
+          q=next(x for x in data if x['id']=='SHOSHI-R7-PM-33')
+          assert q.get('scoring_status')=='all_correct' and q.get('official_answer_no') is None
+          print('PASS: Shoshi native 210-question bundle')
+          PY
+      - name: Apply App Store signing profiles for internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/learning-sprint/shoshi/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
