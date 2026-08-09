@@ -1,0 +1,70 @@
+{
+  "qualification": "管理栄養士国家試験",
+  "updatedAt": "2026-08-09T20:57:00+09:00",
+  "web": {
+    "version": "v0.6.2",
+    "questionBank": 600,
+    "status": "PASS"
+  },
+  "ios": {
+    "status": "TECHNICAL_GATE_PASS_RELEASE_BLOCKED_EXTERNAL",
+    "productizationPR": 4123,
+    "mergeCommit": "ccff97cabed2c54cd7b426cce98120a9a7f6d5b7",
+    "bundleID": "jp.allsunday1122.kanrieiyoushi",
+    "iap": {
+      "type": "Non-Consumable",
+      "productID": "jp.allsunday1122.kanrieiyoushi.premium",
+      "priceDisplay": "StoreKit Product.displayPrice only",
+      "freeScope": "第1回10分類×各6問＝60問",
+      "premiumScope": "全600問・200問模試×3・全苦手復習・詳細記録"
+    },
+    "implementation": [
+      "SwiftUI + WKWebView local bundled web",
+      "Transaction.currentEntitlements",
+      "Transaction.updates",
+      "purchase success/cancel/pending/error",
+      "explicit restore via AppStore.sync()",
+      "revocation handling",
+      "PrivacyInfo.xcprivacy",
+      "native-only entitlement gate",
+      "Codemagic Internal TestFlight workflow with automatic submission disabled"
+    ]
+  },
+  "ci": {
+    "releaseGateRun": 31311911002,
+    "releaseGateConclusion": "SUCCESS",
+    "staticPreflight": "PASS",
+    "macOSReleaseSimulatorBuild": "PASS",
+    "builtAppAssetInspection": "PASS",
+    "webRegressionRun": 31311911011,
+    "webRegressionConclusion": "SUCCESS",
+    "canonicalIconTransport": "BLOCKED_EXTERNAL"
+  },
+  "canonicalAppIcon": {
+    "name": "04_管理栄養士国家試験.png",
+    "driveFileID": "11d72Dl76UH7QvU8Gxl-SgDjTV73GaxP4",
+    "width": 1024,
+    "height": 1024,
+    "bytes": 726223,
+    "sha256": "294481351106502f20958359d02bb2fb117ae18399654388425aad0e264fe31f",
+    "connectorRawFileVerified": true,
+    "releaseEnvironmentMaterialized": false,
+    "note": "匿名DriveダウンロードURLは正本と異なるレスポンスを返すため、仮アイコンでArchive/TestFlightへ進めない。"
+  },
+  "externalHumanGates": [
+    "App Store Connect App record",
+    "Bundle ID / signing setup",
+    "Non-Consumable IAP creation and official price",
+    "Codemagic App Store Connect signing integration",
+    "Canonical AppIcon transport into signed release environment",
+    "Signed IPA upload to Internal TestFlight",
+    "iPhone real-device launch and free-60 verification",
+    "Sandbox purchase",
+    "Purchase restore",
+    "Pending/cancel behavior",
+    "Premium 600-question and mock unlock verification"
+  ],
+  "automaticBetaReview": false,
+  "automaticAppStoreSubmission": false,
+  "nextGate": "Apple-side setup + canonical icon materialization + signed Internal TestFlight + real-device StoreKit verification"
+}
