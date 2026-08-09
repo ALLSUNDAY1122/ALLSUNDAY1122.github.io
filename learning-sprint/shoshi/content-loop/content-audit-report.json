@@ -1,6 +1,6 @@
 {
-  "cycle": 9,
-  "status": "FAIL",
+  "cycle": 10,
+  "status": "PASS",
   "generated": 210,
   "pdf_sets": 6,
   "media_questions": [],
@@ -204,9 +204,7 @@
     "SHOSHI-R7-PM-34: exact statute token not printed; subject-level primary law URL only",
     "SHOSHI-R7-PM-35: exact statute token not printed; subject-level primary law URL only"
   ],
-  "errors": [
-    "orphan section preambles: 3"
-  ],
+  "errors": [],
   "rules": {
     "question": "MOJ official PDF full question segment, including printed choice mapping",
     "ui_choices": "numeric 1..5 only",
@@ -257,20 +255,24 @@
         "chars": 6
       }
     ],
-    "orphan_preambles": [
+    "discarded_pdf_tail_artifacts": [
       {
         "from": "SHOSHI-R5-AM-35",
-        "tail": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n4\n5\n6\n7\n8\n9\n0\n1\n2\n23\n4\n5\n7\n8\n9\n0\n11\n2\n3\n4\n5\n6\n7\n8\n9\n0\n2\n3\n4\n5\n6\n7\n8\n9\n受験地\n受験番号\n氏名\n受験地\n十の位\n0 3 "
+        "chars": 337,
+        "marker": "answer_sheet"
       },
       {
         "from": "SHOSHI-R6-AM-35",
-        "tail": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n4\n5\n6\n7\n8\n9\n0\n1\n2\n23\n4\n5\n7\n8\n9\n0\n11\n2\n3\n4\n5\n6\n7\n8\n9\n0\n2\n3\n4\n5\n6\n7\n8\n9\n受験地\n受験番号\n氏名\n受験地\n十の位\n0 3 "
+        "chars": 337,
+        "marker": "answer_sheet"
       },
       {
         "from": "SHOSHI-R7-AM-35",
-        "tail": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n4\n5\n6\n7\n8\n9\n0\n1\n2\n23\n4\n5\n7\n8\n9\n0\n11\n2\n3\n4\n5\n6\n7\n8\n9\n0\n2\n3\n4\n5\n6\n7\n8\n9\n受験地\n受験番号\n氏 名\n受験地\n十の位\n千の位"
+        "chars": 343,
+        "marker": "answer_sheet"
       }
     ],
+    "orphan_preambles": [],
     "remaining_cross_contamination": [],
     "question_count": 210
   }
