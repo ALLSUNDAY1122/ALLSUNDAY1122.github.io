@@ -1,0 +1,109 @@
+name: Tsukanshi release foundation
+
+on:
+  push:
+    paths:
+      - 'tsukanshi-sprint/**'
+      - 'codemagic.yaml'
+      - '.github/workflows/tsukanshi-release-foundation.yml'
+      - '.github/workflows/tsukanshi-xcode-build.yml'
+  pull_request:
+    paths:
+      - 'tsukanshi-sprint/**'
+      - 'codemagic.yaml'
+      - '.github/workflows/tsukanshi-release-foundation.yml'
+      - '.github/workflows/tsukanshi-xcode-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Re-run content release gates
+        run: |
+          node tsukanshi-sprint/validate-content.mjs
+          node tsukanshi-sprint/validate-editorial-final.mjs
+
+      - name: Validate JavaScript and shell syntax
+        run: |
+          node --check tsukanshi-sprint/bootstrap-v21.js
+          node --check tsukanshi-sprint/app-v21.js
+          node --check tsukanshi-sprint/official-past-exam-links.js
+          node --check tsukanshi-sprint/release-links.js
+          bash -n tsukanshi-sprint/ios/prepare-ios.sh
+
+      - name: Validate privacy manifest
+        run: |
+          python3 - <<'PY'
+          import plistlib
+          p='tsukanshi-sprint/ios/PrivacyInfo.xcprivacy'
+          with open(p,'rb') as f: data=plistlib.load(f)
+          assert data['NSPrivacyTracking'] is False
+          assert data['NSPrivacyCollectedDataTypes']==[]
+          entries=data['NSPrivacyAccessedAPITypes']
+          assert any(x.get('NSPrivacyAccessedAPIType')=='NSPrivacyAccessedAPICategoryUserDefaults' and 'CA92.1' in x.get('NSPrivacyAccessedAPITypeReasons',[]) for x in entries)
+          print('PASS: PrivacyInfo.xcprivacy')
+          PY
+
+      - name: Validate iOS release configuration
+        run: |
+          grep -q 'PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tsukanshi' tsukanshi-sprint/ios/project.yml
+          grep -q 'MARKETING_VERSION: 1.0.0' tsukanshi-sprint/ios/project.yml
+          grep -q -- '- path: Web' tsukanshi-sprint/ios/project.yml
+          grep -q 'type: folder' tsukanshi-sprint/ios/project.yml
+          test "$(grep -c 'buildPhase: resources' tsukanshi-sprint/ios/project.yml)" -ge 3
+          grep -q -- '- path: Assets.xcassets' tsukanshi-sprint/ios/project.yml
+          grep -q -- '- path: PrivacyInfo.xcprivacy' tsukanshi-sprint/ios/project.yml
+          ! grep -q '^    resources:' tsukanshi-sprint/ios/project.yml
+          ! grep -q -- '- path: ../style.css' tsukanshi-sprint/ios/project.yml
+          ! grep -q -- '- path: ../app.js' tsukanshi-sprint/ios/project.yml
+          grep -q 'subdirectory: "Web"' tsukanshi-sprint/ios/App.swift
+          grep -q 'allsunday1122.github.io' tsukanshi-sprint/ios/App.swift
+
+      - name: Validate bundled web asset manifest
+        run: |
+          for file in \
+            index.html style-v21.css questions.js sources-v02.js questions-v02-tb.js \
+            questions-v02-ks1.js questions-v02-ks2.js questions-v02-ks3.js questions-v02-ks4.js \
+            questions-v02-jm1.js questions-v02-jm2.js questions-v02-jm3.js questions-v02-jm4.js \
+            sources-v03.js questions-v03-tb.js questions-v03-audit1.js questions-v03-audit1-order.js \
+            questions-v03-audit1-polish.js questions-editorial-audit2-7.js questions-editorial-final-polish.js \
+            official-past-exam-links.js release-links.js bootstrap-v21.js app-v21.js manifest.json icon.svg; do
+            test -f "tsukanshi-sprint/$file"
+            grep -q "$file" tsukanshi-sprint/ios/prepare-ios.sh
+          done
+          grep -q 'release-links.js?v=20260809-1433' tsukanshi-sprint/index.html
+
+      - name: Validate public submission pages and metadata
+        run: |
+          test -f tsukanshi-sprint/support.html
+          test -f tsukanshi-sprint/privacy.html
+          test -f tsukanshi-sprint/APP_STORE_METADATA_JA.md
+          test -f tsukanshi-sprint/APP_REVIEW_NOTES_JA.md
+          test -f tsukanshi-sprint/RELEASE_STATUS.md
+          test -f tsukanshi-sprint/RELEASE_CHECKLIST.md
+          grep -q 'https://allsunday1122.github.io/tsukanshi-sprint/support.html' tsukanshi-sprint/release-links.js
+          grep -q 'https://allsunday1122.github.io/tsukanshi-sprint/privacy.html' tsukanshi-sprint/release-links.js
+          grep -q 'jp.allsunday1122.tsukanshi.premium' tsukanshi-sprint/APP_STORE_METADATA_JA.md
+          grep -q '本アプリは税関・財務省の公式アプリではありません' tsukanshi-sprint/APP_STORE_METADATA_JA.md
+
+      - name: Validate Codemagic safety gate
+        run: |
+          grep -q '^  tsukanshi-ios:' codemagic.yaml
+          grep -q 'bundle_identifier: jp.allsunday1122.tsukanshi' codemagic.yaml
+          grep -q 'XCODE_PROJECT: tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj' codemagic.yaml
+          python3 - <<'PY'
+          from pathlib import Path
+          text=Path('codemagic.yaml').read_text(encoding='utf-8')
+          block=text.split('\n  tsukanshi-ios:',1)[1]
+          assert 'submit_to_testflight: false' in block
+          assert 'submit_to_app_store: false' in block
+          print('PASS: Codemagic cannot auto-submit during release foundation stage')
+          PY

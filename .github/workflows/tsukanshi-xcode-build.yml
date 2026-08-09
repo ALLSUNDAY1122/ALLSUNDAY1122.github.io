@@ -1,0 +1,79 @@
+name: Tsukanshi Xcode Release Build
+
+on:
+  push:
+    paths:
+      - 'tsukanshi-sprint/*.js'
+      - 'tsukanshi-sprint/*.html'
+      - 'tsukanshi-sprint/*.css'
+      - 'tsukanshi-sprint/manifest.json'
+      - 'tsukanshi-sprint/icon.svg'
+      - 'tsukanshi-sprint/ios/**'
+      - '.github/workflows/tsukanshi-xcode-build.yml'
+  pull_request:
+    paths:
+      - 'tsukanshi-sprint/*.js'
+      - 'tsukanshi-sprint/*.html'
+      - 'tsukanshi-sprint/*.css'
+      - 'tsukanshi-sprint/manifest.json'
+      - 'tsukanshi-sprint/icon.svg'
+      - 'tsukanshi-sprint/ios/**'
+      - '.github/workflows/tsukanshi-xcode-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  simulator-release:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen and ImageMagick
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
+
+      - name: Validate Privacy Manifest
+        run: plutil -lint tsukanshi-sprint/ios/PrivacyInfo.xcprivacy
+
+      - name: Prepare audited iOS bundle
+        run: bash tsukanshi-sprint/ios/prepare-ios.sh
+
+      - name: Generate Xcode project
+        working-directory: tsukanshi-sprint/ios
+        run: xcodegen generate
+
+      - name: Build Release for iPhone Simulator
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj \
+            -scheme TsukanshiSprint \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee /tmp/tsukanshi-xcodebuild.log
+
+      - name: Verify built app resources
+        run: |
+          APP_PATH="$(find "$HOME/Library/Developer/Xcode/DerivedData" -type d -name 'TsukanshiSprint.app' | head -n 1)"
+          test -n "$APP_PATH"
+          echo "Built app: $APP_PATH"
+          find "$APP_PATH" -maxdepth 2 -type f -print | sort | sed -n '1,120p'
+          test -f "$APP_PATH/Web/index.html"
+          test -f "$APP_PATH/Web/questions-editorial-final-polish.js"
+          test -f "$APP_PATH/Web/official-past-exam-links.js"
+          test -f "$APP_PATH/Web/release-links.js"
+          test -f "$APP_PATH/PrivacyInfo.xcprivacy"
+          test -f "$APP_PATH/AppIcon60x60@2x.png" || test -f "$APP_PATH/Assets.car"
+          ! find "$APP_PATH" -type f -name 'sw.js' | grep -q .
+          echo 'PASS: Release app contains audited Web folder, privacy manifest, and app icon assets.'
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tsukanshi-xcodebuild-log
+          path: /tmp/tsukanshi-xcodebuild.log
+          if-no-files-found: ignore
