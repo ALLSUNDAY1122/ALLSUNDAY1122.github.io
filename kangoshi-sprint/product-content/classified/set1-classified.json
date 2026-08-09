@@ -6078,8 +6078,8 @@
       "session": "PM",
       "questionNo": 8,
       "category": "必修",
-      "majorSubject": "人体の構造と機能",
-      "subject": "消化・代謝の機能",
+      "majorSubject": "成人看護学",
+      "subject": "成人期の発達・健康",
       "answerType": "singleChoice",
       "question": "壮年期の身体的変化はどれか。",
       "choices": [
@@ -6111,12 +6111,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "基礎代謝"
+        "v5:壮年期の身体的変化"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM009",
@@ -7002,8 +7002,8 @@
       "session": "PM",
       "questionNo": 28,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "血液の機能",
       "answerType": "singleChoice",
       "question": "ABO 式血液型におけるオモテ検査とウラ検査の結果を表に示す。 オモテ検査 ウラ検査 （患者血球使用） （患者血清使用） 血液型 抗 A 血清 抗 B 血清 A 型血球 B 型血球 ＋ − − ＋ ① − ＋ ＋ − ② − − ＋ ＋ ③ ＋ ＋ − − ④ 表の＋は凝集あり、−は凝集なしを示す。 血液型判定の結果が AB 型となるのはどれか。",
       "choices": [
@@ -7035,10 +7035,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:ABO.*血液型|オモテ検査.*ウラ検査"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM029",
@@ -7138,8 +7140,8 @@
       "session": "PM",
       "questionNo": 31,
       "category": "一般",
-      "majorSubject": "老年看護学",
-      "subject": "高齢者の特徴",
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "保健医療制度・健康政策",
       "answerType": "singleChoice",
       "question": "医療提供施設について正しいのはどれか。",
       "choices": [
@@ -7171,12 +7173,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "高齢者"
+        "v5:医療提供施設|救急医療に関する|学校感染症.*出席停止|育児・介護休業法|労働安全衛生法|食事摂取基準|鉄摂取推奨量"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM032",
@@ -7184,8 +7186,8 @@
       "session": "PM",
       "questionNo": 32,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "保健医療制度・健康政策",
       "answerType": "singleChoice",
       "question": "救急医療に関する記述で正しいのはどれか。",
       "choices": [
@@ -7217,10 +7219,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:医療提供施設|救急医療に関する|学校感染症.*出席停止|育児・介護休業法|労働安全衛生法|食事摂取基準|鉄摂取推奨量"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM033",
@@ -7228,8 +7232,8 @@
       "session": "PM",
       "questionNo": 33,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "看護過程",
       "answerType": "singleChoice",
       "question": "クリティカルシンキングの思考過程として適切なのはどれか。",
       "choices": [
@@ -7261,10 +7265,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:クリティカルシンキング|看護目標を設定|看護計画"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM034",
@@ -7365,8 +7371,8 @@
       "session": "PM",
       "questionNo": 36,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "看護過程",
       "answerType": "singleChoice",
       "question": "看護目標を設定する際に留意する点はどれか。",
       "choices": [
@@ -7398,10 +7404,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:クリティカルシンキング|看護目標を設定|看護計画"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM037",
@@ -7409,8 +7417,8 @@
       "session": "PM",
       "questionNo": 37,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "安楽・リラクセーション",
       "answerType": "singleChoice",
       "question": "漸進的筋弛緩法の目的はどれか。",
       "choices": [
@@ -7442,10 +7450,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:漸進的筋弛緩法"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM038",
@@ -7453,8 +7463,8 @@
       "session": "PM",
       "questionNo": 38,
       "category": "一般",
-      "majorSubject": "人体の構造と機能",
-      "subject": "呼吸の機能",
+      "majorSubject": "成人看護学",
+      "subject": "呼吸器看護",
       "answerType": "singleChoice",
       "question": "口すぼめ呼吸によって生じるのはどれか。",
       "choices": [
@@ -7486,12 +7496,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "換気"
+        "v5:口すぼめ呼吸"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM039",
@@ -7593,8 +7603,8 @@
       "session": "PM",
       "questionNo": 41,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "検査・観察・安全援助",
       "answerType": "singleChoice",
       "question": "超音波検査を実施する部位と患者への説明の組合せで正しいのはどれか。",
       "choices": [
@@ -7626,10 +7636,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:超音波検査.*説明|フィジカルアセスメント.*問診|ストレッチャー.*角|褥瘡の好発部位|創傷処置|24\\s*時間蓄尿"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM042",
@@ -7821,8 +7833,8 @@
       "session": "PM",
       "questionNo": 46,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "中毒・薬理",
       "answerType": "singleChoice",
       "question": "A さん（58 歳、男性）は農作業中に有機リン系殺虫剤を散布していたところ、急 な嘔気と頭痛、呼吸困難が出現したため救急搬送された。搬入時、呼吸は促迫で流 涎があり、縮瞳が認められた。 A さんに直ちに投与される薬剤はどれか。",
       "choices": [
@@ -7854,10 +7866,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:有機リン.*殺虫剤|有機リン.*投与"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM047",
@@ -7958,7 +7972,7 @@
       "questionNo": 49,
       "category": "一般",
       "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "消化器の病態",
+      "subject": "治療",
       "answerType": "singleChoice",
       "question": "肝動脈塞栓術〈TAE〉の適応となる疾患はどれか。",
       "choices": [
@@ -7990,12 +8004,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "肝炎"
+        "v5:肝動脈塞栓術|TAE"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM050",
@@ -8003,8 +8017,8 @@
       "session": "PM",
       "questionNo": 50,
       "category": "一般",
-      "majorSubject": "人体の構造と機能",
-      "subject": "運動器の構造と機能",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・疾患",
       "answerType": "singleChoice",
       "question": "多発性筋炎と診断された成人の症状について正しいのはどれか。 polymyositis",
       "choices": [
@@ -8036,12 +8050,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "関節"
+        "v5:多発性筋炎|Ménière|メニエール|緑内障.*禁忌|器質的変化.*嚥下障害"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM051",
@@ -8049,8 +8063,8 @@
       "session": "PM",
       "questionNo": 51,
       "category": "一般",
-      "majorSubject": "基礎看護学",
-      "subject": "感染予防",
+      "majorSubject": "成人看護学",
+      "subject": "成人の疾患別看護",
       "answerType": "singleChoice",
       "question": "成人の眼底光凝固療法において正しいのはどれか。",
       "choices": [
@@ -8082,12 +8096,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "消毒"
+        "v5:眼底光凝固療法|膀胱癌.*緊急|膀胱鏡.*組織検査|痛風の患者|急性髄膜炎患者"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM052",
@@ -8095,8 +8109,8 @@
       "session": "PM",
       "questionNo": 52,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・疾患",
       "answerType": "singleChoice",
       "question": "Ménière〈メニエール〉病で正しいのはどれか。 Ménièreʼs disease",
       "choices": [
@@ -8128,10 +8142,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:多発性筋炎|Ménière|メニエール|緑内障.*禁忌|器質的変化.*嚥下障害"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM053",
@@ -8139,8 +8155,8 @@
       "session": "PM",
       "questionNo": 53,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "成人看護学",
+      "subject": "成人の疾患別看護",
       "answerType": "singleChoice",
       "question": "膀胱癌で手術療法を予定している成人で、緊急の対応が必要な症状はどれか。 bladder cancer",
       "choices": [
@@ -8172,10 +8188,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:眼底光凝固療法|膀胱癌.*緊急|膀胱鏡.*組織検査|痛風の患者|急性髄膜炎患者"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM054",
@@ -8183,8 +8201,8 @@
       "session": "PM",
       "questionNo": 54,
       "category": "一般",
-      "majorSubject": "母性看護学",
-      "subject": "妊娠・胎児",
+      "majorSubject": "成人看護学",
+      "subject": "がん検診・乳房疾患",
       "answerType": "singleChoice",
       "question": "乳房超音波検査について正しいのはどれか。",
       "choices": [
@@ -8216,12 +8234,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "妊娠"
+        "v5:乳房超音波検査|マンモグラフィ.*成人女性"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM055",
@@ -8276,8 +8294,8 @@
       "session": "PM",
       "questionNo": 56,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "老年看護学",
+      "subject": "加齢変化と看護",
       "answerType": "singleChoice",
       "question": "老人性皮膚搔痒症の特徴はどれか。 pruritus senilis",
       "choices": [
@@ -8309,10 +8327,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:老人性皮膚|老人性難聴|presbyacusis|pruritus senilis"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM057",
@@ -8505,8 +8525,8 @@
       "session": "PM",
       "questionNo": 61,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "保健医療制度・健康政策",
       "answerType": "singleChoice",
       "question": "学校感染症の出席停止基準で正しいのはどれか。",
       "choices": [
@@ -8538,10 +8558,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:医療提供施設|救急医療に関する|学校感染症.*出席停止|育児・介護休業法|労働安全衛生法|食事摂取基準|鉄摂取推奨量"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM062",
@@ -8639,8 +8661,8 @@
       "session": "PM",
       "questionNo": 64,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "母性看護学",
+      "subject": "性と生殖・女性の健康",
       "answerType": "singleChoice",
       "question": "一般不妊治療はどれか。",
       "choices": [
@@ -8672,10 +8694,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:一般不妊治療|不妊治療|経産道感染|親性について|閉経.*エストロゲン"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM065",
@@ -8683,8 +8707,8 @@
       "session": "PM",
       "questionNo": 65,
       "category": "一般",
-      "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "感染・免疫",
+      "majorSubject": "母性看護学",
+      "subject": "性と生殖・女性の健康",
       "answerType": "singleChoice",
       "question": "経産道感染するのはどれか。",
       "choices": [
@@ -8716,12 +8740,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "ウイルス"
+        "v5:一般不妊治療|不妊治療|経産道感染|親性について|閉経.*エストロゲン"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM066",
@@ -10154,8 +10178,8 @@
       "session": "PM",
       "questionNo": 95,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "成人看護学",
+      "subject": "消化器・周術期",
       "answerType": "singleChoice",
       "question": "A さんは腹腔鏡を用いた気腹法による左半結腸切除術を受けることになった。 入院に付き添ってきた妻は「腸を半分も切ると言われて驚いてしまいました。ずい ぶん切るそうですが、どんな手術になるのかしら」と話した。 A さんの手術について正しいのはどれか。",
       "choices": [
@@ -10191,10 +10215,12 @@
       "scenarioIndex": 1,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5-scenario:便潜血.*陽性|結腸切除|大腸"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM096",
@@ -10202,8 +10228,8 @@
       "session": "PM",
       "questionNo": 96,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・フィジカルアセスメント",
+      "majorSubject": "成人看護学",
+      "subject": "消化器・周術期",
       "answerType": "singleChoice",
       "question": "A さんは予定通りに手術を受け、順調に経過した。術後 4 日、A さんは粥食を 摂取し「退院したら早く仕事に戻りたい。入院したときは、身長 176 cm、体重 70 kg だったけれど、入院して 2 kg 減った。退院後はどうなるのでしょうか」と 言 っ た。 血 液 検 査 で は、 赤 血 球 510 万/μL、 Hb 13.8 g/dL、 Ht 40 %、 白 血 球 8,200/μL、総蛋白 7.0 g/dL、アルブミン 5.1 g/dL であった。 A さんへの説明で適切なのはどれか。",
       "choices": [
@@ -10239,12 +10265,12 @@
       "scenarioIndex": 2,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "呼吸数"
+        "v5-scenario:便潜血.*陽性|結腸切除|大腸"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K115-PM097",

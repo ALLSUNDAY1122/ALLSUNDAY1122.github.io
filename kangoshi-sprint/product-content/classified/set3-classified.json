@@ -798,8 +798,8 @@
       "session": "AM",
       "questionNo": 18,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "呼吸器の徴候",
       "answerType": "singleChoice",
       "question": "異常な呼吸音のうち低調性連続性副雑音はどれか。",
       "choices": [
@@ -831,10 +831,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:異常な呼吸音|低調性連続性副雑音"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-AM019",
@@ -4395,8 +4397,8 @@
       "session": "AM",
       "questionNo": 94,
       "category": "状況設定",
-      "majorSubject": "人体の構造と機能",
-      "subject": "呼吸の機能",
+      "majorSubject": "成人看護学",
+      "subject": "呼吸器",
       "answerType": "singleChoice",
       "question": "A さんの呼吸機能に関する数値で増加を示すのはどれか。",
       "choices": [
@@ -4432,12 +4434,12 @@
       "scenarioIndex": 0,
       "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "換気"
+        "v5-scenario:肺気腫|pulmonary emphysema"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-AM095",
@@ -5791,8 +5793,8 @@
       "session": "PM",
       "questionNo": 2,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "保健医療制度・健康政策",
       "answerType": "singleChoice",
       "question": "日本人の食事摂取基準 2020 年版!に示されている、18〜49 歳女性 月経あり!の 鉄摂取推奨量はどれか。",
       "choices": [
@@ -5831,10 +5833,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:医療提供施設|救急医療に関する|学校感染症.*出席停止|育児・介護休業法|労働安全衛生法|食事摂取基準|鉄摂取推奨量"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM003",
@@ -5842,8 +5846,8 @@
       "session": "PM",
       "questionNo": 3,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "保健医療制度・健康政策",
       "answerType": "singleChoice",
       "question": "労働安全衛生法に規定されているのはどれか。",
       "choices": [
@@ -5875,10 +5879,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:医療提供施設|救急医療に関する|学校感染症.*出席停止|育児・介護休業法|労働安全衛生法|食事摂取基準|鉄摂取推奨量"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM004",
@@ -5934,7 +5940,7 @@
       "questionNo": 5,
       "category": "必修",
       "majorSubject": "健康支援と社会保障制度",
-      "subject": "保健医療福祉制度",
+      "subject": "社会保障・福祉制度",
       "answerType": "singleChoice",
       "question": "看護師の業務従事者届の届出先はどれか。",
       "choices": [
@@ -5966,12 +5972,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "保健所"
+        "v5:障害者総合支援法.*地域移行|精神障害者保健福祉手帳|介護老人保健施設|業務従事者届"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM006",
@@ -5979,8 +5985,8 @@
       "session": "PM",
       "questionNo": 6,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "小児看護学",
+      "subject": "成長発達",
       "answerType": "singleChoice",
       "question": "成長・発達における順序性で正しいのはどれか。",
       "choices": [
@@ -6012,10 +6018,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:成長・発達における順序性|第二次性徴.*思春期"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM007",
@@ -6023,8 +6031,8 @@
       "session": "PM",
       "questionNo": 7,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "小児看護学",
+      "subject": "成長発達",
       "answerType": "singleChoice",
       "question": "第二次性徴が発現し始めた思春期に関心が向くのはどれか。",
       "choices": [
@@ -6056,10 +6064,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:成長・発達における順序性|第二次性徴.*思春期"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM008",
@@ -6207,8 +6217,8 @@
       "session": "PM",
       "questionNo": 11,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "人体の構造・生理",
       "answerType": "singleChoice",
       "question": "上行大動脈から分枝するのはどれか。",
       "choices": [
@@ -6247,10 +6257,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:上行大動脈から分枝|膵管と合流|大十二指腸乳頭|健康な成人の皮膚|止血後の線維素溶解|線溶"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM012",
@@ -6258,8 +6270,8 @@
       "session": "PM",
       "questionNo": 12,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "人体の構造・生理",
       "answerType": "singleChoice",
       "question": "膵管と合流して大十二指腸乳頭 Vateruファーターx乳頭!に開口するのはどれ か。",
       "choices": [
@@ -6291,10 +6303,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:上行大動脈から分枝|膵管と合流|大十二指腸乳頭|健康な成人の皮膚|止血後の線維素溶解|線溶"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM013",
@@ -6349,8 +6363,8 @@
       "session": "PM",
       "questionNo": 14,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・疾患",
       "answerType": "singleChoice",
       "question": "器質的変化で嚥下障害が出現する疾患はどれか。",
       "choices": [
@@ -6382,10 +6396,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:多発性筋炎|Ménière|メニエール|緑内障.*禁忌|器質的変化.*嚥下障害"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM015",
@@ -6439,8 +6455,8 @@
       "session": "PM",
       "questionNo": 16,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "薬理・周術期",
       "answerType": "singleChoice",
       "question": "手術予定の患者が服用している場合、安全のために術前の休薬を検討するのはど れか。",
       "choices": [
@@ -6472,10 +6488,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:術前の休薬|休薬を検討"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM017",
@@ -6529,8 +6547,8 @@
       "session": "PM",
       "questionNo": 18,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "検査・観察・安全援助",
       "answerType": "singleChoice",
       "question": "フィジカルアセスメントで問診の次に行うのはどれか。",
       "choices": [
@@ -6562,10 +6580,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:超音波検査.*説明|フィジカルアセスメント.*問診|ストレッチャー.*角|褥瘡の好発部位|創傷処置|24\\s*時間蓄尿"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM019",
@@ -6665,8 +6685,8 @@
       "session": "PM",
       "questionNo": 21,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "検査・観察・安全援助",
       "answerType": "singleChoice",
       "question": "ストレッチャーでの角の曲がり方を図に示す。 適切なのはどれか。",
       "choices": [],
@@ -6696,10 +6716,12 @@
       "sourceAttribution": "出典：厚生労働省『第113回看護師国家試験』を学習用データとして加工",
       "sourceAnswerTokens": [],
       "mediaDetectionReason": "explicit_reference_in_stem",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:超音波検査.*説明|フィジカルアセスメント.*問診|ストレッチャー.*角|褥瘡の好発部位|創傷処置|24\\s*時間蓄尿"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM022",
@@ -6799,8 +6821,8 @@
       "session": "PM",
       "questionNo": 24,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "検査・観察・安全援助",
       "answerType": "singleChoice",
       "question": "側臥位における褥瘡の好発部位はどれか。",
       "choices": [
@@ -6832,10 +6854,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:超音波検査.*説明|フィジカルアセスメント.*問診|ストレッチャー.*角|褥瘡の好発部位|創傷処置|24\\s*時間蓄尿"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM025",
@@ -6843,8 +6867,8 @@
       "session": "PM",
       "questionNo": 25,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・疾患",
       "answerType": "singleChoice",
       "question": "緑内障患者への投与が禁忌なのはどれか。",
       "choices": [
@@ -6877,10 +6901,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:多発性筋炎|Ménière|メニエール|緑内障.*禁忌|器質的変化.*嚥下障害"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM026",
@@ -7078,7 +7104,7 @@
       "questionNo": 30,
       "category": "一般",
       "majorSubject": "基礎看護学",
-      "subject": "与薬・輸液",
+      "subject": "感染予防・医療廃棄物",
       "answerType": "singleChoice",
       "question": "医療機関の廃棄物とバイオハザードマークの色の組合せで正しいのはどれか。",
       "choices": [
@@ -7110,12 +7136,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "注射"
+        "v5:医療機関の廃棄物.*バイオハザード"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM031",
@@ -7169,8 +7195,8 @@
       "session": "PM",
       "questionNo": 32,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "健康・障害の概念",
       "answerType": "singleChoice",
       "question": "国際生活機能分類uICFxで｢生活機能｣の構成要素に含まれるのはどれか。",
       "choices": [
@@ -7202,10 +7228,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:国際生活機能分類|ICF"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM033",
@@ -7352,8 +7380,8 @@
       "session": "PM",
       "questionNo": 36,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "成人看護学",
+      "subject": "成人の疾患別看護",
       "answerType": "singleChoice",
       "question": "痛風の患者が摂取量を減らすことが望ましい食品はどれか。 gout",
       "choices": [
@@ -7385,10 +7413,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:眼底光凝固療法|膀胱癌.*緊急|膀胱鏡.*組織検査|痛風の患者|急性髄膜炎患者"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM037",
@@ -7438,8 +7468,8 @@
       "session": "PM",
       "questionNo": 38,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "人体の構造・生理",
       "answerType": "singleChoice",
       "question": "健康な成人の皮膚で正しいのはどれか。",
       "choices": [
@@ -7471,10 +7501,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:上行大動脈から分枝|膵管と合流|大十二指腸乳頭|健康な成人の皮膚|止血後の線維素溶解|線溶"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM039",
@@ -7483,7 +7515,7 @@
       "questionNo": 39,
       "category": "一般",
       "majorSubject": "基礎看護学",
-      "subject": "感染予防",
+      "subject": "検査・観察・安全援助",
       "answerType": "singleChoice",
       "question": "創傷処置について適切なのはどれか。",
       "choices": [
@@ -7515,12 +7547,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "消毒"
+        "v5:超音波検査.*説明|フィジカルアセスメント.*問診|ストレッチャー.*角|褥瘡の好発部位|創傷処置|24\\s*時間蓄尿"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM040",
@@ -7529,7 +7561,7 @@
       "questionNo": 40,
       "category": "一般",
       "majorSubject": "基礎看護学",
-      "subject": "感染予防",
+      "subject": "検査・観察・安全援助",
       "answerType": "singleChoice",
       "question": "午前 時から 24 時間蓄尿を開始することになった。 蓄尿の方法で正しいのはどれか。",
       "choices": [
@@ -7561,12 +7593,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "滅菌"
+        "v5:超音波検査.*説明|フィジカルアセスメント.*問診|ストレッチャー.*角|褥瘡の好発部位|創傷処置|24\\s*時間蓄尿"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM041",
@@ -7574,8 +7606,8 @@
       "session": "PM",
       "questionNo": 41,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "社会保障・福祉制度",
       "answerType": "singleChoice",
       "question": "介護老人保健施設について適切なのはどれか。",
       "choices": [
@@ -7607,10 +7639,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:障害者総合支援法.*地域移行|精神障害者保健福祉手帳|介護老人保健施設|業務従事者届"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM042",
@@ -7804,8 +7838,8 @@
       "session": "PM",
       "questionNo": 46,
       "category": "一般",
-      "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "薬理",
+      "majorSubject": "成人看護学",
+      "subject": "成人の疾患別看護",
       "answerType": "singleChoice",
       "question": "急性髄膜炎患者への対応で正しいのはどれか。 acute meningitis",
       "choices": [
@@ -7837,12 +7871,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "鎮痛薬"
+        "v5:眼底光凝固療法|膀胱癌.*緊急|膀胱鏡.*組織検査|痛風の患者|急性髄膜炎患者"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM047",
@@ -7850,8 +7884,8 @@
       "session": "PM",
       "questionNo": 47,
       "category": "一般",
-      "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "検査・診断",
+      "majorSubject": "成人看護学",
+      "subject": "成人の疾患別看護",
       "answerType": "singleChoice",
       "question": "膀胱鏡による組織検査を受ける成人男性への説明で正しいのはどれか。",
       "choices": [
@@ -7883,12 +7917,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "内視鏡"
+        "v5:眼底光凝固療法|膀胱癌.*緊急|膀胱鏡.*組織検査|痛風の患者|急性髄膜炎患者"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM048",
@@ -7943,8 +7977,8 @@
       "session": "PM",
       "questionNo": 49,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "老年看護学",
+      "subject": "加齢変化と看護",
       "answerType": "singleChoice",
       "question": "老人性難聴の特徴はどれか。 presbyacusis",
       "choices": [
@@ -7976,10 +8010,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:老人性皮膚|老人性難聴|presbyacusis|pruritus senilis"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM050",
@@ -8214,8 +8250,8 @@
       "session": "PM",
       "questionNo": 55,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "小児看護学",
+      "subject": "成長発達",
       "answerType": "singleChoice",
       "question": "ピアジェ, J. の認知発達理論における段階と病気の説明に使用するツールの組合 Piaget, J. せで適切なのはどれか。",
       "choices": [
@@ -8247,10 +8283,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:ピアジェ|Piaget|子どもの成長・発達"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM056",
@@ -8350,8 +8388,8 @@
       "session": "PM",
       "questionNo": 58,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "母性看護学",
+      "subject": "性と生殖・女性の健康",
       "answerType": "singleChoice",
       "question": "親性について適切なのはどれか。",
       "choices": [
@@ -8383,10 +8421,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:一般不妊治療|不妊治療|経産道感染|親性について|閉経.*エストロゲン"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM059",
@@ -8394,8 +8434,8 @@
       "session": "PM",
       "questionNo": 59,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "母性看護学",
+      "subject": "性と生殖・女性の健康",
       "answerType": "singleChoice",
       "question": "閉経に伴うエストロゲンの低下で生じるのはどれか。",
       "choices": [
@@ -8427,10 +8467,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:一般不妊治療|不妊治療|経産道感染|親性について|閉経.*エストロゲン"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM060",
@@ -8575,8 +8617,8 @@
       "session": "PM",
       "questionNo": 63,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "健康支援と社会保障制度",
+      "subject": "社会保障・福祉制度",
       "answerType": "singleChoice",
       "question": "精神障害者保健福祉手帳の交付によって精神障害者に適用されるのはどれか。",
       "choices": [
@@ -8608,10 +8650,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:障害者総合支援法.*地域移行|精神障害者保健福祉手帳|介護老人保健施設|業務従事者届"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM064",
@@ -8937,8 +8981,8 @@
       "session": "PM",
       "questionNo": 71,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "看護の統合と実践",
+      "subject": "倫理・情報管理",
       "answerType": "singleChoice",
       "question": "診療情報について適切なのはどれか。",
       "choices": [
@@ -8970,10 +9014,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:診療情報について|診療情報.*適切"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM072",
@@ -8982,7 +9028,7 @@
       "questionNo": 72,
       "category": "一般",
       "majorSubject": "看護の統合と実践",
-      "subject": "災害・救急",
+      "subject": "災害看護",
       "answerType": "singleChoice",
       "question": "サイコロジカルファーストエイドuPsychological First Aid：PFAxについて正し いのはどれか。",
       "choices": [
@@ -9014,12 +9060,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 40,
       "classificationSignals": [
-        "災害"
+        "v5:Psychological First Aid|サイコロジカルファーストエイド|PFA"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM073",
@@ -9074,8 +9120,8 @@
       "session": "PM",
       "questionNo": 74,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "人体の構造・生理",
       "answerType": "singleChoice",
       "question": "止血後の線維素溶解 線溶!に関係するのはどれか。",
       "choices": [
@@ -9108,10 +9154,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 40,
+      "classificationSignals": [
+        "v5:上行大動脈から分枝|膵管と合流|大十二指腸乳頭|健康な成人の皮膚|止血後の線維素溶解|線溶"
+      ],
+      "classificationMethod": "refinement-v5"
     },
     {
       "id": "K113-PM075",
