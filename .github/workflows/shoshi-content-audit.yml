@@ -7,6 +7,12 @@ on:
     paths:
       - 'learning-sprint/shoshi/content-loop/**'
       - '.github/workflows/shoshi-content-audit.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'learning-sprint/shoshi/content-loop/**'
+      - '.github/workflows/shoshi-content-audit.yml'
   workflow_dispatch:
 
 permissions:
