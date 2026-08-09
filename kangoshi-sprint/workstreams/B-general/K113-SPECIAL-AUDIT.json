@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "workstream": "B-general",
+  "sourceExam": 113,
+  "category": "一般",
+  "targetCount": 130,
+  "normalTextCovered": 114,
+  "quarantinedCount": 16,
+  "contentAndEvidenceCovered": 130,
+  "releaseStatus": "PASS_WITH_QUARANTINE",
+  "officialAnswerPolicy": "Official answers remain immutable. Media, source-data defects, and current-practice concerns are quarantined instead of guessed or silently normalized.",
+  "quarantine": {
+    "contentConcerns": [
+      {
+        "id": "K113-AM084",
+        "type": "content_concern",
+        "officialAcceptedAnswers": [[2,3]],
+        "officialAnswerLabel": "エンドトキシンが原因である／最重症の臨床像は多臓器不全である",
+        "point": "公式正答は保持するが、敗血症性ショックの原因を『エンドトキシン』へ一律に限定することは現在の敗血症定義へ一般化できない。",
+        "detail": "Sepsis-3は敗血症を感染に対する調節不全の宿主反応による生命を脅かす臓器障害と定義し、敗血症性ショックを循環・細胞・代謝異常が著しいサブセットとする。グラム陰性菌のLPS〈エンドトキシン〉は重要な病原体関連分子だが、敗血症性ショックはグラム陽性菌、真菌など多様な感染で起こる。公式正答は試験史実として変えず、現行実践では『エンドトキシンが普遍的原因』と教えないよう専門監査する。",
+        "evidenceRefs": ["https://pubmed.ncbi.nlm.nih.gov/26903338/"],
+        "evidenceCheckedDate": "2026-08-10",
+        "expertReviewRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K113-AM085",
+        "type": "content_concern",
+        "officialAcceptedAnswers": [[1,4]],
+        "officialAnswerLabel": "症候性てんかんは脳内病変を伴う／脳の神経細胞の発作性電気的興奮によって起こる",
+        "point": "公式正答の医学的核は保持できるが、『症候性てんかん』『単純部分発作』は現在のILAE分類では旧用語。",
+        "detail": "旧分類の『症候性』は現在の原因分類では構造的、感染性、代謝性、免疫性などへ再編され、『単純部分発作』は現在の焦点起始発作の意識保持〈focal aware〉等へ置き換えられている。発作が神経細胞ネットワークの異常過剰・同期性活動で生じるという核心は維持する。公式正答を変更せず、学習解説に旧用語であることを明示する専門監査が必要。",
+        "evidenceRefs": ["https://pubmed.ncbi.nlm.nih.gov/28276062/","https://pubmed.ncbi.nlm.nih.gov/40159961/"],
+        "evidenceCheckedDate": "2026-08-10",
+        "expertReviewRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K113-AM087",
+        "type": "content_concern",
+        "officialAcceptedAnswers": [[2,4]],
+        "officialAnswerLabel": "ハフィング法／インセンティブ・スパイロメトリーの使用",
+        "point": "ハフィングを含む呼吸理学療法は合理的だが、インセンティブ・スパイロメトリー単独を術後無気肺予防の確立した有効策として一般化する根拠は弱い。",
+        "detail": "上腹部手術後の系統的レビューでは、インセンティブ・スパイロメトリーが無治療や他の呼吸理学療法より肺合併症を減らす明確な利益は示されておらず、エビデンスの質も低い。現在の周術期呼吸管理では早期離床、深呼吸、疼痛管理、咳嗽・排痰等を組み合わせる。公式正答は変更せず、単独介入の有効性を過大表現しない専門監査が必要。",
+        "evidenceRefs": ["https://pubmed.ncbi.nlm.nih.gov/25522640/","https://pubmed.ncbi.nlm.nih.gov/33065215/"],
+        "evidenceCheckedDate": "2026-08-10",
+        "expertReviewRequired": true,
+        "releaseStatus": "quarantined"
+      }
+    ],
+    "sourceDataDefects": [
+      {
+        "id": "K113-AM061",
+        "type": "source_data_defect",
+        "defect": "raw choices are empty even though official PDF contains four numeric choices",
+        "officialRepair": {"question":"自然流産を連続（　）回以上繰り返した状態を習慣流産という。","choices":["2","3","4","5"],"officialAcceptedAnswers":[1]},
+        "sourcePdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05a_01.pdf",
+        "evidenceCheckedDate": "2026-08-10",
+        "coordinatorRawFixRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K113-PM053",
+        "type": "source_data_defect",
+        "defect": "choice 1 lost the target-disease count numeral in raw import",
+        "officialRepair": {"preserveStem":true,"repairChoice1FromOfficialPdfVisual":true,"officialAcceptedAnswers":[2]},
+        "sourcePdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+        "note": "The correct option '早期新生児期に実施される' is intact, but a malformed distractor makes the product question unacceptable until repaired.",
+        "evidenceCheckedDate": "2026-08-10",
+        "coordinatorRawFixRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K113-PM057",
+        "type": "source_data_defect",
+        "defect": "all four follow-up interval numerals were lost in raw import",
+        "officialRepair": {"choices":["4週後","3週後","2週後","1週後"],"officialAcceptedAnswers":[2]},
+        "sourcePdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+        "evidenceCheckedDate": "2026-08-10",
+        "coordinatorRawFixRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K113-PM078",
+        "type": "source_data_defect",
+        "defect": "post-gastrectomy interval numeral was lost in raw stem",
+        "officialRepair": {"question":"胃癌の胃切除術後5年ほどで欠乏し貧血を起こさせるのはどれか。","officialAcceptedAnswers":[2]},
+        "sourcePdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+        "evidenceCheckedDate": "2026-08-10",
+        "coordinatorRawFixRequired": true,
+        "releaseStatus": "quarantined"
+      },
+      {
+        "id": "K113-PM090",
+        "type": "source_data_defect",
+        "defect": "infusion duration leading hour numeral was lost in raw stem",
+        "officialRepair": {"question":"20滴で1mLの輸液セットを用いて500mLの輸液を3時間30分かけて実施する場合の1分間の滴下数を求めよ。","officialAcceptedAnswers":[48]},
+        "sourcePdf": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+        "evidenceCheckedDate": "2026-08-10",
+        "coordinatorRawFixRequired": true,
+        "releaseStatus": "quarantined"
+      }
+    ],
+    "mediaDependent": [
+      {"id":"K113-AM027","officialAcceptedAnswers":[0],"point":"舌の味覚支配領域を図番号で答えるため視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true},
+      {"id":"K113-AM034","officialAcceptedAnswers":[3],"point":"僧帽弁領域の聴診位置を図中番号で答えるため視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true},
+      {"id":"K113-AM035","officialAcceptedAnswers":[2],"point":"滅菌手袋の装着手順を図から選ぶため視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true},
+      {"id":"K113-AM046","officialAcceptedAnswers":[3],"point":"関節リウマチ患者用自助具を画像から選ぶため視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true},
+      {"id":"K113-PM037","officialAcceptedAnswers":[3],"point":"右片麻痺患者の車椅子移乗時配置を図から選ぶため視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true},
+      {"id":"K113-PM054","officialAcceptedAnswers":[3],"point":"1歳4か月児に適した遊具を画像から選ぶため視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true},
+      {"id":"K113-PM066","officialAcceptedAnswers":[3],"point":"両上肢で支持し平坦路を歩く高齢者向け福祉用具を画像から選ぶため視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true},
+      {"id":"K113-PM077","officialAcceptedAnswers":[1],"point":"発熱時のセットポイントと実測体温グラフの区間②を読む問題で視覚確認が必要。","evidenceCheckedDate":"2026-08-10","mediaRightsAuditRequired":true}
+    ],
+    "scoringExceptions": []
+  },
+  "audit": {
+    "normalTextPlusQuarantineEqualsTarget": true,
+    "normalTextCount": 114,
+    "contentConcernCount": 3,
+    "sourceDataDefectCount": 5,
+    "mediaDependentCount": 8,
+    "scoringExceptionCount": 0,
+    "questionIdOverlapBetweenQueues": 0,
+    "officialAnswerChanged": 0,
+    "expertReviewRequiredCount": 3,
+    "coordinatorRawFixRequiredCount": 5,
+    "status": "PASS_WITH_QUARANTINE"
+  }
+}
