@@ -37,14 +37,16 @@ try{
 
   const mediaId=await page.evaluate(()=>window.PHARM_QUESTIONS.find(q=>q.displayMode==='officialQuestionImage'&&q.scored)?.id);
   assert(mediaId,'no media question');
-  await page.evaluate(({key,id})=>localStorage.setItem(key,JSON.stringify(blankState({title:'媒体確認',field:'媒体',ids:[id],index:0,results:[],orders:{},isMock:false}))),{key,id:mediaId});
+  const mediaState=blankState({title:'媒体確認',field:'媒体',ids:[mediaId],index:0,results:[],orders:{},isMock:false});
+  await page.evaluate(({key,st})=>localStorage.setItem(key,JSON.stringify(st)),{key,st:mediaState});
   await page.reload({waitUntil:'domcontentloaded'}); await page.waitForFunction(()=>window.PHARM_PRODUCT_META?.total===1035); await page.waitForSelector('#resumeBtn.show'); await page.click('#resumeBtn');
   await page.waitForSelector('#qMedia img');
   await page.waitForFunction(()=>document.querySelector('#qMedia img')?.complete && document.querySelector('#qMedia img')?.naturalWidth>100,{timeout:30000});
   assert(await page.locator('#choices .choice').count()>=2,'media numbered choices missing');
 
   const flex=await page.evaluate(()=>{const q=window.PHARM_QUESTIONS.find(x=>x.id==='P111-287');return {id:q.id,combo:q.accepted[0]}});
-  await page.evaluate(({key,id})=>localStorage.setItem(key,JSON.stringify(blankState({title:'複数正答確認',field:'実践',ids:[id],index:0,results:[],orders:{},isMock:false}))),{key,id:flex.id});
+  const flexState=blankState({title:'複数正答確認',field:'実践',ids:[flex.id],index:0,results:[],orders:{},isMock:false});
+  await page.evaluate(({key,st})=>localStorage.setItem(key,JSON.stringify(st)),{key,st:flexState});
   await page.reload({waitUntil:'domcontentloaded'}); await page.waitForFunction(()=>window.PHARM_PRODUCT_META?.total===1035); await page.waitForSelector('#resumeBtn.show'); await page.click('#resumeBtn');
   for(const i of flex.combo) await page.click(`#choices .choice[data-orig="${i}"]`);
   await page.waitForSelector('#feedback:not(.hidden)');
