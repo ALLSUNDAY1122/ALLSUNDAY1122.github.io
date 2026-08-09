@@ -26,13 +26,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Foundation-only notice
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') == '' }}
+        run: echo 'Otsu4 native product files are not present yet; typecheck will run on the product PR.'
       - name: Show Xcode and Swift versions
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
         run: |
           xcodebuild -version
           xcrun swiftc --version
       - name: Generate audited 360-question JSON
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
         run: node tools/otsu4-build-content-v2.mjs
       - name: Runtime-decode v2.1 learning selections
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
         run: |
           cat > /tmp/Otsu4ContentDecodeCheck.swift <<'SWIFT'
           import Foundation
@@ -67,6 +73,7 @@ jobs:
             -o /tmp/otsu4-content-check
           /tmp/otsu4-content-check
       - name: Typecheck Learning Sprint v2.1 native flow and StoreKit
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
         run: |
           xcrun --sdk iphonesimulator swiftc \
             -target arm64-apple-ios17.0-simulator \
