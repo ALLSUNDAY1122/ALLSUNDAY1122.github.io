@@ -8,6 +8,7 @@ settings:
     SWIFT_VERSION: '5.0'
     MARKETING_VERSION: '1.0.0'
     CURRENT_PROJECT_VERSION: '1'
+    VERSIONING_SYSTEM: apple-generic
 targets:
   Otsu4Sprint:
     type: application
@@ -20,6 +21,8 @@ targets:
         buildPhase: resources
       - path: Generated/questions.generated.json
         buildPhase: resources
+      - path: Assets.xcassets
+        buildPhase: resources
     info:
       path: Info.plist
     settings:
@@ -28,5 +31,6 @@ targets:
         PRODUCT_NAME: Otsu4Sprint
         TARGETED_DEVICE_FAMILY: '1'
         CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     scheme:
       testTargets: []
