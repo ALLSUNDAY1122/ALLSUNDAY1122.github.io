@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "qualification": "看護師国家試験",
+    "sourceExams": [115, 114, 113],
+    "category": "状況設定",
+    "questionCount": 180,
+    "scenarioCount": 60,
+    "questionsPerScenario": 3
+  },
+  "auditPolicy": {
+    "unit": "scenario",
+    "requiredScenarioTotal": 3,
+    "requiredScenarioIndexes": [0, 1, 2],
+    "requireSameScenarioTextAcrossTriplet": true,
+    "requireThreeQuestionLinkage": true,
+    "requireScenarioContextForClassification": true,
+    "requireScenarioContextForExplanation": true,
+    "requirePatientIdentityFromScenario": true,
+    "requireClinicalConsistencyAcrossTriplet": true,
+    "requireExplanationEvidenceForAllThree": true,
+    "requireEvidenceCheckedDateForAllThree": true,
+    "separateMediaScoringConcernExpertQueues": true,
+    "rawDataIsNotTrustedWithoutScenarioAudit": true
+  },
+  "protectedAreas": [
+    "必修問題",
+    "一般問題",
+    "共通UI",
+    "模試エンジン",
+    "StoreKit"
+  ],
+  "baseline": {
+    "checkedAt": "2026-08-09T22:26:00+09:00",
+    "rawAndL2StructurePassScenarios": 60,
+    "l3AppliedSituationQuestions": 27,
+    "l3ContentCompleteScenarios": 9,
+    "strictThreeQuestionBatchPassScenarios": 8,
+    "expertReviewedScenarios": 0,
+    "finalPassScenarios": 0,
+    "contentPendingScenarios": 51,
+    "globalL3ExplainedQuestions": 102,
+    "globalL3TotalQuestions": 720,
+    "globalL3Status": "fail"
+  },
+  "strictGroupPassScenarioIds": [
+    "K115-AM-SC01",
+    "K115-AM-SC02",
+    "K115-AM-SC03",
+    "K115-AM-SC04",
+    "K115-AM-SC06",
+    "K115-AM-SC07",
+    "K115-AM-SC09",
+    "K115-AM-SC10"
+  ],
+  "needsRegroup": [
+    {
+      "scenarioId": "K115-AM-SC08",
+      "questionIds": ["K115-AM112", "K115-AM113", "K115-AM114"],
+      "reason": "All three questions have L3 content, but the current explanation batches are split 2+1 despite scenario-group reviewType. Re-audit as one three-question scenario before PASS."
+    }
+  ],
+  "cursor": {
+    "scenarioId": "K115-AM-SC05",
+    "questionIds": ["K115-AM103", "K115-AM104", "K115-AM105"],
+    "state": "l3_content_pending",
+    "note": "Continue from this scenario unless a newer main snapshot invalidates the cursor."
+  },
+  "knownHistoricalFailureModes": [
+    "next scenario stem leaking into previous question choices during PDF extraction",
+    "family member wording such as 男児 being misread as the patient identity during classification"
+  ],
+  "status": "in_progress"
+}
