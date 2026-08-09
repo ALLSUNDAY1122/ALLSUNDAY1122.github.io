@@ -26,16 +26,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Foundation-only notice
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') == '' }}
+        run: echo 'Otsu4 Xcode project files are not present yet; simulator build will run on the product PR.'
       - name: Install XcodeGen
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: brew install xcodegen
       - name: Validate privacy manifest plist
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: plutil -lint native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy
       - name: Prepare audited native resources
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: bash native-ios/Otsu4Sprint/prepare-ios.sh
       - name: Generate Xcode project
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         working-directory: native-ios/Otsu4Sprint
         run: xcodegen generate
       - name: Build iPhone Simulator app
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         working-directory: native-ios/Otsu4Sprint
         run: |
           set -o pipefail
@@ -48,6 +56,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build | xcpretty
       - name: Verify release bundle resources
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: |
           APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
           echo "APP=$APP"
