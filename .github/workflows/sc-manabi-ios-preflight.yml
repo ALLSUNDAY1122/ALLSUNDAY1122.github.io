@@ -33,19 +33,25 @@ jobs:
       - name: Prepare bundled offline web assets
         run: npm run prepare:web
 
-      - name: Validate bundled content
+      - name: Validate bundled content and IAP layer
         run: |
           test -f www/index.html
           test -f www/full/index.html
           test -f www/full/app.js
           test -f www/full/patch-2140.js
+          test -f www/full/iap-v1.js
           test -f www/full/style.css
           for i in 0 1 2 3 4 5; do test -s "www/q${i}.txt"; done
+          node --check www/full/iap-v1.js
           grep -q '325' www/full/app.js
           grep -q '13問' www/full/patch-2140.js
           grep -q '12問' www/full/patch-2140.js
           grep -q 'resetLearningData' www/full/patch-2140.js
           grep -q 'privacy.html' www/full/patch-2140.js
+          grep -q 'jp.allsunday1122.scmanabisprint.premium' www/full/iap-v1.js
+          grep -q 'restorePremium' www/full/iap-v1.js
+          grep -q 'priceString' www/full/iap-v1.js
+          grep -q '@capgo/native-purchases' package.json
 
       - name: Validate privacy manifest
         run: plutil -lint PrivacyInfo.xcprivacy
@@ -66,6 +72,7 @@ jobs:
           grep -q 'TARGETED_DEVICE_FAMILY = 1;' ios/App/App.xcodeproj/project.pbxproj
           grep -q 'MARKETING_VERSION = 1.0.0;' ios/App/App.xcodeproj/project.pbxproj
           grep -q 'CURRENT_PROJECT_VERSION = 1;' ios/App/App.xcodeproj/project.pbxproj
+          test -f ios/App/App/public/full/iap-v1.js
           find ios/App -maxdepth 4 -name Package.swift -print || true
 
       - name: Unsigned iOS simulator build
@@ -88,6 +95,7 @@ jobs:
           find "$APP" -name PrivacyInfo.xcprivacy -print -quit | grep -q .
           find "$APP" -name q0.txt -print -quit | grep -q .
           find "$APP" -name patch-2140.js -print -quit | grep -q .
+          find "$APP" -name iap-v1.js -print -quit | grep -q .
           test "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP/Info.plist")" = "false"
 
       - name: Unsigned physical-device build
@@ -108,6 +116,7 @@ jobs:
           test -n "$APP"
           find "$APP" -name PrivacyInfo.xcprivacy -print -quit | grep -q .
           find "$APP" -name q5.txt -print -quit | grep -q .
+          find "$APP" -name iap-v1.js -print -quit | grep -q .
           test "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP/Info.plist")" = "false"
 
       - name: Record preflight result
