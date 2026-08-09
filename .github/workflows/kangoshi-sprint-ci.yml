@@ -22,6 +22,7 @@ jobs:
           node --check kangoshi-sprint/questions.js
           node --check kangoshi-sprint/questions-numeric.js
           node --check kangoshi-sprint/questions-audit-v1.js
+          node --check kangoshi-sprint/question-taxonomy-v1.js
           node --check kangoshi-sprint/app-v03.js
           node --check kangoshi-sprint/sw.js
       - name: Question data audit
@@ -34,6 +35,7 @@ jobs:
           grep -q 'questions.js' kangoshi-sprint/index.html
           grep -q 'questions-numeric.js' kangoshi-sprint/index.html
           grep -q 'questions-audit-v1.js' kangoshi-sprint/index.html
+          grep -q 'question-taxonomy-v1.js' kangoshi-sprint/index.html
           grep -q 'app-v03.js' kangoshi-sprint/index.html
           grep -q -- '--paper:#f7f3ea' kangoshi-sprint/style.css
           grep -q -- '--ai:#2f4a6d' kangoshi-sprint/style.css
