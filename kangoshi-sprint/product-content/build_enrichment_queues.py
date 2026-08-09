@@ -11,8 +11,11 @@ queues={
     'dynamicPending':[],
     'contentConcerns':[],
     'scoringExceptionPending':[],
+    'expertReviewPending':[],
+    'releaseQuarantined':[],
     'explained':[]
 }
+
 for sid in ('set1','set2','set3'):
     data=json.loads((DRAFT/f'{sid}-draft.json').read_text(encoding='utf-8'))
     for q in data.get('questions',[]):
@@ -22,6 +25,9 @@ for sid in ('set1','set2','set3'):
         effective_media=bool(q.get('requiresMedia')) or media_cue or no_text_choices
         concern=q.get('contentConcernStatus') not in {None,'none','resolved'}
         scoring_exception=q.get('officialScoringStatus') not in {None,'normal'}
+        expert_required=q.get('expertReviewStatus') in {'required','pending','expert_review_required'}
+        specialist_quarantine=q.get('specialistQuarantineStatus')=='quarantined'
+        explained=q.get('explanationStatus')=='ai_explained'
         row={
             'id':q['id'],'setId':sid,'sourceExam':q.get('sourceExam'),'session':q.get('session'),
             'questionNo':q.get('questionNo'),'category':q.get('category'),'majorSubject':q.get('majorSubject'),
@@ -30,25 +36,44 @@ for sid in ('set1','set2','set3'):
             'sourceRequiresMedia':bool(q.get('requiresMedia')),'mediaCueDetectedInQueue':media_cue or no_text_choices,
             'officialScoringStatus':q.get('officialScoringStatus'),
             'scoringException':q.get('scoringException'),
-            'contentConcernStatus':q.get('contentConcernStatus','none'),'contentConcernReason':q.get('contentConcernReason')
+            'contentConcernStatus':q.get('contentConcernStatus','none'),
+            'contentConcernReason':q.get('contentConcernReason'),
+            'expertReviewStatus':q.get('expertReviewStatus'),
+            'specialistQuarantineStatus':q.get('specialistQuarantineStatus'),
+            'specialistQuarantineReasons':q.get('specialistQuarantineReasons') or [],
+            'explanationStatus':q.get('explanationStatus'),
+            'dynamicEvidenceStatus':q.get('dynamicEvidenceStatus')
         }
-        if q.get('explanationStatus')=='ai_explained':
+
+        if explained:
             queues['explained'].append(q['id'])
-        elif concern:
-            queues['contentConcerns'].append(row)
-        elif scoring_exception:
-            queues['scoringExceptionPending'].append(row)
-        elif effective_media:
-            queues['mediaPending'].append(row)
-        else:
+        elif not (concern or scoring_exception or effective_media or expert_required):
             queues['textPending'].append(row)
 
-        # Dynamic-evidence work is an orthogonal audit queue. Keep it visible even
-        # when the question is waiting on media/expert/scoring-exception handling.
-        if q.get('dynamicEvidenceRequired') and q.get('dynamicEvidenceStatus')!='verified':
+        # Special queues are orthogonal to explanation completion.
+        if effective_media:
+            queues['mediaPending'].append(row)
+        if scoring_exception:
+            queues['scoringExceptionPending'].append(row)
+        if concern:
+            queues['contentConcerns'].append(row)
+        if expert_required:
+            queues['expertReviewPending'].append(row)
+        if specialist_quarantine or concern or scoring_exception or effective_media or expert_required:
+            queues['releaseQuarantined'].append(row)
+
+        # Dynamic evidence escalated to explicit expert review is handled by the
+        # expert queue and is not treated as untriaged L3 dynamic work.
+        if q.get('dynamicEvidenceRequired') and q.get('dynamicEvidenceStatus') not in {'verified','expert_review_required'}:
             queues['dynamicPending'].append(row)
 
 summary={k:len(v) for k,v in queues.items()}
-summary['queueDetectedMediaOverrides']=sum(1 for row in queues['mediaPending'] if row['mediaCueDetectedInQueue'] and not row['sourceRequiresMedia'])
-(DRAFT/'pending-queues.json').write_text(json.dumps({'summary':summary,**queues},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+summary['queueDetectedMediaOverrides']=sum(
+    1 for row in queues['mediaPending']
+    if row['mediaCueDetectedInQueue'] and not row['sourceRequiresMedia']
+)
+(DRAFT/'pending-queues.json').write_text(
+    json.dumps({'summary':summary,**queues},ensure_ascii=False,indent=2)+'\n',
+    encoding='utf-8'
+)
 print(json.dumps(summary,ensure_ascii=False))
