@@ -10,6 +10,7 @@ STAGES=[
  ('refine-v5','refine_classification_v5.py'),
  ('refine-v6','refine_classification_v6.py'),
  ('refine-v7','refine_classification_v7.py'),
+ ('refine-v8','refine_classification_v8.py'),
  ('validate','validate_classification.py'),
  ('semantic-audit','audit_classification_semantics.py'),
 ]
