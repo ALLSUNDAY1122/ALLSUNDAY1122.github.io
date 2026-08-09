@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install Japanese fonts for visual audit
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
       - name: Validate audited 210-question content
         run: |
           python automation/learning-sprint-question-pipeline/validate_questions.py \
@@ -24,8 +26,7 @@ jobs:
         run: |
           node learning-sprint/shoshi/validate-apple-preflight.mjs
           bash -n learning-sprint/shoshi/ios/prepare-ios.sh
-          python -m py_compile learning-sprint/shoshi/ios/apply-xcode-capabilities.py \
-            learning-sprint/shoshi/ios/native_ui_audit.py
+          python -m py_compile learning-sprint/shoshi/ios/apply-xcode-capabilities.py learning-sprint/shoshi/ios/native_ui_audit.py
           python - <<'PY'
           import plistlib
           with open('learning-sprint/shoshi/ios/PrivacyInfo.xcprivacy','rb') as f: data=plistlib.load(f)
@@ -71,15 +72,7 @@ jobs:
           ! grep -q 'SystemCapabilities = "' ShoshiSprint.xcodeproj/project.pbxproj
       - name: Build unsigned Release for iOS Simulator
         run: |
-          xcodebuild \
-            -project learning-sprint/shoshi/ios/ShoshiSprint.xcodeproj \
-            -scheme ShoshiSprint \
-            -configuration Release \
-            -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath /tmp/ShoshiDerivedData \
-            CODE_SIGNING_ALLOWED=NO \
-            build
+          xcodebuild -project learning-sprint/shoshi/ios/ShoshiSprint.xcodeproj -scheme ShoshiSprint -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/ShoshiDerivedData CODE_SIGNING_ALLOWED=NO build
       - name: Inspect built app bundle
         run: |
           APP="$(find /tmp/ShoshiDerivedData/Build/Products -type d -name 'ShoshiSprint.app' | head -1)"
@@ -113,5 +106,4 @@ jobs:
         run: bash learning-sprint/shoshi/ios/prepare-ios.sh
       - name: Verify exact canonical hash
         run: |
-          test "$(shasum -a 256 learning-sprint/shoshi/ios/AppIcon.png | awk '{print $1}')" = \
-            "c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
+          test "$(shasum -a 256 learning-sprint/shoshi/ios/AppIcon.png | awk '{print $1}')" = "c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
