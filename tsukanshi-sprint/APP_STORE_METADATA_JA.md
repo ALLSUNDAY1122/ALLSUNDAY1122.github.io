@@ -9,7 +9,7 @@
 - 初回Build: `1`（配布ビルドではCIのBuild番号へ更新）
 - In-App Purchase: `jp.allsunday1122.tsukanshi.premium`
 - IAP種別: Non-Consumable / 買い切り
-- SKU候補: `tsukanshi-sprint-ios`
+- SKU: `tsukanshi-sprint-ios`
 
 ## App Store表示
 ### 名前
@@ -88,9 +88,11 @@ App Store Connectの現行アンケートを実装どおり回答してAppleの�
 - Price: App Store Connectで正式設定後、StoreKit表示価格と実機で一致確認する。
 - App Review Screenshot: Sandbox動作確認後に作成。
 
+## 申請入力票
+App Store Connect / Codemagicで人が入力する固定値は `APPLE_CONNECT_PACKET.md` を正本とする。
+
 ## 申請時に人が確定する項目
 - App Store Connect App ID
-- SKU最終値
 - IAP価格
 - Paid Apps Agreement / 税務・銀行情報の状態
 - App Review連絡先

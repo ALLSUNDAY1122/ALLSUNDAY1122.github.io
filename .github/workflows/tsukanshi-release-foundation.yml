@@ -37,6 +37,7 @@ jobs:
           node --check tsukanshi-sprint/app-v21.js
           node --check tsukanshi-sprint/official-past-exam-links.js
           node --check tsukanshi-sprint/release-links.js
+          node --check tsukanshi-sprint/validate-apple-preflight.mjs
           bash -n tsukanshi-sprint/ios/prepare-ios.sh
 
       - name: Validate privacy manifest
@@ -87,12 +88,16 @@ jobs:
           test -f tsukanshi-sprint/privacy.html
           test -f tsukanshi-sprint/APP_STORE_METADATA_JA.md
           test -f tsukanshi-sprint/APP_REVIEW_NOTES_JA.md
+          test -f tsukanshi-sprint/APPLE_CONNECT_PACKET.md
           test -f tsukanshi-sprint/RELEASE_STATUS.md
           test -f tsukanshi-sprint/RELEASE_CHECKLIST.md
           grep -q 'https://allsunday1122.github.io/tsukanshi-sprint/support.html' tsukanshi-sprint/release-links.js
           grep -q 'https://allsunday1122.github.io/tsukanshi-sprint/privacy.html' tsukanshi-sprint/release-links.js
           grep -q 'jp.allsunday1122.tsukanshi.premium' tsukanshi-sprint/APP_STORE_METADATA_JA.md
           grep -q '本アプリは税関・財務省の公式アプリではありません' tsukanshi-sprint/APP_STORE_METADATA_JA.md
+
+      - name: Validate Apple signing and TestFlight preflight contract
+        run: node tsukanshi-sprint/validate-apple-preflight.mjs
 
       - name: Validate Codemagic safety gate
         run: |

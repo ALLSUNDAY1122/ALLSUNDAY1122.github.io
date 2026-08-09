@@ -24,31 +24,54 @@ final class StoreKitManager: ObservableObject {
     @Published private(set) var status = "unknown"
 
     private var product: Product?
+    private var transactionUpdatesTask: Task<Void, Never>?
+
+    init() {
+        transactionUpdatesTask = Task { [weak self] in
+            for await result in Transaction.updates {
+                guard !Task.isCancelled else { return }
+                guard case .verified(let transaction) = result,
+                      transaction.productID == Self.productID else { continue }
+                await transaction.finish()
+                await self?.refresh()
+            }
+        }
+    }
 
     func refresh() async {
-        do {
-            if product == nil {
+        var productLoadFailed = false
+        if product == nil {
+            do {
                 product = try await Product.products(for: [Self.productID]).first
                 displayPrice = product?.displayPrice ?? ""
+            } catch {
+                productLoadFailed = true
             }
-            var entitled = false
-            for await result in Transaction.currentEntitlements {
-                guard case .verified(let transaction) = result else { continue }
-                if transaction.productID == Self.productID,
-                   transaction.revocationDate == nil {
-                    entitled = true
-                }
+        }
+
+        var entitled = false
+        for await result in Transaction.currentEntitlements {
+            guard case .verified(let transaction) = result else { continue }
+            if transaction.productID == Self.productID,
+               transaction.revocationDate == nil {
+                entitled = true
             }
-            isPremium = entitled
-            status = "known"
-        } catch {
+        }
+        isPremium = entitled
+
+        if productLoadFailed {
             status = "error"
+        } else {
+            status = product == nil ? "product_unavailable" : "known"
         }
     }
 
     func purchase() async {
         if product == nil { await refresh() }
-        guard let product else { return }
+        guard let product else {
+            status = "product_unavailable"
+            return
+        }
         do {
             let result = try await product.purchase()
             switch result {
@@ -124,6 +147,7 @@ struct WebAppView: UIViewRepresentable {
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
         context.coordinator.store = store
+        context.coordinator.pushStoreKitState()
     }
 
     static func dismantleUIView(_ webView: WKWebView, coordinator: Coordinator) {
@@ -190,7 +214,7 @@ struct WebAppView: UIViewRepresentable {
         }
 
         @MainActor
-        private func pushStoreKitState() {
+        func pushStoreKitState() {
             guard let webView,
                   JSONSerialization.isValidJSONObject(store.payload()),
                   let data = try? JSONSerialization.data(withJSONObject: store.payload()),
