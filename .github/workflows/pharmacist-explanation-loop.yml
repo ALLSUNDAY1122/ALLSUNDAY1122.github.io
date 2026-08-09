@@ -1,0 +1,57 @@
+name: Pharmacist Explanation Loop
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pharmacist-manabi-sprint/tools/generate_explanations_models.py'
+      - '.github/workflows/pharmacist-explanation-loop.yml'
+
+concurrency:
+  group: pharmacist-explanation-loop
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      EXPLANATION_MODEL: openai/gpt-4.1
+      BATCH_SIZE: '10'
+      MAX_BATCHES: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate one validation batch
+        id: generate
+        shell: bash
+        run: |
+          mkdir -p pharmacist-manabi-sprint/content/model-loop
+          set +e
+          python3 pharmacist-manabi-sprint/tools/generate_explanations_models.py > pharmacist-manabi-sprint/content/model-loop/generation.log 2>&1
+          code=$?
+          set -e
+          cat pharmacist-manabi-sprint/content/model-loop/generation.log
+          echo "$code" > pharmacist-manabi-sprint/content/model-loop/generation.exit
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - name: Commit model output and diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pharmacist-manabi-sprint/content/reviewed/auto/ pharmacist-manabi-sprint/content/model-loop/
+          if git diff --cached --quiet; then
+            echo 'No model output changes.'
+          else
+            git commit -m 'pharmacist: explanation model loop result [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
+      - name: Enforce generation gate
+        run: test "${{ steps.generate.outputs.exit_code }}" = '0'
