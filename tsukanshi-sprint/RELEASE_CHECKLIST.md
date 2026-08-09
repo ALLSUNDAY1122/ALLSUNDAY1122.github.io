@@ -22,8 +22,9 @@
 - [x] 現行Web bundle生成スクリプト
 - [x] 1024px AppIcon生成工程
 - [x] Privacy Manifest
-- [ ] XcodeGen CI成功
-- [ ] Simulator Release build成功
+- [x] XcodeGen CI成功
+- [x] Simulator Release build成功
+- [x] `.app`内Web教材・Privacy Manifest・AppIcon確認
 - [ ] Codemagic signed IPA成功
 
 ## C. 公開ページ
