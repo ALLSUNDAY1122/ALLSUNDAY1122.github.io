@@ -8,6 +8,7 @@ on:
       - 'kangoshi-sprint/product-content/raw/set2-raw.json'
       - 'kangoshi-sprint/product-content/raw/set3-raw.json'
       - 'kangoshi-sprint/product-content/classify_questions.py'
+      - 'kangoshi-sprint/product-content/refine_classification.py'
       - 'kangoshi-sprint/product-content/validate_classification.py'
       - '.github/workflows/kangoshi-classification.yml'
 
@@ -16,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  LOOP_SCHEMA: '1'
+  LOOP_SCHEMA: '2'
 
 permissions:
   contents: write
@@ -38,11 +39,26 @@ jobs:
           cat kangoshi-sprint/product-content/classified/classify.log
           echo "$code" > kangoshi-sprint/product-content/classified/classify.exit
 
-      - name: Validate classification
+      - name: Refine low-confidence classifications
         shell: bash
         run: |
           if [ "$(cat kangoshi-sprint/product-content/classified/classify.exit)" != "0" ]; then
-            echo 'SKIPPED: classification generation failed' | tee kangoshi-sprint/product-content/classified/audit.log
+            echo 'SKIPPED: base classification failed' | tee kangoshi-sprint/product-content/classified/refine.log
+            echo '99' > kangoshi-sprint/product-content/classified/refine.exit
+            exit 0
+          fi
+          set +e
+          python3 kangoshi-sprint/product-content/refine_classification.py > kangoshi-sprint/product-content/classified/refine.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/classified/refine.log
+          echo "$code" > kangoshi-sprint/product-content/classified/refine.exit
+
+      - name: Validate classification
+        shell: bash
+        run: |
+          if [ "$(cat kangoshi-sprint/product-content/classified/refine.exit)" != "0" ]; then
+            echo 'SKIPPED: classification refinement failed' | tee kangoshi-sprint/product-content/classified/audit.log
             echo '99' > kangoshi-sprint/product-content/classified/audit.exit
             exit 0
           fi
@@ -66,7 +82,7 @@ jobs:
           report=json.loads(report_path.read_text(encoding='utf-8')) if report_path.exists() else {}
           audit_exit=int((root/'classified/audit.exit').read_text().strip())
           d['classificationLoop']={
-              'method':'keyword-v1',
+              'method':report.get('method','unknown'),
               'high':report.get('high',0),
               'medium':report.get('medium',0),
               'low':report.get('low',0),
@@ -95,4 +111,5 @@ jobs:
         shell: bash
         run: |
           test "$(cat kangoshi-sprint/product-content/classified/classify.exit)" = "0"
+          test "$(cat kangoshi-sprint/product-content/classified/refine.exit)" = "0"
           test "$(cat kangoshi-sprint/product-content/classified/audit.exit)" = "0"
