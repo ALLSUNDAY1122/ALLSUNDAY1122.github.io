@@ -1,6 +1,6 @@
 {
-  "cycle": 8,
-  "status": "PASS",
+  "cycle": 9,
+  "status": "FAIL",
   "generated": 210,
   "pdf_sets": 6,
   "media_questions": [],
@@ -204,7 +204,9 @@
     "SHOSHI-R7-PM-34: exact statute token not printed; subject-level primary law URL only",
     "SHOSHI-R7-PM-35: exact statute token not printed; subject-level primary law URL only"
   ],
-  "errors": [],
+  "errors": [
+    "orphan section preambles: 3"
+  ],
   "rules": {
     "question": "MOJ official PDF full question segment, including printed choice mapping",
     "ui_choices": "numeric 1..5 only",
@@ -221,5 +223,55 @@
   "inline_footer_audit": {
     "remaining": 0,
     "ids": []
+  },
+  "cross_question_boundary_audit": {
+    "moved_section_preambles": [
+      {
+        "from": "SHOSHI-R5-AM-03",
+        "to": "SHOSHI-R5-AM-04",
+        "chars": 72
+      },
+      {
+        "from": "SHOSHI-R6-AM-03",
+        "to": "SHOSHI-R6-AM-04",
+        "chars": 71
+      },
+      {
+        "from": "SHOSHI-R7-AM-02",
+        "to": "SHOSHI-R7-AM-03",
+        "chars": 6
+      },
+      {
+        "from": "SHOSHI-R7-AM-03",
+        "to": "SHOSHI-R7-AM-04",
+        "chars": 79
+      },
+      {
+        "from": "SHOSHI-R7-PM-02",
+        "to": "SHOSHI-R7-PM-03",
+        "chars": 6
+      },
+      {
+        "from": "SHOSHI-R7-PM-03",
+        "to": "SHOSHI-R7-PM-04",
+        "chars": 6
+      }
+    ],
+    "orphan_preambles": [
+      {
+        "from": "SHOSHI-R5-AM-35",
+        "tail": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n4\n5\n6\n7\n8\n9\n0\n1\n2\n23\n4\n5\n7\n8\n9\n0\n11\n2\n3\n4\n5\n6\n7\n8\n9\n0\n2\n3\n4\n5\n6\n7\n8\n9\n受験地\n受験番号\n氏名\n受験地\n十の位\n0 3 "
+      },
+      {
+        "from": "SHOSHI-R6-AM-35",
+        "tail": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n4\n5\n6\n7\n8\n9\n0\n1\n2\n23\n4\n5\n7\n8\n9\n0\n11\n2\n3\n4\n5\n6\n7\n8\n9\n0\n2\n3\n4\n5\n6\n7\n8\n9\n受験地\n受験番号\n氏名\n受験地\n十の位\n0 3 "
+      },
+      {
+        "from": "SHOSHI-R7-AM-35",
+        "tail": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n4\n5\n6\n7\n8\n9\n0\n1\n2\n23\n4\n5\n7\n8\n9\n0\n11\n2\n3\n4\n5\n6\n7\n8\n9\n0\n2\n3\n4\n5\n6\n7\n8\n9\n受験地\n受験番号\n氏 名\n受験地\n十の位\n千の位"
+      }
+    ],
+    "remaining_cross_contamination": [],
+    "question_count": 210
   }
 }
