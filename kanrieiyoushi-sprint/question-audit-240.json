@@ -1,5 +1,5 @@
 {
-  "version": "kanrieiyoushi-240-v1",
+  "version": "kanrieiyoushi-240-v2",
   "generatedAt": "2026-08-09",
   "baseQuestions": 120,
   "addedQuestions": 120,
@@ -36,6 +36,7 @@
     "officialOrPrimarySourceUrlAll": true,
     "rightsOriginalAll": true,
     "approvedAll": true,
+    "crossBankNearDuplicateReview": true,
     "correctPositionBalanced": {
       "1": 24,
       "2": 24,
@@ -45,19 +46,30 @@
     }
   },
   "similarityReview": {
-    "method": "char 3-gram TF-IDF within new 120, threshold >=0.62",
-    "flaggedPairs": [
-      {
-        "ids": ["KN133", "KN139"],
-        "similarity": 0.649
-      }
-    ],
-    "manualDisposition": "甲状腺ホルモンと副甲状腺ホルモンの対比1組のみ。別論点として維持。"
+    "withinNew120": {
+      "method": "char 3-gram TF-IDF within new 120, threshold >=0.62",
+      "flaggedPairs": [
+        {
+          "ids": ["KN133", "KN139"],
+          "similarity": 0.649,
+          "disposition": "副甲状腺ホルモンと甲状腺ホルモンの対比であり別論点として維持"
+        }
+      ]
+    },
+    "crossBank120Plus120": {
+      "scope": "KN001-KN120 vs KN121-KN240",
+      "replacedNearDuplicates": [
+        "KN148","KN152","KN164","KN173","KN175","KN176","KN177","KN178","KN184","KN186","KN187","KN189","KN206","KN210","KN213","KN215","KN219","KN223","KN234"
+      ],
+      "replacementCount": 19,
+      "policy": "既存120問と同じ事実を単純に言い換えた問題は別論点へ差し替える。症例・計算・制度運用など追加の判断を要求する応用問題のみ、基礎知識の再利用を許容する。"
+    }
   },
   "sourceBaseline": [
     "厚生労働省 管理栄養士国家試験出題基準",
     "日本人の食事摂取基準（2025年版）",
     "健康日本21（第三次）",
+    "健康づくりのための身体活動・運動ガイド2023",
     "厚生労働省 e-ヘルスネット",
     "消費者庁 食品表示・食物アレルギー",
     "農林水産省 食事バランスガイド",
