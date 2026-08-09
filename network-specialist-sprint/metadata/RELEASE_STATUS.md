@@ -1,22 +1,15 @@
 # RELEASE STATUS
 
-- 状態：開発ループ完了・TestFlight実行ゲート待ち
+- 状態：TestFlight直前準備
 - Version：1.0.0
 - Build：1
 - Bundle ID候補：jp.allsunday1122.networkspecialist
-- GitHub正本：main / `network-specialist-sprint/`
-- 採用PR：#4092（merged）
-- main統合コミット：19e8e4cd825e07828eedd40be995f0951740272f
 - Web公開パス：/network-specialist-sprint/
 - iOS方式：SwiftUI + WKWebView（ローカル資産同梱）
 - ビルド方式：Codemagic + XcodeGen
-- 専用CI：`.github/workflows/network-specialist-validate.yml` をmainへ追加済み
-- 静的リリース監査：PASS
-- 問題監査：75出題枠 / 68ユニーク / 歴史的再出題・実質同一7出題をcanonical化
-- UI 30状態監査：PASS
 - データ収集：初期版なし
 - ログイン：なし
 - 広告：なし
 - 解析：なし
 - 課金：初期版なし。追加時はPrivacy・IAP・申請原稿のループを再発火。
-- 残ゲート：正本AppIcon PNGのiOS資産配置、Apple Developer/App Store Connect/Codemagicの本人認証、署名、TestFlightアップロード・実機確認、Support/Privacy公開HTTP確認
+- 残ゲート：Apple Developer/App Store Connect/Codemagicの本人ログインを伴う署名・TestFlight実機
