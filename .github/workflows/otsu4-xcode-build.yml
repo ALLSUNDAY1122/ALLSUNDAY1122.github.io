@@ -47,7 +47,7 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             build | xcpretty
-      - name: Verify bundled content and privacy manifest
+      - name: Verify release bundle resources
         run: |
           APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
           echo "APP=$APP"
@@ -55,6 +55,8 @@ jobs:
           find "$APP" -maxdepth 2 -type f -print | sort
           test -f "$APP/questions.generated.json"
           test -f "$APP/PrivacyInfo.xcprivacy"
+          test -f "$APP/Assets.car"
+          plutil -p "$APP/Info.plist"
           /usr/bin/python3 - "$APP/questions.generated.json" <<'PY'
           import json,sys
           p=sys.argv[1]
