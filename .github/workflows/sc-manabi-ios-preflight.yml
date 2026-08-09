@@ -44,12 +44,17 @@ jobs:
           grep -q '325' www/full/app.js
           grep -q '13問' www/full/patch-2140.js
           grep -q '12問' www/full/patch-2140.js
+          grep -q 'resetLearningData' www/full/patch-2140.js
+          grep -q 'privacy.html' www/full/patch-2140.js
 
       - name: Validate privacy manifest
         run: plutil -lint PrivacyInfo.xcprivacy
 
       - name: Generate iOS project
         run: npx cap add ios
+
+      - name: Add app privacy manifest to generated target folder
+        run: cp PrivacyInfo.xcprivacy ios/App/App/PrivacyInfo.xcprivacy
 
       - name: Sync bundled assets
         run: npx cap sync ios
@@ -62,11 +67,34 @@ jobs:
 
       - name: Unsigned iOS simulator build
         run: |
+          rm -rf build/simulator
           xcodebuild \
             -project ios/App/App.xcodeproj \
             -scheme App \
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/simulator \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Inspect simulator bundle
+        run: |
+          APP=$(find build/simulator/Build/Products -type d -name '*.app' -print -quit)
+          test -n "$APP"
+          echo "Built bundle: $APP"
+          find "$APP" -name PrivacyInfo.xcprivacy -print -quit | grep -q .
+          find "$APP" -name q0.txt -print -quit | grep -q .
+          find "$APP" -name patch-2140.js -print -quit | grep -q .
+
+      - name: Unsigned physical-device build
+        run: |
+          rm -rf build/device
+          xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build/device \
             CODE_SIGNING_ALLOWED=NO \
             build
 
