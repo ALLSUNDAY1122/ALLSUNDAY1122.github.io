@@ -21,10 +21,13 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: App.swift
-    resources:
       - path: Web
+        type: folder
+        buildPhase: resources
       - path: Assets.xcassets
+        buildPhase: resources
       - path: PrivacyInfo.xcprivacy
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.tsukanshi
