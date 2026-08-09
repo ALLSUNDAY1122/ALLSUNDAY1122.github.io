@@ -1,52 +1,21 @@
 {
   "qualification": "管理栄養士国家試験",
-  "updatedAt": "2026-08-09T11:41:00+09:00",
+  "updatedAt": "2026-08-09T12:12:00+09:00",
   "loop": "学びスプリント｜問題生成・監査ループ v1.0",
-  "target": {
-    "rounds": 3,
-    "questionsPerRound": 200,
-    "total": 600
+  "target": {"rounds":3,"questionsPerRound":200,"total":600},
+  "publicPool": {"count":240,"status":"CANDIDATE_POOL_NOT_FORMAL_3ROUND_PASS","note":"v0.4で公開中の追加120問を含む。正式な試験回別監査とは分離して扱う。"},
+  "formalRound1": {
+    "count":200,
+    "distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
+    "baseQuestions":120,
+    "addedQuestions":80,
+    "firstAudit":{"runId":31291815484,"status":"FAIL","causes":["追加80問のJS配列読込バグで120問しか生成されなかった","KN100とKN101が類似度0.93"]},
+    "fixes":["concat形式の配列抽出処理を修正","KN101を保管温度の暗記問から実務判断文へ変更"],
+    "secondAudit":"REQUESTED_PR_4081"
   },
-  "current": {
-    "total": 120,
-    "round1": {
-      "社会・環境": 12,
-      "人体・疾病": 12,
-      "食べ物": 12,
-      "基礎栄養": 12,
-      "応用栄養": 12,
-      "栄養教育": 12,
-      "臨床栄養": 12,
-      "公衆栄養": 12,
-      "給食経営": 12,
-      "応用力": 12
-    },
-    "round2": {},
-    "round3": {}
-  },
-  "deficit": {
-    "round1": {
-      "社会・環境": 4,
-      "人体・疾病": 14,
-      "食べ物": 13,
-      "基礎栄養": 2,
-      "応用栄養": 4,
-      "栄養教育": 1,
-      "臨床栄養": 14,
-      "公衆栄養": 4,
-      "給食経営": 6,
-      "応用力": 18,
-      "total": 80
-    },
-    "round2": 200,
-    "round3": 200,
-    "total": 480
-  },
-  "topicMap": {
-    "round1Deficit80": "FIXED",
-    "path": "audit/round1-topic-map.json",
-    "waterPaddingPolicy": "数合わせの言い換え禁止。能力差のある独立論点のみ採用。"
-  },
-  "loopStatus": "ACTIVE_FAIL_EXPECTED_UNTIL_600",
-  "nextLoop": "固定済み論点マップに沿って第1回不足80問を作成し、全200問で一次資料・権利・重複・高類似・正答監査を行う"
+  "topicMaps":{"round1Deficit80":"FIXED","round2Full200":"FIXED"},
+  "round2":{"planned":200,"created":0,"topicMap":"audit/round2-topic-map.json"},
+  "round3":{"planned":200,"created":0},
+  "loopStatus":"ACTIVE",
+  "nextLoop":"第1回再監査PASSを確認後、正式200問へ公開構成を切替。続けて第2回200問を論点マップ順に作問・監査する。"
 }
