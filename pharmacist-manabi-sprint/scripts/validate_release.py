@@ -24,7 +24,7 @@ if "q.exam===111&&q.f==='必須'" not in loader or 'free!==90' not in loader: er
 if 'state.introConfigured&&state.introEligible' not in storeui: errors.append('trial eligibility UI gate missing')
 if 'App Storeで確認' not in storeui: errors.append('StoreKit price fallback missing')
 if '¥200' in storeui or '¥980' in storeui or '￥200' in storeui or '￥980' in storeui: errors.append('hard-coded purchase price found in UI')
-if "monthly+' / 月で自動更新'" not in storeui: errors.append('subscription renewal disclosure missing')
+if '7日間無料' not in storeui or '/ 月で自動更新' not in storeui: errors.append('subscription renewal disclosure missing')
 source=(R/'ios/Assets.xcassets/AppIcon.appiconset/APPICON_SOURCE.md').read_text(encoding='utf-8');expected='dfc7dfe4a1c13afbe98658cde591274e11665b016c39e2a4411de4dbe86127ec'
 if '1Au-Es7rxAyLxuGCzySTDsE-DXLWTwTtu' not in source or expected not in source: errors.append('canonical icon source mismatch')
 icon=R/'ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png';materialized=icon.exists()
