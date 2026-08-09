@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "scope": "K115/K114/K113 required 150 only",
+  "checkedAt": "2026-08-10T05:07:00+09:00",
+  "baseAuditCommit": "ed02ecd49837fb9c3b0e9686ae399e7f257f9338",
+  "mainHeadChecked": "b59571bd58eee06586eeddc7f2d89c129c0cd0a1",
+  "status": "PASS_WITH_QUARANTINE_MAINTAINED",
+  "method": {
+    "inputDiffRevalidation": true,
+    "dedicatedGateInputsChangedSincePass": false,
+    "note": "PASS後73コミットの比較で、raw set1/set2/set3、required-150配下、REQ-K114/K113必修解説バッチに変更なし。一般・状況設定・共通L3統合コード等の変更のみ。したがって必修150問の専門監査入力は不変。統括COORDINATOR_STATUSもA_required=PASS_WITH_QUARANTINEを維持。"
+  },
+  "counts": {
+    "requiredTotal": 150,
+    "contentAndEvidenceCovered": 150,
+    "releaseEligible": 136,
+    "quarantinedUnique": 14,
+    "mediaDependent": 8,
+    "scoringSpecial": 6,
+    "expertReview": 2,
+    "answerMismatch": 0,
+    "explanationMissing": 0,
+    "evidenceMissing": 0
+  },
+  "currentEvidenceRefresh": {
+    "policy": "試験年を指定する統計問題は当時の公式正答を保持し、最新値へ置換しない。法令・制度・医薬品・応急手当など現行知識と齟齬し得る項目は2026-08-10時点の一次資料で再確認し、必要なら専門監査キューを維持する。",
+    "historicalStatistics": {
+      "status": "PASS",
+      "note": "K114-AM001/003/010、K113-AM001/002/006、K113-PM001/002/009/010等は設問中に対象年・版が明示されている。公式試験再現ではその年次・版の値を正答根拠とし、現在値を正答へ上書きしない。"
+    },
+    "K115-PM025": {
+      "officialAnswerPreserved": true,
+      "decision": "expert_review_queue_keep",
+      "currentFinding": "日本赤十字社の現行けいれん手当でも、衣服を緩め呼吸を楽にし、分泌物・嘔吐物で窒息のおそれがある場合は回復体位または顔を横に向けて気道を確保するとされる。けいれん中に口へ物を入れず、無理に押さえつけないことも明記されている。したがって公式正答『気道確保』自体は現行手当と両立するが、強制開口・口腔内操作と誤解させない解説が必要。",
+      "evidenceRefs": [
+        "https://www.jrc.or.jp/study/safety/cramp/",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp260424-05seitou.pdf"
+      ],
+      "evidenceCheckedDate": "2026-08-10"
+    },
+    "K113-PM025": {
+      "officialAnswerPreserved": true,
+      "decision": "expert_review_queue_keep",
+      "currentFinding": "PMDA現行添付文書ではアトロピン硫酸塩注射液の禁忌は閉塞隅角緑内障。開放隅角緑内障は投与禁止ではなく合併症・既往歴等の注意対象として、眼圧上昇・症状悪化のおそれが記載される。設問の『緑内障患者』という一般化は現行知識注記が必要。",
+      "evidenceRefs": [
+        "https://www.pmda.go.jp/PmdaSearch/iyakuDetail/670156_1242405A1070_1_06",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05c_01.pdf",
+        "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/iryou/topics/dl/tp240424-05seitou.pdf"
+      ],
+      "evidenceCheckedDate": "2026-08-10"
+    }
+  },
+  "quarantine": {
+    "media": [
+      "K115-AM013",
+      "K115-AM016",
+      "K115-AM022",
+      "K115-PM020",
+      "K114-AM013",
+      "K114-PM019",
+      "K113-AM023",
+      "K113-PM021"
+    ],
+    "scoringSpecial": [
+      "K113-AM005",
+      "K113-AM023",
+      "K113-AM025",
+      "K113-PM002",
+      "K113-PM011",
+      "K113-PM021"
+    ],
+    "expertReview": [
+      "K115-PM025",
+      "K113-PM025"
+    ]
+  },
+  "scopeGuard": {
+    "general390Edited": false,
+    "situation180Edited": false,
+    "sharedUIEdited": false,
+    "appEdited": false,
+    "storeKitEdited": false,
+    "mockExamEngineEdited": false,
+    "commonValidatorEdited": false
+  },
+  "nextHumanGate": "必修専門チャットとして追加の人間確認は不要。統括のメディア権利監査・専門家最終確認で隔離解除可否を判断する。解除されるまで14問は通常製品解放不可。"
+}
