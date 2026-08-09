@@ -89,8 +89,10 @@ Drive file ID: `123mLZBOqgT8r2cdLoJmDBEcFg35Bv35m`
 - 240問埋込み PASS
 - Golden Master必須表示・状態キー存在 PASS
 - 外部API・認証・課金なし
-
-ブラウザ自動操作は実行環境のlocalhost/fileアクセス制限により実ブラウザE2Eを完走できなかったため、ここは人のプロトタイプ確認で補完する。これはTestFlight実機監査とは別。
+- Playwright実操作監査 PASS
+  - 実行環境が `about:blank` のlocalStorageを拒否するため、テストハーネス内だけin-memory localStorage shimを使用
+  - 同一HTMLを `set_content` で実描画し、ホーム表示、8問スプリント開始、4択回答、解説・ここだけ覚える、模試3カード、記録35日ヒートマップ、設定を操作確認
+  - page_errors 0
 
 ## 辛口レビュー3回
 ### R1 FAIL → 修正 → PASS
@@ -102,7 +104,7 @@ Drive file ID: `123mLZBOqgT8r2cdLoJmDBEcFg35Bv35m`
 ### R3 FAIL → 修正 → PASS
 記録だけでは継続学習の価値が弱い。試験日から必要ペースを算出し、苦手3連続解除・中断復帰・試験回80問模試・分野進捗をプロトタイプへ統合。
 
-**重大指摘残存: 0（静的・論理監査範囲）**
+**重大指摘残存: 0（問題・権利・静的・実操作監査範囲）**
 
 ## 現在の停止点
 **ユーザーによるプロトタイプ確認。**
