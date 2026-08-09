@@ -113,12 +113,12 @@ struct WebAppView: UIViewRepresentable {
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         context.coordinator.webView = webView
 
-        guard let webRoot = Bundle.main.resourceURL?.appendingPathComponent("Web", isDirectory: true),
-              let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") else {
+        guard let resourceRoot = Bundle.main.resourceURL,
+              let url = Bundle.main.url(forResource: "index", withExtension: "html") else {
             webView.loadHTMLString(Self.missingBundleHTML, baseURL: nil)
             return webView
         }
-        webView.loadFileURL(url, allowingReadAccessTo: webRoot)
+        webView.loadFileURL(url, allowingReadAccessTo: resourceRoot)
         return webView
     }
 
