@@ -10,6 +10,7 @@ const swift = read(`${root}/ios/App.swift`);
 const codemagic = read('codemagic.yaml');
 const metadata = read(`${root}/APP_STORE_METADATA_JA.md`);
 const packet = read(`${root}/APPLE_CONNECT_PACKET.md`);
+const storekitPlan = read(`${root}/STOREKIT_TEST_PLAN.md`);
 const review = read(`${root}/APP_REVIEW_NOTES_JA.md`);
 const rights = read(`${root}/past-exam-rights-audit-59-57.md`);
 
@@ -48,6 +49,9 @@ for (const text of [metadata, packet]) {
 includes(packet, 'SKU: `tsukanshi-sprint-ios`', 'fixed SKU');
 includes(packet, 'Type: Non-Consumable', 'IAP type');
 includes(packet, '`submit_to_app_store`: false', 'manual App Review gate');
+includes(storekitPlan, PRODUCT, 'StoreKit test product id');
+includes(storekitPlan, 'Sandbox購入成功', 'Sandbox purchase gate');
+includes(storekitPlan, 'Sandbox復元', 'Sandbox restore gate');
 includes(review, '税関・財務省の公式アプリではありません', 'review disclaimer');
 includes(rights, 'WCO', 'third-party rights audit');
 
