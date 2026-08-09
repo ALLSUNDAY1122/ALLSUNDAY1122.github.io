@@ -7,6 +7,7 @@ on:
       - 'kangoshi-sprint/product-content/import_official_exams.py'
       - 'kangoshi-sprint/product-content/normalize_raw_import.py'
       - 'kangoshi-sprint/product-content/validate_raw_import.py'
+      - 'kangoshi-sprint/product-content/audit_media_detection.py'
       - 'kangoshi-sprint/product-content/build_common_audit_input.py'
       - 'kangoshi-sprint/product-content/learning-sprint-raw-audit.json'
       - 'kangoshi-sprint/product-content/official-sources.json'
@@ -72,6 +73,21 @@ jobs:
           cat kangoshi-sprint/product-content/raw/raw-validation.log
           echo "$code" > kangoshi-sprint/product-content/raw/raw-validation.exit
 
+      - name: Audit media detection independently
+        shell: bash
+        run: |
+          if [ "$(cat kangoshi-sprint/product-content/raw/normalize.exit)" != "0" ]; then
+            echo 'SKIPPED: normalization failed' | tee kangoshi-sprint/product-content/raw/media-detection.log
+            echo '99' > kangoshi-sprint/product-content/raw/media-detection.exit
+            exit 0
+          fi
+          set +e
+          python3 kangoshi-sprint/product-content/audit_media_detection.py > kangoshi-sprint/product-content/raw/media-detection.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/raw/media-detection.log
+          echo "$code" > kangoshi-sprint/product-content/raw/media-detection.exit
+
       - name: Build shared audit input
         shell: bash
         run: |
@@ -118,6 +134,7 @@ jobs:
           imp=exit_code('import.exit')
           norm=exit_code('normalize.exit')
           raw=exit_code('raw-validation.exit')
+          media=exit_code('media-detection.exit')
           common=exit_code('common-audit.exit')
           for s in d['sets']:
               rp=root/s['rawFile']
@@ -134,6 +151,8 @@ jobs:
                   s['status']='raw_normalization_failed'
               elif raw != 0:
                   s['status']='raw_structure_audit_fail'
+              elif media != 0:
+                  s['status']='raw_media_detection_fail'
               elif common != 0:
                   s['status']='raw_common_audit_fail'
               elif imported == 240:
@@ -144,6 +163,7 @@ jobs:
               'importExit':imp,
               'normalizeExit':norm,
               'rawValidationExit':raw,
+              'mediaDetectionExit':media,
               'commonAuditExit':common,
               'releaseAllowed':False
           }
@@ -169,9 +189,11 @@ jobs:
           imp=$(cat kangoshi-sprint/product-content/raw/import.exit)
           norm=$(cat kangoshi-sprint/product-content/raw/normalize.exit)
           raw=$(cat kangoshi-sprint/product-content/raw/raw-validation.exit)
+          media=$(cat kangoshi-sprint/product-content/raw/media-detection.exit)
           common=$(cat kangoshi-sprint/product-content/raw/common-audit.exit)
-          echo "import=$imp normalize=$norm raw=$raw common=$common"
+          echo "import=$imp normalize=$norm raw=$raw media=$media common=$common"
           test "$imp" = "0"
           test "$norm" = "0"
           test "$raw" = "0"
+          test "$media" = "0"
           test "$common" = "0"
