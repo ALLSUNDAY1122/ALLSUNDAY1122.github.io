@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "resolutions": [
+    {
+      "id": "community-context-known",
+      "matchRegex": "^(K115-AM092|K115-AM093|K115-AM107|K115-AM108|K115-PM069|K115-PM091|K115-PM092|K115-PM093|K114-AM091|K114-AM092|K114-AM093|K114-PM092|K114-PM093|K114-PM102|K113-AM116|K113-AM117|K113-PM116|K113-PM117): contextual stem domain community-explicit; assigned .+$",
+      "decision": "accepted",
+      "reason": "状況設定では在宅・訪問看護という場面語だけで主分類を地域看護へ固定せず、患者のライフステージ・主病態・設問目的を優先する。対象IDは症例単位で確認済み。"
+    },
+    {
+      "id": "basic-skill-context-known",
+      "matchRegex": "^(K115-AM095|K114-AM100): contextual stem domain basic-skill-explicit; assigned .+$",
+      "decision": "accepted",
+      "reason": "状況設定内の膀胱留置カテーテル等の技術語は援助手段であり、症例全体の成人・周術期看護という主分類を上書きしない。"
+    },
+    {
+      "id": "home-disaster-known",
+      "matchRegex": "^(K115-PM093|K113-PM116): home-care disaster preparedness; assigned 地域・在宅看護論 allowed as 地域・在宅看護論 or 看護の統合と実践$",
+      "decision": "accepted",
+      "reason": "両設問とも訪問看護利用者・家族の自宅での災害準備を問うため、災害看護との横断性を認めつつ主分類は地域・在宅看護論とする。"
+    },
+    {
+      "id": "split-K113-AM-SC02",
+      "matchRegex": "^K113-AM-SC02: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "同一症例でも疾患看護と退院・地域支援を別設問で問うため、設問ごとの主題に応じた2領域分割を許容する。"
+    },
+    {
+      "id": "split-K113-AM-SC09",
+      "matchRegex": "^K113-AM-SC09: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "同一患者の臨床看護と在宅・地域生活支援を別設問で評価しており、2領域へ分かれること自体は不整合ではない。"
+    },
+    {
+      "id": "split-K113-AM-SC10",
+      "matchRegex": "^K113-AM-SC10: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "症例内で基本的援助と統合・安全判断を別々に問うため、設問単位の分類を維持する。"
+    },
+    {
+      "id": "split-K114-AM-SC05",
+      "matchRegex": "^K114-AM-SC05: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "成人疾患症例の中で疾患別看護と基礎的援助技術をそれぞれ直接問う設問があり、主題別分類を維持する。"
+    },
+    {
+      "id": "split-K114-PM-SC04",
+      "matchRegex": "^K114-PM-SC04: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "高齢者症例の老年看護と退院・地域支援の設問が混在するため、患者属性だけで3問を同一分類へ強制しない。"
+    },
+    {
+      "id": "split-K115-PM-SC02",
+      "matchRegex": "^K115-PM-SC02: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "症例の一部は病態・診断理解、他は成人看護上の援助を問うため、疾病領域と成人看護領域の分割を許容する。"
+    },
+    {
+      "id": "split-K115-PM-SC03",
+      "matchRegex": "^K115-PM-SC03: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "成人疾患の症例内に妊娠・生殖に直接関係する設問が含まれるため、その設問のみ母性看護へ分ける。"
+    },
+    {
+      "id": "split-K115-PM-SC10",
+      "matchRegex": "^K115-PM-SC10: situation group split .*contextual review required$",
+      "decision": "accepted",
+      "reason": "災害・統合判断と個別の基本看護技術を別設問で問う症例であり、設問内容に沿った2領域分類を維持する。"
+    },
+    {
+      "id": "geriatric-facility-not-regional",
+      "matchRegex": "^K113-PM-SC03: home-care case has no 地域・在宅看護論 question: \\{'老年看護学': 3\\}$",
+      "decision": "accepted",
+      "reason": "要介護の施設入所高齢者の排泄・生活機能を扱う症例であり、場所よりも老年期の生活機能支援を主分類として3問とも老年看護学に置く。"
+    },
+    {
+      "id": "dementia-home-not-regional",
+      "matchRegex": "^K115-AM-SC04: home-care case has no 地域・在宅看護論 question: \\{'老年看護学': 3\\}$",
+      "decision": "accepted",
+      "reason": "75歳レビー小体型認知症患者の症状・生活支援を扱う症例で、在宅という場面より認知症・老年看護が3問の中心である。"
+    }
+  ]
+}
