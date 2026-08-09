@@ -12,6 +12,7 @@ SECTION_MARKER_RE = re.compile(
     r"^\s*(?:以下の試験問題について|なお[、,]|また[、,]|次の試験問題について|第\s*\d+\s*問以降について)",
 )
 PDF_TAIL_RE = re.compile(r"(?:受験地|受験番号|十の位|一の位)")
+DANGLING_PREAMBLE_RE = re.compile(r"(?:また[、,]|なお[、,]|及び|又は)\s*$")
 
 
 def split_trailing_preamble(text: str) -> tuple[str, str]:
@@ -32,6 +33,43 @@ def split_trailing_preamble(text: str) -> tuple[str, str]:
             tail = "\n".join(lines[i:]).strip()
             return head, tail
     return text.strip(), ""
+
+
+def promote_false_heading_prefix(q: dict) -> dict | None:
+    """Repair PDF text where '第N問から第M問…' was mistaken for QN heading.
+
+    The base splitter can choose the first occurrence of '第N問'. In section-level
+    instructions that occurrence can be part of '第N問から第M問まで…', while the
+    real question heading appears later. Move the instruction prefix into
+    section_preamble and keep only the real problem body as question text.
+    """
+    qn = int(q.get("source_question_no") or 0)
+    text = q.get("question", "")
+    own = re.compile(fr"第\s*{qn}\s*問")
+    matches = list(own.finditer(text))
+    if not matches:
+        return None
+
+    # A genuine second own heading near the beginning is the reliable signal.
+    # The prefix must also look like section instructions rather than problem prose.
+    m = matches[0]
+    if m.start() == 0 and len(matches) > 1:
+        m = matches[1]
+    if m.start() <= 0 or m.start() > 700:
+        return None
+
+    prefix = text[:m.start()].strip()
+    if not ("試験問題" in prefix and ("解答" in prefix or "適用" in prefix or prefix.startswith("から"))):
+        return None
+
+    body = text[m.end():].strip()
+    if len(body) < 40:
+        return None
+
+    existing = (q.get("section_preamble") or "").strip()
+    q["section_preamble"] = "\n".join(x for x in [existing, prefix] if x).strip()
+    q["question"] = body
+    return {"id": q["id"], "prefix_chars": len(prefix), "preamble_chars": len(q["section_preamble"])}
 
 
 def main() -> int:
@@ -59,27 +97,41 @@ def main() -> int:
                 moved.append({"from": q["id"], "to": nxt["id"], "chars": len(tail)})
                 continue
 
-        # AM booklets append OCR text from the answer sheet after Q35. It is not
-        # question content and has no following question to receive it.
         if q.get("source_question_no") == 35 and q.get("session") == "AM" and PDF_TAIL_RE.search(tail):
             discarded_pdf_tail.append({"from": q["id"], "chars": len(tail), "marker": "answer_sheet"})
         else:
             orphan.append({"from": q["id"], "tail": tail[:120]})
 
+    promoted_prefixes = []
+    for q in questions:
+        fixed = promote_false_heading_prefix(q)
+        if fixed:
+            promoted_prefixes.append(fixed)
+
     cross_contamination = []
+    suspicious_leading_continuation = []
+    dangling_preambles = []
     for q in questions:
         lines = q.get("question", "").splitlines()
         for i, line in enumerate(lines):
             if COMBO_END_RE.fullmatch(line) and any(x.strip() for x in lines[i + 1 :]):
                 cross_contamination.append(q["id"])
                 break
+        if re.match(r"^\s*から\s*第?\s*\d+\s*問", q.get("question", "")):
+            suspicious_leading_continuation.append(q["id"])
+        pre = (q.get("section_preamble") or "").strip()
+        if pre and DANGLING_PREAMBLE_RE.search(pre):
+            dangling_preambles.append(q["id"])
 
-    report["cycle"] = 10
+    report["cycle"] = 11
     report["cross_question_boundary_audit"] = {
         "moved_section_preambles": moved,
+        "promoted_false_heading_prefixes": promoted_prefixes,
         "discarded_pdf_tail_artifacts": discarded_pdf_tail,
         "orphan_preambles": orphan,
         "remaining_cross_contamination": cross_contamination,
+        "suspicious_leading_continuation": suspicious_leading_continuation,
+        "dangling_preambles": dangling_preambles,
         "question_count": len(questions),
     }
 
@@ -90,6 +142,10 @@ def main() -> int:
         errors.append(f"orphan section preambles: {len(orphan)}")
     if cross_contamination:
         errors.append(f"cross-question contamination remains: {len(cross_contamination)}")
+    if suspicious_leading_continuation:
+        errors.append(f"leading continuation remains: {len(suspicious_leading_continuation)}")
+    if dangling_preambles:
+        errors.append(f"dangling section preambles: {len(dangling_preambles)}")
 
     report["errors"] = errors
     report["status"] = "PASS" if rc == 0 and not errors else "FAIL"
@@ -109,12 +165,14 @@ def main() -> int:
     v5.v4.v3.REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(json.dumps({
-        "cycle": 10,
+        "cycle": 11,
         "status": report["status"],
         "moved_preambles": len(moved),
+        "promoted_prefixes": len(promoted_prefixes),
         "discarded_pdf_tail_artifacts": len(discarded_pdf_tail),
         "orphan_preambles": len(orphan),
         "remaining_cross_contamination": len(cross_contamination),
+        "dangling_preambles": len(dangling_preambles),
     }, ensure_ascii=False))
     return 0 if report["status"] == "PASS" else 1
 
