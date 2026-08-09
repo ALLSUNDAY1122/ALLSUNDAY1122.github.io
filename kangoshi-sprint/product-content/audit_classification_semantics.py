@@ -24,6 +24,7 @@ SCEN_EXPECT=[
  (r'統合失調|神経性過食|境界性パーソナリティ|うつ病|双極|精神科', {'精神看護学'}, 'mental-scenario'),
  (r'震度\s*[5-7]|大地震|発災直後', {'看護の統合と実践'}, 'disaster-scenario'),
 ]
+COMMUNITY_STEM=re.compile(r'訪問看護|在宅療養|在宅で|自宅.*療養|福祉避難所|ハザードマップ',re.I)
 
 errors=[]; warnings=[]; total=0; majors=Counter(); per_set={}; scenario_groups=defaultdict(list)
 for sid in ('set1','set2','set3'):
@@ -37,20 +38,15 @@ for sid in ('set1','set2','set3'):
         category=q.get('category')
         majors[major]+=1; set_counts[major]+=1
 
-        scenario_allowed=set(); scenario_labels=[]
-        if category=='状況設定' and scen:
-            for pattern,allowed,label in SCEN_EXPECT:
-                if re.search(pattern,scen,re.I):
-                    scenario_allowed |= allowed; scenario_labels.append(label)
-
         stem_matches=[]
         for pattern,allowed,label in STEM_EXPECT:
             if category=='状況設定' and label in {'basic-skill-explicit','community-explicit'}:
-                # In a case question these words frequently describe the setting or
-                # one nursing technique, while the primary study domain remains the
-                # patient's pediatric/maternal/mental/adult specialty.
                 if re.search(pattern,stem,re.I):
                     warnings.append(f'{qid}: contextual stem domain {label}; assigned {major}')
+                continue
+            if category=='状況設定' and label=='disaster-explicit' and COMMUNITY_STEM.search(stem):
+                if re.search(pattern,stem,re.I):
+                    warnings.append(f'{qid}: home-care disaster preparedness; assigned {major} allowed as 地域・在宅看護論 or 看護の統合と実践')
                 continue
             if re.search(pattern,stem,re.I):
                 stem_matches.append((allowed,label))
@@ -90,7 +86,7 @@ report={
  'total':total,'majorCounts':dict(majors),'perSetMajorCounts':per_set,
  'strongSemanticErrors':errors,'splitScenarioGroups':split_groups,'warnings':warnings,
  'pass':not errors,
- 'note':'独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、患者ライフステージ・主病態を優先する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。'
+ 'note':'独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、在宅利用者の災害準備は地域・在宅看護論または災害看護を許容する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。'
 }
 (OUT/'semantic-consistency-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'total':total,'errorCount':len(errors),'splitScenarioGroups':len(split_groups),'warningCount':len(warnings),'pass':not errors},ensure_ascii=False))
