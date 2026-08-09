@@ -24,6 +24,58 @@ def fail(errors, message):
     errors.append(message)
 
 
+def validate_index(value, size):
+    return isinstance(value, int) and 0 <= value < size
+
+
+def validate_answer_v2(q, label, errors):
+    answer_type = q.get("answer_type") or q.get("answerType")
+    answer = q.get("answer")
+    choices = q.get("choices")
+    scoring_status = q.get("scoring_status") or q.get("officialScoringStatus") or "normal"
+    accepted = q.get("accepted_answers")
+    if accepted is None:
+        accepted = q.get("officialAcceptedAnswers")
+
+    allowed_status = {"normal", "excluded", "include_if_correct_exclude_if_wrong", "multiple_accepted"}
+    if scoring_status not in allowed_status:
+        fail(errors, f"{label}: scoring_status不正 {scoring_status}")
+
+    if scoring_status == "excluded":
+        if answer is not None:
+            fail(errors, f"{label}: excluded問題にanswerが設定されている")
+        return
+
+    if answer_type == "numeric":
+        if not isinstance(answer, (int, float)) or isinstance(answer, bool):
+            fail(errors, f"{label}: numeric answer不正 {answer}")
+    elif answer_type == "singleChoice":
+        if not isinstance(choices, list):
+            fail(errors, f"{label}: choices不正")
+        elif choices:
+            if not validate_index(answer, len(choices)):
+                fail(errors, f"{label}: singleChoice answer不正 {answer}")
+        elif not q.get("requires_media") and not q.get("requiresMedia"):
+            fail(errors, f"{label}: singleChoiceで選択肢が空かつmedia指定なし")
+    elif answer_type == "multiChoice":
+        if not isinstance(choices, list) or len(choices) < 2:
+            fail(errors, f"{label}: multiChoice choices不正")
+        if not isinstance(answer, list) or len(answer) < 2 or len(set(answer)) != len(answer):
+            fail(errors, f"{label}: multiChoice answer不正 {answer}")
+        elif isinstance(choices, list):
+            for idx in answer:
+                if not validate_index(idx, len(choices)):
+                    fail(errors, f"{label}: multiChoice index範囲外 {idx}")
+    else:
+        fail(errors, f"{label}: answer_type不正 {answer_type}")
+
+    if scoring_status == "multiple_accepted":
+        if not isinstance(accepted, list) or len(accepted) < 2:
+            fail(errors, f"{label}: multiple_acceptedだがaccepted_answers不足")
+    elif accepted is not None and not isinstance(accepted, list):
+        fail(errors, f"{label}: accepted_answers形式不正")
+
+
 def validate(config_path: Path) -> int:
     config = load_json(config_path)
     base = config_path.parent
@@ -71,12 +123,17 @@ def validate(config_path: Path) -> int:
         if isinstance(round_no, int) and subject in subjects:
             counts[(round_no, subject)] += 1
 
-        choices = q.get("choices")
-        correct_index = q.get("correct_index")
-        if not isinstance(choices, list) or len(choices) < 2:
-            fail(errors, f"{label}: 選択肢が2件未満")
-        elif not isinstance(correct_index, int) or not (0 <= correct_index < len(choices)):
-            fail(errors, f"{label}: correct_index不正 {correct_index}")
+        # v1: legacy single-choice schema. v2: flexible answer schema used by
+        # qualifications that contain multi-choice, numeric or scoring exclusions.
+        if "answer_type" in q or "answerType" in q:
+            validate_answer_v2(q, label, errors)
+        else:
+            choices = q.get("choices")
+            correct_index = q.get("correct_index")
+            if not isinstance(choices, list) or len(choices) < 2:
+                fail(errors, f"{label}: 選択肢が2件未満")
+            elif not isinstance(correct_index, int) or not (0 <= correct_index < len(choices)):
+                fail(errors, f"{label}: correct_index不正 {correct_index}")
 
         question_text = q.get("question", "")
         if question_text:
