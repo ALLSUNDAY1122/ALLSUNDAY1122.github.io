@@ -1,0 +1,95 @@
+name: Kangoshi 11 Subject Classification Loop
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/raw/set1-raw.json'
+      - 'kangoshi-sprint/product-content/raw/set2-raw.json'
+      - 'kangoshi-sprint/product-content/raw/set3-raw.json'
+      - 'kangoshi-sprint/product-content/classify_questions.py'
+      - 'kangoshi-sprint/product-content/validate_classification.py'
+      - '.github/workflows/kangoshi-classification.yml'
+
+concurrency:
+  group: kangoshi-classification
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Classify 720 questions
+        shell: bash
+        run: |
+          mkdir -p kangoshi-sprint/product-content/classified
+          set +e
+          python3 kangoshi-sprint/product-content/classify_questions.py > kangoshi-sprint/product-content/classified/classify.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/classified/classify.log
+          echo "$code" > kangoshi-sprint/product-content/classified/classify.exit
+
+      - name: Validate classification
+        shell: bash
+        run: |
+          if [ "$(cat kangoshi-sprint/product-content/classified/classify.exit)" != "0" ]; then
+            echo 'SKIPPED: classification generation failed' | tee kangoshi-sprint/product-content/classified/audit.log
+            echo '99' > kangoshi-sprint/product-content/classified/audit.exit
+            exit 0
+          fi
+          set +e
+          python3 kangoshi-sprint/product-content/validate_classification.py > kangoshi-sprint/product-content/classified/audit.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/classified/audit.log
+          echo "$code" > kangoshi-sprint/product-content/classified/audit.exit
+
+      - name: Record manifest classification state
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('kangoshi-sprint/product-content')
+          manifest=root/'manifest.json'
+          d=json.loads(manifest.read_text(encoding='utf-8'))
+          report_path=root/'classified/classification-report.json'
+          report=json.loads(report_path.read_text(encoding='utf-8')) if report_path.exists() else {}
+          audit_exit=int((root/'classified/audit.exit').read_text().strip())
+          d['classificationLoop']={
+              'method':'keyword-v1',
+              'high':report.get('high',0),
+              'medium':report.get('medium',0),
+              'low':report.get('low',0),
+              'unclassified':report.get('unclassified',0),
+              'needsReview':len(report.get('needsReview',[])),
+              'auditExit':audit_exit,
+              'status':'pass' if audit_exit==0 else 'fail'
+          }
+          manifest.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit classification result and diagnostics
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/product-content/classified kangoshi-sprint/product-content/manifest.json
+          if git diff --cached --quiet; then
+            echo 'No generated changes'
+          else
+            git commit -m 'kangoshi: classification loop result [skip ci]'
+            git push
+          fi
+
+      - name: Enforce classification gate
+        shell: bash
+        run: |
+          test "$(cat kangoshi-sprint/product-content/classified/classify.exit)" = "0"
+          test "$(cat kangoshi-sprint/product-content/classified/audit.exit)" = "0"
