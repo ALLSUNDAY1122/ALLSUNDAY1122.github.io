@@ -1,0 +1,60 @@
+name: 管理栄養士 Round1 Question Audit
+
+on:
+  push:
+    paths:
+      - 'kanrieiyoushi-sprint/questions.js'
+      - 'kanrieiyoushi-sprint/data/round1-extra-*.js'
+      - 'kanrieiyoushi-sprint/audit/**'
+      - 'automation/learning-sprint-question-pipeline/validate_questions.py'
+      - '.github/workflows/kanrieiyoushi-round1-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build canonical round1 data
+        run: python kanrieiyoushi-sprint/audit/build_round1_canonical.py
+      - name: Validate and write report
+        id: validate
+        shell: bash
+        run: |
+          set +e
+          python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1.json > /tmp/audit-output.txt 2>&1
+          code=$?
+          cat /tmp/audit-output.txt
+          python - "$code" <<'PY'
+          import json, sys, datetime
+          code=int(sys.argv[1])
+          output=open('/tmp/audit-output.txt',encoding='utf-8').read()
+          report={
+            'qualification':'管理栄養士国家試験',
+            'round':1,
+            'status':'PASS' if code==0 else 'FAIL',
+            'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'validator':'automation/learning-sprint-question-pipeline/validate_questions.py',
+            'output':output
+          }
+          open('kanrieiyoushi-sprint/audit/round1-ci-report.json','w',encoding='utf-8').write(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - name: Commit audit evidence
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kanrieiyoushi-sprint/audit/data/questions.round1.canonical.json kanrieiyoushi-sprint/audit/round1-ci-report.json
+          git diff --cached --quiet || git commit -m '管理栄養士 第1回監査結果を記録 [skip ci]'
+          git push
+      - name: Fail job when validator failed
+        if: steps.validate.outputs.exit_code != '0'
+        run: exit 1

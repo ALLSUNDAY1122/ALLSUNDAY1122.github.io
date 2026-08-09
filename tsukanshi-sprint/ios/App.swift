@@ -1,6 +1,7 @@
 import SwiftUI
 import WebKit
 import StoreKit
+import UIKit
 
 @main
 struct TsukanshiSprintApp: App {
@@ -97,6 +98,7 @@ struct WebAppView: UIViewRepresentable {
         let controller = WKUserContentController()
         controller.add(context.coordinator, name: "storeKit")
         controller.add(context.coordinator, name: "state")
+        controller.add(context.coordinator, name: "openExternal")
 
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = controller
@@ -139,6 +141,10 @@ struct WebAppView: UIViewRepresentable {
                 persistState(message.body)
                 return
             }
+            if message.name == "openExternal" {
+                openExternal(message.body)
+                return
+            }
             guard message.name == "storeKit",
                   let body = message.body as? [String: Any],
                   let action = body["action"] as? String else { return }
@@ -150,6 +156,18 @@ struct WebAppView: UIViewRepresentable {
                 default: await store.refresh()
                 }
                 pushStoreKitState()
+            }
+        }
+
+        private func openExternal(_ body: Any) {
+            guard let payload = body as? [String: Any],
+                  let urlString = payload["url"] as? String,
+                  let url = URL(string: urlString),
+                  url.scheme == "https",
+                  let host = url.host?.lowercased(),
+                  host == "www.customs.go.jp" || host == "customs.go.jp" else { return }
+            Task { @MainActor in
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
 

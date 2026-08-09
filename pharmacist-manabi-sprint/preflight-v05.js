@@ -1,6 +1,16 @@
 (function(){'use strict';
 var all=(window.PHARM_QUESTIONS||[]).filter(function(q){return q&&q.rightsStatus==='cleared'&&q.scored!==false});
-all.forEach(function(q){var fixed=q.exam;Object.defineProperty(q,'exam',{configurable:true,enumerable:true,get:function(){return fixed},set:function(){}})});
+var qa=[],seenIds={};
+all.forEach(function(q){
+  if(!q.id||seenIds[q.id])qa.push('duplicate_or_missing_id:'+String(q.id));seenIds[q.id]=1;
+  if(!Array.isArray(q.c)||q.c.length<2)qa.push('choices:'+q.id);
+  if(!Array.isArray(q.a)||!q.a.length||q.a.some(function(i){return !Number.isInteger(i)||i<0||i>=q.c.length}))qa.push('answer_index:'+q.id);
+  if(q.pick&&q.pick!==q.a.length)qa.push('pick_count:'+q.id);
+  if(q.sourceType==='mhlw_adapted'&&(!q.exam||!q.sourceQuestionNo))qa.push('source_metadata:'+q.id);
+  var fixed=q.exam;Object.defineProperty(q,'exam',{configurable:true,enumerable:true,get:function(){return fixed},set:function(){}});
+});
+window.PHARM_QA={passed:qa.length===0,count:all.length,errors:qa.slice()};
+if(qa.length)throw new Error('PHARM_QUESTION_QA_FAIL '+qa.join(','));
 window.PHARM_QUESTIONS=all;
 try{
   var key='pharmacist_manabi_sprint_v040';
