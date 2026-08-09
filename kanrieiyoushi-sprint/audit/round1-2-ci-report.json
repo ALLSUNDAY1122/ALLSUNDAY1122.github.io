@@ -1,0 +1,37 @@
+{
+  "qualification": "管理栄養士国家試験",
+  "checkedAt": "2026-08-09T14:57:27+09:00",
+  "status": "PASS",
+  "scope": "第1回200問＋第2回200問の400問横断構造監査",
+  "workflowRunId": 31297802979,
+  "validator": "automation/learning-sprint-question-pipeline/validate_questions.py",
+  "total": 400,
+  "round1": {
+    "count": 200,
+    "distribution": {"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
+    "structureAudit": "PASS"
+  },
+  "round2": {
+    "count": 200,
+    "distribution": {"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
+    "structureAudit": "PASS",
+    "composition": {"legacyCandidateReaudited":120,"selectedNew":48,"rebalanceNew":32,"reservedNew":32}
+  },
+  "machineChecks": {
+    "countAndDistribution": "PASS",
+    "exactDuplicateQuestionText": 0,
+    "highSimilarityAtOrAbove0_90": 0,
+    "requiredFields": "PASS"
+  },
+  "notCoveredByThisPass": [
+    "正答内容の一次資料照合",
+    "制度・法令の適用時点確認",
+    "著作権・利用条件の法的判断"
+  ],
+  "publication": {
+    "publicVersion": "v0.5.1",
+    "publicQuestionCount": 200,
+    "round2Public": false,
+    "reason": "第2回は構造監査PASSだが、一次資料・正答・制度・権利監査が未完了のため公開昇格しない"
+  }
+}
