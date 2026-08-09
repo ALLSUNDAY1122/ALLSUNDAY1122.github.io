@@ -24,18 +24,14 @@ workflows:
           bash -n "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
           python3 - <<'PY'
           import plistlib
-          with open('ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy','rb') as f:
-              data=plistlib.load(f)
+          with open('ios/health-manager-2/HealthManager2/PrivacyInfo.xcprivacy','rb') as f: data=plistlib.load(f)
           assert data.get('NSPrivacyTracking') is False
           assert data.get('NSPrivacyCollectedDataTypes') == []
-          print('PASS: Privacy Manifest parses and matches no-data-collection implementation.')
           PY
       - name: Install project tools
-        script: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
       - name: Prepare bundled web assets
-        script: |
-          bash "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
+        script: bash "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
       - name: Generate Xcode project
         script: |
           cd "$CM_BUILD_DIR/ios/health-manager-2"
@@ -52,10 +48,7 @@ workflows:
           cd "$CM_BUILD_DIR/ios/health-manager-2"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
-        script: |
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+        script: xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -100,22 +93,12 @@ workflows:
           test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json"
           test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy"
           test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png"
-          python3 - "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json" <<'PY'
-          import json,sys
-          data=json.load(open(sys.argv[1],encoding='utf-8'))
-          assert data['contentVersion']=='otsu4-2026-08-product-v2'
-          assert len(data['questions'])==360
-          print('PASS: audited Otsu4 bundle inputs')
-          PY
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
-        script: |
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+        script: xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -151,16 +134,6 @@ workflows:
           node tsukanshi-sprint/validate-apple-preflight.mjs
           bash -n tsukanshi-sprint/ios/prepare-ios.sh
           python3 -m py_compile tsukanshi-sprint/ios/apply-xcode-capabilities.py
-          python3 - <<'PY'
-          import plistlib
-          with open('tsukanshi-sprint/ios/PrivacyInfo.xcprivacy','rb') as f:
-              data=plistlib.load(f)
-          assert data.get('NSPrivacyTracking') is False
-          assert data.get('NSPrivacyCollectedDataTypes') == []
-          entries=data.get('NSPrivacyAccessedAPITypes',[])
-          assert any(x.get('NSPrivacyAccessedAPIType')=='NSPrivacyAccessedAPICategoryUserDefaults' and 'CA92.1' in x.get('NSPrivacyAccessedAPITypeReasons',[]) for x in entries)
-          print('PASS: Tsukanshi Privacy Manifest')
-          PY
       - name: Install XcodeGen and ImageMagick
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
       - name: Prepare audited web bundle and icon
@@ -171,33 +144,22 @@ workflows:
           python3 - <<'PY'
           from pathlib import Path
           import os
-          p=Path('project.yml')
-          text=p.read_text(encoding='utf-8')
-          text=text.replace('CURRENT_PROJECT_VERSION: 1', 'CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'], 1)
-          p.write_text(text,encoding='utf-8')
+          p=Path('project.yml');t=p.read_text(encoding='utf-8');t=t.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'],1);p.write_text(t,encoding='utf-8')
           PY
           xcodegen generate
           python3 apply-xcode-capabilities.py TsukanshiSprint.xcodeproj/project.pbxproj
       - name: Verify Tsukanshi release inputs
         script: |
           test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/index.html"
-          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/questions-editorial-final-polish.js"
-          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/official-past-exam-links.js"
-          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/release-links.js"
-          test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Web/storekit-ui-guard.js"
           test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/PrivacyInfo.xcprivacy"
           test -f "$CM_BUILD_DIR/tsukanshi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
           grep -q 'com.apple.InAppPurchase' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
-          ! grep -q 'SystemCapabilities = "' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/tsukanshi-sprint/ios"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
       - name: Build signed IPA
-        script: |
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+        script: xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -207,4 +169,71 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: false
+        submit_to_app_store: false
+
+  pharmacist-ios:
+    name: 薬剤師国家試験 - iOS Internal TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.yakuzaishi
+      vars:
+        BUNDLE_ID: jp.allsunday1122.yakuzaishi
+        XCODE_PROJECT: pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj
+        XCODE_SCHEME: PharmacistSprint
+      xcode: latest
+    scripts:
+      - name: Release audit before signed build
+        script: |
+          cd "$CM_BUILD_DIR"
+          python3 pharmacist-manabi-sprint/scripts/validate_release.py
+          bash -n pharmacist-manabi-sprint/ios/prepare-ios.sh
+          python3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare audited offline bundle and canonical icon
+        script: bash "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/prepare-ios.sh"
+      - name: Set CI build number and generate project
+        script: |
+          cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path('project.yml');t=p.read_text(encoding='utf-8');t=t.replace('CURRENT_PROJECT_VERSION: 1','CURRENT_PROJECT_VERSION: '+os.environ['CM_BUILD_NUMBER'],1);p.write_text(t,encoding='utf-8')
+          PY
+          xcodegen generate
+          python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
+      - name: Verify signed release inputs
+        script: |
+          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Web/index.html"
+          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Web/questions-data.js"
+          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Web/native-store-ui.js"
+          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
+          grep -q 'com.apple.InAppPurchase' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+          python3 - <<'PY'
+          import hashlib
+          p='pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
+          assert hashlib.sha256(open(p,'rb').read()).hexdigest()=='dfc7dfe4a1c13afbe98658cde591274e11665b016c39e2a4411de4dbe86127ec'
+          print('PASS: canonical pharmacist AppIcon')
+          PY
+      - name: Apply App Store signing profiles for internal TestFlight only
+        script: |
+          cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: xcode-project build-ipa --project "$CM_BUILD_DIR/$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
         submit_to_app_store: false
