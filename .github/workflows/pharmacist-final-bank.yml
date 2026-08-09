@@ -8,6 +8,7 @@ on:
       - 'pharmacist-manabi-sprint/content/reviewed/**'
       - 'pharmacist-manabi-sprint/content/media/**'
       - 'pharmacist-manabi-sprint/tools/assemble_product_bank.py'
+      - 'pharmacist-manabi-sprint/tools/normalize_product_cases.py'
       - 'pharmacist-manabi-sprint/tools/final_product_audit_v2.py'
       - 'pharmacist-manabi-sprint/tools/final-bank-trigger.txt'
       - '.github/workflows/pharmacist-final-bank.yml'
@@ -27,6 +28,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Assemble product bank
         run: python3 pharmacist-manabi-sprint/tools/assemble_product_bank.py
+      - name: Normalize shared case stems
+        run: python3 pharmacist-manabi-sprint/tools/normalize_product_cases.py
       - name: Run final audit v2 but retain FAIL report
         id: audit
         shell: bash
