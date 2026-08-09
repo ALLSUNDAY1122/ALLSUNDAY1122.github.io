@@ -5,8 +5,9 @@
   "description": "iOS packaging scaffold for 情報処理安全確保支援士｜学びスプリント",
   "scripts": {
     "prepare:web": "node prepare-web.mjs",
-    "ios:add": "npx cap add ios",
-    "ios:sync": "npm run prepare:web && npx cap sync ios",
+    "ios:configure": "bash configure-ios.sh",
+    "ios:add": "npx cap add ios && npm run ios:configure",
+    "ios:sync": "npm run prepare:web && npx cap sync ios && npm run ios:configure",
     "ios:open": "npx cap open ios"
   },
   "dependencies": {
