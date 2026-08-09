@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dependencies
-        run: python -m pip install --disable-pip-version-check requests pypdf pymupdf
+        run: python -m pip install --disable-pip-version-check requests beautifulsoup4 pypdf pymupdf
       - name: Import and audit 210 questions from MOJ official PDFs
         id: import
         shell: bash
@@ -56,12 +56,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add learning-sprint/shoshi/content-loop/questions.generated.json \
-                  learning-sprint/shoshi/content-loop/content-audit-report.json \
-                  learning-sprint/shoshi/content-loop/learning-sprint-audit.json \
-                  learning-sprint/shoshi/content-loop/official-pdf-probe.json \
-                  learning-sprint/shoshi/content-loop/common-validator.log \
-                  learning-sprint/shoshi/content-loop/official-media || true
+          for p in \
+            learning-sprint/shoshi/content-loop/questions.generated.json \
+            learning-sprint/shoshi/content-loop/content-audit-report.json \
+            learning-sprint/shoshi/content-loop/learning-sprint-audit.json \
+            learning-sprint/shoshi/content-loop/official-pdf-probe.json \
+            learning-sprint/shoshi/content-loop/common-validator.log \
+            learning-sprint/shoshi/content-loop/official-media; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
           if ! git diff --cached --quiet; then
             git commit -m "司法書士210問の公式PDF監査結果を更新"
             git pull --rebase origin feature/shoshi-content-loop || true
