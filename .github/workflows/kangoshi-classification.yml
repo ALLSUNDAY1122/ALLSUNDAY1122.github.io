@@ -17,6 +17,8 @@ on:
       - 'kangoshi-sprint/product-content/audit_classification_semantics.py'
       - 'kangoshi-sprint/product-content/audit_situation_group_semantics.py'
       - 'kangoshi-sprint/product-content/summarize_situation_groups.py'
+      - 'kangoshi-sprint/product-content/validate_classification_warnings.py'
+      - 'kangoshi-sprint/product-content/classification-warning-resolutions.json'
       - '.github/workflows/kangoshi-classification.yml'
 
 concurrency:
@@ -52,7 +54,20 @@ jobs:
           d=json.loads(manifest.read_text(encoding='utf-8'))
           rp=root/'classified/classification-report.json'; report=json.loads(rp.read_text(encoding='utf-8')) if rp.exists() else {}
           loop_exit=int((root/'classified/loop.exit').read_text().strip())
-          d['classificationLoop']={'method':report.get('method','unknown'),'high':report.get('high',0),'medium':report.get('medium',0),'low':report.get('low',0),'unclassified':report.get('unclassified',0),'needsReview':len(report.get('needsReview',[])),'auditExit':loop_exit,'status':'pass' if loop_exit==0 else 'fail'}
+          warn=root/'classified/warning-resolution-audit.json'
+          wr=json.loads(warn.read_text(encoding='utf-8')) if warn.exists() else {}
+          d['classificationLoop']={
+              'method':report.get('method','unknown'),
+              'high':report.get('high',0),
+              'medium':report.get('medium',0),
+              'low':report.get('low',0),
+              'unclassified':report.get('unclassified',0),
+              'needsReview':len(report.get('needsReview',[])),
+              'warningCount':wr.get('warningCount'),
+              'resolvedWarnings':wr.get('resolvedCount'),
+              'auditExit':loop_exit,
+              'status':'pass' if loop_exit==0 else 'fail'
+          }
           manifest.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Commit classification result and diagnostics
