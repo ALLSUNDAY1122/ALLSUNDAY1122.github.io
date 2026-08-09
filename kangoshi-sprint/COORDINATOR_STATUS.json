@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-10T04:42:00+09:00",
+  "sourceOfTruth": "GitHub main",
+  "target": {
+    "totalQuestions": 720,
+    "required": 150,
+    "general": 390,
+    "situation": 180,
+    "scenarioCount": 60
+  },
+  "canonicalIntegratedL3": {
+    "explained": 102,
+    "total": 720,
+    "pending": 618,
+    "pass": false,
+    "releaseAllowed": false,
+    "auditBlobSha": "5f6e922bc7172bcb2cfb98fee7af51472447dcd6",
+    "note": "This is the latest materialized common L3 audit result. New workstream artifacts exist on main but are not counted here until the common apply/queue/validate loop materializes a new audit result."
+  },
+  "workstreams": {
+    "A_required": {
+      "status": "PASS_WITH_QUARANTINE",
+      "target": 150,
+      "contentAndEvidenceCovered": 150,
+      "releaseEligible": 136,
+      "quarantinedUnique": 14,
+      "mediaDependent": 8,
+      "scoringSpecial": 6,
+      "expertReview": 2,
+      "auditCommit": "ed02ecd49837fb9c3b0e9686ae399e7f257f9338",
+      "handoffCommit": "a4d5140036868f55006b7cb1b568af49b34521b6"
+    },
+    "B_general": {
+      "status": "IN_PROGRESS",
+      "target": 390,
+      "authoredL3": 104,
+      "remaining": 286,
+      "latestNewBatchCount": 11,
+      "mediaSeparated": ["K115-PM077"],
+      "statusCommit": "6c2f021c41d0b52875af5ec63b719d55e1931fc8",
+      "latestBatchCommit": "3bc12c1f0f57585694d08871c7fdb980d000c857"
+    },
+    "C_situation": {
+      "status": "IN_PROGRESS",
+      "targetQuestions": 180,
+      "targetScenarios": 60,
+      "authoredL3QuestionFloor": 30,
+      "contentCompleteScenarioFloor": 10,
+      "expertReviewQueueCount": 2,
+      "latestScenario": "K115-AM-SC05",
+      "latestScenarioStatus": "content_pass_expert_pending",
+      "latestScenarioCommit": "538f49fab5d65616488fd9dcf0d8e88762460c48",
+      "expertQueueCommit": "81af1f58a8f73a2c10f4a239436861c6f8c9724b"
+    }
+  },
+  "crossWorkstreamAuthoredCoverageFloor": {
+    "count": 284,
+    "total": 720,
+    "formula": "A150 + B104 + C30",
+    "meaning": "Minimum number of category-disjoint questions with authored/specialist-processed L3 content visible on main. This is not the common integrated L3 count and must not be presented as product-release coverage."
+  },
+  "integration": {
+    "requiredSpecialistOverlayIntegratedIntoPipeline": true,
+    "requiredTextCorrectionsSupported": 18,
+    "requiredSpecialExplanationsSupported": 10,
+    "specialistQuarantinePreserved": true,
+    "expertEscalationSeparatedFromUntriagedDynamicEvidence": true,
+    "latestCheckpoint": "2026-08-10-L3-coordinator-Apass-B104-C30-2",
+    "latestCheckpointCommit": "da5e3b7e699030d189e009b73e1a3a76320f25d6",
+    "expectedBatchFloor": 36,
+    "materializedAfterCheckpoint": false,
+    "materializationNote": "No newer github-actions[bot] L3 result commit was observed when this status was written. Do not infer PASS or newer integrated counts until enriched-draft/enrichment-audit.json changes."
+  },
+  "releaseGates": {
+    "allThreeWorkstreamsPass": false,
+    "l3All720Pass": false,
+    "mediaRightsPass": false,
+    "expertReviewPass": false,
+    "mock240PerExamReady": false,
+    "storeKit2Ready": false,
+    "releaseAuditPass": false,
+    "testFlightReady": false
+  },
+  "nextCoordinatorLoop": [
+    "Re-read A/B/C status artifacts from main",
+    "Re-read enriched-draft/enrichment-audit.json and only adopt a newer materialized common L3 count if its blob changes",
+    "Check explanation batch IDs/question IDs for cross-workstream collisions before every checkpoint",
+    "Keep specialist/media/scoring/expert items quarantined from product availability",
+    "After B and C PASS, run 720-question common integration audit before mock, StoreKit, or release completion claims"
+  ]
+}
