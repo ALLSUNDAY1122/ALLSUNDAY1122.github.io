@@ -73,6 +73,10 @@ jobs:
         if: always()
         working-directory: .
         run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git pull --rebase origin main
           mkdir -p sc-manabi-sprint/build-results
           cat > sc-manabi-sprint/build-results/ios-preflight.txt <<EOF
           workflow=SC Manabi Sprint iOS Preflight
@@ -81,8 +85,6 @@ jobs:
           run_id=${{ github.run_id }}
           checked_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           EOF
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add sc-manabi-sprint/build-results/ios-preflight.txt
           if ! git diff --cached --quiet; then
             git commit -m 'Record SC iOS preflight result'
