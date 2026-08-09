@@ -8,60 +8,58 @@
     "countPerExam": 130
   },
   "sourceOfTruth": "GitHub main",
-  "checkedAt": "2026-08-10T04:44:00+09:00",
+  "checkedAt": "2026-08-10T04:49:00+09:00",
   "canonicalL3Snapshot": {
     "globalExplained": 102,
     "globalTotal": 720,
     "globalPass": false,
     "generalAppliedAndAudited": 53,
-    "generalAppliedScope": "Latest materialized common audit still predates current B workstream batches; do not count authored batches as integrated until coordinator materializes the common apply/queue/validate result.",
+    "generalAppliedScope": "Latest materialized common audit still predates current B workstream batches; workstream coverage must not be presented as integrated product coverage until coordinator materializes common apply/queue/validate.",
     "auditBlobSha": "5f6e922bc7172bcb2cfb98fee7af51472447dcd6"
   },
-  "authoredL3": {
-    "generalAuthoredCount": 116,
-    "generalRemainingNotYetAuthoredOrSpecialistProcessed": 274,
-    "breakdown": {
-      "K115_AM_applied_general": 53,
-      "K115_PM_existing_preBoundary_text": 40,
-      "K115_PM_new_B_general_text": 23,
-      "K115_PM_textAuthoredTotal": 63
+  "workstreamCoverage": {
+    "generalContentAndEvidenceCovered": 130,
+    "generalRemaining": 260,
+    "normalTextCovered": 122,
+    "quarantinedSpecialCovered": 8,
+    "completedExams": {
+      "115": {
+        "status": "PASS_WITH_QUARANTINE",
+        "target": 130,
+        "normalText": 122,
+        "quarantined": 8,
+        "contentConcerns": 2,
+        "scoringExceptions": 2,
+        "mediaDependent": 4,
+        "expertReviewRequired": 2,
+        "specialAuditFile": "kangoshi-sprint/workstreams/B-general/K115-SPECIAL-AUDIT.json",
+        "specialAuditCommit": "37acac58c1748ac74b04512c65033123d752daef"
+      }
     }
   },
-  "latestLoop": {
-    "createdBatch": "B-GENERAL-115-PM079-PM090-TEXT",
-    "createdFile": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM079-PM090-text.json",
-    "createdQuestionIds": [
-      "K115-PM079",
-      "K115-PM080",
-      "K115-PM081",
-      "K115-PM082",
-      "K115-PM083",
-      "K115-PM084",
-      "K115-PM085",
-      "K115-PM086",
-      "K115-PM087",
-      "K115-PM088",
-      "K115-PM089",
-      "K115-PM090"
-    ],
-    "count": 12,
-    "mediaSeparatedInK115PM": ["K115-PM058", "K115-PM077"],
-    "batchQuestionIdDuplicates": 0,
-    "batchIdDuplicateDetected": false,
-    "missingPoint": 0,
-    "missingDetail": 0,
-    "missingEvidenceRefs": 0,
-    "missingEvidenceCheckedDate": 0,
-    "officialAnswerChanged": 0,
-    "newContentConcerns": 0,
-    "dynamicEvidenceVerified": ["K115-PM081", "K115-PM085", "K115-PM086", "K115-PM089"],
-    "latestBatchCommit": "b272717effe7966fee175b50d226502b7267f0a0"
-  },
-  "knownGeneralSpecialQueues": {
+  "latestNormalBatches": [
+    {
+      "file": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM067-PM078-text.json",
+      "count": 11,
+      "commit": "3bc12c1f0f57585694d08871c7fdb980d000c857"
+    },
+    {
+      "file": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM079-PM090-text.json",
+      "count": 12,
+      "commit": "b272717effe7966fee175b50d226502b7267f0a0"
+    },
+    {
+      "file": "kangoshi-sprint/product-content/explanation-batches/B-general-115-AM-gaps-text.json",
+      "count": 6,
+      "commit": "a8d22d26b72c2f117c6a6dd27f48111ab99576fd"
+    }
+  ],
+  "K115SpecialQueues": {
     "contentConcerns": ["K115-AM029", "K115-AM066"],
-    "knownScoringException": ["K115-AM032"],
-    "knownK115PMMedia": ["K115-PM058", "K115-PM077"],
-    "note": "All official answers remain unchanged. Content concerns and scoring/media exceptions remain quarantined for specialist/coordinator processing."
+    "scoringExceptions": ["K115-AM032", "K115-AM080"],
+    "mediaDependent": ["K115-AM034", "K115-AM063", "K115-PM058", "K115-PM077"],
+    "officialAnswerChanged": 0,
+    "questionIdOverlap": 0
   },
   "editBoundary": {
     "allowed": [
@@ -78,5 +76,5 @@
       "StoreKit"
     ]
   },
-  "nextLoop": "Resolve the remaining K115-AM general questions into text/media/scoring/content-concern queues, author any remaining normal text items, then proceed to K114 and K113 general questions. Common integration remains coordinator-owned."
+  "nextLoop": "Process K114 general 130 questions in small evidence-checked batches, separating media/scoring/content concerns, then K113. Common integration remains coordinator-owned."
 }
