@@ -17,6 +17,7 @@ function mapQuestion(q){
     canonicalId:q.dailySprintCanonicalId||q.id,corrections:q.correctionStatus||[],origin:q.origin_type||'licensed_official'
   };
 }
+function loadScript(src,onload){var s=document.createElement('script');s.src=src;s.defer=true;if(onload)s.onload=onload;document.body.appendChild(s)}
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(e){console.warn('SW',e)})})}
 fetch('./content/product/questions.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(data){
   if(!data||!Array.isArray(data.questions)||data.questions.length!==1035)throw new Error('問題数が1035問ではありません');
@@ -25,6 +26,6 @@ fetch('./content/product/questions.json',{cache:'no-store'}).then(function(r){if
   if(err.length)throw new Error('QA '+err.slice(0,8).join(','));
   window.PHARM_QUESTIONS=mapped;
   window.PHARM_PRODUCT_META={version:data.contentVersion||'product-v1',total:mapped.length,active:mapped.filter(function(q){return q.scored}).length,excluded:mapped.filter(function(q){return !q.scored}).length};
-  var s=document.createElement('script');s.src='./app-v06.js';s.defer=true;document.body.appendChild(s);
+  loadScript('./app-v06.js',function(){loadScript('./record-fix-v061.js')});
 }).catch(function(e){console.error(e);fatal(e&&e.message?e.message:String(e))});
 })();
