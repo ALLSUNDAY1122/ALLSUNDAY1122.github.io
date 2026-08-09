@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K115-AM-SC05",
+  "sourceExam": 115,
+  "session": "AM",
+  "questionIds": ["K115-AM103", "K115-AM104", "K115-AM105"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "10歳女児。3歳で気管支喘息と診断。6歳までは年1回程度入院歴があり、8歳以降は明らかな発作がなく定期受診を終了。ダニ・ハウスダスト感作あり。",
+  "mainCondition": "小児気管支喘息の急性増悪、入院後の回復期看護、退院後の学校生活・長期管理。",
+  "assessment": [
+    "AM103では夜間の呼吸困難、著明な喘鳴、呼吸数36/分、心拍数120/分、SpO2 93％から急性増悪の強度を判断する。",
+    "AM104では気管支拡張薬・全身ステロイド・酸素投与後、SpO2 97％まで改善したが喘鳴が残る回復期の看護を判断する。",
+    "AM105では明らかな発作がない期間にも体育時の咳・呼吸苦があり、運動誘発症状を含むコントロール不十分を疑い、学校と連携した長期管理を判断する。"
+  ],
+  "nursingJudgment": "3問は『急性増悪の重症度評価→治療後の気道分泌物への看護→退院後の学校生活と長期管理』という一貫した臨床経過でつながる。患者は全問Aちゃん本人で、家族欄や他の人物との誤認はない。",
+  "nursingPractice": [
+    "呼吸数、SpO2、喘鳴、会話状態など複数所見を合わせて発作強度を判断する。",
+    "呼吸状態の改善後も喘鳴や分泌物に注意し、有効な咳嗽・排痰を促す。",
+    "学校で症状が持続したときは教職員へ伝え、治療を自己中断せず、症状に応じて運動量を調整できるよう支援する。"
+  ],
+  "tripletConsistency": {
+    "sameScenarioId": true,
+    "sameScenarioText": true,
+    "indexesComplete": true,
+    "patientIdentityConsistent": true,
+    "timelineConsistent": true,
+    "clinicalConsistency": true,
+    "nextScenarioLeakDetected": false
+  },
+  "classificationAudit": {
+    "majorSubjectConsistent": true,
+    "majorSubject": "小児看護学",
+    "question105SignalConcern": true,
+    "reason": "AM105のclassificationSignalsに食物アレルギー由来の規則表現が残るが、症例本文と設問内容は小児喘息であり、majorSubject/subject自体は妥当。単一キーワードではなく症例本文主軸でPASS判定する。"
+  },
+  "explanationAudit": {
+    "batchId": "K115-AM103-AM105-situation-SC05",
+    "allThreeExplained": true,
+    "allThreeEvidenceRefsPresent": true,
+    "allThreeEvidenceCheckedDatePresent": true,
+    "evidenceCheckedDate": "2026-08-10"
+  },
+  "media": {
+    "required": false,
+    "status": "not_required"
+  },
+  "scoring": {
+    "exceptionPresent": false,
+    "status": "normal"
+  },
+  "contentConcern": {
+    "status": "expert_review_recommended",
+    "questionId": "K115-AM103",
+    "reason": "公式正答は中発作で維持する。SpO2 93％はJPGLの8歳以上中発作の分布と整合する一方、『途切れ途切れに話す』は強い呼吸困難を示し得る表現でもあるため、重症度説明文は小児喘息専門監査で最終確認する。",
+    "evidenceRefs": [
+      "https://www.jspaci.jp/assets/documents/jpgl2023_web.pdf"
+    ]
+  },
+  "expertReviewStatus": "pending",
+  "scenarioAuditStatus": "content_pass_expert_pending",
+  "auditedAt": "2026-08-10T04:36:00+09:00"
+}
