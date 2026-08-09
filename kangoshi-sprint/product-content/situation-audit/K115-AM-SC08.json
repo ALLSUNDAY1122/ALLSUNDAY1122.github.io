@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "K115-AM-SC08",
+  "sourceExam": 115,
+  "session": "AM",
+  "questionIds": ["K115-AM112", "K115-AM113", "K115-AM114"],
+  "scenarioIndexes": [0, 1, 2],
+  "scenarioTotal": 3,
+  "patientProfile": "24歳・初妊婦・事務職。妊娠8週時点で両親と同居し、24歳のパートナーと結婚予定。",
+  "mainCondition": "正常妊娠から産褥期までの母性看護。妊娠初期のつわり・生理的変化と産後の性生活指導。",
+  "assessment": [
+    "AM112は妊娠8週の悪心・においで増悪するつわりへのセルフケアを問う。",
+    "AM113は同じ妊娠初期に生じやすい生理的変化を問う。",
+    "AM114は同一妊婦が正常分娩後の産褥4日となった時点の退院指導を問う。"
+  ],
+  "nursingJudgment": "3問は同一患者の妊娠初期から産褥期への時間経過として連続しており、患者本人と家族・パートナーの誤認はない。各正答は公式正答と一致する。",
+  "nursingPractice": [
+    "つわり時は空腹を避け、食べられるものを少量ずつ摂取できるよう支援する。",
+    "妊娠初期に起こりやすい便秘などの身体変化を予期的に説明する。",
+    "産褥早期の性生活・避妊について、母体回復と産後健診を踏まえて安全な再開時期を説明する。"
+  ],
+  "tripletConsistency": {
+    "sameScenarioId": true,
+    "sameScenarioText": true,
+    "indexesComplete": true,
+    "patientIdentityConsistent": true,
+    "timelineConsistent": true,
+    "clinicalConsistency": true,
+    "nextScenarioLeakDetected": false
+  },
+  "explanationAudit": {
+    "allThreeExplained": true,
+    "allThreeEvidenceRefsPresent": true,
+    "allThreeEvidenceCheckedDatePresent": true,
+    "evidenceCheckedDate": "2026-08-09",
+    "batchStorageSplit": "2+1",
+    "batchStorageSplitIsBlocking": false,
+    "reason": "監査単位はファイルではなくscenarioIdであるため、現行draft上の3問を同時に再統合監査して整合性を確認した。"
+  },
+  "media": {
+    "required": false,
+    "status": "not_required"
+  },
+  "scoring": {
+    "exceptionPresent": false,
+    "status": "normal"
+  },
+  "contentConcern": {
+    "status": "expert_review_recommended",
+    "questionId": "K115-AM114",
+    "reason": "公式正答は『産後1か月健診までは性交渉を避ける』で維持する。ただし現行の産後ケアは一律の健診時点だけで再開可否を決めるより個別の身体回復・疼痛・避妊を含む支援を重視するため、製品解説の表現は専門監査で最終確認する。",
+    "evidenceRefs": [
+      "https://prenatal.cfa.go.jp/pregnancy-and-childbirth/medical-checkup.html",
+      "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2018/05/optimizing-postpartum-care",
+      "https://www.acog.org/womens-health/faqs/a-partners-guide-to-pregnancy"
+    ]
+  },
+  "expertReviewStatus": "pending",
+  "scenarioAuditStatus": "content_pass_expert_pending",
+  "auditedAt": "2026-08-10T04:34:00+09:00"
+}
