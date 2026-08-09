@@ -1,0 +1,24 @@
+name: 管理栄養士 Round1 Question Audit
+
+on:
+  push:
+    paths:
+      - 'kanrieiyoushi-sprint/questions.js'
+      - 'kanrieiyoushi-sprint/data/round1-extra-*.js'
+      - 'kanrieiyoushi-sprint/audit/**'
+      - 'automation/learning-sprint-question-pipeline/validate_questions.py'
+      - '.github/workflows/kanrieiyoushi-round1-audit.yml'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build canonical round1 data
+        run: python kanrieiyoushi-sprint/audit/build_round1_canonical.py
+      - name: Validate round1
+        run: python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1.json
