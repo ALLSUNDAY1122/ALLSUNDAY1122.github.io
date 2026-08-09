@@ -14,10 +14,16 @@ on:
       - 'pharmacist-manabi-sprint/content/product/questions.json'
       - 'pharmacist-manabi-sprint/content/product/final-audit-v2.json'
       - 'codemagic.yaml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/pharmacist-ios-preflight.yml'
+      - 'pharmacist-manabi-sprint/**'
+      - 'codemagic.yaml'
 permissions:
   contents: write
 concurrency:
-  group: pharmacist-ios-preflight
+  group: pharmacist-ios-preflight-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   preflight:
@@ -64,13 +70,15 @@ jobs:
           r={'pass':code==0,'simulatorBuildExit':code,'bundleId':'jp.allsunday1122.yakuzaishi','version':'1.0.0','questionBank':1035,'activeQuestions':1031,'freeQuestions':90,'note':'Simulator uses a generated placeholder icon only. Signed/TestFlight build requires the canonical Drive PNG SHA-256 gate.'}
           open('pharmacist-manabi-sprint/content/product/ios-preflight-report.json','w',encoding='utf-8').write(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
           PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add pharmacist-manabi-sprint/content/product/ios-preflight-report.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'pharmacist: iOS preflight result [skip ci]'
-            git pull --rebase origin main
-            git push
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add pharmacist-manabi-sprint/content/product/ios-preflight-report.json
+            if ! git diff --cached --quiet; then
+              git commit -m 'pharmacist: iOS preflight result [skip ci]'
+              git pull --rebase origin main
+              git push
+            fi
           fi
       - name: Enforce compile gate
         run: test "${{ steps.build.outputs.exit_code }}" = '0'
