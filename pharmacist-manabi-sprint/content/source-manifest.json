@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "updatedAt": "2026-08-09",
   "license": {
     "provider": "厚生労働省",
@@ -7,12 +7,22 @@
     "attributionRequired": true,
     "modificationDisclosureRequired": true,
     "excludedByDefault": ["シンボルマーク・ロゴ・キャラクターデザイン", "別利用ルールが明示されたコンテンツ"],
-    "assetPolicy": "図・写真・構造式・グラフ・表など、権利又は再現性の個別確認が必要な素材を含む問題は pending のまま公開データへ入れない。初期投入はテキストだけで完結する問題に限定する。"
+    "assetPolicy": "図・写真・構造式・グラフ・表などは原資産をそのまま公開せず、個別権利確認のうえ自作図へ再構成または文章化する。第三者由来が疑われる素材は別監査完了まで転載しない。"
+  },
+  "audit": {
+    "totalQuestions": 1035,
+    "mandatoryPrimarySourcePass": 270,
+    "remainingPrimarySourcePass": 765,
+    "mandatoryDetailFile": "mandatory-audit-v1.json",
+    "fullProblemAuditComplete": false
   },
   "exams": [
     {
+      "sourceRef": "mhlw-111",
       "exam": 111,
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198929.html",
+      "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001677927.pdf",
+      "answerUrl": "https://www.mhlw.go.jp/content/001677933.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 686,
@@ -22,21 +32,27 @@
         {"questions":[199],"type":"unit"},
         {"questions":[220,221],"type":"prescription"}
       ],
-      "initialClearedTextOnly": [1,4,12,13,14,15,16,17]
+      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"excluded":0}
     },
     {
+      "sourceRef": "mhlw-110",
       "exam": 110,
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198928.html",
+      "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001455149.pdf",
+      "answerUrl": "https://www.mhlw.go.jp/content/001458551.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 690,
       "excludedFromScoring": [],
       "corrections": [],
-      "initialClearedTextOnly": [2,4,5,11,13,14,15,17]
+      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"excluded":0}
     },
     {
+      "sourceRef": "mhlw-109",
       "exam": 109,
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198926.html",
+      "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001226759.pdf",
+      "answerUrl": "https://www.mhlw.go.jp/content/001228441.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 688,
@@ -44,7 +60,7 @@
       "corrections": [
         {"questions":[330],"type":"graph-axis-unit"}
       ],
-      "initialClearedTextOnly": [1,2,3,5,10,11,12,13]
+      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":75,"rewrite":15,"corrections":0,"excluded":0,"specialAssetNote":"Q25 graph is based on a MIC/Environmental Dispute Coordination Commission report; rebuild or restate, do not directly copy."}
     }
   ]
 }
