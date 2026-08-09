@@ -1,13 +1,16 @@
-// In-App Purchase / premium gating v1.0
+// In-App Purchase / premium gating v1.1
 // Native iOS: free = IPA official 75 questions. Premium = +250 original questions + domain practice.
 // Web/Safari review build: all content remains available for product review and debugging.
 const PREMIUM_PRODUCT_ID='jp.allsunday1122.scmanabisprint.premium';
+const PREMIUM_CACHE_KEY='sc-premium-entitlement-v1';
 const IAP={native:false,ready:false,supported:false,entitled:false,product:null,error:'',busy:false};
 
 function isNativeApp(){
   try{return !!(window.Capacitor&&typeof window.Capacitor.isNativePlatform==='function'&&window.Capacitor.isNativePlatform())}catch(_){return false}
 }
 function nativePurchases(){return window.Capacitor?.Plugins?.NativePurchases||null}
+function cachedPremium(){try{return localStorage.getItem(PREMIUM_CACHE_KEY)==='1'}catch(_){return false}}
+function cachePremium(v){try{localStorage.setItem(PREMIUM_CACHE_KEY,v?'1':'0')}catch(_){}}
 function hasPremium(){return !IAP.native||IAP.entitled}
 function accessPool(){return hasPremium()?Q:Q.filter(q=>q.official)}
 function accessIdSet(){return new Set(accessPool().map(q=>q.id))}
@@ -25,12 +28,15 @@ async function refreshPremiumEntitlement(){
   if(!np)throw new Error('StoreKit bridge unavailable');
   const {purchases=[]}=await np.getPurchases({productType:'inapp',onlyCurrentEntitlements:true});
   IAP.entitled=purchases.some(p=>p.productIdentifier===PREMIUM_PRODUCT_ID);
+  cachePremium(IAP.entitled);
   return IAP.entitled;
 }
 
 async function initPremium(){
   IAP.native=isNativeApp();
   if(!IAP.native){IAP.ready=true;IAP.supported=false;IAP.entitled=true;render();return}
+  // Keep a previously StoreKit-verified entitlement available while offline.
+  IAP.entitled=cachedPremium();
   try{
     const np=nativePurchases();
     if(!np)throw new Error('NativePurchases unavailable');
@@ -41,7 +47,6 @@ async function initPremium(){
       const {product}=await np.getProduct({productIdentifier:PREMIUM_PRODUCT_ID,productType:'inapp'});
       IAP.product=product||null;
     }catch(e){
-      // Product metadata can be temporarily unavailable before App Store Connect propagation.
       IAP.error='商品情報を取得できません。';
     }
     await refreshPremiumEntitlement();
@@ -49,7 +54,8 @@ async function initPremium(){
       np.addListener('transactionUpdated',async()=>{try{await refreshPremiumEntitlement();render()}catch(_){}}).catch?.(()=>{});
     }
   }catch(e){
-    IAP.error=purchaseErrorText(e);
+    // A temporary StoreKit/network failure must not revoke a purchase verified previously.
+    IAP.error=IAP.entitled?'購入済み状態でオフライン利用中です。':purchaseErrorText(e);
   }finally{
     IAP.ready=true;
     render();
@@ -67,7 +73,7 @@ async function buyPremium(){
       IAP.product=product||null;
     }
     const tx=await np.purchaseProduct({productIdentifier:PREMIUM_PRODUCT_ID,productType:'inapp',quantity:1});
-    if(tx?.productIdentifier===PREMIUM_PRODUCT_ID)IAP.entitled=true;
+    if(tx?.productIdentifier===PREMIUM_PRODUCT_ID){IAP.entitled=true;cachePremium(true)}
     await refreshPremiumEntitlement();
     alert('プレミアムを解放しました。');
   }catch(e){
@@ -102,7 +108,6 @@ weak=function(){
   begin('weak',ids);
 };
 
-const _baseCountdown=countdown;
 countdown=function(){
   if(!S.examDate||!Q.length)return'';
   const pool=accessPool(),allowed=new Set(pool.map(q=>q.id));
@@ -117,12 +122,13 @@ function premiumPaywall(){
     return `<div class="notice"><b>Safari確認版</b><br>Web確認では325問をすべて開放しています。App Store版では公開過去問75問が無料、独自250問＋分野別演習が買い切りプレミアムです。</div>`;
   }
   if(IAP.entitled){
-    return `<div class="card"><div class="row"><div><div class="kicker">PREMIUM</div><h3>プレミアム解放済み</h3></div><span class="badge original">325問</span></div><p class="muted">公開過去問75問＋独自250問、全325問スプリントと分野別演習を利用できます。</p><button class="btn alt" onclick="restorePremium()">購入を復元</button></div>`;
+    return `<div class="card"><div class="row"><div><div class="kicker">PREMIUM</div><h3>プレミアム解放済み</h3></div><span class="badge original">325問</span></div><p class="muted">公開過去問75問＋独自250問、全325問スプリントと分野別演習を利用できます。</p>${IAP.error?`<p class="muted" role="status">${esc(IAP.error)}</p>`:''}<button class="btn alt" onclick="restorePremium()">購入を復元</button></div>`;
   }
   const price=premiumPrice();
+  const title=IAP.product?.title||'プレミアム問題パック';
   const label=IAP.busy?'処理中…':price?`${price}で買い切り解放`:'価格を取得中…';
   const disabled=(!IAP.ready||!IAP.supported||!price||IAP.busy)?'disabled':'';
-  return `<div class="card"><div class="kicker">PREMIUM｜買い切り</div><h2>独自250問を追加して全325問へ</h2><p>無料版ではIPA公開過去問75問、8問スプリント、3回分模試、苦手復習を利用できます。</p><div class="feedback"><b>プレミアムで解放</b><br>独自問題250問／全325問スプリント／分野別演習</div><button class="btn" ${disabled} onclick="buyPremium()">${esc(label)}</button><button class="btn alt" ${IAP.busy?'disabled':''} onclick="restorePremium()">購入を復元</button>${IAP.error?`<p class="muted" role="status">${esc(IAP.error)}</p>`:''}<p class="muted">一度購入すると期限なく利用できます。価格はApp Storeから取得して表示します。</p></div>`;
+  return `<div class="card"><div class="kicker">PREMIUM｜買い切り</div><h2>${esc(title)}</h2><p>無料版ではIPA公開過去問75問、8問スプリント、3回分模試、苦手復習を利用できます。</p><div class="feedback"><b>プレミアムで解放</b><br>独自問題250問／全325問スプリント／分野別演習</div><button class="btn" ${disabled} onclick="buyPremium()">${esc(label)}</button><button class="btn alt" ${IAP.busy?'disabled':''} onclick="restorePremium()">購入を復元</button>${IAP.error?`<p class="muted" role="status">${esc(IAP.error)}</p>`:''}<p class="muted">一度購入すると期限なく利用できます。商品名と価格はApp Storeから取得して表示します。</p></div>`;
 }
 
 function premiumTopicPractice(){
