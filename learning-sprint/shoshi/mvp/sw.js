@@ -1,5 +1,5 @@
-const CACHE = 'shoshi-sprint-v1';
-const STATIC = ['./','./index.html','./styles.css','./app.js','./manifest.webmanifest','../content-loop/questions.generated.json'];
+const CACHE = 'shoshi-sprint-v2';
+const STATIC = ['./','./index.html','./styles.css','./polish.css','./app.js','./manifest.webmanifest','../content-loop/questions.generated.json'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(STATIC)).then(() => self.skipWaiting()));
