@@ -15,16 +15,12 @@ SECTION_MARKER_RE = re.compile(
 
 def split_trailing_preamble(text: str) -> tuple[str, str]:
     lines = text.splitlines()
-    # Combination-choice questions normally end with a single line containing mappings 1..5.
-    # Anything after that line belongs to the following section/question, not this question.
     for i, line in enumerate(lines):
         if COMBO_END_RE.fullmatch(line):
             head = "\n".join(lines[: i + 1]).strip()
             tail = "\n".join(lines[i + 1 :]).strip()
             return head, tail
 
-    # Direct 1..5 questions may wrap choice 5 over multiple lines. Only split when a known
-    # section-level instruction begins after choice 5.
     choice5_seen = False
     for i, line in enumerate(lines):
         if re.match(r"^\s*5(?:\s|　)", line):
@@ -64,7 +60,6 @@ def main() -> int:
         else:
             orphan.append({"from": q["id"], "tail": tail[:120]})
 
-    # Verify no content remains after a terminal combination mapping.
     cross_contamination = []
     for q in questions:
         lines = q.get("question", "").splitlines()
@@ -93,8 +88,7 @@ def main() -> int:
     report["status"] = "PASS" if rc == 0 and not errors else "FAIL"
 
     v5.v4.v3.QUESTIONS.write_text(json.dumps(questions, ensure_ascii=False, indent=2), encoding="utf-8")
-    # Keep common validator input in sync with the cleaned questions.
-    audit = json.loads(v5.v4.v3.AUDIT.read_text(encoding="utf-8"))
+    audit = json.loads(v5.v4.v3.CONFIG.read_text(encoding="utf-8"))
     by_id = {q["id"]: q for q in questions}
     for aq in audit.get("questions", []):
         src = by_id.get(aq.get("id"))
@@ -102,7 +96,9 @@ def main() -> int:
             aq["question"] = src["question"]
             if src.get("section_preamble"):
                 aq["section_preamble"] = src["section_preamble"]
-    v5.v4.v3.AUDIT.write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8")
+            elif "section_preamble" in aq:
+                aq.pop("section_preamble", None)
+    v5.v4.v3.CONFIG.write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8")
     v5.v4.v3.REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(json.dumps({
