@@ -1,0 +1,34 @@
+name: Pharmacist Official-Answer Explanation Fallback
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'pharmacist-manabi-sprint/tools/fallback_official_answer_explanations.py'
+      - '.github/workflows/pharmacist-fallback-explanations.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fallback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build official-answer anchored explanations
+        run: python3 pharmacist-manabi-sprint/tools/fallback_official_answer_explanations.py
+      - name: Commit generated explanation overlay and manual queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pharmacist-manabi-sprint/content/reviewed/official-anchor/ pharmacist-manabi-sprint/content/review/manual-reason-queue.tsv pharmacist-manabi-sprint/content/review/fallback-summary.json
+          if git diff --cached --quiet; then
+            echo 'No fallback changes.'
+          else
+            git commit -m 'pharmacist: build official-answer explanation fallback [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
