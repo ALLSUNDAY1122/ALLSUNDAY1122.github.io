@@ -31,7 +31,7 @@ workflows:
         script: |
           test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/Web/index.html"
           test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/PrivacyInfo.xcprivacy"
-          test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/Assets.xcassets/AppIcon.appiconset/AppIcon.svg"
+          test -f "$CM_BUILD_DIR/ios/sprint-study/SprintStudy/Assets.xcassets/AppIcon.appiconset/AppIcon.png"
       - name: Apply App Store signing profiles
         script: |
           cd "$CM_BUILD_DIR/ios/sprint-study"
