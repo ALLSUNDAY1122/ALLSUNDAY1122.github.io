@@ -23,7 +23,9 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Sync latest main without dropping unrelated work
+      - id: sync
+        name: Sync latest main
+        continue-on-error: true
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -31,13 +33,19 @@ jobs:
           git fetch origin main
           git merge --no-edit -X theirs origin/main -m "chore: sync latest main into Otsu4 release branch"
 
-      - name: Strict 360-question content audit
+      - id: content
+        name: Strict 360-question content audit
+        continue-on-error: true
         run: node tools/otsu4-build-content-v2.mjs --check
 
-      - name: Prepare audited iOS resources
+      - id: prepare
+        name: Prepare audited iOS resources
+        continue-on-error: true
         run: bash native-ios/Otsu4Sprint/prepare-ios.sh
 
-      - name: Runtime-decode 360 questions and v2.1 selections
+      - id: runtime
+        name: Runtime-decode 360 questions and v2.1 selections
+        continue-on-error: true
         run: |
           cat > /tmp/Otsu4ContentDecodeCheck.swift <<'SWIFT'
           import Foundation
@@ -64,7 +72,9 @@ jobs:
           xcrun swiftc native-ios/Otsu4Sprint/Otsu4ContentStore.swift /tmp/Otsu4ContentDecodeCheck.swift -o /tmp/otsu4-content-check
           /tmp/otsu4-content-check
 
-      - name: Typecheck complete native learning and StoreKit flow
+      - id: typecheck
+        name: Typecheck complete native learning and StoreKit flow
+        continue-on-error: true
         run: |
           xcrun --sdk iphonesimulator swiftc \
             -target arm64-apple-ios17.0-simulator \
@@ -77,7 +87,9 @@ jobs:
             native-ios/Otsu4Sprint/Otsu4StudySession.swift \
             native-ios/Otsu4Sprint/Otsu4LearningView.swift
 
-      - name: Generate Xcode project and Release Simulator build
+      - id: xcode
+        name: Generate Xcode project and Release Simulator build
+        continue-on-error: true
         run: |
           set -euo pipefail
           brew install xcodegen
@@ -94,7 +106,9 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build | xcpretty
 
-      - name: Verify app bundle release resources
+      - id: bundle
+        name: Verify app bundle release resources
+        continue-on-error: true
         run: |
           set -euo pipefail
           APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
@@ -107,31 +121,42 @@ jobs:
           data=json.load(open(sys.argv[1],encoding='utf-8'))
           assert data['contentVersion']=='otsu4-2026-08-product-v2'
           assert len(data['questions'])==360
-          print('release bundle PASS: questions=360 privacy=present assets=present')
+          print('release bundle PASS')
           PY
 
-      - name: Fix release-gate result in repository
+      - name: Record release gate outcome
+        if: always()
         run: |
           set -euo pipefail
+          SYNC='${{ steps.sync.outcome }}'
+          CONTENT='${{ steps.content.outcome }}'
+          PREPARE='${{ steps.prepare.outcome }}'
+          RUNTIME='${{ steps.runtime.outcome }}'
+          TYPECHECK='${{ steps.typecheck.outcome }}'
+          XCODE='${{ steps.xcode.outcome }}'
+          BUNDLE='${{ steps.bundle.outcome }}'
+          RESULT=PASS
+          for v in "$SYNC" "$CONTENT" "$PREPARE" "$RUNTIME" "$TYPECHECK" "$XCODE" "$BUNDLE"; do
+            if [ "$v" != success ]; then RESULT=FAIL; fi
+          done
           mkdir -p native-ios/Otsu4Sprint
           cat > native-ios/Otsu4Sprint/RELEASE_CI_STATUS.md <<EOF
           # 危険物乙4 Release Gate
 
-          - Result: **PASS**
+          - Result: **$RESULT**
           - Verified at: $(date -u '+%Y-%m-%dT%H:%M:%SZ')
-          - Content audit: PASS / 360 questions
-          - Native runtime decode: PASS
-          - Sprint goals: 4 / 8 / 16 PASS
-          - Mock exams: 3 sets × 35 questions / 15-10-10 / ID overlap 0 PASS
-          - SwiftUI + StoreKit typecheck: PASS
-          - Xcode Release Simulator build: PASS
-          - App bundle questions.generated.json: present / 360
-          - App bundle PrivacyInfo.xcprivacy: present
-          - App bundle Assets.car / AppIcon: present
+          - Sync latest main: $SYNC
+          - Content audit / 360 questions: $CONTENT
+          - Native resource preparation: $PREPARE
+          - Native runtime decode / sprint 4-8-16 / mock 3x35: $RUNTIME
+          - SwiftUI + StoreKit typecheck: $TYPECHECK
+          - Xcode Release Simulator build: $XCODE
+          - Bundle JSON + PrivacyInfo + Assets.car: $BUNDLE
           - Production App Store submit: **NOT EXECUTED**
           EOF
           git add native-ios/Otsu4Sprint/RELEASE_CI_STATUS.md
           if ! git diff --cached --quiet; then
-            git commit -m "test: record Otsu4 release gate PASS"
+            git commit -m "test: record Otsu4 release gate $RESULT"
           fi
           git push origin HEAD:feat/otsu4-360-productization
+          test "$RESULT" = PASS
