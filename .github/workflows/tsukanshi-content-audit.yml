@@ -7,6 +7,7 @@ on:
       - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-content.mjs'
       - 'tsukanshi-sprint/index.html'
+      - 'tsukanshi-sprint/bootstrap-v21.js'
       - 'tsukanshi-sprint/app-v21.js'
       - 'tsukanshi-sprint/style-v21.css'
       - 'tsukanshi-sprint/manifest.json'
@@ -19,6 +20,7 @@ on:
       - 'tsukanshi-sprint/sources*.js'
       - 'tsukanshi-sprint/validate-content.mjs'
       - 'tsukanshi-sprint/index.html'
+      - 'tsukanshi-sprint/bootstrap-v21.js'
       - 'tsukanshi-sprint/app-v21.js'
       - 'tsukanshi-sprint/style-v21.css'
       - 'tsukanshi-sprint/manifest.json'
@@ -40,13 +42,32 @@ jobs:
       - name: Validate customs broker content
         run: node tsukanshi-sprint/validate-content.mjs
       - name: Validate Golden Master UI JavaScript syntax
-        run: node --check tsukanshi-sprint/app-v21.js
+        run: |
+          node --check tsukanshi-sprint/bootstrap-v21.js
+          node --check tsukanshi-sprint/app-v21.js
+          node --check tsukanshi-sprint/sw.js
+      - name: Validate UI question bootstrap
+        run: |
+          node <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const files=['questions.js','sources-v02.js','questions-v02-tb.js','questions-v02-ks1.js','questions-v02-ks2.js','questions-v02-ks3.js','questions-v02-ks4.js','questions-v02-jm1.js','questions-v02-jm2.js','questions-v02-jm3.js','questions-v02-jm4.js','sources-v03.js','questions-v03-tb.js'];
+          const context=vm.createContext({window:{},console});
+          for(const file of files) vm.runInContext(fs.readFileSync('tsukanshi-sprint/'+file,'utf8'),context,{filename:file});
+          vm.runInContext(fs.readFileSync('tsukanshi-sprint/bootstrap-v21.js','utf8'),context,{filename:'bootstrap-v21.js'});
+          const count=context.window.TSUKANSHI_QUESTIONS?.length||0;
+          if(count!==492) throw new Error(`UI bootstrap question count ${count}; expected 492`);
+          if(!context.window.TSUKANSHI_CONTENT_VERSION) throw new Error('content version not exposed to UI');
+          if(!context.window.TSUKANSHI_LAW_BASELINE) throw new Error('law baseline not exposed to UI');
+          console.log(`UI bootstrap ok: ${count} questions`);
+          NODE
       - name: Validate PWA manifest JSON
         run: node -e "JSON.parse(require('fs').readFileSync('tsukanshi-sprint/manifest.json','utf8')); console.log('manifest ok')"
       - name: Validate v2.1 UI references
         run: |
-          grep -q 'style-v21.css' tsukanshi-sprint/index.html
-          grep -q 'app-v21.js' tsukanshi-sprint/index.html
+          grep -q 'style-v21.css?v=20260809-1034' tsukanshi-sprint/index.html
+          grep -q 'bootstrap-v21.js?v=20260809-1034' tsukanshi-sprint/index.html
+          grep -q 'app-v21.js?v=20260809-1034' tsukanshi-sprint/index.html
           grep -q 'manifest.json' tsukanshi-sprint/index.html
           grep -q 'grid-template-columns:repeat(4,1fr)' tsukanshi-sprint/style-v21.css
           grep -q 'dailyGoal:8' tsukanshi-sprint/app-v21.js
+          grep -q "tsukanshi-sprint-v22-buttons" tsukanshi-sprint/sw.js
