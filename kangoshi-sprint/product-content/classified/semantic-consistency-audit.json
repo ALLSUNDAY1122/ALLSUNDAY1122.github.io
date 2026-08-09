@@ -8,8 +8,8 @@
     "小児看護学": 61,
     "地域・在宅看護論": 45,
     "看護の統合と実践": 38,
-    "成人看護学": 79,
-    "老年看護学": 42,
+    "成人看護学": 76,
+    "老年看護学": 45,
     "母性看護学": 60,
     "精神看護学": 46
   },
@@ -45,18 +45,18 @@
       "疾病の成り立ちと回復の促進": 30,
       "看護の統合と実践": 11,
       "小児看護学": 22,
-      "成人看護学": 31,
+      "成人看護学": 28,
       "人体の構造と機能": 23,
       "基礎看護学": 33,
-      "老年看護学": 16,
+      "老年看護学": 19,
       "母性看護学": 21,
       "精神看護学": 12,
       "地域・在宅看護論": 13
     }
   },
   "strongSemanticErrors": [
-    "K115-AM107: stem semantic domains ['community-explicit'] allow ['地域・在宅看護論'], got 小児看護学",
-    "K115-AM108: stem semantic domains ['community-explicit'] allow ['地域・在宅看護論'], got 小児看護学"
+    "K115-PM093: stem semantic domains ['disaster-explicit'] allow ['看護の統合と実践'], got 地域・在宅看護論",
+    "K113-PM116: stem semantic domains ['disaster-explicit'] allow ['看護の統合と実践'], got 地域・在宅看護論"
   ],
   "splitScenarioGroups": [
     {
@@ -253,9 +253,26 @@
     }
   ],
   "warnings": [
+    "K115-AM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K115-AM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K115-AM095: contextual stem domain basic-skill-explicit; assigned 成人看護学",
+    "K115-AM107: contextual stem domain community-explicit; assigned 小児看護学",
+    "K115-AM108: contextual stem domain community-explicit; assigned 小児看護学",
     "K115-PM069: multi-domain stem ['mental-explicit', 'community-explicit']; assigned 精神看護学 requires contextual review",
-    "K115-PM093: multi-domain stem ['community-explicit', 'disaster-explicit']; assigned 地域・在宅看護論 requires contextual review",
-    "K113-PM116: multi-domain stem ['community-explicit', 'disaster-explicit']; assigned 地域・在宅看護論 requires contextual review",
+    "K115-PM091: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K115-PM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K115-PM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K114-AM091: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K114-AM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K114-AM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K114-AM100: contextual stem domain basic-skill-explicit; assigned 成人看護学",
+    "K114-PM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K114-PM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K114-PM102: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K113-AM116: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K113-AM117: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K113-PM116: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K113-PM117: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K113-AM-SC02: situation group split {'成人看護学': 2, '地域・在宅看護論': 1}; contextual review required",
     "K113-AM-SC09: situation group split {'成人看護学': 1, '地域・在宅看護論': 2}; contextual review required",
     "K113-AM-SC10: situation group split {'基礎看護学': 2, '看護の統合と実践': 1}; contextual review required",
@@ -266,5 +283,5 @@
     "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; contextual review required"
   ],
   "pass": false,
-  "note": "独立ルールによる分類整合監査。小児判定では家族欄の男児・女児を患者本人と誤認しない。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
+  "note": "独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、患者ライフステージ・主病態を優先する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
 }
