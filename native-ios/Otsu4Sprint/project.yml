@@ -18,6 +18,7 @@ targets:
           - '*.swift'
     resources:
       - path: PrivacyInfo.xcprivacy
+      - path: Generated/questions.generated.json
     info:
       path: Info.plist
     settings:
@@ -26,16 +27,5 @@ targets:
         PRODUCT_NAME: Otsu4Sprint
         TARGETED_DEVICE_FAMILY: '1'
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: $(DEVELOPMENT_TEAM)
-    preBuildScripts:
-      - name: Generate audited 360-question bundle
-        basedOnDependencyAnalysis: false
-        script: |
-          set -euo pipefail
-          cd "$SRCROOT/../.."
-          node tools/otsu4-build-content-v2.mjs
-          RESOURCE_DIR="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH"
-          mkdir -p "$RESOURCE_DIR"
-          cp kikenbutsu-otsu4-sprint/questions.generated.json "$RESOURCE_DIR/questions.generated.json"
     scheme:
       testTargets: []
