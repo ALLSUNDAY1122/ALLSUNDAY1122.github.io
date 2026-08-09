@@ -159,6 +159,8 @@ if special_case_path.exists():
             })
             if kind=='expertReview':
                 q['expertReviewStatus']='required'
+                if q.get('dynamicEvidenceRequired') and q.get('dynamicEvidenceStatus')!='verified':
+                    q['dynamicEvidenceStatus']='expert_review_required'
     for qid,reasons in quarantine.items():
         q=index[qid]
         q['specialistQuarantineStatus']='quarantined'
@@ -190,6 +192,8 @@ if situation_expert_path.exists():
                 errors.append(f'{situation_expert_path.name}: out-of-scope id {qid}')
                 continue
             q['expertReviewStatus']='required'
+            if q.get('dynamicEvidenceRequired') and q.get('dynamicEvidenceStatus')!='verified':
+                q['dynamicEvidenceStatus']='expert_review_required'
             q['specialistQuarantineStatus']='quarantined'
             reasons=list(q.get('specialistQuarantineReasons') or [])
             reasons.append({
