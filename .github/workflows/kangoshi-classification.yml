@@ -2,6 +2,9 @@ name: Kangoshi 11 Subject Classification Loop
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Kangoshi Official Exam Import']
+    types: [completed]
   push:
     paths:
       - 'kangoshi-sprint/product-content/raw/set1-raw.json'
@@ -17,13 +20,14 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  LOOP_SCHEMA: '2'
+  LOOP_SCHEMA: '3'
 
 permissions:
   contents: write
 
 jobs:
   classify:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
