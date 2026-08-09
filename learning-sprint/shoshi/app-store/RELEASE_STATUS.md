@@ -10,7 +10,7 @@
 - App Store auto-submit: disabled
 - TestFlight auto-submit: disabled
 - Canonical AppIcon: Drive individual PNG, SHA-256 `c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506`
-- CI gate: pending current PR run
+- CI gate: re-triggered after PR was marked ready for review
 - App Store Connect record: not yet verified/created in this loop
 - TestFlight actual-device check: not yet reached
 
