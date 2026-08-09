@@ -54,7 +54,11 @@
 - [x] 購入／復元／現在の権利確認を実装
 - [x] 以前に確認済みの買い切り権利は通信障害で不用意に失効させない
 - [x] Safari確認版は課金テスト不能のため全325問を開放し、iOS本番のみゲートを有効化
-- [ ] 最新IAP変更後のmacOS CI：最終PASS確認待ち
+- [x] IAP追加後macOS CI PASS：run `31332268836` / source `4de3a6f50a1692e1d826d555df36ca7d100340ee`
+- [x] IAPレイヤー構文・Product ID・購入復元・動的価格表示をCI検査
+- [x] IAPプラグイン込みSimulator Debug build PASS
+- [x] IAPプラグイン込みphysical-device Release build PASS
+- [x] 生成.app内へIAPレイヤー同梱確認
 - [ ] App Store Connect Sandbox：未購入→購入→解放 HUMAN PASS
 - [ ] Sandbox：キャンセル時に未解放を維持 HUMAN PASS
 - [ ] Sandbox：再インストール相当→購入復元 HUMAN PASS
@@ -98,9 +102,9 @@ https://allsunday1122.github.io/sc-manabi-sprint/support.html
 - [x] 初版iPhone-only
 - [x] iOSプロジェクト自動生成・設定
 - [x] PrivacyInfo.xcprivacyをターゲットへ同梱
-- [x] unsigned Simulator Debug build（課金追加前PASS）
-- [x] unsigned physical-device Release build（課金追加前PASS）
-- [ ] IAPプラグイン追加後のSimulator/Device build最終PASS確認待ち
+- [x] IAPプラグイン込みunsigned Simulator Debug build PASS
+- [x] IAPプラグイン込みunsigned physical-device Release build PASS
+- [x] 生成.app内の問題データ・UIパッチ・IAPレイヤー確認
 
 ## 7. 輸出コンプライアンス
 - [x] 独自暗号アルゴリズム実装なし
