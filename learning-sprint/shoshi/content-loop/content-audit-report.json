@@ -1,6 +1,6 @@
 {
-  "cycle": 11,
-  "status": "FAIL",
+  "cycle": 12,
+  "status": "PASS",
   "generated": 210,
   "pdf_sets": 6,
   "media_questions": [],
@@ -204,9 +204,7 @@
     "SHOSHI-R7-PM-34: exact statute token not printed; subject-level primary law URL only",
     "SHOSHI-R7-PM-35: exact statute token not printed; subject-level primary law URL only"
   ],
-  "errors": [
-    "leading continuation remains: 2"
-  ],
+  "errors": [],
   "rules": {
     "question": "MOJ official PDF full question segment, including printed choice mapping",
     "ui_choices": "numeric 1..5 only",
@@ -316,12 +314,22 @@
         "marker": "answer_sheet"
       }
     ],
+    "discarded_booklet_instructions": [
+      {
+        "id": "SHOSHI-R5-PM-01",
+        "discarded_chars": 935,
+        "marker": "booklet_instructions"
+      },
+      {
+        "id": "SHOSHI-R6-PM-01",
+        "discarded_chars": 939,
+        "marker": "booklet_instructions"
+      }
+    ],
     "orphan_preambles": [],
     "remaining_cross_contamination": [],
-    "suspicious_leading_continuation": [
-      "SHOSHI-R5-PM-01",
-      "SHOSHI-R6-PM-01"
-    ],
+    "suspicious_leading_continuation": [],
+    "booklet_instruction_residue": [],
     "dangling_preambles": [],
     "question_count": 210
   }
