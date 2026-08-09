@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - 'automation/learning-sprint-question-pipeline/**'
       - 'learning-sprint/cpa-short-answer/**'
       - '.github/workflows/cpa-r9-279-pr-audit.yml'
   workflow_dispatch:
@@ -18,25 +19,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/cpa-r9-mock-279-loop-v1
           fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Import audited R8 official corpus
-        run: |
-          git fetch origin feature/cpa-r8-content-loop-v3:refs/remotes/origin/cpa-r8-audit
-          mkdir -p learning-sprint/cpa-short-answer/r8-content
-          git show origin/cpa-r8-audit:learning-sprint/cpa-short-answer/r8-content/questions-r8-official.json > learning-sprint/cpa-short-answer/r8-content/questions-r8-official.json
-          git show origin/cpa-r8-audit:learning-sprint/cpa-short-answer/r8-content/audit-result.json > learning-sprint/cpa-short-answer/r8-content/audit-result.json
       - name: Generate and audit R9 independent mock
         run: python learning-sprint/cpa-short-answer/r9-mock/generate_and_audit_r9.py
       - name: Integrate all 279 questions
         run: python learning-sprint/cpa-short-answer/integration/integrate_279.py
-      - name: Legacy common detector for diagnostic comparison
-        continue-on-error: true
+      - name: Common Learning Sprint anti-padding gate
         run: python automation/learning-sprint-question-pipeline/validate_questions.py learning-sprint/cpa-short-answer/integration/learning-sprint-audit.json
-      - name: CPA-aware anti-padding gate
+      - name: CPA-aware cross-check
         run: python learning-sprint/cpa-short-answer/integration/validate_279_cpa.py
       - name: Show audit summaries
         if: always()
