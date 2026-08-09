@@ -55,10 +55,6 @@
     }
   },
   "strongSemanticErrors": [
-    "K114-AM112: pediatric-scenario expects ['小児看護学'], got 母性看護学",
-    "K114-AM114: pediatric-scenario expects ['小児看護学'], got 母性看護学",
-    "K113-AM109: pediatric-scenario expects ['小児看護学'], got 母性看護学",
-    "K113-AM111: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-PM103: pediatric-scenario expects ['小児看護学'], got 健康支援と社会保障制度",
     "K113-PM104: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
     "K113-PM105: pediatric-scenario expects ['小児看護学'], got 基礎看護学"
@@ -321,5 +317,5 @@
     "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; contextual review required"
   ],
   "pass": false,
-  "note": "独立ルールによる分類整合監査。小児は患者本人が小児である症例を優先し、一般的なトリアージ語は災害分類を強制しない。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
+  "note": "独立ルールによる分類整合監査。小児判定では家族欄の男児・女児を患者本人と誤認しない。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
 }
