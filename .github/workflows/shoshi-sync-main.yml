@@ -1,0 +1,31 @@
+name: Shoshi sync latest main and self-clean
+
+on:
+  push:
+    branches:
+      - feature/shoshi-mvp-loop3
+    paths:
+      - '.github/workflows/shoshi-sync-main.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/shoshi-mvp-loop3
+          fetch-depth: 0
+      - name: Merge latest main and remove this temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge origin/main -X ours --no-edit
+          git rm .github/workflows/shoshi-sync-main.yml
+          git commit -m "一時main同期workflowを自己削除"
+          git push origin HEAD:feature/shoshi-mvp-loop3
