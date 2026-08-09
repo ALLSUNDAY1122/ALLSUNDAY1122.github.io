@@ -18,11 +18,12 @@ jobs:
           python-version: '3.12'
       - name: Re-run 600 question audit
         run: |
-          python kanrieiyoushi-sprint/audit/build_all600.py
-          python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-all600.json
-          python kanrieiyoushi-sprint/audit/content_rights_audit.py
+          python kanrieiyoushi-sprint/audit/build_round1_2_3_canonical.py
+          python automation/learning-sprint-question-pipeline/validate_questions.py kanrieiyoushi-sprint/audit/learning-sprint-audit-round1-2-3.json
+          python kanrieiyoushi-sprint/audit/audit_content_rights.py
       - name: Apple and StoreKit preflight
         run: |
+          node --check kanrieiyoushi-sprint/ios/native-storekit.js
           node kanrieiyoushi-sprint/validate-apple-preflight.mjs
           bash -n kanrieiyoushi-sprint/ios/prepare-ios.sh
           python -m py_compile kanrieiyoushi-sprint/ios/apply-xcode-capabilities.py kanrieiyoushi-sprint/ios/ios_productization_audit.py
