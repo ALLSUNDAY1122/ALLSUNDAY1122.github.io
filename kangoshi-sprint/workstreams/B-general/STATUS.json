@@ -8,42 +8,44 @@
     "countPerExam": 130
   },
   "sourceOfTruth": "GitHub main",
-  "checkedAt": "2026-08-09T22:32:00+09:00",
+  "checkedAt": "2026-08-10T04:44:00+09:00",
   "canonicalL3Snapshot": {
     "globalExplained": 102,
     "globalTotal": 720,
     "globalPass": false,
     "generalAppliedAndAudited": 53,
-    "generalAppliedScope": "K115-AM general questions currently present in batch-apply-report",
-    "manifestBlobSha": "8513bbd7947b14efae4fdf6fb3340b9ea3571b8b",
-    "batchApplyReportBlobSha": "94573eb87e6b5b3f68a25bf0adee96e826597e0a"
+    "generalAppliedScope": "Latest materialized common audit still predates current B workstream batches; do not count authored batches as integrated until coordinator materializes the common apply/queue/validate result.",
+    "auditBlobSha": "5f6e922bc7172bcb2cfb98fee7af51472447dcd6"
   },
   "authoredL3": {
-    "generalAuthoredCount": 104,
-    "generalRemainingNotYetAuthoredOrSpecialistProcessed": 286,
+    "generalAuthoredCount": 116,
+    "generalRemainingNotYetAuthoredOrSpecialistProcessed": 274,
     "breakdown": {
       "K115_AM_applied_general": 53,
       "K115_PM_existing_preBoundary_text": 40,
-      "K115_PM_new_B_general_text": 11
+      "K115_PM_new_B_general_text": 23,
+      "K115_PM_textAuthoredTotal": 63
     }
   },
-  "thisSession": {
-    "createdBatch": "B-GENERAL-115-PM067-PM078-TEXT",
-    "createdFile": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM067-PM078-text.json",
+  "latestLoop": {
+    "createdBatch": "B-GENERAL-115-PM079-PM090-TEXT",
+    "createdFile": "kangoshi-sprint/product-content/explanation-batches/B-general-115-PM079-PM090-text.json",
     "createdQuestionIds": [
-      "K115-PM067",
-      "K115-PM068",
-      "K115-PM069",
-      "K115-PM070",
-      "K115-PM071",
-      "K115-PM072",
-      "K115-PM073",
-      "K115-PM074",
-      "K115-PM075",
-      "K115-PM076",
-      "K115-PM078"
+      "K115-PM079",
+      "K115-PM080",
+      "K115-PM081",
+      "K115-PM082",
+      "K115-PM083",
+      "K115-PM084",
+      "K115-PM085",
+      "K115-PM086",
+      "K115-PM087",
+      "K115-PM088",
+      "K115-PM089",
+      "K115-PM090"
     ],
-    "mediaSeparated": ["K115-PM077"],
+    "count": 12,
+    "mediaSeparatedInK115PM": ["K115-PM058", "K115-PM077"],
     "batchQuestionIdDuplicates": 0,
     "batchIdDuplicateDetected": false,
     "missingPoint": 0,
@@ -52,12 +54,14 @@
     "missingEvidenceCheckedDate": 0,
     "officialAnswerChanged": 0,
     "newContentConcerns": 0,
-    "ciStatusForBatchCommit": "no_status_checks_reported"
+    "dynamicEvidenceVerified": ["K115-PM081", "K115-PM085", "K115-PM086", "K115-PM089"],
+    "latestBatchCommit": "b272717effe7966fee175b50d226502b7267f0a0"
   },
   "knownGeneralSpecialQueues": {
     "contentConcerns": ["K115-AM029", "K115-AM066"],
     "knownScoringException": ["K115-AM032"],
-    "note": "Other media/scoring/text queue membership is read from the canonical pending-queues during each loop; this workstream does not edit canonical queue files."
+    "knownK115PMMedia": ["K115-PM058", "K115-PM077"],
+    "note": "All official answers remain unchanged. Content concerns and scoring/media exceptions remain quarantined for specialist/coordinator processing."
   },
   "editBoundary": {
     "allowed": [
@@ -74,5 +78,5 @@
       "StoreKit"
     ]
   },
-  "nextLoop": "Continue K115 general from PM079 onward in small verified batches, separating media/scoring/content concerns; then K114 and K113. Integration/apply/queue rebuild is handed to the coordinator."
+  "nextLoop": "Resolve the remaining K115-AM general questions into text/media/scoring/content-concern queues, author any remaining normal text items, then proceed to K114 and K113 general questions. Common integration remains coordinator-owned."
 }
