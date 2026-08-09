@@ -1,0 +1,410 @@
+{
+  "total": 720,
+  "majorCounts": {
+    "健康支援と社会保障制度": 82,
+    "人体の構造と機能": 75,
+    "疾病の成り立ちと回復の促進": 98,
+    "基礎看護学": 105,
+    "小児看護学": 54,
+    "地域・在宅看護論": 49,
+    "看護の統合と実践": 36,
+    "成人看護学": 79,
+    "老年看護学": 36,
+    "母性看護学": 61,
+    "精神看護学": 45
+  },
+  "perSetMajorCounts": {
+    "set1": {
+      "健康支援と社会保障制度": 24,
+      "人体の構造と機能": 30,
+      "疾病の成り立ちと回復の促進": 34,
+      "基礎看護学": 33,
+      "小児看護学": 17,
+      "地域・在宅看護論": 19,
+      "看護の統合と実践": 17,
+      "成人看護学": 22,
+      "老年看護学": 10,
+      "母性看護学": 20,
+      "精神看護学": 14
+    },
+    "set2": {
+      "健康支援と社会保障制度": 29,
+      "老年看護学": 13,
+      "基礎看護学": 37,
+      "母性看護学": 20,
+      "小児看護学": 17,
+      "人体の構造と機能": 19,
+      "疾病の成り立ちと回復の促進": 34,
+      "成人看護学": 26,
+      "地域・在宅看護論": 17,
+      "精神看護学": 19,
+      "看護の統合と実践": 9
+    },
+    "set3": {
+      "健康支援と社会保障制度": 29,
+      "疾病の成り立ちと回復の促進": 30,
+      "看護の統合と実践": 10,
+      "小児看護学": 20,
+      "成人看護学": 31,
+      "人体の構造と機能": 26,
+      "基礎看護学": 35,
+      "老年看護学": 13,
+      "母性看護学": 21,
+      "精神看護学": 12,
+      "地域・在宅看護論": 13
+    }
+  },
+  "strongSemanticErrors": [
+    "K115-AM095: basic-skill-explicit expects ['基礎看護学'], got 成人看護学",
+    "K115-AM120: disaster-scenario expects ['看護の統合と実践'], got 基礎看護学",
+    "K115-PM069: mental-explicit expects ['精神看護学'], got 地域・在宅看護論",
+    "K115-PM093: disaster-explicit expects ['看護の統合と実践'], got 地域・在宅看護論",
+    "K114-AM100: basic-skill-explicit expects ['基礎看護学'], got 成人看護学",
+    "K114-AM106: disaster-explicit expects ['看護の統合と実践'], got 基礎看護学",
+    "K114-AM106: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
+    "K114-AM112: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K114-AM114: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K114-PM087: system-explicit expects ['健康支援と社会保障制度'], got 地域・在宅看護論",
+    "K114-PM107: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
+    "K114-PM108: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K113-AM072: disaster-explicit expects ['看護の統合と実践'], got 小児看護学",
+    "K113-AM109: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K113-AM111: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K113-PM106: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K113-PM107: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K113-PM108: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K113-PM116: disaster-explicit expects ['看護の統合と実践'], got 地域・在宅看護論",
+    "K114-PM-SC06: situation group split across 3 majors {'小児看護学': 1, '基礎看護学': 1, '母性看護学': 1}"
+  ],
+  "splitScenarioGroups": [
+    {
+      "scenarioId": "K113-AM-SC02",
+      "majors": {
+        "成人看護学": 2,
+        "地域・在宅看護論": 1
+      },
+      "questions": [
+        [
+          "K113-AM094",
+          "成人看護学",
+          "呼吸器"
+        ],
+        [
+          "K113-AM095",
+          "成人看護学",
+          "呼吸器"
+        ],
+        [
+          "K113-AM096",
+          "地域・在宅看護論",
+          "在宅療養・地域連携"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K113-AM-SC09",
+      "majors": {
+        "成人看護学": 1,
+        "地域・在宅看護論": 2
+      },
+      "questions": [
+        [
+          "K113-AM115",
+          "成人看護学",
+          "がん看護"
+        ],
+        [
+          "K113-AM116",
+          "地域・在宅看護論",
+          "在宅療養・地域連携"
+        ],
+        [
+          "K113-AM117",
+          "地域・在宅看護論",
+          "在宅療養・地域連携"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K113-AM-SC10",
+      "majors": {
+        "基礎看護学": 2,
+        "看護の統合と実践": 1
+      },
+      "questions": [
+        [
+          "K113-AM118",
+          "基礎看護学",
+          "観察・フィジカルアセスメント"
+        ],
+        [
+          "K113-AM119",
+          "基礎看護学",
+          "観察・フィジカルアセスメント"
+        ],
+        [
+          "K113-AM120",
+          "看護の統合と実践",
+          "災害・救急"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K113-PM-SC05",
+      "majors": {
+        "健康支援と社会保障制度": 1,
+        "基礎看護学": 2
+      },
+      "questions": [
+        [
+          "K113-PM103",
+          "健康支援と社会保障制度",
+          "公衆衛生・予防"
+        ],
+        [
+          "K113-PM104",
+          "基礎看護学",
+          "与薬・輸液"
+        ],
+        [
+          "K113-PM105",
+          "基礎看護学",
+          "与薬・輸液"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K114-AM-SC05",
+      "majors": {
+        "成人看護学": 1,
+        "基礎看護学": 2
+      },
+      "questions": [
+        [
+          "K114-AM103",
+          "成人看護学",
+          "循環器"
+        ],
+        [
+          "K114-AM104",
+          "基礎看護学",
+          "日常生活援助"
+        ],
+        [
+          "K114-AM105",
+          "基礎看護学",
+          "日常生活援助"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K114-AM-SC06",
+      "majors": {
+        "基礎看護学": 1,
+        "小児看護学": 2
+      },
+      "questions": [
+        [
+          "K114-AM106",
+          "基礎看護学",
+          "観察・フィジカルアセスメント"
+        ],
+        [
+          "K114-AM107",
+          "小児看護学",
+          "小児看護"
+        ],
+        [
+          "K114-AM108",
+          "小児看護学",
+          "小児看護"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K114-PM-SC04",
+      "majors": {
+        "老年看護学": 2,
+        "地域・在宅看護論": 1
+      },
+      "questions": [
+        [
+          "K114-PM100",
+          "老年看護学",
+          "認知症看護"
+        ],
+        [
+          "K114-PM101",
+          "老年看護学",
+          "認知症看護"
+        ],
+        [
+          "K114-PM102",
+          "地域・在宅看護論",
+          "在宅療養・地域連携"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K114-PM-SC06",
+      "majors": {
+        "小児看護学": 1,
+        "基礎看護学": 1,
+        "母性看護学": 1
+      },
+      "questions": [
+        [
+          "K114-PM106",
+          "小児看護学",
+          "成長発達・セルフケア支援"
+        ],
+        [
+          "K114-PM107",
+          "基礎看護学",
+          "排泄援助"
+        ],
+        [
+          "K114-PM108",
+          "母性看護学",
+          "分娩・産褥"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K115-AM-SC06",
+      "majors": {
+        "小児看護学": 1,
+        "地域・在宅看護論": 2
+      },
+      "questions": [
+        [
+          "K115-AM106",
+          "小児看護学",
+          "小児看護"
+        ],
+        [
+          "K115-AM107",
+          "地域・在宅看護論",
+          "在宅療養・地域連携"
+        ],
+        [
+          "K115-AM108",
+          "地域・在宅看護論",
+          "在宅療養・地域連携"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K115-AM-SC10",
+      "majors": {
+        "看護の統合と実践": 2,
+        "基礎看護学": 1
+      },
+      "questions": [
+        [
+          "K115-AM118",
+          "看護の統合と実践",
+          "災害看護"
+        ],
+        [
+          "K115-AM119",
+          "看護の統合と実践",
+          "災害・救急"
+        ],
+        [
+          "K115-AM120",
+          "基礎看護学",
+          "観察・フィジカルアセスメント"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K115-PM-SC02",
+      "majors": {
+        "疾病の成り立ちと回復の促進": 1,
+        "成人看護学": 2
+      },
+      "questions": [
+        [
+          "K115-PM094",
+          "疾病の成り立ちと回復の促進",
+          "検査・診断"
+        ],
+        [
+          "K115-PM095",
+          "成人看護学",
+          "消化器・周術期"
+        ],
+        [
+          "K115-PM096",
+          "成人看護学",
+          "消化器・周術期"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K115-PM-SC03",
+      "majors": {
+        "成人看護学": 2,
+        "母性看護学": 1
+      },
+      "questions": [
+        [
+          "K115-PM097",
+          "成人看護学",
+          "内分泌・代謝"
+        ],
+        [
+          "K115-PM098",
+          "成人看護学",
+          "内分泌・代謝"
+        ],
+        [
+          "K115-PM099",
+          "母性看護学",
+          "母性看護"
+        ]
+      ]
+    },
+    {
+      "scenarioId": "K115-PM-SC10",
+      "majors": {
+        "基礎看護学": 1,
+        "看護の統合と実践": 2
+      },
+      "questions": [
+        [
+          "K115-PM118",
+          "基礎看護学",
+          "与薬・輸液"
+        ],
+        [
+          "K115-PM119",
+          "看護の統合と実践",
+          "災害・救急"
+        ],
+        [
+          "K115-PM120",
+          "看護の統合と実践",
+          "災害・救急"
+        ]
+      ]
+    }
+  ],
+  "warnings": [
+    "K113-AM-SC02: situation group split {'成人看護学': 2, '地域・在宅看護論': 1}; manual semantic check required",
+    "K113-AM-SC09: situation group split {'成人看護学': 1, '地域・在宅看護論': 2}; manual semantic check required",
+    "K113-AM-SC10: situation group split {'基礎看護学': 2, '看護の統合と実践': 1}; manual semantic check required",
+    "K113-PM-SC05: situation group split {'健康支援と社会保障制度': 1, '基礎看護学': 2}; manual semantic check required",
+    "K114-AM-SC05: situation group split {'成人看護学': 1, '基礎看護学': 2}; manual semantic check required",
+    "K114-AM-SC06: situation group split {'基礎看護学': 1, '小児看護学': 2}; manual semantic check required",
+    "K114-PM-SC04: situation group split {'老年看護学': 2, '地域・在宅看護論': 1}; manual semantic check required",
+    "K115-AM-SC06: situation group split {'小児看護学': 1, '地域・在宅看護論': 2}; manual semantic check required",
+    "K115-AM-SC10: situation group split {'看護の統合と実践': 2, '基礎看護学': 1}; manual semantic check required",
+    "K115-PM-SC02: situation group split {'疾病の成り立ちと回復の促進': 1, '成人看護学': 2}; manual semantic check required",
+    "K115-PM-SC03: situation group split {'成人看護学': 2, '母性看護学': 1}; manual semantic check required",
+    "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; manual semantic check required"
+  ],
+  "pass": false,
+  "note": "独立ルールによる分類整合監査。PASSは分類矛盾がないことを示し、医学・看護学的専門家監査の代替ではない。"
+}
