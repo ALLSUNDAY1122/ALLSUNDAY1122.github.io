@@ -7,9 +7,12 @@ CLASSIFIED=ROOT/'classified'
 DRAFT=ROOT/'enriched-draft'
 DRAFT.mkdir(exist_ok=True)
 
+# Match against whitespace-collapsed text so PDF extraction such as "令和 4 年"
+# cannot evade the time-sensitive evidence gate.
 DYNAMIC_PATTERNS=[
     r'法律',r'法に基づ',r'制度',r'保険',r'給付',r'届出',r'人口動態',r'患者調査',r'国民.*調査',r'食事摂取基準',
-    r'平均寿命',r'健康寿命',r'死亡率',r'出生率',r'受療率',r'有訴者率',r'最新',r'令和\s*\d+年',r'20\d{2}年'
+    r'平均寿命',r'健康寿命',r'死亡率',r'出生率',r'受療率',r'有訴者率',r'自殺.*状況',r'将来推計人口',r'最新',
+    r'令和\d+年',r'平成\d+年',r'20\d{2}年'
 ]
 DYNAMIC=re.compile('|'.join(DYNAMIC_PATTERNS),re.I)
 
@@ -20,7 +23,8 @@ for sid in ('set1','set2','set3'):
     dynamic_count=0
     for q in data.get('questions',[]):
         text=' '.join([str(q.get('question') or ''),str(q.get('scenario') or ''),' '.join(q.get('choices') or [])])
-        dynamic=bool(DYNAMIC.search(text))
+        compact=re.sub(r'\s+','',text)
+        dynamic=bool(DYNAMIC.search(compact))
         if dynamic: dynamic_count+=1
         q['point']=None
         q['detail']=None
