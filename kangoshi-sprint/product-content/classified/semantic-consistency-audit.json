@@ -1,11 +1,11 @@
 {
   "total": 720,
   "majorCounts": {
-    "健康支援と社会保障制度": 83,
+    "健康支援と社会保障制度": 82,
     "人体の構造と機能": 75,
     "疾病の成り立ちと回復の促進": 98,
-    "基礎看護学": 102,
-    "小児看護学": 56,
+    "基礎看護学": 100,
+    "小児看護学": 59,
     "地域・在宅看護論": 47,
     "看護の統合と実践": 38,
     "成人看護学": 79,
@@ -41,24 +41,20 @@
       "看護の統合と実践": 9
     },
     "set3": {
-      "健康支援と社会保障制度": 29,
+      "健康支援と社会保障制度": 28,
       "疾病の成り立ちと回復の促進": 30,
       "看護の統合と実践": 11,
-      "小児看護学": 19,
+      "小児看護学": 22,
       "成人看護学": 31,
       "人体の構造と機能": 26,
-      "基礎看護学": 35,
+      "基礎看護学": 33,
       "老年看護学": 13,
       "母性看護学": 21,
       "精神看護学": 12,
       "地域・在宅看護論": 13
     }
   },
-  "strongSemanticErrors": [
-    "K113-PM103: pediatric-scenario expects ['小児看護学'], got 健康支援と社会保障制度",
-    "K113-PM104: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
-    "K113-PM105: pediatric-scenario expects ['小児看護学'], got 基礎看護学"
-  ],
+  "strongSemanticErrors": [],
   "splitScenarioGroups": [
     {
       "scenarioId": "K113-AM-SC02",
@@ -129,30 +125,6 @@
           "K113-AM120",
           "看護の統合と実践",
           "災害・救急"
-        ]
-      ]
-    },
-    {
-      "scenarioId": "K113-PM-SC05",
-      "majors": {
-        "健康支援と社会保障制度": 1,
-        "基礎看護学": 2
-      },
-      "questions": [
-        [
-          "K113-PM103",
-          "健康支援と社会保障制度",
-          "公衆衛生・予防"
-        ],
-        [
-          "K113-PM104",
-          "基礎看護学",
-          "与薬・輸液"
-        ],
-        [
-          "K113-PM105",
-          "基礎看護学",
-          "与薬・輸液"
         ]
       ]
     },
@@ -308,7 +280,6 @@
     "K113-AM-SC02: situation group split {'成人看護学': 2, '地域・在宅看護論': 1}; contextual review required",
     "K113-AM-SC09: situation group split {'成人看護学': 1, '地域・在宅看護論': 2}; contextual review required",
     "K113-AM-SC10: situation group split {'基礎看護学': 2, '看護の統合と実践': 1}; contextual review required",
-    "K113-PM-SC05: situation group split {'健康支援と社会保障制度': 1, '基礎看護学': 2}; contextual review required",
     "K114-AM-SC05: situation group split {'成人看護学': 1, '基礎看護学': 2}; contextual review required",
     "K114-PM-SC04: situation group split {'老年看護学': 2, '地域・在宅看護論': 1}; contextual review required",
     "K115-AM-SC06: situation group split {'小児看護学': 1, '地域・在宅看護論': 2}; contextual review required",
@@ -316,6 +287,6 @@
     "K115-PM-SC03: situation group split {'成人看護学': 2, '母性看護学': 1}; contextual review required",
     "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; contextual review required"
   ],
-  "pass": false,
+  "pass": true,
   "note": "独立ルールによる分類整合監査。小児判定では家族欄の男児・女児を患者本人と誤認しない。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
 }
