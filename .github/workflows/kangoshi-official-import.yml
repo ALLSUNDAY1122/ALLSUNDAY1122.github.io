@@ -1,0 +1,56 @@
+name: Kangoshi Official Exam Import
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/import_official_exams.py'
+      - 'kangoshi-sprint/product-content/validate_raw_import.py'
+      - 'kangoshi-sprint/product-content/official-sources.json'
+      - '.github/workflows/kangoshi-official-import.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import-official-exams:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF text tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Import official exams 115, 114, 113
+        run: python3 kangoshi-sprint/product-content/import_official_exams.py set1 set2 set3
+      - name: Validate raw imports
+        run: python3 kangoshi-sprint/product-content/validate_raw_import.py
+      - name: Mark manifest as raw imported
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('kangoshi-sprint/product-content/manifest.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          for s in d['sets']:
+              rp=Path('kangoshi-sprint/product-content')/s['rawFile']
+              if rp.exists():
+                  raw=json.loads(rp.read_text(encoding='utf-8'))
+                  if raw.get('questionCount')==240:
+                      s['status']='raw_imported_pending_review'
+                      s['importedCount']=240
+                      s['questionCount']=0
+                      s['expertReviewedCount']=0
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit generated raw datasets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/product-content/raw kangoshi-sprint/product-content/manifest.json
+          if git diff --cached --quiet; then
+            echo 'No generated changes'
+          else
+            git commit -m 'kangoshi: import official exams 113-115 raw [skip ci]'
+            git push
+          fi
