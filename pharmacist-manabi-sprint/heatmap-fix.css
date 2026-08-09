@@ -16,9 +16,10 @@
   grid-auto-rows:10px;
   gap:2px;
   width:82px;
+  min-height:58px;
   margin:0 auto;
 }
-.heatCell{
+.heatmap .heatCell{
   display:block;
   width:10px;
   height:10px;
@@ -30,24 +31,17 @@
   box-shadow:none;
   border-radius:2.5px;
   aspect-ratio:auto;
+  background:#efe8da;
 }
-/* ホームの .today カードと当日セルの today クラスが衝突するため完全にリセット */
-.heatmap .heatCell.today{
-  display:block;
-  width:10px;
-  height:10px;
-  min-width:10px;
-  min-height:10px;
-  margin:0;
-  padding:0;
-  border:0;
-  box-shadow:none;
-  border-radius:2.5px;
-  grid-template-columns:none;
-  gap:0;
+.heatmap .heatCell.lv1{background:#efb4a7}
+.heatmap .heatCell.lv2{background:#e77964}
+.heatmap .heatCell.lv3{background:var(--shu)}
+.heatmap .heatCell.future{background:#f6f1e8;opacity:.55}
+.heatmap .heatCell.heatToday{
   outline:1.5px solid var(--ai);
   outline-offset:1px;
 }
+.recordProgressRow .rateTrack i{background:var(--ai);border-radius:99px}
 @media(max-width:360px){
   .heatDays,.heatmap{width:82px}
 }
