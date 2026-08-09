@@ -522,7 +522,7 @@
       "questionNo": 12,
       "category": "必修",
       "majorSubject": "人体の構造と機能",
-      "subject": "腎・内分泌の機能",
+      "subject": "神経・循環・消化の構造機能",
       "answerType": "singleChoice",
       "question": "脳幹に含まれる部位はどれか。",
       "choices": [
@@ -554,12 +554,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 50,
       "classificationSignals": [
-        "下垂体"
+        "v6:神経筋接合部|アセチルコリン.*筋細胞|胸管について|左心房と左心室.*弁|心房と心室.*電気的|直腸の構造|短期記憶|脳幹に含まれる|脳死の状態"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-AM013",
@@ -613,8 +613,8 @@
       "session": "AM",
       "questionNo": 14,
       "category": "必修",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "神経・循環・消化の構造機能",
       "answerType": "singleChoice",
       "question": "脳死の状態はどれか。",
       "choices": [
@@ -646,10 +646,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 50,
+      "classificationSignals": [
+        "v6:神経筋接合部|アセチルコリン.*筋細胞|胸管について|左心房と左心室.*弁|心房と心室.*電気的|直腸の構造|短期記憶|脳幹に含まれる|脳死の状態"
+      ],
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-AM015",
@@ -7287,8 +7289,8 @@
       "session": "PM",
       "questionNo": 34,
       "category": "一般",
-      "majorSubject": "人体の構造と機能",
-      "subject": "神経・感覚器",
+      "majorSubject": "基礎看護学",
+      "subject": "フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "指鼻試験で評価するのはどれか。",
       "choices": [
@@ -7320,12 +7322,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 50,
       "classificationSignals": [
-        "反射"
+        "v6:指鼻試験"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-PM035",
@@ -9214,8 +9216,8 @@
       "session": "PM",
       "questionNo": 76,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "神経・循環・消化の構造機能",
       "answerType": "singleChoice",
       "question": "直腸の構造で正しいのはどれか。",
       "choices": [
@@ -9248,10 +9250,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 50,
+      "classificationSignals": [
+        "v6:神経筋接合部|アセチルコリン.*筋細胞|胸管について|左心房と左心室.*弁|心房と心室.*電気的|直腸の構造|短期記憶|脳幹に含まれる|脳死の状態"
+      ],
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-PM077",
@@ -9259,8 +9263,8 @@
       "session": "PM",
       "questionNo": 77,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "体温調節",
       "answerType": "singleChoice",
       "question": "外傷や風邪で発熱し、解熱するまでの体温のセットポイントと実際の体温 核心 温度!の変化の例を図に示す。 全身のふるえが起こるのはどれか。",
       "choices": [
@@ -9293,10 +9297,12 @@
         "2"
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 50,
+      "classificationSignals": [
+        "v6:体温のセットポイント|全身のふるえ"
+      ],
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-PM078",
@@ -9353,7 +9359,7 @@
       "questionNo": 79,
       "category": "一般",
       "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "感染・免疫",
+      "subject": "病態・診断・治療",
       "answerType": "singleChoice",
       "question": "もやもや病について正しいのはどれか。 moyamoya disease",
       "choices": [
@@ -9386,12 +9392,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 50,
       "classificationSignals": [
-        "ウイルス"
+        "v6:心室頻拍|ventricular tachycardia|下垂手|尿中ケトン体|末.*性顔面神経麻痺|ドパミン受容体.*遮断|全身放射線照射|肝細胞癌|喀血を症状|重炭酸イオン|Helicobacter|ヘリコバクター|うっ血乳頭|伝音性難聴|梅毒|もやもや病|Sjögren|シェーグレン"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-PM080",
@@ -9446,8 +9452,8 @@
       "session": "PM",
       "questionNo": 81,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "神経・循環・消化の構造機能",
       "answerType": "singleChoice",
       "question": "短期記憶と関係が深いのはどれか。",
       "choices": [
@@ -9480,10 +9486,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 50,
+      "classificationSignals": [
+        "v6:神経筋接合部|アセチルコリン.*筋細胞|胸管について|左心房と左心室.*弁|心房と心室.*電気的|直腸の構造|短期記憶|脳幹に含まれる|脳死の状態"
+      ],
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-PM082",
@@ -9544,8 +9552,8 @@
       "session": "PM",
       "questionNo": 83,
       "category": "一般",
-      "majorSubject": "人体の構造と機能",
-      "subject": "循環・血液の機能",
+      "majorSubject": "成人看護学",
+      "subject": "成人の疾患別・周術期看護",
       "answerType": "multiChoice",
       "question": "開心術後の心タンポナーデで正しいのはどれか。઄つ選べ。 cardiac tamponade",
       "choices": [
@@ -9584,12 +9592,12 @@
         "24"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 50,
       "classificationSignals": [
-        "心拍出量"
+        "v6:骨盤底筋訓練.*尿失禁|インスリン療法|人工肛門周囲|高次脳機能障害.*失行|乳房温存療法|臨死期|開心術後.*心タンポナーデ"
       ],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-PM084",
@@ -9597,8 +9605,8 @@
       "session": "PM",
       "questionNo": 84,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・診断・治療",
       "answerType": "multiChoice",
       "question": "Sjögrenuシェーグレンx症候群でリンパ球が浸潤して障害が起こるのはどれか。 Sjögren syndrome ઄つ選べ。",
       "choices": [
@@ -9637,10 +9645,12 @@
         "24"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "semantic-keyword-v2-with-scenario"
+      "classificationStatus": "high",
+      "classificationScore": 50,
+      "classificationSignals": [
+        "v6:心室頻拍|ventricular tachycardia|下垂手|尿中ケトン体|末.*性顔面神経麻痺|ドパミン受容体.*遮断|全身放射線照射|肝細胞癌|喀血を症状|重炭酸イオン|Helicobacter|ヘリコバクター|うっ血乳頭|伝音性難聴|梅毒|もやもや病|Sjögren|シェーグレン"
+      ],
+      "classificationMethod": "refinement-v6"
     },
     {
       "id": "K113-PM085",
