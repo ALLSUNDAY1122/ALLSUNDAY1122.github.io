@@ -30,6 +30,8 @@ jobs:
         run: brew install xcodegen
       - name: Validate privacy manifest plist
         run: plutil -lint native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy
+      - name: Prepare audited native resources
+        run: bash native-ios/Otsu4Sprint/prepare-ios.sh
       - name: Generate Xcode project
         working-directory: native-ios/Otsu4Sprint
         run: xcodegen generate
@@ -48,13 +50,16 @@ jobs:
       - name: Verify bundled content and privacy manifest
         run: |
           APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
+          echo "APP=$APP"
           test -n "$APP"
+          find "$APP" -maxdepth 2 -type f -print | sort
           test -f "$APP/questions.generated.json"
           test -f "$APP/PrivacyInfo.xcprivacy"
-          /usr/bin/python3 - <<'PY' "$APP/questions.generated.json"
+          /usr/bin/python3 - "$APP/questions.generated.json" <<'PY'
           import json,sys
           p=sys.argv[1]
           data=json.load(open(p,encoding='utf-8'))
+          assert data['contentVersion']=='otsu4-2026-08-product-v2'
           assert len(data['questions'])==360
           print('bundle questions=',len(data['questions']))
           PY
