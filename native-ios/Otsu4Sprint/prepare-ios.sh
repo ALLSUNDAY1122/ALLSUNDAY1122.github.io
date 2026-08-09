@@ -24,7 +24,8 @@ assert data['contentVersion']=='otsu4-2026-08-product-v2'
 assert len(data['questions'])==360
 print('prepared native questions:',len(data['questions']))
 
-raw=base64.b64decode(icon_b64_path.read_text(encoding='ascii'), validate=True)
+encoded=''.join(icon_b64_path.read_text(encoding='ascii').split())
+raw=base64.b64decode(encoded, validate=True)
 icon_path.write_bytes(raw)
 sig=raw[:26]
 assert sig[:8]==b'\x89PNG\r\n\x1a\n'
