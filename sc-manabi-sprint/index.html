@@ -1,30 +1,47 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f3ea"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><title>情報処理安全確保支援士｜学びスプリント</title></head><body style="margin:0;background:#f7f3ea;font-family:-apple-system,sans-serif"><div id="status" style="padding:48px 20px;text-align:center;color:#4a5468">読み込み中…</div><script>
-(async()=>{
- const status=document.getElementById('status');
- const fail=(e)=>{console.error(e);document.body.innerHTML='<div style="padding:32px 20px;color:#8b2d2d;line-height:1.7"><b>読み込みに失敗しました。</b><br><span style="font-size:13px">'+String(e&&e.message||e)+'</span><br><br><button onclick="location.reload()" style="font-size:16px;padding:12px 18px">再読み込み</button></div>'};
- const loadScript=(src)=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error('展開ライブラリ読込失敗'));document.head.appendChild(s)});
- try{
-   status.textContent='アプリデータを取得しています…';
-   const r=await fetch('./app.gz.b64?v=20260809-1948',{cache:'no-store'});
-   if(!r.ok)throw new Error('アプリデータ取得エラー HTTP '+r.status);
-   const b=(await r.text()).trim();
-   const u=Uint8Array.from(atob(b),c=>c.charCodeAt(0));
-   let h='';
-   if('DecompressionStream' in window){
-     try{
-       status.textContent='アプリを展開しています…';
-       const ds=new DecompressionStream('gzip');
-       h=await new Response(new Blob([u]).stream().pipeThrough(ds)).text();
-     }catch(nativeErr){console.warn('native gunzip failed',nativeErr)}
-   }
-   if(!h){
-     status.textContent='互換モードで展開しています…';
-     try{await loadScript('https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js')}catch(_){await loadScript('https://unpkg.com/pako@2.1.0/dist/pako.min.js')}
-     if(!window.pako)throw new Error('互換展開機能を利用できません');
-     h=new TextDecoder('utf-8').decode(window.pako.ungzip(u));
-   }
-   if(!/^\s*<!doctype html|^\s*<html/i.test(h))throw new Error('展開後データがHTMLではありません');
-   document.open();document.write(h);document.close();
- }catch(e){fail(e)}
-})();
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#f6f0e4">
+<title>情報処理安全確保支援士｜学びスプリント</title>
+<style>
+:root{--paper:#f6f0e4;--ink:#20252d;--indigo:#263b63;--verm:#a74232;--green:#3e6b55;--gold:#b28a35;--line:#d8d0c1;--card:#fffdf7;--muted:#73766f}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(#d8d0c144 1px,transparent 1px),linear-gradient(90deg,#d8d0c144 1px,transparent 1px);background-size:28px 28px}
+.app{max-width:520px;margin:0 auto;min-height:100dvh;padding:calc(16px + env(safe-area-inset-top)) 16px calc(88px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}.kicker{font-size:12px;color:var(--verm);font-weight:700}.title{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:22px;font-weight:700;line-height:1.35}.pill{font-size:12px;background:#fff8;border:1px solid var(--line);padding:6px 9px;border-radius:999px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 26px #40382012;padding:18px;margin:12px 0}.signature{display:grid;grid-template-columns:92px 1fr;gap:16px;align-items:center}.ring{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--indigo) var(--p,0%),#ddd4c5 0);position:relative}.ring:after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--card)}.ring b{z-index:1;font-family:"Yu Mincho",serif;font-size:18px}
+h2,h3{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;margin:0 0 10px}h2{font-size:22px}h3{font-size:17px}p{line-height:1.75;margin:8px 0}.muted{color:var(--muted);font-size:13px}.btn{appearance:none;border:0;border-radius:14px;padding:14px 16px;font-weight:700;font-size:16px;background:var(--indigo);color:white;width:100%;margin-top:10px}.btn.alt{background:#fff;border:1px solid var(--indigo);color:var(--indigo)}.btn.gold{background:var(--gold)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini{padding:14px;border-radius:16px;border:1px solid var(--line);background:#fffaf0}
+.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);background:#fffdf7f2;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}.nav button{border:0;background:transparent;color:#6d6d68;font-size:12px;padding:8px 2px}.nav button.on{color:var(--indigo);font-weight:800}.nav span{display:block;font-size:20px;margin-bottom:2px}
+.choice{display:block;width:100%;text-align:left;padding:14px;margin:9px 0;border:1px solid var(--line);background:#fff;border-radius:14px;font-size:15px;line-height:1.55}.choice.correct{border-color:var(--green);background:#edf6ef}.choice.wrong{border-color:var(--verm);background:#fbefed}.progress{height:8px;background:#ddd4c5;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--indigo)}.feedback{border-left:5px solid var(--gold);background:#fff7d9;padding:14px;border-radius:10px;margin:14px 0}.mark{font-family:"Yu Mincho",serif;font-size:64px;color:var(--verm);line-height:1;text-align:center}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.tag{font-size:12px;padding:5px 8px;border-radius:999px;background:#eef1f6;color:var(--indigo)}input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:16px}.notice{background:#eef4fb;border:1px solid #c9d6e7;padding:12px;border-radius:12px;font-size:13px;line-height:1.6}
+</style>
+</head>
+<body><main class="app" id="app"></main>
+<nav class="nav" id="nav"><button data-tab="home"><span>⌂</span>ホーム</button><button data-tab="mock"><span>▤</span>模試</button><button data-tab="record"><span>◉</span>記録</button><button data-tab="settings"><span>⚙</span>設定</button></nav>
+<script>
+const Q=[
+{t:"暗号",q:"ハッシュ関数の性質として最も適切なものはどれか。",c:["同じ入力から常に同じハッシュ値が得られる","ハッシュ値から元の入力を必ず復元できる","鍵を使わなければ計算できない","出力長は入力長と同じになる"],a:0,e:"暗号学的ハッシュ関数は決定的で、同一入力には同一出力を返す。一方向性・衝突耐性などが重要になる。",m:"ハッシュ＝同じ入力→同じ固定長出力。復号する仕組みではない。"},
+{t:"認証",q:"多要素認証で『所持情報』に該当するものはどれか。",c:["パスワード","指紋","スマートフォンの認証アプリ","秘密の質問"],a:2,e:"認証アプリを保持するスマートフォンは所持要素。パスワードや秘密の質問は知識要素、指紋は生体要素。",m:"知識・所持・生体の異なる要素を組み合わせる。"},
+{t:"ネットワーク",q:"TLSが主に提供する性質の組合せとして適切なものはどれか。",c:["機密性・完全性・相手認証","可用性・圧縮・匿名性","物理保護・完全性・冗長化","バックアップ・認可・監査"],a:0,e:"TLSは通信の暗号化による機密性、改ざん検出による完全性、証明書等による相手認証を提供する。",m:"TLS＝暗号化＋改ざん検出＋相手確認。"},
+{t:"攻撃",q:"SQLインジェクション対策として最も基本的なものはどれか。",c:["SQL文を文字列連結で生成する","プレースホルダを用いたパラメータ化クエリを使う","DBのポート番号を変更する","画面の文字色を固定する"],a:1,e:"入力値をSQL構文として解釈させないよう、プレースホルダによるバインドを利用する。",m:"SQLi対策の基本＝文字列連結を避けてバインド。"},
+{t:"Web",q:"XSS対策として、HTML本文へ外部入力を表示するときに重要な処理はどれか。",c:["出力時の適切なエスケープ","ファイル圧縮","DNSキャッシュ削除","ポートフォワーディング"],a:0,e:"表示先の文脈に応じたエスケープによって、入力がHTMLやスクリプトとして解釈されることを防ぐ。",m:"XSSは『出力する場所に応じたエスケープ』が基本。"},
+{t:"脆弱性",q:"CVSSの用途として適切なものはどれか。",c:["脆弱性の深刻度を共通尺度で評価する","暗号鍵を自動生成する","ログを圧縮する","利用者の本人確認を行う"],a:0,e:"CVSSは脆弱性の深刻度を共通の指標で表現し、優先順位付けなどに利用する。",m:"CVSS＝脆弱性の深刻度スコア。"},
+{t:"運用",q:"インシデント対応で証拠保全を重視する理由として適切なものはどれか。",c:["原因分析や法的対応に必要な情報を保持するため","端末の処理速度を上げるため","パスワードを短くするため","ネットワーク帯域を増やすため"],a:0,e:"ログやディスクイメージ等を適切に保全することで、原因究明や説明責任、法的手続に耐えられる。",m:"初動で不用意に証拠を壊さない。"},
+{t:"アクセス制御",q:"最小権限の原則として適切なものはどれか。",c:["全員に管理者権限を付与する","業務に必要な最小限の権限だけを与える","退職者の権限を残す","権限変更を記録しない"],a:1,e:"必要最小限の権限に限定することで、誤操作や侵害時の影響範囲を抑える。",m:"必要な人に、必要な期間、必要な権限だけ。"},
+{t:"マルウェア",q:"ランサムウェア被害の低減に有効な備えはどれか。",c:["バックアップを本番環境から分離して保持する","すべて同一アカウントで運用する","ログを無効にする","OS更新を停止する"],a:0,e:"バックアップを分離・保護し、復元手順を確認しておくことが事業継続に重要。",m:"バックアップは『ある』だけでなく隔離と復元確認。"},
+{t:"メール",q:"DMARCが利用する情報の組合せとして適切なものはどれか。",c:["SPFとDKIM","FTPとNTP","SNMPとARP","SSHとRDP"],a:0,e:"DMARCはSPFやDKIMの認証結果とFromドメインの整合性を用いてポリシーを適用する。",m:"DMARCはSPF/DKIMを束ねてなりすまし対策を強化。"},
+{t:"ゼロトラスト",q:"ゼロトラストの考え方として最も適切なものはどれか。",c:["社内ネットワークなら無条件に信頼する","アクセスごとに利用者・端末・状況を検証する","境界FWだけで全てを守る","認証は初回だけ行えばよい"],a:1,e:"ネットワーク位置だけを信頼根拠にせず、継続的な検証と最小権限を組み合わせる。",m:"『内側だから安全』を前提にしない。"},
+{t:"ログ",q:"セキュリティログの時刻同期が重要な主な理由はどれか。",c:["複数機器の事象を時系列で相関分析するため","ファイル容量を減らすため","暗号強度を高めるため","DNS名を短くするため"],a:0,e:"機器間で時刻がずれると、インシデント時の因果関係や攻撃経路の分析が難しくなる。",m:"ログ分析では『同じ時計』が前提。"},
+{t:"クラウド",q:"クラウドの責任共有モデルの説明として適切なものはどれか。",c:["利用者側の責任は常にゼロになる","サービス形態に応じて事業者と利用者の責任範囲が分かれる","全責任を利用者だけが負う","契約がなくても責任範囲は同一である"],a:1,e:"IaaS/PaaS/SaaS等によって、事業者と利用者が担うセキュリティ責任の境界が異なる。",m:"クラウドでも利用者責任は残る。"},
+{t:"暗号",q:"公開鍵暗号方式の一般的な特徴として適切なものはどれか。",c:["暗号化と復号に関連する異なる鍵を用いる","必ず同一鍵だけを使う","鍵を一切使わない","ハッシュ値から秘密鍵を復元する"],a:0,e:"公開鍵と秘密鍵という対になる鍵を利用し、用途に応じて暗号化や署名を行う。",m:"公開鍵暗号＝公開鍵と秘密鍵のペア。"},
+{t:"署名",q:"ディジタル署名で主に確認できるものはどれか。",c:["送信者の真正性とデータの改ざん有無","通信速度","可用性だけ","バックアップ世代数"],a:0,e:"署名検証により署名者の真正性と、署名後にデータが改ざんされていないことを確認できる。",m:"署名＝誰が＋改ざんされていないか。"},
+{t:"BCP",q:"RPOが表すものとして適切なものはどれか。",c:["許容できるデータ損失量を時間で表した目標","復旧に要する最大時間","平均故障間隔","暗号鍵の有効期間"],a:0,e:"RPOはどの時点までデータを戻せれば許容できるかを表す。復旧時間目標はRTO。",m:"RPO＝どこまで戻るか、RTO＝いつまでに戻すか。"}
+];
+const KEY='sc-sprint-review-v1';let state=JSON.parse(localStorage.getItem(KEY)||'{"weak":{},"sessions":[],"goal":8,"tab":"home","active":null}');function save(){localStorage.setItem(KEY,JSON.stringify(state))}function nav(tab){state.tab=tab;save();render()}function esc(s){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]||m))}function start(mode='daily'){let n=mode==='daily'?Number(state.goal||8):8;let ids=[...Q.keys()].sort(()=>Math.random()-.5).slice(0,n);state.active={mode,ids,i:0,correct:0,answers:[],revealed:false};state.tab='quiz';save();render()}function answer(idx){let a=state.active;if(!a||a.revealed)return;let q=Q[a.ids[a.i]],ok=idx===q.a;a.answers.push({id:a.ids[a.i],sel:idx,ok});if(ok)a.correct++;else state.weak[a.ids[a.i]]=0;if(ok&&state.weak[a.ids[a.i]]!=null){state.weak[a.ids[a.i]]++;if(state.weak[a.ids[a.i]]>=3)delete state.weak[a.ids[a.i]]}a.revealed=true;save();render()}function nextQ(){let a=state.active;if(a.i<a.ids.length-1){a.i++;a.revealed=false;save();render()}else{state.sessions.unshift({date:new Date().toISOString(),correct:a.correct,total:a.ids.length});state.active=null;state.tab='record';save();render()}}
+function home(){let weak=Object.keys(state.weak).length;return `<header><div><div class="kicker">科目A-2｜初期試作品</div><div class="title">情報処理安全確保支援士<br>学びスプリント</div></div><div class="pill">Safari版</div></header><div class="card signature"><div class="ring" style="--p:0%"><b>0%</b></div><div><div class="muted">今日の学習</div><h2>${state.goal}問スプリント</h2><p class="muted">短問を回して、間違えた論点だけを戻します。</p></div></div>${state.active?`<button class="btn gold" onclick="state.tab='quiz';save();render()">続きから再開（${state.active.i+1}/${state.active.ids.length}）</button>`:`<button class="btn" onclick="start('daily')">今日の${state.goal}問を始める</button>`}<div class="grid2"><div class="mini"><b>苦手</b><div style="font-size:28px;font-family:serif">${weak}</div><span class="muted">3連続正解で解除</span></div><div class="mini"><b>本番構成</b><div style="font-size:28px;font-family:serif">325</div><span class="muted">監査済み問題バンク</span></div></div><div class="notice">表示・操作確認用の軽量レビュー版です。圧縮データを使用しないため、今回の読み込みエラーは発生しません。</div>`}
+function quiz(){let a=state.active;if(!a){state.tab='home';return home()}let q=Q[a.ids[a.i]],ans=a.answers[a.answers.length-1],pct=Math.round(a.i/a.ids.length*100);return `<header><div><div class="kicker">${esc(q.t)}｜科目A-2</div><div class="title">問題 ${a.i+1} / ${a.ids.length}</div></div><button class="pill" onclick="nav('home')">ホーム</button></header><div class="progress"><i style="width:${pct}%"></i></div><div class="card"><h2>${esc(q.q)}</h2>${q.c.map((x,i)=>`<button class="choice ${a.revealed?(i===q.a?'correct':(ans&&i===ans.sel&&!ans.ok?'wrong':'')):''}" onclick="answer(${i})">${['ア','イ','ウ','エ'][i]}　${esc(x)}</button>`).join('')}${a.revealed?`<div class="mark">${ans.ok?'○':'×'}</div><h3>${ans.ok?'正解':'不正解'}</h3><p>${esc(q.e)}</p><div class="feedback"><b>ここだけ覚える</b><br>${esc(q.m)}</div><button class="btn" onclick="nextQ()">${a.i===a.ids.length-1?'結果を見る':'次の問題'}</button>`:''}</div>`}
+function mock(){return `<header><div><div class="kicker">公開過去問モード想定</div><div class="title">模試</div></div></header><div class="card"><h2>科目A-2 ミニ模試</h2><p>レビュー版では操作確認用8問を出題します。本番版は公開過去問3回分を試験回別に保持します。</p><button class="btn" onclick="start('mock')">8問で試す</button></div><div class="card"><h3>本番版の構成</h3><p>令和7年度秋期　25問</p><p>令和7年度春期　25問</p><p>令和6年度秋期　25問</p></div>`}
+function record(){let s=state.sessions[0],rate=s?Math.round(s.correct/s.total*100):0;return `<header><div><div class="kicker">学習ログ</div><div class="title">記録</div></div></header><div class="card"><h2>直近の達成度</h2><div class="ring" style="--p:${rate}%"><b>${rate}%</b></div>${s?`<p>${s.correct}/${s.total}問正解</p>`:`<p class="muted">まだ学習記録がありません。</p>`}</div><div class="card"><h3>苦手論点</h3>${Object.keys(state.weak).length?Object.keys(state.weak).map(id=>`<p>${esc(Q[id].t)} <span class="tag">${state.weak[id]}/3</span></p>`).join(''):'<p class="muted">現在の苦手登録はありません。</p>'}</div><div class="card"><h3>最近の学習</h3>${state.sessions.slice(0,5).map(x=>`<div class="row"><span>${new Date(x.date).toLocaleDateString('ja-JP')}</span><b>${x.correct}/${x.total}</b></div>`).join('')||'<p class="muted">記録なし</p>'}</div>`}
+function settings(){return `<header><div><div class="kicker">学習設定</div><div class="title">設定</div></div></header><div class="card"><h3>1日の問題数</h3><select onchange="state.goal=Number(this.value);save();render()"><option value="4" ${state.goal==4?'selected':''}>4問</option><option value="8" ${state.goal==8?'selected':''}>8問</option><option value="16" ${state.goal==16?'selected':''}>16問</option></select></div><div class="card"><h3>データ</h3><button class="btn alt" onclick="exportData()">JSONを書き出す</button><button class="btn alt" onclick="if(confirm('学習記録を初期化しますか？')){localStorage.removeItem(KEY);location.reload()}">学習記録を初期化</button></div><div class="notice">2026年度以降の非公開本試験問題を、受験者の記憶などから復元して収録することはしません。</div>`}function exportData(){let b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='sc-sprint-data.json';a.click();URL.revokeObjectURL(u)}function render(){document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===state.tab));document.getElementById('app').innerHTML=state.tab==='home'?home():state.tab==='mock'?mock():state.tab==='record'?record():state.tab==='settings'?settings():quiz()}document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>nav(b.dataset.tab));render();
 </script></body></html>
