@@ -10,6 +10,9 @@ on:
       - '.github/workflows/sc-manabi-ios-preflight.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   ios-preflight:
     runs-on: macos-latest
@@ -23,8 +26,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: sc-manabi-sprint/native/package.json
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -67,3 +68,23 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Record preflight result
+        if: always()
+        working-directory: .
+        run: |
+          mkdir -p sc-manabi-sprint/build-results
+          cat > sc-manabi-sprint/build-results/ios-preflight.txt <<EOF
+          workflow=SC Manabi Sprint iOS Preflight
+          status=${{ job.status }}
+          source_sha=${{ github.sha }}
+          run_id=${{ github.run_id }}
+          checked_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sc-manabi-sprint/build-results/ios-preflight.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record SC iOS preflight result'
+            git push
+          fi
