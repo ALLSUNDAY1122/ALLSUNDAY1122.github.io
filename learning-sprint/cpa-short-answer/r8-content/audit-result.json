@@ -1,0 +1,60 @@
+{
+  "audit": "公認会計士短答式 R8公式186問 問題単位監査 v2",
+  "status": "PASS",
+  "actual_total": 186,
+  "round_counts": {
+    "R8-I": 93,
+    "R8-II": 93
+  },
+  "round_points": {
+    "R8-I": 500,
+    "R8-II": 500
+  },
+  "choice_counts": {
+    "5": 8,
+    "6": 178
+  },
+  "rights_review_pass_count": 186,
+  "exact_historical_duplicate_groups": [],
+  "checks": [
+    "93問×2=186問",
+    "4科目別件数",
+    "各回500点",
+    "5択/6択を原文どおり保持",
+    "公式正解番号照合",
+    "問題単位配点照合",
+    "公式問題/正解URL",
+    "PDF/問題SHA-256",
+    "186問rights_review・加工表示",
+    "ID重複",
+    "公式回間完全一致候補"
+  ],
+  "fail_fix_pass": [
+    {
+      "initial": "FAIL",
+      "finding": "PDF制御文字・特殊空白で問題見出し抽出0件",
+      "fix": "0x07等の制御文字とfigure spaceを通常空白へ1文字置換してから分割",
+      "reaudit": "PASS"
+    },
+    {
+      "initial": "FAIL",
+      "finding": "全問6択と仮定したため管理会計論の5択計算問題を拒否",
+      "fix": "回答肢を原文から末尾連番群として抽出し5択/6択を保持",
+      "reaudit": "PASS"
+    },
+    {
+      "initial": "FAIL",
+      "finding": "財務会計論の5点/6点問題番号が試験回で異なる",
+      "fix": "公式配点表を問題単位pointsとして固定",
+      "reaudit": "PASS"
+    },
+    {
+      "initial": "FAIL",
+      "finding": "PDF単位の利用条件だけでは問題単位権利記録が不足",
+      "fix": "全186問にrights_review・rights_basis・出典・加工表示を付与",
+      "reaudit": "PASS"
+    }
+  ],
+  "warnings": [],
+  "errors": []
+}

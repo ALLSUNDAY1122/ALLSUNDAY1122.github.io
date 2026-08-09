@@ -1,0 +1,54 @@
+{
+  "audit": "CPA-aware 279-question anti-padding audit",
+  "status": "PASS",
+  "total_exam_slots": 279,
+  "round_counts": {
+    "1": 93,
+    "2": 93,
+    "3": 93
+  },
+  "round_points": {
+    "1": 500,
+    "2": 500,
+    "3": 500
+  },
+  "r9_authored_exact_duplicates": 0,
+  "r9_authored_high_similarity_ge_0_90": 0,
+  "official_exact_repeat_groups": [
+    [
+      "CPA-R8-I-財務会計論-025",
+      "CPA-R8-II-財務会計論-025"
+    ]
+  ],
+  "official_similarity_pairs_ge_0_90": [
+    {
+      "a": "CPA-R8-I-管理会計論-011",
+      "b": "CPA-R8-II-管理会計論-011",
+      "ratio": 0.9896
+    },
+    {
+      "a": "CPA-R8-I-財務会計論-025",
+      "b": "CPA-R8-II-財務会計論-025",
+      "ratio": 1.0
+    },
+    {
+      "a": "CPA-R8-I-財務会計論-026",
+      "b": "CPA-R8-II-財務会計論-024",
+      "ratio": 0.9167
+    },
+    {
+      "a": "CPA-R8-I-財務会計論-027",
+      "b": "CPA-R8-II-財務会計論-026",
+      "ratio": 0.9167
+    },
+    {
+      "a": "CPA-R8-I-財務会計論-032",
+      "b": "CPA-R8-I-財務会計論-035",
+      "ratio": 0.9375
+    }
+  ],
+  "normal_learning_unique_count": 278,
+  "policy": "公式問題同士の再出題・類似出題は模試では原文のまま保持する。完全一致の公式再出題のみ通常学習ではcanonical化する。独自作問が関与する完全一致・0.90以上の高類似はFAIL。",
+  "errors": [],
+  "warnings": []
+}
