@@ -47,6 +47,8 @@ final class StoreKitManager: ObservableObject {
         }
     }
 
+    func setStatus(_ value: String) { status = value }
+
     func refresh() async {
         do {
             let loaded = try await Product.products(for: Array(Self.productIDs))
@@ -151,9 +153,7 @@ final class StoreKitManager: ObservableObject {
 struct WebAppView: UIViewRepresentable {
     @ObservedObject var store: StoreKitManager
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(store: store)
-    }
+    func makeCoordinator() -> Coordinator { Coordinator(store: store) }
 
     func makeUIView(context: Context) -> WKWebView {
         let controller = WKUserContentController()
@@ -200,9 +200,7 @@ struct WebAppView: UIViewRepresentable {
         var store: StoreKitManager
         weak var webView: WKWebView?
 
-        init(store: StoreKitManager) {
-            self.store = store
-        }
+        init(store: StoreKitManager) { self.store = store }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             Task { @MainActor in
@@ -243,14 +241,10 @@ struct WebAppView: UIViewRepresentable {
 
             Task { @MainActor in
                 switch action {
-                case "purchase":
-                    await store.purchase(kind: body["product"] as? String ?? "")
-                case "restore":
-                    await store.restore()
-                case "manage":
-                    await showManageSubscriptions()
-                default:
-                    await store.refresh()
+                case "purchase": await store.purchase(kind: body["product"] as? String ?? "")
+                case "restore": await store.restore()
+                case "manage": await showManageSubscriptions()
+                default: await store.refresh()
                 }
                 pushStoreKitState()
             }
@@ -259,14 +253,14 @@ struct WebAppView: UIViewRepresentable {
         @MainActor
         private func showManageSubscriptions() async {
             guard let scene = webView?.window?.windowScene else {
-                store.status = "manage_unavailable"
+                store.setStatus("manage_unavailable")
                 return
             }
             do {
                 try await AppStore.showManageSubscriptions(in: scene)
                 await store.refresh()
             } catch {
-                store.status = "manage_error"
+                store.setStatus("manage_error")
             }
         }
 
@@ -274,9 +268,7 @@ struct WebAppView: UIViewRepresentable {
             guard url.scheme?.lowercased() == "https",
                   let host = url.host?.lowercased(),
                   ["allsunday1122.github.io", "www.mhlw.go.jp", "mhlw.go.jp", "apps.apple.com"].contains(host) else { return }
-            Task { @MainActor in
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
+            Task { @MainActor in UIApplication.shared.open(url, options: [:], completionHandler: nil) }
         }
 
         @MainActor
