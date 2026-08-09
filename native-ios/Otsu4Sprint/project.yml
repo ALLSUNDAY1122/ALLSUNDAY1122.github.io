@@ -16,9 +16,10 @@ targets:
       - path: .
         includes:
           - '*.swift'
-    resources:
       - path: PrivacyInfo.xcprivacy
+        buildPhase: resources
       - path: Generated/questions.generated.json
+        buildPhase: resources
     info:
       path: Info.plist
     settings:
