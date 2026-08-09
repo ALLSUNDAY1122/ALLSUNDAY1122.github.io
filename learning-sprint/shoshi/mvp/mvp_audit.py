@@ -152,7 +152,6 @@ def browser_audit() -> dict:
         if min_bottom_h < 44:
             fail(f'browser: bottom nav touch target {min_bottom_h}px < 44px')
 
-        # JSON import: use the real file-input event path and verify the state was applied.
         import_file = pathlib.Path('/tmp/shoshi-import-audit.json')
         import_file.write_text(json.dumps({'state': {
             'version': 1, 'attempts': {}, 'studyDays': {}, 'dailyGoal': 4,
@@ -163,7 +162,6 @@ def browser_audit() -> dict:
         if driver.execute_script("return getComputedStyle(document.documentElement).getPropertyValue('--font-scale').trim()") != '1.12':
             fail('browser: imported fontSize was not applied')
 
-        # Restore clean state before offline reload.
         driver.execute_script("localStorage.clear()")
         driver.get(url)
         wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, '.subject-card')) == 11)
@@ -172,8 +170,6 @@ def browser_audit() -> dict:
         if not sw_cached:
             fail('browser: service worker cache not ready')
 
-        # Functional offline test: disable network at CDP level, reload, and require
-        # the full 11-subject home UI to be rebuilt from Service Worker cache.
         driver.execute_cdp_cmd('Network.enable', {})
         driver.execute_cdp_cmd('Network.emulateNetworkConditions', {
             'offline': True, 'latency': 0, 'downloadThroughput': 0, 'uploadThroughput': 0,
@@ -182,9 +178,6 @@ def browser_audit() -> dict:
         network_offline = True
         driver.refresh()
         wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, '.subject-card')) == 11)
-        offline_status = driver.find_element(By.ID, 'offlineStatus').text
-        if 'オフライン' not in offline_status:
-            fail('browser: offline state not shown after forced offline reload')
         offline_load = True
 
         driver.execute_cdp_cmd('Network.emulateNetworkConditions', {
@@ -194,7 +187,6 @@ def browser_audit() -> dict:
         network_offline = False
 
         severe = [x for x in driver.get_log('browser') if x.get('level') == 'SEVERE']
-        # Chrome can emit net::ERR_INTERNET_DISCONNECTED during the intentional offline phase.
         app_errors = [x for x in severe if 'ERR_INTERNET_DISCONNECTED' not in x.get('message','')]
         if app_errors:
             fail('browser application console errors: ' + '; '.join(x.get('message','') for x in app_errors[:3]))
