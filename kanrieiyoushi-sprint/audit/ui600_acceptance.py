@@ -19,14 +19,14 @@ def main():
     if '合格圏' in app: errors.append('categorical 合格圏 wording remains')
     for token in ['R2_SELECTED','R2_OV','R3_OV','round2-extra-121-140.json','round2-rebalance-217-232.json','round3/01-social.json','round3/10-applied.json','primary-source-registry.json','rebalance(r1)','rebalance(r2)','rebalance(r3)','window.KANRI_Q=r1.concat(r2,r3)',"await script('app-v061.js')","window.KANRI_Q.length!==600","if(!window.KANRI_APP_READY)"]:
         need(boot,token,'bootstrap',errors)
-    for token in ['.roundseg button{min-height:44px','.mockrounds','.mocknotice','.roundstats','.sourceLink{min-height:44px','.dataerror']:
+    for token in ['.roundseg button{min-height:44px','.mockrounds','.mocknotice','.roundstats','.sourceLink{min-height:44px','.dataerror','.donut{position:relative}', '.donut:before{left:50%;top:50%;transform:translate(-50%,-50%)}']:
         need(css,token,'styles',errors)
-    for token in ['data-bootstrap-v061.js','app-v061.js','styles-v061.css','questions.js','data/round1-runtime-overrides.js','questions-121-150.js','questions-211-240.js','audit/round2-extra-121-140.json','audit/round2-rebalance-217-232.json','audit/primary-source-registry.json','audit/round3/01-social.json','audit/round3/10-applied.json','kanri-sprint-v061','ignoreSearch:true']:
+    for token in ['data-bootstrap-v061.js','app-v061.js','styles-v061.css','questions.js','data/round1-runtime-overrides.js','questions-121-150.js','questions-211-240.js','audit/round2-extra-121-140.json','audit/round2-rebalance-217-232.json','audit/primary-source-registry.json','audit/round3/01-social.json','audit/round3/10-applied.json','kanri-sprint-v062','ignoreSearch:true','self.skipWaiting()','self.clients.claim()']:
         need(sw,token,'service worker',errors)
-    print('=== 管理栄養士 v0.6.1 実装・UI受入監査 ===')
+    print('=== 管理栄養士 v0.6.2 UIホットフィックス受入監査 ===')
     if errors:
         print('FAIL')
         for e in errors: print('-',e)
         raise SystemExit(1)
-    print('PASS: 600問再構成、3回×10分類、200問模試×3、状態移行、模試正答漏洩防止、44px、ARIA、PWAを確認')
+    print('PASS: 600問機能維持＋学習記録ドーナツ内円の中央固定＋PWA即時キャッシュ更新を確認')
 if __name__=='__main__': main()
