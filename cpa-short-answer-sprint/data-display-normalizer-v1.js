@@ -16,14 +16,26 @@
 
   function formatQuestionText(value){
     const text=String(value??'');
-    const re=/([アイウエオカキクケコ])．/g;
+    const re=/([アイウエオカキクケコ])(?:[．。]|\))/g;
     const hits=[...text.matchAll(re)];
     if(hits.length<2||hits[0][1]!=='ア')return text;
     const order='アイウエオカキクケコ';
     for(let i=1;i<hits.length;i++){
       if(order.indexOf(hits[i][1])<=order.indexOf(hits[i-1][1]))return text;
     }
-    return text.replace(re,'\n\n$1．').replace(/^\s*\n\n/,'').trim();
+    let out='',last=0;
+    hits.forEach((m,i)=>{
+      out+=text.slice(last,m.index).replace(/[ \t　\n]+$/,'');
+      out+=(i===0?'\n\n':'\n')+`${m[1]}) `;
+      last=m.index+m[0].length;
+      while(last<text.length&&/[ \t　]/.test(text[last]))last++;
+    });
+    out+=text.slice(last);
+    return out
+      .replace(/[ \t　]+\n/g,'\n')
+      .replace(/\n[ \t　]+/g,'\n')
+      .replace(/\n{3,}/g,'\n\n')
+      .trim();
   }
 
   function sameArray(a,b){
@@ -68,7 +80,7 @@
     });
   }
 
-  window.__CPA_DISPLAY_NORMALIZER__={version:2,formatQuestionText,normalizeAll};
+  window.__CPA_DISPLAY_NORMALIZER__={version:3,formatQuestionText,normalizeAll};
 
   window.fetch=async function(input,init){
     const response=await nativeFetch(input,init);

@@ -11,7 +11,7 @@ APP=ROOT/'cpa-short-answer-sprint'
 DATA=ROOT/'learning-sprint/cpa-short-answer/integration/questions-all-279.json'
 CORRECTIONS=APP/'data-display-corrections-v1.json'
 
-ITEM_RE=re.compile(r'([アイウエオカキクケコ])．')
+ITEM_RE=re.compile(r'([アイウエオカキクケコ])(?:[．。]|\))')
 PDF_ARTIFACT_RE=re.compile(r'M\d+[―—−-]\d+(?:M\d+[―—−-]\d+)+')
 CONTROL_RE=re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
 OFFICIAL_EX_RE=re.compile(r'公式正解・配点表では選択肢(\d+)「([^」]*)」が正解。')
@@ -22,15 +22,33 @@ warnings=[]
 def fail(msg): errors.append(msg)
 def warn(msg): warnings.append(msg)
 
+def item_hits(text:str):
+    return list(ITEM_RE.finditer(text or ''))
+
 def is_structured_question(text:str)->bool:
-    labels=ITEM_RE.findall(text or '')
+    hits=item_hits(text)
+    labels=[m.group(1) for m in hits]
     if len(labels)<2 or labels[0]!='ア': return False
     pos=[ORDER.find(x) for x in labels]
     return all(x>=0 for x in pos) and all(pos[i]>pos[i-1] for i in range(1,len(pos)))
 
 def format_question(text:str)->str:
     if not is_structured_question(text): return text
-    return ITEM_RE.sub(r'\n\n\1．',text).lstrip('\n').strip()
+    hits=item_hits(text)
+    out=[]
+    last=0
+    for i,m in enumerate(hits):
+        prefix=text[last:m.start()].rstrip(' \t　\n')
+        out.append(prefix)
+        out.append(('\n\n' if i==0 else '\n')+f'{m.group(1)}) ')
+        last=m.end()
+        while last<len(text) and text[last] in ' \t　': last+=1
+    out.append(text[last:])
+    result=''.join(out)
+    result=re.sub(r'[ \t　]+\n','\n',result)
+    result=re.sub(r'\n[ \t　]+','\n',result)
+    result=re.sub(r'\n{3,}','\n\n',result)
+    return result.strip()
 
 def sync_official_explanation(q:dict)->None:
     if q.get('origin_type')!='licensed_official' or not isinstance(q.get('explanation'),str): return
@@ -59,7 +77,6 @@ def main():
     corrected=copy.deepcopy(raw)
     corrected_by_id={q['id']:q for q in corrected}
     applied=[]
-    table_repairs=[]
     for qid,entry in (corr.get('questions') or {}).items():
         q=corrected_by_id.get(qid)
         if q is None:
@@ -72,7 +89,6 @@ def main():
                 fail(f'{qid}: 表形式補正元不一致: {q.get("choices")!r}')
             elif q.get('choices')==source:
                 q['choices']=copy.deepcopy(target)
-                table_repairs.append(qid)
                 applied.append({'id':qid,'kind':'table_choices','count':len(target)})
         for rep in entry.get('choice_replacements') or []:
             idx=rep.get('index')
@@ -135,10 +151,19 @@ def main():
         if is_structured_question(text):
             structured+=1
             formatted=format_question(text)
-            if '\n\nア．' not in formatted or '\n\nイ．' not in formatted:
-                fail(f'{qid}: ア・イ等の設問分割に失敗')
+            hits=item_hits(text)
+            labels=[m.group(1) for m in hits]
+            if '\n\nア) ' not in formatted:
+                fail(f'{qid}: 問題文とア項目の間に空行がない')
+            for label in labels[1:]:
+                if f'\n{label}) ' not in formatted:
+                    fail(f'{qid}: {label}項目が独立行になっていない')
+            if re.search(r'[アイウエオカキクケコ][．。]',formatted):
+                fail(f'{qid}: 旧「ア．」形式が表示文に残る')
+            first=formatted.find('\n\nア) ')
+            if first<=0:
+                fail(f'{qid}: 設問本体と列挙部分を視覚分離できない')
 
-    # 公式PDFで再確認した重要回帰条件
     fixed_expectations={
       'CPA-R8-I-企業法-020':(5,'ウエ'),
       'CPA-R8-II-企業法-020':(1,'アウ'),
@@ -157,7 +182,8 @@ def main():
       'source_pdf_artifacts':len(source_artifacts),
       'source_table_collapses':len(raw_table_collapses),
       'applied_repairs':len(applied),
-      'structured_questions_auto_spaced':structured,
+      'structured_questions_layout_v2':structured,
+      'layout_rule':'設問本体\\n\\nア) ...\\nイ) ...（以後1項目1行）',
       'official_answer_mappings_checked':official_checked,
       'choice_count_distribution':dict(sorted(choice_counts.items())),
       'max_choices':max_choices,
