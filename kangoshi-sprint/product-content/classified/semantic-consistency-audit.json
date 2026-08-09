@@ -4,13 +4,13 @@
     "健康支援と社会保障制度": 82,
     "人体の構造と機能": 75,
     "疾病の成り立ちと回復の促進": 98,
-    "基礎看護学": 105,
+    "基礎看護学": 106,
     "小児看護学": 54,
     "地域・在宅看護論": 49,
     "看護の統合と実践": 36,
     "成人看護学": 79,
     "老年看護学": 36,
-    "母性看護学": 61,
+    "母性看護学": 60,
     "精神看護学": 45
   },
   "perSetMajorCounts": {
@@ -30,8 +30,8 @@
     "set2": {
       "健康支援と社会保障制度": 29,
       "老年看護学": 13,
-      "基礎看護学": 37,
-      "母性看護学": 20,
+      "基礎看護学": 38,
+      "母性看護学": 19,
       "小児看護学": 17,
       "人体の構造と機能": 19,
       "疾病の成り立ちと回復の促進": 34,
@@ -66,15 +66,14 @@
     "K114-AM114: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K114-PM087: system-explicit expects ['健康支援と社会保障制度'], got 地域・在宅看護論",
     "K114-PM107: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
-    "K114-PM108: pediatric-scenario expects ['小児看護学'], got 母性看護学",
+    "K114-PM108: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
     "K113-AM072: disaster-explicit expects ['看護の統合と実践'], got 小児看護学",
     "K113-AM109: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-AM111: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-PM106: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-PM107: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-PM108: pediatric-scenario expects ['小児看護学'], got 母性看護学",
-    "K113-PM116: disaster-explicit expects ['看護の統合と実践'], got 地域・在宅看護論",
-    "K114-PM-SC06: situation group split across 3 majors {'小児看護学': 1, '基礎看護学': 1, '母性看護学': 1}"
+    "K113-PM116: disaster-explicit expects ['看護の統合と実践'], got 地域・在宅看護論"
   ],
   "splitScenarioGroups": [
     {
@@ -249,8 +248,7 @@
       "scenarioId": "K114-PM-SC06",
       "majors": {
         "小児看護学": 1,
-        "基礎看護学": 1,
-        "母性看護学": 1
+        "基礎看護学": 2
       },
       "questions": [
         [
@@ -265,8 +263,8 @@
         ],
         [
           "K114-PM108",
-          "母性看護学",
-          "分娩・産褥"
+          "基礎看護学",
+          "排泄援助"
         ]
       ]
     },
@@ -399,6 +397,7 @@
     "K114-AM-SC05: situation group split {'成人看護学': 1, '基礎看護学': 2}; manual semantic check required",
     "K114-AM-SC06: situation group split {'基礎看護学': 1, '小児看護学': 2}; manual semantic check required",
     "K114-PM-SC04: situation group split {'老年看護学': 2, '地域・在宅看護論': 1}; manual semantic check required",
+    "K114-PM-SC06: situation group split {'小児看護学': 1, '基礎看護学': 2}; manual semantic check required",
     "K115-AM-SC06: situation group split {'小児看護学': 1, '地域・在宅看護論': 2}; manual semantic check required",
     "K115-AM-SC10: situation group split {'看護の統合と実践': 2, '基礎看護学': 1}; manual semantic check required",
     "K115-PM-SC02: situation group split {'疾病の成り立ちと回復の促進': 1, '成人看護学': 2}; manual semantic check required",
