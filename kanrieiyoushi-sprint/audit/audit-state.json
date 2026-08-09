@@ -1,39 +1,59 @@
 {
   "qualification": "管理栄養士国家試験",
-  "updatedAt": "2026-08-09T12:18:00+09:00",
+  "updatedAt": "2026-08-09T15:00:00+09:00",
   "loop": "学びスプリント｜問題生成・監査ループ v1.0",
   "target": {"rounds":3,"questionsPerRound":200,"total":600},
   "public": {
     "version":"v0.5.1",
     "count":200,
     "status":"ROUND1_STRUCTURE_AUDIT_PASS_CONTENT_AUDIT_ACTIVE",
-    "legacyCandidatePool":"v0.4のKN121-240候補は公開読込から除外。ファイルは再利用候補として保持。"
+    "round2Public":false,
+    "note":"公開版は第1回200問のみ。第2回は構造候補PASSだが、一次資料・正答・制度・権利監査完了まで公開しない。"
   },
   "formalRound1": {
     "count":200,
     "distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
-    "baseQuestions":120,
-    "addedQuestions":80,
-    "idPolicy":"既存KN001-120は維持。正式追加80問は実行時・正規データでKNR1-121〜KNR1-200へ分離。",
-    "auditHistory":[
-      {"status":"FAIL","cause":"追加80問のJS配列読込バグで120/200。KN100-KN101高類似0.93。"},
-      {"status":"FAIL","cause":"200/200・配分一致後、KN033-KN141高類似0.92。"},
-      {"status":"PASS","result":"200/200、全科目規定数一致、完全重複0、高類似0、必須項目PASS。"},
-      {"status":"PASS","result":"旧候補プールとのID分離後に再検証しPASS維持。"}
-    ],
+    "structureAudit":"PASS",
     "evidence":"audit/round1-ci-report.json",
-    "semanticAudit":"ACTIVE",
+    "contentAudit":"ACTIVE",
     "legalRightsAudit":"ACTIVE"
   },
-  "implementationReview": {
-    "round1":"候補240問を正式200問から隔離",
-    "round2":"旧KN121-240の学習状態が新問題へ誤継承しない移行処理を追加",
-    "round3":"『正式監査済み』表記を『構造監査PASS』へ修正"
+  "formalRound2": {
+    "count":200,
+    "distribution":{"社会・環境":16,"人体・疾病":26,"食べ物":25,"基礎栄養":14,"応用栄養":16,"栄養教育":13,"臨床栄養":26,"公衆栄養":16,"給食経営":18,"応用力":30},
+    "composition":{"legacyCandidateReaudited":120,"selectedNew":48,"rebalanceNew":32,"reservedNew":32},
+    "auditHistory":[
+      {"status":"FAIL","cause":"旧v0.4候補120問を各12問と誤認。実配分7/19/18/5/7/4/19/7/10/24のため、初期追加80問を足すと科目配分不一致。"},
+      {"status":"FAIL","result":"200/200・全科目配分一致。完全一致3組、0.90以上高類似3組を検出。"},
+      {"status":"PASS","result":"第1回＋第2回400/400、両回の全科目規定数一致、問題本文完全一致0、0.90以上高類似0、必須項目PASS。"}
+    ],
+    "structureAudit":"PASS",
+    "structureAuditRunId":31297802979,
+    "evidence":"audit/round1-2-ci-report.json",
+    "contentAudit":"PENDING_PRIMARY_SOURCE_AND_ANSWER_REVIEW",
+    "legalRightsAudit":"PENDING",
+    "public":false
   },
-  "topicMaps":{"round1Deficit80":"FIXED","round2Full200":"FIXED"},
-  "round2":{"planned":200,"created":0,"topicMap":"audit/round2-topic-map.json"},
-  "round3":{"planned":200,"created":0},
-  "remainingQuestions":400,
+  "combinedRound1Round2": {
+    "count":400,
+    "structureAudit":"PASS",
+    "exactDuplicateQuestionText":0,
+    "highSimilarityAtOrAbove0_90":0,
+    "evidence":"audit/round1-2-ci-report.json"
+  },
+  "round3": {
+    "planned":200,
+    "created":0,
+    "topicMap":"audit/round3-topic-map.json",
+    "topicMapStatus":"FIXED",
+    "policy":"第1・第2回と同一問題の言い換えを避け、症例・計算・適用判断・複数条件比較を増やす。"
+  },
+  "progress": {
+    "structureComposed":400,
+    "publicQuestions":200,
+    "remainingAuthoring":200,
+    "productTarget":600
+  },
   "loopStatus":"ACTIVE",
-  "nextLoop":"第1回200問の正答・制度・著作権/権利監査を完了しつつ、第2回200問を固定済み論点マップ順に作問→共通validator→一次資料監査する。"
+  "nextLoop":"第2回200問の一次資料・正答・制度・権利監査を行いFAILを修正する。同時に固定済み第3回200枠を独自作問し、完成後に第1〜第3回600問横断validatorを実行する。"
 }
