@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-08-09T15:03:00+09:00",
+  "questionAudit": {
+    "status": "PASS",
+    "examOccurrences": 75,
+    "uniqueQuestionBank": 68,
+    "historicalRepeatOrVariants": 7,
+    "cycles": [
+      {"cycle":1,"target":"2025春期午前II","initial":"FAIL","fix":"25問構造化・公式解答照合・出典付与","final":"PASS"},
+      {"cycle":2,"target":"2024春期午前II","initial":"FAIL","fix":"高類似誤検知1組の設問表現修正","final":"PASS"},
+      {"cycle":3,"target":"2023春期＋3年度横断","initial":"FAIL","fix":"75出題枠と68ユニーク問題を分離し7出題をcanonical化","final":"PASS"}
+    ]
+  },
+  "implementationValidation": {
+    "status": "PASS",
+    "cycles": [
+      {"initial":"FAIL","issue":"文字サイズ設定が設定画面内で即時反映されない","fix":"設定変更時にapplyFont()を即時実行","final":"PASS"},
+      {"initial":"FAIL","issue":"3件のOSPF問題でuiDomainがセキュリティに誤分類","fix":"ルーティング・SDNへ分類補正。問題文・正解・解説・出典は変更なし","final":"PASS"}
+    ],
+    "retests": ["JavaScript syntax PASS","75出題・68ユニーク PASS","各年度25問 PASS","OSPF分類3件 PASS","4/8/16 session PASS","weak 3-consecutive-right release PASS","resume PASS","4-tab navigation PASS"]
+  },
+  "ui30StateAudit": {"status":"PASS","screenshots":30,"horizontalOverflowStates":0,"statesWithButtonsUnder40px":0,"visualMajorIssues":0,"note":"後続変更はローダー分割・分類補正・申請設定であり、Golden Masterの寸法・色・画面構造は変更していない。"},
+  "releasePreparation": {
+    "status":"PASS_WITH_EXTERNAL_BLOCKERS",
+    "cycles":[
+      {"initial":"FAIL","issue":"manifest.jsonにportrait固定がない","fix":"orientation=portraitを追加","final":"PASS"},
+      {"initial":"FAIL","issue":"iOS LocalWebViewのUIApplication importとindex配置依存","fix":"UIKit明示importとindex読込フォールバック追加","final":"PASS"},
+      {"initial":"FAIL","issue":"questions-ui-fixes.jsがCodemagic同梱・release validator対象から漏れ","fix":"両方に追加","final":"PASS"}
+    ],
+    "passed":["SwiftUI + WKWebView local bundle prepared","PrivacyInfo.xcprivacy parsed","Info.plist parsed","ITSAppUsesNonExemptEncryption=false","portrait iPhone only","App Store metadata draft","Support/Privacy static pages","Codemagic/XcodeGen config","canonical AppIcon 1024x1024 RGB available locally"],
+    "monetization":"Initial release has no IAP. Adding IAP invalidates Privacy/App Store metadata PASS and restarts release audit."
+  },
+  "releaseAudit": {
+    "status":"BLOCKED",
+    "blockers":[
+      "Canonical AppIcon PNG is present locally but not materialized as binary in GitHub checkout; repo-based Archive intentionally fails until exact Drive file is added.",
+      "Support/Privacy URLs are not public until main merge and HTTP 200 verification.",
+      "Bundle ID jp.allsunday1122.networkspecialist is a candidate and has not been verified as an Explicit App ID.",
+      "App Store Connect app record, Codemagic integration, signing, archive, TestFlight upload require Apple/Codemagic authenticated operations.",
+      "TestFlight physical-device verification is not yet complete."
+    ]
+  },
+  "github":{"repo":"ALLSUNDAY1122/ALLSUNDAY1122.github.io","branch":"feature/network-specialist-sprint-v1","draftPr":"pending"},
+  "appIcon":{"title":"07_ネットワークスペシャリスト試験.png","driveFileId":"1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8","size":"1024x1024","mode":"RGB","regenerationForbidden":true},
+  "currentStage":"Draft PR / TestFlight preparation. Apple authentication, exact icon binary materialization in repo, public URL verification and device testing remain."
+}
