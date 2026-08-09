@@ -8,6 +8,7 @@ ASSET_DIR="$SCRIPT_DIR/Assets.xcassets/AppIcon.appiconset"
 ICON_SRC="$SCRIPT_DIR/AppIcon.png"
 ICON_DRIVE_ID="11d72Dl76UH7QvU8Gxl-SgDjTV73GaxP4"
 ICON_EXPECTED_SIZE="726223"
+ICON_SHA256="294481351106502f20958359d02bb2fb117ae18399654388425aad0e264fe31f"
 ICON_MODE="${KANRI_ICON_MODE:-canonical}"
 
 rm -rf "$WEB_DST" "$SCRIPT_DIR/Assets.xcassets"
@@ -56,14 +57,14 @@ PY
     ;;
   canonical)
     if [ ! -f "$ICON_SRC" ]; then curl --fail --location --silent --show-error "https://drive.usercontent.google.com/download?id=${ICON_DRIVE_ID}&export=download&confirm=t" --output "$ICON_SRC"; fi
-    actual_size="$(wc -c < "$ICON_SRC" | tr -d ' ')"
-    if [ "$actual_size" != "$ICON_EXPECTED_SIZE" ]; then echo "ERROR: canonical AppIcon byte-size mismatch: $actual_size (expected $ICON_EXPECTED_SIZE)" >&2;rm -f "$ICON_SRC";exit 1;fi
+    actual_size="$(wc -c < "$ICON_SRC" | tr -d ' ')";actual_sha="$(shasum -a 256 "$ICON_SRC" | awk '{print $1}')"
+    if [ "$actual_size" != "$ICON_EXPECTED_SIZE" ] || [ "$actual_sha" != "$ICON_SHA256" ]; then echo "ERROR: canonical AppIcon mismatch: size=$actual_size sha=$actual_sha" >&2;rm -f "$ICON_SRC";exit 1;fi
     python3 - "$ICON_SRC" <<'PY'
 from pathlib import Path
 import struct,sys
 b=Path(sys.argv[1]).read_bytes();assert b[:8]==b'\x89PNG\r\n\x1a\n';w,h=struct.unpack('>II',b[16:24]);assert (w,h)==(1024,1024),(w,h);print('PASS: canonical PNG dimensions 1024x1024')
 PY
-    cp "$ICON_SRC" "$ASSET_DIR/AppIcon.png";echo "PASS: canonical Drive AppIcon materialized: ${ICON_DRIVE_ID}";;
+    cp "$ICON_SRC" "$ASSET_DIR/AppIcon.png";echo "PASS: canonical Drive AppIcon materialized: ${ICON_DRIVE_ID} SHA256=${ICON_SHA256}";;
   *) echo "ERROR: unknown KANRI_ICON_MODE=$ICON_MODE" >&2;exit 1;;
 esac
 
