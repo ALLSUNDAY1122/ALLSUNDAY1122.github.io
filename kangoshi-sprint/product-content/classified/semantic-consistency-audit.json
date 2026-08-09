@@ -55,25 +55,20 @@
     }
   },
   "strongSemanticErrors": [
-    "K115-AM095: basic-skill-explicit expects ['基礎看護学'], got 成人看護学",
     "K115-AM120: disaster-scenario expects ['看護の統合と実践'], got 基礎看護学",
-    "K115-PM069: mental-explicit expects ['精神看護学'], got 地域・在宅看護論",
-    "K115-PM093: disaster-explicit expects ['看護の統合と実践'], got 地域・在宅看護論",
-    "K114-AM100: basic-skill-explicit expects ['基礎看護学'], got 成人看護学",
-    "K114-AM106: disaster-explicit expects ['看護の統合と実践'], got 基礎看護学",
+    "K114-AM106: stem semantic domains ['disaster-explicit'] allow ['看護の統合と実践'], got 基礎看護学",
     "K114-AM106: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
     "K114-AM112: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K114-AM114: pediatric-scenario expects ['小児看護学'], got 母性看護学",
-    "K114-PM087: system-explicit expects ['健康支援と社会保障制度'], got 地域・在宅看護論",
+    "K114-PM087: stem semantic domains ['system-explicit'] allow ['健康支援と社会保障制度'], got 地域・在宅看護論",
     "K114-PM107: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
     "K114-PM108: pediatric-scenario expects ['小児看護学'], got 基礎看護学",
-    "K113-AM072: disaster-explicit expects ['看護の統合と実践'], got 小児看護学",
+    "K113-AM072: stem semantic domains ['disaster-explicit'] allow ['看護の統合と実践'], got 小児看護学",
     "K113-AM109: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-AM111: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-PM106: pediatric-scenario expects ['小児看護学'], got 母性看護学",
     "K113-PM107: pediatric-scenario expects ['小児看護学'], got 母性看護学",
-    "K113-PM108: pediatric-scenario expects ['小児看護学'], got 母性看護学",
-    "K113-PM116: disaster-explicit expects ['看護の統合と実践'], got 地域・在宅看護論"
+    "K113-PM108: pediatric-scenario expects ['小児看護学'], got 母性看護学"
   ],
   "splitScenarioGroups": [
     {
@@ -390,20 +385,23 @@
     }
   ],
   "warnings": [
-    "K113-AM-SC02: situation group split {'成人看護学': 2, '地域・在宅看護論': 1}; manual semantic check required",
-    "K113-AM-SC09: situation group split {'成人看護学': 1, '地域・在宅看護論': 2}; manual semantic check required",
-    "K113-AM-SC10: situation group split {'基礎看護学': 2, '看護の統合と実践': 1}; manual semantic check required",
-    "K113-PM-SC05: situation group split {'健康支援と社会保障制度': 1, '基礎看護学': 2}; manual semantic check required",
-    "K114-AM-SC05: situation group split {'成人看護学': 1, '基礎看護学': 2}; manual semantic check required",
-    "K114-AM-SC06: situation group split {'基礎看護学': 1, '小児看護学': 2}; manual semantic check required",
-    "K114-PM-SC04: situation group split {'老年看護学': 2, '地域・在宅看護論': 1}; manual semantic check required",
-    "K114-PM-SC06: situation group split {'小児看護学': 1, '基礎看護学': 2}; manual semantic check required",
-    "K115-AM-SC06: situation group split {'小児看護学': 1, '地域・在宅看護論': 2}; manual semantic check required",
-    "K115-AM-SC10: situation group split {'看護の統合と実践': 2, '基礎看護学': 1}; manual semantic check required",
-    "K115-PM-SC02: situation group split {'疾病の成り立ちと回復の促進': 1, '成人看護学': 2}; manual semantic check required",
-    "K115-PM-SC03: situation group split {'成人看護学': 2, '母性看護学': 1}; manual semantic check required",
-    "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; manual semantic check required"
+    "K115-PM069: multi-domain stem ['mental-explicit', 'community-explicit']; assigned 地域・在宅看護論 requires contextual review",
+    "K115-PM093: multi-domain stem ['community-explicit', 'disaster-explicit']; assigned 地域・在宅看護論 requires contextual review",
+    "K113-PM116: multi-domain stem ['community-explicit', 'disaster-explicit']; assigned 地域・在宅看護論 requires contextual review",
+    "K113-AM-SC02: situation group split {'成人看護学': 2, '地域・在宅看護論': 1}; contextual review required",
+    "K113-AM-SC09: situation group split {'成人看護学': 1, '地域・在宅看護論': 2}; contextual review required",
+    "K113-AM-SC10: situation group split {'基礎看護学': 2, '看護の統合と実践': 1}; contextual review required",
+    "K113-PM-SC05: situation group split {'健康支援と社会保障制度': 1, '基礎看護学': 2}; contextual review required",
+    "K114-AM-SC05: situation group split {'成人看護学': 1, '基礎看護学': 2}; contextual review required",
+    "K114-AM-SC06: situation group split {'基礎看護学': 1, '小児看護学': 2}; contextual review required",
+    "K114-PM-SC04: situation group split {'老年看護学': 2, '地域・在宅看護論': 1}; contextual review required",
+    "K114-PM-SC06: situation group split {'小児看護学': 1, '基礎看護学': 2}; contextual review required",
+    "K115-AM-SC06: situation group split {'小児看護学': 1, '地域・在宅看護論': 2}; contextual review required",
+    "K115-AM-SC10: situation group split {'看護の統合と実践': 2, '基礎看護学': 1}; contextual review required",
+    "K115-PM-SC02: situation group split {'疾病の成り立ちと回復の促進': 1, '成人看護学': 2}; contextual review required",
+    "K115-PM-SC03: situation group split {'成人看護学': 2, '母性看護学': 1}; contextual review required",
+    "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; contextual review required"
   ],
   "pass": false,
-  "note": "独立ルールによる分類整合監査。PASSは分類矛盾がないことを示し、医学・看護学的専門家監査の代替ではない。"
+  "note": "独立ルールによる分類整合監査。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。PASSは医学・看護学的専門家監査の代替ではない。"
 }
