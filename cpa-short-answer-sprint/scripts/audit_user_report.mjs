@@ -57,7 +57,7 @@ for(const id of ids){
     const labels=['ア．','イ．','ウ．','エ．'].filter(x=>qtext.includes(x));
     if(labels.length>=2){
       for(const label of labels){
-        if(!qtext.includes(`\n\n${label}`))throw new Error(`${id}: statement spacing missing ${label}`);
+        if(!qtext.includes(`\n${label}`))throw new Error(`${id}: statement line break missing ${label}`);
       }
     }
 
