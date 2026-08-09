@@ -1,0 +1,67 @@
+workflows:
+  otsu4-testflight:
+    name: 危険物乙4 TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      groups:
+        - appstore_credentials
+      vars:
+        BUNDLE_ID: jp.allsunday1122.otsu4
+        XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
+        XCODE_SCHEME: Otsu4Sprint
+      xcode: 26.5
+
+    scripts:
+      - name: Install XcodeGen
+        script: brew install xcodegen
+
+      - name: Prepare audited 360-question resources
+        script: bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
+
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          xcodegen generate
+
+      - name: Set build number
+        script: |
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          agvtool new-version -all "$CM_BUILD_NUMBER"
+
+      - name: Initialize signing keychain
+        script: keychain initialize
+
+      - name: Fetch App Store signing files
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+
+      - name: Add signing certificates
+        script: keychain add-certificates
+
+      - name: Apply provisioning profiles
+        script: |
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          xcode-project use-profiles
+
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        submit_to_app_store: false
