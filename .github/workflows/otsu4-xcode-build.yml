@@ -1,0 +1,76 @@
+name: Otsu4 Xcode Build
+
+on:
+  pull_request:
+    paths:
+      - 'native-ios/Otsu4Sprint/**'
+      - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
+      - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/workflows/otsu4-xcode-build.yml'
+  push:
+    branches: [ feat/otsu4-360-productization ]
+    paths:
+      - 'native-ios/Otsu4Sprint/**'
+      - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
+      - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/workflows/otsu4-xcode-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  simulator-build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Foundation-only notice
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') == '' }}
+        run: echo 'Otsu4 Xcode project files are not present yet; simulator build will run on the product PR.'
+      - name: Install XcodeGen
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: brew install xcodegen
+      - name: Validate privacy manifest plist
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: plutil -lint native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy
+      - name: Prepare audited native resources
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: bash native-ios/Otsu4Sprint/prepare-ios.sh
+      - name: Generate Xcode project
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        working-directory: native-ios/Otsu4Sprint
+        run: xcodegen generate
+      - name: Build iPhone Simulator app
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty
+      - name: Verify release bundle resources
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: |
+          APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
+          echo "APP=$APP"
+          test -n "$APP"
+          find "$APP" -maxdepth 2 -type f -print | sort
+          test -f "$APP/questions.generated.json"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          test -f "$APP/Assets.car"
+          plutil -p "$APP/Info.plist"
+          /usr/bin/python3 - "$APP/questions.generated.json" <<'PY'
+          import json,sys
+          p=sys.argv[1]
+          data=json.load(open(p,encoding='utf-8'))
+          assert data['contentVersion']=='otsu4-2026-08-product-v2'
+          assert len(data['questions'])==360
+          print('bundle questions=',len(data['questions']))
+          PY

@@ -1,0 +1,28 @@
+name: Otsu4 Release Foundation Lint
+
+on:
+  pull_request:
+    paths:
+      - 'codemagic.yaml'
+      - 'automation/regulation-watch/sources.json'
+      - 'kikenbutsu-otsu4-sprint/support.html'
+      - 'kikenbutsu-otsu4-sprint/privacy.html'
+      - '.github/workflows/otsu4-*.yml'
+      - 'docs/otsu4-release-foundation-2026-08-09.md'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON and public pages
+        run: |
+          python3 -m json.tool automation/regulation-watch/sources.json >/dev/null
+          grep -q '危険物乙4' kikenbutsu-otsu4-sprint/support.html
+          grep -q 'プライバシーポリシー' kikenbutsu-otsu4-sprint/privacy.html
+          grep -q 'otsu4-ios:' codemagic.yaml
+          grep -q 'submit_to_app_store: false' codemagic.yaml
+          grep -q 'testFlightInternalTestingOnly' codemagic.yaml

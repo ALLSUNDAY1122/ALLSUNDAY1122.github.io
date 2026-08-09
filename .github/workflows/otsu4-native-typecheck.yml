@@ -1,0 +1,87 @@
+name: Otsu4 Native Typecheck
+
+on:
+  pull_request:
+    paths:
+      - 'native-ios/Otsu4Sprint/**'
+      - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
+      - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/workflows/otsu4-native-typecheck.yml'
+  push:
+    branches: [ feat/otsu4-360-productization ]
+    paths:
+      - 'native-ios/Otsu4Sprint/**'
+      - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
+      - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/workflows/otsu4-native-typecheck.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Foundation-only notice
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') == '' }}
+        run: echo 'Otsu4 native product files are not present yet; typecheck will run on the product PR.'
+      - name: Show Xcode and Swift versions
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
+        run: |
+          xcodebuild -version
+          xcrun swiftc --version
+      - name: Generate audited 360-question JSON
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
+        run: node tools/otsu4-build-content-v2.mjs
+      - name: Runtime-decode v2.1 learning selections
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
+        run: |
+          cat > /tmp/Otsu4ContentDecodeCheck.swift <<'SWIFT'
+          import Foundation
+
+          @main
+          struct Otsu4ContentDecodeCheck {
+              static func main() throws {
+                  let url = URL(fileURLWithPath: "kikenbutsu-otsu4-sprint/questions.generated.json")
+                  let store = try Otsu4ContentStore(url: url)
+                  guard store.allQuestions.count == 360 else { fatalError("question count mismatch") }
+                  guard store.freeQuestions.count == 72 else { fatalError("free count mismatch") }
+                  guard store.sprint(goal: 4, isPremium: true).count == 4 else { fatalError("sprint4 mismatch") }
+                  guard store.sprint(goal: 8, isPremium: true).count == 8 else { fatalError("sprint8 mismatch") }
+                  guard store.sprint(goal: 16, isPremium: true).count == 16 else { fatalError("sprint16 mismatch") }
+                  for set in 1...3 {
+                      guard let mock = store.mockExamQuestions(set: set), mock.count == 35 else {
+                          fatalError("mock set \(set) mismatch")
+                      }
+                      let counts = Dictionary(grouping: mock, by: \.subject).mapValues(\.count)
+                      guard counts["法令"] == 15, counts["物理・化学"] == 10, counts["性質・消火"] == 10 else {
+                          fatalError("mock subject counts mismatch set \(set)")
+                      }
+                  }
+                  guard Otsu4ContentStore.mockSetsAreDisjoint(in: store) else { fatalError("mock sets overlap") }
+                  print("decoded=360 free=72 sprint=4/8/16 mockSets=3x35 disjoint=true")
+              }
+          }
+          SWIFT
+          xcrun swiftc \
+            native-ios/Otsu4Sprint/Otsu4ContentStore.swift \
+            /tmp/Otsu4ContentDecodeCheck.swift \
+            -o /tmp/otsu4-content-check
+          /tmp/otsu4-content-check
+      - name: Typecheck Learning Sprint v2.1 native flow and StoreKit
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
+        run: |
+          xcrun --sdk iphonesimulator swiftc \
+            -target arm64-apple-ios17.0-simulator \
+            -typecheck \
+            native-ios/Otsu4Sprint/Otsu4ContentStore.swift \
+            native-ios/Otsu4Sprint/Otsu4PurchaseStore.swift \
+            native-ios/Otsu4Sprint/Otsu4PaywallView.swift \
+            native-ios/Otsu4Sprint/Otsu4DesignSystem.swift \
+            native-ios/Otsu4Sprint/Otsu4LearningStore.swift \
+            native-ios/Otsu4Sprint/Otsu4StudySession.swift \
+            native-ios/Otsu4Sprint/Otsu4LearningView.swift
