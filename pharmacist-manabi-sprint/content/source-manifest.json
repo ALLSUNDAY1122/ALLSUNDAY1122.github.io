@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "updatedAt": "2026-08-09",
   "license": {
     "provider": "厚生労働省",
@@ -7,21 +7,26 @@
     "attributionRequired": true,
     "modificationDisclosureRequired": true,
     "excludedByDefault": ["シンボルマーク・ロゴ・キャラクターデザイン", "別利用ルールが明示されたコンテンツ"],
-    "assetPolicy": "図・写真・構造式・グラフ・表などは原資産をそのまま公開せず、個別権利確認のうえ自作図へ再構成または文章化する。第三者由来が疑われる素材は別監査完了まで転載しない。"
+    "assetPolicy": "図・写真・構造式・グラフ・表・処方・機器図などは原資産をそのまま公開せず、個別権利確認のうえ自作図へ再構成または文章化する。第三者由来が疑われる素材は別監査完了まで転載しない。"
   },
   "audit": {
     "totalQuestions": 1035,
     "mandatoryPrimarySourcePass": 270,
     "theoryPrimarySourcePass": 315,
-    "primarySourcePassTotal": 585,
-    "remainingPrimarySourcePass": 450,
+    "practicalPrimarySourcePass": 450,
+    "primarySourcePassTotal": 1035,
+    "remainingPrimarySourcePass": 0,
     "mandatoryDetailFile": "mandatory-audit-v1.json",
     "theoryDetailFile": "theory-audit-v1.json",
-    "fullProblemAuditComplete": false
+    "practicalDetailFile": "practical-audit-v1.json",
+    "fullProblemAuditComplete": false,
+    "nextGate": "Finalize question/choice/explanation/evidence/effective-date data, normalize per-question subjects, finish visual redraws, then run duplicate/high-similarity/water-inflation/copyright/factual-answer audits across all 1,035 questions."
   },
   "statusSemantics": {
-    "noOfficialAnswer": "The official answer table says 解なし. This field does not by itself infer the final scoring treatment.",
-    "ordinaryQuestionBankOmit": "Do not deliver this item as an ordinary scored past-question item; omit it or create a corrected independent problem with separate provenance.",
+    "primarySourcePass": "Official source location, answer, correction/no-answer scope, exam section and initial asset gate have been reviewed. It does not mean the release-ready question is complete.",
+    "noOfficialAnswer": "The official answer table says 解なし. Do not publish as an ordinary scored past-question item.",
+    "ordinaryQuestionBankOmit": "Omit from ordinary scored delivery, or create a corrected independent problem with separate provenance.",
+    "flexibleOfficialAnswer": "The official answer table permits any two answers from the listed accepted pool; the grader must implement that rule explicitly.",
     "correction": "Official correction information exists and must be reflected before any adapted/rebuilt problem is released."
   },
   "exams": [
@@ -31,7 +36,9 @@
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198929.html",
       "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001677927.pdf",
       "theoryQuestionUrls": ["https://www.mhlw.go.jp/content/001677928.pdf","https://www.mhlw.go.jp/content/001677929.pdf"],
+      "practicalQuestionUrls": ["https://www.mhlw.go.jp/content/001677930.pdf","https://www.mhlw.go.jp/content/001677931.pdf","https://www.mhlw.go.jp/content/001677932.pdf"],
       "answerUrl": "https://www.mhlw.go.jp/content/001677933.pdf",
+      "correctionUrl": "https://www.mhlw.go.jp/content/001677936.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 686,
@@ -39,12 +46,14 @@
       "ordinaryQuestionBankOmit": [92,199],
       "corrections": [
         {"questions":[92],"type":"wording"},
-        {"questions":[199],"type":"unit"},
-        {"questions":[220,221],"type":"prescription"}
+        {"questions":[199],"type":"concentration_unit"},
+        {"questions":[220,221],"type":"prescription_dosage_form"}
       ],
-      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"noOfficialAnswer":0},
+      "flexibleOfficialAnswers": [{"question":287,"rule":"choose_any_two","acceptedPool":[1,2,3]}],
+      "mandatoryAudit": {"status":"primary_source_pass","questionCount":90,"detailFile":"mandatory-audit-v1.json"},
       "theoryAudit": {"status":"primary_source_pass","questionCount":105,"noOfficialAnswer":[92],"corrections":[92],"detailFile":"theory-audit-v1.json"},
-      "auditCorrectionLog": "Previous manifest incorrectly treated Q287 as excluded. Official answer review corrected the no-official-answer list to Q92 and Q199; Q287 is not recorded as 解なし."
+      "practicalAudit": {"status":"primary_source_pass","questionCount":150,"noOfficialAnswer":[199],"corrections":[199,220,221],"flexibleOfficialAnswers":[287],"detailFile":"practical-audit-v1.json"},
+      "auditCorrectionLog": "Previous manifest incorrectly treated Q287 as excluded. Official answer review corrected the no-official-answer list to Q92 and Q199; Q287 uses a flexible accepted-answer rule."
     },
     {
       "sourceRef": "mhlw-110",
@@ -52,15 +61,19 @@
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198928.html",
       "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001455149.pdf",
       "theoryQuestionUrls": ["https://www.mhlw.go.jp/content/001455152.pdf","https://www.mhlw.go.jp/content/001455159.pdf"],
+      "practicalQuestionUrls": ["https://www.mhlw.go.jp/content/001455160.pdf","https://www.mhlw.go.jp/content/001455161.pdf","https://www.mhlw.go.jp/content/001455162.pdf"],
       "answerUrl": "https://www.mhlw.go.jp/content/001458551.pdf",
+      "correctionUrl": null,
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 690,
       "noOfficialAnswerQuestions": [],
       "ordinaryQuestionBankOmit": [],
       "corrections": [],
-      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":74,"rewrite":16,"corrections":0,"noOfficialAnswer":0},
-      "theoryAudit": {"status":"primary_source_pass","questionCount":105,"noOfficialAnswer":[],"corrections":[],"detailFile":"theory-audit-v1.json"}
+      "flexibleOfficialAnswers": [{"question":331,"rule":"choose_any_two","acceptedPool":[1,2,5]}],
+      "mandatoryAudit": {"status":"primary_source_pass","questionCount":90,"detailFile":"mandatory-audit-v1.json"},
+      "theoryAudit": {"status":"primary_source_pass","questionCount":105,"noOfficialAnswer":[],"corrections":[],"detailFile":"theory-audit-v1.json"},
+      "practicalAudit": {"status":"primary_source_pass","questionCount":150,"noOfficialAnswer":[],"corrections":[],"flexibleOfficialAnswers":[331],"detailFile":"practical-audit-v1.json"}
     },
     {
       "sourceRef": "mhlw-109",
@@ -68,18 +81,19 @@
       "pageUrl": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000198926.html",
       "mandatoryQuestionUrl": "https://www.mhlw.go.jp/content/001226759.pdf",
       "theoryQuestionUrls": ["https://www.mhlw.go.jp/content/001226760.pdf","https://www.mhlw.go.jp/content/001226761.pdf"],
+      "practicalQuestionUrls": ["https://www.mhlw.go.jp/content/001226762.pdf","https://www.mhlw.go.jp/content/001226763.pdf","https://www.mhlw.go.jp/content/001226764.pdf"],
       "answerUrl": "https://www.mhlw.go.jp/content/001228441.pdf",
+      "correctionUrl": "https://www.mhlw.go.jp/content/001228439.pdf",
       "questionCount": 345,
       "sections": {"mandatory":90,"theory":105,"practical":150},
       "officialMaxPoints": 688,
       "noOfficialAnswerQuestions": [111,330],
       "ordinaryQuestionBankOmit": [111,330],
-      "corrections": [
-        {"questions":[330],"type":"graph-axis-unit"}
-      ],
-      "mandatoryAudit": {"status":"primary_source_pass","clearedTextAdapt":75,"rewrite":15,"corrections":0,"noOfficialAnswer":0,"specialAssetNote":"Q25 graph is based on a MIC/Environmental Dispute Coordination Commission report; rebuild or restate, do not directly copy."},
+      "corrections": [{"questions":[330],"type":"graph_axis_unit"}],
+      "flexibleOfficialAnswers": [{"question":305,"rule":"choose_any_two","acceptedPool":[1,3,5]}],
+      "mandatoryAudit": {"status":"primary_source_pass","questionCount":90,"detailFile":"mandatory-audit-v1.json","specialAssetNote":"Q25 graph is based on a MIC/Environmental Dispute Coordination Commission report; rebuild or restate, do not directly copy."},
       "theoryAudit": {"status":"primary_source_pass","questionCount":105,"noOfficialAnswer":[111],"corrections":[],"detailFile":"theory-audit-v1.json"},
-      "practicalCarryover": "Q330 is a practical-section no-official-answer/correction item and will be handled in the practical audit."
+      "practicalAudit": {"status":"primary_source_pass","questionCount":150,"noOfficialAnswer":[330],"corrections":[330],"flexibleOfficialAnswers":[305],"detailFile":"practical-audit-v1.json"}
     }
   ]
 }
