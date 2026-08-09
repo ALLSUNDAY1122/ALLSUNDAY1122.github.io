@@ -24,31 +24,51 @@ final class StoreKitManager: ObservableObject {
     @Published private(set) var status = "unknown"
 
     private var product: Product?
+    private var transactionUpdatesTask: Task<Void, Never>?
+
+    init() {
+        transactionUpdatesTask = Task { [weak self] in
+            for await result in Transaction.updates {
+                guard !Task.isCancelled else { return }
+                guard case .verified(let transaction) = result,
+                      transaction.productID == Self.productID else { continue }
+                await transaction.finish()
+                await self?.refresh()
+            }
+        }
+    }
 
     func refresh() async {
-        do {
-            if product == nil {
+        if product == nil {
+            do {
                 product = try await Product.products(for: [Self.productID]).first
                 displayPrice = product?.displayPrice ?? ""
+            } catch {
+                status = "error"
             }
-            var entitled = false
-            for await result in Transaction.currentEntitlements {
-                guard case .verified(let transaction) = result else { continue }
-                if transaction.productID == Self.productID,
-                   transaction.revocationDate == nil {
-                    entitled = true
-                }
+        }
+
+        var entitled = false
+        for await result in Transaction.currentEntitlements {
+            guard case .verified(let transaction) = result else { continue }
+            if transaction.productID == Self.productID,
+               transaction.revocationDate == nil {
+                entitled = true
             }
-            isPremium = entitled
-            status = "known"
-        } catch {
-            status = "error"
+        }
+        isPremium = entitled
+
+        if status != "error" {
+            status = product == nil ? "product_unavailable" : "known"
         }
     }
 
     func purchase() async {
         if product == nil { await refresh() }
-        guard let product else { return }
+        guard let product else {
+            status = "product_unavailable"
+            return
+        }
         do {
             let result = try await product.purchase()
             switch result {
