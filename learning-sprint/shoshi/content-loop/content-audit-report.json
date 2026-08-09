@@ -1,5 +1,5 @@
 {
-  "cycle": 8,
+  "cycle": 13,
   "status": "PASS",
   "generated": 210,
   "pdf_sets": 6,
@@ -221,5 +221,161 @@
   "inline_footer_audit": {
     "remaining": 0,
     "ids": []
+  },
+  "cross_question_boundary_audit": {
+    "moved_section_preambles": [
+      {
+        "from": "SHOSHI-R5-AM-03",
+        "to": "SHOSHI-R5-AM-04",
+        "chars": 72
+      },
+      {
+        "from": "SHOSHI-R6-AM-03",
+        "to": "SHOSHI-R6-AM-04",
+        "chars": 71
+      },
+      {
+        "from": "SHOSHI-R7-AM-02",
+        "to": "SHOSHI-R7-AM-03",
+        "chars": 6
+      },
+      {
+        "from": "SHOSHI-R7-AM-03",
+        "to": "SHOSHI-R7-AM-04",
+        "chars": 79
+      },
+      {
+        "from": "SHOSHI-R7-PM-02",
+        "to": "SHOSHI-R7-PM-03",
+        "chars": 6
+      },
+      {
+        "from": "SHOSHI-R7-PM-03",
+        "to": "SHOSHI-R7-PM-04",
+        "chars": 6
+      }
+    ],
+    "promoted_false_heading_prefixes": [
+      {
+        "id": "SHOSHI-R5-AM-04",
+        "prefix_chars": 48,
+        "preamble_chars": 121
+      },
+      {
+        "id": "SHOSHI-R5-AM-27",
+        "prefix_chars": 74,
+        "preamble_chars": 74
+      },
+      {
+        "id": "SHOSHI-R6-AM-04",
+        "prefix_chars": 48,
+        "preamble_chars": 120
+      },
+      {
+        "id": "SHOSHI-R6-AM-27",
+        "prefix_chars": 74,
+        "preamble_chars": 74
+      },
+      {
+        "id": "SHOSHI-R6-PM-28",
+        "prefix_chars": 74,
+        "preamble_chars": 74
+      },
+      {
+        "id": "SHOSHI-R7-AM-04",
+        "prefix_chars": 47,
+        "preamble_chars": 127
+      },
+      {
+        "id": "SHOSHI-R7-AM-27",
+        "prefix_chars": 72,
+        "preamble_chars": 72
+      },
+      {
+        "id": "SHOSHI-R7-PM-28",
+        "prefix_chars": 72,
+        "preamble_chars": 72
+      }
+    ],
+    "discarded_pdf_tail_artifacts": [
+      {
+        "from": "SHOSHI-R5-AM-35",
+        "chars": 337,
+        "marker": "answer_sheet"
+      },
+      {
+        "from": "SHOSHI-R6-AM-35",
+        "chars": 337,
+        "marker": "answer_sheet"
+      },
+      {
+        "from": "SHOSHI-R7-AM-35",
+        "chars": 343,
+        "marker": "answer_sheet"
+      }
+    ],
+    "discarded_booklet_instructions": [
+      {
+        "id": "SHOSHI-R5-PM-01",
+        "discarded_chars": 935,
+        "marker": "booklet_instructions"
+      },
+      {
+        "id": "SHOSHI-R6-PM-01",
+        "discarded_chars": 939,
+        "marker": "booklet_instructions"
+      }
+    ],
+    "orphan_preambles": [],
+    "remaining_cross_contamination": [],
+    "suspicious_leading_continuation": [],
+    "booklet_instruction_residue": [],
+    "dangling_preambles": [],
+    "question_count": 210
+  },
+  "consumed_range_start_audit": {
+    "repairs": [
+      {
+        "id": "SHOSHI-R5-AM-04",
+        "from": "また、\nから第 23 問",
+        "to_start": "また、\n第4問から第23問"
+      },
+      {
+        "id": "SHOSHI-R5-AM-27",
+        "from": "から第 34 問",
+        "to_start": "第27問から第34問"
+      },
+      {
+        "id": "SHOSHI-R6-AM-04",
+        "from": "また、\nから第 23 問",
+        "to_start": "また、\n第4問から第23問"
+      },
+      {
+        "id": "SHOSHI-R6-AM-27",
+        "from": "から第 34 問",
+        "to_start": "第27問から第34問"
+      },
+      {
+        "id": "SHOSHI-R6-PM-28",
+        "from": "から第 35 問",
+        "to_start": "第28問から第35問"
+      },
+      {
+        "id": "SHOSHI-R7-AM-04",
+        "from": "また、\nから第 23問",
+        "to_start": "また、\n第4問から第23問"
+      },
+      {
+        "id": "SHOSHI-R7-AM-27",
+        "from": "から第34問",
+        "to_start": "第27問から第34問"
+      },
+      {
+        "id": "SHOSHI-R7-PM-28",
+        "from": "から第35問",
+        "to_start": "第28問から第35問"
+      }
+    ],
+    "remaining_malformed_ids": []
   }
 }

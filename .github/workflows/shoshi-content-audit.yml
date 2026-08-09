@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - feature/shoshi-content-loop
+      - feature/shoshi-mvp-loop3
     paths:
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v3.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v4.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v5.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v6.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v7.py'
       - '.github/workflows/shoshi-content-audit.yml'
   pull_request:
     branches:
@@ -16,6 +19,8 @@ on:
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v3.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v4.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v5.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v6.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v7.py'
       - '.github/workflows/shoshi-content-audit.yml'
   workflow_dispatch:
 
@@ -29,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/shoshi-content-loop
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
@@ -42,7 +47,7 @@ jobs:
         run: |
           set +e
           cd learning-sprint/shoshi/content-loop
-          python official_pdf_loop_v5.py
+          python official_pdf_loop_v7.py
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
@@ -70,9 +75,9 @@ jobs:
             if [ -e "$p" ]; then git add "$p"; fi
           done
           if ! git diff --cached --quiet; then
-            git commit -m "司法書士210問の本文内フッター監査結果を更新"
-            git pull --rebase origin feature/shoshi-content-loop || true
-            git push origin HEAD:feature/shoshi-content-loop || true
+            git commit -m "司法書士210問の問題境界監査結果を更新"
+            git pull --rebase origin "${{ github.head_ref || github.ref_name }}" || true
+            git push origin HEAD:"${{ github.head_ref || github.ref_name }}" || true
           fi
       - name: Enforce PASS
         shell: bash
