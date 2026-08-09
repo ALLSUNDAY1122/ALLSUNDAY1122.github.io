@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "qualification": "看護師国家試験",
+  "targetQuestions": 720,
+  "setCount": 3,
+  "questionsPerSet": 240,
+  "compositionPerSet": {
+    "必修": 50,
+    "一般": 130,
+    "状況設定": 60
+  },
+  "sets": [
+    {"id":"set1","label":"第1回","status":"not_started","file":"set1.js","questionCount":0},
+    {"id":"set2","label":"第2回","status":"not_started","file":"set2.js","questionCount":0},
+    {"id":"set3","label":"第3回","status":"not_started","file":"set3.js","questionCount":0}
+  ],
+  "releaseGate": {
+    "noDuplicateIds": true,
+    "noDuplicateStems": true,
+    "noNearDuplicateStems": true,
+    "explicitMajorSubject": true,
+    "officialElevenSubjectsOnly": true,
+    "explanationRequired": true,
+    "rightsStatusRequired": true,
+    "sourceRefsRequired": true,
+    "expertReviewRequired": true,
+    "scenarioGroupingRequired": true,
+    "noPlaceholderDistractors": true
+  },
+  "reviewStatusOrder": ["draft","ai_audited","expert_reviewed"],
+  "note": "720問は3セット×240問を独立問題として作成する。同一論点の表現差し替えだけで問題数を水増ししない。"
+}
