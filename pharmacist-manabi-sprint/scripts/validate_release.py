@@ -4,7 +4,7 @@ import hashlib,json,plistlib,struct,sys
 R=Path(__file__).resolve().parents[1]; ROOT=R.parent; errors=[]; warnings=[]
 def need(p):
  if not (R/p).exists(): errors.append('missing: '+p)
-for p in ['index.html','style.css','app-v06.js','record-fix-v061.js','content/product/questions.json','content/product/final-audit-v2.json','content/product/web-static-audit.json','support.html','privacy.html','terms.html','ios/project.yml','ios/App.swift','ios/Info.plist','ios/PrivacyInfo.xcprivacy','ios/prepare-ios.sh','ios/product-loader-ios.js','ios/native-store-ui.js','ios/native-store.css','ios/apply-xcode-capabilities.py','ios/Assets.xcassets/AppIcon.appiconset/Contents.json','ios/Assets.xcassets/AppIcon.appiconset/APPICON_SOURCE.md','metadata/APP_STORE_METADATA_JA.md','metadata/RELEASE_STATUS.md','metadata/RELEASE_CHECKLIST.md','metadata/CODEX_HANDOFF.md']: need(p)
+for p in ['index.html','style.css','app-v06.js','record-fix-v061.js','content/product/questions.json','content/product/final-audit-v2.json','content/product/web-static-audit.json','support.html','privacy.html','terms.html','ios/project.yml','ios/App.swift','ios/Info.plist','ios/PrivacyInfo.xcprivacy','ios/prepare-ios.sh','ios/product-loader-ios.js','ios/native-store-ui.js','ios/native-store.css','ios/apply-xcode-capabilities.py','ios/Assets.xcassets/AppIcon.appiconset/Contents.json','ios/Assets.xcassets/AppIcon.appiconset/APPICON_SOURCE.md','metadata/APP_STORE_METADATA_JA.md','metadata/RELEASE_STATUS.md','metadata/RELEASE_CHECKLIST.md','metadata/CODEX_HANDOFF.md','metadata/APP_PRIVACY_AND_RIGHTS.md']: need(p)
 if not (ROOT/'codemagic.yaml').exists(): errors.append('missing: root codemagic.yaml')
 if errors: print('FAIL\n'+'\n'.join('- '+e for e in errors));sys.exit(1)
 a=json.load(open(R/'content/product/final-audit-v2.json',encoding='utf-8'));q=json.load(open(R/'content/product/questions.json',encoding='utf-8'));w=json.load(open(R/'content/product/web-static-audit.json',encoding='utf-8'))
@@ -22,7 +22,9 @@ for s in ['jp.allsunday1122.yakuzaishi','jp.allsunday1122.yakuzaishi.monthly','j
 if 'UserDefaults' in app: errors.append('UserDefaults added without Privacy Manifest reason')
 if "q.exam===111&&q.f==='必須'" not in loader or 'free!==90' not in loader: errors.append('free gate not fixed to current mandatory 90')
 if 'state.introConfigured&&state.introEligible' not in storeui: errors.append('trial eligibility UI gate missing')
-if 'App Storeで確認' not in storeui or 'displayPrice' in storeui: pass
+if 'App Storeで確認' not in storeui: errors.append('StoreKit price fallback missing')
+if '¥200' in storeui or '¥980' in storeui or '￥200' in storeui or '￥980' in storeui: errors.append('hard-coded purchase price found in UI')
+if "monthly+' / 月で自動更新'" not in storeui: errors.append('subscription renewal disclosure missing')
 source=(R/'ios/Assets.xcassets/AppIcon.appiconset/APPICON_SOURCE.md').read_text(encoding='utf-8');expected='dfc7dfe4a1c13afbe98658cde591274e11665b016c39e2a4411de4dbe86127ec'
 if '1Au-Es7rxAyLxuGCzySTDsE-DXLWTwTtu' not in source or expected not in source: errors.append('canonical icon source mismatch')
 icon=R/'ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png';materialized=icon.exists()
