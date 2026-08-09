@@ -19,6 +19,10 @@ targets:
     type: application
     platform: iOS
     deploymentTarget: "16.0"
+    attributes:
+      SystemCapabilities:
+        com.apple.InAppPurchase:
+          enabled: 1
     sources:
       - path: App.swift
       - path: Web
