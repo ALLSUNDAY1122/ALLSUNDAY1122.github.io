@@ -17,6 +17,7 @@ workflows:
     scripts:
       - name: Audit learning content before macOS build
         script: |
+          cd "$CM_BUILD_DIR"
           node "$CM_BUILD_DIR/ios/health-manager-2/export-audit-data.cjs"
           python3 "$CM_BUILD_DIR/automation/learning-sprint-question-pipeline/validate_questions.py" \
             "$CM_BUILD_DIR/ios/health-manager-2/learning-sprint-audit.json"
@@ -63,5 +64,6 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        # The build is marked TestFlight Internal Testing Only, so no Beta App Review submission is requested.
+        submit_to_testflight: false
         submit_to_app_store: false
