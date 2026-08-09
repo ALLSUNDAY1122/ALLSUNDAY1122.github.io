@@ -16,7 +16,8 @@ const files = [
   'sources-v03.js',
   'questions-v03-tb.js',
   'questions-v03-audit1.js',
-  'questions-v03-audit1-order.js'
+  'questions-v03-audit1-order.js',
+  'questions-v03-audit1-polish.js'
 ];
 const context = vm.createContext({});
 for (const file of files) {
