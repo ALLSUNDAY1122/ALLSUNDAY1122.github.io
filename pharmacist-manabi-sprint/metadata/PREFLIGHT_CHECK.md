@@ -1,0 +1,1 @@
+Temporary release CI check for pharmacist app.
