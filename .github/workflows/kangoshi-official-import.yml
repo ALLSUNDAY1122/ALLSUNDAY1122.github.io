@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'kangoshi-sprint/product-content/import_official_exams.py'
+      - 'kangoshi-sprint/product-content/normalize_raw_import.py'
       - 'kangoshi-sprint/product-content/validate_raw_import.py'
       - 'kangoshi-sprint/product-content/build_common_audit_input.py'
       - 'kangoshi-sprint/product-content/learning-sprint-raw-audit.json'
@@ -41,11 +42,26 @@ jobs:
           cat kangoshi-sprint/product-content/raw/import.log
           echo "$code" > kangoshi-sprint/product-content/raw/import.exit
 
-      - name: Validate raw imports
+      - name: Normalize PDF extraction
         shell: bash
         run: |
           if [ "$(cat kangoshi-sprint/product-content/raw/import.exit)" != "0" ]; then
-            echo 'SKIPPED: import failed' | tee kangoshi-sprint/product-content/raw/raw-validation.log
+            echo 'SKIPPED: import failed' | tee kangoshi-sprint/product-content/raw/normalize.log
+            echo '99' > kangoshi-sprint/product-content/raw/normalize.exit
+            exit 0
+          fi
+          set +e
+          python3 kangoshi-sprint/product-content/normalize_raw_import.py > kangoshi-sprint/product-content/raw/normalize.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/raw/normalize.log
+          echo "$code" > kangoshi-sprint/product-content/raw/normalize.exit
+
+      - name: Validate raw imports
+        shell: bash
+        run: |
+          if [ "$(cat kangoshi-sprint/product-content/raw/normalize.exit)" != "0" ]; then
+            echo 'SKIPPED: normalization failed' | tee kangoshi-sprint/product-content/raw/raw-validation.log
             echo '99' > kangoshi-sprint/product-content/raw/raw-validation.exit
             exit 0
           fi
@@ -59,8 +75,8 @@ jobs:
       - name: Build shared audit input
         shell: bash
         run: |
-          if [ "$(cat kangoshi-sprint/product-content/raw/import.exit)" != "0" ]; then
-            echo 'SKIPPED: import failed' | tee kangoshi-sprint/product-content/raw/common-build.log
+          if [ "$(cat kangoshi-sprint/product-content/raw/normalize.exit)" != "0" ]; then
+            echo 'SKIPPED: normalization failed' | tee kangoshi-sprint/product-content/raw/common-build.log
             echo '99' > kangoshi-sprint/product-content/raw/common-build.exit
             exit 0
           fi
@@ -100,6 +116,7 @@ jobs:
               try: return int(f.read_text().strip())
               except Exception: return 98
           imp=exit_code('import.exit')
+          norm=exit_code('normalize.exit')
           raw=exit_code('raw-validation.exit')
           common=exit_code('common-audit.exit')
           for s in d['sets']:
@@ -113,6 +130,8 @@ jobs:
               s['expertReviewedCount']=0
               if imp != 0:
                   s['status']='raw_import_failed'
+              elif norm != 0:
+                  s['status']='raw_normalization_failed'
               elif raw != 0:
                   s['status']='raw_structure_audit_fail'
               elif common != 0:
@@ -123,6 +142,7 @@ jobs:
                   s['status']='raw_incomplete'
           d['lastRawLoop']={
               'importExit':imp,
+              'normalizeExit':norm,
               'rawValidationExit':raw,
               'commonAuditExit':common,
               'releaseAllowed':False
@@ -147,9 +167,11 @@ jobs:
         shell: bash
         run: |
           imp=$(cat kangoshi-sprint/product-content/raw/import.exit)
+          norm=$(cat kangoshi-sprint/product-content/raw/normalize.exit)
           raw=$(cat kangoshi-sprint/product-content/raw/raw-validation.exit)
           common=$(cat kangoshi-sprint/product-content/raw/common-audit.exit)
-          echo "import=$imp raw=$raw common=$common"
+          echo "import=$imp normalize=$norm raw=$raw common=$common"
           test "$imp" = "0"
+          test "$norm" = "0"
           test "$raw" = "0"
           test "$common" = "0"
