@@ -38,24 +38,26 @@
 - [x] 辛口レビュー3: Xcode build成功でもJSON/Privacy Manifestがapp bundleに入らないことを検出→Xcode resource phaseへ移行
 - [x] 360問JSONのSwift runtime decode監査
 - [x] Native Typecheck
-- [ ] 最終CIで Content Audit / Native Typecheck / Xcode Release Simulator Build の3本すべてPASS
+- [x] Content Audit / Native Typecheck / Xcode Release Simulator Build の3本すべてPASS
+- [x] Release Gate一括監査 PASS（latest main同期 / 360問 / 4・8・16 / 模試3×35 / StoreKit / Xcode / bundle）
 
 ## D. iOS方式・申請ファイル
 - [x] iOS方式: SwiftUI native + XcodeGen / Codemagic
 - [x] Bundle ID固定: `jp.allsunday1122.otsu4`
 - [x] Version `1.0.0` / Build `1`
 - [x] `project.yml`（XcodeGen）
-- [x] `prepare-ios.sh`（監査済360問JSON＋1024px App Icon生成）
+- [x] `prepare-ios.sh`（監査済360問JSON＋1024px RGB/no-alpha App Icon生成）
 - [x] `Info.plist`
 - [x] `PrivacyInfo.xcprivacy`
 - [x] App Store日本語メタデータ案
 - [x] Review Notes案
 - [x] Support pageソース
 - [x] Privacy Policyソース
-- [x] 1024x1024 App Store icon再現可能ソース＋Asset Catalog定義
-- [ ] Xcode Release Simulator BuildでAppIcon / JSON / Privacy Manifest同梱を最終確認
+- [x] 1024x1024 App Store icon生成＋Asset Catalog定義
+- [x] Xcode Release Simulator BuildでAppIcon / JSON / Privacy Manifest同梱を確認
+- [x] Support / Privacyソースをmainへ反映（PR #4080）
+- [ ] 公開Support/Privacy URL HTTP 200確認（この実行環境から外部DNS確認できず未判定）
 - [ ] App Store screenshot最終版（TestFlight実機から取得を優先）
-- [ ] 公開Support/Privacy URL HTTP 200確認（main反映後）
 
 ## E. App Store Connect / 課金
 - [ ] Explicit App ID / Bundle ID `jp.allsunday1122.otsu4` の登録確認
@@ -68,19 +70,21 @@
 - [ ] 年齢区分回答
 
 ## F. Codemagic / TestFlight
-- [x] `codemagic.yaml` 作成
-- [x] `submit_to_testflight: true`
-- [x] `submit_to_app_store: false`
-- [ ] Codemagic公式仕様との最終照合
-- [ ] App Store Connect API key / signing資格情報をCodemagicへ設定（秘密情報はGitHubへ置かない）
+- [x] `codemagic.yaml` 作成・mainへ基盤反映
+- [x] Codemagic公式仕様へ合わせ内部TestFlight専用構成を固定
+- [x] `testFlightInternalTestingOnly: true`
+- [x] `submit_to_testflight: false`（Beta App Reviewへ自動提出しない）
+- [x] `submit_to_app_store: false`（本審査へ自動提出しない）
+- [ ] App Store Connect integration / signing資格情報をCodemagicへ設定（秘密情報はGitHubへ置かない）
 - [ ] 無料ビルド枠残量を確認
 - [ ] 署名付きArchive / IPA
-- [ ] Validate
-- [ ] TestFlight内部テストへ反映
+- [ ] Validate / App Store Connectへアップロード
+- [ ] TestFlight内部テストへBuild反映
 
 ## G. 人間チェックポイント
 - [x] 企画採否
 - [x] 初期試作品確認
+- [ ] Apple Developer / App Store Connect / Codemagicで必要な本人ログイン・2FA・契約確認
 - [ ] iPhone実機でTestFlightを確認
 - [ ] 購入成功
 - [ ] 購入キャンセル
@@ -91,6 +95,17 @@
 - [ ] 大きい文字で切れ・重なり・横スクロールなし
 - [ ] 最終スクリーンショット承認
 - [ ] App Store最終提出をユーザーが承認
+
+## 最新Release Gate証跡
+`native-ios/Otsu4Sprint/RELEASE_CI_STATUS.md`
+- Result: PASS
+- Content audit: success
+- Native resource preparation: success
+- Runtime decode: success
+- SwiftUI + StoreKit typecheck: success
+- Xcode Release Simulator build: success
+- Bundle JSON + PrivacyInfo + Assets.car: success
+- Production App Store submit: NOT EXECUTED
 
 ## STOP条件
 App Store本番審査への自動提出は禁止。ユーザーの最終承認前は `submit_to_app_store: false` を維持する。
