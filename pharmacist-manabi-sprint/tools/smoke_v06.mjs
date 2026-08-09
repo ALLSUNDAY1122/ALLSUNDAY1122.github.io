@@ -24,7 +24,7 @@ try{
   await page.waitForSelector('#feedback:not(.hidden)');
   assert((await page.locator('#memory').innerText()).trim().length>5,'memoryPoint empty');
   assert((await page.locator('#reason').innerText()).trim().length>10,'explanation empty');
-  assert((await page.locator('#detail').innerText()).includes('厚生労働省'),'attribution missing');
+  assert((await page.locator('#detail').textContent()).includes('厚生労働省'),'attribution missing');
   await page.click('#quitBtn');
 
   await page.click('.nav button[data-view="mock"]');
