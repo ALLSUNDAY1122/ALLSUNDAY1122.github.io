@@ -1,1 +1,30 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f3ea"><title>学びスプリント</title></head><body style="margin:0;background:#f7f3ea;font-family:-apple-system,sans-serif"><div style="padding:48px 20px;text-align:center;color:#4a5468">読み込み中…</div><script>(async()=>{try{const r=await fetch('app.gz.b64',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const b=await r.text();const u=Uint8Array.from(atob(b.trim()),c=>c.charCodeAt(0));const s=new DecompressionStream('gzip');const h=await new Response(new Blob([u]).stream().pipeThrough(s)).text();document.open();document.write(h);document.close()}catch(e){document.body.innerHTML='<div style="padding:32px;color:#b33">読み込みに失敗しました。再読み込みしてください。</div>'}})();</script></body></html>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f3ea"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><title>情報処理安全確保支援士｜学びスプリント</title></head><body style="margin:0;background:#f7f3ea;font-family:-apple-system,sans-serif"><div id="status" style="padding:48px 20px;text-align:center;color:#4a5468">読み込み中…</div><script>
+(async()=>{
+ const status=document.getElementById('status');
+ const fail=(e)=>{console.error(e);document.body.innerHTML='<div style="padding:32px 20px;color:#8b2d2d;line-height:1.7"><b>読み込みに失敗しました。</b><br><span style="font-size:13px">'+String(e&&e.message||e)+'</span><br><br><button onclick="location.reload()" style="font-size:16px;padding:12px 18px">再読み込み</button></div>'};
+ const loadScript=(src)=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error('展開ライブラリ読込失敗'));document.head.appendChild(s)});
+ try{
+   status.textContent='アプリデータを取得しています…';
+   const r=await fetch('./app.gz.b64?v=20260809-1948',{cache:'no-store'});
+   if(!r.ok)throw new Error('アプリデータ取得エラー HTTP '+r.status);
+   const b=(await r.text()).trim();
+   const u=Uint8Array.from(atob(b),c=>c.charCodeAt(0));
+   let h='';
+   if('DecompressionStream' in window){
+     try{
+       status.textContent='アプリを展開しています…';
+       const ds=new DecompressionStream('gzip');
+       h=await new Response(new Blob([u]).stream().pipeThrough(ds)).text();
+     }catch(nativeErr){console.warn('native gunzip failed',nativeErr)}
+   }
+   if(!h){
+     status.textContent='互換モードで展開しています…';
+     try{await loadScript('https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js')}catch(_){await loadScript('https://unpkg.com/pako@2.1.0/dist/pako.min.js')}
+     if(!window.pako)throw new Error('互換展開機能を利用できません');
+     h=new TextDecoder('utf-8').decode(window.pako.ungzip(u));
+   }
+   if(!/^\s*<!doctype html|^\s*<html/i.test(h))throw new Error('展開後データがHTMLではありません');
+   document.open();document.write(h);document.close();
+ }catch(e){fail(e)}
+})();
+</script></body></html>
