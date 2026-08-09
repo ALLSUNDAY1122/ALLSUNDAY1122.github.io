@@ -10,6 +10,8 @@ STAGES=[
  ('refine-v5','refine_classification_v5.py'),
  ('refine-v6','refine_classification_v6.py'),
  ('refine-v7','refine_classification_v7.py'),
+ ('validate','validate_classification.py'),
+ ('semantic-audit','audit_classification_semantics.py'),
 ]
 results=[]
 for name,file in STAGES:
@@ -22,9 +24,4 @@ for name,file in STAGES:
         (ROOT/'classified/classification-run-summary.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         sys.exit(p.returncode)
 
-p=subprocess.run([sys.executable,str(ROOT/'validate_classification.py')],capture_output=True,text=True)
-print('=== validate ==='); print(p.stdout,end='')
-if p.stderr: print(p.stderr,file=sys.stderr,end='')
-results.append({'stage':'validate','file':'validate_classification.py','exit':p.returncode})
 (ROOT/'classified/classification-run-summary.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-sys.exit(p.returncode)
