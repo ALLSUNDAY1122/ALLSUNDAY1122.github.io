@@ -1,0 +1,65 @@
+name: Kangoshi Explanation Evidence Loop
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ['Kangoshi 11 Subject Classification Loop']
+    types: [completed]
+  push:
+    paths:
+      - 'kangoshi-sprint/product-content/build_enrichment_drafts.py'
+      - 'kangoshi-sprint/product-content/apply_explanation_batches.py'
+      - 'kangoshi-sprint/product-content/validate_enrichment.py'
+      - 'kangoshi-sprint/product-content/explanation-batches/**'
+      - '.github/workflows/kangoshi-enrichment.yml'
+
+concurrency:
+  group: kangoshi-explanation-evidence
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  enrich:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build deterministic drafts
+        run: python3 kangoshi-sprint/product-content/build_enrichment_drafts.py
+      - name: Apply explanation batches
+        run: python3 kangoshi-sprint/product-content/apply_explanation_batches.py
+      - name: Validate enrichment
+        shell: bash
+        run: |
+          set +e
+          python3 kangoshi-sprint/product-content/validate_enrichment.py > kangoshi-sprint/product-content/enriched-draft/enrichment.log 2>&1
+          code=$?
+          set -e
+          cat kangoshi-sprint/product-content/enriched-draft/enrichment.log
+          echo "$code" > kangoshi-sprint/product-content/enriched-draft/enrichment.exit
+      - name: Record manifest L3 state
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('kangoshi-sprint/product-content'); manifest=root/'manifest.json'
+          d=json.loads(manifest.read_text(encoding='utf-8'))
+          ap=root/'enriched-draft/enrichment-audit.json'
+          audit=json.loads(ap.read_text(encoding='utf-8')) if ap.exists() else {'counts':{}}
+          code=int((root/'enriched-draft/enrichment.exit').read_text().strip())
+          d['explanationEvidenceLoop']={**audit.get('counts',{}),'auditExit':code,'status':'pass' if code==0 else 'fail'}
+          manifest.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit L3 result and diagnostics
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kangoshi-sprint/product-content/enriched-draft kangoshi-sprint/product-content/manifest.json
+          if ! git diff --cached --quiet; then git commit -m 'kangoshi: explanation evidence loop result [skip ci]' && git push; fi
+      - name: Enforce L3 gate
+        shell: bash
+        run: test "$(cat kangoshi-sprint/product-content/enriched-draft/enrichment.exit)" = "0"
