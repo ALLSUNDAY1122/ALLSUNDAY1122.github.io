@@ -5,7 +5,7 @@ on:
     paths:
       - 'tsukanshi-sprint/questions*.js'
       - 'tsukanshi-sprint/sources*.js'
-      - 'tsukanshi-sprint/validate-content.mjs'
+      - 'tsukanshi-sprint/validate-*.mjs'
       - 'tsukanshi-sprint/index.html'
       - 'tsukanshi-sprint/bootstrap-v21.js'
       - 'tsukanshi-sprint/app-v21.js'
@@ -18,7 +18,7 @@ on:
     paths:
       - 'tsukanshi-sprint/questions*.js'
       - 'tsukanshi-sprint/sources*.js'
-      - 'tsukanshi-sprint/validate-content.mjs'
+      - 'tsukanshi-sprint/validate-*.mjs'
       - 'tsukanshi-sprint/index.html'
       - 'tsukanshi-sprint/bootstrap-v21.js'
       - 'tsukanshi-sprint/app-v21.js'
@@ -39,8 +39,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate customs broker content
+      - name: Validate customs broker source content
         run: node tsukanshi-sprint/validate-content.mjs
+      - name: Validate all 480 editorial-final questions
+        run: node tsukanshi-sprint/validate-editorial-final.mjs
       - name: Validate Golden Master UI JavaScript syntax
         run: |
           node --check tsukanshi-sprint/bootstrap-v21.js
@@ -49,21 +51,25 @@ jobs:
           node --check tsukanshi-sprint/questions-v03-audit1.js
           node --check tsukanshi-sprint/questions-v03-audit1-order.js
           node --check tsukanshi-sprint/questions-v03-audit1-polish.js
+          node --check tsukanshi-sprint/questions-editorial-audit2-7.js
+          node --check tsukanshi-sprint/questions-editorial-final-polish.js
       - name: Validate UI question bootstrap
         run: |
           node <<'NODE'
           const fs=require('fs'),vm=require('vm');
-          const files=['questions.js','sources-v02.js','questions-v02-tb.js','questions-v02-ks1.js','questions-v02-ks2.js','questions-v02-ks3.js','questions-v02-ks4.js','questions-v02-jm1.js','questions-v02-jm2.js','questions-v02-jm3.js','questions-v02-jm4.js','sources-v03.js','questions-v03-tb.js','questions-v03-audit1.js','questions-v03-audit1-order.js','questions-v03-audit1-polish.js'];
+          const files=['questions.js','sources-v02.js','questions-v02-tb.js','questions-v02-ks1.js','questions-v02-ks2.js','questions-v02-ks3.js','questions-v02-ks4.js','questions-v02-jm1.js','questions-v02-jm2.js','questions-v02-jm3.js','questions-v02-jm4.js','sources-v03.js','questions-v03-tb.js','questions-v03-audit1.js','questions-v03-audit1-order.js','questions-v03-audit1-polish.js','questions-editorial-audit2-7.js','questions-editorial-final-polish.js'];
           const context=vm.createContext({window:{},console});
           for(const file of files) vm.runInContext(fs.readFileSync('tsukanshi-sprint/'+file,'utf8'),context,{filename:file});
           vm.runInContext(fs.readFileSync('tsukanshi-sprint/bootstrap-v21.js','utf8'),context,{filename:'bootstrap-v21.js'});
           const questions=context.window.TSUKANSHI_QUESTIONS||[];
           if(questions.length!==492) throw new Error(`UI bootstrap question count ${questions.length}; expected 492`);
+          const study=questions.filter(q=>q.answerType!=='declaration');
+          const decl=questions.filter(q=>q.answerType==='declaration');
+          if(study.filter(q=>q.editorialStatus==='final').length!==480) throw new Error('UI does not expose 480 editorial-final study questions');
+          if(decl.filter(q=>q.editorialStatus==='final').length!==12) throw new Error('UI does not expose 12 editorial-final declaration sets');
           if(!context.window.TSUKANSHI_CONTENT_VERSION) throw new Error('content version not exposed to UI');
           if(!context.window.TSUKANSHI_LAW_BASELINE) throw new Error('law baseline not exposed to UI');
-          const audited=questions.filter(q=>/^V03-S-(0[0-5][0-9]|060)$/.test(q.id)&&q.editorialStatus==='final');
-          if(audited.length!==60) throw new Error(`UI editorial batch visible ${audited.length}; expected 60`);
-          console.log(`UI bootstrap ok: ${questions.length} questions; editorial batch ${audited.length}/60`);
+          console.log(`UI bootstrap ok: ${questions.length}; study final 480/480; declaration final 12/12`);
           NODE
       - name: Validate PWA manifest JSON
         run: node -e "JSON.parse(require('fs').readFileSync('tsukanshi-sprint/manifest.json','utf8')); console.log('manifest ok')"
@@ -73,9 +79,11 @@ jobs:
           grep -q 'questions-v03-audit1.js?v=20260809-1141' tsukanshi-sprint/index.html
           grep -q 'questions-v03-audit1-order.js?v=20260809-1141' tsukanshi-sprint/index.html
           grep -q 'questions-v03-audit1-polish.js?v=20260809-1150' tsukanshi-sprint/index.html
+          grep -q 'questions-editorial-audit2-7.js?v=20260809-1153' tsukanshi-sprint/index.html
+          grep -q 'questions-editorial-final-polish.js?v=20260809-1158' tsukanshi-sprint/index.html
           grep -q 'bootstrap-v21.js?v=20260809-1034' tsukanshi-sprint/index.html
           grep -q 'app-v21.js?v=20260809-1034' tsukanshi-sprint/index.html
           grep -q 'manifest.json' tsukanshi-sprint/index.html
           grep -q 'grid-template-columns:repeat(4,1fr)' tsukanshi-sprint/style-v21.css
           grep -q 'dailyGoal:8' tsukanshi-sprint/app-v21.js
-          grep -q "tsukanshi-sprint-v24-audit1-polish" tsukanshi-sprint/sw.js
+          grep -q "tsukanshi-sprint-v26-editorial-polish" tsukanshi-sprint/sw.js
