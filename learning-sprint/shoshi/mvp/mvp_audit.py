@@ -129,8 +129,9 @@ def browser_audit() -> dict:
             fail('browser: question text too short')
         driver.find_elements(By.CSS_SELECTOR, '.answer-choice')[0].click()
         wait.until(EC.visibility_of_element_located((By.ID, 'feedbackCard')))
-        if driver.find_element(By.ID, 'gradingMark').text not in ('○', '×'):
-            fail('browser: grading mark missing')
+        mark = driver.execute_script("const e=document.getElementById('gradingMark'); return {text:e.textContent, hidden:e.classList.contains('hidden'), display:getComputedStyle(e).display};")
+        if mark.get('text') not in ('○', '×') or mark.get('hidden') or mark.get('display') == 'none':
+            fail(f"browser: grading mark missing {mark}")
         driver.save_screenshot(str(audit_dir / 'quiz-feedback-mobile.png'))
         driver.find_element(By.ID, 'headerHome').click()
         wait.until(EC.visibility_of_element_located((By.ID, 'homeView')))
@@ -202,6 +203,7 @@ def browser_audit() -> dict:
             'json_import': True,
             'service_worker_cache_ready': sw_cached,
             'offline_reload': offline_load,
+            'grading_mark': 'visible',
         }
     finally:
         if driver:
