@@ -50,14 +50,15 @@ jobs:
           APP_PATH="$(find "$HOME/Library/Developer/Xcode/DerivedData" -type d -name 'TsukanshiSprint.app' | head -n 1)"
           test -n "$APP_PATH"
           echo "Built app: $APP_PATH"
-          test -f "$APP_PATH/index.html"
-          test -f "$APP_PATH/questions-editorial-final-polish.js"
-          test -f "$APP_PATH/official-past-exam-links.js"
-          test -f "$APP_PATH/release-links.js"
+          find "$APP_PATH" -maxdepth 2 -type f -print | sort | sed -n '1,120p'
+          test -f "$APP_PATH/Web/index.html"
+          test -f "$APP_PATH/Web/questions-editorial-final-polish.js"
+          test -f "$APP_PATH/Web/official-past-exam-links.js"
+          test -f "$APP_PATH/Web/release-links.js"
           test -f "$APP_PATH/PrivacyInfo.xcprivacy"
           test -f "$APP_PATH/AppIcon60x60@2x.png" || test -f "$APP_PATH/Assets.car"
           ! find "$APP_PATH" -type f -name 'sw.js' | grep -q .
-          echo 'PASS: Release app contains audited flattened web resources, privacy manifest, and app icon assets.'
+          echo 'PASS: Release app contains audited Web folder, privacy manifest, and app icon assets.'
 
       - name: Upload build log
         if: always()
