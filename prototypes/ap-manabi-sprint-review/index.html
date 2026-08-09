@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f3ea">
+<title>応用情報技術者｜学びスプリント Review Build</title>
+<style>
+:root{--paper:#f7f3ea;--card:#fffdf7;--ink:#24313f;--muted:#6d746f;--indigo:#2f4a6d;--verm:#d8452c;--green:#2f7d5c;--gold:#b5872b;--line:rgba(47,74,109,.15);--shadow:0 10px 26px rgba(40,48,56,.08)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}body{min-height:100vh}.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 18px 102px;background:linear-gradient(rgba(47,74,109,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(47,74,109,.04) 1px,transparent 1px),var(--paper);background-size:28px 28px}.brand{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;color:var(--indigo);font-weight:700;font-size:18px;margin-top:max(6px,env(safe-area-inset-top))}.title{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:28px;font-weight:700;line-height:1.3;margin:12px 0 4px}.tag{color:var(--muted);font-size:14px;margin-bottom:18px}.notice{background:#fff7dc;border-left:4px solid var(--gold);padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.6;margin-bottom:16px}.card{background:rgba(255,253,247,.96);border:1px solid var(--line);border-radius:22px;padding:18px;margin:12px 0;box-shadow:var(--shadow)}.row{display:flex;align-items:center;gap:12px}.between{justify-content:space-between}.ring{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green) var(--pct,0%),rgba(47,125,92,.13) 0);position:relative;flex:0 0 auto}.ring:after{content:"";width:64px;height:64px;border-radius:50%;background:var(--card);position:absolute}.ring span{position:relative;z-index:1;font-weight:800;color:var(--green)}.h2{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:20px;font-weight:700;margin:0 0 6px}.small{font-size:12px;color:var(--muted);line-height:1.6}.bigbtn,.subbtn,.choice{appearance:none;border:0;font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.bigbtn{width:100%;min-height:54px;border-radius:16px;background:var(--indigo);color:white;font-weight:800;font-size:16px;padding:14px;margin-top:12px}.bigbtn:active{transform:scale(.99)}.subbtn{min-height:44px;border-radius:14px;padding:11px 14px;background:#eef2f6;color:var(--indigo);font-weight:700}.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.seg button{min-height:42px;border:1px solid var(--line);border-radius:13px;background:white;font-weight:700;color:var(--indigo)}.seg button.active{background:var(--indigo);color:white}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:white;border:1px solid var(--line);border-radius:15px;padding:12px;text-align:center}.stat b{display:block;font-size:20px;color:var(--indigo)}.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);background:rgba(255,253,247,.96);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);z-index:99}.nav button{border:0;background:transparent;min-height:54px;color:var(--muted);font-weight:700;font-size:12px;cursor:pointer;touch-action:manipulation}.nav button.active{color:var(--indigo)}.screen{display:none}.screen.active{display:block}.qtop{display:flex;justify-content:space-between;align-items:center;margin:10px 0}.progress{height:7px;background:rgba(47,74,109,.12);border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:var(--green);width:0}.question{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:20px;font-weight:700;line-height:1.7;margin:18px 0}.choice{display:block;width:100%;text-align:left;background:white;border:1px solid var(--line);border-radius:16px;min-height:55px;padding:14px 15px;margin:9px 0;color:var(--ink);line-height:1.5}.choice.correct{border:2px solid var(--green);background:#eef8f2}.choice.wrong{border:2px solid var(--verm);background:#fff0ed}.feedback{display:none;margin-top:16px}.feedback.show{display:block}.mark{font-family:"Yu Mincho",serif;font-size:52px;line-height:1;color:var(--verm);font-weight:800}.explain{background:white;border:1px solid var(--line);border-radius:18px;padding:16px;line-height:1.7}.memory{margin-top:12px;background:#fff7dc;border-left:4px solid var(--gold);padding:12px 13px;border-radius:10px}.memory b{color:#7a5d17}.barrow{margin:13px 0}.barlabel{display:flex;justify-content:space-between;font-size:13px}.bar{height:10px;border-radius:9px;background:rgba(47,74,109,.12);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--green)}.setting{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}input[type=date]{font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px;background:white}.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#24313f;color:white;padding:10px 14px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:120}.toast.show{opacity:1}.rounds{display:grid;gap:10px}.round{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}.round strong{color:var(--indigo)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brand">学びスプリント</div>
+  <div id="screen-home" class="screen active">
+    <div class="title">応用情報技術者試験</div>
+    <div class="tag">今日も1問、力に変える。</div>
+    <div class="notice">操作確認用 Review Build。公開前のUI確認用です。問題正本240問とは別に、代表問題だけを読み込んでいます。</div>
+    <div class="card row between">
+      <div><div class="h2">今日の学習</div><div id="todayText" class="small">0 / 8問</div><button id="startBtn" class="bigbtn">8問スプリントを始める</button></div>
+      <div id="ring" class="ring" style="--pct:0%"><span id="ringText">0%</span></div>
+    </div>
+    <div class="card">
+      <div class="h2">今日の目標</div><div class="small">4 / 8 / 16問から変更できます。</div>
+      <div class="seg"><button data-goal="4">4問</button><button data-goal="8" class="active">8問</button><button data-goal="16">16問</button></div>
+    </div>
+    <div class="stats"><div class="stat"><b id="answeredStat">0</b><span class="small">解答</span></div><div class="stat"><b id="correctStat">0%</b><span class="small">正答率</span></div><div class="stat"><b id="weakStat">0</b><span class="small">苦手</span></div></div>
+    <div class="card"><div class="h2">分野別</div><div id="homeBars"></div></div>
+  </div>
+
+  <div id="screen-quiz" class="screen">
+    <div class="qtop"><button id="quizHome" class="subbtn">ホーム</button><span id="quizCount" class="small"></span></div>
+    <div class="progress"><i id="quizProgress"></i></div>
+    <div class="card">
+      <div id="qMeta" class="small"></div><div id="qText" class="question"></div><div id="choices"></div>
+      <div id="feedback" class="feedback"><div id="mark" class="mark"></div><div class="explain"><div id="explanation"></div><div class="memory"><b>ここだけ覚える</b><br><span id="memory"></span></div><div id="source" class="small" style="margin-top:12px"></div></div><button id="nextBtn" class="bigbtn">次の問題へ</button></div>
+    </div>
+  </div>
+
+  <div id="screen-mock" class="screen">
+    <div class="title">模試</div><div class="tag">本番導線の操作確認</div>
+    <div class="card"><div class="h2">確認用8問模試</div><div class="small">Review Buildでは8問。製品版は各試験回80問です。</div><button id="mockStart" class="bigbtn">模試を開始</button></div>
+    <div class="card"><div class="h2">収録予定</div><div class="rounds"><div class="round"><strong>令和7年度 秋期</strong><div class="small">80問</div></div><div class="round"><strong>令和7年度 春期</strong><div class="small">80問</div></div><div class="round"><strong>令和6年度 秋期</strong><div class="small">80問</div></div></div></div>
+  </div>
+
+  <div id="screen-record" class="screen">
+    <div class="title">記録</div><div class="tag">積み上げを可視化</div>
+    <div class="stats"><div class="stat"><b id="recAnswered">0</b><span class="small">解答数</span></div><div class="stat"><b id="recRate">0%</b><span class="small">正答率</span></div><div class="stat"><b id="recWeak">0</b><span class="small">苦手</span></div></div>
+    <div class="card"><div class="h2">分野別正答率</div><div id="recordBars"></div></div>
+    <div class="card"><div class="h2">5週間ヒートマップ</div><div class="small">Review Buildでは操作確認のため簡易表示です。</div><div id="heat" style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:12px"></div></div>
+  </div>
+
+  <div id="screen-settings" class="screen">
+    <div class="title">設定</div><div class="tag">試験日とデータ</div>
+    <div class="card"><div class="setting"><div><b>試験日</b><div id="daysLeft" class="small">未設定</div></div><input id="examDate" type="date"></div><div class="setting"><div><b>保存状態</b><div id="storageStatus" class="small">確認中</div></div><button id="saveTest" class="subbtn">保存テスト</button></div><div class="setting"><div><b>学習データ</b><div class="small">Review Buildの状態を初期化</div></div><button id="resetBtn" class="subbtn">初期化</button></div></div>
+  </div>
+</div>
+
+<nav class="nav"><button data-screen="home" class="active">ホーム</button><button data-screen="mock">模試</button><button data-screen="record">記録</button><button data-screen="settings">設定</button></nav>
+<div id="toast" class="toast"></div>
+<script>
+const QS=[
+{id:'T1',s:'テクノロジ系',t:'M/M/1待ち行列',q:'平均サービス時間をT、利用率をρとすると待ち時間はρT/(1-ρ)。待ち時間がT以上になる最小利用率はどれですか。',c:['33%','50%','67%','80%'],a:1,e:'ρT/(1-ρ)≧T より ρ/(1-ρ)≧1。したがってρ≧0.5です。',m:'M/M/1の待ち時間は利用率が1に近づくほど急増。'},
+{id:'T2',s:'テクノロジ系',t:'CRC',q:'生成多項式による除算の余りを検査用データとして付加する誤り検出方式はどれですか。',c:['パリティ','ハミング符号','CRC','チェックディジット'],a:2,e:'CRCは生成多項式による除算の余りを検査用データとして利用します。',m:'CRC＝生成多項式＋余り。'},
+{id:'T3',s:'テクノロジ系',t:'CIDR',q:'IPアドレスをクラスA〜Cに固定せず、任意のプレフィックス長で割り当てる方式はどれですか。',c:['CIDR','DHCP','DNS','NAPT'],a:0,e:'CIDRはクラスに依存せずプレフィックス長でネットワーク部を指定します。',m:'クラスレスなアドレス割当て＝CIDR。'},
+{id:'T4',s:'テクノロジ系',t:'MVCC',q:'同じデータの複数バージョンを保持し、読取りと更新の競合を減らす仕組みはどれですか。',c:['WAL','MVCC','2相コミット','共有ロック'],a:1,e:'MVCCは複数版を保持し、トランザクションの同時実行性を高めます。',m:'複数版＝MVCC。'},
+{id:'M1',s:'マネジメント系',t:'EVM',q:'プロジェクト管理で、計画価値・出来高・実コストを使って進捗とコストを定量評価する手法はどれですか。',c:['EVM','PERT','SWOT','KPI'],a:0,e:'EVMはPV・EV・ACを用いて進捗とコストを評価します。',m:'PV・EV・AC＝EVM。'},
+{id:'M2',s:'マネジメント系',t:'クリティカルパス',q:'工程ネットワークで、遅れるとプロジェクト全体の完了が遅れる経路を何と呼びますか。',c:['クリティカルパス','WBS','ベースライン','スプリント'],a:0,e:'余裕時間がなく、遅延が全体完了へ直結する経路がクリティカルパスです。',m:'余裕0の経路＝クリティカルパス。'},
+{id:'S1',s:'ストラテジ系',t:'ナッシュ均衡',q:'相手の戦略を所与とすると、どちらも一方的な戦略変更で利得を改善できない状態はどれですか。',c:['規模の経済','ナッシュ均衡','価格弾力性','PPM'],a:1,e:'ゲーム理論で双方が一方的変更による改善をできない戦略組合せがナッシュ均衡です。',m:'一方的に変えても得しない＝ナッシュ均衡。'},
+{id:'S2',s:'ストラテジ系',t:'ファインチューニング',q:'基盤モデルへ用途固有の追加学習を行い、特定業務へ適応させる方法はどれですか。',c:['クラスタリング','ファインチューニング','正規化','指数平滑法'],a:1,e:'既存の学習済みモデルへ追加学習を行い用途に適応させるのがファインチューニングです。',m:'学習済みモデル＋追加学習＝ファインチューニング。'},
+{id:'S3',s:'ストラテジ系',t:'BOM',q:'完成品の必要数から部品表を展開し、手持在庫を差し引いて求める数量はどれですか。',c:['安全在庫','正味所要量','EOQ','発注点'],a:1,e:'総所要量から手持在庫などを差し引いた実際に必要な数量が正味所要量です。',m:'必要数−在庫＝正味所要量。'},
+{id:'S4',s:'ストラテジ系',t:'営業レバレッジ',q:'固定費が大きい企業ほど、売上変動に対する利益変動が大きくなりやすい性質を何と呼びますか。',c:['財務レバレッジ','営業レバレッジ','流動性','回転率'],a:1,e:'固定費の存在によって売上変動以上に営業利益が変動する効果が営業レバレッジです。',m:'固定費が大きい→営業レバレッジ大。'},
+{id:'T5',s:'テクノロジ系',t:'TCP/UDP',q:'UDPにはなく、TCPヘッダーには含まれる情報はどれですか。',c:['宛先ポート番号','シーケンス番号','送信元ポート番号','チェックサム'],a:1,e:'シーケンス番号はTCPの信頼性制御に使われ、UDPにはありません。',m:'TCP固有の代表＝シーケンス番号。'},
+{id:'T6',s:'テクノロジ系',t:'標本化定理',q:'最高周波数20kHzの信号を標本化する最低周波数はどれですか。',c:['10kHz','20kHz','40kHz','80kHz'],a:2,e:'標本化定理より最高周波数の2倍以上が必要なので40kHzです。',m:'標本化周波数≧最高周波数×2。'}
+];
+let memoryStore={};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return k in memoryStore?memoryStore[k]:d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return 'localStorage'}catch(e){memoryStore[k]=v;return 'memory'}}};
+let state=store.get('apReviewState',{goal:8,answered:0,correct:0,weak:{},bySubject:{},examDate:'',heat:Array(35).fill(0)});
+let session=[],idx=0,mode='sprint',locked=false;
+function persist(){return store.set('apReviewState',state)}
+function toast(s){const t=document.getElementById('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1300)}
+function showScreen(name){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('screen-'+name).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));if(name==='home')renderHome();if(name==='record')renderRecord();if(name==='settings')renderSettings();window.scrollTo(0,0)}
+function mix(a){return [...a].sort(()=>Math.random()-.5)}
+function startQuiz(isMock=false){mode=isMock?'mock':'sprint';const n=isMock?8:Math.min(state.goal,QS.length);session=mix(QS).slice(0,n);idx=0;locked=false;showScreen('quiz');renderQuestion()}
+function renderQuestion(){const q=session[idx];locked=false;document.getElementById('feedback').classList.remove('show');document.getElementById('quizCount').textContent=`${idx+1} / ${session.length}`;document.getElementById('quizProgress').style.width=`${(idx/session.length)*100}%`;document.getElementById('qMeta').textContent=`${q.s}｜${q.t}`;document.getElementById('qText').textContent=q.q;const box=document.getElementById('choices');box.innerHTML='';q.c.forEach((x,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=`${'アイウエ'[i]}　${x}`;b.addEventListener('click',()=>answer(i,b));box.appendChild(b)})}
+function answer(i,btn){if(locked)return;locked=true;const q=session[idx],ok=i===q.a;state.answered++;if(ok)state.correct++;state.bySubject[q.s]??={a:0,c:0};state.bySubject[q.s].a++;if(ok)state.bySubject[q.s].c++;if(ok){if(state.weak[q.id]){state.weak[q.id]++;if(state.weak[q.id]>=3)delete state.weak[q.id]}}else state.weak[q.id]=0;state.heat[34]=(state.heat[34]||0)+1;persist();document.querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('correct');if(j===i&&!ok)b.classList.add('wrong')});document.getElementById('mark').textContent=ok?'○':'×';document.getElementById('explanation').textContent=q.e;document.getElementById('memory').textContent=q.m;document.getElementById('source').textContent='出典・改変元：IPA公表問題を基に独自再構成したReview用問題';document.getElementById('feedback').classList.add('show');document.getElementById('quizProgress').style.width=`${((idx+1)/session.length)*100}%`}
+function next(){if(!locked){toast('先に選択肢を選んでください');return}if(idx<session.length-1){idx++;renderQuestion();window.scrollTo(0,0)}else{toast(mode==='mock'?'模試が完了しました':'スプリント完了');showScreen('home')}}
+function rate(){return state.answered?Math.round(state.correct/state.answered*100):0}
+function subjectRate(s){const x=state.bySubject[s];return x&&x.a?Math.round(x.c/x.a*100):0}
+function bars(target){target.innerHTML=['テクノロジ系','マネジメント系','ストラテジ系'].map(s=>`<div class="barrow"><div class="barlabel"><span>${s}</span><span>${subjectRate(s)}%</span></div><div class="bar"><i style="width:${subjectRate(s)}%"></i></div></div>`).join('')}
+function renderHome(){const pct=Math.min(100,Math.round((state.answered%Math.max(state.goal,1))/Math.max(state.goal,1)*100));document.getElementById('ring').style.setProperty('--pct',pct+'%');document.getElementById('ringText').textContent=pct+'%';document.getElementById('todayText').textContent=`${state.answered%Math.max(state.goal,1)} / ${state.goal}問`;document.getElementById('answeredStat').textContent=state.answered;document.getElementById('correctStat').textContent=rate()+'%';document.getElementById('weakStat').textContent=Object.keys(state.weak).length;document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('active',Number(b.dataset.goal)===state.goal));bars(document.getElementById('homeBars'))}
+function renderRecord(){document.getElementById('recAnswered').textContent=state.answered;document.getElementById('recRate').textContent=rate()+'%';document.getElementById('recWeak').textContent=Object.keys(state.weak).length;bars(document.getElementById('recordBars'));const h=document.getElementById('heat');h.innerHTML='';state.heat.forEach(v=>{const d=document.createElement('div');d.style.cssText=`aspect-ratio:1;border-radius:5px;background:rgba(47,125,92,${Math.min(.12+v*.16,.9)})`;h.appendChild(d)})}
+function renderSettings(){document.getElementById('examDate').value=state.examDate||'';let txt='未設定';if(state.examDate){const n=Math.ceil((new Date(state.examDate+'T00:00:00')-new Date())/86400000);txt=n>=0?`あと${n}日`:'試験日は経過しています'}document.getElementById('daysLeft').textContent=txt;const m=persist();document.getElementById('storageStatus').textContent=m==='localStorage'?'端末保存を利用中':'一時メモリで動作中'}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.screen)));
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{state.goal=Number(b.dataset.goal);persist();renderHome()}));
+document.getElementById('startBtn').addEventListener('click',()=>startQuiz(false));document.getElementById('mockStart').addEventListener('click',()=>startQuiz(true));document.getElementById('nextBtn').addEventListener('click',next);document.getElementById('quizHome').addEventListener('click',()=>showScreen('home'));
+document.getElementById('examDate').addEventListener('change',e=>{state.examDate=e.target.value;persist();renderSettings();toast('試験日を保存しました')});
+document.getElementById('saveTest').addEventListener('click',()=>{const m=persist();toast(m==='localStorage'?'保存できました':'一時メモリで動作しています');renderSettings()});
+document.getElementById('resetBtn').addEventListener('click',()=>{state={goal:8,answered:0,correct:0,weak:{},bySubject:{},examDate:'',heat:Array(35).fill(0)};persist();renderHome();renderSettings();toast('初期化しました')});
+renderHome();
+</script>
+</body>
+</html>
