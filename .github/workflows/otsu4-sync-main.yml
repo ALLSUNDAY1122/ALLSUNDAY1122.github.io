@@ -5,6 +5,10 @@ on:
     branches: [ feat/otsu4-360-productization ]
     paths:
       - '.github/workflows/otsu4-sync-main.yml'
+      - 'native-ios/Otsu4Sprint/**'
+      - '!native-ios/Otsu4Sprint/RELEASE_CI_STATUS.md'
+      - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
+      - 'tools/otsu4-build-content-v2.mjs'
 
 permissions:
   contents: write
