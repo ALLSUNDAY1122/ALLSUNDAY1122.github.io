@@ -1,0 +1,119 @@
+name: Shoshi iOS Release Gate
+
+on:
+  push:
+    branches:
+      - feature/shoshi-ios-testflight-gate
+    paths:
+      - 'learning-sprint/shoshi/**'
+      - 'codemagic.yaml'
+      - '.github/workflows/shoshi-ios-release-gate.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'learning-sprint/shoshi/**'
+      - 'codemagic.yaml'
+      - '.github/workflows/shoshi-ios-release-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  native-ui-and-preflight:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate audited 210-question content
+        run: |
+          python automation/learning-sprint-question-pipeline/validate_questions.py \
+            learning-sprint/shoshi/content-loop/learning-sprint-audit.json
+      - name: Apple/TestFlight contract audit
+        run: |
+          node learning-sprint/shoshi/validate-apple-preflight.mjs
+          bash -n learning-sprint/shoshi/ios/prepare-ios.sh
+          python -m py_compile learning-sprint/shoshi/ios/apply-xcode-capabilities.py \
+            learning-sprint/shoshi/ios/native_ui_audit.py
+          python - <<'PY'
+          import plistlib
+          p='learning-sprint/shoshi/ios/PrivacyInfo.xcprivacy'
+          with open(p,'rb') as f: data=plistlib.load(f)
+          assert data.get('NSPrivacyTracking') is False
+          assert data.get('NSPrivacyTrackingDomains') == []
+          assert data.get('NSPrivacyCollectedDataTypes') == []
+          assert data.get('NSPrivacyAccessedAPITypes') == []
+          print('PASS: Shoshi Privacy Manifest')
+          PY
+      - name: Prepare native local bundle and canonical AppIcon
+        run: bash learning-sprint/shoshi/ios/prepare-ios.sh
+      - name: Verify canonical AppIcon bytes
+        run: |
+          test "$(shasum -a 256 learning-sprint/shoshi/ios/AppIcon.png | awk '{print $1}')" = \
+            "c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
+          test "$(shasum -a 256 learning-sprint/shoshi/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png | awk '{print $1}')" = \
+            "c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
+      - name: Install browser audit dependency
+        run: python -m pip install --disable-pip-version-check selenium
+      - name: Run native StoreKit UI audit
+        run: python learning-sprint/shoshi/ios/native_ui_audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shoshi-native-ui-audit
+          path: |
+            learning-sprint/shoshi/ios/audit/*.png
+            learning-sprint/shoshi/ios/native-ui-audit-report.json
+          if-no-files-found: warn
+
+  macos-release-build:
+    needs: native-ui-and-preflight
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare audited local bundle and canonical AppIcon
+        run: bash learning-sprint/shoshi/ios/prepare-ios.sh
+      - name: Generate Xcode project and normalize IAP capability
+        run: |
+          cd learning-sprint/shoshi/ios
+          xcodegen generate
+          python3 apply-xcode-capabilities.py ShoshiSprint.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' ShoshiSprint.xcodeproj/project.pbxproj
+          ! grep -q 'SystemCapabilities = "' ShoshiSprint.xcodeproj/project.pbxproj
+      - name: Build unsigned Release for iOS Simulator
+        run: |
+          xcodebuild \
+            -project learning-sprint/shoshi/ios/ShoshiSprint.xcodeproj \
+            -scheme ShoshiSprint \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath /tmp/ShoshiDerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+      - name: Inspect built app bundle
+        run: |
+          APP="$(find /tmp/ShoshiDerivedData/Build/Products -type d -name 'ShoshiSprint.app' | head -1)"
+          test -n "$APP"
+          test -f "$APP/Web/index.html"
+          test -f "$APP/Web/questions.generated.json"
+          test -f "$APP/Web/native-storekit.js"
+          test -f "$APP/PrivacyInfo.xcprivacy"
+          test -f "$APP/Assets.car"
+          python3 - "$APP/Web/questions.generated.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert len(data)==210 and len({q['id'] for q in data})==210
+          q=next(x for x in data if x['id']=='SHOSHI-R7-PM-33')
+          assert q.get('scoring_status')=='all_correct' and q.get('official_answer_no') is None
+          print('PASS: built .app contains audited 210-question bundle')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shoshi-xcode-release-logs
+          path: |
+            /tmp/ShoshiDerivedData/Logs/**
+          if-no-files-found: ignore
