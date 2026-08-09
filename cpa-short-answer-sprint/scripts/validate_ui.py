@@ -36,7 +36,7 @@ sw=(APP/'sw.js').read_text(encoding='utf-8')
 
 for token in ['--paper:#f7f3ea','--ai:#2f4a6d','--shu:#d8452c','--midori:#2f7d5c','--kin:#b5872b','max-width:520px','background-size:28px 28px','width:82px','grid-template-columns:repeat(4,1fr)']:
     check(token in css,f'Golden Master CSS欠損: {token}')
-for marker in ['今日のスプリント','苦手をつぶす','模擬試験','分野から解く','ここだけ覚える','3回 × 93問','ENGLISH','JSONを書き出す','3連続']:
+for marker in ['今日のスプリント','苦手をつぶす','模擬試験','分野から解く','ここだけ覚える','3回 × 93問','ENGLISH','JSONを書き出す','連続正解']:
     check(marker in js,f'機能/UI文言欠損: {marker}')
 for selector in ['class="nav"','class="today-ring"','class="question-card"','class="result-page"']:
     check(selector in js,f'主要DOM欠損: {selector}')
@@ -46,6 +46,7 @@ check(manifest.get('display')=='standalone','manifest standaloneなし')
 check('questions-all-279.json' in sw and 'canonical-map-279.json' in sw,'SWで問題データ未キャッシュ')
 check("dailyGoal:8" in js,'標準8問でない')
 check("[4,8,16]" in js,'4/8/16設定なし')
+check('streak>=3' in js,'苦手3連続正解解除ロジックなし')
 
 if errors:
     print('FAIL')
