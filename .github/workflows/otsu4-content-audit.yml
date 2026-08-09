@@ -1,0 +1,37 @@
+name: Otsu4 Content Audit
+
+on:
+  pull_request:
+    paths:
+      - 'kikenbutsu-otsu4-sprint/**'
+      - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/workflows/otsu4-content-audit.yml'
+  push:
+    branches: [ main, feat/otsu4-360-productization ]
+    paths:
+      - 'kikenbutsu-otsu4-sprint/**'
+      - 'tools/otsu4-build-content-v2.mjs'
+      - '.github/workflows/otsu4-content-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate audited 360-question bank v2
+        run: node tools/otsu4-build-content-v2.mjs --check
+      - name: Generate native question JSON v2
+        run: node tools/otsu4-build-content-v2.mjs
+      - name: Upload native question JSON v2
+        uses: actions/upload-artifact@v4
+        with:
+          name: otsu4-questions-product-v2
+          path: kikenbutsu-otsu4-sprint/questions.generated.json
+          if-no-files-found: error
+          retention-days: 30
