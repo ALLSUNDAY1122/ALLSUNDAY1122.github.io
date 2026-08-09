@@ -14,7 +14,7 @@ files=(
   index.html
   gm-style.css
   q1.js q2.js q3.js q4.js q5.js q6.js q7.js q8.js q9.js
-  audit-patch-v2.js
+  audit-patch-v2.js audit-fixes.js question-order-v1.js
   gm1.js gm2.js gm3.js gm4.js
   manifest.json icon.svg
 )
@@ -24,8 +24,8 @@ for file in "${files[@]}"; do
   cp "$WEB_SRC/$file" "$WEB_DST/$file"
 done
 
-# The web app catches service-worker registration failure. The native bundle does
-# not include sw.js because local WKWebView assets are already available offline.
+# WKWebView loads bundled assets from file://, so the website service worker is
+# intentionally omitted. All required learning assets are already inside the app.
 
 if command -v magick >/dev/null 2>&1; then
   magick "$WEB_SRC/icon.svg" -background '#f7f3ea' -alpha remove -alpha off -resize 1024x1024 "$ASSET_DIR/AppIcon.png"
@@ -51,4 +51,4 @@ cat > "$ASSET_DIR/Contents.json" <<'JSON'
 }
 JSON
 
-echo "Prepared HealthManager2 bundled web assets."
+echo "Prepared HealthManager2 bundled web assets (audited content set)."
