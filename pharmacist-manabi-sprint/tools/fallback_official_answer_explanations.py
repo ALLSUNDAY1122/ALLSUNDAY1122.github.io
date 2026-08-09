@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Create conservative explanations anchored only to the official correct choices.
 
-This is the no-model fallback. It never invents an explanation when the correct
-choice text is too short/numeric. Such questions are emitted to a manual-reason
-queue instead. Existing manual/model-reviewed overlays always take precedence.
+This is the no-model fallback. It never invents numerical/calculation reasoning.
+Those questions are emitted to a manual-reason queue. Existing manual/model-reviewed
+overlays always take precedence.
 """
 from __future__ import annotations
 
@@ -40,7 +40,6 @@ def correct_choice_texts(row):
     accepted=json.loads(row["accepted_answers_json"])
     if row["scoring_status"]=="excluded": return [], "解なし"
     if row["scoring_status"]=="multiple_accepted":
-        # Explain the accepted pool, not an arbitrary one of the combinations.
         pool=sorted({i for combo in accepted for i in combo})
         return [choices[i] for i in pool if 0<=i<len(choices)], "・".join(str(i+1) for i in pool)+"から任意2つ"
     inds=ans if isinstance(ans,list) else [ans]
@@ -50,10 +49,11 @@ def correct_choice_texts(row):
 def weak_reason(texts,row):
     joined=" ".join(texts).strip()
     if row["scoring_status"]=="excluded": return False
-    if len(joined)<18: return True
+    if not joined: return True
     if re.fullmatch(r"[\d\s.,%％±+\-−×÷/()（）μmMgLmolEq<>＝=^²³⁻⁺℃°・]+",joined): return True
     q=row["question"]
-    if any(k in q for k in ("最も近い値","何倍","何回目","含量","濃度はどれ","投与量","クリアランス","半減期")) and len(joined)<35:
+    calculation_terms=("最も近い値","何倍","何回目","含量","濃度はどれ","投与量","クリアランス","半減期","求めよ","算出","計算")
+    if any(k in q for k in calculation_terms) and len(joined)<45:
         return True
     return False
 
@@ -61,6 +61,13 @@ def weak_reason(texts,row):
 def clip(s,n=180):
     s=re.sub(r"\s+"," ",s).strip()
     return s if len(s)<=n else s[:n-1]+"…"
+
+
+def ask_clause(q):
+    q=clip(q,260)
+    sentences=[x.strip() for x in re.split(r"(?<=[。？！?])",q) if x.strip()]
+    if not sentences: return q
+    return clip(sentences[-1],140)
 
 
 def main():
@@ -81,14 +88,15 @@ def main():
                     explanation="厚生労働省の公式正答表で解なしとされているため、通常の採点対象から除外する。訂正情報がある場合は訂正版を参照し、独立した修正版問題を作る場合は別ID・別来歴で管理する。"
                 else:
                     facts="／".join(clip(x,140) for x in texts)
-                    memory=f"正答肢の要点：{clip(facts,150)}"
+                    clause=ask_clause(row["question"])
+                    memory=f"{clip(clause,80)} → {clip(facts,100)}"
                     explanation=(
-                        f"厚生労働省の公式正答は{label}。この問で選択対象となる内容は「{clip(facts,260)}」。"
-                        f"{row['domain']}の問題では、この記述を設問条件と照合して他の選択肢と区別できることが判断ポイントになる。"
+                        f"厚生労働省の公式正答は{label}。設問は「{clause}」を判断する問題で、選択対象となるのは「{clip(facts,260)}」。"
+                        f"{row['domain']}では、この設問条件と正答肢の対応を区別できることが要点になる。"
                     )
                 batch.append({
                     "id":row["id"],"memoryPoint":memory,"explanation":explanation,
-                    "reviewRequired":False,"generator":"official-correct-choice-anchor",
+                    "reviewRequired":False,"generator":"official-question-and-correct-choice-anchor",
                     "generationStatus":"pending_final_semantic_audit"
                 })
         if batch:
