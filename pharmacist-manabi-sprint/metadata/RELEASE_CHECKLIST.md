@@ -12,8 +12,8 @@
 - [x] Codemagic `pharmacist-ios` workflow
 - [x] App Store本審査自動提出OFF
 - [x] AppIcon正本のDrive ID・寸法・RGB・SHA-256固定
-- [ ] GitHub Actions iOS preflight / Simulator compile PASS
-- [ ] 正本AppIcon PNGをiOS assetへmaterialize
+- [x] GitHub Actions iOS preflight / Simulator compile PASS（run `31304173464`）
+- [x] 正本AppIcon PNGをiOS assetへmaterialize・SHA一致
 
 ## Apple / Codemagic本人認証が必要
 - [ ] Explicit App ID `jp.allsunday1122.yakuzaishi` を登録/確認
