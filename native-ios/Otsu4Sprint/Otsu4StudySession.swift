@@ -64,6 +64,7 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
     @Published private(set) var index: Int
     @Published private(set) var answers: [String: Otsu4AnswerState]
     @Published private(set) var isFinished = false
+    private var timerTask: Task<Void, Never>?
 
     init(kind: Otsu4StudyKind, questions: [Otsu4Question], snapshot: Otsu4SessionSnapshot? = nil) {
         self.kind = kind
@@ -73,11 +74,34 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
         self.answers = snapshot?.answers.mapValues {
             Otsu4AnswerState(selectedIndex: $0.selectedIndex, correct: $0.correct, unknown: $0.unknown)
         } ?? [:]
+
+        if kind.isMock {
+            timerTask = Task { [weak self] in
+                while !Task.isCancelled {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    guard let self else { return }
+                    self.objectWillChange.send()
+                    self.finishIfTimeExpired()
+                    if self.isFinished { return }
+                }
+            }
+        }
+    }
+
+    deinit {
+        timerTask?.cancel()
     }
 
     var currentQuestion: Otsu4Question { questions[index] }
     var currentAnswer: Otsu4AnswerState? { answers[currentQuestion.id] }
-    var progressText: String { "\(index + 1) / \(questions.count)" }
+
+    var progressText: String {
+        if kind.isMock {
+            return "\(index + 1)/\(questions.count)  \(timerText())"
+        }
+        return "\(index + 1) / \(questions.count)"
+    }
+
     var canGoBack: Bool { kind.isMock && index > 0 }
     var isLast: Bool { index == questions.count - 1 }
 
@@ -158,6 +182,8 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
             }
         }
         isFinished = true
+        timerTask?.cancel()
+        timerTask = nil
     }
 
     var correctCount: Int {
