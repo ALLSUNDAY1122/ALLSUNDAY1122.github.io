@@ -1,0 +1,28 @@
+name: Otsu4 Sync Latest Main
+
+on:
+  push:
+    branches: [ feat/otsu4-360-productization ]
+    paths:
+      - '.github/workflows/otsu4-sync-main.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/otsu4-360-productization
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge latest main and preserve main on conflict hunks
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge --no-edit -X theirs origin/main -m "chore: sync latest main into Otsu4 release branch"
+          git push origin HEAD:feat/otsu4-360-productization
