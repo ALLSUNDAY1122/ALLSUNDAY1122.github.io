@@ -8,6 +8,7 @@ STAGES=[
  ('refine-v3','refine_classification.py'),
  ('refine-v4','refine_classification_v4.py'),
  ('refine-v5','refine_classification_v5.py'),
+ ('refine-v6','refine_classification_v6.py'),
 ]
 results=[]
 for name,file in STAGES:
