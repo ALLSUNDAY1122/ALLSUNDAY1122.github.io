@@ -8,6 +8,7 @@ on:
       - 'learning-sprint/shoshi/content-loop/import_and_audit.py'
       - 'learning-sprint/shoshi/content-loop/run_parallel.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v2.py'
       - '.github/workflows/shoshi-content-audit.yml'
   pull_request:
     branches:
@@ -16,6 +17,7 @@ on:
       - 'learning-sprint/shoshi/content-loop/import_and_audit.py'
       - 'learning-sprint/shoshi/content-loop/run_parallel.py'
       - 'learning-sprint/shoshi/content-loop/official_pdf_loop.py'
+      - 'learning-sprint/shoshi/content-loop/official_pdf_loop_v2.py'
       - '.github/workflows/shoshi-content-audit.yml'
   workflow_dispatch:
 
@@ -42,7 +44,7 @@ jobs:
         run: |
           set +e
           cd learning-sprint/shoshi/content-loop
-          python official_pdf_loop.py
+          python official_pdf_loop_v2.py
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
