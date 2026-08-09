@@ -56,13 +56,14 @@ jobs:
 
       - name: Verify generated project
         run: |
-          test -d ios/App/App.xcworkspace
+          test -d ios/App/App.xcodeproj
           test -f ios/App/App.xcodeproj/project.pbxproj
+          test -f ios/App/Package.swift
 
       - name: Unsigned iOS simulator build
         run: |
           xcodebuild \
-            -workspace ios/App/App.xcworkspace \
+            -project ios/App/App.xcodeproj \
             -scheme App \
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
