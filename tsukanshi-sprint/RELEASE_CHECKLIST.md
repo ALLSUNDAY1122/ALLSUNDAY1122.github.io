@@ -27,7 +27,8 @@
 - [x] Simulator Release build成功
 - [x] `.app`内Web教材・Privacy Manifest・AppIcon確認
 - [x] StoreKit `Transaction.updates` 監視
-- [ ] Apple署名前プリフライトCI成功
+- [x] StoreKit状態変化をWKWebViewへ即時反映
+- [x] Apple署名前プリフライトCI成功
 - [ ] Codemagic signed IPA成功
 
 ## C. 公開ページ
@@ -85,6 +86,7 @@
 - [x] `distribution_type: app_store`
 - [x] `testFlightInternalTestingOnly` 設定
 - [x] 本審査自動提出OFF
+- [x] Apple署名前Codemagic安全ゲート成功
 - [ ] App Store Connect API integration確認
 - [ ] Build番号を上げてsigned IPA生成
 - [ ] App Store Connectへアップロード
