@@ -26,8 +26,11 @@ jobs:
           node --check kangoshi-sprint/exam-config.js
           node --check kangoshi-sprint/app-v03.js
           node --check kangoshi-sprint/sw.js
-      - name: Question data audit
+          node --check kangoshi-sprint/audit-product-content.mjs
+      - name: MVP question data audit
         run: node kangoshi-sprint/audit-v02.mjs
+      - name: Product 720-question release gate
+        run: node kangoshi-sprint/audit-product-content.mjs
       - name: Golden Master UI contract
         run: |
           grep -q 'id="app"' kangoshi-sprint/index.html
