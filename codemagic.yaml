@@ -1,0 +1,46 @@
+workflows:
+  health-manager-2-ios:
+    name: Health Manager 2 - iOS TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: jp.allsunday1122.healthmanager2
+      vars:
+        BUNDLE_ID: jp.allsunday1122.healthmanager2
+        XCODE_PROJECT: ios/health-manager-2/HealthManager2.xcodeproj
+        XCODE_SCHEME: HealthManager2
+      xcode: latest
+    scripts:
+      - name: Install project tools
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen imagemagick
+      - name: Prepare bundled web assets
+        script: |
+          bash "$CM_BUILD_DIR/ios/health-manager-2/prepare-web-assets.sh"
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR/ios/health-manager-2"
+          xcodegen generate
+      - name: Apply App Store signing profiles
+        script: |
+          cd "$CM_BUILD_DIR/ios/health-manager-2"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
