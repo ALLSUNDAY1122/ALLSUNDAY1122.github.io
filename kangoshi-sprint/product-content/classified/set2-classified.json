@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "setId": "set2",
   "sourceExam": 114,
   "questionCount": 240,
   "releaseStatus": "raw_import_only",
-  "note": "公式本文・正答の機械取込。解説、11科目分類、図版権利監査、専門監査が完了するまで本番解放禁止。採点除外・複数正答等はofficialScoringStatusに保持する。",
+  "note": "公式本文・正答・状況設定症例の機械取込。解説、11科目分類、図版権利監査、専門監査が完了するまで本番解放禁止。採点除外・複数正答等はofficialScoringStatusに保持する。",
   "questions": [
     {
       "id": "K114-AM001",
@@ -46,11 +46,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "人口"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM002",
@@ -92,12 +92,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 6,
       "classificationSignals": [
         "健康寿命",
         "平均寿命"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM003",
@@ -139,11 +139,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "国民健康・栄養調査"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM004",
@@ -185,11 +185,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM005",
@@ -231,12 +231,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 6,
       "classificationSignals": [
         "予防接種",
         "医療保険"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM006",
@@ -278,13 +278,13 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 15,
       "classificationSignals": [
         "Maslow",
         "マズロー",
         "基本的欲求"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM007",
@@ -325,12 +325,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 5,
       "classificationSignals": [
         "胎児"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM008",
@@ -338,8 +338,8 @@
       "session": "AM",
       "questionNo": 8,
       "category": "必修",
-      "majorSubject": "小児看護学",
-      "subject": "成長発達",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "永久歯が生え始める目安となる年齢はどれか。",
       "choices": [
@@ -371,12 +371,10 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "永久歯"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM009",
@@ -418,11 +416,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "学童"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM010",
@@ -464,11 +462,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "国民生活基礎調査"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM011",
@@ -510,12 +508,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 6,
       "classificationSignals": [
         "眼球運動",
         "視神経"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM012",
@@ -557,11 +555,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "食道の構造"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM013",
@@ -569,8 +567,8 @@
       "session": "AM",
       "questionNo": 13,
       "category": "必修",
-      "majorSubject": "成人看護学",
-      "subject": "循環器",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "心電図波形 別冊No. 1!を別に示す。 心室頻拍はどれか。 ventricular tachycardia",
       "choices": [
@@ -602,12 +600,10 @@
         "4"
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
-      "classificationStatus": "high",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "心室頻拍"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM014",
@@ -648,12 +644,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 5,
       "classificationSignals": [
         "黄疸"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM015",
@@ -697,7 +693,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM016",
@@ -705,8 +701,8 @@
       "session": "AM",
       "questionNo": 16,
       "category": "必修",
-      "majorSubject": "成人看護学",
-      "subject": "腎・泌尿器",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・診断",
       "answerType": "singleChoice",
       "question": "前立腺肥大症患者の頻尿の原因はどれか。 prostatic hyperplasia",
       "choices": [
@@ -739,11 +735,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
-        "前立腺肥大"
+        "前立腺"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM017",
@@ -751,8 +747,8 @@
       "session": "AM",
       "questionNo": 17,
       "category": "必修",
-      "majorSubject": "成人看護学",
-      "subject": "消化器",
+      "majorSubject": "小児看護学",
+      "subject": "小児の健康障害",
       "answerType": "singleChoice",
       "question": "尿中ケトン体が陽性になる疾患はどれか。",
       "choices": [
@@ -785,12 +781,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationScore": 1,
       "classificationSignals": [
-        "糖尿病",
-        "肝硬変"
+        "ネフローゼ"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM018",
@@ -832,11 +827,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "副作用"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM019",
@@ -880,7 +875,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM020",
@@ -924,7 +919,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM021",
@@ -968,7 +963,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM022",
@@ -1014,7 +1009,7 @@
       "classificationSignals": [
         "消毒"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM023",
@@ -1056,13 +1051,13 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 12,
       "classificationSignals": [
         "注射",
         "点滴",
         "輸液"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM024",
@@ -1071,7 +1066,7 @@
       "questionNo": 24,
       "category": "必修",
       "majorSubject": "人体の構造と機能",
-      "subject": "神経・感覚器",
+      "subject": "運動器の構造と機能",
       "answerType": "singleChoice",
       "question": "体位ドレナージの目的はどれか。",
       "choices": [
@@ -1104,11 +1099,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationScore": 2,
       "classificationSignals": [
-        "睡眠"
+        "睡眠",
+        "関節"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM025",
@@ -1152,7 +1148,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM026",
@@ -1196,7 +1192,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM027",
@@ -1204,8 +1200,8 @@
       "session": "AM",
       "questionNo": 27,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "腎・内分泌の機能",
       "answerType": "singleChoice",
       "question": "規則的な日常生活を送っている成人で、血中濃度が日のうち起床時に最も高く なるのはどれか。",
       "choices": [
@@ -1237,10 +1233,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 1,
+      "classificationSignals": [
+        "ホルモン"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM028",
@@ -1284,7 +1282,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM029",
@@ -1326,11 +1324,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "反射"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM030",
@@ -1374,7 +1372,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM031",
@@ -1382,8 +1380,8 @@
       "session": "AM",
       "questionNo": 31,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "血液・免疫",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "重症筋無力症に合併する頻度が最も高いのはどれか。 myasthenia gravis",
       "choices": [
@@ -1415,13 +1413,10 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
-      "classificationSignals": [
-        "悪性リンパ腫",
-        "甲状腺"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM032",
@@ -1467,7 +1462,7 @@
       "classificationSignals": [
         "受療率"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM033",
@@ -1509,11 +1504,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "国民健康・栄養調査"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM034",
@@ -1557,7 +1552,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM035",
@@ -1603,7 +1598,7 @@
       "classificationSignals": [
         "清拭"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM036",
@@ -1645,11 +1640,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "消毒"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM037",
@@ -1693,7 +1688,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM038",
@@ -1701,8 +1696,8 @@
       "session": "AM",
       "questionNo": 38,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "呼吸器",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "高濃度の酸素吸入によって CO2 ナルコーシスを生じる危険性が最も高いのはど れか。",
       "choices": [
@@ -1734,17 +1729,10 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 6,
-      "classificationSignals": [
-        "COPD",
-        "慢性閉塞性肺疾患",
-        "無気肺",
-        "肺塞栓",
-        "肺炎",
-        "間質性肺炎"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM039",
@@ -1781,11 +1769,11 @@
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "三角巾"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM040",
@@ -1832,7 +1820,7 @@
         "輸液",
         "輸血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM041",
@@ -1840,8 +1828,8 @@
       "session": "AM",
       "questionNo": 41,
       "category": "一般",
-      "majorSubject": "看護の統合と実践",
-      "subject": "災害・救急",
+      "majorSubject": "基礎看護学",
+      "subject": "安全・救急時援助",
       "answerType": "singleChoice",
       "question": "一次救命処置?BLSCで回復体位はどれか。",
       "choices": [],
@@ -1870,13 +1858,11 @@
       "mediaDetectionReason": "non_text_choices_inferred",
       "mediaEvidenceStatus": "visual_verification_required",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 10,
       "classificationSignals": [
-        "BLS",
-        "一次救命",
-        "救命処置"
+        "direct:頭部.*切創.*止血|止血法はどれか|回復体位"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM042",
@@ -1885,7 +1871,7 @@
       "questionNo": 42,
       "category": "一般",
       "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "検査・治療",
+      "subject": "検査・診断",
       "answerType": "singleChoice",
       "question": "上部消化管内視鏡検査で適切なのはどれか。",
       "choices": [
@@ -1918,11 +1904,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
-        "内視鏡検査"
+        "内視鏡"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM043",
@@ -1964,11 +1950,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
-        "成年後見制度"
+        "成年後見"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM044",
@@ -1976,8 +1962,8 @@
       "session": "AM",
       "questionNo": 44,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "社会保障・保険",
+      "majorSubject": "地域・在宅看護論",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "要介護認定者であっても、訪問看護が医療保険で提供される疾患はどれか。",
       "choices": [
@@ -2010,12 +1996,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
-        "医療保険",
-        "要介護認定"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM045",
@@ -2023,8 +2008,8 @@
       "session": "AM",
       "questionNo": 45,
       "category": "一般",
-      "majorSubject": "老年看護学",
-      "subject": "認知症看護",
+      "majorSubject": "地域・在宅看護論",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "A さん 78 歳、女性!は認知症があり、認知症高齢者の日常生活自立度判定基準 dementia Ⅰである。人で暮らしており、かかりつけの医師から処方された複数の内服薬を 日回服用している。嚥下障害はない。A さんは｢薬がたくさんあって、余る薬 もあるのよ｣と訪問看護師に話した。 このときの服薬管理で適切なのはどれか。",
       "choices": [
@@ -2057,12 +2042,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 10,
       "classificationSignals": [
-        "認知症",
-        "高齢者"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM046",
@@ -2070,8 +2054,8 @@
       "session": "AM",
       "questionNo": 46,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "社会保障・保険",
+      "majorSubject": "地域・在宅看護論",
+      "subject": "地域包括ケア",
       "answerType": "singleChoice",
       "question": "介護保険制度のケアマネジメントで適切なのはどれか。",
       "choices": [
@@ -2103,12 +2087,13 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "low",
+      "classificationScore": 6,
       "classificationSignals": [
-        "介護保険"
+        "ケアマネジメント",
+        "地域ケア"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM047",
@@ -2116,8 +2101,8 @@
       "session": "AM",
       "questionNo": 47,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "腎・内分泌の機能",
       "answerType": "singleChoice",
       "question": "急性期の患者に起きる生体反応で正しいのはどれか。",
       "choices": [
@@ -2149,10 +2134,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 1,
+      "classificationSignals": [
+        "ホルモン"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM048",
@@ -2196,7 +2183,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM049",
@@ -2204,8 +2191,8 @@
       "session": "AM",
       "questionNo": 49,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "がん看護",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態生理",
       "answerType": "singleChoice",
       "question": "終末期癌患者にみられる悪液質の徴候はどれか。",
       "choices": [
@@ -2237,13 +2224,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationStatus": "low",
+      "classificationScore": 1,
       "classificationSignals": [
-        "癌患者",
-        "終末期"
+        "浮腫"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM050",
@@ -2251,8 +2237,8 @@
       "session": "AM",
       "questionNo": 50,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "がん看護",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "がん患者の家族における社会的苦痛はどれか。",
       "choices": [
@@ -2284,12 +2270,10 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "がん患者"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM051",
@@ -2298,7 +2282,7 @@
       "questionNo": 51,
       "category": "一般",
       "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "subject": "観察・フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "A さん 27 歳、男性!は、突然の胸痛と呼吸困難があり、救急外来を受診した。 意識は清明。身長 179 cm、体重 63 kg、胸郭は平である。20 歳から日 50 本の 喫煙をしている。バイタルサインは、体温 36.1 ℃、呼吸数 22/分、経皮的動脈血 酸素飽和度 SpO2!96 % room air!である。 胸部 CT 別冊No. 2!を示す。 A さんの所見から考えられるのはどれか。",
       "choices": [
@@ -2331,13 +2315,13 @@
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 15,
       "classificationSignals": [
         "SpO2",
         "バイタルサイン",
         "呼吸数"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM052",
@@ -2345,8 +2329,8 @@
       "session": "AM",
       "questionNo": 52,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "膵頭十二指腸切除術においてドレーンを留置する場所で正しいのはどれか。",
       "choices": [
@@ -2378,12 +2362,10 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "ドレーン"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM053",
@@ -2429,7 +2411,7 @@
       "classificationSignals": [
         "消毒"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM054",
@@ -2473,7 +2455,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM055",
@@ -2517,7 +2499,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM056",
@@ -2559,11 +2541,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "medium",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "老化"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM057",
@@ -2605,11 +2587,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 13,
+      "classificationScore": 16,
       "classificationSignals": [
         "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM058",
@@ -2655,7 +2637,7 @@
       "classificationSignals": [
         "認知症"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM059",
@@ -2701,7 +2683,7 @@
       "classificationSignals": [
         "認知機能"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM060",
@@ -2709,8 +2691,8 @@
       "session": "AM",
       "questionNo": 60,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "社会保障・保険",
+      "majorSubject": "老年看護学",
+      "subject": "高齢者の特徴",
       "answerType": "singleChoice",
       "question": "介護医療院の説明で正しいのはどれか。",
       "choices": [
@@ -2743,12 +2725,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationScore": 1,
       "classificationSignals": [
-        "健康保険",
-        "法に基づ"
+        "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM061",
@@ -2789,13 +2770,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationStatus": "low",
+      "classificationScore": 1,
       "classificationSignals": [
-        "母子保健法",
-        "法律"
+        "母子保健法"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM062",
@@ -2839,7 +2819,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM063",
@@ -2881,11 +2861,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 10,
       "classificationSignals": [
-        "乳児"
+        "乳児",
+        "生後"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM064",
@@ -2893,8 +2874,8 @@
       "session": "AM",
       "questionNo": 64,
       "category": "一般",
-      "majorSubject": "基礎看護学",
-      "subject": "感染予防",
+      "majorSubject": "小児看護学",
+      "subject": "小児の健康障害",
       "answerType": "singleChoice",
       "question": "A 君 歳、男児!は腹痛のため来院し、ネフローゼ症候群と診断され入院した。 nephrotic syndrome ステロイド治療が開始され、本日が日目である。尿量の増加がみられ浮腫が軽減 し、血圧は 128/80 mmHg、尿蛋白袷であった。 A 君に説明する必要があるのはどれか。",
       "choices": [
@@ -2927,11 +2908,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationScore": 5,
       "classificationSignals": [
-        "手指衛生"
+        "ネフローゼ"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM065",
@@ -2975,7 +2956,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM066",
@@ -3021,7 +3002,7 @@
       "classificationSignals": [
         "妊娠"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM067",
@@ -3067,7 +3048,7 @@
       "classificationSignals": [
         "胎児"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM068",
@@ -3115,7 +3096,7 @@
         "授乳",
         "胎児"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM069",
@@ -3157,12 +3138,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "出生直後",
         "新生児"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM070",
@@ -3204,11 +3185,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "精神科"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM071",
@@ -3254,7 +3235,7 @@
       "classificationSignals": [
         "統合失調"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM072",
@@ -3300,7 +3281,7 @@
       "classificationSignals": [
         "認知行動療法"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM073",
@@ -3342,12 +3323,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 6,
       "classificationSignals": [
         "精神保健",
         "精神科"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM074",
@@ -3355,8 +3336,8 @@
       "session": "AM",
       "questionNo": 74,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "保健医療福祉制度",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "看護師の特定行為で正しいのはどれか。",
       "choices": [
@@ -3388,12 +3369,10 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
-      "classificationSignals": [
-        "法に基づ"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM075",
@@ -3435,11 +3414,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "medium",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "看護記録"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM076",
@@ -3483,7 +3462,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM077",
@@ -3524,13 +3503,13 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "medium",
-      "classificationScore": 5,
+      "classificationStatus": "low",
+      "classificationScore": 6,
       "classificationSignals": [
         "せん妄",
         "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM078",
@@ -3573,11 +3552,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "炎症"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM079",
@@ -3622,7 +3601,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM080",
@@ -3665,11 +3644,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 6,
       "classificationSignals": [
         "アレルギー"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM081",
@@ -3714,7 +3693,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM082",
@@ -3722,8 +3701,8 @@
       "session": "AM",
       "questionNo": 82,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "内分泌・代謝",
+      "majorSubject": "人体の構造と機能",
+      "subject": "腎・内分泌の機能",
       "answerType": "singleChoice",
       "question": "口渇、多飲、多尿を主訴とする患者が、夜間の排尿が頻回で不眠を訴えている。 日の尿量はL ほどで、尿比重は 1.005、尿浸透圧は 110 mOsm/kg であった。 この症状の原因と考えられるホルモンの内分泌器官はどれか。",
       "choices": [
@@ -3756,12 +3735,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 10,
       "classificationSignals": [
-        "甲状腺"
+        "direct:尿比重|尿の濃縮|糸球体|ネフロン"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM083",
@@ -3769,8 +3748,8 @@
       "session": "AM",
       "questionNo": 83,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "人体の構造と機能",
+      "subject": "血液・免疫の機能",
       "answerType": "multiChoice",
       "question": "血液凝固因子はどれか。઄つ選べ。",
       "choices": [
@@ -3809,10 +3788,12 @@
         "14"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "high",
+      "classificationScore": 10,
+      "classificationSignals": [
+        "direct:止血機構|血液凝固|凝固因子"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM084",
@@ -3863,7 +3844,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM085",
@@ -3916,7 +3897,7 @@
       "classificationSignals": [
         "黄疸"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM086",
@@ -3967,7 +3948,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM087",
@@ -3975,8 +3956,8 @@
       "session": "AM",
       "questionNo": 87,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "保健医療福祉制度",
+      "majorSubject": "地域・在宅看護論",
+      "subject": "在宅療養支援",
       "answerType": "multiChoice",
       "question": "障害者の日常生活及び社会生活を総合的に支援するための法律?障害者総合支援 法Cに基づく障害福祉サービスはどれか。઄つ選べ。",
       "choices": [
@@ -4015,12 +3996,12 @@
         "34"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "low",
+      "classificationScore": 1,
       "classificationSignals": [
-        "法律"
+        "訪問看護"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM088",
@@ -4069,12 +4050,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 5,
       "classificationSignals": [
-        "感染症法",
-        "法律"
+        "感染症法"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM089",
@@ -4125,7 +4105,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM090",
@@ -4133,8 +4113,8 @@
       "session": "AM",
       "questionNo": 90,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "地域・在宅看護論",
+      "subject": "在宅療養支援",
       "answerType": "multiChoice",
       "question": "ドパミン受容体が遮断されることで出現する症状はどれか。઄つ選べ。",
       "choices": [
@@ -4142,7 +4122,7 @@
         "口 渇",
         "妄 想",
         "筋強剛",
-        "アカシジア"
+        "アカシジア 次の文を読み 91〜93 の問いに答えよ。 A さん 73 歳、女性!は人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週回、調理と買い物代行の目的で訪問介護を週回利用して いる。A さんは｢昨日、退院して初めて人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。"
       ],
       "answer": [
         3,
@@ -4173,10 +4153,12 @@
         "45"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 2,
+      "classificationSignals": [
+        "訪問看護"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM091",
@@ -4185,7 +4167,7 @@
       "questionNo": 91,
       "category": "状況設定",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "このとき、訪問看護師が転倒予防のために収集する情報として最も適切なのはど れか。",
       "choices": [
@@ -4216,13 +4198,17 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-AM-SC01",
+      "scenario": "A さん 73 歳、女性!は\u0004人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。\u0006点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週\u0004回、調理と買い物代行の目的で訪問介護を週\u0004回利用して いる。A さんは｢昨日、退院して初めて\u0004人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 10,
       "classificationSignals": [
-        "訪問看護"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM092",
@@ -4231,7 +4217,7 @@
       "questionNo": 92,
       "category": "状況設定",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "退院からか月後、A さんは杖歩行が安定し、時間をかけて調理や買い物を自 分で行うようになった。看護師が訪問したとき、A さんから｢最近トイレに間に合 わずに尿が漏れてしまうことがあるんです。恥ずかしいので排泄だけは人の世話に なりたくないんです。良い方法があれば教えてください｣と相談された。 このときの訪問看護師の A さんへの助言で最も適切なのはどれか。",
       "choices": [
@@ -4262,13 +4248,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC01",
+      "scenario": "A さん 73 歳、女性!は\u0004人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。\u0006点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週\u0004回、調理と買い物代行の目的で訪問介護を週\u0004回利用して いる。A さんは｢昨日、退院して初めて\u0004人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 10,
       "classificationSignals": [
-        "訪問看護"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM093",
@@ -4277,14 +4267,14 @@
       "questionNo": 93,
       "category": "状況設定",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "退院からか月後、A さんはテレビを見て過ごす時間が多くなった。｢買い物や 調理が面倒になって、同じものばかり作っています｣と言い｢退院したころは毎日排 便があったのに、最近便秘気味ですっきりしないんです｣と訴えた。 訪問看護師の対応で最も適切なのはどれか。",
       "choices": [
         "食事内容を見直す。",
         "腹部の温罨法を勧める。",
         "市販の浣腸液の使用を勧める。",
-        "主治医に緩下薬の処方を相談する。"
+        "主治医に緩下薬の処方を相談する。 次の文を読み 94〜96 の問いに答えよ。 A さん 56 歳、女性、主婦!は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は日と説明した。A さん は、同じ手術を受けた妹が合併症で週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。"
       ],
       "answer": 0,
       "officialAcceptedAnswers": [
@@ -4308,13 +4298,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-AM-SC01",
+      "scenario": "A さん 73 歳、女性!は\u0004人で暮らしており、脳梗塞で入院 した。A さんは左半身 cerebral infarction に麻痺があり、認知機能障害はない。\u0006点杖を使用して歩行が可能となり、住宅改修 をして自宅に退院した。退院後は、降圧薬と抗血栓薬が処方され、服薬管理と健康管 理の目的で訪問看護を週\u0004回、調理と買い物代行の目的で訪問介護を週\u0004回利用して いる。A さんは｢昨日、退院して初めて\u0004人で買い物に行ったら転びそうになって、 横にいた人に支えてもらったんです｣と訪問看護師に話した。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 10,
       "classificationSignals": [
-        "訪問看護"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM094",
@@ -4322,8 +4316,8 @@
       "session": "AM",
       "questionNo": 94,
       "category": "状況設定",
-      "majorSubject": "人体の構造と機能",
-      "subject": "消化・代謝の機能",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "消化器の病態",
       "answerType": "singleChoice",
       "question": "A さんの妹が発症した合併症はどれか。",
       "choices": [
@@ -4354,13 +4348,17 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC02",
+      "scenario": "A さん 56 歳、女性、主婦!は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は\u0002日と説明した。A さん は、同じ手術を受けた妹が合併症で\u0005週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationScore": 3,
       "classificationSignals": [
-        "胆汁"
+        "胆石"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM095",
@@ -4368,8 +4366,8 @@
       "session": "AM",
       "questionNo": 95,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "消化器の病態",
       "answerType": "singleChoice",
       "question": "A さんは、全身麻酔下で気腹法による腹腔鏡下胆囊摘出術を受けている。 手術中の A さんに最も生じやすいのはどれか。",
       "choices": [
@@ -4400,13 +4398,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC02",
+      "scenario": "A さん 56 歳、女性、主婦!は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は\u0002日と説明した。A さん は、同じ手術を受けた妹が合併症で\u0005週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "low",
+      "classificationScore": 3,
       "classificationSignals": [
-        "全身麻酔"
+        "胆石"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM096",
@@ -4414,15 +4416,15 @@
       "session": "AM",
       "questionNo": 96,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "消化器の病態",
       "answerType": "singleChoice",
       "question": "A さんの術後の経過は良好で、退院した。その後の外来受診で｢下痢をすること が多いです｣という訴えがあった。 下痢を予防するために控えるもので正しいのはどれか。",
       "choices": [
         "塩 分",
         "脂 質",
         "糖 質",
-        "蛋白質"
+        "蛋白質 次の文を読み 97〜99 の問いに答えよ。 A さん 50 歳、女性、会社員!は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C 98 % room air!であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。"
       ],
       "answer": 1,
       "officialAcceptedAnswers": [
@@ -4446,13 +4448,17 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC02",
+      "scenario": "A さん 56 歳、女性、主婦!は、食後に冷汗を伴う腹痛があり外来を受診した。腹 部超音波検査の結果、胆石症と診断され、腹腔鏡下胆囊摘出術の目的で入院した。 cholelithiasis 看護師は手術オリエンテーションで、術後の入院期間は\u0002日と説明した。A さん は、同じ手術を受けた妹が合併症で\u0005週間以上食事もできなかったので、自分も同じ 合併症を発症するかもしれないと心配そうに話した。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "low",
+      "classificationScore": 3,
       "classificationSignals": [
-        "術後"
+        "胆石"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM097",
@@ -4461,7 +4467,7 @@
       "questionNo": 97,
       "category": "状況設定",
       "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "subject": "観察・フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "A さんの意識レベルは、ジャパン・コーマ・スケール?JCSCで評価するとどれ か。",
       "choices": [
@@ -4492,13 +4498,19 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC03",
+      "scenario": "A さん 50 歳、女性、会社員!は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C 98 % room air!であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 11,
       "classificationSignals": [
+        "SpO2",
+        "バイタルサイン",
         "意識レベル"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM098",
@@ -4507,7 +4519,7 @@
       "questionNo": 98,
       "category": "状況設定",
       "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "subject": "観察・フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "A さんは、CT 検査の結果、脳動脈瘤の破裂によるくも膜下出血と診断され、ク cerebral aneurysm subarachnoid hemorrhage リッピング術を受けて ICU に入室した。入室時のバイタルサインは、体温 36.8 ℃、 呼吸数 22/分、脈拍 78/分、血圧 126/60 mmHg、フェイスマスクによる酸素投与 下 L/分!で経皮的動脈血酸素飽和度?SpO2C98 %であった。時間後、A さんは 開眼して｢頭が痛い｣と訴えた。バイタルサインに変化はなく、脳槽ドレーンからは 淡血性の排液がみられている。 このときの看護師の判断で正しいのはどれか。",
       "choices": [
@@ -4538,15 +4550,19 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-AM-SC03",
+      "scenario": "A さん 50 歳、女性、会社員!は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C 98 % room air!であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 16,
+      "classificationScore": 26,
       "classificationSignals": [
         "SpO2",
         "バイタルサイン",
         "呼吸数"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM099",
@@ -4554,15 +4570,15 @@
       "session": "AM",
       "questionNo": 99,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "脳神経",
+      "majorSubject": "基礎看護学",
+      "subject": "観察・フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "A さんの回復は順調で、後遺症なく退院した。退院か月後の外来で、A さん に生活状況を聞くと、会話に対する反応は鈍く｢この間、尿を漏らしてしまいまし た｣と話した。家族は｢最近物忘れが激しく、歩くのも遅くなりました｣と話した。 看護師が A さんに書類を渡すと、スムーズに受け取り、きれいな文字で名前を書 いた。家族は｢入院前と変わらない字で書けています｣と言った。 A さんに起こっている可能性が高いのはどれか。",
       "choices": [
         "脳血管攣縮",
         "正常圧水頭症 normal pressure hydrocephalus",
         "脳動脈瘤の破裂 cerebral aneurysm",
-        "Parkinson?パーキンソンC病 Parkinson disease"
+        "Parkinson?パーキンソンC病 Parkinson disease 次の文を読み 100〜102 の問いに答えよ。 A さん 87 歳、女性!は人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大ô骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大ôの創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。"
       ],
       "answer": 1,
       "officialAcceptedAnswers": [
@@ -4586,14 +4602,20 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC03",
+      "scenario": "A さん 50 歳、女性、会社員!は、職場で激しい頭痛を訴えて倒れ、意識を失って、 救急搬送された。救命救急センター到着時のバイタルサインは、体温 36.7 ℃、呼吸 数 20/分、脈 拍 88/分、血 圧 168/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C 98 % room air!であった。閉眼していたので、大声で話しかけると開眼したが、すぐに閉 眼して眠り込んでしまう。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 3,
+      "classificationStatus": "high",
+      "classificationScore": 8,
       "classificationSignals": [
-        "Parkinson",
-        "パーキンソン"
+        "SpO2",
+        "バイタルサイン",
+        "注射",
+        "点滴"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM100",
@@ -4602,7 +4624,7 @@
       "questionNo": 100,
       "category": "状況設定",
       "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "subject": "観察・フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "術後日。朝 時の A さんのバイタルサインは、体温 36.5 ℃、呼吸数 18/分、 脈拍 64/分、血圧 120/82 mmHg、経皮的動脈血酸素飽和度?SpO2C97 % room air! であった。膀胱留置カテーテルが挿入されていて夜間の尿の流出は良好であった。 腸蠕動音が確認できたため朝食が開始された。食事時に A さんが顔をしかめてい たため、夜勤の看護師が鎮痛薬の内服を勧めたが A さんは｢痛みはそれほど強くな い｣と言った。朝食後に点滴静脈内注射と吸引式ドレーンが抜去された。 午前 時の看護師の観察項目で優先度が高いのはどれか。",
       "choices": [
@@ -4634,19 +4656,22 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-AM-SC04",
+      "scenario": "A さん 87 歳、女性!は\u0004人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大ô骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大ôの創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 25,
+      "classificationScore": 32,
       "classificationSignals": [
         "SpO2",
         "バイタルサイン",
         "呼吸数",
         "意識レベル",
         "注射",
-        "点滴",
-        "観察項目"
+        "点滴"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM101",
@@ -4655,7 +4680,7 @@
       "questionNo": 101,
       "category": "状況設定",
       "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "subject": "与薬・輸液",
       "answerType": "multiChoice",
       "question": "術後日。午前中に看護師が A さんのバイタルサインを測定しているときは 眠っていた。昼食後に看護師が訪室すると、A さんは多弁で、落ち着かない様子 がみられた。 看護師の A さんへの対応で適切なのはどれか。઄つ選べ。",
       "choices": [
@@ -4693,13 +4718,19 @@
       "sourceAnswerTokens": [
         "35"
       ],
+      "scenarioId": "K114-AM-SC04",
+      "scenario": "A さん 87 歳、女性!は\u0004人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大ô骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大ôの創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 11,
       "classificationSignals": [
-        "バイタルサイン"
+        "バイタルサイン",
+        "注射",
+        "点滴"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM102",
@@ -4707,15 +4738,15 @@
       "session": "AM",
       "questionNo": 102,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "基礎看護学",
+      "subject": "与薬・輸液",
       "answerType": "singleChoice",
       "question": "術後週。A さんは杖歩行の練習をしている。見守りをする看護師に｢早く家に 帰りたいけど、また転びそうで怖いし、元のように歩ける自信がない｣と話した。 A さんへの声かけで最も適切なのはどれか。",
       "choices": [
         "｢リハビリテーションの回数をもっと増やしましょう｣",
         "｢カルシウムを多く含んだ食品を摂りましょう｣",
         "｢少しずつ歩けるようになってきていますよ｣",
-        "｢退院先は介護老人保健施設にしましょう｣"
+        "｢退院先は介護老人保健施設にしましょう｣ 次の文を読み 103〜105 の問いに答えよ。 A さん 76 歳、男性!は妻 72 歳!と人で暮らしている。ベッドからトイレに起き ようとしたところ右上下肢にしびれと脱力感があり、動けなくなったため救急車で来 院した。頭部 CT で左中大脳動脈領域のラクナ梗塞と診断され、緊急入院し血栓溶解 lacunar infarction 療法が施行された。 既往歴：53 歳で高血圧症と診断され内服治療を継続している。 hypertension 生活歴：60 歳まで食品会社に勤務していた。 入 院 時 の 身 体 所 見：身 長 168 cm、体 重 65 kg、体 温 37.2 ℃、呼 吸 数 20/分、脈 拍 78/分、整、血 圧 210/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C97 % room air!、右上下肢麻痺を認めた。 入院時の検査所見：白血球 3,600/μL、赤血球 420 万/μL、Hb 11.2 g/dL、総蛋白 6.2 g/dL、アルブミン 3.6 g/dL、空腹時血糖 108 mg/dL、CRP 0.1 mg/dL。"
       ],
       "answer": 2,
       "officialAcceptedAnswers": [
@@ -4739,13 +4770,19 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-AM-SC04",
+      "scenario": "A さん 87 歳、女性!は\u0004人で暮らしている。難聴のため補聴器を使用している。 自宅で転倒して痛みで起き上がれなくなり、救急搬送され入院した。搬送先の病院で 右大ô骨頸部骨折と診断され、全身麻酔下で人工骨頭置換術を受けた。術後は前腕部 femoral neck fracture に点滴静脈内注射と右大ôの創部に吸引式ドレーンが一本挿入されている。 手術直後の検査所見：赤血球 410 万/μL、白血球 7800/μL、Hb 12.0 g/dL、総蛋白 6.5 g/dL、ア ル ブ ミ ン 4.0 g/dL、尿 素 窒 素 20 mg/dL、Na 145 mEq/L、K 3.8 mEq/L。 術後のドレーン出血量は少量である。創部痛に対して非ステロイド性抗炎症薬の坐薬 と内服が処方され、手術当日の 21 時に坐薬を使用した。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "medium",
+      "classificationScore": 7,
       "classificationSignals": [
-        "術後"
+        "SpO2",
+        "注射",
+        "点滴"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM103",
@@ -4753,8 +4790,8 @@
       "session": "AM",
       "questionNo": 103,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "majorSubject": "成人看護学",
+      "subject": "循環器",
       "answerType": "singleChoice",
       "question": "入院日、A さんは全身状態が落ち着いてきたため、主治医から離床開始の指 示があった。 A さんの離床開始時の観察項目で優先度が高いのはどれか。",
       "choices": [
@@ -4785,13 +4822,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-AM-SC05",
+      "scenario": "A さん 76 歳、男性!は妻 72 歳!と\u0002人で暮らしている。ベッドからトイレに起き ようとしたところ右上下肢にしびれと脱力感があり、動けなくなったため救急車で来 院した。頭部 CT で左中大脳動脈領域のラクナ梗塞と診断され、緊急入院し血栓溶解 lacunar infarction 療法が施行された。 既往歴：53 歳で高血圧症と診断され内服治療を継続している。 hypertension 生活歴：60 歳まで食品会社に勤務していた。 入 院 時 の 身 体 所 見：身 長 168 cm、体 重 65 kg、体 温 37.2 ℃、呼 吸 数 20/分、脈 拍 78/分、整、血 圧 210/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C97 % room air!、右上下肢麻痺を認めた。 入院時の検査所見：白血球 3,600/μL、赤血球 420 万/μL、Hb 11.2 g/dL、総蛋白 6.2 g/dL、アルブミン 3.6 g/dL、空腹時血糖 108 mg/dL、CRP 0.1 mg/dL。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
+      "classificationStatus": "low",
       "classificationScore": 4,
       "classificationSignals": [
-        "観察項目"
+        "高血圧"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM104",
@@ -4831,13 +4872,18 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-AM-SC05",
+      "scenario": "A さん 76 歳、男性!は妻 72 歳!と\u0002人で暮らしている。ベッドからトイレに起き ようとしたところ右上下肢にしびれと脱力感があり、動けなくなったため救急車で来 院した。頭部 CT で左中大脳動脈領域のラクナ梗塞と診断され、緊急入院し血栓溶解 lacunar infarction 療法が施行された。 既往歴：53 歳で高血圧症と診断され内服治療を継続している。 hypertension 生活歴：60 歳まで食品会社に勤務していた。 入 院 時 の 身 体 所 見：身 長 168 cm、体 重 65 kg、体 温 37.2 ℃、呼 吸 数 20/分、脈 拍 78/分、整、血 圧 210/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C97 % room air!、右上下肢麻痺を認めた。 入院時の検査所見：白血球 3,600/μL、赤血球 420 万/μL、Hb 11.2 g/dL、総蛋白 6.2 g/dL、アルブミン 3.6 g/dL、空腹時血糖 108 mg/dL、CRP 0.1 mg/dL。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 8,
       "classificationSignals": [
+        "SpO2",
         "車椅子"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM105",
@@ -4853,7 +4899,7 @@
         "ランク J",
         "ランク A",
         "ランク B",
-        "ランク C"
+        "ランク C 次の文を読み 106〜108 の問いに答えよ。 A ちゃん 歳か月、女児!は、午前 時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 歳か月、男児!：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん 歳、女児!：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 か月、男児!：自宅で痙攣したため受診。初めての痙攣で、分間継続した が、受診時には止まっている。待合室にて回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。"
       ],
       "answer": 2,
       "officialAcceptedAnswers": [
@@ -4877,14 +4923,21 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-AM-SC05",
+      "scenario": "A さん 76 歳、男性!は妻 72 歳!と\u0002人で暮らしている。ベッドからトイレに起き ようとしたところ右上下肢にしびれと脱力感があり、動けなくなったため救急車で来 院した。頭部 CT で左中大脳動脈領域のラクナ梗塞と診断され、緊急入院し血栓溶解 lacunar infarction 療法が施行された。 既往歴：53 歳で高血圧症と診断され内服治療を継続している。 hypertension 生活歴：60 歳まで食品会社に勤務していた。 入 院 時 の 身 体 所 見：身 長 168 cm、体 重 65 kg、体 温 37.2 ℃、呼 吸 数 20/分、脈 拍 78/分、整、血 圧 210/88 mmHg、経 皮 的 動 脈 血 酸 素 飽 和 度 ?SpO2C97 % room air!、右上下肢麻痺を認めた。 入院時の検査所見：白血球 3,600/μL、赤血球 420 万/μL、Hb 11.2 g/dL、総蛋白 6.2 g/dL、アルブミン 3.6 g/dL、空腹時血糖 108 mg/dL、CRP 0.1 mg/dL。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 16,
+      "classificationScore": 25,
       "classificationSignals": [
+        "SpO2",
+        "バイタルサイン",
+        "呼吸数",
         "移乗",
         "車椅子"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM106",
@@ -4892,8 +4945,8 @@
       "session": "AM",
       "questionNo": 106,
       "category": "状況設定",
-      "majorSubject": "看護の統合と実践",
-      "subject": "災害・救急",
+      "majorSubject": "基礎看護学",
+      "subject": "観察・フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "このときの看護師のトリアージで診察を受ける優先度が高いのはどれか。",
       "choices": [
@@ -4924,13 +4977,18 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC06",
+      "scenario": "A ちゃん \u0004歳\u0006か月、女児!は、午前 時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に\u0005人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 \u0004歳\u0005か月、男児!：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん \u0005歳、女児!：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 か月、男児!：自宅で痙攣したため受診。初めての痙攣で、\u0007分間継続した が、受診時には止まっている。待合室にて\u0005回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "low",
+      "classificationScore": 6,
       "classificationSignals": [
-        "トリアージ"
+        "バイタルサイン",
+        "呼吸数"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM107",
@@ -4977,13 +5035,17 @@
       "sourceAnswerTokens": [
         "14"
       ],
+      "scenarioId": "K114-AM-SC06",
+      "scenario": "A ちゃん \u0004歳\u0006か月、女児!は、午前 時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に\u0005人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 \u0004歳\u0005か月、男児!：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん \u0005歳、女児!：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 か月、男児!：自宅で痙攣したため受診。初めての痙攣で、\u0007分間継続した が、受診時には止まっている。待合室にて\u0005回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "explicit_reference_in_stem",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "小児"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM108",
@@ -4991,15 +5053,15 @@
       "session": "AM",
       "questionNo": 108,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "母性看護学",
+      "subject": "妊娠・胎児",
       "answerType": "singleChoice",
       "question": "翌日、A ちゃんは退院することになった。看護師は、A ちゃんの誤飲予防のた めの教育的支援を両親に行うことにした。 両親に伝える内容で最も適切なのはどれか。",
       "choices": [
         "A ちゃんから目を離さないこと",
         "A ちゃんにやってはいけないことを教えること",
         "家の中での A ちゃんの行動範囲を柵で区切ること",
-        "大きさがcm よりも小さいものは A ちゃんの手が届かないところに置くこ と"
+        "大きさがcm よりも小さいものは A ちゃんの手が届かないところに置くこ と 次の文を読み 109〜111 の問いに答えよ。 A さん 41 歳、初妊婦、会社員!は夫 42 歳、会社員!と人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。"
       ],
       "answer": 3,
       "officialAcceptedAnswers": [
@@ -5023,11 +5085,18 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC06",
+      "scenario": "A ちゃん \u0004歳\u0006か月、女児!は、午前 時ころ、ポータブル型のゲーム機用の直 径 10 mm のボタン型電池を誤飲し、午前 10 時に両親に付き添われ外来を受診した。 看護師が A ちゃんを観察すると、機嫌は良くバイタルサインも安定していた。A ちゃんに成長や発達の遅れはない。 待合室には A ちゃんの他に\u0005人の患児が診察を待っていた。それぞれは以下のと おりである。 B 君 \u0004歳\u0005か月、男児!：今朝、カーペットの敷かれたフロアで歩行中に転倒。バイ タルサインは正常、顔色良好。母親に抱っこされて遊んで いる。 C ちゃん \u0005歳、女児!：体温 39.5 ℃、呼吸数 23/分、脈拍 100/分、鼻汁多量、機嫌 良好、顔色良好。 D 君 か月、男児!：自宅で痙攣したため受診。初めての痙攣で、\u0007分間継続した が、受診時には止まっている。待合室にて\u0005回の嘔吐。体温 38.7 ℃。声かけで開眼するが、すぐにうとうとする。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 6,
+      "classificationSignals": [
+        "妊娠",
+        "妊婦"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM109",
@@ -5035,8 +5104,8 @@
       "session": "AM",
       "questionNo": 109,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "母性看護学",
+      "subject": "妊娠・胎児",
       "answerType": "singleChoice",
       "question": "A さんへの活動に関する助言で適切なのはどれか。",
       "choices": [
@@ -5067,11 +5136,18 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC07",
+      "scenario": "A さん 41 歳、初妊婦、会社員!は夫 42 歳、会社員!と\u0002人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週\u0005日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に\u0005回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "high",
+      "classificationScore": 18,
+      "classificationSignals": [
+        "妊娠",
+        "妊婦"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM110",
@@ -5111,14 +5187,18 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC07",
+      "scenario": "A さん 41 歳、初妊婦、会社員!は夫 42 歳、会社員!と\u0002人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週\u0005日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に\u0005回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 13,
+      "classificationScore": 34,
       "classificationSignals": [
         "妊娠",
         "妊婦"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM111",
@@ -5134,7 +5214,7 @@
         "｢体重を減らしましょう｣",
         "｢腹帯を強く巻きましょう｣",
         "｢できるだけ立っていましょう｣",
-        "｢弾性ストッキングを着用しましょう｣"
+        "｢弾性ストッキングを着用しましょう｣ 次の文を読み 112〜114 の問いに答えよ。 A さん 36 歳、経産婦!は、夫 35 歳!、男児 歳!と人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週日で 3,200 g の女児を経腟分娩で出産した。分後 の Apgar?アプガーCスコア 点、分後の Apgar?アプガーCスコア 10 点であった。 産褥日、A さんの子宮底は臍下横指、硬度良好、悪露は赤色であった。｢人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。"
       ],
       "answer": 3,
       "officialAcceptedAnswers": [
@@ -5158,14 +5238,25 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC07",
+      "scenario": "A さん 41 歳、初妊婦、会社員!は夫 42 歳、会社員!と\u0002人で暮らしている。身長 は 158 cm、非妊時体重 55 kg である。A さんは妊娠 16 週\u0005日に妊婦健康診査を受診 し順調な経過と診断された。妊婦健康診査後｢夫から、高齢妊娠だから安静にするよ う言われ、夫が家事をしてくれています。妊娠前はバスケットボールを週に\u0005回、毎 日夕方に夫とウォーキングをしていました。今は仕事に行く以外は、家でなるべく動 かないようにしています｣と A さんが看護師に話した。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 45,
       "classificationSignals": [
+        "Apgar",
+        "アプガー",
+        "分娩",
         "妊娠",
-        "妊婦"
+        "妊婦",
+        "子宮底",
+        "悪露",
+        "産婦",
+        "産褥"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM112",
@@ -5212,14 +5303,25 @@
       "sourceAnswerTokens": [
         "35"
       ],
+      "scenarioId": "K114-AM-SC08",
+      "scenario": "A さん 36 歳、経産婦!は、夫 35 歳!、男児 \u0005歳!と\u0005人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週\u0007日で 3,200 g の女児を経腟分娩で出産した。\u0004分後 の Apgar?アプガーCスコア 点、\u0007分後の Apgar?アプガーCスコア 10 点であった。 産褥\u0004日、A さんの子宮底は臍下\u0002横指、硬度良好、悪露は赤色であった。｢\u0004人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationStatus": "high",
+      "classificationScore": 38,
       "classificationSignals": [
+        "Apgar",
+        "アプガー",
+        "分娩",
+        "妊娠",
+        "子宮底",
+        "悪露",
         "授乳",
-        "産婦"
+        "産婦",
+        "産褥"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM113",
@@ -5228,7 +5330,7 @@
       "questionNo": 113,
       "category": "状況設定",
       "majorSubject": "母性看護学",
-      "subject": "分娩・産褥",
+      "subject": "妊娠・分娩・産褥",
       "answerType": "singleChoice",
       "question": "産褥日、乳房は緊満、乳管開通は左右とも、 本、射乳がある。日 回授 乳をしている。児の体重は 3,080 g で前日よりも 20 g 減少している。｢母乳で育て たいと思っていたけど、乳房が張って授乳がうまくできないです｣と話す。 このときの A さんへの説明で適切なのはどれか。",
       "choices": [
@@ -5259,16 +5361,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC08",
+      "scenario": "A さん 36 歳、経産婦!は、夫 35 歳!、男児 \u0005歳!と\u0005人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週\u0007日で 3,200 g の女児を経腟分娩で出産した。\u0004分後 の Apgar?アプガーCスコア 点、\u0007分後の Apgar?アプガーCスコア 10 点であった。 産褥\u0004日、A さんの子宮底は臍下\u0002横指、硬度良好、悪露は赤色であった。｢\u0004人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 23,
+      "classificationScore": 10,
       "classificationSignals": [
-        "乳房",
-        "授乳",
-        "母乳",
-        "産褥"
+        "direct:うっ滞性乳腺炎|産褥|褥婦|分娩第|陣痛|胎児心拍|妊娠\\s*\\d+週"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM114",
@@ -5276,15 +5379,15 @@
       "session": "AM",
       "questionNo": 114,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "majorSubject": "母性看護学",
+      "subject": "分娩・産褥",
       "answerType": "singleChoice",
       "question": "日 齢 、A さ ん の 児 の 体 重 は 3,100 g。体 温 37.1 ℃、呼 吸 数 48/分、心 拍 数 130/分。経皮ビリルビン 10.0 mg/dL。排尿 回/日、排便 回/日。 児のアセスメントで正しいのはどれか。",
       "choices": [
         "経皮ビリルビン値は光線療法が必要な値である。",
         "生理的体重減少の範囲を超えている。",
         "バイタルサインは正常である。",
-        "排尿回数が少ない。"
+        "排尿回数が少ない。 次の文を読み 115〜117 の問いに答えよ。 A さん 30 歳、男性!は統合失調症 で内服治療をしていた。最近、部屋にこもり、 schizophrenia 精神科受診以外は外出しなくなった。ある日、母親が A さんの部屋で大量の薬を見 つけ、確認すると｢薬は飲みたくない｣と話した。受診に付き添った母親は｢A は昼間 に寝ていて、夜に窓を開けて、隣の家に向かってS悪口を言うなTS監視するなTと大声 で怒鳴る｣と主治医に話した。A さんと母親の強い希望があり、精神科病棟に入院す ることになり、薬物療法が開始された。 入院日、夜間の巡視のたびに A さんは起きていて｢隣の人が自分を監視してい る｣｢皆が悪口を言っている｣と小さな声で看護師に話した。日中はホールで眠そうに していることもあり、レクリエーションには｢疲れた｣と言って参加しない。他の患者 と話すことはあるがトラブルはない。歯磨きや身だしなみは、声をかけると行う。"
       ],
       "answer": 2,
       "officialAcceptedAnswers": [
@@ -5308,13 +5411,24 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-AM-SC08",
+      "scenario": "A さん 36 歳、経産婦!は、夫 35 歳!、男児 \u0005歳!と\u0005人で暮らしている。妊娠、 分娩経過は順調で、妊娠 39 週\u0007日で 3,200 g の女児を経腟分娩で出産した。\u0004分後 の Apgar?アプガーCスコア 点、\u0007分後の Apgar?アプガーCスコア 10 点であった。 産褥\u0004日、A さんの子宮底は臍下\u0002横指、硬度良好、悪露は赤色であった。｢\u0004人 目の出産後よりもお腹が痛くて眠れませんでした｣と看護師に話す。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 36,
       "classificationSignals": [
-        "バイタルサイン"
+        "Apgar",
+        "アプガー",
+        "分娩",
+        "妊娠",
+        "子宮底",
+        "悪露",
+        "産婦",
+        "産褥"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM115",
@@ -5322,8 +5436,8 @@
       "session": "AM",
       "questionNo": 115,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "majorSubject": "精神看護学",
+      "subject": "精神疾患と看護",
       "answerType": "singleChoice",
       "question": "A さんのセルフケアの観察項目で優先度が高いのはどれか。",
       "choices": [
@@ -5354,13 +5468,18 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC09",
+      "scenario": "A さん 30 歳、男性!は統合失調症 で内服治療をしていた。最近、部屋にこもり、 schizophrenia 精神科受診以外は外出しなくなった。ある日、母親が A さんの部屋で大量の薬を見 つけ、確認すると｢薬は飲みたくない｣と話した。受診に付き添った母親は｢A は昼間 に寝ていて、夜に窓を開けて、隣の家に向かってS悪口を言うなTS監視するなTと大声 で怒鳴る｣と主治医に話した。A さんと母親の強い希望があり、精神科病棟に入院す ることになり、薬物療法が開始された。 入院\u0005日、夜間の巡視のたびに A さんは起きていて｢隣の人が自分を監視してい る｣｢皆が悪口を言っている｣と小さな声で看護師に話した。日中はホールで眠そうに していることもあり、レクリエーションには｢疲れた｣と言って参加しない。他の患者 と話すことはあるがトラブルはない。歯磨きや身だしなみは、声をかけると行う。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 9,
       "classificationSignals": [
-        "観察項目"
+        "精神科",
+        "統合失調"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM116",
@@ -5368,8 +5487,8 @@
       "session": "AM",
       "questionNo": 116,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "精神看護学",
+      "subject": "精神疾患と看護",
       "answerType": "singleChoice",
       "question": "入院 14 日、A さんは他の患者や看護師と話をする機会が増えた。｢B 看護師に私 の悪口を言うのをやめるように言ってほしい｣と訴え、受け持ち看護師が話を聞い ていると興奮して声が大きくなることがあった。 受け持ち看護師の A さんへの対応で適切なのはどれか。",
       "choices": [
@@ -5400,11 +5519,18 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC09",
+      "scenario": "A さん 30 歳、男性!は統合失調症 で内服治療をしていた。最近、部屋にこもり、 schizophrenia 精神科受診以外は外出しなくなった。ある日、母親が A さんの部屋で大量の薬を見 つけ、確認すると｢薬は飲みたくない｣と話した。受診に付き添った母親は｢A は昼間 に寝ていて、夜に窓を開けて、隣の家に向かってS悪口を言うなTS監視するなTと大声 で怒鳴る｣と主治医に話した。A さんと母親の強い希望があり、精神科病棟に入院す ることになり、薬物療法が開始された。 入院\u0005日、夜間の巡視のたびに A さんは起きていて｢隣の人が自分を監視してい る｣｢皆が悪口を言っている｣と小さな声で看護師に話した。日中はホールで眠そうに していることもあり、レクリエーションには｢疲れた｣と言って参加しない。他の患者 と話すことはあるがトラブルはない。歯磨きや身だしなみは、声をかけると行う。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "high",
+      "classificationScore": 9,
+      "classificationSignals": [
+        "精神科",
+        "統合失調"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM117",
@@ -5420,7 +5546,7 @@
         "カタルシス",
         "レジリエンス",
         "コンコーダンス",
-        "コンプライアンス"
+        "コンプライアンス 次の文を読み 118〜120 の問いに答えよ。 A さん 64 歳、男性、外国籍!は、年前に日本に移住し、娘 36 歳、会社員!と娘 の夫 42 歳、会社員、日本人!と人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、痛コントロールの目的で入院した。"
       ],
       "answer": 1,
       "officialAcceptedAnswers": [
@@ -5444,14 +5570,20 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC09",
+      "scenario": "A さん 30 歳、男性!は統合失調症 で内服治療をしていた。最近、部屋にこもり、 schizophrenia 精神科受診以外は外出しなくなった。ある日、母親が A さんの部屋で大量の薬を見 つけ、確認すると｢薬は飲みたくない｣と話した。受診に付き添った母親は｢A は昼間 に寝ていて、夜に窓を開けて、隣の家に向かってS悪口を言うなTS監視するなTと大声 で怒鳴る｣と主治医に話した。A さんと母親の強い希望があり、精神科病棟に入院す ることになり、薬物療法が開始された。 入院\u0005日、夜間の巡視のたびに A さんは起きていて｢隣の人が自分を監視してい る｣｢皆が悪口を言っている｣と小さな声で看護師に話した。日中はホールで眠そうに していることもあり、レクリエーションには｢疲れた｣と言って参加しない。他の患者 と話すことはあるがトラブルはない。歯磨きや身だしなみは、声をかけると行う。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 19,
       "classificationSignals": [
         "妄想",
-        "幻聴"
+        "幻聴",
+        "精神科",
+        "統合失調"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM118",
@@ -5459,8 +5591,8 @@
       "session": "AM",
       "questionNo": 118,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "成人看護学",
+      "subject": "呼吸器",
       "answerType": "singleChoice",
       "question": "病状について医師から説明を受けることになったが、娘から｢夫はしばらく帰っ てこないし、私は難しいことは分からないのでどうしたらいいですか｣と質問を受 けた。 看護師の助言で適切なのはどれか。",
       "choices": [
@@ -5491,11 +5623,17 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC10",
+      "scenario": "A さん 64 歳、男性、外国籍!は、\u0004年前に日本に移住し、娘 36 歳、会社員!と娘 の夫 42 歳、会社員、日本人!と\u0005人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、\u0002か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、\u0002痛コントロールの目的で入院した。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 4,
+      "classificationSignals": [
+        "肺癌"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM119",
@@ -5503,8 +5641,8 @@
       "session": "AM",
       "questionNo": 119,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "成人看護学",
+      "subject": "呼吸器",
       "answerType": "singleChoice",
       "question": "入院後、医療従事者との日常会話は、電子端末による翻訳を活用している。痛 に対しては、モルヒネ徐放製剤の内服が開始され、レスキュードーズとして、モル ヒネ速放製剤の内服が指示されている。激しい腰痛が日に数回あるが、レス キュードーズを使いたくないと話し痛みを我慢している。 看護師の対応で優先度が高いのはどれか。",
       "choices": [
@@ -5535,11 +5673,17 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-AM-SC10",
+      "scenario": "A さん 64 歳、男性、外国籍!は、\u0004年前に日本に移住し、娘 36 歳、会社員!と娘 の夫 42 歳、会社員、日本人!と\u0005人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、\u0002か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、\u0002痛コントロールの目的で入院した。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 4,
+      "classificationSignals": [
+        "肺癌"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-AM120",
@@ -5579,13 +5723,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-AM-SC10",
+      "scenario": "A さん 64 歳、男性、外国籍!は、\u0004年前に日本に移住し、娘 36 歳、会社員!と娘 の夫 42 歳、会社員、日本人!と\u0005人家族である。娘の夫は海外に長期出張中で、娘 は日本語での簡単な日常会話はできるが、A さんはほとんど日本語が理解できない。 A さんは、\u0002か月前から時々腰痛があり、市販薬で様子を見ていたが、徐々に腰 痛が強くなり、娘に付き添われて受診した。検査の結果、肺癌と診断され、胸膜と腰 lung cancer 椎への転移が見つかり、\u0002痛コントロールの目的で入院した。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "アドバンス・ケア"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM001",
@@ -5629,7 +5777,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM002",
@@ -5670,12 +5818,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "medium",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 5,
       "classificationSignals": [
         "受療率"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM003",
@@ -5719,7 +5867,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM004",
@@ -5761,12 +5909,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "健康保険",
         "国民健康保険"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM005",
@@ -5808,11 +5956,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "保健師助産師看護師法"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM006",
@@ -5854,12 +6002,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 6,
       "classificationSignals": [
         "予防接種",
         "二次予防"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM007",
@@ -5901,11 +6049,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "妊娠"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM008",
@@ -5947,11 +6095,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "老年期"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM009",
@@ -5959,8 +6107,8 @@
       "session": "PM",
       "questionNo": 9,
       "category": "必修",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "公衆衛生・予防",
+      "majorSubject": "地域・在宅看護論",
+      "subject": "地域包括ケア",
       "answerType": "singleChoice",
       "question": "地域包括支援センターの主な業務に含まれるのはどれか。",
       "choices": [
@@ -5995,13 +6143,10 @@
       "classificationStatus": "medium",
       "classificationScore": 6,
       "classificationSignals": [
-        "予防接種",
-        "健康診査",
-        "法に基づ",
-        "特定健康診査",
-        "要介護認定"
+        "ケアマネジメント",
+        "地域包括"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM010",
@@ -6043,12 +6188,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 5,
       "classificationSignals": [
-        "医療法",
-        "法に基づ"
+        "医療法"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM011",
@@ -6092,7 +6236,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM012",
@@ -6134,11 +6278,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "胆汁"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM013",
@@ -6146,8 +6290,8 @@
       "session": "PM",
       "questionNo": 13,
       "category": "必修",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "保健医療福祉制度",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "臓器の移植に関する法律において脳死の判定基準となっている検査はどれか。",
       "choices": [
@@ -6179,12 +6323,10 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "法律"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM014",
@@ -6192,8 +6334,8 @@
       "session": "PM",
       "questionNo": 14,
       "category": "必修",
-      "majorSubject": "成人看護学",
-      "subject": "呼吸器",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・診断",
       "answerType": "singleChoice",
       "question": "慢性閉塞性肺疾患¹COPD¼の危険因子はどれか。 chronic obstructive pulmonary disease",
       "choices": [
@@ -6226,12 +6368,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "COPD",
         "慢性閉塞性肺疾患"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM015",
@@ -6277,7 +6419,7 @@
       "classificationSignals": [
         "大腸"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM016",
@@ -6285,8 +6427,8 @@
       "session": "PM",
       "questionNo": 16,
       "category": "必修",
-      "majorSubject": "成人看護学",
-      "subject": "消化器",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・診断",
       "answerType": "singleChoice",
       "question": "胃癌の Virchow¹ウィルヒョウ¼転移が生じる部位はどれか。 gastric cancer",
       "choices": [
@@ -6319,11 +6461,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "胃癌"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM017",
@@ -6331,8 +6473,8 @@
       "session": "PM",
       "questionNo": 17,
       "category": "必修",
-      "majorSubject": "成人看護学",
-      "subject": "内分泌・代謝",
+      "majorSubject": "基礎看護学",
+      "subject": "与薬・輸液",
       "answerType": "singleChoice",
       "question": "インスリン療法で正しいのはどれか。",
       "choices": [
@@ -6365,12 +6507,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationScore": 1,
       "classificationSignals": [
-        "低血糖",
-        "糖尿病"
+        "注射"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM018",
@@ -6412,11 +6553,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "看護過程"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM019",
@@ -6424,8 +6565,8 @@
       "session": "PM",
       "questionNo": 19,
       "category": "必修",
-      "majorSubject": "成人看護学",
-      "subject": "循環器",
+      "majorSubject": "基礎看護学",
+      "subject": "検査・処置の援助",
       "answerType": "singleChoice",
       "question": "長期臥床している患者の仰臥位時のポジショニングを図に示す。 A の位置にクッションを挿入する目的はどれか。",
       "choices": [
@@ -6460,9 +6601,9 @@
       "classificationStatus": "low",
       "classificationScore": 1,
       "classificationSignals": [
-        "深部静脈血栓"
+        "静脈血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM020",
@@ -6504,13 +6645,13 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 15,
       "classificationSignals": [
         "更衣",
         "注射",
         "点滴"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM021",
@@ -6554,7 +6695,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM022",
@@ -6598,7 +6739,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM023",
@@ -6639,12 +6780,12 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "medium",
+      "classificationScore": 5,
       "classificationSignals": [
         "輸血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM024",
@@ -6688,7 +6829,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM025",
@@ -6729,12 +6870,12 @@
         "2"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 10,
       "classificationSignals": [
-        "炎症"
+        "direct:電解質異常|創傷の治癒過程|肉芽組織"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM026",
@@ -6743,7 +6884,7 @@
       "questionNo": 26,
       "category": "一般",
       "majorSubject": "人体の構造と機能",
-      "subject": "循環・呼吸の機能",
+      "subject": "呼吸の機能",
       "answerType": "singleChoice",
       "question": "血漿中の重炭酸イオン濃度が基準値よりも高くなるのはどれか。",
       "choices": [
@@ -6780,7 +6921,7 @@
       "classificationSignals": [
         "換気"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM027",
@@ -6824,7 +6965,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM028",
@@ -6868,7 +7009,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM029",
@@ -6910,11 +7051,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 17,
+      "classificationScore": 21,
       "classificationSignals": [
         "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM030",
@@ -6922,8 +7063,8 @@
       "session": "PM",
       "questionNo": 30,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "保健医療福祉制度",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "難病の患者に対する医療等に関する法律¹難病法¼に規定されているのはどれか。",
       "choices": [
@@ -6955,12 +7096,10 @@
         "4"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "法律"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM031",
@@ -7004,7 +7143,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM032",
@@ -7045,12 +7184,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
+      "classificationStatus": "low",
       "classificationScore": 4,
       "classificationSignals": [
         "片麻痺"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM033",
@@ -7094,7 +7233,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM034",
@@ -7140,7 +7279,7 @@
       "classificationSignals": [
         "輸液"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM035",
@@ -7184,7 +7323,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM036",
@@ -7230,7 +7369,7 @@
       "classificationSignals": [
         "消毒"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM037",
@@ -7239,7 +7378,7 @@
       "questionNo": 37,
       "category": "一般",
       "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "感染・免疫",
+      "subject": "病態生理",
       "answerType": "singleChoice",
       "question": "半座位で頸静脈怒張がみられるのはどれか。",
       "choices": [
@@ -7272,11 +7411,13 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationScore": 3,
       "classificationSignals": [
-        "アナフィラキシー"
+        "アナフィラキシー",
+        "ショック",
+        "心不全"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM038",
@@ -7323,7 +7464,7 @@
         "抗菌薬",
         "炎症"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM039",
@@ -7367,7 +7508,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM040",
@@ -7376,7 +7517,7 @@
       "questionNo": 40,
       "category": "一般",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "訪問看護事業所について正しいのはどれか。",
       "choices": [
@@ -7409,11 +7550,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 10,
       "classificationSignals": [
-        "訪問看護"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM041",
@@ -7455,11 +7596,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "在宅療養"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM042",
@@ -7500,12 +7641,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "medium",
+      "classificationScore": 5,
       "classificationSignals": [
         "在宅療養"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM043",
@@ -7514,7 +7655,7 @@
       "questionNo": 43,
       "category": "一般",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "A ちゃん 歳か月、女児!は先天性水頭症のため脳室安腹腔¹V-P¼シャント造 congenital hydrocephalus 設術を受けて退院した。A ちゃんは歩行障害があり、母親が人で育てている。 退院後、訪問看護師が訪問すると、A ちゃんの母親は｢子どもが泣くとイライラし ます。この先 A を育てていく自信がなく、経済的にも生活していけるか不安です｣ と話した。 このとき、訪問看護師が母親に勧める相談先で最も適切なのはどれか。",
       "choices": [
@@ -7547,11 +7688,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
-        "訪問看護"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM044",
@@ -7593,11 +7734,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "地域包括"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM045",
@@ -7639,11 +7780,11 @@
       ],
       "mediaDetectionReason": "explicit_reference_in_stem",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "心肺蘇生"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM046",
@@ -7687,7 +7828,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM047",
@@ -7695,8 +7836,8 @@
       "session": "PM",
       "questionNo": 47,
       "category": "一般",
-      "majorSubject": "母性看護学",
-      "subject": "分娩・産褥",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "乳房温存療法で放射線治療を受ける乳癌患者への説明で適切なのはどれか。 breast cancer",
       "choices": [
@@ -7728,12 +7869,10 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "乳房"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM048",
@@ -7777,7 +7916,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM049",
@@ -7786,7 +7925,7 @@
       "questionNo": 49,
       "category": "一般",
       "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "検査・治療",
+      "subject": "検査・診断",
       "answerType": "singleChoice",
       "question": "超音波ガイド下で肝生検を受ける成人への説明で正しいのはどれか。",
       "choices": [
@@ -7819,11 +7958,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "生検"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM050",
@@ -7832,7 +7971,7 @@
       "questionNo": 50,
       "category": "一般",
       "majorSubject": "疾病の成り立ちと回復の促進",
-      "subject": "検査・治療",
+      "subject": "検査・診断",
       "answerType": "singleChoice",
       "question": "A さん 42 歳、男性!は、同僚との飲酒中に上腹部から背部の激しい痛みと嘔吐 があり、救急搬送された。搬送時の心電図には異常を認めない。 A さんの状態をアセスメントするための血液検査項目で優先度が高いのはどれ か。",
       "choices": [
@@ -7865,11 +8004,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "血液検査"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM051",
@@ -7915,7 +8054,7 @@
       "classificationSignals": [
         "加齢"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM052",
@@ -7961,7 +8100,7 @@
       "classificationSignals": [
         "抗菌薬"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM053",
@@ -8007,7 +8146,7 @@
       "classificationSignals": [
         "ウイルス"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM054",
@@ -8049,11 +8188,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 6,
       "classificationSignals": [
         "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM055",
@@ -8095,12 +8234,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "人口",
         "人口動態"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM056",
@@ -8142,11 +8281,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "大腸"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM057",
@@ -8154,8 +8293,8 @@
       "session": "PM",
       "questionNo": 57,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "老年看護学",
+      "subject": "高齢者の特徴",
       "answerType": "singleChoice",
       "question": "全身麻酔下で肺切除術を受ける高齢者への説明で優先度が高いのはどれか。",
       "choices": [
@@ -8188,13 +8327,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 5,
       "classificationSignals": [
-        "全身麻酔",
-        "術前",
-        "術後"
+        "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM058",
@@ -8236,11 +8373,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "medium",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM059",
@@ -8248,8 +8385,8 @@
       "session": "PM",
       "questionNo": 59,
       "category": "一般",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "検査・処置の援助",
       "answerType": "singleChoice",
       "question": "標準的な成長・発達をしている歳の男児に対して採血を行う。看護師が男児に 採血についてのプレパレーションを実施した。 その後に伝えることで適切なのはどれか。",
       "choices": [
@@ -8281,10 +8418,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "high",
+      "classificationScore": 10,
+      "classificationSignals": [
+        "採血"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM060",
@@ -8326,11 +8465,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "発達段階"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM061",
@@ -8372,11 +8511,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "乳児"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM062",
@@ -8420,7 +8559,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM063",
@@ -8428,8 +8567,8 @@
       "session": "PM",
       "questionNo": 63,
       "category": "一般",
-      "majorSubject": "健康支援と社会保障制度",
-      "subject": "保健医療福祉制度",
+      "majorSubject": "母性看護学",
+      "subject": "妊娠・胎児",
       "answerType": "singleChoice",
       "question": "事業主は雇用している女性労働者が妊婦健康診査を受けるために必要な時間を確 保できるようにしなければならないと規定している法律はどれか。",
       "choices": [
@@ -8461,13 +8600,12 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationStatus": "low",
+      "classificationScore": 5,
       "classificationSignals": [
-        "健康診査",
-        "法律"
+        "妊婦"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM064",
@@ -8475,8 +8613,8 @@
       "session": "PM",
       "questionNo": 64,
       "category": "一般",
-      "majorSubject": "母性看護学",
-      "subject": "妊娠・胎児",
+      "majorSubject": "基礎看護学",
+      "subject": "観察・フィジカルアセスメント",
       "answerType": "singleChoice",
       "question": "Leopold¹レオポルド¼触診法で分かるのはどれか。",
       "choices": [
@@ -8508,13 +8646,12 @@
         "1"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 3,
+      "classificationStatus": "medium",
+      "classificationScore": 5,
       "classificationSignals": [
-        "胎児",
-        "胎盤"
+        "触診"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM065",
@@ -8556,11 +8693,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 14,
       "classificationSignals": [
         "破水"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM066",
@@ -8602,11 +8739,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "出生直後"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM067",
@@ -8650,7 +8787,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM068",
@@ -8694,7 +8831,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM069",
@@ -8738,7 +8875,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM070",
@@ -8784,7 +8921,7 @@
       "classificationSignals": [
         "精神保健"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM071",
@@ -8830,7 +8967,7 @@
       "classificationSignals": [
         "意思決定"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM072",
@@ -8874,7 +9011,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM073",
@@ -8916,12 +9053,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 6,
+      "classificationScore": 7,
       "classificationSignals": [
         "インシデント",
         "医療安全"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM074",
@@ -8963,14 +9100,14 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 9,
       "classificationSignals": [
         "医療チーム",
         "災害",
         "災害派遣",
         "避難所"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM075",
@@ -9012,12 +9149,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 16,
+      "classificationScore": 20,
       "classificationSignals": [
         "予防接種",
         "健康診査"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM076",
@@ -9062,7 +9199,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM077",
@@ -9105,12 +9242,13 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 7,
       "classificationSignals": [
+        "ホルモン",
         "肝臓の機能",
         "胆汁"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM078",
@@ -9118,8 +9256,8 @@
       "session": "PM",
       "questionNo": 78,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": null,
+      "subject": null,
       "answerType": "singleChoice",
       "question": "術後の回復過程でエネルギー不足の場合にケトン体の供給源となるのはどれか。",
       "choices": [
@@ -9152,12 +9290,10 @@
         "3"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
-      "classificationSignals": [
-        "術後"
-      ],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "unclassified",
+      "classificationScore": 0,
+      "classificationSignals": [],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM079",
@@ -9165,8 +9301,8 @@
       "session": "PM",
       "questionNo": 79,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "循環器",
+      "majorSubject": "疾病の成り立ちと回復の促進",
+      "subject": "病態・診断",
       "answerType": "singleChoice",
       "question": "狭窄による血流低下で二次性高血圧を起こす血管はどれか。 secondary hypertension",
       "choices": [
@@ -9200,11 +9336,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "高血圧"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM080",
@@ -9247,13 +9383,13 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 12,
+      "classificationScore": 15,
       "classificationSignals": [
         "人口",
         "人口動態",
         "死亡率"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM081",
@@ -9300,7 +9436,7 @@
       "classificationSignals": [
         "反射"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM082",
@@ -9351,7 +9487,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM083",
@@ -9359,8 +9495,8 @@
       "session": "PM",
       "questionNo": 83,
       "category": "一般",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "人体の構造と機能",
+      "subject": "腎・内分泌の機能",
       "answerType": "multiChoice",
       "question": "A さん 35 歳、女性!は年前に子宮体癌のために単純子宮全摘出術と両側卵巣 uterine corpus cancer 摘出術を受け、その後、ホルモン補充療法は受けずに健康に過ごしている。 A さんの血液中で術前よりも濃度が上昇しているホルモンはどれか。઄つ選べ。",
       "choices": [
@@ -9400,11 +9536,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 12,
       "classificationSignals": [
-        "術前"
+        "ホルモン"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM084",
@@ -9455,7 +9591,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM085",
@@ -9506,7 +9642,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM086",
@@ -9555,11 +9691,11 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "medium",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "介護保険"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM087",
@@ -9608,12 +9744,12 @@
       ],
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "medium",
-      "classificationScore": 6,
+      "classificationScore": 7,
       "classificationSignals": [
         "介護支援専門員",
         "地域包括"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM088",
@@ -9661,12 +9797,12 @@
         "24"
       ],
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 5,
       "classificationSignals": [
         "高齢者"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM089",
@@ -9720,7 +9856,7 @@
         "学童",
         "幼児"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM090",
@@ -9759,7 +9895,7 @@
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM091",
@@ -9767,8 +9903,8 @@
       "session": "PM",
       "questionNo": 91,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "日常生活援助",
+      "majorSubject": "地域・在宅看護論",
+      "subject": "在宅療養支援",
       "answerType": "singleChoice",
       "question": "A さんの家族への助言で適切なのはどれか。",
       "choices": [
@@ -9799,14 +9935,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-PM-SC01",
+      "scenario": "A さん 88 歳、男性!は妻 82 歳!と\u0002人で暮らしている。息子\u0002人は独立して生活 している。要介護度は\u0007で、エアマットレスを使用している。食事は妻の介助で\u0004日 \u0004回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週\u0005回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "low",
-      "classificationScore": 2,
+      "classificationScore": 3,
       "classificationSignals": [
-        "体位変換",
-        "口腔ケア"
+        "訪問看護"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM092",
@@ -9815,7 +9954,7 @@
       "questionNo": 92,
       "category": "状況設定",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "か月後、A さんは食事を口から食べることができなくなり、かかりつけの医 師から家族へ、そろそろ看取りの時期であり、看取りの場所を決めるように説明が あった。息子たちから｢父が長年住んだ家で最期まで過ごさせてあげたいと母とも 話していますが、母が人でみるのは大変だと思い心配しています｣と訪問看護師 に話があった。 このときの訪問看護師の対応で適切なのはどれか。",
       "choices": [
@@ -9846,13 +9985,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC01",
+      "scenario": "A さん 88 歳、男性!は妻 82 歳!と\u0002人で暮らしている。息子\u0002人は独立して生活 している。要介護度は\u0007で、エアマットレスを使用している。食事は妻の介助で\u0004日 \u0004回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週\u0005回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 9,
+      "classificationScore": 10,
       "classificationSignals": [
-        "訪問看護"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM093",
@@ -9861,14 +10004,14 @@
       "questionNo": 93,
       "category": "状況設定",
       "majorSubject": "地域・在宅看護論",
-      "subject": "在宅療養支援",
+      "subject": "在宅療養・地域連携",
       "answerType": "singleChoice",
       "question": "A さんは声をかけても返答したり目を開けたりすることもなく、穏やかな表情 で眠っていることが多くなった。A さんの妻は｢夫は話しかけても何も答えてくれ ないので、どうしたらよいか分かりません｣と訪問看護師に話した。 このときの妻への声かけで適切なのはどれか。",
       "choices": [
         "｢A さんの体にできるだけ触れるようにしましょう｣",
         "｢A さんは苦痛を感じることはありません｣",
         "｢A さんが休めるよう静かにしましょう｣",
-        "｢A さんの世話を頑張りましょう｣"
+        "｢A さんの世話を頑張りましょう｣ 次の文を読み 94〜96 の問いに答えよ。 A さん 55 歳、男性、会社員!。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術¹CABG¼を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末â冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧¹PaO2¼95 Torr、動脈血炭酸ガス分圧 ¹PaCO2¼36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 ¹LVEF¼45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。"
       ],
       "answer": 0,
       "officialAcceptedAnswers": [
@@ -9892,13 +10035,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC01",
+      "scenario": "A さん 88 歳、男性!は妻 82 歳!と\u0002人で暮らしている。息子\u0002人は独立して生活 している。要介護度は\u0007で、エアマットレスを使用している。食事は妻の介助で\u0004日 \u0004回ペースト食を食べているがむせることもあり、食事が全くとれない日もある。排 泄はオムツを使用し、毎日訪問介護サービスを利用して、オムツ交換と陰部洗浄を受 けている。訪問看護は週\u0005回利用している。A さんは妻が話しかけると返事はする が自発的な会話はない。着替えをするときに上肢を動かすと苦痛表情がある。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 10,
       "classificationSignals": [
-        "訪問看護"
+        "direct:在宅療養.*ケアマネジメント|ケアマネジメント.*在宅|訪問看護|退院支援|退院調整"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM094",
@@ -9906,8 +10053,8 @@
       "session": "PM",
       "questionNo": 94,
       "category": "状況設定",
-      "majorSubject": "人体の構造と機能",
-      "subject": "循環・呼吸の機能",
+      "majorSubject": "基礎看護学",
+      "subject": "与薬・輸液",
       "answerType": "singleChoice",
       "question": "A さんに起こっている可能性が高い合併症はどれか。",
       "choices": [
@@ -9938,13 +10085,18 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC02",
+      "scenario": "A さん 55 歳、男性、会社員!。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術¹CABG¼を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末â冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧¹PaO2¼95 Torr、動脈血炭酸ガス分圧 ¹PaCO2¼36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 ¹LVEF¼45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "medium",
+      "classificationScore": 6,
       "classificationSignals": [
-        "心拍出量"
+        "輸液",
+        "輸血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM095",
@@ -9952,8 +10104,8 @@
       "session": "PM",
       "questionNo": 95,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "基礎看護学",
+      "subject": "与薬・輸液",
       "answerType": "multiChoice",
       "question": "術後日、A さんは人工呼吸管理を離脱し、離床が検討されたが中止となった。 看護師が A さんの離床中止を判断した指標はどれか。઄つ選べ。",
       "choices": [
@@ -9991,16 +10143,19 @@
       "sourceAnswerTokens": [
         "45"
       ],
+      "scenarioId": "K114-PM-SC02",
+      "scenario": "A さん 55 歳、男性、会社員!。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術¹CABG¼を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末â冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧¹PaO2¼95 Torr、動脈血炭酸ガス分圧 ¹PaCO2¼36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 ¹LVEF¼45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
+      "classificationStatus": "medium",
       "classificationScore": 7,
       "classificationSignals": [
-        "ドレーン",
-        "不整脈",
-        "心房細動",
-        "術後"
+        "呼吸数",
+        "輸液",
+        "輸血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM096",
@@ -10008,15 +10163,15 @@
       "session": "PM",
       "questionNo": 96,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "基礎看護学",
+      "subject": "与薬・輸液",
       "answerType": "singleChoice",
       "question": "術後日、心臓リハビリテーションが開始された。 A さんは｢傷の痛みはありますが、血管をつないだから安心ですね。落ちついた ら、家族と温泉に行きたいです｣と看護師に話した。 A さんの生活指導で適切なのはどれか。",
       "choices": [
         "｢肩までお湯に入りましょう｣",
         "｢お湯の温度は 43 ℃以上にしましょう｣",
         "｢食後時間以上経過してから入浴しましょう｣",
-        "｢心筋梗塞による心不全があるので入浴は控えましょう｣ myocardial infarction heart failure"
+        "｢心筋梗塞による心不全があるので入浴は控えましょう｣ myocardial infarction heart failure 次の文を読み 97〜99 の問いに答えよ。 A さん 57 歳、男性!は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c¹HbA1c¼ 5.4 %。"
       ],
       "answer": 2,
       "officialAcceptedAnswers": [
@@ -10040,15 +10195,20 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC02",
+      "scenario": "A さん 55 歳、男性、会社員!。激しい胸痛で救急搬送され、心筋梗塞と診断 され myocardial infarction た。冠動脈バイパス術¹CABG¼を受け、ICU に入室した。 手術中の輸液量 2,700 mL、輸血量 400 mL、出血量 280 mL、尿量 200 mL であっ た。手術から 時間が経過し、人工呼吸器が装着され、心囊ドレーンと、胸腔ドレー ンが留置中である。 身体所見：体温 37.1 ℃、脈拍 63/分、血圧 126/62 mmHg、末â冷感はなし。肺野全 体に湿性ラ音を聴取、漿液性の気道分泌物を認める。 検査所見：吸入酸素濃度 40 %、動脈血酸素分圧¹PaO2¼95 Torr、動脈血炭酸ガス分圧 ¹PaCO2¼36 Torr、中心静脈圧 12 cmH2O、心エコー検査では左室駆出率 ¹LVEF¼45 %、心囊液の貯留なし。胸部エックス線写真では両肺野の広範 に透過性の低下を認める。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 6,
+      "classificationStatus": "medium",
+      "classificationScore": 9,
       "classificationSignals": [
-        "心不全",
-        "心筋梗塞",
-        "術後"
+        "入浴",
+        "採血",
+        "輸液",
+        "輸血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM097",
@@ -10056,8 +10216,8 @@
       "session": "PM",
       "questionNo": 97,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "検査・処置の援助",
       "answerType": "singleChoice",
       "question": "A さんの尿所見で予測されるのはどれか。",
       "choices": [
@@ -10088,11 +10248,17 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC03",
+      "scenario": "A さん 57 歳、男性!は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c¹HbA1c¼ 5.4 %。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 3,
+      "classificationSignals": [
+        "採血"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM098",
@@ -10100,8 +10266,8 @@
       "session": "PM",
       "questionNo": 98,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "基礎看護学",
+      "subject": "検査・処置の援助",
       "answerType": "singleChoice",
       "question": "A さんは膀胱全摘出術および回腸導管造設術を受けることになった。 A さんへの術前の説明で正しいのはどれか。",
       "choices": [
@@ -10132,13 +10298,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-PM-SC03",
+      "scenario": "A さん 57 歳、男性!は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c¹HbA1c¼ 5.4 %。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "low",
+      "classificationScore": 3,
       "classificationSignals": [
-        "術前"
+        "採血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM099",
@@ -10146,15 +10316,15 @@
       "session": "PM",
       "questionNo": 99,
       "category": "状況設定",
-      "majorSubject": "成人看護学",
-      "subject": "周術期",
+      "majorSubject": "基礎看護学",
+      "subject": "検査・処置の援助",
       "answerType": "singleChoice",
       "question": "A さんは術後から、これまでにはなかった勃起障害が出現した。A さんのテス トステロン値は 13.5 pg/mL 50 歳代の基準値：4.6〜19.6 pg/mL!であった。 A さんの勃起不全の原因で考えられるのはどれか。 erectile dysfunction",
       "choices": [
         "性ホルモン分泌の低下",
         "神経損傷",
         "糖尿病 diabetes mellitus",
-        "喫 煙"
+        "喫 煙 次の文を読み 100〜102 の問いに答えよ。 A さん 80 歳、女性!は、アパートの階に人で暮らしている。半年前に軽度の Alzheimer¹アルツハイマー¼型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。"
       ],
       "answer": 1,
       "officialAcceptedAnswers": [
@@ -10178,14 +10348,17 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-PM-SC03",
+      "scenario": "A さん 57 歳、男性!は、芳香族アミンを扱う化学工場に 39 年勤務している。 現病歴：ここ数か月で次第に尿の色が濃くなった。いきまないと排尿できなくなり、 泌尿器科を受診し、採血および尿検査を受けた。 既往歴：特記すべき点なし。 生活歴：喫煙 40 本/日を 36 年間、焼酎 120 mL の飲酒をほぼ毎日、20 年間続けてい る。 身体所見：顔面、四肢に浮腫なし、黒色便なし、血便なし。 検査所見：赤血球 308 万/μL、Hb 9.9 g/dL、血清アルブミン 4.2 g/dL、血清総ビリ ルビン 0.2 mg/dL、血糖 102 mg/dL、ヘモグロビン A1c¹HbA1c¼ 5.4 %。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationStatus": "low",
+      "classificationScore": 3,
       "classificationSignals": [
-        "糖尿病",
-        "術後"
+        "採血"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM100",
@@ -10225,13 +10398,17 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-PM-SC04",
+      "scenario": "A さん 80 歳、女性!は、アパートの\u0004階に\u0004人で暮らしている。半年前に軽度の Alzheimer¹アルツハイマー¼型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援\u0002の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 7,
       "classificationSignals": [
         "認知症"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM101",
@@ -10239,8 +10416,8 @@
       "session": "PM",
       "questionNo": 101,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "日常生活援助",
+      "majorSubject": "老年看護学",
+      "subject": "認知症看護",
       "answerType": "singleChoice",
       "question": "A さんは、経過を観察するため入院となった。入院日、A さんの全身状態は 改善し、食事が開始された。A さんは歩行時にふらつきがあるため、看護師が見 守ることになった。看護師はベッドから離れるときは、ナースコールを押すように A さんに説明した。そのとき A さんは｢忘れずにできるかしら｣と呟いた。しばら くすると、A さんが人で移動しているところを看護師が発見した。 A さんへの対応で適切なのはどれか。",
       "choices": [
@@ -10271,13 +10448,17 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC04",
+      "scenario": "A さん 80 歳、女性!は、アパートの\u0004階に\u0004人で暮らしている。半年前に軽度の Alzheimer¹アルツハイマー¼型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援\u0002の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 6,
       "classificationSignals": [
-        "車椅子"
+        "認知症"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM102",
@@ -10285,15 +10466,15 @@
       "session": "PM",
       "questionNo": 102,
       "category": "状況設定",
-      "majorSubject": "地域・在宅看護論",
-      "subject": "地域包括ケア",
+      "majorSubject": "老年看護学",
+      "subject": "認知症看護",
       "answerType": "singleChoice",
       "question": "入院日。A さんは明日の退院が決まった。看護師が朝食後に抗認知症薬の配 薬に行くと、A さんが｢もう薬の時間ですか｣と言った。また、自分の病室を間違 えることが数回あった。 A さんが退院後の在宅療養を継続するために、看護師が担当の介護支援専門員 へ伝える情報で最も適切なのはどれか。",
       "choices": [
         "歩行状態",
         "食事の摂取量",
         "入院中の治療内容",
-        "認知機能障害の出現状況"
+        "認知機能障害の出現状況 次の文を読み 103〜105 の問いに答えよ。 A 君 12 歳、男児!は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢日の食事内容を毎日記録し、週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm 標 準 152.4 cm!、体 重 61.7 kg 標 準 44.1 kg!。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。"
       ],
       "answer": 3,
       "officialAcceptedAnswers": [
@@ -10317,14 +10498,18 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-PM-SC04",
+      "scenario": "A さん 80 歳、女性!は、アパートの\u0004階に\u0004人で暮らしている。半年前に軽度の Alzheimer¹アルツハイマー¼型認知症 と診断され、抗認知症薬の内服治療を開始し Alzheimer disease た。要支援\u0002の認定を受けている。 A さんが屋内でぐったりしているのを訪問した近所の人が発見し、救急搬送され た。来 院 時 の バ イ タ ル サ イ ン は、体 温 36.5 ℃、呼 吸 数 20/分、脈 拍 92/分、血 圧 130/82 mmHg で、皮膚に軽度の発汗がみられた。頭痛や吐き気はなかった。看護師 が A さんに状況を聞くと、最近は食欲がなく、食べたり飲んだりしていなかったし、 昨日は排尿回数も普段より少なかったと話した。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 12,
       "classificationSignals": [
-        "介護支援専門員",
-        "在宅療養"
+        "認知機能",
+        "認知症"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM103",
@@ -10365,11 +10550,15 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-PM-SC05",
+      "scenario": "A 君 12 歳、男児!は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢\u0004日の食事内容を毎日記録し、\u0004週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm 標 準 152.4 cm!、体 重 61.7 kg 標 準 44.1 kg!。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "unclassified",
       "classificationScore": 0,
       "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM104",
@@ -10410,13 +10599,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC05",
+      "scenario": "A 君 12 歳、男児!は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢\u0004日の食事内容を毎日記録し、\u0004週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm 標 準 152.4 cm!、体 重 61.7 kg 標 準 44.1 kg!。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 5,
       "classificationSignals": [
         "学童"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM105",
@@ -10424,15 +10617,15 @@
       "session": "PM",
       "questionNo": 105,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "日常生活援助",
       "answerType": "singleChoice",
       "question": "A 君の保護者は｢この機会に、A の生活リズムの乱れも改善したいと思います。 どんなことから始めるのが良いですか｣と看護師に尋ねた。 看護師の説明で適切なのはどれか。",
       "choices": [
         "｢ゲーム機で遊ぶのを禁止しましょう｣",
         "｢起床したら朝日を浴びると良いでしょう｣",
         "｢サッカークラブに所属すると良いでしょう｣",
-        "｢しばらく学校を休ませて自宅で生活リズムを整えましょう｣"
+        "｢しばらく学校を休ませて自宅で生活リズムを整えましょう｣ 次の文を読み 106〜108 の問いに答えよ。 A 君 歳 か月、男児!は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて日 回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。"
       ],
       "answer": 1,
       "officialAcceptedAnswers": [
@@ -10456,11 +10649,17 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-PM-SC05",
+      "scenario": "A 君 12 歳、男児!は、肥満を心配した保護者に連れられて来院した。A 君と保護 者は、医師から｢\u0004日の食事内容を毎日記録し、\u0004週後に再診してください｣と説明さ れた。 既往歴と家族歴：特記すべきことはない。 生活歴：スナック菓子などの間食を好む。時間があればポータブル型のゲーム機で サッカーゲームばかりして、就寝時刻は毎晩午前 時を過ぎる。A 君は、 学校生活は楽しく思っているが朝起きられず遅刻して登校することが多い。 また、運動することが嫌いなため運動の習慣はない。 身体所見： 身 長 153.0 cm 標 準 152.4 cm!、体 重 61.7 kg 標 準 44.1 kg!。血 圧 100/60 mmHg。心音と呼吸音に異常はない。腹部は平坦、軟で、肝臓と 脾臓を触知しない。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 1,
+      "classificationSignals": [
+        "車椅子"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM106",
@@ -10468,8 +10667,8 @@
       "session": "PM",
       "questionNo": 106,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "日常生活援助",
       "answerType": "singleChoice",
       "question": "母親への説明で、最も適切なのはどれか。",
       "choices": [
@@ -10500,11 +10699,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC06",
+      "scenario": "A 君 \u0007歳 か月、男児!は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて\u0004日 回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 3,
+      "classificationSignals": [
+        "車椅子"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM107",
@@ -10512,8 +10717,8 @@
       "session": "PM",
       "questionNo": 107,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "基礎看護学",
+      "subject": "日常生活援助",
       "answerType": "singleChoice",
       "question": "その後、看護師は、A 君が小学校で自立して間欠的自己導尿ができるようケア 計画を立てた。 間欠的自己導尿の実施について A 君に伝えることで適切なのはどれか。",
       "choices": [
@@ -10544,11 +10749,17 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC06",
+      "scenario": "A 君 \u0007歳 か月、男児!は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて\u0004日 回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 3,
+      "classificationSignals": [
+        "車椅子"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM108",
@@ -10556,15 +10767,15 @@
       "session": "PM",
       "questionNo": 108,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "母性看護学",
+      "subject": "分娩・産褥",
       "answerType": "singleChoice",
       "question": "11 歳になった A 君は間欠的自己導尿を自分で実施している。本日の定期受診時 の尿検査で、尿蛋白袷、赤血球 安!、白血球袷、尿の混濁袷の所見がみられた。 受診に付き添った父親から｢最近、A は親の言うことを聞かないし、あまり口を きいてくれません。家では自立して間欠的自己導尿を行っていますが、学校でも やっているのか心配です｣と発言があった。A 君の水分摂取や運動の状況は以前と 変わらない。 外来看護師の対応で最も適切なのはどれか。",
       "choices": [
         "導尿の必要性を A 君に説明する。",
         "学校での導尿の状況について A 君と話す。",
         "父親に、親が学校に行って導尿を実施するよう伝える。",
-        "導尿の手順が書かれた表を渡し、できたところに A 君にシールを貼っても らう。"
+        "導尿の手順が書かれた表を渡し、できたところに A 君にシールを貼っても らう。 次の文を読み 109〜111 の問いに答えよ。 A さん 30 歳、初産婦!は妊娠 39 週日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室"
       ],
       "answer": 1,
       "officialAcceptedAnswers": [
@@ -10588,11 +10799,22 @@
       "sourceAnswerTokens": [
         "2"
       ],
+      "scenarioId": "K114-PM-SC06",
+      "scenario": "A 君 \u0007歳 か月、男児!は、二分脊椎 のため、繰り返し使用できるカテーテルに spina bifida よる間欠的自己導尿を両親が実施している。現在、間欠的自己導尿は、保育所での実 施を含めて\u0004日 回行うよう医師が指示しており、自宅では両親が導尿している。A 君は下肢の運動機能障害があるが、自分で車椅子からトイレに移動でき、指先の微細 な動きもできる。 外来受診の際に母親から｢地元の小学校に入学予定です。小学生になったら自分で 導尿できたほうが良いと聞きました。A も間欠的自己導尿をやってみたい、と言っ ています。どのように進めたらよいか分からず、焦っています｣と看護師に相談が あった。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "high",
+      "classificationScore": 11,
+      "classificationSignals": [
+        "分娩",
+        "妊娠",
+        "産婦",
+        "破水",
+        "胎盤",
+        "陣痛"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM109",
@@ -10632,13 +10854,22 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC07",
+      "scenario": "A さん 30 歳、初産婦!は妊娠 39 週\u0005日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 38,
       "classificationSignals": [
-        "分娩"
+        "分娩",
+        "妊娠",
+        "産婦",
+        "破水",
+        "胎盤",
+        "陣痛"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM110",
@@ -10678,15 +10909,24 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC07",
+      "scenario": "A さん 30 歳、初産婦!は妊娠 39 週\u0005日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 21,
+      "classificationScore": 59,
       "classificationSignals": [
         "分娩",
+        "妊娠",
         "子宮底",
-        "授乳"
+        "授乳",
+        "産婦",
+        "破水",
+        "胎盤",
+        "陣痛"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM111",
@@ -10694,15 +10934,15 @@
       "session": "PM",
       "questionNo": 111,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "観察・バイタルサイン",
+      "majorSubject": "母性看護学",
+      "subject": "分娩・産褥",
       "answerType": "singleChoice",
       "question": "児は出生時間後、寝衣を着用しコットに収容された。児のバイタルサインは、 体温 腋窩温!36.4 ℃、呼吸数 40/分、心拍数 120/分であった。また末âの冷感は あるが、チアノーゼは認めなかった。排尿、排便はない。児の頰を軽く突くと刺激 の方向を向き、口を開ける動作がみられる。また、腋窩と鼠径部に胎脂が付着して いる。 このときに必要なケアはどれか。",
       "choices": [
         "掛け物を温めたものに交換する。",
         "口腔内吸引をする。",
         "肛門刺激をする。",
-        "沐浴をする。"
+        "沐浴をする。 次の文を読み 112〜114 の問いに答えよ。 A さん 21 歳、女性、大学生!は、人で暮らしている。友人関係のトラブルでう つ状態になり、か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。"
       ],
       "answer": 0,
       "officialAcceptedAnswers": [
@@ -10726,14 +10966,22 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC07",
+      "scenario": "A さん 30 歳、初産婦!は妊娠 39 週\u0005日で陣痛発来した。その後、陣痛が増強して 順調な分娩進行と診断され、入院後に分娩した。 A さんの分娩経過を以下に示す。 2 時 00 分 陣痛周期 10 分 5 時 30 分 入院 15 時 00 分 分娩室入室 15 時 30 分 子宮口全開大 15 時 40 分 自然破水 16 時 20 分 児娩出 16 時 30 分 胎盤娩出 18 時 30 分 帰室",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 33,
       "classificationSignals": [
-        "バイタルサイン",
-        "呼吸数"
+        "分娩",
+        "妊娠",
+        "産婦",
+        "破水",
+        "胎盤",
+        "陣痛"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM112",
@@ -10741,8 +10989,8 @@
       "session": "PM",
       "questionNo": 112,
       "category": "状況設定",
-      "majorSubject": null,
-      "subject": null,
+      "majorSubject": "精神看護学",
+      "subject": "精神疾患と看護",
       "answerType": "singleChoice",
       "question": "A さんの現在の状態はどれか。",
       "choices": [
@@ -10773,11 +11021,17 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC08",
+      "scenario": "A さん 21 歳、女性、大学生!は、\u0004人で暮らしている。友人関係のトラブルでう つ状態になり、\u0005か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "unclassified",
-      "classificationScore": 0,
-      "classificationSignals": [],
-      "classificationMethod": "keyword-v1"
+      "classificationStatus": "low",
+      "classificationScore": 3,
+      "classificationSignals": [
+        "精神科"
+      ],
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM113",
@@ -10817,14 +11071,18 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC08",
+      "scenario": "A さん 21 歳、女性、大学生!は、\u0004人で暮らしている。友人関係のトラブルでう つ状態になり、\u0005か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 5,
+      "classificationScore": 9,
       "classificationSignals": [
         "妄想",
         "精神科"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM114",
@@ -10840,7 +11098,7 @@
         "行動援護",
         "同行援護",
         "セルフヘルプグループ",
-        "共同生活援助¹グループホーム¼"
+        "共同生活援助¹グループホーム¼ 次の文を読み 115〜117 の問いに答えよ。 A さん 65 歳、女性!は、夫と人で暮らしている。友人の死去後、食事量が減り、 か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬¹SSRI¼と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。"
       ],
       "answer": 2,
       "officialAcceptedAnswers": [
@@ -10864,13 +11122,19 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC08",
+      "scenario": "A さん 21 歳、女性、大学生!は、\u0004人で暮らしている。友人関係のトラブルでう つ状態になり、\u0005か月前から精神科クリニックへの通院を開始した。頓用の抗不安薬 を処方され不安が高まったときに服用していたが、徐々に酩酊や陶酔感を得るために 服用するようになった。最近は指示された抗不安薬の量では酩酊や陶酔感が得られな くなってきたため、数日分の薬を溜めて一度に大量に服用するようになった。抗不安 薬を大量に使用した翌日は大学を休むことが続いていた。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationScore": 11,
       "classificationSignals": [
-        "依存症"
+        "うつ病",
+        "依存症",
+        "精神科"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM115",
@@ -10878,8 +11142,8 @@
       "session": "PM",
       "questionNo": 115,
       "category": "状況設定",
-      "majorSubject": "人体の構造と機能",
-      "subject": "神経・感覚器",
+      "majorSubject": "精神看護学",
+      "subject": "精神疾患と看護",
       "answerType": "singleChoice",
       "question": "A さんと夫に看護師が説明する内容で適切なのはどれか。",
       "choices": [
@@ -10910,13 +11174,18 @@
       "sourceAnswerTokens": [
         "3"
       ],
+      "scenarioId": "K114-PM-SC09",
+      "scenario": "A さん 65 歳、女性!は、夫と\u0002人で暮らしている。友人の死去後、食事量が減り、 \u0004か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬¹SSRI¼と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 1,
+      "classificationStatus": "high",
+      "classificationScore": 9,
       "classificationSignals": [
-        "睡眠"
+        "うつ病",
+        "精神科"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM116",
@@ -10963,15 +11232,20 @@
       "sourceAnswerTokens": [
         "15"
       ],
+      "scenarioId": "K114-PM-SC09",
+      "scenario": "A さん 65 歳、女性!は、夫と\u0002人で暮らしている。友人の死去後、食事量が減り、 \u0004か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬¹SSRI¼と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 10,
+      "classificationScore": 21,
       "classificationSignals": [
+        "うつ病",
         "妄想",
         "強迫",
         "精神科"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM117",
@@ -10987,7 +11261,7 @@
         "小規模多機能型居宅介護",
         "認知症対応型通所介護",
         "自立訓練",
-        "療養介護"
+        "療養介護 次の文を読み 118〜120 の問いに答えよ。 午後時に震度 強の地震が発生し、避難所が開設された。地震発生の時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん 54 歳、男性!が搬送されてきた。A さんは右 大部にcm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。"
       ],
       "answer": 0,
       "officialAcceptedAnswers": [
@@ -11011,13 +11285,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC09",
+      "scenario": "A さん 65 歳、女性!は、夫と\u0002人で暮らしている。友人の死去後、食事量が減り、 \u0004か月前から気分の落ち込みが強くなった。夫が積極的に散歩に誘っても、A さん は｢体がだるい｣｢何をしても意味がない｣と話し、寝つきも悪くなり、日中ほとんどの 時間を臥床して過ごすようになった。心配した夫に連れられて精神科外来を受診した ところ、うつ病と 診断され、選択的セロトニン再取り込み阻害薬¹SSRI¼と不眠時の depression 睡眠薬が処方された。夫から精神科外来の看護師に｢日常生活で気を付けることはあ りますか｣と質問があった。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 8,
+      "classificationScore": 10,
       "classificationSignals": [
         "入浴"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM118",
@@ -11025,8 +11303,8 @@
       "session": "PM",
       "questionNo": 118,
       "category": "状況設定",
-      "majorSubject": "基礎看護学",
-      "subject": "感染予防",
+      "majorSubject": "看護の統合と実践",
+      "subject": "災害・救急",
       "answerType": "singleChoice",
       "question": "このときの看護師の感染予防対策で正しいのはどれか。",
       "choices": [
@@ -11057,13 +11335,17 @@
       "sourceAnswerTokens": [
         "1"
       ],
+      "scenarioId": "K114-PM-SC10",
+      "scenario": "午後\u0004時に震度 強の地震が発生し、避難所が開設された。地震発生の\u0002時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん 54 歳、男性!が搬送されてきた。A さんは右 大部に\u0006cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+      "scenarioIndex": 0,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "high",
-      "classificationScore": 4,
+      "classificationStatus": "low",
+      "classificationScore": 6,
       "classificationSignals": [
-        "感染予防"
+        "避難所"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM119",
@@ -11103,13 +11385,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-PM-SC10",
+      "scenario": "午後\u0004時に震度 強の地震が発生し、避難所が開設された。地震発生の\u0002時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん 54 歳、男性!が搬送されてきた。A さんは右 大部に\u0006cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+      "scenarioIndex": 1,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
       "classificationStatus": "high",
-      "classificationScore": 18,
+      "classificationScore": 28,
       "classificationSignals": [
         "避難所"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     },
     {
       "id": "K114-PM120",
@@ -11150,13 +11436,17 @@
       "sourceAnswerTokens": [
         "4"
       ],
+      "scenarioId": "K114-PM-SC10",
+      "scenario": "午後\u0004時に震度 強の地震が発生し、避難所が開設された。地震発生の\u0002時間後、 避難所に救護所が設置され、近隣の病院から医療救護班が派遣された。医療救護班が 複数の被災者に対応するなか、A さん 54 歳、男性!が搬送されてきた。A さんは右 大部に\u0006cm の切創があり出血部位をタオルで押さえている。すぐに看護師が切創 部の処置を介助することになった。",
+      "scenarioIndex": 2,
+      "scenarioTotal": 3,
       "mediaDetectionReason": "not_detected",
-      "classificationStatus": "low",
-      "classificationScore": 4,
+      "classificationStatus": "high",
+      "classificationScore": 11,
       "classificationSignals": [
         "避難所"
       ],
-      "classificationMethod": "keyword-v1"
+      "classificationMethod": "semantic-keyword-v2-with-scenario"
     }
   ]
 }
