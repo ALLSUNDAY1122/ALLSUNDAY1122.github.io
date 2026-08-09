@@ -17,7 +17,7 @@ jobs:
         run: |
           set -euo pipefail
           out='pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
-          curl --fail --location --retry 3 --output "$out" 'https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-9af8-81f7-b695-8bdeb7df2245/raw?se=2026-08-09T08%3A27%3A55Z&sp=r&sv=2026-02-06&sr=b&scid=f6abd3ee-5c26-53a8-b253-cde303349f40&skoid=732f244e-db13-47c3-bcc7-7ee02a9397bc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-09T01%3A38%3A05Z&ske=2026-08-10T01%3A38%3A05Z&sks=b&skv=2026-02-06&sig=6Wz9%2F79W9FpZrceThmgtLasyo6rB1JtZDwpOhyRqdRc%3D'
+          curl --fail --location --retry 3 --output "$out" 'https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-8b14-81f7-8a35-6aff77f9085e/raw?se=2026-08-09T08%3A41%3A09Z&sp=r&sv=2026-02-06&sr=b&scid=6495074e-0a7b-57d1-aa68-da75e0d34a81&skoid=732f244e-db13-47c3-bcc7-7ee02a9397bc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-09T01%3A52%3A14Z&ske=2026-08-10T01%3A52%3A14Z&sks=b&skv=2026-02-06&sig=qmU4gS3s1rfK%2Fwn7q8AOXZOJC1%2BDtJdORpBdsTadu9s%3D'
           echo 'dfc7dfe4a1c13afbe98658cde591274e11665b016c39e2a4411de4dbe86127ec  '"$out" | sha256sum -c -
           python3 - "$out" <<'PY'
           import struct,sys
