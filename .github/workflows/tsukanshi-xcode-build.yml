@@ -45,8 +45,19 @@ jobs:
 
       - name: Verify In-App Purchase capability in generated project
         run: |
-          grep -q 'com.apple.InAppPurchase' tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj/project.pbxproj
-          grep -A3 'com.apple.InAppPurchase' tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj/project.pbxproj | grep -q 'enabled = 1'
+          PBX=tsukanshi-sprint/ios/TsukanshiSprint.xcodeproj/project.pbxproj
+          echo '--- generated TargetAttributes/SystemCapabilities ---'
+          grep -n -A12 -B4 -E 'TargetAttributes|SystemCapabilities|InAppPurchase' "$PBX" || true
+          python3 - "$PBX" <<'PY'
+          import re,sys
+          text=open(sys.argv[1],encoding='utf-8').read()
+          assert 'SystemCapabilities' in text, 'SystemCapabilities missing from generated project'
+          assert 'com.apple.InAppPurchase' in text, 'In-App Purchase capability missing from generated project'
+          m=re.search(r'com\.apple\.InAppPurchase\s*=\s*\{(.*?)\};', text, re.S)
+          assert m, 'In-App Purchase capability block missing'
+          assert re.search(r'enabled\s*=\s*(?:1|true)\s*;',m.group(1),re.I), 'In-App Purchase capability is not enabled'
+          print('PASS: generated Xcode project has enabled In-App Purchase capability')
+          PY
 
       - name: Build Release for iPhone Simulator
         run: |
