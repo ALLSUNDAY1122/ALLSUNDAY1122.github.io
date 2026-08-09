@@ -54,10 +54,10 @@ for(const id of ids){
     await page.locator('[data-resume]').click();
     await page.locator('.question-card').waitFor({state:'visible'});
     const qtext=await page.locator('.qtext').innerText();
-    const labels=['ア．','イ．','ウ．','エ．'].filter(x=>qtext.includes(x));
-    if(labels.length>=2){
+    if(q.question.includes('\n\nア．')){
+      const labels=['ア．','イ．','ウ．','エ．'].filter(x=>q.question.includes(`\n\n${x}`));
       for(const label of labels){
-        if(!qtext.includes(`\n${label}`))throw new Error(`${id}: statement line break missing ${label}`);
+        if(!qtext.includes(`\n${label}`))throw new Error(`${id}: rendered statement line break missing ${label}`);
       }
     }
 
