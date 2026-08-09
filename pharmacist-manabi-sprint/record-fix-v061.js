@@ -5,7 +5,7 @@ function dayKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,
 function activeQuestions(){return (window.PHARM_QUESTIONS||[]).filter(function(q){return q&&q.scored!==false})}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function renderAchievement(){
-  var state=load(),qs=activeQuestions(),seen=state.seen||{},fields=state.fields||{};
+  var state=load(),qs=activeQuestions(),seen=state.seen||{};
   var learned=qs.filter(function(q){return !!seen[q.id]}).length,total=qs.length;
   var progress=total?learned/total:0,pct=total?Math.round(progress*100):0;
   var correct=Number(state.totalCorrect)||0,answered=Number(state.totalAnswered)||0,accuracy=answered?Math.round(correct/answered*100):null;
@@ -38,11 +38,21 @@ function renderHeatmap(){
     x.appendChild(e);
   }
 }
-function render(){var h=document.getElementById('history');if(!h||!h.classList.contains('active'))return;renderAchievement();renderHeatmap()}
-function schedule(){setTimeout(render,0);setTimeout(render,80)}
-document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('.nav button[data-view="history"]'))schedule()},true);
-var historyEl=document.getElementById('history');if(historyEl)new MutationObserver(schedule).observe(historyEl,{attributes:true,attributeFilter:['class']});
-window.addEventListener('storage',schedule);
-document.addEventListener('visibilitychange',function(){if(!document.hidden)schedule()});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
+function renderRecord(){var h=document.getElementById('history');if(!h||!h.classList.contains('active'))return;renderAchievement();renderHeatmap()}
+function currentQuestion(){var tag=document.getElementById('qTag');if(!tag)return null;var m=tag.textContent.match(/第(\d+)回.*問(\d+)/);if(!m)return null;var ex=Number(m[1]),no=Number(m[2]);return (window.PHARM_QUESTIONS||[]).find(function(q){return q.exam===ex&&q.sourceQuestionNo===no})||null}
+function renderAccessibleQuestion(){
+  var qt=document.getElementById('qText');if(!qt)return;var a=document.getElementById('qAccessible');
+  if(!a){a=document.createElement('div');a.id='qAccessible';a.className='srOnly';qt.insertAdjacentElement('afterend',a)}
+  var q=currentQuestion();if(!q){a.textContent='';return}
+  if(q.displayMode==='officialQuestionImage')a.textContent='画像問題。'+(q.q||'')+'。画像内の選択肢番号を確認して回答してください。';
+  else a.textContent='';
+}
+function scheduleRecord(){setTimeout(renderRecord,0);setTimeout(renderRecord,80)}
+function scheduleAccessible(){setTimeout(renderAccessibleQuestion,0);setTimeout(renderAccessibleQuestion,80)}
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('.nav button[data-view="history"]'))scheduleRecord()},true);
+var historyEl=document.getElementById('history');if(historyEl)new MutationObserver(scheduleRecord).observe(historyEl,{attributes:true,attributeFilter:['class']});
+var qTag=document.getElementById('qTag');if(qTag)new MutationObserver(scheduleAccessible).observe(qTag,{childList:true,subtree:true,characterData:true});
+window.addEventListener('storage',scheduleRecord);
+document.addEventListener('visibilitychange',function(){if(!document.hidden){scheduleRecord();scheduleAccessible()}});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){scheduleRecord();scheduleAccessible()});else{scheduleRecord();scheduleAccessible()}
 })();
