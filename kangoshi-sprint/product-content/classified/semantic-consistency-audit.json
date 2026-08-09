@@ -54,10 +54,7 @@
       "地域・在宅看護論": 13
     }
   },
-  "strongSemanticErrors": [
-    "K115-PM093: stem semantic domains ['disaster-explicit'] allow ['看護の統合と実践'], got 地域・在宅看護論",
-    "K113-PM116: stem semantic domains ['disaster-explicit'] allow ['看護の統合と実践'], got 地域・在宅看護論"
-  ],
+  "strongSemanticErrors": [],
   "splitScenarioGroups": [
     {
       "scenarioId": "K113-AM-SC02",
@@ -262,6 +259,7 @@
     "K115-PM091: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K115-PM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K115-PM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K115-PM093: home-care disaster preparedness; assigned 地域・在宅看護論 allowed as 地域・在宅看護論 or 看護の統合と実践",
     "K114-AM091: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K114-AM092: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K114-AM093: contextual stem domain community-explicit; assigned 地域・在宅看護論",
@@ -272,6 +270,7 @@
     "K113-AM116: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K113-AM117: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K113-PM116: contextual stem domain community-explicit; assigned 地域・在宅看護論",
+    "K113-PM116: home-care disaster preparedness; assigned 地域・在宅看護論 allowed as 地域・在宅看護論 or 看護の統合と実践",
     "K113-PM117: contextual stem domain community-explicit; assigned 地域・在宅看護論",
     "K113-AM-SC02: situation group split {'成人看護学': 2, '地域・在宅看護論': 1}; contextual review required",
     "K113-AM-SC09: situation group split {'成人看護学': 1, '地域・在宅看護論': 2}; contextual review required",
@@ -282,6 +281,6 @@
     "K115-PM-SC03: situation group split {'成人看護学': 2, '母性看護学': 1}; contextual review required",
     "K115-PM-SC10: situation group split {'基礎看護学': 1, '看護の統合と実践': 2}; contextual review required"
   ],
-  "pass": false,
-  "note": "独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、患者ライフステージ・主病態を優先する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
+  "pass": true,
+  "note": "独立ルールによる分類整合監査。状況設定では在宅・一般技術語を主分類の強制根拠にせず、在宅利用者の災害準備は地域・在宅看護論または災害看護を許容する。多領域設問は警告、単一の強い意味領域との矛盾はFAIL。専門家監査の代替ではない。"
 }
