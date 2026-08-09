@@ -1,6 +1,6 @@
 {
-  "cycle": 10,
-  "status": "PASS",
+  "cycle": 11,
+  "status": "FAIL",
   "generated": 210,
   "pdf_sets": 6,
   "media_questions": [],
@@ -204,7 +204,9 @@
     "SHOSHI-R7-PM-34: exact statute token not printed; subject-level primary law URL only",
     "SHOSHI-R7-PM-35: exact statute token not printed; subject-level primary law URL only"
   ],
-  "errors": [],
+  "errors": [
+    "leading continuation remains: 2"
+  ],
   "rules": {
     "question": "MOJ official PDF full question segment, including printed choice mapping",
     "ui_choices": "numeric 1..5 only",
@@ -255,6 +257,48 @@
         "chars": 6
       }
     ],
+    "promoted_false_heading_prefixes": [
+      {
+        "id": "SHOSHI-R5-AM-04",
+        "prefix_chars": 48,
+        "preamble_chars": 121
+      },
+      {
+        "id": "SHOSHI-R5-AM-27",
+        "prefix_chars": 74,
+        "preamble_chars": 74
+      },
+      {
+        "id": "SHOSHI-R6-AM-04",
+        "prefix_chars": 48,
+        "preamble_chars": 120
+      },
+      {
+        "id": "SHOSHI-R6-AM-27",
+        "prefix_chars": 74,
+        "preamble_chars": 74
+      },
+      {
+        "id": "SHOSHI-R6-PM-28",
+        "prefix_chars": 74,
+        "preamble_chars": 74
+      },
+      {
+        "id": "SHOSHI-R7-AM-04",
+        "prefix_chars": 47,
+        "preamble_chars": 127
+      },
+      {
+        "id": "SHOSHI-R7-AM-27",
+        "prefix_chars": 72,
+        "preamble_chars": 72
+      },
+      {
+        "id": "SHOSHI-R7-PM-28",
+        "prefix_chars": 72,
+        "preamble_chars": 72
+      }
+    ],
     "discarded_pdf_tail_artifacts": [
       {
         "from": "SHOSHI-R5-AM-35",
@@ -274,6 +318,11 @@
     ],
     "orphan_preambles": [],
     "remaining_cross_contamination": [],
+    "suspicious_leading_continuation": [
+      "SHOSHI-R5-PM-01",
+      "SHOSHI-R6-PM-01"
+    ],
+    "dangling_preambles": [],
     "question_count": 210
   }
 }
