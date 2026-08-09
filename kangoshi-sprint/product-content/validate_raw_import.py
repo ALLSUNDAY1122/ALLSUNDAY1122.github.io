@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json, re, sys
+from collections import defaultdict
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
@@ -15,12 +16,12 @@ for set_id in ('set1','set2','set3'):
     if not p.exists():
         errors.append(f'{set_id}: raw file missing'); continue
     d=json.loads(p.read_text(encoding='utf-8')); qs=d.get('questions',[])
-    if int(d.get('schemaVersion') or 0)<3: errors.append(f'{set_id}: schemaVersion expected >=3, got {d.get("schemaVersion")}')
+    if int(d.get('schemaVersion') or 0)<4: errors.append(f'{set_id}: schemaVersion expected >=4, got {d.get("schemaVersion")}')
     src=source_by_id[set_id]
     expected_exceptions={(x['session'],int(x['questionNo'])):x for x in src.get('scoringExceptions',[])}
     if len(qs)!=240: errors.append(f'{set_id}: expected 240 questions, got {len(qs)}')
     ids=set(); cats={k:0 for k in expected}; media=0; empty_stem=0; short_stem=0; malformed_stem=0; missing_answers=0; multiple_accepted=0; numeric=0; choice_shape_errors=0
-    seen_exceptions=set()
+    seen_exceptions=set(); scenario_groups=defaultdict(list)
     for q in qs:
         qid=q.get('id')
         if not qid or qid in ids: errors.append(f'{set_id}: duplicate/missing id {qid}')
@@ -45,6 +46,17 @@ for set_id in ('set1','set2','set3'):
             else: all_stems[key]=qid
 
         session=q.get('session'); qno=int(q.get('questionNo') or 0)
+        if cat=='状況設定':
+            scenario_id=q.get('scenarioId'); scenario=re.sub(r'\s+',' ',str(q.get('scenario') or '')).strip()
+            idx=q.get('scenarioIndex'); total=q.get('scenarioTotal')
+            if not scenario_id: errors.append(f'{qid}: scenarioId missing')
+            if len(scenario)<20: errors.append(f'{qid}: scenario text missing/too short')
+            if idx not in (0,1,2): errors.append(f'{qid}: scenarioIndex invalid {idx}')
+            if total!=3: errors.append(f'{qid}: scenarioTotal expected 3, got {total}')
+            if scenario_id: scenario_groups[scenario_id].append((qid,session,qno,idx,scenario))
+        elif any(q.get(k) is not None for k in ('scenarioId','scenario','scenarioIndex','scenarioTotal')):
+            errors.append(f'{qid}: non-situation question has scenario fields')
+
         status=q.get('officialScoringStatus','normal')
         expected_exception=expected_exceptions.get((session,qno))
         if expected_exception:
@@ -103,10 +115,29 @@ for set_id in ('set1','set2','set3'):
 
     for cat,n in expected.items():
         if cats[cat]!=n: errors.append(f'{set_id}: {cat} expected {n}, got {cats[cat]}')
+
+    if len(scenario_groups)!=20:
+        errors.append(f'{set_id}: expected 20 scenario groups, got {len(scenario_groups)}')
+    session_group_counts={'AM':0,'PM':0}
+    for scenario_id,rows in scenario_groups.items():
+        if len(rows)!=3:
+            errors.append(f'{scenario_id}: expected 3 questions, got {len(rows)}'); continue
+        sessions={r[1] for r in rows}; qnos=sorted(r[2] for r in rows); indexes=sorted(r[3] for r in rows)
+        scenarios={r[4] for r in rows}
+        if len(sessions)!=1: errors.append(f'{scenario_id}: mixed sessions {sessions}')
+        else:
+            session=next(iter(sessions)); session_group_counts[session]=session_group_counts.get(session,0)+1
+        if qnos[1]!=qnos[0]+1 or qnos[2]!=qnos[1]+1: errors.append(f'{scenario_id}: non-consecutive question numbers {qnos}')
+        if indexes!=[0,1,2]: errors.append(f'{scenario_id}: scenario indexes invalid {indexes}')
+        if len(scenarios)!=1: errors.append(f'{scenario_id}: scenario text differs within group')
+    if session_group_counts.get('AM')!=10 or session_group_counts.get('PM')!=10:
+        errors.append(f'{set_id}: expected AM10/PM10 scenario groups, got {session_group_counts}')
+
     missing_exception_rows=set(expected_exceptions)-seen_exceptions
     if missing_exception_rows: errors.append(f'{set_id}: scoring exception rows missing {sorted(missing_exception_rows)}')
     summaries.append({
-        'set':set_id,'count':len(qs),'categories':cats,'mediaPending':media,'emptyStem':empty_stem,
+        'set':set_id,'count':len(qs),'categories':cats,'scenarioGroups':len(scenario_groups),
+        'scenarioQuestions':sum(len(v) for v in scenario_groups.values()),'mediaPending':media,'emptyStem':empty_stem,
         'shortStem':short_stem,'malformedStem':malformed_stem,'choiceShapeErrors':choice_shape_errors,
         'missingAnswersAllowedExcluded':missing_answers,'numeric':numeric,'multipleAccepted':multiple_accepted,
         'scoringExceptions':len(seen_exceptions)
@@ -117,7 +148,7 @@ report={
     'sets':summaries,
     'exactDuplicateStemsAcrossSets':duplicates,
     'releaseAllowed':False,
-    'note':'raw取込監査。数字だけ・短すぎる設問、前付け混入、選択肢構造不良もFAILにする。採点除外・複数正解は公式例外として保持する。'
+    'note':'raw取込監査。各試験回20症例×3問の状況設定紐付けも必須。数字だけ・前付け混入・選択肢構造不良・採点例外不整合をFAILにする。'
 }
 (RAW/'raw-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 if errors:
