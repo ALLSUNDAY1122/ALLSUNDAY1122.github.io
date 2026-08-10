@@ -49,6 +49,7 @@ if priv.get('NSPrivacyTracking') is not False or priv.get('NSPrivacyCollectedDat
 
 swift_files = list((R/'ios').glob('*.swift'))
 swift = '\n'.join(p.read_text(encoding='utf-8') for p in swift_files)
+compact_swift = ''.join(swift.split())
 app = (R/'ios/App.swift').read_text(encoding='utf-8')
 project = (R/'ios/project.yml').read_text(encoding='utf-8')
 prepare = (R/'ios/prepare-ios.sh').read_text(encoding='utf-8')
@@ -70,7 +71,8 @@ if 'questions.native.json' not in prepare or '1035' not in prepare or 'free' not
 # Golden Master behavior/static contract.
 for token in ['case home = "ホーム"','case mock = "模試"','case history = "記録"','case settings = "設定"','var goal = 8','var fontSize = 16']:
     if token not in swift: errors.append('Golden Master state token missing: ' + token)
-for token in ['[4,8,16]','3回連続正解','わからない（答えを見る）','5週間の学習','JSONを書き出す','JSONを読み込む']:
+if '[4,8,16]' not in compact_swift: errors.append('Golden Master behavior token missing: 4/8/16 goals')
+for token in ['3回連続正解','わからない（答えを見る）','5週間の学習','JSONを書き出す','JSONを読み込む']:
     if token not in swift: errors.append('Golden Master behavior token missing: ' + token)
 if 'daily.answered += 1' not in swift: errors.append('daily answered-count update missing; heatmap regression risk')
 if 'learningProgress' not in swift or 'seen.filter' not in swift: errors.append('achievement progress must be based on seen questions, not accuracy only')
