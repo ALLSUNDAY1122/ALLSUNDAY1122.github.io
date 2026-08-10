@@ -31,7 +31,8 @@ final class AppModel: ObservableObject {
         }
 
         if let data = UserDefaults.standard.data(forKey: Self.storageKey),
-           let restored = try? LearningLogic.importJSON(data) {
+           var restored = try? LearningLogic.importJSON(data) {
+            restored.attempts = restored.attempts.filter { questionsByID[$0.key] != nil }
             state = restored
         } else {
             state = LearningState()
@@ -164,6 +165,7 @@ final class AppModel: ObservableObject {
 
     func importBackupData(_ data: Data) throws {
         var imported = try LearningLogic.importJSON(data)
+        imported.attempts = imported.attempts.filter { questionsByID[$0.key] != nil }
         imported.resume = LearningLogic.validateResume(imported.resume, questionsByID: questionsByID)
         state = imported
         activeSession = nil
