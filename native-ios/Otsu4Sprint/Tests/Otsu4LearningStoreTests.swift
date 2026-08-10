@@ -55,7 +55,8 @@ final class Otsu4LearningStoreTests: XCTestCase {
 
         XCTAssertEqual(restored.goal, 16)
         XCTAssertEqual(restored.fontScale, 2)
-        XCTAssertEqual(restored.examDate?.timeIntervalSince1970, examDate.timeIntervalSince1970, accuracy: 0.001)
+        XCTAssertNotNil(restored.examDate)
+        XCTAssertEqual(restored.examDate!.timeIntervalSince1970, examDate.timeIntervalSince1970, accuracy: 0.001)
         XCTAssertEqual(restored.weakCount, 1)
         XCTAssertEqual(restored.history.count, 1)
         XCTAssertEqual(restored.seenCount, 1)
