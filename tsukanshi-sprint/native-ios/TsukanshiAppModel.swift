@@ -61,11 +61,17 @@ final class TsukanshiStudySession: ObservableObject, Identifiable {
 
     func answer(_ payload: AnswerPayload) throws -> AnswerEvaluation? {
         guard let question = currentQuestion else { return nil }
-        answers[question.id] = payload
         if isMock {
             currentEvaluation = nil
+            if payload.isUnknown || isCompleteMockAnswer(payload, for: question) {
+                answers[question.id] = payload
+            } else {
+                answers.removeValue(forKey: question.id)
+            }
             return nil
         }
+
+        answers[question.id] = payload
         let evaluation = try LearningEngine.evaluate(question, answer: payload)
         evaluations[question.id] = evaluation
         currentEvaluation = evaluation
@@ -100,6 +106,23 @@ final class TsukanshiStudySession: ObservableObject, Identifiable {
 
     var correctCount: Int {
         evaluations.values.filter(\.isCorrect).count
+    }
+
+    private func isCompleteMockAnswer(_ payload: AnswerPayload, for question: LearningQuestion) -> Bool {
+        switch question.answerType {
+        case .singleChoice:
+            return payload.selectedIndices.count == 1
+        case .multiChoice:
+            return payload.selectedIndices.count == question.correctIndices.count
+        case .numeric:
+            return payload.numberValue != nil
+        case .blankSelect:
+            return question.blanks.allSatisfy { payload.blankValues[$0.key] != nil }
+        case .declaration:
+            return question.declarationFields.allSatisfy {
+                !(payload.declarationValues[$0.key] ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            }
+        }
     }
 }
 
