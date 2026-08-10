@@ -43,20 +43,28 @@ boot_device "$LARGE"
 echo "=== XCTest build-for-testing ==="
 BUILD_LOG="$LOG_DIR/build-for-testing.log"
 set +e
-xcodebuild build-for-testing \
-  -project "$PROJECT" \
-  -scheme "$SCHEME" \
-  -destination "platform=iOS Simulator,id=$LARGE" \
-  -derivedDataPath "$DERIVED" \
-  -parallel-testing-enabled NO \
-  CODE_SIGNING_ALLOWED=NO \
-  ASSETCATALOG_COMPILER_APPICON_NAME= \
-  >"$BUILD_LOG" 2>&1
+python3 - "$BUILD_LOG" "$PROJECT" "$SCHEME" "$LARGE" "$DERIVED" <<'PY'
+import subprocess,sys
+log,project,scheme,udid,derived=sys.argv[1:]
+cmd=[
+  'xcodebuild','build-for-testing','-project',project,'-scheme',scheme,
+  '-destination',f'platform=iOS Simulator,id={udid}','-destination-timeout','45',
+  '-derivedDataPath',derived,'-parallel-testing-enabled','NO',
+  'CODE_SIGNING_ALLOWED=NO','ASSETCATALOG_COMPILER_APPICON_NAME='
+]
+with open(log,'wb') as f:
+    try:
+        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=600)
+        raise SystemExit(result.returncode)
+    except subprocess.TimeoutExpired:
+        f.write(b'\nKANRI_BUILD_FOR_TESTING_HARD_TIMEOUT_600S\n')
+        raise SystemExit(124)
+PY
 BUILD_STATUS=$?
 set -e
 if [[ $BUILD_STATUS -ne 0 ]]; then
   echo "=== build-for-testing FAILURE ===" >&2
-  grep -E "error:|BUILD FAILED|failed" "$BUILD_LOG" | tail -160 >&2 || true
+  grep -E "KANRI_BUILD_FOR_TESTING_HARD_TIMEOUT|error:|BUILD FAILED|failed" "$BUILD_LOG" | tail -160 >&2 || true
   tail -80 "$BUILD_LOG" >&2 || true
   exit "$BUILD_STATUS"
 fi
