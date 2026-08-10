@@ -25,7 +25,8 @@
 - [x] オフライン問題データをアプリbundleへ生成
 - [x] VoiceOver向けラベル・accessibilityIdentifier
 - [x] 生成り紙＋藍＋朱＋緑＋金 / 28pxグリッド / 82pxリング / 明朝＋ゴシック
-- [x] contentVersion / lawBaselineDate / sourceCheckedAtをネイティブpayloadへ保持
+- [x] contentVersion / lawBaselineDate / sourceCheckedAtのスキーマをネイティブpayloadへ保持
+- [x] 正本に値がない lawBaselineDate / sourceCheckedAt を推測で埋めない
 
 ## 自動監査
 - [x] `build_native_questions.py` で既存監査データ→native JSON変換
@@ -34,8 +35,14 @@
 - [x] UI test追加
 - [x] 大/小2つのiPhone Simulatorを選ぶテストrunner追加
 - [x] GitHub ActionsへUbuntu静的監査＋macOS Simulator監査を追加
+- [x] 最新Ubuntu静的ゲート PASS（問題/権利/native/JS/75-68/source policy）
+- [x] ネイティブUIの辛口レビュー3周完了
+- [x] 辛口1：未確認の「60%」良否色分けを削除
+- [x] 辛口2：LearningStore初期化順の潜在不整合を修正
+- [x] 辛口3：sourceCheckedAtへの監査生成日時の誤代入を撤去
+- [x] Simulator専用テストでは正本AppIconを仮生成せず、AppIcon指定だけ無効化
+- [x] Simulatorテストへ実行時間上限を設定
 - [ ] PR #4126 macOS Unit/UI test最終PASS
-- [ ] ネイティブUIの辛口レビュー3周完了
 - [ ] 変更後の実装/UI/Release Gateを最終PASSへ更新
 
 ## Apple / TestFlight実行ゲート
