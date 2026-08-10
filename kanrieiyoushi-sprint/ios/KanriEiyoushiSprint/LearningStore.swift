@@ -51,7 +51,7 @@ final class KanriLearningStore: ObservableObject {
     func setExamDate(_ d:Date?){state.examDate=d;save()}
     func setShuffleQuestions(_ e:Bool){state.shuffleQuestions=e;save()}
     func setShuffleChoices(_ e:Bool){state.shuffleChoices=e;save()}
-    func selectRound(_ r:Int){guard(1...3).contains(r)else{return};if !isPremium&&r != 1{showPaywall=true;return};selectedRound=r}
+    func selectRound(_ r:Int){guard(1...3).contains(r)else{return};if !isPremium && r != 1{showPaywall=true;return};selectedRound=r}
     func startToday(){let r=isPremium ? selectedRound:1;startSession(selectPractice(from:accessibleQuestions(round:r)),kind:.sprint)}
     func startSubject(_ subject:String,round:Int?=nil){let r=round ?? selectedRound;if !isPremium&&r != 1{showPaywall=true;return};let pool=accessibleQuestions(round:r).filter{$0.subject==subject};guard !pool.isEmpty else{errorMessage="この分野の問題を読み込めませんでした。";return};startSession(selectPractice(from:pool),kind:.subject("第\(r)回|\(subject)"))}
     func startWeak(){let source=isPremium ? questions:questions.filter{!$0.premium};let selected=LearningEngine.selectWeak(from:source,state:state,target:state.dailyTarget,isPremium:isPremium);guard !selected.isEmpty else{errorMessage="現在、復習する苦手問題はありません。";return};startSession(selected,kind:.weak)}
