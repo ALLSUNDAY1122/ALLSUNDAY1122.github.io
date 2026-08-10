@@ -17,7 +17,16 @@ struct KanriEiyoushiSprintApp: App {
             RootView()
                 .environmentObject(store)
                 .environmentObject(purchase)
+                .dynamicTypeSize(preferredDynamicTypeSize)
                 .task { await purchase.refresh() }
+        }
+    }
+
+    private var preferredDynamicTypeSize: DynamicTypeSize {
+        switch store.state.textSizeStep {
+        case 0: return .medium
+        case 2: return .xLarge
+        default: return .large
         }
     }
 }
