@@ -62,7 +62,7 @@ workflows:
             -sdk iphonesimulator \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
-          scripts/run_native_ui_tests.sh
+          bash scripts/run_native_ui_tests.sh
 
       - name: Resolve App Store signing
         script: |
