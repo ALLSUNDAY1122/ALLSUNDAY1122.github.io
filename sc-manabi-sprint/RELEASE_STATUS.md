@@ -5,13 +5,14 @@
 ## 現在地
 
 - 開発連番: #8
-- 段階: 公開準備 / Apple署名・App Store Connect入力直前
+- 段階: 公開準備 / ChatGPT担当完了 / 次担当AI・Apple入力待ち
 - Safari初期試作品: iPhone実機 HUMAN PASS
 - Safari製品候補版: iPhone実機 HUMAN PASS
 - GitHub Pages: `https://allsunday1122.github.io/sc-manabi-sprint/full/`
 - iOS方式: Capacitor 8.4.2 / app内Web資産同梱 / iPhone-only
 - Bundle ID暫定: `jp.allsunday1122.scmanabisprint`
-- Version / Build: `1.0.0 (1)`
+- Version: `1.0.0`
+- Build: ローカル/GitHub preflightは1、Codemagic signed buildは `CM_BUILD_NUMBER` を使用
 
 ## 問題バンク
 
@@ -32,7 +33,9 @@
 - iOS unsigned Simulator build: PASS
 - iOS unsigned physical-device Release build: PASS
 - IAP追加後のmacOS CI: PASS
-- 最新確認済みGitHub Actions run: `31332268836` / success
+- build-number対応変更後の実装検証: **PASS**
+- 最新確認済みGitHub Actions run: `31375145017` / success
+- 最新検証source: `9b1bf60f2ad19ef9603f8d86753fc36dc64eebc0`
 
 ## 収益方式
 
@@ -68,6 +71,8 @@
 - ITSAppUsesNonExemptEncryption = NO 設定
 - IAP仕様書 / 購入・復元実装
 - 申請前リリース監査記録
+- `CODEX_HANDOFF.md`（Codex / Claude共用の本実装引継ぎ）
+- `app-store/codemagic-sc-workflow.yaml`（root Codemagic定義へ統合する署名ビルド準備）
 
 AppIcon正本:
 - Google Drive: `08_情報処理安全確保支援士試験.png`
@@ -79,18 +84,20 @@ AppIcon正本:
 ## 人間入力が必要な未完了事項
 
 1. 次担当AI（Codex / Claude）の選択
-2. Bundle ID最終承認
-3. App Store Connect Appレコード作成
-4. Paid Apps Agreement、税務・銀行等のApple契約状態確認
-5. Non-Consumable IAP作成
-6. プレミアム販売価格最終承認
-7. Apple Developer Team / 証明書 / provisioning / 2FA
-8. signed IPA → TestFlight
-9. Sandboxで購入・キャンセル・復元・購入済みオフライン再起動を実機確認
-10. TestFlight実機確認
-11. TestFlight実画面からApp Storeスクリーンショット取得
-12. Age Rating / Content Rights / App Privacy最終入力
-13. App Store提出の最終承認
+2. 正本AppIconをiOS資産へ取り込む（次担当AIがDrive正本を使用）
+3. SC用Codemagic workflowをroot `codemagic.yaml`へ統合
+4. Bundle ID最終承認
+5. App Store Connect Appレコード作成
+6. Paid Apps Agreement、税務・銀行等のApple契約状態確認
+7. Non-Consumable IAP作成
+8. プレミアム販売価格最終承認
+9. Apple Developer Team / 証明書 / provisioning / 2FA
+10. signed IPA → TestFlight
+11. Sandboxで購入・キャンセル・復元・購入済みオフライン再起動を実機確認
+12. TestFlight実機確認
+13. TestFlight実画面からApp Storeスクリーンショット取得
+14. Age Rating / Content Rights / App Privacy最終入力
+15. App Store提出の最終承認
 
 ## 再発火原則
 
