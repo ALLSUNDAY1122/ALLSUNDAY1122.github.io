@@ -26,11 +26,13 @@ public struct DeclarationField: Codable, Hashable, Sendable {
     public let key: String
     public let label: String
     public let correctValue: String
+    public let aliases: [String]
 
-    public init(key: String, label: String, correctValue: String) {
+    public init(key: String, label: String, correctValue: String, aliases: [String] = []) {
         self.key = key
         self.label = label
         self.correctValue = correctValue
+        self.aliases = aliases
     }
 }
 
@@ -45,6 +47,7 @@ public struct LearningQuestion: Codable, Identifiable, Hashable, Sendable {
     public let correctNumber: Double?
     public let acceptedRange: Double?
     public let unit: String?
+    public let roundingRule: String?
     public let blanks: [BlankField]
     public let declarationFields: [DeclarationField]
     public let sourceText: String?
@@ -72,6 +75,7 @@ public struct LearningQuestion: Codable, Identifiable, Hashable, Sendable {
         correctNumber: Double? = nil,
         acceptedRange: Double? = nil,
         unit: String? = nil,
+        roundingRule: String? = nil,
         blanks: [BlankField] = [],
         declarationFields: [DeclarationField] = [],
         sourceText: String? = nil,
@@ -98,6 +102,7 @@ public struct LearningQuestion: Codable, Identifiable, Hashable, Sendable {
         self.correctNumber = correctNumber
         self.acceptedRange = acceptedRange
         self.unit = unit
+        self.roundingRule = roundingRule
         self.blanks = blanks
         self.declarationFields = declarationFields
         self.sourceText = sourceText
