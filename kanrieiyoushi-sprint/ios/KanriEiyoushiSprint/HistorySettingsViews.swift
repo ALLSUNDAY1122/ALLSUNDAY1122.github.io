@@ -68,8 +68,15 @@ struct HistoryView: View {
                     } else {
                         VStack(spacing: 0) {
                             ForEach(weakQuestions.prefix(30)) { q in
-                                HStack { VStack(alignment: .leading) { Text(q.subject).font(.caption).foregroundStyle(LearningSprintTheme.indigo); Text(q.topic).font(.subheadline.bold()) }; Spacer(); Text("\(store.state.weakQuestions[q.id]?.consecutiveCorrect ?? 0)/3").font(.caption.bold()) }
-                                    .padding(.vertical, 10)
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(q.subject).font(.caption).foregroundStyle(LearningSprintTheme.indigo)
+                                        Text(q.topic).font(.subheadline.bold())
+                                    }
+                                    Spacer()
+                                    Text("\(store.state.weakQuestions[q.id]?.consecutiveCorrect ?? 0)/3").font(.caption.bold())
+                                }
+                                .padding(.vertical, 10)
                                 Divider()
                             }
                         }.padding(.horizontal, 16).background(LearningSprintTheme.card).clipShape(RoundedRectangle(cornerRadius: 16))
@@ -80,7 +87,9 @@ struct HistoryView: View {
     }
 
     private func sectionTitle(_ text: String) -> some View { Text(text).font(LearningSprintTheme.serif(22, weight: .bold)) }
-    private func metric(_ title: String, _ value: String) -> some View { VStack(spacing: 4) { Text(title).font(.caption).foregroundStyle(LearningSprintTheme.ink3); Text(value).font(.headline).foregroundStyle(LearningSprintTheme.indigo) }.frame(maxWidth: .infinity) }
+    private func metric(_ title: String, _ value: String) -> some View {
+        VStack(spacing: 4) { Text(title).font(.caption).foregroundStyle(LearningSprintTheme.ink3); Text(value).font(.headline).foregroundStyle(LearningSprintTheme.indigo) }.frame(maxWidth: .infinity)
+    }
 }
 
 struct BackupDocument: FileDocument {
@@ -119,6 +128,12 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    settingsCard("出題") {
+                        Toggle("出題順をシャッフル", isOn: Binding(get: { store.shuffleQuestions }, set: { store.setShuffleQuestions($0) }))
+                            .accessibilityIdentifier("shuffleQuestionsToggle")
+                        Toggle("選択肢もシャッフル", isOn: Binding(get: { store.shuffleChoices }, set: { store.setShuffleChoices($0) }))
+                            .accessibilityIdentifier("shuffleChoicesToggle")
+                    }
                     settingsCard("試験日") {
                         Toggle("試験日を登録", isOn: $examEnabled).onChange(of: examEnabled) { enabled in store.setExamDate(enabled ? examDate : nil) }
                         if examEnabled { DatePicker("試験日", selection: $examDate, displayedComponents: .date).onChange(of: examDate) { store.setExamDate($0) } }
@@ -130,11 +145,18 @@ struct SettingsView: View {
                                     .frame(maxWidth: .infinity, minHeight: 44)
                                     .background(store.state.textSizeStep == choice.rawValue ? LearningSprintTheme.indigoSoft : LearningSprintTheme.paper)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .accessibilityIdentifier("font\(choice.rawValue)Button")
                             }
                         }
                     }
                     settingsCard("プレミアム") {
-                        HStack { VStack(alignment: .leading) { Text(store.isPremium ? "全600問 解放済み" : "無料60問").font(.headline); Text(store.isPremium ? "第1〜第3回と模試を利用できます" : "購入すると全600問・模試3回を解放").font(.caption).foregroundStyle(LearningSprintTheme.ink2) }; Spacer() }
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(store.isPremium ? "全600問 解放済み" : "無料60問").font(.headline)
+                                Text(store.isPremium ? "第1〜第3回と模試を利用できます" : "購入すると全600問・模試3回を解放").font(.caption).foregroundStyle(LearningSprintTheme.ink2)
+                            }
+                            Spacer()
+                        }
                         if !store.isPremium {
                             Button(purchase.displayPrice.map { "プレミアムを購入（\($0)）" } ?? "価格を取得中") { Task { await purchase.purchase() } }
                                 .buttonStyle(.borderedProminent).tint(LearningSprintTheme.indigo).disabled(purchase.product == nil).frame(minHeight: 44)
@@ -162,13 +184,17 @@ struct SettingsView: View {
         .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
             switch result {
             case .success(let url):
-                let granted = url.startAccessingSecurityScopedResource(); defer { if granted { url.stopAccessingSecurityScopedResource() } }
+                let granted = url.startAccessingSecurityScopedResource()
+                defer { if granted { url.stopAccessingSecurityScopedResource() } }
                 do { store.importBackup(try Data(contentsOf: url)) } catch { store.importMessage = error.localizedDescription }
             case .failure(let error): store.importMessage = error.localizedDescription
             }
         }
         .alert("学習データ", isPresented: Binding(get: { store.importMessage != nil }, set: { if !$0 { store.importMessage = nil } })) { Button("OK", role: .cancel) { store.importMessage = nil } } message: { Text(store.importMessage ?? "") }
-        .confirmationDialog("学習データをすべて削除しますか？", isPresented: $resetConfirm, titleVisibility: .visible) { Button("削除", role: .destructive) { store.resetLearningData() }; Button("キャンセル", role: .cancel) {} }
+        .confirmationDialog("学習データをすべて削除しますか？", isPresented: $resetConfirm, titleVisibility: .visible) {
+            Button("削除", role: .destructive) { store.resetLearningData() }
+            Button("キャンセル", role: .cancel) {}
+        }
     }
 
     private func settingsCard<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
@@ -194,9 +220,12 @@ struct PaywallView: View {
                 if store.isPremium {
                     Text("購入済みです").font(.headline).foregroundStyle(LearningSprintTheme.green)
                 } else {
-                    Button(purchase.displayPrice.map { "購入する（\($0)）" } ?? "価格を取得中") { Task { await purchase.purchase(); if purchase.isPremium { dismiss() } } }
-                        .buttonStyle(.borderedProminent).tint(LearningSprintTheme.indigo).frame(maxWidth: .infinity, minHeight: 50).disabled(purchase.product == nil)
-                    Button("購入を復元") { Task { await purchase.restore(); if purchase.isPremium { dismiss() } } }.buttonStyle(.bordered).tint(LearningSprintTheme.indigo).frame(maxWidth: .infinity, minHeight: 44)
+                    Button(purchase.displayPrice.map { "購入する（\($0)）" } ?? "価格を取得中") {
+                        Task { await purchase.purchase(); if purchase.isPremium { dismiss() } }
+                    }
+                    .buttonStyle(.borderedProminent).tint(LearningSprintTheme.indigo).frame(maxWidth: .infinity, minHeight: 50).disabled(purchase.product == nil)
+                    Button("購入を復元") { Task { await purchase.restore(); if purchase.isPremium { dismiss() } } }
+                        .buttonStyle(.bordered).tint(LearningSprintTheme.indigo).frame(maxWidth: .infinity, minHeight: 44)
                 }
             }
             .padding(24).background(LearningSprintTheme.paper.ignoresSafeArea())
