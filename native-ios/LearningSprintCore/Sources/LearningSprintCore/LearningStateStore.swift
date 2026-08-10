@@ -46,8 +46,7 @@ public final class LearningStateStore: @unchecked Sendable {
         self.encoder = JSONEncoder()
         self.decoder = JSONDecoder()
         self.encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        self.encoder.dateEncodingStrategy = .iso8601
-        self.decoder.dateDecodingStrategy = .iso8601
+        Self.configureDates(encoder: self.encoder, decoder: self.decoder)
     }
 
     public func load() throws -> LearningState {
@@ -113,4 +112,34 @@ public final class LearningStateStore: @unchecked Sendable {
             try FileManager.default.removeItem(at: fileURL)
         }
     }
+
+    private static func configureDates(encoder: JSONEncoder, decoder: JSONDecoder) {
+        encoder.dateEncodingStrategy = .custom { date, encoder in
+            var container = encoder.singleValueContainer()
+            try container.encode(fractionalISO8601.string(from: date))
+        }
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let value = try container.decode(String.self)
+            if let date = fractionalISO8601.date(from: value) ?? plainISO8601.date(from: value) {
+                return date
+            }
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Invalid ISO-8601 date: \(value)"
+            )
+        }
+    }
+
+    private static let fractionalISO8601: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+    private static let plainISO8601: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
 }
