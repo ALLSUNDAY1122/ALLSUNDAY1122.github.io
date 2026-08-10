@@ -3,6 +3,7 @@ import LearningSprintCore
 
 struct QuizView: View {
     @EnvironmentObject private var store: KanriLearningStore
+    @State private var choiceOrder: [Int] = []
 
     private var isMock: Bool {
         guard let kind = store.activeSession?.kind else { return false }
@@ -31,8 +32,13 @@ struct QuizView: View {
                                 .accessibilityIdentifier("questionPrompt")
 
                             VStack(spacing: 10) {
-                                ForEach(Array(q.choices.enumerated()), id: \.offset) { index, choice in
-                                    choiceButton(question: q, index: index, choice: choice)
+                                ForEach(choiceOrder.isEmpty ? Array(q.choices.indices) : choiceOrder, id: \.self) { originalIndex in
+                                    choiceButton(
+                                        question: q,
+                                        originalIndex: originalIndex,
+                                        displayIndex: (choiceOrder.isEmpty ? Array(q.choices.indices) : choiceOrder).firstIndex(of: originalIndex) ?? originalIndex,
+                                        choice: q.choices[originalIndex]
+                                    )
                                 }
                             }
                             Button("わからない") { store.answer(index: nil) }
@@ -50,11 +56,18 @@ struct QuizView: View {
                         .padding(20).padding(.bottom, 30)
                     }
                 }
+                .onAppear { prepareChoiceOrder(for: q) }
+                .onChange(of: q.id) { _ in prepareChoiceOrder(for: q) }
             } else {
                 ProgressView("問題を読み込んでいます")
             }
         }
         .accessibilityIdentifier("quizView")
+    }
+
+    private func prepareChoiceOrder(for q: LearningQuestion) {
+        let indices = Array(q.choices.indices)
+        choiceOrder = store.shuffleChoices ? indices.shuffled() : indices
     }
 
     private func header(_ q: LearningQuestion) -> some View {
@@ -72,10 +85,10 @@ struct QuizView: View {
         .padding(.horizontal, 10).padding(.vertical, 6).background(LearningSprintTheme.card)
     }
 
-    private func choiceButton(question q: LearningQuestion, index: Int, choice: String) -> some View {
+    private func choiceButton(question q: LearningQuestion, originalIndex: Int, displayIndex: Int, choice: String) -> some View {
         let answered = store.currentEvaluation != nil
-        let correct = q.correctIndices.first == index
-        let selected = store.selectedAnswerIndex == index
+        let correct = q.correctIndices.first == originalIndex
+        let selected = store.selectedAnswerIndex == originalIndex
         let background: Color = {
             if !answered { return LearningSprintTheme.card }
             if isMock { return selected ? LearningSprintTheme.indigoSoft : LearningSprintTheme.card }
@@ -90,9 +103,9 @@ struct QuizView: View {
             if selected { return LearningSprintTheme.vermilion }
             return LearningSprintTheme.line
         }()
-        return Button { store.answer(index: index) } label: {
+        return Button { store.answer(index: originalIndex) } label: {
             HStack(alignment: .top, spacing: 12) {
-                Text("\(index + 1)").font(.subheadline.bold()).frame(width: 28, height: 28).background(LearningSprintTheme.indigoSoft).clipShape(Circle())
+                Text("\(displayIndex + 1)").font(.subheadline.bold()).frame(width: 28, height: 28).background(LearningSprintTheme.indigoSoft).clipShape(Circle())
                 Text(choice).font(.body).foregroundStyle(LearningSprintTheme.ink).multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 4)
                 if answered && !isMock && correct { Image(systemName: "circle").font(.title2).foregroundStyle(LearningSprintTheme.vermilion) }
@@ -102,7 +115,7 @@ struct QuizView: View {
             .background(background).overlay(RoundedRectangle(cornerRadius: 14).stroke(border, lineWidth: answered && (correct || selected) ? 2 : 1)).clipShape(RoundedRectangle(cornerRadius: 14))
         }
         .buttonStyle(.plain).disabled(answered)
-        .accessibilityIdentifier("choice\(index)")
+        .accessibilityIdentifier("choice\(displayIndex)")
     }
 
     private var mockFeedback: some View {
