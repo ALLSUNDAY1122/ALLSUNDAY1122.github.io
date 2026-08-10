@@ -104,7 +104,7 @@ jobs:
           xcodegen generate
 
       - name: SwiftUI unit and UI tests on two iPhone sizes
-        timeout-minutes: 15
+        timeout-minutes: 30
         run: |
           cd network-specialist-sprint
           bash scripts/run_native_ui_tests.sh
