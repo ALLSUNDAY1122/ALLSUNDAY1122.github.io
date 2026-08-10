@@ -63,4 +63,12 @@ final class NetworkSpecialistTests: XCTestCase {
         XCTAssertEqual(store.session?.total, 25)
         XCTAssertEqual(store.session?.mode, .mock)
     }
+
+    func testStoreKitAccessPolicyNeverUnlocksNonVerifiedStates() {
+        XCTAssertTrue(PremiumAccessPolicy.grantsAccess(for: .verifiedActive))
+        XCTAssertFalse(PremiumAccessPolicy.grantsAccess(for: .verifiedRevoked))
+        XCTAssertFalse(PremiumAccessPolicy.grantsAccess(for: .unverified))
+        XCTAssertFalse(PremiumAccessPolicy.grantsAccess(for: .pending))
+        XCTAssertFalse(PremiumAccessPolicy.grantsAccess(for: .cancelled))
+    }
 }
