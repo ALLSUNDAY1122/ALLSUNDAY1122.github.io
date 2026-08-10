@@ -7,6 +7,9 @@ on:
       - '.github/workflows/pharmacist-native-compile-macos14.yml'
       - 'pharmacist-manabi-sprint/ios/**'
       - 'pharmacist-manabi-sprint/scripts/validate_release.py'
+concurrency:
+  group: pharmacist-native-compile-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   compile:
     runs-on: macos-26
