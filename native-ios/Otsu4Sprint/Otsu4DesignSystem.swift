@@ -138,7 +138,10 @@ struct Otsu4MemoryBlock: View {
                 .frame(width: 4)
         }
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityIdentifier("memoryBlock")
+        .accessibilityLabel("ここだけ覚える")
+        .accessibilityValue(text)
     }
 }
 
