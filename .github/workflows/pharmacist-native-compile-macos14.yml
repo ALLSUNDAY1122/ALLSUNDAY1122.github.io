@@ -1,0 +1,49 @@
+name: Pharmacist Native Compile macOS14
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/pharmacist-native-compile-macos14.yml'
+      - 'pharmacist-manabi-sprint/ios/**'
+      - 'pharmacist-manabi-sprint/scripts/validate_release.py'
+jobs:
+  compile:
+    runs-on: macos-14
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode 16 or later
+        run: |
+          xcodebuild -version
+          MAJOR=$(xcodebuild -version | awk '/Xcode/{split($2,a,".");print a[1]}')
+          test "$MAJOR" -ge 16
+      - name: Static audit and native resources
+        env:
+          PREFLIGHT_PLACEHOLDER_ICON: '1'
+        run: |
+          python3 pharmacist-manabi-sprint/scripts/validate_release.py
+          bash pharmacist-manabi-sprint/ios/prepare-ios.sh
+      - name: Install XcodeGen and generate project
+        run: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+          cd pharmacist-manabi-sprint/ios
+          xcodegen generate
+          python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
+          ! grep -R -q 'WKWebView\|import WebKit' --include='*.swift' .
+      - name: XCTest
+        run: |
+          UDID=$(python3 - <<'PY'
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          for devices in d['devices'].values():
+              for x in devices:
+                  if x.get('isAvailable') and x.get('name','').startswith('iPhone'):
+                      print(x['udid']); raise SystemExit
+          raise SystemExit(2)
+          PY
+          )
+          xcodebuild test -project pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj -scheme PharmacistSprint -destination "platform=iOS Simulator,id=$UDID" CODE_SIGNING_ALLOWED=NO
+      - name: Release build
+        run: |
+          xcodebuild build -project pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj -scheme PharmacistSprint -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO
