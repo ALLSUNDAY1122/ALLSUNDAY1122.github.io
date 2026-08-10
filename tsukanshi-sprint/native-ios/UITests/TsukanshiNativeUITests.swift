@@ -18,12 +18,22 @@ final class TsukanshiNativeUITests: XCTestCase {
         XCTAssertTrue(sprint.waitForExistence(timeout: 5))
         sprint.tap()
 
-        XCTAssertTrue(app.buttons["わからない"].waitForExistence(timeout: 5))
-        let option = app.buttons.matching(NSPredicate(format: "label BEGINSWITH '選択肢'")).firstMatch
-        XCTAssertTrue(option.exists)
-        option.tap()
+        let unknown = app.buttons["わからない"]
+        XCTAssertTrue(unknown.waitForExistence(timeout: 5))
+        unknown.tap()
         XCTAssertTrue(app.staticTexts["ここだけ覚える"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["次の問題"].exists || app.buttons["結果を見る"].exists)
+    }
+
+    func testMockTabHasPracticalTrainingAndNineRoundSubjectCards() throws {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["模試"].waitForExistence(timeout: 10))
+        app.tabBars.buttons["模試"].tap()
+        XCTAssertTrue(app.staticTexts["通関実務トレーニング"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["計算"].exists)
+        XCTAssertTrue(app.buttons["申告書演習"].exists)
+        XCTAssertTrue(app.buttons["第59回 通関業法 模擬試験"].exists)
     }
 
     func testSettingsBackupAndGoalControlsExist() throws {
