@@ -1,6 +1,7 @@
 import Foundation
 import StoreKit
 import SwiftUI
+import UIKit
 
 @MainActor
 final class StoreKitManager: ObservableObject {
