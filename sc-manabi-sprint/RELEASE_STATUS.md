@@ -1,103 +1,122 @@
-# 情報処理安全確保支援士｜学びスプリント RELEASE STATUS
+# 情報処理安全確保支援士試験｜学びスプリント RELEASE STATUS
 
-更新基準日: 2026-08-10
+更新基準日: 2026-08-10 18:43 JST
 
-## 現在地
+## 対象アプリ
 
+- 資格名: 情報処理安全確保支援士試験
 - 開発連番: #8
-- 段階: 公開準備 / ChatGPT担当完了 / 次担当AI・Apple入力待ち
-- Safari初期試作品: iPhone実機 HUMAN PASS
-- Safari製品候補版: iPhone実機 HUMAN PASS
-- GitHub Pages: `https://allsunday1122.github.io/sc-manabi-sprint/full/`
-- iOS方式: Capacitor 8.4.2 / app内Web資産同梱 / iPhone-only
-- Bundle ID暫定: `jp.allsunday1122.scmanabisprint`
+- Bundle ID: `jp.allsunday1122.scmanabisprint` **（暫定。App Store Connect作成前のため最終確定扱いにしない）**
+- App Store Connect App ID: **未発行 / 未確認**
 - Version: `1.0.0`
-- Build: ローカル/GitHub preflightは1、Codemagic signed buildは `CM_BUILD_NUMBER` を使用
+- Build番号: `1`（GitHub preflight）。Codemagic signed buildは `CM_BUILD_NUMBER` を使用するため配布Buildは未確定
+- iOS方式: Capacitor `8.4.2` / app内Web資産同梱 / iPhone-only
+- Codemagic workflow候補: `sc-manabi-sprint-ios`
+- workflow定義: `sc-manabi-sprint/app-store/codemagic-sc-workflow.yaml`
+- Codemagic App Store Connect integration候補: `codemagic`
+- 署名方式候補: Codemagic automatic App Store signing (`distribution_type: app_store`)
+- 署名プロファイル: **未確認 / 未実行**
+- root `codemagic.yaml`へのSC workflow統合: **未実施**
+- App Store本審査提出: **禁止 / 未実施**
 
-## 問題バンク
+## 実績ステータス
 
-- IPA公開済み過去問: 75問（3回×25問）
-- シラバス・一次資料準拠の独自問題: 250問
-- 合計: 325問
-- 模試: 各試験回を前半13問 / 後半12問へ分割
-- 2026年度以降の非公開本試験問題は、受験者記憶・SNS・漏洩情報から復元しない
-- 問題、正答、解説、根拠、試験構成を変更した場合は問題生成・監査ループPASSを失効させ再監査する
+| 項目 | 判定 | 証跡 |
+|---|---|---|
+| Notion正本照合 | **PASS** | 対象正本 `https://app.notion.com/p/3b609c10697d8191b58fdcffd8ec7f44`。標準手順 v2.2 / UI Golden Master v2.1 / 問題監査ループ / 申請手順を正本ページで参照固定。 |
+| UI要件照合 | **PASS** | `sc-manabi-sprint/app-store/release-preflight.md`、GitHub Pages `https://allsunday1122.github.io/sc-manabi-sprint/full/`。iPhone Safari HUMAN PASSを正本・進捗へ記録済み。Golden Master v2.1の8問、4タブ、4/8/16、途中再開等を反映。 |
+| ネイティブ実装 | **PASS** | Capacitor iOS target: `sc-manabi-sprint/native/`。`native/package.json` / `native/capacitor.config.json` / `native/configure-ios.sh`。GitHub Actions run `31375145017` job `ios-preflight` steps 8-14 success。source commit `9b1bf60f2ad19ef9603f8d86753fc36dc64eebc0`。純SwiftUIではなくCapacitorネイティブパッケージ。 |
+| データ監査 | **PASS** | `sc-manabi-sprint/app-store/release-preflight.md` に公開過去問75問＋独自250問＝325問、IPA公式解答75/75、重複・高類似・水増し監査PASSを記録。Notion対象正本にも問題生成・監査ループのFAIL→修正→PASS履歴を保存。 |
+| StoreKit 2 | **本人操作待ち** | コード側IAP実装・ビルド検証はPASS: `sc-manabi-sprint/full/iap-v1.js`, `sc-manabi-sprint/app-store/iap-premium.md`, commit `b749f7ff283b756e2c898395bafb6199acfa109b`, run `31375145017` step 6 success。ただしApp Store ConnectでIAP商品未作成のため、Sandboxの購入/キャンセル/復元/購入済みオフライン再起動は未検証。完全PASSにしない。 |
+| オフライン・途中再開・バックアップ | **PASS** | `sc-manabi-sprint/app-store/release-preflight.md` に中断復帰・JSON書出/読込・オフライン同梱を監査記録。run `31375145017` step 5 `Prepare bundled offline web assets` success、steps 12/14で生成.appへの問題データ・patch・IAP資産同梱確認。 |
+| 専門監査 | **PASS** | `sc-manabi-sprint/app-store/release-preflight.md`。IPA利用条件・著作権・2026年度非公開問題不使用・制度監査・Privacy Manifest・輸出コンプライアンスを記録。Notion正本 `https://app.notion.com/p/3b609c10697d8191b58fdcffd8ec7f44` に一次根拠と運用ルールを保持。 |
+| 再監査 | **PASS** | build-number対応変更後に実装検証を再発火。最新 run `31375145017` conclusion `success`。`sc-manabi-sprint/build-results/ios-preflight.txt`: source `9b1bf60f2ad19ef9603f8d86753fc36dc64eebc0`, result記録 commit `c24d78f1f569f2aa4352da072bfc38b3adaf3ede`。 |
+| Releaseビルド | **PASS** | **署名なし** physical-device Release build。workflow `.github/workflows/sc-manabi-ios-preflight.yml` は `xcodebuild -configuration Release -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO`。run `31375145017` step 13 `Unsigned physical-device build` success、step 14 bundle inspection success。 |
+| 署名IPA | **本人操作待ち** | signed IPA artifactなし。候補workflow `sc-manabi-sprint/app-store/codemagic-sc-workflow.yaml` は commit `0ddb87c4953f950c6837d911378a99d32e8ed9b6` で準備済みだがroot `codemagic.yaml`未統合、正本AppIcon未配置、Apple署名プロファイル未確認。 |
+| App Store Connectアップロード | **本人操作待ち** | App Store Connect App ID未発行/未確認。signed IPA未生成のため未アップロード。 |
+| Internal TestFlight | **本人操作待ち** | App Store Connectアップロード未実施。Internal TestFlight buildなし、実機確認未実施。 |
 
-## 品質状態
+## 主要証跡
 
-- 問題生成・監査: PASS
-- 正答・一次根拠監査: PASS
-- 著作権・IPA利用条件監査: PASS
-- 制度監査: PASS
-- UI品質: HUMAN PASS後の修正を反映済み
-- iOS unsigned Simulator build: PASS
-- iOS unsigned physical-device Release build: PASS
-- IAP追加後のmacOS CI: PASS
-- build-number対応変更後の実装検証: **PASS**
-- 最新確認済みGitHub Actions run: `31375145017` / success
+- GitHub進捗正本: `sc-manabi-sprint/RELEASE_STATUS.md`
+- GitHub URL: `https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/blob/main/sc-manabi-sprint/RELEASE_STATUS.md`
+- 申請前監査: `sc-manabi-sprint/app-store/release-preflight.md`
+- iOS preflight workflow: `.github/workflows/sc-manabi-ios-preflight.yml`
+- 最新preflight result: `sc-manabi-sprint/build-results/ios-preflight.txt`
+- 最新preflight run: `31375145017` / success
 - 最新検証source: `9b1bf60f2ad19ef9603f8d86753fc36dc64eebc0`
+- preflight result commit: `c24d78f1f569f2aa4352da072bfc38b3adaf3ede`
+- release status整備 commit: `97e4569919c50786a9a8d1ebfce70fefa3cb9fd9`
+- Codemagic候補workflow commit: `0ddb87c4953f950c6837d911378a99d32e8ed9b6`
+- IAP code-side preflight PASS commit: `b749f7ff283b756e2c898395bafb6199acfa109b`
+- IAP offline entitlement fix commit: `4de3a6f50a1692e1d826d555df36ca7d100340ee`
+- IAP spec commit: `774113e6cb4176307caeac32f4970530b507b070`
+- AppIcon正本: Google Drive `08_情報処理安全確保支援士試験.png`, file ID `1HuyIsiuQFmCbW266NbZIz5YM7tC08fON`, SHA-256 `6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d`
+- GitHub `sc-manabi-sprint/native/AppIcon-1024.png`: **未配置（2026-08-10 18:43確認時 404）**
+- SC専用PR: なし。主要変更はmain直接コミットで記録。
 
-## 収益方式
+## 未完了項目
 
-ユーザー承認済み: **B = 無料 + 一部機能を有料化**
+### 1. AppIconのiOS資産配置
+- 未完了内容: Google Drive正本 `08_情報処理安全確保支援士試験.png` を `sc-manabi-sprint/native/AppIcon-1024.png` へ同一バイトで配置し、SHA-256一致を確認する。
+- FAIL理由: GitHub対象パスは404。署名Releaseのcanonical icon gateを満たさない。
+- ChatGPTで実行可能: Drive正本を取得できる環境でバイト同一性を検証し、GitHubへ配置する。
+- 本人操作が必要: 原則なし。ただしDrive→GitHubバイナリ転送経路が利用不可の場合は次担当AI/Codex環境で実施。
+- 次: canonical icon配置→SHA検証。
 
-### 無料
-- IPA公開過去問75問
-- 4 / 8 / 16問スプリント（75問から出題）
-- 公開過去問3回の模試
-- 公開過去問の苦手復習
-- 基本記録、試験日、文字サイズ、JSON入出力
+### 2. Codemagic workflow統合
+- 未完了内容: `sc-manabi-sprint/app-store/codemagic-sc-workflow.yaml` の `sc-manabi-sprint-ios` をroot `codemagic.yaml`へ統合。
+- FAIL理由: 候補定義のみでCodemagic実行条件が本番設定へ反映されていない。
+- ChatGPTで実行可能: root YAMLへの安全な統合、構文確認。
+- 本人操作が必要: Codemagic App Store Connect integration/署名プロファイルの実アカウント確認。
+- 次: AppIcon配置後にroot workflow統合。
 
-### プレミアム
-- Non-Consumable（買い切り）
-- Product ID: `jp.allsunday1122.scmanabisprint.premium`
-- 独自250問を追加して全325問
-- 全325問スプリント
-- 全325問の苦手復習
-- 分野別集中演習
-- 購入復元を常設
-- 価格はStoreKitから取得し、アプリコードへ固定しない
-- **販売価格は未最終承認。600円は提案値であり確定値ではない。**
+### 3. Bundle ID / App Store Connect App ID
+- 未完了内容: Bundle ID最終確定、App Store Connect Appレコード作成、App ID取得。
+- FAIL理由: 現在のBundle IDは暫定。App Store Connect App IDは未発行/未確認。
+- ChatGPTで実行可能: 入力値・SKU・メタデータの準備。
+- 本人操作が必要: Appleログイン、2FA、Appレコード作成。
+- 次: `jp.allsunday1122.scmanabisprint` を採用するか本人確定→Appレコード作成→App IDを正本へ記録。
 
-## App Store申請資産
+### 4. Paid Apps Agreement / IAP商品
+- 未完了内容: Paid Apps Agreement、税務・銀行状態確認、Non-Consumable `jp.allsunday1122.scmanabisprint.premium` 作成、価格確定。
+- FAIL理由: App Store Connect商品が存在しないためSandbox E2Eを実行できない。
+- ChatGPTで実行可能: 商品名・説明・Review Notes・価格案・Sandbox監査手順の準備。
+- 本人操作が必要: 契約・税務・銀行・IAP作成・価格設定。
+- 次: IAP作成後、Sandboxで未購入→購入→解放 / キャンセル / 復元 / 購入済みオフライン再起動を確認。
 
-作成済み:
-- App Store日本語メタデータ案
-- App Review Notes
-- Privacy Policy公開ページ
-- Support公開ページ
-- PrivacyInfo.xcprivacy
-- 学習データ初期化
-- ITSAppUsesNonExemptEncryption = NO 設定
-- IAP仕様書 / 購入・復元実装
-- 申請前リリース監査記録
-- `CODEX_HANDOFF.md`（Codex / Claude共用の本実装引継ぎ）
-- `app-store/codemagic-sc-workflow.yaml`（root Codemagic定義へ統合する署名ビルド準備）
+### 5. 署名・IPA・アップロード・Internal TestFlight
+- 未完了内容: Apple署名、signed IPA生成、App Store Connect upload、Internal TestFlight配信。
+- FAIL理由: AppIcon未配置、Codemagic本番workflow未統合、Apple signing未確認、App Store Connect App IDなし。
+- ChatGPTで実行可能: workflow統合、release gate整備、ログ監査。
+- 本人操作が必要: Apple Developer/Codemagic認証、証明書/provisioning、2FA、必要な契約確認、TestFlight実機確認。
+- 次: 前項完了後にCodemagic signed build→App Store Connect upload→Internal TestFlight。
 
-AppIcon正本:
-- Google Drive: `08_情報処理安全確保支援士試験.png`
-- Drive file ID: `1HuyIsiuQFmCbW266NbZIz5YM7tC08fON`
-- 1024×1024 / RGB
-- SHA-256: `6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d`
-- 申請時は別デザインを生成せず、この個別PNGを使用する
+### 6. App Store提出前最終項目
+- 未完了内容: TestFlight実画面スクリーンショット、Age Rating、Content Rights、App Privacy最終入力、App Store提出承認。
+- FAIL理由: TestFlight未到達。
+- ChatGPTで実行可能: 入力案・監査・スクリーンショット構成の準備。
+- 本人操作が必要: TestFlight実機確認、App Store Connect最終回答、最終提出承認。
+- 次: Internal TestFlight HUMAN PASS後に実施。
 
-## 人間入力が必要な未完了事項
+## TestFlight判定
 
-1. 次担当AI（Codex / Claude）の選択
-2. 正本AppIconをiOS資産へ取り込む（次担当AIがDrive正本を使用）
-3. SC用Codemagic workflowをroot `codemagic.yaml`へ統合
-4. Bundle ID最終承認
-5. App Store Connect Appレコード作成
-6. Paid Apps Agreement、税務・銀行等のApple契約状態確認
-7. Non-Consumable IAP作成
-8. プレミアム販売価格最終承認
-9. Apple Developer Team / 証明書 / provisioning / 2FA
-10. signed IPA → TestFlight
-11. Sandboxで購入・キャンセル・復元・購入済みオフライン再起動を実機確認
-12. TestFlight実機確認
-13. TestFlight実画面からApp Storeスクリーンショット取得
-14. Age Rating / Content Rights / App Privacy最終入力
-15. App Store提出の最終承認
+**現在判定: NOT READY / 外部ゲート未完了**
+
+`[CODEX TESTFLIGHT READY]` は記録しない。
+
+未達条件:
+- Bundle IDが最終確定扱いではない
+- App Store Connect App ID未確定
+- StoreKit 2のSandbox購入・キャンセル・復元・オフライン実機監査未完了
+- canonical AppIconがiOS資産へ未配置
+- Codemagic SC workflowがroot設定へ未統合
+- 署名プロファイル未確認
+- signed IPA未生成
+- App Store Connect upload未実施
+- Internal TestFlight未実施
+
+本審査への提出は禁止。Internal TestFlight HUMAN PASSおよび最終提出承認まで `submit_to_app_store: false` を維持する。
 
 ## 再発火原則
 
