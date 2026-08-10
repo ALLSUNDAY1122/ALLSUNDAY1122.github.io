@@ -8,7 +8,7 @@ on:
       - 'tools/otsu4-build-content-v2.mjs'
       - '.github/workflows/otsu4-native-typecheck.yml'
   push:
-    branches: [ feat/otsu4-360-productization ]
+    branches: [ main ]
     paths:
       - 'native-ios/Otsu4Sprint/**'
       - 'kikenbutsu-otsu4-sprint/question-bank-v2*.js'
@@ -16,7 +16,7 @@ on:
       - '.github/workflows/otsu4-native-typecheck.yml'
 
 concurrency:
-  group: otsu4-native-${{ github.event.pull_request.number || github.ref }}
+  group: otsu4-native-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 permissions:
