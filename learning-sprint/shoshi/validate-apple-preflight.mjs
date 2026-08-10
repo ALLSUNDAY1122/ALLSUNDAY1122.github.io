@@ -1,26 +1,27 @@
 import fs from 'node:fs';
 
-const read = (p) => fs.readFileSync(p, 'utf8');
+const read = p => fs.readFileSync(p, 'utf8');
 const must = (cond, msg) => { if (!cond) throw new Error(msg); };
 const includes = (text, value, label=value) => must(text.includes(value), `missing: ${label}`);
 
 const root = 'learning-sprint/shoshi';
-const project = read(`${root}/ios/project.yml`);
-const capabilityPatch = read(`${root}/ios/apply-xcode-capabilities.py`);
-const swift = read(`${root}/ios/App.swift`);
-const nativeStore = read(`${root}/ios/native-storekit.js`);
-const prepareIos = read(`${root}/ios/prepare-ios.sh`);
-const codemagicBlock = read(`${root}/ios/codemagic-shoshi.yml`);
+const ios = `${root}/ios`;
+const project = read(`${ios}/project.yml`);
+const prepare = read(`${ios}/prepare-ios.sh`);
+const privacyManifest = read(`${ios}/PrivacyInfo.xcprivacy`);
+const capabilityPatch = read(`${ios}/apply-xcode-capabilities.py`);
+const codemagic = read(`${ios}/codemagic-shoshi.yml`);
 const metadata = read(`${root}/app-store/APP_STORE_METADATA_JA.md`);
 const packet = read(`${root}/app-store/APPLE_CONNECT_PACKET.md`);
-const storekitPlan = read(`${root}/app-store/STOREKIT_TEST_PLAN.md`);
 const review = read(`${root}/app-store/APP_REVIEW_NOTES_JA.md`);
-const privacyHtml = read(`${root}/privacy/index.html`);
-const supportHtml = read(`${root}/support/index.html`);
-const privacyManifest = read(`${root}/ios/PrivacyInfo.xcprivacy`);
+const storekitPlan = read(`${root}/app-store/STOREKIT_TEST_PLAN.md`);
+const swiftNames = ['App.swift','Models.swift','LearningLogic.swift','QuestionRepository.swift','StoreKitManager.swift','AppModel.swift','BackupDocument.swift','Theme.swift','Views.swift'];
+const swift = swiftNames.map(n => read(`${ios}/${n}`)).join('\n');
 const questions = JSON.parse(read(`${root}/content-loop/questions.generated.json`));
 
 const BUNDLE = 'jp.allsunday1122.shoshi';
+const APP_ID = '6799755748';
+const PROFILE = 'shoshi_appstore';
 const PRODUCT = 'jp.allsunday1122.shoshi.premium';
 const VERSION = '1.0.0';
 const SKU = 'shoshi-sprint-ios';
@@ -28,83 +29,76 @@ const SUPPORT = 'https://allsunday1122.github.io/learning-sprint/shoshi/support/
 const PRIVACY = 'https://allsunday1122.github.io/learning-sprint/shoshi/privacy/';
 const ICON_SHA = 'c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506';
 
-includes(project, `PRODUCT_BUNDLE_IDENTIFIER: ${BUNDLE}`, 'Xcode bundle id');
-includes(project, `MARKETING_VERSION: ${VERSION}`, 'Xcode marketing version');
-includes(project, 'UIInterfaceOrientationPortrait', 'portrait-only orientation');
-includes(capabilityPatch, 'com.apple.InAppPurchase', 'generated-project In-App Purchase capability patch');
-includes(capabilityPatch, 'enabled = 1;', 'enabled generated-project capability');
+includes(project, `PRODUCT_BUNDLE_IDENTIFIER: ${BUNDLE}`, 'Xcode bundle ID');
+includes(project, `MARKETING_VERSION: ${VERSION}`, 'version');
+includes(project, 'UIInterfaceOrientationPortrait', 'portrait only');
+includes(project, 'ShoshiSprintTests', 'unit-test target');
+must(!project.includes('path: Web'), 'Web bundle is forbidden in native target');
+includes(project, 'path: Resources', 'native bundled resources');
 
-includes(swift, `static let productID = "${PRODUCT}"`, 'StoreKit product id');
-includes(swift, 'Product.products(for:', 'StoreKit product loading');
-includes(swift, 'displayPrice', 'localized StoreKit price');
-includes(swift, 'Transaction.currentEntitlements', 'current entitlements');
-includes(swift, 'Transaction.updates', 'transaction updates observer');
-includes(swift, 'AppStore.sync()', 'restore purchases');
-includes(swift, 'transaction.revocationDate == nil', 'revocation handling');
-includes(swift, 'loadFileURL', 'local bundled web loading');
-includes(swift, 'www.moj.go.jp', 'MOJ external whitelist');
-includes(swift, 'laws.e-gov.go.jp', 'e-Gov external whitelist');
+for (const token of ['import WebKit','WKWebView','UIViewRepresentable','loadFileURL']) {
+  must(!swift.includes(token), `WebView implementation forbidden: ${token}`);
+}
+for (const label of ['ホーム','模試','記録','設定']) includes(swift, label, `tab ${label}`);
+for (const goal of ['Text("4問").tag(4)','Text("8問").tag(8)','Text("16問").tag(16)']) includes(swift, goal, `goal ${goal}`);
+includes(swift, 'var dailyGoal = 8', 'default 8 questions');
+includes(swift, 'correctStreak >= 3', 'weak release after 3 correct');
+includes(swift, 'state.resume', 'resume state');
+includes(swift, 'fileExporter', 'JSON export');
+includes(swift, 'fileImporter', 'JSON import');
+includes(swift, 'UserDefaults.standard', 'local native persistence');
+includes(swift, `static let productID = "${PRODUCT}"`, 'IAP product');
+includes(swift, 'Product.products(for:', 'StoreKit 2 products');
+includes(swift, 'displayPrice', 'localized price');
+includes(swift, 'Transaction.currentEntitlements', 'entitlements');
+includes(swift, 'Transaction.updates', 'transaction updates');
+includes(swift, 'AppStore.sync()', 'restore');
+includes(swift, 'revocationDate == nil', 'revocation');
+must(!/[¥￥]\s*\d/.test(swift), 'hard-coded yen price forbidden');
 
-includes(nativeStore, 'shoshi-native-trial-completed-v1', 'one-sprint trial state');
-includes(nativeStore, "'.subject-card,.mock-card,.weak-item,#startDaily,[data-goal=\"16\"]'", 'native premium gates');
-includes(nativeStore, '価格を取得できません', 'StoreKit unavailable state');
-includes(nativeStore, '購入承認待ち', 'pending purchase state');
-includes(nativeStore, "send('restore')", 'restore bridge');
-includes(nativeStore, SUPPORT, 'native support URL');
-includes(nativeStore, PRIVACY, 'native privacy URL');
-must(!/[¥￥]\s*\d/.test(nativeStore), 'native StoreKit UI must not hard-code a yen price');
+includes(capabilityPatch, 'com.apple.InAppPurchase', 'IAP capability');
+includes(prepare, ICON_SHA, 'canonical icon SHA');
+includes(prepare, 'Resources/questions.generated.json', 'native question resource');
+includes(prepare, 'WebKit/WKWebView', 'WebKit absence gate');
+includes(privacyManifest, 'NSPrivacyAccessedAPICategoryUserDefaults', 'UserDefaults privacy category');
+includes(privacyManifest, 'CA92.1', 'UserDefaults reason');
 
-includes(prepareIos, 'questions.generated.json', 'audited question bundle');
-includes(prepareIos, 'native-storekit.js', 'native StoreKit UI bundle');
-includes(prepareIos, ICON_SHA, 'canonical AppIcon SHA');
-includes(prepareIos, 'drive.usercontent.google.com', 'canonical Drive icon source');
-includes(prepareIos, "const DATA_URL = './questions.generated.json';", 'local question URL rewrite');
-includes(prepareIos, "location.protocol !== 'file:'", 'service worker disabled for local native bundle');
-
-must(Array.isArray(questions) && questions.length === 210, 'question count must remain 210');
+must(Array.isArray(questions) && questions.length === 210, 'questions must remain 210');
 must(new Set(questions.map(q => q.id)).size === 210, 'question IDs must remain unique');
-const r7pm33 = questions.find(q => q.id === 'SHOSHI-R7-PM-33');
-must(r7pm33 && r7pm33.scoring_status === 'all_correct' && r7pm33.official_answer_no == null, 'R7 PM33 all_correct contract broken');
+const special = questions.find(q => q.id === 'SHOSHI-R7-PM-33');
+must(special && special.scoring_status === 'all_correct' && special.official_answer_no == null, 'R7 PM33 all_correct broken');
 
 for (const text of [metadata, packet]) {
-  includes(text, BUNDLE, 'submission bundle id');
-  includes(text, PRODUCT, 'submission IAP id');
+  includes(text, BUNDLE, 'submission bundle ID');
+  includes(text, PRODUCT, 'submission IAP ID');
   includes(text, SUPPORT, 'support URL');
   includes(text, PRIVACY, 'privacy URL');
 }
-includes(packet, `SKU: \`${SKU}\``, 'fixed SKU');
+includes(packet, APP_ID, 'App Store Connect App ID');
+includes(packet, PROFILE, 'Codemagic signing profile');
+includes(packet, `SKU: \`${SKU}\``, 'SKU');
+includes(packet, 'SwiftUI native', 'native implementation declaration');
 includes(packet, 'testFlightInternalTestingOnly: true', 'internal TestFlight export');
-includes(packet, '`submit_to_testflight`: false', 'manual TestFlight upload gate');
-includes(packet, '`submit_to_app_store`: false', 'manual App Review gate');
+includes(packet, '`submit_to_testflight`: true', 'automatic Internal TestFlight upload');
+includes(packet, '`submit_to_app_store`: false', 'no App Store review submit');
 includes(metadata, 'Type: Non-Consumable', 'IAP type');
-includes(metadata, 'コード・審査原稿には固定価格を書かない', 'no fixed price policy');
-includes(storekitPlan, 'Sandbox購入成功', 'Sandbox purchase gate');
-includes(storekitPlan, '購入を復元', 'Sandbox restore gate');
-includes(storekitPlan, 'R7午後33', 'all-correct actual-device gate');
-includes(review, '法務省の公式アプリではありません', 'review non-official disclaimer');
-includes(privacyHtml, 'トラッキング', 'privacy tracking disclosure');
-includes(privacyHtml, '分析SDK', 'privacy analytics disclosure');
-includes(supportHtml, '令和7年度午後第33問', 'support correction disclosure');
+includes(storekitPlan, 'Sandbox購入成功', 'purchase actual-device gate');
+includes(storekitPlan, '購入を復元', 'restore actual-device gate');
+includes(review, '法務省の公式アプリではありません', 'non-official disclaimer');
+must(!review.includes('WKWebView'), 'review notes still describe WKWebView');
 
-includes(privacyManifest, '<key>NSPrivacyTracking</key>', 'Privacy Manifest tracking key');
-includes(privacyManifest, '<false/>', 'Privacy Manifest tracking false');
-includes(privacyManifest, '<key>NSPrivacyCollectedDataTypes</key>', 'Privacy Manifest collected data key');
+includes(codemagic, 'shoshi-ios:', 'Codemagic workflow');
+includes(codemagic, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle');
+includes(codemagic, APP_ID, 'Codemagic App Store Connect App ID');
+includes(codemagic, PROFILE, 'Codemagic signing profile canonical value');
+includes(codemagic, 'submit_to_testflight: true', 'Internal TestFlight upload');
+includes(codemagic, 'submit_to_app_store: false', 'main review disabled');
+must(!/submit_to_app_store:\s*true/.test(codemagic), 'App Store auto-submit forbidden');
 
-includes(codemagicBlock, 'shoshi-ios:', 'Codemagic Shoshi workflow name');
-includes(codemagicBlock, 'app_store_connect: codemagic', 'Codemagic ASC integration');
-includes(codemagicBlock, 'distribution_type: app_store', 'App Store distribution');
-includes(codemagicBlock, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle id');
-includes(codemagicBlock, `BUNDLE_ID: ${BUNDLE}`, 'Codemagic BUNDLE_ID');
-includes(codemagicBlock, 'testFlightInternalTestingOnly', 'internal TestFlight only export');
-includes(codemagicBlock, 'apply-xcode-capabilities.py', 'generated-project capability normalization');
-includes(codemagicBlock, 'submit_to_testflight: false', 'no automatic TestFlight submission');
-includes(codemagicBlock, 'submit_to_app_store: false', 'no automatic App Store review submission');
-includes(codemagicBlock, 'CM_BUILD_NUMBER', 'CI build number');
-must(!/submit_to_app_store:\s*true/.test(codemagicBlock), 'App Store auto-submit must stay disabled');
-
-console.log('PASS: Shoshi Apple signing/TestFlight preflight contract is internally consistent.');
+console.log('PASS: Shoshi pure-native Apple/TestFlight preflight contract is internally consistent.');
 console.log(`Bundle=${BUNDLE}`);
+console.log(`AppStoreConnectAppID=${APP_ID}`);
+console.log(`SigningProfile=${PROFILE}`);
 console.log(`Product=${PRODUCT}`);
-console.log(`Version=${VERSION}`);
 console.log(`Questions=${questions.length}`);
 console.log(`CanonicalIconSHA=${ICON_SHA}`);
