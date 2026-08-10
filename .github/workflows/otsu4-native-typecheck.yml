@@ -15,12 +15,17 @@ on:
       - 'tools/otsu4-build-content-v2.mjs'
       - '.github/workflows/otsu4-native-typecheck.yml'
 
+concurrency:
+  group: otsu4-native-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   typecheck:
     runs-on: macos-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -72,7 +77,7 @@ jobs:
             /tmp/Otsu4ContentDecodeCheck.swift \
             -o /tmp/otsu4-content-check
           /tmp/otsu4-content-check
-      - name: Typecheck Learning Sprint v2.1 native flow and StoreKit
+      - name: Typecheck complete Learning Sprint v2.1 native flow and StoreKit
         if: ${{ hashFiles('native-ios/Otsu4Sprint/Otsu4ContentStore.swift') != '' }}
         run: |
           xcrun --sdk iphonesimulator swiftc \
@@ -84,4 +89,6 @@ jobs:
             native-ios/Otsu4Sprint/Otsu4DesignSystem.swift \
             native-ios/Otsu4Sprint/Otsu4LearningStore.swift \
             native-ios/Otsu4Sprint/Otsu4StudySession.swift \
-            native-ios/Otsu4Sprint/Otsu4LearningView.swift
+            native-ios/Otsu4Sprint/Otsu4LearningView.swift \
+            native-ios/Otsu4Sprint/Otsu4GoldenRootView.swift \
+            native-ios/Otsu4Sprint/Otsu4SprintApp.swift
