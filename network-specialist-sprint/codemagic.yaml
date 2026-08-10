@@ -18,6 +18,11 @@ workflows:
           cd network-specialist-sprint
           python3 scripts/build_native_questions.py
 
+      - name: Materialize canonical AppIcon
+        script: |
+          cd network-specialist-sprint
+          python3 scripts/materialize_appicon.py
+
       - name: Legacy content and rights validation
         script: |
           cd network-specialist-sprint
@@ -26,23 +31,9 @@ workflows:
       - name: Native Release Gate
         script: |
           cd network-specialist-sprint
+          # Signed/TestFlight release must fail closed until the canonical IAP
+          # Product ID and unlock scope are recorded in the #7 canonical source.
           python3 scripts/validate_native_release.py --require-icon --require-iap
-
-      - name: Verify canonical AppIcon
-        script: |
-          cd network-specialist-sprint
-          python3 - <<'PY'
-          from pathlib import Path
-          import hashlib
-          p=Path('ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png')
-          expected='5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729'
-          if not p.exists():
-              raise SystemExit('Canonical AppIcon missing')
-          actual=hashlib.sha256(p.read_bytes()).hexdigest()
-          if actual != expected:
-              raise SystemExit(f'Canonical AppIcon SHA mismatch: {actual}')
-          print('PASS canonical AppIcon')
-          PY
 
       - name: Install XcodeGen
         script: |
@@ -53,17 +44,21 @@ workflows:
           cd network-specialist-sprint/ios
           xcodegen generate
 
-      - name: Simulator build and size tests
+      - name: Simulator tests
+        script: |
+          cd network-specialist-sprint
+          bash scripts/run_native_ui_tests.sh
+
+      - name: Unsigned Release build gate
         script: |
           cd network-specialist-sprint
           xcodebuild build \
             -project ios/NetworkSpecialist.xcodeproj \
             -scheme NetworkSpecialist \
-            -sdk iphonesimulator \
-            -configuration Debug \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO \
-            ASSETCATALOG_COMPILER_APPICON_NAME=
-          bash scripts/run_native_ui_tests.sh
+            CODE_SIGNING_REQUIRED=NO
 
       - name: Resolve App Store signing
         script: |
@@ -87,7 +82,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        # The IPA is uploaded to App Store Connect. Keep TestFlight beta-review submission
-        # disabled because this app is Internal Testing only.
+        # Upload the signed IPA to App Store Connect, but do not submit the
+        # Internal-Only build to external TestFlight beta review or App Store review.
         submit_to_testflight: false
         submit_to_app_store: false
