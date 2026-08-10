@@ -56,7 +56,7 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             build | xcpretty
-      - name: Verify release bundle resources
+      - name: Verify release bundle resources and canonical identifiers
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: |
           set -euo pipefail
@@ -68,6 +68,9 @@ jobs:
           test -f "$APP/PrivacyInfo.xcprivacy"
           test -f "$APP/Assets.car"
           plutil -p "$APP/Info.plist"
+          test "$(plutil -extract CFBundleIdentifier raw "$APP/Info.plist")" = "jp.allsunday1122.otsu4"
+          test "$(plutil -extract CFBundleShortVersionString raw "$APP/Info.plist")" = "1.0.0"
+          test "$(plutil -extract CFBundleVersion raw "$APP/Info.plist")" = "1"
           /usr/bin/python3 - "$APP/questions.generated.json" <<'PY'
           import json,sys
           p=sys.argv[1]
