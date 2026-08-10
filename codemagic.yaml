@@ -275,21 +275,26 @@ workflows:
         bundle_identifier: jp.allsunday1122.yakuzaishi
       vars:
         BUNDLE_ID: jp.allsunday1122.yakuzaishi
+        APP_STORE_CONNECT_APP_ID: "6799753724"
+        CODEMAGIC_PROFILE_REF: yakuzaishi_appstore
         XCODE_PROJECT: pharmacist-manabi-sprint/ios/PharmacistSprint.xcodeproj
         XCODE_SCHEME: PharmacistSprint
       xcode: latest
     scripts:
-      - name: Release audit before signed build
+      - name: Release audit before signed native build
         script: |
           cd "$CM_BUILD_DIR"
           python3 pharmacist-manabi-sprint/scripts/validate_release.py
           bash -n pharmacist-manabi-sprint/ios/prepare-ios.sh
           python3 -m py_compile pharmacist-manabi-sprint/ios/apply-xcode-capabilities.py
+          test "$BUNDLE_ID" = "jp.allsunday1122.yakuzaishi"
+          test "$APP_STORE_CONNECT_APP_ID" = "6799753724"
+          test "$CODEMAGIC_PROFILE_REF" = "yakuzaishi_appstore"
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - name: Prepare audited offline bundle and canonical icon
+      - name: Prepare audited native resources and canonical icon
         script: bash "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/prepare-ios.sh"
-      - name: Set CI build number and generate project
+      - name: Set CI build number and generate native project
         script: |
           cd "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
           python3 - <<'PY'
@@ -302,20 +307,24 @@ workflows:
           PY
           xcodegen generate
           python3 apply-xcode-capabilities.py PharmacistSprint.xcodeproj/project.pbxproj
-      - name: Verify signed release inputs
+      - name: Verify signed native release inputs
         script: |
-          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Web/index.html"
-          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Web/questions-data.js"
-          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Web/native-store-ui.js"
+          test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Generated/questions.native.json"
           test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/PrivacyInfo.xcprivacy"
           test -f "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
           grep -q 'com.apple.InAppPurchase' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
           ! grep -q 'SystemCapabilities = "' "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+          ! grep -R -q 'WKWebView\|import WebKit' --include='*.swift' "$CM_BUILD_DIR/pharmacist-manabi-sprint/ios"
           python3 - <<'PY'
-          import hashlib
+          import hashlib,json
           p='pharmacist-manabi-sprint/ios/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png'
           assert hashlib.sha256(open(p,'rb').read()).hexdigest()=='dfc7dfe4a1c13afbe98658cde591274e11665b016c39e2a4411de4dbe86127ec'
-          print('PASS: canonical pharmacist AppIcon')
+          d=json.load(open('pharmacist-manabi-sprint/ios/Generated/questions.native.json',encoding='utf-8'))
+          q=d['questions']; active=[x for x in q if x['scoringStatus']!='excluded']
+          free=[x for x in active if x['exam']==111 and x['section']=='必須']
+          media=[x for x in q if x['displayMode']=='officialQuestionImage']
+          assert (len(q),len(active),len(free),len(media))==(1035,1031,90,154)
+          print('PASS: native pharmacist release inputs and canonical AppIcon')
           PY
       - name: Apply App Store signing profiles for internal TestFlight only
         script: |
