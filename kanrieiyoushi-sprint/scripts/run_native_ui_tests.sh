@@ -35,7 +35,24 @@ LARGE="${IDS[0]}"; SMALL="${IDS[1]}"
 boot_device() {
   local UDID="$1"
   xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
-  xcrun simctl bootstatus "$UDID" -b >/dev/null
+  /usr/bin/python3 - "$UDID" <<'PY'
+import subprocess, sys, time
+udid = sys.argv[1]
+for attempt in range(36):
+    try:
+        result = subprocess.run(
+            ['xcrun', 'simctl', 'list', 'devices', 'available'],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=10
+        )
+        if result.returncode == 0 and udid in result.stdout and '(Booted)' in result.stdout:
+            print(f'KANRI_SIMULATOR_BOOTED attempt={attempt + 1}')
+            raise SystemExit(0)
+    except subprocess.TimeoutExpired:
+        print('KANRI_SIMCTL_LIST_TIMEOUT_RETRYING', file=sys.stderr)
+    time.sleep(5)
+print('KANRI_SIMULATOR_DID_NOT_BOOT_WITHIN_180S', file=sys.stderr)
+raise SystemExit(124)
+PY
   xcrun simctl uninstall "$UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
 }
 
