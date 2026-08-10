@@ -269,6 +269,10 @@ final class TsukanshiAppModel: ObservableObject {
     }
 
     func advance(_ session: TsukanshiStudySession) {
+        if session.isMock && session.currentIndex + 1 >= session.questions.count {
+            finishMock(session)
+            return
+        }
         session.advance()
         if session.isFinished {
             state.resumeSession = nil
