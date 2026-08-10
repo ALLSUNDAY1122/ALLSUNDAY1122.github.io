@@ -52,15 +52,17 @@ swift = '\n'.join(p.read_text(encoding='utf-8') for p in swift_files)
 app = (R/'ios/App.swift').read_text(encoding='utf-8')
 project = (R/'ios/project.yml').read_text(encoding='utf-8')
 prepare = (R/'ios/prepare-ios.sh').read_text(encoding='utf-8')
+theme = (R/'ios/Theme.swift').read_text(encoding='utf-8')
+settings = (R/'ios/HistorySettingsViews.swift').read_text(encoding='utf-8')
+tests = (R/'ios/Tests/QuestionModelTests.swift').read_text(encoding='utf-8')
 
 # Native-only gate: learning UI must not be a WKWebView shell.
 for forbidden in ['import WebKit', 'WKWebView', 'UIViewRepresentable']:
     if forbidden in swift: errors.append('WebView-only/native violation: ' + forbidden)
 for required_token in ['RootView()', 'LearningStore()', 'StoreKitManager()']:
     if required_token not in app: errors.append('native app root missing: ' + required_token)
-for token in ['Models.swift','LearningStore.swift','QuizViews.swift','HistorySettingsViews.swift','PharmacistSprintTests','Generated/questions.native.json']:
-    if token not in project and token != 'Models.swift' and token != 'LearningStore.swift' and token != 'QuizViews.swift' and token != 'HistorySettingsViews.swift':
-        errors.append('project native/test token missing: ' + token)
+for token in ['PharmacistSprintTests','Generated/questions.native.json']:
+    if token not in project: errors.append('project native/test token missing: ' + token)
 if 'path: Web' in project: errors.append('Web folder is still bundled by Xcode target')
 if 'questions.native.json' not in prepare or '1035' not in prepare or 'free' not in prepare:
     errors.append('native audited question generator incomplete')
@@ -72,6 +74,26 @@ for token in ['[4,8,16]','3回連続正解','わからない（答えを見る�
     if token not in swift: errors.append('Golden Master behavior token missing: ' + token)
 if 'daily.answered += 1' not in swift: errors.append('daily answered-count update missing; heatmap regression risk')
 if 'learningProgress' not in swift or 'seen.filter' not in swift: errors.append('achievement progress must be based on seen questions, not accuracy only')
+if 'accessibilityReduceMotion' not in theme or 'reduceMotion ? nil' not in theme:
+    errors.append('Reduce Motion handling missing from progress animation')
+
+# Exact mandatory settings sequence: font -> goal -> question shuffle -> choice shuffle -> exam date -> JSON -> memory -> about -> reset.
+settings_tokens = [
+    'settingBlock("文字サイズ")', 'settingBlock("1日の目標")', 'toggleRow("出題順をシャッフル"',
+    'toggleRow("選択肢もシャッフル"', 'examDateBlock', 'backupBlock', 'title: "覚えかたのルール"',
+    'title: "この教材について"', 'Text("学習記録をリセット")'
+]
+positions = [settings.find(token) for token in settings_tokens]
+if any(p < 0 for p in positions) or positions != sorted(positions):
+    errors.append('Golden Master mandatory settings order mismatch')
+about_pos = settings.find('title: "この教材について"')
+premium_pos = settings.find('SprintCard {\n                    premiumBlock')
+if premium_pos < 0 or premium_pos < about_pos:
+    errors.append('premium controls must be outside/after mandatory settings sequence')
+
+# Regression tests for the user-reported record-screen bugs must remain in XCTest.
+for token in ['testWrongOrUnknownAnswerStillAdvancesDailyHeatmapAndAchievement', 'todayRecord.answered', 'learningProgress']:
+    if token not in tests: errors.append('record-screen regression XCTest missing: ' + token)
 
 # StoreKit 2 contract.
 store = (R/'ios/StoreKitManager.swift').read_text(encoding='utf-8')
@@ -106,10 +128,13 @@ metadata = (R/'metadata/APP_STORE_METADATA_JA.md').read_text(encoding='utf-8')
 for token in ['1,031','必須90問','displayPrice','jp.allsunday1122.yakuzaishi.monthly','jp.allsunday1122.yakuzaishi.lifetime','16+']:
     if token not in metadata: errors.append('metadata missing: ' + token)
 
-# TestFlight-only publishing gate. Codemagic workflow may retain bundle-id profile matching;
-# explicit profile name is account-side and is verified before signed build.
+# TestFlight-only publishing gate and fixed identifiers.
 cm = (ROOT/'codemagic.yaml').read_text(encoding='utf-8')
-for token in ['pharmacist-ios:','bundle_identifier: jp.allsunday1122.yakuzaishi','submit_to_testflight: true','submit_to_app_store: false','testFlightInternalTestingOnly']:
+for token in [
+    'pharmacist-ios:', 'bundle_identifier: jp.allsunday1122.yakuzaishi', 'APP_STORE_CONNECT_APP_ID: "6799753724"',
+    'CODEMAGIC_PROFILE_REF: yakuzaishi_appstore', 'submit_to_testflight: true', 'submit_to_app_store: false',
+    'testFlightInternalTestingOnly'
+]:
     if token not in cm: errors.append('Codemagic token missing: ' + token)
 
 report = {
@@ -121,7 +146,8 @@ report = {
     'questions': len(qs), 'active': len(active), 'excluded': len(exc), 'flexible': len(flex), 'free': len(free),
     'iconMaterialized': materialized,
     'bundleId': 'jp.allsunday1122.yakuzaishi',
-    'appStoreConnectAppId': '6799753724'
+    'appStoreConnectAppId': '6799753724',
+    'codemagicProfileRef': 'yakuzaishi_appstore'
 }
 (R/'content/product/release-preflight-static.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
 print(json.dumps(report, ensure_ascii=False))
