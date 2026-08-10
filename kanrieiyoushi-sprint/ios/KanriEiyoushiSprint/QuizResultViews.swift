@@ -1,0 +1,183 @@
+import SwiftUI
+import LearningSprintCore
+
+struct QuizView: View {
+    @EnvironmentObject private var store: KanriLearningStore
+
+    private var isMock: Bool {
+        guard let kind = store.activeSession?.kind else { return false }
+        if case .mock = kind { return true }
+        return false
+    }
+
+    var body: some View {
+        ZStack {
+            LearningSprintTheme.paper.ignoresSafeArea()
+            if let q = store.currentQuestion {
+                VStack(spacing: 0) {
+                    header(q)
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 18) {
+                            if isMock {
+                                Text("模試中は正誤を表示しません")
+                                    .font(.caption.bold()).foregroundStyle(LearningSprintTheme.indigo)
+                                    .padding(.horizontal, 12).padding(.vertical, 7)
+                                    .background(LearningSprintTheme.indigoSoft).clipShape(Capsule())
+                            }
+                            Text(q.prompt)
+                                .font(LearningSprintTheme.serif(22, weight: .semibold))
+                                .foregroundStyle(LearningSprintTheme.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("questionPrompt")
+
+                            VStack(spacing: 10) {
+                                ForEach(Array(q.choices.enumerated()), id: \.offset) { index, choice in
+                                    choiceButton(question: q, index: index, choice: choice)
+                                }
+                            }
+                            Button("わからない") { store.answer(index: nil) }
+                                .buttonStyle(.bordered)
+                                .tint(LearningSprintTheme.ink2)
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .disabled(store.currentEvaluation != nil)
+                                .accessibilityIdentifier("unknownButton")
+
+                            if let evaluation = store.currentEvaluation {
+                                if isMock { mockFeedback }
+                                else { feedback(question: q, evaluation: evaluation) }
+                            }
+                        }
+                        .padding(20).padding(.bottom, 30)
+                    }
+                }
+            } else {
+                ProgressView("問題を読み込んでいます")
+            }
+        }
+        .accessibilityIdentifier("quizView")
+    }
+
+    private func header(_ q: LearningQuestion) -> some View {
+        HStack(spacing: 12) {
+            Button { store.leaveSession() } label: { Image(systemName: "chevron.left").frame(width: 44, height: 44) }
+                .accessibilityLabel("ホームへ戻る")
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(q.examRound ?? "")｜\(q.subject)｜\(q.topic)").font(.caption).foregroundStyle(LearningSprintTheme.ink2).lineLimit(1)
+                Text(store.sessionProgressText).font(.subheadline.bold()).accessibilityIdentifier("questionProgress")
+            }
+            Spacer()
+            Button { store.leaveSession() } label: { Image(systemName: "house").frame(width: 44, height: 44) }
+                .accessibilityLabel("ホーム")
+        }
+        .padding(.horizontal, 10).padding(.vertical, 6).background(LearningSprintTheme.card)
+    }
+
+    private func choiceButton(question q: LearningQuestion, index: Int, choice: String) -> some View {
+        let answered = store.currentEvaluation != nil
+        let correct = q.correctIndices.first == index
+        let selected = store.selectedAnswerIndex == index
+        let background: Color = {
+            if !answered { return LearningSprintTheme.card }
+            if isMock { return selected ? LearningSprintTheme.indigoSoft : LearningSprintTheme.card }
+            if correct { return LearningSprintTheme.greenSoft }
+            if selected { return LearningSprintTheme.vermilionSoft }
+            return LearningSprintTheme.card.opacity(0.72)
+        }()
+        let border: Color = {
+            if !answered { return LearningSprintTheme.line }
+            if isMock { return selected ? LearningSprintTheme.indigo : LearningSprintTheme.line }
+            if correct { return LearningSprintTheme.green }
+            if selected { return LearningSprintTheme.vermilion }
+            return LearningSprintTheme.line
+        }()
+        return Button { store.answer(index: index) } label: {
+            HStack(alignment: .top, spacing: 12) {
+                Text("\(index + 1)").font(.subheadline.bold()).frame(width: 28, height: 28).background(LearningSprintTheme.indigoSoft).clipShape(Circle())
+                Text(choice).font(.body).foregroundStyle(LearningSprintTheme.ink).multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 4)
+                if answered && !isMock && correct { Image(systemName: "circle").font(.title2).foregroundStyle(LearningSprintTheme.vermilion) }
+                else if answered && !isMock && selected && !correct { Image(systemName: "xmark").font(.title2.bold()).foregroundStyle(LearningSprintTheme.vermilion) }
+            }
+            .padding(14).frame(maxWidth: .infinity, minHeight: 52, alignment: .leading)
+            .background(background).overlay(RoundedRectangle(cornerRadius: 14).stroke(border, lineWidth: answered && (correct || selected) ? 2 : 1)).clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+        .buttonStyle(.plain).disabled(answered)
+        .accessibilityIdentifier("choice\(index)")
+    }
+
+    private var mockFeedback: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("回答を記録しました。模試終了まで正誤は表示しません。").font(.subheadline).foregroundStyle(LearningSprintTheme.ink2)
+            nextButton
+        }
+        .padding(16).background(LearningSprintTheme.card).clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+
+    private func feedback(question q: LearningQuestion, evaluation: AnswerEvaluation) -> some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text(evaluation.isCorrect ? "正解" : (evaluation.isUnknown ? "わからないとして記録" : "惜しい"))
+                .font(LearningSprintTheme.serif(24, weight: .bold))
+                .foregroundStyle(evaluation.isCorrect ? LearningSprintTheme.green : LearningSprintTheme.vermilion)
+            LearningSprintMemoryBlock(q.memoryPoint)
+            Text(q.explanation).font(.body).foregroundStyle(LearningSprintTheme.ink2).fixedSize(horizontal: false, vertical: true)
+            if let urlText = q.sourceURL, let url = URL(string: urlText) {
+                Link("一次資料を確認", destination: url).font(.subheadline.bold()).foregroundStyle(LearningSprintTheme.indigo)
+            }
+            if let weak = store.state.weakQuestions[q.id] {
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack { Text("苦手習得"); Spacer(); Text("\(weak.consecutiveCorrect) / 3") }
+                    ProgressView(value: Double(weak.consecutiveCorrect), total: 3).tint(LearningSprintTheme.green)
+                    Text("3連続正解で解除").font(.caption).foregroundStyle(LearningSprintTheme.ink3)
+                }
+            }
+            nextButton
+        }
+        .padding(16).background(LearningSprintTheme.card).clipShape(RoundedRectangle(cornerRadius: 16))
+        .accessibilityElement(children: .contain)
+    }
+
+    private var nextButton: some View {
+        Button { store.advance() } label: {
+            HStack { Text((store.activeSession?.currentIndex ?? 0) >= ((store.activeSession?.questionIDs.count ?? 1) - 1) ? "結果を見る" : "次の問題へ"); Spacer(); Image(systemName: "arrow.right") }
+                .frame(minHeight: 44)
+        }
+        .buttonStyle(.borderedProminent).tint(LearningSprintTheme.indigo)
+        .accessibilityIdentifier("nextButton")
+    }
+}
+
+struct ResultView: View {
+    @EnvironmentObject private var store: KanriLearningStore
+    private var isMock: Bool {
+        guard let kind = store.result?.kind else { return false }
+        if case .mock = kind { return true }
+        return false
+    }
+
+    var body: some View {
+        ZStack {
+            LearningSprintPaperBackground()
+            if let r = store.result {
+                VStack(spacing: 22) {
+                    Spacer()
+                    Text(isMock ? "MOCK COMPLETE" : "SPRINT COMPLETE").font(.caption.bold()).foregroundStyle(LearningSprintTheme.indigo)
+                    Text("\(r.correct) / \(r.total)").font(LearningSprintTheme.serif(52, weight: .bold)).accessibilityIdentifier("resultScore")
+                    Text("正答率 \(r.rate)%").font(.title3.bold())
+                    if isMock { Text(r.correct >= 120 ? "120点以上です。苦手を短く復習しましょう。" : "120点を目安に、苦手分野を復習しましょう。") }
+                    else { Text("今日の積み上げを記録しました。") }
+                    HStack { metric("正答率", "\(r.rate)%"); metric("苦手", "\(store.weakCount)問"); metric("今日", "\(store.todayAnswered)問") }
+                        .padding(16).background(LearningSprintTheme.card).clipShape(RoundedRectangle(cornerRadius: 18))
+                    if store.weakCount > 0 {
+                        Button("苦手を復習") { store.dismissResult(); store.startWeak() }.buttonStyle(.borderedProminent).tint(LearningSprintTheme.indigo)
+                    }
+                    Button("ホームへ") { store.dismissResult() }.buttonStyle(.bordered).tint(LearningSprintTheme.indigo).accessibilityIdentifier("resultHomeButton")
+                    Spacer()
+                }.padding(24).multilineTextAlignment(.center)
+            }
+        }
+    }
+
+    private func metric(_ title: String, _ value: String) -> some View {
+        VStack(spacing: 4) { Text(title).font(.caption).foregroundStyle(LearningSprintTheme.ink3); Text(value).font(.headline).foregroundStyle(LearningSprintTheme.indigo) }.frame(maxWidth: .infinity)
+    }
+}
