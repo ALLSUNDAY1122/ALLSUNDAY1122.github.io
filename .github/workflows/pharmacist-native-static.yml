@@ -1,0 +1,45 @@
+name: Pharmacist Native Static Gate
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/pharmacist-native-static.yml'
+      - 'pharmacist-manabi-sprint/ios/**'
+      - 'pharmacist-manabi-sprint/scripts/validate_release.py'
+      - 'pharmacist-manabi-sprint/content/product/**'
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release static audit
+        run: python3 pharmacist-manabi-sprint/scripts/validate_release.py
+      - name: Prepare native question and media resources
+        env:
+          PREFLIGHT_PLACEHOLDER_ICON: '1'
+        run: bash pharmacist-manabi-sprint/ios/prepare-ios.sh
+      - name: Validate generated native resources
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          ios=Path('pharmacist-manabi-sprint/ios')
+          d=json.load(open(ios/'Generated/questions.native.json',encoding='utf-8'))
+          q=d['questions']
+          active=[x for x in q if x['scoringStatus']!='excluded']
+          free=[x for x in active if x['exam']==111 and x['section']=='必須']
+          flex=[x for x in q if x['scoringStatus']=='multiple_accepted']
+          media=[x for x in q if x['displayMode']=='officialQuestionImage']
+          assert (len(q),len(active),len(free),len(flex),len(media))==(1035,1031,90,3,154)
+          for x in media:
+              assert x['mediaAssets']
+              for rel in x['mediaAssets']:
+                  p=ios/'Generated'/rel
+                  assert p.exists() and p.stat().st_size>1000,(x['id'],rel)
+          swift='\n'.join(p.read_text(encoding='utf-8') for p in ios.glob('*.swift'))
+          assert 'WKWebView' not in swift and 'import WebKit' not in swift and 'UIViewRepresentable' not in swift
+          assert 'RootView()' in (ios/'App.swift').read_text(encoding='utf-8')
+          print({'PASS':True,'questions':len(q),'active':len(active),'free':len(free),'flex':len(flex),'media':len(media)})
+          PY
