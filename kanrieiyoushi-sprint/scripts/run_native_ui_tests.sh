@@ -30,45 +30,52 @@ PY
 )
 [[ ${#IDS[@]} -ge 2 ]] || { echo "Need two available iPhone simulators" >&2; exit 1; }
 
-run_tests() {
-  local LABEL="$1"; local UDID="$2"; shift 2
-  local LOG="$LOG_DIR/${LABEL}.log"
-  echo "=== XCTest start: ${LABEL} ==="
+boot_device() {
+  local UDID="$1"
   xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
   xcrun simctl bootstatus "$UDID" -b >/dev/null
   xcrun simctl uninstall "$UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
+}
+
+run_one() {
+  local LABEL="$1"; local UDID="$2"; local TEST="$3"
+  local LOG="$LOG_DIR/${LABEL}.log"
+  echo "=== XCTest start: ${LABEL} ==="
   set +e
   xcodebuild test \
     -project "$PROJECT" \
     -scheme "$SCHEME" \
     -destination "platform=iOS Simulator,id=$UDID" \
-    -destination-timeout 60 \
+    -destination-timeout 45 \
     -parallel-testing-enabled NO \
     -test-timeouts-enabled YES \
-    -default-test-execution-time-allowance 45 \
-    -maximum-test-execution-time-allowance 75 \
-    "$@" \
+    -default-test-execution-time-allowance 35 \
+    -maximum-test-execution-time-allowance 60 \
+    -only-testing:"$TEST" \
     CODE_SIGNING_ALLOWED=NO \
     ASSETCATALOG_COMPILER_APPICON_NAME= \
     >"$LOG" 2>&1
   local STATUS=$?
   set -e
-  xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
   if [[ $STATUS -ne 0 ]]; then
     echo "=== ${LABEL} XCTest FAILURE ===" >&2
-    grep -E "Test Case .* (failed|passed)|Assertion Failure|XCTAssert|error:|timed out|Timeout|Failure|TEST FAILED|Executed [0-9]+ tests" "$LOG" | tail -220 >&2 || true
-    echo "--- last 80 log lines ---" >&2
-    tail -80 "$LOG" >&2 || true
+    grep -E "Test Case .* (failed|passed)|Assertion Failure|XCTAssert|error:|timed out|Timeout|Failure|TEST FAILED|Executed [0-9]+ tests" "$LOG" | tail -160 >&2 || true
+    tail -60 "$LOG" >&2 || true
     echo "=== end ${LABEL} XCTest FAILURE ===" >&2
     return "$STATUS"
   fi
-  grep -E "Test Case .* passed|Executed [0-9]+ tests|TEST SUCCEEDED" "$LOG" | tail -80 || true
+  grep -E "Test Case .* passed|Executed [0-9]+ tests|TEST SUCCEEDED" "$LOG" | tail -30 || true
   echo "=== XCTest PASS: ${LABEL} ==="
 }
 
-run_tests large "${IDS[0]}" \
-  -only-testing:KanriEiyoushiSprintTests \
-  -only-testing:KanriEiyoushiSprintUITests
+LARGE="${IDS[0]}"; SMALL="${IDS[1]}"
+boot_device "$LARGE"
+run_one unit-large "$LARGE" "KanriEiyoushiSprintTests"
+run_one ui-learning-large "$LARGE" "KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testFourTabsAndDailySprintImmediateScoring"
+run_one ui-settings-large "$LARGE" "KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testSettingsExposeGoldenMasterControls"
+run_one ui-mock-history-large "$LARGE" "KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testPremiumMockAndHistoryRoutes"
+xcrun simctl shutdown "$LARGE" >/dev/null 2>&1 || true
 
-run_tests small "${IDS[1]}" \
-  -only-testing:KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testFourTabsAndDailySprintImmediateScoring
+boot_device "$SMALL"
+run_one ui-learning-small "$SMALL" "KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testFourTabsAndDailySprintImmediateScoring"
+xcrun simctl shutdown "$SMALL" >/dev/null 2>&1 || true
