@@ -1,0 +1,24 @@
+name: Learning Sprint Native Core
+
+on:
+  push:
+    paths:
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/learning-sprint-native-core.yml'
+  pull_request:
+    paths:
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/learning-sprint-native-core.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  swift-tests:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shared native unit tests
+        working-directory: native-ios/LearningSprintCore
+        run: swift test
