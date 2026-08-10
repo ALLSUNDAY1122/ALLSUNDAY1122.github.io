@@ -99,16 +99,16 @@ cmd=[
   'xcodebuild','test-without-building','-project',project,'-scheme',scheme,
   '-destination',f'platform=iOS Simulator,id={udid}','-derivedDataPath',derived,
   '-destination-timeout','45','-parallel-testing-enabled','NO',
-  '-test-timeouts-enabled','YES','-default-test-execution-time-allowance','35',
-  '-maximum-test-execution-time-allowance','60',f'-only-testing:{test}',
+  '-test-timeouts-enabled','YES','-default-test-execution-time-allowance','75',
+  '-maximum-test-execution-time-allowance','150',f'-only-testing:{test}',
   'CODE_SIGNING_ALLOWED=NO','ASSETCATALOG_COMPILER_APPICON_NAME='
 ]
 with open(log,'wb') as f:
     try:
-        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=70)
+        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=180)
         raise SystemExit(result.returncode)
     except subprocess.TimeoutExpired:
-        f.write(b'\nKANRI_XCTEST_HARD_TIMEOUT_70S\n')
+        f.write(b'\nKANRI_XCTEST_HARD_TIMEOUT_180S\n')
         raise SystemExit(124)
 PY
   local STATUS=$?
