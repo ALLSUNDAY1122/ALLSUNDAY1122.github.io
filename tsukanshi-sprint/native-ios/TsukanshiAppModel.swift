@@ -288,6 +288,7 @@ final class TsukanshiAppModel: ObservableObject {
         do {
             if let evaluation = try session.answer(payload) {
                 LearningEngine.record(question: question, evaluation: evaluation, state: &state)
+                state.resumeSession = session.snapshot
                 persist()
             } else {
                 saveResume(session)
@@ -353,9 +354,10 @@ final class TsukanshiAppModel: ObservableObject {
             transientMessage = "利用できる問題がありません"
             return
         }
-        state.resumeSession = nil
+        let session = TsukanshiStudySession(kind: kind, questions: questions)
+        activeSession = session
+        state.resumeSession = session.snapshot
         persist()
-        activeSession = TsukanshiStudySession(kind: kind, questions: questions)
     }
 
     private func saveResume(_ session: TsukanshiStudySession) {
