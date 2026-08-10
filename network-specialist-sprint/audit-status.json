@@ -1,67 +1,125 @@
 {
-  "generatedAt": "2026-08-09T15:15:00+09:00",
+  "generatedAt": "2026-08-10T15:18:00+09:00",
   "questionAudit": {
     "status": "PASS",
     "examOccurrences": 75,
     "uniqueQuestionBank": 68,
     "historicalRepeatOrVariants": 7,
-    "cycles": [
-      {"cycle":1,"target":"2025春期午前II","initial":"FAIL","fix":"25問構造化・公式解答照合・出典付与","final":"PASS"},
-      {"cycle":2,"target":"2024春期午前II","initial":"FAIL","fix":"高類似誤検知1組の設問表現修正","final":"PASS"},
-      {"cycle":3,"target":"2023春期＋3年度横断","initial":"FAIL","fix":"75出題枠と68ユニーク問題を分離し7出題をcanonical化","final":"PASS"}
-    ]
+    "contentChangedDuringNativeMigration": false,
+    "note": "問題本文・正答・解説・出典はネイティブ化で変更していない。既存問題監査PASSを維持。"
   },
-  "implementationValidation": {
+  "nativeImplementation": {
     "status": "PASS",
-    "cycles": [
-      {"initial":"FAIL","issue":"文字サイズ設定が設定画面内で即時反映されない","fix":"設定変更時にapplyFont()を即時実行","final":"PASS"},
-      {"initial":"FAIL","issue":"3件のOSPF問題でuiDomainがセキュリティに誤分類","fix":"ルーティング・SDNへ分類補正。問題文・正解・解説・出典は変更なし","final":"PASS"}
+    "technology": "SwiftUI native",
+    "webView": false,
+    "features": [
+      "4-tab navigation",
+      "4/8/16 question sprint",
+      "immediate practice grading",
+      "unknown answer",
+      "weak registration and 3-consecutive-correct release",
+      "resume",
+      "25-question yearly mocks",
+      "history and 5-week heatmap",
+      "JSON backup/restore",
+      "offline audited payload",
+      "VoiceOver identifiers"
     ],
-    "retests": ["JavaScript syntax PASS","75出題・68ユニーク PASS","各年度25問 PASS","OSPF分類3件 PASS","4/8/16 session PASS","weak 3-consecutive-right release PASS","resume PASS","4-tab navigation PASS"]
+    "dataLoading": "questions.native.json with GeneratedQuestionPayload.swift fallback generated from the same audited payload"
   },
-  "ui30StateAudit": {
-    "status":"PASS",
-    "screenshots":30,
-    "horizontalOverflowStates":0,
-    "statesWithButtonsUnder40px":0,
-    "visualMajorIssues":0,
-    "note":"後続変更はローダー分割・分類補正・申請設定であり、Golden Masterの寸法・色・画面構造は変更していない。"
-  },
-  "releasePreparation": {
-    "status":"PASS_WITH_EXTERNAL_BLOCKERS",
-    "cycles":[
-      {"initial":"FAIL","issue":"manifest.jsonにportrait固定がない","fix":"orientation=portraitを追加","final":"PASS"},
-      {"initial":"FAIL","issue":"iOS LocalWebViewのUIApplication importとindex配置依存","fix":"UIKit明示importとindex読込フォールバック追加","final":"PASS"},
-      {"initial":"FAIL","issue":"questions-ui-fixes.jsがCodemagic同梱・release validator対象から漏れ","fix":"両方に追加","final":"PASS"}
+  "storeKitAudit": {
+    "status": "PASS_WITH_CANONICAL_BLOCKER",
+    "implementation": "StoreKit 2 non-consumable",
+    "rules": [
+      "Product.products",
+      "Product.displayPrice",
+      "verified active transaction only unlocks",
+      "unverified/pending/cancelled/revocation do not unlock",
+      "Transaction.currentEntitlements",
+      "Transaction.updates",
+      "explicit restore via AppStore.sync()"
     ],
-    "passed":["SwiftUI + WKWebView local bundle prepared","PrivacyInfo.xcprivacy parsed","Info.plist parsed","ITSAppUsesNonExemptEncryption=false","portrait iPhone only","App Store metadata draft","Support/Privacy static pages","Codemagic/XcodeGen config","canonical AppIcon 1024x1024 RGB available locally"],
-    "monetization":"Initial release has no IAP. Adding IAP invalidates Privacy/App Store metadata PASS and restarts release audit."
-  },
-  "releaseAudit": {
-    "status":"BLOCKED_EXTERNAL_ONLY",
-    "blockers":[
-      "Canonical AppIcon PNG is present in Google Drive/local package but not materialized as binary in the GitHub checkout; repo-based Archive intentionally fails until the exact Drive file is added.",
-      "Support/Privacy files are merged to main, but public GitHub Pages HTTP 200 has not been independently verified in this session.",
-      "Bundle ID jp.allsunday1122.networkspecialist has not yet been verified/registered as an Explicit App ID in Apple Developer.",
-      "App Store Connect app record, Codemagic integration, signing, archive and TestFlight upload require authenticated Apple/Codemagic operations.",
-      "TestFlight physical-device verification is not yet complete."
+    "canonicalBlockers": [
+      "#7 IAP Product ID is not specified in canonical sources",
+      "free trial scope and premium unlock scope are only a candidate, not a final canonical decision"
     ]
+  },
+  "ci": {
+    "status": "PASS",
+    "workflowRun": 31360542268,
+    "runNumber": 36,
+    "ubuntuStatic": "PASS",
+    "xcodegenAndSwiftCompile": "PASS",
+    "unitTests": {"passed": 5, "failed": 0},
+    "uiTests": {"passed": 3, "failed": 0},
+    "devices": ["iPhone 17 Pro Max", "iPhone SE (3rd generation)"]
+  },
+  "failFixCycles": [
+    {
+      "initial": "FAIL",
+      "issue": "WKWebView-only iOS implementation did not satisfy native requirement",
+      "fix": "Replaced app screens/state/persistence with SwiftUI native implementation and removed WebKit",
+      "final": "PASS"
+    },
+    {
+      "initial": "FAIL",
+      "issue": "questions.native.json missingResource during macOS Unit/UI tests",
+      "fix": "Explicit bundle resource registration and bundle subdirectory fallback",
+      "final": "FAIL"
+    },
+    {
+      "initial": "FAIL",
+      "issue": "Bundle resource layout still differed under test execution",
+      "fix": "Generate GeneratedQuestionPayload.swift from the identical audited payload and use it as offline fallback",
+      "final": "PASS"
+    },
+    {
+      "initial": "FAIL",
+      "issue": "Unverified 60% score threshold implied pass/fail meaning",
+      "fix": "Removed threshold-based judgment styling",
+      "final": "PASS"
+    },
+    {
+      "initial": "FAIL",
+      "issue": "sourceCheckedAt incorrectly inherited audit file generation time",
+      "fix": "Preserved empty canonical value instead of inventing a source verification date",
+      "final": "PASS"
+    }
+  ],
+  "privacyAndMetadata": {
+    "status": "PASS_PENDING_PUBLIC_URL_CHECK",
+    "privacyManifest": "present",
+    "privacyPolicyUpdatedForStoreKit2": true,
+    "supportUpdatedForPurchaseRestore": true,
+    "appStoreMetadataUpdatedForStoreKit2": true,
+    "publicHttp200Verified": false
   },
   "github": {
-    "repo":"ALLSUNDAY1122/ALLSUNDAY1122.github.io",
-    "path":"network-specialist-sprint/",
-    "releaseBranch":"release/network-specialist-sprint-v1-20260809",
-    "pullRequest":4092,
-    "merged":true,
-    "mergeCommit":"19e8e4cd825e07828eedd40be995f0951740272f",
-    "discardedPullRequests":[4090,4091]
+    "repo": "ALLSUNDAY1122/ALLSUNDAY1122.github.io",
+    "path": "network-specialist-sprint/",
+    "pullRequest": 4126,
+    "merged": true,
+    "mergeCommit": "2387b5136e3114d8af694647b2afa44eb3404024"
+  },
+  "releaseAudit": {
+    "status": "BLOCKED_EXTERNAL_CANONICAL",
+    "blockers": [
+      "#7 IAP Product ID is not specified in canonical sources",
+      "Free/premium unlock scope is not finalized in canonical sources",
+      "Canonical AppIcon PNG is not materialized in the GitHub checkout",
+      "#7 App Store Connect App ID is not specified in canonical sources",
+      "Support/Privacy public HTTP 200 has not been independently verified",
+      "Codemagic/Apple authentication and signing are not completed",
+      "Signed IPA/App Store Connect upload/Internal TestFlight device verification are not completed"
+    ]
   },
   "appIcon": {
-    "title":"07_ネットワークスペシャリスト試験.png",
-    "driveFileId":"1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8",
-    "size":"1024x1024",
-    "mode":"RGB",
-    "regenerationForbidden":true
+    "title": "07_ネットワークスペシャリスト試験.png",
+    "driveFileId": "1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8",
+    "size": "1024x1024",
+    "mode": "RGB",
+    "sha256": "5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729",
+    "regenerationForbidden": true
   },
-  "currentStage":"Development loop complete. Ready to enter authenticated TestFlight execution gate."
+  "currentStage": "Native implementation and automated validation PASS. Release blocked only by canonical/external Apple-Codemagic gates."
 }
