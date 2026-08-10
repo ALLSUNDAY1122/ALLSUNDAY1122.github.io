@@ -19,31 +19,38 @@ final class AppModel: ObservableObject {
     @Published var importMessage: String?
 
     init() {
+        let loadedQuestions: [Question]
+        let loadedQuestionsByID: [String: Question]
+        let loadError: String?
         do {
-            let loaded = try QuestionRepository.load()
-            questions = loaded
-            questionsByID = Dictionary(uniqueKeysWithValues: loaded.map { ($0.id, $0) })
-            startupError = nil
+            loadedQuestions = try QuestionRepository.load()
+            loadedQuestionsByID = Dictionary(uniqueKeysWithValues: loadedQuestions.map { ($0.id, $0) })
+            loadError = nil
         } catch {
-            questions = []
-            questionsByID = [:]
-            startupError = error.localizedDescription
+            loadedQuestions = []
+            loadedQuestionsByID = [:]
+            loadError = error.localizedDescription
         }
 
+        questions = loadedQuestions
+        questionsByID = loadedQuestionsByID
+        startupError = loadError
+
+        var initialState: LearningState
         if let data = UserDefaults.standard.data(forKey: Self.storageKey),
            var restored = try? LearningLogic.importJSON(data) {
-            restored.attempts = restored.attempts.filter { questionsByID[$0.key] != nil }
-            state = restored
+            restored.attempts = restored.attempts.filter { loadedQuestionsByID[$0.key] != nil }
+            initialState = restored
         } else {
-            state = LearningState()
+            initialState = LearningState()
         }
+        initialState.resume = LearningLogic.validateResume(initialState.resume, questionsByID: loadedQuestionsByID)
+        state = initialState
 
-        let resume = LearningLogic.validateResume(state.resume, questionsByID: questionsByID)
-        state.resume = resume
-        activeSession = resume
-        selectedChoice = resume?.answeredChoice
-        lastWasCorrect = resume?.answeredCorrect
-        showFeedback = resume?.answeredChoice != nil
+        activeSession = initialState.resume
+        selectedChoice = initialState.resume?.answeredChoice
+        lastWasCorrect = initialState.resume?.answeredCorrect
+        showFeedback = initialState.resume?.answeredChoice != nil
     }
 
     var currentQuestion: Question? {
