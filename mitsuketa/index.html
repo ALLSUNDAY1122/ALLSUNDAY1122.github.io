@@ -17,7 +17,7 @@ button{font:inherit}
 .cloud,.sun,.flower,.butterfly{position:absolute;user-select:none;filter:drop-shadow(0 2px 2px #0001)}
 .cloud{left:5%;top:5%;font-size:55px}.sun{right:6%;top:6%;font-size:55px}.flower{left:5%;bottom:3%;font-size:36px}.butterfly{right:6%;bottom:8%;font-size:37px}
 .spot{position:absolute;border:0;background:transparent;width:118px;height:118px;display:grid;place-items:center;font-size:82px;transform:translate(-50%,-50%);border-radius:36px}
-.spot.active.hint{animation:wiggle .8s ease-in-out infinite alternate}
+.spot.hint{animation:wiggle .8s ease-in-out infinite alternate}
 @keyframes wiggle{from{transform:translate(-50%,-50%) rotate(-3deg) scale(1)}to{transform:translate(-50%,-50%) rotate(3deg) scale(1.07)}}
 .animal{position:absolute;left:50%;top:38%;width:126px;height:126px;transform:translate(-50%,-50%) scale(.9);display:grid;place-items:center;font-size:78px;border-radius:50%;transition:left .85s ease,top .85s ease,transform .65s cubic-bezier(.2,.8,.2,1),background .3s}
 .animal.peek{font-size:66px}
@@ -117,10 +117,10 @@ async function foundAnimal(){
  else startRound();
 }
 document.querySelectorAll('.spot').forEach((el,i)=>{
- el.addEventListener('pointerup',e=>{e.stopPropagation(); if(phase==='search'&&i===spotIndex)foundAnimal(); else if(phase==='search')say(rand(bgFun))})
+ el.addEventListener('click',e=>{e.stopPropagation(); if(phase==='search'&&i===spotIndex)foundAnimal(); else if(phase==='search')say(rand(bgFun))})
 });
-animalEl.addEventListener('pointerup',e=>{e.stopPropagation();foundAnimal()});
-$('scene').addEventListener('pointerup',()=>{if(phase==='search')say(rand(bgFun))});
+animalEl.addEventListener('click',e=>{e.stopPropagation();foundAnimal()});
+$('scene').addEventListener('click',()=>{if(phase==='search')say(rand(bgFun))});
 $('again').addEventListener('click',()=>{found=0;setStars();$('celebrate').classList.remove('show');startRound()});
 $('calm').addEventListener('click',()=>{calm=!calm;$('calm').textContent=calm?'🌙':'☀️';$('modeTag').hidden=!calm});
 $('sound').addEventListener('click',()=>{sound=!sound;$('sound').textContent=sound?'🔊':'🔇'});
