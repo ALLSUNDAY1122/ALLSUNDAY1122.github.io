@@ -73,4 +73,22 @@ final class ShoshiSprintTests: XCTestCase {
         let restored = try LearningLogic.importJSON(data)
         XCTAssertEqual(restored, state)
     }
+
+    func testBackupRejectsInvalidDailyGoal() throws {
+        var state = LearningState()
+        state.dailyGoal = 999
+        let data = try LearningLogic.exportJSON(state)
+        XCTAssertThrowsError(try LearningLogic.importJSON(data))
+    }
+
+    func testBackupRejectsImpossibleAttemptCounts() throws {
+        var state = LearningState()
+        state.attempts["Q1"] = AttemptStat(answered: 1, correct: 2, correctStreak: 2, isWeak: false)
+        let data = try LearningLogic.exportJSON(state)
+        XCTAssertThrowsError(try LearningLogic.importJSON(data))
+    }
+
+    func testBackupRejectsOversizedPayload() {
+        XCTAssertThrowsError(try LearningLogic.importJSON(Data(repeating: 0x20, count: 5 * 1024 * 1024 + 1)))
+    }
 }
