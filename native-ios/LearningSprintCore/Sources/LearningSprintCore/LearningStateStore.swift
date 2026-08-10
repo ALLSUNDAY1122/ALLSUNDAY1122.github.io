@@ -114,19 +114,26 @@ public final class LearningStateStore: @unchecked Sendable {
     }
 
     private static func configureDates(encoder: JSONEncoder, decoder: JSONDecoder) {
+        // Encode the Foundation reference-date Double directly so a backup/import
+        // round trip preserves Date equality at sub-millisecond precision.
+        // The decoder still accepts the older ISO-8601 string representation so
+        // native backups created before this fix remain importable.
         encoder.dateEncodingStrategy = .custom { date, encoder in
             var container = encoder.singleValueContainer()
-            try container.encode(fractionalISO8601.string(from: date))
+            try container.encode(date.timeIntervalSinceReferenceDate)
         }
         decoder.dateDecodingStrategy = .custom { decoder in
             let container = try decoder.singleValueContainer()
+            if let value = try? container.decode(Double.self) {
+                return Date(timeIntervalSinceReferenceDate: value)
+            }
             let value = try container.decode(String.self)
             if let date = fractionalISO8601.date(from: value) ?? plainISO8601.date(from: value) {
                 return date
             }
             throw DecodingError.dataCorruptedError(
                 in: container,
-                debugDescription: "Invalid ISO-8601 date: \(value)"
+                debugDescription: "Invalid date value: \(value)"
             )
         }
     }
