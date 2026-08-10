@@ -1,4 +1,4 @@
-name: Pharmacist Native Compile Latest Xcode
+name: Pharmacist Native Compile Xcode16
 on:
   workflow_dispatch:
   pull_request:
@@ -12,12 +12,19 @@ concurrency:
   cancel-in-progress: true
 jobs:
   compile:
-    runs-on: macos-26
+    runs-on: macos-14
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Verify Xcode 16 or later
+      - name: Select installed Xcode 16
+        shell: bash
         run: |
+          set -euo pipefail
+          echo 'Installed Xcode apps:'
+          find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -print | sort -V
+          XCODE_APP=$(find /Applications -maxdepth 1 -type d -name 'Xcode_16*.app' -print | sort -V | tail -1)
+          test -n "$XCODE_APP"
+          sudo xcode-select -s "$XCODE_APP/Contents/Developer"
           xcodebuild -version
           MAJOR=$(xcodebuild -version | awk '/Xcode/{split($2,a,".");print a[1]}')
           test "$MAJOR" -ge 16
