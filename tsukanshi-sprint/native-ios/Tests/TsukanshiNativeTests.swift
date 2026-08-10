@@ -35,6 +35,22 @@ final class TsukanshiNativeTests: XCTestCase {
         }
     }
 
+    func testFreeMockSetsStillMatchDisplayedExamCounts() throws {
+        let store = try TsukanshiContentStore()
+        for round in TsukanshiNativeConfig.examRounds {
+            for subject in TsukanshiNativeConfig.subjects {
+                let expected = TsukanshiNativeConfig.mockQuestionCountBySubject[subject]!
+                let questions = store.mockQuestions(round: round, subject: subject, premium: false)
+                XCTAssertEqual(
+                    questions.count,
+                    expected,
+                    "Free mock count must match the number displayed by the UI: \(round) \(subject)"
+                )
+                XCTAssertTrue(questions.allSatisfy { !$0.premium })
+            }
+        }
+    }
+
     func testThreeRoundsDoNotProduceIdenticalSubjectOrder() throws {
         let store = try TsukanshiContentStore()
         for subject in TsukanshiNativeConfig.subjects {
