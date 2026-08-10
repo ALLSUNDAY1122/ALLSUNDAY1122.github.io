@@ -1,7 +1,5 @@
 import Foundation
 import Combine
-import SwiftUI
-import UniformTypeIdentifiers
 
 struct Otsu4AttemptRecord: Codable, Identifiable, Equatable {
     let id: UUID
@@ -67,7 +65,9 @@ final class Otsu4LearningStore: ObservableObject {
     var weakCount: Int { state.weakIDs.count }
     var history: [Otsu4AttemptRecord] { state.history }
     var resumeSnapshot: Otsu4SessionSnapshot? { state.resume }
-    var seenCount: Int { state.seenIDs?.count ?? 0 }
+    var seenIDs: Set<String> { state.seenIDs ?? [] }
+    var seenCount: Int { seenIDs.count }
+    var totalCorrect: Int { state.history.reduce(0) { $0 + $1.correct } }
 
     var todayAnswered: Int {
         state.dailyAnswered[Self.dayKey(Date())] ?? 0
@@ -91,6 +91,22 @@ final class Otsu4LearningStore: ObservableObject {
         if remaining == 0 { return 0 }
         guard days > 0 else { return remaining }
         return Int(ceil(Double(remaining) / Double(days)))
+    }
+
+    // Compatibility with the Golden Master view API. Keep the canonical
+    // calculation in requiredDailyPace(totalAvailable:).
+    func requiredDailyPace(totalQuestions: Int) -> Int? {
+        requiredDailyPace(totalAvailable: totalQuestions)
+    }
+
+    func last35DayCounts(referenceDate: Date = Date()) -> [Int] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: referenceDate)
+        return (0..<35).map { offset in
+            let daysAgo = 34 - offset
+            guard let date = calendar.date(byAdding: .day, value: -daysAgo, to: today) else { return 0 }
+            return state.dailyAnswered[Self.dayKey(date)] ?? 0
+        }
     }
 
     func setGoal(_ goal: Int) {
@@ -231,25 +247,5 @@ final class Otsu4LearningStore: ObservableObject {
         f.timeZone = .current
         f.dateFormat = "yyyy-MM-dd"
         return f.string(from: date)
-    }
-}
-
-struct Otsu4BackupDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.json] }
-    var data: Data
-
-    init(data: Data = Data()) {
-        self.data = data
-    }
-
-    init(configuration: ReadConfiguration) throws {
-        guard let data = configuration.file.regularFileContents else {
-            throw CocoaError(.fileReadCorruptFile)
-        }
-        self.data = data
-    }
-
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        FileWrapper(regularFileWithContents: data)
     }
 }
