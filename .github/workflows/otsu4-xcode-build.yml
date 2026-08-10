@@ -113,8 +113,19 @@ jobs:
           print(f'{large[0]}|{large[1]}')
           PY
           cat /tmp/otsu4-simulators.txt
+      - name: Boot selected iPhone simulators
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          while IFS='|' read -r NAME UDID; do
+            echo "Booting $NAME ($UDID)"
+            xcrun simctl boot "$UDID" 2>/dev/null || true
+            xcrun simctl bootstatus "$UDID" -b
+          done < /tmp/otsu4-simulators.txt
       - name: Run native unit tests
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        timeout-minutes: 10
         working-directory: native-ios/Otsu4Sprint
         run: |
           set -euo pipefail
@@ -126,11 +137,15 @@ jobs:
             -scheme Otsu4Sprint \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$UDID" \
-            -destination-timeout 120 \
+            -destination-timeout 60 \
             -only-testing:Otsu4SprintTests \
-            -parallel-testing-enabled NO | xcpretty
+            -parallel-testing-enabled NO \
+            -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 60 \
+            -maximum-test-execution-time-allowance 120 | xcpretty
       - name: Run UI tests on small and large iPhone sizes
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        timeout-minutes: 20
         working-directory: native-ios/Otsu4Sprint
         run: |
           set -euo pipefail
@@ -142,9 +157,12 @@ jobs:
               -scheme Otsu4Sprint \
               -configuration Debug \
               -destination "platform=iOS Simulator,id=$UDID" \
-              -destination-timeout 120 \
+              -destination-timeout 60 \
               -only-testing:Otsu4SprintUITests \
-              -parallel-testing-enabled NO | xcpretty
+              -parallel-testing-enabled NO \
+              -test-timeouts-enabled YES \
+              -default-test-execution-time-allowance 90 \
+              -maximum-test-execution-time-allowance 180 | xcpretty
           done < /tmp/otsu4-simulators.txt
       - name: Enforce canonical App Store icon SHA
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
