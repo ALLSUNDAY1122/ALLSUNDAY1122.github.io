@@ -70,9 +70,7 @@ final class LearningStore: ObservableObject {
         return count
     }
 
-    var uniqueFields: [String] {
-        Array(Set(activeQuestions.map(\.field))).sorted()
-    }
+    var uniqueFields: [String] { Array(Set(activeQuestions.map(\.field))).sorted() }
 
     func fieldQuestions(_ field: String, premium: Bool) -> [Question] {
         activeQuestions.filter { $0.field == field && (premium || $0.isFree) }
@@ -88,8 +86,7 @@ final class LearningStore: ObservableObject {
     }
 
     func startField(_ field: String, premium: Bool) {
-        let pool = fieldQuestions(field, premium: premium)
-        startSession(title: "\(field)スプリント", field: field, pool: pool, count: state.goal, mockKey: nil)
+        startSession(title: "\(field)スプリント", field: field, pool: fieldQuestions(field, premium: premium), count: state.goal, mockKey: nil)
     }
 
     func startWeak(premium: Bool) {
@@ -106,10 +103,27 @@ final class LearningStore: ObservableObject {
     }
 
     func resume() {
-        guard state.inProgress != nil else { return }
+        guard var session = state.inProgress else { return }
+        if session.index >= session.ids.count {
+            route = .result
+            return
+        }
+
+        // If the user closed the quiz after grading but before tapping Next,
+        // advance to the first unanswered item instead of counting it twice.
+        while session.index < session.ids.count,
+              session.answers.contains(where: { $0.questionID == session.ids[session.index] }) {
+            session.index += 1
+        }
+        state.inProgress = session
         feedback = nil
         selectedAnswers = []
-        route = .quiz
+        if session.index >= session.ids.count {
+            finishSessionIfNeeded()
+        } else {
+            route = .quiz
+            persist()
+        }
     }
 
     func quitQuiz() {
@@ -139,7 +153,7 @@ final class LearningStore: ObservableObject {
     func nextQuestion() {
         guard var s = state.inProgress else { return }
         if s.index + 1 >= s.ids.count {
-            finishSession()
+            finishSessionIfNeeded()
             return
         }
         s.index += 1
@@ -147,20 +161,6 @@ final class LearningStore: ObservableObject {
         feedback = nil
         selectedAnswers = []
         persist()
-    }
-
-    func repeatLastSession() {
-        guard let h = state.history.first else { return }
-        let pool: [Question]
-        if h.title.hasPrefix("第") {
-            let parts = h.title.split(separator: " ")
-            let exam = Int(parts.first?.replacingOccurrences(of: "第", with: "").replacingOccurrences(of: "回", with: "") ?? "") ?? 111
-            let section = parts.dropFirst().joined(separator: " ")
-            pool = activeQuestions.filter { $0.exam == exam && $0.section == section }
-        } else {
-            pool = activeQuestions
-        }
-        startSession(title: h.title, field: h.title, pool: pool, count: h.total, mockKey: nil)
     }
 
     func clearCompletedSession() {
@@ -189,8 +189,7 @@ final class LearningStore: ObservableObject {
     func exportData() throws -> Data { try encoder.encode(state) }
 
     func importData(_ data: Data) throws {
-        let imported = try decoder.decode(LearningState.self, from: data)
-        state = imported
+        state = try decoder.decode(LearningState.self, from: data)
         sanitizeState()
         persist()
     }
@@ -209,8 +208,8 @@ final class LearningStore: ObservableObject {
         persist()
     }
 
-    func updateGoal(_ value: Int) { state.goal = [4,8,16].contains(value) ? value : 8; persist() }
-    func updateFontSize(_ value: Int) { state.fontSize = [16,18,20].contains(value) ? value : 16; persist() }
+    func updateGoal(_ value: Int) { state.goal = [4, 8, 16].contains(value) ? value : 8; persist() }
+    func updateFontSize(_ value: Int) { state.fontSize = [16, 18, 20].contains(value) ? value : 16; persist() }
     func updateShuffleQuestions(_ value: Bool) { state.shuffleQuestions = value; persist() }
     func updateShuffleChoices(_ value: Bool) { state.shuffleChoices = value; persist() }
     func updateExamDate(_ value: Date?) { state.examDate = value; persist() }
@@ -256,15 +255,11 @@ final class LearningStore: ObservableObject {
 
     private func grade(unknown: Bool) {
         guard feedback == nil, var s = state.inProgress, let q = currentQuestion else { return }
+        guard !s.answers.contains(where: { $0.questionID == q.id }) else { return }
         let selected = unknown ? [] : selectedAnswers
         let correct = !unknown && q.accepts(selected)
         let weakMessage = applyLearningResult(question: q, correct: correct, unknown: unknown)
-        let answer = SessionAnswer(questionID: q.id, correct: correct, unknown: unknown)
-        if let existing = s.answers.firstIndex(where: { $0.questionID == q.id }) {
-            s.answers[existing] = answer
-        } else {
-            s.answers.append(answer)
-        }
+        s.answers.append(SessionAnswer(questionID: q.id, correct: correct, unknown: unknown))
         state.inProgress = s
         feedback = AnswerFeedback(question: q, selected: selected, correct: correct, unknown: unknown, weakMessage: weakMessage)
         persist()
@@ -303,13 +298,21 @@ final class LearningStore: ObservableObject {
         return "この問題は正解として記録しました。"
     }
 
-    private func finishSession() {
-        guard let s = state.inProgress else { return }
+    private func finishSessionIfNeeded() {
+        guard var s = state.inProgress else { return }
+        if s.index >= s.ids.count {
+            route = .result
+            return
+        }
         let score = s.answers.filter(\.correct).count
         let total = s.ids.count
+        s.index = s.ids.count
+        state.inProgress = s
         state.history.insert(SessionHistory(id: UUID(), completedAt: Date(), title: s.title, score: score, total: total), at: 0)
         if state.history.count > 30 { state.history = Array(state.history.prefix(30)) }
         if let key = s.mockKey { state.mock[key] = MockResult(score: score, total: total, completedAt: Date()) }
+        feedback = nil
+        selectedAnswers = []
         route = .result
         persist()
     }
@@ -332,8 +335,7 @@ final class LearningStore: ObservableObject {
 
     private func loadState() {
         do {
-            let data = try Data(contentsOf: stateURL())
-            state = try decoder.decode(LearningState.self, from: data)
+            state = try decoder.decode(LearningState.self, from: Data(contentsOf: stateURL()))
         } catch {
             state = LearningState()
         }
@@ -344,8 +346,8 @@ final class LearningStore: ObservableObject {
         state.weak = state.weak.filter { validIDs.contains($0.key) }
         state.seen = state.seen.intersection(validIDs)
         if let s = state.inProgress, s.ids.contains(where: { !validIDs.contains($0) }) { state.inProgress = nil }
-        if ![4,8,16].contains(state.goal) { state.goal = 8 }
-        if ![16,18,20].contains(state.fontSize) { state.fontSize = 16 }
+        if ![4, 8, 16].contains(state.goal) { state.goal = 8 }
+        if ![16, 18, 20].contains(state.fontSize) { state.fontSize = 16 }
         persist()
     }
 
@@ -356,7 +358,7 @@ final class LearningStore: ObservableObject {
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
             try data.write(to: url, options: [.atomic])
         } catch {
-            // Persistence failure must not crash a study session.
+            // A persistence failure must not crash a study session.
         }
     }
 
