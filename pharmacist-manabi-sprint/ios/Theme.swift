@@ -82,12 +82,15 @@ struct ScreenTitle: View {
 }
 
 struct ProgressRing<Center: View>: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let progress: Double
     let center: Center
+
     init(progress: Double, @ViewBuilder center: () -> Center) {
         self.progress = progress
         self.center = center()
     }
+
     var body: some View {
         ZStack {
             Circle().stroke(Color.sprintLine.opacity(0.9), lineWidth: 8)
@@ -95,7 +98,7 @@ struct ProgressRing<Center: View>: View {
                 .trim(from: 0, to: max(0, min(1, progress)))
                 .stroke(Color.sprintShu, style: StrokeStyle(lineWidth: 8, lineCap: .round))
                 .rotationEffect(.degrees(-90))
-                .animation(.easeOut(duration: 0.3), value: progress)
+                .animation(reduceMotion ? nil : .easeOut(duration: 0.3), value: progress)
             center
         }
         .frame(width: 82, height: 82)
