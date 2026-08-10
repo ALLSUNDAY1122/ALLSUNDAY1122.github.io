@@ -18,12 +18,12 @@ targets:
     sources:
       - path: NetworkSpecialist
         excludes:
-          - WebApp
           - Assets.xcassets
           - PrivacyInfo.xcprivacy
           - Info.plist
+          - Resources
     resources:
-      - path: NetworkSpecialist/WebApp
+      - path: NetworkSpecialist/Resources/questions.native.json
       - path: NetworkSpecialist/Assets.xcassets
       - path: NetworkSpecialist/PrivacyInfo.xcprivacy
     info:
@@ -33,4 +33,32 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.networkspecialist
         PRODUCT_NAME: NetworkSpecialist
         INFOPLIST_FILE: NetworkSpecialist/Info.plist
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: "MN3D2ZM44N"
+    scheme:
+      testTargets:
+        - NetworkSpecialistTests
+        - NetworkSpecialistUITests
+
+  NetworkSpecialistTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: NetworkSpecialistTests
+    dependencies:
+      - target: NetworkSpecialist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.networkspecialist.tests
+        DEVELOPMENT_TEAM: "MN3D2ZM44N"
+
+  NetworkSpecialistUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: NetworkSpecialistUITests
+    dependencies:
+      - target: NetworkSpecialist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.networkspecialist.uitests
+        DEVELOPMENT_TEAM: "MN3D2ZM44N"
