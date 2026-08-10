@@ -183,13 +183,16 @@ jobs:
           import subprocess, sys, time
           udid = sys.argv[1]
           for attempt in range(24):
-              result = subprocess.run(
-                  ['xcrun', 'simctl', 'list', 'devices', 'available'],
-                  check=False, capture_output=True, text=True, timeout=10
-              )
-              if udid in result.stdout and '(Booted)' in result.stdout:
-                  print(f'{udid} is Booted')
-                  break
+              try:
+                  result = subprocess.run(
+                      ['xcrun', 'simctl', 'list', 'devices', 'available'],
+                      check=False, capture_output=True, text=True, timeout=20
+                  )
+                  if udid in result.stdout and '(Booted)' in result.stdout:
+                      print(f'{udid} is Booted')
+                      break
+              except subprocess.TimeoutExpired:
+                  print('simctl list timed out during retry; waiting for CoreSimulator')
               time.sleep(5)
           else:
               raise SystemExit(f'{udid} did not return to Booted state')
