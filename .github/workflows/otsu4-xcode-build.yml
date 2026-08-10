@@ -202,18 +202,34 @@ jobs:
           run_ui_suite() {
             local log_path="$1"
             set +e
-            xcodebuild test \
-              -project Otsu4Sprint.xcodeproj \
-              -scheme Otsu4Sprint \
-              -configuration Debug \
-              -destination "platform=iOS Simulator,id=$UDID" \
-              -destination-timeout 60 \
-              -only-testing:Otsu4SprintUITests \
-              -parallel-testing-enabled NO \
-              -test-timeouts-enabled YES \
-              -default-test-execution-time-allowance 90 \
-              -maximum-test-execution-time-allowance 180 2>&1 | tee "$log_path" | xcpretty
-            local xcodebuild_status=${PIPESTATUS[0]}
+            /usr/bin/python3 - "$log_path" "$UDID" <<'PY'
+          import subprocess, sys
+          log_path, udid = sys.argv[1:]
+          cmd = [
+              'xcodebuild', 'test',
+              '-project', 'Otsu4Sprint.xcodeproj',
+              '-scheme', 'Otsu4Sprint',
+              '-configuration', 'Debug',
+              '-destination', f'platform=iOS Simulator,id={udid}',
+              '-destination-timeout', '60',
+              '-only-testing:Otsu4SprintUITests',
+              '-parallel-testing-enabled', 'NO',
+              '-test-timeouts-enabled', 'YES',
+              '-default-test-execution-time-allowance', '90',
+              '-maximum-test-execution-time-allowance', '180',
+              'CODE_SIGNING_ALLOWED=NO',
+              'ASSETCATALOG_COMPILER_APPICON_NAME=',
+          ]
+          with open(log_path, 'wb') as log:
+              try:
+                  result = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, timeout=540)
+                  raise SystemExit(result.returncode)
+              except subprocess.TimeoutExpired:
+                  log.write(b'\nOTSU4_UI_XCODEBUILD_HARD_TIMEOUT_540S\n')
+                  raise SystemExit(124)
+          PY
+            local xcodebuild_status=$?
+            cat "$log_path" | xcpretty || true
             set -e
             return "$xcodebuild_status"
           }
@@ -230,6 +246,8 @@ jobs:
                 run_ui_suite "${LOG_PATH}.retry"
               else
                 echo "UI test failure was not a hosted-Xcode launch timeout; not retrying."
+                grep -E 'OTSU4_UI_XCODEBUILD_HARD_TIMEOUT|Timed out|timeout|error:|Assertion Failure|XCTAssert|TEST FAILED|Executed [0-9]+ tests' "$LOG_PATH" | tail -180 || true
+                tail -100 "$LOG_PATH" || true
                 exit 1
               fi
             fi
