@@ -43,19 +43,27 @@ fi
 boot_device() {
   local udid="$1"
   /usr/bin/python3 - "$udid" <<'PY'
-import subprocess, sys
+import subprocess, sys, time
 udid = sys.argv[1]
 try:
     subprocess.run(['xcrun', 'simctl', 'boot', udid], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
 except subprocess.TimeoutExpired:
     print('NETWORK_SIMCTL_BOOT_HARD_TIMEOUT_30S', file=sys.stderr)
     raise SystemExit(124)
-try:
-    result = subprocess.run(['xcrun', 'simctl', 'bootstatus', udid, '-b'], timeout=120)
-except subprocess.TimeoutExpired:
-    print('NETWORK_SIMCTL_BOOTSTATUS_HARD_TIMEOUT_120S', file=sys.stderr)
-    raise SystemExit(124)
-raise SystemExit(result.returncode)
+for attempt in range(36):
+    try:
+        result = subprocess.run(
+            ['xcrun', 'simctl', 'list', 'devices', 'available'],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=10
+        )
+        if result.returncode == 0 and udid in result.stdout and '(Booted)' in result.stdout:
+            print(f'NETWORK_SIMULATOR_BOOTED attempt={attempt + 1}')
+            raise SystemExit(0)
+    except subprocess.TimeoutExpired:
+        print('NETWORK_SIMCTL_LIST_TIMEOUT_RETRYING', file=sys.stderr)
+    time.sleep(5)
+print('NETWORK_SIMULATOR_DID_NOT_BOOT_WITHIN_180S', file=sys.stderr)
+raise SystemExit(124)
 PY
 }
 
