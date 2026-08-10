@@ -14,11 +14,14 @@ def require(cond: bool, message: str) -> None:
 
 
 def main() -> int:
-    swift_files = [p for p in IOS.glob("*.swift") if p.name != "ShoshiSprintTests.swift"]
+    swift_files = list(IOS.glob("*.swift"))
     swift = "\n".join(p.read_text(encoding="utf-8") for p in swift_files)
+    models = (IOS / "Models.swift").read_text(encoding="utf-8")
+    app_model = (IOS / "AppModel.swift").read_text(encoding="utf-8")
     project = (IOS / "project.yml").read_text(encoding="utf-8")
     privacy = (IOS / "PrivacyInfo.xcprivacy").read_text(encoding="utf-8")
     prepare = (IOS / "prepare-ios.sh").read_text(encoding="utf-8")
+    tests = (IOS / "Tests" / "ShoshiSprintTests.swift").read_text(encoding="utf-8")
     questions = json.loads((ROOT / "content-loop" / "questions.generated.json").read_text(encoding="utf-8"))
 
     forbidden = ["import WebKit", "WKWebView", "UIViewRepresentable", "loadFileURL"]
@@ -36,6 +39,10 @@ def main() -> int:
     require("state.resume" in swift and "answeredChoice" in swift and "answeredCorrect" in swift, "mid-session resume contract missing")
     require("fileExporter" in swift and "fileImporter" in swift, "JSON backup UI missing")
     require("UserDefaults.standard" in swift, "native local persistence missing")
+    require("trialCompleted" not in models and "trialConsumed" not in models, "trial entitlement must not be part of exported LearningState")
+    require("trialConsumedKey" in app_model and "UserDefaults.standard.set(true, forKey: Self.trialConsumedKey)" in app_model,
+            "trial consumption must use separate device persistence")
+    require('json.contains("trialConsumed")' in tests, "backup test must verify trial state is excluded")
     require("Product.products(for:" in swift, "StoreKit 2 product loading missing")
     require("Transaction.currentEntitlements" in swift, "StoreKit entitlement audit missing")
     require("Transaction.updates" in swift, "StoreKit transaction update observer missing")
@@ -69,6 +76,7 @@ def main() -> int:
         "weak_release_correct_streak": 3,
         "mid_session_resume": True,
         "json_backup": True,
+        "trial_state_excluded_from_backup": True,
         "offline_bundle": True,
         "storekit2": True,
         "questions": 210,
