@@ -12,12 +12,18 @@ struct QuestionRepository {
     }
 
     static func load(bundle: Bundle = .main) throws -> QuestionRepository {
-        let url = bundle.url(forResource: "questions.native", withExtension: "json")
+        let bundledURL = bundle.url(forResource: "questions.native", withExtension: "json")
             ?? bundle.url(forResource: "questions.native", withExtension: "json", subdirectory: "Resources")
-        guard let url else {
-            throw RepositoryError.missingResource
+
+        let data: Data
+        if let bundledURL {
+            data = try Data(contentsOf: bundledURL)
+        } else {
+            // The same audited payload is generated into Swift before XcodeGen runs.
+            // This keeps offline startup and unit tests independent of Bundle resource layout.
+            data = GeneratedQuestionPayload.data
         }
-        let data = try Data(contentsOf: url)
+
         let decoder = JSONDecoder()
         let payload = try decoder.decode(QuestionPayload.self, from: data)
         try validate(payload)
@@ -111,7 +117,6 @@ struct QuestionRepository {
     }
 
     enum RepositoryError: LocalizedError {
-        case missingResource
         case invalidQuestionCount(Int)
         case invalidUniqueCount(Int)
         case duplicateIDs
@@ -123,8 +128,6 @@ struct QuestionRepository {
 
         var errorDescription: String? {
             switch self {
-            case .missingResource:
-                return "questions.native.json がアプリに含まれていません。"
             case .invalidQuestionCount(let count):
                 return "出題枠が \(count) 問です。正本は75問です。"
             case .invalidUniqueCount(let count):
