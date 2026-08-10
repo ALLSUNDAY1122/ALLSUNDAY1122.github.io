@@ -26,12 +26,16 @@ final class LearningStore: ObservableObject {
         decoder.dateDecodingStrategy = .iso8601
         self.decoder = decoder
 
+        let loadedRepository: QuestionRepository
+        let startupMessage: String?
         do {
-            self.repository = try QuestionRepository.load(bundle: bundle)
+            loadedRepository = try QuestionRepository.load(bundle: bundle)
+            startupMessage = nil
         } catch {
-            self.repository = .empty
-            self.startupError = error.localizedDescription
+            loadedRepository = .empty
+            startupMessage = error.localizedDescription
         }
+        self.repository = loadedRepository
 
         let baseURL: URL
         if let persistenceURL {
@@ -61,6 +65,7 @@ final class LearningStore: ObservableObject {
             self.state.contentVersion = contentVersion
             self.state.inProgress = nil
         }
+        self.startupError = startupMessage
         self.session = self.state.inProgress
     }
 
