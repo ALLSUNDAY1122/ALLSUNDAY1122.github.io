@@ -1,4 +1,4 @@
-name: Pharmacist Native Compile macOS14
+name: Pharmacist Native Compile Xcode16
 on:
   workflow_dispatch:
   pull_request:
@@ -9,26 +9,12 @@ on:
       - 'pharmacist-manabi-sprint/scripts/validate_release.py'
 jobs:
   compile:
-    runs-on: macos-14
+    runs-on: macos-15-intel
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Select installed Xcode 16 or later
-        shell: bash
+      - name: Verify Xcode 16 or later
         run: |
-          set -euo pipefail
-          echo 'Installed Xcode apps:'
-          find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -print | sort -V
-          XCODE_APP=$(find /Applications -maxdepth 1 -type d -name 'Xcode_16*.app' -print | sort -V | tail -1)
-          if [[ -z "$XCODE_APP" ]]; then
-            XCODE_APP=$(find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -print | while read -r app; do
-              version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist" 2>/dev/null || true)
-              major=${version%%.*}
-              if [[ "$major" =~ ^[0-9]+$ ]] && [[ "$major" -ge 16 ]]; then echo "$app"; fi
-            done | sort -V | tail -1)
-          fi
-          test -n "$XCODE_APP"
-          sudo xcode-select -s "$XCODE_APP/Contents/Developer"
           xcodebuild -version
           MAJOR=$(xcodebuild -version | awk '/Xcode/{split($2,a,".");print a[1]}')
           test "$MAJOR" -ge 16
