@@ -6,7 +6,7 @@ errors = []
 required = [
     'index.html','style-v21.css','app-v21.js','questions-meta.js','questions-2025-a.js','questions-2025-b.js','questions-2024-a.js','questions-2024-b.js','questions-2023-a.js','questions-2023-b.js','questions-ui-fixes.js','manifest.json','sw.js','support.html','privacy.html',
     'ios/project.yml','ios/NetworkSpecialist/NetworkSpecialistApp.swift','ios/NetworkSpecialist/ContentView.swift',
-    'ios/NetworkSpecialist/LocalWebView.swift','ios/NetworkSpecialist/PrivacyInfo.xcprivacy',
+    'ios/NetworkSpecialist/PrivacyInfo.xcprivacy',
     'ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/APPICON_SOURCE.md'
 ]
 for rel in required:
