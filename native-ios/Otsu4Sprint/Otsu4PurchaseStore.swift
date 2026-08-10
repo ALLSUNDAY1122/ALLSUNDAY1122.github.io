@@ -60,6 +60,8 @@ final class Otsu4PurchaseStore: ObservableObject {
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
             guard transaction.productID == Self.premiumProductID else { continue }
+            guard transaction.revocationDate == nil else { continue }
+            guard transaction.isUpgraded == false else { continue }
             entitled = true
             break
         }
@@ -97,7 +99,9 @@ final class Otsu4PurchaseStore: ObservableObject {
                     state = .failed("購入情報を確認できませんでした")
                     return
                 }
-                guard transaction.productID == Self.premiumProductID else {
+                guard transaction.productID == Self.premiumProductID,
+                      transaction.revocationDate == nil,
+                      transaction.isUpgraded == false else {
                     state = .failed("購入商品を確認できませんでした")
                     return
                 }
@@ -123,6 +127,10 @@ final class Otsu4PurchaseStore: ObservableObject {
             for await result in Transaction.updates {
                 guard !Task.isCancelled else { return }
                 guard case .verified(let transaction) = result else { continue }
+                guard transaction.productID == Self.premiumProductID else {
+                    await transaction.finish()
+                    continue
+                }
                 await transaction.finish()
                 await self?.refreshEntitlement()
             }
