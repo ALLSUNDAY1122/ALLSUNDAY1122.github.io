@@ -153,6 +153,7 @@ struct HistoryView: View {
 
 struct SettingsView: View {
     @EnvironmentObject private var store: LearningStore
+    @EnvironmentObject private var purchases: PremiumPurchaseStore
     @State private var exportDocument: BackupDocument?
     @State private var showExporter = false
     @State private var showImporter = false
@@ -235,13 +236,62 @@ struct SettingsView: View {
                         }
                     }
 
+                    if purchases.isConfigured {
+                        settingsSection("プレミアム") {
+                            VStack(alignment: .leading, spacing: 10) {
+                                if purchases.isPremium {
+                                    Label("購入済み", systemImage: "checkmark.seal.fill")
+                                        .appSans(14, weight: .bold)
+                                        .foregroundStyle(AppTheme.midori)
+                                } else if let price = purchases.displayPrice {
+                                    HStack {
+                                        Text("買い切り")
+                                            .appSans(13, weight: .bold)
+                                            .foregroundStyle(AppTheme.ink)
+                                        Spacer()
+                                        Text(price)
+                                            .appSans(14, weight: .bold)
+                                            .foregroundStyle(AppTheme.ai)
+                                    }
+                                    Button {
+                                        Task { await purchases.purchase() }
+                                    } label: {
+                                        settingsAction("cart", "プレミアムを購入")
+                                    }
+                                    .buttonStyle(.plain)
+                                    .disabled(purchaseBusy)
+                                    .accessibilityIdentifier("settings.purchasePremium")
+                                } else {
+                                    ProgressView("App Storeから商品情報を確認中")
+                                        .appSans(12)
+                                }
+
+                                Button {
+                                    Task { await purchases.restorePurchases() }
+                                } label: {
+                                    settingsAction("arrow.clockwise", "購入を復元")
+                                }
+                                .buttonStyle(.plain)
+                                .disabled(purchaseBusy)
+                                .accessibilityIdentifier("settings.restorePurchases")
+
+                                if let message = purchases.message {
+                                    Text(message)
+                                        .appSans(11)
+                                        .foregroundStyle(AppTheme.ink2)
+                                        .accessibilityLabel(message)
+                                }
+                            }
+                        }
+                    }
+
                     settingsSection("このアプリ") {
                         VStack(alignment: .leading, spacing: 10) {
                             infoRow("コンテンツ", store.repository.payload.contentVersion)
                             infoRow("監査記録日時", store.repository.payload.sourceCheckedAt.isEmpty ? "未取得" : store.repository.payload.sourceCheckedAt)
                             infoRow("法令基準日", store.repository.payload.lawBaselineDate ?? "正本に定義なし")
                             infoRow("問題", "75出題枠 / 68ユニーク")
-                            infoRow("課金", "初期版なし")
+                            infoRow("課金", purchases.isConfigured ? "StoreKit 2 非消耗型" : "商品ID未設定（Release Gate）")
                         }
                     }
 
@@ -301,6 +351,10 @@ struct SettingsView: View {
             Text(importError ?? store.importMessage ?? "")
         }
         .accessibilityIdentifier("settings.screen")
+    }
+
+    private var purchaseBusy: Bool {
+        purchases.status == .loading || purchases.status == .purchasing || purchases.status == .restoring
     }
 
     @ViewBuilder
