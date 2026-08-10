@@ -1,22 +1,42 @@
 # RELEASE STATUS
 
-- 状態：開発ループ完了・TestFlight実行ゲート待ち
+更新: 2026-08-10 JST
+
+- 状態：純SwiftUIネイティブ化・実装/UI/Release Gate再監査中
 - Version：1.0.0
 - Build：1
-- Bundle ID候補：jp.allsunday1122.networkspecialist
-- GitHub正本：main / `network-specialist-sprint/`
-- 採用PR：#4092（merged）
-- main統合コミット：19e8e4cd825e07828eedd40be995f0951740272f
-- Web公開パス：/network-specialist-sprint/
-- iOS方式：SwiftUI + WKWebView（ローカル資産同梱）
-- ビルド方式：Codemagic + XcodeGen
-- 専用CI：`.github/workflows/network-specialist-validate.yml` をmainへ追加済み
-- 静的リリース監査：PASS
-- 問題監査：75出題枠 / 68ユニーク / 歴史的再出題・実質同一7出題をcanonical化
-- UI 30状態監査：PASS
-- データ収集：初期版なし
+- Bundle ID：`jp.allsunday1122.networkspecialist`（ユーザー正本固定）
+- Apple Team ID：`MN3D2ZM44N`（ユーザー正本固定）
+- Codemagic profile：`networkspecialist_appstore`（ユーザー正本固定）
+- App Store Connect App ID：今回の#7正本ブロックに未記載。推測禁止。
+- GitHub正本候補：`agent/network-specialist-native-swiftui` / PR #4126
+- Web公開版：既存の価値検証・問題確認用として維持
+- iOS方式：**純SwiftUIネイティブ**。WKWebView/WebKitはアプリターゲットから削除
+- データ：既監査75出題枠 / 68ユニークを内容変更せずネイティブJSONへ変換
+- contentVersion：`nw-a2-2026-08-v1`
+- lawBaselineDate：資格正本に値がないため `null` を保持し推測しない
+- sourceCheckedAt：既存監査記録の生成日時を引継ぎ
+- IAP：#7の資格別Product IDが正本にないため初期版なし。Product IDを推測しない
+- データ収集：なし
 - ログイン：なし
 - 広告：なし
 - 解析：なし
-- 課金：初期版なし。追加時はPrivacy・IAP・申請原稿のループを再発火。
-- 残ゲート：正本AppIcon PNGのiOS資産配置、Apple Developer/App Store Connect/Codemagicの本人認証、署名、TestFlightアップロード・実機確認、Support/Privacy公開HTTP確認
+- Distribution：App Store
+- TestFlight：Internal Testing only
+- App Store本審査自動提出：禁止
+
+## 監査状態
+- 問題・正答・解説・出典・権利監査：既存PASSを維持（問題内容を変更していないため）
+- 実装監査：ネイティブ化により旧PASS失効 → PR #4126で再監査中
+- UI監査：ネイティブ化により旧30状態PASS失効 → Simulator/UI test後に再判定
+- Release Gate：ネイティブ化により再発火。署名前ゲート未完了
+
+## Release blocker
+1. 正本AppIcon `07_ネットワークスペシャリスト試験.png` をGitHub checkoutへ同一SHAで配置する必要がある（再生成禁止）
+2. #7のApp Store Connect App IDが今回のユーザー正本に未記載
+3. macOS Unit/UI test・サイズ別検証の最終PASS待ち
+4. Codemagic App Store Connect integration / signingの認証
+5. Signed IPA生成・App Store Connect upload
+6. TestFlight内部実機確認
+
+本審査へは進めない。
