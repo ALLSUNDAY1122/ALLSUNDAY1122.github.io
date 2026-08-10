@@ -46,6 +46,45 @@ final class TsukanshiNativeTests: XCTestCase {
     }
 
     @MainActor
+    func testSessionSnapshotTracksAnswerAndAdvanceForResume() throws {
+        let first = LearningQuestion(
+            id: "resume-1",
+            subject: "通関業法",
+            topic: "途中再開",
+            answerType: .singleChoice,
+            prompt: "一問目",
+            choices: ["正", "誤"],
+            correctIndices: [0],
+            memoryPoint: "resume",
+            explanation: "test",
+            sourceCheckedAt: "2026-08-10",
+            lawBaselineDate: "2026-07-01",
+            contentVersion: "test"
+        )
+        let second = LearningQuestion(
+            id: "resume-2",
+            subject: "通関業法",
+            topic: "途中再開",
+            answerType: .singleChoice,
+            prompt: "二問目",
+            choices: ["正", "誤"],
+            correctIndices: [0],
+            memoryPoint: "resume",
+            explanation: "test",
+            sourceCheckedAt: "2026-08-10",
+            lawBaselineDate: "2026-07-01",
+            contentVersion: "test"
+        )
+        let session = TsukanshiStudySession(kind: .sprint, questions: [first, second])
+        _ = try session.answer(AnswerPayload(selectedIndices: [0]))
+        XCTAssertEqual(session.snapshot.currentIndex, 0)
+        XCTAssertEqual(session.snapshot.answers[first.id]?.selectedIndices, [0])
+        session.advance()
+        XCTAssertEqual(session.snapshot.currentIndex, 1)
+        XCTAssertEqual(session.currentQuestion?.id, second.id)
+    }
+
+    @MainActor
     func testMockMultiChoiceIsStoredOnlyAtRequiredSelectionCount() throws {
         let question = LearningQuestion(
             id: "mock-multi",
