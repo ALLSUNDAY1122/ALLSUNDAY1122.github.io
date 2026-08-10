@@ -1,6 +1,8 @@
 import Foundation
 
 enum LearningLogic {
+    private static let maxBackupBytes = 5 * 1024 * 1024
+
     static func isCorrect(question: Question, choice: Int) -> Bool {
         question.isAllCorrect || question.officialAnswerNo == choice
     }
@@ -74,12 +76,36 @@ enum LearningLogic {
     }
 
     static func importJSON(_ data: Data) throws -> LearningState {
+        guard data.count <= maxBackupBytes else {
+            throw backupError(2, "バックアップファイルが大きすぎます。")
+        }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let state = try decoder.decode(LearningState.self, from: data)
-        guard state.version <= LearningState.currentVersion else {
-            throw NSError(domain: "ShoshiBackup", code: 1, userInfo: [NSLocalizedDescriptionKey: "このバックアップは新しいバージョンで作成されています。"])
+        guard state.version > 0, state.version <= LearningState.currentVersion else {
+            throw backupError(1, "このバックアップのバージョンには対応していません。")
+        }
+        guard [4, 8, 16].contains(state.dailyGoal) else {
+            throw backupError(3, "1日の目標値が不正です。")
+        }
+        guard ["small", "medium", "large"].contains(state.textSize) else {
+            throw backupError(4, "文字サイズ設定が不正です。")
+        }
+        guard state.attempts.values.allSatisfy({ stat in
+            stat.answered >= 0 && stat.correct >= 0 && stat.correct <= stat.answered && stat.correctStreak >= 0 && stat.correctStreak <= stat.correct
+        }) else {
+            throw backupError(5, "問題別学習履歴が不正です。")
+        }
+        guard state.days.values.allSatisfy({ $0.answered >= 0 && $0.correct >= 0 && $0.correct <= $0.answered }) else {
+            throw backupError(6, "日別学習履歴が不正です。")
+        }
+        guard state.completionCounts.values.allSatisfy({ $0 >= 0 }) else {
+            throw backupError(7, "完答回数が不正です。")
         }
         return state
+    }
+
+    private static func backupError(_ code: Int, _ message: String) -> NSError {
+        NSError(domain: "ShoshiBackup", code: code, userInfo: [NSLocalizedDescriptionKey: message])
     }
 }
