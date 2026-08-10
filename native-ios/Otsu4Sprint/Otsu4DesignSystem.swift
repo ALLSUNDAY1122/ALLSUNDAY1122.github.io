@@ -17,11 +17,27 @@ enum Otsu4Theme {
     static let line = Color(hex: 0xECE4D6)
 
     static func serif(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight, design: .serif)
+        .system(textStyle(for: size), design: .serif, weight: weight)
     }
 
     static func sans(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight, design: .default)
+        .system(textStyle(for: size), design: .default, weight: weight)
+    }
+
+    private static func textStyle(for size: CGFloat) -> Font.TextStyle {
+        switch size {
+        case ..<12.5: return .caption2
+        case ..<13.5: return .caption
+        case ..<14.5: return .footnote
+        case ..<15.5: return .subheadline
+        case ..<16.5: return .callout
+        case ..<18.5: return .body
+        case ..<20.5: return .headline
+        case ..<23.5: return .title3
+        case ..<27.5: return .title2
+        case ..<31.5: return .title
+        default: return .largeTitle
+        }
     }
 }
 
@@ -91,9 +107,12 @@ struct Otsu4ProgressRing: View {
             Text(label)
                 .font(Otsu4Theme.sans(16, weight: .bold))
                 .foregroundStyle(Otsu4Theme.ink)
+                .minimumScaleFactor(0.72)
         }
         .frame(width: 82, height: 82)
-        .accessibilityLabel("今日の進捗 \(label)")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("今日の進捗")
+        .accessibilityValue(label)
     }
 }
 
@@ -119,6 +138,7 @@ struct Otsu4MemoryBlock: View {
                 .frame(width: 4)
         }
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -149,7 +169,7 @@ extension Color {
             .sRGB,
             red: Double((hex >> 16) & 0xFF) / 255,
             green: Double((hex >> 8) & 0xFF) / 255,
-            blue: Double(hex & 0xFF) / 255,
+            blue: Double((hex & 0xFF) / 255,
             opacity: 1
         )
     }
