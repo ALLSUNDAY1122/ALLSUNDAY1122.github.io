@@ -9,10 +9,10 @@ struct Otsu4SprintApp: App {
     var body: some Scene {
         WindowGroup {
             if isAccessibilityTextUITest {
-                Otsu4NativeRootView()
+                Otsu4GoldenRootView()
                     .dynamicTypeSize(.accessibility3)
             } else {
-                Otsu4NativeRootView()
+                Otsu4GoldenRootView()
             }
         }
     }
