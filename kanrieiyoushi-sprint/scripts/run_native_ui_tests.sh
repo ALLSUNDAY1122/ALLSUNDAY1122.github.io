@@ -42,25 +42,31 @@ run_one() {
   local LOG="$LOG_DIR/${LABEL}.log"
   echo "=== XCTest start: ${LABEL} ==="
   set +e
-  xcodebuild test \
-    -project "$PROJECT" \
-    -scheme "$SCHEME" \
-    -destination "platform=iOS Simulator,id=$UDID" \
-    -destination-timeout 45 \
-    -parallel-testing-enabled NO \
-    -test-timeouts-enabled YES \
-    -default-test-execution-time-allowance 35 \
-    -maximum-test-execution-time-allowance 60 \
-    -only-testing:"$TEST" \
-    CODE_SIGNING_ALLOWED=NO \
-    ASSETCATALOG_COMPILER_APPICON_NAME= \
-    >"$LOG" 2>&1
+  python3 - "$LOG" "$PROJECT" "$SCHEME" "$UDID" "$TEST" <<'PY'
+import subprocess,sys
+log,project,scheme,udid,test=sys.argv[1:]
+cmd=[
+  'xcodebuild','test','-project',project,'-scheme',scheme,
+  '-destination',f'platform=iOS Simulator,id={udid}',
+  '-destination-timeout','45','-parallel-testing-enabled','NO',
+  '-test-timeouts-enabled','YES','-default-test-execution-time-allowance','35',
+  '-maximum-test-execution-time-allowance','60',f'-only-testing:{test}',
+  'CODE_SIGNING_ALLOWED=NO','ASSETCATALOG_COMPILER_APPICON_NAME='
+]
+with open(log,'wb') as f:
+    try:
+        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=75)
+        raise SystemExit(result.returncode)
+    except subprocess.TimeoutExpired:
+        f.write(b'\nKANRI_XCTEST_HARD_TIMEOUT_75S\n')
+        raise SystemExit(124)
+PY
   local STATUS=$?
   set -e
   if [[ $STATUS -ne 0 ]]; then
-    echo "=== ${LABEL} XCTest FAILURE ===" >&2
-    grep -E "Test Case .* (failed|passed)|Assertion Failure|XCTAssert|error:|timed out|Timeout|Failure|TEST FAILED|Executed [0-9]+ tests" "$LOG" | tail -160 >&2 || true
-    tail -60 "$LOG" >&2 || true
+    echo "=== ${LABEL} XCTest FAILURE status=${STATUS} ===" >&2
+    grep -E "KANRI_XCTEST_HARD_TIMEOUT|Test Case .* (failed|passed)|Assertion Failure|XCTAssert|error:|timed out|Timeout|Failure|TEST FAILED|Executed [0-9]+ tests" "$LOG" | tail -180 >&2 || true
+    tail -70 "$LOG" >&2 || true
     echo "=== end ${LABEL} XCTest FAILURE ===" >&2
     return "$STATUS"
   fi
