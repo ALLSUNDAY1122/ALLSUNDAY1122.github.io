@@ -1,0 +1,63 @@
+name: Tsukanshi Native Fast Preflight
+
+on:
+  push:
+    paths:
+      - 'tsukanshi-sprint/native-ios/**'
+      - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/tsukanshi-native-fast.yml'
+  pull_request:
+    paths:
+      - 'tsukanshi-sprint/native-ios/**'
+      - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/tsukanshi-native-fast.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  fast-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit source content and export native JSON
+        run: |
+          cd tsukanshi-sprint
+          node validate-content.mjs
+          node validate-editorial-final.mjs
+          mkdir -p /tmp/tsukanshi-native
+          node export-native-content.mjs /tmp/tsukanshi-native/tsukanshi-questions.json
+          python3 - <<'PY'
+          import json
+          data=json.load(open('/tmp/tsukanshi-native/tsukanshi-questions.json',encoding='utf-8'))
+          assert len(data['questions'])==492
+          assert data['studyQuestionCount']==480
+          assert data['declarationCount']==12
+          assert all(q['sourceCheckedAt'] and q['rightsBasis'] for q in data['questions'])
+          assert all(q['sourceRefs'] or 'sourceType=appMetadata' in q['rightsBasis'] for q in data['questions'])
+          print('PASS: evidence-backed native export')
+          print('structured metadata warnings:',len(data.get('auditWarnings',[])))
+          PY
+      - name: Reject WebView native implementation
+        run: |
+          ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' tsukanshi-sprint/native-ios --include='*.swift'
+          ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' native-ios/LearningSprintCore --include='*.swift'
+      - name: Parse all Swift sources
+        run: |
+          swift --version
+          find native-ios/LearningSprintCore tsukanshi-sprint/native-ios -type f -name '*.swift' -print0 | while IFS= read -r -d '' file; do
+            echo "Parsing $file"
+            swiftc -parse "$file"
+          done
