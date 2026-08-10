@@ -57,11 +57,30 @@ final class TsukanshiContentStore {
     func mockQuestions(round: String, subject: String, premium: Bool) -> [LearningQuestion] {
         let count = TsukanshiNativeConfig.mockQuestionCountBySubject[subject] ?? 8
         let candidates = questions.filter { $0.subject == subject && (premium || !$0.premium) }
+        guard candidates.count >= count else { return candidates }
         let seedString = "tsukanshi|\(round)|\(subject)|\(bank.contentVersion)"
-        let seed = seedString.utf8.reduce(UInt64(1469598103934665603)) { partial, byte in
+        var generator = NativeLCG(state: fnv1a(seedString))
+        var shuffled = candidates
+        if shuffled.count > 1 {
+            for index in stride(from: shuffled.count - 1, through: 1, by: -1) {
+                let swapIndex = Int(generator.next() % UInt64(index + 1))
+                if swapIndex != index { shuffled.swapAt(index, swapIndex) }
+            }
+        }
+        return Array(shuffled.prefix(count))
+    }
+
+    private func fnv1a(_ value: String) -> UInt64 {
+        value.utf8.reduce(UInt64(1469598103934665603)) { partial, byte in
             (partial ^ UInt64(byte)) &* 1099511628211
         }
-        return Array(LearningEngine.selectSprint(from: candidates, target: 16, isPremium: premium, seed: seed).prefix(count)) +
-            Array(candidates.dropFirst(16).prefix(max(0, count - 16)))
+    }
+}
+
+private struct NativeLCG {
+    var state: UInt64
+    mutating func next() -> UInt64 {
+        state = 2862933555777941757 &* state &+ 3037000493
+        return state
     }
 }
