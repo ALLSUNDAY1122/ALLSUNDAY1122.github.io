@@ -3,9 +3,12 @@ options:
   minimumXcodeGenVersion: 2.38.0
   deploymentTarget:
     iOS: "16.0"
+packages:
+  LearningSprintCore:
+    path: ../../native-ios/LearningSprintCore
 settings:
   base:
-    SWIFT_VERSION: 5.0
+    SWIFT_VERSION: 5.9
     MARKETING_VERSION: 1.0.0
     CURRENT_PROJECT_VERSION: 1
     GENERATE_INFOPLIST_FILE: NO
@@ -13,21 +16,22 @@ settings:
     TARGETED_DEVICE_FAMILY: "1"
     SUPPORTS_MACCATALYST: NO
     CODE_SIGN_STYLE: Automatic
-
+    DEVELOPMENT_TEAM: MN3D2ZM44N
 targets:
   KanriEiyoushiSprint:
     type: application
     platform: iOS
     deploymentTarget: "16.0"
     sources:
-      - path: App.swift
-      - path: Web
-        type: folder
+      - path: KanriEiyoushiSprint
+      - path: Resources
         buildPhase: resources
       - path: Assets.xcassets
         buildPhase: resources
       - path: PrivacyInfo.xcprivacy
         buildPhase: resources
+    dependencies:
+      - package: LearningSprintCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kanrieiyoushi
@@ -46,5 +50,41 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         UIViewControllerBasedStatusBarAppearance: true
-    scheme:
-      testTargets: []
+  KanriEiyoushiSprintTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: KanriEiyoushiSprintTests
+    dependencies:
+      - target: KanriEiyoushiSprint
+      - package: LearningSprintCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kanrieiyoushi.tests
+        CODE_SIGNING_ALLOWED: NO
+  KanriEiyoushiSprintUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: KanriEiyoushiSprintUITests
+    dependencies:
+      - target: KanriEiyoushiSprint
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.kanrieiyoushi.uitests
+        CODE_SIGNING_ALLOWED: NO
+schemes:
+  KanriEiyoushiSprint:
+    build:
+      targets:
+        KanriEiyoushiSprint: all
+        KanriEiyoushiSprintTests: [test]
+        KanriEiyoushiSprintUITests: [test]
+    test:
+      targets:
+        - KanriEiyoushiSprintTests
+        - KanriEiyoushiSprintUITests
