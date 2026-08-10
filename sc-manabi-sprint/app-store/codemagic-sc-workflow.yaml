@@ -1,0 +1,97 @@
+# Merge the workflow block below under root codemagic.yaml -> workflows:
+# after the canonical AppIcon PNG has been placed at:
+# sc-manabi-sprint/native/AppIcon-1024.png
+#
+# Canonical icon SHA-256:
+# 6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d
+
+sc-manabi-sprint-ios:
+  name: 情報処理安全確保支援士 - iOS Internal TestFlight
+  max_build_duration: 60
+  instance_type: mac_mini_m2
+  integrations:
+    app_store_connect: codemagic
+  environment:
+    ios_signing:
+      distribution_type: app_store
+      bundle_identifier: jp.allsunday1122.scmanabisprint
+    vars:
+      BUNDLE_ID: jp.allsunday1122.scmanabisprint
+      XCODE_PROJECT: sc-manabi-sprint/native/ios/App/App.xcodeproj
+      XCODE_SCHEME: App
+    xcode: latest
+  scripts:
+    - name: Audit SC release inputs
+      script: |
+        cd "$CM_BUILD_DIR"
+        test -f sc-manabi-sprint/RELEASE_STATUS.md
+        test -f sc-manabi-sprint/app-store/release-preflight.md
+        test -f sc-manabi-sprint/native/AppIcon-1024.png
+        python3 - <<'PY'
+        import hashlib
+        p='sc-manabi-sprint/native/AppIcon-1024.png'
+        h=hashlib.sha256(open(p,'rb').read()).hexdigest()
+        assert h=='6bf2945788da0be45b9e448ea79d5c40ac197e97d6bed387d4215c50d486bb3d', h
+        print('PASS: canonical SC AppIcon')
+        PY
+    - name: Install Capacitor dependencies
+      script: |
+        cd "$CM_BUILD_DIR/sc-manabi-sprint/native"
+        npm install --no-audit --no-fund
+    - name: Generate audited iOS project
+      script: |
+        cd "$CM_BUILD_DIR/sc-manabi-sprint/native"
+        rm -rf ios
+        npm run prepare:web
+        npm run ios:add
+    - name: Install canonical AppIcon
+      script: |
+        cd "$CM_BUILD_DIR/sc-manabi-sprint/native"
+        ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
+        test -d "$ICONSET"
+        cp AppIcon-1024.png "$ICONSET/AppIcon-1024.png"
+        python3 - <<'PY'
+        import json
+        from pathlib import Path
+        p=Path('ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json')
+        data=json.loads(p.read_text(encoding='utf-8'))
+        images=data.get('images',[])
+        found=False
+        for x in images:
+            if x.get('idiom')=='universal' and x.get('platform')=='ios' and x.get('size')=='1024x1024':
+                x['filename']='AppIcon-1024.png'; found=True
+        if not found:
+            images.append({'filename':'AppIcon-1024.png','idiom':'universal','platform':'ios','size':'1024x1024'})
+        data['images']=images
+        p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        PY
+    - name: Verify signed-build inputs
+      script: |
+        cd "$CM_BUILD_DIR/sc-manabi-sprint/native"
+        test -f ios/App/App.xcodeproj/project.pbxproj
+        test -f ios/App/App/PrivacyInfo.xcprivacy
+        test -f ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+        test -f www/full/iap-v1.js
+        for i in 0 1 2 3 4 5; do test -s "www/q${i}.txt"; done
+        grep -q 'jp.allsunday1122.scmanabisprint.premium' www/full/iap-v1.js
+        test "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' ios/App/App/Info.plist)" = "false"
+        grep -q "CURRENT_PROJECT_VERSION = ${CM_BUILD_NUMBER};" ios/App/App.xcodeproj/project.pbxproj
+    - name: Apply App Store signing profiles for internal TestFlight only
+      script: |
+        cd "$CM_BUILD_DIR/sc-manabi-sprint/native"
+        xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+    - name: Build signed IPA
+      script: |
+        xcode-project build-ipa \
+          --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+          --scheme "$XCODE_SCHEME"
+  artifacts:
+    - build/ios/ipa/*.ipa
+    - /tmp/xcodebuild_logs/*.log
+    - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+    - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+  publishing:
+    app_store_connect:
+      auth: integration
+      submit_to_testflight: true
+      submit_to_app_store: false
