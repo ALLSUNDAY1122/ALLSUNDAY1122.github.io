@@ -5,6 +5,7 @@ PROJECT="$ROOT/ios/KanriEiyoushiSprint.xcodeproj"
 SCHEME="KanriEiyoushiSprint"
 BUNDLE_ID="jp.allsunday1122.kanrieiyoushi"
 LOG_DIR="${TMPDIR:-/tmp}/kanri-native-ui"
+DERIVED="$LOG_DIR/DerivedData"
 mkdir -p "$LOG_DIR"
 
 IDS=()
@@ -29,6 +30,7 @@ for _,udid in chosen[:2]: print(udid)
 PY
 )
 [[ ${#IDS[@]} -ge 2 ]] || { echo "Need two available iPhone simulators" >&2; exit 1; }
+LARGE="${IDS[0]}"; SMALL="${IDS[1]}"
 
 boot_device() {
   local UDID="$1"
@@ -37,17 +39,40 @@ boot_device() {
   xcrun simctl uninstall "$UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
 }
 
+boot_device "$LARGE"
+echo "=== XCTest build-for-testing ==="
+BUILD_LOG="$LOG_DIR/build-for-testing.log"
+set +e
+xcodebuild build-for-testing \
+  -project "$PROJECT" \
+  -scheme "$SCHEME" \
+  -destination "platform=iOS Simulator,id=$LARGE" \
+  -derivedDataPath "$DERIVED" \
+  -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=NO \
+  ASSETCATALOG_COMPILER_APPICON_NAME= \
+  >"$BUILD_LOG" 2>&1
+BUILD_STATUS=$?
+set -e
+if [[ $BUILD_STATUS -ne 0 ]]; then
+  echo "=== build-for-testing FAILURE ===" >&2
+  grep -E "error:|BUILD FAILED|failed" "$BUILD_LOG" | tail -160 >&2 || true
+  tail -80 "$BUILD_LOG" >&2 || true
+  exit "$BUILD_STATUS"
+fi
+echo "=== build-for-testing PASS ==="
+
 run_one() {
   local LABEL="$1"; local UDID="$2"; local TEST="$3"
   local LOG="$LOG_DIR/${LABEL}.log"
   echo "=== XCTest start: ${LABEL} ==="
   set +e
-  python3 - "$LOG" "$PROJECT" "$SCHEME" "$UDID" "$TEST" <<'PY'
+  python3 - "$LOG" "$PROJECT" "$SCHEME" "$UDID" "$TEST" "$DERIVED" <<'PY'
 import subprocess,sys
-log,project,scheme,udid,test=sys.argv[1:]
+log,project,scheme,udid,test,derived=sys.argv[1:]
 cmd=[
-  'xcodebuild','test','-project',project,'-scheme',scheme,
-  '-destination',f'platform=iOS Simulator,id={udid}',
+  'xcodebuild','test-without-building','-project',project,'-scheme',scheme,
+  '-destination',f'platform=iOS Simulator,id={udid}','-derivedDataPath',derived,
   '-destination-timeout','45','-parallel-testing-enabled','NO',
   '-test-timeouts-enabled','YES','-default-test-execution-time-allowance','35',
   '-maximum-test-execution-time-allowance','60',f'-only-testing:{test}',
@@ -55,10 +80,10 @@ cmd=[
 ]
 with open(log,'wb') as f:
     try:
-        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=75)
+        result=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=70)
         raise SystemExit(result.returncode)
     except subprocess.TimeoutExpired:
-        f.write(b'\nKANRI_XCTEST_HARD_TIMEOUT_75S\n')
+        f.write(b'\nKANRI_XCTEST_HARD_TIMEOUT_70S\n')
         raise SystemExit(124)
 PY
   local STATUS=$?
@@ -74,8 +99,6 @@ PY
   echo "=== XCTest PASS: ${LABEL} ==="
 }
 
-LARGE="${IDS[0]}"; SMALL="${IDS[1]}"
-boot_device "$LARGE"
 run_one unit-large "$LARGE" "KanriEiyoushiSprintTests"
 run_one ui-learning-large "$LARGE" "KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testFourTabsAndDailySprintImmediateScoring"
 run_one ui-settings-large "$LARGE" "KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testSettingsExposeGoldenMasterControls"
