@@ -50,7 +50,7 @@ final class Otsu4SprintUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["5週間の学習"].exists)
         XCTAssertTrue(app.staticTexts["科目別"].exists)
         XCTAssertTrue(app.staticTexts["苦手一覧"].exists)
-        XCTAssertTrue(app.otherElements["全体達成度"].exists || app.staticTexts.matching(NSPredicate(format: "label CONTAINS '/' ")).count >= 0)
+        XCTAssertTrue(app.otherElements["全体達成度"].exists)
         assertVisibleContentFitsHorizontally(in: app)
         assertButtonsHaveAccessibilityLabels(in: app)
     }
