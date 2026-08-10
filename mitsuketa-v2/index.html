@@ -1,0 +1,76 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#f7d98b"><title>みーつけた！どうぶつかくれんぼ</title><link rel="stylesheet" href="style.css"></head><body><div id="app">
+  <div class="scene">
+    <div class="sky-cloud c1"></div><div class="sky-cloud c2"></div>
+    <div class="mountain m1"></div><div class="mountain m2"></div><div class="hill"></div><div class="river"></div><div class="grass"></div>
+
+    <div class="header">
+      <div class="avatar-card"><div class="face" id="faceMini">🐻</div><span id="topText">くまさんが<br>かくれるよ！</span></div>
+      <div class="progress" id="progress"><div class="slot">●</div><div class="slot">●</div><div class="slot">●</div></div>
+      <button class="iconbtn" id="soundBtn" aria-label="音">🔈</button>
+      <button class="iconbtn" id="pauseBtn" aria-label="一時停止">Ⅱ</button>
+    </div>
+
+    <div id="animal" class="animal"></div>
+
+    <svg id="tree" class="tree target" viewBox="0 0 430 720" aria-label="大きな木">
+      <defs>
+        <linearGradient id="trunkG" x1="0" x2="1"><stop stop-color="#7a431f"/><stop offset=".45" stop-color="#a8612f"/><stop offset="1" stop-color="#603719"/></linearGradient>
+        <radialGradient id="leafG"><stop stop-color="#75d541"/><stop offset="1" stop-color="#2b8f35"/></radialGradient>
+      </defs>
+      <path d="M146 700 C135 520 160 390 167 280 C110 255 70 216 32 155 C72 165 116 190 164 210 C145 145 157 87 182 32 C205 99 211 144 211 196 C252 162 298 139 363 123 C321 175 284 214 227 246 C238 384 276 521 292 700Z" fill="url(#trunkG)"/>
+      <path d="M190 210 C154 159 138 98 166 49" fill="none" stroke="#613516" stroke-width="15" stroke-linecap="round" opacity=".5"/>
+      <path d="M203 278 C197 391 220 506 253 633" fill="none" stroke="#c37a43" stroke-width="14" stroke-linecap="round" opacity=".45"/>
+      <g fill="url(#leafG)">
+        <circle cx="82" cy="128" r="83"/><circle cx="161" cy="88" r="99"/><circle cx="250" cy="100" r="105"/><circle cx="331" cy="138" r="90"/>
+        <circle cx="100" cy="203" r="90"/><circle cx="210" cy="184" r="108"/><circle cx="322" cy="211" r="95"/>
+      </g>
+      <g fill="#9be757" opacity=".75"><circle cx="112" cy="102" r="28"/><circle cx="270" cy="73" r="33"/><circle cx="344" cy="176" r="25"/><circle cx="183" cy="166" r="31"/></g>
+      <g fill="#f8df58"><circle cx="97" cy="616" r="9"/><circle cx="320" cy="645" r="8"/></g>
+    </svg>
+
+    <svg id="rock" class="rock target" viewBox="0 0 360 270" aria-label="岩">
+      <defs><linearGradient id="rockG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8d3c4"/><stop offset=".55" stop-color="#9e9b90"/><stop offset="1" stop-color="#77766f"/></linearGradient></defs>
+      <path d="M24 244 C15 203 38 153 73 119 C107 85 112 43 165 24 C230 1 276 44 305 91 C339 144 356 188 334 244Z" fill="url(#rockG)" stroke="#777268" stroke-width="8"/>
+      <path d="M76 154 C112 123 154 116 191 122" fill="none" stroke="#eee9dc" stroke-width="9" stroke-linecap="round" opacity=".75"/>
+      <path d="M236 61 C268 83 286 105 298 137" fill="none" stroke="#78766f" stroke-width="10" stroke-linecap="round" opacity=".35"/>
+    </svg>
+
+    <svg id="bush" class="bush target" viewBox="0 0 350 220" aria-label="草むら">
+      <defs><radialGradient id="bushG"><stop stop-color="#7dd652"/><stop offset="1" stop-color="#2d8f35"/></radialGradient></defs>
+      <g fill="url(#bushG)" stroke="#2d7e32" stroke-width="3">
+        <circle cx="70" cy="130" r="58"/><circle cx="126" cy="87" r="70"/><circle cx="186" cy="96" r="73"/><circle cx="250" cy="110" r="68"/><circle cx="300" cy="143" r="51"/><circle cx="174" cy="147" r="70"/>
+      </g>
+      <g fill="#a7ea6f"><ellipse cx="93" cy="75" rx="14" ry="8" transform="rotate(-30 93 75)"/><ellipse cx="230" cy="64" rx="15" ry="8" transform="rotate(25 230 64)"/><ellipse cx="278" cy="126" rx="14" ry="8" transform="rotate(-20 278 126)"/></g>
+    </svg>
+
+    <svg id="log" class="log target" viewBox="0 0 380 220" aria-label="丸太">
+      <defs><linearGradient id="logG" x1="0" x2="1"><stop stop-color="#6d3d1d"/><stop offset=".45" stop-color="#a9652f"/><stop offset="1" stop-color="#5d3218"/></linearGradient></defs>
+      <path d="M70 64 C130 41 234 38 322 59 L338 163 C244 160 139 165 70 139Z" fill="url(#logG)" stroke="#5d351b" stroke-width="8"/>
+      <ellipse cx="68" cy="102" rx="55" ry="63" fill="#8b5127" stroke="#5c3318" stroke-width="8"/>
+      <ellipse cx="68" cy="102" rx="30" ry="36" fill="#3c2719"/><path d="M58 70 C67 87 72 113 65 134" fill="none" stroke="#b8773e" stroke-width="6"/>
+    </svg>
+
+    <button class="homebtn" aria-label="ホーム">⌂</button>
+    <button class="hintbtn" id="hintBtn">🔍 ヒント</button>
+    <div class="prompt" id="prompt">くまさん どこかな？ 🐾</div>
+
+    <div id="celebrate" class="celebrate">
+      <div class="card">
+        <h1>みーつけた！</h1>
+        <div id="bigAnimal" style="width:240px;height:240px;margin:10px auto"></div>
+        <p id="reaction">ばあ！</p>
+        <button id="nextBtn" class="again">つぎへ ➜</button>
+      </div>
+    </div>
+
+    <div id="realModal" class="realModal" aria-live="polite">
+      <div class="realCard">
+        <div class="realTitle" id="realTitle">ほんものの どうぶつ！</div>
+        <div class="realVideoWrap"><video id="realVideo" class="realVideo" muted playsinline preload="metadata"></video><div id="videoFallback" class="videoFallback" hidden>どうがを よみこめなかったよ</div></div>
+        <div class="realFact" id="realFact"></div>
+        <div class="realCredit" id="realCredit"></div>
+        <button id="realNext" class="realNext">つぎへ ➜</button>
+      </div>
+    </div>
+  </div>
+</div><script src="game.js"></script></body></html>
