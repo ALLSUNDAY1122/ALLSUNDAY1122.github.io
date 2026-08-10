@@ -85,7 +85,9 @@ includes(metadata, 'Type: Non-Consumable', 'IAP type');
 includes(storekitPlan, 'Sandbox購入成功', 'purchase actual-device gate');
 includes(storekitPlan, '購入を復元', 'restore actual-device gate');
 includes(review, '法務省の公式アプリではありません', 'non-official disclaimer');
-must(!review.includes('WKWebView'), 'review notes still describe WKWebView');
+includes(review, 'SwiftUIネイティブアプリ', 'native implementation in review notes');
+includes(review, '端末内のUserDefaults', 'native persistence in review notes');
+must(!review.includes('学習履歴はWKWebViewの端末内ストレージに保存'), 'stale WKWebView persistence description remains');
 
 includes(codemagic, 'shoshi-ios:', 'Codemagic workflow');
 includes(codemagic, `bundle_identifier: ${BUNDLE}`, 'Codemagic bundle');
