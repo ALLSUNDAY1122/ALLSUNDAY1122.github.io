@@ -21,6 +21,7 @@ permissions:
 jobs:
   simulator-build:
     runs-on: macos-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -103,8 +104,8 @@ jobs:
                   if udid not in excluded:
                       return name,udid
               raise SystemExit('No simulator available')
-          small=choose(['SE (3rd generation)','16e','15','16'])
-          large=choose(['Pro Max','Plus'], {small[1]})
+          small=choose(['16e','SE (3rd generation)','15','16'])
+          large=choose(['17 Pro Max','Pro Max','Plus'], {small[1]})
           print(f'{small[0]}|{small[1]}')
           print(f'{large[0]}|{large[1]}')
           PY
@@ -116,14 +117,13 @@ jobs:
           set -euo pipefail
           FIRST=$(head -1 /tmp/otsu4-simulators.txt)
           UDID=${FIRST##*|}
-          xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
-          xcrun simctl bootstatus "$UDID" -b
           set -o pipefail
           xcodebuild test \
             -project Otsu4Sprint.xcodeproj \
             -scheme Otsu4Sprint \
             -configuration Debug \
             -destination "platform=iOS Simulator,id=$UDID" \
+            -destination-timeout 120 \
             -only-testing:Otsu4SprintTests \
             -parallel-testing-enabled NO | xcpretty
       - name: Run UI tests on small and large iPhone sizes
@@ -133,15 +133,23 @@ jobs:
           set -euo pipefail
           while IFS='|' read -r NAME UDID; do
             echo "UI testing on $NAME ($UDID)"
-            xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
-            xcrun simctl bootstatus "$UDID" -b
             set -o pipefail
             xcodebuild test \
               -project Otsu4Sprint.xcodeproj \
               -scheme Otsu4Sprint \
               -configuration Debug \
               -destination "platform=iOS Simulator,id=$UDID" \
+              -destination-timeout 120 \
               -only-testing:Otsu4SprintUITests \
               -parallel-testing-enabled NO | xcpretty
-            xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
           done < /tmp/otsu4-simulators.txt
+      - name: Enforce canonical App Store icon SHA
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: |
+          set -euo pipefail
+          ICON=native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png
+          EXPECTED=d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d
+          ACTUAL=$(shasum -a 256 "$ICON" | awk '{print $1}')
+          echo "canonical=$EXPECTED"
+          echo "built=$ACTUAL"
+          test "$ACTUAL" = "$EXPECTED"
