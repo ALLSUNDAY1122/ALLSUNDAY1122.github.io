@@ -15,6 +15,10 @@ on:
       - 'tools/otsu4-build-content-v2.mjs'
       - '.github/workflows/otsu4-xcode-build.yml'
 
+concurrency:
+  group: otsu4-xcode-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
