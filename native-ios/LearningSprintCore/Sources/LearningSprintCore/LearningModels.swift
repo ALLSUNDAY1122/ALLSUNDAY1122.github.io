@@ -200,6 +200,15 @@ public enum SessionKind: Codable, Equatable, Sendable {
     case weak
     case subject(String)
     case mock(String)
+
+    public var completionKey: String {
+        switch self {
+        case .sprint: return "sprint"
+        case .weak: return "weak"
+        case .subject(let value): return "subject:\(value)"
+        case .mock(let value): return "mock:\(value)"
+        }
+    }
 }
 
 public struct LearningSessionSnapshot: Codable, Equatable, Sendable {
@@ -232,6 +241,7 @@ public struct LearningState: Codable, Equatable, Sendable {
     public var examDate: Date?
     public var textSizeStep: Int
     public var contentVersion: String
+    public var completionCounts: [String: Int]?
 
     public init(
         dailyTarget: Int = 8,
@@ -240,7 +250,8 @@ public struct LearningState: Codable, Equatable, Sendable {
         resumeSession: LearningSessionSnapshot? = nil,
         examDate: Date? = nil,
         textSizeStep: Int = 1,
-        contentVersion: String
+        contentVersion: String,
+        completionCounts: [String: Int] = [:]
     ) {
         self.dailyTarget = Self.validTarget(dailyTarget) ? dailyTarget : 8
         self.attempts = attempts
@@ -249,10 +260,21 @@ public struct LearningState: Codable, Equatable, Sendable {
         self.examDate = examDate
         self.textSizeStep = min(2, max(0, textSizeStep))
         self.contentVersion = contentVersion
+        self.completionCounts = completionCounts
     }
 
     public static func validTarget(_ value: Int) -> Bool {
         [4, 8, 16].contains(value)
+    }
+
+    public func completionCount(for kind: SessionKind) -> Int {
+        completionCounts?[kind.completionKey] ?? 0
+    }
+
+    public mutating func recordCompletion(for kind: SessionKind) {
+        var counts = completionCounts ?? [:]
+        counts[kind.completionKey, default: 0] += 1
+        completionCounts = counts
     }
 }
 
