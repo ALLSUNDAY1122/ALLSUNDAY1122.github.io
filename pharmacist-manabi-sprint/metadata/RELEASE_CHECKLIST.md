@@ -16,7 +16,7 @@
 - [x] 達成度をユニーク着手率、正答率を別指標として実装
 - [x] 不正解でも当日回答数を加算してヒートマップへ反映
 - [x] JSON書き出し／読み込み
-- [x] 問題・図版をアプリ内へ同梱するオフライン設計
+- [x] 問題・図版をアプリ内同梱するオフライン設計
 - [x] Reduce Motion対応
 - [x] StoreKit 2 月額＋買い切り
 - [x] `currentEntitlements`／`Transaction.updates`／pending／cancel／restore／manage subscriptions
@@ -38,7 +38,7 @@
 - [x] PR #4128 最新コミットでStatic Gateを再PASS
 - [x] PR #4128 最新コミットでXCTestを再PASS
 - [x] PR #4128 最新コミットでRelease Simulator buildを再PASS
-- [ ] 上記PASS後にmainへ統合
+- [x] PR #4128 をmainへ統合
 
 ## Apple / App Store Connect / Codemagic側で確認する項目
 - [ ] Explicit App ID `jp.allsunday1122.yakuzaishi` が有効
