@@ -40,6 +40,10 @@ struct Otsu4AnswerState: Equatable {
     let selectedIndex: Int?
     let correct: Bool
     let unknown: Bool
+
+    // Golden Master view aliases.
+    var selected: Int? { selectedIndex }
+    var isCorrect: Bool { correct }
 }
 
 struct Otsu4SubjectResult: Equatable {
@@ -50,6 +54,8 @@ struct Otsu4SubjectResult: Equatable {
         guard total > 0 else { return 0 }
         return Int((Double(correct) / Double(total) * 100).rounded())
     }
+
+    var passed: Bool { rate >= 60 }
 }
 
 @MainActor
@@ -92,8 +98,13 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
         timerTask?.cancel()
     }
 
+    var isMock: Bool { kind.isMock }
     var currentQuestion: Otsu4Question { questions[index] }
     var currentAnswer: Otsu4AnswerState? { answers[currentQuestion.id] }
+    var currentAnswerState: Otsu4AnswerState? { currentAnswer }
+    var hasAnsweredCurrent: Bool { currentAnswer != nil }
+    var currentNumber: Int { index + 1 }
+    var total: Int { questions.count }
 
     var progressText: String {
         if kind.isMock {
@@ -119,6 +130,10 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
     func finishIfTimeExpired(at date: Date = Date()) {
         guard kind.isMock, !isFinished, remainingSeconds(at: date) <= 0 else { return }
         finish()
+    }
+
+    func finishBecauseTimeExpired() {
+        finishIfTimeExpired()
     }
 
     var snapshot: Otsu4SessionSnapshot {
@@ -196,6 +211,9 @@ final class Otsu4StudySession: ObservableObject, Identifiable {
         guard !questions.isEmpty else { return 0 }
         return Int((Double(correctCount) / Double(questions.count) * 100).rounded())
     }
+
+    var correctRate: Int { scoreRate }
+    var unknownCount: Int { answers.values.filter(\.unknown).count }
 
     var subjectResults: [String: Otsu4SubjectResult] {
         var result: [String: Otsu4SubjectResult] = [:]
