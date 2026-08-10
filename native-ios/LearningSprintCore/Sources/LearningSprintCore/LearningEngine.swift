@@ -61,7 +61,9 @@ public enum LearningEngine {
                 throw LearningEngineError.missingAnswer
             }
             correct = question.declarationFields.allSatisfy { field in
-                normalized(answer.declarationValues[field.key]) == normalized(field.correctValue)
+                let actual = normalized(answer.declarationValues[field.key])
+                let accepted = [field.correctValue] + field.aliases
+                return accepted.map(normalized).contains(actual)
             }
         }
 
