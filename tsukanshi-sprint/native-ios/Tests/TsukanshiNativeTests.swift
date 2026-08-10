@@ -44,4 +44,54 @@ final class TsukanshiNativeTests: XCTestCase {
             XCTAssertEqual(Set(orders.map { $0.joined(separator: ",") }).count, 3, "all rounds identical for \(subject)")
         }
     }
+
+    @MainActor
+    func testMockMultiChoiceIsStoredOnlyAtRequiredSelectionCount() throws {
+        let question = LearningQuestion(
+            id: "mock-multi",
+            subject: "関税法等",
+            topic: "複数選択",
+            answerType: .multiChoice,
+            prompt: "二つ選べ",
+            choices: ["A", "B", "C", "D"],
+            correctIndices: [0, 2],
+            memoryPoint: "A/C",
+            explanation: "test",
+            sourceCheckedAt: "2026-08-10",
+            lawBaselineDate: "2026-07-01",
+            contentVersion: "test"
+        )
+        let session = TsukanshiStudySession(kind: .mock("第59回|関税法等"), questions: [question])
+        _ = try session.answer(AnswerPayload(selectedIndices: [0]))
+        XCTAssertNil(session.answers[question.id])
+        _ = try session.answer(AnswerPayload(selectedIndices: [0, 2]))
+        XCTAssertEqual(session.answers[question.id]?.selectedIndices, [0, 2])
+        _ = try session.answer(AnswerPayload(selectedIndices: [0, 1, 2]))
+        XCTAssertNil(session.answers[question.id])
+    }
+
+    @MainActor
+    func testMockBlankSelectRequiresEveryBlank() throws {
+        let question = LearningQuestion(
+            id: "mock-blank",
+            subject: "通関実務",
+            topic: "空欄",
+            answerType: .blankSelect,
+            prompt: "空欄を埋めよ",
+            blanks: [
+                BlankField(key: "a", label: "A", options: ["甲", "乙"], correctValue: "甲"),
+                BlankField(key: "b", label: "B", options: ["丙", "丁"], correctValue: "丙")
+            ],
+            memoryPoint: "甲/丙",
+            explanation: "test",
+            sourceCheckedAt: "2026-08-10",
+            lawBaselineDate: "2026-07-01",
+            contentVersion: "test"
+        )
+        let session = TsukanshiStudySession(kind: .mock("第59回|通関実務"), questions: [question])
+        _ = try session.answer(AnswerPayload(blankValues: ["a": "甲"]))
+        XCTAssertNil(session.answers[question.id])
+        _ = try session.answer(AnswerPayload(blankValues: ["a": "甲", "b": "丙"]))
+        XCTAssertEqual(session.answers[question.id]?.blankValues.count, 2)
+    }
 }
