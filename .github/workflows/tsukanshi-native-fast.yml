@@ -1,0 +1,94 @@
+name: Tsukanshi Native Fast Preflight
+
+on:
+  push:
+    paths:
+      - 'tsukanshi-sprint/native-ios/**'
+      - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/tsukanshi-native-fast.yml'
+  pull_request:
+    paths:
+      - 'tsukanshi-sprint/native-ios/**'
+      - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/tsukanshi-native-fast.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  fast-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit source content and export native JSON
+        run: |
+          cd tsukanshi-sprint
+          node validate-content.mjs
+          node validate-editorial-final.mjs
+          mkdir -p /tmp/tsukanshi-native
+          node export-native-content.mjs /tmp/tsukanshi-native/tsukanshi-questions.json
+          python3 - <<'PY'
+          import collections,json
+          data=json.load(open('/tmp/tsukanshi-native/tsukanshi-questions.json',encoding='utf-8'))
+          questions=data['questions']
+          assert len(questions)==492
+          assert data['studyQuestionCount']==480
+          assert data['declarationCount']==12
+          counts=collections.Counter(q['answerType'] for q in questions)
+          assert counts=={
+            'singleChoice':329,
+            'multiChoice':63,
+            'numeric':85,
+            'blankSelect':3,
+            'declaration':12,
+          }, counts
+          assert all(q['sourceCheckedAt'] and q['rightsBasis'] for q in questions)
+          assert all(q['sourceRefs'] or 'sourceType=appMetadata' in q['rightsBasis'] for q in questions)
+          for q in questions:
+            t=q['answerType']
+            if t=='singleChoice':
+              assert len(q['choices'])>=2 and len(q['correctIndices'])==1, q['id']
+              assert 0 <= q['correctIndices'][0] < len(q['choices']), q['id']
+            elif t=='multiChoice':
+              assert len(q['choices'])>=2 and len(q['correctIndices'])>=2, q['id']
+              assert len(set(q['correctIndices']))==len(q['correctIndices']), q['id']
+              assert all(0 <= i < len(q['choices']) for i in q['correctIndices']), q['id']
+            elif t=='numeric':
+              assert q['correctNumber'] is not None, q['id']
+              assert q['unit'], q['id']
+              assert q['acceptedRange'] is None or q['acceptedRange']>=0, q['id']
+            elif t=='blankSelect':
+              assert q['blanks'], q['id']
+              assert all(b['key'] and b['options'] and b['correctValue'] in b['options'] for b in q['blanks']), q['id']
+            elif t=='declaration':
+              assert q['declarationFields'], q['id']
+              assert all(f['key'] and f['correctValue'] for f in q['declarationFields']), q['id']
+          warnings=data.get('auditWarnings',[])
+          assert len(warnings)==85, f'expected 85 explicit rounding metadata warnings, got {len(warnings)}'
+          print('PASS: evidence-backed native export and answer schemas')
+          print('answer types:',dict(counts))
+          print('structured rounding metadata warnings:',len(warnings))
+          PY
+      - name: Reject WebView native implementation
+        run: |
+          ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' tsukanshi-sprint/native-ios --include='*.swift'
+          ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' native-ios/LearningSprintCore --include='*.swift'
+      - name: Parse all Swift sources
+        run: |
+          swift --version
+          find native-ios/LearningSprintCore tsukanshi-sprint/native-ios -type f -name '*.swift' -print0 | while IFS= read -r -d '' file; do
+            echo "Parsing $file"
+            swiftc -parse "$file"
+          done

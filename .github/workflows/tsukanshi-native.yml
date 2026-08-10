@@ -1,0 +1,148 @@
+name: Tsukanshi Pure SwiftUI Native
+
+on:
+  push:
+    paths:
+      - 'tsukanshi-sprint/native-ios/**'
+      - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/tsukanshi-native.yml'
+  pull_request:
+    paths:
+      - 'tsukanshi-sprint/native-ios/**'
+      - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
+      - 'tsukanshi-sprint/questions*.js'
+      - 'tsukanshi-sprint/sources*.js'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/tsukanshi-native.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  native-release-gate:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+
+      - name: Prepare audited native content
+        run: bash tsukanshi-sprint/native-ios/prepare-native.sh
+
+      - name: Validate native privacy manifest
+        run: plutil -lint tsukanshi-sprint/native-ios/PrivacyInfo.xcprivacy
+
+      - name: Generate native Xcode project and normalize IAP capability
+        working-directory: tsukanshi-sprint/native-ios
+        run: |
+          xcodegen generate
+          python3 ../ios/apply-xcode-capabilities.py TsukanshiNative.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' TsukanshiNative.xcodeproj/project.pbxproj
+          ! grep -q 'SystemCapabilities = "' TsukanshiNative.xcodeproj/project.pbxproj
+
+      - name: Build Release for iPhone Simulator
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project tsukanshi-sprint/native-ios/TsukanshiNative.xcodeproj \
+            -scheme TsukanshiNative \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tee /tmp/tsukanshi-native-build.log
+
+      - name: Verify built native app resources and no WebView bundle
+        run: |
+          APP_PATH="$(find "$HOME/Library/Developer/Xcode/DerivedData" -type d -name 'TsukanshiNative.app' | head -n 1)"
+          test -n "$APP_PATH"
+          test -f "$APP_PATH/tsukanshi-questions.json"
+          test -f "$APP_PATH/PrivacyInfo.xcprivacy"
+          ! find "$APP_PATH" -type f \( -name '*.html' -o -name '*.js' -o -name '*.css' \) | grep -q .
+          ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' tsukanshi-sprint/native-ios --include='*.swift'
+          python3 - "$APP_PATH/tsukanshi-questions.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert len(data['questions'])==492
+          assert data['studyQuestionCount']==480
+          assert data['declarationCount']==12
+          assert all(q['sourceCheckedAt'] and q['rightsBasis'] for q in data['questions'])
+          print('PASS: native app contains 492 audited records and no web bundle')
+          PY
+
+      - name: Select small and large iPhone simulators
+        run: |
+          python3 - <<'PY' > /tmp/tsukanshi-simulators.txt
+          import json,subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          devices=[]
+          for runtime,rows in sorted(data.get('devices',{}).items(), reverse=True):
+              if 'iOS' not in runtime: continue
+              for row in rows:
+                  name=row.get('name','')
+                  if row.get('isAvailable',True) and name.startswith('iPhone'):
+                      devices.append((name,row['udid']))
+          by_name={}
+          for name,udid in devices: by_name.setdefault(name,udid)
+          if len(by_name)<2: raise SystemExit('Need two iPhone simulator sizes')
+          def choose(tokens, excluded=set()):
+              for token in tokens:
+                  for name,udid in by_name.items():
+                      if token in name and udid not in excluded: return name,udid
+              for name,udid in by_name.items():
+                  if udid not in excluded: return name,udid
+              raise SystemExit('No simulator')
+          small=choose(['SE (3rd generation)','16e','15','16'])
+          large=choose(['Pro Max','Plus'],{small[1]})
+          print(f'{small[0]}|{small[1]}')
+          print(f'{large[0]}|{large[1]}')
+          PY
+          cat /tmp/tsukanshi-simulators.txt
+
+      - name: Run native unit tests
+        run: |
+          FIRST="$(head -1 /tmp/tsukanshi-simulators.txt)"
+          UDID="${FIRST##*|}"
+          xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcodebuild test \
+            -project tsukanshi-sprint/native-ios/TsukanshiNative.xcodeproj \
+            -scheme TsukanshiNative \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -only-testing:TsukanshiNativeTests \
+            -parallel-testing-enabled NO
+
+      - name: Run UI tests on small and large iPhone sizes
+        run: |
+          while IFS='|' read -r NAME UDID; do
+            echo "UI testing on $NAME ($UDID)"
+            xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
+            xcrun simctl bootstatus "$UDID" -b
+            xcodebuild test \
+              -project tsukanshi-sprint/native-ios/TsukanshiNative.xcodeproj \
+              -scheme TsukanshiNative \
+              -configuration Debug \
+              -destination "platform=iOS Simulator,id=$UDID" \
+              -only-testing:TsukanshiNativeUITests \
+              -parallel-testing-enabled NO
+            xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
+          done < /tmp/tsukanshi-simulators.txt
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tsukanshi-native-xcodebuild-log
+          path: /tmp/tsukanshi-native-build.log
+          if-no-files-found: ignore
