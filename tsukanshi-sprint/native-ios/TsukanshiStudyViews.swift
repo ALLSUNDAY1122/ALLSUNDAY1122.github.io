@@ -219,11 +219,7 @@ struct TsukanshiQuestionStepView: View {
                     choiceButton(index: index, text: choice, selected: selected.contains(index)) {
                         guard session.currentEvaluation == nil else { return }
                         selected = [index]
-                        if session.isMock {
-                            model.submit(AnswerPayload(selectedIndices: [index]), in: session)
-                        } else {
-                            model.submit(AnswerPayload(selectedIndices: [index]), in: session)
-                        }
+                        model.submit(AnswerPayload(selectedIndices: [index]), in: session)
                     }
                 }
             }
@@ -236,14 +232,18 @@ struct TsukanshiQuestionStepView: View {
                 ForEach(Array(question.choices.enumerated()), id: \.offset) { index, choice in
                     choiceButton(index: index, text: choice, selected: selected.contains(index)) {
                         guard session.currentEvaluation == nil else { return }
-                        if selected.contains(index) { selected.remove(index) } else { selected.insert(index) }
+                        if selected.contains(index) {
+                            selected.remove(index)
+                        } else if selected.count < question.correctIndices.count {
+                            selected.insert(index)
+                        }
                         if session.isMock {
                             model.submit(AnswerPayload(selectedIndices: selected.sorted()), in: session)
                         }
                     }
                 }
                 if !session.isMock {
-                    gradingButton(title: "採点する", enabled: !selected.isEmpty) {
+                    gradingButton(title: "採点する", enabled: selected.count == question.correctIndices.count) {
                         model.submit(AnswerPayload(selectedIndices: selected.sorted()), in: session)
                     }
                 }
@@ -382,7 +382,7 @@ struct TsukanshiQuestionStepView: View {
             HStack(alignment: .center, spacing: 12) {
                 Text(evaluation.isCorrect ? "○" : "×")
                     .font(.system(size: 58, weight: .bold, design: .rounded))
-                    .foregroundStyle(evaluation.isCorrect ? LearningSprintTheme.vermilion : LearningSprintTheme.vermilion)
+                    .foregroundStyle(LearningSprintTheme.vermilion)
                     .rotationEffect(.degrees(evaluation.isCorrect ? -7 : 6))
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
