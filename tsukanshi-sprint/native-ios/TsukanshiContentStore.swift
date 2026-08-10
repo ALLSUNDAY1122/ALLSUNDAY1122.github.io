@@ -9,6 +9,7 @@ struct TsukanshiNativeContentBank: Codable {
     let studyQuestionCount: Int
     let declarationCount: Int
     let freeNumericCount: Int
+    let auditWarnings: [String]
     let questions: [LearningQuestion]
 }
 
