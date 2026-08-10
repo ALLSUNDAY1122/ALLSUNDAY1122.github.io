@@ -238,7 +238,7 @@ struct SettingsView: View {
                     settingsSection("このアプリ") {
                         VStack(alignment: .leading, spacing: 10) {
                             infoRow("コンテンツ", store.repository.payload.contentVersion)
-                            infoRow("一次資料確認", store.repository.payload.sourceCheckedAt.isEmpty ? "未取得" : store.repository.payload.sourceCheckedAt)
+                            infoRow("監査記録日時", store.repository.payload.sourceCheckedAt.isEmpty ? "未取得" : store.repository.payload.sourceCheckedAt)
                             infoRow("法令基準日", store.repository.payload.lawBaselineDate ?? "正本に定義なし")
                             infoRow("問題", "75出題枠 / 68ユニーク")
                             infoRow("課金", "初期版なし")
