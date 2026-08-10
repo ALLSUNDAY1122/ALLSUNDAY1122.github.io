@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 final class AppModel: ObservableObject {
     private static let storageKey = "shoshi-learning-state-v2"
+    private static let trialConsumedKey = "shoshi-native-trial-completed-v2"
 
     let questions: [Question]
     let questionsByID: [String: Question]
@@ -55,6 +56,7 @@ final class AppModel: ObservableObject {
     var weakCount: Int { state.weakIDs.count }
     var overallAccuracy: Double { state.overallAccuracy }
     var selectedTextSize: String { state.textSize }
+    var trialConsumed: Bool { UserDefaults.standard.bool(forKey: Self.trialConsumedKey) }
 
     func subjects(for year: Int) -> [String] {
         Array(Set(questions.filter { $0.sourceYear == year }.map(\.subject))).sorted { a, b in
@@ -74,7 +76,7 @@ final class AppModel: ObservableObject {
     func start(_ descriptor: SessionDescriptor, premium: Bool) -> Bool {
         if !premium {
             if descriptor.kind != .daily { return false }
-            if state.trialCompleted { return false }
+            if trialConsumed { return false }
         }
         let limit = descriptor.kind == .daily ? (premium ? state.dailyGoal : min(state.dailyGoal, 8)) : Int.max
         let selected = LearningLogic.selectQuestions(descriptor: descriptor, all: questions, state: state, dailyLimit: limit)
@@ -93,6 +95,7 @@ final class AppModel: ObservableObject {
     func resume(premium: Bool) -> Bool {
         guard let saved = LearningLogic.validateResume(state.resume, questionsByID: questionsByID) else { return false }
         if !premium && saved.descriptor.kind != .daily { return false }
+        if !premium && trialConsumed { return false }
         activeSession = saved
         selectedChoice = saved.answeredChoice
         lastWasCorrect = saved.answeredCorrect
@@ -118,7 +121,9 @@ final class AppModel: ObservableObject {
         guard var session = activeSession, session.answeredChoice != nil else { return }
         if session.index + 1 >= session.questionIDs.count {
             let result = SessionResult(descriptor: session.descriptor, correct: session.correctCount, total: session.questionIDs.count)
-            if session.descriptor.kind == .daily && !premium { state.trialCompleted = true }
+            if session.descriptor.kind == .daily && !premium {
+                UserDefaults.standard.set(true, forKey: Self.trialConsumedKey)
+            }
             LearningLogic.completeSession(state: &state, descriptor: session.descriptor)
             activeSession = nil
             lastResult = result
