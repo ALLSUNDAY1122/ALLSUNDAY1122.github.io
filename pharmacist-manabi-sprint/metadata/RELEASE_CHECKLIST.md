@@ -35,9 +35,9 @@
 - [x] `submit_to_app_store: false`／Internal TestFlight onlyを維持
 
 ## 最新PRゲート
-- [ ] PR #4128 最新コミットでStatic Gateを再PASS
-- [ ] PR #4128 最新コミットでXCTestを再PASS
-- [ ] PR #4128 最新コミットでRelease Simulator buildを再PASS
+- [x] PR #4128 最新コミットでStatic Gateを再PASS
+- [x] PR #4128 最新コミットでXCTestを再PASS
+- [x] PR #4128 最新コミットでRelease Simulator buildを再PASS
 - [ ] 上記PASS後にmainへ統合
 
 ## Apple / App Store Connect / Codemagic側で確認する項目
