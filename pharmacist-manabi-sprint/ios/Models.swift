@@ -35,7 +35,7 @@ struct Question: Codable, Identifiable, Hashable {
     }
     var availableChoices: [String] {
         if !choices.isEmpty { return choices }
-        let count = max(numberedChoiceCount, (answer.max() ?? 0) + 1, 5)
+        let count = max(max(numberedChoiceCount, (answer.max() ?? 0) + 1), 5)
         return (1...count).map { "選択肢 \($0)" }
     }
     var isFree: Bool { exam == 111 && section == "必須" }
