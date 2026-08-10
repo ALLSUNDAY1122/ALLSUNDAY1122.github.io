@@ -126,13 +126,30 @@ jobs:
           xcrun simctl erase all || true
       - name: Boot selected iPhone simulators
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
-        timeout-minutes: 12
+        timeout-minutes: 10
         run: |
           set -euo pipefail
           while IFS='|' read -r NAME UDID; do
             echo "Booting $NAME ($UDID)"
             xcrun simctl boot "$UDID" 2>/dev/null || true
-            xcrun simctl bootstatus "$UDID" -b
+            /usr/bin/python3 - "$UDID" <<'PY'
+          import subprocess, sys, time
+          udid = sys.argv[1]
+          for attempt in range(120):
+              try:
+                  result = subprocess.run(
+                      ['xcrun', 'simctl', 'list', 'devices', 'available'],
+                      check=False, capture_output=True, text=True, timeout=10
+                  )
+                  if udid in result.stdout and '(Booted)' in result.stdout:
+                      print(f'{udid} is Booted')
+                      break
+              except subprocess.TimeoutExpired:
+                  print('simctl list timed out; retrying')
+              time.sleep(5)
+          else:
+              raise SystemExit(f'{udid} did not reach Booted state')
+          PY
           done < /tmp/otsu4-simulators.txt
       - name: Run native unit tests
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
