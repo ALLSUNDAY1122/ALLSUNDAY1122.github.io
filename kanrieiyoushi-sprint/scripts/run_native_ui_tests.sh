@@ -4,6 +4,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="$ROOT/ios/KanriEiyoushiSprint.xcodeproj"
 SCHEME="KanriEiyoushiSprint"
 BUNDLE_ID="jp.allsunday1122.kanrieiyoushi"
+LOG_DIR="${TMPDIR:-/tmp}/kanri-native-ui"
+mkdir -p "$LOG_DIR"
 
 IDS=()
 while IFS= read -r id; do IDS+=("$id"); done < <(python3 - <<'PY'
@@ -29,10 +31,12 @@ PY
 [[ ${#IDS[@]} -ge 2 ]] || { echo "Need two available iPhone simulators" >&2; exit 1; }
 
 run_tests() {
-  local UDID="$1"; shift
+  local LABEL="$1"; local UDID="$2"; shift 2
+  local LOG="$LOG_DIR/${LABEL}.log"
   xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
   xcrun simctl bootstatus "$UDID" -b
   xcrun simctl uninstall "$UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
+  set +e
   xcodebuild test \
     -project "$PROJECT" \
     -scheme "$SCHEME" \
@@ -44,15 +48,24 @@ run_tests() {
     -maximum-test-execution-time-allowance 75 \
     "$@" \
     CODE_SIGNING_ALLOWED=NO \
-    ASSETCATALOG_COMPILER_APPICON_NAME=
+    ASSETCATALOG_COMPILER_APPICON_NAME= \
+    2>&1 | tee "$LOG"
+  local STATUS=${PIPESTATUS[0]}
+  set -e
   xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
+  if [[ $STATUS -ne 0 ]]; then
+    echo "=== ${LABEL} concise XCTest failure summary ===" >&2
+    grep -E "Assertion Failure|XCTAssert|Test Case .* failed|error:|failed \(|timed out|Timeout|Failure" "$LOG" | tail -160 >&2 || true
+    echo "=== end concise failure summary ===" >&2
+    return "$STATUS"
+  fi
 }
 
 # Large iPhone: full native unit/UI acceptance set.
-run_tests "${IDS[0]}" \
+run_tests large "${IDS[0]}" \
   -only-testing:KanriEiyoushiSprintTests \
   -only-testing:KanriEiyoushiSprintUITests
 
-# Small iPhone: layout/navigation/quiz smoke to catch compact-width failures without duplicating all tests.
-run_tests "${IDS[1]}" \
+# Small iPhone: compact-width main learning flow smoke.
+run_tests small "${IDS[1]}" \
   -only-testing:KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testFourTabsAndDailySprintImmediateScoring
