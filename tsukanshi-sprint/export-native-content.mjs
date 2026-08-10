@@ -28,8 +28,12 @@ if (Q.filter(q => q.answerType !== 'declaration').length !== 480) throw new Erro
 if (Q.filter(q => q.answerType === 'declaration').length !== 12) throw new Error('declaration count must be 12');
 if (!version || !baseline) throw new Error('missing content version or law baseline');
 
+const allowedRights = new Set(['original','allowed','licensed']);
 let numericSeen = 0;
 const normalize = q => {
+  if (q.auditStatus !== 'approved') throw new Error(`unapproved question: ${q.id}`);
+  if (!allowedRights.has(q.rightsStatus)) throw new Error(`unsafe rights status: ${q.id} / ${q.rightsStatus}`);
+
   const refs = Array.isArray(q.sourceRefs) ? q.sourceRefs : [];
   const primary = refs.map(ref => sources[ref]).find(Boolean);
   const type = q.answerType;
@@ -49,12 +53,21 @@ const normalize = q => {
   const declarationFields = (q.declarationFields || []).map(f => ({
     key: String(f.key),
     label: String(f.label),
-    correctValue: String(f.answer)
+    correctValue: String(f.answer),
+    aliases: Array.isArray(f.aliases) ? f.aliases.map(String) : []
   }));
   const correctIndices = type === 'singleChoice'
     ? [q.answer]
     : type === 'multiChoice' ? (q.answers || []) : [];
-  const checkedAt = primary?.checkedAt || q.editorialAuditDate || q.auditDate || '2026-08-09';
+  const checkedAt = q.sourceCheckedAt || primary?.checkedAt || q.auditedAt || q.editorialAuditDate || q.auditDate || '2026-08-09';
+  const sourceTitle = q.sourceTitle || primary?.title || null;
+  const sourceURL = q.sourceUrl || q.sourceURL || primary?.url || null;
+  const rightsBasis = [
+    q.rightsStatus,
+    q.sourceType,
+    q.transformationNote,
+    q.rightsBasis
+  ].filter(Boolean).map(String).join(' | ') || null;
 
   return {
     id: String(q.id),
@@ -67,13 +80,14 @@ const normalize = q => {
     correctNumber: Number.isFinite(q.correctNumber) ? q.correctNumber : null,
     acceptedRange: Number.isFinite(q.acceptedRange) ? q.acceptedRange : null,
     unit: q.unit ? String(q.unit) : null,
+    roundingRule: q.roundingRule ? String(q.roundingRule) : null,
     blanks,
     declarationFields,
     sourceText: q.sourceText ? String(q.sourceText) : null,
     memoryPoint: String(q.point),
     explanation: String(q.detail),
-    sourceTitle: primary?.title || null,
-    sourceURL: primary?.url || null,
+    sourceTitle,
+    sourceURL,
     sourceRefs: refs,
     sourceCheckedAt: checkedAt,
     lawBaselineDate: String(q.lawBaseline || baseline),
@@ -81,7 +95,7 @@ const normalize = q => {
     premium,
     examRound: q.examRound ? String(q.examRound) : null,
     questionNumber: q.questionNo ? String(q.questionNo) : null,
-    rightsBasis: q.sourceType === 'original' ? 'original-primary-source-backed' : (q.rightsBasis || null)
+    rightsBasis
   };
 };
 
@@ -96,6 +110,8 @@ for (const q of questions) {
   promptMap.set(signature, q.id);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(q.sourceCheckedAt)) throw new Error(`invalid sourceCheckedAt: ${q.id}`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(q.lawBaselineDate)) throw new Error(`invalid lawBaselineDate: ${q.id}`);
+  if (!q.rightsBasis) throw new Error(`missing rights basis: ${q.id}`);
+  if (q.answerType === 'numeric' && !q.roundingRule) throw new Error(`numeric roundingRule missing: ${q.id}`);
 }
 
 const output = {
