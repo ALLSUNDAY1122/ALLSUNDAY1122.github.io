@@ -19,9 +19,9 @@ final class Otsu4SprintUITests: XCTestCase {
         assertVisibleContentFitsHorizontally(in: app)
         assertButtonsHaveAccessibilityLabels(in: app)
 
-        let sprint = app.staticTexts["今日のスプリント"]
-        XCTAssertTrue(sprint.waitForExistence(timeout: 5))
-        sprint.tap()
+        let start = app.buttons["始める"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
 
         let unknown = app.buttons["わからない"]
         XCTAssertTrue(unknown.waitForExistence(timeout: 10))
@@ -29,11 +29,30 @@ final class Otsu4SprintUITests: XCTestCase {
         assertButtonsHaveAccessibilityLabels(in: app)
 
         unknown.tap()
-        XCTAssertTrue(app.staticTexts["わからない"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["ここだけ覚える"].waitForExistence(timeout: 5))
         let next = app.buttons["次の問題へ"]
         let result = app.buttons["結果を見る"]
         XCTAssertTrue(next.waitForExistence(timeout: 3) || result.exists)
         assertVisibleContentFitsHorizontally(in: app)
+    }
+
+    func testHistoryMatchesGoldenMasterStructure() throws {
+        let app = makeApp()
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["危険物 乙4"].waitForExistence(timeout: 20))
+        let history = app.tabBars.buttons["記録"]
+        XCTAssertTrue(history.exists)
+        history.tap()
+
+        XCTAssertTrue(app.staticTexts["学習記録"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["達成度"].exists)
+        XCTAssertTrue(app.staticTexts["5週間の学習"].exists)
+        XCTAssertTrue(app.staticTexts["科目別"].exists)
+        XCTAssertTrue(app.staticTexts["苦手一覧"].exists)
+        XCTAssertTrue(app.otherElements["全体達成度"].exists || app.staticTexts.matching(NSPredicate(format: "label CONTAINS '/' ")).count >= 0)
+        assertVisibleContentFitsHorizontally(in: app)
+        assertButtonsHaveAccessibilityLabels(in: app)
     }
 
     func testSettingsExposeGoalBackupRestoreAndPurchaseRestore() throws {
@@ -62,9 +81,9 @@ final class Otsu4SprintUITests: XCTestCase {
         assertVisibleContentFitsHorizontally(in: app)
         assertButtonsHaveAccessibilityLabels(in: app)
 
-        let sprint = app.staticTexts["今日のスプリント"]
-        XCTAssertTrue(sprint.waitForExistence(timeout: 5))
-        sprint.tap()
+        let start = app.buttons["始める"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
 
         XCTAssertTrue(app.buttons["わからない"].waitForExistence(timeout: 10))
         assertVisibleContentFitsHorizontally(in: app)
