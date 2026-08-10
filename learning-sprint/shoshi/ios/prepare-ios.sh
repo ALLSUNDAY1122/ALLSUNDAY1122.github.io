@@ -6,6 +6,7 @@ QUESTIONS_SRC="$SHOSHI_ROOT/content-loop/questions.generated.json"
 RESOURCES="$SCRIPT_DIR/Resources"
 ASSET_DIR="$SCRIPT_DIR/Assets.xcassets/AppIcon.appiconset"
 ICON="$ASSET_DIR/AppIcon.png"
+ICON_DRIVE_ID="1lALyLGEVFvdWvMZVsQqdRnEJmJzUOFu7"
 ICON_SHA256="c34399358e182a4709f805127fc7244f9763a1f796bb68dfed24b5c4ee815506"
 ICON_MODE="${SHOSHI_ICON_MODE:-canonical}"
 
@@ -19,11 +20,42 @@ cat > "$ASSET_DIR/Contents.json" <<'JSON'
 }
 JSON
 
+fetch_canonical_icon() {
+  local tmp url sha
+  tmp="$(mktemp)"
+  trap 'rm -f "$tmp"' RETURN
+  for url in \
+    "https://drive.usercontent.google.com/download?id=${ICON_DRIVE_ID}&export=download&confirm=t" \
+    "https://drive.google.com/uc?export=download&id=${ICON_DRIVE_ID}&confirm=t" \
+    "https://drive.google.com/uc?id=${ICON_DRIVE_ID}&export=download&confirm=t"; do
+    rm -f "$tmp"
+    if curl --fail --location --silent --show-error --connect-timeout 15 --max-time 60 "$url" --output "$tmp"; then
+      sha="$(shasum -a 256 "$tmp" | awk '{print $1}')"
+      echo "INFO: canonical AppIcon candidate SHA256=$sha"
+      if [ "$sha" = "$ICON_SHA256" ]; then
+        mv "$tmp" "$ICON"
+        trap - RETURN
+        echo "PASS: retrieved exact canonical AppIcon bytes from Drive"
+        return 0
+      fi
+    fi
+  done
+  return 1
+}
+
 case "$ICON_MODE" in
   canonical)
-    test -f "$ICON"
+    if [ ! -f "$ICON" ]; then
+      fetch_canonical_icon || {
+        echo "ERROR: canonical AppIcon is missing and no exact-byte Drive endpoint reproduced SHA256=$ICON_SHA256" >&2
+        exit 1
+      }
+    fi
     actual_icon_sha="$(shasum -a 256 "$ICON" | awk '{print $1}')"
-    test "$actual_icon_sha" = "$ICON_SHA256"
+    if [ "$actual_icon_sha" != "$ICON_SHA256" ]; then
+      echo "ERROR: canonical AppIcon SHA mismatch: $actual_icon_sha" >&2
+      exit 1
+    fi
     echo "PASS: canonical AppIcon SHA256=$actual_icon_sha"
     ;;
   simulator-placeholder)
