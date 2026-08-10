@@ -1,54 +1,90 @@
 workflows:
-  network-specialist-ios:
-    name: Network Specialist iOS
+  network-specialist-native-ios:
+    name: Network Specialist Native iOS
     max_build_duration: 60
     instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: networkspecialist_appstore
     environment:
       xcode: latest
       vars:
         XCODE_PROJECT: "network-specialist-sprint/ios/NetworkSpecialist.xcodeproj"
         XCODE_SCHEME: "NetworkSpecialist"
         BUNDLE_ID: "jp.allsunday1122.networkspecialist"
+        APPLE_TEAM_ID: "MN3D2ZM44N"
     scripts:
-      - name: Prepare bundled web and icon
+      - name: Build native question payload
         script: |
           cd network-specialist-sprint
-          mkdir -p ios/NetworkSpecialist/WebApp
-          cp index.html style-v21.css app-v21.js questions-meta.js questions-2025-a.js questions-2025-b.js questions-2024-a.js questions-2024-b.js questions-2023-a.js questions-2023-b.js questions-ui-fixes.js manifest.json sw.js icon.svg ios/NetworkSpecialist/WebApp/
-          python3 - <<'PY'
-          from pathlib import Path
-          d=Path('ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset')
-          png=d/'AppIcon-1024.png'
-          if not png.exists():
-              raise SystemExit('Canonical AppIcon missing. Materialize Drive file 1V9gAXcE7jSuYn9Y8SFgYWHNfRGsE_Lb8 before Archive.')
-          PY
-      - name: Validate web assets
+          python3 scripts/build_native_questions.py
+
+      - name: Legacy content and rights validation
         script: |
           cd network-specialist-sprint
           python3 scripts/validate_release.py
+
+      - name: Native static release validation
+        script: |
+          cd network-specialist-sprint
+          python3 scripts/validate_native_release.py --require-icon
+
+      - name: Verify canonical AppIcon
+        script: |
+          cd network-specialist-sprint
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          p=Path('ios/NetworkSpecialist/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png')
+          expected='5b53032021cea4a3e71e737c1a48e1aa8d6495b3647cb770b0e5d917bb0d8729'
+          if not p.exists():
+              raise SystemExit('Canonical AppIcon missing')
+          actual=hashlib.sha256(p.read_bytes()).hexdigest()
+          if actual != expected:
+              raise SystemExit(f'Canonical AppIcon SHA mismatch: {actual}')
+          print('PASS canonical AppIcon')
+          PY
+
       - name: Install XcodeGen
         script: |
           brew install xcodegen
+
       - name: Generate Xcode project
         script: |
           cd network-specialist-sprint/ios
           xcodegen generate
-      - name: Resolve signing
+
+      - name: Simulator build and size tests
+        script: |
+          cd network-specialist-sprint
+          xcodebuild build \
+            -project ios/NetworkSpecialist.xcodeproj \
+            -scheme NetworkSpecialist \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
+          scripts/run_native_ui_tests.sh
+
+      - name: Resolve App Store signing
         script: |
           keychain initialize
           app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
           keychain add-certificates
-          xcode-project use-profiles
-      - name: Build archive
+          xcode-project use-profiles \
+            --project "$XCODE_PROJECT" \
+            --custom-export-options='{"testFlightInternalTestingOnly": true}'
+
+      - name: Build signed IPA
         script: |
           xcode-project build-ipa \
             --project "$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
+
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: false
         submit_to_app_store: false
