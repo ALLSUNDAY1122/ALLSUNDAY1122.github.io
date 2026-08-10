@@ -21,10 +21,17 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: App.swift
-      - path: Web
-        type: folder
-        buildPhase: resources
+      - path: Models.swift
+      - path: LearningLogic.swift
+      - path: QuestionRepository.swift
+      - path: StoreKitManager.swift
+      - path: AppModel.swift
+      - path: BackupDocument.swift
+      - path: Theme.swift
+      - path: Views.swift
       - path: Assets.xcassets
+        buildPhase: resources
+      - path: Resources
         buildPhase: resources
       - path: PrivacyInfo.xcprivacy
         buildPhase: resources
@@ -47,4 +54,17 @@ targets:
           - UIInterfaceOrientationPortrait
         UIViewControllerBasedStatusBarAppearance: true
     scheme:
-      testTargets: []
+      testTargets:
+        - ShoshiSprintTests
+
+  ShoshiSprintTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Tests
+    dependencies:
+      - target: ShoshiSprint
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.allsunday1122.shoshi.tests
