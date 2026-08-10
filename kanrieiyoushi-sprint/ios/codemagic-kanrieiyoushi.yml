@@ -45,6 +45,8 @@ workflows:
           p.write_text(text,encoding='utf-8')
           PY
           xcodegen generate
+          python3 apply-xcode-capabilities.py KanriEiyoushiSprint.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' KanriEiyoushiSprint.xcodeproj/project.pbxproj
       - name: Verify native Release inputs
         script: |
           cd "$CM_BUILD_DIR"
@@ -57,10 +59,10 @@ workflows:
         script: |
           cd "$CM_BUILD_DIR/kanrieiyoushi-sprint"
           KANRI_ICON_MODE=simulator-placeholder bash ios/prepare-ios.sh
-          cd ios && xcodegen generate && cd ..
+          cd ios && xcodegen generate && python3 apply-xcode-capabilities.py KanriEiyoushiSprint.xcodeproj/project.pbxproj && cd ..
           bash scripts/run_native_ui_tests.sh
           KANRI_ICON_MODE=canonical bash ios/prepare-ios.sh
-          cd ios && xcodegen generate
+          cd ios && xcodegen generate && python3 apply-xcode-capabilities.py KanriEiyoushiSprint.xcodeproj/project.pbxproj
       - name: Apply App Store signing for Internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/kanrieiyoushi-sprint/ios"
