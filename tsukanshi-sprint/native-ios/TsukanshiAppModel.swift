@@ -185,6 +185,10 @@ final class TsukanshiAppModel: ObservableObject {
         )
     }
 
+    func completionCount(for kind: SessionKind) -> Int {
+        state.completionCount(for: kind)
+    }
+
     func setDailyTarget(_ value: Int) {
         guard LearningState.validTarget(value) else { return }
         state.dailyTarget = value
@@ -232,6 +236,31 @@ final class TsukanshiAppModel: ObservableObject {
         start(kind: .subject(subject), questions: selected)
     }
 
+    func startNumericPractice() {
+        guard let content else { return }
+        let candidates = content.questions.filter { $0.answerType == .numeric }
+        let selected = LearningEngine.selectSprint(
+            from: candidates,
+            target: state.dailyTarget,
+            isPremium: purchaseController.isPremium
+        )
+        start(kind: .subject("通関実務｜計算"), questions: selected)
+    }
+
+    func startDeclarationPractice() {
+        guard let content else { return }
+        guard purchaseController.isPremium else {
+            transientMessage = "申告書演習はプレミアムで利用できます"
+            return
+        }
+        let selected = LearningEngine.selectSprint(
+            from: content.declarationQuestions,
+            target: state.dailyTarget,
+            isPremium: true
+        )
+        start(kind: .subject("通関実務｜申告書"), questions: selected)
+    }
+
     func startMock(round: String, subject: String) {
         guard let content else { return }
         let questions = content.mockQuestions(
@@ -276,6 +305,7 @@ final class TsukanshiAppModel: ObservableObject {
         session.advance()
         if session.isFinished {
             state.resumeSession = nil
+            state.recordCompletion(for: session.kind)
         } else {
             state.resumeSession = session.snapshot
         }
@@ -289,6 +319,7 @@ final class TsukanshiAppModel: ObservableObject {
             LearningEngine.record(question: question, evaluation: evaluation, state: &state)
         }
         state.resumeSession = nil
+        state.recordCompletion(for: session.kind)
         persist()
     }
 
