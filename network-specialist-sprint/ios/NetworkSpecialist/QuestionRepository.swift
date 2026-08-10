@@ -12,7 +12,9 @@ struct QuestionRepository {
     }
 
     static func load(bundle: Bundle = .main) throws -> QuestionRepository {
-        guard let url = bundle.url(forResource: "questions.native", withExtension: "json") else {
+        let url = bundle.url(forResource: "questions.native", withExtension: "json")
+            ?? bundle.url(forResource: "questions.native", withExtension: "json", subdirectory: "Resources")
+        guard let url else {
             throw RepositoryError.missingResource
         }
         let data = try Data(contentsOf: url)
