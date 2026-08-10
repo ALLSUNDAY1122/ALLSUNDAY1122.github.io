@@ -15,7 +15,7 @@
 - データ：既監査75出題枠 / 68ユニークを内容変更せずネイティブJSONへ変換
 - contentVersion：`nw-a2-2026-08-v1`
 - lawBaselineDate：資格正本に値がないため `null` を保持し推測しない
-- sourceCheckedAt：既存監査記録の生成日時を引継ぎ
+- sourceCheckedAt：資格正本に明示値がないため空値を保持し、設定画面では「未取得」と表示
 - IAP：#7の資格別Product IDが正本にないため初期版なし。Product IDを推測しない
 - データ収集：なし
 - ログイン：なし
