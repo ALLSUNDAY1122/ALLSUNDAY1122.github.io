@@ -12,7 +12,12 @@ struct KanriEiyoushiSprintApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            RootView().environmentObject(store).environmentObject(purchase).dynamicTypeSize(preferredDynamicTypeSize).task{await purchase.refresh()}
+            RootView()
+                .environmentObject(store)
+                .environmentObject(purchase)
+                .dynamicTypeSize(preferredDynamicTypeSize)
+                .kanriPurchaseStatus(purchase.state)
+                .task{await purchase.refresh()}
         }
     }
     private var preferredDynamicTypeSize: DynamicTypeSize {
