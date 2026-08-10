@@ -590,7 +590,10 @@ workflows:
           import os
           p = Path("project.yml")
           text = p.read_text(encoding="utf-8")
-          p.write_text(text.replace("CURRENT_PROJECT_VERSION: '1'", "CURRENT_PROJECT_VERSION: '" + os.environ["CM_BUILD_NUMBER"] + "'", 1), encoding="utf-8")
+          build_number = os.environ.get("CM_BUILD_NUMBER") or os.environ.get("BUILD_NUMBER")
+          if not build_number:
+              raise RuntimeError("Codemagic build number is unavailable")
+          p.write_text(text.replace("CURRENT_PROJECT_VERSION: '1'", "CURRENT_PROJECT_VERSION: '" + build_number + "'", 1), encoding="utf-8")
           PY
           xcodegen generate
       - name: Verify signed release inputs
