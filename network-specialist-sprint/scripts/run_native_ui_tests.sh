@@ -42,12 +42,19 @@ fi
 
 for UDID in "${IDS[@]}"; do
   xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
+  xcrun simctl bootstatus "$UDID" -b
   xcodebuild test \
     -project "$PROJECT" \
     -scheme "$SCHEME" \
     -destination "platform=iOS Simulator,id=$UDID" \
+    -destination-timeout 60 \
+    -parallel-testing-enabled NO \
+    -test-timeouts-enabled YES \
+    -default-test-execution-time-allowance 60 \
+    -maximum-test-execution-time-allowance 120 \
     -only-testing:NetworkSpecialistTests \
     -only-testing:NetworkSpecialistUITests \
-    CODE_SIGNING_ALLOWED=NO
+    CODE_SIGNING_ALLOWED=NO \
+    ASSETCATALOG_COMPILER_APPICON_NAME=
   xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
 done
