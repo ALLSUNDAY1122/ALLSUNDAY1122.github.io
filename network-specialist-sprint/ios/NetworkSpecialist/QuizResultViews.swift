@@ -269,7 +269,7 @@ struct ResultScreen: View {
                             .foregroundStyle(AppTheme.ink)
                         Text("正答率 \(result.accuracy)%")
                             .appSerif(20, weight: .bold)
-                            .foregroundStyle(result.accuracy >= 60 ? AppTheme.midori : AppTheme.shu)
+                            .foregroundStyle(AppTheme.ai)
                     }
                     .padding(.top, 28)
                     .accessibilityIdentifier("result.score")
