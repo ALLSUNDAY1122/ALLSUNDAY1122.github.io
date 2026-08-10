@@ -48,7 +48,7 @@ struct PaperBackground: View {
 }
 
 struct SprintCard<Content: View>: View {
-    @ViewBuilder var content: Content
+    let content: Content
     init(@ViewBuilder content: () -> Content) { self.content = content() }
     var body: some View {
         content
@@ -81,12 +81,12 @@ struct ScreenTitle: View {
     }
 }
 
-struct ProgressRing: View {
+struct ProgressRing<Center: View>: View {
     let progress: Double
-    let center: AnyView
-    init(progress: Double, @ViewBuilder center: () -> some View) {
+    let center: Center
+    init(progress: Double, @ViewBuilder center: () -> Center) {
         self.progress = progress
-        self.center = AnyView(center())
+        self.center = center()
     }
     var body: some View {
         ZStack {
