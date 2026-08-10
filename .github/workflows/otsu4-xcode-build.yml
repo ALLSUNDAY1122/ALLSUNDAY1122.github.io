@@ -133,7 +133,6 @@ jobs:
             echo "Booting $NAME ($UDID)"
             xcrun simctl boot "$UDID" 2>/dev/null || true
             xcrun simctl bootstatus "$UDID" -b
-            xcrun simctl list devices | grep -F "$UDID" | grep -F "(Booted)"
           done < /tmp/otsu4-simulators.txt
       - name: Run native unit tests
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
