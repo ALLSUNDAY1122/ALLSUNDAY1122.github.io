@@ -16,6 +16,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Release static audit
         run: python3 pharmacist-manabi-sprint/scripts/validate_release.py
+      - name: Swift syntax parse
+        run: |
+          swiftc -version
+          swiftc -parse pharmacist-manabi-sprint/ios/*.swift pharmacist-manabi-sprint/ios/Tests/*.swift
       - name: Prepare native question and media resources
         env:
           PREFLIGHT_PLACEHOLDER_ICON: '1'
