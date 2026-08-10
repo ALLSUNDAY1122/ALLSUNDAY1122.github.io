@@ -548,3 +548,81 @@ workflows:
         auth: integration
         submit_to_testflight: false
         submit_to_app_store: false
+
+
+  otsu4-native-ios:
+    name: 危険物乙4 - Native Internal TestFlight
+    max_build_duration: 80
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: "Codemagic Shiwake Swipe"
+    environment:
+      ios_signing:
+        provisioning_profiles:
+          - otsu4_appstore
+      vars:
+        RELEASE_SOURCE_BRANCH: feat/otsu4-360-productization
+        RELEASE_SOURCE_SHA: 8912ef194955900ee4d64b17d37910b7a2931eb8
+        BUNDLE_ID: jp.allsunday1122.otsu4
+        XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
+        XCODE_SCHEME: Otsu4Sprint
+      xcode: latest
+    scripts:
+      - name: Check out pinned Release Gate source
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR"
+          git fetch --depth=1 origin "$RELEASE_SOURCE_BRANCH"
+          git checkout --detach "$RELEASE_SOURCE_SHA"
+          test "$(git rev-parse HEAD)" = "$RELEASE_SOURCE_SHA"
+      - name: Install XcodeGen
+        script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+      - name: Prepare audited 360-question resources and canonical icon
+        script: |
+          set -euo pipefail
+          bash "$CM_BUILD_DIR/native-ios/Otsu4Sprint/prepare-ios.sh"
+      - name: Set CI build number and generate Xcode project
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p = Path("project.yml")
+          text = p.read_text(encoding="utf-8")
+          p.write_text(text.replace("CURRENT_PROJECT_VERSION: '1'", "CURRENT_PROJECT_VERSION: '" + os.environ["CM_BUILD_NUMBER"] + "'", 1), encoding="utf-8")
+          PY
+          xcodegen generate
+      - name: Verify signed release inputs
+        script: |
+          set -euo pipefail
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json"
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/PrivacyInfo.xcprivacy"
+          test -f "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Assets.xcassets/AppIcon.appiconset/Icon-1024.png"
+          python3 - "$CM_BUILD_DIR/native-ios/Otsu4Sprint/Generated/questions.generated.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding="utf-8"))
+          assert data["contentVersion"] == "otsu4-2026-08-product-v2"
+          assert len(data["questions"]) == 360
+          PY
+      - name: Apply App Store signing profile for Internal TestFlight only
+        script: |
+          set -euo pipefail
+          cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
+          xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
+      - name: Build signed IPA
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
