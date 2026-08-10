@@ -35,7 +35,7 @@ jobs:
           ! grep -q 'path: Web' kanrieiyoushi-sprint/ios/project.yml
       - name: Script syntax
         run: |
-          python3 -m py_compile kanrieiyoushi-sprint/scripts/build_native_questions.py kanrieiyoushi-sprint/scripts/validate_native_release.py
+          python3 -m py_compile kanrieiyoushi-sprint/scripts/build_native_questions.py kanrieiyoushi-sprint/scripts/validate_native_release.py kanrieiyoushi-sprint/ios/apply-xcode-capabilities.py
           bash -n kanrieiyoushi-sprint/scripts/run_native_ui_tests.sh
           bash -n kanrieiyoushi-sprint/ios/prepare-ios.sh
 
@@ -53,10 +53,12 @@ jobs:
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Prepare native resources for Simulator
         run: KANRI_ICON_MODE=simulator-placeholder bash kanrieiyoushi-sprint/ios/prepare-ios.sh
-      - name: Generate Xcode project
+      - name: Generate Xcode project and StoreKit capability
         run: |
           cd kanrieiyoushi-sprint/ios
           xcodegen generate
+          python3 apply-xcode-capabilities.py KanriEiyoushiSprint.xcodeproj/project.pbxproj
+          grep -q 'com.apple.InAppPurchase' KanriEiyoushiSprint.xcodeproj/project.pbxproj
       - name: Unit and UI tests on two iPhone sizes
         run: bash kanrieiyoushi-sprint/scripts/run_native_ui_tests.sh
       - name: Release configuration compile without signing
