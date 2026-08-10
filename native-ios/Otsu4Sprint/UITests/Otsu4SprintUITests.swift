@@ -29,7 +29,7 @@ final class Otsu4SprintUITests: XCTestCase {
         assertButtonsHaveAccessibilityLabels(in: app)
 
         unknown.tap()
-        XCTAssertTrue(app.staticTexts["ここだけ覚える"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.otherElements["memoryBlock"].waitForExistence(timeout: 5))
         let next = app.buttons["次の問題へ"]
         let result = app.buttons["結果を見る"]
         XCTAssertTrue(next.waitForExistence(timeout: 3) || result.exists)
