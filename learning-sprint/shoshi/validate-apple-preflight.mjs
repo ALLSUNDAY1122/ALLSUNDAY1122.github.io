@@ -58,7 +58,7 @@ must(!/[¥￥]\s*\d/.test(swift), 'hard-coded yen price forbidden');
 
 includes(capabilityPatch, 'com.apple.InAppPurchase', 'IAP capability');
 includes(prepare, ICON_SHA, 'canonical icon SHA');
-includes(prepare, 'Resources/questions.generated.json', 'native question resource');
+includes(prepare, '$RESOURCES/questions.generated.json', 'native question resource');
 includes(prepare, 'WebKit/WKWebView', 'WebKit absence gate');
 includes(privacyManifest, 'NSPrivacyAccessedAPICategoryUserDefaults', 'UserDefaults privacy category');
 includes(privacyManifest, 'CA92.1', 'UserDefaults reason');
