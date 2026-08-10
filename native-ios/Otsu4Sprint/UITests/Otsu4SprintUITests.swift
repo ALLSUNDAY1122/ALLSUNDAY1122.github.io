@@ -6,8 +6,7 @@ final class Otsu4SprintUITests: XCTestCase {
     }
 
     func testCoreFreeFlowAndFourTabNavigationFitCurrentIPhoneWidth() throws {
-        let app = XCUIApplication()
-        app.launchArguments += ["-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        let app = makeApp()
         app.launch()
 
         XCTAssertTrue(app.staticTexts["危険物 乙4"].waitForExistence(timeout: 20))
@@ -38,8 +37,7 @@ final class Otsu4SprintUITests: XCTestCase {
     }
 
     func testSettingsExposeGoalBackupRestoreAndPurchaseRestore() throws {
-        let app = XCUIApplication()
-        app.launchArguments += ["-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        let app = makeApp()
         app.launch()
 
         XCTAssertTrue(app.staticTexts["危険物 乙4"].waitForExistence(timeout: 20))
@@ -54,6 +52,32 @@ final class Otsu4SprintUITests: XCTestCase {
         XCTAssertTrue(app.buttons["購入を復元"].exists)
         assertVisibleContentFitsHorizontally(in: app)
         assertButtonsHaveAccessibilityLabels(in: app)
+    }
+
+    func testAccessibility3DynamicTypeHasNoHorizontalOverflow() throws {
+        let app = makeApp(accessibilityText: true)
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["危険物 乙4"].waitForExistence(timeout: 20))
+        assertVisibleContentFitsHorizontally(in: app)
+        assertButtonsHaveAccessibilityLabels(in: app)
+
+        let sprint = app.staticTexts["今日のスプリント"]
+        XCTAssertTrue(sprint.waitForExistence(timeout: 5))
+        sprint.tap()
+
+        XCTAssertTrue(app.buttons["わからない"].waitForExistence(timeout: 10))
+        assertVisibleContentFitsHorizontally(in: app)
+        assertButtonsHaveAccessibilityLabels(in: app)
+    }
+
+    private func makeApp(accessibilityText: Bool = false) -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(ja)", "-AppleLocale", "ja_JP"]
+        if accessibilityText {
+            app.launchArguments.append("OTS4_UI_TEST_ACCESSIBILITY3")
+        }
+        return app
     }
 
     private func assertButtonsHaveAccessibilityLabels(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
