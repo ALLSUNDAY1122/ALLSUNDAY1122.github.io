@@ -3,6 +3,7 @@ options:
   minimumXcodeGenVersion: 2.38.0
   deploymentTarget:
     iOS: "16.0"
+  createIntermediateGroups: true
 settings:
   base:
     SWIFT_VERSION: 5.0
@@ -21,7 +22,18 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: App.swift
-      - path: Web
+      - path: Models.swift
+      - path: LearningStore.swift
+      - path: LearningStoreResultActions.swift
+      - path: StoreKitManager.swift
+      - path: Theme.swift
+      - path: RootAndHomeViews.swift
+      - path: QuizViews.swift
+      - path: HistorySettingsViews.swift
+      - path: MockPaywallViews.swift
+      - path: Generated/questions.native.json
+        buildPhase: resources
+      - path: Generated/assets
         type: folder
         buildPhase: resources
       - path: Assets.xcassets
@@ -47,4 +59,21 @@ targets:
           - UIInterfaceOrientationPortrait
         UIViewControllerBasedStatusBarAppearance: true
     scheme:
-      testTargets: []
+      testTargets:
+        - PharmacistSprintTests
+      gatherCoverageData: true
+      coverageTargets:
+        - PharmacistSprint
+
+  PharmacistSprintTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Tests/QuestionModelTests.swift
+    dependencies:
+      - target: PharmacistSprint
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
