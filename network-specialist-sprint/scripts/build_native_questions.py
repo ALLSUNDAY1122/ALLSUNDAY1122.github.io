@@ -64,11 +64,9 @@ def build(root: Path, output: Path) -> dict:
     for question in questions:
         question["sourceAttribution"] = "IPA公開問題を基に改変。解説は独自制作。"
 
-    audit_path = root / "audit-status.json"
+    # The current #7 canonical sources do not define a sourceCheckedAt or
+    # lawBaselineDate value. Preserve the schema without inventing dates.
     source_checked_at = ""
-    if audit_path.exists():
-        audit = json.loads(audit_path.read_text(encoding="utf-8"))
-        source_checked_at = audit.get("generatedAt", "")
 
     payload = {
         "schemaVersion": 1,
