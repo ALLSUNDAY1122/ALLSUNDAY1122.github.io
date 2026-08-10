@@ -58,6 +58,7 @@ jobs:
       - name: Verify release bundle resources
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
         run: |
+          set -euo pipefail
           APP=$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*Build/Products/Release-iphonesimulator/Otsu4Sprint.app' -type d | head -1)
           echo "APP=$APP"
           test -n "$APP"
@@ -74,3 +75,73 @@ jobs:
           assert len(data['questions'])==360
           print('bundle questions=',len(data['questions']))
           PY
+      - name: Select small and large iPhone simulators
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        run: |
+          python3 - <<'PY' > /tmp/otsu4-simulators.txt
+          import json, subprocess
+          data=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          devices=[]
+          for runtime, rows in sorted(data.get('devices',{}).items(), reverse=True):
+              if 'iOS' not in runtime:
+                  continue
+              for row in rows:
+                  name=row.get('name','')
+                  if row.get('isAvailable', True) and name.startswith('iPhone'):
+                      devices.append((name,row['udid']))
+          by_name={}
+          for name,udid in devices:
+              by_name.setdefault(name,udid)
+          if len(by_name) < 2:
+              raise SystemExit('Need at least two available iPhone simulator sizes')
+          def choose(tokens, excluded=set()):
+              for token in tokens:
+                  for name,udid in by_name.items():
+                      if token in name and udid not in excluded:
+                          return name,udid
+              for name,udid in by_name.items():
+                  if udid not in excluded:
+                      return name,udid
+              raise SystemExit('No simulator available')
+          small=choose(['SE (3rd generation)','16e','15','16'])
+          large=choose(['Pro Max','Plus'], {small[1]})
+          print(f'{small[0]}|{small[1]}')
+          print(f'{large[0]}|{large[1]}')
+          PY
+          cat /tmp/otsu4-simulators.txt
+      - name: Run native unit tests
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -euo pipefail
+          FIRST=$(head -1 /tmp/otsu4-simulators.txt)
+          UDID=${FIRST##*|}
+          xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
+          xcrun simctl bootstatus "$UDID" -b
+          set -o pipefail
+          xcodebuild test \
+            -project Otsu4Sprint.xcodeproj \
+            -scheme Otsu4Sprint \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            -only-testing:Otsu4SprintTests \
+            -parallel-testing-enabled NO | xcpretty
+      - name: Run UI tests on small and large iPhone sizes
+        if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
+        working-directory: native-ios/Otsu4Sprint
+        run: |
+          set -euo pipefail
+          while IFS='|' read -r NAME UDID; do
+            echo "UI testing on $NAME ($UDID)"
+            xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
+            xcrun simctl bootstatus "$UDID" -b
+            set -o pipefail
+            xcodebuild test \
+              -project Otsu4Sprint.xcodeproj \
+              -scheme Otsu4Sprint \
+              -configuration Debug \
+              -destination "platform=iOS Simulator,id=$UDID" \
+              -only-testing:Otsu4SprintUITests \
+              -parallel-testing-enabled NO | xcpretty
+            xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
+          done < /tmp/otsu4-simulators.txt
