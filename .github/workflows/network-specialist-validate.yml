@@ -20,8 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Release static validation
+
+      - name: Build native question payload
+        run: python3 network-specialist-sprint/scripts/build_native_questions.py
+
+      - name: Legacy content and rights validation
         run: python3 network-specialist-sprint/scripts/validate_release.py
+
+      - name: Native static validation
+        run: python3 network-specialist-sprint/scripts/validate_native_release.py
+
       - name: JavaScript syntax validation
         run: |
           node --check network-specialist-sprint/app-v21.js
@@ -34,6 +42,7 @@ jobs:
           node --check network-specialist-sprint/questions-2023-b.js
           node --check network-specialist-sprint/questions-ui-fixes.js
           node --check network-specialist-sprint/sw.js
+
       - name: Verify question counts
         run: |
           node <<'NODE'
@@ -55,3 +64,35 @@ jobs:
           for (const id of uniq) if (!ids.has(id)) throw new Error(`unique id missing from occurrences: ${id}`);
           console.log('PASS', {occurrences:occ.length, unique:uniq.length, perYear});
           NODE
+
+      - name: Native source policy
+        run: |
+          ! grep -R --line-number -E 'WKWebView|import WebKit' network-specialist-sprint/ios/NetworkSpecialist/*.swift
+          grep -R --line-number 'わからない' network-specialist-sprint/ios/NetworkSpecialist/*.swift
+          grep -R --line-number '3連続正解で解除' network-specialist-sprint/ios/NetworkSpecialist/*.swift
+          grep -R --line-number 'JSONバックアップ' network-specialist-sprint/ios/NetworkSpecialist/*.swift
+          python3 -m py_compile \
+            network-specialist-sprint/scripts/build_native_questions.py \
+            network-specialist-sprint/scripts/validate_native_release.py
+          bash -n network-specialist-sprint/scripts/run_native_ui_tests.sh
+
+  native-simulator:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build native question payload
+        run: python3 network-specialist-sprint/scripts/build_native_questions.py
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: |
+          cd network-specialist-sprint/ios
+          xcodegen generate
+
+      - name: SwiftUI unit and UI tests on two iPhone sizes
+        run: |
+          cd network-specialist-sprint
+          bash scripts/run_native_ui_tests.sh
