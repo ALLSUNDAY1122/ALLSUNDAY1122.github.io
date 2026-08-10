@@ -75,4 +75,28 @@ final class QuestionModelTests: XCTestCase {
         XCTAssertEqual(restored.weak["P111-001"]?.streak, 0)
         XCTAssertTrue(restored.seen.contains("P111-001"))
     }
+
+    @MainActor
+    func testWrongOrUnknownAnswerStillAdvancesDailyHeatmapAndAchievement() {
+        let store = LearningStore()
+        XCTAssertEqual(store.questions.count, 1035)
+        XCTAssertEqual(store.activeQuestions.count, 1031)
+        store.resetLearningData()
+        store.updateGoal(8)
+        store.updateShuffleQuestions(false)
+
+        let before = store.learningProgress
+        store.startDaily(premium: false)
+        XCTAssertNotNil(store.currentQuestion)
+        store.revealUnknown()
+
+        XCTAssertEqual(store.state.totalAnswered, 1)
+        XCTAssertEqual(store.state.totalCorrect, 0)
+        XCTAssertEqual(store.todayRecord.answered, 1, "不正解でも5週間ヒートマップ用の日別回答数を増やす")
+        XCTAssertEqual(store.todayRecord.correct, 0)
+        XCTAssertGreaterThan(store.learningProgress, before, "達成度は正答率ではなくユニーク着手率なので0%のままにしない")
+        XCTAssertEqual(store.weakCount, 1)
+
+        store.resetLearningData()
+    }
 }
