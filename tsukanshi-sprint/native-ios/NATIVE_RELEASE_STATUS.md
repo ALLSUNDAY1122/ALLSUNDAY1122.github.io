@@ -1,76 +1,74 @@
 # 通関士｜学びスプリント Native Release Status
 
-更新日: 2026-08-10
+更新日時: 2026-08-10 18:09 JST
 
-## 現在地
-純SwiftUIネイティブ移行の実装・専門監査3周を実施。Release Gateは未通過。Internal TestFlight未実施。
-
-## 固定識別子
+## 対象アプリ
+- 資格名: `通関士｜学びスプリント`
 - Bundle ID: `jp.allsunday1122.tsukanshi`
 - App Store Connect App ID: `6799753744`
-- Codemagic profile: `tsukanshi_appstore`
-- Product ID: `jp.allsunday1122.tsukanshi.premium`
-- Team ID: `MN3D2ZM44N`
 - Version: `1.0.0`
+- Build番号: `1`（`native-ios/project.yml` の現在値。Internal TestFlight配布BuildはCodemagic実行時に `CM_BUILD_NUMBER` へ置換するため未確定）
+- Codemagic workflow: `tsukanshi-ios`。root `codemagic.yaml` は旧WKWebView版のため現行配布設定としてFAIL。純SwiftUI候補は `tsukanshi-sprint/native-ios/codemagic-native-workflow.yaml`
+- Codemagic署名プロファイル: `tsukanshi_appstore`
+- IAP Product ID: `jp.allsunday1122.tsukanshi.premium`
+- GitHub Draft PR: https://github.com/ALLSUNDAY1122/ALLSUNDAY1122.github.io/pull/4127
+- 実装監査時コードHEAD: `e276cf7b64492dc30170d60671e9d3263730914f`
+- 共通Native Core: PR #4125 / merge commit `f2c600682e88052c2fec70ddd3f023bcacf4a131`
+- App Store本審査: 未提出。自動提出禁止。
 
-## 実装済み
-- WKWebViewを主UIから完全除去
-- ホーム／模試／記録／設定の4タブ
-- 4／8／16問、既定8問
-- singleChoice / multiChoice / numeric / blankSelect / declaration
-- 即時採点、`わからない`正式回答
-- 苦手登録、3連続正解で解除
-- 中断・再開
-- 学習履歴、科目別正答率、5週間ヒートマップ
-- 科目・模試・実務演習の完答回数
-- 計算／申告書演習の専用導線
-- JSONバックアップ／復元
-- StoreKit 2 非消耗型、`Product.displayPrice`、購入復元
-- verified entitlementのみ解放。pending/cancel/unverified/revocationで新規解放しない
-- 監査済み480学習問＋申告書12セットをビルド時JSONへ変換
-- `contentVersion` / `lawBaselineDate` / `sourceCheckedAt` / 権利根拠を保持
-- 公式過去問本文は同梱せず、税関公式ページを外部リンクで開く
-- portrait固定、iPhone専用、iOS 16.0+
+## 実績ステータス
 
-## 今回の監査で修正済み
-1. JSONバックアップの日時がISO-8601文字列化で精度落ちし、厳密round-trip testがFAIL → Foundation reference-dateのDoubleで保存し、旧ISO-8601バックアップも読める後方互換decoderへ修正。
-2. スプリント開始直後はresume snapshotを保存しておらず、異常終了時に途中再開情報を失う可能性 → 開始時点からsnapshot保存。
-3. 通常学習の回答直後にsnapshotへ回答内容が反映されない経路 → 回答記録と同時にsnapshot更新。
-4. 複数選択で必要数未満のまま採点可能、必要数超過も選択可能 → 必要選択数を上限兼採点条件として固定。
-5. 非公開Google Drive AppIconをCIが匿名curlし、HTML/中間レスポンスを画像として受け取る → ネットワーク取得を廃止。正本PNGを明示stageし、bytes/SHA-256/IHDRをオフライン検証する方式へ変更。
-6. 無料模試が画面表示の問題数より減る将来退行を検知できない → free mock count regression test追加。
+| 項目 | 判定 | 証跡 |
+|---|---|---|
+| Notion正本照合 | PASS | Notion `通関士｜学びスプリント` 正本 https://app.notion.com/p/3b609c10697d817588d7ef5e8de23343 / GitHub `tsukanshi-sprint/CHATGPT_NATIVE_CANON.md` / PR #4127 / code HEAD `e276cf7b...` |
+| UI要件照合 | PASS | Notion UI Master v2.1 / `tsukanshi-sprint/native-ios/TsukanshiRootShell.swift`, `TsukanshiHomeNativeView.swift`, `TsukanshiStudyViews.swift`, `TsukanshiRecordsNativeView.swift`, `TsukanshiSettingsNativeView.swift` / PR #4127 / HEAD `e276cf7b...` |
+| ネイティブ実装 | PASS | `tsukanshi-sprint/native-ios/project.yml`, `TsukanshiNativeApp.swift` ほか純SwiftUIソース。`project.yml`: Bundle ID `jp.allsunday1122.tsukanshi`, Version `1.0.0`, Build `1`。PR #4127 / HEAD `e276cf7b...` |
+| データ監査 | PASS | `tsukanshi-sprint/native-ios/Tests/TsukanshiNativeTests.swift` に480学習問＋申告書12セット＝492件、法令基準日、ID重複、模試件数監査。`tsukanshi-sprint/native-ios/TsukanshiContentStore.swift`。PR #4127 / HEAD `e276cf7b...` |
+| StoreKit 2 | PASS | `native-ios/LearningSprintCore/Sources/LearningSprintCore/PurchaseController.swift`。`Product.displayPrice`, `Transaction.currentEntitlements`, `Transaction.updates`, `AppStore.sync()`, verified entitlementのみ解放。Native Core PR #4125 merge `f2c60068...`。Sandbox実購入は別途未実施。 |
+| オフライン・途中再開・バックアップ | PASS | 教材はローカルJSON。`LearningStateStore.swift` にApplication Support永続化＋JSON export/import、旧ISO-8601互換decoder。`TsukanshiNativeTests.swift` にresume snapshot回帰テスト。Native Core PR #4125 merge `f2c60068...`、PR #4127。 |
+| 専門監査 | PASS | 2026-08-10に3周実施。日時精度、途中再開、複数選択、AppIcon取得方式、無料模試件数をFAILとして検出・修正。証跡: 本ファイル、Notion正本更新、PR #4127 / HEAD `e276cf7b...`。 |
+| 再監査 | PASS | 修正後にUI・教材・状態設計・Privacy Manifest・StoreKit 2・固定識別子を再照合。証跡: `NATIVE_RELEASE_STATUS.md`, `CHATGPT_NATIVE_CANON.md`, PR #4127 / HEAD `e276cf7b...`。 |
+| Releaseビルド | FAIL | 最新HEADでRelease build＋XCTest＋小型/大型iPhone UI testのPASSログなし。正本AppIcon `02_通関士.png` がGitHub `CanonicalAssets/` 未stageでFull Gateを完走できていない。Build番号1は設定値のみでRelease build証跡ではない。 |
+| 署名IPA | 未実施 | root `codemagic.yaml` が旧WKWebView workflowのまま。純SwiftUI候補 `native-ios/codemagic-native-workflow.yaml` は作成済みだが、Codemagic実行ログ／IPA artifactなし。 |
+| App Store Connectアップロード | 未実施 | App Store Connect App ID `6799753744` は固定済みだが、純SwiftUI signed IPAのアップロードBuild／ログなし。 |
+| Internal TestFlight | 未実施 | TestFlight Build番号、処理完了ログ、内部配布Build URL/スクリーンショットなし。 |
 
-## 正本AppIcon
-- Notion/Google Drive正本: `02_通関士.png`
-- 1024×1024 / 8-bit RGB / alphaなし
-- bytes: `556001`
-- SHA-256: `ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa`
-- stage先: `tsukanshi-sprint/native-ios/CanonicalAssets/02_通関士.png`
-- 仮画像、再描画、一覧画像からの切り出しは禁止。
+## 未完了項目
 
-## テスト状況
-- 共通 `LearningSprintCore` の日時round-trip修正後CI: PASS。
-- 480＋12、権利・出典メタデータ、WebKit参照0のFast Preflightは前回PASS済み。
-- 今回追加したresume/multi-choice/free mock回帰テストを含むmacOS Full Gateは、正本AppIcon未stageのため最終PASS未確認。
-- Release simulator build / XCTest / 小型・大型iPhone UI testは、最新HEADでは未PASS確認。
-- StoreKit Sandbox購入・再起動後権利維持・購入復元は実機/TestFlight環境で未実施。
+### 1. 正本AppIconのGitHub stage
+- 未完了内容: Notion/Google Drive正本 `02_通関士.png` を `tsukanshi-sprint/native-ios/CanonicalAssets/02_通関士.png` にバイト同一で配置する。
+- FAIL理由: 現在のGitHubコネクタはテキスト更新は可能だが、このチャットからPNGバイナリをcontents APIへ直接commitできない。
+- 検証済み正本: 1024×1024 / 8-bit RGB / alphaなし / 556001 bytes / SHA-256 `ff9fd508930e8728ef54907ec64a7835dcffb69a1a773edc645b79715fbfccaa`。
+- ChatGPTで実行可能: stage後のSHA/IHDR検証、Full Gate解析、FAIL修正。
+- 本人操作: 正本PNGを指定GitHubパスへそのままcommitする操作が必要。
 
-## Codemagic
-- root `codemagic.yaml` の `tsukanshi-ios` は旧 `tsukanshi-sprint/ios` WKWebView targetを参照しており、純SwiftUI版の配布設定としてはFAIL。
-- 正しいnative候補を `tsukanshi-sprint/native-ios/codemagic-native-workflow.yaml` に作成済み。
-- native candidateは `TsukanshiNative.xcodeproj` / `TsukanshiNative`、Bundle ID `jp.allsunday1122.tsukanshi`、ASC App ID `6799753744` を固定し、`submit_to_testflight: true` / `submit_to_app_store: false`。
-- 実際のInternal TestFlight前にroot `codemagic.yaml` の対象workflowへ反映し、Codemagicで `tsukanshi_appstore` が選択されることを確認する。
+### 2. macOS Full Gate
+- 未完了内容: Release build / XCTest / 小型iPhone UI test / 大型iPhone UI test。
+- FAIL理由: 正本AppIcon未stageのため最新HEADで完走したPASS証跡なし。
+- ChatGPTで実行可能: GitHub Actions/Codemagicログ解析、コード修正、テスト追加、再監査。
+- 本人操作: 原則なし。ただしmacOS runner/Codemagic側の認証・利用許可が要求された場合のみ対応。
 
-## Release blockers
-1. 正本 `02_通関士.png` がGitHub branchの `CanonicalAssets/` にまだ未配置。
-2. そのため最新HEADのmacOS Full Gate Release build＋XCTest＋小型/大型iPhone UI testを完走できていない。
-3. root `codemagic.yaml` が旧WKWebView workflowのまま。
-4. signed IPA / App Store Connect upload / Internal TestFlight未実施。
-5. TestFlight実機でStoreKit Sandbox購入・復元未実施。
+### 3. Codemagic純SwiftUI配布設定
+- 未完了内容: root `codemagic.yaml` の `tsukanshi-ios` を純SwiftUI `TsukanshiNative.xcodeproj` / `TsukanshiNative` へ切替。
+- FAIL理由: root workflowは旧 `tsukanshi-sprint/ios` WKWebView targetを参照中。
+- ChatGPTで実行可能: Full Gate PASS後、候補 `tsukanshi-sprint/native-ios/codemagic-native-workflow.yaml` をrootへ反映し静的監査。
+- 本人操作: Codemagic側で `tsukanshi_appstore` プロファイルとApp Store Connect integrationが実在・利用可能か確認。認証が要求された場合に対応。
 
-## 判定
-- UI/教材/状態設計/StoreKit 2実装: **暫定PASS**
-- 最新HEAD macOS Full Gate: **FAIL（AppIcon stage待ち）**
-- Codemagic native distribution config: **FAIL（root未切替）**
-- Internal TestFlight: **FAIL（未配布）**
-- App Store本審査: 対象外。自動提出禁止。
+### 4. 署名IPA / App Store Connect / Internal TestFlight
+- 未完了内容: signed IPA生成 → ASC App ID `6799753744` へアップロード → Internal TestFlight処理・内部配布。
+- FAIL理由: Release Gate未通過、native root workflow未切替。
+- ChatGPTで実行可能: Codemagic設定、ログ監査、アップロード結果の追跡、FAIL修正。
+- 本人操作: Apple/Codemagicの認証、契約・権限確認が要求された場合に実施。Internal TestFlight後のiPhone実機Sandbox購入・復元確認も本人操作。
+
+## 次に実行すべき作業
+1. 正本 `02_通関士.png` を `tsukanshi-sprint/native-ios/CanonicalAssets/02_通関士.png` へcommit。
+2. 最新PR #4127 HEADでmacOS Full Gateを実行し、Release build / XCTest / small+large iPhone UI testをPASSさせる。
+3. PASS後にroot `codemagic.yaml` を純SwiftUI workflowへ切替。
+4. `tsukanshi_appstore` で署名IPAを生成し、ASC `6799753744` へ送信。
+5. Internal TestFlightへ配布し、Build番号と配布証跡を記録。
+6. iPhone実機で主要導線・オフライン・Sandbox購入・再起動後権利維持・購入復元を確認。
+
+## TestFlight判定
+条件未達。ReleaseビルドPASS、Internal TestFlight用Build番号確定、署名IPA/Codemagic実行証跡が不足しているため、TestFlight Ready文字列は記録しない。
+
+App Store本審査への提出は禁止。`submit_to_app_store: false` を維持する。
