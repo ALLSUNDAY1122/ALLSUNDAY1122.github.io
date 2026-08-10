@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import re
 from pathlib import Path
@@ -43,7 +44,30 @@ def read_ui_fix(path: Path) -> tuple[set[str], str] | None:
     return ids, target.group(1)
 
 
-def build(root: Path, output: Path) -> dict:
+def write_embedded_swift(payload: dict, output: Path) -> None:
+    compact = json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    encoded = base64.b64encode(compact).decode("ascii")
+    wrapped = "\n".join(encoded[i:i + 120] for i in range(0, len(encoded), 120))
+    swift = f'''import Foundation
+
+// Generated from the audited native question payload. Do not edit manually.
+enum GeneratedQuestionPayload {{
+    static let data: Data = {{
+        let encoded = """
+{wrapped}
+"""
+        guard let data = Data(base64Encoded: encoded, options: .ignoreUnknownCharacters) else {{
+            preconditionFailure("Embedded question payload is invalid base64")
+        }}
+        return data
+    }}()
+}}
+'''
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(swift, encoding="utf-8")
+
+
+def build(root: Path, output: Path, swift_output: Path) -> dict:
     meta_text = (root / "questions-meta.js").read_text(encoding="utf-8")
     content_version = extract_content_version(meta_text)
     source_urls = extract_json_assignment(meta_text, "NW_SOURCE_URLS")
@@ -66,13 +90,11 @@ def build(root: Path, output: Path) -> dict:
 
     # The current #7 canonical sources do not define a sourceCheckedAt or
     # lawBaselineDate value. Preserve the schema without inventing dates.
-    source_checked_at = ""
-
     payload = {
         "schemaVersion": 1,
         "contentVersion": content_version,
         "lawBaselineDate": None,
-        "sourceCheckedAt": source_checked_at,
+        "sourceCheckedAt": "",
         "sourceURLs": source_urls,
         "answerURLs": answer_urls,
         "uniqueIDs": unique_ids,
@@ -81,6 +103,7 @@ def build(root: Path, output: Path) -> dict:
     validate(payload)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+    write_embedded_swift(payload, swift_output)
     return payload
 
 
@@ -120,18 +143,29 @@ def validate(payload: dict) -> None:
 
 
 def main() -> None:
+    root_default = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--root", type=Path, default=root_default)
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(__file__).resolve().parents[1] / "ios" / "NetworkSpecialist" / "Resources" / "questions.native.json",
+        default=root_default / "ios" / "NetworkSpecialist" / "Resources" / "questions.native.json",
+    )
+    parser.add_argument(
+        "--swift-output",
+        type=Path,
+        default=root_default / "ios" / "NetworkSpecialist" / "GeneratedQuestionPayload.swift",
     )
     args = parser.parse_args()
-    payload = build(args.root, args.output)
+    payload = build(args.root, args.output, args.swift_output)
     print(
         "PASS native question payload",
-        {"occurrences": len(payload["questions"]), "unique": len(payload["uniqueIDs"]), "output": str(args.output)},
+        {
+            "occurrences": len(payload["questions"]),
+            "unique": len(payload["uniqueIDs"]),
+            "output": str(args.output),
+            "swiftOutput": str(args.swift_output),
+        },
     )
 
 
