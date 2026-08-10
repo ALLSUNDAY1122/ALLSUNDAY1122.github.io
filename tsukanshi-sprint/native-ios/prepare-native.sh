@@ -42,4 +42,7 @@ grep -q 'MN3D2ZM44N' "$NATIVE_DIR/TsukanshiNativeConfig.swift"
 ! grep -R -n -E 'WKWebView|import WebKit|UIViewRepresentable' "$NATIVE_DIR" --include='*.swift'
 ! grep -q "'2026-08-09'" export-native-content.mjs
 
-echo 'PASS: Tsukanshi native preparation and no-WebView gate'
+bash "$NATIVE_DIR/fetch-canonical-appicon.sh"
+test -f "$NATIVE_DIR/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
+
+echo 'PASS: Tsukanshi native preparation, canonical AppIcon, and no-WebView gate'
