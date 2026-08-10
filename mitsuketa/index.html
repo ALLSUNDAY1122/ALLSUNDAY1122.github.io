@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>みーつけた！どうぶつかくれんぼ</title>
+<style>
+:root{--cream:#f7f0dc;--ink:#3d4c3d;--green:#87b87a;--sky:#c7ebe6;--card:#fffdf8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--cream);font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);touch-action:manipulation}
+button{font:inherit}
+.app{height:100dvh;max-width:1120px;margin:auto;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom)}
+.top{height:76px;display:flex;align-items:center;gap:10px;padding:8px 4px}
+.round{width:58px;height:58px;border:0;border-radius:50%;background:#fff;box-shadow:0 4px 12px #0001;font-size:28px;display:grid;place-items:center}
+.stars{margin-left:auto;font-size:29px;letter-spacing:4px}
+.scene{position:relative;flex:1;min-height:0;border-radius:32px;overflow:hidden;background:linear-gradient(#bfe9e3 0 45%,#dcefcf 45% 66%,#a8d18e 66%);box-shadow:inset 0 0 0 2px #ffffff66}
+.cloud,.sun,.flower,.butterfly{position:absolute;user-select:none;filter:drop-shadow(0 2px 2px #0001)}
+.cloud{left:5%;top:5%;font-size:55px}.sun{right:6%;top:6%;font-size:55px}.flower{left:5%;bottom:3%;font-size:36px}.butterfly{right:6%;bottom:8%;font-size:37px}
+.spot{position:absolute;border:0;background:transparent;width:118px;height:118px;display:grid;place-items:center;font-size:82px;transform:translate(-50%,-50%);border-radius:36px}
+.spot.active.hint{animation:wiggle .8s ease-in-out infinite alternate}
+@keyframes wiggle{from{transform:translate(-50%,-50%) rotate(-3deg) scale(1)}to{transform:translate(-50%,-50%) rotate(3deg) scale(1.07)}}
+.animal{position:absolute;left:50%;top:38%;width:126px;height:126px;transform:translate(-50%,-50%) scale(.9);display:grid;place-items:center;font-size:78px;border-radius:50%;transition:left .85s ease,top .85s ease,transform .65s cubic-bezier(.2,.8,.2,1),background .3s}
+.animal.peek{font-size:66px}
+.animal.found{left:50%!important;top:42%!important;transform:translate(-50%,-50%) scale(1.35);background:#fff0ad;animation:pop .85s cubic-bezier(.17,.67,.32,1.4)}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(.7)}70%{transform:translate(-50%,-50%) scale(1.5)}100%{transform:translate(-50%,-50%) scale(1.35)}}
+.message{margin:12px 8px 8px;background:#fff;border-radius:28px;min-height:70px;display:grid;place-items:center;text-align:center;font-size:clamp(21px,4.6vw,31px);font-weight:800;padding:10px 18px;box-shadow:0 5px 14px #0001}
+.hint{position:absolute;right:18px;top:18px;background:#ffffffdd;padding:8px 13px;border-radius:22px;font-size:27px;opacity:0;transition:.25s}
+.hint.show{opacity:1}
+.celebrate{position:absolute;inset:0;display:none;place-items:center;background:linear-gradient(#dcf4e5,#fff3c7);z-index:5;text-align:center;padding:20px}
+.celebrate.show{display:grid}
+.celebrate h1{font-size:clamp(30px,7vw,52px);margin:0 0 18px}.crew{font-size:clamp(48px,10vw,85px);line-height:1.5}
+.again{margin-top:24px;border:0;border-radius:38px;padding:17px 28px;background:#e5f1db;font-size:clamp(22px,5vw,30px);font-weight:900;color:var(--ink);min-width:220px;min-height:72px}
+.modeTag{position:absolute;left:18px;top:18px;background:#ffffffcc;border-radius:20px;padding:6px 11px;font-weight:800;font-size:15px}
+@media (min-width:700px){
+ .app{padding-left:24px;padding-right:24px}.scene{border-radius:40px}.spot{width:160px;height:160px;font-size:110px}.animal{width:165px;height:165px;font-size:112px}.animal.peek{font-size:94px}.message{min-height:86px;margin:14px 20px;font-size:30px}.round{width:66px;height:66px;font-size:31px}.top{height:86px}
+}
+@media (orientation:landscape) and (max-height:600px){
+ .top{height:58px}.round{width:46px;height:46px;font-size:24px}.message{min-height:56px;margin:7px 8px;font-size:20px}.scene{border-radius:24px}.spot{width:96px;height:96px;font-size:67px}.animal{width:105px;height:105px;font-size:70px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button id="sound" class="round" aria-label="音を切り替える">🔇</button>
+    <button id="calm" class="round" aria-label="ゆっくりモード">☀️</button>
+    <div class="stars" id="stars">☆☆☆</div>
+  </div>
+  <div class="scene" id="scene">
+    <div class="cloud">☁️</div><div class="sun">☀️</div>
+    <div class="flower">🌼🌷🌼</div><div class="butterfly">🦋</div>
+    <div class="modeTag" id="modeTag" hidden>🌙 ゆっくり</div>
+    <div class="hint" id="hint">✨</div>
+    <button class="spot" id="s0" style="left:19%;top:53%">🌳</button>
+    <button class="spot" id="s1" style="left:52%;top:72%">🪨</button>
+    <button class="spot" id="s2" style="left:79%;top:58%">🌿</button>
+    <button class="spot" id="s3" style="left:38%;top:83%">🪵</button>
+    <div class="animal" id="animal">🐘</div>
+    <div class="celebrate" id="celebrate">
+      <div>
+        <h1>🎈 みーつけた！ 🎈</h1>
+        <div class="crew">🐘 🐰 🦁<br>🐼 🦊</div>
+        <button class="again" id="again">🔁 もういっかい</button>
+      </div>
+    </div>
+  </div>
+  <div class="message" id="message">だれか きたよ！</div>
+</div>
+<script>
+const animals=[
+ ['🐘','ぞうさん',['おはなが ぷるぷる！','ぱおーん！']],
+ ['🐰','うさぎさん',['ぴょーん！','おみみ ぴこぴこ！']],
+ ['🦁','らいおんさん',['がおー！…ちいさなこえ！','たてがみ ふわっ！']],
+ ['🐼','ぱんださん',['ころん！','こんにちは〜！']],
+ ['🦊','きつねさん',['しっぽ ふりふり！','ばあっ！']],
+ ['🐻','くまさん',['のっそり ばあ！','おなか ぽんぽん！']],
+ ['🐸','かえるさん',['ぴょこん！','けろっ！']],
+ ['🐵','おさるさん',['ぶらーん！','おっとっと！']]
+];
+const spots=[
+ {x:19,y:53,name:'おおきな き'}, {x:52,y:72,name:'いわ'},
+ {x:79,y:58,name:'くさむら'}, {x:38,y:83,name:'きりかぶ'}
+];
+const bgFun=['ちょうちょが ひらひら〜','はっぱが ふわっ！','ことりが ぴょこっ！','おはなが ゆらゆら〜'];
+let animal,spotIndex,phase='arrive',found=0,hintLevel=0,hintTimer=null,calm=false,sound=false;
+const $=id=>document.getElementById(id), animalEl=$('animal'), msg=$('message'), hint=$('hint'), stars=$('stars');
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+function speed(){return calm?1300:800}
+function say(t){msg.textContent=t}
+function setStars(){stars.textContent='★'.repeat(found)+'☆'.repeat(3-found)}
+function clearHints(){clearInterval(hintTimer); hintTimer=null; hint.classList.remove('show'); document.querySelectorAll('.spot').forEach(x=>x.classList.remove('hint'))}
+async function startRound(){
+ clearHints();hintLevel=0;phase='arrive';animal=rand(animals);spotIndex=Math.floor(Math.random()*spots.length);
+ animalEl.textContent=animal[0]; animalEl.className='animal'; animalEl.style.left='18%';animalEl.style.top='36%';say('だれか きたよ！');
+ await wait(speed()); if(phase!=='arrive')return;
+ phase='hide';say(animal[1]+' かくれるよ〜');
+ animalEl.style.left=spots[spotIndex].x+'%';animalEl.style.top=spots[spotIndex].y+'%';animalEl.classList.add('peek');
+ await wait(speed()); if(phase!=='hide')return;
+ phase='search'; say(animal[1]+' ど〜こだ？'); startHints();
+}
+function startHints(){
+ clearInterval(hintTimer);
+ hintTimer=setInterval(()=>{
+  if(phase!=='search')return;
+  hintLevel=Math.min(3,hintLevel+1);hint.classList.add('show');
+  if(hintLevel===1){hint.textContent='✨';say('あれ？ なにか みえてるよ')}
+  if(hintLevel===2){hint.textContent='✨';say(spots[spotIndex].name+'の ほうかな？');$('s'+spotIndex).classList.add('hint')}
+  if(hintLevel===3){hint.textContent='👀';say(animal[1]+'が ちらっ！');animalEl.style.transform='translate(-50%,-50%) scale(.93)'}
+ }, calm?6000:4000);
+}
+async function foundAnimal(){
+ if(phase!=='search')return; clearHints();phase='found';found++;setStars();
+ animalEl.className='animal found';say('みーつけた！ '+rand(animal[2]));
+ await wait(calm?1800:1300); if(phase!=='found')return;
+ if(found>=3){phase='celebrate';$('celebrate').classList.add('show');say('みんな みーつけた！')}
+ else startRound();
+}
+document.querySelectorAll('.spot').forEach((el,i)=>{
+ el.addEventListener('pointerup',e=>{e.stopPropagation(); if(phase==='search'&&i===spotIndex)foundAnimal(); else if(phase==='search')say(rand(bgFun))})
+});
+animalEl.addEventListener('pointerup',e=>{e.stopPropagation();foundAnimal()});
+$('scene').addEventListener('pointerup',()=>{if(phase==='search')say(rand(bgFun))});
+$('again').addEventListener('click',()=>{found=0;setStars();$('celebrate').classList.remove('show');startRound()});
+$('calm').addEventListener('click',()=>{calm=!calm;$('calm').textContent=calm?'🌙':'☀️';$('modeTag').hidden=!calm});
+$('sound').addEventListener('click',()=>{sound=!sound;$('sound').textContent=sound?'🔊':'🔇'});
+setStars();startRound();
+</script>
+</body>
+</html>
