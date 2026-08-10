@@ -61,13 +61,15 @@ final class ShoshiSprintTests: XCTestCase {
         XCTAssertEqual(restored?.answeredCorrect, true)
     }
 
-    func testJSONBackupRoundTrip() throws {
+    func testJSONBackupRoundTripAndDoesNotContainTrialEntitlement() throws {
         var state = LearningState()
         state.dailyGoal = 16
         state.textSize = "large"
-        state.trialCompleted = true
         state.attempts["Q1"] = AttemptStat(answered: 4, correct: 3, correctStreak: 3, isWeak: false)
         let data = try LearningLogic.exportJSON(state)
+        let json = String(decoding: data, as: UTF8.self)
+        XCTAssertFalse(json.contains("trialCompleted"))
+        XCTAssertFalse(json.contains("trialConsumed"))
         let restored = try LearningLogic.importJSON(data)
         XCTAssertEqual(restored, state)
     }
