@@ -29,11 +29,7 @@ final class KanriLearningStore: ObservableObject {
 
     init(purchase: PurchaseController, bundle: Bundle = .main, stateDirectory: URL? = nil) {
         self.purchase = purchase
-        self.stateStore = LearningStateStore(
-            bundleID: KanriAppConfig.bundleID,
-            contentVersion: KanriAppConfig.contentVersion,
-            directoryURL: stateDirectory
-        )
+        self.stateStore = LearningStateStore(bundleID: KanriAppConfig.bundleID, contentVersion: KanriAppConfig.contentVersion, directoryURL: stateDirectory)
         do {
             let repository = try QuestionRepository.load(bundle: bundle)
             self.repository = repository
@@ -47,10 +43,10 @@ final class KanriLearningStore: ObservableObject {
     }
 
     var isPremium: Bool { purchase.isPremium || KanriAppConfig.uiTestPremium }
+    var shuffleQuestions: Bool { state.shuffleQuestions ?? true }
+    var shuffleChoices: Bool { state.shuffleChoices ?? false }
     var currentQuestion: LearningQuestion? {
-        guard let session = activeSession,
-              session.currentIndex >= 0,
-              session.currentIndex < session.questionIDs.count else { return nil }
+        guard let session = activeSession, session.currentIndex >= 0, session.currentIndex < session.questionIDs.count else { return nil }
         return repository?.question(id: session.questionIDs[session.currentIndex])
     }
     var sessionProgressText: String {
@@ -67,48 +63,31 @@ final class KanriLearningStore: ObservableObject {
     var dailyProgress: Double { min(1, Double(todayAnswered) / Double(max(1, state.dailyTarget))) }
     var dailyLabel: String { "\(min(todayAnswered, state.dailyTarget)) / \(state.dailyTarget)" }
     var heatmap: [Date: Int] { LearningEngine.heatmap35Days(state: state) }
-    var requiredDailyPace: Int? {
-        LearningEngine.requiredDailyPace(totalQuestionCount: 600, uniqueAnsweredCount: uniqueAnsweredCount, examDate: state.examDate)
-    }
+    var requiredDailyPace: Int? { LearningEngine.requiredDailyPace(totalQuestionCount: 600, uniqueAnsweredCount: uniqueAnsweredCount, examDate: state.examDate) }
 
-    func setDailyTarget(_ value: Int) {
-        state.dailyTarget = LearningState.validTarget(value) ? value : 8
-        save()
-    }
-
-    func setTextSizeStep(_ value: Int) {
-        state.textSizeStep = min(2, max(0, value)); save()
-    }
-
-    func setExamDate(_ date: Date?) {
-        state.examDate = date; save()
-    }
+    func setDailyTarget(_ value: Int) { state.dailyTarget = LearningState.validTarget(value) ? value : 8; save() }
+    func setTextSizeStep(_ value: Int) { state.textSizeStep = min(2, max(0, value)); save() }
+    func setExamDate(_ date: Date?) { state.examDate = date; save() }
+    func setShuffleQuestions(_ enabled: Bool) { state.shuffleQuestions = enabled; save() }
+    func setShuffleChoices(_ enabled: Bool) { state.shuffleChoices = enabled; save() }
 
     func selectRound(_ round: Int) {
         guard (1...3).contains(round) else { return }
-        if !isPremium && round != 1 {
-            showPaywall = true
-            return
-        }
+        if !isPremium && round != 1 { showPaywall = true; return }
         selectedRound = round
     }
 
     func startToday() {
         let round = isPremium ? selectedRound : 1
-        let pool = accessibleQuestions(round: round)
-        startSession(
-            LearningEngine.selectSprint(from: pool, target: state.dailyTarget, isPremium: isPremium),
-            kind: .sprint
-        )
+        startSession(selectPractice(from: accessibleQuestions(round: round)), kind: .sprint)
     }
 
     func startSubject(_ subject: String, round: Int? = nil) {
         let round = round ?? selectedRound
         if !isPremium && round != 1 { showPaywall = true; return }
         let pool = accessibleQuestions(round: round).filter { $0.subject == subject }
-        if pool.isEmpty { errorMessage = "この分野の問題を読み込めませんでした。"; return }
-        let selected = LearningEngine.selectSprint(from: pool, target: state.dailyTarget, isPremium: isPremium)
-        startSession(selected, kind: .subject("第\(round)回|\(subject)"))
+        guard !pool.isEmpty else { errorMessage = "この分野の問題を読み込めませんでした。"; return }
+        startSession(selectPractice(from: pool), kind: .subject("第\(round)回|\(subject)"))
     }
 
     func startWeak() {
@@ -130,112 +109,55 @@ final class KanriLearningStore: ObservableObject {
         guard var snapshot = state.resumeSession else { return }
         let requiresPremium = snapshot.questionIDs.contains { repository?.question(id: $0)?.premium == true }
         if requiresPremium && !isPremium { showPaywall = true; return }
-        while snapshot.currentIndex < snapshot.questionIDs.count,
-              snapshot.answers[snapshot.questionIDs[snapshot.currentIndex]] != nil {
-            snapshot.currentIndex += 1
-        }
-        if snapshot.currentIndex >= snapshot.questionIDs.count {
-            complete(snapshot)
-            return
-        }
-        activeSession = snapshot
-        state.resumeSession = snapshot
-        currentEvaluation = nil
-        selectedAnswerIndex = nil
-        save()
+        while snapshot.currentIndex < snapshot.questionIDs.count, snapshot.answers[snapshot.questionIDs[snapshot.currentIndex]] != nil { snapshot.currentIndex += 1 }
+        if snapshot.currentIndex >= snapshot.questionIDs.count { complete(snapshot); return }
+        activeSession = snapshot; state.resumeSession = snapshot; currentEvaluation = nil; selectedAnswerIndex = nil; save()
     }
 
     func answer(index: Int?) {
-        guard var session = activeSession, let question = currentQuestion else { return }
-        guard session.answers[question.id] == nil else { return }
+        guard var session = activeSession, let question = currentQuestion, session.answers[question.id] == nil else { return }
         let payload = index.map { AnswerPayload(selectedIndices: [$0]) } ?? .unknown
         do {
             let evaluation = try LearningEngine.evaluate(question, answer: payload)
             session.answers[question.id] = payload
             LearningEngine.record(question: question, evaluation: evaluation, state: &state)
-            activeSession = session
-            state.resumeSession = session
-            selectedAnswerIndex = index
-            currentEvaluation = evaluation
-            save()
-        } catch {
-            errorMessage = "採点できませんでした。問題データを確認してください。"
-        }
+            activeSession = session; state.resumeSession = session; selectedAnswerIndex = index; currentEvaluation = evaluation; save()
+        } catch { errorMessage = "採点できませんでした。問題データを確認してください。" }
     }
 
     func advance() {
-        guard var session = activeSession else { return }
-        guard let q = currentQuestion, session.answers[q.id] != nil else { return }
-        if session.currentIndex >= session.questionIDs.count - 1 {
-            complete(session)
-            return
-        }
-        session.currentIndex += 1
-        activeSession = session
-        state.resumeSession = session
-        currentEvaluation = nil
-        selectedAnswerIndex = nil
-        save()
+        guard var session = activeSession, let q = currentQuestion, session.answers[q.id] != nil else { return }
+        if session.currentIndex >= session.questionIDs.count - 1 { complete(session); return }
+        session.currentIndex += 1; activeSession = session; state.resumeSession = session; currentEvaluation = nil; selectedAnswerIndex = nil; save()
     }
 
-    func leaveSession() {
-        activeSession = nil
-        currentEvaluation = nil
-        selectedAnswerIndex = nil
-        save()
-    }
-
+    func leaveSession() { activeSession = nil; currentEvaluation = nil; selectedAnswerIndex = nil; save() }
     func dismissResult() { result = nil }
 
     func answeredCount(round: Int) -> Int {
-        guard let repository else { return 0 }
-        let ids = Set(repository.round(round).map(\.id))
+        guard let repository else { return 0 }; let ids = Set(repository.round(round).map(\.id))
         return Set(state.attempts.map(\.questionID).filter(ids.contains)).count
     }
-
     func answeredCount(round: Int, subject: String) -> Int {
-        guard let repository else { return 0 }
-        let ids = Set(repository.round(round, subject: subject).map(\.id))
+        guard let repository else { return 0 }; let ids = Set(repository.round(round, subject: subject).map(\.id))
         return Set(state.attempts.map(\.questionID).filter(ids.contains)).count
     }
-
-    func questionCount(round: Int, subject: String) -> Int {
-        repository?.round(round, subject: subject).count ?? 0
-    }
-
-    func completionCount(round: Int, subject: String) -> Int {
-        state.completionCount(for: .subject("第\(round)回|\(subject)"))
-    }
-
-    func mockCompletionCount(round: Int) -> Int {
-        state.completionCount(for: .mock("第\(round)回"))
-    }
-
+    func questionCount(round: Int, subject: String) -> Int { repository?.round(round, subject: subject).count ?? 0 }
+    func completionCount(round: Int, subject: String) -> Int { state.completionCount(for: .subject("第\(round)回|\(subject)")) }
+    func mockCompletionCount(round: Int) -> Int { state.completionCount(for: .mock("第\(round)回")) }
     func subjectAccuracy(_ subject: String) -> Int? {
-        let attempts = state.attempts.filter { $0.subject == subject }
-        guard !attempts.isEmpty else { return nil }
+        let attempts = state.attempts.filter { $0.subject == subject }; guard !attempts.isEmpty else { return nil }
         return Int((Double(attempts.filter(\.isCorrect).count) / Double(attempts.count) * 100).rounded())
     }
 
     func exportBackup() throws -> Data { try stateStore.exportBackup(state) }
-
     func importBackup(_ data: Data) {
-        do {
-            state = try stateStore.importBackup(data, allowContentVersionMigration: false)
-            activeSession = nil; result = nil
-            importMessage = "JSONバックアップを復元しました。"
-        } catch {
-            importMessage = error.localizedDescription
-        }
+        do { state = try stateStore.importBackup(data, allowContentVersionMigration: false); activeSession = nil; result = nil; importMessage = "JSONバックアップを復元しました。" }
+        catch { importMessage = error.localizedDescription }
     }
-
     func resetLearningData() {
-        do {
-            try stateStore.reset()
-            state = LearningState(contentVersion: KanriAppConfig.contentVersion)
-            activeSession = nil; result = nil
-            importMessage = "学習データをリセットしました。"
-        } catch { importMessage = error.localizedDescription }
+        do { try stateStore.reset(); state = LearningState(contentVersion: KanriAppConfig.contentVersion); activeSession = nil; result = nil; importMessage = "学習データをリセットしました。" }
+        catch { importMessage = error.localizedDescription }
     }
 
     private func accessibleQuestions(round: Int) -> [LearningQuestion] {
@@ -244,35 +166,31 @@ final class KanriLearningStore: ObservableObject {
         return isPremium ? set : set.filter { !$0.premium }
     }
 
+    private func selectPractice(from pool: [LearningQuestion]) -> [LearningQuestion] {
+        let count = min(state.dailyTarget, pool.count)
+        if shuffleQuestions {
+            return LearningEngine.selectSprint(from: pool, target: state.dailyTarget, isPremium: isPremium)
+        }
+        let unseen = pool.filter { q in !state.attempts.contains(where: { $0.questionID == q.id }) }
+        let seen = pool.filter { q in state.attempts.contains(where: { $0.questionID == q.id }) }
+        return Array((unseen + seen).prefix(count))
+    }
+
     private func startSession(_ selected: [LearningQuestion], kind: SessionKind) {
         guard !selected.isEmpty else { errorMessage = "出題できる問題がありません。"; return }
         let snapshot = LearningSessionSnapshot(kind: kind, questionIDs: selected.map(\.id))
-        activeSession = snapshot
-        state.resumeSession = snapshot
-        currentEvaluation = nil
-        selectedAnswerIndex = nil
-        result = nil
-        save()
+        activeSession = snapshot; state.resumeSession = snapshot; currentEvaluation = nil; selectedAnswerIndex = nil; result = nil; save()
     }
 
     private func complete(_ session: LearningSessionSnapshot) {
         var correct = 0
         for id in session.questionIDs {
-            guard let q = repository?.question(id: id), let answer = session.answers[id],
-                  let evaluation = try? LearningEngine.evaluate(q, answer: answer) else { continue }
+            guard let q = repository?.question(id: id), let answer = session.answers[id], let evaluation = try? LearningEngine.evaluate(q, answer: answer) else { continue }
             if evaluation.isCorrect { correct += 1 }
         }
-        state.recordCompletion(for: session.kind)
-        state.resumeSession = nil
-        activeSession = nil
-        currentEvaluation = nil
-        selectedAnswerIndex = nil
-        result = SessionResult(kind: session.kind, correct: correct, total: session.questionIDs.count)
-        save()
+        state.recordCompletion(for: session.kind); state.resumeSession = nil; activeSession = nil; currentEvaluation = nil; selectedAnswerIndex = nil
+        result = SessionResult(kind: session.kind, correct: correct, total: session.questionIDs.count); save()
     }
 
-    private func save() {
-        do { try stateStore.save(state) }
-        catch { errorMessage = "学習状態を保存できませんでした。" }
-    }
+    private func save() { do { try stateStore.save(state) } catch { errorMessage = "学習状態を保存できませんでした。" } }
 }
