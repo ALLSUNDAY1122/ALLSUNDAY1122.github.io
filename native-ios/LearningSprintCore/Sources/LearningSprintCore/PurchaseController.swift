@@ -51,33 +51,28 @@ public final class PurchaseController: ObservableObject {
             switch result {
             case .success(let verification):
                 guard case .verified(let transaction) = verification else {
-                    isPremium = false
-                    state = .failed("購入情報を検証できません")
+                    await restoreVerifiedState(or: .failed("購入情報を検証できません"))
                     return
                 }
                 guard transaction.productID == productID,
-                      transaction.revocationDate == nil else {
-                    isPremium = false
-                    state = .failed("購入権利を確認できません")
+                      transaction.revocationDate == nil,
+                      transaction.isUpgraded == false else {
                     await transaction.finish()
+                    await restoreVerifiedState(or: .failed("購入権利を確認できません"))
                     return
                 }
                 isPremium = true
                 state = .purchased
                 await transaction.finish()
             case .pending:
-                isPremium = false
-                state = .pending
+                await restoreVerifiedState(or: .pending)
             case .userCancelled:
-                isPremium = false
-                state = .cancelled
+                await restoreVerifiedState(or: .cancelled)
             @unknown default:
-                isPremium = false
-                state = .failed("購入状態を確認できません")
+                await restoreVerifiedState(or: .failed("購入状態を確認できません"))
             }
         } catch {
-            isPremium = false
-            state = .failed(error.localizedDescription)
+            await restoreVerifiedState(or: .failed(error.localizedDescription))
         }
     }
 
@@ -87,8 +82,7 @@ public final class PurchaseController: ObservableObject {
             await refreshEntitlement()
             state = isPremium ? .purchased : .ready
         } catch {
-            isPremium = false
-            state = .failed(error.localizedDescription)
+            await restoreVerifiedState(or: .failed(error.localizedDescription))
         }
     }
 
@@ -119,6 +113,11 @@ public final class PurchaseController: ObservableObject {
         }
         isPremium = entitled
         if entitled { state = .purchased }
+    }
+
+    private func restoreVerifiedState(or fallback: PurchaseState) async {
+        await refreshEntitlement()
+        state = isPremium ? .purchased : fallback
     }
 
     private func observeTransactions() -> Task<Void, Never> {
