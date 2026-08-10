@@ -3,7 +3,6 @@ import UIKit
 
 struct QuizView: View {
     @EnvironmentObject private var learning: LearningStore
-    @EnvironmentObject private var storeKit: StoreKitManager
 
     var body: some View {
         VStack(spacing: 0) {
@@ -34,6 +33,7 @@ struct QuizView: View {
                         .foregroundStyle(Color.sprintInk)
                 }
                 .accessibilityLabel("問題を閉じる")
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(learning.state.inProgress?.title ?? "")
                         .font(.system(size: 14, weight: .bold))
@@ -60,14 +60,16 @@ struct QuizView: View {
                     }
                 }
             }
+
             GeometryReader { geo in
-                let p: Double = {
+                let progress: Double = {
                     guard let s = learning.state.inProgress, !s.ids.isEmpty else { return 0 }
-                    return Double(min(s.index + (learning.feedback == nil ? 0 : 1), s.ids.count)) / Double(s.ids.count)
+                    let completed = min(s.index + (learning.feedback == nil ? 0 : 1), s.ids.count)
+                    return Double(completed) / Double(s.ids.count)
                 }()
                 ZStack(alignment: .leading) {
                     Rectangle().fill(Color.sprintLine)
-                    Rectangle().fill(Color.sprintAi).frame(width: geo.size.width * p)
+                    Rectangle().fill(Color.sprintAi).frame(width: geo.size.width * progress)
                 }
             }
             .frame(height: 4)
@@ -92,7 +94,8 @@ struct QuizView: View {
                 Text("第\(q.exam)回・\(q.section)・\(q.field)・問\(q.questionNo)")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(Color.sprintAi)
-                    .padding(.horizontal, 9).padding(.vertical, 5)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 5)
                     .background(Color.sprintAiSoft)
                     .clipShape(Capsule())
 
@@ -108,13 +111,11 @@ struct QuizView: View {
                 }
 
                 if q.isMediaQuestion {
-                    if !q.question.isEmpty {
-                        Text(q.question)
-                            .font(.system(size: 1))
-                            .frame(width: 1, height: 1)
-                            .opacity(0.01)
-                            .accessibilityHidden(false)
-                    }
+                    Text(q.question)
+                        .font(.system(size: 1))
+                        .frame(width: 1, height: 1)
+                        .opacity(0.01)
+                        .accessibilityHidden(false)
                     VStack(spacing: 10) {
                         ForEach(q.mediaAssets, id: \.self) { path in
                             BundledMediaImage(path: path, accessibilityText: q.question)
@@ -158,20 +159,21 @@ struct QuizView: View {
         let order = learning.state.inProgress?.choiceOrders[q.id] ?? Array(q.availableChoices.indices)
         let candidates = Set(q.acceptedAnswers.flatMap { $0 } + q.answer)
         return VStack(spacing: 10) {
-            ForEach(order, id: \.self) { originalIndex in
-                let displayText = q.availableChoices.indices.contains(originalIndex) ? q.availableChoices[originalIndex] : "選択肢 \(originalIndex + 1)"
+            ForEach(Array(order.enumerated()), id: \.element) { displayOffset, originalIndex in
+                let displayText = q.availableChoices.indices.contains(originalIndex) ? q.availableChoices[originalIndex] : "選択肢 \(displayOffset + 1)"
                 let isSelected = learning.selectedAnswers.contains(originalIndex) || (learning.feedback?.selected.contains(originalIndex) ?? false)
                 let graded = learning.feedback != nil
                 let isCorrectCandidate = candidates.contains(originalIndex)
+
                 Button {
                     learning.toggleSelection(originalIndex)
                 } label: {
                     HStack(alignment: .top, spacing: 12) {
-                        Text("\(originalIndex + 1)")
+                        Text("\(displayOffset + 1)")
                             .font(.system(size: 13, weight: .bold))
                             .foregroundStyle(graded && isCorrectCandidate ? Color.sprintMidori : Color.sprintAi)
                             .frame(width: 28, height: 28)
-                            .background((graded && isCorrectCandidate ? Color.sprintMidoriSoft : Color.sprintAiSoft))
+                            .background(graded && isCorrectCandidate ? Color.sprintMidoriSoft : Color.sprintAiSoft)
                             .clipShape(Circle())
                         Text(displayText)
                             .font(.system(size: CGFloat(learning.state.fontSize)))
@@ -250,7 +252,9 @@ struct QuizView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(f.question.attribution)
                     Text(f.question.modificationDisclosure)
-                    if f.question.scoringStatus == "excluded" { Text("公式正答が『解なし』のため採点対象外です。") }
+                    if f.question.scoringStatus == "excluded" {
+                        Text("公式正答が『解なし』のため採点対象外です。")
+                    }
                 }
                 .font(.system(size: 12))
                 .foregroundStyle(Color.sprintInk3)
@@ -327,12 +331,14 @@ struct ResultView: View {
                 ScreenTitle(brand: "学びスプリント", title: "結果", tagline: "短い反復を、次の一歩へ。")
                 SprintCard {
                     VStack(spacing: 18) {
-                        Text("\(score)")
-                            .font(.system(size: 62, weight: .bold, design: .serif))
-                            .foregroundStyle(Color.sprintInk)
-                        + Text(" / \(total)")
-                            .font(.system(size: 24, weight: .semibold, design: .serif))
-                            .foregroundStyle(Color.sprintInk3)
+                        HStack(alignment: .firstTextBaseline, spacing: 5) {
+                            Text("\(score)")
+                                .font(.system(size: 62, weight: .bold, design: .serif))
+                                .foregroundStyle(Color.sprintInk)
+                            Text("/ \(total)")
+                                .font(.system(size: 24, weight: .semibold, design: .serif))
+                                .foregroundStyle(Color.sprintInk3)
+                        }
                         Text(resultMessage)
                             .font(.system(size: 20, weight: .semibold, design: .serif))
                             .multilineTextAlignment(.center)
@@ -351,11 +357,14 @@ struct ResultView: View {
                         }
                         Button("もう一度\(total)問") { learning.repeatCurrentSession() }
                             .buttonStyle(PrimaryButtonStyle())
-                        Button("ホームへ戻る") { learning.clearCompletedSession(); learning.selectedTab = .home }
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.sprintAi)
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .overlay(RoundedRectangle(cornerRadius: 13).stroke(Color.sprintAi))
+                        Button("ホームへ戻る") {
+                            learning.clearCompletedSession()
+                            learning.selectedTab = .home
+                        }
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(Color.sprintAi)
+                        .frame(maxWidth: .infinity, minHeight: 52)
+                        .overlay(RoundedRectangle(cornerRadius: 13).stroke(Color.sprintAi))
                     }
                 }
             }
