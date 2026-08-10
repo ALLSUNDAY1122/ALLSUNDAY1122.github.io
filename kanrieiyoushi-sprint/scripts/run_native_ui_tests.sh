@@ -33,8 +33,9 @@ PY
 run_tests() {
   local LABEL="$1"; local UDID="$2"; shift 2
   local LOG="$LOG_DIR/${LABEL}.log"
+  echo "=== XCTest start: ${LABEL} ==="
   xcrun simctl boot "$UDID" >/dev/null 2>&1 || true
-  xcrun simctl bootstatus "$UDID" -b
+  xcrun simctl bootstatus "$UDID" -b >/dev/null
   xcrun simctl uninstall "$UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
   set +e
   xcodebuild test \
@@ -49,23 +50,25 @@ run_tests() {
     "$@" \
     CODE_SIGNING_ALLOWED=NO \
     ASSETCATALOG_COMPILER_APPICON_NAME= \
-    2>&1 | tee "$LOG"
-  local STATUS=${PIPESTATUS[0]}
+    >"$LOG" 2>&1
+  local STATUS=$?
   set -e
   xcrun simctl shutdown "$UDID" >/dev/null 2>&1 || true
   if [[ $STATUS -ne 0 ]]; then
-    echo "=== ${LABEL} concise XCTest failure summary ===" >&2
-    grep -E "Assertion Failure|XCTAssert|Test Case .* failed|error:|failed \(|timed out|Timeout|Failure" "$LOG" | tail -160 >&2 || true
-    echo "=== end concise failure summary ===" >&2
+    echo "=== ${LABEL} XCTest FAILURE ===" >&2
+    grep -E "Test Case .* (failed|passed)|Assertion Failure|XCTAssert|error:|timed out|Timeout|Failure|TEST FAILED|Executed [0-9]+ tests" "$LOG" | tail -220 >&2 || true
+    echo "--- last 80 log lines ---" >&2
+    tail -80 "$LOG" >&2 || true
+    echo "=== end ${LABEL} XCTest FAILURE ===" >&2
     return "$STATUS"
   fi
+  grep -E "Test Case .* passed|Executed [0-9]+ tests|TEST SUCCEEDED" "$LOG" | tail -80 || true
+  echo "=== XCTest PASS: ${LABEL} ==="
 }
 
-# Large iPhone: full native unit/UI acceptance set.
 run_tests large "${IDS[0]}" \
   -only-testing:KanriEiyoushiSprintTests \
   -only-testing:KanriEiyoushiSprintUITests
 
-# Small iPhone: compact-width main learning flow smoke.
 run_tests small "${IDS[1]}" \
   -only-testing:KanriEiyoushiSprintUITests/KanriEiyoushiSprintUITests/testFourTabsAndDailySprintImmediateScoring
