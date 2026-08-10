@@ -105,7 +105,6 @@ struct LearningState: Codable, Hashable {
     var days: [String: DayStat] = [:]
     var completionCounts: [String: Int] = [:]
     var resume: SessionSnapshot?
-    var trialCompleted = false
 
     var totalAnswered: Int { attempts.values.reduce(0) { $0 + $1.answered } }
     var totalCorrect: Int { attempts.values.reduce(0) { $0 + $1.correct } }
