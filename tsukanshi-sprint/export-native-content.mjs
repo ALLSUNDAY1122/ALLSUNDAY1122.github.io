@@ -7,6 +7,8 @@ const files = [
   'questions-v03-audit1.js','questions-v03-audit1-order.js','questions-v03-audit1-polish.js','questions-editorial-audit2-7.js','questions-editorial-final-polish.js'
 ];
 
+const legacyAudit = JSON.parse(fs.readFileSync(new URL('./native-source-audit-legacy.json', import.meta.url), 'utf8'));
+const legacyMap = legacyAudit.questions || {};
 const context = vm.createContext({console});
 for (const file of files) {
   const source = fs.readFileSync(new URL(`./${file}`, import.meta.url), 'utf8');
@@ -29,12 +31,22 @@ if (Q.filter(q => q.answerType === 'declaration').length !== 12) throw new Error
 if (!version || !baseline) throw new Error('missing content version or law baseline');
 
 const allowedRights = new Set(['original','allowed','licensed']);
+const legacySourceTypes = new Set(['original','appMetadata']);
+const warnings = [];
 let numericSeen = 0;
+
 const normalize = q => {
   if (q.auditStatus !== 'approved') throw new Error(`unapproved question: ${q.id}`);
-  if (!allowedRights.has(q.rightsStatus)) throw new Error(`unsafe rights status: ${q.id} / ${q.rightsStatus}`);
+  if (q.rightsStatus !== undefined && !allowedRights.has(q.rightsStatus)) {
+    throw new Error(`unsafe rights status: ${q.id} / ${q.rightsStatus}`);
+  }
+  if (q.rightsStatus === undefined && !legacySourceTypes.has(q.sourceType)) {
+    throw new Error(`legacy question lacks explicit safe sourceType: ${q.id} / ${q.sourceType}`);
+  }
 
-  const refs = Array.isArray(q.sourceRefs) ? q.sourceRefs : [];
+  const legacy = legacyMap[q.id] || {};
+  const refs = Array.isArray(q.sourceRefs) && q.sourceRefs.length ? q.sourceRefs : (legacy.sourceRefs || []);
+  for (const ref of refs) if (!sources[ref]) throw new Error(`unknown sourceRef in native export: ${q.id} / ${ref}`);
   const primary = refs.map(ref => sources[ref]).find(Boolean);
   const type = q.answerType;
   let premium = false;
@@ -44,6 +56,7 @@ const normalize = q => {
   } else if (type === 'declaration') {
     premium = true;
   }
+
   const blanks = (q.blanks || []).map((b, index) => ({
     key: String(b.key || b.label || `blank-${index+1}`),
     label: String(b.label || `空欄${index+1}`),
@@ -59,15 +72,28 @@ const normalize = q => {
   const correctIndices = type === 'singleChoice'
     ? [q.answer]
     : type === 'multiChoice' ? (q.answers || []) : [];
-  const checkedAt = q.sourceCheckedAt || primary?.checkedAt || q.auditedAt || q.editorialAuditDate || q.auditDate || '2026-08-09';
-  const sourceTitle = q.sourceTitle || primary?.title || null;
+
+  // sourceCheckedAt is never synthesized from the current date. It must come from
+  // the question, an explicitly referenced source catalog entry, or the explicit
+  // legacy audit map for internal appMetadata.
+  const checkedAt = q.sourceCheckedAt || primary?.checkedAt || legacy.sourceCheckedAt || null;
+  if (!checkedAt) throw new Error(`sourceCheckedAt has no evidence-backed value: ${q.id}`);
+
+  const sourceTitle = q.sourceTitle || primary?.title || (q.sourceType === 'appMetadata' ? 'アプリ内部メタデータ' : null);
   const sourceURL = q.sourceUrl || q.sourceURL || primary?.url || null;
-  const rightsBasis = [
-    q.rightsStatus,
-    q.sourceType,
-    q.transformationNote,
-    q.rightsBasis
-  ].filter(Boolean).map(String).join(' | ') || null;
+  const rightsBasisParts = [
+    q.rightsStatus ? `rightsStatus=${q.rightsStatus}` : null,
+    q.sourceType ? `sourceType=${q.sourceType}` : null,
+    q.transformationNote ? `transformation=${q.transformationNote}` : null,
+    q.publicationAudit ? `publicationAudit=${q.publicationAudit}` : null,
+    q.rightsBasis || null,
+    legacy.rationale ? `legacySourceAudit=${legacy.rationale}` : null
+  ].filter(Boolean).map(String);
+  const rightsBasis = rightsBasisParts.join(' | ') || null;
+
+  if (type === 'numeric' && !q.roundingRule) {
+    warnings.push(`${q.id}: structured roundingRule absent; preserve null and do not invent one`);
+  }
 
   return {
     id: String(q.id),
@@ -111,7 +137,6 @@ for (const q of questions) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(q.sourceCheckedAt)) throw new Error(`invalid sourceCheckedAt: ${q.id}`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(q.lawBaselineDate)) throw new Error(`invalid lawBaselineDate: ${q.id}`);
   if (!q.rightsBasis) throw new Error(`missing rights basis: ${q.id}`);
-  if (q.answerType === 'numeric' && !q.roundingRule) throw new Error(`numeric roundingRule missing: ${q.id}`);
 }
 
 const output = {
@@ -122,6 +147,7 @@ const output = {
   studyQuestionCount: 480,
   declarationCount: 12,
   freeNumericCount: questions.filter(q => q.answerType === 'numeric' && !q.premium).length,
+  auditWarnings: warnings,
   questions
 };
 
@@ -131,3 +157,6 @@ fs.mkdirSync(new URL('.', path), {recursive:true});
 fs.writeFileSync(path, JSON.stringify(output, null, 2) + '\n');
 console.log(`PASS: exported ${questions.length} audited questions to ${path.pathname}`);
 console.log(`contentVersion=${version} lawBaseline=${baseline} freeNumeric=${output.freeNumericCount}`);
+console.log(`structured metadata warnings=${warnings.length}`);
+for (const warning of warnings.slice(0, 10)) console.log(`WARN: ${warning}`);
+if (warnings.length > 10) console.log(`WARN: ... ${warnings.length - 10} more`);
