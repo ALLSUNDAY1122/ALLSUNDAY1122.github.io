@@ -1,113 +1,117 @@
-# 危険物乙4｜Apple Developer / App Store Connect 入力値
+# 危険物乙4｜Apple Developer / App Store Connect / Codemagic 正本値
 
 更新: 2026-08-10
 
-Notion「申請手順」とユーザー指定の対象アプリ識別情報正本に従う。
-外部検索、推測、過去記録でBundle ID / App Store Connect App ID / Codemagic profile / IAPを変更しない。
+このファイルの識別情報はユーザー指定の正本を転記したもの。外部検索・既存コード・命名規則から変更または補完しない。
 
-共通正本:
-- Notion: https://app.notion.com/p/3b709c10697d8138a352c422d4dd5c47
-- GitHub mirror: `docs/APP_STORE_IDENTIFIERS_CANONICAL.md`
-
-## 0. 固定識別情報
+## 1. 固定識別情報
+- App: `危険物乙4｜学びスプリント`
 - Apple Team ID: `MN3D2ZM44N`
-- App Store Connect App ID: `6799755566`
 - Bundle ID: `jp.allsunday1122.otsu4`
-- Codemagic profile: `otsu4_appstore`
+- App Store Connect App ID: `6799755566`
+- Codemagic provisioning profile reference: `otsu4_appstore`
 - IAP Product ID: `jp.allsunday1122.otsu4.premium`
 - iOS Version: `1.0.0`
 - Distribution: `App Store`
 - TestFlight: `Internal Testing only`
-- App Store本審査への自動提出は禁止
 
-## 1. Apple Developer｜Explicit App ID
-- Description: `危険物乙4 学びスプリント`
-- App ID type: `Explicit`
-- Bundle ID: `jp.allsunday1122.otsu4`
+**App Store本審査への自動提出は禁止。**
+
+## 2. Apple Developer / Xcode
 - Platform: iOS
-- In-App Purchase: 利用する
+- App target Bundle ID: `jp.allsunday1122.otsu4`
+- Development Team: `MN3D2ZM44N`
+- XcodeGen `project.yml` でも同じ値を使用する
+- Bundle IDを別名へ作り直さない
+- App Store配布用の署名を使用する
 
-**Bundle IDは変更しない。**
+Apple Developer Portal上の登録状態を確認する場合も、上記値を検索・推測で置換しない。
 
-## 2. App Store Connect｜既存アプリ正本
+## 3. App Store Connect
+対象レコードの正本値:
 - App Store Connect App ID: `6799755566`
-- Platforms: `iOS`
-- Name: `危険物乙4｜学びスプリント`
-- Primary Language: `Japanese (Japan)`
-- Bundle ID: `jp.allsunday1122.otsu4`
-- SKU: `otsu4-sprint-ios-001`
-- User Access: `Full Access`
 - Version: `1.0.0`
-- Build: Codemagic側のBuild番号を使用
-- Primary Category: `Education`
-- App Price: `Free`
-
-App Store Connect App IDは既に正本値があるため、検索や推測で別IDへ置換しない。
-
-## 3. App Store表示
-- Subtitle: `8問ずつ、合格力を積み上げる`
+- Bundle ID: `jp.allsunday1122.otsu4`
+- Primary Category: Education
+- Sign-in: 不要
 - Support URL: `https://allsunday1122.github.io/kikenbutsu-otsu4-sprint/support.html`
 - Privacy Policy URL: `https://allsunday1122.github.io/kikenbutsu-otsu4-sprint/privacy.html`
-- Copyright: App Store Connect登録時の開発者名義に合わせる
-- Sign-in: 不要
-- Export Compliance: `ITSAppUsesNonExemptEncryption = false` をInfo.plistへ設定済み
+- Export Compliance: `ITSAppUsesNonExemptEncryption = false`
 
-詳細説明・キーワード・Review Notesは `APP_STORE_METADATA_JA.md` を正本とする。
+詳細説明・キーワード・Review Notesは `APP_STORE_METADATA_JA.md` を参照する。
 
 ## 4. In-App Purchase
-### 商品
 - Type: `Non-Consumable`
-- Reference Name: `乙4 プレミアム 買い切り`
 - Product ID: `jp.allsunday1122.otsu4.premium`
 - Display Name (ja-JP): `乙4 プレミアム`
-- Description (ja-JP): `独自360問・模擬試験3回・全範囲の苦手復習を解放`
-- Availability: 初回はアプリ提供地域と一致させる
-- Base Country/Region: `Japan`
-- Price: App Store Connectで最終設定し、アプリ内ではStoreKit `displayPrice`のみ表示する
-- 開発上の価格候補: `¥980`。本審査前にユーザー最終確認可能。
+- 購入後: 全360問、模擬試験3回、全範囲の苦手復習等を解放
+- アプリ内価格表示: StoreKit 2 `Product.displayPrice` のみ
+- コード・説明文へ固定価格を書かない
+- pending / userCancelled / unverified / revocationではPremiumを解放しない
+- 復元は利用者の明示操作から `AppStore.sync()` を実行する
 
-### App Review Information
-- Review Notes:
-  `設定タブの「360問・模試3回を解放」から購入画面を表示できます。購入後は全360問、35問×3回の模擬試験、全範囲の苦手復習が利用可能です。「購入を復元」は設定画面と購入画面から実行できます。ログインは不要です。`
-- App Review Screenshot: TestFlight実機で購入画面を表示したスクリーンショットを最終登録する
+価格設定はApp Store Connect側を正とし、アプリ内へ金額をハードコードしない。
 
-## 5. App Privacy候補
-現行実装:
+## 5. App Privacy実装基準
+現行設計:
 - 独自アカウントなし
 - 広告SDKなし
 - 解析SDKなし
 - 開発者サーバーへの学習履歴送信なし
-- 学習履歴・設定・苦手・中断状態は端末内UserDefaults
+- 学習履歴・設定・苦手・中断状態は端末内保存
 - JSONバックアップは利用者が明示操作してFilesへ書き出し／読み込み
 - 決済はStoreKit / App Store
 
-提出候補: `Data Not Collected`
-
-提出直前に実装と再照合し、第三者SDKや外部通信が追加されていないことを再監査する。
+提出直前に `PrivacyInfo.xcprivacy` と実装を再監査し、追加SDK・外部送信の有無に応じてApp Privacy回答を確定する。
 
 ## 6. Codemagic
 - Workflow: `otsu4-ios`
-- Codemagic署名profile: `otsu4_appstore`
-- Distribution: `app_store`
+- App Store Connect integration: `codemagic`
+- Provisioning profile reference: `otsu4_appstore`
+- Distribution: App Store
 - Bundle ID: `jp.allsunday1122.otsu4`
-- Apple Team ID: `MN3D2ZM44N`
-- Internal TestFlight export: `testFlightInternalTestingOnly: true`
-- Beta App Reviewへの自動提出は禁止
-- App Store本審査への自動提出は禁止
+- App Store Connect App ID: `6799755566`
+- Team ID: `MN3D2ZM44N`
+- Internal-only export: `testFlightInternalTestingOnly: true`
+- `submit_to_testflight: false`
+- `submit_to_app_store: false`
 
-`otsu4_appstore` 以外のprofile名へ推測で変更しない。
-秘密鍵、API key、Issuer ID、Key ID、Appleパスワード、2FAコードはGitHub / Notion / チャットへ保存しない。
+`otsu4_appstore` を個別Reference nameで取得する設定を使用する。対応するApple Distribution証明書のReference nameはこの正本に未記載のため、推測して追加しない。署名付きIPA工程でCodemagic上の実在する証明書設定を確認するまでRelease blockerとして扱う。
 
-## 7. TestFlight内部テスト
-Internal Testing only。
-- Group候補: `乙4 内部テスト`
-- What to Test:
-  `8問スプリント、4/8/16問切替、苦手3連続解除、続きから、模擬試験3回、学習記録、JSONバックアップ、Premium購入・キャンセル・pending・復元・再インストール後の権利復元、文字サイズを確認してください。`
+秘密鍵、API key、Issuer ID、Key ID、証明書パスワード、2FAコードはGitHub / Notion / チャットへ保存しない。
 
-## 8. 人間操作が必要な地点
-1. Apple Developer / App Store Connect / Codemagicへの本人ログイン・2FA
-2. Paid Apps Agreement・税務・銀行情報の契約確認
-3. TestFlightのiPhone実機確認
-4. App Store最終提出の承認
+## 7. App Icon
+学びスプリント申請手順に従い、採用済み個別PNGを使用する。
+- Google Drive正本ファイル: `01_危険物取扱者_乙種4類.png`
+- Drive file ID: `10B_svZxlg80KfV61atBj4_sBkMTndFwS`
+- 1024 × 1024 / RGB / no alpha
+- SHA-256: `d0cb19b237ca3306413c481e4fbc0fb871705b390a1bc37619d9683fff19ff2d`
 
-それ以外は可能な限り自動検証・CIで完結させる。
+似たアイコンの自動生成物をApp Store用アイコンとして完成扱いしない。
+
+## 8. TestFlight内部テスト
+Internal Testing only。最低限:
+- 起動
+- 標準8問
+- 4 / 8 / 16問切替
+- `わからない`
+- 苦手登録と3連続正解解除
+- 中断／続きから
+- 模擬試験3回、35問・120分
+- 記録／5週間ヒートマップ
+- JSONバックアップ／復元
+- Premium購入成功
+- 購入キャンセル
+- pending
+- 復元
+- 再インストール後のentitlement
+- 大きい文字
+- 横スクロールなし
+- VoiceOver
+
+## 9. STOP条件
+ユーザーの明示承認前に行わない。
+- App Store本審査への提出
+- `submit_to_app_store: true` への変更
+- Bundle ID / App Store Connect App ID / IAP Product ID / Codemagic profileの変更
+- Internal Testing以外への勝手な配布変更
