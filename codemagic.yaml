@@ -75,14 +75,24 @@ workflows:
       app_store_connect: codemagic
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: jp.allsunday1122.otsu4
+        provisioning_profiles:
+          - otsu4_appstore
       vars:
+        APP_STORE_ID: '6799755566'
+        APPLE_TEAM_ID: MN3D2ZM44N
         BUNDLE_ID: jp.allsunday1122.otsu4
+        CODEMAGIC_PROFILE: otsu4_appstore
         XCODE_PROJECT: native-ios/Otsu4Sprint/Otsu4Sprint.xcodeproj
         XCODE_SCHEME: Otsu4Sprint
       xcode: latest
     scripts:
+      - name: Verify canonical identifiers
+        script: |
+          set -euo pipefail
+          test "$BUNDLE_ID" = "jp.allsunday1122.otsu4"
+          test "$APP_STORE_ID" = "6799755566"
+          test "$APPLE_TEAM_ID" = "MN3D2ZM44N"
+          test "$CODEMAGIC_PROFILE" = "otsu4_appstore"
       - name: Install XcodeGen
         script: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Prepare audited 360-question resources and icon
@@ -107,7 +117,7 @@ workflows:
           assert len(data['questions'])==360
           print('PASS: audited Otsu4 bundle inputs')
           PY
-      - name: Apply App Store signing profiles for internal TestFlight only
+      - name: Apply canonical App Store profile for internal TestFlight only
         script: |
           cd "$CM_BUILD_DIR/native-ios/Otsu4Sprint"
           xcode-project use-profiles --custom-export-options='{"testFlightInternalTestingOnly": true}'
