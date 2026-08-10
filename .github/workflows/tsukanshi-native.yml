@@ -5,6 +5,7 @@ on:
     paths:
       - 'tsukanshi-sprint/native-ios/**'
       - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
       - 'tsukanshi-sprint/questions*.js'
       - 'tsukanshi-sprint/sources*.js'
       - 'native-ios/LearningSprintCore/**'
@@ -13,6 +14,7 @@ on:
     paths:
       - 'tsukanshi-sprint/native-ios/**'
       - 'tsukanshi-sprint/export-native-content.mjs'
+      - 'tsukanshi-sprint/native-source-audit-legacy.json'
       - 'tsukanshi-sprint/questions*.js'
       - 'tsukanshi-sprint/sources*.js'
       - 'native-ios/LearningSprintCore/**'
@@ -74,6 +76,7 @@ jobs:
           assert len(data['questions'])==492
           assert data['studyQuestionCount']==480
           assert data['declarationCount']==12
+          assert all(q['sourceCheckedAt'] and q['rightsBasis'] for q in data['questions'])
           print('PASS: native app contains 492 audited records and no web bundle')
           PY
 
