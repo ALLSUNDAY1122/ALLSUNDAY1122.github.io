@@ -36,13 +36,17 @@ def main() -> None:
     root = args.root
 
     payload_path = root / "ios" / "NetworkSpecialist" / "Resources" / "questions.native.json"
+    embedded_path = root / "ios" / "NetworkSpecialist" / "GeneratedQuestionPayload.swift"
     require(payload_path.exists(), "questions.native.json missing; run build_native_questions.py")
+    require(embedded_path.exists(), "GeneratedQuestionPayload.swift missing; run build_native_questions.py")
     payload = json.loads(payload_path.read_text(encoding="utf-8"))
     require(len(payload.get("questions", [])) == 75, "native payload must contain 75 occurrences")
     require(len(payload.get("uniqueIDs", [])) == 68, "native payload must contain 68 unique IDs")
     require("lawBaselineDate" in payload, "lawBaselineDate field must be retained even when canonical value is undefined")
     require("sourceCheckedAt" in payload, "sourceCheckedAt field missing")
     require(bool(payload.get("contentVersion")), "contentVersion missing")
+    embedded = embedded_path.read_text(encoding="utf-8")
+    require("GeneratedQuestionPayload" in embedded and "Data(base64Encoded:" in embedded, "embedded audited payload source is invalid")
 
     project = (root / "ios" / "project.yml").read_text(encoding="utf-8")
     require(BUNDLE_ID in project, "Bundle ID mismatch")
@@ -55,6 +59,7 @@ def main() -> None:
     require(swift_files, "Swift source files missing")
     combined = "\n".join(path.read_text(encoding="utf-8") for path in swift_files)
     require("WKWebView" not in combined and "import WebKit" not in combined, "WebKit/WKWebView remains in native target")
+    require("GeneratedQuestionPayload.data" in combined, "QuestionRepository must have embedded offline payload fallback")
     for marker in ("わからない", "3連続正解で解除", "JSONバックアップ", "ホーム", "模試", "記録", "設定"):
         require(marker in combined, f"native UX marker missing: {marker}")
 
@@ -97,7 +102,7 @@ def main() -> None:
     elif args.require_icon:
         require(False, "canonical AppIcon missing")
 
-    print("PASS native release static gate", {"iapConfigured": iap_id is not None})
+    print("PASS native release static gate", {"iapConfigured": iap_id is not None, "embeddedPayload": True})
 
 
 if __name__ == "__main__":
