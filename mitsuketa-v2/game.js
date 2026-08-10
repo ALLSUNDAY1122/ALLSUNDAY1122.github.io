@@ -8,6 +8,7 @@ const reaction=document.getElementById('reaction');
 const nextBtn=document.getElementById('nextBtn');
 const realModal=document.getElementById('realModal');
 const realVideo=document.getElementById('realVideo');
+const realImage=document.getElementById('realImage');
 const realTitle=document.getElementById('realTitle');
 const realFact=document.getElementById('realFact');
 const realCredit=document.getElementById('realCredit');
@@ -15,15 +16,15 @@ const realNext=document.getElementById('realNext');
 const videoFallback=document.getElementById('videoFallback');
 const targets=[...document.querySelectorAll('.target')];
 const spots=[
- {id:'tree',x:23,y:52,peekX:25.5,peekY:50.5,label:'おおきな木'},
- {id:'rock',x:81,y:50,peekX:80.5,peekY:48.8,label:'岩'},
- {id:'bush',x:68,y:69,peekX:68.2,peekY:67.4,label:'草むら'},
- {id:'log',x:87,y:79,peekX:86.0,peekY:78.2,label:'丸太'}
+ {id:'tree',x:14,y:54,peekX:20.5,peekY:52,label:'おおきな木'},
+ {id:'rock',x:84,y:52,peekX:78.5,peekY:49.5,label:'岩'},
+ {id:'bush',x:73,y:71,peekX:68.5,peekY:66,label:'草むら'},
+ {id:'log',x:90,y:81,peekX:84.5,peekY:77.5,label:'丸太'}
 ];
 const animals=[
- {name:'くまさん',mini:'🐻',kind:'bear',reaction:'ばあ！ みーつかった〜！',fact:'ほんものの くまさん。おはなが おおきいね！',video:'https://archive.org/download/grizzly-bear-selfie/GX010742.MP4',credit:'Grizzly Bear selfie / Tom Scott camera・CC0 / Public Domain'},
- {name:'うさぎさん',mini:'🐰',kind:'rabbit',reaction:'ぴょーん！ いたよ〜！',fact:'ほんものの うさぎさん。おみみが ながいね！',video:'https://upload.wikimedia.org/wikipedia/commons/transcoded/1/10/Pet_Rabbit_2_2013-07-18.ogv/Pet_Rabbit_2_2013-07-18.ogv.360p.webm',credit:'Pet Rabbit 2 2013-07-18 / Fastily・CC BY-SA 3.0'},
- {name:'らいおんさん',mini:'🦁',kind:'lion',reaction:'がおー！ みつかった！',fact:'ほんものの らいおんさん。おおきな からだだね！',video:'https://upload.wikimedia.org/wikipedia/commons/8/83/Lion.webm',credit:'Lion.webm / Altes・CC BY-SA 4.0'}
+ {name:'くまさん',mini:'🐻',kind:'bear',reaction:'ばあ！ みーつかった〜！',fact:'ほんものの くまさん。からだが おおきいね！',mediaType:'video',media:'https://upload.wikimedia.org/wikipedia/commons/5/5a/Brown_Bear_%28Ursus_arctos%29.webm',credit:'Brown Bear (Ursus arctos) / U.S. Fish and Wildlife Service・Public Domain'},
+ {name:'うさぎさん',mini:'🐰',kind:'rabbit',reaction:'ぴょーん！ いたよ〜！',fact:'ほんものの うさぎさん。おみみが ながいね！',mediaType:'image',media:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Rabbit_0068.gif',credit:'Rabbit 0068.gif / Nevit Dilmen・CC BY-SA 3.0'},
+ {name:'らいおんさん',mini:'🦁',kind:'lion',reaction:'がおー！ みつかった！',fact:'ほんものの らいおんさん。おおきな からだだね！',mediaType:'video',media:'https://upload.wikimedia.org/wikipedia/commons/8/83/Lion.webm',credit:'Lion.webm / Altes・CC BY-SA 4.0'}
 ];
 let round=0,found=0,currentAnimal,currentSpot,searching=false,hintLevel=0,hintTimer=null,paused=false;
 
@@ -37,6 +38,7 @@ function setProgress(){
  [...document.querySelectorAll('.slot')].forEach((s,i)=>{s.classList.toggle('done',i<found);s.textContent=i<found?'★':'●'})
 }
 function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+function rand(a){return a[Math.floor(Math.random()*a.length)]}
 
 async function startRound(){
  clearInterval(hintTimer); hintLevel=0; searching=false; targets.forEach(t=>t.classList.remove('wiggle'));
@@ -54,8 +56,8 @@ async function startRound(){
  prompt.textContent=`${currentAnimal.name} かくれるよ〜`;
  await wait(950);
  if(paused)return;
- animalEl.style.left=currentSpot.peekX+'%'; animalEl.style.top=currentSpot.peekY+'%';
- animalEl.style.transform='translate(-50%,-50%) scale(.52)';
+ animalEl.style.left=currentSpot.x+'%'; animalEl.style.top=currentSpot.y+'%';
+ animalEl.style.transform='translate(-50%,-50%) scale(.46)';
  animalEl.classList.add('searching');
  searching=true;
  prompt.textContent=`${currentAnimal.name} どこかな？ 🐾`;
@@ -67,8 +69,8 @@ function startHints(){
   if(!searching||paused)return;
   hintLevel=Math.min(3,hintLevel+1);
   if(hintLevel===1) prompt.textContent='よ〜く みてみよう 👀';
-  if(hintLevel===2){document.getElementById(currentSpot.id).classList.add('wiggle');animalEl.style.transform='translate(-50%,-50%) scale(.64)';prompt.textContent=currentSpot.label+'が あやしいよ！'}
-  if(hintLevel===3){animalEl.style.transform='translate(-50%,-50%) scale(.78)';prompt.textContent=currentAnimal.name+'が ちらっ！'}
+  if(hintLevel===2){document.getElementById(currentSpot.id).classList.add('wiggle');animalEl.style.left=currentSpot.peekX+'%';animalEl.style.top=currentSpot.peekY+'%';animalEl.style.transform='translate(-50%,-50%) scale(.52)';prompt.textContent=currentSpot.label+'が あやしいよ！'}
+  if(hintLevel===3){animalEl.style.transform='translate(-50%,-50%) scale(.68)';prompt.textContent=currentAnimal.name+'が ちらっ！'}
  },3500);
 }
 function sparks(){
@@ -88,21 +90,33 @@ async function foundAnimal(){
 }
 targets.forEach(t=>t.addEventListener('click',()=>{if(searching&&t.id===currentSpot.id)foundAnimal();else if(searching)prompt.textContent='そこも みてみよう！'}));
 animalEl.addEventListener('click',foundAnimal);
-document.getElementById('hintBtn').addEventListener('click',()=>{if(searching){document.getElementById(currentSpot.id).classList.add('wiggle');animalEl.style.transform='translate(-50%,-50%) scale(.70)';prompt.textContent=currentSpot.label+'の ところかな？'}});
+document.getElementById('hintBtn').addEventListener('click',()=>{if(searching){document.getElementById(currentSpot.id).classList.add('wiggle');animalEl.style.left=currentSpot.peekX+'%';animalEl.style.top=currentSpot.peekY+'%';animalEl.style.transform='translate(-50%,-50%) scale(.58)';prompt.textContent=currentSpot.label+'の ところかな？'}});
 function showRealAnimal(){
  celebrate.classList.remove('show');
  realTitle.textContent='ほんものの '+currentAnimal.name+'！';
  realFact.textContent=currentAnimal.fact;
  realCredit.textContent='映像: '+currentAnimal.credit;
- videoFallback.hidden=true;realVideo.hidden=false;
- realVideo.src=currentAnimal.video;realVideo.currentTime=0;realModal.classList.add('show');
- const p=realVideo.play(); if(p&&p.catch)p.catch(()=>{});
- setTimeout(()=>{if(realModal.classList.contains('show')){realVideo.pause()}},5200);
+ videoFallback.hidden=true;
+ realVideo.hidden=true; realImage.hidden=true;
+ realVideo.pause(); realVideo.removeAttribute('src'); realVideo.load();
+ realImage.removeAttribute('src');
+ realModal.classList.add('show');
+ if(currentAnimal.mediaType==='image'){
+   realImage.src=currentAnimal.media;
+   realImage.hidden=false;
+ }else{
+   realVideo.src=currentAnimal.media;
+   realVideo.hidden=false;
+   realVideo.currentTime=0;
+   const p=realVideo.play(); if(p&&p.catch)p.catch(()=>{});
+   setTimeout(()=>{if(realModal.classList.contains('show')){realVideo.pause()}},5200);
+ }
 }
 nextBtn.addEventListener('click',showRealAnimal);
 realVideo.addEventListener('error',()=>{realVideo.hidden=true;videoFallback.hidden=false});
+realImage.addEventListener('error',()=>{realImage.hidden=true;videoFallback.hidden=false});
 realNext.addEventListener('click',()=>{
- realVideo.pause();realVideo.removeAttribute('src');realVideo.load();realModal.classList.remove('show');
+ realVideo.pause();realVideo.removeAttribute('src');realVideo.load();realImage.removeAttribute('src');realModal.classList.remove('show');
  if(found>=3){found=0;round=0;setProgress();}else round++;startRound();
 });
 document.getElementById('pauseBtn').addEventListener('click',e=>{paused=!paused;e.currentTarget.textContent=paused?'▶':'Ⅱ';if(!paused)startRound()});
