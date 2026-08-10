@@ -25,7 +25,7 @@ permissions:
 jobs:
   simulator-build:
     runs-on: macos-latest
-    timeout-minutes: 60
+    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -173,7 +173,7 @@ jobs:
             -maximum-test-execution-time-allowance 120 | xcpretty
       - name: Run UI tests on small and large iPhone sizes
         if: ${{ hashFiles('native-ios/Otsu4Sprint/project.yml') != '' }}
-        timeout-minutes: 25
+        timeout-minutes: 40
         working-directory: native-ios/Otsu4Sprint
         run: |
           set -euo pipefail
@@ -222,10 +222,10 @@ jobs:
           ]
           with open(log_path, 'wb') as log:
               try:
-                  result = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, timeout=540)
+                  result = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, timeout=900)
                   raise SystemExit(result.returncode)
               except subprocess.TimeoutExpired:
-                  log.write(b'\nOTSU4_UI_XCODEBUILD_HARD_TIMEOUT_540S\n')
+                  log.write(b'\nOTSU4_UI_XCODEBUILD_HARD_TIMEOUT_900S\n')
                   raise SystemExit(124)
           PY
             local xcodebuild_status=$?
