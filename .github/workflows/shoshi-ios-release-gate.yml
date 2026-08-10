@@ -8,6 +8,10 @@ on:
       - '.github/workflows/shoshi-ios-release-gate.yml'
   workflow_dispatch:
 
+concurrency:
+  group: shoshi-native-ios-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   native-source-and-contract:
     runs-on: ubuntu-24.04
