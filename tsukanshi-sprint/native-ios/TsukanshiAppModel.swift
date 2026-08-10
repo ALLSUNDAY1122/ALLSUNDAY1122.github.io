@@ -10,9 +10,9 @@ final class TsukanshiStudySession: ObservableObject, Identifiable {
     let startedAt: Date
     @Published var currentIndex: Int
     @Published var answers: [String: AnswerPayload]
+    @Published var evaluations: [String: AnswerEvaluation]
     @Published var currentEvaluation: AnswerEvaluation?
     @Published var isFinished = false
-    @Published var mockEvaluations: [String: AnswerEvaluation] = [:]
 
     init(kind: SessionKind, questions: [LearningQuestion], snapshot: LearningSessionSnapshot? = nil) {
         self.kind = kind
@@ -20,11 +20,17 @@ final class TsukanshiStudySession: ObservableObject, Identifiable {
         self.startedAt = snapshot?.startedAt ?? Date()
         self.currentIndex = min(max(0, snapshot?.currentIndex ?? 0), max(0, questions.count - 1))
         self.answers = snapshot?.answers ?? [:]
-        if let snapshot,
-           !isMock,
-           currentIndex < questions.count,
-           let answer = snapshot.answers[questions[currentIndex].id] {
-            self.currentEvaluation = try? LearningEngine.evaluate(questions[currentIndex], answer: answer)
+        self.evaluations = [:]
+        if let snapshot, !isMock {
+            for question in questions {
+                if let answer = snapshot.answers[question.id],
+                   let evaluation = try? LearningEngine.evaluate(question, answer: answer) {
+                    self.evaluations[question.id] = evaluation
+                }
+            }
+            if currentIndex < questions.count {
+                self.currentEvaluation = self.evaluations[questions[currentIndex].id]
+            }
         }
     }
 
@@ -61,6 +67,7 @@ final class TsukanshiStudySession: ObservableObject, Identifiable {
             return nil
         }
         let evaluation = try LearningEngine.evaluate(question, answer: payload)
+        evaluations[question.id] = evaluation
         currentEvaluation = evaluation
         return evaluation
     }
@@ -73,10 +80,8 @@ final class TsukanshiStudySession: ObservableObject, Identifiable {
         }
         currentIndex += 1
         currentEvaluation = nil
-        if !isMock,
-           let question = currentQuestion,
-           let answer = answers[question.id] {
-            currentEvaluation = try? LearningEngine.evaluate(question, answer: answer)
+        if !isMock, let question = currentQuestion {
+            currentEvaluation = evaluations[question.id]
         }
     }
 
@@ -89,12 +94,12 @@ final class TsukanshiStudySession: ObservableObject, Identifiable {
                 results[question.id] = evaluation
             }
         }
-        mockEvaluations = results
+        evaluations = results
         isFinished = true
     }
 
-    var mockCorrectCount: Int {
-        mockEvaluations.values.filter(\.isCorrect).count
+    var correctCount: Int {
+        evaluations.values.filter(\.isCorrect).count
     }
 }
 
@@ -104,7 +109,7 @@ final class TsukanshiAppModel: ObservableObject {
     @Published private(set) var state: LearningState
     @Published var activeSession: TsukanshiStudySession?
     @Published var loadError: String?
-    @Published var importMessage: String?
+    @Published var transientMessage: String?
 
     let purchaseController = PurchaseController(productID: TsukanshiNativeConfig.productID)
     private var stateStore: LearningStateStore?
@@ -236,7 +241,7 @@ final class TsukanshiAppModel: ObservableObject {
                 saveResume(session)
             }
         } catch {
-            importMessage = "回答を採点できません: \(error.localizedDescription)"
+            transientMessage = "回答を採点できません: \(error.localizedDescription)"
         }
     }
 
@@ -253,7 +258,7 @@ final class TsukanshiAppModel: ObservableObject {
     func finishMock(_ session: TsukanshiStudySession) {
         session.finishMock()
         for question in session.questions {
-            let evaluation = session.mockEvaluations[question.id] ?? AnswerEvaluation(isCorrect: false, isUnknown: true, message: "わからない")
+            let evaluation = session.evaluations[question.id] ?? AnswerEvaluation(isCorrect: false, isUnknown: true, message: "わからない")
             LearningEngine.record(question: question, evaluation: evaluation, state: &state)
         }
         state.resumeSession = nil
@@ -279,15 +284,15 @@ final class TsukanshiAppModel: ObservableObject {
         guard let stateStore else { return }
         do {
             state = try stateStore.importBackup(data)
-            importMessage = "バックアップを復元しました"
+            transientMessage = "バックアップを復元しました"
         } catch {
-            importMessage = "復元できません: \(error.localizedDescription)"
+            transientMessage = "復元できません: \(error.localizedDescription)"
         }
     }
 
     private func start(kind: SessionKind, questions: [LearningQuestion]) {
         guard !questions.isEmpty else {
-            importMessage = "利用できる問題がありません"
+            transientMessage = "利用できる問題がありません"
             return
         }
         state.resumeSession = nil
