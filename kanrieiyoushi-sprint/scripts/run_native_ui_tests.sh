@@ -97,7 +97,7 @@ import subprocess,sys
 log,project,scheme,udid,test,derived=sys.argv[1:]
 cmd=[
   'xcodebuild','test-without-building','-project',project,'-scheme',scheme,
-  '-destination',f'platform=iOS Simulator,id={udid}','-derivedDataPath',derived,
+  '-destination',f'platform=iOS Simulator,id={udid},arch=arm64','-derivedDataPath',derived,
   '-destination-timeout','45','-parallel-testing-enabled','NO',
   '-test-timeouts-enabled','YES','-default-test-execution-time-allowance','75',
   '-maximum-test-execution-time-allowance','150',f'-only-testing:{test}',
