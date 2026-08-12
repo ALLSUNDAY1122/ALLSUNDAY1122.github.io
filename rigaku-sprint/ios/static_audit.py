@@ -41,7 +41,7 @@ verified = {int(round_no): int(count) for round_no, count in round_matches}
 expected = {60: 200, 59: 200, 58: 200}
 if verified != expected:
     errors.append(f"公式PDF確認済み枠が不一致: actual={verified}, expected={expected}")
-if "static let totalOfficialQuestionSlots = examRounds.reduce" not in config:
+if "static let totalOfficialQuestionSlots = examRounds.compactMap(\\.officialQuestionCount).reduce(0, +)" not in config:
     errors.append("3回分総枠の導出が欠損")
 
 if errors:
