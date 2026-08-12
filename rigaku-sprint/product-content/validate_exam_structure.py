@@ -13,6 +13,70 @@ def load(name: str):
     return json.loads((ROOT / name).read_text(encoding="utf-8"))
 
 
+def slot_id(round_no: int, session: str, number: int) -> str:
+    return f"RIGAKU-R{round_no}-{session}-{number:03d}"
+
+
+def expand_compact_batch(doc: dict, path_name: str, errors: list[str]) -> list[dict]:
+    compact = doc.get("compactRecords")
+    if compact is None:
+        return []
+    if not isinstance(compact, list):
+        errors.append(f"classification compactRecords不正: {path_name}")
+        return []
+
+    round_no = doc.get("round")
+    session = doc.get("session")
+    source_url = doc.get("sourceURL")
+    default_rights = doc.get("defaultRightsStatus", "pdl_mhlw_confirmed")
+    default_media = doc.get("defaultMediaStatus", "none")
+    default_disposition = doc.get("defaultProductDisposition", "official_text_candidate")
+    media_unresolved = {int(v) for v in doc.get("mediaUnresolved", [])}
+    rights_overrides = {str(k): v for k, v in doc.get("rightsOverrides", {}).items()}
+    media_overrides = {str(k): v for k, v in doc.get("mediaOverrides", {}).items()}
+    disposition_overrides = {str(k): v for k, v in doc.get("dispositionOverrides", {}).items()}
+
+    if not isinstance(round_no, int) or session not in {"AM", "PM"} or not source_url:
+        errors.append(f"classification compact batch metadata不足: {path_name}")
+        return []
+
+    records: list[dict] = []
+    for row in compact:
+        if not isinstance(row, list) or len(row) != 3:
+            errors.append(f"classification compact row不正 {path_name}: {row}")
+            continue
+        number, subject, topic = row
+        if not isinstance(number, int):
+            errors.append(f"classification compact questionNumber不正 {path_name}: {row}")
+            continue
+        key = str(number)
+        unresolved = number in media_unresolved
+        record = {
+            "id": slot_id(round_no, session, number),
+            "round": round_no,
+            "session": session,
+            "questionNumber": number,
+            "subject": subject,
+            "topic": topic,
+            "classificationStatus": "verified",
+            "rightsStatus": rights_overrides.get(
+                key,
+                "excluded_third_party_rights" if unresolved else default_rights,
+            ),
+            "mediaStatus": media_overrides.get(
+                key,
+                "excluded_unresolved_rights" if unresolved else default_media,
+            ),
+            "productDisposition": disposition_overrides.get(
+                key,
+                "originalize_without_official_media" if unresolved else default_disposition,
+            ),
+            "sourceURL": source_url,
+        }
+        records.append(record)
+    return records
+
+
 def load_classification_records() -> tuple[list[dict], list[str]]:
     errors: list[str] = []
     records: list[dict] = []
@@ -31,16 +95,16 @@ def load_classification_records() -> tuple[list[dict], list[str]]:
             if doc.get("qualification") != "理学療法士国家試験":
                 errors.append(f"classification batch qualification不一致: {path.name}")
             batch_records = doc.get("records")
-            if not isinstance(batch_records, list):
-                errors.append(f"classification batch records不正: {path.name}")
-                continue
-            records.extend(batch_records)
+            if batch_records is not None:
+                if not isinstance(batch_records, list):
+                    errors.append(f"classification batch records不正: {path.name}")
+                else:
+                    records.extend(batch_records)
+            records.extend(expand_compact_batch(doc, path.name, errors))
+            if batch_records is None and doc.get("compactRecords") is None:
+                errors.append(f"classification batch records欠損: {path.name}")
 
     return records, errors
-
-
-def slot_id(round_no: int, session: str, number: int) -> str:
-    return f"RIGAKU-R{round_no}-{session}-{number:03d}"
 
 
 def main() -> int:
@@ -116,8 +180,6 @@ def main() -> int:
     if len(adjustment_ids) != 20:
         errors.append(f"expected 20 official scoring adjustments, got {len(adjustment_ids)}")
 
-    # 1-20=実地3点、21-100=一般1点という位置ルールは、厚労省の
-    # 公表満点と採点除外を3回すべて再現できることを機械的に照合する。
     calculated = defaultdict(lambda: {"general": 0, "practical": 0})
     for slot in slots.values():
         if slot["treatment"] == "excluded":
