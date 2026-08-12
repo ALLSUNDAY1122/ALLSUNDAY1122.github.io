@@ -27,7 +27,7 @@ jobs:
       - name: Generate Xcode project
         working-directory: learning-sprint/yobi-tantou/ios
         run: xcodegen generate
-      - name: XCTest on available iOS Simulator
+      - name: XCTest and XCUITest on available iOS Simulator
         working-directory: learning-sprint/yobi-tantou/ios
         run: |
           set -o pipefail
@@ -45,4 +45,5 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             YOBI_BUNDLE_ID=jp.ci.yobi.preview \
             YOBI_TEST_BUNDLE_ID=jp.ci.yobi.preview.tests \
+            YOBI_UI_TEST_BUNDLE_ID=jp.ci.yobi.preview.uitests \
             | xcpretty
