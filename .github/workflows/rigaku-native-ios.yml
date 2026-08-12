@@ -23,6 +23,9 @@ jobs:
       - name: Official 600-slot and scoring audit
         run: python3 rigaku-sprint/product-content/validate_exam_structure.py
 
+      - name: Official 600-answer audit
+        run: python3 rigaku-sprint/product-content/validate_official_answers.py
+
       - name: Classification summary
         run: python3 rigaku-sprint/product-content/summarize_classification.py
 
