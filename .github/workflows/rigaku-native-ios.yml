@@ -1,0 +1,39 @@
+name: Rigaku Native iOS Quality Gate
+
+on:
+  push:
+    branches:
+      - feat/15-rigaku-sprint-native
+    paths:
+      - 'rigaku-sprint/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/rigaku-native-ios.yml'
+  pull_request:
+    paths:
+      - 'rigaku-sprint/**'
+      - 'native-ios/LearningSprintCore/**'
+      - '.github/workflows/rigaku-native-ios.yml'
+
+jobs:
+  native-static-and-core-tests:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static native audit
+        run: python3 rigaku-sprint/ios/static_audit.py
+
+      - name: Swift syntax parse
+        run: |
+          swiftc -frontend -parse \
+            rigaku-sprint/ios/Sources/*.swift \
+            rigaku-sprint/ios/Tests/*.swift
+
+      - name: Shared LearningSprintCore tests
+        working-directory: native-ios/LearningSprintCore
+        run: swift test
+
+      - name: Confirm unresolved identifiers remain external
+        run: |
+          grep -F 'PRODUCT_BUNDLE_IDENTIFIER: $(RIGAKU_BUNDLE_ID)' rigaku-sprint/ios/project.yml
+          ! grep -R -E 'jp\.allsunday1122\.rigaku(sprint)?(\.premium)?' rigaku-sprint/ios rigaku-sprint/product-content
